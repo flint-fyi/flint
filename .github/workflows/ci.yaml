@@ -49,8 +49,8 @@ jobs:
       - name: Cache dependencies and vitest cache
         uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
         with:
-          key: cache-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          path: node_modules/.vitest
+          key: cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          path: node_modules/.vite
       - run: pnpm exec tsc -b # For types tests
       - run: pnpm run build -W ./packages/ts-patch/ # vitest-dev/vitest#9429
       - # Run partial test pass on PRs (only changed files)
