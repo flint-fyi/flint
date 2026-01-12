@@ -4,13 +4,14 @@ import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
 import * as AST from "../types/ast.ts";
 import { hasSameTokens } from "../utils/hasSameTokens.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports duplicate conditions in if-else-if chains that make code unreachable.",
 		id: "elseIfDuplicates",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		duplicateCondition: {

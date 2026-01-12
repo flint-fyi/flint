@@ -4,11 +4,13 @@ import { SyntaxKind } from "typescript";
 
 const globalNames = new Set(["alert", "confirm", "prompt"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports uses of the global alert/confirm/prompt dialog APIs.",
 		id: "alerts",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noAlert: {

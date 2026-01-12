@@ -100,12 +100,14 @@ function isValidAutocompleteValue(value: string): boolean {
 	return false;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Ensure the autocomplete attribute is correct and suitable for the form field.",
 		id: "autocomplete",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalid: {

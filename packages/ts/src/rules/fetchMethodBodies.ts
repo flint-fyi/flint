@@ -3,12 +3,13 @@ import ts, { SyntaxKind } from "typescript";
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
 import * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Disallow providing a body with GET or HEAD fetch requests.",
 		id: "fetchMethodBodies",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noBody: {

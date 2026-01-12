@@ -5,11 +5,13 @@ import type { WithPosition } from "../nodes.ts";
 
 const invalidPattern = /\[[^\]]+\]\[\s+\]/g;
 
-export default markdownLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports invalid label references with whitespace.",
 		id: "labelReferenceValidity",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidWhitespace: {

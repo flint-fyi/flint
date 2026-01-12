@@ -2,13 +2,14 @@ import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports string concatenation using the + operator when both operands are string literals.",
 		id: "unnecessaryConcatenation",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		unnecessaryConcatenation: {

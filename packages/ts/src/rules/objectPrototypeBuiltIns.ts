@@ -11,12 +11,14 @@ const prototypeMethods = new Set([
 	"propertyIsEnumerable",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports direct calls to Object.prototype methods on object instances.",
 		id: "objectPrototypeBuiltIns",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		prototypeBuiltIn: {

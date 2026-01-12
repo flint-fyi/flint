@@ -6,7 +6,9 @@ import {
 } from "@flint.fyi/ts";
 import ts, { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "../ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallow computed member access on imported namespace identifiers.",
