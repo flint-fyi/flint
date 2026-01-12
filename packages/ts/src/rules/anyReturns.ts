@@ -2,6 +2,7 @@ import { nullThrows } from "@flint.fyi/utils";
 import * as tsutils from "ts-api-utils";
 import ts, { SyntaxKind } from "typescript";
 
+import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
 import type * as AST from "../types/ast.ts";
 import type { Checker } from "../types/checker.ts";
@@ -58,6 +59,7 @@ export default typescriptLanguage.createRule({
 			reportingNode: ts.Node,
 			program: ts.Program,
 			typeChecker: Checker,
+			sourceFile: ts.SourceFile,
 		): void {
 			const type = typeChecker.getTypeAtLocation(returnNode);
 
@@ -216,10 +218,7 @@ export default typescriptLanguage.createRule({
 									: "`any[]`",
 					},
 					message,
-					range: {
-						begin: reportingNode.getStart(),
-						end: reportingNode.getEnd(),
-					},
+					range: getTSNodeRange(reportingNode, sourceFile),
 				});
 				return;
 			}
@@ -244,10 +243,7 @@ export default typescriptLanguage.createRule({
 						sender: typeChecker.typeToString(sender),
 					},
 					message: "unsafeReturnAssignment",
-					range: {
-						begin: reportingNode.getStart(),
-						end: reportingNode.getEnd(),
-					},
+					range: getTSNodeRange(reportingNode, sourceFile),
 				});
 				return;
 			}
@@ -255,14 +251,20 @@ export default typescriptLanguage.createRule({
 
 		return {
 			visitors: {
-				ArrowFunction: (node, { program, typeChecker }) => {
+				ArrowFunction: (node, { program, sourceFile, typeChecker }) => {
 					if (node.body.kind != SyntaxKind.Block) {
-						checkReturn(node.body, node.body, program, typeChecker);
+						checkReturn(node.body, node.body, program, typeChecker, sourceFile);
 					}
 				},
-				ReturnStatement: (node, { program, typeChecker }) => {
+				ReturnStatement: (node, { program, sourceFile, typeChecker }) => {
 					if (node.expression != null) {
-						checkReturn(node.expression, node, program, typeChecker);
+						checkReturn(
+							node.expression,
+							node,
+							program,
+							typeChecker,
+							sourceFile,
+						);
 					}
 				},
 			},

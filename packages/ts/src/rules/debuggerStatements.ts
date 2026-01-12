@@ -1,3 +1,4 @@
+import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
 
 export default typescriptLanguage.createRule({
@@ -21,11 +22,8 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				DebuggerStatement: (node) => {
-					const range = {
-						begin: node.getStart(),
-						end: node.getEnd(),
-					};
+				DebuggerStatement: (node, { sourceFile }) => {
+					const range = getTSNodeRange(node, sourceFile);
 
 					context.report({
 						message: "noDebugger",
