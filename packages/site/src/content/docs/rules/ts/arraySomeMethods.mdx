@@ -1,0 +1,78 @@
+---
+description: "Reports patterns that can be replaced with `.some()` for checking array element existence."
+title: "arraySomeMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arraySomeMethods" />
+
+Using `.some()` is the clearest and most efficient way to check if an array contains an element matching a condition.
+Patterns like `.filter(...).length > 0` or `.findIndex(...) !== -1` are less readable and potentially less efficient.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const values = [1, 2, 3];
+const hasPositive = values.filter((value) => value > 0).length > 0;
+```
+
+```ts
+const items = ["a", "b", "c"];
+const hasMatch = items.filter((item) => item === "b").length !== 0;
+```
+
+```ts
+const values = [1, 2, 3];
+const hasMatch = values.findIndex((value) => value > 2) !== -1;
+```
+
+```ts
+const items = ["a", "b", "c"];
+const exists = items.findLastIndex((item) => item === "a") !== -1;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const values = [1, 2, 3];
+const hasPositive = values.some((value) => value > 0);
+```
+
+```ts
+const items = ["a", "b", "c"];
+const hasMatch = items.some((item) => item === "b");
+```
+
+```ts
+const values = [1, 2, 3];
+const filtered = values.filter((value) => value > 0);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need the filtered array for other purposes beyond checking existence, or if you're working in a codebase that prefers explicit length checks for consistency, you may want to disable this rule.
+
+## Further Reading
+
+- [MDN: Array.prototype.some()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some)
+- [MDN: Array.prototype.filter()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
+- [MDN: Array.prototype.findIndex()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arraySomeMethods" />

@@ -1,4 +1,4 @@
-import { formatReportPrimary, hasFix } from "@flint.fyi/core";
+import { formatReport, hasFix } from "@flint.fyi/core";
 import { makeAbsolute } from "@flint.fyi/utils";
 import { styleText } from "node:util";
 import { textTable } from "text-table-fast";
@@ -38,7 +38,7 @@ export const briefPresenterFactory: PresenterFactory = {
 								"gray",
 								`  ${report.range.begin.line + 1}:${report.range.begin.column + 1}`,
 							),
-							formatReportPrimary(report),
+							formatReport(report.data, report.message.primary),
 							styleText("yellow", report.about.id),
 							"\n",
 						]),

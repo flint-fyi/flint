@@ -333,7 +333,7 @@ export default typescriptLanguage.createRule({
 				return undefined;
 			}
 
-			const lastParam = parameters[parameters.length - 1];
+			const lastParam = parameters.at(-1);
 			if (!lastParam) {
 				return undefined;
 			}
