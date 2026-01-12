@@ -23,7 +23,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer EventTarget over EventEmitter for cross-platform compatibility.",
 		id: "eventClasses",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferEventTarget: {

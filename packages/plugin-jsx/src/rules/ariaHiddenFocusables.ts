@@ -22,7 +22,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports elements with aria-hidden='true' that are focusable.",
 		id: "ariaHiddenFocusables",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		ariaHiddenFocusable: {

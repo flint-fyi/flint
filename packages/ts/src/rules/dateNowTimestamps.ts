@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer the shorter `Date.now()` to get the number of milliseconds since the Unix Epoch.",
 		id: "dateNowTimestamps",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferDateNow: {

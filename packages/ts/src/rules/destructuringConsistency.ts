@@ -103,7 +103,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Use destructured variables over properties for consistency.",
 		id: "destructuringConsistency",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		useDestructured: {

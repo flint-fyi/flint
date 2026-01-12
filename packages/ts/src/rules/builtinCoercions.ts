@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports functions that wrap native coercion functions like `String`, `Number`, `BigInt`, `Boolean`, or `Symbol`.",
 		id: "builtinCoercions",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		useBuiltin: {

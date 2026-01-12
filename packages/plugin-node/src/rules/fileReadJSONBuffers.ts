@@ -9,7 +9,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer reading JSON files as buffers when using JSON.parse for better performance.",
 		id: "fileReadJSONBuffers",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferBufferReading: {

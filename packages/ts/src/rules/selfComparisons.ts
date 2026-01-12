@@ -7,7 +7,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports comparing a value to itself.",
 		id: "selfComparisons",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noSelfComparison: {

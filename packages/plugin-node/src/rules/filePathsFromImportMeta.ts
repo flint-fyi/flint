@@ -76,7 +76,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer `import.meta.dirname` and `import.meta.filename` over legacy file path techniques.",
 		id: "filePathsFromImportMeta",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferImportMetaDirname: {

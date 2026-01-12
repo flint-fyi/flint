@@ -18,7 +18,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports anchor elements with ambiguous text that doesn't describe the link destination.",
 		id: "anchorAmbiguousText",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		ambiguousText: {

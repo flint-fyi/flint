@@ -29,7 +29,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports void DOM elements that have children, which is invalid HTML.",
 		id: "elementChildrenValidity",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		voidElementWithChildren: {

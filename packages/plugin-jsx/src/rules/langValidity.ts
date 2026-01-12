@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports invalid lang attribute values.",
 		id: "langValidity",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidLang: {

@@ -27,7 +27,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer modern `querySelector` and `querySelectorAll` over legacy DOM query methods.",
 		id: "nodeQueryMethods",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferQuerySelector: {

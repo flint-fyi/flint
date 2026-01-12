@@ -42,7 +42,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Disallow leading or trailing spaces in console method string arguments.",
 		id: "consoleSpaces",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		leading: {

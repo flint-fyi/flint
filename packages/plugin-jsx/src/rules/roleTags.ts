@@ -40,7 +40,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports ARIA roles that have semantic HTML element equivalents.",
 		id: "roleTags",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferSemanticElement: {

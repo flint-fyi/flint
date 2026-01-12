@@ -10,7 +10,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports patterns that can be replaced with `.some()` for checking array element existence.",
 		id: "arraySomeMethods",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferSome: {
