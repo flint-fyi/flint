@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -28,7 +28,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		function checkForAssignment(
 			node: AST.ConciseBody | AST.Expression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			const unwrapped = unwrapParenthesizedExpression(node);
 

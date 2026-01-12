@@ -4,7 +4,7 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 const alternateProperties = new Set(["aria-label", "aria-labelledby", "title"]);
 
@@ -55,7 +55,7 @@ export default typescriptLanguage.createRule({
 			attributes: AST.JsxAttributes,
 			tagName: AST.JsxTagNameExpression,
 			elementName: string,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const properties = attributes.properties.find(
 				(attr) =>
@@ -113,7 +113,7 @@ export default typescriptLanguage.createRule({
 		function checkInputElement(
 			attributes: AST.JsxAttributes,
 			tagName: AST.JsxTagNameExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const typeAttribute = attributes.properties.find(
 				(properties) =>
@@ -141,7 +141,7 @@ export default typescriptLanguage.createRule({
 		function checkObjectAccessibility(
 			attributes: AST.JsxAttributes,
 			tagName: AST.JsxTagNameExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (
 				!attributes.properties.some(

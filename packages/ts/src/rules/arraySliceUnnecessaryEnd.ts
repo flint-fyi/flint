@@ -85,7 +85,7 @@ function isInfinity(node: AST.Expression) {
 function isLengthOfReceiver(
 	receiver: AST.Expression,
 	endArgument: AST.Expression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	return (
 		ts.isPropertyAccessExpression(endArgument) &&
@@ -97,7 +97,7 @@ function isLengthOfReceiver(
 function isUnnecessaryEnd(
 	receiver: AST.Expression,
 	endArgument: AST.Expression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	return (
 		isInfinity(endArgument) ||

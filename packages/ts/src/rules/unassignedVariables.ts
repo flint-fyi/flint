@@ -28,7 +28,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		function hasAssignments(
 			identifier: AST.Identifier,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
 			// TODO (#400): Switch to scope analysis

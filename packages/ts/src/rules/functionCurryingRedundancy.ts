@@ -1,5 +1,5 @@
 import { nullThrows } from "@flint.fyi/utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
 import * as AST from "../types/ast.ts";
@@ -87,7 +87,7 @@ export default typescriptLanguage.createRule({
 function createApplyFixText(
 	functionExpression: string,
 	methodArguments: AST.Expression[],
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	if (methodArguments.length > 0) {
 		const argsArray = nullThrows(
@@ -103,7 +103,7 @@ function createApplyFixText(
 function createCallFixText(
 	functionExpression: string,
 	methodArguments: AST.Expression[],
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	const argsText = methodArguments
 		.map((arg) => arg.getText(sourceFile))

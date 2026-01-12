@@ -1,5 +1,5 @@
 import { nullThrows } from "@flint.fyi/utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -91,7 +91,7 @@ export default typescriptLanguage.createRule({
 function findToken(
 	node: AST.CallExpression,
 	token: SyntaxKind,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	return nullThrows(
 		node.getChildren(sourceFile).find((child) => child.kind === token),

@@ -5,9 +5,11 @@ import {
 } from "@flint.fyi/core";
 import type * as ts from "typescript";
 
+import type * as AST from "./types/ast.ts";
+
 export function normalizeRange(
 	original: CharacterReportRange,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): NormalizedReportRangeObject {
 	const onCharacters = isNode(original)
 		? { begin: original.getStart(), end: original.getEnd() }

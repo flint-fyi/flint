@@ -1,5 +1,4 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import type * as ts from "typescript";
+import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 
 import { getRuleTesterDescribedCases } from "../getRuleTesterDescribedCases.ts";
 import type { ParsedTestCase } from "../types.ts";
@@ -27,7 +26,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		function checkTestCases(
 			testCases: ParsedTestCase[],
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const seen = new Set<string>();
 

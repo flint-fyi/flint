@@ -78,7 +78,7 @@ export default typescriptLanguage.createRule({
 		function isValidThisArg(
 			expectedThis: AST.Expression | undefined,
 			thisArg: AST.Expression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			return expectedThis
 				? hasSameTokens(expectedThis, thisArg, sourceFile)

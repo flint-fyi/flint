@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import {
@@ -32,7 +32,7 @@ export default typescriptLanguage.createRule({
 		function reportGlobalObjectCall(
 			expression: AST.Expression,
 			name: string,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			context.report({
 				data: { name },

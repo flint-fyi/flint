@@ -2,7 +2,6 @@
 // ...which notes:
 // Adapted from: https://github.com/microsoft/TypeScript/blob/78c16795cdee70b9d9f0f248b6dbb6ba50994a59/src/compiler/program.ts#L680-L811
 
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import {

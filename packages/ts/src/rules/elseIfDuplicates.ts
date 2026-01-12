@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -28,7 +28,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		function checkIfStatement(
 			node: AST.IfStatement,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const seen: AST.Expression[] = [];
 			let current: AST.IfStatement = node;

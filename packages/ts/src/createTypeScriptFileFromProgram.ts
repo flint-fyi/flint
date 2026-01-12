@@ -10,12 +10,13 @@ import { convertTypeScriptDiagnosticToLanguageFileDiagnostic } from "./convertTy
 import { getFirstEnumValues } from "./getFirstEnumValues.ts";
 import type { TypeScriptFileServices } from "./language.ts";
 import type { TypeScriptNodesByName } from "./nodes.ts";
+import type * as AST from "./types/ast.ts";
 
 export const NodeSyntaxKinds = getFirstEnumValues(SyntaxKind);
 
 export function collectTypeScriptFileCacheImpacts(
 	program: ts.Program,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): LanguageFileCacheImpacts {
 	return {
 		dependencies: [
@@ -31,7 +32,7 @@ export function collectTypeScriptFileCacheImpacts(
 export function createTypeScriptFileFromProgram(
 	data: FileAboutData,
 	program: ts.Program,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): LanguageFileDefinition<TypeScriptNodesByName, TypeScriptFileServices> {
 	return {
 		about: {

@@ -1,4 +1,4 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import ts, { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
@@ -25,7 +25,7 @@ export default typescriptLanguage.createRule({
 		function checkStringValue(
 			value: string,
 			node: ts.Node,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (value.toLowerCase().startsWith("javascript:")) {
 				context.report({

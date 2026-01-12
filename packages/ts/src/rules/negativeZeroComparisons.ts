@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
 import type * as AST from "../types/ast.ts";
@@ -38,7 +38,7 @@ export default typescriptLanguage.createRule({
 		function generateObjectIsText(
 			node: AST.BinaryExpression,
 			isNegated: boolean,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const leftText = node.left.getText(sourceFile);
 			const rightText = node.right.getText(sourceFile);

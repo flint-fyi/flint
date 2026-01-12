@@ -1,6 +1,6 @@
 import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import { nullThrows } from "@flint.fyi/utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { isDeclaredInNodeTypes } from "./utils/isDeclaredInNodeTypes.ts";
 
@@ -81,7 +81,7 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkNode(node: AST.Expression, sourceFile: ts.SourceFile) {
+		function checkNode(node: AST.Expression, sourceFile: AST.SourceFile) {
 			if (
 				node.kind === SyntaxKind.StringLiteral &&
 				nodeBuiltinModules.has(node.text) &&

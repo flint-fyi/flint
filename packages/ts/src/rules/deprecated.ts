@@ -188,7 +188,6 @@ export default typescriptLanguage.createRule({
 			typeChecker: ts.TypeChecker,
 		) {
 			const signature = typeChecker.getResolvedSignature(
-				// @ts-expect-error -- https://github.com/flint-fyi/flint/issues/1404
 				callLike as ts.CallLikeExpression,
 			);
 			const symbol = typeChecker.getSymbolAtLocation(node);
@@ -220,7 +219,7 @@ export default typescriptLanguage.createRule({
 
 		function checkNode(
 			node: AST.AnyNode,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
 			if (isDeclarationSite(node) || isInsideImport(node)) {
@@ -274,7 +273,7 @@ export default typescriptLanguage.createRule({
 		// https://github.com/flint-fyi/flint/issues/1298
 		function checkComputedPropertyAccess(
 			node: AST.ElementAccessExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
 			const argumentExpression = node.argumentExpression;
@@ -309,7 +308,7 @@ export default typescriptLanguage.createRule({
 
 		function checkBindingElement(
 			node: AST.BindingElement,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
 			const bindingPattern = node.parent;
@@ -371,7 +370,7 @@ export default typescriptLanguage.createRule({
 
 		function checkHeritageClause(
 			node: AST.HeritageClause,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
 			for (const type of node.types) {
@@ -389,7 +388,7 @@ export default typescriptLanguage.createRule({
 
 		function checkSuperCall(
 			node: AST.SuperExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
 			const callExpr = node.parent;

@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -52,7 +52,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		function checkComparison(
 			node: AST.BinaryExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const leftTypeofOperand = getTypeofOperand(node.left);
 			const rightTypeofOperand = getTypeofOperand(node.right);

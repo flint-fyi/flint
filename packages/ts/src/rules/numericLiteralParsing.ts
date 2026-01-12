@@ -1,5 +1,5 @@
 import { nullThrows } from "@flint.fyi/utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -66,7 +66,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		function checkParseIntCall(
 			node: AST.CallExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (node.arguments.length !== 2) {
 				return;

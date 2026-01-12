@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -74,7 +74,7 @@ export default typescriptLanguage.createRule({
 
 		function checkFetchOptions(
 			node: AST.Expression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (node.kind !== SyntaxKind.ObjectLiteralExpression) {
 				return;
@@ -100,7 +100,7 @@ export default typescriptLanguage.createRule({
 		function checkNode(
 			node: AST.CallExpression | AST.NewExpression,
 			functionName: string,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (
 				node.expression.kind === SyntaxKind.Identifier &&

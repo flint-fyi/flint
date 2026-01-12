@@ -6,7 +6,7 @@ import { unwrapParenthesizedExpression } from "./unwrapParenthesizedExpression.t
 export function hasSameTokens(
 	nodeA: AST.Expression,
 	nodeB: AST.Expression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): boolean {
 	const queueA: ts.Node[] = [unwrapParenthesizedExpression(nodeA)];
 	const queueB: ts.Node[] = [unwrapParenthesizedExpression(nodeB)];
@@ -47,7 +47,7 @@ export function hasSameTokens(
 function areSameToken(
 	nodeA: ts.Node,
 	nodeB: ts.Node,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): boolean {
 	if (
 		ts.isIdentifier(nodeA) ||

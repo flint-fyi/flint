@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -34,7 +34,10 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function hasComments(block: AST.Block, sourceFile: ts.SourceFile): boolean {
+		function hasComments(
+			block: AST.Block,
+			sourceFile: AST.SourceFile,
+		): boolean {
 			const fullText = sourceFile.getFullText();
 
 			const openBrace = block.getStart(sourceFile);
@@ -48,7 +51,7 @@ export default typescriptLanguage.createRule({
 
 		function isEmptyBlock(
 			block: AST.Block,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): boolean {
 			return block.statements.length === 0 && !hasComments(block, sourceFile);
 		}
