@@ -1,19 +1,19 @@
 import ts from "typescript";
 
+import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isIfStatementGuard(node: ts.IfStatement) {
-	const consequent = node.thenStatement;
-
-	if (ts.isContinueStatement(consequent)) {
+function isIfStatementGuard(node: AST.IfStatement) {
+	if (ts.isContinueStatement(node.thenStatement)) {
 		return true;
 	}
 
 	if (
-		ts.isBlock(consequent) &&
-		consequent.statements.length === 1 &&
-		ts.isContinueStatement(consequent.statements[0])
+		ts.isBlock(node.thenStatement) &&
+		node.thenStatement.statements.length === 1 &&
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		ts.isContinueStatement(node.thenStatement.statements[0]!)
 	) {
 		return true;
 	}
@@ -26,7 +26,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports for-in loops without an if statement to filter inherited properties.",
 		id: "forInGuards",
-		presets: ["logical"],
 	},
 	messages: {
 		missingGuard: {
@@ -37,7 +36,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"This behavior can lead to unexpected items being iterated over.",
 			],
 			suggestions: [
-				"Wrap the loop body with `if (Object.hasOwn(obj, key))` or `if (Object.prototype.hasOwnProperty.call(obj, key))`.",
+				"Wrap the loop body with `if (Object.hasOwn(object, key))` or `if (Object.prototype.hasOwnProperty.call(object, key))`.",
 			],
 		},
 	},
@@ -45,35 +44,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				ForInStatement: (node, { sourceFile }) => {
-					const body = node.statement;
-
-					if (ts.isEmptyStatement(body)) {
-						return;
-					}
-
-					if (ts.isIfStatement(body)) {
-						return;
-					}
-
-					if (ts.isBlock(body)) {
-						if (body.statements.length === 0) {
+					switch (node.statement.kind) {
+						case ts.SyntaxKind.EmptyStatement:
+						case ts.SyntaxKind.IfStatement:
 							return;
-						}
 
-						if (
-							body.statements.length === 1 &&
-							ts.isIfStatement(body.statements[0])
-						) {
-							return;
-						}
+						case ts.SyntaxKind.Block: {
+							if (node.statement.statements.length === 0) {
+								return;
+							}
 
-						const firstStatement = body.statements[0];
-						if (
-							firstStatement &&
-							ts.isIfStatement(firstStatement) &&
-							isIfStatementGuard(firstStatement)
-						) {
-							return;
+							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							const firstStatement = node.statement.statements[0]!;
+
+							if (
+								firstStatement.kind === ts.SyntaxKind.IfStatement &&
+								(node.statement.statements.length === 1 ||
+									isIfStatementGuard(firstStatement))
+							) {
+								return;
+							}
 						}
 					}
 
