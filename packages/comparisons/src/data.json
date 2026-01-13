@@ -10395,7 +10395,7 @@
 		"flint": {
 			"name": "forInGuards",
 			"plugin": "ts",
-			"status": "skipped"
+			"status": "implemented"
 		},
 		"oxlint": [
 			{

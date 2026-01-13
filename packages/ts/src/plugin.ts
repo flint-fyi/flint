@@ -62,6 +62,7 @@ import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
 import finallyStatementSafety from "./rules/finallyStatementSafety.ts";
 import forDirections from "./rules/forDirections.ts";
 import forInArrays from "./rules/forInArrays.ts";
+import forInGuards from "./rules/forInGuards.ts";
 import functionApplySpreads from "./rules/functionApplySpreads.ts";
 import functionAssignments from "./rules/functionAssignments.ts";
 import functionCurryingRedundancy from "./rules/functionCurryingRedundancy.ts";
@@ -170,6 +171,7 @@ export const ts = createPlugin({
 		finallyStatementSafety,
 		forDirections,
 		forInArrays,
+		forInGuards,
 		functionApplySpreads,
 		functionAssignments,
 		functionCurryingRedundancy,
