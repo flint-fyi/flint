@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
 
@@ -25,52 +25,55 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				Identifier: (node, { sourceFile, typeChecker }) => {
 					if (
-						ts.isVariableDeclaration(node.parent) &&
-						node.parent.name === node
-					) {
-						return;
-					}
-
-					if (ts.isParameter(node.parent) && node.parent.name === node) {
-						return;
-					}
-
-					if (
-						(ts.isFunctionDeclaration(node.parent) ||
-							ts.isClassDeclaration(node.parent) ||
-							ts.isInterfaceDeclaration(node.parent) ||
-							ts.isTypeAliasDeclaration(node.parent) ||
-							ts.isEnumDeclaration(node.parent) ||
-							ts.isModuleDeclaration(node.parent)) &&
+						node.parent.kind === SyntaxKind.VariableDeclaration &&
 						node.parent.name === node
 					) {
 						return;
 					}
 
 					if (
-						ts.isImportSpecifier(node.parent) ||
-						ts.isImportClause(node.parent) ||
-						ts.isNamespaceImport(node.parent)
-					) {
-						return;
-					}
-
-					if (
-						ts.isPropertyAccessExpression(node.parent) &&
+						node.parent.kind === SyntaxKind.Parameter &&
 						node.parent.name === node
 					) {
 						return;
 					}
 
 					if (
-						ts.isPropertyAssignment(node.parent) &&
+						(node.parent.kind === SyntaxKind.FunctionDeclaration ||
+							node.parent.kind === SyntaxKind.ClassDeclaration ||
+							node.parent.kind === SyntaxKind.InterfaceDeclaration ||
+							node.parent.kind === SyntaxKind.TypeAliasDeclaration ||
+							node.parent.kind === SyntaxKind.EnumDeclaration ||
+							node.parent.kind === SyntaxKind.ModuleDeclaration) &&
 						node.parent.name === node
 					) {
 						return;
 					}
 
 					if (
-						ts.isTypeOfExpression(node.parent) &&
+						node.parent.kind === SyntaxKind.ImportSpecifier ||
+						node.parent.kind === SyntaxKind.ImportClause ||
+						node.parent.kind === SyntaxKind.NamespaceImport
+					) {
+						return;
+					}
+
+					if (
+						node.parent.kind === SyntaxKind.PropertyAccessExpression &&
+						node.parent.name === node
+					) {
+						return;
+					}
+
+					if (
+						node.parent.kind === SyntaxKind.PropertyAssignment &&
+						node.parent.name === node
+					) {
+						return;
+					}
+
+					if (
+						node.parent.kind === SyntaxKind.TypeOfExpression &&
 						node.parent.expression === node
 					) {
 						return;

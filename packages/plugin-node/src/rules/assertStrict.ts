@@ -1,16 +1,16 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
-function isImportFromNodeAssert(expression: ts.Expression) {
+function isImportFromNodeAssert(expression: AST.Expression) {
 	return (
-		ts.isStringLiteral(expression) &&
+		expression.kind === SyntaxKind.StringLiteral &&
 		(expression.text === "assert" || expression.text === "node:assert")
 	);
 }
 
-function isStrictAssertImport(expression: ts.Expression) {
+function isStrictAssertImport(expression: AST.Expression) {
 	return (
-		ts.isStringLiteral(expression) &&
+		expression.kind === SyntaxKind.StringLiteral &&
 		(expression.text === "assert/strict" ||
 			expression.text === "node:assert/strict")
 	);
@@ -40,7 +40,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				ImportDeclaration(node: ts.ImportDeclaration, { sourceFile }) {
+				ImportDeclaration(node, { sourceFile }) {
 					if (
 						isStrictAssertImport(node.moduleSpecifier) ||
 						!isImportFromNodeAssert(node.moduleSpecifier)
@@ -50,7 +50,9 @@ export default typescriptLanguage.createRule({
 
 					if (node.importClause) {
 						if (node.importClause.namedBindings) {
-							if (ts.isNamedImports(node.importClause.namedBindings)) {
+							if (
+								node.importClause.namedBindings.kind === SyntaxKind.NamedImports
+							) {
 								for (const element of node.importClause.namedBindings
 									.elements) {
 									const importedName =
@@ -68,12 +70,9 @@ export default typescriptLanguage.createRule({
 						});
 					}
 				},
-				ImportEqualsDeclaration(
-					node: ts.ImportEqualsDeclaration,
-					{ sourceFile },
-				) {
+				ImportEqualsDeclaration(node, { sourceFile }) {
 					if (
-						ts.isExternalModuleReference(node.moduleReference) &&
+						node.moduleReference.kind === SyntaxKind.ExternalModuleReference &&
 						isImportFromNodeAssert(node.moduleReference.expression)
 					) {
 						context.report({

@@ -1,17 +1,18 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import type * as AST from "../types/ast.ts";
 import {
 	isComparisonOperator,
 	isEqualityOperator,
 	isNegatedEqualityOperator,
 } from "./utils/operators.ts";
 
-function isNegativeZero(node: ts.Node): boolean {
+function isNegativeZero(node: AST.Expression): boolean {
 	return (
-		ts.isPrefixUnaryExpression(node) &&
-		node.operator === ts.SyntaxKind.MinusToken &&
-		ts.isNumericLiteral(node.operand) &&
+		node.kind === SyntaxKind.PrefixUnaryExpression &&
+		node.operator === SyntaxKind.MinusToken &&
+		node.operand.kind === SyntaxKind.NumericLiteral &&
 		node.operand.text === "0"
 	);
 }
@@ -35,7 +36,7 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function generateObjectIsText(
-			node: ts.BinaryExpression,
+			node: AST.BinaryExpression,
 			isNegated: boolean,
 			sourceFile: ts.SourceFile,
 		) {

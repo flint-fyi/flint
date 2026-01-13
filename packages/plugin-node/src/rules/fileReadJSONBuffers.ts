@@ -1,6 +1,6 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import { nullThrows } from "@flint.fyi/utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -25,10 +25,10 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				CallExpression(node, { sourceFile }) {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
-						!ts.isIdentifier(node.expression.expression) ||
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+						node.expression.expression.kind !== SyntaxKind.Identifier ||
 						node.expression.expression.text !== "JSON" ||
-						!ts.isIdentifier(node.expression.name) ||
+						node.expression.name.kind !== SyntaxKind.Identifier ||
 						node.expression.name.text !== "parse" ||
 						node.arguments.length !== 1
 					) {
@@ -42,7 +42,7 @@ export default typescriptLanguage.createRule({
 						),
 					);
 					if (
-						ts.isSpreadElement(argument) ||
+						argument.kind === SyntaxKind.SpreadElement ||
 						!isReadFileCall(argument) ||
 						argument.arguments.length !== 2
 					) {
@@ -53,7 +53,10 @@ export default typescriptLanguage.createRule({
 						argument.arguments[1],
 						"Second argument is expected to be present by prior length check",
 					);
-					if (ts.isSpreadElement(encoding) || !isUtf8Encoding(encoding)) {
+					if (
+						encoding.kind === SyntaxKind.SpreadElement ||
+						!isUtf8Encoding(encoding)
+					) {
 						return;
 					}
 
@@ -67,23 +70,23 @@ export default typescriptLanguage.createRule({
 	},
 });
 
-function isReadFileCall(node: ts.Expression): node is ts.CallExpression {
+function isReadFileCall(node: AST.Expression): node is AST.CallExpression {
 	return (
-		ts.isCallExpression(node) &&
-		ts.isPropertyAccessExpression(node.expression) &&
-		ts.isIdentifier(node.expression.expression) &&
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.expression.kind === SyntaxKind.Identifier &&
 		node.expression.expression.text === "fs" &&
-		ts.isIdentifier(node.expression.name) &&
+		node.expression.name.kind === SyntaxKind.Identifier &&
 		/^readFile(?:Sync)?$/.test(node.expression.name.text)
 	);
 }
 
-function isUtf8Encoding(node: ts.Expression): boolean {
-	if (ts.isStringLiteral(node)) {
+function isUtf8Encoding(node: AST.Expression): boolean {
+	if (node.kind === SyntaxKind.StringLiteral) {
 		return isUtf8EncodingString(node.text);
 	}
 
-	if (ts.isObjectLiteralExpression(node)) {
+	if (node.kind === SyntaxKind.ObjectLiteralExpression) {
 		if (node.properties.length !== 1) {
 			return false;
 		}
@@ -93,14 +96,14 @@ function isUtf8Encoding(node: ts.Expression): boolean {
 			"First property is expected to be present by prior length check",
 		);
 		if (
-			!ts.isPropertyAssignment(property) ||
-			!ts.isIdentifier(property.name) ||
+			property.kind !== SyntaxKind.PropertyAssignment ||
+			property.name.kind !== SyntaxKind.Identifier ||
 			property.name.text !== "encoding"
 		) {
 			return false;
 		}
 
-		if (ts.isStringLiteral(property.initializer)) {
+		if (property.initializer.kind === SyntaxKind.StringLiteral) {
 			return isUtf8EncodingString(property.initializer.text);
 		}
 	}
@@ -112,8 +115,8 @@ function isUtf8EncodingString(value: unknown): boolean {
 	return typeof value === "string" && /utf-?8/i.test(value);
 }
 
-function unwrapAwaitExpression(node: ts.Expression): ts.Expression {
-	while (ts.isAwaitExpression(node)) {
+function unwrapAwaitExpression(node: AST.Expression): AST.Expression {
+	while (node.kind === SyntaxKind.AwaitExpression) {
 		node = node.expression;
 	}
 	return node;

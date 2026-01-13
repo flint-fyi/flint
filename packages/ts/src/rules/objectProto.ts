@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
 
@@ -30,7 +30,7 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				ElementAccessExpression: (node, { sourceFile }) => {
 					if (
-						ts.isStringLiteral(node.argumentExpression) &&
+						node.argumentExpression.kind === SyntaxKind.StringLiteral &&
 						node.argumentExpression.text === "__proto__"
 					) {
 						context.report({
@@ -44,7 +44,7 @@ export default typescriptLanguage.createRule({
 				},
 				PropertyAccessExpression: (node, { sourceFile }) => {
 					if (
-						node.name.kind === ts.SyntaxKind.Identifier &&
+						node.name.kind === SyntaxKind.Identifier &&
 						node.name.text === "__proto__"
 					) {
 						context.report({

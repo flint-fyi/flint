@@ -1,6 +1,10 @@
-import { type TypeScriptFileServices, typescriptLanguage } from "@flint.fyi/ts";
+import {
+	type AST,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -26,7 +30,14 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		const loopVariableNames = new Map<ts.Node, Set<string>>();
 
-		function getLoopVariables(loopNode: ts.Node) {
+		function getLoopVariables(
+			loopNode:
+				| AST.DoStatement
+				| AST.ForInStatement
+				| AST.ForOfStatement
+				| AST.ForStatement
+				| AST.WhileStatement,
+		) {
 			const existing = loopVariableNames.get(loopNode);
 			if (existing) {
 				return existing;
@@ -34,13 +45,13 @@ export default typescriptLanguage.createRule({
 
 			const variables = new Set<string>();
 
-			if (ts.isForStatement(loopNode)) {
+			if (loopNode.kind === SyntaxKind.ForStatement) {
 				if (loopNode.initializer) {
 					collectVariableNames(loopNode.initializer, variables);
 				}
 			} else if (
-				ts.isForInStatement(loopNode) ||
-				ts.isForOfStatement(loopNode)
+				loopNode.kind === SyntaxKind.ForInStatement ||
+				loopNode.kind === SyntaxKind.ForOfStatement
 			) {
 				collectVariableNames(loopNode.initializer, variables);
 			}
@@ -49,20 +60,21 @@ export default typescriptLanguage.createRule({
 			return variables;
 		}
 
-		function collectVariableNames(node: ts.Node, variables: Set<string>) {
-			if (ts.isVariableDeclarationList(node)) {
+		function collectVariableNames(
+			node: AST.ForInitializer,
+			variables: Set<string>,
+		) {
+			if (node.kind === SyntaxKind.VariableDeclarationList) {
 				for (const declaration of node.declarations) {
 					addBindingNames(declaration.name, variables);
 				}
-			} else if (ts.isVariableDeclaration(node)) {
-				addBindingNames(node.name, variables);
-			} else if (ts.isIdentifier(node)) {
+			} else if (node.kind === SyntaxKind.Identifier) {
 				variables.add(node.text);
 			}
 		}
 
 		function addBindingNames(
-			name: ts.BindingName,
+			name: AST.BindingName,
 			variables: Set<string>,
 		): void {
 			if (ts.isIdentifier(name)) {
@@ -83,7 +95,6 @@ export default typescriptLanguage.createRule({
 		function referencesLoopVariable(
 			node: ts.Node,
 			loopVariables: Set<string>,
-			currentLoopNode: ts.Node,
 		): boolean | undefined {
 			if (ts.isIdentifier(node) && loopVariables.has(node.text)) {
 				return true;
@@ -97,19 +108,24 @@ export default typescriptLanguage.createRule({
 					!ts.isForOfStatement(child) &&
 					!ts.isForStatement(child) &&
 					!ts.isWhileStatement(child) &&
-					referencesLoopVariable(child, loopVariables, currentLoopNode)
+					referencesLoopVariable(child, loopVariables)
 				);
 			});
 		}
 
 		function checkFunctionInLoop(
 			node: ts.Node,
-			loopNode: ts.Node,
+			loopNode:
+				| AST.DoStatement
+				| AST.ForInStatement
+				| AST.ForOfStatement
+				| AST.ForStatement
+				| AST.WhileStatement,
 			loopVariables: Set<string>,
 			sourceFile: ts.SourceFile,
 		): void {
 			if (tsutils.isFunctionScopeBoundary(node)) {
-				if (referencesLoopVariable(node, loopVariables, loopNode)) {
+				if (referencesLoopVariable(node, loopVariables)) {
 					const start = node.getStart(sourceFile);
 					let keyword = "function";
 
@@ -151,7 +167,12 @@ export default typescriptLanguage.createRule({
 		}
 
 		function checkLoopStatement(
-			node: ts.Node & { statement: ts.Node },
+			node:
+				| AST.DoStatement
+				| AST.ForInStatement
+				| AST.ForOfStatement
+				| AST.ForStatement
+				| AST.WhileStatement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const loopVariables = getLoopVariables(node);

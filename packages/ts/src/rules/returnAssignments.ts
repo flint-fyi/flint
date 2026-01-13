@@ -1,8 +1,9 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
 
 export default typescriptLanguage.createRule({
@@ -26,13 +27,13 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkForAssignment(
-			node: ts.Expression,
+			node: AST.ConciseBody | AST.Expression,
 			sourceFile: ts.SourceFile,
 		): void {
 			const unwrapped = unwrapParenthesizedExpression(node);
 
 			if (
-				ts.isBinaryExpression(unwrapped) &&
+				unwrapped.kind === SyntaxKind.BinaryExpression &&
 				tsutils.isAssignmentKind(unwrapped.operatorToken.kind)
 			) {
 				context.report({
@@ -45,7 +46,7 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				ArrowFunction: (node, { sourceFile }) => {
-					if (!ts.isBlock(node.body)) {
+					if (node.body.kind !== SyntaxKind.Block) {
 						checkForAssignment(node.body, sourceFile);
 					}
 				},

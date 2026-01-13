@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -28,9 +28,9 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
 					if (
-						node.operatorToken.kind === ts.SyntaxKind.PlusToken &&
-						ts.isStringLiteral(node.left) &&
-						ts.isStringLiteral(node.right)
+						node.operatorToken.kind === SyntaxKind.PlusToken &&
+						node.left.kind === SyntaxKind.StringLiteral &&
+						node.right.kind === SyntaxKind.StringLiteral
 					) {
 						context.report({
 							message: "unnecessaryConcatenation",

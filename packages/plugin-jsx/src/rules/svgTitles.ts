@@ -1,9 +1,10 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -26,11 +27,11 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function hasValidAriaLabel(attributes: ts.JsxAttributes): boolean {
+		function hasValidAriaLabel(attributes: AST.JsxAttributes): boolean {
 			return attributes.properties.some((property) => {
 				if (
-					!ts.isJsxAttribute(property) ||
-					!ts.isIdentifier(property.name) ||
+					property.kind !== SyntaxKind.JsxAttribute ||
+					property.name.kind !== SyntaxKind.Identifier ||
 					(property.name.text !== "aria-label" &&
 						property.name.text !== "aria-labelledby")
 				) {
@@ -41,25 +42,25 @@ export default typescriptLanguage.createRule({
 					return false;
 				}
 
-				if (ts.isJsxExpression(property.initializer)) {
+				if (property.initializer.kind === SyntaxKind.JsxExpression) {
 					const { expression } = property.initializer;
 					if (!expression) {
 						return false;
 					}
 
 					if (
-						ts.isStringLiteral(expression) ||
-						ts.isNoSubstitutionTemplateLiteral(expression)
+						expression.kind === SyntaxKind.StringLiteral ||
+						expression.kind === SyntaxKind.NoSubstitutionTemplateLiteral
 					) {
 						return expression.text !== "";
 					}
 
-					if (ts.isIdentifier(expression)) {
+					if (expression.kind === SyntaxKind.Identifier) {
 						return expression.text !== "undefined";
 					}
 				}
 
-				if (ts.isStringLiteral(property.initializer)) {
+				if (property.initializer.kind === SyntaxKind.StringLiteral) {
 					return property.initializer.text !== "";
 				}
 
@@ -68,26 +69,34 @@ export default typescriptLanguage.createRule({
 		}
 
 		function checkElement(
-			node: ts.JsxElement | ts.JsxSelfClosingElement,
+			node: AST.JsxElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			const tagName = ts.isJsxElement(node)
-				? node.openingElement.tagName
-				: node.tagName;
+			const tagName =
+				node.kind == SyntaxKind.JsxElement
+					? node.openingElement.tagName
+					: node.tagName;
 
-			if (!ts.isIdentifier(tagName) || tagName.text.toLowerCase() !== "svg") {
+			if (
+				tagName.kind !== SyntaxKind.Identifier ||
+				tagName.text.toLowerCase() !== "svg"
+			) {
 				return;
 			}
 
-			const attributes = ts.isJsxElement(node)
-				? node.openingElement.attributes
-				: node.attributes;
+			const attributes =
+				node.kind == SyntaxKind.JsxElement
+					? node.openingElement.attributes
+					: node.attributes;
 
 			if (hasValidAriaLabel(attributes)) {
 				return;
 			}
 
-			if (ts.isJsxElement(node) && node.children.some(isTitleElement)) {
+			if (
+				node.kind == SyntaxKind.JsxElement &&
+				node.children.some(isTitleElement)
+			) {
 				return;
 			}
 
@@ -106,14 +115,20 @@ export default typescriptLanguage.createRule({
 	},
 });
 
-function isTitleElement(node: ts.Node) {
-	if (!ts.isJsxElement(node) && !ts.isJsxSelfClosingElement(node)) {
+function isTitleElement(node: AST.JsxChild) {
+	if (
+		node.kind !== SyntaxKind.JsxElement &&
+		node.kind !== SyntaxKind.JsxSelfClosingElement
+	) {
 		return false;
 	}
 
-	const childTagName = ts.isJsxElement(node)
-		? node.openingElement.tagName
-		: node.tagName;
+	const childTagName =
+		node.kind === SyntaxKind.JsxElement
+			? node.openingElement.tagName
+			: node.tagName;
 
-	return ts.isIdentifier(childTagName) && childTagName.text === "title";
+	return (
+		childTagName.kind === SyntaxKind.Identifier && childTagName.text === "title"
+	);
 }

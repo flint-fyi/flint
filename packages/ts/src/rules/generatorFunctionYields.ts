@@ -1,10 +1,11 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -38,9 +39,9 @@ export default typescriptLanguage.createRule({
 
 		function checkFunction(
 			node:
-				| ts.FunctionDeclaration
-				| ts.FunctionExpression
-				| ts.MethodDeclaration,
+				| AST.FunctionDeclaration
+				| AST.FunctionExpression
+				| AST.MethodDeclaration,
 			{ sourceFile }: TypeScriptFileServices,
 		): void {
 			if (!node.asteriskToken || !node.body || blockContainsYield(node.body)) {
@@ -58,9 +59,9 @@ export default typescriptLanguage.createRule({
 	},
 });
 
-function blockContainsYield(block: ts.Block) {
+function blockContainsYield(block: AST.Block) {
 	function checkForYield(node: ts.Node): boolean | undefined {
-		if (ts.isYieldExpression(node)) {
+		if (node.kind === SyntaxKind.YieldExpression) {
 			return true;
 		}
 

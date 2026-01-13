@@ -1,6 +1,8 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
+import type { Checker } from "../types/checker.ts";
 import { getModifyingReferences } from "../utils/getModifyingReferences.ts";
 
 export default typescriptLanguage.createRule({
@@ -25,9 +27,9 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function hasAssignments(
-			identifier: ts.Identifier,
+			identifier: AST.Identifier,
 			sourceFile: ts.SourceFile,
-			typeChecker: ts.TypeChecker,
+			typeChecker: Checker,
 		): boolean {
 			// TODO (#400): Switch to scope analysis
 			return !!getModifyingReferences(identifier, sourceFile, typeChecker)
@@ -37,12 +39,12 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				VariableDeclaration: (node, { sourceFile, typeChecker }) => {
-					if (node.initializer || !ts.isIdentifier(node.name)) {
+					if (node.initializer || node.name.kind !== SyntaxKind.Identifier) {
 						return;
 					}
 
 					if (
-						ts.isVariableDeclarationList(node.parent) &&
+						node.parent.kind === SyntaxKind.VariableDeclarationList &&
 						!!(node.parent.flags & ts.NodeFlags.Const)
 					) {
 						return;

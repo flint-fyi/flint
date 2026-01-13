@@ -1,6 +1,6 @@
 import { type TypeScriptFileServices, typescriptLanguage } from "@flint.fyi/ts";
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -26,7 +26,7 @@ export default typescriptLanguage.createRule({
 			loopNode: ts.Node,
 			sourceFile: ts.SourceFile,
 		): void {
-			if (ts.isAwaitExpression(node)) {
+			if (node.kind === SyntaxKind.AwaitExpression) {
 				const start = node.getStart(sourceFile);
 				context.report({
 					message: "noAwaitInLoop",
@@ -39,11 +39,11 @@ export default typescriptLanguage.createRule({
 			}
 
 			if (
-				ts.isDoStatement(node) ||
-				ts.isForInStatement(node) ||
-				ts.isForOfStatement(node) ||
-				ts.isForStatement(node) ||
-				ts.isWhileStatement(node) ||
+				node.kind === SyntaxKind.DoStatement ||
+				node.kind === SyntaxKind.ForInStatement ||
+				node.kind === SyntaxKind.ForOfStatement ||
+				node.kind === SyntaxKind.ForStatement ||
+				node.kind === SyntaxKind.WhileStatement ||
 				tsutils.isFunctionScopeBoundary(node)
 			) {
 				return;

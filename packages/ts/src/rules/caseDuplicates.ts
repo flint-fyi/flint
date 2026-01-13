@@ -1,6 +1,7 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 import { hasSameTokens } from "../utils/hasSameTokens.ts";
 
 export default typescriptLanguage.createRule({
@@ -27,10 +28,10 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				SwitchStatement: (node, { sourceFile }) => {
-					const seenCases: ts.Expression[] = [];
+					const seenCases: AST.Expression[] = [];
 
 					for (const clause of node.caseBlock.clauses) {
-						if (!ts.isCaseClause(clause)) {
+						if (clause.kind !== SyntaxKind.CaseClause) {
 							continue;
 						}
 

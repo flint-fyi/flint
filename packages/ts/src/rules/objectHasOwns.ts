@@ -1,7 +1,9 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
+import type { Checker } from "../types/checker.ts";
 import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
 
 export default typescriptLanguage.createRule({
@@ -28,29 +30,32 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function isObjectPrototypeHasOwnProperty(
-			node: ts.Expression,
-			typeChecker: ts.TypeChecker,
+			node: AST.Expression,
+			typeChecker: Checker,
 		) {
 			return (
-				ts.isPropertyAccessExpression(node) &&
-				ts.isIdentifier(node.name) &&
+				node.kind === SyntaxKind.PropertyAccessExpression &&
+				node.name.kind === SyntaxKind.Identifier &&
 				node.name.text === "prototype" &&
-				ts.isIdentifier(node.expression) &&
+				node.expression.kind === SyntaxKind.Identifier &&
 				isGlobalDeclarationOfName(node.expression, "Object", typeChecker)
 			);
 		}
 
-		function isObjectLiteralHasOwnProperty(node: ts.Expression) {
-			return ts.isObjectLiteralExpression(node) && node.properties.length === 0;
+		function isObjectLiteralHasOwnProperty(node: AST.Expression) {
+			return (
+				node.kind === SyntaxKind.ObjectLiteralExpression &&
+				node.properties.length === 0
+			);
 		}
 
 		function isHasOwnProperty(
-			node: ts.Expression,
-			typeChecker: ts.TypeChecker,
+			node: AST.Expression,
+			typeChecker: Checker,
 		): boolean {
 			if (
-				!ts.isPropertyAccessExpression(node) ||
-				!ts.isIdentifier(node.name) ||
+				node.kind !== SyntaxKind.PropertyAccessExpression ||
+				node.name.kind !== SyntaxKind.Identifier ||
 				node.name.text !== "hasOwnProperty"
 			) {
 				return false;
@@ -66,8 +71,8 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
-						!ts.isIdentifier(node.expression.name)
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+						node.expression.name.kind !== SyntaxKind.Identifier
 					) {
 						return;
 					}

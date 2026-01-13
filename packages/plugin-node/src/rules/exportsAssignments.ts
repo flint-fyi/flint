@@ -1,10 +1,15 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
+import ts, { SyntaxKind } from "typescript";
 
 function isLocalExportsVariable(
-	node: ts.Identifier,
+	node: AST.Identifier,
 	sourceFile: ts.SourceFile,
-	typeChecker: ts.TypeChecker,
+	typeChecker: Checker,
 ) {
 	return typeChecker
 		.getSymbolAtLocation(node)
@@ -12,20 +17,22 @@ function isLocalExportsVariable(
 		?.some((declaration) => declaration.getSourceFile() === sourceFile);
 }
 
-function isModuleExportsAccess(node: ts.Expression) {
+function isModuleExportsAccess(node: AST.Expression) {
 	return (
-		ts.isPropertyAccessExpression(node) &&
-		ts.isIdentifier(node.expression) &&
+		node.kind == SyntaxKind.PropertyAccessExpression &&
+		node.expression.kind == SyntaxKind.Identifier &&
 		node.expression.text === "module" &&
-		ts.isIdentifier(node.name) &&
+		node.name.kind == SyntaxKind.Identifier &&
 		node.name.text === "exports"
 	);
 }
 
-function isModuleExportsAccessAssignment(node: ts.Node) {
+function isModuleExportsAccessAssignment(
+	node: AST.Expression | AST.ExpressionParent,
+) {
 	return (
-		ts.isBinaryExpression(node) &&
-		node.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
+		node.kind == SyntaxKind.BinaryExpression &&
+		node.operatorToken.kind === SyntaxKind.EqualsToken &&
 		isModuleExportsAccess(node.left)
 	);
 }
@@ -53,8 +60,8 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				BinaryExpression: (node, { sourceFile, typeChecker }) => {
 					if (
-						node.operatorToken.kind == ts.SyntaxKind.EqualsToken &&
-						ts.isIdentifier(node.left) &&
+						node.operatorToken.kind == SyntaxKind.EqualsToken &&
+						node.left.kind == SyntaxKind.Identifier &&
 						node.left.text === "exports" &&
 						!isLocalExportsVariable(node.left, sourceFile, typeChecker) &&
 						!isModuleExportsAccessAssignment(node.right) &&

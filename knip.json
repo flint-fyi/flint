@@ -1,7 +1,6 @@
 {
 	"$schema": "./node_modules/knip/schema.json",
 	"ignore": ["packages/fixtures/*"],
-	"ignoreDependencies": ["canvaskit-wasm"],
 	"ignoreExportsUsedInFile": { "interface": true, "type": true },
 	"treatConfigHintsAsErrors": true,
 	"workspaces": {
@@ -12,7 +11,7 @@
 			"entry": ["src/sort-data.ts"]
 		},
 		"packages/site": {
-			"entry": ["src/components/*.astro"],
+			"entry": ["src/components/*.astro", "ec.config.mjs"],
 			"ignoreDependencies": ["sharp"]
 		}
 	}

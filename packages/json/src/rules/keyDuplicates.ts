@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import ts from "typescript";
 import z from "zod";
 
 import { jsonLanguage } from "../language.ts";

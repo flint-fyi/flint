@@ -16,6 +16,8 @@ export {
 	type TypeScriptBasedLanguageFile,
 	type TypeScriptBasedLanguageFileFactoryDefinition,
 } from "./prepareTypeScriptBasedLanguage.ts";
+export type * as AST from "./types/ast.ts";
+export type { Checker } from "./types/checker.ts";
 export { getDeclarationsIfGlobal } from "./utils/getDeclarationsIfGlobal.ts";
 export { isGlobalDeclaration } from "./utils/isGlobalDeclaration.ts";
 export { isGlobalDeclarationOfName } from "./utils/isGlobalDeclarationOfName.ts";

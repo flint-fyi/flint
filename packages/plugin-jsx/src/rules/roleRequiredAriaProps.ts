@@ -1,9 +1,10 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const requiredAriaPropsForRole: Partial<Record<string, string[]>> = {
 	checkbox: ["aria-checked"],
@@ -44,21 +45,21 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkElement(
-			node: ts.JsxOpeningLikeElement,
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const roleAttribute = node.attributes.properties.find(
 				(property) =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "role",
 			);
 
 			if (
 				!roleAttribute ||
-				!ts.isJsxAttribute(roleAttribute) ||
+				roleAttribute.kind !== SyntaxKind.JsxAttribute ||
 				!roleAttribute.initializer ||
-				!ts.isStringLiteral(roleAttribute.initializer)
+				roleAttribute.initializer.kind !== SyntaxKind.StringLiteral
 			) {
 				return;
 			}
@@ -72,7 +73,10 @@ export default typescriptLanguage.createRule({
 
 			const existingProps = new Set<string>();
 			for (const property of node.attributes.properties) {
-				if (!ts.isJsxAttribute(property) || !ts.isIdentifier(property.name)) {
+				if (
+					property.kind !== SyntaxKind.JsxAttribute ||
+					property.name.kind !== SyntaxKind.Identifier
+				) {
 					continue;
 				}
 

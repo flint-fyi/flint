@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -27,12 +27,11 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
 					if (
-						node.operatorToken.kind !== ts.SyntaxKind.EqualsToken &&
+						node.operatorToken.kind !== SyntaxKind.EqualsToken &&
 						node.operatorToken.kind !==
-							ts.SyntaxKind.AmpersandAmpersandEqualsToken &&
-						node.operatorToken.kind !== ts.SyntaxKind.BarBarEqualsToken &&
-						node.operatorToken.kind !==
-							ts.SyntaxKind.QuestionQuestionEqualsToken
+							SyntaxKind.AmpersandAmpersandEqualsToken &&
+						node.operatorToken.kind !== SyntaxKind.BarBarEqualsToken &&
+						node.operatorToken.kind !== SyntaxKind.QuestionQuestionEqualsToken
 					) {
 						return;
 					}

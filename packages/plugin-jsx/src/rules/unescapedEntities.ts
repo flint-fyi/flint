@@ -1,5 +1,4 @@
 import { typescriptLanguage } from "@flint.fyi/ts";
-import type * as ts from "typescript";
 
 const problematicEntities = [
 	{ entity: '"', toBrace: '{"\\""}', toHTML: "&quot;" },
@@ -31,7 +30,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				JsxText(node: ts.JsxText, { sourceFile }) {
+				JsxText(node, { sourceFile }) {
 					const nodeStart = node.getStart(sourceFile);
 					const reports: {
 						begin: number;
