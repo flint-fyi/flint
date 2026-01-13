@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 
+import type { AST, Checker } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 
 const comparisonOperators = new Set([
@@ -9,23 +10,25 @@ const comparisonOperators = new Set([
 	ts.SyntaxKind.ExclamationEqualsToken,
 ]);
 
-function getStringLiteralLength(node: ts.Expression): number | undefined {
-	if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) {
-		return node.text.length;
-	}
-	return undefined;
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
+function getStringLiteralLength(node: AST.Expression) {
+	return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)
+		? node.text.length
+		: undefined;
 }
 
-function isCharAtCall(node: ts.Expression): boolean {
-	if (!ts.isCallExpression(node)) {
-		return false;
-	}
+function isStringCharAtCall(node: AST.Expression, typeChecker: Checker) {
+	return (
+		ts.isCallExpression(node) &&
+		ts.isPropertyAccessExpression(node.expression) &&
+		node.expression.name.text === "charAt" &&
+		isStringType(typeChecker.getTypeAtLocation(node.expression.expression))
+	);
+}
 
-	if (!ts.isPropertyAccessExpression(node.expression)) {
-		return false;
-	}
-
-	return node.expression.name.text === "charAt";
+function isStringType(type: ts.Type) {
+	return (type.flags & ts.TypeFlags.StringLike) !== 0;
 }
 
 export default typescriptLanguage.createRule({
@@ -52,27 +55,22 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { sourceFile }) => {
+				BinaryExpression: (node, { sourceFile, typeChecker }) => {
 					if (!comparisonOperators.has(node.operatorToken.kind)) {
 						return;
 					}
 
-					let charAtSide: ts.Expression | undefined;
-					let literalSide: ts.Expression | undefined;
+					let literal: AST.Expression;
 
-					if (isCharAtCall(node.left)) {
-						charAtSide = node.left;
-						literalSide = node.right;
-					} else if (isCharAtCall(node.right)) {
-						charAtSide = node.right;
-						literalSide = node.left;
-					}
-
-					if (!charAtSide || !literalSide) {
+					if (isStringCharAtCall(node.left, typeChecker)) {
+						literal = node.right;
+					} else if (isStringCharAtCall(node.right, typeChecker)) {
+						literal = node.left;
+					} else {
 						return;
 					}
 
-					const length = getStringLiteralLength(literalSide);
+					const length = getStringLiteralLength(literal);
 					if (length === undefined || length <= 1) {
 						return;
 					}
@@ -83,7 +81,7 @@ export default typescriptLanguage.createRule({
 
 					context.report({
 						data: {
-							length: String(length),
+							length,
 							result: isEquality ? "false" : "true",
 						},
 						message: "invalidComparison",
