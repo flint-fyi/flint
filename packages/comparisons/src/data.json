@@ -11312,7 +11312,8 @@
 		"flint": {
 			"name": "instanceOfArrays",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"notes": "Only for built-ins with a static .is* (Array).",
 		"oxlint": [
