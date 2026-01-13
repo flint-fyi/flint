@@ -9858,7 +9858,7 @@
 		"flint": {
 			"name": "equalityOperatorNegations",
 			"plugin": "ts",
-			"status": "skipped"
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
