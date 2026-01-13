@@ -1,0 +1,62 @@
+---
+description: "Prefer block style sequences over flow style sequences."
+title: "blockSequences"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="yaml" rule="blockSequences" />
+
+Block style sequences use hyphens (`-`) to denote list items and are generally more readable for multi-item lists.
+Flow style sequences use brackets (`[]`) and are more compact but less clear in most cases.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```yml
+items: [a, b, c]
+```
+
+```yml
+nested:
+  values: [1, 2, 3]
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```yml
+items:
+  - a
+  - b
+  - c
+```
+
+```yml
+nested:
+  values:
+    - 1
+    - 2
+    - 3
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## Further Reading
+
+- [YAML Specification: Block Sequences](https://yaml.org/spec/1.2.2/#chapter-8-block-style-productions)
+- [YAML Specification: Flow Sequences](https://yaml.org/spec/1.2.2/#chapter-7-flow-style-productions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="yaml" ruleId="blockSequences" />

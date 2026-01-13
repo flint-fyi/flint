@@ -50,7 +50,7 @@
 		"flint": "workspace:^",
 		"husky": "9.1.7",
 		"jiti": "2.6.1",
-		"knip": "5.77.1",
+		"knip": "5.80.2",
 		"lint-staged": "16.2.7",
 		"prettier": "3.7.4",
 		"prettier-plugin-astro": "0.14.1",

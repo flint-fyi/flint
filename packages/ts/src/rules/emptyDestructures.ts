@@ -1,16 +1,16 @@
-import type * as ts from "typescript";
-
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "../language.ts";
+import type * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using empty destructuring patterns that destructure no values.",
 		id: "emptyDestructures",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		emptyPattern: {
@@ -28,7 +28,7 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkBindingPattern(
-			node: ts.ArrayBindingPattern | ts.ObjectBindingPattern,
+			node: AST.ArrayBindingPattern | AST.ObjectBindingPattern,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			if (node.elements.length === 0) {

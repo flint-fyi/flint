@@ -3,16 +3,18 @@ import {
 	isGlobalDeclaration,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const blobReadingMethods = new Set(["arrayBuffer", "bytes", "text"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer direct Blob reading methods over wrapping in Response for simpler code.",
 		id: "blobReadingMethods",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferBlobMethod: {
@@ -30,18 +32,18 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node: ts.CallExpression, { sourceFile, typeChecker }) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
-						!ts.isIdentifier(node.expression.name)
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+						node.expression.name.kind !== SyntaxKind.Identifier
 					) {
 						return;
 					}
 
 					const receiver = node.expression.expression;
 					if (
-						!ts.isNewExpression(receiver) ||
-						!ts.isIdentifier(receiver.expression) ||
+						receiver.kind !== SyntaxKind.NewExpression ||
+						receiver.expression.kind !== SyntaxKind.Identifier ||
 						receiver.expression.text !== "Response" ||
 						!receiver.arguments ||
 						receiver.arguments.length === 0

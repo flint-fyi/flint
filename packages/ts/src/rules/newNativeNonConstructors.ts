@@ -1,15 +1,16 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
 import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallows using `new` with global non-constructor functions like Symbol and BigInt.",
 		id: "newNativeNonConstructors",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noNewNonConstructor: {
@@ -25,7 +26,7 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				NewExpression: (node, { sourceFile, typeChecker }) => {
-					if (!ts.isIdentifier(node.expression)) {
+					if (node.expression.kind !== SyntaxKind.Identifier) {
 						return;
 					}
 

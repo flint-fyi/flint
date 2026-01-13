@@ -1,12 +1,19 @@
 jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      - uses: ./.github/actions/prepare
+      - run: pnpm run build # Ensure packages pass attw, etc.
+      - run: pnpm run -r build # Build packages/site
   flint:
     name: Flint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       - uses: ./.github/actions/prepare
-      - run: pnpm run build
-      - run: pnpm run -r build # Build packages/site
+      - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
       - run: pnpm run flint
   lint:
     name: Lint
@@ -14,8 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       - uses: ./.github/actions/prepare
-      - run: pnpm run build
-      - run: pnpm run -r prebuild # Generate packages/site/.astro without a full build.
+      - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
       - run: pnpm run lint
   lint_knip:
     name: Lint Knip
@@ -37,9 +43,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          fetch-depth: 0 # required so origin/main can be diffed
       - uses: ./.github/actions/prepare
-      - run: pnpm run build # https://github.com/vitest-dev/vitest/discussions/9353
-      - run: pnpm run test
+      - name: Cache dependencies and Vite cache
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+        with:
+          key: cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          path: node_modules/.vite
+      - run: pnpm exec tsc -b # For types tests
+      - run: pnpm run build -W ./packages/ts-patch/ # vitest-dev/vitest#9429
+      - # Run partial test pass on PRs (only changed files)
+        if: ${{ github.event_name == 'pull_request' }}
+        name: Run affected tests
+        run: pnpm run test --changed "origin/main"
+      - # On main, run the full test suite w/ type checking
+        if: ${{ github.ref == 'refs/heads/main' }}
+        name: Run full test suite
+        run: pnpm run test
 
 name: CI
 

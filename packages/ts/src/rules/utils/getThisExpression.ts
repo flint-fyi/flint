@@ -1,12 +1,20 @@
-import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-export function getThisExpression(node: ts.Node): null | ts.ThisExpression {
+import * as AST from "../../types/ast.ts";
+import { skipParentheses } from "./skipParentheses.ts";
+
+export function getThisExpression(
+	node: AST.Expression,
+): AST.ThisExpression | null {
 	while (true) {
 		node = skipParentheses(node);
-		if (ts.isCallExpression(node) || tsutils.isAccessExpression(node)) {
+		if (
+			node.kind == SyntaxKind.CallExpression ||
+			node.kind == SyntaxKind.PropertyAccessExpression ||
+			node.kind == SyntaxKind.ElementAccessExpression
+		) {
 			node = node.expression;
-		} else if (tsutils.isThisExpression(node)) {
+		} else if (node.kind == SyntaxKind.ThisKeyword) {
 			return node;
 		} else {
 			break;
@@ -14,11 +22,4 @@ export function getThisExpression(node: ts.Node): null | ts.ThisExpression {
 	}
 
 	return null;
-}
-
-function skipParentheses(node: ts.Node): ts.Node {
-	while (ts.isParenthesizedExpression(node)) {
-		node = node.expression;
-	}
-	return node;
 }

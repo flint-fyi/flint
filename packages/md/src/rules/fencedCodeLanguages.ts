@@ -2,12 +2,13 @@ import type { Code, Node, Root } from "mdast";
 
 import { markdownLanguage } from "../language.ts";
 import type { WithPosition } from "../nodes.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default markdownLanguage.createRule({
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports fenced code blocks without a language specified.",
 		id: "fencedCodeLanguages",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		missingLanguage: {

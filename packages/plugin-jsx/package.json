@@ -24,6 +24,9 @@
 		"lib/",
 		"!lib/**/*.map"
 	],
+	"scripts": {
+		"test": "vitest --typecheck --project plugin-jsx"
+	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",

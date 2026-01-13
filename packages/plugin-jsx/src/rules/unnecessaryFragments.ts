@@ -1,13 +1,15 @@
 import type { CharacterReportRange } from "@flint.fyi/core";
-import { typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { type AST, typescriptLanguage } from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallow unnecessary JSX fragments that wrap a single child or have no children.",
 		id: "unnecessaryFragments",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		unnecessaryFragment: {
@@ -24,11 +26,12 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkNodeChildren(
-			node: ts.JsxElement | ts.JsxFragment,
+			node: AST.JsxElement | AST.JsxFragment,
 			range: CharacterReportRange,
 		) {
 			const children = node.children.filter(
-				(child) => !ts.isJsxText(child) || child.text.trim().length > 0,
+				(child) =>
+					child.kind !== SyntaxKind.JsxText || child.text.trim().length > 0,
 			);
 
 			let childType: string | undefined;
@@ -52,7 +55,7 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				JsxElement(node, { sourceFile }) {
 					if (
-						ts.isIdentifier(node.openingElement.tagName) &&
+						node.openingElement.tagName.kind === SyntaxKind.Identifier &&
 						!node.openingElement.attributes.properties.length &&
 						node.openingElement.tagName.text === "Fragment"
 					) {
@@ -62,7 +65,7 @@ export default typescriptLanguage.createRule({
 						});
 					}
 				},
-				JsxFragment(node: ts.JsxFragment, { sourceFile }) {
+				JsxFragment(node, { sourceFile }) {
 					checkNodeChildren(node, {
 						begin: node.openingFragment.getStart(sourceFile),
 						end: node.closingFragment.getEnd(),

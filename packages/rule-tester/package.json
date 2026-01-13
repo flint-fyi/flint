@@ -24,6 +24,9 @@
 		"lib/",
 		"!lib/**/*.map"
 	],
+	"scripts": {
+		"test": "vitest --typecheck --project rule-tester"
+	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",

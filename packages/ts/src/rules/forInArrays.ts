@@ -1,15 +1,17 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import type { Checker } from "../types/checker.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports iterating over an array with a for-in loop.",
 		id: "forInArrays",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		forIn: {
@@ -26,10 +28,7 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function hasNumberLikeLength(
-			type: ts.Type,
-			typeChecker: ts.TypeChecker,
-		): boolean {
+		function hasNumberLikeLength(type: ts.Type, typeChecker: Checker): boolean {
 			const lengthProperty = type.getProperty("length");
 
 			if (lengthProperty == null) {
@@ -42,7 +41,7 @@ export default typescriptLanguage.createRule({
 			);
 		}
 
-		function isArrayLike(type: ts.Type, typeChecker: ts.TypeChecker): boolean {
+		function isArrayLike(type: ts.Type, typeChecker: Checker): boolean {
 			return isTypeRecursive(
 				type,
 				(t) =>

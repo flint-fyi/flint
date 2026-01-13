@@ -4206,20 +4206,6 @@
 	{
 		"eslint": [
 			{
-				"name": "n/no-extraneous-import",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-extraneous-import.md"
-			}
-		],
-		"flint": {
-			"name": "extraneousImports",
-			"plugin": "node",
-			"status": "skipped"
-		},
-		"notes": "Superseded by Knip"
-	},
-	{
-		"eslint": [
-			{
 				"name": "n/no-extraneous-require",
 				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-extraneous-require.md"
 			}
@@ -4501,10 +4487,10 @@
 			}
 		],
 		"flint": {
-			"implemented": true,
 			"name": "nodeProtocols",
 			"plugin": "node",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7025,7 +7011,8 @@
 		"flint": {
 			"name": "anyArguments",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7044,7 +7031,8 @@
 		"flint": {
 			"name": "anyAssignments",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7063,7 +7051,8 @@
 		"flint": {
 			"name": "anyCalls",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7082,7 +7071,8 @@
 		"flint": {
 			"name": "anyMemberAccess",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7184,7 +7174,8 @@
 		"flint": {
 			"name": "arrayCallbackReturns",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "untyped",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7223,7 +7214,8 @@
 		"flint": {
 			"name": "arrayConstructors",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7246,7 +7238,8 @@
 		"flint": {
 			"name": "arrayDeleteUnnecessaryCounts",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -7278,7 +7271,8 @@
 		"flint": {
 			"name": "arrayElementDeletions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7291,7 +7285,8 @@
 		"flint": {
 			"name": "arrayEmptyCallbackSlots",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7310,7 +7305,8 @@
 		"flint": {
 			"name": "arrayExistenceChecksConsistency",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7330,6 +7326,7 @@
 			"name": "arrayFilteredFinds",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -7349,7 +7346,8 @@
 		"flint": {
 			"name": "arrayFinds",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -7388,6 +7386,7 @@
 			"name": "arrayFlatMapMethods",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -7408,6 +7407,7 @@
 			"name": "arrayFlatMethods",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -7566,7 +7566,8 @@
 		"flint": {
 			"name": "arrayMapIdentities",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -7598,7 +7599,8 @@
 		"flint": {
 			"name": "arrayMutableReverses",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -7611,7 +7613,8 @@
 		"flint": {
 			"name": "arrayMutableSorts",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -7643,7 +7646,8 @@
 		"flint": {
 			"name": "arraySliceUnnecessaryEnd",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7667,6 +7671,7 @@
 			"name": "arraySomeMethods",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -7705,7 +7710,8 @@
 		"flint": {
 			"name": "arrayTernarySpreadingConsistency",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7749,7 +7755,8 @@
 		"flint": {
 			"name": "arrayUnnecessaryLengthChecks",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7818,7 +7825,8 @@
 		"flint": {
 			"name": "asConstAssertions",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7850,7 +7858,8 @@
 		"flint": {
 			"name": "assignmentOperatorShorthands",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -7947,7 +7956,8 @@
 		"flint": {
 			"name": "asyncUnnecessaryPromiseWrappers",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7973,6 +7983,7 @@
 			"name": "atAccesses",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -8157,6 +8168,7 @@
 			"name": "builtinCoercions",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -8182,7 +8194,8 @@
 		"flint": {
 			"name": "builtinConstructorNews",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -8316,7 +8329,8 @@
 		"flint": {
 			"name": "caseFallthroughs",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -8335,7 +8349,8 @@
 		"flint": {
 			"name": "catchCallbackTypes",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -8369,6 +8384,7 @@
 			"name": "caughtVariableNames",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -8402,7 +8418,8 @@
 		"flint": {
 			"name": "charAtComparisons",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -8453,7 +8470,8 @@
 		"flint": {
 			"name": "classFieldDeclarations",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "untyped",
+			"status": "implemented"
 		}
 	},
 	{
@@ -8466,7 +8484,8 @@
 		"flint": {
 			"name": "classLiteralProperties",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -8495,7 +8514,8 @@
 		"flint": {
 			"name": "classMemberDuplicates",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "untyped",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -8533,6 +8553,7 @@
 			"name": "combinedPushes",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"notes": "Just for Array#push(); the others would be their own rules."
@@ -8944,7 +8965,8 @@
 		"flint": {
 			"name": "dateConstructorClones",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"notes": "unicorn/consistent-date-clone"
 	},
@@ -8965,6 +8987,7 @@
 			"name": "dateNowTimestamps",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -9110,7 +9133,8 @@
 		"flint": {
 			"name": "defaultParameterLast",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "untyped",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -9142,7 +9166,8 @@
 		"flint": {
 			"name": "deprecated",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -9179,6 +9204,7 @@
 			"name": "destructuringConsistency",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -9391,7 +9417,8 @@
 		"flint": {
 			"name": "dynamicDeletes",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -10236,7 +10263,8 @@
 		"flint": {
 			"name": "fetchMethodBodies",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -10415,25 +10443,18 @@
 			{
 				"name": "prefer-spread",
 				"url": "https://eslint.org/docs/latest/rules/prefer-spread"
-			},
-			{
-				"name": "unicorn/prefer-spread",
-				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-spread.md"
 			}
 		],
 		"flint": {
-			"name": "functionCallSpreads",
+			"name": "functionApplySpreads",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
 				"name": "eslint/prefer-spread",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-spread.html"
-			},
-			{
-				"name": "unicorn/prefer-spread",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-spread.html"
 			}
 		]
 	},
@@ -11043,14 +11064,18 @@
 			{
 				"name": "import/no-extraneous-dependencies",
 				"url": "https://github.com/import-js/eslint-plugin-import/blob/HEAD/docs/rules/no-extraneous-dependencies.md"
+			},
+			{
+				"name": "n/no-extraneous-import",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-extraneous-import.md"
 			}
 		],
 		"flint": {
 			"name": "importExtraneousDependencies",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
-		}
+			"preset": "none"
+		},
+		"notes": "Superseded by Knip"
 	},
 	{
 		"eslint": [
@@ -12722,7 +12747,8 @@
 		"flint": {
 			"name": "multilineAmbiguities",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -21427,7 +21453,8 @@
 		"flint": {
 			"name": "blockMappings",
 			"plugin": "yaml",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -21440,7 +21467,8 @@
 		"flint": {
 			"name": "blockSequences",
 			"plugin": "yaml",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{

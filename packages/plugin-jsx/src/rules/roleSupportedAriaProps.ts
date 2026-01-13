@@ -1,9 +1,10 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const globalAriaProperties = new Set([
 	"aria-atomic",
@@ -368,12 +369,14 @@ function getSupportedPropsForRole(role: string): Set<string> {
 	]);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports ARIA properties that are not supported by an element's role.",
 		id: "roleSupportedAriaProps",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsupportedProp: {
@@ -391,10 +394,10 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkElement(
-			node: ts.JsxOpeningLikeElement,
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (!ts.isIdentifier(node.tagName)) {
+			if (node.tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -402,16 +405,16 @@ export default typescriptLanguage.createRule({
 
 			const roleProperty = node.attributes.properties.find(
 				(property) =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "role",
 			);
 
 			const role =
 				roleProperty &&
-				ts.isJsxAttribute(roleProperty) &&
+				roleProperty.kind === SyntaxKind.JsxAttribute &&
 				roleProperty.initializer &&
-				ts.isStringLiteral(roleProperty.initializer)
+				roleProperty.initializer.kind === SyntaxKind.StringLiteral
 					? roleProperty.initializer.text.toLowerCase()
 					: implicitRoles[elementName];
 
@@ -422,7 +425,10 @@ export default typescriptLanguage.createRule({
 			const supportedProps = getSupportedPropsForRole(role);
 
 			for (const property of node.attributes.properties) {
-				if (!ts.isJsxAttribute(property) || !ts.isIdentifier(property.name)) {
+				if (
+					property.kind !== SyntaxKind.JsxAttribute ||
+					property.name.kind !== SyntaxKind.Identifier
+				) {
 					continue;
 				}
 

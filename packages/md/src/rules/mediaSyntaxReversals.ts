@@ -2,12 +2,13 @@ import type { Text } from "mdast";
 
 import { markdownLanguage } from "../language.ts";
 import type { WithPosition } from "../nodes.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default markdownLanguage.createRule({
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports reversed link and image syntax in Markdown.",
 		id: "mediaSyntaxReversals",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		reversedImage: {
