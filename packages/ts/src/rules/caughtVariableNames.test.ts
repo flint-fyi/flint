@@ -75,24 +75,6 @@ try {
 }
 `,
 		},
-		{
-			code: `
-try {
-    doSomething();
-} catch (_) {
-    console.log(_);
-}
-`,
-			snapshot: `
-try {
-    doSomething();
-} catch (_) {
-         ~
-         The catch parameter \`_\` should not be used if you need to reference the error.
-    console.log(_);
-}
-`,
-		},
 	],
 	valid: [
 		`
@@ -119,22 +101,8 @@ try {
 		`
 try {
     doSomething();
-} catch (parseException) {
-    console.log(parseException);
-}
-`,
-		`
-try {
-    doSomething();
-} catch (networkErr) {
-    console.log(networkErr);
-}
-`,
-		`
-try {
-    doSomething();
-} catch (_) {
-    console.log("error occurred");
+} catch (networkError) {
+    console.log(networkError);
 }
 `,
 		`

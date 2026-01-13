@@ -12,9 +12,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 Consistent naming of catch clause parameters improves code readability.
 The preferred name is `error`, which clearly indicates the purpose of the variable.
-Descriptive names ending in "Error", "Exception", or "Err" are also acceptable (e.g., `fsError`, `parseException`).
-
-Using `_` as the parameter name is allowed when the error is intentionally ignored, but reports if `_` is actually used.
+Descriptive names ending in "Error", are also acceptable (e.g., `innerError`, `parseError`).
 
 ## Examples
 
@@ -31,7 +29,7 @@ try {
 
 ```ts
 try {
-	doSomething();
+	readFile(path);
 } catch (err) {
 	console.log(err);
 }
@@ -41,7 +39,7 @@ try {
 try {
 	doSomething();
 } catch (_) {
-	console.log(_);
+	console.log("error occurred");
 }
 ```
 
@@ -59,15 +57,15 @@ try {
 ```ts
 try {
 	readFile(path);
-} catch (fsError) {
-	console.log(fsError);
+} catch (fileError) {
+	console.log(fileError);
 }
 ```
 
 ```ts
 try {
 	doSomething();
-} catch (_) {
+} catch {
 	console.log("error occurred");
 }
 ```

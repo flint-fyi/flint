@@ -2,34 +2,6 @@ import * as ts from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
 
-const preferredName = "error";
-const descriptiveSuffixes = ["Error", "Exception", "Err"];
-
-function isDescriptiveName(name: string): boolean {
-	return descriptiveSuffixes.some((suffix) => name.endsWith(suffix));
-}
-
-function isUnused(identifier: ts.Identifier, block: ts.Block): boolean {
-	const name = identifier.text;
-	let used = false;
-
-	function visit(node: ts.Node): void {
-		if (used) {
-			return;
-		}
-
-		if (ts.isIdentifier(node) && node.text === name && node !== identifier) {
-			used = true;
-			return;
-		}
-
-		ts.forEachChild(node, visit);
-	}
-
-	visit(block);
-	return !used;
-}
-
 export default typescriptLanguage.createRule({
 	about: {
 		description:
@@ -45,19 +17,11 @@ export default typescriptLanguage.createRule({
 			secondary: [
 				"Consistent naming of catch clause parameters improves code readability.",
 				"The name `error` clearly indicates the purpose of the variable.",
-				"Descriptive names ending in 'Error' or 'Exception' are also acceptable.",
-			],
-			suggestions: ["Rename `{{ name }}` to `error`."],
-		},
-		unusedUnderscoreUsed: {
-			primary:
-				"The catch parameter `_` should not be used if you need to reference the error.",
-			secondary: [
-				"Using `_` as a parameter name conventionally indicates the value is intentionally ignored.",
-				"If you need to use the caught error, rename it to `error` or a descriptive name.",
+				"Descriptive names ending in 'Error' are generally also acceptable.",
 			],
 			suggestions: [
-				"Rename `_` to `error` if you need to use the caught value.",
+				"Rename `{{ name }}` to `error`.",
+				"Rename `{{ name }}` to a name ending with `Error`.",
 			],
 		},
 	},
@@ -72,20 +36,7 @@ export default typescriptLanguage.createRule({
 
 					const name = variable.name.text;
 
-					if (name === "_") {
-						if (!isUnused(variable.name, node.block)) {
-							context.report({
-								message: "unusedUnderscoreUsed",
-								range: {
-									begin: variable.name.getStart(sourceFile),
-									end: variable.name.getEnd(),
-								},
-							});
-						}
-						return;
-					}
-
-					if (name === preferredName || isDescriptiveName(name)) {
+					if (name === "error" || name.endsWith("Error")) {
 						return;
 					}
 
