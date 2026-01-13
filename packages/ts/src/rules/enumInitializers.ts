@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -12,14 +12,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		defineInitializer: {
-			primary: "Enum member '{{ name }}' should have an explicit initializer.",
+			primary:
+				"Enum member '{{ name }}' has an implicit initializer that may change if the enum is reordered.",
 			secondary: [
 				"Enum members without explicit values are assigned sequentially increasing numbers.",
 				"This can cause unintended value changes if enum members are reordered or removed.",
 			],
 			suggestions: [
-				"Add an explicit value, such as `{{ name }} = {{ suggestedIndex }}`.",
-				"Or use a string value: `{{ name }} = '{{ name }}'`.",
+				"For numeric enums, add an index-based value such as `{{ name }} = {{ suggestedIndex }}`.",
+				"For string enums, add a string value such as `{{ name }} = '{{ name }}'`.",
 			],
 		},
 	},
@@ -32,11 +33,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							continue;
 						}
 
-						const memberName = member.name;
 						const name =
-							memberName.kind === SyntaxKind.Identifier
-								? memberName.text
-								: memberName.getText(sourceFile);
+							member.name.kind === SyntaxKind.Identifier
+								? member.name.text
+								: member.name.getText(sourceFile);
 						const range = getTSNodeRange(member, sourceFile);
 
 						context.report({

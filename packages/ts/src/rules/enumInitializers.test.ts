@@ -13,7 +13,7 @@ enum Direction {
 enum Direction {
     Up,
     ~~
-    Enum member 'Up' should have an explicit initializer.
+    Enum member 'Up' has an implicit initializer that may change if the enum is reordered.
 }
 `,
 			suggestions: [
@@ -54,10 +54,10 @@ enum Direction {
 enum Direction {
     Up,
     ~~
-    Enum member 'Up' should have an explicit initializer.
+    Enum member 'Up' has an implicit initializer that may change if the enum is reordered.
     Down,
     ~~~~
-    Enum member 'Down' should have an explicit initializer.
+    Enum member 'Down' has an implicit initializer that may change if the enum is reordered.
 }
 `,
 			suggestions: [
@@ -129,7 +129,7 @@ enum Direction {
     Up = 'Up',
     Down,
     ~~~~
-    Enum member 'Down' should have an explicit initializer.
+    Enum member 'Down' has an implicit initializer that may change if the enum is reordered.
 }
 `,
 			suggestions: [
@@ -173,7 +173,7 @@ enum Direction {
 enum Direction {
     Up,
     ~~
-    Enum member 'Up' should have an explicit initializer.
+    Enum member 'Up' has an implicit initializer that may change if the enum is reordered.
     Down = 'Down',
 }
 `,
@@ -219,13 +219,13 @@ enum Numbers {
 enum Numbers {
     First,
     ~~~~~
-    Enum member 'First' should have an explicit initializer.
+    Enum member 'First' has an implicit initializer that may change if the enum is reordered.
     Second,
     ~~~~~~
-    Enum member 'Second' should have an explicit initializer.
+    Enum member 'Second' has an implicit initializer that may change if the enum is reordered.
     Third,
     ~~~~~
-    Enum member 'Third' should have an explicit initializer.
+    Enum member 'Third' has an implicit initializer that may change if the enum is reordered.
 }
 `,
 			suggestions: [
@@ -332,10 +332,10 @@ const enum Status {
 const enum Status {
     Pending,
     ~~~~~~~
-    Enum member 'Pending' should have an explicit initializer.
+    Enum member 'Pending' has an implicit initializer that may change if the enum is reordered.
     Active,
     ~~~~~~
-    Enum member 'Active' should have an explicit initializer.
+    Enum member 'Active' has an implicit initializer that may change if the enum is reordered.
 }
 `,
 			suggestions: [
