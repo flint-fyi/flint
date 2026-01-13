@@ -10466,7 +10466,7 @@
 		"flint": {
 			"name": "functionDeclarationStyles",
 			"plugin": "ts",
-			"status": "skipped"
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
