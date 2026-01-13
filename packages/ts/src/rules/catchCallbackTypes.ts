@@ -3,6 +3,9 @@ import * as ts from "typescript";
 
 import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
+import type { Checker } from "../types/checker.ts";
+import { declarationIncludesGlobal } from "../utils/declarationIncludesGlobal.ts";
+import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -26,9 +29,28 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
+		function isGlobalPromiseType(type: ts.Type): boolean {
+			const symbol = type.getSymbol();
+			if (symbol?.getName() !== "Promise") {
+				return false;
+			}
+
+			const declarations = symbol.getDeclarations();
+			if (!declarations) {
+				return false;
+			}
+
+			return declarations.some(
+				(declaration) =>
+					ts.isInterfaceDeclaration(declaration) &&
+					declaration.name.text === "Promise" &&
+					declarationIncludesGlobal(declaration),
+			);
+		}
+
 		function isCatchOrThenCallback(
 			node: AST.CallExpression,
-			typeChecker: ts.TypeChecker,
+			typeChecker: Checker,
 		): "catch" | "then" | undefined {
 			if (!ts.isPropertyAccessExpression(node.expression)) {
 				return undefined;
@@ -39,34 +61,16 @@ export default typescriptLanguage.createRule({
 				return undefined;
 			}
 
-			const objectType = typeChecker.getTypeAtLocation(
+			const objectType = getConstrainedTypeAtLocation(
 				node.expression.expression,
+				typeChecker,
 			);
-			const symbol = objectType.getSymbol();
 
-			if (!symbol) {
-				const typeString = typeChecker.typeToString(objectType);
-				if (typeString.startsWith("Promise<")) {
-					return methodName === "catch" ? "catch" : "then";
-				}
+			if (!isGlobalPromiseType(objectType)) {
 				return undefined;
 			}
 
-			const symbolName = symbol.getName();
-			if (symbolName === "Promise") {
-				return methodName === "catch" ? "catch" : "then";
-			}
-
-			for (const declaration of symbol.getDeclarations() ?? []) {
-				if (
-					ts.isInterfaceDeclaration(declaration) &&
-					declaration.name.text === "Promise"
-				) {
-					return methodName === "catch" ? "catch" : "then";
-				}
-			}
-
-			return undefined;
+			return methodName === "catch" ? "catch" : "then";
 		}
 
 		function checkCallbackParameter(

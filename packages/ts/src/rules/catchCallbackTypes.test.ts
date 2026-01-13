@@ -81,6 +81,48 @@ fetch("/api").catch(function(error) {
 });
 `,
 		},
+		{
+			code: `
+function handlePromise<T extends Promise<unknown>>(p: T) {
+    p.catch((error) => {
+        console.log(error);
+    });
+}
+`,
+			snapshot: `
+function handlePromise<T extends Promise<unknown>>(p: T) {
+    p.catch((error) => {
+             ~~~~~
+             The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
+        console.log(error);
+    });
+}
+`,
+		},
+		{
+			code: `
+function handlePromise<T extends Promise<string>>(p: T) {
+    p.then(
+        () => {},
+        (error) => {
+            console.log(error);
+        }
+    );
+}
+`,
+			snapshot: `
+function handlePromise<T extends Promise<string>>(p: T) {
+    p.then(
+        () => {},
+        (error) => {
+         ~~~~~
+         The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
+            console.log(error);
+        }
+    );
+}
+`,
+		},
 	],
 	valid: [
 		`
@@ -115,6 +157,23 @@ promise.catch((err: unknown) => {
         console.log(err.message);
     }
 });
+`,
+		`
+function handlePromise<T extends Promise<unknown>>(p: T) {
+    p.catch((error: unknown) => {
+        console.log(error);
+    });
+}
+`,
+		`
+function handlePromise<T extends Promise<string>>(p: T) {
+    p.then(
+        () => {},
+        (error: unknown) => {
+            console.log(error);
+        }
+    );
+}
 `,
 	],
 });
