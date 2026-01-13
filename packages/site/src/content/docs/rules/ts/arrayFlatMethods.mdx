@@ -11,16 +11,15 @@ import RuleSummary from "~/components/RuleSummary.astro";
 <RuleSummary plugin="ts" rule="arrayFlatMethods" />
 
 ES2019 introduced `Array.prototype.flat()` as the standard way to flatten arrays.
-This rule reports legacy techniques that can be replaced with `.flat()`.
+`.flat()` is a more modern and concise way to flatten arrays compared to older techniques:
 
-Flagged patterns include:
-
-- `array.flatMap(value => value)` - identity flatMap
-- `[].concat(...array)` - spread into concat
-- `[].concat.apply([], array)` - concat with apply
+- `array.flatMap(value => value)`
+- `[].concat(...array)`
+- `[].concat.apply([], array)`
 - `Array.prototype.concat.apply([], array)`
 - `Array.prototype.concat.call([], ...array)`
-- `_.flatten(array)`, `lodash.flatten(array)`, `underscore.flatten(array)`
+
+This rule reports legacy techniques that can be replaced with `.flat()`.
 
 ## Examples
 
@@ -84,7 +83,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you need to support environments that don't have `Array.prototype.flat()` (pre-ES2019), or if your codebase extensively uses lodash/underscore for array manipulation, you may disable this rule.
+If you need to support environments that don't have `Array.prototype.flat()` (pre-ES2019), or if your codebase extensively uses lodash/underscore for array manipulation, this rule may not be for you.
+Alternately, if you have specific stylistic preferences that involve more verbose calls to granular APIs, you might prefer to disable this rule.
 
 ## Further Reading
 
