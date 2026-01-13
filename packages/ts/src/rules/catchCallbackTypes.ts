@@ -1,19 +1,20 @@
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
+import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 
 export default typescriptLanguage.createRule({
 	about: {
 		description:
-			"Reports Promise catch callback parameters that are not typed as unknown.",
+			"Reports `Promise` catch callback parameters that are not typed as unknown.",
 		id: "catchCallbackTypes",
 		preset: "logical",
 	},
 	messages: {
 		preferUnknown: {
 			primary:
-				"The catch callback parameter should be typed as `unknown` instead of `any`.",
+				"The catch callback parameter should be typed as the safer `unknown` instead of `any`.",
 			secondary: [
 				"TypeScript's `useUnknownInCatchVariables` option only affects synchronous catch clauses, not Promise callbacks.",
 				"Promise rejection values can be anything, so using `unknown` forces proper type narrowing before use.",
@@ -26,7 +27,7 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function isCatchOrThenCallback(
-			node: ts.CallExpression,
+			node: AST.CallExpression,
 			typeChecker: ts.TypeChecker,
 		): "catch" | "then" | undefined {
 			if (!ts.isPropertyAccessExpression(node.expression)) {
@@ -69,27 +70,24 @@ export default typescriptLanguage.createRule({
 		}
 
 		function checkCallbackParameter(
-			callback: ts.Expression,
+			callback: AST.Expression,
 			sourceFile: ts.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
-			if (!ts.isFunctionLike(callback)) {
+			if (!ts.isFunctionLike(callback) || callback.parameters.length === 0) {
 				return;
 			}
 
-			const firstParam = callback.parameters[0];
-			if (!firstParam) {
-				return;
-			}
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const firstParameter = callback.parameters[0]!;
 
-			if (firstParam.type) {
-				const paramType = typeChecker.getTypeFromTypeNode(firstParam.type);
+			if (firstParameter.type) {
+				const paramType = typeChecker.getTypeFromTypeNode(firstParameter.type);
 
-				if (tsutils.isTypeFlagSet(paramType, ts.TypeFlags.Unknown)) {
-					return;
-				}
-
-				if (!tsutils.isTypeFlagSet(paramType, ts.TypeFlags.Any)) {
+				if (
+					tsutils.isTypeFlagSet(paramType, ts.TypeFlags.Unknown) ||
+					!tsutils.isTypeFlagSet(paramType, ts.TypeFlags.Any)
+				) {
 					return;
 				}
 			}
@@ -97,10 +95,10 @@ export default typescriptLanguage.createRule({
 			context.report({
 				message: "preferUnknown",
 				range: {
-					begin: firstParam.name.getStart(sourceFile),
-					end: firstParam.type
-						? firstParam.type.getEnd()
-						: firstParam.name.getEnd(),
+					begin: firstParameter.name.getStart(sourceFile),
+					end: firstParameter.type
+						? firstParameter.type.getEnd()
+						: firstParameter.name.getEnd(),
 				},
 			});
 		}
@@ -110,14 +108,27 @@ export default typescriptLanguage.createRule({
 				CallExpression: (node, { sourceFile, typeChecker }) => {
 					const callbackType = isCatchOrThenCallback(node, typeChecker);
 
-					if (!callbackType) {
-						return;
-					}
-
-					if (callbackType === "catch" && node.arguments.length >= 1) {
-						checkCallbackParameter(node.arguments[0], sourceFile, typeChecker);
-					} else if (callbackType === "then" && node.arguments.length >= 2) {
-						checkCallbackParameter(node.arguments[1], sourceFile, typeChecker);
+					switch (callbackType) {
+						case "catch":
+							if (node.arguments.length >= 1) {
+								checkCallbackParameter(
+									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+									node.arguments[0]!,
+									sourceFile,
+									typeChecker,
+								);
+							}
+							break;
+						case "then":
+							if (node.arguments.length >= 2) {
+								checkCallbackParameter(
+									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+									node.arguments[1]!,
+									sourceFile,
+									typeChecker,
+								);
+							}
+							break;
 					}
 				},
 			},

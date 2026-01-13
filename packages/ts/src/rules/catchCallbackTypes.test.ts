@@ -12,7 +12,7 @@ Promise.resolve().catch((error) => {
 			snapshot: `
 Promise.resolve().catch((error) => {
                          ~~~~~
-                         The catch callback parameter should be typed as \`unknown\` instead of \`any\`.
+                         The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
     console.log(error);
 });
 `,
@@ -26,7 +26,7 @@ Promise.resolve().catch((error: any) => {
 			snapshot: `
 Promise.resolve().catch((error: any) => {
                          ~~~~~~~~~~
-                         The catch callback parameter should be typed as \`unknown\` instead of \`any\`.
+                         The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
     console.log(error);
 });
 `,
@@ -45,7 +45,7 @@ Promise.resolve().then(
     () => {},
     (error) => {
      ~~~~~
-     The catch callback parameter should be typed as \`unknown\` instead of \`any\`.
+     The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
         console.log(error);
     }
 );
@@ -62,7 +62,7 @@ promise.catch((err) => {
 const promise: Promise<string> = Promise.resolve("test");
 promise.catch((err) => {
                ~~~
-               The catch callback parameter should be typed as \`unknown\` instead of \`any\`.
+               The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
     console.log(err);
 });
 `,
@@ -76,7 +76,7 @@ fetch("/api").catch(function(error) {
 			snapshot: `
 fetch("/api").catch(function(error) {
                              ~~~~~
-                             The catch callback parameter should be typed as \`unknown\` instead of \`any\`.
+                             The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
     console.log(error);
 });
 `,
