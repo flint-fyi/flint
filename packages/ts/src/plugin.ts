@@ -15,6 +15,12 @@ import arrayExistenceChecksConsistency from "./rules/arrayExistenceChecksConsist
 import arrayFilteredFinds from "./rules/arrayFilteredFinds.ts";
 import arrayFinds from "./rules/arrayFinds.ts";
 import arrayFlatMapMethods from "./rules/arrayFlatMapMethods.ts";
+import arrayFlatMethods from "./rules/arrayFlatMethods.ts";
+import arrayFlatUnnecessaryDepths from "./rules/arrayFlatUnnecessaryDepths.ts";
+import arrayIncludes from "./rules/arrayIncludes.ts";
+import arrayIncludesMethods from "./rules/arrayIncludesMethods.ts";
+import arrayIndexOfMethods from "./rules/arrayIndexOfMethods.ts";
+import arrayLoops from "./rules/arrayLoops.ts";
 import arrayMapIdentities from "./rules/arrayMapIdentities.ts";
 import arrayMutableReverses from "./rules/arrayMutableReverses.ts";
 import arrayMutableSorts from "./rules/arrayMutableSorts.ts";
@@ -57,15 +63,19 @@ import elseIfDuplicates from "./rules/elseIfDuplicates.ts";
 import emptyBlocks from "./rules/emptyBlocks.ts";
 import emptyDestructures from "./rules/emptyDestructures.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
+import enumInitializers from "./rules/enumInitializers.ts";
+import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
 import evolvingVariableTypes from "./rules/evolvingVariableTypes.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
 import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
 import finallyStatementSafety from "./rules/finallyStatementSafety.ts";
 import forDirections from "./rules/forDirections.ts";
 import forInArrays from "./rules/forInArrays.ts";
+import forInGuards from "./rules/forInGuards.ts";
 import functionApplySpreads from "./rules/functionApplySpreads.ts";
 import functionAssignments from "./rules/functionAssignments.ts";
 import functionCurryingRedundancy from "./rules/functionCurryingRedundancy.ts";
+import functionDeclarationStyles from "./rules/functionDeclarationStyles.ts";
 import functionNewCalls from "./rules/functionNewCalls.ts";
 import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
 import globalAssignments from "./rules/globalAssignments.ts";
@@ -124,6 +134,12 @@ export const ts = createPlugin({
 		arrayFilteredFinds,
 		arrayFinds,
 		arrayFlatMapMethods,
+		arrayFlatMethods,
+		arrayFlatUnnecessaryDepths,
+		arrayIncludes,
+		arrayIncludesMethods,
+		arrayIndexOfMethods,
+		arrayLoops,
 		arrayMapIdentities,
 		arrayMutableReverses,
 		arrayMutableSorts,
@@ -166,15 +182,19 @@ export const ts = createPlugin({
 		emptyBlocks,
 		emptyDestructures,
 		emptyStaticBlocks,
+		enumInitializers,
+		equalityOperatorNegations,
 		evolvingVariableTypes,
 		exceptionAssignments,
 		fetchMethodBodies,
 		finallyStatementSafety,
 		forDirections,
 		forInArrays,
+		forInGuards,
 		functionApplySpreads,
 		functionAssignments,
 		functionCurryingRedundancy,
+		functionDeclarationStyles,
 		functionNewCalls,
 		generatorFunctionYields,
 		globalAssignments,
