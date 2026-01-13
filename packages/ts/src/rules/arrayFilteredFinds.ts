@@ -1,28 +1,28 @@
 import * as ts from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
+import type { AST, Checker } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
 
 function isArrayFilterCall(
-	node: ts.Expression,
-	typeChecker: ts.TypeChecker,
-): node is ts.CallExpression {
-	if (!ts.isCallExpression(node)) {
-		return false;
-	}
-
-	if (!ts.isPropertyAccessExpression(node.expression)) {
+	node: AST.Expression,
+	typeChecker: Checker,
+): node is AST.CallExpression {
+	if (
+		!ts.isCallExpression(node) ||
+		!ts.isPropertyAccessExpression(node.expression)
+	) {
 		return false;
 	}
 
 	const methodName = node.expression.name.text;
-	if (methodName !== "filter") {
-		return false;
-	}
-
-	if (node.arguments.length < 1 || node.arguments.length > 2) {
+	if (
+		methodName !== "filter" ||
+		node.arguments.length < 1 ||
+		node.arguments.length > 2
+	) {
 		return false;
 	}
 
@@ -44,7 +44,9 @@ function isArrayOrTupleType(
 	);
 }
 
-function isNegativeOneIndex(node: ts.Expression): boolean {
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
+function isNegativeOneIndex(node: AST.Expression): boolean {
 	if (
 		ts.isPrefixUnaryExpression(node) &&
 		node.operator === ts.SyntaxKind.MinusToken &&
@@ -57,7 +59,9 @@ function isNegativeOneIndex(node: ts.Expression): boolean {
 	return false;
 }
 
-function isZeroIndex(node: ts.Expression): boolean {
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
+function isZeroIndex(node: AST.Expression) {
 	return ts.isNumericLiteral(node) && node.text === "0";
 }
 
@@ -100,61 +104,64 @@ export default typescriptLanguage.createRule({
 					const methodName = node.expression.name.text;
 					const objectExpression = node.expression.expression;
 
-					if (methodName === "shift" && node.arguments.length === 0) {
-						if (isArrayFilterCall(objectExpression, typeChecker)) {
-							context.report({
-								message: "preferFind",
-								range: getTSNodeRange(node, sourceFile),
-							});
-						}
-						return;
-					}
-
-					if (methodName === "pop" && node.arguments.length === 0) {
-						if (isArrayFilterCall(objectExpression, typeChecker)) {
-							context.report({
-								message: "preferFindLast",
-								range: getTSNodeRange(node, sourceFile),
-							});
-						}
-						return;
-					}
-
-					if (
-						methodName === "at" &&
-						node.arguments.length === 1 &&
-						node.arguments[0]
-					) {
-						const arg = node.arguments[0];
-
-						if (
-							isZeroIndex(arg) &&
-							isArrayFilterCall(objectExpression, typeChecker)
-						) {
-							context.report({
-								message: "preferFind",
-								range: getTSNodeRange(node, sourceFile),
-							});
+					switch (methodName) {
+						case "pop":
+							if (
+								node.arguments.length === 0 &&
+								isArrayFilterCall(objectExpression, typeChecker)
+							) {
+								context.report({
+									message: "preferFindLast",
+									range: getTSNodeRange(node, sourceFile),
+								});
+							}
 							return;
-						}
 
-						if (
-							isNegativeOneIndex(arg) &&
-							isArrayFilterCall(objectExpression, typeChecker)
-						) {
-							context.report({
-								message: "preferFindLast",
-								range: getTSNodeRange(node, sourceFile),
-							});
-						}
+						case "shift":
+							if (
+								node.arguments.length === 0 &&
+								isArrayFilterCall(objectExpression, typeChecker)
+							) {
+								context.report({
+									message: "preferFind",
+									range: getTSNodeRange(node, sourceFile),
+								});
+							}
+							return;
+
+						case "at":
+							if (node.arguments.length === 1) {
+								// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+								const arg = node.arguments[0]!;
+
+								if (
+									isZeroIndex(arg) &&
+									isArrayFilterCall(objectExpression, typeChecker)
+								) {
+									context.report({
+										message: "preferFind",
+										range: getTSNodeRange(node, sourceFile),
+									});
+									return;
+								}
+
+								if (
+									isNegativeOneIndex(arg) &&
+									isArrayFilterCall(objectExpression, typeChecker)
+								) {
+									context.report({
+										message: "preferFindLast",
+										range: getTSNodeRange(node, sourceFile),
+									});
+								}
+							}
 					}
 				},
 				ElementAccessExpression: (node, { sourceFile, typeChecker }) => {
-					if (!isZeroIndex(node.argumentExpression)) {
-						return;
-					}
-
-					if (isArrayFilterCall(node.expression, typeChecker)) {
+					if (
+						isZeroIndex(node.argumentExpression) &&
+						isArrayFilterCall(node.expression, typeChecker)
+					) {
 						context.report({
 							message: "preferFind",
 							range: getTSNodeRange(node, sourceFile),
