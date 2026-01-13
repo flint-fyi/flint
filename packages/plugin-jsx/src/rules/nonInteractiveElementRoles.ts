@@ -1,9 +1,10 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const nonInteractiveElements = new Set([
 	"article",
@@ -74,12 +75,14 @@ const allowedExceptions: Record<string, Set<string> | undefined> = {
 	]),
 };
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports non-interactive elements with interactive ARIA roles.",
 		id: "nonInteractiveElementRoles",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidRole: {
@@ -98,10 +101,10 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkElement(
-			element: ts.JsxOpeningElement | ts.JsxSelfClosingElement,
+			element: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (!ts.isIdentifier(element.tagName)) {
+			if (element.tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -112,16 +115,16 @@ export default typescriptLanguage.createRule({
 
 			const roleProperty = element.attributes.properties.find(
 				(property) =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "role",
 			);
 
 			if (
 				!roleProperty ||
-				!ts.isJsxAttribute(roleProperty) ||
+				roleProperty.kind !== SyntaxKind.JsxAttribute ||
 				!roleProperty.initializer ||
-				!ts.isStringLiteral(roleProperty.initializer)
+				roleProperty.initializer.kind !== SyntaxKind.StringLiteral
 			) {
 				return;
 			}

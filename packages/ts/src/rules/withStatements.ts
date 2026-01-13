@@ -2,11 +2,13 @@ import { typescriptLanguage } from "../language.ts";
 
 const withKeyword = "with";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using with statements",
 		id: "withStatements",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		withStatement: {

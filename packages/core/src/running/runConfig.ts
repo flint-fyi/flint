@@ -49,7 +49,18 @@ export async function runConfig(
 		),
 	);
 
-	// 4. Write the results to cache, then return them! We did it!
+	// 4. Merge cached file results into filesResults
+	if (cached) {
+		for (const [filePath, cachedStorage] of cached) {
+			filesResults.set(filePath, {
+				dependencies: new Set(cachedStorage.dependencies),
+				diagnostics: cachedStorage.diagnostics ?? [],
+				reports: cachedStorage.reports ?? [],
+			});
+		}
+	}
+
+	// 5. Write the results to cache, then return them! We did it!
 	const lintResults = { allFilePaths, cached, filesResults };
 
 	await writeToCache(configDefinition.filePath, lintResults);

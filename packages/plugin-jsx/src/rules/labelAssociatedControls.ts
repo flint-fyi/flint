@@ -1,9 +1,10 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 const controlElements = new Set([
 	"input",
@@ -14,12 +15,14 @@ const controlElements = new Set([
 	"textarea",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports <label> elements without an associated control element.",
 		id: "labelAssociatedControls",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingAssociatedControl: {
@@ -36,33 +39,35 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function hasHtmlForAttribute(attributes: ts.JsxAttributes): boolean {
+		function hasHtmlForAttribute(attributes: AST.JsxAttributes): boolean {
 			return attributes.properties.some((property) => {
 				if (
-					!ts.isJsxAttribute(property) ||
-					!ts.isIdentifier(property.name) ||
+					property.kind !== SyntaxKind.JsxAttribute ||
+					property.name.kind !== SyntaxKind.Identifier ||
 					property.name.text !== "htmlFor" ||
 					!property.initializer
 				) {
 					return false;
 				}
 
-				if (ts.isStringLiteral(property.initializer)) {
+				if (property.initializer.kind === SyntaxKind.StringLiteral) {
 					return property.initializer.text !== "";
 				}
 
-				if (ts.isJsxExpression(property.initializer)) {
+				if (property.initializer.kind === SyntaxKind.JsxExpression) {
 					const { expression } = property.initializer;
 					if (!expression) {
 						return false;
 					}
 
 					if (
-						(ts.isStringLiteral(expression) && expression.text === "") ||
-						(ts.isNoSubstitutionTemplateLiteral(expression) &&
+						(expression.kind === SyntaxKind.StringLiteral &&
 							expression.text === "") ||
-						(ts.isIdentifier(expression) && expression.text === "undefined") ||
-						expression.kind === ts.SyntaxKind.NullKeyword
+						(expression.kind === SyntaxKind.NoSubstitutionTemplateLiteral &&
+							expression.text === "") ||
+						(expression.kind === SyntaxKind.Identifier &&
+							expression.text === "undefined") ||
+						expression.kind === SyntaxKind.NullKeyword
 					) {
 						return false;
 					}
@@ -72,20 +77,20 @@ export default typescriptLanguage.createRule({
 			});
 		}
 
-		function hasNestedControl(children: ts.NodeArray<ts.JsxChild>): boolean {
+		function hasNestedControl(children: ts.NodeArray<AST.JsxChild>): boolean {
 			return children.some((child) => {
-				if (ts.isJsxElement(child)) {
+				if (child.kind == SyntaxKind.JsxElement) {
 					const { tagName } = child.openingElement;
 					return (
-						(ts.isIdentifier(tagName) &&
+						(tagName.kind === SyntaxKind.Identifier &&
 							controlElements.has(tagName.text.toLowerCase())) ||
 						hasNestedControl(child.children)
 					);
 				}
 
-				if (ts.isJsxSelfClosingElement(child)) {
+				if (child.kind === SyntaxKind.JsxSelfClosingElement) {
 					return (
-						ts.isIdentifier(child.tagName) &&
+						child.tagName.kind === SyntaxKind.Identifier &&
 						controlElements.has(child.tagName.text.toLowerCase())
 					);
 				}
@@ -95,24 +100,32 @@ export default typescriptLanguage.createRule({
 		}
 
 		function checkLabel(
-			node: ts.JsxElement | ts.JsxSelfClosingElement,
+			node: AST.JsxElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (ts.isJsxElement(node) && hasNestedControl(node.children)) {
+			if (
+				node.kind == SyntaxKind.JsxElement &&
+				hasNestedControl(node.children)
+			) {
 				return;
 			}
 
-			const tagName = ts.isJsxElement(node)
-				? node.openingElement.tagName
-				: node.tagName;
+			const tagName =
+				node.kind == SyntaxKind.JsxElement
+					? node.openingElement.tagName
+					: node.tagName;
 
-			if (!ts.isIdentifier(tagName) || tagName.text.toLowerCase() !== "label") {
+			if (
+				tagName.kind !== SyntaxKind.Identifier ||
+				tagName.text.toLowerCase() !== "label"
+			) {
 				return;
 			}
 
-			const attributes = ts.isJsxElement(node)
-				? node.openingElement.attributes
-				: node.attributes;
+			const attributes =
+				node.kind == SyntaxKind.JsxElement
+					? node.openingElement.attributes
+					: node.attributes;
 
 			if (hasHtmlForAttribute(attributes)) {
 				return;
