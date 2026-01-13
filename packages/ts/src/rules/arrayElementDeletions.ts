@@ -19,7 +19,7 @@ export default typescriptLanguage.createRule({
 	about: {
 		description: "Reports using the `delete` operator on array values.",
 		id: "arrayElementDeletions",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noArrayDelete: {
@@ -41,9 +41,8 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					const elementAccess = node.expression;
 					const objectType = getConstrainedTypeAtLocation(
-						elementAccess.expression,
+						node.expression.expression,
 						typeChecker,
 					);
 
