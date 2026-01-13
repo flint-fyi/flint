@@ -50,7 +50,6 @@ function isIndexOfComparison(node: AST.BinaryExpression, typeChecker: Checker) {
 
 	const kind = operatorToken.kind;
 	const isZeroValue = isZero(comparedValue);
-
 	const indexOfOnLeft = ts.isCallExpression(left);
 
 	const isValidComparison =
