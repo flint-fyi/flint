@@ -10522,7 +10522,7 @@
 			}
 		],
 		"flint": {
-			"name": "functionNames",
+			"name": "functionExpressionNames",
 			"plugin": "ts",
 			"status": "implemented"
 		},

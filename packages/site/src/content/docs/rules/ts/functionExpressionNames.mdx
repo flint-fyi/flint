@@ -1,0 +1,62 @@
+---
+description: "Reports function expressions without names."
+title: "functionExpressionNames"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="functionExpressionNames" />
+
+Named function expressions produce better stack traces for debugging.
+The function name appears in error messages and developer tools, making it easier to identify the source of issues.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+array.map(function (item) {
+	return item;
+});
+```
+
+```ts
+(function () {})();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+array.map(function identity(item) {
+	return item;
+});
+```
+
+```ts
+(function main() {})();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer trimming to minimal amounts of code and don't mind anonymous functions in your call stacks, this rule might not be for you.
+
+## Further Reading
+
+- [MDN: function expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/function)
+- [MDN: Function.name](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="functionExpressionNames" />

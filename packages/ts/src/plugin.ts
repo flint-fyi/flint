@@ -76,7 +76,7 @@ import functionAssignments from "./rules/functionAssignments.ts";
 import functionCurryingRedundancy from "./rules/functionCurryingRedundancy.ts";
 import functionDeclarationStyles from "./rules/functionDeclarationStyles.ts";
 import functionNameMatches from "./rules/functionNameMatches.ts";
-import functionNames from "./rules/functionNames.ts";
+import functionExpressionNames from "./rules/functionExpressionNames.ts";
 import functionNewCalls from "./rules/functionNewCalls.ts";
 import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
 import globalAssignments from "./rules/globalAssignments.ts";
@@ -196,7 +196,7 @@ export const ts = createPlugin({
 		functionCurryingRedundancy,
 		functionDeclarationStyles,
 		functionNameMatches,
-		functionNames,
+		functionExpressionNames,
 		functionNewCalls,
 		generatorFunctionYields,
 		globalAssignments,
