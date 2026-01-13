@@ -1,0 +1,126 @@
+---
+description: "Reports function expressions without names."
+title: "functionNames"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="functionNames" />
+
+Named function expressions produce better stack traces for debugging.
+The function name appears in error messages and developer tools, making it easier to identify the source of issues.
+
+## Examples
+
+With the default `"always"` policy:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = function () {};
+```
+
+```ts
+array.map(function (item) {
+	return item;
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = function value() {};
+```
+
+```ts
+array.map(function callback(item) {
+	return item;
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `policy`
+
+Controls when function expressions require names:
+
+- `"always"` (default): Function expressions must have a name
+- `"asNeeded"`: Only require names when they can't be inferred from context
+- `"never"`: Function expressions should not have names
+
+```json
+{
+	"rules": {
+		"ts/functionNames": ["error", { "policy": "asNeeded" }]
+	}
+}
+```
+
+### Policy: `asNeeded`
+
+With `"asNeeded"`, names are only required when they can't be automatically inferred from the assignment context.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+array.map(function (item) {
+	return item;
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = function () {};
+```
+
+```ts
+const object = { value: function () {} };
+```
+
+</TabItem>
+</Tabs>
+
+### Policy: `never`
+
+With `"never"`, function expressions should not have names.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = function named() {};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = function () {};
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your team doesn't care about function expression naming, or if you rely heavily on arrow functions which don't support named expressions, you can disable this rule.
+
+## Further Reading
+
+- [MDN: function expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/function)
+- [MDN: Function.name](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="functionNames" />
