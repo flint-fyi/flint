@@ -1,0 +1,70 @@
+import ts, { SyntaxKind } from "typescript";
+
+import { getTSNodeRange } from "../getTSNodeRange.ts";
+import { typescriptLanguage } from "../language.ts";
+
+export default typescriptLanguage.createRule({
+	about: {
+		description:
+			"Reports imports that use inline type qualifiers on all specifiers when a top-level type qualifier should be used instead.",
+		id: "importTypeSideEffects",
+		preset: "logical",
+	},
+	messages: {
+		useTopLevelQualifier: {
+			primary:
+				"Use a top-level `import type` instead of inline type qualifiers on every specifier.",
+			secondary: [
+				"When all specifiers in an import have inline `type` qualifiers, TypeScript's `verbatimModuleSyntax` leaves behind an empty import statement.",
+				"This creates an unnecessary side-effect import at runtime.",
+			],
+			suggestions: [
+				"Replace `import { type A, type B }` with `import type { A, B }`.",
+			],
+		},
+	},
+	setup(context) {
+		return {
+			visitors: {
+				ImportDeclaration: (node, { sourceFile }) => {
+					// Skip type imports - they're already correct
+					if (node.importClause?.phaseModifier === SyntaxKind.TypeKeyword) {
+						return;
+					}
+
+					// Skip imports without a clause (side-effect imports)
+					if (!node.importClause) {
+						return;
+					}
+
+					// Skip default imports - they can't all be type-only
+					if (node.importClause.name) {
+						return;
+					}
+
+					const namedBindings = node.importClause.namedBindings;
+					if (!namedBindings || !ts.isNamedImports(namedBindings)) {
+						return;
+					}
+
+					const elements = namedBindings.elements;
+					if (elements.length === 0) {
+						return;
+					}
+
+					// Check if ALL specifiers have inline type qualifiers
+					const allHaveTypeQualifier = elements.every(
+						(element) => element.isTypeOnly,
+					);
+
+					if (allHaveTypeQualifier) {
+						context.report({
+							message: "useTopLevelQualifier",
+							range: getTSNodeRange(node, sourceFile),
+						});
+					}
+				},
+			},
+		};
+	},
+});
