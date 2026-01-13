@@ -57,6 +57,7 @@ import elseIfDuplicates from "./rules/elseIfDuplicates.ts";
 import emptyBlocks from "./rules/emptyBlocks.ts";
 import emptyDestructures from "./rules/emptyDestructures.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
+import enumInitializers from "./rules/enumInitializers.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
 import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
 import finallyStatementSafety from "./rules/finallyStatementSafety.ts";
@@ -165,6 +166,7 @@ export const ts = createPlugin({
 		emptyBlocks,
 		emptyDestructures,
 		emptyStaticBlocks,
+		enumInitializers,
 		exceptionAssignments,
 		fetchMethodBodies,
 		finallyStatementSafety,

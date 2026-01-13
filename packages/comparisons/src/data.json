@@ -9757,7 +9757,7 @@
 		"flint": {
 			"name": "enumInitializers",
 			"plugin": "ts",
-			"status": "skipped"
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
