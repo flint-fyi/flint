@@ -1,13 +1,18 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.js";
+import {
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "../language.ts";
+import * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports generator functions that do not yield values.",
 		id: "generatorFunctionYields",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingYield: {
@@ -35,9 +40,10 @@ export default typescriptLanguage.createRule({
 
 		function checkFunction(
 			node:
-				| ts.FunctionDeclaration
-				| ts.FunctionExpression
-				| ts.MethodDeclaration,
+				| AST.FunctionDeclaration
+				| AST.FunctionExpression
+				| AST.MethodDeclaration,
+			{ sourceFile }: TypeScriptFileServices,
 		): void {
 			if (!node.asteriskToken || !node.body || blockContainsYield(node.body)) {
 				return;
@@ -46,7 +52,7 @@ export default typescriptLanguage.createRule({
 			context.report({
 				message: "missingYield",
 				range: {
-					begin: node.asteriskToken.getStart(context.sourceFile),
+					begin: node.asteriskToken.getStart(sourceFile),
 					end: node.asteriskToken.getEnd(),
 				},
 			});
@@ -54,9 +60,9 @@ export default typescriptLanguage.createRule({
 	},
 });
 
-function blockContainsYield(block: ts.Block) {
+function blockContainsYield(block: AST.Block) {
 	function checkForYield(node: ts.Node): boolean | undefined {
-		if (ts.isYieldExpression(node)) {
+		if (node.kind === SyntaxKind.YieldExpression) {
 			return true;
 		}
 

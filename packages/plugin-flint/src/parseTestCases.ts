@@ -1,12 +1,17 @@
-import * as ts from "typescript";
+import type { AST } from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
-import type { ParsedTestCase, ParsedTestCaseInvalid } from "./types.js";
+import { findProperty } from "./findProperty.ts";
+import { tsAstToLiteral } from "./tsAstToLiteral.ts";
+import type { ParsedTestCase, ParsedTestCaseInvalid } from "./types.ts";
 
-import { findProperty } from "./findProperty.js";
-import { tsAstToLiteral } from "./tsAstToLiteral.js";
-
-export function parseTestCase(node: ts.Expression): ParsedTestCase | undefined {
-	if (ts.isStringLiteralLike(node)) {
+export function parseTestCase(
+	node: AST.Expression,
+): ParsedTestCase | undefined {
+	if (
+		node.kind == SyntaxKind.StringLiteral ||
+		node.kind == SyntaxKind.NoSubstitutionTemplateLiteral
+	) {
 		return {
 			code: node.text,
 			nodes: {
@@ -16,11 +21,18 @@ export function parseTestCase(node: ts.Expression): ParsedTestCase | undefined {
 		};
 	}
 
-	if (!ts.isObjectLiteralExpression(node)) {
+	if (node.kind != SyntaxKind.ObjectLiteralExpression) {
 		return undefined;
 	}
 
-	const code = findProperty(node.properties, "code", ts.isStringLiteralLike);
+	const code = findProperty(
+		node.properties,
+		"code",
+
+		(node) =>
+			node.kind == SyntaxKind.StringLiteral ||
+			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
+	);
 	if (!code) {
 		return undefined;
 	}
@@ -28,12 +40,14 @@ export function parseTestCase(node: ts.Expression): ParsedTestCase | undefined {
 	const fileName = findProperty(
 		node.properties,
 		"fileName",
-		ts.isStringLiteralLike,
+		(node) =>
+			node.kind == SyntaxKind.StringLiteral ||
+			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
 	const options = findProperty(
 		node.properties,
 		"options",
-		ts.isObjectLiteralExpression,
+		(node) => node.kind == SyntaxKind.ObjectLiteralExpression,
 	);
 
 	return {
@@ -50,13 +64,19 @@ export function parseTestCase(node: ts.Expression): ParsedTestCase | undefined {
 }
 
 export function parseTestCaseInvalid(
-	node: ts.Expression,
+	node: AST.Expression,
 ): ParsedTestCaseInvalid | undefined {
-	if (!ts.isObjectLiteralExpression(node)) {
+	if (node.kind !== SyntaxKind.ObjectLiteralExpression) {
 		return undefined;
 	}
 
-	const code = findProperty(node.properties, "code", ts.isStringLiteralLike);
+	const code = findProperty(
+		node.properties,
+		"code",
+		(node) =>
+			node.kind == SyntaxKind.StringLiteral ||
+			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
+	);
 	if (!code) {
 		return undefined;
 	}
@@ -64,17 +84,21 @@ export function parseTestCaseInvalid(
 	const fileName = findProperty(
 		node.properties,
 		"fileName",
-		ts.isStringLiteralLike,
+		(node) =>
+			node.kind == SyntaxKind.StringLiteral ||
+			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
 	const options = findProperty(
 		node.properties,
 		"options",
-		ts.isObjectLiteralExpression,
+		(node) => node.kind == SyntaxKind.ObjectLiteralExpression,
 	);
 	const snapshot = findProperty(
 		node.properties,
 		"snapshot",
-		ts.isStringLiteralLike,
+		(node) =>
+			node.kind == SyntaxKind.StringLiteral ||
+			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
 	if (!snapshot) {
 		return undefined;

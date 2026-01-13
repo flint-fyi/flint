@@ -3,7 +3,8 @@ import {
 	isGlobalDeclaration,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { nullThrows } from "@flint.fyi/utils";
+import { SyntaxKind } from "typescript";
 
 const legacyMethods = new Set([
 	"getElementById",
@@ -19,12 +20,14 @@ const methodReplacements: Record<string, string> = {
 	getElementsByTagNameNS: "querySelectorAll",
 };
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer modern `querySelector` and `querySelectorAll` over legacy DOM query methods.",
 		id: "nodeQueryMethods",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferQuerySelector: {
@@ -42,20 +45,23 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node: ts.CallExpression) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					if (
-						ts.isPropertyAccessExpression(node.expression) &&
-						ts.isIdentifier(node.expression.name) &&
+						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+						node.expression.name.kind === SyntaxKind.Identifier &&
 						legacyMethods.has(node.expression.name.text) &&
-						isGlobalDeclaration(node.expression.name, context.typeChecker)
+						isGlobalDeclaration(node.expression.name, typeChecker)
 					) {
 						context.report({
 							data: {
 								method: node.expression.name.text,
-								replacement: methodReplacements[node.expression.name.text],
+								replacement: nullThrows(
+									methodReplacements[node.expression.name.text],
+									"Replacement is expected to be present by the has check",
+								),
 							},
 							message: "preferQuerySelector",
-							range: getTSNodeRange(node.expression.name, context.sourceFile),
+							range: getTSNodeRange(node.expression.name, sourceFile),
 						});
 					}
 				},

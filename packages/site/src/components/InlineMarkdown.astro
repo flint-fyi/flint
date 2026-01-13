@@ -1,0 +1,14 @@
+---
+import markdownIt from "markdown-it";
+
+const renderer = markdownIt();
+
+export interface Props {
+	class?: string;
+	markdown: string;
+}
+---
+
+<span class={Astro.props.class}>
+	<Fragment set:html={renderer.render(Astro.props.markdown)} />
+</span>

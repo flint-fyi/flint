@@ -1,5 +1,5 @@
-import rule from "./chainedAssignments.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./chainedAssignments.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -234,6 +234,30 @@ class MyClass {
         second = 0;
     }
 }
+`,
+		`
+let result = "";
+result += "a" + "b";
+`,
+		`
+let result = 0;
+result += 1 + 2;
+`,
+		`
+let result = 0;
+result += 1 * 2;
+`,
+		`
+let result = 0;
+result += 1 - 2;
+`,
+		`
+let result = 0;
+result += 1 / 2;
+`,
+		`
+let result = 0;
+result += 1 ** 2;
 `,
 	],
 });

@@ -1,5 +1,5 @@
-import rule from "./ariaActiveDescendantTabIndex.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./ariaActiveDescendantTabIndex.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <div aria-activedescendant={someID} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div aria-activedescendant={someID} />
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <span aria-activedescendant="item-1" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <span aria-activedescendant="item-1" />
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -27,51 +25,43 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<CustomComponent />`, fileName: "file.tsx" },
+		{ code: `<CustomComponent />` },
 		{
 			code: `<CustomComponent aria-activedescendant={someID} />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<CustomComponent aria-activedescendant={someID} tabIndex={0} />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `
 <div />`,
-			fileName: "file.tsx",
 		},
-		{ code: `<input />`, fileName: "file.tsx" },
+		{ code: `<input />` },
 		{
 			code: `
 <div tabIndex={0} />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `
 <div aria-activedescendant={someID} tabIndex={0} />
 `,
-			fileName: "file.tsx",
 		},
 		{
 			code: `
 <div aria-activedescendant={someID} tabIndex="0" />
 `,
-			fileName: "file.tsx",
 		},
 		{
 			code: `
 <div aria-activedescendant={someID} tabIndex={1} />
 `,
-			fileName: "file.tsx",
 		},
 		{
 			code: `
 <div aria-activedescendant={someID} tabIndex={-1} />
 `,
-			fileName: "file.tsx",
 		},
-		{ code: `<input aria-activedescendant={someID} />`, fileName: "file.tsx" },
-		{ code: `<button aria-activedescendant={someID} />`, fileName: "file.tsx" },
+		{ code: `<input aria-activedescendant={someID} />` },
+		{ code: `<button aria-activedescendant={someID} />` },
 	],
 });

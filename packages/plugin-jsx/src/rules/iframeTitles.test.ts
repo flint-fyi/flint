@@ -1,5 +1,5 @@
-import rule from "./iframeTitles.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./iframeTitles.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <iframe />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <iframe />
  ~~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <iframe src="https://example.com" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <iframe src="https://example.com" />
  ~~~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <iframe title="" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <iframe title="" />
  ~~~~~~
@@ -40,7 +37,6 @@ ruleTester.describe(rule, {
 			code: `
 <iframe title={''} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <iframe title={''} />
  ~~~~~~
@@ -51,7 +47,6 @@ ruleTester.describe(rule, {
 			code: `
 <iframe title={\`\`} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <iframe title={\`\`} />
  ~~~~~~
@@ -62,7 +57,6 @@ ruleTester.describe(rule, {
 			code: `
 <iframe title={undefined} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <iframe title={undefined} />
  ~~~~~~
@@ -74,18 +68,15 @@ ruleTester.describe(rule, {
 		{
 			code: `<iframe title="This is a unique title" />
 	`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<iframe title={uniqueTitle} />
 	`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<iframe title="Video player" src="video.mp4" />
 	`,
-			fileName: "file.tsx",
 		},
-		{ code: `<div>Not an iframe</div>`, fileName: "file.tsx" },
+		{ code: `<div>Not an iframe</div>` },
 	],
 });

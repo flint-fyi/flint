@@ -1,7 +1,7 @@
-import { OptionsValues } from "../options.js";
-import { getPresenterFactory } from "../presenters/getPresenterFactory.js";
-import { interactiveRendererFactory } from "./interactive/interactiveRendererFactory.js";
-import { singleRendererFactory } from "./singleRendererFactory.js";
+import type { OptionsValues } from "../options.ts";
+import { getPresenterFactory } from "../presenters/getPresenterFactory.ts";
+import { interactiveRendererFactory } from "./interactive/interactiveRendererFactory.ts";
+import { singleRendererFactory } from "./singleRendererFactory.ts";
 
 export function createRendererFactory(
 	configFileName: string,

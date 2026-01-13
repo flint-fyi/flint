@@ -1,5 +1,5 @@
-import rule from "./nonInteractiveElementTabIndexes.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./nonInteractiveElementTabIndexes.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <div tabIndex="0" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div tabIndex="0" />
      ~~~~~~~~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <div tabIndex={0} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div tabIndex={0} />
      ~~~~~~~~~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <article tabIndex="0" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <article tabIndex="0" />
          ~~~~~~~~~~~~
@@ -40,7 +37,6 @@ ruleTester.describe(rule, {
 			code: `
 <article tabIndex={0} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <article tabIndex={0} />
          ~~~~~~~~~~~~
@@ -51,7 +47,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="article" tabIndex="0" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="article" tabIndex="0" />
                     ~~~~~~~~~~~~
@@ -60,14 +55,14 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div />`, fileName: "file.tsx" },
-		{ code: `<button />`, fileName: "file.tsx" },
-		{ code: `<button tabIndex="0" />`, fileName: "file.tsx" },
-		{ code: `<button tabIndex={0} />`, fileName: "file.tsx" },
-		{ code: `<div tabIndex="-1" />`, fileName: "file.tsx" },
-		{ code: `<div tabIndex={-1} />`, fileName: "file.tsx" },
-		{ code: `<div role="button" tabIndex="0" />`, fileName: "file.tsx" },
-		{ code: `<article tabIndex="-1" />`, fileName: "file.tsx" },
-		{ code: `<CustomElement tabIndex={0} />`, fileName: "file.tsx" },
+		{ code: `<div />` },
+		{ code: `<button />` },
+		{ code: `<button tabIndex="0" />` },
+		{ code: `<button tabIndex={0} />` },
+		{ code: `<div tabIndex="-1" />` },
+		{ code: `<div tabIndex={-1} />` },
+		{ code: `<div role="button" tabIndex="0" />` },
+		{ code: `<article tabIndex="-1" />` },
+		{ code: `<CustomElement tabIndex={0} />` },
 	],
 });

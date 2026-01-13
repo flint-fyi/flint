@@ -1,47 +1,47 @@
 .rulesTable {
-	font-size: var(--tableFontSize);
-	table-layout: fixed;
 	width: 100%;
-}
-
-.rulesTable.small {
-	--tableFontSize: 60%;
-}
-
-.rulesTable.normal {
-	--tableFontSize: 85%;
-}
-
-.rulesTable td.rulesWithPlugin {
-	--tableRuleCellWidth: 10%;
-}
-
-.rulesTable td.rulesWithoutPlugin {
-	--tableRuleCellWidth: 30%;
-}
-
-.rulesTable td:not(:empty) {
-	width: var(--tableRuleCellWidth);
 }
 
 .rulesTable code {
 	word-wrap: normal;
 }
 
-.small code {
-	font-size: var(--tableFontSize);
-}
-
 .rulesTable td,
 .rulesTable th {
 	padding: 0.25rem;
+	vertical-align: middle;
 }
 
-.rulesTable td:first-of-type,
-.rulesTable th:first-of-type {
+.rulesTable .ruleNameCell {
 	padding-left: 0;
+	max-width: 50vw;
 }
 
-.rulesTable td a:has(code) {
+.rulesTable .implementingCell {
+	width: 100%;
+}
+
+.rulesTable code a {
+	font-size: var(--sl-text-code);
+	font-weight: bold;
+}
+
+.rulesTable small {
 	display: block;
+	font-size: var(--sl-text-xs);
+	font-style: italic;
+}
+
+.linkCell {
+	font-size: var(--sl-text-sm);
+	min-width: clamp(3.5rem, 7.5vw, 7.5rem);
+}
+
+.noneCell {
+	font-size: var(--sl-text-sm);
+	font-style: italic;
+}
+
+.notesCell {
+	width: 85%;
 }

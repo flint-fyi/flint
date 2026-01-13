@@ -1,23 +1,23 @@
 import { createPlugin } from "@flint.fyi/core";
 
-import alerts from "./rules/alerts.js";
-import classListToggles from "./rules/classListToggles.js";
-import documentCookies from "./rules/documentCookies.js";
-import eventListenerSubscriptions from "./rules/eventListenerSubscriptions.js";
-import implicitGlobals from "./rules/implicitGlobals.js";
-import keyboardEventKeys from "./rules/keyboardEventKeys.js";
-import nodeAppendMethods from "./rules/nodeAppendMethods.js";
-import nodeDatasetAttributes from "./rules/nodeDatasetAttributes.js";
-import nodeModificationMethods from "./rules/nodeModificationMethods.js";
-import nodeQueryMethods from "./rules/nodeQueryMethods.js";
-import nodeRemoveMethods from "./rules/nodeRemoveMethods.js";
-import nodeTextContents from "./rules/nodeTextContents.js";
-import removeEventListenerExpressions from "./rules/removeEventListenerExpressions.js";
-import scriptUrls from "./rules/scriptUrls.js";
-import windowMessagingTargetOrigin from "./rules/windowMessagingTargetOrigin.js";
+import alerts from "./rules/alerts.ts";
+import classListToggles from "./rules/classListToggles.ts";
+import documentCookies from "./rules/documentCookies.ts";
+import eventListenerSubscriptions from "./rules/eventListenerSubscriptions.ts";
+import implicitGlobals from "./rules/implicitGlobals.ts";
+import keyboardEventKeys from "./rules/keyboardEventKeys.ts";
+import nodeAppendMethods from "./rules/nodeAppendMethods.ts";
+import nodeDatasetAttributes from "./rules/nodeDatasetAttributes.ts";
+import nodeModificationMethods from "./rules/nodeModificationMethods.ts";
+import nodeQueryMethods from "./rules/nodeQueryMethods.ts";
+import nodeRemoveMethods from "./rules/nodeRemoveMethods.ts";
+import nodeTextContents from "./rules/nodeTextContents.ts";
+import removeEventListenerExpressions from "./rules/removeEventListenerExpressions.ts";
+import scriptUrls from "./rules/scriptUrls.ts";
+import windowMessagingTargetOrigin from "./rules/windowMessagingTargetOrigin.ts";
 
 export const browser = createPlugin({
-	name: "browser",
+	name: "Browser",
 	rules: [
 		alerts,
 		classListToggles,

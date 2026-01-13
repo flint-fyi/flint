@@ -3,13 +3,15 @@ import {
 	isGlobalDeclaration,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Prefer `textContent` over `innerText` for DOM nodes.",
 		id: "nodeTextContents",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferTextContent: {
@@ -26,15 +28,15 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				PropertyAccessExpression(node: ts.PropertyAccessExpression) {
+				PropertyAccessExpression(node, { sourceFile, typeChecker }) {
 					if (
-						ts.isIdentifier(node.name) &&
+						node.name.kind === SyntaxKind.Identifier &&
 						node.name.text === "innerText" &&
-						isGlobalDeclaration(node.name, context.typeChecker)
+						isGlobalDeclaration(node.name, typeChecker)
 					) {
 						context.report({
 							message: "preferTextContent",
-							range: getTSNodeRange(node.name, context.sourceFile),
+							range: getTSNodeRange(node.name, sourceFile),
 						});
 					}
 				},

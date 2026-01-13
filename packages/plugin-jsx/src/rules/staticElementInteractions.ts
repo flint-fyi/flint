@@ -1,5 +1,10 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
 const interactiveHandlers = [
 	"onClick",
@@ -18,12 +23,14 @@ const interactiveElements = new Set([
 	"textarea",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports static elements with event handlers that lack ARIA roles.",
 		id: "staticElementInteractions",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingRole: {
@@ -41,9 +48,12 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkElement(node: ts.JsxOpeningLikeElement) {
+		function checkElement(
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
 			if (
-				!ts.isIdentifier(node.tagName) ||
+				node.tagName.kind !== SyntaxKind.Identifier ||
 				node.tagName.text.toLowerCase() !== node.tagName.text
 			) {
 				return;
@@ -57,7 +67,10 @@ export default typescriptLanguage.createRule({
 			let hadInteractiveHandler = false;
 
 			for (const property of node.attributes.properties) {
-				if (ts.isJsxAttribute(property) && ts.isIdentifier(property.name)) {
+				if (
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier
+				) {
 					if (property.name.text === "role") {
 						return;
 					}
@@ -74,7 +87,7 @@ export default typescriptLanguage.createRule({
 
 			context.report({
 				message: "missingRole",
-				range: getTSNodeRange(node.tagName, context.sourceFile),
+				range: getTSNodeRange(node.tagName, sourceFile),
 			});
 		}
 

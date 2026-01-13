@@ -1,5 +1,5 @@
-import rule from "./anchorAmbiguousText.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./anchorAmbiguousText.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <a href="/page">click here</a>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <a href="/page">click here</a>
                 ~~~~~~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <a href="/page">here</a>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <a href="/page">here</a>
                 ~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <a href="/page">link</a>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <a href="/page">link</a>
                 ~~~~
@@ -40,7 +37,6 @@ ruleTester.describe(rule, {
 			code: `
 <a href="/page">a link</a>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <a href="/page">a link</a>
                 ~~~~~~
@@ -51,7 +47,6 @@ ruleTester.describe(rule, {
 			code: `
 <a href="/page">learn more</a>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <a href="/page">learn more</a>
                 ~~~~~~~~~~
@@ -62,7 +57,6 @@ ruleTester.describe(rule, {
 			code: `
 <a href="/page">more</a>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <a href="/page">more</a>
                 ~~~~
@@ -73,7 +67,6 @@ ruleTester.describe(rule, {
 			code: `
 <a href="/page">read more</a>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <a href="/page">read more</a>
                 ~~~~~~~~~
@@ -84,7 +77,6 @@ ruleTester.describe(rule, {
 			code: `
 <a href="/page">Click Here</a>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <a href="/page">Click Here</a>
                 ~~~~~~~~~~
@@ -93,17 +85,15 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<a href="/about">About Us</a>`, fileName: "file.tsx" },
-		{ code: `<a href="/docs">View Documentation</a>`, fileName: "file.tsx" },
+		{ code: `<a href="/about">About Us</a>` },
+		{ code: `<a href="/docs">View Documentation</a>` },
 		{
 			code: `<a href="/contact">Contact Information</a>`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<a href="/pricing">See Pricing Details</a>`,
-			fileName: "file.tsx",
 		},
-		{ code: `<a href="/download">Download the App</a>`, fileName: "file.tsx" },
-		{ code: `<CustomLink>click here</CustomLink>`, fileName: "file.tsx" },
+		{ code: `<a href="/download">Download the App</a>` },
+		{ code: `<CustomLink>click here</CustomLink>` },
 	],
 });

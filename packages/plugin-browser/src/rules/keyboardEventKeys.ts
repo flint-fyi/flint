@@ -1,18 +1,23 @@
 import {
+	type AST,
+	type Checker,
 	getDeclarationsIfGlobal,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { nullThrows } from "@flint.fyi/utils";
+import ts, { SyntaxKind } from "typescript";
 
 const deprecatedProperties = new Set(["charCode", "keyCode", "which"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer KeyboardEvent.key over deprecated properties like keyCode, charCode, and which.",
 		id: "keyboardEventKeys",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		preferKey: {
@@ -26,39 +31,49 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function isKeyboardEvent(expression: ts.LeftHandSideExpression) {
+		function isKeyboardEvent(
+			expression: AST.LeftHandSideExpression,
+			typeChecker: Checker,
+		) {
 			return (
-				context.typeChecker.getTypeAtLocation(expression).getSymbol()?.name ===
+				typeChecker.getTypeAtLocation(expression).getSymbol()?.name ===
 				"KeyboardEvent"
 			);
 		}
 
-		function isKeyboardEventProperty(name: ts.Identifier) {
-			const declarations = getDeclarationsIfGlobal(name, context.typeChecker);
+		function isKeyboardEventProperty(
+			name: AST.Identifier,
+			typeChecker: Checker,
+		) {
+			const declarations = getDeclarationsIfGlobal(name, typeChecker);
 			if (!declarations) {
 				return;
 			}
 
+			const declaration = nullThrows(
+				declarations[0],
+				"Declaration is expected to be present by the length check",
+			);
+
 			return (
-				declarations.length === 1 &&
-				ts.isInterfaceDeclaration(declarations[0].parent) &&
-				["KeyboardEvent", "UIEvent"].includes(declarations[0].parent.name.text)
+				ts.isInterfaceDeclaration(declaration.parent) &&
+				["KeyboardEvent", "UIEvent"].includes(declaration.parent.name.text)
 			);
 		}
 
 		return {
 			visitors: {
-				PropertyAccessExpression(node: ts.PropertyAccessExpression) {
+				PropertyAccessExpression(node, { sourceFile, typeChecker }) {
 					if (
-						ts.isIdentifier(node.name) &&
+						node.name.kind === SyntaxKind.Identifier &&
 						deprecatedProperties.has(node.name.text) &&
-						isKeyboardEvent(node.expression) &&
-						isKeyboardEventProperty(node.name)
+						isKeyboardEvent(node.expression, typeChecker) &&
+						isKeyboardEventProperty(node.name, typeChecker)
 					) {
 						context.report({
 							data: { property: node.name.text },
 							message: "preferKey",
-							range: getTSNodeRange(node.name, context.sourceFile),
+							range: getTSNodeRange(node.name, sourceFile),
 						});
 					}
 				},

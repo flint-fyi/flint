@@ -1,7 +1,7 @@
 /**
  * The column and line of a character in a source file, as visualized to users.
  */
-export interface ColumnAndLine {
+export interface ColumnAndLineWithoutRaw {
 	/**
 	 * Column in a source file (0-indexed integer).
 	 */
@@ -11,7 +11,12 @@ export interface ColumnAndLine {
 	 * Line in a source file (0-indexed integer).
 	 */
 	line: number;
+}
 
+/**
+ * The column and line of a character in a source file, as visualized to users.
+ */
+export interface ColumnAndLine extends ColumnAndLineWithoutRaw {
 	/**
 	 * The original raw character position in the source file (0-indexed integer).
 	 */

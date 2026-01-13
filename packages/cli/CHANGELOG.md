@@ -1,5 +1,51 @@
 # @flint/cli
 
+## 0.16.1
+
+### Patch Changes
+
+- 602c75c: chore: rework packaging with tsdown
+- Updated dependencies [9a8ecc1]
+- Updated dependencies [ff52cb1]
+- Updated dependencies [602c75c]
+  - @flint.fyi/utils@0.14.0
+  - @flint.fyi/core@0.18.1
+
+## 0.16.0
+
+### Minor Changes
+
+- 98de4a9: feat: implement a more complete \`--help\` output
+- 1d81a8f: fix!: move runPrettier to @flint/cli, add peer dependency on prettier to prevent skew-induced crashes
+
+### Patch Changes
+
+- e5a1471: fix: additional repo owner updates
+- Updated dependencies [1d81a8f]
+  - @flint.fyi/core@0.18.0
+
+## 0.15.4
+
+### Patch Changes
+
+- d99170f: fix: add missing ("phantom") dependencies to package.jsons
+- edca373: fix(cli): make `runCli` respect passed args
+- Updated dependencies [483ee56]
+- Updated dependencies [d99170f]
+- Updated dependencies [3617e4f]
+- Updated dependencies [5e23e96]
+- Updated dependencies [3117eaf]
+  - @flint.fyi/core@0.17.0
+  - @flint.fyi/utils@0.13.3
+
+## 0.15.3
+
+### Patch Changes
+
+- 51aee45: fix(cli): separate multiple diagnostics by newlines in CLI output
+- Updated dependencies [5bca9c4]
+  - @flint.fyi/core@0.15.2
+
 ## 0.15.2
 
 ### Patch Changes

@@ -76,8 +76,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-This rule should always be enabled, as attempting to reassign read-only global variables is always incorrect behavior in JavaScript and TypeScript.
-Modern JavaScript environments enforce these restrictions in strict mode, and violating them can cause runtime errors.
+If your codebase intentionally assigns to global objects and is guaranteed to run in an environment that allows that, you might not want to enable this rule.
+For example, if you target a legacy runtime with legacy non-standard JavaScript semantics, modern standard practices may not apply to you.
 
 ## Further Reading
 

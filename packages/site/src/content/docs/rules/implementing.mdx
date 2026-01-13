@@ -1,0 +1,25 @@
+---
+description: "All linting rules provided by Flint"
+tableOfContents: false
+title: All Rules
+topic: rules
+---
+
+import { PluginCards } from "~/components/PluginCards.tsx";
+import { RulesTable } from "~/components/RulesTable.tsx";
+
+:::danger
+Flint is still very early stage and experimental.
+Not all features have been implemented.
+:::
+
+:::tip
+Rules are grouped into plugins that you can opt into.
+See [Rules](/rules) for an overview of how rules are sorted into plugins.
+:::
+
+This is a full table of all rules that will be implemented in the main Flint project.
+It includes rules from all three provided categories of plugins: [Core](/rules#core-plugins), [Focused](/rules#focused-plugins), and [Incubator](/rules#incubator-plugins).
+Each rule is equivalent to at least one existing rule in another linter.
+
+<RulesTable implementing small sortBy="name" />

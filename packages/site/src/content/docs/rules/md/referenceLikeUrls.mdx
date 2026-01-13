@@ -1,0 +1,76 @@
+---
+description: "Reports resource links/images with URLs that match definition identifiers."
+title: "referenceLikeUrls"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="md" rule="referenceLikeUrls" />
+
+When you have a definition like `[mercury]: https://example.com/mercury/` in your Markdown document, using `[text](mercury)` as an inline link is likely a mistake.
+The URL `mercury` matches the definition identifier, suggesting you meant to use the reference syntax `[text][mercury]` instead.
+This rule helps catch these common errors where inline URLs accidentally match definition identifiers.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```markdown
+[**Mercury**](mercury) is the first planet from the sun.
+
+[mercury]: https://example.com/mercury/
+```
+
+```markdown
+![**Mercury** is a planet](mercury).
+
+[mercury]: https://example.com/mercury.jpg
+```
+
+```markdown
+[FLint](flint) is a great tool.
+
+[flint]: https://flint.fyi
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```markdown
+[**Mercury**][mercury] is the first planet from the sun.
+
+[mercury]: https://example.com/mercury/
+```
+
+```markdown
+![Mercury][mercury]
+
+[mercury]: https://example.com/mercury.jpg
+```
+
+```markdown
+[Flint](https://flint.fyi) is a great tool.
+```
+
+```markdown
+[Link without definition](some-page)
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you use a framework or separate workflow that allows definition identifiers as inline URLs, you can disable this rule.
+
+## Further Reading
+
+- [Markdown Reference-style Links](https://www.markdownguide.org/basic-syntax/#reference-style-links)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="md" ruleId="referenceLikeUrls" />

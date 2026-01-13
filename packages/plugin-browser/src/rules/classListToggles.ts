@@ -1,12 +1,15 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import { nullThrows } from "@flint.fyi/utils";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer using classList.toggle() over conditional classList.add() and classList.remove().",
 		id: "classListToggles",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferToggle: {
@@ -22,17 +25,17 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function getClassListMethodCall(node: ts.Node) {
-			if (!ts.isExpressionStatement(node)) {
+		function getClassListMethodCall(node: AST.Statement) {
+			if (node.kind !== SyntaxKind.ExpressionStatement) {
 				return undefined;
 			}
 
 			const expression = node.expression;
-			if (!ts.isCallExpression(expression)) {
+			if (expression.kind !== SyntaxKind.CallExpression) {
 				return undefined;
 			}
 
-			if (!ts.isPropertyAccessExpression(expression.expression)) {
+			if (expression.expression.kind != SyntaxKind.PropertyAccessExpression) {
 				return undefined;
 			}
 
@@ -40,19 +43,21 @@ export default typescriptLanguage.createRule({
 			const method = propertyAccess.name;
 
 			if (
-				!ts.isIdentifier(method) ||
+				method.kind != SyntaxKind.Identifier ||
 				(method.text !== "add" && method.text !== "remove")
 			) {
 				return undefined;
 			}
 
-			if (!ts.isPropertyAccessExpression(propertyAccess.expression)) {
+			if (
+				propertyAccess.expression.kind != SyntaxKind.PropertyAccessExpression
+			) {
 				return undefined;
 			}
 
 			const classList = propertyAccess.expression;
 			if (
-				!ts.isIdentifier(classList.name) ||
+				classList.name.kind != SyntaxKind.Identifier ||
 				classList.name.text !== "classList"
 			) {
 				return undefined;
@@ -63,8 +68,11 @@ export default typescriptLanguage.createRule({
 				return undefined;
 			}
 
-			const arg = args[0];
-			if (!ts.isStringLiteral(arg)) {
+			const arg = nullThrows(
+				args[0],
+				"Argument is expected to be present by earlier length check",
+			);
+			if (arg.kind != SyntaxKind.StringLiteral) {
 				return undefined;
 			}
 
@@ -75,20 +83,21 @@ export default typescriptLanguage.createRule({
 			};
 		}
 
-		function getObjectAndClassName(node: ts.Node) {
+		function getObjectAndClassName(node: AST.Statement) {
 			const call = getClassListMethodCall(node);
 			if (!call) {
 				return undefined;
 			}
 
-			const exprStatement = node as ts.ExpressionStatement;
-			const callExpr = exprStatement.expression as ts.CallExpression;
-			const propertyAccess = callExpr.expression as ts.PropertyAccessExpression;
+			const exprStatement = node as AST.ExpressionStatement;
+			const callExpr = exprStatement.expression as AST.CallExpression;
+			const propertyAccess =
+				callExpr.expression as AST.PropertyAccessExpression;
 			const classList =
-				propertyAccess.expression as ts.PropertyAccessExpression;
+				propertyAccess.expression as AST.PropertyAccessExpression;
 			const object = classList.expression;
 
-			if (!ts.isIdentifier(object)) {
+			if (object.kind != SyntaxKind.Identifier) {
 				return undefined;
 			}
 
@@ -100,7 +109,7 @@ export default typescriptLanguage.createRule({
 
 		return {
 			visitors: {
-				IfStatement(node: ts.IfStatement) {
+				IfStatement(node, { sourceFile }) {
 					const thenStatement = node.thenStatement;
 					const elseStatement = node.elseStatement;
 
@@ -108,19 +117,29 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					const thenBlock = ts.isBlock(thenStatement)
-						? thenStatement.statements
-						: [thenStatement];
-					const elseBlock = ts.isBlock(elseStatement)
-						? elseStatement.statements
-						: [elseStatement];
+					const thenBlock =
+						thenStatement.kind == SyntaxKind.Block
+							? thenStatement.statements
+							: [thenStatement];
+					const elseBlock: readonly AST.Statement[] =
+						elseStatement.kind == SyntaxKind.Block
+							? elseStatement.statements
+							: [elseStatement];
 
 					if (thenBlock.length !== 1 || elseBlock.length !== 1) {
 						return;
 					}
 
-					const thenCall = getClassListMethodCall(thenBlock[0]);
-					const elseCall = getClassListMethodCall(elseBlock[0]);
+					const thenBlockStatement = nullThrows(
+						thenBlock[0],
+						"Then block statement is expected to be present by prior length check",
+					);
+					const elseBlockStatement = nullThrows(
+						elseBlock[0],
+						"Else block statement is expected to be present by prior length check",
+					);
+					const thenCall = getClassListMethodCall(thenBlockStatement);
+					const elseCall = getClassListMethodCall(elseBlockStatement);
 
 					if (
 						!thenCall ||
@@ -134,18 +153,17 @@ export default typescriptLanguage.createRule({
 						(thenCall.method === "add" && elseCall.method === "remove") ||
 						(thenCall.method === "remove" && elseCall.method === "add")
 					) {
-						const thenInfo = getObjectAndClassName(thenBlock[0]);
+						const thenInfo = getObjectAndClassName(thenBlockStatement);
 						if (!thenInfo) {
 							return;
 						}
 
-						const elseInfo = getObjectAndClassName(elseBlock[0]);
+						const elseInfo = getObjectAndClassName(elseBlockStatement);
 						if (!elseInfo || thenInfo.object !== elseInfo.object) {
 							return;
 						}
 
 						const condition = node.expression;
-						const sourceFile = context.sourceFile;
 						const conditionText = condition.getText(sourceFile);
 						const className = thenCall.className;
 						const toggleSecondArg =

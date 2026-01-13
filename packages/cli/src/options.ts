@@ -1,4 +1,4 @@
-import { parseArgs, ParseArgsOptionsConfig } from "node:util";
+import type { parseArgs, ParseArgsOptionsConfig } from "node:util";
 
 export const options = {
 	"cache-ignore": {

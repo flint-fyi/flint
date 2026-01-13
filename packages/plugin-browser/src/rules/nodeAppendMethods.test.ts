@@ -1,5 +1,5 @@
-import rule from "./nodeAppendMethods.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./nodeAppendMethods.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

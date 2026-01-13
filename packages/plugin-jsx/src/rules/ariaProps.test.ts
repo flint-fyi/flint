@@ -1,5 +1,5 @@
-import rule from "./ariaProps.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./ariaProps.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 // cspell:disable -- Testing misspellings of ARIA attributes
 ruleTester.describe(rule, {
@@ -8,7 +8,6 @@ ruleTester.describe(rule, {
 			code: `
 <input aria-labeledby="address_label" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <input aria-labeledby="address_label" />
        ~~~~~~~~~~~~~~
@@ -19,7 +18,6 @@ ruleTester.describe(rule, {
 			code: `
 <div aria-invalid-prop="true" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div aria-invalid-prop="true" />
      ~~~~~~~~~~~~~~~~~
@@ -30,7 +28,6 @@ ruleTester.describe(rule, {
 			code: `
 <button aria-labelled="Submit" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <button aria-labelled="Submit" />
         ~~~~~~~~~~~~~
@@ -39,12 +36,12 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<input aria-labelledby="address_label" />`, fileName: "file.tsx" },
-		{ code: `<div aria-label="Section" />`, fileName: "file.tsx" },
-		{ code: `<button aria-pressed="true" />`, fileName: "file.tsx" },
-		{ code: `<div aria-hidden="true" />`, fileName: "file.tsx" },
-		{ code: `<input aria-required="true" />`, fileName: "file.tsx" },
-		{ code: `<div />`, fileName: "file.tsx" },
-		{ code: `<input data-aria-label="test" />`, fileName: "file.tsx" },
+		{ code: `<input aria-labelledby="address_label" />` },
+		{ code: `<div aria-label="Section" />` },
+		{ code: `<button aria-pressed="true" />` },
+		{ code: `<div aria-hidden="true" />` },
+		{ code: `<input aria-required="true" />` },
+		{ code: `<div />` },
+		{ code: `<input data-aria-label="test" />` },
 	],
 });

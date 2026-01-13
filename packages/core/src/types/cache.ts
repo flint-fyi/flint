@@ -1,5 +1,5 @@
-import { LanguageFileDiagnostic } from "./languages.js";
-import { FileReport } from "./reports.js";
+import type { LanguageFileDiagnostic } from "./languages.ts";
+import type { FileReport } from "./reports.ts";
 
 export interface CacheStorage {
 	configs: Record<string, number>;
@@ -8,7 +8,7 @@ export interface CacheStorage {
 
 export interface FileCacheImpacts {
 	// TODO: also include dependents. (i.e. global type augmentations)
-	// https://github.com/JoshuaKGoldberg/flint/issues/116
+	// https://github.com/flint-fyi/flint/issues/116
 	dependencies?: string[];
 }
 

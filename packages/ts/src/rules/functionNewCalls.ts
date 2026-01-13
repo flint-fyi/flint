@@ -1,16 +1,22 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.js";
-import { typescriptLanguage } from "../language.js";
-import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.js";
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.js";
+import { getTSNodeRange } from "../getTSNodeRange.ts";
+import {
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "../language.ts";
+import * as AST from "../types/ast.ts";
+import type { Checker } from "../types/checker.ts";
+import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
+import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using the Function constructor to create functions from strings.",
 		id: "functionNewCalls",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noFunctionConstructor: {
@@ -27,29 +33,31 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkNode(node: ts.CallExpression | ts.NewExpression) {
-			if (isFunctionConstructor(node)) {
+		function checkNode(
+			node: AST.CallExpression | AST.NewExpression,
+			{ sourceFile, typeChecker }: TypeScriptFileServices,
+		) {
+			if (isFunctionConstructor(node, typeChecker)) {
 				context.report({
 					message: "noFunctionConstructor",
-					range: getTSNodeRange(node.expression, context.sourceFile),
+					range: getTSNodeRange(node.expression, sourceFile),
 				});
 			}
 		}
 
-		function isFunctionConstructor(node: ts.CallExpression | ts.NewExpression) {
-			if (ts.isIdentifier(node.expression)) {
+		function isFunctionConstructor(
+			node: AST.CallExpression | AST.NewExpression,
+			typeChecker: Checker,
+		) {
+			if (node.expression.kind === SyntaxKind.Identifier) {
 				if (
-					isGlobalDeclarationOfName(
-						node.expression,
-						"Function",
-						context.typeChecker,
-					)
+					isGlobalDeclarationOfName(node.expression, "Function", typeChecker)
 				) {
 					return true;
 				}
 			} else if (
-				ts.isPropertyAccessExpression(node.expression) &&
-				isGlobalDeclaration(node.expression, context.typeChecker)
+				node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+				isGlobalDeclaration(node.expression, typeChecker)
 			) {
 				const propertyName = node.expression.name.text;
 				if (propertyName !== "Function") {
@@ -57,7 +65,7 @@ export default typescriptLanguage.createRule({
 				}
 
 				const object = node.expression.expression;
-				if (ts.isIdentifier(object)) {
+				if (object.kind === SyntaxKind.Identifier) {
 					return object.text === "globalThis" || object.text === "window";
 				}
 			}

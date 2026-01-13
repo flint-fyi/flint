@@ -1,13 +1,15 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.js";
-import { getModifyingReferences } from "../utils/getModifyingReferences.js";
+import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
+import { getModifyingReferences } from "../utils/getModifyingReferences.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports reassigning exception parameters in catch clauses.",
 		id: "exceptionAssignments",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noExAssign: {
@@ -23,17 +25,14 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function collectBindingElements(name: ts.BindingName): ts.Identifier[] {
-			const identifiers: ts.Identifier[] = [];
+		function collectBindingElements(name: AST.BindingName): AST.Identifier[] {
+			const identifiers: AST.Identifier[] = [];
 
-			if (ts.isIdentifier(name)) {
+			if (name.kind == SyntaxKind.Identifier) {
 				identifiers.push(name);
-			} else if (
-				ts.isObjectBindingPattern(name) ||
-				ts.isArrayBindingPattern(name)
-			) {
+			} else {
 				for (const element of name.elements) {
-					if (ts.isBindingElement(element)) {
+					if (element.kind === SyntaxKind.BindingElement) {
 						identifiers.push(...collectBindingElements(element.name));
 					}
 				}
@@ -44,7 +43,7 @@ export default typescriptLanguage.createRule({
 
 		return {
 			visitors: {
-				CatchClause: (node) => {
+				CatchClause: (node, { sourceFile, typeChecker }) => {
 					if (!node.variableDeclaration?.name) {
 						return;
 					}
@@ -56,15 +55,15 @@ export default typescriptLanguage.createRule({
 					for (const identifier of identifiers) {
 						const modifyingReferences = getModifyingReferences(
 							identifier,
-							context.sourceFile,
-							context.typeChecker,
+							sourceFile,
+							typeChecker,
 						);
 
 						for (const reference of modifyingReferences) {
 							context.report({
 								message: "noExAssign",
 								range: {
-									begin: reference.getStart(context.sourceFile),
+									begin: reference.getStart(sourceFile),
 									end: reference.getEnd(),
 								},
 							});

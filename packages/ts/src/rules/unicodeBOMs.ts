@@ -1,10 +1,11 @@
-import { typescriptLanguage } from "../language.js";
+import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports files with Unicode Byte Order Marks (BOMs).",
 		id: "unicodeBOMs",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		noBOM: {
@@ -18,27 +19,33 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		const text = context.sourceFile.getFullText();
-		if (text.charCodeAt(0) !== 0xfeff) {
-			return {};
-		}
+		return {
+			visitors: {
+				SourceFile: (node) => {
+					const text = node.getFullText();
+					if (text.charCodeAt(0) !== 0xfeff) {
+						return {};
+					}
 
-		context.report({
-			message: "noBOM",
-			range: {
-				begin: 0,
-				end: 1,
-			},
-			suggestions: [
-				{
-					id: "removeBOM",
-					range: {
-						begin: 0,
-						end: 1,
-					},
-					text: "",
+					context.report({
+						message: "noBOM",
+						range: {
+							begin: 0,
+							end: 1,
+						},
+						suggestions: [
+							{
+								id: "removeBOM",
+								range: {
+									begin: 0,
+									end: 1,
+								},
+								text: "",
+							},
+						],
+					});
 				},
-			],
-		});
+			},
+		};
 	},
 });

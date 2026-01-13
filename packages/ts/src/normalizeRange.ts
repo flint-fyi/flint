@@ -1,9 +1,9 @@
-import type * as ts from "typescript";
-
 import {
-	CharacterReportRange,
-	NormalizedReportRangeObject,
+	type CharacterReportRange,
+	getColumnAndLineOfPosition,
+	type NormalizedReportRangeObject,
 } from "@flint.fyi/core";
+import type * as ts from "typescript";
 
 export function normalizeRange(
 	original: CharacterReportRange,
@@ -14,17 +14,11 @@ export function normalizeRange(
 		: original;
 
 	return {
-		begin: normalizeRangePosition(onCharacters.begin, sourceFile),
-		end: normalizeRangePosition(onCharacters.end, sourceFile),
+		begin: getColumnAndLineOfPosition(sourceFile, onCharacters.begin),
+		end: getColumnAndLineOfPosition(sourceFile, onCharacters.end),
 	};
 }
 
 function isNode(value: unknown): value is ts.Node {
 	return typeof value === "object" && value !== null && "kind" in value;
-}
-
-function normalizeRangePosition(raw: number, sourceFile: ts.SourceFile) {
-	const { character, line } = sourceFile.getLineAndCharacterOfPosition(raw);
-
-	return { column: character, line, raw };
 }

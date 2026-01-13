@@ -1,5 +1,5 @@
-import rule from "./roleRequiredAriaProps.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./roleRequiredAriaProps.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="checkbox" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="checkbox" />
      ~~~~~~~~~~~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <span role="combobox" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <span role="combobox" />
       ~~~~~~~~~~~~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="heading" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="heading" />
      ~~~~~~~~~~~~~~
@@ -40,7 +37,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="menuitemcheckbox" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="menuitemcheckbox" />
      ~~~~~~~~~~~~~~~~~~~~~~~
@@ -51,7 +47,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="menuitemradio" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="menuitemradio" />
      ~~~~~~~~~~~~~~~~~~~~
@@ -62,7 +57,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="option" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="option" />
      ~~~~~~~~~~~~~
@@ -73,7 +67,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="radio" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="radio" />
      ~~~~~~~~~~~~
@@ -84,7 +77,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="scrollbar" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="scrollbar" />
      ~~~~~~~~~~~~~~~~
@@ -95,7 +87,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="slider" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="slider" />
      ~~~~~~~~~~~~~
@@ -106,7 +97,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="spinbutton" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="spinbutton" />
      ~~~~~~~~~~~~~~~~~
@@ -117,7 +107,6 @@ ruleTester.describe(rule, {
 			code: `
 <button role="switch" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <button role="switch" />
         ~~~~~~~~~~~~~
@@ -128,7 +117,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="checkbox" aria-label="Accept terms" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="checkbox" aria-label="Accept terms" />
      ~~~~~~~~~~~~~~~
@@ -139,7 +127,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="slider" aria-valuenow="5" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="slider" aria-valuenow="5" />
      ~~~~~~~~~~~~~
@@ -150,53 +137,44 @@ ruleTester.describe(rule, {
 	valid: [
 		{
 			code: `<div role="checkbox" aria-checked="false" />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<div role="combobox" aria-controls="listbox" aria-expanded="false" />`,
-			fileName: "file.tsx",
 		},
-		{ code: `<div role="heading" aria-level="2" />`, fileName: "file.tsx" },
+		{ code: `<div role="heading" aria-level="2" />` },
 		{
 			code: `<div role="menuitemcheckbox" aria-checked="true" />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<div role="menuitemradio" aria-checked="false" />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<div role="option" aria-selected="true" />`,
-			fileName: "file.tsx",
 		},
-		{ code: `<div role="radio" aria-checked="true" />`, fileName: "file.tsx" },
+		{ code: `<div role="radio" aria-checked="true" />` },
 		{
 			code: `<div role="scrollbar" aria-controls="content" aria-valuenow="50" aria-valuemax="100" aria-valuemin="0" />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<div role="slider" aria-valuenow="5" aria-valuemax="10" aria-valuemin="0" />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<div role="spinbutton" aria-valuenow="1" aria-valuemax="100" aria-valuemin="1" />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<button role="switch" aria-checked="false" />`,
-			fileName: "file.tsx",
 		},
-		{ code: `<div role="button" />`, fileName: "file.tsx" },
-		{ code: `<div role="link" />`, fileName: "file.tsx" },
-		{ code: `<div role="gridcell" />`, fileName: "file.tsx" },
-		{ code: `<div role="searchbox" />`, fileName: "file.tsx" },
-		{ code: `<div role="separator" />`, fileName: "file.tsx" },
-		{ code: `<div role="tab" />`, fileName: "file.tsx" },
-		{ code: `<div role="tabpanel" />`, fileName: "file.tsx" },
-		{ code: `<div role="textbox" />`, fileName: "file.tsx" },
-		{ code: `<div role="treeitem" />`, fileName: "file.tsx" },
-		{ code: `<div />`, fileName: "file.tsx" },
-		{ code: `<button />`, fileName: "file.tsx" },
-		{ code: `<CustomElement />`, fileName: "file.tsx" },
+		{ code: `<div role="button" />` },
+		{ code: `<div role="link" />` },
+		{ code: `<div role="gridcell" />` },
+		{ code: `<div role="searchbox" />` },
+		{ code: `<div role="separator" />` },
+		{ code: `<div role="tab" />` },
+		{ code: `<div role="tabpanel" />` },
+		{ code: `<div role="textbox" />` },
+		{ code: `<div role="treeitem" />` },
+		{ code: `<div />` },
+		{ code: `<button />` },
+		{ code: `<CustomElement />` },
 	],
 });

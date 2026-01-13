@@ -1,9 +1,11 @@
 import {
+	type AST,
 	getTSNodeRange,
 	isGlobalDeclaration,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { nullThrows } from "@flint.fyi/utils";
+import { SyntaxKind } from "typescript";
 
 type AttributeMethodName =
 	| "getAttribute"
@@ -21,11 +23,11 @@ function convertDataAttributeToDatasetKey(
 		: undefined;
 }
 
-function getMethodDetails(node: ts.CallExpression) {
+function getMethodDetails(node: AST.CallExpression) {
 	if (
 		node.arguments.length === 0 ||
-		!ts.isPropertyAccessExpression(node.expression) ||
-		!ts.isIdentifier(node.expression.name)
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+		node.expression.name.kind !== SyntaxKind.Identifier
 	) {
 		return undefined;
 	}
@@ -54,12 +56,14 @@ function isAttributeMethodName(
 	return attributeMethodNames.has(methodName);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer using element.dataset over getAttribute/setAttribute for data-* attributes.",
 		id: "nodeDatasetAttributes",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferDataset: {
@@ -75,13 +79,18 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node: ts.CallExpression) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					const details = getMethodDetails(node);
 					if (!details) {
 						return;
 					}
 
-					const attributeName = getStringLiteralValue(node.arguments[0]);
+					const attributeName = getStringLiteralValue(
+						nullThrows(
+							node.arguments[0],
+							"First argument is expected to be present by prior length check",
+						),
+					);
 					if (!attributeName) {
 						return;
 					}
@@ -91,13 +100,13 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					if (!isGlobalDeclaration(node.expression, context.typeChecker)) {
+					if (!isGlobalDeclaration(node.expression, typeChecker)) {
 						return;
 					}
 
 					context.report({
 						message: "preferDataset",
-						range: getTSNodeRange(details.methodNode, context.sourceFile),
+						range: getTSNodeRange(details.methodNode, sourceFile),
 						// TODO: add an automated changer
 					});
 				},
@@ -107,14 +116,15 @@ export default typescriptLanguage.createRule({
 });
 
 // TODO: Use a util like getStaticValue
-function getStringLiteralValue(node: ts.Expression): string | undefined {
-	if (ts.isStringLiteral(node)) {
+// https://github.com/flint-fyi/flint/issues/1298
+function getStringLiteralValue(node: AST.Expression): string | undefined {
+	if (node.kind === SyntaxKind.StringLiteral) {
 		return node.text;
 	}
 
 	if (
-		ts.isNoSubstitutionTemplateLiteral(node) &&
-		!ts.isTaggedTemplateExpression(node.parent)
+		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral &&
+		node.parent.kind !== SyntaxKind.TaggedTemplateExpression
 	) {
 		return node.text;
 	}

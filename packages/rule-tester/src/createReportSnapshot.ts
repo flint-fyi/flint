@@ -1,4 +1,5 @@
-import { formatReportPrimary, NormalizedReport } from "@flint.fyi/core";
+import { formatReport, type NormalizedReport } from "@flint.fyi/core";
+import { nullThrows } from "@flint.fyi/utils";
 
 export function createReportSnapshot(
 	sourceText: string,
@@ -24,7 +25,11 @@ function createReportSnapshotAt(sourceText: string, report: NormalizedReport) {
 	const output: string[] = [];
 
 	for (let i = begin.line; i <= end.line; i++) {
-		const line = lines[i - begin.line];
+		const line = nullThrows(
+			lines[i - begin.line],
+			"Line is expected to be present by the loop condition",
+		);
+
 		output.push(line);
 
 		const prevLineIndent = /^[\t ]*/.exec(line)?.[0] ?? "";
@@ -33,7 +38,10 @@ function createReportSnapshotAt(sourceText: string, report: NormalizedReport) {
 			const indent = prevLineIndent.padEnd(begin.column, " ");
 			const squiggleEnd = begin.line === end.line ? end.column : line.length;
 			output.push(indent.padEnd(squiggleEnd, "~"));
-			for (const errorMessageLine of formatReportPrimary(report).split("\n")) {
+			for (const errorMessageLine of formatReport(
+				report.data,
+				report.message.primary,
+			).split("\n")) {
 				output.push(indent + errorMessageLine);
 			}
 		} else {

@@ -1,9 +1,4 @@
-import { debugForFile } from "debug-for-file";
-import * as ts from "typescript";
-
-import { createTypeScriptFileFromProgram } from "./createTypeScriptFileFromProgram.js";
-
-const log = debugForFile(import.meta.filename);
+import type * as ts from "typescript";
 
 export function createTypeScriptFileFromProjectService(
 	filePathAbsolute: string,
@@ -15,17 +10,11 @@ export function createTypeScriptFileFromProjectService(
 		throw new Error(`Could not retrieve source file for: ${filePathAbsolute}`);
 	}
 
-	log("Retrieved source file and type checker for file %s:", filePathAbsolute);
-
-	const file = createTypeScriptFileFromProgram(program, sourceFile);
-
 	return {
-		languageFile: {
-			...file,
-			[Symbol.dispose]() {
-				service.closeClientFile(filePathAbsolute);
-			},
-		},
+		program,
 		sourceFile,
+		[Symbol.dispose]() {
+			service.closeClientFile(filePathAbsolute);
+		},
 	};
 }

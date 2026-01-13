@@ -1,23 +1,23 @@
 <h1 align="center">Flint</h1>
 
 <p align="center">
-	[Experimental] A fast, friendly linter.
+	[Experimental] Monorepo for Flint: a fast, friendly linter.
 	❤️‍🔥
 </p>
 
 <p align="center">
 	<!-- prettier-ignore-start -->
 	<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 8" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-8-21bb42.svg" /></a>
+	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 11" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-11-21bb42.svg" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 	<!-- prettier-ignore-end -->
-	<a href="https://github.com/JoshuaKGoldberg/flint/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
-	<a href="https://github.com/JoshuaKGoldberg/flint/blob/main/LICENSE.md" target="_blank"><img alt="📝 License: MIT" src="https://img.shields.io/badge/%F0%9F%93%9D_license-MIT-21bb42.svg" /></a>
+	<a href="https://github.com/flint-fyi/flint/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
+	<a href="https://github.com/flint-fyi/flint/blob/main/LICENSE.md" target="_blank"><img alt="📝 License: MIT" src="https://img.shields.io/badge/%F0%9F%93%9D_license-MIT-21bb42.svg" /></a>
 	<a href="http://npmjs.com/package/flint" target="_blank"><img alt="📦 npm version" src="https://img.shields.io/npm/v/flint?color=21bb42&label=%F0%9F%93%A6%20npm" /></a>
 	<img alt="💪 TypeScript: Strict" src="https://img.shields.io/badge/%F0%9F%92%AA_typescript-strict-21bb42.svg" />
 </p>
 
-<img align="right" alt="Cartoon campfire - caption: (experimental)" src="docs/flint.png">
+<img align="right" alt="A flaming heart atop a brown linter-style squiggly line" height="128" src="docs/flint.png" width="105">
 
 **Flint** is an experimental new linter.
 It's a proof-of-concept to explore the concepts in the following blog posts:
@@ -33,7 +33,7 @@ It might show some of those ideas to be wrong.
 It might become a real linter.
 Only time will tell.
 
-In the meantime, come talk about it on the [Flint Discord](https://discord.gg/cFK3RAUDhy).
+In the meantime, come talk about it on the [Flint Discord](https://flint.fyi/discord).
 
 ## Why?
 
@@ -52,7 +52,7 @@ It also brings in several improvements over traditional linter paradigms:
 
 Coming soon.
 
-![Terminal screenshot of a colored linter output. ~/repos/flint $ node bin/index.js      /Users/josh/repos/flint/src/example-lint-failures.ts   1:25  Consecutive non-null assertion operators are unnecessary.                    consecutiveNonNullAssertions   4:0   For-in loops over arrays have surprising behavior that often leads to bugs.  forInArrays  ✖ Found 2 reports across 1 file. ~/repos/flint $ ](https://github.com/user-attachments/assets/f703224e-916f-442e-aa7b-bc2a16b6ad72)
+![Terminal screenshot of a colored linter output. Light mode view of the Flint terminal in --interactive --watch mode, showing 1 file's ts/forInArrays violation with details out of 4 files.](./packages/site/public/screenshots/flint-interactive-light.webp)
 
 ## Development
 
@@ -69,15 +69,18 @@ Thanks! ❤️‍🔥
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ArnaudBarre"><img src="https://avatars.githubusercontent.com/u/14235743?v=4?s=100" width="100px;" alt="Arnaud Barré"/><br /><sub><b>Arnaud Barré</b></sub></a><br /><a href="#ideas-ArnaudBarre" title="Ideas, Planning, & Feedback">🤔</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="http://jasik.xyz"><img src="https://avatars.githubusercontent.com/u/10626596?v=4?s=100" width="100px;" alt="Caleb Jasik"/><br /><sub><b>Caleb Jasik</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/flint/issues?q=author%3Ajasikpark" title="Bug reports">🐛</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://christopher-buss.gitbook.io/portfolio"><img src="https://avatars.githubusercontent.com/u/32301681?v=4?s=100" width="100px;" alt="Christopher Buss"/><br /><sub><b>Christopher Buss</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/flint/commits?author=christopher-buss" title="Code">💻</a> <a href="https://github.com/JoshuaKGoldberg/flint/issues?q=author%3Achristopher-buss" title="Bug reports">🐛</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://donisaac.dev"><img src="https://avatars.githubusercontent.com/u/22823424?v=4?s=100" width="100px;" alt="Don Isaac"/><br /><sub><b>Don Isaac</b></sub></a><br /><a href="#maintenance-donisaac" title="Maintenance">🚧</a> <a href="https://github.com/JoshuaKGoldberg/flint/commits?author=donisaac" title="Tests">⚠️</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="http://www.joshuakgoldberg.com"><img src="https://avatars.githubusercontent.com/u/3335181?v=4?s=100" width="100px;" alt="Josh Goldberg ✨"/><br /><sub><b>Josh Goldberg ✨</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/flint/commits?author=JoshuaKGoldberg" title="Code">💻</a> <a href="#content-JoshuaKGoldberg" title="Content">🖋</a> <a href="https://github.com/JoshuaKGoldberg/flint/commits?author=JoshuaKGoldberg" title="Documentation">📖</a> <a href="#ideas-JoshuaKGoldberg" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-JoshuaKGoldberg" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-JoshuaKGoldberg" title="Maintenance">🚧</a> <a href="#projectManagement-JoshuaKGoldberg" title="Project Management">📆</a> <a href="#tool-JoshuaKGoldberg" title="Tools">🔧</a> <a href="https://github.com/JoshuaKGoldberg/flint/issues?q=author%3AJoshuaKGoldberg" title="Bug reports">🐛</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lo1tuma"><img src="https://avatars.githubusercontent.com/u/169170?v=4?s=100" width="100px;" alt="Mathias Schreck"/><br /><sub><b>Mathias Schreck</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/flint/issues?q=author%3Alo1tuma" title="Bug reports">🐛</a> <a href="#ideas-lo1tuma" title="Ideas, Planning, & Feedback">🤔</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/auvred"><img src="https://avatars.githubusercontent.com/u/61150013?v=4?s=100" width="100px;" alt="auvred"/><br /><sub><b>auvred</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/flint/issues?q=author%3Aauvred" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://barrymichaeldoyle.com"><img src="https://avatars.githubusercontent.com/u/4674486?v=4?s=100" width="100px;" alt="Barry Michael Doyle"/><br /><sub><b>Barry Michael Doyle</b></sub></a><br /><a href="#infra-barrymichaeldoyle" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://jasik.xyz"><img src="https://avatars.githubusercontent.com/u/10626596?v=4?s=100" width="100px;" alt="Caleb Jasik"/><br /><sub><b>Caleb Jasik</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/issues?q=author%3Ajasikpark" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://christopher-buss.gitbook.io/portfolio"><img src="https://avatars.githubusercontent.com/u/32301681?v=4?s=100" width="100px;" alt="Christopher Buss"/><br /><sub><b>Christopher Buss</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/commits?author=christopher-buss" title="Code">💻</a> <a href="https://github.com/flint-fyi/flint/issues?q=author%3Achristopher-buss" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://donisaac.dev"><img src="https://avatars.githubusercontent.com/u/22823424?v=4?s=100" width="100px;" alt="Don Isaac"/><br /><sub><b>Don Isaac</b></sub></a><br /><a href="#maintenance-donisaac" title="Maintenance">🚧</a> <a href="https://github.com/flint-fyi/flint/commits?author=donisaac" title="Tests">⚠️</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://lishaduck.github.io"><img src="https://avatars.githubusercontent.com/u/88557639?v=4?s=100" width="100px;" alt="Eli"/><br /><sub><b>Eli</b></sub></a><br /><a href="#ideas-lishaduck" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/flint-fyi/flint/commits?author=lishaduck" title="Code">💻</a> <a href="#tool-lishaduck" title="Tools">🔧</a> <a href="#maintenance-lishaduck" title="Maintenance">🚧</a> <a href="https://github.com/flint-fyi/flint/issues?q=author%3Alishaduck" title="Bug reports">🐛</a> <a href="#infra-lishaduck" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://www.joshuakgoldberg.com"><img src="https://avatars.githubusercontent.com/u/3335181?v=4?s=100" width="100px;" alt="Josh Goldberg ✨"/><br /><sub><b>Josh Goldberg ✨</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/commits?author=JoshuaKGoldberg" title="Code">💻</a> <a href="#content-JoshuaKGoldberg" title="Content">🖋</a> <a href="https://github.com/flint-fyi/flint/commits?author=JoshuaKGoldberg" title="Documentation">📖</a> <a href="#ideas-JoshuaKGoldberg" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-JoshuaKGoldberg" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-JoshuaKGoldberg" title="Maintenance">🚧</a> <a href="#projectManagement-JoshuaKGoldberg" title="Project Management">📆</a> <a href="#tool-JoshuaKGoldberg" title="Tools">🔧</a> <a href="https://github.com/flint-fyi/flint/issues?q=author%3AJoshuaKGoldberg" title="Bug reports">🐛</a></td>
     </tr>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/bmclear"><img src="https://avatars.githubusercontent.com/u/7715393?v=4?s=100" width="100px;" alt="bmclear"/><br /><sub><b>bmclear</b></sub></a><br /><a href="#maintenance-bmclear" title="Maintenance">🚧</a> <a href="https://github.com/JoshuaKGoldberg/flint/commits?author=bmclear" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kirkwaiblinger"><img src="https://avatars.githubusercontent.com/u/53019676?v=4?s=100" width="100px;" alt="Kirk Waiblinger"/><br /><sub><b>Kirk Waiblinger</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/commits?author=kirkwaiblinger" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lo1tuma"><img src="https://avatars.githubusercontent.com/u/169170?v=4?s=100" width="100px;" alt="Mathias Schreck"/><br /><sub><b>Mathias Schreck</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/issues?q=author%3Alo1tuma" title="Bug reports">🐛</a> <a href="#ideas-lo1tuma" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/auvred"><img src="https://avatars.githubusercontent.com/u/61150013?v=4?s=100" width="100px;" alt="auvred"/><br /><sub><b>auvred</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/issues?q=author%3Aauvred" title="Bug reports">🐛</a> <a href="#maintenance-auvred" title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/bmclear"><img src="https://avatars.githubusercontent.com/u/7715393?v=4?s=100" width="100px;" alt="bmclear"/><br /><sub><b>bmclear</b></sub></a><br /><a href="#maintenance-bmclear" title="Maintenance">🚧</a> <a href="https://github.com/flint-fyi/flint/commits?author=bmclear" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

@@ -67,7 +67,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-This rule should generally always be enabled, as inline function expressions in `removeEventListener` calls are always ineffective and represent programming errors.
+If your codebase uses code generation that relies on uncommon JavaScript semantics such as inline function expressions in `removeEventListener` calls, this rule might not be for you.
+For example, if you use a framework that automatically deduplicates similar function expressions behind-the-scenes, this rule might not apply.
 
 ## Further Reading
 

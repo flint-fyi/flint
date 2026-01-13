@@ -1,5 +1,5 @@
-import rule from "./imageContents.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./imageContents.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

@@ -1,14 +1,14 @@
 import type { Definition, ImageReference, Node, Root } from "mdast";
 
-import type { WithPosition } from "../nodes.js";
+import { markdownLanguage } from "../language.ts";
+import type { WithPosition } from "../nodes.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-import { markdownLanguage } from "../language.js";
-
-export default markdownLanguage.createRule({
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports unused reference definitions.",
 		id: "definitionUses",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unusedDefinition: {

@@ -1,5 +1,5 @@
-import rule from "./clickEventKeyEvents.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./clickEventKeyEvents.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <div onClick={() => {}} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div onClick={() => {}} />
      ~~~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <span onClick={handler} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <span onClick={handler} />
       ~~~~~~~
@@ -29,26 +27,21 @@ ruleTester.describe(rule, {
 	valid: [
 		{
 			code: `<div onClick={() => {}} onKeyDown={handler} />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<div onClick={() => {}} onKeyUp={handler} />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<div onClick={() => {}} onKeyPress={handler} />`,
-			fileName: "file.tsx",
 		},
-		{ code: `<button onClick={() => {}} />`, fileName: "file.tsx" },
+		{ code: `<button onClick={() => {}} />` },
 		{
 			code: `<div onClick={() => {}} aria-hidden="true" />`,
-			fileName: "file.tsx",
 		},
-		{ code: `<div />`, fileName: "file.tsx" },
-		{ code: `<input onClick={() => {}} />`, fileName: "file.tsx" },
+		{ code: `<div />` },
+		{ code: `<input onClick={() => {}} />` },
 		{
 			code: `<CustomElement onClick={() => {}} />`,
-			fileName: "file.tsx",
 		},
 	],
 });

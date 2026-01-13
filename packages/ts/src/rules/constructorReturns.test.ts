@@ -1,5 +1,5 @@
-import rule from "./constructorReturns.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./constructorReturns.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

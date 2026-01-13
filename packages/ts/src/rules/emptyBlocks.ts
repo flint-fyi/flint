@@ -1,24 +1,27 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.js";
-import { typescriptLanguage } from "../language.js";
+import { getTSNodeRange } from "../getTSNodeRange.ts";
+import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 const allowedParents = new Set([
-	ts.SyntaxKind.ArrowFunction,
-	ts.SyntaxKind.CatchClause,
-	ts.SyntaxKind.Constructor,
-	ts.SyntaxKind.FunctionDeclaration,
-	ts.SyntaxKind.FunctionExpression,
-	ts.SyntaxKind.GetAccessor,
-	ts.SyntaxKind.MethodDeclaration,
-	ts.SyntaxKind.SetAccessor,
+	SyntaxKind.ArrowFunction,
+	SyntaxKind.CatchClause,
+	SyntaxKind.Constructor,
+	SyntaxKind.FunctionDeclaration,
+	SyntaxKind.FunctionExpression,
+	SyntaxKind.GetAccessor,
+	SyntaxKind.MethodDeclaration,
+	SyntaxKind.SetAccessor,
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports empty block statements that should contain code.",
 		id: "emptyBlocks",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		emptyBlock: {
@@ -33,10 +36,10 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function hasComments(block: ts.Block): boolean {
-			const fullText = context.sourceFile.getFullText();
+		function hasComments(block: AST.Block, sourceFile: ts.SourceFile): boolean {
+			const fullText = sourceFile.getFullText();
 
-			const openBrace = block.getStart(context.sourceFile);
+			const openBrace = block.getStart(sourceFile);
 			const closeBrace = block.getEnd();
 			const innerText = fullText.substring(openBrace + 1, closeBrace - 1);
 
@@ -45,25 +48,31 @@ export default typescriptLanguage.createRule({
 			return /\S+/.test(innerText.trim());
 		}
 
-		function isEmptyBlock(block: ts.Block): boolean {
-			return block.statements.length === 0 && !hasComments(block);
+		function isEmptyBlock(
+			block: AST.Block,
+			sourceFile: ts.SourceFile,
+		): boolean {
+			return block.statements.length === 0 && !hasComments(block, sourceFile);
 		}
 
 		return {
 			visitors: {
-				Block: (node) => {
-					if (!allowedParents.has(node.parent.kind) && isEmptyBlock(node)) {
+				Block: (node, { sourceFile }) => {
+					if (
+						!allowedParents.has(node.parent.kind) &&
+						isEmptyBlock(node, sourceFile)
+					) {
 						context.report({
 							message: "emptyBlock",
-							range: getTSNodeRange(node, context.sourceFile),
+							range: getTSNodeRange(node, sourceFile),
 						});
 					}
 				},
-				CaseBlock: (node) => {
+				CaseBlock: (node, { sourceFile }) => {
 					if (node.clauses.length === 0) {
 						context.report({
 							message: "emptyBlock",
-							range: getTSNodeRange(node, context.sourceFile),
+							range: getTSNodeRange(node, sourceFile),
 						});
 					}
 				},

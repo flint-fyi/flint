@@ -1,5 +1,5 @@
-import rule from "./nodeQueryMethods.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./nodeQueryMethods.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

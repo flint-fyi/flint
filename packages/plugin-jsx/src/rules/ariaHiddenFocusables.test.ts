@@ -1,5 +1,5 @@
-import rule from "./ariaHiddenFocusables.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./ariaHiddenFocusables.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <div aria-hidden="true" tabIndex="0" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div aria-hidden="true" tabIndex="0" />
      ~~~~~~~~~~~~~~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <input aria-hidden="true" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <input aria-hidden="true" />
        ~~~~~~~~~~~~~~~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <a href="/" aria-hidden="true" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <a href="/" aria-hidden="true" />
             ~~~~~~~~~~~~~~~~~~
@@ -40,7 +37,6 @@ ruleTester.describe(rule, {
 			code: `
 <button aria-hidden="true" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <button aria-hidden="true" />
         ~~~~~~~~~~~~~~~~~~
@@ -51,7 +47,6 @@ ruleTester.describe(rule, {
 			code: `
 <textarea aria-hidden="true" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <textarea aria-hidden="true" />
           ~~~~~~~~~~~~~~~~~~
@@ -62,7 +57,6 @@ ruleTester.describe(rule, {
 			code: `
 <div aria-hidden={true} tabIndex={0} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div aria-hidden={true} tabIndex={0} />
      ~~~~~~~~~~~~~~~~~~
@@ -71,15 +65,14 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div aria-hidden="true" />`, fileName: "file.tsx" },
-		{ code: `<img aria-hidden="true" />`, fileName: "file.tsx" },
-		{ code: `<a aria-hidden="false" href="#" />`, fileName: "file.tsx" },
+		{ code: `<div aria-hidden="true" />` },
+		{ code: `<img aria-hidden="true" />` },
+		{ code: `<a aria-hidden="false" href="#" />` },
 		{
 			code: `<button aria-hidden="true" tabIndex="-1" />`,
-			fileName: "file.tsx",
 		},
-		{ code: `<a href="/" />`, fileName: "file.tsx" },
-		{ code: `<div aria-hidden="false" tabIndex="0" />`, fileName: "file.tsx" },
-		{ code: `<button />`, fileName: "file.tsx" },
+		{ code: `<a href="/" />` },
+		{ code: `<div aria-hidden="false" tabIndex="0" />` },
+		{ code: `<button />` },
 	],
 });

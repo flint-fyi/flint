@@ -1,6 +1,21 @@
 {
-	"editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" },
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"[javascript]": { "editor.defaultFormatter": "prettier.prettier-vscode" },
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "prettier.prettier-vscode"
+	},
+	"[json]": { "editor.defaultFormatter": "prettier.prettier-vscode" },
+	"[jsonc]": { "editor.defaultFormatter": "prettier.prettier-vscode" },
+	"[markdown]": { "editor.defaultFormatter": "prettier.prettier-vscode" },
+	"[typescript]": { "editor.defaultFormatter": "prettier.prettier-vscode" },
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "prettier.prettier-vscode"
+	},
+	"[yaml]": { "editor.defaultFormatter": "prettier.prettier-vscode" },
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit",
+		"source.removeUnusedImports": "explicit"
+	},
+	"editor.defaultFormatter": "prettier.prettier-vscode",
 	"editor.formatOnSave": true,
 	"editor.rulers": [80],
 	"eslint.probe": [
@@ -15,5 +30,5 @@
 	],
 	"eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
 	"typescript.tsdk": "node_modules/typescript/lib",
-	"cSpell.words": ["menuitemcheckbox"]
+	"typescript.tsserver.experimental.enableProjectDiagnostics": true
 }

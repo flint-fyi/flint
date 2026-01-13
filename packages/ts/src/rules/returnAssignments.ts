@@ -1,15 +1,17 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.js";
-import { typescriptLanguage } from "../language.js";
-import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.js";
+import { getTSNodeRange } from "../getTSNodeRange.ts";
+import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
+import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using assignment expressions in return statements.",
 		id: "returnAssignments",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		noReturnAssign: {
@@ -25,30 +27,33 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkForAssignment(node: ts.Expression): void {
+		function checkForAssignment(
+			node: AST.ConciseBody | AST.Expression,
+			sourceFile: ts.SourceFile,
+		): void {
 			const unwrapped = unwrapParenthesizedExpression(node);
 
 			if (
-				ts.isBinaryExpression(unwrapped) &&
+				unwrapped.kind === SyntaxKind.BinaryExpression &&
 				tsutils.isAssignmentKind(unwrapped.operatorToken.kind)
 			) {
 				context.report({
 					message: "noReturnAssign",
-					range: getTSNodeRange(unwrapped.operatorToken, context.sourceFile),
+					range: getTSNodeRange(unwrapped.operatorToken, sourceFile),
 				});
 			}
 		}
 
 		return {
 			visitors: {
-				ArrowFunction: (node) => {
-					if (!ts.isBlock(node.body)) {
-						checkForAssignment(node.body);
+				ArrowFunction: (node, { sourceFile }) => {
+					if (node.body.kind !== SyntaxKind.Block) {
+						checkForAssignment(node.body, sourceFile);
 					}
 				},
-				ReturnStatement: (node) => {
+				ReturnStatement: (node, { sourceFile }) => {
 					if (node.expression) {
-						checkForAssignment(node.expression);
+						checkForAssignment(node.expression, sourceFile);
 					}
 				},
 			},

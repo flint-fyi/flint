@@ -63,7 +63,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-This rule should always be enabled as these escape sequences are legacy features that should not be used in modern JavaScript code.
+If your project has portions that perform raw string manipulations and rely on legacy octal escape sequences, it might be difficult to refactor towards code that passes this rule.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 

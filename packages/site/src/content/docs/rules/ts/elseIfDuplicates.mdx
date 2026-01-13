@@ -91,8 +91,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-This rule should always be enabled.
-Duplicate conditions in if-else-if chains represent unreachable code and are almost always a mistake.
+If your project intentionally uses patterns that look like duplicate conditions but actually modify state behind-the-scenes, you might not want to enable this rule.
+For example, projects that modify state in computed object `get()` properties or use `Proxy` are often considered overly difficult to reason about for both humans and lint rules.
 
 ## Further Reading
 

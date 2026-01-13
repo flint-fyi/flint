@@ -1,12 +1,11 @@
-import rule from "./distractingElements.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./distractingElements.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
 <marquee />`,
-			fileName: "file.tsx",
 			snapshot: `
 <marquee />
  ~~~~~~~
@@ -15,7 +14,6 @@ ruleTester.describe(rule, {
 		{
 			code: `
 <blink />`,
-			fileName: "file.tsx",
 			snapshot: `
 <blink />
  ~~~~~
@@ -24,7 +22,6 @@ ruleTester.describe(rule, {
 		{
 			code: `
 <marquee>Hello</marquee>`,
-			fileName: "file.tsx",
 			snapshot: `
 <marquee>Hello</marquee>
  ~~~~~~~
@@ -33,7 +30,6 @@ ruleTester.describe(rule, {
 		{
 			code: `
 <BLINK>Alert!</BLINK>`,
-			fileName: "file.tsx",
 			snapshot: `
 <BLINK>Alert!</BLINK>
  ~~~~~
@@ -41,12 +37,11 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div />`, fileName: "file.tsx" },
-		{ code: `<span>Text</span>`, fileName: "file.tsx" },
-		{ code: `<button>Click me</button>`, fileName: "file.tsx" },
+		{ code: `<div />` },
+		{ code: `<span>Text</span>` },
+		{ code: `<button>Click me</button>` },
 		{
 			code: `<div className="marquee-style">Animated</div>`,
-			fileName: "file.tsx",
 		},
 	],
 });

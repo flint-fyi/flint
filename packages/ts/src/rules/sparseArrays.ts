@@ -1,12 +1,14 @@
-import * as ts from "typescript";
+import { nullThrows } from "@flint.fyi/utils";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.js";
+import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports array literals with holes (sparse arrays).",
 		id: "sparseArrays",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noSparseArray: {
@@ -25,30 +27,34 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				OmittedExpression: (node) => {
+				OmittedExpression: (node, { sourceFile }) => {
 					const parent = node.parent;
-					if (!ts.isArrayLiteralExpression(parent)) {
+					if (parent.kind !== SyntaxKind.ArrayLiteralExpression) {
 						return;
 					}
 
 					const syntaxList = parent
-						.getChildren(context.sourceFile)
-						.find((child) => child.kind === ts.SyntaxKind.SyntaxList);
+						.getChildren(sourceFile)
+						.find((child) => child.kind === SyntaxKind.SyntaxList);
 
 					if (!syntaxList) {
 						return;
 					}
 
-					const children = syntaxList.getChildren(context.sourceFile);
+					const children = syntaxList.getChildren(sourceFile);
 					const omittedIndex = children.indexOf(node);
 
 					for (let i = omittedIndex + 1; i < children.length; i++) {
-						if (children[i].kind === ts.SyntaxKind.CommaToken) {
+						const child = nullThrows(
+							children[i],
+							"Child is expected to be present by the loop condition",
+						);
+						if (child.kind === SyntaxKind.CommaToken) {
 							context.report({
 								message: "noSparseArray",
 								range: {
-									begin: children[i].getStart(context.sourceFile),
-									end: children[i].getEnd(),
+									begin: child.getStart(sourceFile),
+									end: child.getEnd(),
 								},
 							});
 							break;

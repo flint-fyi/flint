@@ -4,9 +4,9 @@ title: "PackageJSON Plugin"
 ---
 
 import { RulesTable } from "~/components/RulesTable.tsx";
+import PluginTop from "~/components/PluginTop.astro";
 
-Flint's package.json plugin includes rules targeted to package.json files.
-It comes provided with the `flint` npm package.
+<PluginTop pluginId="package-json" />
 
 ## Presets
 
@@ -54,7 +54,7 @@ export default defineConfig({
 
 ## Rules
 
-<RulesTable implementing plugin="packageJson" />
+<RulesTable implementing plugin="package-json" />
 
 ## Selectors
 

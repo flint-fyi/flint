@@ -1,10 +1,10 @@
 {
 	"name": "@flint.fyi/plugin-jsx",
-	"version": "0.1.0",
+	"version": "0.1.2",
 	"description": "[Experimental] A Flint plugin for JSX code.",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/JoshuaKGoldberg/flint",
+		"url": "git+https://github.com/flint-fyi/flint.git",
 		"directory": "packages/plugin-jsx"
 	},
 	"license": "MIT",
@@ -12,23 +12,41 @@
 		"name": "JoshuaKGoldberg",
 		"email": "npm@joshuakgoldberg.com"
 	},
+	"sideEffects": false,
 	"type": "module",
-	"main": "./lib/index.js",
+	"exports": {
+		".": {
+			"@flint.fyi/source": "./src/index.ts",
+			"default": "./lib/index.js"
+		}
+	},
+	"files": [
+		"lib/",
+		"!lib/**/*.map"
+	],
+	"scripts": {
+		"test": "vitest --typecheck --project plugin-jsx"
+	},
 	"dependencies": {
-		"@flint.fyi/core": "workspace:",
-		"@flint.fyi/rule-tester": "workspace:",
-		"@flint.fyi/ts": "workspace:",
-		"@flint.fyi/utils": "workspace:",
-		"language-tags": "^2.1.0"
+		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/ts": "workspace:^",
+		"@flint.fyi/utils": "workspace:^",
+		"language-tags": "^2.1.0",
+		"typescript": "^5.9.3"
 	},
 	"devDependencies": {
-		"@types/language-tags": "1.0.4"
+		"@flint.fyi/rule-tester": "workspace:^",
+		"@types/language-tags": "1.0.4",
+		"tsdown": "0.19.0-beta.2",
+		"vitest": "4.0.15"
 	},
 	"engines": {
 		"node": ">=24.0.0"
 	},
 	"publishConfig": {
 		"access": "public",
-		"provenance": true
+		"exports": {
+			".": "./lib/index.js"
+		}
 	}
 }

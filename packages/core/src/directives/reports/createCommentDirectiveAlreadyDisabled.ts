@@ -1,4 +1,4 @@
-import { CommentDirective } from "../../types/directives.js";
+import type { CommentDirective } from "../../types/directives.ts";
 
 export function createCommentDirectiveAlreadyDisabled(
 	directive: CommentDirective,

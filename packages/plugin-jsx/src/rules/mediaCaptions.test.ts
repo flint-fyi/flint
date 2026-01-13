@@ -1,5 +1,5 @@
-import rule from "./mediaCaptions.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./mediaCaptions.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <audio src="audio.mp3" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <audio src="audio.mp3" />
  ~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <video src="video.mp4" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <video src="video.mp4" />
  ~~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <audio><source src="audio.mp3" /></audio>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <audio><source src="audio.mp3" /></audio>
  ~~~~~
@@ -40,7 +37,6 @@ ruleTester.describe(rule, {
 			code: `
 <video><track kind="subtitles" /></video>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <video><track kind="subtitles" /></video>
  ~~~~~
@@ -53,16 +49,14 @@ ruleTester.describe(rule, {
 			code: `
 <audio><track kind="captions" /></audio>
 `,
-			fileName: "file.tsx",
 		},
-		{ code: `<video><track kind="captions" /></video>`, fileName: "file.tsx" },
-		{ code: `<video muted />`, fileName: "file.tsx" },
-		{ code: `<div>Not media</div>`, fileName: "file.tsx" },
+		{ code: `<video><track kind="captions" /></video>` },
+		{ code: `<video muted />` },
+		{ code: `<div>Not media</div>` },
 		{
 			code: `
 <audio muted src="audio.mp3" />
 `,
-			fileName: "file.tsx",
 		},
 	],
 });

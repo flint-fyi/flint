@@ -1,5 +1,21 @@
 # @flint/utils
 
+## 0.14.0
+
+### Minor Changes
+
+- 9a8ecc1: feat(utils): add assertion helpers
+
+### Patch Changes
+
+- 602c75c: chore: rework packaging with tsdown
+
+## 0.13.3
+
+### Patch Changes
+
+- d99170f: fix: add missing ("phantom") dependencies to package.jsons
+
 ## 0.13.2
 
 ### Patch Changes

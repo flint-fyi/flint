@@ -1,14 +1,16 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.js";
-import { hasSameTokens } from "../utils/hasSameTokens.js";
+import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
+import { hasSameTokens } from "../utils/hasSameTokens.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports switch statements with duplicate case clause test expressions.",
 		id: "caseDuplicates",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		duplicateCase: {
@@ -26,23 +28,23 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				SwitchStatement: (node) => {
-					const seenCases: ts.Expression[] = [];
+				SwitchStatement: (node, { sourceFile }) => {
+					const seenCases: AST.Expression[] = [];
 
 					for (const clause of node.caseBlock.clauses) {
-						if (!ts.isCaseClause(clause)) {
+						if (clause.kind !== SyntaxKind.CaseClause) {
 							continue;
 						}
 
 						const isDuplicate = seenCases.some((seenCase) =>
-							hasSameTokens(seenCase, clause.expression, context.sourceFile),
+							hasSameTokens(seenCase, clause.expression, sourceFile),
 						);
 
 						if (isDuplicate) {
 							context.report({
 								message: "duplicateCase",
 								range: {
-									begin: clause.getStart(context.sourceFile),
+									begin: clause.getStart(sourceFile),
 									end: clause.expression.getEnd(),
 								},
 							});

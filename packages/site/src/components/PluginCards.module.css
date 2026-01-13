@@ -1,0 +1,8 @@
+.pluginCards {
+	--plugin-cards-spacing: 1rem;
+	display: flex;
+	flex-wrap: wrap;
+	list-style: none;
+	gap: var(--plugin-cards-spacing);
+	padding-left: 0;
+}

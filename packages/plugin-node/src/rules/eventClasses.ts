@@ -1,19 +1,29 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
+import ts, { SyntaxKind } from "typescript";
 
-function isImportFromNodeEvents(expression: ts.Expression) {
+function isImportFromNodeEvents(
+	expression: ts.Expression,
+): expression is ts.StringLiteral {
 	return (
 		ts.isStringLiteral(expression) &&
 		(expression.text === "events" || expression.text === "node:events")
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer EventTarget over EventEmitter for cross-platform compatibility.",
 		id: "eventClasses",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferEventTarget: {
@@ -39,7 +49,8 @@ export default typescriptLanguage.createRule({
 				}
 
 				if (
-					ts.isImportDeclaration(declaration.parent.parent.parent) &&
+					declaration.parent.parent.parent.kind ===
+						SyntaxKind.ImportDeclaration &&
 					isImportFromNodeEvents(
 						declaration.parent.parent.parent.moduleSpecifier,
 					)
@@ -61,41 +72,57 @@ export default typescriptLanguage.createRule({
 			return false;
 		}
 
-		function isIdentifierEventEmitter(identifier: ts.Identifier) {
-			return context.typeChecker
+		function isIdentifierEventEmitter(
+			identifier: AST.Identifier,
+			typeChecker: Checker,
+		) {
+			return typeChecker
 				.getSymbolAtLocation(identifier)
 				?.getDeclarations()
 				?.some(isDeclarationEventEmitter);
 		}
 
-		function checkExpression(expression: ts.Expression) {
-			if (ts.isIdentifier(expression) && isIdentifierEventEmitter(expression)) {
+		function checkExpression(
+			expression: AST.Expression,
+			sourceFile: ts.SourceFile,
+			typeChecker: Checker,
+		) {
+			if (
+				expression.kind === SyntaxKind.Identifier &&
+				isIdentifierEventEmitter(expression, typeChecker)
+			) {
 				context.report({
 					message: "preferEventTarget",
-					range: getTSNodeRange(expression, context.sourceFile),
+					range: getTSNodeRange(expression, sourceFile),
 				});
 			}
 		}
 
 		return {
 			visitors: {
-				ClassDeclaration(node: ts.ClassDeclaration) {
+				ClassDeclaration(
+					node,
+					{ sourceFile, typeChecker }: TypeScriptFileServices,
+				) {
 					if (!node.heritageClauses) {
 						return;
 					}
 
 					for (const heritageClause of node.heritageClauses) {
-						if (heritageClause.token !== ts.SyntaxKind.ExtendsKeyword) {
+						if (heritageClause.token !== SyntaxKind.ExtendsKeyword) {
 							continue;
 						}
 
 						for (const type of heritageClause.types) {
-							checkExpression(type.expression);
+							checkExpression(type.expression, sourceFile, typeChecker);
 						}
 					}
 				},
-				NewExpression(node: ts.NewExpression) {
-					checkExpression(node.expression);
+				NewExpression(
+					node,
+					{ sourceFile, typeChecker }: TypeScriptFileServices,
+				) {
+					checkExpression(node.expression, sourceFile, typeChecker);
 				},
 			},
 		};

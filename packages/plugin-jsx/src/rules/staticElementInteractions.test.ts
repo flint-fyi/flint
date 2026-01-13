@@ -1,5 +1,5 @@
-import { ruleTester } from "./ruleTester.js";
-import rule from "./staticElementInteractions.js";
+import { ruleTester } from "./ruleTester.ts";
+import rule from "./staticElementInteractions.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <div onClick={() => {}} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div onClick={() => {}} />
  ~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <span onKeyDown={handler} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <span onKeyDown={handler} />
  ~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <section onMouseDown={() => {}} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <section onMouseDown={() => {}} />
  ~~~~~~~
@@ -41,13 +38,12 @@ ruleTester.describe(rule, {
 		{
 			code: `
 <div onClick={() => {}} role="button" />`,
-			fileName: "file.tsx",
 		},
-		{ code: `<span onKeyDown={handler} role="link" />`, fileName: "file.tsx" },
-		{ code: `<button onClick={() => {}} />`, fileName: "file.tsx" },
-		{ code: `<input onClick={() => {}} />`, fileName: "file.tsx" },
-		{ code: `<div />`, fileName: "file.tsx" },
-		{ code: `<a onClick={() => {}} />`, fileName: "file.tsx" },
-		{ code: `<CustomElement onClick={() => {}} />`, fileName: "file.tsx" },
+		{ code: `<span onKeyDown={handler} role="link" />` },
+		{ code: `<button onClick={() => {}} />` },
+		{ code: `<input onClick={() => {}} />` },
+		{ code: `<div />` },
+		{ code: `<a onClick={() => {}} />` },
+		{ code: `<CustomElement onClick={() => {}} />` },
 	],
 });

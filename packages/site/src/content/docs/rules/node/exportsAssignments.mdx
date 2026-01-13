@@ -1,0 +1,67 @@
+---
+description: "Prevent assignment to the `exports` variable in CommonJS modules."
+title: "exportsAssignments"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="exportsAssignments" />
+
+In CommonJS modules, assigning directly to the `exports` variable breaks the reference to `module.exports`, which means your exports won't work as expected.
+The `exports` variable is initially a reference to `module.exports`, but reassigning it creates a new local binding that doesn't affect the actual module exports.
+
+To export values, always use `module.exports` directly, or modify properties on `exports` without reassigning it.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+exports = {};
+
+exports = { foo: 1, bar: 2 };
+
+exports = somethingElse;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+module.exports.foo = 1;
+
+exports.bar = 2;
+
+module.exports = {};
+
+module.exports = exports = {};
+
+exports = module.exports = {};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you use an unusual code pattern that intentionally needs to remove the original reference to `exports`, this rule may not be for you.
+However, doing so may make it harder to understand your code or migrate it to the more modern ECMAScript Modules (ESM) syntax.
+
+## Further Reading
+
+- [Node.js: Modules - exports shortcut](https://nodejs.org/api/modules.html#exports-shortcut)
+- [Node.js: Modules - module.exports](https://nodejs.org/api/modules.html#moduleexports)
+- [CommonJS module system](https://nodejs.org/api/modules.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="exportsAssignments" />

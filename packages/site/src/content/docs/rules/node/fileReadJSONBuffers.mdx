@@ -1,0 +1,82 @@
+---
+description: "Prefer reading JSON files as buffers when using JSON.parse for better performance."
+title: "fileReadJSONBuffers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="fileReadJSONBuffers" />
+
+`JSON.parse()` can parse buffers directly without needing to convert them to strings first.
+Reading files as buffers when parsing JSON avoids unnecessary string conversion overhead.
+
+When reading a JSON file with `fs.readFile()` or `fs.readFileSync()` and then parsing it with `JSON.parse()`, there's no need to specify UTF-8 encoding.
+The file can be read as a buffer, and `JSON.parse()` will handle the buffer directly.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const packageJson = JSON.parse(await fs.readFile("./package.json", "utf8"));
+```
+
+```ts
+const data = JSON.parse(await fs.readFile("./data.json", "utf-8"));
+```
+
+```ts
+const config = JSON.parse(fs.readFileSync("./config.json", "utf8"));
+```
+
+```ts
+const settings = JSON.parse(
+	fs.readFileSync("./settings.json", { encoding: "utf-8" }),
+);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const packageJson = JSON.parse(await fs.readFile("./package.json"));
+```
+
+```ts
+const data = JSON.parse(await fs.readFile("./data.json"));
+```
+
+```ts
+const config = JSON.parse(fs.readFileSync("./config.json"));
+```
+
+```ts
+const settings = JSON.parse(fs.readFileSync("./settings.json"));
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you explicitly prefer to always describe encoding parameters, this rule might not be for you.
+Additionally, if you choose to manually choose which nuanced parsing behavior you prefer, you may disagree with this rule and choose not to enable it.
+
+## Further Reading
+
+- [Node.js: JSON.parse()](https://nodejs.org/api/buffer.html#buffers-and-json)
+- [Node.js: fs.readFile()](https://nodejs.org/api/fs.html#fsreadfilepath-options-callback)
+- [MDN: JSON.parse()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="fileReadJSONBuffers" />

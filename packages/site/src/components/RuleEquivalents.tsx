@@ -10,11 +10,6 @@ export interface RuleEquivalentsProps {
 export function RuleEquivalents({ pluginId, ruleId }: RuleEquivalentsProps) {
 	const comparison = getComparisonByFlintId(pluginId, ruleId);
 
-	// @ts-ignore - ignore this.
-	if (!comparison?.biome) {
-		console.log({ pluginId, ruleId, comparison });
-	}
-
 	return (
 		<ul>
 			{(Object.entries(linterNames) as [Linter, string][]).map(

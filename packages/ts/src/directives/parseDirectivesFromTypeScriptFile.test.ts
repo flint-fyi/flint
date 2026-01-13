@@ -1,7 +1,7 @@
 import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
-import { parseDirectivesFromTypeScriptFile } from "./parseDirectivesFromTypeScriptFile.js";
+import { parseDirectivesFromTypeScriptFile } from "./parseDirectivesFromTypeScriptFile.ts";
 
 describe(parseDirectivesFromTypeScriptFile, () => {
 	it("returns empty arrays when there are no directives", () => {

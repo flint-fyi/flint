@@ -1,15 +1,20 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.js";
-import { typescriptLanguage } from "../language.js";
+import { getTSNodeRange } from "../getTSNodeRange.ts";
+import {
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "../language.ts";
+import * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports lexical declarations in case clauses without wrapping them in blocks.",
 		id: "caseDeclarations",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		unexpectedLexicalDeclaration: {
@@ -26,36 +31,43 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function getLexicalDeclaration(
-			statements: ts.NodeArray<ts.Statement>,
+			statements: ts.NodeArray<AST.Statement>,
+			sourceFile: ts.SourceFile,
 		): ts.Node | undefined {
 			for (const statement of statements) {
 				if (
-					ts.isVariableStatement(statement) &&
+					statement.kind === SyntaxKind.VariableStatement &&
 					tsutils.isNodeFlagSet(
 						statement.declarationList,
 						ts.NodeFlags.Let | ts.NodeFlags.Const,
 					)
 				) {
-					return statement.declarationList.getChildAt(0, context.sourceFile);
+					return statement.declarationList.getChildAt(0, sourceFile);
 				}
 
 				if (
-					ts.isClassDeclaration(statement) ||
-					ts.isFunctionDeclaration(statement)
+					statement.kind === SyntaxKind.ClassDeclaration ||
+					statement.kind === SyntaxKind.FunctionDeclaration
 				) {
-					return statement.getChildAt(0, context.sourceFile);
+					return statement.getChildAt(0, sourceFile);
 				}
 			}
 
 			return undefined;
 		}
 
-		function checkClause(node: ts.CaseClause | ts.DefaultClause): void {
-			const declarationNode = getLexicalDeclaration(node.statements);
+		function checkClause(
+			node: AST.CaseClause | AST.DefaultClause,
+			{ sourceFile }: TypeScriptFileServices,
+		): void {
+			const declarationNode = getLexicalDeclaration(
+				node.statements,
+				sourceFile,
+			);
 			if (declarationNode) {
 				context.report({
 					message: "unexpectedLexicalDeclaration",
-					range: getTSNodeRange(declarationNode, context.sourceFile),
+					range: getTSNodeRange(declarationNode, sourceFile),
 				});
 			}
 		}

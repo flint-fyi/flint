@@ -1,5 +1,5 @@
-import rule from "./langValidity.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./langValidity.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 const element = <div lang=""></div>;
 `,
-			fileName: "file.tsx",
 			snapshot: `
 const element = <div lang=""></div>;
                           ~~
@@ -18,7 +17,6 @@ const element = <div lang=""></div>;
 			code: `
 const element = <div lang="e"></div>;
 `,
-			fileName: "file.tsx",
 			snapshot: `
 const element = <div lang="e"></div>;
                           ~~~
@@ -29,7 +27,6 @@ const element = <div lang="e"></div>;
 			code: `
 const element = <div lang="1234"></div>;
 `,
-			fileName: "file.tsx",
 			snapshot: `
 const element = <div lang="1234"></div>;
                           ~~~~~~
@@ -40,7 +37,6 @@ const element = <div lang="1234"></div>;
 			code: `
 const element = <html lang="123"></html>;
 `,
-			fileName: "file.tsx",
 			snapshot: `
 const element = <html lang="123"></html>;
                            ~~~~~
@@ -49,36 +45,30 @@ const element = <html lang="123"></html>;
 		},
 	],
 	valid: [
-		{ code: `const element = <div lang="en"></div>;`, fileName: "file.tsx" },
-		{ code: `const element = <div lang="en-US"></div>;`, fileName: "file.tsx" },
-		{ code: `const element = <div lang="en-GB"></div>;`, fileName: "file.tsx" },
+		{ code: `const element = <div lang="en"></div>;` },
+		{ code: `const element = <div lang="en-US"></div>;` },
+		{ code: `const element = <div lang="en-GB"></div>;` },
 		{
 			code: `const element = <div lang="zh-Hans"></div>;`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `const element = <div lang="zh-Hans-CN"></div>;`,
-			fileName: "file.tsx",
 		},
-		{ code: `const element = <div lang="fr"></div>;`, fileName: "file.tsx" },
-		{ code: `const element = <div lang="fr-CA"></div>;`, fileName: "file.tsx" },
+		{ code: `const element = <div lang="fr"></div>;` },
+		{ code: `const element = <div lang="fr-CA"></div>;` },
 		{
 			code: `const element = <div lang="es-419"></div>;`,
-			fileName: "file.tsx",
 		},
-		{ code: `const element = <html lang="en"></html>;`, fileName: "file.tsx" },
+		{ code: `const element = <html lang="en"></html>;` },
 		{
 			code: `const element = <html lang="en-US"></html>;`,
-			fileName: "file.tsx",
 		},
-		{ code: `const element = <div></div>;`, fileName: "file.tsx" },
+		{ code: `const element = <div></div>;` },
 		{
 			code: `const element = <div lang={language}></div>;`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `const element = <div lang="en-GB-oxendict"></div>;`,
-			fileName: "file.tsx",
 		},
 	],
 });

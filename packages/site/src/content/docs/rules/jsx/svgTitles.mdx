@@ -1,0 +1,86 @@
+---
+description: "Reports <svg> elements without a <title> child element."
+title: "svgTitles"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="svgTitles" />
+
+SVG elements should include a `<title>` child element to provide accessible descriptions for screen readers.
+Without a title, users who rely on assistive technologies cannot understand the purpose or content of the SVG.
+
+The `<title>` element provides descriptive text that screen readers can announce.
+Alternatively, you can use `aria-label` or `aria-labelledby` attributes for accessibility.
+
+This is required for WCAG 1.1.1 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<svg />
+```
+
+```tsx
+<svg viewBox="0 0 100 100" />
+```
+
+```tsx
+<svg>
+	<circle cx="50" cy="50" r="40" />
+</svg>
+```
+
+```tsx
+<svg>
+	<desc>Description only</desc>
+</svg>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<svg>
+	<title>Accessible title</title>
+</svg>
+```
+
+```tsx
+<svg>
+	<title>Circle</title>
+	<circle cx="50" cy="50" r="40" />
+</svg>
+```
+
+```tsx
+<svg aria-label="Accessible label" />
+```
+
+```tsx
+<svg aria-labelledby="title-id">
+	<circle cx="50" cy="50" r="40" />
+</svg>
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you're using a framework that automatically injects appropriate titles for SVG elements, you can disable this rule.
+
+## Further Reading
+
+- [WCAG 1.1.1: Non-text Content](https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html)
+- [MDN: SVG title element](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/title)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="svgTitles" />

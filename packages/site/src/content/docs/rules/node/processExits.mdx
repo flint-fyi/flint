@@ -1,0 +1,74 @@
+---
+description: "Prevent direct use of `process.exit()` for better error handling and testing."
+title: "processExits"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="processExits" />
+
+Calling `process.exit()` immediately terminates the Node.js process without allowing proper cleanup or error handling.
+This makes code harder to test and can lead to resource leaks or incomplete operations.
+Throwing errors provides better stack traces and allows proper error handling, while returning exit codes from CLI entry points maintains testability.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+process.exit(0);
+
+process.exit(1);
+
+if (error) {
+	process.exit(1);
+}
+
+function exitHandler() {
+	process.exit(1);
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+throw new Error("Application failed");
+
+function main() {
+	return 1;
+}
+
+async function run() {
+	throw new Error("Fatal error");
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are working with very specific Node.js system-level code that genuinely requires immediate process termination without cleanup, you might choose not to enable this rule.
+However, such cases are rare, and most applications benefit from proper error handling.
+
+Alternately, if your application is not very large and/or doesn't intend to live for a long time, proper process flow logic might not be worth it for you to implement.
+In that case this rule might not be for you.
+
+## Further Reading
+
+- [Node.js: process.exit()](https://nodejs.org/api/process.html#processexitcode)
+- [Node.js: Error handling](https://nodejs.org/api/errors.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="processExits" />

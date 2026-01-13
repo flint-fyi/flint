@@ -1,0 +1,64 @@
+---
+description: "Reports usage of the children prop."
+title: "childrenProps"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="childrenProps" />
+
+In JSX, children are generally intended to be passed as content between opening and closing tags rather than as a `children` prop.
+This makes the JSX more readable and maintainable by following the standard JSX pattern.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<div children="Hello" />
+```
+
+```tsx
+<Component children={<span>Test</span>} />
+```
+
+```tsx
+<button children={["Click me"]} />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div>Hello</div>
+```
+
+```tsx
+<Component>
+	<span>Test</span>
+</Component>
+```
+
+```tsx
+<button>Click me</button>
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you prefer the consistency of always using named props including `children` over aligning with common JSX conventions, you might prefer to disable this rule.
+
+## Further Reading
+
+- [React Documentation: JSX In Depth](https://react.dev/learn/writing-markup-with-jsx)
+- [MDN: JSX](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks/React_getting_started#jsx)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="childrenProps" />

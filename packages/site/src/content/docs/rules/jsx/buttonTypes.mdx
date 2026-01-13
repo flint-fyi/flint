@@ -1,0 +1,65 @@
+---
+description: "Reports button elements without an explicit type attribute."
+title: "buttonTypes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="buttonTypes" />
+
+Button elements without an explicit `type` attribute default to `type="submit"`, which can cause unintended form submissions.
+This rule requires that all `<button>` elements have an explicit `type` attribute set to one of the valid values: `"button"`, `"submit"`, or `"reset"`.
+
+Specifying an explicit type makes the button's behavior clear and prevents accidental form submissions.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<button>Click me</button>
+```
+
+```tsx
+<button onClick={handleClick}>Submit</button>
+```
+
+```tsx
+<button type="invalid">Click</button>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<button type="button">Click me</button>
+```
+
+```tsx
+<button type="submit">Submit form</button>
+```
+
+```tsx
+<button type="reset">Reset form</button>
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your codebase exclusively uses buttons in forms where the default submit behavior is never a concern, you might choose to disable this rule.
+However, it's generally recommended to be explicit about button types for clarity and maintainability.
+
+## Further Reading
+
+- [MDN: The Button element - type attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#type)
+- [WHATWG HTML Standard: Button types](https://html.spec.whatwg.org/multipage/form-elements.html#attr-button-type)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="buttonTypes" />

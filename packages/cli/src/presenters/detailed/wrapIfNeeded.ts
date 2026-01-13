@@ -1,7 +1,7 @@
-import { ChalkInstance } from "chalk";
+import type { ChalkInstance } from "chalk";
 import wrapAnsi from "wrap-ansi";
 
-import { indenter } from "./constants.js";
+import { indenter } from "./constants.ts";
 
 export function wrapIfNeeded(
 	lineFormat: ChalkInstance,

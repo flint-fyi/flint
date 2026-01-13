@@ -1,14 +1,16 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.js";
-import { getModifyingReferences } from "../utils/getModifyingReferences.js";
+import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
+import { getModifyingReferences } from "../utils/getModifyingReferences.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports attempting to reassign variables declared with const.",
 		id: "constantAssignments",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noConstAssign: {
@@ -24,15 +26,15 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function collectBindingElements(name: ts.BindingName): ts.Identifier[] {
-			if (ts.isIdentifier(name)) {
+		function collectBindingElements(name: AST.BindingName): AST.Identifier[] {
+			if (name.kind == SyntaxKind.Identifier) {
 				return [name];
 			}
 
-			const identifiers: ts.Identifier[] = [];
+			const identifiers: AST.Identifier[] = [];
 
 			for (const element of name.elements) {
-				if (ts.isBindingElement(element)) {
+				if (element.kind == SyntaxKind.BindingElement) {
 					identifiers.push(...collectBindingElements(element.name));
 				}
 			}
@@ -42,7 +44,7 @@ export default typescriptLanguage.createRule({
 
 		return {
 			visitors: {
-				VariableDeclarationList: (node) => {
+				VariableDeclarationList: (node, { sourceFile, typeChecker }) => {
 					if (
 						!(node.flags & ts.NodeFlags.Const) ||
 						node.declarations.length === 0
@@ -56,15 +58,15 @@ export default typescriptLanguage.createRule({
 						for (const identifier of identifiers) {
 							const modifyingReferences = getModifyingReferences(
 								identifier,
-								context.sourceFile,
-								context.typeChecker,
+								sourceFile,
+								typeChecker,
 							);
 
 							for (const reference of modifyingReferences) {
 								context.report({
 									message: "noConstAssign",
 									range: {
-										begin: reference.getStart(context.sourceFile),
+										begin: reference.getStart(sourceFile),
 										end: reference.getEnd(),
 									},
 								});

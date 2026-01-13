@@ -1,0 +1,77 @@
+---
+description: "Prefer `import.meta.dirname` and `import.meta.filename` over legacy file path techniques."
+title: "filePathsFromImportMeta"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="filePathsFromImportMeta" />
+
+Node.js 20.11 introduced `import.meta.dirname` and `import.meta.filename` as modern alternatives to legacy file path techniques.
+These properties provide direct access to directory and file paths without requiring imports from `node:path` or `node:url`.
+
+- `import.meta.filename` is equivalent to `fileURLToPath(import.meta.url)`.
+- `import.meta.dirname` is equivalent to `path.dirname(fileURLToPath(import.meta.url))` and similar legacy patterns.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const filename = fileURLToPath(import.meta.url);
+```
+
+```ts
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+```
+
+```ts
+const dirname = path.dirname(import.meta.filename);
+```
+
+```ts
+const url = fileURLToPath(new URL(".", import.meta.url));
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const filename = import.meta.filename;
+```
+
+```ts
+const dirname = import.meta.dirname;
+```
+
+```ts
+const url = import.meta.url;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support Node.js versions earlier than 20.11, you should not enable this rule.
+Stylistically, if you prefer dynamically constructing URLs to be consistent, this rule might not be for you.
+
+## Further Reading
+
+- [Node.js: import.meta.dirname](https://nodejs.org/api/esm.html#importmetadirname)
+- [Node.js: import.meta.filename](https://nodejs.org/api/esm.html#importmetafilename)
+- [Node.js: import.meta.url](https://nodejs.org/api/esm.html#importmetaurl)
+- [Node.js: ECMAScript Modules](https://nodejs.org/api/esm.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="filePathsFromImportMeta" />

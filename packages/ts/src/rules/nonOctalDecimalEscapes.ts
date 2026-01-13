@@ -1,15 +1,19 @@
-import * as ts from "typescript";
-
-import { typescriptLanguage } from "../language.js";
+import {
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 const nonOctalDecimalEscapePattern = /\\[89]/g;
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports non-octal decimal escape sequences (\\8 and \\9) in string literals.",
 		id: "nonOctalDecimalEscapes",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unexpectedEscape: {
@@ -28,9 +32,10 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkNode(
-			node: ts.NoSubstitutionTemplateLiteral | ts.StringLiteral,
+			node: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral,
+			{ sourceFile }: TypeScriptFileServices,
 		) {
-			const text = node.getText(context.sourceFile);
+			const text = node.getText(sourceFile);
 			const matches = [...text.matchAll(nonOctalDecimalEscapePattern)];
 
 			for (const match of matches) {
@@ -48,7 +53,7 @@ export default typescriptLanguage.createRule({
 					continue;
 				}
 
-				const start = node.getStart(context.sourceFile) + matchIndex;
+				const start = node.getStart(sourceFile) + matchIndex;
 
 				context.report({
 					message: "unexpectedEscape",

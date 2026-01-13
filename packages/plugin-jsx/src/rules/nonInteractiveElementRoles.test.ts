@@ -1,5 +1,5 @@
-import rule from "./nonInteractiveElementRoles.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./nonInteractiveElementRoles.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <h1 role="button" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <h1 role="button" />
     ~~~~~~~~~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="link" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="link" />
      ~~~~~~~~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <img role="checkbox" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <img role="checkbox" />
      ~~~~~~~~~~~~~~~
@@ -38,12 +35,12 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div />`, fileName: "file.tsx" },
-		{ code: `<div role="presentation" />`, fileName: "file.tsx" },
-		{ code: `<ul role="menu" />`, fileName: "file.tsx" },
-		{ code: `<li role="menuitem" />`, fileName: "file.tsx" },
-		{ code: `<table role="grid" />`, fileName: "file.tsx" },
-		{ code: `<button role="button" />`, fileName: "file.tsx" },
-		{ code: `<CustomElement role="button" />`, fileName: "file.tsx" },
+		{ code: `<div />` },
+		{ code: `<div role="presentation" />` },
+		{ code: `<ul role="menu" />` },
+		{ code: `<li role="menuitem" />` },
+		{ code: `<table role="grid" />` },
+		{ code: `<button role="button" />` },
+		{ code: `<CustomElement role="button" />` },
 	],
 });

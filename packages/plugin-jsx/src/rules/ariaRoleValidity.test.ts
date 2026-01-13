@@ -1,5 +1,5 @@
-import rule from "./ariaRoleValidity.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./ariaRoleValidity.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="datepicker" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="datepicker" />
      ~~~~~~~~~~~~~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="range" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="range" />
      ~~~~~~~~~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <div role="" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div role="" />
      ~~~~~~~
@@ -40,7 +37,6 @@ ruleTester.describe(rule, {
 			code: `
 <span role="invalid" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <span role="invalid" />
       ~~~~~~~~~~~~~~
@@ -49,12 +45,12 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div role="button" />`, fileName: "file.tsx" },
-		{ code: `<div role="navigation" />`, fileName: "file.tsx" },
-		{ code: `<span role="link" />`, fileName: "file.tsx" },
-		{ code: `<div role={dynamicRole} />`, fileName: "file.tsx" },
-		{ code: `<div />`, fileName: "file.tsx" },
-		{ code: `<button role="button" />`, fileName: "file.tsx" },
-		{ code: `<CustomElement role="other" />`, fileName: "file.tsx" },
+		{ code: `<div role="button" />` },
+		{ code: `<div role="navigation" />` },
+		{ code: `<span role="link" />` },
+		{ code: `<div role={dynamicRole} />` },
+		{ code: `<div />` },
+		{ code: `<button role="button" />` },
+		{ code: `<CustomElement role="other" />` },
 	],
 });

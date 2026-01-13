@@ -1,5 +1,5 @@
-import rule from "./htmlLangs.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./htmlLangs.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 const el = <html></html>;
 `,
-			fileName: "file.tsx",
 			snapshot: `
 const el = <html></html>;
             ~~~~
@@ -18,7 +17,6 @@ const el = <html></html>;
 			code: `
 const el = <html className="root"></html>;
 `,
-			fileName: "file.tsx",
 			snapshot: `
 const el = <html className="root"></html>;
             ~~~~
@@ -29,7 +27,6 @@ const el = <html className="root"></html>;
 			code: `
 function App() { return <html><body>Content</body></html>; }
 `,
-			fileName: "file.tsx",
 			snapshot: `
 function App() { return <html><body>Content</body></html>; }
                          ~~~~
@@ -38,15 +35,14 @@ function App() { return <html><body>Content</body></html>; }
 		},
 	],
 	valid: [
-		{ code: `const el = <html lang="en"></html>;`, fileName: "file.tsx" },
-		{ code: `const el = <html lang="en-US"></html>;`, fileName: "file.tsx" },
-		{ code: `const el = <html lang={language}></html>;`, fileName: "file.tsx" },
+		{ code: `const el = <html lang="en"></html>;` },
+		{ code: `const el = <html lang="en-US"></html>;` },
+		{ code: `const el = <html lang={language}></html>;` },
 		{
 			code: `const el = <html lang="fr" className="root"></html>;`,
-			fileName: "file.tsx",
 		},
-		{ code: `const el = <div></div>;`, fileName: "file.tsx" },
-		{ code: `const el = <Html></Html>;`, fileName: "file.tsx" },
-		{ code: `const el = <html LANG="en"></html>;`, fileName: "file.tsx" },
+		{ code: `const el = <div></div>;` },
+		{ code: `const el = <Html></Html>;` },
+		{ code: `const el = <html LANG="en"></html>;` },
 	],
 });

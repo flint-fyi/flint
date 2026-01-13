@@ -1,13 +1,15 @@
-import * as ts from "typescript";
+import { nullThrows } from "@flint.fyi/utils";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.js";
-import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.js";
+import { typescriptLanguage } from "../language.ts";
+import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using async functions as Promise executor functions.",
 		id: "asyncPromiseExecutors",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		asyncPromiseExecutor: {
@@ -27,21 +29,27 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				NewExpression: (node) => {
+				NewExpression: (node, { sourceFile, typeChecker }) => {
 					if (
-						!isGlobalDeclaration(node.expression, context.typeChecker) ||
+						!isGlobalDeclaration(node.expression, typeChecker) ||
 						!node.arguments?.length
 					) {
 						return;
 					}
 
-					const executor = node.arguments[0];
-					if (!ts.isFunctionLike(executor)) {
+					const executor = nullThrows(
+						node.arguments[0],
+						"Expected there to be a promise executor!",
+					);
+					if (
+						executor.kind !== SyntaxKind.FunctionExpression &&
+						executor.kind !== SyntaxKind.ArrowFunction
+					) {
 						return;
 					}
 
 					const asyncModifier = executor.modifiers?.find(
-						(mod) => mod.kind === ts.SyntaxKind.AsyncKeyword,
+						(mod) => mod.kind === SyntaxKind.AsyncKeyword,
 					);
 					if (!asyncModifier) {
 						return;
@@ -50,7 +58,7 @@ export default typescriptLanguage.createRule({
 					context.report({
 						message: "asyncPromiseExecutor",
 						range: {
-							begin: asyncModifier.getStart(context.sourceFile),
+							begin: asyncModifier.getStart(sourceFile),
 							end: asyncModifier.getEnd(),
 						},
 					});

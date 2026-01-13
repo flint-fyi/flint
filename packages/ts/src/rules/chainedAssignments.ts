@@ -1,17 +1,18 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.js";
-import { typescriptLanguage } from "../language.js";
-import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.js";
-import { unwrapParenthesizedExpressionsParent } from "../utils/unwrapParentParenthesizedExpressions.js";
+import { getTSNodeRange } from "../getTSNodeRange.ts";
+import { typescriptLanguage } from "../language.ts";
+import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
+import { unwrapParenthesizedExpressionsParent } from "../utils/unwrapParentParenthesizedExpressions.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using chained assignment expressions (e.g., a = b = c).",
 		id: "chainedAssignments",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		noChainedAssignment: {
@@ -29,24 +30,27 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node) => {
+				BinaryExpression: (node, { sourceFile }) => {
 					if (!tsutils.isAssignmentKind(node.operatorToken.kind)) {
 						return;
 					}
 
 					const rightSide = unwrapParenthesizedExpression(node.right);
-					if (!ts.isBinaryExpression(rightSide)) {
+					if (
+						rightSide.kind !== SyntaxKind.BinaryExpression ||
+						!tsutils.isAssignmentKind(rightSide.operatorToken.kind)
+					) {
 						return;
 					}
 
 					const parent = unwrapParenthesizedExpressionsParent(node);
-					if (ts.isBinaryExpression(parent)) {
+					if (parent.kind === SyntaxKind.BinaryExpression) {
 						return;
 					}
 
 					context.report({
 						message: "noChainedAssignment",
-						range: getTSNodeRange(node.operatorToken, context.sourceFile),
+						range: getTSNodeRange(node.operatorToken, sourceFile),
 					});
 				},
 			},

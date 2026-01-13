@@ -1,5 +1,5 @@
-import rule from "./eventListenerSubscriptions.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./eventListenerSubscriptions.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

@@ -83,7 +83,40 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/61150013?v=4",
       "profile": "https://github.com/auvred",
       "contributions": [
-        "bug"
+        "bug",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "lishaduck",
+      "name": "Eli",
+      "avatar_url": "https://avatars.githubusercontent.com/u/88557639?v=4",
+      "profile": "http://lishaduck.github.io",
+      "contributions": [
+        "ideas",
+        "code",
+        "tool",
+        "maintenance",
+        "bug",
+        "infra"
+      ]
+    },
+    {
+      "login": "kirkwaiblinger",
+      "name": "Kirk Waiblinger",
+      "avatar_url": "https://avatars.githubusercontent.com/u/53019676?v=4",
+      "profile": "https://github.com/kirkwaiblinger",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "barrymichaeldoyle",
+      "name": "Barry Michael Doyle",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4674486?v=4",
+      "profile": "https://barrymichaeldoyle.com",
+      "contributions": [
+        "infra"
       ]
     }
   ],
@@ -93,7 +126,7 @@
     "README.md"
   ],
   "projectName": "flint",
-  "projectOwner": "JoshuaKGoldberg",
+  "projectOwner": "flint-fyi",
   "repoType": "github",
   "commitConvention": "angular"
 }

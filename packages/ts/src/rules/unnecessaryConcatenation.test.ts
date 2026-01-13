@@ -1,5 +1,5 @@
-import { ruleTester } from "./ruleTester.js";
-import rule from "./unnecessaryConcatenation.js";
+import { ruleTester } from "./ruleTester.ts";
+import rule from "./unnecessaryConcatenation.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

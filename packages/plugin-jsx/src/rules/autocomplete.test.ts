@@ -1,5 +1,5 @@
-import rule from "./autocomplete.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./autocomplete.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <input type="text" autocomplete="foo" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <input type="text" autocomplete="foo" />
                    ~~~~~~~~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <input type="email" autocomplete="invalid" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <input type="email" autocomplete="invalid" />
                     ~~~~~~~~~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <input type="text" autocomplete="name invalid" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <input type="text" autocomplete="name invalid" />
                    ~~~~~~~~~~~~
@@ -40,7 +37,6 @@ ruleTester.describe(rule, {
 			code: `
 <input type="text" autocomplete="home url" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <input type="text" autocomplete="home url" />
                    ~~~~~~~~~~~~
@@ -51,7 +47,6 @@ ruleTester.describe(rule, {
 			code: `
 <input autocomplete="incorrect" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <input autocomplete="incorrect" />
        ~~~~~~~~~~~~
@@ -60,51 +55,42 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<input type="text" />`, fileName: "file.tsx" },
-		{ code: `<input type="text" autocomplete="name" />`, fileName: "file.tsx" },
+		{ code: `<input type="text" />` },
+		{ code: `<input type="text" autocomplete="name" />` },
 		{
 			code: `<input type="text" autocomplete="email" />`,
-			fileName: "file.tsx",
 		},
-		{ code: `<input type="text" autocomplete="off" />`, fileName: "file.tsx" },
-		{ code: `<input type="text" autocomplete="on" />`, fileName: "file.tsx" },
+		{ code: `<input type="text" autocomplete="off" />` },
+		{ code: `<input type="text" autocomplete="on" />` },
 		{
 			code: `<input type="text" autocomplete="username" />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<input type="password" autocomplete="current-password" />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<input type="password" autocomplete="new-password" />`,
-			fileName: "file.tsx",
 		},
-		{ code: `<input type="tel" autocomplete="tel" />`, fileName: "file.tsx" },
-		{ code: `<input type="url" autocomplete="url" />`, fileName: "file.tsx" },
+		{ code: `<input type="tel" autocomplete="tel" />` },
+		{ code: `<input type="url" autocomplete="url" />` },
 		{
 			code: `<input type="text" autocomplete="billing street-address" />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<input type="text" autocomplete="shipping postal-code" />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<input type="text" autocomplete="billing country" />`,
-			fileName: "file.tsx",
 		},
-		{ code: `<input type="text" autocomplete />`, fileName: "file.tsx" },
+		{ code: `<input type="text" autocomplete />` },
 		{
 			code: `<input type="text" autocomplete={otherValue} />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<input type="text" autocomplete={otherValue || "name"} />`,
-			fileName: "file.tsx",
 		},
-		{ code: `<div autocomplete="invalid" />`, fileName: "file.tsx" },
-		{ code: `<Foo autocomplete="bar" />`, fileName: "file.tsx" },
-		{ code: `<button type="submit" />`, fileName: "file.tsx" },
+		{ code: `<div autocomplete="invalid" />` },
+		{ code: `<Foo autocomplete="bar" />` },
+		{ code: `<button type="submit" />` },
 	],
 });

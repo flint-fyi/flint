@@ -1,12 +1,13 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.js";
+import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports unnecessary extra non-null assertions.",
 		id: "consecutiveNonNullAssertions",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		consecutiveNonNullAssertion: {
@@ -22,7 +23,7 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				NonNullExpression: (node) => {
-					if (node.parent.kind !== ts.SyntaxKind.NonNullExpression) {
+					if (node.parent.kind !== SyntaxKind.NonNullExpression) {
 						return;
 					}
 

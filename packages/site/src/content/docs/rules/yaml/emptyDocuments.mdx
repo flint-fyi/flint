@@ -1,0 +1,81 @@
+---
+description: "Remove empty YAML documents that contain only document markers."
+title: "emptyDocuments"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="yaml" rule="emptyDocuments" />
+
+Empty YAML documents contain only document markers (`---` or `...`) without any content.
+These empty documents serve no purpose and typically result from editing mistakes or incomplete refactoring.
+Removing them improves file clarity and reduces confusion.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```yml
+---
+```
+
+```yml
+---
+...
+```
+
+```yml
+---
+---
+key: value
+```
+
+```yml
+---
+key: value
+---
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```yml
+key: value
+```
+
+```yml
+---
+key: value
+```
+
+```yml
+---
+key: value
+---
+another: value
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a specific workflow or tooling that intentionally creates or relies on empty YAML documents for placeholders or other purposes, you might choose to disable this rule.
+However, in most cases, empty documents indicate an error and should be removed.
+
+## Further Reading
+
+- [YAML 1.2 Specification - Document Markers](https://yaml.org/spec/1.2.2/#22-structures)
+- [YAML 1.2 Specification - Documents](https://yaml.org/spec/1.2.2/#3-processes-and-models)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="yaml" ruleId="emptyDocuments" />

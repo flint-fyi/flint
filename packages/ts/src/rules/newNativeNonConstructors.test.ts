@@ -1,5 +1,5 @@
-import rule from "./newNativeNonConstructors.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./newNativeNonConstructors.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

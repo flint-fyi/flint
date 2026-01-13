@@ -1,6 +1,11 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
 import { isGlobalVariable } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const windowLikeNames = new Set([
 	"globalThis",
@@ -10,12 +15,14 @@ const windowLikeNames = new Set([
 	"window",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Requires specifying the targetOrigin argument when calling window.postMessage().",
 		id: "windowMessagingTargetOrigin",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingTargetOrigin: {
@@ -31,27 +38,30 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function isWindowLikeIdentifier(node: ts.Expression): boolean {
+		function isWindowLikeIdentifier(
+			node: AST.LeftHandSideExpression,
+			typeChecker: Checker,
+		): boolean {
 			return (
-				ts.isIdentifier(node) &&
+				node.kind === SyntaxKind.Identifier &&
 				windowLikeNames.has(node.text) &&
-				isGlobalVariable(node, context.typeChecker)
+				isGlobalVariable(node, typeChecker)
 			);
 		}
 
 		return {
 			visitors: {
-				CallExpression(node: ts.CallExpression) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					if (
 						node.arguments.length < 2 &&
-						ts.isPropertyAccessExpression(node.expression) &&
-						ts.isIdentifier(node.expression.name) &&
+						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+						node.expression.name.kind === SyntaxKind.Identifier &&
 						node.expression.name.text === "postMessage" &&
-						isWindowLikeIdentifier(node.expression.expression)
+						isWindowLikeIdentifier(node.expression.expression, typeChecker)
 					) {
 						context.report({
 							message: "missingTargetOrigin",
-							range: getTSNodeRange(node.expression.name, context.sourceFile),
+							range: getTSNodeRange(node.expression.name, sourceFile),
 						});
 					}
 				},

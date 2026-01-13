@@ -10,7 +10,8 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="anyReturns" />
 
-Returning values typed as `any` in TypeScript effectively disables type checking and undermines the safety guarantees of the type system. This rule prevents functions from returning `any`, `any[]`, or `Promise<any>`, as well as from returning generics that contain `any` in positions where a specific type is expected.
+Returning values typed as `any` in TypeScript effectively disables type checking and undermines the safety guarantees of the type system.
+This rule prevents functions from returning `any`, `any[]`, or `Promise<any>`, as well as from returning generics that contain `any` in positions where a specific type is expected.
 
 Prefer using more specific or unknown types to maintain strong type safety.
 
@@ -61,7 +62,9 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If your codebase already contains many `any` types or areas of unsafe code, enabling this rule may be challenging. It may be more practical to defer enabling this rule until type safety has been improved in those areas. You might consider using [Flint disable comments](/) and/or [configuration file disables](/) for specific cases instead of completely disabling this rule.
+If your codebase already contains many `any` types or areas of unsafe code, enabling this rule may be challenging.
+It may be more practical to defer enabling this rule until type safety has been improved in those areas.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for specific cases instead of completely disabling this rule.
 
 ## Equivalents in Other Linters
 

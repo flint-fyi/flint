@@ -1,0 +1,25 @@
+---
+description: "All linting rules provided by Flint"
+tableOfContents: false
+title: All Rules
+topic: rules
+---
+
+import { PluginCards } from "~/components/PluginCards.tsx";
+import { RulesTable } from "~/components/RulesTable.tsx";
+
+:::danger
+Flint is still very early stage and experimental.
+Not all features have been implemented.
+:::
+
+:::tip
+Rules are grouped into plugins that you can opt into.
+See [Rules](/rules) for an overview of how rules are sorted into plugins.
+:::
+
+These rules will not be implemented as a part of Flint.
+They are all too opinionated and/or too niche to be kept in the Flint project.
+They're free to be implemented as a community third-party Flint plugin.
+
+<RulesTable implementing={false} small sortBy="name" />

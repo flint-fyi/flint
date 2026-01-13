@@ -12,7 +12,7 @@ export const linterNames = {
 	oxlint: "Oxlint",
 } as const satisfies Record<Linter, string>;
 
-const comparisons: Comparison[] = data;
+const comparisons = data as Comparison[];
 
 export { comparisons };
 
@@ -27,12 +27,14 @@ export interface Comparison {
 }
 
 export interface FlintRuleReference {
-	implemented?: boolean;
 	name: string;
 	plugin: string;
-	preset: string;
+	preset?: string;
+	status?: FlintRuleStatus;
 	strictness?: string;
 }
+
+export type FlintRuleStatus = "implemented" | "skipped";
 
 export type Linter = "biome" | "deno" | "eslint" | "markdownlint" | "oxlint";
 

@@ -1,14 +1,15 @@
-import { isTruthy } from "@flint.fyi/utils";
-import * as ts from "typescript";
+import type { AST } from "@flint.fyi/ts";
+import { isTruthy, nullThrows } from "@flint.fyi/utils";
+import { SyntaxKind } from "typescript";
 
-import { findProperty } from "./findProperty.js";
-import { parseTestCase, parseTestCaseInvalid } from "./parseTestCases.js";
+import { findProperty } from "./findProperty.ts";
+import { parseTestCase, parseTestCaseInvalid } from "./parseTestCases.ts";
 
-export function getRuleTesterDescribedCases(node: ts.CallExpression) {
+export function getRuleTesterDescribedCases(node: AST.CallExpression) {
 	if (
-		!ts.isPropertyAccessExpression(node.expression) ||
-		!ts.isIdentifier(node.expression.expression) ||
-		!ts.isIdentifier(node.expression.name) ||
+		node.expression.kind != SyntaxKind.PropertyAccessExpression ||
+		node.expression.expression.kind != SyntaxKind.Identifier ||
+		node.expression.name.kind != SyntaxKind.Identifier ||
 		node.expression.name.text !== "describe" ||
 		node.arguments.length !== 2
 	) {
@@ -16,17 +17,20 @@ export function getRuleTesterDescribedCases(node: ts.CallExpression) {
 	}
 
 	// TODO: Check node.expression.expression's type for being a RuleTester
-	// https://github.com/JoshuaKGoldberg/flint/issues/152
+	// https://github.com/flint-fyi/flint/issues/152
 
-	const argument = node.arguments[1];
-	if (!ts.isObjectLiteralExpression(argument)) {
+	const argument = nullThrows(
+		node.arguments[1],
+		"Second argument is expected to be present by prior length check",
+	);
+	if (argument.kind != SyntaxKind.ObjectLiteralExpression) {
 		return undefined;
 	}
 
 	const invalid = findProperty(
 		argument.properties,
 		"invalid",
-		ts.isArrayLiteralExpression,
+		(node) => node.kind == SyntaxKind.ArrayLiteralExpression,
 	);
 	if (!invalid) {
 		return undefined;
@@ -35,7 +39,7 @@ export function getRuleTesterDescribedCases(node: ts.CallExpression) {
 	const valid = findProperty(
 		argument.properties,
 		"valid",
-		ts.isArrayLiteralExpression,
+		(node) => node.kind == SyntaxKind.ArrayLiteralExpression,
 	);
 	if (!valid) {
 		return undefined;

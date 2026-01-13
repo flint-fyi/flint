@@ -1,13 +1,14 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts from "typescript";
 
-import { typescriptLanguage } from "../language.js";
+import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports returning values from constructor functions.",
 		id: "constructorReturns",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noConstructorReturn: {
@@ -25,7 +26,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				Constructor: (node) => {
+				Constructor: (node, { sourceFile }) => {
 					if (!node.body) {
 						return;
 					}
@@ -36,7 +37,7 @@ export default typescriptLanguage.createRule({
 								context.report({
 									message: "noConstructorReturn",
 									range: {
-										begin: node.getStart(context.sourceFile),
+										begin: node.getStart(sourceFile),
 										end: node.getEnd(),
 									},
 								});

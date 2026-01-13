@@ -1,5 +1,10 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
 const validAriaRoles = new Set([
 	"alert",
@@ -74,11 +79,13 @@ const validAriaRoles = new Set([
 	"treeitem",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports invalid or abstract ARIA roles.",
 		id: "ariaRoleValidity",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidRole: {
@@ -96,22 +103,26 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkRole(node: ts.JsxOpeningLikeElement) {
+		function checkRole(
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
 			if (
-				!ts.isIdentifier(node.tagName) ||
+				node.tagName.kind !== SyntaxKind.Identifier ||
 				node.tagName.text.toLowerCase() !== node.tagName.text
 			) {
 				return;
 			}
 
 			const roleProperty = node.attributes.properties.find(
-				(property): property is ts.JsxAttribute =>
-					ts.isJsxAttribute(property) && ts.isIdentifier(property.name),
+				(property): property is AST.JsxAttribute =>
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier,
 			);
 
 			if (
 				!roleProperty?.initializer ||
-				!ts.isStringLiteral(roleProperty.initializer)
+				roleProperty.initializer.kind !== SyntaxKind.StringLiteral
 			) {
 				return;
 			}
@@ -122,7 +133,7 @@ export default typescriptLanguage.createRule({
 				context.report({
 					data: { role: role || "(empty)" },
 					message: "invalidRole",
-					range: getTSNodeRange(roleProperty, context.sourceFile),
+					range: getTSNodeRange(roleProperty, sourceFile),
 				});
 			}
 		}

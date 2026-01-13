@@ -1,8 +1,10 @@
-import { typescriptLanguage } from "@flint.fyi/ts";
+import { type TypeScriptFileServices, typescriptLanguage } from "@flint.fyi/ts";
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "../ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using await expressions inside loops.",
 		id: "loopAwaits",
@@ -21,9 +23,13 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkForAwaitExpressions(node: ts.Node, loopNode: ts.Node): void {
-			if (ts.isAwaitExpression(node)) {
-				const start = node.getStart(context.sourceFile);
+		function checkForAwaitExpressions(
+			node: ts.Node,
+			loopNode: ts.Node,
+			sourceFile: ts.SourceFile,
+		): void {
+			if (node.kind === SyntaxKind.AwaitExpression) {
+				const start = node.getStart(sourceFile);
 				context.report({
 					message: "noAwaitInLoop",
 					range: {
@@ -35,23 +41,26 @@ export default typescriptLanguage.createRule({
 			}
 
 			if (
-				ts.isDoStatement(node) ||
-				ts.isForInStatement(node) ||
-				ts.isForOfStatement(node) ||
-				ts.isForStatement(node) ||
-				ts.isWhileStatement(node) ||
+				node.kind === SyntaxKind.DoStatement ||
+				node.kind === SyntaxKind.ForInStatement ||
+				node.kind === SyntaxKind.ForOfStatement ||
+				node.kind === SyntaxKind.ForStatement ||
+				node.kind === SyntaxKind.WhileStatement ||
 				tsutils.isFunctionScopeBoundary(node)
 			) {
 				return;
 			}
 
 			ts.forEachChild(node, (child) => {
-				checkForAwaitExpressions(child, loopNode);
+				checkForAwaitExpressions(child, loopNode, sourceFile);
 			});
 		}
 
-		function checkNode(node: ts.Node & { statement: ts.Node }) {
-			checkForAwaitExpressions(node.statement, node);
+		function checkNode(
+			node: ts.Node & { statement: ts.Node },
+			{ sourceFile }: TypeScriptFileServices,
+		) {
+			checkForAwaitExpressions(node.statement, node, sourceFile);
 		}
 
 		return {

@@ -1,5 +1,10 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
 const roleToElement: Record<string, string> = {
 	article: "article",
@@ -28,12 +33,14 @@ const roleToElement: Record<string, string> = {
 	textbox: "input[type='text']/textarea",
 };
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports ARIA roles that have semantic HTML element equivalents.",
 		id: "roleTags",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferSemanticElement: {
@@ -48,9 +55,12 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkRole(node: ts.JsxOpeningLikeElement) {
+		function checkRole(
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
 			if (
-				!ts.isIdentifier(node.tagName) ||
+				node.tagName.kind !== SyntaxKind.Identifier ||
 				node.tagName.text.toLowerCase() !== node.tagName.text
 			) {
 				return;
@@ -58,16 +68,16 @@ export default typescriptLanguage.createRule({
 
 			const roleProperty = node.attributes.properties.find(
 				(property) =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "role",
 			);
 
 			if (
 				!roleProperty ||
-				!ts.isJsxAttribute(roleProperty) ||
+				roleProperty.kind !== SyntaxKind.JsxAttribute ||
 				!roleProperty.initializer ||
-				!ts.isStringLiteral(roleProperty.initializer)
+				roleProperty.initializer.kind !== SyntaxKind.StringLiteral
 			) {
 				return;
 			}
@@ -83,7 +93,7 @@ export default typescriptLanguage.createRule({
 						semanticElement,
 					},
 					message: "preferSemanticElement",
-					range: getTSNodeRange(roleProperty, context.sourceFile),
+					range: getTSNodeRange(roleProperty, sourceFile),
 				});
 			}
 		}

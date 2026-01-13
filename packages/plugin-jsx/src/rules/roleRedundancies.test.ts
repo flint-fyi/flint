@@ -1,5 +1,5 @@
-import rule from "./roleRedundancies.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./roleRedundancies.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <button role="button" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <button role="button" />
         ~~~~~~~~~~~~~
@@ -26,7 +25,6 @@ ruleTester.describe(rule, {
 			code: `
 <img role="img" src="/image.jpg" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <img role="img" src="/image.jpg" />
      ~~~~~~~~~~
@@ -45,7 +43,6 @@ ruleTester.describe(rule, {
 			code: `
 <nav role="navigation" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <nav role="navigation" />
      ~~~~~~~~~~~~~~~~~
@@ -64,7 +61,6 @@ ruleTester.describe(rule, {
 			code: `
 <main role="main" style="" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <main role="main" style="" />
       ~~~~~~~~~~~
@@ -81,11 +77,11 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div />`, fileName: "file.tsx" },
-		{ code: `<button role="presentation" />`, fileName: "file.tsx" },
-		{ code: `<div role="button" />`, fileName: "file.tsx" },
-		{ code: `<img src="/image.jpg" />`, fileName: "file.tsx" },
-		{ code: `<nav />`, fileName: "file.tsx" },
-		{ code: `<button />`, fileName: "file.tsx" },
+		{ code: `<div />` },
+		{ code: `<button role="presentation" />` },
+		{ code: `<div role="button" />` },
+		{ code: `<img src="/image.jpg" />` },
+		{ code: `<nav />` },
+		{ code: `<button />` },
 	],
 });

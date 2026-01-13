@@ -1,5 +1,10 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
 const unsupportedElements = new Set([
 	"base",
@@ -46,11 +51,13 @@ const unsupportedElements = new Set([
 	"track",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports ARIA attributes on elements that don't support them.",
 		id: "ariaUnsupportedElements",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsupportedElement: {
@@ -65,8 +72,11 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkElement(node: ts.JsxOpeningLikeElement) {
-			if (!ts.isIdentifier(node.tagName)) {
+		function checkElement(
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
+			if (node.tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -77,7 +87,10 @@ export default typescriptLanguage.createRule({
 
 			if (
 				node.attributes.properties.some((property) => {
-					if (!ts.isJsxAttribute(property) || !ts.isIdentifier(property.name)) {
+					if (
+						property.kind !== SyntaxKind.JsxAttribute ||
+						property.name.kind !== SyntaxKind.Identifier
+					) {
 						return false;
 					}
 
@@ -88,7 +101,7 @@ export default typescriptLanguage.createRule({
 				context.report({
 					data: { element: elementName },
 					message: "unsupportedElement",
-					range: getTSNodeRange(node.tagName, context.sourceFile),
+					range: getTSNodeRange(node.tagName, sourceFile),
 				});
 			}
 		}

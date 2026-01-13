@@ -1,12 +1,14 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import ts, { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prevents implicit global variable declarations in browser scripts.",
 		id: "implicitGlobals",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		implicitGlobal: {
@@ -25,30 +27,10 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		const isModule = context.sourceFile.statements.some(
-			(statement) =>
-				ts.isImportDeclaration(statement) ||
-				ts.isExportDeclaration(statement) ||
-				ts.isExportAssignment(statement) ||
-				(ts.isVariableStatement(statement) &&
-					(statement.modifiers?.some(
-						(modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword,
-					) ??
-						false)) ||
-				(ts.isFunctionDeclaration(statement) &&
-					(statement.modifiers?.some(
-						(modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword,
-					) ??
-						false)),
-		);
-
-		if (isModule) {
-			return {
-				visitors: {},
-			};
-		}
-
-		function checkFunctionDeclaration(node: ts.FunctionDeclaration) {
+		function checkFunctionDeclaration(
+			node: AST.FunctionDeclaration,
+			sourceFile: AST.SourceFile,
+		) {
 			if (!node.name) {
 				return;
 			}
@@ -56,14 +38,20 @@ export default typescriptLanguage.createRule({
 			context.report({
 				data: { declarationType: "function declaration" },
 				message: "implicitGlobal",
-				range: getTSNodeRange(node.name, context.sourceFile),
+				range: getTSNodeRange(
+					node.name,
+					sourceFile as unknown as ts.SourceFile,
+				),
 			});
 		}
 
-		function checkVariableStatement(node: ts.VariableStatement) {
+		function checkVariableStatement(
+			node: AST.VariableStatement,
+			sourceFile: AST.SourceFile,
+		) {
 			if (
 				node.modifiers?.some(
-					(modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword,
+					(modifier) => modifier.kind === SyntaxKind.ExportKeyword,
 				) ||
 				node.declarationList.flags & ts.NodeFlags.BlockScoped
 			) {
@@ -71,11 +59,14 @@ export default typescriptLanguage.createRule({
 			}
 
 			for (const declaration of node.declarationList.declarations) {
-				if (ts.isIdentifier(declaration.name)) {
+				if (declaration.name.kind === SyntaxKind.Identifier) {
 					context.report({
 						data: { declarationType: "var declaration" },
 						message: "implicitGlobal",
-						range: getTSNodeRange(declaration.name, context.sourceFile),
+						range: getTSNodeRange(
+							declaration.name,
+							sourceFile as unknown as ts.SourceFile,
+						),
 					});
 				}
 			}
@@ -84,11 +75,32 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				SourceFile(node) {
+					const isModule = node.statements.some(
+						(statement) =>
+							statement.kind === SyntaxKind.ImportDeclaration ||
+							statement.kind === SyntaxKind.ExportDeclaration ||
+							statement.kind === SyntaxKind.ExportAssignment ||
+							(statement.kind === SyntaxKind.VariableStatement &&
+								(statement.modifiers?.some(
+									(modifier) => modifier.kind === SyntaxKind.ExportKeyword,
+								) ??
+									false)) ||
+							(statement.kind === SyntaxKind.FunctionDeclaration &&
+								(statement.modifiers?.some(
+									(modifier) => modifier.kind === SyntaxKind.ExportKeyword,
+								) ??
+									false)),
+					);
+
+					if (isModule) {
+						return;
+					}
+
 					for (const statement of node.statements) {
-						if (ts.isFunctionDeclaration(statement)) {
-							checkFunctionDeclaration(statement);
-						} else if (ts.isVariableStatement(statement)) {
-							checkVariableStatement(statement);
+						if (statement.kind === SyntaxKind.FunctionDeclaration) {
+							checkFunctionDeclaration(statement, node);
+						} else if (statement.kind === SyntaxKind.VariableStatement) {
+							checkVariableStatement(statement, node);
 						}
 					}
 				},

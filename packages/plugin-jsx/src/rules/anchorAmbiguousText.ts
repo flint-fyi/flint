@@ -1,5 +1,5 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
 const ambiguousWords = new Set([
 	"a link",
@@ -11,12 +11,14 @@ const ambiguousWords = new Set([
 	"read more",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports anchor elements with ambiguous text that doesn't describe the link destination.",
 		id: "anchorAmbiguousText",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		ambiguousText: {
@@ -35,16 +37,19 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function getTextContent(node: ts.JsxElement): string {
+		function getTextContent(node: AST.JsxElement): string {
 			let text = "";
 
 			for (const child of node.children) {
-				if (ts.isJsxText(child)) {
+				if (child.kind === SyntaxKind.JsxText) {
 					text += child.text;
-				} else if (ts.isJsxElement(child)) {
+				} else if (child.kind === SyntaxKind.JsxElement) {
 					text += getTextContent(child);
-				} else if (ts.isJsxExpression(child)) {
-					if (child.expression && ts.isStringLiteral(child.expression)) {
+				} else if (child.kind === SyntaxKind.JsxExpression) {
+					if (
+						child.expression &&
+						child.expression.kind === SyntaxKind.StringLiteral
+					) {
 						text += child.expression.text;
 					}
 				}
@@ -55,9 +60,9 @@ export default typescriptLanguage.createRule({
 
 		return {
 			visitors: {
-				JsxElement(node: ts.JsxElement) {
+				JsxElement(node, { sourceFile }) {
 					if (
-						!ts.isIdentifier(node.openingElement.tagName) ||
+						node.openingElement.tagName.kind !== SyntaxKind.Identifier ||
 						node.openingElement.tagName.text !== "a"
 					) {
 						return;
@@ -69,15 +74,15 @@ export default typescriptLanguage.createRule({
 					}
 
 					const textNodes = node.children.filter(
-						(child) => ts.isJsxText(child) && child.text.trim(),
+						(child) => child.kind === SyntaxKind.JsxText && child.text.trim(),
 					);
 
 					context.report({
 						data: { text: textContent.trim() },
 						message: "ambiguousText",
 						range: getTSNodeRange(
-							textNodes[0] || node.openingElement,
-							context.sourceFile,
+							textNodes[0] ?? node.openingElement,
+							sourceFile,
 						),
 					});
 				},

@@ -1,5 +1,5 @@
-import rule from "./fencedCodeLanguages.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./fencedCodeLanguages.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

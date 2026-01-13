@@ -10,7 +10,7 @@ export interface TestCase<
 	Options extends object | undefined = object | undefined,
 > {
 	code: string;
-	fileName?: string;
+	fileName?: string | undefined;
 
 	/**
 	 * Run only this test case. Useful for debugging.
@@ -19,7 +19,7 @@ export interface TestCase<
 	 */
 	only?: boolean;
 
-	options?: Options;
+	options?: Options | undefined;
 
 	/**
 	 * Skip running this test case. Useful for work-in-progress tests.

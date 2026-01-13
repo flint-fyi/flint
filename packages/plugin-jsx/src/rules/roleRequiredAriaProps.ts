@@ -1,5 +1,10 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
 const requiredAriaPropsForRole: Partial<Record<string, string[]>> = {
 	checkbox: ["aria-checked"],
@@ -20,11 +25,13 @@ const requiredAriaPropsForRole: Partial<Record<string, string[]>> = {
 	switch: ["aria-checked"],
 };
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports ARIA roles missing their required ARIA properties.",
 		id: "roleRequiredAriaProps",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingRequiredProps: {
@@ -39,19 +46,22 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkElement(node: ts.JsxOpeningLikeElement) {
+		function checkElement(
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
 			const roleAttribute = node.attributes.properties.find(
 				(property) =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "role",
 			);
 
 			if (
 				!roleAttribute ||
-				!ts.isJsxAttribute(roleAttribute) ||
+				roleAttribute.kind !== SyntaxKind.JsxAttribute ||
 				!roleAttribute.initializer ||
-				!ts.isStringLiteral(roleAttribute.initializer)
+				roleAttribute.initializer.kind !== SyntaxKind.StringLiteral
 			) {
 				return;
 			}
@@ -65,7 +75,10 @@ export default typescriptLanguage.createRule({
 
 			const existingProps = new Set<string>();
 			for (const property of node.attributes.properties) {
-				if (!ts.isJsxAttribute(property) || !ts.isIdentifier(property.name)) {
+				if (
+					property.kind !== SyntaxKind.JsxAttribute ||
+					property.name.kind !== SyntaxKind.Identifier
+				) {
 					continue;
 				}
 
@@ -86,7 +99,7 @@ export default typescriptLanguage.createRule({
 						role,
 					},
 					message: "missingRequiredProps",
-					range: getTSNodeRange(roleAttribute, context.sourceFile),
+					range: getTSNodeRange(roleAttribute, sourceFile),
 				});
 			}
 		}

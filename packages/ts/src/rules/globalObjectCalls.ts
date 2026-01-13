@@ -1,16 +1,22 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.js";
-import { typescriptLanguage } from "../language.js";
+import { getTSNodeRange } from "../getTSNodeRange.ts";
+import {
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 const globalObjects = new Set(["Atomics", "JSON", "Math", "Reflect"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports calling global objects like Math, JSON, or Reflect as functions.",
 		id: "globalObjectCalls",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noGlobalObjectCall: {
@@ -26,19 +32,26 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function reportGlobalObjectCall(
-			expression: ts.Expression,
+			expression: AST.Expression,
 			name: string,
+			sourceFile: ts.SourceFile,
 		): void {
 			context.report({
 				data: { name },
 				message: "noGlobalObjectCall",
-				range: getTSNodeRange(expression, context.sourceFile),
+				range: getTSNodeRange(expression, sourceFile),
 			});
 		}
 
-		function checkNode({ expression }: ts.CallExpression | ts.NewExpression) {
-			if (ts.isIdentifier(expression) && globalObjects.has(expression.text)) {
-				reportGlobalObjectCall(expression, expression.text);
+		function checkNode(
+			{ expression }: AST.CallExpression | AST.NewExpression,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
+			if (
+				expression.kind === SyntaxKind.Identifier &&
+				globalObjects.has(expression.text)
+			) {
+				reportGlobalObjectCall(expression, expression.text, sourceFile);
 			}
 		}
 

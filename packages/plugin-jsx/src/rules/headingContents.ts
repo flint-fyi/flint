@@ -1,13 +1,20 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
 const headingElements = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports heading elements without accessible content.",
 		id: "headingContents",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		emptyHeading: {
@@ -24,25 +31,33 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkHeading(node: ts.JsxElement | ts.JsxSelfClosingElement) {
-			const tagName = ts.isJsxElement(node)
-				? node.openingElement.tagName
-				: node.tagName;
+		function checkHeading(
+			node: AST.JsxElement | AST.JsxSelfClosingElement,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
+			const tagName =
+				node.kind == SyntaxKind.JsxElement
+					? node.openingElement.tagName
+					: node.tagName;
 
 			if (
-				!ts.isIdentifier(tagName) ||
+				tagName.kind !== SyntaxKind.Identifier ||
 				!headingElements.has(tagName.text.toLowerCase())
 			) {
 				return;
 			}
 
-			const attributes = ts.isJsxElement(node)
-				? node.openingElement.attributes
-				: node.attributes;
+			const attributes =
+				node.kind == SyntaxKind.JsxElement
+					? node.openingElement.attributes
+					: node.attributes;
 
 			if (
 				attributes.properties.some((property) => {
-					if (!ts.isJsxAttribute(property) || !ts.isIdentifier(property.name)) {
+					if (
+						property.kind !== SyntaxKind.JsxAttribute ||
+						property.name.kind !== SyntaxKind.Identifier
+					) {
 						return false;
 					}
 
@@ -57,15 +72,15 @@ export default typescriptLanguage.createRule({
 			}
 
 			if (
-				ts.isJsxElement(node) &&
+				node.kind === SyntaxKind.JsxElement &&
 				node.children.some((child) => {
-					if (ts.isJsxText(child)) {
+					if (child.kind === SyntaxKind.JsxText) {
 						return child.text.trim().length > 0;
 					}
 					return (
-						ts.isJsxElement(child) ||
-						ts.isJsxSelfClosingElement(child) ||
-						ts.isJsxExpression(child)
+						child.kind === SyntaxKind.JsxElement ||
+						child.kind === SyntaxKind.JsxSelfClosingElement ||
+						child.kind === SyntaxKind.JsxExpression
 					);
 				})
 			) {
@@ -74,7 +89,7 @@ export default typescriptLanguage.createRule({
 
 			context.report({
 				message: "emptyHeading",
-				range: getTSNodeRange(tagName, context.sourceFile),
+				range: getTSNodeRange(tagName, sourceFile),
 			});
 		}
 

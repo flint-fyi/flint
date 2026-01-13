@@ -1,12 +1,11 @@
-import rule from "./altTexts.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./altTexts.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
 <img src="foo.jpg" />`,
-			fileName: "file.tsx",
 			snapshot: `
 <img src="foo.jpg" />
  ~~~
@@ -15,7 +14,6 @@ ruleTester.describe(rule, {
 		{
 			code: `
 <img src="foo.jpg" alt />`,
-			fileName: "file.tsx",
 			snapshot: `
 <img src="foo.jpg" alt />
  ~~~
@@ -24,7 +22,6 @@ ruleTester.describe(rule, {
 		{
 			code: `
 <img src="foo.jpg" alt={undefined} />`,
-			fileName: "file.tsx",
 			snapshot: `
 <img src="foo.jpg" alt={undefined} />
  ~~~
@@ -33,7 +30,6 @@ ruleTester.describe(rule, {
 		{
 			code: `
 <area href="#" />`,
-			fileName: "file.tsx",
 			snapshot: `
 <area href="#" />
  ~~~~
@@ -42,7 +38,6 @@ ruleTester.describe(rule, {
 		{
 			code: `
 <input type="image" src="submit.png" />`,
-			fileName: "file.tsx",
 			snapshot: `
 <input type="image" src="submit.png" />
  ~~~~~
@@ -51,7 +46,6 @@ ruleTester.describe(rule, {
 		{
 			code: `
 <object data="movie.mp4" />`,
-			fileName: "file.tsx",
 			snapshot: `
 <object data="movie.mp4" />
  ~~~~~~
@@ -59,15 +53,15 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<img src="foo.jpg" alt="A foo" />`, fileName: "file.tsx" },
-		{ code: `<img src="foo.jpg" alt="" />`, fileName: "file.tsx" },
-		{ code: `<img src="foo.jpg" alt={altTexts} />`, fileName: "file.tsx" },
-		{ code: `<img src="foo.jpg" aria-label="Foo" />`, fileName: "file.tsx" },
-		{ code: `<area alt="Click here" href="#" />`, fileName: "file.tsx" },
-		{ code: `<input type="image" alt="Submit" />`, fileName: "file.tsx" },
-		{ code: `<input type="text" />`, fileName: "file.tsx" },
-		{ code: `<object aria-label="Video" />`, fileName: "file.tsx" },
-		{ code: `<object title="Movie" />`, fileName: "file.tsx" },
-		{ code: `<div>Not an image element</div>`, fileName: "file.tsx" },
+		{ code: `<img src="foo.jpg" alt="A foo" />` },
+		{ code: `<img src="foo.jpg" alt="" />` },
+		{ code: `<img src="foo.jpg" alt={altTexts} />` },
+		{ code: `<img src="foo.jpg" aria-label="Foo" />` },
+		{ code: `<area alt="Click here" href="#" />` },
+		{ code: `<input type="image" alt="Submit" />` },
+		{ code: `<input type="text" />` },
+		{ code: `<object aria-label="Video" />` },
+		{ code: `<object title="Movie" />` },
+		{ code: `<div>Not an image element</div>` },
 	],
 });

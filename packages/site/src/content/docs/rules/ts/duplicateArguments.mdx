@@ -67,8 +67,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-This rule should always be enabled, as duplicate parameter names are either a syntax error (in strict mode) or a source of confusion (in non-strict mode).
-Modern JavaScript and TypeScript code should never use duplicate parameter names.
+If your codebase relies on non-standard behavior that involves duplicate argument names (which is highly discouraged), you might choose to disable this rule.
+For example, if you target a legacy runtime with non-standard JavaScript semantics, standard practices may not apply to you.
 
 ## Further Reading
 

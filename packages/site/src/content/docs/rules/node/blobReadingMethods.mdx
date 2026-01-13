@@ -1,0 +1,61 @@
+---
+description: "Prefer direct Blob reading methods over wrapping in Response for simpler code."
+title: "blobReadingMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="blobReadingMethods" />
+
+Direct Blob methods are simpler and more direct than wrapping the Blob in a Response object.
+The Response wrapper adds unnecessary complexity when the Blob already provides the needed methods.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const text = await new Response(blob).text();
+
+const arrayBuffer = await new Response(blob).arrayBuffer();
+
+const bytes = await new Response(blob).bytes();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const text = await blob.text();
+
+const arrayBuffer = await blob.arrayBuffer();
+
+const bytes = await blob.bytes();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to use Response-specific functionality while reading the Blob data, you might choose not to enable this rule.
+
+## Further Reading
+
+- [MDN: Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob)
+- [MDN: Blob.text()](https://developer.mozilla.org/en-US/docs/Web/API/Blob/text)
+- [MDN: Blob.arrayBuffer()](https://developer.mozilla.org/en-US/docs/Web/API/Blob/arrayBuffer)
+- [MDN: Blob.bytes()](https://developer.mozilla.org/en-US/docs/Web/API/Blob/bytes)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="blobReadingMethods" />

@@ -3,14 +3,10 @@ description: "Performance linting rules provided by Flint."
 title: "Performance Plugin"
 ---
 
-import { PackageManagers } from "starlight-package-managers";
-
 import { RulesTable } from "~/components/RulesTable.tsx";
+import PluginTop from "~/components/PluginTop.astro";
 
-Flint's performance plugin includes rules targeted to code that runs with specialized performance needs.
-As in, this plugin enforces performance best practices that only apply when code must be as performant as possible.
-
-<PackageManagers type="install" pkg="@flint.fyi/plugin-performance" />
+<PluginTop pluginId="performance" />
 
 ## Presets
 

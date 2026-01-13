@@ -3,14 +3,17 @@ import {
 	isGlobalDeclaration,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { nullThrows } from "@flint.fyi/utils";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallow inline function expressions in removeEventListener calls.",
 		id: "removeEventListenerExpressions",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidRemoveEventListener: {
@@ -30,28 +33,31 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node: ts.CallExpression) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
-						!ts.isIdentifier(node.expression.name) ||
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+						node.expression.name.kind !== SyntaxKind.Identifier ||
 						node.expression.name.text !== "removeEventListener" ||
 						node.arguments.length < 2 ||
-						!isGlobalDeclaration(node.expression, context.typeChecker)
+						!isGlobalDeclaration(node.expression, typeChecker)
 					) {
 						return;
 					}
 
-					const listener = node.arguments[1];
+					const listener = nullThrows(
+						node.arguments[1],
+						"Second argument is expected to be present by prior length check",
+					);
 					if (
-						!ts.isArrowFunction(listener) &&
-						!ts.isFunctionExpression(listener)
+						listener.kind !== SyntaxKind.ArrowFunction &&
+						listener.kind !== SyntaxKind.FunctionExpression
 					) {
 						return;
 					}
 
 					context.report({
 						message: "invalidRemoveEventListener",
-						range: getTSNodeRange(listener, context.sourceFile),
+						range: getTSNodeRange(listener, sourceFile),
 					});
 				},
 			},

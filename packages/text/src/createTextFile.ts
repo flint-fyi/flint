@@ -1,57 +1,30 @@
-import {
-	LanguageFileDefinition,
-	NormalizedReport,
-	RuleReport,
-} from "@flint.fyi/core";
-import indexToPosition from "index-to-position";
+import type { FileDiskData, LanguageFileDefinition } from "@flint.fyi/core";
+
+import type { TextFileServices, TextNodes } from "./types.ts";
 
 export function createTextFile(
-	filePathAbsolute: string,
-	sourceText: string,
-): LanguageFileDefinition {
+	data: FileDiskData,
+): LanguageFileDefinition<TextNodes, TextFileServices> {
 	return {
-		async runRule(rule, options) {
-			const reports: NormalizedReport[] = [];
-
-			const context = {
-				filePathAbsolute,
-				report: (report: RuleReport) => {
-					reports.push({
-						...report,
-						fix:
-							report.fix && !Array.isArray(report.fix)
-								? [report.fix]
-								: report.fix,
-						message: rule.messages[report.message],
-						range: {
-							begin: {
-								...indexToPosition(sourceText, report.range.begin),
-								raw: report.range.begin,
-							},
-							end: {
-								...indexToPosition(sourceText, report.range.end),
-								raw: report.range.end,
-							},
-						},
-					});
-				},
-				sourceText,
-			};
-
-			const runtime = await rule.setup(context, options);
-
-			if (runtime?.visitors) {
-				runtime.visitors.file?.(sourceText);
-
-				if (runtime.visitors.line) {
-					const lines = sourceText.split(/\r\n|\n|\r/);
-					for (const line of lines) {
-						runtime.visitors.line(line);
-					}
-				}
+		about: data,
+		runVisitors(options, runtime) {
+			if (!runtime.visitors) {
+				return;
 			}
 
-			return reports;
+			const fileServices = {
+				filePathAbsolute: data.filePathAbsolute,
+				options,
+				sourceText: data.sourceText,
+			};
+
+			runtime.visitors.file?.(data.sourceText, fileServices);
+
+			if (runtime.visitors.line) {
+				for (const line of data.sourceText.split(/\r\n|\n|\r/)) {
+					runtime.visitors.line(line, fileServices);
+				}
+			}
 		},
 	};
 }

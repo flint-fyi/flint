@@ -1,4 +1,4 @@
-import { CharacterReportRange } from "./ranges.js";
+import type { CharacterReportRange } from "./ranges.ts";
 
 export type Change = Fix | Suggestion;
 

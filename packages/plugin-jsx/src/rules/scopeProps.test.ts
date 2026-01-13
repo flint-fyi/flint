@@ -1,5 +1,5 @@
-import { ruleTester } from "./ruleTester.js";
-import rule from "./scopeProps.js";
+import { ruleTester } from "./ruleTester.ts";
+import rule from "./scopeProps.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <div scope />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div scope />
      ~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <div scope="col" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div scope="col" />
      ~~~~~~~~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <td scope="row" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <td scope="row" />
     ~~~~~~~~~~~
@@ -40,7 +37,6 @@ ruleTester.describe(rule, {
 			code: `
 <span scope={scope} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <span scope={scope} />
       ~~~~~~~~~~~~~
@@ -49,10 +45,10 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<th scope="col" />`, fileName: "file.tsx" },
-		{ code: `<th scope="row" />`, fileName: "file.tsx" },
-		{ code: `<th scope={scope} />`, fileName: "file.tsx" },
-		{ code: `<div />`, fileName: "file.tsx" },
-		{ code: `<td>Cell</td>`, fileName: "file.tsx" },
+		{ code: `<th scope="col" />` },
+		{ code: `<th scope="row" />` },
+		{ code: `<th scope={scope} />` },
+		{ code: `<div />` },
+		{ code: `<td>Cell</td>` },
 	],
 });

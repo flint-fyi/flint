@@ -1,5 +1,8 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts from "typescript";
+
+import * as AST from "../types/ast.ts";
+import type { Checker } from "../types/checker.ts";
 
 /**
  * Gets all references to a variable that modify it (assignments, increments, decrements).
@@ -8,9 +11,9 @@ import * as ts from "typescript";
  * @returns An array of identifier nodes that modify the variable.
  */
 export function getModifyingReferences(
-	identifier: ts.Identifier,
-	sourceFile: ts.SourceFile,
-	typeChecker: ts.TypeChecker,
+	identifier: AST.Identifier,
+	sourceFile: AST.SourceFile | ts.SourceFile,
+	typeChecker: Checker,
 ): ts.Identifier[] {
 	const symbol = typeChecker.getSymbolAtLocation(identifier);
 	if (!symbol?.valueDeclaration) {
