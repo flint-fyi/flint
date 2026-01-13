@@ -7407,6 +7407,7 @@
 			"name": "arrayFlatMethods",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -7426,7 +7427,8 @@
 		"flint": {
 			"name": "arrayFlatUnnecessaryDepths",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7445,7 +7447,8 @@
 		"flint": {
 			"name": "arrayIncludes",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{

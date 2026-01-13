@@ -15,6 +15,9 @@ import arrayExistenceChecksConsistency from "./rules/arrayExistenceChecksConsist
 import arrayFilteredFinds from "./rules/arrayFilteredFinds.ts";
 import arrayFinds from "./rules/arrayFinds.ts";
 import arrayFlatMapMethods from "./rules/arrayFlatMapMethods.ts";
+import arrayFlatMethods from "./rules/arrayFlatMethods.ts";
+import arrayFlatUnnecessaryDepths from "./rules/arrayFlatUnnecessaryDepths.ts";
+import arrayIncludes from "./rules/arrayIncludes.ts";
 import arrayMapIdentities from "./rules/arrayMapIdentities.ts";
 import arrayMutableReverses from "./rules/arrayMutableReverses.ts";
 import arrayMutableSorts from "./rules/arrayMutableSorts.ts";
@@ -124,6 +127,9 @@ export const ts = createPlugin({
 		arrayFilteredFinds,
 		arrayFinds,
 		arrayFlatMapMethods,
+		arrayFlatMethods,
+		arrayFlatUnnecessaryDepths,
+		arrayIncludes,
 		arrayMapIdentities,
 		arrayMutableReverses,
 		arrayMutableSorts,
