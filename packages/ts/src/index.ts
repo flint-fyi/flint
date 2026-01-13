@@ -22,3 +22,4 @@ export { getDeclarationsIfGlobal } from "./utils/getDeclarationsIfGlobal.ts";
 export { isGlobalDeclaration } from "./utils/isGlobalDeclaration.ts";
 export { isGlobalDeclarationOfName } from "./utils/isGlobalDeclarationOfName.ts";
 export { isGlobalVariable } from "./utils/isGlobalVariable.ts";
+export { isNodeType } from "./utils/isNodeType.ts";

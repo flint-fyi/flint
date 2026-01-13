@@ -1,4 +1,4 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import { getTSNodeRange, isNodeType, typescriptLanguage } from "@flint.fyi/ts";
 import { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
@@ -26,7 +26,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile }) => {
+				CallExpression: (node, { sourceFile, typeChecker }) => {
 					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
@@ -34,8 +34,7 @@ export default typescriptLanguage.createRule({
 					const propertyAccess = node.expression;
 
 					if (
-						propertyAccess.expression.kind !== SyntaxKind.Identifier ||
-						propertyAccess.expression.text !== "node" ||
+						!isNodeType(propertyAccess, typeChecker) ||
 						propertyAccess.name.kind !== SyntaxKind.Identifier ||
 						propertyAccess.name.text !== "getStart"
 					) {
