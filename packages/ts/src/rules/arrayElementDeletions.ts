@@ -48,7 +48,7 @@ export default typescriptLanguage.createRule({
 	about: {
 		description: "Reports using the `delete` operator on array values.",
 		id: "arrayElementDeletions",
-		presets: ["logical"],
+		preset: "logical",
 	},
 	messages: {
 		noArrayDelete: {
