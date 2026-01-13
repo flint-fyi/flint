@@ -1,0 +1,64 @@
+---
+description: "Reports when a module imports itself."
+title: "importSelf"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="importSelf" />
+
+A module importing itself creates a circular dependency that serves no purpose.
+This typically occurs accidentally during refactoring or copy-pasting code.
+Self-imports can cause issues with module initialization order and are likely indicative of a bug.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// In file: utils.ts
+import { helper } from "./utils";
+```
+
+```ts
+// In file: index.ts
+import * as self from "./index";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// In file: utils.ts
+import { helper } from "./other-utils";
+```
+
+```ts
+// In file: index.ts
+import { value } from "./module";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a specific architectural pattern that intentionally uses self-imports (which is rare), you may disable this rule.
+However, self-imports typically indicate a code organization problem that should be addressed.
+
+## Further Reading
+
+- [MDN: import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
+- [MDN: JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="importSelf" />

@@ -66,6 +66,7 @@ import functionNewCalls from "./rules/functionNewCalls.ts";
 import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
 import globalAssignments from "./rules/globalAssignments.ts";
 import globalObjectCalls from "./rules/globalObjectCalls.ts";
+import importSelf from "./rules/importSelf.ts";
 import multilineAmbiguities from "./rules/multilineAmbiguities.ts";
 import namespaceDeclarations from "./rules/namespaceDeclarations.ts";
 import negativeZeroComparisons from "./rules/negativeZeroComparisons.ts";
@@ -171,6 +172,7 @@ export const ts = createPlugin({
 		generatorFunctionYields,
 		globalAssignments,
 		globalObjectCalls,
+		importSelf,
 		multilineAmbiguities,
 		namespaceDeclarations,
 		negativeZeroComparisons,
