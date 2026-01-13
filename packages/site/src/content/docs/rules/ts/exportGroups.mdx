@@ -1,0 +1,72 @@
+---
+description: "Reports when named exports are not grouped together in a single export statement."
+title: "exportGroups"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="exportGroups" />
+
+Having exports scattered across a file makes it harder to see what a module provides at a glance.
+This rule encourages grouping all named exports in a single `export { ... }` statement, improving readability and maintainability.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+export const a = 1;
+export const b = 2;
+```
+
+```ts
+export function getValue() {
+	return 1;
+}
+export function getOther() {
+	return 2;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const a = 1;
+const b = 2;
+export { a, b };
+```
+
+```ts
+function getValue() {
+	return 1;
+}
+function getOther() {
+	return 2;
+}
+export { getValue, getOther };
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer declaring exports inline with their definitions for better locality, you may not want this rule.
+Some projects prefer inline exports to make it immediately clear what is exported when reading the definition.
+
+## Further Reading
+
+- [MDN: export](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="exportGroups" />

@@ -10153,7 +10153,7 @@
 		"flint": {
 			"name": "exportGroups",
 			"plugin": "ts",
-			"status": "skipped"
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
