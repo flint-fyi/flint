@@ -41,30 +41,29 @@ function isIndexOfComparison(node: AST.BinaryExpression, typeChecker: Checker) {
 
 	const [indexOfCall, comparedValue] = indexOfAndValue;
 
-	if (!ts.isPropertyAccessExpression(indexOfCall.expression)) {
+	if (
+		!ts.isPropertyAccessExpression(indexOfCall.expression) ||
+		!hasIncludesMethod(indexOfCall.expression.expression, typeChecker)
+	) {
 		return undefined;
 	}
 
-	if (!hasIncludesMethod(indexOfCall.expression.expression, typeChecker)) {
-		return undefined;
-	}
-
-	const op = operatorToken.kind;
+	const kind = operatorToken.kind;
 	const isZeroValue = isZero(comparedValue);
 
 	const indexOfOnLeft = ts.isCallExpression(left);
 
 	const isValidComparison =
 		(isNegativeOne(comparedValue) &&
-			(op === ts.SyntaxKind.ExclamationEqualsToken ||
-				op === ts.SyntaxKind.ExclamationEqualsEqualsToken ||
-				op === ts.SyntaxKind.EqualsEqualsToken ||
-				op === ts.SyntaxKind.EqualsEqualsEqualsToken ||
-				(indexOfOnLeft && op === ts.SyntaxKind.GreaterThanToken) ||
-				(!indexOfOnLeft && op === ts.SyntaxKind.LessThanToken))) ||
+			(kind === ts.SyntaxKind.ExclamationEqualsToken ||
+				kind === ts.SyntaxKind.ExclamationEqualsEqualsToken ||
+				kind === ts.SyntaxKind.EqualsEqualsToken ||
+				kind === ts.SyntaxKind.EqualsEqualsEqualsToken ||
+				(indexOfOnLeft && kind === ts.SyntaxKind.GreaterThanToken) ||
+				(!indexOfOnLeft && kind === ts.SyntaxKind.LessThanToken))) ||
 		(isZeroValue &&
-			((indexOfOnLeft && op === ts.SyntaxKind.GreaterThanEqualsToken) ||
-				(!indexOfOnLeft && op === ts.SyntaxKind.LessThanEqualsToken)));
+			((indexOfOnLeft && kind === ts.SyntaxKind.GreaterThanEqualsToken) ||
+				(!indexOfOnLeft && kind === ts.SyntaxKind.LessThanEqualsToken)));
 
 	return isValidComparison && { indexOfCall, node };
 }
