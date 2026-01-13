@@ -1,10 +1,11 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
 import languageTags from "language-tags";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -29,13 +30,13 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkElement(
-			node: ts.JsxOpeningLikeElement,
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const langAttribute = node.attributes.properties.find(
-				(property): property is ts.JsxAttribute =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+				(property): property is AST.JsxAttribute =>
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "lang",
 			);
 
@@ -43,7 +44,7 @@ export default typescriptLanguage.createRule({
 				return;
 			}
 
-			if (ts.isStringLiteral(langAttribute.initializer)) {
+			if (langAttribute.initializer.kind === SyntaxKind.StringLiteral) {
 				const langValue = langAttribute.initializer.text;
 
 				if (!languageTags.check(langValue)) {

@@ -1,13 +1,14 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 function getConditionDirection(
-	condition: ts.Expression,
+	condition: AST.Expression,
 	counterName: string,
 ): -1 | 1 | undefined {
-	if (!ts.isBinaryExpression(condition)) {
+	if (condition.kind !== SyntaxKind.BinaryExpression) {
 		return undefined;
 	}
 
@@ -15,8 +16,7 @@ function getConditionDirection(
 	const rightName = getCounterName(condition.right);
 
 	if (!leftName && !rightName) {
-		return condition.operatorToken.kind ===
-			ts.SyntaxKind.AmpersandAmpersandToken
+		return condition.operatorToken.kind === SyntaxKind.AmpersandAmpersandToken
 			? (getConditionDirection(condition.left, counterName) ??
 					getConditionDirection(condition.right, counterName))
 			: undefined;
@@ -33,27 +33,27 @@ function getConditionDirection(
 
 	if (isCounterLeft) {
 		if (
-			operatorToken.kind === ts.SyntaxKind.LessThanToken ||
-			operatorToken.kind === ts.SyntaxKind.LessThanEqualsToken
+			operatorToken.kind === SyntaxKind.LessThanToken ||
+			operatorToken.kind === SyntaxKind.LessThanEqualsToken
 		) {
 			return 1;
 		}
 		if (
-			operatorToken.kind === ts.SyntaxKind.GreaterThanToken ||
-			operatorToken.kind === ts.SyntaxKind.GreaterThanEqualsToken
+			operatorToken.kind === SyntaxKind.GreaterThanToken ||
+			operatorToken.kind === SyntaxKind.GreaterThanEqualsToken
 		) {
 			return -1;
 		}
 	} else {
 		if (
-			operatorToken.kind === ts.SyntaxKind.LessThanToken ||
-			operatorToken.kind === ts.SyntaxKind.LessThanEqualsToken
+			operatorToken.kind === SyntaxKind.LessThanToken ||
+			operatorToken.kind === SyntaxKind.LessThanEqualsToken
 		) {
 			return -1;
 		}
 		if (
-			operatorToken.kind === ts.SyntaxKind.GreaterThanToken ||
-			operatorToken.kind === ts.SyntaxKind.GreaterThanEqualsToken
+			operatorToken.kind === SyntaxKind.GreaterThanToken ||
+			operatorToken.kind === SyntaxKind.GreaterThanEqualsToken
 		) {
 			return 1;
 		}
@@ -62,47 +62,47 @@ function getConditionDirection(
 	return undefined;
 }
 
-function getCounterName(node: ts.Expression) {
-	return ts.isIdentifier(node) ? node.text : undefined;
+function getCounterName(node: AST.Expression) {
+	return node.kind === SyntaxKind.Identifier ? node.text : undefined;
 }
 
-function getIncrementorDirection(incrementor: ts.Expression) {
+function getIncrementorDirection(incrementor: AST.Expression) {
 	if (
-		ts.isPostfixUnaryExpression(incrementor) ||
-		ts.isPrefixUnaryExpression(incrementor)
+		incrementor.kind === SyntaxKind.PostfixUnaryExpression ||
+		incrementor.kind === SyntaxKind.PrefixUnaryExpression
 	) {
 		switch (incrementor.operator) {
-			case ts.SyntaxKind.MinusMinusToken:
+			case SyntaxKind.MinusMinusToken:
 				return -1;
-			case ts.SyntaxKind.PlusPlusToken:
+			case SyntaxKind.PlusPlusToken:
 				return 1;
 			default:
 				return undefined;
 		}
 	}
 
-	if (ts.isBinaryExpression(incrementor)) {
+	if (incrementor.kind === SyntaxKind.BinaryExpression) {
 		const { operatorToken, right } = incrementor;
 
 		if (
-			operatorToken.kind === ts.SyntaxKind.PlusEqualsToken ||
-			operatorToken.kind === ts.SyntaxKind.MinusEqualsToken
+			operatorToken.kind === SyntaxKind.PlusEqualsToken ||
+			operatorToken.kind === SyntaxKind.MinusEqualsToken
 		) {
-			if (ts.isNumericLiteral(right)) {
+			if (right.kind === SyntaxKind.NumericLiteral) {
 				const value = Number(right.text);
-				if (operatorToken.kind === ts.SyntaxKind.PlusEqualsToken) {
+				if (operatorToken.kind === SyntaxKind.PlusEqualsToken) {
 					return value > 0 ? 1 : value < 0 ? -1 : 0;
 				}
 				return value > 0 ? -1 : value < 0 ? 1 : 0;
 			}
 
 			if (
-				ts.isPrefixUnaryExpression(right) &&
-				right.operator === ts.SyntaxKind.MinusToken &&
-				ts.isNumericLiteral(right.operand)
+				right.kind === SyntaxKind.PrefixUnaryExpression &&
+				right.operator === SyntaxKind.MinusToken &&
+				right.operand.kind === SyntaxKind.NumericLiteral
 			) {
 				const value = Number(right.operand.text);
-				if (operatorToken.kind === ts.SyntaxKind.PlusEqualsToken) {
+				if (operatorToken.kind === SyntaxKind.PlusEqualsToken) {
 					return value > 0 ? -1 : 1;
 				}
 				return value > 0 ? 1 : -1;
@@ -141,13 +141,13 @@ export default typescriptLanguage.createRule({
 						!node.condition ||
 						!node.incrementor ||
 						!node.initializer ||
-						!ts.isVariableDeclarationList(node.initializer)
+						node.initializer.kind !== SyntaxKind.VariableDeclarationList
 					) {
 						return;
 					}
 
 					const declaration = node.initializer.declarations.at(0);
-					if (!declaration || !ts.isIdentifier(declaration.name)) {
+					if (!declaration || declaration.name.kind !== SyntaxKind.Identifier) {
 						return;
 					}
 

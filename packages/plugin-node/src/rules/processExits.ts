@@ -1,5 +1,5 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { isDeclaredInNodeTypes } from "./utils/isDeclaredInNodeTypes.ts";
 
@@ -30,10 +30,10 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				CallExpression(node, { sourceFile, typeChecker }) {
 					if (
-						ts.isPropertyAccessExpression(node.expression) &&
-						ts.isIdentifier(node.expression.expression) &&
+						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+						node.expression.expression.kind === SyntaxKind.Identifier &&
 						node.expression.expression.text === "process" &&
-						ts.isIdentifier(node.expression.name) &&
+						node.expression.name.kind === SyntaxKind.Identifier &&
 						node.expression.name.text === "exit" &&
 						isDeclaredInNodeTypes(node.expression, typeChecker)
 					) {

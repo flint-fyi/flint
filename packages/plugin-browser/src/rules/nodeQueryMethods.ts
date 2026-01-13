@@ -4,7 +4,7 @@ import {
 	typescriptLanguage,
 } from "@flint.fyi/ts";
 import { nullThrows } from "@flint.fyi/utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const legacyMethods = new Set([
 	"getElementById",
@@ -43,10 +43,10 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node: ts.CallExpression, { sourceFile, typeChecker }) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					if (
-						ts.isPropertyAccessExpression(node.expression) &&
-						ts.isIdentifier(node.expression.name) &&
+						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+						node.expression.name.kind === SyntaxKind.Identifier &&
 						legacyMethods.has(node.expression.name.text) &&
 						isGlobalDeclaration(node.expression.name, typeChecker)
 					) {

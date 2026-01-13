@@ -1,9 +1,10 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const validButtonTypes = new Set(["button", "reset", "submit"]);
 
@@ -44,10 +45,10 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkElement(
-			node: ts.JsxOpeningLikeElement,
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (!ts.isIdentifier(node.tagName)) {
+			if (node.tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -57,9 +58,9 @@ export default typescriptLanguage.createRule({
 			}
 
 			const typeAttribute = node.attributes.properties.find(
-				(property): property is ts.JsxAttribute =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+				(property): property is AST.JsxAttribute =>
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text.toLowerCase() === "type",
 			);
 
@@ -93,18 +94,18 @@ export default typescriptLanguage.createRule({
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
-function getTypeValue(attribute: ts.JsxAttribute): string | undefined {
+function getTypeValue(attribute: AST.JsxAttribute): string | undefined {
 	if (!attribute.initializer) {
 		return undefined;
 	}
 
-	if (ts.isStringLiteral(attribute.initializer)) {
+	if (attribute.initializer.kind === SyntaxKind.StringLiteral) {
 		return attribute.initializer.text;
 	}
 
-	if (ts.isJsxExpression(attribute.initializer)) {
+	if (attribute.initializer.kind === SyntaxKind.JsxExpression) {
 		const expr = attribute.initializer.expression;
-		if (expr && ts.isStringLiteral(expr)) {
+		if (expr && expr.kind === SyntaxKind.StringLiteral) {
 			return expr.text;
 		}
 	}

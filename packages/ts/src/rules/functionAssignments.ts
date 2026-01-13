@@ -21,6 +21,7 @@ export default typescriptLanguage.createRule({
 			],
 		},
 	},
+
 	setup(context) {
 		return {
 			visitors: {

@@ -1,6 +1,10 @@
-import { type TypeScriptFileServices, typescriptLanguage } from "@flint.fyi/ts";
+import {
+	type AST,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts from "typescript";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -114,7 +118,12 @@ export default typescriptLanguage.createRule({
 		}
 
 		function checkLoopStatement(
-			node: ts.Node & { statement: ts.Node },
+			node:
+				| AST.DoStatement
+				| AST.ForInStatement
+				| AST.ForOfStatement
+				| AST.ForStatement
+				| AST.WhileStatement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			checkAssignmentInLoop(node.statement, sourceFile);

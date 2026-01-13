@@ -1,6 +1,11 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
 import { isGlobalVariable } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const windowLikeNames = new Set([
 	"globalThis",
@@ -32,11 +37,11 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function isWindowLikeIdentifier(
-			node: ts.Expression,
-			typeChecker: ts.TypeChecker,
+			node: AST.LeftHandSideExpression,
+			typeChecker: Checker,
 		): boolean {
 			return (
-				ts.isIdentifier(node) &&
+				node.kind === SyntaxKind.Identifier &&
 				windowLikeNames.has(node.text) &&
 				isGlobalVariable(node, typeChecker)
 			);
@@ -44,11 +49,11 @@ export default typescriptLanguage.createRule({
 
 		return {
 			visitors: {
-				CallExpression(node: ts.CallExpression, { sourceFile, typeChecker }) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					if (
 						node.arguments.length < 2 &&
-						ts.isPropertyAccessExpression(node.expression) &&
-						ts.isIdentifier(node.expression.name) &&
+						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+						node.expression.name.kind === SyntaxKind.Identifier &&
 						node.expression.name.text === "postMessage" &&
 						isWindowLikeIdentifier(node.expression.expression, typeChecker)
 					) {

@@ -1,10 +1,11 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
 import { nullThrows } from "@flint.fyi/utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const validAutocompleteValues = new Set([
 	"address-level1",
@@ -123,11 +124,11 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkNode(
-			node: ts.JsxOpeningElement | ts.JsxSelfClosingElement,
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const { attributes, tagName } = node;
-			if (!ts.isIdentifier(tagName)) {
+			if (tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -138,14 +139,14 @@ export default typescriptLanguage.createRule({
 
 			const autocomplete = attributes.properties.find(
 				(property) =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text.toLowerCase() === "autocomplete",
 			);
 
 			if (
 				!autocomplete ||
-				!ts.isJsxAttribute(autocomplete) ||
+				autocomplete.kind !== SyntaxKind.JsxAttribute ||
 				!autocomplete.initializer
 			) {
 				return;
@@ -174,14 +175,14 @@ export default typescriptLanguage.createRule({
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
-function getStringLiteralValue(node: ts.Expression): string | undefined {
-	if (ts.isStringLiteral(node)) {
+function getStringLiteralValue(node: AST.Expression): string | undefined {
+	if (node.kind === SyntaxKind.StringLiteral) {
 		return node.text;
 	}
 
 	if (
-		ts.isNoSubstitutionTemplateLiteral(node) &&
-		!ts.isTaggedTemplateExpression(node.parent)
+		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral &&
+		node.parent.kind !== SyntaxKind.TaggedTemplateExpression
 	) {
 		return node.text;
 	}

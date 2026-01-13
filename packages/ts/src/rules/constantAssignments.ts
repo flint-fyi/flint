@@ -1,6 +1,7 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 import { getModifyingReferences } from "../utils/getModifyingReferences.ts";
 
 export default typescriptLanguage.createRule({
@@ -24,15 +25,15 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function collectBindingElements(name: ts.BindingName): ts.Identifier[] {
-			if (ts.isIdentifier(name)) {
+		function collectBindingElements(name: AST.BindingName): AST.Identifier[] {
+			if (name.kind == SyntaxKind.Identifier) {
 				return [name];
 			}
 
-			const identifiers: ts.Identifier[] = [];
+			const identifiers: AST.Identifier[] = [];
 
 			for (const element of name.elements) {
-				if (ts.isBindingElement(element)) {
+				if (element.kind == SyntaxKind.BindingElement) {
 					identifiers.push(...collectBindingElements(element.name));
 				}
 			}

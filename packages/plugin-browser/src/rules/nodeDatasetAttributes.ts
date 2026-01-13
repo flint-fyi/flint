@@ -1,10 +1,11 @@
 import {
+	type AST,
 	getTSNodeRange,
 	isGlobalDeclaration,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
 import { nullThrows } from "@flint.fyi/utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 type AttributeMethodName =
 	| "getAttribute"
@@ -22,11 +23,11 @@ function convertDataAttributeToDatasetKey(
 		: undefined;
 }
 
-function getMethodDetails(node: ts.CallExpression) {
+function getMethodDetails(node: AST.CallExpression) {
 	if (
 		node.arguments.length === 0 ||
-		!ts.isPropertyAccessExpression(node.expression) ||
-		!ts.isIdentifier(node.expression.name)
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+		node.expression.name.kind !== SyntaxKind.Identifier
 	) {
 		return undefined;
 	}
@@ -76,7 +77,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node: ts.CallExpression, { sourceFile, typeChecker }) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					const details = getMethodDetails(node);
 					if (!details) {
 						return;
@@ -114,14 +115,14 @@ export default typescriptLanguage.createRule({
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
-function getStringLiteralValue(node: ts.Expression): string | undefined {
-	if (ts.isStringLiteral(node)) {
+function getStringLiteralValue(node: AST.Expression): string | undefined {
+	if (node.kind === SyntaxKind.StringLiteral) {
 		return node.text;
 	}
 
 	if (
-		ts.isNoSubstitutionTemplateLiteral(node) &&
-		!ts.isTaggedTemplateExpression(node.parent)
+		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral &&
+		node.parent.kind !== SyntaxKind.TaggedTemplateExpression
 	) {
 		return node.text;
 	}

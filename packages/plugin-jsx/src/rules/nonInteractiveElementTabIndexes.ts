@@ -1,9 +1,10 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const nonInteractiveElements = new Set([
 	"article",
@@ -73,19 +74,19 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function getTabIndexValue(attr: ts.JsxAttribute) {
+		function getTabIndexValue(attr: AST.JsxAttribute) {
 			if (!attr.initializer) {
 				return undefined;
 			}
 
-			if (ts.isStringLiteral(attr.initializer)) {
+			if (attr.initializer.kind === SyntaxKind.StringLiteral) {
 				const value = parseInt(attr.initializer.text, 10);
 				return isNaN(value) ? undefined : value;
 			}
 
-			if (ts.isJsxExpression(attr.initializer)) {
+			if (attr.initializer.kind === SyntaxKind.JsxExpression) {
 				const expr = attr.initializer.expression;
-				if (expr && ts.isNumericLiteral(expr)) {
+				if (expr && expr.kind === SyntaxKind.NumericLiteral) {
 					const value = parseInt(expr.text, 10);
 					return isNaN(value) ? undefined : value;
 				}
@@ -94,19 +95,19 @@ export default typescriptLanguage.createRule({
 			return undefined;
 		}
 
-		function getRoleValue(attributes: ts.JsxAttributes) {
+		function getRoleValue(attributes: AST.JsxAttributes) {
 			const roleProperty = attributes.properties.find(
 				(property) =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "role",
 			);
 
 			if (
 				roleProperty &&
-				ts.isJsxAttribute(roleProperty) &&
+				roleProperty.kind === SyntaxKind.JsxAttribute &&
 				roleProperty.initializer &&
-				ts.isStringLiteral(roleProperty.initializer)
+				roleProperty.initializer.kind === SyntaxKind.StringLiteral
 			) {
 				return roleProperty.initializer.text;
 			}
@@ -115,10 +116,10 @@ export default typescriptLanguage.createRule({
 		}
 
 		function checkTabIndex(
-			node: ts.JsxOpeningLikeElement,
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (!ts.isIdentifier(node.tagName)) {
+			if (node.tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -135,12 +136,15 @@ export default typescriptLanguage.createRule({
 
 			const tabIndexProperty = node.attributes.properties.find(
 				(property) =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "tabIndex",
 			);
 
-			if (!tabIndexProperty || !ts.isJsxAttribute(tabIndexProperty)) {
+			if (
+				!tabIndexProperty ||
+				tabIndexProperty.kind !== SyntaxKind.JsxAttribute
+			) {
 				return;
 			}
 

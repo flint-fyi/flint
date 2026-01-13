@@ -1,4 +1,5 @@
-import * as ts from "typescript";
+import { nullThrows } from "@flint.fyi/utils";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
 import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
@@ -35,13 +36,19 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					const executor = node.arguments[0];
-					if (!ts.isFunctionLike(executor)) {
+					const executor = nullThrows(
+						node.arguments[0],
+						"Expected there to be a promise executor!",
+					);
+					if (
+						executor.kind !== SyntaxKind.FunctionExpression &&
+						executor.kind !== SyntaxKind.ArrowFunction
+					) {
 						return;
 					}
 
 					const asyncModifier = executor.modifiers?.find(
-						(mod) => mod.kind === ts.SyntaxKind.AsyncKeyword,
+						(mod) => mod.kind === SyntaxKind.AsyncKeyword,
 					);
 					if (!asyncModifier) {
 						return;
