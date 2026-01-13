@@ -10505,7 +10505,7 @@
 		"flint": {
 			"name": "functionNameMatches",
 			"plugin": "ts",
-			"status": "skipped"
+			"status": "implemented"
 		}
 	},
 	{
