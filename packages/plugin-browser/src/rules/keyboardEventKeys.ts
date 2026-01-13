@@ -10,12 +10,14 @@ import ts, { SyntaxKind } from "typescript";
 
 const deprecatedProperties = new Set(["charCode", "keyCode", "which"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer KeyboardEvent.key over deprecated properties like keyCode, charCode, and which.",
 		id: "keyboardEventKeys",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		preferKey: {

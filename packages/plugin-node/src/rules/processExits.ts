@@ -1,14 +1,15 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import { SyntaxKind } from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
 import { isDeclaredInNodeTypes } from "./utils/isDeclaredInNodeTypes.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prevent direct use of `process.exit()` for better error handling and testing.",
 		id: "processExits",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noProcessExit: {

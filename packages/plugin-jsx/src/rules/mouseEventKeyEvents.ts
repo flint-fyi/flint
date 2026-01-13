@@ -11,11 +11,13 @@ const mouseNamesToKeyboardNames = new Map([
 	["onMouseOver", "onFocus"],
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports mouse events without corresponding keyboard events.",
 		id: "mouseEventKeyEvents",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingKeyEvent: {

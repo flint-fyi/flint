@@ -1,13 +1,14 @@
 import type * as yaml from "yaml-unist-parser";
 
 import { yamlLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default yamlLanguage.createRule({
+export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description:
 			"Reports empty YAML documents that contain only document markers.",
 		id: "emptyDocuments",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		emptyDocument: {

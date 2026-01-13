@@ -3,13 +3,14 @@ import type * as ts from "typescript";
 
 import { getRuleTesterDescribedCases } from "../getRuleTesterDescribedCases.ts";
 import type { ParsedTestCase } from "../types.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports test cases that are identical to previous test cases.",
 		id: "testCaseDuplicates",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		duplicateTest: {

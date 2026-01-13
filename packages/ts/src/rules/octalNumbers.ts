@@ -1,12 +1,13 @@
 import { nullThrows } from "@flint.fyi/utils";
 
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using legacy octal numeric literals.",
 		id: "octalNumbers",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noOctalNumber: {

@@ -44,12 +44,14 @@ function isUnnecessaryCountArgument(
 	return undefined;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using `.length` or `Infinity` as the `deleteCount` or `skipCount` argument of `Array#splice()` or `Array#toSpliced()`.",
 		id: "arrayDeleteUnnecessaryCounts",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		unnecessaryCount: {

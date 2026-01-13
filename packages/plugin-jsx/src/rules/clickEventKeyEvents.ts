@@ -14,11 +14,13 @@ const interactiveElements = new Set([
 	"textarea",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports onClick without keyboard event handlers.",
 		id: "clickEventKeyEvents",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingKeyEvent: {

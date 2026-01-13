@@ -1,10 +1,11 @@
 import { yamlLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default yamlLanguage.createRule({
+export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Reports empty mapping keys.",
 		id: "emptyMappingKeys",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		emptyKey: {

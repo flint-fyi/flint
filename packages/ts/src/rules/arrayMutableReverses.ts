@@ -1,13 +1,14 @@
 import { typescriptLanguage } from "../language.ts";
 import { isBuiltinArrayMethod } from "../utils/isBuiltinArrayMethod.ts";
 import { isInlineArrayCreation } from "../utils/isInlineArrayCreation.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports `.reverse()` calls on arrays that mutate the original array.",
 		id: "arrayMutableReverses",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferToReversed: {

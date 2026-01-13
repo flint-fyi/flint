@@ -68,11 +68,13 @@ function convertToBlock(node: yaml.FlowMapping, sourceText: string) {
 	return "\n" + pairs.join("\n");
 }
 
-export default yamlLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Prefer block-style mappings over flow-style mappings.",
 		id: "blockMappings",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferBlock: {

@@ -27,12 +27,14 @@ function isThisLiteralAssignment(node: AST.BinaryExpression) {
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports assigning literal values to `this` in constructors instead of using class field declarations.",
 		id: "classFieldDeclarations",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		preferClassField: {

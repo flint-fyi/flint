@@ -7,12 +7,14 @@ import { SyntaxKind } from "typescript";
 
 const blobReadingMethods = new Set(["arrayBuffer", "bytes", "text"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer direct Blob reading methods over wrapping in Response for simpler code.",
 		id: "blobReadingMethods",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferBlobMethod: {

@@ -6,12 +6,14 @@ import {
 import { nullThrows } from "@flint.fyi/utils";
 import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallow inline function expressions in removeEventListener calls.",
 		id: "removeEventListenerExpressions",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidRemoveEventListener: {

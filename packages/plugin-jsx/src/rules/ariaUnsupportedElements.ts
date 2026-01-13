@@ -51,11 +51,13 @@ const unsupportedElements = new Set([
 	"track",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports ARIA attributes on elements that don't support them.",
 		id: "ariaUnsupportedElements",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsupportedElement: {
