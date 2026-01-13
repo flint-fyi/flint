@@ -10172,7 +10172,7 @@
 		"flint": {
 			"name": "exportLast",
 			"plugin": "ts",
-			"status": "skipped"
+			"status": "implemented"
 		},
 		"oxlint": [
 			{

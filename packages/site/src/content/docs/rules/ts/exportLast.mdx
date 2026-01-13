@@ -1,0 +1,68 @@
+---
+description: "Reports export declarations that come before non-export statements."
+title: "exportLast"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="exportLast" />
+
+Exports scattered throughout a file make it harder to see what a module provides at a glance.
+This rule enforces that all exports are declared at the bottom of the file, improving code readability.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+export const a = 1;
+const b = 2;
+```
+
+```ts
+export function getValue() {
+	return 1;
+}
+const value = 2;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const a = 1;
+const b = 2;
+export { a };
+```
+
+```ts
+function getValue() {
+	return 1;
+}
+const value = 2;
+export { getValue, value };
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer declaring exports inline with their definitions for better locality, you may not want this rule.
+Some projects prefer inline exports to make it immediately clear what is exported when reading the definition.
+
+## Further Reading
+
+- [MDN: export](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="exportLast" />
