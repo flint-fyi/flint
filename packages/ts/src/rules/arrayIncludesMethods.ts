@@ -1,131 +1,93 @@
 import * as ts from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
+import type { AST, Checker } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
-import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
+import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
-function isArrayOrTupleType(
-	type: ts.Type,
-	typeChecker: ts.TypeChecker,
-): boolean {
-	return isTypeRecursive(
-		type,
-		(t) => typeChecker.isArrayType(t) || typeChecker.isTupleType(t),
-	);
-}
-
-function isSimpleEqualityCheck(
-	node: ts.ArrowFunction | ts.FunctionExpression,
-	paramName: string,
-) {
-	let body: ts.Expression | undefined;
-
-	if (ts.isArrowFunction(node)) {
-		if (ts.isBlock(node.body)) {
-			if (node.body.statements.length !== 1) {
-				return undefined;
-			}
-			const statement = node.body.statements[0];
-			if (
-				!statement ||
-				!ts.isReturnStatement(statement) ||
-				!statement.expression
-			) {
-				return undefined;
-			}
-			body = statement.expression;
-		} else {
-			body = node.body;
-		}
-	} else if (ts.isFunctionExpression(node)) {
-		if (node.body.statements.length !== 1) {
-			return undefined;
-		}
-		const statement = node.body.statements[0];
-		if (
-			!statement ||
-			!ts.isReturnStatement(statement) ||
-			!statement.expression
-		) {
-			return undefined;
-		}
-		body = statement.expression;
-	}
-
-	if (!body || !ts.isBinaryExpression(body)) {
+function getDirectReturnExpression(body: AST.Block) {
+	if (body.statements.length !== 1) {
 		return undefined;
 	}
 
-	const { left, operatorToken, right } = body;
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const statement = body.statements[0]!;
+
+	return statement.kind === ts.SyntaxKind.ReturnStatement
+		? statement.expression
+		: undefined;
+}
+
+function isDirectEqualityCheck(
+	node: AST.ArrowFunction | AST.FunctionExpression,
+	parameterName: string,
+) {
+	let body: AST.Expression | undefined;
+
+	switch (node.kind) {
+		case ts.SyntaxKind.ArrowFunction:
+			body =
+				node.body.kind === ts.SyntaxKind.Block
+					? getDirectReturnExpression(node.body)
+					: node.body;
+			break;
+
+		case ts.SyntaxKind.FunctionExpression:
+			body = getDirectReturnExpression(node.body);
+			break;
+
+		default:
+			return undefined;
+	}
 
 	if (
-		operatorToken.kind !== ts.SyntaxKind.EqualsEqualsToken &&
-		operatorToken.kind !== ts.SyntaxKind.EqualsEqualsEqualsToken
+		body?.kind !== ts.SyntaxKind.BinaryExpression ||
+		(body.operatorToken.kind !== ts.SyntaxKind.EqualsEqualsToken &&
+			body.operatorToken.kind !== ts.SyntaxKind.EqualsEqualsEqualsToken)
 	) {
 		return undefined;
 	}
 
-	const isLeftParam = ts.isIdentifier(left) && left.text === paramName;
-	const isRightParam = ts.isIdentifier(right) && right.text === paramName;
+	const isLeftParam =
+		ts.isIdentifier(body.left) && body.left.text === parameterName;
+	const isRightParam =
+		ts.isIdentifier(body.right) && body.right.text === parameterName;
 
-	if (isLeftParam && !isRightParam) {
-		return right;
-	}
-	if (isRightParam && !isLeftParam) {
-		return left;
-	}
-
-	return undefined;
+	return isLeftParam !== isRightParam;
 }
 
 function isSomeWithSimpleEquality(
-	node: ts.CallExpression,
-	typeChecker: ts.TypeChecker,
+	node: AST.CallExpression,
+	typeChecker: Checker,
 ) {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
+	// TODO: Use a util like getStaticValue
+	// https://github.com/flint-fyi/flint/issues/1298
+	if (
+		!ts.isPropertyAccessExpression(node.expression) ||
+		node.expression.name.text !== "some" ||
+		node.arguments.length !== 1
+	) {
 		return false;
 	}
 
-	if (node.expression.name.text !== "some") {
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const callback = node.arguments[0]!;
+
+	if (
+		(!ts.isArrowFunction(callback) && !ts.isFunctionExpression(callback)) ||
+		callback.parameters.length !== 1
+	) {
 		return false;
 	}
 
-	if (node.arguments.length !== 1) {
-		return false;
-	}
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const firstParameter = callback.parameters[0]!;
 
-	const callback = node.arguments[0];
-	if (!callback) {
-		return false;
-	}
-
-	if (!ts.isArrowFunction(callback) && !ts.isFunctionExpression(callback)) {
-		return false;
-	}
-
-	if (callback.parameters.length !== 1) {
-		return false;
-	}
-
-	const param = callback.parameters[0];
-	if (!param || !ts.isIdentifier(param.name)) {
-		return false;
-	}
-
-	const paramName = param.name.text;
-	const comparedValue = isSimpleEqualityCheck(callback, paramName);
-
-	if (comparedValue === undefined) {
-		return false;
-	}
-
-	const receiverType = getConstrainedTypeAtLocation(
-		node.expression.expression,
-		typeChecker,
+	return (
+		ts.isIdentifier(firstParameter.name) &&
+		isDirectEqualityCheck(callback, firstParameter.name.text) &&
+		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
 	);
-
-	return isArrayOrTupleType(receiverType, typeChecker);
 }
 
 export default typescriptLanguage.createRule({
@@ -133,7 +95,7 @@ export default typescriptLanguage.createRule({
 		description:
 			"Reports using `Array#some()` with simple equality checks that can be replaced with `.includes()`.",
 		id: "arrayIncludesMethods",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferIncludes: {
