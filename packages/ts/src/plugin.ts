@@ -2,10 +2,13 @@ import { createPlugin } from "@flint.fyi/core";
 
 import anyArguments from "./rules/anyArguments.ts";
 import anyAssignments from "./rules/anyAssignments.ts";
+import anyCalls from "./rules/anyCalls.ts";
+import anyMemberAccess from "./rules/anyMemberAccess.ts";
 import anyReturns from "./rules/anyReturns.ts";
 import argumentsRule from "./rules/arguments.ts";
 import arrayCallbackReturns from "./rules/arrayCallbackReturns.ts";
 import arrayConstructors from "./rules/arrayConstructors.ts";
+import arrayDeleteUnnecessaryCounts from "./rules/arrayDeleteUnnecessaryCounts.ts";
 import arrayExistenceChecksConsistency from "./rules/arrayExistenceChecksConsistency.ts";
 import arrayFinds from "./rules/arrayFinds.ts";
 import arrayMapIdentities from "./rules/arrayMapIdentities.ts";
@@ -38,15 +41,20 @@ import dateNowTimestamps from "./rules/dateNowTimestamps.ts";
 import debuggerStatements from "./rules/debuggerStatements.ts";
 import defaultCaseLast from "./rules/defaultCaseLast.ts";
 import defaultParameterLast from "./rules/defaultParameterLast.ts";
+import deprecated from "./rules/deprecated.ts";
+import destructuringConsistency from "./rules/destructuringConsistency.ts";
 import duplicateArguments from "./rules/duplicateArguments.ts";
+import dynamicDeletes from "./rules/dynamicDeletes.ts";
 import elseIfDuplicates from "./rules/elseIfDuplicates.ts";
 import emptyBlocks from "./rules/emptyBlocks.ts";
 import emptyDestructures from "./rules/emptyDestructures.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
+import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
 import finallyStatementSafety from "./rules/finallyStatementSafety.ts";
 import forDirections from "./rules/forDirections.ts";
 import forInArrays from "./rules/forInArrays.ts";
+import functionApplySpreads from "./rules/functionApplySpreads.ts";
 import functionAssignments from "./rules/functionAssignments.ts";
 import functionCurryingRedundancy from "./rules/functionCurryingRedundancy.ts";
 import functionNewCalls from "./rules/functionNewCalls.ts";
@@ -95,10 +103,13 @@ export const ts = createPlugin({
 	rules: [
 		anyArguments,
 		anyAssignments,
+		anyCalls,
+		anyMemberAccess,
 		anyReturns,
 		argumentsRule,
 		arrayCallbackReturns,
 		arrayConstructors,
+		arrayDeleteUnnecessaryCounts,
 		arrayExistenceChecksConsistency,
 		arrayFinds,
 		arrayMapIdentities,
@@ -131,16 +142,21 @@ export const ts = createPlugin({
 		debuggerStatements,
 		defaultCaseLast,
 		defaultParameterLast,
+		deprecated,
+		destructuringConsistency,
 		duplicateArguments,
+		dynamicDeletes,
 		elseIfDuplicates,
 		emptyBlocks,
 		emptyDestructures,
 		emptyStaticBlocks,
 		exceptionAssignments,
+		fetchMethodBodies,
 		finallyStatementSafety,
 		forDirections,
 		forInArrays,
 		functionAssignments,
+		functionApplySpreads,
 		functionCurryingRedundancy,
 		functionNewCalls,
 		functionTypeDeclarations,

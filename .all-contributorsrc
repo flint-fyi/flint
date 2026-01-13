@@ -109,6 +109,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "barrymichaeldoyle",
+      "name": "Barry Michael Doyle",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4674486?v=4",
+      "profile": "https://barrymichaeldoyle.com",
+      "contributions": [
+        "infra"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -117,7 +126,7 @@
     "README.md"
   ],
   "projectName": "flint",
-  "projectOwner": "JoshuaKGoldberg",
+  "projectOwner": "flint-fyi",
   "repoType": "github",
   "commitConvention": "angular"
 }
