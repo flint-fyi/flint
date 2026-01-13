@@ -10,7 +10,7 @@ let value;
 			snapshot: `
 let value;
     ~~~~~
-    Variable 'value' has an implicit 'any' type due to missing type annotation and initializer.
+    Variable 'value' has an implicit evolving 'any' type due to missing type annotation and initializer.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ var value;
 			snapshot: `
 var value;
     ~~~~~
-    Variable 'value' has an implicit 'any' type due to missing type annotation and initializer.
+    Variable 'value' has an implicit evolving 'any' type due to missing type annotation and initializer.
 `,
 		},
 		{
@@ -30,9 +30,9 @@ let first, second;
 			snapshot: `
 let first, second;
     ~~~~~
-    Variable 'first' has an implicit 'any' type due to missing type annotation and initializer.
+    Variable 'first' has an implicit evolving 'any' type due to missing type annotation and initializer.
            ~~~~~~
-           Variable 'second' has an implicit 'any' type due to missing type annotation and initializer.
+           Variable 'second' has an implicit evolving 'any' type due to missing type annotation and initializer.
 `,
 		},
 		{
@@ -43,7 +43,7 @@ value = 1;
 			snapshot: `
 let value;
     ~~~~~
-    Variable 'value' has an implicit 'any' type due to missing type annotation and initializer.
+    Variable 'value' has an implicit evolving 'any' type due to missing type annotation and initializer.
 value = 1;
 `,
 		},
@@ -59,7 +59,7 @@ function process() {
 function process() {
     let result;
         ~~~~~~
-        Variable 'result' has an implicit 'any' type due to missing type annotation and initializer.
+        Variable 'result' has an implicit evolving 'any' type due to missing type annotation and initializer.
     result = compute();
     return result;
 }
@@ -72,7 +72,7 @@ let initialized = 1, uninitialized;
 			snapshot: `
 let initialized = 1, uninitialized;
                      ~~~~~~~~~~~~~
-                     Variable 'uninitialized' has an implicit 'any' type due to missing type annotation and initializer.
+                     Variable 'uninitialized' has an implicit evolving 'any' type due to missing type annotation and initializer.
 `,
 		},
 	],

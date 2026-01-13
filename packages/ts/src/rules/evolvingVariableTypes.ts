@@ -8,15 +8,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports variables declared without type annotation or initializer.",
 		id: "evolvingVariableTypes",
-		presets: ["logical"],
+		presets: ["stylisticStrict"],
 	},
 	messages: {
 		implicitAny: {
 			primary:
-				"Variable '{{ name }}' has an implicit 'any' type due to missing type annotation and initializer.",
+				"Variable '{{ name }}' has an implicit evolving 'any' type due to missing type annotation and initializer.",
 			secondary: [
 				"Variables declared without a type annotation or initial value implicitly have the 'any' type.",
-				"This bypasses TypeScript's type checking and can lead to runtime errors.",
+				"This allows any type of value to be assigned to the variable, which can make it harder to catch type-related bugs at compile time.",
 			],
 			suggestions: [
 				"Add a type annotation to the variable declaration.",
@@ -28,31 +28,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				VariableDeclaration: (node, { sourceFile }) => {
-					if (sourceFile.isDeclarationFile) {
-						return;
-					}
-
-					if (node.initializer !== undefined || node.type !== undefined) {
-						return;
-					}
-
-					if (node.name.kind !== SyntaxKind.Identifier) {
-						return;
-					}
-
-					const { parent } = node;
-					if (parent.kind === SyntaxKind.CatchClause) {
-						return;
-					}
-
-					if (parent.flags & ts.NodeFlags.Const) {
-						return;
-					}
-
-					const grandparent = parent.parent;
 					if (
-						grandparent.kind === SyntaxKind.ForInStatement ||
-						grandparent.kind === SyntaxKind.ForOfStatement
+						sourceFile.isDeclarationFile ||
+						node.initializer !== undefined ||
+						node.type !== undefined ||
+						node.name.kind !== SyntaxKind.Identifier ||
+						node.parent.kind === SyntaxKind.CatchClause ||
+						node.parent.flags & ts.NodeFlags.Const ||
+						node.parent.parent.kind === SyntaxKind.ForInStatement ||
+						node.parent.parent.kind === SyntaxKind.ForOfStatement
 					) {
 						return;
 					}

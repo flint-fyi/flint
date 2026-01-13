@@ -11,7 +11,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 <RuleSummary plugin="ts" rule="evolvingVariableTypes" />
 
 Variables declared with `let` or `var` without a type annotation or initial value have an implicit `any` type that "evolves" based on subsequent assignments.
-This bypasses TypeScript's type checking, making it harder to catch type-related bugs at compile time.
+This allows any type of value to be assigned to the variable, which can make it harder to catch type-related bugs at compile time.
 
 TypeScript's `--noImplicitAny` compiler option does not catch this case.
 
@@ -61,7 +61,7 @@ This rule is not configurable.
 ## When Not To Use It
 
 If you are prototyping code quickly and want to defer type decisions, you may want to disable this rule temporarily.
-However, consider enabling it before committing code to ensure type safety.
+Alternately, some projects prefer to allow evolving variables, as TypeScript will still enforce safe usage of them after assignment.
 
 ## Further Reading
 
