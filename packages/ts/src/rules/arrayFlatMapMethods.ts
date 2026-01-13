@@ -1,23 +1,21 @@
 import * as ts from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
+import type { AST, Checker } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
 
 function isArrayMapCall(
-	node: ts.Expression,
-	typeChecker: ts.TypeChecker,
-): node is ts.CallExpression {
-	if (!ts.isCallExpression(node)) {
-		return false;
-	}
-
-	if (!ts.isPropertyAccessExpression(node.expression)) {
-		return false;
-	}
-
-	if (node.expression.name.text !== "map" || node.arguments.length < 1) {
+	node: AST.Expression,
+	typeChecker: Checker,
+): node is AST.CallExpression {
+	if (
+		!ts.isCallExpression(node) ||
+		!ts.isPropertyAccessExpression(node.expression) ||
+		node.expression.name.text !== "map" ||
+		node.arguments.length < 1
+	) {
 		return false;
 	}
 
@@ -29,27 +27,30 @@ function isArrayMapCall(
 	return isArrayOrTupleType(receiverType, typeChecker);
 }
 
-function isArrayOrTupleType(
-	type: ts.Type,
-	typeChecker: ts.TypeChecker,
-): boolean {
+function isArrayOrTupleType(type: ts.Type, typeChecker: Checker): boolean {
 	return isTypeRecursive(
 		type,
 		(t) => typeChecker.isArrayType(t) || typeChecker.isTupleType(t),
 	);
 }
 
-function isFlatCallWithDepthOne(node: ts.CallExpression) {
-	if (node.arguments.length === 0) {
-		return true;
-	}
+function isFlatCallWithDepthOne(node: AST.CallExpression) {
+	switch (node.arguments.length) {
+		case 0:
+			return true;
 
-	if (node.arguments.length !== 1) {
-		return false;
-	}
+		case 1: {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const firstArgument = node.arguments[0]!;
 
-	const arg = node.arguments[0];
-	return arg && ts.isNumericLiteral(arg) && arg.text === "1";
+			// TODO: Use a util like getStaticValue
+			// https://github.com/flint-fyi/flint/issues/1298
+			return ts.isNumericLiteral(firstArgument) && firstArgument.text === "1";
+		}
+
+		default:
+			return false;
+	}
 }
 
 export default typescriptLanguage.createRule({
