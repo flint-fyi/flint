@@ -10,7 +10,7 @@ function doSomething() {}
 			snapshot: `
 function doSomething() {}
          ~~~~~~~~~~~
-         Use a function expression instead of a function declaration.
+         For consistency, this project prefers a function expression instead of a function declaration.
 `,
 		},
 		{
@@ -22,7 +22,7 @@ function doSomething(value: number): string {
 			snapshot: `
 function doSomething(value: number): string {
          ~~~~~~~~~~~
-         Use a function expression instead of a function declaration.
+         For consistency, this project prefers a function expression instead of a function declaration.
     return String(value);
 }
 `,
@@ -35,7 +35,7 @@ const doSomething = function() {};
 			snapshot: `
 const doSomething = function() {};
       ~~~~~~~~~~~
-      Use a function declaration instead of a function expression.
+      For consistency, this project prefers a function declaration instead of a function expression.
 `,
 		},
 		{
@@ -46,7 +46,7 @@ const doSomething = () => {};
 			snapshot: `
 const doSomething = () => {};
       ~~~~~~~~~~~
-      Use a function declaration instead of a function expression.
+      For consistency, this project prefers a function declaration instead of a function expression.
 `,
 		},
 		{
@@ -57,7 +57,7 @@ const doSomething = () => {};
 			snapshot: `
 const doSomething = () => {};
       ~~~~~~~~~~~
-      Use a function declaration instead of a function expression.
+      For consistency, this project prefers a function declaration instead of a function expression.
 `,
 		},
 	],

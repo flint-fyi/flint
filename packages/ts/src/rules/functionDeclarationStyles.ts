@@ -2,30 +2,26 @@ import ts from "typescript";
 import { z } from "zod";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
+import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-const styleSchema = z
-	.enum(["declaration", "expression"])
-	.default("expression")
-	.describe(
-		"Which function style to enforce: 'declaration' for function declarations, 'expression' for function expressions.",
-	);
-
 function isOverloadedDeclaration(
-	node: ts.FunctionDeclaration,
+	node: AST.FunctionDeclaration,
 	sourceFile: ts.SourceFile,
 ) {
 	if (!node.name) {
 		return false;
 	}
 
-	const name = node.name.text;
 	const statements = sourceFile.statements;
 	let count = 0;
 
 	for (const statement of statements) {
-		if (ts.isFunctionDeclaration(statement) && statement.name?.text === name) {
+		if (
+			ts.isFunctionDeclaration(statement) &&
+			statement.name?.text === node.name.text
+		) {
 			count++;
 			if (count > 1) {
 				return true;
@@ -45,7 +41,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		preferDeclaration: {
-			primary: "Use a function declaration instead of a function expression.",
+			primary:
+				"For consistency, this project prefers a function declaration instead of a function expression.",
 			secondary: [
 				"Function declarations are hoisted and provide clearer intent for named functions.",
 			],
@@ -54,7 +51,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			],
 		},
 		preferExpression: {
-			primary: "Use a function expression instead of a function declaration.",
+			primary:
+				"For consistency, this project prefers a function expression instead of a function declaration.",
 			secondary: [
 				"Function expressions assigned to variables provide consistent syntax with arrow functions.",
 			],
@@ -70,21 +68,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			.describe(
 				"Whether to allow arrow functions when style is 'declaration'.",
 			),
-		style: styleSchema,
+		style: z
+			.enum(["declaration", "expression"])
+			.default("expression")
+			.describe(
+				"Which function style to enforce: 'declaration' for function declarations or 'expression' for function expressions.",
+			),
 	},
 	setup(context) {
 		return {
 			visitors: {
 				FunctionDeclaration: (node, { options, sourceFile }) => {
-					if (options.style !== "expression") {
-						return;
-					}
-
-					if (!node.name) {
-						return;
-					}
-
-					if (isOverloadedDeclaration(node, sourceFile)) {
+					if (
+						options.style !== "expression" ||
+						!node.name ||
+						isOverloadedDeclaration(node, sourceFile)
+					) {
 						return;
 					}
 
@@ -100,29 +99,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					for (const declaration of node.declarationList.declarations) {
-						if (!declaration.initializer) {
-							continue;
-						}
+						switch (declaration.initializer?.kind) {
+							case ts.SyntaxKind.ArrowFunction:
+								if (!options.allowArrowFunctions) {
+									context.report({
+										message: "preferDeclaration",
+										range: getTSNodeRange(declaration.name, sourceFile),
+									});
+								}
+								break;
 
-						const initializer = declaration.initializer;
-
-						if (ts.isArrowFunction(initializer)) {
-							if (options.allowArrowFunctions) {
-								continue;
-							}
-
-							context.report({
-								message: "preferDeclaration",
-								range: getTSNodeRange(declaration.name, sourceFile),
-							});
-							continue;
-						}
-
-						if (ts.isFunctionExpression(initializer)) {
-							context.report({
-								message: "preferDeclaration",
-								range: getTSNodeRange(declaration.name, sourceFile),
-							});
+							case ts.SyntaxKind.FunctionExpression:
+								context.report({
+									message: "preferDeclaration",
+									range: getTSNodeRange(declaration.name, sourceFile),
+								});
 						}
 					}
 				},
