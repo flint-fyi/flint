@@ -1,31 +1,36 @@
 import * as ts from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
+import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
 
-function hasCallbackArgument(callExpression: ts.CallExpression): boolean {
-	const firstArg = callExpression.arguments[0];
-	if (!firstArg) {
+function hasCallbackArgument(callExpression: AST.CallExpression) {
+	if (callExpression.arguments.length === 0) {
 		return false;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const firstArgument = callExpression.arguments[0]!;
+
 	return (
-		ts.isFunctionExpression(firstArg) ||
-		ts.isArrowFunction(firstArg) ||
-		(ts.isIdentifier(firstArg) && firstArg.text !== "undefined")
+		ts.isArrowFunction(firstArgument) ||
+		ts.isFunctionExpression(firstArgument) ||
+		(ts.isIdentifier(firstArgument) && firstArgument.text !== "undefined")
 	);
 }
 
-function isNumericLiteral(node: ts.Expression): boolean {
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
+function isNumericLiteral(node: ts.Expression) {
 	if (ts.isNumericLiteral(node)) {
 		return true;
 	}
 
 	if (ts.isPrefixUnaryExpression(node)) {
 		return (
-			(node.operator === ts.SyntaxKind.PlusToken ||
-				node.operator === ts.SyntaxKind.MinusToken) &&
+			(node.operator === ts.SyntaxKind.MinusToken ||
+				node.operator === ts.SyntaxKind.PlusToken) &&
 			ts.isNumericLiteral(node.operand)
 		);
 	}
@@ -41,7 +46,7 @@ export default typescriptLanguage.createRule({
 		preset: "logical",
 	},
 	messages: {
-		uninvokedCallback: {
+		neverInvoked: {
 			primary: "This callback will not be invoked.",
 			secondary: [
 				"When the Array constructor is called with a single number argument, it creates an array with empty slots (not actual undefined values).",
@@ -61,14 +66,10 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					const memberExpression = node.expression;
-					const objectExpression = memberExpression.expression;
-
-					if (!ts.isNewExpression(objectExpression)) {
-						return;
-					}
+					const objectExpression = node.expression.expression;
 
 					if (
+						!ts.isNewExpression(objectExpression) ||
 						!ts.isIdentifier(objectExpression.expression) ||
 						!isGlobalDeclarationOfName(
 							objectExpression.expression,
@@ -84,18 +85,15 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					const firstArg = args[0];
-					if (!firstArg || !isNumericLiteral(firstArg)) {
-						return;
-					}
-
-					if (!hasCallbackArgument(node)) {
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const firstArgument = args[0]!;
+					if (!isNumericLiteral(firstArgument) || !hasCallbackArgument(node)) {
 						return;
 					}
 
 					context.report({
-						message: "uninvokedCallback",
-						range: getTSNodeRange(memberExpression.name, sourceFile),
+						message: "neverInvoked",
+						range: getTSNodeRange(node.expression.name, sourceFile),
 					});
 				},
 			},
