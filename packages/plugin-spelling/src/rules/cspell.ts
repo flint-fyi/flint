@@ -3,6 +3,7 @@ import { parseJsonSafe } from "@flint.fyi/utils";
 import type { DocumentValidator } from "cspell-lib";
 
 import { createDocumentValidator } from "./createDocumentValidator.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
 interface CSpellConfigLike {
 	words?: string[];
@@ -13,17 +14,24 @@ interface FileTask {
 	text: string;
 }
 
-export default textLanguage.createRule({
+export default ruleCreator.createRule(textLanguage, {
 	about: {
 		description: "Runs the CSpell spell checker on any source code file.",
 		id: "cspell",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		issue: {
 			primary: 'Forbidden or unknown word: "{{ word }}".',
-			secondary: ["TODO"],
-			suggestions: ["TODO"],
+			secondary: [
+				"The word '{{ word }}' is not in the project's dictionary (cspell.json).",
+				"If this is a valid term, consider adding it to 'cspell.json' under 'words'.",
+			],
+			suggestions: [
+				"Add '{{ word }}' to the project's dictionary.",
+				// TODO: update this message when we've implemented "suggestions for typos":https://github.com/flint-fyi/flint/issues/1403
+				"Correct the spelling if this was a typo.",
+			],
 		},
 	},
 	setup(context) {

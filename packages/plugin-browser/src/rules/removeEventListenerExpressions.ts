@@ -4,14 +4,16 @@ import {
 	typescriptLanguage,
 } from "@flint.fyi/ts";
 import { nullThrows } from "@flint.fyi/utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallow inline function expressions in removeEventListener calls.",
 		id: "removeEventListenerExpressions",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidRemoveEventListener: {
@@ -31,10 +33,10 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node: ts.CallExpression, { sourceFile, typeChecker }) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
-						!ts.isIdentifier(node.expression.name) ||
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+						node.expression.name.kind !== SyntaxKind.Identifier ||
 						node.expression.name.text !== "removeEventListener" ||
 						node.arguments.length < 2 ||
 						!isGlobalDeclaration(node.expression, typeChecker)
@@ -47,8 +49,8 @@ export default typescriptLanguage.createRule({
 						"Second argument is expected to be present by prior length check",
 					);
 					if (
-						!ts.isArrowFunction(listener) &&
-						!ts.isFunctionExpression(listener)
+						listener.kind !== SyntaxKind.ArrowFunction &&
+						listener.kind !== SyntaxKind.FunctionExpression
 					) {
 						return;
 					}

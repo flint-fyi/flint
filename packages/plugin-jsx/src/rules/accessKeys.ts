@@ -1,12 +1,14 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallow the use of the `accessKey` / `accesskey` attribute on JSX elements.",
 		id: "accessKeys",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		avoidAccessKey: {
@@ -24,8 +26,8 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				JsxAttribute(node: ts.JsxAttribute, { sourceFile }) {
-					if (!ts.isIdentifier(node.name)) {
+				JsxAttribute(node, { sourceFile }) {
+					if (node.name.kind !== SyntaxKind.Identifier) {
 						return;
 					}
 

@@ -24,7 +24,7 @@ export default typescriptLanguage.createRule({
 		description:
 			"Reports using `Array<T>` or `ReadonlyArray<T>` instead of `T[]` or `readonly T[]`.",
 		id: "arrayTypes",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferArraySyntax: {

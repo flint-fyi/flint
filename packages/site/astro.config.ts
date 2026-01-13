@@ -36,6 +36,7 @@ export default defineConfig({
 					[
 						{
 							icon: "open-book",
+							id: "about",
 							items: [
 								{ label: "About Flint", link: "about" },
 								{ label: "CLI", link: "cli" },

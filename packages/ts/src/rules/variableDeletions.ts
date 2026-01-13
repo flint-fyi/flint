@@ -1,13 +1,14 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports attempting to delete variables with the delete operator.",
 		id: "variableDeletions",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noDeleteVar: {
@@ -27,7 +28,7 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				DeleteExpression: (node, { sourceFile }) => {
-					if (node.expression.kind === ts.SyntaxKind.Identifier) {
+					if (node.expression.kind === SyntaxKind.Identifier) {
 						context.report({
 							message: "noDeleteVar",
 							range: {

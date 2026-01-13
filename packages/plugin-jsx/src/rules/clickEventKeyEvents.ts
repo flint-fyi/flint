@@ -1,9 +1,10 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const interactiveElements = new Set([
 	"a",
@@ -13,11 +14,13 @@ const interactiveElements = new Set([
 	"textarea",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports onClick without keyboard event handlers.",
 		id: "clickEventKeyEvents",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingKeyEvent: {
@@ -36,11 +39,11 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkClickEvent(
-			node: ts.JsxOpeningLikeElement,
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			if (
-				!ts.isIdentifier(node.tagName) ||
+				node.tagName.kind !== SyntaxKind.Identifier ||
 				node.tagName.text.toLowerCase() !== node.tagName.text
 			) {
 				return;
@@ -51,10 +54,13 @@ export default typescriptLanguage.createRule({
 				return;
 			}
 
-			let onClickName: ts.JsxAttributeName | undefined;
+			let onClickName: AST.JsxAttributeName | undefined;
 
 			for (const property of node.attributes.properties) {
-				if (ts.isJsxAttribute(property) && ts.isIdentifier(property.name)) {
+				if (
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier
+				) {
 					switch (property.name.text) {
 						case "aria-hidden":
 						case "onKeyDown":

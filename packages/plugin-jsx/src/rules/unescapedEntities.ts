@@ -1,5 +1,4 @@
 import { typescriptLanguage } from "@flint.fyi/ts";
-import type * as ts from "typescript";
 
 const problematicEntities = [
 	{ entity: '"', toBrace: '{"\\""}', toHTML: "&quot;" },
@@ -8,12 +7,14 @@ const problematicEntities = [
 	{ entity: "}", toBrace: "{'}'}", toHTML: "&#125;" },
 ];
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallow unescaped HTML entities in JSX text that may cause rendering issues.",
 		id: "unescapedEntities",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		unescapedEntity: {
@@ -31,7 +32,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				JsxText(node: ts.JsxText, { sourceFile }) {
+				JsxText(node, { sourceFile }) {
 					const nodeStart = node.getStart(sourceFile);
 					const reports: {
 						begin: number;

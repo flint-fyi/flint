@@ -6,12 +6,14 @@ import type { WithPosition } from "../nodes.ts";
 
 const urlTester = /(?:https?:\/\/|mailto:)\S+|[\w.+-]+@[\w.-]+\.\w+/gi;
 
-export default markdownLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description:
 			"Reports bare URLs that should be formatted as autolinks or links.",
 		id: "bareUrls",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		bareUrl: {

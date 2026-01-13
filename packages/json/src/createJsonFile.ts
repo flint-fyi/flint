@@ -1,5 +1,5 @@
 import type { FileDiskData, LanguageFileDefinition } from "@flint.fyi/core";
-import * as ts from "typescript";
+import ts from "typescript";
 
 import type { JsonFileServices } from "./language.ts";
 import type { JsonNodesByName } from "./nodes.ts";

@@ -1,17 +1,19 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "../language.ts";
+import * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports functions with duplicate parameter names in their signatures.",
 		id: "duplicateArguments",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		duplicateParam: {
@@ -27,13 +29,22 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkNode(
-			{ parameters }: ts.FunctionLikeDeclaration,
+			{
+				parameters,
+			}:
+				| AST.ArrowFunction
+				| AST.ConstructorDeclaration
+				| AST.FunctionDeclaration
+				| AST.FunctionExpression
+				| AST.GetAccessorDeclaration
+				| AST.MethodDeclaration
+				| AST.SetAccessorDeclaration,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const seenNames = new Set<string>();
 
 			for (const parameter of parameters) {
-				if (!ts.isIdentifier(parameter.name)) {
+				if (parameter.name.kind !== SyntaxKind.Identifier) {
 					continue;
 				}
 
