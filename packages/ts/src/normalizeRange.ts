@@ -10,7 +10,7 @@ export function normalizeRange(
 	sourceFile: ts.SourceFile,
 ): NormalizedReportRangeObject {
 	const onCharacters = isNode(original)
-		? { begin: original.getStart(), end: original.getEnd() }
+		? { begin: original.getStart(sourceFile), end: original.getEnd() }
 		: original;
 
 	return {
