@@ -2,8 +2,23 @@ import * as ts from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
+import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
+import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
 
-function isFindIndexWithSimpleEquality(node: ts.CallExpression) {
+function isArrayOrTupleType(
+	type: ts.Type,
+	typeChecker: ts.TypeChecker,
+): boolean {
+	return isTypeRecursive(
+		type,
+		(t) => typeChecker.isArrayType(t) || typeChecker.isTupleType(t),
+	);
+}
+
+function isFindIndexWithSimpleEquality(
+	node: ts.CallExpression,
+	typeChecker: ts.TypeChecker,
+) {
 	if (!ts.isPropertyAccessExpression(node.expression)) {
 		return undefined;
 	}
@@ -39,6 +54,15 @@ function isFindIndexWithSimpleEquality(node: ts.CallExpression) {
 	const comparedValue = isSimpleStrictEqualityCheck(callback, paramName);
 
 	if (comparedValue === undefined) {
+		return undefined;
+	}
+
+	const receiverType = getConstrainedTypeAtLocation(
+		node.expression.expression,
+		typeChecker,
+	);
+
+	if (!isArrayOrTupleType(receiverType, typeChecker)) {
 		return undefined;
 	}
 
@@ -140,8 +164,8 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile }) => {
-					const result = isFindIndexWithSimpleEquality(node);
+				CallExpression: (node, { sourceFile, typeChecker }) => {
+					const result = isFindIndexWithSimpleEquality(node, typeChecker);
 					if (result) {
 						context.report({
 							message:

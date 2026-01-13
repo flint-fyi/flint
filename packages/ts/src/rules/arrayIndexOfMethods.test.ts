@@ -79,6 +79,20 @@ array.findLastIndex((element) => element === target);
 Prefer \`.lastIndexOf()\` over \`.findLastIndex()\` with a simple equality check.
 `,
 		},
+		{
+			code: `
+function find<T extends string[]>(arr: T) {
+	return arr.findIndex((item) => item === "value");
+}
+`,
+			snapshot: `
+function find<T extends string[]>(arr: T) {
+	return arr.findIndex((item) => item === "value");
+	       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	       Prefer \`.indexOf()\` over \`.findIndex()\` with a simple equality check.
+}
+`,
+		},
 	],
 	valid: [
 		`declare const array: string[]; array.indexOf("value");`,
@@ -88,5 +102,6 @@ Prefer \`.lastIndexOf()\` over \`.findLastIndex()\` with a simple equality check
 		`declare const array: string[]; array.findIndex((item, index) => item === "value");`,
 		`declare const array: object[]; array.findIndex((item) => item.id === 1);`,
 		`declare const array: string[]; array.findIndex((item) => item == "value");`,
+		`declare const obj: { findIndex(fn: (x: string) => boolean): number }; obj.findIndex((x) => x === "value");`,
 	],
 });
