@@ -1,35 +1,42 @@
 import * as ts from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
+import type { AST, Checker } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
+import { skipParentheses } from "./utils/skipParentheses.ts";
 
-function isArrayOrTupleType(
-	type: ts.Type,
-	typeChecker: ts.TypeChecker,
-): boolean {
+function isArrayOrTupleType(type: ts.Type, typeChecker: Checker): boolean {
 	return isTypeRecursive(
 		type,
 		(t) => typeChecker.isArrayType(t) || typeChecker.isTupleType(t),
 	);
 }
 
-function isConcatApply(node: ts.CallExpression) {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
-		return false;
-	}
+function isArrayOrTupleTypeAtLocation(
+	node: AST.Expression,
+	typeChecker: Checker,
+) {
+	return isArrayOrTupleType(
+		getConstrainedTypeAtLocation(node, typeChecker),
+		typeChecker,
+	);
+}
 
-	if (node.expression.name.text !== "apply") {
+function isConcatApply(node: AST.CallExpression, typeChecker: Checker) {
+	if (
+		!ts.isPropertyAccessExpression(node.expression) ||
+		node.expression.name.text !== "apply"
+	) {
 		return false;
 	}
 
 	const callExpression = node.expression.expression;
-	if (!ts.isPropertyAccessExpression(callExpression)) {
-		return false;
-	}
-
-	if (callExpression.name.text !== "concat") {
+	if (
+		!ts.isPropertyAccessExpression(callExpression) ||
+		callExpression.name.text !== "concat"
+	) {
 		return false;
 	}
 
@@ -42,33 +49,41 @@ function isConcatApply(node: ts.CallExpression) {
 		concatObject.expression.text === "Array" &&
 		concatObject.name.text === "prototype";
 
-	if (!isEmptyArrayConcat && !isArrayPrototypeConcat) {
+	if (
+		(!isEmptyArrayConcat && !isArrayPrototypeConcat) ||
+		node.arguments.length !== 2
+	) {
 		return false;
 	}
 
-	if (node.arguments.length !== 2) {
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const firstArg = node.arguments[0]!;
+
+	if (!isEmptyArrayLiteral(firstArg)) {
 		return false;
 	}
 
-	const firstArg = node.arguments[0];
-	return firstArg && isEmptyArrayLiteral(firstArg);
+	const secondArg = node.arguments[1];
+	if (!secondArg) {
+		return false;
+	}
+
+	return isArrayOrTupleTypeAtLocation(secondArg, typeChecker);
 }
 
-function isConcatCall(node: ts.CallExpression) {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
-		return false;
-	}
-
-	if (node.expression.name.text !== "call") {
+function isConcatCall(node: AST.CallExpression, typeChecker: Checker) {
+	if (
+		!ts.isPropertyAccessExpression(node.expression) ||
+		node.expression.name.text !== "call"
+	) {
 		return false;
 	}
 
 	const callExpression = node.expression.expression;
-	if (!ts.isPropertyAccessExpression(callExpression)) {
-		return false;
-	}
-
-	if (callExpression.name.text !== "concat") {
+	if (
+		!ts.isPropertyAccessExpression(callExpression) ||
+		callExpression.name.text !== "concat"
+	) {
 		return false;
 	}
 
@@ -86,21 +101,26 @@ function isConcatCall(node: ts.CallExpression) {
 		return false;
 	}
 
-	const firstArg = node.arguments[0];
-	if (!firstArg || !isEmptyArrayLiteral(firstArg)) {
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const firstArg = node.arguments[0]!;
+	if (!isEmptyArrayLiteral(firstArg)) {
 		return false;
 	}
 
-	const secondArg = node.arguments[1];
-	return secondArg && ts.isSpreadElement(secondArg);
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const secondArg = node.arguments[1]!;
+	if (!ts.isSpreadElement(secondArg)) {
+		return false;
+	}
+
+	return isArrayOrTupleTypeAtLocation(secondArg.expression, typeChecker);
 }
 
-function isConcatSpread(node: ts.CallExpression) {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
-		return false;
-	}
-
-	if (node.expression.name.text !== "concat") {
+function isConcatSpread(node: AST.CallExpression, typeChecker: Checker) {
+	if (
+		!ts.isPropertyAccessExpression(node.expression) ||
+		node.expression.name.text !== "concat"
+	) {
 		return false;
 	}
 
@@ -114,79 +134,54 @@ function isConcatSpread(node: ts.CallExpression) {
 	}
 
 	const arg = node.arguments[0];
-	return arg && ts.isSpreadElement(arg);
+	if (!arg || !ts.isSpreadElement(arg)) {
+		return false;
+	}
+
+	return isArrayOrTupleTypeAtLocation(arg.expression, typeChecker);
 }
 
-function isEmptyArrayLiteral(node: ts.Expression) {
+function isEmptyArrayLiteral(node: AST.Expression) {
 	return ts.isArrayLiteralExpression(node) && node.elements.length === 0;
 }
 
-function isIdentityArrowFunction(node: ts.Expression) {
-	if (!ts.isArrowFunction(node)) {
+function isIdentityArrowFunction(node: AST.Expression) {
+	const expression = skipParentheses(node);
+
+	if (!ts.isArrowFunction(expression) || expression.parameters.length !== 1) {
 		return false;
 	}
 
-	if (node.parameters.length !== 1) {
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const param = expression.parameters[0]!;
+
+	if (!ts.isIdentifier(param.name)) {
 		return false;
 	}
 
-	const param = node.parameters[0];
-	if (!param || !ts.isIdentifier(param.name)) {
-		return false;
-	}
-
-	const paramName = param.name.text;
-	const body = node.body;
-
-	return ts.isIdentifier(body) && body.text === paramName;
-}
-
-function isIdentityFlatMapCall(
-	node: ts.CallExpression,
-	typeChecker: ts.TypeChecker,
-) {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
-		return false;
-	}
-
-	if (node.expression.name.text !== "flatMap") {
-		return false;
-	}
-
-	if (node.arguments.length !== 1) {
-		return false;
-	}
-
-	const arg = node.arguments[0];
-	if (!arg || !isIdentityArrowFunction(arg)) {
-		return false;
-	}
-
-	const receiverType = getConstrainedTypeAtLocation(
-		node.expression.expression,
-		typeChecker,
-	);
-
-	return isArrayOrTupleType(receiverType, typeChecker);
-}
-
-function isLodashFlatten(node: ts.CallExpression) {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
-		return false;
-	}
-
-	if (node.expression.name.text !== "flatten") {
-		return false;
-	}
-
-	if (!ts.isIdentifier(node.expression.expression)) {
-		return false;
-	}
-
-	const objectName = node.expression.expression.text;
+	const body = skipParentheses(expression.body as AST.Expression);
 	return (
-		objectName === "_" || objectName === "lodash" || objectName === "underscore"
+		body.kind === ts.SyntaxKind.Identifier && body.text === param.name.text
 	);
+}
+
+function isIdentityFlatMapCall(node: AST.CallExpression, typeChecker: Checker) {
+	if (
+		!ts.isPropertyAccessExpression(node.expression) ||
+		node.expression.name.text !== "flatMap" ||
+		node.arguments.length !== 1
+	) {
+		return false;
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const arg = node.arguments[0]!;
+
+	if (!isIdentityArrowFunction(arg)) {
+		return false;
+	}
+
+	return isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker);
 }
 
 export default typescriptLanguage.createRule({
@@ -212,10 +207,9 @@ export default typescriptLanguage.createRule({
 				CallExpression: (node, { sourceFile, typeChecker }) => {
 					if (
 						isIdentityFlatMapCall(node, typeChecker) ||
-						isConcatSpread(node) ||
-						isConcatApply(node) ||
-						isConcatCall(node) ||
-						isLodashFlatten(node)
+						isConcatSpread(node, typeChecker) ||
+						isConcatApply(node, typeChecker) ||
+						isConcatCall(node, typeChecker)
 					) {
 						context.report({
 							message: "preferFlat",
