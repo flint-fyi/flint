@@ -1,0 +1,82 @@
+---
+description: "Reports using the `Array` constructor to create arrays instead of array literal syntax."
+title: "arrayConstructors"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayConstructors" />
+
+The `Array` constructor has confusing behavior when called with a single numeric argument.
+Instead of creating an array containing that number, it creates a sparse array of that length.
+Array literal syntax is clearer and avoids this pitfall.
+
+This rule allows `new Array(n)` with a single numeric argument for intentionally creating sparse arrays, and allows `Array<T>()` with type arguments for creating typed arrays.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const values = new Array();
+```
+
+```ts
+const values = new Array(1, 2, 3);
+```
+
+```ts
+const values = Array();
+```
+
+```ts
+const values = Array("a", "b", "c");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const values: number[] = [];
+```
+
+```ts
+const values = [1, 2, 3];
+```
+
+```ts
+const sparse = new Array(10);
+```
+
+```ts
+const typed = new Array<number>();
+```
+
+```ts
+const typed = Array<string>(1, 2, 3);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the `Array` constructor style for readability or consistency reasons, you may disable this rule.
+Some codebases may have established patterns using the constructor syntax.
+
+## Further Reading
+
+- [MDN: Array() constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Array)
+- [MDN: Array literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#array_literals)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayConstructors" />

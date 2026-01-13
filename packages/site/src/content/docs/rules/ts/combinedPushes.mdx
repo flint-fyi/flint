@@ -1,0 +1,51 @@
+---
+description: "Consecutive array.push() calls that could be combined into a single call."
+title: "combinedPushes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="combinedPushes" />
+
+Multiple consecutive `.push()` calls on the same array can be combined into a single call.
+Using `.push(a, b, c)` is more concise than separate `.push(a)`, `.push(b)`, `.push(c)` calls.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const items: string[] = [];
+
+items.push("a");
+items.push("b");
+items.push("c");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const items: string[] = [];
+
+items.push("a", "b", "c");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the visual separation of individual `.push()` calls, or if you're intentionally pushing items one at a time for debugging or other purposes, you can disable this rule.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="combinedPushes" />
