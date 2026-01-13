@@ -2,18 +2,7 @@ import * as ts from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
-import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
-
-function isArrayOrTupleType(
-	type: ts.Type,
-	typeChecker: ts.TypeChecker,
-): boolean {
-	return isTypeRecursive(
-		type,
-		(t) => typeChecker.isArrayType(t) || typeChecker.isTupleType(t),
-	);
-}
+import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -35,29 +24,29 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (!ts.isPropertyAccessExpression(node.expression)) {
+					if (
+						!ts.isPropertyAccessExpression(node.expression) ||
+						node.expression.name.text !== "flat" ||
+						node.arguments.length !== 1
+					) {
 						return;
 					}
 
-					if (node.expression.name.text !== "flat") {
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const arg = node.arguments[0]!;
+
+					// TODO: Use a util like getStaticValue
+					// https://github.com/flint-fyi/flint/issues/1298
+					if (!ts.isNumericLiteral(arg) || arg.text !== "1") {
 						return;
 					}
 
-					if (node.arguments.length !== 1) {
-						return;
-					}
-
-					const arg = node.arguments[0];
-					if (!arg || !ts.isNumericLiteral(arg) || arg.text !== "1") {
-						return;
-					}
-
-					const receiverType = getConstrainedTypeAtLocation(
-						node.expression.expression,
-						typeChecker,
-					);
-
-					if (!isArrayOrTupleType(receiverType, typeChecker)) {
+					if (
+						!isArrayOrTupleTypeAtLocation(
+							node.expression.expression,
+							typeChecker,
+						)
+					) {
 						return;
 					}
 

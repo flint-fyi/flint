@@ -3,26 +3,8 @@ import * as ts from "typescript";
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import type { AST, Checker } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
-import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
+import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 import { skipParentheses } from "./utils/skipParentheses.ts";
-
-function isArrayOrTupleType(type: ts.Type, typeChecker: Checker): boolean {
-	return isTypeRecursive(
-		type,
-		(t) => typeChecker.isArrayType(t) || typeChecker.isTupleType(t),
-	);
-}
-
-function isArrayOrTupleTypeAtLocation(
-	node: AST.Expression,
-	typeChecker: Checker,
-) {
-	return isArrayOrTupleType(
-		getConstrainedTypeAtLocation(node, typeChecker),
-		typeChecker,
-	);
-}
 
 function isConcatApply(node: AST.CallExpression, typeChecker: Checker) {
 	if (
