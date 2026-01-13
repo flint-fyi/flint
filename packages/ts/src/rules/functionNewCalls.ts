@@ -1,10 +1,12 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "../language.ts";
+import * as AST from "../types/ast.ts";
+import type { Checker } from "../types/checker.ts";
 import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
 import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
 
@@ -31,7 +33,7 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkNode(
-			node: ts.CallExpression | ts.NewExpression,
+			node: AST.CallExpression | AST.NewExpression,
 			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (isFunctionConstructor(node, typeChecker)) {
@@ -43,17 +45,17 @@ export default typescriptLanguage.createRule({
 		}
 
 		function isFunctionConstructor(
-			node: ts.CallExpression | ts.NewExpression,
-			typeChecker: ts.TypeChecker,
+			node: AST.CallExpression | AST.NewExpression,
+			typeChecker: Checker,
 		) {
-			if (ts.isIdentifier(node.expression)) {
+			if (node.expression.kind === SyntaxKind.Identifier) {
 				if (
 					isGlobalDeclarationOfName(node.expression, "Function", typeChecker)
 				) {
 					return true;
 				}
 			} else if (
-				ts.isPropertyAccessExpression(node.expression) &&
+				node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 				isGlobalDeclaration(node.expression, typeChecker)
 			) {
 				const propertyName = node.expression.name.text;
@@ -62,7 +64,7 @@ export default typescriptLanguage.createRule({
 				}
 
 				const object = node.expression.expression;
-				if (ts.isIdentifier(object)) {
+				if (object.kind === SyntaxKind.Identifier) {
 					return object.text === "globalThis" || object.text === "window";
 				}
 			}

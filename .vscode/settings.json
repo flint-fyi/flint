@@ -11,7 +11,10 @@
 		"editor.defaultFormatter": "prettier.prettier-vscode"
 	},
 	"[yaml]": { "editor.defaultFormatter": "prettier.prettier-vscode" },
-	"editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" },
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit",
+		"source.removeUnusedImports": "explicit"
+	},
 	"editor.defaultFormatter": "prettier.prettier-vscode",
 	"editor.formatOnSave": true,
 	"editor.rulers": [80],
@@ -26,5 +29,6 @@
 		"yaml"
 	],
 	"eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
-	"typescript.tsdk": "node_modules/typescript/lib"
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"typescript.tsserver.experimental.enableProjectDiagnostics": true
 }

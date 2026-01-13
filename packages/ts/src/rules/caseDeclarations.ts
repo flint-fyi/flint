@@ -1,11 +1,12 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -29,12 +30,12 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function getLexicalDeclaration(
-			statements: ts.NodeArray<ts.Statement>,
+			statements: ts.NodeArray<AST.Statement>,
 			sourceFile: ts.SourceFile,
 		): ts.Node | undefined {
 			for (const statement of statements) {
 				if (
-					ts.isVariableStatement(statement) &&
+					statement.kind === SyntaxKind.VariableStatement &&
 					tsutils.isNodeFlagSet(
 						statement.declarationList,
 						ts.NodeFlags.Let | ts.NodeFlags.Const,
@@ -44,8 +45,8 @@ export default typescriptLanguage.createRule({
 				}
 
 				if (
-					ts.isClassDeclaration(statement) ||
-					ts.isFunctionDeclaration(statement)
+					statement.kind === SyntaxKind.ClassDeclaration ||
+					statement.kind === SyntaxKind.FunctionDeclaration
 				) {
 					return statement.getChildAt(0, sourceFile);
 				}
@@ -55,7 +56,7 @@ export default typescriptLanguage.createRule({
 		}
 
 		function checkClause(
-			node: ts.CaseClause | ts.DefaultClause,
+			node: AST.CaseClause | AST.DefaultClause,
 			{ sourceFile }: TypeScriptFileServices,
 		): void {
 			const declarationNode = getLexicalDeclaration(

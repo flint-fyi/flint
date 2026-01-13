@@ -1,9 +1,11 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
+
+import * as AST from "../types/ast.ts";
 
 export function unwrapParenthesizedExpression(
-	expression: ts.Expression,
-): ts.Expression {
-	return ts.isParenthesizedExpression(expression)
+	expression: AST.ConciseBody | AST.Expression,
+): AST.ConciseBody | AST.Expression {
+	return expression.kind === SyntaxKind.ParenthesizedExpression
 		? unwrapParenthesizedExpression(expression.expression)
 		: expression;
 }

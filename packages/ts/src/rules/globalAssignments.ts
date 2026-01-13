@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -51,8 +51,8 @@ export default typescriptLanguage.createRule({
 				},
 				PrefixUnaryExpression: (node, { sourceFile, typeChecker }) => {
 					if (
-						(node.operator === ts.SyntaxKind.PlusPlusToken ||
-							node.operator === ts.SyntaxKind.MinusMinusToken) &&
+						(node.operator === SyntaxKind.PlusPlusToken ||
+							node.operator === SyntaxKind.MinusMinusToken) &&
 						isGlobalVariable(node.operand, typeChecker)
 					) {
 						context.report({

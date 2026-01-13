@@ -28,6 +28,9 @@
 		"!lib/**/*.map",
 		"!lib/bin/**"
 	],
+	"scripts": {
+		"test": "vitest --typecheck --project flint"
+	},
 	"dependencies": {
 		"@flint.fyi/cli": "workspace:",
 		"@flint.fyi/core": "workspace:",

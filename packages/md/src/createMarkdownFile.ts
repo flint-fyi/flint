@@ -1,16 +1,16 @@
 import type { FileDiskData, LanguageFileDefinition } from "@flint.fyi/core";
-import remarkParse from "remark-parse";
-import { unified } from "unified";
+import { fromMarkdown } from "mdast-util-from-markdown";
 import { visit } from "unist-util-visit";
 
 import type { MarkdownFileServices } from "./language.ts";
 import type { MarkdownNodesByName } from "./nodes.ts";
 
-// Eventually, it might make sense to use a native speed Markdown parser...
-// However, the remark ecosystem is quite extensive and well-supported.
-// It'll be a while before we can replace it with a native parser.
+// Eventually, it might make sense to use markdown-rs...
+// However, there aren't currently JS bindings, so
+// it'll be a while before we can replace it with a native parser.
+// See the discussion in https://github.com/flint-fyi/flint/issues/1043.
 export function createMarkdownFile(data: FileDiskData) {
-	const root = unified().use(remarkParse).parse(data.sourceText);
+	const root = fromMarkdown(data.sourceText);
 
 	const languageFile: LanguageFileDefinition<
 		MarkdownNodesByName,

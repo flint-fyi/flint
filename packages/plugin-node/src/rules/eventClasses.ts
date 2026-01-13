@@ -1,11 +1,15 @@
 import {
+	type AST,
+	type Checker,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
-function isImportFromNodeEvents(expression: ts.Expression) {
+function isImportFromNodeEvents(
+	expression: ts.Expression,
+): expression is ts.StringLiteral {
 	return (
 		ts.isStringLiteral(expression) &&
 		(expression.text === "events" || expression.text === "node:events")
@@ -43,7 +47,8 @@ export default typescriptLanguage.createRule({
 				}
 
 				if (
-					ts.isImportDeclaration(declaration.parent.parent.parent) &&
+					declaration.parent.parent.parent.kind ===
+						SyntaxKind.ImportDeclaration &&
 					isImportFromNodeEvents(
 						declaration.parent.parent.parent.moduleSpecifier,
 					)
@@ -66,8 +71,8 @@ export default typescriptLanguage.createRule({
 		}
 
 		function isIdentifierEventEmitter(
-			identifier: ts.Identifier,
-			typeChecker: ts.TypeChecker,
+			identifier: AST.Identifier,
+			typeChecker: Checker,
 		) {
 			return typeChecker
 				.getSymbolAtLocation(identifier)
@@ -76,12 +81,12 @@ export default typescriptLanguage.createRule({
 		}
 
 		function checkExpression(
-			expression: ts.Expression,
+			expression: AST.Expression,
 			sourceFile: ts.SourceFile,
-			typeChecker: ts.TypeChecker,
+			typeChecker: Checker,
 		) {
 			if (
-				ts.isIdentifier(expression) &&
+				expression.kind === SyntaxKind.Identifier &&
 				isIdentifierEventEmitter(expression, typeChecker)
 			) {
 				context.report({
@@ -94,7 +99,7 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				ClassDeclaration(
-					node: ts.ClassDeclaration,
+					node,
 					{ sourceFile, typeChecker }: TypeScriptFileServices,
 				) {
 					if (!node.heritageClauses) {
@@ -102,7 +107,7 @@ export default typescriptLanguage.createRule({
 					}
 
 					for (const heritageClause of node.heritageClauses) {
-						if (heritageClause.token !== ts.SyntaxKind.ExtendsKeyword) {
+						if (heritageClause.token !== SyntaxKind.ExtendsKeyword) {
 							continue;
 						}
 
@@ -112,7 +117,7 @@ export default typescriptLanguage.createRule({
 					}
 				},
 				NewExpression(
-					node: ts.NewExpression,
+					node,
 					{ sourceFile, typeChecker }: TypeScriptFileServices,
 				) {
 					checkExpression(node.expression, sourceFile, typeChecker);

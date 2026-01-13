@@ -1,0 +1,29 @@
+jobs:
+  post-release:
+    name: Post Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          fetch-depth: 0
+      - uses: apexskier/github-release-commenter@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          comment-template: |
+            :tada: This has been released in **{release_tag}** :tada:
+
+            The release is available on:
+
+            * [GitHub releases]({release_link})
+
+            Cheers! 📦🚀
+
+name: Post Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  issues: write
+  pull-requests: write

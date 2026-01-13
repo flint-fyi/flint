@@ -1,8 +1,9 @@
 import { nullThrows } from "@flint.fyi/utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 const prototypeMethods = new Set([
 	"hasOwnProperty",
@@ -36,8 +37,8 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				CallExpression: (node, { sourceFile }) => {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
-						!ts.isIdentifier(node.expression.name)
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+						node.expression.name.kind !== SyntaxKind.Identifier
 					) {
 						return;
 					}
@@ -49,13 +50,13 @@ export default typescriptLanguage.createRule({
 
 					const openParenthesisToken = findToken(
 						node,
-						ts.SyntaxKind.OpenParenToken,
+						SyntaxKind.OpenParenToken,
 						sourceFile,
 					);
 
 					const closeParenthesisToken = findToken(
 						node,
-						ts.SyntaxKind.CloseParenToken,
+						SyntaxKind.CloseParenToken,
 						sourceFile,
 					);
 
@@ -88,8 +89,8 @@ export default typescriptLanguage.createRule({
 });
 
 function findToken(
-	node: ts.Node,
-	token: ts.SyntaxKind,
+	node: AST.CallExpression,
+	token: SyntaxKind,
 	sourceFile: ts.SourceFile,
 ) {
 	return nullThrows(

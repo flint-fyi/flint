@@ -1,5 +1,10 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
+import ts, { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -24,15 +29,15 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		function isNamespaceImportDeclaration(declaration: ts.Declaration) {
 			return (
-				ts.isNamespaceImport(declaration) &&
-				ts.isImportClause(declaration.parent) &&
-				ts.isImportDeclaration(declaration.parent.parent)
+				declaration.kind === SyntaxKind.NamespaceImport &&
+				declaration.parent.kind === SyntaxKind.ImportClause &&
+				declaration.parent.parent.kind === SyntaxKind.ImportDeclaration
 			);
 		}
 
 		function isIdentifierNamespaceImport(
-			identifier: ts.Identifier,
-			typeChecker: ts.TypeChecker,
+			identifier: AST.Identifier,
+			typeChecker: Checker,
 		) {
 			return typeChecker
 				.getSymbolAtLocation(identifier)
@@ -42,12 +47,9 @@ export default typescriptLanguage.createRule({
 
 		return {
 			visitors: {
-				ElementAccessExpression(
-					node: ts.ElementAccessExpression,
-					{ sourceFile, typeChecker },
-				) {
+				ElementAccessExpression(node, { sourceFile, typeChecker }) {
 					if (
-						ts.isIdentifier(node.expression) &&
+						node.expression.kind === SyntaxKind.Identifier &&
 						isIdentifierNamespaceImport(node.expression, typeChecker)
 					) {
 						context.report({

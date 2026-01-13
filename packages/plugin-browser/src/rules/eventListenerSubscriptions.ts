@@ -3,7 +3,7 @@ import {
 	isGlobalDeclaration,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const eventHandlerProperties = new Set([
 	"onabort",
@@ -124,13 +124,10 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression(
-					node: ts.BinaryExpression,
-					{ sourceFile, typeChecker },
-				) {
+				BinaryExpression(node, { sourceFile, typeChecker }) {
 					if (
-						node.operatorToken.kind !== ts.SyntaxKind.EqualsToken ||
-						!ts.isPropertyAccessExpression(node.left) ||
+						node.operatorToken.kind !== SyntaxKind.EqualsToken ||
+						node.left.kind !== SyntaxKind.PropertyAccessExpression ||
 						!eventHandlerProperties.has(node.left.name.text.toLowerCase()) ||
 						!isGlobalDeclaration(node.left, typeChecker)
 					) {

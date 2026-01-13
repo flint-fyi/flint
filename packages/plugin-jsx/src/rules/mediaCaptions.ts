@@ -1,9 +1,10 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -27,14 +28,15 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkMediaElement(
-			node: ts.JsxElement | ts.JsxSelfClosingElement,
+			node: AST.JsxElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			const tagName = ts.isJsxElement(node)
-				? node.openingElement.tagName
-				: node.tagName;
+			const tagName =
+				node.kind == SyntaxKind.JsxElement
+					? node.openingElement.tagName
+					: node.tagName;
 
-			if (!ts.isIdentifier(tagName)) {
+			if (tagName.kind != SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -43,22 +45,26 @@ export default typescriptLanguage.createRule({
 				return;
 			}
 
-			const attributes = ts.isJsxElement(node)
-				? node.openingElement.attributes
-				: node.attributes;
+			const attributes =
+				node.kind == SyntaxKind.JsxElement
+					? node.openingElement.attributes
+					: node.attributes;
 
 			if (
 				attributes.properties.some(
 					(properties) =>
-						ts.isJsxAttribute(properties) &&
-						ts.isIdentifier(properties.name) &&
+						properties.kind == SyntaxKind.JsxAttribute &&
+						properties.name.kind == SyntaxKind.Identifier &&
 						properties.name.text === "muted",
 				)
 			) {
 				return;
 			}
 
-			if (ts.isJsxElement(node) && node.children.some(isCaptionsTrack)) {
+			if (
+				node.kind == SyntaxKind.JsxElement &&
+				node.children.some(isCaptionsTrack)
+			) {
 				return;
 			}
 
@@ -77,33 +83,41 @@ export default typescriptLanguage.createRule({
 	},
 });
 
-function isCaptionsTrack(node: ts.Node) {
-	if (!ts.isJsxElement(node) && !ts.isJsxSelfClosingElement(node)) {
+function isCaptionsTrack(node: AST.JsxChild) {
+	if (
+		node.kind != SyntaxKind.JsxElement &&
+		node.kind != SyntaxKind.JsxSelfClosingElement
+	) {
 		return false;
 	}
 
-	const childTagName = ts.isJsxElement(node)
-		? node.openingElement.tagName
-		: node.tagName;
+	const childTagName =
+		node.kind == SyntaxKind.JsxElement
+			? node.openingElement.tagName
+			: node.tagName;
 
-	if (!ts.isIdentifier(childTagName) || childTagName.text !== "track") {
+	if (
+		childTagName.kind != SyntaxKind.Identifier ||
+		childTagName.text !== "track"
+	) {
 		return false;
 	}
 
-	const childAttributes = ts.isJsxElement(node)
-		? node.openingElement.attributes
-		: node.attributes;
+	const childAttributes =
+		node.kind == SyntaxKind.JsxElement
+			? node.openingElement.attributes
+			: node.attributes;
 
 	return childAttributes.properties.some((property) => {
 		if (
-			!ts.isJsxAttribute(property) ||
-			!ts.isIdentifier(property.name) ||
+			property.kind != SyntaxKind.JsxAttribute ||
+			property.name.kind != SyntaxKind.Identifier ||
 			property.name.text !== "kind"
 		) {
 			return false;
 		}
 
-		if (property.initializer && ts.isStringLiteral(property.initializer)) {
+		if (property.initializer?.kind == SyntaxKind.StringLiteral) {
 			return property.initializer.text === "captions";
 		}
 

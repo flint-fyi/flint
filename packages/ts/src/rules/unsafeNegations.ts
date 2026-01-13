@@ -1,11 +1,11 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
 import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
 
 const operatorStrings = new Map([
-	[ts.SyntaxKind.InKeyword, "in"],
-	[ts.SyntaxKind.InstanceOfKeyword, "instanceof"],
+	[SyntaxKind.InKeyword, "in"],
+	[SyntaxKind.InstanceOfKeyword, "instanceof"],
 ]);
 
 export default typescriptLanguage.createRule({
@@ -36,8 +36,8 @@ export default typescriptLanguage.createRule({
 
 					const left = unwrapParenthesizedExpression(node.left);
 					if (
-						!ts.isPrefixUnaryExpression(left) ||
-						left.operator !== ts.SyntaxKind.ExclamationToken
+						left.kind !== SyntaxKind.PrefixUnaryExpression ||
+						left.operator !== SyntaxKind.ExclamationToken
 					) {
 						return;
 					}

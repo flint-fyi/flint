@@ -1,9 +1,10 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 type AriaPropertyType =
 	| "boolean"
@@ -108,35 +109,35 @@ const tokenValues: Partial<Record<string, Set<string>>> = {
 };
 
 function getAttributeValue(
-	property: ts.JsxAttribute,
+	property: AST.JsxAttribute,
 ): boolean | number | string | undefined {
 	if (!property.initializer) {
 		return true;
 	}
 
-	if (ts.isStringLiteral(property.initializer)) {
+	if (property.initializer.kind === SyntaxKind.StringLiteral) {
 		return property.initializer.text;
 	}
 
-	if (ts.isJsxExpression(property.initializer)) {
+	if (property.initializer.kind === SyntaxKind.JsxExpression) {
 		const expression = property.initializer.expression;
 		if (!expression) {
 			return undefined;
 		}
 
-		if (expression.kind === ts.SyntaxKind.TrueKeyword) {
+		if (expression.kind === SyntaxKind.TrueKeyword) {
 			return true;
 		}
 
-		if (expression.kind === ts.SyntaxKind.FalseKeyword) {
+		if (expression.kind === SyntaxKind.FalseKeyword) {
 			return false;
 		}
 
-		if (ts.isNumericLiteral(expression)) {
+		if (expression.kind === SyntaxKind.NumericLiteral) {
 			return Number(expression.text);
 		}
 
-		if (ts.isStringLiteral(expression)) {
+		if (expression.kind === SyntaxKind.StringLiteral) {
 			return expression.text;
 		}
 	}
@@ -275,11 +276,14 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkElement(
-			node: ts.JsxOpeningLikeElement,
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			for (const property of node.attributes.properties) {
-				if (!ts.isJsxAttribute(property) || !ts.isIdentifier(property.name)) {
+				if (
+					property.kind !== SyntaxKind.JsxAttribute ||
+					property.name.kind !== SyntaxKind.Identifier
+				) {
 					continue;
 				}
 

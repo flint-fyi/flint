@@ -1,0 +1,74 @@
+---
+description: "Disallow calling a function with an argument typed as any."
+title: "anyArguments"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="anyArguments" />
+
+Passing a value typed as `any` as a function argument defeats TypeScript's type safety guarantees.
+The `any` type bypasses type checking, allowing unexpected types to propagate through your codebase and potentially cause runtime errors.
+
+This rule also detects spreading arrays or tuples with `any` typed elements as function arguments.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const value: any;
+declare function processString(input: string): void;
+
+processString(value);
+
+declare const values: any[];
+declare function logAll(...items: string[]): void;
+
+logAll(...values);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const value: string;
+declare function processString(input: string): void;
+
+processString(value);
+
+declare const values: string[];
+declare function logAll(...items: string[]): void;
+
+logAll(...values);
+
+// Passing any to unknown is allowed
+declare function acceptUnknown(input: unknown): void;
+declare const unsafeValue: any;
+acceptUnknown(unsafeValue);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has many existing `any` types or areas of unsafe code, it may be difficult to enable this rule.
+Consider using ESLint disable comments for specific situations while working to improve type safety incrementally.
+
+## Further Reading
+
+- [TypeScript Handbook: The any Type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#any)
+- [TypeScript Deep Dive: Avoid any](https://basarat.gitbook.io/typescript/type-system/type-inference#any)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="anyArguments" />

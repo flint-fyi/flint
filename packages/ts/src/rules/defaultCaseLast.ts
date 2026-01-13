@@ -1,5 +1,5 @@
 import { nullThrows } from "@flint.fyi/utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
 
@@ -28,7 +28,7 @@ export default typescriptLanguage.createRule({
 				SwitchStatement: (node, { sourceFile }) => {
 					const clauses = node.caseBlock.clauses;
 					const defaultClauseIndex = clauses.findIndex(
-						(clause) => clause.kind === ts.SyntaxKind.DefaultClause,
+						(clause) => clause.kind === SyntaxKind.DefaultClause,
 					);
 
 					if (

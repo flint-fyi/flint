@@ -1,7 +1,8 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 const validTypeofValues = new Set([
 	"bigint",
@@ -16,14 +17,15 @@ const validTypeofValues = new Set([
 
 // TODO: Reuse a shared getStaticValue-style utility?
 // https://github.com/flint-fyi/flint/issues/1298
-function getStringValue(node: ts.Expression) {
-	return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)
+function getStringValue(node: AST.Expression) {
+	return node.kind === SyntaxKind.StringLiteral ||
+		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral
 		? node.text
 		: undefined;
 }
 
-function getTypeofOperand(node: ts.Expression) {
-	return ts.isTypeOfExpression(node) && node.expression;
+function getTypeofOperand(node: AST.Expression) {
+	return node.kind === SyntaxKind.TypeOfExpression && node.expression;
 }
 
 export default typescriptLanguage.createRule({
@@ -49,13 +51,13 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkComparison(
-			node: ts.BinaryExpression,
+			node: AST.BinaryExpression,
 			sourceFile: ts.SourceFile,
 		) {
 			const leftTypeofOperand = getTypeofOperand(node.left);
 			const rightTypeofOperand = getTypeofOperand(node.right);
 
-			let comparisonValue: ts.Expression | undefined;
+			let comparisonValue: AST.Expression | undefined;
 			if (leftTypeofOperand) {
 				comparisonValue = node.right;
 			} else if (rightTypeofOperand) {
@@ -77,11 +79,10 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
 					if (
-						node.operatorToken.kind === ts.SyntaxKind.EqualsEqualsToken ||
-						node.operatorToken.kind === ts.SyntaxKind.EqualsEqualsEqualsToken ||
-						node.operatorToken.kind === ts.SyntaxKind.ExclamationEqualsToken ||
-						node.operatorToken.kind ===
-							ts.SyntaxKind.ExclamationEqualsEqualsToken
+						node.operatorToken.kind === SyntaxKind.EqualsEqualsToken ||
+						node.operatorToken.kind === SyntaxKind.EqualsEqualsEqualsToken ||
+						node.operatorToken.kind === SyntaxKind.ExclamationEqualsToken ||
+						node.operatorToken.kind === SyntaxKind.ExclamationEqualsEqualsToken
 					) {
 						checkComparison(node, sourceFile);
 					}

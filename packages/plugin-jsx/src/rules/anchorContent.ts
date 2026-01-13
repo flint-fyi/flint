@@ -1,5 +1,5 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -24,12 +24,12 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function hasAccessibleContent(
-			element: ts.JsxOpeningElement | ts.JsxSelfClosingElement,
+			element: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 		): boolean {
 			return element.attributes.properties.some(
 				(property) =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					(property.name.text === "aria-label" ||
 						property.name.text === "aria-labelledby" ||
 						property.name.text === "title") &&
@@ -37,22 +37,24 @@ export default typescriptLanguage.createRule({
 			);
 		}
 
-		function hasTextContent(element: ts.JsxElement) {
+		function hasTextContent(element: AST.JsxElement) {
 			return element.children.some((child) => {
-				if (ts.isJsxText(child) && child.text.trim()) {
+				if (child.kind === SyntaxKind.JsxText && child.text.trim()) {
 					return true;
 				}
 
-				if (ts.isJsxElement(child) || ts.isJsxSelfClosingElement(child)) {
-					const childElement = ts.isJsxElement(child)
-						? child.openingElement
-						: child;
+				if (
+					child.kind === SyntaxKind.JsxElement ||
+					child.kind === SyntaxKind.JsxSelfClosingElement
+				) {
+					const childElement =
+						child.kind === SyntaxKind.JsxElement ? child.openingElement : child;
 
 					if (
 						!childElement.attributes.properties.some(
 							(attr) =>
-								ts.isJsxAttribute(attr) &&
-								ts.isIdentifier(attr.name) &&
+								attr.kind === SyntaxKind.JsxAttribute &&
+								attr.name.kind === SyntaxKind.Identifier &&
 								attr.name.text === "aria-hidden",
 						)
 					) {
@@ -60,7 +62,7 @@ export default typescriptLanguage.createRule({
 					}
 				}
 
-				if (ts.isJsxExpression(child) && child.expression) {
+				if (child.kind === SyntaxKind.JsxExpression && child.expression) {
 					return true;
 				}
 			});
@@ -71,7 +73,7 @@ export default typescriptLanguage.createRule({
 				JsxElement(node, { sourceFile }) {
 					const openingElement = node.openingElement;
 					if (
-						ts.isIdentifier(openingElement.tagName) &&
+						openingElement.tagName.kind === SyntaxKind.Identifier &&
 						openingElement.tagName.text === "a" &&
 						!hasAccessibleContent(openingElement) &&
 						!hasTextContent(node)
@@ -84,7 +86,7 @@ export default typescriptLanguage.createRule({
 				},
 				JsxSelfClosingElement(node, { sourceFile }) {
 					if (
-						ts.isIdentifier(node.tagName) &&
+						node.tagName.kind === SyntaxKind.Identifier &&
 						node.tagName.text === "a" &&
 						!hasAccessibleContent(node)
 					) {

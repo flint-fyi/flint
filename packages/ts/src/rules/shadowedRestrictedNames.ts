@@ -1,7 +1,8 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 const restrictedNames = new Set([
 	"arguments",
@@ -32,7 +33,7 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkIdentifier(
-			node: ts.Identifier,
+			node: AST.Identifier,
 			sourceFile: ts.SourceFile,
 		): void {
 			if (restrictedNames.has(node.text)) {
@@ -47,17 +48,14 @@ export default typescriptLanguage.createRule({
 		}
 
 		function checkBindingName(
-			name: ts.BindingName,
+			name: AST.BindingName,
 			sourceFile: ts.SourceFile,
 		): void {
-			if (ts.isIdentifier(name)) {
+			if (name.kind === SyntaxKind.Identifier) {
 				checkIdentifier(name, sourceFile);
-			} else if (
-				ts.isObjectBindingPattern(name) ||
-				ts.isArrayBindingPattern(name)
-			) {
+			} else {
 				for (const element of name.elements) {
-					if (ts.isBindingElement(element)) {
+					if (element.kind === SyntaxKind.BindingElement) {
 						checkBindingName(element.name, sourceFile);
 					}
 				}
@@ -65,7 +63,7 @@ export default typescriptLanguage.createRule({
 		}
 
 		function checkParameters(
-			parameters: ts.NodeArray<ts.ParameterDeclaration>,
+			parameters: ts.NodeArray<AST.ParameterDeclaration>,
 			sourceFile: ts.SourceFile,
 		): void {
 			for (const parameter of parameters) {
