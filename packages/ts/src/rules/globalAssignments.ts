@@ -1,16 +1,17 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
 import { isGlobalVariable } from "../utils/isGlobalVariable.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports attempting to assign to read-only global variables such as undefined, NaN, Infinity, Object, etc.",
 		id: "globalAssignments",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noGlobalAssign: {
@@ -51,8 +52,8 @@ export default typescriptLanguage.createRule({
 				},
 				PrefixUnaryExpression: (node, { sourceFile, typeChecker }) => {
 					if (
-						(node.operator === ts.SyntaxKind.PlusPlusToken ||
-							node.operator === ts.SyntaxKind.MinusMinusToken) &&
+						(node.operator === SyntaxKind.PlusPlusToken ||
+							node.operator === SyntaxKind.MinusMinusToken) &&
 						isGlobalVariable(node.operand, typeChecker)
 					) {
 						context.report({

@@ -1,8 +1,8 @@
-import * as ts from "typescript";
+import type { AST, Checker } from "@flint.fyi/ts";
 
 export function isDeclaredInNodeTypes(
-	node: ts.Expression,
-	typeChecker: ts.TypeChecker,
+	node: AST.Expression,
+	typeChecker: Checker,
 ) {
 	const declarations = typeChecker
 		.getTypeAtLocation(node)

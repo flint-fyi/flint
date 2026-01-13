@@ -1,4 +1,4 @@
-import { formatReportPrimary, type NormalizedReport } from "@flint.fyi/core";
+import { formatReport, type NormalizedReport } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 
 export function createReportSnapshot(
@@ -38,7 +38,10 @@ function createReportSnapshotAt(sourceText: string, report: NormalizedReport) {
 			const indent = prevLineIndent.padEnd(begin.column, " ");
 			const squiggleEnd = begin.line === end.line ? end.column : line.length;
 			output.push(indent.padEnd(squiggleEnd, "~"));
-			for (const errorMessageLine of formatReportPrimary(report).split("\n")) {
+			for (const errorMessageLine of formatReport(
+				report.data,
+				report.message.primary,
+			).split("\n")) {
 				output.push(indent + errorMessageLine);
 			}
 		} else {

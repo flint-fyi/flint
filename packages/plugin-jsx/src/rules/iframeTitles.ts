@@ -1,15 +1,18 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports <iframe> elements without a title prop.",
 		id: "iframeTitles",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingTitle: {
@@ -27,11 +30,14 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkIframe(
-			{ attributes, tagName }: ts.JsxOpeningLikeElement,
+			{
+				attributes,
+				tagName,
+			}: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			if (
-				!ts.isIdentifier(tagName) ||
+				tagName.kind !== SyntaxKind.Identifier ||
 				tagName.text.toLowerCase() !== "iframe"
 			) {
 				return;
@@ -39,13 +45,13 @@ export default typescriptLanguage.createRule({
 
 			const titleAttribute = attributes.properties.find((property) => {
 				return (
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text.toLowerCase() === "title"
 				);
 			});
 
-			if (!titleAttribute || !ts.isJsxAttribute(titleAttribute)) {
+			if (!titleAttribute || titleAttribute.kind !== SyntaxKind.JsxAttribute) {
 				context.report({
 					message: "missingTitle",
 					range: getTSNodeRange(tagName, sourceFile),
@@ -61,24 +67,26 @@ export default typescriptLanguage.createRule({
 				return;
 			}
 
-			if (ts.isStringLiteral(titleAttribute.initializer)) {
+			if (titleAttribute.initializer.kind === SyntaxKind.StringLiteral) {
 				if (titleAttribute.initializer.text === "") {
 					context.report({
 						message: "missingTitle",
 						range: getTSNodeRange(tagName, sourceFile),
 					});
 				}
-			} else if (ts.isJsxExpression(titleAttribute.initializer)) {
+			} else if (titleAttribute.initializer.kind === SyntaxKind.JsxExpression) {
 				const { expression } = titleAttribute.initializer;
 				if (!expression) {
 					return;
 				}
 
 				if (
-					(ts.isStringLiteral(expression) && expression.text === "") ||
-					(ts.isNoSubstitutionTemplateLiteral(expression) &&
+					(expression.kind === SyntaxKind.StringLiteral &&
 						expression.text === "") ||
-					(ts.isIdentifier(expression) && expression.text === "undefined")
+					(expression.kind === SyntaxKind.NoSubstitutionTemplateLiteral &&
+						expression.text === "") ||
+					(expression.kind === SyntaxKind.Identifier &&
+						expression.text === "undefined")
 				) {
 					context.report({
 						message: "missingTitle",

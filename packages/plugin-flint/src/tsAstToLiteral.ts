@@ -4,24 +4,25 @@
 // Changing from the switch to manual ifs is due to:
 // https://github.com/Microsoft/TypeScript/issues/56275
 
-import ts from "typescript";
+import type { AST } from "@flint.fyi/ts";
+import ts, { SyntaxKind } from "typescript";
 
-export function tsAstToLiteral(node: ts.ArrayLiteralExpression): unknown[];
-export function tsAstToLiteral(node: ts.ObjectLiteralExpression): object;
+export function tsAstToLiteral(node: AST.ArrayLiteralExpression): unknown[];
+export function tsAstToLiteral(node: AST.ObjectLiteralExpression): object;
 export function tsAstToLiteral(node: ts.Node): unknown;
 export function tsAstToLiteral(node: ts.Node): unknown {
 	switch (node.kind) {
-		case ts.SyntaxKind.FalseKeyword:
+		case SyntaxKind.FalseKeyword:
 			return false;
-		case ts.SyntaxKind.NullKeyword:
+		case SyntaxKind.NullKeyword:
 			return null;
-		case ts.SyntaxKind.TrueKeyword:
+		case SyntaxKind.TrueKeyword:
 			return true;
 	}
 
 	if (ts.isArrayLiteralExpression(node)) {
 		return node.elements
-			.filter((element) => element.kind !== ts.SyntaxKind.SpreadElement)
+			.filter((element) => element.kind !== SyntaxKind.SpreadElement)
 			.map((element) => tsAstToLiteral(element));
 	}
 
@@ -37,8 +38,8 @@ export function tsAstToLiteral(node: ts.Node): unknown {
 						property,
 					): property is ts.PropertyAssignment & { name: ts.Identifier } =>
 						ts.isPropertyAssignment(property) &&
-						(property.name.kind === ts.SyntaxKind.Identifier ||
-							property.name.kind === ts.SyntaxKind.StringLiteral),
+						(property.name.kind === SyntaxKind.Identifier ||
+							property.name.kind === SyntaxKind.StringLiteral),
 				)
 				.map((property) => [
 					property.name.escapedText || property.name.text,

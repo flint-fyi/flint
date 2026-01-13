@@ -18,5 +18,6 @@ peerDependencyRules:
   allowedVersions:
     astro: "5"
 
+shellEmulator: true
 strictDepBuilds: true
 strictPeerDependencies: true

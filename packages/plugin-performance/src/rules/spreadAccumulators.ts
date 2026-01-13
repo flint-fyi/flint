@@ -1,8 +1,14 @@
-import { type TypeScriptFileServices, typescriptLanguage } from "@flint.fyi/ts";
+import {
+	type AST,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "../ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports spread operations that accumulate values in loops, causing quadratic time complexity.",
@@ -114,7 +120,12 @@ export default typescriptLanguage.createRule({
 		}
 
 		function checkLoopStatement(
-			node: ts.Node & { statement: ts.Node },
+			node:
+				| AST.DoStatement
+				| AST.ForInStatement
+				| AST.ForOfStatement
+				| AST.ForStatement
+				| AST.WhileStatement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			checkAssignmentInLoop(node.statement, sourceFile);

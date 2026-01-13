@@ -1,17 +1,20 @@
 import {
+	type AST,
 	getTSNodeRange,
 	isGlobalDeclaration,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
 import { nullThrows } from "@flint.fyi/utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer modern DOM append/prepend methods over appendChild/insertBefore.",
 		id: "nodeAppendMethods",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferAppend: {
@@ -34,20 +37,20 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function isFirstChildAccess(node: ts.Expression): boolean {
+		function isFirstChildAccess(node: AST.Expression): boolean {
 			return (
-				ts.isPropertyAccessExpression(node) &&
-				ts.isIdentifier(node.name) &&
+				node.kind == SyntaxKind.PropertyAccessExpression &&
+				node.name.kind == SyntaxKind.Identifier &&
 				node.name.text === "firstChild"
 			);
 		}
 
 		return {
 			visitors: {
-				CallExpression(node: ts.CallExpression, { sourceFile, typeChecker }) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
-						!ts.isIdentifier(node.expression.name) ||
+						node.expression.kind != SyntaxKind.PropertyAccessExpression ||
+						node.expression.name.kind != SyntaxKind.Identifier ||
 						!isGlobalDeclaration(node.expression.name, typeChecker)
 					) {
 						return;
@@ -72,7 +75,7 @@ export default typescriptLanguage.createRule({
 								"Second argument is expected to be present by the length check",
 							);
 							if (
-								secondArgument.kind !== ts.SyntaxKind.NullKeyword &&
+								secondArgument.kind !== SyntaxKind.NullKeyword &&
 								!isFirstChildAccess(secondArgument)
 							) {
 								break;
@@ -80,11 +83,11 @@ export default typescriptLanguage.createRule({
 
 							context.report({
 								data:
-									secondArgument.kind === ts.SyntaxKind.NullKeyword
+									secondArgument.kind === SyntaxKind.NullKeyword
 										? { method: "insertBefore" }
 										: {},
 								message:
-									secondArgument.kind === ts.SyntaxKind.NullKeyword
+									secondArgument.kind === SyntaxKind.NullKeyword
 										? "preferAppend"
 										: "preferPrepend",
 								range: getTSNodeRange(node.expression.name, sourceFile),
