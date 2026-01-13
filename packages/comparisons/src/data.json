@@ -10966,7 +10966,8 @@
 		"flint": {
 			"name": "importAssignments",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "untyped",
+			"status": "implemented"
 		}
 	},
 	{

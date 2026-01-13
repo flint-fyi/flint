@@ -1,0 +1,86 @@
+---
+description: "Reports attempting to reassign imported bindings, which would cause a runtime error."
+title: "importAssignments"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="importAssignments" />
+
+ES module imports are read-only bindings.
+Attempting to reassign them throws a `TypeError` at runtime.
+This rule detects assignments to imported bindings before they cause runtime errors.
+
+For namespace imports (`import * as mod`), the rule also detects attempts to modify properties of the namespace object, which are similarly immutable.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import mod from "mod";
+mod = 1;
+```
+
+```ts
+import { named } from "mod";
+named++;
+```
+
+```ts
+import * as mod from "mod";
+mod.prop = 1;
+```
+
+```ts
+import * as mod from "mod";
+Object.assign(mod, { a: 1 });
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import mod from "mod";
+console.log(mod);
+```
+
+```ts
+import { named } from "mod";
+const localValue = named + 1;
+```
+
+```ts
+import * as mod from "mod";
+console.log(mod.prop);
+```
+
+```ts
+import mod from "mod";
+mod.property = 1; // Properties of default imports can be modified
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are writing code that will not run in an ES module environment (for example, CommonJS modules where `require` returns mutable objects), this rule may not be applicable.
+However, ES modules are the standard for modern JavaScript and TypeScript projects.
+
+## Further Reading
+
+- [MDN: import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
+- [MDN: JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="importAssignments" />
