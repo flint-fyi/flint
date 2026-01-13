@@ -8,11 +8,7 @@ import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isSimpleType(typeNode: AST.TypeNode | undefined): boolean {
-	if (!typeNode) {
-		return false;
-	}
-
-	switch (typeNode.kind) {
+	switch (typeNode?.kind) {
 		case ts.SyntaxKind.AnyKeyword:
 		case ts.SyntaxKind.BigIntKeyword:
 		case ts.SyntaxKind.BooleanKeyword:
@@ -86,7 +82,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				ArrayType: (node, { options, sourceFile }) => {
-					// Skip if this is inside a readonly type operator - let TypeOperator handle it
 					if (
 						node.parent.kind === ts.SyntaxKind.TypeOperator &&
 						node.parent.operator === ts.SyntaxKind.ReadonlyKeyword
