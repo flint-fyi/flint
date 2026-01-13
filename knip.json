@@ -1,7 +1,6 @@
 {
 	"$schema": "./node_modules/knip/schema.json",
 	"ignore": ["packages/fixtures/*"],
-	"ignoreDependencies": ["canvaskit-wasm"],
 	"ignoreExportsUsedInFile": { "interface": true, "type": true },
 	"treatConfigHintsAsErrors": true,
 	"workspaces": {

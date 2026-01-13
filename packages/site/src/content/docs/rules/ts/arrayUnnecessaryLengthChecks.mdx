@@ -1,0 +1,80 @@
+---
+description: "Reports unnecessary array length checks before `.some()` or `.every()` calls."
+title: "arrayUnnecessaryLengthChecks"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayUnnecessaryLengthChecks" />
+
+`Array#some()` returns `false` for an empty array, so checking `array.length !== 0` or `array.length > 0` before calling `.some()` is redundant.
+
+`Array#every()` returns `true` for an empty array, so checking `array.length === 0` before calling `.every()` is redundant.
+
+This rule reports these unnecessary length checks.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const array: boolean[];
+array.length !== 0 && array.some(Boolean);
+```
+
+```ts
+declare const array: boolean[];
+array.length > 0 && array.some(Boolean);
+```
+
+```ts
+declare const array: boolean[];
+array.length === 0 || array.every(Boolean);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const array: boolean[];
+array.some(Boolean);
+```
+
+```ts
+declare const array: boolean[];
+array.every(Boolean);
+```
+
+```ts
+declare const array: boolean[];
+array.length !== 0 && array.every(Boolean);
+```
+
+```ts
+declare const array: boolean[];
+array.length === 0 || array.some(Boolean);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer explicit length checks for documentation purposes, or if your team's coding standards require them, you may disable this rule.
+
+## Further Reading
+
+- [MDN: Array.prototype.some()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some)
+- [MDN: Array.prototype.every()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayUnnecessaryLengthChecks" />
