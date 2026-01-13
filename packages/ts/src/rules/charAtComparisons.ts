@@ -36,7 +36,7 @@ export default typescriptLanguage.createRule({
 		description:
 			"Reports comparing charAt() results with strings longer than one character.",
 		id: "charAtComparisons",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidComparison: {
