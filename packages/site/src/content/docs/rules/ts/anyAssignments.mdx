@@ -1,0 +1,90 @@
+---
+description: "Reports assigning a value with type `any` to variables and properties."
+title: "anyAssignments"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="anyAssignments" />
+
+The `any` type in TypeScript is a dangerous "escape hatch" from the type system.
+Assigning an `any` typed value to a variable can defeat TypeScript's type safety guarantees, allowing unexpected types to propagate through your codebase.
+
+This rule reports assigning `any` to a variable, destructuring from `any[]`, and spreading `any[]` into typed arrays.
+It also checks generic type arguments to ensure you don't pass an unsafe `any` in a generic position.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = someFunction() as any;
+```
+
+```ts
+const data = Object.create(null);
+```
+
+```ts
+const items = [] as any[];
+```
+
+```ts
+const [first, second] = getArray() as any[];
+```
+
+```ts
+const value: Set<string> = new Set<any>();
+```
+
+```ts
+const items: string[] = [...(getItems() as any[])];
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value: any = someFunction() as any;
+```
+
+```ts
+const value: unknown = someFunction() as any;
+```
+
+```ts
+const items: any[] = [] as any[];
+```
+
+```ts
+const value: Set<any> = new Set<any>();
+```
+
+```ts
+const items: unknown[] = [...(getItems() as any[])];
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has many existing `any` types or areas of unsafe code, it may be difficult to enable this rule.
+You might consider using lint disable comments for specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: any type in TypeScript](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#any)
+- [TypeScript Handbook: Type Assertions](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="anyAssignments" />
