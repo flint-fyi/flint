@@ -10,13 +10,16 @@ describe("data.json", () => {
 	describe("Comparison with ESLint", () => {
 		it("includes all builtin rules", () => {
 			const builtinESLintRuleNames = new Set<string>(
+				/* eslint-disable @typescript-eslint/no-deprecated */
+				// flint-disable-lines-begin deprecated
 				// builtinRules is marked as deprecated since it's in "use-at-your-own-risk", not actually deprecated
-				// eslint-disable-next-line @typescript-eslint/no-deprecated
 				[...builtinRules]
 					.flatMap(([ruleName, module]) =>
 						!module.meta?.deprecated ? [ruleName] : [],
 					)
 					.sort(),
+				/* eslint-enable @typescript-eslint/no-deprecated */
+				// flint-disable-lines-end deprecated
 			);
 
 			const builtinESLintRuleNamesCoveredByFlint = new Set(

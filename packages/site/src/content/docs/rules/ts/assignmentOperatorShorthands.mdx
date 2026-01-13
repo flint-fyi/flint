@@ -1,0 +1,77 @@
+---
+description: "Prefer logical assignment operator shorthand expressions."
+title: "assignmentOperatorShorthands"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="assignmentOperatorShorthands" />
+
+ES2021 introduced logical assignment operators (`||=`, `&&=`, `??=`) that combine logical operations with assignment.
+These shorthand operators make code more concise and express intent more clearly.
+
+For example, `a = a || b` can be written as `a ||= b`.
+This pattern is common for providing default values or conditionally updating variables.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+let value = 0;
+value = value || 1;
+```
+
+```ts
+let config: Config | undefined;
+config = config ?? getDefaultConfig();
+```
+
+```ts
+let enabled = false;
+enabled = enabled && isFeatureAvailable();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+let value = 0;
+value ||= 1;
+```
+
+```ts
+let config: Config | undefined;
+config ??= getDefaultConfig();
+```
+
+```ts
+let enabled = false;
+enabled &&= isFeatureAvailable();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support environments that do not have ES2021 support, you may need to avoid using logical assignment operators.
+You may also prefer the more explicit expanded form if you find it more readable.
+
+## Further Reading
+
+- [MDN: Logical OR assignment (||=)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR_assignment)
+- [MDN: Logical AND assignment (&&=)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_AND_assignment)
+- [MDN: Nullish coalescing assignment (??=)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_assignment)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="assignmentOperatorShorthands" />
