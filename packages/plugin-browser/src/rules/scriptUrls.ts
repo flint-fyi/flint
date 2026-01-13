@@ -1,11 +1,13 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports `javascript:` URLs that can act as a form of eval.",
 		id: "scriptUrls",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		scriptUrl: {
@@ -37,20 +39,17 @@ export default typescriptLanguage.createRule({
 
 		return {
 			visitors: {
-				NoSubstitutionTemplateLiteral(
-					node: ts.NoSubstitutionTemplateLiteral,
-					{ sourceFile },
-				) {
-					if (!ts.isTaggedTemplateExpression(node.parent)) {
+				NoSubstitutionTemplateLiteral(node, { sourceFile }) {
+					if (node.parent.kind !== SyntaxKind.TaggedTemplateExpression) {
 						checkStringValue(node.text, node, sourceFile);
 					}
 				},
-				StringLiteral(node: ts.StringLiteral, { sourceFile }) {
+				StringLiteral(node, { sourceFile }) {
 					checkStringValue(node.text, node, sourceFile);
 				},
-				TemplateExpression(node: ts.TemplateExpression, { sourceFile }) {
+				TemplateExpression(node, { sourceFile }) {
 					if (
-						!ts.isTaggedTemplateExpression(node.parent) &&
+						node.parent.kind !== SyntaxKind.TaggedTemplateExpression &&
 						node.head.text.toLowerCase().startsWith("javascript:")
 					) {
 						context.report({

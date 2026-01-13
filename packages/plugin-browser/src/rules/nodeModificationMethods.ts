@@ -1,6 +1,6 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import { nullThrows } from "@flint.fyi/utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 type ModernMethodName = "after" | "append" | "before" | "prepend";
 
@@ -11,7 +11,7 @@ const insertAdjacentPositionMap: Record<string, ModernMethodName> = {
 	beforeend: "append",
 };
 
-function getModernMethodName(methodName: string, node: ts.CallExpression) {
+function getModernMethodName(methodName: string, node: AST.CallExpression) {
 	switch (methodName) {
 		case "insertAdjacentElement":
 		case "insertAdjacentText": {
@@ -19,7 +19,7 @@ function getModernMethodName(methodName: string, node: ts.CallExpression) {
 				node.arguments[0],
 				`First argument should be defined for call expression (${methodName})`,
 			);
-			if (!ts.isStringLiteral(firstArgument)) {
+			if (firstArgument.kind !== SyntaxKind.StringLiteral) {
 				return undefined;
 			}
 
@@ -35,24 +35,26 @@ function getModernMethodName(methodName: string, node: ts.CallExpression) {
 	}
 }
 
-function getPropertyNameNode(node: ts.Expression) {
-	if (!ts.isPropertyAccessExpression(node)) {
+function getPropertyNameNode(node: AST.LeftHandSideExpression) {
+	if (node.kind !== SyntaxKind.PropertyAccessExpression) {
 		return undefined;
 	}
 
-	if (!ts.isIdentifier(node.name)) {
+	if (node.name.kind !== SyntaxKind.Identifier) {
 		return undefined;
 	}
 
 	return node.name;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer modern DOM APIs like .replaceWith() and .before() over legacy methods like .replaceChild() and .insertBefore().",
 		id: "nodeModificationMethods",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		after: {

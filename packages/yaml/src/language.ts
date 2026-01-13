@@ -8,6 +8,7 @@ import { prepareYamlFile } from "./prepareYamlFile.ts";
 
 export interface YamlFileServices {
 	root: yamlParser.Root;
+	sourceText: string;
 }
 
 export const yamlLanguage = createLanguage<YamlNodesByName, YamlFileServices>({

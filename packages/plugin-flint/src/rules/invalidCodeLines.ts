@@ -1,15 +1,16 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { getRuleTesterDescribedCases } from "../getRuleTesterDescribedCases.ts";
 import type { ParsedTestCaseInvalid } from "../types.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports cases for invalid code that isn't formatted across lines.",
 		id: "invalidCodeLines",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		singleLineTest: {
@@ -46,7 +47,7 @@ export default typescriptLanguage.createRule({
 			testCase: ParsedTestCaseInvalid,
 			sourceFile: ts.SourceFile,
 		) {
-			if (ts.isStringLiteral(testCase.nodes.code)) {
+			if (testCase.nodes.code.kind === SyntaxKind.StringLiteral) {
 				return {
 					range: getTSNodeRange(testCase.nodes.code, sourceFile),
 					text: `\`\n${testCase.code}\n\``,

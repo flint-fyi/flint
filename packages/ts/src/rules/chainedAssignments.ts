@@ -1,17 +1,18 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
 import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
 import { unwrapParenthesizedExpressionsParent } from "../utils/unwrapParentParenthesizedExpressions.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using chained assignment expressions (e.g., a = b = c).",
 		id: "chainedAssignments",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		noChainedAssignment: {
@@ -36,14 +37,14 @@ export default typescriptLanguage.createRule({
 
 					const rightSide = unwrapParenthesizedExpression(node.right);
 					if (
-						!ts.isBinaryExpression(rightSide) ||
+						rightSide.kind !== SyntaxKind.BinaryExpression ||
 						!tsutils.isAssignmentKind(rightSide.operatorToken.kind)
 					) {
 						return;
 					}
 
 					const parent = unwrapParenthesizedExpressionsParent(node);
-					if (ts.isBinaryExpression(parent)) {
+					if (parent.kind === SyntaxKind.BinaryExpression) {
 						return;
 					}
 

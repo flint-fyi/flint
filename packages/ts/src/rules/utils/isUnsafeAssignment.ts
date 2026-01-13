@@ -1,6 +1,9 @@
 import { nullThrows } from "@flint.fyi/utils";
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
+
+import type { AST } from "../../index.ts";
+import type { Checker } from "../../types/checker.ts";
 
 /**
  * Does a simple check to see if there is an any being assigned to a non-any type.
@@ -13,8 +16,8 @@ import * as ts from "typescript";
 export function isUnsafeAssignment(
 	type: ts.Type,
 	receiver: ts.Type,
-	checker: ts.TypeChecker,
-	senderNode: null | ts.Node,
+	checker: Checker,
+	senderNode: AST.Expression,
 ): false | { receiver: ts.Type; sender: ts.Type } {
 	return isUnsafeAssignmentWorker(
 		type,
@@ -28,8 +31,8 @@ export function isUnsafeAssignment(
 function isUnsafeAssignmentWorker(
 	type: ts.Type,
 	receiver: ts.Type,
-	checker: ts.TypeChecker,
-	senderNode: null | ts.Node,
+	checker: Checker,
+	senderNode: AST.Expression,
 	visited: Map<ts.Type, Set<ts.Type>>,
 ): false | { receiver: ts.Type; sender: ts.Type } {
 	if (tsutils.isTypeFlagSet(type, ts.TypeFlags.Any)) {
@@ -75,9 +78,8 @@ function isUnsafeAssignmentWorker(
 		}
 
 		if (
-			senderNode != null &&
-			ts.isNewExpression(senderNode) &&
-			ts.isIdentifier(senderNode.expression) &&
+			senderNode.kind === SyntaxKind.NewExpression &&
+			senderNode.expression.kind === SyntaxKind.Identifier &&
 			senderNode.expression.text === "Map" &&
 			(senderNode.arguments == null || senderNode.arguments.length === 0) &&
 			senderNode.typeArguments == null

@@ -1,5 +1,5 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 function isAssertImport(importName: string) {
 	return (
@@ -10,12 +10,14 @@ function isAssertImport(importName: string) {
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer `assert.ok()` over `assert()` for explicit intent and better readability.",
 		id: "assertStyles",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferAssertOk: {
@@ -35,9 +37,9 @@ export default typescriptLanguage.createRule({
 
 		return {
 			visitors: {
-				CallExpression(node: ts.CallExpression, { sourceFile }) {
+				CallExpression(node, { sourceFile }) {
 					if (
-						ts.isIdentifier(node.expression) &&
+						node.expression.kind === SyntaxKind.Identifier &&
 						assertIdentifierNames.has(node.expression.text)
 					) {
 						context.report({
@@ -46,9 +48,9 @@ export default typescriptLanguage.createRule({
 						});
 					}
 				},
-				ImportDeclaration(node: ts.ImportDeclaration) {
+				ImportDeclaration(node) {
 					if (
-						!ts.isStringLiteral(node.moduleSpecifier) ||
+						node.moduleSpecifier.kind !== SyntaxKind.StringLiteral ||
 						!isAssertImport(node.moduleSpecifier.text) ||
 						!node.importClause
 					) {
@@ -60,7 +62,9 @@ export default typescriptLanguage.createRule({
 					}
 
 					if (node.importClause.namedBindings) {
-						if (ts.isNamedImports(node.importClause.namedBindings)) {
+						if (
+							node.importClause.namedBindings.kind === SyntaxKind.NamedImports
+						) {
 							for (const element of node.importClause.namedBindings.elements) {
 								const importedName =
 									element.propertyName?.text ?? element.name.text;
@@ -68,17 +72,17 @@ export default typescriptLanguage.createRule({
 									assertIdentifierNames.add(element.name.text);
 								}
 							}
-						} else if (ts.isNamespaceImport(node.importClause.namedBindings)) {
+						} else {
 							assertIdentifierNames.add(
 								node.importClause.namedBindings.name.text,
 							);
 						}
 					}
 				},
-				ImportEqualsDeclaration(node: ts.ImportEqualsDeclaration) {
+				ImportEqualsDeclaration(node) {
 					if (
-						ts.isExternalModuleReference(node.moduleReference) &&
-						ts.isStringLiteral(node.moduleReference.expression) &&
+						node.moduleReference.kind === SyntaxKind.ExternalModuleReference &&
+						node.moduleReference.expression.kind === SyntaxKind.StringLiteral &&
 						isAssertImport(node.moduleReference.expression.text)
 					) {
 						assertIdentifierNames.add(node.name.text);

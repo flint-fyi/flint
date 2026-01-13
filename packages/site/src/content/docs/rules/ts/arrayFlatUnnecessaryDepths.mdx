@@ -1,0 +1,66 @@
+---
+description: "Reports using `1` as the depth argument of `.flat()` since it is the default."
+title: "arrayFlatUnnecessaryDepths"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayFlatUnnecessaryDepths" />
+
+The default depth for `Array.prototype.flat()` is `1`, so passing it explicitly is redundant.
+This rule reports when `1` is passed as the depth argument to `.flat()`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const array: number[][];
+array.flat(1);
+```
+
+```ts
+declare const array: number[][] | undefined;
+array?.flat(1);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const array: number[][];
+array.flat();
+```
+
+```ts
+declare const array: number[][][];
+array.flat(2);
+```
+
+```ts
+declare const array: number[];
+array.flat(Infinity);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer to be explicit about the depth argument for readability or consistency, you may disable this rule.
+
+## Further Reading
+
+- [MDN: Array.prototype.flat()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayFlatUnnecessaryDepths" />

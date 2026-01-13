@@ -11,7 +11,10 @@ export interface Plugin<
 		? undefined
 		: Record<FilesKey & string, FilesValue>;
 	name: string;
-	presets: PluginPresets<About, Rules[number]["about"]["preset"]>;
+	presets: PluginPresets<
+		About,
+		NonNullable<Rules[number]["about"]["presets"]>[number]
+	>;
 	rules: PluginRulesFactory<Rules>;
 	rulesById: Map<string, Rules[number]>;
 }

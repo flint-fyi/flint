@@ -1,10 +1,11 @@
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using debugger statements.",
 		id: "debuggerStatements",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noDebugger: {

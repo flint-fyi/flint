@@ -1,15 +1,17 @@
 import { nullThrows } from "@flint.fyi/utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 import { isFunction } from "../utils/isFunction.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using `.apply()` or `.call()` or  when the context (`this` value) provides no benefit.",
 		id: "functionCurryingRedundancy",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unnecessaryCall: {
@@ -28,7 +30,7 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (!ts.isPropertyAccessExpression(node.expression)) {
+					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
 
@@ -46,9 +48,9 @@ export default typescriptLanguage.createRule({
 						"First argument is expected to be present by prior length check",
 					);
 					if (
-						firstArgument.kind !== ts.SyntaxKind.NullKeyword &&
+						firstArgument.kind !== SyntaxKind.NullKeyword &&
 						!(
-							ts.isIdentifier(firstArgument) &&
+							firstArgument.kind === SyntaxKind.Identifier &&
 							firstArgument.text === "undefined"
 						)
 					) {
@@ -85,7 +87,7 @@ export default typescriptLanguage.createRule({
 
 function createApplyFixText(
 	functionExpression: string,
-	methodArguments: ts.Expression[],
+	methodArguments: AST.Expression[],
 	sourceFile: ts.SourceFile,
 ) {
 	if (methodArguments.length > 0) {
@@ -101,7 +103,7 @@ function createApplyFixText(
 
 function createCallFixText(
 	functionExpression: string,
-	methodArguments: ts.Expression[],
+	methodArguments: AST.Expression[],
 	sourceFile: ts.SourceFile,
 ) {
 	const argsText = methodArguments

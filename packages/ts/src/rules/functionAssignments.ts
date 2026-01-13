@@ -1,12 +1,13 @@
 import { typescriptLanguage } from "../language.ts";
 import { getModifyingReferences } from "../utils/getModifyingReferences.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports reassigning variables declared with function declarations.",
 		id: "functionAssignments",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noFunctionAssignment: {
@@ -21,6 +22,7 @@ export default typescriptLanguage.createRule({
 			],
 		},
 	},
+
 	setup(context) {
 		return {
 			visitors: {

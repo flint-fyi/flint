@@ -1,13 +1,15 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import { isGlobalDeclaration } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports uses of `document.cookie` which can be error-prone and has security implications.",
 		id: "documentCookies",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noCookie: {
@@ -25,14 +27,11 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				PropertyAccessExpression(
-					node: ts.PropertyAccessExpression,
-					{ sourceFile, typeChecker },
-				) {
+				PropertyAccessExpression(node, { sourceFile, typeChecker }) {
 					if (
-						ts.isIdentifier(node.name) &&
+						node.name.kind === SyntaxKind.Identifier &&
 						node.name.text === "cookie" &&
-						ts.isIdentifier(node.expression) &&
+						node.expression.kind === SyntaxKind.Identifier &&
 						node.expression.text === "document" &&
 						isGlobalDeclaration(node.expression, typeChecker)
 					) {
