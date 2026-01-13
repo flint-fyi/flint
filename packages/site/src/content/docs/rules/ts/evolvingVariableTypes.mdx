@@ -1,0 +1,73 @@
+---
+description: "Reports variables declared without type annotation or initializer."
+title: "evolvingVariableTypes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="evolvingVariableTypes" />
+
+Variables declared with `let` or `var` without a type annotation or initial value have an implicit `any` type that "evolves" based on subsequent assignments.
+This bypasses TypeScript's type checking, making it harder to catch type-related bugs at compile time.
+
+TypeScript's `--noImplicitAny` compiler option does not catch this case.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+let value;
+value = getValue();
+```
+
+```ts
+var count;
+count = 0;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+let value: string;
+value = getValue();
+```
+
+```ts
+let value = getValue();
+```
+
+```ts
+var count = 0;
+```
+
+```ts
+var count: number;
+count = 0;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are prototyping code quickly and want to defer type decisions, you may want to disable this rule temporarily.
+However, consider enabling it before committing code to ensure type safety.
+
+## Further Reading
+
+- [TypeScript handbook: Variable Declarations](https://www.typescriptlang.org/docs/handbook/variable-declarations.html)
+- [TypeScript: noImplicitAny](https://www.typescriptlang.org/tsconfig/#noImplicitAny)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="evolvingVariableTypes" />
