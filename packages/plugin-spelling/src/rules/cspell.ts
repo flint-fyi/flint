@@ -15,7 +15,7 @@ interface FileTask {
 	text: string;
 }
 
-function createIssueMessage({
+export function createIssueMessage({
 	withReplacement,
 }: { withReplacement?: boolean } = {}) {
 	return {
@@ -26,7 +26,9 @@ function createIssueMessage({
 		],
 		suggestions: [
 			'Add "{{ word }}" to dictionary.',
-			...(withReplacement ? ['Replace with "{{ replacement }}".'] : []),
+			...(withReplacement
+				? ['Replace with "{{ replacement }}" or another known word.']
+				: []),
 		],
 	};
 }
