@@ -7,7 +7,7 @@ export default typescriptLanguage.createRule({
 		description:
 			"Enforces a consistent naming convention for catch clause error variables.",
 		id: "caughtVariableNames",
-		preset: "stylistic",
+		presets: ["stylistic"],
 		strictness: "strict",
 	},
 	messages: {
