@@ -1,0 +1,81 @@
+---
+description: "Reports modules that have only one named export but no default export."
+title: "exportDefault"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="exportDefault" />
+
+When a module has only one export, using a default export can make imports more concise and readable.
+This rule encourages using default exports for single-export modules, which can help standardize module structure across a codebase.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+export const value = 1;
+```
+
+```ts
+export function getValue() {
+	return 1;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export default 1;
+```
+
+```ts
+export default function getValue() {
+	return 1;
+}
+```
+
+```ts
+export const a = 1;
+export const b = 2;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `target`
+
+Configuration option to specify the target type for preferring default exports.
+
+- `"single"` (default): Prefer default export when there is only one export in the module.
+- `"any"`: Prefer default export in any module that has exports.
+
+```ts
+ts.rules({
+	exportDefault: {
+		target: "any",
+	},
+});
+```
+
+## When Not To Use It
+
+If your project uses a style guide that prefers named exports for consistency or to support tree-shaking, you may not want this rule.
+Some teams prefer named exports because they enforce consistent import names and make refactoring easier.
+
+## Further Reading
+
+- [MDN: export](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+- [TypeScript handbook: Modules](https://www.typescriptlang.org/docs/handbook/modules.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="exportDefault" />
