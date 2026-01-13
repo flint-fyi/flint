@@ -1,5 +1,6 @@
-import * as ts from "typescript";
+import ts from "typescript";
 
+import type { Checker } from "../types/checker.ts";
 import { declarationIncludesGlobal } from "./declarationIncludesGlobal.ts";
 
 /**
@@ -8,7 +9,7 @@ import { declarationIncludesGlobal } from "./declarationIncludesGlobal.ts";
 export function isGlobalDeclarationOfName(
 	node: ts.Node,
 	name: string,
-	typeChecker: ts.TypeChecker,
+	typeChecker: Checker,
 ): boolean {
 	const declarations = typeChecker.getSymbolAtLocation(node)?.getDeclarations();
 	if (!declarations) {
@@ -21,7 +22,7 @@ export function isGlobalDeclarationOfName(
 		if (
 			ts.isVariableDeclaration(declaration) &&
 			declaration.initializer &&
-			declaration.initializer.kind === ts.SyntaxKind.Identifier
+			ts.isIdentifier(declaration.initializer)
 		) {
 			return isGlobalDeclarationOfName(
 				declaration.initializer,
@@ -42,7 +43,7 @@ export function isGlobalDeclarationOfName(
 	});
 }
 
-function isDeclarationOfName(node: ts.Node, name: string) {
+function isDeclarationOfName(node: ts.Declaration, name: string) {
 	if (
 		ts.isClassDeclaration(node) ||
 		ts.isFunctionDeclaration(node) ||

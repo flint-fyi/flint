@@ -1,13 +1,15 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports control flow statements in `finally` blocks that can override control flow in `try`/`catch` blocks.",
 		id: "finallyStatementSafety",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsafeFinally: {
@@ -31,12 +33,12 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					function checkStatement(statement: ts.Statement): void {
+					function checkStatement(statement: AST.Statement): void {
 						if (
-							ts.isReturnStatement(statement) ||
-							ts.isThrowStatement(statement) ||
-							ts.isBreakStatement(statement) ||
-							ts.isContinueStatement(statement)
+							statement.kind == SyntaxKind.ReturnStatement ||
+							statement.kind == SyntaxKind.ThrowStatement ||
+							statement.kind == SyntaxKind.BreakStatement ||
+							statement.kind == SyntaxKind.ContinueStatement
 						) {
 							const firstToken = statement.getFirstToken(sourceFile);
 							if (!firstToken) {
@@ -54,18 +56,18 @@ export default typescriptLanguage.createRule({
 							});
 						}
 
-						if (ts.isBlock(statement)) {
+						if (statement.kind == SyntaxKind.Block) {
 							statement.statements.forEach(checkStatement);
-						} else if (ts.isIfStatement(statement)) {
+						} else if (statement.kind == SyntaxKind.IfStatement) {
 							checkStatement(statement.thenStatement);
 							if (statement.elseStatement) {
 								checkStatement(statement.elseStatement);
 							}
-						} else if (ts.isSwitchStatement(statement)) {
+						} else if (statement.kind == SyntaxKind.SwitchStatement) {
 							statement.caseBlock.clauses.forEach((clause) => {
 								clause.statements.forEach(checkStatement);
 							});
-						} else if (ts.isLabeledStatement(statement)) {
+						} else if (statement.kind == SyntaxKind.LabeledStatement) {
 							checkStatement(statement.statement);
 						}
 					}

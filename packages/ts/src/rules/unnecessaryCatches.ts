@@ -1,13 +1,14 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports catch clauses that only rethrow the caught error without modification.",
 		id: "unnecessaryCatches",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unnecessaryCatch: {
@@ -26,7 +27,7 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				CatchClause: (node, { sourceFile }) => {
-					if (!node.variableDeclaration || !ts.isBlock(node.block)) {
+					if (!node.variableDeclaration) {
 						return;
 					}
 
@@ -40,7 +41,7 @@ export default typescriptLanguage.createRule({
 					/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
 					const statement = statements[0]!;
 
-					if (!ts.isThrowStatement(statement)) {
+					if (statement.kind !== SyntaxKind.ThrowStatement) {
 						return;
 					}
 
@@ -48,18 +49,13 @@ export default typescriptLanguage.createRule({
 					const thrownExpression = statement.expression;
 
 					if (
-						!ts.isIdentifier(catchVariable) ||
-						!ts.isIdentifier(thrownExpression)
+						catchVariable.kind !== SyntaxKind.Identifier ||
+						thrownExpression.kind !== SyntaxKind.Identifier
 					) {
 						return;
 					}
 
 					if (catchVariable.text !== thrownExpression.text) {
-						return;
-					}
-
-					const tryStatement = node.parent;
-					if (!ts.isTryStatement(tryStatement)) {
 						return;
 					}
 
@@ -71,7 +67,7 @@ export default typescriptLanguage.createRule({
 					context.report({
 						fix: {
 							range: {
-								begin: tryStatement.tryBlock.getEnd(),
+								begin: node.parent.tryBlock.getEnd(),
 								end: node.getEnd(),
 							},
 							text: "",

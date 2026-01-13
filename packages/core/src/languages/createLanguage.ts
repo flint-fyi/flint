@@ -1,10 +1,10 @@
 import { debugForFile } from "debug-for-file";
 
 import type {
-	CreateRule,
 	FileAboutData,
 	FileDiskData,
 	Language,
+	LanguageCreateRule,
 	LanguageDefinition,
 } from "../types/languages.ts";
 import type { AnyRuleDefinition } from "../types/rules.ts";
@@ -57,7 +57,7 @@ export function createLanguage<AstNodesByName, FileServices extends object>(
 				...ruleDefinition,
 				language,
 			};
-		}) as CreateRule<AstNodesByName, FileServices>,
+		}) as LanguageCreateRule<AstNodesByName, FileServices>,
 	};
 
 	return language;

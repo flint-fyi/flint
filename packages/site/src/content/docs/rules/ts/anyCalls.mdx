@@ -1,0 +1,106 @@
+---
+description: "Reports calling a value with type `any`."
+title: "anyCalls"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="anyCalls" />
+
+Calling a value typed as `any` creates a potential type safety hole and source of bugs.
+TypeScript cannot verify that the value is actually a function, what parameters it expects, or what it returns.
+This rule disallows calling any value that is typed as `any` or `Function`.
+
+This includes:
+
+- Regular function calls on `any` typed values
+- Constructor calls with `new` on `any` typed values
+- Tagged template literals using `any` typed values as the tag
+
+The `Function` type behaves almost identically to `any` when called, so this rule also disallows calling values of type `Function` that have no call or construct signatures.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const value: any;
+value();
+```
+
+```ts
+declare const value: any;
+value.property();
+```
+
+```ts
+declare const value: any;
+new value();
+```
+
+```ts
+declare const value: any;
+value`template`;
+```
+
+```ts
+declare const value: Function;
+value();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const value: () => void;
+value();
+```
+
+```ts
+declare const object: { method(): void };
+object.method();
+```
+
+```ts
+declare class Constructor {}
+new Constructor();
+```
+
+```ts
+const tag = (strings: TemplateStringsArray, ...values: unknown[]) => strings[0];
+tag`template`;
+```
+
+```ts
+interface SafeFunction extends Function {
+	(): void;
+}
+declare const value: SafeFunction;
+value();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has many existing `any` values or areas of unsafe code, enabling this rule may be challenging.
+It may be more practical to defer enabling this rule until type safety has been improved in those areas.
+You might consider using lint disable comments for specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [TypeScript Handbook: The `any` Type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#any)
+- [TypeScript Handbook: Function Type Expressions](https://www.typescriptlang.org/docs/handbook/2/functions.html#function-type-expressions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="anyCalls" />

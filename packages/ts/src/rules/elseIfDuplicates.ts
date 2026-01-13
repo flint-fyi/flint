@@ -1,15 +1,17 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 import { hasSameTokens } from "../utils/hasSameTokens.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports duplicate conditions in if-else-if chains that make code unreachable.",
 		id: "elseIfDuplicates",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		duplicateCondition: {
@@ -25,9 +27,12 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkIfStatement(node: ts.IfStatement, sourceFile: ts.SourceFile) {
-			const seen: ts.Expression[] = [];
-			let current: ts.IfStatement = node;
+		function checkIfStatement(
+			node: AST.IfStatement,
+			sourceFile: ts.SourceFile,
+		) {
+			const seen: AST.Expression[] = [];
+			let current: AST.IfStatement = node;
 
 			while (true) {
 				if (
@@ -43,7 +48,7 @@ export default typescriptLanguage.createRule({
 
 				if (
 					!current.elseStatement ||
-					!ts.isIfStatement(current.elseStatement)
+					current.elseStatement.kind !== SyntaxKind.IfStatement
 				) {
 					break;
 				}
@@ -57,7 +62,7 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				IfStatement: (node, { sourceFile }) => {
 					if (
-						!ts.isIfStatement(node.parent) ||
+						node.parent.kind !== SyntaxKind.IfStatement ||
 						node.parent.elseStatement !== node
 					) {
 						checkIfStatement(node, sourceFile);

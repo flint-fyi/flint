@@ -1,4 +1,5 @@
 import type { InvalidTestCase, TestCase } from "@flint.fyi/rule-tester";
+import type { AST } from "@flint.fyi/ts";
 import type * as ts from "typescript";
 
 export interface ParsedTestCase extends TestCase {
@@ -11,9 +12,9 @@ export interface ParsedTestCaseInvalid extends InvalidTestCase {
 
 export interface ParsedTestCaseNodes {
 	case: ts.Node;
-	code: ts.StringLiteralLike;
-	fileName?: ts.StringLiteralLike | undefined;
-	options?: ts.ObjectLiteralExpression | undefined;
+	code: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral;
+	fileName?: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral | undefined;
+	options?: AST.ObjectLiteralExpression | undefined;
 }
 
 export interface ParsedTestCaseNodesInvalid extends ParsedTestCaseNodes {

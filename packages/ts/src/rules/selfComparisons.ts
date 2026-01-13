@@ -1,12 +1,13 @@
 import { typescriptLanguage } from "../language.ts";
 import { hasSameTokens } from "../utils/hasSameTokens.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 import { isComparisonOperator } from "./utils/operators.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports comparing a value to itself.",
 		id: "selfComparisons",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noSelfComparison: {

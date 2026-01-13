@@ -1,16 +1,19 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer shorthand boolean attributes over explicit {true} values in JSX.",
 		id: "booleanValues",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferShorthand: {
@@ -25,16 +28,16 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkElement(
-			node: ts.JsxOpeningLikeElement,
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			for (const property of node.attributes.properties) {
 				if (
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.initializer &&
-					ts.isJsxExpression(property.initializer) &&
-					property.initializer.expression?.kind === ts.SyntaxKind.TrueKeyword
+					property.initializer.kind === SyntaxKind.JsxExpression &&
+					property.initializer.expression?.kind === SyntaxKind.TrueKeyword
 				) {
 					context.report({
 						data: { name: property.name.text },

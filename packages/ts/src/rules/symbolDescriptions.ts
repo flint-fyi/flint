@@ -1,12 +1,13 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports Symbol() calls without description arguments.",
 		id: "symbolDescriptions",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		missingDescription: {
@@ -26,7 +27,7 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				CallExpression: (node, { sourceFile }) => {
 					if (
-						!ts.isIdentifier(node.expression) ||
+						node.expression.kind !== SyntaxKind.Identifier ||
 						node.expression.text !== "Symbol" ||
 						node.arguments.length
 					) {

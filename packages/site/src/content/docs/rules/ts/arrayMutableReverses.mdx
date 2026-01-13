@@ -1,0 +1,73 @@
+---
+description: "Reports `.reverse()` calls on arrays that mutate the original array."
+title: "arrayMutableReverses"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayMutableReverses" />
+
+The `.reverse()` method mutates the original array in place.
+Using `.toReversed()` instead returns a new reversed array without modifying the original, making code more predictable and avoiding unintended side effects.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const values = [1, 2, 3];
+const reversed = values.reverse();
+```
+
+```ts
+const items = ["a", "b", "c"];
+doSomething(items.reverse());
+```
+
+```ts
+const data = [1, 2, 3];
+const result = [...data].reverse();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const values = [1, 2, 3];
+const reversed = values.toReversed();
+```
+
+```ts
+const items = ["a", "b", "c"];
+doSomething(items.toReversed());
+```
+
+```ts
+const values = [1, 2, 3];
+values.reverse();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally want to mutate the original array in place, or if you're working in an environment that doesn't support `.toReversed()` (ES2023+), you may want to disable this rule.
+Note that `.reverse()` is still allowed when used as a standalone expression statement since the mutation is likely intentional in that case.
+
+## Further Reading
+
+- [MDN: Array.prototype.reverse()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse)
+- [MDN: Array.prototype.toReversed()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toReversed)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayMutableReverses" />

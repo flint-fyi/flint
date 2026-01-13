@@ -1,12 +1,13 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import type * as ts from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports JSX text nodes that contain comment syntax but are rendered as text.",
 		id: "commentTextNodes",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		commentAsText: {
@@ -26,7 +27,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				JsxText(node: ts.JsxText, { sourceFile }) {
+				JsxText(node, { sourceFile }) {
 					const text = node.text;
 
 					if (/^\s*(?:\/\/|\/\*)/.test(text)) {

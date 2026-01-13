@@ -1,0 +1,96 @@
+---
+description: "Reports getters that return literal values instead of using readonly class fields."
+title: "classLiteralProperties"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="classLiteralProperties" />
+
+When a class getter only returns a literal value, it can be replaced with a `readonly` class field.
+Readonly fields are more concise and avoid the overhead of setting up and tearing down a function closure.
+
+This rule only reports getters that return constant literal values (strings, numbers, bigints, booleans, regular expressions, template literals, `null`).
+It does not report getters that return objects, arrays, or functions, as these have different semantics.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Example {
+	get value() {
+		return "hello";
+	}
+}
+```
+
+```ts
+class Example {
+	get count() {
+		return 42;
+	}
+}
+```
+
+```ts
+class Example {
+	get enabled() {
+		return true;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Example {
+	readonly value = "hello";
+}
+```
+
+```ts
+class Example {
+	readonly count = 42;
+}
+```
+
+```ts
+class Example {
+	readonly enabled = true;
+}
+```
+
+```ts
+class Example {
+	get items() {
+		return this.computeItems();
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are writing a TypeScript library intended to be consumed by JavaScript users, you may prefer getters because the `readonly` modifier is only enforced at compile time.
+JavaScript consumers could still modify a readonly field at runtime.
+
+## Further Reading
+
+- [MDN: getter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get)
+- [TypeScript: readonly modifier](https://www.typescriptlang.org/docs/handbook/2/classes.html#readonly)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="classLiteralProperties" />
