@@ -6,14 +6,8 @@ import { typescriptLanguage } from "../language.ts";
 const fallthroughCommentPattern = /falls?\s*through/i;
 
 function endsWithTerminatingStatement(statements: ts.NodeArray<AST.Statement>) {
-	if (statements.length === 0) {
-		return false;
-	}
-
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const lastStatement = statements.at(-1)!;
-
-	return isTerminatingStatement(lastStatement);
+	return !!statements.length && isTerminatingStatement(statements.at(-1)!);
 }
 
 function hasFallthroughComment(
@@ -56,48 +50,43 @@ function isTerminatingStatement(node: AST.Statement): boolean {
 	switch (node.kind) {
 		case ts.SyntaxKind.Block:
 			return endsWithTerminatingStatement(node.statements);
+
 		case ts.SyntaxKind.BreakStatement:
 		case ts.SyntaxKind.ContinueStatement:
 		case ts.SyntaxKind.ReturnStatement:
 		case ts.SyntaxKind.ThrowStatement:
 			return true;
 
-		case ts.SyntaxKind.IfStatement: {
+		case ts.SyntaxKind.IfStatement:
 			return (
 				!!node.elseStatement &&
 				isTerminatingStatement(node.thenStatement) &&
 				isTerminatingStatement(node.elseStatement)
 			);
-		}
 
 		case ts.SyntaxKind.SwitchStatement: {
-			const switchStmt = node;
-			const clauses = switchStmt.caseBlock.clauses;
-			const hasDefault = clauses.some(ts.isDefaultClause);
-			if (!hasDefault) {
-				return false;
-			}
-
-			return clauses.every(
-				(clause) =>
-					clause.statements.length === 0 ||
-					endsWithTerminatingStatement(clause.statements),
+			return (
+				node.caseBlock.clauses.some(ts.isDefaultClause) &&
+				node.caseBlock.clauses.every(
+					(clause) =>
+						clause.statements.length === 0 ||
+						endsWithTerminatingStatement(clause.statements),
+				)
 			);
 		}
 
 		case ts.SyntaxKind.TryStatement: {
-			const tryStmt = node;
-			if (tryStmt.finallyBlock) {
-				return endsWithTerminatingStatement(tryStmt.finallyBlock.statements);
+			if (node.finallyBlock) {
+				return endsWithTerminatingStatement(node.finallyBlock.statements);
 			}
 
-			if (!tryStmt.catchClause) {
-				return endsWithTerminatingStatement(tryStmt.tryBlock.statements);
+			if (!node.catchClause) {
+				return endsWithTerminatingStatement(node.tryBlock.statements);
 			}
 
 			return (
-				endsWithTerminatingStatement(tryStmt.tryBlock.statements) &&
-				endsWithTerminatingStatement(tryStmt.catchClause.block.statements)
+				endsWithTerminatingStatement(node.tryBlock.statements) &&
+				endsWithTerminatingStatement(node.catchClause.block.statements)
 			);
 		}
 
