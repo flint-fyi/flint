@@ -7407,6 +7407,7 @@
 			"name": "arrayFlatMethods",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -7426,7 +7427,8 @@
 		"flint": {
 			"name": "arrayFlatUnnecessaryDepths",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7445,7 +7447,8 @@
 		"flint": {
 			"name": "arrayIncludes",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -7465,6 +7468,7 @@
 			"name": "arrayIncludesMethods",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -7485,6 +7489,7 @@
 			"name": "arrayIndexOfMethods",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -9757,7 +9762,7 @@
 		"flint": {
 			"name": "enumInitializers",
 			"plugin": "ts",
-			"status": "skipped"
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -10395,7 +10400,7 @@
 		"flint": {
 			"name": "forInGuards",
 			"plugin": "ts",
-			"status": "skipped"
+			"status": "implemented"
 		},
 		"oxlint": [
 			{

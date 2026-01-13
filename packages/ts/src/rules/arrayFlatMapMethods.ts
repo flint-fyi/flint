@@ -3,34 +3,18 @@ import * as ts from "typescript";
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import type { AST, Checker } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
-import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
+import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
 function isArrayMapCall(
 	node: AST.Expression,
 	typeChecker: Checker,
 ): node is AST.CallExpression {
-	if (
-		!ts.isCallExpression(node) ||
-		!ts.isPropertyAccessExpression(node.expression) ||
-		node.expression.name.text !== "map" ||
-		node.arguments.length < 1
-	) {
-		return false;
-	}
-
-	const receiverType = getConstrainedTypeAtLocation(
-		node.expression.expression,
-		typeChecker,
-	);
-
-	return isArrayOrTupleType(receiverType, typeChecker);
-}
-
-function isArrayOrTupleType(type: ts.Type, typeChecker: Checker): boolean {
-	return isTypeRecursive(
-		type,
-		(t) => typeChecker.isArrayType(t) || typeChecker.isTupleType(t),
+	return (
+		ts.isCallExpression(node) &&
+		ts.isPropertyAccessExpression(node.expression) &&
+		node.expression.name.text === "map" &&
+		node.arguments.length >= 1 &&
+		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
 	);
 }
 
@@ -57,7 +41,7 @@ export default typescriptLanguage.createRule({
 	about: {
 		description: "Reports using `.map().flat()` when `.flatMap()` can be used.",
 		id: "arrayFlatMapMethods",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferFlatMap: {
