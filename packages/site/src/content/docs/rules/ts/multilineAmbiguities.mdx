@@ -1,0 +1,91 @@
+---
+description: "Avoid ambiguous multiline expressions that could be misinterpreted."
+title: "multilineAmbiguities"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="multilineAmbiguities" />
+
+When a line ends with an expression and the next line starts with certain characters (parentheses, brackets, or template literals), JavaScript may interpret them as a continuation of the previous line rather than separate statements.
+This can lead to unexpected behavior and runtime errors that are difficult to debug.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+{/* prettier-ignore-start */}
+
+```ts
+const value = identifier(expression)
+doSomething();
+```
+
+```ts
+const data = getArray
+[0].value;
+```
+
+```ts
+const result = calculate
+`template literal`;
+```
+
+```ts
+function process() {
+	const a = b
+	(c || d).execute();
+}
+```
+
+{/* prettier-ignore-end */}
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = identifier;
+expression.doSomething();
+```
+
+```ts
+const data = getArray;
+[0].value;
+```
+
+```ts
+const result = calculate;
+`template literal`;
+```
+
+```ts
+function process() {
+	const a = b;
+	(c || d).execute();
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you consistently use semicolons and have tooling that enforces their presence, this rule may be unnecessary.
+However, having this rule enabled provides an additional safety net against accidental multiline ambiguities.
+
+## Further Reading
+
+- [MDN: Automatic semicolon insertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#automatic_semicolon_insertion)
+- [MDN: Tagged templates](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="multilineAmbiguities" />

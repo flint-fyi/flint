@@ -1,6 +1,6 @@
-import { typescriptLanguage } from "@flint.fyi/ts";
+import { type AST, type Checker, typescriptLanguage } from "@flint.fyi/ts";
 import { nullThrows } from "@flint.fyi/utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { isDeclaredInNodeTypes } from "./utils/isDeclaredInNodeTypes.ts";
 
@@ -24,12 +24,12 @@ const consoleMethods = new Set([
 	"warn",
 ]);
 
-function isConsoleMethodCall(node: ts.Expression, typeChecker: ts.TypeChecker) {
+function isConsoleMethodCall(node: AST.Expression, typeChecker: Checker) {
 	return (
-		ts.isPropertyAccessExpression(node) &&
-		ts.isIdentifier(node.expression) &&
+		node.kind == SyntaxKind.PropertyAccessExpression &&
+		node.expression.kind == SyntaxKind.Identifier &&
 		node.expression.text === "console" &&
-		ts.isIdentifier(node.name) &&
+		node.name.kind == SyntaxKind.Identifier &&
 		consoleMethods.has(node.name.text) &&
 		isDeclaredInNodeTypes(node.expression, typeChecker)
 	);
@@ -65,7 +65,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node: ts.CallExpression, { sourceFile, typeChecker }) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					if (!isConsoleMethodCall(node.expression, typeChecker)) {
 						return;
 					}
@@ -75,7 +75,10 @@ export default typescriptLanguage.createRule({
 							node.arguments[i],
 							"Argument is expected to be present by the loop condition",
 						);
-						if (!ts.isStringLiteral(argument) || argument.text.length === 0) {
+						if (
+							argument.kind != SyntaxKind.StringLiteral ||
+							argument.text.length === 0
+						) {
 							continue;
 						}
 

@@ -1,9 +1,8 @@
-import type * as ts from "typescript";
-
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 const nonOctalDecimalEscapePattern = /\\[89]/g;
 
@@ -31,7 +30,7 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkNode(
-			node: ts.NoSubstitutionTemplateLiteral | ts.StringLiteral,
+			node: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const text = node.getText(sourceFile);

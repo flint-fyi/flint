@@ -1,9 +1,10 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const distractingElements = new Set(["blink", "marquee"]);
 
@@ -29,10 +30,10 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkElement(
-			{ tagName }: ts.JsxOpeningElement | ts.JsxSelfClosingElement,
+			{ tagName }: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (!ts.isIdentifier(tagName)) {
+			if (tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 

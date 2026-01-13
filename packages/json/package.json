@@ -24,6 +24,9 @@
 		"lib/",
 		"!lib/**/*.map"
 	],
+	"scripts": {
+		"test": "vitest --typecheck --project json"
+	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"typescript": "^5.9.0 || ^6.0.0",

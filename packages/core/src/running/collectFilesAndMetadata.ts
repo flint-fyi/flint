@@ -69,17 +69,19 @@ export async function collectFilesAndMetadata(
 	const rulesFilesAndOptionsByRule = new Map(
 		Array.from(rulesOptionsByFile).map(([rule, optionsByFile]) => [
 			rule,
-			Array.from(optionsByFile).map(([filePath, options]) => ({
-				languageFiles: Array.from(
-					nullThrows(
-						languageFileMetadataByFilePath.get(filePath),
-						"Language file metadata is expected to be present by the map",
-					)
-						.values()
-						.map((value) => value.fileMetadata.file),
-				),
-				options,
-			})),
+			Array.from(optionsByFile)
+				.filter(([filePath]) => languageFileMetadataByFilePath.has(filePath))
+				.map(([filePath, options]) => ({
+					languageFiles: Array.from(
+						nullThrows(
+							languageFileMetadataByFilePath.get(filePath),
+							"Language file metadata is expected to be present by the map",
+						)
+							.values()
+							.map((value) => value.fileMetadata.file),
+					),
+					options,
+				})),
 		]),
 	);
 

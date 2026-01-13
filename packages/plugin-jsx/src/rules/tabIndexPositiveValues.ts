@@ -1,5 +1,5 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -26,9 +26,9 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				JsxAttribute(node: ts.JsxAttribute, { sourceFile }) {
+				JsxAttribute(node, { sourceFile }) {
 					if (
-						!ts.isIdentifier(node.name) ||
+						node.name.kind !== SyntaxKind.Identifier ||
 						node.name.text.toLowerCase() !== "tabindex" ||
 						!node.initializer
 					) {
@@ -49,15 +49,16 @@ export default typescriptLanguage.createRule({
 	},
 });
 
-function getInitializerValue(initializer: ts.JsxAttributeValue) {
-	if (ts.isStringLiteral(initializer)) {
+function getInitializerValue(initializer: AST.JsxAttributeValue) {
+	if (initializer.kind === SyntaxKind.StringLiteral) {
 		const parsed = Number(initializer.text);
 
 		return isNaN(parsed) ? undefined : parsed;
 	}
 
-	if (ts.isJsxExpression(initializer)) {
-		return initializer.expression && ts.isNumericLiteral(initializer.expression)
+	if (initializer.kind === SyntaxKind.JsxExpression) {
+		return initializer.expression &&
+			initializer.expression.kind === SyntaxKind.NumericLiteral
 			? Number(initializer.expression.text)
 			: undefined;
 	}

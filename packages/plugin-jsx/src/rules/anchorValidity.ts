@@ -1,9 +1,10 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -47,21 +48,21 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function getHrefValue(attributes: ts.JsxAttributes) {
+		function getHrefValue(attributes: AST.JsxAttributes) {
 			const hrefProperty = attributes.properties.find(
 				(property) =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "href",
 			);
 
-			if (!hrefProperty || !ts.isJsxAttribute(hrefProperty)) {
+			if (!hrefProperty || hrefProperty.kind !== SyntaxKind.JsxAttribute) {
 				return undefined;
 			}
 
 			if (
 				hrefProperty.initializer &&
-				ts.isStringLiteral(hrefProperty.initializer)
+				hrefProperty.initializer.kind === SyntaxKind.StringLiteral
 			) {
 				return hrefProperty.initializer.text;
 			}
@@ -69,11 +70,11 @@ export default typescriptLanguage.createRule({
 			return "";
 		}
 
-		function hasOnClick(attributes: ts.JsxAttributes) {
+		function hasOnClick(attributes: AST.JsxAttributes) {
 			return attributes.properties.some(
 				(property) =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text === "onClick",
 			);
 		}
@@ -83,10 +84,13 @@ export default typescriptLanguage.createRule({
 		}
 
 		function checkAnchor(
-			node: ts.JsxOpeningLikeElement,
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (!ts.isIdentifier(node.tagName) || node.tagName.text !== "a") {
+			if (
+				node.tagName.kind !== SyntaxKind.Identifier ||
+				node.tagName.text !== "a"
+			) {
 				return;
 			}
 

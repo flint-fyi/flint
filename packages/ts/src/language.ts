@@ -4,11 +4,12 @@ import type * as ts from "typescript";
 import type { TypeScriptNodesByName } from "./nodes.ts";
 import { prepareTypeScriptBasedLanguage } from "./prepareTypeScriptBasedLanguage.ts";
 import { prepareTypeScriptFile } from "./prepareTypeScriptFile.ts";
+import type { Checker } from "./types/checker.ts";
 
 export interface TypeScriptFileServices {
 	program: ts.Program;
 	sourceFile: ts.SourceFile;
-	typeChecker: ts.TypeChecker;
+	typeChecker: Checker;
 }
 
 export const typescriptLanguage = createLanguage<

@@ -1,6 +1,7 @@
 import type * as ts from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 /**
  * Finds the position and length of an octal escape sequence in a string.
@@ -48,7 +49,15 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkNode(node: ts.Node, sourceFile: ts.SourceFile) {
+		function checkNode(
+			node:
+				| AST.NoSubstitutionTemplateLiteral
+				| AST.StringLiteral
+				| AST.TemplateHead
+				| AST.TemplateMiddle
+				| AST.TemplateTail,
+			sourceFile: ts.SourceFile,
+		) {
 			const text = node.getText(sourceFile);
 			const octalEscape = findOctalEscape(text);
 

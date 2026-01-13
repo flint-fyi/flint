@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -36,14 +36,14 @@ export default typescriptLanguage.createRule({
 
 					const rightSide = unwrapParenthesizedExpression(node.right);
 					if (
-						!ts.isBinaryExpression(rightSide) ||
+						rightSide.kind !== SyntaxKind.BinaryExpression ||
 						!tsutils.isAssignmentKind(rightSide.operatorToken.kind)
 					) {
 						return;
 					}
 
 					const parent = unwrapParenthesizedExpressionsParent(node);
-					if (ts.isBinaryExpression(parent)) {
+					if (parent.kind === SyntaxKind.BinaryExpression) {
 						return;
 					}
 

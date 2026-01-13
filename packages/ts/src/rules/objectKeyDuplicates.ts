@@ -1,7 +1,8 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -60,25 +61,26 @@ export default typescriptLanguage.createRule({
 
 // TODO: Reuse a shared getStaticValue-style utility?
 // https://github.com/flint-fyi/flint/issues/1298
-function getNameText(name: ts.PropertyName) {
+function getNameText(name: AST.PropertyName) {
 	if (
-		ts.isIdentifier(name) ||
-		ts.isStringLiteral(name) ||
-		ts.isNumericLiteral(name) ||
-		ts.isLiteralExpression(name)
+		name.kind === SyntaxKind.Identifier ||
+		name.kind === SyntaxKind.NumericLiteral ||
+		name.kind === SyntaxKind.BigIntLiteral ||
+		name.kind === SyntaxKind.StringLiteral ||
+		name.kind === SyntaxKind.NoSubstitutionTemplateLiteral
 	) {
 		return name.text;
 	}
 
-	if (ts.isPrivateIdentifier(name)) {
+	if (name.kind === SyntaxKind.PrivateIdentifier) {
 		return `#${name.text}`;
 	}
 
 	return undefined;
 }
 
-function getPropertyKeyName(property: ts.ObjectLiteralElementLike) {
-	if (ts.isShorthandPropertyAssignment(property)) {
+function getPropertyKeyName(property: AST.ObjectLiteralElementLike) {
+	if (property.kind === SyntaxKind.ShorthandPropertyAssignment) {
 		return {
 			group: "values",
 			node: property.name,
@@ -87,10 +89,10 @@ function getPropertyKeyName(property: ts.ObjectLiteralElementLike) {
 	}
 
 	if (
-		ts.isPropertyAssignment(property) ||
-		ts.isMethodDeclaration(property) ||
-		ts.isGetAccessorDeclaration(property) ||
-		ts.isSetAccessorDeclaration(property)
+		property.kind === SyntaxKind.PropertyAssignment ||
+		property.kind === SyntaxKind.MethodDeclaration ||
+		property.kind === SyntaxKind.GetAccessor ||
+		property.kind === SyntaxKind.SetAccessor
 	) {
 		const { name } = property;
 		const text = getNameText(name);
@@ -98,11 +100,12 @@ function getPropertyKeyName(property: ts.ObjectLiteralElementLike) {
 			return undefined;
 		}
 
-		const group = ts.isGetAccessorDeclaration(property)
-			? "getters"
-			: ts.isSetAccessorDeclaration(property)
-				? "setters"
-				: "values";
+		const group =
+			property.kind === SyntaxKind.GetAccessor
+				? "getters"
+				: property.kind === SyntaxKind.SetAccessor
+					? "setters"
+					: "values";
 
 		return { group, node: name, text } as const;
 	}

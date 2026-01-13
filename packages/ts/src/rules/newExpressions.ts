@@ -1,7 +1,8 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
+import type * as AST from "../types/ast.ts";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -25,18 +26,20 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function isStandaloneExpression(node: ts.Node): boolean {
+		function isStandaloneExpression(
+			node: AST.BinaryExpression | AST.NewExpression,
+		): boolean {
 			const parent = node.parent;
 
 			// If parent is an ExpressionStatement, it's standalone
-			if (parent.kind === ts.SyntaxKind.ExpressionStatement) {
+			if (parent.kind === SyntaxKind.ExpressionStatement) {
 				return true;
 			}
 
 			// If parent is a comma expression, check recursively
 			if (
-				ts.isBinaryExpression(parent) &&
-				parent.operatorToken.kind === ts.SyntaxKind.CommaToken
+				parent.kind === SyntaxKind.BinaryExpression &&
+				parent.operatorToken.kind === SyntaxKind.CommaToken
 			) {
 				// If this is the last expression in the comma sequence, check if the parent is standalone
 				if (parent.right === node) {
