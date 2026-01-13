@@ -1,27 +1,20 @@
 import * as ts from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
+import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
+import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
-function isArrayType(type: ts.Type, typeChecker: ts.TypeChecker) {
-	if (typeChecker.isArrayType(type)) {
-		return true;
-	}
-
-	if (typeChecker.isTupleType(type)) {
-		return true;
-	}
-
-	return false;
-}
-
-function isForEachCall(node: ts.CallExpression) {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
-		return false;
-	}
-
-	return node.expression.name.text === "forEach" && node.arguments.length >= 1;
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
+function isForEachCall(
+	node: AST.CallExpression,
+): node is AST.CallExpression & { expression: AST.PropertyAccessExpression } {
+	return (
+		node.expression.kind === ts.SyntaxKind.PropertyAccessExpression &&
+		node.expression.name.text === "forEach" &&
+		node.arguments.length >= 1
+	);
 }
 
 export default typescriptLanguage.createRule({
@@ -32,7 +25,7 @@ export default typescriptLanguage.createRule({
 	},
 	messages: {
 		preferForOf: {
-			primary: "Prefer a for-of loop over `.forEach()`.",
+			primary: "Prefer a more direct for-of loop over `.forEach()`.",
 			secondary: [
 				"for-of loops are often more readable and offer benefits over `.forEach()`.",
 				"for-of allows using `break` to exit early, `continue` to skip iterations, and `return` to exit the containing function.",
@@ -45,27 +38,18 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (!isForEachCall(node)) {
-						return;
+					if (
+						isForEachCall(node) &&
+						isArrayOrTupleTypeAtLocation(
+							node.expression.expression,
+							typeChecker,
+						)
+					) {
+						context.report({
+							message: "preferForOf",
+							range: getTSNodeRange(node, sourceFile),
+						});
 					}
-
-					if (!ts.isPropertyAccessExpression(node.expression)) {
-						return;
-					}
-
-					const receiverType = getConstrainedTypeAtLocation(
-						node.expression.expression,
-						typeChecker,
-					);
-
-					if (!isArrayType(receiverType, typeChecker)) {
-						return;
-					}
-
-					context.report({
-						message: "preferForOf",
-						range: getTSNodeRange(node, sourceFile),
-					});
 				},
 			},
 		};

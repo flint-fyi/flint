@@ -12,7 +12,7 @@ array.forEach((element) => { console.log(element); });
 declare const array: number[];
 array.forEach((element) => { console.log(element); });
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer a for-of loop over \`.forEach()\`.
+Prefer a more direct for-of loop over \`.forEach()\`.
 `,
 		},
 		{
@@ -24,7 +24,7 @@ array.forEach(function (item) { process(item); });
 declare const array: string[];
 array.forEach(function (item) { process(item); });
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer a for-of loop over \`.forEach()\`.
+Prefer a more direct for-of loop over \`.forEach()\`.
 `,
 		},
 		{
@@ -34,7 +34,7 @@ Prefer a for-of loop over \`.forEach()\`.
 			snapshot: `
 [1, 2, 3].forEach((value) => { handle(value); });
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer a for-of loop over \`.forEach()\`.
+Prefer a more direct for-of loop over \`.forEach()\`.
 `,
 		},
 		{
@@ -46,7 +46,7 @@ array.forEach((element, index) => { console.log(index, element); });
 declare const array: number[];
 array.forEach((element, index) => { console.log(index, element); });
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer a for-of loop over \`.forEach()\`.
+Prefer a more direct for-of loop over \`.forEach()\`.
 `,
 		},
 		{
@@ -59,7 +59,7 @@ function process<T extends number[]>(arr: T) {
 function process<T extends number[]>(arr: T) {
 	arr.forEach((element) => { console.log(element); });
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	Prefer a for-of loop over \`.forEach()\`.
+	Prefer a more direct for-of loop over \`.forEach()\`.
 }
 `,
 		},
