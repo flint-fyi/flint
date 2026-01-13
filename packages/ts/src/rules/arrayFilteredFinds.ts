@@ -3,60 +3,31 @@ import * as ts from "typescript";
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import type { AST, Checker } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
-import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
+import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
 function isArrayFilterCall(
 	node: AST.Expression,
 	typeChecker: Checker,
 ): node is AST.CallExpression {
-	if (
-		!ts.isCallExpression(node) ||
-		!ts.isPropertyAccessExpression(node.expression)
-	) {
-		return false;
-	}
-
-	const methodName = node.expression.name.text;
-	if (
-		methodName !== "filter" ||
-		node.arguments.length < 1 ||
-		node.arguments.length > 2
-	) {
-		return false;
-	}
-
-	const receiverType = getConstrainedTypeAtLocation(
-		node.expression.expression,
-		typeChecker,
-	);
-
-	return isArrayOrTupleType(receiverType, typeChecker);
-}
-
-function isArrayOrTupleType(
-	type: ts.Type,
-	typeChecker: ts.TypeChecker,
-): boolean {
-	return isTypeRecursive(
-		type,
-		(t) => typeChecker.isArrayType(t) || typeChecker.isTupleType(t),
+	return (
+		ts.isCallExpression(node) &&
+		ts.isPropertyAccessExpression(node.expression) &&
+		node.expression.name.text === "filter" &&
+		node.arguments.length > 0 &&
+		node.arguments.length <= 2 &&
+		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
 	);
 }
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
 function isNegativeOneIndex(node: AST.Expression): boolean {
-	if (
+	return (
 		ts.isPrefixUnaryExpression(node) &&
 		node.operator === ts.SyntaxKind.MinusToken &&
 		ts.isNumericLiteral(node.operand) &&
 		node.operand.text === "1"
-	) {
-		return true;
-	}
-
-	return false;
+	);
 }
 
 // TODO: Use a util like getStaticValue
@@ -70,7 +41,7 @@ export default typescriptLanguage.createRule({
 		description:
 			"Reports using `.filter()` when only the first or last matching element is needed.",
 		id: "arrayFilteredFinds",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		preferFind: {
