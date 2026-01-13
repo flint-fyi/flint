@@ -59,6 +59,7 @@ import emptyDestructures from "./rules/emptyDestructures.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
 import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
+import filenameCasing from "./rules/filenameCasing.ts";
 import finallyStatementSafety from "./rules/finallyStatementSafety.ts";
 import forDirections from "./rules/forDirections.ts";
 import forInArrays from "./rules/forInArrays.ts";
@@ -167,6 +168,7 @@ export const ts = createPlugin({
 		emptyStaticBlocks,
 		exceptionAssignments,
 		fetchMethodBodies,
+		filenameCasing,
 		finallyStatementSafety,
 		forDirections,
 		forInArrays,

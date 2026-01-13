@@ -1,0 +1,122 @@
+---
+description: "Reports filenames that do not match a consistent casing."
+title: "filenameCasing"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="filenameCasing" />
+
+Consistent filename casing makes files easier to find and helps avoid cross-platform issues with case-sensitive file systems.
+Different operating systems handle file casing differently: macOS and Windows are case-insensitive by default, while Linux is case-sensitive.
+This can lead to confusing bugs when developers on different platforms collaborate.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// myFile.ts
+const value = 1;
+```
+
+```ts
+// MyComponent.ts (with default kebab-case setting)
+export function MyComponent() {}
+```
+
+```ts
+// my_file.ts
+const value = 1;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// my-file.ts
+const value = 1;
+```
+
+```ts
+// my-component.ts
+export function MyComponent() {}
+```
+
+```ts
+// index.ts (always allowed)
+export * from "./my-module.ts";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `cases`
+
+An object specifying which case styles are allowed.
+At least one should be set to `true`.
+
+- `camelCase`: Allows `myFileName.ts`
+- `kebabCase`: Allows `my-file-name.ts` (default)
+- `pascalCase`: Allows `MyFileName.ts`
+- `snakeCase`: Allows `my_file_name.ts`
+
+```json
+{
+	"rules": {
+		"ts/filenameCasing": [
+			"error",
+			{ "cases": { "camelCase": true, "pascalCase": true } }
+		]
+	}
+}
+```
+
+### `ignore`
+
+An array of regex patterns for filenames to ignore.
+Useful for files that cannot follow naming conventions.
+
+```json
+{
+	"rules": {
+		"ts/filenameCasing": ["error", { "ignore": ["^CHANGELOG", "^README"] }]
+	}
+}
+```
+
+### `multipleFileExtensions`
+
+When `true` (the default), treats parts after the first `.` as extensions.
+For example, in `MyComponent.test.ts`, only `MyComponent` is validated.
+
+When `false`, the entire filename before the final extension is validated.
+For example, in `MyComponent.test.ts`, `MyComponent.test` is validated.
+
+```json
+{
+	"rules": {
+		"ts/filenameCasing": ["error", { "multipleFileExtensions": false }]
+	}
+}
+```
+
+## When Not To Use It
+
+If your project has an established naming convention that differs from the available options, or if you have many legacy files that would require significant effort to rename, you might want to disable this rule.
+Some projects also have technical constraints that require specific filename patterns (e.g., certain bundlers or frameworks with special file naming requirements).
+
+## Further Reading
+
+- [MDN: File systems](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/Express_Nodejs/development_environment#file_paths)
+- [Wikipedia: Case sensitivity](https://en.wikipedia.org/wiki/Case_sensitivity#In_filesystems)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="filenameCasing" />

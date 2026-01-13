@@ -676,6 +676,9 @@ importers:
       cached-factory:
         specifier: ^0.1.0
         version: 0.1.0
+      change-case:
+        specifier: ^5.4.4
+        version: 5.4.4
       debug-for-file:
         specifier: ^0.2.0
         version: 0.2.0
