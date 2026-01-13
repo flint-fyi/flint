@@ -1,0 +1,93 @@
+---
+description: "Reports member access on a value with type `any`."
+title: "anyMemberAccess"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="anyMemberAccess" />
+
+Accessing a member of a value typed as `any` creates a potential type safety hole and source of bugs.
+TypeScript cannot verify that the member exists or what type it has.
+This rule disallows member access on any variable that is typed as `any`.
+
+This includes:
+
+- Property access on `any` typed values (e.g., `anyValue.property`)
+- Element access on `any` typed values (e.g., `anyValue[0]`)
+- Using `any` typed values as computed property keys (e.g., `obj[anyKey]`)
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const value: any;
+value.property;
+```
+
+```ts
+declare const value: any;
+value["property"];
+```
+
+```ts
+declare const value: any;
+value.a.b.c;
+```
+
+```ts
+declare const obj: { a: number };
+declare const key: any;
+obj[key];
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const value: { property: string };
+value.property;
+```
+
+```ts
+declare const value: string[];
+value[0];
+```
+
+```ts
+declare const value: Record<string, number>;
+declare const key: string;
+value[key];
+```
+
+```ts
+declare const map: Map<string, number>;
+map.get("key");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has many existing `any` values or areas of unsafe code, enabling this rule may be challenging.
+It may be more practical to defer enabling this rule until type safety has been improved in those areas.
+You might consider using lint disable comments for specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [TypeScript Handbook: The any Type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#any)
+- [TypeScript Handbook: Property Accessors](https://www.typescriptlang.org/docs/handbook/2/objects.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="anyMemberAccess" />
