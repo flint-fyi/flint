@@ -5,8 +5,9 @@ import type { AST, Checker } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
-function hasIncludesMethod(type: ts.Type, typeChecker: ts.TypeChecker) {
-	const includesProperty = type.getProperty("includes");
+function hasIncludesMethod(node: AST.Expression, typeChecker: Checker) {
+	const receiverType = getConstrainedTypeAtLocation(node, typeChecker);
+	const includesProperty = receiverType.getProperty("includes");
 
 	return (
 		includesProperty &&
@@ -44,12 +45,7 @@ function isIndexOfComparison(node: AST.BinaryExpression, typeChecker: Checker) {
 		return undefined;
 	}
 
-	const receiverType = getConstrainedTypeAtLocation(
-		indexOfCall.expression.expression,
-		typeChecker,
-	);
-
-	if (!hasIncludesMethod(receiverType, typeChecker)) {
+	if (!hasIncludesMethod(indexOfCall.expression.expression, typeChecker)) {
 		return undefined;
 	}
 
