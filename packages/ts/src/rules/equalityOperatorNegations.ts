@@ -30,7 +30,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports negated expressions on the left side of equality checks.",
 		id: "equalityOperatorNegations",
-		presets: ["logical"],
 	},
 	messages: {
 		negatedEquality: {
@@ -70,8 +69,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const begin = left.getStart(sourceFile);
-					const operator = operatorStrings.get(node.operatorToken.kind);
-					const suggested = negatedOperators.get(node.operatorToken.kind);
+
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const operator = operatorStrings.get(node.operatorToken.kind)!;
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const suggested = negatedOperators.get(node.operatorToken.kind)!;
 
 					context.report({
 						data: { operator, suggested },
