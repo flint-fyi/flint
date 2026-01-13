@@ -14,6 +14,15 @@ delete array[0];
 ~~~~~~~~~~~~~~~
 Avoid using the \`delete\` operator on arrays.
 `,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare const array: number[];
+ array.splice(0, 1);
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -28,6 +37,16 @@ delete array[index];
 ~~~~~~~~~~~~~~~~~~~
 Avoid using the \`delete\` operator on arrays.
 `,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare const array: string[];
+const index = 2;
+ array.splice(index, 1);
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -40,6 +59,15 @@ delete items[1];
 ~~~~~~~~~~~~~~~
 Avoid using the \`delete\` operator on arrays.
 `,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+const items = [1, 2, 3];
+ items.splice(1, 1);
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -52,6 +80,15 @@ delete matrix[0][1];
 ~~~~~~~~~~~~~~~~~~~
 Avoid using the \`delete\` operator on arrays.
 `,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare const matrix: number[][];
+ matrix[0].splice(1, 1);
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -64,6 +101,15 @@ delete getArray()[0];
 ~~~~~~~~~~~~~~~~~~~~
 Avoid using the \`delete\` operator on arrays.
 `,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare function getArray(): number[];
+ getArray().splice(0, 1);
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -76,6 +122,15 @@ delete arr[0];
 ~~~~~~~~~~~~~
 Avoid using the \`delete\` operator on arrays.
 `,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare const arr: Array<number>;
+ arr.splice(0, 1);
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -88,6 +143,15 @@ delete tuple[0];
 ~~~~~~~~~~~~~~~
 Avoid using the \`delete\` operator on arrays.
 `,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare const tuple: [number, string];
+ tuple.splice(0, 1);
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -100,6 +164,15 @@ delete arr[0];
 ~~~~~~~~~~~~~
 Avoid using the \`delete\` operator on arrays.
 `,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare const arr: number[] | string[];
+ arr.splice(0, 1);
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -114,6 +187,16 @@ function deleteFromArray<T extends number[]>(a: T) {
 	Avoid using the \`delete\` operator on arrays.
 }
 `,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+function deleteFromArray<T extends number[]>(a: T) {
+	 a.splice(0, 1);
+}
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -126,6 +209,123 @@ delete arr[0];
 ~~~~~~~~~~~~~
 Avoid using the \`delete\` operator on arrays.
 `,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare const arr: readonly number[];
+ arr.splice(0, 1);
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare const arr: number[];
+delete arr[/* index */ 0];
+`,
+			snapshot: `
+declare const arr: number[];
+delete arr[/* index */ 0];
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Avoid using the \`delete\` operator on arrays.
+`,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare const arr: number[];
+ arr.splice(/* index */ 0, 1);
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare const arr: number[];
+delete arr[0 /* trailing */];
+`,
+			snapshot: `
+declare const arr: number[];
+delete arr[0 /* trailing */];
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Avoid using the \`delete\` operator on arrays.
+`,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare const arr: number[];
+ arr.splice(0 /* trailing */, 1);
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare const arr: number[];
+// line comment before
+delete arr[0];
+`,
+			snapshot: `
+declare const arr: number[];
+// line comment before
+delete arr[0];
+~~~~~~~~~~~~~
+Avoid using the \`delete\` operator on arrays.
+`,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare const arr: number[];
+// line comment before
+ arr.splice(0, 1);
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare const arr: number[];
+delete /* comment */ arr[0];
+`,
+			snapshot: `
+declare const arr: number[];
+delete /* comment */ arr[0];
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Avoid using the \`delete\` operator on arrays.
+`,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare const arr: number[];
+ /* comment */ arr.splice(0, 1);
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare const arr: number[];
+delete arr /* target comment */ [0];
+`,
+			snapshot: `
+declare const arr: number[];
+delete arr /* target comment */ [0];
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Avoid using the \`delete\` operator on arrays.
+`,
+			suggestions: [
+				{
+					id: "useSplice",
+					updated: `
+declare const arr: number[];
+ arr /* target comment */ .splice(0, 1);
+`,
+				},
+			],
 		},
 	],
 	valid: [
@@ -143,7 +343,7 @@ map.delete("key");
 `,
 		`
 declare const array: number[];
-array.splice(0, 1);
+ array.splice(0, 1);
 `,
 		`
 delete globalThis.myProperty;
