@@ -15,6 +15,22 @@ interface FileTask {
 	text: string;
 }
 
+function createIssueMessage({
+	withReplacement,
+}: { withReplacement?: boolean } = {}) {
+	return {
+		primary: 'Forbidden or unknown word: "{{ word }}".',
+		secondary: [
+			'The word "{{ word }}" is not in the project\'s dictionary (cspell.json).',
+			"If it's intentional, add it to cspell.json under `words`.",
+		],
+		suggestions: [
+			'Add "{{ word }}" to dictionary.',
+			...(withReplacement ? ['Replace with "{{ replacement }}".'] : []),
+		],
+	};
+}
+
 export default textLanguage.createRule({
 	about: {
 		description: "Runs the CSpell spell checker on any source code file.",
@@ -22,17 +38,8 @@ export default textLanguage.createRule({
 		preset: "logical",
 	},
 	messages: {
-		issue: {
-			primary: 'Forbidden or unknown word: "{{ word }}".',
-			secondary: [
-				'The word "{{ word }}" is not in the project\'s dictionary (cspell.json).',
-				"If it's intentional, add it to cspell.json under `words`.",
-			],
-			suggestions: [
-				'Add "{{ word }}" to dictionary.',
-				'Replace with "{{ replacement }}".',
-			],
-		},
+		issue: createIssueMessage(),
+		issueWithReplacement: createIssueMessage({ withReplacement: true }),
 	},
 	setup(context) {
 		const fileTasks: FileTask[] = [];
@@ -60,19 +67,24 @@ export default textLanguage.createRule({
 							end: issue.offset + (issue.length ?? issue.text.length),
 						};
 
-						const suggestionsResult = await suggestionsForWord(issue.text, {
+						const suggestionsResults = await suggestionsForWord(issue.text, {
 							...finalizedSettings,
 							numSuggestions: 1,
 						});
-						const validSuggestion = suggestionsResult.suggestions.find(
-							(s) => !s.forbidden && !s.noSuggest,
-						);
+						const firstSuggestion = suggestionsResults.suggestions[0];
+						const isValidSuggestion =
+							firstSuggestion &&
+							!firstSuggestion.forbidden &&
+							!firstSuggestion.noSuggest;
+
+						const replacement = isValidSuggestion
+							? (firstSuggestion.wordAdjustedToMatchCase ??
+								firstSuggestion.word)
+							: undefined;
+
 						const data: Record<string, string> = {
-							replacement: validSuggestion
-								? (validSuggestion.wordAdjustedToMatchCase ??
-									validSuggestion.word)
-								: "",
 							word: issue.text,
+							...(replacement && { replacement }),
 						};
 
 						const suggestions: Suggestion[] = [
@@ -106,7 +118,7 @@ export default textLanguage.createRule({
 
 						context.report({
 							data,
-							message: "issue",
+							message: replacement ? "issueWithReplacement" : "issue",
 							range: issueRange,
 							suggestions,
 						});
