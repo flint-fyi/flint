@@ -31,6 +31,7 @@
 		"astro-og-canvas": "^0.10.0",
 		"canvaskit-wasm": "^0.40.0",
 		"clsx": "^2.1.1",
+		"expressive-code-twoslash": "^0.5.3",
 		"flint": "workspace:^",
 		"konami-emoji-blast": "^0.6.0",
 		"markdown-it": "^14.1.0",

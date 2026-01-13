@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
 
@@ -27,7 +27,7 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				DeleteExpression: (node, { sourceFile }) => {
-					if (node.expression.kind === ts.SyntaxKind.Identifier) {
+					if (node.expression.kind === SyntaxKind.Identifier) {
 						context.report({
 							message: "noDeleteVar",
 							range: {

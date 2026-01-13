@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -25,7 +25,7 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				NewExpression: (node, { sourceFile, typeChecker }) => {
-					if (!ts.isIdentifier(node.expression)) {
+					if (node.expression.kind !== SyntaxKind.Identifier) {
 						return;
 					}
 

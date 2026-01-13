@@ -1,5 +1,5 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -26,9 +26,9 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				NewExpression(node: ts.NewExpression, { sourceFile }) {
+				NewExpression(node, { sourceFile }) {
 					if (
-						!ts.isIdentifier(node.expression) ||
+						node.expression.kind !== SyntaxKind.Identifier ||
 						node.expression.text !== "Buffer"
 					) {
 						return;

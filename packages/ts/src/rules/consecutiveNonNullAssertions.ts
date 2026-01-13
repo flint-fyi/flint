@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
 
@@ -22,7 +22,7 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				NonNullExpression: (node) => {
-					if (node.parent.kind !== ts.SyntaxKind.NonNullExpression) {
+					if (node.parent.kind !== SyntaxKind.NonNullExpression) {
 						return;
 					}
 

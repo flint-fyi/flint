@@ -1,5 +1,5 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -24,19 +24,20 @@ export default typescriptLanguage.createRule({
 				JsxExpression(node, { sourceFile }) {
 					if (
 						!node.expression ||
-						(!ts.isJsxElement(node.parent) && !ts.isJsxFragment(node.parent))
+						(node.parent.kind !== SyntaxKind.JsxElement &&
+							node.parent.kind !== SyntaxKind.JsxFragment)
 					) {
 						return;
 					}
 
 					let unnecessaryType: string | undefined;
 
-					if (ts.isStringLiteral(node.expression)) {
+					if (node.expression.kind === SyntaxKind.StringLiteral) {
 						unnecessaryType = "string literals";
 					} else if (
-						ts.isJsxElement(node.expression) ||
-						ts.isJsxSelfClosingElement(node.expression) ||
-						ts.isJsxFragment(node.expression)
+						node.expression.kind === SyntaxKind.JsxElement ||
+						node.expression.kind === SyntaxKind.JsxSelfClosingElement ||
+						node.expression.kind === SyntaxKind.JsxFragment
 					) {
 						unnecessaryType = "JSX elements";
 					}

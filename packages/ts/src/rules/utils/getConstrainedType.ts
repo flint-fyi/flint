@@ -1,8 +1,9 @@
-import type * as ts from "typescript";
+import type * as AST from "../../types/ast.ts";
+import type { Checker } from "../../types/checker.ts";
 
 export function getConstrainedTypeAtLocation(
-	node: ts.Node,
-	typeChecker: ts.TypeChecker,
+	node: AST.Expression,
+	typeChecker: Checker,
 ) {
 	const type = typeChecker.getTypeAtLocation(node);
 	return typeChecker.getBaseConstraintOfType(type) ?? type;

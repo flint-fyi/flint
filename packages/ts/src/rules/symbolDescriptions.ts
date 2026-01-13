@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
 
@@ -26,7 +26,7 @@ export default typescriptLanguage.createRule({
 			visitors: {
 				CallExpression: (node, { sourceFile }) => {
 					if (
-						!ts.isIdentifier(node.expression) ||
+						node.expression.kind !== SyntaxKind.Identifier ||
 						node.expression.text !== "Symbol" ||
 						node.arguments.length
 					) {

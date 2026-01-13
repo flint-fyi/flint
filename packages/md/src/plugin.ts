@@ -13,6 +13,7 @@ import labelReferences from "./rules/labelReferences.ts";
 import labelReferenceValidity from "./rules/labelReferenceValidity.ts";
 import linkContents from "./rules/linkContents.ts";
 import mediaSyntaxReversals from "./rules/mediaSyntaxReversals.ts";
+import referenceLikeUrls from "./rules/referenceLikeUrls.ts";
 
 export const md = createPlugin({
 	files: {
@@ -33,5 +34,6 @@ export const md = createPlugin({
 		labelReferenceValidity,
 		linkContents,
 		mediaSyntaxReversals,
+		referenceLikeUrls,
 	],
 });

@@ -11,9 +11,9 @@
 		"./packages/*/bin/index.js"
 	],
 	"references": [
+		{ "path": "./packages/cli" },
 		{ "path": "./packages/comparisons" },
 		{ "path": "./packages/core" },
-		{ "path": "./packages/cli" },
 		{ "path": "./packages/flint" },
 		{ "path": "./packages/json" },
 		{ "path": "./packages/md" },
@@ -23,8 +23,8 @@
 		{ "path": "./packages/plugin-flint" },
 		{ "path": "./packages/plugin-jsx" },
 		{ "path": "./packages/plugin-next" },
-		{ "path": "./packages/plugin-nuxt" },
 		{ "path": "./packages/plugin-node" },
+		{ "path": "./packages/plugin-nuxt" },
 		{ "path": "./packages/plugin-performance" },
 		{ "path": "./packages/plugin-react" },
 		{ "path": "./packages/plugin-solid" },

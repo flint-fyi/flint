@@ -1,7 +1,11 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-export function unwrapParenthesizedExpressionsParent(node: ts.Node): ts.Node {
-	return ts.isParenthesizedExpression(node.parent)
+import type * as AST from "../types/ast.ts";
+
+export function unwrapParenthesizedExpressionsParent(
+	node: AST.BinaryExpression | AST.ParenthesizedExpression,
+): AST.LeftHandSideExpressionParent {
+	return node.parent.kind === SyntaxKind.ParenthesizedExpression
 		? unwrapParenthesizedExpressionsParent(node.parent)
 		: node.parent;
 }

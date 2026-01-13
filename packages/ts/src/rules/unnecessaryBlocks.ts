@@ -1,6 +1,7 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -24,46 +25,49 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function isValidBlock(node: ts.Block): boolean {
+		function isValidBlock(node: AST.Block): boolean {
 			const parent = node.parent;
 
 			// Valid blocks: function bodies, arrow functions, class/interface bodies, etc.
 			if (
-				ts.isFunctionDeclaration(parent) ||
-				ts.isFunctionExpression(parent) ||
-				ts.isArrowFunction(parent) ||
-				ts.isMethodDeclaration(parent) ||
-				ts.isConstructorDeclaration(parent) ||
-				ts.isGetAccessorDeclaration(parent) ||
-				ts.isSetAccessorDeclaration(parent) ||
-				ts.isModuleBlock(parent)
+				parent.kind == SyntaxKind.FunctionDeclaration ||
+				parent.kind == SyntaxKind.FunctionExpression ||
+				parent.kind == SyntaxKind.ArrowFunction ||
+				parent.kind == SyntaxKind.MethodDeclaration ||
+				parent.kind == SyntaxKind.Constructor ||
+				parent.kind == SyntaxKind.GetAccessor ||
+				parent.kind == SyntaxKind.SetAccessor ||
+				parent.kind == SyntaxKind.ModuleBlock
 			) {
 				return true;
 			}
 
 			// Valid blocks: control flow statements
 			if (
-				ts.isIfStatement(parent) ||
-				ts.isForStatement(parent) ||
-				ts.isForInStatement(parent) ||
-				ts.isForOfStatement(parent) ||
-				ts.isWhileStatement(parent) ||
-				ts.isDoStatement(parent) ||
-				ts.isWithStatement(parent) ||
-				ts.isTryStatement(parent) ||
-				ts.isCatchClause(parent)
+				parent.kind == SyntaxKind.IfStatement ||
+				parent.kind == SyntaxKind.ForStatement ||
+				parent.kind == SyntaxKind.ForInStatement ||
+				parent.kind == SyntaxKind.ForOfStatement ||
+				parent.kind == SyntaxKind.WhileStatement ||
+				parent.kind == SyntaxKind.DoStatement ||
+				parent.kind == SyntaxKind.WithStatement ||
+				parent.kind == SyntaxKind.TryStatement ||
+				parent.kind == SyntaxKind.CatchClause
 			) {
 				return true;
 			}
 
 			// Valid block: switch case/default clause with block
 			// In ES6+, blocks in switch cases create scope for let/const
-			if (ts.isCaseClause(parent) || ts.isDefaultClause(parent)) {
+			if (
+				parent.kind == SyntaxKind.CaseClause ||
+				parent.kind == SyntaxKind.DefaultClause
+			) {
 				return true;
 			}
 
 			// Valid block: labeled statement
-			if (ts.isLabeledStatement(parent)) {
+			if (parent.kind == SyntaxKind.LabeledStatement) {
 				return true;
 			}
 

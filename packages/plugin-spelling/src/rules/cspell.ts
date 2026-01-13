@@ -22,8 +22,15 @@ export default textLanguage.createRule({
 	messages: {
 		issue: {
 			primary: 'Forbidden or unknown word: "{{ word }}".',
-			secondary: ["TODO"],
-			suggestions: ["TODO"],
+			secondary: [
+				"The word '{{ word }}' is not in the project's dictionary (cspell.json).",
+				"If this is a valid term, consider adding it to 'cspell.json' under 'words'.",
+			],
+			suggestions: [
+				"Add '{{ word }}' to the project's dictionary.",
+				// TODO: update this message when we've implemented "suggestions for typos":https://github.com/flint-fyi/flint/issues/1403
+				"Correct the spelling if this was a typo.",
+			],
 		},
 	},
 	setup(context) {

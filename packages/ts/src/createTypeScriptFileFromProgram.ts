@@ -3,7 +3,7 @@ import type {
 	LanguageFileCacheImpacts,
 	LanguageFileDefinition,
 } from "@flint.fyi/core";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { collectReferencedFilePaths } from "./collectReferencedFilePaths.ts";
 import { convertTypeScriptDiagnosticToLanguageFileDiagnostic } from "./convertTypeScriptDiagnosticToLanguageFileDiagnostic.ts";
@@ -11,7 +11,7 @@ import { getFirstEnumValues } from "./getFirstEnumValues.ts";
 import type { TypeScriptFileServices } from "./language.ts";
 import type { TypeScriptNodesByName } from "./nodes.ts";
 
-export const NodeSyntaxKinds = getFirstEnumValues(ts.SyntaxKind);
+export const NodeSyntaxKinds = getFirstEnumValues(SyntaxKind);
 
 export function collectTypeScriptFileCacheImpacts(
 	program: ts.Program,

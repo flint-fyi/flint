@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -24,7 +24,7 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
-					if (node.operatorToken.kind === ts.SyntaxKind.CommaToken) {
+					if (node.operatorToken.kind === SyntaxKind.CommaToken) {
 						context.report({
 							message: "noSequences",
 							range: getTSNodeRange(node.operatorToken, sourceFile),
