@@ -15,6 +15,10 @@ import arrayExistenceChecksConsistency from "./rules/arrayExistenceChecksConsist
 import arrayFilteredFinds from "./rules/arrayFilteredFinds.ts";
 import arrayFinds from "./rules/arrayFinds.ts";
 import arrayFlatMapMethods from "./rules/arrayFlatMapMethods.ts";
+import arrayFlatMethods from "./rules/arrayFlatMethods.ts";
+import arrayFlatUnnecessaryDepths from "./rules/arrayFlatUnnecessaryDepths.ts";
+import arrayIncludes from "./rules/arrayIncludes.ts";
+import arrayIncludesMethods from "./rules/arrayIncludesMethods.ts";
 import arrayMapIdentities from "./rules/arrayMapIdentities.ts";
 import arrayMutableReverses from "./rules/arrayMutableReverses.ts";
 import arrayMutableSorts from "./rules/arrayMutableSorts.ts";
@@ -62,6 +66,7 @@ import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
 import finallyStatementSafety from "./rules/finallyStatementSafety.ts";
 import forDirections from "./rules/forDirections.ts";
 import forInArrays from "./rules/forInArrays.ts";
+import forInGuards from "./rules/forInGuards.ts";
 import functionApplySpreads from "./rules/functionApplySpreads.ts";
 import functionAssignments from "./rules/functionAssignments.ts";
 import functionCurryingRedundancy from "./rules/functionCurryingRedundancy.ts";
@@ -114,6 +119,7 @@ export const ts = createPlugin({
 		anyCalls,
 		anyMemberAccess,
 		anyReturns,
+		arrayIncludesMethods,
 		argumentsRule,
 		arrayCallbackReturns,
 		arrayConstructors,
@@ -124,6 +130,9 @@ export const ts = createPlugin({
 		arrayFilteredFinds,
 		arrayFinds,
 		arrayFlatMapMethods,
+		arrayFlatMethods,
+		arrayFlatUnnecessaryDepths,
+		arrayIncludes,
 		arrayMapIdentities,
 		arrayMutableReverses,
 		arrayMutableSorts,
@@ -171,6 +180,7 @@ export const ts = createPlugin({
 		finallyStatementSafety,
 		forDirections,
 		forInArrays,
+		forInGuards,
 		functionApplySpreads,
 		functionAssignments,
 		functionCurryingRedundancy,

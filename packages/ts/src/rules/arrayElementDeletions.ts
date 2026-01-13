@@ -3,8 +3,7 @@ import * as ts from "typescript";
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
-import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
+import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
 function buildSpliceReplacement(
 	node: AST.DeleteExpression,
@@ -34,21 +33,11 @@ function buildSpliceReplacement(
 	return `${before}.splice(${keyText}, 1)`;
 }
 
-function isArrayOrTupleType(
-	type: ts.Type,
-	typeChecker: ts.TypeChecker,
-): boolean {
-	return isTypeRecursive(
-		type,
-		(t) => typeChecker.isArrayType(t) || typeChecker.isTupleType(t),
-	);
-}
-
 export default typescriptLanguage.createRule({
 	about: {
 		description: "Reports using the `delete` operator on array values.",
 		id: "arrayElementDeletions",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noArrayDelete: {
@@ -64,16 +53,13 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				DeleteExpression: (node, { sourceFile, typeChecker }) => {
-					if (!ts.isElementAccessExpression(node.expression)) {
-						return;
-					}
-
-					const objectType = getConstrainedTypeAtLocation(
-						node.expression.expression,
-						typeChecker,
-					);
-
-					if (!isArrayOrTupleType(objectType, typeChecker)) {
+					if (
+						!ts.isElementAccessExpression(node.expression) ||
+						!isArrayOrTupleTypeAtLocation(
+							node.expression.expression,
+							typeChecker,
+						)
+					) {
 						return;
 					}
 
