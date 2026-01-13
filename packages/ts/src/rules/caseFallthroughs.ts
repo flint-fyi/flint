@@ -11,7 +11,7 @@ function endsWithTerminatingStatement(statements: ts.NodeArray<AST.Statement>) {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const lastStatement = statements[statements.length - 1]!;
+	const lastStatement = statements.at(-1)!;
 
 	return isTerminatingStatement(lastStatement);
 }
