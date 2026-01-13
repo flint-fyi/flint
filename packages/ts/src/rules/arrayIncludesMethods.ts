@@ -4,59 +4,9 @@ import { getTSNodeRange } from "../getTSNodeRange.ts";
 import type { AST, Checker } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
+import { isDirectEqualityCheck } from "./utils/isDirectEqualityCheck.ts";
 
-function getDirectReturnExpression(body: AST.Block) {
-	if (body.statements.length !== 1) {
-		return undefined;
-	}
-
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const statement = body.statements[0]!;
-
-	return statement.kind === ts.SyntaxKind.ReturnStatement
-		? statement.expression
-		: undefined;
-}
-
-function isDirectEqualityCheck(
-	node: AST.ArrowFunction | AST.FunctionExpression,
-	parameterName: string,
-) {
-	let body: AST.Expression | undefined;
-
-	switch (node.kind) {
-		case ts.SyntaxKind.ArrowFunction:
-			body =
-				node.body.kind === ts.SyntaxKind.Block
-					? getDirectReturnExpression(node.body)
-					: node.body;
-			break;
-
-		case ts.SyntaxKind.FunctionExpression:
-			body = getDirectReturnExpression(node.body);
-			break;
-
-		default:
-			return undefined;
-	}
-
-	if (
-		body?.kind !== ts.SyntaxKind.BinaryExpression ||
-		(body.operatorToken.kind !== ts.SyntaxKind.EqualsEqualsToken &&
-			body.operatorToken.kind !== ts.SyntaxKind.EqualsEqualsEqualsToken)
-	) {
-		return undefined;
-	}
-
-	const isLeftParam =
-		ts.isIdentifier(body.left) && body.left.text === parameterName;
-	const isRightParam =
-		ts.isIdentifier(body.right) && body.right.text === parameterName;
-
-	return isLeftParam !== isRightParam;
-}
-
-function isSomeWithSimpleEquality(
+function isSomeWithDirectEquality(
 	node: AST.CallExpression,
 	typeChecker: Checker,
 ) {
@@ -84,8 +34,12 @@ function isSomeWithSimpleEquality(
 	const firstParameter = callback.parameters[0]!;
 
 	return (
-		ts.isIdentifier(firstParameter.name) &&
-		isDirectEqualityCheck(callback, firstParameter.name.text) &&
+		firstParameter.name.kind === ts.SyntaxKind.Identifier &&
+		isDirectEqualityCheck(
+			callback,
+			[ts.SyntaxKind.EqualsEqualsToken, ts.SyntaxKind.EqualsEqualsEqualsToken],
+			firstParameter.name.text,
+		) &&
 		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
 	);
 }
@@ -114,7 +68,7 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (isSomeWithSimpleEquality(node, typeChecker)) {
+					if (isSomeWithDirectEquality(node, typeChecker)) {
 						context.report({
 							message: "preferIncludes",
 							range: getTSNodeRange(node, sourceFile),
