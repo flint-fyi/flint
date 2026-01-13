@@ -1,21 +1,24 @@
 import * as ts from "typescript";
 
+import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 
 const fallthroughCommentPattern = /falls?\s*through/i;
 
-function endsWithTerminatingStatement(statements: ts.NodeArray<ts.Statement>) {
+function endsWithTerminatingStatement(statements: ts.NodeArray<AST.Statement>) {
 	if (statements.length === 0) {
 		return false;
 	}
 
-	const lastStatement = statements[statements.length - 1];
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const lastStatement = statements[statements.length - 1]!;
+
 	return isTerminatingStatement(lastStatement);
 }
 
 function hasFallthroughComment(
-	clause: ts.CaseClause | ts.DefaultClause,
-	nextClause: ts.CaseClause | ts.DefaultClause,
+	clause: AST.CaseClause | AST.DefaultClause,
+	nextClause: AST.CaseClause | AST.DefaultClause,
 	sourceFile: ts.SourceFile,
 ): boolean {
 	const sourceText = sourceFile.getFullText();
@@ -49,29 +52,26 @@ function hasFallthroughComment(
 	return false;
 }
 
-function isTerminatingStatement(node: ts.Statement): boolean {
+function isTerminatingStatement(node: AST.Statement): boolean {
 	switch (node.kind) {
 		case ts.SyntaxKind.Block:
-			return endsWithTerminatingStatement((node as ts.Block).statements);
+			return endsWithTerminatingStatement(node.statements);
 		case ts.SyntaxKind.BreakStatement:
 		case ts.SyntaxKind.ContinueStatement:
 		case ts.SyntaxKind.ReturnStatement:
 		case ts.SyntaxKind.ThrowStatement:
 			return true;
-		case ts.SyntaxKind.IfStatement: {
-			const ifStmt = node as ts.IfStatement;
-			if (!ifStmt.elseStatement) {
-				return false;
-			}
 
+		case ts.SyntaxKind.IfStatement: {
 			return (
-				isTerminatingStatement(ifStmt.thenStatement) &&
-				isTerminatingStatement(ifStmt.elseStatement)
+				!!node.elseStatement &&
+				isTerminatingStatement(node.thenStatement) &&
+				isTerminatingStatement(node.elseStatement)
 			);
 		}
 
 		case ts.SyntaxKind.SwitchStatement: {
-			const switchStmt = node as ts.SwitchStatement;
+			const switchStmt = node;
 			const clauses = switchStmt.caseBlock.clauses;
 			const hasDefault = clauses.some(ts.isDefaultClause);
 			if (!hasDefault) {
@@ -86,7 +86,7 @@ function isTerminatingStatement(node: ts.Statement): boolean {
 		}
 
 		case ts.SyntaxKind.TryStatement: {
-			const tryStmt = node as ts.TryStatement;
+			const tryStmt = node;
 			if (tryStmt.finallyBlock) {
 				return endsWithTerminatingStatement(tryStmt.finallyBlock.statements);
 			}
@@ -131,25 +131,25 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				SwitchStatement: (node, { sourceFile }) => {
-					const clauses = node.caseBlock.clauses;
-
-					for (let i = 0; i < clauses.length - 1; i++) {
-						const clause = clauses[i];
-						const nextClause = clauses[i + 1];
-
-						if (clause.statements.length === 0) {
+					for (let i = 0; i < node.caseBlock.clauses.length - 1; i++) {
+						const clause = node.caseBlock.clauses[i];
+						if (!clause) {
 							continue;
 						}
 
-						if (endsWithTerminatingStatement(clause.statements)) {
-							continue;
-						}
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						const nextClause = node.caseBlock.clauses[i + 1]!;
 
-						if (hasFallthroughComment(clause, nextClause, sourceFile)) {
+						if (
+							clause.statements.length === 0 ||
+							endsWithTerminatingStatement(clause.statements) ||
+							hasFallthroughComment(clause, nextClause, sourceFile)
+						) {
 							continue;
 						}
 
 						const caseKeyword = ts.isCaseClause(clause) ? "case" : "default";
+
 						context.report({
 							message: "unexpectedFallthrough",
 							range: {
