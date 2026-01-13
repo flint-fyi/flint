@@ -31,6 +31,8 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"mdast-util-from-markdown": "^2.0.2",
+		"mdast-util-gfm": "^3.1.0",
+		"micromark-extension-gfm": "^3.0.0",
 		"unist-util-visit": "^5.0.0"
 	},
 	"devDependencies": {
