@@ -9,6 +9,7 @@ import argumentsRule from "./rules/arguments.ts";
 import arrayCallbackReturns from "./rules/arrayCallbackReturns.ts";
 import arrayConstructors from "./rules/arrayConstructors.ts";
 import arrayDeleteUnnecessaryCounts from "./rules/arrayDeleteUnnecessaryCounts.ts";
+import arrayElementDeletions from "./rules/arrayElementDeletions.ts";
 import arrayExistenceChecksConsistency from "./rules/arrayExistenceChecksConsistency.ts";
 import arrayFinds from "./rules/arrayFinds.ts";
 import arrayMapIdentities from "./rules/arrayMapIdentities.ts";
@@ -27,6 +28,7 @@ import builtinCoercions from "./rules/builtinCoercions.ts";
 import builtinConstructorNews from "./rules/builtinConstructorNews.ts";
 import caseDeclarations from "./rules/caseDeclarations.ts";
 import caseDuplicates from "./rules/caseDuplicates.ts";
+import caseFallthroughs from "./rules/caseFallthroughs.ts";
 import catchCallbackTypes from "./rules/catchCallbackTypes.ts";
 import chainedAssignments from "./rules/chainedAssignments.ts";
 import classAssignments from "./rules/classAssignments.ts";
@@ -110,6 +112,7 @@ export const ts = createPlugin({
 		arrayCallbackReturns,
 		arrayConstructors,
 		arrayDeleteUnnecessaryCounts,
+		arrayElementDeletions,
 		arrayExistenceChecksConsistency,
 		arrayFinds,
 		arrayMapIdentities,
@@ -128,6 +131,7 @@ export const ts = createPlugin({
 		builtinConstructorNews,
 		caseDeclarations,
 		caseDuplicates,
+		caseFallthroughs,
 		catchCallbackTypes,
 		chainedAssignments,
 		classAssignments,
@@ -156,8 +160,8 @@ export const ts = createPlugin({
 		finallyStatementSafety,
 		forDirections,
 		forInArrays,
-		functionAssignments,
 		functionApplySpreads,
+		functionAssignments,
 		functionCurryingRedundancy,
 		functionNewCalls,
 		generatorFunctionYields,
