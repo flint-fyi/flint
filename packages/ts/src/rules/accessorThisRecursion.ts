@@ -24,7 +24,7 @@ export default typescriptLanguage.createRule({
 	about: {
 		description: "Reports recursive access to this within getters and setters.",
 		id: "accessorThisRecursion",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noGetterRecursion: {
