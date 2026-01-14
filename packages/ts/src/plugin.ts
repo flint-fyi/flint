@@ -69,6 +69,7 @@ import enumInitializers from "./rules/enumInitializers.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
 import evolvingVariableTypes from "./rules/evolvingVariableTypes.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
+import explicitAnys from "./rules/explicitAnys.ts";
 import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
 import finallyStatementSafety from "./rules/finallyStatementSafety.ts";
 import forDirections from "./rules/forDirections.ts";
@@ -192,6 +193,7 @@ export const ts = createPlugin({
 		equalityOperatorNegations,
 		evolvingVariableTypes,
 		exceptionAssignments,
+		explicitAnys,
 		fetchMethodBodies,
 		finallyStatementSafety,
 		forDirections,

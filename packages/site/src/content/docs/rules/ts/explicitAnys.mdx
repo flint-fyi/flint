@@ -1,0 +1,95 @@
+---
+description: "Reports explicit uses of the any type."
+title: "explicitAnys"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="explicitAnys" />
+
+Using the `any` type in TypeScript disables type checking for the annotated value.
+This defeats the purpose of using TypeScript and can lead to runtime errors that would otherwise be caught at compile time.
+
+When a value is typed as `any`:
+
+- Any property can be accessed without checks
+- Any method can be called without verification
+- It can be assigned to any other type
+- Type errors propagate silently through the codebase
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value: any = getResponse();
+```
+
+```ts
+function process(input: any): void {
+	console.log(input.property);
+}
+```
+
+```ts
+function getData(): any {
+	return fetchData();
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value: unknown = getResponse();
+```
+
+```ts
+function process(input: unknown): void {
+	if (typeof input === "object" && input !== null && "property" in input) {
+		console.log(input.property);
+	}
+}
+```
+
+```ts
+interface Data {
+	property: string;
+}
+
+function getData(): Data {
+	return fetchData();
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Alternatives to any
+
+- **unknown**: A type-safe alternative that requires type narrowing before use
+- **Generics**: Preserve type information across function boundaries
+- **Union types**: When a value can be one of several known types
+- **Interface/Type definitions**: When the shape of an object is known
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are migrating a JavaScript codebase to TypeScript and need to temporarily use `any` to get the code to compile, you may disable this rule.
+Consider using TypeScript's `--noImplicitAny` compiler option alongside this rule for comprehensive coverage.
+
+## Further Reading
+
+- [TypeScript Handbook: any](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#any)
+- [TypeScript Handbook: unknown](https://www.typescriptlang.org/docs/handbook/2/functions.html#unknown)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="explicitAnys" />
