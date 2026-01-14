@@ -90,15 +90,16 @@ function createApplyFixText(
 	methodArguments: AST.Expression[],
 	sourceFile: ts.SourceFile,
 ) {
-	if (methodArguments.length > 0) {
-		const argsArray = nullThrows(
-			methodArguments[0],
-			"First argument is expected to be present by prior length check",
-		);
-		return `${functionExpression}(...${argsArray.getText(sourceFile)})`;
-	} else {
+	if (methodArguments.length === 0) {
 		return `${functionExpression}()`;
 	}
+
+	const argsArray = nullThrows(
+		methodArguments[0],
+		"First argument is expected to be present by prior length check",
+	);
+
+	return `${functionExpression}(...${argsArray.getText(sourceFile)})`;
 }
 
 function createCallFixText(
