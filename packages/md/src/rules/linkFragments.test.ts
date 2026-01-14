@@ -1,5 +1,5 @@
-import rule from "./linkFragments.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./linkFragments.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
