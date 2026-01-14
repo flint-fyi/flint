@@ -5,20 +5,21 @@ import { typescriptLanguage } from "../language.ts";
 import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-function alwaysReturns(node: AST.Statement) {
+function alwaysTerminates(node: AST.Statement): boolean {
 	switch (node.kind) {
 		case SyntaxKind.Block:
 			return node.statements.some(
 				(statement) =>
-					statement.kind === SyntaxKind.ReturnStatement ||
-					hasNestedIfWithReturn(statement),
+					isTerminatingStatement(statement.kind) ||
+					hasNestedIfThatTerminates(statement),
 			);
 
 		case SyntaxKind.ReturnStatement:
+		case SyntaxKind.ThrowStatement:
 			return true;
 
 		default:
-			return hasNestedIfWithReturn(node);
+			return hasNestedIfThatTerminates(node);
 	}
 }
 
@@ -28,12 +29,12 @@ function findElseKeyword(node: AST.IfStatement, sourceFile: ts.SourceFile) {
 		.find((child) => child.kind === SyntaxKind.ElseKeyword);
 }
 
-function hasNestedIfWithReturn(node: AST.Statement) {
+function hasNestedIfThatTerminates(node: AST.Statement): boolean {
 	return (
 		node.kind === SyntaxKind.IfStatement &&
 		node.elseStatement !== undefined &&
-		naiveHasReturn(node.thenStatement) &&
-		naiveHasReturn(node.elseStatement)
+		naiveTerminates(node.thenStatement) &&
+		naiveTerminates(node.elseStatement)
 	);
 }
 
@@ -47,33 +48,42 @@ function isInStatementListContext(node: AST.IfStatement) {
 	);
 }
 
-function naiveHasReturn(node: AST.Statement) {
-	if (node.kind === SyntaxKind.Block) {
-		const block = node;
-		const statements = block.statements;
-		const lastStatement = statements.at(-1);
+function isTerminatingStatement(kind: SyntaxKind) {
+	return (
+		kind === SyntaxKind.ReturnStatement || kind === SyntaxKind.ThrowStatement
+	);
+}
 
-		return (
-			lastStatement !== undefined &&
-			lastStatement.kind === SyntaxKind.ReturnStatement
-		);
+function naiveTerminates(node: AST.Statement): boolean {
+	if (node.kind !== SyntaxKind.Block) {
+		return isTerminatingStatement(node.kind);
 	}
 
-	return node.kind === SyntaxKind.ReturnStatement;
+	const lastStatement = node.statements.at(-1);
+
+	if (!lastStatement) {
+		return false;
+	}
+
+	return (
+		isTerminatingStatement(lastStatement.kind) ||
+		hasNestedIfThatTerminates(lastStatement)
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
-			"Reports unnecessary `else` blocks following `if` statements that always return.",
+			"Reports unnecessary `else` blocks following `if` statements that always return or throw.",
 		id: "elseReturns",
 		presets: ["stylisticStrict"],
 	},
 	messages: {
 		unnecessaryElse: {
-			primary: "This `else` clause is unnecessary after a `return` statement.",
+			primary:
+				"This `else` clause is unnecessary after a terminating statement.",
 			secondary: [
-				"When an `if` block always returns, the `else` block is redundant because the code after the `if` statement will only execute when the condition is false.",
+				"When an `if` block always returns or throws, the `else` block is redundant because the code after the `if` statement will only execute when the condition is false.",
 			],
 			suggestions: [
 				"Remove the `else` keyword and un-indent the contents of the `else` block.",
@@ -102,7 +112,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						currentNode = currentNode.elseStatement;
 					}
 
-					if (!thenBranches.every(alwaysReturns)) {
+					if (!thenBranches.every(alwaysTerminates)) {
 						return;
 					}
 

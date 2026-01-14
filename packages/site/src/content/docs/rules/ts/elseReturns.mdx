@@ -1,5 +1,5 @@
 ---
-description: "Reports unnecessary `else` blocks following `if` statements that always return."
+description: "Reports unnecessary `else` blocks following `if` statements that always return or throw."
 title: "elseReturns"
 topic: "rules"
 ---
@@ -10,8 +10,13 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="elseReturns" />
 
-When an `if` block always ends with a `return` statement, any code in the `else` block is unnecessary because it will only execute when the condition is false.
+When an `if` block always ends with a terminating statement (`return` or `throw`), any code in the `else` block is unnecessary because it will only execute when the condition is false.
 Removing the `else` clause reduces nesting and improves code readability.
+
+This rule also handles:
+
+- `throw` statements as terminating statements
+- Nested `if`/`else` blocks where the inner if-else always terminates (making the outer else unnecessary)
 
 ## Examples
 
