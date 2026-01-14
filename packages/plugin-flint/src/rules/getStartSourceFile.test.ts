@@ -74,7 +74,7 @@ const range = [
 	],
 	valid: [
 		`import ts from "typescript"; declare const node: ts.Node; declare const sourceFile: ts.SourceFile; node.getStart(sourceFile)`,
-		`import ts from "typescript"; declare const custom: ts.Node; declare const sourceFile: ts.SourceFile; const custom = node.getStart(sourceFile)`,
+		`import ts from "typescript"; declare const custom: ts.Node; declare const sourceFile: ts.SourceFile; custom.getStart(sourceFile)`,
 		`import ts from "typescript"; function visit(node: ts.Node, sourceFile: ts.SourceFile) { return node.getStart(sourceFile); }`,
 		`import ts from "typescript"; declare const node: ts.Node; node.getEnd()`,
 		`declare const someOtherMethod: { getStart(): void }; someOtherMethod.getStart()`,
