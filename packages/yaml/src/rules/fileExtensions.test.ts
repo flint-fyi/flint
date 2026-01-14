@@ -4,18 +4,26 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `key: value`,
+			code: `
+key: value
+`,
 			fileName: "config.yml",
-			snapshot: `key: value
+			snapshot: `
+key: value
 ~
-Use .yaml extension instead of .yml for YAML files.`,
+Use .yaml extension instead of .yml for YAML files.
+`,
 		},
 		{
-			code: `name: test`,
+			code: `
+name: test
+`,
 			fileName: "settings.YML",
-			snapshot: `name: test
+			snapshot: `
+name: test
 ~
-Use .yaml extension instead of .yml for YAML files.`,
+Use .yaml extension instead of .yml for YAML files.
+`,
 		},
 	],
 	valid: [
