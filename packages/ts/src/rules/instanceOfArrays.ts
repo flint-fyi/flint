@@ -10,7 +10,7 @@ export default typescriptLanguage.createRule({
 		description:
 			"Reports using `instanceof Array` instead of `Array.isArray()`.",
 		id: "instanceOfArrays",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		useArrayIsArray: {
