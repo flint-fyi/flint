@@ -34,7 +34,7 @@ export async function runCliWatch(
 			return { renderer, runner };
 		}
 
-		const rerun = debounce(async (fileName: string) => {
+		const rerun = debounce((fileName: string) => {
 			if (fileName.startsWith("node_modules/.cache")) {
 				log(
 					"Skipping re-running watch mode for ignored change to: %s",
@@ -69,7 +69,7 @@ export async function runCliWatch(
 			},
 			(_, fileName) => {
 				if (fileName) {
-					void rerun(fileName);
+					rerun(fileName);
 				}
 			},
 		);
