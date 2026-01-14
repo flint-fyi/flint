@@ -1,8 +1,8 @@
 import { markdownLanguage } from "@flint.fyi/markdown-language";
+import type { WithPosition } from "@flint.fyi/markdown-language";
 import GithubSlugger from "github-slugger";
 import type { Heading, Html, Link, Node, Root, Text } from "mdast";
 
-import type { WithPosition } from "@flint.fyi/markdown-language";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(markdownLanguage, {

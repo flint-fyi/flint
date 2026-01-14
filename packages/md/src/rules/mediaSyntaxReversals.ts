@@ -1,7 +1,7 @@
 import { markdownLanguage } from "@flint.fyi/markdown-language";
+import type { WithPosition } from "@flint.fyi/markdown-language";
 import type { Heading, Paragraph, Text } from "mdast";
 
-import type { WithPosition } from "@flint.fyi/markdown-language";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(markdownLanguage, {
