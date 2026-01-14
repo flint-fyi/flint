@@ -10150,7 +10150,8 @@
 		"flint": {
 			"name": "exportFromImports",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
