@@ -29,15 +29,11 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
-						return;
-					}
-
-					const propertyAccess = node.expression;
 					if (
-						propertyAccess.name.kind !== SyntaxKind.Identifier ||
-						propertyAccess.name.text !== "getStart" ||
-						!isTypeFromTS(propertyAccess.expression, typeChecker, "Node")
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+						node.expression.name.kind !== SyntaxKind.Identifier ||
+						node.expression.name.text !== "getStart" ||
+						!isTypeFromTS(node.expression.expression, typeChecker, "Node")
 					) {
 						return;
 					}

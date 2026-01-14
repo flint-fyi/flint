@@ -16,7 +16,7 @@ function isTypeFromTSRecursive(
 	typeChecker: Checker,
 	typeName: string,
 ): boolean {
-	// `xx | ts[typeName] or `xx & ts[typeName]`
+	// `xx | ts[typeName]` or `xx & ts[typeName]`
 	if (type.isUnionOrIntersection()) {
 		return type.types.some((subType) =>
 			isTypeFromTSRecursive(subType, typeChecker, typeName),
