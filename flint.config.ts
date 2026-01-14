@@ -1,5 +1,5 @@
-import { flint } from "@flint.fyi/plugin-flint";
 import { node } from "@flint.fyi/node";
+import { flint } from "@flint.fyi/plugin-flint";
 import { spelling } from "@flint.fyi/spelling";
 import { defineConfig, globs, json, md, ts, yaml } from "flint";
 

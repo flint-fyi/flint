@@ -17,6 +17,10 @@ import mediaSyntaxReversals from "./rules/mediaSyntaxReversals.ts";
 import referenceLikeUrls from "./rules/referenceLikeUrls.ts";
 import tableColumnCounts from "./rules/tableColumnCounts.ts";
 
+// TODO: How do we appease TypeScript?!
+// The inferred type of 'default' cannot be named without a reference to ...
+export type * as language from "@flint.fyi/markdown-language";
+
 export const md = createPlugin({
 	files: {
 		all: ["**/*.md"],

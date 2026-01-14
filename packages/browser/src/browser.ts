@@ -16,6 +16,8 @@ import removeEventListenerExpressions from "./rules/removeEventListenerExpressio
 import scriptUrls from "./rules/scriptUrls.ts";
 import windowMessagingTargetOrigin from "./rules/windowMessagingTargetOrigin.ts";
 
+export type * from "@flint.fyi/typescript-language";
+
 export const browser = createPlugin({
 	name: "Browser",
 	rules: [

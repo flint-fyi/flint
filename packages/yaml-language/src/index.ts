@@ -1,1 +1,2 @@
-export { yamlLanguage } from "./language.ts";
+export * from "./language.ts";
+export type * from "./nodes.ts";

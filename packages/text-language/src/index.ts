@@ -1,2 +1,2 @@
-export { textLanguage } from "./language.ts";
+export * from "./language.ts";
 export type * from "./types.ts";
