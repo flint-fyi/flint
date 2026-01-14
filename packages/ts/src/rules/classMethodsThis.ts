@@ -1,4 +1,5 @@
 import ts from "typescript";
+import { z } from "zod";
 
 import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
@@ -10,52 +11,81 @@ type ClassMember =
 	| AST.PropertyDeclaration
 	| AST.SetAccessorDeclaration;
 
-function classImplementsInterface(
+interface RuleOptions {
+	ignoreClassesThatImplementAnInterface: "public-fields" | boolean;
+	ignoreOverrideMethods: boolean;
+}
+
+function classImplementsSomething(
 	classNode: AST.ClassDeclaration | AST.ClassExpression,
-) {
-	return classNode.heritageClauses?.some(
-		(clause) => clause.token === ts.SyntaxKind.ImplementsKeyword,
+): boolean {
+	return (
+		classNode.heritageClauses?.some(
+			(clause) => clause.token === ts.SyntaxKind.ImplementsKeyword,
+		) ?? false
 	);
 }
 
 function containsThis(node: ts.Node): boolean {
-	if (
-		node.kind === ts.SyntaxKind.ThisKeyword ||
-		node.kind === ts.SyntaxKind.SuperKeyword
-	) {
-		return true;
-	}
+	switch (node.kind) {
+		case ts.SyntaxKind.ClassDeclaration:
+		case ts.SyntaxKind.ClassExpression: {
+			const classNode = node as ts.ClassDeclaration | ts.ClassExpression;
+			for (const member of classNode.members) {
+				if (
+					ts.isPropertyDeclaration(member) &&
+					ts.isComputedPropertyName(member.name) &&
+					containsThis(member.name.expression)
+				) {
+					return true;
+				}
+			}
+			return false;
+		}
 
-	if (
-		node.kind === ts.SyntaxKind.ClassDeclaration ||
-		node.kind === ts.SyntaxKind.ClassExpression ||
-		node.kind === ts.SyntaxKind.FunctionDeclaration ||
-		node.kind === ts.SyntaxKind.FunctionExpression
-	) {
-		return false;
-	}
+		case ts.SyntaxKind.ClassStaticBlockDeclaration:
+		case ts.SyntaxKind.FunctionDeclaration:
+		case ts.SyntaxKind.FunctionExpression:
+			return false;
 
-	return ts.forEachChild(node, containsThis) ?? false;
+		case ts.SyntaxKind.SuperKeyword:
+		case ts.SyntaxKind.ThisKeyword:
+			return true;
+
+		default:
+			return ts.forEachChild(node, containsThis) ?? false;
+	}
 }
 
-function getMemberName(
+function getMemberDisplayName(
 	member: ClassMember,
 	sourceFile: ts.SourceFile,
 ): string | undefined {
+	const name = member.name;
+
 	if (
-		ts.isIdentifier(member.name) ||
-		ts.isStringLiteral(member.name) ||
-		ts.isNumericLiteral(member.name)
+		ts.isIdentifier(name) ||
+		ts.isStringLiteral(name) ||
+		ts.isNumericLiteral(name)
 	) {
-		return member.name.text;
+		return name.text;
 	}
 
-	if (ts.isPrivateIdentifier(member.name)) {
-		return member.name.text;
+	if (ts.isPrivateIdentifier(name)) {
+		return name.text;
 	}
 
-	if (ts.isComputedPropertyName(member.name)) {
-		return `[${member.name.expression.getText(sourceFile)}]`;
+	if (ts.isComputedPropertyName(name)) {
+		const expr = name.expression;
+		if (
+			ts.isStringLiteral(expr) ||
+			ts.isNoSubstitutionTemplateLiteral(expr) ||
+			ts.isNumericLiteral(expr)
+		) {
+			return expr.text;
+		}
+
+		return `[${expr.getText(sourceFile)}]`;
 	}
 
 	return undefined;
@@ -64,16 +94,63 @@ function getMemberName(
 function hasModifier(
 	modifiers: ts.NodeArray<AST.ModifierLike> | undefined,
 	kind: ts.SyntaxKind,
-) {
+): boolean {
 	return modifiers?.some((modifier) => modifier.kind === kind) ?? false;
 }
 
-function isOverrideMember(member: ClassMember) {
-	return hasModifier(member.modifiers, ts.SyntaxKind.OverrideKeyword);
+function isPublicMember(member: ClassMember): boolean {
+	if (ts.isPrivateIdentifier(member.name)) {
+		return false;
+	}
+
+	const modifiers = member.modifiers;
+	if (!modifiers) {
+		return true;
+	}
+
+	if (
+		modifiers.some(
+			(m) =>
+				m.kind === ts.SyntaxKind.PrivateKeyword ||
+				m.kind === ts.SyntaxKind.ProtectedKeyword,
+		)
+	) {
+		return false;
+	}
+
+	return true;
 }
 
-function isStaticMember(member: ClassMember) {
-	return hasModifier(member.modifiers, ts.SyntaxKind.StaticKeyword);
+function shouldSkipMember(
+	member: ClassMember,
+	classNode: AST.ClassDeclaration | AST.ClassExpression,
+	options: RuleOptions,
+): boolean {
+	if (hasModifier(member.modifiers, ts.SyntaxKind.StaticKeyword)) {
+		return true;
+	}
+
+	if (
+		options.ignoreOverrideMethods &&
+		hasModifier(member.modifiers, ts.SyntaxKind.OverrideKeyword)
+	) {
+		return true;
+	}
+
+	const implementsInterface = classImplementsSomething(classNode);
+	const ignoreImpl = options.ignoreClassesThatImplementAnInterface;
+
+	if (implementsInterface && ignoreImpl) {
+		if (ignoreImpl === true) {
+			return true;
+		}
+
+		if (isPublicMember(member)) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -95,37 +172,37 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			],
 		},
 	},
+	options: {
+		ignoreClassesThatImplementAnInterface: z
+			.union([z.boolean(), z.literal("public-fields")])
+			.default(false)
+			.describe(
+				"Whether to ignore classes that implement interfaces. Set to 'public-fields' to only ignore public members.",
+			),
+		ignoreOverrideMethods: z
+			.boolean()
+			.default(false)
+			.describe("Whether to ignore members with the 'override' modifier."),
+	},
 	setup(context) {
-		function shouldSkipMember(
-			member: ClassMember,
-			classNode: AST.ClassDeclaration | AST.ClassExpression,
-		) {
-			return (
-				isStaticMember(member) ||
-				isOverrideMember(member) ||
-				(classImplementsInterface(classNode) ?? false)
-			);
-		}
-
 		function reportMember(
 			member: ClassMember,
 			kind: string,
 			sourceFile: ts.SourceFile,
 			reportFromStart: boolean,
 		) {
-			const name = getMemberName(member, sourceFile) ?? "(anonymous)";
-			const begin = reportFromStart
-				? member.getStart(sourceFile)
-				: member.name.getStart(sourceFile);
+			const name = getMemberDisplayName(member, sourceFile);
+			if (!name) {
+				return;
+			}
+
+			const beginNode = reportFromStart ? member : member.name;
 
 			context.report({
-				data: {
-					kind,
-					name,
-				},
+				data: { kind, name },
 				message: "missingThis",
 				range: {
-					begin,
+					begin: beginNode.getStart(sourceFile),
 					end: member.name.getEnd(),
 				},
 			});
@@ -135,77 +212,90 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			member: AST.MethodDeclaration,
 			classNode: AST.ClassDeclaration | AST.ClassExpression,
 			sourceFile: ts.SourceFile,
+			options: RuleOptions,
 		) {
-			if (shouldSkipMember(member, classNode) || !member.body) {
+			if (!member.body) {
+				return;
+			}
+			if (shouldSkipMember(member, classNode, options)) {
 				return;
 			}
 
-			if (containsThis(member.body)) {
-				return;
+			if (!containsThis(member.body)) {
+				reportMember(member, "method", sourceFile, false);
 			}
-
-			reportMember(member, "method", sourceFile, false);
 		}
 
 		function checkAccessor(
 			member: AST.GetAccessorDeclaration | AST.SetAccessorDeclaration,
 			classNode: AST.ClassDeclaration | AST.ClassExpression,
 			sourceFile: ts.SourceFile,
+			options: RuleOptions,
 			kind: "getter" | "setter",
 		) {
-			if (shouldSkipMember(member, classNode) || !member.body) {
+			if (!member.body) {
+				return;
+			}
+			if (shouldSkipMember(member, classNode, options)) {
 				return;
 			}
 
-			if (containsThis(member.body)) {
-				return;
+			if (!containsThis(member.body)) {
+				reportMember(member, kind, sourceFile, true);
 			}
-
-			reportMember(member, kind, sourceFile, true);
 		}
 
-		function checkPropertyArrowFunction(
+		function checkPropertyInitializerFunction(
 			member: AST.PropertyDeclaration,
 			classNode: AST.ClassDeclaration | AST.ClassExpression,
 			sourceFile: ts.SourceFile,
+			options: RuleOptions,
 		) {
-			if (shouldSkipMember(member, classNode)) {
+			const init = member.initializer;
+			if (!init) {
 				return;
 			}
 
+			const initKind = init.kind;
+
 			if (
-				!member.initializer ||
-				member.initializer.kind !== ts.SyntaxKind.ArrowFunction
+				initKind !== ts.SyntaxKind.ArrowFunction &&
+				initKind !== ts.SyntaxKind.FunctionExpression
 			) {
 				return;
 			}
 
-			const arrowFunction = member.initializer;
-
-			if (containsThis(arrowFunction.body)) {
+			if (shouldSkipMember(member, classNode, options)) {
 				return;
 			}
 
-			reportMember(member, "method", sourceFile, false);
+			const body = init.body;
+
+			if (!containsThis(body)) {
+				reportMember(member, "method", sourceFile, false);
+			}
 		}
 
 		function checkClass(
 			node: AST.ClassDeclaration | AST.ClassExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			{
+				options,
+				sourceFile,
+			}: { options: RuleOptions; sourceFile: ts.SourceFile },
 		) {
 			for (const member of node.members) {
 				switch (member.kind) {
 					case ts.SyntaxKind.GetAccessor:
-						checkAccessor(member, node, sourceFile, "getter");
+						checkAccessor(member, node, sourceFile, options, "getter");
 						break;
 					case ts.SyntaxKind.MethodDeclaration:
-						checkMethod(member, node, sourceFile);
+						checkMethod(member, node, sourceFile, options);
 						break;
 					case ts.SyntaxKind.PropertyDeclaration:
-						checkPropertyArrowFunction(member, node, sourceFile);
+						checkPropertyInitializerFunction(member, node, sourceFile, options);
 						break;
 					case ts.SyntaxKind.SetAccessor:
-						checkAccessor(member, node, sourceFile, "setter");
+						checkAccessor(member, node, sourceFile, options, "setter");
 						break;
 				}
 			}
