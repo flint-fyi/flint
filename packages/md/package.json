@@ -28,18 +28,6 @@
 		"test": "vitest --typecheck --project md"
 	},
 	"dependencies": {
-		"@flint.fyi/core": "workspace:",
-		"@flint.fyi/rule-tester": "workspace:",
-		"github-slugger": "^2.0.0",
-		"remark-parse": "^11.0.0",
-		"unified": "^11.0.5",
-		"unist-util-visit": "^5.0.0",
-		"vfile": "^6.0.3",
-		"vfile-location": "^5.0.3"
-	},
-	"devDependencies": {
-		"@types/github-slugger": "^2.0.0",
-		"@types/unist": "3.0.3"
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"mdast-util-from-markdown": "^2.0.2",
