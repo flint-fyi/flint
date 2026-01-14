@@ -25,11 +25,13 @@ const requiredAriaPropsForRole: Partial<Record<string, string[]>> = {
 	switch: ["aria-checked"],
 };
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports ARIA roles missing their required ARIA properties.",
 		id: "roleRequiredAriaProps",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingRequiredProps: {

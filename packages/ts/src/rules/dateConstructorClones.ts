@@ -9,12 +9,14 @@ function isDateType(node: AST.Expression, typeChecker: Checker) {
 	return typeChecker.getTypeAtLocation(node).getSymbol()?.getName() === "Date";
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer passing a `Date` directly to the `Date` constructor when cloning, rather than calling `getTime()`.",
 		id: "dateConstructorClones",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unnecessaryGetTime: {

@@ -7,13 +7,14 @@ import {
 } from "../language.ts";
 import type * as AST from "../types/ast.ts";
 import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer `{}` object literal notation or `Object.create` instead of calling or constructing `Object`.",
 		id: "objectCalls",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferObjectLiteral: {

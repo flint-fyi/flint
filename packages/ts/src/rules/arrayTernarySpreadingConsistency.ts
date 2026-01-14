@@ -1,13 +1,14 @@
 import * as ts from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports inconsistent types when spreading a ternary in an array literal.",
 		id: "arrayTernarySpreadingConsistency",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		inconsistentTypes: {

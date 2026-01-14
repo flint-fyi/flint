@@ -29,11 +29,13 @@ function findOctalEscape(
 	};
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using octal escape sequences in string literals.",
 		id: "octalEscapes",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noOctalEscape: {

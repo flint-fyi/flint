@@ -47,13 +47,17 @@ export async function* createDetailedReport(
 		yield indenter;
 		yield chalk.hex(ColorCodes.suggestionTextHighlight)(" Suggestions:");
 		yield "\n";
-		yield* report.message.suggestions.map((suggestion) =>
-			[
-				indenter,
-				chalk.hex(ColorCodes.suggestionMessage)("  • "),
-				formatSuggestion(report.data, suggestion),
-			].join("\n"),
-		);
+		yield* report.message.suggestions
+			.map((suggestion) =>
+				[
+					indenter,
+					chalk.hex(ColorCodes.suggestionMessage)("  • "),
+					formatSuggestion(report.data, suggestion),
+				].join(""),
+			)
+			.join("\n");
+
+		yield "\n";
 	} else {
 		yield `${indenter} `;
 		yield wrapIfNeeded(

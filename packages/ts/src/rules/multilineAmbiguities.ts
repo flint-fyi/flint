@@ -2,13 +2,14 @@ import * as ts from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
 import type * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports ambiguous multiline expressions that could be misinterpreted.",
 		id: "multilineAmbiguities",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		ambiguity: {

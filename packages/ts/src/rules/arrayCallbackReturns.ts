@@ -19,12 +19,14 @@ const arrayMethodsRequiringReturn = new Set([
 	"toSorted",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports missing return statements in callbacks of array methods.",
 		id: "arrayCallbackReturns",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		missingReturn: {

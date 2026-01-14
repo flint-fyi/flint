@@ -35,12 +35,14 @@ function isConsoleMethodCall(node: AST.Expression, typeChecker: Checker) {
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallow leading or trailing spaces in console method string arguments.",
 		id: "consoleSpaces",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		leading: {
