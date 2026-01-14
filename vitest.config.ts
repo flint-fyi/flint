@@ -15,7 +15,7 @@ export default defineConfig({
 					name,
 					root: path.join(import.meta.dirname, "packages", name),
 					setupFiles: [
-						"console-fail-test/setup",
+						// "console-fail-test/setup",
 						"@flint.fyi/ts-patch/install-patch-hooks",
 					],
 					testTimeout: 10_000,

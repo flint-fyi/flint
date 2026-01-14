@@ -1,183 +1,212 @@
 import rule from "./impliedEvals.ts";
 import { ruleTester } from "./ruleTester.ts";
 
-const globalDeclarations = `
-declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
-declare function setInterval(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
-declare function setImmediate(handler: string | ((...args: unknown[]) => void)): number;
-declare function execScript(code: string): void;
-declare var window: { setTimeout: typeof setTimeout; setInterval: typeof setInterval };
-declare var globalThis: { setTimeout: typeof setTimeout; setInterval: typeof setInterval };
-export {};
-`;
-
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `${globalDeclarations}
+			code: `
 setTimeout("code", 0);
 `,
-			snapshot: `${globalDeclarations}
+			// only: true,
+			snapshot: `
 setTimeout("code", 0);
            ~~~~~~
-           Avoid passing strings to setTimeout; pass a function instead.
+           Avoid passing unsafe strings to setTimeout; pass a function instead.
 `,
 		},
 		{
-			code: `${globalDeclarations}
+			code: `
 setInterval("code", 0);
 `,
-			snapshot: `${globalDeclarations}
+			snapshot: `
 setInterval("code", 0);
             ~~~~~~
-            Avoid passing strings to setInterval; pass a function instead.
+            Avoid passing unsafe strings to setInterval; pass a function instead.
 `,
 		},
 		{
-			code: `${globalDeclarations}
+			code: `
 setImmediate("code");
 `,
-			snapshot: `${globalDeclarations}
+			snapshot: `
 setImmediate("code");
              ~~~~~~
-             Avoid passing strings to setImmediate; pass a function instead.
+             Avoid passing unsafe strings to setImmediate; pass a function instead.
 `,
 		},
 		{
-			code: `${globalDeclarations}
+			code: `
 execScript("code");
 `,
-			snapshot: `${globalDeclarations}
+			snapshot: `
 execScript("code");
            ~~~~~~
-           Avoid passing strings to execScript; pass a function instead.
+           Avoid passing unsafe strings to execScript; pass a function instead.
 `,
 		},
 		{
-			code: `${globalDeclarations}
+			code: `
 window.setTimeout("code", 0);
 `,
-			snapshot: `${globalDeclarations}
+			snapshot: `
 window.setTimeout("code", 0);
                   ~~~~~~
-                  Avoid passing strings to setTimeout; pass a function instead.
+                  Avoid passing unsafe strings to setTimeout; pass a function instead.
 `,
 		},
 		{
-			code: `${globalDeclarations}
+			code: `
 globalThis.setInterval("code", 0);
 `,
-			snapshot: `${globalDeclarations}
+			snapshot: `
 globalThis.setInterval("code", 0);
                        ~~~~~~
-                       Avoid passing strings to setInterval; pass a function instead.
+                       Avoid passing unsafe strings to setInterval; pass a function instead.
 `,
 		},
 		{
-			code: `${globalDeclarations}
+			code: `
 window["setTimeout"]("code", 0);
 `,
-			snapshot: `${globalDeclarations}
+			snapshot: `
 window["setTimeout"]("code", 0);
                      ~~~~~~
-                     Avoid passing strings to setTimeout; pass a function instead.
+                     Avoid passing unsafe strings to setTimeout; pass a function instead.
 `,
 		},
 		{
-			code: `${globalDeclarations}
+			code: `
 const code = "alert('hi');";
 setTimeout(code, 100);
 `,
-			snapshot: `${globalDeclarations}
+			snapshot: `
 const code = "alert('hi');";
 setTimeout(code, 100);
            ~~~~
-           Avoid passing strings to setTimeout; pass a function instead.
+           Avoid passing unsafe strings to setTimeout; pass a function instead.
 `,
 		},
 		{
-			code: `${globalDeclarations}
+			code: `
 setTimeout(\`code\`, 100);
 `,
-			snapshot: `${globalDeclarations}
+			snapshot: `
 setTimeout(\`code\`, 100);
            ~~~~~~
-           Avoid passing strings to setTimeout; pass a function instead.
+           Avoid passing unsafe strings to setTimeout; pass a function instead.
 `,
 		},
 		{
-			code: `${globalDeclarations}
+			code: `
 const template = \`code\`;
 setInterval(template, 1000);
 `,
-			snapshot: `${globalDeclarations}
+			snapshot: `
 const template = \`code\`;
 setInterval(template, 1000);
             ~~~~~~~~
-            Avoid passing strings to setInterval; pass a function instead.
+            Avoid passing unsafe strings to setInterval; pass a function instead.
 `,
 		},
 		{
 			code: `
 new Function("return 1 + 1");
-export {};
 `,
 			snapshot: `
 new Function("return 1 + 1");
     ~~~~~~~~
-    Avoid using the Function constructor to create functions.
-export {};
+    Avoid using the unsafe Function constructor to create functions.
 `,
 		},
 		{
 			code: `
 Function("return 1 + 1");
-export {};
 `,
 			snapshot: `
 Function("return 1 + 1");
 ~~~~~~~~
-Avoid using the Function constructor to create functions.
-export {};
+Avoid using the unsafe Function constructor to create functions.
 `,
 		},
 		{
 			code: `
 new Function("a", "b", "return a + b");
-export {};
 `,
 			snapshot: `
 new Function("a", "b", "return a + b");
     ~~~~~~~~
-    Avoid using the Function constructor to create functions.
-export {};
+    Avoid using the unsafe Function constructor to create functions.
 `,
 		},
 		{
-			code: `${globalDeclarations}
+			code: `
+declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
 const getCode = (): string => "code";
 setTimeout(getCode(), 0);
 `,
-			snapshot: `${globalDeclarations}
+			snapshot: `
+declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
 const getCode = (): string => "code";
 setTimeout(getCode(), 0);
            ~~~~~~~~~
-           Avoid passing strings to setTimeout; pass a function instead.
+           Avoid passing unsafe strings to setTimeout; pass a function instead.
 `,
 		},
 	],
 	valid: [
-		`${globalDeclarations}setTimeout(() => {}, 100);`,
-		`${globalDeclarations}setInterval(function() {}, 1000);`,
-		`${globalDeclarations}setImmediate(() => {});`,
-		`${globalDeclarations}declare const callback: () => void; setTimeout(callback, 100);`,
-		`${globalDeclarations}declare function someFunction(): void; setInterval(someFunction, 1000);`,
-		`${globalDeclarations}const fn = () => {}; setTimeout(fn, 100);`,
-		`${globalDeclarations}declare const fn: { bind: (ctx: unknown) => () => void }; setTimeout(fn.bind(this), 100);`,
-		`${globalDeclarations}window.setTimeout(() => {}, 100);`,
-		`${globalDeclarations}declare const callback: () => void; globalThis.setInterval(callback, 1000);`,
-		`${globalDeclarations}declare function getCallback(): () => void; setTimeout(getCallback(), 100);`,
-		`${globalDeclarations}const getCallback = (): (() => void) => () => {}; setTimeout(getCallback(), 100);`,
+		`
+declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
+setTimeout(() => {}, 100);
+export {};
+`,
+		`
+declare function setInterval(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
+setInterval(function() {}, 1000);
+export {};
+`,
+		`
+declare function setImmediate(handler: string | ((...args: unknown[]) => void)): number;
+setImmediate(() => {});
+export {};
+`,
+		`
+declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
+declare const callback: () => void; setTimeout(callback, 100);
+export {};
+`,
+		`
+declare function setInterval(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
+declare function someFunction(): void; setInterval(someFunction, 1000);
+export {};
+`,
+		`
+declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
+const fn = () => {}; setTimeout(fn, 100);
+export {};
+`,
+		`
+declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
+declare const fn: { bind: (ctx: unknown) => () => void }; setTimeout(fn.bind(this), 100);
+export {};
+`,
+		`
+window.setTimeout(() => {}, 100);
+export {};
+`,
+		`
+declare const callback: () => void; globalThis.setInterval(callback, 1000);
+export {};
+`,
+		`
+declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
+declare function getCallback(): () => void; setTimeout(getCallback(), 100);
+export {};
+`,
+		`
+declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
+const getCallback = (): (() => void) => () => {}; setTimeout(getCallback(), 100);
+export {};
+`,
 		`
 function setTimeout(input: string, value: number) {}
 setTimeout("", 0);

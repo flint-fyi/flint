@@ -11,14 +11,14 @@ import RuleSummary from "~/components/RuleSummary.astro";
 <RuleSummary plugin="ts" rule="impliedEvals" />
 
 JavaScript's `eval()` function is generally discouraged because it executes arbitrary strings as code, making programs harder to analyze and creating potential security vulnerabilities.
-However, several other APIs also evaluate strings as code:
+Several other APIs similarly evaluate strings as code:
 
 - `setTimeout()` and `setInterval()` accept a string as their first argument
 - `setImmediate()` accepts a string as its first argument
 - `execScript()` (Internet Explorer only) accepts a string
 - The `Function` constructor creates functions from strings
 
-These "implied evals" have the same problems as `eval()`: they're difficult to analyze statically, prevent certain optimizations, and can introduce security risks if the string contains untrusted content.
+These "implied evals" have the same problems as `eval()`: they're difficult to analyze statically, prevent many optimizations, and can introduce security risks if the string contains untrusted content.
 
 ## Examples
 
@@ -84,7 +84,7 @@ This rule is not configurable.
 
 If you have a specific use case that requires dynamic code evaluation and you've carefully considered the security implications, you might disable this rule for those specific instances.
 For example, certain build tools or code playgrounds may legitimately need to use these APIs with string arguments.
-Consider using ESLint disable comments for those specific lines rather than disabling the rule entirely.
+Consider using Flint disable comments for those specific lines rather than disabling the rule entirely.
 
 ## Further Reading
 
