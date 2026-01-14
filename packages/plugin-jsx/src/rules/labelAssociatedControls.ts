@@ -15,12 +15,14 @@ const controlElements = new Set([
 	"textarea",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports <label> elements without an associated control element.",
 		id: "labelAssociatedControls",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingAssociatedControl: {

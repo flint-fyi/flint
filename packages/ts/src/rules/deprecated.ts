@@ -3,12 +3,13 @@ import * as ts from "typescript";
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Disallow using code marked as @deprecated.",
 		id: "deprecated",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		deprecated: {

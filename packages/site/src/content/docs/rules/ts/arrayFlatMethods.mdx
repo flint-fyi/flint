@@ -1,0 +1,96 @@
+---
+description: "Reports legacy techniques to flatten arrays instead of using `.flat()`."
+title: "arrayFlatMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayFlatMethods" />
+
+ES2019 introduced `Array.prototype.flat()` as the standard way to flatten arrays.
+`.flat()` is a more modern and concise way to flatten arrays compared to older techniques:
+
+- `array.flatMap(value => value)`
+- `[].concat(...array)`
+- `[].concat.apply([], array)`
+- `Array.prototype.concat.apply([], array)`
+- `Array.prototype.concat.call([], ...array)`
+
+This rule reports legacy techniques that can be replaced with `.flat()`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const array: number[][];
+array.flatMap((value) => value);
+```
+
+```ts
+declare const array: number[][];
+[].concat(...array);
+```
+
+```ts
+declare const array: number[][];
+[].concat.apply([], array);
+```
+
+```ts
+declare const array: number[][];
+Array.prototype.concat.apply([], array);
+```
+
+```ts
+declare const array: number[][];
+Array.prototype.concat.call([], ...array);
+```
+
+```ts
+declare const array: number[][];
+_.flatten(array);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const array: number[][];
+array.flat();
+```
+
+```ts
+declare const array: number[][];
+array.flatMap((value) => value.map((n) => n * 2));
+```
+
+```ts
+declare const array: number[];
+array.flatMap((value) => [value, value * 2]);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support environments that don't have `Array.prototype.flat()` (pre-ES2019), or if your codebase extensively uses lodash/underscore for array manipulation, this rule may not be for you.
+Alternately, if you have specific stylistic preferences that involve more verbose calls to granular APIs, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Array.prototype.flat()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat)
+- [MDN: Array.prototype.flatMap()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayFlatMethods" />

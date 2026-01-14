@@ -8,11 +8,13 @@ import { SyntaxKind } from "typescript";
 
 const headingElements = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports heading elements without accessible content.",
 		id: "headingContents",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		emptyHeading: {

@@ -4,13 +4,14 @@ import { getTSNodeRange } from "../getTSNodeRange.ts";
 import type { AST, TypeScriptFileServices } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using the `Array` constructor to create arrays instead of array literal syntax.",
 		id: "arrayConstructors",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		preferLiteral: {

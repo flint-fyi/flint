@@ -56,12 +56,14 @@ function isAttributeMethodName(
 	return attributeMethodNames.has(methodName);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer using element.dataset over getAttribute/setAttribute for data-* attributes.",
 		id: "nodeDatasetAttributes",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferDataset: {

@@ -1,5 +1,7 @@
 import type { FileDiskData, LanguageFileDefinition } from "@flint.fyi/core";
 import { fromMarkdown } from "mdast-util-from-markdown";
+import { gfmFromMarkdown } from "mdast-util-gfm";
+import { gfm } from "micromark-extension-gfm";
 import { visit } from "unist-util-visit";
 
 import type { MarkdownFileServices } from "./language.ts";
@@ -10,7 +12,10 @@ import type { MarkdownNodesByName } from "./nodes.ts";
 // it'll be a while before we can replace it with a native parser.
 // See the discussion in https://github.com/flint-fyi/flint/issues/1043.
 export function createMarkdownFile(data: FileDiskData) {
-	const root = fromMarkdown(data.sourceText);
+	const root = fromMarkdown(data.sourceText, {
+		extensions: [gfm()],
+		mdastExtensions: [gfmFromMarkdown()],
+	});
 
 	const languageFile: LanguageFileDefinition<
 		MarkdownNodesByName,

@@ -28,12 +28,14 @@ function getTypeofOperand(node: AST.Expression) {
 	return node.kind === SyntaxKind.TypeOfExpression && node.expression;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports typeof expressions that compare impossible string literals.",
 		id: "typeofComparisons",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		invalidValue: {

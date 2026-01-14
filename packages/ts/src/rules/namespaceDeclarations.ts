@@ -4,12 +4,13 @@ import { z } from "zod";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using legacy `namespace` declarations.",
 		id: "namespaceDeclarations",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		preferModules: {

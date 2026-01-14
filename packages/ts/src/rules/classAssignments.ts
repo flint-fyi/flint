@@ -1,11 +1,12 @@
 import { typescriptLanguage } from "../language.ts";
 import { getModifyingReferences } from "../utils/getModifyingReferences.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports reassigning class declarations.",
 		id: "classAssignments",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noClassAssign: {

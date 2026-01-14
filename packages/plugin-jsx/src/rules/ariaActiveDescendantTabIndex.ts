@@ -15,12 +15,14 @@ const inherentlyTabbableElements = new Set([
 	"textarea",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports elements with aria-activedescendant without tabIndex.",
 		id: "ariaActiveDescendantTabIndex",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingTabIndex: {
