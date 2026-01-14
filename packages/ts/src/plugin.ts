@@ -91,6 +91,7 @@ import globalObjectCalls from "./rules/globalObjectCalls.ts";
 import impliedEvals from "./rules/impliedEvals.ts";
 import instanceOfArrays from "./rules/instanceOfArrays.ts";
 import isNaNComparisons from "./rules/isNaNComparisons.ts";
+import misleadingVoidExpressions from "./rules/misleadingVoidExpressions.ts";
 import multilineAmbiguities from "./rules/multilineAmbiguities.ts";
 import namespaceDeclarations from "./rules/namespaceDeclarations.ts";
 import negativeZeroComparisons from "./rules/negativeZeroComparisons.ts";
@@ -221,6 +222,7 @@ export const ts = createPlugin({
 		impliedEvals,
 		instanceOfArrays,
 		isNaNComparisons,
+		misleadingVoidExpressions,
 		multilineAmbiguities,
 		namespaceDeclarations,
 		negativeZeroComparisons,
