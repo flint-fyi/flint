@@ -1,7 +1,7 @@
 import { markdownLanguage } from "@flint.fyi/markdown-language";
 import type { Node, Root, Text } from "mdast";
 
-import type { WithPosition } from "../nodes.ts";
+import type { WithPosition } from "@flint.fyi/markdown-language";
 
 const invalidPattern = /\[[^\]]+\]\[\s+\]/g;
 

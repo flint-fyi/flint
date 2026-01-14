@@ -1,7 +1,7 @@
 import { markdownLanguage } from "@flint.fyi/markdown-language";
 import type { Definition, Node, Root, Text } from "mdast";
 
-import type { WithPosition } from "../nodes.ts";
+import type { WithPosition } from "@flint.fyi/markdown-language";
 
 // Pattern to match label references: ![text][label], [text][label], [label][], or [label]
 // Includes optional ! for images
