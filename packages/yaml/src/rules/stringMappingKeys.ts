@@ -1,12 +1,12 @@
 import { yamlLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-const nullPattern = /^(?:~|null|Null|NULL)?$/;
 const boolPattern =
 	/^(?:true|True|TRUE|false|False|FALSE|yes|Yes|YES|no|No|NO|on|On|ON|off|Off|OFF)$/;
 const intPattern = /^[-+]?(?:0|[1-9]\d*|0o[0-7]+|0x[\dA-Fa-f]+)$/;
 const floatPattern =
 	/^[-+]?(?:\.\d+|\d+(?:\.\d*)?)(?:[eE][-+]?\d+)?$|^[-+]?\.(?:inf|Inf|INF)$|^\.(?:nan|NaN|NAN)$/;
+const nullPattern = /^(?:~|null|Null|NULL)?$/;
 
 function isNonStringPlainScalar(value: string): boolean {
 	return (
@@ -21,8 +21,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Enforces mapping keys to be strings.",
 		id: "stringMappingKeys",
-		presets: ["logical"],
-		strictness: "strict",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		nonStringKey: {
@@ -31,7 +30,10 @@ export default ruleCreator.createRule(yamlLanguage, {
 				"Non-string keys can cause interoperability issues with parsers and programming languages that expect string keys.",
 				"Using non-string keys makes YAML documents harder to read and may lead to unexpected behavior.",
 			],
-			suggestions: ["TODO"],
+			suggestions: [
+				"Convert the keys to strings.",
+				"Switch to a different data structure, as multiple entries in arrays.",
+			],
 		},
 	},
 	setup(context) {
@@ -42,34 +44,34 @@ export default ruleCreator.createRule(yamlLanguage, {
 						return;
 					}
 
-					const keyContent = node.children[0];
+					const [keyContent] = node.children;
 
-					if (
-						keyContent.type !== "plain" &&
-						keyContent.type !== "quoteSingle" &&
-						keyContent.type !== "quoteDouble"
-					) {
-						context.report({
-							message: "nonStringKey",
-							range: {
-								begin: keyContent.position.start.offset,
-								end: keyContent.position.end.offset,
-							},
-						});
-						return;
-					}
+					switch (keyContent.type) {
+						case "plain":
+							if (isNonStringPlainScalar(keyContent.value)) {
+								context.report({
+									message: "nonStringKey",
+									range: {
+										begin: keyContent.position.start.offset,
+										end: keyContent.position.end.offset,
+									},
+								});
+							}
+							break;
 
-					if (
-						keyContent.type === "plain" &&
-						isNonStringPlainScalar(keyContent.value)
-					) {
-						context.report({
-							message: "nonStringKey",
-							range: {
-								begin: keyContent.position.start.offset,
-								end: keyContent.position.end.offset,
-							},
-						});
+						case "quoteDouble":
+						case "quoteSingle":
+							break;
+
+						default:
+							context.report({
+								message: "nonStringKey",
+								range: {
+									begin: keyContent.position.start.offset,
+									end: keyContent.position.end.offset,
+								},
+							});
+							break;
 					}
 				},
 			},
