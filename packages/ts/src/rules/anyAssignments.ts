@@ -24,12 +24,14 @@ function isTypeAnyOrUnknown(type: ts.Type): boolean {
 	return tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports assigning a value with type `any` to variables and properties.",
 		id: "anyAssignments",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsafeArrayDestructure: {

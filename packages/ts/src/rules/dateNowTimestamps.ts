@@ -5,13 +5,14 @@ import { typescriptLanguage } from "../language.ts";
 import * as AST from "../types/ast.ts";
 import type { Checker } from "../types/checker.ts";
 import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer the shorter `Date.now()` to get the number of milliseconds since the Unix Epoch.",
 		id: "dateNowTimestamps",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferDateNow: {

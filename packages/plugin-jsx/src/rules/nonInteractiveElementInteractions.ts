@@ -55,12 +55,14 @@ const nonInteractiveRoles = new Set([
 	"tooltip",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports non-interactive elements with interactive event handlers.",
 		id: "nonInteractiveElementInteractions",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidHandler: {

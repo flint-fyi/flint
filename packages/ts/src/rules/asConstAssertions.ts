@@ -31,12 +31,14 @@ function isLiteralType(node: AST.TypeNode): boolean {
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using explicit literal types when `as const` can be used.",
 		id: "asConstAssertions",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferAsConst: {

@@ -34,12 +34,14 @@ const implicitRoles: Record<string, string> = {
 	ul: "list",
 };
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports redundant ARIA roles on elements with implicit roles.",
 		id: "roleRedundancies",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		redundantRole: {

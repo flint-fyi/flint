@@ -37,12 +37,14 @@ function isModuleExportsAccessAssignment(
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prevent assignment to the `exports` variable in CommonJS modules.",
 		id: "exportsAssignments",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noExportsAssign: {

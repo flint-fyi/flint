@@ -4,13 +4,14 @@ import { getTSNodeRange } from "../getTSNodeRange.ts";
 import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 import { hasSameTokens } from "../utils/hasSameTokens.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports unnecessary `end` argument in `.slice()` calls when it equals the length or is `Infinity`.",
 		id: "arraySliceUnnecessaryEnd",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		unnecessaryEnd: {

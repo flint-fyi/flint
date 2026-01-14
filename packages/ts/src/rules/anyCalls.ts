@@ -7,14 +7,15 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isBuiltinSymbolLike } from "./utils/isBuiltinSymbolLike.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports calling a value with type `any`.",
 		id: "anyCalls",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsafeCall: {

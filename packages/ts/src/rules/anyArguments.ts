@@ -6,15 +6,16 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports calling a function with a value typed as `any` as an argument.",
 		id: "anyArguments",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsafeArgument: {

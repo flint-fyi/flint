@@ -5,16 +5,17 @@ import ts, { SyntaxKind } from "typescript";
 import { typescriptLanguage } from "../language.ts";
 import type * as AST from "../types/ast.ts";
 import type { Checker } from "../types/checker.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { getThisExpression } from "./utils/getThisExpression.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports returning a value with type `any` from a function.",
 		id: "anyReturns",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsafeReturn: {

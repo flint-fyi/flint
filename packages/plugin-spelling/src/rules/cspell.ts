@@ -3,6 +3,7 @@ import { parseJsonSafe } from "@flint.fyi/utils";
 import type { DocumentValidator } from "cspell-lib";
 
 import { createDocumentValidator } from "./createDocumentValidator.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
 interface CSpellConfigLike {
 	words?: string[];
@@ -13,11 +14,11 @@ interface FileTask {
 	text: string;
 }
 
-export default textLanguage.createRule({
+export default ruleCreator.createRule(textLanguage, {
 	about: {
 		description: "Runs the CSpell spell checker on any source code file.",
 		id: "cspell",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		issue: {

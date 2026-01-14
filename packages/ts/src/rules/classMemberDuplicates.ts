@@ -3,13 +3,14 @@ import ts, { SyntaxKind } from "typescript";
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
 import * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports duplicate class member names that will be overwritten.",
 		id: "classMemberDuplicates",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		duplicateMember: {

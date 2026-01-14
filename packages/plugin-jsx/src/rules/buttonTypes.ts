@@ -8,11 +8,13 @@ import { SyntaxKind } from "typescript";
 
 const validButtonTypes = new Set(["button", "reset", "submit"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports button elements without an explicit type attribute.",
 		id: "buttonTypes",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidType: {

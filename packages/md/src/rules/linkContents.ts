@@ -1,10 +1,11 @@
 import { markdownLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default markdownLanguage.createRule({
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports links with empty URLs or only empty fragments.",
 		id: "linkContents",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		emptyLink: {

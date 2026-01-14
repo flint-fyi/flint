@@ -6,11 +6,13 @@ import {
 } from "@flint.fyi/ts";
 import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports scope props on non-th elements.",
 		id: "scopeProps",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidScope: {

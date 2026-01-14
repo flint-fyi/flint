@@ -15,11 +15,13 @@ const allowedParents = new Set([
 	SyntaxKind.SetAccessor,
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports empty block statements that should contain code.",
 		id: "emptyBlocks",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		emptyBlock: {

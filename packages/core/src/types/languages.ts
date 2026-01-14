@@ -8,7 +8,22 @@ export type AnyLanguageFileDefinition = LanguageFileDefinition<object, object>;
 export type AnyLanguageFileFactory = LanguageFileFactory<object, object>;
 export type AnyLanguageFileMetadata = LanguageFileMetadata<object, object>;
 
-export interface CreateRule<AstNodesByName, FileServices extends object> {
+export type GetLanguageAstNodesByName<InputLanguage extends AnyLanguage> =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Fixes TS inference.
+	InputLanguage extends Language<infer AstNodesByName, infer _>
+		? AstNodesByName
+		: never;
+
+export type GetLanguageFileServices<InputLanguage extends AnyLanguage> =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Fixes TS inference.
+	InputLanguage extends Language<infer _, infer FileServices>
+		? FileServices
+		: never;
+
+export interface LanguageCreateRule<
+	AstNodesByName,
+	FileServices extends object,
+> {
 	<const About extends RuleAbout, const MessageId extends string>(
 		definition: RuleDefinition<
 			About,
@@ -54,7 +69,7 @@ export interface Language<
 	FileServices extends object,
 > extends LanguageDefinition<AstNodesByName, FileServices> {
 	createFileFactory(): LanguageFileFactory<AstNodesByName, FileServices>;
-	createRule: CreateRule<AstNodesByName, FileServices>;
+	createRule: LanguageCreateRule<AstNodesByName, FileServices>;
 }
 
 export interface LanguageAbout {

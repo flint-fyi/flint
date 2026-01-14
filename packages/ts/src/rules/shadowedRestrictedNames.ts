@@ -12,12 +12,14 @@ const restrictedNames = new Set([
 	"undefined",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports variable declarations that shadow JavaScript's restricted names.",
 		id: "shadowedRestrictedNames",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		shadowedRestrictedName: {

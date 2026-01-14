@@ -15,12 +15,14 @@ const windowLikeNames = new Set([
 	"window",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Requires specifying the targetOrigin argument when calling window.postMessage().",
 		id: "windowMessagingTargetOrigin",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingTargetOrigin: {
