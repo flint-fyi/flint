@@ -62,6 +62,7 @@ import destructuringConsistency from "./rules/destructuringConsistency.ts";
 import duplicateArguments from "./rules/duplicateArguments.ts";
 import dynamicDeletes from "./rules/dynamicDeletes.ts";
 import elseIfDuplicates from "./rules/elseIfDuplicates.ts";
+import elseReturns from "./rules/elseReturns.ts";
 import emptyBlocks from "./rules/emptyBlocks.ts";
 import emptyDestructures from "./rules/emptyDestructures.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
@@ -185,6 +186,7 @@ export const ts = createPlugin({
 		duplicateArguments,
 		dynamicDeletes,
 		elseIfDuplicates,
+		elseReturns,
 		emptyBlocks,
 		emptyDestructures,
 		emptyStaticBlocks,
