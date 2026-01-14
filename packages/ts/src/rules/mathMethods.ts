@@ -1,0 +1,260 @@
+import ts, { SyntaxKind } from "typescript";
+
+import { getTSNodeRange } from "../getTSNodeRange.ts";
+import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
+import type { Checker } from "../types/checker.ts";
+import { hasSameTokens } from "../utils/hasSameTokens.ts";
+import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
+import { ruleCreator } from "./ruleCreator.ts";
+import { skipParentheses } from "./utils/skipParentheses.ts";
+
+interface PatternMatch {
+	description: string;
+	replacement: string;
+}
+
+function checkLogDivideConstant(
+	node: AST.BinaryExpression,
+	typeChecker: Checker,
+	constantName: string,
+	replacementMethod: string,
+): PatternMatch | undefined {
+	if (node.operatorToken.kind !== SyntaxKind.SlashToken) {
+		return;
+	}
+
+	const left = skipParentheses(node.left);
+	const right = skipParentheses(node.right);
+
+	if (
+		isMathMethodCall(left, "log", typeChecker) &&
+		isMathProperty(right, constantName, typeChecker)
+	) {
+		return {
+			description: `Math.log(…) / Math.${constantName}`,
+			replacement: `Math.${replacementMethod}(…)`,
+		};
+	}
+
+	return;
+}
+
+function checkLogTimesConstant(
+	node: AST.BinaryExpression,
+	typeChecker: Checker,
+	constantName: string,
+	replacementMethod: string,
+): PatternMatch | undefined {
+	if (node.operatorToken.kind !== SyntaxKind.AsteriskToken) {
+		return;
+	}
+
+	const left = skipParentheses(node.left);
+	const right = skipParentheses(node.right);
+
+	if (
+		isMathMethodCall(left, "log", typeChecker) &&
+		isMathProperty(right, constantName, typeChecker)
+	) {
+		return {
+			description: `Math.log(…) * Math.${constantName}`,
+			replacement: `Math.${replacementMethod}(…)`,
+		};
+	}
+
+	if (
+		isMathProperty(left, constantName, typeChecker) &&
+		isMathMethodCall(right, "log", typeChecker)
+	) {
+		return {
+			description: `Math.${constantName} * Math.log(…)`,
+			replacement: `Math.${replacementMethod}(…)`,
+		};
+	}
+
+	return;
+}
+
+function flattenPlusExpression(node: AST.Expression): AST.Expression[] {
+	const unwrapped = skipParentheses(node);
+
+	if (
+		unwrapped.kind === SyntaxKind.BinaryExpression &&
+		unwrapped.operatorToken.kind === SyntaxKind.PlusToken
+	) {
+		return [
+			...flattenPlusExpression(unwrapped.left),
+			...flattenPlusExpression(unwrapped.right),
+		];
+	}
+
+	return [unwrapped];
+}
+
+function isMathMethodCall(
+	node: AST.Expression,
+	methodName: string,
+	typeChecker: Checker,
+) {
+	if (node.kind !== SyntaxKind.CallExpression || node.questionDotToken) {
+		return false;
+	}
+
+	if (node.arguments.length !== 1) {
+		return false;
+	}
+
+	const argument = node.arguments[0];
+	if (!argument || argument.kind === SyntaxKind.SpreadElement) {
+		return false;
+	}
+
+	return isMathProperty(node.expression, methodName, typeChecker);
+}
+
+function isMathProperty(
+	node: AST.Expression,
+	propertyName: string,
+	typeChecker: Checker,
+) {
+	if (
+		node.kind !== SyntaxKind.PropertyAccessExpression ||
+		node.questionDotToken
+	) {
+		return false;
+	}
+
+	return (
+		node.name.kind === SyntaxKind.Identifier &&
+		node.name.text === propertyName &&
+		node.expression.kind === SyntaxKind.Identifier &&
+		isGlobalDeclarationOfName(node.expression, "Math", typeChecker)
+	);
+}
+
+function isPow2Expression(
+	node: AST.Expression,
+	sourceFile: ts.SourceFile,
+): boolean {
+	const unwrapped = skipParentheses(node);
+
+	if (unwrapped.kind !== SyntaxKind.BinaryExpression) {
+		return false;
+	}
+
+	if (unwrapped.operatorToken.kind === SyntaxKind.AsteriskToken) {
+		return hasSameTokens(unwrapped.left, unwrapped.right, sourceFile);
+	}
+
+	if (unwrapped.operatorToken.kind === SyntaxKind.AsteriskAsteriskToken) {
+		const right = skipParentheses(unwrapped.right);
+		return right.kind === SyntaxKind.NumericLiteral && right.text === "2";
+	}
+
+	return false;
+}
+
+export default ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Prefer modern Math methods over legacy patterns.",
+		id: "mathMethods",
+		presets: ["stylisticStrict"],
+	},
+	messages: {
+		preferModernMath: {
+			primary: "Prefer `{{replacement}}` over `{{description}}`.",
+			secondary: [
+				"Modern Math methods are clearer and more explicit about their purpose.",
+				"These methods have been available since ES2015 and are well-supported in all modern environments.",
+			],
+			suggestions: ["Replace the legacy pattern with the modern Math method."],
+		},
+	},
+	setup(context) {
+		return {
+			visitors: {
+				BinaryExpression: (node, { sourceFile, typeChecker }) => {
+					const logPatterns = [
+						{ constantName: "LOG10E", replacementMethod: "log10" },
+						{ constantName: "LOG2E", replacementMethod: "log2" },
+					];
+
+					for (const { constantName, replacementMethod } of logPatterns) {
+						const match = checkLogTimesConstant(
+							node,
+							typeChecker,
+							constantName,
+							replacementMethod,
+						);
+						if (match) {
+							context.report({
+								data: {
+									description: match.description,
+									replacement: match.replacement,
+								},
+								message: "preferModernMath",
+								range: getTSNodeRange(node, sourceFile),
+							});
+							return;
+						}
+					}
+
+					const lnPatterns = [
+						{ constantName: "LN10", replacementMethod: "log10" },
+						{ constantName: "LN2", replacementMethod: "log2" },
+					];
+
+					for (const { constantName, replacementMethod } of lnPatterns) {
+						const match = checkLogDivideConstant(
+							node,
+							typeChecker,
+							constantName,
+							replacementMethod,
+						);
+						if (match) {
+							context.report({
+								data: {
+									description: match.description,
+									replacement: match.replacement,
+								},
+								message: "preferModernMath",
+								range: getTSNodeRange(node, sourceFile),
+							});
+							return;
+						}
+					}
+				},
+				CallExpression: (node, { sourceFile, typeChecker }) => {
+					if (!isMathMethodCall(node, "sqrt", typeChecker)) {
+						return;
+					}
+
+					const argument = node.arguments[0];
+					if (!argument) {
+						return;
+					}
+
+					const expressions = flattenPlusExpression(argument);
+
+					if (
+						!expressions.every((expr) => isPow2Expression(expr, sourceFile))
+					) {
+						return;
+					}
+
+					const replacementMethod = expressions.length === 1 ? "abs" : "hypot";
+
+					context.report({
+						data: {
+							description: "Math.sqrt(…)",
+							replacement: `Math.${replacementMethod}(…)`,
+						},
+						message: "preferModernMath",
+						range: getTSNodeRange(node, sourceFile),
+					});
+				},
+			},
+		};
+	},
+});
