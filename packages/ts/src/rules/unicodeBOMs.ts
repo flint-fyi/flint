@@ -1,10 +1,11 @@
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports files with Unicode Byte Order Marks (BOMs).",
 		id: "unicodeBOMs",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		noBOM: {

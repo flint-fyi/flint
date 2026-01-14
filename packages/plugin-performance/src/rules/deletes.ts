@@ -1,6 +1,8 @@
 import { typescriptLanguage } from "@flint.fyi/ts";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "../ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using the delete operator.",
 		id: "deletes",

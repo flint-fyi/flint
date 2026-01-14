@@ -1,0 +1,100 @@
+---
+description: "Reports using `.indexOf()` comparisons that can be replaced with `.includes()`."
+title: "arrayIncludes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayIncludes" />
+
+Prior to ES2015, `Array#indexOf` and `String#indexOf` comparisons against `-1` were the standard ways to check whether a value exists in an array or string.
+ES2015 added `String.prototype.includes()` and ES2016 added `Array.prototype.includes()`, which are more readable and expressive.
+
+This rule reports when an `.indexOf()` comparison can be replaced with `.includes()`.
+It checks for any receiver object that has both `.indexOf()` and `.includes()` methods with compatible parameters.
+
+Matching types include: `String`, `Array`, `ReadonlyArray`, and typed arrays.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const array: number[];
+declare const value: number;
+array.indexOf(value) !== -1;
+```
+
+```ts
+declare const array: number[];
+declare const value: number;
+array.indexOf(value) === -1;
+```
+
+```ts
+declare const array: number[];
+declare const value: number;
+array.indexOf(value) > -1;
+```
+
+```ts
+declare const array: number[];
+declare const value: number;
+array.indexOf(value) >= 0;
+```
+
+```ts
+declare const str: string;
+str.indexOf("test") !== -1;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const array: number[];
+declare const value: number;
+array.includes(value);
+```
+
+```ts
+declare const array: number[];
+declare const value: number;
+!array.includes(value);
+```
+
+```ts
+declare const str: string;
+str.includes("test");
+```
+
+```ts
+declare const array: number[];
+declare const value: number;
+const index = array.indexOf(value);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support environments that don't have `Array.prototype.includes()` (pre-ES2016) or `String.prototype.includes()` (pre-ES2015), or if you need the actual index returned by `.indexOf()`, you may disable this rule.
+
+## Further Reading
+
+- [MDN: Array.prototype.includes()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
+- [MDN: String.prototype.includes()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes)
+- [MDN: Array.prototype.indexOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayIncludes" />

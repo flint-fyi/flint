@@ -6,13 +6,14 @@ import {
 	typescriptLanguage,
 } from "../language.ts";
 import * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports functions with duplicate parameter names in their signatures.",
 		id: "duplicateArguments",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		duplicateParam: {

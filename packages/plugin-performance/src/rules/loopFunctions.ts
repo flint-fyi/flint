@@ -6,7 +6,9 @@ import {
 import * as tsutils from "ts-api-utils";
 import ts, { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "../ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports function declarations and expressions inside loops that reference variables modified by the loop.",

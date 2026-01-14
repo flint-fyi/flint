@@ -20,12 +20,14 @@ const methodReplacements: Record<string, string> = {
 	getElementsByTagNameNS: "querySelectorAll",
 };
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer modern `querySelector` and `querySelectorAll` over legacy DOM query methods.",
 		id: "nodeQueryMethods",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferQuerySelector: {

@@ -1,11 +1,13 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports <html> elements without a lang prop.",
 		id: "htmlLangs",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingLang: {

@@ -2,12 +2,14 @@ import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import { nullThrows } from "@flint.fyi/utils";
 import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer reading JSON files as buffers when using JSON.parse for better performance.",
 		id: "fileReadJSONBuffers",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferBufferReading: {

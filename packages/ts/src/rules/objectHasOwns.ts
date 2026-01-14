@@ -5,13 +5,14 @@ import { typescriptLanguage } from "../language.ts";
 import * as AST from "../types/ast.ts";
 import type { Checker } from "../types/checker.ts";
 import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer Object.hasOwn() over Object.prototype.hasOwnProperty.call() for checking own properties.",
 		id: "objectHasOwns",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferHasOwn: {

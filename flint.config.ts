@@ -11,7 +11,7 @@ export default defineConfig({
 		},
 		{
 			files: md.files.all,
-			rules: md.presets.logical,
+			rules: md.presets.logicalStrict,
 		},
 		{
 			files: {
@@ -20,10 +20,10 @@ export default defineConfig({
 			},
 			rules: [
 				flint.presets.logical,
-				node.presets.logical,
-				node.presets.stylistic,
-				ts.presets.logical,
-				ts.presets.stylistic,
+				node.presets.logicalStrict,
+				node.presets.stylisticStrict,
+				ts.presets.logicalStrict,
+				ts.presets.stylisticStrict,
 			],
 		},
 		{
