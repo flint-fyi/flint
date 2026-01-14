@@ -1,0 +1,7 @@
+{
+	"name": "test-new-syntax",
+	"version": "1.0.0",
+	"engines": {
+		"node": ">=20.0.0"
+	}
+}

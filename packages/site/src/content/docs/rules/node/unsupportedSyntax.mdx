@@ -1,0 +1,113 @@
+---
+description: "Disallow using ECMAScript syntax not supported in the configured Node.js version."
+title: "unsupportedSyntax"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="unsupportedSyntax" />
+
+ECMAScript introduces new syntax features over time, and Node.js adds support for them in specific versions.
+Using syntax not supported by your target Node.js version will cause syntax errors at runtime.
+
+This rule checks the `engines.node` field in your `package.json` and reports usage of syntax that is not available in the specified version range.
+
+## Supported Syntax Features
+
+This rule currently checks for:
+
+- **Optional chaining** (`?.`) - Node.js 14.0.0+
+- **Nullish coalescing** (`??`) - Node.js 14.0.0+
+- **Logical assignment operators** (`&&=`, `||=`, `??=`) - Node.js 15.0.0+
+- **Class static blocks** - Node.js 16.11.0+
+- **Private class members** (`#field`) - Node.js 12.0.0+
+- **Class fields** - Node.js 12.0.0+
+- **Numeric separators** (`1_000_000`) - Node.js 12.5.0+
+- **Async/await** - Node.js 7.6.0+
+- **Async iteration** (`for await...of`) - Node.js 10.0.0+
+- **Dynamic import** - Node.js 13.2.0+
+- **Top-level await** - Node.js 14.8.0+
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// With package.json: { "engines": { "node": ">=12.0.0" } }
+// Optional chaining was added in Node.js 14.0.0
+const value = obj?.property;
+```
+
+```ts
+// With package.json: { "engines": { "node": ">=12.0.0" } }
+// Nullish coalescing was added in Node.js 14.0.0
+const result = value ?? defaultValue;
+```
+
+```ts
+// With package.json: { "engines": { "node": ">=12.0.0" } }
+// Logical assignment was added in Node.js 15.0.0
+count ||= 1;
+```
+
+```ts
+// With package.json: { "engines": { "node": ">=12.0.0" } }
+// Class static blocks were added in Node.js 16.11.0
+class Example {
+	static {
+		console.log("init");
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// With package.json: { "engines": { "node": ">=20.0.0" } }
+// All modern syntax is supported
+const value = obj?.property;
+const result = value ?? defaultValue;
+count ||= 1;
+```
+
+```ts
+// Using only syntax supported in your version
+// With package.json: { "engines": { "node": ">=12.0.0" } }
+async function doWork() {
+	await fetch();
+}
+
+class Example {
+	field = 1;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are transpiling your code with a tool like Babel or TypeScript that compiles modern syntax to older JavaScript, this rule may produce false positives.
+Disable it for projects where you know compilation is in place.
+
+If your project does not specify an `engines.node` field in `package.json`, this rule will not report any issues.
+
+## Further Reading
+
+- [node.green - Node.js ECMAScript compatibility tables](https://node.green/)
+- [npm: package.json engines](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#engines)
+- [TC39 Finished Proposals](https://github.com/tc39/proposals/blob/main/finished-proposals.md)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="unsupportedSyntax" />

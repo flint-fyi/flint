@@ -11,6 +11,7 @@ import filePathsFromImportMeta from "./rules/filePathsFromImportMeta.ts";
 import fileReadJSONBuffers from "./rules/fileReadJSONBuffers.ts";
 import nodeProtocols from "./rules/nodeProtocols.ts";
 import processExits from "./rules/processExits.ts";
+import unsupportedSyntax from "./rules/unsupportedSyntax.ts";
 
 export const node = createPlugin({
 	name: "Node.js",
@@ -26,5 +27,6 @@ export const node = createPlugin({
 		fileReadJSONBuffers,
 		nodeProtocols,
 		processExits,
+		unsupportedSyntax,
 	],
 });
