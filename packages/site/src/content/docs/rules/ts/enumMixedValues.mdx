@@ -1,0 +1,172 @@
+---
+description: "Disallows using the spread operator when it might cause unexpected behavior."
+title: "enumMixedValues"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="enumMixedValues" />
+
+The spread operator (`...`) in JavaScript allows expanding iterables and objects into new contexts.
+However, spreading certain types can produce unexpected results because the spread behavior depends on the object's enumerable properties.
+
+This rule detects problematic spread usage patterns:
+
+- **Promise spread**: Spreading a Promise into an object produces an empty object since Promises don't have meaningful enumerable properties.
+- **Function spread**: Spreading a function without additional properties produces an empty object.
+- **Map spread**: Spreading a Map into an object produces an empty object since Map entries aren't enumerable properties.
+- **Array spread into object**: Spreading an array into an object produces an object with numeric indices as keys.
+- **Iterable spread into object**: Spreading iterables like Set or generators into objects can cause unexpected behavior.
+- **Class instance spread**: Spreading class instances loses all prototype methods and inheritance.
+- **Class declaration spread**: Spreading a class only copies static properties, losing the prototype chain.
+- **String spread into array**: Spreading strings can mishandle complex characters like emojis.
+
+## Examples
+
+### Promise Spread
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+async function fetchData() {
+	return { key: 1 };
+}
+const value = { ...fetchData() };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+async function fetchData() {
+	return { key: 1 };
+}
+const value = { ...(await fetchData()) };
+```
+
+</TabItem>
+</Tabs>
+
+### Array Spread into Object
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const items = [1, 2, 3];
+const value = { ...items };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const items = [1, 2, 3];
+const copy = [...items];
+```
+
+</TabItem>
+</Tabs>
+
+### Map Spread
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const map = new Map([
+	["a", 1],
+	["b", 2],
+]);
+const value = { ...map };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const map = new Map([
+	["a", 1],
+	["b", 2],
+]);
+const value = Object.fromEntries(map);
+```
+
+</TabItem>
+</Tabs>
+
+### Class Instance Spread
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class User {
+	name = "Alice";
+	greet() {
+		return `Hello, ${this.name}`;
+	}
+}
+const value = { ...new User() };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class User {
+	name = "Alice";
+	greet() {
+		return `Hello, ${this.name}`;
+	}
+}
+const user = new User();
+const value = { name: user.name };
+```
+
+</TabItem>
+</Tabs>
+
+### String Spread
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const text = "hello";
+const chars = [...text];
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const text = "hello";
+const segmenter = new Intl.Segmenter();
+const chars = [...segmenter.segment(text)].map((s) => s.segment);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your application intentionally works with raw data in unusual ways, such as directly manipulating class prototype chains, you might not want this rule.
+If you only have a few intentional uses of unusual spreads, consider using ESLint disable comments for those specific lines rather than disabling the rule entirely.
+
+## Further Reading
+
+- [MDN: Spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
+- [MDN: Intl.Segmenter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="enumMixedValues" />

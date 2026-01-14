@@ -66,6 +66,7 @@ import emptyBlocks from "./rules/emptyBlocks.ts";
 import emptyDestructures from "./rules/emptyDestructures.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
 import enumInitializers from "./rules/enumInitializers.ts";
+import enumMixedValues from "./rules/enumMixedValues.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
 import evolvingVariableTypes from "./rules/evolvingVariableTypes.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
@@ -189,6 +190,7 @@ export const ts = createPlugin({
 		emptyDestructures,
 		emptyStaticBlocks,
 		enumInitializers,
+		enumMixedValues,
 		equalityOperatorNegations,
 		evolvingVariableTypes,
 		exceptionAssignments,
