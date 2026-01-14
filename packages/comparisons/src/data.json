@@ -4711,7 +4711,8 @@
 		"flint": {
 			"name": "unsupportedGlobals",
 			"plugin": "node",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "skipped"
 		}
 	},
 	{
@@ -4737,7 +4738,8 @@
 		"flint": {
 			"name": "unsupportedSyntax",
 			"plugin": "node",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "skipped"
 		}
 	},
 	{
@@ -21520,7 +21522,8 @@
 		"flint": {
 			"name": "emptyMappingValues",
 			"plugin": "yaml",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -21587,6 +21590,7 @@
 			"name": "numericTrailingZeros",
 			"plugin": "yaml",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -21601,6 +21605,7 @@
 			"name": "plainScalars",
 			"plugin": "yaml",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
