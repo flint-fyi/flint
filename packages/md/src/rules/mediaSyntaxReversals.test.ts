@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 (Flint)[https://flint.fyi]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-This link syntax is reversed and will not render as an image.
+This link syntax is reversed and will not render as a link.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ This image syntax is reversed and will not render as an image.
 			snapshot: `
 # (Flint)[https://flint.fyi]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~
-  This link syntax is reversed and will not render as an image.
+  This link syntax is reversed and will not render as a link.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ Check out (this link)[https://example.com] for more info.
 			snapshot: `
 Check out (this link)[https://example.com] for more info.
           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          This link syntax is reversed and will not render as an image.
+          This link syntax is reversed and will not render as a link.
 `,
 		},
 		{
@@ -62,7 +62,7 @@ Both (link)[url] and !(image)[path] are wrong.
                      ~~~~~~~~~~~~~~
                      This image syntax is reversed and will not render as an image.
      ~~~~~~~~~~~
-     This link syntax is reversed and will not render as an image.
+     This link syntax is reversed and will not render as a link.
 `,
 		},
 	],

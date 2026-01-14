@@ -1,12 +1,13 @@
 import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports Symbol() calls without description arguments.",
 		id: "symbolDescriptions",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		missingDescription: {

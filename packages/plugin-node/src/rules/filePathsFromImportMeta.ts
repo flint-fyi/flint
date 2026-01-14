@@ -69,12 +69,14 @@ function isPathDirnameCall(node: AST.CallExpression): boolean {
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer `import.meta.dirname` and `import.meta.filename` over legacy file path techniques.",
 		id: "filePathsFromImportMeta",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferImportMetaDirname: {

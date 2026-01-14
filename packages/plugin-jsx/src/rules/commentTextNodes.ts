@@ -1,11 +1,13 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports JSX text nodes that contain comment syntax but are rendered as text.",
 		id: "commentTextNodes",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		commentAsText: {

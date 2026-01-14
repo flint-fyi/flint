@@ -4,13 +4,14 @@ import * as ts from "typescript";
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import type { AST, Checker } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports member access on a value with type `any`.",
 		id: "anyMemberAccess",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsafeComputedMemberAccess: {

@@ -1,13 +1,14 @@
 import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports catch clauses that only rethrow the caught error without modification.",
 		id: "unnecessaryCatches",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unnecessaryCatch: {

@@ -92,12 +92,14 @@ function isZero(node: AST.Expression) {
 	return ts.isNumericLiteral(node) && node.text === "0";
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports unnecessary array length checks before `.some()` or `.every()` calls.",
 		id: "arrayUnnecessaryLengthChecks",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unnecessaryLengthCheckEvery: {

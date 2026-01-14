@@ -11,12 +11,14 @@ const ambiguousWords = new Set([
 	"read more",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports anchor elements with ambiguous text that doesn't describe the link destination.",
 		id: "anchorAmbiguousText",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		ambiguousText: {

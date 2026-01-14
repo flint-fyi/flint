@@ -3,12 +3,13 @@ import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
 import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using async functions as Promise executor functions.",
 		id: "asyncPromiseExecutors",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		asyncPromiseExecutor: {

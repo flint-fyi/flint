@@ -97,11 +97,13 @@ function isLeftHandSide(node: AST.AnyNode) {
 	}
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Use destructured variables over properties for consistency.",
 		id: "destructuringConsistency",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		useDestructured: {

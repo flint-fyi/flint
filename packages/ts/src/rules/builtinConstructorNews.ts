@@ -47,12 +47,14 @@ const disallowsNew = new Set([
 	"Symbol",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Enforces using new for constructors that require it, and disallows new for primitive coercion functions.",
 		id: "builtinConstructorNews",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		disallowedNew: {

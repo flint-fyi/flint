@@ -1,13 +1,14 @@
 import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using the deprecated __proto__ property to access or modify an object's prototype.",
 		id: "objectProto",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noProto: {

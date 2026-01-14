@@ -7,12 +7,14 @@ const problematicEntities = [
 	{ entity: "}", toBrace: "{'}'}", toHTML: "&#125;" },
 ];
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallow unescaped HTML entities in JSX text that may cause rendering issues.",
 		id: "unescapedEntities",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		unescapedEntity: {
