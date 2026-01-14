@@ -1,11 +1,12 @@
-import { markdownLanguage } from "../language.js";
+import { markdownLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default markdownLanguage.createRule({
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description:
 			"Reports table rows with column counts that don't match the header.",
 		id: "tableColumnCounts",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		tooManyCells: {
@@ -30,7 +31,9 @@ export default markdownLanguage.createRule({
 						return;
 					}
 
-					const [headerRow, ...dataRows] = node.children;
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const headerRow = node.children[0]!;
+					const dataRows = node.children.slice(1);
 
 					for (const dataRow of dataRows) {
 						const dataCellCount = dataRow.children.length;

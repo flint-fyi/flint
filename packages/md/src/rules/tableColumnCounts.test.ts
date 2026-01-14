@@ -1,5 +1,5 @@
-import { ruleTester } from "./ruleTester.js";
-import rule from "./tableColumnCounts.js";
+import { ruleTester } from "./ruleTester.ts";
+import rule from "./tableColumnCounts.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
