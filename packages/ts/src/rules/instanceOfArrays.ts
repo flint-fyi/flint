@@ -31,15 +31,11 @@ export default typescriptLanguage.createRule({
 					}
 
 					const right = unwrapParenthesizedExpression(node.right);
-					if (right.kind !== SyntaxKind.Identifier) {
-						return;
-					}
-
-					if (right.text !== "Array") {
-						return;
-					}
-
-					if (!isGlobalDeclarationOfName(right, "Array", typeChecker)) {
+					if (
+						right.kind !== SyntaxKind.Identifier ||
+						right.text !== "Array" ||
+						!isGlobalDeclarationOfName(right, "Array", typeChecker)
+					) {
 						return;
 					}
 

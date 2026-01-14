@@ -57,7 +57,7 @@ This rule is not configurable.
 ## When Not To Use It
 
 If you are certain that your code will never receive arrays from other execution contexts (such as iframes) and you don't need to handle array-like objects, you might not need this rule.
-However, using `Array.isArray()` is generally considered a best practice for its reliability.
+Some projects with those characteristics prefer to stick with `instanceof` for consistency with other class instance checks.
 
 ## Further Reading
 
