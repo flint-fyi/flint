@@ -48,6 +48,7 @@ import classAssignments from "./rules/classAssignments.ts";
 import classFieldDeclarations from "./rules/classFieldDeclarations.ts";
 import classLiteralProperties from "./rules/classLiteralProperties.ts";
 import classMemberDuplicates from "./rules/classMemberDuplicates.ts";
+import classMethodsThis from "./rules/classMethodsThis.ts";
 import combinedPushes from "./rules/combinedPushes.ts";
 import consecutiveNonNullAssertions from "./rules/consecutiveNonNullAssertions.ts";
 import constantAssignments from "./rules/constantAssignments.ts";
@@ -62,6 +63,7 @@ import destructuringConsistency from "./rules/destructuringConsistency.ts";
 import duplicateArguments from "./rules/duplicateArguments.ts";
 import dynamicDeletes from "./rules/dynamicDeletes.ts";
 import elseIfDuplicates from "./rules/elseIfDuplicates.ts";
+import elseReturns from "./rules/elseReturns.ts";
 import emptyBlocks from "./rules/emptyBlocks.ts";
 import emptyDestructures from "./rules/emptyDestructures.ts";
 import emptyEnums from "./rules/emptyEnums.ts";
@@ -84,6 +86,8 @@ import functionNewCalls from "./rules/functionNewCalls.ts";
 import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
 import globalAssignments from "./rules/globalAssignments.ts";
 import globalObjectCalls from "./rules/globalObjectCalls.ts";
+import impliedEvals from "./rules/impliedEvals.ts";
+import instanceOfArrays from "./rules/instanceOfArrays.ts";
 import isNaNComparisons from "./rules/isNaNComparisons.ts";
 import multilineAmbiguities from "./rules/multilineAmbiguities.ts";
 import namespaceDeclarations from "./rules/namespaceDeclarations.ts";
@@ -172,6 +176,7 @@ export const ts = createPlugin({
 		classFieldDeclarations,
 		classLiteralProperties,
 		classMemberDuplicates,
+		classMethodsThis,
 		combinedPushes,
 		consecutiveNonNullAssertions,
 		constantAssignments,
@@ -186,6 +191,7 @@ export const ts = createPlugin({
 		duplicateArguments,
 		dynamicDeletes,
 		elseIfDuplicates,
+		elseReturns,
 		emptyBlocks,
 		emptyDestructures,
 		emptyEnums,
@@ -208,6 +214,8 @@ export const ts = createPlugin({
 		generatorFunctionYields,
 		globalAssignments,
 		globalObjectCalls,
+		impliedEvals,
+		instanceOfArrays,
 		isNaNComparisons,
 		multilineAmbiguities,
 		namespaceDeclarations,
