@@ -4,56 +4,17 @@ import { yamlLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function canBePlain(value: string) {
-	if (value.length === 0) {
-		return false;
-	}
-
-	if (/^[\s#&*!|>'"%@`[\]{}]/.test(value)) {
-		return false;
-	}
-
-	if (/[\s]$/.test(value)) {
-		return false;
-	}
-
-	if (value.includes(": ") || value.includes(" #")) {
-		return false;
-	}
-
-	if (/^[-?:](?:\s|$)/.test(value)) {
-		return false;
-	}
-
-	if (/^(true|false|null|yes|no|on|off|y|n)$/i.test(value)) {
-		return false;
-	}
-
-	if (/^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$/.test(value)) {
-		return false;
-	}
-
-	if (/[\n\r]/.test(value)) {
-		return false;
-	}
-
-	return true;
-}
-
-function handleQuotedNode(
-	node: yaml.QuoteDouble | yaml.QuoteSingle,
-	context: Parameters<Parameters<typeof ruleCreator.createRule>[1]["setup"]>[0],
-) {
-	if (!canBePlain(node.value)) {
-		return;
-	}
-
-	context.report({
-		message: "preferPlain",
-		range: {
-			begin: node.position.start.offset,
-			end: node.position.end.offset,
-		},
-	});
+	return (
+		value.length &&
+		!value.includes(": ") &&
+		!value.includes(" #") &&
+		!/[\n\r]/.test(value) &&
+		!/\s$/.test(value) &&
+		!/^[-?:](?:\s|$)/.test(value) &&
+		!/^[\s#&*!|>'"%@`[\]{}]/.test(value) &&
+		!/^[+-]?\d+(?:\.\d+)?(?:e[+-]?\d+)?$/i.test(value) &&
+		!/^true|false|null|yes|no|on|off|y|n$/i.test(value)
+	);
 }
 
 export default ruleCreator.createRule(yamlLanguage, {
@@ -73,14 +34,21 @@ export default ruleCreator.createRule(yamlLanguage, {
 		},
 	},
 	setup(context) {
+		function checkNode(node: yaml.QuoteDouble | yaml.QuoteSingle) {
+			if (canBePlain(node.value)) {
+				context.report({
+					message: "preferPlain",
+					range: {
+						begin: node.position.start.offset,
+						end: node.position.end.offset,
+					},
+				});
+			}
+		}
 		return {
 			visitors: {
-				quoteDouble: (node) => {
-					handleQuotedNode(node, context);
-				},
-				quoteSingle: (node) => {
-					handleQuotedNode(node, context);
-				},
+				quoteDouble: checkNode,
+				quoteSingle: checkNode,
 			},
 		};
 	},
