@@ -1,3 +1,9 @@
+import {
+	cacheFilePath,
+	type CacheStorage,
+	normalizePath,
+	readFileSafeAsJson,
+} from "@flint.fyi/core";
 import debounce from "debounce";
 import { debugForFile } from "debug-for-file";
 import * as fs from "node:fs";
@@ -33,10 +39,25 @@ export async function runCliWatch(
 			return { renderer, runner };
 		}
 
-		const rerun = debounce((fileName: string) => {
+		const rerun = debounce(async (fileName: string) => {
 			if (fileName.startsWith("node_modules/.cache")) {
 				log(
 					"Skipping re-running watch mode for ignored change to: %s",
+					fileName,
+				);
+				return;
+			}
+
+			const normalizedPath = normalizePath(fileName, true);
+
+			const shouldRerun = await shouldRerunForFileChange(
+				normalizedPath,
+				cacheFilePath,
+			);
+
+			if (!shouldRerun) {
+				log(
+					"Skipping re-running watch mode for unrelated file change: %s",
 					fileName,
 				);
 				return;
@@ -61,4 +82,36 @@ export async function runCliWatch(
 			},
 		);
 	});
+}
+
+async function shouldRerunForFileChange(
+	changedFilePath: string,
+	cacheFilePath: string,
+): Promise<boolean> {
+	// TODO: Add some kind of validation to cache data
+	// https://github.com/flint-fyi/flint/issues/114
+	const cache = (await readFileSafeAsJson(cacheFilePath)) as
+		| CacheStorage
+		| undefined;
+	if (!cache) {
+		return true;
+	}
+
+	for (const filePath of Object.keys(cache.files)) {
+		if (filePath === changedFilePath) {
+			return true;
+		}
+	}
+
+	for (const fileStorage of Object.values(cache.files)) {
+		if (fileStorage.dependencies) {
+			for (const dep of fileStorage.dependencies) {
+				if (dep === changedFilePath) {
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
 }
