@@ -10106,7 +10106,8 @@
 		"flint": {
 			"name": "exponentiationOperators",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
