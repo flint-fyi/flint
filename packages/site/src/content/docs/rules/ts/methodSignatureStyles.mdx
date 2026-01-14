@@ -1,0 +1,84 @@
+---
+description: "Enforce using function property signatures over methods."
+title: "methodSignatureStyles"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="methodSignatureStyles" />
+
+TypeScript provides two ways to define function properties in interfaces and type literals: method signatures and property signatures with function types.
+
+Method signatures are bivariant in their parameter types when `strictFunctionTypes` is enabled, meaning parameters are checked less strictly.
+Function property signatures are fully contravariant and provide better type safety.
+
+This rule reports method signatures and suggests converting them to function property signatures.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+interface Example {
+	method(): void;
+}
+```
+
+```ts
+interface Example {
+	greet(name: string): string;
+}
+```
+
+```ts
+interface Example {
+	transform<T>(value: T): T;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+interface Example {
+	method: () => void;
+}
+```
+
+```ts
+interface Example {
+	greet: (name: string) => string;
+}
+```
+
+```ts
+interface Example {
+	transform: <T>(value: T) => T;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project does not use `strictFunctionTypes` or if you prefer the conciseness of method signatures, you may disable this rule.
+Some codebases may also intentionally use method signatures to allow for more flexible parameter typing in scenarios where bivariance is desired.
+
+## Further Reading
+
+- [TypeScript PR for strictFunctionTypes](https://github.com/microsoft/TypeScript/pull/18654)
+- [TypeScript handbook: strictFunctionTypes](https://www.typescriptlang.org/tsconfig#strictFunctionTypes)
+- [TypeScript FAQ: Method and function call behavior](https://github.com/microsoft/TypeScript/wiki/FAQ#why-are-function-parameters-bivariant)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="methodSignatureStyles" />
