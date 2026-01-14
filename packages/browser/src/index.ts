@@ -1,1 +1,1 @@
-export * from "./browser.ts";
+export * from "./plugin.ts";

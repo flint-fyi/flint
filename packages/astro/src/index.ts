@@ -1,1 +1,1 @@
-export * from "./astro.ts";
+export * from "./plugin.ts";

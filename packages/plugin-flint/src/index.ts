@@ -1,1 +1,1 @@
-export * from "./flint.ts";
+export * from "./plugin.ts";
