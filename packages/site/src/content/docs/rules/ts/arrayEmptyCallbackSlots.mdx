@@ -1,0 +1,77 @@
+---
+description: "Reports array methods with callbacks that will never be invoked on arrays with empty slots."
+title: "arrayEmptyCallbackSlots"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayEmptyCallbackSlots" />
+
+When the `Array` constructor is called with a single number argument, it creates an array with the specified number of empty slots (not actual `undefined` values).
+Callback methods like `map`, `filter`, `forEach`, and others skip empty slots, so callbacks passed to these methods will never be invoked.
+
+This rule reports when array methods with callbacks are called on arrays created with `new Array(n)`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+new Array(5).map((_) => 0);
+```
+
+```ts
+new Array(10).filter((value) => value > 0);
+```
+
+```ts
+new Array(3).forEach((item) => console.log(item));
+```
+
+```ts
+new Array(5).every((value) => value !== undefined);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+new Array(5).fill(0).map((_) => 1);
+```
+
+```ts
+Array.from({ length: 5 }, (_, index) => index);
+```
+
+```ts
+new Array(5).fill(undefined).forEach((item) => console.log(item));
+```
+
+```ts
+[1, 2, 3].map((value) => value * 2);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use `new Array(n)` for its other properties (like setting `length`) and understand that callbacks won't be invoked, you can disable this rule.
+However, this pattern is rarely intentional and usually indicates a bug.
+
+## Further Reading
+
+- [MDN: Array() constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Array)
+- [MDN: Array.from()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayEmptyCallbackSlots" />

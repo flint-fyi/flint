@@ -46,12 +46,14 @@ function getStringValue(node: AST.Expression): string | undefined {
 		: undefined;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports parseInt calls with binary, hexadecimal, or octal strings that can be replaced with numeric literals.",
 		id: "numericLiteralParsing",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferLiteral: {

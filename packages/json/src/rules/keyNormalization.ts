@@ -2,13 +2,14 @@ import ts from "typescript";
 import z from "zod";
 
 import { jsonLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default jsonLanguage.createRule({
+export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:
 			"Reports object keys that are not normalized using Unicode normalization forms.",
 		id: "keyNormalization",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unnormalizedKey: {

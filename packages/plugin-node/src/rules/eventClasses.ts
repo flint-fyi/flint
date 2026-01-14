@@ -16,12 +16,14 @@ function isImportFromNodeEvents(
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer EventTarget over EventEmitter for cross-platform compatibility.",
 		id: "eventClasses",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferEventTarget: {

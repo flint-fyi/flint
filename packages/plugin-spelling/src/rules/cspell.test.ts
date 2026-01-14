@@ -1,7 +1,4 @@
 /* cspell:disable */
-import { describe, expect, it } from "vitest";
-
-import { createIssueMessage } from "./cspell.ts";
 import rule from "./cspell.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -114,31 +111,4 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: ["", "known", "known-word", "knownWord"],
-});
-
-describe("createIssueMessage", () => {
-	it("includes replacement suggestion when withReplacement is true", () => {
-		const message = createIssueMessage({ withReplacement: true });
-
-		expect(message.suggestions).toHaveLength(2);
-		expect(message.suggestions[0]).toBe('Add "{{ word }}" to dictionary.');
-		expect(message.suggestions[1]).toBe(
-			'Replace with "{{ replacement }}" or another known word.',
-		);
-	});
-
-	it("does not include replacement suggestion when withReplacement is false or undefined", () => {
-		const messageWithout = createIssueMessage({ withReplacement: false });
-		const messageDefault = createIssueMessage();
-
-		expect(messageWithout.suggestions).toHaveLength(1);
-		expect(messageWithout.suggestions[0]).toBe(
-			'Add "{{ word }}" to dictionary.',
-		);
-
-		expect(messageDefault.suggestions).toHaveLength(1);
-		expect(messageDefault.suggestions[0]).toBe(
-			'Add "{{ word }}" to dictionary.',
-		);
-	});
 });

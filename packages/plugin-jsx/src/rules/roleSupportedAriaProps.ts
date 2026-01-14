@@ -369,12 +369,14 @@ function getSupportedPropsForRole(role: string): Set<string> {
 	]);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports ARIA properties that are not supported by an element's role.",
 		id: "roleSupportedAriaProps",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsupportedProp: {

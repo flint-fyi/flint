@@ -48,11 +48,13 @@ function getNodeText(
 	);
 }
 
-export default yamlLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Prefer block style sequences over flow style sequences.",
 		id: "blockSequences",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		flowSequence: {

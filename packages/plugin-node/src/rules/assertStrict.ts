@@ -1,6 +1,8 @@
 import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import { SyntaxKind } from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
+
 function isImportFromNodeAssert(expression: AST.Expression) {
 	return (
 		expression.kind === SyntaxKind.StringLiteral &&
@@ -16,12 +18,12 @@ function isStrictAssertImport(expression: AST.Expression) {
 	);
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer strict assertion mode from Node.js for better error messages and behavior.",
 		id: "assertStrict",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		preferStrictAssert: {

@@ -1,11 +1,12 @@
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports empty static initialization blocks within class declarations.",
 		id: "emptyStaticBlocks",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		emptyStaticBlock: {

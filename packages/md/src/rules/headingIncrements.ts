@@ -1,10 +1,11 @@
 import { markdownLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default markdownLanguage.createRule({
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports heading levels incrementing by more than one.",
 		id: "headingIncrements",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		levelSkip: {
