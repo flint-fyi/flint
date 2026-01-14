@@ -4,21 +4,13 @@ import { yamlLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasTrailingZeros(value: string) {
-	const match = /^[+-]?\d+\.(\d+)(?:[eE][+-]?\d+)?$/.exec(value);
-	if (!match) {
-		return false;
-	}
-
-	const decimalPart = match[1];
-	if (!decimalPart) {
-		return false;
-	}
-
-	return /0+$/.test(decimalPart);
+	const match = /^[+-]?\d+\.(\d+)(?:e[+-]?\d+)?$/i.exec(value);
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	return match && /0+$/.test(match[1]!);
 }
 
 function isPlainFloat(node: yaml.Plain) {
-	return /^[+-]?\d+\.\d+(?:[eE][+-]?\d+)?$/.test(node.value);
+	return /^[+-]?\d+\.\d+(?:e[+-]?\d+)?$/i.test(node.value);
 }
 
 export default ruleCreator.createRule(yamlLanguage, {
@@ -41,11 +33,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 		return {
 			visitors: {
 				plain: (node) => {
-					if (!isPlainFloat(node)) {
-						return;
-					}
-
-					if (!hasTrailingZeros(node.value)) {
+					if (!isPlainFloat(node) || !hasTrailingZeros(node.value)) {
 						return;
 					}
 

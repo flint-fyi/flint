@@ -4,22 +4,34 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `value: 1.50`,
-			snapshot: `value: 1.50
+			code: `
+value: 1.50
+`,
+			snapshot: `
+value: 1.50
        ~~~~
-       Numeric value has unnecessary trailing zeros.`,
+       Numeric value has unnecessary trailing zeros.
+`,
 		},
 		{
-			code: `price: 10.00`,
-			snapshot: `price: 10.00
+			code: `
+price: 10.00
+`,
+			snapshot: `
+price: 10.00
        ~~~~~
-       Numeric value has unnecessary trailing zeros.`,
+       Numeric value has unnecessary trailing zeros.
+`,
 		},
 		{
-			code: `rate: 0.100`,
-			snapshot: `rate: 0.100
+			code: `
+rate: 0.100
+`,
+			snapshot: `
+rate: 0.100
       ~~~~~
-      Numeric value has unnecessary trailing zeros.`,
+      Numeric value has unnecessary trailing zeros.
+`,
 		},
 	],
 	valid: [
