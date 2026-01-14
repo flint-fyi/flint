@@ -57,6 +57,8 @@ function containsThis(node: ts.Node): boolean {
 	}
 }
 
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
 function getMemberDisplayName(
 	member: ClassMember,
 	sourceFile: ts.SourceFile,
@@ -214,14 +216,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			sourceFile: ts.SourceFile,
 			options: RuleOptions,
 		) {
-			if (!member.body) {
-				return;
-			}
-			if (shouldSkipMember(member, classNode, options)) {
-				return;
-			}
-
-			if (!containsThis(member.body)) {
+			if (
+				member.body &&
+				!shouldSkipMember(member, classNode, options) &&
+				!containsThis(member.body)
+			) {
 				reportMember(member, "method", sourceFile, false);
 			}
 		}
@@ -233,14 +232,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			options: RuleOptions,
 			kind: "getter" | "setter",
 		) {
-			if (!member.body) {
-				return;
-			}
-			if (shouldSkipMember(member, classNode, options)) {
-				return;
-			}
-
-			if (!containsThis(member.body)) {
+			if (
+				member.body &&
+				!shouldSkipMember(member, classNode, options) &&
+				!containsThis(member.body)
+			) {
 				reportMember(member, kind, sourceFile, true);
 			}
 		}
@@ -256,22 +252,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const initKind = init.kind;
-
 			if (
-				initKind !== ts.SyntaxKind.ArrowFunction &&
-				initKind !== ts.SyntaxKind.FunctionExpression
+				init.kind !== ts.SyntaxKind.ArrowFunction &&
+				init.kind !== ts.SyntaxKind.FunctionExpression
 			) {
 				return;
 			}
 
-			if (shouldSkipMember(member, classNode, options)) {
-				return;
-			}
-
-			const body = init.body;
-
-			if (!containsThis(body)) {
+			if (
+				!shouldSkipMember(member, classNode, options) &&
+				!containsThis(init.body)
+			) {
 				reportMember(member, "method", sourceFile, false);
 			}
 		}
