@@ -24,17 +24,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				EnumDeclaration: (node, { sourceFile }) => {
-					if (node.members.length > 0) {
-						return;
+					if (node.members.length === 0) {
+						context.report({
+							message: "emptyEnum",
+							range: {
+								begin: node.getStart(sourceFile),
+								end: node.name.getEnd(),
+							},
+						});
 					}
-
-					context.report({
-						message: "emptyEnum",
-						range: {
-							begin: node.getStart(sourceFile),
-							end: node.name.getEnd(),
-						},
-					});
 				},
 			},
 		};
