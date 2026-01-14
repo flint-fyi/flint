@@ -30,6 +30,7 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
+		"github-slugger": "^2.0.0",
 		"mdast-util-from-markdown": "^2.0.2",
 		"mdast-util-gfm": "^3.1.0",
 		"micromark-extension-gfm": "^3.0.0",
