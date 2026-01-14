@@ -21570,7 +21570,9 @@
 		"flint": {
 			"name": "mappingKeyCasing",
 			"plugin": "yaml",
-			"status": "skipped"
+			"preset": "stylistic",
+			"status": "implemented",
+			"strictness": "strict"
 		}
 	},
 	{

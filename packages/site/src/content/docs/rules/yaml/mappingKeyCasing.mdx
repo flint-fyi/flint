@@ -1,0 +1,66 @@
+---
+description: "Enforces consistent casing for mapping keys."
+title: "mappingKeyCasing"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="yaml" rule="mappingKeyCasing" />
+
+Using consistent casing for mapping keys improves readability and maintainability.
+This rule enforces snake_case for all mapping keys, which is a common convention for YAML configuration files.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```yaml
+camelCase: value
+```
+
+```yaml
+PascalCase: value
+```
+
+```yaml
+kebab-case: value
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```yaml
+snake_case: value
+```
+
+```yaml
+simple: value
+```
+
+```yaml
+multi_word_key: value
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project uses a different naming convention for YAML keys, such as camelCase or kebab-case, you may not need this rule.
+Projects that integrate with systems requiring specific key naming patterns may also choose to disable this rule.
+
+## Further Reading
+
+- [YAML Specification - Mapping](https://yaml.org/spec/1.2.2/#mapping)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="yaml" ruleId="mappingKeyCasing" />
