@@ -77,10 +77,6 @@ ruleTester.describe(rule, {
 				},
 			],
 		},
-		// Regression test: ensures that when cspell can't find a replacement suggestion,
-		// we don't show "Replace with ""." in the message suggestions.
-		// This test verifies the rule uses the "issue" message (not "issueWithReplacement")
-		// when no valid replacement is found.
 		{
 			code: `
                 qwertyuiop
