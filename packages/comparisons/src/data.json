@@ -8549,6 +8549,7 @@
 			"name": "classMethodsThis",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -9481,6 +9482,7 @@
 			"name": "elseReturns",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -11334,7 +11336,8 @@
 		"flint": {
 			"name": "instanceOfArrays",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"notes": "Only for built-ins with a static .is* (Array).",
 		"oxlint": [
