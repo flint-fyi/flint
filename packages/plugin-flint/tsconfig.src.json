@@ -10,6 +10,7 @@
 	"exclude": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
 	"references": [
 		{ "path": "../core" },
+		{ "path": "../rule-tester" },
 		{ "path": "../typescript-language" },
 		{ "path": "../utils" }
 	]
