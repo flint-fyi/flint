@@ -6,13 +6,14 @@ import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 import { hasSameTokens } from "../utils/hasSameTokens.ts";
 import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer using .at() for accessing elements at negative indices.",
 		id: "atAccesses",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferAt: {

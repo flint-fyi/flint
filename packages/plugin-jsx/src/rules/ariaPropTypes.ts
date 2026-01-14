@@ -254,11 +254,13 @@ function isValidPropertyValue(
 	}
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports ARIA properties with invalid value types.",
 		id: "ariaPropTypes",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidPropType: {

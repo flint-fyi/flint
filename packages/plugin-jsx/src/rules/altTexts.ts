@@ -8,11 +8,13 @@ import ts, { SyntaxKind } from "typescript";
 
 const alternateProperties = new Set(["aria-label", "aria-labelledby", "title"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports elements that require alt text but are missing it.",
 		id: "altTexts",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingAlt: {

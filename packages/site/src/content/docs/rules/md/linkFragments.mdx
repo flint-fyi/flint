@@ -1,0 +1,88 @@
+---
+description: "Reports link fragments that don't exist in the document."
+title: "linkFragments"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="md" rule="linkFragments" />
+
+Link fragments (URLs that start with `#`) should reference valid headings or anchors in the document.
+This rule helps prevent broken internal links by ensuring that every fragment link points to an existing heading or HTML anchor.
+It uses GitHub's heading algorithm for generating heading IDs, ensuring compatibility with how GitHub renders Markdown heading anchors.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```markdown
+[Invalid Link](#non-existent-heading)
+
+# Some Heading
+```
+
+```markdown
+# Some Heading
+
+[Case Mismatch](#other-heading)
+```
+
+```markdown
+# Introduction
+
+[Invalid Link](#introductions)
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```markdown
+# Introduction
+
+[Valid Link](#introduction)
+```
+
+```markdown
+<h1 id="html-anchor">HTML Anchor</h1>
+
+[Link to HTML anchor](#html-anchor)
+```
+
+```markdown
+<a name="named-anchor">Named Anchor</a>
+
+[Link to named anchor](#named-anchor)
+```
+
+```markdown
+[Link to top of page](#top)
+```
+
+```markdown
+# café
+
+[Link to café](#café)
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+You might consider disabling this rule if:
+
+- You are using a Markdown processor or static site generator that has a significantly different algorithm for generating heading IDs
+- You have many dynamically generated links or fragments that cannot be easily validated statically
+
+## Further Reading
+
+- [GitHub's heading anchor links](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#section-links)
+- [MD051 - Link fragments should be valid](https://github.com/DavidAnson/markdownlint/blob/main/doc/md051.md)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="md" ruleId="linkFragments" />

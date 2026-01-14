@@ -1,12 +1,14 @@
 import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import ts, { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prevents implicit global variable declarations in browser scripts.",
 		id: "implicitGlobals",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		implicitGlobal: {

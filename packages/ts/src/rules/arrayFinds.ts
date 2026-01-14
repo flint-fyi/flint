@@ -3,13 +3,14 @@ import * as ts from "typescript";
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import type { AST, Checker } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using `.filter()[0]` instead of `.find()` when looking for a single element.",
 		id: "arrayFinds",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferFind: {

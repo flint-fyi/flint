@@ -6,7 +6,9 @@ import {
 import * as tsutils from "ts-api-utils";
 import ts from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "../ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports spread operations that accumulate values in loops, causing quadratic time complexity.",

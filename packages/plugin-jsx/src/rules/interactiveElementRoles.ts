@@ -57,12 +57,14 @@ const nonInteractiveRoles = new Set([
 	"tooltip",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports interactive elements with non-interactive ARIA roles.",
 		id: "interactiveElementRoles",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidRole: {

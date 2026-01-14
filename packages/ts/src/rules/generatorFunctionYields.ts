@@ -6,12 +6,13 @@ import {
 	typescriptLanguage,
 } from "../language.ts";
 import * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports generator functions that do not yield values.",
 		id: "generatorFunctionYields",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingYield: {

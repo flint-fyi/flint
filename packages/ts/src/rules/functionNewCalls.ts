@@ -9,13 +9,14 @@ import * as AST from "../types/ast.ts";
 import type { Checker } from "../types/checker.ts";
 import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
 import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using the Function constructor to create functions from strings.",
 		id: "functionNewCalls",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noFunctionConstructor: {

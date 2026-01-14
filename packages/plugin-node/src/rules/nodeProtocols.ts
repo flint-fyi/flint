@@ -61,12 +61,14 @@ const nodeBuiltinModules = new Set([
 	"zlib",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer the `node:` protocol prefix for Node.js built-in modules for clarity and consistency.",
 		id: "nodeProtocols",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		preferNodeProtocol: {

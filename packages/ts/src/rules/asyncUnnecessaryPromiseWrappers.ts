@@ -2,13 +2,14 @@ import * as ts from "typescript";
 
 import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports unnecessary `Promise.resolve()` or `Promise.reject()` in async contexts.",
 		id: "asyncUnnecessaryPromiseWrappers",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unnecessaryReject: {

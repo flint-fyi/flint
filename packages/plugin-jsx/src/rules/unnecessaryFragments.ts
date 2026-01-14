@@ -2,12 +2,14 @@ import type { CharacterReportRange } from "@flint.fyi/core";
 import { type AST, typescriptLanguage } from "@flint.fyi/ts";
 import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallow unnecessary JSX fragments that wrap a single child or have no children.",
 		id: "unnecessaryFragments",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		unnecessaryFragment: {

@@ -100,12 +100,14 @@ const eventHandlerProperties = new Set([
 	"onwheel",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer addEventListener over assigning to on* event handler properties.",
 		id: "eventListenerSubscriptions",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferAddEventListener: {

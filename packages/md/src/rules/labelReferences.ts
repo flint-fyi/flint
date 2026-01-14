@@ -7,11 +7,13 @@ import type { WithPosition } from "../nodes.ts";
 // Includes optional ! for images
 const labelPattern = /!?\[(?<left>[^[\]\\]*)\]\[(?<right>[^\]\\]*)\]/g;
 
-export default markdownLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports missing label references.",
 		id: "labelReferences",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingLabel: {
