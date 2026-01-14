@@ -1,11 +1,13 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports <html> elements without a lang prop.",
 		id: "htmlLangs",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingLang: {
@@ -24,14 +26,14 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				JsxOpeningElement(node: ts.JsxOpeningElement, { sourceFile }) {
+				JsxOpeningElement(node, { sourceFile }) {
 					if (
-						ts.isIdentifier(node.tagName) &&
+						node.tagName.kind === SyntaxKind.Identifier &&
 						node.tagName.text === "html" &&
 						!node.attributes.properties.some(
 							(property) =>
-								ts.isJsxAttribute(property) &&
-								ts.isIdentifier(property.name) &&
+								property.kind === SyntaxKind.JsxAttribute &&
+								property.name.kind === SyntaxKind.Identifier &&
 								property.name.text.toLowerCase() === "lang",
 						)
 					) {

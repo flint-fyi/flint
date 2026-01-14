@@ -3,7 +3,7 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const voidElements = new Set([
 	"area",
@@ -22,12 +22,14 @@ const voidElements = new Set([
 	"wbr",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports void DOM elements that have children, which is invalid HTML.",
 		id: "elementChildrenValidity",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		voidElementWithChildren: {
@@ -47,16 +49,13 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				JsxElement(
-					node: ts.JsxElement,
-					{ sourceFile }: TypeScriptFileServices,
-				) {
+				JsxElement(node, { sourceFile }: TypeScriptFileServices) {
 					if (!node.children.length) {
 						return;
 					}
 
 					const openingElement = node.openingElement;
-					if (!ts.isIdentifier(openingElement.tagName)) {
+					if (openingElement.tagName.kind !== SyntaxKind.Identifier) {
 						return;
 					}
 

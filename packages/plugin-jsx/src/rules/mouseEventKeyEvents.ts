@@ -1,20 +1,23 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const mouseNamesToKeyboardNames = new Map([
 	["onMouseOut", "onBlur"],
 	["onMouseOver", "onFocus"],
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports mouse events without corresponding keyboard events.",
 		id: "mouseEventKeyEvents",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingKeyEvent: {
@@ -33,20 +36,26 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkMouseEvents(
-			node: ts.JsxOpeningElement | ts.JsxSelfClosingElement,
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const { attributes } = node;
 			const presentAttributes = new Set<string>();
 
 			for (const property of attributes.properties) {
-				if (ts.isJsxAttribute(property) && ts.isIdentifier(property.name)) {
+				if (
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier
+				) {
 					presentAttributes.add(property.name.text);
 				}
 			}
 
 			for (const property of attributes.properties) {
-				if (!ts.isJsxAttribute(property) || !ts.isIdentifier(property.name)) {
+				if (
+					property.kind !== SyntaxKind.JsxAttribute ||
+					property.name.kind !== SyntaxKind.Identifier
+				) {
 					continue;
 				}
 

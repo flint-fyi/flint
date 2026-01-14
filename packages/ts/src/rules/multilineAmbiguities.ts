@@ -1,13 +1,15 @@
 import * as ts from "typescript";
 
 import { typescriptLanguage } from "../language.ts";
+import type * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports ambiguous multiline expressions that could be misinterpreted.",
 		id: "multilineAmbiguities",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		ambiguity: {
@@ -113,7 +115,7 @@ export default typescriptLanguage.createRule({
 });
 
 function findChildToken(
-	node: ts.Node,
+	node: AST.CallExpression | AST.ElementAccessExpression,
 	kind: ts.SyntaxKind,
 	sourceFile: ts.SourceFile,
 ) {
@@ -125,7 +127,7 @@ function findChildToken(
 	return undefined;
 }
 
-function getExpressionEnd(node: ts.CallExpression, sourceFile: ts.SourceFile) {
+function getExpressionEnd(node: AST.CallExpression, sourceFile: ts.SourceFile) {
 	const greaterThan =
 		node.typeArguments &&
 		findChildToken(node, ts.SyntaxKind.GreaterThanToken, sourceFile);

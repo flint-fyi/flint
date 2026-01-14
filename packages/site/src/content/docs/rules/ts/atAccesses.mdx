@@ -1,0 +1,74 @@
+---
+description: "Prefer using .at() for accessing elements at negative indices."
+title: "atAccesses"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="atAccesses" />
+
+Accessing an element at the end of an array or string using `array[array.length - 1]` is less readable than using the `.at()` method with a negative index.
+The `.at()` method provides a cleaner syntax for accessing elements from the end of a sequence.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const last = array[array.length - 1];
+```
+
+```ts
+const secondLast = items[items.length - 2];
+```
+
+```ts
+const lastChar = text[text.length - 1];
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const last = array.at(-1);
+```
+
+```ts
+const secondLast = items.at(-2);
+```
+
+```ts
+const lastChar = text.at(-1);
+```
+
+```ts
+const first = array[0];
+```
+
+```ts
+const element = array[dynamicIndex];
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support environments that do not have the `.at()` method (pre-ES2022), or if your project has a polyfill that only covers certain cases, you can disable this rule.
+
+## Further Reading
+
+- [MDN: Array.prototype.at()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at)
+- [MDN: String.prototype.at()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/at)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="atAccesses" />

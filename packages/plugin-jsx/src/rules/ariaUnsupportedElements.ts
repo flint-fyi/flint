@@ -1,9 +1,10 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const unsupportedElements = new Set([
 	"base",
@@ -50,11 +51,13 @@ const unsupportedElements = new Set([
 	"track",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports ARIA attributes on elements that don't support them.",
 		id: "ariaUnsupportedElements",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsupportedElement: {
@@ -70,10 +73,10 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkElement(
-			node: ts.JsxOpeningLikeElement,
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (!ts.isIdentifier(node.tagName)) {
+			if (node.tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -84,7 +87,10 @@ export default typescriptLanguage.createRule({
 
 			if (
 				node.attributes.properties.some((property) => {
-					if (!ts.isJsxAttribute(property) || !ts.isIdentifier(property.name)) {
+					if (
+						property.kind !== SyntaxKind.JsxAttribute ||
+						property.name.kind !== SyntaxKind.Identifier
+					) {
 						return false;
 					}
 

@@ -1,0 +1,75 @@
+---
+description: "Reports using `.flatMap()` with an identity function that returns its argument unchanged."
+title: "arrayMapIdentities"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayMapIdentities" />
+
+Using `.flatMap()` with a callback that returns its argument unchanged is equivalent to calling `.flat()`.
+The `.flat()` method is more concise and clearly expresses the intent to flatten an array.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const result = values.flatMap((value) => value);
+```
+
+```ts
+const result = values.flatMap((item) => {
+	return item;
+});
+```
+
+```ts
+const result = values.flatMap(function (element) {
+	return element;
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const result = values.flat();
+```
+
+```ts
+const result = values.flatMap((value) => value.children);
+```
+
+```ts
+const result = values.flatMap((value) => [value, ...value.extras]);
+```
+
+```ts
+const result = values.flatMap((value) => transform(value));
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are maintaining a codebase that must support environments where `.flat()` is not available, you may need to disable this rule.
+Some older JavaScript environments do not support `.flat()` or `.flatMap()` and only polyfill `.flatMap()`, though this is rare in modern development.
+
+## Further Reading
+
+- [MDN: Array.prototype.flat()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat)
+- [MDN: Array.prototype.flatMap()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayMapIdentities" />

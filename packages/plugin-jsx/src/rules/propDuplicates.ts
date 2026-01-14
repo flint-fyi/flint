@@ -1,15 +1,18 @@
 import {
+	type AST,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Disallow duplicate props in JSX elements.",
 		id: "propDuplicates",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		duplicateProp: {
@@ -24,13 +27,16 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkElement(
-			node: ts.JsxOpeningLikeElement,
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const seenProps = new Set<string>();
 
 			for (const property of node.attributes.properties) {
-				if (!ts.isJsxAttribute(property) || !ts.isIdentifier(property.name)) {
+				if (
+					property.kind !== SyntaxKind.JsxAttribute ||
+					property.name.kind !== SyntaxKind.Identifier
+				) {
 					continue;
 				}
 
