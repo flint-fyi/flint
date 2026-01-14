@@ -1,14 +1,15 @@
 import GithubSlugger from "github-slugger";
 import type { Heading, Html, Link, Node, Root, Text } from "mdast";
 
-import { markdownLanguage } from "../language.js";
-import type { WithPosition } from "../nodes.js";
+import { markdownLanguage } from "../language.ts";
+import type { WithPosition } from "../nodes.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default markdownLanguage.createRule({
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports link fragments that don't exist in the document.",
 		id: "linkFragments",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingFragment: {
@@ -71,7 +72,8 @@ export default markdownLanguage.createRule({
 								/\b(?:id|name)=["']([^"']+)["']/g,
 							);
 							for (const match of idMatches) {
-								validFragments.add(match[1]);
+								// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+								validFragments.add(match[1]!);
 							}
 						} else if (n.type === "link") {
 							const link = n as Link;
