@@ -23,7 +23,7 @@ export default typescriptLanguage.createRule({
 		description:
 			"Reports comparisons with NaN, which should use Number.isNaN() instead.",
 		id: "isNaNComparisons",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		useIsNaN: {
