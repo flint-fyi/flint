@@ -41,7 +41,3 @@ export const md = createPlugin({
 		referenceLikeUrls,
 	],
 });
-
-// TODO: How do we appease TypeScript?!
-// The inferred type of 'default' cannot be named without a reference to ...
-export type * as language from "@flint.fyi/markdown-language";

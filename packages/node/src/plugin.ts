@@ -28,7 +28,3 @@ export const node = createPlugin({
 		processExits,
 	],
 });
-
-// TODO: How do we appease TypeScript?!
-// The inferred type of 'default' cannot be named without a reference to ...
-export type * from "@flint.fyi/typescript-language";

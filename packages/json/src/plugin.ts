@@ -11,7 +11,3 @@ export const json = createPlugin({
 	name: "JSON",
 	rules: [keyDuplicates, keyNormalization, valueSafety],
 });
-
-// TODO: How do we appease TypeScript?!
-// The inferred type of 'default' cannot be named without a reference to ...
-export type * from "@flint.fyi/json-language";
