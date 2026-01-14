@@ -1,10 +1,8 @@
+import GithubSlugger from "github-slugger";
 import type { Heading, Html, Link, Node, Root, Text } from "mdast";
 
-import GithubSlugger from "github-slugger";
-
-import type { WithPosition } from "../nodes.js";
-
 import { markdownLanguage } from "../language.js";
+import type { WithPosition } from "../nodes.js";
 
 export default markdownLanguage.createRule({
 	about: {
@@ -29,10 +27,10 @@ export default markdownLanguage.createRule({
 		},
 	},
 	setup(context) {
+		const slugger = new GithubSlugger();
 		return {
 			visitors: {
 				root(node: WithPosition<Root>) {
-					const slugger = new GithubSlugger();
 					const validFragments = new Set<string>();
 					const linksToCheck: {
 						begin: number;
@@ -103,6 +101,7 @@ export default markdownLanguage.createRule({
 						}
 					}
 
+					// TODO: Add :exit selectors, so this rule can report after traversal?
 					visit(node);
 
 					// Check all fragment links
