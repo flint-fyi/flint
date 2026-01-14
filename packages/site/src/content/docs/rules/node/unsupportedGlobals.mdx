@@ -1,0 +1,95 @@
+---
+description: "Disallow using ECMAScript built-in globals not supported in the configured Node.js version."
+title: "unsupportedGlobals"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="unsupportedGlobals" />
+
+ECMAScript introduces new built-in globals over time, and Node.js adds support for them in specific versions.
+Using globals not supported by your target Node.js version will cause runtime errors.
+
+This rule checks the `engines.node` field in your `package.json` and reports usage of globals that are not available in the specified version range.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// With package.json: { "engines": { "node": ">=10.0.0" } }
+// FinalizationRegistry was added in Node.js 14.6.0
+const registry = new FinalizationRegistry(() => {});
+```
+
+```ts
+// With package.json: { "engines": { "node": ">=10.0.0" } }
+// WeakRef was added in Node.js 14.6.0
+const ref = new WeakRef({});
+```
+
+```ts
+// With package.json: { "engines": { "node": ">=10.0.0" } }
+// globalThis was added in Node.js 12.0.0
+console.log(globalThis);
+```
+
+```ts
+// With package.json: { "engines": { "node": ">=10.0.0" } }
+// AggregateError was added in Node.js 15.0.0
+const error = new AggregateError([new Error("error1")]);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// With package.json: { "engines": { "node": ">=20.0.0" } }
+// All modern globals are supported
+const registry = new FinalizationRegistry(() => {});
+const ref = new WeakRef({});
+console.log(globalThis);
+```
+
+```ts
+// Using only globals supported in your version
+// With package.json: { "engines": { "node": ">=10.0.0" } }
+const promise = Promise.resolve();
+const map = new Map();
+const set = new Set();
+const proxy = new Proxy({}, {});
+```
+
+```ts
+// Type references are not flagged
+type Ref = WeakRef<object>;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are transpiling your code with a tool like Babel that polyfills unsupported globals, this rule may produce false positives.
+Disable it for projects where you know polyfills are in place.
+
+If your project does not specify an `engines.node` field in `package.json`, this rule will not report any issues.
+
+## Further Reading
+
+- [node.green - Node.js ECMAScript compatibility tables](https://node.green/)
+- [npm: package.json engines](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#engines)
+- [TC39 Finished Proposals](https://github.com/tc39/proposals/blob/main/finished-proposals.md)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="unsupportedGlobals" />
