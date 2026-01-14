@@ -9926,6 +9926,7 @@
 			"name": "errorMessages",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [

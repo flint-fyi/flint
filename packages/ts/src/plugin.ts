@@ -67,6 +67,7 @@ import emptyDestructures from "./rules/emptyDestructures.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
 import enumInitializers from "./rules/enumInitializers.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
+import errorMessages from "./rules/errorMessages.ts";
 import evolvingVariableTypes from "./rules/evolvingVariableTypes.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
 import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
@@ -189,6 +190,7 @@ export const ts = createPlugin({
 		emptyDestructures,
 		emptyStaticBlocks,
 		enumInitializers,
+		errorMessages,
 		equalityOperatorNegations,
 		evolvingVariableTypes,
 		exceptionAssignments,
