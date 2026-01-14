@@ -4724,7 +4724,8 @@
 		"flint": {
 			"name": "unsupportedNodeAPIs",
 			"plugin": "node",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{

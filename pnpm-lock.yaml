@@ -433,13 +433,22 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
+      semver:
+        specifier: ^7.7.3
+        version: 7.7.3
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      zod:
+        specifier: ^4.2.1
+        version: 4.2.1
     devDependencies:
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
+      '@types/semver':
+        specifier: ^7.7.0
+        version: 7.7.1
       tsdown:
         specifier: 0.19.0-beta.2
         version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
@@ -2167,6 +2176,9 @@ packages:
 
   '@types/sax@1.2.7':
     resolution: {integrity: sha512-rO73L89PJxeYM3s3pPPjiPgVVcymqU490g0YO5n5By0k2Erzj6tay/4lr1CHAAU4JyOWd1rpQ8bCf6cZfHU96A==}
+
+  '@types/semver@7.7.1':
+    resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
 
   '@types/unist@2.0.11':
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
@@ -6817,6 +6829,8 @@ snapshots:
   '@types/sax@1.2.7':
     dependencies:
       '@types/node': 24.10.1
+
+  '@types/semver@7.7.1': {}
 
   '@types/unist@2.0.11': {}
 

@@ -1,0 +1,104 @@
+---
+description: "Disallow usage of Node.js built-in APIs not supported by the configured Node.js version."
+title: "unsupportedNodeAPIs"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="unsupportedNodeAPIs" />
+
+Node.js continuously adds new built-in APIs with each release.
+Using APIs that aren't available in your target Node.js version causes runtime errors when deployed to environments running older versions.
+
+This rule reports usage of Node.js built-in APIs that were added after the configured minimum Node.js version.
+
+## Examples
+
+With `minVersion` set to `"14.0.0"`:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import * as fs from "fs";
+
+await fs.promises.rm("file.txt");
+```
+
+```ts
+import * as test from "node:test";
+```
+
+```ts
+const data = await fetch("https://api.example.com/data");
+```
+
+```ts
+const clone = structuredClone({ value: 1 });
+```
+
+```ts
+crypto.randomUUID();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import * as fs from "fs";
+
+await fs.promises.unlink("file.txt");
+```
+
+```ts
+import * as crypto from "crypto";
+
+crypto.randomBytes(16);
+```
+
+```ts
+import { request } from "https";
+```
+
+```ts
+const clone = JSON.parse(JSON.stringify({ value: 1 }));
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `minVersion`
+
+The minimum Node.js version the project supports.
+Defaults to `"18.0.0"`.
+
+APIs added after this version will be reported as errors.
+
+```json
+{
+	"rules": {
+		"node/unsupportedNodeAPIs": ["error", { "minVersion": "16.0.0" }]
+	}
+}
+```
+
+## When Not To Use It
+
+If you use a transpiler or bundler that provides polyfills for newer Node.js APIs, you may not need this rule.
+You may also disable this rule if your project only targets the latest Node.js versions.
+
+## Further Reading
+
+- [Node.js: Releases](https://nodejs.org/en/about/previous-releases)
+- [Node.js: API Documentation](https://nodejs.org/api/)
+- [node.green: Node.js ES compatibility tables](https://node.green/)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="unsupportedNodeAPIs" />
