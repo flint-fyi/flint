@@ -1,7 +1,7 @@
 {
 	"name": "@flint.fyi/md",
 	"version": "0.14.3",
-	"description": "[Experimental] Markdown language plugin for Flint.",
+	"description": "[Experimental] Markdown plugin for Flint.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -29,6 +29,7 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/markdown-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"github-slugger": "^2.0.0",
 		"mdast-util-from-markdown": "^2.0.2",

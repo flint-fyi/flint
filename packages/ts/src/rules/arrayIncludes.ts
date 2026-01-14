@@ -1,8 +1,11 @@
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST, Checker } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
+import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
 function hasIncludesMethod(node: AST.Expression, typeChecker: Checker) {

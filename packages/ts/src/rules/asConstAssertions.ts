@@ -1,8 +1,10 @@
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298

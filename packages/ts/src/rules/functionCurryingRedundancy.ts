@@ -1,9 +1,9 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import type { AST } from "@flint.fyi/typescript-language";
+import { isFunction } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 import ts, { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import { isFunction } from "../utils/isFunction.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

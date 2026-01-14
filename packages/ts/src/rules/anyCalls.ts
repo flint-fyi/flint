@@ -1,12 +1,12 @@
-import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
+import { getTSNodeRange } from "@flint.fyi/typescript-language";
+import type { AST } from "@flint.fyi/typescript-language";
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
-} from "../language.ts";
+} from "@flint.fyi/typescript-language";
+import * as tsutils from "ts-api-utils";
+import * as ts from "typescript";
+
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isBuiltinSymbolLike } from "./utils/isBuiltinSymbolLike.ts";

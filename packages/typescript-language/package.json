@@ -1,0 +1,53 @@
+{
+	"name": "@flint.fyi/typescript-language",
+	"version": "0.15.1",
+	"description": "[Experimental] TypeScript language for Flint.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/typescript-language"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "JoshuaKGoldberg",
+		"email": "npm@joshuakgoldberg.com"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": {
+			"@flint.fyi/source": "./src/index.ts",
+			"default": "./lib/index.js"
+		}
+	},
+	"files": [
+		"lib/",
+		"!lib/**/*.map"
+	],
+	"scripts": {
+		"test": "vitest --typecheck --project typescript-language"
+	},
+	"dependencies": {
+		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/utils": "workspace:^",
+		"@typescript-eslint/project-service": "^8.46.2",
+		"@typescript/vfs": "^1.6.1",
+		"cached-factory": "^0.1.0",
+		"debug-for-file": "^0.2.0",
+		"ts-api-utils": "^2.1.0",
+		"typescript": "^5.9.0 || ^6.0.0"
+	},
+	"devDependencies": {
+		"tsdown": "0.19.0-beta.2",
+		"vitest": "4.0.15"
+	},
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"exports": {
+			".": "./lib/index.js"
+		}
+	}
+}

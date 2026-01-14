@@ -1,7 +1,10 @@
 import * as ts from "typescript";
 
-import type { AST, Checker } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
+import {
+	type AST,
+	type Checker,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 
 const comparisonOperators = new Set([
 	ts.SyntaxKind.EqualsEqualsEqualsToken,

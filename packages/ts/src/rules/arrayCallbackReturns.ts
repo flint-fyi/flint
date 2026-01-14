@@ -1,7 +1,7 @@
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
 const arrayMethodsRequiringReturn = new Set([
 	"every",

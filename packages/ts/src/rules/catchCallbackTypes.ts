@@ -1,10 +1,12 @@
+import {
+	type AST,
+	type Checker,
+	declarationIncludesGlobal,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import type { Checker } from "../types/checker.ts";
-import { declarationIncludesGlobal } from "../utils/declarationIncludesGlobal.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
 export default typescriptLanguage.createRule({

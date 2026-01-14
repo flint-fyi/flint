@@ -1,8 +1,10 @@
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import { hasSameTokens } from "../utils/hasSameTokens.ts";
+import {
+	type AST,
+	typescriptLanguage,
+	hasSameTokens,
+} from "@flint.fyi/typescript-language";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

@@ -7,7 +7,7 @@ import {
 import type { Expression } from "typescript";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
 function isAcceptableIndexExpression(property: Expression): boolean {
 	return (

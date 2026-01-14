@@ -2,8 +2,8 @@ import { nullThrows } from "@flint.fyi/utils";
 import * as tsutils from "ts-api-utils";
 import ts, { SyntaxKind } from "typescript";
 
-import type { AST } from "../../index.ts";
-import type { Checker } from "../../types/checker.ts";
+import type { AST } from "@flint.fyi/typescript-language";
+import type { Checker } from "@flint.fyi/typescript-language";
 
 /**
  * Does a simple check to see if there is an any being assigned to a non-any type.

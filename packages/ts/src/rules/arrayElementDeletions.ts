@@ -1,8 +1,10 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
 function buildSpliceReplacement(

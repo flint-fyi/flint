@@ -1,5 +1,5 @@
-import { typescriptLanguage } from "../language.ts";
-import { hasSameTokens } from "../utils/hasSameTokens.ts";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { hasSameTokens } from "@flint.fyi/typescript-language";
 import { ruleCreator } from "./ruleCreator.ts";
 import { isComparisonOperator } from "./utils/operators.ts";
 

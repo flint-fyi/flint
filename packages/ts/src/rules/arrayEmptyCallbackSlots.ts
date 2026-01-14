@@ -1,9 +1,10 @@
+import {
+	type AST,
+	getTSNodeRange,
+	isGlobalDeclarationOfName,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
 
 function hasCallbackArgument(callExpression: AST.CallExpression) {
 	if (callExpression.arguments.length === 0) {

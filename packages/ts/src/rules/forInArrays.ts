@@ -1,8 +1,8 @@
 import * as tsutils from "ts-api-utils";
 import ts from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import type { Checker } from "../types/checker.ts";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import type { Checker } from "@flint.fyi/typescript-language";
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isTypeRecursive } from "./utils/isTypeRecursive.ts";

@@ -1,4 +1,4 @@
-import { yamlLanguage } from "../language.ts";
+import { yamlLanguage } from "@flint.fyi/yaml-language";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(yamlLanguage, {

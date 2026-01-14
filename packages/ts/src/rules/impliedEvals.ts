@@ -1,13 +1,12 @@
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
+import { getTSNodeRange } from "@flint.fyi/typescript-language";
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
-} from "../language.ts";
-import type * as AST from "../types/ast.ts";
-import type { Checker } from "../types/checker.ts";
+} from "@flint.fyi/typescript-language";
+import type { AST, Checker } from "@flint.fyi/typescript-language";
 import { isBuiltinSymbolLike } from "./utils/isBuiltinSymbolLike.ts";
 
 const globalCandidates = new Set(["global", "globalThis", "window"]);

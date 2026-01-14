@@ -1,11 +1,13 @@
 import { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import type { Checker } from "../types/checker.ts";
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
-import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+import type { Checker } from "@flint.fyi/typescript-language";
+import { isGlobalDeclarationOfName } from "@flint.fyi/typescript-language";
+import { unwrapParenthesizedExpression } from "@flint.fyi/typescript-language";
 
 const comparisonOperators = new Set([
 	SyntaxKind.EqualsEqualsEqualsToken,

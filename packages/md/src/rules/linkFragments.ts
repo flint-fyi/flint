@@ -1,7 +1,7 @@
 import GithubSlugger from "github-slugger";
 import type { Heading, Html, Link, Node, Root, Text } from "mdast";
 
-import { markdownLanguage } from "../language.ts";
+import { markdownLanguage } from "@flint.fyi/markdown-language";
 import type { WithPosition } from "../nodes.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
