@@ -3478,7 +3478,8 @@
 		"flint": {
 			"name": "linkFragments",
 			"plugin": "md",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"markdownlint": [
 			{
@@ -3643,7 +3644,8 @@
 		"flint": {
 			"name": "tableColumnCounts",
 			"plugin": "md",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"markdownlint": [
 			{
@@ -6992,6 +6994,7 @@
 			"name": "accessorThisRecursion",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -11400,7 +11403,8 @@
 		"flint": {
 			"name": "isNaNComparisons",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -21515,7 +21519,8 @@
 		"flint": {
 			"name": "emptyMappingValues",
 			"plugin": "yaml",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{

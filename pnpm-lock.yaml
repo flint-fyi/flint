@@ -273,9 +273,18 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
+      github-slugger:
+        specifier: ^2.0.0
+        version: 2.0.0
       mdast-util-from-markdown:
         specifier: ^2.0.2
         version: 2.0.2
+      mdast-util-gfm:
+        specifier: ^3.1.0
+        version: 3.1.0
+      micromark-extension-gfm:
+        specifier: ^3.0.0
+        version: 3.0.0
       unist-util-visit:
         specifier: ^5.0.0
         version: 5.0.0
