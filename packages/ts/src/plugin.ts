@@ -118,10 +118,6 @@ import variableDeletions from "./rules/variableDeletions.ts";
 import voidOperator from "./rules/voidOperator.ts";
 import withStatements from "./rules/withStatements.ts";
 
-// TODO: How do we appease TypeScript?!
-// The inferred type of 'default' cannot be named without a reference to ...
-export type * as language from "@flint.fyi/typescript-language";
-
 export const ts = createPlugin({
 	files: {
 		all: ["**/*.{cjs,js,jsx,mjs,ts,tsx}"],
@@ -247,3 +243,7 @@ export const ts = createPlugin({
 		withStatements,
 	],
 });
+
+// TODO: How do we appease TypeScript?!
+// The inferred type of 'default' cannot be named without a reference to ...
+export type * as language from "@flint.fyi/typescript-language";
