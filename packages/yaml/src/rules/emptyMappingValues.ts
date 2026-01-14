@@ -14,7 +14,11 @@ export default ruleCreator.createRule(yamlLanguage, {
 				"Empty values can lead to unexpected runtime behavior when parsers interpret them as null or empty strings.",
 				"If an empty value is intentional, use explicit null to clarify intent.",
 			],
-			suggestions: ["TODO"],
+			suggestions: [
+				"Remove the mapping key if it is not needed.",
+				"Use an explicit `null` to clarify intent.",
+				"Add one or more values to the mapping.",
+			],
 		},
 	},
 	setup(context) {
