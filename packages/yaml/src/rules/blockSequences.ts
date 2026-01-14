@@ -1,6 +1,5 @@
-import type * as yamlParser from "yaml-unist-parser";
-
 import { yamlLanguage } from "@flint.fyi/yaml-language";
+import type * as yamlParser from "yaml-unist-parser";
 
 function buildBlockSequenceFix(
 	node: yamlParser.FlowSequence,

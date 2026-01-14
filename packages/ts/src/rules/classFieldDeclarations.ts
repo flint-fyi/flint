@@ -1,10 +1,9 @@
-import ts from "typescript";
-
 import {
 	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import ts from "typescript";
 
 function isLiteralValue(node: AST.AnyNode) {
 	if (ts.isPrefixUnaryExpression(node)) {

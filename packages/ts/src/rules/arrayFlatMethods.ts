@@ -1,11 +1,11 @@
-import * as ts from "typescript";
-
 import {
 	type AST,
 	type Checker,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import * as ts from "typescript";
+
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 import { skipParentheses } from "./utils/skipParentheses.ts";
 

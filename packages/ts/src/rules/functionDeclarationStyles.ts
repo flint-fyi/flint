@@ -1,11 +1,11 @@
-import ts from "typescript";
-import { z } from "zod";
-
 import {
 	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import ts from "typescript";
+import { z } from "zod";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isOverloadedDeclaration(

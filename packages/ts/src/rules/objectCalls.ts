@@ -1,5 +1,3 @@
-import { SyntaxKind } from "typescript";
-
 import { getTSNodeRange } from "@flint.fyi/typescript-language";
 import {
 	type TypeScriptFileServices,
@@ -7,6 +5,8 @@ import {
 } from "@flint.fyi/typescript-language";
 import type { AST } from "@flint.fyi/typescript-language";
 import { isGlobalDeclarationOfName } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

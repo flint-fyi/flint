@@ -1,8 +1,8 @@
 import { browser } from "@flint.fyi/browser";
-import { flint } from "@flint.fyi/plugin-flint";
 import { jsx } from "@flint.fyi/jsx";
 import { node } from "@flint.fyi/node";
 import { performance } from "@flint.fyi/performance";
+import { flint } from "@flint.fyi/plugin-flint";
 import { spelling } from "@flint.fyi/spelling";
 import { type AnyRule, json, md, ts, yaml } from "flint";
 

@@ -1,11 +1,10 @@
-import { nullThrows } from "@flint.fyi/utils";
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import type { AST } from "@flint.fyi/typescript-language";
+import { nullThrows } from "@flint.fyi/utils";
+import ts, { SyntaxKind } from "typescript";
 
 const prototypeMethods = new Set([
 	"hasOwnProperty",

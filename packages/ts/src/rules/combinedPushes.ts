@@ -1,11 +1,11 @@
+import {
+	type AST,
+	type Checker,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
-import {
-	type Checker,
-	typescriptLanguage,
-	type AST,
-	type TypeScriptFileServices,
-} from "@flint.fyi/typescript-language";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

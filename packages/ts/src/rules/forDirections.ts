@@ -1,10 +1,9 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
 
 function getConditionDirection(
 	condition: AST.Expression,

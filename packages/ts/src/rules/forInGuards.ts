@@ -1,7 +1,7 @@
-import ts from "typescript";
-
 import type { AST } from "@flint.fyi/typescript-language";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import ts from "typescript";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isIfStatementGuard(node: AST.IfStatement) {

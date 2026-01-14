@@ -1,10 +1,9 @@
-import * as ts from "typescript";
-
 import {
 	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import * as ts from "typescript";
 
 function haveSameArrayExpression(
 	expr1: AST.Expression,

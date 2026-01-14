@@ -1,7 +1,7 @@
-import * as ts from "typescript";
-
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import type { AST } from "@flint.fyi/typescript-language";
+import * as ts from "typescript";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

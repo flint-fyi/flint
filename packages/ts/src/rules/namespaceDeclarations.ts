@@ -1,11 +1,11 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
-import { z } from "zod";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import * as tsutils from "ts-api-utils";
+import ts, { SyntaxKind } from "typescript";
+import { z } from "zod";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

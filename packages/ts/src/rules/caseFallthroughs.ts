@@ -1,7 +1,6 @@
-import * as ts from "typescript";
-
 import type { AST } from "@flint.fyi/typescript-language";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import * as ts from "typescript";
 
 const fallthroughCommentPattern = /falls?\s*through/i;
 

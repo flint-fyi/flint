@@ -1,12 +1,12 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	type AST,
 	type Checker,
-	isGlobalDeclarationOfName,
 	getTSNodeRange,
+	isGlobalDeclarationOfName,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

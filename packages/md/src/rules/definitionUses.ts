@@ -1,6 +1,6 @@
+import { markdownLanguage } from "@flint.fyi/markdown-language";
 import type { Definition, ImageReference, Node, Root } from "mdast";
 
-import { markdownLanguage } from "@flint.fyi/markdown-language";
 import type { WithPosition } from "../nodes.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 

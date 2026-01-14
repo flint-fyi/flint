@@ -1,9 +1,9 @@
 import {
-	hasSameTokens,
-	unwrapParenthesizedExpression,
 	type AST,
 	getTSNodeRange,
+	hasSameTokens,
 	typescriptLanguage,
+	unwrapParenthesizedExpression,
 } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";

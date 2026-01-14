@@ -1,7 +1,6 @@
-import type * as ts from "typescript";
-
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import type { AST } from "@flint.fyi/typescript-language";
+import type * as ts from "typescript";
 
 /**
  * Finds the position and length of an octal escape sequence in a string.

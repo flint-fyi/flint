@@ -1,10 +1,9 @@
-import * as ts from "typescript";
-
 import {
 	getTSNodeRange,
-	typescriptLanguage,
 	isBuiltinArrayMethod,
+	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import * as ts from "typescript";
 
 const methodsReturningNewArray = new Set([
 	"concat",

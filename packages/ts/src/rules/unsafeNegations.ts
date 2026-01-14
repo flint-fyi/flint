@@ -1,7 +1,6 @@
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
-
 import { unwrapParenthesizedExpression } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
 
 const operatorStrings = new Map([
 	[SyntaxKind.InKeyword, "in"],

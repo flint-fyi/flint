@@ -1,9 +1,8 @@
-import * as ts from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import * as ts from "typescript";
 
 const indexMethods = new Set([
 	"findIndex",

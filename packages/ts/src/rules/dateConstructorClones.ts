@@ -1,11 +1,10 @@
-import { SyntaxKind } from "typescript";
-
 import {
-	typescriptLanguage,
 	type AST,
 	type Checker,
 	isGlobalDeclarationOfName,
+	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
 
 function isDateType(node: AST.Expression, typeChecker: Checker) {
 	return typeChecker.getTypeAtLocation(node).getSymbol()?.getName() === "Date";

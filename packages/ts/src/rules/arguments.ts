@@ -1,9 +1,8 @@
-import * as ts from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import * as ts from "typescript";
 
 function isNonArrowFunctionBoundary(node: ts.Node): "quit" | boolean {
 	if (ts.isArrowFunction(node)) {

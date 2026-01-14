@@ -1,11 +1,11 @@
-import * as ts from "typescript";
-
 import {
 	type AST,
 	getTSNodeRange,
-	typescriptLanguage,
 	hasSameTokens,
+	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import * as ts from "typescript";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

@@ -1,12 +1,12 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import type { AST } from "@flint.fyi/typescript-language";
 import { unwrapParenthesizedExpression } from "@flint.fyi/typescript-language";
+import * as tsutils from "ts-api-utils";
+import ts, { SyntaxKind } from "typescript";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

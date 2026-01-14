@@ -1,11 +1,10 @@
-import * as ts from "typescript";
-
 import {
+	type AST,
+	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
-	getTSNodeRange,
-	type AST,
 } from "@flint.fyi/typescript-language";
+import * as ts from "typescript";
 
 const nativeCoercionFunctions = new Set([
 	"BigInt",

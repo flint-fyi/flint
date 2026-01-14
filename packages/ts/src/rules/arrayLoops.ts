@@ -1,10 +1,10 @@
-import * as ts from "typescript";
-
 import {
 	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import * as ts from "typescript";
+
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
 // TODO: Use a util like getStaticValue

@@ -1,11 +1,10 @@
-import * as ts from "typescript";
-
 import {
 	type AST,
+	isGlobalDeclarationOfName,
 	type TypeScriptFileServices,
 	typescriptLanguage,
-	isGlobalDeclarationOfName,
 } from "@flint.fyi/typescript-language";
+import * as ts from "typescript";
 
 const requiresNew = new Set([
 	"Array",

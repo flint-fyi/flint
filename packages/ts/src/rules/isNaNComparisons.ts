@@ -1,5 +1,3 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	type AST,
 	getTSNodeRange,
@@ -8,6 +6,7 @@ import {
 import type { Checker } from "@flint.fyi/typescript-language";
 import { isGlobalDeclarationOfName } from "@flint.fyi/typescript-language";
 import { unwrapParenthesizedExpression } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
 
 const comparisonOperators = new Set([
 	SyntaxKind.EqualsEqualsEqualsToken,

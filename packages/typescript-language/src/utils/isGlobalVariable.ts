@@ -1,4 +1,5 @@
 import type { AST, Checker } from "@flint.fyi/typescript-language";
+
 import { declarationsIncludeGlobal } from "./declarationsIncludeGlobal.ts";
 
 /**

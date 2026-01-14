@@ -1,10 +1,10 @@
-import ts from "typescript";
-
 import {
 	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import ts from "typescript";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 // TODO: Use a util like getStaticValue

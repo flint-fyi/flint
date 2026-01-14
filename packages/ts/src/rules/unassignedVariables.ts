@@ -1,9 +1,9 @@
-import ts, { SyntaxKind } from "typescript";
-
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import type { AST } from "@flint.fyi/typescript-language";
 import type { Checker } from "@flint.fyi/typescript-language";
 import { getModifyingReferences } from "@flint.fyi/typescript-language";
+import ts, { SyntaxKind } from "typescript";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
