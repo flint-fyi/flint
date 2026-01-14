@@ -4,22 +4,34 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `key: "simple"`,
-			snapshot: `key: "simple"
+			code: `
+key: "simple"
+`,
+			snapshot: `
+key: "simple"
      ~~~~~~~~
-     Prefer plain scalar over quoted scalar.`,
+     Prefer plain scalars over quoted scalars.
+`,
 		},
 		{
-			code: `key: 'simple'`,
-			snapshot: `key: 'simple'
+			code: `
+key: 'simple'
+`,
+			snapshot: `
+key: 'simple'
      ~~~~~~~~
-     Prefer plain scalar over quoted scalar.`,
+     Prefer plain scalars over quoted scalars.
+`,
 		},
 		{
-			code: `name: "hello"`,
-			snapshot: `name: "hello"
+			code: `
+name: "hello"
+`,
+			snapshot: `
+name: "hello"
       ~~~~~~~
-      Prefer plain scalar over quoted scalar.`,
+      Prefer plain scalars over quoted scalars.
+`,
 		},
 	],
 	valid: [

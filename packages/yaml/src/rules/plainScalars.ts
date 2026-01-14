@@ -25,7 +25,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 	},
 	messages: {
 		preferPlain: {
-			primary: "Prefer plain scalar over quoted scalar.",
+			primary: "Prefer plain scalars over quoted scalars.",
 			secondary: [
 				"Plain scalars are more readable and concise than quoted scalars.",
 				"Quoted scalars should only be used when the value cannot be represented as a plain scalar.",
