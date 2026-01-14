@@ -1,0 +1,91 @@
+---
+description: "Reports variables declared with `let` that are never reassigned and could be `const`."
+title: "constVariables"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="constVariables" />
+
+Using `const` for variables that are never reassigned signals to readers that the variable's binding will not change.
+This reduces cognitive load and makes code easier to understand and maintain.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+let value = 1;
+console.log(value);
+```
+
+```ts
+let name = "hello";
+```
+
+```ts
+let obj = { key: "value" };
+obj.key = "updated";
+```
+
+```ts
+let arr = [1, 2, 3];
+arr.push(4);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = 1;
+console.log(value);
+```
+
+```ts
+const name = "hello";
+```
+
+```ts
+let count = 0;
+count++;
+```
+
+```ts
+let value = 1;
+value = 2;
+```
+
+```ts
+const obj = { key: "value" };
+obj.key = "updated";
+```
+
+```ts
+const arr = [1, 2, 3];
+arr.push(4);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are working in a codebase where `let` is preferred for stylistic consistency regardless of reassignment, you may want to disable this rule.
+Some developers prefer using `let` for all mutable data structures even when the binding itself is not reassigned.
+
+## Further Reading
+
+- [MDN: const](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const)
+- [MDN: let](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="constVariables" />
