@@ -5,20 +5,11 @@ import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isDirective(statement: AST.Statement) {
-	if (statement.kind !== SyntaxKind.ExpressionStatement) {
-		return false;
-	}
-
-	const expressionStatement = statement;
-	const expression = expressionStatement.expression;
-
-	if (expression.kind !== SyntaxKind.StringLiteral) {
-		return false;
-	}
-
-	const text = expression.text;
-
-	return text === "use strict" || text === "use asm";
+	return (
+		statement.kind === SyntaxKind.ExpressionStatement &&
+		statement.expression.kind === SyntaxKind.StringLiteral &&
+		/^use \w+$/.exec(statement.expression.text)
+	);
 }
 
 function isEmptyStatement(statement: AST.Statement) {
@@ -33,23 +24,14 @@ function isEmptyStatement(statement: AST.Statement) {
 }
 
 function isMeaningfulStatement(statement: AST.Statement) {
-	if (isEmptyStatement(statement)) {
-		return false;
-	}
-
-	if (isDirective(statement)) {
-		return false;
-	}
-
-	return true;
+	return !isEmptyStatement(statement) && !isDirective(statement);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports files that contain no meaningful code.",
 		id: "emptyFiles",
-		presets: ["stylistic"],
-		strictness: "strict",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		emptyFile: {
@@ -59,7 +41,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"Files containing only whitespace, comments, directives, or empty statements are considered empty.",
 			],
 			suggestions: [
-				"Add meaningful code to the file, or delete it if it's no longer needed.",
+				"Add meaningful code to the file.",
+				"Delete the file if it's no longer needed.",
 			],
 		},
 	},
@@ -67,25 +50,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				SourceFile: (sourceFile) => {
-					if (sourceFile.isDeclarationFile) {
-						return;
+					if (
+						!sourceFile.isDeclarationFile &&
+						!sourceFile.statements.some(isMeaningfulStatement)
+					) {
+						context.report({
+							message: "emptyFile",
+							range: {
+								begin: 0,
+								end: 0,
+							},
+						});
 					}
-
-					const hasMeaningfulCode = sourceFile.statements.some(
-						isMeaningfulStatement,
-					);
-
-					if (hasMeaningfulCode) {
-						return;
-					}
-
-					context.report({
-						message: "emptyFile",
-						range: {
-							begin: 0,
-							end: 0,
-						},
-					});
 				},
 			},
 		};
