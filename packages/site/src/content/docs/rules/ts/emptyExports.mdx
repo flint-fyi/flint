@@ -1,0 +1,75 @@
+---
+description: "Reports empty export statements that don't change anything in a module file."
+title: "emptyExports"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="emptyExports" />
+
+An empty `export {}` statement is sometimes useful in TypeScript to turn a script file into a module file when there are no other imports or exports.
+However, when the file already contains imports or exports, the empty export statement is unnecessary and can be removed.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { something } from "module";
+export {};
+```
+
+```ts
+export const value = 1;
+export {};
+```
+
+```ts
+export function getValue() {
+	return 42;
+}
+export {};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { something } from "module";
+```
+
+```ts
+export const value = 1;
+```
+
+```ts
+// This empty export is the only module-related statement,
+// so it's necessary to make this file a module
+const value = 1;
+export {};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer to keep empty `export {}` statements for consistency or as a convention in your codebase, you may disable this rule.
+Some teams use empty exports as markers to indicate that a file should be treated as a module.
+
+## Further Reading
+
+- [TypeScript Handbook: Modules](https://www.typescriptlang.org/docs/handbook/modules.html)
+- [MDN: export](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="emptyExports" />
