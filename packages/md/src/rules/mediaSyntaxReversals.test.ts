@@ -81,18 +81,12 @@ Both (link)[url] and !(image)[path] are wrong.
 `,
 		`
 Check out [this link](https://example.com) for more info.
-
-...
 `,
 		`
 Both [link](url) and ![image](path) are correct.
-
-...
 `,
 		`
 Normal (parentheses) and [square brackets] are fine.
-
-...
 `,
 	],
 });
