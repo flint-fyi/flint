@@ -1,7 +1,7 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { getTSNodeRange } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
 import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
 import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
 
