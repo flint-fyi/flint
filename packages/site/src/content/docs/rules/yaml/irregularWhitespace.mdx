@@ -1,0 +1,69 @@
+---
+description: "Reports irregular whitespace characters."
+title: "irregularWhitespace"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="yaml" rule="irregularWhitespace" />
+
+Irregular whitespace characters like non-breaking spaces, zero-width spaces, or other Unicode whitespace characters can cause parsing issues or debugging difficulties.
+These characters are often invisible and can be accidentally introduced when copying text from other sources.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```yaml
+# Contains non-breaking space (U+00A0) after the colon
+key: value
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```yaml
+key: value
+```
+
+</TabItem>
+</Tabs>
+
+## Irregular Characters Detected
+
+This rule detects the following characters:
+
+- Vertical tab (`\v`, U+000B)
+- Form feed (`\f`, U+000C)
+- Next line (U+0085)
+- Non-breaking space (U+00A0)
+- Ogham space mark (U+1680)
+- Mongolian vowel separator (U+180E)
+- En quad through hair space (U+2000-U+200B)
+- Line separator (U+2028)
+- Paragraph separator (U+2029)
+- Narrow no-break space (U+202F)
+- Medium mathematical space (U+205F)
+- Ideographic space (U+3000)
+- Byte order mark (U+FEFF)
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your YAML files intentionally contain special Unicode whitespace characters for specific purposes, you may not need this rule.
+
+## Further Reading
+
+- [ESLint no-irregular-whitespace](https://eslint.org/docs/rules/no-irregular-whitespace)
+- [Unicode Character Categories - Space Separator](https://www.unicode.org/reports/tr44/)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="yaml" ruleId="irregularWhitespace" />

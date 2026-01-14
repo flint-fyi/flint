@@ -21555,7 +21555,8 @@
 		"flint": {
 			"name": "irregularWhitespace",
 			"plugin": "yaml",
-			"preset": "stylistic"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
