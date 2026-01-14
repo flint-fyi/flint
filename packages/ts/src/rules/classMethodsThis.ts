@@ -247,21 +247,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			sourceFile: ts.SourceFile,
 			options: RuleOptions,
 		) {
-			const init = member.initializer;
-			if (!init) {
+			if (!member.initializer) {
 				return;
 			}
 
 			if (
-				init.kind !== ts.SyntaxKind.ArrowFunction &&
-				init.kind !== ts.SyntaxKind.FunctionExpression
+				member.initializer.kind !== ts.SyntaxKind.ArrowFunction &&
+				member.initializer.kind !== ts.SyntaxKind.FunctionExpression
 			) {
 				return;
 			}
 
 			if (
 				!shouldSkipMember(member, classNode, options) &&
-				!containsThis(init.body)
+				!containsThis(member.initializer.body)
 			) {
 				reportMember(member, "method", sourceFile, false);
 			}
