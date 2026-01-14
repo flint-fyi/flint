@@ -9735,7 +9735,8 @@
 		"flint": {
 			"name": "emptyTypeParameterLists",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{

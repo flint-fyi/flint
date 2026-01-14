@@ -65,6 +65,7 @@ import elseIfDuplicates from "./rules/elseIfDuplicates.ts";
 import emptyBlocks from "./rules/emptyBlocks.ts";
 import emptyDestructures from "./rules/emptyDestructures.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
+import emptyTypeParameterLists from "./rules/emptyTypeParameterLists.ts";
 import enumInitializers from "./rules/enumInitializers.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
 import evolvingVariableTypes from "./rules/evolvingVariableTypes.ts";
@@ -188,6 +189,7 @@ export const ts = createPlugin({
 		emptyBlocks,
 		emptyDestructures,
 		emptyStaticBlocks,
+		emptyTypeParameterLists,
 		enumInitializers,
 		equalityOperatorNegations,
 		evolvingVariableTypes,
