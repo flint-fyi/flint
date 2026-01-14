@@ -77,7 +77,7 @@ export async function runCliWatch(
 			},
 			(_, fileName) => {
 				if (fileName) {
-					rerun(fileName);
+					void rerun(fileName);
 				}
 			},
 		);
