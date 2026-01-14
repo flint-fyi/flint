@@ -8,7 +8,7 @@ export default typescriptLanguage.createRule({
 		description:
 			"Requires passing `sourceFile` to `getStart()` for better performance.",
 		id: "getStartSourceFile",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingSourceFile: {
