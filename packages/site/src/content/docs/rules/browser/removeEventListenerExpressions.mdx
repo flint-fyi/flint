@@ -1,0 +1,80 @@
+---
+description: "Disallow inline function expressions in removeEventListener calls."
+title: "removeEventListenerExpressions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="removeEventListenerExpressions" />
+
+The `removeEventListener` method requires the exact same function reference that was passed to `addEventListener` in order to successfully remove the event listener.
+Passing an inline arrow function or function expression to `removeEventListener` creates a new function instance each time, which means the listener will never be removed because it doesn't match the original reference.
+
+This is a common mistake that leads to memory leaks and unexpected behavior, as event listeners remain attached to elements even after attempts to remove them.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```js
+element.removeEventListener("click", () => {
+	console.log("clicked");
+});
+```
+
+```js
+element.removeEventListener("click", function () {
+	console.log("clicked");
+});
+```
+
+```js
+window.removeEventListener("resize", () => handleResize());
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```js
+const handler = () => {
+	console.log("clicked");
+};
+element.removeEventListener("click", handler);
+```
+
+```js
+function handler() {
+	console.log("clicked");
+}
+element.removeEventListener("click", handler);
+```
+
+```js
+element.removeEventListener("click", this.handleClick);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase uses code generation that relies on uncommon JavaScript semantics such as inline function expressions in `removeEventListener` calls, this rule might not be for you.
+For example, if you use a framework that automatically deduplicates similar function expressions behind-the-scenes, this rule might not apply.
+
+## Further Reading
+
+- [MDN: `EventTarget.removeEventListener()`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener)
+- [MDN: `EventTarget.addEventListener()`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="removeEventListenerExpressions" />

@@ -1,12 +1,10 @@
-import * as ts from "typescript";
-
-import { declarationsIncludeGlobal } from "./declarationsIncludeGlobal.js";
+import type * as AST from "../types/ast.ts";
+import type { Checker } from "../types/checker.ts";
+import { getDeclarationsIfGlobal } from "./getDeclarationsIfGlobal.ts";
 
 export function isGlobalDeclaration(
-	node: ts.Expression,
-	typeChecker: ts.TypeChecker,
-): boolean {
-	const declarations = typeChecker.getSymbolAtLocation(node)?.getDeclarations();
-
-	return !!declarations && declarationsIncludeGlobal(declarations);
+	node: AST.Expression,
+	typeChecker: Checker,
+) {
+	return !!getDeclarationsIfGlobal(node, typeChecker);
 }

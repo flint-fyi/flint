@@ -1,5 +1,5 @@
-import rule from "./bareUrls.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./bareUrls.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

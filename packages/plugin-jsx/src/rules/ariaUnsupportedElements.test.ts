@@ -1,5 +1,5 @@
-import rule from "./ariaUnsupportedElements.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./ariaUnsupportedElements.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <meta charset="UTF-8" aria-hidden="false" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <meta charset="UTF-8" aria-hidden="false" />
  ~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <script role="application" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <script role="application" />
  ~~~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <style aria-label="styles" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <style aria-label="styles" />
  ~~~~~
@@ -40,7 +37,6 @@ ruleTester.describe(rule, {
 			code: `
 <html aria-required="true" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <html aria-required="true" />
  ~~~~
@@ -51,23 +47,18 @@ ruleTester.describe(rule, {
 	valid: [
 		{
 			code: `<meta charset="UTF-8" />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<script src="app.js" />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<style>{css}</style>`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<div role="button" />`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `<button aria-label="Click me" />`,
-			fileName: "file.tsx",
 		},
 	],
 });

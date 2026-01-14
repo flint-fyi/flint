@@ -1,2 +1,2 @@
-export { markdownLanguage } from "./language.js";
-export { md } from "./plugin.js";
+export { markdownLanguage } from "./language.ts";
+export { md } from "./plugin.ts";

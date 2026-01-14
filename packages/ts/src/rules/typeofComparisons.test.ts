@@ -1,5 +1,5 @@
-import { ruleTester } from "./ruleTester.js";
-import rule from "./typeofComparisons.js";
+import { ruleTester } from "./ruleTester.ts";
+import rule from "./typeofComparisons.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

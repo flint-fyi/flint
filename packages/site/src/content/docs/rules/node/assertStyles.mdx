@@ -1,0 +1,74 @@
+---
+description: "Prefer `assert.ok()` over `assert()` for explicit intent and better readability."
+title: "assertStyles"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="assertStyles" />
+
+Using `assert.ok()` aligns with other assert methods, ensuring consistency and making code easier to maintain and understand.
+The explicit method call clarifies the assertion's purpose, making it immediately clear that a boolean check is being performed.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import assert from "node:assert";
+
+assert(divide(10, 2) === 5);
+```
+
+```ts
+import { strict as assert } from "node:assert";
+
+assert(value);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import assert from "node:assert";
+
+assert.ok(divide(10, 2) === 5);
+```
+
+```ts
+import { strict as assert } from "node:assert";
+
+assert.ok(value);
+```
+
+```ts
+import assert from "node:assert";
+
+assert.strictEqual(actual, expected);
+assert.deepStrictEqual(actual, expected);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a strong preference for the shorter `assert()` syntax and find it clear enough in your codebase, you might choose not to enable this rule.
+
+## Further Reading
+
+- [Node.js: Assert module](https://nodejs.org/api/assert.html)
+- [MDN: Assertions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="assertStyles" />

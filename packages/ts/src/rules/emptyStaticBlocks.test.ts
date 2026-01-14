@@ -1,5 +1,5 @@
-import rule from "./emptyStaticBlocks.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./emptyStaticBlocks.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -63,22 +63,22 @@ class Example {
 			code: `
 class Multiple {
     static property = 1;
-    
+
     static {
     }
-    
+
     method() {}
 }
 `,
 			snapshot: `
 class Multiple {
     static property = 1;
-    
+
     static {
     ~~~~~~~~
     Empty static blocks serve no purpose and should be removed for cleaner code.
     }
-    
+
     method() {}
 }
 `,
@@ -88,9 +88,9 @@ class Multiple {
 					updated: `
 class Multiple {
     static property = 1;
+
     
-    
-    
+
     method() {}
 }
 `,
@@ -103,7 +103,7 @@ class MultipleBlocks {
     static {
         console.log("first");
     }
-    
+
     static {
     }
 }
@@ -113,7 +113,7 @@ class MultipleBlocks {
     static {
         console.log("first");
     }
-    
+
     static {
     ~~~~~~~~
     Empty static blocks serve no purpose and should be removed for cleaner code.
@@ -128,7 +128,7 @@ class MultipleBlocks {
     static {
         console.log("first");
     }
-    
+
     
 }
 `,
@@ -158,7 +158,7 @@ class Multiple {
     static {
         console.log("first");
     }
-    
+
     static {
         console.log("second");
     }

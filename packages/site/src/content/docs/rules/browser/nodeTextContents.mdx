@@ -1,0 +1,79 @@
+---
+description: "Prefer textContent over innerText for DOM nodes."
+title: "nodeTextContents"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="nodeTextContents" />
+
+The `textContent` property should be preferred over `innerText` when accessing or setting the text content of DOM nodes.
+`textContent` is more performant because it doesn't trigger a reflow, is more widely supported and standard across browsers, and has more predictable behavior.
+
+`innerText` is aware of styling and won't return text of hidden elements, which can lead to unexpected behavior in some cases.
+Additionally, `innerText` is slower because it requires layout information.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```typescript
+const text = element.innerText;
+```
+
+```typescript
+element.innerText = "Hello";
+```
+
+```typescript
+const content = node.innerText;
+```
+
+```typescript
+div.innerText = value;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```typescript
+const text = element.textContent;
+```
+
+```typescript
+element.textContent = "Hello";
+```
+
+```typescript
+const content = node.textContent;
+```
+
+```typescript
+div.textContent = value;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you specifically need the behavior of `innerText` (filtering out hidden elements or getting rendered text), then you should disable this rule for those specific cases.
+
+## Further Reading
+
+- [MDN: `Node.textContent`](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent)
+- [MDN: `HTMLElement.innerText`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/innerText)
+- [Performance comparison: textContent vs innerText](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent#differences_from_innertext)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="nodeTextContents" />

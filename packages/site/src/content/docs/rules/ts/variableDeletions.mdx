@@ -48,7 +48,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-This rule should always be enabled, as attempting to delete variables is always incorrect behavior in JavaScript and TypeScript.
+If your codebase relies on non-standard behavior that involves deleting variables (which is highly discouraged), you might choose to disable this rule.
+For example, if you target a legacy runtime with non-standard JavaScript semantics, standard practices may not apply to you.
 
 ## Further Reading
 

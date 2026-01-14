@@ -1,5 +1,5 @@
-import { ruleTester } from "./ruleTester.js";
-import rule from "./scriptUrls.js";
+import { ruleTester } from "./ruleTester.ts";
+import rule from "./scriptUrls.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -54,11 +54,14 @@ const url = "JAVASCRIPT:doSomething()";
 `,
 		},
 		{
-			code: `window.location = "javascript:void(0)";`,
-			snapshot: `window.location = "javascript:void(0)";
-                 ~~~~~~~~~~~~~~~~~~~~
-                 This \`javascript:\` URL is a form of eval.
-`,
+			code: `
+window.location = "javascript:void(0)";
+			`,
+			snapshot: `
+window.location = "javascript:void(0)";
+                  ~~~~~~~~~~~~~~~~~~~~
+                  This \`javascript:\` URL is a form of eval.
+			`,
 		},
 		{
 			code: `

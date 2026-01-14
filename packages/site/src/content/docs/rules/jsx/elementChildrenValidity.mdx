@@ -1,0 +1,93 @@
+---
+description: "Reports void DOM elements that have children, which is invalid HTML."
+title: "elementChildrenValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="elementChildrenValidity" />
+
+Void elements (also called self-closing or empty elements) are HTML elements that cannot have children.
+These elements, such as `<br>`, `<img>`, and `<input>`, are self-closing by definition and attempting to give them children violates the HTML specification.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<br>text content</br>
+```
+
+```tsx
+<img>Invalid children</img>
+```
+
+```tsx
+<input>
+	<span>Not allowed</span>
+</input>
+```
+
+```tsx
+<hr>{expression}</hr>
+```
+
+```tsx
+<meta>
+	<div>Content</div>
+</meta>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<br />
+```
+
+```tsx
+<img src="photo.jpg" />
+```
+
+```tsx
+<input type="text" />
+```
+
+```tsx
+<hr />
+```
+
+```tsx
+<meta name="viewport" content="width=device-width" />
+```
+
+```tsx
+<div>
+	<br />
+	Text content around void elements
+</div>
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your application is a rare one that violates HTML standards and places invalid children inside standard elements, this rule may be counterproductive for you.
+
+## Further Reading
+
+- [MDN: Void elements](https://developer.mozilla.org/en-US/docs/Glossary/Void_element)
+- [HTML Standard: Void elements](https://html.spec.whatwg.org/multipage/syntax.html#void-elements)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="elementChildrenValidity" />

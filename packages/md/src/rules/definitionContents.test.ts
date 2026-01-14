@@ -1,5 +1,5 @@
-import rule from "./definitionContents.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./definitionContents.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

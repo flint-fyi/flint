@@ -1,14 +1,15 @@
-import * as ts from "typescript";
+import ts from "typescript";
 import z from "zod";
 
-import { jsonLanguage } from "../language.js";
+import { jsonLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default jsonLanguage.createRule({
+export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:
 			"Reports object keys that are not normalized using Unicode normalization forms.",
 		id: "keyNormalization",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unnormalizedKey: {
@@ -31,10 +32,10 @@ export default jsonLanguage.createRule({
 				"Unicode normalization form to use when checking keys. Must be one of: NFC (default), NFD, NFKC, or NFKD.",
 			),
 	},
-	setup(context, { form = "NFC" }) {
+	setup(context) {
 		return {
 			visitors: {
-				ObjectLiteralExpression(node) {
+				ObjectLiteralExpression(node, { options: { form }, sourceFile }) {
 					for (const property of node.properties) {
 						if (
 							!ts.isPropertyAssignment(property) ||
@@ -54,14 +55,14 @@ export default jsonLanguage.createRule({
 							data: { form },
 							message: "unnormalizedKey",
 							range: {
-								begin: property.name.getStart(context.sourceFile),
+								begin: property.name.getStart(sourceFile),
 								end: property.name.end,
 							},
 							suggestions: [
 								{
 									id: "normalizeKey",
 									range: {
-										begin: property.name.getStart(context.sourceFile) + 1,
+										begin: property.name.getStart(sourceFile) + 1,
 										end: property.name.end - 1,
 									},
 									text: normalizedKey,

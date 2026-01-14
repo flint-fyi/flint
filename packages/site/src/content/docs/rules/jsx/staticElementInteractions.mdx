@@ -1,0 +1,62 @@
+---
+description: "Reports static elements with event handlers that lack ARIA roles."
+title: "staticElementInteractions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="staticElementInteractions" />
+
+Static HTML elements like `<div>` and `<span>` have no semantic meaning.
+When adding interactive event handlers to these elements, you should provide a role attribute to convey their purpose to screen readers, search engine crawlers, and other technologies that rely on semantic elements.
+
+Semantic HTML elements like `<button>` already have appropriate roles and don't need additional attributes.
+
+This is required for WCAG 4.1.2 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<div onClick={() => {}} />
+```
+
+```tsx
+<span onKeyDown={handler} />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div onClick={() => {}} role="button" />
+```
+
+```tsx
+<span onKeyDown={handler} role="link" />
+```
+
+```tsx
+<button onClick={() => {}} />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you are using a framework that automatically assigns element roles, you can disable this rule.
+
+## Further Reading
+
+- [WCAG 4.1.2: Name, Role, Value](https://www.w3.org/WAI/WCAG21/Understanding/name-role-value)
+- [WAI-ARIA role attribute](https://www.w3.org/TR/wai-aria-1.1/#usage_intro)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="staticElementInteractions" />

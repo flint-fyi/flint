@@ -1,0 +1,94 @@
+---
+description: "Prefer modern DOM APIs like .replaceWith() and .before() over legacy methods."
+title: "nodeModificationMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="nodeModificationMethods" />
+
+Modern DOM APIs provide simpler and more intuitive ways to modify the DOM compared to their legacy counterparts.
+These newer methods can be called directly on the node being modified, accept multiple nodes or strings at once, and do not require traversing to parent nodes.
+This rule enforces calling to modern APIs over their legacy equivalents.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```js
+element.insertAdjacentElement("afterend", newNode);
+```
+
+```js
+parentNode.replaceChild(newNode, oldNode);
+```
+
+```js
+parentNode.insertBefore(newNode, referenceNode);
+```
+
+```js
+referenceNode.insertAdjacentText("beforebegin", "text");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```js
+element.after(newNode);
+```
+
+```js
+oldNode.replaceWith(newNode);
+```
+
+```js
+referenceNode.before(newNode);
+```
+
+```js
+referenceNode.before("text");
+```
+
+</TabItem>
+</Tabs>
+
+## Details
+
+This rule enforces the use of modern DOM manipulation methods:
+
+- `childNode.replaceWith(newNode)` instead of `parentNode.replaceChild(newNode, oldNode)`
+- `referenceNode.before(newNode)` instead of `parentNode.insertBefore(newNode, referenceNode)`
+- `referenceNode.before('text')` instead of `referenceNode.insertAdjacentText('beforebegin', 'text')`
+- `referenceNode.prepend('text')` instead of `referenceNode.insertAdjacentText('afterbegin', 'text')`
+- `referenceNode.append('text')` instead of `referenceNode.insertAdjacentText('beforeend', 'text')`
+- `referenceNode.after('text')` instead of `referenceNode.insertAdjacentText('afterend', 'text')`
+- `referenceNode.before(newNode)` instead of `referenceNode.insertAdjacentElement('beforebegin', newNode)`
+- `referenceNode.prepend(newNode)` instead of `referenceNode.insertAdjacentElement('afterbegin', newNode)`
+- `referenceNode.append(newNode)` instead of `referenceNode.insertAdjacentElement('beforeend', newNode)`
+- `referenceNode.after(newNode)` instead of `referenceNode.insertAdjacentElement('afterend', newNode)`
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support older browsers that do not have these modern DOM APIs, you might need to continue using the legacy methods or use polyfills.
+
+## Further Reading
+
+- [MDN: ChildNode.replaceWith()](https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/replaceWith)
+- [MDN: ChildNode.before()](https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/before)
+- [MDN: ChildNode.after()](https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/after)
+- [MDN: Element.append()](https://developer.mozilla.org/en-US/docs/Web/API/Element/append)
+- [MDN: Element.prepend()](https://developer.mozilla.org/en-US/docs/Web/API/Element/prepend)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="nodeModificationMethods" />

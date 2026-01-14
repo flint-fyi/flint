@@ -1,5 +1,5 @@
-import { FilesValue } from "../types/files.js";
-import { flatten } from "../utils/arrays.js";
+import type { FilesValue } from "../types/files.ts";
+import { flatten } from "../utils/arrays.ts";
 
 export function collectFilesValues(
 	filesValues: FilesValue[],

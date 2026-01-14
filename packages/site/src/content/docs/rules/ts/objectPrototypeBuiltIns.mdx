@@ -1,0 +1,70 @@
+---
+description: "Reports direct calls to Object.prototype methods on object instances."
+title: "objectPrototypeBuiltIns"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="objectPrototypeBuiltIns" />
+
+Objects can have properties that shadow the built-in methods from `Object.prototype` such as `hasOwnProperty`, `isPrototypeOf`, and `propertyIsEnumerable`.
+Additionally, objects created with `Object.create(null)` do not inherit from `Object.prototype` and will not have these methods.
+Calling these methods directly on objects can lead to errors or security vulnerabilities.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const hasKey = object.hasOwnProperty("key");
+```
+
+```ts
+const isPrototypeOf = object.isPrototypeOf(other);
+```
+
+```ts
+const isEnumerable = object.propertyIsEnumerable("prop");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const hasKey = Object.prototype.hasOwnProperty.call(object, "key");
+```
+
+```ts
+const isPrototypeOf = Object.prototype.isPrototypeOf.call(object, other);
+```
+
+```ts
+const isEnumerable = {}.propertyIsEnumerable.call(object, "prop");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If code only uses objects with hardcoded keys and never uses `Object.create(null)` or allows user-controlled object keys, this rule might not be necessary.
+Alternately, if your codebase overrides these properties -which is a dangerous legacy pattern most runtimes recommend against- you might not be able to enable this rule.
+
+## Further Reading
+
+- [MDN: `Object.prototype.hasOwnProperty`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwnProperty)
+- [MDN: `Object.prototype.isPrototypeOf`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isPrototypeOf)
+- [MDN: `Object.prototype.propertyIsEnumerable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/propertyIsEnumerable)
+- [MDN: `Object.create`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="objectPrototypeBuiltIns" />

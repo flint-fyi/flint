@@ -1,5 +1,5 @@
-import rule from "./labelReferenceValidity.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./labelReferenceValidity.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -20,9 +20,10 @@ This label reference has invalid whitespace between brackets.
 `,
 			snapshot: `
 [flint][
-~~~~~~~~~~
+~~~~~~~~
 This label reference has invalid whitespace between brackets.
 ]
+~
 `,
 		},
 		{

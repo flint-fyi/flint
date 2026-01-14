@@ -1,10 +1,10 @@
 {
 	"name": "@flint.fyi/cli",
-	"version": "0.15.2",
+	"version": "0.16.1",
 	"description": "[Experimental] Command-line interface for Flint.",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/JoshuaKGoldberg/flint",
+		"url": "git+https://github.com/flint-fyi/flint.git",
 		"directory": "packages/cli"
 	},
 	"license": "MIT",
@@ -12,24 +12,47 @@
 		"name": "JoshuaKGoldberg",
 		"email": "npm@joshuakgoldberg.com"
 	},
+	"sideEffects": false,
 	"type": "module",
-	"main": "./lib/index.js",
+	"exports": {
+		".": {
+			"@flint.fyi/source": "./src/index.ts",
+			"default": "./lib/index.js"
+		}
+	},
+	"files": [
+		"lib/",
+		"!lib/**/*.map"
+	],
+	"scripts": {
+		"test": "vitest --typecheck --project cli"
+	},
 	"dependencies": {
-		"@flint.fyi/core": "workspace:",
-		"@flint.fyi/utils": "workspace:",
+		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/utils": "workspace:^",
 		"@shikijs/cli": "^3.13.0",
 		"chalk": "^5.6.2",
 		"cli-cursor": "^5.0.0",
-		"debounce": "^2.2.0",
+		"debounce": "^3.0.0",
 		"debug-for-file": "^0.2.0",
 		"text-table-fast": "^0.1.0",
+		"typescript": "^5.9.3 || ^6.0.0",
 		"wrap-ansi": "^9.0.2"
+	},
+	"devDependencies": {
+		"prettier": "3.7.4",
+		"tsdown": "0.19.0-beta.2"
+	},
+	"peerDependencies": {
+		"prettier": "^3.7.4"
 	},
 	"engines": {
 		"node": ">=24.0.0"
 	},
 	"publishConfig": {
 		"access": "public",
-		"provenance": true
+		"exports": {
+			".": "./lib/index.js"
+		}
 	}
 }

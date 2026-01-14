@@ -1,8 +1,9 @@
 import { createPlugin } from "@flint.fyi/core";
 
-import duplicateTestCases from "./rules/duplicateTestCases.js";
+import invalidCodeLines from "./rules/invalidCodeLines.ts";
+import testCaseDuplicates from "./rules/testCaseDuplicates.ts";
 
 export const flint = createPlugin({
-	name: "flint",
-	rules: [duplicateTestCases],
+	name: "Flint",
+	rules: [invalidCodeLines, testCaseDuplicates],
 });

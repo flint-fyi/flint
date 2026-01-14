@@ -1,0 +1,138 @@
+---
+description: "YAML linting rules provided by Flint."
+title: "YAML Plugin"
+---
+
+import { RulesTable } from "~/components/RulesTable.tsx";
+import PluginTop from "~/components/PluginTop.astro";
+
+<PluginTop pluginId="yaml" />
+
+## Presets
+
+Flint's YAML plugin provides the following presets:
+
+| Preset                                    | Recommended   | Description                                                                           |
+| ----------------------------------------- | ------------- | ------------------------------------------------------------------------------------- |
+| **[`logical`](#logical)**                 | ✅ Always     | Common rules for finding bugs and enforcing good logical practices in YAML files.     |
+| **[`logicalStrict`](#logicalstrict)**     | ☑️ When Ready | Additional rules for finding bugs and enforcing good logical practices in YAML files. |
+| **[`stylistic`](#stylistic)**             | ✅ Always     | Common rules for consistent styling and best stylistic practices in YAML files.       |
+| **[`stylisticStrict`](#stylisticstrict)** | ☑️ When Ready | Additional rules for consistent styling and best stylistic practices in YAML files.   |
+
+If you are just getting started with linting, Flint recommends using the [`logical`](#logical) and [`stylistic`](#stylistic) presets:
+
+```ts title="flint.config.ts"
+import { defineConfig, yaml } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: yaml.files.all,
+			rules: [yaml.presets.logical, yaml.presets.stylistic],
+		},
+	],
+});
+```
+
+If you are experienced with both YAML and linting, Flint recommends using the [`logicalStrict`](#logicalstrict) and [`stylisticStrict`](#stylisticstrict) presets:
+
+```ts title="flint.config.ts"
+import { defineConfig, yaml } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: yaml.files.all,
+			rules: [yaml.presets.logicalStrict, yaml.presets.stylisticStrict],
+		},
+	],
+});
+```
+
+:::note
+Coming soon: more expansive documentation on choosing and combining plugins & presets with Flint.
+:::
+
+### `logical`
+
+Rules that find bugs and enforce good YAML practices for most-to-all YAML files.
+
+```ts title="flint.config.ts"
+import { defineConfig, yaml } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: yaml.files.all,
+			rules: yaml.presets.logical,
+		},
+	],
+});
+```
+
+### `logicalStrict`
+
+Additional logical rules that enforce best practices which are not always straightforward to implement.
+These rules are recommended for projects where a majority of developers are experienced with both YAML and using a linter.
+
+```ts title="flint.config.ts"
+import { defineConfig, yaml } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: yaml.files.all,
+			rules: yaml.presets.logicalStrict,
+		},
+	],
+});
+```
+
+This preset's rules are a superset of those in [`logical`](#logical).
+
+### `stylistic`
+
+Rules that enforce consistent styling and best stylistic practices for most-to-all YAML files.
+
+```ts title="flint.config.ts"
+import { defineConfig, yaml } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: yaml.files.all,
+			rules: yaml.presets.stylistic,
+		},
+	],
+});
+```
+
+### `stylisticStrict`
+
+Additional stylistic rules that enforce best practices which are not always straightforward to implement.
+These rules are recommended for projects where a majority of developers are experienced with both YAML and using a linter.
+
+```ts title="flint.config.ts"
+import { defineConfig, yaml } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: yaml.files.all,
+			rules: yaml.presets.stylisticStrict,
+		},
+	],
+});
+```
+
+This preset's rules are a superset of those in [`stylistic`](#stylistic).
+
+## Rules
+
+<RulesTable implementing plugin="yaml" />
+
+## Selectors
+
+Flint's YAML plugin provides the following file selector:
+
+- `all`: `**/*.{yaml,yml}`

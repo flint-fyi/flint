@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.bin.json",
+		"rootDir": "bin/",
+		"outDir": "lib/bin/",
+		"types": ["node"]
+	},
+	"extends": "../../tsconfig.base.json",
+	"include": ["bin"],
+	"references": [{ "path": "../cli" }, { "path": "../ts-patch" }]
+}

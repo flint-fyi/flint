@@ -1,0 +1,82 @@
+---
+description: "Prefer addEventListener over assigning to on* event handler properties."
+title: "eventListenerSubscriptions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="eventListenerSubscriptions" />
+
+Modern DOM event handling should use `addEventListener` rather than assigning functions directly to `on*` event handler properties like `onclick` or `onload`.
+Legacy event handler properties have several limitations:
+
+- They can only hold one function at a time (overwriting previous handlers)
+- They don't provide options for capture phase or passive listeners
+- They're harder to remove later
+
+Using `addEventListener` provides more flexibility by allowing multiple event listeners for the same event.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```js
+element.onclick = function () {
+	console.log("clicked");
+};
+
+window.onload = () => {
+	initialize();
+};
+
+button.onmousedown = handleMouseDown;
+
+form.onsubmit = (event) => {
+	event.preventDefault();
+};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```js
+element.addEventListener("click", function () {
+	console.log("clicked");
+});
+
+window.addEventListener("load", () => {
+	initialize();
+});
+
+button.addEventListener("mousedown", handleMouseDown);
+
+form.addEventListener("submit", (event) => {
+	event.preventDefault();
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support very old browsers that don't have `addEventListener` (Internet Explorer 8 and below), you might need to use event handler properties.
+However, for modern web development, `addEventListener` is the recommended approach.
+
+## Further Reading
+
+- [MDN: `EventTarget.addEventListener()`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)
+- [MDN: Event handlers](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Event_handlers)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="eventListenerSubscriptions" />

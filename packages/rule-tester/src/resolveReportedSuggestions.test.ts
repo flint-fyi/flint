@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { resolveReportedSuggestions } from "./resolveReportedSuggestions.js";
+import { resolveReportedSuggestions } from "./resolveReportedSuggestions.ts";
 
 const mockReport = {
 	message: { primary: "", secondary: [], suggestions: [] },

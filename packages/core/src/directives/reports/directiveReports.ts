@@ -1,8 +1,8 @@
-import { createCommentDirectiveAlreadyDisabled } from "./createCommentDirectiveAlreadyDisabled.js";
-import { createCommentDirectiveFileAfterContent } from "./createCommentDirectiveFileAfterContent.js";
-import { createCommentDirectiveNoSelection } from "./createCommentDirectiveNoSelection.js";
-import { createCommentDirectiveNotPreviouslyDisabled } from "./createCommentDirectiveNotPreviouslyDisabled.js";
-import { createCommentDirectiveUnknown } from "./createCommentDirectiveUnknown.js";
+import { createCommentDirectiveAlreadyDisabled } from "./createCommentDirectiveAlreadyDisabled.ts";
+import { createCommentDirectiveFileAfterContent } from "./createCommentDirectiveFileAfterContent.ts";
+import { createCommentDirectiveNoSelection } from "./createCommentDirectiveNoSelection.ts";
+import { createCommentDirectiveNotPreviouslyDisabled } from "./createCommentDirectiveNotPreviouslyDisabled.ts";
+import { createCommentDirectiveUnknown } from "./createCommentDirectiveUnknown.ts";
 
 export const directiveReports = {
 	createAlreadyDisabled: createCommentDirectiveAlreadyDisabled,

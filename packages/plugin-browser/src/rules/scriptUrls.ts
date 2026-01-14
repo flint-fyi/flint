@@ -1,11 +1,13 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports `javascript:` URLs that can act as a form of eval.",
 		id: "scriptUrls",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		scriptUrl: {
@@ -22,33 +24,37 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkStringValue(value: string, node: ts.Node) {
+		function checkStringValue(
+			value: string,
+			node: ts.Node,
+			sourceFile: ts.SourceFile,
+		) {
 			if (value.toLowerCase().startsWith("javascript:")) {
 				context.report({
 					message: "scriptUrl",
-					range: getTSNodeRange(node, context.sourceFile),
+					range: getTSNodeRange(node, sourceFile),
 				});
 			}
 		}
 
 		return {
 			visitors: {
-				NoSubstitutionTemplateLiteral(node: ts.NoSubstitutionTemplateLiteral) {
-					if (!ts.isTaggedTemplateExpression(node.parent)) {
-						checkStringValue(node.text, node);
+				NoSubstitutionTemplateLiteral(node, { sourceFile }) {
+					if (node.parent.kind !== SyntaxKind.TaggedTemplateExpression) {
+						checkStringValue(node.text, node, sourceFile);
 					}
 				},
-				StringLiteral(node: ts.StringLiteral) {
-					checkStringValue(node.text, node);
+				StringLiteral(node, { sourceFile }) {
+					checkStringValue(node.text, node, sourceFile);
 				},
-				TemplateExpression(node: ts.TemplateExpression) {
+				TemplateExpression(node, { sourceFile }) {
 					if (
-						!ts.isTaggedTemplateExpression(node.parent) &&
+						node.parent.kind !== SyntaxKind.TaggedTemplateExpression &&
 						node.head.text.toLowerCase().startsWith("javascript:")
 					) {
 						context.report({
 							message: "scriptUrl",
-							range: getTSNodeRange(node, context.sourceFile),
+							range: getTSNodeRange(node, sourceFile),
 						});
 					}
 				},

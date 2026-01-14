@@ -1,0 +1,73 @@
+---
+description: "Reports non-interactive elements with interactive ARIA roles."
+title: "nonInteractiveElementRoles"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="nonInteractiveElementRoles" />
+
+Non-interactive HTML elements such as `<div>` and `<span>` are not given interactions such as <kbd>Tab</kbd> focus by browsers.
+Giving a non-interactive HTMl element an interactive role will not fill in those interactions, and so causes accessibility issues on pages that do so.
+It's generally more accessible to use native interactive elements instead.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<h1 role="button" />
+```
+
+```tsx
+<div role="link" />
+```
+
+```tsx
+<img role="checkbox" />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<button />
+```
+
+```tsx
+<a href="/" />
+```
+
+```tsx
+<input type="checkbox" />
+```
+
+```tsx
+<ul role="menu" />
+```
+
+```tsx
+<li role="menuitem" />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you are using a framework that fully recreates browser interaction events for elements, you can safely disable this rule.
+However, native browser interactions are exceedingly difficult to fully recreate.
+It is strongly recommended to use native interactive elements instead.
+
+## Further Reading
+
+- [WCAG 4.1.2 - Name, Role, Value](https://www.w3.org/WAI/WCAG21/Understanding/name-role-value)
+- [WAI-ARIA Roles](https://www.w3.org/TR/wai-aria-1.1/#usage_intro)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="nonInteractiveElementRoles" />

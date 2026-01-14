@@ -1,6 +1,6 @@
-import * as ts from "typescript";
-
-import { declarationsIncludeGlobal } from "./declarationsIncludeGlobal.js";
+import type * as AST from "../types/ast.ts";
+import type { Checker } from "../types/checker.ts";
+import { declarationsIncludeGlobal } from "./declarationsIncludeGlobal.ts";
 
 /**
  * Checks if a node is a reference to a global variable (e.g., Object, undefined, NaN).
@@ -9,8 +9,8 @@ import { declarationsIncludeGlobal } from "./declarationsIncludeGlobal.js";
  * TODO: Use a scope manager (#400).
  */
 export function isGlobalVariable(
-	node: ts.Expression,
-	typeChecker: ts.TypeChecker,
+	node: AST.Expression,
+	typeChecker: Checker,
 ): boolean {
 	const symbol = typeChecker.getSymbolAtLocation(node);
 	if (!symbol) {

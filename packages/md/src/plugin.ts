@@ -1,25 +1,27 @@
 import { createPlugin } from "@flint.fyi/core";
 
-import bareUrls from "./rules/bareUrls.js";
-import definitionContents from "./rules/definitionContents.js";
-import definitionDuplicates from "./rules/definitionDuplicates.js";
-import definitionUses from "./rules/definitionUses.js";
-import fencedCodeLanguages from "./rules/fencedCodeLanguages.js";
-import headingIncrements from "./rules/headingIncrements.js";
-import headingRootDuplicates from "./rules/headingRootDuplicates.js";
-import imageAltTexts from "./rules/imageAltTexts.js";
-import imageContents from "./rules/imageContents.js";
-import labelReferences from "./rules/labelReferences.js";
-import labelReferenceValidity from "./rules/labelReferenceValidity.js";
-import linkContents from "./rules/linkContents.js";
-import mediaSyntaxReversals from "./rules/mediaSyntaxReversals.js";
-import tableColumnCounts from "./rules/tableColumnCounts.js";
+import bareUrls from "./rules/bareUrls.ts";
+import definitionContents from "./rules/definitionContents.ts";
+import definitionDuplicates from "./rules/definitionDuplicates.ts";
+import definitionUses from "./rules/definitionUses.ts";
+import fencedCodeLanguages from "./rules/fencedCodeLanguages.ts";
+import headingIncrements from "./rules/headingIncrements.ts";
+import headingRootDuplicates from "./rules/headingRootDuplicates.ts";
+import imageAltTexts from "./rules/imageAltTexts.ts";
+import imageContents from "./rules/imageContents.ts";
+import labelReferences from "./rules/labelReferences.ts";
+import labelReferenceValidity from "./rules/labelReferenceValidity.ts";
+import linkContents from "./rules/linkContents.ts";
+import linkFragments from "./rules/linkFragments.ts";
+import mediaSyntaxReversals from "./rules/mediaSyntaxReversals.ts";
+import referenceLikeUrls from "./rules/referenceLikeUrls.ts";
+import tableColumnCounts from "./rules/tableColumnCounts.ts";
 
 export const md = createPlugin({
 	files: {
 		all: ["**/*.md"],
 	},
-	name: "md",
+	name: "Markdown",
 	rules: [
 		bareUrls,
 		definitionContents,
@@ -33,7 +35,9 @@ export const md = createPlugin({
 		labelReferences,
 		labelReferenceValidity,
 		linkContents,
+		linkFragments,
 		mediaSyntaxReversals,
 		tableColumnCounts,
+		referenceLikeUrls,
 	],
 });

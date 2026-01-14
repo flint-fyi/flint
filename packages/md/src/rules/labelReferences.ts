@@ -1,18 +1,19 @@
 import type { Definition, Node, Root, Text } from "mdast";
 
-import type { WithPosition } from "../nodes.js";
-
-import { markdownLanguage } from "../language.js";
+import { markdownLanguage } from "../language.ts";
+import type { WithPosition } from "../nodes.ts";
 
 // Pattern to match label references: ![text][label], [text][label], [label][], or [label]
 // Includes optional ! for images
 const labelPattern = /!?\[(?<left>[^[\]\\]*)\]\[(?<right>[^\]\\]*)\]/g;
 
-export default markdownLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports missing label references.",
 		id: "labelReferences",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingLabel: {
@@ -61,8 +62,8 @@ export default markdownLanguage.createRule({
 							}
 
 							const identifier = right
-								? right.trim() || left.trim()
-								: left.trim();
+								? right.trim() || (left?.trim() ?? "")
+								: (left?.trim() ?? "");
 
 							if (!identifier) {
 								continue;

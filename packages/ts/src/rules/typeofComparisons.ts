@@ -1,7 +1,8 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.js";
-import { typescriptLanguage } from "../language.js";
+import { getTSNodeRange } from "../getTSNodeRange.ts";
+import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 const validTypeofValues = new Set([
 	"bigint",
@@ -15,22 +16,26 @@ const validTypeofValues = new Set([
 ]);
 
 // TODO: Reuse a shared getStaticValue-style utility?
-function getStringValue(node: ts.Expression) {
-	return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)
+// https://github.com/flint-fyi/flint/issues/1298
+function getStringValue(node: AST.Expression) {
+	return node.kind === SyntaxKind.StringLiteral ||
+		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral
 		? node.text
 		: undefined;
 }
 
-function getTypeofOperand(node: ts.Expression) {
-	return ts.isTypeOfExpression(node) && node.expression;
+function getTypeofOperand(node: AST.Expression) {
+	return node.kind === SyntaxKind.TypeOfExpression && node.expression;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports typeof expressions that compare impossible string literals.",
 		id: "typeofComparisons",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		invalidValue: {
@@ -47,11 +52,14 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkComparison(node: ts.BinaryExpression) {
+		function checkComparison(
+			node: AST.BinaryExpression,
+			sourceFile: ts.SourceFile,
+		) {
 			const leftTypeofOperand = getTypeofOperand(node.left);
 			const rightTypeofOperand = getTypeofOperand(node.right);
 
-			let comparisonValue: ts.Expression | undefined;
+			let comparisonValue: AST.Expression | undefined;
 			if (leftTypeofOperand) {
 				comparisonValue = node.right;
 			} else if (rightTypeofOperand) {
@@ -64,22 +72,21 @@ export default typescriptLanguage.createRule({
 			if (stringValue != null && !validTypeofValues.has(stringValue)) {
 				context.report({
 					message: "invalidValue",
-					range: getTSNodeRange(comparisonValue, context.sourceFile),
+					range: getTSNodeRange(comparisonValue, sourceFile),
 				});
 			}
 		}
 
 		return {
 			visitors: {
-				BinaryExpression: (node) => {
+				BinaryExpression: (node, { sourceFile }) => {
 					if (
-						node.operatorToken.kind === ts.SyntaxKind.EqualsEqualsToken ||
-						node.operatorToken.kind === ts.SyntaxKind.EqualsEqualsEqualsToken ||
-						node.operatorToken.kind === ts.SyntaxKind.ExclamationEqualsToken ||
-						node.operatorToken.kind ===
-							ts.SyntaxKind.ExclamationEqualsEqualsToken
+						node.operatorToken.kind === SyntaxKind.EqualsEqualsToken ||
+						node.operatorToken.kind === SyntaxKind.EqualsEqualsEqualsToken ||
+						node.operatorToken.kind === SyntaxKind.ExclamationEqualsToken ||
+						node.operatorToken.kind === SyntaxKind.ExclamationEqualsEqualsToken
 					) {
-						checkComparison(node);
+						checkComparison(node, sourceFile);
 					}
 				},
 			},

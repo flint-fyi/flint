@@ -2,17 +2,18 @@ import { cacheFilePath } from "@flint.fyi/core";
 import chalk from "chalk";
 import fs from "node:fs";
 
-import { PresenterInitializeContext } from "../types.js";
+import type { PresenterInitializeContext } from "../types.ts";
 
 export function* presentHeader({
 	configFileName,
 	ignoreCache,
 	runMode,
 }: PresenterInitializeContext) {
+	const configFileNameText = chalk.cyan(chalk.bold(configFileName));
 	yield chalk.gray(
 		runMode === "single-run"
-			? `Linting with ${configFileName}...`
-			: `Running with ${configFileName} in --watch mode (start time: ${Date.now()})...`,
+			? `Linting with ${configFileNameText}...`
+			: `Running with ${configFileNameText} in --watch mode (start time: ${Date.now()})...`,
 	);
 
 	if (!ignoreCache) {

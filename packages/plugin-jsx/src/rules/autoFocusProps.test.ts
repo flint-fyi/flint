@@ -1,5 +1,5 @@
-import rule from "./autoFocusProps.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./autoFocusProps.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <div autoFocus />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div autoFocus />
      ~~~~~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <div autoFocus="true" />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div autoFocus="true" />
      ~~~~~~~~~~~~~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <div autoFocus={true} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div autoFocus={true} />
      ~~~~~~~~~~~~~~~~
@@ -40,7 +37,6 @@ ruleTester.describe(rule, {
 			code: `
 <input autoFocus={undefined} />
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <input autoFocus={undefined} />
        ~~~~~~~~~~~~~~~~~~~~~
@@ -49,9 +45,9 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div />`, fileName: "file.tsx" },
-		{ code: `<div autoFocus="false" />`, fileName: "file.tsx" },
-		{ code: `<div autoFocus={false} />`, fileName: "file.tsx" },
-		{ code: `<input type="text" />`, fileName: "file.tsx" },
+		{ code: `<div />` },
+		{ code: `<div autoFocus="false" />` },
+		{ code: `<div autoFocus={false} />` },
+		{ code: `<input type="text" />` },
 	],
 });

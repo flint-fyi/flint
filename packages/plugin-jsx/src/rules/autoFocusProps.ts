@@ -1,11 +1,18 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports autoFocus props that are not set to false.",
 		id: "autoFocusProps",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noAutoFocus: {
@@ -23,18 +30,18 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function isSetToFalse(property: ts.JsxAttribute) {
+		function isSetToFalse(property: AST.JsxAttribute) {
 			if (!property.initializer) {
 				return false;
 			}
 
-			if (ts.isStringLiteral(property.initializer)) {
+			if (property.initializer.kind === SyntaxKind.StringLiteral) {
 				return property.initializer.text === "false";
 			}
 
-			if (ts.isJsxExpression(property.initializer)) {
+			if (property.initializer.kind === SyntaxKind.JsxExpression) {
 				const expr = property.initializer.expression;
-				if (expr && expr.kind === ts.SyntaxKind.FalseKeyword) {
+				if (expr && expr.kind === SyntaxKind.FalseKeyword) {
 					return true;
 				}
 			}
@@ -42,17 +49,20 @@ export default typescriptLanguage.createRule({
 			return false;
 		}
 
-		function checkElement(node: ts.JsxOpeningLikeElement) {
+		function checkElement(
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
 			for (const property of node.attributes.properties) {
 				if (
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text.toLowerCase() === "autofocus" &&
 					!isSetToFalse(property)
 				) {
 					context.report({
 						message: "noAutoFocus",
-						range: getTSNodeRange(property, context.sourceFile),
+						range: getTSNodeRange(property, sourceFile),
 					});
 				}
 			}

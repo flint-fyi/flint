@@ -1,11 +1,12 @@
-import { typescriptLanguage } from "../language.js";
+import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports empty static initialization blocks within class declarations.",
 		id: "emptyStaticBlocks",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		emptyStaticBlock: {
@@ -23,19 +24,19 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				ClassStaticBlockDeclaration: (node) => {
+				ClassStaticBlockDeclaration: (node, { sourceFile }) => {
 					const statements = node.body.statements;
 					if (statements.length) {
 						return;
 					}
 
-					const openBrace = node.body.getFirstToken(context.sourceFile);
+					const openBrace = node.body.getFirstToken(sourceFile);
 					if (!openBrace) {
 						return;
 					}
 
 					const range = {
-						begin: node.getStart(context.sourceFile),
+						begin: node.getStart(sourceFile),
 						end: openBrace.getEnd(),
 					};
 
@@ -46,7 +47,7 @@ export default typescriptLanguage.createRule({
 							{
 								id: "removeEmptyStaticBlock",
 								range: {
-									begin: node.getStart(context.sourceFile),
+									begin: node.getStart(sourceFile),
 									end: node.getEnd(),
 								},
 								text: "",

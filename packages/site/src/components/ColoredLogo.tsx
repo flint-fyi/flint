@@ -1,0 +1,52 @@
+import clsx from "clsx";
+
+import styles from "./ColoredLogo.module.css";
+import type { PluginLogoColors } from "~/data/pluginData";
+
+export interface ColoredLogoProps {
+	colors: PluginLogoColors;
+	className?: string;
+	size?: "normal" | "large";
+}
+
+export function ColoredLogo({
+	colors,
+	className,
+	size = "normal",
+}: ColoredLogoProps) {
+	return (
+		<svg
+			className={clsx(styles.coloredLogo, styles[size], className)}
+			viewBox="0 0 137 168"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path
+				d="M14.0007 153.306L35.8007 136.306L57.6007 153.306L79.4007 136.306L101.201 153.306L123.001 136.306"
+				stroke="black"
+				strokeWidth="28"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+			<path
+				d="M14.0007 153.306L35.8007 136.306L57.6007 153.306L79.4007 136.306L101.201 153.306L123.001 136.306"
+				stroke={colors.squiggly}
+				strokeWidth="12"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+			<path
+				d="M89.2451 38.27C89.2451 11.4737 67.7109 5.3064 67.7109 5.3064C67.7109 5.3064 67.7109 27.1235 51.7757 38.27C29.4869 53.8606 16.1492 66.0869 18.1824 90.0698C20.4519 116.842 42.4059 136.531 69.4337 136.304C96.2134 136.08 117.877 116.619 119.824 90.0698C121.77 63.5204 104.75 50.6848 104.75 50.6848C104.75 50.6848 96.3181 66.0209 89.2451 63.9559C80.5309 61.4116 89.2451 52.3972 89.2451 38.27Z"
+				fill={colors.flame}
+				stroke={colors.squiggly}
+				strokeWidth="8"
+			/>
+			<path
+				d="M98.9767 93.5385C98.5187 121.096 69.6647 132.306 69.6647 132.306C69.6647 132.306 38.9784 120.162 38.9788 93.5385C38.9789 86.0652 43.4645 81.5661 49.9707 80.4602C58.2147 79.059 69.6647 87.6924 69.6647 87.6924C69.6647 87.6924 80.6567 79.5261 88.4427 80.4602C94.8794 81.2325 99.0854 87.0003 98.9767 93.5385Z"
+				fill={colors.heart}
+				stroke={colors.squiggly}
+				strokeWidth="8"
+			/>
+		</svg>
+	);
+}

@@ -1,6 +1,7 @@
 import * as ts from "typescript";
 
-import { typescriptLanguage } from "../language.js";
+import { getTSNodeRange } from "../getTSNodeRange.ts";
+import { typescriptLanguage } from "../language.ts";
 
 function isNonArrowFunctionBoundary(node: ts.Node): "quit" | boolean {
 	if (ts.isArrowFunction(node)) {
@@ -16,12 +17,14 @@ function isNonArrowFunctionBoundary(node: ts.Node): "quit" | boolean {
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using the arguments object instead of rest parameters.",
 		id: "arguments",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		preferRestParameters: {
@@ -38,7 +41,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				Identifier: (node) => {
+				Identifier: (node, { sourceFile, typeChecker }) => {
 					if (node.text !== "arguments") {
 						return;
 					}
@@ -59,35 +62,32 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
+					// TODO: This might get simpler when we have scope analysis.
+					// https://github.com/JoshuaKGoldberg/flint/issues/400
 					if (!ts.findAncestor(node, isNonArrowFunctionBoundary)) {
 						return;
 					}
 
-					const symbol = context.typeChecker.getSymbolAtLocation(node);
+					const symbol = typeChecker.getSymbolAtLocation(node);
 
-					if (symbol) {
-						const declarations = symbol.getDeclarations();
-						if (declarations && declarations.length > 0) {
-							const isUserDefined = declarations.some(
+					if (
+						!symbol ||
+						symbol
+							.getDeclarations()
+							?.some(
 								(declaration) =>
 									ts.isParameter(declaration) ||
 									ts.isVariableDeclaration(declaration) ||
 									ts.isPropertyDeclaration(declaration) ||
 									ts.isBindingElement(declaration),
-							);
-
-							if (isUserDefined) {
-								return;
-							}
-						}
+							)
+					) {
+						return;
 					}
 
 					context.report({
 						message: "preferRestParameters",
-						range: {
-							begin: node.getStart(context.sourceFile),
-							end: node.getEnd(),
-						},
+						range: getTSNodeRange(node, sourceFile),
 					});
 				},
 			},

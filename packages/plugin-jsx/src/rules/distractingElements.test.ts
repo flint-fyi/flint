@@ -1,48 +1,47 @@
-import rule from "./distractingElements.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./distractingElements.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `<marquee />`,
-			fileName: "file.tsx",
-			snapshot: `<marquee />
-~~~~~~~
-The <marquee> element is distracting and deprecated.
-`,
+			code: `
+<marquee />`,
+			snapshot: `
+<marquee />
+ ~~~~~~~
+ The <marquee> element is distracting and deprecated.`,
 		},
 		{
-			code: `<blink />`,
-			fileName: "file.tsx",
-			snapshot: `<blink />
-~~~~~
-The <blink> element is distracting and deprecated.
-`,
+			code: `
+<blink />`,
+			snapshot: `
+<blink />
+ ~~~~~
+ The <blink> element is distracting and deprecated.`,
 		},
 		{
-			code: `<marquee>Hello</marquee>`,
-			fileName: "file.tsx",
-			snapshot: `<marquee>Hello</marquee>
-~~~~~~~
-The <marquee> element is distracting and deprecated.
-`,
+			code: `
+<marquee>Hello</marquee>`,
+			snapshot: `
+<marquee>Hello</marquee>
+ ~~~~~~~
+ The <marquee> element is distracting and deprecated.`,
 		},
 		{
-			code: `<BLINK>Alert!</BLINK>`,
-			fileName: "file.tsx",
-			snapshot: `<BLINK>Alert!</BLINK>
-~~~~~
-The <blink> element is distracting and deprecated.
-`,
+			code: `
+<BLINK>Alert!</BLINK>`,
+			snapshot: `
+<BLINK>Alert!</BLINK>
+ ~~~~~
+ The <blink> element is distracting and deprecated.`,
 		},
 	],
 	valid: [
-		{ code: `<div />`, fileName: "file.tsx" },
-		{ code: `<span>Text</span>`, fileName: "file.tsx" },
-		{ code: `<button>Click me</button>`, fileName: "file.tsx" },
+		{ code: `<div />` },
+		{ code: `<span>Text</span>` },
+		{ code: `<button>Click me</button>` },
 		{
 			code: `<div className="marquee-style">Animated</div>`,
-			fileName: "file.tsx",
 		},
 	],
 });

@@ -1,0 +1,77 @@
+---
+description: "Prefer the modern `node.remove()` method over the legacy `parentNode.removeChild(node)` API."
+title: "nodeRemoveMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="nodeRemoveMethods" />
+
+The `Node.remove()` method provides a more direct and modern way to remove an element from the DOM compared to the legacy `removeChild()` API.
+It's more concise and easier to read, eliminating the need to reference the parent node.
+
+Modern browsers support `Node.remove()`, making it the preferred approach for removing DOM elements.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```typescript
+parentNode.removeChild(childNode);
+```
+
+```typescript
+element.parentNode.removeChild(element);
+```
+
+```typescript
+node.parentElement.removeChild(node);
+```
+
+```typescript
+document.body.removeChild(footer);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```typescript
+childNode.remove();
+```
+
+```typescript
+element.remove();
+```
+
+```typescript
+node.remove();
+```
+
+```typescript
+footer.remove();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support very old browsers that don't implement the `Node.remove()` method (such as Internet Explorer), you might not want to enable this rule.
+However, for most modern web applications, `Node.remove()` has broad browser support.
+
+## Further Reading
+
+- [MDN: `Node.remove()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/remove)
+- [MDN: `Node.removeChild()`](https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="nodeRemoveMethods" />

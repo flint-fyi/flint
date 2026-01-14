@@ -3,13 +3,10 @@ description: "Browser linting rules provided by Flint."
 title: "Browser Plugin"
 ---
 
-import { PackageManagers } from "starlight-package-managers";
-
 import { RulesTable } from "~/components/RulesTable.tsx";
+import PluginTop from "~/components/PluginTop.astro";
 
-Flint's browser plugin includes rules targeted to code that runs in browsers and browser-like environments.
-
-<PackageManagers type="install" pkg="@flint.fyi/plugin-browser" />
+<PluginTop pluginId="browser" />
 
 ## Presets
 

@@ -1,14 +1,16 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import { isGlobalDeclaration } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 const globalNames = new Set(["alert", "confirm", "prompt"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports uses of the global alert/confirm/prompt dialog APIs.",
 		id: "alerts",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noAlert: {
@@ -24,14 +26,17 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function getCalleeNameAndNode(node: ts.Expression) {
-			if (ts.isIdentifier(node)) {
+		function getCalleeNameAndNode(node: AST.LeftHandSideExpression) {
+			if (node.kind === SyntaxKind.Identifier) {
 				return { name: node.text, node };
 			}
 
-			if (ts.isPropertyAccessExpression(node)) {
+			if (node.kind === SyntaxKind.PropertyAccessExpression) {
 				const { expression, name } = node;
-				if (!ts.isIdentifier(name) || !ts.isIdentifier(expression)) {
+				if (
+					name.kind !== SyntaxKind.Identifier ||
+					expression.kind !== SyntaxKind.Identifier
+				) {
 					return undefined;
 				}
 
@@ -43,7 +48,7 @@ export default typescriptLanguage.createRule({
 
 		return {
 			visitors: {
-				CallExpression(node: ts.CallExpression) {
+				CallExpression(node, { sourceFile, typeChecker }) {
 					const found = getCalleeNameAndNode(node.expression);
 					if (found === undefined) {
 						return;
@@ -52,7 +57,7 @@ export default typescriptLanguage.createRule({
 					const { name, node: nodeToReport } = found;
 					if (
 						!globalNames.has(name) ||
-						!isGlobalDeclaration(nodeToReport, context.typeChecker)
+						!isGlobalDeclaration(nodeToReport, typeChecker)
 					) {
 						return;
 					}
@@ -60,7 +65,7 @@ export default typescriptLanguage.createRule({
 					context.report({
 						data: { name },
 						message: "noAlert",
-						range: getTSNodeRange(nodeToReport, context.sourceFile),
+						range: getTSNodeRange(nodeToReport, sourceFile),
 					});
 				},
 			},

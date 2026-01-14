@@ -1,10 +1,10 @@
 {
 	"name": "@flint.fyi/ts",
-	"version": "0.14.4",
+	"version": "0.15.1",
 	"description": "[Experimental] TypeScript language plugin for Flint.",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/JoshuaKGoldberg/flint",
+		"url": "git+https://github.com/flint-fyi/flint.git",
 		"directory": "packages/ts"
 	},
 	"license": "MIT",
@@ -12,23 +12,44 @@
 		"name": "JoshuaKGoldberg",
 		"email": "npm@joshuakgoldberg.com"
 	},
+	"sideEffects": false,
 	"type": "module",
-	"main": "./lib/index.js",
+	"exports": {
+		".": {
+			"@flint.fyi/source": "./src/index.ts",
+			"default": "./lib/index.js"
+		}
+	},
+	"files": [
+		"lib/",
+		"!lib/**/*.map"
+	],
+	"scripts": {
+		"test": "vitest --typecheck --project ts"
+	},
 	"dependencies": {
-		"@flint.fyi/core": "workspace:",
-		"@flint.fyi/rule-tester": "workspace:",
+		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/utils": "workspace:^",
 		"@typescript-eslint/project-service": "^8.46.2",
 		"@typescript/vfs": "^1.6.1",
 		"cached-factory": "^0.1.0",
 		"debug-for-file": "^0.2.0",
 		"ts-api-utils": "^2.1.0",
-		"typescript": ">=5.9.3"
+		"typescript": "^5.9.0 || ^6.0.0",
+		"zod": "^4.2.1"
+	},
+	"devDependencies": {
+		"@flint.fyi/rule-tester": "workspace:^",
+		"tsdown": "0.19.0-beta.2",
+		"vitest": "4.0.15"
 	},
 	"engines": {
 		"node": ">=24.0.0"
 	},
 	"publishConfig": {
 		"access": "public",
-		"provenance": true
+		"exports": {
+			".": "./lib/index.js"
+		}
 	}
 }

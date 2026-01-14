@@ -1,0 +1,82 @@
+---
+description: "Requires specifying the targetOrigin argument when calling window.postMessage()."
+title: "windowMessagingTargetOrigin"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="windowMessagingTargetOrigin" />
+
+When calling `window.postMessage()` without the `targetOrigin` argument, the message cannot be received by any window.
+The `targetOrigin` parameter specifies which origin is allowed to receive the message.
+Omitting this argument is a common mistake that prevents cross-window communication from working.
+
+Always specify a target origin (for example, `'https://example.com'` or `'*'` for any origin) as the second argument to `postMessage()`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```typescript
+window.postMessage("message");
+```
+
+```typescript
+self.postMessage("message");
+```
+
+```typescript
+parent.postMessage("message");
+```
+
+```typescript
+top.postMessage("message");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```typescript
+window.postMessage("message", "https://example.com");
+```
+
+```typescript
+window.postMessage("message", "*");
+```
+
+```typescript
+self.postMessage("message", "https://example.com");
+```
+
+```typescript
+parent.postMessage("message", "*");
+```
+
+```typescript
+// Worker, MessagePort, and other postMessage calls are not affected
+worker.postMessage("message");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are developing a specialized internal application on a custom platform with unusual `postMessage` semantics, you may need to disable this rule.
+
+## Further Reading
+
+- [MDN: `Window.postMessage()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage)
+- [MDN: Using the `postMessage` API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage#using_window.postmessage)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="windowMessagingTargetOrigin" />

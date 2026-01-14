@@ -1,16 +1,19 @@
-import { Link } from "mdast";
+import { nullThrows } from "@flint.fyi/utils";
+import type { Link } from "mdast";
 
-import { markdownLanguage } from "../language.js";
-import { WithPosition } from "../nodes.js";
+import { markdownLanguage } from "../language.ts";
+import type { WithPosition } from "../nodes.ts";
 
 const urlTester = /(?:https?:\/\/|mailto:)\S+|[\w.+-]+@[\w.-]+\.\w+/gi;
 
-export default markdownLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description:
 			"Reports bare URLs that should be formatted as autolinks or links.",
 		id: "bareUrls",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		bareUrl: {
@@ -28,7 +31,7 @@ export default markdownLanguage.createRule({
 	setup(context) {
 		// TODO: Add parent nodes to AST?
 		// That way this will be compatible with createOnce-style API in:
-		// https://github.com/JoshuaKGoldberg/flint/issues/356
+		// https://github.com/flint-fyi/flint/issues/356
 		const textInValidLinks = new Set<number>();
 
 		function report(begin: number, end: number, urlText: string) {
@@ -51,7 +54,10 @@ export default markdownLanguage.createRule({
 		}
 
 		function checkTextNode(node: WithPosition<Link>) {
-			const textNode = node.children[0];
+			const textNode = nullThrows(
+				node.children[0],
+				`First node child should be defined for link node ${node.position.start.offset}`,
+			);
 			const textPosition = textNode.position;
 
 			if (
@@ -65,9 +71,9 @@ export default markdownLanguage.createRule({
 			const linkLength = linkPosition.end.offset - linkPosition.start.offset;
 			const textLength = textPosition.end.offset - textPosition.start.offset;
 
-			if (linkLength > textLength) {
-				textInValidLinks.add(textPosition.start.offset);
-			} else {
+			textInValidLinks.add(textPosition.start.offset);
+
+			if (linkLength <= textLength) {
 				report(textPosition.start.offset, textPosition.end.offset, node.url);
 			}
 		}
@@ -75,9 +81,13 @@ export default markdownLanguage.createRule({
 		return {
 			visitors: {
 				link(node) {
+					const firstNodeChild = nullThrows(
+						node.children[0],
+						`First node child should be defined for link node`,
+					);
 					if (
-						node.children[0].type === "text" &&
-						node.children[0].value === node.url
+						firstNodeChild.type === "text" &&
+						firstNodeChild.value === node.url
 					) {
 						checkTextNode(node);
 					} else {

@@ -1,7 +1,8 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.js";
-import { typescriptLanguage } from "../language.js";
+import { getTSNodeRange } from "../getTSNodeRange.ts";
+import { typescriptLanguage } from "../language.ts";
+import * as AST from "../types/ast.ts";
 
 const restrictedNames = new Set([
 	"arguments",
@@ -11,12 +12,14 @@ const restrictedNames = new Set([
 	"undefined",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports variable declarations that shadow JavaScript's restricted names.",
 		id: "shadowedRestrictedNames",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		shadowedRestrictedName: {
@@ -31,73 +34,77 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkIdentifier(node: ts.Identifier): void {
+		function checkIdentifier(
+			node: AST.Identifier,
+			sourceFile: ts.SourceFile,
+		): void {
 			if (restrictedNames.has(node.text)) {
 				context.report({
 					data: {
 						name: node.text,
 					},
 					message: "shadowedRestrictedName",
-					range: getTSNodeRange(node, context.sourceFile),
+					range: getTSNodeRange(node, sourceFile),
 				});
 			}
 		}
 
-		function checkBindingName(name: ts.BindingName): void {
-			if (ts.isIdentifier(name)) {
-				checkIdentifier(name);
-			} else if (
-				ts.isObjectBindingPattern(name) ||
-				ts.isArrayBindingPattern(name)
-			) {
+		function checkBindingName(
+			name: AST.BindingName,
+			sourceFile: ts.SourceFile,
+		): void {
+			if (name.kind === SyntaxKind.Identifier) {
+				checkIdentifier(name, sourceFile);
+			} else {
 				for (const element of name.elements) {
-					if (ts.isBindingElement(element)) {
-						checkBindingName(element.name);
+					if (element.kind === SyntaxKind.BindingElement) {
+						checkBindingName(element.name, sourceFile);
 					}
 				}
 			}
 		}
 
 		function checkParameters(
-			parameters: ts.NodeArray<ts.ParameterDeclaration>,
+			parameters: ts.NodeArray<AST.ParameterDeclaration>,
+			sourceFile: ts.SourceFile,
 		): void {
 			for (const parameter of parameters) {
-				checkBindingName(parameter.name);
+				checkBindingName(parameter.name, sourceFile);
 			}
 		}
 
 		return {
 			visitors: {
-				ArrowFunction: (node) => {
-					checkParameters(node.parameters);
+				ArrowFunction: (node, { sourceFile }) => {
+					checkParameters(node.parameters, sourceFile);
 				},
-				ClassDeclaration: (node) => {
+				ClassDeclaration: (node, { sourceFile }) => {
 					if (node.name) {
-						checkIdentifier(node.name);
+						checkIdentifier(node.name, sourceFile);
 					}
 				},
-				ClassExpression: (node) => {
+				ClassExpression: (node, { sourceFile }) => {
 					if (node.name) {
-						checkIdentifier(node.name);
+						checkIdentifier(node.name, sourceFile);
 					}
 				},
-				FunctionDeclaration: (node) => {
+				FunctionDeclaration: (node, { sourceFile }) => {
 					if (node.name) {
-						checkIdentifier(node.name);
+						checkIdentifier(node.name, sourceFile);
 					}
-					checkParameters(node.parameters);
+					checkParameters(node.parameters, sourceFile);
 				},
-				FunctionExpression: (node) => {
+				FunctionExpression: (node, { sourceFile }) => {
 					if (node.name) {
-						checkIdentifier(node.name);
+						checkIdentifier(node.name, sourceFile);
 					}
-					checkParameters(node.parameters);
+					checkParameters(node.parameters, sourceFile);
 				},
-				MethodDeclaration: (node) => {
-					checkParameters(node.parameters);
+				MethodDeclaration: (node, { sourceFile }) => {
+					checkParameters(node.parameters, sourceFile);
 				},
-				VariableDeclaration: (node) => {
-					checkBindingName(node.name);
+				VariableDeclaration: (node, { sourceFile }) => {
+					checkBindingName(node.name, sourceFile);
 				},
 			},
 		};

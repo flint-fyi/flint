@@ -5,6 +5,7 @@
 		"prettier-plugin-astro",
 		"prettier-plugin-curly",
 		"prettier-plugin-packagejson",
+		"prettier-plugin-sentences-per-line",
 		"prettier-plugin-sh"
 	],
 	"useTabs": true

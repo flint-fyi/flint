@@ -1,5 +1,10 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
 const inherentlyTabbableElements = new Set([
 	"a",
@@ -10,12 +15,14 @@ const inherentlyTabbableElements = new Set([
 	"textarea",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports elements with aria-activedescendant without tabIndex.",
 		id: "ariaActiveDescendantTabIndex",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingTabIndex: {
@@ -34,10 +41,13 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkElement(
-			tagName: ts.JsxTagNameExpression,
-			attributes: ts.JsxAttributes,
+			{
+				attributes,
+				tagName,
+			}: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
+			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (ts.isIdentifier(tagName)) {
+			if (tagName.kind === SyntaxKind.Identifier) {
 				const firstCharacter = tagName.text.charAt(0);
 				if (
 					firstCharacter === firstCharacter.toUpperCase() &&
@@ -50,8 +60,8 @@ export default typescriptLanguage.createRule({
 			if (
 				!attributes.properties.some(
 					(property) =>
-						ts.isJsxAttribute(property) &&
-						ts.isIdentifier(property.name) &&
+						property.kind === SyntaxKind.JsxAttribute &&
+						property.name.kind === SyntaxKind.Identifier &&
 						property.name.text === "aria-activedescendant" &&
 						property.initializer,
 				)
@@ -59,7 +69,7 @@ export default typescriptLanguage.createRule({
 				return;
 			}
 
-			if (ts.isIdentifier(tagName)) {
+			if (tagName.kind === SyntaxKind.Identifier) {
 				if (inherentlyTabbableElements.has(tagName.text.toLowerCase())) {
 					return;
 				}
@@ -67,23 +77,23 @@ export default typescriptLanguage.createRule({
 
 			const hasTabIndex = attributes.properties.some(
 				(property) =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text.toLowerCase() === "tabindex",
 			);
 
 			if (!hasTabIndex) {
 				const ariaProperty = attributes.properties.find(
 					(property) =>
-						ts.isJsxAttribute(property) &&
-						ts.isIdentifier(property.name) &&
+						property.kind === SyntaxKind.JsxAttribute &&
+						property.name.kind === SyntaxKind.Identifier &&
 						property.name.text === "aria-activedescendant",
 				);
 
-				if (ariaProperty && ts.isJsxAttribute(ariaProperty)) {
+				if (ariaProperty && ariaProperty.kind === SyntaxKind.JsxAttribute) {
 					context.report({
 						message: "missingTabIndex",
-						range: getTSNodeRange(ariaProperty, context.sourceFile),
+						range: getTSNodeRange(ariaProperty, sourceFile),
 					});
 				}
 			}
@@ -91,12 +101,8 @@ export default typescriptLanguage.createRule({
 
 		return {
 			visitors: {
-				JsxOpeningElement(node: ts.JsxOpeningElement) {
-					checkElement(node.tagName, node.attributes);
-				},
-				JsxSelfClosingElement(node: ts.JsxSelfClosingElement) {
-					checkElement(node.tagName, node.attributes);
-				},
+				JsxOpeningElement: checkElement,
+				JsxSelfClosingElement: checkElement,
 			},
 		};
 	},

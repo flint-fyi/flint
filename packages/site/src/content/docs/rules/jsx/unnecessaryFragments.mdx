@@ -1,0 +1,91 @@
+---
+description: "Disallow unnecessary JSX fragments that wrap a single child or have no children."
+title: "unnecessaryFragments"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="unnecessaryFragments" />
+
+JSX fragments (`<>...</>` or `<Fragment>...</Fragment>`) are used to group multiple elements without adding extra nodes to the DOM.
+However, when a fragment wraps only a single child or has no children at all, it serves no purpose and adds unnecessary complexity to the code.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+const element = (
+	<>
+		<div>Hello</div>
+	</>
+);
+```
+
+```tsx
+const element = <>Hello</>;
+```
+
+```tsx
+const element = <></>;
+```
+
+```tsx
+const element = (
+	<Fragment>
+		<div>Hello</div>
+	</Fragment>
+);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+const element = <div>Hello</div>;
+```
+
+```tsx
+const element = "Hello";
+```
+
+```tsx
+const element = (
+	<>
+		<div>First</div>
+		<div>Second</div>
+	</>
+);
+```
+
+```tsx
+const element = (
+	<Fragment key="item">
+		<div>Hello</div>
+	</Fragment>
+);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has specific requirements where fragments are used consistently for stylistic reasons, you may want to disable this rule.
+However, removing unnecessary fragments is generally recommended to keep code concise and maintainable.
+
+## Further Reading
+
+- [React Documentation: Fragments](https://react.dev/reference/react/Fragment)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="unnecessaryFragments" />

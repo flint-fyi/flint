@@ -1,0 +1,93 @@
+---
+description: "Reports using `.findIndex()` or `.findLastIndex()` with simple equality checks that can be replaced with `.indexOf()` or `.lastIndexOf()`."
+title: "arrayIndexOfMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayIndexOfMethods" />
+
+`Array.prototype.findIndex()` and `Array.prototype.findLastIndex()` are intended for more complex predicate checks.
+When the callback only performs a simple strict equality check (`x === value`), `.indexOf()` or `.lastIndexOf()` are more readable and expressive.
+
+This rule reports when `.findIndex()` or `.findLastIndex()` can be simplified.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const array: string[];
+array.findIndex((item) => item === "value");
+```
+
+```ts
+declare const array: string[];
+array.findIndex((item) => "value" === item);
+```
+
+```ts
+declare const array: string[];
+array.findLastIndex((item) => item === "value");
+```
+
+```ts
+declare const array: string[];
+array.findIndex(function (item) {
+	return item === "value";
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const array: string[];
+array.indexOf("value");
+```
+
+```ts
+declare const array: string[];
+array.lastIndexOf("value");
+```
+
+```ts
+declare const array: string[];
+array.findIndex((item) => item.startsWith("v"));
+```
+
+```ts
+declare const array: number[];
+array.findIndex((item) => item > 0);
+```
+
+```ts
+declare const array: object[];
+array.findIndex((item) => item.id === 1);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the functional style of `.findIndex()` for consistency, or if your codebase has a large number of existing uses, you may disable this rule.
+
+## Further Reading
+
+- [MDN: Array.prototype.indexOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf)
+- [MDN: Array.prototype.lastIndexOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/lastIndexOf)
+- [MDN: Array.prototype.findIndex()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex)
+- [MDN: Array.prototype.findLastIndex()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLastIndex)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayIndexOfMethods" />

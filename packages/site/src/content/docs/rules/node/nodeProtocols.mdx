@@ -1,0 +1,69 @@
+---
+description: "Prefer the `node:` protocol prefix for Node.js built-in modules for clarity and consistency."
+title: "nodeProtocols"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="nodeProtocols" />
+
+The `node:` protocol makes it explicit that the module is a Node.js built-in, preventing confusion with npm packages that might have the same name.
+The protocol is supported in Node.js 16+ and is the recommended way to import built-ins.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import fs from "fs";
+
+import path from "path";
+
+import { readFile } from "fs";
+
+import fsPromises from "fs/promises";
+
+const crypto = require("crypto");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import fs from "node:fs";
+
+import path from "node:path";
+
+import { readFile } from "node:fs";
+
+import fsPromises from "node:fs/promises";
+
+const crypto = require("node:crypto");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support Node.js versions older than 16, you should not use this rule, as the `node:` protocol was introduced in Node.js 16.0.0.
+
+If you strongly prefer more succinct imports and aren't worried about confusing userland modules with built-in Node.js modules, this rule might not be for you.
+
+## Further Reading
+
+- [Node.js: Core modules](https://nodejs.org/api/modules.html#core-modules)
+- [Node.js: Release notes for v16.0.0](https://nodejs.org/en/blog/release/v16.0.0)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="nodeProtocols" />

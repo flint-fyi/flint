@@ -1,0 +1,41 @@
+.pluginCard {
+	align-items: center;
+	border: 1px solid var(--sl-color-gray-5);
+	display: flex;
+	gap: 1rem;
+	margin: 0;
+	width: 100%;
+	padding: 0.25rem 1.25rem;
+}
+
+@media (width >= 1117px) {
+	.pluginCard {
+		max-width: calc(50% - calc(var(--plugin-cards-spacing) / 2));
+		min-width: 30%;
+	}
+}
+
+.pluginCard a {
+	color: var(----sl-color-accent-high);
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.texts {
+	display: flex;
+	flex-basis: fit-content;
+	flex-direction: column;
+	gap: 0.15rem;
+	text-align: left;
+}
+
+.name {
+	font-size: var(--sl-text-lg);
+	margin-right: 1rem;
+	white-space: nowrap;
+}
+
+.description {
+	font-size: var(--sl-text-body-sm);
+	line-height: 1.25;
+}

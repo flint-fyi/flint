@@ -1,0 +1,15 @@
+.coloredLogo {
+	height: var(--coloredLogoSize);
+	width: var(--coloredLogoSize);
+
+	/* Yucky CSS hack to get lines to be less jarring in Chrome... */
+	transform: scale(0.99);
+}
+
+.coloredLogo.normal {
+	--coloredLogoSize: 4rem;
+}
+
+.coloredLogo.large {
+	--coloredLogoSize: clamp(5rem, 10vw, 7rem);
+}

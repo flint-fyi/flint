@@ -1,11 +1,13 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports positive tabIndex values.",
 		id: "tabIndexPositiveValues",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noPositiveTabIndex: {
@@ -26,9 +28,9 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				JsxAttribute(node: ts.JsxAttribute) {
+				JsxAttribute(node, { sourceFile }) {
 					if (
-						!ts.isIdentifier(node.name) ||
+						node.name.kind !== SyntaxKind.Identifier ||
 						node.name.text.toLowerCase() !== "tabindex" ||
 						!node.initializer
 					) {
@@ -40,7 +42,7 @@ export default typescriptLanguage.createRule({
 					if (value !== undefined && value > 0) {
 						context.report({
 							message: "noPositiveTabIndex",
-							range: getTSNodeRange(node, context.sourceFile),
+							range: getTSNodeRange(node, sourceFile),
 						});
 					}
 				},
@@ -49,15 +51,16 @@ export default typescriptLanguage.createRule({
 	},
 });
 
-function getInitializerValue(initializer: ts.JsxAttributeValue) {
-	if (ts.isStringLiteral(initializer)) {
+function getInitializerValue(initializer: AST.JsxAttributeValue) {
+	if (initializer.kind === SyntaxKind.StringLiteral) {
 		const parsed = Number(initializer.text);
 
 		return isNaN(parsed) ? undefined : parsed;
 	}
 
-	if (ts.isJsxExpression(initializer)) {
-		return initializer.expression && ts.isNumericLiteral(initializer.expression)
+	if (initializer.kind === SyntaxKind.JsxExpression) {
+		return initializer.expression &&
+			initializer.expression.kind === SyntaxKind.NumericLiteral
 			? Number(initializer.expression.text)
 			: undefined;
 	}

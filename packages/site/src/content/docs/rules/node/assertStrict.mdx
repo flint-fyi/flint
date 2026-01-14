@@ -1,0 +1,61 @@
+---
+description: "Prefer strict assertion mode from Node.js for better error messages and behavior."
+title: "assertStrict"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="assertStrict" />
+
+In strict assertion mode, non-strict methods like `deepEqual()` behave like their strict counterparts (`deepStrictEqual()`).
+Strict mode provides better error messages with diffs and more reliable equality checks, reducing the risk of false positives in tests.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import assert from "assert";
+
+import assert from "node:assert";
+
+import { deepEqual } from "node:assert";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import assert from "assert/strict";
+
+import assert from "node:assert/strict";
+
+import { strict as assert } from "node:assert";
+
+import { strict } from "node:assert";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you specifically need the non-strict behavior of assertion methods (for example, when testing legacy code that relies on coercive equality), you might choose not to enable this rule.
+
+## Further Reading
+
+- [Node.js: Strict assertion mode](https://nodejs.org/api/assert.html#strict-assertion-mode)
+- [Node.js: Assert module](https://nodejs.org/api/assert.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="assertStrict" />

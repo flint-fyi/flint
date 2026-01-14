@@ -1,37 +1,39 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-export function isComparisonOperator(token: ts.BinaryOperatorToken) {
+import * as AST from "../../types/ast.ts";
+
+export function isComparisonOperator(token: AST.BinaryOperatorToken) {
 	switch (token.kind) {
-		case ts.SyntaxKind.EqualsEqualsEqualsToken:
-		case ts.SyntaxKind.EqualsEqualsToken:
-		case ts.SyntaxKind.ExclamationEqualsEqualsToken:
-		case ts.SyntaxKind.ExclamationEqualsToken:
-		case ts.SyntaxKind.GreaterThanEqualsToken:
-		case ts.SyntaxKind.GreaterThanToken:
-		case ts.SyntaxKind.LessThanEqualsToken:
-		case ts.SyntaxKind.LessThanToken:
+		case SyntaxKind.EqualsEqualsEqualsToken:
+		case SyntaxKind.EqualsEqualsToken:
+		case SyntaxKind.ExclamationEqualsEqualsToken:
+		case SyntaxKind.ExclamationEqualsToken:
+		case SyntaxKind.GreaterThanEqualsToken:
+		case SyntaxKind.GreaterThanToken:
+		case SyntaxKind.LessThanEqualsToken:
+		case SyntaxKind.LessThanToken:
 			return true;
 		default:
 			return false;
 	}
 }
 
-export function isEqualityOperator(token: ts.BinaryOperatorToken) {
+export function isEqualityOperator(token: AST.BinaryOperatorToken) {
 	switch (token.kind) {
-		case ts.SyntaxKind.EqualsEqualsEqualsToken:
-		case ts.SyntaxKind.EqualsEqualsToken:
-		case ts.SyntaxKind.ExclamationEqualsEqualsToken:
-		case ts.SyntaxKind.ExclamationEqualsToken:
+		case SyntaxKind.EqualsEqualsEqualsToken:
+		case SyntaxKind.EqualsEqualsToken:
+		case SyntaxKind.ExclamationEqualsEqualsToken:
+		case SyntaxKind.ExclamationEqualsToken:
 			return true;
 		default:
 			return false;
 	}
 }
 
-export function isNegatedEqualityOperator(token: ts.BinaryOperatorToken) {
+export function isNegatedEqualityOperator(token: AST.BinaryOperatorToken) {
 	switch (token.kind) {
-		case ts.SyntaxKind.ExclamationEqualsEqualsToken:
-		case ts.SyntaxKind.ExclamationEqualsToken:
+		case SyntaxKind.ExclamationEqualsEqualsToken:
+		case SyntaxKind.ExclamationEqualsToken:
 			return true;
 		default:
 			return false;

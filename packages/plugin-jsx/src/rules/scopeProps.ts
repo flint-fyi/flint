@@ -1,11 +1,18 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports scope props on non-th elements.",
 		id: "scopeProps",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidScope: {
@@ -22,9 +29,12 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkElement(node: ts.JsxOpeningLikeElement) {
+		function checkElement(
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
 			if (
-				!ts.isIdentifier(node.tagName) ||
+				node.tagName.kind !== SyntaxKind.Identifier ||
 				node.tagName.text.toLowerCase() === "th"
 			) {
 				return;
@@ -32,8 +42,8 @@ export default typescriptLanguage.createRule({
 
 			const scopeProperty = node.attributes.properties.find((property) => {
 				return (
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text.toLowerCase() === "scope"
 				);
 			});
@@ -44,7 +54,7 @@ export default typescriptLanguage.createRule({
 
 			context.report({
 				message: "invalidScope",
-				range: getTSNodeRange(scopeProperty, context.sourceFile),
+				range: getTSNodeRange(scopeProperty, sourceFile),
 			});
 		}
 

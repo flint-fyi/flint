@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { readGitignore } from "./readGitignore.js";
+import { readGitignore } from "./readGitignore.ts";
 
 const mockReadFileSafe = vi.fn();
 
-vi.mock("./readFileSafe.js", () => ({
+vi.mock("./readFileSafe.ts", () => ({
 	get readFileSafe() {
 		return mockReadFileSafe;
 	},

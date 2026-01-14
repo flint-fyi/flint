@@ -1,5 +1,5 @@
-import rule from "./objectProto.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./objectProto.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

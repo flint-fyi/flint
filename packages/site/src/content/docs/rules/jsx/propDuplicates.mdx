@@ -1,0 +1,74 @@
+---
+description: "Disallow duplicate props in JSX elements."
+title: "propDuplicates"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="propDuplicates" />
+
+When a JSX element has multiple props with the same name, only the last occurrence takes effect.
+This can lead to unexpected behavior and makes the code harder to understand and maintain.
+Duplicate props are typically the result of copy-paste errors or merge conflicts that were not properly resolved.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```jsx
+<div id="first" id="second">
+	Content
+</div>
+```
+
+```jsx
+<button className="btn" onClick={handleClick} className="btn-primary">
+	Click me
+</button>
+```
+
+```jsx
+<input type="text" name="field" type="email" />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```jsx
+<div id="unique">Content</div>
+```
+
+```jsx
+<button className="btn-primary" onClick={handleClick}>
+	Click me
+</button>
+```
+
+```jsx
+<input type="email" name="field" />
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase uses code generation that relies on uncommon JavaScript semantics such as duplicate prop names, this rule might not be for you.
+
+## Further Reading
+
+- [React Documentation: JSX In Depth](https://react.dev/learn/writing-markup-with-jsx)
+- [MDN: Working with objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="propDuplicates" />

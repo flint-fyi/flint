@@ -1,12 +1,12 @@
 ---
 description: "Consecutive non-null assertion operators are unnecessary."
-title: "About"
+title: "TypeScript (and JavaScript) Plugin"
 ---
 
 import { RulesTable } from "~/components/RulesTable.tsx";
+import PluginTop from "~/components/PluginTop.astro";
 
-Flint's TypeScript plugin supports linting JavaScript and TypeScript source code.
-It comes provided with the `flint` npm package.
+<PluginTop pluginId="ts" />
 
 ## Presets
 
@@ -150,7 +150,7 @@ For long-lived projects, Flint recommends using this only as a stopgap measure p
 
 ## Rules
 
-<RulesTable implementing plugin="ts" small />
+<RulesTable implementing plugin="ts" />
 
 ## Selectors
 

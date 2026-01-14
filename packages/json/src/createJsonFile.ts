@@ -1,53 +1,35 @@
-import {
-	LanguageFileDefinition,
-	NormalizedReport,
-	RuleReport,
-} from "@flint.fyi/core";
-import * as ts from "typescript";
+import type { FileDiskData, LanguageFileDefinition } from "@flint.fyi/core";
+import ts from "typescript";
 
-import { normalizeRange } from "./normalizeRange.js";
+import type { JsonFileServices } from "./language.ts";
+import type { JsonNodesByName } from "./nodes.ts";
 
 // TODO: Eventually, it might make sense to use a native speed JSON parser.
 // The standard TypeScript language will likely use that itself.
-// https://github.com/JoshuaKGoldberg/flint/issues/44
+// https://github.com/flint-fyi/flint/issues/44
 export function createTypeScriptJsonFile(
-	filePathAbsolute: string,
-	sourceText: string,
-): LanguageFileDefinition {
-	const sourceFile = ts.parseJsonText(filePathAbsolute, sourceText);
+	data: FileDiskData,
+): LanguageFileDefinition<JsonNodesByName, JsonFileServices> {
+	const sourceFile = ts.parseJsonText(data.filePathAbsolute, data.sourceText);
 
 	return {
-		async runRule(rule, options) {
-			const reports: NormalizedReport[] = [];
-
-			const context = {
-				report: (report: RuleReport) => {
-					reports.push({
-						...report,
-						message: rule.messages[report.message],
-						range: normalizeRange(report.range, sourceFile),
-					});
-				},
-				sourceFile,
-			};
-
-			const runtime = await rule.setup(context, options);
-
-			if (!runtime?.visitors) {
-				return reports;
+		about: data,
+		runVisitors(options, runtime) {
+			if (!runtime.visitors) {
+				return;
 			}
 
 			const { visitors } = runtime;
+			const fileServices = { options, sourceFile };
 
 			const visit = (node: ts.Node) => {
-				visitors[ts.SyntaxKind[node.kind]]?.(node);
-
+				// @ts-expect-error -- This should work...?
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+				visitors[ts.SyntaxKind[node.kind]]?.(node, fileServices);
 				node.forEachChild(visit);
 			};
 
 			sourceFile.forEachChild(visit);
-
-			return reports;
 		},
 	};
 }

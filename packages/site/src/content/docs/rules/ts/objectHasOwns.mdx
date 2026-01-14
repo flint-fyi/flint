@@ -1,0 +1,84 @@
+---
+description: "Prefer `Object.hasOwn()` over `Object.prototype.hasOwnProperty.call()` for checking own properties."
+title: "objectHasOwns"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="objectHasOwns" />
+
+`Object.hasOwn()` is the modern, recommended way to check if an object has a property as its own property (not inherited from the prototype chain).
+It provides a safer and more convenient alternative to older patterns like `Object.prototype.hasOwnProperty.call()` or calling `hasOwnProperty()` directly on objects.
+
+Using `Object.hasOwn()` avoids potential issues with objects that don't inherit from `Object.prototype`, such as objects created with `Object.create(null)` and objects that have overridden the `hasOwnProperty` method.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const hasKey = obj.hasOwnProperty("key");
+```
+
+```ts
+if (obj.hasOwnProperty("prop")) {
+	console.log("Has property");
+}
+```
+
+```ts
+const result = Object.prototype.hasOwnProperty.call(obj, "key");
+```
+
+```ts
+const exists = {}.hasOwnProperty.call(obj, "prop");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const hasKey = Object.hasOwn(obj, "key");
+```
+
+```ts
+if (Object.hasOwn(obj, "prop")) {
+	console.log("Has property");
+}
+```
+
+```ts
+const result = Object.hasOwn(obj, "key");
+```
+
+```ts
+const exists = Object.hasOwn(obj, "prop");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support JavaScript environments that don't have `Object.hasOwn()` (pre-ES2022), you might need to disable this rule or use a polyfill.
+`Object.hasOwn()` is supported in Node.js 16.9.0+ and all modern browsers.
+
+For projects with a large existing codebase using the older patterns, and projects where `hasOwn` and/or `hasOwnProperty` are overridden with custom semantics, this rule might not be applicable.
+
+## Further Reading
+
+- [MDN: Object.hasOwn()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn)
+- [MDN: Object.prototype.hasOwnProperty()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwnProperty)
+- [TC39 Proposal: Accessible Object.prototype.hasOwnProperty](https://github.com/tc39/proposal-accessible-object-hasownproperty)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="objectHasOwns" />

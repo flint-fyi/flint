@@ -1,0 +1,73 @@
+---
+description: "Reports anchor elements with ambiguous text that doesn't describe the link destination."
+title: "anchorAmbiguousText"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="anchorAmbiguousText" />
+
+Anchor elements should have descriptive text that clearly indicates where the link leads or what action it performs.
+Ambiguous text like "click here", "here", "link", or "read more" doesn't provide meaningful context for users, especially those using screen readers who often navigate by jumping between links.
+
+This rule checks that anchor elements don't contain common ambiguous phrases that fail to describe the link destination.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<a href="/about">click here</a>
+```
+
+```tsx
+<a href="/docs">here</a>
+```
+
+```tsx
+<a href="/contact">link</a>
+```
+
+```tsx
+<a href="/pricing">read more</a>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<a href="/about">About Us</a>
+```
+
+```tsx
+<a href="/docs">View Documentation</a>
+```
+
+```tsx
+<a href="/contact">Contact Information</a>
+```
+
+```tsx
+<a href="/pricing">See Pricing Details</a>
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you use a framework that automatically adds sufficient context around links you might choose to disable this rule.
+
+## Further Reading
+
+- [WebAIM: Links and Hypertext](https://webaim.org/techniques/hypertext/)
+- [WCAG 2.4.4 - Link Purpose (In Context)](https://www.w3.org/WAI/WCAG21/Understanding/link-purpose-in-context)
+- [WCAG 2.4.9 - Link Purpose (Link Only)](https://www.w3.org/WAI/WCAG21/Understanding/link-purpose-link-only)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="anchorAmbiguousText" />

@@ -1,5 +1,10 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import * as ts from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/ts";
+import { SyntaxKind } from "typescript";
 
 const focusableElements = new Set([
 	"a",
@@ -11,11 +16,13 @@ const focusableElements = new Set([
 	"video",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports elements with aria-hidden='true' that are focusable.",
 		id: "ariaHiddenFocusables",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		ariaHiddenFocusable: {
@@ -33,22 +40,25 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkElement(node: ts.JsxOpeningLikeElement) {
+		function checkElement(
+			node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
 			const { attributes, tagName } = node;
-			if (!ts.isIdentifier(tagName)) {
+			if (tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
 			const ariaHiddenProperty = attributes.properties.find(
 				(property) =>
-					ts.isJsxAttribute(property) &&
-					ts.isIdentifier(property.name) &&
+					property.kind === SyntaxKind.JsxAttribute &&
+					property.name.kind === SyntaxKind.Identifier &&
 					property.name.text.toLowerCase() === "aria-hidden",
 			);
 
 			if (
 				!ariaHiddenProperty ||
-				!ts.isJsxAttribute(ariaHiddenProperty) ||
+				ariaHiddenProperty.kind !== SyntaxKind.JsxAttribute ||
 				!isAriaHiddenTrue(ariaHiddenProperty)
 			) {
 				return;
@@ -65,7 +75,7 @@ export default typescriptLanguage.createRule({
 			) {
 				context.report({
 					message: "ariaHiddenFocusable",
-					range: getTSNodeRange(ariaHiddenProperty, context.sourceFile),
+					range: getTSNodeRange(ariaHiddenProperty, sourceFile),
 				});
 			}
 		}
@@ -79,11 +89,13 @@ export default typescriptLanguage.createRule({
 	},
 });
 
-function findTabIndexValue(node: ts.JsxOpeningLikeElement) {
+function findTabIndexValue(
+	node: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
+) {
 	const tabIndexProperty = node.attributes.properties.find(
-		(property): property is ts.JsxAttribute =>
-			ts.isJsxAttribute(property) &&
-			ts.isIdentifier(property.name) &&
+		(property): property is AST.JsxAttribute =>
+			property.kind == SyntaxKind.JsxAttribute &&
+			property.name.kind == SyntaxKind.Identifier &&
 			property.name.text.toLowerCase() === "tabindex",
 	);
 
@@ -91,32 +103,32 @@ function findTabIndexValue(node: ts.JsxOpeningLikeElement) {
 		return undefined;
 	}
 
-	if (ts.isJsxExpression(tabIndexProperty.initializer)) {
+	if (tabIndexProperty.initializer.kind == SyntaxKind.JsxExpression) {
 		const expression = tabIndexProperty.initializer.expression;
-		if (expression && ts.isNumericLiteral(expression)) {
+		if (expression && expression.kind == SyntaxKind.NumericLiteral) {
 			return Number(expression.text);
 		}
 	}
 
-	if (ts.isStringLiteral(tabIndexProperty.initializer)) {
+	if (tabIndexProperty.initializer.kind == SyntaxKind.StringLiteral) {
 		return Number(tabIndexProperty.initializer.text);
 	}
 
 	return undefined;
 }
 
-function isAriaHiddenTrue(ariaHiddenProperty: ts.JsxAttribute) {
+function isAriaHiddenTrue(ariaHiddenProperty: AST.JsxAttribute) {
 	if (!ariaHiddenProperty.initializer) {
 		return false;
 	}
 
-	if (ts.isStringLiteral(ariaHiddenProperty.initializer)) {
+	if (ariaHiddenProperty.initializer.kind === SyntaxKind.StringLiteral) {
 		return ariaHiddenProperty.initializer.text === "true";
 	}
 
-	if (ts.isJsxExpression(ariaHiddenProperty.initializer)) {
+	if (ariaHiddenProperty.initializer.kind === SyntaxKind.JsxExpression) {
 		const expression = ariaHiddenProperty.initializer.expression;
-		if (expression && expression.kind === ts.SyntaxKind.TrueKeyword) {
+		if (expression && expression.kind === SyntaxKind.TrueKeyword) {
 			return true;
 		}
 	}

@@ -1,5 +1,5 @@
-import { ruleTester } from "./ruleTester.js";
-import rule from "./tabIndexPositiveValues.js";
+import { ruleTester } from "./ruleTester.ts";
+import rule from "./tabIndexPositiveValues.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <span tabIndex="5">foo</span>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <span tabIndex="5">foo</span>
       ~~~~~~~~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <span tabIndex="1">bar</span>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <span tabIndex="1">bar</span>
       ~~~~~~~~~~~~
@@ -29,7 +27,6 @@ ruleTester.describe(rule, {
 			code: `
 <div tabIndex={3}>baz</div>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div tabIndex={3}>baz</div>
      ~~~~~~~~~~~~
@@ -40,7 +37,6 @@ ruleTester.describe(rule, {
 			code: `
 <button tabIndex={100}>Click</button>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <button tabIndex={100}>Click</button>
         ~~~~~~~~~~~~~~
@@ -52,32 +48,26 @@ ruleTester.describe(rule, {
 		{
 			code: `
 <span tabIndex="0">foo</span>`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `
 <span tabIndex="-1">bar</span>`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `
 <span tabIndex={0}>baz</span>`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `
 <span tabIndex={-1}>qux</span>`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `
 <div>no tabIndex</div>`,
-			fileName: "file.tsx",
 		},
 		{
 			code: `
 <button>Click me</button>`,
-			fileName: "file.tsx",
 		},
 	],
 });

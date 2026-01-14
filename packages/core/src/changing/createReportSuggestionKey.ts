@@ -1,5 +1,5 @@
-import { Suggestion } from "../types/changes.js";
-import { FileReport } from "../types/reports.js";
+import type { Suggestion } from "../types/changes.ts";
+import type { FileReport } from "../types/reports.ts";
 
 export function createReportSuggestionKey(
 	report: FileReport,

@@ -1,26 +1,29 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.js";
+import { typescriptLanguage } from "../language.ts";
+import type * as AST from "../types/ast.ts";
 import {
 	isComparisonOperator,
 	isEqualityOperator,
 	isNegatedEqualityOperator,
-} from "./utils/operators.js";
+} from "./utils/operators.ts";
 
-function isNegativeZero(node: ts.Node): boolean {
+function isNegativeZero(node: AST.Expression): boolean {
 	return (
-		ts.isPrefixUnaryExpression(node) &&
-		node.operator === ts.SyntaxKind.MinusToken &&
-		ts.isNumericLiteral(node.operand) &&
+		node.kind === SyntaxKind.PrefixUnaryExpression &&
+		node.operator === SyntaxKind.MinusToken &&
+		node.operand.kind === SyntaxKind.NumericLiteral &&
 		node.operand.text === "0"
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports comparisons with -0 that may not behave as expected.",
 		id: "negativeZeroComparisons",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unexpectedNegativeZeroComparison: {
@@ -35,11 +38,12 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function generateObjectIsText(
-			node: ts.BinaryExpression,
+			node: AST.BinaryExpression,
 			isNegated: boolean,
+			sourceFile: ts.SourceFile,
 		) {
-			const leftText = node.left.getText(context.sourceFile);
-			const rightText = node.right.getText(context.sourceFile);
+			const leftText = node.left.getText(sourceFile);
+			const rightText = node.right.getText(sourceFile);
 			const objectIsCall = `Object.is(${leftText}, ${rightText})`;
 
 			return isNegated ? `!${objectIsCall}` : objectIsCall;
@@ -47,7 +51,7 @@ export default typescriptLanguage.createRule({
 
 		return {
 			visitors: {
-				BinaryExpression: (node) => {
+				BinaryExpression: (node, { sourceFile }) => {
 					if (
 						!isComparisonOperator(node.operatorToken) ||
 						(!isNegativeZero(node.left) && !isNegativeZero(node.right))
@@ -55,9 +59,9 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					const operator = node.operatorToken.getText(context.sourceFile);
+					const operator = node.operatorToken.getText(sourceFile);
 					const range = {
-						begin: node.getStart(context.sourceFile),
+						begin: node.getStart(sourceFile),
 						end: node.getEnd(),
 					};
 
@@ -75,6 +79,7 @@ export default typescriptLanguage.createRule({
 										text: generateObjectIsText(
 											node,
 											isNegatedEqualityOperator(node.operatorToken),
+											sourceFile,
 										),
 									},
 								]

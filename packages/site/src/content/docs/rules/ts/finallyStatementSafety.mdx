@@ -1,0 +1,109 @@
+---
+description: "Avoid using control flow statements in finally blocks."
+title: "finallyStatementSafety"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="finallyStatementSafety" />
+
+Control flow statements such as `return`, `throw`, `break`, and `continue` in `finally` blocks can cause unexpected behavior.
+When these statements appear in a `finally` block, they override any control flow statements in the corresponding `try` or `catch` blocks.
+The `finally` block always executes, and its control flow statements take precedence, which can lead to bugs that are difficult to diagnose.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function processData() {
+	try {
+		return fetchData();
+	} finally {
+		return null;
+	}
+}
+```
+
+```ts
+function handleError() {
+	try {
+		throw new Error("Original error");
+	} catch (error) {
+		throw error;
+	} finally {
+		throw new Error("Override error");
+	}
+}
+```
+
+```ts
+for (let i = 0; i < items.length; i++) {
+	try {
+		processItem(items[i]);
+	} finally {
+		break;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function processData() {
+	try {
+		return fetchData();
+	} finally {
+		cleanup();
+	}
+}
+```
+
+```ts
+function handleError() {
+	try {
+		throw new Error("Original error");
+	} catch (error) {
+		console.error(error);
+		throw error;
+	} finally {
+		cleanup();
+	}
+}
+```
+
+```ts
+for (let i = 0; i < items.length; i++) {
+	try {
+		processItem(items[i]);
+		break;
+	} finally {
+		cleanup();
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are very confident in your handling of exception handling in your code and specifically want to use the confusing quirks of `finally` control flow statements, this rule might not be for you.
+
+## Further Reading
+
+- [MDN: try...catch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch)
+- [MDN: Control flow and error handling](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="finallyStatementSafety" />

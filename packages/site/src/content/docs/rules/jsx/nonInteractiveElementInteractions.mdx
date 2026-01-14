@@ -1,0 +1,82 @@
+---
+description: "Reports non-interactive elements with interactive event handlers."
+title: "nonInteractiveElementInteractions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="nonInteractiveElementInteractions" />
+
+Non-interactive HTML elements and non-interactive ARIA roles indicate content and containers in the user interface.
+These elements should not have interactive event handlers because they are not designed to be interactive.
+
+Non-interactive elements include `<main>`, `<area>`, `<h1>` through `<h6>`, `<p>`, `<img>`, `<li>`, `<ul>`, and `<ol>`.
+Non-interactive ARIA roles include `article`, `banner`, `complementary`, `img`, `listitem`, `main`, `navigation`, `region`, and `tooltip`.
+
+When you need to add interactivity, use native interactive elements like `<button>` or `<a>`, or add an appropriate interactive role to the element.
+
+This is required for WCAG 4.1.2 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<h1 onClick={() => {}}>Heading</h1>
+```
+
+```tsx
+<main onKeyDown={handler}>Content</main>
+```
+
+```tsx
+<img onClick={handleClick} src="image.png" />
+```
+
+```tsx
+<section onClick={handler} role="article" />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<h1>
+	<button onClick={() => {}}>Heading</button>
+</h1>
+```
+
+```tsx
+<h1 onClick={() => {}} role="button">
+	Heading
+</h1>
+```
+
+```tsx
+<button onClick={() => {}}>Click me</button>
+```
+
+```tsx
+<section onClick={handler} role="button" />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you are using a framework that automatically handles accessibility for non-interactive elements with event handlers, you can disable this rule.
+
+## Further Reading
+
+- [WCAG 4.1.2: Name, Role, Value](https://www.w3.org/WAI/WCAG21/Understanding/name-role-value)
+- [WAI-ARIA Authoring Practices Guide - Design Patterns and Widgets](https://www.w3.org/TR/wai-aria-practices-1.1/#aria_ex)
+- [WAI-ARIA roles](https://www.w3.org/TR/wai-aria-1.1/#usage_intro)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="nonInteractiveElementInteractions" />

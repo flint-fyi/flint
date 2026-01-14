@@ -5,11 +5,155 @@ title: CLI
 
 import { PackageManagers } from "starlight-package-managers";
 
-:::danger
-Flint is still very early stage and experimental.
-Not all features have been implemented.
+Flint's CLI comes as part of the [`flint` npm package](https://npmjs.com/package/flint).
+You can run it with `npx` or an equivalent:
+
+<PackageManagers pkg="flint" type="dlx" />
+
+## `--cache-ignore`
+
+Whether to ignore any existing cache data on disk.
+This will cause a full re-lint of all linted files.
+
+<PackageManagers args="--cache-ignore" pkg="flint" type="dlx" />
+
+:::tip
+Flint stores linting caches under `node_modules/.cache/flint.json`.
+Open that file in an editor to see which files are cached as well as dependencies between files.
 :::
 
-<PackageManagers type="dlx" pkg="flint" />
+## `--fix`
 
-Coming soon!
+Enables auto-fixing ["fixes"](/glossary#fix) from rule reports.
+
+<PackageManagers args="--fix" pkg="flint" type="dlx" />
+
+Rule reports may include safe "fixer" changes that show how to fix source code.
+Adding `--fix` will instruct Flint to continuously re-run (up to 10 times), fixing code and re-linting files.
+
+## `--fix-suggestions`
+
+Enables auto-fixing any number of specific ["suggestions"](/glossary#suggestion) from rule reports.
+
+<PackageManagers
+	args="--fix-suggestions cspell:addWordToWords"
+	pkg="flint"
+	type="dlx"
+/>
+
+Unlike [`--fix`](#--fix), `--fix-suggestions` requires passing in explicit names of suggestions to apply.
+Suggestion names are comprised of the rule name, and a suggestion ID, all joined by `:`.
+
+:::note
+[🚀 Feature: Comment directives and suggestions should prefix with plugin IDs](https://github.com/flint-fyi/flint/issues/248) will soon change suggestion keys.
+:::
+
+## `--help`
+
+Prints a help text dialog that explains options and links to this website.
+
+<PackageManagers args="--help" pkg="flint" type="dlx" />
+
+## `--interactive`
+
+Whether to run Flint with an interactive "one file at a time" viewer.
+
+<PackageManagers args="--interactive" pkg="flint" type="dlx" />
+
+Flint's interactive CLI view can be controlled by using the arrow keys printed in the output:
+
+```plaintext
+📌 Displaying Flint reports in --interactive mode (file 1 of 2).
+   [<] previous file  [>] next file  [q] quit
+
+╭./example.ts
+│
+│ [forInArrays] For-in loops over arrays have surprising behavior that often leads to bugs.
+│
+│  6:1 │ for (const i in ["a", "b", "c"]) {
+│      │ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+│
+│  A for-in loop (`for (const i in o)`) iterates over all enumerable properties of an object, including those that are not array indices.
+│  This can lead to unexpected behavior when used with arrays, as it may include properties that are not part of the array's numeric indices.
+│  It also returns the index key (`i`) as a string, which is not the expected numeric type for array indices.
+│
+│  Suggestion: Use a construct more suited for arrays, such as a for-of loop (`for (const i of o)`).
+│  → flint.fyi/rules/ts/forInArrays
+│
+╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✖ Found 3 reports across 2 files.
+```
+
+:::tip
+The `--interactive` mode switches the default [`--presenter`](#--presenter) from `brief` to `detailed`.
+It does not, however, enable `--watch` by default.
+Run with `--interactive --watch` to use both modes.
+:::
+
+## `--presenter`
+
+Which ["presenter"](/glossary#presenter) to output results using: `brief` _(default)_ or `detailed`.
+
+<PackageManagers arg="--presenter detailed" pkg="flint" type="dlx" />
+
+The `brief` presenter shows a terse output with just file locations, primary report messages, and report IDs.
+
+```plaintext
+Linting with flint.config.ts...
+
+/Users/josh/repos/flint/packages/cli/src/presenters/getPresenterFactory.ts
+  6:1  For-in loops over arrays have surprising behavior that often leads to bugs.  forInArrays
+
+✖ Found 1 report across 1 file.
+```
+
+The `detailed` presenter shows a rich formatted output containing full report messages and syntax locations.
+
+```plaintext
+Linting with flint.config.ts...
+╭./packages/cli/src/presenters/getPresenterFactory.ts
+│
+│ [forInArrays] For-in loops over arrays have surprising behavior that often leads to bugs.
+│
+│  6:1 │ for (const i in ["a", "b", "c"]) {
+│      │ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+│
+│  A for-in loop (`for (const i in o)`) iterates over all enumerable properties of an object, including those that are not array indices.
+│  This can lead to unexpected behavior when used with arrays, as it may include properties that are not part of the array's numeric indices.
+│  It also returns the index key (`i`) as a string, which is not the expected numeric type for array indices.
+│
+│  Suggestion: Use a construct more suited for arrays, such as a for-of loop (`for (const i of o)`).
+│  → flint.fyi/rules/forInArrays
+│
+╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✖ Found 1 report across 1 file.
+```
+
+## `--skip-diagnostics`
+
+Whether to skip reporting language "diagnostics" after linting.
+
+<PackageManagers args="--skip-diagnostics" pkg="flint" type="dlx" />
+
+Language plugins such as Flint's TypeScript plugin are able to report additional checks from the languages after linting.
+For example, Flint's core TypeScript plugin reports TypeScript type errors (effectively running `tsc --noEmit`) by re-using the TypeScript type services used in linting.
+
+`--skip-diagnostics` can be used to disable those checks.
+You may wish to do this for performance and/or if you run tools like `tsc` separately from Flint.
+
+## `--version`
+
+Prints the current package version of Flint.
+
+<PackageManagers args="--version" pkg="flint" type="dlx" />
+
+## `--watch`
+
+Whether to keep the linting process running, re-linting files as they change.
+
+<PackageManagers args="--watch" pkg="flint" type="dlx" />
+
+Flint's `--watch` mode is similar to the watch mode in other developer tools CLIs such as [`tsc --watch`](https://www.typescriptlang.org/docs/handbook/compiler-options.html#:~:text=Watch%20Options,-Flag), [`tsdown --watch`](https://tsdown.dev/options/watch-mode), and [`vitest --watch`](https://vitest.dev/guide/cli.html#watch).
+It will lint files once on startup, then again whenever any linted files are changed on disk.

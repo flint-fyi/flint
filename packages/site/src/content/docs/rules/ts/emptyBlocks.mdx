@@ -1,0 +1,84 @@
+---
+description: "Empty block statements should be removed or contain code."
+title: "emptyBlocks"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="emptyBlocks" />
+
+Empty blocks can indicate incomplete code or areas where logic was removed but the block structure was left behind.
+They can also reduce code readability by cluttering the codebase with unnecessary braces.
+
+This rule does not report empty function, method, constructor, or accessor bodies, as these are common patterns for abstract methods, stubs, or interfaces.
+Empty catch blocks are also allowed when they contain comments explaining why the error is being ignored.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (condition) {
+}
+
+while (condition) {}
+
+for (let i = 0; i < 10; i++) {}
+
+switch (value) {
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (condition) {
+	doSomething();
+}
+
+while (condition) {
+	// Intentionally empty - waiting for condition
+}
+
+for (let i = 0; i < 10; i++) {
+	processItem(i);
+}
+
+switch (value) {
+	case 1:
+		break;
+}
+
+// Empty function bodies are allowed
+function stub() {}
+
+// Empty catch blocks are allowed
+try {
+	doSomething();
+} catch (error) {}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase frequently uses empty blocks as placeholders during development, you might find this rule too strict.
+However, it's generally better to add comments to empty blocks to explain their purpose.
+
+## Further Reading
+
+- [MDN documentation on block statements](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="emptyBlocks" />

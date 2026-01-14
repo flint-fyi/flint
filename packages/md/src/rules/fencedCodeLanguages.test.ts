@@ -1,5 +1,5 @@
-import rule from "./fencedCodeLanguages.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./fencedCodeLanguages.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -12,11 +12,14 @@ console.log(message);
 `,
 			snapshot: `
 \`\`\`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 This fenced code block's language is ambiguous.
 const message = "Hello, world!";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 console.log(message);
+~~~~~~~~~~~~~~~~~~~~~
 \`\`\`
+~~~
 `,
 		},
 		{
@@ -31,10 +34,12 @@ plain text here
 Some text.
 
 \`\`\`
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 This fenced code block's language is ambiguous.
 plain text here
+~~~~~~~~~~~~~~~
 \`\`\`
+~~~
 `,
 		},
 		{
@@ -51,10 +56,12 @@ More content.
 # Heading
 
 \`\`\`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 This fenced code block's language is ambiguous.
 code without language
+~~~~~~~~~~~~~~~~~~~~~
 \`\`\`
+~~~
 
 More content.
 `,
@@ -71,16 +78,20 @@ second block
 `,
 			snapshot: `
 \`\`\`
-~~~~~~~~~~~~~~~~~~~
+~~~
 This fenced code block's language is ambiguous.
 first block
+~~~~~~~~~~~
 \`\`\`
+~~~
 
 \`\`\`
-~~~~~~~~~~~~~~~~~~~~
+~~~
 This fenced code block's language is ambiguous.
 second block
+~~~~~~~~~~~~
 \`\`\`
+~~~
 `,
 		},
 	],

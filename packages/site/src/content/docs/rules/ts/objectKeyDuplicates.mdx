@@ -1,0 +1,63 @@
+---
+description: "Reports unnecessary duplicate keys that override previous values."
+title: "objectKeyDuplicates"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="objectKeyDuplicates" />
+
+Duplicate object keys are legal in JavaScript, but they can lead to unexpected behavior.
+When duplicate keys exist, only the last value for a given key is used.
+This can cause confusion and bugs, especially when maintaining the code.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const object = { a: 1, a: 2 };
+
+const config = {
+	port: 3000,
+	host: "localhost",
+	port: 8080,
+};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const object = { a: 1, b: 2 };
+
+const config = {
+	host: "localhost",
+	port: 8080,
+};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project intentionally creates duplicate keys as an unusual style choice, this rule may not be for you.
+If you have a rare case where duplicate keys are intentional, you can use [Flint disable comments](/directives) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Object initializer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer)
+- [MDN: Working with objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="objectKeyDuplicates" />

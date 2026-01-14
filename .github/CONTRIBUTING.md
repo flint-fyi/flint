@@ -10,7 +10,7 @@ This project contains a [Contributor Covenant code of conduct](./CODE_OF_CONDUCT
 
 ## Reporting Issues
 
-Please do [report an issue on the issue tracker](https://github.com/JoshuaKGoldberg/flint/issues/new/choose) if there's any bugfix, documentation improvement, or general enhancement you'd like to see in the repository! Please fully fill out all required fields in the most appropriate issue form.
+Please do [report an issue on the issue tracker](https://github.com/flint-fyi/flint/issues/new/choose) if there's any bugfix, documentation improvement, or general enhancement you'd like to see in the repository! Please fully fill out all required fields in the most appropriate issue form.
 
 ## Sending Contributions
 
@@ -22,8 +22,8 @@ There are two steps involved:
 
 ### Finding an Issue
 
-With the exception of very small typos, all changes to this repository generally need to correspond to an [unassigned open issue marked as `status: accepting prs` on the issue tracker](https://github.com/JoshuaKGoldberg/flint/issues?q=is%3Aissue+is%3Aopen+label%3A%22status%3A+accepting+prs%22+no%3Aassignee+).
-If this is your first time contributing, consider searching for [unassigned issues that also have the `good first issue` label](https://github.com/JoshuaKGoldberg/flint/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+label%3A%22status%3A+accepting+prs%22+no%3Aassignee+).
+With the exception of very small typos, all changes to this repository generally need to correspond to an [unassigned open issue marked as `status: accepting prs` and not `ai assigned` on the issue tracker](https://github.com/flint-fyi/flint/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22status%3A%20accepting%20prs%22%20-label%3A%22ai%20assigned%22%20no%3Aassignee).
+If this is your first time contributing, consider searching for [unassigned issues that also have the `good first issue` label](https://github.com/flint-fyi/flint/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+label%3A%22status%3A+accepting+prs%22+no%3Aassignee+).
 If the issue you'd like to fix isn't found on the issue, see [Reporting Issues](#reporting-issues) for filing your own (please do!).
 
 #### Issue Claiming
@@ -42,7 +42,11 @@ Be sure to fill out the pull request template's requested information -- otherwi
 PRs are also expected to have a title that adheres to [conventional commits](https://www.conventionalcommits.org/en/v1.0.0).
 Only PR titles need to be in that format, not individual commits.
 Don't worry if you get this wrong: you can always change the PR title after sending it.
-Check [previously merged PRs](https://github.com/JoshuaKGoldberg/flint/pulls?q=is%3Apr+is%3Amerged+-label%3Adependencies+) for reference.
+Check [previously merged PRs](https://github.com/flint-fyi/flint/pulls?q=is%3Apr+is%3Amerged+-label%3Adependencies+) for reference.
+
+Finally, if your PR includes any user-facing changes, run `pnpm changeset` to [add a proper changeset](https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md).
+You can copy the exact title from the PR.
+This will allow our release automation to version packages appropriately when the next release happens.
 
 #### Draft PRs
 

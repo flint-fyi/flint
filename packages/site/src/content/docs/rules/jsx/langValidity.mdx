@@ -1,0 +1,79 @@
+---
+description: "Reports invalid lang attribute values."
+title: "langValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="langValidity" />
+
+The `lang` attribute must contain a valid BCP 47 language tag to properly identify the language of content for screen readers and assistive technologies.
+Invalid language tags can cause confusion for users who rely on assistive technologies.
+
+Valid BCP 47 language tags consist of a primary language subtag (2-3 letters) optionally followed by script, region, and variant subtags.
+
+This is required for WCAG 3.1.2 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<div lang="">Content</div>
+```
+
+```tsx
+<div lang="e">Content</div>
+```
+
+```tsx
+<div lang="123">Content</div>
+```
+
+```tsx
+<html lang="en-">Content</html>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div lang="en">Content</div>
+```
+
+```tsx
+<div lang="en-US">Content</div>
+```
+
+```tsx
+<div lang="zh-Hans">Content</div>
+```
+
+```tsx
+<div lang="zh-Hans-CN">Content</div>
+```
+
+```tsx
+<div lang={language}>Content</div>
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you're using a framework that manages language attributes automatically, you may want to disable this rule.
+
+## Further Reading
+
+- [MDN: HTMLElement: lang property](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/lang)
+- [WCAG 3.1.2: Language of Parts](https://www.w3.org/WAI/WCAG21/Understanding/language-of-parts)
+- [BCP 47: Tags for Identifying Languages](https://www.rfc-editor.org/rfc/bcp/bcp47.txt)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="langValidity" />

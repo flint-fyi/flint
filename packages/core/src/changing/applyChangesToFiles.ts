@@ -1,8 +1,8 @@
 import { debugForFile } from "debug-for-file";
 
-import { FileResults } from "../types/linting.js";
-import { applyChangesToFile } from "./applyChangesToFile.js";
-import { resolveChangesByFile } from "./resolveChangesByFile.js";
+import type { FileResults } from "../types/linting.ts";
+import { applyChangesToFile } from "./applyChangesToFile.ts";
+import { resolveChangesByFile } from "./resolveChangesByFile.ts";
 
 const log = debugForFile(import.meta.filename);
 
