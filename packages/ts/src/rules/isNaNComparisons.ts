@@ -1,7 +1,9 @@
 import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
+import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
+import type { Checker } from "../types/checker.ts";
 import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
 import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
 
@@ -40,14 +42,10 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					const left = unwrapParenthesizedExpression(node.left);
-					const right = unwrapParenthesizedExpression(node.right);
-
-					const isNaNComparison =
-						isNaNIdentifier(left, typeChecker) ||
-						isNaNIdentifier(right, typeChecker);
-
-					if (isNaNComparison) {
+					if (
+						isNaNIdentifier(node.left, typeChecker) ||
+						isNaNIdentifier(node.right, typeChecker)
+					) {
 						context.report({
 							message: "useIsNaN",
 							range: getTSNodeRange(node, sourceFile),
@@ -57,23 +55,13 @@ export default typescriptLanguage.createRule({
 			},
 		};
 
-		function isNaNIdentifier(
-			node: ReturnType<typeof unwrapParenthesizedExpression>,
-			typeChecker: Parameters<
-				Parameters<typeof typescriptLanguage.createRule>[0]["setup"]
-			>[0] extends { typeChecker: infer T }
-				? T
-				: never,
-		): boolean {
-			if (node.kind !== SyntaxKind.Identifier) {
-				return false;
-			}
-
-			if (node.text !== "NaN") {
-				return false;
-			}
-
-			return isGlobalDeclarationOfName(node, "NaN", typeChecker);
+		function isNaNIdentifier(node: AST.Expression, typeChecker: Checker) {
+			const unwrapped = unwrapParenthesizedExpression(node);
+			return (
+				unwrapped.kind === SyntaxKind.Identifier &&
+				unwrapped.text === "NaN" &&
+				isGlobalDeclarationOfName(unwrapped, "NaN", typeChecker)
+			);
 		}
 	},
 });
