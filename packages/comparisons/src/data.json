@@ -4685,7 +4685,8 @@
 		"flint": {
 			"name": "unpublishedImports",
 			"plugin": "node",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{

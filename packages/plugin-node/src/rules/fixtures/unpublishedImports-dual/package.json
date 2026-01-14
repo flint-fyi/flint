@@ -1,0 +1,10 @@
+{
+	"name": "dual-test-package",
+	"version": "1.0.0",
+	"dependencies": {
+		"dual-dependency": "1.0.0"
+	},
+	"devDependencies": {
+		"dual-dependency": "1.0.0"
+	}
+}

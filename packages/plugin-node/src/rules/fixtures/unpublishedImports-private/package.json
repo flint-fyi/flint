@@ -1,0 +1,11 @@
+{
+	"name": "private-test-package",
+	"version": "1.0.0",
+	"private": true,
+	"dependencies": {
+		"some-prod-dependency": "1.0.0"
+	},
+	"devDependencies": {
+		"some-dev-dependency": "1.0.0"
+	}
+}

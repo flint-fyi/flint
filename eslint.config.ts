@@ -50,6 +50,7 @@ export default defineConfig(
 		"packages/*/.astro",
 		"packages/*/dist",
 		"packages/*/lib",
+		"packages/*/src/rules/fixtures",
 		"packages/fixtures",
 		"pnpm-lock.yaml",
 	]),

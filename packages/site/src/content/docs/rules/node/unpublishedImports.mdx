@@ -1,0 +1,101 @@
+---
+description: "Disallow importing packages from devDependencies in published files."
+title: "unpublishedImports"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="unpublishedImports" />
+
+Importing packages listed only in `devDependencies` within files that will be published to npm can cause "Module Not Found" errors for consumers of your package.
+When users install your package, only `dependencies`, `peerDependencies`, and `optionalDependencies` are installed — not `devDependencies`.
+
+This rule flags imports of packages that are listed in `devDependencies` but not in `dependencies`, `peerDependencies`, or `optionalDependencies`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// With package.json: { "devDependencies": { "test-utils": "1.0.0" } }
+import { setup } from "test-utils";
+```
+
+```ts
+// With package.json: { "devDependencies": { "@scope/dev-tool": "1.0.0" } }
+import tool from "@scope/dev-tool";
+```
+
+```ts
+// With package.json: { "devDependencies": { "dev-lib": "1.0.0" } }
+const lib = require("dev-lib");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// With package.json: { "dependencies": { "lodash": "4.0.0" } }
+import { debounce } from "lodash";
+```
+
+```ts
+// With package.json: { "peerDependencies": { "react": "18.0.0" } }
+import React from "react";
+```
+
+```ts
+// Type-only imports are allowed (they're erased at compile time)
+import type { TestUtils } from "test-utils";
+```
+
+```ts
+// Inline type-only imports are also allowed
+import { type Config } from "test-utils";
+```
+
+```ts
+// Node.js built-in modules are always allowed
+import fs from "node:fs";
+```
+
+```ts
+// Relative imports are not checked
+import { helper } from "./utils";
+```
+
+```ts
+// Private packages are not checked
+// With package.json: { "private": true, "devDependencies": { "test": "1.0.0" } }
+import test from "test";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project is a private package that will never be published to npm (e.g., an application rather than a library), this rule may not be necessary.
+The rule already skips packages with `"private": true` in their `package.json`.
+
+If you intentionally exclude certain files from publishing using the `files` field in `package.json` or `.npmignore`, this rule may produce false positives for those files.
+In those cases, you may want to disable the rule for specific files.
+
+## Further Reading
+
+- [npm: package.json dependencies](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#dependencies)
+- [npm: package.json devDependencies](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#devdependencies)
+- [npm: package.json files](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#files)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="unpublishedImports" />
