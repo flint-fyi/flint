@@ -1,0 +1,119 @@
+---
+description: "Reports classes that only contain static members or are empty."
+title: "extraneousClasses"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="extraneousClasses" />
+
+Classes in JavaScript and TypeScript are intended for creating instances with shared behavior.
+When a class contains only static members, is empty, or only has a constructor, it's often a misuse of the class pattern.
+
+This rule reports:
+
+- **Empty classes**: Serve no purpose
+- **Static-only classes**: Can be replaced with module exports
+- **Constructor-only classes**: Can be replaced with functions
+
+## Examples
+
+### Static-Only Classes
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Utils {
+	static add(a: number, b: number) {
+		return a + b;
+	}
+
+	static multiply(a: number, b: number) {
+		return a * b;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export function add(a: number, b: number) {
+	return a + b;
+}
+
+export function multiply(a: number, b: number) {
+	return a * b;
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Empty Classes
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Empty {}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Counter {
+	value = 0;
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Constructor-Only Classes
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Logger {
+	constructor(message: string) {
+		console.log(message);
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function log(message: string) {
+	console.log(message);
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project uses decorators that add behavior to classes, or if you're working with a framework that requires class-based patterns, you may need to disable this rule for specific files.
+Some dependency injection frameworks also require empty or constructor-only classes.
+
+## Further Reading
+
+- [MDN: Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+- [TypeScript Handbook: Classes](https://www.typescriptlang.org/docs/handbook/2/classes.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="extraneousClasses" />
