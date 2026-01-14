@@ -1,5 +1,4 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
+import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 import ts from "typescript";
 import { z } from "zod";
 

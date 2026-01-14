@@ -1,9 +1,10 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import { getTSNodeRange } from "@flint.fyi/typescript-language";
+import {
+	getTSNodeRange,
+	isGlobalDeclarationOfName,
+	typescriptLanguage,
+	unwrapParenthesizedExpression,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
-
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
-import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
 
 export default typescriptLanguage.createRule({
 	about: {
