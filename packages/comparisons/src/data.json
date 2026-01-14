@@ -21612,6 +21612,7 @@
 			"name": "stringMappingKeys",
 			"plugin": "yaml",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	}
