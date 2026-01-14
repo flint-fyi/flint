@@ -7,6 +7,7 @@ import type { YamlNodesByName } from "./nodes.ts";
 import { prepareYamlFile } from "./prepareYamlFile.ts";
 
 export interface YamlFileServices {
+	filePathAbsolute: string;
 	root: yamlParser.Root;
 	sourceText: string;
 }

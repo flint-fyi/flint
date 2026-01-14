@@ -21542,6 +21542,7 @@
 			"name": "fileExtensions",
 			"plugin": "yaml",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},

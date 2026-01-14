@@ -22,7 +22,12 @@ export function createYamlFile(data: FileDiskData) {
 			}
 
 			const { visitors } = runtime;
-			const fileServices = { options, root, sourceText: data.sourceText };
+			const fileServices = {
+				filePathAbsolute: data.filePathAbsolute,
+				options,
+				root,
+				sourceText: data.sourceText,
+			};
 
 			visit(root, (node) => {
 				// @ts-expect-error -- This should work...?

@@ -1,0 +1,55 @@
+---
+description: "Enforces consistent YAML file extensions."
+title: "fileExtensions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="yaml" rule="fileExtensions" />
+
+The .yaml extension is the official extension recommended by the YAML specification.
+Using .yaml consistently makes file types clearer and avoids confusion.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```yaml
+# config.yml
+name: my-project
+version: 1.0.0
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```yaml
+# config.yaml
+name: my-project
+version: 1.0.0
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project or organization has an established convention of using .yml extensions, you may not need this rule.
+Some ecosystems or tools may prefer or require .yml extensions.
+
+## Further Reading
+
+- [YAML Specification](https://yaml.org/spec/1.2.2/)
+- [YAML FAQ - What is the recommended file extension?](https://yaml.org/faq.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="yaml" ruleId="fileExtensions" />
