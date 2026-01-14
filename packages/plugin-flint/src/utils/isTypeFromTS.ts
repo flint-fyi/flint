@@ -1,7 +1,5 @@
+import type { AST, Checker } from "@flint.fyi/ts";
 import ts from "typescript";
-
-import type * as AST from "../types/ast.ts";
-import type { Checker } from "../types/checker.ts";
 
 export function isTypeFromTS(
 	node: AST.Expression,

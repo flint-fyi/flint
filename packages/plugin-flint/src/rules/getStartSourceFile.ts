@@ -1,9 +1,7 @@
-import {
-	getTSNodeRange,
-	isTypeFromTS,
-	typescriptLanguage,
-} from "@flint.fyi/ts";
+import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import { SyntaxKind } from "typescript";
+
+import { isTypeFromTS } from "../utils/isTypeFromTS.ts";
 
 export default typescriptLanguage.createRule({
 	about: {
