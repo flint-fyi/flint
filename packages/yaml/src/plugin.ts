@@ -4,11 +4,18 @@ import blockMappings from "./rules/blockMappings.ts";
 import blockSequences from "./rules/blockSequences.ts";
 import emptyDocuments from "./rules/emptyDocuments.ts";
 import emptyMappingKeys from "./rules/emptyMappingKeys.ts";
+import numericTrailingZeros from "./rules/numericTrailingZeros.ts";
 
 export const yaml = createPlugin({
 	files: {
 		all: ["**/*.{yaml,yml}"],
 	},
 	name: "YAML",
-	rules: [blockMappings, blockSequences, emptyDocuments, emptyMappingKeys],
+	rules: [
+		blockMappings,
+		blockSequences,
+		emptyDocuments,
+		emptyMappingKeys,
+		numericTrailingZeros,
+	],
 });

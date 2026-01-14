@@ -21584,6 +21584,7 @@
 			"name": "numericTrailingZeros",
 			"plugin": "yaml",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
