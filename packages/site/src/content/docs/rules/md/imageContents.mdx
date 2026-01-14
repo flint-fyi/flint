@@ -1,0 +1,58 @@
+---
+description: "Reports images with empty URLs or only empty fragments."
+title: "imageContents"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="md" rule="imageContents" />
+
+In Markdown, it's not always easy to spot when you've forgotten to provide a destination for an image.
+This is especially common when writing content and intending to insert an image later, leaving the destination empty as a placeholder, only to forget to complete it.
+An image with an empty URL or only an empty fragment (`#`) results in broken image links.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```markdown
+![]()
+```
+
+```markdown
+![Flint Logo]()
+```
+
+```markdown
+![](#)
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```markdown
+![](https://flint.fyi/logo.png)
+```
+
+```markdown
+![Flint Logo](https://flint.fyi/logo.png)
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you intentionally use empty image URLs as placeholders and have a framework or other workflow that always fills them in later, you might want to disable this rule.
+
+## Further Reading
+
+- [Markdown Images Syntax](https://www.markdownguide.org/basic-syntax/#images-1)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="md" ruleId="imageContents" />

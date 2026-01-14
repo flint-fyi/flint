@@ -1,0 +1,96 @@
+---
+description: "Reports typeof expressions that compare impossible string literals."
+title: "typeofComparisons"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="typeofComparisons" />
+
+The `typeof` operator in JavaScript returns one of a specific set of string values: `"bigint"`, `"boolean"`, `"function"`, `"number"`, `"object"`, `"string"`, `"symbol"`, or `"undefined"`.
+Comparing the result of `typeof` to any other string literal is usually a typo and the comparison will never be true.
+This rule enforces that `typeof` expressions are only compared to valid string literals.
+
+## Examples
+
+{/* spellchecker: disable */}
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (typeof value === "strnig") {
+	processString(value);
+}
+```
+
+```ts
+if (typeof callback !== "fucntion") {
+	throw new Error("Invalid callback");
+}
+```
+
+```ts
+if (typeof data == "undefimed") {
+	initialize();
+}
+```
+
+```ts
+if (typeof count === "nunber") {
+	calculate(count);
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (typeof value === "string") {
+	processString(value);
+}
+```
+
+```ts
+if (typeof callback !== "function") {
+	throw new Error("Invalid callback");
+}
+```
+
+```ts
+if (typeof data == "undefined") {
+	initialize();
+}
+```
+
+```ts
+if (typeof count === "number") {
+	calculate(count);
+}
+```
+
+</TabItem>
+</Tabs>
+
+{/* spellchecker: enable */}
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project is a rare one that operates on non-standard objects, such as ancient versions of obscure browsers, this rule might not benefit you.
+For all other projects, using either this rule or a full type-checker should always be done.
+
+## Further Reading
+
+- [MDN: `typeof` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof)
+- [MDN: JavaScript data types](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="typeofComparisons" />

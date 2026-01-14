@@ -1,0 +1,68 @@
+---
+description: "Combine consecutive string literals instead of using the + operator."
+title: "unnecessaryConcatenation"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryConcatenation" />
+
+Concatenating string literals with the + operator is unnecessary and reduces code readability.
+String literals can be combined into a single literal, which is clearer and potentially more performant.
+This rule reports cases where two string literals are concatenated using the + operator when they could be combined into a single string literal.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const message = "Hello" + "World";
+const path = "directory" + "/" + "file.txt";
+const multiLine =
+	"This is a very long string that " + "continues on the next line";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const message = "HelloWorld";
+const path = "directory/file.txt";
+const multiLine = "This is a very long string that continues on the next line";
+```
+
+```ts
+// Concatenating with variables is allowed
+const greeting = "Hello" + name;
+const fullPath = basePath + "/file.txt";
+```
+
+```ts
+// Template literals are a better choice for string interpolation
+const template = `Hello ${name}`;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase uses string concatenation intentionally for code clarity or consistency (for example, when breaking long strings across multiple lines for readability), you might choose to disable this rule.
+However, in most cases, combining string literals or using template literals improves code quality.
+
+## Further Reading
+
+- [MDN: String concatenation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Addition#string_concatenation)
+- [MDN: Template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryConcatenation" />

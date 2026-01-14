@@ -1,21 +1,23 @@
-import { ruleTester } from "./ruleTester.js";
-import rule from "./valueSafety.js";
+import { ruleTester } from "./ruleTester.ts";
+import rule from "./valueSafety.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `[2e308]`,
-			snapshot: `[2e308]
-~~~~~
-This number evaluates to Infinity.
-`,
+			code: `
+[2e308]`,
+			snapshot: `
+[2e308]
+ ~~~~~
+ This number evaluates to Infinity.`,
 		},
 		{
-			code: `[-2e308]`,
-			snapshot: `[-2e308]
- ~~~~~
- This number evaluates to Infinity.
-`,
+			code: `
+[-2e308]`,
+			snapshot: `
+[-2e308]
+  ~~~~~
+  This number evaluates to Infinity.`,
 		},
 		{
 			code: `
@@ -32,11 +34,12 @@ This number evaluates to Infinity.
 `,
 		},
 		{
-			code: `["\ud83d"]`,
-			snapshot: `["\ud83d"]
-~~~
-This string contains an unmatched surrogate.
-`,
+			code: `
+["\ud83d"]`,
+			snapshot: `
+["\ud83d"]
+ ~~~
+ This string contains an unmatched surrogate.`,
 		},
 		{
 			code: `
@@ -53,11 +56,12 @@ This string contains an unmatched surrogate.
 `,
 		},
 		{
-			code: `[1e-400]`,
-			snapshot: `[1e-400]
-~~~~~~
-This number is too small and evaluates to zero.
-`,
+			code: `
+[1e-400]`,
+			snapshot: `
+[1e-400]
+ ~~~~~~
+ This number is too small and evaluates to zero.`,
 		},
 		{
 			code: `
@@ -74,18 +78,20 @@ This number is too small and evaluates to zero.
 `,
 		},
 		{
-			code: `[9007199254740992]`,
-			snapshot: `[9007199254740992]
-~~~~~~~~~~~~~~~~
-This integer is outside the safe integer range.
-`,
+			code: `
+[9007199254740992]`,
+			snapshot: `
+[9007199254740992]
+ ~~~~~~~~~~~~~~~~
+ This integer is outside the safe integer range.`,
 		},
 		{
-			code: `[-9007199254740992]`,
-			snapshot: `[-9007199254740992]
- ~~~~~~~~~~~~~~~~
- This integer is outside the safe integer range.
-`,
+			code: `
+[-9007199254740992]`,
+			snapshot: `
+[-9007199254740992]
+  ~~~~~~~~~~~~~~~~
+  This integer is outside the safe integer range.`,
 		},
 		{
 			code: `
@@ -102,11 +108,12 @@ This integer is outside the safe integer range.
 `,
 		},
 		{
-			code: `[2.2250738585072009e-308]`,
-			snapshot: `[2.2250738585072009e-308]
-~~~~~~~~~~~~~~~~~~~~~~~
-This subnormal number may be handled inconsistently.
-`,
+			code: `
+[2.2250738585072009e-308]`,
+			snapshot: `
+[2.2250738585072009e-308]
+ ~~~~~~~~~~~~~~~~~~~~~~~
+ This subnormal number may be handled inconsistently.`,
 		},
 		{
 			code: `

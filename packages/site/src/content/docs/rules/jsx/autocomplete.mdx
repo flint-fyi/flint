@@ -1,0 +1,78 @@
+---
+description: "Ensure the autocomplete attribute is correct and suitable for the form field."
+title: "autocomplete"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="autocomplete" />
+
+The `autocomplete` attribute helps browsers and assistive technologies automatically fill in form fields based on previously entered information.
+Using correct autocomplete values improves accessibility and user experience by helping users complete forms more quickly and accurately.
+The HTML specification defines a specific set of valid autocomplete tokens that must be used to ensure proper functionality.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```jsx
+<input type="text" autocomplete="incorrect" />
+```
+
+```jsx
+<input type="email" autocomplete="invalid" />
+```
+
+```jsx
+<input type="text" autocomplete="name invalid" />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```jsx
+<input type="text" autocomplete="name" />
+```
+
+```jsx
+<input type="email" autocomplete="email" />
+```
+
+```jsx
+<input type="password" autocomplete="current-password" />
+```
+
+```jsx
+<input type="text" autocomplete="billing street-address" />
+```
+
+```jsx
+<input type="text" autocomplete="off" />
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you're working on a form that intentionally uses non-standard autocomplete values for specific browser or framework integrations, you may want to disable this rule.
+However, standard autocomplete values are recommended for better cross-browser compatibility and accessibility.
+
+## Further Reading
+
+- [MDN: HTML autocomplete attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete)
+- [WCAG 1.3.5: Identify Input Purpose](https://www.w3.org/WAI/WCAG21/Understanding/identify-input-purpose)
+- [HTML Specification: Autofill](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="autocomplete" />

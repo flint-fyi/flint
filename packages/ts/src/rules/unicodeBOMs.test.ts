@@ -1,5 +1,6 @@
-import { ruleTester } from "./ruleTester.js";
-import rule from "./unicodeBOMs.js";
+// flint-disable-file invalidCodeLines -- This rule checks the first character of code files.
+import { ruleTester } from "./ruleTester.ts";
+import rule from "./unicodeBOMs.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

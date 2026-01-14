@@ -1,0 +1,68 @@
+---
+description: "Reports positive tabIndex values."
+title: "tabIndexPositiveValues"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="tabIndexPositiveValues" />
+
+Positive `tabIndex` values disrupt the natural tab order and make keyboard navigation unpredictable for users.
+Instead, use `tabIndex="0"` to include elements in the natural tab order, or `tabIndex="-1"` to make them programmatically focusable.
+
+This is required for WCAG 2.4.3 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<span tabIndex="5">content</span>
+```
+
+```tsx
+<span tabIndex="1">content</span>
+```
+
+```tsx
+<div tabIndex={3}>content</div>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<span tabIndex="0">content</span>
+```
+
+```tsx
+<span tabIndex="-1">content</span>
+```
+
+```tsx
+<span tabIndex={0}>content</span>
+```
+
+```tsx
+<div>no tabIndex needed</div>
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you are managing tab orders with a well-defined focus management system that handles positive `tabIndex` values well, this rule may not be applicable.
+
+## Further Reading
+
+- [WCAG 2.4.3: Focus Order](https://www.w3.org/WAI/WCAG21/Understanding/focus-order)
+- [Avoid Using Tabindex with Positive Numbers](https://dequeuniversity.com/tips/tabindex-positive-numbers)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="tabIndexPositiveValues" />

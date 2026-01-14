@@ -1,27 +1,38 @@
-import { CommentDirective } from "./directives.js";
-import { PromiseOrSync } from "./promises.js";
-import { FileReport, NormalizedReport } from "./reports.js";
-import {
-	AnyRule,
-	AnyRuleDefinition,
-	Rule,
-	RuleAbout,
-	RuleDefinition,
-} from "./rules.js";
-import { AnyOptionalSchema, InferredObject } from "./shapes.js";
+import type { CommentDirective } from "./directives.ts";
+import type { FileReport } from "./reports.ts";
+import type { Rule, RuleAbout, RuleDefinition, RuleRuntime } from "./rules.ts";
+import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
 
 export type AnyLanguage = Language<object, object>;
+export type AnyLanguageFileDefinition = LanguageFileDefinition<object, object>;
+export type AnyLanguageFileFactory = LanguageFileFactory<object, object>;
+export type AnyLanguageFileMetadata = LanguageFileMetadata<object, object>;
 
-export interface CreateRule<AstNodesByName, ContextServices extends object> {
+export type GetLanguageAstNodesByName<InputLanguage extends AnyLanguage> =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Fixes TS inference.
+	InputLanguage extends Language<infer AstNodesByName, infer _>
+		? AstNodesByName
+		: never;
+
+export type GetLanguageFileServices<InputLanguage extends AnyLanguage> =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Fixes TS inference.
+	InputLanguage extends Language<infer _, infer FileServices>
+		? FileServices
+		: never;
+
+export interface LanguageCreateRule<
+	AstNodesByName,
+	FileServices extends object,
+> {
 	<const About extends RuleAbout, const MessageId extends string>(
 		definition: RuleDefinition<
 			About,
 			AstNodesByName,
-			ContextServices,
+			FileServices,
 			MessageId,
 			undefined
 		>,
-	): Rule<About, AstNodesByName, ContextServices, MessageId, undefined>;
+	): Rule<About, AstNodesByName, FileServices, MessageId, undefined>;
 
 	<
 		const About extends RuleAbout,
@@ -31,17 +42,34 @@ export interface CreateRule<AstNodesByName, ContextServices extends object> {
 		definition: RuleDefinition<
 			About,
 			AstNodesByName,
-			ContextServices,
+			FileServices,
 			MessageId,
 			OptionsSchema
 		>,
-	): Rule<About, AstNodesByName, ContextServices, MessageId, OptionsSchema>;
+	): Rule<About, AstNodesByName, FileServices, MessageId, OptionsSchema>;
 }
 
-export interface Language<AstNodesByName, ContextServices extends object>
-	extends LanguageDefinition {
-	createRule: CreateRule<AstNodesByName, ContextServices>;
-	prepare(): LanguageFileFactory;
+/**
+ * Description of a file's representation in the file system.
+ */
+export interface FileAboutData {
+	filePath: string;
+	filePathAbsolute: string;
+}
+
+/**
+ * Description of a file's contents and representation in the file system.
+ */
+export interface FileDiskData extends FileAboutData {
+	sourceText: string;
+}
+
+export interface Language<
+	AstNodesByName,
+	FileServices extends object,
+> extends LanguageDefinition<AstNodesByName, FileServices> {
+	createFileFactory(): LanguageFileFactory<AstNodesByName, FileServices>;
+	createRule: LanguageCreateRule<AstNodesByName, FileServices>;
 }
 
 export interface LanguageAbout {
@@ -58,83 +86,115 @@ export interface LanguageFileDiagnostic {
 /**
  * The definition of a language, as provided to language creators internally.
  */
-export interface LanguageDefinition {
+export interface LanguageDefinition<
+	AstNodesByName,
+	FileServices extends object,
+> {
 	about: LanguageAbout;
-	prepare(): LanguageFileFactoryDefinition;
+	createFileFactory(): LanguageFileFactoryDefinition<
+		AstNodesByName,
+		FileServices
+	>;
 }
 
 export interface LanguageFileCacheImpacts {
 	dependencies: string[];
 }
 
+// TODO: Perhaps the LanguageFile wrappers could be removed altogether?
+// Maybe the Languages themselves should handle diagnostics, runVisitors, etc.?
+// Then we would have 1-2 fewer objects per file...
+
 /**
  * Wraps a file to be linted by any number of rules.
  */
-export interface LanguageFile extends Disposable {
+export interface LanguageFile<
+	AstNodesByName,
+	FileServices extends object,
+> extends Disposable {
+	about: FileDiskData;
 	cache?: LanguageFileCacheImpacts;
 	getDiagnostics?(): LanguageDiagnostics;
-	runRule<
+	runVisitors<
 		OptionsSchema extends AnyOptionalSchema | undefined =
 			| AnyOptionalSchema
 			| undefined,
 	>(
-		rule: AnyRule<RuleAbout, OptionsSchema>,
-		options: InferredObject<OptionsSchema>,
-	): PromiseOrSync<NormalizedReport[]>;
+		options: InferredOutputObject<OptionsSchema>,
+		runtime: RuleRuntime<AstNodesByName, FileServices>,
+	): void;
 }
 
 /**
  * Internal definition of how to wrap a file to be linted by any number of rules.
  */
-export interface LanguageFileDefinition extends Partial<Disposable> {
+export interface LanguageFileDefinition<
+	AstNodesByName,
+	FileServices extends object,
+> extends Partial<Disposable> {
+	about: FileDiskData;
 	cache?: LanguageFileCacheImpacts;
 	getDiagnostics?(): LanguageDiagnostics;
-	runRule<
+	runVisitors<
 		OptionsSchema extends AnyOptionalSchema | undefined =
 			| AnyOptionalSchema
 			| undefined,
 	>(
-		rule: AnyRuleDefinition<OptionsSchema>,
-		options: InferredObject<OptionsSchema>,
-	): PromiseOrSync<NormalizedReport[]>;
+		options: InferredOutputObject<OptionsSchema>,
+		runtime: RuleRuntime<AstNodesByName, FileServices>,
+	): void;
 }
 
 /**
  * Creates wrappers around files to be linted.
  */
-export interface LanguageFileFactory extends Disposable {
-	prepareFromDisk(filePathAbsolute: string): LanguagePrepared;
+export interface LanguageFileFactory<
+	AstNodesByName,
+	FileServices extends object,
+> extends Disposable {
+	prepareFromDisk(
+		data: FileAboutData,
+	): LanguageFileMetadata<AstNodesByName, FileServices>;
 	prepareFromVirtual(
-		filePathAbsolute: string,
-		sourceText: string,
-	): LanguagePrepared;
+		data: FileDiskData,
+	): LanguageFileMetadata<AstNodesByName, FileServices>;
 }
 
 /**
  * Prepared information about a file to be linted.
  */
-export interface LanguagePrepared {
+export interface LanguageFileMetadata<
+	AstNodesByName,
+	FileServices extends object,
+> {
 	directives?: CommentDirective[];
-	file: LanguageFile;
+	file: LanguageFile<AstNodesByName, FileServices>;
 	reports?: FileReport[];
 }
 
 /**
  * Internal definition of how to create wrappers around files to be linted.
  */
-export interface LanguageFileFactoryDefinition extends Partial<Disposable> {
-	prepareFromDisk(filePathAbsolute: string): LanguagePreparedDefinition;
+export interface LanguageFileFactoryDefinition<
+	AstNodesByName,
+	FileServices extends object,
+> extends Partial<Disposable> {
+	prepareFromDisk(
+		data: FileAboutData,
+	): LanguageFileMetadataDefinition<AstNodesByName, FileServices>;
 	prepareFromVirtual(
-		filePathAbsolute: string,
-		sourceText: string,
-	): LanguagePreparedDefinition;
+		data: FileDiskData,
+	): LanguageFileMetadataDefinition<AstNodesByName, FileServices>;
 }
 
 /**
  * Internal definition of prepared information about a file to be linted.
  */
-export interface LanguagePreparedDefinition {
+export interface LanguageFileMetadataDefinition<
+	AstNodesByName,
+	FileServices extends object,
+> {
 	directives?: CommentDirective[];
-	file: LanguageFileDefinition;
+	file: LanguageFileDefinition<AstNodesByName, FileServices>;
 	reports?: FileReport[];
 }

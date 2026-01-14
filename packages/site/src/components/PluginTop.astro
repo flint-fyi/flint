@@ -1,0 +1,53 @@
+---
+import { getPluginData } from "~/data/pluginData";
+import { ColoredLogo } from "./ColoredLogo";
+import { PackageManagers } from "starlight-package-managers";
+import { InlineMarkdown } from "./InlineMarkdown";
+
+export interface Props {
+	pluginId: string;
+}
+
+const { group, plugin } = getPluginData(Astro.props.pluginId);
+const npmPackage =
+	group === "core" ? `flint` : `@flint.fyi/plugin-${Astro.props.pluginId}`;
+---
+
+<div class="plugin-top-main">
+	<ColoredLogo colors={plugin.colors} size="large" />
+	<p>
+		<InlineMarkdown markdown={plugin.description} />
+		<br />
+		<InlineMarkdown
+			markdown={group === "core"
+				? `This plugin comes packaged with the [\`${npmPackage}\`](${npmPackage}) npm package.`
+				: `This plugin is provided in a standalone [\`${npmPackage}\`](https://npmjs.com/package/${npmPackage}) npm package.`}
+		/>
+	</p>
+</div>
+
+{
+	group === "focused" && (
+		<div class="plugin-top-focused">
+			<PackageManagers type="install" pkg={npmPackage} />
+		</div>
+	)
+}
+
+<style>
+	.plugin-top-main {
+		align-items: center;
+		display: flex;
+		font-style: italic;
+		gap: 1rem;
+		width: 100%;
+	}
+
+	.plugin-top-main p {
+		margin-top: 0;
+	}
+
+	.plugin-top-focused {
+		margin-top: 2rem;
+	}
+</style>

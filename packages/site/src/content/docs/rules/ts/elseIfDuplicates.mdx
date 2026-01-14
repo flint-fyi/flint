@@ -1,0 +1,104 @@
+---
+description: "Reports duplicate conditions in if-else-if chains that make code unreachable."
+title: "elseIfDuplicates"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="elseIfDuplicates" />
+
+When an if-else-if chain contains duplicate conditions, the branch with the duplicate condition will never execute.
+This is because the earlier identical condition will always be evaluated first and match when true, preventing the duplicate condition from ever being reached.
+Duplicate conditions typically indicate a copy-paste error or a logic mistake in the code.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (status === "pending") {
+	handlePending();
+} else if (status === "active") {
+	handleActive();
+} else if (status === "pending") {
+	handlePendingAgain();
+}
+```
+
+```ts
+if (isValid && isActive) {
+	processValid();
+} else if (isPending) {
+	processPending();
+} else if (isValid && isActive) {
+	processValidAgain();
+}
+```
+
+```ts
+if (count === 1) {
+	handleOne();
+} else if (count === 2) {
+	handleTwo();
+} else if (count === 1) {
+	handleOneAgain();
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (status === "pending") {
+	handlePending();
+} else if (status === "active") {
+	handleActive();
+} else if (status === "completed") {
+	handleCompleted();
+}
+```
+
+```ts
+if (isValid && isActive) {
+	processValid();
+} else if (isPending) {
+	processPending();
+} else if (isValid && !isActive) {
+	processInactive();
+}
+```
+
+```ts
+if (count === 1) {
+	handleOne();
+} else if (count === 2) {
+	handleTwo();
+} else if (count === 3) {
+	handleThree();
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project intentionally uses patterns that look like duplicate conditions but actually modify state behind-the-scenes, you might not want to enable this rule.
+For example, projects that modify state in computed object `get()` properties or use `Proxy` are often considered overly difficult to reason about for both humans and lint rules.
+
+## Further Reading
+
+- [MDN: if...else](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/if...else)
+- [MDN: Conditional statements](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/conditionals)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="elseIfDuplicates" />

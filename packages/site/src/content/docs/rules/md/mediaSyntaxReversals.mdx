@@ -1,0 +1,73 @@
+---
+description: "Reports reversed link and image syntax in Markdown."
+title: "mediaSyntaxReversals"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="md" rule="mediaSyntaxReversals" />
+
+Markdown syntax for links requires the text to be in square brackets `[]` followed by the URL in parentheses `()`.
+Similarly, images use `![alt](url)`.
+It's easy to accidentally reverse these brackets, which results in invalid syntax that won't render correctly.
+
+This rule detects when the brackets and parentheses are in the wrong order and helps you fix them.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```markdown
+(Flint)[https://flint.fyi]
+```
+
+```markdown
+!(A beautiful sunset)[sunset.png]
+```
+
+```markdown
+# (Flint)[https://flint.fyi]
+```
+
+```markdown
+Check out (this link)[https://example.com] for more info.
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```markdown
+[Flint](https://flint.fyi)
+```
+
+```markdown
+![A beautiful sunset](sunset.png)
+```
+
+```markdown
+# [Flint](https://flint.fyi)
+```
+
+```markdown
+Check out [this link](https://example.com) for more info.
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you are using a non-standard Markdown parser that allows reversed media syntax, you can safely disable this rule.
+
+## Further Reading
+
+- [Markdown Links](https://www.markdownguide.org/basic-syntax/#links)
+- [Markdown Images](https://www.markdownguide.org/basic-syntax/#images-1)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="md" ruleId="mediaSyntaxReversals" />

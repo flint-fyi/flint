@@ -1,6 +1,7 @@
-import * as ts from "typescript";
+import ts from "typescript";
 
-import { jsonLanguage } from "../language.js";
+import { jsonLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
 const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER;
 const MIN_SAFE_INTEGER = Number.MIN_SAFE_INTEGER;
@@ -26,11 +27,11 @@ function hasLoneSurrogate(text: string): boolean {
 	return false;
 }
 
-export default jsonLanguage.createRule({
+export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description: "Reports JSON values that are unsafe for data interchange.",
 		id: "valueSafety",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		infinity: {
@@ -90,9 +91,12 @@ export default jsonLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function checkNumericLiteral(node: ts.NumericLiteral) {
-			const originalText = context.sourceFile.text.substring(
-				node.getStart(context.sourceFile),
+		function checkNumericLiteral(
+			node: ts.NumericLiteral,
+			sourceFile: ts.SourceFile,
+		) {
+			const originalText = sourceFile.text.substring(
+				node.getStart(sourceFile),
 				node.end,
 			);
 			const value = Number(originalText);
@@ -102,7 +106,7 @@ export default jsonLanguage.createRule({
 					data: { sign: value > 0 ? "" : "-" },
 					message: "infinity",
 					range: {
-						begin: node.getStart(context.sourceFile),
+						begin: node.getStart(sourceFile),
 						end: node.end,
 					},
 				});
@@ -119,7 +123,7 @@ export default jsonLanguage.createRule({
 					context.report({
 						message: "unsafeZero",
 						range: {
-							begin: node.getStart(context.sourceFile),
+							begin: node.getStart(sourceFile),
 							end: node.end,
 						},
 					});
@@ -132,7 +136,7 @@ export default jsonLanguage.createRule({
 					context.report({
 						message: "unsafeInteger",
 						range: {
-							begin: node.getStart(context.sourceFile),
+							begin: node.getStart(sourceFile),
 							end: node.end,
 						},
 					});
@@ -144,39 +148,48 @@ export default jsonLanguage.createRule({
 				context.report({
 					message: "subnormal",
 					range: {
-						begin: node.getStart(context.sourceFile),
+						begin: node.getStart(sourceFile),
 						end: node.end,
 					},
 				});
 			}
 		}
 
-		function checkStringLiteral(node: ts.StringLiteral) {
+		function checkStringLiteral(
+			node: ts.StringLiteral,
+			sourceFile: ts.SourceFile,
+		) {
 			if (hasLoneSurrogate(node.text)) {
 				context.report({
 					message: "loneSurrogate",
 					range: {
-						begin: node.getStart(context.sourceFile),
+						begin: node.getStart(sourceFile),
 						end: node.end,
 					},
 				});
 			}
 		}
 
-		function checkNode(node: ts.Node) {
+		function checkNode(node: ts.Node, sourceFile: ts.SourceFile) {
 			if (ts.isNumericLiteral(node)) {
-				checkNumericLiteral(node);
+				checkNumericLiteral(node, sourceFile);
 			} else if (ts.isStringLiteral(node)) {
-				checkStringLiteral(node);
+				checkStringLiteral(node, sourceFile);
 			} else {
-				node.forEachChild(checkNode);
+				node.forEachChild((child) => {
+					checkNode(child, sourceFile);
+				});
 			}
 		}
 
 		return {
 			visitors: {
-				ArrayLiteralExpression: checkNode,
-				ObjectLiteralExpression: checkNode,
+				ArrayLiteralExpression: (node, { sourceFile }) => {
+					checkNode(node, sourceFile);
+				},
+				ObjectLiteralExpression: (node, { sourceFile }) => {
+					checkNode(node, sourceFile);
+				},
 			},
 		};
 	},

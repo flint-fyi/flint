@@ -1,0 +1,77 @@
+---
+description: "Disallow leading or trailing spaces in console method string arguments."
+title: "consoleSpaces"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="consoleSpaces" />
+
+Leading or trailing spaces in console output are often unintentional and can make debugging harder.
+They can be difficult to spot in console output and may lead to confusion about the actual content being logged.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+console.log("text ");
+```
+
+```ts
+console.error(" error message");
+```
+
+```ts
+console.warn("warning ", "message");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+console.log("text");
+```
+
+```ts
+// Leading spaces on a first argument are allowed as a form of indentation
+console.log(" text");
+```
+
+```ts
+console.log("text", "message");
+```
+
+```ts
+console.error("error message");
+```
+
+```ts
+console.warn("warning", "message");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally need leading or trailing spaces in console output for formatting purposes, you might choose not to enable this rule.
+However, consider using explicit spacing methods or separate arguments instead for better clarity.
+
+## Further Reading
+
+- [MDN: Console](https://developer.mozilla.org/en-US/docs/Web/API/Console)
+- [Node.js: Console](https://nodejs.org/api/console.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="consoleSpaces" />

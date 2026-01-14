@@ -1,0 +1,181 @@
+---
+date: 2025-12-30T14:59:23Z
+excerpt: ESLint has been the leading web ecosystem linter for a decade.
+  Its dominance is being challenged by new native speed linters such as Biome and Oxlint that implement blazing fast linting using native speed languages.
+  Even TypeScript's source is being ported from TypeScript to Go.
+  Yet, this Flint project -a new, experimental linter- is implemented in TypeScript rather than Go or Rust.
+  Why does Flint exist when there are so many other linters already, and why is it implemented the way it is?
+title: Introducing Flint
+---
+
+ESLint has been the leading web ecosystem linter for a decade.
+Its dominance is being challenged by new native speed linters such as Biome and Oxlint that implement blazing fast linting using native speed languages.
+Even TypeScript's source is being ported from TypeScript to Go.
+Yet, this Flint project -a new, experimental linter- is implemented in TypeScript rather than Go or Rust.
+
+Why does Flint exist when there are so many other linters already, and why is it implemented the way it is?
+
+Trust us: Flint serves a real purpose, and we're excited to explain it.
+
+## The Great Flint Experiment
+
+Flint is an experimental linter made to validate several hypotheses:
+
+- **[Hybrid linting](#hybrid-linting)**: optimizing for approachability while still delivering high-speed performance
+- **[Streamlined rich configuration](#streamlined-rich-configuration)**: finding a dynamic JS/TS config system that doesn't confuse users
+- **[Thorough documentation and plugins](#thorough-provided-plugins)**: standardizing common user needs in the core project
+- **[Tooling coordination](#tooling-coordination)**: saving user CI complexity and repeat work by coordinating and deduplicating tasks
+
+Each of those hypotheses is a separate bet that we believe will show the best way for a modern linter to be positioned.
+
+### Hybrid Linting
+
+Flint is a _hybrid linter_: its core is written in TypeScript, but language-specific plugins are free to use native-speed linting.
+Hybrid linting is an intentional architecture choice meant to bring the best of both worlds from the two other common linter architectures in use today.
+
+To recap, most other linters fall into either:
+
+- Pure JavaScript (i.e. [ESLint](https://eslint.org)): written wholly in JavaScript and/or TypeScript, optimizing for developer approachability
+- Native Speed (e.g. [Biome](https://biomejs.dev), [deno lint](https://docs.deno.com/runtime/reference/cli/lint), [Oxlint](https://oxc.rs/docs/guide/usage/linter)): written in native speed languages such as Go or Rust, optimizing for performance
+
+Pure JavaScript linters' approachability comes with big benefits for onboarding developers to become linting and static analysis power users.
+The downside of JS/TS speed linters is their performance: they slow down tremendously when running on many thousands of files.
+
+Native speed linters are able to optimize for performance and run many tens of times faster than traditional pure JavaScript linters.
+However, most web developers only have time to learn JavaScript and/or TypeScript.
+Contributing to linters and lint rules written in other languages is much less approachable for them.
+
+With Flint, we're writing a new TypeScript linter core with the following performance optimizations for significant speed improvements over traditional JavaScript linters:
+
+- Although Flint's core and lint rules are in TypeScript, it will delegate to native speed parsing and type checking (e.g. typescript-go) -- which are the most common performance bottlenecks for linters
+- Flint's caching recognizes cross-file dependencies, allowing it to reuse cached results from unchanged files between runs
+- Adopting more modern techniques such as [Oxlint's `createOnce` API](https://oxc.rs/docs/guide/usage/linter/js-plugins#why-is-the-alternative-api-faster) will yield further memory and time improvements
+
+Flint's hypothesis for performance is that by adopting those techniques, we can have the approachability of a traditional JavaScript linter with most of the performance of a native speed linter.
+
+:::note
+See [Hybrid Linters: The Best of Both Worlds](https://www.joshuakgoldberg.com/blog/hybrid-linters-the-best-of-both-worlds) for more details on the reasoning, benefits, and drawbacks of hybrid linters.
+:::
+
+### Streamlined Rich Configuration
+
+Most linters today fall into two classifications of linter configs:
+
+- Direct JSON ([Biome](https://biomejs.dev/linter/#configure-the-linter), [Deno](https://docs.deno.com/runtime/fundamentals/configuration/#linting), [Oxlint](https://oxc.rs/docs/guide/usage/linter/config.html))
+- Full JavaScript (ESLint: [`.eslintrc.js` (deprecated)](https://eslint.org/docs/latest/use/configure/configuration-files-deprecated), [`eslint.config.js`](https://eslint.org/docs/latest/use/configure/configuration-files))
+
+Direct JSON is a nice and straightforward "walled garden" that shines in small projects.
+But it tends to fall apart at scale:
+
+- JSON doesn't benefit from full TypeScript-style types, even with editor extensions
+- Not being able to use native ESM imports means adding plugin support introduces a new loader system for users to learn
+- Similarly, composing or extending configs together adds additional new complexity
+
+Full JavaScript configurations such as ESLint's bring much more power by leaning into native JavaScript semantics.
+They can receive TypeScript types and even be written in TypeScript.
+Native ESM exports and imports allow them to compose plugins and each other.
+
+However, many users are wary of JavaScript configurations because of bad experiences working with ESLint's current "flat config" approach.
+Flat config leaned directly into being "just" JavaScript, but contains many edge cases that have tripped up recent adopters.
+ESLint's configs also include concepts such as parsers and processors that add complexity and more edge case hazards.
+
+Flint's hypothesis for configuration files is that it's possible to have a full JavaScript configuration system without confusing users over subtle edge cases.
+Flint's configs will be fully type-safe -including lint rules and their options- and will support workspace configurations.
+Parsing, processing, and other edge case hazards will be handled for users behind-the-scenes.
+
+:::note
+See [Configuration](/configuration) for documentation explaining the Flint config system.
+:::
+
+### Thorough Provided Plugins
+
+Other mainstream linters today only build a limited subset of lint rules into their core projects:
+
+- ESLint: only bundles a limited set of rules specifically for JavaScript; plugins such as for regular expressions or TypeScript support are separate projects
+- Biome, Oxlint, etc.: bundle many more common rules into their projects, but have not holistically looked through the full ESLint ecosystem for reference
+
+ESLint's "lean core" approach is great for encouraging ecosystem experimentation of new rules.
+But once a rule is known to be stable and popular, keeping it out of the core project makes it less discoverable for users.
+
+The core rules bundling from linters like Biome and Oxlint is a step in the right direction, but in our opinion doesn't go far enough:
+
+- Their JSON-based configuration systems make it difficult to explicitly determine which categories of rules are enabled
+- Their rules still aren't a full representation of all the various ecosystem rules that ESLint users have created
+
+Flint's approach for plugins is that all rules which apply to a super-majority of users of the linter should be built in the core project.
+By being created as part of the core project, the plugins both become more easily discoverable and will have a much more consistent look and feel for users.
+
+To fully support that larger effort, the Flint project:
+
+- Establishes three tiers of project plugins:
+  - "Core": Plugins applicable to any project using their language (JavaScript/TypeScript, JSON, Markdown, YAML)
+  - "Focused": Plugins for large areas of projects or code styles that are applicable to many, but not all, likely Flint users
+  - "Incubator": Area-specific plugins that should exist under community governance, but don't yet have that dedicated team
+- Keeps a list of over 1,000 popular lint rules for reference, with rules that will be implemented categorized into Flint's plugins
+- Maintains a shared glossary for terms to be standardized across those plugins.
+
+Flint's hypothesis for plugins is that by taking that comprehensive, holistic approach, users of Flint will be able to easily turn on more comprehensive, powerful linting by default - without needing to deep dive into the plugin ecosystem.
+
+:::tip
+For more information on Flint's plugins, see:
+
+- [Glossary](/glossary): for the common linting terms as used by Flint, and compared to other linters
+- [Rules](/rules): to see the provided plugins and rules to be (or not to be) implemented in them
+
+:::
+
+### Tooling Coordination
+
+Modern web projects are able to use a plethora of tools: formatters, a variety of linters, type-checkers, and more.
+Each of those tools often ends up being either its own workflow in CI and/or a step in a larger CI job.
+Repositories have to choose: how much tooling power do they want, at the cost of CI time and configuration complexity?
+
+Modern linters such as Biome's and Oxlint have proven there is user benefit in integrating multiple tools for users.
+Flint aims to reduce complexity and user pain in three ways:
+
+- Flint's APIs allow for project-aware lint rules that can take on complex tasks like import cycle analysis and unused code detection
+- Flint coordinates a formatter ([Prettier](https://prettier.io)) out-of-the-box, running on all files being linted
+- Flint allows languages to surface "diagnostics" such as TypeScript's type errors as part of linting as well
+
+Flint's hypothesis is that by providing one centralized place to coordinate all those tasks, users' repositories will become simpler and benefit from faster and less complex CI workflows.
+
+## The Flint Project
+
+The goal of the Flint project is to _test its hypotheses_.
+Flint is run by a set of independent volunteer maintainers as a fully open source project.
+We are not associated with any one company, and not pressured by funding to achieve any level of adoption in industry.
+
+The best case scenario would be that all of Flint's hypotheses would be shown to be correct.
+As in, Flint's choices do lead to a linter that is fast by default, straightforward to configure, and useful for users.
+In that case we'll transition Flint to a full open source project to stand alongside other web linters.
+
+Another success case would be that some or all of the hypothesis are proven wrong.
+In that case we'll feel more confident that traditional linters such as ESLint and/or native speed linters such as Biome and Oxlint are the way to go.
+
+### Current Status
+
+Flint is very early stage.
+Many features have not yet been implemented.
+
+Don't expect Flint to be ready to alpha test for several months from now, at the earliest.
+
+### Getting Involved
+
+If you're interested in helping build out a new experimental linter, we'd love to have you join us.
+At the very least, see [About](/about) for how to get started using Flint as a user.
+Trying out the project and telling us about your experience on the [Flint Discord](https://flint.fyi/discord) would be immensely helpful.
+
+The [GitHub issue tracker](https://github.com/flint-fyi/flint/issues) is where you can find our list of upcoming work.
+See our [Contributing guide](https://github.com/flint-fyi/flint/blob/main/.github/CONTRIBUTING.md) for how to find issues that you can get started on.
+Feel free to ask for help if you're new and unsure.
+We're happy to assist you.
+
+### Supporting Flint Financially
+
+Flint can receive donations on its [Open Collective](https://opencollective.com/flintfyi).
+Your financial support will allow us to pay our volunteer contributors and maintainers to tackle more Flint work.
+As thanks, we'll put you under a sponsors list on the [flint.fyi homepage](/).
+
+### Further Reading
+
+See [What Flint Does Differently](/blog/what-flint-does-differently) for a full list of all the changes Flint makes to the linter status quo.

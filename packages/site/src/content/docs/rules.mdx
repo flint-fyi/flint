@@ -1,0 +1,46 @@
+---
+description: "How Flint's linting rules are organized into plugins"
+title: Rules
+topic: rules
+---
+
+import { pluginDataByGroup } from "~/data/pluginData";
+import { PluginCards } from "~/components/PluginCards.tsx";
+
+:::danger
+Flint is still very early stage and experimental.
+Not all features have been implemented.
+:::
+
+Flint will provide a comprehensive set of rules for all languages common to most typical web development projects.
+Rules are grouped into plugins that you can opt into as you choose.
+
+Plugins are grouped into three categories:
+
+- **[Core Plugins](#core-plugins)**: Those applicable to any project using their language.
+They come as part of the [`flint`](https://npmjs.com/package/flint) npm package.
+- **[Focused Plugins](#focused-plugins)**: Those for large areas of projects or code styles that are applicable to many, but not all, likely Flint users.
+They come in separate npm packages under `@flint.fyi/`.
+- **[Incubator Plugins](#incubator-plugins)**: Area-specific plugins that should exist under community governance, but don't yet have a dedicated team outside of Flint working on them.
+They come in separate npm packages under `@flint.fyi/`.
+
+## Core Plugins
+
+These come as part of the [`flint`](https://npmjs.com/package/flint) npm package.
+They're applicable to any project using the language they lint for.
+
+<PluginCards plugins={Object.values(pluginDataByGroup.core)} />
+
+## Focused Plugins
+
+These are large areas of projects or code styles that are applicable to many, but not all, likely Flint users.
+They come in separate npm packages under `@flint.fyi/`.
+
+<PluginCards plugins={Object.values(pluginDataByGroup.focused)} />
+
+## Incubator Plugins
+
+Area-specific plugins that should exist under community governance, but pending a dedicated maintenance team outside of Flint's, are being developed as part of the Flint project.
+They come in separate npm packages under `@flint.fyi/`.
+
+<PluginCards plugins={Object.values(pluginDataByGroup.incubator)} />

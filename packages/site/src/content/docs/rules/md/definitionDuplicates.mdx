@@ -1,0 +1,71 @@
+---
+description: "Reports duplicate definition identifiers (case-insensitive)."
+title: "definitionDuplicates"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="md" rule="definitionDuplicates" />
+
+In Markdown, defining the same identifier multiple times can lead to unintended or incorrect link and image references.
+Only the first definition for an identifier is used, making subsequent definitions misleading and potentially confusing for readers and maintainers.
+Definition identifiers are case-insensitive, so `earth` and `Earth` are treated as duplicates.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```markdown
+[mercury]: https://example.com/mercury
+[mercury]: https://example.com/venus
+```
+
+```markdown
+[earth]: https://example.com/earth
+[Earth]: https://example.com/mars
+```
+
+```markdown
+[venus]: https://example.com/venus
+[mars]: https://example.com/mars
+[venus]: https://example.com/jupiter
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```markdown
+[mercury]: https://example.com/mercury
+[venus]: https://example.com/venus
+```
+
+```markdown
+[earth]: https://example.com/earth
+[mars]: https://example.com/mars
+[jupiter]: https://example.com/jupiter
+```
+
+```markdown
+[//]: # "This is a comment 1"
+
+[//]: <> (This is a comment 2)
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you are using a custom Markdown processor that handles duplicate definitions differently, or intentionally use duplicate definitions for an unusual framework or workflow, you might want to disable this rule.
+
+## Further Reading
+
+- [Markdown Reference-Style Links](https://www.markdownguide.org/basic-syntax/#reference-style-links)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="md" ruleId="definitionDuplicates" />

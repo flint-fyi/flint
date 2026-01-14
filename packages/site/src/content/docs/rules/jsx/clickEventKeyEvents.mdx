@@ -1,0 +1,75 @@
+---
+description: "Reports onClick without keyboard event handlers."
+title: "clickEventKeyEvents"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="clickEventKeyEvents" />
+
+Elements with `onClick` handlers must also have keyboard event handlers for accessibility.
+Users who are not using a mouse, such as those using keyboards or assistive technologies, often rely on those keyboard events to be able to use the page.
+If non-interactive elements such as `<div>`s with an `onClick` event handler should have at least one of the following corresponding keyboard events registered as well:
+
+- `onKeyDown`
+- `onKeyPress`
+- `onKeyUp`
+
+Interactive elements like `<button>` and `<input>` are already keyboard accessible and don't require additional handlers.
+
+This is required for WCAG 2.1.1 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<div onClick={() => {}} />
+```
+
+```tsx
+<span onClick={handler} />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div onClick={() => {}} onKeyDown={handler} />
+```
+
+```tsx
+<div onClick={() => {}} onKeyUp={handler} />
+```
+
+```tsx
+<button onClick={() => {}} />
+```
+
+```tsx
+<div onClick={() => {}} aria-hidden="true" />
+```
+
+```tsx
+<CustomElement onClick={() => {}} aria-hidden="true" />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you're using a framework that automatically assigns keyboard events for corresponding mouse events, you can safely disable this rule.
+
+## Further Reading
+
+- [MDN: click event](https://developer.mozilla.org/en-US/docs/Web/API/Element/click_event)
+- [WCAG 2.1.1: Keyboard](https://www.w3.org/WAI/WCAG21/Understanding/keyboard)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="clickEventKeyEvents" />

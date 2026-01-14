@@ -4,8 +4,11 @@ title: "Sorting Plugin"
 ---
 
 import { RulesTable } from "~/components/RulesTable.tsx";
+import PluginTop from "~/components/PluginTop.astro";
 
-Flint's sorting plugin includes rules that automatically sort various aspects of code.
+<PluginTop pluginId="sorting" />
+
+Flint's sorting plugin includes rules that automatically sort any and all possible aspects of code alphabetically, such as imports and properties.
 It comes provided with the `flint` npm package.
 
 ## Presets
@@ -39,7 +42,7 @@ Coming soon: more expansive documentation on choosing and combining plugins & pr
 ### `stylistic`
 
 Rules that sort code in most-to-all common web files.
-This will include, tentatively, all files supported by other Flint plugins: JavaScript/TypeScript, Markdown, and YML.
+This will include, tentatively, all files supported by other core Flint plugins: JavaScript/TypeScript, Markdown, and YAML.
 
 ```ts title="flint.config.ts"
 import { sorting } from "@flint.fyi/sorting";

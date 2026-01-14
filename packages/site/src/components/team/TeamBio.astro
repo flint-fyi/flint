@@ -1,0 +1,138 @@
+---
+import { Icon } from "@astrojs/starlight/components";
+import type { StarlightIcon } from "@astrojs/starlight/types";
+
+import InlineMarkdown from "../InlineMarkdown.astro";
+
+export type TeamBioWidth = "half" | "wide";
+
+export interface Props {
+	description: string;
+	extras?: string[];
+	links?: [StarlightIcon, string][];
+	name: string;
+	username: string;
+	width: TeamBioWidth;
+}
+
+const {
+	description,
+	extras,
+	links = [],
+	username,
+	name = username,
+	width,
+} = Astro.props;
+---
+
+<li class:list={["team-bio", width]}>
+	<div class="team-bio-card">
+		<div class="avatar-area">
+			<img alt="" class="avatar" src={`/team/${username}.webp`} />
+		</div>
+		<div class="texts">
+			<strong class="name">{name}</strong>
+			<p class="description">{description}</p>
+		</div>
+		<ol class="services">
+			{
+				[["github", `https://github.com/${username}`] as const, ...links]
+					.sort(([a], [b]) => (a === "seti:html" ? 1 : a.localeCompare(b)))
+					.map(([service, url]) => (
+						<li class="service">
+							<a
+								aria-label={`${name}'s ${service}'`}
+								href={url}
+								target="_blank"
+							>
+								<Icon name={service} />
+							</a>
+						</li>
+					))
+			}
+		</ol>
+	</div>
+	{
+		extras && (
+			<div class="extras">
+				{extras.map((extra) => (
+					<InlineMarkdown class="extra" markdown={extra} />
+				))}
+			</div>
+		)
+	}
+</li>
+
+<style>
+	.team-bio {
+		--square-size: 9rem;
+		display: flex;
+		gap: 1.5rem;
+		list-style: none;
+		margin-top: 0;
+	}
+
+	.team-bio.half {
+		max-width: 50%;
+	}
+
+	.team-bio.wide {
+		width: 100%;
+	}
+
+	.team-bio-card {
+		display: flex;
+		flex-direction: column;
+		width: var(--square-size);
+	}
+
+	.avatar-area {
+		width: var(--square-size);
+		flex-basis: fit-content;
+	}
+
+	.avatar {
+		height: var(--square-size);
+		width: var(--square-size);
+	}
+
+	.texts {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin-top: 0.75rem;
+	}
+
+	.name {
+		font-size: 0.9rem;
+	}
+
+	.description {
+		font-size: 0.85rem;
+	}
+
+	.services {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		list-style-type: none;
+		padding-left: 0;
+	}
+
+	.service {
+		margin-top: 0;
+	}
+
+	.extras {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		margin: 0;
+	}
+
+	@media (width >= 1117px) {
+		.team-bio:not(:only-child) {
+			width: calc(50% - 1rem);
+		}
+	}
+</style>

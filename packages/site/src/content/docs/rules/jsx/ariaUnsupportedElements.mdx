@@ -1,0 +1,64 @@
+---
+description: "Reports ARIA attributes on elements that don't support them."
+title: "ariaUnsupportedElements"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="ariaUnsupportedElements" />
+
+Specific reserved DOM elements do not support ARIA roles, states, and properties.
+Those elements generally are either not visible (like `meta`, `script`, `style`) or have specific semantic meaning (like `body` or `html`).
+
+This is required for WCAG 4.1.2 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<meta charset="UTF-8" aria-hidden="false" />
+```
+
+```tsx
+<script role="application" />
+```
+
+```tsx
+<style aria-label="styles" />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<meta charset="UTF-8" />
+```
+
+```tsx
+<script src="app.js" />
+```
+
+```tsx
+<div role="button" />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+You should always use this rule to ensure ARIA attributes are only applied to elements that support them.
+
+## Further Reading
+
+- [WCAG 4.1.2: Name, Role, Value](https://www.w3.org/WAI/WCAG21/Understanding/name-role-value)
+- [Chrome Audit Rules, AX_ARIA_12](https://github.com/GoogleChrome/accessibility-developer-tools/wiki/Audit-Rules#ax_aria_12)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="ariaUnsupportedElements" />

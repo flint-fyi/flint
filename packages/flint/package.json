@@ -1,10 +1,10 @@
 {
 	"name": "flint",
-	"version": "0.14.0",
+	"version": "0.15.1",
 	"description": "[Experimental] A fast, friendly linter. ❤️‍🔥",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/JoshuaKGoldberg/flint",
+		"url": "git+https://github.com/flint-fyi/flint.git",
 		"directory": "packages/flint"
 	},
 	"license": "MIT",
@@ -12,22 +12,49 @@
 		"name": "JoshuaKGoldberg",
 		"email": "npm@joshuakgoldberg.com"
 	},
+	"sideEffects": false,
 	"type": "module",
-	"main": "./lib/index.js",
-	"bin": "bin/index.js",
+	"exports": {
+		".": {
+			"@flint.fyi/source": "./src/index.ts",
+			"default": "./lib/index.js"
+		}
+	},
+	"bin": {
+		"flint": "bin/index.js"
+	},
+	"files": [
+		"lib/",
+		"!lib/**/*.map",
+		"!lib/bin/**"
+	],
+	"scripts": {
+		"test": "vitest --typecheck --project flint"
+	},
 	"dependencies": {
 		"@flint.fyi/cli": "workspace:",
 		"@flint.fyi/core": "workspace:",
 		"@flint.fyi/json": "workspace:",
 		"@flint.fyi/md": "workspace:",
+		"@flint.fyi/package-json": "workspace:",
 		"@flint.fyi/ts": "workspace:",
-		"@flint.fyi/yml": "workspace:"
+		"@flint.fyi/ts-patch": "workspace:",
+		"@flint.fyi/yaml": "workspace:",
+		"typescript": "^5.9.3"
+	},
+	"devDependencies": {
+		"prettier": "3.7.4",
+		"tsdown": "0.19.0-beta.2"
+	},
+	"peerDependencies": {
+		"prettier": "^3.7.4"
 	},
 	"engines": {
 		"node": ">=24.0.0"
 	},
 	"publishConfig": {
-		"access": "public",
-		"provenance": true
+		"exports": {
+			".": "./lib/index.js"
+		}
 	}
 }

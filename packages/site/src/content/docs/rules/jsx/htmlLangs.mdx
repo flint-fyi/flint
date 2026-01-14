@@ -1,0 +1,71 @@
+---
+description: "Reports <html> elements without a lang prop."
+title: "htmlLangs"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="htmlLangs" />
+
+The `lang` attribute on the `<html>` element identifies the language of the document for screen readers and assistive technologies.
+Without it, screen readers may default to the user's system language, causing confusion for users.
+
+This is required for WCAG 3.1.1 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<html>
+	<body>Content</body>
+</html>
+```
+
+```tsx
+<html className="root">
+	<body>Content</body>
+</html>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<html lang="en">
+	<body>Content</body>
+</html>
+```
+
+```tsx
+<html lang="en-US">
+	<body>Content</body>
+</html>
+```
+
+```tsx
+<html lang={language}>
+	<body>Content</body>
+</html>
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you're not working with HTML documents or the `<html>` element is managed by a framework, you can disable this rule.
+
+## Further Reading
+
+- [MDN: HTMLElement: lang property](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/lang)
+- [WCAG 3.1.1: Language of Page](https://www.w3.org/WAI/WCAG21/Understanding/language-of-page)
+- [axe-core: html-has-lang](https://dequeuniversity.com/rules/axe/3.2/html-has-lang)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="htmlLangs" />

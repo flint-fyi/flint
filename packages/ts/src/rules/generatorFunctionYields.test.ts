@@ -1,5 +1,5 @@
-import rule from "./generatorFunctionYields.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./generatorFunctionYields.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

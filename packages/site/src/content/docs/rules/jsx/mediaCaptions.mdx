@@ -1,0 +1,75 @@
+---
+description: "Reports media elements without captions."
+title: "mediaCaptions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="mediaCaptions" />
+
+Providing captions for media is essential for deaf users to follow along.
+Captions should be a transcription or translation of the dialogue, sound effects, and other relevant audio information.
+
+Media elements (`<audio>` and `<video>`) should include a `<track>` element with `kind="captions"` to provide this accessibility feature.
+The only exception is that muted media does not require captions.
+
+This is required for WCAG 1.2.2 and 1.2.3 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<audio src="audio.mp3" />
+```
+
+```tsx
+<video src="video.mp4" />
+```
+
+```tsx
+<video>
+	<track kind="subtitles" />
+</video>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<audio>
+	<track kind="captions" />
+</audio>
+```
+
+```tsx
+<video>
+	<track kind="captions" />
+</video>
+```
+
+```tsx
+<video muted />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you're not using media elements or have a different captioning system, you can disable this rule.
+
+## Further Reading
+
+- [WCAG 1.2.2: Captions (Prerecorded)](https://www.w3.org/WAI/WCAG21/Understanding/captions-prerecorded.html)
+- [WCAG 1.2.3: Audio Description or Media Alternative](https://www.w3.org/WAI/WCAG21/Understanding/audio-description-or-media-alternative-prerecorded.html)
+- [axe-core: audio-caption](https://dequeuniversity.com/rules/axe/2.1/audio-caption)
+- [axe-core: video-caption](https://dequeuniversity.com/rules/axe/2.1/video-caption)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="mediaCaptions" />

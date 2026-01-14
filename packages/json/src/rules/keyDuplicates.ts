@@ -1,14 +1,15 @@
-import * as ts from "typescript";
+import ts from "typescript";
 import z from "zod";
 
-import { jsonLanguage } from "../language.js";
+import { jsonLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default jsonLanguage.createRule({
+export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:
 			"Reports unnecessary duplicate keys that override previous values.",
 		id: "keyDuplicates",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		duplicateKey: {
@@ -31,12 +32,10 @@ export default jsonLanguage.createRule({
 			.default([])
 			.describe("Keys to allow duplicates under."),
 	},
-	setup(context, { allowKeys }) {
-		const allowKeysUnique = new Set(allowKeys);
-
+	setup(context) {
 		return {
 			visitors: {
-				ObjectLiteralExpression(node) {
+				ObjectLiteralExpression(node, { options, sourceFile }) {
 					const seenKeys = new Set<string>();
 
 					for (const property of node.properties.toReversed()) {
@@ -48,7 +47,7 @@ export default jsonLanguage.createRule({
 						}
 
 						const key = property.name.text;
-						if (allowKeysUnique.has(key)) {
+						if (options.allowKeys.includes(key)) {
 							continue;
 						}
 
@@ -62,7 +61,7 @@ export default jsonLanguage.createRule({
 						context.report({
 							message: "duplicateKey",
 							range: {
-								begin: property.name.getStart(context.sourceFile),
+								begin: property.name.getStart(sourceFile),
 								end: property.name.end,
 							},
 						});

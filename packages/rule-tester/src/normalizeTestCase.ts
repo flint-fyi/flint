@@ -1,4 +1,4 @@
-import { TestCase } from "./types.js";
+import type { TestCase } from "./types.ts";
 
 export interface TestCaseNormalized extends TestCase {
 	fileName: string;
@@ -6,9 +6,11 @@ export interface TestCaseNormalized extends TestCase {
 
 export function normalizeTestCase<T extends TestCase>(
 	testCase: T,
+	fileName: string | undefined,
 ): T & TestCaseNormalized {
-	return {
-		fileName: "file.ts",
+	const rv: T = {
 		...testCase,
 	};
+	rv.fileName ??= fileName ?? "file.ts";
+	return rv as typeof rv & { fileName: string };
 }

@@ -1,14 +1,14 @@
 import {
 	applyChangesToText,
 	isSuggestionForFiles,
-	NormalizedReport,
+	type NormalizedReport,
+	type SuggestionForFiles,
 } from "@flint.fyi/core";
-import { SuggestionForFiles } from "@flint.fyi/core/src/types/changes.js";
 import { isTruthy } from "@flint.fyi/utils";
 
-import { TestCaseNormalized } from "./normalizeTestCase.js";
-import { isTestSuggestionForFiles } from "./predicates.js";
-import { InvalidTestCase, TestSuggestionFileCase } from "./types.js";
+import type { TestCaseNormalized } from "./normalizeTestCase.ts";
+import { isTestSuggestionForFiles } from "./predicates.ts";
+import type { InvalidTestCase, TestSuggestionFileCase } from "./types.ts";
 
 export function resolveReportedSuggestions(
 	reports: NormalizedReport[],
@@ -56,8 +56,8 @@ function resolveReportedSuggestionForFiles(
 	}
 
 	return Object.fromEntries(
-		testCaseNormalized.suggestions
-			.map((suggestionExpected): [string, TestSuggestionFileCase[]][] => {
+		testCaseNormalized.suggestions.flatMap(
+			(suggestionExpected): [string, TestSuggestionFileCase[]][] => {
 				return Object.entries(suggestionExpected.files).map(
 					([filePath, suggestionCasesExpected]) => {
 						return [
@@ -79,7 +79,7 @@ function resolveReportedSuggestionForFiles(
 						];
 					},
 				);
-			})
-			.flat(),
+			},
+		),
 	);
 }

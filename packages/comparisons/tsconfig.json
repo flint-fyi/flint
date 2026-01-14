@@ -1,7 +1,9 @@
 {
 	"compilerOptions": {
-		"outDir": "lib",
-		"rootDir": "src"
+		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.json",
+		"rootDir": "src/",
+		"outDir": "lib/",
+		"types": ["node"]
 	},
 	"extends": "../../tsconfig.base.json",
 	"include": ["src", "src/data.json"]

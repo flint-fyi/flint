@@ -1,2 +1,2 @@
-export { jsonLanguage } from "./language.js";
-export { json } from "./plugin.js";
+export { jsonLanguage } from "./language.ts";
+export { json } from "./plugin.ts";

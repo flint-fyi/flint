@@ -1,0 +1,76 @@
+---
+description: "Reports non-octal decimal escape sequences (\\8 and \\9) in string literals."
+title: "nonOctalDecimalEscapes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="nonOctalDecimalEscapes" />
+
+The escape sequences `\8` and `\9` in string literals are legacy features that behave as identity escapes, meaning they simply represent the literal digits "8" and "9".
+While these were allowed in most JavaScript engines before ECMAScript 2021, they are now specified as non-octal decimal escape sequences and are considered optional in the specification.
+These escape sequences are not supported in strict mode in all environments and should be avoided when writing new code.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = "\8";
+```
+
+```ts
+const message = "w\8less";
+```
+
+```ts
+const date = "December 1\9";
+```
+
+```ts
+const text = "Don't use \8 and \9 escapes.";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = "8";
+```
+
+```ts
+const message = "w8less";
+```
+
+```ts
+const date = "December 19";
+```
+
+```ts
+const text = "Don't use \\8 and \\9 escapes.";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project has portions that perform raw string manipulations and rely on legacy octal escape sequences, it might be difficult to refactor towards code that passes this rule.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Escape sequences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#escape_sequences)
+- [ECMAScript® Specification: Non-octal decimal escape sequences](https://tc39.es/ecma262/#prod-NonOctalDecimalEscapeSequence)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="nonOctalDecimalEscapes" />

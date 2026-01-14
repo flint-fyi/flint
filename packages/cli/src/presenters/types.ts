@@ -37,7 +37,7 @@ export interface PresenterSummarizeContext {
 }
 
 // TODO: Eventually, the file system should be abstracted
-// https://github.com/JoshuaKGoldberg/flint/issues/73
+// https://github.com/flint-fyi/flint/issues/73
 export interface PresenterVirtualFile {
 	filePath: string;
 	text: string;

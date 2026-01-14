@@ -1,0 +1,76 @@
+---
+description: "Reports <label> elements without an associated control element."
+title: "labelAssociatedControls"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="labelAssociatedControls" />
+
+Form labels are a critical component of web accessibility.
+Screen readers and other assistive technologies rely on labels to identify and describe form controls.
+A label must be associated with a control element to provide this context.
+
+This rule checks that all `<label>` elements have an associated control, either through:
+
+- An `htmlFor` prop that references the id of a control element
+- A control element nested within the label (input, select, textarea, meter, output, or progress)
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<label />
+```
+
+```tsx
+<label>Name</label>
+```
+
+```tsx
+<label>
+	<span>Name</span>
+</label>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<label htmlFor="name">Name</label>
+```
+
+```tsx
+<label>
+	Name <input type="text" />
+</label>
+```
+
+```tsx
+<label>
+	<input type="text" />
+</label>
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you are using a framework that handles label associations differently or automatically generates accessible labels, you can safely disable this rule.
+
+## Further Reading
+
+- [WCAG 1.3.1 - Info and Relationships](https://www.w3.org/WAI/WCAG21/Understanding/info-and-relationships)
+- [WCAG 2.4.6 - Headings and Labels](https://www.w3.org/WAI/WCAG21/Understanding/headings-and-labels)
+- [WCAG 4.1.2 - Name, Role, Value](https://www.w3.org/WAI/WCAG21/Understanding/name-role-value)
+- [MDN: The Label element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="labelAssociatedControls" />

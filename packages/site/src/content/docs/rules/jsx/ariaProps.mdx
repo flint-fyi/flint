@@ -1,0 +1,68 @@
+---
+description: "Reports invalid ARIA properties."
+title: "ariaProps"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="ariaProps" />
+
+{/* cspell:disable */}
+
+If a DOM property begins with `aria-`, it can only be valid if it's listed in the WAI-ARIA States and Properties specification.
+Any other property beginning with `aria-` is considered invalid and will not be handled propertly by a browser.
+
+Common mistakes include misspelling property names, such as `aria-labeledby` instead of `aria-labelledby`.
+
+This is required for WCAG 4.1.2 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<input aria-labeledby="address_label" />
+```
+
+```tsx
+<div aria-invalid-prop="true" />
+```
+
+```tsx
+<button aria-labelled="Submit" />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<input aria-labelledby="address_label" />
+```
+
+```tsx
+<div aria-label="Section" />
+```
+
+```tsx
+<button aria-pressed="true" />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+You should always use this rule to ensure ARIA properties are valid.
+
+## Further Reading
+
+- [WCAG 4.1.2: Name, Role, Value](https://www.w3.org/WAI/WCAG21/Understanding/name-role-value)
+- [WAI-ARIA States and Properties](https://www.w3.org/TR/wai-aria-1.2/#state_prop_def)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="ariaProps" />

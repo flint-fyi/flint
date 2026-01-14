@@ -1,15 +1,17 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts from "typescript";
 
-import { typescriptLanguage } from "../language.js";
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.js";
-import { isTypeRecursive } from "./utils/isTypeRecursive.js";
+import { typescriptLanguage } from "../language.ts";
+import type { Checker } from "../types/checker.ts";
+import { ruleCreator } from "./ruleCreator.ts";
+import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
+import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports iterating over an array with a for-in loop.",
 		id: "forInArrays",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		forIn: {
@@ -26,7 +28,7 @@ export default typescriptLanguage.createRule({
 		},
 	},
 	setup(context) {
-		function hasNumberLikeLength(type: ts.Type): boolean {
+		function hasNumberLikeLength(type: ts.Type, typeChecker: Checker): boolean {
 			const lengthProperty = type.getProperty("length");
 
 			if (lengthProperty == null) {
@@ -34,27 +36,28 @@ export default typescriptLanguage.createRule({
 			}
 
 			return tsutils.isTypeFlagSet(
-				context.typeChecker.getTypeOfSymbol(lengthProperty),
+				typeChecker.getTypeOfSymbol(lengthProperty),
 				ts.TypeFlags.NumberLike,
 			);
 		}
 
-		function isArrayLike(type: ts.Type): boolean {
+		function isArrayLike(type: ts.Type, typeChecker: Checker): boolean {
 			return isTypeRecursive(
 				type,
-				(t) => t.getNumberIndexType() != null && hasNumberLikeLength(t),
+				(t) =>
+					t.getNumberIndexType() != null && hasNumberLikeLength(t, typeChecker),
 			);
 		}
 
 		return {
 			visitors: {
-				ForInStatement: (node) => {
+				ForInStatement: (node, { typeChecker }) => {
 					const type = getConstrainedTypeAtLocation(
 						node.expression,
-						context.typeChecker,
+						typeChecker,
 					);
 
-					if (isArrayLike(type)) {
+					if (isArrayLike(type, typeChecker)) {
 						context.report({
 							message: "forIn",
 							range: {

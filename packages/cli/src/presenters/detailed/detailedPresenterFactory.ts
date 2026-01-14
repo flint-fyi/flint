@@ -1,13 +1,13 @@
 import { hasFix } from "@flint.fyi/core";
 import chalk from "chalk";
 
-import { presentHeader } from "../shared/header.js";
-import { presentDiagnostics } from "../shared/presentDiagnostics.js";
-import { presentSummary } from "../shared/summary.js";
-import { PresenterFactory } from "../types.js";
-import { ColorCodes, indenter } from "./constants.js";
-import { createDetailedReport } from "./createDetailedReport.js";
-import { wrapIfNeeded } from "./wrapIfNeeded.js";
+import { presentHeader } from "../shared/header.ts";
+import { presentDiagnostics } from "../shared/presentDiagnostics.ts";
+import { presentSummary } from "../shared/summary.ts";
+import type { PresenterFactory } from "../types.ts";
+import { ColorCodes, indenter } from "./constants.ts";
+import { createDetailedReport } from "./createDetailedReport.ts";
+import { wrapIfNeeded } from "./wrapIfNeeded.ts";
 
 export const detailedPresenterFactory: PresenterFactory = {
 	about: {

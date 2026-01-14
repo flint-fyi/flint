@@ -1,0 +1,77 @@
+---
+description: "Prefer KeyboardEvent.key over deprecated properties like keyCode, charCode, and which."
+title: "keyboardEventKeys"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="keyboardEventKeys" />
+
+The deprecated `KeyboardEvent` properties `keyCode`, `charCode`, and `which` provide numeric codes that are less readable and harder to maintain than the modern `.key` property.
+The `.key` property returns a string representation of the key pressed, making code more semantic and accessible.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```js
+window.addEventListener("keydown", (event) => {
+	if (event.keyCode === 13) {
+		console.log("Enter pressed");
+	}
+});
+
+document.addEventListener("keypress", (event) => {
+	console.log(event.charCode);
+});
+
+window.addEventListener("keyup", (event) => {
+	console.log(event.which);
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```js
+window.addEventListener("keydown", (event) => {
+	if (event.key === "Enter") {
+		console.log("Enter pressed");
+	}
+});
+
+document.addEventListener("keypress", (event) => {
+	console.log(event.key);
+});
+
+window.addEventListener("keyup", (event) => {
+	console.log(event.key);
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support very old browsers that do not implement `KeyboardEvent.key` (Internet Explorer 8 and below), you might need to continue using the deprecated properties.
+However, for modern web development, the `.key` property is widely supported and recommended.
+
+## Further Reading
+
+- [MDN: `KeyboardEvent.key`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key)
+- [MDN: `KeyboardEvent.keyCode` (deprecated)](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode)
+- [MDN: `KeyboardEvent.charCode` (deprecated)](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/charCode)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="keyboardEventKeys" />

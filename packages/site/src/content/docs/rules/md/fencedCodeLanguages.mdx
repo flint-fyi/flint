@@ -1,0 +1,81 @@
+---
+description: "Reports fenced code blocks without a language specified."
+title: "fencedCodeLanguages"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="md" rule="fencedCodeLanguages" />
+
+Fenced code blocks in Markdown allow you to embed syntax-highlighted blocks of other languages.
+The language name is expected, but not required, after the initial three backticks.
+
+It's a good idea to provide a language because that allows editors and converters to properly syntax highlight the embedded code.
+Even if you're just embedding plain text, it's preferable to use `text` as the language to explicitly indicate your intention.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+````markdown
+```
+const message = "Hello, world!";
+console.log(message);
+```
+````
+
+````markdown
+```
+plain text here
+```
+````
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+````markdown
+```js
+const message = "Hello, world!";
+console.log(message);
+```
+````
+
+````markdown
+```javascript
+const message = "Hello, world!";
+console.log(message);
+```
+````
+
+````markdown
+```text
+plain text here
+```
+````
+
+````markdown
+```python
+def greet():
+    print("Hello, world!")
+```
+````
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't mind languages being inferred rather than explicit, you can safely disable this rule.
+
+## Further Reading
+
+- [MD040 - Fenced code blocks should have a language specified](https://github.com/DavidAnson/markdownlint/blob/main/doc/md040.md)
+- [GitHub Flavored Markdown - Fenced code blocks](https://github.github.com/gfm/#fenced-code-blocks)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="md" ruleId="fencedCodeLanguages" />

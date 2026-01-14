@@ -1,5 +1,5 @@
-import { AnyLevelDeep } from "./arrays.js";
-import { ProcessedConfigDefinition } from "./configs.js";
+import type { AnyLevelDeep } from "./arrays.ts";
+import type { ProcessedConfigDefinition } from "./configs.ts";
 
 export type FilesComputer = (
 	config: ProcessedConfigDefinition,

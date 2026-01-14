@@ -1,0 +1,29 @@
+body:
+  - attributes:
+      description: If any of these required steps are not taken, we may not be able to review your issue. Help us to help you!
+      label: Feature Request Checklist
+      options:
+        - label: I am using the latest published version of all Flint packages.
+          required: true
+        - label: I have [searched for related issues](https://github.com/flint-fyi/flint/issues?q=is%3Aissue) and found none that matched my issue.
+          required: true
+    type: checkboxes
+  - attributes:
+      description: What did you expect to be able to do?
+      label: Overview
+    type: textarea
+    validations:
+      required: true
+  - attributes:
+      description: Any additional info you'd like to provide.
+      label: Additional Info
+    type: textarea
+
+description: Request a feature be added to a lint rule provided by Flint
+
+labels:
+  - "type: feature"
+
+name: 🚀 Lint Rule Feature
+
+title: "🚀 Feature: [plugin.ruleName] <short description of the feature>"

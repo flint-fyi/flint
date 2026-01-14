@@ -1,0 +1,82 @@
+---
+description: "Reports multiple H1 headings in the same document."
+title: "headingRootDuplicates"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="md" rule="headingRootDuplicates" />
+
+An H1 heading is meant to define the main heading of a page, providing important structural information for both users and assistive technologies.
+Using more than one H1 heading per page can cause confusion for screen readers, dilute SEO signals, and break the logical content hierarchy.
+It's best to use a single H1 heading per document.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```markdown
+# Heading 1
+
+# Another H1 heading
+```
+
+```markdown
+# Heading 1
+
+# Another H1 heading
+```
+
+```markdown
+<h1>First Heading</h1>
+
+<h1>Second Heading</h1>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```markdown
+# Main Heading
+
+## Subsection
+
+### Deeper Section
+```
+
+```markdown
+<h1>Single HTML Heading</h1>
+
+Content here.
+```
+
+```markdown
+# Single Heading
+
+## Multiple H2s
+
+## Are fine
+
+### And H3s too
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you have a specific use case that requires multiple H1 headings in a single Markdown document, you can safely disable this rule.
+However, this is not recommended for general content as it breaks accessibility and SEO best practices.
+
+## Further Reading
+
+- [MD025 - Multiple top-level headings](https://github.com/DavidAnson/markdownlint/blob/main/doc/md025.md)
+- [Heading hierarchy and accessibility](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements#navigation)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="md" ruleId="headingRootDuplicates" />

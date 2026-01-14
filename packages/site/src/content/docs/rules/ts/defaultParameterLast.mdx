@@ -1,0 +1,88 @@
+---
+description: "Enforce default parameters to be last."
+title: "defaultParameterLast"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="defaultParameterLast" />
+
+Putting default parameters last allows function calls to omit optional tail arguments.
+When default parameters appear before required ones, callers must explicitly pass `undefined` to skip them.
+
+This rule reports parameters with default values or optional markers (`?`) that appear before required parameters.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function greet(name = "World", greeting: string) {
+	console.log(`${greeting}, ${name}!`);
+}
+```
+
+```ts
+function calculate(a = 1, b: number, c = 2) {
+	return a + b + c;
+}
+```
+
+```ts
+const fn = (x = 0, y: number) => x + y;
+```
+
+```ts
+function example(a?: number, b: number) {
+	return (a ?? 0) + b;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function greet(greeting: string, name = "World") {
+	console.log(`${greeting}, ${name}!`);
+}
+```
+
+```ts
+function calculate(b: number, a = 1, c = 2) {
+	return a + b + c;
+}
+```
+
+```ts
+const fn = (y: number, x = 0) => x + y;
+```
+
+```ts
+function example(a = 1, ...rest: number[]) {
+	return rest.reduce((sum, value) => sum + value, a);
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your API design intentionally places default parameters before required ones for readability or documentation purposes, you may disable this rule.
+Some legacy APIs may also have established parameter orderings that cannot be changed without breaking changes.
+
+## Further Reading
+
+- [MDN documentation on Default parameters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="defaultParameterLast" />

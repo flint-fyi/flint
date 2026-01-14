@@ -1,0 +1,74 @@
+---
+description: "Reports `javascript:` URLs that can act as a form of eval."
+title: "scriptUrls"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="scriptUrls" />
+
+Using `javascript:` URLs is a form of `eval`.
+Code passed in `javascript:` URLs is parsed and evaluated by the browser in the same way that `eval` is processed.
+This can lead to security vulnerabilities and is generally considered bad practice.
+
+Use event handlers or proper JavaScript functions instead of `javascript:` URLs.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```typescript
+location.href = "javascript:void(0)";
+```
+
+```typescript
+const url = "javascript:alert('XSS')";
+```
+
+```typescript
+const link = `javascript:void(0)`;
+```
+
+```typescript
+window.location = "javascript:doSomething()";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```typescript
+const url = "https://example.com";
+```
+
+```typescript
+const url = "http://example.com";
+```
+
+```typescript
+const url = "/page";
+```
+
+```typescript
+const data = "data:text/plain;base64,SGVsbG8=";
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your project is internal-facing only and already uses `javascript:` URLs as a core design pattern, it might be difficult to enable this rule.
+
+## Further Reading
+
+- [MDN: eval](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval)
+- [MDN: javascript: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/javascript)
+- [OWASP: Avoid eval and javascript: URLs](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="scriptUrls" />

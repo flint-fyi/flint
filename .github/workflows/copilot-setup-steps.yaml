@@ -1,0 +1,20 @@
+jobs:
+  copilot-setup-steps:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      - uses: ./.github/actions/prepare
+      - run: pnpm build
+
+name: Copilot Setup Steps
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  workflow_dispatch: ~

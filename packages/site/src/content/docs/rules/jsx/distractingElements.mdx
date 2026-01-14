@@ -1,0 +1,65 @@
+---
+description: "Reports distracting elements like <marquee> and <blink>."
+title: "distractingElements"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="distractingElements" />
+
+Visually distracting elements cause accessibility issues for users with visual impairments.
+The `<marquee>` and `<blink>` elements are deprecated and should not be used in modern web applications.
+
+Use CSS animations if movement is necessary for your design.
+
+This is required for WCAG 2.2.2 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<marquee />
+```
+
+```tsx
+<blink />
+```
+
+```tsx
+<marquee>Scrolling text</marquee>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div />
+```
+
+```tsx
+<div className="animated">Modern animation with CSS</div>
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your project is extremely old, or is a narrowly used novelty for amusement, you might not be able to enable this rule.
+Otherwise you should always use this rule.
+There are no valid modern use cases for `<marquee>` or `<blink>` elements.
+
+## Further Reading
+
+- [WCAG 2.2.2: Pause, Stop, Hide](https://www.w3.org/WAI/WCAG21/Understanding/pause-stop-hide)
+- [axe-core: marquee](https://dequeuniversity.com/rules/axe/3.2/marquee)
+- [axe-core: blink](https://dequeuniversity.com/rules/axe/3.2/blink)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="distractingElements" />

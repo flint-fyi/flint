@@ -1,15 +1,16 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.js";
-import { typescriptLanguage } from "../language.js";
-import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.js";
+import { getTSNodeRange } from "../getTSNodeRange.ts";
+import { typescriptLanguage } from "../language.ts";
+import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallows using `new` with global non-constructor functions like Symbol and BigInt.",
 		id: "newNativeNonConstructors",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noNewNonConstructor: {
@@ -24,15 +25,15 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				NewExpression: (node) => {
-					if (!ts.isIdentifier(node.expression)) {
+				NewExpression: (node, { sourceFile, typeChecker }) => {
+					if (node.expression.kind !== SyntaxKind.Identifier) {
 						return;
 					}
 
 					const name = node.expression.text;
 					if (
 						!["BigInt", "Symbol"].includes(name) ||
-						!isGlobalDeclaration(node.expression, context.typeChecker)
+						!isGlobalDeclaration(node.expression, typeChecker)
 					) {
 						return;
 					}
@@ -41,16 +42,13 @@ export default typescriptLanguage.createRule({
 						data: { name },
 						fix: {
 							range: {
-								begin: node.getStart(context.sourceFile),
-								end: node.expression.getStart(context.sourceFile),
+								begin: node.getStart(sourceFile),
+								end: node.expression.getStart(sourceFile),
 							},
 							text: "",
 						},
 						message: "noNewNonConstructor",
-						range: getTSNodeRange(
-							node.getChildAt(0, context.sourceFile),
-							context.sourceFile,
-						),
+						range: getTSNodeRange(node.getChildAt(0, sourceFile), sourceFile),
 					});
 				},
 			},

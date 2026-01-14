@@ -1,0 +1,76 @@
+---
+description: "Prefer `{}` object literal notation or `Object.create` instead of calling or constructing `Object`."
+title: "objectCalls"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="objectCalls" />
+
+Calling or constructing the global `Object` directly is unnecessarily verbose and less idiomatic than using object literal syntax.
+Object literal notation `{}` is the preferred and more concise way to create plain objects in JavaScript and TypeScript.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const emptyObject = new Object();
+```
+
+```ts
+const emptyObject = Object();
+```
+
+```ts
+const config = new Object({ key: "value" });
+```
+
+```ts
+const config = Object({ key: "value" });
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const emptyObject = {};
+```
+
+```ts
+const config = { key: "value" };
+```
+
+```ts
+const objectWithoutPrototype = Object.create(null);
+```
+
+```ts
+const copy = Object.assign({}, source);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have an existing codebase style that would be difficult to migrate away from, such as for consistency preferences with legacy code, you might find it difficult to onboard to this rule.
+Alternately, if you target a legacy runtime with behavioral quirks where object literals behave differently than `Object()` calls, this rule might be counterproductive for you.
+
+## Further Reading
+
+- [MDN: Object initializer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer)
+- [MDN: Object() constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/Object)
+- [MDN: Object.create()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="objectCalls" />

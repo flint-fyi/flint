@@ -1,6 +1,6 @@
 ---
 description: "Reports test cases that are identical to previous test cases."
-title: "duplicateTestCases"
+title: "testCaseDuplicates"
 topic: "rules"
 ---
 
@@ -8,7 +8,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
-<RuleSummary plugin="flint" rule="duplicateTestCases" />
+<RuleSummary plugin="flint" rule="testCaseDuplicates" />
 
 When writing tests for lint rules, it's possible to accidentally create deeply identical test cases.
 Doing so provides no added benefit for testing and is unnecessary.
@@ -96,4 +96,4 @@ This rule is not configurable.
 
 ## Equivalents in Other Linters
 
-<RuleEquivalents pluginId="flint" ruleId="duplicateTestCases" />
+<RuleEquivalents pluginId="flint" ruleId="testCaseDuplicates" />

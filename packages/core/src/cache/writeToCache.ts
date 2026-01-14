@@ -2,10 +2,10 @@ import { CachedFactory } from "cached-factory";
 import * as fs from "node:fs/promises";
 import omitEmpty from "omit-empty";
 
-import { CacheStorage } from "../types/cache.js";
-import { LintResults } from "../types/linting.js";
-import { cacheFileDirectory, cacheFilePath } from "./constants.js";
-import { getFileTouchTime } from "./getFileTouchTime.js";
+import type { CacheStorage } from "../types/cache.ts";
+import type { LintResults } from "../types/linting.ts";
+import { cacheFileDirectory, cacheFilePath } from "./constants.ts";
+import { getFileTouchTime } from "./getFileTouchTime.ts";
 
 export async function writeToCache(
 	configFileName: string,

@@ -1,0 +1,82 @@
+---
+description: "Reports invalid usage of anchor elements."
+title: "anchorValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="anchorValidity" />
+
+The HTML `<a>` ("anchor") element represents a link to some place on the current page or another page.
+If an `<a>` does not have a valid `href` attribute than it is not a valid anchor.
+
+Invalid anchors are most commonly seen when developers use an `<a>` with an `onClick`, rather than the more semantic `<button>`.
+Anchor elements should only be used for navigation, not triggering modifications to the current page.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<a />
+```
+
+```tsx
+<a href="#" />
+```
+
+```tsx
+<a href="javascript:void(0)" />
+```
+
+```tsx
+<a onClick={() => {}} />
+```
+
+```tsx
+<a href="#" onClick={() => {}} />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<a href="https://example.com" />
+```
+
+```tsx
+<a href="/path" />
+```
+
+```tsx
+<a href="#section" />
+```
+
+```tsx
+<button onClick={() => {}} />
+```
+
+```tsx
+<a href="https://example.com" onClick={() => {}} />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you use a framework that automatically populates anchors with proper `href` attributes, then you can disable this rule.
+
+## Further Reading
+
+- [MDN: The Anchor element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a)
+- [WCAG 2.4.4 - Link Purpose](https://www.w3.org/WAI/WCAG21/Understanding/link-purpose-in-context)
+- [WCAG 4.1.2 - Name, Role, Value](https://www.w3.org/WAI/WCAG21/Understanding/name-role-value)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="anchorValidity" />

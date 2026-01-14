@@ -1,0 +1,103 @@
+---
+description: "Disallow unescaped HTML entities in JSX text that may cause rendering issues."
+title: "unescapedEntities"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="unescapedEntities" />
+
+In JSX, certain characters have special meaning and should be properly escaped to avoid rendering issues or breaking the JSX syntax.
+Characters like `>`, `"`, `'`, and `}` should be escaped using HTML entities or wrapped in JSX expressions.
+
+Unescaped entities can lead to unexpected rendering behavior or syntax errors in JSX.
+This rule helps prevent these issues by identifying characters that should be escaped.
+
+Note that `{` in JSX text will automatically be parsed as the start of a JSX expression, so unmatched `{` characters will cause syntax errors rather than being flagged by this rule.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<div>Greater than > sign</div>
+```
+
+```tsx
+<span>Double "quote" example</span>
+```
+
+```tsx
+<p>Single 'quote' example</p>
+```
+
+```tsx
+<div>Opening { brace</div>
+```
+
+Note: This will cause a syntax error as `{` starts a JSX expression.
+
+```tsx
+<div>Closing } brace</div>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div>Greater than &gt; sign</div>
+```
+
+```tsx
+<div>Greater than {">"} sign</div>
+```
+
+```tsx
+<span>Double &quot;quote&quot; example</span>
+```
+
+```tsx
+<span>
+	Double {'"'}quote{'"'} example
+</span>
+```
+
+```tsx
+<p>Single &apos;quote&apos; example</p>
+```
+
+Or:
+
+```tsx
+<p>Single &#39;quote&#39; example</p>
+```
+
+```tsx
+<p>
+	Single {"'"}quote{"'"} example
+</p>
+```
+
+```tsx
+<div>Closing {"}"} brace</div>
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your JSX is being processed by a tool that automatically handles entity escaping, or if you're working in a context where these characters don't cause issues, you may want to disable this rule.
+
+## Further Reading
+
+- [React: JSX In Depth - String Literals](https://react.dev/learn/writing-markup-with-jsx)
+- [MDN: HTML Entities](https://developer.mozilla.org/en-US/docs/Glossary/Entity)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="unescapedEntities" />

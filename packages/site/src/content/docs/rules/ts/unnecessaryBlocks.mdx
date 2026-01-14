@@ -1,0 +1,89 @@
+---
+description: "This standalone block statement is unnecessary and adds no value."
+title: "unnecessaryBlocks"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryBlocks" />
+
+Standalone block statements that aren't part of control flow structures (if/else, loops, switch, etc.) or don't create a meaningful lexical scope can make code harder to understand.
+In modern JavaScript and TypeScript, blocks primarily serve to create lexical scope for `let` and `const` variables, but using standalone blocks for this purpose is often confusing compared to other patterns like functions or modules.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+{
+	const temporaryValue = computeValue();
+	processValue(temporaryValue);
+}
+```
+
+```ts
+function processData() {
+	{
+		const result = calculate();
+		console.log(result);
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const temporaryValue = computeValue();
+processValue(temporaryValue);
+```
+
+```ts
+function processData() {
+	const result = calculate();
+	console.log(result);
+}
+```
+
+```ts
+// Valid: block is part of control flow
+if (condition) {
+	const value = getValue();
+	processValue(value);
+}
+```
+
+```ts
+// Valid: block creates scope in switch case
+switch (type) {
+	case "a": {
+		const value = getA();
+		break;
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you frequently use standalone blocks for visual organization or temporary scoping in ways that your team finds helpful, you might choose to disable this rule.
+However, consider whether extracting to functions or using other scoping mechanisms would be clearer.
+
+## Further Reading
+
+- [MDN: Block statements](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block)
+- [MDN: `let` and `const` scoping](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryBlocks" />

@@ -1,0 +1,65 @@
+---
+description: "Reports redundant ARIA roles on elements with implicit roles."
+title: "roleRedundancies"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="roleRedundancies" />
+
+HTML elements have default semantics implemented by the browser, including implicit ARIA roles.
+Setting an explicit role that matches the element's implicit role is redundant and should be removed.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<button role="button" />
+```
+
+```tsx
+<img role="img" src="foo.jpg" />
+```
+
+```tsx
+<nav role="navigation" />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<button />
+```
+
+```tsx
+<button role="presentation" />
+```
+
+```tsx
+<img src="foo.jpg" />
+```
+
+```tsx
+<nav />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you need to explicitly set roles for documentation purposes, you may want to disable this rule.
+
+## Further Reading
+
+- [ARIA in HTML: ARIA Adds Nothing to Default Semantics](https://www.w3.org/TR/using-aria/#aria-does-nothing)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="roleRedundancies" />

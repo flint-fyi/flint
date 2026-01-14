@@ -1,0 +1,100 @@
+---
+description: "Reports function declarations and expressions inside loops that reference variables modified by the loop."
+title: "loopFunctions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="performance" rule="loopFunctions" />
+
+Creating functions inside loops that reference variables modified by the loop often leads to unexpected behavior.
+Functions created in this way share the same scope and capture references to loop variables rather than their values at creation time.
+This means all created functions typically reference the final value of the loop variable, not the value during their creation.
+
+This behavior is a common source of bugs in JavaScript applications, especially when creating event handlers, callbacks, or other deferred operations within loops.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const handlers = [];
+for (let i = 0; i < 5; i++) {
+	handlers.push(function () {
+		return i;
+	});
+}
+// All handlers return 5, not 0, 1, 2, 3, 4
+```
+
+```ts
+const items = ["a", "b", "c"];
+for (let i = 0; i < items.length; i++) {
+	button.addEventListener("click", () => {
+		console.log(items[i]);
+	});
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const handlers = [];
+for (let i = 0; i < 5; i++) {
+	handlers.push(
+		(function (value) {
+			return function () {
+				return value;
+			};
+		})(i),
+	);
+}
+```
+
+```ts
+function createHandler(item: string) {
+	return () => {
+		console.log(item);
+	};
+}
+
+const items = ["a", "b", "c"];
+for (let i = 0; i < items.length; i++) {
+	button.addEventListener("click", createHandler(items[i]));
+}
+```
+
+```ts
+const handlers = items.map((item) => () => {
+	console.log(item);
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are using modern JavaScript with `let` or `const` declarations in `for` loops, each iteration creates a new binding, which can mitigate some of the issues this rule warns about.
+However, the rule still catches cases where the behavior might be unexpected, so it's generally beneficial to keep it enabled.
+
+You may wish to disable this rule if you have a specific use case where creating functions in loops is intentional and the captured variable references are the desired behavior.
+
+## Further Reading
+
+- [MDN: Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures)
+- [MDN: let](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let)
+- [MDN: const](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="performance" ruleId="loopFunctions" />

@@ -29,8 +29,8 @@ The [typescript-eslint playground](https://typescript-eslint.io/play#showAST=ts&
 A modification to code, as suggested by the [linter](#linter) or a [rule](#rule).
 Changes can either be:
 
-- [Fixes](#fix): can be automatically applied, such as with a `--fix` command-line
-- [Suggestions](#suggestion): may not be safe to apply, and are typically surfaced as editor suggestions
+- [Fixes](#fix): can be automatically applied, such as with a [`--fix`](/cli#--fix) command-line
+- [Suggestions](#suggestion): may not be safe to apply, and are typically surfaced as editor suggestions or via [`--fix-suggestions`](/cli#--fix-suggestions)
 
 ### Comment Directive
 
@@ -38,6 +38,8 @@ An inline comment that changes how a [linter](#linter) should behave for a file.
 
 Comment directives are most often used to disable some or all of a linter's rules.
 For example, a directive might disable a particular rule for a specific file or block of code.
+
+See the [Directives](/directives) documentation for details on using comment directives in Flint.
 
 ### Configuration
 
@@ -51,7 +53,7 @@ Those customizations are generally stored in a configuration file in the root of
 A [change](#change) that is safe to apply automatically.
 
 Fixes are generally created by [rules](#rule) as a part of a [report](#report) when there is a single known best way to resolve a detected code defect.
-Running a linter with `--fix` enabled will apply all reported fixes to code.
+Running a linter with [`--fix`](/cli#--fix) enabled will apply all reported fixes to code.
 
 ### Formatter
 
@@ -139,7 +141,7 @@ See: [typescript-eslint > Shared Configs > `stylistic`](https://typescript-eslin
 A [change](#change) that is not safe to apply automatically.
 
 Suggestions are generally created by [rules](#rule) as a part of a [report](#report) when resolving the suggestion would change the meaning of code, and/or there are multiple potential changes that could be applied.
-Users typically apply suggestions manually through an interface in their editor.
+Users typically apply suggestions manually through an interface in their editor or via [`--fix-suggestions`](/cli#--fix-suggestions).
 
 ### Type-Aware Linting
 

@@ -1,13 +1,14 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.js";
+import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports catch clauses that only rethrow the caught error without modification.",
 		id: "unnecessaryCatches",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unnecessaryCatch: {
@@ -25,8 +26,8 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				CatchClause: (node) => {
-					if (!node.variableDeclaration || !ts.isBlock(node.block)) {
+				CatchClause: (node, { sourceFile }) => {
+					if (!node.variableDeclaration) {
 						return;
 					}
 
@@ -36,9 +37,11 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					const statement = statements[0];
+					// Confirmed by the length check above
+					/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
+					const statement = statements[0]!;
 
-					if (!ts.isThrowStatement(statement)) {
+					if (statement.kind !== SyntaxKind.ThrowStatement) {
 						return;
 					}
 
@@ -46,8 +49,8 @@ export default typescriptLanguage.createRule({
 					const thrownExpression = statement.expression;
 
 					if (
-						!ts.isIdentifier(catchVariable) ||
-						!ts.isIdentifier(thrownExpression)
+						catchVariable.kind !== SyntaxKind.Identifier ||
+						thrownExpression.kind !== SyntaxKind.Identifier
 					) {
 						return;
 					}
@@ -56,20 +59,15 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					const tryStatement = node.parent;
-					if (!ts.isTryStatement(tryStatement)) {
-						return;
-					}
-
 					const range = {
-						begin: node.getStart(context.sourceFile),
-						end: node.getStart(context.sourceFile) + "catch".length,
+						begin: node.getStart(sourceFile),
+						end: node.getStart(sourceFile) + "catch".length,
 					};
 
 					context.report({
 						fix: {
 							range: {
-								begin: tryStatement.tryBlock.getEnd(),
+								begin: node.parent.tryBlock.getEnd(),
 								end: node.getEnd(),
 							},
 							text: "",

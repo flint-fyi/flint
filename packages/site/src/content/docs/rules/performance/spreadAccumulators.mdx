@@ -1,0 +1,92 @@
+---
+description: "Reports spread operations that accumulate values in loops, causing quadratic time complexity."
+title: "spreadAccumulators"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="performance" rule="spreadAccumulators" />
+
+Using spread operations to accumulate values in a loop creates a new array or object on each iteration by copying all previous elements.
+This results in quadratic time complexity (O(n²)) because each iteration does more work than the last.
+As the accumulated collection grows, this pattern becomes increasingly inefficient and can significantly slow down your code.
+
+Instead of spreading into a new array or object each iteration, use mutating methods like `push()` for arrays or direct property assignment for objects.
+These operations have constant time complexity (O(1)) per iteration, resulting in overall linear time (O(n)) for the entire loop.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+let array = [];
+for (const item of items) {
+	array = [...array, item];
+}
+```
+
+```ts
+let numbers = [];
+for (let i = 0; i < 10; i++) {
+	numbers = [...numbers, i * 2];
+}
+```
+
+```ts
+let object = {};
+for (const [key, value] of entries) {
+	object = { ...object, [key]: value };
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+let array = [];
+for (const item of items) {
+	array.push(item);
+}
+```
+
+```ts
+let numbers = [];
+for (let i = 0; i < 10; i++) {
+	numbers.push(i * 2);
+}
+```
+
+```ts
+let object = {};
+for (const [key, value] of entries) {
+	object[key] = value;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to maintain immutability within a loop and performance is not a concern for your use case, you may choose to disable this rule.
+For example, in scenarios where you need to preserve each intermediate state of the accumulation for debugging or other purposes.
+
+However, even when immutability is required, consider collecting items first and creating the final immutable collection once after the loop completes, rather than recreating it on every iteration.
+
+## Further Reading
+
+- [MDN: Spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
+- [MDN: Array.prototype.push()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push)
+- [MDN: Object.assign()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="performance" ruleId="spreadAccumulators" />

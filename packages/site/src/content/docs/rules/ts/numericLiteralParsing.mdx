@@ -1,0 +1,76 @@
+---
+description: "Reports parseInt calls with binary, hexadecimal, or octal strings that can be replaced with numeric literals."
+title: "numericLiteralParsing"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="numericLiteralParsing" />
+
+Binary, octal, and hexadecimal numeric literals provide a more readable and direct way to represent numbers in those bases compared to using `parseInt()` or `Number.parseInt()` with a radix argument.
+Instead of parsing a string representation at runtime, you can use the native literal syntax (`0b` for binary, `0o` for octal, `0x` for hexadecimal) which is clearer and more performant.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const binary = parseInt("111110111", 2);
+```
+
+```ts
+const octal = parseInt("767", 8);
+```
+
+```ts
+const hex = parseInt("1F7", 16);
+```
+
+```ts
+const value = Number.parseInt("FF", 16);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const binary = 0b111110111;
+```
+
+```ts
+const octal = 0o767;
+```
+
+```ts
+const hex = 0x1f7;
+```
+
+```ts
+const value = 0xff;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project heavily deals with literals and you want to be consistent with their parsing, this rule might not be useful for you.
+
+## Further Reading
+
+- [MDN: Binary literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#binary)
+- [MDN: Octal literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#octal)
+- [MDN: Hexadecimal literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#hexadecimal)
+- [MDN: parseInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="numericLiteralParsing" />

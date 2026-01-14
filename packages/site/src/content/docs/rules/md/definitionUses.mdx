@@ -1,0 +1,79 @@
+---
+description: "Reports unused reference definitions."
+title: "definitionUses"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="md" rule="definitionUses" />
+
+In Markdown, you can define reference-style links and images using definitions that appear elsewhere in the document.
+When definitions are created but never referenced, they become unused and add unnecessary clutter.
+Unused definitions may indicate broken references or content that was intended to be included, and can mislead readers who might assume the definitions are being used somewhere.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```markdown
+[mercury]: https://example.com/mercury/
+```
+
+```markdown
+[venus]: https://example.com/venus.jpg
+```
+
+```markdown
+[mercury]: https://example.com/mercury/
+
+[Mercury][mercury]
+
+[venus]: https://example.com/venus/
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```markdown
+[Mercury][mercury]
+
+[mercury]: https://example.com/mercury/
+```
+
+```markdown
+![Venus Image][venus]
+
+[venus]: https://example.com/venus.jpg
+```
+
+```markdown
+See [docs][] and [guide][].
+
+[docs]: https://docs.example.com
+[guide]: https://guide.example.com
+```
+
+```markdown
+[//]: # "This is a comment 1"
+
+[//]: <> (This is a comment 2)
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you intentionally use unused definitions as placeholders and have a framework or other workflow that always fills them in later, you might want to disable this rule.
+
+## Further Reading
+
+- [Markdown Reference-Style Links](https://www.markdownguide.org/basic-syntax/#reference-style-links)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="md" ruleId="definitionUses" />

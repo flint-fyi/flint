@@ -1,0 +1,29 @@
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    if: github.event.repository.fork != true
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      - uses: ./.github/actions/prepare
+      - run: pnpm build
+      - env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        name: Create Release Pull Request
+        uses: changesets/action@v1
+        with:
+          publish: pnpm -r publish
+
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  id-token: write

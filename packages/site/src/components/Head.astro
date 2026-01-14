@@ -1,6 +1,7 @@
 ---
 import type { StarlightRouteData } from "@astrojs/starlight/route-data";
 import Default from "@astrojs/starlight/components/Head.astro";
+import { getOgImageUrl } from "~/util/getOgImageUrl";
 
 export type Props = StarlightRouteData;
 
@@ -8,11 +9,17 @@ const data = Astro.props.entry?.data ?? {
 	description: "[Experimental] A fast, friendly linter. ❤️‍🔥",
 	title: "Flint",
 };
+
+const currentPath = Astro.url.pathname;
+const ogImageUrl = getOgImageUrl(currentPath);
+const ogImage = new URL(ogImageUrl, Astro.site).toString();
 ---
 
 <Default {...Astro.props}><slot /></Default>
 
+<meta property="og:image" content={ogImage} />
 <meta property="twitter:domain" content={Astro.site} />
 <meta property="twitter:url" content={Astro.site} />
 <meta name="twitter:description" content={data.description} />
+<meta name="twitter:image" content={ogImage} />
 <meta name="twitter:title" content={data.title} />

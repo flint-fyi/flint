@@ -1,0 +1,63 @@
+---
+description: "Dynamically creating functions with the Function constructor is insecure and slow."
+title: "functionNewCalls"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="functionNewCalls" />
+
+Using the `Function` constructor to create functions from strings is similar to `eval()` and introduces security risks and performance issues.
+Code passed to the Function constructor is executed in the global scope, making it harder to optimize and potentially allowing arbitrary code execution if user input is involved.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const add = new Function("a", "b", "return a + b");
+
+const multiply = Function("x", "y", "return x * y");
+
+const greet = new globalThis.Function("name", "return 'Hello, ' + name");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const add = function (a, b) {
+	return a + b;
+};
+
+const multiply = (x, y) => x * y;
+
+function greet(name) {
+	return "Hello, " + name;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a legitimate need to dynamically generate functions from strings at runtime and have properly sanitized all inputs, you might choose to disable this rule.
+However, in most cases there are safer alternatives to achieve the same goal.
+
+## Further Reading
+
+- [MDN: `Function`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function)
+- [MDN: `eval` and security](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#never_use_direct_eval!)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="functionNewCalls" />

@@ -1,0 +1,64 @@
+---
+description: "Reports invalid label references with whitespace."
+title: "labelReferenceValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="md" rule="labelReferenceValidity" />
+
+CommonMark's shorthand label reference syntax (`[label][]`) does not allow whitespace between the brackets.
+When whitespace is present, CommonMark-compliant renderers will not treat this as a link reference.
+While GitHub may render this correctly, relying on this behavior could result in errors when using other Markdown processors.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```markdown
+[eslint][ ]
+```
+
+```markdown
+[eslint][ ]
+```
+
+```markdown
+[link][ ]
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```markdown
+[eslint][]
+```
+
+```markdown
+[eslint][eslint]
+```
+
+```markdown
+[link][ref]
+
+[ref]: https://example.com
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you publish your Markdown exclusively on GitHub and don't need compatibility with other CommonMark-compliant renderers, you can safely disable this rule.
+
+## Further Reading
+
+- [CommonMark Specification - Link Reference Definitions](https://spec.commonmark.org/0.30/#link-reference-definitions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="md" ruleId="labelReferenceValidity" />

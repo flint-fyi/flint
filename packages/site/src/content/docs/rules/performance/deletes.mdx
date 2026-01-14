@@ -1,0 +1,76 @@
+---
+description: "Reports using the delete operator."
+title: "deletes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="performance" rule="deletes" />
+
+The `delete` operator in JavaScript modifies the shape of objects, which prevents modern JavaScript engines from optimizing their internal representations.
+When you delete a property, the engine can no longer use fast property access paths that were optimized for that object's original shape.
+
+These deoptimizations can significantly impact performance in performance-critical code paths, especially when objects are created and modified frequently.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const user = { name: "Alice", age: 30, email: "alice@example.com" };
+delete user.email;
+```
+
+```ts
+function clearCache(cache: Record<string, any>) {
+	for (const key in cache) {
+		delete cache[key];
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const user = { name: "Alice", age: 30, email: "alice@example.com" };
+user.email = undefined;
+```
+
+```ts
+function clearCache(cache: Map<string, any>) {
+	cache.clear();
+}
+```
+
+```ts
+const user = { name: "Alice", age: 30, email: "alice@example.com" };
+const { email, ...userWithoutEmail } = user;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are not concerned about performance in a particular code path, or if you need the precise semantics of the `delete` operator (such as affecting property enumeration or reflecting in `hasOwnProperty`), you may wish to disable this rule.
+
+In some cases, the performance impact is negligible and code clarity may be more important than the optimization.
+
+## Further Reading
+
+- [MDN: delete operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete)
+- [V8 Blog: Fast properties in V8](https://v8.dev/blog/fast-properties)
+- [MDN: Object destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#object_destructuring)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="performance" ruleId="deletes" />

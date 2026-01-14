@@ -1,0 +1,78 @@
+---
+description: "Reports interactive elements that are not focusable via keyboard."
+title: "interactiveElementsFocusable"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="interactiveElementsFocusable" />
+
+Elements with interactive roles and event handlers must be focusable.
+Users navigating with keyboards need to be able to reach all interactive elements.
+When interactive elements are not focusable, they become inaccessible to keyboard-only users.
+
+This rule reports elements that have interactive roles (like `button`, `link`, etc.) and event handlers but lack a way to be focused via keyboard - either through being inherently focusable (like `<button>`) or having an explicit `tabIndex` attribute.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<div role="button" onClick={() => {}} />
+```
+
+```tsx
+<span role="link" onClick={() => {}} />
+```
+
+```tsx
+<div role="checkbox" onClick={() => {}} />
+```
+
+```tsx
+<div role="menuitem" onKeyDown={() => {}} />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<button onClick={() => {}} />
+```
+
+```tsx
+<div role="button" tabIndex={0} onClick={() => {}} />
+```
+
+```tsx
+<span role="link" tabIndex={0} onClick={() => {}} />
+```
+
+```tsx
+<div role="menuitem" tabIndex={-1} onKeyDown={() => {}} />
+```
+
+```tsx
+<a href="#section" onClick={() => {}} />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you are using a framework that automatically manages focus for interactive elements, you may want to disable this rule.
+
+## Further Reading
+
+- [MDN: Keyboard-navigable JavaScript widgets](https://developer.mozilla.org/en-US/docs/Web/Accessibility/Keyboard-navigable_JavaScript_widgets)
+- [WCAG 2.1.1: Keyboard](https://www.w3.org/WAI/WCAG21/Understanding/keyboard)
+- [WAI-ARIA Authoring Practices: Keyboard Navigation Conventions](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="interactiveElementsFocusable" />

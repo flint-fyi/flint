@@ -1,5 +1,5 @@
-import rule from "./octalNumbers.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./octalNumbers.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -160,8 +160,8 @@ function calculate() {
 			snapshot: `
 function calculate() {
 	return 077;
-        ~~~
-        This legacy octal numeric literal evaluates to 63. Did you mean that value, or to use a modern octal syntax such as 0o77?
+	       ~~~
+	       This legacy octal numeric literal evaluates to 63. Did you mean that value, or to use a modern octal syntax such as 0o77?
 }
 `,
 			suggestions: [

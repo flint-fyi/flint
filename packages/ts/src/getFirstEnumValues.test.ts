@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { getFirstEnumValues } from "./getFirstEnumValues.js";
+import { getFirstEnumValues } from "./getFirstEnumValues.ts";
 
 describe("getFirstEnumValues", () => {
 	it("returns an empty object when given an empty enum", () => {

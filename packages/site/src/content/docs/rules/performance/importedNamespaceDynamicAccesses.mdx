@@ -1,0 +1,78 @@
+---
+description: "Disallow computed member access on imported namespace identifiers."
+title: "importedNamespaceDynamicAccesses"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="performance" rule="importedNamespaceDynamicAccesses" />
+
+Using computed member access (bracket notation) on namespace imports prevents bundlers from performing tree-shaking optimizations.
+When you dynamically access properties on a namespace import, bundlers cannot determine at build time which exports are actually used, forcing them to include the entire module in the final bundle.
+
+Using static property access (dot notation) allows bundlers to analyze which specific exports are used and eliminate unused code during the build process.
+This can significantly reduce bundle size, especially for large libraries where you only use a subset of the available functionality.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import * as utils from "./utils";
+
+function getValue(key: string) {
+	return utils[key];
+}
+```
+
+```ts
+import * as api from "api-library";
+const method = getMethodName();
+api[method]();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import * as utils from "./utils";
+
+function getValue(key: string) {
+	return utils.someFunction();
+}
+```
+
+```ts
+import { method1, method2 } from "api-library";
+const method = condition ? method1 : method2;
+method();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are not using a bundler that performs tree-shaking, or if you are working in an environment where bundle size is not a concern, you may choose to disable this rule.
+
+However, even without tree-shaking concerns, static property access is generally more maintainable and provides better type checking than dynamic access.
+
+## Further Reading
+
+- [MDN: import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
+- [MDN: Member accessors](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents
+	pluginId="performance"
+	ruleId="importedNamespaceDynamicAccesses"
+/>

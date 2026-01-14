@@ -1,8 +1,8 @@
 import { debugForFile } from "debug-for-file";
 import * as fs from "node:fs/promises";
 
-import { FileChange } from "../types/changes.js";
-import { applyChangesToText } from "./applyChangesToText.js";
+import type { FileChange } from "../types/changes.ts";
+import { applyChangesToText } from "./applyChangesToText.ts";
 
 const log = debugForFile(import.meta.filename);
 
@@ -20,7 +20,7 @@ export async function applyChangesToFile(
 		changes,
 		// TODO: Eventually, the file system should be abstracted
 		// Direct fs read calls don't make sense in e.g. virtual file systems
-		// https://github.com/JoshuaKGoldberg/flint/issues/73
+		// https://github.com/flint-fyi/flint/issues/73
 		await fs.readFile(absoluteFilePath, "utf8"),
 	);
 
@@ -28,7 +28,7 @@ export async function applyChangesToFile(
 
 	// TODO: Eventually, the file system should be abstracted
 	// Direct fs write calls don't make sense in e.g. virtual file systems
-	// https://github.com/JoshuaKGoldberg/flint/issues/73
+	// https://github.com/flint-fyi/flint/issues/73
 	await fs.writeFile(absoluteFilePath, updatedFileContent);
 
 	log("Wrote changes to file: %s", absoluteFilePath);

@@ -1,5 +1,5 @@
-import { ruleTester } from "./ruleTester.js";
-import rule from "./voidOperator.js";
+import { ruleTester } from "./ruleTester.ts";
+import rule from "./voidOperator.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -72,8 +72,8 @@ function process() {
 			snapshot: `
 function process() {
 	void doSomething();
- ~~~~~~~~~~~~~~~~~~
- Prefer an explicit value over using the void operator to produce undefined.
+	~~~~~~~~~~~~~~~~~~
+	Prefer an explicit value over using the void operator to produce undefined.
 }
 `,
 		},

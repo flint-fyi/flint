@@ -1,0 +1,106 @@
+---
+description: "Reports switch case clauses that fall through unexpectedly."
+title: "caseFallthroughs"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="caseFallthroughs" />
+
+The `switch` statement in JavaScript allows "fallthrough" from one `case` to the next, which is often unintentional and can lead to bugs.
+This rule reports cases that fall through to the next case without a `break`, `return`, `throw`, or `continue` statement.
+
+Empty case clauses are allowed to fall through, as this is a common pattern for grouping multiple cases.
+Intentional fallthrough can be indicated with a comment containing "falls through" (case-insensitive).
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+switch (value) {
+	case 1:
+		doSomething();
+	case 2:
+		doSomethingElse();
+		break;
+}
+```
+
+```ts
+switch (value) {
+	case 1:
+		if (condition) {
+			break;
+		}
+	case 2:
+		break;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+switch (value) {
+	case 1:
+		doSomething();
+		break;
+	case 2:
+		doSomethingElse();
+		break;
+}
+```
+
+```ts
+switch (value) {
+	case 1:
+	case 2:
+		doSomething();
+		break;
+}
+```
+
+```ts
+switch (value) {
+	case 1:
+		doSomething();
+	// falls through
+	case 2:
+		doSomethingElse();
+		break;
+}
+```
+
+```ts
+switch (value) {
+	case 1:
+		return first();
+	case 2:
+		return second();
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you rely heavily on intentional fallthrough in switch statements and prefer not to add comments, you may disable this rule.
+Some legacy codebases may use fallthrough patterns that would require extensive refactoring.
+
+## Further Reading
+
+- [MDN documentation on switch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="caseFallthroughs" />

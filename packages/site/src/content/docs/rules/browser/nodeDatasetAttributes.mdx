@@ -1,0 +1,58 @@
+---
+description: "Prefer using element.dataset over getAttribute/setAttribute for data-* attributes."
+title: "nodeDatasetAttributes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="nodeDatasetAttributes" />
+
+The `dataset` property provides a more convenient and cleaner API for working with `data-*` attributes on DOM elements.
+It automatically converts between kebab-case attribute names and camelCase property names, making the code more readable and less error-prone.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```js
+element.getAttribute("data-foo");
+element.setAttribute("data-foo", "bar");
+element.removeAttribute("data-foo");
+element.hasAttribute("data-foo");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```js
+element.dataset.foo;
+element.dataset.foo = "bar";
+delete element.dataset.foo;
+"foo" in element.dataset;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support very old browsers that don't have the `dataset` property (IE 10 and below), you may need to use the traditional attribute methods.
+For modern web applications, the `dataset` property is widely supported and preferred.
+
+## Further Reading
+
+- [MDN: `HTMLElement.dataset`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset)
+- [MDN: Using data attributes](https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="nodeDatasetAttributes" />

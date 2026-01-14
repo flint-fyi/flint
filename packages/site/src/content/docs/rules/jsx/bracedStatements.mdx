@@ -1,0 +1,65 @@
+---
+description: "Disallow unnecessary JSX curly braces around literals and JSX elements."
+title: "bracedStatements"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="bracedStatements" />
+
+Curly braces are necessary in JSX to embed JavaScript expressions.
+However, when wrapping simple string literals or JSX elements in curly braces, they add unnecessary visual clutter without providing value.
+Prefer using the content directly when possible for improved readability.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```jsx
+<div>{"Hello"}</div>
+<Component>{<span>Text</span>}</Component>
+<div>{<ChildComponent />}</div>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```jsx
+<div>Hello</div>
+<Component><span>Text</span></Component>
+<div><ChildComponent /></div>
+```
+
+</TabItem>
+</Tabs>
+
+Note that curly braces are still necessary for expressions, variables, and more complex JavaScript:
+
+```jsx
+<div>{variable}</div>
+<div>{someFunction()}</div>
+<div>{1 + 2}</div>
+```
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has a specific style guide that requires curly braces for consistency in certain contexts, you may choose not to enable this rule.
+However, most style guides prefer removing unnecessary braces for cleaner code.
+
+## Further Reading
+
+- [MDN: JSX in React](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks/React_getting_started#jsx)
+- [React Documentation: JSX In Depth](https://react.dev/learn/writing-markup-with-jsx)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="bracedStatements" />

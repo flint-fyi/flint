@@ -1,13 +1,15 @@
-import * as ts from "typescript";
+import { nullThrows } from "@flint.fyi/utils";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.js";
+import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports switch statements where the default clause is not last.",
 		id: "defaultCaseLast",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		defaultCaseShouldBeLast: {
@@ -24,10 +26,10 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				SwitchStatement: (node) => {
+				SwitchStatement: (node, { sourceFile }) => {
 					const clauses = node.caseBlock.clauses;
 					const defaultClauseIndex = clauses.findIndex(
-						(clause) => clause.kind === ts.SyntaxKind.DefaultClause,
+						(clause) => clause.kind === SyntaxKind.DefaultClause,
 					);
 
 					if (
@@ -37,14 +39,16 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					const defaultClause = clauses[defaultClauseIndex];
+					const defaultClause = nullThrows(
+						clauses[defaultClauseIndex],
+						"Default clause is expected to be present by prior length check",
+					);
 
 					context.report({
 						message: "defaultCaseShouldBeLast",
 						range: {
-							begin: defaultClause.getStart(context.sourceFile),
-							end:
-								defaultClause.getStart(context.sourceFile) + "default".length,
+							begin: defaultClause.getStart(sourceFile),
+							end: defaultClause.getStart(sourceFile) + "default".length,
 						},
 					});
 				},

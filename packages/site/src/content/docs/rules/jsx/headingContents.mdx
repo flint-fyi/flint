@@ -1,0 +1,66 @@
+---
+description: "Reports heading elements without accessible content."
+title: "headingContents"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="headingContents" />
+
+Heading elements (`h1` through `h6`) must have content that is accessible to screen readers.
+Empty headings provide no value and are misleading to search engine crawlers and users navigating with assistive technologies.
+
+This is required for WCAG 2.4.6 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<h1 />
+```
+
+```tsx
+<h2></h2>
+```
+
+```tsx
+<h3> </h3>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<h1>Heading Content</h1>
+```
+
+```tsx
+<h2>
+	<TextWrapper />
+</h2>
+```
+
+```tsx
+<h3 aria-label="Heading" />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you use a framework that automatically injects known good contents for heading elements, you can disable this rule.
+
+## Further Reading
+
+- [WCAG 2.4.6: Headings and Labels](https://www.w3.org/TR/UNDERSTANDING-WCAG20/navigation-mechanisms-descriptive.html)
+- [axe-core: empty-heading](https://dequeuniversity.com/rules/axe/3.2/empty-heading)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="headingContents" />

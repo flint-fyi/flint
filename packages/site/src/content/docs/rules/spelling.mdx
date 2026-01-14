@@ -1,0 +1,34 @@
+---
+description: "Spelling linting rules provided by Flint, powered by CSpell."
+title: "Spelling Plugin"
+---
+
+import { RulesTable } from "~/components/RulesTable.tsx";
+import PluginTop from "~/components/PluginTop.astro";
+
+<PluginTop pluginId="spelling" />
+
+See the [CSpell spell checker documentation](https://cspell.org) for more details on spell-checking code.
+
+## Presets
+
+### `logical`
+
+Rules that run CSpell to find likely spell-checking mistakes.
+
+```ts title="flint.config.ts"
+import { defineConfig, globs, spelling } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: globs.all,
+			rules: spelling.presets.logical,
+		},
+	],
+});
+```
+
+## Rules
+
+<RulesTable implementing plugin="spelling" />

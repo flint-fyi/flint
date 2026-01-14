@@ -1,2 +1,2 @@
-export { RuleTester } from "./RuleTester.js";
-export type * from "./types.js";
+export { RuleTester } from "./RuleTester.ts";
+export type * from "./types.ts";

@@ -1,0 +1,27 @@
+---
+import TeamBio, {
+	type Props as BioEntry,
+	type TeamBioWidth,
+} from "./TeamBio.astro";
+
+interface Props {
+	bios: BioEntry[];
+	width?: TeamBioWidth;
+}
+
+const { bios, width = "half" } = Astro.props;
+---
+
+<ul class="team-bio-list">
+	{bios.map((bio) => <TeamBio {...bio} width={width} />)}
+</ul>
+
+<style>
+	.team-bio-list {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 1.5rem;
+		padding: 1rem 0 0 0;
+	}
+</style>

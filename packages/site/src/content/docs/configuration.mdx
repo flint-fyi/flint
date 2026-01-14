@@ -3,9 +3,178 @@ description: "Configuring Flint from a config file."
 title: Configuration
 ---
 
-:::danger
-Flint is still very early stage and experimental.
-Not all features have been implemented.
-:::
+Linting with Flint must be configured by at least one `flint.config.*` configuration file, in the root of a repository to be linted.
+That file may be any extension recognized by your version of Node.js.
 
-Coming soon!
+Flint configs must default-export the result of calling the [`defineConfig`](#defineconfig) function imported from the `flint` package.
+`flint` also exports a [`globs`](#globs) object for common file globs, as well as objects for each of the [core plugins](/rules#core-plugins).
+
+## `defineConfig`
+
+Defines a new configuration for linting.
+It takes in an object with one required property, `use`:
+
+```ts twoslash title="flint.config.ts"
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: ts.files.all,
+			rules: ts.presets.logical,
+		},
+	],
+});
+```
+
+### `use`
+
+The only required object property to pass to `defineConfig` is `use`, an array of definitions containing two properties:
+
+- `files`: glob pattern(s) describing which file(s) to lint
+- `rules`: any number of rules to enable for those files
+
+#### `files`
+
+Any number of glob pattern(s) describing file(s) to lint.
+This can be a `string`, any level deep array of `string`s, or an object containing [`exclude` and `include`](#exclude-and-include).
+
+For example, this `files` selector matches all TypeScript test files by extension and in a directory:
+
+```ts twoslash title="flint.config.ts"
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: ["src/**/*.test.*.ts", "test/**/*.ts"],
+			rules: ts.presets.logical,
+		},
+	],
+});
+```
+
+See the [Node.js file system `glob` documentation](https://nodejs.org/api/fs.html#fspromisesglobpattern-options) for details on glob patterns.
+
+##### `exclude` and `include`
+
+In addition to plain `string`s, `files` selectors can also be objects with two properties:
+
+- `exclude`: glob pattern(s) to _not_ include in the files group
+- `include`: glob pattern(s) to include in the files group
+
+For example, this `files` selector matches all TypeScript source files that don't have a `*.test.*` extension:
+
+```ts twoslash title="flint.config.ts"
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: {
+				exclude: "**/*.test.*",
+				include: ts.files.all,
+			},
+			rules: ts.presets.logical,
+		},
+	],
+});
+```
+
+#### `rules`
+
+Any number of rule(s) to enable on the corresponding [`files`](#files).
+These may be arrays of rules, such as from presets exported by plugins, and/or calls to plugin rules themselves.
+
+For example, this `rules` entry enables all the recommended logical and stylistic TypeScript rules:
+
+```ts twoslash title="flint.config.ts"
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: ts.files.all,
+			rules: [ts.presets.logical, ts.presets.stylistic],
+		},
+	],
+});
+```
+
+##### Configuring Rules
+
+Rules can be configured or even disabled by calling to the `rules` method of their plugin.
+That method takes in an object where the keys are rule names and values are what to do with the rule:
+
+- `true`: enable it (if it wasn't already)
+- `false`: disable it (if it was previously enabled)
+- Object containing options: enable it with those options
+
+For example, this `rules` entry disables one rule and reconfigures another:
+
+```ts twoslash title="flint.config.ts"
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: ts.files.all,
+			rules: [
+				ts.presets.logical,
+				ts.presets.stylistic,
+				ts.rules({
+					debuggerStatements: false,
+					namespaceDeclarations: {
+						allowDeclarations: true,
+					},
+				}),
+			],
+		},
+	],
+});
+```
+
+## `globs`
+
+A helper object containing file selectors with dynamic computed values.
+Currently it contains only one selector, [`all`](#all).
+
+### `all`
+
+Includes all files previously selected by the configuration.
+
+For example, this config enables the [spelling plugin](/rules/spelling) on all files that are being linted, which includes multiple languages:
+
+```ts twoslash title="flint.config.ts"
+import { spelling } from "@flint.fyi/plugin-spelling";
+import { defineConfig, globs, md, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: md.files.all,
+			rules: md.presets.logical,
+		},
+		{
+			files: ts.files.all,
+			rules: [ts.presets.logical, ts.presets.stylistic],
+		},
+		{
+			files: globs.all,
+			rules: spelling.presets.logical,
+		},
+	],
+});
+```
+
+## Inline Directives
+
+You can also disable specific rules inline in your code using [comment directives](/directives).
+This is useful when you need to suppress a rule for a specific line, block, or file.
+
+### Workspaces
+
+:::danger
+Flint configuration workspaces are not yet implemented.
+See [flint-fyi/flint#64 🚀 Feature: Config file workspaces support](https://github.com/flint-fyi/flint/issues/64) for details.
+:::

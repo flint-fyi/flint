@@ -1,0 +1,78 @@
+---
+description: "Reports using await expressions inside loops."
+title: "loopAwaits"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="performance" rule="loopAwaits" />
+
+Using `await` inside a loop causes each iteration to wait for the previous iteration to complete before starting the next one.
+This sequential execution can significantly slow down your code when the awaited operations are independent and could be executed in parallel.
+
+Consider collecting promises in an array during the loop and then using `Promise.all()` to await all of them in parallel.
+This allows all the asynchronous operations to run concurrently, which is typically much faster than running them one at a time.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+async function processItems(items: string[]) {
+	for (const item of items) {
+		await fetch(`/api/${item}`);
+	}
+}
+```
+
+```ts
+async function updateRecords(ids: number[]) {
+	let i = 0;
+	while (i < ids.length) {
+		await database.update(ids[i]);
+		i += 1;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+async function processItems(items: string[]) {
+	const promises = items.map((item) => fetch(`/api/${item}`));
+	await Promise.all(promises);
+}
+```
+
+```ts
+async function updateRecords(ids: number[]) {
+	await Promise.all(ids.map((id) => database.update(id)));
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your asynchronous operations must be executed sequentially you may wish to disable this rule for those specific cases.
+For example, if each operation depends on the result of the previous one, or if you need to avoid overwhelming a rate-limited API, parallel calls may not be an option.
+
+## Further Reading
+
+- [MDN: Promise.all()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all)
+- [MDN: async function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
+- [MDN: await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="performance" ruleId="loopAwaits" />

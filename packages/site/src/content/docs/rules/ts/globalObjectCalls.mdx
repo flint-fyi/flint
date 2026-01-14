@@ -51,8 +51,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If your codebase redefines these objects, you likely will not want to enable this rule.
-Otherwise this rule should generally always be enabled, as calling these global objects as functions will always result in a runtime error.
+If your codebase redefines these objects and is guaranteed to run in an environment that allows that, you might not want to enable this rule.
+For example, if you target a legacy runtime with legacy non-standard JavaScript semantics, modern standard practices may not apply to you.
 
 ## Further Reading
 

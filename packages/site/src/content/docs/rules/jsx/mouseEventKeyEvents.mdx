@@ -1,0 +1,60 @@
+---
+description: "Reports mouse events without corresponding keyboard events."
+title: "mouseEventKeyEvents"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="mouseEventKeyEvents" />
+
+Mouse events should have keyboard equivalents for users who cannot use a mouse.
+This ensures that functionality is accessible to all users, such as those with limited hardware or personal disabilities.
+
+Specifically:
+
+- `onMouseOver` must be paired with `onFocus`
+- `onMouseOut` must be paired with `onBlur`
+
+This is required for WCAG 2.1.1 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<div onMouseOver={() => {}} />
+```
+
+```tsx
+<div onMouseOut={() => {}} />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div onMouseOver={() => {}} onFocus={() => {}} />
+```
+
+```tsx
+<div onMouseOut={() => {}} onBlur={() => {}} />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your application doesn't use mouse event handlers, or if you use a framework that automatically injects key event handlers for equivalent mouse event handlers, you can disable this rule.
+
+## Further Reading
+
+- [WCAG 2.1.1: Keyboard](https://www.w3.org/WAI/WCAG21/Understanding/keyboard)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="mouseEventKeyEvents" />

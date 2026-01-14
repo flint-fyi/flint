@@ -1,0 +1,69 @@
+---
+description: "Reports images without alternative text."
+title: "imageAltTexts"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="md" rule="imageAltTexts" />
+
+Providing alternative text for images is essential for both accessibility and SEO.
+Without alternative text, users who rely on screen readers or other assistive technologies won't be able to understand the content of images.
+Search engine crawlers are also unable to understand images without alt text or other labels.
+
+This rule helps catch cases where alternative text is missing or contains only whitespace.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```markdown
+![](sunset.png)
+```
+
+```markdown
+![ ](sunset.png)
+```
+
+```markdown
+![][ref]
+
+[ref]: sunset.png
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```markdown
+![A beautiful sunset](sunset.png)
+```
+
+```markdown
+![Company logo][logo]
+
+[logo]: logo.png
+```
+
+```markdown
+![Mountains and valleys](landscape.jpg)
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your images are automatically given alt text by frameworks, then this rule will report false positives.
+
+## Further Reading
+
+- [WebAIM: Alternative Text](https://webaim.org/techniques/alttext/)
+- [MD045 - Images should have alternate text](https://github.com/DavidAnson/markdownlint/blob/main/doc/md045.md)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="md" ruleId="imageAltTexts" />

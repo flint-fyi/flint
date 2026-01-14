@@ -83,8 +83,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-This rule should always be enabled.
-Reassigning a const variable is a runtime error in JavaScript and TypeScript, so this rule helps catch such issues during development.
+If your codebase relies on non-standard behavior that involves reassigning constant variables (which is highly discouraged), you might choose to disable this rule.
+For example, if you target a legacy runtime with non-standard JavaScript semantics, standard practices may not apply to you.
 
 ## Further Reading
 

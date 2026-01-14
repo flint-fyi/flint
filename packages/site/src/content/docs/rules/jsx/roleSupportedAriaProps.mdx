@@ -1,0 +1,69 @@
+---
+description: "Reports ARIA properties that are not supported by an element's role."
+title: "roleSupportedAriaProps"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="roleSupportedAriaProps" />
+
+Elements with ARIA roles should only use ARIA properties that are supported by that role.
+Each ARIA role has a specific set of supported properties defined in the WAI-ARIA specification.
+Using ARIA properties that are not supported by a role can confuse assistive technologies and lead to unexpected behavior.
+
+For example, the `checkbox` role supports properties like `aria-checked` and `aria-required`, but not `aria-selected`.
+Similarly, the `button` role supports `aria-pressed` and `aria-expanded`, but not `aria-checked`.
+
+This is required for WCAG 4.1.2 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<div role="button" aria-checked="true" />
+```
+
+```tsx
+<div role="link" aria-selected="true" />
+```
+
+```tsx
+<button aria-checked="false" />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div role="button" aria-pressed="true" />
+```
+
+```tsx
+<div role="checkbox" aria-checked="true" />
+```
+
+```tsx
+<button aria-pressed="true" />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you use a framework that automatically changes ARIA properties from custom invalid ones to correct roles, you might need to disable this rule.
+
+## Further Reading
+
+- [WCAG 4.1.2: Name, Role, Value](https://www.w3.org/WAI/WCAG21/Understanding/name-role-value)
+- [WAI-ARIA Roles](https://www.w3.org/TR/wai-aria-1.2/#role_definitions)
+- [WAI-ARIA States and Properties](https://www.w3.org/TR/wai-aria-1.2/#state_prop_def)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="roleSupportedAriaProps" />

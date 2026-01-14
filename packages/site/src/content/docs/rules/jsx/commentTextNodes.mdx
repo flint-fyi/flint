@@ -1,0 +1,79 @@
+---
+description: "Reports JSX text nodes that contain comment syntax but are rendered as text."
+title: "commentTextNodes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="commentTextNodes" />
+
+In JSX, text that looks like comments (`//` or `/* */`) is rendered as literal text unless it's wrapped in braces.
+This can lead to confusion where developers think they're adding comments, but the text actually appears in the rendered output.
+
+To add actual comments in JSX, wrap them in braces: `{/* comment */}` or `{// comment}`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<div>// This looks like a comment but will be rendered</div>
+```
+
+```tsx
+<span>/* This also looks like a comment */</span>
+```
+
+```tsx
+<p>// comment text</p>
+```
+
+```tsx
+<div>Some text // followed by comment-like syntax</div>
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div>{/* This is an actual comment */}</div>
+```
+
+```tsx
+<div>
+	{/* Comment inside expression */}
+	Regular text content
+</div>
+```
+
+```tsx
+<span>
+	{
+		// Single line comment
+	}
+</span>
+```
+
+```tsx
+<div>Regular text without comment syntax</div>
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you intentionally want to display text that looks like comments (for example, in a code tutorial or documentation site), you may want to disable this rule for those specific files.
+
+## Further Reading
+
+- [React: JSX In Depth - Comments](https://react.dev/learn/writing-markup-with-jsx#jsx-is-stricter-than-html)
+- [MDN: JSX](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks/React_getting_started#jsx)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="commentTextNodes" />

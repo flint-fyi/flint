@@ -1,7 +1,7 @@
-import { FileReport } from "@flint.fyi/core";
+import type { FileReport } from "@flint.fyi/core";
 import * as fs from "node:fs";
 
-import { Presenter } from "../../presenters/types.js";
+import type { Presenter } from "../../presenters/types.ts";
 
 export async function printFile(
 	filePath: string,

@@ -1,0 +1,64 @@
+---
+description: "Reports autoFocus props that are not set to false."
+title: "autoFocusProps"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="autoFocusProps" />
+
+Auto-focusing elements automatically grab the user's focus, which is generally disruptive behavior.
+It can be particularly disruptive to users who rely on screen readers and/or keyboard navigation.
+
+Consider letting users focus elements manually instead.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<button autoFocus />
+```
+
+```tsx
+<button autoFocus="true" />
+```
+
+```tsx
+<input autoFocus={true} />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<button />
+```
+
+```tsx
+<button autoFocus="false" />
+```
+
+```tsx
+<button autoFocus={false} />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you have specific use cases where auto-focus is necessary for user experience (such as modal dialogs), you may want to disable this rule for those specific cases.
+Auto-focusing elements should only sparingly be used when explicitly triggered by users.
+
+## Further Reading
+
+- [WHATWG HTML Standard: The autofocus attribute](https://html.spec.whatwg.org/multipage/interaction.html#attr-fe-autofocus)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="autoFocusProps" />

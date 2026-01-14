@@ -1,0 +1,97 @@
+---
+description: "Reports using `.apply()` `.call()` or  when the context (`this` value) provides no benefit."
+title: "functionCurryingRedundancy"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="functionCurryingRedundancy" />
+
+Using `.apply()` `.call()` or with `null` or `undefined` as the context (first argument) provides no benefit over calling the function directly.
+Doing so adds unnecessary complexity and reduces code readability.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function add(a: number, b: number) {
+	return a + b;
+}
+const result = add.call(undefined, 1, 2);
+```
+
+```ts
+function multiply(x: number, y: number) {
+	return x * y;
+}
+const value = multiply.call(null, 5, 3);
+```
+
+```ts
+const callback = (message: string) => message.toUpperCase();
+callback.apply(undefined, ["hello"]);
+```
+
+```ts
+const compute = (a: number, b: number) => a + b;
+compute.apply(null, [10, 20]);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function add(a: number, b: number) {
+	return a + b;
+}
+const result = add(1, 2);
+```
+
+```ts
+const callback = (message: string) => message.toUpperCase();
+callback("hello");
+```
+
+```ts
+// Using .call() with a meaningful context
+const obj = { value: 10 };
+function getValue() {
+	return this.value;
+}
+const contextResult = getValue.call(obj);
+```
+
+```ts
+// Using .apply() to pass an array of arguments with context
+function greet(this: { name: string }, greeting: string) {
+	return `${greeting}, ${this.name}!`;
+}
+const person = { name: "Alice" };
+greet.apply(person, ["Hello"]);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a specific coding pattern that requires explicit use of `.apply()` `.call()` or for consistency across a large codebase, even when the context is `null` or `undefined`, you might choose to disable this rule.
+However, in most cases, direct function calls improve code clarity and maintainability.
+
+## Further Reading
+
+- [MDN: Function.prototype.apply()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
+- [MDN: Function.prototype.call()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="functionCurryingRedundancy" />

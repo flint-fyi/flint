@@ -1,72 +1,39 @@
-import {
-	LanguageFileDefinition,
-	NormalizedReport,
-	RuleReport,
-} from "@flint.fyi/core";
-import remarkParse from "remark-parse";
-import { unified } from "unified";
+import type { FileDiskData, LanguageFileDefinition } from "@flint.fyi/core";
+import { fromMarkdown } from "mdast-util-from-markdown";
+import { gfmFromMarkdown } from "mdast-util-gfm";
+import { gfm } from "micromark-extension-gfm";
 import { visit } from "unist-util-visit";
-import { VFile } from "vfile";
-import { location } from "vfile-location";
 
-// Eventually, it might make sense to use a native speed Markdown parser...
-// However, the remark ecosystem is quite extensive and well-supported.
-// It'll be a while before we can replace it with a native parser.
-export function createMarkdownFile(
-	filePathAbsolute: string,
-	sourceText: string,
-) {
-	const virtualFile = new VFile({
-		path: filePathAbsolute,
-		value: sourceText,
+import type { MarkdownFileServices } from "./language.ts";
+import type { MarkdownNodesByName } from "./nodes.ts";
+
+// Eventually, it might make sense to use markdown-rs...
+// However, there aren't currently JS bindings, so
+// it'll be a while before we can replace it with a native parser.
+// See the discussion in https://github.com/flint-fyi/flint/issues/1043.
+export function createMarkdownFile(data: FileDiskData) {
+	const root = fromMarkdown(data.sourceText, {
+		extensions: [gfm()],
+		mdastExtensions: [gfmFromMarkdown()],
 	});
-	const fileLocation = location(virtualFile);
-	const root = unified().use(remarkParse).parse(virtualFile);
 
-	const languageFile: LanguageFileDefinition = {
-		async runRule(rule, options) {
-			const reports: NormalizedReport[] = [];
-
-			const context = {
-				report: (report: RuleReport) => {
-					// We can assume these always exist.
-					/* eslint-disable @typescript-eslint/no-non-null-assertion */
-					const positionBegin = fileLocation.toPoint(report.range.begin)!;
-					const positionEnd = fileLocation.toPoint(report.range.end)!;
-					/* eslint-enable @typescript-eslint/no-non-null-assertion */
-
-					reports.push({
-						...report,
-						message: rule.messages[report.message],
-						range: {
-							begin: {
-								column: positionBegin.column,
-								line: positionEnd.line,
-								raw: report.range.begin,
-							},
-							end: {
-								column: positionEnd.column,
-								line: positionEnd.line,
-								raw: report.range.end,
-							},
-						},
-					});
-				},
-				root,
-			};
-
-			const runtime = await rule.setup(context, options);
-
-			if (!runtime?.visitors) {
-				return reports;
+	const languageFile: LanguageFileDefinition<
+		MarkdownNodesByName,
+		MarkdownFileServices
+	> = {
+		about: data,
+		runVisitors(options, runtime) {
+			if (!runtime.visitors) {
+				return;
 			}
 
 			const { visitors } = runtime;
-			visit(root, (node) => {
-				visitors[node.type]?.(node);
-			});
+			const fileServices = { options, root };
 
-			return reports;
+			visit(root, (node) => {
+				// @ts-expect-error -- This should work...?
+				visitors[node.type]?.(node, fileServices);
+			});
 		},
 	};
 

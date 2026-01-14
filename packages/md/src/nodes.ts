@@ -1,6 +1,5 @@
 import type * as mdast from "mdast";
-
-import { Point, Position } from "unist";
+import type { Point, Position } from "unist";
 
 export interface MarkdownNodesByName extends RootContentMapWithChildren {
 	root: WithPosition<mdast.Root>;

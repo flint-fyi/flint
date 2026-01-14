@@ -1,0 +1,67 @@
+---
+description: "Reports non-interactive elements with positive or zero tabIndex values."
+title: "nonInteractiveElementTabIndexes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="nonInteractiveElementTabIndexes" />
+
+Tab key navigation should be limited to interactive elements.
+Adding `tabIndex` to non-interactive elements creates unnecessary stops in the tab order and can confuse users relying on keyboard navigation.
+
+Non-interactive elements can use `tabIndex="-1"` if they need to be programmatically focused, but should not be in the natural tab order.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<div tabIndex="0" />
+```
+
+```tsx
+<article tabIndex={0} />
+```
+
+```tsx
+<div role="article" tabIndex="0" />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div />
+```
+
+```tsx
+<div tabIndex="-1" />
+```
+
+```tsx
+<button tabIndex="0" />
+```
+
+```tsx
+<div role="button" tabIndex="0" />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you have specific requirements for keyboard navigation that require non-interactive elements to be in the tab order, you may need to disable this rule.
+
+## Further Reading
+
+- [WCAG 2.4.3 - Focus Order](https://www.w3.org/WAI/WCAG21/Understanding/focus-order)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="nonInteractiveElementTabIndexes" />

@@ -1,0 +1,62 @@
+---
+description: "Reports links with empty URLs or only empty fragments."
+title: "linkContents"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="md" rule="linkContents" />
+
+Markdown syntax can make it difficult to easily see that you've forgotten to give a link a destination.
+This is especially true when writing prose in Markdown, where you may intend to create a link but leave the destination for later and then forget to go back and add it.
+A link with an empty URL or only an empty fragment (`#`) results in broken or non-functional links.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```markdown
+[Flint]()
+```
+
+```markdown
+[Skip to Content](#)
+```
+
+```markdown
+[Link text]()
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```markdown
+[Flint](https://flint.fyi)
+```
+
+```markdown
+[Skip to Content](#content)
+```
+
+```markdown
+[Link](./page.html)
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you intentionally use empty link URLs as placeholders and have a framework or other workflow that always fills them in later, you might want to disable this rule.
+
+## Further Reading
+
+- [Markdown Links Syntax](https://www.markdownguide.org/basic-syntax/#links)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="md" ruleId="linkContents" />

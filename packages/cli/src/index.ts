@@ -1,1 +1,1 @@
-export { runCli } from "./runCli.js";
+export { runCli } from "./runCli.ts";

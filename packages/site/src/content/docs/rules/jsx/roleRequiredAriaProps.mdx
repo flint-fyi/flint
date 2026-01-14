@@ -1,0 +1,71 @@
+---
+description: "Reports ARIA roles missing their required ARIA properties."
+title: "roleRequiredAriaProps"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="roleRequiredAriaProps" />
+
+ARIA roles define how elements are exposed to assistive technologies like screen readers.
+Some roles require specific ARIA properties to function correctly and provide meaningful information to users.
+Omitting these required properties can result in incomplete or confusing experiences for users of assistive technologies.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<div role="checkbox" />
+```
+
+```tsx
+<div role="slider" aria-valuenow="5" />
+```
+
+```tsx
+<span role="combobox" />
+```
+
+```tsx
+<div role="heading" />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div role="checkbox" aria-checked="false" />
+```
+
+```tsx
+<div role="slider" aria-valuenow="5" aria-valuemax="10" aria-valuemin="0" />
+```
+
+```tsx
+<span role="combobox" aria-controls="listbox" aria-expanded="false" />
+```
+
+```tsx
+<div role="heading" aria-level="2" />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you are using a custom framework that populates valid ARIA property roles for you, you might not need this rule.
+
+## Further Reading
+
+- [WAI-ARIA Roles Model](https://www.w3.org/TR/wai-aria-1.2/#roles)
+- [ARIA Required States and Properties](https://www.w3.org/TR/wai-aria-1.2/#requiredState)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="roleRequiredAriaProps" />

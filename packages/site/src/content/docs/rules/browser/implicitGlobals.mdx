@@ -1,0 +1,84 @@
+---
+description: "Prevent implicit global variable declarations in browser scripts."
+title: "implicitGlobals"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="implicitGlobals" />
+
+In browser scripts (non-module code), top-level `var` declarations and function declarations create properties on the global `window` object.
+This can lead to unexpected behavior and naming conflicts with other scripts loaded in the same page.
+
+This rule flags top-level `var` declarations and function declarations in non-module scripts.
+It encourages developers to either use modules (with `import`/`export`), use `let` or `const` declarations (which don't create globals), or explicitly assign to `window` if global access is truly needed.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```js
+var globalCounter = 0;
+
+function incrementCounter() {
+	globalCounter++;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```js
+// Use let or const - they don't create window properties
+let globalCounter = 0;
+
+function incrementCounter() {
+	globalCounter++;
+}
+```
+
+```js
+// Or use a module with export
+export const globalCounter = 0;
+
+export function incrementCounter() {
+	// ...
+}
+```
+
+```js
+// Or explicitly assign to window if truly needed
+window.globalCounter = 0;
+
+window.incrementCounter = function () {
+	window.globalCounter++;
+};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you're working with legacy non-module browser code where globals are intentional and there's no risk of naming conflicts, you might disable this rule.
+For modern applications, prefer using modules and avoiding implicit globals.
+
+## Further Reading
+
+- [MDN: JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
+- [MDN: `var`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/var)
+- [MDN: `let`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let)
+- [MDN: `const`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="implicitGlobals" />

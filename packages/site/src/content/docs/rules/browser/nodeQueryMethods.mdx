@@ -1,0 +1,82 @@
+---
+description: "Prefer modern querySelector and querySelectorAll over legacy DOM query methods."
+title: "nodeQueryMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="nodeQueryMethods" />
+
+The legacy DOM query methods `getElementById`, `getElementsByClassName`, `getElementsByTagName`, and `getElementsByTagNameNS` are less flexible and consistent than the modern `querySelector` and `querySelectorAll` methods.
+The querySelector methods use CSS selectors, which are more powerful, widely understood, and consistent with other web APIs.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```typescript
+const element = document.getElementById("myId");
+```
+
+```typescript
+const elements = document.getElementsByClassName("myClass");
+```
+
+```typescript
+const divs = document.getElementsByTagName("div");
+```
+
+```typescript
+const elements = document.getElementsByTagNameNS(
+	"http://www.w3.org/1999/xhtml",
+	"div",
+);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```typescript
+const element = document.querySelector("#myId");
+```
+
+```typescript
+const elements = document.querySelectorAll(".myClass");
+```
+
+```typescript
+const divs = document.querySelectorAll("div");
+```
+
+```typescript
+// For namespaced elements, use attribute selectors or specific namespaced query methods
+const svgElements = document.querySelectorAll('svg, [xmlns*="svg"]');
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project needs to support very old browsers that don't have querySelector support (Internet Explorer 7 and below), you might not be able to use this rule.
+However, querySelector has been widely supported since Internet Explorer 8 and is part of the modern web platform.
+
+## Further Reading
+
+- [MDN: Document.querySelector()](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector)
+- [MDN: Document.querySelectorAll()](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll)
+- [MDN: Element.querySelector()](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector)
+- [MDN: Element.querySelectorAll()](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="nodeQueryMethods" />

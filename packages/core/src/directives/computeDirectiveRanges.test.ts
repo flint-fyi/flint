@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { computeDirectiveRanges } from "./computeDirectiveRanges.js";
+import { computeDirectiveRanges } from "./computeDirectiveRanges.ts";
 
 function createDirectiveRange(forLine: number) {
 	return {

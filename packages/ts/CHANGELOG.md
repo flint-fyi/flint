@@ -1,5 +1,65 @@
 # @flint/ts
 
+## 0.15.1
+
+### Patch Changes
+
+- f1a6f9e: fix: support dynamic and type imports in reference collection
+- 602c75c: chore: rework packaging with tsdown
+- Updated dependencies [ff52cb1]
+- Updated dependencies [602c75c]
+  - @flint.fyi/core@0.18.1
+
+## 0.15.0
+
+### Minor Changes
+
+- 483ee56: feat(core): export getPositionOfColumnAndLine utility
+  feat(ts): allow passing loose TS-based diagnostics to convertTypeScriptDiagnosticToLanguageFileDiagnostic
+- 59a78c0: feat(ts): export reusable TS-based language preparation util
+- 618f259: feat(ts): decouple parsing and extracion of `// flint-*` directives in TS files
+- 52f8cc4: feat(ts): export cache impact collection and TS diangostic conversion utils
+- 46f2d0e: feat(ts): \[withStatements\] add rule
+
+### Patch Changes
+
+- d99170f: fix: add missing ("phantom") dependencies to package.jsons
+- 3617e4f: chore: pass services to rule visitors
+- 3117eaf: feat: add optional async teardown() for rules
+- Updated dependencies [483ee56]
+- Updated dependencies [d99170f]
+- Updated dependencies [3617e4f]
+- Updated dependencies [f37f0d0]
+- Updated dependencies [5e23e96]
+- Updated dependencies [3117eaf]
+  - @flint.fyi/core@0.17.0
+  - @flint.fyi/rule-tester@0.15.0
+
+## 0.14.6
+
+### Patch Changes
+
+- b789918: fix(ts): [forDirections] allow multi-part conditions
+- Updated dependencies [1bbae2e]
+- Updated dependencies [11abdff]
+  - @flint.fyi/core@0.16.0
+
+## 0.14.5
+
+### Patch Changes
+
+- 7e21021: fix(ts): [chainedAssignments] allow non-assignment right-side operators
+
+## 0.14.4
+
+### Patch Changes
+
+- 158b542: expose \`program\` in TS rules context
+- Updated dependencies [3d19082]
+- Updated dependencies [a3f9043]
+  - @flint.fyi/core@0.15.1
+  - @flint.fyi/rule-tester@0.14.2
+
 ## 0.14.3
 
 ### Patch Changes

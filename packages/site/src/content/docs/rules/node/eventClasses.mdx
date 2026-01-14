@@ -1,0 +1,58 @@
+---
+description: "Prefer EventTarget over EventEmitter for cross-platform compatibility."
+title: "eventClasses"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="eventClasses" />
+
+While `EventEmitter` is only available in Node.js, `EventTarget` is available in browsers, Deno, and modern Node.js (v14.5+).
+Using `EventTarget` makes code more cross-platform friendly and can reduce bundle size in built packages.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { EventEmitter } from "events";
+
+class MyEmitter extends EventEmitter {}
+
+const emitter = new EventEmitter();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class MyTarget extends EventTarget {}
+
+const target = new EventTarget();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your code exclusively targets Node.js environments and you specifically need EventEmitter's API features that are not available in EventTarget (for example, `prependListener`, `once` returning a cleanup function, or error events with special handling), you might choose not to enable this rule.
+
+## Further Reading
+
+- [MDN: EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget)
+- [Node.js: EventTarget and Event API](https://nodejs.org/api/events.html#eventtarget-and-event-api)
+- [Node.js: Differences between EventEmitter and EventTarget](https://nodejs.org/api/events.html#eventtarget-and-event-api)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="eventClasses" />

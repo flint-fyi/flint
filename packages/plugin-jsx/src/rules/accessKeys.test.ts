@@ -1,5 +1,5 @@
-import rule from "./accessKeys.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./accessKeys.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -7,7 +7,6 @@ ruleTester.describe(rule, {
 			code: `
 <button accessKey="h">Help</button>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <button accessKey="h">Help</button>
         ~~~~~~~~~
@@ -18,7 +17,6 @@ ruleTester.describe(rule, {
 			code: `
 <div accesskey="x">Something</div>
 `,
-			fileName: "file.tsx",
 			snapshot: `
 <div accesskey="x">Something</div>
      ~~~~~~~~~
@@ -27,11 +25,10 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<button>Click me</button>`, fileName: "file.tsx" },
+		{ code: `<button>Click me</button>` },
 		{
 			code: `<div className="accessKey">not an attribute</div>`,
-			fileName: "file.tsx",
 		},
-		{ code: `const a = <span />;`, fileName: "file.tsx" },
+		{ code: `const a = <span />;` },
 	],
 });

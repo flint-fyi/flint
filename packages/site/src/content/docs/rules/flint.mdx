@@ -1,16 +1,12 @@
 ---
-description: "CSpell linting rules provided by Flint."
-title: "About"
+description: "Flint plugin linting rules provided by Flint. Meta!"
+title: "Flint Plugin"
 ---
 
-import { PackageManagers } from "starlight-package-managers";
-
 import { RulesTable } from "~/components/RulesTable.tsx";
+import PluginTop from "~/components/PluginTop.astro";
 
-Flint provides a lint plugin for developing Flint plugins and rules.
-It generally runs on JavaScript and TypeScript files alongside rules from the [TypeScript plugin](/rules/ts).
-
-<PackageManagers type="install" pkg="@flint.fyi/plugin-flint" />
+<PluginTop pluginId="flint" />
 
 ## Presets
 
@@ -19,7 +15,8 @@ It generally runs on JavaScript and TypeScript files alongside rules from the [T
 Rules that find bugs and enforce good practices for Flint plugins and rules.
 
 ```ts title="flint.config.ts"
-import { defineConfig, flint, ts } from "flint";
+import { flint } from "@flint.fyi/plugin-flint";
+import { defineConfig, ts } from "flint";
 
 export default defineConfig({
 	use: [
@@ -31,8 +28,45 @@ export default defineConfig({
 });
 ```
 
+### `logicalStrict`
+
+Additional logical rules that enforce best practices which are not always straightforward to implement.
+These rules are recommended for projects where a majority of developers are experienced with both JavaScript/TypeScript and writing plugins for a linter.
+
+```ts title="flint.config.ts"
+import { flint } from "@flint.fyi/plugin-flint";
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: ts.files.all,
+			rules: flint.presets.logicalStrict,
+		},
+	],
+});
+```
+
+This preset's rules are a superset of those in [`logical`](#logical).
+
+### `stylistic`
+
+Rules that enforce consistent styling and best stylistic practices for most-to-all Flint plugins.
+
+```ts title="flint.config.ts"
+import { flint } from "@flint.fyi/plugin-flint";
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: ts.files.all,
+			rules: flint.presets.stylistic,
+		},
+	],
+});
+```
+
 ## Rules
 
 <RulesTable implementing plugin="flint" />
-
-More rules will be noted here pending [flint#343 📝 Documentation: Add comparisons for eslint-plugin-eslint-plugin](https://github.com/JoshuaKGoldberg/flint/issues/343).

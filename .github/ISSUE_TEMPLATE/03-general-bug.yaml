@@ -1,0 +1,37 @@
+body:
+  - attributes:
+      description: If any of these required steps are not taken, we may not be able to review your issue. Help us to help you!
+      label: Bug Report Checklist
+      options:
+        - label: I am using the latest published version of all Flint packages.
+          required: true
+        - label: I have [searched for related issues](https://github.com/flint-fyi/flint/issues?q=is%3Aissue) and found none that matched my issue.
+          required: true
+    type: checkboxes
+  - attributes:
+      description: What did you expect to happen?
+      label: Expected
+    type: textarea
+    validations:
+      required: true
+  - attributes:
+      description: What happened instead?
+      label: Actual
+    id: actual
+    type: textarea
+    validations:
+      required: true
+  - attributes:
+      description: Any additional info you'd like to provide.
+      label: Additional Info
+    id: additional_info
+    type: textarea
+
+description: Report a non-rule-specific bug with Flint, its integrations, or its plugins
+
+labels:
+  - "type: bug"
+
+name: 🐛 General Bug
+
+title: "🐛 Bug: <short description of the bug>"

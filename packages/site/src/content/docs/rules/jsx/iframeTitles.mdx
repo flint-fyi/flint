@@ -1,0 +1,69 @@
+---
+description: "Reports <iframe> elements without a title prop."
+title: "iframeTitles"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="iframeTitles" />
+
+The `title` attribute on `<iframe>` elements provides a label that describes the iframe's content to screen reader users.
+Without it, users may have difficulty understanding the purpose of the iframe.
+
+This is required for WCAG 2.4.1 and 4.1.2 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<iframe />
+```
+
+```tsx
+<iframe src="https://example.com" />
+```
+
+```tsx
+<iframe title="" />
+```
+
+```tsx
+<iframe title={undefined} />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<iframe title="This is a unique title" />
+```
+
+```tsx
+<iframe title={uniqueTitle} />
+```
+
+```tsx
+<iframe title="Video player" src="video.mp4" />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you're not using iframes in your application, or your iframes are implicitly handled by a framework, you can disable this rule.
+
+## Further Reading
+
+- [WCAG 2.4.1: Bypass Blocks](https://www.w3.org/WAI/WCAG21/Understanding/bypass-blocks)
+- [WCAG 4.1.2: Name, Role, Value](https://www.w3.org/WAI/WCAG21/Understanding/name-role-value)
+- [axe-core: frame-title](https://dequeuniversity.com/rules/axe/3.2/frame-title)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="iframeTitles" />

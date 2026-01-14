@@ -1,10 +1,10 @@
 {
 	"name": "@flint.fyi/core",
-	"version": "0.15.0",
+	"version": "0.18.1",
 	"description": "[Experimental] Core building blocks for Flint.",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/JoshuaKGoldberg/flint",
+		"url": "git+https://github.com/flint-fyi/flint.git",
 		"directory": "packages/core"
 	},
 	"license": "MIT",
@@ -12,24 +12,40 @@
 		"name": "JoshuaKGoldberg",
 		"email": "npm@joshuakgoldberg.com"
 	},
+	"sideEffects": false,
 	"type": "module",
-	"main": "./lib/index.js",
+	"exports": {
+		".": {
+			"@flint.fyi/source": "./src/index.ts",
+			"default": "./lib/index.js"
+		}
+	},
+	"files": [
+		"lib/",
+		"!lib/**/*.map"
+	],
+	"scripts": {
+		"test": "vitest --typecheck --project core"
+	},
 	"dependencies": {
-		"@flint.fyi/utils": "workspace:",
+		"@flint.fyi/utils": "workspace:^",
 		"cached-factory": "^0.1.0",
 		"debug-for-file": "^0.2.0",
 		"omit-empty": "^1.0.0",
-		"prettier": "3.6.1",
-		"zod": "^4.0.0"
+		"zod": "^4.2.1"
 	},
 	"devDependencies": {
-		"@types/omit-empty": "1.0.4"
+		"@types/omit-empty": "1.0.4",
+		"tsdown": "0.19.0-beta.2",
+		"vitest": "4.0.15"
 	},
 	"engines": {
 		"node": ">=24.0.0"
 	},
 	"publishConfig": {
 		"access": "public",
-		"provenance": true
+		"exports": {
+			".": "./lib/index.js"
+		}
 	}
 }

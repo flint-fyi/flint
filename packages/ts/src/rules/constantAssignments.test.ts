@@ -1,5 +1,5 @@
-import rule from "./constantAssignments.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./constantAssignments.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

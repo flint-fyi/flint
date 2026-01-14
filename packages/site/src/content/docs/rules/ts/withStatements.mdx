@@ -1,0 +1,55 @@
+---
+description: "Debugger statements should not be used in production code."
+title: "withStatements"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="withStatements" />
+
+`with` statements are deprecated, unreliable, and difficult to reason about.
+They are problematic because they add members of an object to the current scope, making it impossible to reliably know what a variable inside the block actually refers to.
+If an object doesn't have an expected variable, you'll end up modifying a global instead of the expected property.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+with (container.property) {
+	value = true;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+let property = container.property;
+property.value = true;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase relies on non-standard behavior that involves with statements (which is highly discouraged), you might choose to disable this rule.
+For example, if you target a legacy runtime with non-standard JavaScript semantics, standard practices may not apply to you.
+
+## Further Reading
+
+- [MDN documentation on `with` statements](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/with)
+- [with Statement Considered Harmful (archive)](https://web.archive.org/web/20200717110117/https://yuiblog.com/blog/2006/04/11/with-statement-considered-harmful/)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="withStatements" />

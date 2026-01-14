@@ -1,0 +1,63 @@
+---
+description: "Prefer modern Buffer allocation methods over the deprecated Buffer constructor."
+title: "bufferAllocators"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="node" rule="bufferAllocators" />
+
+The `new Buffer()` constructor has been deprecated since Node.js 4 due to security and usability concerns.
+Modern alternatives provide safer and more explicit ways to create buffers.
+
+Use `Buffer.from()` for creating a Buffer from existing data (strings, arrays, or ArrayBuffers).
+Use `Buffer.alloc()` for creating a Buffer of a specific size with zero-filled memory.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const buffer = new Buffer("7468697320697320612074c3a97374", "hex");
+
+const buffer = new Buffer([0x62, 0x75, 0x66, 0x66, 0x65, 0x72]);
+
+const buffer = new Buffer(10);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const buffer = Buffer.from("7468697320697320612074c3a97374", "hex");
+
+const buffer = Buffer.from([0x62, 0x75, 0x66, 0x66, 0x65, 0x72]);
+
+const buffer = Buffer.alloc(10);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are working with legacy code that specifically requires the old Buffer constructor (which is highly unlikely in modern codebases), you might choose not to enable this rule.
+
+## Further Reading
+
+- [Node.js: Buffer class](https://nodejs.org/api/buffer.html)
+- [Node.js: Buffer.from()](https://nodejs.org/api/buffer.html#static-method-bufferfromarray)
+- [Node.js: Buffer.alloc()](https://nodejs.org/api/buffer.html#static-method-bufferallocsize-fill-encoding)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="node" ruleId="bufferAllocators" />

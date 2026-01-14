@@ -1,0 +1,75 @@
+---
+description: "Reports interactive elements with non-interactive ARIA roles."
+title: "interactiveElementRoles"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="interactiveElementRoles" />
+
+Interactive HTML elements such as `<button>` and `<a>` are given interactions such as <kbd>Tab</kbd> focus by browsers.
+Giving an interactive HTML element a non-interactive role will remove those interactions, which causes accessibility issues on pages that do so.
+Preserve the native element behavior or use a different native element instead.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<button role="article" />
+```
+
+```tsx
+<a role="img" />
+```
+
+```tsx
+<input role="navigation" />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div role="article" />
+```
+
+```tsx
+<img alt="description" />
+```
+
+```tsx
+<nav>
+	<a href="/" />
+</nav>
+```
+
+```tsx
+<button />
+```
+
+```tsx
+<a href="/" />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you are using a framework that intentionally removes native browser interactions, you can disable this rule.
+However, removing native browser interactions is strongly discouraged as it harms accessibility.
+It is recommended to preserve native interactive element behaviors.
+
+## Further Reading
+
+- [WCAG 4.1.2 - Name, Role, Value](https://www.w3.org/WAI/WCAG21/Understanding/name-role-value)
+- [WAI-ARIA Roles](https://www.w3.org/TR/wai-aria-1.1/#usage_intro)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="interactiveElementRoles" />

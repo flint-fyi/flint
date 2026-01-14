@@ -1,5 +1,5 @@
-import { ruleTester } from "./ruleTester.js";
-import rule from "./variableDeletions.js";
+import { ruleTester } from "./ruleTester.ts";
+import rule from "./variableDeletions.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

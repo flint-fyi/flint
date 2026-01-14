@@ -1,0 +1,93 @@
+---
+description: "Reports ARIA properties with invalid value types."
+title: "ariaPropTypes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="ariaPropTypes" />
+
+ARIA properties have specific value types defined in the WAI-ARIA specification.
+Each property expects values of a particular type, such as boolean, integer, token, or string.
+Providing values that don't match the expected type can cause assistive technologies to ignore the property or behave unexpectedly.
+
+Common value types include:
+
+- **boolean**: `true` or `false` (e.g., `aria-disabled`, `aria-hidden`)
+- **tristate**: `true`, `false`, or `mixed` (e.g., `aria-checked`, `aria-pressed`)
+- **integer**: whole numbers (e.g., `aria-level`, `aria-posinset`)
+- **number**: numeric values (e.g., `aria-valuemax`, `aria-valuemin`)
+- **token**: specific predefined values (e.g., `aria-live`, `aria-orientation`)
+- **string**: any text value (e.g., `aria-label`, `aria-placeholder`)
+- **ID reference**: ID of another element (e.g., `aria-activedescendant`)
+- **ID list**: space-separated list of IDs (e.g., `aria-controls`, `aria-labelledby`)
+
+This is required for WCAG 4.1.2 compliance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<div aria-hidden="yes" />
+```
+
+```tsx
+<input aria-checked="1" />
+```
+
+```tsx
+<div aria-level="low" />
+```
+
+```tsx
+<button aria-pressed="yes" />
+```
+
+```tsx
+<div aria-autocomplete="invalid" />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div aria-hidden="true" />
+```
+
+```tsx
+<input aria-checked="true" />
+```
+
+```tsx
+<div aria-level="1" />
+```
+
+```tsx
+<button aria-pressed="false" />
+```
+
+```tsx
+<div aria-autocomplete="inline" />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you are using a framework that automatically transforms specific invalid property values to match the ARIA specification, this rule might not be useful for you.
+
+## Further Reading
+
+- [WCAG 4.1.2: Name, Role, Value](https://www.w3.org/WAI/WCAG21/Understanding/name-role-value)
+- [WAI-ARIA States and Properties](https://www.w3.org/TR/wai-aria-1.2/#state_prop_def)
+- [MDN: ARIA attributes](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="ariaPropTypes" />

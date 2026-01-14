@@ -1,12 +1,14 @@
-import { CommentDirectiveWithinFile } from "../types/directives.js";
-import { createSelectionMatcher } from "./createSelectionMatcher.js";
+import { nullThrows } from "@flint.fyi/utils";
+
+import type { CommentDirectiveWithinFile } from "../types/directives.ts";
+import { createSelectionMatcher } from "./createSelectionMatcher.ts";
 
 export interface RangedSelection {
 	lines: RangedSelectionLines;
 
 	// TODO: There's got to be a better way.
 	// Maybe an existing common one like minimatch?
-	// https://github.com/JoshuaKGoldberg/flint/issues/245
+	// https://github.com/flint-fyi/flint/issues/245
 	selections: RegExp[];
 }
 
@@ -23,7 +25,10 @@ export function computeDirectiveRanges(
 	}
 
 	if (directives.length === 1) {
-		const [directive] = directives;
+		const directive = nullThrows(
+			directives[0],
+			"Directive is expected to be present by previous length check",
+		);
 		switch (directive.type) {
 			case "disable-lines-begin":
 				return [
@@ -49,13 +54,16 @@ export function computeDirectiveRanges(
 		}
 	}
 
-	const directivesSorted = directives.sort(
+	const directivesSorted = directives.toSorted(
 		(a, b) => a.range.begin.raw - b.range.begin.raw,
 	);
 
 	const rangedSelections: RangedSelection[] = [];
-	let previousDirective = directivesSorted[0];
-	let currentSelections = directivesSorted[0].selections;
+	let previousDirective = nullThrows(
+		directivesSorted[0],
+		"Previous directive is expected to be present by the loop condition",
+	);
+	let currentSelections = previousDirective.selections;
 
 	for (const directive of directivesSorted.slice(1)) {
 		rangedSelections.push({

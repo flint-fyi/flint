@@ -1,0 +1,68 @@
+---
+description: "Avoid direct use of document.cookie for reading and writing cookies."
+title: "documentCookies"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="documentCookies" />
+
+Direct use of `document.cookie` for reading and writing cookies is error-prone and has security implications.
+The `document.cookie` API requires manual string parsing and formatting, which is tedious and can lead to bugs with encoding, expiration dates, and security flags.
+Modern cookie management should be performed through dedicated libraries or the Cookie Store API, which provide better ergonomics and security.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```js
+const sessionId = document.cookie
+	.split("; ")
+	.find((row) => row.startsWith("session="))
+	?.split("=")[1];
+
+document.cookie = "theme=dark";
+
+document.cookie = `user=${userId}; expires=${expiryDate.toUTCString()}`;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```js
+const sessionId = await cookieStore.get("session");
+
+await cookieStore.set("theme", "dark");
+
+await cookieStore.set({
+	name: "user",
+	value: userId,
+	expires: expiryDate.getTime(),
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support older browsers that do not have access to the Cookie Store API or cookie management libraries, you might need to use `document.cookie` directly.
+However, for most modern applications, prefer using proper cookie management abstractions.
+
+## Further Reading
+
+- [MDN: `document.cookie`](https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie)
+- [MDN: Cookie Store API](https://developer.mozilla.org/en-US/docs/Web/API/Cookie_Store_API)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="documentCookies" />

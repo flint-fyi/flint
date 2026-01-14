@@ -1,10 +1,10 @@
 {
 	"name": "@flint.fyi/md",
-	"version": "0.14.0",
+	"version": "0.14.3",
 	"description": "[Experimental] Markdown language plugin for Flint.",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/JoshuaKGoldberg/flint",
+		"url": "git+https://github.com/flint-fyi/flint.git",
 		"directory": "packages/md"
 	},
 	"license": "MIT",
@@ -12,8 +12,21 @@
 		"name": "JoshuaKGoldberg",
 		"email": "npm@joshuakgoldberg.com"
 	},
+	"sideEffects": false,
 	"type": "module",
-	"main": "./lib/index.js",
+	"exports": {
+		".": {
+			"@flint.fyi/source": "./src/index.ts",
+			"default": "./lib/index.js"
+		}
+	},
+	"files": [
+		"lib/",
+		"!lib/**/*.map"
+	],
+	"scripts": {
+		"test": "vitest --typecheck --project md"
+	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:",
 		"@flint.fyi/rule-tester": "workspace:",
@@ -27,12 +40,26 @@
 	"devDependencies": {
 		"@types/github-slugger": "^2.0.0",
 		"@types/unist": "3.0.3"
+		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/utils": "workspace:^",
+		"mdast-util-from-markdown": "^2.0.2",
+		"mdast-util-gfm": "^3.1.0",
+		"micromark-extension-gfm": "^3.0.0",
+		"unist-util-visit": "^5.0.0"
+	},
+	"devDependencies": {
+		"@flint.fyi/rule-tester": "workspace:^",
+		"@types/unist": "3.0.3",
+		"tsdown": "0.19.0-beta.2",
+		"vitest": "4.0.15"
 	},
 	"engines": {
 		"node": ">=24.0.0"
 	},
 	"publishConfig": {
 		"access": "public",
-		"provenance": true
+		"exports": {
+			".": "./lib/index.js"
+		}
 	}
 }

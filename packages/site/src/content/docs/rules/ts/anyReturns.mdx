@@ -1,0 +1,71 @@
+---
+description: "Reports returning a value with type `any` from a function."
+title: "anyReturns"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="anyReturns" />
+
+Returning values typed as `any` in TypeScript effectively disables type checking and undermines the safety guarantees of the type system.
+This rule prevents functions from returning `any`, `any[]`, or `Promise<any>`, as well as from returning generics that contain `any` in positions where a specific type is expected.
+
+Prefer using more specific or unknown types to maintain strong type safety.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function foo1() {
+	return 1 as any;
+}
+function foo2() {
+	return [] as any[];
+}
+async function foo3() {
+	return Promise.resolve({} as any);
+}
+function assignability(): Set<string> {
+	return new Set<any>();
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function foo1() {
+	return 1;
+}
+function foo2() {
+	return [];
+}
+async function foo3() {
+	return Promise.resolve({});
+}
+function assignability(): Set<string> {
+	return new Set<string>();
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase already contains many `any` types or areas of unsafe code, enabling this rule may be challenging.
+It may be more practical to defer enabling this rule until type safety has been improved in those areas.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for specific cases instead of completely disabling this rule.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="anyReturns" />

@@ -1,4 +1,6 @@
-import { FileChange } from "../types/changes.js";
+import { nullThrows } from "@flint.fyi/utils";
+
+import type { FileChange } from "../types/changes.ts";
 
 export const orderChangesLastToFirstWithoutOverlaps = (
 	changes: FileChange[],
@@ -8,7 +10,10 @@ export const orderChangesLastToFirstWithoutOverlaps = (
 	let lastStart = Infinity;
 
 	for (let i = ordered.length - 1; i >= 0; i -= 1) {
-		const change = ordered[i];
+		const change = nullThrows(
+			ordered[i],
+			"Change is expected to be present by the loop condition",
+		);
 		if (change.range.end > lastStart) {
 			continue;
 		}

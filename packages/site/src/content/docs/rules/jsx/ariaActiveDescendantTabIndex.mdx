@@ -1,0 +1,64 @@
+---
+description: "Reports elements with aria-activedescendant without tabIndex."
+title: "ariaActiveDescendantTabIndex"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="ariaActiveDescendantTabIndex" />
+
+`aria-activedescendant` is used to manage focus within a composite widget.
+Elements with this attribute should be tabbable, either through an inherent `tabIndex` (like `<input>`) or an explicit `tabIndex` attribute.
+
+Without proper tabIndex, keyboard users cannot reach the element to interact with it.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<div aria-activedescendant={someID} />
+```
+
+```tsx
+<span aria-activedescendant="item-1" />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<div aria-activedescendant={someID} tabIndex={0} />
+```
+
+```tsx
+<div aria-activedescendant={someID} tabIndex={-1} />
+```
+
+```tsx
+<input aria-activedescendant={someID} />
+```
+
+```tsx
+<button aria-activedescendant={someID} />
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you're not using `aria-activedescendant` or have a custom focus management system, you can disable this rule.
+
+## Further Reading
+
+- [MDN: Using the aria-activedescendant attribute](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-activedescendant_attribute)
+- [WAI-ARIA: Composite Widgets](https://www.w3.org/TR/wai-aria/#composite)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="ariaActiveDescendantTabIndex" />

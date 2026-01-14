@@ -43,9 +43,7 @@ Each should be shown in VS Code, and can be run manually on the command-line:
 
 - `pnpm lint` ([ESLint](https://eslint.org) with [typescript-eslint](https://typescript-eslint.io)): Lints JavaScript and TypeScript source files
 - `pnpm lint:knip` ([knip](https://github.com/webpro/knip)): Detects unused files, dependencies, and code exports
-- `pnpm lint:md` ([Markdownlint](https://github.com/DavidAnson/markdownlint)): Checks Markdown source files
-- `pnpm lint:packages` ([pnpm dedupe --check](https://pnpm.io/cli/dedupe)): Checks for unnecessarily duplicated packages in the `pnpm-lock.yml` file
-- `pnpm lint:spelling` ([cspell](https://cspell.org)): Spell checks across all source files
+- `pnpm lint:packages` ([pnpm dedupe --check](https://pnpm.io/cli/dedupe)): Checks for unnecessarily duplicated packages in the `pnpm-lock.yaml` file
 
 Read the individual documentation for each linter to understand how it can be configured and used best.
 
@@ -73,3 +71,27 @@ Calls to `console.log`, `console.warn`, and other console methods will cause a t
 
 This repository includes a [VS Code launch configuration](https://code.visualstudio.com/docs/editor/debugging) for debugging unit tests.
 To launch it, open a test file, then run _Debug Current Test File_ from the VS Code Debug panel (or press F5).
+
+## Common Contributing Tasks
+
+The following sections detail common tasks you may want to perform when contributing to Flint.
+
+### Writing a New Rule
+
+> [!TIP]
+> Search for an existing rule with a similar purpose to see all the places it's referenced.
+
+To add a new rule, `{ruleName}` to an existing Flint plugin `{plugin}`:
+
+1. Create the following files, copying contents from an existing rule as a starting point:
+   - `packages/{plugin}/src/rules/{ruleName}.ts`
+   - `packages/{plugin}/src/rules/{ruleName}.test.ts`
+   - `packages/site/src/content/docs/rules/{plugin}/{ruleName}.mdx`
+2. Updating existing files that reference rules:
+   - `packages/{plugin}/src/plugin.ts`: adding the rule in alphabetical order to `rules`
+   - `packages/comparisons/src/data.json`: marking the rule as `"status": "implemented"`
+3. Try to follow these best practices when writing the rule's documentation and tests:
+   - In documentation, see the sections present in other rules and fill them out
+     - In _Further Reading_ documentation, find at least one first-party source such as MDN
+     - _When Not To Use It_ should not say to always use the rule; instead, think of at least one legitimate reason - even if it's legacy runtimes
+   - In tests, use as straightforward code snippets as possible, preferring generic names like `value` over references like `foo`/`bar`

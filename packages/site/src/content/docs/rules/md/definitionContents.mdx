@@ -1,0 +1,69 @@
+---
+description: "Reports definitions with empty URLs or only empty fragments."
+title: "definitionContents"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="md" rule="definitionContents" />
+
+Definitions in Markdown provide URLs for reference-style links and images.
+A definition with an empty URL or only an empty fragment (`#`) provides no useful destination and will result in broken links.
+Empty definitions are often created as placeholders but forgotten to be filled in.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```markdown
+[earth]: <>
+```
+
+```markdown
+[moon]: #
+```
+
+```markdown
+[mars]:
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```markdown
+[earth]: https://example.com/earth/
+```
+
+```markdown
+[moon]: #section
+```
+
+```markdown
+[mercury]: https://example.com/mercury/
+
+Check out [Mercury][mercury]
+```
+
+```markdown
+[//]: <> (This is a comment)
+[//]: # (This is also a comment)
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you intentionally use empty definition URLs as placeholders and have a framework or other workflow that always fills them in later, you might want to disable this rule.
+
+## Further Reading
+
+- [Markdown Reference-Style Links](https://www.markdownguide.org/basic-syntax/#reference-style-links)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="md" ruleId="definitionContents" />

@@ -1,0 +1,84 @@
+---
+description: "Avoid shadowing restricted names like undefined, NaN, Infinity, arguments, and eval."
+title: "shadowedRestrictedNames"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="shadowedRestrictedNames" />
+
+JavaScript provides a set of built-in global identifiers with well-known names.
+When you declare a variable, function, or class with one of these names, it "shadows" the global identifier and can cause unexpected behavior or make code harder to understand.
+
+This rule reports shadowing of the most common global names that developers sometimes unintentionally shadow:
+
+- `arguments`
+- `eval`
+- `Infinity`
+- `NaN`
+- `undefined`
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function processValue(undefined) {
+	if (undefined === null) {
+		return 0;
+	}
+	return undefined;
+}
+
+let NaN = 123;
+
+class Infinity {
+	value = 100;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function processValue(value) {
+	if (value === undefined) {
+		return 0;
+	}
+	return value;
+}
+
+let notANumber = NaN;
+
+class InfiniteValue {
+	value = Infinity;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are working in a large legacy project that came before modern practices, you might find that these names are too difficult to refactor away from.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: `arguments`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments)
+- [MDN: `eval()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval)
+- [MDN: `Infinity`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity)
+- [MDN: `NaN`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN)
+- [MDN: `undefined`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="shadowedRestrictedNames" />

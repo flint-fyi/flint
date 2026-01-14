@@ -1,0 +1,75 @@
+---
+description: "Prefer shorthand boolean attributes over explicit {true} values in JSX."
+title: "booleanValues"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="jsx" rule="booleanValues" />
+
+When a boolean JSX attribute is set to `true`, the value can be omitted entirely.
+The shorthand syntax is more concise and idiomatic in JSX, reducing visual noise and improving readability.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+<button disabled={true}>Click me</button>
+```
+
+```tsx
+<input type="text" required={true} />
+```
+
+```tsx
+<Component isActive={true} />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+<button disabled>Click me</button>
+```
+
+```tsx
+<input type="text" required />
+```
+
+```tsx
+<Component isActive />
+```
+
+```tsx
+<button disabled={false}>Explicit false is fine</button>
+```
+
+```tsx
+<Component isActive={someCondition} />
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project has an established style guide that prefers explicit boolean values for consistency or clarity, you may want to disable this rule.
+However, the shorthand syntax is widely accepted as idiomatic JSX.
+
+## Further Reading
+
+- [React Documentation: JSX In Depth](https://react.dev/learn/writing-markup-with-jsx)
+- [MDN: Boolean attributes](https://developer.mozilla.org/en-US/docs/Glossary/Boolean/HTML)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="jsx" ruleId="booleanValues" />

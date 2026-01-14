@@ -1,0 +1,77 @@
+---
+description: "Reports self-assignments which have no effect and are likely errors."
+title: "selfAssignments"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="selfAssignments" />
+
+Self-assignments where a variable is assigned to itself have no effect and typically indicate an incomplete refactoring or a copy-paste error.
+These assignments serve no purpose and should be removed or corrected to assign the intended value.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+value = value;
+```
+
+```ts
+count &&= count;
+```
+
+```ts
+flags.value ||= flags.value;
+```
+
+```ts
+data ??= data;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+value = newValue;
+```
+
+```ts
+count &&= otherCount;
+```
+
+```ts
+flag ||= defaultFlag;
+```
+
+```ts
+data ??= fallbackData;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+There are rarely valid reasons to use self-assignment.
+In cases where you need to trigger getters/setters or proxies, consider adding a comment explaining the intentional self-assignment.
+
+## Further Reading
+
+- [MDN: Assignment operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Assignment)
+- [MDN: Logical AND assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_AND_assignment)
+- [MDN: Logical OR assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR_assignment)
+- [MDN: Nullish coalescing assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_assignment)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="selfAssignments" />
