@@ -27,7 +27,7 @@ export default defineConfig({
 			],
 		},
 		{
-			files: "packages/cli/**/*",
+			files: "packages/cli/src/**/*",
 			rules: [
 				ts.rules({
 					consoleCalls: false,
