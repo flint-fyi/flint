@@ -3,8 +3,9 @@ import ts from "typescript";
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
 import { isGlobalVariable } from "../utils/isGlobalVariable.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports calls to console methods.",
 		id: "consoleCalls",
