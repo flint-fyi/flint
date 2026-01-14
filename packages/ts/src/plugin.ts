@@ -69,6 +69,7 @@ import elseReturns from "./rules/elseReturns.ts";
 import emptyBlocks from "./rules/emptyBlocks.ts";
 import emptyDestructures from "./rules/emptyDestructures.ts";
 import emptyEnums from "./rules/emptyEnums.ts";
+import emptyExports from "./rules/emptyExports.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
 import enumInitializers from "./rules/enumInitializers.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
@@ -199,6 +200,7 @@ export const ts = createPlugin({
 		emptyBlocks,
 		emptyDestructures,
 		emptyEnums,
+		emptyExports,
 		emptyStaticBlocks,
 		enumInitializers,
 		equalityOperatorNegations,
