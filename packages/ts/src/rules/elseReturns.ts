@@ -1,69 +1,53 @@
 import ts, { SyntaxKind } from "typescript";
-import { z } from "zod";
 
+import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
 import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-function alwaysReturns(node: AST.Statement): boolean {
-	if (node.kind === SyntaxKind.Block) {
-		const block = node;
+function alwaysReturns(node: AST.Statement) {
+	switch (node.kind) {
+		case SyntaxKind.Block:
+			return node.statements.some(
+				(statement) =>
+					statement.kind === SyntaxKind.ReturnStatement ||
+					hasNestedIfWithReturn(statement),
+			);
 
-		return block.statements.some(
-			(statement) =>
-				statement.kind === SyntaxKind.ReturnStatement ||
-				hasNestedIfWithReturn(statement),
-		);
+		case SyntaxKind.ReturnStatement:
+			return true;
+
+		default:
+			return hasNestedIfWithReturn(node);
 	}
+}
 
+function findElseKeyword(node: AST.IfStatement, sourceFile: ts.SourceFile) {
+	return node
+		.getChildren(sourceFile)
+		.find((child) => child.kind === SyntaxKind.ElseKeyword);
+}
+
+function hasNestedIfWithReturn(node: AST.Statement) {
 	return (
-		node.kind === SyntaxKind.ReturnStatement || hasNestedIfWithReturn(node)
+		node.kind === SyntaxKind.IfStatement &&
+		node.elseStatement !== undefined &&
+		naiveHasReturn(node.thenStatement) &&
+		naiveHasReturn(node.elseStatement)
 	);
 }
 
-function findElseKeyword(ifNode: AST.IfStatement, sourceFile: ts.SourceFile) {
-	const children = ifNode.getChildren(sourceFile);
-
-	for (const child of children) {
-		if (child.kind === SyntaxKind.ElseKeyword) {
-			return child;
-		}
-	}
-
-	return undefined;
-}
-
-function hasNestedIfWithReturn(node: AST.Statement): boolean {
-	if (node.kind !== SyntaxKind.IfStatement) {
-		return false;
-	}
-
-	const ifNode = node;
-
+function isInStatementListContext(node: AST.IfStatement) {
 	return (
-		ifNode.elseStatement !== undefined &&
-		naiveHasReturn(ifNode.thenStatement) &&
-		naiveHasReturn(ifNode.elseStatement)
+		node.parent.kind === SyntaxKind.Block ||
+		node.parent.kind === SyntaxKind.SourceFile ||
+		node.parent.kind === SyntaxKind.ModuleBlock ||
+		node.parent.kind === SyntaxKind.CaseClause ||
+		node.parent.kind === SyntaxKind.DefaultClause
 	);
 }
 
-function isIfStatement(node: AST.Statement): node is AST.IfStatement {
-	return node.kind === SyntaxKind.IfStatement;
-}
-
-function isInStatementListContext(node: AST.IfStatement): boolean {
-	const parent = node.parent;
-
-	return (
-		parent.kind === SyntaxKind.Block ||
-		parent.kind === SyntaxKind.SourceFile ||
-		parent.kind === SyntaxKind.ModuleBlock ||
-		parent.kind === SyntaxKind.CaseClause ||
-		parent.kind === SyntaxKind.DefaultClause
-	);
-}
-
-function naiveHasReturn(node: AST.Statement): boolean {
+function naiveHasReturn(node: AST.Statement) {
 	if (node.kind === SyntaxKind.Block) {
 		const block = node;
 		const statements = block.statements;
@@ -96,83 +80,41 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			],
 		},
 	},
-	options: {
-		allowElseIf: z
-			.boolean()
-			.default(true)
-			.describe(
-				"Whether to allow `else if` blocks after a `return` statement.",
-			),
-	},
 	setup(context) {
 		return {
 			visitors: {
-				IfStatement: (node, { options, sourceFile }) => {
-					if (!isInStatementListContext(node)) {
+				IfStatement: (node, { sourceFile }) => {
+					if (!isInStatementListContext(node) || !node.elseStatement) {
 						return;
 					}
 
-					if (!node.elseStatement) {
+					const thenBranches: AST.Statement[] = [];
+					let lastIfNode: AST.IfStatement = node;
+					let currentNode: AST.Statement = node;
+
+					while (currentNode.kind === SyntaxKind.IfStatement) {
+						if (!currentNode.elseStatement) {
+							return;
+						}
+
+						thenBranches.push(currentNode.thenStatement);
+						lastIfNode = currentNode;
+						currentNode = currentNode.elseStatement;
+					}
+
+					if (!thenBranches.every(alwaysReturns)) {
 						return;
 					}
 
-					if (options.allowElseIf) {
-						const thenBranches: AST.Statement[] = [];
-						let lastIfNode: AST.IfStatement = node;
-						let currentNode: AST.Statement = node;
-
-						while (isIfStatement(currentNode)) {
-							if (!currentNode.elseStatement) {
-								return;
-							}
-
-							thenBranches.push(currentNode.thenStatement);
-							lastIfNode = currentNode;
-							currentNode = currentNode.elseStatement;
-						}
-
-						const alternate = lastIfNode.elseStatement;
-
-						if (!alternate || alternate.kind === SyntaxKind.IfStatement) {
-							return;
-						}
-
-						if (!thenBranches.every(alwaysReturns)) {
-							return;
-						}
-
-						const elseKeyword = findElseKeyword(lastIfNode, sourceFile);
-
-						if (!elseKeyword) {
-							return;
-						}
-
-						context.report({
-							message: "unnecessaryElse",
-							range: {
-								begin: elseKeyword.getStart(sourceFile),
-								end: elseKeyword.getEnd(),
-							},
-						});
-					} else {
-						if (!alwaysReturns(node.thenStatement)) {
-							return;
-						}
-
-						const elseKeyword = findElseKeyword(node, sourceFile);
-
-						if (!elseKeyword) {
-							return;
-						}
-
-						context.report({
-							message: "unnecessaryElse",
-							range: {
-								begin: elseKeyword.getStart(sourceFile),
-								end: elseKeyword.getEnd(),
-							},
-						});
+					const elseKeyword = findElseKeyword(lastIfNode, sourceFile);
+					if (!elseKeyword) {
+						return;
 					}
+
+					context.report({
+						message: "unnecessaryElse",
+						range: getTSNodeRange(elseKeyword, sourceFile),
+					});
 				},
 			},
 		};

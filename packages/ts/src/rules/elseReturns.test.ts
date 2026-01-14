@@ -119,56 +119,7 @@ function nested() {
 }
 `,
 		},
-		{
-			code: `
-function getValue() {
-    if (true) {
-        return 1;
-    } else if (false) {
-        return 2;
-    }
-}
-`,
-			options: { allowElseIf: false },
-			snapshot: `
-function getValue() {
-    if (true) {
-        return 1;
-    } else if (false) {
-      ~~~~
-      This \`else\` clause is unnecessary after a \`return\` statement.
-        return 2;
-    }
-}
-`,
-		},
-		{
-			code: `
-function getValue(a: boolean, b: boolean) {
-    if (a) {
-        return 1;
-    } else if (b) {
-        process();
-    } else {
-        fallback();
-    }
-}
-`,
-			options: { allowElseIf: false },
-			snapshot: `
-function getValue(a: boolean, b: boolean) {
-    if (a) {
-        return 1;
-    } else if (b) {
-      ~~~~
-      This \`else\` clause is unnecessary after a \`return\` statement.
-        process();
-    } else {
-        fallback();
-    }
-}
-`,
-		},
+
 		{
 			code: `
 function getValue() {
@@ -230,17 +181,8 @@ function getValue() {
         else process();
 }
 `,
-		{
-			code: `function getValue() { if (true) { return 1; } else if (false) { return 2; } }`,
-			options: { allowElseIf: true },
-		},
-		{
-			code: `function getValue(a: boolean, b: boolean) { if (a) { return 1; } else if (b) { process(); } else { fallback(); } }`,
-			options: { allowElseIf: true },
-		},
-		{
-			code: `function getValue(a: boolean, b: boolean) { if (a) { return 1; } else if (b) { return 2; } }`,
-			options: { allowElseIf: true },
-		},
+		`function getValue() { if (true) { return 1; } else if (false) { return 2; } }`,
+		`function getValue(a: boolean, b: boolean) { if (a) { return 1; } else if (b) { process(); } else { fallback(); } }`,
+		`function getValue(a: boolean, b: boolean) { if (a) { return 1; } else if (b) { return 2; } }`,
 	],
 });

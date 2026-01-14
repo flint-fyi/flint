@@ -70,28 +70,6 @@ function process(a: boolean, b: boolean) {
 </TabItem>
 </Tabs>
 
-## Options
-
-### `allowElseIf`
-
-When set to `true` (the default), allows `else if` blocks following a `return` statement in the preceding `if` block.
-The rule will only flag the final `else` block when all preceding branches return.
-
-When set to `false`, the rule will flag any `else` or `else if` block that follows a returning `if` block.
-
-```ts
-// With allowElseIf: true (default), this is allowed:
-function getValue(a: boolean, b: boolean) {
-	if (a) {
-		return 1;
-	} else if (b) {
-		return 2;
-	}
-}
-
-// With allowElseIf: false, the else if would be flagged
-```
-
 ## When Not To Use It
 
 If your team prefers the explicit structure of `if`/`else` blocks for clarity in conditional logic, or you have a large codebase where enforcing this style would require significant refactoring, you may choose to disable this rule.
