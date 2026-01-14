@@ -64,6 +64,7 @@ import dynamicDeletes from "./rules/dynamicDeletes.ts";
 import elseIfDuplicates from "./rules/elseIfDuplicates.ts";
 import emptyBlocks from "./rules/emptyBlocks.ts";
 import emptyDestructures from "./rules/emptyDestructures.ts";
+import emptyFunctions from "./rules/emptyFunctions.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
 import enumInitializers from "./rules/enumInitializers.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
@@ -187,6 +188,7 @@ export const ts = createPlugin({
 		elseIfDuplicates,
 		emptyBlocks,
 		emptyDestructures,
+		emptyFunctions,
 		emptyStaticBlocks,
 		enumInitializers,
 		equalityOperatorNegations,
