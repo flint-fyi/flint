@@ -9,12 +9,14 @@ import * as AST from "../types/ast.ts";
 
 const globalObjects = new Set(["Atomics", "JSON", "Math", "Reflect"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports calling global objects like Math, JSON, or Reflect as functions.",
 		id: "globalObjectCalls",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noGlobalObjectCall: {

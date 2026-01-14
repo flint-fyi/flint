@@ -5,11 +5,13 @@ import {
 } from "@flint.fyi/ts";
 import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Prefer `textContent` over `innerText` for DOM nodes.",
 		id: "nodeTextContents",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferTextContent: {

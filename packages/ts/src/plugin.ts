@@ -14,12 +14,20 @@ import arrayEmptyCallbackSlots from "./rules/arrayEmptyCallbackSlots.ts";
 import arrayExistenceChecksConsistency from "./rules/arrayExistenceChecksConsistency.ts";
 import arrayFilteredFinds from "./rules/arrayFilteredFinds.ts";
 import arrayFinds from "./rules/arrayFinds.ts";
+import arrayFlatMapMethods from "./rules/arrayFlatMapMethods.ts";
+import arrayFlatMethods from "./rules/arrayFlatMethods.ts";
+import arrayFlatUnnecessaryDepths from "./rules/arrayFlatUnnecessaryDepths.ts";
+import arrayIncludes from "./rules/arrayIncludes.ts";
+import arrayIncludesMethods from "./rules/arrayIncludesMethods.ts";
+import arrayIndexOfMethods from "./rules/arrayIndexOfMethods.ts";
+import arrayLoops from "./rules/arrayLoops.ts";
 import arrayMapIdentities from "./rules/arrayMapIdentities.ts";
 import arrayMutableReverses from "./rules/arrayMutableReverses.ts";
 import arrayMutableSorts from "./rules/arrayMutableSorts.ts";
 import arraySliceUnnecessaryEnd from "./rules/arraySliceUnnecessaryEnd.ts";
 import arraySomeMethods from "./rules/arraySomeMethods.ts";
 import arrayTernarySpreadingConsistency from "./rules/arrayTernarySpreadingConsistency.ts";
+import arrayTypes from "./rules/arrayTypes.ts";
 import arrayUnnecessaryLengthChecks from "./rules/arrayUnnecessaryLengthChecks.ts";
 import asConstAssertions from "./rules/asConstAssertions.ts";
 import assignmentOperatorShorthands from "./rules/assignmentOperatorShorthands.ts";
@@ -34,6 +42,7 @@ import caseFallthroughs from "./rules/caseFallthroughs.ts";
 import catchCallbackTypes from "./rules/catchCallbackTypes.ts";
 import caughtVariableNames from "./rules/caughtVariableNames.ts";
 import chainedAssignments from "./rules/chainedAssignments.ts";
+import charAtComparisons from "./rules/charAtComparisons.ts";
 import classAssignments from "./rules/classAssignments.ts";
 import classFieldDeclarations from "./rules/classFieldDeclarations.ts";
 import classLiteralProperties from "./rules/classLiteralProperties.ts";
@@ -55,14 +64,20 @@ import elseIfDuplicates from "./rules/elseIfDuplicates.ts";
 import emptyBlocks from "./rules/emptyBlocks.ts";
 import emptyDestructures from "./rules/emptyDestructures.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
+import enumInitializers from "./rules/enumInitializers.ts";
+import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
+import evolvingVariableTypes from "./rules/evolvingVariableTypes.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
 import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
 import finallyStatementSafety from "./rules/finallyStatementSafety.ts";
 import forDirections from "./rules/forDirections.ts";
 import forInArrays from "./rules/forInArrays.ts";
+import forInGuards from "./rules/forInGuards.ts";
 import functionApplySpreads from "./rules/functionApplySpreads.ts";
 import functionAssignments from "./rules/functionAssignments.ts";
 import functionCurryingRedundancy from "./rules/functionCurryingRedundancy.ts";
+import functionDeclarationStyles from "./rules/functionDeclarationStyles.ts";
+import functionNameMatches from "./rules/functionNameMatches.ts";
 import functionNewCalls from "./rules/functionNewCalls.ts";
 import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
 import globalAssignments from "./rules/globalAssignments.ts";
@@ -121,12 +136,20 @@ export const ts = createPlugin({
 		arrayExistenceChecksConsistency,
 		arrayFilteredFinds,
 		arrayFinds,
+		arrayFlatMapMethods,
+		arrayFlatMethods,
+		arrayFlatUnnecessaryDepths,
+		arrayIncludes,
+		arrayIncludesMethods,
+		arrayIndexOfMethods,
+		arrayLoops,
 		arrayMapIdentities,
 		arrayMutableReverses,
 		arrayMutableSorts,
 		arraySliceUnnecessaryEnd,
 		arraySomeMethods,
 		arrayTernarySpreadingConsistency,
+		arrayTypes,
 		arrayUnnecessaryLengthChecks,
 		asConstAssertions,
 		assignmentOperatorShorthands,
@@ -141,6 +164,7 @@ export const ts = createPlugin({
 		catchCallbackTypes,
 		caughtVariableNames,
 		chainedAssignments,
+		charAtComparisons,
 		classAssignments,
 		classFieldDeclarations,
 		classLiteralProperties,
@@ -162,14 +186,20 @@ export const ts = createPlugin({
 		emptyBlocks,
 		emptyDestructures,
 		emptyStaticBlocks,
+		enumInitializers,
+		equalityOperatorNegations,
+		evolvingVariableTypes,
 		exceptionAssignments,
 		fetchMethodBodies,
 		finallyStatementSafety,
 		forDirections,
 		forInArrays,
+		forInGuards,
 		functionApplySpreads,
 		functionAssignments,
 		functionCurryingRedundancy,
+		functionDeclarationStyles,
+		functionNameMatches,
 		functionNewCalls,
 		generatorFunctionYields,
 		globalAssignments,

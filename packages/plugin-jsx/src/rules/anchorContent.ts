@@ -1,11 +1,13 @@
 import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports anchor elements without accessible content.",
 		id: "anchorContent",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingContent: {

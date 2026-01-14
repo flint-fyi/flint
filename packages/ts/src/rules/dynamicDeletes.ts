@@ -19,12 +19,14 @@ function isAcceptableIndexExpression(property: Expression): boolean {
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallow using the delete operator on computed key expressions.",
 		id: "dynamicDeletes",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		dynamicDelete: {

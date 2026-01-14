@@ -10,12 +10,14 @@ const indexMethods = new Set([
 	"lastIndexOf",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports inconsistent styles for checking element existence using index methods.",
 		id: "arrayExistenceChecksConsistency",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferEqualsMinusOne: {

@@ -1,0 +1,122 @@
+---
+description: "Reports functions that don't match the configured style (declaration vs expression)."
+title: "functionDeclarationStyles"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="functionDeclarationStyles" />
+
+There are two ways of defining functions in JavaScript: function declarations and function expressions assigned to variables.
+Function declarations are hoisted to the top of their scope, while function expressions are not.
+Enforcing a consistent style helps maintain code consistency across a codebase.
+
+## Examples
+
+With the default `"expression"` style:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function doSomething() {
+	return 42;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const doSomething = function () {
+	return 42;
+};
+```
+
+```ts
+const doSomething = () => {
+	return 42;
+};
+```
+
+</TabItem>
+</Tabs>
+
+With the `"declaration"` style:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const doSomething = function () {
+	return 42;
+};
+```
+
+```ts
+const doSomething = () => {
+	return 42;
+};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function doSomething() {
+	return 42;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `style`
+
+Which function style to enforce:
+
+- `"expression"` (default): Requires function expressions instead of declarations
+- `"declaration"`: Requires function declarations instead of expressions
+
+```json
+{
+	"rules": {
+		"ts/functionDeclarationStyles": ["error", { "style": "declaration" }]
+	}
+}
+```
+
+### `allowArrowFunctions`
+
+When `true` and style is `"declaration"`, arrow functions are allowed.
+Default is `false`.
+
+```json
+{
+	"rules": {
+		"ts/functionDeclarationStyles": [
+			"error",
+			{ "style": "declaration", "allowArrowFunctions": true }
+		]
+	}
+}
+```
+
+## When Not To Use It
+
+If your team doesn't have a preference between function declarations and expressions, or if you want developers to choose the style that best fits each situation, you can disable this rule.
+
+## Further Reading
+
+- [MDN: function declaration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)
+- [MDN: function expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/function)
+- [MDN: Arrow function expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="functionDeclarationStyles" />
