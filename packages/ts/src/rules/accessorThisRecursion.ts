@@ -1,25 +1,23 @@
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
+import type { AST } from "../index.ts";
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "../language.ts";
 
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
 function getPropertyName(
-	accessor: ts.GetAccessorDeclaration | ts.SetAccessorDeclaration,
+	accessor: AST.GetAccessorDeclaration | AST.SetAccessorDeclaration,
 	sourceFile: ts.SourceFile,
 ) {
-	if (ts.isIdentifier(accessor.name)) {
-		return accessor.name.text;
-	}
-	if (ts.isStringLiteral(accessor.name)) {
-		return accessor.name.text;
-	}
-	if (ts.isNumericLiteral(accessor.name)) {
-		return accessor.name.text;
-	}
-	return accessor.name.getText(sourceFile);
+	return ts.isIdentifier(accessor.name) ||
+		ts.isStringLiteral(accessor.name) ||
+		ts.isNumericLiteral(accessor.name)
+		? accessor.name.text
+		: accessor.name.getText(sourceFile);
 }
 
 export default typescriptLanguage.createRule({
@@ -56,7 +54,7 @@ export default typescriptLanguage.createRule({
 	},
 	setup(context) {
 		function checkAccessor(
-			accessor: ts.GetAccessorDeclaration | ts.SetAccessorDeclaration,
+			accessor: AST.GetAccessorDeclaration | AST.SetAccessorDeclaration,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			if (!accessor.body) {
@@ -81,9 +79,8 @@ export default typescriptLanguage.createRule({
 			function checkPropertyAccessExpression(
 				node: ts.PropertyAccessExpression,
 			) {
-				const accessedName = node.name.text;
 				if (
-					accessedName !== propertyName ||
+					node.name.text !== propertyName ||
 					node.expression.kind !== ts.SyntaxKind.ThisKeyword
 				) {
 					return;
