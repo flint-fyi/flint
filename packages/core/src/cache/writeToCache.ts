@@ -7,12 +7,6 @@ import type { LintResults } from "../types/linting.ts";
 import { cacheFileDirectory, cacheFilePath } from "./constants.ts";
 import { getFileTouchTime } from "./getFileTouchTime.ts";
 
-let memoryCache: CacheStorage | undefined;
-
-export function getMemoryCache(): CacheStorage | undefined {
-	return memoryCache;
-}
-
 export async function writeToCache(
 	configFileName: string,
 	lintResults: LintResults,
@@ -56,6 +50,4 @@ export async function writeToCache(
 
 	await fs.mkdir(cacheFileDirectory, { recursive: true });
 	await fs.writeFile(cacheFilePath, JSON.stringify(storage, null, "\t"));
-
-	memoryCache = storage;
 }

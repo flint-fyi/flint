@@ -1,5 +1,5 @@
 export * from "./cache/constants.ts";
-export { getMemoryCache, writeToCache } from "./cache/writeToCache.ts";
+export { writeToCache } from "./cache/writeToCache.ts";
 export { applyChangesToText } from "./changing/applyChangesToText.ts";
 export { defineConfig } from "./configs/defineConfig.ts";
 export { isConfig } from "./configs/isConfig.ts";
@@ -18,7 +18,6 @@ export { createPlugin } from "./plugins/createPlugin.ts";
 export { formatReport } from "./reporting/formatReport.ts";
 export * from "./rules/RuleCreator.ts";
 export { parseOptions } from "./running/parseOptions.ts";
-export { readFileSafeAsJson } from "./running/readFileSafeAsJson.ts";
 export { runConfig } from "./running/runConfig.ts";
 export { runConfigFixing } from "./running/runConfigFixing.ts";
 export { runLintRule } from "./running/runLintRule.ts";

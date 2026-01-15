@@ -24,7 +24,7 @@ export async function runCliOnce(
 		console.error(
 			`${configFileName} does not default export a Flint defineConfig value.`,
 		);
-		return 2;
+		return { exitCode: 2, lintResults: undefined };
 	}
 
 	log("Running with Flint in single-run mode with config: %s", configFileName);
@@ -53,14 +53,14 @@ export async function runCliOnce(
 	await renderer.render({ formattingResults, ignoreCache, lintResults });
 
 	if (formattingResults.dirty.size && !formattingResults.written) {
-		return 1;
+		return { exitCode: 1, lintResults };
 	}
 
 	for (const fileResults of lintResults.filesResults.values()) {
 		if (fileResults.diagnostics.length || fileResults.reports.length) {
-			return 1;
+			return { exitCode: 1, lintResults };
 		}
 	}
 
-	return 0;
+	return { exitCode: 0, lintResults };
 }

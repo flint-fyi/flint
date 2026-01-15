@@ -1,4 +1,5 @@
-import { getMemoryCache, normalizePath } from "@flint.fyi/core";
+import type { LintResults } from "@flint.fyi/core";
+import { normalizePath } from "@flint.fyi/core";
 import debounce from "debounce";
 import { debugForFile } from "debug-for-file";
 import * as fs from "node:fs";
@@ -20,11 +21,17 @@ export async function runCliWatch(
 	log("Running single-run CLI once before watching");
 
 	return new Promise<void>((resolve) => {
+		let currentLintResults: LintResults | undefined;
 		let currentTask = startNewTask();
 
 		function startNewTask() {
 			const renderer = getRenderer();
-			const runner = runCliOnce(configFileName, renderer, values);
+			const runner = runCliOnce(configFileName, renderer, values).then(
+				(result) => {
+					currentLintResults = result.lintResults;
+					return result.exitCode;
+				},
+			);
 
 			renderer.onQuit?.(() => {
 				abortController.abort();
@@ -45,7 +52,10 @@ export async function runCliWatch(
 
 			const normalizedPath = normalizePath(fileName, true);
 
-			const shouldRerun = shouldRerunForFileChange(normalizedPath);
+			const shouldRerun = shouldRerunForFileChange(
+				normalizedPath,
+				currentLintResults,
+			);
 
 			if (!shouldRerun) {
 				log(
@@ -76,25 +86,24 @@ export async function runCliWatch(
 	});
 }
 
-function shouldRerunForFileChange(changedFilePath: string): boolean {
-	const memoryCache = getMemoryCache();
-
-	if (!memoryCache) {
+function shouldRerunForFileChange(
+	changedFilePath: string,
+	lintResults: LintResults | undefined,
+): boolean {
+	if (!lintResults) {
 		return true;
 	}
 
-	for (const filePath of Object.keys(memoryCache.files)) {
+	for (const filePath of lintResults.filesResults.keys()) {
 		if (filePath === changedFilePath) {
 			return true;
 		}
 	}
 
-	for (const fileStorage of Object.values(memoryCache.files)) {
-		if (fileStorage.dependencies) {
-			for (const dep of fileStorage.dependencies) {
-				if (dep === changedFilePath) {
-					return true;
-				}
+	for (const fileResult of lintResults.filesResults.values()) {
+		for (const dependency of fileResult.dependencies) {
+			if (dependency === changedFilePath) {
+				return true;
 			}
 		}
 	}

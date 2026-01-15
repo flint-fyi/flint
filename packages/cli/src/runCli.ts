@@ -88,7 +88,7 @@ export async function runCli(args: string[]) {
 	}
 
 	const renderer = getRenderer();
-	const exitCode = await runCliOnce(configFileName, renderer, values);
+	const { exitCode } = await runCliOnce(configFileName, renderer, values);
 
 	renderer.dispose?.();
 
