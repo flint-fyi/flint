@@ -23,8 +23,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports empty functions that should contain code or a comment.",
 		id: "emptyFunctions",
-		presets: ["stylistic"],
-		strictness: "strict",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		emptyFunction: {
@@ -35,7 +34,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"Adding a comment makes the intention clear.",
 			],
 			suggestions: [
-				"Add a comment explaining why the function is intentionally empty, or add the function body.",
+				"Add a comment explaining why the function is intentionally empty.",
+				"Add to the function body.",
 			],
 		},
 	},
@@ -45,28 +45,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			body: AST.Block | undefined,
 			sourceFile: ts.SourceFile,
 		) {
-			if (!body) {
-				return;
+			if (body && isEmptyBlock(body, sourceFile)) {
+				context.report({
+					message: "emptyFunction",
+					range: getTSNodeRange(node, sourceFile),
+				});
 			}
-
-			if (!isEmptyBlock(body, sourceFile)) {
-				return;
-			}
-
-			context.report({
-				message: "emptyFunction",
-				range: getTSNodeRange(node, sourceFile),
-			});
 		}
 
 		return {
 			visitors: {
 				ArrowFunction: (node, { sourceFile }) => {
-					if (node.body.kind !== SyntaxKind.Block) {
-						return;
+					if (node.body.kind === SyntaxKind.Block) {
+						checkFunctionBody(node, node.body, sourceFile);
 					}
-
-					checkFunctionBody(node, node.body, sourceFile);
 				},
 				Constructor: (node, { sourceFile }) => {
 					checkFunctionBody(node, node.body, sourceFile);
