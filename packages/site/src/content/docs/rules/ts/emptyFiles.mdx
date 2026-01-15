@@ -1,0 +1,77 @@
+---
+description: "Reports files that contain no meaningful code."
+title: "emptyFiles"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="emptyFiles" />
+
+Empty files clutter a codebase and often serve no purpose.
+Files containing only whitespace, comments, directives (like `"use strict"`), or empty statements are considered empty and should either contain meaningful code or be deleted.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// This file is empty
+```
+
+```ts
+"use strict";
+```
+
+```ts
+
+```
+
+```ts
+{
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export const value = 1;
+```
+
+```ts
+import { something } from "module";
+```
+
+```ts
+function getValue() {
+	return 42;
+}
+```
+
+```ts
+"use strict";
+const x = 1;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally keep placeholder files in your codebase (e.g., as part of scaffolding or to reserve file names), you may want to disable this rule.
+
+## Further Reading
+
+- [ESLint unicorn/no-empty-file](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-empty-file.md)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="emptyFiles" />
