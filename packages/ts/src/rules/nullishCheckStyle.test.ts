@@ -1,4 +1,4 @@
-import rule from "./equalityNullishOperators.ts";
+import rule from "./nullishCheckStyle.ts";
 import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
