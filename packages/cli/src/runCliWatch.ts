@@ -22,24 +22,31 @@ export async function runCliWatch(
 
 	return new Promise<void>((resolve) => {
 		let currentLintResults: LintResults | undefined;
-		let currentTask = startNewTask();
+		let currentRenderer: Renderer;
 
 		function startNewTask() {
 			const renderer = getRenderer();
-			const runner = runCliOnce(configFileName, renderer, values).then(
-				(result) => {
-					currentLintResults = result.lintResults;
-					return result.exitCode;
-				},
-			);
+			currentRenderer = renderer;
+
+			runCliOnce(configFileName, renderer, values)
+				.then(({ lintResults }) => {
+					if (currentRenderer === renderer) {
+						currentLintResults = lintResults;
+					}
+				})
+				.catch((error) => {
+					log("Error during lint run: %o", error);
+				});
 
 			renderer.onQuit?.(() => {
 				abortController.abort();
 				resolve();
 			});
 
-			return { renderer, runner };
+			return renderer;
 		}
+
+		currentRenderer = startNewTask();
 
 		const rerun = debounce((fileName: string) => {
 			if (fileName.startsWith("node_modules/.cache")) {
@@ -66,8 +73,8 @@ export async function runCliWatch(
 			}
 
 			log("Change detected from: %s", fileName);
-			currentTask.renderer.dispose?.();
-			currentTask = startNewTask();
+			currentRenderer.dispose?.();
+			currentRenderer = startNewTask();
 		}, 100);
 
 		log("Watching cwd:", cwd);
