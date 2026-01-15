@@ -1,0 +1,85 @@
+---
+description: "Requires a message value when creating a built-in error."
+title: "errorMessages"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="errorMessages" />
+
+This rule enforces passing a message value when creating an instance of a built-in `Error` object.
+Error instances without messages are harder to debug because they don't explain what went wrong.
+
+The rule applies to all built-in error constructors:
+
+- `Error`
+- `TypeError`
+- `RangeError`
+- `ReferenceError`
+- `SyntaxError`
+- `EvalError`
+- `URIError`
+- `AggregateError`
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+throw new Error();
+```
+
+```ts
+throw new TypeError();
+```
+
+```ts
+throw new Error("");
+```
+
+```ts
+throw new Error(undefined);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+throw new Error("Something went wrong");
+```
+
+```ts
+throw new TypeError("Expected a number");
+```
+
+```ts
+throw new RangeError(`Value must be between ${min} and ${max}`);
+```
+
+```ts
+throw new Error(getErrorMessage());
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has legitimate reasons to throw errors without messages, such as for internal control flow that users never see, you may disable this rule.
+However, providing descriptive error messages is generally recommended for better debugging experience.
+
+## Further Reading
+
+- [MDN: Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="errorMessages" />

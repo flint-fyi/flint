@@ -1,0 +1,92 @@
+---
+description: "Require expressions of type void to appear in statement position."
+title: "misleadingVoidExpressions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="misleadingVoidExpressions" />
+
+The `void` type in TypeScript refers to a function return that is meant to be ignored.
+Using a void-typed value—such as assigning the result of a called function to a variable or returning it from another function—is often a programmer error.
+Even when used correctly, `void` expressions in value positions can be misleading for other developers.
+
+This rule reports void expressions that are used in misleading locations such as being assigned to a variable, provided as a function argument, or returned from a function.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare function log(message: string): void;
+const result = log("hello");
+```
+
+```ts
+declare function log(message: string): void;
+[1, 2, 3].forEach((n) => log(String(n)));
+```
+
+```ts
+declare function log(message: string): void;
+function run() {
+	return log("done");
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare function log(message: string): void;
+log("hello");
+```
+
+```ts
+declare function log(message: string): void;
+[1, 2, 3].forEach((n) => {
+	log(String(n));
+});
+```
+
+```ts
+declare function log(message: string): void;
+function run() {
+	log("done");
+}
+```
+
+```ts
+declare function log(message: string): void;
+true && log("message");
+```
+
+```ts
+declare function log(message: string): void;
+void log("explicitly ignored");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you frequently use concise arrow function shorthands that return void, or if your codebase intentionally uses void expressions as values in certain patterns, you may not need this rule.
+The return type of a function can be inspected by going to its definition or hovering over it in an IDE, so some teams prefer relying on IDE hints rather than lint rules for this purpose.
+
+## Further Reading
+
+- [TypeScript handbook: void](https://www.typescriptlang.org/docs/handbook/2/functions.html#void)
+- [MDN: void operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/void)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="misleadingVoidExpressions" />
