@@ -10,38 +10,69 @@ export default typescriptLanguage.createRule({
 		preset: "logical",
 	},
 	messages: {
-		noEmptyNamedBlocks: {
+		noEmptyNamedBlocksOnly: {
 			primary: "Empty named import blocks are unnecessary.",
 			secondary: [
-				"An empty `{ }` in an import statement has no effect and should be removed.",
+				"An empty `{ }` in an import statement has no effect and can be removed.",
 			],
-			suggestions: ["Remove the empty block, or add the imports you need."],
+			suggestions: [
+				"Remove the entire import statement.",
+				"Convert to a side-effect only import.",
+			],
+		},
+		noEmptyNamedBlocksWithOther: {
+			primary: "Empty named import blocks are unnecessary.",
+			secondary: [
+				"An empty `{ }` in an import statement has no effect and can be removed.",
+			],
+			suggestions: ["Remove the empty block."],
 		},
 	},
 	setup(context) {
 		return {
 			visitors: {
 				ImportDeclaration: (node, { sourceFile }) => {
-					const importClause = node.importClause;
-					if (!importClause) {
-						return;
-					}
-
-					const namedBindings = importClause.namedBindings;
-					if (!namedBindings) {
-						return;
-					}
-
-					// Check for empty named imports: import { } from "mod"
 					if (
-						ts.isNamedImports(namedBindings) &&
-						namedBindings.elements.length === 0
+						!node.importClause?.namedBindings ||
+						!ts.isNamedImports(node.importClause.namedBindings) ||
+						node.importClause.namedBindings.elements.length
 					) {
+						return;
+					}
+
+					if (!node.importClause.name) {
 						context.report({
-							message: "noEmptyNamedBlocks",
-							range: getTSNodeRange(namedBindings, sourceFile),
+							fix: {
+								range: getTSNodeRange(node, sourceFile),
+								text: `import ${node.moduleSpecifier.getText(sourceFile)};`,
+							},
+							message: "noEmptyNamedBlocksOnly",
+							range: getTSNodeRange(
+								node.importClause.namedBindings,
+								sourceFile,
+							),
 						});
 					}
+
+					const commaToken = node.importClause
+						.getChildren(sourceFile)
+						.find((child) => child.kind === ts.SyntaxKind.CommaToken);
+
+					if (!commaToken) {
+						return;
+					}
+
+					context.report({
+						fix: {
+							range: {
+								begin: commaToken.getStart(sourceFile),
+								end: node.importClause.namedBindings.getEnd(),
+							},
+							text: "",
+						},
+						message: "noEmptyNamedBlocksWithOther",
+						range: getTSNodeRange(node.importClause.namedBindings, sourceFile),
+					});
 				},
 			},
 		};
