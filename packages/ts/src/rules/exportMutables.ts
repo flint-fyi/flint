@@ -1,9 +1,11 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 import ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isMutableDeclaration(node: AST.VariableDeclarationList): boolean {
@@ -36,26 +38,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				VariableStatement: (node, { sourceFile }) => {
-					const hasExportModifier = node.modifiers?.some(
-						(mod) => mod.kind === SyntaxKind.ExportKeyword,
-					);
-
-					if (!hasExportModifier) {
-						return;
-					}
-
-					if (!isMutableDeclaration(node.declarationList)) {
+					if (
+						!isMutableDeclaration(node.declarationList) ||
+						!node.modifiers?.some(
+							(modifier) => modifier.kind === SyntaxKind.ExportKeyword,
+						)
+					) {
 						return;
 					}
 
 					for (const declaration of node.declarationList.declarations) {
-						const name =
-							declaration.name.kind === SyntaxKind.Identifier
-								? declaration.name.text
-								: declaration.name.getText(sourceFile);
-
 						context.report({
-							data: { name },
+							data: {
+								name:
+									declaration.name.kind === SyntaxKind.Identifier
+										? declaration.name.text
+										: declaration.name.getText(sourceFile),
+							},
 							message: "noMutableExport",
 							range: getTSNodeRange(declaration.name, sourceFile),
 						});
