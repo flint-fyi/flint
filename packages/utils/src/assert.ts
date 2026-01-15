@@ -3,6 +3,7 @@ export class FlintAssertionError extends Error {
 		super(`Flint bug: ${message}.`);
 		const issueUrl = buildIssueUrl(message, this.stack);
 		this.message = `Flint bug: ${message}. Please report it here: ${issueUrl}`;
+		this.name = "FlintAssertionError";
 		if (this.stack) {
 			const [, ...rest] = this.stack.split("\n");
 			this.stack = [`FlintAssertionError: ${this.message}`, ...rest].join("\n");

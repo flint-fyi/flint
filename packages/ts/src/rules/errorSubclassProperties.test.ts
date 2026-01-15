@@ -4,13 +4,15 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `class foo extends Error {
+			code: `
+class foo extends Error {
 	constructor(message: string) {
 		super(message);
 		this.name = 'foo';
 	}
 }`,
-			snapshot: `class foo extends Error {
+			snapshot: `
+class foo extends Error {
       ~~~
       Error subclass name 'foo' should start with an uppercase letter and end with 'Error'.
 	constructor(message: string) {
@@ -20,13 +22,15 @@ ruleTester.describe(rule, {
 }`,
 		},
 		{
-			code: `class Custom extends Error {
+			code: `
+class Custom extends Error {
 	constructor(message: string) {
 		super(message);
 		this.name = 'Custom';
 	}
 }`,
-			snapshot: `class Custom extends Error {
+			snapshot: `
+class Custom extends Error {
       ~~~~~~
       Error subclass name 'Custom' should start with an uppercase letter and end with 'Error'.
 	constructor(message: string) {
@@ -36,14 +40,16 @@ ruleTester.describe(rule, {
 }`,
 		},
 		{
-			code: `class CustomError extends Error {
+			code: `
+class CustomError extends Error {
 	constructor(message: string) {
 		super(message);
 		this.message = message;
 		this.name = 'CustomError';
 	}
 }`,
-			snapshot: `class CustomError extends Error {
+			snapshot: `
+class CustomError extends Error {
 	constructor(message: string) {
 		super(message);
 		this.message = message;
@@ -54,12 +60,14 @@ ruleTester.describe(rule, {
 }`,
 		},
 		{
-			code: `class CustomError extends Error {
+			code: `
+class CustomError extends Error {
 	constructor(message: string) {
 		super(message);
 	}
 }`,
-			snapshot: `class CustomError extends Error {
+			snapshot: `
+class CustomError extends Error {
 	constructor(message: string) {
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	Error subclass is missing a \`this.name\` assignment in the constructor.
@@ -70,13 +78,15 @@ ruleTester.describe(rule, {
 }`,
 		},
 		{
-			code: `class CustomError extends Error {
+			code: `
+class CustomError extends Error {
 	constructor(message: string) {
 		super(message);
 		this.name = this.constructor.name;
 	}
 }`,
-			snapshot: `class CustomError extends Error {
+			snapshot: `
+class CustomError extends Error {
 	constructor(message: string) {
 		super(message);
 		this.name = this.constructor.name;
@@ -86,13 +96,15 @@ ruleTester.describe(rule, {
 }`,
 		},
 		{
-			code: `class CustomError extends Error {
+			code: `
+class CustomError extends Error {
 	constructor(message: string) {
 		super(message);
 		this.name = 'WrongError';
 	}
 }`,
-			snapshot: `class CustomError extends Error {
+			snapshot: `
+class CustomError extends Error {
 	constructor(message: string) {
 		super(message);
 		this.name = 'WrongError';
