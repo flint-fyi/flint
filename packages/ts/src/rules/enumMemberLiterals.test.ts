@@ -4,8 +4,10 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `enum Foo { a = 1, b = a }`,
-			snapshot: `enum Foo { a = 1, b = a }
+			code: `
+enum Foo { a = 1, b = a }`,
+			snapshot: `
+enum Foo { a = 1, b = a }
                   ~~~~~
                   Prefer initializing enum members with literal values for predictability.`,
 		},
@@ -16,20 +18,26 @@ ruleTester.describe(rule, {
                         Prefer initializing enum members with literal values for predictability.`,
 		},
 		{
-			code: `enum Foo { a = 1 + 2 }`,
-			snapshot: `enum Foo { a = 1 + 2 }
+			code: `
+enum Foo { a = 1 + 2 }`,
+			snapshot: `
+enum Foo { a = 1 + 2 }
            ~~~~~~~~~
            Prefer initializing enum members with literal values for predictability.`,
 		},
 		{
-			code: `enum Foo { a = getValue() }`,
-			snapshot: `enum Foo { a = getValue() }
+			code: `
+enum Foo { a = getValue() }`,
+			snapshot: `
+enum Foo { a = getValue() }
            ~~~~~~~~~~~~~~
            Prefer initializing enum members with literal values for predictability.`,
 		},
 		{
-			code: `enum Foo { a = \`\${x}\` }`,
-			snapshot: `enum Foo { a = \`\${x}\` }
+			code: `
+enum Foo { a = \`\${x}\` }`,
+			snapshot: `
+enum Foo { a = \`\${x}\` }
            ~~~~~~~~~~
            Prefer initializing enum members with literal values for predictability.`,
 		},
