@@ -5,6 +5,8 @@ import { typescriptLanguage } from "../language.ts";
 import type * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
 function getLiteralValue(
 	initializer: AST.Expression,
 ): number | string | undefined {
@@ -12,13 +14,16 @@ function getLiteralValue(
 		case SyntaxKind.NoSubstitutionTemplateLiteral:
 		case SyntaxKind.StringLiteral:
 			return initializer.text;
+
 		case SyntaxKind.NumericLiteral:
 			return Number(initializer.text);
+
 		case SyntaxKind.PrefixUnaryExpression: {
 			const unary = initializer;
 			if (unary.operand.kind !== SyntaxKind.NumericLiteral) {
 				return undefined;
 			}
+
 			const value = Number(unary.operand.text);
 			if (unary.operator === SyntaxKind.MinusToken) {
 				return -value;
@@ -26,8 +31,10 @@ function getLiteralValue(
 			if (unary.operator === SyntaxKind.PlusToken) {
 				return value;
 			}
+
 			return undefined;
 		}
+
 		default:
 			return undefined;
 	}
@@ -75,19 +82,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								: member.name.getText(sourceFile);
 
 						const firstMember = seenValues.get(value);
-						if (firstMember !== undefined) {
-							context.report({
-								data: {
-									firstMember,
-									name: memberName,
-									value: String(value),
-								},
-								message: "duplicateValue",
-								range: getTSNodeRange(member, sourceFile),
-							});
-						} else {
+						if (firstMember === undefined) {
 							seenValues.set(value, memberName);
+							continue;
 						}
+
+						context.report({
+							data: {
+								firstMember,
+								name: memberName,
+								value: String(value),
+							},
+							message: "duplicateValue",
+							range: getTSNodeRange(member, sourceFile),
+						});
 					}
 				},
 			},
