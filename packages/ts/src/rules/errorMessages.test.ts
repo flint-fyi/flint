@@ -10,7 +10,7 @@ throw new Error();
 			snapshot: `
 throw new Error();
           ~~~~~
-          Errors created without a message are generally harder to debug.
+          \`Error\`s created without a message are generally harder to debug.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ throw new TypeError();
 			snapshot: `
 throw new TypeError();
           ~~~~~~~~~
-          Errors created without a message are generally harder to debug.
+          \`TypeError\`s created without a message are generally harder to debug.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ throw new RangeError();
 			snapshot: `
 throw new RangeError();
           ~~~~~~~~~~
-          Errors created without a message are generally harder to debug.
+          \`RangeError\`s created without a message are generally harder to debug.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ throw new Error("");
 			snapshot: `
 throw new Error("");
           ~~~~~
-          Errors created without a message are generally harder to debug.
+          \`Error\`s created without a message are generally harder to debug.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ throw new Error(undefined);
 			snapshot: `
 throw new Error(undefined);
           ~~~~~
-          Errors created without a message are generally harder to debug.
+          \`Error\`s created without a message are generally harder to debug.
 `,
 		},
 		{
@@ -60,7 +60,7 @@ Error();
 			snapshot: `
 Error();
 ~~~~~
-Errors created without a message are generally harder to debug.
+\`Error\`s created without a message are generally harder to debug.
 `,
 		},
 		{
@@ -70,7 +70,17 @@ const error = Error();
 			snapshot: `
 const error = Error();
               ~~~~~
-              Errors created without a message are generally harder to debug.
+              \`Error\`s created without a message are generally harder to debug.
+`,
+		},
+		{
+			code: `
+const MyError = Error; throw new MyError();
+`,
+			snapshot: `
+const MyError = Error; throw new MyError();
+                                 ~~~~~~~
+                                 \`Error\`s created without a message are generally harder to debug.
 `,
 		},
 	],
@@ -80,8 +90,8 @@ const error = Error();
 		`throw new RangeError(\`Value out of range\`);`,
 		`throw new Error(getMessage());`,
 		`throw new Error(condition ? "a" : "b");`,
+		`const MyError = Error; throw new MyError(condition ? "a" : "b");`,
 		`class CustomError extends Error {} throw new CustomError();`,
-		`const MyError = Error; throw new MyError();`,
 		`
 class Error {
   constructor(message: string) {}

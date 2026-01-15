@@ -8,7 +8,7 @@ import type * as AST from "../types/ast.ts";
 import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-const ERROR_CONSTRUCTORS = new Set([
+const errorConstructors = [
 	"AggregateError",
 	"Error",
 	"EvalError",
@@ -17,7 +17,23 @@ const ERROR_CONSTRUCTORS = new Set([
 	"SyntaxError",
 	"TypeError",
 	"URIError",
-]);
+];
+
+function getErrorConstructorWithoutMessage(
+	node: AST.CallExpression | AST.NewExpression,
+	typeChecker: Checker,
+) {
+	if (
+		node.expression.kind !== SyntaxKind.Identifier ||
+		hasValidMessageArgument(node.arguments)
+	) {
+		return false;
+	}
+
+	return errorConstructors.find((errorConstructor) =>
+		isGlobalDeclarationOfName(node.expression, errorConstructor, typeChecker),
+	);
+}
 
 function hasValidMessageArgument(
 	args: ts.NodeArray<AST.Expression> | undefined,
@@ -32,22 +48,6 @@ function hasValidMessageArgument(
 		!!firstArgument &&
 		!isEmptyString(firstArgument) &&
 		!isUndefinedLiteral(firstArgument)
-	);
-}
-
-function isErrorWithoutMessage(
-	node: AST.CallExpression | AST.NewExpression,
-	typeChecker: Checker,
-) {
-	return (
-		node.expression.kind === SyntaxKind.Identifier &&
-		ERROR_CONSTRUCTORS.has(node.expression.text) &&
-		isGlobalDeclarationOfName(
-			node.expression,
-			node.expression.text,
-			typeChecker,
-		) &&
-		!hasValidMessageArgument(node.arguments)
 	);
 }
 
@@ -77,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		missingMessage: {
 			primary:
-				"Errors created without a message are generally harder to debug.",
+				"`{{ errorConstructor }}`s created without a message are generally harder to debug.",
 			secondary: [
 				"Error instances without messages are harder to debug because they don't explain what went wrong.",
 				"A descriptive error message helps developers understand and fix issues more quickly.",
@@ -92,8 +92,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CallExpression | AST.NewExpression,
 			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
-			if (isErrorWithoutMessage(node, typeChecker)) {
+			const errorConstructor = getErrorConstructorWithoutMessage(
+				node,
+				typeChecker,
+			);
+
+			if (errorConstructor) {
 				context.report({
+					data: { errorConstructor },
 					message: "missingMessage",
 					range: getTSNodeRange(node.expression, sourceFile),
 				});
