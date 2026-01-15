@@ -1,0 +1,79 @@
+---
+description: "Reports empty enum declarations with no members."
+title: "emptyEnums"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="emptyEnums" />
+
+An enum with no members serves no purpose.
+Empty enums cannot be used to represent any values and are typically the result of incomplete implementation or accidental deletion.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+enum Status {}
+```
+
+```ts
+export enum Direction {}
+```
+
+```ts
+const enum Color {}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+enum Status {
+	Active,
+	Inactive,
+}
+```
+
+```ts
+export enum Direction {
+	North,
+	South,
+	East,
+	West,
+}
+```
+
+```ts
+const enum Color {
+	Red = 1,
+	Green = 2,
+	Blue = 3,
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are in the middle of implementing an enum and prefer to define the structure before adding members, you may want to temporarily disable this rule.
+Some codebases use empty enums as placeholder types during development.
+
+## Further Reading
+
+- [MDN: enum](https://developer.mozilla.org/en-US/docs/Glossary/Enumeration)
+- [TypeScript Handbook: Enums](https://www.typescriptlang.org/docs/handbook/enums.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="emptyEnums" />

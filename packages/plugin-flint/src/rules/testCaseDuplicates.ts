@@ -1,4 +1,7 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import type * as ts from "typescript";
 
 import { getRuleTesterDescribedCases } from "../getRuleTesterDescribedCases.ts";

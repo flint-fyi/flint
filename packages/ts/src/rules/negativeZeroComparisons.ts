@@ -1,7 +1,6 @@
+import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
 import {
 	isComparisonOperator,
 	isEqualityOperator,
