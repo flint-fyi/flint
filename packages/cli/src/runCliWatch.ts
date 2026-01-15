@@ -28,15 +28,16 @@ export async function runCliWatch(
 			const renderer = getRenderer();
 			currentRenderer = renderer;
 
-			runCliOnce(configFileName, renderer, values)
-				.then(({ lintResults }) => {
+			runCliOnce(configFileName, renderer, values).then(
+				({ lintResults }) => {
 					if (currentRenderer === renderer) {
 						currentLintResults = lintResults;
 					}
-				})
-				.catch((error: unknown) => {
+				},
+				(error: unknown) => {
 					log("Error during lint run: %o", error);
-				});
+				},
+			);
 
 			renderer.onQuit?.(() => {
 				abortController.abort();
