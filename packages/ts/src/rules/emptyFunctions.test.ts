@@ -100,5 +100,15 @@ const obj = { foo() {} };
 		`class Foo { constructor() { /* empty */ } }`,
 		`declare function foo(): void;`,
 		`abstract class Foo { abstract bar(): void; }`,
+		`
+export function makeDisposable<T extends object>(obj: T): Disposable & T {
+	return {
+		...obj,
+		[Symbol.dispose]: () => () => {
+			// Intentionally empty to satisfy the Disposable interface.
+		},
+	};
+}
+		`,
 	],
 });
