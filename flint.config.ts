@@ -27,6 +27,14 @@ export default defineConfig({
 			],
 		},
 		{
+			files: "packages/cli/src/**/*",
+			rules: [
+				ts.rules({
+					consoleCalls: false,
+				}),
+			],
+		},
+		{
 			files: {
 				exclude: ["pnpm-lock.yaml"],
 				include: yaml.files.all,
