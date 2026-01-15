@@ -15,7 +15,7 @@ Strict equality operators (`===` and `!==`) compare both value and type without 
 Therefore, it is almost always preferable to use the strict equality operators.
 
 **Note:** This rule only handles comparisons where neither operand is a nullish literal (`null` or `undefined`).
-Nullish comparisons are handled by the [nullishCheckStyle](/rules/ts/nullishCheckStyle) rule.
+Null/undefined checks are the one major exception to the rule that strict equality is always preferable, and linting around them is handled by the [nullishCheckStyle](/rules/ts/nullishCheckStyle) rule.
 
 ## Examples
 
