@@ -19,16 +19,15 @@ function getLiteralValue(
 			return Number(initializer.text);
 
 		case SyntaxKind.PrefixUnaryExpression: {
-			const unary = initializer;
-			if (unary.operand.kind !== SyntaxKind.NumericLiteral) {
+			if (initializer.operand.kind !== SyntaxKind.NumericLiteral) {
 				return undefined;
 			}
 
-			const value = Number(unary.operand.text);
-			if (unary.operator === SyntaxKind.MinusToken) {
+			const value = Number(initializer.operand.text);
+			if (initializer.operator === SyntaxKind.MinusToken) {
 				return -value;
 			}
-			if (unary.operator === SyntaxKind.PlusToken) {
+			if (initializer.operator === SyntaxKind.PlusToken) {
 				return value;
 			}
 
