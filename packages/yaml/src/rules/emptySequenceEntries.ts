@@ -14,7 +14,10 @@ export default ruleCreator.createRule(yamlLanguage, {
 				"Empty entries in sequences can lead to unexpected null values in the parsed data.",
 				"If an empty entry is intentional, use explicit null to clarify intent.",
 			],
-			suggestions: ["TODO"],
+			suggestions: [
+				"Remove the empty entry entirely.",
+				"Add content to the entry if it was intended to hold data.",
+			],
 		},
 	},
 	setup(context) {
