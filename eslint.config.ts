@@ -85,12 +85,13 @@ export default defineConfig(
 				"error",
 				{ allowNumber: true },
 			],
+			eqeqeq: ["error", "always", { null: "ignore" }],
 			"n/no-missing-import": "off",
+
 			"n/no-unsupported-features/node-builtins": [
 				"error",
 				{ allowExperimental: true },
 			],
-
 			// Stylistic concerns that don't interfere with Prettier
 			"logical-assignment-operators": [
 				"error",

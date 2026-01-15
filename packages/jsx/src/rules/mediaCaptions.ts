@@ -34,11 +34,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const tagName =
-				node.kind == SyntaxKind.JsxElement
+				node.kind === SyntaxKind.JsxElement
 					? node.openingElement.tagName
 					: node.tagName;
 
-			if (tagName.kind != SyntaxKind.Identifier) {
+			if (tagName.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 
@@ -48,15 +48,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const attributes =
-				node.kind == SyntaxKind.JsxElement
+				node.kind === SyntaxKind.JsxElement
 					? node.openingElement.attributes
 					: node.attributes;
 
 			if (
 				attributes.properties.some(
 					(properties) =>
-						properties.kind == SyntaxKind.JsxAttribute &&
-						properties.name.kind == SyntaxKind.Identifier &&
+						properties.kind === SyntaxKind.JsxAttribute &&
+						properties.name.kind === SyntaxKind.Identifier &&
 						properties.name.text === "muted",
 				)
 			) {
@@ -64,7 +64,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				node.kind == SyntaxKind.JsxElement &&
+				node.kind === SyntaxKind.JsxElement &&
 				node.children.some(isCaptionsTrack)
 			) {
 				return;
@@ -87,39 +87,39 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function isCaptionsTrack(node: AST.JsxChild) {
 	if (
-		node.kind != SyntaxKind.JsxElement &&
-		node.kind != SyntaxKind.JsxSelfClosingElement
+		node.kind !== SyntaxKind.JsxElement &&
+		node.kind !== SyntaxKind.JsxSelfClosingElement
 	) {
 		return false;
 	}
 
 	const childTagName =
-		node.kind == SyntaxKind.JsxElement
+		node.kind === SyntaxKind.JsxElement
 			? node.openingElement.tagName
 			: node.tagName;
 
 	if (
-		childTagName.kind != SyntaxKind.Identifier ||
+		childTagName.kind !== SyntaxKind.Identifier ||
 		childTagName.text !== "track"
 	) {
 		return false;
 	}
 
 	const childAttributes =
-		node.kind == SyntaxKind.JsxElement
+		node.kind === SyntaxKind.JsxElement
 			? node.openingElement.attributes
 			: node.attributes;
 
 	return childAttributes.properties.some((property) => {
 		if (
-			property.kind != SyntaxKind.JsxAttribute ||
-			property.name.kind != SyntaxKind.Identifier ||
+			property.kind !== SyntaxKind.JsxAttribute ||
+			property.name.kind !== SyntaxKind.Identifier ||
 			property.name.text !== "kind"
 		) {
 			return false;
 		}
 
-		if (property.initializer?.kind == SyntaxKind.StringLiteral) {
+		if (property.initializer?.kind === SyntaxKind.StringLiteral) {
 			return property.initializer.text === "captions";
 		}
 

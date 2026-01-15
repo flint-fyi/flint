@@ -47,7 +47,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (isNullishLiteral(node.left) || isNullishLiteral(node.right)) {
-						// Skip nullish comparisons - those are handled by equalityNullishOperators rule
+						// Skip nullish comparisons - those are handled by the nullishCheckStyle rule
 						return;
 					}
 

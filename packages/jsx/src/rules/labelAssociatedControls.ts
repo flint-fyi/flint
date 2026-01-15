@@ -79,7 +79,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function hasNestedControl(children: ts.NodeArray<AST.JsxChild>): boolean {
 			return children.some((child) => {
-				if (child.kind == SyntaxKind.JsxElement) {
+				if (child.kind === SyntaxKind.JsxElement) {
 					const { tagName } = child.openingElement;
 					return (
 						(tagName.kind === SyntaxKind.Identifier &&
@@ -104,14 +104,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			if (
-				node.kind == SyntaxKind.JsxElement &&
+				node.kind === SyntaxKind.JsxElement &&
 				hasNestedControl(node.children)
 			) {
 				return;
 			}
 
 			const tagName =
-				node.kind == SyntaxKind.JsxElement
+				node.kind === SyntaxKind.JsxElement
 					? node.openingElement.tagName
 					: node.tagName;
 
@@ -123,7 +123,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const attributes =
-				node.kind == SyntaxKind.JsxElement
+				node.kind === SyntaxKind.JsxElement
 					? node.openingElement.attributes
 					: node.attributes;
 

@@ -7,9 +7,9 @@ import { parseTestCase, parseTestCaseInvalid } from "./parseTestCases.ts";
 
 export function getRuleTesterDescribedCases(node: AST.CallExpression) {
 	if (
-		node.expression.kind != SyntaxKind.PropertyAccessExpression ||
-		node.expression.expression.kind != SyntaxKind.Identifier ||
-		node.expression.name.kind != SyntaxKind.Identifier ||
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+		node.expression.expression.kind !== SyntaxKind.Identifier ||
+		node.expression.name.kind !== SyntaxKind.Identifier ||
 		node.expression.name.text !== "describe" ||
 		node.arguments.length !== 2
 	) {
@@ -23,14 +23,14 @@ export function getRuleTesterDescribedCases(node: AST.CallExpression) {
 		node.arguments[1],
 		"Second argument is expected to be present by prior length check",
 	);
-	if (argument.kind != SyntaxKind.ObjectLiteralExpression) {
+	if (argument.kind !== SyntaxKind.ObjectLiteralExpression) {
 		return undefined;
 	}
 
 	const invalid = findProperty(
 		argument.properties,
 		"invalid",
-		(node) => node.kind == SyntaxKind.ArrayLiteralExpression,
+		(node) => node.kind === SyntaxKind.ArrayLiteralExpression,
 	);
 	if (!invalid) {
 		return undefined;
@@ -39,7 +39,7 @@ export function getRuleTesterDescribedCases(node: AST.CallExpression) {
 	const valid = findProperty(
 		argument.properties,
 		"valid",
-		(node) => node.kind == SyntaxKind.ArrayLiteralExpression,
+		(node) => node.kind === SyntaxKind.ArrayLiteralExpression,
 	);
 	if (!valid) {
 		return undefined;

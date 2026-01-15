@@ -39,8 +39,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function isFirstChildAccess(node: AST.Expression): boolean {
 			return (
-				node.kind == SyntaxKind.PropertyAccessExpression &&
-				node.name.kind == SyntaxKind.Identifier &&
+				node.kind === SyntaxKind.PropertyAccessExpression &&
+				node.name.kind === SyntaxKind.Identifier &&
 				node.name.text === "firstChild"
 			);
 		}
@@ -49,8 +49,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression(node, { sourceFile, typeChecker }) {
 					if (
-						node.expression.kind != SyntaxKind.PropertyAccessExpression ||
-						node.expression.name.kind != SyntaxKind.Identifier ||
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+						node.expression.name.kind !== SyntaxKind.Identifier ||
 						!isGlobalDeclaration(node.expression.name, typeChecker)
 					) {
 						return;

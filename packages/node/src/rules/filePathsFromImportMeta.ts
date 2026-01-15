@@ -58,7 +58,8 @@ function isNewURLWithDot(node: AST.Expression): node is AST.NewExpression & {
 		"First argument is expected to be present by prior length check",
 	);
 	return (
-		firstArgument.kind == SyntaxKind.StringLiteral && firstArgument.text === "."
+		firstArgument.kind === SyntaxKind.StringLiteral &&
+		firstArgument.text === "."
 	);
 }
 

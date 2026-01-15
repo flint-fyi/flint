@@ -17,8 +17,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Enforces consistent equality operator usage when comparing with null or undefined.",
-		id: "equalityNullishOperators",
-		presets: ["logical", "logicalStrict"],
+		id: "nullishCheckStyle",
 	},
 	messages: {
 		preferLooseNull: {

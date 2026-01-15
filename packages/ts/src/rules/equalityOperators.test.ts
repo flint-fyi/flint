@@ -63,7 +63,7 @@ x !== y
 		"a !== b",
 		"x === y",
 		"x !== y",
-		// Nullish comparisons are handled by equalityNullishOperators rule
+		// Nullish comparisons are handled by nullishCheckStyle rule
 		"a == null",
 		"null == a",
 		"a != null",

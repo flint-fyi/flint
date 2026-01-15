@@ -9,8 +9,8 @@ export function findProperty<Node extends AST.Expression>(
 ) {
 	return properties.find(
 		(property): property is AST.PropertyAssignment & { initializer: Node } =>
-			property.kind == SyntaxKind.PropertyAssignment &&
-			property.name.kind == SyntaxKind.Identifier &&
+			property.kind === SyntaxKind.PropertyAssignment &&
+			property.name.kind === SyntaxKind.Identifier &&
 			property.name.text === name &&
 			predicate(property.initializer),
 	)?.initializer;
