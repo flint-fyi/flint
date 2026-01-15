@@ -4,12 +4,14 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `class MyError extends Error {
+			code: `
+class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace(this, MyError);
 	}
 }`,
-			snapshot: `class MyError extends Error {
+			snapshot: `
+class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace(this, MyError);
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -18,12 +20,14 @@ ruleTester.describe(rule, {
 }`,
 		},
 		{
-			code: `class MyError extends Error {
+			code: `
+class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace?.(this, MyError);
 	}
 }`,
-			snapshot: `class MyError extends Error {
+			snapshot: `
+class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace?.(this, MyError);
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,12 +36,14 @@ ruleTester.describe(rule, {
 }`,
 		},
 		{
-			code: `class MyError extends Error {
+			code: `
+class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace(this, this.constructor);
 	}
 }`,
-			snapshot: `class MyError extends Error {
+			snapshot: `
+class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace(this, this.constructor);
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,12 +52,14 @@ ruleTester.describe(rule, {
 }`,
 		},
 		{
-			code: `class MyError extends Error {
+			code: `
+class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace?.(this, this.constructor);
 	}
 }`,
-			snapshot: `class MyError extends Error {
+			snapshot: `
+class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace?.(this, this.constructor);
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -60,12 +68,14 @@ ruleTester.describe(rule, {
 }`,
 		},
 		{
-			code: `class MyError extends Error {
+			code: `
+class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace(this, new.target);
 	}
 }`,
-			snapshot: `class MyError extends Error {
+			snapshot: `
+class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace(this, new.target);
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,12 +84,14 @@ ruleTester.describe(rule, {
 }`,
 		},
 		{
-			code: `class MyError extends Error {
+			code: `
+class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace?.(this, new.target);
 	}
 }`,
-			snapshot: `class MyError extends Error {
+			snapshot: `
+class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace?.(this, new.target);
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -88,12 +100,14 @@ ruleTester.describe(rule, {
 }`,
 		},
 		{
-			code: `class MyError extends TypeError {
+			code: `
+class MyError extends TypeError {
 	constructor() {
 		Error.captureStackTrace(this, MyError);
 	}
 }`,
-			snapshot: `class MyError extends TypeError {
+			snapshot: `
+class MyError extends TypeError {
 	constructor() {
 		Error.captureStackTrace(this, MyError);
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

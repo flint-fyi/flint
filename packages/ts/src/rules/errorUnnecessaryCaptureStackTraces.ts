@@ -6,39 +6,7 @@ import { typescriptLanguage } from "../language.ts";
 import type * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isErrorSubclass(node: AST.ClassDeclaration): boolean {
-	if (!node.heritageClauses) {
-		return false;
-	}
-
-	for (const clause of node.heritageClauses) {
-		if (clause.token !== SyntaxKind.ExtendsKeyword) {
-			continue;
-		}
-
-		for (const type of clause.types) {
-			const typeName = type.expression;
-			if (ts.isIdentifier(typeName)) {
-				const name = typeName.text;
-				if (
-					name === "Error" ||
-					name === "TypeError" ||
-					name === "RangeError" ||
-					name === "SyntaxError" ||
-					name === "ReferenceError" ||
-					name === "EvalError" ||
-					name === "URIError"
-				) {
-					return true;
-				}
-			}
-		}
-	}
-
-	return false;
-}
-
-function isCaptureStackTraceCall(node: ts.Node): boolean {
+function isCaptureStackTraceCall(node: ts.Node) {
 	if (!ts.isCallExpression(node) && !ts.isOptionalChain(node)) {
 		return false;
 	}
@@ -64,6 +32,38 @@ function isCaptureStackTraceCall(node: ts.Node): boolean {
 			property.text === "captureStackTrace"
 		) {
 			return true;
+		}
+	}
+
+	return false;
+}
+
+function isErrorSubclass(node: AST.ClassDeclaration) {
+	if (!node.heritageClauses) {
+		return false;
+	}
+
+	for (const clause of node.heritageClauses) {
+		if (clause.token !== SyntaxKind.ExtendsKeyword) {
+			continue;
+		}
+
+		for (const type of clause.types) {
+			const typeName = type.expression;
+			if (ts.isIdentifier(typeName)) {
+				const name = typeName.text;
+				if (
+					name === "Error" ||
+					name === "TypeError" ||
+					name === "RangeError" ||
+					name === "SyntaxError" ||
+					name === "ReferenceError" ||
+					name === "EvalError" ||
+					name === "URIError"
+				) {
+					return true;
+				}
+			}
 		}
 	}
 
@@ -126,69 +126,38 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const className = node.name?.text;
-
 					for (const member of node.members) {
-						if (!ts.isConstructorDeclaration(member)) {
+						if (!ts.isConstructorDeclaration(member) || !member.body) {
 							continue;
 						}
 
-						const body = member.body;
-						if (!body) {
-							continue;
-						}
-
-						for (const statement of body.statements) {
-							if (!ts.isExpressionStatement(statement)) {
+						for (const statement of member.body.statements) {
+							if (
+								!ts.isExpressionStatement(statement) ||
+								!(
+									ts.isCallExpression(statement.expression) ||
+									ts.isCallChain(statement.expression)
+								) ||
+								!isCaptureStackTraceCall(statement.expression)
+							) {
 								continue;
 							}
 
-							let callExpr: ts.CallExpression | undefined;
-
-							if (ts.isCallExpression(statement.expression)) {
-								callExpr = statement.expression;
-							} else if (ts.isCallChain(statement.expression)) {
-								callExpr = statement.expression;
-							}
-
-							if (!callExpr) {
-								continue;
-							}
-
-							const callee = callExpr.expression;
-							let isMatch = false;
-
-							if (ts.isPropertyAccessExpression(callee)) {
-								const object = callee.expression;
-								const property = callee.name;
-
-								if (
-									ts.isIdentifier(object) &&
-									object.text === "Error" &&
-									ts.isIdentifier(property) &&
-									property.text === "captureStackTrace"
-								) {
-									isMatch = true;
-								}
-							}
-
-							if (!isMatch) {
-								continue;
-							}
-
-							const args = callExpr.arguments;
+							const args = statement.expression.arguments;
 							if (args.length < 1) {
 								continue;
 							}
 
-							const firstArg = args[0];
-							if (firstArg.kind !== SyntaxKind.ThisKeyword) {
+							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							const firstArgument = args[0]!;
+							if (firstArgument.kind !== SyntaxKind.ThisKeyword) {
 								continue;
 							}
 
 							if (args.length >= 2) {
-								const secondArg = args[1];
-								if (!isValidSecondArgument(secondArg, className)) {
+								// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+								const secondArgument = args[1]!;
+								if (!isValidSecondArgument(secondArgument, node.name?.text)) {
 									continue;
 								}
 							}

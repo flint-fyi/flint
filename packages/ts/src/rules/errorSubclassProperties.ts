@@ -5,6 +5,7 @@ import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
 import type * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
+import { isErrorSubclass } from "./utils/isErrorSubclass.ts";
 
 function analyzeConstructor(node: AST.ClassDeclaration) {
 	let constructor: AST.ConstructorDeclaration | undefined;
@@ -93,18 +94,6 @@ function analyzeConstructor(node: AST.ClassDeclaration) {
 		superCallNode,
 		superCallPassesMessage,
 	};
-}
-
-function isErrorSubclass(node: AST.ClassDeclaration) {
-	return node.heritageClauses?.some(
-		(clause) =>
-			clause.token === SyntaxKind.ExtendsKeyword &&
-			clause.types.some(
-				(type) =>
-					ts.isIdentifier(type.expression) &&
-					type.expression.text.endsWith("Error"),
-			),
-	);
 }
 
 function isValidErrorClassName(
