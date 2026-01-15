@@ -4,7 +4,6 @@ import { describe, expect, it, vi } from "vitest";
 import { createVFSLinterHost } from "./createVFSLinterHost.ts";
 
 /* eslint @typescript-eslint/no-unused-vars: ["error", { "varsIgnorePattern": "^_$" }] */
-/* eslint-disable @typescript-eslint/no-empty-function */
 
 describe(createVFSLinterHost, () => {
 	it("normalizes cwd", () => {
@@ -405,11 +404,13 @@ describe(createVFSLinterHost, () => {
 		it("propagates correct params to base host watcher", () => {
 			const baseHost = {
 				...createVFSLinterHost({ caseSensitive: true, cwd: "/root" }),
-				watchFile: vi.fn(() => ({ [Symbol.dispose]() {} })),
+				watchFile: vi.fn(() => ({
+					[Symbol.dispose]: vi.fn(),
+				})),
 			};
 			const host = createVFSLinterHost({ baseHost });
 
-			using _ = host.watchFile("/root/file.txt", () => {}, 555);
+			using _ = host.watchFile("/root/file.txt", vi.fn(), 555);
 
 			expect(baseHost.watchFile).toHaveBeenCalledExactlyOnceWith(
 				"/root/file.txt",
@@ -427,7 +428,7 @@ describe(createVFSLinterHost, () => {
 			const host = createVFSLinterHost({ baseHost });
 
 			{
-				using _ = host.watchFile("/root/file.txt", () => {});
+				using _ = host.watchFile("/root/file.txt", vi.fn());
 				expect(dispose).not.toHaveBeenCalled();
 			}
 
@@ -592,11 +593,13 @@ describe(createVFSLinterHost, () => {
 		it("propagates correct params to base host watcher", () => {
 			const baseHost = {
 				...createVFSLinterHost({ caseSensitive: true, cwd: "/root" }),
-				watchDirectory: vi.fn(() => ({ [Symbol.dispose]() {} })),
+				watchDirectory: vi.fn(() => ({
+					[Symbol.dispose]: vi.fn(),
+				})),
 			};
 			const host = createVFSLinterHost({ baseHost });
 
-			using _ = host.watchDirectory("/root/file.txt", false, () => {}, 555);
+			using _ = host.watchDirectory("/root/file.txt", false, vi.fn(), 555);
 
 			expect(baseHost.watchDirectory).toHaveBeenCalledExactlyOnceWith(
 				"/root/file.txt",
@@ -615,7 +618,7 @@ describe(createVFSLinterHost, () => {
 			const host = createVFSLinterHost({ baseHost });
 
 			{
-				using _ = host.watchDirectory("/root/file.txt", false, () => {});
+				using _ = host.watchDirectory("/root/file.txt", false, vi.fn());
 				expect(dispose).not.toHaveBeenCalled();
 			}
 
@@ -623,5 +626,3 @@ describe(createVFSLinterHost, () => {
 		});
 	});
 });
-
-/* eslint-enable @typescript-eslint/no-empty-function */

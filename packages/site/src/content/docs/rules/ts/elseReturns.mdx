@@ -1,0 +1,89 @@
+---
+description: "Reports unnecessary `else` blocks following `if` statements that always return or throw."
+title: "elseReturns"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="elseReturns" />
+
+When an `if` block always ends with a terminating statement (`return` or `throw`), any code in the `else` block is unnecessary because it will only execute when the condition is false.
+Removing the `else` clause reduces nesting and improves code readability.
+
+This rule also handles:
+
+- `throw` statements as terminating statements
+- Nested `if`/`else` blocks where the inner if-else always terminates (making the outer else unnecessary)
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function getValue(condition: boolean) {
+	if (condition) {
+		return 1;
+	} else {
+		return 2;
+	}
+}
+```
+
+```ts
+function process(a: boolean, b: boolean) {
+	if (a) {
+		return compute();
+	} else if (b) {
+		return fallback();
+	} else {
+		return defaultValue();
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function getValue(condition: boolean) {
+	if (condition) {
+		return 1;
+	}
+
+	return 2;
+}
+```
+
+```ts
+function process(a: boolean, b: boolean) {
+	if (a) {
+		return compute();
+	}
+
+	if (b) {
+		return fallback();
+	}
+
+	return defaultValue();
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your team prefers the explicit structure of `if`/`else` blocks for clarity in conditional logic, or you have a large codebase where enforcing this style would require significant refactoring, you may choose to disable this rule.
+
+## Further Reading
+
+- [MDN: if...else](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/if...else)
+- [MDN: return](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/return)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="elseReturns" />

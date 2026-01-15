@@ -1,0 +1,88 @@
+---
+description: "Reports enums that contain both string and number members."
+title: "enumValueConsistency"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="enumValueConsistency" />
+
+TypeScript enums can have members with numeric or string values.
+While it's technically possible to mix both types in the same enum, doing so creates confusing iteration behavior.
+
+When you iterate over an enum using `Object.keys()`, `Object.values()`, or `Object.entries()`:
+
+- **String enums** produce exactly the number of items matching enum members
+- **Numeric enums** produce double the items due to reverse mappings (value-to-name mappings)
+- **Mixed enums** produce both numbers and strings
+
+This rule requires all enum members to consistently use either all numbers or all strings.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+enum Status {
+	Active = 0,
+	Inactive = "inactive",
+}
+```
+
+```ts
+enum Mixed {
+	First,
+	Second = "second",
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+enum Status {
+	Active = 0,
+	Inactive = 1,
+}
+```
+
+```ts
+enum Status {
+	Active = "active",
+	Inactive = "inactive",
+}
+```
+
+```ts
+enum Direction {
+	Up,
+	Down,
+	Left,
+	Right,
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you don't iterate over enums and don't mind the confusion of mixed enum member values, you may disable this rule.
+Some codebases intentionally use mixed enums for specific use cases where the iteration behavior is well understood.
+
+## Further Reading
+
+- [MDN: Object.keys()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys)
+- [TypeScript Handbook: Enums](https://www.typescriptlang.org/docs/handbook/enums.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="enumValueConsistency" />
