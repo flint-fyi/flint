@@ -186,47 +186,46 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				text: `void ${nodeText}`,
 			};
 
-			if (ts.isReturnStatement(invalidAncestor)) {
-				const functionNode = getParentFunction(invalidAncestor);
-				const isLastStatement =
-					functionNode &&
-					ts.isBlock(invalidAncestor.parent) &&
-					invalidAncestor.parent.parent === functionNode &&
-					invalidAncestor.parent.statements.at(-1) === invalidAncestor;
-
-				const returnValueText = invalidAncestor.expression
-					? sourceFile.text.slice(
-							invalidAncestor.expression.getStart(sourceFile),
-							invalidAncestor.expression.getEnd(),
-						)
-					: "";
-
+			if (!ts.isReturnStatement(invalidAncestor)) {
 				context.report({
-					message: "voidExpressionReturn",
+					message: "voidExpressionValue",
 					range: getTSNodeRange(node, sourceFile),
-					suggestions: [
-						isLastStatement
-							? {
-									id: "removeReturn",
-									range: getTSNodeRange(invalidAncestor, sourceFile),
-									text: `${returnValueText};`,
-								}
-							: {
-									id: "moveBeforeReturn",
-									range: getTSNodeRange(invalidAncestor, sourceFile),
-									text: `${returnValueText}; return;`,
-								},
-						suggestionBase,
-					],
+					suggestions: [suggestionBase],
 				});
-
 				return;
 			}
 
+			const functionNode = getParentFunction(invalidAncestor);
+			const isLastStatement =
+				functionNode &&
+				ts.isBlock(invalidAncestor.parent) &&
+				invalidAncestor.parent.parent === functionNode &&
+				invalidAncestor.parent.statements.at(-1) === invalidAncestor;
+
+			const returnValueText = invalidAncestor.expression
+				? sourceFile.text.slice(
+						invalidAncestor.expression.getStart(sourceFile),
+						invalidAncestor.expression.getEnd(),
+					)
+				: "";
+
 			context.report({
-				message: "voidExpressionValue",
+				message: "voidExpressionReturn",
 				range: getTSNodeRange(node, sourceFile),
-				suggestions: [suggestionBase],
+				suggestions: [
+					isLastStatement
+						? {
+								id: "removeReturn",
+								range: getTSNodeRange(invalidAncestor, sourceFile),
+								text: `${returnValueText};`,
+							}
+						: {
+								id: "moveBeforeReturn",
+								range: getTSNodeRange(invalidAncestor, sourceFile),
+								text: `${returnValueText}; return;`,
+							},
+					suggestionBase,
+				],
 			});
 		}
 
