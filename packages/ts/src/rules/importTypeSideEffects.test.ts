@@ -10,7 +10,7 @@ import { type A } from "mod";
 			snapshot: `
 import { type A } from "mod";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use a top-level \`import type\` instead of inline type qualifiers on every specifier.
+Every specifier in this import is a type, so a single top-level \`import type\` would be cleaner.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ import { type A, type B } from "mod";
 			snapshot: `
 import { type A, type B } from "mod";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use a top-level \`import type\` instead of inline type qualifiers on every specifier.
+Every specifier in this import is a type, so a single top-level \`import type\` would be cleaner.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ import { type A, type B, type C } from "mod";
 			snapshot: `
 import { type A, type B, type C } from "mod";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use a top-level \`import type\` instead of inline type qualifiers on every specifier.
+Every specifier in this import is a type, so a single top-level \`import type\` would be cleaner.
 `,
 		},
 	],

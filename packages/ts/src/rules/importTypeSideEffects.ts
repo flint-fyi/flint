@@ -8,12 +8,12 @@ export default typescriptLanguage.createRule({
 		description:
 			"Reports imports that use inline type qualifiers on all specifiers when a top-level type qualifier should be used instead.",
 		id: "importTypeSideEffects",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		useTopLevelQualifier: {
 			primary:
-				"Use a top-level `import type` instead of inline type qualifiers on every specifier.",
+				"Every specifier in this import is a type, so a single top-level `import type` would be cleaner.",
 			secondary: [
 				"When all specifiers in an import have inline `type` qualifiers, TypeScript's `verbatimModuleSyntax` leaves behind an empty import statement.",
 				"This creates an unnecessary side-effect import at runtime.",
