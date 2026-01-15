@@ -1,6 +1,6 @@
+import type { AST } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import * as AST from "../../types/ast.ts";
 import { skipParentheses } from "./skipParentheses.ts";
 
 export function getThisExpression(

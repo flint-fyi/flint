@@ -1,28 +1,14 @@
+import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST, Checker } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
-import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
+import { ruleCreator } from "./ruleCreator.ts";
+import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 import { skipParentheses } from "./utils/skipParentheses.ts";
-
-function isArrayOrTupleType(type: ts.Type, typeChecker: Checker): boolean {
-	return isTypeRecursive(
-		type,
-		(t) => typeChecker.isArrayType(t) || typeChecker.isTupleType(t),
-	);
-}
-
-function isArrayOrTupleTypeAtLocation(
-	node: AST.Expression,
-	typeChecker: Checker,
-) {
-	return isArrayOrTupleType(
-		getConstrainedTypeAtLocation(node, typeChecker),
-		typeChecker,
-	);
-}
 
 function isConcatApply(node: AST.CallExpression, typeChecker: Checker) {
 	if (
@@ -184,7 +170,7 @@ function isIdentityFlatMapCall(node: AST.CallExpression, typeChecker: Checker) {
 	return isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker);
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports legacy techniques to flatten arrays instead of using `.flat()`.",

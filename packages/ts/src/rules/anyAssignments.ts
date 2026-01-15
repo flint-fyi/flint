@@ -1,9 +1,11 @@
+import {
+	type AST,
+	type Checker,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
-import type { Checker } from "../types/checker.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 

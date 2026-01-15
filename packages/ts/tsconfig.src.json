@@ -6,7 +6,15 @@
 		"types": ["node"]
 	},
 	"extends": "../../tsconfig.base.json",
-	"include": ["src"],
+	"include": [
+		"src",
+		"../typescript-language/src/directives",
+		"../typescript-language/src/types"
+	],
 	"exclude": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
-	"references": [{ "path": "../core" }, { "path": "../utils" }]
+	"references": [
+		{ "path": "../core" },
+		{ "path": "../typescript-language" },
+		{ "path": "../utils" }
+	]
 }

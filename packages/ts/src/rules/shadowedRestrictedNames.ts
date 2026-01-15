@@ -1,8 +1,9 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 
 const restrictedNames = new Set([
 	"arguments",

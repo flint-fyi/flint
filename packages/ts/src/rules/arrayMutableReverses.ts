@@ -1,6 +1,9 @@
-import { typescriptLanguage } from "../language.ts";
-import { isBuiltinArrayMethod } from "../utils/isBuiltinArrayMethod.ts";
-import { isInlineArrayCreation } from "../utils/isInlineArrayCreation.ts";
+import {
+	isBuiltinArrayMethod,
+	isInlineArrayCreation,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
