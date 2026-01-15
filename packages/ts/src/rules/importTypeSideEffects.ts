@@ -27,42 +27,28 @@ export default typescriptLanguage.createRule({
 		return {
 			visitors: {
 				ImportDeclaration: (node, { sourceFile }) => {
-					// Skip type imports - they're already correct
-					if (node.importClause?.phaseModifier === SyntaxKind.TypeKeyword) {
-						return;
-					}
-
-					// Skip imports without a clause (side-effect imports)
-					if (!node.importClause) {
-						return;
-					}
-
-					// Skip default imports - they can't all be type-only
-					if (node.importClause.name) {
+					if (
+						!node.importClause ||
+						node.importClause.name ||
+						node.importClause.phaseModifier === SyntaxKind.TypeKeyword
+					) {
 						return;
 					}
 
 					const namedBindings = node.importClause.namedBindings;
-					if (!namedBindings || !ts.isNamedImports(namedBindings)) {
+					if (
+						!namedBindings ||
+						!ts.isNamedImports(namedBindings) ||
+						namedBindings.elements.length === 0 ||
+						namedBindings.elements.some((element) => !element.isTypeOnly)
+					) {
 						return;
 					}
 
-					const elements = namedBindings.elements;
-					if (elements.length === 0) {
-						return;
-					}
-
-					// Check if ALL specifiers have inline type qualifiers
-					const allHaveTypeQualifier = elements.every(
-						(element) => element.isTypeOnly,
-					);
-
-					if (allHaveTypeQualifier) {
-						context.report({
-							message: "useTopLevelQualifier",
-							range: getTSNodeRange(node, sourceFile),
-						});
-					}
+					context.report({
+						message: "useTopLevelQualifier",
+						range: getTSNodeRange(node, sourceFile),
+					});
 				},
 			},
 		};
