@@ -1,5 +1,16 @@
 # @flint/core
 
+## 0.19.0
+
+### Minor Changes
+
+- 6a5e553: feat(core): add RuleCreator class
+- 3561386: feat(core): introduce `LinterHost`
+
+### Patch Changes
+
+- 2fb9715: feat(cli): dynamic data replacement in message
+
 ## 0.18.1
 
 ### Patch Changes

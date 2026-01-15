@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/plugin-spelling",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"description": "[Experimental] A spell-checker plugin for Flint powered by CSpell.",
 	"repository": {
 		"type": "git",

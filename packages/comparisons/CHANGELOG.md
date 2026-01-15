@@ -1,5 +1,11 @@
 # @flint.fyi/comparisons
 
+## 0.1.5
+
+### Patch Changes
+
+- 56463f0: fix(comparisons): mark import/no-extraneous-dependencies as superseded by Knip
+
 ## 0.1.4
 
 ### Patch Changes

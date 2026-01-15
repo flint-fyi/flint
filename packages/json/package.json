@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/json",
-	"version": "0.15.2",
+	"version": "0.15.3",
 	"description": "[Experimental] JSON language plugin for Flint.",
 	"repository": {
 		"type": "git",

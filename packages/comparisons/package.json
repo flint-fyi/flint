@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/comparisons",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"description": "Comparisons of common lint rules across Flint and other web linters.",
 	"repository": {
 		"type": "git",

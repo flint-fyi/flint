@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/ts",
-	"version": "0.15.1",
+	"version": "0.15.2",
 	"description": "[Experimental] TypeScript language plugin for Flint.",
 	"repository": {
 		"type": "git",

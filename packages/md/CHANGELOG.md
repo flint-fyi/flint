@@ -1,5 +1,19 @@
 # @flint/md
 
+## 0.15.0
+
+### Minor Changes
+
+- de2ff83: feat(md): always parse with GFM
+
+### Patch Changes
+
+- 6a5e553: feat(core): add RuleCreator class
+- Updated dependencies [6a5e553]
+- Updated dependencies [2fb9715]
+- Updated dependencies [3561386]
+  - @flint.fyi/core@0.19.0
+
 ## 0.14.3
 
 ### Patch Changes
