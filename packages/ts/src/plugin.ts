@@ -74,6 +74,7 @@ import emptyFunctions from "./rules/emptyFunctions.ts";
 import emptyModuleAttributes from "./rules/emptyModuleAttributes.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
 import enumInitializers from "./rules/enumInitializers.ts";
+import enumMemberLiterals from "./rules/enumMemberLiterals.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
 import evolvingVariableTypes from "./rules/evolvingVariableTypes.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
@@ -93,8 +94,10 @@ import globalAssignments from "./rules/globalAssignments.ts";
 import globalObjectCalls from "./rules/globalObjectCalls.ts";
 import impliedEvals from "./rules/impliedEvals.ts";
 import importEmptyBlocks from "./rules/importEmptyBlocks.ts";
+import importTypeSideEffects from "./rules/importTypeSideEffects.ts";
 import instanceOfArrays from "./rules/instanceOfArrays.ts";
 import isNaNComparisons from "./rules/isNaNComparisons.ts";
+import misleadingVoidExpressions from "./rules/misleadingVoidExpressions.ts";
 import multilineAmbiguities from "./rules/multilineAmbiguities.ts";
 import namespaceDeclarations from "./rules/namespaceDeclarations.ts";
 import negativeZeroComparisons from "./rules/negativeZeroComparisons.ts";
@@ -208,6 +211,7 @@ export const ts = createPlugin({
 		emptyModuleAttributes,
 		emptyStaticBlocks,
 		enumInitializers,
+		enumMemberLiterals,
 		equalityOperatorNegations,
 		evolvingVariableTypes,
 		exceptionAssignments,
@@ -227,8 +231,10 @@ export const ts = createPlugin({
 		globalObjectCalls,
 		impliedEvals,
 		importEmptyBlocks,
+		importTypeSideEffects,
 		instanceOfArrays,
 		isNaNComparisons,
+		misleadingVoidExpressions,
 		multilineAmbiguities,
 		namespaceDeclarations,
 		negativeZeroComparisons,
