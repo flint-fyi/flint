@@ -4711,7 +4711,8 @@
 		"flint": {
 			"name": "unsupportedGlobals",
 			"plugin": "node",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "skipped"
 		}
 	},
 	{
@@ -4737,7 +4738,8 @@
 		"flint": {
 			"name": "unsupportedSyntax",
 			"plugin": "node",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "skipped"
 		}
 	},
 	{
@@ -8547,6 +8549,7 @@
 			"name": "classMethodsThis",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -8756,7 +8759,8 @@
 		],
 		"flint": {
 			"name": "consoleCalls",
-			"plugin": "ts"
+			"plugin": "ts",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -8916,7 +8920,8 @@
 		"flint": {
 			"name": "constructorSupers",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "untyped",
+			"status": "implemented"
 		}
 	},
 	{
@@ -9478,6 +9483,7 @@
 			"name": "elseReturns",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -9561,7 +9567,8 @@
 		"flint": {
 			"name": "emptyEnums",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -9600,6 +9607,7 @@
 			"name": "emptyFiles",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -9630,6 +9638,7 @@
 			"name": "emptyFunctions",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -9649,7 +9658,8 @@
 		"flint": {
 			"name": "emptyModuleAttributes",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -9735,7 +9745,8 @@
 		"flint": {
 			"name": "emptyTypeParameterLists",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -9792,7 +9803,9 @@
 		"flint": {
 			"name": "enumMemberLiterals",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"strictness": "strict",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -9830,7 +9843,8 @@
 		"flint": {
 			"name": "enumValueConsistency",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -9849,7 +9863,8 @@
 		"flint": {
 			"name": "enumValueDuplicates",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -10919,7 +10934,8 @@
 		"flint": {
 			"name": "impliedEvals",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -11060,7 +11076,8 @@
 		"flint": {
 			"name": "importEmptyBlocks",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -11224,7 +11241,9 @@
 		],
 		"flint": {
 			"name": "importTypeSideEffects",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -11331,7 +11350,8 @@
 		"flint": {
 			"name": "instanceOfArrays",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"notes": "Only for built-ins with a static .is* (Array).",
 		"oxlint": [
@@ -12638,7 +12658,8 @@
 		"flint": {
 			"name": "misleadingVoidExpressions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -12745,7 +12766,8 @@
 		"flint": {
 			"name": "moduleSpecifierLists",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -21534,7 +21556,8 @@
 		"flint": {
 			"name": "emptySequenceEntries",
 			"plugin": "yaml",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -21588,6 +21611,7 @@
 			"name": "numericTrailingZeros",
 			"plugin": "yaml",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -21602,6 +21626,7 @@
 			"name": "plainScalars",
 			"plugin": "yaml",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -21616,6 +21641,7 @@
 			"name": "stringMappingKeys",
 			"plugin": "yaml",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	}
