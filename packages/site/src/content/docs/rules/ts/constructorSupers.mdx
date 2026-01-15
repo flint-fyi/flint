@@ -1,0 +1,102 @@
+---
+description: "Reports constructors of derived classes that do not call `super()`, and constructors of non-derived classes that call `super()`."
+title: "constructorSupers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="constructorSupers" />
+
+Constructors of derived classes (classes that extend another class) must call `super()` before accessing `this` or returning.
+Constructors of non-derived classes must not call `super()`.
+Violating either requirement causes a runtime error.
+
+This rule reports code that appears to violate either requirement.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Child extends Parent {
+	constructor() {
+		this.value = 1;
+	}
+}
+```
+
+```ts
+class Child extends Parent {
+	constructor(name: string) {
+		this.name = name;
+	}
+}
+```
+
+```ts
+class Example {
+	constructor() {
+		super();
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Child extends Parent {
+	constructor() {
+		super();
+		this.value = 1;
+	}
+}
+```
+
+```ts
+class Child extends Parent {
+	constructor(name: string) {
+		super(name);
+		this.name = name;
+	}
+}
+```
+
+```ts
+class Example {
+	constructor() {
+		this.value = 1;
+	}
+}
+```
+
+```ts
+class Child extends Parent {
+	value = 1;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+TypeScript's compiler enforces this check, so this rule is redundant when using TypeScript with type checking enabled.
+Disable this rule if you are using TypeScript's type checker and want to reduce redundant linting.
+
+## Further Reading
+
+- [MDN: super](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/super)
+- [MDN: Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="constructorSupers" />

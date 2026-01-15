@@ -3478,7 +3478,8 @@
 		"flint": {
 			"name": "linkFragments",
 			"plugin": "md",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"markdownlint": [
 			{
@@ -3643,7 +3644,8 @@
 		"flint": {
 			"name": "tableColumnCounts",
 			"plugin": "md",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"markdownlint": [
 			{
@@ -4709,7 +4711,8 @@
 		"flint": {
 			"name": "unsupportedGlobals",
 			"plugin": "node",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "skipped"
 		}
 	},
 	{
@@ -4735,7 +4738,8 @@
 		"flint": {
 			"name": "unsupportedSyntax",
 			"plugin": "node",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "skipped"
 		}
 	},
 	{
@@ -6992,6 +6996,7 @@
 			"name": "accessorThisRecursion",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -8544,6 +8549,7 @@
 			"name": "classMethodsThis",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -8753,7 +8759,8 @@
 		],
 		"flint": {
 			"name": "consoleCalls",
-			"plugin": "ts"
+			"plugin": "ts",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -8913,7 +8920,8 @@
 		"flint": {
 			"name": "constructorSupers",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "untyped",
+			"status": "implemented"
 		}
 	},
 	{
@@ -9475,6 +9483,7 @@
 			"name": "elseReturns",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -9558,7 +9567,8 @@
 		"flint": {
 			"name": "emptyEnums",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -9597,6 +9607,7 @@
 			"name": "emptyFiles",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -9627,6 +9638,7 @@
 			"name": "emptyFunctions",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -10915,7 +10927,8 @@
 		"flint": {
 			"name": "impliedEvals",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -11056,7 +11069,8 @@
 		"flint": {
 			"name": "importEmptyBlocks",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -11220,7 +11234,9 @@
 		],
 		"flint": {
 			"name": "importTypeSideEffects",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -11327,7 +11343,8 @@
 		"flint": {
 			"name": "instanceOfArrays",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"notes": "Only for built-ins with a static .is* (Array).",
 		"oxlint": [
@@ -11400,7 +11417,8 @@
 		"flint": {
 			"name": "isNaNComparisons",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -12633,7 +12651,8 @@
 		"flint": {
 			"name": "misleadingVoidExpressions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -21515,7 +21534,8 @@
 		"flint": {
 			"name": "emptyMappingValues",
 			"plugin": "yaml",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -21583,6 +21603,7 @@
 			"name": "numericTrailingZeros",
 			"plugin": "yaml",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -21597,6 +21618,7 @@
 			"name": "plainScalars",
 			"plugin": "yaml",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -21611,6 +21633,7 @@
 			"name": "stringMappingKeys",
 			"plugin": "yaml",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	}

@@ -71,9 +71,9 @@ export default ruleCreator.createRule(markdownLanguage, {
 			const linkLength = linkPosition.end.offset - linkPosition.start.offset;
 			const textLength = textPosition.end.offset - textPosition.start.offset;
 
-			if (linkLength > textLength) {
-				textInValidLinks.add(textPosition.start.offset);
-			} else {
+			textInValidLinks.add(textPosition.start.offset);
+
+			if (linkLength <= textLength) {
 				report(textPosition.start.offset, textPosition.end.offset, node.url);
 			}
 		}
