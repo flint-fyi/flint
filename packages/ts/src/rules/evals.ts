@@ -1,27 +1,10 @@
 import {
-	type AST,
-	type Checker,
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
-
-function isEvalCall(node: AST.CallExpression, typeChecker: Checker): boolean {
-	const callee = node.expression;
-
-	if (callee.kind !== SyntaxKind.Identifier) {
-		return false;
-	}
-
-	if (callee.text !== "eval") {
-		return false;
-	}
-
-	return isGlobalDeclarationOfName(callee, "eval", typeChecker);
-}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -31,15 +14,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		noEval: {
-			primary: "Avoid using eval() as it poses security and performance risks.",
+			primary:
+				"Avoid using `eval()` as it poses security and performance risks.",
 			secondary: [
-				"eval() executes arbitrary code, which can be exploited for code injection attacks.",
+				"`eval()` executes arbitrary code, which can be exploited for code injection attacks.",
 				"It prevents JavaScript engine optimizations, making code run slower.",
 				"It makes code harder to debug and reason about.",
 			],
 			suggestions: [
-				"Use safer alternatives like JSON.parse() for parsing JSON data.",
-				"Use Function constructor if dynamic code execution is truly necessary (though still risky).",
+				"Use safer alternatives like `JSON.parse()` for parsing JSON data.",
+				"Use `Function` constructor if dynamic code execution is truly necessary (though still risky).",
 			],
 		},
 	},
@@ -47,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (isEvalCall(node, typeChecker)) {
+					if (isGlobalDeclarationOfName(node.expression, "eval", typeChecker)) {
 						context.report({
 							message: "noEval",
 							range: getTSNodeRange(node.expression, sourceFile),
