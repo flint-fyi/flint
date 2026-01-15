@@ -9,17 +9,12 @@ import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts
 import { ruleCreator } from "./ruleCreator.ts";
 import { skipParentheses } from "./utils/skipParentheses.ts";
 
-interface PatternMatch {
-	description: string;
-	replacement: string;
-}
-
 function checkLogDivideConstant(
 	node: AST.BinaryExpression,
 	typeChecker: Checker,
 	constantName: string,
 	replacementMethod: string,
-): PatternMatch | undefined {
+) {
 	if (node.operatorToken.kind !== SyntaxKind.SlashToken) {
 		return;
 	}
@@ -28,7 +23,7 @@ function checkLogDivideConstant(
 	const right = skipParentheses(node.right);
 
 	if (
-		isMathMethodCall(left, "log", typeChecker) &&
+		getMathMethodArgument(left, "log", typeChecker) &&
 		isMathProperty(right, constantName, typeChecker)
 	) {
 		return {
@@ -36,8 +31,6 @@ function checkLogDivideConstant(
 			replacement: `Math.${replacementMethod}(…)`,
 		};
 	}
-
-	return;
 }
 
 function checkLogTimesConstant(
@@ -45,7 +38,7 @@ function checkLogTimesConstant(
 	typeChecker: Checker,
 	constantName: string,
 	replacementMethod: string,
-): PatternMatch | undefined {
+) {
 	if (node.operatorToken.kind !== SyntaxKind.AsteriskToken) {
 		return;
 	}
@@ -54,7 +47,7 @@ function checkLogTimesConstant(
 	const right = skipParentheses(node.right);
 
 	if (
-		isMathMethodCall(left, "log", typeChecker) &&
+		getMathMethodArgument(left, "log", typeChecker) &&
 		isMathProperty(right, constantName, typeChecker)
 	) {
 		return {
@@ -65,15 +58,13 @@ function checkLogTimesConstant(
 
 	if (
 		isMathProperty(left, constantName, typeChecker) &&
-		isMathMethodCall(right, "log", typeChecker)
+		getMathMethodArgument(right, "log", typeChecker)
 	) {
 		return {
 			description: `Math.${constantName} * Math.log(…)`,
 			replacement: `Math.${replacementMethod}(…)`,
 		};
 	}
-
-	return;
 }
 
 function flattenPlusExpression(node: AST.Expression): AST.Expression[] {
@@ -92,25 +83,30 @@ function flattenPlusExpression(node: AST.Expression): AST.Expression[] {
 	return [unwrapped];
 }
 
-function isMathMethodCall(
+function getMathMethodArgument(
 	node: AST.Expression,
 	methodName: string,
 	typeChecker: Checker,
 ) {
-	if (node.kind !== SyntaxKind.CallExpression || node.questionDotToken) {
+	if (
+		node.kind !== SyntaxKind.CallExpression ||
+		node.questionDotToken ||
+		node.arguments.length !== 1
+	) {
 		return false;
 	}
 
-	if (node.arguments.length !== 1) {
-		return false;
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const argument = node.arguments[0]!;
+
+	if (
+		argument.kind === SyntaxKind.SpreadElement ||
+		!isMathProperty(node.expression, methodName, typeChecker)
+	) {
+		return undefined;
 	}
 
-	const argument = node.arguments[0];
-	if (!argument || argument.kind === SyntaxKind.SpreadElement) {
-		return false;
-	}
-
-	return isMathProperty(node.expression, methodName, typeChecker);
+	return argument;
 }
 
 function isMathProperty(
@@ -118,14 +114,9 @@ function isMathProperty(
 	propertyName: string,
 	typeChecker: Checker,
 ) {
-	if (
-		node.kind !== SyntaxKind.PropertyAccessExpression ||
-		node.questionDotToken
-	) {
-		return false;
-	}
-
 	return (
+		node.kind === SyntaxKind.PropertyAccessExpression &&
+		!node.questionDotToken &&
 		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === propertyName &&
 		node.expression.kind === SyntaxKind.Identifier &&
@@ -133,7 +124,7 @@ function isMathProperty(
 	);
 }
 
-function isPow2Expression(
+function isPowerTwoExpression(
 	node: AST.Expression,
 	sourceFile: ts.SourceFile,
 ): boolean {
@@ -226,11 +217,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 				},
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (!isMathMethodCall(node, "sqrt", typeChecker)) {
-						return;
-					}
-
-					const argument = node.arguments[0];
+					const argument = getMathMethodArgument(node, "sqrt", typeChecker);
 					if (!argument) {
 						return;
 					}
@@ -238,7 +225,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const expressions = flattenPlusExpression(argument);
 
 					if (
-						!expressions.every((expr) => isPow2Expression(expr, sourceFile))
+						!expressions.every((expr) => isPowerTwoExpression(expr, sourceFile))
 					) {
 						return;
 					}
