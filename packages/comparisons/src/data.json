@@ -9587,8 +9587,7 @@
 		"flint": {
 			"name": "emptyExports",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
+			"preset": "logical"
 		},
 		"oxlint": [
 			{

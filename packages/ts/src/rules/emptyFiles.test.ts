@@ -5,17 +5,23 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+
 // just a comment
 `,
+
 			snapshot: `
 
 
 This file contains no meaningful code.
+
 // just a comment
 `,
 		},
 		{
 			code: `
+
+
+This file contains no meaningful code.
 /* multi-line
 comment */
 `,
@@ -28,51 +34,69 @@ comment */
 `,
 		},
 		{
-			code: `"use strict";
+			code: `
+"use strict";
 `,
-			snapshot: `"use strict";
+			snapshot: `
+
 
 This file contains no meaningful code.
+"use strict";
 `,
 		},
 		{
-			code: `'use strict';
+			code: `
+'use strict';
 `,
-			snapshot: `'use strict';
+			snapshot: `
+
 
 This file contains no meaningful code.
+'use strict';
 `,
 		},
 		{
-			code: `"use asm";
+			code: `
+"use asm";
 `,
-			snapshot: `"use asm";
+			snapshot: `
+
 
 This file contains no meaningful code.
+"use asm";
 `,
 		},
 		{
-			code: `;
+			code: `
+;
 `,
-			snapshot: `;
+			snapshot: `
+
 
 This file contains no meaningful code.
+;
 `,
 		},
 		{
-			code: `;;;
+			code: `
+;;;
 `,
-			snapshot: `;;;
+			snapshot: `
+
 
 This file contains no meaningful code.
+;;;
 `,
 		},
 		{
-			code: `{}
+			code: `
+{}
 `,
-			snapshot: `{}
+			snapshot: `
+
 
 This file contains no meaningful code.
+{}
 `,
 		},
 		{
