@@ -13,7 +13,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 When using TypeScript's `verbatimModuleSyntax` option, imports with inline `type` qualifiers on every specifier (like `import { type A, type B }`) get transpiled to an empty import statement (`import "mod"`).
 This creates an unnecessary side-effect import at runtime.
 
-Using a top-level `import type` declaration (`import type { A, B }`) ensures the entire import statement is removed during transpilation.
+Using a top-level `import type` declaration ensures the entire import statement is removed during transpilation.
 
 ## Examples
 
@@ -21,23 +21,23 @@ Using a top-level `import type` declaration (`import type { A, B }`) ensures the
 <TabItem label="❌ Incorrect">
 
 ```ts
-import { type A } from "mod";
+import { type A } from "flint";
 ```
 
 ```ts
-import { type A, type B } from "mod";
+import { type A, type B } from "flint";
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```ts
-import type { A, B } from "mod";
+import type { A, B } from "flint";
 ```
 
 ```ts
 // Mixed type and value imports are allowed
-import { type A, value } from "mod";
+import { type A, value } from "flint";
 ```
 
 </TabItem>
