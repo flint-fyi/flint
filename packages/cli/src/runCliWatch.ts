@@ -34,7 +34,7 @@ export async function runCliWatch(
 						currentLintResults = lintResults;
 					}
 				})
-				.catch((error) => {
+				.catch((error: unknown) => {
 					log("Error during lint run: %o", error);
 				});
 
