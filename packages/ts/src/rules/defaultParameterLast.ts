@@ -4,12 +4,13 @@ import {
 	typescriptLanguage,
 } from "../language.ts";
 import * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Enforce default parameters to be last.",
 		id: "defaultParameterLast",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		defaultParameterLast: {

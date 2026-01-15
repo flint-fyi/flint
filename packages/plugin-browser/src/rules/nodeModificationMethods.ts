@@ -47,12 +47,14 @@ function getPropertyNameNode(node: AST.LeftHandSideExpression) {
 	return node.name;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer modern DOM APIs like .replaceWith() and .before() over legacy methods like .replaceChild() and .insertBefore().",
 		id: "nodeModificationMethods",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		after: {

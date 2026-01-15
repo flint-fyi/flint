@@ -1,6 +1,7 @@
 import ts from "typescript";
 
 import { jsonLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
 const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER;
 const MIN_SAFE_INTEGER = Number.MIN_SAFE_INTEGER;
@@ -26,11 +27,11 @@ function hasLoneSurrogate(text: string): boolean {
 	return false;
 }
 
-export default jsonLanguage.createRule({
+export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description: "Reports JSON values that are unsafe for data interchange.",
 		id: "valueSafety",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		infinity: {

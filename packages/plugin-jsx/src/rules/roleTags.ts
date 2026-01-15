@@ -33,12 +33,14 @@ const roleToElement: Record<string, string> = {
 	textbox: "input[type='text']/textarea",
 };
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports ARIA roles that have semantic HTML element equivalents.",
 		id: "roleTags",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferSemanticElement: {

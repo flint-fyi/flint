@@ -7,11 +7,13 @@ import {
 import languageTags from "language-tags";
 import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports invalid lang attribute values.",
 		id: "langValidity",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidLang: {

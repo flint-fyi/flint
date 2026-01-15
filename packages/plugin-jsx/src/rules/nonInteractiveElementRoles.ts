@@ -75,12 +75,14 @@ const allowedExceptions: Record<string, Set<string> | undefined> = {
 	]),
 };
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports non-interactive elements with interactive ARIA roles.",
 		id: "nonInteractiveElementRoles",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidRole: {

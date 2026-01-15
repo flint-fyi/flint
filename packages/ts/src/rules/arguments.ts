@@ -17,12 +17,14 @@ function isNonArrowFunctionBoundary(node: ts.Node): "quit" | boolean {
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using the arguments object instead of rest parameters.",
 		id: "arguments",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		preferRestParameters: {

@@ -2,7 +2,9 @@ import { type TypeScriptFileServices, typescriptLanguage } from "@flint.fyi/ts";
 import * as tsutils from "ts-api-utils";
 import ts, { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "../ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using await expressions inside loops.",
 		id: "loopAwaits",

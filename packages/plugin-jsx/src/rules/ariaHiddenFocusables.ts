@@ -16,11 +16,13 @@ const focusableElements = new Set([
 	"video",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports elements with aria-hidden='true' that are focusable.",
 		id: "ariaHiddenFocusables",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		ariaHiddenFocusable: {

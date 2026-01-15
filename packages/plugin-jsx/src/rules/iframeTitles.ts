@@ -6,11 +6,13 @@ import {
 } from "@flint.fyi/ts";
 import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports <iframe> elements without a title prop.",
 		id: "iframeTitles",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingTitle: {

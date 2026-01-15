@@ -1,11 +1,13 @@
 import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
 import ts, { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports `javascript:` URLs that can act as a form of eval.",
 		id: "scriptUrls",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		scriptUrl: {

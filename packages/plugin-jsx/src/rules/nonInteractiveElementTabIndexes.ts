@@ -50,12 +50,14 @@ const interactiveRoles = new Set([
 	"textbox",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports non-interactive elements with positive or zero tabIndex values.",
 		id: "nonInteractiveElementTabIndexes",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		nonInteractiveTabIndex: {

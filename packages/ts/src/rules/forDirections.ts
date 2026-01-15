@@ -113,12 +113,14 @@ function getIncrementorDirection(incrementor: AST.Expression) {
 	return undefined;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports for loops with counter variables that move in the wrong direction.",
 		id: "forDirections",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		wrongDirection: {

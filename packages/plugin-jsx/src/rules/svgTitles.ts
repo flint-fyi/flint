@@ -6,11 +6,13 @@ import {
 } from "@flint.fyi/ts";
 import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports <svg> elements without a <title> child element.",
 		id: "svgTitles",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingTitle: {

@@ -8,11 +8,13 @@ import { SyntaxKind } from "typescript";
 
 const distractingElements = new Set(["blink", "marquee"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports distracting elements like <marquee> and <blink>.",
 		id: "distractingElements",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noDistractingElement: {
