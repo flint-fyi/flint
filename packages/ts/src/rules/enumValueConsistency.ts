@@ -6,27 +6,26 @@ import { typescriptLanguage } from "../language.ts";
 import type * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-enum EnumMemberKind {
-	Number = "number",
-	String = "string",
-	Unknown = "unknown",
-}
+const enumMemberKinds = {
+	Number: "number",
+	String: "string",
+	Unknown: "unknown",
+};
 
-function getEnumMemberKind(
-	member: AST.EnumMember,
-	typeChecker: Checker,
-): EnumMemberKind {
+function getEnumMemberKind(member: AST.EnumMember, typeChecker: Checker) {
 	const type = typeChecker.getTypeAtLocation(member);
 
-	if (type.isNumberLiteral() || (type.flags & ts.TypeFlags.NumberLike) !== 0) {
-		return EnumMemberKind.Number;
+	if (type.isNumberLiteral()) {
+		if ((type.flags & ts.TypeFlags.NumberLike) !== 0) {
+			return enumMemberKinds.Number;
+		}
+	} else if (type.isStringLiteral()) {
+		if ((type.flags & ts.TypeFlags.StringLike) !== 0) {
+			return enumMemberKinds.String;
+		}
 	}
 
-	if (type.isStringLiteral() || (type.flags & ts.TypeFlags.StringLike) !== 0) {
-		return EnumMemberKind.String;
-	}
-
-	return EnumMemberKind.Unknown;
+	return enumMemberKinds.Unknown;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -64,17 +63,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					for (const member of node.members) {
 						const kind = getEnumMemberKind(member, typeChecker);
 
-						if (kind === EnumMemberKind.Number) {
+						if (kind === enumMemberKinds.Number) {
 							hasNumber = true;
-						} else if (kind === EnumMemberKind.String) {
+						} else if (kind === enumMemberKinds.String) {
 							hasString = true;
 						}
 
 						if (hasNumber && hasString) {
-							const name = node.name.text;
-
 							context.report({
-								data: { name },
+								data: { name: node.name.text },
 								message: "mixedTypes",
 								range: getTSNodeRange(node.name, sourceFile),
 							});

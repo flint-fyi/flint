@@ -4,22 +4,34 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `enum Status { Active = 0, Inactive = "inactive" }`,
-			snapshot: `enum Status { Active = 0, Inactive = "inactive" }
+			code: `
+enum Status { Active = 0, Inactive = "inactive" }
+`,
+			snapshot: `
+enum Status { Active = 0, Inactive = "inactive" }
      ~~~~~~
-     Enum 'Status' contains both number and string members, which can cause unexpected iteration behavior.`,
+     Enum 'Status' contains both number and string members, which can cause unexpected iteration behavior.
+`,
 		},
 		{
-			code: `enum Mixed { First, Second = "second" }`,
-			snapshot: `enum Mixed { First, Second = "second" }
+			code: `
+enum Mixed { First, Second = "second" }
+`,
+			snapshot: `
+enum Mixed { First, Second = "second" }
      ~~~~~
-     Enum 'Mixed' contains both number and string members, which can cause unexpected iteration behavior.`,
+     Enum 'Mixed' contains both number and string members, which can cause unexpected iteration behavior.
+`,
 		},
 		{
-			code: `enum Values { a = 1, b = 2, c = "three" }`,
-			snapshot: `enum Values { a = 1, b = 2, c = "three" }
+			code: `
+enum Values { a = 1, b = 2, c = "three" }
+`,
+			snapshot: `
+enum Values { a = 1, b = 2, c = "three" }
      ~~~~~~
-     Enum 'Values' contains both number and string members, which can cause unexpected iteration behavior.`,
+     Enum 'Values' contains both number and string members, which can cause unexpected iteration behavior.
+`,
 		},
 	],
 	valid: [
