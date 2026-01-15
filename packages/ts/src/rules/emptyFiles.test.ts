@@ -4,20 +4,26 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `// just a comment
+			code: `
+// just a comment
 `,
-			snapshot: `// just a comment
+			snapshot: `
+
 
 This file contains no meaningful code.
+// just a comment
 `,
 		},
 		{
-			code: `/* multi-line
+			code: `
+/* multi-line
 comment */
 `,
-			snapshot: `/* multi-line
+			snapshot: `
+
 
 This file contains no meaningful code.
+/* multi-line
 comment */
 `,
 		},
@@ -70,13 +76,16 @@ This file contains no meaningful code.
 `,
 		},
 		{
-			code: `// Comment
+			code: `
+// Comment
 "use strict";
 ;
 `,
-			snapshot: `// Comment
+			snapshot: `
+
 
 This file contains no meaningful code.
+// Comment
 "use strict";
 ;
 `,

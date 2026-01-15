@@ -37,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		emptyFile: {
 			primary: "This file contains no meaningful code.",
 			secondary: [
-				"Empty files clutter the codebase and serve no purpose.",
+				"Empty files clutter the codebase and often serve no purpose.",
 				"Files containing only whitespace, comments, directives, or empty statements are considered empty.",
 			],
 			suggestions: [
