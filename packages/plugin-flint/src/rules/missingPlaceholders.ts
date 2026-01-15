@@ -121,18 +121,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (!messageProperty) {
 				return;
 			}
-
-			const messageId =
-				messageProperty.kind === SyntaxKind.PropertyAssignment &&
-				messageProperty.initializer.kind === SyntaxKind.StringLiteral
-					? messageProperty.initializer.text
-					: null;
-
-			if (!messageId) {
+			if (
+				messageProperty.kind !== SyntaxKind.PropertyAssignment ||
+				messageProperty.initializer.kind !== SyntaxKind.StringLiteral
+			) {
 				return;
 			}
 
-			const requiredPlaceholders = messagesMap.get(messageId);
+			const requiredPlaceholders = messagesMap.get(
+				messageProperty.initializer.text,
+			);
 			if (!requiredPlaceholders || requiredPlaceholders.size === 0) {
 				return;
 			}
