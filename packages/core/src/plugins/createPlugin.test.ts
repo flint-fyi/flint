@@ -15,7 +15,7 @@ const ruleStandalone = stubLanguage.createRule({
 	about: {
 		description: "",
 		id: "standalone",
-		preset: "first",
+		presets: ["first"],
 	},
 	messages: stubMessages,
 	setup: vi.fn(),
@@ -25,7 +25,7 @@ const ruleWithOptionalOption = stubLanguage.createRule({
 	about: {
 		description: "",
 		id: "withOptionalOption",
-		preset: "second",
+		presets: ["second"],
 	},
 	messages: stubMessages,
 	options: {
@@ -41,7 +41,7 @@ describe(createPlugin, () => {
 	});
 
 	describe("presets", () => {
-		it("groups rules by about.preset when it exists", () => {
+		it("groups rules by about.presets when they exist", () => {
 			expect(plugin.presets).toEqual({
 				first: [ruleStandalone],
 				second: [ruleWithOptionalOption],

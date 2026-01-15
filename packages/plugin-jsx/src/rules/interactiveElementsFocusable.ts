@@ -99,12 +99,14 @@ const nonInteractiveRoles = new Set([
 	"tooltip",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports interactive elements that are not focusable via keyboard.",
 		id: "interactiveElementsFocusable",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		notFocusable: {

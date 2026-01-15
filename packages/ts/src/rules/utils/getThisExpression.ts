@@ -1,6 +1,7 @@
 import { SyntaxKind } from "typescript";
 
 import * as AST from "../../types/ast.ts";
+import { skipParentheses } from "./skipParentheses.ts";
 
 export function getThisExpression(
 	node: AST.Expression,
@@ -21,11 +22,4 @@ export function getThisExpression(
 	}
 
 	return null;
-}
-
-function skipParentheses(node: AST.Expression): AST.Expression {
-	while (node.kind == SyntaxKind.ParenthesizedExpression) {
-		node = node.expression;
-	}
-	return node;
 }

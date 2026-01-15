@@ -79,11 +79,13 @@ const validAriaRoles = new Set([
 	"treeitem",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports invalid or abstract ARIA roles.",
 		id: "ariaRoleValidity",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidRole: {

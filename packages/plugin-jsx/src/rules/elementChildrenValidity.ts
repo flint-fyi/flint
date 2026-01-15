@@ -22,12 +22,14 @@ const voidElements = new Set([
 	"wbr",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports void DOM elements that have children, which is invalid HTML.",
 		id: "elementChildrenValidity",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		voidElementWithChildren: {

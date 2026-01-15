@@ -6,11 +6,13 @@ import {
 } from "@flint.fyi/ts";
 import { SyntaxKind } from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports invalid usage of anchor elements.",
 		id: "anchorValidity",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidHref: {

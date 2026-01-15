@@ -12,7 +12,7 @@ export default typescriptLanguage.createRule({
 		description:
 			"Reports `Promise` catch callback parameters that are not typed as unknown.",
 		id: "catchCallbackTypes",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		preferUnknown: {

@@ -5,13 +5,14 @@ import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
 import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
 import { unwrapParenthesizedExpressionsParent } from "../utils/unwrapParentParenthesizedExpressions.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using chained assignment expressions (e.g., a = b = c).",
 		id: "chainedAssignments",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		noChainedAssignment: {

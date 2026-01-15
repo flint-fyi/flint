@@ -3,13 +3,14 @@ import ts from "typescript";
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import type { AST } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports getters that return literal values instead of using readonly class fields.",
 		id: "classLiteralProperties",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferField: {

@@ -3,13 +3,14 @@ import {
 	typescriptLanguage,
 } from "../language.ts";
 import type * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using empty destructuring patterns that destructure no values.",
 		id: "emptyDestructures",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		emptyPattern: {

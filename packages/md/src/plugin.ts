@@ -12,8 +12,10 @@ import imageContents from "./rules/imageContents.ts";
 import labelReferences from "./rules/labelReferences.ts";
 import labelReferenceValidity from "./rules/labelReferenceValidity.ts";
 import linkContents from "./rules/linkContents.ts";
+import linkFragments from "./rules/linkFragments.ts";
 import mediaSyntaxReversals from "./rules/mediaSyntaxReversals.ts";
 import referenceLikeUrls from "./rules/referenceLikeUrls.ts";
+import tableColumnCounts from "./rules/tableColumnCounts.ts";
 
 export const md = createPlugin({
 	files: {
@@ -33,7 +35,9 @@ export const md = createPlugin({
 		labelReferences,
 		labelReferenceValidity,
 		linkContents,
+		linkFragments,
 		mediaSyntaxReversals,
+		tableColumnCounts,
 		referenceLikeUrls,
 	],
 });
