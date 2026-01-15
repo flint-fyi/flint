@@ -12,8 +12,10 @@ enum Foo { a = 1, b = a }
                   Prefer initializing enum members with literal values for predictability.`,
 		},
 		{
-			code: `const x = 1; enum Foo { a = x }`,
-			snapshot: `const x = 1; enum Foo { a = x }
+			code: `
+const x = 1; enum Foo { a = x }`,
+			snapshot: `
+const x = 1; enum Foo { a = x }
                         ~~~~~
                         Prefer initializing enum members with literal values for predictability.`,
 		},
