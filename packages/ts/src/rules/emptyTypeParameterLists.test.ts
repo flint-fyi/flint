@@ -7,25 +7,25 @@ ruleTester.describe(rule, {
 			code: `type Foo<> = string;`,
 			snapshot: `type Foo<> = string;
 ~~~~~~~~~~~~~~~~~~~~
-Empty type parameter lists are not allowed.`,
+Empty type parameter lists are unnecessary.`,
 		},
 		{
 			code: `interface Bar<> {}`,
 			snapshot: `interface Bar<> {}
 ~~~~~~~~~~~~~~~~~~
-Empty type parameter lists are not allowed.`,
+Empty type parameter lists are unnecessary.`,
 		},
 		{
 			code: `type Generic<> = { value: number };`,
 			snapshot: `type Generic<> = { value: number };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Empty type parameter lists are not allowed.`,
+Empty type parameter lists are unnecessary.`,
 		},
 		{
 			code: `interface Empty<> extends Base {}`,
 			snapshot: `interface Empty<> extends Base {}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Empty type parameter lists are not allowed.`,
+Empty type parameter lists are unnecessary.`,
 		},
 	],
 	valid: [

@@ -10,7 +10,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="emptyTypeParameterLists" />
 
-TypeScript permits empty type parameter lists like `<>`, but this practice is discouraged.
+TypeScript permits empty type parameter lists like `<>`, but this practice is unnecessary.
 Empty type parameter lists can lead to unclear or ambiguous code where the intention is not self-evident.
 
 ## Examples
@@ -60,11 +60,11 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If your codebase intentionally uses empty type parameter lists for specific tooling or codegen purposes, you may disable this rule.
+If your codebase intentionally uses empty type parameter lists for specific tooling or code generation purposes, you may disable this rule.
 
 ## Further Reading
 
-- [Biome: noEmptyTypeParameters](https://biomejs.dev/linter/rules/noEmptyTypeParameters)
+- [TypeScript Handbook: Generics](https://www.typescriptlang.org/docs/handbook/2/generics.html)
 
 ## Equivalents in Other Linters
 
