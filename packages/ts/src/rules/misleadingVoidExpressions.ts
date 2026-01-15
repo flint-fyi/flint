@@ -192,9 +192,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					functionNode &&
 					ts.isBlock(invalidAncestor.parent) &&
 					invalidAncestor.parent.parent === functionNode &&
-					invalidAncestor.parent.statements[
-						invalidAncestor.parent.statements.length - 1
-					] === invalidAncestor;
+					invalidAncestor.parent.statements.at(-1) === invalidAncestor;
 
 				const returnValueText = invalidAncestor.expression
 					? sourceFile.text.slice(
