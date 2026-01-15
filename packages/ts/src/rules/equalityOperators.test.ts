@@ -7,10 +7,13 @@ ruleTester.describe(rule, {
 			code: `
 a != undefined
 `,
+			output: `
+a != null
+`,
 			snapshot: `
 a != undefined
   ~~~~~~~~~~~~
-  Compare with 'null' rather than 'undefined'
+  Compare with 'null' rather than 'undefined'.
 `,
 		},
 		{
@@ -22,6 +25,14 @@ a !== null
   ~~~~~~~~
   Use loose equality ('!=') for nullish comparisons.
 `,
+			suggestions: [
+				{
+					id: "useLooseOperator",
+					updated: `
+a != null
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -31,8 +42,16 @@ a != null
 			snapshot: `
 a != null
   ~~~~~~~
-  Use strict equality ('!==') instead of '!='
+  Use strict equality ('!==') instead of '!='.
 `,
+			suggestions: [
+				{
+					id: "useStrictOperator",
+					updated: `
+a !== null
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -42,8 +61,16 @@ null != a
 			snapshot: `
 null != a
 ~~~~~~~
-Use strict equality ('!==') instead of '!='
+Use strict equality ('!==') instead of '!='.
 `,
+			suggestions: [
+				{
+					id: "useStrictOperator",
+					updated: `
+null !== a
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -54,16 +81,27 @@ null !== a
 ~~~~~~~~
 Use loose equality ('!=') for nullish comparisons.
 `,
+			suggestions: [
+				{
+					id: "useLooseOperator",
+					updated: `
+null != a
+`,
+				},
+			],
 		},
 		{
 			code: `
 a != undefined
 `,
 			options: { nullishComparisonStrictness: "either" },
+			output: `
+a != null
+`,
 			snapshot: `
 a != undefined
   ~~~~~~~~~~~~
-  Compare with 'null' rather than 'undefined'
+  Compare with 'null' rather than 'undefined'.
 `,
 		},
 		{
@@ -71,10 +109,13 @@ a != undefined
 undefined != a
 `,
 			options: { nullishComparisonStrictness: "either" },
+			output: `
+null != a
+`,
 			snapshot: `
 undefined != a
 ~~~~~~~~~~~~
-Compare with 'null' rather than 'undefined'
+Compare with 'null' rather than 'undefined'.
 `,
 		},
 		{
@@ -84,8 +125,16 @@ a == b
 			snapshot: `
 a == b
   ~~
-	Use strict equality ('===') instead of loose equality ('==').
+  Use strict equality ('===') instead of '=='.
 `,
+			suggestions: [
+				{
+					id: "useStrictOperator",
+					updated: `
+a === b
+`,
+				},
+			],
 		},
 	],
 	valid: [

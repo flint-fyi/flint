@@ -1,5 +1,6 @@
 import {
 	type AST,
+	getTSNodeRange,
 	typescriptLanguage,
 	unwrapParenthesizedExpression,
 } from "@flint.fyi/typescript-language";
@@ -70,7 +71,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		preferLooseNull: {
-			primary: "Compare with 'null' rather than 'undefined'",
+			primary: "Compare with 'null' rather than 'undefined'.",
 			secondary: [
 				"`x == null` and `x == undefined` are equivalent to each other; both check `x === null || x === undefined`.",
 				"Use `x == null` since it is shorter.",
@@ -78,21 +79,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			suggestions: ["Replace 'undefined' with 'null'."],
 		},
 		preferLooseNullish: {
-			primary: "Use loose equality ('{{ looseOp }}') for nullish comparisons.",
+			primary:
+				"Use loose equality ('{{ looseOperator }}') for nullish comparisons.",
 			secondary: [
 				"When checking for nullish values (null or undefined), loose equality is more concise.",
 				"`x == null` checks for both null and undefined, equivalent to `x === null || x === undefined`.",
 			],
-			suggestions: ["Replace '{{ strictOp }}' with '{{ looseOp }}'."],
+			suggestions: [
+				"Replace '{{ strictOperator }}' with '{{ looseOperator }}'.",
+			],
 		},
 		preferStrictEquality: {
 			primary:
-				"Use strict equality ('{{ strictOp }}') instead of '{{ looseOp }}'",
+				"Use strict equality ('{{ strictOperator }}') instead of '{{ looseOperator }}'.",
 			secondary: [
 				"The loose equality operators '=='/'!=' perform arcane type coercion and are difficult to reason about.",
 				"Use strict equality operators '==='/'!==' instead.",
 			],
-			suggestions: ["Replace '{{ looseOp }} with {{ strictOp }}."],
+			suggestions: ["Replace '{{ looseOperator }} with {{ strictOperator }}."],
 		},
 	},
 	options: {
@@ -127,16 +131,25 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (!hasNullishComparison) {
 						if (isLooseComparison) {
+							const strictOperator = toStrictOperator(operator);
+							const operatorRange = getTSNodeRange(
+								node.operatorToken,
+								sourceFile,
+							);
 							context.report({
 								data: {
-									looseOp: operator,
-									strictOp: toStrictOperator(operator),
+									looseOperator: operator,
+									strictOperator,
 								},
 								message: "preferStrictEquality",
-								range: {
-									begin: node.operatorToken.getStart(sourceFile),
-									end: node.operatorToken.getEnd(),
-								},
+								range: operatorRange,
+								suggestions: [
+									{
+										id: "useStrictOperator",
+										range: operatorRange,
+										text: strictOperator,
+									},
+								],
 							});
 						}
 						return;
@@ -153,22 +166,33 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						options.nullishComparisonStrictness === "loose" &&
 						!isLooseComparison
 					) {
-						const looseOp = toLooseOperator(operator);
+						const looseOperator = toLooseOperator(operator);
+						const operatorRange = getTSNodeRange(
+							node.operatorToken,
+							sourceFile,
+						);
 						context.report({
 							data: {
-								looseOp,
-								strictOp: operator,
+								looseOperator,
+								strictOperator: operator,
 							},
 							message: "preferLooseNullish",
 							range: leftIsNullish
 								? {
 										begin: node.left.getStart(sourceFile),
-										end: node.operatorToken.getEnd(),
+										end: operatorRange.end,
 									}
 								: {
-										begin: node.operatorToken.getStart(sourceFile),
+										begin: operatorRange.begin,
 										end: node.right.getEnd(),
 									},
+							suggestions: [
+								{
+									id: "useLooseOperator",
+									range: operatorRange,
+									text: looseOperator,
+								},
+							],
 						});
 						return;
 					}
@@ -178,26 +202,36 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						isLooseComparison
 					) {
 						const strictOperator = toStrictOperator(operator);
+						const operatorRange = getTSNodeRange(
+							node.operatorToken,
+							sourceFile,
+						);
 						context.report({
 							data: {
-								looseOp: operator,
-								strictOp: strictOperator,
+								looseOperator: operator,
+								strictOperator,
 							},
 							message: "preferStrictEquality",
 							range: leftIsNullish
 								? {
 										begin: node.left.getStart(sourceFile),
-										end: node.operatorToken.getEnd(),
+										end: operatorRange.end,
 									}
 								: {
-										begin: node.operatorToken.getStart(sourceFile),
+										begin: operatorRange.begin,
 										end: node.right.getEnd(),
 									},
+							suggestions: [
+								{
+									id: "useStrictOperator",
+									range: operatorRange,
+									text: strictOperator,
+								},
+							],
 						});
 						return;
 					}
 
-					// For loose comparisons with nullish values, check the style preference
 					if (
 						isLooseComparison &&
 						options.looseNullishComparisonStyle === "null"
@@ -207,6 +241,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						if (leftIsUndefined || rightIsUndefined) {
 							context.report({
+								fix: [
+									{
+										range: getTSNodeRange(
+											leftIsUndefined ? node.left : node.right,
+											sourceFile,
+										),
+										text: "null",
+									},
+								],
 								message: "preferLooseNull",
 								range: leftIsUndefined
 									? {
