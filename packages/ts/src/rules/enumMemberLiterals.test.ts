@@ -7,31 +7,31 @@ ruleTester.describe(rule, {
 			code: `enum Foo { a = 1, b = a }`,
 			snapshot: `enum Foo { a = 1, b = a }
                   ~~~~~
-                  Enum members should be initialized with literal values.`,
+                  Prefer initializing enum members with literal values for predictability.`,
 		},
 		{
 			code: `const x = 1; enum Foo { a = x }`,
 			snapshot: `const x = 1; enum Foo { a = x }
                         ~~~~~
-                        Enum members should be initialized with literal values.`,
+                        Prefer initializing enum members with literal values for predictability.`,
 		},
 		{
 			code: `enum Foo { a = 1 + 2 }`,
 			snapshot: `enum Foo { a = 1 + 2 }
            ~~~~~~~~~
-           Enum members should be initialized with literal values.`,
+           Prefer initializing enum members with literal values for predictability.`,
 		},
 		{
 			code: `enum Foo { a = getValue() }`,
 			snapshot: `enum Foo { a = getValue() }
            ~~~~~~~~~~~~~~
-           Enum members should be initialized with literal values.`,
+           Prefer initializing enum members with literal values for predictability.`,
 		},
 		{
 			code: `enum Foo { a = \`\${x}\` }`,
 			snapshot: `enum Foo { a = \`\${x}\` }
            ~~~~~~~~~~
-           Enum members should be initialized with literal values.`,
+           Prefer initializing enum members with literal values for predictability.`,
 		},
 	],
 	valid: [

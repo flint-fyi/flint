@@ -11,14 +11,13 @@ function isLiteralExpression(expression: AST.Expression): boolean {
 		case SyntaxKind.NumericLiteral:
 		case SyntaxKind.StringLiteral:
 			return true;
-		case SyntaxKind.PrefixUnaryExpression: {
-			const unary = expression;
 
+		case SyntaxKind.PrefixUnaryExpression: {
 			if (
-				unary.operator === SyntaxKind.PlusToken ||
-				unary.operator === SyntaxKind.MinusToken
+				expression.operator === SyntaxKind.PlusToken ||
+				expression.operator === SyntaxKind.MinusToken
 			) {
-				return unary.operand.kind === SyntaxKind.NumericLiteral;
+				return expression.operand.kind === SyntaxKind.NumericLiteral;
 			}
 
 			return false;
@@ -33,11 +32,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Requires all enum members to be literal values.",
 		id: "enumMemberLiterals",
-		presets: ["logical"],
+		presets: ["logicalStrict"],
 	},
 	messages: {
 		requireLiteral: {
-			primary: "Enum members should be initialized with literal values.",
+			primary:
+				"Prefer initializing enum members with literal values for predictability.",
 			secondary: [
 				"Using computed values in enum initializers can lead to unexpected results.",
 				"Enum members create their own scope, so variable references may not work as expected.",
@@ -51,20 +51,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				EnumMember: (node, { sourceFile }) => {
-					const initializer = node.initializer;
-
-					if (!initializer) {
-						return;
+					if (node.initializer && !isLiteralExpression(node.initializer)) {
+						context.report({
+							message: "requireLiteral",
+							range: getTSNodeRange(node, sourceFile),
+						});
 					}
-
-					if (isLiteralExpression(initializer)) {
-						return;
-					}
-
-					context.report({
-						message: "requireLiteral",
-						range: getTSNodeRange(node, sourceFile),
-					});
 				},
 			},
 		};

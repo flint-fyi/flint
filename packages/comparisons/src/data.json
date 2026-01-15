@@ -9802,6 +9802,7 @@
 			"name": "enumMemberLiterals",
 			"plugin": "ts",
 			"preset": "logical",
+			"strictness": "strict",
 			"status": "implemented"
 		},
 		"oxlint": [
