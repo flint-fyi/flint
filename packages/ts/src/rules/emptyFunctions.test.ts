@@ -4,62 +4,82 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `function foo() {}`,
-			snapshot: `function foo() {}
+			code: `
+function foo() {}`,
+			snapshot: `
+function foo() {}
 ~~~~~~~~~~~~~~~~~
 Empty functions should contain code or a comment explaining why they are empty.`,
 		},
 		{
-			code: `const foo = function() {};`,
-			snapshot: `const foo = function() {};
+			code: `
+const foo = function() {};`,
+			snapshot: `
+const foo = function() {};
             ~~~~~~~~~~~~~
             Empty functions should contain code or a comment explaining why they are empty.`,
 		},
 		{
-			code: `const foo = () => {};`,
-			snapshot: `const foo = () => {};
+			code: `
+const foo = () => {};`,
+			snapshot: `
+const foo = () => {};
             ~~~~~~~~
             Empty functions should contain code or a comment explaining why they are empty.`,
 		},
 		{
-			code: `class Foo { bar() {} }`,
-			snapshot: `class Foo { bar() {} }
+			code: `
+class Foo { bar() {} }`,
+			snapshot: `
+class Foo { bar() {} }
             ~~~~~~~~
             Empty functions should contain code or a comment explaining why they are empty.`,
 		},
 		{
-			code: `class Foo { constructor() {} }`,
-			snapshot: `class Foo { constructor() {} }
+			code: `
+class Foo { constructor() {} }`,
+			snapshot: `
+class Foo { constructor() {} }
             ~~~~~~~~~~~~~~~~
             Empty functions should contain code or a comment explaining why they are empty.`,
 		},
 		{
-			code: `class Foo { get bar() {} }`,
-			snapshot: `class Foo { get bar() {} }
+			code: `
+class Foo { get bar() {} }`,
+			snapshot: `
+class Foo { get bar() {} }
             ~~~~~~~~~~~~
             Empty functions should contain code or a comment explaining why they are empty.`,
 		},
 		{
-			code: `class Foo { set bar(value) {} }`,
-			snapshot: `class Foo { set bar(value) {} }
+			code: `
+class Foo { set bar(value) {} }`,
+			snapshot: `
+class Foo { set bar(value) {} }
             ~~~~~~~~~~~~~~~~~
             Empty functions should contain code or a comment explaining why they are empty.`,
 		},
 		{
-			code: `async function foo() {}`,
-			snapshot: `async function foo() {}
+			code: `
+async function foo() {}`,
+			snapshot: `
+async function foo() {}
 ~~~~~~~~~~~~~~~~~~~~~~~
 Empty functions should contain code or a comment explaining why they are empty.`,
 		},
 		{
-			code: `function* foo() {}`,
-			snapshot: `function* foo() {}
+			code: `
+function* foo() {}`,
+			snapshot: `
+function* foo() {}
 ~~~~~~~~~~~~~~~~~~
 Empty functions should contain code or a comment explaining why they are empty.`,
 		},
 		{
-			code: `const obj = { foo() {} };`,
-			snapshot: `const obj = { foo() {} };
+			code: `
+const obj = { foo() {} };`,
+			snapshot: `
+const obj = { foo() {} };
               ~~~~~~~~
               Empty functions should contain code or a comment explaining why they are empty.`,
 		},
