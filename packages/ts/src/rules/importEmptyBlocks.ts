@@ -7,7 +7,7 @@ export default typescriptLanguage.createRule({
 	about: {
 		description: "Reports empty named import blocks.",
 		id: "importEmptyBlocks",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noEmptyNamedBlocksOnly: {
