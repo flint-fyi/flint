@@ -1,9 +1,11 @@
+import {
+	type AST,
+	type Checker,
+	getModifyingReferences,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import type { Checker } from "../types/checker.ts";
-import { getModifyingReferences } from "../utils/getModifyingReferences.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

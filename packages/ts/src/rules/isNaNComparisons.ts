@@ -1,11 +1,14 @@
+import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
+	isGlobalDeclarationOfName,
+	typescriptLanguage,
+	unwrapParenthesizedExpression,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import type { Checker } from "../types/checker.ts";
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
-import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
 const comparisonOperators = new Set([
 	SyntaxKind.EqualsEqualsEqualsToken,
@@ -18,7 +21,7 @@ const comparisonOperators = new Set([
 	SyntaxKind.LessThanToken,
 ]);
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports comparisons with NaN, which should use Number.isNaN() instead.",

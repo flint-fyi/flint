@@ -48,10 +48,13 @@ import classAssignments from "./rules/classAssignments.ts";
 import classFieldDeclarations from "./rules/classFieldDeclarations.ts";
 import classLiteralProperties from "./rules/classLiteralProperties.ts";
 import classMemberDuplicates from "./rules/classMemberDuplicates.ts";
+import classMethodsThis from "./rules/classMethodsThis.ts";
 import combinedPushes from "./rules/combinedPushes.ts";
 import consecutiveNonNullAssertions from "./rules/consecutiveNonNullAssertions.ts";
+import consoleCalls from "./rules/consoleCalls.ts";
 import constantAssignments from "./rules/constantAssignments.ts";
 import constructorReturns from "./rules/constructorReturns.ts";
+import constructorSupers from "./rules/constructorSupers.ts";
 import dateConstructorClones from "./rules/dateConstructorClones.ts";
 import dateNowTimestamps from "./rules/dateNowTimestamps.ts";
 import debuggerStatements from "./rules/debuggerStatements.ts";
@@ -62,14 +65,30 @@ import destructuringConsistency from "./rules/destructuringConsistency.ts";
 import duplicateArguments from "./rules/duplicateArguments.ts";
 import dynamicDeletes from "./rules/dynamicDeletes.ts";
 import elseIfDuplicates from "./rules/elseIfDuplicates.ts";
+import elseReturns from "./rules/elseReturns.ts";
 import emptyBlocks from "./rules/emptyBlocks.ts";
 import emptyDestructures from "./rules/emptyDestructures.ts";
+import emptyEnums from "./rules/emptyEnums.ts";
+import emptyExports from "./rules/emptyExports.ts";
+import emptyFiles from "./rules/emptyFiles.ts";
+import emptyFunctions from "./rules/emptyFunctions.ts";
+import emptyModuleAttributes from "./rules/emptyModuleAttributes.ts";
+import emptyObjectTypes from "./rules/emptyObjectTypes.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
+import emptyTypeParameterLists from "./rules/emptyTypeParameterLists.ts";
 import enumInitializers from "./rules/enumInitializers.ts";
+import enumMemberLiterals from "./rules/enumMemberLiterals.ts";
+import enumValueConsistency from "./rules/enumValueConsistency.ts";
+import enumValueDuplicates from "./rules/enumValueDuplicates.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
+import errorMessages from "./rules/errorMessages.ts";
+import errorSubclassProperties from "./rules/errorSubclassProperties.ts";
+import errorUnnecessaryCaptureStackTraces from "./rules/errorUnnecessaryCaptureStackTraces.ts";
 import evals from "./rules/evals.ts";
 import evolvingVariableTypes from "./rules/evolvingVariableTypes.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
+import exportMutables from "./rules/exportMutables.ts";
+import exportUniqueNames from "./rules/exportUniqueNames.ts";
 import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
 import finallyStatementSafety from "./rules/finallyStatementSafety.ts";
 import forDirections from "./rules/forDirections.ts";
@@ -84,7 +103,15 @@ import functionNewCalls from "./rules/functionNewCalls.ts";
 import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
 import globalAssignments from "./rules/globalAssignments.ts";
 import globalObjectCalls from "./rules/globalObjectCalls.ts";
+import impliedEvals from "./rules/impliedEvals.ts";
+import importEmptyBlocks from "./rules/importEmptyBlocks.ts";
+import importTypeSideEffects from "./rules/importTypeSideEffects.ts";
+import instanceOfArrays from "./rules/instanceOfArrays.ts";
 import isNaNComparisons from "./rules/isNaNComparisons.ts";
+import mathMethods from "./rules/mathMethods.ts";
+import meaninglessVoidOperators from "./rules/meaninglessVoidOperators.ts";
+import misleadingVoidExpressions from "./rules/misleadingVoidExpressions.ts";
+import moduleSpecifierLists from "./rules/moduleSpecifierLists.ts";
 import multilineAmbiguities from "./rules/multilineAmbiguities.ts";
 import namespaceDeclarations from "./rules/namespaceDeclarations.ts";
 import negativeZeroComparisons from "./rules/negativeZeroComparisons.ts";
@@ -172,10 +199,13 @@ export const ts = createPlugin({
 		classFieldDeclarations,
 		classLiteralProperties,
 		classMemberDuplicates,
+		classMethodsThis,
 		combinedPushes,
 		consecutiveNonNullAssertions,
+		consoleCalls,
 		constantAssignments,
 		constructorReturns,
+		constructorSupers,
 		dateConstructorClones,
 		dateNowTimestamps,
 		debuggerStatements,
@@ -186,14 +216,30 @@ export const ts = createPlugin({
 		duplicateArguments,
 		dynamicDeletes,
 		elseIfDuplicates,
+		elseReturns,
 		emptyBlocks,
 		emptyDestructures,
+		emptyEnums,
+		emptyExports,
+		emptyFiles,
+		emptyFunctions,
+		emptyModuleAttributes,
+		emptyObjectTypes,
 		emptyStaticBlocks,
+		emptyTypeParameterLists,
 		enumInitializers,
+		enumMemberLiterals,
+		enumValueConsistency,
+		enumValueDuplicates,
 		equalityOperatorNegations,
+		errorMessages,
+		errorSubclassProperties,
+		errorUnnecessaryCaptureStackTraces,
 		evals,
 		evolvingVariableTypes,
 		exceptionAssignments,
+		exportMutables,
+		exportUniqueNames,
 		fetchMethodBodies,
 		finallyStatementSafety,
 		forDirections,
@@ -208,7 +254,15 @@ export const ts = createPlugin({
 		generatorFunctionYields,
 		globalAssignments,
 		globalObjectCalls,
+		impliedEvals,
+		importEmptyBlocks,
+		importTypeSideEffects,
+		instanceOfArrays,
 		isNaNComparisons,
+		mathMethods,
+		meaninglessVoidOperators,
+		misleadingVoidExpressions,
+		moduleSpecifierLists,
 		multilineAmbiguities,
 		namespaceDeclarations,
 		negativeZeroComparisons,

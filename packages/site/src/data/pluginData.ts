@@ -258,6 +258,5 @@ export function getPluginData(pluginId: string) {
 		}
 	}
 
-	console.log(new Error().stack);
 	throw new Error(`Unknown pluginId: ${pluginId}`);
 }

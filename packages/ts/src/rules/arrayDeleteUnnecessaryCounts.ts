@@ -1,10 +1,12 @@
+import {
+	type AST,
+	getTSNodeRange,
+	hasSameTokens,
+	typescriptLanguage,
+	unwrapParenthesizedExpression,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import { hasSameTokens } from "../utils/hasSameTokens.ts";
-import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
 function isUnnecessaryCountArgument(
