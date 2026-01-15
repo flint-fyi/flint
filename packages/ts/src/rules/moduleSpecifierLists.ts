@@ -6,25 +6,12 @@ import type * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasNamedBindings(node: AST.ImportDeclaration) {
-	const importClause = node.importClause;
-	if (!importClause) {
-		return false;
-	}
-
-	const namedBindings = importClause.namedBindings;
+	const namedBindings = node.importClause?.namedBindings;
 	if (!namedBindings) {
 		return false;
 	}
 
-	if (ts.isNamedImports(namedBindings)) {
-		return namedBindings.elements.length > 0;
-	}
-
-	return true;
-}
-
-function hasDefaultImport(node: AST.ImportDeclaration) {
-	return node.importClause?.name !== undefined;
+	return !ts.isNamedImports(namedBindings) || namedBindings.elements.length > 0;
 }
 
 function hasNamespaceImport(node: AST.ImportDeclaration) {
@@ -49,6 +36,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		presets: ["logical"],
 	},
 	messages: {
+		emptyExportSpecifiers: {
+			primary: "Export statement with empty specifier list is unnecessary.",
+			secondary: [
+				"Empty export braces serve no purpose and can be removed.",
+				"If re-exporting from a module, ensure you specify what to export.",
+			],
+			suggestions: ["Remove the empty export statement."],
+		},
 		emptyImportSpecifiers: {
 			primary: "Import statement with empty specifier list is unnecessary.",
 			secondary: [
@@ -59,140 +54,119 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"Remove the empty braces or convert to a side-effect import.",
 			],
 		},
-		emptyExportSpecifiers: {
-			primary: "Export statement with empty specifier list is unnecessary.",
-			secondary: [
-				"Empty export braces serve no purpose and can be removed.",
-				"If re-exporting from a module, ensure you specify what to export.",
-			],
-			suggestions: ["Remove the empty export statement."],
-		},
 	},
 	setup(context) {
+		function createExportSuggestions(
+			moduleSpecifier: AST.Expression,
+			node: AST.ExportDeclaration,
+			sourceFile: ts.SourceFile,
+		) {
+			const moduleSpecifierText = sourceFile.text.slice(
+				moduleSpecifier.getStart(sourceFile),
+				moduleSpecifier.getEnd(),
+			);
+
+			return [
+				{
+					id: "removeStatement",
+					range: getTSNodeRange(node, sourceFile),
+					text: "",
+				},
+				...(moduleSpecifierText
+					? [
+							{
+								id: "convertToSideEffectImport",
+								range: getTSNodeRange(node, sourceFile),
+								text: `import ${moduleSpecifierText};`,
+							},
+						]
+					: []),
+			];
+		}
+
+		function createImportSuggestions(
+			importClause: AST.ImportClause,
+			node: AST.ImportDeclaration,
+			sourceFile: ts.SourceFile,
+		) {
+			const moduleSpecifier = sourceFile.text.slice(
+				node.moduleSpecifier.getStart(sourceFile),
+				node.moduleSpecifier.getEnd(),
+			);
+
+			if (importClause.name) {
+				const defaultImportName = importClause.name.getText(sourceFile);
+				return [
+					{
+						id: "removeEmptyBraces",
+						range: getTSNodeRange(node, sourceFile),
+						text: `import ${defaultImportName} from ${moduleSpecifier};`,
+					},
+				];
+			}
+
+			return [
+				{
+					id: "removeStatement",
+					range: getTSNodeRange(node, sourceFile),
+					text: "",
+				},
+				...(importClause.phaseModifier === ts.SyntaxKind.TypeKeyword
+					? []
+					: [
+							{
+								id: "convertToSideEffectImport",
+								range: getTSNodeRange(node, sourceFile),
+								text: `import ${moduleSpecifier};`,
+							},
+						]),
+			];
+		}
+
 		return {
 			visitors: {
 				ExportDeclaration: (node, { sourceFile }) => {
-					if (node.moduleSpecifier === undefined) {
+					if (
+						node.moduleSpecifier === undefined ||
+						!ts.isExportDeclaration(node) ||
+						!node.exportClause ||
+						!ts.isNamedExports(node.exportClause) ||
+						node.exportClause.elements.length > 0
+					) {
 						return;
 					}
-
-					if (!ts.isExportDeclaration(node)) {
-						return;
-					}
-
-					const exportClause = node.exportClause;
-					if (!exportClause) {
-						return;
-					}
-
-					if (!ts.isNamedExports(exportClause)) {
-						return;
-					}
-
-					if (exportClause.elements.length > 0) {
-						return;
-					}
-
-					const moduleSpecifier = node.moduleSpecifier
-						? sourceFile.text.slice(
-								node.moduleSpecifier.getStart(sourceFile),
-								node.moduleSpecifier.getEnd(),
-							)
-						: "";
 
 					context.report({
 						message: "emptyExportSpecifiers",
 						range: getTSNodeRange(node, sourceFile),
-						suggestions: [
-							{
-								id: "removeStatement",
-								range: getTSNodeRange(node, sourceFile),
-								text: "",
-							},
-							...(moduleSpecifier
-								? [
-										{
-											id: "convertToSideEffectImport",
-											range: getTSNodeRange(node, sourceFile),
-											text: `import ${moduleSpecifier};`,
-										},
-									]
-								: []),
-						],
+						suggestions: createExportSuggestions(
+							node.moduleSpecifier,
+							node,
+							sourceFile,
+						),
 					});
 				},
 				ImportDeclaration: (node, { sourceFile }) => {
-					if (hasNamedBindings(node) || hasNamespaceImport(node)) {
-						return;
-					}
-
-					if (!isEmptyNamedImports(node)) {
-						return;
-					}
-
-					const moduleSpecifier = sourceFile.text.slice(
-						node.moduleSpecifier.getStart(sourceFile),
-						node.moduleSpecifier.getEnd(),
-					);
-
-					if (hasDefaultImport(node)) {
-						const defaultImportName =
-							node.importClause!.name!.getText(sourceFile);
-
-						context.report({
-							message: "emptyImportSpecifiers",
-							range: getTSNodeRange(
-								node.importClause!.namedBindings!,
-								sourceFile,
-							),
-							suggestions: [
-								{
-									id: "removeEmptyBraces",
-									range: getTSNodeRange(node, sourceFile),
-									text: `import ${defaultImportName} from ${moduleSpecifier};`,
-								},
-							],
-						});
-						return;
-					}
-
-					const isTypeImport = node.importClause?.isTypeOnly;
-					if (isTypeImport) {
-						context.report({
-							message: "emptyImportSpecifiers",
-							range: getTSNodeRange(
-								node.importClause!.namedBindings!,
-								sourceFile,
-							),
-							suggestions: [
-								{
-									id: "removeStatement",
-									range: getTSNodeRange(node, sourceFile),
-									text: "",
-								},
-							],
-						});
+					if (
+						hasNamedBindings(node) ||
+						hasNamespaceImport(node) ||
+						!isEmptyNamedImports(node) ||
+						!node.importClause
+					) {
 						return;
 					}
 
 					context.report({
 						message: "emptyImportSpecifiers",
 						range: getTSNodeRange(
-							node.importClause!.namedBindings!,
+							node.importClause.namedBindings ?? node.importClause,
 							sourceFile,
 						),
-						suggestions: [
-							{
-								id: "removeStatement",
-								range: getTSNodeRange(node, sourceFile),
-								text: "",
-							},
-							{
-								id: "convertToSideEffectImport",
-								range: getTSNodeRange(node, sourceFile),
-								text: `import ${moduleSpecifier};`,
-							},
-						],
+						suggestions: createImportSuggestions(
+							node.importClause,
+							node,
+							sourceFile,
+						),
 					});
 				},
 			},
