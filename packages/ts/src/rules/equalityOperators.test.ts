@@ -77,6 +77,16 @@ undefined != a
 Compare with 'null' rather than 'undefined'
 `,
 		},
+		{
+			code: `
+a == b
+`,
+			snapshot: `
+a == b
+  ~~
+	Use strict equality ('===') instead of loose equality ('==').
+`,
+		},
 	],
 	valid: [
 		"a === b",
