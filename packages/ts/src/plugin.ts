@@ -81,6 +81,7 @@ import enumMemberLiterals from "./rules/enumMemberLiterals.ts";
 import enumValueConsistency from "./rules/enumValueConsistency.ts";
 import enumValueDuplicates from "./rules/enumValueDuplicates.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
+import equalityOperators from "./rules/equalityOperators.ts";
 import errorMessages from "./rules/errorMessages.ts";
 import errorSubclassProperties from "./rules/errorSubclassProperties.ts";
 import errorUnnecessaryCaptureStackTraces from "./rules/errorUnnecessaryCaptureStackTraces.ts";
@@ -231,6 +232,7 @@ export const ts = createPlugin({
 		enumValueConsistency,
 		enumValueDuplicates,
 		equalityOperatorNegations,
+		equalityOperators,
 		errorMessages,
 		errorSubclassProperties,
 		errorUnnecessaryCaptureStackTraces,

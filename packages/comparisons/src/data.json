@@ -9916,7 +9916,8 @@
 		"flint": {
 			"name": "equalityOperators",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"notes": "Default ESLint's \"smart\" to true",
 		"oxlint": [
