@@ -2,30 +2,7 @@ import { SyntaxKind } from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
-
-function isEmptyInterface(node: AST.InterfaceDeclaration) {
-	if (node.members.length > 0) {
-		return false;
-	}
-
-	if (node.heritageClauses && node.heritageClauses.length > 0) {
-		const extendsClause = node.heritageClauses.find(
-			(clause) => clause.token === SyntaxKind.ExtendsKeyword,
-		);
-
-		if (extendsClause && extendsClause.types.length > 1) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-function isEmptyObjectType(node: AST.TypeLiteralNode) {
-	return node.members.length === 0;
-}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -62,7 +39,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				InterfaceDeclaration: (node, { sourceFile }) => {
-					if (!isEmptyInterface(node)) {
+					if (node.members.length) {
+						return false;
+					}
+
+					const extendsClause = node.heritageClauses?.find(
+						(clause) => clause.token === SyntaxKind.ExtendsKeyword,
+					);
+
+					if (extendsClause && extendsClause.types.length > 1) {
 						return;
 					}
 
@@ -72,11 +57,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					});
 				},
 				TypeLiteral: (node, { sourceFile }) => {
-					if (!isEmptyObjectType(node)) {
-						return;
-					}
-
 					if (
+						node.members.length ||
 						node.parent.kind === SyntaxKind.IntersectionType ||
 						node.parent.kind === SyntaxKind.MappedType
 					) {
