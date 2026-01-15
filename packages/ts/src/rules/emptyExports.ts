@@ -1,5 +1,6 @@
 import ts, { SyntaxKind } from "typescript";
 
+import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
 import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
@@ -12,55 +13,33 @@ const moduleIndicatorKinds = new Set([
 ]);
 
 function hasExportModifier(node: AST.Statement) {
-	if (!ts.canHaveModifiers(node)) {
-		return false;
-	}
-
-	return ts
-		.getModifiers(node)
-		?.some((modifier) => modifier.kind === SyntaxKind.ExportKeyword);
+	return !!(
+		ts.canHaveModifiers(node) &&
+		ts
+			.getModifiers(node)
+			?.some((modifier) => modifier.kind === SyntaxKind.ExportKeyword)
+	);
 }
 
 function hasOtherModuleIndicator(statements: readonly AST.Statement[]) {
-	for (const statement of statements) {
-		if (hasExportModifier(statement)) {
-			return true;
-		}
-
-		if (!moduleIndicatorKinds.has(statement.kind)) {
-			continue;
-		}
-
-		if (isEmptyNamedExport(statement)) {
-			continue;
-		}
-
-		return true;
-	}
-
-	return false;
+	return statements.some(
+		(statement) =>
+			hasExportModifier(statement) ||
+			(moduleIndicatorKinds.has(statement.kind) &&
+				!isEmptyNamedExport(statement)),
+	);
 }
 
 function isEmptyNamedExport(
 	node: AST.Statement,
 ): node is AST.ExportDeclaration {
-	if (node.kind !== SyntaxKind.ExportDeclaration) {
-		return false;
-	}
-
-	if (node.moduleSpecifier) {
-		return false;
-	}
-
-	if (!node.exportClause) {
-		return false;
-	}
-
-	if (node.exportClause.kind !== SyntaxKind.NamedExports) {
-		return false;
-	}
-
-	return node.exportClause.elements.length === 0;
+	return !!(
+		node.kind === SyntaxKind.ExportDeclaration &&
+		!node.moduleSpecifier &&
+		node.exportClause &&
+		node.exportClause.kind === SyntaxKind.NamedExports &&
+		!node.exportClause.elements.length
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -94,19 +73,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
+				const range = getTSNodeRange(statement, sourceFile);
+
 				context.report({
 					fix: {
-						range: {
-							begin: statement.pos,
-							end: statement.end,
-						},
+						range,
 						text: "",
 					},
 					message: "uselessExport",
-					range: {
-						begin: statement.getStart(sourceFile),
-						end: statement.end,
-					},
+					range,
 				});
 			}
 		}
@@ -117,11 +92,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					checkStatements(node.statements, sourceFile);
 				},
 				SourceFile: (node, { sourceFile }) => {
-					if (sourceFile.fileName.endsWith(".d.ts")) {
-						return;
+					if (!sourceFile.fileName.endsWith(".d.ts")) {
+						checkStatements(node.statements, sourceFile);
 					}
-
-					checkStatements(node.statements, sourceFile);
 				},
 			},
 		};
