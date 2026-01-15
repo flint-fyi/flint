@@ -69,26 +69,6 @@ enum Direction {
 </TabItem>
 </Tabs>
 
-## Iteration Behavior Example
-
-Consider how iteration differs between enum types:
-
-```ts
-enum StringEnum {
-	A = "a",
-	B = "b",
-}
-// Object.keys(StringEnum) → ["A", "B"] (2 items)
-
-enum NumericEnum {
-	A = 0,
-	B = 1,
-}
-// Object.keys(NumericEnum) → ["0", "1", "A", "B"] (4 items)
-```
-
-Mixing types makes this behavior unpredictable and error-prone.
-
 ## Options
 
 This rule is not configurable.
