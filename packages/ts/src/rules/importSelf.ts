@@ -50,7 +50,7 @@ export default typescriptLanguage.createRule({
 	about: {
 		description: "Reports when a module imports itself.",
 		id: "importSelf",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noSelfImport: {
