@@ -81,7 +81,6 @@ import enumMemberLiterals from "./rules/enumMemberLiterals.ts";
 import enumValueConsistency from "./rules/enumValueConsistency.ts";
 import enumValueDuplicates from "./rules/enumValueDuplicates.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
-import equalityNullishOperators from "./rules/equalityNullishOperators.ts";
 import equalityOperators from "./rules/equalityOperators.ts";
 import errorMessages from "./rules/errorMessages.ts";
 import errorSubclassProperties from "./rules/errorSubclassProperties.ts";
@@ -119,6 +118,7 @@ import negativeZeroComparisons from "./rules/negativeZeroComparisons.ts";
 import newExpressions from "./rules/newExpressions.ts";
 import newNativeNonConstructors from "./rules/newNativeNonConstructors.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
+import nullishCheckStyle from "./rules/nullishCheckStyle.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
 import objectCalls from "./rules/objectCalls.ts";
 import objectHasOwns from "./rules/objectHasOwns.ts";
@@ -233,7 +233,6 @@ export const ts = createPlugin({
 		enumValueConsistency,
 		enumValueDuplicates,
 		equalityOperatorNegations,
-		equalityNullishOperators,
 		equalityOperators,
 		errorMessages,
 		errorSubclassProperties,
@@ -271,6 +270,7 @@ export const ts = createPlugin({
 		newExpressions,
 		newNativeNonConstructors,
 		nonOctalDecimalEscapes,
+		nullishCheckStyle,
 		numericLiteralParsing,
 		objectCalls,
 		objectHasOwns,
