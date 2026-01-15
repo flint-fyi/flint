@@ -1,5 +1,5 @@
 ---
-description: "Enforces consistent use of strict equality operators (=== and !==) over loose equality operators (== and !=)."
+description: "Enforces consistent use of strict equality operators (=== and !==) over loose equality operators (== and !=) for non-nullish comparisons."
 title: "equalityOperators"
 topic: "rules"
 ---
@@ -14,7 +14,8 @@ The loose equality operators (`==` and `!=`) perform arcane type coercion before
 Strict equality operators (`===` and `!==`) compare both value and type without coercion, making comparisons more predictable.
 Therefore, it is almost always preferable to use the strict equality operators.
 
-The only exception to this is for nullish (`null`/`undefined`) comparisons, where `== null` is preferred as a concise way to check for both `null` and `undefined`.
+**Note:** This rule only handles comparisons where neither operand is a nullish literal (`null` or `undefined`).
+Nullish comparisons are handled by the [equalityNullishOperators](/rules/ts/equalityNullishOperators) rule.
 
 ## Examples
 
@@ -33,13 +34,6 @@ if (name != "admin") {
 }
 ```
 
-```ts
-// Loosely checking for null is preferable since it's shorter
-if (user == undefined) {
-	createUser();
-}
-```
-
 </TabItem>
 <TabItem label="✅ Correct">
 
@@ -55,86 +49,21 @@ if (name !== "admin") {
 }
 ```
 
-```ts
-// Use null for nullish comparisons
-if (user == null) {
-	createUser();
-}
-```
-
-```ts
-// Or use strict equality if configured
-if (user === null || user === undefined) {
-	createUser();
-}
-```
-
 </TabItem>
 </Tabs>
 
 ## Options
 
-### `nullishComparisonStrictness`
-
-**Type:** `"strict" | "loose" | "either"`
-**Default:** `"loose"`
-
-Controls how null/undefined comparisons should be handled:
-
-- `"loose"` (default): Requires `==` or `!=` for nullish comparisons
-- `"strict"`: Requires `===` or `!==` for nullish comparisons
-- `"either"`: Allows both strict and loose equality for nullish comparisons
-
-```ts
-// With nullishComparisonStrictness: "strict"
-if (value === null) {
-	// ✅ Allowed
-}
-if (value == null) {
-	// ❌ Error: Use strict equality
-}
-
-// With nullishComparisonStrictness: "loose" (default)
-if (value == null) {
-	// ✅ Allowed
-}
-if (value === null) {
-	// ❌ Error: Use loose equality
-}
-```
-
-### `looseNullishComparisonStyle`
-
-**Type:** `"null" | "either"`
-**Default:** `"null"`
-
-When loose comparisons are used with nullish values, controls whether to prefer `null` or allow `undefined`:
-
-- `"null"` (default): Requires comparing with `null` (e.g., `x == null`)
-- `"either"`: Allows comparing with either `null` or `undefined`
-
-```ts
-// With looseNullishComparisonStyle: "null" (default)
-if (value == null) {
-	// ✅ Allowed
-}
-if (value == undefined) {
-	// ❌ Error: Compare with 'null' rather than 'undefined'
-}
-
-// With looseNullishComparisonStyle: "either"
-if (value == null) {
-	// ✅ Allowed
-}
-if (value == undefined) {
-	// ✅ Allowed
-}
-```
+This rule has no options.
 
 ## When Not To Use It
 
-In some rare scenarios, it can be important to distinguish between `null` and `undefined` at runtime.
-In such cases, a disable comment is appropriate.
+If your codebase has specific requirements for using loose equality operators in certain niche contexts, you may want to disable this rule.
+However, such cases are exceedingly rare.
+
+## Related Rules
+
+- [equalityNullishOperators](/rules/ts/equalityNullishOperators) - Enforces consistent equality operator usage for nullish comparisons
 
 ## Further Reading
 

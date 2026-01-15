@@ -5,121 +5,6 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-a != undefined
-`,
-			output: `
-a != null
-`,
-			snapshot: `
-a != undefined
-  ~~~~~~~~~~~~
-  Compare with 'null' rather than 'undefined'.
-`,
-		},
-		{
-			code: `
-a !== null
-`,
-			snapshot: `
-a !== null
-  ~~~~~~~~
-  Use loose equality ('!=') for nullish comparisons.
-`,
-			suggestions: [
-				{
-					id: "useLooseOperator",
-					updated: `
-a != null
-`,
-				},
-			],
-		},
-		{
-			code: `
-a != null
-`,
-			options: { nullishComparisonStrictness: "strict" },
-			snapshot: `
-a != null
-  ~~~~~~~
-  Use strict equality ('!==') instead of '!='.
-`,
-			suggestions: [
-				{
-					id: "useStrictOperator",
-					updated: `
-a !== null
-`,
-				},
-			],
-		},
-		{
-			code: `
-null != a
-`,
-			options: { nullishComparisonStrictness: "strict" },
-			snapshot: `
-null != a
-~~~~~~~
-Use strict equality ('!==') instead of '!='.
-`,
-			suggestions: [
-				{
-					id: "useStrictOperator",
-					updated: `
-null !== a
-`,
-				},
-			],
-		},
-		{
-			code: `
-null !== a
-`,
-			snapshot: `
-null !== a
-~~~~~~~~
-Use loose equality ('!=') for nullish comparisons.
-`,
-			suggestions: [
-				{
-					id: "useLooseOperator",
-					updated: `
-null != a
-`,
-				},
-			],
-		},
-		{
-			code: `
-a != undefined
-`,
-			options: { nullishComparisonStrictness: "either" },
-			output: `
-a != null
-`,
-			snapshot: `
-a != undefined
-  ~~~~~~~~~~~~
-  Compare with 'null' rather than 'undefined'.
-`,
-		},
-		{
-			code: `
-undefined != a
-`,
-			options: { nullishComparisonStrictness: "either" },
-			output: `
-null != a
-`,
-			snapshot: `
-undefined != a
-~~~~~~~~~~~~
-Compare with 'null' rather than 'undefined'.
-`,
-		},
-		{
-			code: `
 a == b
 `,
 			snapshot: `
@@ -136,29 +21,64 @@ a === b
 				},
 			],
 		},
+		{
+			code: `
+x != y
+`,
+			snapshot: `
+x != y
+  ~~
+  Use strict equality ('!==') instead of '!='.
+`,
+			suggestions: [
+				{
+					id: "useStrictOperator",
+					updated: `
+x !== y
+`,
+				},
+			],
+		},
+		{
+			code: `
+5 == value
+`,
+			snapshot: `
+5 == value
+  ~~
+  Use strict equality ('===') instead of '=='.
+`,
+			suggestions: [
+				{
+					id: "useStrictOperator",
+					updated: `
+5 === value
+`,
+				},
+			],
+		},
 	],
 	valid: [
 		"a === b",
 		"a !== b",
+		"x === y",
+		"x !== y",
+		// Nullish comparisons are handled by equalityNullishOperators rule
 		"a == null",
 		"null == a",
-		{
-			code: `
-undefined === foo
-`,
-			options: { nullishComparisonStrictness: "strict" },
-		},
-		{
-			code: `
-undefined === foo
-`,
-			options: { nullishComparisonStrictness: "either" },
-		},
-		{
-			code: `
-a != undefined
-`,
-			options: { looseNullishComparisonStyle: "either" },
-		},
+		"a != null",
+		"null != a",
+		"a == undefined",
+		"undefined == a",
+		"a != undefined",
+		"undefined != a",
+		"a === null",
+		"null === a",
+		"a !== null",
+		"null !== a",
+		"a === undefined",
+		"undefined === a",
+		"a !== undefined",
+		"undefined !== a",
 	],
 });
