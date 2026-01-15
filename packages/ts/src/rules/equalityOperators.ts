@@ -67,7 +67,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Enforces consistent use of strict equality operators (=== and !==) over loose equality operators (== and !=).",
 		id: "equalityOperators",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferLooseNull: {
