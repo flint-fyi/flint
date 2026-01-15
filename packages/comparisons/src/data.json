@@ -10221,7 +10221,8 @@
 		"flint": {
 			"name": "exportMutables",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
