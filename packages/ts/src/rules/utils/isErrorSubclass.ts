@@ -1,9 +1,9 @@
-import { SyntaxKind } from "typescript";
+import {
+	type AST,
+	type Checker,
+	isGlobalDeclaration,
+} from "@flint.fyi/typescript-language";
 import ts from "typescript";
-
-import type * as AST from "../../types/ast.ts";
-import type { Checker } from "../../types/checker.ts";
-import { isGlobalDeclaration } from "../../utils/isGlobalDeclaration.ts";
 
 const builtinErrorNames = new Set([
 	"Error",
@@ -24,7 +24,7 @@ export function isErrorSubclass(
 	}
 
 	for (const clause of node.heritageClauses) {
-		if (clause.token !== SyntaxKind.ExtendsKeyword) {
+		if (clause.token !== ts.SyntaxKind.ExtendsKeyword) {
 			continue;
 		}
 

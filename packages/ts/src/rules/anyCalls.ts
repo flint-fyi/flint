@@ -1,9 +1,9 @@
-import { getTSNodeRange } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
 import {
-	type TypeScriptFileServices,
+	type AST,
+	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import { type TypeScriptFileServices } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 

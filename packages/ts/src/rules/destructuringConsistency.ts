@@ -1,8 +1,8 @@
 import {
+	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
 // TODO (#400): Switch to scope analysis

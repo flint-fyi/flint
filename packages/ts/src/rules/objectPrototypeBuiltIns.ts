@@ -1,8 +1,8 @@
 import {
+	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 import ts, { SyntaxKind } from "typescript";
 

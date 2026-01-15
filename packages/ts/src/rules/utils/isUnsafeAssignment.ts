@@ -1,5 +1,4 @@
-import type { AST } from "@flint.fyi/typescript-language";
-import type { Checker } from "@flint.fyi/typescript-language";
+import type { AST, Checker } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 import * as tsutils from "ts-api-utils";
 import ts, { SyntaxKind } from "typescript";

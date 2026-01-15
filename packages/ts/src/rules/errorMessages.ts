@@ -1,11 +1,14 @@
+import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
+	isGlobalDeclarationOfName,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 import ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { Checker, TypeScriptFileServices } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 const errorConstructors = [

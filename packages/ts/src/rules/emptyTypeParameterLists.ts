@@ -1,9 +1,10 @@
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
 import {
+	type AST,
+	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
-} from "../language.ts";
+} from "@flint.fyi/typescript-language";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

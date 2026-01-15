@@ -4,9 +4,10 @@ import {
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using `1` as the depth argument of `.flat()` since it is the default.",

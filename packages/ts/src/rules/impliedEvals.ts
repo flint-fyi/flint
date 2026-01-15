@@ -1,12 +1,14 @@
-import { getTSNodeRange } from "@flint.fyi/typescript-language";
 import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import type { AST, Checker } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
 import { isBuiltinSymbolLike } from "./utils/isBuiltinSymbolLike.ts";
 
 const globalCandidates = new Set(["global", "globalThis", "window"]);
@@ -173,7 +175,7 @@ function isReferenceToGlobalFunction(
 	});
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using string arguments in setTimeout, setInterval, setImmediate, execScript, or the Function constructor.",

@@ -1,10 +1,12 @@
-import type { AST } from "@flint.fyi/typescript-language";
 import {
+	type AST,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
@@ -19,7 +21,7 @@ function getPropertyName(
 		: accessor.name.getText(sourceFile);
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports recursive access to this within getters and setters.",
 		id: "accessorThisRecursion",

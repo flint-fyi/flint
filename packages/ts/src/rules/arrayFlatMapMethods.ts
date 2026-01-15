@@ -6,6 +6,7 @@ import {
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
 function isArrayMapCall(
@@ -40,7 +41,7 @@ function isFlatCallWithDepthOne(node: AST.CallExpression) {
 	}
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using `.map().flat()` when `.flatMap()` can be used.",
 		id: "arrayFlatMapMethods",

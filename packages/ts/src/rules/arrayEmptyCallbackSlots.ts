@@ -6,6 +6,8 @@ import {
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
+
 function hasCallbackArgument(callExpression: AST.CallExpression) {
 	if (callExpression.arguments.length === 0) {
 		return false;
@@ -39,7 +41,7 @@ function isNumericLiteral(node: ts.Expression) {
 	return false;
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports array methods with callbacks that will never be invoked on arrays with empty slots.",

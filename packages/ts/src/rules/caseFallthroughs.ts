@@ -1,6 +1,7 @@
-import type { AST } from "@flint.fyi/typescript-language";
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 const fallthroughCommentPattern = /falls?\s*through/i;
 
@@ -94,7 +95,7 @@ function isTerminatingStatement(node: AST.Statement): boolean {
 	}
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports switch case clauses that fall through unexpectedly.",
 		id: "caseFallthroughs",

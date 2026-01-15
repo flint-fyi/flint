@@ -6,6 +6,7 @@ import {
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 import { skipParentheses } from "./utils/skipParentheses.ts";
 
@@ -169,7 +170,7 @@ function isIdentityFlatMapCall(node: AST.CallExpression, typeChecker: Checker) {
 	return isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker);
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports legacy techniques to flatten arrays instead of using `.flat()`.",

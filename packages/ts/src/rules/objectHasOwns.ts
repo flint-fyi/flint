@@ -2,8 +2,7 @@ import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
-import type { Checker } from "@flint.fyi/typescript-language";
+import type { AST, Checker } from "@flint.fyi/typescript-language";
 import { isGlobalDeclarationOfName } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 

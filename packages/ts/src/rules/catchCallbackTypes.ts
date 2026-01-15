@@ -7,9 +7,10 @@ import {
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports `Promise` catch callback parameters that are not typed as unknown.",

@@ -6,6 +6,7 @@ import {
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
 function isArrayFilterCall(
@@ -39,7 +40,7 @@ function isZeroIndex(node: AST.Expression) {
 	return ts.isNumericLiteral(node) && node.text === "0";
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using `.filter()` when only the first or last matching element is needed.",

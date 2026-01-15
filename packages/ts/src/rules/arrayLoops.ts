@@ -5,6 +5,7 @@ import {
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
 // TODO: Use a util like getStaticValue
@@ -19,7 +20,7 @@ function isForEachCall(
 	);
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using `.forEach()` when a for-of loop can be used.",
 		id: "arrayLoops",

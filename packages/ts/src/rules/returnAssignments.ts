@@ -1,9 +1,9 @@
 import {
+	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
+	unwrapParenthesizedExpression,
 } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
-import { unwrapParenthesizedExpression } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import ts, { SyntaxKind } from "typescript";
 

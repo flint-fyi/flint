@@ -1,8 +1,10 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasNamedBindings(node: AST.ImportDeclaration) {

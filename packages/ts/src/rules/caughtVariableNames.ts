@@ -1,13 +1,14 @@
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Enforces a consistent naming convention for catch clause error variables.",
 		id: "caughtVariableNames",
-		presets: ["stylistic"],
-		strictness: "strict",
+		presets: ["stylisticStrict"],
 	},
 	messages: {
 		preferErrorName: {

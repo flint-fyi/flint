@@ -1,9 +1,9 @@
 import {
 	type AST,
 	getTSNodeRange,
+	isGlobalDeclaration,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import { isGlobalDeclaration } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
 const globalNames = new Set(["alert", "confirm", "prompt"]);
