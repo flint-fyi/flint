@@ -1,17 +1,20 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasDefaultModifier(
-	modifiers: ts.NodeArray<ts.ModifierLike> | undefined,
+	modifiers: ts.NodeArray<AST.ModifierLike> | undefined,
 ) {
 	return modifiers?.some((mod) => mod.kind === SyntaxKind.DefaultKeyword);
 }
 
 function hasExportModifier(
-	modifiers: ts.NodeArray<ts.ModifierLike> | undefined,
+	modifiers: ts.NodeArray<AST.ModifierLike> | undefined,
 ) {
 	return modifiers?.some((mod) => mod.kind === SyntaxKind.ExportKeyword);
 }
@@ -20,7 +23,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports duplicate export names in a module.",
 		id: "exportUniqueNames",
-		presets: ["logical"],
+		presets: ["untyped"],
 	},
 	messages: {
 		duplicateExport: {
@@ -34,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				SourceFile: (sourceFile) => {
+				SourceFile: (node, { sourceFile }) => {
 					const exportedNames = new Map<string, ts.Node>();
 
 					function checkAndReportDuplicate(name: string, node: ts.Node) {
@@ -50,52 +53,63 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 
-					for (const statement of sourceFile.statements) {
+					function checkClassOrFunctionDeclaration(
+						statement: AST.ClassDeclaration | AST.FunctionDeclaration,
+					) {
+						if (
+							hasExportModifier(statement.modifiers) &&
+							!hasDefaultModifier(statement.modifiers) &&
+							statement.name
+						) {
+							checkAndReportDuplicate(statement.name.text, statement.name);
+						}
+					}
+
+					function checkExportDeclaration(statement: AST.ExportDeclaration) {
+						if (
+							statement.exportClause &&
+							ts.isNamedExports(statement.exportClause) &&
+							!statement.isTypeOnly
+						) {
+							for (const specifier of statement.exportClause.elements) {
+								if (specifier.isTypeOnly) {
+									continue;
+								}
+								const exportedName = specifier.name.text;
+								checkAndReportDuplicate(exportedName, specifier.name);
+							}
+						}
+					}
+
+					function checkVariableStatement(statement: AST.VariableStatement) {
+						if (!hasExportModifier(statement.modifiers)) {
+							return;
+						}
+
+						for (const declaration of statement.declarationList.declarations) {
+							if (ts.isIdentifier(declaration.name)) {
+								checkAndReportDuplicate(
+									declaration.name.text,
+									declaration.name,
+								);
+							}
+						}
+					}
+
+					for (const statement of node.statements) {
 						switch (statement.kind) {
 							case SyntaxKind.ClassDeclaration:
-							case SyntaxKind.FunctionDeclaration: {
-								const decl = statement as
-									| ts.ClassDeclaration
-									| ts.FunctionDeclaration;
-								if (
-									hasExportModifier(decl.modifiers) &&
-									!hasDefaultModifier(decl.modifiers) &&
-									decl.name
-								) {
-									checkAndReportDuplicate(decl.name.text, decl.name);
-								}
+							case SyntaxKind.FunctionDeclaration:
+								checkClassOrFunctionDeclaration(statement);
 								break;
-							}
 
-							case SyntaxKind.ExportDeclaration: {
-								const exportDecl = statement as ts.ExportDeclaration;
-								if (
-									exportDecl.exportClause &&
-									ts.isNamedExports(exportDecl.exportClause) &&
-									!exportDecl.isTypeOnly
-								) {
-									for (const specifier of exportDecl.exportClause.elements) {
-										if (specifier.isTypeOnly) {
-											continue;
-										}
-										const exportedName = specifier.name.text;
-										checkAndReportDuplicate(exportedName, specifier.name);
-									}
-								}
+							case SyntaxKind.ExportDeclaration:
+								checkExportDeclaration(statement);
 								break;
-							}
 
-							case SyntaxKind.VariableStatement: {
-								const varStmt = statement as ts.VariableStatement;
-								if (hasExportModifier(varStmt.modifiers)) {
-									for (const decl of varStmt.declarationList.declarations) {
-										if (ts.isIdentifier(decl.name)) {
-											checkAndReportDuplicate(decl.name.text, decl.name);
-										}
-									}
-								}
+							case SyntaxKind.VariableStatement:
+								checkVariableStatement(statement);
 								break;
-							}
 						}
 					}
 				},

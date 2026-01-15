@@ -10240,6 +10240,7 @@
 		"flint": {
 			"name": "exportUniqueNames",
 			"plugin": "ts",
+			"preset": "untyped",
 			"status": "implemented"
 		},
 		"oxlint": [
