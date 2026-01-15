@@ -6,21 +6,7 @@ import { typescriptLanguage } from "../language.ts";
 import type * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-interface ConstructorInfo {
-	constructor: AST.ConstructorDeclaration;
-	hasNameAssignment: boolean;
-	hasRedundantMessageAssignment: boolean;
-	hasSuperCall: boolean;
-	messageAssignmentNode: ts.BinaryExpression | undefined;
-	nameAssignmentNode: ts.BinaryExpression | undefined;
-	nameValue: string | undefined;
-	superCallNode: ts.CallExpression | undefined;
-	superCallPassesMessage: boolean;
-}
-
-function analyzeConstructor(
-	node: AST.ClassDeclaration,
-): ConstructorInfo | undefined {
+function analyzeConstructor(node: AST.ClassDeclaration) {
 	let constructor: AST.ConstructorDeclaration | undefined;
 
 	for (const member of node.members) {
@@ -45,17 +31,7 @@ function analyzeConstructor(
 
 	const body = constructor.body;
 	if (!body) {
-		return {
-			constructor,
-			hasNameAssignment,
-			hasRedundantMessageAssignment,
-			hasSuperCall,
-			messageAssignmentNode,
-			nameAssignmentNode,
-			nameValue,
-			superCallNode,
-			superCallPassesMessage,
-		};
+		return undefined;
 	}
 
 	for (const statement of body.statements) {
@@ -150,12 +126,10 @@ function isErrorSubclass(node: AST.ClassDeclaration): boolean {
 	return false;
 }
 
-function isValidErrorClassName(name: string | undefined): boolean {
-	if (!name) {
-		return false;
-	}
-
-	return /^[A-Z]/.test(name) && name.endsWith("Error");
+function isValidErrorClassName(
+	name: string | undefined,
+): name is `${string}Error` {
+	return !!name && /^[A-Z]/.test(name) && name.endsWith("Error");
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

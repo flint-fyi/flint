@@ -14,11 +14,11 @@ When creating custom error classes that extend `Error`, there are several conven
 
 This rule reports:
 
-- **Invalid class names**: Should be capitalized and end with `Error`
-- **Missing `name` property**: Required for proper error identification
-- **Using `this.constructor.name`**: Won't work after minification
-- **Mismatched `name` values**: Should match the class name
-- **Redundant `this.message` assignments**: Already set by `super()`
+- Invalid class names: should be capitalized and end with `Error`
+- Missing `name` property: required for proper error identification
+- Using `this.constructor.name`: won't work after minification
+- Mismatched `name` values: should match the class name
+- Redundant `this.message` assignments: already set by `super()`
 
 ## Examples
 
