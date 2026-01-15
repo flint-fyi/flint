@@ -1,0 +1,69 @@
+---
+description: "Reports empty named import blocks."
+title: "importEmptyBlocks"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="importEmptyBlocks" />
+
+Empty named import blocks (`import { } from "mod"`) have no effect and are likely the result of incomplete refactoring or accidental deletion of import specifiers.
+This rule detects such empty blocks to help keep imports clean and intentional.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import {} from "mod";
+```
+
+```ts
+import Default from "mod";
+```
+
+```ts
+import type {} from "mod";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { named } from "mod";
+```
+
+```ts
+import Default from "mod";
+```
+
+```ts
+import * as mod from "mod";
+```
+
+```ts
+import "mod"; // Side-effect imports are allowed
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use empty named import blocks as placeholders during development or have tooling that generates such imports temporarily, you might disable this rule.
+
+## Further Reading
+
+- [MDN: import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="importEmptyBlocks" />

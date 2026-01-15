@@ -1,0 +1,68 @@
+---
+description: "Prefer plain style scalars over quoted scalars."
+title: "plainScalars"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="yaml" rule="plainScalars" />
+
+Plain scalars are more readable and concise than quoted scalars.
+Quoted scalars should only be used when the value cannot be represented as a plain scalar.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```yaml
+name: "simple"
+```
+
+```yaml
+key: "value"
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```yaml
+name: simple
+```
+
+```yaml
+key: value
+```
+
+```yaml
+# Quotes are needed for special values
+enabled: "true"
+```
+
+```yaml
+# Quotes are needed for values with special characters
+message: "contains: colon"
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project prefers quoted strings for consistency or compatibility with other tools, you may not need this rule.
+Some YAML consumers may handle quoted and unquoted strings differently.
+
+## Further Reading
+
+- [YAML Specification - Scalar Styles](https://yaml.org/spec/1.2.2/#scalars)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="yaml" ruleId="plainScalars" />
