@@ -2,8 +2,23 @@ import { SyntaxKind } from "typescript";
 import ts from "typescript";
 
 import type * as AST from "../../types/ast.ts";
+import type { Checker } from "../../types/checker.ts";
+import { isGlobalDeclaration } from "../../utils/isGlobalDeclaration.ts";
 
-export function isErrorSubclass(node: AST.ClassDeclaration): boolean {
+const builtinErrorNames = new Set([
+	"Error",
+	"EvalError",
+	"RangeError",
+	"ReferenceError",
+	"SyntaxError",
+	"TypeError",
+	"URIError",
+]);
+
+export function isErrorSubclass(
+	node: AST.ClassDeclaration,
+	typeChecker: Checker,
+): boolean {
 	if (!node.heritageClauses) {
 		return false;
 	}
@@ -15,19 +30,12 @@ export function isErrorSubclass(node: AST.ClassDeclaration): boolean {
 
 		for (const type of clause.types) {
 			const typeName = type.expression;
-			if (ts.isIdentifier(typeName)) {
-				const name = typeName.text;
-				if (
-					name === "Error" ||
-					name === "TypeError" ||
-					name === "RangeError" ||
-					name === "SyntaxError" ||
-					name === "ReferenceError" ||
-					name === "EvalError" ||
-					name === "URIError"
-				) {
-					return true;
-				}
+			if (
+				ts.isIdentifier(typeName) &&
+				builtinErrorNames.has(typeName.text) &&
+				isGlobalDeclaration(typeName, typeChecker)
+			) {
+				return true;
 			}
 		}
 	}

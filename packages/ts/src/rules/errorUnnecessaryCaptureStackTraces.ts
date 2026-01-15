@@ -3,71 +3,26 @@ import ts from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
 import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
+import { isErrorSubclass } from "./utils/isErrorSubclass.ts";
 
-function isCaptureStackTraceCall(node: ts.Node) {
+function isCaptureStackTraceCall(node: ts.Node): boolean {
 	if (!ts.isCallExpression(node) && !ts.isOptionalChain(node)) {
 		return false;
 	}
 
-	const callExpr = ts.isCallExpression(node) ? node : undefined;
-	if (!callExpr) {
-		if (ts.isCallExpression(node)) {
-			return isCaptureStackTraceCall(node);
-		}
-		return false;
+	const callExpression = ts.isCallExpression(node) ? node : undefined;
+	if (!callExpression) {
+		return ts.isCallExpression(node) && isCaptureStackTraceCall(node);
 	}
 
-	const callee = callExpr.expression;
-
-	if (ts.isPropertyAccessExpression(callee)) {
-		const object = callee.expression;
-		const property = callee.name;
-
-		if (
-			ts.isIdentifier(object) &&
-			object.text === "Error" &&
-			ts.isIdentifier(property) &&
-			property.text === "captureStackTrace"
-		) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-function isErrorSubclass(node: AST.ClassDeclaration) {
-	if (!node.heritageClauses) {
-		return false;
-	}
-
-	for (const clause of node.heritageClauses) {
-		if (clause.token !== SyntaxKind.ExtendsKeyword) {
-			continue;
-		}
-
-		for (const type of clause.types) {
-			const typeName = type.expression;
-			if (ts.isIdentifier(typeName)) {
-				const name = typeName.text;
-				if (
-					name === "Error" ||
-					name === "TypeError" ||
-					name === "RangeError" ||
-					name === "SyntaxError" ||
-					name === "ReferenceError" ||
-					name === "EvalError" ||
-					name === "URIError"
-				) {
-					return true;
-				}
-			}
-		}
-	}
-
-	return false;
+	return (
+		ts.isPropertyAccessExpression(callExpression.expression) &&
+		ts.isIdentifier(callExpression.expression.expression) &&
+		callExpression.expression.expression.text === "Error" &&
+		ts.isIdentifier(callExpression.expression.name) &&
+		callExpression.expression.name.text === "captureStackTrace"
+	);
 }
 
 function isValidSecondArgument(
@@ -121,8 +76,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				ClassDeclaration: (node, { sourceFile }) => {
-					if (!isErrorSubclass(node)) {
+				ClassDeclaration: (node, { sourceFile, typeChecker }) => {
+					if (!isErrorSubclass(node, typeChecker)) {
 						return;
 					}
 

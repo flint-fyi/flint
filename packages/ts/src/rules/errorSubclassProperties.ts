@@ -164,8 +164,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				ClassDeclaration: (node, { sourceFile }) => {
-					if (!isErrorSubclass(node)) {
+				ClassDeclaration: (node, { sourceFile, typeChecker }) => {
+					if (!isErrorSubclass(node, typeChecker)) {
 						return;
 					}
 
