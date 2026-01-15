@@ -35,55 +35,49 @@ function analyzeConstructor(node: AST.ClassDeclaration) {
 	}
 
 	for (const statement of body.statements) {
-		if (ts.isExpressionStatement(statement)) {
-			const expr = statement.expression;
+		if (!ts.isExpressionStatement(statement)) {
+			continue;
+		}
 
-			if (
-				ts.isCallExpression(expr) &&
-				expr.expression.kind === SyntaxKind.SuperKeyword
-			) {
-				hasSuperCall = true;
-				superCallNode = expr;
-				superCallPassesMessage = expr.arguments.length > 0;
+		if (
+			ts.isCallExpression(statement.expression) &&
+			statement.expression.expression.kind === SyntaxKind.SuperKeyword
+		) {
+			hasSuperCall = true;
+			superCallNode = statement.expression;
+			superCallPassesMessage = statement.expression.arguments.length > 0;
+		}
+
+		if (
+			ts.isBinaryExpression(statement.expression) &&
+			statement.expression.operatorToken.kind === SyntaxKind.EqualsToken &&
+			ts.isPropertyAccessExpression(statement.expression.left) &&
+			statement.expression.left.expression.kind === SyntaxKind.ThisKeyword
+		) {
+			const propName = statement.expression.left.name.text;
+
+			if (propName === "name") {
+				hasNameAssignment = true;
+				nameAssignmentNode = statement.expression;
+				if (ts.isStringLiteral(statement.expression.right)) {
+					nameValue = statement.expression.right.text;
+				} else if (
+					ts.isPropertyAccessExpression(statement.expression.right) &&
+					ts.isPropertyAccessExpression(
+						statement.expression.right.expression,
+					) &&
+					statement.expression.right.expression.expression.kind ===
+						SyntaxKind.ThisKeyword &&
+					statement.expression.right.expression.name.text === "constructor" &&
+					statement.expression.right.name.text === "name"
+				) {
+					nameValue = "this.constructor.name";
+				}
 			}
 
-			if (
-				ts.isBinaryExpression(expr) &&
-				expr.operatorToken.kind === SyntaxKind.EqualsToken
-			) {
-				const left = expr.left;
-				if (
-					ts.isPropertyAccessExpression(left) &&
-					left.expression.kind === SyntaxKind.ThisKeyword
-				) {
-					const propName = left.name.text;
-
-					if (propName === "name") {
-						hasNameAssignment = true;
-						nameAssignmentNode = expr;
-						if (ts.isStringLiteral(expr.right)) {
-							nameValue = expr.right.text;
-						} else if (
-							ts.isPropertyAccessExpression(expr.right) &&
-							ts.isPropertyAccessExpression(expr.right.expression) &&
-							expr.right.expression.expression.kind ===
-								SyntaxKind.ThisKeyword &&
-							expr.right.expression.name.text === "constructor" &&
-							expr.right.name.text === "name"
-						) {
-							nameValue = "this.constructor.name";
-						}
-					}
-
-					if (
-						propName === "message" &&
-						hasSuperCall &&
-						superCallPassesMessage
-					) {
-						hasRedundantMessageAssignment = true;
-						messageAssignmentNode = expr;
-					}
-				}
+			if (propName === "message" && hasSuperCall && superCallPassesMessage) {
+				hasRedundantMessageAssignment = true;
+				messageAssignmentNode = statement.expression;
 			}
 		}
 	}
@@ -101,29 +95,16 @@ function analyzeConstructor(node: AST.ClassDeclaration) {
 	};
 }
 
-function getClassName(node: AST.ClassDeclaration): string | undefined {
-	return node.name?.text;
-}
-
-function isErrorSubclass(node: AST.ClassDeclaration): boolean {
-	if (!node.heritageClauses) {
-		return false;
-	}
-
-	for (const clause of node.heritageClauses) {
-		if (clause.token !== SyntaxKind.ExtendsKeyword) {
-			continue;
-		}
-
-		for (const type of clause.types) {
-			const typeName = type.expression;
-			if (ts.isIdentifier(typeName) && typeName.text.endsWith("Error")) {
-				return true;
-			}
-		}
-	}
-
-	return false;
+function isErrorSubclass(node: AST.ClassDeclaration) {
+	return node.heritageClauses?.some(
+		(clause) =>
+			clause.token === SyntaxKind.ExtendsKeyword &&
+			clause.types.some(
+				(type) =>
+					ts.isIdentifier(type.expression) &&
+					type.expression.text.endsWith("Error"),
+			),
+	);
 }
 
 function isValidErrorClassName(
@@ -199,7 +180,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const className = getClassName(node);
+					const className = node.name?.text;
 
 					if (!isValidErrorClassName(className)) {
 						const baseName = className ?? "Custom";
