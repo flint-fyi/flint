@@ -10,7 +10,7 @@ void (() => {})();
 			snapshot: `
 void (() => {})();
 ~~~~~~~~~~~~~~~~~
-Using the \`void\` operator on a value of type \`void\` is meaningless.
+Using the \`void\` operator on a value of type \`void\` does nothing.
 `,
 		},
 		{
@@ -22,7 +22,7 @@ void getValue();
 function getValue() {}
 void getValue();
 ~~~~~~~~~~~~~~~
-Using the \`void\` operator on a value of type \`void\` is meaningless.
+Using the \`void\` operator on a value of type \`void\` does nothing.
 `,
 		},
 		{
@@ -34,7 +34,7 @@ void value;
 const value: undefined = undefined;
 void value;
 ~~~~~~~~~~
-Using the \`void\` operator on a value of type \`undefined\` is meaningless.
+Using the \`void\` operator on a value of type \`undefined\` does nothing.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ function getValue(): void | undefined {
 }
 void getValue();
 ~~~~~~~~~~~~~~~
-Using the \`void\` operator on a value of type \`void | undefined\` is meaningless.
+Using the \`void\` operator on a value of type \`void | undefined\` does nothing.
 `,
 		},
 		{
@@ -62,7 +62,7 @@ void getValue();
 declare const getValue: () => void;
 void getValue();
 ~~~~~~~~~~~~~~~
-Using the \`void\` operator on a value of type \`void\` is meaningless.
+Using the \`void\` operator on a value of type \`void\` does nothing.
 `,
 		},
 		{
@@ -74,7 +74,7 @@ void void getValue();
 async function getValue() {}
 void void getValue();
 ~~~~~~~~~~~~~~~~~~~~
-Using the \`void\` operator on a value of type \`undefined\` is meaningless.
+Using the \`void\` operator on a value of type \`undefined\` does nothing.
 `,
 		},
 	],

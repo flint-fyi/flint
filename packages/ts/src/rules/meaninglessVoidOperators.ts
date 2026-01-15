@@ -22,7 +22,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		meaninglessVoid: {
 			primary:
-				"Using the `void` operator on a value of type `{{ type }}` is meaningless.",
+				"Using the `void` operator on a value of type `{{ type }}` does nothing.",
 			secondary: [
 				"The `void` operator is meant to discard a return value and produce `undefined`.",
 				"Applying `void` to a value that is already `void` or `undefined` has no effect.",

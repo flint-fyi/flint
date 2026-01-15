@@ -345,12 +345,12 @@ function run() {
 		},
 		{
 			code: `
-function notcool(input: string) {
+function example(input: string) {
 	return (input, console.log(input));
 }
 `,
 			snapshot: `
-function notcool(input: string) {
+function example(input: string) {
 	return (input, console.log(input));
 	               ~~~~~~~~~~~~~~~~~~
 	               Returning a void expression from a function is misleading.
@@ -360,7 +360,7 @@ function notcool(input: string) {
 				{
 					id: "removeReturn",
 					updated: `
-function notcool(input: string) {
+function example(input: string) {
 	(input, console.log(input));
 }
 `,
@@ -368,7 +368,7 @@ function notcool(input: string) {
 				{
 					id: "wrapWithVoid",
 					updated: `
-function notcool(input: string) {
+function example(input: string) {
 	return (input, void console.log(input));
 }
 `,
