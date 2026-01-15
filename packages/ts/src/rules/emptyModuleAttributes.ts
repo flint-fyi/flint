@@ -1,15 +1,10 @@
 import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
+import {
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "../language.ts";
 import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
-
-function isEmptyAttributes(attributes: AST.ImportAttributes | undefined) {
-	if (!attributes) {
-		return false;
-	}
-
-	return attributes.elements.length === 0;
-}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -30,35 +25,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function checkAttributes(
-			attributes: AST.ImportAttributes | undefined,
-			sourceFile: AST.SourceFile,
+		function checkNode(
+			{ attributes }: AST.ExportDeclaration | AST.ImportDeclaration,
+			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (!isEmptyAttributes(attributes) || !attributes) {
-				return;
-			}
-
-			context.report({
-				fix: {
-					range: {
-						begin: attributes.getStart(sourceFile),
-						end: attributes.getEnd(),
+			if (attributes && !attributes.elements.length) {
+				context.report({
+					fix: {
+						range: getTSNodeRange(attributes, sourceFile),
+						text: "",
 					},
-					text: "",
-				},
-				message: "emptyAttributes",
-				range: getTSNodeRange(attributes, sourceFile),
-			});
+					message: "emptyAttributes",
+					range: getTSNodeRange(attributes, sourceFile),
+				});
+			}
 		}
 
 		return {
 			visitors: {
-				ExportDeclaration: (node, { sourceFile }) => {
-					checkAttributes(node.attributes, sourceFile);
-				},
-				ImportDeclaration: (node, { sourceFile }) => {
-					checkAttributes(node.attributes, sourceFile);
-				},
+				ExportDeclaration: checkNode,
+				ImportDeclaration: checkNode,
 			},
 		};
 	},
