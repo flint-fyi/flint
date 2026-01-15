@@ -2,7 +2,7 @@ import { SyntaxKind } from "typescript";
 import ts from "typescript";
 
 import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { Checker } from "../index.ts";
+import type { Checker, TypeScriptFileServices } from "../index.ts";
 import { typescriptLanguage } from "../language.ts";
 import type * as AST from "../types/ast.ts";
 import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
@@ -19,62 +19,52 @@ const ERROR_CONSTRUCTORS = new Set([
 	"URIError",
 ]);
 
-function checkErrorConstruction(
+function hasValidMessageArgument(
+	args: ts.NodeArray<AST.Expression> | undefined,
+) {
+	if (!args?.length) {
+		return false;
+	}
+
+	const firstArgument = args[0];
+
+	return (
+		!!firstArgument &&
+		!isEmptyString(firstArgument) &&
+		!isUndefinedLiteral(firstArgument)
+	);
+}
+
+function isErrorWithoutMessage(
 	node: AST.CallExpression | AST.NewExpression,
 	typeChecker: Checker,
-): string | undefined {
-	const callee = node.expression;
-
-	if (callee.kind !== SyntaxKind.Identifier) {
-		return undefined;
-	}
-
-	const name = callee.text;
-	if (!ERROR_CONSTRUCTORS.has(name)) {
-		return undefined;
-	}
-
-	if (!isGlobalDeclarationOfName(callee, name, typeChecker)) {
-		return undefined;
-	}
-
-	if (!node.arguments || !hasValidMessageArgument(node.arguments)) {
-		return name;
-	}
-
-	return undefined;
+) {
+	return (
+		node.expression.kind === SyntaxKind.Identifier &&
+		ERROR_CONSTRUCTORS.has(node.expression.text) &&
+		isGlobalDeclarationOfName(
+			node.expression,
+			node.expression.text,
+			typeChecker,
+		) &&
+		!hasValidMessageArgument(node.arguments)
+	);
 }
 
-function hasValidMessageArgument(args: ts.NodeArray<AST.Expression>): boolean {
-	const firstArg = args[0];
-	if (!firstArg) {
-		return false;
-	}
-
-	if (isEmptyString(firstArg)) {
-		return false;
-	}
-
-	if (isUndefinedLiteral(firstArg)) {
-		return false;
-	}
-
-	return true;
-}
-
-function isEmptyString(node: AST.Expression): boolean {
-	if (node.kind === SyntaxKind.StringLiteral) {
-		return node.text === "";
-	}
-
-	if (node.kind === SyntaxKind.NoSubstitutionTemplateLiteral) {
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
+function isEmptyString(node: AST.Expression) {
+	if (
+		node.kind === SyntaxKind.StringLiteral ||
+		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral
+	) {
 		return node.text === "";
 	}
 
 	return false;
 }
 
-function isUndefinedLiteral(node: AST.Expression): boolean {
+function isUndefinedLiteral(node: AST.Expression) {
 	return node.kind === SyntaxKind.Identifier && node.text === "undefined";
 }
 
@@ -87,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		missingMessage: {
 			primary:
-				"{{ errorType }} constructor should be called with a message argument.",
+				"Errors created without a message are generally harder to debug.",
 			secondary: [
 				"Error instances without messages are harder to debug because they don't explain what went wrong.",
 				"A descriptive error message helps developers understand and fix issues more quickly.",
@@ -98,28 +88,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
+		function checkNode(
+			node: AST.CallExpression | AST.NewExpression,
+			{ sourceFile, typeChecker }: TypeScriptFileServices,
+		) {
+			if (isErrorWithoutMessage(node, typeChecker)) {
+				context.report({
+					message: "missingMessage",
+					range: getTSNodeRange(node.expression, sourceFile),
+				});
+			}
+		}
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
-					const errorType = checkErrorConstruction(node, typeChecker);
-					if (errorType) {
-						context.report({
-							data: { errorType },
-							message: "missingMessage",
-							range: getTSNodeRange(node.expression, sourceFile),
-						});
-					}
-				},
-				NewExpression: (node, { sourceFile, typeChecker }) => {
-					const errorType = checkErrorConstruction(node, typeChecker);
-					if (errorType) {
-						context.report({
-							data: { errorType },
-							message: "missingMessage",
-							range: getTSNodeRange(node.expression, sourceFile),
-						});
-					}
-				},
+				CallExpression: checkNode,
+				NewExpression: checkNode,
 			},
 		};
 	},

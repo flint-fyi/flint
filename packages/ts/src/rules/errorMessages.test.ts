@@ -4,40 +4,74 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `throw new Error();`,
-			snapshot: `throw new Error();
+			code: `
+throw new Error();
+`,
+			snapshot: `
+throw new Error();
           ~~~~~
-          Error constructor should be called with a message argument.`,
+          Errors created without a message are generally harder to debug.
+`,
 		},
 		{
-			code: `throw new TypeError();`,
-			snapshot: `throw new TypeError();
+			code: `
+throw new TypeError();
+`,
+			snapshot: `
+throw new TypeError();
           ~~~~~~~~~
-          TypeError constructor should be called with a message argument.`,
+          Errors created without a message are generally harder to debug.
+`,
 		},
 		{
-			code: `throw new RangeError();`,
-			snapshot: `throw new RangeError();
+			code: `
+throw new RangeError();
+`,
+			snapshot: `
+throw new RangeError();
           ~~~~~~~~~~
-          RangeError constructor should be called with a message argument.`,
+          Errors created without a message are generally harder to debug.
+`,
 		},
 		{
-			code: `throw new Error("");`,
-			snapshot: `throw new Error("");
+			code: `
+throw new Error("");
+`,
+			snapshot: `
+throw new Error("");
           ~~~~~
-          Error constructor should be called with a message argument.`,
+          Errors created without a message are generally harder to debug.
+`,
 		},
 		{
-			code: `throw new Error(undefined);`,
-			snapshot: `throw new Error(undefined);
+			code: `
+throw new Error(undefined);
+`,
+			snapshot: `
+throw new Error(undefined);
           ~~~~~
-          Error constructor should be called with a message argument.`,
+          Errors created without a message are generally harder to debug.
+`,
 		},
 		{
-			code: `const err = Error();`,
-			snapshot: `const err = Error();
-            ~~~~~
-            Error constructor should be called with a message argument.`,
+			code: `
+Error();
+`,
+			snapshot: `
+Error();
+~~~~~
+Errors created without a message are generally harder to debug.
+`,
+		},
+		{
+			code: `
+const error = Error();
+`,
+			snapshot: `
+const error = Error();
+              ~~~~~
+              Errors created without a message are generally harder to debug.
+`,
 		},
 	],
 	valid: [
@@ -48,5 +82,23 @@ ruleTester.describe(rule, {
 		`throw new Error(condition ? "a" : "b");`,
 		`class CustomError extends Error {} throw new CustomError();`,
 		`const MyError = Error; throw new MyError();`,
+		`
+class Error {
+  constructor(message: string) {}
+}
+
+throw new Error();
+
+export {}
+		`,
+		`
+class Error {
+  constructor(message: string) {}
+}
+
+throw new Error("Something went wrong");
+
+export {}
+		`,
 	],
 });
