@@ -69,6 +69,8 @@ import elseReturns from "./rules/elseReturns.ts";
 import emptyBlocks from "./rules/emptyBlocks.ts";
 import emptyDestructures from "./rules/emptyDestructures.ts";
 import emptyEnums from "./rules/emptyEnums.ts";
+import emptyFiles from "./rules/emptyFiles.ts";
+import emptyFunctions from "./rules/emptyFunctions.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
 import enumInitializers from "./rules/enumInitializers.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
@@ -89,6 +91,7 @@ import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
 import globalAssignments from "./rules/globalAssignments.ts";
 import globalObjectCalls from "./rules/globalObjectCalls.ts";
 import impliedEvals from "./rules/impliedEvals.ts";
+import importEmptyBlocks from "./rules/importEmptyBlocks.ts";
 import instanceOfArrays from "./rules/instanceOfArrays.ts";
 import isNaNComparisons from "./rules/isNaNComparisons.ts";
 import misleadingVoidExpressions from "./rules/misleadingVoidExpressions.ts";
@@ -200,6 +203,8 @@ export const ts = createPlugin({
 		emptyBlocks,
 		emptyDestructures,
 		emptyEnums,
+		emptyFiles,
+		emptyFunctions,
 		emptyStaticBlocks,
 		enumInitializers,
 		equalityOperatorNegations,
@@ -220,6 +225,7 @@ export const ts = createPlugin({
 		globalAssignments,
 		globalObjectCalls,
 		impliedEvals,
+		importEmptyBlocks,
 		instanceOfArrays,
 		isNaNComparisons,
 		misleadingVoidExpressions,
