@@ -34,8 +34,10 @@ describe("getFirstEnumValues", () => {
 		enum Repeating {
 			A = 1,
 			B = 2,
+			// flint-disable-lines-begin enumMemberLiterals
 			// eslint-disable-next-line @typescript-eslint/prefer-literal-enum-member
 			C = A,
+			// flint-disable-lines-end enumMemberLiterals
 		}
 
 		const result = getFirstEnumValues(Repeating);
