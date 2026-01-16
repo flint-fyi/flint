@@ -1,5 +1,7 @@
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

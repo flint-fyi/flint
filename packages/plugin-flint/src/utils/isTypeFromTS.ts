@@ -1,4 +1,4 @@
-import type { AST, Checker } from "@flint.fyi/ts";
+import type { AST, Checker } from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
 export function isTypeFromTS(
