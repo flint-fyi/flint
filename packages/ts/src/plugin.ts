@@ -114,6 +114,7 @@ import meaninglessVoidOperators from "./rules/meaninglessVoidOperators.ts";
 import misleadingVoidExpressions from "./rules/misleadingVoidExpressions.ts";
 import moduleSpecifierLists from "./rules/moduleSpecifierLists.ts";
 import multilineAmbiguities from "./rules/multilineAmbiguities.ts";
+import namedDefaultExports from "./rules/namedDefaultExports.ts";
 import namespaceDeclarations from "./rules/namespaceDeclarations.ts";
 import negativeZeroComparisons from "./rules/negativeZeroComparisons.ts";
 import newExpressions from "./rules/newExpressions.ts";
@@ -266,6 +267,7 @@ export const ts = createPlugin({
 		misleadingVoidExpressions,
 		moduleSpecifierLists,
 		multilineAmbiguities,
+		namedDefaultExports,
 		namespaceDeclarations,
 		negativeZeroComparisons,
 		newExpressions,
