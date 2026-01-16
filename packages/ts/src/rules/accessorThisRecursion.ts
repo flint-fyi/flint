@@ -12,7 +12,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 // https://github.com/flint-fyi/flint/issues/1298
 function getPropertyName(
 	accessor: AST.GetAccessorDeclaration | AST.SetAccessorDeclaration,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	return ts.isIdentifier(accessor.name) ||
 		ts.isStringLiteral(accessor.name) ||

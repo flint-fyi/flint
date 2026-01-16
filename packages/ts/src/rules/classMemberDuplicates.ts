@@ -38,7 +38,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function visitClass(
 			node: AST.ClassDeclaration | AST.ClassExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			{ sourceFile }: { sourceFile: AST.SourceFile },
 		) {
 			const seenMembers = {
 				instance: {

@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function getLexicalDeclaration(
 			statements: ts.NodeArray<AST.Statement>,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): ts.Node | undefined {
 			for (const statement of statements) {
 				if (

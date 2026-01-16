@@ -1,8 +1,9 @@
 import {
+	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getRuleTesterDescribedCases } from "../getRuleTesterDescribedCases.ts";
 import type { ParsedTestCaseInvalid } from "../types.ts";
@@ -32,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkTestCase(
 			testCase: ParsedTestCaseInvalid,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (!testCase.code.startsWith("\n")) {
 				context.report({
@@ -48,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function createFixForCode(
 			testCase: ParsedTestCaseInvalid,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (testCase.nodes.code.kind === SyntaxKind.StringLiteral) {
 				return {
@@ -70,7 +71,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function createFixForSnapshot(
 			testCase: ParsedTestCaseInvalid,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const begin = testCase.nodes.snapshot.getStart(sourceFile) + 1;
 

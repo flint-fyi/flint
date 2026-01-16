@@ -122,7 +122,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (typeChecker.isTupleType(spreadType)) {
 						const tupleResult = checkTupleSpread(
-							spreadType as ts.TypeReference,
+							spreadType,
 							parameters,
 							parameterIndex,
 							typeChecker,
@@ -142,9 +142,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								},
 							});
 						}
-						const tupleTypeArgs = typeChecker.getTypeArguments(
-							spreadType as ts.TypeReference,
-						);
+						const tupleTypeArgs = typeChecker.getTypeArguments(spreadType);
 						parameterIndex += tupleTypeArgs.length;
 					}
 					continue;

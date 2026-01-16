@@ -4,7 +4,7 @@ import {
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -90,7 +90,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 function createApplyFixText(
 	functionExpression: string,
 	methodArguments: AST.Expression[],
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	if (methodArguments.length === 0) {
 		return `${functionExpression}()`;
@@ -107,7 +107,7 @@ function createApplyFixText(
 function createCallFixText(
 	functionExpression: string,
 	methodArguments: AST.Expression[],
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	const argsText = methodArguments
 		.map((arg) => arg.getText(sourceFile))

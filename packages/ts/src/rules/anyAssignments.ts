@@ -104,7 +104,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkArrayDestructureWorker(
 			pattern: ts.ArrayBindingPattern,
 			senderType: ts.Type,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
 			if (isTypeAnyArray(senderType, typeChecker)) {
@@ -178,7 +178,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkObjectDestructureWorker(
 			pattern: ts.ObjectBindingPattern,
 			senderType: ts.Type,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
 			let didReport = false;
@@ -260,11 +260,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkArrayDestructure(
 			pattern: AST.ArrayBindingPattern,
 			senderType: ts.Type,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
 			return checkArrayDestructureWorker(
-				pattern as unknown as ts.ArrayBindingPattern,
+				pattern as ts.ArrayBindingPattern,
 				senderType,
 				sourceFile,
 				typeChecker,
@@ -274,11 +274,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkObjectDestructure(
 			pattern: AST.ObjectBindingPattern,
 			senderType: ts.Type,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
 			return checkObjectDestructureWorker(
-				pattern as unknown as ts.ObjectBindingPattern,
+				pattern as ts.ObjectBindingPattern,
 				senderType,
 				sourceFile,
 				typeChecker,
@@ -290,7 +290,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			declaredType: ts.Type | undefined,
 			initializer: AST.Expression,
 			reportNode: ts.Node,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 			program: ts.Program,
 		): boolean {
@@ -298,7 +298,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				initializerType,
 				typeChecker,
 				program,
-				initializer as unknown as ts.Node,
+				initializer,
 			);
 
 			if (declaredType === undefined) {

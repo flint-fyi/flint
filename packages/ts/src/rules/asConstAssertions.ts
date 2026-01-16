@@ -66,7 +66,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			expressionNode: AST.Expression,
 			typeNode: AST.TypeNode,
 			message: "preferAsConst" | "preferAsConstAnnotation",
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const typeValue = getTextValue(typeNode);
 			if (typeValue === undefined) {

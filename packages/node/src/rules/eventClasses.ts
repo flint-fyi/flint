@@ -9,7 +9,7 @@ import ts, { SyntaxKind } from "typescript";
 
 function isImportFromNodeEvents(
 	expression: ts.Expression,
-): expression is ts.StringLiteral {
+): expression is AST.StringLiteral {
 	return (
 		ts.isStringLiteral(expression) &&
 		(expression.text === "events" || expression.text === "node:events")
@@ -84,7 +84,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkExpression(
 			expression: AST.Expression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		) {
 			if (

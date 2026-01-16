@@ -86,7 +86,7 @@ function isLeftHandSide(node: AST.ElementAccessExpression) {
 
 function isLengthMinusAccess(
 	node: AST.ElementAccessExpression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	const argument = unwrapParenthesizedExpression(node.argumentExpression);
 

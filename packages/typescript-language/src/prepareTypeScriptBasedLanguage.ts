@@ -9,13 +9,14 @@ import path from "node:path";
 import ts from "typescript";
 
 import { createTypeScriptFileFromProjectService } from "./createTypeScriptFileFromProjectService.ts";
+import type * as AST from "./types/ast.ts";
 
 const projectRoot = path.join(import.meta.dirname, "../..");
 const log = debugForFile(import.meta.filename);
 
 export interface TypeScriptBasedLanguageFile extends Partial<Disposable> {
 	program: ts.Program;
-	sourceFile: ts.SourceFile;
+	sourceFile: AST.SourceFile;
 }
 
 export interface TypeScriptBasedLanguageFileFactoryDefinition {
@@ -91,7 +92,9 @@ export function prepareTypeScriptBasedLanguage(): TypeScriptBasedLanguageFileFac
 			const environment = environments.get(filePathAbsolute);
 			environment.updateFile(filePathAbsolute, sourceText);
 			/* eslint-disable @typescript-eslint/no-non-null-assertion */
-			const sourceFile = environment.getSourceFile(filePathAbsolute)!;
+			const sourceFile = environment.getSourceFile(
+				filePathAbsolute,
+			)! as AST.SourceFile;
 			const program = environment.languageService.getProgram()!;
 			/* eslint-enable @typescript-eslint/no-non-null-assertion */
 

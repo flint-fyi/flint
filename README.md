@@ -8,7 +8,7 @@
 <p align="center">
 	<!-- prettier-ignore-start -->
 	<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 11" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-11-21bb42.svg" /></a>
+	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 12" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-12-21bb42.svg" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 	<!-- prettier-ignore-end -->
 	<a href="https://github.com/flint-fyi/flint/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
@@ -78,6 +78,7 @@ Thanks! ❤️‍🔥
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/kirkwaiblinger"><img src="https://avatars.githubusercontent.com/u/53019676?v=4?s=100" width="100px;" alt="Kirk Waiblinger"/><br /><sub><b>Kirk Waiblinger</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/commits?author=kirkwaiblinger" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kovsu"><img src="https://avatars.githubusercontent.com/u/82451257?v=4?s=100" width="100px;" alt="Konv Suu"/><br /><sub><b>Konv Suu</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/commits?author=kovsu" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/lo1tuma"><img src="https://avatars.githubusercontent.com/u/169170?v=4?s=100" width="100px;" alt="Mathias Schreck"/><br /><sub><b>Mathias Schreck</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/issues?q=author%3Alo1tuma" title="Bug reports">🐛</a> <a href="#ideas-lo1tuma" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/auvred"><img src="https://avatars.githubusercontent.com/u/61150013?v=4?s=100" width="100px;" alt="auvred"/><br /><sub><b>auvred</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/issues?q=author%3Aauvred" title="Bug reports">🐛</a> <a href="#maintenance-auvred" title="Maintenance">🚧</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/bmclear"><img src="https://avatars.githubusercontent.com/u/7715393?v=4?s=100" width="100px;" alt="bmclear"/><br /><sub><b>bmclear</b></sub></a><br /><a href="#maintenance-bmclear" title="Maintenance">🚧</a> <a href="https://github.com/flint-fyi/flint/commits?author=bmclear" title="Code">💻</a></td>

@@ -1,5 +1,5 @@
 import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	isComparisonOperator,
@@ -39,7 +39,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function generateObjectIsText(
 			node: AST.BinaryExpression,
 			isNegated: boolean,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const leftText = node.left.getText(sourceFile);
 			const rightText = node.right.getText(sourceFile);

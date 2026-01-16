@@ -4,7 +4,7 @@ import {
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 const prototypeMethods = new Set([
 	"hasOwnProperty",
@@ -94,7 +94,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 function findToken(
 	node: AST.CallExpression,
 	token: SyntaxKind,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	return nullThrows(
 		node.getChildren(sourceFile).find((child) => child.kind === token),

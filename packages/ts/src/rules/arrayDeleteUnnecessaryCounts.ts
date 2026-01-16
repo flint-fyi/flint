@@ -12,7 +12,7 @@ import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 function isUnnecessaryCountArgument(
 	argumentRoot: AST.Expression,
 	calleeObject: AST.Expression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	const argument = unwrapParenthesizedExpression(argumentRoot);
 

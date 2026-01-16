@@ -4,7 +4,7 @@ import {
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import type { AST } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 const globalObjects = new Set(["Atomics", "JSON", "Math", "Reflect"]);
 
@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function reportGlobalObjectCall(
 			expression: AST.Expression,
 			name: string,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			context.report({
 				data: { name },

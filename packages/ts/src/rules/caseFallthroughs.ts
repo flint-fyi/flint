@@ -13,7 +13,7 @@ function endsWithTerminatingStatement(statements: ts.NodeArray<AST.Statement>) {
 function hasFallthroughComment(
 	clause: AST.CaseClause | AST.DefaultClause,
 	nextClause: AST.CaseClause | AST.DefaultClause,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): boolean {
 	const sourceText = sourceFile.getFullText();
 	const commentRanges = ts.getLeadingCommentRanges(

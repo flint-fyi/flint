@@ -5,7 +5,7 @@ import {
 	unwrapParenthesizedExpression,
 } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkForAssignment(
 			node: AST.ConciseBody | AST.Expression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			const unwrapped = unwrapParenthesizedExpression(node);
 

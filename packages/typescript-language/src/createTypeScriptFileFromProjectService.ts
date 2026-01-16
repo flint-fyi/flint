@@ -1,5 +1,7 @@
 import type * as ts from "typescript";
 
+import type * as AST from "./types/ast.ts";
+
 export function createTypeScriptFileFromProjectService(
 	filePathAbsolute: string,
 	program: ts.Program,
@@ -12,7 +14,7 @@ export function createTypeScriptFileFromProjectService(
 
 	return {
 		program,
-		sourceFile,
+		sourceFile: sourceFile as AST.SourceFile,
 		[Symbol.dispose]() {
 			service.closeClientFile(filePathAbsolute);
 		},

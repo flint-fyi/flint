@@ -61,7 +61,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function createExportSuggestions(
 			moduleSpecifier: AST.Expression,
 			node: AST.ExportDeclaration,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const moduleSpecifierText = sourceFile.text.slice(
 				moduleSpecifier.getStart(sourceFile),
@@ -89,7 +89,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function createImportSuggestions(
 			importClause: AST.ImportClause,
 			node: AST.ImportDeclaration,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const moduleSpecifier = sourceFile.text.slice(
 				node.moduleSpecifier.getStart(sourceFile),
