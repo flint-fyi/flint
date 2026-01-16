@@ -1,4 +1,4 @@
-import type { AST } from "@flint.fyi/ts";
+import type { AST } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
 import { findProperty } from "./findProperty.ts";

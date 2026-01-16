@@ -76,6 +76,10 @@ export default defineConfig(
 			},
 		},
 		rules: {
+			"@eslint-community/eslint-comments/disable-enable-pair": [
+				"error",
+				{ allowWholeFile: true },
+			],
 			"@typescript-eslint/no-import-type-side-effects": "error",
 			"@typescript-eslint/no-unnecessary-condition": [
 				"error",

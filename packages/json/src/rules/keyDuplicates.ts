@@ -1,7 +1,7 @@
+import { jsonLanguage } from "@flint.fyi/json-language";
 import ts from "typescript";
 import z from "zod";
 
-import { jsonLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(jsonLanguage, {

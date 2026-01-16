@@ -1,0 +1,156 @@
+---
+description: "Reports incorrect Error subclass definitions that don't follow best practices."
+title: "errorSubclassProperties"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="errorSubclassProperties" />
+
+When creating custom error classes that extend `Error`, there are several conventions that should be followed to ensure the errors work correctly and are easy to debug.
+
+This rule reports:
+
+- Invalid class names: should be capitalized and end with `Error`
+- Missing `name` property: required for proper error identification
+- Using `this.constructor.name`: won't work after minification
+- Mismatched `name` values: should match the class name
+- Redundant `this.message` assignments: already set by `super()`
+
+## Examples
+
+### Correct Error Subclass
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class foo extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "foo";
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class FooError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "FooError";
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Missing Name Property
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class CustomError extends Error {
+	constructor(message: string) {
+		super(message);
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class CustomError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "CustomError";
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Avoid `this.constructor.name`
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class CustomError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = this.constructor.name;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class CustomError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "CustomError";
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Redundant Message Assignment
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class CustomError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.message = message;
+		this.name = "CustomError";
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class CustomError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "CustomError";
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a specific naming convention for errors that doesn't follow the standard pattern, or if you're working with legacy code that can't be easily refactored, you may need to disable this rule.
+
+## Further Reading
+
+- [MDN: Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)
+- [Custom errors in JavaScript](https://javascript.info/custom-errors)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="errorSubclassProperties" />

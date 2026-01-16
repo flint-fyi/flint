@@ -5,6 +5,10 @@ import blockSequences from "./rules/blockSequences.ts";
 import emptyDocuments from "./rules/emptyDocuments.ts";
 import emptyMappingKeys from "./rules/emptyMappingKeys.ts";
 import emptyMappingValues from "./rules/emptyMappingValues.ts";
+import emptySequenceEntries from "./rules/emptySequenceEntries.ts";
+import numericTrailingZeros from "./rules/numericTrailingZeros.ts";
+import plainScalars from "./rules/plainScalars.ts";
+import stringMappingKeys from "./rules/stringMappingKeys.ts";
 
 export const yaml = createPlugin({
 	files: {
@@ -17,5 +21,9 @@ export const yaml = createPlugin({
 		emptyDocuments,
 		emptyMappingKeys,
 		emptyMappingValues,
+		emptySequenceEntries,
+		numericTrailingZeros,
+		plainScalars,
+		stringMappingKeys,
 	],
 });

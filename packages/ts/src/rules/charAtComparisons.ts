@@ -1,7 +1,11 @@
+import {
+	type AST,
+	type Checker,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import type { AST, Checker } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
 const comparisonOperators = new Set([
 	ts.SyntaxKind.EqualsEqualsEqualsToken,
@@ -31,7 +35,7 @@ function isStringType(type: ts.Type) {
 	return (type.flags & ts.TypeFlags.StringLike) !== 0;
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports comparing charAt() results with strings longer than one character.",
