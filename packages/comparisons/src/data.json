@@ -11387,7 +11387,8 @@
 		"flint": {
 			"name": "invalidThis",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "untyped",
+			"status": "implemented"
 		}
 	},
 	{

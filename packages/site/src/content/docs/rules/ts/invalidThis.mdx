@@ -1,0 +1,146 @@
+---
+description: "Reports usage of `this` in contexts where its value is `undefined`."
+title: "invalidThis"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="invalidThis" />
+
+In strict mode, `this` is `undefined` in functions that are not methods, constructors, or bound to an object.
+Using `this` in such contexts typically indicates a bug or misunderstanding of how `this` works in JavaScript.
+
+This rule flags usage of `this` in contexts where its value would be `undefined`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function getValue() {
+	return this.value;
+}
+```
+
+```ts
+const getValue = function () {
+	return this.value;
+};
+```
+
+```ts
+(function () {
+	console.log(this);
+})();
+```
+
+```ts
+const obj = {
+	method() {
+		return function () {
+			return this.value;
+		};
+	},
+};
+```
+
+```ts
+items.forEach(function (item) {
+	this.process(item);
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Example {
+	method() {
+		return this.value;
+	}
+}
+```
+
+```ts
+const obj = {
+	method() {
+		return this.value;
+	},
+};
+```
+
+```ts
+const obj = {
+	handler: function () {
+		return this.value;
+	},
+};
+```
+
+```ts
+function Foo() {
+	this.value = 0;
+}
+```
+
+```ts
+const bar = function () {
+	this.value = 0;
+}.bind(obj);
+```
+
+```ts
+items.forEach(function (item) {
+	this.process(item);
+}, thisArg);
+```
+
+```ts
+obj.method = function () {
+	return this.value;
+};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `capIsConstructor`
+
+Type: `boolean`
+Default: `true`
+
+Whether to assume functions starting with an uppercase letter are constructors.
+
+When `true` (default), functions with names starting with uppercase are treated as constructors, allowing `this` usage:
+
+```ts
+function Foo() {
+	this.value = 0;
+}
+
+const Handler = function () {
+	this.active = true;
+};
+```
+
+When `false`, these functions are treated as regular functions and `this` usage is flagged.
+
+## When Not To Use It
+
+If your codebase uses `this` in non-strict mode scripts where `this` refers to the global object, you may disable this rule.
+TypeScript with `strict` or `noImplicitThis` enabled will catch these issues at compile time, making this rule redundant.
+
+## Further Reading
+
+- [MDN: this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this)
+- [MDN: Strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="invalidThis" />
