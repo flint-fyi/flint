@@ -1,6 +1,6 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 
-import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

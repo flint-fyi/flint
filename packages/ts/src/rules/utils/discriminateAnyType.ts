@@ -1,8 +1,7 @@
+import type { Checker } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 import * as tsutils from "ts-api-utils";
 import ts from "typescript";
-
-import type { Checker } from "../../types/checker.ts";
 
 export const AnyType = {
 	Any: "any",

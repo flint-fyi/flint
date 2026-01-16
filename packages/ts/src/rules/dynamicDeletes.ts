@@ -1,3 +1,4 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import {
 	isElementAccessExpression,
 	isNumericLiteral,
@@ -6,8 +7,6 @@ import {
 } from "typescript";
 import type { Expression } from "typescript";
 import { SyntaxKind } from "typescript";
-
-import { typescriptLanguage } from "../language.ts";
 
 function isAcceptableIndexExpression(property: Expression): boolean {
 	return (

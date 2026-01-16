@@ -1,6 +1,5 @@
+import { yamlLanguage } from "@flint.fyi/yaml-language";
 import type * as yaml from "yaml-unist-parser";
-
-import { yamlLanguage } from "../language.ts";
 
 /**
  * Calculate the expected indentation for a flow mapping's pairs when converted to block style.
