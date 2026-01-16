@@ -1,8 +1,8 @@
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
-} from "../language.ts";
-import * as AST from "../types/ast.ts";
+} from "@flint.fyi/typescript-language";
+import type { AST } from "@flint.fyi/typescript-language";
 
 const nonOctalDecimalEscapePattern = /\\[89]/g;
 

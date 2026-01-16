@@ -1,8 +1,7 @@
+import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import ts from "typescript";
 
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function classHasExtendsClause(
@@ -64,7 +63,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkConstructor(
 			classNode: AST.ClassDeclaration | AST.ClassExpression,
 			constructor: AST.ConstructorDeclaration,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (!constructor.body) {
 				return;
@@ -96,7 +95,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 		}
 
-		function findAndReportSuperCalls(node: ts.Node, sourceFile: ts.SourceFile) {
+		function findAndReportSuperCalls(
+			node: ts.Node,
+			sourceFile: AST.SourceFile,
+		) {
 			if (
 				ts.isCallExpression(node) &&
 				node.expression.kind === ts.SyntaxKind.SuperKeyword
@@ -122,7 +124,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkClass(
 			node: AST.ClassDeclaration | AST.ClassExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			{ sourceFile }: { sourceFile: AST.SourceFile },
 		) {
 			for (const member of node.members) {
 				if (member.kind === ts.SyntaxKind.Constructor) {

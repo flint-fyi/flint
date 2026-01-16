@@ -1,7 +1,7 @@
 <h1 align="center"><code>@flint.fyi/json</code></h1>
 
 <p align="center">
-	[Experimental] JSON language plugin for Flint.
+	[Experimental] JSON plugin for Flint.
 	❤️‍🔥
 </p>
 

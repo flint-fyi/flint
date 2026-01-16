@@ -1,8 +1,10 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasNamedBindings(node: AST.ImportDeclaration) {
@@ -59,7 +61,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function createExportSuggestions(
 			moduleSpecifier: AST.Expression,
 			node: AST.ExportDeclaration,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const moduleSpecifierText = sourceFile.text.slice(
 				moduleSpecifier.getStart(sourceFile),
@@ -87,7 +89,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function createImportSuggestions(
 			importClause: AST.ImportClause,
 			node: AST.ImportDeclaration,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const moduleSpecifier = sourceFile.text.slice(
 				node.moduleSpecifier.getStart(sourceFile),

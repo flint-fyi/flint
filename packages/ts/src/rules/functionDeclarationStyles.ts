@@ -1,14 +1,16 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts from "typescript";
 import { z } from "zod";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isOverloadedDeclaration(
 	node: AST.FunctionDeclaration,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	if (!node.name) {
 		return false;

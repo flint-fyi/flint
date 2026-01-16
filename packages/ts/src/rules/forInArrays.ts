@@ -1,8 +1,10 @@
+import {
+	type Checker,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import ts from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import type { Checker } from "../types/checker.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
@@ -51,7 +53,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				ForInStatement: (node, { typeChecker }) => {
+				ForInStatement: (node, { sourceFile, typeChecker }) => {
 					const type = getConstrainedTypeAtLocation(
 						node.expression,
 						typeChecker,
@@ -61,8 +63,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						context.report({
 							message: "forIn",
 							range: {
-								begin: node.getStart(),
-								end: node.statement.getStart() - 1,
+								begin: node.getStart(sourceFile),
+								end: node.statement.getStart(sourceFile) - 1,
 							},
 						});
 					}

@@ -1,7 +1,9 @@
+import {
+	typescriptLanguage,
+	unwrapParenthesizedExpression,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 const equalityOperators = new Set([

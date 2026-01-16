@@ -73,6 +73,7 @@ import emptyExports from "./rules/emptyExports.ts";
 import emptyFiles from "./rules/emptyFiles.ts";
 import emptyFunctions from "./rules/emptyFunctions.ts";
 import emptyModuleAttributes from "./rules/emptyModuleAttributes.ts";
+import emptyObjectTypes from "./rules/emptyObjectTypes.ts";
 import emptyStaticBlocks from "./rules/emptyStaticBlocks.ts";
 import emptyTypeParameterLists from "./rules/emptyTypeParameterLists.ts";
 import enumInitializers from "./rules/enumInitializers.ts";
@@ -81,8 +82,13 @@ import enumValueConsistency from "./rules/enumValueConsistency.ts";
 import enumValueDuplicates from "./rules/enumValueDuplicates.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
 import errorMessages from "./rules/errorMessages.ts";
+import errorSubclassProperties from "./rules/errorSubclassProperties.ts";
+import errorUnnecessaryCaptureStackTraces from "./rules/errorUnnecessaryCaptureStackTraces.ts";
+import evals from "./rules/evals.ts";
 import evolvingVariableTypes from "./rules/evolvingVariableTypes.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
+import exportMutables from "./rules/exportMutables.ts";
+import exportUniqueNames from "./rules/exportUniqueNames.ts";
 import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
 import finallyStatementSafety from "./rules/finallyStatementSafety.ts";
 import forDirections from "./rules/forDirections.ts";
@@ -218,6 +224,7 @@ export const ts = createPlugin({
 		emptyFiles,
 		emptyFunctions,
 		emptyModuleAttributes,
+		emptyObjectTypes,
 		emptyStaticBlocks,
 		emptyTypeParameterLists,
 		enumInitializers,
@@ -226,8 +233,13 @@ export const ts = createPlugin({
 		enumValueDuplicates,
 		equalityOperatorNegations,
 		errorMessages,
+		errorSubclassProperties,
+		errorUnnecessaryCaptureStackTraces,
+		evals,
 		evolvingVariableTypes,
 		exceptionAssignments,
+		exportMutables,
+		exportUniqueNames,
 		fetchMethodBodies,
 		finallyStatementSafety,
 		forDirections,

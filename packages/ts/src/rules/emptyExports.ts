@@ -1,8 +1,10 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 const moduleIndicatorKinds = new Set([
@@ -62,7 +64,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkStatements(
 			statements: readonly AST.Statement[],
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (!hasOtherModuleIndicator(statements)) {
 				return;

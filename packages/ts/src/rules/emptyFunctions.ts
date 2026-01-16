@@ -1,11 +1,13 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-function hasComments(block: AST.Block, sourceFile: ts.SourceFile) {
+function hasComments(block: AST.Block, sourceFile: AST.SourceFile) {
 	const fullText = sourceFile.getFullText();
 	const openBrace = block.getStart(sourceFile);
 	const closeBrace = block.getEnd();
@@ -14,7 +16,7 @@ function hasComments(block: AST.Block, sourceFile: ts.SourceFile) {
 	return /\S+/.test(innerText.trim());
 }
 
-function isEmptyBlock(block: AST.Block, sourceFile: ts.SourceFile) {
+function isEmptyBlock(block: AST.Block, sourceFile: AST.SourceFile) {
 	return block.statements.length === 0 && !hasComments(block, sourceFile);
 }
 
@@ -43,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkFunctionBody(
 			node: ts.Node,
 			body: AST.Block | undefined,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (body && isEmptyBlock(body, sourceFile)) {
 				context.report({

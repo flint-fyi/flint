@@ -1,6 +1,6 @@
+import { node } from "@flint.fyi/node";
 import { flint } from "@flint.fyi/plugin-flint";
-import { node } from "@flint.fyi/plugin-node";
-import { spelling } from "@flint.fyi/plugin-spelling";
+import { spelling } from "@flint.fyi/spelling";
 import { defineConfig, globs, json, md, ts, yaml } from "flint";
 
 export default defineConfig({

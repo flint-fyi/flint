@@ -46,8 +46,8 @@ export class RuleCreator<Presets extends string> {
 		>,
 	): Rule<
 		RuleAboutWithPresetsAndUrl<Presets>,
-		GetLanguageAstNodesByName<Language>,
-		GetLanguageFileServices<Language>,
+		object,
+		object,
 		MessageId,
 		OptionsSchema
 	> {

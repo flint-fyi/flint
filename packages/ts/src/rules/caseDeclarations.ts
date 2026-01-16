@@ -1,12 +1,12 @@
+import {
+	type AST,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import {
-	type TypeScriptFileServices,
-	typescriptLanguage,
-} from "../language.ts";
-import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function getLexicalDeclaration(
 			statements: ts.NodeArray<AST.Statement>,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): ts.Node | undefined {
 			for (const statement of statements) {
 				if (

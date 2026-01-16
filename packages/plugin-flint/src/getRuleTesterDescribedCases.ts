@@ -1,4 +1,4 @@
-import type { AST } from "@flint.fyi/ts";
+import type { AST } from "@flint.fyi/typescript-language";
 import { isTruthy, nullThrows } from "@flint.fyi/utils";
 import { SyntaxKind } from "typescript";
 
