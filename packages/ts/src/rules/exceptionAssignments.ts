@@ -1,14 +1,17 @@
+import {
+	type AST,
+	getModifyingReferences,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import { getModifyingReferences } from "../utils/getModifyingReferences.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports reassigning exception parameters in catch clauses.",
 		id: "exceptionAssignments",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		noExAssign: {

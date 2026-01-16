@@ -1,10 +1,12 @@
-import { markdownLanguage } from "../language.ts";
+import { markdownLanguage } from "@flint.fyi/markdown-language";
 
-export default markdownLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports links with empty URLs or only empty fragments.",
 		id: "linkContents",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		emptyLink: {

@@ -1,14 +1,14 @@
+import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports control flow statements in `finally` blocks that can override control flow in `try`/`catch` blocks.",
 		id: "finallyStatementSafety",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsafeFinally: {

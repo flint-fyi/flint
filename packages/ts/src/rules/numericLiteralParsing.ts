@@ -1,10 +1,11 @@
+import {
+	type AST,
+	getTSNodeRange,
+	isGlobalDeclaration,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 import ts, { SyntaxKind } from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
 
 function convertToLiteral(value: string, radix: number): string {
 	const parsed = Number.parseInt(value, radix);
@@ -46,12 +47,14 @@ function getStringValue(node: AST.Expression): string | undefined {
 		: undefined;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports parseInt calls with binary, hexadecimal, or octal strings that can be replaced with numeric literals.",
 		id: "numericLiteralParsing",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferLiteral: {

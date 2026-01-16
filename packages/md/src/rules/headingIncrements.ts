@@ -1,10 +1,12 @@
-import { markdownLanguage } from "../language.ts";
+import { markdownLanguage } from "@flint.fyi/markdown-language";
 
-export default markdownLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports heading levels incrementing by more than one.",
 		id: "headingIncrements",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		levelSkip: {

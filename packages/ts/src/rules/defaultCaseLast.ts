@@ -1,14 +1,15 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports switch statements where the default clause is not last.",
 		id: "defaultCaseLast",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		defaultCaseShouldBeLast: {

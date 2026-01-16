@@ -1,20 +1,23 @@
+import {
+	type AST,
+	type Checker,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 import * as tsutils from "ts-api-utils";
 import ts, { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
-import type { Checker } from "../types/checker.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { getThisExpression } from "./utils/getThisExpression.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports returning a value with type `any` from a function.",
 		id: "anyReturns",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsafeReturn: {
@@ -74,8 +77,11 @@ export default typescriptLanguage.createRule({
 				// It says "With TypeScript v5, in favor of typescript's `isFunctionLike`."
 				// However, isFunctionLike also checks for signature-like nodes,
 				// whereas isFunctionLikeDeclaration checks only for function-like nodes.
-				// eslint-disable-next-line @typescript-eslint/no-deprecated
+				/* eslint-disable @typescript-eslint/no-deprecated */
+				// flint-disable-lines-begin deprecated
 				tsutils.isFunctionLikeDeclaration,
+				/* eslint-enable @typescript-eslint/no-deprecated */
+				// flint-disable-lines-end deprecated
 			);
 			if (!functionNode) {
 				return;

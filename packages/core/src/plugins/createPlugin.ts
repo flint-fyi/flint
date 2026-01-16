@@ -1,3 +1,5 @@
+import { CachedFactory } from "cached-factory";
+
 import type { FilesValues } from "../types/files.ts";
 import type { Plugin, PluginPresets } from "../types/plugins.ts";
 import type { Rule, RuleAbout } from "../types/rules.ts";
@@ -53,20 +55,13 @@ export function createPlugin<
 	FilesKey,
 	Rules
 > {
-	const presets = Object.groupBy(
-		rules.filter((rule) => typeof rule.about.preset === "string"),
-		// TODO: Figure out inferred type predicate...
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		(rule) => rule.about.preset!,
-	) as PluginPresets<About, string>;
-
+	const presets = collectPresetsFromRules(rules);
 	const rulesById = new Map(rules.map((rule) => [rule.about.id, rule]));
 
 	return {
 		// @ts-expect-error -- TODO: Figure this out...?
 		files,
 		name,
-		// @ts-expect-error -- TODO: Figure this out...?
 		presets,
 		// @ts-expect-error -- TODO: Figure out what to assert...?
 		rules: (configuration) => {
@@ -78,4 +73,20 @@ export function createPlugin<
 		},
 		rulesById,
 	};
+}
+
+function collectPresetsFromRules<const About extends RuleAbout>(
+	rules: UnsafeAnyRule<About>[],
+) {
+	const presets = new CachedFactory<string, UnsafeAnyRule<About>[]>(() => []);
+
+	for (const rule of rules) {
+		if (rule.about.presets) {
+			for (const preset of rule.about.presets) {
+				presets.get(preset).push(rule);
+			}
+		}
+	}
+
+	return Object.fromEntries(presets.entries()) as PluginPresets<About, string>;
 }

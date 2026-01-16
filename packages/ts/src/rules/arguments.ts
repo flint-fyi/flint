@@ -1,7 +1,8 @@
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
 
 function isNonArrowFunctionBoundary(node: ts.Node): "quit" | boolean {
 	if (ts.isArrowFunction(node)) {
@@ -17,12 +18,14 @@ function isNonArrowFunctionBoundary(node: ts.Node): "quit" | boolean {
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using the arguments object instead of rest parameters.",
 		id: "arguments",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		preferRestParameters: {

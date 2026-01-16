@@ -1,15 +1,17 @@
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
-} from "../language.ts";
-import type * as AST from "../types/ast.ts";
+} from "@flint.fyi/typescript-language";
+import type { AST } from "@flint.fyi/typescript-language";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using empty destructuring patterns that destructure no values.",
 		id: "emptyDestructures",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		emptyPattern: {

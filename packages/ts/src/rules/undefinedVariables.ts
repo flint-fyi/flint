@@ -1,12 +1,13 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using variables that are not defined.",
 		id: "undefinedVariables",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		undefinedVariable: {

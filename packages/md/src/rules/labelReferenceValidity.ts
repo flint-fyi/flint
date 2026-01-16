@@ -1,15 +1,16 @@
+import { markdownLanguage } from "@flint.fyi/markdown-language";
+import type { WithPosition } from "@flint.fyi/markdown-language";
 import type { Node, Root, Text } from "mdast";
-
-import { markdownLanguage } from "../language.ts";
-import type { WithPosition } from "../nodes.ts";
 
 const invalidPattern = /\[[^\]]+\]\[\s+\]/g;
 
-export default markdownLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports invalid label references with whitespace.",
 		id: "labelReferenceValidity",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidWhitespace: {

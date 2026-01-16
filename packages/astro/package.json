@@ -1,0 +1,46 @@
+{
+	"name": "@flint.fyi/astro",
+	"version": "0.1.2",
+	"description": "[Experimental] A Flint plugin for Astro code.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/astro"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "JoshuaKGoldberg",
+		"email": "npm@joshuakgoldberg.com"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": {
+			"@flint.fyi/source": "./src/index.ts",
+			"default": "./lib/index.js"
+		}
+	},
+	"files": [
+		"lib/",
+		"!lib/**/*.map"
+	],
+	"scripts": {
+		"test": "vitest --typecheck --project astro"
+	},
+	"dependencies": {
+		"@flint.fyi/core": "workspace:^",
+		"typescript": "^5.9.3"
+	},
+	"devDependencies": {
+		"tsdown": "0.19.0-beta.2"
+	},
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"exports": {
+			".": "./lib/index.js"
+		}
+	}
+}

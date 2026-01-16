@@ -1,6 +1,5 @@
+import { yamlLanguage } from "@flint.fyi/yaml-language";
 import type * as yamlParser from "yaml-unist-parser";
-
-import { yamlLanguage } from "../language.ts";
 
 function buildBlockSequenceFix(
 	node: yamlParser.FlowSequence,
@@ -48,11 +47,13 @@ function getNodeText(
 	);
 }
 
-export default yamlLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Prefer block style sequences over flow style sequences.",
 		id: "blockSequences",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		flowSequence: {

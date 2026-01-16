@@ -1,14 +1,13 @@
+import type { Checker } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 import * as tsutils from "ts-api-utils";
 import ts from "typescript";
 
-import type { Checker } from "../../types/checker.ts";
-
 export const AnyType = {
-	Any: "Any",
-	AnyArray: "AnyArray",
-	PromiseAny: "PromiseAny",
-	Safe: "Safe",
+	Any: "any",
+	AnyArray: "any[]",
+	PromiseAny: "Promise<any>",
+	Safe: "safe",
 } as const;
 export type AnyType = (typeof AnyType)[keyof typeof AnyType];
 

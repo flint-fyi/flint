@@ -1,6 +1,6 @@
+import { node } from "@flint.fyi/node";
 import { flint } from "@flint.fyi/plugin-flint";
-import { node } from "@flint.fyi/plugin-node";
-import { spelling } from "@flint.fyi/plugin-spelling";
+import { spelling } from "@flint.fyi/spelling";
 import { defineConfig, globs, json, md, ts, yaml } from "flint";
 
 export default defineConfig({
@@ -11,7 +11,7 @@ export default defineConfig({
 		},
 		{
 			files: md.files.all,
-			rules: md.presets.logical,
+			rules: md.presets.logicalStrict,
 		},
 		{
 			files: {
@@ -20,10 +20,18 @@ export default defineConfig({
 			},
 			rules: [
 				flint.presets.logical,
-				node.presets.logical,
-				node.presets.stylistic,
-				ts.presets.logical,
-				ts.presets.stylistic,
+				node.presets.logicalStrict,
+				node.presets.stylisticStrict,
+				ts.presets.logicalStrict,
+				ts.presets.stylisticStrict,
+			],
+		},
+		{
+			files: "packages/cli/src/**/*",
+			rules: [
+				ts.rules({
+					consoleCalls: false,
+				}),
 			],
 		},
 		{

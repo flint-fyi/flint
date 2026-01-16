@@ -1,7 +1,6 @@
+import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
 import {
 	isComparisonOperator,
 	isEqualityOperator,
@@ -17,11 +16,13 @@ function isNegativeZero(node: AST.Expression): boolean {
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports comparisons with -0 that may not behave as expected.",
 		id: "negativeZeroComparisons",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unexpectedNegativeZeroComparison: {

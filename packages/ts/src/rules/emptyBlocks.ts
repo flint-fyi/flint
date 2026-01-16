@@ -1,8 +1,9 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 
 const allowedParents = new Set([
 	SyntaxKind.ArrowFunction,
@@ -15,11 +16,13 @@ const allowedParents = new Set([
 	SyntaxKind.SetAccessor,
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports empty block statements that should contain code.",
 		id: "emptyBlocks",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		emptyBlock: {

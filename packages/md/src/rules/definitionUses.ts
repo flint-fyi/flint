@@ -1,13 +1,14 @@
+import { markdownLanguage } from "@flint.fyi/markdown-language";
+import type { WithPosition } from "@flint.fyi/markdown-language";
 import type { Definition, ImageReference, Node, Root } from "mdast";
 
-import { markdownLanguage } from "../language.ts";
-import type { WithPosition } from "../nodes.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default markdownLanguage.createRule({
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports unused reference definitions.",
 		id: "definitionUses",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unusedDefinition: {

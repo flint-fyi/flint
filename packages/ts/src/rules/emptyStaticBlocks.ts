@@ -1,11 +1,13 @@
-import { typescriptLanguage } from "../language.ts";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports empty static initialization blocks within class declarations.",
 		id: "emptyStaticBlocks",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		emptyStaticBlock: {

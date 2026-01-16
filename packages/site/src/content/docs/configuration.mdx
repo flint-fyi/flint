@@ -146,7 +146,7 @@ Includes all files previously selected by the configuration.
 For example, this config enables the [spelling plugin](/rules/spelling) on all files that are being linted, which includes multiple languages:
 
 ```ts twoslash title="flint.config.ts"
-import { spelling } from "@flint.fyi/plugin-spelling";
+import { spelling } from "@flint.fyi/spelling";
 import { defineConfig, globs, md, ts } from "flint";
 
 export default defineConfig({
@@ -166,6 +166,11 @@ export default defineConfig({
 	],
 });
 ```
+
+## Inline Directives
+
+You can also disable specific rules inline in your code using [comment directives](/directives).
+This is useful when you need to suppress a rule for a specific line, block, or file.
 
 ### Workspaces
 

@@ -1,10 +1,12 @@
-import { typescriptLanguage } from "../language.ts";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports files with Unicode Byte Order Marks (BOMs).",
 		id: "unicodeBOMs",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		noBOM: {
