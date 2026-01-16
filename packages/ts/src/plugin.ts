@@ -104,6 +104,7 @@ import functionNewCalls from "./rules/functionNewCalls.ts";
 import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
 import globalAssignments from "./rules/globalAssignments.ts";
 import globalObjectCalls from "./rules/globalObjectCalls.ts";
+import globalThisAliases from "./rules/globalThisAliases.ts";
 import impliedEvals from "./rules/impliedEvals.ts";
 import importEmptyBlocks from "./rules/importEmptyBlocks.ts";
 import importTypeSideEffects from "./rules/importTypeSideEffects.ts";
@@ -256,6 +257,7 @@ export const ts = createPlugin({
 		generatorFunctionYields,
 		globalAssignments,
 		globalObjectCalls,
+		globalThisAliases,
 		impliedEvals,
 		importEmptyBlocks,
 		importTypeSideEffects,
