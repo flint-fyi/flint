@@ -10275,8 +10275,8 @@
 		"flint": {
 			"name": "extraneousClasses",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
