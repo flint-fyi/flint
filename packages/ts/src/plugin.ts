@@ -102,6 +102,7 @@ import functionDeclarationStyles from "./rules/functionDeclarationStyles.ts";
 import functionNameMatches from "./rules/functionNameMatches.ts";
 import functionNewCalls from "./rules/functionNewCalls.ts";
 import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
+import genericConstructorCalls from "./rules/genericConstructorCalls.ts";
 import globalAssignments from "./rules/globalAssignments.ts";
 import globalObjectCalls from "./rules/globalObjectCalls.ts";
 import impliedEvals from "./rules/impliedEvals.ts";
@@ -254,6 +255,7 @@ export const ts = createPlugin({
 		functionNameMatches,
 		functionNewCalls,
 		generatorFunctionYields,
+		genericConstructorCalls,
 		globalAssignments,
 		globalObjectCalls,
 		impliedEvals,
