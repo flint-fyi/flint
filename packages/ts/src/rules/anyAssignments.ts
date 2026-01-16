@@ -1,9 +1,11 @@
+import {
+	type AST,
+	type Checker,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
-import type { Checker } from "../types/checker.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
@@ -24,12 +26,14 @@ function isTypeAnyOrUnknown(type: ts.Type): boolean {
 	return tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports assigning a value with type `any` to variables and properties.",
 		id: "anyAssignments",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unsafeArrayDestructure: {

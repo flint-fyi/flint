@@ -1,7 +1,6 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
-
-import { typescriptLanguage } from "../language.ts";
 
 const arrayMethodsRequiringReturn = new Set([
 	"every",
@@ -19,12 +18,14 @@ const arrayMethodsRequiringReturn = new Set([
 	"toSorted",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports missing return statements in callbacks of array methods.",
 		id: "arrayCallbackReturns",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		missingReturn: {

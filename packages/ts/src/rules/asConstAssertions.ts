@@ -1,8 +1,9 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
@@ -31,12 +32,14 @@ function isLiteralType(node: AST.TypeNode): boolean {
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using explicit literal types when `as const` can be used.",
 		id: "asConstAssertions",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferAsConst: {

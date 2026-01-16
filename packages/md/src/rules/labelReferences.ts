@@ -1,17 +1,18 @@
+import { markdownLanguage } from "@flint.fyi/markdown-language";
+import type { WithPosition } from "@flint.fyi/markdown-language";
 import type { Definition, Node, Root, Text } from "mdast";
-
-import { markdownLanguage } from "../language.ts";
-import type { WithPosition } from "../nodes.ts";
 
 // Pattern to match label references: ![text][label], [text][label], [label][], or [label]
 // Includes optional ! for images
 const labelPattern = /!?\[(?<left>[^[\]\\]*)\]\[(?<right>[^\]\\]*)\]/g;
 
-export default markdownLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports missing label references.",
 		id: "labelReferences",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingLabel: {

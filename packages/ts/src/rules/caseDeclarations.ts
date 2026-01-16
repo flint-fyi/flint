@@ -1,19 +1,20 @@
+import {
+	type AST,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import {
-	type TypeScriptFileServices,
-	typescriptLanguage,
-} from "../language.ts";
-import * as AST from "../types/ast.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports lexical declarations in case clauses without wrapping them in blocks.",
 		id: "caseDeclarations",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		unexpectedLexicalDeclaration: {

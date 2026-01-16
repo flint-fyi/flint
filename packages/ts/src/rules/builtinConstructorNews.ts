@@ -1,11 +1,10 @@
-import * as ts from "typescript";
-
-import type { AST } from "../index.ts";
 import {
+	type AST,
+	isGlobalDeclarationOfName,
 	type TypeScriptFileServices,
 	typescriptLanguage,
-} from "../language.ts";
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
+} from "@flint.fyi/typescript-language";
+import * as ts from "typescript";
 
 const requiresNew = new Set([
 	"Array",
@@ -47,12 +46,14 @@ const disallowsNew = new Set([
 	"Symbol",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Enforces using new for constructors that require it, and disallows new for primitive coercion functions.",
 		id: "builtinConstructorNews",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		disallowedNew: {

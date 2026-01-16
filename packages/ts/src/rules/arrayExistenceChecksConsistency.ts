@@ -1,7 +1,8 @@
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
 
 const indexMethods = new Set([
 	"findIndex",
@@ -10,12 +11,14 @@ const indexMethods = new Set([
 	"lastIndexOf",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports inconsistent styles for checking element existence using index methods.",
 		id: "arrayExistenceChecksConsistency",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferEqualsMinusOne: {

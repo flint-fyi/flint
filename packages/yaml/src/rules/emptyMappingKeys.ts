@@ -1,10 +1,12 @@
-import { yamlLanguage } from "../language.ts";
+import { yamlLanguage } from "@flint.fyi/yaml-language";
 
-export default yamlLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Reports empty mapping keys.",
 		id: "emptyMappingKeys",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		emptyKey: {

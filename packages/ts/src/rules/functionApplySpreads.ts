@@ -1,16 +1,19 @@
+import {
+	type AST,
+	getTSNodeRange,
+	hasSameTokens,
+	isFunction,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
-import { hasSameTokens } from "../utils/hasSameTokens.ts";
-import { isFunction } from "../utils/isFunction.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Prefer the spread operator over `.apply()` calls.",
 		id: "functionApplySpreads",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferSpread: {

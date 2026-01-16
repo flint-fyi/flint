@@ -1,20 +1,23 @@
+import {
+	type AST,
+	type Checker,
+	isGlobalDeclarationOfName,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
-
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import type { Checker } from "../types/checker.ts";
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
 
 function isDateType(node: AST.Expression, typeChecker: Checker) {
 	return typeChecker.getTypeAtLocation(node).getSymbol()?.getName() === "Date";
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer passing a `Date` directly to the `Date` constructor when cloning, rather than calling `getTime()`.",
 		id: "dateConstructorClones",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unnecessaryGetTime: {

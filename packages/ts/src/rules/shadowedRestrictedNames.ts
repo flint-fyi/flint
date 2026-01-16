@@ -1,8 +1,9 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 
 const restrictedNames = new Set([
 	"arguments",
@@ -12,12 +13,14 @@ const restrictedNames = new Set([
 	"undefined",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports variable declarations that shadow JavaScript's restricted names.",
 		id: "shadowedRestrictedNames",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		shadowedRestrictedName: {

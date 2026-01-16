@@ -1,16 +1,19 @@
+import {
+	getTSNodeRange,
+	isGlobalVariable,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import { isGlobalVariable } from "../utils/isGlobalVariable.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports attempting to assign to read-only global variables such as undefined, NaN, Infinity, Object, etc.",
 		id: "globalAssignments",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noGlobalAssign: {

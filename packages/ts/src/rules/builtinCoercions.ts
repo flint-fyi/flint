@@ -1,11 +1,10 @@
-import * as ts from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
 import {
+	type AST,
+	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
-} from "../language.ts";
-import type * as AST from "../types/ast.ts";
+} from "@flint.fyi/typescript-language";
+import * as ts from "typescript";
 
 const nativeCoercionFunctions = new Set([
 	"BigInt",
@@ -25,12 +24,14 @@ const arrayMethodsWithBooleanCallback = new Set([
 	"some",
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports functions that wrap native coercion functions like `String`, `Number`, `BigInt`, `Boolean`, or `Symbol`.",
 		id: "builtinCoercions",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		useBuiltin: {

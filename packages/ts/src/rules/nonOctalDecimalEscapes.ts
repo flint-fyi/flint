@@ -1,17 +1,19 @@
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
-} from "../language.ts";
-import * as AST from "../types/ast.ts";
+} from "@flint.fyi/typescript-language";
+import type { AST } from "@flint.fyi/typescript-language";
 
 const nonOctalDecimalEscapePattern = /\\[89]/g;
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports non-octal decimal escape sequences (\\8 and \\9) in string literals.",
 		id: "nonOctalDecimalEscapes",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		unexpectedEscape: {

@@ -1,10 +1,12 @@
+import {
+	type AST,
+	getTSNodeRange,
+	hasSameTokens,
+	typescriptLanguage,
+	unwrapParenthesizedExpression,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import { hasSameTokens } from "../utils/hasSameTokens.ts";
-import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
 function isUnnecessaryCountArgument(
@@ -44,12 +46,14 @@ function isUnnecessaryCountArgument(
 	return undefined;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using `.length` or `Infinity` as the `deleteCount` or `skipCount` argument of `Array#splice()` or `Array#toSpliced()`.",
 		id: "arrayDeleteUnnecessaryCounts",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		unnecessaryCount: {

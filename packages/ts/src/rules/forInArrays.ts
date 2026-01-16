@@ -1,16 +1,19 @@
+import {
+	type Checker,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import ts from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import type { Checker } from "../types/checker.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports iterating over an array with a for-in loop.",
 		id: "forInArrays",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		forIn: {

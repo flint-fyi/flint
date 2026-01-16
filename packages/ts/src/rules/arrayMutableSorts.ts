@@ -1,8 +1,9 @@
+import {
+	getTSNodeRange,
+	isBuiltinArrayMethod,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import { isBuiltinArrayMethod } from "../utils/isBuiltinArrayMethod.ts";
 
 const methodsReturningNewArray = new Set([
 	"concat",
@@ -75,12 +76,14 @@ function isInlineArrayCreation(node: ts.Expression): boolean {
 	return false;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports `.sort()` calls on arrays that mutate the original array.",
 		id: "arrayMutableSorts",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferToSorted: {

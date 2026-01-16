@@ -1,13 +1,14 @@
+import { markdownLanguage } from "@flint.fyi/markdown-language";
+import type { WithPosition } from "@flint.fyi/markdown-language";
 import type { Image, ImageReference } from "mdast";
 
-import { markdownLanguage } from "../language.ts";
-import type { WithPosition } from "../nodes.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default markdownLanguage.createRule({
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports images without alternative text.",
 		id: "imageAltTexts",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		missingAlt: {

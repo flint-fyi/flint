@@ -1,8 +1,9 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
 
 function isLiteralValue(node: AST.AnyNode) {
 	if (ts.isPrefixUnaryExpression(node)) {
@@ -27,12 +28,14 @@ function isThisLiteralAssignment(node: AST.BinaryExpression) {
 	);
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports assigning literal values to `this` in constructors instead of using class field declarations.",
 		id: "classFieldDeclarations",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		preferClassField: {

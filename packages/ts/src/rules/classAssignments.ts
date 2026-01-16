@@ -1,11 +1,15 @@
-import { typescriptLanguage } from "../language.ts";
-import { getModifyingReferences } from "../utils/getModifyingReferences.ts";
+import {
+	getModifyingReferences,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports reassigning class declarations.",
 		id: "classAssignments",
-		preset: "untyped",
+		presets: ["untyped"],
 	},
 	messages: {
 		noClassAssign: {

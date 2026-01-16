@@ -1,5 +1,5 @@
 import type { InvalidTestCase, TestCase } from "@flint.fyi/rule-tester";
-import type { AST } from "@flint.fyi/ts";
+import type { AST } from "@flint.fyi/typescript-language";
 import type * as ts from "typescript";
 
 export interface ParsedTestCase extends TestCase {

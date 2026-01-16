@@ -1,14 +1,17 @@
+import {
+	getTSNodeRange,
+	hasSameTokens,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import { hasSameTokens } from "../utils/hasSameTokens.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Prefer logical assignment operator shorthand expressions.",
 		id: "assignmentOperatorShorthands",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferShorthand: {

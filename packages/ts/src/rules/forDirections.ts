@@ -1,8 +1,9 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 
 function getConditionDirection(
 	condition: AST.Expression,
@@ -113,12 +114,14 @@ function getIncrementorDirection(incrementor: AST.Expression) {
 	return undefined;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports for loops with counter variables that move in the wrong direction.",
 		id: "forDirections",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		wrongDirection: {

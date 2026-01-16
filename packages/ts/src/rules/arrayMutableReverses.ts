@@ -1,13 +1,17 @@
-import { typescriptLanguage } from "../language.ts";
-import { isBuiltinArrayMethod } from "../utils/isBuiltinArrayMethod.ts";
-import { isInlineArrayCreation } from "../utils/isInlineArrayCreation.ts";
+import {
+	isBuiltinArrayMethod,
+	isInlineArrayCreation,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports `.reverse()` calls on arrays that mutate the original array.",
 		id: "arrayMutableReverses",
-		preset: "stylistic",
+		presets: ["stylistic"],
 	},
 	messages: {
 		preferToReversed: {
