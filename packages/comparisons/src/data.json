@@ -11217,7 +11217,8 @@
 		"flint": {
 			"name": "importSelf",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -11288,7 +11289,8 @@
 		"flint": {
 			"name": "indexedObjectTypes",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
