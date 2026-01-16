@@ -1,10 +1,12 @@
+import {
+	type AST,
+	getTSNodeRange,
+	isGlobalDeclaration,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 import { z } from "zod";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isSimpleType(typeNode: AST.TypeNode | undefined): boolean {

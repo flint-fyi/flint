@@ -1,5 +1,5 @@
 ---
-"@flint.fyi/plugin-spelling": patch
+"@flint.fyi/spelling": patch
 ---
 
-fix(plugin-spelling): [cspell] fill in secondary and suggestions
+fix(spelling): [cspell] fill in secondary and suggestions

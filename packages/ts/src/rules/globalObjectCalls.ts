@@ -1,11 +1,10 @@
-import ts, { SyntaxKind } from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
+import { getTSNodeRange } from "@flint.fyi/typescript-language";
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
-} from "../language.ts";
-import * as AST from "../types/ast.ts";
+} from "@flint.fyi/typescript-language";
+import type { AST } from "@flint.fyi/typescript-language";
+import ts, { SyntaxKind } from "typescript";
 
 const globalObjects = new Set(["Atomics", "JSON", "Math", "Reflect"]);
 

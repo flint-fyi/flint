@@ -1,4 +1,4 @@
-import { typescriptLanguage } from "../language.ts";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
 const withKeyword = "with";
 
