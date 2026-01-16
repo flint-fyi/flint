@@ -1,6 +1,18 @@
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+import ts from "typescript";
+
 import { ruleCreator } from "./ruleCreator.ts";
+
+function isNodeWithinKeyofAny(node: AST.AnyKeyword) {
+	return (
+		node.parent.kind === ts.SyntaxKind.TypeOperator &&
+		node.parent.operator === ts.SyntaxKind.KeyOfKeyword
+	);
+}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -11,16 +23,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		noExplicitAny: {
 			primary:
-				"Avoid using the any type as it disables type checking for the annotated value.",
+				"Avoid using the `any` type as it disables type checking for the annotated value.",
 			secondary: [
-				"Using any defeats the purpose of TypeScript's type system.",
-				"It allows any operation on the value without compile-time checks.",
+				"Using `any` eliminates many of the benefits of TypeScript's type system.",
+				"It allows `any` operation on the value without compile-time checks.",
 				"Errors that could be caught at compile time may only appear at runtime.",
 			],
 			suggestions: [
-				"Use unknown instead if you need to accept any value but want type safety.",
+				"Use `unknown` instead if you need to accept `any` value but want type safety.",
 				"Use a more specific type if the possible values are known.",
-				"Use generics to preserve type information across function calls.",
+				"For generic classes and functions, use type parameters to preserve type information across calls.",
+				"For keyof `any`, consider using `PropertyKey` instead.",
 			],
 		},
 	},
@@ -28,9 +41,32 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				AnyKeyword: (node, { sourceFile }) => {
+					const isKeyofAny = isNodeWithinKeyofAny(node);
+					const range = getTSNodeRange(node, sourceFile);
+
 					context.report({
 						message: "noExplicitAny",
-						range: getTSNodeRange(node, sourceFile),
+						range,
+						suggestions: isKeyofAny
+							? [
+									{
+										id: "propertyKey",
+										range: getTSNodeRange(node.parent, sourceFile),
+										text: "PropertyKey",
+									},
+								]
+							: [
+									{
+										id: "unknown",
+										range,
+										text: "unknown",
+									},
+									{
+										id: "never",
+										range,
+										text: "never",
+									},
+								],
 					});
 				},
 			},
