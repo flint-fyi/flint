@@ -1,8 +1,4 @@
-import {
-	type AST,
-	type TypeScriptFileServices,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
+import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -15,7 +11,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		missingReturn: {
-			primary: "Getter functions must return a value.",
+			primary:
+				"This getter implicitly returns `undefined` because it does not explicitly `return` a value.",
 			secondary: [
 				"A `get` accessor is expected to return a value when the property is accessed.",
 				"A getter without a return statement will implicitly return `undefined`, which is likely unintentional.",
@@ -27,47 +24,33 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function checkGetter(
-			node: AST.GetAccessorDeclaration,
-			{ sourceFile }: TypeScriptFileServices,
-		) {
-			if (!node.body || allPathsReturnValue(node.body)) {
-				return;
-			}
-
-			context.report({
-				message: "missingReturn",
-				range: {
-					begin: node.name.getStart(sourceFile),
-					end: node.name.getEnd(),
-				},
-			});
-		}
-
 		return {
 			visitors: {
-				GetAccessor: checkGetter,
+				GetAccessor: (node, { sourceFile }) => {
+					if (node.body && !statementsReturnValue(node.body.statements)) {
+						context.report({
+							message: "missingReturn",
+							range: {
+								begin: node.name.getStart(sourceFile),
+								end: node.name.getEnd(),
+							},
+						});
+					}
+				},
 			},
 		};
 	},
 });
 
-function allPathsReturnValue(block: AST.Block): boolean {
-	return statementsReturnValue(block.statements);
-}
-
 function ifStatementReturnsValue(statement: AST.IfStatement): boolean {
-	if (!statement.elseStatement) {
-		return false;
-	}
-
-	return (
+	return !!(
+		statement.elseStatement &&
 		statementReturnsValue(statement.thenStatement) &&
 		statementReturnsValue(statement.elseStatement)
 	);
 }
 
-function statementReturnsValue(statement: AST.Statement): boolean {
+function statementReturnsValue(statement: AST.Statement) {
 	switch (statement.kind) {
 		case SyntaxKind.Block:
 			return statementsReturnValue(statement.statements);
@@ -92,16 +75,11 @@ function statementReturnsValue(statement: AST.Statement): boolean {
 	}
 }
 
-function statementsReturnValue(statements: readonly AST.Statement[]): boolean {
-	for (const statement of statements) {
-		if (statementReturnsValue(statement)) {
-			return true;
-		}
-	}
-	return false;
+function statementsReturnValue(statements: readonly AST.Statement[]) {
+	return statements.some(statementReturnsValue);
 }
 
-function switchStatementReturnsValue(statement: AST.SwitchStatement): boolean {
+function switchStatementReturnsValue(statement: AST.SwitchStatement) {
 	const clauses = statement.caseBlock.clauses;
 	if (clauses.length === 0) {
 		return false;
@@ -120,14 +98,15 @@ function switchStatementReturnsValue(statement: AST.SwitchStatement): boolean {
 	return hasDefault;
 }
 
-function tryStatementReturnsValue(statement: AST.TryStatement): boolean {
-	const tryReturns = statementsReturnValue(statement.tryBlock.statements);
-
-	if (statement.finallyBlock) {
-		if (statementsReturnValue(statement.finallyBlock.statements)) {
-			return true;
-		}
+function tryStatementReturnsValue(statement: AST.TryStatement) {
+	if (
+		statement.finallyBlock &&
+		statementsReturnValue(statement.finallyBlock.statements)
+	) {
+		return true;
 	}
+
+	const tryReturns = statementsReturnValue(statement.tryBlock.statements);
 
 	if (!statement.catchClause) {
 		return tryReturns;

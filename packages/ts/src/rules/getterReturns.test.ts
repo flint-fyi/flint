@@ -15,7 +15,7 @@ const object = {
 const object = {
     get value() {
         ~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         console.log("accessed");
     }
 };
@@ -33,7 +33,7 @@ class Example {
 class Example {
     get value() {
         ~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         this.compute();
     }
 }
@@ -49,7 +49,7 @@ const object = {
 const object = {
     get value() {}
         ~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
 };
 `,
 		},
@@ -65,7 +65,7 @@ class Example {
 class Example {
     get value() {
         ~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         return;
     }
 }
@@ -85,7 +85,7 @@ const object = {
 const object = {
     get value() {
         ~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         if (this.condition) {
             return this.data;
         }
@@ -105,7 +105,7 @@ class Example {
 class Example {
     get value() {
         ~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         const helper = () => { return 42; };
     }
 }
@@ -123,7 +123,7 @@ class Example {
 class Example {
     get value() {
         ~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         function inner() { return 1; }
     }
 }
@@ -141,7 +141,7 @@ class Example {
 class Example {
     get "computed-name"() {
         ~~~~~~~~~~~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         console.log("no return");
     }
 }
@@ -161,7 +161,7 @@ const key = "dynamic";
 const object = {
     get [key]() {
         ~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         console.log("accessed");
     }
 };
@@ -181,7 +181,7 @@ class Example {
 class Example {
     get value() {
         ~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         for (const item of this.items) {
             return item;
         }
@@ -203,7 +203,7 @@ class Example {
 class Example {
     get value() {
         ~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         while (this.condition) {
             return this.data;
         }
@@ -228,7 +228,7 @@ class Example {
 class Example {
     get value() {
         ~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         switch (this.type) {
             case "a":
                 return 1;
@@ -255,7 +255,7 @@ class Example {
 class Example {
     get value() {
         ~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         try {
             return this.compute();
         } catch {
@@ -281,7 +281,7 @@ class Example {
 class Example {
     get value() {
         ~~~~~
-        Getter functions must return a value.
+        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         if (this.condition) {
             return 1;
         } else if (this.other) {

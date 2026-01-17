@@ -13,6 +13,8 @@ import RuleSummary from "~/components/RuleSummary.astro";
 The `get` syntax binds an object property to a function that will be called when that property is looked up.
 A getter is expected to return a value; otherwise, accessing the property will return `undefined`, which is likely unintentional.
 
+This rule reports when a getter does not explicitly `return` a value.
+
 ## Examples
 
 <Tabs>
