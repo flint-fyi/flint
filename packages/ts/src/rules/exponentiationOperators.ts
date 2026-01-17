@@ -3,8 +3,7 @@ import {
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
