@@ -1,10 +1,12 @@
+import {
+	type AST,
+	getTSNodeRange,
+	hasSameTokens,
+	isFunction,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
-import { hasSameTokens } from "../utils/hasSameTokens.ts";
-import { isFunction } from "../utils/isFunction.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -79,7 +81,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isValidThisArg(
 			expectedThis: AST.Expression | undefined,
 			thisArg: AST.Expression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			return expectedThis
 				? hasSameTokens(expectedThis, thisArg, sourceFile)

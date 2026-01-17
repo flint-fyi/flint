@@ -32,7 +32,7 @@ export interface LanguageCreateRule<
 			MessageId,
 			undefined
 		>,
-	): Rule<About, AstNodesByName, FileServices, MessageId, undefined>;
+	): Rule<About, object, object, MessageId, undefined>;
 
 	<
 		const About extends RuleAbout,
@@ -46,7 +46,7 @@ export interface LanguageCreateRule<
 			MessageId,
 			OptionsSchema
 		>,
-	): Rule<About, AstNodesByName, FileServices, MessageId, OptionsSchema>;
+	): Rule<About, object, object, MessageId, OptionsSchema>;
 }
 
 /**

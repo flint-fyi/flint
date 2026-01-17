@@ -1,7 +1,4 @@
-import type * as ts from "typescript";
-
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
+import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 
 /**
  * Finds the position and length of an octal escape sequence in a string.
@@ -58,7 +55,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				| AST.TemplateHead
 				| AST.TemplateMiddle
 				| AST.TemplateTail,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const text = node.getText(sourceFile);
 			const octalEscape = findOctalEscape(text);
