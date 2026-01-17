@@ -13,11 +13,11 @@ import RuleSummary from "~/components/RuleSummary.astro";
 The exponentiation operator `**` was introduced in ES2016 as a more readable alternative to `Math.pow()`.
 This rule suggests using `**` instead of `Math.pow()` for exponentiation operations.
 
-Benefits of using `**`:
+Benefits of using `**` include:
 
-- More concise and readable syntax
-- Works with BigInt values, unlike `Math.pow()`
-- Consistent with other mathematical operators
+- A more concise and readable syntax
+- It works with BigInt values, unlike `Math.pow()`
+- Consistency with other mathematical operators
 
 ## Examples
 
@@ -62,6 +62,8 @@ This rule is not configurable.
 
 If you need to support environments that don't have the exponentiation operator (pre-ES2016), you may disable this rule.
 However, most modern JavaScript environments support `**`, and transpilers can convert it for older targets.
+
+Some projects also prefer to use `Math.pow()` for consistency with older codebases or `Math`-oriented areas of code.
 
 ## Further Reading
 

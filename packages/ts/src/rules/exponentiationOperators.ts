@@ -1,42 +1,12 @@
+import {
+	getTSNodeRange,
+	isGlobalDeclarationOfName,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 import ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { Checker } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
 import { ruleCreator } from "./ruleCreator.ts";
-
-function isMathPowCall(
-	node: AST.CallExpression,
-	typeChecker: Checker,
-): boolean {
-	const callee = node.expression;
-
-	if (!ts.isPropertyAccessExpression(callee)) {
-		return false;
-	}
-
-	if (callee.name.text !== "pow") {
-		return false;
-	}
-
-	if (callee.expression.kind !== SyntaxKind.Identifier) {
-		return false;
-	}
-
-	const mathObject = callee.expression as AST.Identifier;
-	if (mathObject.text !== "Math") {
-		return false;
-	}
-
-	if (!isGlobalDeclarationOfName(mathObject, "Math", typeChecker)) {
-		return false;
-	}
-
-	return node.arguments.length === 2;
-}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -46,24 +16,46 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		preferOperator: {
-			primary: "Use the ** operator instead of Math.pow() for exponentiation.",
+			primary:
+				"Prefer the more succinct `**` operator instead of Math.pow() for exponentiation.",
 			secondary: [
-				"The ** operator was introduced in ES2016 and is more readable.",
+				"The `**` operator was introduced in ES2016 and is more readable.",
 				"It also works with BigInt values, unlike Math.pow().",
 			],
-			suggestions: ["Replace Math.pow(base, exponent) with base ** exponent."],
+			suggestions: ["`Replace Math.pow(base, exponent)` with `**`."],
 		},
 	},
 	setup(context) {
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (isMathPowCall(node, typeChecker)) {
-						context.report({
-							message: "preferOperator",
-							range: getTSNodeRange(node, sourceFile),
-						});
+					if (
+						!ts.isPropertyAccessExpression(node.expression) ||
+						node.expression.name.text !== "pow" ||
+						node.expression.expression.kind !== SyntaxKind.Identifier ||
+						node.expression.expression.text !== "Math" ||
+						node.arguments.length !== 2 ||
+						!isGlobalDeclarationOfName(
+							node.expression.expression,
+							"Math",
+							typeChecker,
+						)
+					) {
+						return;
 					}
+
+					const range = getTSNodeRange(node, sourceFile);
+
+					context.report({
+						fix: {
+							range,
+							text: node.arguments
+								.map((argument) => argument.getText(sourceFile))
+								.join(" ** "),
+						},
+						message: "preferOperator",
+						range,
+					});
 				},
 			},
 		};

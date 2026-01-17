@@ -4,22 +4,43 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `const result = Math.pow(2, 8);`,
-			snapshot: `const result = Math.pow(2, 8);
+			code: `
+const result = Math.pow(2, 8);
+`,
+			output: `
+const result = 2 ** 8;
+`,
+			snapshot: `
+const result = Math.pow(2, 8);
                ~~~~~~~~~~~~~~
-               Use the ** operator instead of Math.pow() for exponentiation.`,
+               Prefer the more succinct \`**\` operator instead of Math.pow() for exponentiation.
+`,
 		},
 		{
-			code: `const squared = Math.pow(x, 2);`,
-			snapshot: `const squared = Math.pow(x, 2);
+			code: `
+const squared = Math.pow(x, 2);
+`,
+			output: `
+const squared = x ** 2;
+`,
+			snapshot: `
+const squared = Math.pow(x, 2);
                 ~~~~~~~~~~~~~~
-                Use the ** operator instead of Math.pow() for exponentiation.`,
+                Prefer the more succinct \`**\` operator instead of Math.pow() for exponentiation.
+`,
 		},
 		{
-			code: `const cubed = Math.pow(x, 3);`,
-			snapshot: `const cubed = Math.pow(x, 3);
+			code: `
+const cubed = Math.pow(x, 3);
+`,
+			output: `
+const cubed = x ** 3;
+`,
+			snapshot: `
+const cubed = Math.pow(x, 3);
               ~~~~~~~~~~~~~~
-              Use the ** operator instead of Math.pow() for exponentiation.`,
+              Prefer the more succinct \`**\` operator instead of Math.pow() for exponentiation.
+`,
 		},
 	],
 	valid: [
