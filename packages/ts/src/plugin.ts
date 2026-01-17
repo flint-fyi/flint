@@ -87,6 +87,7 @@ import errorUnnecessaryCaptureStackTraces from "./rules/errorUnnecessaryCaptureS
 import evals from "./rules/evals.ts";
 import evolvingVariableTypes from "./rules/evolvingVariableTypes.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
+import explicitAnys from "./rules/explicitAnys.ts";
 import exportMutables from "./rules/exportMutables.ts";
 import exportUniqueNames from "./rules/exportUniqueNames.ts";
 import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
@@ -239,6 +240,7 @@ export const ts = createPlugin({
 		evals,
 		evolvingVariableTypes,
 		exceptionAssignments,
+		explicitAnys,
 		exportMutables,
 		exportUniqueNames,
 		fetchMethodBodies,
