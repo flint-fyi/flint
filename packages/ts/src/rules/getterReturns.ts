@@ -42,6 +42,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 });
 
+// TODO: This might get simpler when we have scope analysis.
+// https://github.com/JoshuaKGoldberg/flint/issues/400
 function ifStatementReturnsValue(statement: AST.IfStatement): boolean {
 	return !!(
 		statement.elseStatement &&
