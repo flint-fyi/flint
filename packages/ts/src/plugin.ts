@@ -53,7 +53,7 @@ import combinedPushes from "./rules/combinedPushes.ts";
 import consecutiveNonNullAssertions from "./rules/consecutiveNonNullAssertions.ts";
 import consoleCalls from "./rules/consoleCalls.ts";
 import constantAssignments from "./rules/constantAssignments.ts";
-import constructorGenericCalls from "./rules/constructorGenericCalls.test.ts";
+import constructorGenericCalls from "./rules/constructorGenericCalls.ts";
 import constructorReturns from "./rules/constructorReturns.ts";
 import constructorSupers from "./rules/constructorSupers.ts";
 import dateConstructorClones from "./rules/dateConstructorClones.ts";
