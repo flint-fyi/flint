@@ -86,16 +86,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			for (const [, pair] of pairs) {
-				if (!pair.getter || !pair.setter) {
+				if (!pair.getter || pair.setter?.parameters.length !== 1) {
 					continue;
 				}
+
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const setterParameter = pair.setter.parameters[0]!;
 
 				const getterReturnType = typeChecker.getTypeAtLocation(pair.getter);
-
-				const setterParameter = pair.setter.parameters[0];
-				if (!setterParameter) {
-					continue;
-				}
 
 				const setterParameterType =
 					typeChecker.getTypeAtLocation(setterParameter);
