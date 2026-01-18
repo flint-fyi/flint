@@ -118,6 +118,7 @@ import importEmptyBlocks from "./rules/importEmptyBlocks.ts";
 import importTypeSideEffects from "./rules/importTypeSideEffects.ts";
 import indexedObjectTypes from "./rules/indexedObjectTypes.ts";
 import instanceOfArrays from "./rules/instanceOfArrays.ts";
+import irregularWhitespaces from "./rules/irregularWhitespaces.ts";
 import isNaNComparisons from "./rules/isNaNComparisons.ts";
 import literalConstructorWrappers from "./rules/literalConstructorWrappers.ts";
 import mathMethods from "./rules/mathMethods.ts";
@@ -283,6 +284,7 @@ export const ts = createPlugin({
 		importTypeSideEffects,
 		indexedObjectTypes,
 		instanceOfArrays,
+		irregularWhitespaces,
 		isNaNComparisons,
 		literalConstructorWrappers,
 		mathMethods,
