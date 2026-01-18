@@ -1,0 +1,94 @@
+---
+description: "Prefers literal syntax over constructor function calls for primitive values."
+title: "literalConstructorWrappers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="literalConstructorWrappers" />
+
+JavaScript provides built-in constructor functions for creating primitive values: `BigInt()`, `Boolean()`, `Number()`, and `String()`.
+While these constructors can coerce values to their respective types, using literal syntax is often more concise and idiomatic when the argument is already a literal value.
+
+This rule flags constructor calls with literal arguments that could be replaced with literal syntax.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = BigInt(123);
+```
+
+```ts
+const value = Boolean(true);
+```
+
+```ts
+const value = Number("42");
+```
+
+```ts
+const value = String(123);
+```
+
+```ts
+const value = String(true);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = 123n;
+```
+
+```ts
+const value = true;
+```
+
+```ts
+const value = 42;
+```
+
+```ts
+const text = "123";
+```
+
+```ts
+const text = `${someVariable}`;
+```
+
+```ts
+const value = BigInt(variable);
+```
+
+```ts
+const value = Boolean(variable);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the explicit constructor syntax for consistency in your codebase, or if you're maintaining a codebase where constructor calls are used as a deliberate style choice to make type coercion more explicit, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN documentation on BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+- [MDN documentation on Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+- [MDN documentation on Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
+- [MDN documentation on String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="literalConstructorWrappers" />
