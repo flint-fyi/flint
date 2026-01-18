@@ -13,6 +13,9 @@ interface EscapeInfo {
 	original: string;
 }
 
+const escapeCase =
+	/(?<=(?:^|[^\\])(?:\\\\)*\\)(?:<data>x[\dA-Fa-f]{2}|u[\dA-Fa-f]{4}|u\{[\dA-Fa-f]+\})/g;
+
 function findLowercaseEscapeSequence(text: string): EscapeInfo | undefined {
 	const patterns = [
 		/\\x([0-9a-f]{2})/g,
@@ -27,7 +30,11 @@ function findLowercaseEscapeSequence(text: string): EscapeInfo | undefined {
 			const hexPart = match[1];
 			if (hexPart && hexPart !== hexPart.toUpperCase()) {
 				const original = match[0];
-				const fixed = original.toUpperCase();
+				const fixed = original.replace(
+					escapeCase,
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					(data) => data[0]! + data.slice(1).toUpperCase(),
+				);
 				return {
 					fixed,
 					index: match.index,
