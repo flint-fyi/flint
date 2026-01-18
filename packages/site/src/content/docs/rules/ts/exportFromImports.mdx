@@ -1,0 +1,118 @@
+---
+description: "Reports imports that are re-exported and could use export...from syntax instead."
+title: "exportFromImports"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="exportFromImports" />
+
+When re-exporting from a module without otherwise using the imported value, it's unnecessary to import and then export.
+It can be done in a single `export...from` declaration, which is more concise and makes the re-export intent clearer.
+
+## Examples
+
+### Re-exporting Default Export
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import defaultExport from "./foo.js";
+export default defaultExport;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export { default } from "./foo.js";
+```
+
+</TabItem>
+</Tabs>
+
+### Re-exporting Named Export
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { named } from "./foo.js";
+export { named };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export { named } from "./foo.js";
+```
+
+</TabItem>
+</Tabs>
+
+### Re-exporting Namespace
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import * as namespace from "./foo.js";
+export { namespace };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export * as namespace from "./foo.js";
+```
+
+</TabItem>
+</Tabs>
+
+### Multiple Re-exports
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import defaultExport, { named } from "./foo.js";
+export default defaultExport;
+export { defaultExport as renamedDefault, named, named as renamedNamed };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export {
+	default,
+	default as renamedDefault,
+	named,
+	named as renamedNamed,
+} from "./foo.js";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the explicit import/export pattern for clarity in your codebase, this rule may not be for you.
+
+## Further Reading
+
+- [MDN: export statement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="exportFromImports" />
