@@ -18,7 +18,7 @@ class Example {
 class Example {
     get value(): string {
         ~~~~~
-        The getter return type must be assignable to the setter parameter type.
+        A getter's return type should be assignable to its corresponding setter's parameter type.
         return this._value;
     }
     set value(newValue: number) {
@@ -40,7 +40,7 @@ const object = {
 const object = {
     get value(): boolean {
         ~~~~~
-        The getter return type must be assignable to the setter parameter type.
+        A getter's return type should be assignable to its corresponding setter's parameter type.
         return true;
     },
     set value(newValue: string) {}
@@ -58,7 +58,7 @@ interface Example {
 interface Example {
     get value(): string;
         ~~~~~
-        The getter return type must be assignable to the setter parameter type.
+        A getter's return type should be assignable to its corresponding setter's parameter type.
     set value(newValue: number);
 }
 `,
@@ -74,7 +74,7 @@ type Example = {
 type Example = {
     get value(): string;
         ~~~~~
-        The getter return type must be assignable to the setter parameter type.
+        A getter's return type should be assignable to its corresponding setter's parameter type.
     set value(newValue: number);
 };
 `,
@@ -94,7 +94,7 @@ class Example {
 class Example {
     get value(): string | number {
         ~~~~~
-        The getter return type must be assignable to the setter parameter type.
+        A getter's return type should be assignable to its corresponding setter's parameter type.
         return this._value;
     }
     set value(newValue: string) {

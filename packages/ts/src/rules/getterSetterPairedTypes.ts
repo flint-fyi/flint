@@ -22,7 +22,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		mismatchedTypes: {
 			primary:
-				"The getter return type must be assignable to the setter parameter type.",
+				"A getter's return type should be assignable to its corresponding setter's parameter type.",
 			secondary: [
 				"Getter and setter accessor pairs should have compatible types.",
 				"Having mismatched types means assigning a property to itself would not work.",
@@ -33,6 +33,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
+		// TODO: Use a util like getStaticValue
+		// https://github.com/flint-fyi/flint/issues/1298
 		function getPropertyName(
 			accessor: AST.GetAccessorDeclaration | AST.SetAccessorDeclaration,
 			sourceFile: AST.SourceFile,
@@ -49,30 +51,30 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function collectAccessorPairs(
-			members: ts.NodeArray<ts.Node>,
+			members: ts.NodeArray<AST.AnyNode>,
 			sourceFile: AST.SourceFile,
 		) {
 			const pairs = new Map<string, AccessorPair>();
 
 			for (const member of members) {
-				if (ts.isGetAccessorDeclaration(member)) {
-					const getter = member as AST.GetAccessorDeclaration;
-					const name = getPropertyName(getter, sourceFile);
-					let pair = pairs.get(name);
-					if (!pair) {
-						pair = {};
-						pairs.set(name, pair);
-					}
-					pair.getter = getter;
-				} else if (ts.isSetAccessorDeclaration(member)) {
-					const setter = member as AST.SetAccessorDeclaration;
-					const name = getPropertyName(setter, sourceFile);
-					let pair = pairs.get(name);
-					if (!pair) {
-						pair = {};
-						pairs.set(name, pair);
-					}
-					pair.setter = setter;
+				if (
+					member.kind !== ts.SyntaxKind.GetAccessor &&
+					member.kind !== ts.SyntaxKind.SetAccessor
+				) {
+					continue;
+				}
+
+				const name = getPropertyName(member, sourceFile);
+				let pair = pairs.get(name);
+				if (!pair) {
+					pair = {};
+					pairs.set(name, pair);
+				}
+
+				if (member.kind === ts.SyntaxKind.GetAccessor) {
+					pair.getter = member;
+				} else {
+					pair.setter = member;
 				}
 			}
 
