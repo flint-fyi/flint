@@ -5,12 +5,32 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+window;
+`,
+			snapshot: `
+window;
+~~~~~~
+Prefer the standard \`globalThis\` over the platform-specific \`window\` for accessing the global object.
+`,
+		},
+		{
+			code: `
+const ref = window;
+`,
+			snapshot: `
+const ref = window;
+            ~~~~~~
+            Prefer the standard \`globalThis\` over the platform-specific \`window\` for accessing the global object.
+`,
+		},
+		{
+			code: `
 const value = window.localStorage;
 `,
 			snapshot: `
 const value = window.localStorage;
               ~~~~~~
-              Prefer \`globalThis\` over \`window\` to access the global object.
+              Prefer the standard \`globalThis\` over the platform-specific \`window\` for accessing the global object.
 `,
 		},
 		{
@@ -20,7 +40,7 @@ const value = self.postMessage;
 			snapshot: `
 const value = self.postMessage;
               ~~~~
-              Prefer \`globalThis\` over \`self\` to access the global object.
+              Prefer the standard \`globalThis\` over the platform-specific \`self\` for accessing the global object.
 `,
 		},
 
@@ -31,7 +51,7 @@ window.addEventListener("load", handler);
 			snapshot: `
 window.addEventListener("load", handler);
 ~~~~~~
-Prefer \`globalThis\` over \`window\` to access the global object.
+Prefer the standard \`globalThis\` over the platform-specific \`window\` for accessing the global object.
 `,
 		},
 		{
@@ -41,17 +61,7 @@ console.log(window);
 			snapshot: `
 console.log(window);
             ~~~~~~
-            Prefer \`globalThis\` over \`window\` to access the global object.
-`,
-		},
-		{
-			code: `
-const ref = window;
-`,
-			snapshot: `
-const ref = window;
-            ~~~~~~
-            Prefer \`globalThis\` over \`window\` to access the global object.
+            Prefer the standard \`globalThis\` over the platform-specific \`window\` for accessing the global object.
 `,
 		},
 		{
@@ -61,7 +71,7 @@ if (typeof window !== "undefined") {}
 			snapshot: `
 if (typeof window !== "undefined") {}
            ~~~~~~
-           Prefer \`globalThis\` over \`window\` to access the global object.
+           Prefer the standard \`globalThis\` over the platform-specific \`window\` for accessing the global object.
 `,
 		},
 	],

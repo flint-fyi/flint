@@ -11,47 +11,6 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 const globalAliases = new Set(["global", "self", "window"]);
 
-export default ruleCreator.createRule(typescriptLanguage, {
-	about: {
-		description: "Reports using window, self, or global instead of globalThis.",
-		id: "globalThisAliases",
-		presets: ["stylisticStrict"],
-	},
-	messages: {
-		preferGlobalThis: {
-			primary:
-				"Prefer `globalThis` over `{{ name }}` to access the global object.",
-			secondary: [
-				"`globalThis` is the standard way to access the global object across all JavaScript environments.",
-				"Using `window`, `self`, or `global` ties your code to specific environments (browser, web worker, or Node.js).",
-			],
-			suggestions: ["Replace `{{ name }}` with `globalThis`."],
-		},
-	},
-	setup(context) {
-		return {
-			visitors: {
-				Identifier: (node, { sourceFile, typeChecker }) => {
-					if (
-						!globalAliases.has(node.text) ||
-						!isOnlyGlobalDeclaration(node, typeChecker) ||
-						isPropertyAccess(node) ||
-						isPropertyShorthand(node)
-					) {
-						return;
-					}
-
-					context.report({
-						data: { name: node.text },
-						message: "preferGlobalThis",
-						range: getTSNodeRange(node, sourceFile),
-					});
-				},
-			},
-		};
-	},
-});
-
 function isOnlyGlobalDeclaration(node: AST.Identifier, typeChecker: Checker) {
 	const symbol = typeChecker.getSymbolAtLocation(node);
 	if (!symbol) {
@@ -77,3 +36,42 @@ function isPropertyShorthand(node: ts.Identifier) {
 		ts.isShorthandPropertyAssignment(node.parent) && node.parent.name === node
 	);
 }
+
+export default ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Reports using window, self, or global instead of globalThis.",
+		id: "globalThisAliases",
+		presets: ["stylisticStrict"],
+	},
+	messages: {
+		preferGlobalThis: {
+			primary:
+				"Prefer the standard `globalThis` over the platform-specific `{{ name }}` for accessing the global object.",
+			secondary: [
+				"`globalThis` is the standard way to access the global object across all JavaScript environments.",
+				"Using `window`, `self`, or `global` ties your code to specific environments (browser, web worker, or Node.js).",
+			],
+			suggestions: ["Replace `{{ name }}` with `globalThis`."],
+		},
+	},
+	setup(context) {
+		return {
+			visitors: {
+				Identifier: (node, { sourceFile, typeChecker }) => {
+					if (
+						globalAliases.has(node.text) &&
+						!isPropertyAccess(node) &&
+						!isPropertyShorthand(node) &&
+						isOnlyGlobalDeclaration(node, typeChecker)
+					) {
+						context.report({
+							data: { name: node.text },
+							message: "preferGlobalThis",
+							range: getTSNodeRange(node, sourceFile),
+						});
+					}
+				},
+			},
+		};
+	},
+});
