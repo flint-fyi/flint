@@ -1,5 +1,8 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -26,27 +29,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				ModuleDeclaration: (node, { sourceFile }) => {
-					// Skip if the name is a string literal (e.g., `module "name" {}`)
-					// String literals indicate external/ambient module declarations, not namespaces
 					if (node.name.kind === SyntaxKind.StringLiteral) {
 						return;
 					}
 
-					// Find the module keyword token by searching through children
 					const children = node.getChildren(sourceFile);
 					const moduleKeywordToken = children.find(
-						(child): child is ts.Token<SyntaxKind.ModuleKeyword> =>
-							child.kind === SyntaxKind.ModuleKeyword,
+						(child) => child.kind === SyntaxKind.ModuleKeyword,
 					);
 
 					if (!moduleKeywordToken) {
 						return;
 					}
 
-					const range = {
-						begin: moduleKeywordToken.getStart(sourceFile),
-						end: moduleKeywordToken.getEnd(),
-					};
+					const range = getTSNodeRange(moduleKeywordToken, sourceFile);
 
 					context.report({
 						fix: {
