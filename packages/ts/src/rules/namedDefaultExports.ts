@@ -28,7 +28,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		anonymousClass: {
-			primary: "Default exported class should have a name.",
+			primary: "This default-exported class is missing an informative name.",
 			secondary: [
 				"Named default exports improve codebase searchability by ensuring consistent identifier use for a module's default export.",
 				"When a class is anonymous, it becomes harder to find all usages and references in the codebase.",
@@ -36,7 +36,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			suggestions: ["Add a name to the exported class."],
 		},
 		anonymousFunction: {
-			primary: "Default exported function should have a name.",
+			primary: "This default-exported function is missing an informative name.",
 			secondary: [
 				"Named default exports improve codebase searchability by ensuring consistent identifier use for a module's default export.",
 				"When a function is anonymous, it becomes harder to find all usages and references in the codebase.",
@@ -52,53 +52,50 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ClassDeclaration: (node, { sourceFile }) => {
 					if (
-						!hasExportModifier(node.modifiers) ||
-						!hasDefaultModifier(node.modifiers) ||
-						node.name
+						hasExportModifier(node.modifiers) &&
+						hasDefaultModifier(node.modifiers) &&
+						!node.name
 					) {
-						return;
+						context.report({
+							message: "anonymousClass",
+							range: getTSNodeRange(node, sourceFile),
+						});
 					}
-
-					context.report({
-						message: "anonymousClass",
-						range: getTSNodeRange(node, sourceFile),
-					});
 				},
 				ExportAssignment: (node, { sourceFile }) => {
 					if (node.isExportEquals) {
 						return;
 					}
 
-					const expression = node.expression;
-
 					if (
-						ts.isArrowFunction(expression) ||
-						(ts.isFunctionExpression(expression) && !expression.name)
+						ts.isArrowFunction(node.expression) ||
+						(ts.isFunctionExpression(node.expression) && !node.expression.name)
 					) {
 						context.report({
 							message: "anonymousFunction",
-							range: getTSNodeRange(expression, sourceFile),
+							range: getTSNodeRange(node.expression, sourceFile),
 						});
-					} else if (ts.isClassExpression(expression) && !expression.name) {
+					} else if (
+						ts.isClassExpression(node.expression) &&
+						!node.expression.name
+					) {
 						context.report({
 							message: "anonymousClass",
-							range: getTSNodeRange(expression, sourceFile),
+							range: getTSNodeRange(node.expression, sourceFile),
 						});
 					}
 				},
 				FunctionDeclaration: (node, { sourceFile }) => {
 					if (
-						!hasExportModifier(node.modifiers) ||
-						!hasDefaultModifier(node.modifiers) ||
-						node.name
+						hasExportModifier(node.modifiers) &&
+						hasDefaultModifier(node.modifiers) &&
+						!node.name
 					) {
-						return;
+						context.report({
+							message: "anonymousFunction",
+							range: getTSNodeRange(node, sourceFile),
+						});
 					}
-
-					context.report({
-						message: "anonymousFunction",
-						range: getTSNodeRange(node, sourceFile),
-					});
 				},
 			},
 		};

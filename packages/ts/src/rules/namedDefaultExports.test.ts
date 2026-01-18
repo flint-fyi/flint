@@ -10,7 +10,7 @@ export default function () {}
 			snapshot: `
 export default function () {}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Default exported function should have a name.
+This default-exported function is missing an informative name.
 `,
 		},
 		{
@@ -22,7 +22,7 @@ export default function () {
 			snapshot: `
 export default function () {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Default exported function should have a name.
+This default-exported function is missing an informative name.
     return "value";
     ~~~~~~~~~~~~~~~
 }
@@ -36,7 +36,7 @@ export default () => {};
 			snapshot: `
 export default () => {};
                ~~~~~~~~
-               Default exported function should have a name.
+               This default-exported function is missing an informative name.
 `,
 		},
 		{
@@ -48,7 +48,7 @@ export default () => {
 			snapshot: `
 export default () => {
                ~~~~~~~
-               Default exported function should have a name.
+               This default-exported function is missing an informative name.
     return "value";
     ~~~~~~~~~~~~~~~
 };
@@ -62,7 +62,7 @@ export default async () => {};
 			snapshot: `
 export default async () => {};
                ~~~~~~~~~~~~~~
-               Default exported function should have a name.
+               This default-exported function is missing an informative name.
 `,
 		},
 		{
@@ -72,7 +72,7 @@ export default class {}
 			snapshot: `
 export default class {}
 ~~~~~~~~~~~~~~~~~~~~~~~
-Default exported class should have a name.
+This default-exported class is missing an informative name.
 `,
 		},
 		{
@@ -86,7 +86,7 @@ export default class {
 			snapshot: `
 export default class {
 ~~~~~~~~~~~~~~~~~~~~~~
-Default exported class should have a name.
+This default-exported class is missing an informative name.
     getValue() {
     ~~~~~~~~~~~~
         return 42;
