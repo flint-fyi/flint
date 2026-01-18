@@ -10681,7 +10681,7 @@
 			}
 		],
 		"flint": {
-			"name": "genericConstructorCalls",
+			"name": "constructorGenericCalls",
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"

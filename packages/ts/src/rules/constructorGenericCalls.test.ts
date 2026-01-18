@@ -1,4 +1,4 @@
-import rule from "./genericConstructorCalls.ts";
+import rule from "./constructorGenericCalls.ts";
 import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {

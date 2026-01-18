@@ -53,6 +53,7 @@ import combinedPushes from "./rules/combinedPushes.ts";
 import consecutiveNonNullAssertions from "./rules/consecutiveNonNullAssertions.ts";
 import consoleCalls from "./rules/consoleCalls.ts";
 import constantAssignments from "./rules/constantAssignments.ts";
+import constructorGenericCalls from "./rules/constructorGenericCalls.test.ts";
 import constructorReturns from "./rules/constructorReturns.ts";
 import constructorSupers from "./rules/constructorSupers.ts";
 import dateConstructorClones from "./rules/dateConstructorClones.ts";
@@ -106,7 +107,6 @@ import functionDeclarationStyles from "./rules/functionDeclarationStyles.ts";
 import functionNameMatches from "./rules/functionNameMatches.ts";
 import functionNewCalls from "./rules/functionNewCalls.ts";
 import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
-import genericConstructorCalls from "./rules/genericConstructorCalls.ts";
 import getterReturns from "./rules/getterReturns.ts";
 import getterSetterPairedTypes from "./rules/getterSetterPairedTypes.ts";
 import globalAssignments from "./rules/globalAssignments.ts";
@@ -215,6 +215,7 @@ export const ts = createPlugin({
 		consecutiveNonNullAssertions,
 		consoleCalls,
 		constantAssignments,
+		constructorGenericCalls,
 		constructorReturns,
 		constructorSupers,
 		dateConstructorClones,
@@ -268,7 +269,6 @@ export const ts = createPlugin({
 		functionNameMatches,
 		functionNewCalls,
 		generatorFunctionYields,
-		genericConstructorCalls,
 		getterReturns,
 		getterSetterPairedTypes,
 		globalAssignments,
