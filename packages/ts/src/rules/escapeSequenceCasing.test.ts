@@ -1,4 +1,3 @@
-// flint-disable-file escapeSequenceCasing
 import rule from "./escapeSequenceCasing.ts";
 import { ruleTester } from "./ruleTester.ts";
 
