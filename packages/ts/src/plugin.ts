@@ -158,6 +158,7 @@ import unsafeNegations from "./rules/unsafeNegations.ts";
 import variableDeletions from "./rules/variableDeletions.ts";
 import voidOperator from "./rules/voidOperator.ts";
 import withStatements from "./rules/withStatements.ts";
+import wrapperObjects from "./rules/wrapperObjects.ts";
 
 export const ts = createPlugin({
 	files: {
@@ -323,5 +324,6 @@ export const ts = createPlugin({
 		variableDeletions,
 		voidOperator,
 		withStatements,
+		wrapperObjects,
 	],
 });
