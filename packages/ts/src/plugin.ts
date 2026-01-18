@@ -132,6 +132,7 @@ import newExpressions from "./rules/newExpressions.ts";
 import newNativeNonConstructors from "./rules/newNativeNonConstructors.ts";
 import nonNullAssertedOptionalChains from "./rules/nonNullAssertedOptionalChains.ts";
 import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
+import nonNullAssertions from "./rules/nonNullAssertions.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
 import objectCalls from "./rules/objectCalls.ts";
@@ -298,6 +299,7 @@ export const ts = createPlugin({
 		newNativeNonConstructors,
 		nonNullAssertedOptionalChains,
 		nonNullAssertionPlacement,
+		nonNullAssertions,
 		nonOctalDecimalEscapes,
 		numericLiteralParsing,
 		objectCalls,
