@@ -9993,6 +9993,7 @@
 			"name": "escapeSequenceCasing",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -10102,7 +10103,8 @@
 		"flint": {
 			"name": "explicitAnys",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -10127,7 +10129,8 @@
 		"flint": {
 			"name": "exponentiationOperators",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -10171,7 +10174,8 @@
 		"flint": {
 			"name": "exportFromImports",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -10275,8 +10279,8 @@
 		"flint": {
 			"name": "extraneousClasses",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -10710,7 +10714,8 @@
 		"flint": {
 			"name": "getterReturns",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "untyped",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -10727,9 +10732,10 @@
 			}
 		],
 		"flint": {
-			"name": "getterSetterPairedTypes",
+			"name": "accessorPairTypes",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -10823,6 +10829,7 @@
 			"name": "globalThisAliases",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -10835,8 +10842,8 @@
 	{
 		"biome": [
 			{
-				"name": "useGroupedAccessorPairs",
-				"url": "https://biomejs.dev/linter/rules/useGroupedAccessorPairs"
+				"name": "useaccessorPairGroups",
+				"url": "https://biomejs.dev/linter/rules/useaccessorPairGroups"
 			}
 		],
 		"eslint": [
@@ -10846,9 +10853,10 @@
 			}
 		],
 		"flint": {
-			"name": "groupedAccessorPairs",
+			"name": "accessorPairGroups",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -12275,7 +12283,8 @@
 		"flint": {
 			"name": "literalConstructorWrappers",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"notes": "Will apply to all literals, not just bigint"
 	},
@@ -12844,6 +12853,7 @@
 			"name": "namedDefaultExports",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
