@@ -9993,6 +9993,7 @@
 			"name": "escapeSequenceCasing",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -10277,8 +10278,8 @@
 		"flint": {
 			"name": "extraneousClasses",
 			"plugin": "ts",
-			"preset": "logical",
-			"strictness": "strict"
+			"preset": "logicalStrict",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -10827,6 +10828,7 @@
 			"name": "globalThisAliases",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -12278,7 +12280,8 @@
 		"flint": {
 			"name": "literalConstructorWrappers",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"notes": "Will apply to all literals, not just bigint"
 	},
