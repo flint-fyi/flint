@@ -13,13 +13,6 @@ import RuleSummary from "~/components/RuleSummary.astro";
 JavaScript provides built-in constructor functions for creating primitive values: `BigInt()`, `Boolean()`, `Number()`, and `String()`.
 While these constructors can coerce values to their respective types, using literal syntax is often more concise and idiomatic when the argument is already a literal value.
 
-For example:
-
-- `BigInt(123)` can be written as `123n`
-- `Boolean(true)` is redundant; use `true` directly
-- `Number("123")` can be written as `123`
-- `String(123)` can be written as `"123"` or `` `${123}` ``
-
 This rule flags constructor calls with literal arguments that could be replaced with literal syntax.
 
 ## Examples
@@ -87,7 +80,7 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you prefer the explicit constructor syntax for consistency in your codebase, or if you're maintaining a codebase where constructor calls are used as a deliberate style choice to make type coercion more explicit, you may disable this rule.
+If you prefer the explicit constructor syntax for consistency in your codebase, or if you're maintaining a codebase where constructor calls are used as a deliberate style choice to make type coercion more explicit, you might prefer to disable this rule.
 
 ## Further Reading
 

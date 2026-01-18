@@ -10,7 +10,7 @@ const value = BigInt(123);
 			snapshot: `
 const value = BigInt(123);
               ~~~~~~
-              Prefer literal syntax over BigInt() for creating primitive values.
+              Prefer literal syntax over \`BigInt()\` for creating primitive values.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ const value = BigInt(0);
 			snapshot: `
 const value = BigInt(0);
               ~~~~~~
-              Prefer literal syntax over BigInt() for creating primitive values.
+              Prefer literal syntax over \`BigInt()\` for creating primitive values.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ const value = Boolean(true);
 			snapshot: `
 const value = Boolean(true);
               ~~~~~~~
-              Prefer literal syntax over Boolean() for creating primitive values.
+              Prefer literal syntax over \`Boolean()\` for creating primitive values.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ const value = Boolean(false);
 			snapshot: `
 const value = Boolean(false);
               ~~~~~~~
-              Prefer literal syntax over Boolean() for creating primitive values.
+              Prefer literal syntax over \`Boolean()\` for creating primitive values.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ const value = Boolean("text");
 			snapshot: `
 const value = Boolean("text");
               ~~~~~~~
-              Prefer literal syntax over Boolean() for creating primitive values.
+              Prefer literal syntax over \`Boolean()\` for creating primitive values.
 `,
 		},
 		{
@@ -60,7 +60,7 @@ const value = Boolean(123);
 			snapshot: `
 const value = Boolean(123);
               ~~~~~~~
-              Prefer literal syntax over Boolean() for creating primitive values.
+              Prefer literal syntax over \`Boolean()\` for creating primitive values.
 `,
 		},
 		{
@@ -70,7 +70,7 @@ const value = Number("123");
 			snapshot: `
 const value = Number("123");
               ~~~~~~
-              Prefer literal syntax over Number() for creating primitive values.
+              Prefer literal syntax over \`Number()\` for creating primitive values.
 `,
 		},
 		{
@@ -80,7 +80,7 @@ const value = Number("0");
 			snapshot: `
 const value = Number("0");
               ~~~~~~
-              Prefer literal syntax over Number() for creating primitive values.
+              Prefer literal syntax over \`Number()\` for creating primitive values.
 `,
 		},
 		{
@@ -90,7 +90,7 @@ const value = Number("-42");
 			snapshot: `
 const value = Number("-42");
               ~~~~~~
-              Prefer literal syntax over Number() for creating primitive values.
+              Prefer literal syntax over \`Number()\` for creating primitive values.
 `,
 		},
 		{
@@ -100,7 +100,7 @@ const value = Number("3.14");
 			snapshot: `
 const value = Number("3.14");
               ~~~~~~
-              Prefer literal syntax over Number() for creating primitive values.
+              Prefer literal syntax over \`Number()\` for creating primitive values.
 `,
 		},
 		{
@@ -110,7 +110,7 @@ const value = String(123);
 			snapshot: `
 const value = String(123);
               ~~~~~~
-              Prefer literal syntax over String() for creating primitive values.
+              Prefer literal syntax over \`String()\` for creating primitive values.
 `,
 		},
 		{
@@ -120,7 +120,7 @@ const value = String(true);
 			snapshot: `
 const value = String(true);
               ~~~~~~
-              Prefer literal syntax over String() for creating primitive values.
+              Prefer literal syntax over \`String()\` for creating primitive values.
 `,
 		},
 		{
@@ -130,7 +130,7 @@ const value = String(false);
 			snapshot: `
 const value = String(false);
               ~~~~~~
-              Prefer literal syntax over String() for creating primitive values.
+              Prefer literal syntax over \`String()\` for creating primitive values.
 `,
 		},
 		{
@@ -140,7 +140,7 @@ const value = String(123n);
 			snapshot: `
 const value = String(123n);
               ~~~~~~
-              Prefer literal syntax over String() for creating primitive values.
+              Prefer literal syntax over \`String()\` for creating primitive values.
 `,
 		},
 	],
