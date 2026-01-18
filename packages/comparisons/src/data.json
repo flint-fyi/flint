@@ -13064,7 +13064,8 @@
 		"flint": {
 			"name": "nestedStandaloneIfs",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
