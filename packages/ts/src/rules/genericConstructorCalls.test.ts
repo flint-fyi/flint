@@ -15,6 +15,28 @@ const value: Map<string, number> = new Map();
 		},
 		{
 			code: `
+// comment with < and >
+const value: Map<string, number> = new Map();
+`,
+			snapshot: `
+// comment with < and >
+const value: Map<string, number> = new Map();
+                ~~~~~~~~~~~~~~~~
+                Prefer specifying the type argument on the constructor call instead of the type annotation.
+`,
+		},
+		{
+			code: `
+const value: Map<string, number> = new Map(); // a < b > c
+`,
+			snapshot: `
+const value: Map<string, number> = new Map(); // a < b > c
+                ~~~~~~~~~~~~~~~~
+                Prefer specifying the type argument on the constructor call instead of the type annotation.
+`,
+		},
+		{
+			code: `
 const value: Set<string> = new Set();
 `,
 			snapshot: `
@@ -90,6 +112,30 @@ const value = new Map<string, number>();
 		},
 		{
 			code: `
+// comment with < and >
+const value = new Map<string, number>();
+`,
+			options: { style: "type-annotation" },
+			snapshot: `
+// comment with < and >
+const value = new Map<string, number>();
+                     ~~~~~~~~~~~~~~~~
+                     Prefer specifying the type argument on the type annotation instead of the constructor call.
+`,
+		},
+		{
+			code: `
+const value = new Map<string, number>(); // a < b > c
+`,
+			options: { style: "type-annotation" },
+			snapshot: `
+const value = new Map<string, number>(); // a < b > c
+                     ~~~~~~~~~~~~~~~~
+                     Prefer specifying the type argument on the type annotation instead of the constructor call.
+`,
+		},
+		{
+			code: `
 const value = new Set<string>();
 `,
 			options: { style: "type-annotation" },
@@ -127,6 +173,7 @@ class Example {
 		},
 	],
 	valid: [
+		`const value = new Map<string, number>(); // a < b > c`,
 		`const value = new Map<string, number>();`,
 		`const value: Map<string, number> = new Map<string, number>();`,
 		`const value = new Map();`,

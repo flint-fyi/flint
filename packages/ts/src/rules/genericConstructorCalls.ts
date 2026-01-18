@@ -1,4 +1,8 @@
-import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	type AST,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts from "typescript";
 import { z } from "zod";
 
@@ -17,43 +21,48 @@ const builtInTypedArrays = new Set<string>([
 ]);
 
 function getTypeArgumentsRange(
+	parent: AST.AnyNode,
 	typeArguments: ts.NodeArray<ts.TypeNode>,
 	sourceFile: AST.SourceFile,
 ) {
-	const text = sourceFile.text;
-	const argsPos = typeArguments.pos;
-	const argsEnd = typeArguments.end;
+	const children = parent.getChildren(sourceFile);
+	let begin = typeArguments.pos;
+	let end = typeArguments.end;
 
-	let begin = argsPos;
-	while (begin > 0 && text.charAt(begin - 1) !== "<") {
-		begin--;
-	}
-	if (begin > 0) {
-		begin--;
-	}
-
-	let end = argsEnd;
-	while (end < text.length && text.charAt(end) !== ">") {
-		end++;
-	}
-	if (end < text.length) {
-		end++;
+	for (const child of children) {
+		if (child.kind === ts.SyntaxKind.LessThanToken) {
+			begin = child.getStart(sourceFile);
+		} else if (child.kind === ts.SyntaxKind.GreaterThanToken) {
+			end = child.getEnd();
+		}
 	}
 
 	return { begin, end };
 }
 
 function getTypeArgumentsText(
+	parent: AST.AnyNode,
 	typeArguments: ts.NodeArray<ts.TypeNode>,
 	sourceFile: AST.SourceFile,
 ) {
-	const range = getTypeArgumentsRange(typeArguments, sourceFile);
+	const range = getTypeArgumentsRange(parent, typeArguments, sourceFile);
 	return sourceFile.text.slice(range.begin, range.end);
 }
 
 function isBuiltInTypedArray(name: string) {
 	return builtInTypedArrays.has(name);
 }
+
+const options = {
+	style: z
+		.enum(["constructor", "type-annotation"])
+		.default("constructor")
+		.describe(
+			"Where to prefer type arguments: 'constructor' for the constructor call, 'type-annotation' for the type annotation.",
+		),
+};
+
+type Options = z.infer<z.ZodObject<typeof options>>;
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -86,54 +95,46 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			],
 		},
 	},
-	options: {
-		style: z
-			.enum(["constructor", "type-annotation"])
-			.default("constructor")
-			.describe(
-				"Where to prefer type arguments: 'constructor' for the constructor call, 'type-annotation' for the type annotation.",
-			),
-	},
+	options,
 	setup(context) {
-		function checkDeclaration(
-			identifier: AST.BindingPattern | AST.Identifier,
-			typeAnnotation: AST.TypeNode | undefined,
-			initializer: AST.Expression | undefined,
-			sourceFile: AST.SourceFile,
-			style: "constructor" | "type-annotation",
+		function checkNode(
+			node: AST.PropertyDeclaration | AST.VariableDeclaration,
+			{ options, sourceFile }: TypeScriptFileServices & { options: Options },
 		) {
-			if (!initializer || !ts.isNewExpression(initializer)) {
-				return;
-			}
+			const identifier = node.name;
+			const typeAnnotation = node.type;
+			const initializer = node.initializer;
+			const style = options.style;
 
-			if (!ts.isIdentifier(initializer.expression)) {
+			if (
+				!initializer ||
+				!ts.isNewExpression(initializer) ||
+				!ts.isIdentifier(initializer.expression)
+			) {
 				return;
 			}
 
 			const constructorName = initializer.expression.text;
-			const constructorTypeArgs = initializer.typeArguments;
 
 			if (!typeAnnotation) {
-				if (style === "type-annotation" && constructorTypeArgs) {
+				if (style === "type-annotation" && initializer.typeArguments) {
 					const typeArgsText = getTypeArgumentsText(
-						constructorTypeArgs,
+						initializer,
+						initializer.typeArguments,
 						sourceFile,
 					);
+					const identifierEnd = identifier.getEnd();
 					const typeAnnotationText = `${constructorName}${typeArgsText}`;
-
-					const identifierEnd = ts.isIdentifier(identifier)
-						? identifier.getEnd()
-						: identifier.getEnd();
-
-					const typeArgsRange = getTypeArgumentsRange(
-						constructorTypeArgs,
+					const typeArgumentsRange = getTypeArgumentsRange(
+						initializer,
+						initializer.typeArguments,
 						sourceFile,
 					);
 
 					context.report({
 						fix: [
 							{
-								range: typeArgsRange,
+								range: typeArgumentsRange,
 								text: "",
 							},
 							{
@@ -145,51 +146,35 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							},
 						],
 						message: "preferTypeAnnotation",
-						range: typeArgsRange,
+						range: typeArgumentsRange,
 					});
 				}
 				return;
 			}
 
-			if (!ts.isTypeReferenceNode(typeAnnotation)) {
-				return;
-			}
-
-			if (!ts.isIdentifier(typeAnnotation.typeName)) {
-				return;
-			}
-
-			const annotationTypeName = typeAnnotation.typeName.text;
-
-			if (annotationTypeName !== constructorName) {
-				return;
-			}
-
-			if (isBuiltInTypedArray(annotationTypeName)) {
-				return;
-			}
-
-			const annotationTypeArgs = typeAnnotation.typeArguments;
-
-			if (!annotationTypeArgs && !constructorTypeArgs) {
-				return;
-			}
-
-			if (annotationTypeArgs && constructorTypeArgs) {
+			if (
+				!ts.isTypeReferenceNode(typeAnnotation) ||
+				!ts.isIdentifier(typeAnnotation.typeName) ||
+				typeAnnotation.typeName.text !== constructorName ||
+				isBuiltInTypedArray(typeAnnotation.typeName.text) ||
+				!!typeAnnotation.typeArguments !== !initializer.typeArguments
+			) {
 				return;
 			}
 
 			if (
 				style === "constructor" &&
-				annotationTypeArgs &&
-				!constructorTypeArgs
+				typeAnnotation.typeArguments &&
+				!initializer.typeArguments
 			) {
 				const typeArgsText = getTypeArgumentsText(
-					annotationTypeArgs,
+					typeAnnotation,
+					typeAnnotation.typeArguments,
 					sourceFile,
 				);
 				const typeArgsRange = getTypeArgumentsRange(
-					annotationTypeArgs,
+					typeAnnotation,
+					typeAnnotation.typeArguments,
 					sourceFile,
 				);
 
@@ -218,18 +203,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				});
 			} else if (
 				style === "type-annotation" &&
-				!annotationTypeArgs &&
-				constructorTypeArgs
+				!typeAnnotation.typeArguments &&
+				initializer.typeArguments
 			) {
-				const typeArgsText = getTypeArgumentsText(
-					constructorTypeArgs,
+				const typeArgumentsText = getTypeArgumentsText(
+					initializer,
+					initializer.typeArguments,
 					sourceFile,
 				);
-				const typeArgsRange = getTypeArgumentsRange(
-					constructorTypeArgs,
+				const typeArgumentsRange = getTypeArgumentsRange(
+					initializer,
+					initializer.typeArguments,
 					sourceFile,
 				);
-				const newTypeAnnotation = `${annotationTypeName}${typeArgsText}`;
+				const newTypeAnnotation = `${typeAnnotation.typeName.text}${typeArgumentsText}`;
 
 				context.report({
 					fix: [
@@ -241,36 +228,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							text: newTypeAnnotation,
 						},
 						{
-							range: typeArgsRange,
+							range: typeArgumentsRange,
 							text: "",
 						},
 					],
 					message: "preferTypeAnnotation",
-					range: typeArgsRange,
+					range: typeArgumentsRange,
 				});
 			}
 		}
 
 		return {
 			visitors: {
-				PropertyDeclaration: (node, { options, sourceFile }) => {
-					checkDeclaration(
-						node.name as AST.Identifier,
-						node.type,
-						node.initializer,
-						sourceFile,
-						options.style,
-					);
-				},
-				VariableDeclaration: (node, { options, sourceFile }) => {
-					checkDeclaration(
-						node.name,
-						node.type,
-						node.initializer,
-						sourceFile,
-						options.style,
-					);
-				},
+				PropertyDeclaration: checkNode,
+				VariableDeclaration: checkNode,
 			},
 		};
 	},
