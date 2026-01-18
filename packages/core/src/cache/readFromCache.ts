@@ -61,7 +61,10 @@ export async function readFromCache(
 		}
 	}
 
-	const cached = new Map(Object.entries(cache.files));
+	const cached = new Map(Object.entries(cache.files)) as Map<
+		string,
+		FileCacheStorage
+	>;
 	const filePathsToLint = new Set<string>();
 
 	// Any files touched since last cache write will need to be re-linted
@@ -141,6 +144,7 @@ export async function readFromCache(
 		cached.size,
 		allFilePaths.size,
 	);
+
 	return cached;
 
 	function markAsUncached(filePath: string) {

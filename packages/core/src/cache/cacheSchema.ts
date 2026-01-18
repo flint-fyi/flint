@@ -70,5 +70,3 @@ export const cacheStorageSchema = z.object({
 	configs: z.record(z.string(), z.number()),
 	files: z.record(z.string(), fileCacheStorageSchema),
 });
-
-export type ParsedCacheStorage = z.infer<typeof cacheStorageSchema>;
