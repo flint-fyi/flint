@@ -28,15 +28,15 @@ importers:
       '@eslint/markdown':
         specifier: 7.5.1
         version: 7.5.1
+      '@flint.fyi/node':
+        specifier: workspace:^
+        version: link:packages/node
       '@flint.fyi/plugin-flint':
         specifier: workspace:^
         version: link:packages/plugin-flint
-      '@flint.fyi/plugin-node':
+      '@flint.fyi/spelling':
         specifier: workspace:^
-        version: link:packages/plugin-node
-      '@flint.fyi/plugin-spelling':
-        specifier: workspace:^
-        version: link:packages/plugin-spelling
+        version: link:packages/spelling
       '@flint.fyi/ts-patch':
         specifier: workspace:^
         version: link:packages/ts-patch
@@ -118,6 +118,44 @@ importers:
       typescript-eslint:
         specifier: 8.50.0
         version: 8.50.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
+      vitest:
+        specifier: 4.0.15
+        version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
+
+  packages/astro:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+    devDependencies:
+      tsdown:
+        specifier: 0.19.0-beta.2
+        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
+
+  packages/browser:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
+      '@flint.fyi/utils':
+        specifier: workspace:^
+        version: link:../utils
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+    devDependencies:
+      '@flint.fyi/rule-tester':
+        specifier: workspace:^
+        version: link:../rule-tester
+      tsdown:
+        specifier: 0.19.0-beta.2
+        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
       vitest:
         specifier: 4.0.15
         version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
@@ -248,6 +286,9 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
+      '@flint.fyi/json-language':
+        specifier: workspace:^
+        version: link:../json-language
       typescript:
         specifier: ^5.9.0 || ^6.0.0
         version: 5.9.3
@@ -265,44 +306,7 @@ importers:
         specifier: 4.0.15
         version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
 
-  packages/md:
-    dependencies:
-      '@flint.fyi/core':
-        specifier: workspace:^
-        version: link:../core
-      '@flint.fyi/utils':
-        specifier: workspace:^
-        version: link:../utils
-      github-slugger:
-        specifier: ^2.0.0
-        version: 2.0.0
-      mdast-util-from-markdown:
-        specifier: ^2.0.2
-        version: 2.0.2
-      mdast-util-gfm:
-        specifier: ^3.1.0
-        version: 3.1.0
-      micromark-extension-gfm:
-        specifier: ^3.0.0
-        version: 3.0.0
-      unist-util-visit:
-        specifier: ^5.0.0
-        version: 5.0.0
-    devDependencies:
-      '@flint.fyi/rule-tester':
-        specifier: workspace:^
-        version: link:../rule-tester
-      '@types/unist':
-        specifier: 3.0.3
-        version: 3.0.3
-      tsdown:
-        specifier: 0.19.0-beta.2
-        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
-      vitest:
-        specifier: 4.0.15
-        version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
-
-  packages/package-json:
+  packages/json-language:
     dependencies:
       '@flint.fyi/core':
         specifier: workspace:^
@@ -314,78 +318,18 @@ importers:
       tsdown:
         specifier: 0.19.0-beta.2
         version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
-
-  packages/plugin-astro:
-    dependencies:
-      '@flint.fyi/core':
-        specifier: workspace:^
-        version: link:../core
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-    devDependencies:
-      tsdown:
-        specifier: 0.19.0-beta.2
-        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
-
-  packages/plugin-browser:
-    dependencies:
-      '@flint.fyi/core':
-        specifier: workspace:^
-        version: link:../core
-      '@flint.fyi/ts':
-        specifier: workspace:^
-        version: link:../ts
-      '@flint.fyi/utils':
-        specifier: workspace:^
-        version: link:../utils
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-    devDependencies:
-      '@flint.fyi/rule-tester':
-        specifier: workspace:^
-        version: link:../rule-tester
-      tsdown:
-        specifier: 0.19.0-beta.2
-        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
       vitest:
         specifier: 4.0.15
         version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
 
-  packages/plugin-flint:
+  packages/jsx:
     dependencies:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      '@flint.fyi/ts':
+      '@flint.fyi/typescript-language':
         specifier: workspace:^
-        version: link:../ts
-      '@flint.fyi/utils':
-        specifier: workspace:^
-        version: link:../utils
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-    devDependencies:
-      '@flint.fyi/rule-tester':
-        specifier: workspace:^
-        version: link:../rule-tester
-      tsdown:
-        specifier: 0.19.0-beta.2
-        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
-      vitest:
-        specifier: 4.0.15
-        version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
-
-  packages/plugin-jsx:
-    dependencies:
-      '@flint.fyi/core':
-        specifier: workspace:^
-        version: link:../core
-      '@flint.fyi/ts':
-        specifier: workspace:^
-        version: link:../ts
+        version: link:../typescript-language
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
@@ -409,7 +353,63 @@ importers:
         specifier: 4.0.15
         version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
 
-  packages/plugin-next:
+  packages/markdown-language:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      '@flint.fyi/utils':
+        specifier: workspace:^
+        version: link:../utils
+      mdast-util-from-markdown:
+        specifier: ^2.0.2
+        version: 2.0.2
+      mdast-util-gfm:
+        specifier: ^3.1.0
+        version: 3.1.0
+      micromark-extension-gfm:
+        specifier: ^3.0.0
+        version: 3.0.0
+      unist-util-visit:
+        specifier: ^5.0.0
+        version: 5.0.0
+    devDependencies:
+      '@types/unist':
+        specifier: 3.0.3
+        version: 3.0.3
+      tsdown:
+        specifier: 0.19.0-beta.2
+        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
+      vitest:
+        specifier: 4.0.15
+        version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
+
+  packages/md:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      '@flint.fyi/markdown-language':
+        specifier: workspace:^
+        version: link:../markdown-language
+      '@flint.fyi/utils':
+        specifier: workspace:^
+        version: link:../utils
+      github-slugger:
+        specifier: ^2.0.0
+        version: 2.0.0
+    devDependencies:
+      '@flint.fyi/rule-tester':
+        specifier: workspace:^
+        version: link:../rule-tester
+      tsdown:
+        specifier: 0.19.0-beta.2
+        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
+      vitest:
+        specifier: 4.0.15
+        version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
+
+  packages/next:
     dependencies:
       '@flint.fyi/core':
         specifier: workspace:^
@@ -422,14 +422,14 @@ importers:
         specifier: 0.19.0-beta.2
         version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
 
-  packages/plugin-node:
+  packages/node:
     dependencies:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      '@flint.fyi/ts':
+      '@flint.fyi/typescript-language':
         specifier: workspace:^
-        version: link:../ts
+        version: link:../typescript-language
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
@@ -447,7 +447,7 @@ importers:
         specifier: 4.0.15
         version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
 
-  packages/plugin-nuxt:
+  packages/nuxt:
     dependencies:
       '@flint.fyi/core':
         specifier: workspace:^
@@ -460,14 +460,27 @@ importers:
         specifier: 0.19.0-beta.2
         version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
 
-  packages/plugin-performance:
+  packages/package-json:
     dependencies:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      '@flint.fyi/ts':
+      typescript:
+        specifier: ^5.9.0 || ^6.0.0
+        version: 5.9.3
+    devDependencies:
+      tsdown:
+        specifier: 0.19.0-beta.2
+        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
+
+  packages/performance:
+    dependencies:
+      '@flint.fyi/core':
         specifier: workspace:^
-        version: link:../ts
+        version: link:../core
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
       ts-api-utils:
         specifier: ^2.1.0
         version: 2.1.0(typescript@5.9.3)
@@ -485,49 +498,20 @@ importers:
         specifier: 4.0.15
         version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
 
-  packages/plugin-react:
+  packages/plugin-flint:
     dependencies:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-    devDependencies:
-      tsdown:
-        specifier: 0.19.0-beta.2
-        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
-
-  packages/plugin-solid:
-    dependencies:
-      '@flint.fyi/core':
+      '@flint.fyi/typescript-language':
         specifier: workspace:^
-        version: link:../core
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-    devDependencies:
-      tsdown:
-        specifier: 0.19.0-beta.2
-        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
-
-  packages/plugin-spelling:
-    dependencies:
-      '@cspell/url':
-        specifier: ^9.2.2
-        version: 9.4.0
-      '@flint.fyi/core':
-        specifier: workspace:^
-        version: link:../core
-      '@flint.fyi/text':
-        specifier: workspace:^
-        version: link:../text
+        version: link:../typescript-language
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      cspell-lib:
-        specifier: ^9.2.2
-        version: 9.4.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
     devDependencies:
       '@flint.fyi/rule-tester':
         specifier: workspace:^
@@ -538,6 +522,19 @@ importers:
       vitest:
         specifier: 4.0.15
         version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
+
+  packages/react:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+    devDependencies:
+      tsdown:
+        specifier: 0.19.0-beta.2
+        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
 
   packages/rule-tester:
     dependencies:
@@ -569,27 +566,27 @@ importers:
       '@astrojs/starlight':
         specifier: ^0.37.0
         version: 0.37.0(astro@5.16.2(@types/node@24.10.1)(jiti@2.6.1)(rollup@4.52.5)(typescript@5.9.3)(yaml@2.8.2))
+      '@flint.fyi/browser':
+        specifier: workspace:^
+        version: link:../browser
       '@flint.fyi/comparisons':
         specifier: workspace:^
         version: link:../comparisons
-      '@flint.fyi/plugin-browser':
+      '@flint.fyi/jsx':
         specifier: workspace:^
-        version: link:../plugin-browser
+        version: link:../jsx
+      '@flint.fyi/node':
+        specifier: workspace:^
+        version: link:../node
+      '@flint.fyi/performance':
+        specifier: workspace:^
+        version: link:../performance
       '@flint.fyi/plugin-flint':
         specifier: workspace:^
         version: link:../plugin-flint
-      '@flint.fyi/plugin-jsx':
+      '@flint.fyi/spelling':
         specifier: workspace:^
-        version: link:../plugin-jsx
-      '@flint.fyi/plugin-node':
-        specifier: workspace:^
-        version: link:../plugin-node
-      '@flint.fyi/plugin-performance':
-        specifier: workspace:^
-        version: link:../plugin-performance
-      '@flint.fyi/plugin-spelling':
-        specifier: workspace:^
-        version: link:../plugin-spelling
+        version: link:../spelling
       '@konami-emoji-blast/astro':
         specifier: ^0.2.0
         version: 0.2.0(astro@5.16.2(@types/node@24.10.1)(jiti@2.6.1)(rollup@4.52.5)(typescript@5.9.3)(yaml@2.8.2))(konami-emoji-blast@0.6.0)
@@ -658,7 +655,48 @@ importers:
         specifier: 0.34.5
         version: 0.34.5
 
-  packages/text:
+  packages/solid:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+    devDependencies:
+      tsdown:
+        specifier: 0.19.0-beta.2
+        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
+
+  packages/spelling:
+    dependencies:
+      '@cspell/url':
+        specifier: ^9.2.2
+        version: 9.4.0
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      '@flint.fyi/text-language':
+        specifier: workspace:^
+        version: link:../text-language
+      '@flint.fyi/utils':
+        specifier: workspace:^
+        version: link:../utils
+      cspell-lib:
+        specifier: ^9.2.2
+        version: 9.4.0
+    devDependencies:
+      '@flint.fyi/rule-tester':
+        specifier: workspace:^
+        version: link:../rule-tester
+      tsdown:
+        specifier: 0.19.0-beta.2
+        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
+      vitest:
+        specifier: 4.0.15
+        version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
+
+  packages/text-language:
     dependencies:
       '@flint.fyi/core':
         specifier: workspace:^
@@ -673,21 +711,12 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      '@typescript-eslint/project-service':
-        specifier: ^8.46.2
-        version: 8.50.1(typescript@5.9.3)
-      '@typescript/vfs':
-        specifier: ^1.6.1
-        version: 1.6.1(typescript@5.9.3)
-      cached-factory:
-        specifier: ^0.1.0
-        version: 0.1.0
-      debug-for-file:
-        specifier: ^0.2.0
-        version: 0.2.0
       ts-api-utils:
         specifier: ^2.1.0
         version: 2.1.0(typescript@5.9.3)
@@ -717,6 +746,40 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
 
+  packages/typescript-language:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      '@flint.fyi/utils':
+        specifier: workspace:^
+        version: link:../utils
+      '@typescript-eslint/project-service':
+        specifier: ^8.46.2
+        version: 8.50.1(typescript@5.9.3)
+      '@typescript/vfs':
+        specifier: ^1.6.1
+        version: 1.6.1(typescript@5.9.3)
+      cached-factory:
+        specifier: ^0.1.0
+        version: 0.1.0
+      debug-for-file:
+        specifier: ^0.2.0
+        version: 0.2.0
+      ts-api-utils:
+        specifier: ^2.1.0
+        version: 2.1.0(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.0 || ^6.0.0
+        version: 5.9.3
+    devDependencies:
+      tsdown:
+        specifier: 0.19.0-beta.2
+        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
+      vitest:
+        specifier: 4.0.15
+        version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
+
   packages/utils:
     devDependencies:
       tsdown:
@@ -731,6 +794,28 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
+      '@flint.fyi/yaml-language':
+        specifier: workspace:^
+        version: link:../yaml-language
+      yaml-unist-parser:
+        specifier: ^3.0.0
+        version: 3.1.0
+    devDependencies:
+      '@flint.fyi/rule-tester':
+        specifier: workspace:^
+        version: link:../rule-tester
+      tsdown:
+        specifier: 0.19.0-beta.2
+        version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)
+      vitest:
+        specifier: 4.0.15
+        version: 4.0.15(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
+
+  packages/yaml-language:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
@@ -741,9 +826,6 @@ importers:
         specifier: ^3.0.0
         version: 3.1.0
     devDependencies:
-      '@flint.fyi/rule-tester':
-        specifier: workspace:^
-        version: link:../rule-tester
       tsdown:
         specifier: 0.19.0-beta.2
         version: 0.19.0-beta.2(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.15.0)(synckit@0.11.11)(typescript@5.9.3)

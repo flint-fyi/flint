@@ -1,8 +1,9 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 
 const restrictedNames = new Set([
 	"arguments",
@@ -36,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkIdentifier(
 			node: AST.Identifier,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			if (restrictedNames.has(node.text)) {
 				context.report({
@@ -51,7 +52,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkBindingName(
 			name: AST.BindingName,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			if (name.kind === SyntaxKind.Identifier) {
 				checkIdentifier(name, sourceFile);
@@ -66,7 +67,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkParameters(
 			parameters: ts.NodeArray<AST.ParameterDeclaration>,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			for (const parameter of parameters) {
 				checkBindingName(parameter.name, sourceFile);

@@ -16,10 +16,10 @@
 	"include": [".astro/types.d.ts", "*.config.*", "src"],
 	"references": [
 		{ "path": "../comparisons" },
-		{ "path": "../plugin-browser" },
+		{ "path": "../browser" },
 		{ "path": "../plugin-flint" },
-		{ "path": "../plugin-node" },
-		{ "path": "../plugin-performance" },
-		{ "path": "../plugin-spelling" }
+		{ "path": "../node" },
+		{ "path": "../performance" },
+		{ "path": "../spelling" }
 	]
 }

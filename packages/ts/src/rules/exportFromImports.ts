@@ -1,21 +1,18 @@
-import ts, { SyntaxKind } from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+import ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 interface ImportInfo {
 	declaration: AST.ImportDeclaration;
-	moduleSpecifier: string;
 	defaultImport?: string;
+	moduleSpecifier: string;
 	namedImports: Map<string, string>;
 	namespaceImport?: string;
-}
-
-interface ExportInfo {
-	declaration: AST.ExportDeclaration;
-	names: Set<string>;
 }
 
 function getImportInfo(
@@ -59,6 +56,21 @@ function getImportInfo(
 	return info;
 }
 
+function isDefaultExportOfImport(
+	exportDecl: AST.ExportAssignment,
+	defaultImportName: string,
+): boolean {
+	if (!exportDecl.expression) {
+		return false;
+	}
+
+	if (ts.isIdentifier(exportDecl.expression)) {
+		return exportDecl.expression.text === defaultImportName;
+	}
+
+	return false;
+}
+
 function isReExportedAsNamed(
 	exportDecl: AST.ExportDeclaration,
 	localName: string,
@@ -79,21 +91,6 @@ function isReExportedAsNamed(
 	return false;
 }
 
-function isDefaultExportOfImport(
-	exportDecl: AST.ExportAssignment,
-	defaultImportName: string,
-): boolean {
-	if (!exportDecl.expression) {
-		return false;
-	}
-
-	if (ts.isIdentifier(exportDecl.expression)) {
-		return exportDecl.expression.text === defaultImportName;
-	}
-
-	return false;
-}
-
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
@@ -102,15 +99,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		presets: ["stylistic"],
 	},
 	messages: {
-		preferExportFrom: {
-			primary:
-				"Prefer `export { {{ name }} } from '{{ module }}'` instead of separate import and export.",
-			secondary: [
-				"When re-exporting from a module, it's unnecessary to import and then export.",
-				"Using `export...from` is more concise and makes the re-export intent clearer.",
-			],
-			suggestions: ["Use `export { {{ name }} } from '{{ module }}'` syntax."],
-		},
 		preferExportDefaultFrom: {
 			primary:
 				"Prefer `export { default } from '{{ module }}'` instead of separate import and export default.",
@@ -119,6 +107,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"This is more concise and makes the re-export intent clearer.",
 			],
 			suggestions: ["Use `export { default } from '{{ module }}'` syntax."],
+		},
+		preferExportFrom: {
+			primary:
+				"Prefer `export { {{ name }} } from '{{ module }}'` instead of separate import and export.",
+			secondary: [
+				"When re-exporting from a module, it's unnecessary to import and then export.",
+				"Using `export...from` is more concise and makes the re-export intent clearer.",
+			],
+			suggestions: ["Use `export { {{ name }} } from '{{ module }}'` syntax."],
 		},
 		preferExportNamespaceFrom: {
 			primary:
@@ -224,7 +221,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const localName = exportAssignment.expression.text;
 						const importInfo = imports.get(localName);
 
-						if (!importInfo || importInfo.defaultImport !== localName) {
+						if (importInfo?.defaultImport !== localName) {
 							continue;
 						}
 

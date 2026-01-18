@@ -1,9 +1,11 @@
+import {
+	type AST,
+	type Checker,
+	getModifyingReferences,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import type { Checker } from "../types/checker.ts";
-import { getModifyingReferences } from "../utils/getModifyingReferences.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -29,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function hasAssignments(
 			identifier: AST.Identifier,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
 			// TODO (#400): Switch to scope analysis

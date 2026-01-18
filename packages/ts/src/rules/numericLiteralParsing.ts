@@ -1,10 +1,11 @@
+import {
+	type AST,
+	getTSNodeRange,
+	isGlobalDeclaration,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import ts, { SyntaxKind } from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
+import { SyntaxKind } from "typescript";
 
 function convertToLiteral(value: string, radix: number): string {
 	const parsed = Number.parseInt(value, radix);
@@ -68,7 +69,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkParseIntCall(
 			node: AST.CallExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (node.arguments.length !== 2) {
 				return;

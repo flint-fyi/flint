@@ -1,0 +1,78 @@
+---
+description: "Reports using the void operator on expressions that are already void or undefined."
+title: "meaninglessVoidOperators"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="meaninglessVoidOperators" />
+
+The `void` operator is used to discard a return value and produce `undefined`.
+Applying `void` to a value that is already `void` or `undefined` is meaningless and indicates a likely mistake or unnecessary code.
+
+This rule helps catch API changes where a function that previously returned a value no longer does, as well as ensuring that `void` is used consistently and intentionally.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+void (() => {})();
+```
+
+```ts
+function getValue() {}
+void getValue();
+```
+
+```ts
+const value: undefined = undefined;
+void value;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function getValue() {
+	return 1;
+}
+void getValue();
+```
+
+```ts
+void (async () => {})();
+```
+
+```ts
+function log(message: number) {
+	void message;
+	console.log(message);
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use `void` for stylistic consistency regardless of the argument's type, you may disable this rule.
+
+For codebases that heavily rely on explicit `void` annotations for documentation purposes, this rule might produce unwanted warnings.
+
+## Further Reading
+
+- [MDN: void operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/void)
+- [TypeScript Handbook: void](https://www.typescriptlang.org/docs/handbook/2/functions.html#void)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="meaninglessVoidOperators" />

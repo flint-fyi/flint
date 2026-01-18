@@ -1,8 +1,10 @@
-import ts, { SyntaxKind } from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -75,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkFetchOptions(
 			node: AST.Expression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (node.kind !== SyntaxKind.ObjectLiteralExpression) {
 				return;
@@ -101,7 +103,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkNode(
 			node: AST.CallExpression | AST.NewExpression,
 			functionName: string,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (
 				node.expression.kind === SyntaxKind.Identifier &&
