@@ -10730,7 +10730,7 @@
 			}
 		],
 		"flint": {
-			"name": "getterSetterPairedTypes",
+			"name": "accessorPairTypes",
 			"plugin": "ts",
 			"preset": "logical",
 			"status": "implemented"
@@ -10839,8 +10839,8 @@
 	{
 		"biome": [
 			{
-				"name": "useGroupedAccessorPairs",
-				"url": "https://biomejs.dev/linter/rules/useGroupedAccessorPairs"
+				"name": "useaccessorPairGroups",
+				"url": "https://biomejs.dev/linter/rules/useaccessorPairGroups"
 			}
 		],
 		"eslint": [
@@ -10850,7 +10850,7 @@
 			}
 		],
 		"flint": {
-			"name": "groupedAccessorPairs",
+			"name": "accessorPairGroups",
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"

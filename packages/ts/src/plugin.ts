@@ -104,10 +104,10 @@ import functionNameMatches from "./rules/functionNameMatches.ts";
 import functionNewCalls from "./rules/functionNewCalls.ts";
 import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
 import getterReturns from "./rules/getterReturns.ts";
-import getterSetterPairedTypes from "./rules/getterSetterPairedTypes.ts";
+import accessorPairTypes from "./rules/accessorPairTypes.ts";
 import globalAssignments from "./rules/globalAssignments.ts";
 import globalObjectCalls from "./rules/globalObjectCalls.ts";
-import groupedAccessorPairs from "./rules/groupedAccessorPairs.ts";
+import accessorPairGroups from "./rules/accessorPairGroups.ts";
 import impliedEvals from "./rules/impliedEvals.ts";
 import importEmptyBlocks from "./rules/importEmptyBlocks.ts";
 import importTypeSideEffects from "./rules/importTypeSideEffects.ts";
@@ -260,10 +260,10 @@ export const ts = createPlugin({
 		functionNewCalls,
 		generatorFunctionYields,
 		getterReturns,
-		getterSetterPairedTypes,
+		accessorPairTypes,
 		globalAssignments,
 		globalObjectCalls,
-		groupedAccessorPairs,
+		accessorPairGroups,
 		impliedEvals,
 		importEmptyBlocks,
 		importTypeSideEffects,

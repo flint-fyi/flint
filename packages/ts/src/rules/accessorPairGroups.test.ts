@@ -1,4 +1,4 @@
-import rule from "./groupedAccessorPairs.ts";
+import rule from "./accessorPairGroups.ts";
 import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {

@@ -1,6 +1,6 @@
 ---
 description: "Reports getter and setter accessors for the same property that are not adjacent."
-title: "groupedAccessorPairs"
+title: "accessorPairGroups"
 topic: "rules"
 ---
 
@@ -8,7 +8,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
-<RuleSummary plugin="ts" rule="groupedAccessorPairs" />
+<RuleSummary plugin="ts" rule="accessorPairGroups" />
 
 Grouping getters and setters together improves code readability.
 When a property has both a getter and a setter, defining them adjacent to each other makes it easier to understand how the property is accessed and modified.
@@ -88,4 +88,4 @@ If you prefer a different organization style for class members, such as grouping
 
 ## Equivalents in Other Linters
 
-<RuleEquivalents pluginId="ts" ruleId="groupedAccessorPairs" />
+<RuleEquivalents pluginId="ts" ruleId="accessorPairGroups" />
