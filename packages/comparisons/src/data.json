@@ -12984,7 +12984,8 @@
 		"flint": {
 			"name": "nativeObjectExtensions",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "untyped",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
