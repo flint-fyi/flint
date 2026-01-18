@@ -1,5 +1,15 @@
 # @flint.fyi/nuxt
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [6a5e553]
+- Updated dependencies [2fb9715]
+- Updated dependencies [3353692]
+- Updated dependencies [3561386]
+  - @flint.fyi/core@0.19.0
+
 ## 0.1.2
 
 ### Patch Changes

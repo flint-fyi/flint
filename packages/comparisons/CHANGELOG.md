@@ -1,5 +1,15 @@
 # @flint.fyi/comparisons
 
+## 0.2.0
+
+### Minor Changes
+
+- 3353692: feat: split languages into dedicated packages
+
+### Patch Changes
+
+- 56463f0: fix(comparisons): mark import/no-extraneous-dependencies as superseded by Knip
+
 ## 0.1.4
 
 ### Patch Changes
