@@ -9,26 +9,23 @@ import { z } from "zod";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function getSingleIndexSignature(
-	members: ts.NodeArray<ts.TypeElement>,
-): ts.IndexSignatureDeclaration | undefined {
+function getSingleIndexSignature(members: ts.NodeArray<AST.TypeElement>) {
 	if (members.length !== 1) {
 		return undefined;
 	}
 
-	const member = members[0];
-	if (!member || member.kind !== ts.SyntaxKind.IndexSignature) {
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const member = members[0]!;
+	if (member.kind !== ts.SyntaxKind.IndexSignature) {
 		return undefined;
 	}
 
-	return member as ts.IndexSignatureDeclaration;
+	return member;
 }
 
-function getTypeName(
-	node: AST.InterfaceDeclaration | AST.TypeLiteralNode,
-): string | undefined {
+function getTypeName(node: AST.InterfaceDeclaration | AST.TypeLiteralNode) {
 	if (node.kind === ts.SyntaxKind.InterfaceDeclaration) {
-		return (node as ts.InterfaceDeclaration).name.text;
+		return node.name.text;
 	}
 
 	let current = node.parent as ts.Node | undefined;
@@ -41,100 +38,47 @@ function getTypeName(
 	return undefined;
 }
 
-function hasValidIndexSignatureParameter(member: ts.IndexSignatureDeclaration) {
-	const parameter = member.parameters[0];
-	return (
-		parameter !== undefined &&
-		parameter.name.kind === ts.SyntaxKind.Identifier &&
-		parameter.type !== undefined
-	);
-}
-
-function isRecursiveType(
-	node: ts.Node,
-	parentTypeName: string | undefined,
-	visited: Set<ts.Node>,
+function isDirectlyRecursive(
+	node: AST.AnyNode,
+	parentTypeName: string,
 ): boolean {
-	if (!parentTypeName) {
-		return false;
-	}
-
-	if (visited.has(node)) {
-		return false;
-	}
-
-	visited.add(node);
-
 	switch (node.kind) {
-		case ts.SyntaxKind.ArrayType:
-			return isRecursiveType(
-				(node as ts.ArrayTypeNode).elementType,
-				parentTypeName,
-				visited,
-			);
-		case ts.SyntaxKind.ConditionalType: {
-			const conditional = node as ts.ConditionalTypeNode;
+		case ts.SyntaxKind.ConditionalType:
 			return (
-				isRecursiveType(conditional.checkType, parentTypeName, visited) ||
-				isRecursiveType(conditional.extendsType, parentTypeName, visited) ||
-				isRecursiveType(conditional.trueType, parentTypeName, visited) ||
-				isRecursiveType(conditional.falseType, parentTypeName, visited)
+				isDirectlyRecursive(node.checkType, parentTypeName) ||
+				isDirectlyRecursive(node.extendsType, parentTypeName) ||
+				isDirectlyRecursive(node.trueType, parentTypeName) ||
+				isDirectlyRecursive(node.falseType, parentTypeName)
 			);
-		}
-		case ts.SyntaxKind.IndexedAccessType: {
-			const indexed = node as ts.IndexedAccessTypeNode;
+
+		case ts.SyntaxKind.IndexedAccessType:
 			return (
-				isRecursiveType(indexed.objectType, parentTypeName, visited) ||
-				isRecursiveType(indexed.indexType, parentTypeName, visited)
+				isDirectlyRecursive(node.objectType, parentTypeName) ||
+				isDirectlyRecursive(node.indexType, parentTypeName)
 			);
-		}
-		case ts.SyntaxKind.IndexSignature:
-			return isRecursiveType(
-				(node as ts.IndexSignatureDeclaration).type,
-				parentTypeName,
-				visited,
-			);
+
 		case ts.SyntaxKind.IntersectionType:
 		case ts.SyntaxKind.UnionType:
-			return (node as ts.UnionOrIntersectionTypeNode).types.some((type) =>
-				isRecursiveType(type, parentTypeName, visited),
+			return node.types.some((type) =>
+				isDirectlyRecursive(type, parentTypeName),
 			);
-		case ts.SyntaxKind.MappedType: {
-			const mapped = node as ts.MappedTypeNode;
-			if (mapped.type) {
-				return isRecursiveType(mapped.type, parentTypeName, visited);
-			}
-			return false;
-		}
 		case ts.SyntaxKind.ParenthesizedType:
-			return isRecursiveType(
-				(node as ts.ParenthesizedTypeNode).type,
-				parentTypeName,
-				visited,
-			);
-		case ts.SyntaxKind.TupleType:
-			return (node as ts.TupleTypeNode).elements.some((element) =>
-				isRecursiveType(element, parentTypeName, visited),
-			);
-		case ts.SyntaxKind.TypeLiteral:
-			return (node as ts.TypeLiteralNode).members.some((member) =>
-				isRecursiveType(member, parentTypeName, visited),
-			);
-		case ts.SyntaxKind.TypeReference: {
-			const typeRef = node as ts.TypeReferenceNode;
+			return isDirectlyRecursive(node.type, parentTypeName);
+
+		case ts.SyntaxKind.TypeReference:
 			if (
-				typeRef.typeName.kind === ts.SyntaxKind.Identifier &&
-				typeRef.typeName.text === parentTypeName
+				node.typeName.kind === ts.SyntaxKind.Identifier &&
+				node.typeName.text === parentTypeName
 			) {
 				return true;
 			}
-			if (typeRef.typeArguments) {
-				return typeRef.typeArguments.some((arg) =>
-					isRecursiveType(arg, parentTypeName, visited),
+			if (node.typeArguments) {
+				return node.typeArguments.some((arg) =>
+					isDirectlyRecursive(arg, parentTypeName),
 				);
 			}
 			return false;
-		}
+
 		default:
 			return false;
 	}
@@ -176,20 +120,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkForRecord(
 			node: AST.InterfaceDeclaration | AST.TypeLiteralNode,
-			members: ts.NodeArray<ts.TypeElement>,
+			members: ts.NodeArray<AST.TypeElement>,
 			sourceFile: AST.SourceFile,
 		) {
 			const member = getSingleIndexSignature(members);
-			if (!member) {
-				return;
-			}
-
-			if (!hasValidIndexSignatureParameter(member)) {
+			if (!member?.type) {
 				return;
 			}
 
 			const typeName = getTypeName(node);
-			if (isRecursiveType(member.type, typeName, new Set())) {
+			if (typeName && isDirectlyRecursive(member.type, typeName)) {
 				return;
 			}
 
@@ -202,44 +142,28 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				InterfaceDeclaration: (node, { options, sourceFile }) => {
-					if (options.style !== "record") {
-						return;
+					if (options.style === "record" && !node.heritageClauses?.length) {
+						checkForRecord(node, node.members, sourceFile);
 					}
-
-					if (node.heritageClauses?.length) {
-						return;
-					}
-
-					checkForRecord(node, node.members, sourceFile);
 				},
 				TypeLiteral: (node, { options, sourceFile }) => {
-					if (options.style !== "record") {
-						return;
+					if (options.style === "record") {
+						checkForRecord(node, node.members, sourceFile);
 					}
-
-					checkForRecord(node, node.members, sourceFile);
 				},
 				TypeReference: (node, { options, sourceFile, typeChecker }) => {
-					if (options.style !== "index-signature") {
-						return;
-					}
-
 					if (
-						node.typeName.kind !== ts.SyntaxKind.Identifier ||
-						node.typeName.text !== "Record" ||
-						!isGlobalDeclaration(node.typeName, typeChecker)
+						options.style === "index-signature" &&
+						node.typeName.kind === ts.SyntaxKind.Identifier &&
+						node.typeName.text === "Record" &&
+						isGlobalDeclaration(node.typeName, typeChecker) &&
+						node.typeArguments?.length === 2
 					) {
-						return;
+						context.report({
+							message: "preferIndexSignature",
+							range: getTSNodeRange(node, sourceFile),
+						});
 					}
-
-					if (node.typeArguments?.length !== 2) {
-						return;
-					}
-
-					context.report({
-						message: "preferIndexSignature",
-						range: getTSNodeRange(node, sourceFile),
-					});
 				},
 			},
 		};
