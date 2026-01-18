@@ -88,6 +88,7 @@ import evals from "./rules/evals.ts";
 import evolvingVariableTypes from "./rules/evolvingVariableTypes.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
 import explicitAnys from "./rules/explicitAnys.ts";
+import exponentiationOperators from "./rules/exponentiationOperators.ts";
 import exportMutables from "./rules/exportMutables.ts";
 import exportUniqueNames from "./rules/exportUniqueNames.ts";
 import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
@@ -102,8 +103,11 @@ import functionDeclarationStyles from "./rules/functionDeclarationStyles.ts";
 import functionNameMatches from "./rules/functionNameMatches.ts";
 import functionNewCalls from "./rules/functionNewCalls.ts";
 import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
+import getterReturns from "./rules/getterReturns.ts";
+import getterSetterPairedTypes from "./rules/getterSetterPairedTypes.ts";
 import globalAssignments from "./rules/globalAssignments.ts";
 import globalObjectCalls from "./rules/globalObjectCalls.ts";
+import globalThisAliases from "./rules/globalThisAliases.ts";
 import impliedEvals from "./rules/impliedEvals.ts";
 import importEmptyBlocks from "./rules/importEmptyBlocks.ts";
 import importTypeSideEffects from "./rules/importTypeSideEffects.ts";
@@ -240,6 +244,7 @@ export const ts = createPlugin({
 		evals,
 		evolvingVariableTypes,
 		exceptionAssignments,
+		exponentiationOperators,
 		explicitAnys,
 		exportMutables,
 		exportUniqueNames,
@@ -255,8 +260,11 @@ export const ts = createPlugin({
 		functionNameMatches,
 		functionNewCalls,
 		generatorFunctionYields,
+		getterReturns,
+		getterSetterPairedTypes,
 		globalAssignments,
 		globalObjectCalls,
+		globalThisAliases,
 		impliedEvals,
 		importEmptyBlocks,
 		importTypeSideEffects,
