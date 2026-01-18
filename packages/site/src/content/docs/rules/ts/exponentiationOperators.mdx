@@ -1,0 +1,75 @@
+---
+description: "Prefers the ** operator over Math.pow()."
+title: "exponentiationOperators"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="exponentiationOperators" />
+
+The exponentiation operator `**` was introduced in ES2016 as a more readable alternative to `Math.pow()`.
+This rule suggests using `**` instead of `Math.pow()` for exponentiation operations.
+
+Benefits of using `**` include:
+
+- A more concise and readable syntax
+- It works with BigInt values, unlike `Math.pow()`
+- Consistency with other mathematical operators
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const result = Math.pow(2, 8);
+```
+
+```ts
+const squared = Math.pow(x, 2);
+```
+
+```ts
+const cubed = Math.pow(base, exponent);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const result = 2 ** 8;
+```
+
+```ts
+const squared = x ** 2;
+```
+
+```ts
+const cubed = base ** exponent;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support environments that don't have the exponentiation operator (pre-ES2016), you may disable this rule.
+However, most modern JavaScript environments support `**`, and transpilers can convert it for older targets.
+
+Some projects also prefer to use `Math.pow()` for consistency with older codebases or `Math`-oriented areas of code.
+
+## Further Reading
+
+- [MDN: Exponentiation (\*\*)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Exponentiation)
+- [MDN: Math.pow()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/pow)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="exponentiationOperators" />
