@@ -10,7 +10,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="exportFromImports" />
 
-When re-exporting from a module, it's unnecessary to import and then export.
+When re-exporting from a module without otherwise using the imported value, it's unnecessary to import and then export.
 It can be done in a single `export...from` declaration, which is more concise and makes the re-export intent clearer.
 
 ## Examples
@@ -107,7 +107,7 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you need to use the imported value in your module before re-exporting it, or if you prefer the explicit import/export pattern for clarity in your codebase, you may disable this rule.
+If you prefer the explicit import/export pattern for clarity in your codebase, this rule may not be for you.
 
 ## Further Reading
 

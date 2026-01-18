@@ -23,6 +23,8 @@ function getImportInfo(
 		return undefined;
 	}
 
+	// TODO: Use a util like getStaticValue
+	// https://github.com/flint-fyi/flint/issues/1298
 	const moduleSpecifier = ts.isStringLiteral(node.moduleSpecifier)
 		? node.moduleSpecifier.text
 		: node.moduleSpecifier.getText(sourceFile);
@@ -54,41 +56,6 @@ function getImportInfo(
 	}
 
 	return info;
-}
-
-function isDefaultExportOfImport(
-	exportDecl: AST.ExportAssignment,
-	defaultImportName: string,
-): boolean {
-	if (!exportDecl.expression) {
-		return false;
-	}
-
-	if (ts.isIdentifier(exportDecl.expression)) {
-		return exportDecl.expression.text === defaultImportName;
-	}
-
-	return false;
-}
-
-function isReExportedAsNamed(
-	exportDecl: AST.ExportDeclaration,
-	localName: string,
-): boolean {
-	if (!exportDecl.exportClause || !ts.isNamedExports(exportDecl.exportClause)) {
-		return false;
-	}
-
-	for (const element of exportDecl.exportClause.elements) {
-		const exportedLocalName = element.propertyName
-			? element.propertyName.text
-			: element.name.text;
-		if (exportedLocalName === localName) {
-			return true;
-		}
-	}
-
-	return false;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -136,42 +103,46 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const namedExports: AST.ExportDeclaration[] = [];
 
 					for (const statement of node.statements) {
-						if (ts.isImportDeclaration(statement)) {
-							const info = getImportInfo(statement, sourceFile);
-							if (info) {
-								if (info.defaultImport) {
-									imports.set(info.defaultImport, info);
+						switch (statement.kind) {
+							case ts.SyntaxKind.ExportAssignment:
+								if (!statement.isExportEquals) {
+									exportAssignments.push(statement);
 								}
-								for (const [localName] of info.namedImports) {
-									imports.set(localName, info);
+								break;
+
+							case ts.SyntaxKind.ExportDeclaration:
+								if (!statement.moduleSpecifier) {
+									namedExports.push(statement);
 								}
-								if (info.namespaceImport) {
-									imports.set(info.namespaceImport, info);
+								break;
+
+							case ts.SyntaxKind.ImportDeclaration: {
+								const info = getImportInfo(statement, sourceFile);
+								if (info) {
+									if (info.defaultImport) {
+										imports.set(info.defaultImport, info);
+									}
+									for (const [localName] of info.namedImports) {
+										imports.set(localName, info);
+									}
+									if (info.namespaceImport) {
+										imports.set(info.namespaceImport, info);
+									}
 								}
+								break;
 							}
-						}
-
-						if (ts.isExportAssignment(statement) && !statement.isExportEquals) {
-							exportAssignments.push(statement);
-						}
-
-						if (
-							ts.isExportDeclaration(statement) &&
-							!statement.moduleSpecifier
-						) {
-							namedExports.push(statement);
 						}
 					}
 
-					for (const exportDecl of namedExports) {
+					for (const exportDeclaration of namedExports) {
 						if (
-							!exportDecl.exportClause ||
-							!ts.isNamedExports(exportDecl.exportClause)
+							!exportDeclaration.exportClause ||
+							!ts.isNamedExports(exportDeclaration.exportClause)
 						) {
 							continue;
 						}
 
-						for (const element of exportDecl.exportClause.elements) {
+						for (const element of exportDeclaration.exportClause.elements) {
 							const localName = element.propertyName
 								? element.propertyName.text
 								: element.name.text;
