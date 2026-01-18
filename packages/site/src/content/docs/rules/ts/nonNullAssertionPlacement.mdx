@@ -1,0 +1,97 @@
+---
+description: "Reports confusing placement of non-null assertions next to comparison or assignment operators."
+title: "nonNullAssertionPlacement"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="nonNullAssertionPlacement" />
+
+When a non-null assertion (`!`) appears immediately before an assignment (`=`) or comparison operator (`==`, `===`, `in`, `instanceof`), it can be visually confused with a different operator.
+For example, `a! == b` looks similar to `a !== b`, and `a! = b` looks similar to `a != b`.
+
+This visual ambiguity can make code harder to understand and may cause readers to misinterpret the intended logic.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const value: string | null;
+
+value! == "test";
+```
+
+```ts
+declare let value: string | null;
+
+value! = "new value";
+```
+
+```ts
+declare const key: string | null;
+declare const object: Record<string, number>;
+
+key! in object;
+```
+
+```ts
+declare const value: object | null;
+declare class MyClass {}
+
+value! instanceof MyClass;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const value: string | null;
+
+value! == "test";
+```
+
+```ts
+declare const value: string | null;
+
+value !== "test";
+```
+
+```ts
+declare const key: string | null;
+declare const object: Record<string, number>;
+
+key! in object;
+```
+
+```ts
+declare const value: object | null;
+declare class MyClass {}
+
+value! instanceof MyClass;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your team is familiar with non-null assertions and the visual similarity does not cause confusion in your codebase, you may choose to disable this rule.
+Projects with established conventions around non-null assertion placement may also opt out.
+
+## Further Reading
+
+- [MDN: Expressions and operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_operators)
+- [TypeScript: Non-null assertion operator](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#non-null-assertion-operator-postfix-)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="nonNullAssertionPlacement" />
