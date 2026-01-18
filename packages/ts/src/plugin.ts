@@ -127,6 +127,7 @@ import moduleSpecifierLists from "./rules/moduleSpecifierLists.ts";
 import multilineAmbiguities from "./rules/multilineAmbiguities.ts";
 import namedDefaultExports from "./rules/namedDefaultExports.ts";
 import namespaceDeclarations from "./rules/namespaceDeclarations.ts";
+import namespaceKeywords from "./rules/namespaceKeywords.ts";
 import negativeZeroComparisons from "./rules/negativeZeroComparisons.ts";
 import newExpressions from "./rules/newExpressions.ts";
 import newNativeNonConstructors from "./rules/newNativeNonConstructors.ts";
@@ -291,6 +292,7 @@ export const ts = createPlugin({
 		multilineAmbiguities,
 		namedDefaultExports,
 		namespaceDeclarations,
+		namespaceKeywords,
 		negativeZeroComparisons,
 		newExpressions,
 		newNativeNonConstructors,

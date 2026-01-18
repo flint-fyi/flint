@@ -12936,7 +12936,8 @@
 		"flint": {
 			"name": "namespaceKeywords",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
