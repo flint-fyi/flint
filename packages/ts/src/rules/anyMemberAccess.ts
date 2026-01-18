@@ -1,9 +1,12 @@
+import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST, Checker } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
@@ -92,7 +95,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkMemberExpression(
 			node: AST.ElementAccessExpression | AST.PropertyAccessExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		) {
 			if (reportedChains.has(node) || isInHeritageClause(node)) {
@@ -126,7 +129,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkComputedKey(
 			node: AST.ElementAccessExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		) {
 			const keyNode = node.argumentExpression;

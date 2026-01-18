@@ -1,14 +1,16 @@
-import type * as ts from "typescript";
+import {
+	type AST,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 interface EscapeInfo {
+	fixed: string;
 	index: number;
 	length: number;
 	original: string;
-	fixed: string;
 }
 
 function findLowercaseEscapeSequence(text: string): EscapeInfo | undefined {
@@ -20,7 +22,7 @@ function findLowercaseEscapeSequence(text: string): EscapeInfo | undefined {
 	];
 
 	for (const pattern of patterns) {
-		let match: RegExpExecArray | null;
+		let match: null | RegExpExecArray;
 		while ((match = pattern.exec(text)) !== null) {
 			const hexPart = match[1];
 			if (hexPart && hexPart !== hexPart.toUpperCase()) {
@@ -48,7 +50,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		useUppercase: {
-			primary: "Use uppercase characters for escape sequence '{{ original }}'.",
+			primary:
+				"Prefer uppercase characters for escape sequence '{{ original }}'.",
 			secondary: [
 				"Uppercase hexadecimal characters in escape sequences are more readable and distinguishable from identifiers.",
 			],
@@ -63,7 +66,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				| AST.TemplateHead
 				| AST.TemplateMiddle
 				| AST.TemplateTail,
-			sourceFile: ts.SourceFile,
+			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const text = node.getText(sourceFile);
 			const escapeInfo = findLowercaseEscapeSequence(text);
@@ -78,37 +81,30 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					fixed: escapeInfo.fixed,
 					original: escapeInfo.original,
 				},
+				fix: {
+					range: {
+						begin: nodeStart + escapeInfo.index,
+						end: nodeStart + escapeInfo.index + escapeInfo.length,
+					},
+					text: escapeInfo.fixed,
+				},
 				message: "useUppercase",
 				range: {
 					begin: nodeStart + escapeInfo.index,
 					end: nodeStart + escapeInfo.index + escapeInfo.length,
 				},
-				suggestions: [
-					{
-						id: "replaceWithUppercase",
-						range: {
-							begin: nodeStart + escapeInfo.index,
-							end: nodeStart + escapeInfo.index + escapeInfo.length,
-						},
-						text: escapeInfo.fixed,
-					},
-				],
 			});
 		}
 
 		return {
 			visitors: {
-				NoSubstitutionTemplateLiteral: (node, { sourceFile }) => {
-					checkNode(node, sourceFile);
-				},
-				StringLiteral: (node, { sourceFile }) => {
-					checkNode(node, sourceFile);
-				},
-				TemplateExpression: (node, { sourceFile }) => {
-					checkNode(node.head, sourceFile);
+				NoSubstitutionTemplateLiteral: checkNode,
+				StringLiteral: checkNode,
+				TemplateExpression: (node, services) => {
+					checkNode(node.head, services);
 
 					for (const span of node.templateSpans) {
-						checkNode(span.literal, sourceFile);
+						checkNode(span.literal, services);
 					}
 				},
 			},

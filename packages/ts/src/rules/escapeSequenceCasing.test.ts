@@ -4,101 +4,108 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `const foo = '\\xa9';`,
-			snapshot: `const foo = '\\xa9';
+			code: `
+'\\xa9';
+`,
+			output: `
+'\\XA9';
+`,
+			snapshot: `
+'\\xa9';
+ ~~~~
+ Prefer uppercase characters for escape sequence '\\xa9'.
+`,
+		},
+		{
+			code: `
+'\\ud834';
+`,
+			output: `
+'\\UD834';
+`,
+			snapshot: `
+'\\ud834';
+ ~~~~~~
+ Prefer uppercase characters for escape sequence '\\ud834'.
+`,
+		},
+		{
+			code: `
+'\\u{1d306}';
+`,
+			output: `
+'\\U{1D306}';
+`,
+			snapshot: `
+'\\u{1d306}';
+ ~~~~~~~~~
+ Prefer uppercase characters for escape sequence '\\u{1d306}'.
+`,
+		},
+		{
+			code: `
+'\\ca';
+`,
+			output: `
+'\\CA';
+`,
+			snapshot: `
+'\\ca';
+ ~~~
+ Prefer uppercase characters for escape sequence '\\ca'.
+`,
+		},
+		{
+			code: `
+"\\xa9";
+`,
+			output: `
+"\\XA9";
+`,
+			snapshot: `
+"\\xa9";
+ ~~~~
+ Prefer uppercase characters for escape sequence '\\xa9'.
+`,
+		},
+		{
+			code: `
+\`\\xa9\`;
+`,
+			output: `
+\`\\XA9\`;
+`,
+			snapshot: `
+\`\\xa9\`;
+ ~~~~
+ Prefer uppercase characters for escape sequence '\\xa9'.
+`,
+		},
+		{
+			code: `
+const x = 5;
+\`value: \${x} \\xa9\`;
+`,
+			output: `
+const x = 5;
+\`value: \${x} \\xa9\`;
+`,
+			snapshot: `
+const x = 5;
+\`value: \${x} \\xa9\`;
              ~~~~
-             Use uppercase characters for escape sequence '\\xa9'.`,
-			suggestions: [
-				{
-					id: "replaceWithUppercase",
-					updated: `const foo = '\\XA9';`,
-				},
-			],
-		},
-		{
-			code: `const foo = '\\ud834';`,
-			snapshot: `const foo = '\\ud834';
-             ~~~~~~
-             Use uppercase characters for escape sequence '\\ud834'.`,
-			suggestions: [
-				{
-					id: "replaceWithUppercase",
-					updated: `const foo = '\\UD834';`,
-				},
-			],
-		},
-		{
-			code: `const foo = '\\u{1d306}';`,
-			snapshot: `const foo = '\\u{1d306}';
-             ~~~~~~~~~
-             Use uppercase characters for escape sequence '\\u{1d306}'.`,
-			suggestions: [
-				{
-					id: "replaceWithUppercase",
-					updated: `const foo = '\\U{1D306}';`,
-				},
-			],
-		},
-		{
-			code: `const foo = '\\ca';`,
-			snapshot: `const foo = '\\ca';
-             ~~~
-             Use uppercase characters for escape sequence '\\ca'.`,
-			suggestions: [
-				{
-					id: "replaceWithUppercase",
-					updated: `const foo = '\\CA';`,
-				},
-			],
-		},
-		{
-			code: `const foo = "\\xa9";`,
-			snapshot: `const foo = "\\xa9";
-             ~~~~
-             Use uppercase characters for escape sequence '\\xa9'.`,
-			suggestions: [
-				{
-					id: "replaceWithUppercase",
-					updated: `const foo = "\\XA9";`,
-				},
-			],
-		},
-		{
-			code: `const foo = \`\\xa9\`;`,
-			snapshot: `const foo = \`\\xa9\`;
-             ~~~~
-             Use uppercase characters for escape sequence '\\xa9'.`,
-			suggestions: [
-				{
-					id: "replaceWithUppercase",
-					updated: `const foo = \`\\XA9\`;`,
-				},
-			],
-		},
-		{
-			code: `const x = 5;
-const foo = \`value: \${x} \\xa9\`;`,
-			snapshot: `const x = 5;
-const foo = \`value: \${x} \\xa9\`;
-                         ~~~~
-                         Use uppercase characters for escape sequence '\\xa9'.`,
-			suggestions: [
-				{
-					id: "replaceWithUppercase",
-					updated: `const x = 5;
-const foo = \`value: \${x} \\XA9\`;`,
-				},
-			],
+             Prefer uppercase characters for escape sequence '\\xa9'.
+`,
 		},
 	],
 	valid: [
-		`const foo = '\\xA9';`,
-		`const foo = '\\uD834';`,
-		`const foo = '\\u{1D306}';`,
-		`const foo = '\\cA';`,
-		`const foo = "\\xA9";`,
-		`const foo = \`\\xA9\`;`,
-		`const foo = 'hello';`,
-		`const foo = '\\n\\t\\r';`,
+		`'\\xA9';`,
+		`'\\uD834';`,
+		`'\\u{1D306}';`,
+		`'\\cA';`,
+		`"\\xA9";`,
+		`\`\\xA9\`;`,
+		`'hello';`,
+		`'\\n\\t\\r';`,
 	],
 });

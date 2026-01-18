@@ -1,0 +1,93 @@
+---
+description: "Reports empty object type literals and empty interfaces that are often used incorrectly."
+title: "emptyObjectTypes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="emptyObjectTypes" />
+
+The `{}` ("empty object") type in TypeScript is a common source of confusion.
+It actually represents any _non-nullish value_, not an empty object.
+This includes primitives like strings and numbers.
+
+Similarly, an empty interface `interface Foo {}` is equivalent to `{}`.
+
+If you want to represent any object, use `object`.
+If you want any value, use `unknown`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+type Empty = {};
+```
+
+```ts
+interface Empty {}
+```
+
+```ts
+let value: {};
+```
+
+```ts
+function foo(param: {}) {}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+type HasMembers = { foo: string };
+```
+
+```ts
+interface HasMembers {
+	foo: string;
+}
+```
+
+```ts
+let value: object;
+```
+
+```ts
+let value: unknown;
+```
+
+```ts
+// Empty object in intersection types is allowed (useful for NonNullable)
+type NonNullable<T> = T & {};
+```
+
+```ts
+// Empty interface extending multiple interfaces is allowed
+interface Combined extends Foo, Bar {}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your code commonly needs to represent the "any non-nullish value" type, this rule may not be for you.
+Projects that extensively use type operations such as conditional types and mapped types may benefit from disabling this rule.
+
+## Further Reading
+
+- [TypeScript ESLint: Revamping the `ban-types` rule](https://typescript-eslint.io/blog/revamping-the-ban-types-rule)
+- [Total TypeScript: The Empty Object Type in TypeScript](https://www.totaltypescript.com/the-empty-object-type-in-typescript)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="emptyObjectTypes" />
