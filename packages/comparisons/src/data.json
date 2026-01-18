@@ -13400,7 +13400,7 @@
 		"flint": {
 			"name": "nullComparisons",
 			"plugin": "ts",
-			"status": "skipped"
+			"status": "implemented"
 		},
 		"oxlint": [
 			{

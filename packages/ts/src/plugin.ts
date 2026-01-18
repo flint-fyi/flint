@@ -134,6 +134,7 @@ import nonNullAssertedOptionalChains from "./rules/nonNullAssertedOptionalChains
 import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
 import nonNullAssertions from "./rules/nonNullAssertions.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
+import nullComparisons from "./rules/nullComparisons.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
 import objectCalls from "./rules/objectCalls.ts";
 import objectHasOwns from "./rules/objectHasOwns.ts";
@@ -301,6 +302,7 @@ export const ts = createPlugin({
 		nonNullAssertionPlacement,
 		nonNullAssertions,
 		nonOctalDecimalEscapes,
+		nullComparisons,
 		numericLiteralParsing,
 		objectCalls,
 		objectHasOwns,
