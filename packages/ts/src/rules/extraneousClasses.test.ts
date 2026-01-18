@@ -10,7 +10,7 @@ class Empty {}
 			snapshot: `
 class Empty {}
       ~~~~~
-      Unexpected empty class.
+      This empty class does nothing and can be removed.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ export class Empty {}
 			snapshot: `
 export class Empty {}
              ~~~~~
-             Unexpected empty class.
+             This empty class does nothing and can be removed.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ const Empty = class {};
 			snapshot: `
 const Empty = class {};
               ~~~~~~~~
-              Unexpected empty class.
+              This empty class does nothing and can be removed.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ const Named = class MyClass {};
 			snapshot: `
 const Named = class MyClass {};
                     ~~~~~~~
-                    Unexpected empty class.
+                    This empty class does nothing and can be removed.
 `,
 		},
 		{
@@ -54,7 +54,7 @@ class ConstructorOnly {
 			snapshot: `
 class ConstructorOnly {
       ~~~~~~~~~~~~~~~
-      Unexpected class with only a constructor.
+      This class contains only a constructor and can be removed or replaced with a standalone function.
     constructor() {
         console.log("init");
     }
@@ -72,7 +72,7 @@ class ConstructorWithParams {
 			snapshot: `
 class ConstructorWithParams {
       ~~~~~~~~~~~~~~~~~~~~~
-      Unexpected class with only a constructor.
+      This class contains only a constructor and can be removed or replaced with a standalone function.
     constructor(value: number) {
         console.log(value);
     }
@@ -88,7 +88,7 @@ const Example = class {
 			snapshot: `
 const Example = class {
                 ~~~~~~~
-                Unexpected class with only a constructor.
+                This class contains only a constructor and can be removed or replaced with a standalone function.
     constructor() {}
     ~~~~~~~~~~~~~~~~
 };
@@ -104,7 +104,7 @@ class StaticOnly {
 			snapshot: `
 class StaticOnly {
       ~~~~~~~~~~
-      Unexpected class with only static properties.
+      This class contains only static properties and can be removed or replaced with variables.
     static value = 42;
 }
 `,
@@ -121,7 +121,7 @@ class StaticMethods {
 			snapshot: `
 class StaticMethods {
       ~~~~~~~~~~~~~
-      Unexpected class with only static properties.
+      This class contains only static properties and can be removed or replaced with variables.
     static getValue() {
         return 42;
     }
@@ -141,7 +141,7 @@ class StaticAccessors {
 			snapshot: `
 class StaticAccessors {
       ~~~~~~~~~~~~~~~
-      Unexpected class with only static properties.
+      This class contains only static properties and can be removed or replaced with variables.
     static get value() {
         return 42;
     }
@@ -159,7 +159,7 @@ class StaticAndConstructor {
 			snapshot: `
 class StaticAndConstructor {
       ~~~~~~~~~~~~~~~~~~~~
-      Unexpected class with only static properties.
+      This class contains only static properties and can be removed or replaced with variables.
     static value = 42;
     constructor() {}
 }
@@ -176,7 +176,7 @@ class StaticBlock {
 			snapshot: `
 class StaticBlock {
       ~~~~~~~~~~~
-      Unexpected empty class.
+      This empty class does nothing and can be removed.
     static {
         console.log("init");
     }
@@ -193,7 +193,7 @@ class StaticPrivate {
 			snapshot: `
 class StaticPrivate {
       ~~~~~~~~~~~~~
-      Unexpected class with only static properties.
+      This class contains only static properties and can be removed or replaced with variables.
     static #value = 42;
     static #method() {}
 }
@@ -211,7 +211,7 @@ export class Utility {
 			snapshot: `
 export class Utility {
              ~~~~~~~
-             Unexpected class with only static properties.
+             This class contains only static properties and can be removed or replaced with variables.
     static readonly VERSION = "1.0.0";
     static format(value: string) {
         return value.trim();
@@ -227,7 +227,7 @@ class Empty {}
 			snapshot: `
 class Empty {}
       ~~~~~
-      Unexpected empty class.
+      This empty class does nothing and can be removed.
 `,
 		},
 		{
@@ -238,7 +238,7 @@ class Empty {}
 			snapshot: `
 class Empty {}
       ~~~~~
-      Unexpected empty class.
+      This empty class does nothing and can be removed.
 `,
 		},
 		{
@@ -249,7 +249,7 @@ class Empty {}
 			snapshot: `
 class Empty {}
       ~~~~~
-      Unexpected empty class.
+      This empty class does nothing and can be removed.
 `,
 		},
 		{
@@ -262,7 +262,7 @@ class ConstructorOnly {
 			snapshot: `
 class ConstructorOnly {
       ~~~~~~~~~~~~~~~
-      Unexpected class with only a constructor.
+      This class contains only a constructor and can be removed or replaced with a standalone function.
     constructor() {}
 }
 `,
@@ -277,7 +277,7 @@ class ConstructorOnly {
 			snapshot: `
 class ConstructorOnly {
       ~~~~~~~~~~~~~~~
-      Unexpected class with only a constructor.
+      This class contains only a constructor and can be removed or replaced with a standalone function.
     constructor() {}
 }
 `,
@@ -292,7 +292,7 @@ class StaticOnly {
 			snapshot: `
 class StaticOnly {
       ~~~~~~~~~~
-      Unexpected class with only static properties.
+      This class contains only static properties and can be removed or replaced with variables.
     static value = 42;
 }
 `,
@@ -307,7 +307,7 @@ class StaticOnly {
 			snapshot: `
 class StaticOnly {
       ~~~~~~~~~~
-      Unexpected class with only static properties.
+      This class contains only static properties and can be removed or replaced with variables.
     static value = 42;
 }
 `,
@@ -321,7 +321,7 @@ class Empty {}
 @decorator
 class Empty {}
       ~~~~~
-      Unexpected empty class.
+      This empty class does nothing and can be removed.
 `,
 		},
 		{
@@ -335,7 +335,7 @@ class ConstructorOnly {
 @decorator
 class ConstructorOnly {
       ~~~~~~~~~~~~~~~
-      Unexpected class with only a constructor.
+      This class contains only a constructor and can be removed or replaced with a standalone function.
     constructor() {}
 }
 `,
@@ -351,7 +351,7 @@ class StaticOnly {
 @decorator
 class StaticOnly {
       ~~~~~~~~~~
-      Unexpected class with only static properties.
+      This class contains only static properties and can be removed or replaced with variables.
     static value = 42;
 }
 `,
@@ -365,7 +365,7 @@ class WithSemicolon {
 			snapshot: `
 class WithSemicolon {
       ~~~~~~~~~~~~~
-      Unexpected empty class.
+      This empty class does nothing and can be removed.
     ;
 }
 `,

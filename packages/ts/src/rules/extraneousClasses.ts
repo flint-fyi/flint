@@ -1,4 +1,8 @@
-import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	type AST,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts from "typescript";
 import { z } from "zod";
 
@@ -60,6 +64,33 @@ function isRealMember(
 	);
 }
 
+const options = {
+	allowConstructorOnly: z
+		.boolean()
+		.default(false)
+		.describe(
+			"Whether to allow extraneous classes that contain only a constructor.",
+		),
+	allowEmpty: z
+		.boolean()
+		.default(false)
+		.describe(
+			"Whether to allow extraneous classes that have no body (are empty).",
+		),
+	allowStaticOnly: z
+		.boolean()
+		.default(false)
+		.describe(
+			"Whether to allow extraneous classes that only contain static members.",
+		),
+	allowWithDecorator: z
+		.boolean()
+		.default(false)
+		.describe("Whether to allow extraneous classes that include a decorator."),
+};
+
+type Options = z.infer<z.ZodObject<typeof options>>;
+
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports classes used as static namespaces.",
@@ -68,7 +99,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		empty: {
-			primary: "Unexpected empty class.",
+			primary: "This empty class does nothing and can be removed.",
 			secondary: [
 				"Empty classes serve no purpose and add unnecessary noise to the codebase.",
 			],
@@ -78,7 +109,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			],
 		},
 		onlyConstructor: {
-			primary: "Unexpected class with only a constructor.",
+			primary:
+				"This class contains only a constructor and can be removed or replaced with a standalone function.",
 			secondary: [
 				"Classes with only a constructor and no fields can be replaced with a standalone function.",
 			],
@@ -88,7 +120,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			],
 		},
 		onlyStatic: {
-			primary: "Unexpected class with only static properties.",
+			primary:
+				"This class contains only static properties and can be removed or replaced with variables.",
 			secondary: [
 				"Static-only classes can be replaced with plain objects or module exports.",
 				"Using a class as a namespace adds unnecessary complexity.",
@@ -99,46 +132,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			],
 		},
 	},
-	options: {
-		allowConstructorOnly: z
-			.boolean()
-			.default(false)
-			.describe(
-				"Whether to allow extraneous classes that contain only a constructor.",
-			),
-		allowEmpty: z
-			.boolean()
-			.default(false)
-			.describe(
-				"Whether to allow extraneous classes that have no body (are empty).",
-			),
-		allowStaticOnly: z
-			.boolean()
-			.default(false)
-			.describe(
-				"Whether to allow extraneous classes that only contain static members.",
-			),
-		allowWithDecorator: z
-			.boolean()
-			.default(false)
-			.describe(
-				"Whether to allow extraneous classes that include a decorator.",
-			),
-	},
+	options,
 	setup(context) {
 		function checkClass(
 			node: AST.ClassDeclaration | AST.ClassExpression,
 			{
 				options,
 				sourceFile,
-			}: {
-				options: {
-					allowConstructorOnly: boolean;
-					allowEmpty: boolean;
-					allowStaticOnly: boolean;
-					allowWithDecorator: boolean;
-				};
-				sourceFile: AST.SourceFile;
+			}: TypeScriptFileServices & {
+				options: Options;
 			},
 		) {
 			if (hasSuperClass(node)) {
@@ -149,15 +151,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const members = node.members;
-			const realMembers = members.filter(isRealMember);
+			const realMembers = node.members.filter(isRealMember);
 
 			const reportRange = node.name
 				? { begin: node.name.getStart(sourceFile), end: node.name.getEnd() }
 				: { begin: node.getStart(sourceFile), end: node.getEnd() };
 
 			if (realMembers.length === 0) {
-				for (const member of members) {
+				for (const member of node.members) {
 					if (
 						ts.isConstructorDeclaration(member) &&
 						hasParameterProperties(member)
@@ -166,35 +167,28 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 				}
 
-				const hasConstructor = members.some(ts.isConstructorDeclaration);
+				const hasConstructor = node.members.some(ts.isConstructorDeclaration);
 
 				if (hasConstructor) {
-					if (options.allowConstructorOnly) {
-						return;
+					if (!options.allowConstructorOnly) {
+						context.report({
+							message: "onlyConstructor",
+							range: reportRange,
+						});
 					}
-
+				} else if (!options.allowEmpty) {
 					context.report({
-						message: "onlyConstructor",
+						message: "empty",
 						range: reportRange,
 					});
-					return;
 				}
-
-				if (options.allowEmpty) {
-					return;
-				}
-
-				context.report({
-					message: "empty",
-					range: reportRange,
-				});
 				return;
 			}
 
 			let onlyStatic = true;
 			let onlyConstructor = true;
 
-			for (const member of members) {
+			for (const member of node.members) {
 				if (ts.isConstructorDeclaration(member)) {
 					if (hasParameterProperties(member)) {
 						onlyConstructor = false;
@@ -213,26 +207,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (onlyConstructor) {
-				if (options.allowConstructorOnly) {
-					return;
+				if (!options.allowConstructorOnly) {
+					context.report({
+						message: "onlyConstructor",
+						range: reportRange,
+					});
 				}
-
-				context.report({
-					message: "onlyConstructor",
-					range: reportRange,
-				});
 				return;
 			}
 
 			if (onlyStatic) {
-				if (options.allowStaticOnly) {
-					return;
+				if (!options.allowStaticOnly) {
+					context.report({
+						message: "onlyStatic",
+						range: reportRange,
+					});
 				}
-
-				context.report({
-					message: "onlyStatic",
-					range: reportRange,
-				});
 			}
 		}
 
