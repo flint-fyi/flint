@@ -1,6 +1,6 @@
 ---
 "@flint.fyi/cli": patch
-"@flint.fyi/plugin-spelling": patch
+"@flint.fyi/spelling": patch
 ---
 
 Feature: spelling plugin typo suggestions

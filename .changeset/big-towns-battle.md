@@ -2,7 +2,7 @@
 "@flint.fyi/core": minor
 "@flint.fyi/performance": patch
 "@flint.fyi/spelling": patch
-"@flint.fyi/plugin-browser": patch
+"@flint.fyi/browser": patch
 "@flint.fyi/plugin-flint": patch
 "@flint.fyi/node": patch
 "@flint.fyi/jsx": patch
