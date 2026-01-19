@@ -102,17 +102,13 @@ function shouldRerunForFileChange(
 		return true;
 	}
 
-	for (const filePath of lintResults.filesResults.keys()) {
-		if (filePath === changedFilePath) {
-			return true;
-		}
+	if (lintResults.filesResults.has(changedFilePath)) {
+		return true;
 	}
 
 	for (const fileResult of lintResults.filesResults.values()) {
-		for (const dependency of fileResult.dependencies) {
-			if (dependency === changedFilePath) {
-				return true;
-			}
+		if (fileResult.dependencies.has(changedFilePath)) {
+			return true;
 		}
 	}
 
