@@ -14,7 +14,7 @@ export interface Config {
 	definition: ConfigDefinition;
 
 	/**
-	 * @private
+	 * @internal
 	 */
 	isFlintConfig: true;
 }
