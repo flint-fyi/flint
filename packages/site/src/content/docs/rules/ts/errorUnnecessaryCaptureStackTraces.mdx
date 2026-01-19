@@ -1,0 +1,141 @@
+---
+description: "Reports unnecessary Error.captureStackTrace() calls in Error subclass constructors."
+title: "errorUnnecessaryCaptureStackTraces"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="errorUnnecessaryCaptureStackTraces" />
+
+Calling [`Error.captureStackTrace()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/captureStackTrace) inside the constructor of a built-in `Error` subclass is unnecessary, since the `Error` constructor calls it automatically.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class MyError extends Error {
+	constructor() {
+		Error.captureStackTrace(this, MyError);
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class MyError extends Error {
+	constructor() {
+		super();
+		this.name = "MyError";
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Optional Chaining
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class MyError extends Error {
+	constructor() {
+		Error.captureStackTrace?.(this, MyError);
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class MyError extends Error {
+	constructor() {
+		super();
+		this.name = "MyError";
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Using `this.constructor`
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class MyError extends Error {
+	constructor() {
+		Error.captureStackTrace(this, this.constructor);
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class MyError extends Error {
+	constructor() {
+		super();
+		this.name = "MyError";
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Using `new.target`
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class MyError extends Error {
+	constructor() {
+		Error.captureStackTrace(this, new.target);
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class MyError extends Error {
+	constructor() {
+		super();
+		this.name = "MyError";
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you're extending a custom error class that changes the default behavior to not capture the stack trace, you may need to disable this rule for that specific class.
+
+## Further Reading
+
+- [MDN: Error.captureStackTrace()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/captureStackTrace)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="errorUnnecessaryCaptureStackTraces" />

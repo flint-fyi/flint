@@ -1,5 +1,6 @@
-import { typescriptLanguage } from "../language.ts";
-import { getModifyingReferences } from "../utils/getModifyingReferences.ts";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { getModifyingReferences } from "@flint.fyi/typescript-language";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

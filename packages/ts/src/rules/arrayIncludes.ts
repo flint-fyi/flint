@@ -1,8 +1,12 @@
+import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST, Checker } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
 function hasIncludesMethod(node: AST.Expression, typeChecker: Checker) {
@@ -84,7 +88,7 @@ function isZero(node: AST.Expression) {
 	return ts.isNumericLiteral(node) && node.text === "0";
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using `.indexOf()` comparisons that can be replaced with `.includes()`.",

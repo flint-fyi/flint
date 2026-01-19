@@ -1,7 +1,7 @@
 {
 	"name": "@flint.fyi/json",
-	"version": "0.15.2",
-	"description": "[Experimental] JSON language plugin for Flint.",
+	"version": "0.16.0",
+	"description": "[Experimental] JSON plugin for Flint.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -29,6 +29,7 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/json-language": "workspace:^",
 		"typescript": "^5.9.0 || ^6.0.0",
 		"zod": "^4.2.1"
 	},

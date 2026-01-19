@@ -1,8 +1,10 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -189,7 +191,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			typeChecker: ts.TypeChecker,
 		) {
 			const signature = typeChecker.getResolvedSignature(
-				// @ts-expect-error -- https://github.com/flint-fyi/flint/issues/1404
 				callLike as ts.CallLikeExpression,
 			);
 			const symbol = typeChecker.getSymbolAtLocation(node);
@@ -221,7 +222,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkNode(
 			node: AST.AnyNode,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
 			if (isDeclarationSite(node) || isInsideImport(node)) {
@@ -275,7 +276,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		// https://github.com/flint-fyi/flint/issues/1298
 		function checkComputedPropertyAccess(
 			node: AST.ElementAccessExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
 			const argumentExpression = node.argumentExpression;
@@ -310,7 +311,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkBindingElement(
 			node: AST.BindingElement,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
 			const bindingPattern = node.parent;
@@ -372,7 +373,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkHeritageClause(
 			node: AST.HeritageClause,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
 			for (const type of node.types) {
@@ -390,7 +391,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkSuperCall(
 			node: AST.SuperExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
 			const callExpr = node.parent;

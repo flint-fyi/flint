@@ -1,7 +1,6 @@
+import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -31,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			delimiterStart: number,
 			after: string,
 			interpretation: string,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const { line: expressionEndLine } =
 				sourceFile.getLineAndCharacterOfPosition(expressionEnd);
@@ -117,7 +116,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 function findChildToken(
 	node: AST.CallExpression | AST.ElementAccessExpression,
 	kind: ts.SyntaxKind,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	for (const child of node.getChildren(sourceFile)) {
 		if (child.kind === kind) {
@@ -127,7 +126,10 @@ function findChildToken(
 	return undefined;
 }
 
-function getExpressionEnd(node: AST.CallExpression, sourceFile: ts.SourceFile) {
+function getExpressionEnd(
+	node: AST.CallExpression,
+	sourceFile: AST.SourceFile,
+) {
 	const greaterThan =
 		node.typeArguments &&
 		findChildToken(node, ts.SyntaxKind.GreaterThanToken, sourceFile);
@@ -135,7 +137,7 @@ function getExpressionEnd(node: AST.CallExpression, sourceFile: ts.SourceFile) {
 	return greaterThan?.getEnd() ?? node.expression.getEnd();
 }
 
-function getLineEndPosition(lineNumber: number, sourceFile: ts.SourceFile) {
+function getLineEndPosition(lineNumber: number, sourceFile: AST.SourceFile) {
 	const lineStarts = sourceFile.getLineStarts();
 	const nextLineStart = lineStarts[lineNumber + 1];
 	return nextLineStart === undefined ? sourceFile.getEnd() : nextLineStart - 1;

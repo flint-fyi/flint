@@ -1,4 +1,8 @@
-import { typescriptLanguage } from "../language.ts";
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -22,11 +26,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				DebuggerStatement: (node) => {
-					const range = {
-						begin: node.getStart(),
-						end: node.getEnd(),
-					};
+				DebuggerStatement: (node, { sourceFile }) => {
+					const range = getTSNodeRange(node, sourceFile);
 
 					context.report({
 						message: "noDebugger",

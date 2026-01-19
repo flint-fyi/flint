@@ -1,13 +1,14 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
 
 function haveSameArrayExpression(
 	expr1: AST.Expression,
 	expr2: AST.Expression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	return expr1.getText(sourceFile) === expr2.getText(sourceFile);
 }

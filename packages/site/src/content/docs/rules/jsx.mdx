@@ -21,7 +21,7 @@ Flint's JSX plugin provides the following presets:
 If you are just getting started with linting, Flint recommends using the [`logical`](#logical) and [`stylistic`](#stylistic) presets:
 
 ```ts title="flint.config.ts"
-import { jsx } from "@flint.fyi/plugin-jsx";
+import { jsx } from "@flint.fyi/jsx";
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -37,7 +37,7 @@ export default defineConfig({
 If you are experienced with both JavaScript/TypeScript and linting, Flint recommends additionally using the [`logicalStrict`](#logicalstrict) preset:
 
 ```ts title="flint.config.ts"
-import { jsx } from "@flint.fyi/plugin-jsx";
+import { jsx } from "@flint.fyi/jsx";
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -59,7 +59,7 @@ Coming soon: more expansive documentation on choosing and combining plugins & pr
 Rules that find bugs and enforce best practices and catch common pitfalls around JSX for most-to-all JavaScript and TypeScript files.
 
 ```ts title="flint.config.ts"
-import { jsx } from "@flint.fyi/plugin-jsx";
+import { jsx } from "@flint.fyi/jsx";
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -78,7 +78,7 @@ Additional logical rules that enforce best practices which are not always straig
 These rules are recommended for projects where a majority of developers are experienced with both JavaScript/TypeScript and using a linter.
 
 ```ts title="flint.config.ts"
-import { jsx } from "@flint.fyi/plugin-jsx";
+import { jsx } from "@flint.fyi/jsx";
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -98,7 +98,7 @@ This preset's rules are a superset of those in [`logical`](#logical).
 Rules that enforce consistent JSX styling and best JSX stylistic practices for most-to-all JavaScript and TypeScript files.
 
 ```ts title="flint.config.ts"
-import { jsx } from "@flint.fyi/plugin-jsx";
+import { jsx } from "@flint.fyi/jsx";
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({

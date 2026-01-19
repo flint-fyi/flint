@@ -22,7 +22,7 @@ export async function* createDetailedReport(
 			chalk.hex(ColorCodes.ruleBracket)("["),
 			chalk
 				.hex(ColorCodes.reportAboutId)
-				.bold(`\u001b]8;;${url}\u0007${report.about.id}\u001b]8;;\u0007`),
+				.bold(`\u001B]8;;${url}\u0007${report.about.id}\u001B]8;;\u0007`),
 			chalk.hex(ColorCodes.ruleBracket)("]"),
 			" ",
 			formatReport(report.data, report.message.primary),
@@ -71,5 +71,5 @@ export async function* createDetailedReport(
 	yield `${indenter} `;
 	yield chalk
 		.hex(ColorCodes.ruleUrl)
-		.italic(`→ \u001b]8;;${url}\u0007${urlFriendly}\u001b]8;;\u0007`);
+		.italic(`→ \u001B]8;;${url}\u0007${urlFriendly}\u001B]8;;\u0007`);
 }

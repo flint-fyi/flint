@@ -1,0 +1,92 @@
+---
+description: "Reports getter and setter accessors for the same property that are not adjacent."
+title: "accessorPairGroups"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="accessorPairGroups" />
+
+Grouping getters and setters together improves code readability.
+When a property has both a getter and a setter, defining them adjacent to each other makes it easier to understand how the property is accessed and modified.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Example {
+	get value() {
+		return this._value;
+	}
+	otherMethod() {}
+	set value(newValue: number) {
+		this._value = newValue;
+	}
+}
+```
+
+```ts
+const object = {
+	get value() {
+		return this._value;
+	},
+	other: 42,
+	set value(newValue: number) {
+		this._value = newValue;
+	},
+};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Example {
+	get value() {
+		return this._value;
+	}
+	set value(newValue: number) {
+		this._value = newValue;
+	}
+	otherMethod() {}
+}
+```
+
+```ts
+const object = {
+	get value() {
+		return this._value;
+	},
+	set value(newValue: number) {
+		this._value = newValue;
+	},
+	other: 42,
+};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer a different organization style for class members, such as grouping by visibility or functionality, you might choose to disable this rule.
+
+## Further Reading
+
+- [MDN: Property accessors](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors)
+- [MDN: getter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get)
+- [MDN: setter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set)
+- [MDN: Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="accessorPairGroups" />

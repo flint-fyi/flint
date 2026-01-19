@@ -1,0 +1,50 @@
+{
+	"name": "@flint.fyi/node",
+	"version": "0.2.0",
+	"description": "[Experimental] A Flint plugin for Node.js code.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/node"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "JoshuaKGoldberg",
+		"email": "npm@joshuakgoldberg.com"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": {
+			"@flint.fyi/source": "./src/index.ts",
+			"default": "./lib/index.js"
+		}
+	},
+	"files": [
+		"lib/",
+		"!lib/**/*.map"
+	],
+	"scripts": {
+		"test": "vitest --typecheck --project node"
+	},
+	"dependencies": {
+		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
+		"@flint.fyi/utils": "workspace:^",
+		"typescript": "^5.9.3"
+	},
+	"devDependencies": {
+		"@flint.fyi/rule-tester": "workspace:^",
+		"tsdown": "0.19.0-beta.2",
+		"vitest": "4.0.15"
+	},
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"exports": {
+			".": "./lib/index.js"
+		}
+	}
+}

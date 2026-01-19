@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/yaml",
-	"version": "0.14.3",
+	"version": "0.15.0",
 	"description": "[Experimental] YAML language plugin for Flint.",
 	"repository": {
 		"type": "git",
@@ -29,8 +29,7 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"@flint.fyi/utils": "workspace:^",
-		"unist-util-visit": "^5.0.0",
+		"@flint.fyi/yaml-language": "workspace:^",
 		"yaml-unist-parser": "^3.0.0"
 	},
 	"devDependencies": {

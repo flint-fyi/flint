@@ -1,5 +1,9 @@
-import { type AST, getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import { type SourceFile, SyntaxKind } from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -21,16 +25,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		const messagesMap = new Map<string, Set<string>>();
+		const messagePlaceholders = new Map<string, Set<string>>();
 
 		function checkMessageInCreateRule(ruleCreatorNode: AST.CallExpression) {
 			const args = ruleCreatorNode.arguments[1];
-			if (!args || args.kind !== SyntaxKind.ObjectLiteralExpression) {
+			if (args?.kind !== SyntaxKind.ObjectLiteralExpression) {
 				return;
 			}
 
-			const properties = args.properties;
-			const messagesProperty = properties.find((prop) => {
+			const messagesProperty = args.properties.find((prop) => {
 				return (
 					prop.kind === SyntaxKind.PropertyAssignment &&
 					prop.name.kind === SyntaxKind.Identifier &&
@@ -39,17 +42,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			});
 
 			if (
-				!messagesProperty ||
-				messagesProperty.kind !== SyntaxKind.PropertyAssignment ||
+				messagesProperty?.kind !== SyntaxKind.PropertyAssignment ||
 				messagesProperty.initializer.kind !== SyntaxKind.ObjectLiteralExpression
 			) {
 				return;
 			}
 
-			const messageProperties = messagesProperty.initializer.properties;
 			const placeholderPattern = /\{\{\s*(\w+)\s*\}\}/g;
 
-			for (const prop of messageProperties) {
+			for (const prop of messagesProperty.initializer.properties) {
 				if (
 					prop.kind !== SyntaxKind.PropertyAssignment ||
 					prop.name.kind !== SyntaxKind.Identifier ||
@@ -58,11 +59,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				const messageId = prop.name.text;
 				const placeholders = new Set<string>();
-				const messageIdProperties = prop.initializer.properties;
 
-				messageIdProperties.forEach((messageProp) => {
+				prop.initializer.properties.forEach((messageProp) => {
 					if (
 						messageProp.kind === SyntaxKind.PropertyAssignment &&
 						messageProp.name.kind === SyntaxKind.Identifier
@@ -97,16 +96,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 				});
 
-				messagesMap.set(messageId, placeholders);
+				messagePlaceholders.set(prop.name.text, placeholders);
 			}
 		}
 
-		function checkReportInCreateRule(
+		function populateMessageInCreateRule(
 			contextNode: AST.CallExpression,
-			sourceFile: SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const args = contextNode.arguments[0];
-			if (!args || args.kind !== SyntaxKind.ObjectLiteralExpression) {
+			if (args?.kind !== SyntaxKind.ObjectLiteralExpression) {
 				return;
 			}
 
@@ -118,17 +117,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					prop.name.text === "message"
 				);
 			});
-			if (!messageProperty) {
-				return;
-			}
+
 			if (
-				messageProperty.kind !== SyntaxKind.PropertyAssignment ||
+				messageProperty?.kind !== SyntaxKind.PropertyAssignment ||
 				messageProperty.initializer.kind !== SyntaxKind.StringLiteral
 			) {
 				return;
 			}
 
-			const requiredPlaceholders = messagesMap.get(
+			const requiredPlaceholders = messagePlaceholders.get(
 				messageProperty.initializer.text,
 			);
 			if (!requiredPlaceholders || requiredPlaceholders.size === 0) {
@@ -203,6 +200,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const typeName = type.getSymbol()?.getName();
 
 					// TODO: Maybe need to check it more strictly
+					// https://github.com/flint-fyi/flint/issues/152
 					if (
 						typeName === "RuleCreator" &&
 						propertyAccess.name.text === "createRule"
@@ -212,11 +210,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					// TODO: Maybe need to check it more strictly
+					// https://github.com/flint-fyi/flint/issues/152
 					if (
 						typeName === "RuleContext" &&
 						propertyAccess.name.text === "report"
 					) {
-						checkReportInCreateRule(node, sourceFile);
+						populateMessageInCreateRule(node, sourceFile);
 						return;
 					}
 				},
