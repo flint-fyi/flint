@@ -219,6 +219,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 				},
+				Program() {
+					messagePlaceholders.clear();
+				},
 			},
 		};
 	},
