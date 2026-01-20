@@ -1,4 +1,8 @@
-import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -9,11 +13,7 @@ function containsOptionalChain(node: AST.Expression): boolean {
 
 	while (true) {
 		if (ts.isParenthesizedExpression(current)) {
-			if (foundNonOptionalAccess) {
-				return false;
-			}
-
-			return isOptionalChainRoot(current.expression);
+			return !foundNonOptionalAccess && isOptionalChainRoot(current.expression);
 		}
 
 		if (ts.isNonNullExpression(current)) {
@@ -44,14 +44,12 @@ function isNonNullExpressionContinued(node: AST.NonNullExpression): boolean {
 		return false;
 	}
 
-	const { parent } = node;
-
 	if (
-		ts.isPropertyAccessExpression(parent) ||
-		ts.isElementAccessExpression(parent) ||
-		ts.isCallExpression(parent)
+		ts.isPropertyAccessExpression(node.parent) ||
+		ts.isElementAccessExpression(node.parent) ||
+		ts.isCallExpression(node.parent)
 	) {
-		return parent.expression === node;
+		return node.parent.expression === node;
 	}
 
 	return false;
@@ -60,12 +58,10 @@ function isNonNullExpressionContinued(node: AST.NonNullExpression): boolean {
 function isOptionalChainRoot(node: ts.Node): boolean {
 	let current: ts.Node = node;
 	while (true) {
-		if (ts.isParenthesizedExpression(current)) {
-			current = current.expression;
-			continue;
-		}
-
-		if (ts.isNonNullExpression(current)) {
+		if (
+			ts.isNonNullExpression(current) ||
+			ts.isParenthesizedExpression(current)
+		) {
 			current = current.expression;
 			continue;
 		}
@@ -103,18 +99,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				NonNullExpression: (node, { sourceFile }) => {
-					if (!containsOptionalChain(node.expression)) {
+					if (
+						!containsOptionalChain(node.expression) ||
+						isNonNullExpressionContinued(node)
+					) {
 						return;
 					}
 
-					if (isNonNullExpressionContinued(node)) {
-						return;
-					}
-
-					const range = {
-						begin: node.getStart(sourceFile),
-						end: node.getEnd(),
-					};
+					const range = getTSNodeRange(node, sourceFile);
 
 					context.report({
 						message: "nonNullOptionalChain",
