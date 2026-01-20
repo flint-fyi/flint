@@ -1,4 +1,4 @@
-import type { FileDiskData, LanguageFileDefinition } from "@flint.fyi/core";
+import type { FileAboutData, LanguageFileDefinition } from "@flint.fyi/core";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { gfmFromMarkdown } from "mdast-util-gfm";
 import { gfm } from "micromark-extension-gfm";
@@ -11,7 +11,7 @@ import type { MarkdownNodesByName } from "./nodes.ts";
 // However, there aren't currently JS bindings, so
 // it'll be a while before we can replace it with a native parser.
 // See the discussion in https://github.com/flint-fyi/flint/issues/1043.
-export function createMarkdownFile(data: FileDiskData) {
+export function createMarkdownFile(data: FileAboutData) {
 	const root = fromMarkdown(data.sourceText, {
 		extensions: [gfm()],
 		mdastExtensions: [gfmFromMarkdown()],

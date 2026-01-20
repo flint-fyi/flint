@@ -1,5 +1,23 @@
 # @flint.fyi/spelling
 
+## 0.2.0
+
+### Minor Changes
+
+- 3353692: feat: split languages into dedicated packages
+
+### Patch Changes
+
+- 6a5e553: feat(core): add RuleCreator class
+- ca74d5d: fix(spelling): [cspell] fill in secondary and suggestions
+- 017f3e3: Feature: spelling plugin typo suggestions
+- Updated dependencies [6a5e553]
+- Updated dependencies [2fb9715]
+- Updated dependencies [3353692]
+- Updated dependencies [3561386]
+  - @flint.fyi/core@0.19.0
+  - @flint.fyi/text-language@0.15.0
+
 ## 0.1.4
 
 ### Patch Changes

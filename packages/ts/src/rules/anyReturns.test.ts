@@ -1,6 +1,15 @@
 import rule from "./anyReturns.ts";
 import { ruleTester } from "./ruleTester.ts";
 
+const tsconfigNoImplicitThisFalse = {
+	"tsconfig.json": `{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"noImplicitThis": false
+	}
+}`,
+};
+
 ruleTester.describe(rule, {
 	invalid: [
 		{
@@ -244,17 +253,18 @@ function bar() {
   return () => this;
 }
       `,
+			files: tsconfigNoImplicitThisFalse,
 			snapshot: `
 function foo() {
   return this;
   ~~~~~~~~~~~~
-  Unsafe return of a value of type \`any\`.
+  Unsafe return of a value of type \`any\`. \`this\` is typed as \`any\`.
 }
 
 function bar() {
   return () => this;
                ~~~~
-               Unsafe return of a value of type \`any\`.
+               Unsafe return of a value of type \`any\`. \`this\` is typed as \`any\`.
 }
       `,
 		},
@@ -634,7 +644,8 @@ function foo(): Set<number> {
       }
     `,
 		"const foo: (() => void) | undefined = () => 1;",
-		`
+		{
+			code: `
       class Foo {
         public foo(): this {
           return this;
@@ -645,5 +656,7 @@ function foo(): Set<number> {
         }
       }
     `,
+			files: tsconfigNoImplicitThisFalse,
+		},
 	],
 });
