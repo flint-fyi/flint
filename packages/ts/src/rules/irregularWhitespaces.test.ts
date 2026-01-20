@@ -159,17 +159,6 @@ const value\u2029= 1;
 		},
 		{
 			code: `
-const value = "\u00a0";
-`,
-			options: { skipStrings: false },
-			snapshot: `
-const value = "\u00a0";
-               ~
-               Irregular whitespace characters can cause unexpected behavior and display issues.
-`,
-		},
-		{
-			code: `
 const value = \`\u00a0\`;
 `,
 			snapshot: `
@@ -234,14 +223,6 @@ const value = 1;
 		`const value = /regular expression/;`,
 		`// Comment with regular spaces`,
 		`/* Block comment */`,
-		{
-			code: `const value = "\u00a0";`,
-			options: { skipStrings: true },
-		},
-		{
-			code: `const value = '\u00a0';`,
-			options: { skipStrings: true },
-		},
 		{
 			code: `const value = \`\u00a0\`;`,
 			options: { skipTemplates: true },

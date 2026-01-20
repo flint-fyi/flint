@@ -67,10 +67,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			.describe(
 				"Whether to allow irregular whitespace in regular expression literals.",
 			),
-		skipStrings: z
-			.boolean()
-			.default(true)
-			.describe("Whether to allow irregular whitespace in string literals."),
 		skipTemplates: z
 			.boolean()
 			.default(false)
@@ -90,10 +86,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const excludedRanges: { end: number; start: number }[] = [];
 
 					function collectExcludedRanges(astNode: ts.Node) {
-						if (
-							options.skipStrings &&
-							astNode.kind === ts.SyntaxKind.StringLiteral
-						) {
+						if (astNode.kind === ts.SyntaxKind.StringLiteral) {
 							excludedRanges.push({
 								end: astNode.getEnd(),
 								start: astNode.getStart(sourceFile),
