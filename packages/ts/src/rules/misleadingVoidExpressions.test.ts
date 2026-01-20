@@ -240,119 +240,185 @@ function run() {
 			],
 		},
 		{
-			code: `const x = console?.log('foo');`,
-			snapshot:
-				"const x = console?.log('foo');\n" +
-				"          ~~~~~~~~~~~~~~~~~~~\n" +
-				"          Void expressions should not be used as values.",
+			code: `
+declare function log(message: string): void;
+const x = log?.('foo');
+`,
+			snapshot: `
+declare function log(message: string): void;
+const x = log?.('foo');
+          ~~~~~~~~~~~~
+          Void expressions should not be used as values.
+`,
 			suggestions: [
 				{
 					id: "wrapWithVoid",
-					updated: `const x = void console?.log('foo');`,
-				},
-			],
-		},
-		{
-			code: `console.error(console.log('foo'));`,
-			snapshot:
-				"console.error(console.log('foo'));\n" +
-				"              ~~~~~~~~~~~~~~~~~~\n" +
-				"              Void expressions should not be used as values.",
-			suggestions: [
-				{
-					id: "wrapWithVoid",
-					updated: `console.error(void console.log('foo'));`,
-				},
-			],
-		},
-		{
-			code: `[console.log('foo')];`,
-			snapshot:
-				"[console.log('foo')];\n" +
-				" ~~~~~~~~~~~~~~~~~~\n" +
-				" Void expressions should not be used as values.",
-			suggestions: [
-				{
-					id: "wrapWithVoid",
-					updated: `[void console.log('foo')];`,
-				},
-			],
-		},
-		{
-			code: `({ x: console.log('foo') });`,
-			snapshot:
-				"({ x: console.log('foo') });\n" +
-				"      ~~~~~~~~~~~~~~~~~~\n" +
-				"      Void expressions should not be used as values.",
-			suggestions: [
-				{
-					id: "wrapWithVoid",
-					updated: `({ x: void console.log('foo') });`,
-				},
-			],
-		},
-		{
-			code: `console.log('foo') ? true : false;`,
-			snapshot:
-				"console.log('foo') ? true : false;\n" +
-				"~~~~~~~~~~~~~~~~~~\n" +
-				"Void expressions should not be used as values.",
-			suggestions: [
-				{
-					id: "wrapWithVoid",
-					updated: `void console.log('foo') ? true : false;`,
-				},
-			],
-		},
-		{
-			code: `(console.log('foo') && true) || false;`,
-			snapshot:
-				"(console.log('foo') && true) || false;\n" +
-				" ~~~~~~~~~~~~~~~~~~\n" +
-				" Void expressions should not be used as values.",
-			suggestions: [
-				{
-					id: "wrapWithVoid",
-					updated: `(void console.log('foo') && true) || false;`,
-				},
-			],
-		},
-		{
-			code: `!console.log('foo');`,
-			snapshot:
-				"!console.log('foo');\n" +
-				" ~~~~~~~~~~~~~~~~~~\n" +
-				" Void expressions should not be used as values.",
-			suggestions: [
-				{
-					id: "wrapWithVoid",
-					updated: `!void console.log('foo');`,
-				},
-			],
-		},
-		{
-			code: `!!console.log('foo');`,
-			snapshot:
-				"!!console.log('foo');\n" +
-				"  ~~~~~~~~~~~~~~~~~~\n" +
-				"  Void expressions should not be used as values.",
-			suggestions: [
-				{
-					id: "wrapWithVoid",
-					updated: `!!void console.log('foo');`,
+					updated: `
+declare function log(message: string): void;
+const x = void log?.('foo');
+`,
 				},
 			],
 		},
 		{
 			code: `
+declare function log(message: string): void;
+log(log('foo'));
+`,
+			snapshot: `
+declare function log(message: string): void;
+log(log('foo'));
+    ~~~~~~~~~~
+    Void expressions should not be used as values.
+`,
+			suggestions: [
+				{
+					id: "wrapWithVoid",
+					updated: `
+declare function log(message: string): void;
+log(void log('foo'));
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare function log(message: string): void;
+[log('foo')];
+`,
+			snapshot: `
+declare function log(message: string): void;
+[log('foo')];
+ ~~~~~~~~~~
+ Void expressions should not be used as values.
+`,
+			suggestions: [
+				{
+					id: "wrapWithVoid",
+					updated: `
+declare function log(message: string): void;
+[void log('foo')];
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare function log(message: string): void;
+({ x: log('foo') });
+`,
+			snapshot: `
+declare function log(message: string): void;
+({ x: log('foo') });
+      ~~~~~~~~~~
+      Void expressions should not be used as values.
+`,
+			suggestions: [
+				{
+					id: "wrapWithVoid",
+					updated: `
+declare function log(message: string): void;
+({ x: void log('foo') });
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare function log(message: string): void;
+log('foo') ? true : false;
+`,
+			snapshot: `
+declare function log(message: string): void;
+log('foo') ? true : false;
+~~~~~~~~~~
+Void expressions should not be used as values.
+`,
+			suggestions: [
+				{
+					id: "wrapWithVoid",
+					updated: `
+declare function log(message: string): void;
+void log('foo') ? true : false;
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare function log(message: string): void;
+(log('foo') && true) || false;
+`,
+			snapshot: `
+declare function log(message: string): void;
+(log('foo') && true) || false;
+ ~~~~~~~~~~
+ Void expressions should not be used as values.
+`,
+			suggestions: [
+				{
+					id: "wrapWithVoid",
+					updated: `
+declare function log(message: string): void;
+(void log('foo') && true) || false;
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare function log(message: string): void;
+!log('foo');
+`,
+			snapshot: `
+declare function log(message: string): void;
+!log('foo');
+ ~~~~~~~~~~
+ Void expressions should not be used as values.
+`,
+			suggestions: [
+				{
+					id: "wrapWithVoid",
+					updated: `
+declare function log(message: string): void;
+!void log('foo');
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare function log(message: string): void;
+!!log('foo');
+`,
+			snapshot: `
+declare function log(message: string): void;
+!!log('foo');
+  ~~~~~~~~~~
+  Void expressions should not be used as values.
+`,
+			suggestions: [
+				{
+					id: "wrapWithVoid",
+					updated: `
+declare function log(message: string): void;
+!!void log('foo');
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare function log(message: string): void;
 function example(input: string) {
-	return (input, console.log(input));
+	return (input, log(input));
 }
 `,
 			snapshot: `
+declare function log(message: string): void;
 function example(input: string) {
-	return (input, console.log(input));
-	               ~~~~~~~~~~~~~~~~~~
+	return (input, log(input));
+	               ~~~~~~~~~~
 	               Returning a void expression from a function is misleading.
 }
 `,
@@ -360,87 +426,110 @@ function example(input: string) {
 				{
 					id: "removeReturn",
 					updated: `
+declare function log(message: string): void;
 function example(input: string) {
-	(input, console.log(input));
+	(input, log(input));
 }
 `,
 				},
 				{
 					id: "wrapWithVoid",
 					updated: `
+declare function log(message: string): void;
 function example(input: string) {
-	return (input, void console.log(input));
+	return (input, void log(input));
 }
 `,
 				},
 			],
 		},
 		{
-			code: `foo => (foo ? console.log(true) : console.log(false));`,
-			snapshot:
-				"foo => (foo ? console.log(true) : console.log(false));\n" +
-				"              ~~~~~~~~~~~~~~~~~\n" +
-				"              Returning a void expression from an arrow function shorthand is misleading.\n" +
-				"                                  ~~~~~~~~~~~~~~~~~~\n" +
-				"                                  Returning a void expression from an arrow function shorthand is misleading.",
+			code: `
+declare function log(message: string): void;
+foo => (foo ? log(true) : log(false));
+`,
+			snapshot: `
+declare function log(message: string): void;
+foo => (foo ? log(true) : log(false));
+              ~~~~~~~~~
+              Returning a void expression from an arrow function shorthand is misleading.
+                          ~~~~~~~~~~
+                          Returning a void expression from an arrow function shorthand is misleading.
+`,
 			suggestions: [
 				{
 					id: "addBraces",
-					updated: `foo => { (foo ? console.log(true) : console.log(false)); };`,
+					updated: `
+declare function log(message: string): void;
+foo => { (foo ? log(true) : log(false)); };
+`,
 				},
 				{
 					id: "wrapWithVoid",
-					updated: `foo => (foo ? void console.log(true) : console.log(false));`,
+					updated: `
+declare function log(message: string): void;
+foo => (foo ? void log(true) : log(false));
+`,
 				},
 				{
 					id: "addBraces",
-					updated: `foo => { (foo ? console.log(true) : console.log(false)); };`,
+					updated: `
+declare function log(message: string): void;
+foo => { (foo ? log(true) : log(false)); };
+`,
 				},
 				{
 					id: "wrapWithVoid",
-					updated: `foo => (foo ? console.log(true) : void console.log(false));`,
+					updated: `
+declare function log(message: string): void;
+foo => (foo ? log(true) : void log(false));
+`,
 				},
 			],
 		},
 		{
 			code: `
+declare function log(message: string): void;
 const f = function () {
 	if (cond) {
-		return console.error('foo');
+		return log('foo');
 	}
-	console.log('bar');
+	log('bar');
 };
 `,
 			snapshot: `
+declare function log(message: string): void;
 const f = function () {
 	if (cond) {
-		return console.error('foo');
-		       ~~~~~~~~~~~~~~~~~~~~
+		return log('foo');
+		       ~~~~~~~~~~
 		       Returning a void expression from a function is misleading.
 	}
-	console.log('bar');
+	log('bar');
 };
 `,
 			suggestions: [
 				{
 					id: "moveBeforeReturn",
 					updated: `
+declare function log(message: string): void;
 const f = function () {
 	if (cond) {
-		console.error('foo'); return;
+		log('foo'); return;
 	}
-	console.log('bar');
+	log('bar');
 };
 `,
 				},
 				{
 					id: "wrapWithVoid",
 					updated: `
+declare function log(message: string): void;
 const f = function () {
 	if (cond) {
-		return void console.error('foo');
+		return void log('foo');
 	}
-	console.log('bar');
+	log('bar');
 };
 `,
 				},
@@ -448,35 +537,39 @@ const f = function () {
 		},
 		{
 			code: `
+declare function log(message: string): void;
 const f = function () {
-	if (cond) return console.error('foo');
-	console.log('bar');
+	if (cond) return log('foo');
+	log('bar');
 };
 `,
 			snapshot: `
+declare function log(message: string): void;
 const f = function () {
-	if (cond) return console.error('foo');
-	                 ~~~~~~~~~~~~~~~~~~~~
+	if (cond) return log('foo');
+	                 ~~~~~~~~~~
 	                 Returning a void expression from a function is misleading.
-	console.log('bar');
+	log('bar');
 };
 `,
 			suggestions: [
 				{
 					id: "moveBeforeReturn",
 					updated: `
+declare function log(message: string): void;
 const f = function () {
-	if (cond) console.error('foo'); return;
-	console.log('bar');
+	if (cond) log('foo'); return;
+	log('bar');
 };
 `,
 				},
 				{
 					id: "wrapWithVoid",
 					updated: `
+declare function log(message: string): void;
 const f = function () {
-	if (cond) return void console.error('foo');
-	console.log('bar');
+	if (cond) return void log('foo');
+	log('bar');
 };
 `,
 				},
@@ -484,16 +577,18 @@ const f = function () {
 		},
 		{
 			code: `
+declare function log(message: string): void;
 const f = function () {
 	let num = 1;
-	return num ? console.log('foo') : num;
+	return num ? log('foo') : num;
 };
 `,
 			snapshot: `
+declare function log(message: string): void;
 const f = function () {
 	let num = 1;
-	return num ? console.log('foo') : num;
-	             ~~~~~~~~~~~~~~~~~~
+	return num ? log('foo') : num;
+	             ~~~~~~~~~~
 	             Returning a void expression from a function is misleading.
 };
 `,
@@ -501,18 +596,20 @@ const f = function () {
 				{
 					id: "removeReturn",
 					updated: `
+declare function log(message: string): void;
 const f = function () {
 	let num = 1;
-	num ? console.log('foo') : num;
+	num ? log('foo') : num;
 };
 `,
 				},
 				{
 					id: "wrapWithVoid",
 					updated: `
+declare function log(message: string): void;
 const f = function () {
 	let num = 1;
-	return num ? void console.log('foo') : num;
+	return num ? void log('foo') : num;
 };
 `,
 				},
@@ -520,16 +617,18 @@ const f = function () {
 		},
 		{
 			code: `
+declare function log(message: string): void;
 const f = function () {
 	let undef = undefined;
-	return undef ? console.log('foo') : undef;
+	return undef ? log('foo') : undef;
 };
 `,
 			snapshot: `
+declare function log(message: string): void;
 const f = function () {
 	let undef = undefined;
-	return undef ? console.log('foo') : undef;
-	               ~~~~~~~~~~~~~~~~~~
+	return undef ? log('foo') : undef;
+	               ~~~~~~~~~~
 	               Returning a void expression from a function is misleading.
 };
 `,
@@ -537,18 +636,20 @@ const f = function () {
 				{
 					id: "removeReturn",
 					updated: `
+declare function log(message: string): void;
 const f = function () {
 	let undef = undefined;
-	undef ? console.log('foo') : undef;
+	undef ? log('foo') : undef;
 };
 `,
 				},
 				{
 					id: "wrapWithVoid",
 					updated: `
+declare function log(message: string): void;
 const f = function () {
 	let undef = undefined;
-	return undef ? void console.log('foo') : undef;
+	return undef ? void log('foo') : undef;
 };
 `,
 				},
@@ -556,16 +657,18 @@ const f = function () {
 		},
 		{
 			code: `
+declare function log(message: string): void;
 const f = function () {
 	let num = 1;
-	return num || console.log('foo');
+	return num || log('foo');
 };
 `,
 			snapshot: `
+declare function log(message: string): void;
 const f = function () {
 	let num = 1;
-	return num || console.log('foo');
-	              ~~~~~~~~~~~~~~~~~~
+	return num || log('foo');
+	              ~~~~~~~~~~
 	              Returning a void expression from a function is misleading.
 };
 `,
@@ -573,18 +676,20 @@ const f = function () {
 				{
 					id: "removeReturn",
 					updated: `
+declare function log(message: string): void;
 const f = function () {
 	let num = 1;
-	num || console.log('foo');
+	num || log('foo');
 };
 `,
 				},
 				{
 					id: "wrapWithVoid",
 					updated: `
+declare function log(message: string): void;
 const f = function () {
 	let num = 1;
-	return num || void console.log('foo');
+	return num || void log('foo');
 };
 `,
 				},
@@ -592,16 +697,18 @@ const f = function () {
 		},
 		{
 			code: `
+declare function log(message: string): void;
 const f = function () {
 	let bar = void 0;
-	return bar || console.log('foo');
+	return bar || log('foo');
 };
 `,
 			snapshot: `
+declare function log(message: string): void;
 const f = function () {
 	let bar = void 0;
-	return bar || console.log('foo');
-	              ~~~~~~~~~~~~~~~~~~
+	return bar || log('foo');
+	              ~~~~~~~~~~
 	              Returning a void expression from a function is misleading.
 };
 `,
@@ -609,18 +716,20 @@ const f = function () {
 				{
 					id: "removeReturn",
 					updated: `
+declare function log(message: string): void;
 const f = function () {
 	let bar = void 0;
-	bar || console.log('foo');
+	bar || log('foo');
 };
 `,
 				},
 				{
 					id: "wrapWithVoid",
 					updated: `
+declare function log(message: string): void;
 const f = function () {
 	let bar = void 0;
-	return bar || void console.log('foo');
+	return bar || void log('foo');
 };
 `,
 				},
@@ -628,56 +737,64 @@ const f = function () {
 		},
 		{
 			code: `
+declare function log(message: string): void;
 let num = 1;
-const foo = () => (num ? console.log('foo') : num);
+const foo = () => (num ? log('foo') : num);
 `,
 			snapshot: `
+declare function log(message: string): void;
 let num = 1;
-const foo = () => (num ? console.log('foo') : num);
-                         ~~~~~~~~~~~~~~~~~~
+const foo = () => (num ? log('foo') : num);
+                         ~~~~~~~~~~
                          Returning a void expression from an arrow function shorthand is misleading.
 `,
 			suggestions: [
 				{
 					id: "addBraces",
 					updated: `
+declare function log(message: string): void;
 let num = 1;
-const foo = () => { (num ? console.log('foo') : num); };
+const foo = () => { (num ? log('foo') : num); };
 `,
 				},
 				{
 					id: "wrapWithVoid",
 					updated: `
+declare function log(message: string): void;
 let num = 1;
-const foo = () => (num ? void console.log('foo') : num);
+const foo = () => (num ? void log('foo') : num);
 `,
 				},
 			],
 		},
 		{
 			code: `
+declare function log(message: string): void;
 let bar = void 0;
-const foo = () => (bar ? console.log('foo') : bar);
+const foo = () => (bar ? log('foo') : bar);
 `,
 			snapshot: `
+declare function log(message: string): void;
 let bar = void 0;
-const foo = () => (bar ? console.log('foo') : bar);
-                         ~~~~~~~~~~~~~~~~~~
+const foo = () => (bar ? log('foo') : bar);
+                         ~~~~~~~~~~
                          Returning a void expression from an arrow function shorthand is misleading.
 `,
 			suggestions: [
 				{
 					id: "addBraces",
 					updated: `
+declare function log(message: string): void;
 let bar = void 0;
-const foo = () => { (bar ? console.log('foo') : bar); };
+const foo = () => { (bar ? log('foo') : bar); };
 `,
 				},
 				{
 					id: "wrapWithVoid",
 					updated: `
+declare function log(message: string): void;
 let bar = void 0;
-const foo = () => (bar ? void console.log('foo') : bar);
+const foo = () => (bar ? void log('foo') : bar);
 `,
 				},
 			],
@@ -697,13 +814,15 @@ const foo = () => (bar ? void console.log('foo') : bar);
 		`() => Math.random();`,
 		`declare function log(message: string): void; log?.("hello");`,
 		`
+declare function log(message: string): void;
 function cool(input: string) {
-	return (console.log(input), input);
+	return (log(input), input);
 }
 `,
 		`
+declare function log(message: string): void;
 function cool(input: string) {
-	return (input, console.log(input), input);
+	return (input, log(input), input);
 }
 `,
 	],

@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/md",
-	"version": "0.14.3",
+	"version": "0.15.0",
 	"description": "[Experimental] Markdown plugin for Flint.",
 	"repository": {
 		"type": "git",
