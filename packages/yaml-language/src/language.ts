@@ -1,5 +1,4 @@
 import { createLanguage } from "@flint.fyi/core";
-import fsSync from "node:fs";
 import type * as yamlParser from "yaml-unist-parser";
 
 import { createYamlFile } from "./createYamlFile.ts";
@@ -17,13 +16,7 @@ export const yamlLanguage = createLanguage<YamlNodesByName, YamlFileServices>({
 	},
 	createFileFactory: () => {
 		return {
-			prepareFromDisk: (data) => {
-				const sourceText = fsSync.readFileSync(data.filePathAbsolute, "utf8");
-				const { languageFile, root } = createYamlFile({ ...data, sourceText });
-
-				return prepareYamlFile(languageFile, root, sourceText);
-			},
-			prepareFromVirtual: (data) => {
+			prepareFile: (data) => {
 				const { languageFile, root } = createYamlFile(data);
 
 				return prepareYamlFile(languageFile, root, data.sourceText);
