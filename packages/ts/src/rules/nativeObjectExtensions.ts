@@ -55,35 +55,27 @@ const nativeConstructors = new Set([
 function getPrototypeObject(
 	node: AST.ElementAccessExpression | AST.PropertyAccessExpression,
 ) {
-	if (!ts.isIdentifier(node.expression)) {
-		return undefined;
-	}
-
-	return node.expression;
+	return ts.isIdentifier(node.expression) && node.expression;
 }
 
 function isPrototypeAccess(
-	node: ts.Node,
+	node: AST.AnyNode,
 ): node is AST.ElementAccessExpression | AST.PropertyAccessExpression {
-	if (
-		!ts.isPropertyAccessExpression(node) &&
-		!ts.isElementAccessExpression(node)
-	) {
-		return false;
-	}
+	switch (node.kind) {
+		case ts.SyntaxKind.ElementAccessExpression:
+			// TODO: Use a util like getStaticValue
+			// https://github.com/flint-fyi/flint/issues/1298
+			return (
+				ts.isStringLiteral(node.argumentExpression) &&
+				node.argumentExpression.text === "prototype"
+			);
 
-	if (ts.isPropertyAccessExpression(node)) {
-		return node.name.text === "prototype";
-	}
+		case ts.SyntaxKind.PropertyAccessExpression:
+			return node.name.text === "prototype";
 
-	if (
-		ts.isElementAccessExpression(node) &&
-		ts.isStringLiteral(node.argumentExpression)
-	) {
-		return node.argumentExpression.text === "prototype";
+		default:
+			return false;
 	}
-
-	return false;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -109,7 +101,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function checkPrototypeExtension(
+		function checkNode(
 			node: AST.ElementAccessExpression | AST.PropertyAccessExpression,
 			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
@@ -123,67 +115,72 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const name = objectIdentifier.text;
-			if (!nativeConstructors.has(name)) {
+			if (
+				!nativeConstructors.has(name) ||
+				!isGlobalDeclarationOfName(objectIdentifier, name, typeChecker)
+			) {
 				return;
 			}
-
-			if (!isGlobalDeclarationOfName(objectIdentifier, name, typeChecker)) {
-				return;
-			}
-
-			const parent = node.parent;
 
 			// Case 1: Assignment to prototype property - Array.prototype.custom = ...
 			// or Element access assignment - Array.prototype["custom"] = ...
-			if (
-				(ts.isPropertyAccessExpression(parent) ||
-					ts.isElementAccessExpression(parent)) &&
-				parent.expression === node
-			) {
-				const grandparent = parent.parent;
-				if (
-					ts.isBinaryExpression(grandparent) &&
-					grandparent.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
-					grandparent.left === parent
-				) {
+			switch (node.parent.kind) {
+				// Case 2: Object.defineProperty(Array.prototype, ...)
+				// Case 3: Object.defineProperties(Array.prototype, ...)
+				case ts.SyntaxKind.CallExpression: {
+					if (node.parent.arguments[0] !== node) {
+						break;
+					}
+
+					const callee = node.parent.expression;
+					if (
+						!ts.isPropertyAccessExpression(callee) ||
+						!ts.isIdentifier(callee.expression) ||
+						callee.expression.text !== "Object" ||
+						(callee.name.text !== "defineProperty" &&
+							callee.name.text !== "defineProperties") ||
+						!isGlobalDeclarationOfName(callee.expression, "Object", typeChecker)
+					) {
+						break;
+					}
+
+					context.report({
+						data: { name },
+						message: "noExtendNative",
+						range: getTSNodeRange(node.parent, sourceFile),
+					});
+					break;
+				}
+
+				case ts.SyntaxKind.ElementAccessExpression:
+				case ts.SyntaxKind.PropertyAccessExpression: {
+					if (node.parent.expression !== node) {
+						break;
+					}
+
+					const grandparent = node.parent.parent;
+					if (
+						!ts.isBinaryExpression(grandparent) ||
+						grandparent.operatorToken.kind !== ts.SyntaxKind.EqualsToken ||
+						grandparent.left !== node.parent
+					) {
+						break;
+					}
+
 					context.report({
 						data: { name },
 						message: "noExtendNative",
 						range: getTSNodeRange(grandparent, sourceFile),
 					});
-					return;
-				}
-			}
-
-			// Case 2: Object.defineProperty(Array.prototype, ...)
-			// Case 3: Object.defineProperties(Array.prototype, ...)
-			if (ts.isCallExpression(parent) && parent.arguments[0] === node) {
-				const callee = parent.expression;
-				if (
-					ts.isPropertyAccessExpression(callee) &&
-					ts.isIdentifier(callee.expression) &&
-					callee.expression.text === "Object" &&
-					(callee.name.text === "defineProperty" ||
-						callee.name.text === "defineProperties") &&
-					isGlobalDeclarationOfName(callee.expression, "Object", typeChecker)
-				) {
-					context.report({
-						data: { name },
-						message: "noExtendNative",
-						range: getTSNodeRange(parent, sourceFile),
-					});
+					break;
 				}
 			}
 		}
 
 		return {
 			visitors: {
-				ElementAccessExpression: (node, services) => {
-					checkPrototypeExtension(node, services);
-				},
-				PropertyAccessExpression: (node, services) => {
-					checkPrototypeExtension(node, services);
-				},
+				ElementAccessExpression: checkNode,
+				PropertyAccessExpression: checkNode,
 			},
 		};
 	},
