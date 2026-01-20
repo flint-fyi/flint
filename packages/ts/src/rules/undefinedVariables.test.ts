@@ -5,12 +5,12 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-console.log(undefinedVar);
+undefinedVar;
 `,
 			snapshot: `
-console.log(undefinedVar);
-            ~~~~~~~~~~~~
-            Variable 'undefinedVar' is used but was never defined.
+undefinedVar;
+~~~~~~~~~~~~
+Variable 'undefinedVar' is used but was never defined.
 `,
 		},
 		{
@@ -67,15 +67,15 @@ const result = first + second;
 		},
 	],
 	valid: [
-		`const value = 5; console.log(value);`,
+		`const value = 5; value;`,
 		`function test(parameter: number) { return parameter; }`,
 		`let count = 0; count++;`,
-		`const obj = { prop: 1 }; console.log(obj.prop);`,
+		`const obj = { prop: 1 }; obj.prop;`,
 		`typeof undefinedVar === "undefined"`,
 		`const obj = {}; const { prop } = obj;`,
 		`function fn() { return 1; } fn();`,
 		`class MyClass {} const instance = new MyClass();`,
-		`import { value } from "module"; console.log(value);`,
-		`const array = [1, 2, 3]; array.forEach(item => console.log(item));`,
+		`import { value } from "module"; value;`,
+		`const array = [1, 2, 3]; array.forEach(item => item);`,
 	],
 });

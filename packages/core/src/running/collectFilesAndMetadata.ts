@@ -3,6 +3,7 @@ import { nullThrows } from "@flint.fyi/utils";
 import { readFromCache } from "../cache/readFromCache.ts";
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
+import type { LinterHost } from "../types/host.ts";
 import type { AnyRule } from "../types/rules.ts";
 import { collectLanguageMetadataByFilePath } from "./collectLanguageMetadataByFilePath.ts";
 import { collectRulesOptionsByFile } from "./collectRulesOptionsByFile.ts";
@@ -45,6 +46,7 @@ export interface CollectedFilesAndMetadata {
 // Also, what if we removed the concept of a virtual file...?
 export async function collectFilesAndMetadata(
 	configDefinition: ProcessedConfigDefinition,
+	host: LinterHost,
 	ignoreCache: boolean | undefined,
 ): Promise<CollectedFilesAndMetadata> {
 	// 1. Collect all file paths to lint and the 'use' rule configuration groups
@@ -63,6 +65,7 @@ export async function collectFilesAndMetadata(
 	const languageFileMetadataByFilePath = collectLanguageMetadataByFilePath(
 		cached,
 		rulesOptionsByFile,
+		host,
 	);
 
 	// 5. Join language metadata files into the corresponding options by file path

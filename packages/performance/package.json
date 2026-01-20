@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/performance",
-	"version": "0.1.2",
+	"version": "0.2.0",
 	"description": "[Experimental] A Flint plugin for performant code.",
 	"repository": {
 		"type": "git",

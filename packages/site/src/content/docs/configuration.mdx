@@ -12,12 +12,35 @@ Flint configs must default-export the result of calling the [`defineConfig`](#de
 ## `defineConfig`
 
 Defines a new configuration for linting.
-It takes in an object with one required property, `use`:
+It takes in an object with one required property, [`use`](#use):
 
 ```ts twoslash title="flint.config.ts"
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
+	use: [
+		{
+			files: ts.files.all,
+			rules: ts.presets.logical,
+		},
+	],
+});
+```
+
+### `ignore`
+
+A list of glob patterns to ignore from linting.
+This can be a `string`, any level deep array of `string`s, or an object containing [`exclude` and `include`](#exclude-and-include).
+
+`ignore` by default includes all patterns defined in a `.gitignore` file, if it exists.
+
+This `ignore` directive ignores all files under `src/legacy/`:
+
+```ts twoslash title="flint.config.ts"
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	ignore: ["src/legacy/**/*"],
 	use: [
 		{
 			files: ts.files.all,
@@ -103,7 +126,7 @@ export default defineConfig({
 
 ##### Configuring Rules
 
-Rules can be configured or even disabled by calling to the `rules` method of their plugin.
+Rules can be configured or disabled by calling to the `rules` method of their plugin.
 That method takes in an object where the keys are rule names and values are what to do with the rule:
 
 - `true`: enable it (if it wasn't already)
