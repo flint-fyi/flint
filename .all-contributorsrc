@@ -140,6 +140,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "kolharsam",
+      "name": "Sameer Kolhar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6604943?v=4",
+      "profile": "https://www.kolharsam.net",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
