@@ -2,7 +2,6 @@ import { debugForFile } from "debug-for-file";
 
 import type {
 	FileAboutData,
-	FileDiskData,
 	Language,
 	LanguageCreateRule,
 	LanguageDefinition,
@@ -18,29 +17,20 @@ export function createLanguage<AstNodesByName, FileServices extends object>(
 	const language: Language<AstNodesByName, FileServices> = {
 		...languageDefinition,
 
-		createFileFactory() {
+		createFileFactory(host) {
 			log(
 				"Creating file factory for language: %s",
 				languageDefinition.about.name,
 			);
 
-			const fileFactoryDefinition = languageDefinition.createFileFactory();
+			const fileFactoryDefinition = languageDefinition.createFileFactory(host);
 
 			log("Created file factory.");
 
 			const fileFactory = makeDisposable({
 				...fileFactoryDefinition,
-				prepareFromDisk: (data: FileAboutData) => {
-					const { file, ...rest } = fileFactoryDefinition.prepareFromDisk(data);
-
-					return {
-						file: makeDisposable(file),
-						...rest,
-					};
-				},
-				prepareFromVirtual: (data: FileDiskData) => {
-					const { file, ...rest } =
-						fileFactoryDefinition.prepareFromVirtual(data);
+				prepareFile: (data: FileAboutData) => {
+					const { file, ...rest } = fileFactoryDefinition.prepareFile(data);
 
 					return {
 						file: makeDisposable(file),

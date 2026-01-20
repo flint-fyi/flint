@@ -1,5 +1,32 @@
 # flint
 
+## 0.16.0
+
+### Minor Changes
+
+- 3353692: feat: split languages into dedicated packages
+
+### Patch Changes
+
+- Updated dependencies [6a5e553]
+- Updated dependencies [5d45d64]
+- Updated dependencies [2fb9715]
+- Updated dependencies [de2ff83]
+- Updated dependencies [3353692]
+- Updated dependencies [eb87fbe]
+- Updated dependencies [2e393a1]
+- Updated dependencies [3561386]
+- Updated dependencies [f8bf886]
+- Updated dependencies [017f3e3]
+  - @flint.fyi/core@0.19.0
+  - @flint.fyi/json@0.16.0
+  - @flint.fyi/yaml@0.15.0
+  - @flint.fyi/md@0.15.0
+  - @flint.fyi/ts@0.16.0
+  - @flint.fyi/cli@0.17.0
+  - @flint.fyi/package-json@0.16.0
+  - @flint.fyi/ts-patch@0.13.5
+
 ## 0.15.1
 
 ### Patch Changes
