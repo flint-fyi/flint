@@ -89,6 +89,11 @@ export default defineConfig(
 				"error",
 				{ allowNumber: true },
 			],
+			"jsdoc/check-tag-names": [
+				"error",
+				// https://tsdoc.org/pages/tags/remarks
+				{ definedTags: ["remarks"], typed: true },
+			],
 			"n/no-missing-import": "off",
 			"n/no-unsupported-features/node-builtins": [
 				"error",

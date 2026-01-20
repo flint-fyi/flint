@@ -16,10 +16,13 @@ import assert from "node:assert/strict";
 import path from "node:path";
 
 import { createReportSnapshot } from "./createReportSnapshot.ts";
-import { normalizeTestCase } from "./normalizeTestCase.ts";
+import {
+	normalizeTestCase,
+	type TestCaseNormalized,
+} from "./normalizeTestCase.ts";
 import { resolveReportedSuggestions } from "./resolveReportedSuggestions.ts";
 import { runTestCaseRule } from "./runTestCaseRule.ts";
-import type { InvalidTestCase, TestCase, ValidTestCase } from "./types.ts";
+import type { InvalidTestCase, ValidTestCase } from "./types.ts";
 
 export interface RuleTesterDefaults {
 	fileName?: string;
@@ -168,7 +171,7 @@ export class RuleTester {
 		});
 	}
 
-	#itTestCase(testCase: TestCase, setup: () => Promise<void>) {
+	#itTestCase(testCase: TestCaseNormalized, setup: () => Promise<void>) {
 		let test = testCase.only
 			? this.#testerOptions.only
 			: this.#testerOptions.it;
@@ -181,7 +184,25 @@ export class RuleTester {
 			}
 		}
 
-		test(testCase.code, setup);
+		test(
+			"files" in testCase
+				? JSON.stringify(
+						{ [testCase.fileName]: testCase.code, ...testCase.files },
+						null,
+						2,
+					)
+				: testCase.code,
+			() => {
+				if (testCase.files != null) {
+					assert.notEqual(
+						Object.keys(testCase.files),
+						0,
+						`'files' must have at least one file`,
+					);
+				}
+				return setup();
+			},
+		);
 	}
 
 	#itValidCase<OptionsSchema extends AnyOptionalSchema | undefined>(
