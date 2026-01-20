@@ -144,7 +144,6 @@ export async function readFromCache(
 		cached.size,
 		allFilePaths.size,
 	);
-
 	return cached;
 
 	function markAsUncached(filePath: string) {
