@@ -10,15 +10,15 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="numberMethodRanges" />
 
-Number methods such as `toString`, `toFixed`, `toExponential`, and `toPrecision` have specific valid ranges for their arguments.
+Number methods such as `toExponential`, `toFixed`, `toPrecision`, and `toString` have specific valid ranges for their arguments.
 Passing values outside these ranges will throw a `RangeError` at runtime.
 
 This rule flags numeric literal arguments that are outside the valid range:
 
-- `Number.prototype.toString(radix)`: radix must be between 2 and 36
-- `Number.prototype.toFixed(digits)`: digits must be between 0 and 100
 - `Number.prototype.toExponential(digits)`: digits must be between 0 and 100
+- `Number.prototype.toFixed(digits)`: digits must be between 0 and 100
 - `Number.prototype.toPrecision(precision)`: precision must be between 1 and 100
+- `Number.prototype.toString(radix)`: radix must be between 2 and 36
 
 ## Examples
 
@@ -77,15 +77,14 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-This rule only checks numeric literal arguments.
-If your codebase uses dynamic values for these arguments and you have runtime validation in place, you may not need this rule.
+If your codebase is a rare one that overrides those native methods, this rule might not be for you.
 
 ## Further Reading
 
-- [MDN: Number.prototype.toString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString)
-- [MDN: Number.prototype.toFixed()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed)
 - [MDN: Number.prototype.toExponential()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toExponential)
+- [MDN: Number.prototype.toFixed()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed)
 - [MDN: Number.prototype.toPrecision()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toPrecision)
+- [MDN: Number.prototype.toString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString)
 
 ## Equivalents in Other Linters
 

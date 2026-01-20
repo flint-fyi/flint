@@ -7,39 +7,40 @@ import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-interface MethodSpec {
-	max: number;
-	min: number;
-	name: string;
-	requiresInteger: boolean;
-}
-
-const methodSpecs: Record<string, MethodSpec> = {
-	toExponential: {
-		max: 100,
-		min: 0,
-		name: "toExponential",
-		requiresInteger: true,
-	},
-	toFixed: {
-		max: 100,
-		min: 0,
-		name: "toFixed",
-		requiresInteger: true,
-	},
-	toPrecision: {
-		max: 100,
-		min: 1,
-		name: "toPrecision",
-		requiresInteger: true,
-	},
-	toString: {
-		max: 36,
-		min: 2,
-		name: "toString",
-		requiresInteger: true,
-	},
-};
+const methodSpecs = new Map([
+	[
+		"toExponential",
+		{
+			max: 100,
+			min: 0,
+			name: "toExponential",
+		},
+	],
+	[
+		"toFixed",
+		{
+			max: 100,
+			min: 0,
+			name: "toFixed",
+		},
+	],
+	[
+		"toPrecision",
+		{
+			max: 100,
+			min: 1,
+			name: "toPrecision",
+		},
+	],
+	[
+		"toString",
+		{
+			max: 36,
+			min: 2,
+			name: "toString",
+		},
+	],
+]);
 
 function getMethodName(expression: AST.Expression): string | undefined {
 	if (
@@ -89,28 +90,33 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			secondary: [
 				"Passing an out-of-range argument to `{{method}}` will throw a RangeError at runtime.",
 			],
+			suggestions: [
+				"Check the documentation for `{{method}}` to see the valid range of values.",
+			],
 		},
 	},
 	setup(context) {
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile }) => {
+					if (node.arguments.length === 0) {
+						return;
+					}
+
 					const methodName = getMethodName(node.expression);
 					if (!methodName) {
 						return;
 					}
 
-					const spec = methodSpecs[methodName];
+					const spec = methodSpecs.get(methodName);
 					if (!spec) {
 						return;
 					}
 
-					if (node.arguments.length === 0) {
-						return;
-					}
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const argument = node.arguments[0]!;
 
-					const argument = node.arguments[0];
-					if (!argument || argument.kind === SyntaxKind.SpreadElement) {
+					if (argument.kind === SyntaxKind.SpreadElement) {
 						return;
 					}
 
@@ -119,10 +125,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const isOutOfRange = value < spec.min || value > spec.max;
-					const isNonInteger = spec.requiresInteger && !Number.isInteger(value);
-
-					if (!isOutOfRange && !isNonInteger) {
+					if (
+						Number.isInteger(value) &&
+						value >= spec.min &&
+						value <= spec.max
+					) {
 						return;
 					}
 
