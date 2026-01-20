@@ -132,6 +132,7 @@ import negativeZeroComparisons from "./rules/negativeZeroComparisons.ts";
 import newExpressions from "./rules/newExpressions.ts";
 import newNativeNonConstructors from "./rules/newNativeNonConstructors.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
+import numberMethodRanges from "./rules/numberMethodRanges.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
 import objectCalls from "./rules/objectCalls.ts";
 import objectHasOwns from "./rules/objectHasOwns.ts";
@@ -297,6 +298,7 @@ export const ts = createPlugin({
 		newExpressions,
 		newNativeNonConstructors,
 		nonOctalDecimalEscapes,
+		numberMethodRanges,
 		numericLiteralParsing,
 		objectCalls,
 		objectHasOwns,
