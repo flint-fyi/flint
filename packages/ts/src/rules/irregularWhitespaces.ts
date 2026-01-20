@@ -1,11 +1,8 @@
-import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 import { z } from "zod";
 
 import { ruleCreator } from "./ruleCreator.ts";
-
-const irregularWhitespacePattern =
-	/[\f\v\u0085\ufeff\u00a0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u202f\u205f\u3000\u2028\u2029]/gu;
 
 interface IrregularWhitespaceMatch {
 	index: number;
@@ -13,9 +10,11 @@ interface IrregularWhitespaceMatch {
 }
 
 function findIrregularWhitespaces(text: string): IrregularWhitespaceMatch[] {
+	const irregularWhitespacePattern =
+		/[\f\v\u0085\ufeff\u00a0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u202f\u205f\u3000\u2028\u2029]/gu;
+
 	const matches: IrregularWhitespaceMatch[] = [];
 	let match: null | RegExpExecArray;
-	irregularWhitespacePattern.lastIndex = 0;
 
 	while ((match = irregularWhitespacePattern.exec(text)) !== null) {
 		matches.push({
@@ -62,7 +61,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			.boolean()
 			.default(false)
 			.describe("Whether to allow irregular whitespace in JSX text content."),
-		skipRegExps: z
+		skipRegularExpressions: z
 			.boolean()
 			.default(false)
 			.describe(
@@ -82,16 +81,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				SourceFile: (node, { options, sourceFile }) => {
 					const text = sourceFile.getFullText();
-
 					const allMatches = findIrregularWhitespaces(text);
 
 					if (allMatches.length === 0) {
-						return {};
+						return;
 					}
 
 					const excludedRanges: { end: number; start: number }[] = [];
 
-					function collectExcludedRanges(astNode: AST.AnyNode) {
+					function collectExcludedRanges(astNode: ts.Node) {
 						if (
 							options.skipStrings &&
 							astNode.kind === ts.SyntaxKind.StringLiteral
@@ -103,7 +101,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 
 						if (
-							options.skipRegExps &&
+							options.skipRegularExpressions &&
 							astNode.kind === ts.SyntaxKind.RegularExpressionLiteral
 						) {
 							excludedRanges.push({
@@ -142,7 +140,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							...(ts.getLeadingCommentRanges(text, 0) ?? []),
 						];
 
-						function collectCommentRanges(astNode: AST.AnyNode) {
+						function collectCommentRanges(astNode: ts.Node) {
 							const leading = ts.getLeadingCommentRanges(
 								text,
 								astNode.getFullStart(),

@@ -252,7 +252,7 @@ const value = 1;
 		},
 		{
 			code: `const value = /\u00a0/;`,
-			options: { skipRegExps: true },
+			options: { skipRegularExpressions: true },
 		},
 		{
 			code: `// Comment\u00a0with irregular space`,
