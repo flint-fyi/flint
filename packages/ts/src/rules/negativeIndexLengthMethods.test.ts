@@ -16,7 +16,7 @@ values.slice(-2);
 const values = [1, 2, 3];
 values.slice(values.length - 2);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -32,7 +32,7 @@ values.slice(-2, -1);
 const values = [1, 2, 3];
 values.slice(values.length - 2, values.length - 1);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -48,7 +48,7 @@ text.slice(-3);
 const text = "hello";
 text.slice(text.length - 3);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -64,7 +64,7 @@ values.at(-1);
 const values = [1, 2, 3];
 values.at(values.length - 1);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`at\`.
+Prefer using a negative index over \`.length - index\` for \`at\`.
 `,
 		},
 		{
@@ -80,7 +80,7 @@ values.splice(-1, 1);
 const values = [1, 2, 3];
 values.splice(values.length - 1, 1);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`splice\`.
+Prefer using a negative index over \`.length - index\` for \`splice\`.
 `,
 		},
 		{
@@ -96,7 +96,7 @@ values.toSpliced(-1, 1);
 const values = [1, 2, 3];
 values.toSpliced(values.length - 1, 1);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`toSpliced\`.
+Prefer using a negative index over \`.length - index\` for \`toSpliced\`.
 `,
 		},
 		{
@@ -112,7 +112,7 @@ values.with(-1, 99);
 const values = [1, 2, 3];
 values.with(values.length - 1, 99);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`with\`.
+Prefer using a negative index over \`.length - index\` for \`with\`.
 `,
 		},
 		{
@@ -128,7 +128,7 @@ buffer.subarray(-2);
 const buffer = new Int32Array([1, 2, 3, 4]);
 buffer.subarray(buffer.length - 2);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`subarray\`.
+Prefer using a negative index over \`.length - index\` for \`subarray\`.
 `,
 		},
 		{
@@ -144,7 +144,7 @@ values.slice(-2);
 const values = [1, 2, 3];
 values.slice((values.length) - 2);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -160,7 +160,7 @@ values.slice(-2);
 const values = [1, 2, 3];
 values.slice(values.length - (2));
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -176,7 +176,7 @@ values.slice((-2));
 const values = [1, 2, 3];
 values.slice((values.length - 2));
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -192,7 +192,7 @@ values.slice(-2 - 1);
 const values = [1, 2, 3];
 values.slice(values.length - 2 - 1);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -208,7 +208,7 @@ Array.prototype.slice.call(values, -2);
 const values = [1, 2, 3];
 Array.prototype.slice.call(values, values.length - 2);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -224,7 +224,7 @@ Array.prototype.slice.apply(values, [-2]);
 const values = [1, 2, 3];
 Array.prototype.slice.apply(values, [values.length - 2]);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -240,7 +240,7 @@ Array.prototype.slice.apply(values, [-2, -1]);
 const values = [1, 2, 3];
 Array.prototype.slice.apply(values, [values.length - 2, values.length - 1]);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -256,7 +256,7 @@ const values = [1, 2, 3];
 const values = [1, 2, 3];
 [].slice.call(values, values.length - 2);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -272,7 +272,7 @@ const text = "hello";
 const text = "hello";
 "".slice.call(text, text.length - 2);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -288,7 +288,7 @@ String.prototype.slice.call(text, -2);
 const text = "hello";
 String.prototype.slice.call(text, text.length - 2);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -304,7 +304,7 @@ Int32Array.prototype.subarray.call(buffer, -2);
 const buffer = new Int32Array([1, 2, 3]);
 Int32Array.prototype.subarray.call(buffer, buffer.length - 2);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`subarray\`.
+Prefer using a negative index over \`.length - index\` for \`subarray\`.
 `,
 		},
 		{
@@ -317,7 +317,7 @@ this.items.slice(-2);
 			snapshot: `
 this.items.slice(this.items.length - 2);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -330,7 +330,7 @@ object.array.slice(-2);
 			snapshot: `
 object.array.slice(object.array.length - 2);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -346,7 +346,7 @@ values.slice(-0x2);
 const values = [1, 2, 3];
 values.slice(values.length - 0x2);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -362,7 +362,7 @@ values.slice(-2.0);
 const values = [1, 2, 3];
 values.slice(values.length - 2.0);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 		{
@@ -378,7 +378,7 @@ values.slice(-2);
 const values = [1, 2, 3];
 values.slice(values.length  -  2);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer negative index over \`.length - index\` for \`slice\`.
+Prefer using a negative index over \`.length - index\` for \`slice\`.
 `,
 		},
 	],
@@ -400,5 +400,9 @@ Prefer negative index over \`.length - index\` for \`slice\`.
 		`const values = [1, 2, 3]; values.pop();`,
 		`values.slice(values.length - 1.5);`,
 		`const values = [1, 2, 3]; Object.prototype.slice.call(values, values.length - 2);`,
+		`const obj = { length: 5; slice(at: number) {} }; obj.slice(obj.length - 2);`,
+		`declare const custom: { length: number; slice(start: number): void }; custom.slice(custom.length - 2);`,
+		`const values = [1, 2, 3]; values.toSpliced(values.length);`,
+		`const text = "hello"; text.subarray?.(text.length - 2);`,
 	],
 });

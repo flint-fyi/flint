@@ -10,7 +10,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="negativeIndexLengthMethods" />
 
-Methods like `.slice()`, `.at()`, `.splice()`, `.toSpliced()`, `.with()`, and `.subarray()` accept negative indices to access elements from the end of an array or string.
+Array methods like `.at()`, `.slice()`, and `.splice()` accept negative indices to access elements from the end of an array or string.
 Using `array.slice(array.length - 2)` is less readable than `array.slice(-2)`.
 
 ## Examples
@@ -99,8 +99,8 @@ If you prefer explicit `.length - index` calculations for documentation purposes
 
 ## Further Reading
 
-- [MDN: Array.prototype.slice()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice)
 - [MDN: Array.prototype.at()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at)
+- [MDN: Array.prototype.slice()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice)
 - [MDN: Array.prototype.splice()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice)
 - [MDN: Array.prototype.with()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/with)
 
