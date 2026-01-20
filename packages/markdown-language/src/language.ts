@@ -1,6 +1,5 @@
 import { createLanguage } from "@flint.fyi/core";
 import type * as mdast from "mdast";
-import fsSync from "node:fs";
 
 import { createMarkdownFile } from "./createMarkdownFile.ts";
 import type { MarkdownNodesByName, WithPosition } from "./nodes.ts";
@@ -19,16 +18,7 @@ export const markdownLanguage = createLanguage<
 	},
 	createFileFactory: () => {
 		return {
-			prepareFromDisk: (data) => {
-				const sourceText = fsSync.readFileSync(data.filePathAbsolute, "utf8");
-				const { languageFile, root } = createMarkdownFile({
-					...data,
-					sourceText,
-				});
-
-				return prepareMarkdownFile(languageFile, root, sourceText);
-			},
-			prepareFromVirtual: (data) => {
+			prepareFile: (data) => {
 				const { languageFile, root } = createMarkdownFile(data);
 
 				return prepareMarkdownFile(languageFile, root, data.sourceText);
