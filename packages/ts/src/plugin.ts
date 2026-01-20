@@ -132,6 +132,7 @@ import namespaceKeywords from "./rules/namespaceKeywords.ts";
 import negativeZeroComparisons from "./rules/negativeZeroComparisons.ts";
 import newExpressions from "./rules/newExpressions.ts";
 import newNativeNonConstructors from "./rules/newNativeNonConstructors.ts";
+import nonNullAssertedNullishCoalesces from "./rules/nonNullAssertedNullishCoalesces.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
 import objectCalls from "./rules/objectCalls.ts";
@@ -298,6 +299,7 @@ export const ts = createPlugin({
 		negativeZeroComparisons,
 		newExpressions,
 		newNativeNonConstructors,
+		nonNullAssertedNullishCoalesces,
 		nonOctalDecimalEscapes,
 		numericLiteralParsing,
 		objectCalls,
