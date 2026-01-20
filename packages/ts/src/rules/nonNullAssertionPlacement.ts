@@ -1,48 +1,19 @@
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
+import { type Expression, type SourceFile, SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-const confusingOperators = new Set([
-	SyntaxKind.EqualsEqualsEqualsToken,
-	SyntaxKind.EqualsEqualsToken,
-	SyntaxKind.EqualsToken,
-	SyntaxKind.InKeyword,
-	SyntaxKind.InstanceOfKeyword,
+function endsWithNonNullAssertion(node: Expression, sourceFile: SourceFile) {
+	return node.getLastToken(sourceFile)?.kind === SyntaxKind.ExclamationToken;
+}
+
+const confusingOperatorTexts = new Map([
+	[SyntaxKind.EqualsEqualsEqualsToken, "==="],
+	[SyntaxKind.EqualsEqualsToken, "=="],
+	[SyntaxKind.EqualsToken, "="],
+	[SyntaxKind.InKeyword, "in"],
+	[SyntaxKind.InstanceOfKeyword, "instanceof"],
 ]);
-
-function endsWithNonNullAssertion(
-	sourceText: string,
-	nodeEnd: number,
-	operatorStart: number,
-) {
-	let position = nodeEnd;
-	while (position < operatorStart) {
-		const char = sourceText[position];
-		if (char === ")") {
-			return false;
-		}
-
-		position++;
-	}
-
-	return sourceText[nodeEnd - 1] === "!";
-}
-
-function getOperatorText(kind: SyntaxKind) {
-	switch (kind) {
-		case SyntaxKind.EqualsEqualsEqualsToken:
-			return "===";
-		case SyntaxKind.EqualsEqualsToken:
-			return "==";
-		case SyntaxKind.EqualsToken:
-			return "=";
-		case SyntaxKind.InKeyword:
-			return "in";
-		case SyntaxKind.InstanceOfKeyword:
-			return "instanceof";
-	}
-}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -93,54 +64,76 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
-					const operatorKind = node.operatorToken.kind;
-
-					if (!confusingOperators.has(operatorKind)) {
-						return;
-					}
-
-					const sourceText = sourceFile.getFullText();
-					const operatorStart = node.operatorToken.getStart(sourceFile);
-
+					const operatorText = confusingOperatorTexts.get(
+						node.operatorToken.kind,
+					);
 					if (
-						!endsWithNonNullAssertion(sourceText, node.left.end, operatorStart)
+						!operatorText ||
+						!endsWithNonNullAssertion(node.left, sourceFile)
 					) {
 						return;
 					}
-
-					const operatorText = getOperatorText(operatorKind);
-					const exclamationEnd = node.left.end;
-					const exclamationBegin = exclamationEnd - 1;
 
 					const range = {
-						begin: exclamationBegin,
-						end: exclamationEnd,
+						begin: node.left.end - 1,
+						end: node.left.end,
 					};
 
-					if (
-						operatorKind === SyntaxKind.InKeyword ||
-						operatorKind === SyntaxKind.InstanceOfKeyword
-					) {
-						context.report({
-							data: { operator: operatorText },
-							message: "confusingOperator",
-							range,
-						});
-						return;
-					}
+					const leftText = node.left.getText(sourceFile);
+					const innerExpression =
+						node.left.kind === SyntaxKind.NonNullExpression &&
+						node.left.expression;
 
-					if (operatorKind === SyntaxKind.EqualsToken) {
-						context.report({
-							message: "confusingAssign",
-							range,
-						});
-						return;
-					}
+					const suggestions = [
+						...(innerExpression
+							? [
+									{
+										id: "removeAssertion",
+										range: {
+											begin: node.left.getStart(sourceFile),
+											end: node.left.end,
+										},
+										text: innerExpression.getText(sourceFile),
+									},
+								]
+							: []),
+						{
+							id: "wrapInParentheses",
+							range: {
+								begin: node.left.getStart(sourceFile),
+								end: node.left.end,
+							},
+							text: `(${leftText})`,
+						},
+					];
 
-					context.report({
-						message: "confusingEqual",
-						range,
-					});
+					switch (node.operatorToken.kind) {
+						case SyntaxKind.EqualsToken:
+							context.report({
+								message: "confusingAssign",
+								range,
+								suggestions,
+							});
+							break;
+
+						case SyntaxKind.InKeyword:
+						case SyntaxKind.InstanceOfKeyword:
+							context.report({
+								data: { operator: operatorText },
+								message: "confusingOperator",
+								range,
+								suggestions,
+							});
+							break;
+
+						default:
+							context.report({
+								message: "confusingEqual",
+								range,
+								suggestions,
+							});
+							break;
+					}
 				},
 			},
 		};

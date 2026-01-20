@@ -138,6 +138,7 @@ import newNativeNonConstructors from "./rules/newNativeNonConstructors.ts";
 import nonNullableTypeAssertions from "./rules/nonNullableTypeAssertions.ts";
 import nonNullAssertedNullishCoalesces from "./rules/nonNullAssertedNullishCoalesces.ts";
 import nonNullAssertedOptionalChains from "./rules/nonNullAssertedOptionalChains.ts";
+import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
 import numberMethodRanges from "./rules/numberMethodRanges.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
