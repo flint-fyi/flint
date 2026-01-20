@@ -6,6 +6,9 @@ import type { Language } from "./languages.ts";
 import type { ReportMessageData } from "./reports.ts";
 import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
 
+/**
+ * A single lint rule, as used by users in configs.
+ */
 export type AnyRule<
 	About extends RuleAbout = RuleAbout,
 	OptionsSchema extends AnyOptionalSchema | undefined =

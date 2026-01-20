@@ -4,7 +4,7 @@ import {
 } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { isTypeFromTS } from "../utils/isTypeFromTS.ts";
+import { isTSNode } from "../utils/isTSNode.ts";
 
 export default typescriptLanguage.createRule({
 	about: {
@@ -36,7 +36,7 @@ export default typescriptLanguage.createRule({
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.kind !== SyntaxKind.Identifier ||
 						node.expression.name.text !== "getStart" ||
-						!isTypeFromTS(node.expression.expression, typeChecker, "Node")
+						!isTSNode(node.expression.expression, typeChecker)
 					) {
 						return;
 					}
