@@ -6,10 +6,14 @@ import {
 	getColumnAndLineOfPosition,
 	type InferredOutputObject,
 	type NormalizedReport,
+	normalizePath,
 	type RuleAbout,
+	type VFSLinterHost,
 } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 import type { CachedFactory } from "cached-factory";
+import assert from "node:assert/strict";
+import path from "node:path";
 
 import type { TestCaseNormalized } from "./normalizeTestCase.ts";
 
@@ -24,12 +28,36 @@ export async function runTestCaseRule<
 	OptionsSchema extends AnyOptionalSchema | undefined,
 >(
 	fileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>,
+	linterHost: VFSLinterHost,
 	{ options, rule }: Required<TestCaseRuleConfiguration<OptionsSchema>>,
-	{ code, fileName }: TestCaseNormalized,
+	{ code, fileName, files }: TestCaseNormalized,
 ): Promise<NormalizedReport[]> {
-	using file = fileFactories.get(rule.language).prepareFromVirtual({
+	const filePathAbsolute = normalizePath(
+		path.resolve(linterHost.getCurrentDirectory(), fileName),
+		linterHost.isCaseSensitiveFS(),
+	);
+	for (const oldFile of linterHost.vfsListFiles().keys()) {
+		if (oldFile !== filePathAbsolute) {
+			linterHost.vfsDeleteFile(oldFile);
+		}
+	}
+	for (const [name, content] of Object.entries(files ?? {})) {
+		const filePath = normalizePath(
+			path.resolve(linterHost.getCurrentDirectory(), name),
+			linterHost.isCaseSensitiveFS(),
+		);
+		assert.notEqual(
+			filePath,
+			filePathAbsolute,
+			`Expected 'files' not to shadow '${fileName}'`,
+		);
+		linterHost.vfsUpsertFile(filePath, content);
+	}
+	linterHost.vfsUpsertFile(filePathAbsolute, code);
+
+	using file = fileFactories.get(rule.language).prepareFile({
 		filePath: fileName,
-		filePathAbsolute: fileName,
+		filePathAbsolute,
 		sourceText: code,
 	}).file;
 

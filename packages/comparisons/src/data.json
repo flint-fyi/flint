@@ -12909,6 +12909,7 @@
 			"name": "namespaceImplicitAmbientImports",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -12983,7 +12984,8 @@
 		"flint": {
 			"name": "nativeObjectExtensions",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "untyped",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -13003,6 +13005,7 @@
 			"name": "negativeIndexLengthMethods",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -13205,7 +13208,8 @@
 		"flint": {
 			"name": "irregularWhitespaces",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -13230,7 +13234,8 @@
 		"flint": {
 			"name": "wrapperObjects",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -13249,7 +13254,8 @@
 		"flint": {
 			"name": "nonNullableTypeAssertions",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -13269,6 +13275,7 @@
 			"name": "nonNullAssertedNullishCoalesces",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -13300,7 +13307,8 @@
 		"flint": {
 			"name": "nonNullAssertedOptionalChains",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -13455,7 +13463,8 @@
 		"flint": {
 			"name": "numberMethodRanges",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
