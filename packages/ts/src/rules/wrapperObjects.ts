@@ -1,4 +1,5 @@
 import {
+	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -11,7 +12,7 @@ const wrapperConstructors = new Set(["Boolean", "Number", "String"]);
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
-			"Flags using new with String, Number, or Boolean, which creates wrapper objects instead of primitives.",
+			"Flags using `new` with `Boolean`, `Number`, or `String`, which creates wrapper objects instead of primitives.",
 		id: "wrapperObjects",
 		presets: ["logical"],
 	},
@@ -32,28 +33,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				NewExpression: (node, { sourceFile, typeChecker }) => {
-					if (node.expression.kind !== ts.SyntaxKind.Identifier) {
+					if (
+						node.expression.kind !== ts.SyntaxKind.Identifier ||
+						!wrapperConstructors.has(node.expression.text) ||
+						!isGlobalDeclarationOfName(
+							node.expression,
+							node.expression.text,
+							typeChecker,
+						)
+					) {
 						return;
 					}
 
-					const identifier = node.expression as ts.Identifier;
-					const name = identifier.text;
-
-					if (!wrapperConstructors.has(name)) {
-						return;
-					}
-
-					if (!isGlobalDeclarationOfName(identifier, name, typeChecker)) {
-						return;
-					}
+					const range = getTSNodeRange(node, sourceFile);
 
 					context.report({
-						data: { name },
+						data: { name: node.expression.text },
 						message: "wrapperObject",
-						range: {
-							begin: node.getStart(sourceFile),
-							end: node.getEnd(),
-						},
+						range,
 					});
 				},
 			},

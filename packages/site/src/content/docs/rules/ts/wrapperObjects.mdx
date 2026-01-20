@@ -1,5 +1,5 @@
 ---
-description: "Flags using new with String, Number, or Boolean, which creates wrapper objects instead of primitives."
+description: "Flags using `new` with `Boolean`, `Number`, or `String`, which creates wrapper objects instead of primitives."
 title: "wrapperObjects"
 topic: "rules"
 ---
@@ -10,7 +10,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="wrapperObjects" />
 
-Using `new` with [`String`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String), [`Number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number), or [`Boolean`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) creates object wrappers around primitive values.
+Using `new` with [`Boolean`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean), [`Number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number), or [`String`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) creates object wrappers around primitive values.
 These wrapper objects behave differently from primitives in surprising ways:
 
 ```ts
@@ -25,13 +25,7 @@ typeof wrappedString; // "object"
 ```
 
 Wrapper objects are almost never intended.
-To convert values to primitives, call these constructors as functions without `new`:
-
-```ts
-const text = String(value);
-const count = Number(value);
-const flag = Boolean(value);
-```
+This rule reports when a wrapper object is created instead of a normal primitive.
 
 ## Examples
 

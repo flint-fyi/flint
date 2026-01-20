@@ -5,6 +5,16 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+new String("hello");
+`,
+			snapshot: `
+new String("hello");
+~~~~~~~~~~~~~~~~~~~
+String wrapper objects are rarely intended and can cause unexpected behavior.
+`,
+		},
+		{
+			code: `
 const text = new String("hello");
 `,
 			snapshot: `
@@ -75,6 +85,8 @@ const converted = new String(123);
 		},
 	],
 	valid: [
+		"String(0);",
+		"String('');",
 		"const text = String(value);",
 		"const count = Number(value);",
 		"const flag = Boolean(value);",
