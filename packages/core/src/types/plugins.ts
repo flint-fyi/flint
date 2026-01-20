@@ -4,7 +4,7 @@ import type { AnyOptionalSchema, InferredInputObject } from "./shapes.ts";
 
 /**
  * A Flint plugin containing a set of rules and presets.
- * @see [flint.fyi/glossary#plugin](https://flint.fyi/glossary#plugin)
+ * @see {@link https://flint.fyi/glossary#plugin|flint.fyi/glossary#plugin}
  */
 export interface Plugin<
 	About extends RuleAbout,
@@ -13,7 +13,7 @@ export interface Plugin<
 > {
 	/**
 	 * Selectors of files this plugin suggests applying its rules to.
-	 * @see [flint.fyi/glossary#files](https://flint.fyi/glossary#files)
+	 * @see {@link https://flint.fyi/glossary#files|flint.fyi/glossary#files}
 	 */
 	files: undefined extends FilesKey
 		? undefined
@@ -26,7 +26,7 @@ export interface Plugin<
 
 	/**
 	 * Preset lists of rules to enable on files.
-	 * @see [flint.fyi/glossary#preset](https://flint.fyi/glossary#preset)
+	 * @see {@link https://flint.fyi/glossary#preset|flint.fyi/glossary#preset}
 	 */
 	presets: PluginPresets<
 		About,

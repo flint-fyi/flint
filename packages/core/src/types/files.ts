@@ -32,7 +32,7 @@ export interface FilesGlobObject {
 
 /**
  * Selects files to exclude or include in a {@link Plugin} `rules` config.
- * @see [flint.fyi/glossary#files](https://flint.fyi/glossary#files)
+ * @see {@link https://flint.fyi/glossary#files|flint.fyi/glossary#files}
  */
 export type FilesValue = FilesComputer | FilesValuePrimitive;
 
