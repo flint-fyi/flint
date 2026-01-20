@@ -65,30 +65,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						!node.modifiers?.some(
 							(modifier) => modifier.kind === SyntaxKind.DeclareKeyword,
-						)
+						) ||
+						node.name.kind !== SyntaxKind.Identifier ||
+						!node.body ||
+						node.body.kind !== SyntaxKind.ModuleBlock
 					) {
-						return;
-					}
-
-					if (node.name.kind !== SyntaxKind.Identifier) {
-						return;
-					}
-
-					if (!node.body || node.body.kind !== SyntaxKind.ModuleBlock) {
 						return;
 					}
 
 					const statements = node.body.statements;
 
-					if (statements.length === 0) {
-						return;
-					}
-
-					if (hasNamedExport(statements)) {
-						return;
-					}
-
-					if (!hasNonExportedMember(statements)) {
+					if (
+						statements.length === 0 ||
+						hasNamedExport(statements) ||
+						!hasNonExportedMember(statements)
+					) {
 						return;
 					}
 
