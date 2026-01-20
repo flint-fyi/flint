@@ -10,7 +10,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="newDefinitions" />
 
-In TypeScript, interfaces and classes have different ways of defining how instances are created.
+In TypeScript, classes and interfaces have different ways of defining how instances are created.
 This rule flags misleading definitions that confuse interface construct signatures with class constructors.
 
 There are two common mistakes this rule catches:
@@ -91,7 +91,7 @@ declare class Component {
 ## When Not To Use It
 
 This rule is useful for catching common mistakes when defining constructor-like signatures.
-If you have intentional advanced type patterns that this rule incorrectly flags, you may need to disable it for those specific cases.
+If you have intentional advanced type patterns that this rule incorrectly flags, you may need to disable it.
 
 ## Further Reading
 

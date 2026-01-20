@@ -7,55 +7,46 @@ import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
+// TODO: This might get simpler when we have scope analysis.
+// https://github.com/JoshuaKGoldberg/flint/issues/400
 function getParentClassName(node: AST.AnyNode): string | undefined {
-	const { parent } = node;
+	switch (node.parent.kind) {
+		case ts.SyntaxKind.ClassDeclaration:
+		case ts.SyntaxKind.ClassExpression:
+			return node.parent.name?.text;
 
-	if (parent.kind === ts.SyntaxKind.SourceFile) {
-		return undefined;
+		case ts.SyntaxKind.SourceFile:
+			return undefined;
+
+		default:
+			return getParentClassName(node.parent as AST.AnyNode);
 	}
-
-	if (parent.kind === ts.SyntaxKind.ClassDeclaration) {
-		return parent.name?.text;
-	}
-
-	if (parent.kind === ts.SyntaxKind.ClassExpression) {
-		return parent.name?.text;
-	}
-
-	return getParentClassName(parent);
 }
 
+// TODO: This might get simpler when we have scope analysis.
+// https://github.com/JoshuaKGoldberg/flint/issues/400
 function getParentInterface(
 	node: AST.AnyNode,
 ): AST.InterfaceDeclaration | undefined {
-	const { parent } = node;
+	switch (node.parent.kind) {
+		case ts.SyntaxKind.InterfaceDeclaration:
+			return node.parent;
 
-	if (parent.kind === ts.SyntaxKind.SourceFile) {
-		return undefined;
+		case ts.SyntaxKind.SourceFile:
+			return undefined;
+
+		default:
+			return getParentInterface(node.parent as AST.AnyNode);
 	}
-
-	if (parent.kind === ts.SyntaxKind.InterfaceDeclaration) {
-		return parent;
-	}
-
-	return getParentInterface(parent);
 }
 
 function getTypeReferenceName(
 	node: AST.TypeNode | undefined,
 ): string | undefined {
-	if (!node) {
-		return undefined;
-	}
-
-	if (node.kind === ts.SyntaxKind.TypeReference) {
-		const { typeName } = node;
-		if (typeName.kind === ts.SyntaxKind.Identifier) {
-			return typeName.text;
-		}
-	}
-
-	return undefined;
+	return node?.kind === ts.SyntaxKind.TypeReference &&
+		node.typeName.kind === ts.SyntaxKind.Identifier
+		? node.typeName.text
+		: undefined;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -125,21 +116,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				MethodDeclaration: (node, { sourceFile }) => {
 					if (
-						node.parent.kind !== ts.SyntaxKind.ClassDeclaration &&
-						node.parent.kind !== ts.SyntaxKind.ClassExpression
+						node.body ||
+						(node.parent.kind !== ts.SyntaxKind.ClassDeclaration &&
+							node.parent.kind !== ts.SyntaxKind.ClassExpression) ||
+						node.name.kind !== ts.SyntaxKind.Identifier ||
+						node.name.text !== "new"
 					) {
-						return;
-					}
-
-					if (node.name.kind !== ts.SyntaxKind.Identifier) {
-						return;
-					}
-
-					if (node.name.text !== "new") {
-						return;
-					}
-
-					if (node.body) {
 						return;
 					}
 
@@ -159,11 +141,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					});
 				},
 				MethodSignature: (node, { sourceFile }) => {
-					if (node.name.kind !== ts.SyntaxKind.Identifier) {
-						return;
-					}
-
-					if (node.name.text !== "constructor") {
+					if (
+						node.name.kind !== ts.SyntaxKind.Identifier ||
+						node.name.text !== "constructor"
+					) {
 						return;
 					}
 
