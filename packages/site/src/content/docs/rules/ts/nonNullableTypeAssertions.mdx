@@ -1,0 +1,86 @@
+---
+description: "Reports type assertions that can be replaced with non-null assertions."
+title: "nonNullableTypeAssertions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="nonNullableTypeAssertions" />
+
+When asserting a type that only removes `null` or `undefined` from a union, a non-null assertion (`!`) is more concise and expressive than a full type assertion (`as` or angle-bracket syntax).
+
+For example, if a value is of type `string | null`, asserting it as `string` can be replaced with a non-null assertion: `value!`.
+
+This rule reports type assertions where the only difference between the original and asserted type is nullability, suggesting the use of a non-null assertion instead.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const value: string | null;
+value as string;
+```
+
+```ts
+declare const value: number | undefined;
+<number>value;
+```
+
+```ts
+declare const value: string | number | null;
+value as string | number;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const value: string | null;
+value!;
+```
+
+```ts
+declare const value: number | undefined;
+value!;
+```
+
+```ts
+declare const value: string | number | null;
+value!;
+```
+
+```ts
+declare const value: string | number | null;
+value as string;
+```
+
+```ts
+declare const value: any;
+value as string;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase prefers explicit type assertions for clarity or documentation, you may disable this rule.
+Alternatively, if you avoid non-null assertions entirely due to their potential for runtime errors, this rule may not be appropriate.
+
+## Further Reading
+
+- [TypeScript: Non-null assertion operator](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#non-null-assertion-operator-postfix-)
+- [TypeScript: Type Assertions](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="nonNullableTypeAssertions" />

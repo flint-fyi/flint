@@ -13248,7 +13248,8 @@
 		"flint": {
 			"name": "nonNullableTypeAssertions",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
