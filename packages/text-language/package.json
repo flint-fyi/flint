@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/text-language",
-	"version": "0.14.2",
+	"version": "0.15.0",
 	"description": "[Experimental] Plain text language for Flint.",
 	"repository": {
 		"type": "git",

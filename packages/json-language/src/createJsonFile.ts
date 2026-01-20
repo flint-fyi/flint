@@ -1,4 +1,4 @@
-import type { FileDiskData, LanguageFileDefinition } from "@flint.fyi/core";
+import type { FileAboutData, LanguageFileDefinition } from "@flint.fyi/core";
 import ts from "typescript";
 
 import type { JsonFileServices } from "./language.ts";
@@ -8,7 +8,7 @@ import type { JsonNodesByName } from "./nodes.ts";
 // The standard TypeScript language will likely use that itself.
 // https://github.com/flint-fyi/flint/issues/44
 export function createTypeScriptJsonFile(
-	data: FileDiskData,
+	data: FileAboutData,
 ): LanguageFileDefinition<JsonNodesByName, JsonFileServices> {
 	const sourceFile = ts.parseJsonText(data.filePathAbsolute, data.sourceText);
 

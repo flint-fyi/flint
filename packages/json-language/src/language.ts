@@ -1,5 +1,4 @@
 import { createLanguage } from "@flint.fyi/core";
-import fsSync from "node:fs";
 import type * as ts from "typescript";
 
 import { createTypeScriptJsonFile } from "./createJsonFile.ts";
@@ -15,15 +14,7 @@ export const jsonLanguage = createLanguage<JsonNodesByName, JsonFileServices>({
 	},
 	createFileFactory: () => {
 		return {
-			prepareFromDisk: (data) => {
-				return {
-					file: createTypeScriptJsonFile({
-						...data,
-						sourceText: fsSync.readFileSync(data.filePathAbsolute, "utf8"),
-					}),
-				};
-			},
-			prepareFromVirtual: (data) => {
+			prepareFile: (data) => {
 				return {
 					file: createTypeScriptJsonFile(data),
 				};

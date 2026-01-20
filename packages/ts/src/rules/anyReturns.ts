@@ -44,7 +44,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 		unsafeReturnThis: {
 			primary:
-				"Unsafe return of a value of type `{{ type }}`. `this` is typed as `any`.",
+				"Unsafe return of a value of type {{ type }}. `this` is typed as `any`.",
 			secondary: [
 				"Returning `this` when it is implicitly typed as `any` introduces type-unsafe behavior.",
 				"This can allow unexpected types to propagate through your codebase, potentially causing runtime errors.",

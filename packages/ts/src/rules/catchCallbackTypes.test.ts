@@ -73,6 +73,14 @@ fetch("/api").catch(function(error) {
     console.log(error);
 });
 `,
+			files: {
+				"tsconfig.json": `{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"lib": ["esnext", "DOM"]
+	}
+}`,
+			},
 			snapshot: `
 fetch("/api").catch(function(error) {
                              ~~~~~

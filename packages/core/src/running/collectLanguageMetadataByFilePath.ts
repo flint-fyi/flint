@@ -1,7 +1,8 @@
-import { makeAbsolute } from "@flint.fyi/utils";
+import { makeAbsolute, nullThrows } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 
 import type { FileCacheStorage } from "../types/cache.ts";
+import type { LinterHost } from "../types/host.ts";
 import type {
 	AnyLanguage,
 	AnyLanguageFileMetadata,
@@ -11,6 +12,7 @@ import type { AnyRule } from "../types/rules.ts";
 export function collectLanguageMetadataByFilePath(
 	cached: Map<string, FileCacheStorage> | undefined,
 	rulesOptionsByFile: Map<AnyRule, Map<string, unknown>>,
+	host: LinterHost,
 ) {
 	const languageFileMetadataByFilePath = new CachedFactory<
 		string,
@@ -19,12 +21,16 @@ export function collectLanguageMetadataByFilePath(
 
 	const languageFilesMetadataByLanguage = new CachedFactory(
 		(language: AnyLanguage) => {
-			const fileFactory = language.createFileFactory();
+			const fileFactory = language.createFileFactory(host);
 
 			return new CachedFactory((filePath: string) =>
-				fileFactory.prepareFromDisk({
+				fileFactory.prepareFile({
 					filePath,
 					filePathAbsolute: makeAbsolute(filePath),
+					sourceText: nullThrows(
+						host.readFile(filePath),
+						`Expected ${filePath} to exist`,
+					),
 				}),
 			);
 		},
