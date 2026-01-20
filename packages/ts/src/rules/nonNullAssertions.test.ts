@@ -26,6 +26,15 @@ object!.property;
       ~
       Non-null assertions bypass TypeScript's strict null checking.
 `,
+			suggestions: [
+				{
+					id: "optionalChain",
+					updated: `
+declare const object: { property: string } | null;
+object?.property;
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -38,6 +47,15 @@ array![0];
      ~
      Non-null assertions bypass TypeScript's strict null checking.
 `,
+			suggestions: [
+				{
+					id: "optionalChain",
+					updated: `
+declare const array: string[] | null;
+array?.[0];
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -50,6 +68,15 @@ callable!();
         ~
         Non-null assertions bypass TypeScript's strict null checking.
 `,
+			suggestions: [
+				{
+					id: "optionalChain",
+					updated: `
+declare const callable: (() => void) | null;
+callable?.();
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -62,6 +89,15 @@ value!.toString();
      ~
      Non-null assertions bypass TypeScript's strict null checking.
 `,
+			suggestions: [
+				{
+					id: "optionalChain",
+					updated: `
+declare const value: string | null;
+value?.toString();
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -74,6 +110,15 @@ outer.inner!.value;
            ~
            Non-null assertions bypass TypeScript's strict null checking.
 `,
+			suggestions: [
+				{
+					id: "optionalChain",
+					updated: `
+declare const outer: { inner: { value: string } | null };
+outer.inner?.value;
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -99,6 +144,65 @@ values.map((value) => value!);
                            Non-null assertions bypass TypeScript's strict null checking.
 `,
 		},
+		{
+			code: `
+declare const foo: { bar: number } | null;
+foo!.bar = 1;
+`,
+			snapshot: `
+declare const foo: { bar: number } | null;
+foo!.bar = 1;
+   ~
+   Non-null assertions bypass TypeScript's strict null checking.
+`,
+		},
+		{
+			code: `
+declare const foo: { bar: { baz: string } } | null;
+foo?.bar!.baz;
+`,
+			snapshot: `
+declare const foo: { bar: { baz: string } } | null;
+foo?.bar!.baz;
+        ~
+        Non-null assertions bypass TypeScript's strict null checking.
+`,
+		},
+		{
+			code: `
+declare const obj: { [key: string]: string } | null;
+obj![key];
+`,
+			snapshot: `
+declare const obj: { [key: string]: string } | null;
+obj![key];
+   ~
+   Non-null assertions bypass TypeScript's strict null checking.
+`,
+			suggestions: [
+				{
+					id: "optionalChain",
+					updated: `
+declare const obj: { [key: string]: string } | null;
+obj?.[key];
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare const value: string | null;
+value!!;
+`,
+			snapshot: `
+declare const value: string | null;
+value!!;
+      ~
+      Non-null assertions bypass TypeScript's strict null checking.
+     ~
+     Non-null assertions bypass TypeScript's strict null checking.
+`,
+		},
 	],
 	valid: [
 		`
@@ -122,6 +226,10 @@ declare const value: string | null;
 if (value !== null) {
     value.toUpperCase();
 }
+`,
+		`
+declare const value: boolean;
+!value;
 `,
 	],
 });

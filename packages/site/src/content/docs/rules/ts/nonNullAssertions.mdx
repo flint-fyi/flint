@@ -76,8 +76,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you are migrating a large codebase to strict null checking and need to temporarily use non-null assertions, you may disable this rule.
-Some codebases may also have well-understood patterns where non-null assertions are safe and documented.
+If your project is still onboarding to TypeScript's `strictNullChecks` compiler option, or more generally has unusual needs for null values, you might not receive false reports from this rule.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for specific cases instead of completely disabling this rule.
 
 ## Further Reading
 
