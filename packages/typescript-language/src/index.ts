@@ -11,13 +11,9 @@ export { getTSNodeRange } from "./getTSNodeRange.ts";
 export * from "./language.ts";
 export type * from "./nodes.ts";
 export type { TypeScriptNodesByName } from "./nodes.ts";
-export {
-	prepareTypeScriptBasedLanguage,
-	type TypeScriptBasedLanguageFile,
-	type TypeScriptBasedLanguageFileFactoryDefinition,
-} from "./prepareTypeScriptBasedLanguage.ts";
 export type * as AST from "./types/ast.ts";
 export type { Checker } from "./types/checker.ts";
+export { createRuleTesterTSConfig } from "./utils/createRuleTesterTSConfig.ts";
 export { declarationIncludesGlobal } from "./utils/declarationIncludesGlobal.ts";
 export { getDeclarationsIfGlobal } from "./utils/getDeclarationsIfGlobal.ts";
 export { getModifyingReferences } from "./utils/getModifyingReferences.ts";

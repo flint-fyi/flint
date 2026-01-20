@@ -3237,7 +3237,6 @@
 			"name": "headingRootPresence",
 			"plugin": "md",
 			"preset": "logical",
-			"status": "implemented",
 			"strictness": "strict"
 		},
 		"markdownlint": [
@@ -3458,7 +3457,6 @@
 			"name": "linkDescriptions",
 			"plugin": "md",
 			"preset": "logical",
-			"status": "implemented",
 			"strictness": "strict"
 		},
 		"markdownlint": [
@@ -7122,7 +7120,8 @@
 		"flint": {
 			"name": "arguments",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -11226,8 +11225,7 @@
 		"flint": {
 			"name": "importSelf",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
+			"preset": "logical"
 		},
 		"oxlint": [
 			{
@@ -12937,7 +12935,8 @@
 		"flint": {
 			"name": "namespaceKeywords",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -13270,6 +13269,7 @@
 			"name": "nonNullAssertedNullishCoalesces",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [

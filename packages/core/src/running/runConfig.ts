@@ -2,6 +2,7 @@ import { CachedFactory } from "cached-factory";
 
 import { writeToCache } from "../cache/writeToCache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
+import type { LinterHost } from "../types/host.ts";
 import type { LintResults } from "../types/linting.ts";
 import type { FileReport } from "../types/reports.ts";
 import type { AnyRule } from "../types/rules.ts";
@@ -17,6 +18,7 @@ export interface RunConfigOptions {
 
 export async function runConfig(
 	configDefinition: ProcessedConfigDefinition,
+	host: LinterHost,
 	{ ignoreCache, skipDiagnostics }: RunConfigOptions,
 ): Promise<LintResults> {
 	// 1. Based on the original config definition, collect:
@@ -29,7 +31,7 @@ export async function runConfig(
 		cached,
 		languageFileMetadataByFilePath,
 		rulesFilesAndOptionsByRule,
-	} = await collectFilesAndMetadata(configDefinition, ignoreCache);
+	} = await collectFilesAndMetadata(configDefinition, host, ignoreCache);
 
 	// 2. For each lint rule, run it on all files and store each file's results
 	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule);
