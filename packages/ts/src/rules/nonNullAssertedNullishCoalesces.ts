@@ -1,6 +1,7 @@
 import {
 	type AST,
 	type Checker,
+	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
@@ -99,25 +100,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				NonNullExpression: (node, { sourceFile, typeChecker }) => {
-					if (node.parent.kind !== ts.SyntaxKind.BinaryExpression) {
-						return;
-					}
-
-					const binaryExpression = node.parent;
 					if (
-						binaryExpression.operatorToken.kind !==
+						node.parent.kind !== ts.SyntaxKind.BinaryExpression ||
+						node.parent.operatorToken.kind !==
 							ts.SyntaxKind.QuestionQuestionToken ||
-						binaryExpression.left !== node
+						node.parent.left !== node
 					) {
 						return;
 					}
 
-					const innerExpression = node.expression;
-
-					if (innerExpression.kind === ts.SyntaxKind.Identifier) {
+					if (node.expression.kind === ts.SyntaxKind.Identifier) {
 						if (
 							hasNoAssignmentBeforeNode(
-								innerExpression,
+								node.expression,
 								node,
 								sourceFile,
 								typeChecker,
@@ -127,10 +122,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 
-					const range = {
-						begin: node.getStart(sourceFile),
-						end: node.getEnd(),
-					};
+					const range = getTSNodeRange(node, sourceFile);
 
 					context.report({
 						message: "unnecessaryNonNullAssertion",
@@ -139,7 +131,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							{
 								id: "removeNonNullAssertion",
 								range,
-								text: innerExpression.getText(sourceFile),
+								text: node.expression.getText(sourceFile),
 							},
 						],
 					});

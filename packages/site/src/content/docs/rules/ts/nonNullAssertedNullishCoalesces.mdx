@@ -75,8 +75,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-This rule is part of the `logicalStrict` preset and catches a likely programmer error.
-If you have code that intentionally uses this pattern and you understand the implications, you can disable the rule for those specific lines.
+If your project is still onboarding to TypeScript's `strictNullChecks` compiler option, or more generally has unusual needs for null values, you might not receive false reports from this rule.
+If you have a rare case where duplicate keys are intentional, you can use [Flint disable comments](/directives) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 
