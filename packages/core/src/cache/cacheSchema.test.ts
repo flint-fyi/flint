@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
+import z from "zod";
 
-import { cacheStorageSchema } from "./cacheSchema.ts";
+import { cacheStorageCodec, cacheStorageSchema } from "./cacheSchema.ts";
 
 describe("cacheStorageSchema", () => {
 	it("parses valid cache data", () => {
@@ -238,5 +239,114 @@ describe("cacheStorageSchema", () => {
 
 		const result = cacheStorageSchema.safeParse(invalidCache);
 		expect(result.success).toBe(false);
+	});
+});
+
+describe("cacheStorageCodec", () => {
+	it("encodes valid cache data to JSON string", () => {
+		const validCache = {
+			configs: {
+				"flint.config.ts": 1234567890,
+				"package.json": 1234567890,
+			},
+			files: {
+				"src/index.ts": {
+					timestamp: 1234567890,
+				},
+			},
+		};
+
+		const encoded = z.encode(cacheStorageCodec, validCache);
+		expect(typeof encoded).toBe("string");
+		expect(JSON.parse(encoded)).toEqual(validCache);
+	});
+
+	it("decodes valid JSON string to cache data", () => {
+		const validCache = {
+			configs: { "package.json": 123 },
+			files: {
+				"src/index.ts": {
+					timestamp: 123,
+				},
+			},
+		};
+		const json = JSON.stringify(validCache);
+
+		const decoded = z.decode(cacheStorageCodec, json);
+		expect(decoded).toEqual(validCache);
+	});
+
+	it("fails to encode invalid cache data", () => {
+		const invalidCache = {
+			configs: "invalid",
+			files: {},
+		};
+
+		const result = z.safeEncode(
+			cacheStorageCodec,
+			invalidCache as unknown as z.infer<typeof cacheStorageSchema>,
+		);
+		expect(result.success).toBe(false);
+	});
+
+	it("fails to decode invalid JSON string", () => {
+		const invalidJson = "{ invalid json }";
+
+		const result = z.safeDecode(cacheStorageCodec, invalidJson);
+		expect(result.success).toBe(false);
+	});
+
+	it("fails to decode valid JSON with invalid schema", () => {
+		const validJsonInvalidSchema = JSON.stringify({
+			configs: "not-a-record",
+			files: {},
+		});
+
+		const result = z.safeDecode(cacheStorageCodec, validJsonInvalidSchema);
+		expect(result.success).toBe(false);
+	});
+
+	it("roundtrips cache data correctly", () => {
+		const original = {
+			configs: {
+				"flint.config.ts": 1234567890,
+				"package.json": 1234567890,
+			},
+			files: {
+				"src/index.ts": {
+					dependencies: ["src/utils.ts"],
+					reports: [
+						{
+							about: { id: "test-rule", presets: ["recommended"] },
+							message: {
+								primary: "Test error",
+								secondary: ["More info"],
+								suggestions: [],
+							},
+							range: {
+								begin: { column: 0, line: 0, raw: 0 },
+								end: { column: 5, line: 0, raw: 5 },
+							},
+						},
+					],
+					timestamp: 1234567890,
+				},
+			},
+		};
+
+		const encoded = z.encode(cacheStorageCodec, original);
+		const decoded = z.decode(cacheStorageCodec, encoded);
+
+		expect(decoded).toEqual(original);
+	});
+
+	it("formats JSON with tabs for readability", () => {
+		const validCache = {
+			configs: { "package.json": 123 },
+			files: {},
+		};
+
+		const encoded = z.encode(cacheStorageCodec, validCache);
+		expect(encoded).toContain("\t");
 	});
 });

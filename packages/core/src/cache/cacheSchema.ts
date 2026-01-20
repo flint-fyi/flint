@@ -70,3 +70,26 @@ export const cacheStorageSchema = z.object({
 	configs: z.record(z.string(), z.number()),
 	files: z.record(z.string(), fileCacheStorageSchema),
 });
+
+// JSON codec for bidirectional cache serialization
+export const cacheStorageCodec = z.codec(
+	z.string(), // input: raw JSON string
+	cacheStorageSchema, // output: validated CacheStorage object
+	{
+		decode: (jsonString, ctx) => {
+			try {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+				return JSON.parse(jsonString);
+			} catch (error: unknown) {
+				ctx.issues.push({
+					code: "invalid_format",
+					format: "json",
+					input: jsonString,
+					message: error instanceof Error ? error.message : String(error),
+				});
+				return z.NEVER;
+			}
+		},
+		encode: (value) => JSON.stringify(value, null, "\t"),
+	},
+);
