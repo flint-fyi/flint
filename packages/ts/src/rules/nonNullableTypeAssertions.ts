@@ -2,6 +2,7 @@ import {
 	type AST,
 	type Checker,
 	getTSNodeRange,
+	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
@@ -16,12 +17,7 @@ function couldBeNullish(type: ts.Type): boolean {
 	}
 
 	if (tsutils.isUnionType(type)) {
-		for (const part of type.types) {
-			if (couldBeNullish(part)) {
-				return true;
-			}
-		}
-		return false;
+		return type.types.some(couldBeNullish);
 	}
 
 	return (type.flags & (ts.TypeFlags.Null | ts.TypeFlags.Undefined)) !== 0;
@@ -43,14 +39,10 @@ function isConstAssertion(
 	node: AST.AsExpression | AST.TypeAssertion,
 	sourceFile: AST.SourceFile,
 ) {
-	if (node.type.kind !== ts.SyntaxKind.TypeReference) {
-		return false;
-	}
-
-	const typeRef: AST.TypeReferenceNode = node.type;
 	return (
-		ts.isIdentifier(typeRef.typeName) &&
-		typeRef.typeName.getText(sourceFile) === "const"
+		node.type.kind === ts.SyntaxKind.TypeReference &&
+		node.type.typeName.kind === ts.SyntaxKind.Identifier &&
+		node.type.typeName.getText(sourceFile) === "const"
 	);
 }
 
@@ -117,10 +109,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function checkAssertion(
+		function checkNode(
 			node: AST.AsExpression | AST.TypeAssertion,
-			sourceFile: AST.SourceFile,
-			typeChecker: Checker,
+			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (isConstAssertion(node, sourceFile)) {
 				return;
@@ -132,11 +123,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const assertedTypes = getTypesIfNotLoose(node.type, typeChecker);
-			if (!assertedTypes) {
-				return;
-			}
-
-			if (!sameTypeWithoutNullish(assertedTypes, originalTypes)) {
+			if (
+				!assertedTypes ||
+				!sameTypeWithoutNullish(assertedTypes, originalTypes)
+			) {
 				return;
 			}
 
@@ -157,12 +147,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				AsExpression: (node, { sourceFile, typeChecker }) => {
-					checkAssertion(node, sourceFile, typeChecker);
-				},
-				TypeAssertionExpression: (node, { sourceFile, typeChecker }) => {
-					checkAssertion(node, sourceFile, typeChecker);
-				},
+				AsExpression: checkNode,
+				TypeAssertionExpression: checkNode,
 			},
 		};
 	},
