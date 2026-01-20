@@ -118,6 +118,7 @@ import importEmptyBlocks from "./rules/importEmptyBlocks.ts";
 import importTypeSideEffects from "./rules/importTypeSideEffects.ts";
 import indexedObjectTypes from "./rules/indexedObjectTypes.ts";
 import instanceOfArrays from "./rules/instanceOfArrays.ts";
+import irregularWhitespaces from "./rules/irregularWhitespaces.ts";
 import isNaNComparisons from "./rules/isNaNComparisons.ts";
 import literalConstructorWrappers from "./rules/literalConstructorWrappers.ts";
 import mathMethods from "./rules/mathMethods.ts";
@@ -127,12 +128,21 @@ import moduleSpecifierLists from "./rules/moduleSpecifierLists.ts";
 import multilineAmbiguities from "./rules/multilineAmbiguities.ts";
 import namedDefaultExports from "./rules/namedDefaultExports.ts";
 import namespaceDeclarations from "./rules/namespaceDeclarations.ts";
+import namespaceImplicitAmbientImports from "./rules/namespaceImplicitAmbientImports.ts";
 import namespaceKeywords from "./rules/namespaceKeywords.ts";
+import nativeObjectExtensions from "./rules/nativeObjectExtensions.ts";
+import negativeIndexLengthMethods from "./rules/negativeIndexLengthMethods.ts";
 import negativeZeroComparisons from "./rules/negativeZeroComparisons.ts";
 import nestedStandaloneIfs from "./rules/nestedStandaloneIfs.ts";
+import newDefinitions from "./rules/newDefinitions.ts";
 import newExpressions from "./rules/newExpressions.ts";
 import newNativeNonConstructors from "./rules/newNativeNonConstructors.ts";
+import nonNullableTypeAssertions from "./rules/nonNullableTypeAssertions.ts";
+import nonNullAssertedNullishCoalesces from "./rules/nonNullAssertedNullishCoalesces.ts";
+import nonNullAssertedOptionalChains from "./rules/nonNullAssertedOptionalChains.ts";
+import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
+import numberMethodRanges from "./rules/numberMethodRanges.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
 import objectCalls from "./rules/objectCalls.ts";
 import objectHasOwns from "./rules/objectHasOwns.ts";
@@ -159,6 +169,7 @@ import unsafeNegations from "./rules/unsafeNegations.ts";
 import variableDeletions from "./rules/variableDeletions.ts";
 import voidOperator from "./rules/voidOperator.ts";
 import withStatements from "./rules/withStatements.ts";
+import wrapperObjects from "./rules/wrapperObjects.ts";
 
 export const ts = createPlugin({
 	files: {
@@ -284,6 +295,7 @@ export const ts = createPlugin({
 		importTypeSideEffects,
 		indexedObjectTypes,
 		instanceOfArrays,
+		irregularWhitespaces,
 		isNaNComparisons,
 		literalConstructorWrappers,
 		mathMethods,
@@ -293,12 +305,22 @@ export const ts = createPlugin({
 		multilineAmbiguities,
 		namedDefaultExports,
 		namespaceDeclarations,
+		namespaceImplicitAmbientImports,
 		namespaceKeywords,
+		nativeObjectExtensions,
+		negativeIndexLengthMethods,
 		negativeZeroComparisons,
 		nestedStandaloneIfs,
+		newDefinitions,
 		newExpressions,
 		newNativeNonConstructors,
+		nonNullableTypeAssertions,
+		nonNullAssertedNullishCoalesces,
+		nonNullAssertedOptionalChains,
+		nonNullAssertedOptionalChains,
+		nonNullAssertionPlacement,
 		nonOctalDecimalEscapes,
+		numberMethodRanges,
 		numericLiteralParsing,
 		objectCalls,
 		objectHasOwns,
@@ -325,5 +347,6 @@ export const ts = createPlugin({
 		variableDeletions,
 		voidOperator,
 		withStatements,
+		wrapperObjects,
 	],
 });

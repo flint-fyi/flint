@@ -1,0 +1,88 @@
+---
+description: "Reports non-null assertions on optional chain expressions."
+title: "nonNullAssertedOptionalChains"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="nonNullAssertedOptionalChains" />
+
+Optional chain expressions (`?.`) return `undefined` when the left side is `null` or `undefined`.
+Using a non-null assertion (`!`) on an optional chain is contradictory: you're asserting the result is not `null` or `undefined`, but the optional chain may have already returned `undefined`.
+
+This pattern is almost always a mistake.
+The non-null assertion doesn't change the runtime behavior—if the chain short-circuits, the value will still be `undefined`, potentially causing runtime errors later.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const object: { property?: string } | undefined;
+
+object?.property!;
+```
+
+```ts
+declare const object: { method?: () => string } | undefined;
+
+object?.method()!;
+```
+
+```ts
+declare const object: { nested?: { value: string } } | undefined;
+
+(object?.nested)!.value;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const object: { property?: string } | undefined;
+
+object?.property;
+```
+
+```ts
+declare const object: { method?: () => string } | undefined;
+
+object?.method();
+```
+
+```ts
+declare const object: { nested: { value: string } } | undefined;
+
+object?.nested.value;
+```
+
+```ts
+declare const object: { nested?: { value: string } };
+
+object.nested!.value;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project is still onboarding to TypeScript's `strictNullChecks` compiler option, or more generally has unusual needs for null values, you might not receive false reports from this rule.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Optional chaining (?.)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining)
+- [TypeScript: Non-null assertion operator](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#non-null-assertion-operator-postfix-)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="nonNullAssertedOptionalChains" />
