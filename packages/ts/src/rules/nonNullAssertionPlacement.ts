@@ -109,6 +109,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const operatorText = getOperatorText(operatorKind);
+					if (!operatorText) {
+						return;
+					}
+
 					const exclamationEnd = node.left.end;
 					const exclamationBegin = exclamationEnd - 1;
 

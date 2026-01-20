@@ -24,6 +24,10 @@ export default defineConfig({
 				node.presets.stylisticStrict,
 				ts.presets.logicalStrict,
 				ts.presets.stylisticStrict,
+				ts.rules({
+					// We have ESLint's rule for now, and disabling two rules on a line is a lot
+					nonNullAssertions: false,
+				}),
 			],
 		},
 		{
