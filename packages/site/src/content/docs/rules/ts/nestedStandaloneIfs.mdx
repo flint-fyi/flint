@@ -17,6 +17,12 @@ This rule identifies two patterns of unnecessarily nested `if` statements that c
 
 Both patterns reduce nesting and improve code readability.
 
+Note that this rule will not flag cases where:
+
+- There are comments inside the block (indicating intentional structure)
+- Multiple statements exist in the block
+- The outer `if` has an `else` clause (for the "lonely if in if" pattern)
+
 ## Examples
 
 ### Lonely `if` in `else`
@@ -103,12 +109,6 @@ if ((a || b) && c) {
 ## When Not To Use It
 
 If you prefer explicit nesting for clarity in complex conditional logic, or if your codebase has a style guide that prefers the nested form, you may want to disable this rule.
-
-The rule will not flag cases where:
-
-- There are comments inside the block (indicating intentional structure)
-- Multiple statements exist in the block
-- The outer `if` has an `else` clause (for the "lonely if in if" pattern)
 
 ## Further Reading
 
