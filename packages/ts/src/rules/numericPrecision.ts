@@ -160,7 +160,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"Numbers with more than 15-17 significant digits cannot be accurately represented.",
 			],
 			suggestions: [
-				"If large amounts of precision are needed, switch to a different data structure.",
+				"If large amounts of precision are needed, switch to a `BigInt` or a different data structure.",
 				"Remove the digits that are lost at runtime.",
 			],
 		},
