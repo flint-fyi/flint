@@ -17,12 +17,15 @@ function hasAccessors(node: AST.ObjectLiteralExpression) {
 }
 
 function hasArgumentsWithAccessors(node: AST.CallExpression) {
-	return node.arguments
-		.filter(
-			(argument): argument is AST.ObjectLiteralExpression =>
-				argument.kind === SyntaxKind.ObjectLiteralExpression,
-		)
-		.some(hasAccessors);
+	return (
+		node.arguments.length > 1 &&
+		node.arguments
+			.filter(
+				(argument): argument is AST.ObjectLiteralExpression =>
+					argument.kind === SyntaxKind.ObjectLiteralExpression,
+			)
+			.some(hasAccessors)
+	);
 }
 
 function hasArraySpread(node: AST.CallExpression) {
@@ -35,27 +38,12 @@ function isObjectAssignCall(
 	node: AST.CallExpression,
 	typeChecker: Checker,
 ): boolean {
-	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
-		return false;
-	}
-
-	const propertyAccess = node.expression;
-	if (propertyAccess.name.kind !== SyntaxKind.Identifier) {
-		return false;
-	}
-
-	if (propertyAccess.name.text !== "assign") {
-		return false;
-	}
-
-	if (propertyAccess.expression.kind !== SyntaxKind.Identifier) {
-		return false;
-	}
-
-	return isGlobalDeclarationOfName(
-		propertyAccess.expression,
-		"Object",
-		typeChecker,
+	return (
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.name.kind === SyntaxKind.Identifier &&
+		node.expression.name.text === "assign" &&
+		node.expression.expression.kind === SyntaxKind.Identifier &&
+		isGlobalDeclarationOfName(node.expression.expression, "Object", typeChecker)
 	);
 }
 
@@ -96,37 +84,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (!isObjectAssignCall(node, typeChecker)) {
-						return;
-					}
-
-					if (node.arguments.length < 1) {
-						return;
-					}
-
-					const firstArgument = node.arguments[0];
 					if (
-						!firstArgument ||
-						firstArgument.kind !== SyntaxKind.ObjectLiteralExpression
+						!isObjectAssignCall(node, typeChecker) ||
+						node.arguments.length < 1
 					) {
 						return;
 					}
 
-					if (hasArraySpread(node)) {
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const firstArgument = node.arguments[0]!;
+
+					if (
+						firstArgument.kind !== SyntaxKind.ObjectLiteralExpression ||
+						hasArraySpread(node) ||
+						hasArgumentsWithAccessors(node)
+					) {
 						return;
 					}
-
-					if (node.arguments.length > 1 && hasArgumentsWithAccessors(node)) {
-						return;
-					}
-
-					const messageId =
-						node.arguments.length === 1
-							? "preferObjectLiteral"
-							: "preferObjectSpread";
 
 					context.report({
-						message: messageId,
+						message:
+							node.arguments.length === 1
+								? "preferObjectLiteral"
+								: "preferObjectSpread",
 						range: getTSNodeRange(node, sourceFile),
 					});
 				},

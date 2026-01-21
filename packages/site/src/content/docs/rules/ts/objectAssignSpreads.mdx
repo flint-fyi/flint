@@ -68,13 +68,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-This rule should not be used when the first argument is an existing object that you want to mutate rather than create a new object.
-`Object.assign(target, source)` mutates `target`, while `{ ...target, ...source }` creates a new object.
-
-Additionally, `Object.assign()` with accessors (getters/setters) in arguments other than the first will invoke those accessors and copy their resulting values, whereas spread syntax copies the accessor definitions themselves.
-This rule intentionally does not flag these cases.
-
 If your codebase needs to support older JavaScript environments (pre-ES2018) that don't have native spread syntax support, you may need to disable this rule or use a transpiler.
+Alternately, some projects may prefer to use `Object.assign()` for its mutability, or may use it in many places where spread syntax is not appropriate and prefer always using it for consistency.
 
 ## Further Reading
 
