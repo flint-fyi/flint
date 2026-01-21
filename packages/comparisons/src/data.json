@@ -13912,7 +13912,8 @@
 		"flint": {
 			"name": "objectTypeDefinitions",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
