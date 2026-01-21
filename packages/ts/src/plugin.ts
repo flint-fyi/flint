@@ -152,6 +152,7 @@ import objectPrototypeBuiltIns from "./rules/objectPrototypeBuiltIns.ts";
 import objectTypeDefinitions from "./rules/objectTypeDefinitions.ts";
 import octalEscapes from "./rules/octalEscapes.ts";
 import octalNumbers from "./rules/octalNumbers.ts";
+import parseIntRadixes from "./rules/parseIntRadixes.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import selfComparisons from "./rules/selfComparisons.ts";
@@ -331,6 +332,7 @@ export const ts = createPlugin({
 		objectTypeDefinitions,
 		octalEscapes,
 		octalNumbers,
+		parseIntRadixes,
 		returnAssignments,
 		selfAssignments,
 		selfComparisons,
