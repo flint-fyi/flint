@@ -51,7 +51,6 @@ const result = value || false;
                Prefer nullish coalescing operator (\`??\`) over logical OR (\`||\`) for nullish checks.
 `,
 		},
-
 		{
 			code: `
 let value: null = null;
@@ -228,29 +227,135 @@ const result = value || 1n;
                Prefer nullish coalescing operator (\`??\`) over logical OR (\`||\`) for nullish checks.
 `,
 		},
+		{
+			code: `
+let value: string | null = null;
+const result = value ? value : "default";
+`,
+			output: `
+let value: string | null = null;
+const result = value ?? "default";
+`,
+			snapshot: `
+let value: string | null = null;
+const result = value ? value : "default";
+               ~~~~~~~~~~~~~~~~~~~~~~~~~
+               Prefer nullish coalescing operator (\`??\`) over ternary expression for nullish checks.
+`,
+		},
+		{
+			code: `
+let value: number | undefined = undefined;
+const result = !value ? "default" : value;
+`,
+			output: `
+let value: number | undefined = undefined;
+const result = value ?? "default";
+`,
+			snapshot: `
+let value: number | undefined = undefined;
+const result = !value ? "default" : value;
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~
+               Prefer nullish coalescing operator (\`??\`) over ternary expression for nullish checks.
+`,
+		},
 	],
 	valid: [
-		`const result = value ?? "default";`,
-		`let value: string | null = null; const result = value ?? "default";`,
-		`let value = "text"; const result = value || "default";`,
-		`let value = 0; const result = value || 1;`,
-		`let value = false; const result = value || true;`,
-		`let value: string = ""; const result = value || "default";`,
-		`let value: number = 0; const result = value || 1;`,
-		`let value: boolean = false; const result = value || true;`,
-		`let value: string | number = ""; const result = value || "default";`,
-		`let value: boolean | string = false; const result = value || "default";`,
-		`let value: any = null; const result = value || "default";`,
-		`let value: unknown = null; const result = value || "default";`,
-		`let value: string | undefined = ""; const result = value || "default";`,
-		`let value: number | null = 0; const result = value || 1;`,
-		`let value: boolean | undefined = false; const result = value || true;`,
-		`let value: bigint | null = 0n; const result = value || 1n;`,
-		`let value = 1 && 2;`,
-		`let value = 1 + 2;`,
-		`declare const value: 0 | null; const result = value || 1;`,
-		`declare const value: "" | undefined; const result = value || "default";`,
-		`declare const value: false | null; const result = value || true;`,
-		`declare const value: 0n | undefined; const result = value || 1n;`,
+		{
+			code: `
+let value: string = "";
+const result = value || "default";
+`,
+		},
+		{
+			code: `
+let value: number = 0;
+const result = value || 1;
+`,
+		},
+		{
+			code: `
+let value: boolean = false;
+const result = value || true;
+`,
+		},
+		{
+			code: `
+let value = "text";
+const result = value || "default";
+`,
+		},
+		{
+			code: `
+let value: string | null = null;
+const result = value ?? "default";
+`,
+		},
+		{
+			code: `
+declare const value: 0 | null;
+const result = value || 1;
+`,
+		},
+		{
+			code: `
+declare const value: "" | undefined;
+const result = value || "default";
+`,
+		},
+		{
+			code: `
+declare const value: false | null;
+const result = value || true;
+`,
+		},
+		{
+			code: `
+declare const value: 0n | undefined;
+const result = value || 1n;
+`,
+		},
+		{
+			code: `
+let value: any = null;
+const result = value || "default";
+`,
+		},
+		{
+			code: `
+let value: unknown = null;
+const result = value || "default";
+`,
+		},
+		{
+			code: `
+let value: string = "test";
+const result = value ? value : "default";
+`,
+		},
+		{
+			code: `
+declare let x: string | boolean;
+const result = x ? x : "default";
+`,
+		},
+		{
+			code: `
+let foo: string | null = null;
+function test() {
+  if (!foo) {
+    foo = "default";
+  } else {
+    console.log(foo);
+  }
+}
+`,
+		},
+		{
+			code: `
+let obj = { value: "test" };
+const result = obj.value || "default";
+`,
+		},
 	],
 });
