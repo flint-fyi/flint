@@ -1,0 +1,80 @@
+---
+description: "Reports bracket notation property access when dot notation can be used."
+title: "propertyAccessNotation"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="propertyAccessNotation" />
+
+Dot notation (`obj.property`) is generally preferred over bracket notation (`obj["property"]`) for accessing object properties.
+Dot notation is more concise and easier to read.
+Bracket notation should be reserved for cases where it is necessary, such as when the property name contains special characters, is a reserved word, or is computed dynamically.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = obj["property"];
+
+obj["value"] = 123;
+
+const name = person["firstName"];
+
+const nested = data["items"]["first"];
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = obj.property;
+
+obj.value = 123;
+
+const name = person.firstName;
+
+const nested = data.items.first;
+```
+
+```ts
+// Bracket notation is allowed for non-identifier keys
+const value = obj["key with spaces"];
+
+const dashed = obj["key-with-dashes"];
+
+// Bracket notation is allowed for reserved words
+const reserved = obj["class"];
+
+const keyword = obj["import"];
+
+// Bracket notation is allowed for computed keys
+const dynamic = obj[variable];
+
+const computed = obj[getKey()];
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has a convention of using bracket notation for consistency, such as when many properties are accessed dynamically or are reserved words, you may want to disable this rule.
+
+## Further Reading
+
+- [MDN: Property accessors](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors)
+- [JavaScript property access: dot notation vs. brackets](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects#accessing_properties)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="propertyAccessNotation" />
