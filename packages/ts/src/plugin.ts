@@ -145,6 +145,7 @@ import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
 import numberMethodRanges from "./rules/numberMethodRanges.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
 import objectCalls from "./rules/objectCalls.ts";
+import objectEntriesMethods from "./rules/objectEntriesMethods.ts";
 import objectHasOwns from "./rules/objectHasOwns.ts";
 import objectKeyDuplicates from "./rules/objectKeyDuplicates.ts";
 import objectProto from "./rules/objectProto.ts";
@@ -323,6 +324,7 @@ export const ts = createPlugin({
 		numberMethodRanges,
 		numericLiteralParsing,
 		objectCalls,
+		objectEntriesMethods,
 		objectHasOwns,
 		objectKeyDuplicates,
 		objectProto,
