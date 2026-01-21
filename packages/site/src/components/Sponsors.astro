@@ -1,0 +1,57 @@
+---
+import SponsorsList from "./SponsorsList.astro";
+import FlankedLinkButton from "./FlankedLinkButton.astro";
+---
+
+<section class="sponsors" id="sponsors">
+	<h2>
+		❤️‍🔥
+		<br />
+		Thank you to our sponsors
+	</h2>
+
+	<p class="tagline">
+		Flint can't happen without the generous support of these wonderful folks.
+	</p>
+
+	<SponsorsList />
+
+	<p>
+		Financial sponsors allow us to keep development of Flint going, including
+		maintaining and improving the project, providing support to users, and
+		pushing web ecosystem tooling forward with advances in great typed static
+		analysis and holistically designed linting.
+	</p>
+
+	<FlankedLinkButton href="https://opencollective.com/flint">
+		Become a Sponsor
+	</FlankedLinkButton>
+</section>
+
+<style>
+	.sponsors {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		margin: 0 auto -4rem;
+		max-width: 49rem;
+		padding: 4rem 1rem;
+	}
+
+	h2 {
+		font-size: var(--sl-text-h2);
+		margin: 0;
+		text-align: center;
+	}
+
+	p {
+		color: var(--sl-color-gray-2);
+		margin: 0;
+		text-align: center;
+	}
+
+	.tagline {
+		font-size: var(--sl-text-lg);
+	}
+</style>

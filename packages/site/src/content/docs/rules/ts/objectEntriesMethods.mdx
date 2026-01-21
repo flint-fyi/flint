@@ -1,0 +1,123 @@
+---
+description: "Prefer Object.fromEntries() over reduce patterns that build objects from key-value pairs."
+title: "objectEntriesMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="objectEntriesMethods" />
+
+`Object.fromEntries()` is a built-in method that transforms a list of key-value pairs into an object.
+It provides a more readable and concise alternative to using `reduce()` to build objects from entries.
+
+Using `Object.fromEntries()` with `map()` is clearer than the equivalent reduce pattern, and avoids creating unnecessary intermediate objects on each iteration.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const entries = [
+	["first", 1],
+	["second", 2],
+];
+const result = entries.reduce(
+	(accumulator, [key, value]) => ({ ...accumulator, [key]: value }),
+	{},
+);
+```
+
+```ts
+const entries = [
+	["first", 1],
+	["second", 2],
+];
+const result = entries.reduce(
+	(accumulator, [key, value]) => Object.assign(accumulator, { [key]: value }),
+	{},
+);
+```
+
+```ts
+const items = [
+	{ id: "a", name: "Alpha" },
+	{ id: "b", name: "Beta" },
+];
+const lookup = items.reduce(
+	(accumulator, item) => ({ ...accumulator, [item.id]: item.name }),
+	{},
+);
+```
+
+```ts
+const entries = Object.entries({ first: 1, second: 2 });
+const doubled = entries.reduce(
+	(accumulator, [key, value]) => ({ ...accumulator, [key]: value * 2 }),
+	{},
+);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const entries = [
+	["first", 1],
+	["second", 2],
+];
+const result = Object.fromEntries(entries);
+```
+
+```ts
+const entries = [
+	["first", 1],
+	["second", 2],
+];
+const result = Object.fromEntries(
+	entries.map(([key, value]) => [key, value * 2]),
+);
+```
+
+```ts
+const items = [
+	{ id: "a", name: "Alpha" },
+	{ id: "b", name: "Beta" },
+];
+const lookup = Object.fromEntries(items.map((item) => [item.id, item.name]));
+```
+
+```ts
+const entries = Object.entries({ first: 1, second: 2 });
+const doubled = Object.fromEntries(
+	entries.map(([key, value]) => [key, value * 2]),
+);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support JavaScript environments that don't have `Object.fromEntries()` (pre-ES2019), you might need to disable this rule or use a polyfill.
+`Object.fromEntries()` is supported in Node.js 12.0.0+ and all modern browsers.
+
+Some reduce patterns are more complex than what this rule detects, such as when the accumulator needs additional processing or when building an object with conditional keys.
+If you use those patterns often and prefer to keep stylistic consistency with them, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Object.fromEntries()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries)
+- [MDN: Array.prototype.reduce()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce)
+- [MDN: Object.entries()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="objectEntriesMethods" />
