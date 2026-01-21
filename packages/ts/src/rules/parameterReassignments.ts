@@ -60,6 +60,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 		};
 
+		const handleUnaryExpression = (
+			node: ts.PostfixUnaryExpression | ts.PrefixUnaryExpression,
+			{ sourceFile }: { sourceFile: ts.SourceFile },
+		) => {
+			if (
+				(node.operator === ts.SyntaxKind.PlusPlusToken ||
+					node.operator === ts.SyntaxKind.MinusMinusToken) &&
+				ts.isIdentifier(node.operand)
+			) {
+				checkParameterAssignment(node.operand.text, node.operand, sourceFile);
+			}
+		};
+
 		return {
 			visitors: {
 				ArrowFunction: (node) => {
