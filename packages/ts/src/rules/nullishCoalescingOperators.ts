@@ -72,22 +72,16 @@ function analyzeConditionalForNullish(
 			}
 
 			const operator = getComparisonOperator(condition);
+			const [alternate, consequent] = isNegation
+				? [whenFalse, whenTrue]
+				: [whenTrue, whenFalse];
 
-			if (isNegation) {
-				return {
-					alternate: whenFalse,
-					consequent: whenTrue,
-					operator,
-					test: testValue,
-				};
-			} else {
-				return {
-					alternate: whenTrue,
-					consequent: whenFalse,
-					operator,
-					test: testValue,
-				};
-			}
+			return {
+				alternate,
+				consequent,
+				operator,
+				test: testValue,
+			};
 		}
 	}
 
