@@ -11,6 +11,6 @@ export async function readGitignore() {
 				? line.slice(1)
 				: line.includes("/")
 					? line
-					: `**/${line}/**`,
+					: `**/${line}`,
 		);
 }
