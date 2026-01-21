@@ -13496,6 +13496,7 @@
 			"name": "numberStaticMethods",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
