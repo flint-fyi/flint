@@ -14081,8 +14081,7 @@
 		"flint": {
 			"name": "parameterPropertyAssignment",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
+			"preset": "logical"
 		},
 		"oxlint": [
 			{
@@ -14107,8 +14106,7 @@
 		"flint": {
 			"name": "parameterReassignments",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
+			"preset": "logical"
 		}
 	},
 	{
