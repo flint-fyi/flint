@@ -11,7 +11,7 @@ import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocati
 function buildSpliceReplacement(
 	node: AST.DeleteExpression,
 	elementAccess: AST.ElementAccessExpression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): string {
 	const children = elementAccess.getChildren(sourceFile);
 	const openBracket = children.find(

@@ -39,6 +39,76 @@ ruleTester.describe(rule, {
 				},
 			],
 		},
+		{
+			code: `
+                const myarray = [];
+            `,
+			snapshot: `
+                const myarray = [];
+                      ~~~~~~~
+                      Forbidden or unknown word: "myarray".
+            `,
+			suggestions: [
+				{
+					files: {
+						"cspell.json": [
+							{
+								original: ``,
+								updated: '{"words":["myarray"]}',
+							},
+							{
+								original: `{}`,
+								updated: '{"words":["myarray"]}',
+							},
+							{
+								original: `{"words":[]}`,
+								updated: '{"words":["myarray"]}',
+							},
+							{
+								original: `{"words":["existing"]}`,
+								updated: '{"words":["existing","myarray"]}',
+							},
+						],
+					},
+					id: "addWordToWords",
+				},
+			],
+		},
+		{
+			code: `
+                qwertyuiop
+            `,
+			snapshot: `
+                qwertyuiop
+                ~~~~~~~~~~
+                Forbidden or unknown word: "qwertyuiop".
+            `,
+			suggestions: [
+				{
+					files: {
+						"cspell.json": [
+							{
+								original: ``,
+								updated: '{"words":["qwertyuiop"]}',
+							},
+							{
+								original: `{}`,
+								updated: '{"words":["qwertyuiop"]}',
+							},
+							{
+								original: `{"words":[]}`,
+								updated: '{"words":["qwertyuiop"]}',
+							},
+							{
+								original: `{"words":["existing"]}`,
+								updated: '{"words":["existing","qwertyuiop"]}',
+							},
+						],
+					},
+					id: "addWordToWords",
+				},
+			],
+		},
 	],
 	valid: ["", "known", "known-word", "knownWord"],
 });

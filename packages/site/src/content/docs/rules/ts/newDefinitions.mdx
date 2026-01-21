@@ -1,0 +1,104 @@
+---
+description: "Reports misleading constructor and `new` definitions in interfaces and classes."
+title: "newDefinitions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="newDefinitions" />
+
+In TypeScript, classes and interfaces have different ways of defining how instances are created.
+This rule flags misleading definitions that confuse interface construct signatures with class constructors.
+
+There are two common mistakes this rule catches:
+
+1. **Interface `new()` returning the interface type**: An interface with `new(): InterfaceName` is misleading because interfaces cannot be instantiated directly.
+If the interface describes a constructor function, the return type should typically be different from the interface name.
+
+2. **Interface with `constructor` method**: Interfaces should use `new()` signatures to describe constructables, not `constructor()` methods.
+The `constructor` keyword is used in classes, not interfaces.
+
+3. **Class with `new` method returning the class type**: A class method named `new` that returns the class type looks like a constructor definition, but classes use `constructor` instead.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+interface Container {
+	new (): Container;
+}
+```
+
+```ts
+interface Handler {
+	constructor(): void;
+}
+```
+
+```ts
+declare class Component {
+	new(): Component;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+interface ContainerConstructor {
+	new (): Container;
+}
+
+interface Container {
+	value: string;
+}
+```
+
+```ts
+class Handler {
+	constructor() {
+		// initialization
+	}
+}
+```
+
+```ts
+interface Callable {
+	(): void;
+}
+```
+
+```ts
+interface Factory<T> {
+	new (): T;
+}
+```
+
+```ts
+declare class Component {
+	constructor();
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+This rule is useful for catching common mistakes when defining constructor-like signatures.
+If you have intentional advanced type patterns that this rule incorrectly flags, you may need to disable it.
+
+## Further Reading
+
+- [TypeScript Handbook: Interfaces](https://www.typescriptlang.org/docs/handbook/2/objects.html)
+- [TypeScript Handbook: Classes](https://www.typescriptlang.org/docs/handbook/2/classes.html)
+- [MDN: Constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/constructor)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="newDefinitions" />

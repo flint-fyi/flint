@@ -57,7 +57,7 @@ export async function runCli(args: string[]) {
 		);
 		console.log("");
 		console.log(
-			"See \u001b]8;;flint.fyi\u0007flint.fyi\u001b]8;;\u0007 for more information.",
+			"See \u001B]8;;flint.fyi\u0007flint.fyi\u001B]8;;\u0007 for more information.",
 		);
 		return 0;
 	}
@@ -74,7 +74,7 @@ export async function runCli(args: string[]) {
 			"The Flint CLI auto-initializer is not yet implemented. Check back soon!",
 		);
 		console.error(
-			`In the meantime, why not join \u001b]8;;https://flint.fyi/discord\u0007flint.fyi/discord\u001b]8;;\u0007 and chat with us? ❤️`,
+			`In the meantime, why not join \u001B]8;;https://flint.fyi/discord\u0007flint.fyi/discord\u001B]8;;\u0007 and chat with us? ❤️`,
 		);
 		return 2;
 	}
@@ -88,7 +88,7 @@ export async function runCli(args: string[]) {
 	}
 
 	const renderer = getRenderer();
-	const exitCode = await runCliOnce(configFileName, renderer, values);
+	const { exitCode } = await runCliOnce(configFileName, renderer, values);
 
 	renderer.dispose?.();
 

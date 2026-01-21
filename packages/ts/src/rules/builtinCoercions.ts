@@ -119,7 +119,7 @@ function getCoercionCallName(
 function getCoercionWrapperProblem(
 	node: AST.ArrowFunction | AST.FunctionExpression,
 	parameterName: string,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	if (node.parameters.length !== 1) {
 		return undefined;
@@ -144,7 +144,7 @@ function getCoercionWrapperProblem(
 
 function getFunctionProblem(
 	node: AST.ArrowFunction | AST.FunctionExpression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	const soleParameterText = getSoleParameterText(node);
 	if (!soleParameterText) {
@@ -160,7 +160,7 @@ function getFunctionProblem(
 function getIdentityCallbackProblem(
 	node: AST.ArrowFunction | AST.FunctionExpression,
 	soleParameterText: string,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	if (
 		!isIdentityFunction(node, soleParameterText) ||

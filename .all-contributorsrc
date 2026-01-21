@@ -84,7 +84,8 @@
       "profile": "https://github.com/auvred",
       "contributions": [
         "bug",
-        "maintenance"
+        "maintenance",
+        "ideas"
       ]
     },
     {
@@ -107,7 +108,9 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/53019676?v=4",
       "profile": "https://github.com/kirkwaiblinger",
       "contributions": [
-        "code"
+        "code",
+        "maintenance",
+        "ideas"
       ]
     },
     {
@@ -117,6 +120,34 @@
       "profile": "https://barrymichaeldoyle.com",
       "contributions": [
         "infra"
+      ]
+    },
+    {
+      "login": "kovsu",
+      "name": "Konv Suu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/82451257?v=4",
+      "profile": "https://github.com/kovsu",
+      "contributions": [
+        "doc",
+        "code"
+      ]
+    },
+    {
+      "login": "michaelfaith",
+      "name": "michael faith",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8071845?v=4",
+      "profile": "https://github.com/michaelfaith",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "kolharsam",
+      "name": "Sameer Kolhar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6604943?v=4",
+      "profile": "https://www.kolharsam.net",
+      "contributions": [
+        "code"
       ]
     }
   ],

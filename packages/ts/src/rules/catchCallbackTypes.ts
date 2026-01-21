@@ -78,7 +78,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkCallbackParameter(
 			callback: AST.Expression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
 			if (!ts.isFunctionLike(callback) || callback.parameters.length === 0) {

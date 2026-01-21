@@ -1,0 +1,108 @@
+---
+description: "Reports escape sequences with lowercase hexadecimal characters."
+title: "escapeSequenceCasing"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="escapeSequenceCasing" />
+
+Enforces a consistent escaped value style by requiring escape sequence values to use uppercase hexadecimal characters.
+Uppercase characters promote readability by making the escaped value more distinguishable from the identifier.
+
+## Examples
+
+### Hexadecimal Escape Sequences
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const foo = "\xa9";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const foo = "\xA9";
+```
+
+</TabItem>
+</Tabs>
+
+### Unicode Escape Sequences
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const foo = "\ud834";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const foo = "\uD834";
+```
+
+</TabItem>
+</Tabs>
+
+### Unicode Code Point Escape Sequences
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const foo = "\u{1d306}";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const foo = "\u{1D306}";
+```
+
+</TabItem>
+</Tabs>
+
+### Control Character Escape Sequences
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const foo = "\ca";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const foo = "\cA";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has an established convention of using lowercase escape sequences, or if you don't care about the casing of escape sequences, you may disable this rule.
+
+## Further Reading
+
+- [MDN: Escape sequences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#escape_sequences)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="escapeSequenceCasing" />

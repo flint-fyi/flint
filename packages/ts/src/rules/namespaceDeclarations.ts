@@ -62,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						allowDeclarations &&
 						tsutils.includesModifier(
-							node.modifiers as unknown as ts.NodeArray<ts.ModifierLike>,
+							node.modifiers as ts.NodeArray<ts.ModifierLike>,
 							SyntaxKind.DeclareKeyword,
 						)
 					) {

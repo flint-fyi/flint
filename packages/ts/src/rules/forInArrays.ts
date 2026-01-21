@@ -53,7 +53,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				ForInStatement: (node, { typeChecker }) => {
+				ForInStatement: (node, { sourceFile, typeChecker }) => {
 					const type = getConstrainedTypeAtLocation(
 						node.expression,
 						typeChecker,
@@ -63,8 +63,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						context.report({
 							message: "forIn",
 							range: {
-								begin: node.getStart(),
-								end: node.statement.getStart() - 1,
+								begin: node.getStart(sourceFile),
+								end: node.statement.getStart(sourceFile) - 1,
 							},
 						});
 					}

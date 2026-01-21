@@ -1,4 +1,5 @@
 import {
+	type AST,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -29,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkForAwaitExpressions(
 			node: ts.Node,
 			loopNode: ts.Node,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			if (node.kind === SyntaxKind.AwaitExpression) {
 				const start = node.getStart(sourceFile);

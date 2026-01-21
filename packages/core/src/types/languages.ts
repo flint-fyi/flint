@@ -1,4 +1,5 @@
 import type { CommentDirective } from "./directives.ts";
+import type { LinterHost } from "./host.ts";
 import type { FileReport } from "./reports.ts";
 import type { Rule, RuleAbout, RuleDefinition, RuleRuntime } from "./rules.ts";
 import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
@@ -55,12 +56,6 @@ export interface LanguageCreateRule<
 export interface FileAboutData {
 	filePath: string;
 	filePathAbsolute: string;
-}
-
-/**
- * Description of a file's contents and representation in the file system.
- */
-export interface FileDiskData extends FileAboutData {
 	sourceText: string;
 }
 
@@ -68,7 +63,9 @@ export interface Language<
 	AstNodesByName,
 	FileServices extends object,
 > extends LanguageDefinition<AstNodesByName, FileServices> {
-	createFileFactory(): LanguageFileFactory<AstNodesByName, FileServices>;
+	createFileFactory(
+		host: LinterHost,
+	): LanguageFileFactory<AstNodesByName, FileServices>;
 	createRule: LanguageCreateRule<AstNodesByName, FileServices>;
 }
 
@@ -91,10 +88,9 @@ export interface LanguageDefinition<
 	FileServices extends object,
 > {
 	about: LanguageAbout;
-	createFileFactory(): LanguageFileFactoryDefinition<
-		AstNodesByName,
-		FileServices
-	>;
+	createFileFactory(
+		host: LinterHost,
+	): LanguageFileFactoryDefinition<AstNodesByName, FileServices>;
 }
 
 export interface LanguageFileCacheImpacts {
@@ -112,7 +108,7 @@ export interface LanguageFile<
 	AstNodesByName,
 	FileServices extends object,
 > extends Disposable {
-	about: FileDiskData;
+	about: FileAboutData;
 	cache?: LanguageFileCacheImpacts;
 	getDiagnostics?(): LanguageDiagnostics;
 	runVisitors<
@@ -132,7 +128,7 @@ export interface LanguageFileDefinition<
 	AstNodesByName,
 	FileServices extends object,
 > extends Partial<Disposable> {
-	about: FileDiskData;
+	about: FileAboutData;
 	cache?: LanguageFileCacheImpacts;
 	getDiagnostics?(): LanguageDiagnostics;
 	runVisitors<
@@ -152,11 +148,8 @@ export interface LanguageFileFactory<
 	AstNodesByName,
 	FileServices extends object,
 > extends Disposable {
-	prepareFromDisk(
+	prepareFile(
 		data: FileAboutData,
-	): LanguageFileMetadata<AstNodesByName, FileServices>;
-	prepareFromVirtual(
-		data: FileDiskData,
 	): LanguageFileMetadata<AstNodesByName, FileServices>;
 }
 
@@ -179,11 +172,8 @@ export interface LanguageFileFactoryDefinition<
 	AstNodesByName,
 	FileServices extends object,
 > extends Partial<Disposable> {
-	prepareFromDisk(
+	prepareFile(
 		data: FileAboutData,
-	): LanguageFileMetadataDefinition<AstNodesByName, FileServices>;
-	prepareFromVirtual(
-		data: FileDiskData,
 	): LanguageFileMetadataDefinition<AstNodesByName, FileServices>;
 }
 

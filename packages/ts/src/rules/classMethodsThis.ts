@@ -60,7 +60,7 @@ function containsThis(node: ts.Node): boolean {
 // https://github.com/flint-fyi/flint/issues/1298
 function getMemberDisplayName(
 	member: ClassMember,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): string | undefined {
 	const name = member.name;
 
@@ -189,7 +189,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function reportMember(
 			member: ClassMember,
 			kind: string,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			reportFromStart: boolean,
 		) {
 			const name = getMemberDisplayName(member, sourceFile);
@@ -212,7 +212,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkMethod(
 			member: AST.MethodDeclaration,
 			classNode: AST.ClassDeclaration | AST.ClassExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			options: RuleOptions,
 		) {
 			if (
@@ -227,7 +227,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkAccessor(
 			member: AST.GetAccessorDeclaration | AST.SetAccessorDeclaration,
 			classNode: AST.ClassDeclaration | AST.ClassExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			options: RuleOptions,
 			kind: "getter" | "setter",
 		) {
@@ -243,7 +243,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkPropertyInitializerFunction(
 			member: AST.PropertyDeclaration,
 			classNode: AST.ClassDeclaration | AST.ClassExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			options: RuleOptions,
 		) {
 			if (!member.initializer) {
@@ -270,7 +270,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{
 				options,
 				sourceFile,
-			}: { options: RuleOptions; sourceFile: ts.SourceFile },
+			}: { options: RuleOptions; sourceFile: AST.SourceFile },
 		) {
 			for (const member of node.members) {
 				switch (member.kind) {

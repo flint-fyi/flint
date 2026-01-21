@@ -26,12 +26,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				WithStatement: (node) => {
+				WithStatement: (node, { sourceFile }) => {
 					context.report({
 						message: "withStatement",
 						range: {
-							begin: node.getStart(),
-							end: node.getStart() + withKeyword.length,
+							begin: node.getStart(sourceFile),
+							end: node.getStart(sourceFile) + withKeyword.length,
 						},
 					});
 				},

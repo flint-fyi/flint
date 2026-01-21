@@ -3,7 +3,7 @@ import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -25,7 +25,7 @@ function alwaysTerminates(node: AST.Statement): boolean {
 	}
 }
 
-function findElseKeyword(node: AST.IfStatement, sourceFile: ts.SourceFile) {
+function findElseKeyword(node: AST.IfStatement, sourceFile: AST.SourceFile) {
 	return node
 		.getChildren(sourceFile)
 		.find((child) => child.kind === SyntaxKind.ElseKeyword);

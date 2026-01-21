@@ -124,7 +124,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				| AST.ForStatement
 				| AST.WhileStatement,
 			loopVariables: Set<string>,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			if (tsutils.isFunctionScopeBoundary(node)) {
 				if (referencesLoopVariable(node, loopVariables)) {

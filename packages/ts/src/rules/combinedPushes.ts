@@ -37,7 +37,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 		}
 
-		function getArrayName(node: AST.CallExpression, sourceFile: ts.SourceFile) {
+		function getArrayName(
+			node: AST.CallExpression,
+			sourceFile: AST.SourceFile,
+		) {
 			return (
 				ts.isPropertyAccessExpression(node.expression) &&
 				node.expression.expression.getText(sourceFile)
@@ -46,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isPushCallStatement(
 			statement: AST.Statement,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		) {
 			if (

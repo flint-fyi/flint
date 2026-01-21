@@ -64,7 +64,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkStatements(
 			statements: readonly AST.Statement[],
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (!hasOtherModuleIndicator(statements)) {
 				return;

@@ -12,7 +12,7 @@ import type * as AST from "../types/ast.ts";
  */
 export function getModifyingReferences(
 	identifier: AST.Identifier,
-	sourceFile: AST.SourceFile | ts.SourceFile,
+	sourceFile: AST.SourceFile,
 	typeChecker: Checker,
 ): ts.Identifier[] {
 	const symbol = typeChecker.getSymbolAtLocation(identifier);

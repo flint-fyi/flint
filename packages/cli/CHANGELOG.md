@@ -1,5 +1,23 @@
 # @flint/cli
 
+## 0.17.0
+
+### Minor Changes
+
+- 2fb9715: feat(cli): dynamic data replacement in message
+
+### Patch Changes
+
+- 5d45d64: fix(cli): improve output that has multiple lines
+- eb87fbe: fix(cli): correct output with multiple suggestions
+- f8bf886: fix(cli): config file link in vscode terminal
+- 017f3e3: Feature: spelling plugin typo suggestions
+- Updated dependencies [6a5e553]
+- Updated dependencies [2fb9715]
+- Updated dependencies [3353692]
+- Updated dependencies [3561386]
+  - @flint.fyi/core@0.19.0
+
 ## 0.16.1
 
 ### Patch Changes

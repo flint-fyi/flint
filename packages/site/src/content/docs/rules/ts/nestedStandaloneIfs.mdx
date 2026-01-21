@@ -1,0 +1,120 @@
+---
+description: "Reports `if` statements that are the only statement inside an `else` block or inside another `if` without an `else`."
+title: "nestedStandaloneIfs"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="nestedStandaloneIfs" />
+
+This rule identifies two patterns of unnecessarily nested `if` statements that can be simplified:
+
+1. **Lonely `if` in `else`**: An `if` statement that is the only statement inside an `else` block can be written as `else if`.
+2. **Lonely `if` in `if`**: An `if` statement that is the only statement inside another `if` (without an `else`) can have its conditions combined with `&&`.
+
+Both patterns reduce nesting and improve code readability.
+
+Note that this rule will not flag cases where:
+
+- There are comments inside the block (indicating intentional structure)
+- Multiple statements exist in the block
+- The outer `if` has an `else` clause (for the "lonely if in if" pattern)
+
+## Examples
+
+### Lonely `if` in `else`
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (condition) {
+	doSomething();
+} else {
+	if (otherCondition) {
+		doSomethingElse();
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (condition) {
+	doSomething();
+} else if (otherCondition) {
+	doSomethingElse();
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Lonely `if` in `if`
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (a) {
+	if (b) {
+		doSomething();
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (a && b) {
+	doSomething();
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Operator Precedence
+
+When combining conditions, the rule correctly handles operator precedence by adding parentheses where needed:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (a || b) {
+	if (c) {
+		doSomething();
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if ((a || b) && c) {
+	doSomething();
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you prefer explicit nesting for clarity in complex conditional logic, or if your codebase has a style guide that prefers the nested form, you may want to disable this rule.
+
+## Further Reading
+
+- [MDN: if...else](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/if...else)
+- [MDN: Logical AND (&&)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_AND)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="nestedStandaloneIfs" />

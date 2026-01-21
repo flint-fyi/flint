@@ -1,9 +1,9 @@
-import type { FileDiskData, LanguageFileDefinition } from "@flint.fyi/core";
+import type { FileAboutData, LanguageFileDefinition } from "@flint.fyi/core";
 
 import type { TextFileServices, TextNodes } from "./types.ts";
 
 export function createTextFile(
-	data: FileDiskData,
+	data: FileAboutData,
 ): LanguageFileDefinition<TextNodes, TextFileServices> {
 	return {
 		about: data,

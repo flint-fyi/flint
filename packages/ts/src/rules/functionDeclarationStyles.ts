@@ -10,7 +10,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function isOverloadedDeclaration(
 	node: AST.FunctionDeclaration,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	if (!node.name) {
 		return false;

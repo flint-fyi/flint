@@ -76,6 +76,10 @@ export default defineConfig(
 			},
 		},
 		rules: {
+			"@eslint-community/eslint-comments/disable-enable-pair": [
+				"error",
+				{ allowWholeFile: true },
+			],
 			"@typescript-eslint/no-import-type-side-effects": "error",
 			"@typescript-eslint/no-unnecessary-condition": [
 				"error",
@@ -84,6 +88,11 @@ export default defineConfig(
 			"@typescript-eslint/restrict-template-expressions": [
 				"error",
 				{ allowNumber: true },
+			],
+			"jsdoc/check-tag-names": [
+				"error",
+				// https://tsdoc.org/pages/tags/remarks
+				{ definedTags: ["remarks"], typed: true },
 			],
 			"n/no-missing-import": "off",
 			"n/no-unsupported-features/node-builtins": [

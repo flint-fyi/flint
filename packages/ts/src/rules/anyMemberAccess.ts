@@ -95,7 +95,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkMemberExpression(
 			node: AST.ElementAccessExpression | AST.PropertyAccessExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		) {
 			if (reportedChains.has(node) || isInHeritageClause(node)) {
@@ -129,7 +129,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkComputedKey(
 			node: AST.ElementAccessExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		) {
 			const keyNode = node.argumentExpression;
