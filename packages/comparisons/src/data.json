@@ -13495,7 +13495,8 @@
 		"flint": {
 			"name": "numberStaticMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
+			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [

@@ -143,6 +143,7 @@ import nonNullAssertedOptionalChains from "./rules/nonNullAssertedOptionalChains
 import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
 import numberMethodRanges from "./rules/numberMethodRanges.ts";
+import numberStaticMethods from "./rules/numberStaticMethods.ts";
 import numericErasingOperations from "./rules/numericErasingOperations.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
 import objectCalls from "./rules/objectCalls.ts";
@@ -322,6 +323,7 @@ export const ts = createPlugin({
 		nonNullAssertionPlacement,
 		nonOctalDecimalEscapes,
 		numberMethodRanges,
+		numberStaticMethods,
 		numericErasingOperations,
 		numericLiteralParsing,
 		objectCalls,

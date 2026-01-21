@@ -59,7 +59,7 @@ function getInitializerValue(initializer: AST.JsxAttributeValue) {
 	if (initializer.kind === SyntaxKind.StringLiteral) {
 		const parsed = Number(initializer.text);
 
-		return isNaN(parsed) ? undefined : parsed;
+		return Number.isNaN(parsed) ? undefined : parsed;
 	}
 
 	if (initializer.kind === SyntaxKind.JsxExpression) {
