@@ -152,6 +152,7 @@ import objectProto from "./rules/objectProto.ts";
 import objectPrototypeBuiltIns from "./rules/objectPrototypeBuiltIns.ts";
 import octalEscapes from "./rules/octalEscapes.ts";
 import octalNumbers from "./rules/octalNumbers.ts";
+import operatorAssignmentShorthand from "./rules/operatorAssignmentShorthand.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import selfComparisons from "./rules/selfComparisons.ts";
@@ -331,6 +332,7 @@ export const ts = createPlugin({
 		objectPrototypeBuiltIns,
 		octalEscapes,
 		octalNumbers,
+		operatorAssignmentShorthand,
 		returnAssignments,
 		selfAssignments,
 		selfComparisons,
