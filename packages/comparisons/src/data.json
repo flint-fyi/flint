@@ -14013,7 +14013,8 @@
 		"flint": {
 			"name": "optionalChainOperators",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
