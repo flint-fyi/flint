@@ -109,7 +109,8 @@ This rule is not configurable.
 If you need to support JavaScript environments that don't have `Object.fromEntries()` (pre-ES2019), you might need to disable this rule or use a polyfill.
 `Object.fromEntries()` is supported in Node.js 12.0.0+ and all modern browsers.
 
-Some reduce patterns are more complex than what this rule detects and may be intentional, such as when the accumulator needs additional processing or when building an object with conditional keys.
+Some reduce patterns are more complex than what this rule detects, such as when the accumulator needs additional processing or when building an object with conditional keys.
+If you use those patterns often and prefer to keep stylistic consistency with them, you might prefer to disable this rule.
 
 ## Further Reading
 

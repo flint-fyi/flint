@@ -14,11 +14,7 @@ import { skipParentheses } from "./utils/skipParentheses.ts";
 function isArrowFunctionWithParams(
 	node: AST.Expression,
 ): node is AST.ArrowFunction {
-	if (node.kind !== SyntaxKind.ArrowFunction) {
-		return false;
-	}
-
-	return node.parameters.length > 0;
+	return node.kind === SyntaxKind.ArrowFunction && node.parameters.length > 0;
 }
 
 function isEmptyObject(node: AST.Expression, typeChecker: Checker) {
@@ -36,29 +32,8 @@ function isEmptyObjectLiteral(node: AST.Expression) {
 	);
 }
 
-function isMatchingReducePattern(
-	node: AST.CallExpression,
-	typeChecker: Checker,
-) {
-	if (!isReduceCallWithEmptyObject(node, typeChecker)) {
-		return false;
-	}
-
-	const callback = node.arguments[0];
-	if (callback === undefined || !isArrowFunctionWithParams(callback)) {
-		return false;
-	}
-
-	if (callback.body.kind === SyntaxKind.Block) {
-		return false;
-	}
-
-	return (
-		isObjectAssignPattern(callback, typeChecker) ||
-		isSpreadAccumulatorPattern(callback)
-	);
-}
-
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
 function isObjectAssignPattern(
 	callback: AST.ArrowFunction,
 	typeChecker: Checker,
@@ -67,33 +42,19 @@ function isObjectAssignPattern(
 		return false;
 	}
 
-	const firstParam = callback.parameters[0];
-	if (
-		firstParam === undefined ||
-		firstParam.name.kind !== SyntaxKind.Identifier
-	) {
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const firstParameter = callback.parameters[0]!;
+
+	if (firstParameter.name.kind !== SyntaxKind.Identifier) {
 		return false;
 	}
 
-	const accumulatorName = firstParam.name.text;
+	const accumulatorName = firstParameter.name.text;
 	const body = skipParentheses(callback.body as AST.Expression);
 
-	if (body.kind !== SyntaxKind.CallExpression) {
-		return false;
-	}
-
-	if (body.expression.kind !== SyntaxKind.PropertyAccessExpression) {
-		return false;
-	}
-
 	if (
-		body.expression.name.kind !== SyntaxKind.Identifier ||
-		body.expression.name.text !== "assign"
-	) {
-		return false;
-	}
-
-	if (
+		!isObjectMethodCall(body, "assign", typeChecker) ||
+		body.arguments.length !== 2 ||
 		!isGlobalDeclarationOfName(
 			body.expression.expression,
 			"Object",
@@ -103,102 +64,89 @@ function isObjectAssignPattern(
 		return false;
 	}
 
-	if (body.arguments.length !== 2) {
-		return false;
-	}
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const firstArg = body.arguments[0]!;
 
-	const firstArg = body.arguments[0];
 	if (
-		firstArg === undefined ||
 		firstArg.kind !== SyntaxKind.Identifier ||
 		firstArg.text !== accumulatorName
 	) {
 		return false;
 	}
 
-	const secondArg = body.arguments[1];
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const secondArg = body.arguments[1]!;
+
 	if (
-		secondArg === undefined ||
-		secondArg.kind !== SyntaxKind.ObjectLiteralExpression
+		secondArg.kind !== SyntaxKind.ObjectLiteralExpression ||
+		secondArg.properties.length !== 1
 	) {
 		return false;
 	}
 
-	if (secondArg.properties.length !== 1) {
-		return false;
-	}
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const property = secondArg.properties[0]!;
 
-	const property = secondArg.properties[0];
 	return (
-		property !== undefined &&
 		property.kind === SyntaxKind.PropertyAssignment &&
 		property.name.kind === SyntaxKind.ComputedPropertyName
 	);
 }
 
 function isObjectCreateNull(node: AST.Expression, typeChecker: Checker) {
-	if (node.kind !== SyntaxKind.CallExpression) {
-		return false;
-	}
-
-	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
-		return false;
-	}
-
 	if (
-		node.expression.name.kind !== SyntaxKind.Identifier ||
-		node.expression.name.text !== "create"
-	) {
-		return false;
-	}
-
-	if (
+		!isObjectMethodCall(node, "create", typeChecker) ||
 		!isGlobalDeclarationOfName(
 			node.expression.expression,
 			"Object",
 			typeChecker,
-		)
+		) ||
+		node.arguments.length !== 1
 	) {
 		return false;
 	}
 
-	if (node.arguments.length !== 1) {
-		return false;
-	}
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const argument = node.arguments[0]!;
 
-	const argument = node.arguments[0];
-	return argument !== undefined && argument.kind === SyntaxKind.NullKeyword;
+	return argument.kind === SyntaxKind.NullKeyword;
+}
+
+function isObjectMethodCall(
+	node: AST.AnyNode,
+	text: string,
+	typeChecker: Checker,
+): node is AST.CallExpression & { expression: AST.PropertyAccessExpression } {
+	return (
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.name.kind === SyntaxKind.Identifier &&
+		node.expression.name.text === text &&
+		isGlobalDeclarationOfName(node.expression.expression, "Object", typeChecker)
+	);
 }
 
 function isReduceCallWithEmptyObject(
 	node: AST.CallExpression,
 	typeChecker: Checker,
 ) {
-	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
-		return false;
-	}
-
 	if (
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.kind !== SyntaxKind.Identifier ||
-		node.expression.name.text !== "reduce"
+		node.expression.name.text !== "reduce" ||
+		node.questionDotToken !== undefined ||
+		node.arguments.length !== 2
 	) {
 		return false;
 	}
 
-	if (node.questionDotToken !== undefined) {
-		return false;
-	}
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const initialValue = node.arguments[1]!;
 
-	if (node.arguments.length !== 2) {
-		return false;
-	}
-
-	const initialValue = node.arguments[1];
-	if (initialValue === undefined || !isEmptyObject(initialValue, typeChecker)) {
-		return false;
-	}
-
-	return isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker);
+	return (
+		isEmptyObject(initialValue, typeChecker) &&
+		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
+	);
 }
 
 function isSpreadAccumulatorPattern(callback: AST.ArrowFunction) {
@@ -217,32 +165,28 @@ function isSpreadAccumulatorPattern(callback: AST.ArrowFunction) {
 	const accumulatorName = firstParam.name.text;
 	const body = skipParentheses(callback.body as AST.Expression);
 
-	if (body.kind !== SyntaxKind.ObjectLiteralExpression) {
-		return false;
-	}
-
-	if (body.properties.length !== 2) {
-		return false;
-	}
-
-	const firstProp = body.properties[0];
 	if (
-		firstProp === undefined ||
-		firstProp.kind !== SyntaxKind.SpreadAssignment
+		body.kind !== SyntaxKind.ObjectLiteralExpression ||
+		body.properties.length !== 2
 	) {
 		return false;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const firstProp = body.properties[0]!;
+
 	if (
+		firstProp.kind !== SyntaxKind.SpreadAssignment ||
 		firstProp.expression.kind !== SyntaxKind.Identifier ||
 		firstProp.expression.text !== accumulatorName
 	) {
 		return false;
 	}
 
-	const secondProp = body.properties[1];
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const secondProp = body.properties[1]!;
+
 	return (
-		secondProp !== undefined &&
 		secondProp.kind === SyntaxKind.PropertyAssignment &&
 		secondProp.name.kind === SyntaxKind.ComputedPropertyName
 	);
@@ -272,7 +216,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (!isMatchingReducePattern(node, typeChecker)) {
+					if (!isReduceCallWithEmptyObject(node, typeChecker)) {
+						return;
+					}
+
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const callback = node.arguments[0]!;
+
+					if (
+						!isArrowFunctionWithParams(callback) ||
+						callback.body.kind === SyntaxKind.Block
+					) {
+						return;
+					}
+
+					if (
+						!isObjectAssignPattern(callback, typeChecker) &&
+						!isSpreadAccumulatorPattern(callback)
+					) {
 						return;
 					}
 
