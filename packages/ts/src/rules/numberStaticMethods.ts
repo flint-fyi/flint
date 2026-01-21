@@ -8,8 +8,7 @@ import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-const globalProperties = new Map([
-	["Infinity", "Number.POSITIVE_INFINITY"],
+const globalReplacements = new Map([
 	["isFinite", "Number.isFinite"],
 	["isNaN", "Number.isNaN"],
 	["NaN", "Number.NaN"],
@@ -18,46 +17,30 @@ const globalProperties = new Map([
 ]);
 
 function isDeclarationName(node: ts.Identifier) {
-	const { parent } = node;
 	return (
-		(ts.isFunctionDeclaration(parent) && parent.name === node) ||
-		(ts.isVariableDeclaration(parent) && parent.name === node) ||
-		(ts.isParameter(parent) && parent.name === node)
+		(ts.isFunctionDeclaration(node.parent) && node.parent.name === node) ||
+		(ts.isVariableDeclaration(node.parent) && node.parent.name === node) ||
+		(ts.isParameter(node.parent) && node.parent.name === node)
 	);
 }
 
 function isLeftHandSide(node: AST.Identifier) {
-	if (
+	return (
 		node.parent.kind === ts.SyntaxKind.BinaryExpression &&
 		ts.isBinaryExpression(node.parent) &&
-		node.parent.left === node
-	) {
-		const { operatorToken } = node.parent;
-		return (
-			operatorToken.kind >= ts.SyntaxKind.FirstAssignment &&
-			operatorToken.kind <= ts.SyntaxKind.LastAssignment
-		);
-	}
-
-	return false;
-}
-
-function isNegativeInfinity(node: AST.Identifier) {
-	return (
-		node.parent.kind === ts.SyntaxKind.PrefixUnaryExpression &&
-		ts.isPrefixUnaryExpression(node.parent) &&
-		node.parent.operator === ts.SyntaxKind.MinusToken &&
-		node.parent.operand === node
+		node.parent.left === node &&
+		node.parent.operatorToken.kind >= ts.SyntaxKind.FirstAssignment &&
+		node.parent.operatorToken.kind <= ts.SyntaxKind.LastAssignment
 	);
 }
 
-function isPropertyAccess(node: ts.Identifier) {
+function isPropertyAccessOfNode(node: ts.Identifier) {
 	return (
 		ts.isPropertyAccessExpression(node.parent) && node.parent.name === node
 	);
 }
 
-function isPropertyShorthand(node: ts.Identifier) {
+function isPropertyShorthandOfNode(node: ts.Identifier) {
 	return (
 		ts.isShorthandPropertyAssignment(node.parent) && node.parent.name === node
 	);
@@ -85,39 +68,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				Identifier: (node, { sourceFile, typeChecker }) => {
-					const replacement = globalProperties.get(node.text);
-					if (!replacement) {
-						return;
-					}
-
+					const replacement = globalReplacements.get(node.text);
 					if (
-						isPropertyAccess(node) ||
-						isPropertyShorthand(node) ||
-						isDeclarationName(node)
+						!replacement ||
+						isPropertyAccessOfNode(node) ||
+						isPropertyShorthandOfNode(node) ||
+						isDeclarationName(node) ||
+						!isGlobalVariable(node, typeChecker) ||
+						isLeftHandSide(node)
 					) {
 						return;
 					}
 
-					if (!isGlobalVariable(node, typeChecker)) {
-						return;
-					}
-
-					if (isLeftHandSide(node)) {
-						return;
-					}
-
-					let finalReplacement = replacement;
-					let reportNode: AST.AnyNode = node;
-
-					if (node.text === "Infinity" && isNegativeInfinity(node)) {
-						finalReplacement = "Number.NEGATIVE_INFINITY";
-						reportNode = node.parent;
-					}
-
 					context.report({
-						data: { name: node.text, replacement: finalReplacement },
+						data: { name: node.text, replacement },
 						message: "preferNumberMethod",
-						range: getTSNodeRange(reportNode, sourceFile),
+						range: getTSNodeRange(node, sourceFile),
 					});
 				},
 			},

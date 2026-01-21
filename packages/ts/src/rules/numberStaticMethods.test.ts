@@ -55,26 +55,6 @@ const value = NaN;
 		},
 		{
 			code: `
-const value = Infinity;
-`,
-			snapshot: `
-const value = Infinity;
-              ~~~~~~~~
-              Prefer \`Number.POSITIVE_INFINITY\` over the global \`Infinity\` for clarity and consistency.
-`,
-		},
-		{
-			code: `
-const value = -Infinity;
-`,
-			snapshot: `
-const value = -Infinity;
-              ~~~~~~~~~
-              Prefer \`Number.NEGATIVE_INFINITY\` over the global \`Infinity\` for clarity and consistency.
-`,
-		},
-		{
-			code: `
 if (isNaN(result)) {}
 `,
 			snapshot: `
@@ -105,20 +85,6 @@ console.log(NaN);
 		},
 		{
 			code: `
-const positive = Infinity;
-const negative = -Infinity;
-`,
-			snapshot: `
-const positive = Infinity;
-                 ~~~~~~~~
-                 Prefer \`Number.POSITIVE_INFINITY\` over the global \`Infinity\` for clarity and consistency.
-const negative = -Infinity;
-                 ~~~~~~~~~
-                 Prefer \`Number.NEGATIVE_INFINITY\` over the global \`Infinity\` for clarity and consistency.
-`,
-		},
-		{
-			code: `
 typeof isNaN;
 `,
 			snapshot: `
@@ -135,16 +101,6 @@ const check = value === NaN;
 const check = value === NaN;
                         ~~~
                         Prefer \`Number.NaN\` over the global \`NaN\` for clarity and consistency.
-`,
-		},
-		{
-			code: `
-const value = +Infinity;
-`,
-			snapshot: `
-const value = +Infinity;
-               ~~~~~~~~
-               Prefer \`Number.POSITIVE_INFINITY\` over the global \`Infinity\` for clarity and consistency.
 `,
 		},
 		{
@@ -174,8 +130,6 @@ const ref = parseInt;
 		`Number.isNaN(value);`,
 		`Number.isFinite(value);`,
 		`Number.NaN;`,
-		`Number.POSITIVE_INFINITY;`,
-		`Number.NEGATIVE_INFINITY;`,
 		`const isNaN = (value: unknown) => typeof value === "number" && value !== value;`,
 		`function parseInt(value: string) { return value; }`,
 		`const obj = { isNaN: true };`,
@@ -184,7 +138,6 @@ const ref = parseInt;
 		`const value = obj.isNaN;`,
 		`class Example { isNaN = true; }`,
 		`const obj = { NaN: 0 };`,
-		`const value = config.Infinity;`,
 		`function example(isNaN: boolean) { return isNaN; }`,
 		`const parseFloat = 42;`,
 		`const object = { parseInt };`,
