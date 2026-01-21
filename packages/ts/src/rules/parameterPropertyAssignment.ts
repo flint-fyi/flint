@@ -23,22 +23,49 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		const parameterNames = new Map<ts.Node, Set<string>>();
+		const parametersByNode = new Map<ts.Node, Set<string>>();
 
-		const collectParameterNames = (parameters: ts.ParameterDeclaration[]) => {
+		const getParameterNames = (parameters: ts.ParameterDeclaration[]) => {
 			const names = new Set<string>();
-			for (const parameter of parameters) {
-				if (parameter.name.kind === ts.SyntaxKind.Identifier) {
-					names.add(parameter.name.text);
+			for (const param of parameters) {
+				if (param.name.kind === ts.SyntaxKind.Identifier) {
+					names.add(param.name.text);
 				}
 			}
 			return names;
 		};
 
+		const findContainingFunction = (node: ts.Node) => {
+			let current: ts.Node | undefined = node;
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			while (current !== undefined) {
+				if (
+					ts.isFunctionDeclaration(current) ||
+					ts.isFunctionExpression(current) ||
+					ts.isArrowFunction(current) ||
+					ts.isMethodDeclaration(current) ||
+					ts.isConstructorDeclaration(current)
+				) {
+					return current;
+				}
+				current = current.parent;
+			}
+			return undefined;
+		};
+
 		return {
 			visitors: {
-				ArrowFunction: (node) => {
-					parameterNames.set(node, collectParameterNames(node.parameters));
+				ArrowFunction: (
+					node:
+						| ts.ArrowFunction
+						| ts.ConstructorDeclaration
+						| ts.FunctionDeclaration
+						| ts.FunctionExpression
+						| ts.MethodDeclaration,
+				) => {
+					if (ts.isArrowFunction(node)) {
+						parametersByNode.set(node, getParameterNames(node.parameters));
+					}
 				},
 				BinaryExpression: (node, { sourceFile }) => {
 					// Check for pattern: this.x = x (where x is a parameter)
@@ -46,49 +73,80 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const left = node.left;
-					const right = node.right;
-
 					if (
-						!ts.isPropertyAccessExpression(left) ||
-						!ts.isIdentifier(left.expression) ||
-						left.expression.text !== "this" ||
-						!ts.isIdentifier(left.name) ||
-						!ts.isIdentifier(right)
+						!ts.isPropertyAccessExpression(node.left) ||
+						node.left.expression.kind !== ts.SyntaxKind.ThisKeyword ||
+						!ts.isIdentifier(node.left.name) ||
+						!ts.isIdentifier(node.right)
 					) {
 						return;
 					}
 
-					const propertyName = left.name.text;
-					const parameterName = right.text;
+					const propertyName = node.left.name.text;
+					const parameterName = node.right.text;
 
-					if (propertyName === parameterName) {
-						let currentNode: ts.Node | undefined = node;
-						// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-						while (currentNode !== undefined) {
-							if (
-								ts.isFunctionDeclaration(currentNode) ||
-								ts.isFunctionExpression(currentNode) ||
-								ts.isArrowFunction(currentNode)
-							) {
-								const params = parameterNames.get(currentNode);
-								if (params?.has(parameterName)) {
-									context.report({
-										message: "unnecessaryParameterPropertyAssignment",
-										range: getTSNodeRange(node, sourceFile),
-									});
-								}
-								return;
-							}
-							currentNode = currentNode.parent;
+					if (propertyName !== parameterName) {
+						return;
+					}
+
+					const func = findContainingFunction(node);
+					if (func && parametersByNode.has(func)) {
+						const params = parametersByNode.get(func);
+						if (params?.has(parameterName)) {
+							context.report({
+								message: "unnecessaryParameterPropertyAssignment",
+								range: getTSNodeRange(node, sourceFile),
+							});
 						}
 					}
 				},
-				FunctionDeclaration: (node) => {
-					parameterNames.set(node, collectParameterNames(node.parameters));
+				ConstructorDeclaration: (
+					node:
+						| ts.ArrowFunction
+						| ts.ConstructorDeclaration
+						| ts.FunctionDeclaration
+						| ts.FunctionExpression
+						| ts.MethodDeclaration,
+				) => {
+					if (ts.isConstructorDeclaration(node)) {
+						parametersByNode.set(node, getParameterNames(node.parameters));
+					}
 				},
-				FunctionExpression: (node) => {
-					parameterNames.set(node, collectParameterNames(node.parameters));
+				FunctionDeclaration: (
+					node:
+						| ts.ArrowFunction
+						| ts.ConstructorDeclaration
+						| ts.FunctionDeclaration
+						| ts.FunctionExpression
+						| ts.MethodDeclaration,
+				) => {
+					if (ts.isFunctionDeclaration(node)) {
+						parametersByNode.set(node, getParameterNames(node.parameters));
+					}
+				},
+				FunctionExpression: (
+					node:
+						| ts.ArrowFunction
+						| ts.ConstructorDeclaration
+						| ts.FunctionDeclaration
+						| ts.FunctionExpression
+						| ts.MethodDeclaration,
+				) => {
+					if (ts.isFunctionExpression(node)) {
+						parametersByNode.set(node, getParameterNames(node.parameters));
+					}
+				},
+				MethodDeclaration: (
+					node:
+						| ts.ArrowFunction
+						| ts.ConstructorDeclaration
+						| ts.FunctionDeclaration
+						| ts.FunctionExpression
+						| ts.MethodDeclaration,
+				) => {
+					if (ts.isMethodDeclaration(node)) {
+						parametersByNode.set(node, getParameterNames(node.parameters));
+					}
 				},
 			},
 		};

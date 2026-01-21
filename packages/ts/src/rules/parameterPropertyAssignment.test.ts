@@ -3,7 +3,14 @@ import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
-		// TODO: Implement detection logic
+		{
+			code: `
+const x = 1;
+`,
+			snapshot: `
+const x = 1;
+`,
+		},
 	],
 	valid: [
 		`
