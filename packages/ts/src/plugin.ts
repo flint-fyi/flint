@@ -152,6 +152,7 @@ import objectPrototypeBuiltIns from "./rules/objectPrototypeBuiltIns.ts";
 import octalEscapes from "./rules/octalEscapes.ts";
 import octalNumbers from "./rules/octalNumbers.ts";
 import optionalChainOperators from "./rules/optionalChainOperators.ts";
+import parameterPropertyAssignment from "./rules/parameterPropertyAssignment.ts";
 import parameterReassignments from "./rules/parameterReassignments.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
@@ -332,6 +333,7 @@ export const ts = createPlugin({
 		octalEscapes,
 		octalNumbers,
 		optionalChainOperators,
+		parameterPropertyAssignment,
 		parameterReassignments,
 		returnAssignments,
 		selfAssignments,
