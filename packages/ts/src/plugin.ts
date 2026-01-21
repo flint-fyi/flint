@@ -142,10 +142,15 @@ import nonNullAssertedNullishCoalesces from "./rules/nonNullAssertedNullishCoale
 import nonNullAssertedOptionalChains from "./rules/nonNullAssertedOptionalChains.ts";
 import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
+import nullishCoalescingOperators from "./rules/nullishCoalescingOperators.ts";
 import numberMethodRanges from "./rules/numberMethodRanges.ts";
+import numberStaticMethods from "./rules/numberStaticMethods.ts";
+import numericErasingOperations from "./rules/numericErasingOperations.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
 import numericPrecision from "./rules/numericPrecision.ts";
+import objectAssignSpreads from "./rules/objectAssignSpreads.ts";
 import objectCalls from "./rules/objectCalls.ts";
+import objectEntriesMethods from "./rules/objectEntriesMethods.ts";
 import objectHasOwns from "./rules/objectHasOwns.ts";
 import objectKeyDuplicates from "./rules/objectKeyDuplicates.ts";
 import objectProto from "./rules/objectProto.ts";
@@ -318,13 +323,17 @@ export const ts = createPlugin({
 		nonNullableTypeAssertions,
 		nonNullAssertedNullishCoalesces,
 		nonNullAssertedOptionalChains,
-		nonNullAssertedOptionalChains,
 		nonNullAssertionPlacement,
 		nonOctalDecimalEscapes,
+		nullishCoalescingOperators,
 		numberMethodRanges,
+		numberStaticMethods,
+		numericErasingOperations,
 		numericLiteralParsing,
 		numericPrecision,
+		objectAssignSpreads,
 		objectCalls,
+		objectEntriesMethods,
 		objectHasOwns,
 		objectKeyDuplicates,
 		objectProto,

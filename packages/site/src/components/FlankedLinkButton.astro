@@ -1,0 +1,46 @@
+---
+import { LinkButton } from "@astrojs/starlight/components";
+
+interface Props {
+	href: string;
+}
+---
+
+<div class="flanked-link-button-area">
+	<div class="hr"></div>
+	<LinkButton href={Astro.props.href}>
+		<span class="get-started-button-text">
+			<slot />
+		</span>
+	</LinkButton>
+	<div class="hr"></div>
+</div>
+
+<style>
+	.flanked-link-button-area {
+		align-items: center;
+		display: flex;
+		flex-direction: row;
+		gap: 2rem;
+		width: 100%;
+	}
+
+	a {
+		margin: 0;
+		margin-inline-end: 0;
+	}
+
+	.hr {
+		background: var(--sl-color-gray-5);
+		display: block;
+		height: 2px;
+		width: 100%;
+	}
+
+	.get-started-button-text {
+		display: block;
+		font-size: var(--sl-text-xl);
+		margin: 0 1rem;
+		text-wrap: nowrap;
+	}
+</style>
