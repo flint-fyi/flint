@@ -1,0 +1,97 @@
+---
+description: "Reports numeric literals with inconsistent casing in prefixes and exponents."
+title: "numericLiteralCasing"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="numericLiteralCasing" />
+
+This rule enforces consistent casing for numeric literal prefixes and exponents.
+
+The convention is:
+
+- Lowercase prefixes: `0x`, `0o`, `0b`
+- Lowercase exponent notation: `e`
+- Uppercase hexadecimal digits: `0xABCDEF`
+
+This improves readability by clearly distinguishing prefixes from values and making hexadecimal letters visually distinct from lowercase characters.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = 0xff;
+```
+
+```ts
+const value = 0xff;
+```
+
+```ts
+const value = 0o77;
+```
+
+```ts
+const value = 0b1010;
+```
+
+```ts
+const value = 1e10;
+```
+
+```ts
+const value = 0xffn;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = 0xff;
+```
+
+```ts
+const value = 0xabcd;
+```
+
+```ts
+const value = 0o77;
+```
+
+```ts
+const value = 0b1010;
+```
+
+```ts
+const value = 1e10;
+```
+
+```ts
+const value = 0xffn;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a codebase with a different established convention for numeric literal casing, or if you prefer a different style, you may want to disable this rule.
+
+## Further Reading
+
+- [MDN: Lexical grammar - Numeric literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#numeric_literals)
+- [MDN: BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="numericLiteralCasing" />
