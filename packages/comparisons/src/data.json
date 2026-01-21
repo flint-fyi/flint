@@ -14034,7 +14034,8 @@
 		"flint": {
 			"name": "overloadSignaturesAdjacent",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
