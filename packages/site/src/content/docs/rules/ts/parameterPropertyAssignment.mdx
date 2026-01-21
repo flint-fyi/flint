@@ -1,0 +1,56 @@
+---
+description: "Disallow unnecessary property assignments in function parameters."
+title: "parameterPropertyAssignment"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="parameterPropertyAssignment" />
+
+Assigning a function parameter directly to a property with the same name is redundant and indicates unnecessary boilerplate.
+Modern TypeScript provides better syntax for this pattern using parameter properties.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class MyClass {
+	constructor(value: string) {
+		this.value = value;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class MyClass {
+	constructor(public value: string) {}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer explicit constructor assignments for clarity or consistency with existing code patterns, you can disable this rule.
+
+## Further Reading
+
+- [TypeScript: Parameter Properties](https://www.typescriptlang.org/docs/handbook/2/classes.html#parameter-properties)
+- [ESLint: no-unnecessary-parameter-property-assignment](https://typescript-eslint.io/rules/no-unnecessary-parameter-property-assignment)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="parameterPropertyAssignment" />
