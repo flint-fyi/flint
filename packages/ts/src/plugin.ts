@@ -142,18 +142,20 @@ import nonNullAssertedNullishCoalesces from "./rules/nonNullAssertedNullishCoale
 import nonNullAssertedOptionalChains from "./rules/nonNullAssertedOptionalChains.ts";
 import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
+import nullishCoalescingOperators from "./rules/nullishCoalescingOperators.ts";
 import numberMethodRanges from "./rules/numberMethodRanges.ts";
+import numberStaticMethods from "./rules/numberStaticMethods.ts";
+import numericErasingOperations from "./rules/numericErasingOperations.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
 import objectCalls from "./rules/objectCalls.ts";
+import objectEntriesMethods from "./rules/objectEntriesMethods.ts";
 import objectHasOwns from "./rules/objectHasOwns.ts";
 import objectKeyDuplicates from "./rules/objectKeyDuplicates.ts";
 import objectProto from "./rules/objectProto.ts";
 import objectPrototypeBuiltIns from "./rules/objectPrototypeBuiltIns.ts";
 import octalEscapes from "./rules/octalEscapes.ts";
 import octalNumbers from "./rules/octalNumbers.ts";
-import optionalChainOperators from "./rules/optionalChainOperators.ts";
 import parameterPropertyAssignment from "./rules/parameterPropertyAssignment.ts";
-import parameterReassignments from "./rules/parameterReassignments.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import selfComparisons from "./rules/selfComparisons.ts";
@@ -320,21 +322,22 @@ export const ts = createPlugin({
 		nonNullableTypeAssertions,
 		nonNullAssertedNullishCoalesces,
 		nonNullAssertedOptionalChains,
-		nonNullAssertedOptionalChains,
 		nonNullAssertionPlacement,
 		nonOctalDecimalEscapes,
+		nullishCoalescingOperators,
 		numberMethodRanges,
+		numberStaticMethods,
+		numericErasingOperations,
 		numericLiteralParsing,
 		objectCalls,
+		objectEntriesMethods,
 		objectHasOwns,
 		objectKeyDuplicates,
 		objectProto,
 		objectPrototypeBuiltIns,
 		octalEscapes,
 		octalNumbers,
-		optionalChainOperators,
 		parameterPropertyAssignment,
-		parameterReassignments,
 		returnAssignments,
 		selfAssignments,
 		selfComparisons,
