@@ -13874,7 +13874,8 @@
 		"flint": {
 			"name": "objectShorthand",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
