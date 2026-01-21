@@ -13408,7 +13408,7 @@
 		"flint": {
 			"name": "nullComparisons",
 			"plugin": "ts",
-			"status": "implemented"
+			"status": "skipped"
 		},
 		"oxlint": [
 			{
@@ -13427,8 +13427,7 @@
 		"flint": {
 			"name": "nullishCoalescingOperators",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented"
+			"preset": "stylistic"
 		}
 	},
 	{
