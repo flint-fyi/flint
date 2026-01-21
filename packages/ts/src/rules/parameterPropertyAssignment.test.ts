@@ -5,10 +5,38 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-const x = 1;
+class MyClass {
+	constructor(value: string) {
+		this.value = value;
+	}
+}
 `,
 			snapshot: `
-const x = 1;
+class MyClass {
+	constructor(value: string) {
+		this.value = value;
+		~~~~~~~~~~~~~~~~~~
+		Parameter property assignment is unnecessary.
+	}
+}
+`,
+		},
+		{
+			code: `
+class Service {
+	update(data: object) {
+		this.data = data;
+	}
+}
+`,
+			snapshot: `
+class Service {
+	update(data: object) {
+		this.data = data;
+		~~~~~~~~~~~~~~~~
+		Parameter property assignment is unnecessary.
+	}
+}
 `,
 		},
 	],
