@@ -14013,8 +14013,7 @@
 		"flint": {
 			"name": "optionalChainOperators",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -14107,8 +14106,8 @@
 		"flint": {
 			"name": "parameterReassignments",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
+			"preset": "stylistic",
+			"strictness": "strict"
 		}
 	},
 	{
