@@ -39,7 +39,10 @@ function convertNumberToScientificNotation(
 	parseAsFloat: boolean,
 ): ScientificNotation {
 	const splitNumber = stringNumber.split("e");
-	const originalCoefficient = splitNumber[0];
+
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const originalCoefficient = splitNumber[0]!;
+
 	const normalizedNumber =
 		parseAsFloat || stringNumber.includes(".")
 			? normalizeFloat(originalCoefficient)
@@ -155,16 +158,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"JavaScript numbers are 64-bit floating-point values with limited precision.",
 				"Numbers with more than 15-17 significant digits cannot be accurately represented.",
 			],
+			suggestions: [
+				"If large amounts of precision are needed, switch to a different data structure.",
+				"Remove the digits that are lost at runtime.",
+			],
 		},
 	},
 	setup(context) {
 		return {
 			visitors: {
 				NumericLiteral: (node, { sourceFile }) => {
-					const raw = getRaw(node.getText(sourceFile));
-					const value = Number(node.text);
-
-					if (losesPrecision(raw, value)) {
+					if (
+						losesPrecision(getRaw(node.getText(sourceFile)), Number(node.text))
+					) {
 						context.report({
 							message: "lossOfPrecision",
 							range: getTSNodeRange(node, sourceFile),
