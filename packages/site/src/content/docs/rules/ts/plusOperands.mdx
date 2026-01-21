@@ -1,0 +1,108 @@
+---
+description: "Require both operands of addition to be the same type and be `bigint`, `number`, or `string`."
+title: "plusOperands"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="plusOperands" />
+
+JavaScript's `+` operator has two distinct behaviors: arithmetic addition for numbers and string concatenation for strings.
+When operands of different types are used, implicit type coercion occurs, which can lead to unexpected results and bugs.
+
+This rule enforces that both operands of a `+` operation are of the same type and are either `bigint`, `number`, or `string`.
+It also catches attempts to mix `bigint` and `number` types, which causes a runtime error in JavaScript.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const str = "Count: ";
+const num = 5;
+const result = str + num; // String concatenation via coercion
+```
+
+```ts
+const num = 5;
+const str = "10";
+const result = num + str; // "510" instead of 15
+```
+
+```ts
+const bigint = 5n;
+const num = 10;
+const result = bigint + num; // TypeError at runtime
+```
+
+```ts
+const bool = true;
+const num = 5;
+const result = bool + num; // Boolean coerced to 1
+```
+
+```ts
+let count = 0;
+count += "1"; // count becomes "01"
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const a = 5;
+const b = 10;
+const result = a + b; // 15
+```
+
+```ts
+const greeting = "Hello, ";
+const name = "world";
+const result = greeting + name; // "Hello, world"
+```
+
+```ts
+const a = 5n;
+const b = 10n;
+const result = a + b; // 15n
+```
+
+```ts
+const count = 5;
+const label = "Count: ";
+const result = label + String(count); // Explicit conversion
+```
+
+```ts
+let total = 0;
+total += 10; // total is 10
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use the `+` operator for type coercion and string concatenation with mixed types, you may want to disable this rule.
+However, it's generally better to use explicit type conversions like `String()` or `Number()` for clarity.
+
+Some legacy codebases may rely on implicit coercion behavior, in which case this rule may produce many warnings.
+
+## Further Reading
+
+- [MDN: Addition (+)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Addition)
+- [MDN: BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+- [MDN: Type coercion](https://developer.mozilla.org/en-US/docs/Glossary/Type_coercion)
+- [TypeScript Handbook: Everyday Types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="plusOperands" />
