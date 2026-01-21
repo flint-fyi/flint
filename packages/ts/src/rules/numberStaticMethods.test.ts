@@ -5,33 +5,21 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-parseInt("10");
-`,
-			snapshot: `
-parseInt("10");
-~~~~~~~~
-Prefer \`Number.parseInt\` over the global \`parseInt\` for clarity and consistency.
-`,
-		},
-		{
-			code: `
-parseFloat("10.5");
-`,
-			snapshot: `
-parseFloat("10.5");
-~~~~~~~~~~
-Prefer \`Number.parseFloat\` over the global \`parseFloat\` for clarity and consistency.
-`,
-		},
-		{
-			code: `
 isNaN(value);
 `,
 			snapshot: `
 isNaN(value);
 ~~~~~
-Prefer \`Number.isNaN\` over the global \`isNaN\` for clarity and consistency.
+Prefer the more precise \`Number.isNaN\` over the legacy global \`isNaN\`.
 `,
+			suggestions: [
+				{
+					id: "replaceWithNumberMethod",
+					updated: `
+Number.isNaN(value);
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -40,18 +28,16 @@ isFinite(value);
 			snapshot: `
 isFinite(value);
 ~~~~~~~~
-Prefer \`Number.isFinite\` over the global \`isFinite\` for clarity and consistency.
+Prefer the more precise \`Number.isFinite\` over the legacy global \`isFinite\`.
 `,
-		},
-		{
-			code: `
-const value = NaN;
+			suggestions: [
+				{
+					id: "replaceWithNumberMethod",
+					updated: `
+Number.isFinite(value);
 `,
-			snapshot: `
-const value = NaN;
-              ~~~
-              Prefer \`Number.NaN\` over the global \`NaN\` for clarity and consistency.
-`,
+				},
+			],
 		},
 		{
 			code: `
@@ -60,71 +46,24 @@ if (isNaN(result)) {}
 			snapshot: `
 if (isNaN(result)) {}
     ~~~~~
-    Prefer \`Number.isNaN\` over the global \`isNaN\` for clarity and consistency.
+    Prefer the more precise \`Number.isNaN\` over the legacy global \`isNaN\`.
 `,
-		},
-		{
-			code: `
-const result = parseInt("42", 10);
+			suggestions: [
+				{
+					id: "replaceWithNumberMethod",
+					updated: `
+if (Number.isNaN(result)) {}
 `,
-			snapshot: `
-const result = parseInt("42", 10);
-               ~~~~~~~~
-               Prefer \`Number.parseInt\` over the global \`parseInt\` for clarity and consistency.
-`,
-		},
-		{
-			code: `
-console.log(NaN);
-`,
-			snapshot: `
-console.log(NaN);
-            ~~~
-            Prefer \`Number.NaN\` over the global \`NaN\` for clarity and consistency.
-`,
-		},
-		{
-			code: `
-typeof isNaN;
-`,
-			snapshot: `
-typeof isNaN;
-       ~~~~~
-       Prefer \`Number.isNaN\` over the global \`isNaN\` for clarity and consistency.
-`,
-		},
-		{
-			code: `
-const check = value === NaN;
-`,
-			snapshot: `
-const check = value === NaN;
-                        ~~~
-                        Prefer \`Number.NaN\` over the global \`NaN\` for clarity and consistency.
-`,
-		},
-		{
-			code: `
-const ref = parseInt;
-`,
-			snapshot: `
-const ref = parseInt;
-            ~~~~~~~~
-            Prefer \`Number.parseInt\` over the global \`parseInt\` for clarity and consistency.
-`,
-		},
-		{
-			code: `
-[1, 2, "3"].map(parseInt);
-`,
-			snapshot: `
-[1, 2, "3"].map(parseInt);
-                ~~~~~~~~
-                Prefer \`Number.parseInt\` over the global \`parseInt\` for clarity and consistency.
-`,
+				},
+			],
 		},
 	],
 	valid: [
+		`parseInt("10");`,
+		`parseFloat("10.5");`,
+		`NaN;`,
+		`console.log(NaN);`,
+		`value === NaN;`,
 		`Number.parseInt("10");`,
 		`Number.parseFloat("10.5");`,
 		`Number.isNaN(value);`,
@@ -139,7 +78,6 @@ const ref = parseInt;
 		`class Example { isNaN = true; }`,
 		`const obj = { NaN: 0 };`,
 		`function example(isNaN: boolean) { return isNaN; }`,
-		`const parseFloat = 42;`,
 		`const object = { parseInt };`,
 	],
 });

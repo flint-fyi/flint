@@ -11,9 +11,6 @@ import { ruleCreator } from "./ruleCreator.ts";
 const globalReplacements = new Map([
 	["isFinite", "Number.isFinite"],
 	["isNaN", "Number.isNaN"],
-	["NaN", "Number.NaN"],
-	["parseFloat", "Number.parseFloat"],
-	["parseInt", "Number.parseInt"],
 ]);
 
 function isDeclarationName(node: ts.Identifier) {
@@ -49,17 +46,17 @@ function isPropertyShorthandOfNode(node: ts.Identifier) {
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
-			"Reports using global number methods and properties instead of Number static methods.",
+			"Reports using legacy global functions instead of `Number` static methods.",
 		id: "numberStaticMethods",
-		presets: ["stylisticStrict"],
+		presets: ["logicalStrict"],
 	},
 	messages: {
 		preferNumberMethod: {
 			primary:
-				"Prefer `{{ replacement }}` over the global `{{ name }}` for clarity and consistency.",
+				"Prefer the more precise `{{ replacement }}` over the legacy global `{{ name }}`.",
 			secondary: [
 				"`Number` static methods clearly indicate you're working with numbers.",
-				"Global methods like `isNaN` and `isFinite` coerce their arguments, which can lead to unexpected behavior.",
+				"The global methods like `isFinite` and `isNaN` coerce their arguments, which can lead to unexpected behavior.",
 			],
 			suggestions: ["Replace `{{ name }}` with `{{ replacement }}`."],
 		},
@@ -80,10 +77,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
+					const range = getTSNodeRange(node, sourceFile);
+
 					context.report({
 						data: { name: node.text, replacement },
 						message: "preferNumberMethod",
-						range: getTSNodeRange(node, sourceFile),
+						range,
+						suggestions: [
+							{
+								id: "replaceWithNumberMethod",
+								range,
+								text: replacement,
+							},
+						],
 					});
 				},
 			},

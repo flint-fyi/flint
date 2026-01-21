@@ -1,5 +1,5 @@
 ---
-description: "Reports using global number methods and properties instead of Number static methods."
+description: "Reports using legacy global functions instead of `Number` static methods."
 title: "numberStaticMethods"
 topic: "rules"
 ---
@@ -12,23 +12,13 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 This rule enforces using `Number` static methods and properties instead of global equivalents.
 
-Global methods like `isNaN()` and `isFinite()` coerce their arguments to numbers before checking, which can lead to unexpected behavior.
+The global methods `isFinite()` and `isNaN()` coerce their arguments to numbers before checking, which can lead to unexpected behavior.
 `Number.isNaN()` and `Number.isFinite()` do not perform coercion and are more predictable.
-
-Similarly, `Number.parseInt()` and `Number.parseFloat()` are preferred over the global versions for consistency and clarity.
 
 ## Examples
 
 <Tabs>
 <TabItem label="❌ Incorrect">
-
-```ts
-parseInt("10");
-```
-
-```ts
-parseFloat("10.5");
-```
 
 ```ts
 isNaN(value);
@@ -44,14 +34,6 @@ const value = NaN;
 
 </TabItem>
 <TabItem label="✅ Correct">
-
-```ts
-Number.parseInt("10");
-```
-
-```ts
-Number.parseFloat("10.5");
-```
 
 ```ts
 Number.isNaN(value);
