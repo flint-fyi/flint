@@ -1,4 +1,5 @@
 import {
+	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -10,13 +11,25 @@ function fixBigIntLiteral(raw: string) {
 }
 
 function fixNumericLiteral(raw: string) {
-	let fixed = raw.toLowerCase();
+	const fixed = raw.toLowerCase();
 
-	if (fixed.startsWith("0x")) {
-		fixed = "0x" + fixed.slice(2).toUpperCase();
+	return fixed.startsWith("0x") ? "0x" + fixed.slice(2).toUpperCase() : fixed;
+}
+
+function getPrefix(raw: string) {
+	const lowerRaw = raw.toLowerCase();
+
+	for (const prefix of ["0x", "0o", "0b"]) {
+		if (lowerRaw.startsWith(prefix)) {
+			return prefix;
+		}
 	}
 
-	return fixed;
+	if (lowerRaw.includes("e")) {
+		return "e";
+	}
+
+	return "";
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -28,65 +41,54 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		invalidCasing: {
-			primary:
-				"Use lowercase for the `{{ prefix }}` prefix and exponent notation.",
+			primary: "Prefer lowercase for the exponent notation.",
 			secondary: [
 				"Lowercase prefixes (`0x`, `0o`, `0b`) and exponents (`e`) are more readable.",
 				"Hexadecimal digits should be uppercase for better distinction from lowercase letters.",
 			],
+			suggestions: ["Switch the numeric literal to the suggested case."],
+		},
+		invalidCasingPrefix: {
+			primary:
+				"Prefer lowercase for the `{{ prefix }}` prefix and exponent notation.",
+			secondary: [
+				"Lowercase prefixes (`0x`, `0o`, `0b`) and exponents (`e`) are more readable.",
+				"Hexadecimal digits should be uppercase for better distinction from lowercase letters.",
+			],
+			suggestions: ["Switch the numeric literal to the suggested case."],
 		},
 	},
 	setup(context) {
+		function checkNode(
+			node: AST.BigIntLiteral | AST.NumericLiteral,
+			fixer: (raw: string) => string,
+			sourceFile: AST.SourceFile,
+		) {
+			const raw = node.getText(sourceFile);
+			const fixed = fixer(raw);
+
+			if (raw === fixed) {
+				return;
+			}
+
+			const prefix = getPrefix(raw);
+
+			context.report({
+				data: { prefix },
+				message: prefix ? "invalidCasingPrefix" : "invalidCasing",
+				range: getTSNodeRange(node, sourceFile),
+			});
+		}
+
 		return {
 			visitors: {
 				BigIntLiteral: (node, { sourceFile }) => {
-					const raw = node.getText(sourceFile);
-					const fixed = fixBigIntLiteral(raw);
-
-					if (raw !== fixed) {
-						const prefix = getPrefix(raw);
-						context.report({
-							data: { prefix },
-							message: "invalidCasing",
-							range: getTSNodeRange(node, sourceFile),
-						});
-					}
+					checkNode(node, fixBigIntLiteral, sourceFile);
 				},
 				NumericLiteral: (node, { sourceFile }) => {
-					const raw = node.getText(sourceFile);
-					const fixed = fixNumericLiteral(raw);
-
-					if (raw !== fixed) {
-						const prefix = getPrefix(raw);
-						context.report({
-							data: { prefix },
-							message: "invalidCasing",
-							range: getTSNodeRange(node, sourceFile),
-						});
-					}
+					checkNode(node, fixNumericLiteral, sourceFile);
 				},
 			},
 		};
 	},
 });
-
-function getPrefix(raw: string) {
-	const lowerRaw = raw.toLowerCase();
-	if (lowerRaw.startsWith("0x")) {
-		return "0x";
-	}
-
-	if (lowerRaw.startsWith("0o")) {
-		return "0o";
-	}
-
-	if (lowerRaw.startsWith("0b")) {
-		return "0b";
-	}
-
-	if (lowerRaw.includes("e")) {
-		return "e";
-	}
-
-	return "";
-}
