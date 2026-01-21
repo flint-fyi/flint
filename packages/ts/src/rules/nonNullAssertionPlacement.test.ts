@@ -14,6 +14,82 @@ value! == "test";
      ~
      Non-null assertion before equality test (\`a! == b\`) looks similar to strict not-equals (\`a !== b\`).
 `,
+			suggestions: [
+				{
+					id: "removeAssertion",
+					updated: `
+declare const value: string | null;
+value == "test";
+`,
+				},
+				{
+					id: "wrapInParentheses",
+					updated: `
+declare const value: string | null;
+(value!) == "test";
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare const value: string | null;
+value! /* ) */ == "test";
+`,
+			snapshot: `
+declare const value: string | null;
+value! /* ) */ == "test";
+     ~
+     Non-null assertion before equality test (\`a! == b\`) looks similar to strict not-equals (\`a !== b\`).
+`,
+			suggestions: [
+				{
+					id: "removeAssertion",
+					updated: `
+declare const value: string | null;
+value /* ) */ == "test";
+`,
+				},
+				{
+					id: "wrapInParentheses",
+					updated: `
+declare const value: string | null;
+(value!) /* ) */ == "test";
+`,
+				},
+			],
+		},
+		{
+			code: `
+declare const value: string | null;
+value! // )
+== "test";
+`,
+			snapshot: `
+declare const value: string | null;
+value! // )
+     ~
+     Non-null assertion before equality test (\`a! == b\`) looks similar to strict not-equals (\`a !== b\`).
+== "test";
+`,
+			suggestions: [
+				{
+					id: "removeAssertion",
+					updated: `
+declare const value: string | null;
+value // )
+== "test";
+`,
+				},
+				{
+					id: "wrapInParentheses",
+					updated: `
+declare const value: string | null;
+(value!) // )
+== "test";
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -26,6 +102,22 @@ value! === "test";
      ~
      Non-null assertion before equality test (\`a! == b\`) looks similar to strict not-equals (\`a !== b\`).
 `,
+			suggestions: [
+				{
+					id: "removeAssertion",
+					updated: `
+declare const value: string | null;
+value === "test";
+`,
+				},
+				{
+					id: "wrapInParentheses",
+					updated: `
+declare const value: string | null;
+(value!) === "test";
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -38,6 +130,22 @@ value! = "new value";
      ~
      Non-null assertion before assignment (\`a! = b\`) looks similar to not-equals (\`a != b\`).
 `,
+			suggestions: [
+				{
+					id: "removeAssertion",
+					updated: `
+declare let value: string | null;
+value = "new value";
+`,
+				},
+				{
+					id: "wrapInParentheses",
+					updated: `
+declare let value: string | null;
+(value!) = "new value";
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -52,6 +160,24 @@ key! in object;
    ~
    Non-null assertion before \`in\` operator (\`a! in b\`) might be misread as \`!(a in b)\`.
 `,
+			suggestions: [
+				{
+					id: "removeAssertion",
+					updated: `
+declare const key: string | null;
+declare const object: Record<string, number>;
+key in object;
+`,
+				},
+				{
+					id: "wrapInParentheses",
+					updated: `
+declare const key: string | null;
+declare const object: Record<string, number>;
+(key!) in object;
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -66,6 +192,24 @@ value! instanceof MyClass;
      ~
      Non-null assertion before \`instanceof\` operator (\`a! instanceof b\`) might be misread as \`!(a instanceof b)\`.
 `,
+			suggestions: [
+				{
+					id: "removeAssertion",
+					updated: `
+declare const value: object | null;
+declare class MyClass {}
+value instanceof MyClass;
+`,
+				},
+				{
+					id: "wrapInParentheses",
+					updated: `
+declare const value: object | null;
+declare class MyClass {}
+(value!) instanceof MyClass;
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -80,6 +224,16 @@ first! + second! == 10;
                ~
                Non-null assertion before equality test (\`a! == b\`) looks similar to strict not-equals (\`a !== b\`).
 `,
+			suggestions: [
+				{
+					id: "wrapInParentheses",
+					updated: `
+declare const first: number | null;
+declare const second: number;
+(first! + second!) == 10;
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -94,6 +248,24 @@ declare const second: boolean;
                  ~
                  Non-null assertion before equality test (\`a! == b\`) looks similar to strict not-equals (\`a !== b\`).
 `,
+			suggestions: [
+				{
+					id: "removeAssertion",
+					updated: `
+declare const first: boolean | null;
+declare const second: boolean;
+(first == second) == true;
+`,
+				},
+				{
+					id: "wrapInParentheses",
+					updated: `
+declare const first: boolean | null;
+declare const second: boolean;
+((first == second)!) == true;
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -108,6 +280,24 @@ declare const second: boolean;
                 ~
                 Non-null assertion before assignment (\`a! = b\`) looks similar to not-equals (\`a != b\`).
 `,
+			suggestions: [
+				{
+					id: "removeAssertion",
+					updated: `
+declare let first: boolean | null;
+declare const second: boolean;
+(first = second) = true;
+`,
+				},
+				{
+					id: "wrapInParentheses",
+					updated: `
+declare let first: boolean | null;
+declare const second: boolean;
+((first = second)!) = true;
+`,
+				},
+			],
 		},
 	],
 	valid: [

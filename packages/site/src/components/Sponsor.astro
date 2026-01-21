@@ -1,0 +1,64 @@
+---
+export interface SponsorData {
+	href: string;
+	image: string;
+	name: string;
+}
+
+interface Props {
+	data: SponsorData;
+}
+
+const { data } = Astro.props;
+---
+
+<a class="sponsor" href={data.href} target="_blank" rel="noopener noreferrer">
+	<img src={data.image} alt={data.name} class="avatar" loading="lazy" />
+	<div class="info">
+		<span class="name">{data.name}</span>
+	</div>
+</a>
+
+<style>
+	.sponsor {
+		align-items: center;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.25rem;
+		display: flex;
+		gap: 1rem;
+		line-height: 1.25;
+		max-width: 15rem;
+		padding: 1rem 1.25rem;
+		text-decoration: none;
+		transition:
+			transform 0.2s ease,
+			box-shadow 0.2s ease,
+			border-color 0.2s ease;
+		width: 100%;
+	}
+
+	.sponsor:hover {
+		border-color: var(--sl-color-accent);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		transform: translateY(-2px);
+	}
+
+	.avatar {
+		border-radius: 0.25rem;
+		height: 4rem;
+		width: 4rem;
+	}
+
+	.info {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		margin-top: 0;
+	}
+
+	.name {
+		color: var(--sl-color-white);
+		font-size: var(--sl-text-lg);
+		font-weight: 600;
+	}
+</style>
