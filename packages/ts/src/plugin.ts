@@ -144,6 +144,7 @@ import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
 import numberMethodRanges from "./rules/numberMethodRanges.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
+import objectAssignSpreads from "./rules/objectAssignSpreads.ts";
 import objectCalls from "./rules/objectCalls.ts";
 import objectHasOwns from "./rules/objectHasOwns.ts";
 import objectKeyDuplicates from "./rules/objectKeyDuplicates.ts";
@@ -322,6 +323,7 @@ export const ts = createPlugin({
 		nonOctalDecimalEscapes,
 		numberMethodRanges,
 		numericLiteralParsing,
+		objectAssignSpreads,
 		objectCalls,
 		objectHasOwns,
 		objectKeyDuplicates,
