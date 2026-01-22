@@ -11,9 +11,10 @@ import RuleSummary from "~/components/RuleSummary.astro";
 <RuleSummary plugin="ts" rule="overloadSignaturesAdjacent" />
 
 Function overload signatures represent multiple ways a function can be called with different parameter types or return types.
+When overload signatures are separated by other code, it becomes harder to see the full API of a function at a glance.
 Grouping all overload signatures for a function together makes code easier to read and understand.
 
-When overload signatures are separated by other code, it becomes harder to see the full API of a function at a glance.
+This rule reports when a function's overload signatures are not adjacent to each other.
 
 ## Examples
 
@@ -64,6 +65,7 @@ This rule is not configurable.
 
 It can sometimes be useful to place overload signatures alongside other meaningful parts of a type.
 For example, if each overload corresponds to a different property, you might wish to place each overload next to its property.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 

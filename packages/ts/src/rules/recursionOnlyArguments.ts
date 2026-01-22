@@ -8,6 +8,7 @@ import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getFunctionName } from "./utils/getFunctionName.ts";
 
 // TODO: This will be more clean when there is a scope manager
 // https://github.com/flint-fyi/flint/issues/400
@@ -38,33 +39,6 @@ function collectParameterReferences(
 	ts.forEachChild(functionBody, collectNode);
 
 	return references;
-}
-
-function getFunctionName(
-	node:
-		| AST.ArrowFunction
-		| AST.FunctionDeclaration
-		| AST.FunctionExpression
-		| AST.MethodDeclaration,
-) {
-	switch (node.kind) {
-		case ts.SyntaxKind.ArrowFunction: {
-			return ts.isVariableDeclaration(node.parent) &&
-				ts.isIdentifier(node.parent.name)
-				? node.parent.name.text
-				: undefined;
-		}
-
-		case ts.SyntaxKind.FunctionDeclaration:
-		case ts.SyntaxKind.FunctionExpression:
-			return node.name?.text;
-
-		case ts.SyntaxKind.MethodDeclaration:
-			return ts.isIdentifier(node.name) ? node.name.text : undefined;
-
-		default:
-			return undefined;
-	}
 }
 
 function isParameterOnlyUsedInRecursion(

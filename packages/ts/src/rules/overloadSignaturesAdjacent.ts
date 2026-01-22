@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
 	getTSNodeRange,
 	typescriptLanguage,
@@ -5,28 +6,7 @@ import {
 import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
-
-function getFunctionName(node: ts.Node): string | undefined {
-	if (ts.isFunctionDeclaration(node)) {
-		return node.name?.text;
-	}
-
-	if (ts.isMethodSignature(node)) {
-		if (node.name.kind === ts.SyntaxKind.Identifier) {
-			return node.name.text;
-		}
-
-		if (node.name.kind === ts.SyntaxKind.StringLiteral) {
-			return node.name.text;
-		}
-
-		if (node.name.kind === ts.SyntaxKind.NumericLiteral) {
-			return node.name.text;
-		}
-	}
-
-	return undefined;
-}
+import { getFunctionName } from "./utils/getFunctionName.ts";
 
 function isOverloadSignature(node: ts.Node): boolean {
 	if (ts.isFunctionDeclaration(node)) {
@@ -47,7 +27,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			primary: "Function overload signatures should be consecutive.",
 			secondary: [
 				"Separating overload signatures makes code harder to read and maintain.",
-				"Group all overloads for a function together for better organization.",
+				"Grouping all overloads for a function together makes it easier to read and understand that function.",
+			],
+			suggestions: [
+				"Group all overload signatures for this function together.",
 			],
 		},
 	},
@@ -61,9 +44,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					>();
 
 					for (let i = 0; i < node.members.length; i++) {
-						const member = node.members[i];
+						const member = node.members[i]!;
 
-						if (ts.isMethodSignature(member)) {
+						if (member.kind === ts.SyntaxKind.MethodSignature) {
 							const name = getFunctionName(member);
 
 							if (name) {
@@ -83,13 +66,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 
 						for (let i = 0; i < signatures.length - 1; i++) {
-							const currentIndex = signatures[i].index;
-							const nextIndex = signatures[i + 1].index;
+							const currentIndex = signatures[i]!.index;
+							const nextIndex = signatures[i + 1]!.index;
 
 							if (nextIndex !== currentIndex + 1) {
 								context.report({
 									message: "overloadSignatureSeparated",
-									range: getTSNodeRange(signatures[i + 1].node, sourceFile),
+									range: getTSNodeRange(signatures[i + 1]!.node, sourceFile),
 								});
 							}
 						}
