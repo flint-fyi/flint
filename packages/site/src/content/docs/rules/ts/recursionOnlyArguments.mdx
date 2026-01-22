@@ -85,8 +85,9 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-You might disable this rule if you have functions where parameters are intentionally passed through for API consistency or future extensibility, even if they're not currently used in the function body itself.
-This is rare and typically indicates a design issue that should be addressed.
+This rule might get in your way if you have functions where parameters are intentionally passed through for API consistency or future extensibility, even if they're not currently used in the function body itself.
+Doing so is rare and typically indicates a design issue that should be addressed.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 

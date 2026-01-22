@@ -9,12 +9,14 @@ import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
+// TODO: This will be more clean when there is a scope manager
+// https://github.com/flint-fyi/flint/issues/400
 function collectParameterReferences(
 	parameterName: string,
 	parameterNode: ts.Identifier,
 	functionNode: ts.Node,
 	functionBody: ts.Node,
-): ts.Identifier[] {
+) {
 	const references: ts.Identifier[] = [];
 
 	function collectNode(node: ts.Node): void {
@@ -34,6 +36,7 @@ function collectParameterReferences(
 	}
 
 	ts.forEachChild(functionBody, collectNode);
+
 	return references;
 }
 
@@ -43,23 +46,25 @@ function getFunctionName(
 		| AST.FunctionDeclaration
 		| AST.FunctionExpression
 		| AST.MethodDeclaration,
-): string | undefined {
-	if (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node)) {
-		return node.name?.text;
-	}
-
-	if (ts.isMethodDeclaration(node) && ts.isIdentifier(node.name)) {
-		return node.name.text;
-	}
-
-	if (ts.isArrowFunction(node)) {
-		const parent = node.parent;
-		if (ts.isVariableDeclaration(parent) && ts.isIdentifier(parent.name)) {
-			return parent.name.text;
+) {
+	switch (node.kind) {
+		case ts.SyntaxKind.ArrowFunction: {
+			return ts.isVariableDeclaration(node.parent) &&
+				ts.isIdentifier(node.parent.name)
+				? node.parent.name.text
+				: undefined;
 		}
-	}
 
-	return undefined;
+		case ts.SyntaxKind.FunctionDeclaration:
+		case ts.SyntaxKind.FunctionExpression:
+			return node.name?.text;
+
+		case ts.SyntaxKind.MethodDeclaration:
+			return ts.isIdentifier(node.name) ? node.name.text : undefined;
+
+		default:
+			return undefined;
+	}
 }
 
 function isParameterOnlyUsedInRecursion(
@@ -71,36 +76,28 @@ function isParameterOnlyUsedInRecursion(
 		| AST.FunctionDeclaration
 		| AST.FunctionExpression
 		| AST.MethodDeclaration,
-): boolean {
-	if (!ts.isIdentifier(parameter.name)) {
-		return false;
-	}
-
-	const parameterName = parameter.name.text;
-	const functionBody = functionNode.body;
-
-	if (!functionBody) {
+) {
+	if (!ts.isIdentifier(parameter.name) || !functionNode.body) {
 		return false;
 	}
 
 	const references = collectParameterReferences(
-		parameterName,
+		parameter.name.text,
 		parameter.name,
 		functionNode,
-		functionBody,
+		functionNode.body,
 	);
 
-	if (references.length === 0) {
-		return false;
-	}
-
-	return references.every((reference) =>
-		isReferenceOnlyUsedInRecursion(
-			reference,
-			parameterIndex,
-			functionName,
-			functionNode,
-		),
+	return (
+		references.length &&
+		references.every((reference) =>
+			isReferenceOnlyUsedInRecursion(
+				reference,
+				parameterIndex,
+				functionName,
+				functionNode,
+			),
+		)
 	);
 }
 
@@ -196,19 +193,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const functionName = getFunctionName(node);
-			if (!functionName) {
-				return;
-			}
-
-			if (!node.body) {
+			if (!functionName || !node.body) {
 				return;
 			}
 
 			for (const [parameterIndex, parameter] of node.parameters.entries()) {
-				if (!ts.isIdentifier(parameter.name)) {
-					continue;
-				}
-
 				if (
 					isParameterOnlyUsedInRecursion(
 						parameter,
