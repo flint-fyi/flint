@@ -10,54 +10,57 @@ import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-const validRadixValues = new Set(
-	Array.from({ length: 37 - 2 }, (_, index) => index + 2),
-);
-
 function isParseIntCall(node: AST.CallExpression, typeChecker: Checker) {
-	const expression = node.expression;
+	switch (node.expression.kind) {
+		case ts.SyntaxKind.Identifier:
+			return isGlobalDeclarationOfName(
+				node.expression,
+				"parseInt",
+				typeChecker,
+			);
 
-	if (ts.isIdentifier(expression)) {
-		return isGlobalDeclarationOfName(expression, "parseInt", typeChecker);
+		case ts.SyntaxKind.PropertyAccessExpression:
+			return (
+				ts.isIdentifier(node.expression.name) &&
+				node.expression.name.text === "parseInt" &&
+				ts.isIdentifier(node.expression.expression) &&
+				node.expression.expression.text === "Number" &&
+				isGlobalDeclarationOfName(
+					node.expression.expression,
+					"Number",
+					typeChecker,
+				)
+			);
+
+		default:
+			return false;
 	}
-
-	if (
-		ts.isPropertyAccessExpression(expression) &&
-		ts.isIdentifier(expression.name) &&
-		expression.name.text === "parseInt" &&
-		ts.isIdentifier(expression.expression) &&
-		expression.expression.text === "Number"
-	) {
-		return isGlobalDeclarationOfName(
-			expression.expression,
-			"Number",
-			typeChecker,
-		);
-	}
-
-	return false;
 }
 
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
 function isValidRadix(argument: AST.Expression) {
-	if (ts.isNumericLiteral(argument)) {
-		const value = Number(argument.text);
-		return validRadixValues.has(value);
-	}
+	switch (argument.kind) {
+		case ts.SyntaxKind.Identifier:
+			return argument.text !== "undefined";
 
-	if (
-		ts.isPrefixUnaryExpression(argument) &&
-		argument.operator === ts.SyntaxKind.MinusToken &&
-		ts.isNumericLiteral(argument.operand)
-	) {
-		const value = -Number(argument.operand.text);
-		return validRadixValues.has(value);
-	}
+		case ts.SyntaxKind.NumericLiteral:
+			return isValidRadixValue(Number(argument.text));
 
-	if (ts.isIdentifier(argument) && argument.text === "undefined") {
-		return false;
-	}
+		case ts.SyntaxKind.PrefixUnaryExpression:
+			return (
+				argument.operator === ts.SyntaxKind.MinusToken &&
+				ts.isNumericLiteral(argument.operand) &&
+				isValidRadixValue(-Number(argument.operand.text))
+			);
 
-	return true;
+		default:
+			return true;
+	}
+}
+
+function isValidRadixValue(value: number) {
+	return value >= 2 && value <= 36;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -79,14 +82,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			],
 		},
 		missingRadix: {
-			primary: "Missing radix parameter in parseInt call.",
+			primary:
+				"This `parseInt` call is missing a radix parameter to specify the numeral system base.",
 			secondary: [
 				"Without a radix, parseInt may interpret the string differently based on its format.",
 				"For example, strings starting with '0' were historically parsed as octal.",
 			],
-			suggestions: [
-				"Add an explicit radix parameter, typically 10 for decimal numbers: parseInt(value, 10)",
-			],
+			suggestions: ["Add an explicit radix parameter."],
 		},
 	},
 	setup(context) {
@@ -100,17 +102,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const argumentsCount = node.arguments.length;
-
-					if (argumentsCount === 0) {
-						context.report({
-							message: "missingRadix",
-							range: getTSNodeRange(node, sourceFile),
-						});
-						return;
-					}
-
-					if (argumentsCount === 1) {
+					if (node.arguments.length <= 1) {
 						context.report({
 							message: "missingRadix",
 							range: getTSNodeRange(node, sourceFile),
