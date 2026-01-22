@@ -8,6 +8,10 @@ ruleTester.describe(rule, {
 export const value = {};
 export {};
 `,
+			output: `
+export const value = {};
+
+`,
 			snapshot: `
 export const value = {};
 export {};
@@ -20,6 +24,10 @@ Empty export does nothing and can be removed.
 export * from 'module';
 export {};
 `,
+			output: `
+export * from 'module';
+
+`,
 			snapshot: `
 export * from 'module';
 export {};
@@ -30,6 +38,10 @@ Empty export does nothing and can be removed.
 		{
 			code: `
 export {};
+export * from 'module';
+`,
+			output: `
+
 export * from 'module';
 `,
 			snapshot: `
@@ -45,6 +57,11 @@ const value = {};
 export default value;
 export {};
 `,
+			output: `
+const value = {};
+export default value;
+
+`,
 			snapshot: `
 const value = {};
 export default value;
@@ -56,6 +73,11 @@ Empty export does nothing and can be removed.
 		{
 			code: `
 export {};
+const value = {};
+export default value;
+`,
+			output: `
+
 const value = {};
 export default value;
 `,
@@ -73,6 +95,11 @@ const value = {};
 export { value };
 export {};
 `,
+			output: `
+const value = {};
+export { value };
+
+`,
 			snapshot: `
 const value = {};
 export { value };
@@ -86,6 +113,10 @@ Empty export does nothing and can be removed.
 import value = require('module');
 export {};
 `,
+			output: `
+import value = require('module');
+
+`,
 			snapshot: `
 import value = require('module');
 export {};
@@ -98,6 +129,11 @@ Empty export does nothing and can be removed.
 import value = require('module');
 export {};
 export {};
+`,
+			output: `
+import value = require('module');
+
+
 `,
 			snapshot: `
 import value = require('module');
@@ -113,6 +149,10 @@ Empty export does nothing and can be removed.
 			code: `
 import { value } from 'module';
 export {};
+`,
+			output: `
+import { value } from 'module';
+
 `,
 			snapshot: `
 import { value } from 'module';
@@ -125,6 +165,10 @@ Empty export does nothing and can be removed.
 			code: `
 import * as ns from 'module';
 export {};
+`,
+			output: `
+import * as ns from 'module';
+
 `,
 			snapshot: `
 import * as ns from 'module';
@@ -137,6 +181,10 @@ Empty export does nothing and can be removed.
 			code: `
 export = {};
 export {};
+`,
+			output: `
+export = {};
+
 `,
 			snapshot: `
 export = {};

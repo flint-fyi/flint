@@ -14,7 +14,7 @@ interface EscapeInfo {
 }
 
 const escapeCase =
-	/(?<=(?:^|[^\\])(?:\\\\)*\\)(?:<data>x[\dA-Fa-f]{2}|u[\dA-Fa-f]{4}|u\{[\dA-Fa-f]+\})/g;
+	/(?<=(?:^|[^\\])(?:\\\\)*\\)(?:x[\dA-Fa-f]{2}|u[\dA-Fa-f]{4}|u\{[\dA-Fa-f]+\}|c[a-z])/g;
 
 function findLowercaseEscapeSequence(text: string): EscapeInfo | undefined {
 	const patterns = [

@@ -3,7 +3,6 @@ import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
 
 import { getRuleTesterDescribedCases } from "../getRuleTesterDescribedCases.ts";
 import type { ParsedTestCaseInvalid } from "../types.ts";
@@ -35,7 +34,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			testCase: ParsedTestCaseInvalid,
 			sourceFile: AST.SourceFile,
 		) {
-			if (!testCase.code.startsWith("\n")) {
+			if (!testCase.code.endsWith("\n") || !testCase.code.startsWith("\n")) {
 				context.report({
 					fix: [
 						createFixForCode(testCase, sourceFile),
@@ -51,21 +50,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			testCase: ParsedTestCaseInvalid,
 			sourceFile: AST.SourceFile,
 		) {
-			if (testCase.nodes.code.kind === SyntaxKind.StringLiteral) {
-				return {
-					range: getTSNodeRange(testCase.nodes.code, sourceFile),
-					text: `\`\n${testCase.code}\n\``,
-				};
-			}
-
-			const begin = testCase.nodes.code.getStart(sourceFile) + 1;
-
 			return {
-				range: {
-					begin,
-					end: begin,
-				},
-				text: "\n",
+				range: getTSNodeRange(testCase.nodes.code, sourceFile),
+				text: `\`\n${testCase.code.trim()}\n\``,
 			};
 		}
 
@@ -73,14 +60,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			testCase: ParsedTestCaseInvalid,
 			sourceFile: AST.SourceFile,
 		) {
-			const begin = testCase.nodes.snapshot.getStart(sourceFile) + 1;
-
 			return {
-				range: {
-					begin,
-					end: begin,
-				},
-				text: "\n",
+				range: getTSNodeRange(testCase.nodes.snapshot, sourceFile),
+				text: `\`\n${testCase.snapshot.trim()}\n\``,
 			};
 		}
 

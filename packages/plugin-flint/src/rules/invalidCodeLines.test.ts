@@ -115,7 +115,7 @@ ruleTester.describe(rule, {
       {
         code: \`console.log();\`,
         snapshot: \`console.log();
-~~~~~~~~~~~~
+~~~~~~~~~~~~~
 Rule report message.
 \`,
       }
@@ -148,7 +148,7 @@ ruleTester.describe(rule, {
               ~~~~~~~~~~~~~~~~
               This code block should be formatted across multiple lines for more readable reports.
         snapshot: \`console.log();
-~~~~~~~~~~~~
+~~~~~~~~~~~~~
 Rule report message.
 \`,
       }
@@ -187,7 +187,7 @@ Rule report message.
 console.log();
 \`,
                     snapshot: \`
-~~~~~~~~~~~~
+~~~~~~~~~~~~~
 Rule report message.
 \`,
     }

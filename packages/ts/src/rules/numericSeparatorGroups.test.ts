@@ -7,6 +7,9 @@ ruleTester.describe(rule, {
 			code: `
 const value = 1000000;
 `,
+			output: `
+const value = 1_000_000;
+`,
 			snapshot: `
 const value = 1000000;
               ~~~~~~~
@@ -16,6 +19,9 @@ const value = 1000000;
 		{
 			code: `
 const value = 10000;
+`,
+			output: `
+const value = 10_000;
 `,
 			snapshot: `
 const value = 10000;
@@ -27,6 +33,9 @@ const value = 10000;
 			code: `
 const value = 100_00;
 `,
+			output: `
+const value = 10_000;
+`,
 			snapshot: `
 const value = 100_00;
               ~~~~~~
@@ -37,6 +46,9 @@ const value = 100_00;
 			code: `
 const value = 1_0000;
 `,
+			output: `
+const value = 10_000;
+`,
 			snapshot: `
 const value = 1_0000;
               ~~~~~~
@@ -47,6 +59,9 @@ const value = 1_0000;
 			code: `
 const value = 123456.789012;
 `,
+			output: `
+const value = 123_456.789_012;
+`,
 			snapshot: `
 const value = 123456.789012;
               ~~~~~~~~~~~~~
@@ -56,6 +71,9 @@ const value = 123456.789012;
 		{
 			code: `
 const value = 10000n;
+`,
+			output: `
+const value = 10_000n;
 `,
 			snapshot: `
 const value = 10000n;

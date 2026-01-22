@@ -11,6 +11,9 @@ if (condition) {
     element.classList.remove("active");
 }
 `,
+			output: `
+element.classList.toggle("active", condition);
+`,
 			snapshot: `
 if (condition) {
     element.classList.add("active");
@@ -29,6 +32,9 @@ if (isVisible) {
     button.classList.add("hidden");
 }
 `,
+			output: `
+button.classList.toggle("hidden", !(isVisible));
+`,
 			snapshot: `
 if (isVisible) {
     button.classList.remove("hidden");
@@ -45,6 +51,9 @@ if (flag)
     element.classList.add("active");
 else
     element.classList.remove("active");
+`,
+			output: `
+element.classList.toggle("active", flag);
 `,
 			snapshot: `
 if (flag)
