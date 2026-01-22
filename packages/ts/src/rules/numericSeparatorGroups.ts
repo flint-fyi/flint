@@ -1,4 +1,5 @@
 import {
+	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -10,7 +11,7 @@ interface GroupOptions {
 	minimumDigits: number;
 }
 
-const defaultOptions: Record<string, GroupOptions> = {
+const defaultOptions = {
 	"": { groupLength: 3, minimumDigits: 5 },
 	"0b": { groupLength: 4, minimumDigits: 0 },
 	"0o": { groupLength: 4, minimumDigits: 0 },
@@ -60,7 +61,8 @@ function format(
 	data: string,
 	hasSeparators: boolean,
 ) {
-	const formatOption = defaultOptions[prefix.toLowerCase()];
+	const formatOption =
+		defaultOptions[prefix.toLowerCase() as keyof typeof defaultOptions];
 
 	if (prefix) {
 		if (hasSeparators) {
@@ -105,16 +107,11 @@ function formatNumber(
 
 function getPrefix(raw: string) {
 	const lowerRaw = raw.toLowerCase();
-	if (lowerRaw.startsWith("0x")) {
-		return { data: raw.slice(2), prefix: "0x" };
-	}
 
-	if (lowerRaw.startsWith("0o")) {
-		return { data: raw.slice(2), prefix: "0o" };
-	}
-
-	if (lowerRaw.startsWith("0b")) {
-		return { data: raw.slice(2), prefix: "0b" };
+	for (const prefix of ["0x", "0o", "0b"]) {
+		if (lowerRaw.startsWith(prefix)) {
+			return { data: raw.slice(2), prefix };
+		}
 	}
 
 	return { data: raw, prefix: "" };
@@ -141,10 +138,12 @@ function parseNumber(value: string) {
 	const match = /^([+-]?(?:\d+(?:\.\d+)?|\.\d+))(e)([+-]?)(\d+)$/i.exec(value);
 	if (match) {
 		return {
-			mark: match[2].toLowerCase(),
-			number: match[1],
-			power: match[4],
+			/* eslint-disable @typescript-eslint/no-non-null-assertion */
+			mark: match[2]!.toLowerCase(),
+			number: match[1]!,
+			power: match[4]!,
 			sign: match[3] ?? "",
+			/* eslint-enable @typescript-eslint/no-non-null-assertion */
 		};
 	}
 
@@ -165,49 +164,45 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"Numeric separators should group digits consistently for readability.",
 				"Use groups of 3 for decimals, 4 for binary/octal, and 2 for hexadecimal.",
 			],
+			suggestions: [
+				"Add `_`s to the number to make it consistent with the rest of the codebase.",
+			],
 		},
 	},
 	setup(context) {
+		function checkNode(
+			node: AST.BigIntLiteral | AST.NumericLiteral,
+			raw: string,
+			number: string,
+			suffix: string,
+			sourceFile: AST.SourceFile,
+		) {
+			if (isLegacyOctal(number)) {
+				return;
+			}
+
+			const hasSeparators = raw.includes("_");
+			const stripped = number.replaceAll("_", "");
+			const { data, prefix } = getPrefix(stripped);
+			const formatted = format(stripped, prefix, data, hasSeparators) + suffix;
+
+			if (raw !== formatted) {
+				context.report({
+					message: "invalidGrouping",
+					range: getTSNodeRange(node, sourceFile),
+				});
+			}
+		}
 		return {
 			visitors: {
 				BigIntLiteral: (node, { sourceFile }) => {
 					const raw = node.getText(sourceFile);
 					const number = raw.slice(0, -1);
-
-					if (isLegacyOctal(number)) {
-						return;
-					}
-
-					const hasSeparators = raw.includes("_");
-					const stripped = number.replaceAll("_", "");
-					const { data, prefix } = getPrefix(stripped);
-					const formatted = format(stripped, prefix, data, hasSeparators) + "n";
-
-					if (raw !== formatted) {
-						context.report({
-							message: "invalidGrouping",
-							range: getTSNodeRange(node, sourceFile),
-						});
-					}
+					checkNode(node, raw, number, "n", sourceFile);
 				},
 				NumericLiteral: (node, { sourceFile }) => {
 					const raw = node.getText(sourceFile);
-
-					if (isLegacyOctal(raw)) {
-						return;
-					}
-
-					const hasSeparators = raw.includes("_");
-					const stripped = raw.replaceAll("_", "");
-					const { data, prefix } = getPrefix(stripped);
-					const formatted = format(stripped, prefix, data, hasSeparators);
-
-					if (raw !== formatted) {
-						context.report({
-							message: "invalidGrouping",
-							range: getTSNodeRange(node, sourceFile),
-						});
-					}
+					checkNode(node, raw, raw, "", sourceFile);
 				},
 			},
 		};
