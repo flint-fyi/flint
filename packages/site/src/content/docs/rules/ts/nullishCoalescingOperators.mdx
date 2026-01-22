@@ -1,0 +1,90 @@
+---
+description: "Prefer nullish coalescing operator (??) over logical OR (||) for nullish values."
+title: "nullishCoalescingOperators"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="nullishCoalescingOperators" />
+
+The logical OR operator (`||`) returns the right operand when the left operand is any falsy value, including `0`, `""`, `false`, `null`, and `undefined`.
+The nullish coalescing operator (`??`) only returns the right operand when the left operand is `null` or `undefined`, preserving other falsy values.
+
+When the left operand can only be nullish (not other falsy values like `0`, `""`, or `false`), using `??` more clearly expresses the intent and avoids accidentally replacing legitimate falsy values.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+let value: string | null = null;
+const result = value || "default";
+```
+
+```ts
+let value: number | undefined = undefined;
+const result = value || 0;
+```
+
+```ts
+function getValue(): object | null {
+	return null;
+}
+const result = getValue() || {};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+let value: string | null = null;
+const result = value ?? "default";
+```
+
+```ts
+let value: number | undefined = undefined;
+const result = value ?? 0;
+```
+
+```ts
+function getValue(): object | null {
+	return null;
+}
+const result = getValue() ?? {};
+```
+
+```ts
+let value: string = "";
+const result = value || "default";
+```
+
+```ts
+let value: number = 0;
+const result = value || 1;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase intentionally uses `||` to handle all falsy values uniformly, or if you have a large legacy codebase where migrating to `??` would require extensive changes, you may want to disable this rule.
+
+Some projects also prefer `||` for its broader falsy checking behavior when the distinction between nullish and other falsy values is not important.
+
+## Further Reading
+
+- [MDN: Nullish coalescing operator (??)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)
+- [MDN: Logical OR (||)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="nullishCoalescingOperators" />

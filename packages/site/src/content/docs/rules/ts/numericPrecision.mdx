@@ -1,0 +1,78 @@
+---
+description: "Reports numeric literals that lose precision when converted to JavaScript numbers."
+title: "numericPrecision"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="numericPrecision" />
+
+This rule reports numeric literals that cannot be accurately represented as JavaScript numbers.
+
+JavaScript uses 64-bit floating-point numbers (IEEE 754 double precision), which can only accurately represent integers up to `Number.MAX_SAFE_INTEGER` (9007199254740991) and floating-point numbers with about 15-17 significant digits.
+Numbers exceeding these limits will be silently rounded, leading to unexpected behavior.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = 9007199254740993;
+```
+
+```ts
+const value = 5123000000000000000000000000001;
+```
+
+```ts
+const value = 1.0000000000000001;
+```
+
+```ts
+const value = 0x20000000000001;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = 9007199254740991;
+```
+
+```ts
+const value = 9007199254740993n;
+```
+
+```ts
+const value = 123.456;
+```
+
+```ts
+const value = 0xabcdef;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are intentionally using imprecise numeric literals for their rounded values, or if you have specific domain knowledge that the precision loss is acceptable, you may want to disable this rule.
+Consider using BigInt for large integers that require exact precision.
+
+## Further Reading
+
+- [MDN: Number.MAX_SAFE_INTEGER](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER)
+- [MDN: BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+- [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="numericPrecision" />
