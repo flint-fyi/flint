@@ -6,38 +6,17 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-interface GroupOptions {
-	groupLength: number;
-	minimumDigits: number;
+const groupLength = 3;
+const minimumDigits = 5;
+
+function addSeparator(value: string, fromLeft?: boolean) {
+	return value.length < minimumDigits
+		? value
+		: addSeparatorAlways(value, fromLeft);
 }
 
-const defaultOptions = {
-	"": { groupLength: 3, minimumDigits: 5 },
-	"0b": { groupLength: 4, minimumDigits: 0 },
-	"0o": { groupLength: 4, minimumDigits: 0 },
-	"0x": { groupLength: 2, minimumDigits: 0 },
-};
-
-function addSeparator(
-	value: string,
-	{ groupLength, minimumDigits }: GroupOptions,
-	fromLeft = false,
-) {
+function addSeparatorAlways(value: string, fromLeft?: boolean) {
 	const { length } = value;
-	if (length < minimumDigits) {
-		return value;
-	}
-
-	return addSeparatorAlways(value, groupLength, fromLeft);
-}
-
-function addSeparatorAlways(
-	value: string,
-	groupLength: number,
-	fromLeft = false,
-) {
-	const { length } = value;
-
 	const parts: string[] = [];
 
 	if (fromLeft) {
@@ -55,70 +34,24 @@ function addSeparatorAlways(
 	return parts.join("_");
 }
 
-function format(
-	stripped: string,
-	prefix: string,
-	data: string,
-	hasSeparators: boolean,
-) {
-	const formatOption =
-		defaultOptions[prefix.toLowerCase() as keyof typeof defaultOptions];
-
-	if (prefix) {
-		if (hasSeparators) {
-			return prefix + addSeparatorAlways(data, formatOption.groupLength);
-		}
-
-		return prefix + addSeparator(data, formatOption);
-	}
-
+function format(stripped: string, hasSeparators: boolean) {
 	const { mark, number, power, sign } = parseNumber(stripped);
 	return (
-		formatNumber(number, formatOption, hasSeparators) +
+		formatNumber(number, hasSeparators) +
 		mark +
 		sign +
-		(hasSeparators
-			? addSeparatorAlways(power, defaultOptions[""].groupLength)
-			: addSeparator(power, defaultOptions[""]))
+		(hasSeparators ? addSeparatorAlways(power) : addSeparator(power))
 	);
 }
 
-function formatNumber(
-	value: string,
-	options: GroupOptions,
-	hasSeparators: boolean,
-) {
+function formatNumber(value: string, hasSeparators: boolean) {
 	const { dot, fractional, integer } = parseFloatNumber(value);
 
-	if (hasSeparators) {
-		return (
-			addSeparatorAlways(integer, options.groupLength) +
-			dot +
-			addSeparatorAlways(fractional, options.groupLength, true)
-		);
-	}
+	const [prefix, suffix] = hasSeparators
+		? [addSeparatorAlways(integer), addSeparatorAlways(fractional, true)]
+		: [addSeparator(integer), addSeparator(fractional, true)];
 
-	return (
-		addSeparator(integer, options) +
-		dot +
-		addSeparator(fractional, options, true)
-	);
-}
-
-function getPrefix(raw: string) {
-	const lowerRaw = raw.toLowerCase();
-
-	for (const prefix of ["0x", "0o", "0b"]) {
-		if (lowerRaw.startsWith(prefix)) {
-			return { data: raw.slice(2), prefix };
-		}
-	}
-
-	return { data: raw, prefix: "" };
-}
-
-function isLegacyOctal(raw: string) {
-	return /^0[0-7]+$/.test(raw);
+	return prefix + dot + suffix;
 }
 
 function parseFloatNumber(value: string) {
@@ -177,21 +110,25 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			suffix: string,
 			sourceFile: AST.SourceFile,
 		) {
-			if (isLegacyOctal(number)) {
+			if (/[a-z]/i.test(number.slice(0, 2)) || number.includes("e")) {
 				return;
 			}
 
-			const hasSeparators = raw.includes("_");
 			const stripped = number.replaceAll("_", "");
-			const { data, prefix } = getPrefix(stripped);
-			const formatted = format(stripped, prefix, data, hasSeparators) + suffix;
+			const hasSeparators = number !== stripped;
+			const formatted = format(stripped, hasSeparators) + suffix;
 
-			if (raw !== formatted) {
-				context.report({
-					message: "invalidGrouping",
-					range: getTSNodeRange(node, sourceFile),
-				});
+			if (raw === formatted) {
+				return;
 			}
+
+			const range = getTSNodeRange(node, sourceFile);
+
+			context.report({
+				fix: { range, text: formatted },
+				message: "invalidGrouping",
+				range,
+			});
 		}
 		return {
 			visitors: {
