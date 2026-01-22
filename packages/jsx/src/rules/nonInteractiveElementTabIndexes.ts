@@ -83,14 +83,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			if (attr.initializer.kind === SyntaxKind.StringLiteral) {
 				const value = parseInt(attr.initializer.text, 10);
-				return isNaN(value) ? undefined : value;
+				return Number.isNaN(value) ? undefined : value;
 			}
 
 			if (attr.initializer.kind === SyntaxKind.JsxExpression) {
 				const expr = attr.initializer.expression;
 				if (expr && expr.kind === SyntaxKind.NumericLiteral) {
 					const value = parseInt(expr.text, 10);
-					return isNaN(value) ? undefined : value;
+					return Number.isNaN(value) ? undefined : value;
 				}
 			}
 
