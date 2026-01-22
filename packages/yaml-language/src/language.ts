@@ -2,6 +2,7 @@ import { createLanguage } from "@flint.fyi/core";
 import { visit } from "unist-util-visit";
 import * as yamlParser from "yaml-unist-parser";
 
+import { parseDirectivesFromYamlFile } from "./directives/parseDirectivesFromYamlFile.ts";
 import type { YamlNodesByName } from "./nodes.ts";
 
 export interface YamlFileServices {
@@ -19,6 +20,7 @@ export const yamlLanguage = createLanguage<YamlNodesByName, YamlFileServices>({
 				const root = yamlParser.parse(data.sourceText);
 
 				return {
+					...parseDirectivesFromYamlFile(root, data.sourceText),
 					about: data,
 					services: { root, sourceText: data.sourceText },
 				};

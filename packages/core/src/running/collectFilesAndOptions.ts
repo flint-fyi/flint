@@ -25,7 +25,7 @@ export interface CollectedFilesAndOptions {
 	cached: Map<string, FileCacheStorage> | undefined;
 
 	/**
-	 * For each file path, all prepared language files representing it.
+	 * For each file path, all prepared language files representing it.
 	 */
 	languageFilesByFilePath: Map<string, LanguageAndFile[]>;
 
