@@ -7,17 +7,33 @@ import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-const commutativeOperatorsWithShorthand = ["*", "&", "^", "|"];
-const nonCommutativeOperatorsWithShorthand = [
+const operatorTokenTexts = new Map([
+	[ts.SyntaxKind.AmpersandToken, "&"],
+	[ts.SyntaxKind.AsteriskAsteriskToken, "**"],
+	[ts.SyntaxKind.AsteriskToken, "*"],
+	[ts.SyntaxKind.BarToken, "|"],
+	[ts.SyntaxKind.CaretToken, "^"],
+	[ts.SyntaxKind.GreaterThanGreaterThanGreaterThanToken, ">>>"],
+	[ts.SyntaxKind.GreaterThanGreaterThanToken, ">>"],
+	[ts.SyntaxKind.LessThanLessThanToken, "<<"],
+	[ts.SyntaxKind.MinusToken, "-"],
+	[ts.SyntaxKind.PercentToken, "%"],
+	[ts.SyntaxKind.PlusToken, "+"],
+	[ts.SyntaxKind.SlashToken, "/"],
+]);
+
+const commutativeOperatorsWithShorthand = new Set(["&", "*", "^", "|"]);
+
+const nonCommutativeOperatorsWithShorthand = new Set([
+	"%",
+	"**",
 	"+",
 	"-",
 	"/",
-	"%",
 	"<<",
 	">>",
 	">>>",
-	"**",
-];
+]);
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -28,97 +44,77 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferShorthand: {
 			primary:
-				"Assignment (=) can be replaced with operator assignment ({{operator}}).",
+				"This `=` assignment can be replaced with an `{{ operator }}` operator assignment.",
+			secondary: [
+				"The shorthand operator assignment accomplishes the same operation with less code.",
+			],
+			suggestions: [
+				"Switch the `=` assignment with an `{{ operator }}` operator assignment.",
+			],
 		},
 	},
 	setup(context) {
 		return {
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
-					if (node.operatorToken.kind !== ts.SyntaxKind.EqualsToken) {
+					if (
+						node.operatorToken.kind !== ts.SyntaxKind.EqualsToken ||
+						!ts.isBinaryExpression(node.right)
+					) {
 						return;
 					}
 
-					if (!ts.isBinaryExpression(node.right)) {
+					const binaryOperator = operatorTokenTexts.get(
+						node.right.operatorToken.kind,
+					);
+					if (!binaryOperator) {
 						return;
-					}
-
-					const left = node.left;
-					const right = node.right;
-					const operatorToken = right.operatorToken.kind;
-
-					let binaryOperator: string | undefined;
-					switch (operatorToken) {
-						case ts.SyntaxKind.AmpersandToken:
-							binaryOperator = "&";
-							break;
-						case ts.SyntaxKind.AsteriskAsteriskToken:
-							binaryOperator = "**";
-							break;
-						case ts.SyntaxKind.AsteriskToken:
-							binaryOperator = "*";
-							break;
-						case ts.SyntaxKind.BarToken:
-							binaryOperator = "|";
-							break;
-						case ts.SyntaxKind.CaretToken:
-							binaryOperator = "^";
-							break;
-						case ts.SyntaxKind.GreaterThanGreaterThanGreaterThanToken:
-							binaryOperator = ">>>";
-							break;
-						case ts.SyntaxKind.GreaterThanGreaterThanToken:
-							binaryOperator = ">>";
-							break;
-						case ts.SyntaxKind.LessThanLessThanToken:
-							binaryOperator = "<<";
-							break;
-						case ts.SyntaxKind.MinusToken:
-							binaryOperator = "-";
-							break;
-						case ts.SyntaxKind.PercentToken:
-							binaryOperator = "%";
-							break;
-						case ts.SyntaxKind.PlusToken:
-							binaryOperator = "+";
-							break;
-						case ts.SyntaxKind.SlashToken:
-							binaryOperator = "/";
-							break;
-						default:
-							return;
 					}
 
 					const isCommutative =
-						commutativeOperatorsWithShorthand.includes(binaryOperator);
-					const isNonCommutative =
-						nonCommutativeOperatorsWithShorthand.includes(binaryOperator);
+						commutativeOperatorsWithShorthand.has(binaryOperator);
 
-					if (!isCommutative && !isNonCommutative) {
+					if (
+						!isCommutative &&
+						!nonCommutativeOperatorsWithShorthand.has(binaryOperator)
+					) {
 						return;
 					}
 
-					// Check if left matches left side of binary expression
-					if (hasSameTokens(left, right.left, sourceFile)) {
+					if (hasSameTokens(node.left, node.right.left, sourceFile)) {
 						const replacementOperator = `${binaryOperator}=`;
+						const range = getTSNodeRange(node, sourceFile);
+						const leftText = node.left.getText(sourceFile);
+						const rightText = node.right.right.getText(sourceFile);
+						const fixedText = `${leftText} ${replacementOperator} ${rightText}`;
 
 						context.report({
 							data: { operator: replacementOperator },
+							fix: {
+								range,
+								text: fixedText,
+							},
 							message: "preferShorthand",
-							range: getTSNodeRange(node, sourceFile),
+							range,
 						});
-					}
-					// Check if left matches right side (only for commutative operators)
-					else if (
+					} else if (
 						isCommutative &&
-						hasSameTokens(left, right.right, sourceFile)
+						hasSameTokens(node.left, node.right.right, sourceFile)
 					) {
-						// Cannot fix safely for commutative operators matching on right
-						// because custom valueOf() behavior would change execution order
+						const replacementOperator = `${binaryOperator}=`;
+						const range = getTSNodeRange(node, sourceFile);
+						const leftText = node.left.getText(sourceFile);
+						const rightText = node.right.left.getText(sourceFile);
+						const fixedText = `${leftText} ${replacementOperator} ${rightText}`;
+
 						context.report({
-							data: { operator: `${binaryOperator}=` },
+							data: { operator: replacementOperator },
+							fix: {
+								range,
+								text: fixedText,
+							},
 							message: "preferShorthand",
-							range: getTSNodeRange(node, sourceFile),
+							range,
 						});
 					}
 				},
