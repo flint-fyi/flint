@@ -7,12 +7,14 @@ ruleTester.describe(rule, {
 		{
 			code: `
                 incorect
-            `,
+            
+`,
 			snapshot: `
                 incorect
                 ~~~~~~~~
                 Forbidden or unknown word: "incorect".
-            `,
+            
+`,
 			suggestions: [
 				{
 					files: {
@@ -42,12 +44,14 @@ ruleTester.describe(rule, {
 		{
 			code: `
                 const myarray = [];
-            `,
+            
+`,
 			snapshot: `
                 const myarray = [];
                       ~~~~~~~
                       Forbidden or unknown word: "myarray".
-            `,
+            
+`,
 			suggestions: [
 				{
 					files: {
@@ -77,12 +81,14 @@ ruleTester.describe(rule, {
 		{
 			code: `
                 qwertyuiop
-            `,
+            
+`,
 			snapshot: `
                 qwertyuiop
                 ~~~~~~~~~~
                 Forbidden or unknown word: "qwertyuiop".
-            `,
+            
+`,
 			suggestions: [
 				{
 					files: {

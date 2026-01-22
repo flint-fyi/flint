@@ -34,7 +34,7 @@ obj["value"] = 123;
 const result = data["items"]["first"];
 `,
 			output: `
-const result = data.items.first;
+const result = data["items"].first;
 `,
 			snapshot: `
 const result = data["items"]["first"];
@@ -75,7 +75,7 @@ const count = arr["length"];
 const value = foo["bar"]["baz"];
 `,
 			output: `
-const value = foo.bar.baz;
+const value = foo["bar"].baz;
 `,
 			snapshot: `
 const value = foo["bar"]["baz"];
@@ -129,7 +129,7 @@ const val = obj?.["property"];
 const nested = a?.["b"]?.["c"];
 `,
 			output: `
-const nested = a?.b?.c;
+const nested = a?.["b"]?.c;
 `,
 			snapshot: `
 const nested = a?.["b"]?.["c"];

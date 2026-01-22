@@ -90,11 +90,19 @@ export default ruleCreator.createRule(yamlLanguage, {
 		return {
 			visitors: {
 				flowMapping: (node, { sourceText }) => {
+					const fixStart = (() => {
+						let start = node.position.start.offset;
+						while (start > 0 && sourceText[start - 1] === " ") {
+							start--;
+						}
+						return start;
+					})();
+
 					context.report({
 						fix: canConvertToBlock(node)
 							? {
 									range: {
-										begin: node.position.start.offset,
+										begin: fixStart,
 										end: node.position.end.offset,
 									},
 									text: convertToBlock(node, sourceText),

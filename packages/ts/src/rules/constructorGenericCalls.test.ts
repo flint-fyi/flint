@@ -7,6 +7,9 @@ ruleTester.describe(rule, {
 			code: `
 const value: Map<string, number> = new Map();
 `,
+			output: `
+const value: Map = new Map<string, number>();
+`,
 			snapshot: `
 const value: Map<string, number> = new Map();
                 ~~~~~~~~~~~~~~~~
@@ -17,6 +20,10 @@ const value: Map<string, number> = new Map();
 			code: `
 // comment with < and >
 const value: Map<string, number> = new Map();
+`,
+			output: `
+// comment with < and >
+const value: Map = new Map<string, number>();
 `,
 			snapshot: `
 // comment with < and >
@@ -28,6 +35,9 @@ const value: Map<string, number> = new Map();
 		{
 			code: `
 const value: Map<string, number> = new Map(); // a < b > c
+`,
+			output: `
+const value: Map = new Map<string, number>(); // a < b > c
 `,
 			snapshot: `
 const value: Map<string, number> = new Map(); // a < b > c
@@ -38,6 +48,9 @@ const value: Map<string, number> = new Map(); // a < b > c
 		{
 			code: `
 const value: Set<string> = new Set();
+`,
+			output: `
+const value: Set = new Set<string>();
 `,
 			snapshot: `
 const value: Set<string> = new Set();
@@ -49,6 +62,9 @@ const value: Set<string> = new Set();
 			code: `
 const value: Array<number> = new Array();
 `,
+			output: `
+const value: Array = new Array<number>();
+`,
 			snapshot: `
 const value: Array<number> = new Array();
                   ~~~~~~~~
@@ -58,6 +74,9 @@ const value: Array<number> = new Array();
 		{
 			code: `
 const value: Promise<string> = new Promise((resolve) => resolve("test"));
+`,
+			output: `
+const value: Promise = new Promise<string>((resolve) => resolve("test"));
 `,
 			snapshot: `
 const value: Promise<string> = new Promise((resolve) => resolve("test"));
@@ -69,6 +88,9 @@ const value: Promise<string> = new Promise((resolve) => resolve("test"));
 			code: `
 const value: MyClass<T, U> = new MyClass();
 `,
+			output: `
+const value: MyClass = new MyClass<T, U>();
+`,
 			snapshot: `
 const value: MyClass<T, U> = new MyClass();
                     ~~~~~~
@@ -79,6 +101,11 @@ const value: MyClass<T, U> = new MyClass();
 			code: `
 class Example {
     property: Map<string, number> = new Map();
+}
+`,
+			output: `
+class Example {
+    property: Map = new Map<string, number>();
 }
 `,
 			snapshot: `
@@ -93,6 +120,9 @@ class Example {
 			code: `
 const value: Foo<string> = new Foo;
 `,
+			output: `
+const value: Foo = new Foo<string>();
+`,
 			snapshot: `
 const value: Foo<string> = new Foo;
                 ~~~~~~~~
@@ -104,6 +134,9 @@ const value: Foo<string> = new Foo;
 const value = new Map<string, number>();
 `,
 			options: { style: "type-annotation" },
+			output: `
+const value: Map<string, number> = new Map();
+`,
 			snapshot: `
 const value = new Map<string, number>();
                      ~~~~~~~~~~~~~~~~
@@ -116,6 +149,10 @@ const value = new Map<string, number>();
 const value = new Map<string, number>();
 `,
 			options: { style: "type-annotation" },
+			output: `
+// comment with < and >
+const value: Map<string, number> = new Map();
+`,
 			snapshot: `
 // comment with < and >
 const value = new Map<string, number>();
@@ -128,6 +165,9 @@ const value = new Map<string, number>();
 const value = new Map<string, number>(); // a < b > c
 `,
 			options: { style: "type-annotation" },
+			output: `
+const value: Map<string, number> = new Map(); // a < b > c
+`,
 			snapshot: `
 const value = new Map<string, number>(); // a < b > c
                      ~~~~~~~~~~~~~~~~
@@ -139,6 +179,9 @@ const value = new Map<string, number>(); // a < b > c
 const value = new Set<string>();
 `,
 			options: { style: "type-annotation" },
+			output: `
+const value: Set<string> = new Set();
+`,
 			snapshot: `
 const value = new Set<string>();
                      ~~~~~~~~
@@ -150,6 +193,9 @@ const value = new Set<string>();
 const value: Map = new Map<string, number>();
 `,
 			options: { style: "type-annotation" },
+			output: `
+const value: Map<string, number> = new Map();
+`,
 			snapshot: `
 const value: Map = new Map<string, number>();
                           ~~~~~~~~~~~~~~~~
@@ -163,6 +209,11 @@ class Example {
 }
 `,
 			options: { style: "type-annotation" },
+			output: `
+class Example {
+    property: Map<string, number> = new Map();
+}
+`,
 			snapshot: `
 class Example {
     property = new Map<string, number>();

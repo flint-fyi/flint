@@ -107,6 +107,60 @@ Rule report message.
 });
 `,
 		},
+
+		{
+			code: `
+ruleTester.describe(rule, {
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: \`
+console.log();\`,
+        snapshot: \`
+console.log();
+~
+Rule report message.\`,
+      }
+    ],
+});
+`,
+			output: `
+ruleTester.describe(rule, {
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: \`
+console.log();
+\`,
+        snapshot: \`
+console.log();
+~
+Rule report message.
+\`,
+      }
+    ],
+});
+`,
+			snapshot: `
+ruleTester.describe(rule, {
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: \`
+              ~
+              This code block should be formatted across multiple lines for more readable reports.
+console.log();\`,
+~~~~~~~~~~~~~~~
+        snapshot: \`
+console.log();
+~
+Rule report message.\`,
+      }
+    ],
+});
+`,
+		},
+
 		{
 			code: `
 ruleTester.describe(rule, {
@@ -115,7 +169,7 @@ ruleTester.describe(rule, {
       {
         code: \`console.log();\`,
         snapshot: \`console.log();
-~~~~~~~~~~~~
+~~~~~~~~~~~~~
 Rule report message.
 \`,
       }
@@ -148,7 +202,7 @@ ruleTester.describe(rule, {
               ~~~~~~~~~~~~~~~~
               This code block should be formatted across multiple lines for more readable reports.
         snapshot: \`console.log();
-~~~~~~~~~~~~
+~~~~~~~~~~~~~
 Rule report message.
 \`,
       }
@@ -187,7 +241,7 @@ Rule report message.
 console.log();
 \`,
                     snapshot: \`
-~~~~~~~~~~~~
+~~~~~~~~~~~~~
 Rule report message.
 \`,
     }

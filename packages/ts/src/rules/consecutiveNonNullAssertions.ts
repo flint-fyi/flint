@@ -27,18 +27,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const range = {
-						begin: node.end - 1,
-						end: node.parent.end,
-					};
-
 					context.report({
 						fix: {
-							range,
+							range: {
+								begin: node.end,
+								end: node.parent.end,
+							},
 							text: "",
 						},
 						message: "consecutiveNonNullAssertion",
-						range,
+						range: {
+							begin: node.end - 1,
+							end: node.parent.end,
+						},
 					});
 				},
 			},
