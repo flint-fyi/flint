@@ -147,12 +147,16 @@ import numberMethodRanges from "./rules/numberMethodRanges.ts";
 import numberStaticMethods from "./rules/numberStaticMethods.ts";
 import numericErasingOperations from "./rules/numericErasingOperations.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
+import numericPrecision from "./rules/numericPrecision.ts";
+import numericSeparatorGroups from "./rules/numericSeparatorGroups.ts";
+import objectAssignSpreads from "./rules/objectAssignSpreads.ts";
 import objectCalls from "./rules/objectCalls.ts";
 import objectEntriesMethods from "./rules/objectEntriesMethods.ts";
 import objectHasOwns from "./rules/objectHasOwns.ts";
 import objectKeyDuplicates from "./rules/objectKeyDuplicates.ts";
 import objectProto from "./rules/objectProto.ts";
 import objectPrototypeBuiltIns from "./rules/objectPrototypeBuiltIns.ts";
+import objectShorthand from "./rules/objectShorthand.ts";
 import octalEscapes from "./rules/octalEscapes.ts";
 import octalNumbers from "./rules/octalNumbers.ts";
 import parameterReassignments from "./rules/parameterReassignments.ts";
@@ -329,10 +333,14 @@ export const ts = createPlugin({
 		numberStaticMethods,
 		numericErasingOperations,
 		numericLiteralParsing,
+		numericPrecision,
+		numericSeparatorGroups,
+		objectAssignSpreads,
 		objectCalls,
 		objectEntriesMethods,
 		objectHasOwns,
 		objectKeyDuplicates,
+		objectShorthand,
 		objectProto,
 		objectPrototypeBuiltIns,
 		octalEscapes,
