@@ -14665,7 +14665,8 @@
 		"flint": {
 			"name": "regexAmbiguousInvalidity",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
