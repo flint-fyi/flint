@@ -12,13 +12,11 @@ export function validateConfigDefinition(
 		rulesValue: AnyLevelDeep<ConfigRuleDefinition> | undefined,
 		useIndex: number,
 	) => {
-		if (rulesValue) {
-			return undefined;
-		}
-
-		return `Invalid configuration in ${configFilePath}
+		return rulesValue
+			? undefined
+			: `Invalid configuration in ${configFilePath}
   at use[${useIndex}]
-  Received: ${rulesValue}
+  Received: ${String(rulesValue)}
 
 This often happens when a preset or rule doesn't exist.
 Common causes:
