@@ -10,7 +10,8 @@ class foo extends Error {
 		super(message);
 		this.name = 'foo';
 	}
-}`,
+}
+`,
 			snapshot: `
 class foo extends Error {
       ~~~
@@ -19,7 +20,8 @@ class foo extends Error {
 		super(message);
 		this.name = 'foo';
 	}
-}`,
+}
+`,
 		},
 		{
 			code: `
@@ -28,7 +30,8 @@ class Custom extends Error {
 		super(message);
 		this.name = 'Custom';
 	}
-}`,
+}
+`,
 			snapshot: `
 class Custom extends Error {
       ~~~~~~
@@ -37,7 +40,8 @@ class Custom extends Error {
 		super(message);
 		this.name = 'Custom';
 	}
-}`,
+}
+`,
 		},
 		{
 			code: `
@@ -47,7 +51,8 @@ class CustomError extends Error {
 		this.message = message;
 		this.name = 'CustomError';
 	}
-}`,
+}
+`,
 			snapshot: `
 class CustomError extends Error {
 	constructor(message: string) {
@@ -57,7 +62,8 @@ class CustomError extends Error {
 		Assignment to \`this.message\` is redundant when the message is already passed to \`super()\`.
 		this.name = 'CustomError';
 	}
-}`,
+}
+`,
 		},
 		{
 			code: `
@@ -65,7 +71,8 @@ class CustomError extends Error {
 	constructor(message: string) {
 		super(message);
 	}
-}`,
+}
+`,
 			snapshot: `
 class CustomError extends Error {
 	constructor(message: string) {
@@ -75,7 +82,8 @@ class CustomError extends Error {
 		~~~~~~~~~~~~~~~
 	}
 	~
-}`,
+}
+`,
 		},
 		{
 			code: `
@@ -84,7 +92,8 @@ class CustomError extends Error {
 		super(message);
 		this.name = this.constructor.name;
 	}
-}`,
+}
+`,
 			snapshot: `
 class CustomError extends Error {
 	constructor(message: string) {
@@ -93,7 +102,8 @@ class CustomError extends Error {
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Avoid using \`this.constructor.name\` for the error name.
 	}
-}`,
+}
+`,
 		},
 		{
 			code: `
@@ -102,7 +112,8 @@ class CustomError extends Error {
 		super(message);
 		this.name = 'WrongError';
 	}
-}`,
+}
+`,
 			snapshot: `
 class CustomError extends Error {
 	constructor(message: string) {
@@ -111,7 +122,8 @@ class CustomError extends Error {
 		~~~~~~~~~~~~~~~~~~~~~~~~
 		Error subclass name property 'WrongError' should match the class name 'CustomError'.
 	}
-}`,
+}
+`,
 		},
 	],
 	valid: [

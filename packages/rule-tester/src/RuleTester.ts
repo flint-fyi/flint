@@ -15,6 +15,7 @@ import { CachedFactory } from "cached-factory";
 import assert from "node:assert/strict";
 import path from "node:path";
 
+import { createOutput } from "./createOutput.ts";
 import { createReportSnapshot } from "./createReportSnapshot.ts";
 import {
 	normalizeTestCase,
@@ -162,6 +163,14 @@ export class RuleTester {
 			const actualSnapshot = createReportSnapshot(testCase.code, reports);
 
 			assert.equal(actualSnapshot, testCase.snapshot);
+
+			const actualOutput = createOutput(reports, testCaseNormalized);
+
+			assert.equal(
+				testCase.output,
+				actualOutput,
+				"Expected `output` property to equal:",
+			);
 
 			const actualSuggestions = resolveReportedSuggestions(
 				reports,

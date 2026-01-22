@@ -105,8 +105,7 @@ if (a)
         doSomething();
 `,
 			output: `
-if (a && b)
-        doSomething();
+if (a && b) doSomething();
 `,
 			snapshot: `
 if (a)
