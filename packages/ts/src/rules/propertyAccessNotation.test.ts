@@ -140,17 +140,23 @@ const nested = a?.["b"]?.["c"];
 `,
 		},
 		{
-			code: `function test() {
+			code: `
+function test() {
     return this["property"];
-}`,
-			output: `function test() {
+}
+`,
+			output: `
+function test() {
     return this.property;
-}`,
-			snapshot: `function test() {
+}
+`,
+			snapshot: `
+function test() {
     return this["property"];
                 ~~~~~~~~~~
                 Prefer the cleaner dot notation instead of bracket notation for \`property\`.
-}`,
+}
+`,
 		},
 		{
 			code: `
