@@ -1,24 +1,12 @@
 import {
 	type AST,
-	type Checker,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import * as tsutils from "ts-api-utils";
 import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
-
-function isArrayType(type: ts.Type, typeChecker: Checker) {
-	return tsutils
-		.unionConstituents(type)
-		.every((unionPart) =>
-			tsutils
-				.intersectionConstituents(unionPart)
-				.every((t) => typeChecker.isArrayType(t) || typeChecker.isTupleType(t)),
-		);
-}
+import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
 function isTypeAssertion(
 	node: AST.Expression,
@@ -39,7 +27,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferTypeParameter: {
 			primary:
-				"Prefer a type parameter over a type assertion on the initial value.",
+				"Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.",
 			secondary: [
 				"Using `Array#reduce<T>` with a type parameter is clearer than asserting the initial value type.",
 				"This avoids unnecessary type assertions and keeps generic inference consistent.",
@@ -66,20 +54,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							? node.expression.argumentExpression.text
 							: undefined;
 
-					if (methodName !== "reduce") {
+					if (methodName !== "reduce" || node.arguments.length < 2) {
 						return;
 					}
 
-					const secondArg = node.arguments[1];
-					if (!secondArg || !isTypeAssertion(secondArg)) {
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const secondArg = node.arguments[1]!;
+
+					if (!isTypeAssertion(secondArg)) {
 						return;
 					}
 
-					const calleeObjectType = getConstrainedTypeAtLocation(
-						node.expression.expression,
-						typeChecker,
-					);
-					if (!isArrayType(calleeObjectType, typeChecker)) {
+					if (
+						!isArrayOrTupleTypeAtLocation(
+							node.expression.expression,
+							typeChecker,
+						)
+					) {
 						return;
 					}
 

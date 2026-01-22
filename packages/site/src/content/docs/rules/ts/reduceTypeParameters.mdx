@@ -12,7 +12,6 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 When calling `Array#reduce` with an empty array or object as the initial value, TypeScript can't infer useful types from those values.
 A common workaround is to use a type assertion like `[] as number[]` or `{} as Record<string, boolean>`.
-
 However, using the type parameter on `reduce<T>()` is preferred because it avoids type assertions and keeps the generic inference more consistent.
 
 ## Examples
@@ -66,14 +65,14 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If the assertion is necessary because the initial value is not assignable to the asserted type, this rule will not report.
-For example, when using a generic type parameter whose constraint is broader than the initial value, the assertion may be required.
-
-You might also disable this rule if you prefer the visual consistency of `as` assertions over type parameters for stylistic reasons.
+Some codebases use exceedingly complex array reducers that are difficult to represent in the type system with type parameters.
+This rule can be difficult to enable on those projects.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 
 - [MDN: Array.prototype.reduce()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce)
+- [TypeScript: Generics](https://www.typescriptlang.org/docs/handbook/2/generics.html)
 
 ## Equivalents in Other Linters
 

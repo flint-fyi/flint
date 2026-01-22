@@ -13,7 +13,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 [1, 2, 3].reduce((accumulator, value) => accumulator.concat(value * 2), [] as number[]);
                                                                         ~~~~~~~~~~~~~~
-                                                                        Prefer a type parameter over a type assertion on the initial value.
+                                                                        Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
 `,
 		},
 		{
@@ -26,7 +26,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 [1, 2, 3].reduce((accumulator, value) => accumulator.concat(value * 2), <number[]>[]);
                                                                         ~~~~~~~~~~~~
-                                                                        Prefer a type parameter over a type assertion on the initial value.
+                                                                        Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
 `,
 		},
 		{
@@ -39,7 +39,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 [1, 2, 3]?.reduce((accumulator, value) => accumulator.concat(value * 2), [] as number[]);
                                                                          ~~~~~~~~~~~~~~
-                                                                         Prefer a type parameter over a type assertion on the initial value.
+                                                                         Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
 `,
 		},
 		{
@@ -72,7 +72,7 @@ names.reduce(
     }),
     {} as Record<string, boolean>,
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Prefer a type parameter over a type assertion on the initial value.
+    Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
 );
 `,
 		},
@@ -103,7 +103,7 @@ names.reduce(
     }),
     {} as Record<string, boolean>,
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Prefer a type parameter over a type assertion on the initial value.
+    Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
 );
 `,
 		},
@@ -120,7 +120,7 @@ tuple.reduce<number[]>((accumulator, value) => accumulator.concat(value * 2), []
 declare const tuple: [number, number, number];
 tuple.reduce((accumulator, value) => accumulator.concat(value * 2), [] as number[]);
                                                                     ~~~~~~~~~~~~~~
-                                                                    Prefer a type parameter over a type assertion on the initial value.
+                                                                    Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
 `,
 		},
 		{
@@ -136,7 +136,7 @@ tupleOrArray.reduce<number[]>((accumulator, value) => accumulator.concat(value *
 declare const tupleOrArray: [number, number, number] | number[];
 tupleOrArray.reduce((accumulator, value) => accumulator.concat(value * 2), [] as number[]);
                                                                            ~~~~~~~~~~~~~~
-                                                                           Prefer a type parameter over a type assertion on the initial value.
+                                                                           Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
 `,
 		},
 		{
@@ -152,7 +152,7 @@ tuple.reduce<number[]>((accumulator, value) => accumulator.concat(value * 2), []
 declare const tuple: [number, number, number] & number[];
 tuple.reduce((accumulator, value) => accumulator.concat(value * 2), [] as number[]);
                                                                     ~~~~~~~~~~~~~~
-                                                                    Prefer a type parameter over a type assertion on the initial value.
+                                                                    Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
 `,
 		},
 		{
@@ -170,7 +170,7 @@ function example<U extends number[]>(values: U) {
 function example<U extends number[]>(values: U) {
     return values.reduce(() => {}, {} as Record<string, boolean>);
                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                   Prefer a type parameter over a type assertion on the initial value.
+                                   Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
 }
 `,
 		},
@@ -206,7 +206,7 @@ function example<T extends Record<string, boolean>>(value: T) {
         }),
         value as Record<string, boolean>,
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        Prefer a type parameter over a type assertion on the initial value.
+        Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
     );
 }
 `,
@@ -224,7 +224,57 @@ values.reduce<string | undefined>((accumulator) => accumulator, values.shift());
 declare const values: string[];
 values.reduce((accumulator) => accumulator, values.shift() as string | undefined);
                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                            Prefer a type parameter over a type assertion on the initial value.
+                                            Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
+`,
+		},
+		{
+			code: `
+type Reducer = { reduce: (callback: (arg: unknown) => unknown, arg: unknown) => unknown };
+declare const arrayOrReducer: number[] & Reducer;
+arrayOrReducer.reduce(accumulator => {
+    return (accumulator as number[]).concat(1);
+}, [] as number[]);
+`,
+			output: `
+type Reducer = { reduce: (callback: (arg: unknown) => unknown, arg: unknown) => unknown };
+declare const arrayOrReducer: number[] & Reducer;
+arrayOrReducer.reduce<number[]>(accumulator => {
+    return (accumulator as number[]).concat(1);
+}, []);
+`,
+			snapshot: `
+type Reducer = { reduce: (callback: (arg: unknown) => unknown, arg: unknown) => unknown };
+declare const arrayOrReducer: number[] & Reducer;
+arrayOrReducer.reduce(accumulator => {
+    return (accumulator as number[]).concat(1);
+}, [] as number[]);
+   ~~~~~~~~~~~~~~
+   Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
+`,
+		},
+		{
+			code: `
+type Reducer = { reduce: (callback: (arg: unknown) => unknown, arg: unknown) => unknown };
+declare const tuple: [number, number, number] | Reducer;
+tuple.reduce(accumulator => {
+    return (accumulator as number[]).concat(1);
+}, [] as number[]);
+`,
+			output: `
+type Reducer = { reduce: (callback: (arg: unknown) => unknown, arg: unknown) => unknown };
+declare const tuple: [number, number, number] | Reducer;
+tuple.reduce<number[]>(accumulator => {
+    return (accumulator as number[]).concat(1);
+}, []);
+`,
+			snapshot: `
+type Reducer = { reduce: (callback: (arg: unknown) => unknown, arg: unknown) => unknown };
+declare const tuple: [number, number, number] | Reducer;
+tuple.reduce(accumulator => {
+    return (accumulator as number[]).concat(1);
+}, [] as number[]);
+   ~~~~~~~~~~~~~~
+   Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
 `,
 		},
 	],
@@ -286,20 +336,6 @@ function example<T>() {
         {} as T,
     );
 }
-`,
-		`
-type Reducer = { reduce: (callback: (arg: unknown) => unknown, arg: unknown) => unknown };
-declare const tuple: [number, number, number] | Reducer;
-tuple.reduce(accumulator => {
-    return (accumulator as number[]).concat(1);
-}, [] as number[]);
-`,
-		`
-type Reducer = { reduce: (callback: (arg: unknown) => unknown, arg: unknown) => unknown };
-declare const arrayOrReducer: number[] & Reducer;
-arrayOrReducer.reduce(accumulator => {
-    return (accumulator as number[]).concat(1);
-}, [] as number[]);
 `,
 	],
 });
