@@ -1,9 +1,8 @@
 import { createLanguage } from "@flint.fyi/core";
-import type * as yamlParser from "yaml-unist-parser";
+import { visit } from "unist-util-visit";
+import * as yamlParser from "yaml-unist-parser";
 
-import { createYamlFile } from "./createYamlFile.ts";
 import type { YamlNodesByName } from "./nodes.ts";
-import { prepareYamlFile } from "./prepareYamlFile.ts";
 
 export interface YamlFileServices {
 	root: yamlParser.Root;
@@ -17,10 +16,26 @@ export const yamlLanguage = createLanguage<YamlNodesByName, YamlFileServices>({
 	createFileFactory: () => {
 		return {
 			prepareFile: (data) => {
-				const { languageFile, root } = createYamlFile(data);
+				const root = yamlParser.parse(data.sourceText);
 
-				return prepareYamlFile(languageFile, root, data.sourceText);
+				return {
+					about: data,
+					services: { root, sourceText: data.sourceText },
+				};
 			},
 		};
+	},
+	runFileVisitors: (file, options, runtime) => {
+		if (!runtime.visitors) {
+			return;
+		}
+
+		const { visitors } = runtime;
+		const visitorServices = { options, ...file.services };
+
+		visit(file.services.root, (node) => {
+			// @ts-expect-error -- This should work...?
+			visitors[node.type]?.(node, visitorServices);
+		});
 	},
 });

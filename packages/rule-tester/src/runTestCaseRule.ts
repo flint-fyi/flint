@@ -59,7 +59,7 @@ export async function runTestCaseRule<
 		filePath: fileName,
 		filePathAbsolute,
 		sourceText: code,
-	}).file;
+	});
 
 	const reports: NormalizedReport[] = [];
 
@@ -90,8 +90,7 @@ export async function runTestCaseRule<
 	});
 
 	if (ruleRuntime) {
-		file.runVisitors(options, ruleRuntime);
-
+		rule.language.runFileVisitors(file, options, ruleRuntime);
 		await ruleRuntime.teardown?.();
 	}
 
