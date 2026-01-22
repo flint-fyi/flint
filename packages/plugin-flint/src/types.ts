@@ -18,5 +18,5 @@ export interface ParsedTestCaseNodes {
 }
 
 export interface ParsedTestCaseNodesInvalid extends ParsedTestCaseNodes {
-	snapshot: ts.Node;
+	snapshot: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral;
 }

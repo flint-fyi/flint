@@ -9,7 +9,7 @@ ruleTester.describe(rule, {
 '\\xa9';
 `,
 			output: `
-'\\XA9';
+'\\xA9';
 `,
 			snapshot: `
 '\\xa9';
@@ -22,7 +22,7 @@ ruleTester.describe(rule, {
 '\\ud834';
 `,
 			output: `
-'\\UD834';
+'\\uD834';
 `,
 			snapshot: `
 '\\ud834';
@@ -35,7 +35,7 @@ ruleTester.describe(rule, {
 '\\u{1d306}';
 `,
 			output: `
-'\\U{1D306}';
+'\\u{1D306}';
 `,
 			snapshot: `
 '\\u{1d306}';
@@ -48,7 +48,7 @@ ruleTester.describe(rule, {
 '\\ca';
 `,
 			output: `
-'\\CA';
+'\\cA';
 `,
 			snapshot: `
 '\\ca';
@@ -61,7 +61,7 @@ ruleTester.describe(rule, {
 "\\xa9";
 `,
 			output: `
-"\\XA9";
+"\\xA9";
 `,
 			snapshot: `
 "\\xa9";
@@ -74,7 +74,7 @@ ruleTester.describe(rule, {
 \`\\xa9\`;
 `,
 			output: `
-\`\\XA9\`;
+\`\\xA9\`;
 `,
 			snapshot: `
 \`\\xa9\`;
@@ -89,7 +89,7 @@ const x = 5;
 `,
 			output: `
 const x = 5;
-\`value: \${x} \\xa9\`;
+\`value: \${x} \\xA9\`;
 `,
 			snapshot: `
 const x = 5;

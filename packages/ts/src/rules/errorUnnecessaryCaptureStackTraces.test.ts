@@ -9,7 +9,8 @@ class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace(this, MyError);
 	}
-}`,
+}
+`,
 			snapshot: `
 class MyError extends Error {
 	constructor() {
@@ -17,7 +18,8 @@ class MyError extends Error {
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
 	}
-}`,
+}
+`,
 		},
 		{
 			code: `
@@ -25,7 +27,8 @@ class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace?.(this, MyError);
 	}
-}`,
+}
+`,
 			snapshot: `
 class MyError extends Error {
 	constructor() {
@@ -33,7 +36,8 @@ class MyError extends Error {
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
 	}
-}`,
+}
+`,
 		},
 		{
 			code: `
@@ -41,7 +45,8 @@ class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace(this, this.constructor);
 	}
-}`,
+}
+`,
 			snapshot: `
 class MyError extends Error {
 	constructor() {
@@ -49,7 +54,8 @@ class MyError extends Error {
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
 	}
-}`,
+}
+`,
 		},
 		{
 			code: `
@@ -57,7 +63,8 @@ class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace?.(this, this.constructor);
 	}
-}`,
+}
+`,
 			snapshot: `
 class MyError extends Error {
 	constructor() {
@@ -65,7 +72,8 @@ class MyError extends Error {
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
 	}
-}`,
+}
+`,
 		},
 		{
 			code: `
@@ -73,7 +81,8 @@ class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace(this, new.target);
 	}
-}`,
+}
+`,
 			snapshot: `
 class MyError extends Error {
 	constructor() {
@@ -81,7 +90,8 @@ class MyError extends Error {
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
 	}
-}`,
+}
+`,
 		},
 		{
 			code: `
@@ -89,7 +99,8 @@ class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace?.(this, new.target);
 	}
-}`,
+}
+`,
 			snapshot: `
 class MyError extends Error {
 	constructor() {
@@ -97,7 +108,8 @@ class MyError extends Error {
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
 	}
-}`,
+}
+`,
 		},
 		{
 			code: `
@@ -105,7 +117,8 @@ class MyError extends TypeError {
 	constructor() {
 		Error.captureStackTrace(this, MyError);
 	}
-}`,
+}
+`,
 			snapshot: `
 class MyError extends TypeError {
 	constructor() {
@@ -113,7 +126,8 @@ class MyError extends TypeError {
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
 	}
-}`,
+}
+`,
 		},
 	],
 	valid: [

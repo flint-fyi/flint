@@ -5,5 +5,12 @@ export async function readGitignore() {
 		.trim()
 		.split("\n")
 		.filter(Boolean)
-		.map((line) => (line.startsWith("/") ? line.slice(1) : line));
+		.filter((line) => !line.startsWith("#"))
+		.map((line) =>
+			line.startsWith("/")
+				? line.slice(1)
+				: line.includes("/")
+					? line
+					: `**/${line}`,
+		);
 }

@@ -147,15 +147,25 @@ import numberMethodRanges from "./rules/numberMethodRanges.ts";
 import numberStaticMethods from "./rules/numberStaticMethods.ts";
 import numericErasingOperations from "./rules/numericErasingOperations.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
+import numericPrecision from "./rules/numericPrecision.ts";
+import numericSeparatorGroups from "./rules/numericSeparatorGroups.ts";
+import objectAssignSpreads from "./rules/objectAssignSpreads.ts";
 import objectCalls from "./rules/objectCalls.ts";
 import objectEntriesMethods from "./rules/objectEntriesMethods.ts";
 import objectHasOwns from "./rules/objectHasOwns.ts";
 import objectKeyDuplicates from "./rules/objectKeyDuplicates.ts";
 import objectProto from "./rules/objectProto.ts";
 import objectPrototypeBuiltIns from "./rules/objectPrototypeBuiltIns.ts";
+import objectShorthand from "./rules/objectShorthand.ts";
+import objectSpreadUnnecessaryFallbacks from "./rules/objectSpreadUnnecessaryFallbacks.ts";
+import objectTypeDefinitions from "./rules/objectTypeDefinitions.ts";
 import octalEscapes from "./rules/octalEscapes.ts";
 import octalNumbers from "./rules/octalNumbers.ts";
 import parameterPropertyAssignment from "./rules/parameterPropertyAssignment.ts";
+import parameterReassignments from "./rules/parameterReassignments.ts";
+import parseIntRadixes from "./rules/parseIntRadixes.ts";
+import propertyAccessNotation from "./rules/propertyAccessNotation.ts";
+import recursionOnlyArguments from "./rules/recursionOnlyArguments.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import selfComparisons from "./rules/selfComparisons.ts";
@@ -329,15 +339,25 @@ export const ts = createPlugin({
 		numberStaticMethods,
 		numericErasingOperations,
 		numericLiteralParsing,
+		numericPrecision,
+		numericSeparatorGroups,
+		objectAssignSpreads,
 		objectCalls,
 		objectEntriesMethods,
 		objectHasOwns,
 		objectKeyDuplicates,
 		objectProto,
 		objectPrototypeBuiltIns,
+		objectShorthand,
+		objectSpreadUnnecessaryFallbacks,
+		objectTypeDefinitions,
 		octalEscapes,
 		octalNumbers,
 		parameterPropertyAssignment,
+		parameterReassignments,
+		parseIntRadixes,
+		propertyAccessNotation,
+		recursionOnlyArguments,
 		returnAssignments,
 		selfAssignments,
 		selfComparisons,
