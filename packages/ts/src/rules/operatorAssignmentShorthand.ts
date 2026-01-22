@@ -1,4 +1,5 @@
 import {
+	type AST,
 	getTSNodeRange,
 	hasSameTokens,
 	typescriptLanguage,
@@ -7,7 +8,7 @@ import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-const operatorTokenTexts = new Map([
+const operatorTexts = new Map([
 	[ts.SyntaxKind.AmpersandToken, "&"],
 	[ts.SyntaxKind.AsteriskAsteriskToken, "**"],
 	[ts.SyntaxKind.AsteriskToken, "*"],
@@ -44,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferShorthand: {
 			primary:
-				"This `=` assignment can be replaced with an `{{ operator }}` operator assignment.",
+				"This `=` assignment can be replaced with an `{{ operator }}=` operator assignment.",
 			secondary: [
 				"The shorthand operator assignment accomplishes the same operation with less code.",
 			],
@@ -54,6 +55,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
+		function report(
+			operator: string,
+			node: AST.BinaryExpression,
+			right: AST.AnyNode,
+			sourceFile: AST.SourceFile,
+		) {
+			const range = getTSNodeRange(node, sourceFile);
+
+			context.report({
+				data: { operator },
+				fix: {
+					range,
+					text: [
+						node.left.getText(sourceFile),
+						`${operator}=`,
+						right.getText(sourceFile),
+					].join(" "),
+				},
+				message: "preferShorthand",
+				range,
+			});
+		}
+
 		return {
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
@@ -64,58 +88,27 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const binaryOperator = operatorTokenTexts.get(
-						node.right.operatorToken.kind,
-					);
-					if (!binaryOperator) {
+					const operator = operatorTexts.get(node.right.operatorToken.kind);
+					if (!operator) {
 						return;
 					}
 
-					const isCommutative =
-						commutativeOperatorsWithShorthand.has(binaryOperator);
+					const isCommutative = commutativeOperatorsWithShorthand.has(operator);
 
 					if (
 						!isCommutative &&
-						!nonCommutativeOperatorsWithShorthand.has(binaryOperator)
+						!nonCommutativeOperatorsWithShorthand.has(operator)
 					) {
 						return;
 					}
 
 					if (hasSameTokens(node.left, node.right.left, sourceFile)) {
-						const replacementOperator = `${binaryOperator}=`;
-						const range = getTSNodeRange(node, sourceFile);
-						const leftText = node.left.getText(sourceFile);
-						const rightText = node.right.right.getText(sourceFile);
-						const fixedText = `${leftText} ${replacementOperator} ${rightText}`;
-
-						context.report({
-							data: { operator: replacementOperator },
-							fix: {
-								range,
-								text: fixedText,
-							},
-							message: "preferShorthand",
-							range,
-						});
+						report(operator, node, node.right.right, sourceFile);
 					} else if (
 						isCommutative &&
 						hasSameTokens(node.left, node.right.right, sourceFile)
 					) {
-						const replacementOperator = `${binaryOperator}=`;
-						const range = getTSNodeRange(node, sourceFile);
-						const leftText = node.left.getText(sourceFile);
-						const rightText = node.right.left.getText(sourceFile);
-						const fixedText = `${leftText} ${replacementOperator} ${rightText}`;
-
-						context.report({
-							data: { operator: replacementOperator },
-							fix: {
-								range,
-								text: fixedText,
-							},
-							message: "preferShorthand",
-							range,
-						});
+						report(operator, node, node.right.left, sourceFile);
 					}
 				},
 			},

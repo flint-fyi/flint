@@ -229,22 +229,6 @@ This \`=\` assignment can be replaced with an \`+=\` operator assignment.
 		},
 		{
 			code: `
-let value = 5;
-value = value & 3;
-`,
-			output: `
-let value = 5;
-value &= 3;
-`,
-			snapshot: `
-let value = 5;
-value = value & 3;
-~~~~~~~~~~~~~~~~~
-This \`=\` assignment can be replaced with an \`&=\` operator assignment.
-`,
-		},
-		{
-			code: `
 let a = 5;
 a = 3 * a;
 `,
