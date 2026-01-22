@@ -1,0 +1,94 @@
+---
+description: "Reports numeric literals with inconsistent separator grouping."
+title: "numericSeparatorGroups"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="numericSeparatorGroups" />
+
+This rule enforces consistent grouping of digits using numeric separators.
+
+Numeric separators (`_`) make large numbers more readable by grouping digits.
+This rule enforces:
+
+- Groups of 3 for decimal numbers (e.g., `1_000_000`)
+- Groups of 4 for binary and octal numbers (e.g., `0b1111_0000`)
+- Groups of 2 for hexadecimal numbers (e.g., `0xFF_FF`)
+
+Numbers with fewer than 5 digits are not required to use separators.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = 1000000;
+```
+
+```ts
+const value = 100_00;
+```
+
+```ts
+const value = 0xffff;
+```
+
+```ts
+const value = 0b11111111;
+```
+
+```ts
+const value = 10000n;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = 1_000_000;
+```
+
+```ts
+const value = 10_000;
+```
+
+```ts
+const value = 0xff_ff;
+```
+
+```ts
+const value = 0b1111_1111;
+```
+
+```ts
+const value = 10_000n;
+```
+
+```ts
+const value = 1000;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer not to use numeric separators, or have a codebase with a different convention for digit grouping, you may want to disable this rule.
+
+## Further Reading
+
+- [MDN: Numeric separators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#numeric_separators)
+- [MDN: BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="numericSeparatorGroups" />
