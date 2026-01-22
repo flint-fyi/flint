@@ -158,8 +158,10 @@ import objectProto from "./rules/objectProto.ts";
 import objectPrototypeBuiltIns from "./rules/objectPrototypeBuiltIns.ts";
 import objectShorthand from "./rules/objectShorthand.ts";
 import objectSpreadUnnecessaryFallbacks from "./rules/objectSpreadUnnecessaryFallbacks.ts";
+import objectTypeDefinitions from "./rules/objectTypeDefinitions.ts";
 import octalEscapes from "./rules/octalEscapes.ts";
 import octalNumbers from "./rules/octalNumbers.ts";
+import parseIntRadixes from "./rules/parseIntRadixes.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import selfComparisons from "./rules/selfComparisons.ts";
@@ -344,8 +346,10 @@ export const ts = createPlugin({
 		objectPrototypeBuiltIns,
 		objectShorthand,
 		objectSpreadUnnecessaryFallbacks,
+		objectTypeDefinitions,
 		octalEscapes,
 		octalNumbers,
+		parseIntRadixes,
 		returnAssignments,
 		selfAssignments,
 		selfComparisons,
