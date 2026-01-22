@@ -1,7 +1,7 @@
 import type { AST, Checker } from "@flint.fyi/typescript-language";
 import type ts from "typescript";
 
-import { getConstrainedTypeAtLocation } from "./getConstrainedType.ts";
+import { getConstrainedTypeAtLocation } from "./getConstrainedTypeAtLocation.ts";
 import { isTypeRecursive } from "./isTypeRecursive.ts";
 
 export function isArrayOrTupleTypeAtLocation(

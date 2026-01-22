@@ -8,7 +8,7 @@ import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
+import { getConstrainedTypeAtLocation } from "./utils/getConstrainedTypeAtLocation.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

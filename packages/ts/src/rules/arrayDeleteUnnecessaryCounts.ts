@@ -7,7 +7,7 @@ import {
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
+import { getConstrainedTypeAtLocation } from "./utils/getConstrainedTypeAtLocation.ts";
 
 function isUnnecessaryCountArgument(
 	argumentRoot: AST.Expression,

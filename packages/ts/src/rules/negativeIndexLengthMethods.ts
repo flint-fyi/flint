@@ -9,7 +9,7 @@ import {
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
+import { getConstrainedTypeAtLocation } from "./utils/getConstrainedTypeAtLocation.ts";
 import { isTypeRecursive } from "./utils/isTypeRecursive.ts";
 
 const typedArrayNames = new Set([

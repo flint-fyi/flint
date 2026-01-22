@@ -24,30 +24,30 @@ It also catches attempts to mix `bigint` and `number` types, which causes a runt
 ```ts
 const str = "Count: ";
 const num = 5;
-const result = str + num; // String concatenation via coercion
+const result = str + num;
 ```
 
 ```ts
 const num = 5;
 const str = "10";
-const result = num + str; // "510" instead of 15
+const result = num + str;
 ```
 
 ```ts
 const bigint = 5n;
 const num = 10;
-const result = bigint + num; // TypeError at runtime
+const result = bigint + num;
 ```
 
 ```ts
 const bool = true;
 const num = 5;
-const result = bool + num; // Boolean coerced to 1
+const result = bool + num;
 ```
 
 ```ts
 let count = 0;
-count += "1"; // count becomes "01"
+count += "1";
 ```
 
 </TabItem>
@@ -56,30 +56,30 @@ count += "1"; // count becomes "01"
 ```ts
 const a = 5;
 const b = 10;
-const result = a + b; // 15
+const result = a + b;
 ```
 
 ```ts
 const greeting = "Hello, ";
 const name = "world";
-const result = greeting + name; // "Hello, world"
+const result = greeting + name;
 ```
 
 ```ts
 const a = 5n;
 const b = 10n;
-const result = a + b; // 15n
+const result = a + b;
 ```
 
 ```ts
 const count = 5;
 const label = "Count: ";
-const result = label + String(count); // Explicit conversion
+const result = label + String(count);
 ```
 
 ```ts
 let total = 0;
-total += 10; // total is 10
+total += 10;
 ```
 
 </TabItem>
@@ -94,7 +94,8 @@ This rule is not configurable.
 If you intentionally use the `+` operator for type coercion and string concatenation with mixed types, you may want to disable this rule.
 However, it's generally better to use explicit type conversions like `String()` or `Number()` for clarity.
 
-Some legacy codebases may rely on implicit coercion behavior, in which case this rule may produce many warnings.
+Some legacy codebases may rely on implicit coercion behavior, in which case this rule may produce many reports.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 

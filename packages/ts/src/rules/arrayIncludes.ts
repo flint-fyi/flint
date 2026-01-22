@@ -7,7 +7,7 @@ import {
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
+import { getConstrainedTypeAtLocation } from "./utils/getConstrainedTypeAtLocation.ts";
 
 function hasIncludesMethod(node: AST.Expression, typeChecker: Checker) {
 	const receiverType = getConstrainedTypeAtLocation(node, typeChecker);

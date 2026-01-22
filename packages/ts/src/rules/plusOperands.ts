@@ -1,5 +1,6 @@
 import {
 	type AST,
+	type Checker,
 	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
@@ -8,94 +9,84 @@ import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getConstrainedTypeAtLocation } from "./utils/getConstrainedTypeAtLocation.ts";
 
 type OperandType =
+	| "`any`"
+	| "`never`"
+	| "`unknown`"
 	| "bigint"
 	| "boolean"
-	| "invalid"
+	| "non-primitive"
 	| "null"
 	| "number"
+	| "object"
 	| "RegExp"
 	| "string"
+	| "symbol"
 	| "undefined";
 
-function getConstrainedBaseType(
-	node: AST.Expression,
-	typeChecker: ts.TypeChecker,
-): ts.Type {
-	const type = typeChecker.getTypeAtLocation(node);
-	const constrainedType = typeChecker.getBaseConstraintOfType(type) ?? type;
-	return typeChecker.getBaseTypeOfLiteralType(constrainedType);
+const invalidOperandTypes = new Set<OperandType>([
+	"`any`",
+	"`never`",
+	"`unknown`",
+	"boolean",
+	"non-primitive",
+	"null",
+	"object",
+	"RegExp",
+	"symbol",
+	"undefined",
+]);
+
+const typeFlagOperands = {
+	overriding: [
+		[ts.TypeFlags.ESSymbolLike, "symbol"],
+		[ts.TypeFlags.Any, "`any`"],
+		[ts.TypeFlags.Never, "`never`"],
+		[ts.TypeFlags.Unknown, "`unknown`"],
+	],
+	secondary: [
+		[ts.TypeFlags.BigIntLike, "bigint"],
+		[ts.TypeFlags.NumberLike, "number"],
+		[ts.TypeFlags.StringLike, "string"],
+		[ts.TypeFlags.BooleanLike, "boolean"],
+		[ts.TypeFlags.Null, "null"],
+		[ts.TypeFlags.Undefined, "undefined"],
+	],
+} as const;
+
+function getConstrainedBaseType(node: AST.Expression, typeChecker: Checker) {
+	return typeChecker.getBaseTypeOfLiteralType(
+		getConstrainedTypeAtLocation(node, typeChecker),
+	);
 }
 
 function getOperandType(type: ts.Type): OperandType {
 	const constituents = tsutils.unionConstituents(type);
 
 	for (const subType of constituents) {
-		if (
-			hasTypeFlag(
-				subType,
-				ts.TypeFlags.ESSymbolLike | ts.TypeFlags.Never | ts.TypeFlags.Unknown,
-			)
-		) {
-			return "invalid";
+		for (const [typeFlag, operandType] of typeFlagOperands.overriding) {
+			if (hasTypeFlag(subType, typeFlag)) {
+				return operandType;
+			}
 		}
 	}
 
-	if (
-		constituents.every((subType) =>
-			hasTypeFlag(subType, ts.TypeFlags.BigIntLike),
-		)
-	) {
-		return "bigint";
-	}
-
-	if (
-		constituents.every((subType) =>
-			hasTypeFlag(subType, ts.TypeFlags.NumberLike),
-		)
-	) {
-		return "number";
-	}
-
-	if (
-		constituents.every((subType) =>
-			hasTypeFlag(subType, ts.TypeFlags.StringLike),
-		)
-	) {
-		return "string";
-	}
-
-	if (
-		constituents.every((subType) =>
-			hasTypeFlag(subType, ts.TypeFlags.BooleanLike),
-		)
-	) {
-		return "boolean";
-	}
-
-	if (
-		constituents.every((subType) => hasTypeFlag(subType, ts.TypeFlags.Null))
-	) {
-		return "null";
-	}
-
-	if (
-		constituents.every((subType) =>
-			hasTypeFlag(subType, ts.TypeFlags.Undefined),
-		)
-	) {
-		return "undefined";
-	}
-
 	for (const subType of constituents) {
+		for (const [typeFlag, operandType] of typeFlagOperands.secondary) {
+			if (hasTypeFlag(subType, typeFlag)) {
+				return operandType;
+			}
+		}
+
 		const symbol = subType.getSymbol();
 		if (symbol?.getName() === "RegExp") {
 			return "RegExp";
 		}
 	}
 
-	return "invalid";
+	return "object";
 }
 
 function hasTypeFlag(type: ts.Type, flag: ts.TypeFlags): boolean {
@@ -108,7 +99,7 @@ function hasTypeFlag(type: ts.Type, flag: ts.TypeFlags): boolean {
 	return false;
 }
 
-function isValidOperandType(operandType: OperandType): boolean {
+function isValidOperandType(operandType: string) {
 	return (
 		operandType === "number" ||
 		operandType === "bigint" ||
@@ -135,7 +126,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 		invalidOperand: {
 			primary:
-				"Invalid operand for a '+' operation. Operands must each be a number or string. Got `{{ type }}`.",
+				"This {{ type }} operand is invalid for a '+' operation. Operands must each be a numeric or string value.",
 			secondary: [
 				"The '+' operator only works reliably with numbers, bigints, or strings.",
 				"Using other types like objects, symbols, or unknown values can cause unexpected behavior.",
@@ -172,22 +163,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const leftType = getConstrainedBaseType(node.left, typeChecker);
-			const rightType = getConstrainedBaseType(node.right, typeChecker);
 			const leftOperandType = getOperandType(leftType);
-			const rightOperandType = getOperandType(rightType);
 
-			if (leftOperandType === "invalid") {
+			if (invalidOperandTypes.has(leftOperandType)) {
 				context.report({
-					data: { type: typeChecker.typeToString(leftType) },
+					data: { type: leftOperandType },
 					message: "invalidOperand",
 					range: getTSNodeRange(node.left, sourceFile),
 				});
 				return;
 			}
 
-			if (rightOperandType === "invalid") {
+			const rightType = getConstrainedBaseType(node.right, typeChecker);
+			const rightOperandType = getOperandType(rightType);
+
+			if (invalidOperandTypes.has(rightOperandType)) {
 				context.report({
-					data: { type: typeChecker.typeToString(rightType) },
+					data: { type: rightOperandType },
 					message: "invalidOperand",
 					range: getTSNodeRange(node.right, sourceFile),
 				});
@@ -195,14 +187,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (leftOperandType === rightOperandType) {
-				if (isValidOperandType(leftOperandType)) {
-					return;
+				if (!isValidOperandType(leftOperandType)) {
+					context.report({
+						data: { type: leftOperandType },
+						message: "invalidOperand",
+						range: getTSNodeRange(node.left, sourceFile),
+					});
 				}
-				context.report({
-					data: { type: typeChecker.typeToString(leftType) },
-					message: "invalidOperand",
-					range: getTSNodeRange(node.left, sourceFile),
-				});
 				return;
 			}
 
@@ -212,8 +203,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			) {
 				context.report({
 					data: {
-						leftType: typeChecker.typeToString(leftType),
-						rightType: typeChecker.typeToString(rightType),
+						leftType: leftOperandType,
+						rightType: rightOperandType,
 					},
 					message: "bigintAndNumber",
 					range: getTSNodeRange(node, sourceFile),
@@ -223,8 +214,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			context.report({
 				data: {
-					leftType: typeChecker.typeToString(leftType),
-					rightType: typeChecker.typeToString(rightType),
+					leftType: leftOperandType,
+					rightType: rightOperandType,
 				},
 				message: "mismatchedTypes",
 				range: getTSNodeRange(node, sourceFile),

@@ -3,7 +3,6 @@ import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
-		// String + Number
 		{
 			code: `
 const str = "hello";
@@ -15,10 +14,9 @@ const str = "hello";
 const num = 5;
 const result = str + num;
                ~~~~~~~~~
-               Operands of '+' operations must be both numbers or both strings. Got \`string\` + \`number\`.
+               This non-primitive operand is invalid for a '+' operation. Operands must each be a numeric or string value.
 `,
 		},
-		// Number + String
 		{
 			code: `
 const num = 5;
@@ -30,10 +28,9 @@ const num = 5;
 const str = "hello";
 const result = num + str;
                ~~~~~~~~~
-               Operands of '+' operations must be both numbers or both strings. Got \`number\` + \`string\`.
+               This non-primitive operand is invalid for a '+' operation. Operands must each be a numeric or string value.
 `,
 		},
-		// BigInt + Number
 		{
 			code: `
 const bigint = 5n;
@@ -48,7 +45,6 @@ const result = bigint + num;
                Numeric '+' operations must either be both bigints or both numbers. Got \`bigint\` + \`number\`.
 `,
 		},
-		// Number + BigInt
 		{
 			code: `
 const num = 5;
@@ -63,7 +59,6 @@ const result = num + bigint;
                Numeric '+' operations must either be both bigints or both numbers. Got \`number\` + \`bigint\`.
 `,
 		},
-		// Boolean + Number
 		{
 			code: `
 const bool = true;
@@ -75,10 +70,9 @@ const bool = true;
 const num = 5;
 const result = bool + num;
                ~~~~~~~~~~
-               Operands of '+' operations must be both numbers or both strings. Got \`boolean\` + \`number\`.
+               This non-primitive operand is invalid for a '+' operation. Operands must each be a numeric or string value.
 `,
 		},
-		// Boolean + String
 		{
 			code: `
 const bool = true;
@@ -90,10 +84,9 @@ const bool = true;
 const str = "hello";
 const result = bool + str;
                ~~~~~~~~~~
-               Operands of '+' operations must be both numbers or both strings. Got \`boolean\` + \`string\`.
+               This non-primitive operand is invalid for a '+' operation. Operands must each be a numeric or string value.
 `,
 		},
-		// Boolean + Boolean
 		{
 			code: `
 const a = true;
@@ -108,7 +101,6 @@ const result = a + b;
                Invalid operand for a '+' operation. Operands must each be a number or string. Got \`boolean\`.
 `,
 		},
-		// Null + Number
 		{
 			code: `
 const n = null;
@@ -120,10 +112,9 @@ const n = null;
 const num = 5;
 const result = n + num;
                ~~~~~~~
-               Operands of '+' operations must be both numbers or both strings. Got \`null\` + \`number\`.
+               This non-primitive operand is invalid for a '+' operation. Operands must each be a numeric or string value.
 `,
 		},
-		// Undefined + String
 		{
 			code: `
 const u = undefined;
@@ -135,10 +126,9 @@ const u = undefined;
 const str = "hello";
 const result = u + str;
                ~~~~~~~
-               Operands of '+' operations must be both numbers or both strings. Got \`undefined\` + \`string\`.
+               This non-primitive operand is invalid for a '+' operation. Operands must each be a numeric or string value.
 `,
 		},
-		// Symbol + Number
 		{
 			code: `
 const sym = Symbol("test");
@@ -153,7 +143,6 @@ const result = sym + num;
                Invalid operand for a '+' operation. Operands must each be a number or string. Got \`unique symbol\`.
 `,
 		},
-		// Object + Number
 		{
 			code: `
 const obj = {};
@@ -168,7 +157,6 @@ const result = obj + num;
                Invalid operand for a '+' operation. Operands must each be a number or string. Got \`{}\`.
 `,
 		},
-		// Array + String
 		{
 			code: `
 const arr: number[] = [];
@@ -183,7 +171,6 @@ const result = arr + str;
                Invalid operand for a '+' operation. Operands must each be a number or string. Got \`number[]\`.
 `,
 		},
-		// Function return type mismatch
 		{
 			code: `
 function getString(): string { return "hello"; }
@@ -195,10 +182,9 @@ function getString(): string { return "hello"; }
 function getNumber(): number { return 5; }
 const result = getString() + getNumber();
                ~~~~~~~~~~~~~~~~~~~~~~~~~
-               Operands of '+' operations must be both numbers or both strings. Got \`string\` + \`number\`.
+               This non-primitive operand is invalid for a '+' operation. Operands must each be a numeric or string value.
 `,
 		},
-		// Compound assignment += with mismatched types
 		{
 			code: `
 let str = "hello";
@@ -213,7 +199,6 @@ str += num;
 Operands of '+' operations must be both numbers or both strings. Got \`string\` + \`number\`.
 `,
 		},
-		// Compound assignment with invalid type
 		{
 			code: `
 let num = 5;
@@ -225,10 +210,9 @@ let num = 5;
 const sym = Symbol("test");
 num += sym;
        ~~~
-       Invalid operand for a '+' operation. Operands must each be a number or string. Got \`unique symbol\`.
+       This symbol operand is invalid for a '+' operation. Operands must each be a numeric or string value.
 `,
 		},
-		// RegExp + Number
 		{
 			code: `
 const regex = /test/;
@@ -239,11 +223,10 @@ const result = regex + num;
 const regex = /test/;
 const num = 5;
 const result = regex + num;
-               ~~~~~~~~~~~
-               Operands of '+' operations must be both numbers or both strings. Got \`RegExp\` + \`number\`.
+               ~~~~~
+               This RegExp operand is invalid for a '+' operation. Operands must each be a numeric or string value.
 `,
 		},
-		// Unknown type
 		{
 			code: `
 function test(value: unknown) {
@@ -254,11 +237,10 @@ function test(value: unknown) {
 function test(value: unknown) {
 	const result = value + 5;
 	               ~~~~~
-	               Invalid operand for a '+' operation. Operands must each be a number or string. Got \`unknown\`.
+	               This \`unknown\` operand is invalid for a '+' operation. Operands must each be a numeric or string value.
 }
 `,
 		},
-		// Never type
 		{
 			code: `
 function test(value: never) {
@@ -269,11 +251,10 @@ function test(value: never) {
 function test(value: never) {
 	const result = value + 5;
 	               ~~~~~
-	               Invalid operand for a '+' operation. Operands must each be a number or string. Got \`never\`.
+	               This \`never\` operand is invalid for a '+' operation. Operands must each be a numeric or string value.
 }
 `,
 		},
-		// Any type operand
 		{
 			code: `
 declare const value: any;
@@ -283,10 +264,9 @@ const result = value + 5;
 declare const value: any;
 const result = value + 5;
                ~~~~~
-               Invalid operand for a '+' operation. Operands must each be a number or string. Got \`any\`.
+               This \`any\` operand is invalid for a '+' operation. Operands must each be a numeric or string value.
 `,
 		},
-		// Template literal type + number
 		{
 			code: `
 type Prefix = \`prefix_\${string}\`;
@@ -305,25 +285,21 @@ const result = prefix + num;
 		},
 	],
 	valid: [
-		// Number + Number
 		`
 const a = 5;
 const b = 10;
 const result = a + b;
 `,
-		// Generic extends number
 		`
 function add<T extends number>(a: T, b: T): T {
 	return a + b as T;
 }
 `,
-		// Generic extends string
 		`
 function concat<T extends string>(a: T, b: T): string {
 	return a + b;
 }
 `,
-		// Const enum values
 		`
 const enum Numbers {
 	One = 1,
@@ -331,73 +307,58 @@ const enum Numbers {
 }
 const result = Numbers.One + Numbers.Two;
 `,
-		// Type assertion to number
 		`
 const a = 5 as number;
 const b = 10 as number;
 const result = a + b;
 `,
-		// Intersection with number
 		`
 type NumericBrand = number & { __brand: "numeric" };
 declare const a: NumericBrand;
 declare const b: NumericBrand;
 const result = a + b;
 `,
-		// String + String
 		`
 const a = "hello";
 const b = " world";
 const result = a + b;
 `,
-		// BigInt + BigInt
 		`
 const a = 5n;
 const b = 10n;
 const result = a + b;
 `,
-		// Numeric literals
 		`const result = 5 + 10;`,
-		// String literals
 		`const result = "hello" + " world";`,
-		// BigInt literals
 		`const result = 5n + 10n;`,
-		// Function returning number + number
 		`
 function getNumber(): number { return 5; }
 const result = getNumber() + 10;
 `,
-		// Function returning string + string
 		`
 function getString(): string { return "hello"; }
 const result = getString() + " world";
 `,
-		// Compound assignment with matching types
 		`
 let num = 5;
 num += 10;
 `,
-		// Compound assignment with string
 		`
 let str = "hello";
 str += " world";
 `,
-		// Compound assignment with bigint
 		`
 let bigint = 5n;
 bigint += 10n;
 `,
-		// Number union type (all numbers)
 		`
 function getNum(): 1 | 2 | 3 { return 1; }
 const result = getNum() + 5;
 `,
-		// String union type (all strings)
 		`
 function getStr(): "a" | "b" | "c" { return "a"; }
 const result = getStr() + "d";
 `,
-		// Template expressions with string concatenation
 		`
 const name = "world";
 const result = "hello " + name;
