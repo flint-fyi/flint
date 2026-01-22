@@ -45,9 +45,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		parameterReassignment: {
-			primary: "Do not reassign function parameters.",
+			primary:
+				"Reassigning function parameters can make them more difficult to reason about.",
 			secondary: [
-				"Reassigning parameters can make code harder to understand and debug.",
+				"Most code treats function parameters as constants.",
+				"Reassigning them inside the function removes that reference to the original value.",
 				"It's generally more understandable to write code that does not modify parameters.",
 			],
 			suggestions: [
@@ -67,7 +69,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			sourceFile: AST.SourceFile,
 		) => {
 			let currentNode: ts.Node | undefined = node;
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
 			while (currentNode !== undefined) {
 				if (
 					ts.isFunctionDeclaration(currentNode) ||
@@ -82,7 +84,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 					return;
 				}
-				currentNode = currentNode.parent;
+
+				currentNode = currentNode.parent as ts.Node | undefined;
 			}
 		};
 

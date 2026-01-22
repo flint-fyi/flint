@@ -13,7 +13,7 @@ function f(x: number) {
 function f(x: number) {
 	x = 5;
 	~
-	Do not reassign function parameters.
+	Reassigning function parameters can make them more difficult to reason about.
 }
 `,
 		},
@@ -27,7 +27,7 @@ const fn = (value: string) => {
 const fn = (value: string) => {
 	value = "new";
 	~~~~~
-	Do not reassign function parameters.
+	Reassigning function parameters can make them more difficult to reason about.
 };
 `,
 		},
@@ -41,7 +41,7 @@ function f(x: number) {
 function f(x: number) {
 	x += 1;
 	~
-	Do not reassign function parameters.
+	Reassigning function parameters can make them more difficult to reason about.
 }
 `,
 		},
@@ -55,7 +55,7 @@ function f(count: number) {
 function f(count: number) {
 	count--;
 	~~~~~
-	Do not reassign function parameters.
+	Reassigning function parameters can make them more difficult to reason about.
 }
 `,
 		},
@@ -69,7 +69,7 @@ function f(x: number) {
 function f(x: number) {
 	x++;
 	~
-	Do not reassign function parameters.
+	Reassigning function parameters can make them more difficult to reason about.
 }
 `,
 		},
@@ -83,7 +83,7 @@ function f(x: number) {
 function f(x: number) {
 	x -= 2;
 	~
-	Do not reassign function parameters.
+	Reassigning function parameters can make them more difficult to reason about.
 }
 `,
 		},
@@ -97,7 +97,7 @@ function f(x: number) {
 function f(x: number) {
 	x *= 3;
 	~
-	Do not reassign function parameters.
+	Reassigning function parameters can make them more difficult to reason about.
 }
 `,
 		},
@@ -111,7 +111,7 @@ function f(x: number) {
 function f(x: number) {
 	x /= 2;
 	~
-	Do not reassign function parameters.
+	Reassigning function parameters can make them more difficult to reason about.
 }
 `,
 		},
@@ -125,7 +125,7 @@ function f({ x }: { x: number }) {
 function f({ x }: { x: number }) {
 	x = 5;
 	~
-	Do not reassign function parameters.
+	Reassigning function parameters can make them more difficult to reason about.
 }
 `,
 		},
@@ -139,7 +139,7 @@ function f([a, b]: [number, number]) {
 function f([a, b]: [number, number]) {
 	a = 5;
 	~
-	Do not reassign function parameters.
+	Reassigning function parameters can make them more difficult to reason about.
 }
 `,
 		},
@@ -153,7 +153,7 @@ function f({ x, y }: { x: number; y: string }) {
 function f({ x, y }: { x: number; y: string }) {
 	y = "new";
 	~
-	Do not reassign function parameters.
+	Reassigning function parameters can make them more difficult to reason about.
 }
 `,
 		},
@@ -167,7 +167,7 @@ function f([x, , z]: [number, string, boolean]) {
 function f([x, , z]: [number, string, boolean]) {
 	z++;
 	~
-	Do not reassign function parameters.
+	Reassigning function parameters can make them more difficult to reason about.
 }
 `,
 		},
@@ -181,7 +181,7 @@ function f({ a: x }: { a: number }) {
 function f({ a: x }: { a: number }) {
 	x = 5;
 	~
-	Do not reassign function parameters.
+	Reassigning function parameters can make them more difficult to reason about.
 }
 `,
 		},
