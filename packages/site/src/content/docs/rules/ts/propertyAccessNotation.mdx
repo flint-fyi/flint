@@ -29,6 +29,15 @@ const name = person["firstName"];
 const nested = data["items"]["first"];
 ```
 
+```ts
+class Container {
+	privateProperty = 123;
+}
+
+const container = new Container();
+container["privateProperty"] = 123;
+```
+
 </TabItem>
 <TabItem label="✅ Correct">
 
@@ -40,6 +49,17 @@ obj.value = 123;
 const name = person.firstName;
 
 const nested = data.items.first;
+```
+
+```ts
+class Container {
+	private privateProperty = 123;
+}
+
+const container = new Container();
+
+// TypeScript allows private properties to be accessed with quotes
+container["privateProperty"] = 123;
 ```
 
 ```ts
@@ -64,87 +84,11 @@ const computed = obj[getKey()];
 
 ## Options
 
-### `allowPattern`
-
-A regular expression pattern for property names that should not be converted to dot notation.
-
-**Type:** `string`  
-**Default:** `""`
-
-Properties matching this pattern will remain in bracket notation.
-
-```ts
-// eslint ts/propertyAccessNotation: ["error", { allowPattern: "^_" }]
-
-// ✅ OK - matches pattern
-const privateField = obj["_private"];
-
-// ❌ Incorrect - doesn't match pattern
-const publicField = obj["public"];
-```
-
-### `prefer`
-
-Whether to prefer dot notation (`"dot"`) or bracket notation (`"brackets"`) for property access.
-
-**Type:** `"dot" | "brackets"`  
-**Default:** `"dot"`
-
-When set to `"brackets"`, the rule will suggest converting dot notation to bracket notation for properties matching the `allowPattern`.
-
-```ts
-// eslint ts/propertyAccessNotation: ["error", { prefer: "brackets", allowPattern: "^[a-z]+(_[a-z]+)+$" }]
-
-// ✅ OK - matches pattern for bracket notation
-const snakeCase = obj["snake_case"];
-
-// ❌ Incorrect - should use brackets
-const camelCase = obj.camelCase;
-```
-
-### `allowPrivateClassPropertyAccess`
-
-Whether to allow accessing class members marked as `private` with bracket notation.
-
-**Type:** `boolean`  
-**Default:** `false`
-
-```ts
-// eslint ts/propertyAccessNotation: ["error", { allowPrivateClassPropertyAccess: true }]
-
-class MyClass {
-	private privateProp = 123;
-}
-
-const instance = new MyClass();
-// ✅ OK with option enabled
-const value = instance["privateProp"];
-```
-
-### `allowProtectedClassPropertyAccess`
-
-Whether to allow accessing class members marked as `protected` with bracket notation.
-
-**Type:** `boolean`  
-**Default:** `false`
-
-```ts
-// eslint ts/propertyAccessNotation: ["error", { allowProtectedClassPropertyAccess: true }]
-
-class MyClass {
-	protected protectedProp = 123;
-}
-
-const instance = new MyClass();
-// ✅ OK with option enabled
-const value = instance["protectedProp"];
-```
-
 ### `allowIndexSignaturePropertyAccess`
 
 Whether to allow accessing properties matching an index signature with bracket notation.
 
-**Type:** `boolean`  
+**Type:** `boolean`
 **Default:** `false`
 
 ```ts
