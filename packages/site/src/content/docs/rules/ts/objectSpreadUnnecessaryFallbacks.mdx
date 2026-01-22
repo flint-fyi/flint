@@ -10,7 +10,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="objectSpreadUnnecessaryFallbacks" />
 
-When spreading a value into an object literal, JavaScript handles `undefined` and `null` by simply skipping them without throwing an error.
+When spreading a value into an object literal, JavaScript handles `undefined` and `null` by skipping them without throwing an error.
 This means that fallback patterns like `{ ...value || {} }` or `{ ...value ?? {} }` are unnecessary.
 
 This rule reports when an object spread fallback is an empty object.

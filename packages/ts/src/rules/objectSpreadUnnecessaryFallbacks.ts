@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			primary:
 				"Spreading `undefined` or `null` in an object literal has no effect, making this empty object fallback unnecessary.",
 			secondary: [
-				"When spreading `undefined` or `null` in an object literal, JavaScript simply skips those values without throwing an error.",
+				"When spreading `undefined` or `null` in an object literal, JavaScript skips those values without throwing an error.",
 				"A fallback like `|| {}` or `?? {}` is not needed because the spread will work correctly without it.",
 			],
 			suggestions: [
