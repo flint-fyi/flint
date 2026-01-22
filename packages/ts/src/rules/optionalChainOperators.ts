@@ -14,11 +14,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		preferOptionalChain: {
-			primary: "Prefer optional chaining operator to logically chaining.",
+			primary:
+				"Prefer the cleaner `?.` optional chaining operator over more verbose logical chains.",
 			secondary: [
 				"Optional chaining short-circuits safely on null and undefined, unlike logical operators that only short-circuit on falsy values.",
 				"This makes the code more concise and safer.",
 			],
+			suggestions: ["Switch this logical chain to a `?.` optional chain."],
 		},
 	},
 	setup(context) {

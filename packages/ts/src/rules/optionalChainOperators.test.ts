@@ -10,7 +10,7 @@ const value = foo && foo.bar;
 			snapshot: `
 const value = foo && foo.bar;
               ~~~~~~~~~~~~~~
-              Prefer optional chaining operator to logically chaining.
+              Prefer the cleaner \`?.\` optional chaining operator over more verbose logical chains.
 `,
 		},
 	],
