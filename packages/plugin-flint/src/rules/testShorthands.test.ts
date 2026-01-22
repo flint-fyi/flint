@@ -14,7 +14,7 @@ ruleTester.describe(rule, {
                 ruleTester.describe(rule, {
                     valid: ['a', { code: 'a' }],
                                    ~~~~~~~~~
-                                   Prefer using a string shorthand for this test case instead of an object literal.
+                                   Use string shorthand for test cases with only a code property.
                     invalid: []
                 });
             `,
@@ -38,7 +38,7 @@ ruleTester.describe(rule, {
                         {
                           code: 'a'
                           ~~~~~~~~~
-                          Prefer using a string shorthand for this test case instead of an object literal.
+                          Use string shorthand for test cases with only a code property.
                         }
                     ],
                     invalid: []
