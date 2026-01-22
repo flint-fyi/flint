@@ -27,25 +27,29 @@ ruleTester.describe(rule, {
 			code: `
 <svg>
     <circle cx="50" cy="50" r="40" />
-</svg>`,
+</svg>
+`,
 			snapshot: `
 <svg>
  ~~~
  This <svg> element is missing a <title> child element.
     <circle cx="50" cy="50" r="40" />
-</svg>`,
+</svg>
+`,
 		},
 		{
 			code: `
 <svg>
     <desc>Description only</desc>
-</svg>`,
+</svg>
+`,
 			snapshot: `
 <svg>
  ~~~
  This <svg> element is missing a <title> child element.
     <desc>Description only</desc>
-</svg>`,
+</svg>
+`,
 		},
 		{
 			code: `
