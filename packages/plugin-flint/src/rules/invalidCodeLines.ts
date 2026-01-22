@@ -1,8 +1,10 @@
+import type { FileChange } from "@flint.fyi/core";
 import {
 	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import ts from "typescript";
 
 import { getRuleTesterDescribedCases } from "../getRuleTesterDescribedCases.ts";
 import type { ParsedTestCaseInvalid } from "../types.ts";
@@ -34,36 +36,61 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			testCase: ParsedTestCaseInvalid,
 			sourceFile: AST.SourceFile,
 		) {
-			if (!testCase.code.endsWith("\n") || !testCase.code.startsWith("\n")) {
+			const fix = [
+				...createNewlineFixes(testCase.code, testCase.nodes.code, sourceFile),
+				...createNewlineFixes(
+					testCase.snapshot,
+					testCase.nodes.snapshot,
+					sourceFile,
+				),
+			];
+
+			if (fix.length) {
 				context.report({
-					fix: [
-						createFixForCode(testCase, sourceFile),
-						createFixForSnapshot(testCase, sourceFile),
-					],
+					fix,
 					message: "singleLineTest",
 					range: getTSNodeRange(testCase.nodes.code, sourceFile),
 				});
 			}
 		}
 
-		function createFixForCode(
-			testCase: ParsedTestCaseInvalid,
+		function createNewlineFixes(
+			code: string,
+			node: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral,
 			sourceFile: AST.SourceFile,
 		) {
-			return {
-				range: getTSNodeRange(testCase.nodes.code, sourceFile),
-				text: `\`\n${testCase.code.trim()}\n\``,
-			};
-		}
+			if (node.kind === ts.SyntaxKind.StringLiteral) {
+				return [
+					{
+						range: getTSNodeRange(node, sourceFile),
+						text: `\`\n${code}\n\``,
+					},
+				];
+			}
 
-		function createFixForSnapshot(
-			testCase: ParsedTestCaseInvalid,
-			sourceFile: AST.SourceFile,
-		) {
-			return {
-				range: getTSNodeRange(testCase.nodes.snapshot, sourceFile),
-				text: `\`\n${testCase.snapshot.trim()}\n\``,
-			};
+			const changes: FileChange[] = [];
+
+			if (!code.startsWith("\n")) {
+				changes.push({
+					range: {
+						begin: node.getStart(sourceFile) + 1,
+						end: node.getStart(sourceFile) + 1,
+					},
+					text: "\n",
+				});
+			}
+
+			if (!code.endsWith("\n")) {
+				changes.push({
+					range: {
+						begin: node.getEnd() - 1,
+						end: node.getEnd() - 1,
+					},
+					text: "\n",
+				});
+			}
+
+			return changes;
 		}
 
 		return {

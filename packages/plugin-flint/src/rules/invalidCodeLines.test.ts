@@ -107,6 +107,60 @@ Rule report message.
 });
 `,
 		},
+
+		{
+			code: `
+ruleTester.describe(rule, {
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: \`
+console.log();\`,
+        snapshot: \`
+console.log();
+~
+Rule report message.\`,
+      }
+    ],
+});
+`,
+			output: `
+ruleTester.describe(rule, {
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: \`
+console.log();
+\`,
+        snapshot: \`
+console.log();
+~
+Rule report message.
+\`,
+      }
+    ],
+});
+`,
+			snapshot: `
+ruleTester.describe(rule, {
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: \`
+              ~
+              This code block should be formatted across multiple lines for more readable reports.
+console.log();\`,
+~~~~~~~~~~~~~~~
+        snapshot: \`
+console.log();
+~
+Rule report message.\`,
+      }
+    ],
+});
+`,
+		},
+
 		{
 			code: `
 ruleTester.describe(rule, {
