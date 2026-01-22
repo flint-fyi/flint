@@ -14776,7 +14776,8 @@
 		"flint": {
 			"name": "regexContradictoryAssertions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
