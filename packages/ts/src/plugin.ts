@@ -156,6 +156,7 @@ import objectHasOwns from "./rules/objectHasOwns.ts";
 import objectKeyDuplicates from "./rules/objectKeyDuplicates.ts";
 import objectProto from "./rules/objectProto.ts";
 import objectPrototypeBuiltIns from "./rules/objectPrototypeBuiltIns.ts";
+import objectShorthand from "./rules/objectShorthand.ts";
 import objectSpreadUnnecessaryFallbacks from "./rules/objectSpreadUnnecessaryFallbacks.ts";
 import octalEscapes from "./rules/octalEscapes.ts";
 import octalNumbers from "./rules/octalNumbers.ts";
@@ -341,6 +342,7 @@ export const ts = createPlugin({
 		objectKeyDuplicates,
 		objectProto,
 		objectPrototypeBuiltIns,
+		objectShorthand,
 		objectSpreadUnnecessaryFallbacks,
 		octalEscapes,
 		octalNumbers,
