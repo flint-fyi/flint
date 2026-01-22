@@ -163,7 +163,6 @@ import octalEscapes from "./rules/octalEscapes.ts";
 import octalNumbers from "./rules/octalNumbers.ts";
 import parameterReassignments from "./rules/parameterReassignments.ts";
 import parseIntRadixes from "./rules/parseIntRadixes.ts";
-import plusOperands from "./rules/plusOperands.ts";
 import propertyAccessNotation from "./rules/propertyAccessNotation.ts";
 import recursionOnlyArguments from "./rules/recursionOnlyArguments.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
@@ -355,7 +354,6 @@ export const ts = createPlugin({
 		octalNumbers,
 		parameterReassignments,
 		parseIntRadixes,
-		plusOperands,
 		propertyAccessNotation,
 		recursionOnlyArguments,
 		returnAssignments,
