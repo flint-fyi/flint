@@ -1,0 +1,80 @@
+---
+description: "Reports `Array#reduce` calls using type assertions on initial values instead of type parameters."
+title: "reduceTypeParameters"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="reduceTypeParameters" />
+
+When calling `Array#reduce` with an empty array or object as the initial value, TypeScript can't infer useful types from those values.
+A common workaround is to use a type assertion like `[] as number[]` or `{} as Record<string, boolean>`.
+
+However, using the type parameter on `reduce<T>()` is preferred because it avoids type assertions and keeps the generic inference more consistent.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const result = [1, 2, 3].reduce(
+	(acc, value) => acc.concat(value * 2),
+	[] as number[],
+);
+```
+
+```ts
+const names = ["a", "b", "c"];
+const result = names.reduce(
+	(acc, name) => ({ ...acc, [name]: true }),
+	{} as Record<string, boolean>,
+);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const result = [1, 2, 3].reduce<number[]>(
+	(acc, value) => acc.concat(value * 2),
+	[],
+);
+```
+
+```ts
+const names = ["a", "b", "c"];
+const result = names.reduce<Record<string, boolean>>(
+	(acc, name) => ({ ...acc, [name]: true }),
+	{},
+);
+```
+
+```ts
+const sum = [1, 2, 3].reduce((acc, value) => acc + value, 0);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If the assertion is necessary because the initial value is not assignable to the asserted type, this rule will not report.
+For example, when using a generic type parameter whose constraint is broader than the initial value, the assertion may be required.
+
+You might also disable this rule if you prefer the visual consistency of `as` assertions over type parameters for stylistic reasons.
+
+## Further Reading
+
+- [MDN: Array.prototype.reduce()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="reduceTypeParameters" />
