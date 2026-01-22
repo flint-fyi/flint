@@ -1,10 +1,41 @@
 import {
+	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+
+function collectParameterNames(
+	parameters: readonly AST.ParameterDeclaration[],
+) {
+	const names = new Set<string>();
+
+	const collectNames = (node: AST.AnyNode) => {
+		if (node.kind === ts.SyntaxKind.Identifier) {
+			names.add((node as ts.Identifier).text);
+		} else if (ts.isObjectBindingPattern(node)) {
+			for (const element of node.elements) {
+				if (!ts.isOmittedExpression(element)) {
+					collectNames(element.name);
+				}
+			}
+		} else if (ts.isArrayBindingPattern(node)) {
+			for (const element of node.elements) {
+				if (!ts.isOmittedExpression(element)) {
+					collectNames(element.name);
+				}
+			}
+		}
+	};
+
+	for (const parameter of parameters) {
+		collectNames(parameter.name);
+	}
+
+	return names;
+}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -17,27 +48,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			primary: "Do not reassign function parameters.",
 			secondary: [
 				"Reassigning parameters can make code harder to understand and debug.",
-				"Consider using a new variable if you need to modify the value.",
+				"It's generally more understandable to write code that does not modify parameters.",
+			],
+			suggestions: [
+				"Use a new variable if you need to modify the value.",
+				"Use a different pattern such as a helper function.",
 			],
 		},
 	},
 	setup(context) {
+		// TODO: This will be more clean when there is a scope manager
+		// https://github.com/flint-fyi/flint/issues/400
 		const scopes = new Map<ts.Node, Set<string>>();
-
-		const collectParameterNames = (parameters: ts.ParameterDeclaration[]) => {
-			const names = new Set<string>();
-			for (const parameter of parameters) {
-				if (parameter.name.kind === ts.SyntaxKind.Identifier) {
-					names.add(parameter.name.text);
-				}
-			}
-			return names;
-		};
 
 		const checkParameterAssignment = (
 			name: string,
-			node: ts.Node,
-			sourceFile: ts.SourceFile,
+			node: AST.AnyNode,
+			sourceFile: AST.SourceFile,
 		) => {
 			let currentNode: ts.Node | undefined = node;
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -47,8 +74,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					ts.isFunctionExpression(currentNode) ||
 					ts.isArrowFunction(currentNode)
 				) {
-					const parameterNames = scopes.get(currentNode);
-					if (parameterNames?.has(name)) {
+					if (scopes.get(currentNode)?.has(name)) {
 						context.report({
 							message: "parameterReassignment",
 							range: getTSNodeRange(node, sourceFile),
@@ -61,8 +87,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 
 		const handleUnaryExpression = (
-			node: ts.PostfixUnaryExpression | ts.PrefixUnaryExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			node: AST.PostfixUnaryExpression | AST.PrefixUnaryExpression,
+			{ sourceFile }: { sourceFile: AST.SourceFile },
 		) => {
 			if (
 				(node.operator === ts.SyntaxKind.PlusPlusToken ||
@@ -100,6 +126,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				PostfixUnaryExpression: handleUnaryExpression,
 				PrefixUnaryExpression: handleUnaryExpression,
+				Program: () => {
+					scopes.clear();
+				},
 			},
 		};
 	},

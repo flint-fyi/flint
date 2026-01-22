@@ -115,6 +115,76 @@ function f(x: number) {
 }
 `,
 		},
+		{
+			code: `
+function f({ x }: { x: number }) {
+	x = 5;
+}
+`,
+			snapshot: `
+function f({ x }: { x: number }) {
+	x = 5;
+	~
+	Do not reassign function parameters.
+}
+`,
+		},
+		{
+			code: `
+function f([a, b]: [number, number]) {
+	a = 5;
+}
+`,
+			snapshot: `
+function f([a, b]: [number, number]) {
+	a = 5;
+	~
+	Do not reassign function parameters.
+}
+`,
+		},
+		{
+			code: `
+function f({ x, y }: { x: number; y: string }) {
+	y = "new";
+}
+`,
+			snapshot: `
+function f({ x, y }: { x: number; y: string }) {
+	y = "new";
+	~
+	Do not reassign function parameters.
+}
+`,
+		},
+		{
+			code: `
+function f([x, , z]: [number, string, boolean]) {
+	z++;
+}
+`,
+			snapshot: `
+function f([x, , z]: [number, string, boolean]) {
+	z++;
+	~
+	Do not reassign function parameters.
+}
+`,
+		},
+		{
+			code: `
+function f({ a: x }: { a: number }) {
+	x = 5;
+}
+`,
+			snapshot: `
+function f({ a: x }: { a: number }) {
+	x = 5;
+	~
+	Do not reassign function parameters.
+}
+`,
+		},
 	],
 	valid: [
 		`
@@ -156,6 +226,24 @@ function f(x: number) {
 function f(x: { prop: number }) {
 	const temp = x;
 	temp = { prop: 5 };
+}
+`,
+		`
+function f({ x }: { x: number }) {
+	const y = x;
+	y = 5;
+}
+`,
+		`
+function f([a, b]: [number, string]) {
+	const c = a;
+	c = 10;
+}
+`,
+		`
+function f({ x, y }: { x: number; y: string }) {
+	x.toString();
+	y.charAt(0);
 }
 `,
 	],
