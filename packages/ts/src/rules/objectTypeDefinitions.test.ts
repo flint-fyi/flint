@@ -3,175 +3,315 @@ import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
-		// Type aliases when "interface" is preferred (default)
 		{
-			code: `type Person = { name: string; age: number };`,
-			output: `interface Person { name: string; age: number };`,
-			snapshot: `type Person = { name: string; age: number };
+			code: `
+type Person = { name: string; age: number };
+`,
+			output: `
+interface Person { name: string; age: number };
+`,
+			snapshot: `
+type Person = { name: string; age: number };
 ~~~~
-Use an \`interface\` instead of a \`type\`.`,
+This project prefers using an \`interface\` instead of a \`type\`.
+`,
 		},
 		{
-			code: `type Config = {
+			code: `
+type Config = {
     host: string;
     port: number;
-};`,
-			output: `interface Config {
+};
+`,
+			output: `
+interface Config {
     host: string;
     port: number;
-};`,
-			snapshot: `type Config = {
+};
+`,
+			snapshot: `
+type Config = {
 ~~~~
-Use an \`interface\` instead of a \`type\`.
+This project prefers using an \`interface\` instead of a \`type\`.
     host: string;
     port: number;
-};`,
+};
+`,
 		},
 		{
-			code: `export type UserSettings = { theme: string; notifications: boolean };`,
-			output: `export interface UserSettings { theme: string; notifications: boolean };`,
-			snapshot: `export type UserSettings = { theme: string; notifications: boolean };
+			code: `
+export type UserSettings = { theme: string; notifications: boolean };
+`,
+			output: `
+export interface UserSettings { theme: string; notifications: boolean };
+`,
+			snapshot: `
+export type UserSettings = { theme: string; notifications: boolean };
        ~~~~
-       Use an \`interface\` instead of a \`type\`.`,
+       This project prefers using an \`interface\` instead of a \`type\`.
+`,
 		},
 		{
-			code: `type Empty = {};`,
-			output: `interface Empty {};`,
-			snapshot: `type Empty = {};
+			code: `
+type Empty = {};
+`,
+			output: `
+interface Empty {};
+`,
+			snapshot: `
+type Empty = {};
 ~~~~
-Use an \`interface\` instead of a \`type\`.`,
+This project prefers using an \`interface\` instead of a \`type\`.
+`,
 		},
 		{
-			code: `type WithMethods = {
+			code: `
+type WithMethods = {
     getValue(): number;
     setValue(value: number): void;
-};`,
-			output: `interface WithMethods {
+};
+`,
+			output: `
+interface WithMethods {
     getValue(): number;
     setValue(value: number): void;
-};`,
-			snapshot: `type WithMethods = {
+};
+`,
+			snapshot: `
+type WithMethods = {
 ~~~~
-Use an \`interface\` instead of a \`type\`.
+This project prefers using an \`interface\` instead of a \`type\`.
     getValue(): number;
     setValue(value: number): void;
-};`,
+};
+`,
 		},
 		{
-			code: `type Nested = { inner: { value: string } };`,
-			output: `interface Nested { inner: { value: string } };`,
-			snapshot: `type Nested = { inner: { value: string } };
+			code: `
+type Nested = { inner: { value: string } };
+`,
+			output: `
+interface Nested { inner: { value: string } };
+`,
+			snapshot: `
+type Nested = { inner: { value: string } };
 ~~~~
-Use an \`interface\` instead of a \`type\`.`,
+This project prefers using an \`interface\` instead of a \`type\`.
+`,
 		},
 		{
-			code: `type Generic<T> = { data: T };`,
-			output: `interface Generic<T> { data: T };`,
-			snapshot: `type Generic<T> = { data: T };
+			code: `
+type Generic<T> = { data: T };
+`,
+			output: `
+interface Generic<T> { data: T };
+`,
+			snapshot: `
+type Generic<T> = { data: T };
 ~~~~
-Use an \`interface\` instead of a \`type\`.`,
+This project prefers using an \`interface\` instead of a \`type\`.
+`,
 		},
 		{
-			code: `type WithOptional = { required: string; optional?: number };`,
-			output: `interface WithOptional { required: string; optional?: number };`,
-			snapshot: `type WithOptional = { required: string; optional?: number };
+			code: `
+type WithOptional = { required: string; optional?: number };
+`,
+			output: `
+interface WithOptional { required: string; optional?: number };
+`,
+			snapshot: `
+type WithOptional = { required: string; optional?: number };
 ~~~~
-Use an \`interface\` instead of a \`type\`.`,
+This project prefers using an \`interface\` instead of a \`type\`.
+`,
 		},
 		{
-			code: `type WithReadonly = { readonly id: string };`,
-			output: `interface WithReadonly { readonly id: string };`,
-			snapshot: `type WithReadonly = { readonly id: string };
+			code: `
+type WithReadonly = { readonly id: string };
+`,
+			output: `
+interface WithReadonly { readonly id: string };
+`,
+			snapshot: `
+type WithReadonly = { readonly id: string };
 ~~~~
-Use an \`interface\` instead of a \`type\`.`,
+This project prefers using an \`interface\` instead of a \`type\`.
+`,
 		},
 		{
-			code: `type IndexSignature = { [key: string]: number };`,
-			output: `interface IndexSignature { [key: string]: number };`,
-			snapshot: `type IndexSignature = { [key: string]: number };
+			code: `
+type IndexSignature = { [key: string]: number };
+`,
+			output: `
+interface IndexSignature { [key: string]: number };
+`,
+			snapshot: `
+type IndexSignature = { [key: string]: number };
 ~~~~
-Use an \`interface\` instead of a \`type\`.`,
+This project prefers using an \`interface\` instead of a \`type\`.
+`,
 		},
 
-		// Interfaces when "type" is preferred
 		{
-			code: `interface Person { name: string; age: number }`,
+			code: `
+interface Person { name: string; age: number }
+`,
 			options: { prefer: "type" },
-			snapshot: `interface Person { name: string; age: number }
+			output: `
+type Person = { name: string; age: number }
+`,
+			snapshot: `
+interface Person { name: string; age: number }
           ~~~~~~
-          Use a \`type\` instead of an \`interface\`.`,
+          This project prefers using a \`type\` instead of an \`interface\`.
+`,
 		},
 		{
-			code: `interface Empty {}`,
+			code: `
+interface Empty {}
+`,
 			options: { prefer: "type" },
-			snapshot: `interface Empty {}
+			output: `
+type Empty = {}
+`,
+			snapshot: `
+interface Empty {}
           ~~~~~
-          Use a \`type\` instead of an \`interface\`.`,
+          This project prefers using a \`type\` instead of an \`interface\`.
+`,
 		},
 		{
-			code: `interface Config {
+			code: `
+interface Config {
     host: string;
     port: number;
-}`,
+}
+`,
 			options: { prefer: "type" },
-			snapshot: `interface Config {
+			output: `
+type Config = {
+    host: string;
+    port: number;
+}
+`,
+			snapshot: `
+interface Config {
           ~~~~~~
-          Use a \`type\` instead of an \`interface\`.
+          This project prefers using a \`type\` instead of an \`interface\`.
     host: string;
     port: number;
-}`,
+}
+`,
 		},
 		{
-			code: `interface WithMethods {
+			code: `
+interface WithMethods {
     getValue(): number;
     setValue(value: number): void;
-}`,
+}
+`,
 			options: { prefer: "type" },
-			snapshot: `interface WithMethods {
+			output: `
+type WithMethods = {
+    getValue(): number;
+    setValue(value: number): void;
+}
+`,
+			snapshot: `
+interface WithMethods {
           ~~~~~~~~~~~
-          Use a \`type\` instead of an \`interface\`.
+          This project prefers using a \`type\` instead of an \`interface\`.
     getValue(): number;
     setValue(value: number): void;
-}`,
+}
+`,
 		},
 		{
-			code: `interface Generic<T> { data: T }`,
+			code: `
+interface Generic<T> { data: T }
+`,
 			options: { prefer: "type" },
-			snapshot: `interface Generic<T> { data: T }
+			output: `
+type Generic<T> = { data: T }
+`,
+			snapshot: `
+interface Generic<T> { data: T }
           ~~~~~~~
-          Use a \`type\` instead of an \`interface\`.`,
+          This project prefers using a \`type\` instead of an \`interface\`.
+`,
 		},
 		{
-			code: `export interface Exported { value: string }`,
+			code: `
+export interface Generic<T> { data: T }
+`,
 			options: { prefer: "type" },
-			snapshot: `export interface Exported { value: string }
+			output: `
+export type Generic<T> = { data: T }
+`,
+			snapshot: `
+export interface Generic<T> { data: T }
+                 ~~~~~~~
+                 This project prefers using a \`type\` instead of an \`interface\`.
+`,
+		},
+		{
+			code: `
+export interface Exported { value: string }
+`,
+			options: { prefer: "type" },
+			output: `
+export type Exported = { value: string }
+`,
+			snapshot: `
+export interface Exported { value: string }
                  ~~~~~~~~
-                 Use a \`type\` instead of an \`interface\`.`,
+                 This project prefers using a \`type\` instead of an \`interface\`.
+`,
 		},
 		{
-			code: `export declare interface ExportDeclared { value: string }`,
+			code: `
+export declare interface ExportDeclared { value: string }
+`,
 			options: { prefer: "type" },
-			snapshot: `export declare interface ExportDeclared { value: string }
+			output: `
+export declare type ExportDeclared = { value: string }
+`,
+			snapshot: `
+export declare interface ExportDeclared { value: string }
                          ~~~~~~~~~~~~~~
-                         Use a \`type\` instead of an \`interface\`.`,
+                         This project prefers using a \`type\` instead of an \`interface\`.
+`,
 		},
 		{
-			code: `interface WithExtends extends Base { extra: string }`,
+			code: `
+interface WithExtends extends Base { extra: string }
+`,
 			options: { prefer: "type" },
-			snapshot: `interface WithExtends extends Base { extra: string }
+			output: `
+type WithExtends = { extra: string } & Base
+`,
+			snapshot: `
+interface WithExtends extends Base { extra: string }
           ~~~~~~~~~~~
-          Use a \`type\` instead of an \`interface\`.`,
+          This project prefers using a \`type\` instead of an \`interface\`.
+`,
 		},
 		{
-			code: `interface MultiExtends extends Base1, Base2 { extra: string }`,
+			code: `
+interface MultiExtends extends Base1, Base2 { extra: string }
+`,
 			options: { prefer: "type" },
-			snapshot: `interface MultiExtends extends Base1, Base2 { extra: string }
+			output: `
+type MultiExtends = { extra: string } & Base1 & Base2
+`,
+			snapshot: `
+interface MultiExtends extends Base1, Base2 { extra: string }
           ~~~~~~~~~~~~
-          Use a \`type\` instead of an \`interface\`.`,
+          This project prefers using a \`type\` instead of an \`interface\`.
+`,
 		},
 	],
 	valid: [
-		// Interfaces - valid when prefer is "interface" (default)
 		`interface Person { name: string; age: number }`,
 		`interface Config { host: string; port: number }`,
 		`export interface UserSettings { theme: string; notifications: boolean }`,
@@ -179,8 +319,6 @@ Use an \`interface\` instead of a \`type\`.`,
 		`interface Generic<T> { data: T }`,
 		`interface WithExtends extends Base { extra: string }`,
 		`interface MultipleExtends extends Base1, Base2 { extra: string }`,
-
-		// Type aliases that don't have object literal types - always valid
 		`type StringAlias = string;`,
 		`type NumberAlias = number;`,
 		`type BooleanAlias = boolean;`,

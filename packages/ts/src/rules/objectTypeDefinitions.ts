@@ -19,20 +19,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		preferInterface: {
-			primary: "Use an `interface` instead of a `type`.",
+			primary: "This project prefers using an `interface` instead of a `type`.",
 			secondary: [
 				"Interfaces support declaration merging and can be extended with the `extends` keyword.",
 				"Interfaces can be implemented by classes, providing clearer contracts.",
 				"Error messages from the TypeScript compiler often display the interface name directly, making them more readable.",
 			],
+			suggestions: ["Convert this interface to a type."],
 		},
 		preferType: {
-			primary: "Use a `type` instead of an `interface`.",
+			primary: "This project prefers using a `type` instead of an `interface`.",
 			secondary: [
 				"Type aliases support more flexible composition with union and intersection types.",
 				"Type aliases can be used for primitive types and more complex type operations.",
 				"Consistency with type-based patterns in modern TypeScript code.",
 			],
+			suggestions: ["Convert this type to an interface."],
 		},
 	},
 	options: {
@@ -49,16 +51,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const canFix = !isGlobalDeclaration(node.name, typeChecker);
-
-					let fix;
-					if (canFix) {
-						try {
-							fix = convertInterfaceToType(node, sourceFile);
-						} catch {
-							// If fix generation fails, report without fix
-						}
-					}
+					const fix = isGlobalDeclaration(node.name, typeChecker)
+						? undefined
+						: convertInterfaceToType(node, sourceFile);
 
 					context.report({
 						fix,
@@ -99,23 +94,28 @@ function convertInterfaceToType(
 	sourceFile: AST.SourceFile,
 ) {
 	const sourceCode = sourceFile.text;
-	const start = node.getStart(sourceFile);
-	const end = node.getEnd();
-	const nodeText = sourceCode.slice(start, end);
 
 	const name = node.name.text;
 	const typeParams = node.typeParameters?.length
-		? `<${node.typeParameters.map((p: any) => p.name.text).join(", ")}>`
+		? `<${node.typeParameters.map((typeParameter) => typeParameter.name.text).join(", ")}>`
 		: "";
 
-	const bodyStart = node.body.getStart(sourceFile);
-	const bodyEnd = node.body.getEnd();
-	const bodyText = sourceCode.slice(bodyStart, bodyEnd);
+	const openBrace = node
+		.getChildren(sourceFile)
+		.find((child) => child.kind === SyntaxKind.OpenBraceToken);
+	const closeBrace = node
+		.getChildren(sourceFile)
+		.find((child) => child.kind === SyntaxKind.CloseBraceToken);
+
+	const bodyText =
+		openBrace && closeBrace
+			? sourceCode.slice(openBrace.getStart(sourceFile), closeBrace.getEnd())
+			: "{}";
 
 	let intersection = "";
 	if (node.heritageClauses?.length) {
-		const intersectionTypes = node.heritageClauses.flatMap((clause: any) => {
-			return clause.types.map((type: any) => {
+		const intersectionTypes = node.heritageClauses.flatMap((clause) => {
+			return clause.types.map((type) => {
 				const typeStart = type.getStart(sourceFile);
 				const typeEnd = type.getEnd();
 				return sourceCode.slice(typeStart, typeEnd);
@@ -127,26 +127,32 @@ function convertInterfaceToType(
 		}
 	}
 
+	const modifiers = node.modifiers ? [...node.modifiers] : [];
+	const hasExport = hasModifier(modifiers, SyntaxKind.ExportKeyword);
+	const hasDefault = hasModifier(modifiers, SyntaxKind.DefaultKeyword);
 	const isExportDefault =
-		node.parent?.kind === SyntaxKind.ExportAssignment ||
-		(node.modifiers?.some(
-			(mod: any) => mod.kind === SyntaxKind.ExportKeyword,
-		) &&
-			node.parent?.kind === SyntaxKind.SourceFile &&
-			/^export\s+default\s+/.exec(sourceCode.slice(node.getStart(sourceFile))));
+		hasExport && hasDefault && node.parent.kind === SyntaxKind.SourceFile;
 
 	if (isExportDefault) {
-		const exportDefaultMatch = /^export\s+default\s+interface/.exec(nodeText);
-		if (exportDefaultMatch) {
-			const replacement = `type ${name}${typeParams} = ${bodyText}${intersection}\nexport default ${name}`;
-			return {
-				range: getTSNodeRange(node, sourceFile),
-				text: replacement,
-			};
-		}
+		const replacement = `type ${name}${typeParams} = ${bodyText}${intersection}\nexport default ${name}`;
+		return {
+			range: getTSNodeRange(node, sourceFile),
+			text: replacement,
+		};
 	}
 
-	const replacement = `type ${name}${typeParams} = ${bodyText}${intersection}`;
+	const modifierText = modifiers
+		.filter(
+			(mod) =>
+				mod.kind !== SyntaxKind.ExportKeyword &&
+				mod.kind !== SyntaxKind.DefaultKeyword,
+		)
+		.map((mod) => mod.getText(sourceFile))
+		.join(" ");
+
+	const exportText = hasExport ? "export " : "";
+	const prefix = modifierText ? `${exportText}${modifierText} ` : exportText;
+	const replacement = `${prefix}type ${name}${typeParams} = ${bodyText}${intersection}`;
 
 	return {
 		range: getTSNodeRange(node, sourceFile),
@@ -159,32 +165,35 @@ function convertTypeToInterface(
 	sourceFile: AST.SourceFile,
 ) {
 	const sourceCode = sourceFile.text;
-	const start = node.getStart(sourceFile);
-	const end = node.getEnd();
-	const nodeText = sourceCode.slice(start, end);
 
-	const typeKeywordStart = nodeText.indexOf("type");
-
-	const beforeType = nodeText.slice(0, typeKeywordStart).trim();
-	const modifiers = beforeType ? beforeType + " " : "";
-
-	const equalIndex = nodeText.indexOf("=");
+	const modifiers = node.modifiers ? [...node.modifiers] : [];
+	const modifierText = modifiers
+		.map((mod) => mod.getText(sourceFile))
+		.join(" ");
+	const prefix = modifierText ? `${modifierText} ` : "";
 
 	const name = node.name.text;
 	const typeParams = node.typeParameters?.length
 		? `<${node.typeParameters.map((typeParameter) => typeParameter.name.text).join(", ")}>`
 		: "";
 
-	let typeLiteral = nodeText.slice(equalIndex + 1).trimStart();
+	const typeNode = unwrapParenthesizedTypeNode(node.type);
+	const typeLiteralText = sourceCode.slice(
+		typeNode.getStart(sourceFile),
+		typeNode.getEnd(),
+	);
 
-	if (typeLiteral.endsWith(";")) {
-		typeLiteral = typeLiteral.slice(0, -1).trimEnd();
-	}
-
-	const replacement = `${modifiers}interface ${name}${typeParams} ${typeLiteral}`;
+	const replacement = `${prefix}interface ${name}${typeParams} ${typeLiteralText}`;
 
 	return {
 		range: getTSNodeRange(node, sourceFile),
 		text: replacement,
 	};
+}
+
+function hasModifier(
+	modifiers: AST.ModifierLike[] | undefined,
+	kind: SyntaxKind,
+): boolean {
+	return modifiers?.some((modifier) => modifier.kind === kind) ?? false;
 }
