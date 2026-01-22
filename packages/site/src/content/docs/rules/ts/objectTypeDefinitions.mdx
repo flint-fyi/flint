@@ -11,13 +11,11 @@ import RuleSummary from "~/components/RuleSummary.astro";
 <RuleSummary plugin="ts" rule="objectTypeDefinitions" />
 
 TypeScript provides two ways to define named object types: interfaces and type aliases.
-While they are largely interchangeable for simple object types, interfaces have some unique characteristics that can be beneficial.
+The two are generally very similar, and can often be used interchangeably.
+Using the same type declaration style consistently helps with code readability.
 
-Interfaces support declaration merging, which allows extending an interface across multiple declarations.
-They can also be implemented by classes using the `implements` keyword, providing clearer contracts.
-Additionally, TypeScript compiler error messages tend to display interface names directly, making debugging easier.
-
-This rule reports type aliases that define object literal types, suggesting the use of interface declarations instead.
+This rule enforces keeping to a consistent style within a codebase.
+It defaults to preferring interfaces over type aliases for object types.
 
 ## Examples
 
@@ -95,16 +93,50 @@ type Mapped<T> = { [K in keyof T]: T[K] };
 
 This rule is not configurable.
 
+## FAQs
+
+### What are the differences between `interface` and `type`?
+
+There are very few differences between interfaces and object types in TypeScript.
+Other than type aliases being used to represent union types, it is rare that you will need to choose one over the other.
+
+| Feature               | Interfaces | Object Types | Explanation                                                                                            |
+| --------------------- | ---------- | ------------ | ------------------------------------------------------------------------------------------------------ |
+| Object shapes         | ✅         | ✅           | Both can be used to represent general object shapes.                                                   |
+| General performance   | ✅         | ✅           | Both are optimized for performance in TypeScript's type checker.                                       |
+| Edge case performance | ✅         |              | Large, complex logical types can be optimized better with interfaces by TypeScript's type checker.     |
+| Traditional semantics | ✅         |              | Interfaces are typically the default in much -though not all- of the TypeScript community.             |
+| Non-object shapes     |            | ✅           | Object types may describe literals, primitives, unions, and intersections.                             |
+| Logical types         |            | ✅           | Object types may include conditional and mapped types.                                                 |
+| Merging               | Allowed    | Not allowed  | Interfaces of the same name are treated as one interface ("merged"); type aliases may not share names. |
+
+We recommend choosing one definition style, using it when possible, and falling back to the other style when needed.
+The benefits of remaining consistent within a codebase almost always outweigh the benefits of either definition style.
+
+### When do the performance differences between `interface` and `type` matter?
+
+Almost never.
+Most TypeScript projects do not -and should not- utilize types that exercise the performance differences between the two kinds of definitions.
+
+If you are having problems with type checking performance, see the [TypeScript Wiki's Performance page](https://github.com/microsoft/TypeScript/wiki/Performance).
+
+### Why is the default `interface`?
+
+Interfaces are the prevailing, most common style in the TypeScript.
+`interface` has traditionally been TypeScript's intended ("semantic") way to convey _"an object with these fields"_.
+
+We generally recommend staying with the default, `'interface'`, to be stylistically consistent with the majority of TypeScript projects.
+If you strongly prefer `'type'`, that's fine too.
+
 ## When Not To Use It
 
-Type aliases and interfaces have subtle differences that may make type aliases preferable in some scenarios:
+If your team has established conventions that it keeps to that cannot be represented by this rule, you may want to disable this rule.
 
-- Type aliases can represent union types, intersection types, tuples, and other complex types that interfaces cannot directly express.
-- Type aliases are often preferred in codebases that use a functional programming style.
-- When you explicitly want to prevent declaration merging, type aliases ensure the type cannot be accidentally extended elsewhere.
-- Some teams prefer the visual consistency of using `type` for all type definitions.
+However, keep in mind that inconsistent style can harm readability in a project.
+We recommend picking a single option for this rule that works best for your project.
 
-If your team has established conventions that favor type aliases for object types, or if you're working in a codebase that consistently uses type aliases, you may want to disable this rule.
+You might occasionally need to a different definition type in specific cases, such as if your project is a dependency or dependent of another project that relies on a specific type definition style.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 
