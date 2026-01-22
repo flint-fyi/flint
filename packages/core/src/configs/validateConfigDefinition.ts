@@ -1,12 +1,22 @@
-import type { ConfigDefinition } from "../types/configs.ts";
+import type { AnyLevelDeep } from "../types/arrays.ts";
+import type {
+	ConfigDefinition,
+	ConfigRuleDefinition,
+} from "../types/configs.ts";
 
 export function validateConfigDefinition(
 	definition: ConfigDefinition,
 	configFilePath: string,
 ) {
-	const checkRules = (rulesValue: unknown, useIndex: number) => {
-		if (!rulesValue) {
-			return `Invalid configuration in ${configFilePath}
+	const checkRules = (
+		rulesValue: AnyLevelDeep<ConfigRuleDefinition> | undefined,
+		useIndex: number,
+	) => {
+		if (rulesValue) {
+			return undefined;
+		}
+
+		return `Invalid configuration in ${configFilePath}
   at use[${useIndex}]
   Received: ${rulesValue}
 
@@ -16,9 +26,6 @@ Common causes:
   • Using a preset that hasn't been implemented yet
   • Importing from the wrong package
 `;
-		}
-
-		return undefined;
 	};
 
 	for (const [useIndex, use] of definition.use.entries()) {
