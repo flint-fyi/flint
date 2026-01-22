@@ -22,46 +22,46 @@ This confusion led to the suggestion that you always use the radix parameter to 
 <TabItem label="❌ Incorrect">
 
 ```ts
-const num = parseInt("071");
+parseInt("071");
 ```
 
 ```ts
-const num = parseInt(someValue);
+parseInt(someValue);
 ```
 
 ```ts
-const num = Number.parseInt("071");
+Number.parseInt("071");
 ```
 
 ```ts
-const num = parseInt("10", 1);
+parseInt("10", 1);
 ```
 
 ```ts
-const num = parseInt("10", 37);
+parseInt("10", 37);
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```ts
-const num = parseInt("071", 10);
+parseInt("071", 10);
 ```
 
 ```ts
-const num = parseInt("071", 8);
+parseInt("071", 8);
 ```
 
 ```ts
-const num = Number.parseInt(someValue, 10);
+Number.parseInt(someValue, 10);
 ```
 
 ```ts
-const num = parseInt("10", 16);
+parseInt("10", 16);
 ```
 
 ```ts
-const num = parseInt("10", radix);
+parseInt("10", radix);
 ```
 
 </TabItem>
@@ -73,13 +73,11 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you are confident your codebase only targets ECMAScript 5+ environments and you always use decimal strings without leading zeros, you may choose to disable this rule.
-However, explicitly specifying the radix improves code clarity and prevents subtle bugs.
+If you are confident that your codebase always uses decimal strings without leading zeros, it may be preferable to disable this rule.
 
 ## Further Reading
 
 - [MDN: parseInt()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt)
-- [parseInt Radix - David Walsh Blog](https://davidwalsh.name/parseint-radix)
 
 ## Equivalents in Other Linters
 

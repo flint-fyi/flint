@@ -29,6 +29,15 @@ const name = person["firstName"];
 const nested = data["items"]["first"];
 ```
 
+```ts
+class Container {
+	privateProperty = 123;
+}
+
+const container = new Container();
+container["privateProperty"] = 123;
+```
+
 </TabItem>
 <TabItem label="✅ Correct">
 
@@ -40,6 +49,17 @@ obj.value = 123;
 const name = person.firstName;
 
 const nested = data.items.first;
+```
+
+```ts
+class Container {
+	private privateProperty = 123;
+}
+
+const container = new Container();
+
+// TypeScript allows private properties to be accessed with quotes
+container["privateProperty"] = 123;
 ```
 
 ```ts
@@ -64,11 +84,28 @@ const computed = obj[getKey()];
 
 ## Options
 
-This rule is not configurable.
+### `allowIndexSignaturePropertyAccess`
+
+Whether to allow accessing properties matching an index signature with bracket notation.
+
+**Type:** `boolean`
+**Default:** `false`
+
+```ts
+// eslint ts/propertyAccessNotation: ["error", { allowIndexSignaturePropertyAccess: true }]
+
+interface Config {
+	[key: string]: string;
+}
+
+const config: Config = {};
+// ✅ OK with option enabled
+const value = config["anyKey"];
+```
 
 ## When Not To Use It
 
-If your codebase has a convention of using bracket notation for consistency, such as when many properties are accessed dynamically or are reserved words, you may want to disable this rule.
+Disable this rule if your codebase has a convention of using bracket notation for consistency, or if you frequently access properties with names that are reserved words or contain special characters.
 
 ## Further Reading
 

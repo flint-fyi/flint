@@ -10,7 +10,7 @@ parseInt("10");
 			snapshot: `
 parseInt("10");
 ~~~~~~~~~~~~~~
-Missing radix parameter in parseInt call.
+This \`parseInt\` call is missing a radix parameter to specify the numeral system base.
 `,
 		},
 		{
@@ -60,7 +60,7 @@ Number.parseInt("10");
 			snapshot: `
 Number.parseInt("10");
 ~~~~~~~~~~~~~~~~~~~~~
-Missing radix parameter in parseInt call.
+This \`parseInt\` call is missing a radix parameter to specify the numeral system base.
 `,
 		},
 		{
@@ -80,7 +80,7 @@ parseInt();
 			snapshot: `
 parseInt();
 ~~~~~~~~~~
-Missing radix parameter in parseInt call.
+This \`parseInt\` call is missing a radix parameter to specify the numeral system base.
 `,
 		},
 		{
@@ -90,7 +90,7 @@ Number.parseInt();
 			snapshot: `
 Number.parseInt();
 ~~~~~~~~~~~~~~~~~
-Missing radix parameter in parseInt call.
+This \`parseInt\` call is missing a radix parameter to specify the numeral system base.
 `,
 		},
 		{
@@ -112,7 +112,7 @@ aliasedParseInt("10");
 const aliasedParseInt = parseInt;
 aliasedParseInt("10");
 ~~~~~~~~~~~~~~~~~~~~~
-Missing radix parameter in parseInt call.
+This \`parseInt\` call is missing a radix parameter to specify the numeral system base.
 `,
 		},
 		{

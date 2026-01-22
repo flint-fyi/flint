@@ -32,7 +32,7 @@ describe(readGitignore, () => {
 
 		const actual = await readGitignore();
 
-		expect(actual).toEqual(["a", "b"]);
+		expect(actual).toEqual(["**/a", "**/b"]);
 	});
 
 	it("resolves a non-/ path when a file line starts with /", async () => {

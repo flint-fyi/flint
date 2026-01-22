@@ -13,7 +13,7 @@ const value = obj.property;
 			snapshot: `
 const value = obj["property"];
                   ~~~~~~~~~~
-                  Use dot notation instead of bracket notation for \`property\`.
+                  Prefer the cleaner dot notation instead of bracket notation for \`property\`.
 `,
 		},
 		{
@@ -26,7 +26,7 @@ obj.value = 123;
 			snapshot: `
 obj["value"] = 123;
     ~~~~~~~
-    Use dot notation instead of bracket notation for \`value\`.
+    Prefer the cleaner dot notation instead of bracket notation for \`value\`.
 `,
 		},
 		{
@@ -39,9 +39,9 @@ const result = data.items.first;
 			snapshot: `
 const result = data["items"]["first"];
                              ~~~~~~~
-                             Use dot notation instead of bracket notation for \`first\`.
+                             Prefer the cleaner dot notation instead of bracket notation for \`first\`.
                     ~~~~~~~
-                    Use dot notation instead of bracket notation for \`items\`.
+                    Prefer the cleaner dot notation instead of bracket notation for \`items\`.
 `,
 		},
 		{
@@ -54,7 +54,7 @@ const name = person.firstName;
 			snapshot: `
 const name = person["firstName"];
                     ~~~~~~~~~~~
-                    Use dot notation instead of bracket notation for \`firstName\`.
+                    Prefer the cleaner dot notation instead of bracket notation for \`firstName\`.
 `,
 		},
 		{
@@ -67,7 +67,7 @@ const count = arr.length;
 			snapshot: `
 const count = arr["length"];
                   ~~~~~~~~
-                  Use dot notation instead of bracket notation for \`length\`.
+                  Prefer the cleaner dot notation instead of bracket notation for \`length\`.
 `,
 		},
 		{
@@ -80,9 +80,9 @@ const value = foo.bar.baz;
 			snapshot: `
 const value = foo["bar"]["baz"];
                          ~~~~~
-                         Use dot notation instead of bracket notation for \`baz\`.
+                         Prefer the cleaner dot notation instead of bracket notation for \`baz\`.
                   ~~~~~
-                  Use dot notation instead of bracket notation for \`bar\`.
+                  Prefer the cleaner dot notation instead of bracket notation for \`bar\`.
 `,
 		},
 		{
@@ -95,7 +95,7 @@ const underscore = obj._private;
 			snapshot: `
 const underscore = obj["_private"];
                        ~~~~~~~~~~
-                       Use dot notation instead of bracket notation for \`_private\`.
+                       Prefer the cleaner dot notation instead of bracket notation for \`_private\`.
 `,
 		},
 		{
@@ -108,7 +108,7 @@ const dollar = obj.$element;
 			snapshot: `
 const dollar = obj["$element"];
                    ~~~~~~~~~~
-                   Use dot notation instead of bracket notation for \`$element\`.
+                   Prefer the cleaner dot notation instead of bracket notation for \`$element\`.
 `,
 		},
 		{
@@ -121,7 +121,7 @@ const val = obj?.property;
 			snapshot: `
 const val = obj?.["property"];
                   ~~~~~~~~~~
-                  Use dot notation instead of bracket notation for \`property\`.
+                  Prefer the cleaner dot notation instead of bracket notation for \`property\`.
 `,
 		},
 		{
@@ -134,9 +134,9 @@ const nested = a?.b?.c;
 			snapshot: `
 const nested = a?.["b"]?.["c"];
                           ~~~
-                          Use dot notation instead of bracket notation for \`c\`.
+                          Prefer the cleaner dot notation instead of bracket notation for \`c\`.
                    ~~~
-                   Use dot notation instead of bracket notation for \`b\`.
+                   Prefer the cleaner dot notation instead of bracket notation for \`b\`.
 `,
 		},
 		{
@@ -154,7 +154,7 @@ function test() {
 function test() {
     return this["property"];
                 ~~~~~~~~~~
-                Use dot notation instead of bracket notation for \`property\`.
+                Prefer the cleaner dot notation instead of bracket notation for \`property\`.
 }
 `,
 		},
@@ -168,7 +168,7 @@ const method = obj.toString;
 			snapshot: `
 const method = obj["toString"];
                    ~~~~~~~~~~
-                   Use dot notation instead of bracket notation for \`toString\`.
+                   Prefer the cleaner dot notation instead of bracket notation for \`toString\`.
 `,
 		},
 		{
@@ -181,7 +181,7 @@ const unicode = obj.naïve;
 			snapshot: `
 const unicode = obj["naïve"];
                     ~~~~~~~
-                    Use dot notation instead of bracket notation for \`naïve\`.
+                    Prefer the cleaner dot notation instead of bracket notation for \`naïve\`.
 `,
 		},
 		{
@@ -194,7 +194,7 @@ const num = obj.prop123;
 			snapshot: `
 const num = obj["prop123"];
                 ~~~~~~~~~
-                Use dot notation instead of bracket notation for \`prop123\`.
+                Prefer the cleaner dot notation instead of bracket notation for \`prop123\`.
 `,
 		},
 		{
@@ -213,7 +213,61 @@ type ObjType = { foo: string };
 declare const obj: ObjType;
 obj["foo"];
     ~~~~~
-    Use dot notation instead of bracket notation for \`foo\`.
+    Prefer the cleaner dot notation instead of bracket notation for \`foo\`.
+`,
+		},
+		{
+			code: `
+declare const container: {
+  [i: string]: string;
+}
+
+container['computed'] = 123;
+`,
+			output: `
+declare const container: {
+  [i: string]: string;
+}
+
+container.computed = 123;
+`,
+			snapshot: `
+declare const container: {
+  [i: string]: string;
+}
+
+container['computed'] = 123;
+          ~~~~~~~~~~
+          Prefer the cleaner dot notation instead of bracket notation for \`computed\`.
+`,
+		},
+		{
+			code: `
+declare const container: {
+  [i: string]: string;
+  known: string;
+}
+
+container['known'] = 123;
+`,
+			options: { allowIndexSignaturePropertyAccess: true },
+			output: `
+declare const container: {
+  [i: string]: string;
+  known: string;
+}
+
+container.known = 123;
+`,
+			snapshot: `
+declare const container: {
+  [i: string]: string;
+  known: string;
+}
+
+container['known'] = 123;
+          ~~~~~~~
+          Prefer the cleaner dot notation instead of bracket notation for \`known\`.
 `,
 		},
 	],
@@ -234,54 +288,34 @@ obj["foo"];
 		`const value = obj[getKey()];`,
 		`const value = obj[\`template\`];`,
 		`const value = obj[\`template\${var}\`];`,
-		`const value = obj["break"];`,
-		`const value = obj["case"];`,
-		`const value = obj["catch"];`,
-		`const value = obj["class"];`,
-		`const value = obj["const"];`,
-		`const value = obj["continue"];`,
-		`const value = obj["debugger"];`,
-		`const value = obj["default"];`,
-		`const value = obj["delete"];`,
-		`const value = obj["do"];`,
-		`const value = obj["else"];`,
-		`const value = obj["enum"];`,
-		`const value = obj["export"];`,
-		`const value = obj["extends"];`,
-		`const value = obj["false"];`,
-		`const value = obj["finally"];`,
-		`const value = obj["for"];`,
-		`const value = obj["function"];`,
-		`const value = obj["if"];`,
-		`const value = obj["import"];`,
-		`const value = obj["in"];`,
-		`const value = obj["instanceof"];`,
-		`const value = obj["new"];`,
-		`const value = obj["null"];`,
-		`const value = obj["return"];`,
-		`const value = obj["super"];`,
-		`const value = obj["switch"];`,
-		`const value = obj["this"];`,
-		`const value = obj["throw"];`,
-		`const value = obj["true"];`,
-		`const value = obj["try"];`,
-		`const value = obj["typeof"];`,
-		`const value = obj["var"];`,
-		`const value = obj["void"];`,
-		`const value = obj["while"];`,
-		`const value = obj["with"];`,
-		`const value = obj["await"];`,
-		`const value = obj["implements"];`,
-		`const value = obj["interface"];`,
-		`const value = obj["let"];`,
-		`const value = obj["package"];`,
-		`const value = obj["private"];`,
-		`const value = obj["protected"];`,
-		`const value = obj["public"];`,
-		`const value = obj["static"];`,
-		`const value = obj["yield"];`,
 		`const value = obj?.property;`,
 		`const value = obj?.[dynamicKey];`,
 		`const value = obj?.["key with spaces"];`,
+		`
+class Container {
+  private privateProperty = 123;
+}
+
+const container = new Container();
+container['privateProperty'] = 123;
+`,
+		`
+class Container {
+  protected protectedProperty = 123;
+}
+
+const container = new Container();
+container['protectedProperty'] = 123;
+`,
+		{
+			code: `
+declare const container: {
+  [i: string]: string;
+}
+
+container['protectedProperty'] = 123;
+`,
+			options: { allowIndexSignaturePropertyAccess: true },
+		},
 	],
 });
