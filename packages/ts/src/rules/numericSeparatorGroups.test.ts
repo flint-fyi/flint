@@ -45,46 +45,6 @@ const value = 1_0000;
 		},
 		{
 			code: `
-const value = 0xFFFF;
-`,
-			snapshot: `
-const value = 0xFFFF;
-              ~~~~~~
-              Use consistent grouping with numeric separators.
-`,
-		},
-		{
-			code: `
-const value = 0xABCDEF;
-`,
-			snapshot: `
-const value = 0xABCDEF;
-              ~~~~~~~~
-              Use consistent grouping with numeric separators.
-`,
-		},
-		{
-			code: `
-const value = 0b11111111;
-`,
-			snapshot: `
-const value = 0b11111111;
-              ~~~~~~~~~~
-              Use consistent grouping with numeric separators.
-`,
-		},
-		{
-			code: `
-const value = 0o77777777;
-`,
-			snapshot: `
-const value = 0o77777777;
-              ~~~~~~~~~~
-              Use consistent grouping with numeric separators.
-`,
-		},
-		{
-			code: `
 const value = 123456.789012;
 `,
 			snapshot: `
@@ -95,16 +55,6 @@ const value = 123456.789012;
 		},
 		{
 			code: `
-const value = 1e10000;
-`,
-			snapshot: `
-const value = 1e10000;
-              ~~~~~~~
-              Use consistent grouping with numeric separators.
-`,
-		},
-		{
-			code: `
 const value = 10000n;
 `,
 			snapshot: `
@@ -113,36 +63,34 @@ const value = 10000n;
               Use consistent grouping with numeric separators.
 `,
 		},
-		{
-			code: `
-const value = 0xFFFFn;
-`,
-			snapshot: `
-const value = 0xFFFFn;
-              ~~~~~~~
-              Use consistent grouping with numeric separators.
-`,
-		},
 	],
 	valid: [
-		`const value = 1000;`,
-		`const value = 1_000;`,
-		`const value = 10_000;`,
-		`const value = 100_000;`,
-		`const value = 1_000_000;`,
-		`const value = 0xFF;`,
-		`const value = 0xFF_FF;`,
-		`const value = 0xAB_CD_EF;`,
-		`const value = 0b1111;`,
-		`const value = 0b1111_1111;`,
-		`const value = 0o7777;`,
-		`const value = 0o7777_7777;`,
-		`const value = 123_456.789_012;`,
-		`const value = 1e10_000;`,
-		`const value = 10_000n;`,
-		`const value = 0xFF_FFn;`,
-		`const value = 1.5;`,
-		`const value = 0;`,
+		`1000;`,
+		`1_000;`,
+		`10_000;`,
+		`100_000;`,
+		`1_000_000;`,
+		`0xFF;`,
+		`0xFF_FF;`,
+		`0xAB_CD_EF;`,
+		`0b1111;`,
+		`0b1111_1111;`,
+		`0o7777;`,
+		`0o7777_7777;`,
+		`123_456.789_012;`,
+		`1e10_000;`,
+		`10_000n;`,
+		`0xFF_FFn;`,
+		`1.5;`,
+		`0;`,
+		`123;`,
 		`const value = 123;`,
+		`0b11111111`,
+		`0o77777777`,
+		`0xABCDEF`,
+		`0xFFFF`,
+		`0xFFFFn`,
+		`1e10000`,
+		`2.2250738585072014e-308`,
 	],
 });

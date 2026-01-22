@@ -6,12 +6,12 @@ describe("cacheStorageSchema", () => {
 	it("parses valid cache data", () => {
 		const validCache = {
 			configs: {
-				"flint.config.ts": 1234567890,
-				"package.json": 1234567890,
+				"flint.config.ts": 1_234_567_890,
+				"package.json": 1_234_567_890,
 			},
 			files: {
 				"src/index.ts": {
-					timestamp: 1234567890,
+					timestamp: 1_234_567_890,
 				},
 			},
 		};
