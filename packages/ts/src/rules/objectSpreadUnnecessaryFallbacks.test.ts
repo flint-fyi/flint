@@ -15,6 +15,16 @@ const merged = { ...options || {} };
 		},
 		{
 			code: `
+const merged = { ...(options || {}) };
+`,
+			snapshot: `
+const merged = { ...(options || {}) };
+                                ~~
+                                Spreading \`undefined\` or \`null\` in an object literal has no effect, making this empty object fallback unnecessary.
+`,
+		},
+		{
+			code: `
 const config = { ...settings ?? {} };
 `,
 			snapshot: `
