@@ -38,19 +38,20 @@ function isMultipleGraphemes(stringAlternative: RegExpAST.StringAlternative) {
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
-			"Reports string literals inside character classes with the v flag that contain multiple graphemes.",
+			"Reports string literals inside character classes with the `v` flag that contain multiple graphemes.",
 		id: "regexGraphemeStringLiterals",
-		presets: ["logicalStrict"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		multipleGraphemes: {
 			primary:
-				"Only single characters and graphemes are allowed inside character class string literals. Use regular alternatives (e.g. '{{ alternative }}') for strings instead.",
+				"This literal contains multiple graphemes in the `\\q{}` matcher intended for single graphemes.",
 			secondary: [
-				"String literals in character classes should represent single graphemes, not multi-character strings.",
+				"The `\\q{}` syntax is designed for single extended grapheme clusters like emoji sequences.",
+				'Using it for multiple "graphemes" (visual characters) is often a mistake.',
 			],
 			suggestions: [
-				"Replace with alternation using a non-capturing group: '{{ alternative }}'.",
+				"If matching multi-character strings, consider using alternation: '{{ alternative }}'.",
 			],
 		},
 	},
@@ -71,9 +72,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const regexpAst = parseRegexpAst(pattern, {
-						unicodeSets: true,
-					});
+					const regexpAst = parseRegexpAst(pattern, flagsStr);
 
 					if (!regexpAst) {
 						return;
