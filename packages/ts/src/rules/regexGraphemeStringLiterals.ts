@@ -40,7 +40,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports string literals inside character classes with the `v` flag that contain multiple graphemes.",
 		id: "regexGraphemeStringLiterals",
-		presets: ["stylistic", "stylisticStrict"],
+		presets: ["stylisticStrict"],
 	},
 	messages: {
 		multipleGraphemes: {
