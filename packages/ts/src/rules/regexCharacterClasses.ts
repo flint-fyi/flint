@@ -16,9 +16,20 @@ interface CharAlternative {
 	raw: string;
 }
 
-interface CharElement {
-	raw: string;
-}
+type CharElement =
+	| RegExpAST.Character
+	| RegExpAST.CharacterClass
+	| RegExpAST.CharacterClassRange
+	| RegExpAST.CharacterSet
+	| RegExpAST.ClassStringDisjunction
+	| RegExpAST.ExpressionCharacterClass;
+
+type NodeWithAlternatives =
+	| RegExpAST.CapturingGroup
+	| RegExpAST.Group
+	| RegExpAST.LookaheadAssertion
+	| RegExpAST.LookbehindAssertion
+	| RegExpAST.Pattern;
 
 interface NonCharAlternative {
 	isCharacter: false;
@@ -32,6 +43,28 @@ type SingleCharElement =
 	| RegExpAST.CharacterClass
 	| RegExpAST.CharacterSet
 	| RegExpAST.ExpressionCharacterClass;
+
+const reservedDoublePunctuatorCharacters = new Set([
+	"!",
+	"#",
+	"$",
+	"%",
+	"&",
+	"*",
+	"+",
+	",",
+	".",
+	":",
+	";",
+	"<",
+	"=",
+	">",
+	"?",
+	"@",
+	"^",
+	"`",
+	"~",
+]);
 
 function categorizeAlternative(
 	alternative: RegExpAST.Alternative,
@@ -71,27 +104,73 @@ function elementsToCharacterClass(elements: CharElement[]): string {
 	const parts: string[] = [];
 
 	for (const element of elements) {
-		parts.push(element.raw);
+		switch (element.type) {
+			case "Character":
+				if (element.raw === "-") {
+					parts.push("\\-");
+				} else if (element.raw === "]") {
+					parts.push("\\]");
+				} else {
+					parts.push(element.raw);
+				}
+				break;
+			case "CharacterClass":
+			case "CharacterClassRange":
+			case "CharacterSet":
+			case "ClassStringDisjunction":
+			case "ExpressionCharacterClass":
+				parts.push(element.raw);
+				break;
+		}
 	}
 
 	if (parts.length === 0) {
 		return "[]";
 	}
 
-	if (parts[0]?.startsWith("^")) {
+	if (parts[0]?.[0] === "^") {
 		parts[0] = `\\${parts[0]}`;
 	}
 
-	for (let i = 0; i < parts.length; i++) {
-		const part = parts[i];
-		if (part === "-") {
-			parts[i] = "\\-";
-		} else if (part === "]") {
-			parts[i] = "\\]";
+	for (let i = 1; i < parts.length; i++) {
+		const prev = parts[i - 1];
+		const curr = parts[i];
+		if (prev && curr) {
+			const pChar = prev.slice(-1);
+			const cChar = curr[0];
+			if (
+				cChar &&
+				reservedDoublePunctuatorCharacters.has(cChar) &&
+				cChar === pChar &&
+				!prev.endsWith(`\\${pChar}`)
+			) {
+				parts[i - 1] = `${prev.slice(0, -1)}\\${pChar}`;
+			}
 		}
 	}
 
 	return `[${parts.join("")}]`;
+}
+
+function getParentPrefixAndSuffix(
+	parent: NodeWithAlternatives,
+): [string, string] {
+	switch (parent.type) {
+		case "Assertion":
+			return [
+				`(?${parent.kind === "lookahead" ? "" : "<"}${parent.negate ? "!" : "="}`,
+				")",
+			];
+		case "CapturingGroup":
+			if (parent.name !== null) {
+				return [`(?<${parent.name}>`, ")"];
+			}
+			return ["(", ")"];
+		case "Group":
+			return ["(?:", ")"];
+		case "Pattern":
+			return ["", ""];
+	}
 }
 
 function isSingleCharElement(
@@ -209,8 +288,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		const parser = new RegExpParser();
 
 		function processAlternatives(
-			alternatives: readonly RegExpAST.Alternative[],
-		): undefined | { changed: boolean; replacement: string } {
+			node: NodeWithAlternatives,
+		): undefined | { fixedPattern: string; replacement: string } {
+			const alternatives = node.alternatives;
 			if (alternatives.length < 2) {
 				return undefined;
 			}
@@ -229,13 +309,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const optimized = optimizeAlternatives(parsed);
-
 			if (optimized.length === parsed.length) {
 				return undefined;
 			}
 
 			const replacement = optimized.map((a) => a.raw).join("|");
-			return { changed: true, replacement };
+			const [prefix, suffix] = getParentPrefixAndSuffix(node);
+			const fixedPattern = prefix + replacement + suffix;
+
+			return { fixedPattern, replacement };
 		}
 
 		return {
@@ -267,14 +349,45 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
+					const nodeRange = getTSNodeRange(node, sourceFile);
+					const flags = flagsStr ?? "";
+
 					visitRegExpAST(regexpAst, {
+						onAssertionEnter(assertion) {
+							if (
+								assertion.kind === "lookahead" ||
+								assertion.kind === "lookbehind"
+							) {
+								const result = processAlternatives(assertion);
+								if (result) {
+									const newPattern =
+										pattern.slice(0, assertion.start) +
+										result.fixedPattern +
+										pattern.slice(assertion.end);
+									context.report({
+										data: { replacement: result.replacement },
+										fix: {
+											range: nodeRange,
+											text: `/${newPattern}/${flags}`,
+										},
+										message: "preferCharacterClass",
+										range: nodeRange,
+									});
+								}
+							}
+						},
 						onCapturingGroupEnter(group) {
-							const result = processAlternatives(group.alternatives);
+							const result = processAlternatives(group);
 							if (result) {
-								const nodeRange = getTSNodeRange(node, sourceFile);
+								const newPattern =
+									pattern.slice(0, group.start) +
+									result.fixedPattern +
+									pattern.slice(group.end);
 								context.report({
-									data: {
-										replacement: result.replacement,
+									data: { replacement: result.replacement },
+									fix: {
+										range: nodeRange,
+										text: `/${newPattern}/${flags}`,
 									},
 									message: "preferCharacterClass",
 									range: nodeRange,
@@ -282,12 +395,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 						},
 						onGroupEnter(group) {
-							const result = processAlternatives(group.alternatives);
+							const result = processAlternatives(group);
 							if (result) {
-								const nodeRange = getTSNodeRange(node, sourceFile);
+								const newPattern =
+									pattern.slice(0, group.start) +
+									result.fixedPattern +
+									pattern.slice(group.end);
 								context.report({
-									data: {
-										replacement: result.replacement,
+									data: { replacement: result.replacement },
+									fix: {
+										range: nodeRange,
+										text: `/${newPattern}/${flags}`,
 									},
 									message: "preferCharacterClass",
 									range: nodeRange,
@@ -295,12 +413,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 						},
 						onPatternEnter(patternNode) {
-							const result = processAlternatives(patternNode.alternatives);
+							const result = processAlternatives(patternNode);
 							if (result) {
-								const nodeRange = getTSNodeRange(node, sourceFile);
 								context.report({
-									data: {
-										replacement: result.replacement,
+									data: { replacement: result.replacement },
+									fix: {
+										range: nodeRange,
+										text: `/${result.replacement}/${flags}`,
 									},
 									message: "preferCharacterClass",
 									range: nodeRange,
