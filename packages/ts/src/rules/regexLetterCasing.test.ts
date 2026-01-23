@@ -14,7 +14,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /Regexp/i;
  ~
- 'R' is not in lowercase.
+ 'R' is not in lowercase as preferred for consistency.
 `,
 		},
 		{
@@ -27,11 +27,11 @@ ruleTester.describe(rule, {
 			snapshot: `
 /ReGeXp/i;
  ~
- 'R' is not in lowercase.
+ 'R' is not in lowercase as preferred for consistency.
    ~
-   'G' is not in lowercase.
+   'G' is not in lowercase as preferred for consistency.
      ~
-     'X' is not in lowercase.
+     'X' is not in lowercase as preferred for consistency.
 `,
 		},
 		{
@@ -44,7 +44,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[A-Z]/i;
   ~~~
-  'A-Z' is not in lowercase.
+  'A-Z' is not in lowercase as preferred for consistency.
 `,
 		},
 		{
@@ -57,7 +57,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\u000A/;
  ~~~~~~
- '\\u000A' is not in lowercase.
+ '\\u000A' is not in lowercase as preferred for consistency.
 `,
 		},
 		{
@@ -70,7 +70,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\u{A}/u;
  ~~~~~
- '\\u{A}' is not in lowercase.
+ '\\u{A}' is not in lowercase as preferred for consistency.
 `,
 		},
 		{
@@ -83,7 +83,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\u{1F4A9}/u;
  ~~~~~~~~~
- '\\u{1F4A9}' is not in lowercase.
+ '\\u{1F4A9}' is not in lowercase as preferred for consistency.
 `,
 		},
 		{
@@ -96,7 +96,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\x0A/;
  ~~~~
- '\\x0A' is not in lowercase.
+ '\\x0A' is not in lowercase as preferred for consistency.
 `,
 		},
 		{
@@ -109,7 +109,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\ca/u;
  ~~~
- '\\ca' is not in uppercase.
+ '\\ca' is not in uppercase as preferred for consistency.
 `,
 		},
 		{
@@ -122,9 +122,9 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\xAB\\xCD/;
  ~~~~
- '\\xAB' is not in lowercase.
+ '\\xAB' is not in lowercase as preferred for consistency.
      ~~~~
-     '\\xCD' is not in lowercase.
+     '\\xCD' is not in lowercase as preferred for consistency.
 `,
 		},
 
@@ -138,7 +138,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[A-Z]/i;
   ~~~
-  'A-Z' is not in lowercase.
+  'A-Z' is not in lowercase as preferred for consistency.
 `,
 		},
 	],

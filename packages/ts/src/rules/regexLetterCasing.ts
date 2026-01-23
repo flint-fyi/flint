@@ -236,7 +236,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		unexpectedCase: {
-			primary: "'{{ char }}' is not in {{ case }}.",
+			primary:
+				"'{{ char }}' is not in {{ case }} as preferred for consistency.",
 			secondary: [
 				"Consistent letter casing in escape sequences improves readability.",
 			],
