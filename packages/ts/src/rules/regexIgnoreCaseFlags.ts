@@ -10,20 +10,13 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-function canUseIgnoreCase(
-	pattern: RegExpAST.Pattern,
-	hasIgnoreCase: boolean,
-): { characterClasses: RegExpAST.CharacterClass[]; simplified: boolean } {
-	if (hasIgnoreCase) {
-		return { characterClasses: [], simplified: false };
-	}
-
+function getCharacterClassesIfSimplified(pattern: RegExpAST.Pattern) {
 	const characterClasses: RegExpAST.CharacterClass[] = [];
 	let simplified = false;
 
 	visitRegExpAST(pattern, {
 		onCharacterClassEnter(charClass) {
-			if (charClass.negate) {
+			if (charClass.negate || simplified) {
 				return;
 			}
 
@@ -34,7 +27,9 @@ function canUseIgnoreCase(
 		},
 	});
 
-	return { characterClasses, simplified };
+	// May be set by the function inside visitors
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+	return simplified ? characterClasses : undefined;
 }
 
 function hasMatchingCasePair(elements: RegExpAST.CharacterClassElement[]) {
@@ -52,16 +47,12 @@ function hasMatchingCasePair(elements: RegExpAST.CharacterClassElement[]) {
 		}
 	}
 
-	for (const letter of letters) {
-		const lower = toLowerCase(letter);
-		const upper = toUpperCase(letter);
-
-		if (letters.has(lower) && letters.has(upper)) {
-			return true;
-		}
-	}
-
-	return false;
+	return letters
+		.values()
+		.some(
+			(letter) =>
+				letters.has(toLowerCase(letter)) && letters.has(toUpperCase(letter)),
+		);
 }
 
 function isLetter(codePoint: number) {
@@ -72,19 +63,11 @@ function isLetter(codePoint: number) {
 }
 
 function toLowerCase(codePoint: number) {
-	if (codePoint >= 0x41 && codePoint <= 0x5a) {
-		return codePoint + 0x20;
-	}
-
-	return codePoint;
+	return codePoint >= 0x41 && codePoint <= 0x5a ? codePoint + 0x20 : codePoint;
 }
 
 function toUpperCase(codePoint: number) {
-	if (codePoint >= 0x61 && codePoint <= 0x7a) {
-		return codePoint - 0x20;
-	}
-
-	return codePoint;
+	return codePoint >= 0x61 && codePoint <= 0x7a ? codePoint - 0x20 : codePoint;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -96,11 +79,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		useIgnoreCase: {
-			primary: "This character class can be simplified by using the 'i' flag.",
+			primary: "This character class can be simplified by using the `i` flag.",
 			secondary: [
-				"The 'i' flag makes the regex case-insensitive, eliminating the need to match both upper and lower case letters explicitly.",
+				"The `i` flag makes the regex case-insensitive, eliminating the need to match both upper and lower case letters explicitly.",
 			],
-			suggestions: ["Add the 'i' flag and simplify the character class."],
+			suggestions: [
+				"Add the `i` flag and simplify the character class if it is meant to be case-insensitive.",
+				"Remove the `i` flag if it is not meant to be case-insensitive.",
+			],
 		},
 	},
 	setup(context) {
@@ -109,41 +95,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				RegularExpressionLiteral: (node, { sourceFile }) => {
 					const text = node.getText(sourceFile);
 					const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(text);
-
 					if (!match) {
 						return;
 					}
 
-					const [, pattern, flagsStr] = match;
-
-					if (!pattern) {
+					const [, pattern, flags] = match;
+					if (!pattern || flags?.includes("i")) {
 						return;
 					}
 
-					const hasIgnoreCase = flagsStr?.includes("i") ?? false;
-
-					if (hasIgnoreCase) {
-						return;
-					}
-
-					const hasUnicode = flagsStr?.includes("u");
-					const hasUnicodeSets = flagsStr?.includes("v");
-
-					const regexpAst = parseRegexpAst(pattern, {
-						unicode: hasUnicode,
-						unicodeSets: hasUnicodeSets,
-					});
-
+					const regexpAst = parseRegexpAst(pattern, flags);
 					if (!regexpAst) {
 						return;
 					}
 
-					const { characterClasses, simplified } = canUseIgnoreCase(
-						regexpAst,
-						hasIgnoreCase,
-					);
-
-					if (!simplified) {
+					const characterClasses = getCharacterClassesIfSimplified(regexpAst);
+					if (!characterClasses) {
 						return;
 					}
 

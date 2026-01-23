@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[aA]/;
  ~~~~
- This character class can be simplified by using the 'i' flag.
+ This character class can be simplified by using the \`i\` flag.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[a-zA-Z]/;
  ~~~~~~~~
- This character class can be simplified by using the 'i' flag.
+ This character class can be simplified by using the \`i\` flag.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[aAbBcC]/;
  ~~~~~~~~
- This character class can be simplified by using the 'i' flag.
+ This character class can be simplified by using the \`i\` flag.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[a-zA-Z0-9]/;
  ~~~~~~~~~~~
- This character class can be simplified by using the 'i' flag.
+ This character class can be simplified by using the \`i\` flag.
 `,
 		},
 	],
