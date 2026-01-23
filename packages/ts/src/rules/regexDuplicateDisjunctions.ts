@@ -1,30 +1,24 @@
 import {
-	parseRegExpLiteral,
 	type AST as RegExpAST,
 	visitRegExpAST,
 } from "@eslint-community/regexpp";
 import {
-	type AST,
+	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import type { ReadonlyFlags } from "regexp-ast-analysis";
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
-
-interface Issue {
-	duplicate: RegExpAST.Alternative;
-	end: number;
-	original: RegExpAST.Alternative;
-	start: number;
-}
-
-type ParentNode =
-	| RegExpAST.CapturingGroup
-	| RegExpAST.Group
-	| RegExpAST.LookaheadAssertion
-	| RegExpAST.LookbehindAssertion
-	| RegExpAST.Pattern;
+import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
+import {
+	analyzeParentNode,
+	createParser,
+	type DisjunctionIssue,
+	faToSource,
+	type NestedAlternative,
+} from "./utils/regexDisjunctionAnalysis.ts";
 
 function adjustPositionForEscapes(escaped: string, unescapedPos: number) {
 	let escapedIndex = 0;
@@ -42,152 +36,26 @@ function adjustPositionForEscapes(escaped: string, unescapedPos: number) {
 	return escapedIndex;
 }
 
-function alternativesEqual(
-	a: RegExpAST.Alternative,
-	b: RegExpAST.Alternative,
-): boolean {
-	if (a.elements.length !== b.elements.length) {
-		return false;
+function getReportedNode(
+	result: DisjunctionIssue,
+): NestedAlternative | RegExpAST.Alternative {
+	if (result.type === "NestedSubset" || result.type === "PrefixNestedSubset") {
+		return result.nested;
 	}
-
-	for (let i = 0; i < a.elements.length; i++) {
-		const aElement = a.elements[i];
-		const bElement = b.elements[i];
-		if (!aElement || !bElement) {
-			return false;
-		}
-		if (aElement.raw !== bElement.raw) {
-			return false;
-		}
-	}
-
-	return true;
+	return result.alternative;
 }
 
-function findDuplicateDisjunctions(parentNode: ParentNode): Issue[] {
-	const issues: Issue[] = [];
-	const alternatives = parentNode.alternatives;
-
-	if (alternatives.length < 2) {
-		return issues;
+function mentionNested(nested: NestedAlternative): string {
+	if (nested.type === "Alternative" || nested.type === "StringAlternative") {
+		return nested.raw;
 	}
-
-	for (let i = 0; i < alternatives.length; i++) {
-		const current = alternatives[i];
-		if (!current) {
-			continue;
-		}
-
-		for (let j = i + 1; j < alternatives.length; j++) {
-			const other = alternatives[j];
-			if (!other) {
-				continue;
-			}
-
-			if (alternativesEqual(current, other)) {
-				issues.push({
-					duplicate: other,
-					end: other.end,
-					original: current,
-					start: other.start,
-				});
-			}
-		}
-	}
-
-	if (hasContentAfter(parentNode)) {
-		return issues;
-	}
-
-	for (let i = 0; i < alternatives.length; i++) {
-		const current = alternatives[i];
-		if (!current) {
-			continue;
-		}
-
-		for (let j = i + 1; j < alternatives.length; j++) {
-			const other = alternatives[j];
-			if (!other) {
-				continue;
-			}
-
-			const alreadyReported = issues.some((issue) => issue.duplicate === other);
-			if (alreadyReported) {
-				continue;
-			}
-
-			if (isPrefixOf(current, other)) {
-				issues.push({
-					duplicate: other,
-					end: other.end,
-					original: current,
-					start: other.start,
-				});
-			}
-		}
-	}
-
-	return issues;
-}
-
-function findIssues(pattern: string, flags: string): Issue[] {
-	const issues: Issue[] = [];
-
-	let ast: RegExpAST.RegExpLiteral;
-	try {
-		ast = parseRegExpLiteral(new RegExp(pattern, flags));
-	} catch {
-		return issues;
-	}
-
-	visitRegExpAST(ast, {
-		onAssertionEnter(node) {
-			if (node.kind === "lookahead" || node.kind === "lookbehind") {
-				const duplicates = findDuplicateDisjunctions(node);
-				issues.push(...duplicates);
-			}
-		},
-		onCapturingGroupEnter(node) {
-			const duplicates = findDuplicateDisjunctions(node);
-			issues.push(...duplicates);
-		},
-		onGroupEnter(node) {
-			const duplicates = findDuplicateDisjunctions(node);
-			issues.push(...duplicates);
-		},
-		onPatternEnter(node) {
-			const duplicates = findDuplicateDisjunctions(node);
-			issues.push(...duplicates);
-		},
-	});
-
-	return issues;
-}
-
-function getRegexPattern(node: AST.RegularExpressionLiteral): {
-	flags: string;
-	pattern: string;
-} {
-	const text = node.text;
-	const lastSlash = text.lastIndexOf("/");
-	return {
-		flags: text.slice(lastSlash + 1),
-		pattern: text.slice(1, lastSlash),
-	};
-}
-
-function hasContentAfter(parentNode: ParentNode): boolean {
-	if (parentNode.type !== "Pattern") {
-		return true;
-	}
-
-	return false;
+	return nested.raw;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
-			"Reports duplicate alternatives in regular expression disjunctions.",
+			"Reports duplicate or unreachable alternatives in regular expression disjunctions.",
 		id: "regexDuplicateDisjunctions",
 		presets: ["logical"],
 	},
@@ -199,49 +67,225 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			],
 			suggestions: ["Remove the duplicate alternative."],
 		},
+		nestedSubset: {
+			primary:
+				"Element '{{ nested }}' in '{{ alternative }}' is a subset of '{{ others }}' and is unreachable.",
+			secondary: [
+				"All paths through this element are already covered by a previous alternative.",
+			],
+			suggestions: ["Remove the unreachable element."],
+		},
+		overlap: {
+			primary:
+				"Alternative '{{ alternative }}' overlaps with '{{ others }}'. The overlap is '{{ overlap }}'.",
+			secondary: ["This ambiguity may cause exponential backtracking."],
+			suggestions: ["Refactor to eliminate the overlap."],
+		},
+		prefixNestedSubset: {
+			primary:
+				"Element '{{ nested }}' in '{{ alternative }}' is already covered by '{{ others }}'.",
+			secondary: [
+				"All paths through this element will never match because a previous alternative accepts first.",
+			],
+			suggestions: ["Remove the unreachable element."],
+		},
+		prefixSubset: {
+			primary:
+				"Alternative '{{ alternative }}' is already covered by '{{ others }}' and is unreachable.",
+			secondary: [
+				"This alternative will never match because a previous alternative always accepts first.",
+			],
+			suggestions: ["Remove the unreachable alternative."],
+		},
 		subset: {
 			primary:
-				"Alternative '{{ alternative }}' is a subset of '{{ superset }}' and is unreachable.",
+				"Alternative '{{ alternative }}' is a subset of '{{ others }}' and is unreachable.",
 			secondary: [
 				"This alternative will never match because a previous, more general alternative will always match first.",
 			],
 			suggestions: ["Remove the unreachable alternative."],
 		},
+		superset: {
+			primary:
+				"Alternative '{{ alternative }}' is a superset of '{{ others }}'.",
+			secondary: [
+				"The earlier alternative(s) might be removable. This ambiguity may cause exponential backtracking.",
+			],
+			suggestions: ["Consider removing the shadowed alternative(s)."],
+		},
 	},
 	setup(context) {
-		function checkRegexLiteral(
-			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: TypeScriptFileServices,
+		function processPattern(
+			pattern: RegExpAST.Pattern,
+			flags: ReadonlyFlags,
+			nodeStart: number,
+			mapRange: (start: number, end: number) => { begin: number; end: number },
 		) {
-			const { flags, pattern } = getRegexPattern(node);
-			const issues = findIssues(pattern, flags);
+			const parser = createParser(pattern, flags);
+			const issues: DisjunctionIssue[] = [];
 
-			const nodeStart = node.getStart(sourceFile);
+			visitRegExpAST(pattern, {
+				onAssertionEnter(node) {
+					if (node.kind === "lookahead" || node.kind === "lookbehind") {
+						issues.push(...analyzeParentNode(node, flags, parser));
+					}
+				},
+				onCapturingGroupEnter(node) {
+					issues.push(...analyzeParentNode(node, flags, parser));
+				},
+				onGroupEnter(node) {
+					issues.push(...analyzeParentNode(node, flags, parser));
+				},
+				onPatternEnter(node) {
+					issues.push(...analyzeParentNode(node, flags, parser));
+				},
+			});
 
 			for (const issue of issues) {
-				const isSubsetIssue =
-					issue.duplicate.raw.length > issue.original.raw.length;
-				context.report({
-					data: {
-						alternative: issue.duplicate.raw,
-						superset: issue.original.raw,
-					},
-					message: isSubsetIssue ? "subset" : "duplicate",
-					range: {
-						begin: nodeStart + issue.start,
-						end: nodeStart + issue.end,
-					},
-				});
+				const reportedNode = getReportedNode(issue);
+				const range = mapRange(reportedNode.start, reportedNode.end);
+				const othersStr = issue.others.map((a) => a.raw).join("|");
+
+				switch (issue.type) {
+					case "Duplicate":
+						context.report({
+							data: {
+								alternative: issue.alternative.raw,
+							},
+							message: "duplicate",
+							range,
+						});
+						break;
+
+					case "NestedSubset":
+						context.report({
+							data: {
+								alternative: issue.alternative.raw,
+								nested: mentionNested(issue.nested),
+								others: othersStr,
+							},
+							message: "nestedSubset",
+							range,
+						});
+						break;
+
+					case "Overlap":
+						context.report({
+							data: {
+								alternative: issue.alternative.raw,
+								others: othersStr,
+								overlap: faToSource(issue.overlap, flags),
+							},
+							message: "overlap",
+							range,
+						});
+						break;
+
+					case "PrefixNestedSubset":
+						context.report({
+							data: {
+								alternative: issue.alternative.raw,
+								nested: mentionNested(issue.nested),
+								others: othersStr,
+							},
+							message: "prefixNestedSubset",
+							range,
+						});
+						break;
+
+					case "PrefixSubset":
+						context.report({
+							data: {
+								alternative: issue.alternative.raw,
+								others: othersStr,
+							},
+							message: "prefixSubset",
+							range,
+						});
+						break;
+
+					case "Subset":
+						context.report({
+							data: {
+								alternative: issue.alternative.raw,
+								others: othersStr,
+							},
+							message: "subset",
+							range,
+						});
+						break;
+
+					case "Superset":
+						context.report({
+							data: {
+								alternative: issue.alternative.raw,
+								others: othersStr,
+							},
+							message: "superset",
+							range,
+						});
+						break;
+				}
 			}
 		}
 
+		function checkRegexLiteral(
+			node: ts.RegularExpressionLiteral,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
+			const text = node.getText(sourceFile);
+			const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(text);
+
+			if (!match) {
+				return;
+			}
+
+			const [, pattern, flagsStr] = match;
+
+			if (!pattern) {
+				return;
+			}
+
+			const hasUnicode = flagsStr?.includes("u");
+			const hasUnicodeSets = flagsStr?.includes("v");
+
+			const ast = parseRegexpAst(pattern, {
+				unicode: hasUnicode,
+				unicodeSets: hasUnicodeSets,
+			});
+			if (!ast) {
+				return;
+			}
+
+			const nodeRange = getTSNodeRange(node, sourceFile);
+			const nodeStart = nodeRange.begin;
+
+			const flags: ReadonlyFlags = {
+				dotAll: flagsStr?.includes("s") ?? false,
+				global: flagsStr?.includes("g") ?? false,
+				hasIndices: flagsStr?.includes("d") ?? false,
+				ignoreCase: flagsStr?.includes("i") ?? false,
+				multiline: flagsStr?.includes("m") ?? false,
+				sticky: flagsStr?.includes("y") ?? false,
+				unicode: hasUnicode ?? false,
+				unicodeSets: hasUnicodeSets ?? false,
+			};
+
+			const mapRange = (start: number, end: number) => ({
+				begin: nodeStart + 1 + start,
+				end: nodeStart + 1 + end,
+			});
+
+			processPattern(ast, flags, nodeStart, mapRange);
+		}
+
 		function checkRegExpConstructor(
-			node: AST.CallExpression | AST.NewExpression,
+			node: ts.CallExpression | ts.NewExpression,
 			services: TypeScriptFileServices,
 		) {
 			if (
 				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
+				(node.expression as ts.Identifier).text !== "RegExp"
 			) {
 				return;
 			}
@@ -256,45 +300,56 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const stringLiteral = firstArg;
+			const stringLiteral = firstArg as ts.StringLiteral;
 			const rawText = stringLiteral.getText(services.sourceFile);
-			const pattern = rawText.slice(1, -1);
+			const patternEscaped = rawText.slice(1, -1);
+			const pattern = patternEscaped.replace(/\\\\/g, "\\");
 
-			let flags = "";
+			let flagsStr = "";
 			if (args.length >= 2) {
 				const secondArg = args[1];
 				if (secondArg?.kind === ts.SyntaxKind.StringLiteral) {
-					const flagsText = secondArg.getText(services.sourceFile);
-					flags = flagsText.slice(1, -1);
+					const flagsText = (secondArg as ts.StringLiteral).getText(
+						services.sourceFile,
+					);
+					flagsStr = flagsText.slice(1, -1);
 				}
 			}
 
-			const unescapedPattern = pattern.replace(/\\\\/g, "\\");
-			const issues = findIssues(unescapedPattern, flags);
+			const hasUnicode = flagsStr.includes("u");
+			const hasUnicodeSets = flagsStr.includes("v");
+
+			const ast = parseRegexpAst(pattern, {
+				unicode: hasUnicode,
+				unicodeSets: hasUnicodeSets,
+			});
+			if (!ast) {
+				return;
+			}
 
 			const nodeStart = firstArg.getStart(services.sourceFile);
 
-			for (const issue of issues) {
-				const isSubsetIssue =
-					issue.duplicate.raw.length > issue.original.raw.length;
-				const adjustedStart = adjustPositionForEscapes(
-					pattern,
-					issue.start - 1,
-				);
-				const adjustedEnd = adjustPositionForEscapes(pattern, issue.end - 1);
+			const flags: ReadonlyFlags = {
+				dotAll: flagsStr.includes("s"),
+				global: flagsStr.includes("g"),
+				hasIndices: flagsStr.includes("d"),
+				ignoreCase: flagsStr.includes("i"),
+				multiline: flagsStr.includes("m"),
+				sticky: flagsStr.includes("y"),
+				unicode: hasUnicode,
+				unicodeSets: hasUnicodeSets,
+			};
 
-				context.report({
-					data: {
-						alternative: issue.duplicate.raw,
-						superset: issue.original.raw,
-					},
-					message: isSubsetIssue ? "subset" : "duplicate",
-					range: {
-						begin: nodeStart + 1 + adjustedStart,
-						end: nodeStart + 1 + adjustedEnd,
-					},
-				});
-			}
+			const mapRange = (start: number, end: number) => {
+				const adjustedStart = adjustPositionForEscapes(patternEscaped, start);
+				const adjustedEnd = adjustPositionForEscapes(patternEscaped, end);
+				return {
+					begin: nodeStart + 1 + adjustedStart,
+					end: nodeStart + 1 + adjustedEnd,
+				};
+			};
+
+			processPattern(ast, flags, nodeStart, mapRange);
 		}
 
 		return {
@@ -306,25 +361,3 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 	},
 });
-
-function isPrefixOf(
-	prefix: RegExpAST.Alternative,
-	longer: RegExpAST.Alternative,
-): boolean {
-	if (prefix.elements.length >= longer.elements.length) {
-		return false;
-	}
-
-	for (let i = 0; i < prefix.elements.length; i++) {
-		const prefixElement = prefix.elements[i];
-		const longerElement = longer.elements[i];
-		if (!prefixElement || !longerElement) {
-			return false;
-		}
-		if (prefixElement.raw !== longerElement.raw) {
-			return false;
-		}
-	}
-
-	return true;
-}
