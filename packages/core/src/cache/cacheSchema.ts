@@ -34,6 +34,7 @@ const suggestionForFileSchema = changeBaseSchema.extend({
 	text: z.string(),
 });
 
+// Note: SuggestionForFiles cannot be cached because functions aren't serializable.
 const suggestionForFilesSchema = changeBaseSchema.extend({
 	files: z.record(
 		z.string(),
@@ -98,10 +99,9 @@ const fileCacheStorageSchema = z.object({
 	timestamp: z.number(),
 });
 
-/** @internal */
-export const cacheStorageSchema = z.object({
-	configs: z.record(z.string(), z.number()),
-	files: z.record(z.string(), fileCacheStorageSchema),
-});
-
-export const cacheStorageCodec = jsonCodec(cacheStorageSchema);
+export const cacheStorageCodec = jsonCodec(
+	z.object({
+		configs: z.record(z.string(), z.number()),
+		files: z.record(z.string(), fileCacheStorageSchema),
+	}),
+);

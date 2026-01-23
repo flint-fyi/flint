@@ -5,7 +5,7 @@ import type { CacheStorage } from "../types/cache.ts";
 import { cacheStorageCodec } from "./cacheSchema.ts";
 
 describe("cacheStorageCodec decoding", () => {
-	it("validates valid cache data", () => {
+	it("parses valid cache data", () => {
 		const validCache = {
 			configs: {
 				"flint.config.ts": 1_234_567_890,
@@ -63,7 +63,7 @@ describe("cacheStorageCodec decoding", () => {
 		expect(result.success).toBe(false);
 	});
 
-	it("validates cache with optional file properties", () => {
+	it("parses cache with optional file properties", () => {
 		const validCache = {
 			configs: { "package.json": 123 },
 			files: {
@@ -79,7 +79,7 @@ describe("cacheStorageCodec decoding", () => {
 		expect(result.success).toBe(true);
 	});
 
-	it("validates cache with full file data including reports", () => {
+	it("parses cache with full file data including reports", () => {
 		const validCache = {
 			configs: { "package.json": 123 },
 			files: {
@@ -109,7 +109,7 @@ describe("cacheStorageCodec decoding", () => {
 		expect(result.success).toBe(true);
 	});
 
-	it("validates cache with report containing optional fields", () => {
+	it("parses cache with report containing optional fields", () => {
 		const validCache = {
 			configs: { "package.json": 123 },
 			files: {
@@ -504,7 +504,7 @@ describe("toSerializableCacheStorage encoding", () => {
 		expect(result.files["src/index.ts"]?.reports).toBeUndefined();
 	});
 
-	it("produces output that validates against the codec", () => {
+	it("produces output that parses against the codec", () => {
 		const cache: CacheStorage = {
 			configs: { "package.json": 123 },
 			files: {
