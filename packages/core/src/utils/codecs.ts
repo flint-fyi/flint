@@ -1,3 +1,7 @@
+/**
+ * https://zod.dev/codecs#useful-codecs
+ */
+
 import z from "zod/v4";
 
 export const jsonCodec = <T extends z.core.$ZodType>(schema: T) =>
