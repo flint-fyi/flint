@@ -9,9 +9,7 @@ import * as ts from "typescript";
 import { ruleCreator } from "./ruleCreator.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-function isEmptyGroup(
-	group: RegExpAST.CapturingGroup | RegExpAST.Group,
-): boolean {
+function isEmptyGroup(group: RegExpAST.CapturingGroup | RegExpAST.Group) {
 	return group.alternatives.every(
 		(alternative) => alternative.elements.length === 0,
 	);
@@ -25,59 +23,57 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		emptyGroup: {
-			primary: "Empty {{ kind }} '{{ raw }}' matches nothing.",
+			primary: "Empty {{ kind }} `{{ raw }}` matches nothing.",
 			secondary: [
 				"Empty groups match the empty string and have no effect on the regex.",
+			],
+			suggestions: [
+				"Remove the empty group.",
+				"Replace the empty group with a non-capturing group.",
 			],
 		},
 	},
 	setup(context) {
+		function reportEmptyGroup(
+			group: RegExpAST.CapturingGroup | RegExpAST.Group,
+			kind: string,
+			start: number,
+		) {
+			if (isEmptyGroup(group)) {
+				context.report({
+					data: {
+						kind,
+						raw: group.raw,
+					},
+					message: "emptyGroup",
+					range: {
+						begin: start + group.start,
+						end: start + group.end,
+					},
+				});
+			}
+		}
+
 		function checkPattern(
-			node:
-				| AST.CallExpression
-				| AST.NewExpression
-				| AST.RegularExpressionLiteral,
 			pattern: string,
 			patternStart: number,
 			flags: string,
 		) {
-			const hasUnicode = flags.includes("u");
-			const hasUnicodeSets = flags.includes("v");
-
 			const regexpAst = parseRegexpAst(pattern, {
-				unicode: hasUnicode,
-				unicodeSets: hasUnicodeSets,
+				unicode: flags.includes("u"),
+				unicodeSets: flags.includes("v"),
 			});
 
 			if (!regexpAst) {
 				return;
 			}
 
-			function reportEmptyGroup(
-				group: RegExpAST.CapturingGroup | RegExpAST.Group,
-				kind: string,
-			) {
-				if (isEmptyGroup(group)) {
-					context.report({
-						data: {
-							kind,
-							raw: group.raw,
-						},
-						message: "emptyGroup",
-						range: {
-							begin: patternStart + group.start,
-							end: patternStart + group.end,
-						},
-					});
-				}
-			}
-
 			visitRegExpAST(regexpAst, {
 				onCapturingGroupEnter(group) {
-					reportEmptyGroup(group, "capturing group");
+					reportEmptyGroup(group, "capturing group", patternStart);
 				},
 				onGroupEnter(group) {
-					reportEmptyGroup(group, "non-capturing group");
+					reportEmptyGroup(group, "non-capturing group", patternStart);
 				},
 			});
 		}
@@ -100,7 +96,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const nodeStart = node.getStart(sourceFile);
-			checkPattern(node, pattern, nodeStart + 1, flags ?? "");
+			checkPattern(pattern, nodeStart + 1, flags ?? "");
 		}
 
 		function checkRegExpConstructor(
@@ -115,25 +111,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const args = node.arguments;
-			if (!args || args.length === 0) {
+			if (!args?.length) {
 				return;
 			}
 
-			const firstArg = args[0];
-			if (!firstArg || firstArg.kind !== ts.SyntaxKind.StringLiteral) {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const firstArg = args[0]!;
+
+			if (firstArg.kind !== ts.SyntaxKind.StringLiteral) {
 				return;
 			}
 
 			const pattern = firstArg.text;
 			const patternStart = firstArg.getStart(sourceFile) + 1;
 
-			let flags = "";
 			const secondArg = args[1];
-			if (secondArg?.kind === ts.SyntaxKind.StringLiteral) {
-				flags = secondArg.text;
-			}
 
-			checkPattern(node, pattern, patternStart, flags);
+			const flags =
+				secondArg?.kind === ts.SyntaxKind.StringLiteral ? secondArg.text : "";
+
+			checkPattern(pattern, patternStart, flags);
 		}
 
 		return {

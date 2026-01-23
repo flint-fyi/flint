@@ -12,6 +12,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 Reports empty capturing and non-capturing groups in regular expressions.
 Empty groups like `()` or `(?:)` match the empty string and have no meaningful effect on the regex pattern.
+This rule reports those empty groups.
 
 ## Examples
 
@@ -97,7 +98,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you are intentionally using empty groups for some specific purpose in generated or legacy code, you may disable this rule.
+If you are intentionally using empty groups for some specific purpose in generated or legacy code, such as for stylistic separations, you might prefer to disable this rule.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 

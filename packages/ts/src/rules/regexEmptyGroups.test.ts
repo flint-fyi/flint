@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /()/;
  ~~
- Empty capturing group '()' matches nothing.
+ Empty capturing group \`()\` matches nothing.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(?:)/;
  ~~~~
- Empty non-capturing group '(?:)' matches nothing.
+ Empty non-capturing group \`(?:)\` matches nothing.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(|)/;
  ~~~
- Empty capturing group '(|)' matches nothing.
+ Empty capturing group \`(|)\` matches nothing.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(?:|)/;
  ~~~~~
- Empty non-capturing group '(?:|)' matches nothing.
+ Empty non-capturing group \`(?:|)\` matches nothing.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(||)/;
  ~~~~
- Empty capturing group '(||)' matches nothing.
+ Empty capturing group \`(||)\` matches nothing.
 `,
 		},
 		{
@@ -60,7 +60,7 @@ new RegExp("()");
 			snapshot: `
 new RegExp("()");
             ~~
-            Empty capturing group '()' matches nothing.
+            Empty capturing group \`()\` matches nothing.
 `,
 		},
 		{
@@ -70,7 +70,7 @@ new RegExp("(?:)");
 			snapshot: `
 new RegExp("(?:)");
             ~~~~
-            Empty non-capturing group '(?:)' matches nothing.
+            Empty non-capturing group \`(?:)\` matches nothing.
 `,
 		},
 		{
@@ -80,7 +80,7 @@ RegExp("()");
 			snapshot: `
 RegExp("()");
         ~~
-        Empty capturing group '()' matches nothing.
+        Empty capturing group \`()\` matches nothing.
 `,
 		},
 		{
@@ -90,7 +90,7 @@ RegExp("()");
 			snapshot: `
 /a()/;
   ~~
-  Empty capturing group '()' matches nothing.
+  Empty capturing group \`()\` matches nothing.
 `,
 		},
 		{
@@ -100,7 +100,7 @@ RegExp("()");
 			snapshot: `
 /()b/;
  ~~
- Empty capturing group '()' matches nothing.
+ Empty capturing group \`()\` matches nothing.
 `,
 		},
 		{
@@ -110,7 +110,7 @@ RegExp("()");
 			snapshot: `
 /a()b/;
   ~~
-  Empty capturing group '()' matches nothing.
+  Empty capturing group \`()\` matches nothing.
 `,
 		},
 		{
@@ -120,7 +120,7 @@ RegExp("()");
 			snapshot: `
 /(?:())a/;
     ~~
-    Empty capturing group '()' matches nothing.
+    Empty capturing group \`()\` matches nothing.
 `,
 		},
 	],
