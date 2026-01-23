@@ -1,12 +1,12 @@
-// flint-disable-file escapeSequenceCasing -- Lowercase escapes are intentional in this rule
+// flint-disable-file escapeSequenceCasing
 import {
 	type AST,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 
 interface ControlCharInfo {
 	end: number;
@@ -15,7 +15,7 @@ interface ControlCharInfo {
 	start: number;
 }
 
-const CONTROL_CHAR_MAP: Record<string, string> = {
+const controlCharacters: Record<string, string> = {
 	"\\0": "\\0",
 	"\\cI": "\\t",
 	"\\cJ": "\\n",
@@ -54,23 +54,23 @@ const CONTROL_CHAR_MAP: Record<string, string> = {
 	"\\x09": "\\t",
 };
 
-const CONTROL_ESCAPE_PATTERN =
+const controlDoubleEscapePattern =
+	/\\\\(?:x0[09A-Da-d]|u000[09A-Da-d]|u\{[09A-Da-d]\}|c[I-M])/g;
+
+const controlSingleEscapePattern =
 	/\\(?:x0[09A-Da-d]|u000[09A-Da-d]|u\{[09A-Da-d]\}|c[I-M])/g;
 
-function findControlCharacterIssues(
-	pattern: string,
-	doubleEscaped: boolean,
-): ControlCharInfo[] {
+function findControlCharacterIssues(pattern: string, doubleEscaped: boolean) {
 	const issues: ControlCharInfo[] = [];
 	const searchPattern = doubleEscaped
-		? /\\\\(?:x0[09A-Da-d]|u000[09A-Da-d]|u\{[09A-Da-d]\}|c[I-M])/g
-		: CONTROL_ESCAPE_PATTERN;
+		? controlDoubleEscapePattern
+		: controlSingleEscapePattern;
 
 	let match: null | RegExpExecArray;
 	while ((match = searchPattern.exec(pattern)) !== null) {
 		const found = match[0];
 		const normalizedKey = doubleEscaped ? found.slice(1) : found;
-		const expected = CONTROL_CHAR_MAP[normalizedKey];
+		const expected = controlCharacters[normalizedKey];
 
 		if (expected && normalizedKey !== expected) {
 			issues.push({
@@ -144,29 +144,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CallExpression | AST.NewExpression,
 			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args || args.length === 0) {
-				return;
-			}
-
-			const firstArg = args[0];
-			if (!firstArg || firstArg.kind !== ts.SyntaxKind.StringLiteral) {
-				return;
-			}
-
-			const stringLiteral = firstArg;
-			const rawText = stringLiteral.getText(services.sourceFile);
-			const pattern = rawText.slice(1, -1);
-			const issues = findControlCharacterIssues(pattern, true);
-
-			const nodeStart = firstArg.getStart(services.sourceFile);
+			const issues = findControlCharacterIssues(construction.pattern, true);
 
 			for (const issue of issues) {
 				context.report({
@@ -176,15 +159,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					},
 					fix: {
 						range: {
-							begin: nodeStart + 1 + issue.start,
-							end: nodeStart + 1 + issue.end,
+							begin: construction.start + 1 + issue.start,
+							end: construction.start + 1 + issue.end,
 						},
 						text: issue.expected,
 					},
 					message: "preferStandardEscape",
 					range: {
-						begin: nodeStart + 1 + issue.start,
-						end: nodeStart + 1 + issue.end,
+						begin: construction.start + 1 + issue.start,
+						end: construction.start + 1 + issue.end,
 					},
 				});
 			}

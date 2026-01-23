@@ -3,9 +3,9 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 
 interface AssertionInfo {
 	assertionRaw: string;
@@ -352,30 +352,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CallExpression | AST.NewExpression,
 			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args || args.length === 0) {
-				return;
-			}
-
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const stringLiteral = args[0]!;
-
-			if (stringLiteral.kind !== ts.SyntaxKind.StringLiteral) {
-				return;
-			}
-
-			const rawText = stringLiteral.getText(services.sourceFile);
-			const pattern = rawText.slice(1, -1);
-			const contradictions = findContradictions(pattern, true);
-
-			const nodeStart = stringLiteral.getStart(services.sourceFile);
+			const contradictions = findContradictions(construction.pattern, true);
 
 			for (const contradiction of contradictions) {
 				context.report({
@@ -388,8 +370,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							? "alwaysEnter"
 							: "cannotEnter",
 					range: {
-						begin: nodeStart + 1 + contradiction.start,
-						end: nodeStart + 1 + contradiction.end,
+						begin: construction.start + 1 + contradiction.start,
+						end: construction.start + 1 + contradiction.end,
 					},
 				});
 			}
