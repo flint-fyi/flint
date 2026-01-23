@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "text".matchAll(/pattern/);
                 ~~~~~~~~~
-                The regex argument to matchAll() requires the global (g) flag.
+                The regex argument to \`matchAll()\` requires the global (\`g\`) flag.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "text".matchAll(/pattern/i);
                 ~~~~~~~~~~
-                The regex argument to matchAll() requires the global (g) flag.
+                The regex argument to \`matchAll()\` requires the global (\`g\`) flag.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "text".replaceAll(/pattern/, "replacement");
                   ~~~~~~~~~
-                  The regex argument to replaceAll() requires the global (g) flag.
+                  The regex argument to \`replaceAll()\` requires the global (\`g\`) flag.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "text".replaceAll(/pattern/i, "replacement");
                   ~~~~~~~~~~
-                  The regex argument to replaceAll() requires the global (g) flag.
+                  The regex argument to \`replaceAll()\` requires the global (\`g\`) flag.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "text".matchAll(new RegExp("pattern"));
                 ~~~~~~~~~~~~~~~~~~~~~
-                The regex argument to matchAll() requires the global (g) flag.
+                The regex argument to \`matchAll()\` requires the global (\`g\`) flag.
 `,
 		},
 		{
@@ -60,7 +60,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "text".matchAll(new RegExp("pattern", "i"));
                 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-                The regex argument to matchAll() requires the global (g) flag.
+                The regex argument to \`matchAll()\` requires the global (\`g\`) flag.
 `,
 		},
 		{
@@ -70,7 +70,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "text".replaceAll(new RegExp("pattern"), "replacement");
                   ~~~~~~~~~~~~~~~~~~~~~
-                  The regex argument to replaceAll() requires the global (g) flag.
+                  The regex argument to \`replaceAll()\` requires the global (\`g\`) flag.
 `,
 		},
 		{
@@ -80,7 +80,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "text".matchAll(RegExp("pattern"));
                 ~~~~~~~~~~~~~~~~~
-                The regex argument to matchAll() requires the global (g) flag.
+                The regex argument to \`matchAll()\` requires the global (\`g\`) flag.
 `,
 		},
 		{
@@ -92,7 +92,7 @@ text.matchAll(/o/);
 const text = "hello world";
 text.matchAll(/o/);
               ~~~
-              The regex argument to matchAll() requires the global (g) flag.
+              The regex argument to \`matchAll()\` requires the global (\`g\`) flag.
 `,
 		},
 	],

@@ -7,34 +7,38 @@ import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function getRegexFlags(
-	node: AST.Expression,
-	sourceFile: AST.SourceFile,
-): string | undefined {
-	if (node.kind === ts.SyntaxKind.RegularExpressionLiteral) {
-		const text = node.getText(sourceFile);
-		const lastSlash = text.lastIndexOf("/");
-		return lastSlash >= 0 ? text.slice(lastSlash + 1) : "";
-	}
+function getRegexFlags(node: AST.Expression, sourceFile: AST.SourceFile) {
+	switch (node.kind) {
+		case ts.SyntaxKind.CallExpression:
+		case ts.SyntaxKind.NewExpression:
+			if (
+				ts.isIdentifier(node.expression) &&
+				node.expression.text === "RegExp" &&
+				node.arguments
+			) {
+				if (node.arguments.length < 2) {
+					return "";
+				}
 
-	if (
-		(node.kind === ts.SyntaxKind.NewExpression ||
-			node.kind === ts.SyntaxKind.CallExpression) &&
-		ts.isIdentifier(node.expression) &&
-		node.expression.text === "RegExp" &&
-		node.arguments
-	) {
-		const flagsArg = node.arguments[1];
-		if (!flagsArg) {
-			return "";
-		}
-		if (ts.isStringLiteral(flagsArg)) {
-			return flagsArg.text;
-		}
-		return undefined;
-	}
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const flagsArg = node.arguments[1]!;
 
-	return undefined;
+				if (ts.isStringLiteral(flagsArg)) {
+					return flagsArg.text;
+				}
+			}
+
+			return undefined;
+
+		case ts.SyntaxKind.RegularExpressionLiteral: {
+			const text = node.getText(sourceFile);
+			const lastSlash = text.lastIndexOf("/");
+			return lastSlash >= 0 ? text.slice(lastSlash + 1) : "";
+		}
+
+		default:
+			return undefined;
+	}
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -47,10 +51,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		missingGlobalFlag: {
 			primary:
-				"The regex argument to {{method}}() requires the global (g) flag.",
+				"The regex argument to `{{method}}()` requires the global (`g`) flag.",
 			secondary: [
 				"String.prototype.{{method}}() throws a TypeError at runtime if the regex argument lacks the global flag.",
-				"Add the 'g' flag to the regex pattern.",
 			],
 			suggestions: ["Add the global (g) flag to the regex."],
 		},
@@ -73,18 +76,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const firstArg = node.arguments[0];
-					if (!firstArg) {
-						return;
-					}
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const firstArg = node.arguments[0]!;
 
 					const objectType = typeChecker.getTypeAtLocation(
 						node.expression.expression,
 					);
-					if (
-						!(objectType.flags & ts.TypeFlags.StringLike) &&
-						!objectType.isStringLiteral()
-					) {
+					if (!(objectType.flags & ts.TypeFlags.StringLike)) {
 						return;
 					}
 
