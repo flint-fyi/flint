@@ -1,0 +1,93 @@
+---
+description: "Reports usage of legacy RegExp static properties and prototype methods."
+title: "regexLegacyFeatures"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexLegacyFeatures" />
+
+JavaScript's `RegExp` constructor has several static properties (like `RegExp.$1`, `RegExp.input`, and `RegExp.lastMatch`) and prototype methods (like `RegExp.prototype.compile`) that are legacy features from earlier JavaScript versions.
+These properties and methods exist only for backwards compatibility and should not be used in modern code.
+
+Legacy static properties are problematic because they are global state that changes whenever any regex executes, which can cause hard-to-debug issues in concurrent or modular code.
+The `compile` method is deprecated because it allows mutating an existing regex, which leads to confusing behavior.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+RegExp.input;
+```
+
+```ts
+RegExp.$_;
+```
+
+```ts
+RegExp.lastMatch;
+```
+
+```ts
+RegExp["$&"];
+```
+
+```ts
+RegExp.$1;
+```
+
+```ts
+const regex = /pattern/;
+regex.compile("newPattern", "g");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const regex = /pattern/;
+const result = regex.exec("test");
+if (result) {
+	console.log(result[1]);
+}
+```
+
+```ts
+const regex = /pattern/;
+regex.test("value");
+```
+
+```ts
+const matches = "test".match(/pattern/g);
+```
+
+```ts
+const newRegex = new RegExp("newPattern", "g");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are maintaining legacy code that relies on these features and cannot be refactored, you may need to disable this rule for those specific files.
+Some older testing frameworks or polyfills may also depend on these features.
+
+## Further Reading
+
+- [MDN: RegExp static properties](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#static_properties)
+- [TC39: Legacy RegExp features in JavaScript](https://github.com/tc39/proposal-regexp-legacy-features)
+- [MDN: RegExp.prototype.compile()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/compile)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexLegacyFeatures" />

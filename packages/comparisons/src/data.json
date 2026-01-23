@@ -15134,7 +15134,8 @@
 		"flint": {
 			"name": "regexLegacyFeatures",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
