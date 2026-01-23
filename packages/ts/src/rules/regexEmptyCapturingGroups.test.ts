@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /()/;
  ~~
- Capturing group captures only empty strings.
+ This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a()/;
   ~~
-  Capturing group captures only empty strings.
+  This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /()b/;
  ~~
- Capturing group captures only empty strings.
+ This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(|)/;
  ~~~
- Capturing group captures only empty strings.
+ This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(||)/;
  ~~~~
- Capturing group captures only empty strings.
+ This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -60,7 +60,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(\\b)/;
  ~~~~
- Capturing group captures only empty strings.
+ This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -70,7 +70,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(^)/;
  ~~~
- Capturing group captures only empty strings.
+ This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -80,7 +80,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /($)/;
  ~~~
- Capturing group captures only empty strings.
+ This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -90,7 +90,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /((?=a))/;
  ~~~~~~~
- Capturing group captures only empty strings.
+ This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -100,7 +100,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /((?!a))/;
  ~~~~~~~
- Capturing group captures only empty strings.
+ This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -110,7 +110,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /((?<=a))/;
  ~~~~~~~~
- Capturing group captures only empty strings.
+ This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -120,7 +120,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /((?<!a))/;
  ~~~~~~~~
- Capturing group captures only empty strings.
+ This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -130,7 +130,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a?)?/;
  ~~~~
- Capturing group captures only empty strings.
+ This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -140,7 +140,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a*)/;
  ~~~~
- Capturing group captures only empty strings.
+ This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -150,7 +150,7 @@ new RegExp("()");
 			snapshot: `
 new RegExp("()");
             ~~
-            Capturing group captures only empty strings.
+            This capturing group captures only empty strings.
 `,
 		},
 		{
@@ -160,7 +160,7 @@ RegExp("(\\\\b)");
 			snapshot: `
 RegExp("(\\\\b)");
         ~~~~
-        Capturing group captures only empty strings.
+        This capturing group captures only empty strings.
 `,
 		},
 	],

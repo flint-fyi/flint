@@ -9,34 +9,20 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
-
-interface EmptyCapturingGroup {
-	end: number;
-	start: number;
-}
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 
 function elementIsZeroLength(element: Element): boolean {
 	switch (element.type) {
 		case "Assertion":
 			return true;
 
-		case "Backreference":
-			return false;
-
 		case "CapturingGroup":
 		case "Group":
 			return element.alternatives.every((alt) =>
 				alt.elements.every(elementIsZeroLength),
 			);
-
-		case "Character":
-		case "CharacterClass":
-		case "CharacterSet":
-		case "ExpressionCharacterClass":
-			return false;
 
 		case "Quantifier":
 			return element.min === 0 || elementIsZeroLength(element.element);
@@ -46,11 +32,8 @@ function elementIsZeroLength(element: Element): boolean {
 	}
 }
 
-function findEmptyCapturingGroups(
-	pattern: string,
-	flags: string,
-): EmptyCapturingGroup[] {
-	const results: EmptyCapturingGroup[] = [];
+function findEmptyCapturingGroups(pattern: string, flags: string) {
+	const results: CapturingGroup[] = [];
 
 	let ast: RegExpLiteral;
 	try {
@@ -66,10 +49,7 @@ function findEmptyCapturingGroups(
 			);
 
 			if (allAlternativesEmpty) {
-				results.push({
-					end: node.end,
-					start: node.start,
-				});
+				results.push(node);
 			}
 		},
 	});
@@ -78,11 +58,10 @@ function findEmptyCapturingGroups(
 }
 
 function getRegexInfo(node: AST.RegularExpressionLiteral) {
-	const text = node.text;
-	const lastSlash = text.lastIndexOf("/");
+	const lastSlash = node.text.lastIndexOf("/");
 	return {
-		flags: text.slice(lastSlash + 1),
-		pattern: text.slice(1, lastSlash),
+		flags: node.text.slice(lastSlash + 1),
+		pattern: node.text.slice(1, lastSlash),
 	};
 }
 
@@ -94,24 +73,25 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		emptyCapture: {
-			primary: "Capturing group captures only empty strings.",
+			primary: "This capturing group captures only empty strings.",
 			secondary: [
 				"This capturing group will only ever match zero-length text.",
 				"It may indicate a mistake in the pattern.",
 			],
 			suggestions: [
-				"Add content to the capturing group or convert it to a non-capturing group.",
+				"Add content to the capturing group.",
+				"Convert the capturing group to a non-capturing group.",
 			],
 		},
 	},
 	setup(context) {
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			services: TypeScriptFileServices,
+			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const { flags, pattern } = getRegexInfo(node);
 			const emptyGroups = findEmptyCapturingGroups(pattern, flags);
-			const nodeStart = node.getStart(services.sourceFile);
+			const nodeStart = node.getStart(sourceFile);
 
 			for (const group of emptyGroups) {
 				context.report({
@@ -128,44 +108,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CallExpression | AST.NewExpression,
 			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args || args.length === 0) {
-				return;
-			}
-
-			const patternArg = args[0];
-			if (!patternArg || patternArg.kind !== ts.SyntaxKind.StringLiteral) {
-				return;
-			}
-
-			const rawText = patternArg.getText(services.sourceFile);
-			const pattern = rawText.slice(1, -1).replace(/\\\\/g, "\\");
-
-			let flags = "";
-			if (args.length >= 2) {
-				const flagsArg = args[1];
-				if (flagsArg?.kind === ts.SyntaxKind.StringLiteral) {
-					const flagsText = flagsArg.getText(services.sourceFile);
-					flags = flagsText.slice(1, -1);
-				}
-			}
-
-			const emptyGroups = findEmptyCapturingGroups(pattern, flags);
-			const patternNodeStart = patternArg.getStart(services.sourceFile);
+			const patternEscaped = construction.pattern.replace(/\\\\/g, "\\");
+			const emptyGroups = findEmptyCapturingGroups(
+				patternEscaped,
+				construction.flags,
+			);
 
 			for (const group of emptyGroups) {
 				context.report({
 					message: "emptyCapture",
 					range: {
-						begin: patternNodeStart + group.start,
-						end: patternNodeStart + group.end,
+						begin: construction.start + group.start,
+						end: construction.start + group.end,
 					},
 				});
 			}
