@@ -14908,7 +14908,8 @@
 		"flint": {
 			"name": "regexDuplicateDisjunctions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{

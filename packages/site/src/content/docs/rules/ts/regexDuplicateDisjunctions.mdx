@@ -1,0 +1,94 @@
+---
+description: "Reports duplicate alternatives in regular expression disjunctions."
+title: "regexDuplicateDisjunctions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexDuplicateDisjunctions" />
+
+Disallows duplicate alternatives in regular expression disjunctions.
+Duplicate alternatives are often typing mistakes and can be safely removed without changing the behavior of the regex.
+
+## Examples
+
+### Duplicate Alternatives
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a|a/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a|b/;
+```
+
+</TabItem>
+</Tabs>
+
+### Duplicate Complex Alternatives
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:ab|ab)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?:ab)/;
+```
+
+</TabItem>
+</Tabs>
+
+### Unreachable Prefix Alternative
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /foo|foobar/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /foobar|foo/;
+```
+
+</TabItem>
+</Tabs>
+
+When `foo` appears before `foobar`, the `foobar` alternative will never match because `foo` will always match first.
+Reordering so the longer alternative comes first ensures both can match.
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have complex regex patterns where duplicates are intentional for documentation or readability purposes, you might disable this rule.
+However, removing duplicates is generally safe and improves clarity.
+
+## Further Reading
+
+- [MDN: Disjunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Disjunction)
+- [MDN: Regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexDuplicateDisjunctions" />
