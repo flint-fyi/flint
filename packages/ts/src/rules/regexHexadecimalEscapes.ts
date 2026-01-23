@@ -56,50 +56,33 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferHexEscape: {
 			primary:
-				"Prefer hexadecimal escape '{{ hexEscape }}' over {{ escapeType }} escape '{{ found }}'.",
+				"Prefer the more succinct hexadecimal escape `{{ hexEscape }}` over {{ escapeType }} escape `{{ found }}`.",
 			secondary: [
 				"Hexadecimal escapes are more concise for characters in the 0x00-0xFF range.",
 			],
-			suggestions: ["Replace '{{ found }}' with '{{ hexEscape }}'."],
-		},
-		unexpectedHexEscape: {
-			primary: "Unexpected hexadecimal escape '{{ found }}'.",
-			secondary: [
-				"Unicode escapes provide a consistent format for all character escapes.",
-			],
-			suggestions: ["Replace '{{ found }}' with '{{ unicodeEscape }}'."],
+			suggestions: ["Replace `{{ found }}` with `{{ hexEscape }}`."],
 		},
 	},
 	setup(context) {
 		return {
 			visitors: {
 				RegularExpressionLiteral: (node, { sourceFile }) => {
-					const text = node.getText(sourceFile);
-					const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(text);
-
+					const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(node.text);
 					if (!match) {
 						return;
 					}
 
 					const [, pattern, flagsStr] = match;
-
 					if (!pattern) {
 						return;
 					}
 
-					const hasUnicode = flagsStr?.includes("u");
-					const hasUnicodeSets = flagsStr?.includes("v");
-
-					const regexpAst = parseRegexpAst(pattern, {
-						unicode: hasUnicode,
-						unicodeSets: hasUnicodeSets,
-					});
-
+					const regexpAst = parseRegexpAst(pattern, flagsStr);
 					if (!regexpAst) {
 						return;
 					}
 
-					const nodeRange = getTSNodeRange(node, sourceFile);
+					const range = getTSNodeRange(node, sourceFile);
 
 					visitRegExpAST(regexpAst, {
 						onCharacterEnter(charNode: RegExpAST.Character) {
@@ -108,7 +91,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 
 							const escapeType = getEscapeType(charNode.raw);
-
 							if (!escapeType) {
 								return;
 							}
@@ -128,15 +110,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									},
 									fix: {
 										range: {
-											begin: nodeRange.begin + 1 + charNode.start,
-											end: nodeRange.begin + 1 + charNode.end,
+											begin: range.begin + 1 + charNode.start,
+											end: range.begin + 1 + charNode.end,
 										},
 										text: hexEscape,
 									},
 									message: "preferHexEscape",
 									range: {
-										begin: nodeRange.begin + 1 + charNode.start,
-										end: nodeRange.begin + 1 + charNode.end,
+										begin: range.begin + 1 + charNode.start,
+										end: range.begin + 1 + charNode.end,
 									},
 								});
 							}
