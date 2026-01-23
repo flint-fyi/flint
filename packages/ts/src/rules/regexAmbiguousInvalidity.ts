@@ -1,11 +1,20 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import type { ReportInterpolationData } from "@flint.fyi/core";
+import {
+	isGlobalDeclarationOfName,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 interface PatternIssue {
+	data: ReportInterpolationData;
 	end: number;
-	message: string;
+	message:
+		| "ambiguousOctalEscape"
+		| "incompleteNameSequence"
+		| "unescapedCharacter"
+		| "uselessEscape";
 	start: number;
 }
 
@@ -25,8 +34,9 @@ function checkIncompleteEscape(pattern: string): PatternIssue[] {
 		let match: null | RegExpExecArray;
 		while ((match = regex.exec(pattern)) !== null) {
 			issues.push({
+				data: { name },
 				end: match.index + match[0].length,
-				message: `Incomplete ${name} sequence.`,
+				message: "incompleteNameSequence",
 				start: match.index,
 			});
 		}
@@ -41,8 +51,9 @@ function checkOctalEscape(pattern: string): PatternIssue[] {
 	let match: null | RegExpExecArray;
 	while ((match = octalRegex.exec(pattern)) !== null) {
 		issues.push({
+			data: { escape: match[0] },
 			end: match.index + match[0].length,
-			message: `Octal escape ${match[0]} is ambiguous; use a hexadecimal escape instead.`,
+			message: "ambiguousOctalEscape",
 			start: match.index,
 		});
 	}
@@ -77,8 +88,9 @@ function checkUnescapedBrackets(pattern: string): PatternIssue[] {
 		if (!inCharClass) {
 			if (char === "]" || char === "{" || char === "}") {
 				issues.push({
+					data: { character: char },
 					end: i + 1,
-					message: `Unescaped '${char}' should be escaped.`,
+					message: "unescapedCharacter",
 					start: i,
 				});
 			}
@@ -102,18 +114,16 @@ function checkUselessEscape(
 	const escapeRegex = /\\(.)/g;
 	let match: null | RegExpExecArray;
 	while ((match = escapeRegex.exec(pattern)) !== null) {
-		const escapedChar = match[1];
-		if (!escapedChar) {
+		const escaped = match[1];
+		if (!escaped) {
 			continue;
 		}
 
-		if (
-			!syntaxChars.test(escapedChar) &&
-			!/[dDr-xWSbBnf0-9kpPc]/.test(escapedChar)
-		) {
+		if (!syntaxChars.test(escaped) && !/[dDr-xWSbBnf0-9kpPc]/.test(escaped)) {
 			issues.push({
+				data: { escaped },
 				end: match.index + match[0].length,
-				message: `Useless escape \\${escapedChar}.`,
+				message: "uselessEscape",
 				start: match.index,
 			});
 		}
@@ -153,22 +163,65 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		presets: ["logical"],
 	},
 	messages: {
-		ambiguousSyntax: {
-			primary: "{{issue}}",
+		ambiguousOctalEscape: {
+			primary:
+				"Octal escape `{{ escape }}` is ambiguous; use a hexadecimal escape instead.",
 			secondary: [
 				"This regex uses syntax from ECMAScript Annex B which is ambiguous or deprecated.",
 				"Consider using strict regex syntax for clarity and cross-platform compatibility.",
 			],
-			suggestions: ["Fix the ambiguous regex syntax."],
+			suggestions: ["Switch to a hexadecimal escape instead."],
+		},
+		incompleteNameSequence: {
+			primary: "Incomplete {{ name }} sequence.",
+			secondary: [
+				"This regex uses syntax from ECMAScript Annex B which is ambiguous or deprecated.",
+				"Consider using strict regex syntax for clarity and cross-platform compatibility.",
+			],
+			suggestions: ["Complete the name sequence."],
+		},
+		unescapedCharacter: {
+			primary: "Unescaped character `{{ character }}` should be escaped.",
+			secondary: [
+				"This regex uses syntax from ECMAScript Annex B which is ambiguous or deprecated.",
+				"Consider using strict regex syntax for clarity and cross-platform compatibility.",
+			],
+			suggestions: ["Escape the character."],
+		},
+		uselessEscape: {
+			primary: "Useless escape `\\{{ escaped }}`.",
+			secondary: [
+				"This regex uses syntax from ECMAScript Annex B which is ambiguous or deprecated.",
+				"Consider using strict regex syntax for clarity and cross-platform compatibility.",
+			],
+			suggestions: ["Remove the useless escape."],
 		},
 	},
 	setup(context) {
+		function reportIssues(issues: PatternIssue[], start: number) {
+			for (const issue of issues) {
+				context.report({
+					data: issue.data,
+					message: issue.message,
+					range: {
+						begin: start + 1 + issue.start,
+						end: start + 1 + issue.end,
+					},
+				});
+			}
+		}
+
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile }) => {
+				CallExpression: (node, { sourceFile, typeChecker }) => {
 					if (
 						!ts.isIdentifier(node.expression) ||
 						node.expression.text !== "RegExp" ||
+						!isGlobalDeclarationOfName(
+							node.expression,
+							"RegExp",
+							typeChecker,
+						) ||
 						!node.arguments.length
 					) {
 						return;
@@ -184,23 +237,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						flagsArg && ts.isStringLiteral(flagsArg) ? flagsArg.text : "";
 
 					const issues = findPatternIssues(patternArg.text, flags);
-					const nodeStart = patternArg.getStart(sourceFile);
 
-					for (const issue of issues) {
-						context.report({
-							data: { issue: issue.message },
-							message: "ambiguousSyntax",
-							range: {
-								begin: nodeStart + 1 + issue.start,
-								end: nodeStart + 1 + issue.end,
-							},
-						});
-					}
+					reportIssues(issues, patternArg.getStart(sourceFile));
 				},
-				NewExpression: (node, { sourceFile }) => {
+				NewExpression: (node, { sourceFile, typeChecker }) => {
 					if (
 						!ts.isIdentifier(node.expression) ||
 						node.expression.text !== "RegExp" ||
+						!isGlobalDeclarationOfName(
+							node.expression,
+							"RegExp",
+							typeChecker,
+						) ||
 						!node.arguments?.length
 					) {
 						return;
@@ -216,18 +264,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						flagsArg && ts.isStringLiteral(flagsArg) ? flagsArg.text : "";
 
 					const issues = findPatternIssues(patternArg.text, flags);
-					const nodeStart = patternArg.getStart(sourceFile);
 
-					for (const issue of issues) {
-						context.report({
-							data: { issue: issue.message },
-							message: "ambiguousSyntax",
-							range: {
-								begin: nodeStart + 1 + issue.start,
-								end: nodeStart + 1 + issue.end,
-							},
-						});
-					}
+					reportIssues(issues, patternArg.getStart(sourceFile));
 				},
 				RegularExpressionLiteral: (node, { sourceFile }) => {
 					const text = node.getText(sourceFile);
@@ -237,18 +275,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const issues = findPatternIssues(parsed.pattern, parsed.flags);
-					const nodeStart = node.getStart(sourceFile);
 
-					for (const issue of issues) {
-						context.report({
-							data: { issue: issue.message },
-							message: "ambiguousSyntax",
-							range: {
-								begin: nodeStart + 1 + issue.start,
-								end: nodeStart + 1 + issue.end,
-							},
-						});
-					}
+					reportIssues(issues, node.getStart(sourceFile));
 				},
 			},
 		};

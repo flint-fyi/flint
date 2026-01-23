@@ -10,7 +10,7 @@ const re = /\\1/;
 			snapshot: `
 const re = /\\1/;
             ~~
-            Octal escape \\1 is ambiguous; use a hexadecimal escape instead.
+            Octal escape \`\\1\` is ambiguous; use a hexadecimal escape instead.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ const re = /\\12/;
 			snapshot: `
 const re = /\\12/;
             ~~~
-            Octal escape \\12 is ambiguous; use a hexadecimal escape instead.
+            Octal escape \`\\12\` is ambiguous; use a hexadecimal escape instead.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ const re = /\\07/;
 			snapshot: `
 const re = /\\07/;
             ~~~
-            Octal escape \\07 is ambiguous; use a hexadecimal escape instead.
+            Octal escape \`\\07\` is ambiguous; use a hexadecimal escape instead.
 `,
 		},
 		{
@@ -90,7 +90,7 @@ const re = /a]/;
 			snapshot: `
 const re = /a]/;
              ~
-             Unescaped ']' should be escaped.
+             Unescaped character \`]\` should be escaped.
 `,
 		},
 		{
@@ -100,7 +100,7 @@ const re = /a{/;
 			snapshot: `
 const re = /a{/;
              ~
-             Unescaped '{' should be escaped.
+             Unescaped character \`{\` should be escaped.
 `,
 		},
 		{
@@ -110,7 +110,7 @@ const re = /a}/;
 			snapshot: `
 const re = /a}/;
              ~
-             Unescaped '}' should be escaped.
+             Unescaped character \`}\` should be escaped.
 `,
 		},
 		{
@@ -120,7 +120,7 @@ const re = /\\q/;
 			snapshot: `
 const re = /\\q/;
             ~~
-            Useless escape \\q.
+            Useless escape \`\\q\`.
 `,
 		},
 		{
@@ -130,7 +130,7 @@ const re = /\\!/;
 			snapshot: `
 const re = /\\!/;
             ~~
-            Useless escape \\!.
+            Useless escape \`\\!\`.
 `,
 		},
 		{
@@ -140,7 +140,7 @@ const re = RegExp("\\\\1");
 			snapshot: `
 const re = RegExp("\\\\1");
                    ~~
-                   Octal escape \\1 is ambiguous; use a hexadecimal escape instead.
+                   Octal escape \`\\1\` is ambiguous; use a hexadecimal escape instead.
 `,
 		},
 		{
@@ -150,7 +150,7 @@ const re = new RegExp("\\\\1");
 			snapshot: `
 const re = new RegExp("\\\\1");
                        ~~
-                       Octal escape \\1 is ambiguous; use a hexadecimal escape instead.
+                       Octal escape \`\\1\` is ambiguous; use a hexadecimal escape instead.
 `,
 		},
 		{
@@ -170,7 +170,7 @@ const re = new RegExp("a]");
 			snapshot: `
 const re = new RegExp("a]");
                         ~
-                        Unescaped ']' should be escaped.
+                        Unescaped character \`]\` should be escaped.
 `,
 		},
 	],
