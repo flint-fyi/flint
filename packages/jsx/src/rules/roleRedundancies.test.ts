@@ -77,11 +77,11 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div />` },
-		{ code: `<button role="presentation" />` },
-		{ code: `<div role="button" />` },
-		{ code: `<img src="/image.jpg" />` },
-		{ code: `<nav />` },
-		{ code: `<button />` },
+		`<div />`,
+		`<button role="presentation" />`,
+		`<div role="button" />`,
+		`<img src="/image.jpg" />`,
+		`<nav />`,
+		`<button />`,
 	],
 });

@@ -45,10 +45,10 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<th scope="col" />` },
-		{ code: `<th scope="row" />` },
-		{ code: `<th scope={scope} />` },
-		{ code: `<div />` },
-		{ code: `<td>Cell</td>` },
+		`<th scope="col" />`,
+		`<th scope="row" />`,
+		`<th scope={scope} />`,
+		`<div />`,
+		`<td>Cell</td>`,
 	],
 });
