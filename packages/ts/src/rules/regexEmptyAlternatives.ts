@@ -7,33 +7,17 @@ import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-interface EmptyAlternative {
-	start: number;
-}
-
-function findEmptyAlternatives(pattern: string): EmptyAlternative[] {
-	const emptyAlternatives: EmptyAlternative[] = [];
-
-	findEmptyAlternativesInGroup(pattern, 0, pattern.length, emptyAlternatives);
-
-	return emptyAlternatives;
-}
-
 function findEmptyAlternativesInGroup(
 	pattern: string,
 	groupStart: number,
 	groupEnd: number,
-	results: EmptyAlternative[],
+	results: number[],
 ) {
-	let charClassDepth = 0;
 	let contentStart = groupStart;
 
 	if (
-		pattern.slice(groupStart, groupStart + 2) === "?:" ||
-		pattern.slice(groupStart, groupStart + 2) === "?=" ||
-		pattern.slice(groupStart, groupStart + 2) === "?!" ||
-		pattern.slice(groupStart, groupStart + 3) === "?<=" ||
-		pattern.slice(groupStart, groupStart + 3) === "?<!"
+		["?!", "?:", "?="].includes(pattern.slice(groupStart, groupStart + 2)) ||
+		["?<!", "?<="].includes(pattern.slice(groupStart, groupStart + 3))
 	) {
 		if (pattern.slice(groupStart, groupStart + 3).startsWith("?<")) {
 			contentStart = groupStart + 3;
@@ -50,38 +34,25 @@ function findEmptyAlternativesInGroup(
 	const pipePositions: number[] = [];
 
 	for (let i = contentStart; i < groupEnd; i++) {
-		const char = pattern[i];
+		const character = pattern[i];
 
-		if (char === "\\") {
-			i++;
-			continue;
-		}
-
-		if (charClassDepth > 0) {
-			if (char === "]") {
-				charClassDepth--;
+		switch (character) {
+			case "(": {
+				const parenthesisEnd = findMatchingParenthesis(pattern, i);
+				if (parenthesisEnd !== -1) {
+					findEmptyAlternativesInGroup(pattern, i + 1, parenthesisEnd, results);
+					i = parenthesisEnd;
+				}
+				break;
 			}
 
-			continue;
-		}
+			case "\\":
+				i++;
+				break;
 
-		if (char === "[") {
-			charClassDepth++;
-			continue;
-		}
-
-		if (char === "(") {
-			const parenEnd = findMatchingParen(pattern, i);
-			if (parenEnd !== -1) {
-				findEmptyAlternativesInGroup(pattern, i + 1, parenEnd, results);
-				i = parenEnd;
-			}
-
-			continue;
-		}
-
-		if (char === "|") {
-			pipePositions.push(i);
+			case "|":
+				pipePositions.push(i);
+				break;
 		}
 	}
 
@@ -109,18 +80,31 @@ function findEmptyAlternativesInGroup(
 
 		if (isAlternativeEmpty(pattern, start, end)) {
 			const isLast = i === alternativeBoundaries.length - 1;
-			const lastPipePos = pipePositions[pipePositions.length - 1];
-			if (isLast && lastPipePos === undefined) {
+			const lastPipePosition = pipePositions.at(-1);
+			if (isLast && lastPipePosition === undefined) {
 				continue;
 			}
 
-			const reportPos = isLast ? lastPipePos : start;
-			results.push({ start: reportPos });
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			results.push(isLast ? lastPipePosition! : start);
 		}
 	}
 }
 
-function findMatchingParen(pattern: string, openIndex: number) {
+function findEmptyAlternativeStarts(pattern: string) {
+	const emptyAlternativeStarts: number[] = [];
+
+	findEmptyAlternativesInGroup(
+		pattern,
+		0,
+		pattern.length,
+		emptyAlternativeStarts,
+	);
+
+	return emptyAlternativeStarts;
+}
+
+function findMatchingParenthesis(pattern: string, openIndex: number) {
 	let depth = 1;
 	let charClassDepth = 0;
 
@@ -166,8 +150,9 @@ function getPatternFromRegex(node: AST.RegularExpressionLiteral) {
 
 function isAlternativeEmpty(pattern: string, start: number, end: number) {
 	for (let i = start; i < end; i++) {
-		const char = pattern[i];
-		if (char !== undefined && char.trim() !== "") {
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const char = pattern[i]!;
+		if (char.trim() !== "") {
 			return false;
 		}
 	}
@@ -198,15 +183,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			services: TypeScriptFileServices,
 		) {
 			const pattern = getPatternFromRegex(node);
-			const emptyAlternatives = findEmptyAlternatives(pattern);
+			const emptyAlternativeStarts = findEmptyAlternativeStarts(pattern);
 			const nodeStart = node.getStart(services.sourceFile);
 
-			for (const alt of emptyAlternatives) {
+			for (const alternativeStart of emptyAlternativeStarts) {
 				context.report({
 					message: "emptyAlternative",
 					range: {
-						begin: nodeStart + 1 + alt.start,
-						end: nodeStart + 1 + alt.start + 1,
+						begin: nodeStart + 1 + alternativeStart,
+						end: nodeStart + 1 + alternativeStart + 1,
 					},
 				});
 			}
@@ -224,26 +209,28 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const args = node.arguments;
-			if (!args || args.length === 0) {
+			if (!args?.length) {
 				return;
 			}
 
-			const patternArg = args[0];
-			if (!patternArg || patternArg.kind !== ts.SyntaxKind.StringLiteral) {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const patternArg = args[0]!;
+
+			if (patternArg.kind !== ts.SyntaxKind.StringLiteral) {
 				return;
 			}
 
 			const rawText = patternArg.getText(services.sourceFile);
 			const pattern = rawText.slice(1, -1);
-			const emptyAlternatives = findEmptyAlternatives(pattern);
+			const emptyAlternativeStarts = findEmptyAlternativeStarts(pattern);
 			const nodeStart = patternArg.getStart(services.sourceFile);
 
-			for (const alt of emptyAlternatives) {
+			for (const alternativeStart of emptyAlternativeStarts) {
 				context.report({
 					message: "emptyAlternative",
 					range: {
-						begin: nodeStart + 1 + alt.start,
-						end: nodeStart + 1 + alt.start + 1,
+						begin: nodeStart + 1 + alternativeStart,
+						end: nodeStart + 1 + alternativeStart + 1,
 					},
 				});
 			}
