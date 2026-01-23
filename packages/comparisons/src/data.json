@@ -14882,7 +14882,8 @@
 		"flint": {
 			"name": "regexDollarEscapes",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -14895,7 +14896,8 @@
 		"flint": {
 			"name": "regexDuplicateCharacterClassCharacters",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -14921,7 +14923,8 @@
 		"flint": {
 			"name": "regexEmptyAlternatives",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -14934,7 +14937,8 @@
 		"flint": {
 			"name": "regexEmptyCapturingGroups",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -14982,7 +14986,8 @@
 		"flint": {
 			"name": "regexEmptyGroups",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -14995,7 +15000,8 @@
 		"flint": {
 			"name": "regexEmptyLazyQuantifiers",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15053,6 +15059,7 @@
 			"name": "regexExecutors",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
