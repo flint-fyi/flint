@@ -1,3 +1,4 @@
+// flint-disable-file escapeSequenceCasing
 import rule from "./regexHexadecimalEscapes.ts";
 import { ruleTester } from "./ruleTester.ts";
 
