@@ -76,13 +76,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					visitRegExpAST(regexpAst, {
-						onCharacterClassEnter(ccNode) {
-							if (!ccNode.negate || ccNode.elements.length !== 1) {
+						onCharacterClassEnter(characterClassNode) {
+							if (
+								!characterClassNode.negate ||
+								characterClassNode.elements.length !== 1
+							) {
 								return;
 							}
 
 							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-							const element = ccNode.elements[0]!;
+							const element = characterClassNode.elements[0]!;
 
 							if (
 								element.type !== "CharacterSet" &&
