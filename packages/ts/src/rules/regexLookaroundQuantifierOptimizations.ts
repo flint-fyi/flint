@@ -35,8 +35,6 @@ function* extractInvalidQuantifiers(
 					}
 				}
 				break;
-			default:
-				break;
 		}
 	}
 }
