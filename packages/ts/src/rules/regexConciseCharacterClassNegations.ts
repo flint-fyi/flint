@@ -71,6 +71,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						unicode: hasUnicode,
 						unicodeSets: hasUnicodeSets,
 					});
+					if (!regexpAst) {
+						return;
+					}
 
 					visitRegExpAST(regexpAst, {
 						onCharacterClassEnter(ccNode) {
