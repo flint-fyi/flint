@@ -2,7 +2,6 @@ import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 import * as fs from "node:fs/promises";
 import omitEmpty from "omit-empty";
-import z from "zod";
 
 import type { CacheStorage } from "../types/cache.ts";
 import type { LintResults } from "../types/linting.ts";
@@ -55,7 +54,7 @@ export async function writeToCache(
 
 	await fs.mkdir(cacheFileDirectory, { recursive: true });
 
-	const encoded = z.safeEncode(cacheStorageSchema, storage);
+	const encoded = cacheStorageSchema.safeEncode(storage);
 	if (!encoded.success) {
 		log("Failed to encode cache data: %s", encoded.error.message);
 		return;

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports -- TODO: Use Zod Mini in core package
 import z from "zod/v4";
 
 import type { SuggestionForFile } from "../types/changes.ts";

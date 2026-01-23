@@ -119,6 +119,15 @@ export default defineConfig(
 			// https://github.com/eslint-community/eslint-plugin-n/issues/472
 			"n/no-unpublished-bin": "off",
 
+			// Restrict imports
+			"@typescript-eslint/no-restricted-imports": [
+				"error",
+				{
+					message: "Use zod/v4 for the modern v4 API instead.",
+					name: "zod",
+				},
+			],
+			// Use no-restricted-syntax to target e.g. `type Foo = typeof import('foo.js')` as well.
 			"no-restricted-syntax": ["error", ...banJsImportExtension()],
 
 			"perfectionist/sort-imports": [
@@ -148,6 +157,25 @@ export default defineConfig(
 				],
 			},
 			perfectionist: { partitionByComment: true, type: "natural" },
+		},
+	},
+	{
+		files: ["packages/core/**/*.ts"],
+		ignores: ["packages/core/**/*.test.ts"],
+		rules: {
+			"@typescript-eslint/no-restricted-imports": [
+				"error",
+				{
+					message:
+						"Use Standard Schema for abstractions or Zod Core for parsing.",
+					name: "zod",
+				},
+				{
+					message:
+						"Use Standard Schema for abstractions or Zod Core for parsing.",
+					name: "zod/v4",
+				},
+			],
 		},
 	},
 	{
