@@ -16,7 +16,7 @@ interface ControlCharInfo {
 	suggestedEscape?: string | undefined;
 }
 
-const KNOWN_CONTROL_ESCAPES: Record<number, string> = {
+const knownControlEscapes: Record<number, string> = {
 	0: "\\0",
 	9: "\\t",
 	10: "\\n",
@@ -25,8 +25,10 @@ const KNOWN_CONTROL_ESCAPES: Record<number, string> = {
 	13: "\\r",
 };
 
-const CONTROL_CHAR_PATTERN =
+const controlCharacterSinglePattern =
 	/\\x(0[0-9a-fA-F]|1[0-9a-fA-F])|\\u00(0[0-9a-fA-F]|1[0-9a-fA-F])|\\u\{([0-9a-fA-F]|1[0-9a-fA-F])\}|\\c[A-Z]/g;
+const controlCharacterDoubleEscapedPattern =
+	/\\\\x(0[0-9A-Fa-f]|1[0-9A-Fa-f])|\\\\u00(0[0-9A-Fa-f]|1[0-9A-Fa-f])|\\\\u\{([0-9A-Fa-f]|1[0-9A-Fa-f])\}|\\\\c[A-Z]/g;
 
 function findControlCharacters(
 	pattern: string,
@@ -35,8 +37,8 @@ function findControlCharacters(
 	const issues: ControlCharInfo[] = [];
 
 	const searchPattern = doubleEscaped
-		? /\\\\x(0[0-9A-Fa-f]|1[0-9A-Fa-f])|\\\\u00(0[0-9A-Fa-f]|1[0-9A-Fa-f])|\\\\u\{([0-9A-Fa-f]|1[0-9A-Fa-f])\}|\\\\c[A-Z]/g
-		: CONTROL_CHAR_PATTERN;
+		? controlCharacterDoubleEscapedPattern
+		: controlCharacterSinglePattern;
 
 	let match: null | RegExpExecArray;
 	while ((match = searchPattern.exec(pattern)) !== null) {
@@ -45,7 +47,7 @@ function findControlCharacters(
 		const codePoint = parseControlCharCodePoint(normalizedMatch);
 
 		if (codePoint !== undefined && codePoint <= 0x1f) {
-			const suggestedEscape = KNOWN_CONTROL_ESCAPES[codePoint];
+			const suggestedEscape = knownControlEscapes[codePoint];
 			issues.push({
 				codePoint,
 				end: match.index + found.length,
@@ -114,15 +116,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function checkRegexLiteral(
-			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: TypeScriptFileServices,
-		) {
-			const pattern = getRegexPattern(node);
-			const issues = findControlCharacters(pattern, false);
-
-			const nodeStart = node.getStart(sourceFile);
-
+		function reportIssues(issues: ControlCharInfo[], start: number) {
 			for (const issue of issues) {
 				context.report({
 					data: {
@@ -131,11 +125,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					},
 					message: "unexpectedControlChar",
 					range: {
-						begin: nodeStart + 1 + issue.start,
-						end: nodeStart + 1 + issue.end,
+						begin: start + 1 + issue.start,
+						end: start + 1 + issue.end,
 					},
 				});
 			}
+		}
+
+		function checkRegexLiteral(
+			node: AST.RegularExpressionLiteral,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
+			const pattern = getRegexPattern(node);
+			const issues = findControlCharacters(pattern, false);
+
+			reportIssues(issues, node.getStart(sourceFile));
 		}
 
 		function checkRegExpConstructor(
@@ -154,31 +158,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const firstArg = args[0];
-			if (!firstArg || firstArg.kind !== ts.SyntaxKind.StringLiteral) {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const stringLiteral = args[0]!;
+
+			if (stringLiteral.kind !== ts.SyntaxKind.StringLiteral) {
 				return;
 			}
 
-			const stringLiteral = firstArg;
 			const rawText = stringLiteral.getText(services.sourceFile);
 			const pattern = rawText.slice(1, -1);
 			const issues = findControlCharacters(pattern, true);
 
-			const nodeStart = firstArg.getStart(services.sourceFile);
-
-			for (const issue of issues) {
-				context.report({
-					data: {
-						codePoint: formatCodePoint(issue.codePoint),
-						found: issue.found,
-					},
-					message: "unexpectedControlChar",
-					range: {
-						begin: nodeStart + 1 + issue.start,
-						end: nodeStart + 1 + issue.end,
-					},
-				});
-			}
+			reportIssues(issues, stringLiteral.getStart(services.sourceFile));
 		}
 
 		return {
