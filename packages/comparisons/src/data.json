@@ -15568,7 +15568,9 @@
 		],
 		"flint": {
 			"name": "regexUnicodeFlag",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
