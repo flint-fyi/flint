@@ -15234,7 +15234,8 @@
 		"flint": {
 			"name": "regexMisleadingQuantifiers",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
