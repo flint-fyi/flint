@@ -14995,7 +14995,8 @@
 		"flint": {
 			"name": "regexEmptyLazyQuantifiers",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
