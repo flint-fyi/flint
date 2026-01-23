@@ -15342,7 +15342,8 @@
 		"flint": {
 			"name": "regexOctalEscapes",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
