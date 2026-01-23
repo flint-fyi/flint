@@ -17,7 +17,6 @@ import {
 	createParser,
 	type DisjunctionIssue,
 	faToSource,
-	type NestedAlternative,
 } from "./utils/regexDisjunctionAnalysis.ts";
 
 function adjustPositionForEscapes(escaped: string, unescapedPos: number) {
@@ -36,20 +35,10 @@ function adjustPositionForEscapes(escaped: string, unescapedPos: number) {
 	return escapedIndex;
 }
 
-function getReportedNode(
-	result: DisjunctionIssue,
-): NestedAlternative | RegExpAST.Alternative {
-	if (result.type === "NestedSubset" || result.type === "PrefixNestedSubset") {
-		return result.nested;
-	}
-	return result.alternative;
-}
-
-function mentionNested(nested: NestedAlternative): string {
-	if (nested.type === "Alternative" || nested.type === "StringAlternative") {
-		return nested.raw;
-	}
-	return nested.raw;
+function getReportedNode(result: DisjunctionIssue) {
+	return result.type === "NestedSubset" || result.type === "PrefixNestedSubset"
+		? result.nested
+		: result.alternative;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -111,14 +100,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			secondary: [
 				"The earlier alternative(s) might be removable. This ambiguity may cause exponential backtracking.",
 			],
-			suggestions: ["Consider removing the shadowed alternative(s)."],
+			suggestions: ["Remove the shadowed alternative(s)."],
 		},
 	},
 	setup(context) {
-		function processPattern(
+		function checkPattern(
 			pattern: RegExpAST.Pattern,
 			flags: ReadonlyFlags,
-			nodeStart: number,
 			mapRange: (start: number, end: number) => { begin: number; end: number },
 		) {
 			const parser = createParser(pattern, flags);
@@ -161,7 +149,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						context.report({
 							data: {
 								alternative: issue.alternative.raw,
-								nested: mentionNested(issue.nested),
+								nested: issue.nested.raw,
 								others: othersStr,
 							},
 							message: "nestedSubset",
@@ -185,7 +173,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						context.report({
 							data: {
 								alternative: issue.alternative.raw,
-								nested: mentionNested(issue.nested),
+								nested: issue.nested.raw,
 								others: othersStr,
 							},
 							message: "prefixNestedSubset",
@@ -246,13 +234,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const hasUnicode = flagsStr?.includes("u");
-			const hasUnicodeSets = flagsStr?.includes("v");
-
-			const ast = parseRegexpAst(pattern, {
-				unicode: hasUnicode,
-				unicodeSets: hasUnicodeSets,
-			});
+			const ast = parseRegexpAst(pattern, flagsStr);
 			if (!ast) {
 				return;
 			}
@@ -260,15 +242,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const nodeRange = getTSNodeRange(node, sourceFile);
 			const nodeStart = nodeRange.begin;
 
-			const flags: ReadonlyFlags = {
+			const flags = {
 				dotAll: flagsStr?.includes("s") ?? false,
 				global: flagsStr?.includes("g") ?? false,
 				hasIndices: flagsStr?.includes("d") ?? false,
 				ignoreCase: flagsStr?.includes("i") ?? false,
 				multiline: flagsStr?.includes("m") ?? false,
 				sticky: flagsStr?.includes("y") ?? false,
-				unicode: hasUnicode ?? false,
-				unicodeSets: hasUnicodeSets ?? false,
+				unicode: flagsStr?.includes("u") ?? false,
+				unicodeSets: flagsStr?.includes("v") ?? false,
 			};
 
 			const mapRange = (start: number, end: number) => ({
@@ -276,7 +258,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				end: nodeStart + 1 + end,
 			});
 
-			processPattern(ast, flags, nodeStart, mapRange);
+			checkPattern(ast, flags, mapRange);
 		}
 
 		function checkRegExpConstructor(
@@ -316,28 +298,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 			}
 
-			const hasUnicode = flagsStr.includes("u");
-			const hasUnicodeSets = flagsStr.includes("v");
-
-			const ast = parseRegexpAst(pattern, {
-				unicode: hasUnicode,
-				unicodeSets: hasUnicodeSets,
-			});
+			const ast = parseRegexpAst(pattern, flagsStr);
 			if (!ast) {
 				return;
 			}
 
 			const nodeStart = firstArg.getStart(services.sourceFile);
 
-			const flags: ReadonlyFlags = {
+			const flags = {
 				dotAll: flagsStr.includes("s"),
 				global: flagsStr.includes("g"),
 				hasIndices: flagsStr.includes("d"),
 				ignoreCase: flagsStr.includes("i"),
 				multiline: flagsStr.includes("m"),
 				sticky: flagsStr.includes("y"),
-				unicode: hasUnicode,
-				unicodeSets: hasUnicodeSets,
+				unicode: flagsStr.includes("u"),
+				unicodeSets: flagsStr.includes("v"),
 			};
 
 			const mapRange = (start: number, end: number) => {
@@ -349,7 +325,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				};
 			};
 
-			processPattern(ast, flags, nodeStart, mapRange);
+			checkPattern(ast, flags, mapRange);
 		}
 
 		return {
