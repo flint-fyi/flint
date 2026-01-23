@@ -1,3 +1,9 @@
+import { parseRegExpLiteral, visitRegExpAST } from "@eslint-community/regexpp";
+import type {
+	Character,
+	CharacterClass,
+	CharacterClassRange,
+} from "@eslint-community/regexpp/ast";
 import {
 	type AST,
 	type TypeScriptFileServices,
@@ -7,83 +13,173 @@ import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-interface DigitMatcherInfo {
+interface AllowedRange {
+	max: number;
+	min: number;
+}
+
+interface CharacterGroup {
+	max: Character;
+	min: Character;
+	nodes: (Character | CharacterClassRange)[];
+}
+
+interface Issue {
 	end: number;
-	found: string;
-	isNegated: boolean;
-	replacement: string;
+	newText: string;
+	nodeRanges: { end: number; start: number }[];
 	start: number;
 }
 
-function findDigitMatchers(
-	pattern: string,
-	doubleEscaped: boolean,
-): DigitMatcherInfo[] {
-	const issues: DigitMatcherInfo[] = [];
+const ALLOWED_RANGES: AllowedRange[] = [
+	{ max: 0x39, min: 0x30 }, // 0-9
+	{ max: 0x5a, min: 0x41 }, // A-Z
+	{ max: 0x7a, min: 0x61 }, // a-z
+];
 
-	const digitClassPatterns = doubleEscaped
-		? [
-				{ isNegated: false, pattern: /\[0-9\]/g, replacement: "\\\\d" },
-				{ isNegated: true, pattern: /\[\^0-9\]/g, replacement: "\\\\D" },
-				{
-					isNegated: false,
-					pattern: /\[0123456789\]/g,
-					replacement: "\\\\d",
-				},
-				{
-					isNegated: true,
-					pattern: /\[\^0123456789\]/g,
-					replacement: "\\\\D",
-				},
-			]
-		: [
-				{ isNegated: false, pattern: /\[0-9\]/g, replacement: "\\d" },
-				{ isNegated: true, pattern: /\[\^0-9\]/g, replacement: "\\D" },
-				{ isNegated: false, pattern: /\[0123456789\]/g, replacement: "\\d" },
-				{ isNegated: true, pattern: /\[\^0123456789\]/g, replacement: "\\D" },
-			];
-
-	for (const {
-		isNegated,
-		pattern: searchPattern,
-		replacement,
-	} of digitClassPatterns) {
-		let match: null | RegExpExecArray;
-		while ((match = searchPattern.exec(pattern)) !== null) {
-			issues.push({
-				end: match.index + match[0].length,
-				found: match[0],
-				isNegated,
-				replacement,
-				start: match.index,
-			});
-		}
-	}
-
-	return issues.sort((a, b) => a.start - b.start);
+function checkInAllowedRange(
+	value: number,
+	rangeMin?: number,
+	rangeMax?: number,
+): boolean {
+	const min = rangeMin ?? value;
+	const max = rangeMax ?? value;
+	return ALLOWED_RANGES.some((r) => r.min <= min && max <= r.max);
 }
 
-function getRegexPattern(node: AST.RegularExpressionLiteral): string {
+function findIssues(pattern: string, flags: string): Issue[] {
+	const issues: Issue[] = [];
+
+	let ast;
+	try {
+		ast = parseRegExpLiteral(new RegExp(pattern, flags));
+	} catch {
+		return issues;
+	}
+
+	visitRegExpAST(ast, {
+		onCharacterClassEnter(ccNode: CharacterClass) {
+			const groups: CharacterGroup[] = [];
+
+			for (const element of ccNode.elements) {
+				let data: { max: Character; min: Character };
+
+				if (element.type === "Character") {
+					if (checkInAllowedRange(element.value)) {
+						data = { max: element, min: element };
+					} else {
+						continue;
+					}
+				} else if (element.type === "CharacterClassRange") {
+					if (
+						checkInAllowedRange(
+							element.min.value,
+							element.min.value,
+							element.max.value,
+						)
+					) {
+						data = { max: element.max, min: element.min };
+					} else {
+						continue;
+					}
+				} else {
+					continue;
+				}
+
+				const group = groups.find((gp) => {
+					const adjacent =
+						gp.min.value - 1 <= data.max.value &&
+						data.min.value <= gp.max.value + 1;
+					if (!adjacent) {
+						return false;
+					}
+					const min = Math.min(gp.min.value, data.min.value);
+					const max = Math.max(gp.max.value, data.max.value);
+					return checkInAllowedRange(min, min, max);
+				});
+
+				if (group) {
+					if (data.min.value < group.min.value) {
+						group.min = data.min;
+					}
+					if (group.max.value < data.max.value) {
+						group.max = data.max;
+					}
+					group.nodes.push(element);
+				} else {
+					groups.push({
+						...data,
+						nodes: [element],
+					});
+				}
+			}
+
+			for (const group of groups) {
+				const charCount = group.max.value - group.min.value + 1;
+				if (charCount >= 4 && group.nodes.length > 1) {
+					const newText = `${group.min.raw}-${group.max.raw}`;
+
+					const nodeRanges: { end: number; start: number }[] = [];
+					for (const node of group.nodes) {
+						nodeRanges.push({ end: node.end, start: node.start });
+					}
+					nodeRanges.sort((a, b) => a.start - b.start);
+
+					const mergedRanges: { end: number; start: number }[] = [];
+					for (const range of nodeRanges) {
+						const last = mergedRanges[mergedRanges.length - 1];
+						if (last && last.end >= range.start) {
+							last.end = Math.max(last.end, range.end);
+						} else {
+							mergedRanges.push({ ...range });
+						}
+					}
+
+					const firstMerged = mergedRanges[0];
+					const lastMerged = mergedRanges[mergedRanges.length - 1];
+					if (firstMerged && lastMerged) {
+						issues.push({
+							end: lastMerged.end,
+							newText,
+							nodeRanges: mergedRanges,
+							start: firstMerged.start,
+						});
+					}
+				}
+			}
+		},
+	});
+
+	return issues;
+}
+
+function getRegexPattern(node: AST.RegularExpressionLiteral): {
+	flags: string;
+	pattern: string;
+} {
 	const text = node.text;
 	const lastSlash = text.lastIndexOf("/");
-	return text.slice(1, lastSlash);
+	return {
+		flags: text.slice(lastSlash + 1),
+		pattern: text.slice(1, lastSlash),
+	};
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
-			"Reports character classes that match digits and could use \\d or \\D instead.",
+			"Reports character classes with multiple adjacent characters that could use a range instead.",
 		id: "regexDigitMatchers",
 		presets: ["stylisticStrict"],
 	},
 	messages: {
-		preferDigitEscape: {
-			primary: "Prefer '{{ replacement }}' over character class '{{ found }}'.",
+		preferRange: {
+			primary:
+				"These multiple adjacent characters can be simplified to `{{ range }}` instead.",
 			secondary: [
-				"The \\d escape sequence is a more concise and readable way to match digits [0-9].",
-				"Similarly, \\D matches any non-digit character.",
+				"Character class ranges (e.g., `a-d`) are more concise and readable than listing multiple adjacent characters (e.g., `abcd`).",
 			],
-			suggestions: ["Replace '{{ found }}' with '{{ replacement }}'."],
+			suggestions: ["Replace adjacent characters with '{{ range }}'."],
 		},
 	},
 	setup(context) {
@@ -91,28 +187,31 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.RegularExpressionLiteral,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			const pattern = getRegexPattern(node);
-			const issues = findDigitMatchers(pattern, false);
+			const { flags, pattern } = getRegexPattern(node);
+			const issues = findIssues(pattern, flags);
 
 			const nodeStart = node.getStart(sourceFile);
 
 			for (const issue of issues) {
+				const firstRange = issue.nodeRanges[0];
+				if (!firstRange) {
+					continue;
+				}
 				context.report({
 					data: {
-						found: issue.found,
-						replacement: issue.replacement,
+						range: issue.newText,
 					},
-					fix: {
+					fix: issue.nodeRanges.map((range, index) => ({
 						range: {
-							begin: nodeStart + 1 + issue.start,
-							end: nodeStart + 1 + issue.end,
+							begin: nodeStart + range.start,
+							end: nodeStart + range.end,
 						},
-						text: issue.replacement,
-					},
-					message: "preferDigitEscape",
+						text: index === 0 ? issue.newText : "",
+					})),
+					message: "preferRange",
 					range: {
-						begin: nodeStart + 1 + issue.start,
-						end: nodeStart + 1 + issue.end,
+						begin: nodeStart + firstRange.start,
+						end: nodeStart + firstRange.end,
 					},
 				});
 			}
@@ -130,39 +229,73 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const args = node.arguments;
-			if (!args || args.length === 0) {
+			if (!args?.length) {
 				return;
 			}
 
-			const firstArg = args[0];
-			if (!firstArg || firstArg.kind !== ts.SyntaxKind.StringLiteral) {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const firstArg = args[0]!;
+
+			if (firstArg.kind !== ts.SyntaxKind.StringLiteral) {
 				return;
 			}
 
 			const stringLiteral = firstArg;
 			const rawText = stringLiteral.getText(services.sourceFile);
 			const pattern = rawText.slice(1, -1);
-			const issues = findDigitMatchers(pattern, true);
+
+			let flags = "";
+			if (args.length >= 2) {
+				const secondArg = args[1];
+				if (secondArg?.kind === ts.SyntaxKind.StringLiteral) {
+					const flagsText = secondArg.getText(services.sourceFile);
+					flags = flagsText.slice(1, -1);
+				}
+			}
+
+			const unescapedPattern = pattern.replace(/\\\\/g, "\\");
+			const issues = findIssues(unescapedPattern, flags);
 
 			const nodeStart = firstArg.getStart(services.sourceFile);
 
+			function mapPositionToSource(pos: number): number {
+				let sourcePos = 0;
+				let patternPos = 0;
+				while (patternPos < pos && sourcePos < pattern.length) {
+					if (pattern[sourcePos] === "\\" && pattern[sourcePos + 1] === "\\") {
+						sourcePos += 2;
+					} else {
+						sourcePos += 1;
+					}
+					patternPos += 1;
+				}
+				return sourcePos;
+			}
+
 			for (const issue of issues) {
+				const adjustedRanges = issue.nodeRanges.map((range) => ({
+					end: mapPositionToSource(range.end - 1),
+					start: mapPositionToSource(range.start - 1),
+				}));
+
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const firstRange = adjustedRanges[0]!;
+
 				context.report({
 					data: {
-						found: issue.found,
-						replacement: issue.replacement,
+						range: issue.newText.replace(/\\/g, "\\\\"),
 					},
-					fix: {
+					fix: adjustedRanges.map((range, index) => ({
 						range: {
-							begin: nodeStart + 1 + issue.start,
-							end: nodeStart + 1 + issue.end,
+							begin: nodeStart + 1 + range.start,
+							end: nodeStart + 1 + range.end,
 						},
-						text: issue.replacement,
-					},
-					message: "preferDigitEscape",
+						text: index === 0 ? issue.newText.replace(/\\/g, "\\\\") : "",
+					})),
+					message: "preferRange",
 					range: {
-						begin: nodeStart + 1 + issue.start,
-						end: nodeStart + 1 + issue.end,
+						begin: nodeStart + 1 + firstRange.start,
+						end: nodeStart + 1 + firstRange.end,
 					},
 				});
 			}
