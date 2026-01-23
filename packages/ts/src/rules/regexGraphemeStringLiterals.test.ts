@@ -1,3 +1,4 @@
+// flint-disable-file escapeSequenceCasing
 import rule from "./regexGraphemeStringLiterals.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -7,7 +8,6 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\q{abc}]/v;
 `,
-			only: true,
 			snapshot: `
 /[\\q{abc}]/v;
 ~~~~~~~~~~~~
