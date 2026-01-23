@@ -1,0 +1,95 @@
+---
+description: "Reports octal escape sequences in regular expressions."
+title: "regexOctalEscapes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexOctalEscapes" />
+
+Reports octal escape sequences in regular expressions.
+Octal escapes like `\7` or `\07` can be confused with backreferences.
+The same sequence (e.g., `\2`) may be a character or a backreference depending on the number of capturing groups in the pattern.
+
+## Examples
+
+### Octal Escape Starting with Zero
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\07/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\x07/;
+```
+
+</TabItem>
+</Tabs>
+
+### Simple Octal Escape
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\7/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\x07/;
+```
+
+</TabItem>
+</Tabs>
+
+### Ambiguous Octal vs Backreference
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\1\2/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\x01\x02/;
+```
+
+</TabItem>
+</Tabs>
+
+In the incorrect example, `\1` and `\2` are octal escapes (matching characters with code 1 and 2).
+If capturing groups are added later, they could become backreferences.
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use octal escapes for specific character matching and understand the distinction from backreferences, you might want to disable this rule.
+Octal escapes inside character class ranges (e.g., `[\1-\4]`) are allowed.
+
+## Further Reading
+
+- [MDN: Character escape](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_escape)
+- [MDN: Backreference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Backreference)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexOctalEscapes" />
