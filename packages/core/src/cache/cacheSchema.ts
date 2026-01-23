@@ -99,7 +99,7 @@ const fileCacheStorageSchema = z.object({
 	timestamp: z.number(),
 });
 
-export const cacheStorageCodec = jsonCodec(
+export const cacheStorageSchema = jsonCodec(
 	z.object({
 		configs: z.record(z.string(), z.number()),
 		files: z.record(z.string(), fileCacheStorageSchema),

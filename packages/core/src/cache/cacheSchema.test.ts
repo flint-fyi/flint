@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import z from "zod";
 
 import type { CacheStorage } from "../types/cache.ts";
-import { cacheStorageCodec } from "./cacheSchema.ts";
+import { cacheStorageSchema } from "./cacheSchema.ts";
 
-describe("cacheStorageCodec decoding", () => {
+describe("cacheStorageSchema decoding", () => {
 	it("parses valid cache data", () => {
 		const validCache = {
 			configs: {
@@ -18,7 +18,7 @@ describe("cacheStorageCodec decoding", () => {
 			},
 		};
 
-		const result = z.safeDecode(cacheStorageCodec, JSON.stringify(validCache));
+		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
 		expect(result.success).toBe(true);
 	});
 
@@ -28,7 +28,7 @@ describe("cacheStorageCodec decoding", () => {
 		};
 
 		const result = z.safeDecode(
-			cacheStorageCodec,
+			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
 		expect(result.success).toBe(false);
@@ -40,7 +40,7 @@ describe("cacheStorageCodec decoding", () => {
 		};
 
 		const result = z.safeDecode(
-			cacheStorageCodec,
+			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
 		expect(result.success).toBe(false);
@@ -57,7 +57,7 @@ describe("cacheStorageCodec decoding", () => {
 		};
 
 		const result = z.safeDecode(
-			cacheStorageCodec,
+			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
 		expect(result.success).toBe(false);
@@ -75,7 +75,7 @@ describe("cacheStorageCodec decoding", () => {
 			},
 		};
 
-		const result = z.safeDecode(cacheStorageCodec, JSON.stringify(validCache));
+		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
 		expect(result.success).toBe(true);
 	});
 
@@ -105,7 +105,7 @@ describe("cacheStorageCodec decoding", () => {
 			},
 		};
 
-		const result = z.safeDecode(cacheStorageCodec, JSON.stringify(validCache));
+		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
 		expect(result.success).toBe(true);
 	});
 
@@ -143,7 +143,7 @@ describe("cacheStorageCodec decoding", () => {
 			},
 		};
 
-		const result = z.safeDecode(cacheStorageCodec, JSON.stringify(validCache));
+		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
 		expect(result.success).toBe(true);
 	});
 
@@ -171,19 +171,19 @@ describe("cacheStorageCodec decoding", () => {
 		};
 
 		const result = z.safeDecode(
-			cacheStorageCodec,
+			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
 		expect(result.success).toBe(false);
 	});
 
 	it("rejects null input", () => {
-		const result = z.safeDecode(cacheStorageCodec, JSON.stringify(null));
+		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(null));
 		expect(result.success).toBe(false);
 	});
 
 	it("rejects undefined input", () => {
-		const result = z.safeDecode(cacheStorageCodec, JSON.stringify(undefined));
+		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(undefined));
 		expect(result.success).toBe(false);
 	});
 
@@ -194,7 +194,7 @@ describe("cacheStorageCodec decoding", () => {
 		};
 
 		const result = z.safeDecode(
-			cacheStorageCodec,
+			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
 		expect(result.success).toBe(false);
@@ -225,7 +225,7 @@ describe("cacheStorageCodec decoding", () => {
 		};
 
 		const result = z.safeDecode(
-			cacheStorageCodec,
+			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
 		expect(result.success).toBe(false);
@@ -257,14 +257,14 @@ describe("cacheStorageCodec decoding", () => {
 		};
 
 		const result = z.safeDecode(
-			cacheStorageCodec,
+			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
 		expect(result.success).toBe(false);
 	});
 });
 
-describe("cacheStorageCodec", () => {
+describe("cacheStorageSchema", () => {
 	it("encodes valid cache data to JSON string", () => {
 		const validCache = {
 			configs: {
@@ -278,7 +278,7 @@ describe("cacheStorageCodec", () => {
 			},
 		};
 
-		const encoded = z.encode(cacheStorageCodec, validCache);
+		const encoded = z.encode(cacheStorageSchema, validCache);
 		expect(typeof encoded).toBe("string");
 		expect(JSON.parse(encoded)).toEqual(validCache);
 	});
@@ -294,7 +294,7 @@ describe("cacheStorageCodec", () => {
 		};
 		const json = JSON.stringify(validCache);
 
-		const decoded = z.decode(cacheStorageCodec, json);
+		const decoded = z.decode(cacheStorageSchema, json);
 		expect(decoded).toEqual(validCache);
 	});
 
@@ -305,8 +305,8 @@ describe("cacheStorageCodec", () => {
 		};
 
 		const result = z.safeEncode(
-			cacheStorageCodec,
-			invalidCache as unknown as z.output<typeof cacheStorageCodec>,
+			cacheStorageSchema,
+			invalidCache as unknown as z.output<typeof cacheStorageSchema>,
 		);
 		expect(result.success).toBe(false);
 	});
@@ -314,7 +314,10 @@ describe("cacheStorageCodec", () => {
 	it("fails to decode invalid JSON string", () => {
 		const invalidJson = "{ invalid json }";
 
-		const result = z.safeDecode(cacheStorageCodec, JSON.stringify(invalidJson));
+		const result = z.safeDecode(
+			cacheStorageSchema,
+			JSON.stringify(invalidJson),
+		);
 		expect(result.success).toBe(false);
 	});
 
@@ -325,7 +328,7 @@ describe("cacheStorageCodec", () => {
 		});
 
 		const result = z.safeDecode(
-			cacheStorageCodec,
+			cacheStorageSchema,
 			JSON.stringify(validJsonInvalidSchema),
 		);
 		expect(result.success).toBe(false);
@@ -359,8 +362,8 @@ describe("cacheStorageCodec", () => {
 			},
 		};
 
-		const encoded = z.encode(cacheStorageCodec, original);
-		const decoded = z.decode(cacheStorageCodec, encoded);
+		const encoded = z.encode(cacheStorageSchema, original);
+		const decoded = z.decode(cacheStorageSchema, encoded);
 
 		expect(decoded).toEqual(original);
 	});
@@ -395,8 +398,8 @@ describe("toSerializableCacheStorage encoding", () => {
 		};
 
 		const result = z.decode(
-			cacheStorageCodec,
-			z.encode(cacheStorageCodec, cache),
+			cacheStorageSchema,
+			z.encode(cacheStorageSchema, cache),
 		);
 
 		expect(result.files["src/index.ts"]?.reports?.[0]?.suggestions).toEqual([
@@ -442,8 +445,8 @@ describe("toSerializableCacheStorage encoding", () => {
 		};
 
 		const result = z.decode(
-			cacheStorageCodec,
-			z.encode(cacheStorageCodec, cache),
+			cacheStorageSchema,
+			z.encode(cacheStorageSchema, cache),
 		);
 
 		// Only the SuggestionForFile should remain
@@ -477,8 +480,8 @@ describe("toSerializableCacheStorage encoding", () => {
 		};
 
 		const result = z.decode(
-			cacheStorageCodec,
-			z.encode(cacheStorageCodec, cache),
+			cacheStorageSchema,
+			z.encode(cacheStorageSchema, cache),
 		);
 
 		expect(
@@ -497,8 +500,8 @@ describe("toSerializableCacheStorage encoding", () => {
 		};
 
 		const result = z.decode(
-			cacheStorageCodec,
-			z.encode(cacheStorageCodec, cache),
+			cacheStorageSchema,
+			z.encode(cacheStorageSchema, cache),
 		);
 
 		expect(result.files["src/index.ts"]?.reports).toBeUndefined();
@@ -537,10 +540,10 @@ describe("toSerializableCacheStorage encoding", () => {
 		};
 
 		const serializable = z.decode(
-			cacheStorageCodec,
-			z.encode(cacheStorageCodec, cache),
+			cacheStorageSchema,
+			z.encode(cacheStorageSchema, cache),
 		);
-		const encoded = z.safeEncode(cacheStorageCodec, serializable);
+		const encoded = z.safeEncode(cacheStorageSchema, serializable);
 
 		expect(encoded.success).toBe(true);
 	});

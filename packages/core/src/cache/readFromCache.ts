@@ -5,7 +5,7 @@ import z from "zod";
 
 import { readFileSafe } from "../running/readFileSafe.ts";
 import type { FileCacheStorage } from "../types/cache.ts";
-import { cacheStorageCodec } from "./cacheSchema.ts";
+import { cacheStorageSchema } from "./cacheSchema.ts";
 import { cacheFilePath } from "./constants.ts";
 import { getFileTouchTime } from "./getFileTouchTime.ts";
 
@@ -22,7 +22,7 @@ export async function readFromCache(
 		return undefined;
 	}
 
-	const decodeResult = z.safeDecode(cacheStorageCodec, rawCacheString);
+	const decodeResult = z.safeDecode(cacheStorageSchema, rawCacheString);
 	if (!decodeResult.success) {
 		log(
 			"Linting all %d file path(s) due to invalid cache data: %s",
