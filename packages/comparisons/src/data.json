@@ -15194,7 +15194,8 @@
 		"flint": {
 			"name": "regexLookaroundQuantifierOptimizations",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
