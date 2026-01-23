@@ -1,0 +1,117 @@
+---
+description: "Reports capturing groups that only capture empty strings."
+title: "regexEmptyCapturingGroups"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexEmptyCapturingGroups" />
+
+Reports capturing groups in regular expressions that can only capture zero-length strings.
+A capturing group that never captures any text is likely a mistake or unnecessary.
+
+## Examples
+
+### Empty Capturing Group
+
+A capturing group with no content.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /()/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)/;
+```
+
+</TabItem>
+</Tabs>
+
+### Capturing Group with Only Assertions
+
+Assertions match positions, not characters, so a capturing group containing only assertions captures nothing.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(\b)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\b/;
+```
+
+</TabItem>
+</Tabs>
+
+### Zero-Length Quantifiers
+
+A quantifier with `min=0` like `*` or `?` applied to all elements means the group can match zero characters.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(a*)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a+)/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+The rule also checks regex patterns in `RegExp` constructor calls.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("()");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("(a)");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use empty capturing groups for indexing purposes or other as a stylistic choice, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Capturing groups](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Capturing_group)
+- [MDN: Assertions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Assertions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexEmptyCapturingGroups" />

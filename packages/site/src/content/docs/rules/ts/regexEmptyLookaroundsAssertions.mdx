@@ -1,0 +1,109 @@
+---
+description: "Reports empty lookahead and lookbehind assertions in regular expressions."
+title: "regexEmptyLookaroundsAssertions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexEmptyLookaroundsAssertions" />
+
+Reports empty lookahead and lookbehind assertions in regular expressions.
+Empty lookarounds like `(?=)` or `(?!)` will trivially accept or reject all inputs since they match the empty string.
+
+## Examples
+
+### Empty Lookahead
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?=)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?=\d)/;
+```
+
+</TabItem>
+</Tabs>
+
+### Empty Negative Lookahead
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?!)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?!\d)/;
+```
+
+</TabItem>
+</Tabs>
+
+### Empty Lookbehind
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?<=)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?<=\d)/;
+```
+
+</TabItem>
+</Tabs>
+
+### Lookahead with Optional Content
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?=a?)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?=a+)/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a legitimate use case for empty lookarounds in generated or experimental regex patterns, you may disable this rule.
+
+## Further Reading
+
+- [MDN: Lookahead assertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookahead_assertion)
+- [MDN: Lookbehind assertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookbehind_assertion)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexEmptyLookaroundsAssertions" />
