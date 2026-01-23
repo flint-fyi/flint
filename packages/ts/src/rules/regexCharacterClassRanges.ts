@@ -13,12 +13,17 @@ import { ruleCreator } from "./ruleCreator.ts";
 interface CharacterGroup {
 	max: { raw: string; value: number };
 	min: { raw: string; value: number };
-	nodeCount: number;
+	nodes: (RegExpAST.Character | RegExpAST.CharacterClassRange)[];
 }
 
 interface CharRange {
 	max: number;
 	min: number;
+}
+
+interface ProcessResult {
+	newRange: string;
+	nodes: (RegExpAST.Character | RegExpAST.CharacterClassRange)[];
 }
 
 const ALPHANUMERIC_RANGES: readonly CharRange[] = [
@@ -37,14 +42,15 @@ function inRange(ranges: readonly CharRange[], min: number, max = min) {
 }
 
 function processCharacterClass(
-	ccNode: RegExpAST.CharacterClass,
-): undefined | { newRange: string; nodeCount: number } {
+	node: RegExpAST.CharacterClass,
+): ProcessResult | undefined {
 	const groups: CharacterGroup[] = [];
 
-	for (const element of ccNode.elements) {
+	for (const element of node.elements) {
 		let data: {
 			max: { raw: string; value: number };
 			min: { raw: string; value: number };
+			node: RegExpAST.Character | RegExpAST.CharacterClassRange;
 		};
 
 		if (element.type === "Character") {
@@ -54,6 +60,7 @@ function processCharacterClass(
 			data = {
 				max: { raw: element.raw, value: element.value },
 				min: { raw: element.raw, value: element.value },
+				node: element,
 			};
 		} else if (element.type === "CharacterClassRange") {
 			if (!inRange(ALPHANUMERIC_RANGES, element.min.value, element.max.value)) {
@@ -62,6 +69,7 @@ function processCharacterClass(
 			data = {
 				max: { raw: element.max.raw, value: element.max.value },
 				min: { raw: element.min.raw, value: element.min.value },
+				node: element,
 			};
 		} else {
 			continue;
@@ -89,20 +97,21 @@ function processCharacterClass(
 			if (group.max.value < data.max.value) {
 				group.max = data.max;
 			}
-			group.nodeCount++;
+			group.nodes.push(data.node);
 		} else {
 			groups.push({
-				...data,
-				nodeCount: 1,
+				max: data.max,
+				min: data.min,
+				nodes: [data.node],
 			});
 		}
 	}
 
 	for (const group of groups) {
 		const charCount = group.max.value - group.min.value + 1;
-		if (charCount >= 4 && group.nodeCount > 1) {
+		if (charCount >= 4 && group.nodes.length > 1) {
 			const newRange = `${group.min.raw}-${group.max.raw}`;
-			return { newRange, nodeCount: group.nodeCount };
+			return { newRange, nodes: group.nodes };
 		}
 	}
 
@@ -158,17 +167,52 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
+					const nodeStart = node.getStart(sourceFile);
+					const patternOffset = 1;
+
 					visitRegExpAST(regexpAst, {
 						onCharacterClassEnter(ccNode) {
 							const result = processCharacterClass(ccNode);
 							if (result) {
-								const nodeRange = getTSNodeRange(node, sourceFile);
+								const sortedNodes = [...result.nodes].sort(
+									(a, b) => a.start - b.start,
+								);
+
+								const firstNode = sortedNodes[0];
+								const lastNode = sortedNodes[sortedNodes.length - 1];
+
+								if (!firstNode || !lastNode) {
+									return;
+								}
+
+								const fixRanges: { begin: number; end: number }[] = [];
+
+								for (const currentNode of sortedNodes) {
+									const begin = nodeStart + patternOffset + currentNode.start;
+									const end = nodeStart + patternOffset + currentNode.end;
+
+									if (fixRanges.length === 0) {
+										fixRanges.push({ begin, end });
+									} else {
+										const lastRange = fixRanges[fixRanges.length - 1];
+										if (lastRange && lastRange.end >= begin) {
+											lastRange.end = Math.max(lastRange.end, end);
+										} else {
+											fixRanges.push({ begin, end });
+										}
+									}
+								}
+
 								context.report({
 									data: {
 										range: result.newRange,
 									},
+									fix: fixRanges.map((range, index) => ({
+										range,
+										text: index === 0 ? result.newRange : "",
+									})),
 									message: "preferRange",
-									range: nodeRange,
+									range: getTSNodeRange(node, sourceFile),
 								});
 							}
 						},
