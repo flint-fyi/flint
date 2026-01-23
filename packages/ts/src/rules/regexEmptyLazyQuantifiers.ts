@@ -23,6 +23,10 @@ function* extractLazyEndQuantifiers(
 		}
 
 		switch (last.type) {
+			case "CapturingGroup":
+			case "Group":
+				yield* extractLazyEndQuantifiers(last.alternatives);
+				break;
 			case "Quantifier":
 				if (!last.greedy && last.min !== last.max) {
 					yield last;
@@ -32,10 +36,6 @@ function* extractLazyEndQuantifiers(
 						yield* extractLazyEndQuantifiers(element.alternatives);
 					}
 				}
-				break;
-			case "CapturingGroup":
-			case "Group":
-				yield* extractLazyEndQuantifiers(last.alternatives);
 				break;
 			default:
 				break;
@@ -56,6 +56,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			secondary: [
 				"Lazy quantifiers at the end of a pattern with minimum 0 will match nothing because there's nothing after them to satisfy.",
 			],
+			suggestions: [
+				"Remove the lazy quantifier.",
+				"Add characters after the lazy quantifier to make it useful.",
+			],
 		},
 		uselessQuantifier: {
 			primary:
@@ -63,12 +67,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			secondary: [
 				"Lazy quantifiers at the end of a pattern with minimum 1 will match exactly once because there's nothing after them to satisfy.",
 			],
+			suggestions: [
+				"Remove the lazy quantifier.",
+				"Add characters after the lazy quantifier to make it useful.",
+			],
 		},
 		uselessRange: {
 			primary:
 				"Lazy quantifier '{{ raw }}' at end of pattern will always match exactly {{ min }} times.",
 			secondary: [
 				"Lazy quantifiers at the end of a pattern will match only their minimum because there's nothing after them to satisfy.",
+			],
+			suggestions: [
+				"Remove the lazy quantifier.",
+				"Add characters after the lazy quantifier to make it useful.",
 			],
 		},
 	},
@@ -78,14 +90,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			patternStart: number,
 			flags: string,
 		) {
-			const hasUnicode = flags.includes("u");
-			const hasUnicodeSets = flags.includes("v");
-
-			const regexpAst = parseRegexpAst(pattern, {
-				unicode: hasUnicode,
-				unicodeSets: hasUnicodeSets,
-			});
-
+			const regexpAst = parseRegexpAst(pattern, flags);
 			if (!regexpAst) {
 				return;
 			}
@@ -104,7 +109,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						context.report({
 							data: {
-								min: String(lazy.min),
+								min: lazy.min,
 								raw: lazy.raw,
 							},
 							message: messageId,
@@ -151,25 +156,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const args = node.arguments;
-			if (!args || args.length === 0) {
+			if (!args?.length) {
 				return;
 			}
 
-			const firstArg = args[0];
-			if (!firstArg || firstArg.kind !== ts.SyntaxKind.StringLiteral) {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const firstArgument = args[0]!;
+
+			if (firstArgument.kind !== ts.SyntaxKind.StringLiteral) {
 				return;
 			}
 
-			const pattern = firstArg.text;
-			const patternStart = firstArg.getStart(sourceFile) + 1;
+			const patternStart = firstArgument.getStart(sourceFile) + 1;
 
 			let flags = "";
-			const secondArg = args[1];
-			if (secondArg?.kind === ts.SyntaxKind.StringLiteral) {
-				flags = secondArg.text;
+			const secondArgument = args[1];
+			if (secondArgument?.kind === ts.SyntaxKind.StringLiteral) {
+				flags = secondArgument.text;
 			}
 
-			checkPattern(pattern, patternStart, flags);
+			checkPattern(firstArgument.text, patternStart, flags);
 		}
 
 		return {

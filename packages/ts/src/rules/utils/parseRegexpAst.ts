@@ -7,14 +7,11 @@ export interface RegexpAstOptions {
 	unicodeSets?: boolean | undefined;
 }
 
-export function parseRegexpAst(
-	pattern: string,
-	options: RegexpAstOptions = {},
-) {
+export function parseRegexpAst(pattern: string, flags = "") {
 	try {
 		return parser.parsePattern(pattern, undefined, undefined, {
-			unicode: options.unicode ?? false,
-			unicodeSets: options.unicodeSets ?? true,
+			unicode: flags.includes("u"),
+			unicodeSets: flags.includes("v"),
 		});
 	} catch {
 		return undefined;
