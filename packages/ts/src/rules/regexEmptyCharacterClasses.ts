@@ -8,9 +8,9 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 
 interface EmptyCharacterClass {
 	end: number;
@@ -75,7 +75,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"An empty character class `[]` never matches anything.",
 				"This often indicates a mistake in the regular expression.",
 			],
-			suggestions: ["Add characters to the class or remove it if unintended."],
+			suggestions: [
+				"Add characters to the class if it's meant to capture any.",
+				"Remove the class if it is unintended.",
+			],
 		},
 	},
 	setup(context) {
@@ -102,44 +105,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CallExpression | AST.NewExpression,
 			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args || args.length === 0) {
-				return;
-			}
-
-			const patternArg = args[0];
-			if (!patternArg || patternArg.kind !== ts.SyntaxKind.StringLiteral) {
-				return;
-			}
-
-			const rawText = patternArg.getText(services.sourceFile);
-			const pattern = rawText.slice(1, -1).replace(/\\\\/g, "\\");
-
-			let flags = "";
-			if (args.length >= 2) {
-				const flagsArg = args[1];
-				if (flagsArg?.kind === ts.SyntaxKind.StringLiteral) {
-					const flagsText = flagsArg.getText(services.sourceFile);
-					flags = flagsText.slice(1, -1);
-				}
-			}
-
-			const emptyClasses = findEmptyCharacterClasses(pattern, flags);
-			const patternNodeStart = patternArg.getStart(services.sourceFile);
+			const patternEscaped = construction.pattern.replace(/\\\\/g, "\\");
+			const emptyClasses = findEmptyCharacterClasses(
+				patternEscaped,
+				construction.flags,
+			);
 
 			for (const charClass of emptyClasses) {
 				context.report({
 					message: "empty",
 					range: {
-						begin: patternNodeStart + charClass.start,
-						end: patternNodeStart + charClass.end,
+						begin: construction.start + charClass.start,
+						end: construction.start + charClass.end,
 					},
 				});
 			}
