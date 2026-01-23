@@ -14922,7 +14922,8 @@
 		"flint": {
 			"name": "regexEmptyAlternatives",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -14983,7 +14984,8 @@
 		"flint": {
 			"name": "regexEmptyGroups",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{

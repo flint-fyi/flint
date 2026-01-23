@@ -180,6 +180,8 @@ import regexControlCharacterEscapes from "./rules/regexControlCharacterEscapes.t
 import regexControlCharacters from "./rules/regexControlCharacters.ts";
 import regexDigitMatchers from "./rules/regexDigitMatchers.ts";
 import regexDollarEscapes from "./rules/regexDollarEscapes.ts";
+import regexEmptyAlternatives from "./rules/regexEmptyAlternatives.ts";
+import regexEmptyGroups from "./rules/regexEmptyGroups.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import selfComparisons from "./rules/selfComparisons.ts";
@@ -386,6 +388,8 @@ export const ts = createPlugin({
 		regexControlCharacters,
 		regexDigitMatchers,
 		regexDollarEscapes,
+		regexEmptyAlternatives,
+		regexEmptyGroups,
 		returnAssignments,
 		selfAssignments,
 		selfComparisons,
