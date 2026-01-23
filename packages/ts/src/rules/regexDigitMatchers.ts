@@ -228,7 +228,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const { pattern, start } = construction;
-			const unescapedPattern = construction.pattern.replace(/\\\\/g, "\\");
+			const unescapedPattern = pattern.replace(/\\\\/g, "\\");
 			const issues = findIssues(unescapedPattern, construction.flags);
 
 			function mapPositionToSource(pos: number): number {
