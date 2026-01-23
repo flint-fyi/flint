@@ -17,7 +17,7 @@ function* extractLazyEndQuantifiers(
 			continue;
 		}
 
-		const last = elements[elements.length - 1];
+		const last = elements.at(-1);
 		if (!last) {
 			continue;
 		}
