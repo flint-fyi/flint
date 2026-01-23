@@ -66,14 +66,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const [, pattern, flagsStr] = match;
+					const [, pattern, flags] = match;
 
-					if (!pattern || !flagsStr?.includes("v")) {
+					if (!pattern || !flags?.includes("v")) {
 						return;
 					}
 
-					const regexpAst = parseRegexpAst(pattern, flagsStr);
-
+					const regexpAst = parseRegexpAst(pattern, flags);
 					if (!regexpAst) {
 						return;
 					}
