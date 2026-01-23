@@ -167,6 +167,7 @@ import parameterReassignments from "./rules/parameterReassignments.ts";
 import parseIntRadixes from "./rules/parseIntRadixes.ts";
 import propertyAccessNotation from "./rules/propertyAccessNotation.ts";
 import recursionOnlyArguments from "./rules/recursionOnlyArguments.ts";
+import reduceTypeParameters from "./rules/reduceTypeParameters.ts";
 import regexDigitMatchers from "./rules/regexDigitMatchers.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
@@ -361,6 +362,7 @@ export const ts = createPlugin({
 		parseIntRadixes,
 		propertyAccessNotation,
 		recursionOnlyArguments,
+		reduceTypeParameters,
 		regexDigitMatchers,
 		returnAssignments,
 		selfAssignments,
