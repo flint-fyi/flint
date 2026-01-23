@@ -37,55 +37,61 @@ function adjustPositionForEscapes(escaped: string, unescapedPos: number) {
 
 function findDuplicatesInCharacterClass(
 	characterClass: RegExpAST.CharacterClass,
-): Issue[] {
+) {
 	const issues: Issue[] = [];
 	const seenCharacters = new Map<number, RegExpAST.Character>();
 	const seenRanges: RegExpAST.CharacterClassRange[] = [];
 
 	for (const element of characterClass.elements) {
-		if (element.type === "Character") {
-			const existing = seenCharacters.get(element.value);
-			if (existing) {
-				issues.push({
-					duplicate: element,
-					end: element.end,
-					original: existing,
-					start: element.start,
-				});
-			} else {
-				seenCharacters.set(element.value, element);
+		switch (element.type) {
+			case "Character": {
+				const existing = seenCharacters.get(element.value);
+				if (existing) {
+					issues.push({
+						duplicate: element,
+						end: element.end,
+						original: existing,
+						start: element.start,
+					});
+				} else {
+					seenCharacters.set(element.value, element);
+				}
+				break;
 			}
-		} else if (element.type === "CharacterClassRange") {
-			const duplicateRange = seenRanges.find(
-				(range) =>
-					range.min.value === element.min.value &&
-					range.max.value === element.max.value,
-			);
-			if (duplicateRange) {
-				issues.push({
-					duplicate: element,
-					end: element.end,
-					original: duplicateRange,
-					start: element.start,
-				});
-			} else {
-				seenRanges.push(element);
+
+			case "CharacterClassRange": {
+				const duplicateRange = seenRanges.find(
+					(range) =>
+						range.min.value === element.min.value &&
+						range.max.value === element.max.value,
+				);
+				if (duplicateRange) {
+					issues.push({
+						duplicate: element,
+						end: element.end,
+						original: duplicateRange,
+						start: element.start,
+					});
+				} else {
+					seenRanges.push(element);
+				}
+				break;
 			}
 		}
 	}
 
-	for (const [charValue, charElement] of seenCharacters) {
+	for (const [value, element] of seenCharacters) {
 		for (const range of seenRanges) {
-			if (charValue >= range.min.value && charValue <= range.max.value) {
+			if (value >= range.min.value && value <= range.max.value) {
 				const alreadyReported = issues.some(
-					(issue) => issue.duplicate === charElement,
+					(issue) => issue.duplicate === element,
 				);
 				if (!alreadyReported) {
 					issues.push({
-						duplicate: charElement,
-						end: charElement.end,
+						duplicate: element,
+						end: element.end,
 						original: range,
-						start: charElement.start,
+						start: element.start,
 					});
 				}
 			}
@@ -95,7 +101,7 @@ function findDuplicatesInCharacterClass(
 	return issues;
 }
 
-function findIssues(pattern: string, flags: string): Issue[] {
+function findIssues(pattern: string, flags: string) {
 	const issues: Issue[] = [];
 
 	let ast: RegExpAST.RegExpLiteral;
@@ -115,21 +121,14 @@ function findIssues(pattern: string, flags: string): Issue[] {
 	return issues;
 }
 
-function formatElement(
-	element: RegExpAST.Character | RegExpAST.CharacterClassRange,
-): string {
-	return element.raw;
-}
-
 function getRegexPattern(node: AST.RegularExpressionLiteral): {
 	flags: string;
 	pattern: string;
 } {
-	const text = node.text;
-	const lastSlash = text.lastIndexOf("/");
+	const lastSlash = node.text.lastIndexOf("/");
 	return {
-		flags: text.slice(lastSlash + 1),
-		pattern: text.slice(1, lastSlash),
+		flags: node.text.slice(lastSlash + 1),
+		pattern: node.text.slice(1, lastSlash),
 	};
 }
 
@@ -158,28 +157,31 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function checkRegexLiteral(
-			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: TypeScriptFileServices,
-		) {
-			const { flags, pattern } = getRegexPattern(node);
+		function checkPattern(flags: string, pattern: string, start: number) {
 			const issues = findIssues(pattern, flags);
-
-			const nodeStart = node.getStart(sourceFile);
 
 			for (const issue of issues) {
 				const isCharacterInRange =
 					issue.duplicate.type === "Character" &&
 					issue.original.type === "CharacterClassRange";
+				const adjustedStart = adjustPositionForEscapes(
+					pattern,
+					issue.start - 1,
+				);
+				const adjustedEnd = adjustPositionForEscapes(pattern, issue.end - 1);
+				const [message, range] = isCharacterInRange
+					? (["includedInRange", issue.original.raw] as const)
+					: (["duplicate", ""] as const);
+
 				context.report({
 					data: {
-						character: formatElement(issue.duplicate),
-						range: isCharacterInRange ? formatElement(issue.original) : "",
+						character: issue.duplicate.raw,
+						range,
 					},
-					message: isCharacterInRange ? "includedInRange" : "duplicate",
+					message,
 					range: {
-						begin: nodeStart + issue.start,
-						end: nodeStart + issue.end,
+						begin: start + 1 + adjustedStart,
+						end: start + 1 + adjustedEnd,
 					},
 				});
 			}
@@ -201,51 +203,41 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const firstArg = args[0];
-			if (!firstArg || firstArg.kind !== ts.SyntaxKind.StringLiteral) {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const firstArgument = args[0]!;
+
+			if (firstArgument.kind !== ts.SyntaxKind.StringLiteral) {
 				return;
 			}
 
-			const stringLiteral = firstArg;
+			const stringLiteral = firstArgument;
 			const rawText = stringLiteral.getText(services.sourceFile);
 			const pattern = rawText.slice(1, -1);
 
 			let flags = "";
 			if (args.length >= 2) {
-				const secondArg = args[1];
-				if (secondArg?.kind === ts.SyntaxKind.StringLiteral) {
-					const flagsText = secondArg.getText(services.sourceFile);
+				const secondArgument = args[1];
+				if (secondArgument?.kind === ts.SyntaxKind.StringLiteral) {
+					const flagsText = secondArgument.getText(services.sourceFile);
 					flags = flagsText.slice(1, -1);
 				}
 			}
 
 			const unescapedPattern = pattern.replace(/\\\\/g, "\\");
-			const issues = findIssues(unescapedPattern, flags);
+			const nodeStart = firstArgument.getStart(services.sourceFile);
 
-			const nodeStart = firstArg.getStart(services.sourceFile);
+			checkPattern(flags, unescapedPattern, nodeStart);
+		}
 
-			for (const issue of issues) {
-				const isCharacterInRange =
-					issue.duplicate.type === "Character" &&
-					issue.original.type === "CharacterClassRange";
-				const adjustedStart = adjustPositionForEscapes(
-					pattern,
-					issue.start - 1,
-				);
-				const adjustedEnd = adjustPositionForEscapes(pattern, issue.end - 1);
+		function checkRegexLiteral(
+			node: AST.RegularExpressionLiteral,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
+			const { flags, pattern } = getRegexPattern(node);
 
-				context.report({
-					data: {
-						character: formatElement(issue.duplicate),
-						range: isCharacterInRange ? formatElement(issue.original) : "",
-					},
-					message: isCharacterInRange ? "includedInRange" : "duplicate",
-					range: {
-						begin: nodeStart + 1 + adjustedStart,
-						end: nodeStart + 1 + adjustedEnd,
-					},
-				});
-			}
+			const nodeStart = node.getStart(sourceFile);
+
+			checkPattern(flags, pattern, nodeStart);
 		}
 
 		return {
