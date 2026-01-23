@@ -1,58 +1,50 @@
-import {
-	type AST as RegExpAST,
-	visitRegExpAST,
-} from "@eslint-community/regexpp";
+import { visitRegExpAST } from "@eslint-community/regexpp";
+import type { Character } from "@eslint-community/regexpp/ast";
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import type {
+	AST,
+	TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
+import { Chars } from "regexp-ast-analysis";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-const INVISIBLE_CODE_POINTS = new Set([
-	0x0009, // Tab
-	0x000a, // Line Feed
-	0x000b, // Vertical Tab
-	0x000c, // Form Feed
-	0x000d, // Carriage Return
-	0x0020, // Space
-	0x0085, // Next Line (NEL)
-	0x00a0, // Non-Breaking Space
-	0x1680, // Ogham Space Mark
-	0x180e, // Mongolian Vowel Separator
-	0x2000, // En Quad
-	0x2001, // Em Quad
-	0x2002, // En Space
-	0x2003, // Em Space
-	0x2004, // Three-Per-Em Space
-	0x2005, // Four-Per-Em Space
-	0x2006, // Six-Per-Em Space
-	0x2007, // Figure Space
-	0x2008, // Punctuation Space
-	0x2009, // Thin Space
-	0x200a, // Hair Space
-	0x200b, // Zero Width Space
-	0x200c, // Zero Width Non-Joiner
-	0x200d, // Zero Width Joiner
-	0x200e, // Left-to-Right Mark
-	0x200f, // Right-to-Left Mark
-	0x2028, // Line Separator
-	0x2029, // Paragraph Separator
-	0x202f, // Narrow No-Break Space
-	0x205f, // Medium Mathematical Space
-	0x2800, // Braille Pattern Blank
-	0x3000, // Ideographic Space
-	0xfeff, // Byte Order Mark
-]);
+const CP_SPACE = 0x0020;
+const CP_NEL = 0x0085;
+const CP_MONGOLIAN_VOWEL_SEPARATOR = 0x180e;
+const CP_ZWSP = 0x200b;
+const CP_ZWNJ = 0x200c;
+const CP_ZWJ = 0x200d;
+const CP_LRM = 0x200e;
+const CP_RLM = 0x200f;
+const CP_BRAILLE_PATTERN_BLANK = 0x2800;
 
-const SPACE_CODE_POINT = 0x0020;
-
-function isInvisible(codePoint: number) {
-	return INVISIBLE_CODE_POINTS.has(codePoint);
+function isInvisible(codePoint: number): boolean {
+	if (isSpace(codePoint)) {
+		return true;
+	}
+	return (
+		codePoint === CP_MONGOLIAN_VOWEL_SEPARATOR ||
+		codePoint === CP_NEL ||
+		codePoint === CP_ZWSP ||
+		codePoint === CP_ZWNJ ||
+		codePoint === CP_ZWJ ||
+		codePoint === CP_LRM ||
+		codePoint === CP_RLM ||
+		codePoint === CP_BRAILLE_PATTERN_BLANK
+	);
 }
 
-function toEscapeSequence(codePoint: number, hasUnicode: boolean) {
+function isSpace(codePoint: number): boolean {
+	return Chars.space({}).has(codePoint);
+}
+
+function toEscapeSequence(codePoint: number, hasUnicode: boolean): string {
 	if (codePoint <= 0xff) {
 		return `\\x${codePoint.toString(16).toUpperCase().padStart(2, "0")}`;
 	}
@@ -73,7 +65,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		unexpectedInvisible: {
-			primary: "Unexpected invisible character. Use '{{ escape }}' instead.",
+			primary:
+				"Prefer the more clear '{{ escape }}' instead of this invisible character.",
 			secondary: [
 				"Invisible characters are difficult to distinguish and can lead to hard-to-debug issues.",
 			],
@@ -81,71 +74,98 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
+		function checkCharacter(
+			charNode: Character,
+			patternStart: number,
+			hasUnicode: boolean,
+		) {
+			if (charNode.value === CP_SPACE) {
+				return;
+			}
+
+			if (charNode.raw.length !== 1) {
+				return;
+			}
+
+			if (!isInvisible(charNode.value)) {
+				return;
+			}
+
+			const escape = toEscapeSequence(charNode.value, hasUnicode);
+
+			context.report({
+				data: { escape },
+				fix: {
+					range: {
+						begin: patternStart + charNode.start,
+						end: patternStart + charNode.end,
+					},
+					text: escape,
+				},
+				message: "unexpectedInvisible",
+				range: {
+					begin: patternStart + charNode.start,
+					end: patternStart + charNode.end,
+				},
+			});
+		}
+
+		function checkPattern(
+			pattern: string,
+			patternStart: number,
+			flags: string,
+		) {
+			const regexpAst = parseRegexpAst(pattern, flags);
+			if (!regexpAst) {
+				return;
+			}
+
+			const hasUnicode = flags.includes("u") || flags.includes("v");
+
+			visitRegExpAST(regexpAst, {
+				onCharacterEnter(charNode) {
+					checkCharacter(charNode, patternStart, hasUnicode);
+				},
+			});
+		}
+
+		function checkRegexLiteral(
+			node: AST.RegularExpressionLiteral,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
+			const text = node.getText(sourceFile);
+			const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(text);
+			if (!match) {
+				return;
+			}
+
+			const [, pattern, flags] = match;
+			if (!pattern) {
+				return;
+			}
+
+			const nodeRange = getTSNodeRange(node, sourceFile);
+			checkPattern(pattern, nodeRange.begin + 1, flags ?? "");
+		}
+
+		function checkRegExpConstructor(
+			node: AST.CallExpression | AST.NewExpression,
+			services: TypeScriptFileServices,
+		) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
+				return;
+			}
+
+			const patternEscaped = construction.pattern.replace(/\\\\/g, "\\");
+			checkPattern(patternEscaped, construction.start + 1, construction.flags);
+		}
+
 		return {
 			visitors: {
-				RegularExpressionLiteral: (node, { sourceFile }) => {
-					const text = node.getText(sourceFile);
-					const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(text);
-
-					if (!match) {
-						return;
-					}
-
-					const [, pattern, flagsStr] = match;
-
-					if (!pattern) {
-						return;
-					}
-
-					const hasUnicode =
-						(flagsStr?.includes("u") ?? false) ||
-						(flagsStr?.includes("v") ?? false);
-
-					const regexpAst = parseRegexpAst(pattern, {
-						unicode: flagsStr?.includes("u"),
-						unicodeSets: flagsStr?.includes("v"),
-					});
-
-					if (!regexpAst) {
-						return;
-					}
-
-					const nodeRange = getTSNodeRange(node, sourceFile);
-
-					visitRegExpAST(regexpAst, {
-						onCharacterEnter(charNode: RegExpAST.Character) {
-							if (charNode.value === SPACE_CODE_POINT) {
-								return;
-							}
-
-							if (charNode.raw.length !== 1) {
-								return;
-							}
-
-							if (!isInvisible(charNode.value)) {
-								return;
-							}
-
-							const escape = toEscapeSequence(charNode.value, hasUnicode);
-
-							context.report({
-								data: { escape },
-								fix: {
-									range: {
-										begin: nodeRange.begin + 1 + charNode.start,
-										end: nodeRange.begin + 1 + charNode.end,
-									},
-									text: escape,
-								},
-								message: "unexpectedInvisible",
-								range: {
-									begin: nodeRange.begin + 1 + charNode.start,
-									end: nodeRange.begin + 1 + charNode.end,
-								},
-							});
-						},
-					});
-				},
+				CallExpression: checkRegExpConstructor,
+				NewExpression: checkRegExpConstructor,
+				RegularExpressionLiteral: checkRegexLiteral,
 			},
 		};
 	},
