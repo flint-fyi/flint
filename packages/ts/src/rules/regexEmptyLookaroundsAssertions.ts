@@ -1,42 +1,21 @@
-import {
-	type AST as RegExpAST,
-	visitRegExpAST,
-} from "@eslint-community/regexpp";
+import { visitRegExpAST } from "@eslint-community/regexpp";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
+import type {
+	AST,
+	TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
+import { isPotentiallyEmpty } from "regexp-ast-analysis";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-function isAlternativeEmpty(alternative: RegExpAST.Alternative): boolean {
-	return alternative.elements.every(isElementEmpty);
-}
-
-function isElementEmpty(element: RegExpAST.Element): boolean {
-	switch (element.type) {
-		case "Assertion":
-			return true;
-		case "Backreference":
-		case "Character":
-		case "CharacterClass":
-		case "CharacterSet":
-		case "ExpressionCharacterClass":
-			return false;
-		case "CapturingGroup":
-		case "Group":
-			return isPotentiallyEmpty(element.alternatives);
-		case "Quantifier":
-			return element.min === 0 || isElementEmpty(element.element);
-		default:
-			return false;
-	}
-}
-
-function isPotentiallyEmpty(
-	alternatives: readonly RegExpAST.Alternative[],
-): boolean {
-	return alternatives.some(isAlternativeEmpty);
+function getRegexInfo(node: AST.RegularExpressionLiteral) {
+	const lastSlash = node.text.lastIndexOf("/");
+	return {
+		flags: node.text.slice(lastSlash + 1),
+		pattern: node.text.slice(1, lastSlash),
+	};
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -59,19 +38,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkPattern(
 			pattern: string,
 			patternStart: number,
-			flags: string,
+			flagsStr: string,
 		) {
-			const hasUnicode = flags.includes("u");
-			const hasUnicodeSets = flags.includes("v");
-
-			const regexpAst = parseRegexpAst(pattern, {
-				unicode: hasUnicode,
-				unicodeSets: hasUnicodeSets,
-			});
-
+			const regexpAst = parseRegexpAst(pattern, flagsStr);
 			if (!regexpAst) {
 				return;
 			}
+
+			const flags = {
+				dotAll: flagsStr.includes("s"),
+				global: flagsStr.includes("g"),
+				hasIndices: flagsStr.includes("d"),
+				ignoreCase: flagsStr.includes("i"),
+				multiline: flagsStr.includes("m"),
+				sticky: flagsStr.includes("y"),
+				unicode: flagsStr.includes("u"),
+				unicodeSets: flagsStr.includes("v"),
+			};
 
 			visitRegExpAST(regexpAst, {
 				onAssertionEnter(assertion) {
@@ -82,7 +65,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (isPotentiallyEmpty(assertion.alternatives)) {
+					if (isPotentiallyEmpty(assertion.alternatives, flags)) {
 						context.report({
 							data: {
 								kind: assertion.kind,
@@ -101,56 +84,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			{ sourceFile }: TypeScriptFileServices,
 		) {
-			const text = node.getText(sourceFile);
-			const match = /^\/(.*)\/([dgimsuyv]*)$/.exec(text);
-
-			if (!match) {
-				return;
-			}
-
-			const [, pattern, flags] = match;
-
-			if (!pattern) {
-				return;
-			}
-
+			const { flags, pattern } = getRegexInfo(node);
 			const nodeStart = node.getStart(sourceFile);
-			checkPattern(pattern, nodeStart + 1, flags ?? "");
+			checkPattern(pattern, nodeStart + 1, flags);
 		}
 
 		function checkRegExpConstructor(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args || args.length === 0) {
-				return;
-			}
-
-			const firstArg = args[0];
-			if (!firstArg || firstArg.kind !== ts.SyntaxKind.StringLiteral) {
-				return;
-			}
-
-			const pattern = firstArg.text;
-			const patternStart = firstArg.getStart(sourceFile) + 1;
-
-			let flags = "";
-			const secondArg = args[1];
-			if (secondArg?.kind === ts.SyntaxKind.StringLiteral) {
-				flags = secondArg.text;
-			}
-
-			checkPattern(pattern, patternStart, flags);
+			const patternEscaped = construction.pattern.replace(/\\\\/g, "\\");
+			checkPattern(patternEscaped, construction.start + 1, construction.flags);
 		}
 
 		return {

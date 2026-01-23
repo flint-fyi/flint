@@ -720,6 +720,9 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
+      regexp-ast-analysis:
+        specifier: ^0.7.1
+        version: 0.7.1
       ts-api-utils:
         specifier: ^2.1.0
         version: 2.1.0(typescript@5.9.3)
