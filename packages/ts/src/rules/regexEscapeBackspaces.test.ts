@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\b]/;
   ~~
-  Use \`\\u0008\` instead of \`[\\b]\` for backspace character.
+  Prefer the clearer \`\\u0008\` instead of \`[\\b]\` for backspace character.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a[\\b]b/;
    ~~
-   Use \`\\u0008\` instead of \`[\\b]\` for backspace character.
+   Prefer the clearer \`\\u0008\` instead of \`[\\b]\` for backspace character.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\b\\t]/;
   ~~
-  Use \`\\u0008\` instead of \`[\\b]\` for backspace character.
+  Prefer the clearer \`\\u0008\` instead of \`[\\b]\` for backspace character.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[a\\b]/;
    ~~
-   Use \`\\u0008\` instead of \`[\\b]\` for backspace character.
+   Prefer the clearer \`\\u0008\` instead of \`[\\b]\` for backspace character.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\ba]/;
   ~~
-  Use \`\\u0008\` instead of \`[\\b]\` for backspace character.
+  Prefer the clearer \`\\u0008\` instead of \`[\\b]\` for backspace character.
 `,
 		},
 		{
@@ -60,21 +60,21 @@ new RegExp("[\\\\b]");
 			snapshot: `
 new RegExp("[\\\\b]");
              ~~
-             Use \`\\u0008\` instead of \`[\\b]\` for backspace character.
+             Prefer the clearer \`\\u0008\` instead of \`[\\b]\` for backspace character.
 `,
 		},
 	],
 	valid: [
-		String.raw`/\b/;`,
-		String.raw`/a\b/;`,
-		String.raw`/\ba/;`,
-		String.raw`/\bword\b/;`,
+		`new RegExp("\\\\b");`,
+		`new RegExp(variable);`,
+		String.raw`/[\n]/;`,
+		String.raw`/[\t]/;`,
 		String.raw`/[\u0008]/;`,
 		String.raw`/[a]/;`,
 		String.raw`/[abc]/;`,
-		`new RegExp("\\\\b");`,
-		`new RegExp(variable);`,
-		String.raw`/[\t]/;`,
-		String.raw`/[\n]/;`,
+		String.raw`/\b/;`,
+		String.raw`/\ba/;`,
+		String.raw`/\bword\b/;`,
+		String.raw`/a\b/;`,
 	],
 });
