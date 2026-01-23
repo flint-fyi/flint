@@ -13,34 +13,19 @@ import { ruleCreator } from "./ruleCreator.ts";
 function getNegationText(
 	node: RegExpAST.CharacterSet | RegExpAST.ExpressionCharacterClass,
 ) {
-	if (node.type === "CharacterSet") {
-		const kind = node.raw[1];
-		if (!kind) {
-			return undefined;
-		}
-		const newKind =
-			kind.toLowerCase() === kind ? kind.toUpperCase() : kind.toLowerCase();
-		return `\\${newKind}${node.raw.slice(2)}`;
-	}
-
 	if (node.type === "ExpressionCharacterClass") {
 		return `[${node.raw.slice(2, -1)}]`;
 	}
 
-	return undefined;
-}
+	const kind = node.raw[1];
+	if (!kind) {
+		return undefined;
+	}
 
-function isNegatableElement(
-	element: RegExpAST.CharacterClassElement,
-): element is RegExpAST.CharacterSet | RegExpAST.ExpressionCharacterClass {
-	return (
-		(element.type === "CharacterSet" &&
-			(element.kind === "digit" ||
-				element.kind === "word" ||
-				element.kind === "space" ||
-				element.kind === "property")) ||
-		element.type === "ExpressionCharacterClass"
-	);
+	const newKind =
+		kind.toLowerCase() === kind ? kind.toUpperCase() : kind.toLowerCase();
+
+	return `\\${newKind}${node.raw.slice(2)}`;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -100,8 +85,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								return;
 							}
 
-							const element = ccNode.elements[0];
-							if (!element || !isNegatableElement(element)) {
+							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							const element = ccNode.elements[0]!;
+
+							if (
+								element.type !== "CharacterSet" &&
+								element.type !== "ExpressionCharacterClass"
+							) {
 								return;
 							}
 
@@ -119,13 +109,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								return;
 							}
 
-							const nodeRange = getTSNodeRange(node, sourceFile);
 							context.report({
-								data: {
-									replacement,
-								},
+								data: { replacement },
 								message: "preferNegatedEscape",
-								range: nodeRange,
+								range: getTSNodeRange(node, sourceFile),
 							});
 						},
 					});

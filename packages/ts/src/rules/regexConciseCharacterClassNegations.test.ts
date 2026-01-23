@@ -93,5 +93,8 @@ Use '\p{ASCII}' instead of negated character class.
 		String.raw`/[abc]/;`,
 		String.raw`/[^abc]/;`,
 		String.raw`/[^\p{ASCII}]/iu;`,
+		String.raw`/[\p{Basic_Emoji}]/v`,
+		String.raw`/[^\P{Lowercase_Letter}]/iu`,
+		String.raw`/[^[^a][^b]]/v`,
 	],
 });

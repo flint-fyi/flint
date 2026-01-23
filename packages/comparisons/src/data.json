@@ -14722,7 +14722,8 @@
 		"flint": {
 			"name": "regexConciseCharacterClassNegations",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
