@@ -12,7 +12,8 @@ ruleTester.describe(rule, {
                     ],
                     invalid: []
                 });
-            `,
+            
+`,
 			snapshot: `
                 ruleTester.describe(rule, {
                     valid: [
@@ -23,7 +24,8 @@ ruleTester.describe(rule, {
                     ],
                     invalid: []
                 });
-            `,
+            
+`,
 		},
 		{
 			code: `
@@ -36,7 +38,8 @@ ruleTester.describe(rule, {
                     ],
                     invalid: []
                 });
-            `,
+            
+`,
 			snapshot: `
                 ruleTester.describe(rule, {
                     valid: [
@@ -49,7 +52,8 @@ ruleTester.describe(rule, {
                     ],
                     invalid: []
                 });
-            `,
+            
+`,
 		},
 	],
 	valid: [
