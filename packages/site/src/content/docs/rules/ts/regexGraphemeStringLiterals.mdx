@@ -1,0 +1,78 @@
+---
+description: "Reports string literals inside character classes with the v flag that contain multiple graphemes."
+title: "regexGraphemeStringLiterals"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexGraphemeStringLiterals" />
+
+When using the `v` flag (Unicode sets mode), character classes support string literals using the `\q{...}` syntax.
+These string literals are intended to match a single grapheme or character sequence that behaves as a unit.
+Using multi-grapheme strings inside these literals confuses the distinction between string matching and character class behavior.
+
+If you need to match multi-character strings, use regular alternation with a non-capturing group instead of string literals inside character classes.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\q{abc}]/v;
+```
+
+```ts
+const pattern = /[\q{a|bc}]/v;
+```
+
+```ts
+const pattern = /[\q{hello|world}]/v;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[\q{a|b|c}]/v;
+```
+
+```ts
+const pattern = /[\q{©️|®️}]/v;
+```
+
+```ts
+const pattern = /[\q{🇦🇨|🇦🇩}]/v;
+```
+
+```ts
+const pattern = /[\q{👨‍👩‍👧‍👦}]/v;
+```
+
+```ts
+// Use regular alternation for multi-character strings
+const pattern = /(?:hello|world)/v;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use multi-grapheme string literals in character classes and understand the semantic difference between string matching and character class behavior, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Regular expressions - Unicode character class escape](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Unicode_character_class_escape)
+- [MDN: Regular expressions - Character class](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_class)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexGraphemeStringLiterals" />

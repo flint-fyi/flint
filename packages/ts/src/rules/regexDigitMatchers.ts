@@ -10,9 +10,9 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 
 interface AllowedRange {
 	max: number;
@@ -222,42 +222,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CallExpression | AST.NewExpression,
 			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args?.length) {
-				return;
-			}
-
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const firstArg = args[0]!;
-
-			if (firstArg.kind !== ts.SyntaxKind.StringLiteral) {
-				return;
-			}
-
-			const stringLiteral = firstArg;
-			const rawText = stringLiteral.getText(services.sourceFile);
-			const pattern = rawText.slice(1, -1);
-
-			let flags = "";
-			if (args.length >= 2) {
-				const secondArg = args[1];
-				if (secondArg?.kind === ts.SyntaxKind.StringLiteral) {
-					const flagsText = secondArg.getText(services.sourceFile);
-					flags = flagsText.slice(1, -1);
-				}
-			}
-
+			const { pattern, start } = construction;
 			const unescapedPattern = pattern.replace(/\\\\/g, "\\");
-			const issues = findIssues(unescapedPattern, flags);
-
-			const nodeStart = firstArg.getStart(services.sourceFile);
+			const issues = findIssues(unescapedPattern, construction.flags);
 
 			function mapPositionToSource(pos: number): number {
 				let sourcePos = 0;
@@ -288,15 +260,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					},
 					fix: adjustedRanges.map((range, index) => ({
 						range: {
-							begin: nodeStart + 1 + range.start,
-							end: nodeStart + 1 + range.end,
+							begin: start + 1 + range.start,
+							end: start + 1 + range.end,
 						},
 						text: index === 0 ? issue.newText.replace(/\\/g, "\\\\") : "",
 					})),
 					message: "preferRange",
 					range: {
-						begin: nodeStart + 1 + firstRange.start,
-						end: nodeStart + 1 + firstRange.end,
+						begin: start + 1 + firstRange.start,
+						end: start + 1 + firstRange.end,
 					},
 				});
 			}
