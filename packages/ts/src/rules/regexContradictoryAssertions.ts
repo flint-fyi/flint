@@ -15,12 +15,7 @@ interface AssertionInfo {
 	type: "alwaysEnter" | "cannotEnter";
 }
 
-const wordChars = /^\w$/;
-
-function findContradictions(
-	pattern: string,
-	doubleEscaped: boolean,
-): AssertionInfo[] {
+function findContradictions(pattern: string, doubleEscaped: boolean) {
 	const contradictions: AssertionInfo[] = [];
 	// In a string literal source, \b is represented as \\b (backslash is escaped)
 	// In a regex literal source, \b is just \b
@@ -31,13 +26,13 @@ function findContradictions(
 		const assertionStart = match.index;
 		const assertionEnd = match.index + match[0].length;
 
-		const charBefore = getCharBeforeAssertion(
+		const characterBefore = getCharBeforeAssertion(
 			pattern,
 			assertionStart,
 			doubleEscaped,
 		);
 
-		if (!charBefore) {
+		if (!characterBefore) {
 			continue;
 		}
 
@@ -50,9 +45,9 @@ function findContradictions(
 			continue;
 		}
 
-		const beforeIsWord = isWordChar(charBefore);
-		const elementChar = getElementChar(optional.element, doubleEscaped);
-		const elementIsWord = isWordChar(elementChar);
+		const beforeIsWord = isWordCharacter(characterBefore);
+		const elementCharacter = getElementChar(optional.element, doubleEscaped);
+		const elementIsWord = isWordCharacter(elementCharacter);
 
 		const afterOptional = getCharRepresentation(
 			pattern,
@@ -63,7 +58,7 @@ function findContradictions(
 			continue;
 		}
 
-		const afterIsWord = isWordChar(afterOptional.char);
+		const afterIsWord = isWordCharacter(afterOptional.character);
 
 		// Word boundary \b requires a transition between word and non-word chars
 		// If element has same word-ness as char before \b, entering quantifier would violate \b
@@ -91,11 +86,42 @@ function findContradictions(
 	return contradictions;
 }
 
+function getCharacterFromEscape(escape: string) {
+	switch (escape) {
+		case "\\\\d":
+		case "\\d":
+			return "0";
+
+		case "\\\\D":
+		case "\\D":
+			return " ";
+
+		case "\\\\s":
+		case "\\s":
+			return " ";
+
+		case "\\\\S":
+		case "\\S":
+			return "a";
+
+		case "\\\\w":
+		case "\\w":
+			return "a";
+
+		case "\\\\W":
+		case "\\W":
+			return " ";
+
+		default:
+			return undefined;
+	}
+}
+
 function getCharBeforeAssertion(
 	pattern: string,
 	assertionStart: number,
 	doubleEscaped: boolean,
-): string | undefined {
+) {
 	if (assertionStart <= 0) {
 		return undefined;
 	}
@@ -103,7 +129,7 @@ function getCharBeforeAssertion(
 	if (doubleEscaped) {
 		if (assertionStart >= 3 && pattern[assertionStart - 3] === "\\") {
 			const seq = pattern.slice(assertionStart - 3, assertionStart);
-			const charResult = getCharFromEscape(seq);
+			const charResult = getCharacterFromEscape(seq);
 			if (charResult) {
 				return charResult;
 			}
@@ -116,7 +142,7 @@ function getCharBeforeAssertion(
 
 	if (assertionStart >= 2 && pattern[assertionStart - 2] === "\\") {
 		const seq = pattern.slice(assertionStart - 2, assertionStart);
-		const charResult = getCharFromEscape(seq);
+		const charResult = getCharacterFromEscape(seq);
 		if (charResult) {
 			return charResult;
 		}
@@ -127,39 +153,11 @@ function getCharBeforeAssertion(
 	return pattern[assertionStart - 1];
 }
 
-function getCharFromEscape(escape: string): string | undefined {
-	if (escape === "\\w" || escape === "\\\\w") {
-		return "a";
-	}
-
-	if (escape === "\\W" || escape === "\\\\W") {
-		return " ";
-	}
-
-	if (escape === "\\d" || escape === "\\\\d") {
-		return "0";
-	}
-
-	if (escape === "\\D" || escape === "\\\\D") {
-		return " ";
-	}
-
-	if (escape === "\\s" || escape === "\\\\s") {
-		return " ";
-	}
-
-	if (escape === "\\S" || escape === "\\\\S") {
-		return "a";
-	}
-
-	return undefined;
-}
-
 function getCharRepresentation(
 	pattern: string,
 	startIndex: number,
 	doubleEscaped: boolean,
-): undefined | { char: string; length: number } {
+): undefined | { character: string; length: number } {
 	if (startIndex >= pattern.length) {
 		return undefined;
 	}
@@ -169,13 +167,13 @@ function getCharRepresentation(
 	if (doubleEscaped) {
 		if (remaining.startsWith("\\\\")) {
 			const twoCharEscape = remaining.slice(0, 3);
-			const charResult = getCharFromEscape(twoCharEscape);
+			const charResult = getCharacterFromEscape(twoCharEscape);
 			if (charResult) {
-				return { char: charResult, length: 3 };
+				return { character: charResult, length: 3 };
 			}
 
 			if (remaining.length >= 3 && remaining[2]) {
-				return { char: remaining[2], length: 3 };
+				return { character: remaining[2], length: 3 };
 			}
 
 			return undefined;
@@ -183,46 +181,35 @@ function getCharRepresentation(
 	} else {
 		if (remaining.startsWith("\\")) {
 			const twoCharEscape = remaining.slice(0, 2);
-			const charResult = getCharFromEscape(twoCharEscape);
+			const charResult = getCharacterFromEscape(twoCharEscape);
 			if (charResult) {
-				return { char: charResult, length: 2 };
+				return { character: charResult, length: 2 };
 			}
 
 			if (
 				twoCharEscape === "\\b" ||
 				twoCharEscape === "\\B" ||
-				twoCharEscape === "\\0"
+				twoCharEscape === "\\0" ||
+				remaining.length < 1 ||
+				!remaining[1]
 			) {
 				return undefined;
 			}
 
-			if (remaining.length >= 2 && remaining[1]) {
-				return { char: remaining[1], length: 2 };
-			}
-
-			return undefined;
+			return { character: remaining[1], length: 2 };
 		}
 	}
 
-	const char = remaining[0];
-	if (!char) {
-		return undefined;
-	}
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const character = remaining[0]!;
 
-	return { char, length: 1 };
+	return { character, length: 1 };
 }
 
-function getElementChar(
-	element: string,
-	doubleEscaped: boolean,
-): string | undefined {
+function getElementChar(element: string, doubleEscaped: boolean) {
 	if (element.startsWith("[")) {
 		const inner = element.slice(1, element.lastIndexOf("]"));
-		if (inner.length === 0) {
-			return undefined;
-		}
-
-		if (inner.startsWith("^")) {
+		if (inner.length === 0 || inner.startsWith("^")) {
 			return undefined;
 		}
 
@@ -233,16 +220,15 @@ function getElementChar(
 			}
 		}
 
-		const firstChar = inner[0];
-		return firstChar;
+		return inner[0];
 	}
 
 	const withoutQuantifier = element.replace(/[*?]$/, "");
 
 	if (doubleEscaped && withoutQuantifier.startsWith("\\\\")) {
-		const charResult = getCharFromEscape(withoutQuantifier);
-		if (charResult) {
-			return charResult;
+		const characterResult = getCharacterFromEscape(withoutQuantifier);
+		if (characterResult) {
+			return characterResult;
 		}
 
 		if (withoutQuantifier.length >= 3) {
@@ -253,7 +239,7 @@ function getElementChar(
 	}
 
 	if (!doubleEscaped && withoutQuantifier.startsWith("\\")) {
-		const charResult = getCharFromEscape(withoutQuantifier);
+		const charResult = getCharacterFromEscape(withoutQuantifier);
 		if (charResult) {
 			return charResult;
 		}
@@ -269,17 +255,11 @@ function getElementChar(
 }
 
 function getRegexPattern(node: AST.RegularExpressionLiteral): string {
-	const text = node.text;
-	const lastSlash = text.lastIndexOf("/");
-	return text.slice(1, lastSlash);
+	return node.text.slice(1, node.text.lastIndexOf("/"));
 }
 
-function isWordChar(char: string | undefined) {
-	if (!char) {
-		return false;
-	}
-
-	return wordChars.test(char);
+function isWordCharacter(character: string | undefined) {
+	return character ? /^\w$/.test(character) : false;
 }
 
 function parseOptionalQuantifier(
@@ -293,11 +273,11 @@ function parseOptionalQuantifier(
 
 	const remaining = pattern.slice(startIndex);
 
-	const charClassMatch = /^\[[^\]]*\][*?]/.exec(remaining);
-	if (charClassMatch) {
+	const characterClassMatch = /^\[[^\]]*\][*?]/.exec(remaining);
+	if (characterClassMatch) {
 		return {
-			element: charClassMatch[0],
-			end: startIndex + charClassMatch[0].length,
+			element: characterClassMatch[0],
+			end: startIndex + characterClassMatch[0].length,
 		};
 	}
 
@@ -384,17 +364,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const firstArg = args[0];
-			if (!firstArg || firstArg.kind !== ts.SyntaxKind.StringLiteral) {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const stringLiteral = args[0]!;
+
+			if (stringLiteral.kind !== ts.SyntaxKind.StringLiteral) {
 				return;
 			}
 
-			const stringLiteral = firstArg;
 			const rawText = stringLiteral.getText(services.sourceFile);
 			const pattern = rawText.slice(1, -1);
 			const contradictions = findContradictions(pattern, true);
 
-			const nodeStart = firstArg.getStart(services.sourceFile);
+			const nodeStart = stringLiteral.getStart(services.sourceFile);
 
 			for (const contradiction of contradictions) {
 				context.report({
