@@ -6,10 +6,7 @@ import z from "zod";
 
 import type { CacheStorage } from "../types/cache.ts";
 import type { LintResults } from "../types/linting.ts";
-import {
-	cacheStorageCodec,
-	toSerializableCacheStorage,
-} from "./cacheSchema.ts";
+import { cacheStorageCodec } from "./cacheSchema.ts";
 import { cacheFileDirectory, cacheFilePath } from "./constants.ts";
 import { getFileTouchTime } from "./getFileTouchTime.ts";
 
@@ -58,9 +55,7 @@ export async function writeToCache(
 
 	await fs.mkdir(cacheFileDirectory, { recursive: true });
 
-	// Convert to serializable form (filters out SuggestionForFiles with functions)
-	const serializableStorage = toSerializableCacheStorage(storage);
-	const encoded = z.safeEncode(cacheStorageCodec, serializableStorage);
+	const encoded = z.safeEncode(cacheStorageCodec, storage);
 	if (!encoded.success) {
 		log("Failed to encode cache data: %s", encoded.error.message);
 		return;

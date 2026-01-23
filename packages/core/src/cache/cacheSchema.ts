@@ -1,7 +1,8 @@
-import z from "zod";
+import z from "zod/v4";
 
-import type { CacheStorage } from "../types/cache.ts";
-import type { Suggestion, SuggestionForFile } from "../types/changes.ts";
+import type { SuggestionForFile } from "../types/changes.ts";
+import { jsonCodec } from "../utils/codecs.ts";
+import { isSuggestionForFiles } from "../utils/predicates.ts";
 
 const characterReportRangeSchema = z.object({
 	begin: z.number(),
@@ -24,12 +25,31 @@ const fixSchema = z.object({
 	text: z.string(),
 });
 
-// Note: SuggestionForFiles with functions cannot be cached (not serializable)
-const suggestionSchema = z.object({
+const changeBaseSchema = z.object({
 	id: z.string(),
+});
+
+const suggestionForFileSchema = changeBaseSchema.extend({
 	range: characterReportRangeSchema,
 	text: z.string(),
 });
+
+const suggestionForFilesSchema = changeBaseSchema.extend({
+	files: z.record(
+		z.string(),
+		z
+			.function({
+				input: z.tuple([z.string()]),
+				output: z.array(fixSchema),
+			})
+			.optional(),
+	),
+});
+
+const suggestionSchema = z.union([
+	suggestionForFileSchema,
+	suggestionForFilesSchema,
+]);
 
 const reportMessageDataSchema = z.object({
 	primary: z.string(),
@@ -54,7 +74,16 @@ const fileReportSchema = z.object({
 	fix: z.array(fixSchema).optional(),
 	message: reportMessageDataSchema,
 	range: normalizedReportRangeObjectSchema,
-	suggestions: z.array(suggestionSchema).optional(),
+	suggestions: z
+		.codec(z.array(suggestionForFileSchema), z.array(suggestionSchema), {
+			decode: (suggestions) => suggestions,
+			encode: (suggestions) =>
+				suggestions.filter(
+					(change): change is SuggestionForFile =>
+						!isSuggestionForFiles(change),
+				),
+		})
+		.optional(),
 });
 
 const languageFileDiagnosticSchema = z.object({
@@ -69,71 +98,10 @@ const fileCacheStorageSchema = z.object({
 	timestamp: z.number(),
 });
 
-const cacheStorageSchema = z.object({
+/** @internal */
+export const cacheStorageSchema = z.object({
 	configs: z.record(z.string(), z.number()),
 	files: z.record(z.string(), fileCacheStorageSchema),
 });
 
-// JSON codec for bidirectional cache serialization
-export const cacheStorageCodec = z.codec(
-	z.string(), // input: raw JSON string
-	cacheStorageSchema, // output: validated CacheStorage object
-	{
-		decode: (jsonString, ctx) => {
-			try {
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-				return JSON.parse(jsonString);
-			} catch (error: unknown) {
-				ctx.issues.push({
-					code: "invalid_format",
-					format: "json",
-					input: jsonString,
-					message: error instanceof Error ? error.message : String(error),
-				});
-				return z.NEVER;
-			}
-		},
-		encode: (value) => JSON.stringify(value, null, "\t"),
-	},
-);
-
-/** The serializable form of CacheStorage (no functions) */
-export type SerializableCacheStorage = z.output<typeof cacheStorageCodec>;
-
-/**
- * Type guard to check if a suggestion is serializable (SuggestionForFile).
- * SuggestionForFiles contains functions and cannot be serialized to JSON.
- */
-function isSerializableSuggestion(
-	suggestion: Suggestion,
-): suggestion is SuggestionForFile {
-	return "range" in suggestion && "text" in suggestion;
-}
-
-/**
- * Converts CacheStorage to its serializable form by filtering out
- * non-serializable suggestions (SuggestionForFiles with functions).
- *
- * This handles the type transformation from CacheStorage (which can contain
- * SuggestionForFiles) to SerializableCacheStorage (which only contains
- * SuggestionForFile).
- */
-export function toSerializableCacheStorage(
-	cache: CacheStorage,
-): SerializableCacheStorage {
-	return {
-		configs: cache.configs,
-		files: Object.fromEntries(
-			Object.entries(cache.files).map(([filePath, fileCache]) => [
-				filePath,
-				{
-					...fileCache,
-					reports: fileCache.reports?.map((report) => ({
-						...report,
-						suggestions: report.suggestions?.filter(isSerializableSuggestion),
-					})),
-				},
-			]),
-		),
-	};
-}
+export const cacheStorageCodec = jsonCodec(cacheStorageSchema);
