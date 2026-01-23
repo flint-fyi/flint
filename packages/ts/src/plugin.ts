@@ -167,7 +167,15 @@ import parameterReassignments from "./rules/parameterReassignments.ts";
 import parseIntRadixes from "./rules/parseIntRadixes.ts";
 import propertyAccessNotation from "./rules/propertyAccessNotation.ts";
 import recursionOnlyArguments from "./rules/recursionOnlyArguments.ts";
+import reduceTypeParameters from "./rules/reduceTypeParameters.ts";
+import regexAllGlobalFlags from "./rules/regexAllGlobalFlags.ts";
 import regexAmbiguousInvalidity from "./rules/regexAmbiguousInvalidity.ts";
+import regexCharacterClasses from "./rules/regexCharacterClasses.ts";
+import regexCharacterClassRanges from "./rules/regexCharacterClassRanges.ts";
+import regexConciseCharacterClassNegations from "./rules/regexConciseCharacterClassNegations.ts";
+import regexControlCharacterEscapes from "./rules/regexControlCharacterEscapes.ts";
+import regexControlCharacters from "./rules/regexControlCharacters.ts";
+import regexDigitMatchers from "./rules/regexDigitMatchers.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import selfComparisons from "./rules/selfComparisons.ts";
@@ -361,7 +369,15 @@ export const ts = createPlugin({
 		parseIntRadixes,
 		propertyAccessNotation,
 		recursionOnlyArguments,
+		reduceTypeParameters,
+		regexAllGlobalFlags,
 		regexAmbiguousInvalidity,
+		regexCharacterClasses,
+		regexCharacterClassRanges,
+		regexConciseCharacterClassNegations,
+		regexControlCharacterEscapes,
+		regexControlCharacters,
+		regexDigitMatchers,
 		returnAssignments,
 		selfAssignments,
 		selfComparisons,

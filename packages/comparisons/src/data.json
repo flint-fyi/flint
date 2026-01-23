@@ -14589,6 +14589,7 @@
 			"name": "reduceTypeParameters",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -14646,7 +14647,8 @@
 		"flint": {
 			"name": "regexAllGlobalFlags",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -14680,6 +14682,7 @@
 			"name": "regexCharacterClasses",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -14693,7 +14696,8 @@
 		"flint": {
 			"name": "regexCharacterClassRanges",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -14719,7 +14723,8 @@
 		"flint": {
 			"name": "regexConciseCharacterClassNegations",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -14790,7 +14795,8 @@
 		"flint": {
 			"name": "regexControlCharacterEscapes",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -14819,7 +14825,8 @@
 		"flint": {
 			"name": "regexControlCharacters",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -14839,6 +14846,7 @@
 			"name": "regexDigitMatchers",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
