@@ -8,20 +8,12 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 
-interface EmptyStringLiteral {
-	end: number;
-	start: number;
-}
-
-function findEmptyStringLiterals(
-	pattern: string,
-	flags: string,
-): EmptyStringLiteral[] {
-	const results: EmptyStringLiteral[] = [];
+function findEmptyStringLiterals(pattern: string, flags: string) {
+	const results: ClassStringDisjunction[] = [];
 
 	if (!flags.includes("v")) {
 		return results;
@@ -36,15 +28,12 @@ function findEmptyStringLiterals(
 
 	visitRegExpAST(ast, {
 		onClassStringDisjunctionEnter(node: ClassStringDisjunction) {
-			const allEmpty = node.alternatives.every(
-				(alt) => alt.elements.length === 0,
-			);
-
-			if (allEmpty) {
-				results.push({
-					end: node.end,
-					start: node.start,
-				});
+			if (
+				node.alternatives.every(
+					(alternative) => alternative.elements.length === 0,
+				)
+			) {
+				results.push(node);
 			}
 		},
 	});
@@ -53,11 +42,10 @@ function findEmptyStringLiterals(
 }
 
 function getRegexInfo(node: AST.RegularExpressionLiteral) {
-	const text = node.text;
-	const lastSlash = text.lastIndexOf("/");
+	const lastSlash = node.text.lastIndexOf("/");
 	return {
-		flags: text.slice(lastSlash + 1),
-		pattern: text.slice(1, lastSlash),
+		flags: node.text.slice(lastSlash + 1),
+		pattern: node.text.slice(1, lastSlash),
 	};
 }
 
@@ -69,13 +57,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		emptyStringLiteral: {
-			primary: "Empty string literal in character class.",
+			primary:
+				"This empty string literal in a character class will always match the empty string.",
 			secondary: [
 				"The `\\q{}` string literal matches the empty string.",
-				"Use a quantifier instead if this is intentional.",
+				"This generally either does not benefit the regular expression or can cause unintended matches.",
 			],
 			suggestions: [
-				"Remove the empty string literal or use a quantifier on the character class.",
+				"Remove the empty string literal if this was unintentional.",
+				"Use a quantifier on the character class if this was intentional.",
 			],
 		},
 	},
@@ -103,44 +93,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CallExpression | AST.NewExpression,
 			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args || args.length === 0) {
-				return;
-			}
-
-			const patternArg = args[0];
-			if (!patternArg || patternArg.kind !== ts.SyntaxKind.StringLiteral) {
-				return;
-			}
-
-			const rawText = patternArg.getText(services.sourceFile);
-			const pattern = rawText.slice(1, -1).replace(/\\\\/g, "\\");
-
-			let flags = "";
-			if (args.length >= 2) {
-				const flagsArg = args[1];
-				if (flagsArg?.kind === ts.SyntaxKind.StringLiteral) {
-					const flagsText = flagsArg.getText(services.sourceFile);
-					flags = flagsText.slice(1, -1);
-				}
-			}
-
-			const emptyLiterals = findEmptyStringLiterals(pattern, flags);
-			const patternNodeStart = patternArg.getStart(services.sourceFile);
+			const pattern = construction.pattern.replace(/\\\\/g, "\\");
+			const emptyLiterals = findEmptyStringLiterals(
+				pattern,
+				construction.flags,
+			);
 
 			for (const literal of emptyLiterals) {
 				context.report({
 					message: "emptyStringLiteral",
 					range: {
-						begin: patternNodeStart + literal.start,
-						end: patternNodeStart + literal.end,
+						begin: construction.start + literal.start,
+						end: construction.start + literal.end,
 					},
 				});
 			}

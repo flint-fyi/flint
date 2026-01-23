@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\q{}]/v;
   ~~~~
-  Empty string literal in character class.
+  This empty string literal in a character class will always match the empty string.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[a\\q{}]/v;
    ~~~~
-   Empty string literal in character class.
+   This empty string literal in a character class will always match the empty string.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\q{}b]/v;
   ~~~~
-  Empty string literal in character class.
+  This empty string literal in a character class will always match the empty string.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[a\\q{}b]/v;
    ~~~~
-   Empty string literal in character class.
+   This empty string literal in a character class will always match the empty string.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ new RegExp("[\\\\q{}]", "v");
 			snapshot: `
 new RegExp("[\\\\q{}]", "v");
              ~~~~
-             Empty string literal in character class.
+             This empty string literal in a character class will always match the empty string.
 `,
 		},
 	],
