@@ -14793,7 +14793,8 @@
 		"flint": {
 			"name": "regexControlCharacterEscapes",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{

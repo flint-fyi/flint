@@ -1,0 +1,108 @@
+---
+description: "Reports control characters that are not escaped using standard escape sequences."
+title: "regexControlCharacterEscapes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexControlCharacterEscapes" />
+
+Enforces consistent escaping of control characters in regular expressions by requiring standard escape sequences (`\0`, `\t`, `\n`, `\v`, `\f`, `\r`) instead of hex, unicode, or control character escapes.
+
+## Examples
+
+### Hex Escapes
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\x0a/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\n/;
+```
+
+</TabItem>
+</Tabs>
+
+### Unicode Escapes
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\u000a/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\n/;
+```
+
+</TabItem>
+</Tabs>
+
+### Control Character Escapes
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\cJ/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\n/;
+```
+
+</TabItem>
+</Tabs>
+
+### Unicode Code Point Escapes
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\u{a}/u;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\n/u;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has an established convention of using hex or unicode escapes for control characters, or if you need consistency with generated code that uses these formats, you may disable this rule.
+
+## Further Reading
+
+- [MDN: Character escape](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_escape)
+- [MDN: Regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexControlCharacterEscapes" />

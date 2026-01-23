@@ -171,6 +171,7 @@ import reduceTypeParameters from "./rules/reduceTypeParameters.ts";
 import regexAllGlobalFlags from "./rules/regexAllGlobalFlags.ts";
 import regexCharacterClasses from "./rules/regexCharacterClasses.ts";
 import regexCharacterClassRanges from "./rules/regexCharacterClassRanges.ts";
+import regexControlCharacterEscapes from "./rules/regexControlCharacterEscapes.ts";
 import regexDigitMatchers from "./rules/regexDigitMatchers.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
@@ -369,6 +370,7 @@ export const ts = createPlugin({
 		regexAllGlobalFlags,
 		regexCharacterClasses,
 		regexCharacterClassRanges,
+		regexControlCharacterEscapes,
 		regexDigitMatchers,
 		returnAssignments,
 		selfAssignments,
