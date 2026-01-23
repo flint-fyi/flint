@@ -11,7 +11,7 @@ interface IrregularWhitespaceMatch {
 
 function findIrregularWhitespaces(text: string): IrregularWhitespaceMatch[] {
 	const irregularWhitespacePattern =
-		/[\f\v\u0085\ufeff\u00a0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u202f\u205f\u3000\u2028\u2029]/gu;
+		/[\f\v\x85\ufeff\xa0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u202f\u205f\u3000\u2028\u2029]/gu;
 
 	const matches: IrregularWhitespaceMatch[] = [];
 	let match: null | RegExpExecArray;
