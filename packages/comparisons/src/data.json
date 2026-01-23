@@ -15435,7 +15435,8 @@
 		"flint": {
 			"name": "regexSetOperationOptimizations",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
