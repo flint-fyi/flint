@@ -1,3 +1,4 @@
+// flint-disable-file escapeSequenceCasing
 import rule from "./regexDuplicateCharacterClassCharacters.ts";
 import { ruleTester } from "./ruleTester.ts";
 
