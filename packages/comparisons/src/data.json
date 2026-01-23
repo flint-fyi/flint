@@ -15096,7 +15096,8 @@
 		"flint": {
 			"name": "regexIgnoreCaseFlags",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{

@@ -1,0 +1,82 @@
+---
+description: "Reports regex patterns that can be simplified by using the i (ignore case) flag."
+title: "regexIgnoreCaseFlags"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexIgnoreCaseFlags" />
+
+When a character class contains both upper and lower case versions of the same letters, the pattern can be simplified by using the `i` (ignore case) flag.
+This makes the regex shorter and clearer by eliminating redundant character class entries.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[aA]/;
+```
+
+```ts
+const pattern = /[a-zA-Z]/;
+```
+
+```ts
+const pattern = /[aAbBcC]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[a]/i;
+```
+
+```ts
+const pattern = /[a-z]/i;
+```
+
+```ts
+const pattern = /[abc]/i;
+```
+
+```ts
+// Only lowercase letters - no redundancy
+const pattern = /[a-z]/;
+```
+
+```ts
+// Only uppercase letters - no redundancy
+const pattern = /[A-Z]/;
+```
+
+```ts
+// Already using the i flag
+const pattern = /[a-z]/i;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need explicit control over case matching in your regex patterns, or if your codebase intentionally avoids the `i` flag for performance or compatibility reasons, you might prefer to disable this rule.
+Some legacy JavaScript environments may have inconsistent behavior with the `i` flag for non-ASCII characters.
+
+## Further Reading
+
+- [MDN: Regular expressions - Flags](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#advanced_searching_with_flags)
+- [MDN: Regular expressions - Case-insensitive matching](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_class#case-insensitive_matching)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexIgnoreCaseFlags" />
