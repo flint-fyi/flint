@@ -1,6 +1,5 @@
 import {
 	type AST as RegExpAST,
-	RegExpParser,
 	visitRegExpAST,
 } from "@eslint-community/regexpp";
 import {
@@ -9,6 +8,7 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 type CharElement =
 	| RegExpAST.Character
@@ -23,10 +23,7 @@ interface CharLookaround {
 }
 
 function escapeRaw(raw: string) {
-	if (/^[&\-^]$/u.test(raw)) {
-		return `\\${raw}`;
-	}
-	return raw;
+	return /^[&\-^]$/u.test(raw) ? `\\${raw}` : raw;
 }
 
 function isCharElement(node: RegExpAST.Node): node is CharElement {
@@ -53,8 +50,10 @@ function isCharLookaround(
 		return false;
 	}
 
-	const firstElement = firstAlt.elements[0];
-	if (!firstElement || firstAlt.elements.length !== 1) {
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const firstElement = firstAlt.elements[0]!;
+
+	if (firstAlt.elements.length !== 1) {
 		return false;
 	}
 
@@ -81,8 +80,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		const parser = new RegExpParser();
-
 		return {
 			visitors: {
 				RegularExpressionLiteral: (node, { sourceFile }) => {
@@ -95,23 +92,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const [, pattern, flagsStr] = match;
 
-					if (!pattern) {
+					if (!pattern || !flagsStr?.includes("v")) {
 						return;
 					}
 
-					const hasUnicodeSets = flagsStr?.includes("v") ?? false;
-
-					if (!hasUnicodeSets) {
-						return;
-					}
-
-					let regexpAst: RegExpAST.Pattern;
-					try {
-						regexpAst = parser.parsePattern(pattern, undefined, undefined, {
-							unicode: false,
-							unicodeSets: true,
-						});
-					} catch {
+					const regexpAst = parseRegexpAst(pattern);
+					if (!regexpAst) {
 						return;
 					}
 
@@ -120,12 +106,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							const { elements } = alternative;
 
 							for (let i = 1; i < elements.length; i++) {
-								const previous = elements[i - 1];
-								const current = elements[i];
-
-								if (!previous || !current) {
-									continue;
-								}
+								// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+								const previous = elements[i - 1]!;
+								// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+								const current = elements[i]!;
 
 								if (
 									isCharElement(previous) &&

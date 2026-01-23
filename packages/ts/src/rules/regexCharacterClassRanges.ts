@@ -1,6 +1,5 @@
 import {
 	type AST as RegExpAST,
-	RegExpParser,
 	visitRegExpAST,
 } from "@eslint-community/regexpp";
 import {
@@ -9,6 +8,7 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 interface CharacterGroup {
 	max: { raw: string; value: number };
@@ -136,8 +136,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		const parser = new RegExpParser();
-
 		return {
 			visitors: {
 				RegularExpressionLiteral: (node, { sourceFile }) => {
@@ -154,16 +152,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const hasUnicode = flagsStr?.includes("u") ?? false;
-					const hasUnicodeSets = flagsStr?.includes("v") ?? false;
+					const hasUnicode = flagsStr?.includes("u");
+					const hasUnicodeSets = flagsStr?.includes("v");
 
-					let regexpAst: RegExpAST.Pattern;
-					try {
-						regexpAst = parser.parsePattern(pattern, undefined, undefined, {
-							unicode: hasUnicode,
-							unicodeSets: hasUnicodeSets,
-						});
-					} catch {
+					const regexpAst = parseRegexpAst(pattern, {
+						unicode: hasUnicode,
+						unicodeSets: hasUnicodeSets,
+					});
+					if (!regexpAst) {
 						return;
 					}
 

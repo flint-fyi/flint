@@ -1,6 +1,5 @@
 import {
 	type AST as RegExpAST,
-	RegExpParser,
 	visitRegExpAST,
 } from "@eslint-community/regexpp";
 import {
@@ -9,6 +8,7 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 function getNegationText(
 	node: RegExpAST.CharacterSet | RegExpAST.ExpressionCharacterClass,
@@ -47,8 +47,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		const parser = new RegExpParser();
-
 		return {
 			visitors: {
 				RegularExpressionLiteral: (node, { sourceFile }) => {
@@ -69,15 +67,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const hasUnicodeSets = flagsStr?.includes("v") ?? false;
 					const hasIgnoreCase = flagsStr?.includes("i") ?? false;
 
-					let regexpAst: RegExpAST.Pattern;
-					try {
-						regexpAst = parser.parsePattern(pattern, undefined, undefined, {
-							unicode: hasUnicode,
-							unicodeSets: hasUnicodeSets,
-						});
-					} catch {
-						return;
-					}
+					const regexpAst = parseRegexpAst(pattern, {
+						unicode: hasUnicode,
+						unicodeSets: hasUnicodeSets,
+					});
 
 					visitRegExpAST(regexpAst, {
 						onCharacterClassEnter(ccNode) {
