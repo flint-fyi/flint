@@ -7,68 +7,74 @@ ruleTester.describe(rule, {
 			code: `
 "something".match(/thing/);
 `,
+			output: `
+/thing/.exec("something");
+`,
 			snapshot: `
 "something".match(/thing/);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer \`RegExp.prototype.exec()\` over \`String.prototype.match()\` when not using the global flag.
-`,
-		},
-		{
-			code: `
-"some things are just things".match(/thing/);
-`,
-			snapshot: `
-"some things are just things".match(/thing/);
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer \`RegExp.prototype.exec()\` over \`String.prototype.match()\` when not using the global flag.
+For consistency, prefer \`RegExp.prototype.exec()\` over \`String.prototype.match()\` when not using the global flag.
 `,
 		},
 		{
 			code: `
 "something".match(new RegExp("thing"));
+`,
+			output: `
+new RegExp("thing").exec("something");
 `,
 			snapshot: `
 "something".match(new RegExp("thing"));
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer \`RegExp.prototype.exec()\` over \`String.prototype.match()\` when not using the global flag.
+For consistency, prefer \`RegExp.prototype.exec()\` over \`String.prototype.match()\` when not using the global flag.
 `,
 		},
 		{
 			code: `
 "something".match(RegExp("thing"));
+`,
+			output: `
+RegExp("thing").exec("something");
 `,
 			snapshot: `
 "something".match(RegExp("thing"));
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer \`RegExp.prototype.exec()\` over \`String.prototype.match()\` when not using the global flag.
+For consistency, prefer \`RegExp.prototype.exec()\` over \`String.prototype.match()\` when not using the global flag.
 `,
 		},
 		{
 			code: `
 "something".match(/thin[[g]]/v);
 `,
+			output: `
+/thin[[g]]/v.exec("something");
+`,
 			snapshot: `
 "something".match(/thin[[g]]/v);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer \`RegExp.prototype.exec()\` over \`String.prototype.match()\` when not using the global flag.
+For consistency, prefer \`RegExp.prototype.exec()\` over \`String.prototype.match()\` when not using the global flag.
 `,
 		},
 		{
 			code: `
 const getValue = (input: string) => input + "";
 getValue("test").match(/pattern/);
+`,
+			output: `
+const getValue = (input: string) => input + "";
+/pattern/.exec(getValue("test"));
 `,
 			snapshot: `
 const getValue = (input: string) => input + "";
 getValue("test").match(/pattern/);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Prefer \`RegExp.prototype.exec()\` over \`String.prototype.match()\` when not using the global flag.
+For consistency, prefer \`RegExp.prototype.exec()\` over \`String.prototype.match()\` when not using the global flag.
 `,
 		},
 	],
 	valid: [
 		`/thing/.exec("something");`,
-		`"some things are just things".match(/thing/g);`,
+		`"example".match(/thing/g);`,
 		`
 const text = "something";
 const search = /thing/;
@@ -83,6 +89,14 @@ search.exec(text);
 const text = "something";
 const search = /thing/;
 text.match(search);
+`,
+		`
+declare const hasExec: { exec(...args: unknown[]): unknown };
+hasExec.exec("test");
+`,
+		`
+declare const hasMatch: { match(...args: unknown[]): unknown };
+hasExec.match(/test/
 `,
 	],
 });
