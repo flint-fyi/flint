@@ -1,10 +1,23 @@
 import { describe, expect, it } from "vitest";
 import z from "zod";
 
-import { cacheStorageCodec, cacheStorageSchema } from "./cacheSchema.ts";
+import type { CacheStorage } from "../types/cache.ts";
+import {
+	cacheStorageCodec,
+	toSerializableCacheStorage,
+} from "./cacheSchema.ts";
 
-describe("cacheStorageSchema", () => {
-	it("parses valid cache data", () => {
+// Helper to validate cache objects using the codec
+// z.safeEncode validates the object against the codec's output schema
+function validateCacheObject(obj: unknown) {
+	return z.safeEncode(
+		cacheStorageCodec,
+		obj as z.output<typeof cacheStorageCodec>,
+	);
+}
+
+describe("cacheStorageCodec validation", () => {
+	it("validates valid cache data", () => {
 		const validCache = {
 			configs: {
 				"flint.config.ts": 1234567890,
@@ -17,7 +30,7 @@ describe("cacheStorageSchema", () => {
 			},
 		};
 
-		const result = cacheStorageSchema.safeParse(validCache);
+		const result = validateCacheObject(validCache);
 		expect(result.success).toBe(true);
 	});
 
@@ -26,7 +39,7 @@ describe("cacheStorageSchema", () => {
 			files: {},
 		};
 
-		const result = cacheStorageSchema.safeParse(invalidCache);
+		const result = validateCacheObject(invalidCache);
 		expect(result.success).toBe(false);
 	});
 
@@ -35,7 +48,7 @@ describe("cacheStorageSchema", () => {
 			configs: {},
 		};
 
-		const result = cacheStorageSchema.safeParse(invalidCache);
+		const result = validateCacheObject(invalidCache);
 		expect(result.success).toBe(false);
 	});
 
@@ -49,11 +62,11 @@ describe("cacheStorageSchema", () => {
 			},
 		};
 
-		const result = cacheStorageSchema.safeParse(invalidCache);
+		const result = validateCacheObject(invalidCache);
 		expect(result.success).toBe(false);
 	});
 
-	it("parses cache with optional file properties", () => {
+	it("validates cache with optional file properties", () => {
 		const validCache = {
 			configs: { "package.json": 123 },
 			files: {
@@ -65,11 +78,11 @@ describe("cacheStorageSchema", () => {
 			},
 		};
 
-		const result = cacheStorageSchema.safeParse(validCache);
+		const result = validateCacheObject(validCache);
 		expect(result.success).toBe(true);
 	});
 
-	it("parses cache with full file data including reports", () => {
+	it("validates cache with full file data including reports", () => {
 		const validCache = {
 			configs: { "package.json": 123 },
 			files: {
@@ -95,11 +108,11 @@ describe("cacheStorageSchema", () => {
 			},
 		};
 
-		const result = cacheStorageSchema.safeParse(validCache);
+		const result = validateCacheObject(validCache);
 		expect(result.success).toBe(true);
 	});
 
-	it("parses cache with report containing optional fields", () => {
+	it("validates cache with report containing optional fields", () => {
 		const validCache = {
 			configs: { "package.json": 123 },
 			files: {
@@ -133,7 +146,7 @@ describe("cacheStorageSchema", () => {
 			},
 		};
 
-		const result = cacheStorageSchema.safeParse(validCache);
+		const result = validateCacheObject(validCache);
 		expect(result.success).toBe(true);
 	});
 
@@ -160,17 +173,17 @@ describe("cacheStorageSchema", () => {
 			},
 		};
 
-		const result = cacheStorageSchema.safeParse(invalidCache);
+		const result = validateCacheObject(invalidCache);
 		expect(result.success).toBe(false);
 	});
 
 	it("rejects null input", () => {
-		const result = cacheStorageSchema.safeParse(null);
+		const result = validateCacheObject(null);
 		expect(result.success).toBe(false);
 	});
 
 	it("rejects undefined input", () => {
-		const result = cacheStorageSchema.safeParse(undefined);
+		const result = validateCacheObject(undefined);
 		expect(result.success).toBe(false);
 	});
 
@@ -180,7 +193,7 @@ describe("cacheStorageSchema", () => {
 			files: {},
 		};
 
-		const result = cacheStorageSchema.safeParse(invalidCache);
+		const result = validateCacheObject(invalidCache);
 		expect(result.success).toBe(false);
 	});
 
@@ -208,7 +221,7 @@ describe("cacheStorageSchema", () => {
 			},
 		};
 
-		const result = cacheStorageSchema.safeParse(invalidCache);
+		const result = validateCacheObject(invalidCache);
 		expect(result.success).toBe(false);
 	});
 
@@ -237,7 +250,7 @@ describe("cacheStorageSchema", () => {
 			},
 		};
 
-		const result = cacheStorageSchema.safeParse(invalidCache);
+		const result = validateCacheObject(invalidCache);
 		expect(result.success).toBe(false);
 	});
 });
@@ -284,7 +297,7 @@ describe("cacheStorageCodec", () => {
 
 		const result = z.safeEncode(
 			cacheStorageCodec,
-			invalidCache as unknown as z.infer<typeof cacheStorageSchema>,
+			invalidCache as unknown as z.output<typeof cacheStorageCodec>,
 		);
 		expect(result.success).toBe(false);
 	});
@@ -348,5 +361,170 @@ describe("cacheStorageCodec", () => {
 
 		const encoded = z.encode(cacheStorageCodec, validCache);
 		expect(encoded).toContain("\t");
+	});
+});
+
+describe("toSerializableCacheStorage", () => {
+	it("passes through cache with only SuggestionForFile suggestions", () => {
+		const cache: CacheStorage = {
+			configs: { "package.json": 123 },
+			files: {
+				"src/index.ts": {
+					reports: [
+						{
+							about: { id: "test-rule" },
+							message: {
+								primary: "Error",
+								secondary: [],
+								suggestions: [],
+							},
+							range: {
+								begin: { column: 0, line: 0, raw: 0 },
+								end: { column: 5, line: 0, raw: 5 },
+							},
+							suggestions: [
+								{ id: "fix-1", range: { begin: 0, end: 5 }, text: "fixed" },
+							],
+						},
+					],
+					timestamp: 123,
+				},
+			},
+		};
+
+		const result = toSerializableCacheStorage(cache);
+
+		expect(result.files["src/index.ts"]?.reports?.[0]?.suggestions).toEqual([
+			{ id: "fix-1", range: { begin: 0, end: 5 }, text: "fixed" },
+		]);
+	});
+
+	it("filters out SuggestionForFiles (with functions)", () => {
+		const cache: CacheStorage = {
+			configs: { "package.json": 123 },
+			files: {
+				"src/index.ts": {
+					reports: [
+						{
+							about: { id: "test-rule" },
+							message: {
+								primary: "Error",
+								secondary: [],
+								suggestions: [],
+							},
+							range: {
+								begin: { column: 0, line: 0, raw: 0 },
+								end: { column: 5, line: 0, raw: 5 },
+							},
+							suggestions: [
+								// SuggestionForFile - should be kept
+								{ id: "fix-1", range: { begin: 0, end: 5 }, text: "fixed" },
+								// SuggestionForFiles - should be filtered out
+								{
+									files: {
+										"other.ts": () => [
+											{ range: { begin: 0, end: 1 }, text: "x" },
+										],
+									},
+									id: "multi-fix",
+								},
+							],
+						},
+					],
+					timestamp: 123,
+				},
+			},
+		};
+
+		const result = toSerializableCacheStorage(cache);
+
+		// Only the SuggestionForFile should remain
+		expect(result.files["src/index.ts"]?.reports?.[0]?.suggestions).toEqual([
+			{ id: "fix-1", range: { begin: 0, end: 5 }, text: "fixed" },
+		]);
+	});
+
+	it("handles cache with no suggestions", () => {
+		const cache: CacheStorage = {
+			configs: { "package.json": 123 },
+			files: {
+				"src/index.ts": {
+					reports: [
+						{
+							about: { id: "test-rule" },
+							message: {
+								primary: "Error",
+								secondary: [],
+								suggestions: [],
+							},
+							range: {
+								begin: { column: 0, line: 0, raw: 0 },
+								end: { column: 5, line: 0, raw: 5 },
+							},
+						},
+					],
+					timestamp: 123,
+				},
+			},
+		};
+
+		const result = toSerializableCacheStorage(cache);
+
+		expect(
+			result.files["src/index.ts"]?.reports?.[0]?.suggestions,
+		).toBeUndefined();
+	});
+
+	it("handles cache with no reports", () => {
+		const cache: CacheStorage = {
+			configs: { "package.json": 123 },
+			files: {
+				"src/index.ts": {
+					timestamp: 123,
+				},
+			},
+		};
+
+		const result = toSerializableCacheStorage(cache);
+
+		expect(result.files["src/index.ts"]?.reports).toBeUndefined();
+	});
+
+	it("produces output that validates against the codec", () => {
+		const cache: CacheStorage = {
+			configs: { "package.json": 123 },
+			files: {
+				"src/index.ts": {
+					reports: [
+						{
+							about: { id: "test-rule" },
+							message: {
+								primary: "Error",
+								secondary: [],
+								suggestions: [],
+							},
+							range: {
+								begin: { column: 0, line: 0, raw: 0 },
+								end: { column: 5, line: 0, raw: 5 },
+							},
+							suggestions: [
+								{ id: "fix-1", range: { begin: 0, end: 5 }, text: "fixed" },
+								// This would fail validation if not filtered
+								{
+									files: { "other.ts": () => [] },
+									id: "multi-fix",
+								},
+							],
+						},
+					],
+					timestamp: 123,
+				},
+			},
+		};
+
+		const serializable = toSerializableCacheStorage(cache);
+		const encoded = z.safeEncode(cacheStorageCodec, serializable);
+
+		expect(encoded.success).toBe(true);
 	});
 });
