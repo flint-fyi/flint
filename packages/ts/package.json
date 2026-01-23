@@ -28,6 +28,7 @@
 		"test": "vitest --typecheck --project ts"
 	},
 	"dependencies": {
+		"@eslint-community/regexpp": "^4.12.2",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",

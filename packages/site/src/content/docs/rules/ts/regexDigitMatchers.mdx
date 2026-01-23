@@ -1,0 +1,109 @@
+---
+description: "Reports character classes that match digits and could use \\d or \\D instead."
+title: "regexDigitMatchers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexDigitMatchers" />
+
+Enforces using `\d` instead of `[0-9]` and `\D` instead of `[^0-9]` in regular expressions.
+The escape sequences are more concise and widely recognized.
+
+## Examples
+
+### Digit Character Class
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[0-9]+/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\d+/;
+```
+
+</TabItem>
+</Tabs>
+
+### Negated Digit Character Class
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[^0-9]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\D/;
+```
+
+</TabItem>
+</Tabs>
+
+### All Digits Listed
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[0123456789]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\d/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("[0-9]+");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("\\d+");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has an established convention of using `[0-9]` for readability, or if you need consistency with patterns that mix digit ranges with other characters (like `[0-9a-f]` for hexadecimal), you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Character class escape \\d](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_class_escape)
+- [MDN: Character class](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_class)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexDigitMatchers" />
