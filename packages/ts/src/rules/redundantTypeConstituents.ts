@@ -22,14 +22,14 @@ const literalTypeFlags = [
 	ts.TypeFlags.NumberLiteral,
 	ts.TypeFlags.StringLiteral,
 	ts.TypeFlags.TemplateLiteral,
-] as const;
+];
 
 const primitiveTypeFlags = [
 	ts.TypeFlags.BigInt,
 	ts.TypeFlags.Boolean,
 	ts.TypeFlags.Number,
 	ts.TypeFlags.String,
-] as const;
+];
 
 const primitiveTypeFlagNames: Record<number, string> = {
 	[ts.TypeFlags.BigInt]: "bigint",
@@ -83,25 +83,27 @@ function describeLiteralType(type: ts.Type): string {
 	return "literal type";
 }
 
-function isDescendantOf(
-	node: AST.AnyNode,
-	potentialAncestor: ts.Node,
-): boolean {
-	if (node === potentialAncestor) {
-		return true;
-	}
-	let current = node.parent as ts.Node | undefined;
+// TODO: This will be more clean when there is a scope manager
+// https://github.com/flint-fyi/flint/issues/400
+function isDescendantOf(node: AST.AnyNode, potentialAncestor: ts.Node) {
+	let current: ts.Node | undefined = node;
+
 	while (current) {
 		if (current === potentialAncestor) {
 			return true;
 		}
-		current = current.parent;
+
+		current = current.parent as ts.Node | undefined;
 	}
+
 	return false;
 }
 
-function isNodeInsideReturnType(node: AST.AnyNode): boolean {
-	let current = node.parent as ts.Node | undefined;
+// TODO: This will be more clean when there is a scope manager
+// https://github.com/flint-fyi/flint/issues/400
+function isNodeInsideReturnType(node: AST.AnyNode) {
+	let current = node.parent as AST.AnyNode | undefined;
+
 	while (current) {
 		if (
 			current.kind === ts.SyntaxKind.FunctionDeclaration ||
@@ -114,18 +116,16 @@ function isNodeInsideReturnType(node: AST.AnyNode): boolean {
 			current.kind === ts.SyntaxKind.ConstructSignature ||
 			current.kind === ts.SyntaxKind.ConstructorType
 		) {
-			const functionLike = current as ts.SignatureDeclaration;
-			if (functionLike.type && isDescendantOf(node, functionLike.type)) {
-				return true;
-			}
-			return false;
+			return !!current.type && isDescendantOf(node, current.type);
 		}
-		current = current.parent;
+
+		current = current.parent as AST.AnyNode | undefined;
 	}
+
 	return false;
 }
 
-function unionTypePartsUnlessBoolean(type: ts.Type): ts.Type[] {
+function unionTypePartsUnlessBoolean(type: ts.Type) {
 	if (
 		type.isUnion() &&
 		type.types.length === 2 &&
