@@ -6,22 +6,16 @@ ruleTester.describe(rule, {
 		{
 			code: `
                 ruleTester.describe(rule, {
-                    valid: [
-                        'a',
-                        { code: 'a' },
-                    ],
+                    valid: ['a', { code: 'a' }],
                     invalid: []
                 });
             
 `,
 			snapshot: `
                 ruleTester.describe(rule, {
-                    valid: [
-                        'a',
-                        { code: 'a' },
-                          ~~~~~~~~~
-                          Use string shorthand for test cases with only a code property.
-                    ],
+                    valid: ['a', { code: 'a' }],
+                                   ~~~~~~~~~
+                                   Use string shorthand for test cases with only a code property.
                     invalid: []
                 });
             
