@@ -15475,7 +15475,8 @@
 		"flint": {
 			"name": "regexSuperLinearBacktracking",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
