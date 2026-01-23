@@ -14882,7 +14882,8 @@
 		"flint": {
 			"name": "regexDollarEscapes",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
