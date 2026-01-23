@@ -13,7 +13,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "price".replace(/p/, "$");
                       ~
-                      Use \`$$\` to represent a literal \`$\` in replacement strings.
+                      This unescaped \`$\` is an invalid substitution pattern matcher. Use \`$$\` to represent a literal \`$\` in replacement strings.
 `,
 		},
 		{
@@ -26,7 +26,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "abc".replace(/a/v, "$");
                      ~
-                     Use \`$$\` to represent a literal \`$\` in replacement strings.
+                     This unescaped \`$\` is an invalid substitution pattern matcher. Use \`$$\` to represent a literal \`$\` in replacement strings.
 `,
 		},
 		{
@@ -39,7 +39,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "abc".replaceAll(/a/g, "$");
                         ~
-                        Use \`$$\` to represent a literal \`$\` in replacement strings.
+                        This unescaped \`$\` is an invalid substitution pattern matcher. Use \`$$\` to represent a literal \`$\` in replacement strings.
 `,
 		},
 		{
@@ -52,9 +52,9 @@ ruleTester.describe(rule, {
 			snapshot: `
 "abc".replace(/./, "$ $$ $");
                     ~
-                    Use \`$$\` to represent a literal \`$\` in replacement strings.
+                    This unescaped \`$\` is an invalid substitution pattern matcher. Use \`$$\` to represent a literal \`$\` in replacement strings.
                          ~
-                         Use \`$$\` to represent a literal \`$\` in replacement strings.
+                         This unescaped \`$\` is an invalid substitution pattern matcher. Use \`$$\` to represent a literal \`$\` in replacement strings.
 `,
 		},
 		{
@@ -67,7 +67,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "abc".replace(/(?<name>.)/, "$<name> $");
                                      ~
-                                     Use \`$$\` to represent a literal \`$\` in replacement strings.
+                                     This unescaped \`$\` is an invalid substitution pattern matcher. Use \`$$\` to represent a literal \`$\` in replacement strings.
 `,
 		},
 		{
@@ -80,7 +80,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "abc".replace(/./, "$x");
                     ~
-                    Use \`$$\` to represent a literal \`$\` in replacement strings.
+                    This unescaped \`$\` is an invalid substitution pattern matcher. Use \`$$\` to represent a literal \`$\` in replacement strings.
 `,
 		},
 		{
@@ -93,7 +93,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "abc".replace(new RegExp("."), "$");
                                 ~
-                                Use \`$$\` to represent a literal \`$\` in replacement strings.
+                                This unescaped \`$\` is an invalid substitution pattern matcher. Use \`$$\` to represent a literal \`$\` in replacement strings.
 `,
 		},
 		{
@@ -106,7 +106,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "abc".replace(RegExp("."), "$");
                             ~
-                            Use \`$$\` to represent a literal \`$\` in replacement strings.
+                            This unescaped \`$\` is an invalid substitution pattern matcher. Use \`$$\` to represent a literal \`$\` in replacement strings.
 `,
 		},
 		{
@@ -119,7 +119,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 "abc".replace(/(?<name>.)/, "$<name");
                              ~
-                             Use \`$$\` to represent a literal \`$\` in replacement strings.
+                             This unescaped \`$\` is an invalid substitution pattern matcher. Use \`$$\` to represent a literal \`$\` in replacement strings.
 `,
 		},
 	],

@@ -15,6 +15,8 @@ Enforces escaping the `$` character as `$$` when using it literally in the repla
 In these methods, `$` has special meaning for substitution patterns like `$&` (matched substring), `$1` (first capture group), etc.
 An unescaped `$` followed by an unrecognized character will be treated as a literal `$`, but this behavior is confusing and error-prone.
 
+This rule reports unescaped `$` characters in replacement strings that are not valid substitution pattern matchers.
+
 ## Examples
 
 ### Unescaped Dollar Sign
@@ -76,8 +78,7 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you intentionally rely on the behavior where `$` followed by an unrecognized character produces a literal `$`, you might disable this rule.
-However, explicitly escaping as `$$` is clearer and recommended.
+If you intentionally rely on the behavior where `$` followed by an unrecognized character produces a literal `$`, you might prefer to disable this rule.
 
 ## Further Reading
 
