@@ -20,12 +20,12 @@ describe("cacheStorageCodec validation", () => {
 	it("validates valid cache data", () => {
 		const validCache = {
 			configs: {
-				"flint.config.ts": 1234567890,
-				"package.json": 1234567890,
+				"flint.config.ts": 1_234_567_890,
+				"package.json": 1_234_567_890,
 			},
 			files: {
 				"src/index.ts": {
-					timestamp: 1234567890,
+					timestamp: 1_234_567_890,
 				},
 			},
 		};
@@ -259,12 +259,12 @@ describe("cacheStorageCodec", () => {
 	it("encodes valid cache data to JSON string", () => {
 		const validCache = {
 			configs: {
-				"flint.config.ts": 1234567890,
-				"package.json": 1234567890,
+				"flint.config.ts": 1_234_567_890,
+				"package.json": 1_234_567_890,
 			},
 			files: {
 				"src/index.ts": {
-					timestamp: 1234567890,
+					timestamp: 1_234_567_890,
 				},
 			},
 		};
@@ -322,8 +322,8 @@ describe("cacheStorageCodec", () => {
 	it("roundtrips cache data correctly", () => {
 		const original = {
 			configs: {
-				"flint.config.ts": 1234567890,
-				"package.json": 1234567890,
+				"flint.config.ts": 1_234_567_890,
+				"package.json": 1_234_567_890,
 			},
 			files: {
 				"src/index.ts": {
@@ -342,7 +342,7 @@ describe("cacheStorageCodec", () => {
 							},
 						},
 					],
-					timestamp: 1234567890,
+					timestamp: 1_234_567_890,
 				},
 			},
 		};
