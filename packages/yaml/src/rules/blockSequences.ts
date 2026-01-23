@@ -73,10 +73,17 @@ export default ruleCreator.createRule(yamlLanguage, {
 				flowSequence: (node, services) => {
 					const fixText = buildBlockSequenceFix(node, services.sourceText);
 
+					const sourceText = services.sourceText;
+					let fixBegin = node.position.start.offset;
+
+					while (fixBegin > 0 && sourceText[fixBegin - 1] === " ") {
+						fixBegin--;
+					}
+
 					context.report({
 						fix: {
 							range: {
-								begin: node.position.start.offset,
+								begin: fixBegin,
 								end: node.position.end.offset,
 							},
 							text: fixText,

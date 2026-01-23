@@ -1,0 +1,117 @@
+---
+description: "Reports bracket notation property access when dot notation can be used."
+title: "propertyAccessNotation"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="propertyAccessNotation" />
+
+Dot notation (`obj.property`) is generally preferred over bracket notation (`obj["property"]`) for accessing object properties.
+Dot notation is more concise and easier to read.
+Bracket notation should be reserved for cases where it is necessary, such as when the property name contains special characters, is a reserved word, or is computed dynamically.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = obj["property"];
+
+obj["value"] = 123;
+
+const name = person["firstName"];
+
+const nested = data["items"]["first"];
+```
+
+```ts
+class Container {
+	privateProperty = 123;
+}
+
+const container = new Container();
+container["privateProperty"] = 123;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = obj.property;
+
+obj.value = 123;
+
+const name = person.firstName;
+
+const nested = data.items.first;
+```
+
+```ts
+class Container {
+	private privateProperty = 123;
+}
+
+const container = new Container();
+
+// TypeScript allows private properties to be accessed with quotes
+container["privateProperty"] = 123;
+```
+
+```ts
+// Bracket notation is allowed for non-identifier keys
+const value = obj["key with spaces"];
+
+const dashed = obj["key-with-dashes"];
+
+// Bracket notation is allowed for reserved words
+const reserved = obj["class"];
+
+const keyword = obj["import"];
+
+// Bracket notation is allowed for computed keys
+const dynamic = obj[variable];
+
+const computed = obj[getKey()];
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `allowIndexSignaturePropertyAccess`
+
+Whether to allow accessing properties matching an index signature with bracket notation.
+
+**Type:** `boolean`
+**Default:** `false`
+
+```ts
+// eslint ts/propertyAccessNotation: ["error", { allowIndexSignaturePropertyAccess: true }]
+
+interface Config {
+	[key: string]: string;
+}
+
+const config: Config = {};
+// ✅ OK with option enabled
+const value = config["anyKey"];
+```
+
+## When Not To Use It
+
+Disable this rule if your codebase has a convention of using bracket notation for consistency, or if you frequently access properties with names that are reserved words or contain special characters.
+
+## Further Reading
+
+- [MDN: Property accessors](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors)
+- [JavaScript property access: dot notation vs. brackets](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects#accessing_properties)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="propertyAccessNotation" />

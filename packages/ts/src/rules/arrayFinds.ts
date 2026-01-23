@@ -38,7 +38,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const arrayText = node.expression.expression.getText(sourceFile);
+					const arrayText =
+						node.expression.expression.expression.getText(sourceFile);
 					const filterArgumentsText = node.expression.arguments
 						.map((arg) => arg.getText(sourceFile))
 						.join(", ");

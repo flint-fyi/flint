@@ -56,6 +56,12 @@ const methodConfigurations = new Map([
 	],
 ]);
 
+interface NegativeIndexInfo {
+	binaryExpression: AST.BinaryExpression;
+	lengthNode: AST.PropertyAccessExpression;
+	rightOperand: AST.Expression;
+}
+
 interface ParsedCall {
 	argumentNodes: readonly AST.Expression[];
 	method: string;
@@ -66,7 +72,7 @@ function getNegativeIndexLengthNode(
 	node: AST.Expression,
 	target: AST.Expression,
 	sourceFile: AST.SourceFile,
-): AST.PropertyAccessExpression | undefined {
+): NegativeIndexInfo | undefined {
 	const unwrapped = unwrapParenthesizedExpression(node);
 
 	if (
@@ -86,18 +92,14 @@ function getNegativeIndexLengthNode(
 	const left = unwrapParenthesizedExpression(unwrapped.left) as AST.Expression;
 
 	if (isLengthPropertyAccess(left, target, sourceFile)) {
-		return left;
+		return {
+			binaryExpression: unwrapped,
+			lengthNode: left,
+			rightOperand: right,
+		};
 	}
 
 	return getNegativeIndexLengthNode(unwrapped.left, target, sourceFile);
-}
-
-function getWhitespaceAfterLength(text: string, position: number) {
-	let length = 0;
-	while (/\s/.test(text[position + length] ?? "")) {
-		length++;
-	}
-	return length;
 }
 
 function isLengthPropertyAccess(
@@ -300,7 +302,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const fixableArguments: {
 						argument: AST.Expression;
-						lengthNode: AST.PropertyAccessExpression;
+						info: NegativeIndexInfo;
 					}[] = [];
 
 					for (const index of methodConfiguration.argumentIndexes) {
@@ -309,13 +311,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							continue;
 						}
 
-						const lengthNode = getNegativeIndexLengthNode(
+						const info = getNegativeIndexLengthNode(
 							argument,
 							target,
 							sourceFile,
 						);
-						if (lengthNode) {
-							fixableArguments.push({ argument, lengthNode });
+						if (info) {
+							fixableArguments.push({ argument, info });
 						}
 					}
 
@@ -325,18 +327,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					context.report({
 						data: { method },
-						fix: fixableArguments.map(({ argument, lengthNode }) => ({
-							range: {
-								begin: argument.getStart(sourceFile),
-								end:
-									lengthNode.getEnd() +
-									getWhitespaceAfterLength(
-										sourceFile.text,
-										lengthNode.getEnd(),
-									),
-							},
-							text: "-",
-						})),
+						fix: fixableArguments.map(({ info }) => {
+							return {
+								range: {
+									begin: info.binaryExpression.getStart(sourceFile),
+									end: info.binaryExpression.getEnd(),
+								},
+								text: `-${info.rightOperand.getText(sourceFile)}`,
+							};
+						}),
 						message: "preferNegativeIndex",
 						range: getTSNodeRange(node, sourceFile),
 					});

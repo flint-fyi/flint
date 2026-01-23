@@ -5,27 +5,33 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-<h1 />`,
+<h1 />
+`,
 			snapshot: `
 <h1 />
  ~~
- This heading element is missing accessible content.`,
+ This heading element is missing accessible content.
+`,
 		},
 		{
 			code: `
-<h2></h2>`,
+<h2></h2>
+`,
 			snapshot: `
 <h2></h2>
  ~~
- This heading element is missing accessible content.`,
+ This heading element is missing accessible content.
+`,
 		},
 		{
 			code: `
-<h3>  </h3>`,
+<h3>  </h3>
+`,
 			snapshot: `
 <h3>  </h3>
  ~~
- This heading element is missing accessible content.`,
+ This heading element is missing accessible content.
+`,
 		},
 	],
 	valid: [

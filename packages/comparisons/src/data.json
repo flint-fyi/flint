@@ -13980,7 +13980,8 @@
 		"flint": {
 			"name": "operatorAssignmentShorthand",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -14043,7 +14044,8 @@
 		"flint": {
 			"name": "overloadSignaturesAdjacent",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -14085,7 +14087,8 @@
 		"flint": {
 			"name": "parameterPropertyAssignment",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -14110,8 +14113,8 @@
 		"flint": {
 			"name": "parameterReassignments",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -14504,7 +14507,8 @@
 		"flint": {
 			"name": "propertyAccessNotation",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -14564,7 +14568,8 @@
 		"flint": {
 			"name": "recursionOnlyArguments",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -14584,6 +14589,7 @@
 			"name": "reduceTypeParameters",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [

@@ -175,27 +175,31 @@ function generic(): Array<never> {}
 			code: `
 class Greeter {
 	message: any;
-}`,
+}
+`,
 			snapshot: `
 class Greeter {
 	message: any;
 	         ~~~
 	         Avoid using the \`any\` type as it disables type checking for the annotated value.
-}`,
+}
+`,
 			suggestions: [
 				{
 					id: "unknown",
 					updated: `
 class Greeter {
 	message: unknown;
-}`,
+}
+`,
 				},
 				{
 					id: "never",
 					updated: `
 class Greeter {
 	message: never;
-}`,
+}
+`,
 				},
 			],
 		},
@@ -203,27 +207,31 @@ class Greeter {
 			code: `
 class Greeter {
 	message: Array<any>;
-}`,
+}
+`,
 			snapshot: `
 class Greeter {
 	message: Array<any>;
 	               ~~~
 	               Avoid using the \`any\` type as it disables type checking for the annotated value.
-}`,
+}
+`,
 			suggestions: [
 				{
 					id: "unknown",
 					updated: `
 class Greeter {
 	message: Array<unknown>;
-}`,
+}
+`,
 				},
 				{
 					id: "never",
 					updated: `
 class Greeter {
 	message: Array<never>;
-}`,
+}
+`,
 				},
 			],
 		},
@@ -231,27 +239,31 @@ class Greeter {
 			code: `
 interface Greeter {
 	message: any;
-}`,
+}
+`,
 			snapshot: `
 interface Greeter {
 	message: any;
 	         ~~~
 	         Avoid using the \`any\` type as it disables type checking for the annotated value.
-}`,
+}
+`,
 			suggestions: [
 				{
 					id: "unknown",
 					updated: `
 interface Greeter {
 	message: unknown;
-}`,
+}
+`,
 				},
 				{
 					id: "never",
 					updated: `
 interface Greeter {
 	message: never;
-}`,
+}
+`,
 				},
 			],
 		},
@@ -259,27 +271,31 @@ interface Greeter {
 			code: `
 type obj = {
 	message: any;
-};`,
+};
+`,
 			snapshot: `
 type obj = {
 	message: any;
 	         ~~~
 	         Avoid using the \`any\` type as it disables type checking for the annotated value.
-};`,
+};
+`,
 			suggestions: [
 				{
 					id: "unknown",
 					updated: `
 type obj = {
 	message: unknown;
-};`,
+};
+`,
 				},
 				{
 					id: "never",
 					updated: `
 type obj = {
 	message: never;
-};`,
+};
+`,
 				},
 			],
 		},
@@ -287,27 +303,31 @@ type obj = {
 			code: `
 type obj = {
 	message: string | any;
-};`,
+};
+`,
 			snapshot: `
 type obj = {
 	message: string | any;
 	                  ~~~
 	                  Avoid using the \`any\` type as it disables type checking for the annotated value.
-};`,
+};
+`,
 			suggestions: [
 				{
 					id: "unknown",
 					updated: `
 type obj = {
 	message: string | unknown;
-};`,
+};
+`,
 				},
 				{
 					id: "never",
 					updated: `
 type obj = {
 	message: string | never;
-};`,
+};
+`,
 				},
 			],
 		},
@@ -315,27 +335,31 @@ type obj = {
 			code: `
 type obj = {
 	message: string & any;
-};`,
+};
+`,
 			snapshot: `
 type obj = {
 	message: string & any;
 	                  ~~~
 	                  Avoid using the \`any\` type as it disables type checking for the annotated value.
-};`,
+};
+`,
 			suggestions: [
 				{
 					id: "unknown",
 					updated: `
 type obj = {
 	message: string & unknown;
-};`,
+};
+`,
 				},
 				{
 					id: "never",
 					updated: `
 type obj = {
 	message: string & never;
-};`,
+};
+`,
 				},
 			],
 		},
@@ -447,7 +471,8 @@ function test(...args: never) {}
 	valid: [
 		`const value: unknown = 1;`,
 		`const value: string = "hello";`,
-		`function process(input: unknown): void {}`,
+		`function process(input: unknown): void {}
+`,
 		`const items: string[] = [];`,
 		`type Callback = (value: unknown) => void;`,
 	],

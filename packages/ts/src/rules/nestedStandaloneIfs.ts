@@ -126,7 +126,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				const nodeText = node.getText(sourceFile);
-				const needsSpace = !nodeText.startsWith(" ");
 
 				context.report({
 					fix: {
@@ -134,7 +133,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							begin: node.parent.getStart(sourceFile),
 							end: node.parent.getEnd(),
 						},
-						text: needsSpace ? ` ${nodeText}` : nodeText,
+						text: nodeText,
 					},
 					message: "lonelyIfInElse",
 					range: getTSNodeRange(node, sourceFile),

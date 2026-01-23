@@ -5,19 +5,23 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-[2e308]`,
+[2e308]
+`,
 			snapshot: `
 [2e308]
  ~~~~~
- This number evaluates to Infinity.`,
+ This number evaluates to Infinity.
+`,
 		},
 		{
 			code: `
-[-2e308]`,
+[-2e308]
+`,
 			snapshot: `
 [-2e308]
   ~~~~~
-  This number evaluates to Infinity.`,
+  This number evaluates to Infinity.
+`,
 		},
 		{
 			code: `
@@ -35,11 +39,13 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-["\uD83D"]`,
+["\uD83D"]
+`,
 			snapshot: `
 ["\uD83D"]
  ~~~
- This string contains an unmatched surrogate.`,
+ This string contains an unmatched surrogate.
+`,
 		},
 		{
 			code: `
@@ -57,11 +63,13 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-[1e-400]`,
+[1e-400]
+`,
 			snapshot: `
 [1e-400]
  ~~~~~~
- This number is too small and evaluates to zero.`,
+ This number is too small and evaluates to zero.
+`,
 		},
 		{
 			code: `
@@ -79,19 +87,23 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-[9007199254740992]`,
+[9007199254740992]
+`,
 			snapshot: `
 [9007199254740992]
  ~~~~~~~~~~~~~~~~
- This integer is outside the safe integer range.`,
+ This integer is outside the safe integer range.
+`,
 		},
 		{
 			code: `
-[-9007199254740992]`,
+[-9007199254740992]
+`,
 			snapshot: `
 [-9007199254740992]
   ~~~~~~~~~~~~~~~~
-  This integer is outside the safe integer range.`,
+  This integer is outside the safe integer range.
+`,
 		},
 		{
 			code: `
@@ -109,11 +121,13 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-[2.2250738585072009e-308]`,
+[2.2250738585072009e-308]
+`,
 			snapshot: `
 [2.2250738585072009e-308]
  ~~~~~~~~~~~~~~~~~~~~~~~
- This subnormal number may be handled inconsistently.`,
+ This subnormal number may be handled inconsistently.
+`,
 		},
 		{
 			code: `
