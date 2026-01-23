@@ -179,7 +179,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								);
 
 								const firstNode = sortedNodes[0];
-								const lastNode = sortedNodes[sortedNodes.length - 1];
+								const lastNode = sortedNodes.at(-1);
 
 								if (!firstNode || !lastNode) {
 									return;
@@ -194,7 +194,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									if (fixRanges.length === 0) {
 										fixRanges.push({ begin, end });
 									} else {
-										const lastRange = fixRanges[fixRanges.length - 1];
+										const lastRange = fixRanges.at(-1);
 										if (lastRange && lastRange.end >= begin) {
 											lastRange.end = Math.max(lastRange.end, end);
 										} else {
