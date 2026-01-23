@@ -3,6 +3,7 @@ import type {
 	Character,
 	CharacterClass,
 	CharacterClassRange,
+	RegExpLiteral,
 } from "@eslint-community/regexpp/ast";
 import {
 	type AST,
@@ -50,7 +51,7 @@ function checkInAllowedRange(
 function findIssues(pattern: string, flags: string): Issue[] {
 	const issues: Issue[] = [];
 
-	let ast;
+	let ast: RegExpLiteral;
 	try {
 		ast = parseRegExpLiteral(new RegExp(pattern, flags));
 	} catch {
@@ -127,7 +128,7 @@ function findIssues(pattern: string, flags: string): Issue[] {
 
 					const mergedRanges: { end: number; start: number }[] = [];
 					for (const range of nodeRanges) {
-						const last = mergedRanges[mergedRanges.length - 1];
+						const last = mergedRanges.at(-1);
 						if (last && last.end >= range.start) {
 							last.end = Math.max(last.end, range.end);
 						} else {
@@ -136,7 +137,7 @@ function findIssues(pattern: string, flags: string): Issue[] {
 					}
 
 					const firstMerged = mergedRanges[0];
-					const lastMerged = mergedRanges[mergedRanges.length - 1];
+					const lastMerged = mergedRanges.at(-1);
 					if (firstMerged && lastMerged) {
 						issues.push({
 							end: lastMerged.end,
