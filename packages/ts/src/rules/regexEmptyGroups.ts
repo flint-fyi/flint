@@ -59,11 +59,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			patternStart: number,
 			flags: string,
 		) {
-			const regexpAst = parseRegexpAst(pattern, {
-				unicode: flags.includes("u"),
-				unicodeSets: flags.includes("v"),
-			});
-
+			const regexpAst = parseRegexpAst(pattern, flags);
 			if (!regexpAst) {
 				return;
 			}

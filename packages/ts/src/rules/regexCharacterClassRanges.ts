@@ -146,19 +146,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const [, pattern, flagsStr] = match;
+					const [, pattern, flags] = match;
 
 					if (!pattern) {
 						return;
 					}
 
-					const hasUnicode = flagsStr?.includes("u");
-					const hasUnicodeSets = flagsStr?.includes("v");
-
-					const regexpAst = parseRegexpAst(pattern, {
-						unicode: hasUnicode,
-						unicodeSets: hasUnicodeSets,
-					});
+					const regexpAst = parseRegexpAst(pattern, flags);
 					if (!regexpAst) {
 						return;
 					}

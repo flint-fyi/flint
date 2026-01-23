@@ -57,23 +57,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const [, pattern, flagsStr] = match;
+					const [, pattern, flags] = match;
 
 					if (!pattern) {
 						return;
 					}
 
-					const hasUnicode = flagsStr?.includes("u") ?? false;
-					const hasUnicodeSets = flagsStr?.includes("v") ?? false;
-					const hasIgnoreCase = flagsStr?.includes("i") ?? false;
-
-					const regexpAst = parseRegexpAst(pattern, {
-						unicode: hasUnicode,
-						unicodeSets: hasUnicodeSets,
-					});
+					const regexpAst = parseRegexpAst(pattern, flags);
 					if (!regexpAst) {
 						return;
 					}
+
+					const hasIgnoreCase = flags?.includes("i") ?? false;
 
 					visitRegExpAST(regexpAst, {
 						onCharacterClassEnter(characterClassNode) {
@@ -97,8 +92,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							if (
 								element.type === "CharacterSet" &&
 								element.kind === "property" &&
-								hasIgnoreCase &&
-								!hasUnicodeSets
+								hasIgnoreCase
 							) {
 								return;
 							}
