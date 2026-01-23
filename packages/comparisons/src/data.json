@@ -14896,7 +14896,8 @@
 		"flint": {
 			"name": "regexDuplicateCharacterClassCharacters",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -14936,7 +14937,8 @@
 		"flint": {
 			"name": "regexEmptyCapturingGroups",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -14965,7 +14967,8 @@
 		"flint": {
 			"name": "regexEmptyCharacterClasses",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -14998,7 +15001,8 @@
 		"flint": {
 			"name": "regexEmptyLazyQuantifiers",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15011,7 +15015,8 @@
 		"flint": {
 			"name": "regexEmptyLookaroundsAssertions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15024,7 +15029,8 @@
 		"flint": {
 			"name": "regexEmptyStringLiterals",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15037,7 +15043,8 @@
 		"flint": {
 			"name": "regexEscapeBackspaces",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15055,6 +15062,7 @@
 			"name": "regexExecutors",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15068,7 +15076,8 @@
 		"flint": {
 			"name": "regexGraphemeStringLiterals",
 			"plugin": "ts",
-			"preset": "logical",
+			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15083,6 +15092,7 @@
 			"name": "regexHexadecimalEscapes",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},

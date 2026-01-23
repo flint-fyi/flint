@@ -180,8 +180,18 @@ import regexControlCharacterEscapes from "./rules/regexControlCharacterEscapes.t
 import regexControlCharacters from "./rules/regexControlCharacters.ts";
 import regexDigitMatchers from "./rules/regexDigitMatchers.ts";
 import regexDollarEscapes from "./rules/regexDollarEscapes.ts";
+import regexDuplicateCharacterClassCharacters from "./rules/regexDuplicateCharacterClassCharacters.ts";
 import regexEmptyAlternatives from "./rules/regexEmptyAlternatives.ts";
+import regexEmptyCapturingGroups from "./rules/regexEmptyCapturingGroups.ts";
+import regexEmptyCharacterClasses from "./rules/regexEmptyCharacterClasses.ts";
 import regexEmptyGroups from "./rules/regexEmptyGroups.ts";
+import regexEmptyLazyQuantifiers from "./rules/regexEmptyLazyQuantifiers.ts";
+import regexEmptyLookaroundsAssertions from "./rules/regexEmptyLookaroundsAssertions.ts";
+import regexEmptyStringLiterals from "./rules/regexEmptyStringLiterals.ts";
+import regexEscapeBackspaces from "./rules/regexEscapeBackspaces.ts";
+import regexExecutors from "./rules/regexExecutors.ts";
+import regexGraphemeStringLiterals from "./rules/regexGraphemeStringLiterals.ts";
+import regexHexadecimalEscapes from "./rules/regexHexadecimalEscapes.ts";
 import regexIgnoreCaseFlags from "./rules/regexIgnoreCaseFlags.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
@@ -389,8 +399,18 @@ export const ts = createPlugin({
 		regexControlCharacters,
 		regexDigitMatchers,
 		regexDollarEscapes,
+		regexDuplicateCharacterClassCharacters,
 		regexEmptyAlternatives,
+		regexEmptyCapturingGroups,
+		regexEmptyCharacterClasses,
 		regexEmptyGroups,
+		regexEmptyLazyQuantifiers,
+		regexEmptyLookaroundsAssertions,
+		regexEmptyStringLiterals,
+		regexEscapeBackspaces,
+		regexExecutors,
+		regexGraphemeStringLiterals,
+		regexHexadecimalEscapes,
 		regexIgnoreCaseFlags,
 		returnAssignments,
 		selfAssignments,
