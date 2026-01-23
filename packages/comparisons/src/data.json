@@ -15034,7 +15034,8 @@
 		"flint": {
 			"name": "regexEscapeBackspaces",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
