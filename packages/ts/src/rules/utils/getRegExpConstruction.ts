@@ -23,9 +23,9 @@ export function getRegExpConstruction(
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const raw = args[0]!;
+	const firstArgument = args[0]!;
 
-	if (raw.kind !== ts.SyntaxKind.StringLiteral) {
+	if (firstArgument.kind !== ts.SyntaxKind.StringLiteral) {
 		return;
 	}
 
@@ -40,8 +40,8 @@ export function getRegExpConstruction(
 
 	return {
 		flags,
-		pattern: raw.getText(sourceFile).slice(1, -1),
-		raw,
-		start: raw.getStart(sourceFile),
+		pattern: firstArgument.getText(sourceFile).slice(1, -1),
+		raw: firstArgument.text,
+		start: firstArgument.getStart(sourceFile),
 	};
 }

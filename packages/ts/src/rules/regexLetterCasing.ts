@@ -11,6 +11,7 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 type EscapeSequenceKind =
@@ -281,22 +282,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: TypeScriptFileServices,
+			services: TypeScriptFileServices,
 		) {
-			const text = node.getText(sourceFile);
-			const match = /^\/(.+)\/([dgimsuyv]*)$/s.exec(text);
-			if (!match) {
-				return;
-			}
-
-			const [, pattern, flags] = match;
-			if (!pattern) {
-				return;
-			}
-
-			const nodeStart = node.getStart(sourceFile);
-			const issues = checkPattern(pattern, flags ?? "");
-			reportIssues(issues, nodeStart + 1);
+			const { flags, pattern, start } = getRegExpLiteralDetails(node, services);
+			reportIssues(checkPattern(pattern, flags), start);
 		}
 
 		function checkRegExpConstructor(
@@ -308,8 +297,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const patternEscaped = construction.pattern.replace(/\\\\/g, "\\");
-			const issues = checkPattern(patternEscaped, construction.flags);
+			const issues = checkPattern(construction.pattern, construction.flags);
 			reportIssues(issues, construction.start + 1);
 		}
 
