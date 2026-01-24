@@ -15136,8 +15136,9 @@
 		"flint": {
 			"name": "regexLegacyFeatures",
 			"plugin": "ts",
-			"preset": "logical"
-		}
+			"status": "skipped"
+		},
+		"notes": "Superseded by deprecated."
 	},
 	{
 		"eslint": [
