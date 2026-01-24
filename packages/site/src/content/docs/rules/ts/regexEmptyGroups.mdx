@@ -1,0 +1,111 @@
+---
+description: "Reports empty groups in regular expressions."
+title: "regexEmptyGroups"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexEmptyGroups" />
+
+Reports empty capturing and non-capturing groups in regular expressions.
+Empty groups like `()` or `(?:)` match the empty string and have no meaningful effect on the regex pattern.
+This rule reports those empty groups.
+
+## Examples
+
+### Empty Capturing Group
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /()/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)/;
+```
+
+</TabItem>
+</Tabs>
+
+### Empty Non-Capturing Group
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?:a)/;
+```
+
+</TabItem>
+</Tabs>
+
+### Empty Group with Empty Alternatives
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(|)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a|)/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("()");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("(a)");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are intentionally using empty groups for some specific purpose in generated or legacy code, such as for stylistic separations, you might prefer to disable this rule.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Groups and backreferences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Groups_and_backreferences)
+- [MDN: Non-capturing group](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Non-capturing_group)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexEmptyGroups" />

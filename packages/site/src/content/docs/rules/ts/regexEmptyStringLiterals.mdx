@@ -1,0 +1,110 @@
+---
+description: "Reports empty string literals in character classes."
+title: "regexEmptyStringLiterals"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexEmptyStringLiterals" />
+
+Reports empty string literals (`\q{}`) in character classes when using the `v` (unicodeSets) flag.
+An empty string literal in a character class always matches the empty string, which is usually a mistake.
+
+## Examples
+
+### Empty String Literal
+
+A `\q{}` with no content matches the empty string.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\q{}]/v;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[\q{a}]/v;
+```
+
+</TabItem>
+</Tabs>
+
+### Empty String Literal with Other Elements
+
+Even with other elements in the character class, an empty `\q{}` is reported.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[a\q{}]/v;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[a]?/v;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+The rule also checks regex patterns in `RegExp` constructor calls.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("[\\q{}]", "v");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("[\\q{abc}]", "v");
+```
+
+</TabItem>
+</Tabs>
+
+### Non-Empty Alternatives Are Valid
+
+If the string literal has at least one non-empty alternative, it is valid.
+
+<Tabs>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[\q{a|}]/v;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use empty string literals in character classes to match empty strings and prefer this style over using quantifiers, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Character class escape: \q](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_class_escape#q)
+- [TC39: RegExp v flag proposal](https://github.com/tc39/proposal-regexp-v-flag)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexEmptyStringLiterals" />

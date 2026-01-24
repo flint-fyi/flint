@@ -1,0 +1,82 @@
+---
+description: "Reports lookarounds that can be replaced with character class set operations."
+title: "regexCharacterClassSetOperations"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexCharacterClassSetOperations" />
+
+Regular expressions with the `v` flag have access to character class set operations like intersection (`&&`) and subtraction (`--`).
+These are more readable and performant than using lookarounds to achieve the same effect.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// Negative lookahead can be subtraction
+const pattern = /(?!\d)\w/v;
+```
+
+```ts
+// Positive lookbehind can be intersection
+const pattern = /\w(?<=\d)/v;
+```
+
+```ts
+// Positive lookahead can be intersection
+const pattern = /(?=\d)\w/v;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// Use subtraction instead of negative lookahead
+const pattern = /[\w--\d]/v;
+```
+
+```ts
+// Use intersection instead of positive lookbehind
+const pattern = /[\w&&\d]/v;
+```
+
+```ts
+// Use intersection instead of positive lookahead
+const pattern = /[\w&&\d]/v;
+```
+
+```ts
+// Lookarounds without the v flag are valid
+const pattern = /(?!\d)\w/;
+```
+
+```ts
+// Complex lookarounds cannot be converted
+const pattern = /(?!abc)\w/v;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the explicit semantics of lookarounds over set operations, this rule might not be for you.
+
+## Further Reading
+
+- [MDN: Unicode character class escape - v-mode character class](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Unicode_character_class_escape#v-mode_character_class)
+- [MDN: Lookahead assertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookahead_assertion)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexCharacterClassSetOperations" />

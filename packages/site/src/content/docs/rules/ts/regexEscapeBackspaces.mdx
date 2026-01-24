@@ -1,0 +1,110 @@
+---
+description: "Reports escape backspace (`[\\b]`) in character classes."
+title: "regexEscapeBackspaces"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexEscapeBackspaces" />
+
+Reports the use of `\b` inside character classes to match the backspace character (U+0008).
+The word boundary assertion (`\b`) and the escape backspace (`[\b]`) look identical, which can cause confusion.
+
+## Examples
+
+### Escape Backspace in Character Class
+
+Using `\b` inside a character class matches the backspace character, not a word boundary.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\b]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[\u0008]/;
+```
+
+</TabItem>
+</Tabs>
+
+### Mixed Character Class
+
+Even with other characters in the class, `\b` should be replaced.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[a\b]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[a\u0008]/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+The rule also checks regex patterns in `RegExp` constructor calls.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("[\\b]");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("[\\u0008]");
+```
+
+</TabItem>
+</Tabs>
+
+### Word Boundary Is Valid
+
+The word boundary assertion `\b` outside character classes is valid and not reported.
+
+<Tabs>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\bword\b/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has established conventions for using `[\b]` and all developers working on it understand the differences, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Character escape: \b](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_escape)
+- [MDN: Word boundary assertion: \b](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Word_boundary_assertion)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexEscapeBackspaces" />
