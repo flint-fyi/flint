@@ -10,9 +10,9 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexObscureRanges" />
 
-Reports obscure character ranges in regular expressions.
 Character ranges like `A-z` or `0-A` span across non-obvious character sets and can lead to unexpected matching behavior.
-Standard alphanumeric ranges like `a-z`, `A-Z`, and `0-9` are allowed.
+Standard alphanumeric ranges like `a-z`, `A-Z`, and `0-9` are preferable.
+This rule reports obscure character ranges in regular expressions.
 
 ## Examples
 

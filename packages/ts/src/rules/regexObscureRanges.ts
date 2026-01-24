@@ -3,30 +3,33 @@ import {
 	visitRegExpAST,
 } from "@eslint-community/regexpp";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
+import type {
+	AST,
+	TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-const ALPHANUMERIC_RANGES: [number, number][] = [
+const alphanumericRanges: [number, number][] = [
 	[0x30, 0x39],
 	[0x41, 0x5a],
 	[0x61, 0x7a],
 ];
 
-function formatChar(char: RegExpAST.Character): string {
-	if (char.value >= 0x20 && char.value <= 0x7e) {
-		return String.fromCodePoint(char.value);
-	}
-	return `U+${char.value.toString(16).toUpperCase().padStart(4, "0")}`;
+function formatChar(char: RegExpAST.Character) {
+	return char.value >= 0x20 && char.value <= 0x7e
+		? String.fromCodePoint(char.value)
+		: `U+${char.value.toString(16).toUpperCase().padStart(4, "0")}`;
 }
 
-function isControlEscape(raw: string): boolean {
+function isControlEscape(raw: string) {
 	return /^\\c[A-Za-z]$/.test(raw);
 }
 
-function isEscapeSequence(raw: string): boolean {
+function isEscapeSequence(raw: string) {
 	return (
 		isControlEscape(raw) ||
 		isOctalEscape(raw) ||
@@ -35,16 +38,16 @@ function isEscapeSequence(raw: string): boolean {
 	);
 }
 
-function isHexadecimalEscape(raw: string): boolean {
+function isHexadecimalEscape(raw: string) {
 	return /^\\x[\dA-Fa-f]{2}$/.test(raw);
 }
 
-function isHexLikeEscape(raw: string): boolean {
+function isHexLikeEscape(raw: string) {
 	return isHexadecimalEscape(raw) || isUnicodeEscape(raw);
 }
 
-function isInAlphanumericRange(min: number, max: number): boolean {
-	for (const [rangeMin, rangeMax] of ALPHANUMERIC_RANGES) {
+function isInAlphanumericRange(min: number, max: number) {
+	for (const [rangeMin, rangeMax] of alphanumericRanges) {
 		if (min >= rangeMin && max <= rangeMax) {
 			return true;
 		}
@@ -52,11 +55,11 @@ function isInAlphanumericRange(min: number, max: number): boolean {
 	return false;
 }
 
-function isOctalEscape(raw: string): boolean {
+function isOctalEscape(raw: string) {
 	return /^\\[0-7]{1,3}$/.test(raw);
 }
 
-function isUnicodeEscape(raw: string): boolean {
+function isUnicodeEscape(raw: string) {
 	return /^\\u[\dA-Fa-f]{4}$/.test(raw) || /^\\u\{[\dA-Fa-f]+\}$/.test(raw);
 }
 
@@ -138,59 +141,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			const text = node.getText(sourceFile);
-			const match = /^\/(.*)\/([dgimsuyv]*)$/.exec(text);
-
-			if (!match) {
-				return;
-			}
-
-			const [, pattern, flags] = match;
-
-			if (!pattern) {
-				return;
-			}
-
-			const nodeStart = node.getStart(sourceFile);
-			checkPattern(pattern, nodeStart + 1, flags ?? "");
+			const details = getRegExpLiteralDetails(node, services);
+			checkPattern(details.pattern, details.start, details.flags);
 		}
 
 		function checkRegExpConstructor(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args?.length) {
-				return;
-			}
-
-			const firstArgument = args[0];
-
-			if (
-				!firstArgument ||
-				firstArgument.kind !== ts.SyntaxKind.StringLiteral
-			) {
-				return;
-			}
-
-			const patternStart = firstArgument.getStart(sourceFile) + 1;
-
-			let flags = "";
-			const secondArgument = args[1];
-			if (secondArgument?.kind === ts.SyntaxKind.StringLiteral) {
-				flags = secondArgument.text;
-			}
-
-			checkPattern(firstArgument.text, patternStart, flags);
+			checkPattern(
+				construction.raw,
+				construction.start + 1,
+				construction.flags,
+			);
 		}
 
 		return {
