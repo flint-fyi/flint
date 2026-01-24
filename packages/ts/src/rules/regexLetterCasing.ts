@@ -43,7 +43,10 @@ function checkPattern(pattern: string, flags: string): Issue[] {
 	const ignoreCase = flags.includes("i");
 
 	function checkCaseInsensitive(charNode: Character) {
-		if (charNode.parent.type === "CharacterClassRange") {
+		if (
+			charNode.parent.type === "CharacterClassRange" ||
+			!isLetter(charNode.value)
+		) {
 			return;
 		}
 
@@ -71,6 +74,10 @@ function checkPattern(pattern: string, flags: string): Issue[] {
 	function checkCharacterClassRangeCaseInsensitive(
 		rangeNode: CharacterClassRange,
 	) {
+		if (!isLetter(rangeNode.min.value) || !isLetter(rangeNode.max.value)) {
+			return;
+		}
+
 		const lowercaseMin = String.fromCodePoint(rangeNode.min.value);
 		if (isLowercaseLetter(lowercaseMin)) {
 			return;
@@ -227,7 +234,11 @@ function getEscapeSequenceKind(raw: string): EscapeSequenceKind {
 	return "none";
 }
 
-function isLowercaseLetter(value: string): boolean {
+function isLetter(codePoint: number) {
+	return /^[a-zA-Z]$/u.test(String.fromCodePoint(codePoint));
+}
+
+function isLowercaseLetter(value: string) {
 	return /^[a-z]$/u.test(value);
 }
 
