@@ -14,7 +14,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /Regexp/i;
  ~
- 'R' is not in lowercase as preferred for consistency.
+ Prefer lowercase characters (\`r\`) rather than uppercase (\`R\`) for consistency.
 `,
 		},
 		{
@@ -27,11 +27,11 @@ ruleTester.describe(rule, {
 			snapshot: `
 /ReGeXp/i;
  ~
- 'R' is not in lowercase as preferred for consistency.
+ Prefer lowercase characters (\`r\`) rather than uppercase (\`R\`) for consistency.
    ~
-   'G' is not in lowercase as preferred for consistency.
+   Prefer lowercase characters (\`g\`) rather than uppercase (\`G\`) for consistency.
      ~
-     'X' is not in lowercase as preferred for consistency.
+     Prefer lowercase characters (\`x\`) rather than uppercase (\`X\`) for consistency.
 `,
 		},
 		{
@@ -44,7 +44,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[A-Z]/i;
   ~~~
-  'A-Z' is not in lowercase as preferred for consistency.
+  Prefer lowercase character class ranges (\`a-z\`) rather than uppercase (\`A-Z\`) for consistency.
 `,
 		},
 		{
@@ -57,7 +57,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\u000A/;
  ~~~~~~
- '\\u000A' is not in lowercase as preferred for consistency.
+ Prefer lowercase unicode escapes (\`\\u000a\`) rather than uppercase (\`\\u000A\`) for consistency.
 `,
 		},
 		{
@@ -70,7 +70,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\u{A}/u;
  ~~~~~
- '\\u{A}' is not in lowercase as preferred for consistency.
+ Prefer lowercase unicode escapes (\`\\u{a}\`) rather than uppercase (\`\\u{A}\`) for consistency.
 `,
 		},
 		{
@@ -83,7 +83,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\u{1F4A9}/u;
  ~~~~~~~~~
- '\\u{1F4A9}' is not in lowercase as preferred for consistency.
+ Prefer lowercase unicode escapes (\`\\u{1f4a9}\`) rather than uppercase (\`\\u{1F4A9}\`) for consistency.
 `,
 		},
 		{
@@ -96,7 +96,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\x0A/;
  ~~~~
- '\\x0A' is not in lowercase as preferred for consistency.
+ Prefer lowercase hexadecimal escapes (\`\\x0a\`) rather than uppercase (\`\\x0A\`) for consistency.
 `,
 		},
 		{
@@ -109,7 +109,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\ca/u;
  ~~~
- '\\ca' is not in uppercase as preferred for consistency.
+ Prefer uppercase control escapes (\`\\cA\`) rather than lowercase (\`\\ca\`) for consistency.
 `,
 		},
 		{
@@ -122,9 +122,9 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\xAB\\xCD/;
  ~~~~
- '\\xAB' is not in lowercase as preferred for consistency.
+ Prefer lowercase hexadecimal escapes (\`\\xab\`) rather than uppercase (\`\\xAB\`) for consistency.
      ~~~~
-     '\\xCD' is not in lowercase as preferred for consistency.
+     Prefer lowercase hexadecimal escapes (\`\\xcd\`) rather than uppercase (\`\\xCD\`) for consistency.
 `,
 		},
 
@@ -138,7 +138,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[A-Z]/i;
   ~~~
-  'A-Z' is not in lowercase as preferred for consistency.
+  Prefer lowercase character class ranges (\`a-z\`) rather than uppercase (\`A-Z\`) for consistency.
 `,
 		},
 	],

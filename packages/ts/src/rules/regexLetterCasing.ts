@@ -22,11 +22,13 @@ type EscapeSequenceKind =
 
 interface Issue {
 	data: {
-		case: string;
-		char: string;
+		area: string;
+		caseActual: string;
+		casePreferred: string;
+		lettersActual: string;
+		lettersPreferred: string;
 	};
 	end: number;
-	fix?: string;
 	message: "unexpectedCase";
 	start: number;
 }
@@ -45,22 +47,22 @@ function checkPattern(pattern: string, flags: string): Issue[] {
 			return;
 		}
 
-		if (!isLetter(charNode.value)) {
-			return;
-		}
-
-		if (isLowercaseLetter(charNode.value)) {
+		const characterValue = String.fromCodePoint(charNode.value);
+		if (isLowercaseLetter(characterValue)) {
 			return;
 		}
 
 		const lowercase = String.fromCodePoint(charNode.value).toLowerCase();
+
 		issues.push({
 			data: {
-				case: "lowercase",
-				char: charNode.raw,
+				area: "characters",
+				caseActual: "uppercase",
+				casePreferred: "lowercase",
+				lettersActual: charNode.raw,
+				lettersPreferred: lowercase,
 			},
 			end: charNode.end,
-			fix: lowercase,
 			message: "unexpectedCase",
 			start: charNode.start,
 		});
@@ -69,25 +71,25 @@ function checkPattern(pattern: string, flags: string): Issue[] {
 	function checkCharacterClassRangeCaseInsensitive(
 		rangeNode: CharacterClassRange,
 	) {
-		if (
-			!isLetter(rangeNode.min.value) ||
-			!isLetter(rangeNode.max.value) ||
-			isLowercaseLetter(rangeNode.min.value) ||
-			isLowercaseLetter(rangeNode.max.value)
-		) {
+		const lowercaseMin = String.fromCodePoint(rangeNode.min.value);
+		if (isLowercaseLetter(lowercaseMin)) {
 			return;
 		}
 
-		const lowercaseMin = String.fromCodePoint(rangeNode.min.value);
 		const lowercaseMax = String.fromCodePoint(rangeNode.max.value);
+		if (isLowercaseLetter(lowercaseMax)) {
+			return;
+		}
 
 		issues.push({
 			data: {
-				case: "lowercase",
-				char: rangeNode.raw,
+				area: "character class ranges",
+				caseActual: "uppercase",
+				casePreferred: "lowercase",
+				lettersActual: rangeNode.raw,
+				lettersPreferred: `${lowercaseMin}-${lowercaseMax}`.toLowerCase(),
 			},
 			end: rangeNode.end,
-			fix: `${lowercaseMin}-${lowercaseMax}`.toLowerCase(),
 			message: "unexpectedCase",
 			start: rangeNode.start,
 		});
@@ -106,11 +108,13 @@ function checkPattern(pattern: string, flags: string): Issue[] {
 
 		issues.push({
 			data: {
-				case: "lowercase",
-				char: charNode.raw,
+				area: "unicode escapes",
+				caseActual: "uppercase",
+				casePreferred: "lowercase",
+				lettersActual: charNode.raw,
+				lettersPreferred: `${prefix}${code?.toLowerCase()}${suffix}`,
 			},
 			end: charNode.end,
-			fix: `${prefix}${code?.toLowerCase()}${suffix}`,
 			message: "unexpectedCase",
 			start: charNode.start,
 		});
@@ -131,11 +135,13 @@ function checkPattern(pattern: string, flags: string): Issue[] {
 
 		issues.push({
 			data: {
-				case: "lowercase",
-				char: charNode.raw,
+				area: "hexadecimal escapes",
+				caseActual: "uppercase",
+				casePreferred: "lowercase",
+				lettersActual: charNode.raw,
+				lettersPreferred: `\\x${code.toLowerCase()}`,
 			},
 			end: charNode.end,
-			fix: `\\x${code.toLowerCase()}`,
 			message: "unexpectedCase",
 			start: charNode.start,
 		});
@@ -156,11 +162,13 @@ function checkPattern(pattern: string, flags: string): Issue[] {
 
 		issues.push({
 			data: {
-				case: "uppercase",
-				char: charNode.raw,
+				area: "control escapes",
+				caseActual: "lowercase",
+				casePreferred: "uppercase",
+				lettersActual: charNode.raw,
+				lettersPreferred: `\\c${controlChar.toUpperCase()}`,
 			},
 			end: charNode.end,
-			fix: `\\c${controlChar.toUpperCase()}`,
 			message: "unexpectedCase",
 			start: charNode.start,
 		});
@@ -219,29 +227,22 @@ function getEscapeSequenceKind(raw: string): EscapeSequenceKind {
 	return "none";
 }
 
-function isLetter(codePoint: number): boolean {
-	return /^[a-zA-Z]$/u.test(String.fromCodePoint(codePoint));
-}
-
-function isLowercaseLetter(codePoint: number): boolean {
-	return /^[a-z]$/u.test(String.fromCodePoint(codePoint));
+function isLowercaseLetter(value: string): boolean {
+	return /^[a-z]$/u.test(value);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
-		description:
-			"Reports inconsistent letter casing in regex escape sequences.",
+		description: "Reports inconsistent letter casing in regex sequences.",
 		id: "regexLetterCasing",
 		presets: ["stylisticStrict"],
 	},
 	messages: {
 		unexpectedCase: {
 			primary:
-				"'{{ char }}' is not in {{ case }} as preferred for consistency.",
-			secondary: [
-				"Consistent letter casing in escape sequences improves readability.",
-			],
-			suggestions: ["Convert the escape sequence to {{ case }}."],
+				"Prefer {{ casePreferred }} {{ area }} (`{{ lettersPreferred }}`) rather than {{ caseActual }} (`{{ lettersActual }}`) for consistency.",
+			secondary: ["Consistent letter casing in improves readability."],
+			suggestions: ["Convert the escape sequence to {{ casePreferred }}."],
 		},
 	},
 	setup(context) {
@@ -249,13 +250,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			for (const issue of issues) {
 				context.report({
 					data: issue.data,
-					fix: issue.fix
+					fix: issue.data.lettersPreferred
 						? {
 								range: {
 									begin: patternStart + issue.start,
 									end: patternStart + issue.end,
 								},
-								text: issue.fix,
+								text: issue.data.lettersPreferred,
 							}
 						: undefined,
 					message: issue.message,
