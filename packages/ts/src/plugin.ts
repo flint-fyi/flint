@@ -196,6 +196,7 @@ import regexIgnoreCaseFlags from "./rules/regexIgnoreCaseFlags.ts";
 import regexInvisibleCharacters from "./rules/regexInvisibleCharacters.ts";
 import regexLetterCasing from "./rules/regexLetterCasing.ts";
 import regexLookaroundQuantifierOptimizations from "./rules/regexLookaroundQuantifierOptimizations.ts";
+import regexMatchNotation from "./rules/regexMatchNotation.ts";
 import regexNamedReplacements from "./rules/regexNamedReplacements.ts";
 import regexNonStandardFlags from "./rules/regexNonStandardFlags.ts";
 import regexOctalEscapes from "./rules/regexOctalEscapes.ts";
@@ -421,6 +422,8 @@ export const ts = createPlugin({
 		regexInvisibleCharacters,
 		regexLetterCasing,
 		regexLookaroundQuantifierOptimizations,
+		regexMatchNotation,
+		regexNamedReplacements,
 		regexNamedReplacements,
 		regexNonStandardFlags,
 		regexOctalEscapes,
