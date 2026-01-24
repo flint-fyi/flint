@@ -194,7 +194,14 @@ import regexGraphemeStringLiterals from "./rules/regexGraphemeStringLiterals.ts"
 import regexHexadecimalEscapes from "./rules/regexHexadecimalEscapes.ts";
 import regexIgnoreCaseFlags from "./rules/regexIgnoreCaseFlags.ts";
 import regexInvisibleCharacters from "./rules/regexInvisibleCharacters.ts";
+import regexLetterCasing from "./rules/regexLetterCasing.ts";
+import regexLookaroundQuantifierOptimizations from "./rules/regexLookaroundQuantifierOptimizations.ts";
+import regexMatchNotation from "./rules/regexMatchNotation.ts";
+import regexNamedReplacements from "./rules/regexNamedReplacements.ts";
+import regexNonStandardFlags from "./rules/regexNonStandardFlags.ts";
 import regexObscureRanges from "./rules/regexObscureRanges.ts";
+import regexOctalEscapes from "./rules/regexOctalEscapes.ts";
+import regexStarQuantifiers from "./rules/regexStarQuantifiers.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import selfComparisons from "./rules/selfComparisons.ts";
@@ -406,7 +413,6 @@ export const ts = createPlugin({
 		regexEmptyCapturingGroups,
 		regexEmptyCharacterClasses,
 		regexEmptyGroups,
-		regexInvisibleCharacters,
 		regexEmptyLazyQuantifiers,
 		regexEmptyLookaroundsAssertions,
 		regexEmptyStringLiterals,
@@ -415,7 +421,16 @@ export const ts = createPlugin({
 		regexGraphemeStringLiterals,
 		regexHexadecimalEscapes,
 		regexIgnoreCaseFlags,
+		regexInvisibleCharacters,
+		regexLetterCasing,
+		regexLookaroundQuantifierOptimizations,
+		regexMatchNotation,
+		regexNamedReplacements,
+		regexNamedReplacements,
+		regexNonStandardFlags,
 		regexObscureRanges,
+		regexOctalEscapes,
+		regexStarQuantifiers,
 		returnAssignments,
 		selfAssignments,
 		selfComparisons,

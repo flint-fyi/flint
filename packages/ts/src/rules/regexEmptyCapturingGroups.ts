@@ -12,6 +12,7 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
 function elementIsZeroLength(element: Element): boolean {
 	switch (element.type) {
@@ -57,14 +58,6 @@ function findEmptyCapturingGroups(pattern: string, flags: string) {
 	return results;
 }
 
-function getRegexInfo(node: AST.RegularExpressionLiteral) {
-	const lastSlash = node.text.lastIndexOf("/");
-	return {
-		flags: node.text.slice(lastSlash + 1),
-		pattern: node.text.slice(1, lastSlash),
-	};
-}
-
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports capturing groups that only capture empty strings.",
@@ -87,18 +80,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: TypeScriptFileServices,
+			services: TypeScriptFileServices,
 		) {
-			const { flags, pattern } = getRegexInfo(node);
+			const { flags, pattern, start } = getRegExpLiteralDetails(node, services);
 			const emptyGroups = findEmptyCapturingGroups(pattern, flags);
-			const nodeStart = node.getStart(sourceFile);
 
 			for (const group of emptyGroups) {
 				context.report({
 					message: "emptyCapture",
 					range: {
-						begin: nodeStart + group.start,
-						end: nodeStart + group.end,
+						begin: start + group.start - 1,
+						end: start + group.end - 1,
 					},
 				});
 			}

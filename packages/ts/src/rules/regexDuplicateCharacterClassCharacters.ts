@@ -8,9 +8,10 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
 interface Issue {
 	duplicate: RegExpAST.Character | RegExpAST.CharacterClassRange;
@@ -121,17 +122,6 @@ function findIssues(pattern: string, flags: string) {
 	return issues;
 }
 
-function getRegexPattern(node: AST.RegularExpressionLiteral): {
-	flags: string;
-	pattern: string;
-} {
-	const lastSlash = node.text.lastIndexOf("/");
-	return {
-		flags: node.text.slice(lastSlash + 1),
-		pattern: node.text.slice(1, lastSlash),
-	};
-}
-
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
@@ -191,53 +181,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CallExpression | AST.NewExpression,
 			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args?.length) {
-				return;
-			}
-
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const firstArgument = args[0]!;
-
-			if (firstArgument.kind !== ts.SyntaxKind.StringLiteral) {
-				return;
-			}
-
-			const stringLiteral = firstArgument;
-			const rawText = stringLiteral.getText(services.sourceFile);
-			const pattern = rawText.slice(1, -1);
-
-			let flags = "";
-			if (args.length >= 2) {
-				const secondArgument = args[1];
-				if (secondArgument?.kind === ts.SyntaxKind.StringLiteral) {
-					const flagsText = secondArgument.getText(services.sourceFile);
-					flags = flagsText.slice(1, -1);
-				}
-			}
-
-			const unescapedPattern = pattern.replace(/\\\\/g, "\\");
-			const nodeStart = firstArgument.getStart(services.sourceFile);
-
-			checkPattern(flags, unescapedPattern, nodeStart);
+			const patternUnescaped = construction.pattern.replace(/\\\\/g, "\\");
+			checkPattern(construction.flags, patternUnescaped, construction.start);
 		}
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: TypeScriptFileServices,
+			services: TypeScriptFileServices,
 		) {
-			const { flags, pattern } = getRegexPattern(node);
-
-			const nodeStart = node.getStart(sourceFile);
-
-			checkPattern(flags, pattern, nodeStart);
+			const details = getRegExpLiteralDetails(node, services);
+			checkPattern(details.flags, details.pattern, details.start - 1);
 		}
 
 		return {
