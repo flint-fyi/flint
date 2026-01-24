@@ -13,7 +13,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a{0,}/;
   ~~~~
-  Use '*' quantifier instead of '{0,}'.
+  Prefer the more succinct '*' quantifier instead of '{0,}'.
 `,
 		},
 		{
@@ -26,7 +26,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a{0,}?/;
   ~~~~
-  Use '*' quantifier instead of '{0,}'.
+  Prefer the more succinct '*' quantifier instead of '{0,}'.
 `,
 		},
 		{
@@ -39,7 +39,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a){0,}/;
     ~~~~
-    Use '*' quantifier instead of '{0,}'.
+    Prefer the more succinct '*' quantifier instead of '{0,}'.
 `,
 		},
 		{
@@ -52,7 +52,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a){0,}/v;
     ~~~~
-    Use '*' quantifier instead of '{0,}'.
+    Prefer the more succinct '*' quantifier instead of '{0,}'.
 `,
 		},
 		{
@@ -65,7 +65,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a){0,}?/;
     ~~~~
-    Use '*' quantifier instead of '{0,}'.
+    Prefer the more succinct '*' quantifier instead of '{0,}'.
 `,
 		},
 		{
@@ -78,7 +78,7 @@ new RegExp("a*");
 			snapshot: `
 new RegExp("a{0,}");
              ~~~~
-             Use '*' quantifier instead of '{0,}'.
+             Prefer the more succinct '*' quantifier instead of '{0,}'.
 `,
 		},
 		{
@@ -91,7 +91,7 @@ RegExp("a*");
 			snapshot: `
 RegExp("a{0,}");
          ~~~~
-         Use '*' quantifier instead of '{0,}'.
+         Prefer the more succinct '*' quantifier instead of '{0,}'.
 `,
 		},
 		{
@@ -104,7 +104,7 @@ RegExp("a{0,}");
 			snapshot: `
 /[abc]{0,}/;
       ~~~~
-      Use '*' quantifier instead of '{0,}'.
+      Prefer the more succinct '*' quantifier instead of '{0,}'.
 `,
 		},
 		{
@@ -117,7 +117,7 @@ RegExp("a{0,}");
 			snapshot: `
 /(?:foo){0,}/;
         ~~~~
-        Use '*' quantifier instead of '{0,}'.
+        Prefer the more succinct '*' quantifier instead of '{0,}'.
 `,
 		},
 	],
