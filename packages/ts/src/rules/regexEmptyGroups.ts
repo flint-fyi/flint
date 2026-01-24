@@ -3,10 +3,14 @@ import {
 	visitRegExpAST,
 } from "@eslint-community/regexpp";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
+import type {
+	AST,
+	TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 function isEmptyGroup(group: RegExpAST.CapturingGroup | RegExpAST.Group) {
@@ -76,57 +80,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			const text = node.getText(sourceFile);
-			const match = /^\/(.*)\/([dgimsuyv]*)$/.exec(text);
-
-			if (!match) {
-				return;
-			}
-
-			const [, pattern, flags] = match;
-
-			if (!pattern) {
-				return;
-			}
-
-			const nodeStart = node.getStart(sourceFile);
-			checkPattern(pattern, nodeStart + 1, flags ?? "");
+			const details = getRegExpLiteralDetails(node, services);
+			checkPattern(details.pattern, details.start, details.flags);
 		}
 
 		function checkRegExpConstructor(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
-				return;
+			const construction = getRegExpConstruction(node, services);
+			if (construction) {
+				checkPattern(
+					construction.pattern,
+					construction.start + 1,
+					construction.flags,
+				);
 			}
-
-			const args = node.arguments;
-			if (!args?.length) {
-				return;
-			}
-
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const firstArg = args[0]!;
-
-			if (firstArg.kind !== ts.SyntaxKind.StringLiteral) {
-				return;
-			}
-
-			const pattern = firstArg.text;
-			const patternStart = firstArg.getStart(sourceFile) + 1;
-
-			const secondArg = args[1];
-
-			const flags =
-				secondArg?.kind === ts.SyntaxKind.StringLiteral ? secondArg.text : "";
-
-			checkPattern(pattern, patternStart, flags);
 		}
 
 		return {

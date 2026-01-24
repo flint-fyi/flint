@@ -135,9 +135,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const replacementText = replacementArg.text;
-					const references = parseReplacementReferences(replacementText);
-
+					const references = parseReplacementReferences(replacementArg.text);
 					const replacementRange = getTSNodeRange(replacementArg, sourceFile);
 
 					for (const reference of references) {
