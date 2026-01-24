@@ -1,10 +1,15 @@
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
+import type {
+	AST,
+	TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
-const STANDARD_FLAGS = new Set(["d", "g", "i", "m", "s", "u", "v", "y"]);
+const standardFlags = new Set(["d", "g", "i", "m", "s", "u", "v", "y"]);
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -24,9 +29,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function checkFlags(flags: string, flagsStart: number) {
-			for (let i = 0; i < flags.length; i++) {
-				const flag = flags[i];
-				if (flag && !STANDARD_FLAGS.has(flag)) {
+			for (let i = 0; i < flags.length; i += 1) {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const flag = flags[i]!;
+				if (!standardFlags.has(flag)) {
 					context.report({
 						data: {
 							flag,
@@ -43,54 +49,38 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			const text = node.getText(sourceFile);
-			const match = /^\/.*\/([a-z]*)$/i.exec(text);
-
-			if (!match) {
-				return;
-			}
-
-			const [, flags] = match;
-
-			if (!flags) {
-				return;
-			}
-
-			const nodeStart = node.getStart(sourceFile);
-			const flagsStart = nodeStart + text.length - flags.length;
-			checkFlags(flags, flagsStart);
+			const details = getRegExpLiteralDetails(node, services);
+			checkFlags(
+				details.flags,
+				details.start + node.text.length - details.flags.length - 1,
+			);
 		}
 
 		function checkRegExpConstructor(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args || args.length < 2) {
+			const args = construction.args;
+			if (args.length < 2) {
 				return;
 			}
 
-			const secondArgument = args[1];
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const secondArgument = args[1]!;
 
-			if (
-				!secondArgument ||
-				secondArgument.kind !== ts.SyntaxKind.StringLiteral
-			) {
+			if (secondArgument.kind !== ts.SyntaxKind.StringLiteral) {
 				return;
 			}
 
-			const flags = secondArgument.text;
-			const flagsStart = secondArgument.getStart(sourceFile) + 1;
-			checkFlags(flags, flagsStart);
+			const flagsStart = secondArgument.getStart(services.sourceFile) + 1;
+			checkFlags(construction.flags, flagsStart);
 		}
 
 		return {

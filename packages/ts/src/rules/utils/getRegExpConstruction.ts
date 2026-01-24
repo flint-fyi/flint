@@ -39,6 +39,7 @@ export function getRegExpConstruction(
 	}
 
 	return {
+		args,
 		flags,
 		pattern: firstArgument.getText(sourceFile).slice(1, -1),
 		raw: firstArgument.text,
