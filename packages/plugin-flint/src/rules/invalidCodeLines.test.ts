@@ -241,6 +241,7 @@ Rule report message.
 console.log();
 \`,
                     snapshot: \`
+console.log();
 ~~~~~~~~~~~~~
 Rule report message.
 \`,
