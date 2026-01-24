@@ -55,7 +55,7 @@ export async function runTestCaseRule<
 	}
 	linterHost.vfsUpsertFile(filePathAbsolute, code);
 
-	using file = fileFactories.get(rule.language).prepareFile({
+	using file = fileFactories.get(rule.language).createFile({
 		filePath: fileName,
 		filePathAbsolute,
 		sourceText: code,

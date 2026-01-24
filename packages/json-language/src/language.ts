@@ -13,7 +13,7 @@ export const jsonLanguage = createLanguage<JsonNodesByName, JsonFileServices>({
 	},
 	createFileFactory: () => {
 		return {
-			prepareFile: (data) => {
+			createFile: (data) => {
 				const sourceFile = ts.parseJsonText(
 					data.filePathAbsolute,
 					data.sourceText,

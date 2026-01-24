@@ -8,7 +8,7 @@ export const textLanguage = createLanguage<TextNodes, TextFileServices>({
 	},
 	createFileFactory: () => {
 		return {
-			prepareFile: (data) => {
+			createFile: (data) => {
 				return {
 					about: data,
 					services: data,

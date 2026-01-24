@@ -25,7 +25,7 @@ export const markdownLanguage = createLanguage<
 			// However, there aren't currently JS bindings, so
 			// it'll be a while before we can replace it with a native parser.
 			// See the discussion in https://github.com/flint-fyi/flint/issues/1043.
-			prepareFile: (data) => {
+			createFile: (data) => {
 				const root = fromMarkdown(data.sourceText, {
 					extensions: [gfm()],
 					mdastExtensions: [gfmFromMarkdown()],

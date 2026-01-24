@@ -124,7 +124,7 @@ export interface LanguageFileCacheImpacts {
  * Creates prepared information around files to be linted.
  */
 export interface LanguageFileFactory<FileServices extends object> {
-	prepareFile(data: FileAboutData): LanguageFile<FileServices>;
+	createFile(data: FileAboutData): LanguageFile<FileServices>;
 }
 
 /**
@@ -157,5 +157,5 @@ export type LanguageFileDefinition<FileServices extends object> =
  * than {@link LanguageFile}s (which are always disposable).
  */
 export interface LanguageFileFactoryDefinition<FileServices extends object> {
-	prepareFile(data: FileAboutData): LanguageFileDefinition<FileServices>;
+	createFile(data: FileAboutData): LanguageFileDefinition<FileServices>;
 }

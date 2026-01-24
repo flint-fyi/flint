@@ -28,8 +28,8 @@ export function createLanguage<
 
 			const fileFactory = {
 				...fileFactoryDefinition,
-				prepareFile: (data: FileAboutData) => {
-					return makeDisposable(fileFactoryDefinition.prepareFile(data));
+				createFile: (data: FileAboutData) => {
+					return makeDisposable(fileFactoryDefinition.createFile(data));
 				},
 			};
 

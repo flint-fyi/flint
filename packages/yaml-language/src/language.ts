@@ -16,7 +16,7 @@ export const yamlLanguage = createLanguage<YamlNodesByName, YamlFileServices>({
 	},
 	createFileFactory: () => {
 		return {
-			prepareFile: (data) => {
+			createFile: (data) => {
 				const root = yamlParser.parse(data.sourceText);
 
 				return {

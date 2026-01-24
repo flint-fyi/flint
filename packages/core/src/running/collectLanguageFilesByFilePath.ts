@@ -20,7 +20,7 @@ export function collectLanguageFilesByFilePath(
 		const fileFactory = language.createFileFactory(host);
 
 		return new CachedFactory((filePath: string) =>
-			fileFactory.prepareFile({
+			fileFactory.createFile({
 				filePath,
 				filePathAbsolute: makeAbsolute(filePath),
 				sourceText: nullThrows(

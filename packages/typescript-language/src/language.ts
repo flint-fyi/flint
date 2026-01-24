@@ -35,7 +35,7 @@ export const typescriptLanguage = createLanguage<
 			host: createTypeScriptServerHost(host),
 		});
 
-		function prepareFile(data: FileAboutData) {
+		function createFile(data: FileAboutData) {
 			log("Opening client file:", data.filePathAbsolute);
 			service.openClientFile(data.filePathAbsolute);
 
@@ -82,7 +82,7 @@ export const typescriptLanguage = createLanguage<
 			};
 		}
 
-		return { prepareFile };
+		return { createFile };
 	},
 
 	getFileCacheImpacts: getTypeScriptFileCacheImpacts,
