@@ -924,7 +924,8 @@
 		"flint": {
 			"name": "testShorthands",
 			"plugin": "flint",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{

@@ -52,7 +52,7 @@ ruleTester.describe(rule, {
 	],
 	valid: [
 		`
-            describe(rule, {
+            ruleTester.describe(rule, {
                 valid: ['a', 'a'],
                 invalid: []
             });
