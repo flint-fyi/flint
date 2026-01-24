@@ -40,7 +40,6 @@ export interface CollectedFilesAndOptions {
 
 // TODO: This is very slow and the whole thing should be refactored 🙌.
 // Creating arrays and Maps and Sets per rule x per file is a lot of memory!
-// Also, what if we removed the concept of a virtual file...?
 export async function collectFilesAndOptions(
 	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
