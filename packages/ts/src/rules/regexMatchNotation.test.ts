@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /[\S\s]/;
  ~~~~~~
- Prefer '[\s\S]' over '[\S\s]' to match any character.
+ For consistency, prefer '[\s\S]' over '[\S\s]' to match any character.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /[^]/;
  ~~~
- Prefer '[\s\S]' over '[^]' to match any character.
+ For consistency, prefer '[\s\S]' over '[^]' to match any character.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /[\d\D]/;
  ~~~~~~
- Prefer '[\s\S]' over '[\d\D]' to match any character.
+ For consistency, prefer '[\s\S]' over '[\d\D]' to match any character.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /[\D\d]/;
  ~~~~~~
- Prefer '[\s\S]' over '[\D\d]' to match any character.
+ For consistency, prefer '[\s\S]' over '[\D\d]' to match any character.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /[\w\W]/;
  ~~~~~~
- Prefer '[\s\S]' over '[\w\W]' to match any character.
+ For consistency, prefer '[\s\S]' over '[\w\W]' to match any character.
 `,
 		},
 		{
@@ -60,7 +60,7 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /[\W\w]/;
  ~~~~~~
- Prefer '[\s\S]' over '[\W\w]' to match any character.
+ For consistency, prefer '[\s\S]' over '[\W\w]' to match any character.
 `,
 		},
 		{
@@ -70,7 +70,7 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /[\0-\uFFFF]/;
  ~~~~~~~~~~~
- Prefer '[\s\S]' over '[\0-\uFFFF]' to match any character.
+ For consistency, prefer '[\s\S]' over '[\0-\uFFFF]' to match any character.
 `,
 		},
 		{
@@ -80,7 +80,7 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /[\p{ASCII}\P{ASCII}]/u;
  ~~~~~~~~~~~~~~~~~~~~
- Prefer '[\s\S]' over '[\p{ASCII}\P{ASCII}]' to match any character.
+ For consistency, prefer '[\s\S]' over '[\p{ASCII}\P{ASCII}]' to match any character.
 `,
 		},
 		{
@@ -90,7 +90,7 @@ new RegExp("[\\S\\s]");
 			snapshot: String.raw`
 new RegExp("[\\S\\s]");
             ~~~~~~
-            Prefer '[\s\S]' over '[\S\s]' to match any character.
+            For consistency, prefer '[\s\S]' over '[\S\s]' to match any character.
 `,
 		},
 		{
@@ -100,7 +100,7 @@ RegExp("[^]");
 			snapshot: String.raw`
 RegExp("[^]");
         ~~~
-        Prefer '[\s\S]' over '[^]' to match any character.
+        For consistency, prefer '[\s\S]' over '[^]' to match any character.
 `,
 		},
 		{
@@ -110,7 +110,7 @@ RegExp("[^]");
 			snapshot: String.raw`
 /[\S\s]/v;
  ~~~~~~
- Prefer '[\s\S]' over '[\S\s]' to match any character.
+ For consistency, prefer '[\s\S]' over '[\S\s]' to match any character.
 `,
 		},
 		{
@@ -120,7 +120,7 @@ RegExp("[^]");
 			snapshot: String.raw`
 /[^]/s;
  ~~~
- Prefer '.' over '[^]' to match any character.
+ For consistency, prefer '.' over '[^]' to match any character.
 `,
 		},
 	],

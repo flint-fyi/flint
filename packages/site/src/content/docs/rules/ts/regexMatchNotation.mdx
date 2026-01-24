@@ -1,5 +1,5 @@
 ---
-description: "Reports non-standard notations for matching any character in regular expressions."
+description: "Reports inconsistent notations for matching any character in regular expressions."
 title: "regexMatchNotation"
 topic: "rules"
 ---
@@ -10,7 +10,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexMatchNotation" />
 
-Reports non-standard notations for matching any character in regular expressions.
+Reports inconsistent notations for matching any character in regular expressions.
 There are multiple ways to match any character: `[\s\S]`, `[\S\s]`, `[\d\D]`, `[\w\W]`, `[^]`, and `.` with the `s` (dotAll) flag.
 This rule enforces using `[\s\S]` as the standard notation.
 

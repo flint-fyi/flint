@@ -9,17 +9,14 @@ import * as ts from "typescript";
 import { ruleCreator } from "./ruleCreator.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-const ALLOWED_NOTATION = String.raw`[\s\S]`;
+const allowedNotation = String.raw`[\s\S]`;
 
 function isMatchAnyCharacterClass(
 	node: RegExpAST.CharacterClass,
 	flags: { unicode: boolean; unicodeSets: boolean },
-): boolean {
+) {
 	if (node.negate) {
-		if (node.elements.length === 0) {
-			return true;
-		}
-		return false;
+		return node.elements.length === 0;
 	}
 
 	const positiveElements: {
@@ -90,7 +87,7 @@ function isMatchAnyCharacterClass(
 
 	for (const positive of positiveElements) {
 		const matchingNegative = negativeElements.find(
-			(neg) => neg.kind === positive.kind,
+			(negative) => negative.kind === positive.kind,
 		);
 		if (matchingNegative) {
 			return true;
@@ -121,14 +118,14 @@ function isMatchAnyCharacterClass(
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
-			"Reports non-standard notations for matching any character in regular expressions.",
+			"Reports inconsistent notations for matching any character in regular expressions.",
 		id: "regexMatchNotation",
 		presets: ["stylisticStrict"],
 	},
 	messages: {
 		unexpected: {
 			primary:
-				"Prefer '{{ preferred }}' over '{{ raw }}' to match any character.",
+				"For consistency, prefer '{{ preferred }}' over '{{ raw }}' to match any character.",
 			secondary: [
 				"Using a consistent notation for matching any character improves readability.",
 			],
@@ -156,9 +153,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				onCharacterClassEnter(ccNode) {
 					if (
 						isMatchAnyCharacterClass(ccNode, flagsInfo) &&
-						ccNode.raw !== ALLOWED_NOTATION
+						ccNode.raw !== allowedNotation
 					) {
-						const preferred = flagsInfo.dotAll ? "." : ALLOWED_NOTATION;
+						const preferred = flagsInfo.dotAll ? "." : allowedNotation;
 						context.report({
 							data: {
 								preferred,
