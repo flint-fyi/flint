@@ -3,9 +3,10 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
 function findEmptyAlternativesInGroup(
 	pattern: string,
@@ -142,12 +143,6 @@ function findMatchingParenthesis(pattern: string, openIndex: number) {
 	return -1;
 }
 
-function getPatternFromRegex(node: AST.RegularExpressionLiteral) {
-	const text = node.text;
-	const lastSlash = text.lastIndexOf("/");
-	return text.slice(1, lastSlash);
-}
-
 function isAlternativeEmpty(pattern: string, start: number, end: number) {
 	for (let i = start; i < end; i++) {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -182,16 +177,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.RegularExpressionLiteral,
 			services: TypeScriptFileServices,
 		) {
-			const pattern = getPatternFromRegex(node);
+			const { pattern, start } = getRegExpLiteralDetails(node, services);
 			const emptyAlternativeStarts = findEmptyAlternativeStarts(pattern);
-			const nodeStart = node.getStart(services.sourceFile);
 
 			for (const alternativeStart of emptyAlternativeStarts) {
 				context.report({
 					message: "emptyAlternative",
 					range: {
-						begin: nodeStart + 1 + alternativeStart,
-						end: nodeStart + 1 + alternativeStart + 1,
+						begin: start + alternativeStart,
+						end: start + alternativeStart + 1,
 					},
 				});
 			}
@@ -201,36 +195,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CallExpression | AST.NewExpression,
 			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args?.length) {
-				return;
-			}
-
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const patternArg = args[0]!;
-
-			if (patternArg.kind !== ts.SyntaxKind.StringLiteral) {
-				return;
-			}
-
-			const rawText = patternArg.getText(services.sourceFile);
-			const pattern = rawText.slice(1, -1);
-			const emptyAlternativeStarts = findEmptyAlternativeStarts(pattern);
-			const nodeStart = patternArg.getStart(services.sourceFile);
+			const emptyAlternativeStarts = findEmptyAlternativeStarts(
+				construction.pattern,
+			);
 
 			for (const alternativeStart of emptyAlternativeStarts) {
 				context.report({
 					message: "emptyAlternative",
 					range: {
-						begin: nodeStart + 1 + alternativeStart,
-						end: nodeStart + 1 + alternativeStart + 1,
+						begin: construction.start + 1 + alternativeStart,
+						end: construction.start + 1 + alternativeStart + 1,
 					},
 				});
 			}

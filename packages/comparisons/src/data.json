@@ -741,7 +741,8 @@
 		"flint": {
 			"name": "missingPlaceholders",
 			"plugin": "flint",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -754,7 +755,8 @@
 		"flint": {
 			"name": "nodePropertyInChecks",
 			"plugin": "flint",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15148,6 +15150,7 @@
 			"name": "regexLetterCasing",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15194,7 +15197,8 @@
 		"flint": {
 			"name": "regexLookaroundQuantifierOptimizations",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15303,6 +15307,7 @@
 			"name": "regexNamedReplacements",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15342,7 +15347,8 @@
 		"flint": {
 			"name": "regexOctalEscapes",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
