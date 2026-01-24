@@ -11,6 +11,7 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
 function findEmptyStringLiterals(pattern: string, flags: string) {
 	const results: ClassStringDisjunction[] = [];
@@ -41,14 +42,6 @@ function findEmptyStringLiterals(pattern: string, flags: string) {
 	return results;
 }
 
-function getRegexInfo(node: AST.RegularExpressionLiteral) {
-	const lastSlash = node.text.lastIndexOf("/");
-	return {
-		flags: node.text.slice(lastSlash + 1),
-		pattern: node.text.slice(1, lastSlash),
-	};
-}
-
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports empty string literals in character classes.",
@@ -74,16 +67,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.RegularExpressionLiteral,
 			services: TypeScriptFileServices,
 		) {
-			const { flags, pattern } = getRegexInfo(node);
+			const { flags, pattern, start } = getRegExpLiteralDetails(node, services);
 			const emptyLiterals = findEmptyStringLiterals(pattern, flags);
-			const nodeStart = node.getStart(services.sourceFile);
 
 			for (const literal of emptyLiterals) {
 				context.report({
 					message: "emptyStringLiteral",
 					range: {
-						begin: nodeStart + literal.start,
-						end: nodeStart + literal.end,
+						begin: start + literal.start - 1,
+						end: start + literal.end - 1,
 					},
 				});
 			}
@@ -98,9 +90,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const pattern = construction.pattern.replace(/\\\\/g, "\\");
+			const patternEscaped = construction.pattern.replace(/\\\\/g, "\\");
 			const emptyLiterals = findEmptyStringLiterals(
-				pattern,
+				patternEscaped,
 				construction.flags,
 			);
 

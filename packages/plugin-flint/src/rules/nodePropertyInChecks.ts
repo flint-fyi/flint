@@ -5,8 +5,9 @@ import {
 import { SyntaxKind } from "typescript";
 
 import { isTSNode } from "../utils/isTSNode.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Disallows using the `in` operator to check properties on TypeScript nodes.",
