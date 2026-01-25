@@ -84,40 +84,40 @@ function findReachableQuantifiers(pattern: RegExpAST.Pattern) {
 }
 
 function generateAttackString(quantifier: RegExpAST.Quantifier) {
-	let character: string;
+	let character: string | undefined;
 
 	switch (quantifier.element.type) {
 		case "Character": {
 			character = String.fromCharCode(quantifier.element.value);
 			break;
 		}
+
 		case "CharacterClass": {
-			const first = quantifier.element.elements[0];
-			if (first?.type === "Character") {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const first = quantifier.element.elements[0]!;
+			if (first.type === "Character") {
 				character = String.fromCharCode(first.value);
 			}
 			break;
 		}
+
 		case "CharacterSet": {
-			if (quantifier.element.kind === "any") {
-				character = "x";
-			} else if (quantifier.element.kind === "digit") {
-				character = "0";
-			} else if (quantifier.element.kind === "space") {
-				character = " ";
-			} else if (quantifier.element.kind === "word") {
-				character = "a";
-			} else {
-				character = "a";
+			switch (quantifier.element.kind) {
+				case "any":
+					character = "x";
+					break;
+				case "digit":
+					character = "0";
+					break;
+				case "space":
+					character = " ";
+					break;
 			}
 			break;
 		}
-
-		default:
-			character = "a";
 	}
 
-	return character.repeat(20);
+	return (character ?? "a").repeat(20);
 }
 
 function getFollowingElements(quantifier: RegExpAST.Quantifier) {
