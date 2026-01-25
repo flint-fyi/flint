@@ -3,14 +3,19 @@ import {
 	visitRegExpAST,
 } from "@eslint-community/regexpp";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
+import type {
+	AST,
+	TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 function formatQuantifier(min: number, max: number, greedy: boolean): string {
 	let result: string;
+
 	if (min === 0 && max === 1) {
 		result = "?";
 	} else if (min === 0 && max === Infinity) {
@@ -31,7 +36,6 @@ function formatQuantifier(min: number, max: number, greedy: boolean): string {
 function isPotentiallyEmpty(element: RegExpAST.Element): boolean {
 	switch (element.type) {
 		case "Assertion":
-			return true;
 		case "Backreference":
 			return true;
 		case "CapturingGroup":
@@ -39,10 +43,6 @@ function isPotentiallyEmpty(element: RegExpAST.Element): boolean {
 			return element.alternatives.some((alt) =>
 				alt.elements.every((el) => isPotentiallyEmpty(el)),
 			);
-		case "Character":
-		case "CharacterClass":
-		case "CharacterSet":
-			return false;
 		case "Quantifier":
 			return element.min === 0 || isPotentiallyEmpty(element.element);
 		default:
@@ -82,80 +82,49 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			visitRegExpAST(regexpAst, {
 				onQuantifierEnter(qNode) {
-					if (qNode.min > 0 && isPotentiallyEmpty(qNode.element)) {
-						const proposal = formatQuantifier(0, qNode.max, qNode.greedy);
-
-						context.report({
-							data: {
-								min: qNode.min,
-								proposal,
-							},
-							message: "confusing",
-							range: {
-								begin: patternStart + qNode.start,
-								end: patternStart + qNode.end,
-							},
-						});
+					if (qNode.min <= 0 || !isPotentiallyEmpty(qNode.element)) {
+						return;
 					}
+
+					const proposal = formatQuantifier(0, qNode.max, qNode.greedy);
+
+					context.report({
+						data: {
+							min: qNode.min,
+							proposal,
+						},
+						message: "confusing",
+						range: {
+							begin: patternStart + qNode.start,
+							end: patternStart + qNode.end,
+						},
+					});
 				},
 			});
 		}
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			{ sourceFile }: TypeScriptFileServices,
 		) {
-			const text = node.getText(sourceFile);
-			const match = /^\/(.*)\/([dgimsuyv]*)$/.exec(text);
-
-			if (!match) {
-				return;
-			}
-
-			const [, pattern, flags] = match;
-
-			if (!pattern) {
-				return;
-			}
-
-			const nodeStart = node.getStart(sourceFile);
-			checkPattern(pattern, nodeStart + 1, flags ?? "");
+			const details = getRegExpLiteralDetails(node, { sourceFile });
+			checkPattern(details.pattern, details.start, details.flags);
 		}
 
 		function checkRegExpConstructor(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args?.length) {
-				return;
-			}
-
-			const firstArgument = args[0];
-
-			if (
-				!firstArgument ||
-				firstArgument.kind !== ts.SyntaxKind.StringLiteral
-			) {
-				return;
-			}
-
-			const patternStart = firstArgument.getStart(sourceFile) + 1;
-
-			let flags = "";
-			const secondArgument = args[1];
-			if (secondArgument?.kind === ts.SyntaxKind.StringLiteral) {
-				flags = secondArgument.text;
-			}
-
-			checkPattern(firstArgument.text, patternStart, flags);
+			checkPattern(
+				construction.pattern,
+				construction.start + 1,
+				construction.flags,
+			);
 		}
 
 		return {
