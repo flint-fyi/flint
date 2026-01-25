@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /([0-9]{4})/;
  ~~~~~~~~~~
- Capture group \`([0-9]{4})\` should be converted to a named or non-capturing group.
+ Anonymous capture group \`([0-9]{4})\` should be converted to a named or non-capturing group for clarity.
 `,
 			suggestions: [
 				{
@@ -34,9 +34,9 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a)(b)/;
  ~~~
- Capture group \`(a)\` should be converted to a named or non-capturing group.
+ Anonymous capture group \`(a)\` should be converted to a named or non-capturing group for clarity.
     ~~~
-    Capture group \`(b)\` should be converted to a named or non-capturing group.
+    Anonymous capture group \`(b)\` should be converted to a named or non-capturing group for clarity.
 `,
 			suggestions: [
 				{
@@ -72,7 +72,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(?<year>[0-9]{4})-(\\w{5})/;
                    ~~~~~~~
-                   Capture group \`(\\w{5})\` should be converted to a named or non-capturing group.
+                   Anonymous capture group \`(\\w{5})\` should be converted to a named or non-capturing group for clarity.
 `,
 			suggestions: [
 				{
@@ -96,7 +96,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a)/v;
  ~~~
- Capture group \`(a)\` should be converted to a named or non-capturing group.
+ Anonymous capture group \`(a)\` should be converted to a named or non-capturing group for clarity.
 `,
 			suggestions: [
 				{
@@ -120,7 +120,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(?<outer>(?<inner>a)(b))/;
                      ~~~
-                     Capture group \`(b)\` should be converted to a named or non-capturing group.
+                     Anonymous capture group \`(b)\` should be converted to a named or non-capturing group for clarity.
 `,
 			suggestions: [
 				{
@@ -137,6 +137,97 @@ ruleTester.describe(rule, {
 				},
 			],
 		},
+		{
+			code: String.raw`
+new RegExp("([0-9]{4})");
+`,
+			snapshot: `
+new RegExp("([0-9]{4})");
+            ~~~~~~~~~~
+            Anonymous capture group \`([0-9]{4})\` should be converted to a named or non-capturing group for clarity.
+`,
+			suggestions: [
+				{
+					id: "addGroupName",
+					updated: String.raw`
+new RegExp("(?<name>[0-9]{4})");
+`,
+				},
+				{
+					id: "convertToNonCapturing",
+					updated: String.raw`
+new RegExp("(?:[0-9]{4})");
+`,
+				},
+			],
+		},
+		{
+			code: String.raw`
+RegExp("(a)(b)");
+`,
+			snapshot: `
+RegExp("(a)(b)");
+        ~~~
+        Anonymous capture group \`(a)\` should be converted to a named or non-capturing group for clarity.
+           ~~~
+           Anonymous capture group \`(b)\` should be converted to a named or non-capturing group for clarity.
+`,
+			suggestions: [
+				{
+					id: "addGroupName",
+					updated: String.raw`
+RegExp("(?<name>a)(b)");
+`,
+				},
+				{
+					id: "convertToNonCapturing",
+					updated: String.raw`
+RegExp("(?:a)(b)");
+`,
+				},
+				{
+					id: "addGroupName",
+					updated: String.raw`
+RegExp("(a)(?<name>b)");
+`,
+				},
+				{
+					id: "convertToNonCapturing",
+					updated: String.raw`
+RegExp("(a)(?:b)");
+`,
+				},
+			],
+		},
+		{
+			code: String.raw`
+new RegExp("(?<year>[0-9]{4})-(\\w{5})");
+`,
+			snapshot:
+				String.raw`
+new RegExp("(?<year>[0-9]{4})-(\\w{5})");
+                              ~~~~~~~
+                              Anonymous capture group ` +
+				"`" +
+				String.raw`(\w{5})` +
+				"`" +
+				String.raw` should be converted to a named or non-capturing group for clarity.
+`,
+			suggestions: [
+				{
+					id: "addGroupName",
+					updated: String.raw`
+new RegExp("(?<year>[0-9]{4})-(?<name>\\w{5})");
+`,
+				},
+				{
+					id: "convertToNonCapturing",
+					updated: String.raw`
+new RegExp("(?<year>[0-9]{4})-(?:\\w{5})");
+`,
+				},
+			],
+		},
 	],
 	valid: [
 		String.raw`/normal_regex/`,
@@ -145,5 +236,10 @@ ruleTester.describe(rule, {
 		String.raw`/\u{1F680}/u`,
 		String.raw`/(?<a>x)(?<b>y)/`,
 		String.raw`/(?<outer>(?<inner>a))/`,
+		String.raw`new RegExp("normal_regex")`,
+		String.raw`new RegExp("(?:[0-9]{4})")`,
+		String.raw`new RegExp("(?<year>[0-9]{4})")`,
+		String.raw`RegExp("(?<a>x)(?<b>y)")`,
+		String.raw`new RegExp(variable)`,
 	],
 });
