@@ -73,23 +73,19 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div>Regular text</div>` },
-		{ code: `<div>Text with &gt; entity</div>` },
-		{ code: `<div>Text with &quot; entity</div>` },
-		{ code: `<div>Text with &#39; entity</div>` },
-		{ code: `<div>Text with &#125; entity</div>` },
-		{ code: `<div>{'>'}{'<'}</div>` },
-		{ code: `<div>{'"'}</div>` },
-		{ code: `<div>{"'"}</div>` },
-		{ code: `<div>{'}'}</div>` },
-		{ code: `<div>No special characters here</div>` },
-		{
-			code: `<div>
+		`<div>Regular text</div>`,
+		`<div>Text with &gt; entity</div>`,
+		`<div>Text with &quot; entity</div>`,
+		`<div>Text with &#39; entity</div>`,
+		`<div>Text with &#125; entity</div>`,
+		`<div>{'>'}{'<'}</div>`,
+		`<div>{'"'}</div>`,
+		`<div>{"'"}</div>`,
+		`<div>{'}'}</div>`,
+		`<div>No special characters here</div>`,
+		`<div>
     Regular text content
 </div>`,
-		},
-		{
-			code: `<a href="https://example.com">Link</a>`,
-		},
+		`<a href="https://example.com">Link</a>`,
 	],
 });

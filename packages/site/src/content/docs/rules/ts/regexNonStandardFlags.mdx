@@ -1,0 +1,74 @@
+---
+description: "Reports non-standard regular expression flags."
+title: "regexNonStandardFlags"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexNonStandardFlags" />
+
+Reports non-standard regular expression flags.
+Some JavaScript environments support experimental flags not defined in the ECMAScript standard.
+These flags should be avoided in production code as they may not work in all environments.
+
+The standard flags are: `d`, `g`, `i`, `m`, `s`, `u`, `v`, `y`.
+
+## Examples
+
+### Non-Standard Flag in Literal
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /foo/l;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /foo/g;
+```
+
+</TabItem>
+</Tabs>
+
+### Non-Standard Flag in RegExp Constructor
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("foo", "gxl");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("foo", "gi");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are targeting a specific JavaScript environment that supports non-standard flags (such as certain embedded environments or experimental runtimes), you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: RegExp](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+- [ECMAScript Regular Expression Flags](https://tc39.es/ecma262/#sec-regexp-pattern-flags)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexNonStandardFlags" />
