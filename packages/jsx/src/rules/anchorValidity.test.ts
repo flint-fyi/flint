@@ -55,14 +55,12 @@ Anchor with onClick handler should be a button.
 		},
 	],
 	valid: [
-		{ code: `<a href="https://example.com" />` },
-		{ code: `<a href="/path" />` },
-		{ code: `<a href="#section" />` },
-		{ code: `<a href="page.html" />` },
-		{
-			code: `<a href="https://example.com" onClick={() => {}} />`,
-		},
-		{ code: `<a href={someVariable} />` },
-		{ code: `<CustomElement href={false} />` },
+		`<a href="https://example.com" />`,
+		`<a href="/path" />`,
+		`<a href="#section" />`,
+		`<a href="page.html" />`,
+		`<a href="https://example.com" onClick={() => {}} />`,
+		`<a href={someVariable} />`,
+		`<CustomElement href={false} />`,
 	],
 });
