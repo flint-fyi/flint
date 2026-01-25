@@ -13,7 +13,7 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /\u0041/u;
  ~~~~~~
- Use Unicode codepoint escape '\u{0041}' instead of 4-digit escape '\u0041'.
+ Prefer the Unicode codepoint escape '\u{0041}' instead of 4-digit escape '\u0041'.
 `,
 		},
 		{
@@ -26,7 +26,7 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /\u00FF/u;
  ~~~~~~
- Use Unicode codepoint escape '\u{00FF}' instead of 4-digit escape '\u00FF'.
+ Prefer the Unicode codepoint escape '\u{00FF}' instead of 4-digit escape '\u00FF'.
 `,
 		},
 		{
@@ -39,9 +39,9 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /[\u0041\u0042]/u;
   ~~~~~~
-  Use Unicode codepoint escape '\u{0041}' instead of 4-digit escape '\u0041'.
+  Prefer the Unicode codepoint escape '\u{0041}' instead of 4-digit escape '\u0041'.
         ~~~~~~
-        Use Unicode codepoint escape '\u{0042}' instead of 4-digit escape '\u0042'.
+        Prefer the Unicode codepoint escape '\u{0042}' instead of 4-digit escape '\u0042'.
 `,
 		},
 		{
@@ -54,9 +54,9 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /[\u0041-\u005A]/u;
   ~~~~~~
-  Use Unicode codepoint escape '\u{0041}' instead of 4-digit escape '\u0041'.
+  Prefer the Unicode codepoint escape '\u{0041}' instead of 4-digit escape '\u0041'.
          ~~~~~~
-         Use Unicode codepoint escape '\u{005A}' instead of 4-digit escape '\u005A'.
+         Prefer the Unicode codepoint escape '\u{005A}' instead of 4-digit escape '\u005A'.
 `,
 		},
 		{
@@ -69,7 +69,7 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /\u0041/v;
  ~~~~~~
- Use Unicode codepoint escape '\u{0041}' instead of 4-digit escape '\u0041'.
+ Prefer the Unicode codepoint escape '\u{0041}' instead of 4-digit escape '\u0041'.
 `,
 		},
 		{
@@ -79,7 +79,7 @@ new RegExp("\\u0041", "u");
 			snapshot: String.raw`
 new RegExp("\\u0041", "u");
             ~~~~~~
-            Use Unicode codepoint escape '\u{0041}' instead of 4-digit escape '\u0041'.
+            Prefer the Unicode codepoint escape '\u{0041}' instead of 4-digit escape '\u0041'.
 `,
 		},
 	],

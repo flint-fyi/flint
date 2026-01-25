@@ -3,10 +3,14 @@ import {
 	visitRegExpAST,
 } from "@eslint-community/regexpp";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
+import type {
+	AST,
+	TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 interface CharacterInfo {
@@ -20,12 +24,12 @@ function collectSurrogatePairIndices(characters: CharacterInfo[]) {
 	const surrogateIndices = new Set<number>();
 
 	for (let index = 0; index < characters.length - 1; index++) {
-		const current = characters[index];
-		const next = characters[index + 1];
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const current = characters[index]!;
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const next = characters[index + 1]!;
 
 		if (
-			current &&
-			next &&
 			isFourDigitUnicodeEscape(current.raw) &&
 			isFourDigitUnicodeEscape(next.raw) &&
 			isHighSurrogate(current.value) &&
@@ -62,11 +66,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferCodepointEscape: {
 			primary:
-				"Use Unicode codepoint escape '{{ replacement }}' instead of 4-digit escape '{{ raw }}'.",
+				"Prefer the Unicode codepoint escape '{{ replacement }}' instead of 4-digit escape '{{ raw }}'.",
 			secondary: [
 				"The \\u{...} format is more flexible, readable, and consistent with modern Unicode handling in JavaScript.",
 			],
-			suggestions: ["Replace '{{ raw }}' with '{{ replacement }}'."],
+			suggestions: ["Replace `{{ raw }}` with `{{ replacement }}`."],
 		},
 	},
 	setup(context) {
@@ -107,13 +111,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				const charInfo = characters[index];
-				if (!charInfo) {
-					continue;
-				}
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const charInfo = characters[index]!;
 
-				const hex = charInfo.raw.slice(2);
-				const replacement = `\\u{${hex}}`;
+				const replacement = `\\u{${charInfo.raw.slice(2)}}`;
 
 				context.report({
 					data: {
@@ -140,59 +141,27 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			const text = node.getText(sourceFile);
-			const match = /^\/(.*)\/([dgimsuyv]*)$/.exec(text);
-
-			if (!match) {
-				return;
-			}
-
-			const [, pattern, flags] = match;
-
-			if (!pattern) {
-				return;
-			}
-
-			const nodeStart = node.getStart(sourceFile);
-			checkPattern(pattern, nodeStart + 1, flags ?? "", true);
+			const details = getRegExpLiteralDetails(node, services);
+			checkPattern(details.pattern, details.start, details.flags, true);
 		}
 
 		function checkRegExpConstructor(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args?.length) {
-				return;
-			}
-
-			const firstArgument = args[0];
-
-			if (
-				!firstArgument ||
-				firstArgument.kind !== ts.SyntaxKind.StringLiteral
-			) {
-				return;
-			}
-
-			const patternStart = firstArgument.getStart(sourceFile) + 1;
-
-			let flags = "";
-			const secondArgument = args[1];
-			if (secondArgument?.kind === ts.SyntaxKind.StringLiteral) {
-				flags = secondArgument.text;
-			}
-
-			checkPattern(firstArgument.text, patternStart, flags, false);
+			checkPattern(
+				construction.raw,
+				construction.start + 1,
+				construction.flags,
+				false,
+			);
 		}
 
 		return {
