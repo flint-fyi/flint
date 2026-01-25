@@ -45,30 +45,18 @@ const element = <html lang="123"></html>;
 		},
 	],
 	valid: [
-		{ code: `const element = <div lang="en"></div>;` },
-		{ code: `const element = <div lang="en-US"></div>;` },
-		{ code: `const element = <div lang="en-GB"></div>;` },
-		{
-			code: `const element = <div lang="zh-Hans"></div>;`,
-		},
-		{
-			code: `const element = <div lang="zh-Hans-CN"></div>;`,
-		},
-		{ code: `const element = <div lang="fr"></div>;` },
-		{ code: `const element = <div lang="fr-CA"></div>;` },
-		{
-			code: `const element = <div lang="es-419"></div>;`,
-		},
-		{ code: `const element = <html lang="en"></html>;` },
-		{
-			code: `const element = <html lang="en-US"></html>;`,
-		},
-		{ code: `const element = <div></div>;` },
-		{
-			code: `const element = <div lang={language}></div>;`,
-		},
-		{
-			code: `const element = <div lang="en-GB-oxendict"></div>;`,
-		},
+		`const element = <div lang="en"></div>;`,
+		`const element = <div lang="en-US"></div>;`,
+		`const element = <div lang="en-GB"></div>;`,
+		`const element = <div lang="zh-Hans"></div>;`,
+		`const element = <div lang="zh-Hans-CN"></div>;`,
+		`const element = <div lang="fr"></div>;`,
+		`const element = <div lang="fr-CA"></div>;`,
+		`const element = <div lang="es-419"></div>;`,
+		`const element = <html lang="en"></html>;`,
+		`const element = <html lang="en-US"></html>;`,
+		`const element = <div></div>;`,
+		`const element = <div lang={language}></div>;`,
+		`const element = <div lang="en-GB-oxendict"></div>;`,
 	],
 });

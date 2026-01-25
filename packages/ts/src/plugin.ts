@@ -194,7 +194,21 @@ import regexGraphemeStringLiterals from "./rules/regexGraphemeStringLiterals.ts"
 import regexHexadecimalEscapes from "./rules/regexHexadecimalEscapes.ts";
 import regexIgnoreCaseFlags from "./rules/regexIgnoreCaseFlags.ts";
 import regexInvisibleCharacters from "./rules/regexInvisibleCharacters.ts";
+import regexLetterCasing from "./rules/regexLetterCasing.ts";
+import regexLookaroundQuantifierOptimizations from "./rules/regexLookaroundQuantifierOptimizations.ts";
+import regexMatchNotation from "./rules/regexMatchNotation.ts";
+import regexMisleadingCapturingGroups from "./rules/regexMisleadingCapturingGroups.ts";
+import regexMisleadingUnicodeCharacters from "./rules/regexMisleadingUnicodeCharacters.ts";
+import regexNamedBackreferences from "./rules/regexNamedBackreferences.ts";
+import regexNamedReplacements from "./rules/regexNamedReplacements.ts";
+import regexNonStandardFlags from "./rules/regexNonStandardFlags.ts";
+import regexObscureRanges from "./rules/regexObscureRanges.ts";
 import regexOctalEscapes from "./rules/regexOctalEscapes.ts";
+import regexResultArrayGroups from "./rules/regexResultArrayGroups.ts";
+import regexSetOperationOptimizations from "./rules/regexSetOperationOptimizations.ts";
+import regexStarQuantifiers from "./rules/regexStarQuantifiers.ts";
+import regexSuperLinearBacktracking from "./rules/regexSuperLinearBacktracking.ts";
+import regexTestMethods from "./rules/regexTestMethods.ts";
 import regexUnicodeCodepointEscapes from "./rules/regexUnicodeCodepointEscapes.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
@@ -407,7 +421,6 @@ export const ts = createPlugin({
 		regexEmptyCapturingGroups,
 		regexEmptyCharacterClasses,
 		regexEmptyGroups,
-		regexInvisibleCharacters,
 		regexEmptyLazyQuantifiers,
 		regexEmptyLookaroundsAssertions,
 		regexEmptyStringLiterals,
@@ -416,7 +429,22 @@ export const ts = createPlugin({
 		regexGraphemeStringLiterals,
 		regexHexadecimalEscapes,
 		regexIgnoreCaseFlags,
+		regexInvisibleCharacters,
+		regexLetterCasing,
+		regexLookaroundQuantifierOptimizations,
+		regexMatchNotation,
+		regexMisleadingCapturingGroups,
+		regexMisleadingUnicodeCharacters,
+		regexNamedBackreferences,
+		regexNamedReplacements,
+		regexNonStandardFlags,
+		regexObscureRanges,
 		regexOctalEscapes,
+		regexResultArrayGroups,
+		regexSetOperationOptimizations,
+		regexStarQuantifiers,
+		regexSuperLinearBacktracking,
+		regexTestMethods,
 		regexUnicodeCodepointEscapes,
 		returnAssignments,
 		selfAssignments,

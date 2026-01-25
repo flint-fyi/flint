@@ -15,7 +15,7 @@ ruleTester.describe(rule, {
 				String.raw`
 /\uD83D\uDE00/u;
  ~~~~~~~~~~~~
- Use Unicode codepoint escape ` +
+ Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1F600}`" +
 				String.raw` instead of surrogate pair ` +
 				"`\\uD83D\\uDE00`" +
@@ -33,7 +33,7 @@ ruleTester.describe(rule, {
 				String.raw`
 /\ud83d\ude00/u;
  ~~~~~~~~~~~~
- Use Unicode codepoint escape ` +
+ Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1f600}`" +
 				String.raw` instead of surrogate pair ` +
 				"`\\ud83d\\ude00`" +
@@ -51,7 +51,7 @@ ruleTester.describe(rule, {
 				String.raw`
 /[\uD83D\uDE00]/u;
   ~~~~~~~~~~~~
-  Use Unicode codepoint escape ` +
+  Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1F600}`" +
 				String.raw` instead of surrogate pair ` +
 				"`\\uD83D\\uDE00`" +
@@ -69,7 +69,7 @@ ruleTester.describe(rule, {
 				String.raw`
 /\uD83D\uDE00/v;
  ~~~~~~~~~~~~
- Use Unicode codepoint escape ` +
+ Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1F600}`" +
 				String.raw` instead of surrogate pair ` +
 				"`\\uD83D\\uDE00`" +
@@ -87,7 +87,7 @@ new RegExp("\\u{1F600}", "u");
 				String.raw`
 new RegExp("\\uD83D\\uDE00", "u");
             ~~~~~~~~~~~~~~
-            Use Unicode codepoint escape ` +
+            Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1F600}`" +
 				String.raw` instead of surrogate pair ` +
 				"`\\uD83D\\uDE00`" +
@@ -105,13 +105,13 @@ new RegExp("\\uD83D\\uDE00", "u");
 				String.raw`
 /\uD83D\uDE00\uD83D\uDE01/u;
  ~~~~~~~~~~~~
- Use Unicode codepoint escape ` +
+ Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1F600}`" +
 				String.raw` instead of surrogate pair ` +
 				"`\\uD83D\\uDE00`" +
 				String.raw`.
              ~~~~~~~~~~~~
-             Use Unicode codepoint escape ` +
+             Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1F601}`" +
 				String.raw` instead of surrogate pair ` +
 				"`\\uD83D\\uDE01`" +

@@ -45,9 +45,9 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div />` },
-		{ code: `<div autoFocus="false" />` },
-		{ code: `<div autoFocus={false} />` },
-		{ code: `<input type="text" />` },
+		`<div />`,
+		`<div autoFocus="false" />`,
+		`<div autoFocus={false} />`,
+		`<input type="text" />`,
 	],
 });

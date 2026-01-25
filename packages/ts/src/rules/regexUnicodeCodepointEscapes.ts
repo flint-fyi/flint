@@ -1,9 +1,13 @@
 import { visitRegExpAST } from "@eslint-community/regexpp";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
+import type {
+	AST,
+	TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 function isSurrogatePairEscape(raw: string) {
@@ -20,7 +24,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		useSurrogatePair: {
 			primary:
-				"Use Unicode codepoint escape `{{ replacement }}` instead of surrogate pair `{{ raw }}`.",
+				"Prefer the more expressive Unicode codepoint escape `{{ replacement }}` instead of surrogate pair `{{ raw }}`.",
 			secondary: [
 				"Unicode codepoint escapes are clearer and more maintainable than surrogate pairs.",
 			],
@@ -44,11 +48,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			visitRegExpAST(regexpAst, {
 				onCharacterEnter(charNode) {
-					if (charNode.value < 0x10000) {
-						return;
-					}
-
-					if (!isSurrogatePairEscape(charNode.raw)) {
+					if (
+						charNode.value < 0x10000 ||
+						!isSurrogatePairEscape(charNode.raw)
+					) {
 						return;
 					}
 
@@ -57,20 +60,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						hex = hex.toUpperCase();
 					}
 
-					const fixText = `\\u{${hex}}`;
-					const displayReplacement = `\\u{${hex}}`;
+					const replacement = `\\u{${hex}}`;
 
 					context.report({
 						data: {
 							raw: charNode.raw,
-							replacement: displayReplacement,
+							replacement,
 						},
 						fix: {
 							range: {
 								begin: patternStart + charNode.start,
 								end: patternStart + charNode.end,
 							},
-							text: fixText,
+							text: replacement,
 						},
 						message: "useSurrogatePair",
 						range: {
@@ -101,9 +103,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				const high = parseInt(highHex, 16);
-				const low = parseInt(lowHex, 16);
+				if (high < 0xd800 || high > 0xdbff) {
+					continue;
+				}
 
-				if (high < 0xd800 || high > 0xdbff || low < 0xdc00 || low > 0xdfff) {
+				const low = parseInt(lowHex, 16);
+				if (low < 0xdc00 || low > 0xdfff) {
 					continue;
 				}
 
@@ -115,8 +120,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				const raw = `\\u${highHex}\\u${lowHex}`;
-				const fixText = `\\\\u{${hex}}`;
 				const displayReplacement = `\\u{${hex}}`;
+				const fixText = `\\${displayReplacement}`;
 
 				context.report({
 					data: {
@@ -141,60 +146,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			const text = node.getText(sourceFile);
-			const match = /^\/(.*)\/([dgimsuyv]*)$/.exec(text);
-
-			if (!match) {
-				return;
-			}
-
-			const [, pattern, flags] = match;
-
-			if (!pattern) {
-				return;
-			}
-
-			const nodeStart = node.getStart(sourceFile);
-			checkPattern(pattern, nodeStart + 1, flags ?? "");
+			const details = getRegExpLiteralDetails(node, services);
+			checkPattern(details.pattern, details.start, details.flags);
 		}
 
 		function checkRegExpConstructor(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args?.length) {
-				return;
-			}
-
-			const firstArgument = args[0];
-
-			if (
-				!firstArgument ||
-				firstArgument.kind !== ts.SyntaxKind.StringLiteral
-			) {
-				return;
-			}
-
-			const patternStart = firstArgument.getStart(sourceFile) + 1;
-			const rawPattern = firstArgument.getText(sourceFile).slice(1, -1);
-
-			let flags = "";
-			const secondArgument = args[1];
-			if (secondArgument?.kind === ts.SyntaxKind.StringLiteral) {
-				flags = secondArgument.text;
-			}
-
-			checkStringPattern(rawPattern, patternStart, flags);
+			checkStringPattern(
+				construction.pattern,
+				construction.start + 1,
+				construction.flags,
+			);
 		}
 
 		return {

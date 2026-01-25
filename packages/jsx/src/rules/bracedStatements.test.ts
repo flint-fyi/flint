@@ -45,11 +45,11 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div>Hello</div>` },
-		{ code: `<div><span>Content</span></div>` },
-		{ code: `<div>{variable}</div>` },
-		{ code: `<div>{someFunction()}</div>` },
-		{ code: `<div>{1 + 2}</div>` },
-		{ code: `<Component attribute={"value"} />` },
+		`<div>Hello</div>`,
+		`<div><span>Content</span></div>`,
+		`<div>{variable}</div>`,
+		`<div>{someFunction()}</div>`,
+		`<div>{1 + 2}</div>`,
+		`<Component attribute={"value"} />`,
 	],
 });
