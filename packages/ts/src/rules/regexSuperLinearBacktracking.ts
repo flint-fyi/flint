@@ -7,6 +7,7 @@ import { analyse, type ParsedLiteral } from "scslre";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAstFull } from "./utils/parseRegexpAstFull.ts";
 
 function mentionQuantifier(quantifier: { raw: string }) {
@@ -105,24 +106,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: TypeScriptFileServices,
+			services: TypeScriptFileServices,
 		) {
-			const text = node.getText(sourceFile);
-			const lastSlash = text.lastIndexOf("/");
-			if (lastSlash <= 0) {
-				return;
-			}
-
-			const pattern = text.slice(1, lastSlash);
-			const flags = text.slice(lastSlash + 1);
-
-			const parsed = parseRegexpAstFull(pattern, flags);
+			const details = getRegExpLiteralDetails(node, services);
+			const parsed = parseRegexpAstFull(details.pattern, details.flags);
 			if (!parsed) {
 				return;
 			}
 
-			const nodeStart = node.getStart(sourceFile);
-			analyseAndReport(parsed, nodeStart + 1, flags);
+			analyseAndReport(parsed, details.start, details.flags);
 		}
 
 		function checkRegExpConstructor(
