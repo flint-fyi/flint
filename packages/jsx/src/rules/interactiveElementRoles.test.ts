@@ -85,11 +85,11 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<button />` },
-		{ code: `<button role="button" />` },
-		{ code: `<a role="link" />` },
-		{ code: `<input role="textbox" />` },
-		{ code: `<div role="article" />` },
-		{ code: `<CustomElement role="article" />` },
+		`<button />`,
+		`<button role="button" />`,
+		`<a role="link" />`,
+		`<input role="textbox" />`,
+		`<div role="article" />`,
+		`<CustomElement role="article" />`,
 	],
 });

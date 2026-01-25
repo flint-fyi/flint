@@ -35,14 +35,12 @@ function App() { return <html><body>Content</body></html>; }
 		},
 	],
 	valid: [
-		{ code: `const el = <html lang="en"></html>;` },
-		{ code: `const el = <html lang="en-US"></html>;` },
-		{ code: `const el = <html lang={language}></html>;` },
-		{
-			code: `const el = <html lang="fr" className="root"></html>;`,
-		},
-		{ code: `const el = <div></div>;` },
-		{ code: `const el = <Html></Html>;` },
-		{ code: `const el = <html LANG="en"></html>;` },
+		`const el = <html lang="en"></html>;`,
+		`const el = <html lang="en-US"></html>;`,
+		`const el = <html lang={language}></html>;`,
+		`const el = <html lang="fr" className="root"></html>;`,
+		`const el = <div></div>;`,
+		`const el = <Html></Html>;`,
+		`const el = <html LANG="en"></html>;`,
 	],
 });

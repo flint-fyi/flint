@@ -1,0 +1,42 @@
+---
+description: "Disallows using the `in` operator to check properties on TypeScript nodes."
+title: "nodePropertyInChecks"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="flint" rule="nodePropertyInChecks" />
+
+Using the `in` operator to check for the existence of properties on TypeScript AST nodes can lead to unreliable results, as not all properties may be present on every node type.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if ("CallExpression" in node) {
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (ts.isCallExpression(node)) {
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="flint" ruleId="nodePropertyInChecks" />

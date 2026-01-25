@@ -25,43 +25,17 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<CustomComponent />` },
-		{
-			code: `<CustomComponent aria-activedescendant={someID} />`,
-		},
-		{
-			code: `<CustomComponent aria-activedescendant={someID} tabIndex={0} />`,
-		},
-		{
-			code: `
-<div />`,
-		},
-		{ code: `<input />` },
-		{
-			code: `
-<div tabIndex={0} />`,
-		},
-		{
-			code: `
-<div aria-activedescendant={someID} tabIndex={0} />
-`,
-		},
-		{
-			code: `
-<div aria-activedescendant={someID} tabIndex="0" />
-`,
-		},
-		{
-			code: `
-<div aria-activedescendant={someID} tabIndex={1} />
-`,
-		},
-		{
-			code: `
-<div aria-activedescendant={someID} tabIndex={-1} />
-`,
-		},
-		{ code: `<input aria-activedescendant={someID} />` },
-		{ code: `<button aria-activedescendant={someID} />` },
+		`<CustomComponent />`,
+		`<CustomComponent aria-activedescendant={someID} />`,
+		`<CustomComponent aria-activedescendant={someID} tabIndex={0} />`,
+		`<div />`,
+		`<input />`,
+		`<div tabIndex={0} />`,
+		`<div aria-activedescendant={someID} tabIndex={0} />`,
+		`<div aria-activedescendant={someID} tabIndex="0" />`,
+		`<div aria-activedescendant={someID} tabIndex={1} />`,
+		`<div aria-activedescendant={someID} tabIndex={-1} />`,
+		`<input aria-activedescendant={someID} />`,
+		`<button aria-activedescendant={someID} />`,
 	],
 });
