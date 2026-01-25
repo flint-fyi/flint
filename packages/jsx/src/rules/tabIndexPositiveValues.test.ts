@@ -45,29 +45,17 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{
-			code: `
+		`
 <span tabIndex="0">foo</span>`,
-		},
-		{
-			code: `
+		`
 <span tabIndex="-1">bar</span>`,
-		},
-		{
-			code: `
+		`
 <span tabIndex={0}>baz</span>`,
-		},
-		{
-			code: `
+		`
 <span tabIndex={-1}>qux</span>`,
-		},
-		{
-			code: `
+		`
 <div>no tabIndex</div>`,
-		},
-		{
-			code: `
+		`
 <button>Click me</button>`,
-		},
 	],
 });

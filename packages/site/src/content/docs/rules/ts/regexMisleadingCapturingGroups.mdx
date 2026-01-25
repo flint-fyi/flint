@@ -1,0 +1,96 @@
+---
+description: "Reports capturing groups that capture less text than their pattern suggests."
+title: "regexMisleadingCapturingGroups"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexMisleadingCapturingGroups" />
+
+Reports capturing groups that capture less text than their pattern suggests.
+This happens when a quantifier in a capturing group matches the same characters as a preceding quantifier, causing the capturing group to always capture less than expected.
+
+## Examples
+
+### Preceding Quantifier Consumes Characters
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\d+(\d*)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\d+/;
+```
+
+</TabItem>
+</Tabs>
+
+The `(\d*)` capturing group will always capture the empty string because `\d+` already consumed all the digits.
+
+### Backtracking End Quantifiers
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /^(a*).+/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /^(a*)(?!a).+/;
+```
+
+</TabItem>
+</Tabs>
+
+The `(a*)` capturing group may capture fewer characters than expected because `.+` can force it to give up characters during backtracking.
+
+### Redundant Minimum in Capturing Group
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a+(a+)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a+(a)/;
+```
+
+</TabItem>
+</Tabs>
+
+The `(a+)` will always capture exactly one `a` because all other `a` characters are consumed by the preceding `a+`.
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If the behavior of capturing less text is intentional, or if you are working with patterns where the capturing group is only used for backreferences and the exact captured content is not important, you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: Groups and backreferences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Groups_and_backreferences)
+- [MDN: Quantifier](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Quantifiers)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexMisleadingCapturingGroups" />

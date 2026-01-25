@@ -1,9 +1,6 @@
 import { visitRegExpAST } from "@eslint-community/regexpp";
 import type { Character } from "@eslint-community/regexpp/ast";
-import {
-	getTSNodeRange,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import type {
 	AST,
 	TypeScriptFileServices,
@@ -12,31 +9,35 @@ import { Chars } from "regexp-ast-analysis";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-const CP_SPACE = 0x0020;
-const CP_NEL = 0x0085;
-const CP_MONGOLIAN_VOWEL_SEPARATOR = 0x180e;
-const CP_ZWSP = 0x200b;
-const CP_ZWNJ = 0x200c;
-const CP_ZWJ = 0x200d;
-const CP_LRM = 0x200e;
-const CP_RLM = 0x200f;
-const CP_BRAILLE_PATTERN_BLANK = 0x2800;
+const codepoints = {
+	braillePatternBlank: 0x2800,
+	leftToRight: 0x200e,
+	mongolianVowelSeparator: 0x180e,
+	nextLine: 0x0085,
+	rightToLeft: 0x200f,
+	space: 0x0020,
+	zeroWidthNonJoiner: 0x200c,
+	zeroWidthSpace: 0x200b,
+	zeroWithJoiner: 0x200d,
+};
 
 function isInvisible(codePoint: number): boolean {
 	if (isSpace(codePoint)) {
 		return true;
 	}
 	return (
-		codePoint === CP_MONGOLIAN_VOWEL_SEPARATOR ||
-		codePoint === CP_NEL ||
-		codePoint === CP_ZWSP ||
-		codePoint === CP_ZWNJ ||
-		codePoint === CP_ZWJ ||
-		codePoint === CP_LRM ||
-		codePoint === CP_RLM ||
-		codePoint === CP_BRAILLE_PATTERN_BLANK
+		codePoint === codepoints.space ||
+		codePoint === codepoints.nextLine ||
+		codePoint === codepoints.mongolianVowelSeparator ||
+		codePoint === codepoints.zeroWidthSpace ||
+		codePoint === codepoints.zeroWidthNonJoiner ||
+		codePoint === codepoints.zeroWithJoiner ||
+		codePoint === codepoints.leftToRight ||
+		codePoint === codepoints.rightToLeft ||
+		codePoint === codepoints.braillePatternBlank
 	);
 }
 
@@ -79,15 +80,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			patternStart: number,
 			hasUnicode: boolean,
 		) {
-			if (charNode.value === CP_SPACE) {
-				return;
-			}
-
-			if (charNode.raw.length !== 1) {
-				return;
-			}
-
-			if (!isInvisible(charNode.value)) {
+			if (
+				charNode.raw.length !== 1 ||
+				charNode.value === codepoints.space ||
+				!isInvisible(charNode.value)
+			) {
 				return;
 			}
 
@@ -131,21 +128,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: TypeScriptFileServices,
+			services: TypeScriptFileServices,
 		) {
-			const text = node.getText(sourceFile);
-			const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(text);
-			if (!match) {
-				return;
-			}
-
-			const [, pattern, flags] = match;
-			if (!pattern) {
-				return;
-			}
-
-			const nodeRange = getTSNodeRange(node, sourceFile);
-			checkPattern(pattern, nodeRange.begin + 1, flags ?? "");
+			const { flags, pattern, start } = getRegExpLiteralDetails(node, services);
+			checkPattern(pattern, start, flags);
 		}
 
 		function checkRegExpConstructor(

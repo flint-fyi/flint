@@ -55,29 +55,19 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div>Regular text</div>` },
-		{ code: `<div>{/* This is a real comment */}</div>` },
-		{
-			code: `<div>
+		`<div>Regular text</div>`,
+		`<div>{/* This is a real comment */}</div>`,
+		`<div>
     {/* Comment inside expression */}
     Text content
 </div>`,
-		},
-		{ code: `<span>No comment syntax here</span>` },
-		{
-			code: `<div>
+		`<span>No comment syntax here</span>`,
+		`<div>
     {// Single line comment in expression
     }
 </div>`,
-		},
-		{
-			code: `<a href="https://example.com">Link</a>`,
-		},
-		{
-			code: `<div>Text before // comment syntax</div>`,
-		},
-		{
-			code: `<div>Text before /* comment */ syntax</div>`,
-		},
+		`<a href="https://example.com">Link</a>`,
+		`<div>Text before // comment syntax</div>`,
+		`<div>Text before /* comment */ syntax</div>`,
 	],
 });
