@@ -15,10 +15,10 @@ This rule identifies patterns where these set operations can be simplified using
 
 The rule detects four types of simplifications:
 
-1. **Intersection to subtraction**: `[a&&[^b]]` becomes `[a--b]`
-2. **Subtraction to intersection**: `[a--[^b]]` becomes `[a&&b]`
-3. **Negation of disjunction**: `[[^a]&&[^b]]` becomes `[^ab]`
-4. **Negation of conjunction**: `[[^a][^b]]` becomes `[^a&&b]`
+1. Intersection to subtraction: `[a&&[^b]]` becomes `[a--b]`
+2. Subtraction to intersection: `[a--[^b]]` becomes `[a&&b]`
+3. Negation of disjunction: `[[^a]&&[^b]]` becomes `[^ab]`
+4. Negation of conjunction: `[[^a][^b]]` becomes `[^a&&b]`
 
 ## Examples
 

@@ -10,38 +10,25 @@ import {
 import { toUnicodeSet } from "regexp-ast-analysis";
 
 import { ruleCreator } from "./ruleCreator.ts";
-
-interface NegatedElement {
-	negate: true;
-	raw: string;
-	type: string;
-}
-
-interface ToUnicodeSetElement {
-	raw: string;
-	type: string;
-}
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
 function collectIntersectionOperands(
 	expression: RegExpAST.ClassIntersection,
 ): RegExpAST.ClassSetOperand[] {
 	const operands: RegExpAST.ClassSetOperand[] = [];
+
 	let operand: RegExpAST.ClassIntersection | RegExpAST.ClassSetOperand =
 		expression;
 
 	while (operand.type === "ClassIntersection") {
-		operands.unshift(operand.right);
+		operands.push(operand.right);
 		operand = operand.left;
 	}
 
-	operands.unshift(operand);
-	return operands;
+	return [operand, ...operands.reverse()];
 }
 
-function getParsedElement(
-	pattern: string,
-	unicodeSets: boolean,
-): ToUnicodeSetElement | undefined {
+function getParsedElement(pattern: string, unicodeSets: boolean) {
 	try {
 		const parser = new RegExpParser();
 		const ast = parser.parsePattern(pattern, undefined, undefined, {
@@ -53,14 +40,17 @@ function getParsedElement(
 			return undefined;
 		}
 
-		const alt = ast.alternatives[0];
-		if (alt?.elements.length !== 1) {
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const alt = ast.alternatives[0]!;
+
+		if (alt.elements.length !== 1) {
 			return undefined;
 		}
 
-		const element = alt.elements[0];
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const element = alt.elements[0]!;
+
 		if (
-			!element ||
 			element.type === "Assertion" ||
 			element.type === "Quantifier" ||
 			element.type === "CapturingGroup" ||
@@ -76,22 +66,20 @@ function getParsedElement(
 	}
 }
 
-function getRawTextToNot(negatedNode: NegatedElement) {
-	const raw = negatedNode.raw;
-
+function getRawTextToNot(negatedNode: RegExpAST.ClassSetOperand) {
 	if (
 		negatedNode.type === "CharacterClass" ||
 		negatedNode.type === "ExpressionCharacterClass"
 	) {
-		return `${raw[0]}${raw.slice(2)}`;
+		return `${negatedNode.raw[0]}${negatedNode.raw.slice(2)}`;
 	}
 
 	const escapeChar = negatedNode.raw[1]?.toLowerCase();
 	if (!escapeChar) {
-		return raw;
+		return negatedNode.raw;
 	}
 
-	return `${raw[0]}${escapeChar}${raw.slice(2)}`;
+	return `${negatedNode.raw[0]}${escapeChar}${negatedNode.raw.slice(2)}`;
 }
 
 function hasNegate(
@@ -114,24 +102,19 @@ function isFixedPatternEquivalent(
 	unicodeSets: boolean,
 ) {
 	const flags = { unicode: false, unicodeSets };
+	const originalUs = toUnicodeSet(targetNode, flags);
+	const convertedElement = getParsedElement(fixedText, unicodeSets);
 
-	try {
-		const originalUs = toUnicodeSet(targetNode, flags);
-		const convertedElement = getParsedElement(fixedText, unicodeSets);
-
-		if (!convertedElement) {
-			return false;
-		}
-
-		const convertedUs = toUnicodeSet(
-			convertedElement as Parameters<typeof toUnicodeSet>[0],
-			flags,
-		);
-
-		return originalUs.equals(convertedUs);
-	} catch {
+	if (!convertedElement) {
 		return false;
 	}
+
+	const convertedUs = toUnicodeSet(
+		convertedElement as Parameters<typeof toUnicodeSet>[0],
+		flags,
+	);
+
+	return originalUs.equals(convertedUs);
 }
 
 function isNegated(
@@ -139,47 +122,48 @@ function isNegated(
 		| RegExpAST.CharacterClassElement
 		| RegExpAST.ClassIntersection
 		| RegExpAST.ClassSetOperand,
-): boolean {
+) {
 	return hasNegate(node) && node.negate;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
-			"Reports set operations in regular expressions that can be simplified using De Morgan's laws.",
+			"Reports set operations in regular expressions that can be simplified.",
 		id: "regexSetOperationOptimizations",
 		presets: ["logical"],
 	},
 	messages: {
 		toIntersection: {
-			primary:
-				"This subtraction can be converted to an intersection using De Morgan's laws.",
+			primary: "This subtraction can be simplified to an intersection.",
 			secondary: [
 				"Subtracting a negated set is equivalent to intersecting with the positive set.",
+				"This simplification allows for a more clear and readable regular expression.",
 			],
 			suggestions: ["Convert the subtraction to an intersection."],
 		},
 		toNegationOfConjunction: {
 			primary:
-				"This character class can be converted to a negated conjunction using De Morgan's laws.",
+				"This character class can be simplified to a negated conjunction.",
 			secondary: [
 				"A union of negated sets is equivalent to the negation of their intersection.",
+				"This simplification allows for a more clear and readable regular expression.",
 			],
 			suggestions: ["Convert to a negated conjunction."],
 		},
 		toNegationOfDisjunction: {
-			primary:
-				"This {{ target }} can be converted to a negated disjunction using De Morgan's laws.",
+			primary: "This {{ target }} can be simplified to a negated disjunction.",
 			secondary: [
 				"An intersection of negated sets is equivalent to the negation of their union.",
+				"This simplification allows for a more clear and readable regular expression.",
 			],
 			suggestions: ["Convert to a negated disjunction."],
 		},
 		toSubtraction: {
-			primary:
-				"This intersection can be converted to a subtraction using De Morgan's laws.",
+			primary: "This intersection can be simplified to a subtraction.",
 			secondary: [
 				"Intersecting with a negated set is equivalent to subtracting the positive set.",
+				"This simplification allows for a more clear and readable regular expression.",
 			],
 			suggestions: ["Convert the intersection to a subtraction."],
 		},
@@ -188,23 +172,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				RegularExpressionLiteral: (node, { sourceFile }) => {
-					const text = node.getText(sourceFile);
-					const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(text);
-
-					if (!match) {
-						return;
-					}
-
-					const [, pattern, flagsStr = ""] = match;
-
-					if (!pattern || !flagsStr.includes("v")) {
+					const details = getRegExpLiteralDetails(node, { sourceFile });
+					if (!details.flags.includes("v")) {
 						return;
 					}
 
 					let regexpAst: RegExpAST.Pattern | undefined;
 					try {
 						regexpAst = new RegExpParser().parsePattern(
-							pattern,
+							details.pattern,
 							undefined,
 							undefined,
 							{ unicode: false, unicodeSets: true },
@@ -227,7 +203,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						fixedText: string,
 						data?: Record<string, string>,
 					) {
-						if (!pattern) {
+						if (!details.pattern) {
 							return false;
 						}
 
@@ -236,15 +212,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 
 						const newPattern =
-							pattern.slice(0, targetNode.start) +
+							details.pattern.slice(0, targetNode.start) +
 							fixedText +
-							pattern.slice(targetNode.end);
+							details.pattern.slice(targetNode.end);
 
 						context.report({
 							data,
 							fix: {
 								range: nodeRange,
-								text: `/${newPattern}/${flagsStr}`,
+								text: `/${newPattern}/${details.flags}`,
 							},
 							message: messageId,
 							range: nodeRange,
@@ -254,21 +230,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					function toNegationOfDisjunction(
-						eccNode: RegExpAST.ExpressionCharacterClass,
+						classNode: RegExpAST.ExpressionCharacterClass,
 					) {
-						const expression = eccNode.expression;
-
-						if (expression.type !== "ClassIntersection") {
+						if (classNode.expression.type !== "ClassIntersection") {
 							return false;
 						}
 
-						const operands = collectIntersectionOperands(expression);
-						const negatedOperands: NegatedElement[] = [];
+						const operands = collectIntersectionOperands(classNode.expression);
+						const negatedOperands: RegExpAST.ClassSetOperand[] = [];
 						const others: RegExpAST.ClassSetOperand[] = [];
 
 						for (const operand of operands) {
 							if (isNegated(operand)) {
-								negatedOperands.push(operand as NegatedElement);
+								negatedOperands.push(operand);
 							} else {
 								others.push(operand);
 							}
@@ -284,9 +258,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						if (negatedOperands.length === operands.length) {
 							return reportWithFix(
-								eccNode,
+								classNode,
 								"toNegationOfDisjunction",
-								`[${eccNode.negate ? "" : "^"}${fixedOperands}]`,
+								`[${classNode.negate ? "" : "^"}${fixedOperands}]`,
 								{ target: "character class" },
 							);
 						}
@@ -297,9 +271,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						];
 
 						return reportWithFix(
-							eccNode,
+							classNode,
 							"toNegationOfDisjunction",
-							`[${eccNode.negate ? "^" : ""}${operandTextList.join("&&")}]`,
+							`[${classNode.negate ? "^" : ""}${operandTextList.join("&&")}]`,
 							{ target: "expression" },
 						);
 					}
@@ -312,7 +286,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const elements = ccNode.elements;
 						const negatedElements = elements.filter(
 							isNegated,
-						) as NegatedElement[];
+						) as RegExpAST.ClassSetOperand[];
 
 						if (negatedElements.length !== elements.length) {
 							return false;
@@ -329,17 +303,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						);
 					}
 
-					function toSubtraction(eccNode: RegExpAST.ExpressionCharacterClass) {
-						const expression = eccNode.expression;
+					function toSubtraction(
+						classNode: RegExpAST.ExpressionCharacterClass,
+					) {
+						const expression = classNode.expression;
 
 						if (expression.type !== "ClassIntersection") {
 							return false;
 						}
 
 						const operands = collectIntersectionOperands(expression);
-						const negatedOperand = operands.find(isNegated) as
-							| NegatedElement
-							| undefined;
+						const negatedOperand = operands.find(isNegated);
 
 						if (!negatedOperand) {
 							return false;
@@ -357,9 +331,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const fixedRightText = getRawTextToNot(negatedOperand);
 
 						return reportWithFix(
-							eccNode,
+							classNode,
 							"toSubtraction",
-							`[${eccNode.negate ? "^" : ""}${fixedLeftText}--${fixedRightText}]`,
+							`[${classNode.negate ? "^" : ""}${fixedLeftText}--${fixedRightText}]`,
 						);
 					}
 
@@ -384,12 +358,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							return false;
 						}
 
-						let fixedLeftText = left.raw;
-						if (left.type === "ClassSubtraction") {
-							fixedLeftText = `[${fixedLeftText}]`;
-						}
+						const fixedLeftText =
+							left.type === "ClassSubtraction" ? `[${left.raw}]` : left.raw;
 
-						const fixedRightText = getRawTextToNot(right as NegatedElement);
+						const fixedRightText = getRawTextToNot(right);
 						let fixedText = `${fixedLeftText}&&${fixedRightText}`;
 
 						if (expressionRight) {
@@ -433,15 +405,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							toNegationOfConjunction(ccNode);
 						},
 						onExpressionCharacterClassEnter(eccNode) {
-							if (toNegationOfDisjunction(eccNode)) {
-								return;
+							if (
+								!toNegationOfDisjunction(eccNode) &&
+								!toSubtraction(eccNode)
+							) {
+								verifyExpressions(eccNode);
 							}
-
-							if (toSubtraction(eccNode)) {
-								return;
-							}
-
-							verifyExpressions(eccNode);
 						},
 					});
 				},

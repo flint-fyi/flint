@@ -13,7 +13,7 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /[a&&[^b]]/v;
 ~~~~~~~~~~~~
-This intersection can be converted to a subtraction using De Morgan's laws.
+This intersection can be simplified to a subtraction.
 `,
 		},
 		{
@@ -26,7 +26,7 @@ This intersection can be converted to a subtraction using De Morgan's laws.
 			snapshot: String.raw`
 /[a&&b&&[^c]]/v;
 ~~~~~~~~~~~~~~~
-This intersection can be converted to a subtraction using De Morgan's laws.
+This intersection can be simplified to a subtraction.
 `,
 		},
 		{
@@ -39,7 +39,7 @@ This intersection can be converted to a subtraction using De Morgan's laws.
 			snapshot: String.raw`
 /[a&&[^b]&&c]/v;
 ~~~~~~~~~~~~~~~
-This intersection can be converted to a subtraction using De Morgan's laws.
+This intersection can be simplified to a subtraction.
 `,
 		},
 		{
@@ -52,7 +52,7 @@ This intersection can be converted to a subtraction using De Morgan's laws.
 			snapshot: String.raw`
 /[a&&b&&[^c]&&d]/v;
 ~~~~~~~~~~~~~~~~~~
-This intersection can be converted to a subtraction using De Morgan's laws.
+This intersection can be simplified to a subtraction.
 `,
 		},
 		{
@@ -65,7 +65,7 @@ This intersection can be converted to a subtraction using De Morgan's laws.
 			snapshot: String.raw`
 /[[^a]&&b&&c]/v;
 ~~~~~~~~~~~~~~~
-This intersection can be converted to a subtraction using De Morgan's laws.
+This intersection can be simplified to a subtraction.
 `,
 		},
 		{
@@ -78,7 +78,7 @@ This intersection can be converted to a subtraction using De Morgan's laws.
 			snapshot: String.raw`
 /[[^b]&&a]/v;
 ~~~~~~~~~~~~
-This intersection can be converted to a subtraction using De Morgan's laws.
+This intersection can be simplified to a subtraction.
 `,
 		},
 		{
@@ -91,7 +91,7 @@ This intersection can be converted to a subtraction using De Morgan's laws.
 			snapshot: String.raw`
 /[[abc]&&[^def]]/v;
 ~~~~~~~~~~~~~~~~~~
-This intersection can be converted to a subtraction using De Morgan's laws.
+This intersection can be simplified to a subtraction.
 `,
 		},
 		{
@@ -104,7 +104,7 @@ This intersection can be converted to a subtraction using De Morgan's laws.
 			snapshot: String.raw`
 /[a--[^b]]/v;
 ~~~~~~~~~~~~
-This subtraction can be converted to an intersection using De Morgan's laws.
+This subtraction can be simplified to an intersection.
 `,
 		},
 		{
@@ -117,7 +117,7 @@ This subtraction can be converted to an intersection using De Morgan's laws.
 			snapshot: String.raw`
 /[a--[^b]--c]/v;
 ~~~~~~~~~~~~~~~
-This subtraction can be converted to an intersection using De Morgan's laws.
+This subtraction can be simplified to an intersection.
 `,
 		},
 		{
@@ -130,7 +130,7 @@ This subtraction can be converted to an intersection using De Morgan's laws.
 			snapshot: String.raw`
 /[a--b--[^c]]/v;
 ~~~~~~~~~~~~~~~
-This subtraction can be converted to an intersection using De Morgan's laws.
+This subtraction can be simplified to an intersection.
 `,
 		},
 		{
@@ -143,7 +143,7 @@ This subtraction can be converted to an intersection using De Morgan's laws.
 			snapshot: String.raw`
 /[[abc]--[^def]]/v;
 ~~~~~~~~~~~~~~~~~~
-This subtraction can be converted to an intersection using De Morgan's laws.
+This subtraction can be simplified to an intersection.
 `,
 		},
 		{
@@ -156,7 +156,7 @@ This subtraction can be converted to an intersection using De Morgan's laws.
 			snapshot: String.raw`
 /[[^a]&&[^b]]/v;
 ~~~~~~~~~~~~~~~
-This character class can be converted to a negated disjunction using De Morgan's laws.
+This character class can be simplified to a negated disjunction.
 `,
 		},
 		{
@@ -169,7 +169,7 @@ This character class can be converted to a negated disjunction using De Morgan's
 			snapshot: String.raw`
 /[^[^a]&&[^b]]/v;
 ~~~~~~~~~~~~~~~~
-This character class can be converted to a negated disjunction using De Morgan's laws.
+This character class can be simplified to a negated disjunction.
 `,
 		},
 		{
@@ -182,7 +182,7 @@ This character class can be converted to a negated disjunction using De Morgan's
 			snapshot: String.raw`
 /[[^a]&&[^b]&&\D]/v;
 ~~~~~~~~~~~~~~~~~~~
-This character class can be converted to a negated disjunction using De Morgan's laws.
+This character class can be simplified to a negated disjunction.
 `,
 		},
 		{
@@ -195,7 +195,7 @@ This character class can be converted to a negated disjunction using De Morgan's
 			snapshot: String.raw`
 /[^[^a]&&[^b]&&\D]/v;
 ~~~~~~~~~~~~~~~~~~~~
-This character class can be converted to a negated disjunction using De Morgan's laws.
+This character class can be simplified to a negated disjunction.
 `,
 		},
 		{
@@ -208,7 +208,7 @@ This character class can be converted to a negated disjunction using De Morgan's
 			snapshot: String.raw`
 /[[^a]&&\D&&b]/v;
 ~~~~~~~~~~~~~~~~
-This expression can be converted to a negated disjunction using De Morgan's laws.
+This expression can be simplified to a negated disjunction.
 `,
 		},
 		{
@@ -221,7 +221,7 @@ This expression can be converted to a negated disjunction using De Morgan's laws
 			snapshot: String.raw`
 /[[^abc]&&[^def]&&\D]/v;
 ~~~~~~~~~~~~~~~~~~~~~~~
-This character class can be converted to a negated disjunction using De Morgan's laws.
+This character class can be simplified to a negated disjunction.
 `,
 		},
 		{
@@ -234,7 +234,7 @@ This character class can be converted to a negated disjunction using De Morgan's
 			snapshot: String.raw`
 /[[^a]&&[b]&&[^c]]/v;
 ~~~~~~~~~~~~~~~~~~~~
-This expression can be converted to a negated disjunction using De Morgan's laws.
+This expression can be simplified to a negated disjunction.
 `,
 		},
 		{
@@ -247,7 +247,7 @@ This expression can be converted to a negated disjunction using De Morgan's laws
 			snapshot: String.raw`
 /[[^a][^b]]/v;
 ~~~~~~~~~~~~~
-This character class can be converted to a negated conjunction using De Morgan's laws.
+This character class can be simplified to a negated conjunction.
 `,
 		},
 		{
@@ -260,7 +260,7 @@ This character class can be converted to a negated conjunction using De Morgan's
 			snapshot: String.raw`
 /[[^abc][^def]]/v;
 ~~~~~~~~~~~~~~~~~
-This character class can be converted to a negated conjunction using De Morgan's laws.
+This character class can be simplified to a negated conjunction.
 `,
 		},
 		{
@@ -273,7 +273,7 @@ This character class can be converted to a negated conjunction using De Morgan's
 			snapshot: String.raw`
 /[^[^a][^b]]/v;
 ~~~~~~~~~~~~~~
-This character class can be converted to a negated conjunction using De Morgan's laws.
+This character class can be simplified to a negated conjunction.
 `,
 		},
 		{
@@ -286,7 +286,7 @@ This character class can be converted to a negated conjunction using De Morgan's
 			snapshot: String.raw`
 /[^\S\P{ASCII}]/v;
 ~~~~~~~~~~~~~~~~~
-This character class can be converted to a negated conjunction using De Morgan's laws.
+This character class can be simplified to a negated conjunction.
 `,
 		},
 		{
@@ -299,7 +299,7 @@ This character class can be converted to a negated conjunction using De Morgan's
 			snapshot: String.raw`
 /[a&&[^b]&&[^c]&&d]/v;
 ~~~~~~~~~~~~~~~~~~~~~
-This expression can be converted to a negated disjunction using De Morgan's laws.
+This expression can be simplified to a negated disjunction.
 `,
 		},
 		{
@@ -312,7 +312,7 @@ This expression can be converted to a negated disjunction using De Morgan's laws
 			snapshot: String.raw`
 /[[^bc]&&a&&d]/v;
 ~~~~~~~~~~~~~~~~
-This intersection can be converted to a subtraction using De Morgan's laws.
+This intersection can be simplified to a subtraction.
 `,
 		},
 	],
