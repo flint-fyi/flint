@@ -24,7 +24,7 @@ export function nullThrows<T>(x: T, message: string): NonNullable<T> {
 	return x;
 }
 export function sanitizeStackTrace(stack: string): string {
-	const pathRegex = /(?:[A-Z]:\\|\/)[^:\s)]+:\d+(?::\d+)?/gi;
+	const pathRegex = /(?:[a-z]:\\|\/)[^:\s)]+:\d+(?::\d+)?/gi;
 	return stack.replace(pathRegex, (match) => {
 		const normalized = match.replace(/\\/g, "/");
 		const nodeModulesIndex = normalized.lastIndexOf("node_modules/");

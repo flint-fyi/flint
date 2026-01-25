@@ -11,25 +11,14 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
-interface EmptyCharacterClass {
-	end: number;
-	start: number;
+function characterClassIsEmpty(node: CharacterClass) {
+	return !node.negate && node.elements.length === 0;
 }
 
-function characterClassIsEmpty(node: CharacterClass): boolean {
-	if (node.negate) {
-		return false;
-	}
-
-	return node.elements.length === 0;
-}
-
-function findEmptyCharacterClasses(
-	pattern: string,
-	flags: string,
-): EmptyCharacterClass[] {
-	const results: EmptyCharacterClass[] = [];
+function findEmptyCharacterClasses(pattern: string, flags: string) {
+	const results: CharacterClass[] = [];
 
 	let ast: RegExpLiteral;
 	try {
@@ -41,24 +30,12 @@ function findEmptyCharacterClasses(
 	visitRegExpAST(ast, {
 		onCharacterClassEnter(node: CharacterClass) {
 			if (characterClassIsEmpty(node)) {
-				results.push({
-					end: node.end,
-					start: node.start,
-				});
+				results.push(node);
 			}
 		},
 	});
 
 	return results;
-}
-
-function getRegexInfo(node: AST.RegularExpressionLiteral) {
-	const text = node.text;
-	const lastSlash = text.lastIndexOf("/");
-	return {
-		flags: text.slice(lastSlash + 1),
-		pattern: text.slice(1, lastSlash),
-	};
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -86,16 +63,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.RegularExpressionLiteral,
 			services: TypeScriptFileServices,
 		) {
-			const { flags, pattern } = getRegexInfo(node);
+			const { flags, pattern, start } = getRegExpLiteralDetails(node, services);
 			const emptyClasses = findEmptyCharacterClasses(pattern, flags);
-			const nodeStart = node.getStart(services.sourceFile);
 
 			for (const charClass of emptyClasses) {
 				context.report({
 					message: "empty",
 					range: {
-						begin: nodeStart + charClass.start,
-						end: nodeStart + charClass.end,
+						begin: start + charClass.start - 1,
+						end: start + charClass.end - 1,
 					},
 				});
 			}

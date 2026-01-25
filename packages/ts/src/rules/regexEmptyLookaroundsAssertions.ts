@@ -8,15 +8,8 @@ import { isPotentiallyEmpty } from "regexp-ast-analysis";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
-
-function getRegexInfo(node: AST.RegularExpressionLiteral) {
-	const lastSlash = node.text.lastIndexOf("/");
-	return {
-		flags: node.text.slice(lastSlash + 1),
-		pattern: node.text.slice(1, lastSlash),
-	};
-}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -38,22 +31,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkPattern(
 			pattern: string,
 			patternStart: number,
-			flagsStr: string,
+			flagsText: string,
 		) {
-			const regexpAst = parseRegexpAst(pattern, flagsStr);
+			const regexpAst = parseRegexpAst(pattern, flagsText);
 			if (!regexpAst) {
 				return;
 			}
 
 			const flags = {
-				dotAll: flagsStr.includes("s"),
-				global: flagsStr.includes("g"),
-				hasIndices: flagsStr.includes("d"),
-				ignoreCase: flagsStr.includes("i"),
-				multiline: flagsStr.includes("m"),
-				sticky: flagsStr.includes("y"),
-				unicode: flagsStr.includes("u"),
-				unicodeSets: flagsStr.includes("v"),
+				dotAll: flagsText.includes("s"),
+				global: flagsText.includes("g"),
+				hasIndices: flagsText.includes("d"),
+				ignoreCase: flagsText.includes("i"),
+				multiline: flagsText.includes("m"),
+				sticky: flagsText.includes("y"),
+				unicode: flagsText.includes("u"),
+				unicodeSets: flagsText.includes("v"),
 			};
 
 			visitRegExpAST(regexpAst, {
@@ -84,11 +77,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: TypeScriptFileServices,
+			services: TypeScriptFileServices,
 		) {
-			const { flags, pattern } = getRegexInfo(node);
-			const nodeStart = node.getStart(sourceFile);
-			checkPattern(pattern, nodeStart + 1, flags);
+			const { flags, pattern, start } = getRegExpLiteralDetails(node, services);
+			checkPattern(pattern, start, flags);
 		}
 
 		function checkRegExpConstructor(

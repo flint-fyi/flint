@@ -57,6 +57,7 @@
 		"joshuakgoldberg",
 		"kirkwaiblinger",
 		"lishaduck",
+		"lookaheads",
 		"lookarounds",
 		"mdast",
 		"menuitemcheckbox",
@@ -64,6 +65,7 @@
 		"Mintlify",
 		"Mutables",
 		"nord",
+		"nrtfvbsd",
 		"oxendict",
 		"Oxlint",
 		"prefault",
@@ -85,6 +87,7 @@
 		"typelang",
 		"Waiblinger",
 		"webauthn",
-		"WHATWG"
+		"WHATWG",
+		"xobi"
 	]
 }
