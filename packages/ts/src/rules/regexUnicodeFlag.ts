@@ -1,15 +1,20 @@
+import type { Fix } from "@flint.fyi/core";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
+import type {
+	AST,
+	TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 function canAddUnicodeFlag(pattern: string, flags: string) {
-	if (hasUnicodeFlag(flags)) {
-		return false;
-	}
-	return parseRegexpAst(pattern, flags + "u") !== undefined;
+	return (
+		!hasUnicodeFlag(flags) && parseRegexpAst(pattern, flags + "u") !== undefined
+	);
 }
 
 function hasUnicodeFlag(flags: string) {
@@ -21,111 +26,78 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Require regex patterns to have the unicode ('u') or unicodeSets ('v') flag for proper Unicode character handling.",
 		id: "regexUnicodeFlag",
-		presets: ["logical"],
 	},
 	messages: {
 		missing: {
 			primary:
-				"Add the Unicode ('u') flag to this regular expression for proper Unicode character handling.",
+				"This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.",
 			secondary: [
 				"Without the unicode flag, regex patterns may fail to match Unicode characters correctly, especially surrogate pairs like emoji.",
 			],
 			suggestions: [
-				"Add the 'u' flag to enable unicode mode, or use the 'v' flag for unicodeSets mode (ES2024).",
+				"Add the `u` flag to enable unicode mode.",
+				"Use the `v` flag for unicodeSets mode (ES2024).",
 			],
 		},
 	},
 	setup(context) {
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			const text = node.getText(sourceFile);
-			const match = /^\/(.*)\/([dgimsuyv]*)$/.exec(text);
-
-			if (!match) {
+			const details = getRegExpLiteralDetails(node, services);
+			if (hasUnicodeFlag(details.flags)) {
 				return;
 			}
 
-			const [, pattern, flags] = match;
-
-			if (!pattern || hasUnicodeFlag(flags ?? "")) {
-				return;
-			}
-
-			const nodeStart = node.getStart(sourceFile);
 			const nodeEnd = node.getEnd();
 
 			context.report({
-				fix: canAddUnicodeFlag(pattern, flags ?? "")
+				fix: canAddUnicodeFlag(details.pattern, details.flags)
 					? {
-							range: { begin: nodeStart, end: nodeEnd },
-							text: `${text}u`,
+							range: { begin: details.start - 1, end: nodeEnd },
+							text: `${node.getText(services.sourceFile)}u`,
 						}
 					: undefined,
 				message: "missing",
-				range: { begin: nodeStart, end: nodeEnd },
+				range: { begin: details.start - 1, end: nodeEnd },
 			});
 		}
 
 		function checkRegExpConstructor(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args?.length) {
-				return;
-			}
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const firstArgument = construction.args[0]!;
 
-			if (args.some((argument) => ts.isSpreadElement(argument))) {
-				return;
-			}
-
-			const firstArgument = args[0];
-
-			if (
-				!firstArgument ||
-				firstArgument.kind !== ts.SyntaxKind.StringLiteral
-			) {
-				return;
-			}
-
-			let flags = "";
-			const secondArgument = args[1];
+			const secondArgument = construction.args[1];
 			const hasSecondArgument = secondArgument !== undefined;
 			const secondIsStringLiteral =
 				secondArgument?.kind === ts.SyntaxKind.StringLiteral;
 
-			if (secondIsStringLiteral) {
-				flags = secondArgument.text;
-			}
-
-			if (hasUnicodeFlag(flags)) {
+			if (hasUnicodeFlag(construction.flags)) {
 				return;
 			}
 
-			const nodeStart = node.getStart(sourceFile);
+			const nodeStart = node.getStart(services.sourceFile);
 			const nodeEnd = node.getEnd();
 
-			let fix:
-				| undefined
-				| { range: { begin: number; end: number }; text: string };
+			let fix: Fix | undefined;
 
-			if (canAddUnicodeFlag(firstArgument.text, flags)) {
+			if (canAddUnicodeFlag(construction.raw, construction.flags)) {
 				if (secondIsStringLiteral) {
-					const secondStart = secondArgument.getStart(sourceFile);
+					const secondStart = secondArgument.getStart(services.sourceFile);
 					const secondEnd = secondArgument.getEnd();
-					const quote = secondArgument.getText(sourceFile)[0];
+					const quote = secondArgument.getText(services.sourceFile)[0];
 					fix = {
 						range: { begin: secondStart, end: secondEnd },
-						text: `${quote}${flags}u${quote}`,
+						text: `${quote}${construction.flags}u${quote}`,
 					};
 				} else if (!hasSecondArgument) {
 					const firstEnd = firstArgument.getEnd();

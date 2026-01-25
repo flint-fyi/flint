@@ -13,7 +13,7 @@ ruleTester.describe(rule, {
 			snapshot: String.raw`
 /abc/;
 ~~~~~
-Add the Unicode ('u') flag to this regular expression for proper Unicode character handling.
+This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
 `,
 		},
 		{
@@ -26,7 +26,7 @@ Add the Unicode ('u') flag to this regular expression for proper Unicode charact
 			snapshot: String.raw`
 /abc/g;
 ~~~~~~
-Add the Unicode ('u') flag to this regular expression for proper Unicode character handling.
+This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
 `,
 		},
 		{
@@ -39,7 +39,7 @@ Add the Unicode ('u') flag to this regular expression for proper Unicode charact
 			snapshot: String.raw`
 /abc/gim;
 ~~~~~~~~
-Add the Unicode ('u') flag to this regular expression for proper Unicode character handling.
+This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
 `,
 		},
 		{
@@ -52,7 +52,7 @@ RegExp("abc", "u");
 			snapshot: String.raw`
 RegExp("abc");
 ~~~~~~~~~~~~~
-Add the Unicode ('u') flag to this regular expression for proper Unicode character handling.
+This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
 `,
 		},
 		{
@@ -65,7 +65,7 @@ new RegExp("abc", "u");
 			snapshot: String.raw`
 new RegExp("abc");
 ~~~~~~~~~~~~~~~~~
-Add the Unicode ('u') flag to this regular expression for proper Unicode character handling.
+This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
 `,
 		},
 		{
@@ -78,7 +78,7 @@ RegExp("abc", "gu");
 			snapshot: String.raw`
 RegExp("abc", "g");
 ~~~~~~~~~~~~~~~~~~
-Add the Unicode ('u') flag to this regular expression for proper Unicode character handling.
+This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
 `,
 		},
 		{
@@ -88,7 +88,7 @@ Add the Unicode ('u') flag to this regular expression for proper Unicode charact
 			snapshot: String.raw`
 /\a/;
 ~~~~
-Add the Unicode ('u') flag to this regular expression for proper Unicode character handling.
+This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
 `,
 		},
 		{
@@ -98,7 +98,7 @@ RegExp("abc", flags);
 			snapshot: String.raw`
 RegExp("abc", flags);
 ~~~~~~~~~~~~~~~~~~~~
-Add the Unicode ('u') flag to this regular expression for proper Unicode character handling.
+This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
 `,
 		},
 	],

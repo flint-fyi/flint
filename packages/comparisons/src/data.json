@@ -15593,7 +15593,6 @@
 		"flint": {
 			"name": "regexUnicodeFlag",
 			"plugin": "ts",
-			"preset": "logical",
 			"status": "implemented"
 		}
 	},
