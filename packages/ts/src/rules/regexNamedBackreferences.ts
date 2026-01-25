@@ -1,10 +1,8 @@
 import { visitRegExpAST } from "@eslint-community/regexpp";
-import {
-	getTSNodeRange,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -29,58 +27,38 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				RegularExpressionLiteral: (node, { sourceFile }) => {
-					const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(node.text);
-					if (!match) {
-						return;
-					}
-
-					const [, pattern, flagsStr = ""] = match;
-					if (!pattern) {
-						return;
-					}
-
-					const regexpAst = parseRegexpAst(pattern, flagsStr);
+					const details = getRegExpLiteralDetails(node, { sourceFile });
+					const regexpAst = parseRegexpAst(details.pattern, details.flags);
 					if (!regexpAst) {
 						return;
 					}
 
-					const range = getTSNodeRange(node, sourceFile);
-
 					visitRegExpAST(regexpAst, {
-						onBackreferenceEnter(bNode) {
-							const resolved = bNode.resolved;
-
-							if (Array.isArray(resolved)) {
+						onBackreferenceEnter(backNode) {
+							if (
+								Array.isArray(backNode.resolved) ||
+								!backNode.resolved.name ||
+								backNode.raw.startsWith("\\k<")
+							) {
 								return;
 							}
 
-							if (!resolved.name) {
-								return;
-							}
-
-							if (bNode.raw.startsWith("\\k<")) {
-								return;
-							}
-
-							const name = resolved.name;
+							const range = {
+								begin: details.start + backNode.start,
+								end: details.start + backNode.end,
+							};
 
 							context.report({
 								data: {
-									found: bNode.raw,
-									name,
+									found: backNode.raw,
+									name: backNode.resolved.name,
 								},
 								fix: {
-									range: {
-										begin: range.begin + 1 + bNode.start,
-										end: range.begin + 1 + bNode.end,
-									},
-									text: `\\k<${name}>`,
+									range,
+									text: `\\k<${backNode.resolved.name}>`,
 								},
 								message: "preferNamed",
-								range: {
-									begin: range.begin + 1 + bNode.start,
-									end: range.begin + 1 + bNode.end,
-								},
+								range,
 							});
 						},
 					});

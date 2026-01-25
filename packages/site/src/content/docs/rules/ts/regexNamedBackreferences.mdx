@@ -13,6 +13,8 @@ import RuleSummary from "~/components/RuleSummary.astro";
 When a capturing group has a name (e.g., `(?<name>...)`), backreferences to that group should use the named syntax `\k<name>` instead of the numeric syntax `\1`.
 Named backreferences are more readable and maintainable, especially when regex patterns change over time.
 
+This rule reports backreferences that do not use the name of their referenced capturing group.
+
 ## Examples
 
 <Tabs>
