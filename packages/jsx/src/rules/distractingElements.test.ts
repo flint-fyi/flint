@@ -45,11 +45,9 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div />` },
-		{ code: `<span>Text</span>` },
-		{ code: `<button>Click me</button>` },
-		{
-			code: `<div className="marquee-style">Animated</div>`,
-		},
+		`<div />`,
+		`<span>Text</span>`,
+		`<button>Click me</button>`,
+		`<div className="marquee-style">Animated</div>`,
 	],
 });
