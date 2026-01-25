@@ -7,6 +7,7 @@ import {
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
 interface ControlCharInfo {
 	codePoint: number;
@@ -30,10 +31,7 @@ const controlCharacterSinglePattern =
 const controlCharacterDoubleEscapedPattern =
 	/\\\\x(0[0-9A-Fa-f]|1[0-9A-Fa-f])|\\\\u00(0[0-9A-Fa-f]|1[0-9A-Fa-f])|\\\\u\{([0-9A-Fa-f]|1[0-9A-Fa-f])\}|\\\\c[A-Z]/g;
 
-function findControlCharacters(
-	pattern: string,
-	doubleEscaped: boolean,
-): ControlCharInfo[] {
+function findControlCharacters(pattern: string, doubleEscaped: boolean) {
 	const issues: ControlCharInfo[] = [];
 
 	const searchPattern = doubleEscaped
@@ -67,12 +65,6 @@ function findControlCharacters(
 
 function formatCodePoint(codePoint: number): string {
 	return `U+${codePoint.toString(16).toUpperCase().padStart(4, "0")}`;
-}
-
-function getRegexPattern(node: AST.RegularExpressionLiteral): string {
-	const text = node.text;
-	const lastSlash = text.lastIndexOf("/");
-	return text.slice(1, lastSlash);
 }
 
 function parseControlCharCodePoint(match: string): number | undefined {
@@ -134,12 +126,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: TypeScriptFileServices,
+			services: TypeScriptFileServices,
 		) {
-			const pattern = getRegexPattern(node);
+			const { pattern, start } = getRegExpLiteralDetails(node, services);
 			const issues = findControlCharacters(pattern, false);
 
-			reportIssues(issues, node.getStart(sourceFile));
+			reportIssues(issues, start - 1);
 		}
 
 		function checkRegExpConstructor(

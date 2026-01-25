@@ -107,21 +107,12 @@ const element = <Fragment>
 		},
 	],
 	valid: [
-		{
-			code: `const element = <><div>First</div><div>Second</div></>;`,
-		},
-		{
-			code: `const element = <Fragment><div>First</div><div>Second</div></Fragment>;`,
-		},
-		{
-			code: `const element = <Fragment key="item"><div>Hello</div></Fragment>;`,
-		},
-		{
-			code: `const element = <><div>A</div><div>B</div><div>C</div></>;`,
-		},
-		{ code: `const element = <div>Hello</div>;` },
-		{
-			code: `
+		`const element = <><div>First</div><div>Second</div></>;`,
+		`const element = <Fragment><div>First</div><div>Second</div></Fragment>;`,
+		`const element = <Fragment key="item"><div>Hello</div></Fragment>;`,
+		`const element = <><div>A</div><div>B</div><div>C</div></>;`,
+		`const element = <div>Hello</div>;`,
+		`
 return (
     <>
         <div>First</div>
@@ -129,18 +120,13 @@ return (
     </>
 );
 `,
-		},
-		{
-			code: `const element = <Fragment key={item.id}><span>{item.text}</span></Fragment>;`,
-		},
-		{
-			code: `
+		`const element = <Fragment key={item.id}><span>{item.text}</span></Fragment>;`,
+		`
 const element = <>
     <div>First</div>
     Text between
     <div>Second</div>
 </>;
 `,
-		},
 	],
 });

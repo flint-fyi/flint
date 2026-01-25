@@ -45,18 +45,10 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{
-			code: `
-<audio><track kind="captions" /></audio>
-`,
-		},
-		{ code: `<video><track kind="captions" /></video>` },
-		{ code: `<video muted />` },
-		{ code: `<div>Not media</div>` },
-		{
-			code: `
-<audio muted src="audio.mp3" />
-`,
-		},
+		`<audio><track kind="captions" /></audio>`,
+		`<video><track kind="captions" /></video>`,
+		`<video muted />`,
+		`<div>Not media</div>`,
+		`<audio muted src="audio.mp3" />`,
 	],
 });

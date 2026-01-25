@@ -103,36 +103,26 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{
-			code: `
+		`
 <svg>
     <title>Accessible title</title>
 </svg>`,
-		},
-		{
-			code: `
+		`
 <svg>
     <title>Circle</title>
     <circle cx="50" cy="50" r="40" />
 </svg>`,
-		},
-		{
-			code: `
+		`
 <svg aria-label="Accessible label" />
 `,
-		},
-		{
-			code: `
+		`
 <svg aria-labelledby="title-id" />
 `,
-		},
-		{
-			code: `
+		`
 <svg aria-labelledby="title-id">
     <circle cx="50" cy="50" r="40" />
 </svg>
 `,
-		},
-		{ code: `<div>Not an svg element</div>` },
+		`<div>Not an svg element</div>`,
 	],
 });

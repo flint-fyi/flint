@@ -85,15 +85,11 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<a href="/about">About Us</a>` },
-		{ code: `<a href="/docs">View Documentation</a>` },
-		{
-			code: `<a href="/contact">Contact Information</a>`,
-		},
-		{
-			code: `<a href="/pricing">See Pricing Details</a>`,
-		},
-		{ code: `<a href="/download">Download the App</a>` },
-		{ code: `<CustomLink>click here</CustomLink>` },
+		`<a href="/about">About Us</a>`,
+		`<a href="/docs">View Documentation</a>`,
+		`<a href="/contact">Contact Information</a>`,
+		`<a href="/pricing">See Pricing Details</a>`,
+		`<a href="/download">Download the App</a>`,
+		`<CustomLink>click here</CustomLink>`,
 	],
 });
