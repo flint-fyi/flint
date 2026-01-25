@@ -42,7 +42,7 @@ function getRegexFlags(node: AST.Expression, sourceFile: AST.SourceFile) {
 	}
 }
 
-function isInBooleanContext(node: ts.Node): boolean {
+function isInBooleanContext(node: AST.AnyNode): boolean {
 	switch (node.parent.kind) {
 		case ts.SyntaxKind.AsExpression:
 		case ts.SyntaxKind.NonNullExpression:
@@ -50,46 +50,40 @@ function isInBooleanContext(node: ts.Node): boolean {
 			return isInBooleanContext(node.parent);
 
 		case ts.SyntaxKind.BinaryExpression: {
-			const binary = node.parent as ts.BinaryExpression;
 			return (
-				binary.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken ||
-				binary.operatorToken.kind === ts.SyntaxKind.BarBarToken
+				node.parent.operatorToken.kind ===
+					ts.SyntaxKind.AmpersandAmpersandToken ||
+				node.parent.operatorToken.kind === ts.SyntaxKind.BarBarToken
 			);
 		}
 
 		case ts.SyntaxKind.CallExpression: {
-			const call = node.parent as ts.CallExpression;
 			return (
-				ts.isIdentifier(call.expression) &&
-				call.expression.text === "Boolean" &&
-				call.arguments.length === 1 &&
-				call.arguments[0] === node
+				ts.isIdentifier(node.parent.expression) &&
+				node.parent.expression.text === "Boolean" &&
+				node.parent.arguments.length === 1 &&
+				node.parent.arguments[0] === node
 			);
 		}
 
 		case ts.SyntaxKind.ConditionalExpression:
-			return (node.parent as ts.ConditionalExpression).condition === node;
+		case ts.SyntaxKind.ForStatement:
+			return node.parent.condition === node;
 
 		case ts.SyntaxKind.DoStatement:
 		case ts.SyntaxKind.IfStatement:
 		case ts.SyntaxKind.WhileStatement:
-			return (node.parent as ts.IfStatement).expression === node;
-
-		case ts.SyntaxKind.ForStatement:
-			return (node.parent as ts.ForStatement).condition === node;
+			return node.parent.expression === node;
 
 		case ts.SyntaxKind.PrefixUnaryExpression:
-			return (
-				(node.parent as ts.PrefixUnaryExpression).operator ===
-				ts.SyntaxKind.ExclamationToken
-			);
+			return node.parent.operator === ts.SyntaxKind.ExclamationToken;
 
 		default:
 			return false;
 	}
 }
 
-function needsParentheses(node: ts.Node) {
+function needsParentheses(node: AST.AnyNode) {
 	return !(
 		ts.isIdentifier(node) ||
 		ts.isRegularExpressionLiteral(node) ||
@@ -109,9 +103,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferTest: {
 			primary:
-				"Use 'RegExp.test(string)' for boolean checks instead of '{{ method }}'.",
+				"Prefer the faster `RegExp.test()` for boolean checks instead of the slower `RegExp.{{ method }}()`.",
 			secondary: [
 				"`RegExp.prototype.test()` is more efficient and semantically clearer when only checking for existence.",
+				"`RegExp.prototype.exec()` returns a full matches array, including capture groups, which is slower to execute.",
 			],
 			suggestions: [
 				"Replace with `RegExp.prototype.test()` for boolean context checks.",
@@ -122,14 +117,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression: (node, { program, sourceFile, typeChecker }) => {
-					if (!ts.isPropertyAccessExpression(node.expression)) {
+					if (
+						!ts.isPropertyAccessExpression(node.expression) ||
+						node.arguments.length !== 1
+					) {
 						return;
 					}
 
-					if (node.arguments.length !== 1) {
-						return;
-					}
-
+					// TODO: Use a util like getStaticValue
+					// https://github.com/flint-fyi/flint/issues/1298
 					const methodName = node.expression.name.text;
 
 					if (methodName !== "match" && methodName !== "exec") {
@@ -140,10 +136,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const argument = node.arguments[0];
-					if (!argument) {
-						return;
-					}
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const argument = node.arguments[0]!;
 
 					const range = getTSNodeRange(node, sourceFile);
 

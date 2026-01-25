@@ -12,7 +12,7 @@ if (pattern.exec(text)) {}
 declare const pattern: RegExp;
 if (pattern.exec(text)) {}
     ~~~~~~~~~~~~~~~~~~
-    Use 'RegExp.test(string)' for boolean checks instead of 'exec'.
+    Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
 `,
 		},
 		{
@@ -25,7 +25,7 @@ while (/search/.test(text)) {}
 			snapshot: `
 while (/search/.exec(text)) {}
        ~~~~~~~~~~~~~~~~~~~
-       Use 'RegExp.test(string)' for boolean checks instead of 'exec'.
+       Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
 `,
 		},
 		{
@@ -37,7 +37,7 @@ const found = !pattern.exec(text);
 declare const pattern: RegExp;
 const found = !pattern.exec(text);
                ~~~~~~~~~~~~~~~~~~
-               Use 'RegExp.test(string)' for boolean checks instead of 'exec'.
+               Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
 `,
 		},
 		{
@@ -49,7 +49,7 @@ const found = Boolean(pattern.exec(text));
 declare const pattern: RegExp;
 const found = Boolean(pattern.exec(text));
                       ~~~~~~~~~~~~~~~~~~
-                      Use 'RegExp.test(string)' for boolean checks instead of 'exec'.
+                      Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
 `,
 		},
 		{
@@ -65,7 +65,7 @@ if (/search/.test(text)) {}
 declare const text: string;
 if (text.match(/search/)) {}
     ~~~~~~~~~~~~~~~~~~~~
-    Use 'RegExp.test(string)' for boolean checks instead of 'match'.
+    Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.match()\`.
 `,
 		},
 		{
@@ -81,7 +81,7 @@ if (new RegExp("search").test(text)) {}
 declare const text: string;
 if (text.match(new RegExp("search"))) {}
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Use 'RegExp.test(string)' for boolean checks instead of 'match'.
+    Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.match()\`.
 `,
 		},
 		{
@@ -93,7 +93,7 @@ const result = pattern.exec(text) ? "found" : "missing";
 declare const pattern: RegExp;
 const result = pattern.exec(text) ? "found" : "missing";
                ~~~~~~~~~~~~~~~~~~
-               Use 'RegExp.test(string)' for boolean checks instead of 'exec'.
+               Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
 `,
 		},
 		{
@@ -105,7 +105,7 @@ if (pattern.exec(text) && other) {}
 declare const pattern: RegExp;
 if (pattern.exec(text) && other) {}
     ~~~~~~~~~~~~~~~~~~
-    Use 'RegExp.test(string)' for boolean checks instead of 'exec'.
+    Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
 `,
 		},
 		{
@@ -117,7 +117,7 @@ do {} while (pattern.exec(text));
 declare const pattern: RegExp;
 do {} while (pattern.exec(text));
              ~~~~~~~~~~~~~~~~~~
-             Use 'RegExp.test(string)' for boolean checks instead of 'exec'.
+             Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
 `,
 		},
 		{
@@ -129,7 +129,7 @@ for (; pattern.exec(text);) {}
 declare const pattern: RegExp;
 for (; pattern.exec(text);) {}
        ~~~~~~~~~~~~~~~~~~
-       Use 'RegExp.test(string)' for boolean checks instead of 'exec'.
+       Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
 `,
 		},
 		{
@@ -141,7 +141,7 @@ if (text.match(/search/g)) {}
 declare const text: string;
 if (text.match(/search/g)) {}
     ~~~~~~~~~~~~~~~~~~~~~
-    Use 'RegExp.test(string)' for boolean checks instead of 'match'.
+    Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.match()\`.
 `,
 		},
 		{
@@ -151,7 +151,7 @@ if (/search/g.exec(text)) {}
 			snapshot: `
 if (/search/g.exec(text)) {}
     ~~~~~~~~~~~~~~~~~~~~
-    Use 'RegExp.test(string)' for boolean checks instead of 'exec'.
+    Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
 `,
 		},
 	],

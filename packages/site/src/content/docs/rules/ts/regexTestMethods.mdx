@@ -10,8 +10,12 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexTestMethods" />
 
-Reports calls to `String.prototype.match()` and `RegExp.prototype.exec()` that are used in a boolean context.
-`RegExp.prototype.test()` is more efficient and semantically clearer when only checking for pattern existence.
+Two common regular expression methods exist for checking whether a pattern exists in a string:
+
+- `exec()`: returns a full matches array, including capture groups, which requires more work than just boolean checking.
+- `test()`: only returns a `boolean`, which is more efficient and semantically clearer when only checking for pattern existence.
+
+This rule reports calls to `String.prototype.match()` and `RegExp.prototype.exec()` that are used in a boolean context.
 
 ## Examples
 
@@ -92,7 +96,7 @@ if (text.match(/pattern/g)) {
 
 ### Using Results (Valid)
 
-Using the result of `match()` or `exec()` is valid:
+Using the result of `exec()` or `match()` is valid:
 
 ```ts
 const matches = text.match(/(\w+)/);
@@ -105,7 +109,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you prefer the semantics of `match()` or `exec()` even in boolean contexts, you may disable this rule.
+If you prefer the semantics of `exec()` or `match()` even in boolean contexts, you might prefer to disable this rule.
+For example, some developers prefer to always use the same methods for stylistic consistency.
 
 ## Further Reading
 
