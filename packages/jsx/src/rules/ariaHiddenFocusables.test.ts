@@ -65,14 +65,12 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div aria-hidden="true" />` },
-		{ code: `<img aria-hidden="true" />` },
-		{ code: `<a aria-hidden="false" href="#" />` },
-		{
-			code: `<button aria-hidden="true" tabIndex="-1" />`,
-		},
-		{ code: `<a href="/" />` },
-		{ code: `<div aria-hidden="false" tabIndex="0" />` },
-		{ code: `<button />` },
+		`<div aria-hidden="true" />`,
+		`<img aria-hidden="true" />`,
+		`<a aria-hidden="false" href="#" />`,
+		`<button aria-hidden="true" tabIndex="-1" />`,
+		`<a href="/" />`,
+		`<div aria-hidden="false" tabIndex="0" />`,
+		`<button />`,
 	],
 });

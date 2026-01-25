@@ -95,51 +95,27 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<button onClick={() => {}} />` },
-		{ code: `<a href="#" onClick={() => {}} />` },
-		{ code: `<input onClick={() => {}} />` },
-		{ code: `<select onChange={() => {}} />` },
-		{ code: `<textarea onChange={() => {}} />` },
-		{
-			code: `<div role="button" tabIndex={0} onClick={() => {}} />`,
-		},
-		{
-			code: `<div role="button" tabIndex="-1" onClick={() => {}} />`,
-		},
-		{
-			code: `<div role="button" tabIndex="0" onClick={() => {}} />`,
-		},
-		{
-			code: `<span role="link" tabIndex={0} onClick={() => {}} />`,
-		},
-		{
-			code: `<div role="checkbox" tabIndex={0} onClick={() => {}} />`,
-		},
-		{
-			code: `<div onClick={() => {}} aria-hidden="true" />`,
-		},
-		{
-			code: `<div onClick={() => {}} aria-hidden={true} />`,
-		},
-		{ code: `<button onClick={() => {}} disabled />` },
-		{
-			code: `<button onClick={() => {}} disabled={true} />`,
-		},
-		{
-			code: `<div role="presentation" onClick={() => {}} />`,
-		},
-		{
-			code: `<div role="none" onClick={() => {}} />`,
-		},
-		{ code: `<div onClick={() => {}} />` },
-		{ code: `<span onClick={() => {}} />` },
-		{
-			code: `<div role="article" onClick={() => {}} />`,
-		},
-		{
-			code: `<div role="banner" onClick={() => {}} />`,
-		},
-		{ code: `<div role="button" />` },
-		{ code: `<button />` },
+		`<button onClick={() => {}} />`,
+		`<a href="#" onClick={() => {}} />`,
+		`<input onClick={() => {}} />`,
+		`<select onChange={() => {}} />`,
+		`<textarea onChange={() => {}} />`,
+		`<div role="button" tabIndex={0} onClick={() => {}} />`,
+		`<div role="button" tabIndex="-1" onClick={() => {}} />`,
+		`<div role="button" tabIndex="0" onClick={() => {}} />`,
+		`<span role="link" tabIndex={0} onClick={() => {}} />`,
+		`<div role="checkbox" tabIndex={0} onClick={() => {}} />`,
+		`<div onClick={() => {}} aria-hidden="true" />`,
+		`<div onClick={() => {}} aria-hidden={true} />`,
+		`<button onClick={() => {}} disabled />`,
+		`<button onClick={() => {}} disabled={true} />`,
+		`<div role="presentation" onClick={() => {}} />`,
+		`<div role="none" onClick={() => {}} />`,
+		`<div onClick={() => {}} />`,
+		`<span onClick={() => {}} />`,
+		`<div role="article" onClick={() => {}} />`,
+		`<div role="banner" onClick={() => {}} />`,
+		`<div role="button" />`,
+		`<button />`,
 	],
 });
