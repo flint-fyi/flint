@@ -25,23 +25,13 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{
-			code: `<div onClick={() => {}} onKeyDown={handler} />`,
-		},
-		{
-			code: `<div onClick={() => {}} onKeyUp={handler} />`,
-		},
-		{
-			code: `<div onClick={() => {}} onKeyPress={handler} />`,
-		},
-		{ code: `<button onClick={() => {}} />` },
-		{
-			code: `<div onClick={() => {}} aria-hidden="true" />`,
-		},
-		{ code: `<div />` },
-		{ code: `<input onClick={() => {}} />` },
-		{
-			code: `<CustomElement onClick={() => {}} />`,
-		},
+		`<div onClick={() => {}} onKeyDown={handler} />`,
+		`<div onClick={() => {}} onKeyUp={handler} />`,
+		`<div onClick={() => {}} onKeyPress={handler} />`,
+		`<button onClick={() => {}} />`,
+		`<div onClick={() => {}} aria-hidden="true" />`,
+		`<div />`,
+		`<input onClick={() => {}} />`,
+		`<CustomElement onClick={() => {}} />`,
 	],
 });

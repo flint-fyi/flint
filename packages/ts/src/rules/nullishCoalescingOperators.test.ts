@@ -261,86 +261,59 @@ const result = !value ? "default" : value;
 		},
 	],
 	valid: [
-		{
-			code: `
+		`
 let value: string = "";
 const result = value || "default";
 `,
-		},
-		{
-			code: `
+		`
 let value: number = 0;
 const result = value || 1;
 `,
-		},
-		{
-			code: `
+		`
 let value: boolean = false;
 const result = value || true;
 `,
-		},
-		{
-			code: `
+		`
 let value = "text";
 const result = value || "default";
 `,
-		},
-		{
-			code: `
+		`
 let value: string | null = null;
 const result = value ?? "default";
 `,
-		},
-		{
-			code: `
+		`
 declare const value: 0 | null;
 const result = value || 1;
 `,
-		},
-		{
-			code: `
+		`
 declare const value: "" | undefined;
 const result = value || "default";
 `,
-		},
-		{
-			code: `
+		`
 declare const value: false | null;
 const result = value || true;
 `,
-		},
-		{
-			code: `
+		`
 declare const value: 0n | undefined;
 const result = value || 1n;
 `,
-		},
-		{
-			code: `
+		`
 let value: any = null;
 const result = value || "default";
 `,
-		},
-		{
-			code: `
+		`
 let value: unknown = null;
 const result = value || "default";
 `,
-		},
-		{
-			code: `
+		`
 let value: string = "test";
 const result = value ? value : "default";
 `,
-		},
-		{
-			code: `
+		`
 declare let x: string | boolean;
 const result = x ? x : "default";
 `,
-		},
-		{
-			code: `
+		`
 let foo: string | null = null;
 function test() {
   if (!foo) {
@@ -350,12 +323,9 @@ function test() {
   }
 }
 `,
-		},
-		{
-			code: `
+		`
 let obj = { value: "test" };
 const result = obj.value || "default";
 `,
-		},
 	],
 });

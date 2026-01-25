@@ -1,0 +1,57 @@
+---
+description: "Test cases with only a code property can use string shorthand syntax instead of object literal syntax."
+title: "testShorthands"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="flint" rule="testShorthands" />
+
+When defining test cases for linting rules, if a test case only requires a `code` property
+without any additional configuration (like `options`, `errors`, etc.), it can be simplified using string shorthand syntax.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+ruleTester.describe(rule, {
+	valid: ["a", { code: "a" }],
+	invalid: [],
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+ruleTester.describe(rule, {
+	valid: ["a", "a"],
+	invalid: [],
+});
+```
+
+```ts
+ruleTester.describe(rule, {
+	valid: [
+		{ code: "a", fileName: "b.ts" },
+		{ code: "a", fileName: "c.ts" },
+	],
+	invalid: [],
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="flint" ruleId="testShorthands" />

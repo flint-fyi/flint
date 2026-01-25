@@ -8,6 +8,7 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
 function findEscapeBackspaces(pattern: string, flags: string) {
 	const results: Character[] = [];
@@ -28,14 +29,6 @@ function findEscapeBackspaces(pattern: string, flags: string) {
 	});
 
 	return results;
-}
-
-function getRegexInfo(node: AST.RegularExpressionLiteral) {
-	const lastSlash = node.text.lastIndexOf("/");
-	return {
-		flags: node.text.slice(lastSlash + 1),
-		pattern: node.text.slice(1, lastSlash),
-	};
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -61,16 +54,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.RegularExpressionLiteral,
 			services: TypeScriptFileServices,
 		) {
-			const { flags, pattern } = getRegexInfo(node);
+			const { flags, pattern, start } = getRegExpLiteralDetails(node, services);
 			const backspaces = findEscapeBackspaces(pattern, flags);
-			const nodeStart = node.getStart(services.sourceFile);
 
 			for (const backspace of backspaces) {
 				context.report({
 					message: "escapeBackspace",
 					range: {
-						begin: nodeStart + backspace.start,
-						end: nodeStart + backspace.end,
+						begin: start + backspace.start - 1,
+						end: start + backspace.end - 1,
 					},
 				});
 			}

@@ -35,11 +35,11 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<h1>Heading Content</h1>` },
-		{ code: `<h2><TextWrapper /></h2>` },
-		{ code: `<h4 aria-label="Heading" />` },
-		{ code: `<h5 aria-labelledby="heading-id" />` },
-		{ code: `<div>Not a heading</div>` },
-		{ code: `<h6>{content}</h6>` },
+		`<h1>Heading Content</h1>`,
+		`<h2><TextWrapper /></h2>`,
+		`<h4 aria-label="Heading" />`,
+		`<h5 aria-labelledby="heading-id" />`,
+		`<div>Not a heading</div>`,
+		`<h6>{content}</h6>`,
 	],
 });
