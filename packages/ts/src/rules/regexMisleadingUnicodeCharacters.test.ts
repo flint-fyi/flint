@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[👍]/;
   ~~
-  Surrogate pair in character class without the \`u\` or \`v\` flag.
+  Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
 `,
 			suggestions: [
 				{
@@ -28,7 +28,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\uD83D\\uDC4D]/;
   ~~~~~~~~~~~~
-  Surrogate pair in character class without the \`u\` or \`v\` flag.
+  Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
 `,
 			suggestions: [
 				{
@@ -46,7 +46,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[A\\u0301]/;
   ~~~~~~~
-  Combined character in character class.
+  Misleading combined character in character class.
 `,
 		},
 		{
@@ -56,7 +56,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[A\\u0301]/u;
   ~~~~~~~
-  Combined character in character class.
+  Misleading combined character in character class.
 `,
 		},
 		{
@@ -66,7 +66,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\u0041\\u0301]/;
   ~~~~~~~~~~~~
-  Combined character in character class.
+  Misleading combined character in character class.
 `,
 		},
 		{
@@ -76,7 +76,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\u0041\\u0301]/u;
   ~~~~~~~~~~~~
-  Combined character in character class.
+  Misleading combined character in character class.
 `,
 		},
 		{
@@ -86,7 +86,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[❇️]/;
   ~~
-  Combined character in character class.
+  Misleading combined character in character class.
 `,
 		},
 		{
@@ -96,7 +96,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[❇️]/u;
   ~~
-  Combined character in character class.
+  Misleading combined character in character class.
 `,
 		},
 		{
@@ -106,9 +106,9 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[👶🏻]/;
   ~~
-  Surrogate pair in character class without the \`u\` or \`v\` flag.
+  Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
     ~~
-    Surrogate pair in character class without the \`u\` or \`v\` flag.
+    Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
 `,
 			suggestions: [
 				{
@@ -132,7 +132,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[👶🏻]/u;
   ~~~~
-  Emoji with skin tone modifier in character class.
+  Misleading emoji with skin tone modifier in character class.
 `,
 		},
 		{
@@ -142,7 +142,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\uD83D\\uDC76\\uD83C\\uDFFB]/u;
   ~~~~~~~~~~~~~~~~~~~~~~~~
-  Emoji with skin tone modifier in character class.
+  Misleading emoji with skin tone modifier in character class.
 `,
 		},
 		{
@@ -152,7 +152,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\u{1F476}\\u{1F3FB}]/u;
   ~~~~~~~~~~~~~~~~~~
-  Emoji with skin tone modifier in character class.
+  Misleading emoji with skin tone modifier in character class.
 `,
 		},
 		{
@@ -162,9 +162,9 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[🇯🇵]/;
   ~~
-  Surrogate pair in character class without the \`u\` or \`v\` flag.
+  Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
     ~~
-    Surrogate pair in character class without the \`u\` or \`v\` flag.
+    Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
 `,
 			suggestions: [
 				{
@@ -188,7 +188,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[🇯🇵]/u;
   ~~~~
-  Regional indicator symbols (flag) in character class.
+  Misleading regional indicator symbols (flag) in character class.
 `,
 		},
 		{
@@ -198,7 +198,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\uD83C\\uDDEF\\uD83C\\uDDF5]/u;
   ~~~~~~~~~~~~~~~~~~~~~~~~
-  Regional indicator symbols (flag) in character class.
+  Misleading regional indicator symbols (flag) in character class.
 `,
 		},
 		{
@@ -208,7 +208,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\u{1F1EF}\\u{1F1F5}]/u;
   ~~~~~~~~~~~~~~~~~~
-  Regional indicator symbols (flag) in character class.
+  Misleading regional indicator symbols (flag) in character class.
 `,
 		},
 		{
@@ -218,15 +218,15 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[👨‍👩‍👦]/;
   ~~
-  Surrogate pair in character class without the \`u\` or \`v\` flag.
+  Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
      ~~
-     Surrogate pair in character class without the \`u\` or \`v\` flag.
+     Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
         ~~
-        Surrogate pair in character class without the \`u\` or \`v\` flag.
+        Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
    ~~~
-   Zero-width joiner sequence in character class.
+   Misleading zero-width joiner sequence in character class.
       ~~~
-      Zero-width joiner sequence in character class.
+      Misleading zero-width joiner sequence in character class.
 `,
 			suggestions: [
 				{
@@ -256,7 +256,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[👨‍👩‍👦]/u;
   ~~~~~~~~
-  Zero-width joiner sequence in character class.
+  Misleading zero-width joiner sequence in character class.
 `,
 		},
 		{
@@ -266,7 +266,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[👩‍👦]/u;
   ~~~~~
-  Zero-width joiner sequence in character class.
+  Misleading zero-width joiner sequence in character class.
 `,
 		},
 		{
@@ -276,7 +276,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\uD83D\\uDC68\\u200D\\uD83D\\uDC69\\u200D\\uD83D\\uDC66]/u;
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Zero-width joiner sequence in character class.
+  Misleading zero-width joiner sequence in character class.
 `,
 		},
 		{
@@ -286,7 +286,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\u{1F468}\\u{200D}\\u{1F469}\\u{200D}\\u{1F466}]/u;
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Zero-width joiner sequence in character class.
+  Misleading zero-width joiner sequence in character class.
 `,
 		},
 		{
@@ -296,7 +296,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\uD83D\\u{DC4D}]/u;
   ~~~~~~~~~~~~~~
-  Surrogate pair in character class.
+  Misleading surrogate pair in character class.
 `,
 		},
 		{
@@ -306,7 +306,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\u{D83D}\\uDC4D]/u;
   ~~~~~~~~~~~~~~
-  Surrogate pair in character class.
+  Misleading surrogate pair in character class.
 `,
 		},
 		{
@@ -316,7 +316,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\u{D83D}\\u{DC4D}]/u;
   ~~~~~~~~~~~~~~~~
-  Surrogate pair in character class.
+  Misleading surrogate pair in character class.
 `,
 		},
 		{
@@ -326,9 +326,9 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[👩‍👦][👩‍👦]/u;
   ~~~~~
-  Zero-width joiner sequence in character class.
+  Misleading zero-width joiner sequence in character class.
          ~~~~~
-         Zero-width joiner sequence in character class.
+         Misleading zero-width joiner sequence in character class.
 `,
 		},
 		{
@@ -338,9 +338,9 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[👨‍👩‍👦👩‍👦]/u;
   ~~~~~~~~
-  Zero-width joiner sequence in character class.
+  Misleading zero-width joiner sequence in character class.
           ~~~~~
-          Zero-width joiner sequence in character class.
+          Misleading zero-width joiner sequence in character class.
 `,
 		},
 		{
@@ -350,7 +350,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[[👶🏻]]/v;
    ~~~~
-   Emoji with skin tone modifier in character class.
+   Misleading emoji with skin tone modifier in character class.
 `,
 		},
 	],

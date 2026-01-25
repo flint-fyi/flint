@@ -8,14 +8,12 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-type Character = RegExpAST.Character;
-type CharacterClassElement = RegExpAST.CharacterClassElement;
-
 interface Match {
-	characters: Character[];
 	kind: MatchKind;
+	nodes: RegExpAST.Character[];
 }
 
 type MatchKind =
@@ -26,43 +24,46 @@ type MatchKind =
 	| "surrogatePairWithoutUFlag"
 	| "zwj";
 
-function findAllMatches(chars: Character[], hasUnicodeFlag: boolean): Match[] {
+function findAllMatches(
+	characters: RegExpAST.Character[],
+	hasUnicodeFlag: boolean,
+): Match[] {
 	const matches: Match[] = [];
 
 	if (hasUnicodeFlag) {
-		for (const characters of findSurrogatePair(chars)) {
-			matches.push({ characters, kind: "surrogatePair" });
+		for (const nodes of findSurrogatePairs(characters)) {
+			matches.push({ kind: "surrogatePair", nodes });
 		}
 	} else {
-		for (const characters of findSurrogatePairWithoutUFlag(chars)) {
-			matches.push({ characters, kind: "surrogatePairWithoutUFlag" });
+		for (const nodes of findSurrogatePairsWithoutUFlag(characters)) {
+			matches.push({ kind: "surrogatePairWithoutUFlag", nodes });
 		}
 	}
 
-	for (const characters of findCombiningClass(chars)) {
-		matches.push({ characters, kind: "combiningClass" });
+	for (const nodes of findCombiningClass(characters)) {
+		matches.push({ kind: "combiningClass", nodes });
 	}
 
-	for (const characters of findEmojiModifier(chars)) {
-		matches.push({ characters, kind: "emojiModifier" });
+	for (const nodes of findEmojiModifiers(characters)) {
+		matches.push({ kind: "emojiModifier", nodes });
 	}
 
-	for (const characters of findRegionalIndicatorSymbol(chars)) {
-		matches.push({ characters, kind: "regionalIndicatorSymbol" });
+	for (const nodes of findRegionalIndicatorSymbols(characters)) {
+		matches.push({ kind: "regionalIndicatorSymbol", nodes });
 	}
 
-	for (const characters of findZwj(chars)) {
-		matches.push({ characters, kind: "zwj" });
+	for (const nodes of findZeroWidthJoins(characters)) {
+		matches.push({ kind: "zwj", nodes });
 	}
 
 	return matches;
 }
 
 function* findCombiningClass(
-	chars: Character[],
-): IterableIterator<Character[]> {
-	for (const [index, char] of chars.entries()) {
-		const previous = chars[index - 1];
+	characters: RegExpAST.Character[],
+): IterableIterator<RegExpAST.Character[]> {
+	for (const [index, char] of characters.entries()) {
+		const previous = characters[index - 1];
 		if (
 			previous &&
 			isCombiningCharacter(char.value) &&
@@ -73,9 +74,11 @@ function* findCombiningClass(
 	}
 }
 
-function* findEmojiModifier(chars: Character[]): IterableIterator<Character[]> {
-	for (const [index, char] of chars.entries()) {
-		const previous = chars[index - 1];
+function* findEmojiModifiers(
+	characters: RegExpAST.Character[],
+): IterableIterator<RegExpAST.Character[]> {
+	for (const [index, char] of characters.entries()) {
+		const previous = characters[index - 1];
 		if (
 			previous &&
 			isEmojiModifier(char.value) &&
@@ -86,11 +89,11 @@ function* findEmojiModifier(chars: Character[]): IterableIterator<Character[]> {
 	}
 }
 
-function* findRegionalIndicatorSymbol(
-	chars: Character[],
-): IterableIterator<Character[]> {
-	for (const [index, char] of chars.entries()) {
-		const previous = chars[index - 1];
+function* findRegionalIndicatorSymbols(
+	characters: RegExpAST.Character[],
+): IterableIterator<RegExpAST.Character[]> {
+	for (const [index, char] of characters.entries()) {
+		const previous = characters[index - 1];
 		if (
 			previous &&
 			isRegionalIndicatorSymbol(char.value) &&
@@ -101,9 +104,11 @@ function* findRegionalIndicatorSymbol(
 	}
 }
 
-function* findSurrogatePair(chars: Character[]): IterableIterator<Character[]> {
-	for (const [index, char] of chars.entries()) {
-		const previous = chars[index - 1];
+function* findSurrogatePairs(
+	characters: RegExpAST.Character[],
+): IterableIterator<RegExpAST.Character[]> {
+	for (const [index, char] of characters.entries()) {
+		const previous = characters[index - 1];
 		if (
 			previous &&
 			isSurrogatePair(previous.value, char.value) &&
@@ -114,11 +119,11 @@ function* findSurrogatePair(chars: Character[]): IterableIterator<Character[]> {
 	}
 }
 
-function* findSurrogatePairWithoutUFlag(
-	chars: Character[],
-): IterableIterator<Character[]> {
-	for (const [index, char] of chars.entries()) {
-		const previous = chars[index - 1];
+function* findSurrogatePairsWithoutUFlag(
+	characters: RegExpAST.Character[],
+): IterableIterator<RegExpAST.Character[]> {
+	for (const [index, char] of characters.entries()) {
+		const previous = characters[index - 1];
 		if (
 			previous &&
 			isSurrogatePair(previous.value, char.value) &&
@@ -130,12 +135,14 @@ function* findSurrogatePairWithoutUFlag(
 	}
 }
 
-function* findZwj(chars: Character[]): IterableIterator<Character[]> {
-	let sequence: Character[] | undefined;
+function* findZeroWidthJoins(
+	characters: RegExpAST.Character[],
+): IterableIterator<RegExpAST.Character[]> {
+	let sequence: RegExpAST.Character[] | undefined;
 
-	for (const [index, char] of chars.entries()) {
-		const previous = chars[index - 1];
-		const next = chars[index + 1];
+	for (const [index, char] of characters.entries()) {
+		const previous = characters[index - 1];
+		const next = characters[index + 1];
 
 		if (
 			previous &&
@@ -149,10 +156,10 @@ function* findZwj(chars: Character[]): IterableIterator<Character[]> {
 					sequence.push(char, next);
 				} else {
 					yield sequence;
-					sequence = chars.slice(index - 1, index + 2);
+					sequence = characters.slice(index - 1, index + 2);
 				}
 			} else {
-				sequence = chars.slice(index - 1, index + 2);
+				sequence = characters.slice(index - 1, index + 2);
 			}
 		}
 	}
@@ -195,14 +202,14 @@ function isSurrogatePair(lead: number, tail: number) {
 	return lead >= 0xd800 && lead < 0xdc00 && tail >= 0xdc00 && tail < 0xe000;
 }
 
-function isUnicodeCodePointEscape(char: Character) {
+function isUnicodeCodePointEscape(char: RegExpAST.Character) {
 	return /^\\u\{[\da-f]+\}$/iu.test(char.raw);
 }
 
 function* iterateCharacterSequence(
-	nodes: CharacterClassElement[],
-): IterableIterator<Character[]> {
-	let sequence: Character[] = [];
+	nodes: RegExpAST.CharacterClassElement[],
+): IterableIterator<RegExpAST.Character[]> {
+	let sequence: RegExpAST.Character[] = [];
 
 	for (const node of nodes) {
 		switch (node.type) {
@@ -240,87 +247,82 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		combiningClass: {
-			primary: "Combined character in character class.",
+			primary: "Misleading combined character in character class.",
 			secondary: [
 				"The base character and combining mark are matched separately, not as a single unit.",
-				"Consider using Unicode normalization or matching the composed character.",
 			],
-			suggestions: [],
+			suggestions: [
+				"Match the composed character outside of a character class.",
+				"Use Unicode normalization for the regular expression.",
+			],
 		},
 		emojiModifier: {
-			primary: "Emoji with skin tone modifier in character class.",
+			primary: "Misleading emoji with skin tone modifier in character class.",
 			secondary: [
 				"The emoji and its modifier are matched separately, not as a single unit.",
-				"Consider matching the sequence outside of a character class.",
 			],
-			suggestions: [],
+			suggestions: ["Match the emoji sequence outside of a character class."],
 		},
 		regionalIndicatorSymbol: {
-			primary: "Regional indicator symbols (flag) in character class.",
+			primary:
+				"Misleading regional indicator symbols (flag) in character class.",
 			secondary: [
 				"The two regional indicator symbols are matched separately, not as a single flag.",
-				"Consider matching the flag sequence outside of a character class.",
 			],
-			suggestions: [],
+			suggestions: ["Match the flag sequence outside of a character class."],
 		},
 		surrogatePair: {
-			primary: "Surrogate pair in character class.",
+			primary: "Misleading surrogate pair in character class.",
 			secondary: [
 				"The surrogate code points are represented with different escape types.",
+			],
+			suggestions: [
 				"Use consistent escape sequences for both halves of the pair.",
 			],
-			suggestions: [],
 		},
 		surrogatePairWithoutUFlag: {
-			primary: "Surrogate pair in character class without the `u` or `v` flag.",
+			primary:
+				"Misleading surrogate pair in character class without the `u` or `v` flag.",
 			secondary: [
 				"Without the unicode flag, each half of the surrogate pair is matched separately.",
 			],
 			suggestions: ["Add the `u` flag to the regex."],
 		},
 		zwj: {
-			primary: "Zero-width joiner sequence in character class.",
+			primary: "Misleading zero-width joiner sequence in character class.",
 			secondary: [
 				"Characters joined with ZWJ are matched separately, not as a single unit.",
 				"Consider matching the sequence outside of a character class.",
 			],
-			suggestions: [],
+			suggestions: ["Match the ZWJ sequence outside of a character class."],
 		},
 	},
 	setup(context) {
 		return {
 			visitors: {
-				RegularExpressionLiteral: (node, { sourceFile }) => {
-					const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(node.text);
-					if (!match) {
-						return;
-					}
-
-					const [, pattern, flagsStr = ""] = match;
-					if (!pattern) {
-						return;
-					}
-
-					const regexpAst = parseRegexpAst(pattern, flagsStr);
+				RegularExpressionLiteral: (node, services) => {
+					const details = getRegExpLiteralDetails(node, services);
+					const regexpAst = parseRegexpAst(details.pattern, details.flags);
 					if (!regexpAst) {
 						return;
 					}
 
 					const hasUnicodeFlag =
-						flagsStr.includes("u") || flagsStr.includes("v");
-					const range = getTSNodeRange(node, sourceFile);
+						details.flags.includes("u") || details.flags.includes("v");
+					const range = getTSNodeRange(node, services.sourceFile);
 
 					visitRegExpAST(regexpAst, {
-						onCharacterClassEnter(ccNode) {
-							for (const chars of iterateCharacterSequence(ccNode.elements)) {
-								const matches = findAllMatches(chars, hasUnicodeFlag);
+						onCharacterClassEnter(characterClassNode) {
+							for (const characters of iterateCharacterSequence(
+								characterClassNode.elements,
+							)) {
+								const matches = findAllMatches(characters, hasUnicodeFlag);
 
-								for (const { characters, kind } of matches) {
-									const first = characters[0];
-									const last = characters.at(-1);
-									if (!first || !last) {
-										continue;
-									}
+								for (const { kind, nodes: characters } of matches) {
+									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+									const first = characters[0]!;
+									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+									const last = characters.at(-1)!;
 
 									const messageId = getMessageId(kind);
 
