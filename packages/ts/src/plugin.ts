@@ -194,7 +194,6 @@ import regexGraphemeStringLiterals from "./rules/regexGraphemeStringLiterals.ts"
 import regexHexadecimalEscapes from "./rules/regexHexadecimalEscapes.ts";
 import regexIgnoreCaseFlags from "./rules/regexIgnoreCaseFlags.ts";
 import regexInvisibleCharacters from "./rules/regexInvisibleCharacters.ts";
-import regexResultArrayGroups from "./rules/regexResultArrayGroups.ts";
 import regexLetterCasing from "./rules/regexLetterCasing.ts";
 import regexLookaroundQuantifierOptimizations from "./rules/regexLookaroundQuantifierOptimizations.ts";
 import regexMatchNotation from "./rules/regexMatchNotation.ts";
@@ -203,6 +202,7 @@ import regexNamedReplacements from "./rules/regexNamedReplacements.ts";
 import regexNonStandardFlags from "./rules/regexNonStandardFlags.ts";
 import regexObscureRanges from "./rules/regexObscureRanges.ts";
 import regexOctalEscapes from "./rules/regexOctalEscapes.ts";
+import regexResultArrayGroups from "./rules/regexResultArrayGroups.ts";
 import regexStarQuantifiers from "./rules/regexStarQuantifiers.ts";
 import regexTestMethods from "./rules/regexTestMethods.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
