@@ -55,20 +55,14 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div role="button" aria-pressed="true" />` },
-		{ code: `<button aria-pressed="true" />` },
-		{
-			code: `<div role="checkbox" aria-checked="true" />`,
-		},
-		{
-			code: `<div role="checkbox" aria-required="true" />`,
-		},
-		{
-			code: `<div role="link" aria-label="Click here" />`,
-		},
-		{ code: `<button aria-label="Submit" />` },
-		{ code: `<div aria-label="Section" />` },
-		{ code: `<div />` },
-		{ code: `<button />` },
+		`<div role="button" aria-pressed="true" />`,
+		`<button aria-pressed="true" />`,
+		`<div role="checkbox" aria-checked="true" />`,
+		`<div role="checkbox" aria-required="true" />`,
+		`<div role="link" aria-label="Click here" />`,
+		`<button aria-label="Submit" />`,
+		`<div aria-label="Section" />`,
+		`<div />`,
+		`<button />`,
 	],
 });

@@ -1,0 +1,129 @@
+---
+description: "Reports cases for invalid code that isn't formatted across lines."
+title: "invalidCodeLines"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="flint" rule="invalidCodeLines" />
+
+When writing `invalid` test cases for lint rules, code and snapshot blocks should be formatted across multiple lines using template literals.
+This allows snapshot `~` characters to appear visually underneath the flagged code, making test reports more readable.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+ruleTester.describe(rule, {
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: "",
+        snapshot: \`
+~
+Rule report message.
+\`,
+      }
+    ],
+});
+```
+
+```ts
+ruleTester.describe(rule, {
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: \`console.log(
+);\`,
+        snapshot: \`console.log(
+);
+~
+Rule report message.
+\`,
+      }
+    ],
+});
+```
+
+```ts
+ruleTester.describe(rule, {
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: \`
+console.log();\`,
+        snapshot: \`
+console.log();
+~
+Rule report message.\`,
+      }
+    ],
+});
+```
+
+```ts
+ruleTester.describe(rule, {
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: \`console.log();\`,
+        snapshot: \`console.log();
+~~~~~~~~~~~~~
+Rule report message.
+\`,
+      }
+    ],
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: [
+    {
+        code: \`
+\`,
+        snapshot: \`
+~
+\`,
+}
+    ],
+});
+```
+
+```ts
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: [
+    {
+        code: \`
+console.log();
+\`,
+        snapshot: \`
+console.log();
+~~~~~~~~~~~~~
+Rule report message.
+\`,
+}
+    ],
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="flint" ruleId="invalidCodeLines" />

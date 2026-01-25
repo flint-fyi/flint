@@ -65,18 +65,9 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{
-			code: `<iframe title="This is a unique title" />
-	`,
-		},
-		{
-			code: `<iframe title={uniqueTitle} />
-	`,
-		},
-		{
-			code: `<iframe title="Video player" src="video.mp4" />
-	`,
-		},
-		{ code: `<div>Not an iframe</div>` },
+		`<iframe title="This is a unique title" />`,
+		`<iframe title={uniqueTitle} />`,
+		`<iframe title="Video player" src="video.mp4" />`,
+		`<div>Not an iframe</div>`,
 	],
 });

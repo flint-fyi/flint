@@ -1,0 +1,114 @@
+---
+description: "Reports quantifiers that can cause quadratic regex matching time."
+title: "regexSuperLinearMoves"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexSuperLinearMoves" />
+
+When a quantifier at the start of a pattern is followed by elements that can fail to match, the regex engine may try the pattern from each position in the input string.
+For an input of length n, this can result in O(n²) time complexity.
+
+This rule reports quantifiers that can cause quadratic regex matching time.
+
+## Examples
+
+### Basic Quantifier with Literal Suffix
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a*b/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /^a*b/;
+```
+
+</TabItem>
+</Tabs>
+
+### Character Set Quantifier
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\s+foo/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /^\s+foo/;
+```
+
+</TabItem>
+</Tabs>
+
+### Quantifier Inside Group
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:\s*)foo/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /^(?:\s*)foo/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("a*b");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("^a*b");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your regex is only used on small trusted inputs where performance is not a concern, you might want to disable this rule.
+Some patterns are inherently super-linear but necessary for the matching logic.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for specific cases instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Quantifier](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Quantifier)
+- [MDN: Assertions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Assertions)
+- [Regular Expression Denial of Service (ReDoS)](https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexSuperLinearMoves" />
