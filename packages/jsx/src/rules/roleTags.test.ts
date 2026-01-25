@@ -45,11 +45,11 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<button />` },
-		{ code: `<img />` },
-		{ code: `<a href="#" />` },
-		{ code: `<nav />` },
-		{ code: `<div />` },
-		{ code: `<div role="presentation" />` },
+		`<button />`,
+		`<img />`,
+		`<a href="#" />`,
+		`<nav />`,
+		`<div />`,
+		`<div role="presentation" />`,
 	],
 });

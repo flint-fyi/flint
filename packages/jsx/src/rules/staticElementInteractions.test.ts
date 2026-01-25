@@ -35,15 +35,12 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{
-			code: `
-<div onClick={() => {}} role="button" />`,
-		},
-		{ code: `<span onKeyDown={handler} role="link" />` },
-		{ code: `<button onClick={() => {}} />` },
-		{ code: `<input onClick={() => {}} />` },
-		{ code: `<div />` },
-		{ code: `<a onClick={() => {}} />` },
-		{ code: `<CustomElement onClick={() => {}} />` },
+		`<div onClick={() => {}} role="button" />`,
+		`<span onKeyDown={handler} role="link" />`,
+		`<button onClick={() => {}} />`,
+		`<input onClick={() => {}} />`,
+		`<div />`,
+		`<a onClick={() => {}} />`,
+		`<CustomElement onClick={() => {}} />`,
 	],
 });

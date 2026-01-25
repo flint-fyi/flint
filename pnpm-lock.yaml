@@ -723,6 +723,9 @@ importers:
       regexp-ast-analysis:
         specifier: ^0.7.1
         version: 0.7.1
+      scslre:
+        specifier: ^0.3.0
+        version: 0.3.0
       ts-api-utils:
         specifier: ^2.1.0
         version: 2.1.0(typescript@5.9.3)

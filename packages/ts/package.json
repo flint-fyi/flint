@@ -33,6 +33,7 @@
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"regexp-ast-analysis": "^0.7.1",
+		"scslre": "^0.3.0",
 		"ts-api-utils": "^2.1.0",
 		"typescript": "^5.9.0 || ^6.0.0",
 		"zod": "^4.2.1"
