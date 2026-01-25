@@ -741,7 +741,8 @@
 		"flint": {
 			"name": "missingPlaceholders",
 			"plugin": "flint",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -754,7 +755,8 @@
 		"flint": {
 			"name": "nodePropertyInChecks",
 			"plugin": "flint",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -924,7 +926,8 @@
 		"flint": {
 			"name": "testShorthands",
 			"plugin": "flint",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15134,8 +15137,9 @@
 		"flint": {
 			"name": "regexLegacyFeatures",
 			"plugin": "ts",
-			"preset": "logical"
-		}
+			"status": "skipped"
+		},
+		"notes": "Superseded by deprecated."
 	},
 	{
 		"eslint": [
@@ -15148,6 +15152,7 @@
 			"name": "regexLetterCasing",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15194,7 +15199,8 @@
 		"flint": {
 			"name": "regexLookaroundQuantifierOptimizations",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15208,6 +15214,7 @@
 			"name": "regexMatchNotation",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15221,7 +15228,8 @@
 		"flint": {
 			"name": "regexMisleadingCapturingGroups",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15234,7 +15242,8 @@
 		"flint": {
 			"name": "regexMisleadingQuantifiers",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15257,7 +15266,8 @@
 		"flint": {
 			"name": "regexMisleadingUnicodeCharacters",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15271,6 +15281,7 @@
 			"name": "regexNamedBackreferences",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15302,6 +15313,7 @@
 			"name": "regexNamedReplacements",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15315,7 +15327,8 @@
 		"flint": {
 			"name": "regexNonStandardFlags",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15328,7 +15341,8 @@
 		"flint": {
 			"name": "regexObscureRanges",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15341,7 +15355,8 @@
 		"flint": {
 			"name": "regexOctalEscapes",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15422,6 +15437,7 @@
 			"name": "regexResultArrayGroups",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15435,7 +15451,8 @@
 		"flint": {
 			"name": "regexSetOperationOptimizations",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15463,6 +15480,7 @@
 			"name": "regexStarQuantifiers",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15476,7 +15494,8 @@
 		"flint": {
 			"name": "regexSuperLinearBacktracking",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15489,7 +15508,8 @@
 		"flint": {
 			"name": "regexSuperLinearMoves",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15506,7 +15526,8 @@
 		"flint": {
 			"name": "regexTestMethods",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -15539,6 +15560,7 @@
 			"name": "regexUnicodeCodepointEscapes",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15552,7 +15574,8 @@
 		"flint": {
 			"name": "regexUnicodeEscapes",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{

@@ -45,20 +45,10 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{
-			code: `<meta charset="UTF-8" />`,
-		},
-		{
-			code: `<script src="app.js" />`,
-		},
-		{
-			code: `<style>{css}</style>`,
-		},
-		{
-			code: `<div role="button" />`,
-		},
-		{
-			code: `<button aria-label="Click me" />`,
-		},
+		`<meta charset="UTF-8" />`,
+		`<script src="app.js" />`,
+		`<style>{css}</style>`,
+		`<div role="button" />`,
+		`<button aria-label="Click me" />`,
 	],
 });

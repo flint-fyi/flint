@@ -1,0 +1,109 @@
+---
+description: "Enforces consistent Unicode escape style in regex patterns by preferring codepoint escapes."
+title: "regexUnicodeEscapes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnicodeEscapes" />
+
+Enforces consistent Unicode escape style in regex patterns by preferring `\u{XXXX}` (codepoint escape) over `\uXXXX` (4-digit Unicode escape) when the `u` or `v` flag is present.
+
+The `\u{...}` format is more flexible, readable, and consistent with the modern Unicode handling in JavaScript.
+
+## Examples
+
+### Basic Unicode Escape
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\u0041/u;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\u{0041}/u;
+```
+
+</TabItem>
+</Tabs>
+
+### Character Class
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\u0041\u0042]/u;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[\u{0041}\u{0042}]/u;
+```
+
+</TabItem>
+</Tabs>
+
+### Character Range
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\u0041-\u005A]/u;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[\u{0041}-\u{005A}]/u;
+```
+
+</TabItem>
+</Tabs>
+
+### With v Flag
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\u0041/v;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\u{0041}/v;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support environments that do not have the `u` or `v` flag, or if you intentionally use 4-digit Unicode escapes as a stylistic preference, you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: Unicode character class escape](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Unicode_character_class_escape)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnicodeEscapes" />

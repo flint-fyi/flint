@@ -6,6 +6,7 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
 interface AssertionInfo {
 	assertionRaw: string;
@@ -254,10 +255,6 @@ function getElementChar(element: string, doubleEscaped: boolean) {
 	return withoutQuantifier;
 }
 
-function getRegexPattern(node: AST.RegularExpressionLiteral): string {
-	return node.text.slice(1, node.text.lastIndexOf("/"));
-}
-
 function isWordCharacter(character: string | undefined) {
 	return character ? /^\w$/.test(character) : false;
 }
@@ -323,12 +320,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: TypeScriptFileServices,
+			services: TypeScriptFileServices,
 		) {
-			const pattern = getRegexPattern(node);
+			const { pattern, start } = getRegExpLiteralDetails(node, services);
 			const contradictions = findContradictions(pattern, false);
-
-			const nodeStart = node.getStart(sourceFile);
 
 			for (const contradiction of contradictions) {
 				context.report({
@@ -341,8 +336,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							? "alwaysEnter"
 							: "cannotEnter",
 					range: {
-						begin: nodeStart + 1 + contradiction.start,
-						end: nodeStart + 1 + contradiction.end,
+						begin: start + contradiction.start,
+						end: start + contradiction.end,
 					},
 				});
 			}

@@ -1,0 +1,96 @@
+---
+description: "Reports quantifiers whose minimum implies they must match but whose element can match empty."
+title: "regexMisleadingQuantifiers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexMisleadingQuantifiers" />
+
+Reports quantifiers whose minimum implies they must match but whose element can match empty.
+These quantifiers are misleading because they suggest a minimum number of matches, but the quantified element can match the empty string, making the effective minimum 0.
+
+## Examples
+
+### Optional Element with Fixed Repetition
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(a?){5}/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a?){0,5}/;
+```
+
+</TabItem>
+</Tabs>
+
+The `{5}` suggests exactly 5 matches are required, but since `a?` can match empty, the pattern can match the empty string.
+
+### Alternation with Optional Elements
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:a?b*|c+){4}/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?:a?b*|c+){0,4}/;
+```
+
+</TabItem>
+</Tabs>
+
+The `{4}` suggests at least 4 matches, but the `a?b*` alternative can match empty.
+
+### Plus Quantifier on Empty-Matchable Group
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(a?)+/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a?)*/;
+```
+
+</TabItem>
+</Tabs>
+
+The `+` suggests at least 1 match is required, but `a?` can match empty.
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you use misleading quantifiers intentionally for backtracking behavior, or if you use quantifiers to control iteration count rather than match content, you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: Quantifier](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Quantifiers)
+- [MDN: Groups and backreferences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Groups_and_backreferences)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexMisleadingQuantifiers" />

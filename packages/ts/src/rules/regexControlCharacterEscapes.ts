@@ -7,6 +7,7 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
 interface ControlCharInfo {
 	end: number;
@@ -85,12 +86,6 @@ function findControlCharacterIssues(pattern: string, doubleEscaped: boolean) {
 	return issues;
 }
 
-function getRegexPattern(node: AST.RegularExpressionLiteral): string {
-	const text = node.text;
-	const lastSlash = text.lastIndexOf("/");
-	return text.slice(1, lastSlash);
-}
-
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
@@ -111,12 +106,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: TypeScriptFileServices,
+			services: TypeScriptFileServices,
 		) {
-			const pattern = getRegexPattern(node);
+			const { pattern, start } = getRegExpLiteralDetails(node, services);
 			const issues = findControlCharacterIssues(pattern, false);
-
-			const nodeStart = node.getStart(sourceFile);
 
 			for (const issue of issues) {
 				context.report({
@@ -126,15 +119,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					},
 					fix: {
 						range: {
-							begin: nodeStart + 1 + issue.start,
-							end: nodeStart + 1 + issue.end,
+							begin: start + issue.start,
+							end: start + issue.end,
 						},
 						text: issue.expected,
 					},
 					message: "preferStandardEscape",
 					range: {
-						begin: nodeStart + 1 + issue.start,
-						end: nodeStart + 1 + issue.end,
+						begin: start + issue.start,
+						end: start + issue.end,
 					},
 				});
 			}

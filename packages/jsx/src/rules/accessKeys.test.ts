@@ -25,10 +25,8 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<button>Click me</button>` },
-		{
-			code: `<div className="accessKey">not an attribute</div>`,
-		},
-		{ code: `const a = <span />;` },
+		`<button>Click me</button>`,
+		`<div className="accessKey">not an attribute</div>`,
+		`const a = <span />;`,
 	],
 });
