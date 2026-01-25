@@ -14,6 +14,7 @@ import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { skipParentheses } from "./utils/skipParentheses.ts";
 
 interface NamedCapturingGroup {
@@ -21,9 +22,7 @@ interface NamedCapturingGroup {
 	name: string;
 }
 
-function extractCallExpr(
-	expression: AST.Expression,
-): AST.CallExpression | undefined {
+function extractCallExpression(expression: AST.Expression) {
 	const unwrapped = skipParentheses(expression);
 
 	if (ts.isCallExpression(unwrapped)) {
@@ -35,7 +34,7 @@ function extractCallExpr(
 		ts.isAsExpression(unwrapped) ||
 		ts.isTypeAssertionExpression(unwrapped)
 	) {
-		return extractCallExpr(unwrapped.expression as AST.Expression);
+		return extractCallExpression(unwrapped.expression);
 	}
 
 	return undefined;
@@ -45,7 +44,7 @@ function findAssignmentsToSymbol(
 	symbol: ts.Symbol,
 	sourceFile: AST.SourceFile,
 	typeChecker: Checker,
-): ts.BinaryExpression[] {
+) {
 	const assignments: ts.BinaryExpression[] = [];
 
 	function visit(node: ts.Node) {
@@ -63,20 +62,11 @@ function findAssignmentsToSymbol(
 	}
 
 	visit(sourceFile);
+
 	return assignments;
 }
 
-function findNamedGroupForIndex(
-	namedGroups: NamedCapturingGroup[],
-	index: number,
-): NamedCapturingGroup | undefined {
-	return namedGroups.find((group) => group.index === index);
-}
-
-function getNamedCapturingGroups(
-	pattern: string,
-	flags: string,
-): NamedCapturingGroup[] {
+function getNamedCapturingGroups(pattern: string, flags: string) {
 	const groups: NamedCapturingGroup[] = [];
 
 	let ast: RegExpLiteral;
@@ -87,6 +77,7 @@ function getNamedCapturingGroups(
 	}
 
 	let index = 0;
+
 	visitRegExpAST(ast, {
 		onCapturingGroupEnter(node: CapturingGroup) {
 			index++;
@@ -103,7 +94,7 @@ function getNamedGroupsFromExpression(
 	node: AST.Expression,
 	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
-): NamedCapturingGroup[] | undefined {
+) {
 	const unwrapped = skipParentheses(node);
 
 	if (ts.isIdentifier(unwrapped)) {
@@ -149,7 +140,7 @@ function getRegexFromCall(
 	node: AST.CallExpression,
 	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
-): undefined | { flags: string; pattern: string } {
+) {
 	return (
 		getRegexFromExecCall(node, typeChecker, sourceFile) ??
 		getRegexFromMatchCall(node, typeChecker, sourceFile) ??
@@ -161,7 +152,7 @@ function getRegexFromExecCall(
 	node: AST.CallExpression,
 	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
-): undefined | { flags: string; pattern: string } {
+) {
 	if (!ts.isPropertyAccessExpression(node.expression)) {
 		return undefined;
 	}
@@ -182,7 +173,7 @@ function getRegexFromMatchAllCall(
 	node: AST.CallExpression,
 	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
-): undefined | { flags: string; pattern: string } {
+) {
 	if (!ts.isPropertyAccessExpression(node.expression)) {
 		return undefined;
 	}
@@ -206,12 +197,12 @@ function getRegexFromMatchCall(
 	node: AST.CallExpression,
 	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
-): undefined | { flags: string; pattern: string } {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
-		return undefined;
-	}
-
-	if (node.expression.name.text !== "match" || node.arguments.length !== 1) {
+) {
+	if (
+		!ts.isPropertyAccessExpression(node.expression) ||
+		node.expression.name.text !== "match" ||
+		node.arguments.length !== 1
+	) {
 		return undefined;
 	}
 
@@ -227,6 +218,7 @@ function getRegexFromMatchCall(
 	if (info?.flags.includes("g")) {
 		return undefined;
 	}
+
 	return info;
 }
 
@@ -234,11 +226,11 @@ function getRegexInfoFromExpression(
 	node: AST.Expression,
 	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
-): undefined | { flags: string; pattern: string } {
+) {
 	const unwrapped = skipParentheses(node);
 
 	if (ts.isRegularExpressionLiteral(unwrapped)) {
-		return getRegexInfoFromLiteral(unwrapped);
+		return getRegExpLiteralDetails(unwrapped, { sourceFile });
 	}
 
 	if (ts.isCallExpression(unwrapped) || ts.isNewExpression(unwrapped)) {
@@ -278,29 +270,25 @@ function getRegexInfoFromExpression(
 	return undefined;
 }
 
-function getRegexInfoFromLiteral(node: AST.RegularExpressionLiteral) {
-	const lastSlash = node.text.lastIndexOf("/");
-	return {
-		flags: node.text.slice(lastSlash + 1),
-		pattern: node.text.slice(1, lastSlash),
-	};
-}
-
 function getRegexInfoFromSymbol(
 	symbol: ts.Symbol,
 	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
-): NamedCapturingGroup[] | undefined {
+) {
 	const declarations = symbol.getDeclarations();
 
 	if (declarations) {
 		for (const declaration of declarations) {
 			if (ts.isVariableDeclaration(declaration) && declaration.initializer) {
-				const callExpr = extractCallExpr(
+				const callExpression = extractCallExpression(
 					declaration.initializer as AST.Expression,
 				);
-				if (callExpr) {
-					const regexInfo = getRegexFromCall(callExpr, typeChecker, sourceFile);
+				if (callExpression) {
+					const regexInfo = getRegexFromCall(
+						callExpression,
+						typeChecker,
+						sourceFile,
+					);
 					if (regexInfo) {
 						const namedGroups = getNamedCapturingGroups(
 							regexInfo.pattern,
@@ -321,9 +309,15 @@ function getRegexInfoFromSymbol(
 
 	const assignments = findAssignmentsToSymbol(symbol, sourceFile, typeChecker);
 	for (const assignment of assignments) {
-		const callExpr = extractCallExpr(assignment.right as AST.Expression);
-		if (callExpr) {
-			const regexInfo = getRegexFromCall(callExpr, typeChecker, sourceFile);
+		const callExpression = extractCallExpression(
+			assignment.right as AST.Expression,
+		);
+		if (callExpression) {
+			const regexInfo = getRegexFromCall(
+				callExpression,
+				typeChecker,
+				sourceFile,
+			);
 			if (regexInfo) {
 				const namedGroups = getNamedCapturingGroups(
 					regexInfo.pattern,
@@ -422,7 +416,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const namedGroup = findNamedGroupForIndex(namedGroups, index);
+					const namedGroup = namedGroups.find((group) => group.index === index);
 					if (!namedGroup) {
 						return;
 					}

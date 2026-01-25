@@ -5,7 +5,7 @@ import type {
 
 export function getRegExpLiteralDetails(
 	node: AST.RegularExpressionLiteral,
-	{ sourceFile }: TypeScriptFileServices,
+	{ sourceFile }: Pick<TypeScriptFileServices, "sourceFile">,
 ) {
 	const lastSlash = node.text.lastIndexOf("/");
 	return {

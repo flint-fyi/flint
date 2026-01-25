@@ -10,10 +10,10 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexResultArrayGroups" />
 
-Reports indexed access on regex result arrays when the index corresponds to a named capturing group.
 When a regular expression has named capturing groups, accessing the matched values through `.groups.name` is more readable and maintainable than using numeric indices like `result[1]`.
-
 Numeric indices are fragile because they can break if the regex pattern is modified (e.g., adding a new capturing group before the one you're accessing).
+
+This rule reports indexed access on regex result arrays when the index corresponds to a named capturing group.
 
 ## Examples
 
@@ -164,7 +164,7 @@ This rule is not configurable.
 ## When Not To Use It
 
 If you have a codebase that consistently uses numeric indices for all capturing groups, migrating to named groups may require significant refactoring.
-You may also disable this rule if you prefer the brevity of numeric indices over the clarity of named groups.
+You might also prefer to disable this rule if you prefer the brevity of numeric indices over the clarity of named groups.
 
 ## Further Reading
 
