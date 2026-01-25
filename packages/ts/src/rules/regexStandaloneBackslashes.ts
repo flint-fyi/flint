@@ -1,9 +1,6 @@
 import { visitRegExpAST } from "@eslint-community/regexpp";
 import type { Character } from "@eslint-community/regexpp/ast";
-import {
-	getTSNodeRange,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import type {
 	AST,
 	TypeScriptFileServices,
@@ -11,9 +8,10 @@ import type {
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-const CP_BACK_SLASH = 0x5c;
+const codepointBackslash = 0x5c;
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -25,7 +23,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		standaloneBackslash: {
 			primary:
-				"Standalone backslash (`\\`) looks like an incomplete escape sequence.",
+				"This standalone backslash (`\\`) looks like an incomplete escape sequence.",
 			secondary: [
 				"This backslash is interpreted as a literal `\\` character because the following character doesn't form a valid escape sequence.",
 				"This commonly happens with incomplete control escapes like `\\c` or `\\c1`.",
@@ -46,7 +44,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			visitRegExpAST(regexpAst, {
 				onCharacterEnter(charNode) {
-					if (charNode.value === CP_BACK_SLASH && charNode.raw === "\\") {
+					if (charNode.value === codepointBackslash && charNode.raw === "\\") {
 						results.push(charNode);
 					}
 				},
@@ -75,21 +73,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: TypeScriptFileServices,
+			services: TypeScriptFileServices,
 		) {
-			const text = node.getText(sourceFile);
-			const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(text);
-			if (!match) {
-				return;
-			}
-
-			const [, pattern, flags] = match;
-			if (!pattern) {
-				return;
-			}
-
-			const nodeRange = getTSNodeRange(node, sourceFile);
-			checkPattern(pattern, nodeRange.begin + 1, flags ?? "");
+			const details = getRegExpLiteralDetails(node, services);
+			checkPattern(details.pattern, details.start, details.flags);
 		}
 
 		function checkRegExpConstructor(

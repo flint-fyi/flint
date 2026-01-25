@@ -10,11 +10,12 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexStandaloneBackslashes" />
 
-Reports standalone backslashes (`\`) in regex patterns that don't form a valid escape sequence.
 In non-unicode mode, backslashes followed by certain characters are interpreted as literal backslash characters rather than escape sequences.
 
 For example, `/\c/` (without the unicode flag) is equivalent to `/\\c/` — a literal backslash followed by `c`.
 This behavior is described in [Annex B](https://tc39.es/ecma262/#sec-regular-expressions-patterns) of the ECMAScript specification.
+
+Reports standalone backslashes (`\`) in regex patterns that don't form a valid escape sequence.
 
 ## Examples
 

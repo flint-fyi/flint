@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\c/;
  ~
- Standalone backslash (\`\\\`) looks like an incomplete escape sequence.
+ This standalone backslash (\`\\\`) looks like an incomplete escape sequence.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\c-/;
  ~
- Standalone backslash (\`\\\`) looks like an incomplete escape sequence.
+ This standalone backslash (\`\\\`) looks like an incomplete escape sequence.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\c1/;
  ~
- Standalone backslash (\`\\\`) looks like an incomplete escape sequence.
+ This standalone backslash (\`\\\`) looks like an incomplete escape sequence.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /[\\c]/;
   ~
-  Standalone backslash (\`\\\`) looks like an incomplete escape sequence.
+  This standalone backslash (\`\\\`) looks like an incomplete escape sequence.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a\\c-b/;
   ~
-  Standalone backslash (\`\\\`) looks like an incomplete escape sequence.
+  This standalone backslash (\`\\\`) looks like an incomplete escape sequence.
 `,
 		},
 		{
@@ -60,9 +60,9 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\c\\c/;
  ~
- Standalone backslash (\`\\\`) looks like an incomplete escape sequence.
+ This standalone backslash (\`\\\`) looks like an incomplete escape sequence.
    ~
-   Standalone backslash (\`\\\`) looks like an incomplete escape sequence.
+   This standalone backslash (\`\\\`) looks like an incomplete escape sequence.
 `,
 		},
 		{
@@ -72,7 +72,7 @@ new RegExp("\\\\c");
 			snapshot: `
 new RegExp("\\\\c");
             ~
-            Standalone backslash (\`\\\`) looks like an incomplete escape sequence.
+            This standalone backslash (\`\\\`) looks like an incomplete escape sequence.
 `,
 		},
 		{
@@ -82,7 +82,7 @@ RegExp("\\\\c1");
 			snapshot: `
 RegExp("\\\\c1");
         ~
-        Standalone backslash (\`\\\`) looks like an incomplete escape sequence.
+        This standalone backslash (\`\\\`) looks like an incomplete escape sequence.
 `,
 		},
 	],
