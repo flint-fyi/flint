@@ -12,6 +12,7 @@
 	],
 	"words": [
 		"aeiou",
+		"analyse",
 		"affordances",
 		"Amiel",
 		"Anys",
@@ -56,6 +57,7 @@
 		"joshuakgoldberg",
 		"kirkwaiblinger",
 		"lishaduck",
+		"lookaheads",
 		"lookarounds",
 		"mdast",
 		"menuitemcheckbox",
@@ -63,11 +65,13 @@
 		"Mintlify",
 		"Mutables",
 		"nord",
+		"nrtfvbsd",
 		"oxendict",
 		"Oxlint",
 		"prefault",
 		"roletype",
 		"ronami",
+		"scslre",
 		"Ronen",
 		"sectionhead",
 		"seti",
@@ -83,6 +87,7 @@
 		"typelang",
 		"Waiblinger",
 		"webauthn",
-		"WHATWG"
+		"WHATWG",
+		"xobi"
 	]
 }

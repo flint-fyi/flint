@@ -47,17 +47,13 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<button disabled>Click me</button>` },
-		{ code: `<input type="text" required />` },
-		{ code: `<Component isActive />` },
-		{
-			code: `<button disabled={false}>Click me</button>`,
-		},
-		{ code: `<input type="text" required={false} />` },
-		{
-			code: `<Component isActive={someCondition} />`,
-		},
-		{ code: `<button>Click me</button>` },
-		{ code: `<div className="test" />` },
+		`<button disabled>Click me</button>`,
+		`<input type="text" required />`,
+		`<Component isActive />`,
+		`<button disabled={false}>Click me</button>`,
+		`<input type="text" required={false} />`,
+		`<Component isActive={someCondition} />`,
+		`<button>Click me</button>`,
+		`<div className="test" />`,
 	],
 });

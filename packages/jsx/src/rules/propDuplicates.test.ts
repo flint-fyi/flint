@@ -63,16 +63,10 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<div id="unique">Content</div>` },
-		{
-			code: `<button className="btn" onClick={handleClick}>Click</button>`,
-		},
-		{
-			code: `<input type="text" name="field" value="test" />`,
-		},
-		{ code: `<Component {...props} />` },
-		{
-			code: `<Element prop1="a" prop2="b" prop3="c" />`,
-		},
+		`<div id="unique">Content</div>`,
+		`<button className="btn" onClick={handleClick}>Click</button>`,
+		`<input type="text" name="field" value="test" />`,
+		`<Component {...props} />`,
+		`<Element prop1="a" prop2="b" prop3="c" />`,
 	],
 });
