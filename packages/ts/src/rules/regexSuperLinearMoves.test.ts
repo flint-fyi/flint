@@ -10,17 +10,17 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a*b/;
  ~~
- This quantifier can cause quadratic regex matching time. An input like 'aaaaaaaaaaaaaaaaaaaa' could trigger slow matching.
+ This quantifier can cause quadratic regex matching time. An input like \`aaaaaaaaaaaaaaaaaaaa\` could trigger slow matching.
 `,
 		},
 		{
 			code: String.raw`
 /(?:\s*)foo/;
 `,
-			snapshot: String.raw`
-/(?:\s*)foo/;
+			snapshot: `
+/(?:\\s*)foo/;
     ~~~
-    This quantifier can cause quadratic regex matching time. An input like '                    ' could trigger slow matching.
+    This quantifier can cause quadratic regex matching time. An input like \`                    \` could trigger slow matching.
 `,
 		},
 		{
@@ -30,17 +30,17 @@ new RegExp("a*b");
 			snapshot: `
 new RegExp("a*b");
             ~~
-            This quantifier can cause quadratic regex matching time. An input like 'aaaaaaaaaaaaaaaaaaaa' could trigger slow matching.
+            This quantifier can cause quadratic regex matching time. An input like \`aaaaaaaaaaaaaaaaaaaa\` could trigger slow matching.
 `,
 		},
 		{
 			code: String.raw`
 /\w*\b/;
 `,
-			snapshot: String.raw`
-/\w*\b/;
+			snapshot: `
+/\\w*\\b/;
  ~~~
- This quantifier can cause quadratic regex matching time. An input like 'aaaaaaaaaaaaaaaaaaaa' could trigger slow matching.
+ This quantifier can cause quadratic regex matching time. An input like \`aaaaaaaaaaaaaaaaaaaa\` could trigger slow matching.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ new RegExp("a*b");
 			snapshot: `
 /.*:/;
  ~~
- This quantifier can cause quadratic regex matching time. An input like 'xxxxxxxxxxxxxxxxxxxx' could trigger slow matching.
+ This quantifier can cause quadratic regex matching time. An input like \`xxxxxxxxxxxxxxxxxxxx\` could trigger slow matching.
 `,
 		},
 	],

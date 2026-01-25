@@ -1,26 +1,19 @@
 import type { AST as RegExpAST } from "@eslint-community/regexpp";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
+import type {
+	AST,
+	TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
+import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-type Alternative = RegExpAST.Alternative;
-type Element = RegExpAST.Element;
-type Pattern = RegExpAST.Pattern;
-type Quantifier = RegExpAST.Quantifier;
-
-function canMatchEmpty(element: Element): boolean {
+function canMatchEmpty(element: RegExpAST.Element) {
 	switch (element.type) {
 		case "Assertion":
 			return true;
-		case "Backreference":
-		case "Character":
-		case "CharacterClass":
-		case "CharacterSet":
-		case "ExpressionCharacterClass":
-			return false;
 		case "CapturingGroup":
 		case "Group":
 			return element.alternatives.some((alternative) =>
@@ -33,7 +26,7 @@ function canMatchEmpty(element: Element): boolean {
 	}
 }
 
-function canReject(element: Element): boolean {
+function canReject(element: RegExpAST.Element): boolean {
 	switch (element.type) {
 		case "Assertion":
 			return element.kind === "end" || element.kind === "word";
@@ -51,38 +44,33 @@ function canReject(element: Element): boolean {
 		case "CharacterSet":
 			return element.kind !== "any" || element.raw !== "[\\s\\S]";
 		case "Quantifier":
-			if (element.min === 0) {
-				return false;
-			}
-			return canReject(element.element);
+			return element.min !== 0 && canReject(element.element);
 		default:
 			return false;
 	}
 }
 
-function findReachableQuantifiers(pattern: Pattern): Quantifier[] {
-	const quantifiers: Quantifier[] = [];
+function findReachableQuantifiers(pattern: RegExpAST.Pattern) {
+	const quantifiers: RegExpAST.Quantifier[] = [];
 
-	function walkAlternative(alternative: Alternative) {
+	function walkAlternative(alternative: RegExpAST.Alternative) {
 		for (const element of alternative.elements) {
-			if (element.type === "Quantifier") {
-				if (element.max === Infinity && element.min === 0) {
-					quantifiers.push(element);
-				}
-				if (!canMatchEmpty(element)) {
-					return;
-				}
-			} else if (
-				element.type === "CapturingGroup" ||
-				element.type === "Group"
-			) {
-				for (const innerAlternative of element.alternatives) {
-					walkAlternative(innerAlternative);
-				}
-				if (!canMatchEmpty(element)) {
-					return;
-				}
-			} else if (!canMatchEmpty(element)) {
+			switch (element.type) {
+				case "CapturingGroup":
+				case "Group":
+					for (const innerAlternative of element.alternatives) {
+						walkAlternative(innerAlternative);
+					}
+					break;
+
+				case "Quantifier":
+					if (element.max === Infinity && element.min === 0) {
+						quantifiers.push(element);
+					}
+					break;
+			}
+
+			if (!canMatchEmpty(element)) {
 				return;
 			}
 		}
@@ -95,80 +83,77 @@ function findReachableQuantifiers(pattern: Pattern): Quantifier[] {
 	return quantifiers;
 }
 
-function generateAttackString(quantifier: Quantifier): string {
-	const element = quantifier.element;
-	let char = "a";
+function generateAttackString(quantifier: RegExpAST.Quantifier) {
+	let character: string;
 
-	if (element.type === "Character") {
-		char = String.fromCharCode(element.value);
-	} else if (element.type === "CharacterSet") {
-		if (element.kind === "any") {
-			char = "x";
-		} else if (element.kind === "digit") {
-			char = "0";
-		} else if (element.kind === "space") {
-			char = " ";
-		} else if (element.kind === "word") {
-			char = "a";
-		} else {
-			char = "a";
+	switch (quantifier.element.type) {
+		case "Character": {
+			character = String.fromCharCode(quantifier.element.value);
+			break;
 		}
-	} else if (element.type === "CharacterClass") {
-		const first = element.elements[0];
-		if (first?.type === "Character") {
-			char = String.fromCharCode(first.value);
+		case "CharacterClass": {
+			const first = quantifier.element.elements[0];
+			if (first?.type === "Character") {
+				character = String.fromCharCode(first.value);
+			}
+			break;
 		}
+		case "CharacterSet": {
+			if (quantifier.element.kind === "any") {
+				character = "x";
+			} else if (quantifier.element.kind === "digit") {
+				character = "0";
+			} else if (quantifier.element.kind === "space") {
+				character = " ";
+			} else if (quantifier.element.kind === "word") {
+				character = "a";
+			} else {
+				character = "a";
+			}
+			break;
+		}
+
+		default:
+			character = "a";
 	}
 
-	return char.repeat(20);
+	return character.repeat(20);
 }
 
-function getFollowingElements(quantifier: Quantifier): Element[] {
-	const following: Element[] = [];
-	const parent = quantifier.parent;
-	const index = parent.elements.indexOf(quantifier);
+function getFollowingElements(quantifier: RegExpAST.Quantifier) {
+	const index = quantifier.parent.elements.indexOf(quantifier);
+	const following = quantifier.parent.elements.slice(index + 1);
+	const grandparent = quantifier.parent.parent;
 
-	for (let i = index + 1; i < parent.elements.length; i++) {
-		const element = parent.elements[i];
-		if (element) {
-			following.push(element);
-		}
-	}
-
-	const grandparent = parent.parent;
 	if (grandparent.type === "CapturingGroup" || grandparent.type === "Group") {
 		const groupParent = grandparent.parent;
+
 		if (groupParent.type === "Alternative") {
-			const groupIndex = groupParent.elements.indexOf(grandparent);
-			for (let i = groupIndex + 1; i < groupParent.elements.length; i++) {
-				const element = groupParent.elements[i];
-				if (element) {
-					following.push(element);
-				}
-			}
+			following.push(
+				...groupParent.elements.slice(
+					groupParent.elements.indexOf(grandparent) + 1,
+				),
+			);
 		}
 	}
 
 	return following;
 }
 
-function hasRejectingSuffix(quantifier: Quantifier): boolean {
-	const following = getFollowingElements(quantifier);
-	return following.some(canReject);
+function hasRejectingSuffix(quantifier: RegExpAST.Quantifier) {
+	return getFollowingElements(quantifier).some(canReject);
 }
 
-function isAnchoredAtStart(pattern: Pattern): boolean {
+function isAnchoredAtStart(pattern: RegExpAST.Pattern) {
 	return pattern.alternatives.every((alternative) => {
-		const first = alternative.elements[0];
-		return first?.type === "Assertion" && first.kind === "start";
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const first = alternative.elements[0]!;
+		return first.type === "Assertion" && first.kind === "start";
 	});
 }
 
-function isMatchAll(characterClass: RegExpAST.CharacterClass): boolean {
-	if (characterClass.negate) {
-		return characterClass.elements.length === 0;
-	}
-	return false;
+function isMatchAll(characterClass: RegExpAST.CharacterClass) {
+	return characterClass.negate && characterClass.elements.length === 0;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -181,13 +166,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		superLinear: {
 			primary:
-				"This quantifier can cause quadratic regex matching time. An input like '{{ attack }}' could trigger slow matching.",
+				"This quantifier can cause quadratic regex matching time. An input like `{{ attack }}` could trigger slow matching.",
 			secondary: [
 				"When a quantifier at the start of a pattern is followed by elements that can fail to match, the regex engine may try the pattern from each position in the input string.",
 				"For an input of length n, this can result in O(n²) time complexity.",
 			],
 			suggestions: [
-				"Anchor the pattern with ^ to prevent repeated matching attempts.",
+				"Anchor the pattern with `^` to prevent repeated matching attempts.",
 				"Ensure the quantifier is preceded by a required consuming element.",
 			],
 		},
@@ -199,88 +184,49 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			flags: string,
 		) {
 			const regexpAst = parseRegexpAst(pattern, flags);
-			if (!regexpAst) {
+			if (!regexpAst || isAnchoredAtStart(regexpAst)) {
 				return;
 			}
 
-			if (isAnchoredAtStart(regexpAst)) {
-				return;
-			}
+			const quantifiers =
+				findReachableQuantifiers(regexpAst).filter(hasRejectingSuffix);
 
-			const reachableQuantifiers = findReachableQuantifiers(regexpAst);
-
-			for (const quantifier of reachableQuantifiers) {
-				if (hasRejectingSuffix(quantifier)) {
-					const attack = generateAttackString(quantifier);
-					context.report({
-						data: {
-							attack,
-						},
-						message: "superLinear",
-						range: {
-							begin: patternStart + quantifier.start,
-							end: patternStart + quantifier.end,
-						},
-					});
-				}
+			for (const quantifier of quantifiers) {
+				context.report({
+					data: {
+						attack: generateAttackString(quantifier),
+					},
+					message: "superLinear",
+					range: {
+						begin: patternStart + quantifier.start,
+						end: patternStart + quantifier.end,
+					},
+				});
 			}
 		}
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			const text = node.getText(sourceFile);
-			const match = /^\/(.*)\/([dgimsuyv]*)$/.exec(text);
-
-			if (!match) {
-				return;
-			}
-
-			const [, pattern, flags] = match;
-
-			if (!pattern) {
-				return;
-			}
-
-			const nodeStart = node.getStart(sourceFile);
-			checkPattern(pattern, nodeStart + 1, flags ?? "");
+			const details = getRegExpLiteralDetails(node, services);
+			checkPattern(details.pattern, details.start, details.flags);
 		}
 
 		function checkRegExpConstructor(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			services: TypeScriptFileServices,
 		) {
-			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
-				node.expression.text !== "RegExp"
-			) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args?.length) {
-				return;
-			}
-
-			const firstArgument = args[0];
-
-			if (
-				!firstArgument ||
-				firstArgument.kind !== ts.SyntaxKind.StringLiteral
-			) {
-				return;
-			}
-
-			const patternStart = firstArgument.getStart(sourceFile) + 1;
-
-			let flags = "";
-			const secondArgument = args[1];
-			if (secondArgument?.kind === ts.SyntaxKind.StringLiteral) {
-				flags = secondArgument.text;
-			}
-
-			checkPattern(firstArgument.text, patternStart, flags);
+			checkPattern(
+				construction.pattern,
+				construction.start + 1,
+				construction.flags,
+			);
 		}
 
 		return {
