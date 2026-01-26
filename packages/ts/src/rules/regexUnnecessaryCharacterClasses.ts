@@ -13,6 +13,30 @@ import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
+function canUnwrapSingleElement(characterClass: CharacterClass) {
+	if (characterClass.negate || characterClass.elements.length !== 1) {
+		return false;
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const element = characterClass.elements[0]!;
+
+	switch (element.type) {
+		case "Character":
+			return (
+				element.raw !== "=" &&
+				element.raw !== "\\b" &&
+				!/^\\[1-9]\d*$/.test(element.raw)
+			);
+
+		case "CharacterClassRange":
+			return false;
+
+		default:
+			return true;
+	}
+}
+
 function findUnnecessaryCharacterClasses(pattern: string, flags: string) {
 	const results: CharacterClass[] = [];
 
@@ -34,41 +58,6 @@ function findUnnecessaryCharacterClasses(pattern: string, flags: string) {
 	return results;
 }
 
-function canUnwrapSingleElement(characterClass: CharacterClass) {
-	if (characterClass.negate) {
-		return false;
-	}
-
-	if (characterClass.elements.length !== 1) {
-		return false;
-	}
-
-	const element = characterClass.elements[0];
-	if (!element) {
-		return false;
-	}
-
-	if (element.type === "CharacterClassRange") {
-		return false;
-	}
-
-	if (element.type === "Character") {
-		if (element.raw === "=") {
-			return false;
-		}
-
-		if (element.raw === "\\b") {
-			return false;
-		}
-
-		if (/^\\[1-9]\d*$/.test(element.raw)) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
@@ -81,6 +70,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			primary:
 				"This character class wraps a single element that does not require brackets.",
 			secondary: [
+				"Brackets are used to encapsulate multiple classes of characters.",
 				"Single-element character classes can be simplified by removing the brackets.",
 			],
 			suggestions: [
