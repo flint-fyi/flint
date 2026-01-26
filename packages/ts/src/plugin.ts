@@ -216,6 +216,7 @@ import regexTestMethods from "./rules/regexTestMethods.ts";
 import regexUnicodeCodepointEscapes from "./rules/regexUnicodeCodepointEscapes.ts";
 import regexUnicodeEscapes from "./rules/regexUnicodeEscapes.ts";
 import regexUnicodeFlag from "./rules/regexUnicodeFlag.ts";
+import requireImports from "./rules/requireImports.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import selfComparisons from "./rules/selfComparisons.ts";
@@ -411,6 +412,7 @@ export const ts = createPlugin({
 		recursionOnlyArguments,
 		reduceTypeParameters,
 		redundantTypeConstituents,
+		requireImports,
 		regexAllGlobalFlags,
 		regexAmbiguousInvalidity,
 		regexCharacterClasses,
