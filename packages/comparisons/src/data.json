@@ -15863,7 +15863,8 @@
 		"flint": {
 			"name": "regexUnusedFlags",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
