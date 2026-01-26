@@ -72,7 +72,7 @@ function getBoundaryGroups(
 	const result: BoundaryGroup[] = [];
 
 	const firstElement = elements[0];
-	const lastElement = elements[elements.length - 1];
+	const lastElement = elements.at(-1);
 
 	if (groups.length === 1) {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -87,10 +87,12 @@ function getBoundaryGroups(
 	} else {
 		const [first, second] = groups;
 		if (firstElement === first && lastElement === second) {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			result.push({ group: first!, position: "start" });
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			result.push({ group: second!, position: "end" });
+			result.push(
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				{ group: first!, position: "start" },
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				{ group: second!, position: "end" },
+			);
 		} else {
 			return undefined;
 		}
