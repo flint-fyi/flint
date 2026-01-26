@@ -42,6 +42,15 @@ function findUnnecessaryRanges(pattern: string, flags: string) {
 	return results;
 }
 
+function getRangeReplacement(range: UnnecessaryRange): string {
+	if (range.type === "identity") {
+		// For [a-a], replace with just [a]
+		return range.node.min.raw;
+	}
+	// For [a-b], replace with [ab]
+	return range.node.min.raw + range.node.max.raw;
+}
+
 function getUnnecessaryRangeType(
 	node: CharacterClassRange,
 ): RangeType | undefined {
@@ -54,6 +63,7 @@ function getUnnecessaryRangeType(
 	if (min + 1 === max) {
 		return "adjacent";
 	}
+
 	return undefined;
 }
 
@@ -66,14 +76,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		adjacent: {
-			primary: "This character range spans only two adjacent characters.",
+			primary: "This two-character range can be simplified to omit the hyphen.",
 			secondary: [
 				"A range like `[a-b]` can be written as `[ab]` without the hyphen.",
 			],
 			suggestions: ["Replace the range with the two characters directly."],
 		},
 		identity: {
-			primary: "This character range spans only one character.",
+			primary:
+				"This single-character range can be simplified to just the character.",
 			secondary: ["A range like `[a-a]` can be simplified to just `[a]`."],
 			suggestions: ["Remove the hyphen and duplicate character."],
 		},
@@ -87,11 +98,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const unnecessaryRanges = findUnnecessaryRanges(pattern, flags);
 
 			for (const range of unnecessaryRanges) {
+				const beginPos = start + range.node.start - 1;
+				const endPos = start + range.node.end - 1;
+
 				context.report({
+					fix: {
+						range: {
+							begin: beginPos,
+							end: endPos,
+						},
+						text: getRangeReplacement(range),
+					},
 					message: range.type,
 					range: {
-						begin: start + range.node.start - 1,
-						end: start + range.node.end - 1,
+						begin: beginPos,
+						end: endPos,
 					},
 				});
 			}
@@ -113,11 +134,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			for (const range of unnecessaryRanges) {
+				const beginPos = construction.start + range.node.start;
+				const endPos = construction.start + range.node.end;
+
 				context.report({
+					fix: {
+						range: {
+							begin: beginPos,
+							end: endPos,
+						},
+						text: getRangeReplacement(range),
+					},
 					message: range.type,
 					range: {
-						begin: construction.start + range.node.start,
-						end: construction.start + range.node.end,
+						begin: beginPos,
+						end: endPos,
 					},
 				});
 			}
