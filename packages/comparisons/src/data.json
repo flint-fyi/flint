@@ -15837,7 +15837,8 @@
 		"flint": {
 			"name": "regexUnnecessarySetOperands",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
