@@ -5,18 +5,15 @@ import type { FileCacheStorage } from "../types/cache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
 import type { AnyRule } from "../types/rules.ts";
-import { collectLanguageMetadataByFilePath } from "./collectLanguageMetadataByFilePath.ts";
+import { collectLanguageFilesByFilePath } from "./collectLanguageFilesByFilePath.ts";
 import { collectRulesOptionsByFile } from "./collectRulesOptionsByFile.ts";
 import { computeUseDefinitions } from "./computeUseDefinitions.ts";
-import type {
-	LanguageAndFilesMetadata,
-	LanguageFilesWithOptions,
-} from "./types.ts";
+import type { LanguageAndFile, LanguageFilesWithOptions } from "./types.ts";
 
 /**
- * Collected information describing files to lint, along with metadata and rule options.
+ * Collected information describing files to lint, along with rule options.
  */
-export interface CollectedFilesAndMetadata {
+export interface CollectedFilesAndOptions {
 	/**
 	 * All file paths the user wants linted, including any previously cached ones.
 	 */
@@ -28,27 +25,26 @@ export interface CollectedFilesAndMetadata {
 	cached: Map<string, FileCacheStorage> | undefined;
 
 	/**
-	 * For each file, all prepared language file metadata wrappers around it.
+	 * For each file path, all prepared language files representing it.
 	 */
-	languageFileMetadataByFilePath: Map<string, LanguageAndFilesMetadata[]>;
+	languageFilesByFilePath: Map<string, LanguageAndFile[]>;
 
 	/**
 	 * For each rule, the array of files to lint with which options.
-	 *
+	 * @remarks
 	 * Note that this should not include cached files.
-	 * Those files don't need to have metadata wrappers or options computed.
+	 * Those files don't need to have language files or options computed.
 	 */
 	rulesFilesAndOptionsByRule: Map<AnyRule, LanguageFilesWithOptions[]>;
 }
 
 // TODO: This is very slow and the whole thing should be refactored 🙌.
 // Creating arrays and Maps and Sets per rule x per file is a lot of memory!
-// Also, what if we removed the concept of a virtual file...?
-export async function collectFilesAndMetadata(
+export async function collectFilesAndOptions(
 	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
 	ignoreCache: boolean | undefined,
-): Promise<CollectedFilesAndMetadata> {
+): Promise<CollectedFilesAndOptions> {
 	// 1. Collect all file paths to lint and the 'use' rule configuration groups
 	const { allFilePaths, useDefinitions } =
 		await computeUseDefinitions(configDefinition);
@@ -62,7 +58,7 @@ export async function collectFilesAndMetadata(
 	const rulesOptionsByFile = collectRulesOptionsByFile(useDefinitions);
 
 	// 4. Collect metadata for each linted file on its enabled rules' languages
-	const languageFileMetadataByFilePath = collectLanguageMetadataByFilePath(
+	const languageFilesByFilePath = collectLanguageFilesByFilePath(
 		cached,
 		rulesOptionsByFile,
 		host,
@@ -73,15 +69,13 @@ export async function collectFilesAndMetadata(
 		Array.from(rulesOptionsByFile).map(([rule, optionsByFile]) => [
 			rule,
 			Array.from(optionsByFile)
-				.filter(([filePath]) => languageFileMetadataByFilePath.has(filePath))
+				.filter(([filePath]) => languageFilesByFilePath.has(filePath))
 				.map(([filePath, options]) => ({
 					languageFiles: Array.from(
 						nullThrows(
-							languageFileMetadataByFilePath.get(filePath),
-							"Language file metadata is expected to be present by the map",
-						)
-							.values()
-							.map((value) => value.fileMetadata.file),
+							languageFilesByFilePath.get(filePath),
+							"Language file is expected to be present by the map",
+						).values(),
 					),
 					options,
 				})),
@@ -91,7 +85,7 @@ export async function collectFilesAndMetadata(
 	return {
 		allFilePaths,
 		cached,
-		languageFileMetadataByFilePath,
+		languageFilesByFilePath,
 		rulesFilesAndOptionsByRule,
 	};
 }
