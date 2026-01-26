@@ -5,8 +5,8 @@ import type { ConfigUseDefinitionWithFiles } from "./computeUseDefinitions.ts";
 
 export function collectRulesOptionsByFile(
 	useDefinitions: ConfigUseDefinitionWithFiles[],
-): Map<AnyRule, Map<string, unknown>> {
-	const rulesOptionsByFile = new CachedFactory<AnyRule, Map<string, unknown>>(
+): Map<AnyRule, Map<string, object>> {
+	const rulesOptionsByFile = new CachedFactory<AnyRule, Map<string, object>>(
 		() => new Map(),
 	);
 
@@ -17,7 +17,16 @@ export function collectRulesOptionsByFile(
 					? [ruleDefinition.options, ruleDefinition.rule]
 					: [{}, ruleDefinition];
 
+			if (options == true) {
+				break;
+			}
+
 			for (const filePath of use.found) {
+				if (options == false) {
+					rulesOptionsByFile.get(rule).delete(filePath);
+					break;
+				}
+
 				rulesOptionsByFile.get(rule).set(filePath, options);
 			}
 		}

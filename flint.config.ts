@@ -20,9 +20,13 @@ export default defineConfig({
 			},
 			rules: [
 				flint.presets.logical,
+				node.presets.logical,
 				node.presets.logicalStrict,
+				node.presets.stylistic,
 				node.presets.stylisticStrict,
+				ts.presets.logical,
 				ts.presets.logicalStrict,
+				ts.presets.stylistic,
 				ts.presets.stylisticStrict,
 			],
 		},
@@ -37,5 +41,15 @@ export default defineConfig({
 			files: globs.all,
 			rules: spelling.presets.logical,
 		},
+		{
+			files: globs.all,
+			rules: [
+				ts.rules({
+					functionDeclarationStyles: false,
+				}),
+			],
+		},
 	],
 });
+
+const a = Promise.resolve().catch((any) => any);

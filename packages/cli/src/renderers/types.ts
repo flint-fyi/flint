@@ -13,6 +13,7 @@ export interface RendererAbout {
 	name: string;
 }
 
+// TODO: stream these
 export interface RendererContext {
 	formattingResults: FormattingResults;
 	ignoreCache: boolean;
