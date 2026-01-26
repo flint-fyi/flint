@@ -233,6 +233,7 @@ import unnecessaryConcatenation from "./rules/unnecessaryConcatenation.ts";
 import unsafeNegations from "./rules/unsafeNegations.ts";
 import variableDeletions from "./rules/variableDeletions.ts";
 import voidOperator from "./rules/voidOperator.ts";
+import tripleSlashReferenceValidity from "./rules/tripleSlashReferenceValidity.ts";
 import withStatements from "./rules/withStatements.ts";
 import wrapperObjects from "./rules/wrapperObjects.ts";
 
@@ -466,6 +467,7 @@ export const ts = createPlugin({
 		sparseArrays,
 		symbolDescriptions,
 		typeofComparisons,
+		tripleSlashReferenceValidity,
 		unassignedVariables,
 		undefinedVariables,
 		unicodeBOMs,

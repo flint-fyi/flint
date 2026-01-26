@@ -17190,7 +17190,8 @@
 		"flint": {
 			"name": "tripleSlashReferenceValidity",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
