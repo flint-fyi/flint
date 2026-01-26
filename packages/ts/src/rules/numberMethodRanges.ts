@@ -81,7 +81,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports when number method arguments are outside their valid range.",
 		id: "numberMethodRanges",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		outOfRange: {

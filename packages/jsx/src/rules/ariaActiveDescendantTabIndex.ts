@@ -22,7 +22,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports elements with aria-activedescendant without tabIndex.",
 		id: "ariaActiveDescendantTabIndex",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingTabIndex: {

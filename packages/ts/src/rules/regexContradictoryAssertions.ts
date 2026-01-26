@@ -295,7 +295,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports elements in regular expressions that contradict assertions.",
 		id: "regexContradictoryAssertions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		alwaysEnter: {

@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports elements that require alt text but are missing it.",
 		id: "altTexts",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingAlt: {

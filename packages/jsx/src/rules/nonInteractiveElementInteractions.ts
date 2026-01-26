@@ -62,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports non-interactive elements with interactive event handlers.",
 		id: "nonInteractiveElementInteractions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidHandler: {

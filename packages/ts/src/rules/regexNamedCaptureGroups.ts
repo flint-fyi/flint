@@ -16,7 +16,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports capturing groups in regular expressions that do not have a name.",
 		id: "regexNamedCaptureGroups",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferNamed: {

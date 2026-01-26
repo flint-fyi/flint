@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `instanceof Array` instead of `Array.isArray()`.",
 		id: "instanceOfArrays",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		useArrayIsArray: {

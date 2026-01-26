@@ -131,7 +131,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports set operations in regular expressions that can be simplified.",
 		id: "regexSetOperationOptimizations",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		toIntersection: {

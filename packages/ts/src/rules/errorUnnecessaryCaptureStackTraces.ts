@@ -62,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports unnecessary Error.captureStackTrace() calls in Error subclass constructors.",
 		id: "errorUnnecessaryCaptureStackTraces",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryCaptureStackTrace: {

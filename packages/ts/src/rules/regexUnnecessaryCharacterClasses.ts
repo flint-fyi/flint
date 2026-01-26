@@ -63,7 +63,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports character classes that wrap a single element that does not require brackets.",
 		id: "regexUnnecessaryCharacterClasses",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessary: {

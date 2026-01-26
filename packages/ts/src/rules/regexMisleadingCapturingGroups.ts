@@ -158,7 +158,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports capturing groups that capture less text than their pattern suggests.",
 		id: "regexMisleadingCapturingGroups",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		misleadingEnd: {

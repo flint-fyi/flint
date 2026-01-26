@@ -34,7 +34,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports enums that contain both string and number members.",
 		id: "enumValueConsistency",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		mixedTypes: {

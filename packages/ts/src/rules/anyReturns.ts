@@ -17,7 +17,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports returning a value with type `any` from a function.",
 		id: "anyReturns",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsafeReturn: {

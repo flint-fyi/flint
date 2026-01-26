@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports assigning a value with type `any` to variables and properties.",
 		id: "anyAssignments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsafeArrayDestructure: {

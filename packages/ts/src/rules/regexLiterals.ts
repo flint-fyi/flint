@@ -79,7 +79,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Use a regular expression literal when the pattern is static.",
 		id: "regexLiterals",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferLiteral: {

@@ -260,7 +260,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports ARIA properties with invalid value types.",
 		id: "ariaPropTypes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidPropType: {

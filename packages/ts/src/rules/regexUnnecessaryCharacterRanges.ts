@@ -72,7 +72,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports character class ranges that span only one or two characters.",
 		id: "regexUnnecessaryCharacterRanges",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		adjacent: {

@@ -26,7 +26,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports comparisons with NaN, which should use Number.isNaN() instead.",
 		id: "isNaNComparisons",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		useIsNaN: {

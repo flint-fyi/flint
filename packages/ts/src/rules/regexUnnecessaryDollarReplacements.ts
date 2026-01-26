@@ -120,7 +120,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports replacement string references to capturing groups that do not exist in the pattern.",
 		id: "regexUnnecessaryDollarReplacements",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		namedNotFound: {

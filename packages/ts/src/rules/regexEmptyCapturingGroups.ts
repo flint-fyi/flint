@@ -62,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports capturing groups that only capture empty strings.",
 		id: "regexEmptyCapturingGroups",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyCapture: {

@@ -75,7 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports regex patterns that can be simplified by using the i (ignore case) flag.",
 		id: "regexIgnoreCaseFlags",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		useIgnoreCase: {
