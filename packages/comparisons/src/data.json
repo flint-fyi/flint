@@ -17242,7 +17242,8 @@
 		"flint": {
 			"name": "tslintComments",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
