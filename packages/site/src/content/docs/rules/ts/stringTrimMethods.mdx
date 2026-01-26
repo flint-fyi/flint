@@ -1,0 +1,78 @@
+---
+description: "Reports usage of trimLeft and trimRight instead of trimStart and trimEnd."
+title: "stringTrimMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="stringTrimMethods" />
+
+JavaScript provides `trimStart()` and `trimEnd()` as the standard methods for trimming whitespace from the beginning or end of a string.
+The older `trimLeft()` and `trimRight()` methods are deprecated aliases that use directional terminology.
+
+Using `trimStart()` and `trimEnd()` is preferred because:
+
+- They are the standard method names in the ECMAScript specification
+- They use direction-independent terminology, which is better for internationalization
+- The terms "start" and "end" are more accurate for strings in right-to-left languages
+
+## Examples
+
+### trimLeft to trimStart
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const result = text.trimLeft();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const result = text.trimStart();
+```
+
+</TabItem>
+</Tabs>
+
+### trimRight to trimEnd
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const result = text.trimRight();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const result = text.trimEnd();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support very old JavaScript environments that don't have `trimStart` and `trimEnd`, you may need to disable this rule.
+However, these methods are widely supported in all modern environments.
+
+## Further Reading
+
+- [MDN: String.prototype.trimStart()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimStart)
+- [MDN: String.prototype.trimEnd()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimEnd)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="stringTrimMethods" />
