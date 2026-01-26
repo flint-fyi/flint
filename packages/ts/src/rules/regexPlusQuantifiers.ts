@@ -32,11 +32,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferPlus: {
 			primary:
-				"Prefer the more succinct '+' quantifier instead of '{{ quantifier }}'.",
+				"Prefer the more succinct `+` quantifier instead of `{{ quantifier }}`.",
 			secondary: [
 				"The `+` quantifier is a more concise way to express matching one or more of the preceding element.",
 			],
-			suggestions: ["Replace '{{ quantifier }}' with '+'."],
+			suggestions: ["Replace `{{ quantifier }}` with `+`."],
 		},
 	},
 	setup(context) {

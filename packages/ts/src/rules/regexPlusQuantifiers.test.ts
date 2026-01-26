@@ -13,7 +13,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a{1,}/;
   ~~~~
-  Prefer the more succinct '+' quantifier instead of '{1,}'.
+  Prefer the more succinct \`+\` quantifier instead of \`{1,}\`.
 `,
 		},
 		{
@@ -26,7 +26,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a{1,}?/;
   ~~~~
-  Prefer the more succinct '+' quantifier instead of '{1,}'.
+  Prefer the more succinct \`+\` quantifier instead of \`{1,}\`.
 `,
 		},
 		{
@@ -39,7 +39,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a){1,}/;
     ~~~~
-    Prefer the more succinct '+' quantifier instead of '{1,}'.
+    Prefer the more succinct \`+\` quantifier instead of \`{1,}\`.
 `,
 		},
 		{
@@ -52,7 +52,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a){1,}/v;
     ~~~~
-    Prefer the more succinct '+' quantifier instead of '{1,}'.
+    Prefer the more succinct \`+\` quantifier instead of \`{1,}\`.
 `,
 		},
 		{
@@ -65,7 +65,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a){1,}?/;
     ~~~~
-    Prefer the more succinct '+' quantifier instead of '{1,}'.
+    Prefer the more succinct \`+\` quantifier instead of \`{1,}\`.
 `,
 		},
 		{
@@ -78,7 +78,7 @@ new RegExp("a+");
 			snapshot: `
 new RegExp("a{1,}");
              ~~~~
-             Prefer the more succinct '+' quantifier instead of '{1,}'.
+             Prefer the more succinct \`+\` quantifier instead of \`{1,}\`.
 `,
 		},
 		{
@@ -91,7 +91,7 @@ RegExp("a+");
 			snapshot: `
 RegExp("a{1,}");
          ~~~~
-         Prefer the more succinct '+' quantifier instead of '{1,}'.
+         Prefer the more succinct \`+\` quantifier instead of \`{1,}\`.
 `,
 		},
 		{
@@ -104,7 +104,7 @@ RegExp("a{1,}");
 			snapshot: `
 /[abc]{1,}/;
       ~~~~
-      Prefer the more succinct '+' quantifier instead of '{1,}'.
+      Prefer the more succinct \`+\` quantifier instead of \`{1,}\`.
 `,
 		},
 		{
@@ -117,7 +117,7 @@ RegExp("a{1,}");
 			snapshot: `
 /(?:foo){1,}/;
         ~~~~
-        Prefer the more succinct '+' quantifier instead of '{1,}'.
+        Prefer the more succinct \`+\` quantifier instead of \`{1,}\`.
 `,
 		},
 	],
