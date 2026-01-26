@@ -15996,7 +15996,8 @@
 		"flint": {
 			"name": "responseMethods",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
