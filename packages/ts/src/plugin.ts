@@ -195,6 +195,7 @@ import regexHexadecimalEscapes from "./rules/regexHexadecimalEscapes.ts";
 import regexIgnoreCaseFlags from "./rules/regexIgnoreCaseFlags.ts";
 import regexInvisibleCharacters from "./rules/regexInvisibleCharacters.ts";
 import regexLetterCasing from "./rules/regexLetterCasing.ts";
+import regexLookaroundAssertions from "./rules/regexLookaroundAssertions.ts";
 import regexLookaroundQuantifierOptimizations from "./rules/regexLookaroundQuantifierOptimizations.ts";
 import regexMatchNotation from "./rules/regexMatchNotation.ts";
 import regexMisleadingCapturingGroups from "./rules/regexMisleadingCapturingGroups.ts";
@@ -206,6 +207,8 @@ import regexNamedReplacements from "./rules/regexNamedReplacements.ts";
 import regexNonStandardFlags from "./rules/regexNonStandardFlags.ts";
 import regexObscureRanges from "./rules/regexObscureRanges.ts";
 import regexOctalEscapes from "./rules/regexOctalEscapes.ts";
+import regexPlusQuantifiers from "./rules/regexPlusQuantifiers.ts";
+import regexQuestionQuantifiers from "./rules/regexQuestionQuantifiers.ts";
 import regexResultArrayGroups from "./rules/regexResultArrayGroups.ts";
 import regexSetOperationOptimizations from "./rules/regexSetOperationOptimizations.ts";
 import regexStandaloneBackslashes from "./rules/regexStandaloneBackslashes.ts";
@@ -216,7 +219,10 @@ import regexTestMethods from "./rules/regexTestMethods.ts";
 import regexUnicodeCodepointEscapes from "./rules/regexUnicodeCodepointEscapes.ts";
 import regexUnicodeEscapes from "./rules/regexUnicodeEscapes.ts";
 import regexUnicodeFlag from "./rules/regexUnicodeFlag.ts";
+import regexUnnecessaryCharacterClasses from "./rules/regexUnnecessaryCharacterClasses.ts";
 import regexUnnecessaryCharacterRanges from "./rules/regexUnnecessaryCharacterRanges.ts";
+import regexUnnecessaryDisjunctions from "./rules/regexUnnecessaryDisjunctions.ts";
+import regexUnnecessaryDollarReplacements from "./rules/regexUnnecessaryDollarReplacements.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import selfComparisons from "./rules/selfComparisons.ts";
@@ -438,6 +444,7 @@ export const ts = createPlugin({
 		regexIgnoreCaseFlags,
 		regexInvisibleCharacters,
 		regexLetterCasing,
+		regexLookaroundAssertions,
 		regexLookaroundQuantifierOptimizations,
 		regexMatchNotation,
 		regexMisleadingCapturingGroups,
@@ -449,6 +456,8 @@ export const ts = createPlugin({
 		regexNonStandardFlags,
 		regexObscureRanges,
 		regexOctalEscapes,
+		regexPlusQuantifiers,
+		regexQuestionQuantifiers,
 		regexResultArrayGroups,
 		regexSetOperationOptimizations,
 		regexStandaloneBackslashes,
@@ -459,7 +468,10 @@ export const ts = createPlugin({
 		regexUnicodeCodepointEscapes,
 		regexUnicodeEscapes,
 		regexUnicodeFlag,
+		regexUnnecessaryCharacterClasses,
 		regexUnnecessaryCharacterRanges,
+		regexUnnecessaryDisjunctions,
+		regexUnnecessaryDollarReplacements,
 		returnAssignments,
 		selfAssignments,
 		selfComparisons,
