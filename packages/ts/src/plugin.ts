@@ -220,6 +220,7 @@ import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import selfComparisons from "./rules/selfComparisons.ts";
 import sequences from "./rules/sequences.ts";
+import setSizeLengthChecks from "./rules/setSizeLengthChecks.ts";
 import shadowedRestrictedNames from "./rules/shadowedRestrictedNames.ts";
 import sparseArrays from "./rules/sparseArrays.ts";
 import symbolDescriptions from "./rules/symbolDescriptions.ts";
@@ -462,6 +463,7 @@ export const ts = createPlugin({
 		selfAssignments,
 		selfComparisons,
 		sequences,
+		setSizeLengthChecks,
 		shadowedRestrictedNames,
 		sparseArrays,
 		symbolDescriptions,
