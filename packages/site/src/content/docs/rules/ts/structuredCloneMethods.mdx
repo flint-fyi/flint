@@ -1,0 +1,86 @@
+---
+description: "Reports JSON.parse(JSON.stringify()) patterns that can use structuredClone."
+title: "structuredCloneMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="structuredCloneMethods" />
+
+The `JSON.parse(JSON.stringify())` pattern has long been used for deep cloning objects in JavaScript.
+However, the modern `structuredClone()` API provides a native, more robust alternative.
+
+Benefits of `structuredClone()`:
+
+- Native API with better performance
+- Properly handles circular references
+- Supports more data types (Date, RegExp, Map, Set, ArrayBuffer, etc.)
+- Throws meaningful errors for non-cloneable values
+
+## Examples
+
+### Basic Deep Clone
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const clone = JSON.parse(JSON.stringify(obj));
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const clone = structuredClone(obj);
+```
+
+</TabItem>
+</Tabs>
+
+### In a Function
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function deepCopy<T>(value: T): T {
+	return JSON.parse(JSON.stringify(value));
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function deepCopy<T>(value: T): T {
+	return structuredClone(value);
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support environments without `structuredClone()` (pre-Node.js 17, older browsers), you may need to disable this rule.
+However, `structuredClone()` is widely supported in modern environments.
+
+Note that this rule only flags the simple `JSON.parse(JSON.stringify(x))` pattern.
+It does not flag uses with additional arguments like replacers or revivers, as those provide functionality that `structuredClone()` doesn't replicate.
+
+## Further Reading
+
+- [MDN: structuredClone()](https://developer.mozilla.org/en-US/docs/Web/API/structuredClone)
+- [MDN: The structured clone algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="structuredCloneMethods" />
