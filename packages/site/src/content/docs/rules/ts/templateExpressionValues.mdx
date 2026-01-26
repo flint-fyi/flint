@@ -1,0 +1,103 @@
+---
+description: "Reports template expressions with values that may produce unhelpful string output."
+title: "templateExpressionValues"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="templateExpressionValues" />
+
+Template literals in JavaScript convert embedded expressions to strings.
+Some values produce unhelpful output when stringified:
+
+- Plain objects produce `[object Object]`
+- Arrays are joined with commas, but nested objects still produce `[object Object]`
+- Functions produce their source code
+
+This rule reports when these values are embedded directly in template literals.
+
+## Examples
+
+### Object in Template
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const data = { name: "Alice", age: 30 };
+const msg = `User: ${data}`;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const data = { name: "Alice", age: 30 };
+const msg = `User: ${JSON.stringify(data)}`;
+```
+
+</TabItem>
+</Tabs>
+
+### Array in Template
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const items = [1, 2, 3];
+const msg = `Items: ${items}`;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const items = [1, 2, 3];
+const msg = `Items: ${items.join(", ")}`;
+```
+
+</TabItem>
+</Tabs>
+
+### Function in Template
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const callback = () => console.log("hello");
+const msg = `Callback: ${callback}`;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const callback = () => console.log("hello");
+const msg = `Callback result: ${callback()}`;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you're intentionally using template literals for debugging purposes where seeing `[object Object]` is acceptable, you may disable this rule.
+Tagged template literals are always ignored as they may have custom string conversion logic.
+
+## Further Reading
+
+- [MDN: Template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
+- [MDN: Object.prototype.toString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="templateExpressionValues" />
