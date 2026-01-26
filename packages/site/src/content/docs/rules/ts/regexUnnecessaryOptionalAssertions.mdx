@@ -1,0 +1,110 @@
+---
+description: "Reports assertions inside optional quantifiers that have no effect."
+title: "regexUnnecessaryOptionalAssertions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryOptionalAssertions" />
+
+Reports assertions (like `\b`, `^`, `$`, `(?=...)`, `(?<=...)`) that are inside optional quantifiers (`?`, `*`, `{0,n}`) where all paths to the assertion consume no characters.
+These assertions are useless because the regex engine can skip the entire quantified element without any impact.
+
+## Examples
+
+### Word Boundary in Optional Group
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:\b|a)?/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?:\b-)?/;
+```
+
+</TabItem>
+</Tabs>
+
+### Start/End Anchors in Star Quantifier
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:^|a)*/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?:^a)*/;
+```
+
+</TabItem>
+</Tabs>
+
+### Lookahead in Optional Group
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:(?=foo))?/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?=foo)/;
+```
+
+</TabItem>
+</Tabs>
+
+### Assertion With Consuming Sibling
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:\b|(?=a))?/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /fo(?:o\b)?/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are constructing patterns dynamically or using patterns as partials that will be combined with other patterns, you might need to disable this rule.
+
+## Further Reading
+
+- [MDN: Assertions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Assertions)
+- [MDN: Quantifiers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Quantifiers)
+- [MDN: Regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryOptionalAssertions" />

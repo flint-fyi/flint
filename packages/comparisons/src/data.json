@@ -15811,7 +15811,8 @@
 		"flint": {
 			"name": "regexUnnecessaryOptionalAssertions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
