@@ -15758,7 +15758,8 @@
 		"flint": {
 			"name": "regexUnnecessaryNestedAssertions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
