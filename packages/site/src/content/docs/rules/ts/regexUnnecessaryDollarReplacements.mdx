@@ -12,8 +12,9 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 When using `String.prototype.replace()` or `String.prototype.replaceAll()` with a replacement string, referencing capturing groups that do not exist in the pattern is likely a mistake.
 This includes numeric references like `$3` when only two groups exist, or named references like `$<middle>` when no such named group exists.
-
 These invalid references will be treated as literal text in the output, which is rarely the intended behavior.
+
+This rule reports dollar replacements that are either invalid or unnecessary.
 
 ## Examples
 

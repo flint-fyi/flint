@@ -130,7 +130,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"There is no capturing group named `{{ reference }}` in the pattern.",
 			],
 			suggestions: [
-				"Verify the capturing group name is correct or escape the dollar sign with `$$`.",
+				"Correct the capturing group name.",
+				"Escape the dollar sign with `$$`.",
 			],
 		},
 		numericNotFound: {
@@ -140,7 +141,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"The pattern only has {{ count }} capturing group(s), but `{{ found }}` references group {{ reference }}.",
 			],
 			suggestions: [
-				"Verify the capturing group index is correct or escape the dollar sign with `$$`.",
+				"Correct the capturing group index.",
+				"Escape the dollar sign with `$$`.",
 			],
 		},
 	},
