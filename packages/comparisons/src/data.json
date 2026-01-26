@@ -16058,7 +16058,8 @@
 		],
 		"flint": {
 			"name": "restrictedIdentifiers",
-			"plugin": "ts"
+			"plugin": "ts",
+			"status": "implemented"
 		}
 	},
 	{

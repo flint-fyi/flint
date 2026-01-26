@@ -1,0 +1,70 @@
+---
+description: "Disallows specific identifier names in binding positions."
+title: "restrictedIdentifiers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="restrictedIdentifiers" />
+
+Generic or ambiguous identifier names can make code harder to understand.
+This rule disallows specific identifier names that are too vague or commonly overused.
+Using more descriptive names improves code readability and maintainability.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const data = fetchUsers();
+```
+
+```ts
+function callback() {}
+```
+
+```ts
+function process(data, callback) {}
+```
+
+```ts
+import data from "lib";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const users = fetchUsers();
+```
+
+```ts
+function onComplete() {}
+```
+
+```ts
+function process(users, onComplete) {}
+```
+
+```ts
+import userData from "lib";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has established conventions using names like `data` or `callback`, and changing them would require significant refactoring, you may disable this rule.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="restrictedIdentifiers" />

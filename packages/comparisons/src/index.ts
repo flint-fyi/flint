@@ -1,4 +1,4 @@
-import data from "./data.json" with { type: "json" };
+import comparisonData from "./data.json" with { type: "json" };
 
 export function getComparisonId(pluginId: string, ruleId: string) {
 	return [pluginId, ruleId].join("/");
@@ -12,7 +12,7 @@ export const linterNames = {
 	oxlint: "Oxlint",
 } as const satisfies Record<Linter, string>;
 
-const comparisons = data as Comparison[];
+const comparisons = comparisonData as Comparison[];
 
 export { comparisons };
 
