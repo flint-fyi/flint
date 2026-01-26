@@ -1,0 +1,94 @@
+---
+description: "Reports methods that may lose their 'this' context."
+title: "unboundMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unboundMethods" />
+
+When class methods are referenced without being bound, they lose their `this` context.
+This is a common source of bugs in JavaScript and TypeScript.
+
+## Examples
+
+### Method Reference
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Logger {
+	log(message: string): void {
+		console.log(this.prefix + message);
+	}
+}
+const logger = new Logger();
+const unbound = logger.log;
+unbound("hello"); // 'this' is undefined
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Logger {
+	log(message: string): void {
+		console.log(this.prefix + message);
+	}
+}
+const logger = new Logger();
+const bound = logger.log.bind(logger);
+bound("hello"); // 'this' is correct
+```
+
+</TabItem>
+</Tabs>
+
+### Callback Patterns
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Service {
+	fetch(): Promise<void> {}
+}
+const service = new Service();
+setTimeout(service.fetch, 1000);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Service {
+	fetch(): Promise<void> {}
+}
+const service = new Service();
+setTimeout(() => service.fetch(), 1000);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you're using arrow function methods or class property initializers that auto-bind,
+this rule may produce false positives.
+
+## Further Reading
+
+- [MDN: this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this)
+- [TypeScript: Classes](https://www.typescriptlang.org/docs/handbook/2/classes.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unboundMethods" />
