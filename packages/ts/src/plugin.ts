@@ -223,6 +223,7 @@ import sequences from "./rules/sequences.ts";
 import shadowedRestrictedNames from "./rules/shadowedRestrictedNames.ts";
 import sparseArrays from "./rules/sparseArrays.ts";
 import symbolDescriptions from "./rules/symbolDescriptions.ts";
+import typeConstituentDuplicates from "./rules/typeConstituentDuplicates.ts";
 import typeofComparisons from "./rules/typeofComparisons.ts";
 import unassignedVariables from "./rules/unassignedVariables.ts";
 import undefinedVariables from "./rules/undefinedVariables.ts";
@@ -465,6 +466,7 @@ export const ts = createPlugin({
 		shadowedRestrictedNames,
 		sparseArrays,
 		symbolDescriptions,
+		typeConstituentDuplicates,
 		typeofComparisons,
 		unassignedVariables,
 		undefinedVariables,
