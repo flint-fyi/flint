@@ -36,7 +36,6 @@ const reportMessageDataSchema = z.object({
 
 const baseAboutSchema = z.object({
 	id: z.string(),
-	presets: z.array(z.string()).optional(),
 });
 
 const reportInterpolationDataSchema = z.record(
