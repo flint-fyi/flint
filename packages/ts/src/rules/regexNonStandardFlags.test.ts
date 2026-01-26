@@ -57,6 +57,7 @@ new RegExp("foo", "gxl");
          Non-standard flag 'n' is not part of the ECMAScript standard.
 `,
 		},
+		/* spellchecker:disable */
 		{
 			code: `
 /test/gixl;
@@ -68,6 +69,7 @@ new RegExp("foo", "gxl");
          ~
          Non-standard flag 'l' is not part of the ECMAScript standard.
 `,
+			/* spellchecker:enable */
 		},
 	],
 	valid: [

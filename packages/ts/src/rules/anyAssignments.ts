@@ -292,12 +292,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			reportNode: ts.Node,
 			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
-			program: ts.Program,
 		): boolean {
 			const anyType = discriminateAnyType(
 				initializerType,
 				typeChecker,
-				program,
 				initializer,
 			);
 
@@ -330,7 +328,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const result = isUnsafeAssignment(
 				initializerType,
 				declaredType,
-				typeChecker,
 				initializer,
 			);
 			if (!result) {
@@ -436,7 +433,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node,
 						sourceFile,
 						typeChecker,
-						program,
 					);
 				},
 
@@ -515,7 +511,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node,
 						sourceFile,
 						typeChecker,
-						program,
 					);
 				},
 
@@ -600,7 +595,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node,
 						sourceFile,
 						typeChecker,
-						program,
 					);
 				},
 			},

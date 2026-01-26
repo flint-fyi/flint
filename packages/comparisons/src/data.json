@@ -15301,7 +15301,6 @@
 		"flint": {
 			"name": "regexNamedCaptureGroups",
 			"plugin": "ts",
-			"preset": "logical",
 			"status": "implemented"
 		}
 	},

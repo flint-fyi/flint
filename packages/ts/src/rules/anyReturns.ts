@@ -59,18 +59,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkReturn(
 			returnNode: AST.Expression,
 			reportingNode: ts.Node,
-			fileService: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		): void {
-			const { program, sourceFile, typeChecker } = fileService;
-
 			const type = typeChecker.getTypeAtLocation(returnNode);
 
-			const anyType = discriminateAnyType(
-				type,
-				typeChecker,
-				program,
-				returnNode,
-			);
+			const anyType = discriminateAnyType(type, typeChecker, returnNode);
 			const functionNode = ts.findAncestor(
 				returnNode,
 				// TODO: I believe isFunctionLikeDeclaration was incorrectly marked
@@ -234,7 +227,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const result = isUnsafeAssignment(
 					returnNodeType,
 					functionReturnType,
-					typeChecker,
 					returnNode,
 				);
 				if (!result) {
