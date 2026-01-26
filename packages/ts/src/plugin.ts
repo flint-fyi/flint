@@ -221,6 +221,7 @@ import selfAssignments from "./rules/selfAssignments.ts";
 import selfComparisons from "./rules/selfComparisons.ts";
 import sequences from "./rules/sequences.ts";
 import shadowedRestrictedNames from "./rules/shadowedRestrictedNames.ts";
+import singleVariableDeclarations from "./rules/singleVariableDeclarations.ts";
 import sparseArrays from "./rules/sparseArrays.ts";
 import symbolDescriptions from "./rules/symbolDescriptions.ts";
 import typeofComparisons from "./rules/typeofComparisons.ts";
@@ -463,6 +464,7 @@ export const ts = createPlugin({
 		selfComparisons,
 		sequences,
 		shadowedRestrictedNames,
+		singleVariableDeclarations,
 		sparseArrays,
 		symbolDescriptions,
 		typeofComparisons,
