@@ -15687,7 +15687,8 @@
 		"flint": {
 			"name": "regexUnnecessaryCharacterRanges",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
