@@ -15713,7 +15713,8 @@
 		"flint": {
 			"name": "regexUnnecessaryDollarReplacements",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
