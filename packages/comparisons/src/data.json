@@ -16573,7 +16573,8 @@
 		"flint": {
 			"name": "strictBooleanExpressions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{

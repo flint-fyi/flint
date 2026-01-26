@@ -1,0 +1,86 @@
+---
+description: "Disallow non-boolean types in boolean contexts that may cause unexpected behavior."
+title: "strictBooleanExpressions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="strictBooleanExpressions" />
+
+JavaScript allows any value in boolean contexts like `if` statements, ternary expressions, and logical negation.
+While primitives like strings and numbers have well-understood coercion rules, certain types in boolean contexts can indicate bugs or unclear code.
+
+This rule reports:
+
+- Using `any` in a boolean context, which defeats type safety
+- Nullable booleans (`boolean | null` or `boolean | undefined`), where `null`/`undefined` silently coerce to `false`
+- Non-nullable objects that are always truthy, making the condition redundant
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const value: any;
+if (value) {
+}
+
+declare const flag: boolean | null;
+if (flag) {
+}
+
+const config = { enabled: true };
+if (config) {
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const flag: boolean;
+if (flag) {
+}
+
+declare const text: string;
+if (text) {
+}
+
+declare const count: number;
+if (count) {
+}
+
+declare const item: object | null;
+if (item) {
+}
+
+declare const flag: boolean | null;
+if (flag === true) {
+}
+if (flag ?? false) {
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase intentionally relies on truthy/falsy coercion for nullable booleans or uses `any` types extensively, you may want to disable this rule.
+
+## Further Reading
+
+- [TypeScript Handbook: Narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)
+- [MDN: Falsy values](https://developer.mozilla.org/en-US/docs/Glossary/Falsy)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="strictBooleanExpressions" />
