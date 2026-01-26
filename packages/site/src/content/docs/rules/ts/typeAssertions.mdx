@@ -1,0 +1,79 @@
+---
+description: "Reports angle-bracket type assertions."
+title: "typeAssertions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="typeAssertions" />
+
+TypeScript supports two syntaxes for type assertions: angle-bracket (`<Type>value`) and `as` (`value as Type`).
+The angle-bracket syntax is ambiguous with JSX and should be avoided.
+
+## Examples
+
+### Basic Type Assertion
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = <string>foo;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = foo as string;
+```
+
+</TabItem>
+</Tabs>
+
+### Generic Types
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const items = <Array<string>>getData();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const items = getData() as Array<string>;
+```
+
+</TabItem>
+</Tabs>
+
+### Const Assertions Are Allowed
+
+Both syntaxes are allowed for `const` assertions since they're beneficial for type narrowing:
+
+```ts
+const value = { name: "test" } as const;
+const value = <const>{ name: "test" };
+```
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project doesn't use JSX and you prefer the angle-bracket syntax, you can disable this rule.
+
+## Further Reading
+
+- [TypeScript: Type Assertions](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="typeAssertions" />
