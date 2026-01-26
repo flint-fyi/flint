@@ -1,0 +1,104 @@
+---
+description: "Avoid declaring variables that shadow variables in outer scopes."
+title: "shadows"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="shadows" />
+
+When a variable in an inner scope has the same name as a variable in an outer scope, it "shadows" the outer variable.
+This can lead to confusion about which variable is being referenced and may cause subtle bugs.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = 3;
+function example() {
+	const value = 10; // shadows outer 'value'
+	return value;
+}
+
+let count = 1;
+function increment(count) {
+	// parameter shadows outer 'count'
+	return count + 1;
+}
+
+let name = "outer";
+{
+	let name = "inner"; // shadows outer 'name'
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const outerValue = 3;
+function example() {
+	const innerValue = 10;
+	return innerValue;
+}
+
+let totalCount = 1;
+function increment(amount) {
+	return totalCount + amount;
+}
+
+let outerName = "outer";
+{
+	let innerName = "inner";
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Allowed Patterns
+
+This rule allows some common patterns that would otherwise be flagged:
+
+### Function/Class Expression Names
+
+When a function or class expression has the same name as the variable it's assigned to, this is not reported:
+
+```ts
+const compute = function compute() {}; // allowed
+const Widget = class Widget {}; // allowed
+```
+
+### Type Shadowing Value
+
+TypeScript types and interfaces exist in a separate namespace from values, so a value can have the same name as a type without shadowing:
+
+```ts
+type Value = number;
+function example() {
+	const Value = 1; // allowed - type vs value
+}
+```
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase frequently uses the same variable names in different scopes intentionally (such as callback parameters that match outer variables), you may find this rule too noisy.
+You might consider using [Flint disable comments](/directives) for specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Variable scope](https://developer.mozilla.org/en-US/docs/Glossary/Scope)
+- [ESLint: no-shadow](https://eslint.org/docs/latest/rules/no-shadow)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="shadows" />
