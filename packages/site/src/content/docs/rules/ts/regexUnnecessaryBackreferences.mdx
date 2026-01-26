@@ -1,0 +1,117 @@
+---
+description: "Reports backreferences in regular expressions that are always empty or never match."
+title: "regexUnnecessaryBackreferences"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryBackreferences" />
+
+Reports backreferences in regular expressions that will always match an empty string or will never participate in the match.
+This can indicate a bug in the regex pattern.
+
+## Examples
+
+### Nested Backreference
+
+When a backreference is inside the group it references, it always matches an empty string because the group hasn't completed yet.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(a\1)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)\1/;
+```
+
+</TabItem>
+</Tabs>
+
+### Forward Backreference
+
+When a backreference appears before its capturing group is defined, it always matches an empty string.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\1(a)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)\1/;
+```
+
+</TabItem>
+</Tabs>
+
+### Disjunctive Backreference
+
+When a backreference and its capturing group are in different alternation branches, the backreference never matches because when one branch is taken, the other is not.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(a)|\1b/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)\1|b/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+The rule also checks regex patterns in `RegExp` constructor calls.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("(a\\1)");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("(a)\\1");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use backreferences that match empty strings for specific regex logic, or if you're working with dynamically constructed regex patterns, you may disable this rule.
+
+## Further Reading
+
+- [MDN: Backreferences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Groups_and_backreferences)
+- [MDN: Groups and backreferences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Backreference)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryBackreferences" />
