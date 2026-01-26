@@ -225,6 +225,7 @@ import sparseArrays from "./rules/sparseArrays.ts";
 import symbolDescriptions from "./rules/symbolDescriptions.ts";
 import typeofComparisons from "./rules/typeofComparisons.ts";
 import unassignedVariables from "./rules/unassignedVariables.ts";
+import undefinedTypeofChecks from "./rules/undefinedTypeofChecks.ts";
 import undefinedVariables from "./rules/undefinedVariables.ts";
 import unicodeBOMs from "./rules/unicodeBOMs.ts";
 import unnecessaryBlocks from "./rules/unnecessaryBlocks.ts";
@@ -467,6 +468,7 @@ export const ts = createPlugin({
 		symbolDescriptions,
 		typeofComparisons,
 		unassignedVariables,
+		undefinedTypeofChecks,
 		undefinedVariables,
 		unicodeBOMs,
 		unnecessaryBlocks,
