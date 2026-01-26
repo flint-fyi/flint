@@ -15726,7 +15726,8 @@
 		"flint": {
 			"name": "regexUnnecessaryEscapes",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
