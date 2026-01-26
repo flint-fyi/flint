@@ -15850,7 +15850,8 @@
 		"flint": {
 			"name": "regexUnusedCapturingGroups",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
