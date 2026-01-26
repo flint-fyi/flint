@@ -51,7 +51,7 @@ export default ruleCreator.createRule(textLanguage, {
 				for (const { documentValidatorTask, text } of fileTasks) {
 					const documentValidator = await documentValidatorTask;
 					if (!documentValidator) {
-						return undefined;
+						continue;
 					}
 
 					const issues = documentValidator.checkText(

@@ -28,7 +28,7 @@ export function finalizeFileResults(
 		if (fileMetadata.directives) {
 			log(
 				"Adding %d directives for file %s",
-				fileMetadata.directives,
+				fileMetadata.directives.length,
 				filePath,
 			);
 			directivesFilterer.add(fileMetadata.directives);
