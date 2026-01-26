@@ -1,0 +1,110 @@
+---
+description: "Prefer `this` return type over explicit class name when returning `this`."
+title: "returnThisTypes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="returnThisTypes" />
+
+When a class method returns `this`, using the polymorphic `this` type instead of the explicit class name preserves method chaining behavior in subclasses.
+This ensures that subclass methods return the subclass type, not the parent class type.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Builder {
+	setValue(): Builder {
+		return this;
+	}
+}
+```
+
+```ts
+class Builder {
+	setValue = (): Builder => this;
+}
+```
+
+```ts
+class Builder {
+	get self(): Builder {
+		return this;
+	}
+}
+```
+
+```ts
+class Animal<T> {
+	eat(): Animal<T> {
+		return this;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Builder {
+	setValue(): this {
+		return this;
+	}
+}
+```
+
+```ts
+class Builder {
+	setValue = (): this => this;
+}
+```
+
+```ts
+class Builder {
+	get self(): this {
+		return this;
+	}
+}
+```
+
+```ts
+class Builder {
+	clone(): Builder {
+		return new Builder();
+	}
+}
+```
+
+```ts
+class Builder {
+	setValue() {
+		return this;
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally want to restrict method chaining to the exact class type and prevent subclasses from inheriting the fluent interface, you may want to disable this rule for specific methods.
+
+## Further Reading
+
+- [MDN: Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+- [TypeScript Handbook: this Types](https://www.typescriptlang.org/docs/handbook/2/classes.html#this-types)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="returnThisTypes" />

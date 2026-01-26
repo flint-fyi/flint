@@ -1,7 +1,5 @@
 import { createPlugin } from "@flint.fyi/core";
 
-import accessorPairGroups from "./rules/accessorPairGroups.ts";
-import accessorPairTypes from "./rules/accessorPairTypes.ts";
 import accessorThisRecursion from "./rules/accessorThisRecursion.ts";
 import anyArguments from "./rules/anyArguments.ts";
 import anyAssignments from "./rules/anyAssignments.ts";
@@ -55,7 +53,6 @@ import combinedPushes from "./rules/combinedPushes.ts";
 import consecutiveNonNullAssertions from "./rules/consecutiveNonNullAssertions.ts";
 import consoleCalls from "./rules/consoleCalls.ts";
 import constantAssignments from "./rules/constantAssignments.ts";
-import constructorGenericCalls from "./rules/constructorGenericCalls.ts";
 import constructorReturns from "./rules/constructorReturns.ts";
 import constructorSupers from "./rules/constructorSupers.ts";
 import dateConstructorClones from "./rules/dateConstructorClones.ts";
@@ -87,16 +84,12 @@ import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
 import errorMessages from "./rules/errorMessages.ts";
 import errorSubclassProperties from "./rules/errorSubclassProperties.ts";
 import errorUnnecessaryCaptureStackTraces from "./rules/errorUnnecessaryCaptureStackTraces.ts";
-import escapeSequenceCasing from "./rules/escapeSequenceCasing.ts";
 import evals from "./rules/evals.ts";
 import evolvingVariableTypes from "./rules/evolvingVariableTypes.ts";
 import exceptionAssignments from "./rules/exceptionAssignments.ts";
 import explicitAnys from "./rules/explicitAnys.ts";
-import exponentiationOperators from "./rules/exponentiationOperators.ts";
-import exportFromImports from "./rules/exportFromImports.ts";
 import exportMutables from "./rules/exportMutables.ts";
 import exportUniqueNames from "./rules/exportUniqueNames.ts";
-import extraneousClasses from "./rules/extraneousClasses.ts";
 import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
 import finallyStatementSafety from "./rules/finallyStatementSafety.ts";
 import forDirections from "./rules/forDirections.ts";
@@ -109,18 +102,14 @@ import functionDeclarationStyles from "./rules/functionDeclarationStyles.ts";
 import functionNameMatches from "./rules/functionNameMatches.ts";
 import functionNewCalls from "./rules/functionNewCalls.ts";
 import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
-import getterReturns from "./rules/getterReturns.ts";
 import globalAssignments from "./rules/globalAssignments.ts";
 import globalObjectCalls from "./rules/globalObjectCalls.ts";
-import globalThisAliases from "./rules/globalThisAliases.ts";
 import impliedEvals from "./rules/impliedEvals.ts";
 import importEmptyBlocks from "./rules/importEmptyBlocks.ts";
 import importTypeSideEffects from "./rules/importTypeSideEffects.ts";
-import indexedObjectTypes from "./rules/indexedObjectTypes.ts";
 import instanceOfArrays from "./rules/instanceOfArrays.ts";
-import irregularWhitespaces from "./rules/irregularWhitespaces.ts";
+import invalidThis from "./rules/invalidThis.ts";
 import isNaNComparisons from "./rules/isNaNComparisons.ts";
-import literalConstructorWrappers from "./rules/literalConstructorWrappers.ts";
 import mathMethods from "./rules/mathMethods.ts";
 import meaninglessVoidOperators from "./rules/meaninglessVoidOperators.ts";
 import misleadingVoidExpressions from "./rules/misleadingVoidExpressions.ts";
@@ -128,95 +117,20 @@ import moduleSpecifierLists from "./rules/moduleSpecifierLists.ts";
 import multilineAmbiguities from "./rules/multilineAmbiguities.ts";
 import namedDefaultExports from "./rules/namedDefaultExports.ts";
 import namespaceDeclarations from "./rules/namespaceDeclarations.ts";
-import namespaceImplicitAmbientImports from "./rules/namespaceImplicitAmbientImports.ts";
-import namespaceKeywords from "./rules/namespaceKeywords.ts";
-import nativeObjectExtensions from "./rules/nativeObjectExtensions.ts";
-import negativeIndexLengthMethods from "./rules/negativeIndexLengthMethods.ts";
 import negativeZeroComparisons from "./rules/negativeZeroComparisons.ts";
-import nestedStandaloneIfs from "./rules/nestedStandaloneIfs.ts";
-import newDefinitions from "./rules/newDefinitions.ts";
 import newExpressions from "./rules/newExpressions.ts";
 import newNativeNonConstructors from "./rules/newNativeNonConstructors.ts";
-import nonNullableTypeAssertions from "./rules/nonNullableTypeAssertions.ts";
-import nonNullAssertedNullishCoalesces from "./rules/nonNullAssertedNullishCoalesces.ts";
-import nonNullAssertedOptionalChains from "./rules/nonNullAssertedOptionalChains.ts";
-import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
-import nullishCoalescingOperators from "./rules/nullishCoalescingOperators.ts";
-import numberMethodRanges from "./rules/numberMethodRanges.ts";
-import numberStaticMethods from "./rules/numberStaticMethods.ts";
-import numericErasingOperations from "./rules/numericErasingOperations.ts";
 import numericLiteralParsing from "./rules/numericLiteralParsing.ts";
-import numericPrecision from "./rules/numericPrecision.ts";
-import numericSeparatorGroups from "./rules/numericSeparatorGroups.ts";
-import objectAssignSpreads from "./rules/objectAssignSpreads.ts";
 import objectCalls from "./rules/objectCalls.ts";
-import objectEntriesMethods from "./rules/objectEntriesMethods.ts";
 import objectHasOwns from "./rules/objectHasOwns.ts";
 import objectKeyDuplicates from "./rules/objectKeyDuplicates.ts";
 import objectProto from "./rules/objectProto.ts";
 import objectPrototypeBuiltIns from "./rules/objectPrototypeBuiltIns.ts";
-import objectShorthand from "./rules/objectShorthand.ts";
-import objectSpreadUnnecessaryFallbacks from "./rules/objectSpreadUnnecessaryFallbacks.ts";
-import objectTypeDefinitions from "./rules/objectTypeDefinitions.ts";
 import octalEscapes from "./rules/octalEscapes.ts";
 import octalNumbers from "./rules/octalNumbers.ts";
-import operatorAssignmentShorthand from "./rules/operatorAssignmentShorthand.ts";
-import overloadSignaturesAdjacent from "./rules/overloadSignaturesAdjacent.ts";
-import parameterReassignments from "./rules/parameterReassignments.ts";
-import parseIntRadixes from "./rules/parseIntRadixes.ts";
-import propertyAccessNotation from "./rules/propertyAccessNotation.ts";
-import recursionOnlyArguments from "./rules/recursionOnlyArguments.ts";
-import reduceTypeParameters from "./rules/reduceTypeParameters.ts";
-import redundantTypeConstituents from "./rules/redundantTypeConstituents.ts";
-import regexAllGlobalFlags from "./rules/regexAllGlobalFlags.ts";
-import regexAmbiguousInvalidity from "./rules/regexAmbiguousInvalidity.ts";
-import regexCharacterClasses from "./rules/regexCharacterClasses.ts";
-import regexCharacterClassRanges from "./rules/regexCharacterClassRanges.ts";
-import regexCharacterClassSetOperations from "./rules/regexCharacterClassSetOperations.ts";
-import regexConciseCharacterClassNegations from "./rules/regexConciseCharacterClassNegations.ts";
-import regexContradictoryAssertions from "./rules/regexContradictoryAssertions.ts";
-import regexControlCharacterEscapes from "./rules/regexControlCharacterEscapes.ts";
-import regexControlCharacters from "./rules/regexControlCharacters.ts";
-import regexDigitMatchers from "./rules/regexDigitMatchers.ts";
-import regexDollarEscapes from "./rules/regexDollarEscapes.ts";
-import regexDuplicateCharacterClassCharacters from "./rules/regexDuplicateCharacterClassCharacters.ts";
-import regexEmptyAlternatives from "./rules/regexEmptyAlternatives.ts";
-import regexEmptyCapturingGroups from "./rules/regexEmptyCapturingGroups.ts";
-import regexEmptyCharacterClasses from "./rules/regexEmptyCharacterClasses.ts";
-import regexEmptyGroups from "./rules/regexEmptyGroups.ts";
-import regexEmptyLazyQuantifiers from "./rules/regexEmptyLazyQuantifiers.ts";
-import regexEmptyLookaroundsAssertions from "./rules/regexEmptyLookaroundsAssertions.ts";
-import regexEmptyStringLiterals from "./rules/regexEmptyStringLiterals.ts";
-import regexEscapeBackspaces from "./rules/regexEscapeBackspaces.ts";
-import regexExecutors from "./rules/regexExecutors.ts";
-import regexGraphemeStringLiterals from "./rules/regexGraphemeStringLiterals.ts";
-import regexHexadecimalEscapes from "./rules/regexHexadecimalEscapes.ts";
-import regexIgnoreCaseFlags from "./rules/regexIgnoreCaseFlags.ts";
-import regexInvisibleCharacters from "./rules/regexInvisibleCharacters.ts";
-import regexLetterCasing from "./rules/regexLetterCasing.ts";
-import regexLookaroundQuantifierOptimizations from "./rules/regexLookaroundQuantifierOptimizations.ts";
-import regexMatchNotation from "./rules/regexMatchNotation.ts";
-import regexMisleadingCapturingGroups from "./rules/regexMisleadingCapturingGroups.ts";
-import regexMisleadingQuantifiers from "./rules/regexMisleadingQuantifiers.ts";
-import regexMisleadingUnicodeCharacters from "./rules/regexMisleadingUnicodeCharacters.ts";
-import regexNamedBackreferences from "./rules/regexNamedBackreferences.ts";
-import regexNamedCaptureGroups from "./rules/regexNamedCaptureGroups.ts";
-import regexNamedReplacements from "./rules/regexNamedReplacements.ts";
-import regexNonStandardFlags from "./rules/regexNonStandardFlags.ts";
-import regexObscureRanges from "./rules/regexObscureRanges.ts";
-import regexOctalEscapes from "./rules/regexOctalEscapes.ts";
-import regexResultArrayGroups from "./rules/regexResultArrayGroups.ts";
-import regexSetOperationOptimizations from "./rules/regexSetOperationOptimizations.ts";
-import regexStandaloneBackslashes from "./rules/regexStandaloneBackslashes.ts";
-import regexStarQuantifiers from "./rules/regexStarQuantifiers.ts";
-import regexSuperLinearBacktracking from "./rules/regexSuperLinearBacktracking.ts";
-import regexSuperLinearMoves from "./rules/regexSuperLinearMoves.ts";
-import regexTestMethods from "./rules/regexTestMethods.ts";
-import regexUnicodeCodepointEscapes from "./rules/regexUnicodeCodepointEscapes.ts";
-import regexUnicodeEscapes from "./rules/regexUnicodeEscapes.ts";
-import regexUnicodeFlag from "./rules/regexUnicodeFlag.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
+import returnThisTypes from "./rules/returnThisTypes.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import selfComparisons from "./rules/selfComparisons.ts";
 import sequences from "./rules/sequences.ts";
@@ -234,7 +148,6 @@ import unsafeNegations from "./rules/unsafeNegations.ts";
 import variableDeletions from "./rules/variableDeletions.ts";
 import voidOperator from "./rules/voidOperator.ts";
 import withStatements from "./rules/withStatements.ts";
-import wrapperObjects from "./rules/wrapperObjects.ts";
 
 export const ts = createPlugin({
 	files: {
@@ -242,8 +155,6 @@ export const ts = createPlugin({
 	},
 	name: "TypeScript",
 	rules: [
-		accessorPairGroups,
-		accessorPairTypes,
 		accessorThisRecursion,
 		anyArguments,
 		anyAssignments,
@@ -297,7 +208,6 @@ export const ts = createPlugin({
 		consecutiveNonNullAssertions,
 		consoleCalls,
 		constantAssignments,
-		constructorGenericCalls,
 		constructorReturns,
 		constructorSupers,
 		dateConstructorClones,
@@ -329,16 +239,12 @@ export const ts = createPlugin({
 		errorMessages,
 		errorSubclassProperties,
 		errorUnnecessaryCaptureStackTraces,
-		escapeSequenceCasing,
 		evals,
 		evolvingVariableTypes,
 		exceptionAssignments,
 		explicitAnys,
-		exponentiationOperators,
-		exportFromImports,
 		exportMutables,
 		exportUniqueNames,
-		extraneousClasses,
 		fetchMethodBodies,
 		finallyStatementSafety,
 		forDirections,
@@ -351,18 +257,14 @@ export const ts = createPlugin({
 		functionNameMatches,
 		functionNewCalls,
 		generatorFunctionYields,
-		getterReturns,
 		globalAssignments,
 		globalObjectCalls,
-		globalThisAliases,
 		impliedEvals,
 		importEmptyBlocks,
 		importTypeSideEffects,
-		indexedObjectTypes,
 		instanceOfArrays,
-		irregularWhitespaces,
+		invalidThis,
 		isNaNComparisons,
-		literalConstructorWrappers,
 		mathMethods,
 		meaninglessVoidOperators,
 		misleadingVoidExpressions,
@@ -370,95 +272,20 @@ export const ts = createPlugin({
 		multilineAmbiguities,
 		namedDefaultExports,
 		namespaceDeclarations,
-		namespaceImplicitAmbientImports,
-		namespaceKeywords,
-		nativeObjectExtensions,
-		negativeIndexLengthMethods,
 		negativeZeroComparisons,
-		nestedStandaloneIfs,
-		newDefinitions,
 		newExpressions,
 		newNativeNonConstructors,
-		nonNullableTypeAssertions,
-		nonNullAssertedNullishCoalesces,
-		nonNullAssertedOptionalChains,
-		nonNullAssertionPlacement,
 		nonOctalDecimalEscapes,
-		nullishCoalescingOperators,
-		numberMethodRanges,
-		numberStaticMethods,
-		numericErasingOperations,
 		numericLiteralParsing,
-		numericPrecision,
-		numericSeparatorGroups,
-		objectAssignSpreads,
 		objectCalls,
-		objectEntriesMethods,
 		objectHasOwns,
 		objectKeyDuplicates,
 		objectProto,
 		objectPrototypeBuiltIns,
-		objectShorthand,
-		objectSpreadUnnecessaryFallbacks,
-		objectTypeDefinitions,
 		octalEscapes,
 		octalNumbers,
-		operatorAssignmentShorthand,
-		overloadSignaturesAdjacent,
-		parameterReassignments,
-		parseIntRadixes,
-		propertyAccessNotation,
-		recursionOnlyArguments,
-		reduceTypeParameters,
-		redundantTypeConstituents,
-		regexAllGlobalFlags,
-		regexAmbiguousInvalidity,
-		regexCharacterClasses,
-		regexCharacterClassRanges,
-		regexCharacterClassSetOperations,
-		regexConciseCharacterClassNegations,
-		regexContradictoryAssertions,
-		regexControlCharacterEscapes,
-		regexControlCharacters,
-		regexDigitMatchers,
-		regexDollarEscapes,
-		regexDuplicateCharacterClassCharacters,
-		regexEmptyAlternatives,
-		regexEmptyCapturingGroups,
-		regexEmptyCharacterClasses,
-		regexEmptyGroups,
-		regexEmptyLazyQuantifiers,
-		regexEmptyLookaroundsAssertions,
-		regexEmptyStringLiterals,
-		regexEscapeBackspaces,
-		regexExecutors,
-		regexGraphemeStringLiterals,
-		regexHexadecimalEscapes,
-		regexIgnoreCaseFlags,
-		regexInvisibleCharacters,
-		regexLetterCasing,
-		regexLookaroundQuantifierOptimizations,
-		regexMatchNotation,
-		regexMisleadingCapturingGroups,
-		regexMisleadingQuantifiers,
-		regexMisleadingUnicodeCharacters,
-		regexNamedBackreferences,
-		regexNamedCaptureGroups,
-		regexNamedReplacements,
-		regexNonStandardFlags,
-		regexObscureRanges,
-		regexOctalEscapes,
-		regexResultArrayGroups,
-		regexSetOperationOptimizations,
-		regexStandaloneBackslashes,
-		regexStarQuantifiers,
-		regexSuperLinearBacktracking,
-		regexSuperLinearMoves,
-		regexTestMethods,
-		regexUnicodeCodepointEscapes,
-		regexUnicodeEscapes,
-		regexUnicodeFlag,
 		returnAssignments,
+		returnThisTypes,
 		selfAssignments,
 		selfComparisons,
 		sequences,
@@ -476,6 +303,5 @@ export const ts = createPlugin({
 		variableDeletions,
 		voidOperator,
 		withStatements,
-		wrapperObjects,
 	],
 });

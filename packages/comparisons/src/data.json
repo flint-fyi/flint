@@ -11398,7 +11398,8 @@
 		"flint": {
 			"name": "invalidThis",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "untyped",
+			"status": "implemented"
 		}
 	},
 	{
@@ -16207,6 +16208,7 @@
 			"name": "returnThisTypes",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
