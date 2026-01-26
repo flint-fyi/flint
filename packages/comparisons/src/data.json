@@ -15745,7 +15745,8 @@
 		"flint": {
 			"name": "regexUnnecessaryLookaroundAssertions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
