@@ -4,53 +4,68 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
-/[\\q{a}]/v;
+			code: String.raw`
+/[\q{a}]/v;
 `,
-			snapshot: `
-/[\\q{a}]/v;
+			output: String.raw`
+/[a]/v;
+`,
+			snapshot: String.raw`
+/[\q{a}]/v;
      ~
-     This string disjunction alternative contains only a single character.
+     This single-character disjunction alternative can be inlined into the surrounding character class.
 `,
 		},
 		{
-			code: `
-/[\\q{a|bc}]/v;
+			code: String.raw`
+/[\q{a|bc}]/v;
 `,
-			snapshot: `
-/[\\q{a|bc}]/v;
+			output: String.raw`
+/[a\q{bc}]/v;
+`,
+			snapshot: String.raw`
+/[\q{a|bc}]/v;
      ~
-     This string disjunction alternative contains only a single character.
+     This single-character disjunction alternative can be inlined into the surrounding character class.
 `,
 		},
 		{
-			code: `
-/[\\q{ab|c|de}]/v;
+			code: String.raw`
+/[\q{ab|c|de}]/v;
 `,
-			snapshot: `
-/[\\q{ab|c|de}]/v;
+			output: String.raw`
+/[c\q{ab|de}]/v;
+`,
+			snapshot: String.raw`
+/[\q{ab|c|de}]/v;
         ~
-        This string disjunction alternative contains only a single character.
+        This single-character disjunction alternative can be inlined into the surrounding character class.
 `,
 		},
 		{
 			code: `
 new RegExp("[\\\\q{a|bc}]", "v");
+`,
+			output: `
+new RegExp("[a\\\\q{bc}]", "v");
 `,
 			snapshot: `
 new RegExp("[\\\\q{a|bc}]", "v");
                 ~
-                This string disjunction alternative contains only a single character.
+                This single-character disjunction alternative can be inlined into the surrounding character class.
 `,
 		},
 		{
 			code: `
 RegExp("[\\\\q{a}]", "v");
 `,
+			output: `
+RegExp("[a]", "v");
+`,
 			snapshot: `
 RegExp("[\\\\q{a}]", "v");
             ~
-            This string disjunction alternative contains only a single character.
+            This single-character disjunction alternative can be inlined into the surrounding character class.
 `,
 		},
 	],

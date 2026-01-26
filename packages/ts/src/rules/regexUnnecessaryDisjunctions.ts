@@ -1,5 +1,6 @@
 import { parseRegExpLiteral, visitRegExpAST } from "@eslint-community/regexpp";
 import type {
+	ClassStringDisjunction,
 	RegExpLiteral,
 	StringAlternative,
 } from "@eslint-community/regexpp/ast";
@@ -13,8 +14,63 @@ import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
+interface UnnecessaryAlternativeInfo {
+	alternative: StringAlternative;
+	disjunction: ClassStringDisjunction;
+}
+
+function computeFixedPattern(
+	pattern: string,
+	infos: UnnecessaryAlternativeInfo[],
+): string {
+	const disjunctionMap = new Map<ClassStringDisjunction, StringAlternative[]>();
+
+	for (const info of infos) {
+		const existing = disjunctionMap.get(info.disjunction);
+		if (existing) {
+			existing.push(info.alternative);
+		} else {
+			disjunctionMap.set(info.disjunction, [info.alternative]);
+		}
+	}
+
+	const replacements: { end: number; start: number; text: string }[] = [];
+
+	for (const [disjunction, singleCharAlts] of disjunctionMap) {
+		const singleCharSet = new Set(singleCharAlts);
+		const remainingAlts = disjunction.alternatives.filter(
+			(alt) => !singleCharSet.has(alt),
+		);
+
+		const extractedChars = singleCharAlts.map((alt) => alt.raw);
+
+		let replacement: string;
+		if (remainingAlts.length === 0) {
+			replacement = extractedChars.join("");
+		} else {
+			const remainingDisjunction = `\\q{${remainingAlts.map((alt) => alt.raw).join("|")}}`;
+			replacement = extractedChars.join("") + remainingDisjunction;
+		}
+
+		replacements.push({
+			end: disjunction.end - 1,
+			start: disjunction.start - 1,
+			text: replacement,
+		});
+	}
+
+	replacements.sort((a, b) => b.start - a.start);
+
+	let result = pattern;
+	for (const rep of replacements) {
+		result = result.slice(0, rep.start) + rep.text + result.slice(rep.end);
+	}
+
+	return result;
+}
+
 function findUnnecessaryStringAlternatives(pattern: string, flags: string) {
-	const results: StringAlternative[] = [];
+	const results: UnnecessaryAlternativeInfo[] = [];
 
 	if (!flags.includes("v")) {
 		return results;
@@ -30,7 +86,10 @@ function findUnnecessaryStringAlternatives(pattern: string, flags: string) {
 	visitRegExpAST(ast, {
 		onStringAlternativeEnter(node: StringAlternative) {
 			if (node.elements.length === 1) {
-				results.push(node);
+				results.push({
+					alternative: node,
+					disjunction: node.parent,
+				});
 			}
 		},
 	});
@@ -48,9 +107,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		unnecessary: {
 			primary:
-				"This string disjunction alternative contains only a single character.",
+				"This single-character disjunction alternative can be inlined into the surrounding character class.",
 			secondary: [
-				"Single-character alternatives in `\\q{...}` can be placed directly in the character class.",
+				"Single-character alternatives in `\\q{...}` are equivalent to using the character directly.",
+				"Their parent character class can be simplified by replacing the alternative with the character.",
 			],
 			suggestions: [
 				"Extract the character from the `\\q{...}` into the surrounding character class.",
@@ -68,12 +128,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				flags,
 			);
 
-			for (const alternative of unnecessaryAlternatives) {
+			if (unnecessaryAlternatives.length === 0) {
+				return;
+			}
+
+			const fixedPattern = computeFixedPattern(
+				pattern,
+				unnecessaryAlternatives,
+			);
+			const nodeRange = {
+				begin: start - 1,
+				end: start + pattern.length + flags.length + 1,
+			};
+
+			for (const info of unnecessaryAlternatives) {
 				context.report({
+					fix: {
+						range: nodeRange,
+						text: `/${fixedPattern}/${flags}`,
+					},
 					message: "unnecessary",
 					range: {
-						begin: start + alternative.start - 1,
-						end: start + alternative.end - 1,
+						begin: start + info.alternative.start - 1,
+						end: start + info.alternative.end - 1,
 					},
 				});
 			}
@@ -94,12 +171,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				construction.flags,
 			);
 
-			for (const alternative of unnecessaryAlternatives) {
+			if (unnecessaryAlternatives.length === 0) {
+				return;
+			}
+
+			const fixedPattern = computeFixedPattern(
+				patternEscaped,
+				unnecessaryAlternatives,
+			);
+			const fixedPatternEscaped = fixedPattern.replace(/\\/g, "\\\\");
+
+			for (const info of unnecessaryAlternatives) {
 				context.report({
+					fix: {
+						range: {
+							begin: construction.start + 1,
+							end: construction.start + 1 + construction.pattern.length,
+						},
+						text: fixedPatternEscaped,
+					},
 					message: "unnecessary",
 					range: {
-						begin: construction.start + alternative.start,
-						end: construction.start + alternative.end,
+						begin: construction.start + info.alternative.start,
+						end: construction.start + info.alternative.end,
 					},
 				});
 			}
