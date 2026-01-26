@@ -1,0 +1,116 @@
+---
+description: "Prefer explicit comparison operators for `.length` and `.size` checks."
+title: "sizeComparisonOperators"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="sizeComparisonOperators" />
+
+Using `.length` or `.size` in a boolean context relies on implicit type coercion: non-zero values are truthy, and zero is falsy.
+While this works, explicit comparisons like `.length > 0` or `.length === 0` make the intent clearer.
+
+This rule reports implicit boolean coercion of `.length` and `.size` properties and suggests explicit comparisons instead.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const items: string[];
+if (items.length) {
+}
+```
+
+```ts
+declare const items: string[];
+if (!items.length) {
+}
+```
+
+```ts
+declare const items: string[];
+items.length && doSomething();
+```
+
+```ts
+declare const items: string[];
+const hasItems = items.length ? "yes" : "no";
+```
+
+```ts
+declare const items: string[];
+Boolean(items.length);
+```
+
+```ts
+declare const mySet: Set<string>;
+if (mySet.size) {
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const items: string[];
+if (items.length > 0) {
+}
+```
+
+```ts
+declare const items: string[];
+if (items.length === 0) {
+}
+```
+
+```ts
+declare const items: string[];
+if (items.length !== 0) {
+}
+```
+
+```ts
+declare const items: string[];
+const count = items.length;
+```
+
+```ts
+declare const items: string[];
+const count = items.length ?? 0;
+```
+
+```ts
+declare const items: string[];
+const value = items.length || 1;
+```
+
+```ts
+declare const mySet: Set<string>;
+if (mySet.size > 0) {
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your team prefers the concise implicit boolean coercion style, or if you find the explicit comparisons too verbose, you may disable this rule.
+
+## Further Reading
+
+- [MDN: Truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy)
+- [MDN: Falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="sizeComparisonOperators" />
