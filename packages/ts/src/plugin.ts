@@ -228,6 +228,7 @@ import unassignedVariables from "./rules/unassignedVariables.ts";
 import undefinedVariables from "./rules/undefinedVariables.ts";
 import unicodeBOMs from "./rules/unicodeBOMs.ts";
 import unnecessaryBlocks from "./rules/unnecessaryBlocks.ts";
+import unnecessaryBooleanCasts from "./rules/unnecessaryBooleanCasts.ts";
 import unnecessaryCatches from "./rules/unnecessaryCatches.ts";
 import unnecessaryConcatenation from "./rules/unnecessaryConcatenation.ts";
 import unsafeNegations from "./rules/unsafeNegations.ts";
@@ -470,6 +471,7 @@ export const ts = createPlugin({
 		undefinedVariables,
 		unicodeBOMs,
 		unnecessaryBlocks,
+		unnecessaryBooleanCasts,
 		unnecessaryCatches,
 		unnecessaryConcatenation,
 		unsafeNegations,

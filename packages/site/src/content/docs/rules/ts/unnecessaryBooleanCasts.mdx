@@ -1,0 +1,90 @@
+---
+description: "Reports unnecessary boolean casts."
+title: "unnecessaryBooleanCasts"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryBooleanCasts" />
+
+Using `!!value` or `Boolean(value)` in boolean contexts is redundant because the value is already coerced to boolean.
+
+## Examples
+
+### Double Negation
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (!!value) {
+	// ...
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (value) {
+	// ...
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Boolean Constructor
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+while (Boolean(condition)) {
+	// ...
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+while (condition) {
+	// ...
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Valid Uses
+
+Converting a value to a boolean for storage or return is valid:
+
+```ts
+const bool = !!value;
+const enabled = Boolean(flag);
+return { active: !!isActive };
+```
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+This rule is generally safe to enable.
+However, if you prefer explicit boolean casts for clarity,
+you may want to disable it.
+
+## Further Reading
+
+- [MDN: Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+- [MDN: Logical NOT](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryBooleanCasts" />
