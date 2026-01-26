@@ -1,0 +1,75 @@
+---
+description: "Reports imports that should use 'import type' syntax."
+title: "typeImports"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="typeImports" />
+
+Using `import type` for type-only imports improves tree-shaking and makes the intent explicit.
+When an import is only used in type positions (type annotations, interfaces, type aliases),
+it should use `import type` syntax.
+
+## Examples
+
+### Type-Only Named Import
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { User } from "./types";
+type Admin = User & { isAdmin: boolean };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import type { User } from "./types";
+type Admin = User & { isAdmin: boolean };
+```
+
+</TabItem>
+</Tabs>
+
+### Type Annotations
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { Config } from "./config";
+function setup(config: Config): void {}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import type { Config } from "./config";
+function setup(config: Config): void {}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer not to distinguish between type and value imports, you can disable this rule.
+
+## Further Reading
+
+- [TypeScript: Type-Only Imports and Exports](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="typeImports" />

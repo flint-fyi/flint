@@ -224,6 +224,7 @@ import shadowedRestrictedNames from "./rules/shadowedRestrictedNames.ts";
 import sparseArrays from "./rules/sparseArrays.ts";
 import symbolDescriptions from "./rules/symbolDescriptions.ts";
 import typeofComparisons from "./rules/typeofComparisons.ts";
+import typeImports from "./rules/typeImports.ts";
 import unassignedVariables from "./rules/unassignedVariables.ts";
 import undefinedVariables from "./rules/undefinedVariables.ts";
 import unicodeBOMs from "./rules/unicodeBOMs.ts";
@@ -466,6 +467,7 @@ export const ts = createPlugin({
 		sparseArrays,
 		symbolDescriptions,
 		typeofComparisons,
+		typeImports,
 		unassignedVariables,
 		undefinedVariables,
 		unicodeBOMs,
