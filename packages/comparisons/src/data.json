@@ -17629,6 +17629,7 @@
 			"name": "unifiedSignatures",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},

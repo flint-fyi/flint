@@ -1,0 +1,81 @@
+---
+description: "Reports function overloads that could be unified."
+title: "unifiedSignatures"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unifiedSignatures" />
+
+Function overloads that differ only by a single parameter type or by optional parameters
+can be simplified using union types or optional parameters.
+
+## Examples
+
+### Union Types
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+interface Parser {
+	parse(input: string): Document;
+	parse(input: Buffer): Document;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+interface Parser {
+	parse(input: string | Buffer): Document;
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Optional Parameters
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+interface Logger {
+	log(): void;
+	log(message: string): void;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+interface Logger {
+	log(message?: string): void;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use separate overloads for different behaviors or documentation purposes,
+you may want to disable this rule.
+
+## Further Reading
+
+- [TypeScript: Function Overloads](https://www.typescriptlang.org/docs/handbook/2/functions.html#function-overloads)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unifiedSignatures" />
