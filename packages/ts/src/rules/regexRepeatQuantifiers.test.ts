@@ -5,149 +5,95 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-/aaa/;
+/aaaaa/;
 `,
 			output: `
-/a{3}/;
+/a{5}/;
 `,
 			snapshot: `
-/aaa/;
- ~~~
- Prefer 'a{3}' instead of repeating 'a' 3 times.
+/aaaaa/;
+ ~~~~~
+ Prefer \`a{5}\` instead of repeating \`a\` 5 times.
 `,
 		},
 		{
 			code: `
-/\\d\\d/;
+/\\d\\d\\d\\d\\d-\\d\\d\\d\\d\\d/;
 `,
 			output: `
-/\\d{2}/;
+/\\d{5}-\\d{5}/;
 `,
 			snapshot: `
-/\\d\\d/;
- ~~~~
- Prefer '\\d{2}' instead of repeating '\\d' 2 times.
+/\\d\\d\\d\\d\\d-\\d\\d\\d\\d\\d/;
+ ~~~~~~~~~~
+ Prefer \`\\d{5}\` instead of repeating \`\\d\` 5 times.
+            ~~~~~~~~~~
+            Prefer \`\\d{5}\` instead of repeating \`\\d\` 5 times.
 `,
 		},
 		{
 			code: `
-/[ab][ab]/;
+/[ab][ab][ab][ab][ab]/;
 `,
 			output: `
-/[ab]{2}/;
+/[ab]{5}/;
 `,
 			snapshot: `
-/[ab][ab]/;
- ~~~~~~~~
- Prefer '[ab]{2}' instead of repeating '[ab]' 2 times.
+/[ab][ab][ab][ab][ab]/;
+ ~~~~~~~~~~~~~~~~~~~~
+ Prefer \`[ab]{5}\` instead of repeating \`[ab]\` 5 times.
 `,
 		},
 		{
 			code: `
-/../;
+/...../;
 `,
 			output: `
-/.{2}/;
+/.{5}/;
 `,
 			snapshot: `
-/../;
- ~~
- Prefer '.{2}' instead of repeating '.' 2 times.
+/...../;
+ ~~~~~
+ Prefer \`.{5}\` instead of repeating \`.\` 5 times.
 `,
 		},
 		{
 			code: `
-/\\d\\d\\d\\d-\\d\\d-\\d\\d/;
+new RegExp("aaaaa");
 `,
 			output: `
-/\\d{4}-\\d{2}-\\d{2}/;
+new RegExp("a{5}");
 `,
 			snapshot: `
-/\\d\\d\\d\\d-\\d\\d-\\d\\d/;
- ~~~~~~~~
- Prefer '\\d{4}' instead of repeating '\\d' 4 times.
-          ~~~~
-          Prefer '\\d{2}' instead of repeating '\\d' 2 times.
-               ~~~~
-               Prefer '\\d{2}' instead of repeating '\\d' 2 times.
+new RegExp("aaaaa");
+            ~~~~~
+            Prefer \`a{5}\` instead of repeating \`a\` 5 times.
 `,
 		},
 		{
 			code: `
-new RegExp("aaa");
+/\\w\\w\\w\\w\\w/;
 `,
 			output: `
-new RegExp("a{3}");
+/\\w{5}/;
 `,
 			snapshot: `
-new RegExp("aaa");
-            ~~~
-            Prefer 'a{3}' instead of repeating 'a' 3 times.
+/\\w\\w\\w\\w\\w/;
+ ~~~~~~~~~~
+ Prefer \`\\w{5}\` instead of repeating \`\\w\` 5 times.
 `,
 		},
 		{
 			code: `
-new RegExp("aa");
+/\\1\\1\\1\\1\\1/;
 `,
 			output: `
-new RegExp("a{2}");
+/\\1{5}/;
 `,
 			snapshot: `
-new RegExp("aa");
-            ~~
-            Prefer 'a{2}' instead of repeating 'a' 2 times.
-`,
-		},
-		{
-			code: `
-RegExp("aaa");
-`,
-			output: `
-RegExp("a{3}");
-`,
-			snapshot: `
-RegExp("aaa");
-        ~~~
-        Prefer 'a{3}' instead of repeating 'a' 3 times.
-`,
-		},
-		{
-			code: `
-/aaaa/v;
-`,
-			output: `
-/a{4}/v;
-`,
-			snapshot: `
-/aaaa/v;
- ~~~~
- Prefer 'a{4}' instead of repeating 'a' 4 times.
-`,
-		},
-		{
-			code: `
-/\\w\\w\\w/;
-`,
-			output: `
-/\\w{3}/;
-`,
-			snapshot: `
-/\\w\\w\\w/;
- ~~~~~~
- Prefer '\\w{3}' instead of repeating '\\w' 3 times.
-`,
-		},
-		{
-			code: `
-/\\1\\1/;
-`,
-			output: `
-/\\1{2}/;
-`,
-			snapshot: `
-/\\1\\1/;
- ~~~~
- Prefer '\\1{2}' instead of repeating '\\1' 2 times.
+/\\1\\1\\1\\1\\1/;
+ ~~~~~~~~~~
+ Prefer \`\\1{5}\` instead of repeating \`\\1\` 5 times.
 `,
 		},
 	],
@@ -155,17 +101,17 @@ RegExp("aaa");
 		`/a{3}/;`,
 		`/ab/;`,
 		`/abc/;`,
-		`/(a)(a)/;`,
-		`/(?:a)(?:a)/;`,
-		`new RegExp(variable);`,
-		`RegExp();`,
-		`/[a{2}]/;`,
-		`/a*/;`,
-		`/a+/;`,
-		`/a?/;`,
-		`/a{2}/;`,
 		`/a{2,}/;`,
 		`/a{2,4}/;`,
 		`/{{}}/;`,
+		`/aaa/;`,
+		`/aaaa/;`,
+		`/\\d\\d/;`,
+		`/[ab][ab]/;`,
+		`/../;`,
+		`/\\w\\w\\w/;`,
+		`/\\1\\1/;`,
+		`new RegExp("aaaa");`,
+		`RegExp("aaaa");`,
 	],
 });

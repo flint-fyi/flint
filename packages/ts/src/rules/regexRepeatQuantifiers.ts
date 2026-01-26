@@ -22,7 +22,6 @@ function isFixableAtom(element: RegExpAST.Element): boolean {
 		case "Backreference":
 		case "CharacterClass":
 		case "CharacterSet":
-		case "Dot":
 			return true;
 		case "Character":
 			return element.raw !== "{" && element.raw !== "}";
@@ -41,11 +40,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferQuantifier: {
 			primary:
-				"Prefer '{{ replacement }}' instead of repeating '{{ atom }}' {{ count }} times.",
+				"Prefer `{{ replacement }}` instead of repeating `{{ atom }}` {{ count }} times.",
 			secondary: [
 				"Using a quantifier is more concise than repeating the same element.",
 			],
-			suggestions: ["Replace with '{{ replacement }}'."],
+			suggestions: ["Replace with `{{ replacement }}`."],
 		},
 	},
 	setup(context) {
@@ -65,7 +64,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					let index = 0;
 
 					while (index < elements.length) {
-						const element = elements[index];
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						const element = elements[index]!;
 
 						if (!isFixableAtom(element)) {
 							index++;
@@ -77,19 +77,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						while (
 							endIndex < elements.length &&
-							isFixableAtom(elements[endIndex]) &&
-							getSignature(elements[endIndex]) === signature
+							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							isFixableAtom(elements[endIndex]!) &&
+							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							getSignature(elements[endIndex]!) === signature
 						) {
 							endIndex++;
 						}
 
 						const count = endIndex - index;
 
-						if (count >= 2) {
+						if (count >= 5) {
 							const atomText = element.raw;
 							const replacement = atomText + "{" + String(count) + "}";
 							const runStart = element.start;
-							const runEnd = elements[endIndex - 1].end;
+							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							const runEnd = elements[endIndex - 1]!.end;
 
 							context.report({
 								data: {

@@ -10,8 +10,11 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexRepeatQuantifiers" />
 
-Reports consecutive identical elements in regular expressions and suggests using quantifiers instead.
-Writing `a{3}` is more concise and readable than `aaa`.
+Matching multiple consecutive characters in a regular expression can be done either by writing out that character repeatedly or using a quantifier.
+Quantifiers keep the regex shorter and harder to miscount, and they make it obvious how many times a part repeats without visually scanning a long run of characters.
+For example, writing `a{5}` is more concise and readable than `aaaaa`.
+
+This rule reports runs of five or more identical elements in regular expressions and suggests replacing them with quantifiers.
 
 ## Examples
 
@@ -21,14 +24,14 @@ Writing `a{3}` is more concise and readable than `aaa`.
 <TabItem label="❌ Incorrect">
 
 ```ts
-const pattern = /aaa/;
+const pattern = /aaaaa/;
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```ts
-const pattern = /a{3}/;
+const pattern = /a{5}/;
 ```
 
 </TabItem>
@@ -40,14 +43,14 @@ const pattern = /a{3}/;
 <TabItem label="❌ Incorrect">
 
 ```ts
-const pattern = /\d\d\d\d-\d\d-\d\d/;
+const pattern = /\d\d\d\d\d/;
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```ts
-const pattern = /\d{4}-\d{2}-\d{2}/;
+const pattern = /\d{5}/;
 ```
 
 </TabItem>
@@ -59,14 +62,14 @@ const pattern = /\d{4}-\d{2}-\d{2}/;
 <TabItem label="❌ Incorrect">
 
 ```ts
-const pattern = /[a-z][a-z]/;
+const pattern = /[a-z][a-z][a-z][a-z][a-z]/;
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```ts
-const pattern = /[a-z]{2}/;
+const pattern = /[a-z]{5}/;
 ```
 
 </TabItem>
@@ -78,14 +81,14 @@ const pattern = /[a-z]{2}/;
 <TabItem label="❌ Incorrect">
 
 ```ts
-const pattern = /../;
+const pattern = /...../;
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```ts
-const pattern = /.{2}/;
+const pattern = /.{5}/;
 ```
 
 </TabItem>
@@ -97,14 +100,14 @@ const pattern = /.{2}/;
 <TabItem label="❌ Incorrect">
 
 ```ts
-const pattern = new RegExp("aaa");
+const pattern = new RegExp("aaaaa");
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```ts
-const pattern = new RegExp("a{3}");
+const pattern = new RegExp("a{5}");
 ```
 
 </TabItem>
