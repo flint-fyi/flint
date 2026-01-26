@@ -15824,7 +15824,8 @@
 		"flint": {
 			"name": "regexUnnecessaryReferentialBackreferences",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
