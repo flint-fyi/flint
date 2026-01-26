@@ -1,11 +1,12 @@
 import {
-	isGlobalDeclarationOfName,
+	type AST,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 function escapeForRegexLiteral(pattern: string) {
@@ -23,55 +24,51 @@ function escapeForRegexLiteral(pattern: string) {
 			continue;
 		}
 
-		if (char === "\\") {
-			result += char;
-			escaped = true;
-			continue;
-		}
+		switch (char) {
+			case "\n": {
+				result += "\\n";
+				break;
+			}
 
-		if (char === "/") {
-			result += "\\/";
-			continue;
-		}
+			case "\r": {
+				result += "\\r";
+				break;
+			}
 
-		if (char === "\n") {
-			result += "\\n";
-			continue;
-		}
+			case "\u2028": {
+				result += "\\u2028";
+				break;
+			}
 
-		if (char === "\r") {
-			result += "\\r";
-			continue;
-		}
+			case "\u2029": {
+				result += "\\u2029";
+				break;
+			}
 
-		if (char === "\u2028") {
-			result += "\\u2028";
-			continue;
-		}
+			case "/": {
+				result += "\\/";
+				break;
+			}
 
-		if (char === "\u2029") {
-			result += "\\u2029";
-			continue;
-		}
+			case "\\": {
+				result += char;
+				escaped = true;
+				break;
+			}
 
-		result += char;
+			default:
+				result += char;
+				break;
+		}
 	}
 
 	return result;
 }
 
-function getStringValue(node: ts.Expression) {
-	if (
-		node.kind === ts.SyntaxKind.StringLiteral ||
-		node.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral
-	) {
-		return (node as ts.NoSubstitutionTemplateLiteral | ts.StringLiteral).text;
-	}
-
-	return undefined;
-}
-
-function isStaticString(node: ts.Expression) {
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
+// (also move this into getRegExpConstruction)
+function isStaticString(node: AST.Expression) {
 	return (
 		node.kind === ts.SyntaxKind.StringLiteral ||
 		node.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral
@@ -86,7 +83,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		preferLiteral: {
-			primary: "Use a regular expression literal when the pattern is static.",
+			primary:
+				"This `RegExp` construction with a static value can be simplified to a regular expression literal.",
 			secondary: [
 				"Regex literals are more concise and avoid unnecessary constructor calls.",
 			],
@@ -95,70 +93,47 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function checkRegExpCall(
-			node: ts.CallExpression | ts.NewExpression,
-			{ sourceFile, typeChecker }: TypeScriptFileServices,
+			node: AST.CallExpression | AST.NewExpression,
+			services: TypeScriptFileServices,
 		) {
-			if (!ts.isIdentifier(node.expression)) {
+			const construction = getRegExpConstruction(node, services);
+			if (!construction) {
 				return;
 			}
 
-			if (node.expression.text !== "RegExp") {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			if (!isStaticString(construction.args[0]!)) {
 				return;
 			}
 
-			if (!isGlobalDeclarationOfName(node.expression, "RegExp", typeChecker)) {
+			if (
+				construction.args.length === 2 &&
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				!isStaticString(construction.args[1]!)
+			) {
 				return;
 			}
 
-			const args = node.arguments;
-			if (!args || args.length === 0 || args.length > 2) {
+			if (!parseRegexpAst(construction.pattern, construction.flags)) {
 				return;
 			}
 
-			const patternArg = args[0];
-			if (!patternArg || !isStaticString(patternArg)) {
-				return;
-			}
-
-			const pattern = getStringValue(patternArg);
-			if (pattern === undefined) {
-				return;
-			}
-
-			let flags = "";
-			if (args.length === 2) {
-				const flagsArg = args[1];
-				if (!flagsArg || !isStaticString(flagsArg)) {
-					return;
-				}
-
-				const flagsValue = getStringValue(flagsArg);
-				if (flagsValue === undefined) {
-					return;
-				}
-
-				flags = flagsValue;
-			}
-
-			if (!parseRegexpAst(pattern, flags)) {
-				return;
-			}
-
-			const escapedPattern = escapeForRegexLiteral(pattern);
-			const literal = `/${escapedPattern}/${flags}`;
+			const patternEscaped = escapeForRegexLiteral(construction.raw);
+			const literal = `/${patternEscaped}/${construction.flags}`;
+			const begin = node.getStart(services.sourceFile);
 
 			context.report({
 				data: { literal },
 				fix: {
 					range: {
-						begin: node.getStart(sourceFile),
+						begin,
 						end: node.getEnd(),
 					},
 					text: literal,
 				},
 				message: "preferLiteral",
 				range: {
-					begin: node.getStart(sourceFile),
+					begin,
 					end: node.expression.getEnd(),
 				},
 			});

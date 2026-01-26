@@ -13,7 +13,7 @@ RegExp("abc");
 			snapshot: `
 RegExp("abc");
 ~~~~~~
-Use a regular expression literal when the pattern is static.
+This \`RegExp\` construction with a static value can be simplified to a regular expression literal.
 `,
 		},
 		{
@@ -26,7 +26,7 @@ new RegExp("abc");
 			snapshot: `
 new RegExp("abc");
 ~~~~~~~~~~
-Use a regular expression literal when the pattern is static.
+This \`RegExp\` construction with a static value can be simplified to a regular expression literal.
 `,
 		},
 		{
@@ -39,7 +39,7 @@ new RegExp(\`abc\`);
 			snapshot: `
 new RegExp(\`abc\`);
 ~~~~~~~~~~
-Use a regular expression literal when the pattern is static.
+This \`RegExp\` construction with a static value can be simplified to a regular expression literal.
 `,
 		},
 		{
@@ -52,7 +52,7 @@ RegExp("abc", "gi");
 			snapshot: `
 RegExp("abc", "gi");
 ~~~~~~
-Use a regular expression literal when the pattern is static.
+This \`RegExp\` construction with a static value can be simplified to a regular expression literal.
 `,
 		},
 		{
@@ -65,7 +65,7 @@ RegExp("a/b");
 			snapshot: `
 RegExp("a/b");
 ~~~~~~
-Use a regular expression literal when the pattern is static.
+This \`RegExp\` construction with a static value can be simplified to a regular expression literal.
 `,
 		},
 		{
@@ -78,7 +78,7 @@ RegExp("");
 			snapshot: `
 RegExp("");
 ~~~~~~
-Use a regular expression literal when the pattern is static.
+This \`RegExp\` construction with a static value can be simplified to a regular expression literal.
 `,
 		},
 		{
@@ -91,7 +91,7 @@ new RegExp("test\\\\d+");
 			snapshot: `
 new RegExp("test\\\\d+");
 ~~~~~~~~~~
-Use a regular expression literal when the pattern is static.
+This \`RegExp\` construction with a static value can be simplified to a regular expression literal.
 `,
 		},
 		{
@@ -101,10 +101,10 @@ RegExp("line1\nline2");
 			output: String.raw`
 /line1\nline2/;
 `,
-			snapshot: String.raw`
-RegExp("line1\nline2");
+			snapshot: `
+RegExp("line1\\nline2");
 ~~~~~~
-Use a regular expression literal when the pattern is static.
+This \`RegExp\` construction with a static value can be simplified to a regular expression literal.
 `,
 		},
 	],
