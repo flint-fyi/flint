@@ -195,6 +195,7 @@ import regexHexadecimalEscapes from "./rules/regexHexadecimalEscapes.ts";
 import regexIgnoreCaseFlags from "./rules/regexIgnoreCaseFlags.ts";
 import regexInvisibleCharacters from "./rules/regexInvisibleCharacters.ts";
 import regexLetterCasing from "./rules/regexLetterCasing.ts";
+import regexLiterals from "./rules/regexLiterals.ts";
 import regexLookaroundAssertions from "./rules/regexLookaroundAssertions.ts";
 import regexLookaroundQuantifierOptimizations from "./rules/regexLookaroundQuantifierOptimizations.ts";
 import regexMatchNotation from "./rules/regexMatchNotation.ts";
@@ -444,6 +445,7 @@ export const ts = createPlugin({
 		regexIgnoreCaseFlags,
 		regexInvisibleCharacters,
 		regexLetterCasing,
+		regexLiterals,
 		regexLookaroundAssertions,
 		regexLookaroundQuantifierOptimizations,
 		regexMatchNotation,
