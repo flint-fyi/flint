@@ -15384,7 +15384,8 @@
 		"flint": {
 			"name": "regexPredefinedAssertions",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
