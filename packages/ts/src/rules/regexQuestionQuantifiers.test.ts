@@ -13,7 +13,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a{0,1}/;
   ~~~~~
-  Prefer the more succinct '?' quantifier instead of '{0,1}'.
+  Prefer the more succinct \`?\` quantifier instead of '{0,1}'.
 `,
 		},
 		{
@@ -26,7 +26,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a{0,1}?/;
   ~~~~~
-  Prefer the more succinct '?' quantifier instead of '{0,1}'.
+  Prefer the more succinct \`?\` quantifier instead of '{0,1}'.
 `,
 		},
 		{
@@ -39,7 +39,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a){0,1}/;
     ~~~~~
-    Prefer the more succinct '?' quantifier instead of '{0,1}'.
+    Prefer the more succinct \`?\` quantifier instead of '{0,1}'.
 `,
 		},
 		{
@@ -52,7 +52,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a){0,1}/v;
     ~~~~~
-    Prefer the more succinct '?' quantifier instead of '{0,1}'.
+    Prefer the more succinct \`?\` quantifier instead of '{0,1}'.
 `,
 		},
 		{
@@ -65,7 +65,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a){0,1}?/;
     ~~~~~
-    Prefer the more succinct '?' quantifier instead of '{0,1}'.
+    Prefer the more succinct \`?\` quantifier instead of '{0,1}'.
 `,
 		},
 		{
@@ -78,7 +78,7 @@ new RegExp("a?");
 			snapshot: `
 new RegExp("a{0,1}");
              ~~~~~
-             Prefer the more succinct '?' quantifier instead of '{0,1}'.
+             Prefer the more succinct \`?\` quantifier instead of '{0,1}'.
 `,
 		},
 		{
@@ -91,7 +91,7 @@ RegExp("a?");
 			snapshot: `
 RegExp("a{0,1}");
          ~~~~~
-         Prefer the more succinct '?' quantifier instead of '{0,1}'.
+         Prefer the more succinct \`?\` quantifier instead of '{0,1}'.
 `,
 		},
 		{
@@ -104,7 +104,7 @@ RegExp("a{0,1}");
 			snapshot: `
 /[abc]{0,1}/;
       ~~~~~
-      Prefer the more succinct '?' quantifier instead of '{0,1}'.
+      Prefer the more succinct \`?\` quantifier instead of '{0,1}'.
 `,
 		},
 		{
@@ -117,7 +117,7 @@ RegExp("a{0,1}");
 			snapshot: `
 /(?:foo){0,1}/;
         ~~~~~
-        Prefer the more succinct '?' quantifier instead of '{0,1}'.
+        Prefer the more succinct \`?\` quantifier instead of '{0,1}'.
 `,
 		},
 		{
@@ -130,7 +130,7 @@ RegExp("a{0,1}");
 			snapshot: `
 /(?:abc|)/;
  ~~~~~~~~
- Prefer optional group syntax using '?' instead of a trailing empty alternative.
+ Prefer optional group syntax using \`?\` instead of a trailing empty alternative.
 `,
 		},
 		{
@@ -143,7 +143,7 @@ RegExp("a{0,1}");
 			snapshot: `
 /(?:a|b|)/;
  ~~~~~~~~
- Prefer optional group syntax using '?' instead of a trailing empty alternative.
+ Prefer optional group syntax using \`?\` instead of a trailing empty alternative.
 `,
 		},
 		{
@@ -156,7 +156,7 @@ new RegExp("(?:abc)?");
 			snapshot: `
 new RegExp("(?:abc|)");
             ~~~~~~~~
-            Prefer optional group syntax using '?' instead of a trailing empty alternative.
+            Prefer optional group syntax using \`?\` instead of a trailing empty alternative.
 `,
 		},
 	],

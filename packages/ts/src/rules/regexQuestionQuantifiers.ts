@@ -27,7 +27,9 @@ function hasTrailingEmptyAlternative(group: RegExpAST.Group) {
 		return false;
 	}
 
-	const lastAlternative = group.alternatives[group.alternatives.length - 1];
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const lastAlternative = group.alternatives[group.alternatives.length - 1]!;
+
 	return lastAlternative.elements.length === 0;
 }
 
@@ -46,21 +48,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferOptionalGroup: {
 			primary:
-				"Prefer optional group syntax using '?' instead of a trailing empty alternative.",
+				"Prefer optional group syntax using `?` instead of a trailing empty alternative.",
 			secondary: [
 				"Using `(?:...)?` is clearer than using an empty alternative `(?:...|)`.",
 			],
 			suggestions: [
-				"Remove the trailing empty alternative and add '?' quantifier.",
+				"Remove the trailing empty alternative and add `?` quantifier.",
 			],
 		},
 		preferQuestion: {
 			primary:
-				"Prefer the more succinct '?' quantifier instead of '{{ quantifier }}'.",
+				"Prefer the more succinct `?` quantifier instead of '{{ quantifier }}'.",
 			secondary: [
 				"The `?` quantifier is a more concise way to express matching zero or one of the preceding element.",
 			],
-			suggestions: ["Replace '{{ quantifier }}' with '?'."],
+			suggestions: ["Replace '{{ quantifier }}' with `?`."],
 		},
 	},
 	setup(context) {
@@ -77,16 +79,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			visitRegExpAST(regexpAst, {
 				onGroupEnter(group) {
-					if (!hasTrailingEmptyAlternative(group)) {
+					if (!hasTrailingEmptyAlternative(group) || isGroupQuantified(group)) {
 						return;
 					}
 
-					if (isGroupQuantified(group)) {
-						return;
-					}
+					const secondToLastAlternative =
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						group.alternatives[group.alternatives.length - 2]!;
 
-					const alternatives = group.alternatives;
-					const secondToLastAlternative = alternatives[alternatives.length - 2];
 					const removeStart = secondToLastAlternative.end - group.start;
 					const removeEnd = group.end - group.start;
 
