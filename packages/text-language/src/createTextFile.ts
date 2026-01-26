@@ -13,6 +13,7 @@ export function createTextFile(
 			}
 
 			const fileServices = {
+				filePath: data.filePath,
 				filePathAbsolute: data.filePathAbsolute,
 				options,
 				sourceText: data.sourceText,
