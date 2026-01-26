@@ -1,3 +1,4 @@
+// flint-disable-file explicitAnys
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* Generated from tsl */
 import type ts from "typescript";
