@@ -15186,6 +15186,7 @@
 			"name": "regexLookaroundAssertions",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15371,6 +15372,7 @@
 			"name": "regexPlusQuantifiers",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15411,6 +15413,7 @@
 			"name": "regexQuestionQuantifiers",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15701,7 +15704,8 @@
 		"flint": {
 			"name": "regexUnnecessaryDisjunctions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15714,7 +15718,8 @@
 		"flint": {
 			"name": "regexUnnecessaryDollarReplacements",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
