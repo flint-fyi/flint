@@ -1,0 +1,96 @@
+---
+description: "Reports string case method calls compared against literals with mismatched casing."
+title: "stringCaseMismatches"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="stringCaseMismatches" />
+
+When using `.toLowerCase()` or `.toUpperCase()` in comparisons, the compared string literal must match the expected case.
+Otherwise, the comparison will always produce the same result regardless of input.
+
+For example, `str.toLowerCase() === "VALUE"` will always be `false` because `.toLowerCase()` returns a lowercase string, but `"VALUE"` is uppercase.
+
+## Examples
+
+### toLowerCase with Uppercase Literal
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const isMatch = input.toLowerCase() === "VALUE";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const isMatch = input.toLowerCase() === "value";
+```
+
+</TabItem>
+</Tabs>
+
+### toUpperCase with Lowercase Literal
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const isMatch = input.toUpperCase() === "hello";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const isMatch = input.toUpperCase() === "HELLO";
+```
+
+</TabItem>
+</Tabs>
+
+### Mixed Case Literal
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (name.toLowerCase() === "JohnDoe") {
+	greetUser();
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (name.toLowerCase() === "johndoe") {
+	greetUser();
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have code that intentionally uses mismatched case comparisons for testing or demonstration purposes, you may need to disable this rule for those specific cases.
+
+## Further Reading
+
+- [MDN: String.prototype.toLowerCase()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase)
+- [MDN: String.prototype.toUpperCase()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="stringCaseMismatches" />
