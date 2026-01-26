@@ -28,7 +28,7 @@ function hasTrailingEmptyAlternative(group: RegExpAST.Group) {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const lastAlternative = group.alternatives[group.alternatives.length - 1]!;
+	const lastAlternative = group.alternatives.at(-1)!;
 
 	return lastAlternative.elements.length === 0;
 }
@@ -83,9 +83,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const secondToLastAlternative =
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-						group.alternatives[group.alternatives.length - 2]!;
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const secondToLastAlternative = group.alternatives.at(-2)!;
 
 					const removeStart = secondToLastAlternative.end - group.start;
 					const removeEnd = group.end - group.start;
