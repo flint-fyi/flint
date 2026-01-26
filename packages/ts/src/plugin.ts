@@ -220,6 +220,7 @@ import regexUnicodeCodepointEscapes from "./rules/regexUnicodeCodepointEscapes.t
 import regexUnicodeEscapes from "./rules/regexUnicodeEscapes.ts";
 import regexUnicodeFlag from "./rules/regexUnicodeFlag.ts";
 import regexUnnecessaryCharacterClasses from "./rules/regexUnnecessaryCharacterClasses.ts";
+import regexUnnecessaryCharacterRanges from "./rules/regexUnnecessaryCharacterRanges.ts";
 import regexUnnecessaryDisjunctions from "./rules/regexUnnecessaryDisjunctions.ts";
 import regexUnnecessaryDollarReplacements from "./rules/regexUnnecessaryDollarReplacements.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
@@ -468,6 +469,7 @@ export const ts = createPlugin({
 		regexUnicodeEscapes,
 		regexUnicodeFlag,
 		regexUnnecessaryCharacterClasses,
+		regexUnnecessaryCharacterRanges,
 		regexUnnecessaryDisjunctions,
 		regexUnnecessaryDollarReplacements,
 		returnAssignments,
