@@ -1,0 +1,102 @@
+---
+description: "Prefer `Set.has()` over `Array.includes()` for repeated existence checks."
+title: "setHasExistenceChecks"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="setHasExistenceChecks" />
+
+When an array is only used for existence checks via `.includes()`, converting it to a `Set` and using `.has()` provides better performance.
+`Array.includes()` has O(n) time complexity, while `Set.has()` has O(1) time complexity.
+
+This rule reports when:
+
+- A `const` variable is initialized with an array (literal, `Array()`, `Array.from()`, `Array.of()`, or array methods like `.filter()`, `.map()`, etc.)
+- All usages of that variable are `.includes()` calls with exactly one argument
+- Either there are multiple `.includes()` calls, or a single call is inside a loop or function
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const items = [1, 2, 3];
+function check(value: number) {
+	return items.includes(value);
+}
+```
+
+```ts
+const items = [1, 2, 3];
+items.includes(1);
+items.includes(2);
+```
+
+```ts
+const items = [1, 2, 3];
+for (const value of values) {
+	items.includes(value);
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const items = new Set([1, 2, 3]);
+function check(value: number) {
+	return items.has(value);
+}
+```
+
+```ts
+const items = new Set([1, 2, 3]);
+items.has(1);
+items.has(2);
+```
+
+```ts
+// Single call, not in loop/function - acceptable
+const items = [1, 2, 3];
+items.includes(1);
+```
+
+```ts
+// Has other usages besides .includes()
+const items = [1, 2, 3];
+items.push(4);
+items.includes(1);
+```
+
+```ts
+// Exported arrays are not reported
+export const items = [1, 2, 3];
+items.includes(1);
+items.includes(2);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If the array is very small (a few elements), the performance difference between `Array.includes()` and `Set.has()` is negligible.
+You may also disable this rule if you need to preserve the array type for compatibility with APIs that expect arrays.
+
+## Further Reading
+
+- [MDN: Set.prototype.has()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/has)
+- [MDN: Array.prototype.includes()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="setHasExistenceChecks" />
