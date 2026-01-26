@@ -1,4 +1,8 @@
-import z from "zod";
+import z from "zod/v4";
+
+import type { SuggestionForFile } from "../types/changes.ts";
+import { jsonCodec } from "../utils/codecs.ts";
+import { isSuggestionForFiles } from "../utils/predicates.ts";
 
 const characterReportRangeSchema = z.object({
 	begin: z.number(),
@@ -21,12 +25,32 @@ const fixSchema = z.object({
 	text: z.string(),
 });
 
-// Note: SuggestionForFiles with functions cannot be cached (not serializable)
-const suggestionSchema = z.object({
+const changeBaseSchema = z.object({
 	id: z.string(),
+});
+
+const suggestionForFileSchema = changeBaseSchema.extend({
 	range: characterReportRangeSchema,
 	text: z.string(),
 });
+
+// Note: SuggestionForFiles cannot be cached because functions aren't serializable.
+const suggestionForFilesSchema = changeBaseSchema.extend({
+	files: z.record(
+		z.string(),
+		z
+			.function({
+				input: z.tuple([z.string()]),
+				output: z.array(fixSchema),
+			})
+			.optional(),
+	),
+});
+
+const suggestionSchema = z.union([
+	suggestionForFileSchema,
+	suggestionForFilesSchema,
+]);
 
 const reportMessageDataSchema = z.object({
 	primary: z.string(),
@@ -51,7 +75,16 @@ const fileReportSchema = z.object({
 	fix: z.array(fixSchema).optional(),
 	message: reportMessageDataSchema,
 	range: normalizedReportRangeObjectSchema,
-	suggestions: z.array(suggestionSchema).optional(),
+	suggestions: z
+		.codec(z.array(suggestionForFileSchema), z.array(suggestionSchema), {
+			decode: (suggestions) => suggestions,
+			encode: (suggestions) =>
+				suggestions.filter(
+					(change): change is SuggestionForFile =>
+						!isSuggestionForFiles(change),
+				),
+		})
+		.optional(),
 });
 
 const languageFileDiagnosticSchema = z.object({
@@ -66,7 +99,9 @@ const fileCacheStorageSchema = z.object({
 	timestamp: z.number(),
 });
 
-export const cacheStorageSchema = z.object({
-	configs: z.record(z.string(), z.number()),
-	files: z.record(z.string(), fileCacheStorageSchema),
-});
+export const cacheStorageSchema = jsonCodec(
+	z.object({
+		configs: z.record(z.string(), z.number()),
+		files: z.record(z.string(), fileCacheStorageSchema),
+	}),
+);
