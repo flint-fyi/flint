@@ -15424,7 +15424,8 @@
 		"flint": {
 			"name": "regexRepeatQuantifiers",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{

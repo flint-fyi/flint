@@ -206,6 +206,7 @@ import regexNamedReplacements from "./rules/regexNamedReplacements.ts";
 import regexNonStandardFlags from "./rules/regexNonStandardFlags.ts";
 import regexObscureRanges from "./rules/regexObscureRanges.ts";
 import regexOctalEscapes from "./rules/regexOctalEscapes.ts";
+import regexRepeatQuantifiers from "./rules/regexRepeatQuantifiers.ts";
 import regexResultArrayGroups from "./rules/regexResultArrayGroups.ts";
 import regexSetOperationOptimizations from "./rules/regexSetOperationOptimizations.ts";
 import regexStandaloneBackslashes from "./rules/regexStandaloneBackslashes.ts";
@@ -448,6 +449,7 @@ export const ts = createPlugin({
 		regexNonStandardFlags,
 		regexObscureRanges,
 		regexOctalEscapes,
+		regexRepeatQuantifiers,
 		regexResultArrayGroups,
 		regexSetOperationOptimizations,
 		regexStandaloneBackslashes,
