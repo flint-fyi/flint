@@ -227,6 +227,7 @@ import typeofComparisons from "./rules/typeofComparisons.ts";
 import unassignedVariables from "./rules/unassignedVariables.ts";
 import undefinedVariables from "./rules/undefinedVariables.ts";
 import unicodeBOMs from "./rules/unicodeBOMs.ts";
+import unnecessaryBind from "./rules/unnecessaryBind.ts";
 import unnecessaryBlocks from "./rules/unnecessaryBlocks.ts";
 import unnecessaryCatches from "./rules/unnecessaryCatches.ts";
 import unnecessaryConcatenation from "./rules/unnecessaryConcatenation.ts";
@@ -469,6 +470,7 @@ export const ts = createPlugin({
 		unassignedVariables,
 		undefinedVariables,
 		unicodeBOMs,
+		unnecessaryBind,
 		unnecessaryBlocks,
 		unnecessaryCatches,
 		unnecessaryConcatenation,

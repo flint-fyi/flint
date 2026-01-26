@@ -17642,7 +17642,8 @@
 		"flint": {
 			"name": "unnecessaryBind",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
