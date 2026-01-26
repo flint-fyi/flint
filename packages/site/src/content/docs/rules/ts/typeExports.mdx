@@ -1,0 +1,74 @@
+---
+description: "Reports exports that should use 'export type' syntax."
+title: "typeExports"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="typeExports" />
+
+Using `export type` for type-only exports improves tree-shaking and makes the intent explicit.
+When exporting symbols that were imported using `import type`, use `export type` instead.
+
+## Examples
+
+### Type-Only Re-exports
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import type { User } from "./types";
+export { User };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import type { User } from "./types";
+export type { User };
+```
+
+</TabItem>
+</Tabs>
+
+### Inline Type Imports
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { type Post } from "./types";
+export { Post };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { type Post } from "./types";
+export type { Post };
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer not to distinguish between type and value exports, you can disable this rule.
+
+## Further Reading
+
+- [TypeScript: Type-Only Imports and Exports](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="typeExports" />
