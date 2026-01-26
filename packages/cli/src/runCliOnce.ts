@@ -4,6 +4,7 @@ import {
 	isConfig,
 	runConfig,
 	runConfigFixing,
+	validateConfigDefinition,
 } from "@flint.fyi/core";
 import { debugForFile } from "debug-for-file";
 import path from "node:path";
@@ -30,6 +31,16 @@ export async function runCliOnce(
 		console.error(
 			`${configFileName} does not default export a Flint defineConfig value.`,
 		);
+		return { exitCode: 2, lintResults: undefined };
+	}
+
+	const validationError = validateConfigDefinition(
+		config.definition,
+		configFileName,
+	);
+
+	if (validationError) {
+		console.error(validationError);
 		return { exitCode: 2, lintResults: undefined };
 	}
 

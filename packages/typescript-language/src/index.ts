@@ -1,9 +1,5 @@
 export { convertTypeScriptDiagnosticToLanguageFileDiagnostic } from "./convertTypeScriptDiagnosticToLanguageFileDiagnostic.ts";
 export {
-	collectTypeScriptFileCacheImpacts,
-	NodeSyntaxKinds,
-} from "./createTypeScriptFileFromProgram.ts";
-export {
 	extractDirectivesFromTypeScriptFile,
 	type ExtractedDirective,
 } from "./directives/parseDirectivesFromTypeScriptFile.ts";

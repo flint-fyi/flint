@@ -15172,7 +15172,8 @@
 		"flint": {
 			"name": "regexLiterals",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15186,6 +15187,7 @@
 			"name": "regexLookaroundAssertions",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15242,7 +15244,8 @@
 		"flint": {
 			"name": "regexMisleadingQuantifiers",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15298,7 +15301,8 @@
 		"flint": {
 			"name": "regexNamedCaptureGroups",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15369,6 +15373,7 @@
 			"name": "regexPlusQuantifiers",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15409,6 +15414,7 @@
 			"name": "regexQuestionQuantifiers",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -15422,7 +15428,8 @@
 		"flint": {
 			"name": "regexRepeatQuantifiers",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15464,7 +15471,8 @@
 		"flint": {
 			"name": "regexStandaloneBackslashes",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15506,7 +15514,8 @@
 		"flint": {
 			"name": "regexSuperLinearMoves",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15571,7 +15580,8 @@
 		"flint": {
 			"name": "regexUnicodeEscapes",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15587,7 +15597,8 @@
 		],
 		"flint": {
 			"name": "regexUnicodeFlag",
-			"plugin": "ts"
+			"plugin": "ts",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15668,7 +15679,8 @@
 		"flint": {
 			"name": "regexUnnecessaryCharacterClasses",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15681,7 +15693,8 @@
 		"flint": {
 			"name": "regexUnnecessaryCharacterRanges",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15694,7 +15707,8 @@
 		"flint": {
 			"name": "regexUnnecessaryDisjunctions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15707,7 +15721,8 @@
 		"flint": {
 			"name": "regexUnnecessaryDollarReplacements",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
