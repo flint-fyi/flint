@@ -10,8 +10,13 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexLookaroundAssertions" />
 
-When using `String.prototype.replace()` or `String.prototype.replaceAll()` with a regular expression that has capturing groups at pattern boundaries, consider using lookaround assertions instead.
-Lookaround assertions preserve the surrounding text without needing to re-insert captured content in the replacement string.
+When a capturing group is at the start or end of a regex pattern and is only used to re-insert matched text in the replacement string (e.g., `$1`), it can be replaced with a lookaround assertion.
+
+- A capturing group at the **start** like `/(prefix)rest/` can become a lookbehind: `/(?<=prefix)rest/`
+- A capturing group at the **end** like `/rest(suffix)/` can become a lookahead: `/rest(?=suffix)/`
+
+Doing so simplifies the replacement string since the matched text stays in place automatically.
+It can also make the regular expression easier to read and easier for engines to optimize for faster performance.
 
 ## Examples
 

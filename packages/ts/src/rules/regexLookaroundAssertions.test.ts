@@ -12,8 +12,8 @@ ruleTester.describe(rule, {
 `,
 			snapshot: `
 "text".replace(/(Java)Script/, "$1");
-               ~~~~~~~~~~~~~~
-               Use lookaround assertions to preserve surrounding text instead of capturing groups.
+                ~~~~~~
+                This capturing group can be optimized by switching to a lookaround assertion.
 `,
 		},
 		{
@@ -25,8 +25,8 @@ ruleTester.describe(rule, {
 `,
 			snapshot: `
 "text".replace(/Java(Script)/, "Type$1");
-               ~~~~~~~~~~~~~~
-               Use lookaround assertions to preserve surrounding text instead of capturing groups.
+                    ~~~~~~~~
+                    This capturing group can be optimized by switching to a lookaround assertion.
 `,
 		},
 		{
@@ -38,8 +38,10 @@ ruleTester.describe(rule, {
 `,
 			snapshot: `
 "text".replace(/(pre)text(suf)/, "$1x$2");
-               ~~~~~~~~~~~~~~~~
-               Use lookaround assertions to preserve surrounding text instead of capturing groups.
+                ~~~~~
+                This capturing group can be optimized by switching to a lookaround assertion.
+                         ~~~~~
+                         This capturing group can be optimized by switching to a lookaround assertion.
 `,
 		},
 		{
@@ -51,8 +53,8 @@ ruleTester.describe(rule, {
 `,
 			snapshot: `
 "text".replaceAll(/(Java)Script/g, "$1");
-                  ~~~~~~~~~~~~~~~
-                  Use lookaround assertions to preserve surrounding text instead of capturing groups.
+                   ~~~~~~
+                   This capturing group can be optimized by switching to a lookaround assertion.
 `,
 		},
 		{
@@ -64,8 +66,10 @@ ruleTester.describe(rule, {
 `,
 			snapshot: `
 "text".replace(/(a)bc(d)/, "$1-$2");
-               ~~~~~~~~~~
-               Use lookaround assertions to preserve surrounding text instead of capturing groups.
+                ~~~
+                This capturing group can be optimized by switching to a lookaround assertion.
+                     ~~~
+                     This capturing group can be optimized by switching to a lookaround assertion.
 `,
 		},
 	],

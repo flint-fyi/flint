@@ -49,12 +49,12 @@ function buildFixedReplacement(
 function getBoundaryGroups(
 	pattern: RegExpAST.Pattern,
 	groups: RegExpAST.CapturingGroup[],
-): BoundaryGroup[] | undefined {
-	if (groups.length === 0 || groups.length > 2) {
-		return undefined;
-	}
-
-	if (groups.some((group) => group.name != null)) {
+) {
+	if (
+		groups.length === 0 ||
+		groups.length > 2 ||
+		groups.some((group) => group.name != null)
+	) {
 		return undefined;
 	}
 
@@ -126,13 +126,11 @@ function getRegexPatternAndFlags(node: AST.Expression) {
 }
 
 function groupToRaw(group: RegExpAST.CapturingGroup) {
-	let raw = "";
-	for (const alt of group.alternatives) {
-		for (const elem of alt.elements) {
-			raw += elem.raw;
-		}
-	}
-	return raw;
+	return group.alternatives
+		.flatMap((alternative) =>
+			alternative.elements.flatMap((element) => element.raw),
+		)
+		.join("");
 }
 
 function hasBackreferences(pattern: RegExpAST.Pattern) {
@@ -191,11 +189,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferLookaround: {
 			primary:
-				"Use lookaround assertions to preserve surrounding text instead of capturing groups.",
+				"This capturing group can be optimized by switching to a lookaround assertion.",
 			secondary: [
 				"Lookaround assertions avoid re-inserting captured content in the replacement string.",
+				"Using them allows engines to more easily optimize regular expressions.",
 			],
-			suggestions: ["Convert to lookahead/lookbehind assertion."],
+			suggestions: ["Convert to a lookahead or lookbehind assertion."],
 		},
 	},
 	setup(context) {
@@ -220,21 +219,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					const regexArg = node.arguments[0]!;
+					const regexArgument = node.arguments[0]!;
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					const replacementArg = node.arguments[1]!;
+					const replacementArgument = node.arguments[1]!;
 
-					if (!ts.isStringLiteral(replacementArg)) {
+					if (
+						!ts.isStringLiteral(replacementArgument) ||
+						hasSpecialDollarSyntax(replacementArgument.text)
+					) {
 						return;
 					}
 
-					const regexInfo = getRegexPatternAndFlags(regexArg);
+					const regexInfo = getRegexPatternAndFlags(regexArgument);
 					if (!regexInfo) {
 						return;
 					}
 
 					const regexpAst = parseRegexpAst(regexInfo.pattern, regexInfo.flags);
-					if (!regexpAst) {
+					if (!regexpAst || hasBackreferences(regexpAst)) {
 						return;
 					}
 
@@ -243,26 +245,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (hasBackreferences(regexpAst)) {
-						return;
-					}
-
 					const boundaryGroups = getBoundaryGroups(regexpAst, capturingGroups);
 					if (!boundaryGroups) {
 						return;
 					}
 
-					const replacementText = replacementArg.text;
-
-					if (hasSpecialDollarSyntax(replacementText)) {
-						return;
-					}
-
-					const references = parseReplacementReferences(replacementText);
+					const references = parseReplacementReferences(
+						replacementArgument.text,
+					);
 
 					for (let i = 0; i < boundaryGroups.length; i++) {
-						const refIndex = i + 1;
-						if (references.get(refIndex) !== 1) {
+						if (references.get(i + 1) !== 1) {
 							return;
 						}
 					}
@@ -273,38 +266,50 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 
-					const regexRange = getTSNodeRange(regexArg, sourceFile);
-					const replacementRange = getTSNodeRange(replacementArg, sourceFile);
+					const regexRange = getTSNodeRange(regexArgument, sourceFile);
+					const replacementRange = getTSNodeRange(
+						replacementArgument,
+						sourceFile,
+					);
 
 					const fixedPattern = buildFixedPattern(
 						regexInfo.pattern,
 						boundaryGroups,
 					);
 					const fixedReplacement = buildFixedReplacement(
-						replacementText,
+						replacementArgument.text,
 						boundaryGroups,
 					);
 
-					context.report({
-						fix: [
-							{
-								range: {
-									begin: regexRange.begin + 1,
-									end: regexRange.end - 1 - regexInfo.flags.length,
-								},
-								text: fixedPattern,
+					const fix = [
+						{
+							range: {
+								begin: regexRange.begin + 1,
+								end: regexRange.end - 1 - regexInfo.flags.length,
 							},
-							{
-								range: {
-									begin: replacementRange.begin + 1,
-									end: replacementRange.end - 1,
-								},
-								text: fixedReplacement,
+							text: fixedPattern,
+						},
+						{
+							range: {
+								begin: replacementRange.begin + 1,
+								end: replacementRange.end - 1,
 							},
-						],
-						message: "preferLookaround",
-						range: regexRange,
-					});
+							text: fixedReplacement,
+						},
+					];
+
+					for (const { group } of boundaryGroups) {
+						const groupRange = {
+							begin: regexRange.begin + 1 + group.start,
+							end: regexRange.begin + 1 + group.end,
+						};
+
+						context.report({
+							fix,
+							message: "preferLookaround",
+							range: groupRange,
+						});
+					}
 				},
 			},
 		};
