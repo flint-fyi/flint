@@ -119,8 +119,8 @@ export default ruleCreator.createRule(textLanguage, {
 						];
 
 						context.report({
-							filePath,
 							data,
+							filePath,
 							message: replacement ? "issueWithReplacement" : "issue",
 							range: issueRange,
 							suggestions,
@@ -129,7 +129,7 @@ export default ruleCreator.createRule(textLanguage, {
 				}
 			},
 			visitors: {
-				file: (text, { filePathAbsolute, filePath }) => {
+				file: (text, { filePath, filePathAbsolute }) => {
 					fileTasks.push({
 						documentValidatorTask: createDocumentValidator(
 							filePathAbsolute,

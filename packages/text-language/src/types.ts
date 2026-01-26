@@ -1,6 +1,6 @@
 export interface TextFileServices {
-	filePathAbsolute: string;
 	filePath: string;
+	filePathAbsolute: string;
 	sourceText: string;
 }
 
