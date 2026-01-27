@@ -24,10 +24,6 @@ export default defineConfig({
 				node.presets.stylisticStrict,
 				ts.presets.logicalStrict,
 				ts.presets.stylisticStrict,
-				ts.rules({
-					catchCallbackTypes: {},
-					functionDeclarationStyles: true,
-				}),
 			],
 		},
 		{
@@ -41,15 +37,5 @@ export default defineConfig({
 			files: globs.all,
 			rules: spelling.presets.logical,
 		},
-		{
-			files: globs.all,
-			rules: [
-				ts.rules({
-					catchCallbackTypes: false,
-				}),
-			],
-		},
 	],
 });
-
-const a = Promise.resolve().catch((any) => any);

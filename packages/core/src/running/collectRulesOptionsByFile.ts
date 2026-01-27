@@ -15,19 +15,24 @@ export function collectRulesOptionsByFile(
 			const [options, rule] =
 				"rule" in ruleDefinition
 					? [ruleDefinition.options, ruleDefinition.rule]
-					: [{}, ruleDefinition];
+					: [true, ruleDefinition];
 
-			if (options == true) {
-				break;
-			}
+			const perFile = rulesOptionsByFile.get(rule);
 
 			for (const filePath of use.found) {
-				if (options == false) {
-					rulesOptionsByFile.get(rule).delete(filePath);
-					break;
+				if (options === false) {
+					perFile.delete(filePath);
+					continue;
 				}
 
-				rulesOptionsByFile.get(rule).set(filePath, options);
+				if (options === true) {
+					if (!perFile.has(filePath)) {
+						perFile.set(filePath, {});
+					}
+					continue;
+				}
+
+				perFile.set(filePath, options);
 			}
 		}
 	}
