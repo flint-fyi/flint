@@ -35,14 +35,13 @@ function isValidSecondArgument(
 		return node.text === className;
 	}
 
-	if (ts.isPropertyAccessExpression(node)) {
-		if (
-			node.expression.kind === SyntaxKind.ThisKeyword &&
-			ts.isIdentifier(node.name) &&
-			node.name.text === "constructor"
-		) {
-			return true;
-		}
+	if (
+		ts.isPropertyAccessExpression(node) &&
+		node.expression.kind === SyntaxKind.ThisKeyword &&
+		ts.isIdentifier(node.name) &&
+		node.name.text === "constructor"
+	) {
+		return true;
 	}
 
 	if (

@@ -124,19 +124,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					properties.name.text === "type",
 			);
 
-			if (typeAttribute && typeAttribute.kind === SyntaxKind.JsxAttribute) {
-				if (
-					typeAttribute.initializer &&
-					typeAttribute.initializer.kind === SyntaxKind.StringLiteral &&
-					typeAttribute.initializer.text === "image"
-				) {
-					checkAltAttribute(
-						attributes,
-						tagName,
-						"input[type='image']",
-						sourceFile,
-					);
-				}
+			if (
+				typeAttribute &&
+				typeAttribute.kind === SyntaxKind.JsxAttribute &&
+				typeAttribute.initializer &&
+				typeAttribute.initializer.kind === SyntaxKind.StringLiteral &&
+				typeAttribute.initializer.text === "image"
+			) {
+				checkAltAttribute(
+					attributes,
+					tagName,
+					"input[type='image']",
+					sourceFile,
+				);
 			}
 		}
 

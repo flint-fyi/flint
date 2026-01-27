@@ -33,122 +33,125 @@ function analyzeConditionalForNullish(
 	const { condition, whenFalse, whenTrue } = node;
 
 	// Simple truthiness check: x ? x : y
-	if (ts.isIdentifier(condition) && ts.isIdentifier(whenTrue)) {
-		if (condition.text === whenTrue.text) {
-			return {
-				alternate: whenFalse,
-				consequent: whenTrue,
-				operator: "",
-				test: condition,
-			};
-		}
+	if (
+		ts.isIdentifier(condition) &&
+		ts.isIdentifier(whenTrue) &&
+		condition.text === whenTrue.text
+	) {
+		return {
+			alternate: whenFalse,
+			consequent: whenTrue,
+			operator: "",
+			test: condition,
+		};
 	}
 
 	// Negation: !x ? y : x
-	if (ts.isPrefixUnaryExpression(condition)) {
-		if (condition.operator === ts.SyntaxKind.ExclamationToken) {
-			const operand = condition.operand;
-			if (ts.isIdentifier(operand) && ts.isIdentifier(whenFalse)) {
-				if (operand.text === whenFalse.text) {
-					return {
-						alternate: whenTrue,
-						consequent: whenFalse,
-						operator: "!",
-						test: operand,
-					};
-				}
-			}
+	if (
+		ts.isPrefixUnaryExpression(condition) &&
+		condition.operator === ts.SyntaxKind.ExclamationToken
+	) {
+		const operand = condition.operand;
+		if (
+			ts.isIdentifier(operand) &&
+			ts.isIdentifier(whenFalse) &&
+			operand.text === whenFalse.text
+		) {
+			return {
+				alternate: whenTrue,
+				consequent: whenFalse,
+				operator: "!",
+				test: operand,
+			};
 		}
 	}
 
 	// Comparison patterns: x !== null ? x : y
-	if (ts.isBinaryExpression(condition)) {
-		if (isNullLikeComparison(condition)) {
-			const { isNegation, value: testValue } =
-				extractValueFromComparison(condition);
+	if (ts.isBinaryExpression(condition) && isNullLikeComparison(condition)) {
+		const { isNegation, value: testValue } =
+			extractValueFromComparison(condition);
 
-			if (!testValue) {
-				return {};
-			}
-
-			const operator = getComparisonOperator(condition);
-			const [alternate, consequent] = isNegation
-				? [whenFalse, whenTrue]
-				: [whenTrue, whenFalse];
-
-			return {
-				alternate,
-				consequent,
-				operator,
-				test: testValue,
-			};
+		if (!testValue) {
+			return {};
 		}
+
+		const operator = getComparisonOperator(condition);
+		const [alternate, consequent] = isNegation
+			? [whenFalse, whenTrue]
+			: [whenTrue, whenFalse];
+
+		return {
+			alternate,
+			consequent,
+			operator,
+			test: testValue,
+		};
 	}
 
 	// Logical AND pattern: x !== undefined && x !== null ? x : y
-	if (ts.isBinaryExpression(condition)) {
-		if (
-			condition.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
-		) {
-			const leftIsComparison = ts.isBinaryExpression(condition.left)
-				? isNullLikeComparison(condition.left)
-				: false;
-			const rightIsComparison = ts.isBinaryExpression(condition.right)
-				? isNullLikeComparison(condition.right)
-				: false;
+	if (
+		ts.isBinaryExpression(condition) &&
+		condition.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
+	) {
+		const leftIsComparison = ts.isBinaryExpression(condition.left)
+			? isNullLikeComparison(condition.left)
+			: false;
+		const rightIsComparison = ts.isBinaryExpression(condition.right)
+			? isNullLikeComparison(condition.right)
+			: false;
 
-			if (leftIsComparison && rightIsComparison) {
-				const leftComp = condition.left as AST.BinaryExpression;
-				const rightComp = condition.right as AST.BinaryExpression;
+		if (leftIsComparison && rightIsComparison) {
+			const leftComp = condition.left as AST.BinaryExpression;
+			const rightComp = condition.right as AST.BinaryExpression;
 
-				const leftValue = extractValueFromComparison(leftComp).value;
-				const rightValue = extractValueFromComparison(rightComp).value;
+			const leftValue = extractValueFromComparison(leftComp).value;
+			const rightValue = extractValueFromComparison(rightComp).value;
 
-				if (
-					leftValue &&
-					rightValue &&
-					hasSameTokens(leftValue, rightValue, sourceFile)
-				) {
-					return {
-						alternate: whenFalse,
-						consequent: whenTrue,
-						operator: "===",
-						test: leftValue,
-					};
-				}
+			if (
+				leftValue &&
+				rightValue &&
+				hasSameTokens(leftValue, rightValue, sourceFile)
+			) {
+				return {
+					alternate: whenFalse,
+					consequent: whenTrue,
+					operator: "===",
+					test: leftValue,
+				};
 			}
 		}
 	}
 
 	// Logical OR pattern: x === undefined || x === null ? y : x
-	if (ts.isBinaryExpression(condition)) {
-		if (condition.operatorToken.kind === ts.SyntaxKind.BarBarToken) {
-			const leftIsComparison = ts.isBinaryExpression(condition.left)
-				? isNullLikeComparison(condition.left)
-				: false;
-			const rightIsComparison = ts.isBinaryExpression(condition.right)
-				? isNullLikeComparison(condition.right)
-				: false;
+	if (
+		ts.isBinaryExpression(condition) &&
+		condition.operatorToken.kind === ts.SyntaxKind.BarBarToken
+	) {
+		const leftIsComparison = ts.isBinaryExpression(condition.left)
+			? isNullLikeComparison(condition.left)
+			: false;
+		const rightIsComparison = ts.isBinaryExpression(condition.right)
+			? isNullLikeComparison(condition.right)
+			: false;
 
-			if (leftIsComparison && rightIsComparison) {
-				const leftComp = condition.left as AST.BinaryExpression;
-				const rightComp = condition.right as AST.BinaryExpression;
+		if (leftIsComparison && rightIsComparison) {
+			const leftComp = condition.left as AST.BinaryExpression;
+			const rightComp = condition.right as AST.BinaryExpression;
 
-				const leftValue = extractValueFromComparison(leftComp).value;
-				const rightValue = extractValueFromComparison(rightComp).value;
+			const leftValue = extractValueFromComparison(leftComp).value;
+			const rightValue = extractValueFromComparison(rightComp).value;
 
-				if (
-					leftValue &&
-					rightValue &&
-					hasSameTokens(leftValue, rightValue, sourceFile)
-				) {
-					return {
-						alternate: whenTrue,
-						consequent: whenFalse,
-						operator: "===",
-						test: leftValue,
-					};
-				}
+			if (
+				leftValue &&
+				rightValue &&
+				hasSameTokens(leftValue, rightValue, sourceFile)
+			) {
+				return {
+					alternate: whenTrue,
+					consequent: whenFalse,
+					operator: "===",
+					test: leftValue,
+				};
 			}
 		}
 	}

@@ -69,10 +69,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (tagName.kind === SyntaxKind.Identifier) {
-				if (inherentlyTabbableElements.has(tagName.text.toLowerCase())) {
-					return;
-				}
+			if (
+				tagName.kind === SyntaxKind.Identifier &&
+				inherentlyTabbableElements.has(tagName.text.toLowerCase())
+			) {
+				return;
 			}
 
 			const hasTabIndex = attributes.properties.some(

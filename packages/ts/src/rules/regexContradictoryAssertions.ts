@@ -179,26 +179,24 @@ function getCharRepresentation(
 
 			return undefined;
 		}
-	} else {
-		if (remaining.startsWith("\\")) {
-			const twoCharEscape = remaining.slice(0, 2);
-			const charResult = getCharacterFromEscape(twoCharEscape);
-			if (charResult) {
-				return { character: charResult, length: 2 };
-			}
-
-			if (
-				twoCharEscape === "\\b" ||
-				twoCharEscape === "\\B" ||
-				twoCharEscape === "\\0" ||
-				remaining.length < 1 ||
-				!remaining[1]
-			) {
-				return undefined;
-			}
-
-			return { character: remaining[1], length: 2 };
+	} else if (remaining.startsWith("\\")) {
+		const twoCharEscape = remaining.slice(0, 2);
+		const charResult = getCharacterFromEscape(twoCharEscape);
+		if (charResult) {
+			return { character: charResult, length: 2 };
 		}
+
+		if (
+			twoCharEscape === "\\b" ||
+			twoCharEscape === "\\B" ||
+			twoCharEscape === "\\0" ||
+			remaining.length < 1 ||
+			!remaining[1]
+		) {
+			return undefined;
+		}
+
+		return { character: remaining[1], length: 2 };
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion

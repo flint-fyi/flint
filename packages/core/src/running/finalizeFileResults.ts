@@ -41,20 +41,18 @@ export function finalizeFileResults(
 			}
 		}
 
-		if (!skipDiagnostics) {
-			if (language.getFileDiagnostics) {
-				log(
-					"Retrieving language %s diagnostics for file %s",
-					language.about.name,
-					filePath,
-				);
-				fileDiagnostics.push(...language.getFileDiagnostics(file));
-				log(
-					"Retrieved language %s diagnostics for file %s",
-					language.about.name,
-					filePath,
-				);
-			}
+		if (!skipDiagnostics && language.getFileDiagnostics) {
+			log(
+				"Retrieving language %s diagnostics for file %s",
+				language.about.name,
+				filePath,
+			);
+			fileDiagnostics.push(...language.getFileDiagnostics(file));
+			log(
+				"Retrieved language %s diagnostics for file %s",
+				language.about.name,
+				filePath,
+			);
 		}
 	}
 

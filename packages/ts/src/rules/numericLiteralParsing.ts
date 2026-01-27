@@ -116,17 +116,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							checkParseIntCall(node, sourceFile);
 						}
 					} else if (
-						node.expression.kind === SyntaxKind.PropertyAccessExpression
+						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+						node.expression.expression.kind === SyntaxKind.Identifier &&
+						node.expression.expression.text === "Number" &&
+						node.expression.name.kind === SyntaxKind.Identifier &&
+						node.expression.name.text === "parseInt" &&
+						isGlobalDeclaration(node.expression.expression, typeChecker)
 					) {
-						if (
-							node.expression.expression.kind === SyntaxKind.Identifier &&
-							node.expression.expression.text === "Number" &&
-							node.expression.name.kind === SyntaxKind.Identifier &&
-							node.expression.name.text === "parseInt" &&
-							isGlobalDeclaration(node.expression.expression, typeChecker)
-						) {
-							checkParseIntCall(node, sourceFile);
-						}
+						checkParseIntCall(node, sourceFile);
 					}
 				},
 			},
