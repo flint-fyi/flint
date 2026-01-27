@@ -18,7 +18,9 @@
 			"program": "${workspaceFolder}/packages/flint/bin/index.js",
 			"sourceMaps": true,
 			"console": "integratedTerminal",
-			"internalConsoleOptions": "neverOpen"
+			"internalConsoleOptions": "neverOpen",
+			"runtimeArgs": ["--conditions='@flint.fyi/source'"],
+			"args": "--cache-ignore"
 		}
 	]
 }

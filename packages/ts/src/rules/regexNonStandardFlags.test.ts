@@ -1,3 +1,4 @@
+// cSpell:ignore gixl
 import rule from "./regexNonStandardFlags.ts";
 import { ruleTester } from "./ruleTester.ts";
 

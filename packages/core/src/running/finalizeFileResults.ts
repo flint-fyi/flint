@@ -26,7 +26,7 @@ export function finalizeFileResults(
 
 	for (const { file, language } of languageAndFiles) {
 		if (file.directives) {
-			log("Adding %d directives for file %s", file.directives, filePath);
+			log("Adding %d directives for file %s", file.directives.length, filePath);
 			directivesFilterer.add(file.directives);
 		}
 

@@ -13,108 +13,125 @@ import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
+function collectFromElement<T>(
+	element: RegExpAST.Element,
+	collector: (el: RegExpAST.Element) => T[],
+): Set<T> {
+	const result = new Set<T>();
+
+	forEachInGroup(element, (element) => {
+		for (const item of collector(element)) {
+			result.add(item);
+		}
+		return undefined;
+	});
+
+	return result;
+}
+
 function elementContainsPositiveSet(
 	element: RegExpAST.Element,
 	kind: RegExpAST.CharacterSet["kind"],
 ) {
+	return forEachInGroup(
+		element,
+		(el) =>
+			el.type === "CharacterSet" &&
+			hasNegate(el) &&
+			el.kind === kind &&
+			!el.negate,
+	);
+}
+
+function findFollowingElement(capturingGroup: RegExpAST.CapturingGroup) {
+	const info = getAlternativeIndex(capturingGroup);
+	return info?.elements[info.index + 1];
+}
+
+function findPrecedingQuantifier(capturingGroup: RegExpAST.CapturingGroup) {
+	const info = getAlternativeIndex(capturingGroup);
+	if (!info || info.index <= 0) {
+		return undefined;
+	}
+
+	const previous = info.elements[info.index - 1];
+	return previous?.type === "Quantifier" && previous.max > previous.min
+		? previous
+		: undefined;
+}
+
+function forEachInGroup(
+	element: RegExpAST.Element,
+	callback: (element: RegExpAST.Element) => boolean | undefined,
+) {
 	switch (element.type) {
 		case "CapturingGroup":
-		case "Group": {
-			for (const alternative of element.alternatives) {
-				for (const element of alternative.elements) {
-					if (elementContainsPositiveSet(element, kind)) {
+		case "Group":
+			for (const alt of element.alternatives) {
+				for (const el of alt.elements) {
+					if (forEachInGroup(el, callback)) {
 						return true;
 					}
 				}
 			}
 			return false;
-		}
-
-		case "CharacterSet":
-			return hasNegate(element) && element.kind === kind && !element.negate;
 
 		case "Quantifier":
-			return elementContainsPositiveSet(element.element, kind);
+			return forEachInGroup(element.element, callback);
 
 		default:
-			return false;
+			return callback(element) === true;
 	}
 }
 
-function findFollowingElement(capturingGroup: RegExpAST.CapturingGroup) {
+function getAlternativeIndex(capturingGroup: RegExpAST.CapturingGroup) {
 	const parent = capturingGroup.parent;
 	if (parent.type !== "Alternative") {
 		return undefined;
 	}
-
 	const index = parent.elements.indexOf(capturingGroup);
-	return index === -1 ? undefined : parent.elements[index + 1];
+	return index === -1 ? undefined : { elements: parent.elements, index };
 }
 
-function findPrecedingQuantifier(capturingGroup: RegExpAST.CapturingGroup) {
-	const parent = capturingGroup.parent;
-	if (parent.type !== "Alternative") {
-		return undefined;
+function getCharacterSetType(el: RegExpAST.CharacterSet): string {
+	if (el.kind === "any") {
+		return "set:any";
 	}
-
-	const index = parent.elements.indexOf(capturingGroup);
-	if (index <= 0) {
-		return undefined;
+	if (!hasNegate(el)) {
+		return "";
 	}
-
-	// Only consider the immediately preceding element; separators break the relation.
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const previous = parent.elements[index - 1]!;
-
-	return previous.type === "Quantifier" && previous.max > previous.min
-		? previous
-		: undefined;
+	return `set:${el.kind}${el.negate ? ":negated" : ""}`;
 }
 
-function getClassExcludedChars(element: RegExpAST.Element) {
-	const excluded = new Set<number>();
-	if (element.type === "CharacterClass" && element.negate) {
-		for (const child of element.elements) {
-			if (child.type === "Character") {
-				excluded.add(child.value);
-			}
+function getCharacterValues(
+	elements: RegExpAST.CharacterClassElement[],
+): number[] {
+	const result: number[] = [];
+	for (const el of elements) {
+		if (el.type === "Character") {
+			result.push(el.value);
 		}
 	}
-	return excluded;
+	return result;
 }
 
-function getElementCharacters(element: RegExpAST.Element) {
-	const characters = new Set<number>();
-
-	switch (element.type) {
-		case "CapturingGroup":
-		case "Group":
-			for (const alternative of element.alternatives) {
-				for (const element of alternative.elements) {
-					for (const character of getElementCharacters(element)) {
-						characters.add(character);
-					}
-				}
-			}
-			break;
-		case "Character":
-			characters.add(element.value);
-			break;
-		case "CharacterClass":
-			for (const child of element.elements) {
-				if (child.type === "Character") {
-					characters.add(child.value);
-				}
-			}
-			break;
-		case "Quantifier":
-			for (const character of getElementCharacters(element.element)) {
-				characters.add(character);
-			}
-			break;
+function getClassExcludedChars(element: RegExpAST.Element): Set<number> {
+	if (element.type !== "CharacterClass" || !element.negate) {
+		return new Set<number>();
 	}
+	return new Set<number>(getCharacterValues(element.elements));
+}
 
-	return characters;
+function getElementCharacters(element: RegExpAST.Element): Set<number> {
+	return collectFromElement<number>(element, (el): number[] => {
+		if (el.type === "Character") {
+			return [el.value];
+		}
+		if (el.type === "CharacterClass") {
+			return getCharacterValues(el.elements);
+		}
+		return [];
+	});
 }
 
 function getEndQuantifier(capturingGroup: RegExpAST.CapturingGroup) {
@@ -157,59 +174,30 @@ function getFirstElementInGroup(element: RegExpAST.Element) {
 }
 
 function getMatchableCharacterTypes(element: RegExpAST.Element) {
-	const types = new Set<string>();
-
-	switch (element.type) {
-		case "CapturingGroup":
-		case "Group":
-			for (const alternative of element.alternatives) {
-				for (const child of alternative.elements) {
-					for (const type of getMatchableCharacterTypes(child)) {
-						types.add(type);
-					}
-				}
-			}
-			break;
-
-		case "Character":
-			types.add(`char:${element.value}`);
-			break;
-
-		case "CharacterClass":
-			// Note: overall class negation is complex; keep per-element collection
-			for (const child of element.elements) {
-				if (child.type === "Character") {
-					types.add(`char:${child.value}`);
-				} else if (child.type === "CharacterSet" && hasNegate(child)) {
-					const negateSuffix = child.negate ? ":negated" : "";
-					types.add(`set:${child.kind}${negateSuffix}`);
-				} else if (child.type === "CharacterClassRange") {
-					types.add(`range:${child.min.value}-${child.max.value}`);
-				}
-			}
-			break;
-
-		case "CharacterSet": {
-			if (element.kind === "any") {
-				types.add("set:any");
-			} else if (hasNegate(element)) {
-				const negateSuffix = element.negate ? ":negated" : "";
-				types.add(`set:${element.kind}${negateSuffix}`);
-			}
-			break;
+	return collectFromElement(element, (el) => {
+		if (el.type === "Character") {
+			return [`char:${el.value}`];
 		}
-
-		case "Quantifier":
-			for (const type of getMatchableCharacterTypes(element.element)) {
-				types.add(type);
-			}
-			break;
-
-		default:
-			break;
-	}
-
-	return types;
+		if (el.type === "CharacterSet") {
+			const type = getCharacterSetType(el);
+			return type ? [type] : [];
+		}
+		if (el.type === "CharacterClass") {
+			return el.elements.flatMap((child) => {
+				if (child.type === "Character") {
+					return [`char:${child.value}`];
+				}
+				if (child.type === "CharacterSet" && hasNegate(child)) {
+					return [`set:${child.kind}${child.negate ? ":negated" : ""}`];
+				}
+				if (child.type === "CharacterClassRange") {
+					return [`range:${child.min.value}-${child.max.value}`];
+				}
+				return [];
+			});
+		}
+		return [];
+	});
 }
 
 function getStartQuantifier(
@@ -247,23 +235,8 @@ function hasNegate(node: RegExpAST.CharacterSet) {
 }
 
 function hasOverlap(a: Set<string>, b: Set<string>) {
-	// If either side matches any character (dot), it overlaps with literals and most sets.
 	if (a.has("set:any") || b.has("set:any")) {
 		return true;
-	}
-
-	// Treat negated simple sets as disjoint from their non-negated counterparts.
-	const simpleSets = ["space", "digit", "word"] as const;
-	for (const kind of simpleSets) {
-		const aPos = a.has(`set:${kind}`);
-		const aNeg = a.has(`set:${kind}:negated`);
-		const bPos = b.has(`set:${kind}`);
-		const bNeg = b.has(`set:${kind}:negated`);
-		// If one side is the negation and the other is the positive of the same kind, they do not overlap.
-		if ((aPos && bNeg) || (aNeg && bPos)) {
-			// continue without early return to allow other overlaps to be considered
-			// but if both are exclusively this relation and no other shared types, we'll return false below
-		}
 	}
 
 	for (const type of a) {
@@ -273,6 +246,66 @@ function hasOverlap(a: Set<string>, b: Set<string>) {
 	}
 
 	return false;
+}
+
+function isAllowedEndPattern(
+	endQuantifier: RegExpAST.Quantifier,
+	followingElement: RegExpAST.Element,
+) {
+	return (
+		isDotDelimiterPattern(endQuantifier, followingElement) ||
+		isNegatedSetFollowedByPositive(endQuantifier, followingElement) ||
+		isExcludedDelimiterPattern(endQuantifier, followingElement)
+	);
+}
+
+function isDotDelimiterPattern(
+	endQuantifier: RegExpAST.Quantifier,
+	followingElement: RegExpAST.Element,
+) {
+	return (
+		endQuantifier.element.type === "CharacterSet" &&
+		endQuantifier.element.kind === "any" &&
+		followingElement.type === "Character"
+	);
+}
+
+function isExcludedDelimiterPattern(
+	endQuantifier: RegExpAST.Quantifier,
+	followingElement: RegExpAST.Element,
+) {
+	if (
+		endQuantifier.element.type !== "CharacterClass" ||
+		!endQuantifier.element.negate
+	) {
+		return false;
+	}
+
+	const excluded = getClassExcludedChars(endQuantifier.element);
+	if (!excluded.size) {
+		return false;
+	}
+
+	const followingChars = getElementCharacters(followingElement);
+	for (const character of followingChars) {
+		if (excluded.has(character)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function isNegatedSetFollowedByPositive(
+	endQuantifier: RegExpAST.Quantifier,
+	followingElement: RegExpAST.Element,
+) {
+	return (
+		endQuantifier.element.type === "CharacterSet" &&
+		hasNegate(endQuantifier.element) &&
+		endQuantifier.element.negate &&
+		elementContainsPositiveSet(followingElement, endQuantifier.element.kind)
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -316,110 +349,95 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			visitRegExpAST(regexpAst, {
 				onCapturingGroupEnter(cgNode) {
-					const precedingQuantifier = findPrecedingQuantifier(cgNode);
-					const firstAlternative = cgNode.alternatives[0];
-					if (precedingQuantifier && firstAlternative) {
-						const startQuantifier = getStartQuantifier(firstAlternative, "ltr");
-						if (startQuantifier) {
-							const precedingTypes = getMatchableCharacterTypes(
-								precedingQuantifier.element,
-							);
-							const captureTypes = getMatchableCharacterTypes(
-								startQuantifier.element,
-							);
+					checkMisleadingStart(cgNode, patternStart);
+					checkMisleadingEnd(cgNode, patternStart);
+				},
+			});
+		}
 
-							// Allow broad dot-quantifiers at the start of a capturing group.
-							if (
-								startQuantifier.element.type === "CharacterSet" &&
-								startQuantifier.element.kind === "any"
-							) {
-								return;
-							}
+		function checkMisleadingStart(
+			capturingGroupNode: RegExpAST.CapturingGroup,
+			patternStart: number,
+		) {
+			const precedingQuantifier = findPrecedingQuantifier(capturingGroupNode);
+			const firstAlternative = capturingGroupNode.alternatives[0];
+			if (!precedingQuantifier || !firstAlternative) {
+				return;
+			}
 
-							if (hasOverlap(precedingTypes, captureTypes)) {
-								const behavior =
-									startQuantifier.min === 0
-										? "the empty string"
-										: `only ${startQuantifier.min} character${startQuantifier.min > 1 ? "s" : ""}`;
+			const startQuantifier = getStartQuantifier(firstAlternative, "ltr");
+			if (!startQuantifier) {
+				return;
+			}
 
-								context.report({
-									data: {
-										behavior,
-										captureRaw: startQuantifier.raw,
-										precedingRaw: precedingQuantifier.raw,
-									},
-									message: "misleadingStart",
-									range: {
-										begin: patternStart + startQuantifier.start,
-										end: patternStart + startQuantifier.end,
-									},
-								});
-							}
-						}
-					}
+			if (
+				startQuantifier.element.type === "CharacterSet" &&
+				startQuantifier.element.kind === "any"
+			) {
+				return;
+			}
 
-					const endQuantifier = getEndQuantifier(cgNode);
-					const followingElement = findFollowingElement(cgNode);
-					if (endQuantifier && followingElement) {
-						const endTypes = getMatchableCharacterTypes(endQuantifier.element);
-						const firstFollowing = getFirstElementInGroup(followingElement);
+			const precedingTypes = getMatchableCharacterTypes(
+				precedingQuantifier.element,
+			);
+			const captureTypes = getMatchableCharacterTypes(startQuantifier.element);
 
-						const followingTypes = firstFollowing
-							? getMatchableCharacterTypes(firstFollowing)
-							: new Set<string>();
+			if (!hasOverlap(precedingTypes, captureTypes)) {
+				return;
+			}
 
-						// Common delimiter patterns: /(.*)\/.../ and /[^x]+x/ — allow without reporting.
-						// 1) Dot-quantifier followed by a literal delimiter
-						if (
-							endQuantifier.element.type === "CharacterSet" &&
-							endQuantifier.element.kind === "any" &&
-							followingElement.type === "Character"
-						) {
-							return;
-						}
+			const behavior =
+				startQuantifier.min === 0
+					? "the empty string"
+					: `only ${startQuantifier.min} character${startQuantifier.min > 1 ? "s" : ""}`;
 
-						// 2) Negated simple set followed by its positive counterpart (e.g., \S+ then \s+)
-						if (
-							endQuantifier.element.type === "CharacterSet" &&
-							hasNegate(endQuantifier.element) &&
-							endQuantifier.element.negate &&
-							elementContainsPositiveSet(
-								followingElement,
-								endQuantifier.element.kind,
-							)
-						) {
-							return;
-						}
+			context.report({
+				data: {
+					behavior,
+					captureRaw: startQuantifier.raw,
+					precedingRaw: precedingQuantifier.raw,
+				},
+				message: "misleadingStart",
+				range: {
+					begin: patternStart + startQuantifier.start,
+					end: patternStart + startQuantifier.end,
+				},
+			});
+		}
 
-						// 3) Negated character class excluding specific delimiters followed by those delimiters
-						if (
-							endQuantifier.element.type === "CharacterClass" &&
-							endQuantifier.element.negate
-						) {
-							const excluded = getClassExcludedChars(endQuantifier.element);
-							if (excluded.size) {
-								const followingChars = getElementCharacters(followingElement);
-								for (const ch of followingChars) {
-									if (excluded.has(ch)) {
-										return;
-									}
-								}
-							}
-						}
+		function checkMisleadingEnd(
+			capturingGroupNode: RegExpAST.CapturingGroup,
+			patternStart: number,
+		) {
+			const endQuantifier = getEndQuantifier(capturingGroupNode);
+			if (!endQuantifier) {
+				return;
+			}
 
-						if (hasOverlap(endTypes, followingTypes)) {
-							context.report({
-								data: {
-									quantifierRaw: endQuantifier.raw,
-								},
-								message: "misleadingEnd",
-								range: {
-									begin: patternStart + endQuantifier.start,
-									end: patternStart + endQuantifier.end,
-								},
-							});
-						}
-					}
+			const followingElement = findFollowingElement(capturingGroupNode);
+			if (
+				!followingElement ||
+				isAllowedEndPattern(endQuantifier, followingElement)
+			) {
+				return;
+			}
+
+			const endTypes = getMatchableCharacterTypes(endQuantifier.element);
+			const firstFollowing = getFirstElementInGroup(followingElement);
+			const followingTypes = firstFollowing
+				? getMatchableCharacterTypes(firstFollowing)
+				: new Set<string>();
+
+			if (!hasOverlap(endTypes, followingTypes)) {
+				return;
+			}
+
+			context.report({
+				data: { quantifierRaw: endQuantifier.raw },
+				message: "misleadingEnd",
+				range: {
+					begin: patternStart + endQuantifier.start,
+					end: patternStart + endQuantifier.end,
 				},
 			});
 		}

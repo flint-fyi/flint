@@ -43,6 +43,7 @@ export interface Rule<
 
 export interface RuleAbout extends BaseAbout {
 	description: string;
+	presets?: string[];
 }
 
 /**
