@@ -1,3 +1,4 @@
+// flint-disable-file octalEscapes
 import rule from "./regexUnnecessaryCharacterClasses.ts";
 import { ruleTester } from "./ruleTester.ts";
 

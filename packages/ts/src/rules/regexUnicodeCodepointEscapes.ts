@@ -11,7 +11,7 @@ import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 function isSurrogatePairEscape(raw: string) {
-	return /^(?:\\u[\dA-Fa-f]{4}){2}$/.test(raw);
+	return /^(?:\\u[\da-f]{4}){2}$/i.test(raw);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -93,7 +93,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const surrogatePairPattern = /\\\\u([\dA-Fa-f]{4})\\\\u([\dA-Fa-f]{4})/g;
+			const surrogatePairPattern = /\\\\u([\da-f]{4})\\\\u([\da-f]{4})/gi;
 
 			let match: null | RegExpExecArray;
 			while ((match = surrogatePairPattern.exec(rawPattern)) !== null) {
