@@ -177,12 +177,12 @@ importers:
       cli-cursor:
         specifier: ^5.0.0
         version: 5.0.0
-      debounce:
-        specifier: ^3.0.0
-        version: 3.0.0
       debug-for-file:
         specifier: ^0.2.0
         version: 0.2.0
+      p-debounce:
+        specifier: ^5.1.0
+        version: 5.1.0
       text-table-fast:
         specifier: ^0.1.0
         version: 0.1.0
@@ -2846,10 +2846,6 @@ packages:
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
-  debounce@3.0.0:
-    resolution: {integrity: sha512-64byRbF0/AirwbuHqB3/ZpMG9/nckDa6ZA0yd6UnaQNwbbemCOwvz2sL5sjXLHhZHADyiwLm0M5qMhltUUx+TA==}
-    engines: {node: '>=20'}
-
   debug-for-file@0.2.0:
     resolution: {integrity: sha512-2w8an7kqhP8LXvU+riM7azVfAV3uEzE1lOsQFhrLI1K+kQZEbCK+nigYHK5GrgUvwvVNbWnlMkUM3kLbeJ0bPA==}
     engines: {node: '>=18.3.0'}
@@ -4077,6 +4073,10 @@ packages:
 
   oxc-resolver@11.15.0:
     resolution: {integrity: sha512-Hk2J8QMYwmIO9XTCUiOH00+Xk2/+aBxRUnhrSlANDyCnLYc32R1WSIq1sU2yEdlqd53FfMpPEpnBYIKQMzliJw==}
+
+  p-debounce@5.1.0:
+    resolution: {integrity: sha512-3DNQmB7HPRMSuZ9P8JQFzEr7156s1S5Lqpi3mSrsZe5AHvl4ONfGrdB5azWqeOpNejQiemgQBkyU+IDKR5nwyg==}
+    engines: {node: '>=20'}
 
   p-filter@2.1.0:
     resolution: {integrity: sha512-ZBxxZ5sL2HghephhpGAQdoskxplTwr7ICaehZwLIlfL6acuVgZPm8yBNuRAFBGEqtD/hmUeq9eqLg2ys9Xr/yw==}
@@ -7680,8 +7680,6 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  debounce@3.0.0: {}
-
   debug-for-file@0.2.0:
     dependencies:
       debug: 4.4.3
@@ -9404,6 +9402,8 @@ snapshots:
       '@oxc-resolver/binding-win32-arm64-msvc': 11.15.0
       '@oxc-resolver/binding-win32-ia32-msvc': 11.15.0
       '@oxc-resolver/binding-win32-x64-msvc': 11.15.0
+
+  p-debounce@5.1.0: {}
 
   p-filter@2.1.0:
     dependencies:

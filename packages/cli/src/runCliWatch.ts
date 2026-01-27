@@ -1,8 +1,8 @@
 import type { LintResults } from "@flint.fyi/core";
 import { normalizePath } from "@flint.fyi/core";
-import debounce from "debounce"; // p-debounce???
 import { debugForFile } from "debug-for-file";
 import * as fs from "node:fs/promises";
+import pDebounce from "p-debounce";
 
 import type { OptionsValues } from "./options.ts";
 import type { Renderer } from "./renderers/types.ts";
@@ -27,6 +27,11 @@ export async function runCliWatch(
 		const renderer = getRenderer();
 		currentRenderer = renderer;
 
+		// Register onQuit immediately before lint run starts
+		renderer.onQuit?.(() => {
+			abortController.abort();
+		});
+
 		try {
 			const { lintResults } = await runCliOnce(
 				configFileName,
@@ -41,50 +46,61 @@ export async function runCliWatch(
 			log("Error during lint run: %o", error);
 		}
 
-		renderer.onQuit?.(() => {
-			abortController.abort();
-		});
-
 		return renderer;
 	}
 
 	currentRenderer = await startNewTask();
 
-	const rerun = debounce(async (fileName: string) => {
-		if (fileName.startsWith("node_modules/.cache")) {
-			log("Skipping re-running watch mode for ignored change to: %s", fileName);
-			return;
-		}
+	const rerun = pDebounce(
+		async (fileName: string) => {
+			const normalizedPath = normalizePath(fileName, true);
 
-		const normalizedPath = normalizePath(fileName, true);
+			if (normalizedPath.startsWith("node_modules/.cache")) {
+				log(
+					"Skipping re-running watch mode for ignored change to: %s",
+					fileName,
+				);
+				return;
+			}
 
-		const shouldRerun = shouldRerunForFileChange(
-			normalizedPath,
-			currentLintResults,
-		);
-
-		if (!shouldRerun) {
-			log(
-				"Skipping re-running watch mode for unrelated file change: %s",
-				fileName,
+			const shouldRerun = shouldRerunForFileChange(
+				normalizedPath,
+				currentLintResults,
 			);
-			return;
-		}
 
-		log("Change detected from: %s", fileName);
-		currentRenderer.dispose?.();
-		currentRenderer = await startNewTask();
-	}, 100);
+			if (!shouldRerun) {
+				log(
+					"Skipping re-running watch mode for unrelated file change: %s",
+					fileName,
+				);
+				return;
+			}
+
+			log("Change detected from: %s", fileName);
+			currentRenderer.dispose?.();
+			currentRenderer = await startNewTask();
+		},
+		100,
+		{ signal: abortController.signal },
+	);
 
 	log("Watching cwd:", cwd);
 
-	for await (const { filename } of fs.watch(cwd, {
-		recursive: true,
-		signal: abortController.signal,
-	})) {
-		if (filename) {
-			await rerun(filename);
+	try {
+		for await (const { filename } of fs.watch(cwd, {
+			recursive: true,
+			signal: abortController.signal,
+		})) {
+			if (filename) {
+				await rerun(filename);
+			}
 		}
+	} catch (error) {
+		// AbortError is expected when quitting - just exit cleanly
+		if (error instanceof Error && error.name === "AbortError") {
+			return;
+		}
+		throw error;
 	}
 }
 
