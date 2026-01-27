@@ -14,6 +14,18 @@ import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
+// Allowed flags set
+const allowedFlags = new Set([
+	0x64, // d
+	0x67, // g
+	0x69, // i
+	0x6d, // m
+	0x73, // s
+	0x75, // u
+	0x76, // v
+	0x79, // y
+]);
+
 function elementIsZeroLength(element: Element): boolean {
 	switch (element.type) {
 		case "Assertion":
@@ -45,11 +57,75 @@ function findEmptyCapturingGroups(pattern: string, flags: string) {
 
 	visitRegExpAST(ast, {
 		onCapturingGroupEnter(node: CapturingGroup) {
-			const allAlternativesEmpty = node.alternatives.every((alt) =>
-				alt.elements.every(elementIsZeroLength),
+			// Skip named capturing groups; optional content is often intentional.
+			if (node.name) {
+				return;
+			}
+			const onlyEmpty = node.alternatives.every((alternate) =>
+				alternate.elements.every(elementIsZeroLength),
 			);
 
-			if (allAlternativesEmpty) {
+			// Exception: groups like ([\s\S]*?) used to match any text are not considered empty-only
+			const hasAnyCharQuantifier = node.alternatives.some((alternate) => {
+				if (alternate.elements.length !== 1) {
+					return false;
+				}
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const element = alternate.elements[0]!;
+				if (
+					element.type !== "Quantifier" ||
+					element.element.type !== "CharacterClass"
+				) {
+					return false;
+				}
+
+				let hasSpace = false;
+				let hasNonSpace = false;
+
+				for (const child of element.element.elements) {
+					if (child.type !== "CharacterSet" || child.kind !== "space") {
+						continue;
+					}
+
+					if (child.negate) {
+						hasNonSpace = true;
+					} else {
+						hasSpace = true;
+					}
+
+					if (hasSpace && hasNonSpace) {
+						return true;
+					}
+				}
+
+				return false;
+			});
+
+			// Exception for flag-capturing groups like ([dgimsuyv]*)
+			const isFlagGroup = node.alternatives.some((alternate) => {
+				if (alternate.elements.length !== 1) {
+					return false;
+				}
+
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const element = alternate.elements[0]!;
+				if (
+					element.type !== "Quantifier" ||
+					element.element.type !== "CharacterClass"
+				) {
+					return false;
+				}
+
+				for (const child of element.element.elements) {
+					if (child.type !== "Character" || !allowedFlags.has(child.value)) {
+						return false;
+					}
+				}
+
+				return true;
+			});
+
+			if (onlyEmpty && !hasAnyCharQuantifier && !isFlagGroup) {
 				results.push(node);
 			}
 		},

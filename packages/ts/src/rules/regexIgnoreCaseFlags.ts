@@ -20,7 +20,8 @@ function getCharacterClassesIfSimplified(pattern: RegExpAST.Pattern) {
 				return;
 			}
 
-			if (hasMatchingCasePair(charClass.elements)) {
+			const elements = charClass.elements;
+			if (hasMatchingCasePair(elements) && !isHexSubset(elements)) {
 				characterClasses.push(charClass);
 				simplified = true;
 			}
@@ -53,6 +54,55 @@ function hasMatchingCasePair(elements: RegExpAST.CharacterClassElement[]) {
 			(letter) =>
 				letters.has(toLowerCase(letter)) && letters.has(toUpperCase(letter)),
 		);
+}
+
+function containsDigits(elements: RegExpAST.CharacterClassElement[]) {
+	for (const element of elements) {
+		if (element.type === "Character") {
+			if (element.value >= 0x30 && element.value <= 0x39) {
+				return true;
+			}
+		} else if (element.type === "CharacterClassRange") {
+			const min = element.min.value;
+			const max = element.max.value;
+			if (min <= 0x39 && max >= 0x30) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+function isHexSubset(elements: RegExpAST.CharacterClassElement[]) {
+	// Returns true if there is a letter range confined to A-F/a-f
+	let hasHexRange = false;
+	for (const element of elements) {
+		if (element.type === "CharacterClassRange") {
+			const min = element.min.value;
+			const max = element.max.value;
+			const isUpperHexRange = min >= 0x41 && max <= 0x46; // A-F
+			const isLowerHexRange = min >= 0x61 && max <= 0x66; // a-f
+			if (isUpperHexRange || isLowerHexRange) {
+				hasHexRange = true;
+			} else if (isLetter(min) || isLetter(max)) {
+				// Contains a non-hex letter range
+				return false;
+			}
+		} else if (element.type === "Character") {
+			// Individual letters don't qualify as hex subset by themselves
+			if (isLetter(element.value) && !isHexLetter(element.value)) {
+				return false;
+			}
+		}
+	}
+	return hasHexRange;
+}
+
+function isHexLetter(codePoint: number) {
+	return (
+		(codePoint >= 0x41 && codePoint <= 0x46) || // A-F
+		(codePoint >= 0x61 && codePoint <= 0x66) // a-f
+	);
 }
 
 function isLetter(codePoint: number) {
