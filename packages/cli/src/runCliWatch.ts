@@ -50,7 +50,12 @@ export async function runCliWatch(
 		currentRenderer = startNewTask();
 
 		const rerun = debounce((fileName: string) => {
-			if (fileName.startsWith("node_modules/.cache")) {
+			if (
+				fileName.startsWith("node_modules/.cache") ||
+				fileName.startsWith(".git") ||
+				fileName.startsWith(".jj") ||
+				fileName.startsWith(".turbo")
+			) {
 				log(
 					"Skipping re-running watch mode for ignored change to: %s",
 					fileName,
