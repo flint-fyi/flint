@@ -15579,7 +15579,6 @@
 		"flint": {
 			"name": "regexUnicodeEscapes",
 			"plugin": "ts",
-			"preset": "stylistic",
 			"status": "implemented"
 		}
 	},

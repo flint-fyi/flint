@@ -10,23 +10,6 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-function containsDigits(elements: RegExpAST.CharacterClassElement[]) {
-	for (const element of elements) {
-		if (element.type === "Character") {
-			if (element.value >= 0x30 && element.value <= 0x39) {
-				return true;
-			}
-		} else if (element.type === "CharacterClassRange") {
-			const min = element.min.value;
-			const max = element.max.value;
-			if (min <= 0x39 && max >= 0x30) {
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
 function getCharacterClassesIfSimplified(pattern: RegExpAST.Pattern) {
 	const characterClasses: RegExpAST.CharacterClass[] = [];
 	let simplified = false;
@@ -38,7 +21,11 @@ function getCharacterClassesIfSimplified(pattern: RegExpAST.Pattern) {
 			}
 
 			const elements = charClass.elements;
-			if (hasMatchingCasePair(elements) && !isHexSubset(elements)) {
+			if (
+				hasMatchingCasePair(elements) &&
+				!isHexSubset(elements) &&
+				!isFullAlphabetMatch(elements)
+			) {
 				characterClasses.push(charClass);
 				simplified = true;
 			}
@@ -71,6 +58,31 @@ function hasMatchingCasePair(elements: RegExpAST.CharacterClassElement[]) {
 			(letter) =>
 				letters.has(toLowerCase(letter)) && letters.has(toUpperCase(letter)),
 		);
+}
+
+function isFullAlphabetMatch(elements: RegExpAST.CharacterClassElement[]) {
+	// Returns true if the class matches exactly [A-Za-z] - intentionally matching any letter
+	let hasFullUpper = false;
+	let hasFullLower = false;
+	let hasOtherLetters = false;
+
+	for (const element of elements) {
+		if (element.type === "CharacterClassRange") {
+			const min = element.min.value;
+			const max = element.max.value;
+			if (min === 0x41 && max === 0x5a) {
+				hasFullUpper = true;
+			} else if (min === 0x61 && max === 0x7a) {
+				hasFullLower = true;
+			} else if (isLetter(min) || isLetter(max)) {
+				hasOtherLetters = true;
+			}
+		} else if (element.type === "Character" && isLetter(element.value)) {
+			hasOtherLetters = true;
+		}
+	}
+
+	return hasFullUpper && hasFullLower && !hasOtherLetters;
 }
 
 function isHexLetter(codePoint: number) {
