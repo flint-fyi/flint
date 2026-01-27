@@ -20,14 +20,14 @@ export default defineConfig({
 			},
 			rules: [
 				flint.presets.logical,
-				node.presets.logical,
 				node.presets.logicalStrict,
-				node.presets.stylistic,
 				node.presets.stylisticStrict,
-				ts.presets.logical,
 				ts.presets.logicalStrict,
-				ts.presets.stylistic,
 				ts.presets.stylisticStrict,
+				ts.rules({
+					catchCallbackTypes: {},
+					functionDeclarationStyles: true,
+				}),
 			],
 		},
 		{
@@ -45,7 +45,7 @@ export default defineConfig({
 			files: globs.all,
 			rules: [
 				ts.rules({
-					functionDeclarationStyles: false,
+					catchCallbackTypes: false,
 				}),
 			],
 		},
