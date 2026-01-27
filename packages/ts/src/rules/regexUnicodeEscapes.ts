@@ -61,7 +61,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Enforces consistent Unicode escape style in regex patterns by preferring codepoint escapes.",
 		id: "regexUnicodeEscapes",
-		presets: ["stylistic"],
 	},
 	messages: {
 		preferCodepointEscape: {

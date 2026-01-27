@@ -15301,7 +15301,6 @@
 		"flint": {
 			"name": "regexNamedCaptureGroups",
 			"plugin": "ts",
-			"preset": "logical",
 			"status": "implemented"
 		}
 	},
@@ -15580,7 +15579,6 @@
 		"flint": {
 			"name": "regexUnicodeEscapes",
 			"plugin": "ts",
-			"preset": "stylistic",
 			"status": "implemented"
 		}
 	},
