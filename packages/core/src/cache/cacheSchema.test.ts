@@ -116,7 +116,7 @@ describe("cacheStorageSchema decoding", () => {
 				"src/index.ts": {
 					reports: [
 						{
-							about: { id: "test-rule", presets: ["recommended"] },
+							about: { id: "test-rule" },
 							data: { count: 5, enabled: true, name: "test" },
 							dependencies: ["src/other.ts"],
 							fix: [{ range: { begin: 0, end: 5 }, text: "fixed" }],
@@ -345,7 +345,7 @@ describe("cacheStorageSchema", () => {
 					dependencies: ["src/utils.ts"],
 					reports: [
 						{
-							about: { id: "test-rule", presets: ["recommended"] },
+							about: { id: "test-rule" },
 							message: {
 								primary: "Test error",
 								secondary: ["More info"],
