@@ -16,7 +16,7 @@ import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 function elementContainsPositiveSet(
 	element: RegExpAST.Element,
 	kind: RegExpAST.CharacterSet["kind"],
-): boolean {
+) {
 	switch (element.type) {
 		case "CapturingGroup":
 		case "Group": {
@@ -29,10 +29,13 @@ function elementContainsPositiveSet(
 			}
 			return false;
 		}
+
 		case "CharacterSet":
-			return element.kind === kind && !element.negate;
+			return hasNegate(element) && element.kind === kind && !element.negate;
+
 		case "Quantifier":
 			return elementContainsPositiveSet(element.element, kind);
+
 		default:
 			return false;
 	}
@@ -68,7 +71,7 @@ function findPrecedingQuantifier(capturingGroup: RegExpAST.CapturingGroup) {
 		: undefined;
 }
 
-function getClassExcludedChars(element: RegExpAST.Element): Set<number> {
+function getClassExcludedChars(element: RegExpAST.Element) {
 	const excluded = new Set<number>();
 	if (element.type === "CharacterClass" && element.negate) {
 		for (const child of element.elements) {
@@ -80,7 +83,7 @@ function getClassExcludedChars(element: RegExpAST.Element): Set<number> {
 	return excluded;
 }
 
-function getElementCharacters(element: RegExpAST.Element): Set<number> {
+function getElementCharacters(element: RegExpAST.Element) {
 	const characters = new Set<number>();
 
 	switch (element.type) {
@@ -130,6 +133,29 @@ function getEndQuantifier(capturingGroup: RegExpAST.CapturingGroup) {
 	return undefined;
 }
 
+function getFirstElementInGroup(element: RegExpAST.Element) {
+	let current: RegExpAST.Element | undefined = element;
+
+	while (current) {
+		if (current.type === "Quantifier") {
+			current = current.element;
+			continue;
+		}
+		if (current.type === "Group" || current.type === "CapturingGroup") {
+			const alternative: RegExpAST.Alternative | undefined =
+				current.alternatives[0];
+			if (!alternative) {
+				return undefined;
+			}
+			current = alternative.elements[0];
+			continue;
+		}
+		break;
+	}
+
+	return current;
+}
+
 function getMatchableCharacterTypes(element: RegExpAST.Element) {
 	const types = new Set<string>();
 
@@ -154,7 +180,7 @@ function getMatchableCharacterTypes(element: RegExpAST.Element) {
 			for (const child of element.elements) {
 				if (child.type === "Character") {
 					types.add(`char:${child.value}`);
-				} else if (child.type === "CharacterSet") {
+				} else if (child.type === "CharacterSet" && hasNegate(child)) {
 					const negateSuffix = child.negate ? ":negated" : "";
 					types.add(`set:${child.kind}${negateSuffix}`);
 				} else if (child.type === "CharacterClassRange") {
@@ -163,12 +189,15 @@ function getMatchableCharacterTypes(element: RegExpAST.Element) {
 			}
 			break;
 
-		case "CharacterSet":
-			{
+		case "CharacterSet": {
+			if (element.kind === "any") {
+				types.add("set:any");
+			} else if (hasNegate(element)) {
 				const negateSuffix = element.negate ? ":negated" : "";
 				types.add(`set:${element.kind}${negateSuffix}`);
 			}
 			break;
+		}
 
 		case "Quantifier":
 			for (const type of getMatchableCharacterTypes(element.element)) {
@@ -211,6 +240,10 @@ function getStartQuantifier(
 	}
 
 	return undefined;
+}
+
+function hasNegate(node: RegExpAST.CharacterSet) {
+	return "negate" in node;
 }
 
 function hasOverlap(a: Set<string>, b: Set<string>) {
@@ -329,27 +362,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const followingElement = findFollowingElement(cgNode);
 					if (endQuantifier && followingElement) {
 						const endTypes = getMatchableCharacterTypes(endQuantifier.element);
-						const firstFollowing = ((element: RegExpAST.Element) => {
-							let current: RegExpAST.Element | undefined = element;
-							// Descend into quantifiers and groups to find the first inner element
-							// Skip assertions implicitly as they won't produce text
-							while (current) {
-								if (current.type === "Quantifier") {
-									current = current.element;
-									continue;
-								}
-								if (
-									current.type === "Group" ||
-									current.type === "CapturingGroup"
-								) {
-									const alternative = current.alternatives[0];
-									current = alternative?.elements[0];
-									continue;
-								}
-								break;
-							}
-							return current;
-						})(followingElement);
+						const firstFollowing = getFirstElementInGroup(followingElement);
 
 						const followingTypes = firstFollowing
 							? getMatchableCharacterTypes(firstFollowing)
@@ -368,6 +381,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						// 2) Negated simple set followed by its positive counterpart (e.g., \S+ then \s+)
 						if (
 							endQuantifier.element.type === "CharacterSet" &&
+							hasNegate(endQuantifier.element) &&
 							endQuantifier.element.negate &&
 							elementContainsPositiveSet(
 								followingElement,

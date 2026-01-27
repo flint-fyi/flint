@@ -10,6 +10,23 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
+function containsDigits(elements: RegExpAST.CharacterClassElement[]) {
+	for (const element of elements) {
+		if (element.type === "Character") {
+			if (element.value >= 0x30 && element.value <= 0x39) {
+				return true;
+			}
+		} else if (element.type === "CharacterClassRange") {
+			const min = element.min.value;
+			const max = element.max.value;
+			if (min <= 0x39 && max >= 0x30) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 function getCharacterClassesIfSimplified(pattern: RegExpAST.Pattern) {
 	const characterClasses: RegExpAST.CharacterClass[] = [];
 	let simplified = false;
@@ -56,21 +73,11 @@ function hasMatchingCasePair(elements: RegExpAST.CharacterClassElement[]) {
 		);
 }
 
-function containsDigits(elements: RegExpAST.CharacterClassElement[]) {
-	for (const element of elements) {
-		if (element.type === "Character") {
-			if (element.value >= 0x30 && element.value <= 0x39) {
-				return true;
-			}
-		} else if (element.type === "CharacterClassRange") {
-			const min = element.min.value;
-			const max = element.max.value;
-			if (min <= 0x39 && max >= 0x30) {
-				return true;
-			}
-		}
-	}
-	return false;
+function isHexLetter(codePoint: number) {
+	return (
+		(codePoint >= 0x41 && codePoint <= 0x46) || // A-F
+		(codePoint >= 0x61 && codePoint <= 0x66) // a-f
+	);
 }
 
 function isHexSubset(elements: RegExpAST.CharacterClassElement[]) {
@@ -96,13 +103,6 @@ function isHexSubset(elements: RegExpAST.CharacterClassElement[]) {
 		}
 	}
 	return hasHexRange;
-}
-
-function isHexLetter(codePoint: number) {
-	return (
-		(codePoint >= 0x41 && codePoint <= 0x46) || // A-F
-		(codePoint >= 0x61 && codePoint <= 0x66) // a-f
-	);
 }
 
 function isLetter(codePoint: number) {
