@@ -16275,13 +16275,11 @@
 			}
 		],
 		"flint": {
-			"name": "selfComparisons",
+			"name": "unnecessaryComparisons",
 			"plugin": "ts",
 			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"status": "implemented"
 		},
-		"notes": "Superseded by unnecessaryConditions.",
 		"oxlint": [
 			{
 				"name": "eslint/no-self-compare",
@@ -17746,8 +17744,7 @@
 			"name": "unnecessaryComparisons",
 			"plugin": "ts",
 			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
+			"status": "implemented"
 		},
 		"oxlint": [
 			{

@@ -15,10 +15,10 @@ Such patterns often indicate logic errors, copy-paste mistakes, or overly comple
 
 The rule covers several categories of problematic comparisons:
 
-1. **Self-comparisons**: Comparing a value to itself (e.g., `x === x`)
-2. **Impossible ranges**: Range checks that can never be satisfied (e.g., `x <= 400 && x > 500`)
-3. **Redundant double comparisons**: OR patterns that can be simplified (e.g., `x === y || x < y` can become `x <= y`)
-4. **Ineffective checks**: Redundant bounds in AND chains (e.g., `x < 200 && x <= 299` where the second check is always true when the first is)
+1. Self-comparisons: Comparing a value to itself (e.g., `x === x`)
+2. Impossible ranges: Range checks that can never be satisfied (e.g., `x <= 400 && x > 500`)
+3. Redundant double comparisons: OR patterns that can be simplified (e.g., `x === y || x < y` can become `x <= y`)
+4. Ineffective checks: Redundant bounds in AND chains (e.g., `x < 200 && x <= 299` where the second check is always true when the first is)
 
 ## Examples
 
@@ -29,7 +29,7 @@ The rule covers several categories of problematic comparisons:
 
 ```ts
 if (value === value) {
-	// Always true (except for NaN)
+	// Always true
 }
 ```
 
@@ -180,9 +180,7 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If your project relies on dynamic getters or other side effects that could make seemingly-identical expressions return different values, you might need to disable this rule for those specific cases.
-
-For NaN checking, use `Number.isNaN(value)` instead of `value !== value`.
+If your codebase relies on dynamic getters or other side effects that could make seemingly-identical expressions return different values, you might want to disable this rule for those specific cases.
 
 ## Further Reading
 

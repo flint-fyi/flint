@@ -227,7 +227,6 @@ import regexUnnecessaryDisjunctions from "./rules/regexUnnecessaryDisjunctions.t
 import regexUnnecessaryDollarReplacements from "./rules/regexUnnecessaryDollarReplacements.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
-import selfComparisons from "./rules/selfComparisons.ts";
 import sequences from "./rules/sequences.ts";
 import shadowedRestrictedNames from "./rules/shadowedRestrictedNames.ts";
 import sparseArrays from "./rules/sparseArrays.ts";
@@ -479,7 +478,6 @@ export const ts = createPlugin({
 		regexUnnecessaryDollarReplacements,
 		returnAssignments,
 		selfAssignments,
-		selfComparisons,
 		sequences,
 		shadowedRestrictedNames,
 		sparseArrays,

@@ -24,7 +24,7 @@ interface ComparisonInfo {
 function checkImpossibleRange(
 	comparisons: ComparisonInfo[],
 	sourceFile: AST.SourceFile,
-): null | { lowerBound: ComparisonInfo; upperBound: ComparisonInfo } {
+) {
 	// Find pairs that create impossible ranges
 	for (const [i, a] of comparisons.entries()) {
 		for (const b of comparisons.slice(i + 1)) {
@@ -86,7 +86,7 @@ function checkImpossibleRange(
 function checkIneffectiveChecks(
 	comparisons: ComparisonInfo[],
 	sourceFile: AST.SourceFile,
-): null | { stronger: ComparisonInfo; weaker: ComparisonInfo } {
+) {
 	for (const [i, a] of comparisons.entries()) {
 		for (const b of comparisons.slice(i + 1)) {
 			// Both must have numeric values
@@ -153,11 +153,7 @@ function checkIneffectiveChecks(
 function checkRedundantOrComparison(
 	comparisons: ComparisonInfo[],
 	sourceFile: AST.SourceFile,
-): null | {
-	first: ComparisonInfo;
-	second: ComparisonInfo;
-	suggestion: string;
-} {
+) {
 	for (const [index, a] of comparisons.entries()) {
 		for (const b of comparisons.slice(index + 1)) {
 			// Must compare the same operands
@@ -188,7 +184,7 @@ function checkRedundantOrComparison(
 function collectComparisonsFromChain(
 	node: AST.BinaryExpression,
 	operatorKind: SyntaxKind,
-): ComparisonInfo[] {
+) {
 	const results: ComparisonInfo[] = [];
 
 	function traverse(expr: AST.Expression): void {
@@ -216,9 +212,7 @@ function collectComparisonsFromChain(
 	return results;
 }
 
-function extractComparisonInfo(
-	node: AST.BinaryExpression,
-): ComparisonInfo | null {
+function extractComparisonInfo(node: AST.BinaryExpression) {
 	if (!isComparisonOperator(node.operatorToken)) {
 		return null;
 	}
@@ -268,7 +262,10 @@ function extractComparisonInfo(
 	};
 }
 
-function extractNumericLiteral(node: AST.Expression): null | number {
+// TODO: Add a getStaticValue util that could get static values from things like
+// `const x = 5` (similar to ESLint's getStaticValue). That would help increase
+// this rule's coverage.
+function extractNumericLiteral(node: AST.Expression) {
 	const unwrapped = unwrapParenthesizedExpression(node);
 
 	if (unwrapped.kind === SyntaxKind.NumericLiteral) {
@@ -296,7 +293,7 @@ function extractNumericLiteral(node: AST.Expression): null | number {
 	return null;
 }
 
-function flipDirection(direction: ComparisonDirection): ComparisonDirection {
+function flipDirection(direction: ComparisonDirection) {
 	switch (direction) {
 		case "lower":
 			return "upper";
@@ -307,7 +304,7 @@ function flipDirection(direction: ComparisonDirection): ComparisonDirection {
 	}
 }
 
-function flipOperator(operatorKind: SyntaxKind): SyntaxKind {
+function flipOperator(operatorKind: SyntaxKind) {
 	switch (operatorKind) {
 		case SyntaxKind.GreaterThanEqualsToken:
 			return SyntaxKind.LessThanEqualsToken;
@@ -322,14 +319,11 @@ function flipOperator(operatorKind: SyntaxKind): SyntaxKind {
 	}
 }
 
-function formatComparison(
-	info: ComparisonInfo,
-	sourceFile: AST.SourceFile,
-): string {
+function formatComparison(info: ComparisonInfo, sourceFile: AST.SourceFile) {
 	return info.node.getText(sourceFile);
 }
 
-function getComparisonDirection(operatorKind: SyntaxKind): ComparisonDirection {
+function getComparisonDirection(operatorKind: SyntaxKind) {
 	switch (operatorKind) {
 		case SyntaxKind.EqualsEqualsEqualsToken:
 		case SyntaxKind.EqualsEqualsToken:
@@ -348,10 +342,7 @@ function getComparisonDirection(operatorKind: SyntaxKind): ComparisonDirection {
 	}
 }
 
-function getSimplifiedOperator(
-	op1: SyntaxKind,
-	op2: SyntaxKind,
-): null | string {
+function getSimplifiedOperator(op1: SyntaxKind, op2: SyntaxKind) {
 	// x === y || x < y  ->  x <= y
 	// x === y || x > y  ->  x >= y
 	const pairs: [SyntaxKind, SyntaxKind, string][] = [
@@ -370,7 +361,7 @@ function getSimplifiedOperator(
 	return null;
 }
 
-function isStrictComparison(operatorKind: SyntaxKind): boolean {
+function isStrictComparison(operatorKind: SyntaxKind) {
 	return (
 		operatorKind === SyntaxKind.LessThanToken ||
 		operatorKind === SyntaxKind.GreaterThanToken
@@ -422,7 +413,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			],
 			suggestions: [
 				"Verify that you intended to compare two different values.",
-				"If checking for NaN, use `Number.isNaN()` or `isNaN()` instead.",
 			],
 		},
 	},

@@ -3,9 +3,6 @@ import rule from "./unnecessaryComparisons.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
-		// =====================
-		// Self-Comparisons
-		// =====================
 		{
 			code: `
 if (value === value) {
@@ -152,10 +149,20 @@ if ((value) === (value)) {
 }
 `,
 		},
-
-		// =====================
-		// Impossible Ranges
-		// =====================
+		{
+			code: `
+if (a.b.c === a.b.c) {
+	console.log("deeply nested");
+}
+`,
+			snapshot: `
+if (a.b.c === a.b.c) {
+    ~~~~~~~~~~~~~~~
+    Comparing a value to itself is unnecessary and likely indicates a logic error.
+	console.log("deeply nested");
+}
+`,
+		},
 		{
 			code: `
 if (x <= 400 && x > 500) {
@@ -282,10 +289,20 @@ if (obj.value <= 10 && obj.value > 20) {
 }
 `,
 		},
-
-		// =====================
-		// Redundant Double Comparisons (OR)
-		// =====================
+		{
+			code: `
+if (a.b.c <= 10 && a.b.c > 20) {
+	console.log("deeply nested impossible");
+}
+`,
+			snapshot: `
+if (a.b.c <= 10 && a.b.c > 20) {
+    ~~~~~~~~~~~~~~~~~~~~~~~~~
+    This range comparison can never be true.
+	console.log("deeply nested impossible");
+}
+`,
+		},
 		{
 			code: `
 if (x === y || x < y) {
@@ -356,10 +373,6 @@ if (a == b || a > b) {
 }
 `,
 		},
-
-		// =====================
-		// Ineffective Checks (AND)
-		// =====================
 		{
 			code: `
 if (x < 200 && x <= 299) {
@@ -458,10 +471,6 @@ if (x < 5 && x <= 5) {
 }
 `,
 		},
-
-		// =====================
-		// Edge Cases
-		// =====================
 		{
 			code: `
 if ((x) <= 400 && (x) > 500) {
