@@ -167,7 +167,7 @@ import parameterReassignments from "./rules/parameterReassignments.ts";
 import parseIntRadixes from "./rules/parseIntRadixes.ts";
 import propertyAccessNotation from "./rules/propertyAccessNotation.ts";
 import recursionOnlyArguments from "./rules/recursionOnlyArguments.ts";
-import reduceTypeParameters from "./rules/reduceTypeParameters.ts";
+import arrayReduceTypeArguments from "./rules/arrayReduceTypeArguments.ts";
 import redundantTypeConstituents from "./rules/redundantTypeConstituents.ts";
 import regexAllGlobalFlags from "./rules/regexAllGlobalFlags.ts";
 import regexAmbiguousInvalidity from "./rules/regexAmbiguousInvalidity.ts";
@@ -418,7 +418,7 @@ export const ts = createPlugin({
 		parseIntRadixes,
 		propertyAccessNotation,
 		recursionOnlyArguments,
-		reduceTypeParameters,
+		arrayReduceTypeArguments,
 		redundantTypeConstituents,
 		regexAllGlobalFlags,
 		regexAmbiguousInvalidity,

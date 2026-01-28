@@ -14589,7 +14589,7 @@
 			}
 		],
 		"flint": {
-			"name": "reduceTypeParameters",
+			"name": "arrayReduceTypeArguments",
 			"plugin": "ts",
 			"preset": "logical",
 			"status": "implemented",
