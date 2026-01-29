@@ -15,13 +15,22 @@ function getPreferredAssertion(node: RegExpAST.LookaroundAssertion) {
 		return undefined;
 	}
 
-	const elements = node.alternatives[0].elements;
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const elements = node.alternatives[0]!.elements;
 	if (elements.length !== 1) {
 		return undefined;
 	}
 
-	const element = elements[0];
-	if (element.type !== "CharacterSet" || element.negate) {
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const element = elements[0]!;
+
+	if (
+		element.type !== "CharacterSet" ||
+		element.kind === "any" ||
+		element.kind === "digit" ||
+		element.kind === "space" ||
+		element.negate
+	) {
 		return undefined;
 	}
 
@@ -55,12 +64,15 @@ function isNegativeLookaheadDot(node: RegExpAST.Element) {
 		return false;
 	}
 
-	const elements = node.alternatives[0].elements;
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const elements = node.alternatives[0]!.elements;
 	if (elements.length !== 1) {
 		return false;
 	}
 
-	const element = elements[0];
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const element = elements[0]!;
+
 	return element.type === "CharacterSet" && element.kind === "any";
 }
 
@@ -73,12 +85,15 @@ function isNegativeLookbehindDot(node: RegExpAST.Element) {
 		return false;
 	}
 
-	const elements = node.alternatives[0].elements;
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const elements = node.alternatives[0]!.elements;
 	if (elements.length !== 1) {
 		return false;
 	}
 
-	const element = elements[0];
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const element = elements[0]!;
+
 	return element.type === "CharacterSet" && element.kind === "any";
 }
 
@@ -121,10 +136,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const range = getTSNodeRange(node, sourceFile);
 
 					if (regexpAst.alternatives.length === 1) {
-						const elements = regexpAst.alternatives[0].elements;
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						const { elements } = regexpAst.alternatives[0]!;
 
 						if (elements.length > 0) {
-							const first = elements[0];
+							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							const first = elements[0]!;
+
 							if (isNegativeLookbehindDot(first)) {
 								context.report({
 									data: {
@@ -146,7 +164,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								});
 							}
 
-							const last = elements[elements.length - 1];
+							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							const last = elements.at(-1)!;
+
 							if (isNegativeLookaheadDot(last)) {
 								context.report({
 									data: {
