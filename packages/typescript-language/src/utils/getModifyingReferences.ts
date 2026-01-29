@@ -20,37 +20,41 @@ export function getModifyingReferences(
 		return [];
 	}
 
-	const valueDeclaration = symbol.valueDeclaration;
+	const { valueDeclaration } = symbol;
 	const modifyingReferences: ts.Identifier[] = [];
+
+	function isIdentifierForSameSymbol(
+		node: AST.AnyNode,
+	): node is AST.Identifier {
+		if (node.kind !== ts.SyntaxKind.Identifier) {
+			return false;
+		}
+
+		const symbol = typeChecker.getSymbolAtLocation(node);
+		if (symbol?.valueDeclaration !== valueDeclaration) {
+			return false;
+		}
+
+		switch (node.parent.kind) {
+			case ts.SyntaxKind.BinaryExpression:
+				return (
+					tsutils.isAssignmentKind(node.parent.operatorToken.kind) &&
+					node.parent.left === node
+				);
+
+			case ts.SyntaxKind.PostfixUnaryExpression:
+			case ts.SyntaxKind.PrefixUnaryExpression:
+				return node.parent.operand === node;
+
+			default:
+				return false;
+		}
+	}
 
 	function visit(node: ts.Node): void {
 		// Check if this is an identifier that refers to the same symbol
-		if (ts.isIdentifier(node)) {
-			const nodeSymbol = typeChecker.getSymbolAtLocation(node);
-			if (
-				nodeSymbol?.valueDeclaration &&
-				nodeSymbol.valueDeclaration === valueDeclaration
-			) {
-				// Check if this identifier is being modified
-				const parent = node.parent;
-
-				// Assignment expressions (=, +=, -=, etc.)
-				if (
-					ts.isBinaryExpression(parent) &&
-					tsutils.isAssignmentKind(parent.operatorToken.kind) &&
-					parent.left === node
-				) {
-					modifyingReferences.push(node);
-				}
-				// Unary expressions (++, --)
-				else if (
-					(ts.isPostfixUnaryExpression(parent) ||
-						ts.isPrefixUnaryExpression(parent)) &&
-					parent.operand === node
-				) {
-					modifyingReferences.push(node);
-				}
-			}
+		if (isIdentifierForSameSymbol(node as AST.AnyNode)) {
+			modifyingReferences.push(node);
 		}
 
 		ts.forEachChild(node, visit);

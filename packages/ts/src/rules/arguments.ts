@@ -25,7 +25,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using the arguments object instead of rest parameters.",
 		id: "arguments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferRestParameters: {

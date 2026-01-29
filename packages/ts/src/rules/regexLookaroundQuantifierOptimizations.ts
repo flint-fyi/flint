@@ -33,10 +33,11 @@ function* extractInvalidQuantifiers(
 				break;
 
 			case "Quantifier":
-				if (last.min !== last.max) {
-					if (!hasCapturingGroupDescendant(last.element)) {
-						yield last;
-					}
+				if (
+					last.min !== last.max &&
+					!hasCapturingGroupDescendant(last.element)
+				) {
+					yield last;
 				}
 				break;
 		}

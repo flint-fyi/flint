@@ -180,7 +180,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using string arguments in setTimeout, setInterval, setImmediate, execScript, or the Function constructor.",
 		id: "impliedEvals",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		functionConstructor: {

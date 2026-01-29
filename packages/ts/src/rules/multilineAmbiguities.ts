@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports ambiguous multiline expressions that could be misinterpreted.",
 		id: "multilineAmbiguities",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		ambiguity: {

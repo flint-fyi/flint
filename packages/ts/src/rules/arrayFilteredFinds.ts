@@ -45,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `.filter()` when only the first or last matching element is needed.",
 		id: "arrayFilteredFinds",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferFind: {

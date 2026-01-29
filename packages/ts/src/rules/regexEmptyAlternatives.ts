@@ -160,7 +160,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports empty alternatives in regular expressions that may indicate a mistake.",
 		id: "regexEmptyAlternatives",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyAlternative: {

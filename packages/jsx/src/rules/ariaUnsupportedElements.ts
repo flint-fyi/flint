@@ -57,7 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports ARIA attributes on elements that don't support them.",
 		id: "ariaUnsupportedElements",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsupportedElement: {

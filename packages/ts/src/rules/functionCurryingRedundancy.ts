@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `.apply()` or `.call()` or  when the context (`this` value) provides no benefit.",
 		id: "functionCurryingRedundancy",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryCall: {

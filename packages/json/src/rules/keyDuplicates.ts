@@ -9,7 +9,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 		description:
 			"Reports unnecessary duplicate keys that override previous values.",
 		id: "keyDuplicates",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		duplicateKey: {
