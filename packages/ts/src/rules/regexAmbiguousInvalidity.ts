@@ -307,7 +307,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports regex patterns that use ambiguous or invalid syntax from Annex B.",
 		id: "regexAmbiguousInvalidity",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		incompleteBackreference: {

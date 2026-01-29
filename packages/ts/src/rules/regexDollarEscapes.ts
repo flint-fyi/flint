@@ -86,7 +86,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports replacement strings with unescaped `$` that should use `$$`.",
 		id: "regexDollarEscapes",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		unescapedDollar: {

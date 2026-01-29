@@ -392,7 +392,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const index = Number(argument.text);
-					if (index === 0 || !Number.isInteger(index) || index < 0) {
+					if (index <= 0 || !Number.isInteger(index)) {
 						return;
 					}
 

@@ -59,14 +59,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 			}
 
-			if (ts.isImportEqualsDeclaration(declaration)) {
-				if (
-					declaration.name.text === "EventEmitter" &&
-					ts.isExternalModuleReference(declaration.moduleReference) &&
-					isImportFromNodeEvents(declaration.moduleReference.expression)
-				) {
-					return true;
-				}
+			if (
+				ts.isImportEqualsDeclaration(declaration) &&
+				declaration.name.text === "EventEmitter" &&
+				ts.isExternalModuleReference(declaration.moduleReference) &&
+				isImportFromNodeEvents(declaration.moduleReference.expression)
+			) {
+				return true;
 			}
 
 			return false;

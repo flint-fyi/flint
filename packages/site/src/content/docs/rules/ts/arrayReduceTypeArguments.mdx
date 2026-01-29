@@ -1,6 +1,6 @@
 ---
-description: "Reports `Array#reduce` calls using type assertions on initial values instead of type parameters."
-title: "reduceTypeParameters"
+description: "Reports `Array#reduce` calls using type assertions on initial values instead of type arguments."
+title: "arrayReduceTypeArguments"
 topic: "rules"
 ---
 
@@ -8,7 +8,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
-<RuleSummary plugin="ts" rule="reduceTypeParameters" />
+<RuleSummary plugin="ts" rule="arrayReduceTypeArguments" />
 
 When calling `Array#reduce` with an empty array or object as the initial value, TypeScript can't infer useful types from those values.
 A common workaround is to use a type assertion like `[] as number[]` or `{} as Record<string, boolean>`.
@@ -76,4 +76,4 @@ You might consider using [Flint disable comments](/directives) and/or [configura
 
 ## Equivalents in Other Linters
 
-<RuleEquivalents pluginId="ts" ruleId="reduceTypeParameters" />
+<RuleEquivalents pluginId="ts" ruleId="arrayReduceTypeArguments" />

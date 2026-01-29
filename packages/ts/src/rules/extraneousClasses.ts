@@ -216,13 +216,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (onlyStatic) {
-				if (!options.allowStaticOnly) {
-					context.report({
-						message: "onlyStatic",
-						range: reportRange,
-					});
-				}
+			if (onlyStatic && !options.allowStaticOnly) {
+				context.report({
+					message: "onlyStatic",
+					range: reportRange,
+				});
 			}
 		}
 

@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports assigning a value with type `any` to variables and properties.",
 		id: "anyAssignments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsafeArrayDestructure: {
@@ -292,12 +292,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			reportNode: ts.Node,
 			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
-			program: ts.Program,
 		): boolean {
 			const anyType = discriminateAnyType(
 				initializerType,
 				typeChecker,
-				program,
 				initializer,
 			);
 
@@ -330,7 +328,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const result = isUnsafeAssignment(
 				initializerType,
 				declaredType,
-				typeChecker,
 				initializer,
 			);
 			if (!result) {
@@ -396,8 +393,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 				},
-
-				Parameter: (node, { program, sourceFile, typeChecker }) => {
+				Parameter: (node, { sourceFile, typeChecker }) => {
 					if (!node.initializer) {
 						return;
 					}
@@ -436,7 +432,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node,
 						sourceFile,
 						typeChecker,
-						program,
 					);
 				},
 
@@ -495,8 +490,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				},
-
-				PropertyDeclaration: (node, { program, sourceFile, typeChecker }) => {
+				PropertyDeclaration: (node, { sourceFile, typeChecker }) => {
 					if (!node.initializer) {
 						return;
 					}
@@ -515,10 +509,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node,
 						sourceFile,
 						typeChecker,
-						program,
 					);
 				},
-
 				ShorthandPropertyAssignment: (node, { sourceFile, typeChecker }) => {
 					const initializerType = typeChecker.getTypeAtLocation(node.name);
 
@@ -559,8 +551,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				},
-
-				VariableDeclaration: (node, { program, sourceFile, typeChecker }) => {
+				VariableDeclaration: (node, { sourceFile, typeChecker }) => {
 					if (!node.initializer) {
 						return;
 					}
@@ -600,7 +591,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node,
 						sourceFile,
 						typeChecker,
-						program,
 					);
 				},
 			},

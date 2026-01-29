@@ -20,8 +20,8 @@ function isTypeAssertion(
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
-			"Reports `Array#reduce` calls using type assertions on initial values instead of type parameters.",
-		id: "reduceTypeParameters",
+			"Reports `Array#reduce` calls using type assertions on initial values instead of type arguments.",
+		id: "arrayReduceTypeArguments",
 		presets: ["logicalStrict"],
 	},
 	messages: {

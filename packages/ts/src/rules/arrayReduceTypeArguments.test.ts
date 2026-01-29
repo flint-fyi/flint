@@ -1,4 +1,4 @@
-import rule from "./reduceTypeParameters.ts";
+import rule from "./arrayReduceTypeArguments.ts";
 import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
