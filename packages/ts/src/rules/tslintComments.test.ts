@@ -1,53 +1,77 @@
-import rule from "./tslintComments.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./tslintComments.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `// tslint:disable
-const value = 1;`,
-			snapshot: `// tslint:disable
+			code: `
+// tslint:disable
+const value = 1;
+`,
+			snapshot: `
+// tslint:disable
 ~~~~~~~~~~~~~~~~~
-TSLint comments are deprecated.
-const value = 1;`,
+TSLint is deprecated and its comments are no longer necessary.
+const value = 1;
+`,
 		},
 		{
-			code: `// tslint:enable
-const value = 1;`,
-			snapshot: `// tslint:enable
+			code: `
+// tslint:enable
+const value = 1;
+`,
+			snapshot: `
+// tslint:enable
 ~~~~~~~~~~~~~~~~
-TSLint comments are deprecated.
-const value = 1;`,
+TSLint is deprecated and its comments are no longer necessary.
+const value = 1;
+`,
 		},
 		{
-			code: `const value = 1; // tslint:disable-line`,
-			snapshot: `const value = 1; // tslint:disable-line
+			code: `
+const value = 1; // tslint:disable-line
+`,
+			snapshot: `
+const value = 1; // tslint:disable-line
                  ~~~~~~~~~~~~~~~~~~~~~~
-                 TSLint comments are deprecated.`,
+                 TSLint is deprecated and its comments are no longer necessary.
+`,
 		},
 		{
-			code: `// tslint:disable-next-line
-const value = 1;`,
-			snapshot: `// tslint:disable-next-line
+			code: `
+// tslint:disable-next-line
+const value = 1;
+`,
+			snapshot: `
+// tslint:disable-next-line
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-TSLint comments are deprecated.
-const value = 1;`,
+TSLint is deprecated and its comments are no longer necessary.
+const value = 1;
+`,
 		},
 		{
-			code: `/* tslint:disable:no-console */
-console.log("hello");`,
-			snapshot: `/* tslint:disable:no-console */
+			code: `
+/* tslint:disable:no-console */
+console.log("hello");
+`,
+			snapshot: `
+/* tslint:disable:no-console */
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-TSLint comments are deprecated.
-console.log("hello");`,
+TSLint is deprecated and its comments are no longer necessary.
+console.log("hello");
+`,
 		},
 		{
-			code: `// tslint:disable no-console no-debugger
-const value = 1;`,
-			snapshot: `// tslint:disable no-console no-debugger
+			code: `
+// tslint:disable no-console no-debugger
+const value = 1;
+`,
+			snapshot: `
+// tslint:disable no-console no-debugger
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-TSLint comments are deprecated.
-const value = 1;`,
+TSLint is deprecated and its comments are no longer necessary.
+const value = 1;
+`,
 		},
 	],
 	valid: [
