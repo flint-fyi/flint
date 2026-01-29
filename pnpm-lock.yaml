@@ -482,8 +482,8 @@ importers:
         specifier: workspace:^
         version: link:../typescript-language
       ts-api-utils:
-        specifier: ^2.1.0
-        version: 2.1.0(typescript@5.9.3)
+        specifier: ^2.4.0
+        version: 2.4.0(typescript@5.9.3)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -727,8 +727,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0
       ts-api-utils:
-        specifier: ^2.1.0
-        version: 2.1.0(typescript@5.9.3)
+        specifier: ^2.4.0
+        version: 2.4.0(typescript@5.9.3)
       typescript:
         specifier: ^5.9.0 || ^6.0.0
         version: 5.9.3
@@ -770,8 +770,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
       ts-api-utils:
-        specifier: ^2.1.0
-        version: 2.1.0(typescript@5.9.3)
+        specifier: ^2.4.0
+        version: 2.4.0(typescript@5.9.3)
       typescript:
         specifier: ^5.9.0 || ^6.0.0
         version: 5.9.3
@@ -4780,8 +4780,8 @@ packages:
   trough@2.2.0:
     resolution: {integrity: sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw==}
 
-  ts-api-utils@2.1.0:
-    resolution: {integrity: sha512-CUgTZL1irw8u29bzrOD/nH85jqyc74D6SshFgujOIA7osm2Rz7dYH77agkx7H4FBNxDq7Cjf+IjaX/8zwFW+ZQ==}
+  ts-api-utils@2.4.0:
+    resolution: {integrity: sha512-3TaVTaAv2gTiMB35i3FiGJaRfwb3Pyn/j3m/bfAvGe8FB7CF6u+LMYqYlDh7reQf7UNvoTvdfAqHGmPGOSsPmA==}
     engines: {node: '>=18.12'}
     peerDependencies:
       typescript: '>=4.8.4'
@@ -6934,7 +6934,7 @@ snapshots:
       eslint: 9.39.1(jiti@2.6.1)
       ignore: 7.0.5
       natural-compare: 1.4.0
-      ts-api-utils: 2.1.0(typescript@5.9.3)
+      ts-api-utils: 2.4.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
@@ -7007,7 +7007,7 @@ snapshots:
       '@typescript-eslint/utils': 8.50.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
       debug: 4.4.3
       eslint: 9.39.1(jiti@2.6.1)
-      ts-api-utils: 2.1.0(typescript@5.9.3)
+      ts-api-utils: 2.4.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
@@ -7028,7 +7028,7 @@ snapshots:
       minimatch: 9.0.5
       semver: 7.7.3
       tinyglobby: 0.2.15
-      ts-api-utils: 2.1.0(typescript@5.9.3)
+      ts-api-utils: 2.4.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
@@ -7043,7 +7043,7 @@ snapshots:
       minimatch: 9.0.5
       semver: 7.7.3
       tinyglobby: 0.2.15
-      ts-api-utils: 2.1.0(typescript@5.9.3)
+      ts-api-utils: 2.4.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
@@ -10234,7 +10234,7 @@ snapshots:
 
   trough@2.2.0: {}
 
-  ts-api-utils@2.1.0(typescript@5.9.3):
+  ts-api-utils@2.4.0(typescript@5.9.3):
     dependencies:
       typescript: 5.9.3
 

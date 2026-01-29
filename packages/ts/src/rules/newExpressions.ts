@@ -32,26 +32,27 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isStandaloneExpression(
 			node: AST.BinaryExpression | AST.NewExpression,
 		): boolean {
-			const parent = node.parent;
+			switch (node.parent.kind) {
+				// If parent is a comma expression, check recursively
+				case SyntaxKind.BinaryExpression:
+					if (node.parent.operatorToken.kind !== SyntaxKind.CommaToken) {
+						return false;
+					}
 
-			// If parent is an ExpressionStatement, it's standalone
-			if (parent.kind === SyntaxKind.ExpressionStatement) {
-				return true;
+					// If this is the last expression in the comma sequence, check if the parent is standalone
+					if (node.parent.right === node) {
+						return isStandaloneExpression(node.parent);
+					}
+
+					return true;
+
+				// If parent is an ExpressionStatement, it's standalone
+				case SyntaxKind.ExpressionStatement:
+					return true;
+
+				default:
+					return false;
 			}
-
-			// If parent is a comma expression, check recursively
-			if (
-				parent.kind === SyntaxKind.BinaryExpression &&
-				parent.operatorToken.kind === SyntaxKind.CommaToken
-			) {
-				// If this is the last expression in the comma sequence, check if the parent is standalone
-				if (parent.right === node) {
-					return isStandaloneExpression(parent);
-				}
-				return true;
-			}
-
-			return false;
 		}
 
 		return {

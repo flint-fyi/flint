@@ -28,12 +28,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				OmittedExpression: (node, { sourceFile }) => {
-					const parent = node.parent;
-					if (parent.kind !== SyntaxKind.ArrayLiteralExpression) {
+					if (node.parent.kind !== SyntaxKind.ArrayLiteralExpression) {
 						return;
 					}
 
-					const syntaxList = parent
+					const syntaxList = node.parent
 						.getChildren(sourceFile)
 						.find((child) => child.kind === SyntaxKind.SyntaxList);
 

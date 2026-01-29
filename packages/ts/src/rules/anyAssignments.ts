@@ -444,16 +444,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const parent = node.parent;
-					if (!ts.isObjectLiteralExpression(parent)) {
+					if (!ts.isObjectLiteralExpression(node.parent)) {
 						return;
 					}
 
-					const contextualType = typeChecker.getContextualType(parent);
+					const contextualType = typeChecker.getContextualType(node.parent);
 					if (!contextualType) {
 						return;
 					}
 
+					// TODO: Use a util like getStaticValue
+					// https://github.com/flint-fyi/flint/issues/1298
 					let key: string | undefined;
 					if (ts.isIdentifier(node.name)) {
 						key = node.name.text;
