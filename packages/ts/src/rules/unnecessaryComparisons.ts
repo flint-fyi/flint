@@ -293,7 +293,7 @@ function extractNumericLiteral(node: AST.Expression) {
 	return null;
 }
 
-function flipDirection(direction: ComparisonDirection) {
+function flipDirection(direction: ComparisonDirection): ComparisonDirection {
 	switch (direction) {
 		case "lower":
 			return "upper";
@@ -323,7 +323,7 @@ function formatComparison(info: ComparisonInfo, sourceFile: AST.SourceFile) {
 	return info.node.getText(sourceFile);
 }
 
-function getComparisonDirection(operatorKind: SyntaxKind) {
+function getComparisonDirection(operatorKind: SyntaxKind): ComparisonDirection {
 	switch (operatorKind) {
 		case SyntaxKind.EqualsEqualsEqualsToken:
 		case SyntaxKind.EqualsEqualsToken:
