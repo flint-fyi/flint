@@ -70,7 +70,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports `if` statements that are the only statement inside an `else` block or inside another `if` without an `else`.",
 		id: "nestedStandaloneIfs",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		lonelyIfInElse: {

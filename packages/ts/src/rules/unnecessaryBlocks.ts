@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports standalone block statements that don't create a meaningful scope.",
 		id: "unnecessaryBlocks",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		unnecessaryBlock: {

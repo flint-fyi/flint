@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using assignment expressions in return statements.",
 		id: "returnAssignments",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		noReturnAssign: {

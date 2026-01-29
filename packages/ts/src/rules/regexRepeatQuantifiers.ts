@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports consecutive identical elements in regular expressions that should use quantifiers.",
 		id: "regexRepeatQuantifiers",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferQuantifier: {

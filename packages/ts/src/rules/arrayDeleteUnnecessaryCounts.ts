@@ -53,7 +53,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `.length` or `Infinity` as the `deleteCount` or `skipCount` argument of `Array#splice()` or `Array#toSpliced()`.",
 		id: "arrayDeleteUnnecessaryCounts",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		unnecessaryCount: {

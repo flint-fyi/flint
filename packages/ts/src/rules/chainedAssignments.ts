@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using chained assignment expressions (e.g., a = b = c).",
 		id: "chainedAssignments",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		noChainedAssignment: {

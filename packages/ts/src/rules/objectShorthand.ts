@@ -75,7 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Object property and method definitions can use shorthand syntax when the key matches the value identifier or when a function expression is assigned.",
 		id: "objectShorthand",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		expectedMethodShorthand: {
