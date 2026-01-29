@@ -3,7 +3,7 @@ import {
 	getTSNodeRange,
 	hasSameTokens,
 	typescriptLanguage,
-	unwrapParenthesizedExpression,
+	unwrapParenthesizedNode,
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
@@ -14,7 +14,7 @@ function isUnnecessaryCountArgument(
 	calleeObject: AST.Expression,
 	sourceFile: AST.SourceFile,
 ) {
-	const argument = unwrapParenthesizedExpression(argumentRoot);
+	const argument = unwrapParenthesizedNode(argumentRoot);
 
 	switch (argument.kind) {
 		case ts.SyntaxKind.Identifier:

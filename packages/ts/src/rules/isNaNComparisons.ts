@@ -4,7 +4,7 @@ import {
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
-	unwrapParenthesizedExpression,
+	unwrapParenthesizedNode,
 } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
@@ -59,7 +59,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 
 		function isNaNIdentifier(node: AST.Expression, typeChecker: Checker) {
-			const unwrapped = unwrapParenthesizedExpression(node);
+			const unwrapped = unwrapParenthesizedNode(node);
 			return (
 				unwrapped.kind === SyntaxKind.Identifier &&
 				unwrapped.text === "NaN" &&

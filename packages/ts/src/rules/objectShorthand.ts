@@ -2,7 +2,7 @@ import {
 	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
-	unwrapParenthesizedExpression,
+	unwrapParenthesizedNode,
 } from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
 
@@ -106,7 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const initializer = unwrapParenthesizedExpression(node.initializer);
+					const initializer = unwrapParenthesizedNode(node.initializer);
 
 					switch (initializer.kind) {
 						case SyntaxKind.ArrowFunction:
