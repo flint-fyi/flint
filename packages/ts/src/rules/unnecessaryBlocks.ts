@@ -1,7 +1,44 @@
 import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
+import { isNodeFlagSet } from "ts-api-utils";
+import ts, { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+
+function isUsingVariableStatement(node: AST.AnyNode) {
+	return (
+		node.kind == SyntaxKind.VariableStatement &&
+		isNodeFlagSet(node.declarationList, ts.NodeFlags.Using)
+	);
+}
+
+function isValidBlock(node: AST.Block) {
+	switch (node.parent.kind) {
+		case SyntaxKind.ArrowFunction:
+		case SyntaxKind.CaseClause:
+		case SyntaxKind.CatchClause:
+		case SyntaxKind.Constructor:
+		case SyntaxKind.DefaultClause:
+		case SyntaxKind.DoStatement:
+		case SyntaxKind.ForInStatement:
+		case SyntaxKind.ForOfStatement:
+		case SyntaxKind.ForStatement:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.FunctionExpression:
+		case SyntaxKind.GetAccessor:
+		case SyntaxKind.IfStatement:
+		case SyntaxKind.LabeledStatement:
+		case SyntaxKind.MethodDeclaration:
+		case SyntaxKind.ModuleBlock:
+		case SyntaxKind.SetAccessor:
+		case SyntaxKind.TryStatement:
+		case SyntaxKind.WhileStatement:
+		case SyntaxKind.WithStatement:
+			return true;
+
+		default:
+			return node.statements.some(isUsingVariableStatement);
+	}
+}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -25,55 +62,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function isValidBlock(node: AST.Block): boolean {
-			const parent = node.parent;
-
-			// Valid blocks: function bodies, arrow functions, class/interface bodies, etc.
-			if (
-				parent.kind == SyntaxKind.FunctionDeclaration ||
-				parent.kind == SyntaxKind.FunctionExpression ||
-				parent.kind == SyntaxKind.ArrowFunction ||
-				parent.kind == SyntaxKind.MethodDeclaration ||
-				parent.kind == SyntaxKind.Constructor ||
-				parent.kind == SyntaxKind.GetAccessor ||
-				parent.kind == SyntaxKind.SetAccessor ||
-				parent.kind == SyntaxKind.ModuleBlock
-			) {
-				return true;
-			}
-
-			// Valid blocks: control flow statements
-			if (
-				parent.kind == SyntaxKind.IfStatement ||
-				parent.kind == SyntaxKind.ForStatement ||
-				parent.kind == SyntaxKind.ForInStatement ||
-				parent.kind == SyntaxKind.ForOfStatement ||
-				parent.kind == SyntaxKind.WhileStatement ||
-				parent.kind == SyntaxKind.DoStatement ||
-				parent.kind == SyntaxKind.WithStatement ||
-				parent.kind == SyntaxKind.TryStatement ||
-				parent.kind == SyntaxKind.CatchClause
-			) {
-				return true;
-			}
-
-			// Valid block: switch case/default clause with block
-			// In ES6+, blocks in switch cases create scope for let/const
-			if (
-				parent.kind == SyntaxKind.CaseClause ||
-				parent.kind == SyntaxKind.DefaultClause
-			) {
-				return true;
-			}
-
-			// Valid block: labeled statement
-			if (parent.kind == SyntaxKind.LabeledStatement) {
-				return true;
-			}
-
-			return false;
-		}
-
 		return {
 			visitors: {
 				Block: (node, { sourceFile }) => {
