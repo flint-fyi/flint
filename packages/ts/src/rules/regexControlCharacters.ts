@@ -1,4 +1,3 @@
-// flint-disable-file escapeSequenceCasing -- Control character patterns need lowercase escapes
 import {
 	type AST,
 	type TypeScriptFileServices,

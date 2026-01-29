@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports inconsistent types when spreading a ternary in an array literal.",
 		id: "arrayTernarySpreadingConsistency",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		inconsistentTypes: {

@@ -24,6 +24,10 @@ export default defineConfig({
 				node.presets.stylisticStrict,
 				ts.presets.logicalStrict,
 				ts.presets.stylisticStrict,
+				ts.rules({
+					// Pending https://github.com/flint-fyi/flint/issues/2165
+					objectShorthand: false,
+				}),
 			],
 		},
 		{

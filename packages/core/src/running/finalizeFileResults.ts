@@ -1,6 +1,7 @@
 import { debugForFile } from "debug-for-file";
 
 import { DirectivesFilterer } from "../directives/DirectivesFilterer.ts";
+import { directiveReports } from "../directives/reports/directiveReports.ts";
 import type { LanguageFileDiagnostic } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
 import type { LanguageAndFile } from "./types.ts";
@@ -56,9 +57,26 @@ export function finalizeFileResults(
 		}
 	}
 
+	const directiveReportsFromCollector: FileReport[] = [];
+	for (const { file } of languageAndFiles) {
+		if (file.reports) {
+			directiveReportsFromCollector.push(...file.reports);
+		}
+	}
+
+	const filterResult = directivesFilterer.filter(reports);
+
+	const unusedDirectiveReports = filterResult.unusedDirectives.map(
+		(directive) => directiveReports.createUnused(directive),
+	);
+
 	return {
 		dependencies: fileDependencies,
 		diagnostics: fileDiagnostics,
-		reports: directivesFilterer.filter(reports),
+		reports: [
+			...filterResult.reports,
+			...directiveReportsFromCollector,
+			...unusedDirectiveReports,
+		],
 	};
 }

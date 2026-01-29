@@ -54,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports parseInt calls with binary, hexadecimal, or octal strings that can be replaced with numeric literals.",
 		id: "numericLiteralParsing",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferLiteral: {

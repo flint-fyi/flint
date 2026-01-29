@@ -1,4 +1,3 @@
-// flint-disable-file octalEscapes
 import rule from "./regexEmptyLookaroundsAssertions.ts";
 import { ruleTester } from "./ruleTester.ts";
 

@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Prefer the spread operator over `.apply()` calls.",
 		id: "functionApplySpreads",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferSpread: {

@@ -25,7 +25,7 @@ function collectIntersectionOperands(
 		operand = operand.left;
 	}
 
-	return [operand, ...operands.reverse()];
+	return [operand, ...operands.toReversed()];
 }
 
 function getParsedElement(pattern: string, unicodeSets: boolean) {

@@ -27,6 +27,7 @@ import arrayLoops from "./rules/arrayLoops.ts";
 import arrayMapIdentities from "./rules/arrayMapIdentities.ts";
 import arrayMutableReverses from "./rules/arrayMutableReverses.ts";
 import arrayMutableSorts from "./rules/arrayMutableSorts.ts";
+import arrayReduceTypeArguments from "./rules/arrayReduceTypeArguments.ts";
 import arraySliceUnnecessaryEnd from "./rules/arraySliceUnnecessaryEnd.ts";
 import arraySomeMethods from "./rules/arraySomeMethods.ts";
 import arrayTernarySpreadingConsistency from "./rules/arrayTernarySpreadingConsistency.ts";
@@ -167,7 +168,6 @@ import parameterReassignments from "./rules/parameterReassignments.ts";
 import parseIntRadixes from "./rules/parseIntRadixes.ts";
 import propertyAccessNotation from "./rules/propertyAccessNotation.ts";
 import recursionOnlyArguments from "./rules/recursionOnlyArguments.ts";
-import reduceTypeParameters from "./rules/reduceTypeParameters.ts";
 import redundantTypeConstituents from "./rules/redundantTypeConstituents.ts";
 import regexAllGlobalFlags from "./rules/regexAllGlobalFlags.ts";
 import regexAmbiguousInvalidity from "./rules/regexAmbiguousInvalidity.ts";
@@ -418,7 +418,7 @@ export const ts = createPlugin({
 		parseIntRadixes,
 		propertyAccessNotation,
 		recursionOnlyArguments,
-		reduceTypeParameters,
+		arrayReduceTypeArguments,
 		redundantTypeConstituents,
 		regexAllGlobalFlags,
 		regexAmbiguousInvalidity,

@@ -236,9 +236,7 @@ function isValidPropertyValue(
 				return false;
 			}
 			const validTokens = tokenValues[propertyName];
-			return validTokens !== undefined
-				? validTokens.has(value.toLowerCase())
-				: true;
+			return validTokens?.has(value.toLowerCase()) ?? true;
 		}
 
 		case "tristate":
