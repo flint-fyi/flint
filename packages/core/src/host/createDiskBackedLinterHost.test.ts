@@ -71,33 +71,36 @@ describe("createDiskBackedLinterHost", () => {
 		expect(host.readFile(filePath)).toEqual("hello");
 	});
 
-	it("lists directory entries and resolves symlinks", () => {
-		const host = createDiskBackedLinterHost(integrationRoot);
-		const filePath = path.join(integrationRoot, "file.txt");
-		const dirPath = path.join(integrationRoot, "dir");
-		const fileLink = path.join(integrationRoot, "file-link.txt");
-		const dirLink = path.join(integrationRoot, "dir-link");
-		const brokenLink = path.join(integrationRoot, "broken-link");
-		const missingPath = path.join(integrationRoot, "missing.txt");
+	it.skipIf(process.platform === "win32")(
+		"lists directory entries and resolves symlinks",
+		() => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			const filePath = path.join(integrationRoot, "file.txt");
+			const dirPath = path.join(integrationRoot, "dir");
+			const fileLink = path.join(integrationRoot, "file-link.txt");
+			const dirLink = path.join(integrationRoot, "dir-link");
+			const brokenLink = path.join(integrationRoot, "broken-link");
+			const missingPath = path.join(integrationRoot, "missing.txt");
 
-		fs.writeFileSync(filePath, "hello");
-		fs.mkdirSync(dirPath, { recursive: true });
-		fs.symlinkSync(filePath, fileLink);
-		fs.symlinkSync(dirPath, dirLink, "junction");
-		fs.symlinkSync(missingPath, brokenLink);
+			fs.writeFileSync(filePath, "hello");
+			fs.mkdirSync(dirPath, { recursive: true });
+			fs.symlinkSync(filePath, fileLink);
+			fs.symlinkSync(dirPath, dirLink, "junction");
+			fs.symlinkSync(missingPath, brokenLink);
 
-		const entries = host.readDirectory(integrationRoot);
-		const sortedEntries = entries
-			.map((entry) => ({ name: entry.name, type: entry.type }))
-			.toSorted((a, b) => a.name.localeCompare(b.name));
+			const entries = host.readDirectory(integrationRoot);
+			const sortedEntries = entries
+				.map((entry) => ({ name: entry.name, type: entry.type }))
+				.toSorted((a, b) => a.name.localeCompare(b.name));
 
-		expect(sortedEntries).toStrictEqual([
-			{ name: "dir", type: "directory" },
-			{ name: "dir-link", type: "directory" },
-			{ name: "file-link.txt", type: "file" },
-			{ name: "file.txt", type: "file" },
-		]);
-	});
+			expect(sortedEntries).toStrictEqual([
+				{ name: "dir", type: "directory" },
+				{ name: "dir-link", type: "directory" },
+				{ name: "file-link.txt", type: "file" },
+				{ name: "file.txt", type: "file" },
+			]);
+		},
+	);
 
 	describe("watchFile", () => {
 		it("reports creation", async () => {
