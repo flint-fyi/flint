@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		presets: ["logical"],
 	},
 	messages: {
-		singleVar: {
+		singleVariable: {
 			primary: "Split this into separate variable declarations.",
 			secondary: [
 				"Declaring multiple variables in one statement can reduce readability.",
@@ -25,17 +25,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				ForStatement: (node, { sourceFile }) => {
-					if (!node.initializer) {
-						return;
-					}
-
-					if (!ts.isVariableDeclarationList(node.initializer)) {
-						return;
-					}
-
-					if (node.initializer.declarations.length > 1) {
+					if (
+						node.initializer &&
+						ts.isVariableDeclarationList(node.initializer) &&
+						node.initializer.declarations.length > 1
+					) {
 						context.report({
-							message: "singleVar",
+							message: "singleVariable",
 							range: getTSNodeRange(node.initializer, sourceFile),
 						});
 					}
@@ -43,7 +39,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				VariableStatement: (node, { sourceFile }) => {
 					if (node.declarationList.declarations.length > 1) {
 						context.report({
-							message: "singleVar",
+							message: "singleVariable",
 							range: getTSNodeRange(node.declarationList, sourceFile),
 						});
 					}
