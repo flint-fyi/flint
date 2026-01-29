@@ -62,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports invisible characters in regex patterns that should use escape sequences instead.",
 		id: "regexInvisibleCharacters",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unexpectedInvisible: {

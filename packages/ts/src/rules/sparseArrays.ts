@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports array literals with holes (sparse arrays).",
 		id: "sparseArrays",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noSparseArray: {

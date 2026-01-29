@@ -1,8 +1,8 @@
 import {
 	getTSNodeRange,
 	typescriptLanguage,
-	unwrapParenthesizedExpression,
-	unwrapParenthesizedExpressionsParent,
+	unwrapParenthesizedNode,
+	unwrapParentParenthesizedExpressions,
 } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import { SyntaxKind } from "typescript";
@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using chained assignment expressions (e.g., a = b = c).",
 		id: "chainedAssignments",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		noChainedAssignment: {
@@ -37,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const rightSide = unwrapParenthesizedExpression(node.right);
+					const rightSide = unwrapParenthesizedNode(node.right);
 					if (
 						rightSide.kind !== SyntaxKind.BinaryExpression ||
 						!tsutils.isAssignmentKind(rightSide.operatorToken.kind)
@@ -45,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const parent = unwrapParenthesizedExpressionsParent(node);
+					const parent = unwrapParentParenthesizedExpressions(node);
 					if (parent.kind === SyntaxKind.BinaryExpression) {
 						return;
 					}
