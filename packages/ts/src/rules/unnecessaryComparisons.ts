@@ -3,7 +3,7 @@ import {
 	getTSNodeRange,
 	hasSameTokens,
 	typescriptLanguage,
-	unwrapParenthesizedExpression,
+	unwrapParenthesizedNode,
 } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
@@ -188,7 +188,7 @@ function collectComparisonsFromChain(
 	const results: ComparisonInfo[] = [];
 
 	function traverse(expr: AST.Expression): void {
-		const unwrapped = unwrapParenthesizedExpression(expr);
+		const unwrapped = unwrapParenthesizedNode(expr);
 
 		if (unwrapped.kind !== SyntaxKind.BinaryExpression) {
 			return;
@@ -266,7 +266,7 @@ function extractComparisonInfo(node: AST.BinaryExpression) {
 // `const x = 5` (similar to ESLint's getStaticValue). That would help increase
 // this rule's coverage.
 function extractNumericLiteral(node: AST.Expression) {
-	const unwrapped = unwrapParenthesizedExpression(node);
+	const unwrapped = unwrapParenthesizedNode(node);
 
 	if (unwrapped.kind === SyntaxKind.NumericLiteral) {
 		return Number(unwrapped.text);
