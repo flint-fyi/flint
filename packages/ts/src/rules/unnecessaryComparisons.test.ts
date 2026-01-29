@@ -501,7 +501,6 @@ if (a && x <= 400 && x > 500) {
 		},
 	],
 	valid: [
-		// Different values - valid comparisons
 		`if (value1 === value2) { console.log("different values"); }`,
 		`if (value === other) { console.log("different values"); }`,
 		`if (object.property === object.otherProperty) { console.log("different properties"); }`,
@@ -513,30 +512,18 @@ if (a && x <= 400 && x > 500) {
 		`const result = value1 <= value2;`,
 		`const result = value1 > value2;`,
 		`const result = value1 >= value2;`,
-
-		// Valid ranges
 		`if (x <= 500 && x > 400) { console.log("valid range"); }`,
 		`if (x < 100 && x > 0) { console.log("valid range"); }`,
 		`if (x <= 5 && x >= 5) { console.log("effectively x === 5"); }`,
 		`if (x < 5 && x > 3) { console.log("valid narrow range"); }`,
-
-		// Non-literal comparisons - cannot determine if impossible
 		`if (x < y && x > z) { console.log("non-literal"); }`,
 		`if (x < getMax() && x > getMin()) { console.log("function calls"); }`,
-
-		// Different variables
 		`if (x < 200 && y < 300) { console.log("different variables"); }`,
 		`if (a.x < 5 && b.x > 10) { console.log("different objects"); }`,
-
-		// Valid OR comparisons (not redundant)
 		`if (x === y || x < z) { console.log("different operands"); }`,
 		`if (x !== y && x < y) { console.log("inequality with AND"); }`,
 		`if (x === y || z < y) { console.log("different left operands"); }`,
-
-		// Valid AND checks (both bounds are needed for a range)
 		`if (x < 200 && x > 100) { console.log("both bounds needed"); }`,
-
-		// NaN checking pattern
 		`if (Number.isNaN(value)) { console.log("checking for NaN correctly"); }`,
 	],
 });

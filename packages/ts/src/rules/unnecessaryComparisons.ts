@@ -262,9 +262,8 @@ function extractComparisonInfo(node: AST.BinaryExpression) {
 	};
 }
 
-// TODO: Add a getStaticValue util that could get static values from things like
-// `const x = 5` (similar to ESLint's getStaticValue). That would help increase
-// this rule's coverage.
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
 function extractNumericLiteral(node: AST.Expression) {
 	const unwrapped = unwrapParenthesizedNode(node);
 
