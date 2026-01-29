@@ -34,12 +34,14 @@ export interface CreatePluginOptionsWithoutFiles<
 export type UnsafeAnyRule<About extends RuleAbout = RuleAbout> = Rule<
 	About,
 	// TODO: How to make these types work with createPlugin.test.ts & co.?
+	// flint-disable-lines-begin explicitAnys
 	/* eslint-disable @typescript-eslint/no-explicit-any */
 	any,
 	any,
 	any,
 	any
 	/* eslint-enable @typescript-eslint/no-explicit-any */
+	// flint-disable-lines-end explicitAnys
 >;
 
 export function createPlugin<

@@ -121,7 +121,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports for loops with counter variables that move in the wrong direction.",
 		id: "forDirections",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		wrongDirection: {

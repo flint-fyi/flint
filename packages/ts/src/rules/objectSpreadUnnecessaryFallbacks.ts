@@ -24,7 +24,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports empty object fallbacks in object spread expressions that have no effect.",
 		id: "objectSpreadUnnecessaryFallbacks",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryFallback: {
