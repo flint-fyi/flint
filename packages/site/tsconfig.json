@@ -9,7 +9,6 @@
 			"~/*": ["src/*"]
 		},
 		"target": "esnext",
-		"customConditions": ["@flint.fyi/source"],
 		"emitDeclarationOnly": true
 	},
 	"extends": "astro/tsconfigs/strict",

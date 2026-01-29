@@ -9,9 +9,6 @@ export default defineConfig({
 		},
 		projects: readdirSync(path.join(import.meta.dirname, "packages")).map(
 			(name) => ({
-				ssr: {
-					resolve: { conditions: ["@flint.fyi/source"] },
-				},
 				test: {
 					clearMocks: true,
 					include: ["**/src/**/*.test.ts"],
