@@ -15,7 +15,10 @@ export default ruleCreator.createRule(yamlLanguage, {
 				"Empty keys are invalid in YAML and may cause parsers to reject the document or misinterpret its structure.",
 				"Even if allowed by a parser, empty keys can be confusing for developers and lead to accidental mistakes in code.",
 			],
-			suggestions: ["TODO"],
+			suggestions: [
+				"Remove the mapping entry if it is not needed.",
+				"Add a key name to the mapping.",
+			],
 		},
 	},
 	setup(context) {
