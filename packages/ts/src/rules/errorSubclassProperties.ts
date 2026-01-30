@@ -48,7 +48,7 @@ function analyzeConstructor(node: AST.ClassDeclaration) {
 		) {
 			hasSuperCall = true;
 			superCallNode = statement.expression;
-			superCallPassesMessage = statement.expression.arguments.length > 0;
+			superCallPassesMessage = !!statement.expression.arguments.length;
 		}
 
 		if (

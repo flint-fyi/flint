@@ -14,7 +14,7 @@ import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
 function characterClassIsEmpty(node: CharacterClass) {
-	return !node.negate && node.elements.length === 0;
+	return !node.negate && !node.elements.length;
 }
 
 function findEmptyCharacterClasses(pattern: string, flags: string) {
@@ -42,7 +42,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports character classes that match no characters.",
 		id: "regexEmptyCharacterClasses",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		empty: {

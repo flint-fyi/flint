@@ -40,7 +40,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports comparing charAt() results with strings longer than one character.",
 		id: "charAtComparisons",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidComparison: {
