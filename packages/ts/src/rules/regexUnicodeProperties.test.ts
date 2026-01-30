@@ -1,3 +1,4 @@
+/* spellchecker:disable */
 import rule from "./regexUnicodeProperties.ts";
 import { ruleTester } from "./ruleTester.ts";
 
