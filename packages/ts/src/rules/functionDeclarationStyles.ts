@@ -39,7 +39,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports functions that don't match the configured style (declaration vs expression).",
 		id: "functionDeclarationStyles",
-		presets: ["stylistic"],
 	},
 	messages: {
 		preferDeclaration: {

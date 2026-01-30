@@ -17,7 +17,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports mismatched types between getter and setter accessor pairs.",
 		id: "accessorPairTypes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		mismatchedTypes: {

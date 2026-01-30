@@ -83,7 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						);
 						if (
 							argument.kind != SyntaxKind.StringLiteral ||
-							argument.text.length === 0
+							!argument.text.length
 						) {
 							continue;
 						}

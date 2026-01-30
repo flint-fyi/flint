@@ -15,43 +15,29 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-/[a-zA-Z]/;
-`,
-			snapshot: `
-/[a-zA-Z]/;
- ~~~~~~~~
- This character class can be simplified by using the \`i\` flag.
-`,
-		},
-		{
-			code: `
 /[aAbBcC]/;
 `,
 			snapshot: `
 /[aAbBcC]/;
  ~~~~~~~~
- This character class can be simplified by using the \`i\` flag.
-`,
-		},
-		{
-			code: `
-/[a-zA-Z0-9]/;
-`,
-			snapshot: `
-/[a-zA-Z0-9]/;
- ~~~~~~~~~~~
  This character class can be simplified by using the \`i\` flag.
 `,
 		},
 	],
 	valid: [
+		`/[^aA]/;`,
+		`/[0-9]/;`,
 		`/[a-z]/;`,
 		`/[A-Z]/;`,
-		`/[abc]/;`,
 		`/[a-z]/i;`,
+		`/[a-zA-Z]/;`,
 		`/[a-zA-Z]/i;`,
-		`/[0-9]/;`,
-		`/[^aA]/;`,
+		`/[a-zA-Z0-9]/;`,
 		`/[aB]/;`,
+		`/[abc]/;`,
+		String.raw`/[0-9A-Fa-f]/;`,
+		String.raw`/[09A-Da-d]/;`,
+		String.raw`/[A-Fa-f]/;`,
+		String.raw`/^\\c[A-Za-z]$/;`,
 	],
 });

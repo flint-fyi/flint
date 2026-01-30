@@ -14,7 +14,7 @@ import { skipParentheses } from "./utils/skipParentheses.ts";
 function isArrowFunctionWithParams(
 	node: AST.Expression,
 ): node is AST.ArrowFunction {
-	return node.kind === SyntaxKind.ArrowFunction && node.parameters.length > 0;
+	return node.kind === SyntaxKind.ArrowFunction && !!node.parameters.length;
 }
 
 function isEmptyObject(node: AST.Expression, typeChecker: Checker) {
@@ -27,8 +27,7 @@ function isEmptyObject(node: AST.Expression, typeChecker: Checker) {
 
 function isEmptyObjectLiteral(node: AST.Expression) {
 	return (
-		node.kind === SyntaxKind.ObjectLiteralExpression &&
-		node.properties.length === 0
+		node.kind === SyntaxKind.ObjectLiteralExpression && !node.properties.length
 	);
 }
 
@@ -197,7 +196,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer Object.fromEntries() over reduce patterns that build objects from key-value pairs.",
 		id: "objectEntriesMethods",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferFromEntries: {
