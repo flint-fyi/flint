@@ -25,14 +25,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		preferEndsWith: {
-			primary: "Prefer `endsWith()` over a regex with `$`.",
+			primary: "Prefer `endsWith()` over a regex with `$` for readability.",
 			secondary: [
 				"`endsWith` is generally more readable than using a regular expression.",
 			],
 			suggestions: ["Replace the regular expression with `endsWith()`."],
 		},
 		preferStartsWith: {
-			primary: "Prefer `startsWith()` over a regex with `^`.",
+			primary: "Prefer `startsWith()` over a regex with `^` for readability.",
 			secondary: [
 				"`startsWith` is generally more readable than using a regular expression.",
 			],

@@ -13,7 +13,7 @@ str.startsWith("foo");
 			snapshot: `
 /^foo/.test(str);
 ~~~~~~
-Prefer \`startsWith()\` over a regex with \`^\`.
+Prefer \`startsWith()\` over a regex with \`^\` for readability.
 `,
 		},
 		{
@@ -26,7 +26,7 @@ str.endsWith("bar");
 			snapshot: `
 /bar$/.test(str);
 ~~~~~~
-Prefer \`endsWith()\` over a regex with \`$\`.
+Prefer \`endsWith()\` over a regex with \`$\` for readability.
 `,
 		},
 		{
@@ -39,7 +39,7 @@ myString.startsWith("hello");
 			snapshot: `
 /^hello/.test(myString);
 ~~~~~~~~
-Prefer \`startsWith()\` over a regex with \`^\`.
+Prefer \`startsWith()\` over a regex with \`^\` for readability.
 `,
 		},
 		{
@@ -52,7 +52,7 @@ myString.endsWith("world");
 			snapshot: `
 /world$/.test(myString);
 ~~~~~~~~
-Prefer \`endsWith()\` over a regex with \`$\`.
+Prefer \`endsWith()\` over a regex with \`$\` for readability.
 `,
 		},
 		{
@@ -65,7 +65,7 @@ getValue().startsWith("prefix");
 			snapshot: `
 /^prefix/.test(getValue());
 ~~~~~~~~~
-Prefer \`startsWith()\` over a regex with \`^\`.
+Prefer \`startsWith()\` over a regex with \`^\` for readability.
 `,
 		},
 		{
@@ -78,7 +78,7 @@ obj.prop.endsWith("suffix");
 			snapshot: `
 /suffix$/.test(obj.prop);
 ~~~~~~~~~
-Prefer \`endsWith()\` over a regex with \`$\`.
+Prefer \`endsWith()\` over a regex with \`$\` for readability.
 `,
 		},
 	],
