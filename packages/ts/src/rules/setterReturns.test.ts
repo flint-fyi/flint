@@ -16,7 +16,7 @@ const object = {
     set value(val) {
         return val;
         ~~~~~~~~~~~
-        Setters cannot return a value.
+        Values returned by setters are always ignored.
     }
 };
 `,
@@ -34,7 +34,7 @@ class Example {
     set name(value) {
         return value;
         ~~~~~~~~~~~~~
-        Setters cannot return a value.
+        Values returned by setters are always ignored.
     }
 }
 `,
@@ -56,7 +56,7 @@ class Example {
         if (val > 0) {
             return val;
             ~~~~~~~~~~~
-            Setters cannot return a value.
+            Values returned by setters are always ignored.
         }
         this._value = val;
     }
@@ -76,7 +76,7 @@ const object = {
     set value(val) {
         return 42;
         ~~~~~~~~~~
-        Setters cannot return a value.
+        Values returned by setters are always ignored.
     }
 };
 `,
@@ -94,7 +94,7 @@ class Example {
     set "computed-name"(val) {
         return val;
         ~~~~~~~~~~~
-        Setters cannot return a value.
+        Values returned by setters are always ignored.
     }
 }
 `,
@@ -114,7 +114,7 @@ const object = {
     set [key](val) {
         return val;
         ~~~~~~~~~~~
-        Setters cannot return a value.
+        Values returned by setters are always ignored.
     }
 };
 `,
