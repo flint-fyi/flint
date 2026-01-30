@@ -156,10 +156,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			visitRegExpAST(regexpAst, {
 				onAssertionEnter(assertion) {
-					if (zeroMinQuantifierStack.length === 0) {
-						return;
+					if (zeroMinQuantifierStack.length) {
+						collectedAssertions.push(assertion);
 					}
-					collectedAssertions.push(assertion);
 				},
 				onQuantifierEnter(quantifier) {
 					if (quantifier.min === 0) {
@@ -169,7 +168,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				onQuantifierLeave(quantifier) {
 					if (quantifier.min === 0) {
 						const popped = zeroMinQuantifierStack.pop();
-						if (popped === quantifier && collectedAssertions.length > 0) {
+						if (popped === quantifier && collectedAssertions.length) {
 							const assertionsInThisQuantifier = collectedAssertions.filter(
 								(assertion) => isDescendantOf(assertion, quantifier),
 							);
