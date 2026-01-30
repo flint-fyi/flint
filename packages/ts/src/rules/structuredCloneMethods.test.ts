@@ -1,5 +1,5 @@
-import rule from "./structuredCloneMethods.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./structuredCloneMethods.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -58,5 +58,13 @@ export const copy = JSON.parse(JSON.stringify({ a: 1 }));
 		`const result = JSON.parse(getData());`,
 		`const result = JSON.parse(JSON.stringify());`,
 		`const result = JSON.parse(JSON.stringify(...items));`,
+		`
+declare const JSON: {
+   parse(value: string): unknown;
+   stringify(value: unknown): string;
+}
+const result = JSON.parse(JSON.stringify({}));
+export {};
+`,
 	],
 });
