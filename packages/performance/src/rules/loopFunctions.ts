@@ -178,7 +178,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const loopVariables = getLoopVariables(node);
-			if (loopVariables.size > 0) {
+			if (loopVariables.size) {
 				checkFunctionInLoop(node.statement, node, loopVariables, sourceFile);
 			}
 		}

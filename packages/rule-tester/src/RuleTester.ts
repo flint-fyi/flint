@@ -81,7 +81,7 @@ export class RuleTester {
 					)
 				: undefined;
 		const { files: defaultFiles = {} } = defaults;
-		if (Object.keys(defaultFiles).length > 0) {
+		if (Object.keys(defaultFiles).length) {
 			const vfs = createVFSLinterHost(
 				baseHost == null ? { cwd: process.cwd() } : { baseHost },
 			);

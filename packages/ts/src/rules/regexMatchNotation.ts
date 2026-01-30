@@ -16,7 +16,7 @@ function isMatchAnyCharacterClass(
 	flags: { unicode: boolean; unicodeSets: boolean },
 ) {
 	if (node.negate) {
-		return node.elements.length === 0;
+		return !node.elements.length;
 	}
 
 	const positiveElements: {
@@ -73,15 +73,14 @@ function isMatchAnyCharacterClass(
 				default:
 					break;
 			}
-		} else if (element.type === "CharacterClassRange") {
-			if (
-				element.min.value === 0 &&
-				(element.max.value === 0xffff ||
-					element.max.value === 0x10ffff ||
-					(flags.unicode && element.max.value >= 0x10ffff))
-			) {
-				return true;
-			}
+		} else if (
+			element.type === "CharacterClassRange" &&
+			element.min.value === 0 &&
+			(element.max.value === 0xffff ||
+				element.max.value === 0x10ffff ||
+				(flags.unicode && element.max.value >= 0x10ffff))
+		) {
+			return true;
 		}
 	}
 

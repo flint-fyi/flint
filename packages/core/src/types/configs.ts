@@ -54,7 +54,7 @@ export interface ConfigDefinition {
 export type ConfigRuleDefinition = AnyRule | ConfigRuleDefinitionObject;
 
 export interface ConfigRuleDefinitionObject {
-	options: unknown;
+	options: boolean | object;
 	rule: AnyRule;
 }
 
