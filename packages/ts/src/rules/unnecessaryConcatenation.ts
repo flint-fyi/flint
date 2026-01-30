@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports string concatenation using the + operator when both operands are string literals.",
 		id: "unnecessaryConcatenation",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		unnecessaryConcatenation: {

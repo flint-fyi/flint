@@ -171,7 +171,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Require that function overload signatures be consecutive.",
 		id: "overloadSignaturesAdjacent",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		overloadSignatureSeparated: {

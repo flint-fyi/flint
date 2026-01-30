@@ -1,0 +1,120 @@
+---
+description: "Reports inconsistent Unicode property names in regular expressions."
+title: "regexUnicodeProperties"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnicodeProperties" />
+
+Unicode properties may be expressed in several different ways.
+Including the fully-written out category prefix is a more verbose way that is not necessary.
+
+This rule detects inconsistent Unicode property names in regular expressions and suggests more idiomatic forms for:
+
+1. Unnecessary `gc=` / `General_Category=` prefix: unicode general category properties can be used without the prefix.
+2. Long script names: short script aliases like `Grek` should use the full name `Greek` for readability.
+
+## Examples
+
+### Unnecessary General_Category Prefix
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\p{gc=L}/u;
+const pattern2 = /\p{General_Category=Letter}/u;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\p{L}/u;
+const pattern2 = /\p{Letter}/u;
+```
+
+</TabItem>
+</Tabs>
+
+### Short Script Names
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\p{sc=Grek}/u;
+const pattern2 = /\p{Script=Latn}/u;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\p{sc=Greek}/u;
+const pattern2 = /\p{Script=Latin}/u;
+```
+
+</TabItem>
+</Tabs>
+
+### Script_Extensions
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\p{scx=Cyrl}/u;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\p{scx=Cyrillic}/u;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("\\p{gc=L}", "u");
+const pattern2 = new RegExp("\\p{sc=Grek}", "u");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("\\p{L}", "u");
+const pattern2 = new RegExp("\\p{sc=Greek}", "u");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project has a style guide that prefers explicit `gc=` prefixes or short script names for consistency with other documentation, you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: Unicode character class escape](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Unicode_character_class_escape)
+- [Unicode Technical Standard #18: Unicode Regular Expressions](https://unicode.org/reports/tr18/)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnicodeProperties" />
