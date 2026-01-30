@@ -45,8 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						receiver.kind !== SyntaxKind.NewExpression ||
 						receiver.expression.kind !== SyntaxKind.Identifier ||
 						receiver.expression.text !== "Response" ||
-						!receiver.arguments ||
-						!receiver.arguments.length
+						!receiver.arguments?.length
 					) {
 						return;
 					}

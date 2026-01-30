@@ -128,7 +128,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const requiredPlaceholders = messagePlaceholders.get(
 				messageProperty.initializer.text,
 			);
-			if (!requiredPlaceholders || !requiredPlaceholders.size) {
+			if (!requiredPlaceholders?.size) {
 				return;
 			}
 

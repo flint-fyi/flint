@@ -145,7 +145,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const args = node.arguments;
-			if (!args || !args.length) {
+			if (!args?.length) {
 				return;
 			}
 
