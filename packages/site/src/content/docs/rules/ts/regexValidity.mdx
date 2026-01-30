@@ -10,18 +10,31 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexValidity" />
 
-Reports invalid regular expressions that would throw at runtime.
+It is possible to write regular expression literals that will throw at runtime.
 This includes invalid patterns, invalid flags, duplicate flags, and conflicting flag combinations.
+This rule reports those invalid regular expressions.
 
 ## Examples
 
-### Invalid Pattern
+Invalid Pattern
 
 <Tabs>
 <TabItem label="❌ Incorrect">
 
 ```ts
 const pattern = RegExp("(");
+```
+
+```ts
+const pattern = RegExp("abc", "q");
+```
+
+```ts
+const pattern = RegExp("abc", "gg");
+```
+
+```ts
+const pattern = RegExp("abc", "uv");
 ```
 
 </TabItem>
@@ -31,58 +44,13 @@ const pattern = RegExp("(");
 const pattern = RegExp("(abc)");
 ```
 
-</TabItem>
-</Tabs>
-
-### Invalid Flag
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
-```ts
-const pattern = RegExp("abc", "q");
-```
-
-</TabItem>
-<TabItem label="✅ Correct">
-
 ```ts
 const pattern = RegExp("abc", "g");
 ```
 
-</TabItem>
-</Tabs>
-
-### Duplicate Flag
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
-```ts
-const pattern = RegExp("abc", "gg");
-```
-
-</TabItem>
-<TabItem label="✅ Correct">
-
 ```ts
 const pattern = RegExp("abc", "gi");
 ```
-
-</TabItem>
-</Tabs>
-
-### Conflicting Flags
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
-```ts
-const pattern = RegExp("abc", "uv");
-```
-
-</TabItem>
-<TabItem label="✅ Correct">
 
 ```ts
 const pattern = RegExp("abc", "u");
@@ -97,7 +65,7 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-There is no reason to disable this rule.
+If you are working in an environment with different regular expression semantics than the norm, you may prefer to disable this rule.
 
 ## Further Reading
 

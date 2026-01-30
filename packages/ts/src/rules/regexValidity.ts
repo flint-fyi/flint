@@ -20,17 +20,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		conflictingFlags: {
-			primary: "The 'u' and 'v' flags cannot be used together.",
+			primary: "The `u` and `v` flags cannot be used together.",
 			secondary: ["These flags enable mutually exclusive Unicode modes."],
-			suggestions: ["Use either 'u' or 'v', but not both."],
+			suggestions: ["Use either `u` or `v`, but not both."],
 		},
 		duplicateFlag: {
-			primary: "Duplicate regular expression flag '{{ flag }}'.",
+			primary: "Duplicate regular expression flag `{{ flag }}`.",
 			secondary: ["Each flag can only appear once."],
 			suggestions: ["Remove the duplicate flag."],
 		},
 		invalidFlag: {
-			primary: "Invalid regular expression flag '{{ flag }}'.",
+			primary: "Invalid regular expression flag `{{ flag }}`.",
 			secondary: ["Valid flags are: d, g, i, m, s, u, v, y."],
 			suggestions: ["Remove the invalid flag."],
 		},
@@ -150,16 +150,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const args = construction.args;
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const firstArgument = args[0]!;
-			const patternStart = firstArgument.getStart(services.sourceFile) + 1;
-			const patternEnd = firstArgument.getEnd() - 1;
+			const firstArgument = construction.args[0]!;
 
 			let hasInvalidFlags = false;
-			if (args.length >= 2) {
+			if (construction.args.length >= 2) {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				const secondArgument = args[1]!;
+				const secondArgument = construction.args[1]!;
 				if (secondArgument.kind === ts.SyntaxKind.StringLiteral) {
 					const flagsStart = secondArgument.getStart(services.sourceFile) + 1;
 					hasInvalidFlags = checkFlags(construction.flags, flagsStart);
@@ -169,6 +166,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (hasInvalidFlags) {
 				return;
 			}
+
+			const patternStart = firstArgument.getStart(services.sourceFile) + 1;
+			const patternEnd = firstArgument.getEnd() - 1;
 
 			checkPattern(
 				construction.raw,

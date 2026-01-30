@@ -1,3 +1,4 @@
+// spellchecker:disable
 import rule from "./regexValidity.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -50,7 +51,7 @@ RegExp("abc", "q");
 			snapshot: `
 RegExp("abc", "q");
                ~
-               Invalid regular expression flag 'q'.
+               Invalid regular expression flag \`q\`.
 `,
 		},
 		{
@@ -60,7 +61,7 @@ RegExp("abc", "gg");
 			snapshot: `
 RegExp("abc", "gg");
                 ~
-                Duplicate regular expression flag 'g'.
+                Duplicate regular expression flag \`g\`.
 `,
 		},
 		{
@@ -70,7 +71,7 @@ RegExp("abc", "uv");
 			snapshot: `
 RegExp("abc", "uv");
                 ~
-                The 'u' and 'v' flags cannot be used together.
+                The \`u\` and \`v\` flags cannot be used together.
 `,
 		},
 		{
@@ -80,7 +81,7 @@ RegExp("abc", "vu");
 			snapshot: `
 RegExp("abc", "vu");
                 ~
-                The 'u' and 'v' flags cannot be used together.
+                The \`u\` and \`v\` flags cannot be used together.
 `,
 		},
 		{
@@ -100,7 +101,7 @@ RegExp("abc", "vu");
 			snapshot: `
 /abc/gg;
       ~
-      Duplicate regular expression flag 'g'.
+      Duplicate regular expression flag \`g\`.
 `,
 		},
 		{
@@ -110,7 +111,7 @@ RegExp("abc", "vu");
 			snapshot: `
 /abc/uv;
       ~
-      The 'u' and 'v' flags cannot be used together.
+      The \`u\` and \`v\` flags cannot be used together.
 `,
 		},
 		{
@@ -120,9 +121,9 @@ RegExp("abc", "gqx");
 			snapshot: `
 RegExp("abc", "gqx");
                 ~
-                Invalid regular expression flag 'q'.
+                Invalid regular expression flag \`q\`.
                  ~
-                 Invalid regular expression flag 'x'.
+                 Invalid regular expression flag \`x\`.
 `,
 		},
 	],
