@@ -1,15 +1,11 @@
-import type {
-	AnyLanguage,
-	AnyLanguageFileDefinition,
-	AnyLanguageFileMetadata,
-} from "../types/languages.ts";
+import type { AnyLanguage, AnyLanguageFile } from "../types/languages.ts";
 
-export interface LanguageAndFilesMetadata {
-	fileMetadata: AnyLanguageFileMetadata;
+export interface LanguageAndFile {
+	file: AnyLanguageFile;
 	language: AnyLanguage;
 }
 
 export interface LanguageFilesWithOptions {
-	languageFiles: AnyLanguageFileDefinition[];
+	languageFiles: LanguageAndFile[];
 	options: unknown;
 }

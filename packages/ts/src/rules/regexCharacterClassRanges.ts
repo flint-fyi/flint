@@ -123,7 +123,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports character class elements that can be simplified to ranges.",
 		id: "regexCharacterClassRanges",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferRange: {
@@ -181,7 +181,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									const begin = nodeStart + patternOffset + currentNode.start;
 									const end = nodeStart + patternOffset + currentNode.end;
 
-									if (fixRanges.length === 0) {
+									if (!fixRanges.length) {
 										fixRanges.push({ begin, end });
 									} else {
 										const lastRange = fixRanges.at(-1);

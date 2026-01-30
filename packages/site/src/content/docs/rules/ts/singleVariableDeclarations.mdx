@@ -1,0 +1,70 @@
+---
+description: "Enforces one variable per declaration statement."
+title: "singleVariableDeclarations"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="singleVariableDeclarations" />
+
+Declaring multiple variables in a single statement can reduce readability.
+Each variable declaration should be on its own line to make the code easier to read and maintain.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+let first, second, third;
+
+const width = 100,
+	height = 200;
+
+for (let index = 0, length = 10; index < length; index++) {
+	console.log(index);
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+let first;
+let second;
+let third;
+
+const width = 100;
+const height = 200;
+
+// Destructuring is allowed (single binding pattern)
+const { first, second } = object;
+const [width, height] = dimensions;
+
+// For-of and for-in loops are fine
+for (const item of items) {
+	console.log(item);
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer to declare multiple variables in a single statement for brevity, you might choose to disable this rule.
+
+## Further Reading
+
+- [MDN documentation on variable declarations](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="singleVariableDeclarations" />

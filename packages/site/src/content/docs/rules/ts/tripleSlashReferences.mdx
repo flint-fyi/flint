@@ -1,0 +1,68 @@
+---
+description: "Reports triple-slash reference directives."
+title: "tripleSlashReferences"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="tripleSlashReferences" />
+
+Triple-slash reference directives (`/// <reference />`) are an older TypeScript feature for declaring dependencies between files.
+With modern ECMAScript modules and `tsconfig.json` configuration, these directives are rarely needed.
+
+This rule reports on uses of triple-slash references.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+/// <reference path="./types.d.ts" />
+export const value = 1;
+```
+
+```ts
+/// <reference types="node" />
+const path = require("path");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import type { MyType } from "./types";
+export const value: MyType = 1;
+```
+
+```ts
+import * as path from "path";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+In some cases, triple-slash directives are still necessary:
+
+- When working with global type augmentations in a codebase not set up with `tsconfig.json` file inclusions
+- When a file needs to reference a specific declaration file that cannot be resolved through normal module resolution
+- When using `/// <reference lib="..." />` for lib references in a codebase that overrides them
+
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [TypeScript: Triple-Slash Directives](https://www.typescriptlang.org/docs/handbook/triple-slash-directives.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="tripleSlashReferences" />
