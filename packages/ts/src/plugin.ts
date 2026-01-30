@@ -230,6 +230,7 @@ import regexUnnecessaryCharacterRanges from "./rules/regexUnnecessaryCharacterRa
 import regexUnnecessaryDisjunctions from "./rules/regexUnnecessaryDisjunctions.ts";
 import regexUnnecessaryDollarReplacements from "./rules/regexUnnecessaryDollarReplacements.ts";
 import regexUnnecessaryEscapes from "./rules/regexUnnecessaryEscapes.ts";
+import regexUnusedCapturingGroups from "./rules/regexUnusedCapturingGroups.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import sequences from "./rules/sequences.ts";
@@ -240,6 +241,7 @@ import singleVariableDeclarations from "./rules/singleVariableDeclarations.ts";
 import sizeComparisonOperators from "./rules/sizeComparisonOperators.ts";
 import sparseArrays from "./rules/sparseArrays.ts";
 import symbolDescriptions from "./rules/symbolDescriptions.ts";
+import topLevelAwaits from "./rules/topLevelAwaits.ts";
 import tsComments from "./rules/tsComments.ts";
 import tslintComments from "./rules/tslintComments.ts";
 import typeofComparisons from "./rules/typeofComparisons.ts";
@@ -492,6 +494,7 @@ export const ts = createPlugin({
 		regexUnnecessaryDisjunctions,
 		regexUnnecessaryDollarReplacements,
 		regexUnnecessaryEscapes,
+		regexUnusedCapturingGroups,
 		returnAssignments,
 		selfAssignments,
 		sequences,
@@ -502,6 +505,7 @@ export const ts = createPlugin({
 		sizeComparisonOperators,
 		sparseArrays,
 		symbolDescriptions,
+		topLevelAwaits,
 		tsComments,
 		tslintComments,
 		typeofComparisons,

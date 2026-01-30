@@ -15862,7 +15862,8 @@
 		"flint": {
 			"name": "regexUnusedCapturingGroups",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -17166,6 +17167,7 @@
 			"name": "topLevelAwaits",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},

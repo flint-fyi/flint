@@ -20,6 +20,7 @@
 		"aria-colcount",
 		"aria-colindex",
 		"aria-describedby",
+		"backreferenced",
 		"aria-dropeffect",
 		"aria-flowto",
 		"aria-haspopup",
