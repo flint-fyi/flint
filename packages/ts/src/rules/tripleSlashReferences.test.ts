@@ -10,7 +10,7 @@ const value = 1;`,
 			snapshot: `
 /// <reference path="./types.d.ts" />
                      ~~~~~~~~~~~~
-                     Triple-slash reference directives are outdated.
+                     Prefer ECMAScript modules and/or TSConfig settings over legacy triple-slash directives.
 const value = 1;`,
 		},
 		{
@@ -20,7 +20,7 @@ const process = {};`,
 			snapshot: `
 /// <reference types="node" />
                       ~~~~
-                      Triple-slash reference directives are outdated.
+                      Prefer ECMAScript modules and/or TSConfig settings over legacy triple-slash directives.
 const process = {};`,
 		},
 		{
@@ -30,7 +30,7 @@ const value = 1;`,
 			snapshot: `
 /// <reference lib="es2020" />
                     ~~~~~~
-                    Triple-slash reference directives are outdated.
+                    Prefer ECMAScript modules and/or TSConfig settings over legacy triple-slash directives.
 const value = 1;`,
 		},
 	],

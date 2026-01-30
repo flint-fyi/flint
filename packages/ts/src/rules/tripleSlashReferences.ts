@@ -10,7 +10,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		noTripleSlashReference: {
-			primary: "Triple-slash reference directives are outdated.",
+			primary:
+				"Prefer ECMAScript modules and/or TSConfig settings over legacy triple-slash directives.",
 			secondary: [
 				"ECMAScript module imports are the modern way to declare dependencies.",
 				"Triple-slash references are only needed in specific legacy scenarios.",
