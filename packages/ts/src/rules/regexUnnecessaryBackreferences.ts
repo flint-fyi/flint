@@ -54,11 +54,13 @@ function getUselessProblem(
 			backrefPath.indexOf(commonAncestor),
 		);
 		if (backrefCut.length > 0 && groupCut.length > 0) {
-			const backrefChild = backrefCut[backrefCut.length - 1];
-			const groupChild = groupCut[groupCut.length - 1];
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const backrefChild = backrefCut.at(-1)!;
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const groupChild = groupCut.at(-1)!;
 			if (
-				backrefChild?.type === "Alternative" &&
-				groupChild?.type === "Alternative" &&
+				backrefChild.type === "Alternative" &&
+				groupChild.type === "Alternative" &&
 				backrefChild !== groupChild
 			) {
 				return "disjunctive";
@@ -76,10 +78,8 @@ function getUselessProblem(
 		if (backreference.end <= group.start) {
 			return "forward";
 		}
-	} else {
-		if (group.end <= backreference.start) {
-			return "backward";
-		}
+	} else if (group.end <= backreference.start) {
+		return "backward";
 	}
 
 	return undefined;
