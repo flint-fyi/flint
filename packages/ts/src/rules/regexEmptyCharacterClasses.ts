@@ -42,7 +42,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports character classes that match no characters.",
 		id: "regexEmptyCharacterClasses",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		empty: {
