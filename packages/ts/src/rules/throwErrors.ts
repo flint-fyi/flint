@@ -1,5 +1,6 @@
 import {
 	type AST,
+	declarationIncludesGlobal,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -9,11 +10,17 @@ import * as ts from "typescript";
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
-function isErrorType(type: ts.Type, typeChecker: ts.TypeChecker): boolean {
+function isBuiltinErrorType(type: ts.Type): boolean {
 	const symbol = type.getSymbol();
-	const symbolName = symbol?.getName();
+	if (!symbol || symbol.getName() !== "Error") {
+		return false;
+	}
 
-	if (symbolName === "Error" || symbolName?.endsWith("Error")) {
+	return !!symbol.getDeclarations()?.some(declarationIncludesGlobal);
+}
+
+function isErrorType(type: ts.Type, typeChecker: ts.TypeChecker): boolean {
+	if (isBuiltinErrorType(type)) {
 		return true;
 	}
 
