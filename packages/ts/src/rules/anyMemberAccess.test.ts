@@ -488,13 +488,9 @@ declare const sym: unique symbol;
 declare const obj: { [key: typeof sym]: number };
 obj[sym];
 `,
-		// Edge case: class implements unknown type (heritage context - type-level, not runtime)
 		`class B implements FG.A {}`,
-		// Edge case: interface extends unknown type (heritage context)
 		`interface B extends FG.A {}`,
-		// Edge case: deeply nested unknown type in heritage
 		`class B implements F.S.T.A {}`,
-		// Edge case: interface with deeply nested heritage
 		`interface B extends F.S.T.A {}`,
 	],
 });

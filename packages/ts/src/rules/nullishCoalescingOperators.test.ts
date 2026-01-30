@@ -259,6 +259,76 @@ const result = !value ? "default" : value;
                Prefer nullish coalescing operator (\`??\`) over ternary expression for nullish checks.
 `,
 		},
+		{
+			code: `
+declare const values: Set<string> | undefined;
+function emptiness() {
+    return values !== undefined ? values.has("") : true;
+}
+`,
+			output: `
+declare const values: Set<string> | undefined;
+function emptiness() {
+    return values?.has("") ?? true;
+}
+`,
+			snapshot: `
+declare const values: Set<string> | undefined;
+function emptiness() {
+    return values !== undefined ? values.has("") : true;
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           Prefer nullish coalescing operator (\`??\`) over ternary expression for nullish checks.
+}
+`,
+		},
+		{
+			code: `
+declare const obj: { key: string } | undefined;
+const result = obj !== undefined ? obj["key"] : "default";
+`,
+			output: `
+declare const obj: { key: string } | undefined;
+const result = obj?.["key"] ?? "default";
+`,
+			snapshot: `
+declare const obj: { key: string } | undefined;
+const result = obj !== undefined ? obj["key"] : "default";
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+               Prefer nullish coalescing operator (\`??\`) over ternary expression for nullish checks.
+`,
+		},
+		{
+			code: `
+declare const obj: { nested: { value: number } } | null;
+const result = obj !== null ? obj.nested.value : 0;
+`,
+			output: `
+declare const obj: { nested: { value: number } } | null;
+const result = obj?.nested.value ?? 0;
+`,
+			snapshot: `
+declare const obj: { nested: { value: number } } | null;
+const result = obj !== null ? obj.nested.value : 0;
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+               Prefer nullish coalescing operator (\`??\`) over ternary expression for nullish checks.
+`,
+		},
+		{
+			code: `
+declare const arr: number[] | undefined;
+const result = arr !== undefined ? arr.map(x => x * 2).filter(x => x > 0) : [];
+`,
+			output: `
+declare const arr: number[] | undefined;
+const result = arr?.map(x => x * 2).filter(x => x > 0) ?? [];
+`,
+			snapshot: `
+declare const arr: number[] | undefined;
+const result = arr !== undefined ? arr.map(x => x * 2).filter(x => x > 0) : [];
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+               Prefer nullish coalescing operator (\`??\`) over ternary expression for nullish checks.
+`,
+		},
 	],
 	valid: [
 		`
@@ -326,6 +396,10 @@ function test() {
 		`
 let obj = { value: "test" };
 const result = obj.value || "default";
+`,
+		`
+declare const baseHost: string[] | null;
+console.log(baseHost == null ? { cwd: process.cwd() } : { baseHost });
 `,
 	],
 });

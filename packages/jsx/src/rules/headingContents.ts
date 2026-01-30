@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports heading elements without accessible content.",
 		id: "headingContents",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyHeading: {

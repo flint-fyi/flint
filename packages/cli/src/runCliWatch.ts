@@ -24,11 +24,15 @@ export async function runCliWatch(
 		let currentLintResults: LintResults | undefined;
 		let currentRenderer: Renderer;
 
-		function startNewTask() {
+		function startNewTask(initial = false) {
 			const renderer = getRenderer();
 			currentRenderer = renderer;
 
-			runCliOnce(configFileName, renderer, values).then(
+			runCliOnce(
+				configFileName,
+				renderer,
+				initial ? values : { ...values, "cache-ignore": false },
+			).then(
 				({ lintResults }) => {
 					if (currentRenderer === renderer) {
 						currentLintResults = lintResults;
@@ -47,10 +51,15 @@ export async function runCliWatch(
 			return renderer;
 		}
 
-		currentRenderer = startNewTask();
+		currentRenderer = startNewTask(true);
 
 		const rerun = debounce((fileName: string) => {
-			if (fileName.startsWith("node_modules/.cache")) {
+			if (
+				fileName.startsWith("node_modules/.cache") ||
+				fileName.startsWith(".git") ||
+				fileName.startsWith(".jj") ||
+				fileName.startsWith(".turbo")
+			) {
 				log(
 					"Skipping re-running watch mode for ignored change to: %s",
 					fileName,
