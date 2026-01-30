@@ -10,7 +10,7 @@ const result = str.toLowerCase() === "VALUE";
 			snapshot: `
 const result = str.toLowerCase() === "VALUE";
                                      ~~~~~~~
-                                     This toLowerCase() call is compared against a string that is not lowercase.
+                                     This \`toLowerCase()\` call is compared against a string that is not lowercase.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ const result = str.toUpperCase() === "value";
 			snapshot: `
 const result = str.toUpperCase() === "value";
                                      ~~~~~~~
-                                     This toUpperCase() call is compared against a string that is not uppercase.
+                                     This \`toUpperCase()\` call is compared against a string that is not uppercase.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ const result = "Mixed" === str.toLowerCase();
 			snapshot: `
 const result = "Mixed" === str.toLowerCase();
                ~~~~~~~
-               This toLowerCase() call is compared against a string that is not lowercase.
+               This \`toLowerCase()\` call is compared against a string that is not lowercase.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ const result = str.toLowerCase() !== "HELLO";
 			snapshot: `
 const result = str.toLowerCase() !== "HELLO";
                                      ~~~~~~~
-                                     This toLowerCase() call is compared against a string that is not lowercase.
+                                     This \`toLowerCase()\` call is compared against a string that is not lowercase.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ const result = str.toUpperCase() == "MixedCase";
 			snapshot: `
 const result = str.toUpperCase() == "MixedCase";
                                     ~~~~~~~~~~~
-                                    This toUpperCase() call is compared against a string that is not uppercase.
+                                    This \`toUpperCase()\` call is compared against a string that is not uppercase.
 `,
 		},
 		{
@@ -62,7 +62,7 @@ if (input.toLowerCase() === "YES") {
 			snapshot: `
 if (input.toLowerCase() === "YES") {
                             ~~~~~
-                            This toLowerCase() call is compared against a string that is not lowercase.
+                            This \`toLowerCase()\` call is compared against a string that is not lowercase.
     doSomething();
 }
 `,

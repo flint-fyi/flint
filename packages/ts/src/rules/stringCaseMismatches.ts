@@ -3,18 +3,18 @@ import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isStringLiteral(
-	node: ts.Node,
-): node is ts.StringLiteral | ts.NoSubstitutionTemplateLiteral {
+function isLowerCase(text: string) {
+	return text === text.toLowerCase();
+}
+
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
+function isStringLiteral(node: ts.Node) {
 	return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node);
 }
 
-function isLowerCase(str: string): boolean {
-	return str === str.toLowerCase();
-}
-
-function isUpperCase(str: string): boolean {
-	return str === str.toUpperCase();
+function isUpperCase(text: string) {
+	return text === text.toUpperCase();
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -27,7 +27,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		mismatch: {
 			primary:
-				"This {{method}}() call is compared against a string that is not {{expectedCase}}.",
+				"This `{{method}}()` call is compared against a string that is not {{expectedCase}}.",
 			secondary: [
 				"The comparison will always be {{result}} because the casing doesn't match.",
 			],
@@ -44,21 +44,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const methodName = node.expression.name.text;
-					if (methodName !== "toLowerCase" && methodName !== "toUpperCase") {
+					if (
+						(node.expression.name.text !== "toLowerCase" &&
+							node.expression.name.text !== "toUpperCase") ||
+						node.arguments.length !== 0 ||
+						!ts.isBinaryExpression(node.parent)
+					) {
 						return;
 					}
 
-					if (node.arguments.length !== 0) {
-						return;
-					}
-
-					const parent = node.parent;
-					if (!ts.isBinaryExpression(parent)) {
-						return;
-					}
-
-					const operator = parent.operatorToken.kind;
+					const operator = node.parent.operatorToken.kind;
 					if (
 						operator !== ts.SyntaxKind.EqualsEqualsToken &&
 						operator !== ts.SyntaxKind.EqualsEqualsEqualsToken &&
@@ -68,13 +63,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const otherSide = parent.left === node ? parent.right : parent.left;
+					const otherSide =
+						node.parent.left === node ? node.parent.right : node.parent.left;
 					if (!isStringLiteral(otherSide)) {
 						return;
 					}
 
 					const value = otherSide.text;
-					const isToLower = methodName === "toLowerCase";
+					const isToLower = node.expression.name.text === "toLowerCase";
 					const expectedCase = isToLower ? "lowercase" : "uppercase";
 					const matchesCase = isToLower
 						? isLowerCase(value)
@@ -95,7 +91,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						data: {
 							corrected,
 							expectedCase,
-							method: methodName,
+							method: node.expression.name.text,
 							result: isEquality ? "false" : "true",
 						},
 						message: "mismatch",

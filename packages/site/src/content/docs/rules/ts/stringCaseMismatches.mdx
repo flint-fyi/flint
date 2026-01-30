@@ -13,66 +13,30 @@ import RuleSummary from "~/components/RuleSummary.astro";
 When using `.toLowerCase()` or `.toUpperCase()` in comparisons, the compared string literal must match the expected case.
 Otherwise, the comparison will always produce the same result regardless of input.
 
-For example, `str.toLowerCase() === "VALUE"` will always be `false` because `.toLowerCase()` returns a lowercase string, but `"VALUE"` is uppercase.
+For example, `text.toLowerCase() === "VALUE"` will always be `false` because `.toLowerCase()` returns a lowercase string, but `"VALUE"` is uppercase.
 
 ## Examples
 
-### toLowerCase with Uppercase Literal
-
 <Tabs>
 <TabItem label="❌ Incorrect">
 
 ```ts
-const isMatch = input.toLowerCase() === "VALUE";
+input.toLowerCase() === "VALUE";
+```
+
+```ts
+input.toUpperCase() === "hello";
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```ts
-const isMatch = input.toLowerCase() === "value";
+input.toLowerCase() === "value";
 ```
 
-</TabItem>
-</Tabs>
-
-### toUpperCase with Lowercase Literal
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
 ```ts
-const isMatch = input.toUpperCase() === "hello";
-```
-
-</TabItem>
-<TabItem label="✅ Correct">
-
-```ts
-const isMatch = input.toUpperCase() === "HELLO";
-```
-
-</TabItem>
-</Tabs>
-
-### Mixed Case Literal
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
-```ts
-if (name.toLowerCase() === "JohnDoe") {
-	greetUser();
-}
-```
-
-</TabItem>
-<TabItem label="✅ Correct">
-
-```ts
-if (name.toLowerCase() === "johndoe") {
-	greetUser();
-}
+input.toUpperCase() === "HELLO";
 ```
 
 </TabItem>
@@ -84,7 +48,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you have code that intentionally uses mismatched case comparisons for testing or demonstration purposes, you may need to disable this rule for those specific cases.
+If you have code that intentionally uses mismatched case comparisons for testing or demonstration purposes, this rule might get in your way.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 
