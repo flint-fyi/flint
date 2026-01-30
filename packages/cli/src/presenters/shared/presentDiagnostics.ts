@@ -12,7 +12,9 @@ export function* presentDiagnostics(filesResults: Map<string, FileResults>) {
 	}
 
 	yield "\n";
-	yield chalk.yellow`⚠️  Additionally found ${pluralize(diagnostics.length, "diagnostic")}:`;
+	yield chalk.yellow(
+		`⚠️  Additionally found ${pluralize(diagnostics.length, "diagnostic")}:`,
+	);
 	yield "\n\n";
 
 	for (const diagnostic of diagnostics) {

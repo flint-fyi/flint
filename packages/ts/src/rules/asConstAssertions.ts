@@ -39,7 +39,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using explicit literal types when `as const` can be used.",
 		id: "asConstAssertions",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferAsConst: {

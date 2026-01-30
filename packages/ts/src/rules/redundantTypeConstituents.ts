@@ -144,7 +144,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports union and intersection type constituents that are redundant or override other types.",
 		id: "redundantTypeConstituents",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		errorTypeOverrides: {

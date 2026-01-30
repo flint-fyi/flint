@@ -24,13 +24,9 @@ export default defineConfig({
 				node.presets.stylisticStrict,
 				ts.presets.logicalStrict,
 				ts.presets.stylisticStrict,
-			],
-		},
-		{
-			files: "packages/cli/src/**/*",
-			rules: [
 				ts.rules({
-					consoleCalls: false,
+					// Pending https://github.com/flint-fyi/flint/issues/2165
+					objectShorthand: false,
 				}),
 			],
 		},

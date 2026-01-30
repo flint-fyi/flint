@@ -123,7 +123,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports character class elements that can be simplified to ranges.",
 		id: "regexCharacterClassRanges",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferRange: {

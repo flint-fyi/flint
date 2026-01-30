@@ -45,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using `.map().flat()` when `.flatMap()` can be used.",
 		id: "arrayFlatMapMethods",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferFlatMap: {
