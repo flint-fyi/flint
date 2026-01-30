@@ -179,6 +179,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"This array is only used for existence checks. Prefer `Set` with `.has()` for better performance.",
 			secondary: [
 				"`Set.has()` has O(1) lookup time compared to `Array.includes()` which is O(n).",
+				"Because this array is only ever used to check whether an element is present, using a `Set` would result in faster, more idiomatic code.",
 			],
 			suggestions: [
 				"Convert the array to a `Set` and use `.has()` instead of `.includes()`.",
