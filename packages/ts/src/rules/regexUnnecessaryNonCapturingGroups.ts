@@ -14,128 +14,58 @@ import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 function canUnwrap(group: RegExpAST.Group, pattern: string): boolean {
-	const groupStart = group.start;
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const alternative = group.alternatives[0]!;
+	const groupContent = alternative.raw;
 
-	const alternative = group.alternatives[0];
-	if (!alternative || alternative.elements.length === 0) {
+	if (!alternative.elements.length) {
 		return true;
 	}
 
-	const firstElement = alternative.elements[0];
-
-	if (!firstElement) {
-		return true;
-	}
-
-	const firstChar = pattern[firstElement.start];
-
-	if (!firstChar) {
-		return true;
-	}
-
-	if (groupStart >= 3) {
-		const threeCharsBefore = pattern.slice(groupStart - 3, groupStart);
-		const thirdChar = threeCharsBefore[2];
-
-		if (
-			thirdChar &&
-			threeCharsBefore.startsWith("\\") &&
-			threeCharsBefore[1] === "x" &&
-			isHexDigit(thirdChar)
-		) {
-			if (isHexDigit(firstChar)) {
-				return false;
-			}
-		}
-
-		if (
-			thirdChar &&
-			threeCharsBefore.startsWith("\\") &&
-			threeCharsBefore[1] === "c" &&
-			isLetter(thirdChar)
-		) {
-			return false;
-		}
-	}
-
-	if (groupStart >= 2) {
-		const twoCharsBefore = pattern.slice(groupStart - 2, groupStart);
-
-		if (twoCharsBefore.startsWith("\\") && twoCharsBefore[1] === "c") {
-			if (isLetter(firstChar)) {
-				return false;
-			}
-		}
-	}
-
-	if (groupStart >= 1) {
-		const charBeforeGroup = pattern[groupStart - 1];
-
-		if (charBeforeGroup && isDigit(charBeforeGroup)) {
-			const backslashIndex = pattern.lastIndexOf("\\", groupStart - 1);
-			if (backslashIndex >= 0) {
-				const between = pattern.slice(backslashIndex + 1, groupStart);
-				if (/^\d+$/.test(between) && isDigit(firstChar)) {
-					return false;
-				}
-			}
-		}
-
-		if (charBeforeGroup === "{" && alternative.elements.length > 0) {
-			const lastElement = alternative.elements[alternative.elements.length - 1];
-			const charAfterGroup =
-				group.end < pattern.length ? pattern[group.end] : undefined;
-			const lastChar = lastElement ? pattern[lastElement.end - 1] : undefined;
-
-			if (isDigit(firstChar) && (charAfterGroup === "}" || lastChar === "}")) {
-				return false;
-			}
-		}
-	}
-
-	return true;
-}
-
-function isDigit(char: string): boolean {
-	return /^\d$/.test(char);
-}
-
-function isHexDigit(char: string): boolean {
-	return /^[0-9a-f]$/i.test(char);
-}
-
-function isLetter(char: string): boolean {
-	return /^[a-z]$/i.test(char);
-}
-
-function isUnnecessaryGroup(group: RegExpAST.Group, pattern: string): boolean {
 	const parent = group.parent;
-	const alternatives = group.alternatives;
-	const firstAlternative = alternatives[0];
+	let textBefore: string;
+	let textAfter: string;
 
-	if (!firstAlternative) {
-		return false;
+	if (parent.type === "Alternative") {
+		textBefore = pattern.slice(parent.start, group.start);
+		textAfter = pattern.slice(group.end, parent.end);
+	} else {
+		// parent.type === "Quantifier"
+		const alt = parent.parent;
+		textBefore = pattern.slice(alt.start, group.start);
+		textAfter = pattern.slice(group.end, alt.end);
 	}
 
-	if (alternatives.length === 1) {
+	return (
+		!mightCreateNewElement(textBefore, groupContent) &&
+		!mightCreateNewElement(groupContent, textAfter)
+	);
+}
+
+function isUnnecessaryGroup(group: RegExpAST.Group, pattern: string) {
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const firstAlternative = group.alternatives[0]!;
+
+	if (group.alternatives.length === 1) {
 		const elements = firstAlternative.elements;
 
-		if (parent.type === "Quantifier") {
+		// Ignore empty groups - handled by a different rule
+		if (elements.length === 0) {
+			return false;
+		}
+
+		if (group.parent.type === "Quantifier") {
 			if (elements.length !== 1) {
 				return false;
 			}
 
-			const singleElement = elements[0];
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const singleElement = elements[0]!;
 
-			if (!singleElement) {
-				return false;
-			}
-
-			if (singleElement.type === "Quantifier") {
-				return false;
-			}
-
-			if (singleElement.type === "Assertion") {
+			if (
+				singleElement.type === "Quantifier" ||
+				singleElement.type === "Assertion"
+			) {
 				return false;
 			}
 
@@ -145,15 +75,78 @@ function isUnnecessaryGroup(group: RegExpAST.Group, pattern: string): boolean {
 		return canUnwrap(group, pattern);
 	}
 
-	if (parent.type === "Quantifier") {
-		return false;
-	}
-
-	if (parent.elements.length !== 1) {
+	if (
+		group.parent.type === "Quantifier" ||
+		group.parent.elements.length !== 1
+	) {
 		return false;
 	}
 
 	return canUnwrap(group, pattern);
+}
+
+function mightCreateNewElement(before: string, after: string): boolean {
+	// Control: \cA
+	if (before.endsWith("\\c") && /^[a-z]/i.test(after)) {
+		return true;
+	}
+
+	// Hexadecimal: \xFF \uFFFF
+	if (
+		/(?:^|[^\\])(?:\\{2})*\\(?:x[\dA-Fa-f]?|u[\dA-Fa-f]{0,3})$/.test(before) &&
+		/^[\da-f]/i.test(after)
+	) {
+		return true;
+	}
+
+	// Unicode: \u{FFFF}
+	if (
+		(/(?:^|[^\\])(?:\\{2})*\\u$/.test(before) &&
+			/^\{[\da-f]*(?:\}[\s\S]*)?$/i.test(after)) ||
+		(/(?:^|[^\\])(?:\\{2})*\\u\{[\da-f]*$/.test(before) &&
+			/^(?:[\da-f]+\}?|\})/i.test(after))
+	) {
+		return true;
+	}
+
+	// Octal: \077 \123
+	if (
+		(/(?:^|[^\\])(?:\\{2})*\\0[0-7]?$/.test(before) && /^[0-7]/.test(after)) ||
+		(/(?:^|[^\\])(?:\\{2})*\\[1-7]$/.test(before) && /^[0-7]/.test(after))
+	) {
+		return true;
+	}
+
+	// Backreference: \12 \k<foo>
+	if (
+		(/(?:^|[^\\])(?:\\{2})*\\[1-9]\d*$/.test(before) && /^\d/.test(after)) ||
+		(/(?:^|[^\\])(?:\\{2})*\\k$/.test(before) && after.startsWith("<")) ||
+		/(?:^|[^\\])(?:\\{2})*\\k<[^<>]*$/.test(before)
+	) {
+		return true;
+	}
+
+	// Property: \p{L} \P{L}
+	if (
+		(/(?:^|[^\\])(?:\\{2})*\\p$/i.test(before) &&
+			/^\{[\w=]*(?:\}[\s\S]*)?$/.test(after)) ||
+		(/(?:^|[^\\])(?:\\{2})*\\p\{[\w=]*$/i.test(before) &&
+			/^[\w=]+(?:\}[\s\S]*)?$|^\}/.test(after))
+	) {
+		return true;
+	}
+
+	// Quantifier: {1} {2,} {2,3}
+	if (
+		(/(?:^|[^\\])(?:\\{2})*\{\d*$/.test(before) && /^[\d,}]/.test(after)) ||
+		(/(?:^|[^\\])(?:\\{2})*\{\d+,$/.test(before) &&
+			/^(?:\d+(?:\}|$)|\})/.test(after)) ||
+		(/(?:^|[^\\])(?:\\{2})*\{\d+,\d*$/.test(before) && after.startsWith("}"))
+	) {
+		return true;
+	}
+
+	return false;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -165,11 +158,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		unnecessaryGroup: {
-			primary: "Remove unnecessary non-capturing group.",
+			primary:
+				"This non-capturing group can be removed without changing the regular expression's behavior.",
 			secondary: [
-				"This non-capturing group can be removed without changing the regex behavior.",
+				"Non-capturing groups are generally only necessary when changing search behavior based on the full group.",
+				"This non-capturing group has no such logic, and so can be removed without changing the regex behavior.",
 			],
-			suggestions: ["Remove the group delimiters (?:...)."],
+			suggestions: ["Remove the group delimiters to inline the group."],
 		},
 	},
 	setup(context) {
@@ -186,7 +181,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitRegExpAST(regexpAst, {
 				onGroupEnter(group) {
 					if (isUnnecessaryGroup(group, pattern)) {
+						const groupContent = group.raw.slice(3, -1);
 						context.report({
+							fix: {
+								range: {
+									begin: patternStart + group.start,
+									end: patternStart + group.end,
+								},
+								text: groupContent,
+							},
 							message: "unnecessaryGroup",
 							range: {
 								begin: patternStart + group.start,

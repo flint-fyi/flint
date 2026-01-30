@@ -10,11 +10,16 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexUnnecessaryNonCapturingGroups" />
 
-Reports non-capturing groups `(?:...)` that serve no purpose and can be removed without changing the meaning of the regex.
+Reports non-capturing groups `(?:...)` that serve no purpose and can be removed without changing the meaning of the regular expression.
+
+Note that groups are necessary when:
+
+- They apply a quantifier to multiple elements: `/(?:ab)+/`
+- They group alternations that are not the only element: `/a(?:b|c)d/`
+- Removing them would create escape sequences: `/\x4(?:1)/`
+- They wrap a quantified element for an outer quantifier: `/(?:a{2})+/`
 
 ## Examples
-
-### Single Element Without Quantifier
 
 <Tabs>
 <TabItem label="❌ Incorrect">
@@ -23,39 +28,9 @@ Reports non-capturing groups `(?:...)` that serve no purpose and can be removed 
 const pattern = /(?:abcd)/;
 ```
 
-</TabItem>
-<TabItem label="✅ Correct">
-
-```ts
-const pattern = /abcd/;
-```
-
-</TabItem>
-</Tabs>
-
-### Single Element With Quantifier
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
 ```ts
 const pattern = /(?:a)+/;
 ```
-
-</TabItem>
-<TabItem label="✅ Correct">
-
-```ts
-const pattern = /a+/;
-```
-
-</TabItem>
-</Tabs>
-
-### Top-Level Alternation Wrapper
-
-<Tabs>
-<TabItem label="❌ Incorrect">
 
 ```ts
 const pattern = /(?:a|b)/;
@@ -65,28 +40,19 @@ const pattern = /(?:a|b)/;
 <TabItem label="✅ Correct">
 
 ```ts
+const pattern = /abcd/;
+```
+
+```ts
+const pattern = /a+/;
+```
+
+```ts
 const pattern = /a|b/;
 ```
 
 </TabItem>
 </Tabs>
-
-### Necessary Groups
-
-Groups are necessary when:
-
-- They apply a quantifier to multiple elements: `/(?:ab)+/`
-- They group alternations that are not the only element: `/a(?:b|c)d/`
-- Removing them would create escape sequences: `/\x4(?:1)/`
-- They wrap a quantified element for an outer quantifier: `/(?:a{2})+/`
-
-```ts
-// All of these are valid - the groups are necessary
-const multiElement = /(?:ab)+/;
-const alternationInContext = /a(?:b|c)d/;
-const escapeHazard = /\x4(?:1)/;
-const nestedQuantifier = /(?:a{2})+/;
-```
 
 ## Options
 
