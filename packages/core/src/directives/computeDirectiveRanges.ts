@@ -20,7 +20,7 @@ export interface RangedSelectionLines {
 export function computeDirectiveRanges(
 	directives: CommentDirectiveWithinFile[],
 ) {
-	if (directives.length === 0) {
+	if (!directives.length) {
 		return [];
 	}
 

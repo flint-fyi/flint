@@ -14,7 +14,7 @@ function isDirective(statement: AST.Statement) {
 function isEmptyStatement(statement: AST.Statement) {
 	switch (statement.kind) {
 		case SyntaxKind.Block:
-			return statement.statements.length === 0;
+			return !statement.statements.length;
 		case SyntaxKind.EmptyStatement:
 			return true;
 		default:

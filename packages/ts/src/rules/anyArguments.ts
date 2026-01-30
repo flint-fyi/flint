@@ -188,7 +188,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					parameterIndex,
 					typeChecker,
 				);
-				if (parameters.length === 0 || !parameterInfo) {
+				if (!parameters.length || !parameterInfo) {
 					parameterIndex++;
 					continue;
 				}
@@ -316,7 +316,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			index: number,
 			typeChecker: ts.TypeChecker,
 		): undefined | { symbol: ts.Symbol; tupleIndex?: number; type: ts.Type } {
-			if (parameters.length === 0) {
+			if (!parameters.length) {
 				return undefined;
 			}
 

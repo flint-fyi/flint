@@ -203,10 +203,10 @@ function isValidPropertyValue(
 			);
 
 		case "id":
-			return typeof value === "string" && value.length > 0;
+			return typeof value === "string" && !!value.length;
 
 		case "idlist":
-			return typeof value === "string" && value.trim().length > 0;
+			return typeof value === "string" && !!value.trim().length;
 
 		case "integer":
 			if (typeof value === "number") {

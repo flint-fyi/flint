@@ -157,7 +157,7 @@ function isSupportedType(
 }
 
 function isValidPrototypePattern(node: AST.Expression, method: string) {
-	if (ts.isArrayLiteralExpression(node) && node.elements.length === 0) {
+	if (ts.isArrayLiteralExpression(node) && !node.elements.length) {
 		return true;
 	}
 
@@ -319,7 +319,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 
-					if (fixableArguments.length === 0) {
+					if (!fixableArguments.length) {
 						return;
 					}
 

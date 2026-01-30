@@ -136,7 +136,7 @@ function getElementCharacters(element: RegExpAST.Element): Set<number> {
 
 function getEndQuantifier(capturingGroup: RegExpAST.CapturingGroup) {
 	for (const alternative of capturingGroup.alternatives) {
-		if (alternative.elements.length === 0) {
+		if (!alternative.elements.length) {
 			continue;
 		}
 
@@ -205,7 +205,7 @@ function getStartQuantifier(
 	direction: "ltr" | "rtl",
 ): RegExpAST.Quantifier | undefined {
 	const elements = alternative.elements;
-	if (elements.length === 0) {
+	if (!elements.length) {
 		return undefined;
 	}
 

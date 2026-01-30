@@ -146,7 +146,7 @@ function isFunctionType(
 		ts.SignatureKind.Call,
 	);
 
-	return signatures.length > 0;
+	return !!signatures.length;
 }
 
 function isReferenceToGlobalFunction(

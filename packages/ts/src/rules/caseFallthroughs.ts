@@ -69,7 +69,7 @@ function isTerminatingStatement(node: AST.Statement): boolean {
 				node.caseBlock.clauses.some(ts.isDefaultClause) &&
 				node.caseBlock.clauses.every(
 					(clause) =>
-						clause.statements.length === 0 ||
+						!clause.statements.length ||
 						endsWithTerminatingStatement(clause.statements),
 				)
 			);
@@ -130,7 +130,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const nextClause = node.caseBlock.clauses[i + 1]!;
 
 						if (
-							clause.statements.length === 0 ||
+							!clause.statements.length ||
 							endsWithTerminatingStatement(clause.statements) ||
 							hasFallthroughComment(clause, nextClause, sourceFile)
 						) {

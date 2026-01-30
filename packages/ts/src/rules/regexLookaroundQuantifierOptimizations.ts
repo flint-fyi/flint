@@ -18,7 +18,7 @@ function* extractInvalidQuantifiers(
 	kind: "lookahead" | "lookbehind",
 ): IterableIterator<RegExpAST.Quantifier> {
 	for (const { elements } of alternatives) {
-		if (elements.length === 0) {
+		if (!elements.length) {
 			continue;
 		}
 

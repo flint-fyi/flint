@@ -51,7 +51,7 @@ function getBoundaryGroups(
 	groups: RegExpAST.CapturingGroup[],
 ) {
 	if (
-		groups.length === 0 ||
+		!groups.length ||
 		groups.length > 2 ||
 		groups.some((group) => group.name != null)
 	) {
@@ -243,7 +243,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const capturingGroups = getCapturingGroups(regexpAst);
-					if (capturingGroups.length === 0 || capturingGroups.length > 2) {
+					if (!capturingGroups.length || capturingGroups.length > 2) {
 						return;
 					}
 

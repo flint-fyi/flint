@@ -92,7 +92,7 @@ function createApplyFixText(
 	methodArguments: AST.Expression[],
 	sourceFile: AST.SourceFile,
 ) {
-	if (methodArguments.length === 0) {
+	if (!methodArguments.length) {
 		return `${functionExpression}()`;
 	}
 

@@ -72,7 +72,7 @@ function getSoleArgument(node: AST.CallExpression | AST.NewExpression) {
 }
 
 function shouldAllowCallOrNew(node: AST.CallExpression | AST.NewExpression) {
-	if (node.typeArguments && node.typeArguments.length > 0) {
+	if (node.typeArguments && !!node.typeArguments.length) {
 		return true;
 	}
 

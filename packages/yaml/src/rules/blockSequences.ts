@@ -9,7 +9,7 @@ function buildBlockSequenceFix(
 	const items: string[] = [];
 
 	for (const item of node.children) {
-		if (item.children.length > 0) {
+		if (item.children.length) {
 			const child = item.children[0];
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const itemText = getNodeText(child!, sourceText);

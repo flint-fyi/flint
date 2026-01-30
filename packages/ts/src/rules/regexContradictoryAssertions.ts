@@ -208,7 +208,7 @@ function getCharRepresentation(
 function getElementChar(element: string, doubleEscaped: boolean) {
 	if (element.startsWith("[")) {
 		const inner = element.slice(1, element.lastIndexOf("]"));
-		if (inner.length === 0 || inner.startsWith("^")) {
+		if (!inner.length || inner.startsWith("^")) {
 			return undefined;
 		}
 

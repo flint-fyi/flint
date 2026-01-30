@@ -9,7 +9,7 @@ import * as ts from "typescript";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasCallbackArgument(callExpression: AST.CallExpression) {
-	if (callExpression.arguments.length === 0) {
+	if (!callExpression.arguments.length) {
 		return false;
 	}
 

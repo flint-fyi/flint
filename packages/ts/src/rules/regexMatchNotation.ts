@@ -16,7 +16,7 @@ function isMatchAnyCharacterClass(
 	flags: { unicode: boolean; unicodeSets: boolean },
 ) {
 	if (node.negate) {
-		return node.elements.length === 0;
+		return !node.elements.length;
 	}
 
 	const positiveElements: {

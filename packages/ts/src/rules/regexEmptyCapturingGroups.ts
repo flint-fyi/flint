@@ -105,7 +105,7 @@ function isAllowedException(node: CapturingGroup): boolean {
 		if (quantifier.max === 1) {
 			if (
 				quantifier.element.type === "CharacterClass" &&
-				quantifier.element.elements.length > 0
+				!!quantifier.element.elements.length
 			) {
 				return true;
 			}
@@ -140,7 +140,7 @@ function isAllowedException(node: CapturingGroup): boolean {
 
 		// ([dgimsuyv]*) - flag characters only
 		if (
-			quantifier.element.elements.length > 0 &&
+			quantifier.element.elements.length &&
 			quantifier.element.elements.every(
 				(child) => child.type === "Character" && allowedFlags.has(child.value),
 			)

@@ -45,7 +45,7 @@ function computeFixedPattern(
 		const extractedChars = singleCharAlts.map((alt) => alt.raw);
 
 		let replacement: string;
-		if (remainingAlts.length === 0) {
+		if (!remainingAlts.length) {
 			replacement = extractedChars.join("");
 		} else {
 			const remainingDisjunction = `\\q{${remainingAlts.map((alt) => alt.raw).join("|")}}`;
@@ -128,7 +128,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				flags,
 			);
 
-			if (unnecessaryAlternatives.length === 0) {
+			if (!unnecessaryAlternatives.length) {
 				return;
 			}
 
@@ -171,7 +171,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				construction.flags,
 			);
 
-			if (unnecessaryAlternatives.length === 0) {
+			if (!unnecessaryAlternatives.length) {
 				return;
 			}
 

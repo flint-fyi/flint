@@ -1,5 +1,5 @@
 ---
-description: "Prefer explicit comparison operators for `.length` and `.size` checks."
+description: "Enforce consistent style for `.length` and `.size` checks."
 title: "sizeComparisonOperators"
 topic: "rules"
 ---
@@ -10,12 +10,77 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="sizeComparisonOperators" />
 
-Using `.length` or `.size` in a boolean context relies on implicit type coercion: non-zero values are truthy, and zero is falsy.
-While this works, explicit comparisons like `.length > 0` or `.length === 0` make the intent clearer.
+This rule enforces a consistent style for checking `.length` and `.size` properties in boolean contexts.
 
-This rule reports implicit boolean coercion of `.length` and `.size` properties and suggests explicit comparisons instead.
+By default, the rule prefers implicit boolean coercion (e.g., `if (array.length)`) for its conciseness.
+Alternatively, you can configure it to prefer explicit comparisons (e.g., `if (array.length > 0)`) for clarity.
 
 ## Examples
+
+### Default (`style: "coercion"`)
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const items: string[];
+if (items.length > 0) {
+}
+```
+
+```ts
+declare const items: string[];
+if (items.length === 0) {
+}
+```
+
+```ts
+declare const items: string[];
+if (items.length !== 0) {
+}
+```
+
+```ts
+declare const mySet: Set<string>;
+if (mySet.size > 0) {
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const items: string[];
+if (items.length) {
+}
+```
+
+```ts
+declare const items: string[];
+if (!items.length) {
+}
+```
+
+```ts
+declare const items: string[];
+items.length && doSomething();
+```
+
+```ts
+declare const items: string[];
+const hasItems = items.length ? "yes" : "no";
+```
+
+```ts
+declare const mySet: Set<string>;
+if (mySet.size) {
+}
+```
+
+</TabItem>
+</Tabs>
+
+### With `style: "explicit"`
 
 <Tabs>
 <TabItem label="❌ Incorrect">
@@ -100,11 +165,19 @@ if (mySet.size > 0) {
 
 ## Options
 
-This rule is not configurable.
+### `style`
+
+- **Type:** `"coercion" | "explicit"`
+- **Default:** `"coercion"`
+
+Which style to enforce:
+
+- `"coercion"`: Prefer implicit boolean checks like `if (array.length)`
+- `"explicit"`: Prefer explicit comparisons like `if (array.length > 0)`
 
 ## When Not To Use It
 
-If your team prefers the concise implicit boolean coercion style, or if you find the explicit comparisons too verbose, you may disable this rule.
+If your team doesn't have a preference for one style over the other, or if you want to allow both styles, you might prefer to disable this rule.
 
 ## Further Reading
 

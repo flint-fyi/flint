@@ -68,7 +68,7 @@ function isFilterCall(
 	return (
 		ts.isCallExpression(node) &&
 		ts.isPropertyAccessExpression(node.expression) &&
-		node.arguments.length !== 0 &&
+		!!node.arguments.length &&
 		node.expression.name.text === "filter" &&
 		typeChecker.isArrayType(
 			typeChecker.getTypeAtLocation(node.expression.expression),

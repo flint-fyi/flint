@@ -41,7 +41,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 		return {
 			visitors: {
 				mappingKey: (node) => {
-					if (node.children.length === 0) {
+					if (!node.children.length) {
 						return;
 					}
 

@@ -9,7 +9,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 function isEmptyObjectLiteral(node: ts.Expression) {
 	const unwrapped = unwrapParentheses(node);
 	return (
-		ts.isObjectLiteralExpression(unwrapped) && unwrapped.properties.length === 0
+		ts.isObjectLiteralExpression(unwrapped) && !unwrapped.properties.length
 	);
 }
 

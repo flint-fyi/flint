@@ -53,7 +53,7 @@ function getUselessProblem(
 			0,
 			backrefPath.indexOf(commonAncestor),
 		);
-		if (backrefCut.length > 0 && groupCut.length > 0) {
+		if (backrefCut.length && !!groupCut.length) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const backrefChild = backrefCut.at(-1)!;
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion

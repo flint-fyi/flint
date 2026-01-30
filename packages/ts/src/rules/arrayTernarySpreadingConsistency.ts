@@ -91,7 +91,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 });
 
 function isEmptyArray(node: ts.Expression) {
-	return ts.isArrayLiteralExpression(node) && node.elements.length === 0;
+	return ts.isArrayLiteralExpression(node) && !node.elements.length;
 }
 
 function isEmptyStringLike(node: ts.Expression) {

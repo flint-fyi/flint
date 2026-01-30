@@ -181,7 +181,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									const begin = nodeStart + patternOffset + currentNode.start;
 									const end = nodeStart + patternOffset + currentNode.end;
 
-									if (fixRanges.length === 0) {
+									if (!fixRanges.length) {
 										fixRanges.push({ begin, end });
 									} else {
 										const lastRange = fixRanges.at(-1);

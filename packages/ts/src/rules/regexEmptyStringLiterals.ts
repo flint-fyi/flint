@@ -30,9 +30,7 @@ function findEmptyStringLiterals(pattern: string, flags: string) {
 	visitRegExpAST(ast, {
 		onClassStringDisjunctionEnter(node: ClassStringDisjunction) {
 			if (
-				node.alternatives.every(
-					(alternative) => alternative.elements.length === 0,
-				)
+				node.alternatives.every((alternative) => !alternative.elements.length)
 			) {
 				results.push(node);
 			}

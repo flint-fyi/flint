@@ -15,7 +15,7 @@ function hasIncludesMethod(node: AST.Expression, typeChecker: Checker) {
 
 	return (
 		includesProperty &&
-		typeChecker.getTypeOfSymbol(includesProperty).getCallSignatures().length > 0
+		!!typeChecker.getTypeOfSymbol(includesProperty).getCallSignatures().length
 	);
 }
 

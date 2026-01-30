@@ -57,7 +57,7 @@ function findEmptyAlternativesInGroup(
 		}
 	}
 
-	if (pipePositions.length === 0) {
+	if (!pipePositions.length) {
 		return;
 	}
 

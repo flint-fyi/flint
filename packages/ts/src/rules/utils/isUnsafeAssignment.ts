@@ -71,7 +71,7 @@ function isUnsafeAssignmentWorker(
 			senderNode.kind === SyntaxKind.NewExpression &&
 			senderNode.expression.kind === SyntaxKind.Identifier &&
 			senderNode.expression.text === "Map" &&
-			(senderNode.arguments == null || senderNode.arguments.length === 0) &&
+			(senderNode.arguments == null || !senderNode.arguments.length) &&
 			senderNode.typeArguments == null
 		) {
 			// special case to handle `new Map()`

@@ -30,7 +30,7 @@ function hasTrailingEmptyAlternative(group: RegExpAST.Group) {
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const lastAlternative = group.alternatives.at(-1)!;
 
-	return lastAlternative.elements.length === 0;
+	return !lastAlternative.elements.length;
 }
 
 function isGroupQuantified(group: RegExpAST.Group) {

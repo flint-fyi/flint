@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.ArrayBindingPattern | AST.ObjectBindingPattern,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (node.elements.length === 0) {
+			if (!node.elements.length) {
 				context.report({
 					message: "emptyPattern",
 					range: {

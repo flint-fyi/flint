@@ -99,7 +99,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile }) => {
-					if (node.arguments.length === 0) {
+					if (!node.arguments.length) {
 						return;
 					}
 

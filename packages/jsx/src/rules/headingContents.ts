@@ -75,7 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.kind === SyntaxKind.JsxElement &&
 				node.children.some((child) => {
 					if (child.kind === SyntaxKind.JsxText) {
-						return child.text.trim().length > 0;
+						return !!child.text.trim().length;
 					}
 					return (
 						child.kind === SyntaxKind.JsxElement ||

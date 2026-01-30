@@ -81,7 +81,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
-			if (!ts.isFunctionLike(callback) || callback.parameters.length === 0) {
+			if (!ts.isFunctionLike(callback) || !callback.parameters.length) {
 				return;
 			}
 

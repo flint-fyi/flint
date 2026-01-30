@@ -4,12 +4,13 @@ import {
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
+import { z } from "zod";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 const sizePropertyNames = new Set(["length", "size"]);
 
-function hasLogicalOrFallback(node: AST.Expression): boolean {
+function hasLogicalOrFallback(node: AST.Expression) {
 	const parent = node.parent;
 
 	if (
@@ -23,7 +24,7 @@ function hasLogicalOrFallback(node: AST.Expression): boolean {
 	return false;
 }
 
-function isDoubleNegation(node: AST.Expression): boolean {
+function isDoubleNegation(node: AST.Expression) {
 	return (
 		ts.isPrefixUnaryExpression(node) &&
 		node.operator === ts.SyntaxKind.ExclamationToken &&
@@ -32,109 +33,130 @@ function isDoubleNegation(node: AST.Expression): boolean {
 	);
 }
 
-function isInBooleanContext(node: AST.Expression): boolean {
+function isInBooleanContext(node: AST.Expression) {
 	if (isDoubleNegation(node)) {
 		return true;
 	}
 
-	const parent = node.parent;
+	switch (node.parent.kind) {
+		case ts.SyntaxKind.BinaryExpression:
+			return (
+				node.parent.operatorToken.kind ===
+					ts.SyntaxKind.AmpersandAmpersandToken && node.parent.left === node
+			);
 
-	if (ts.isIfStatement(parent) && parent.expression === node) {
-		return true;
+		case ts.SyntaxKind.CallExpression:
+			return (
+				ts.isIdentifier(node.parent.expression) &&
+				node.parent.expression.text === "Boolean" &&
+				node.parent.arguments.length === 1 &&
+				node.parent.arguments[0] === node
+			);
+
+		case ts.SyntaxKind.ConditionalExpression:
+		case ts.SyntaxKind.ForStatement:
+			return node.parent.condition === node;
+
+		case ts.SyntaxKind.DoStatement:
+		case ts.SyntaxKind.IfStatement:
+		case ts.SyntaxKind.WhileStatement:
+			return node.parent.expression === node;
+
+		case ts.SyntaxKind.PrefixUnaryExpression:
+			return node.parent.operator === ts.SyntaxKind.ExclamationToken;
+
+		default:
+			return false;
 	}
+}
 
-	if (ts.isWhileStatement(parent) && parent.expression === node) {
-		return true;
-	}
+function isInNullishCoalescing(node: AST.Expression) {
+	return (
+		ts.isBinaryExpression(node.parent) &&
+		node.parent.operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken
+	);
+}
 
-	if (ts.isDoStatement(parent) && parent.expression === node) {
-		return true;
-	}
-
-	if (ts.isForStatement(parent) && parent.condition === node) {
-		return true;
-	}
-
-	if (ts.isConditionalExpression(parent) && parent.condition === node) {
-		return true;
+function isNegated(node: AST.PropertyAccessExpression) {
+	if (
+		!ts.isPrefixUnaryExpression(node.parent) ||
+		node.parent.operator !== ts.SyntaxKind.ExclamationToken
+	) {
+		return { negated: false, outerNode: node };
 	}
 
 	if (
-		ts.isPrefixUnaryExpression(parent) &&
-		parent.operator === ts.SyntaxKind.ExclamationToken
+		ts.isPrefixUnaryExpression(node.parent.parent) &&
+		node.parent.parent.operator === ts.SyntaxKind.ExclamationToken
 	) {
+		return { negated: false, outerNode: node.parent.parent };
+	}
+
+	return { negated: true, outerNode: node.parent };
+}
+
+function requiresBooleanType(node: AST.Expression): boolean {
+	const parent = node.parent;
+
+	if (ts.isReturnStatement(parent) || ts.isArrowFunction(parent)) {
+		return true;
+	}
+
+	if (ts.isVariableDeclaration(parent) || ts.isPropertyDeclaration(parent)) {
 		return true;
 	}
 
 	if (
 		ts.isBinaryExpression(parent) &&
-		parent.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken &&
-		parent.left === node
+		parent.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
+		parent.right === node
 	) {
 		return true;
 	}
 
-	if (ts.isCallExpression(parent)) {
+	if (ts.isBinaryExpression(parent)) {
+		const op = parent.operatorToken.kind;
 		if (
-			ts.isIdentifier(parent.expression) &&
-			parent.expression.text === "Boolean" &&
-			parent.arguments.length === 1 &&
-			parent.arguments[0] === node
+			op === ts.SyntaxKind.BarBarToken ||
+			op === ts.SyntaxKind.AmpersandAmpersandToken
 		) {
-			return true;
+			return parent.right === node;
 		}
 	}
 
-	return false;
-}
-
-function isInNullishCoalescing(node: AST.Expression): boolean {
-	const parent = node.parent;
-
-	if (
-		ts.isBinaryExpression(parent) &&
-		parent.operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken
-	) {
-		return true;
+	if (ts.isParenthesizedExpression(parent)) {
+		return requiresBooleanType(parent);
 	}
 
 	return false;
-}
-
-function isNegated(node: AST.PropertyAccessExpression): {
-	isNegated: boolean;
-	outerNode: AST.Expression;
-} {
-	const parent = node.parent;
-
-	if (
-		ts.isPrefixUnaryExpression(parent) &&
-		parent.operator === ts.SyntaxKind.ExclamationToken
-	) {
-		const grandparent = parent.parent;
-		if (
-			ts.isPrefixUnaryExpression(grandparent) &&
-			grandparent.operator === ts.SyntaxKind.ExclamationToken
-		) {
-			return { isNegated: false, outerNode: grandparent };
-		}
-		return { isNegated: true, outerNode: parent };
-	}
-
-	return { isNegated: false, outerNode: node };
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
-		description:
-			"Prefer explicit comparison operators for `.length` and `.size` checks.",
+		description: "Enforce consistent style for `.length` and `.size` checks.",
 		id: "sizeComparisonOperators",
 		presets: ["stylisticStrict"],
 	},
 	messages: {
+		coercionNonZeroCheck: {
+			primary:
+				"Prefer implicit boolean coercions instead of explicit `> 0` comparisons.",
+			secondary: [
+				"Implicit boolean coercion of `.{{ property }}` is more concise.",
+			],
+			suggestions: ["Replace with `.{{ property }}`."],
+		},
+		coercionZeroCheck: {
+			primary:
+				"Prefer implicit boolean coercions instead of explicit `=== 0` comparisons.",
+			secondary: [
+				"Implicit boolean coercion of `.{{ property }}` is more concise.",
+			],
+			suggestions: ["Replace with `!.{{ property }}`."],
+		},
 		explicitNonZeroCheck: {
 			primary:
-				"Use explicit `> 0` comparison instead of implicit boolean coercion.",
+				"Prefer explicit `> 0` comparisons instead of implicit boolean coercions.",
 			secondary: [
 				"Implicit boolean coercion of `.{{ property }}` can be confusing.",
 			],
@@ -142,37 +164,105 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 		explicitZeroCheck: {
 			primary:
-				"Use explicit `=== 0` comparison instead of implicit boolean coercion.",
+				"Prefer explicit `=== 0` comparisons instead of implicit boolean coercions.",
 			secondary: [
 				"Implicit boolean coercion of `.{{ property }}` can be confusing.",
 			],
 			suggestions: ["Replace with `.{{ property }} === 0`."],
 		},
 	},
+	options: {
+		style: z
+			.enum(["coercion", "explicit"])
+			.default("coercion")
+			.describe(
+				"Which style to enforce: 'coercion' for implicit boolean checks like `if (arr.length)`, or 'explicit' for comparisons like `if (arr.length > 0)`.",
+			),
+	},
 	setup(context) {
 		return {
 			visitors: {
-				PropertyAccessExpression: (node, { sourceFile }) => {
-					if (!sizePropertyNames.has(node.name.text)) {
+				BinaryExpression: (node, { options, sourceFile }) => {
+					if (options.style !== "coercion") {
 						return;
 					}
 
-					if (hasLogicalOrFallback(node) || isInNullishCoalescing(node)) {
+					const { left, operatorToken, right } = node;
+
+					if (
+						!ts.isPropertyAccessExpression(left) ||
+						!sizePropertyNames.has(left.name.text) ||
+						// TODO: Use a util like getStaticValue
+						// https://github.com/flint-fyi/flint/issues/1298
+						!ts.isNumericLiteral(right) ||
+						right.text !== "0"
+					) {
 						return;
 					}
 
-					const { isNegated: negated, outerNode } = isNegated(node);
+					const isNonZeroCheck =
+						operatorToken.kind === ts.SyntaxKind.GreaterThanToken ||
+						operatorToken.kind === ts.SyntaxKind.ExclamationEqualsEqualsToken ||
+						operatorToken.kind === ts.SyntaxKind.ExclamationEqualsToken;
+
+					const isZeroCheck =
+						operatorToken.kind === ts.SyntaxKind.EqualsEqualsEqualsToken ||
+						operatorToken.kind === ts.SyntaxKind.EqualsEqualsToken ||
+						operatorToken.kind === ts.SyntaxKind.LessThanEqualsToken;
+
+					if (!isNonZeroCheck && !isZeroCheck) {
+						return;
+					}
+
+					const propertyText = left.getText(sourceFile);
+					const needsBoolean = requiresBooleanType(node);
+
+					if (isZeroCheck) {
+						context.report({
+							data: { property: left.name.text },
+							fix: {
+								range: getTSNodeRange(node, sourceFile),
+								text: `!${propertyText}`,
+							},
+							message: "coercionZeroCheck",
+							range: getTSNodeRange(node, sourceFile),
+						});
+					} else {
+						context.report({
+							data: { property: left.name.text },
+							fix: {
+								range: getTSNodeRange(node, sourceFile),
+								text: needsBoolean ? `!!${propertyText}` : propertyText,
+							},
+							message: "coercionNonZeroCheck",
+							range: getTSNodeRange(node, sourceFile),
+						});
+					}
+				},
+				PropertyAccessExpression: (node, { options, sourceFile }) => {
+					if (options.style !== "explicit") {
+						return;
+					}
+
+					if (
+						!sizePropertyNames.has(node.name.text) ||
+						hasLogicalOrFallback(node) ||
+						isInNullishCoalescing(node)
+					) {
+						return;
+					}
+
+					const { negated, outerNode } = isNegated(node);
 
 					if (!isInBooleanContext(outerNode)) {
 						return;
 					}
 
-					const propertyName = node.name.text;
 					const propertyText = node.getText(sourceFile);
 
 					if (negated) {
 						context.report({
-							data: { property: propertyName },
+							data: { property: node.name.text },
 							fix: {
 								range: getTSNodeRange(outerNode, sourceFile),
 								text: `${propertyText} === 0`,
@@ -182,7 +272,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					} else {
 						context.report({
-							data: { property: propertyName },
+							data: { property: node.name.text },
 							fix: {
 								range: getTSNodeRange(outerNode, sourceFile),
 								text: `${propertyText} > 0`,

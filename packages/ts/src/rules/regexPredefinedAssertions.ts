@@ -139,7 +139,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 						const { elements } = regexpAst.alternatives[0]!;
 
-						if (elements.length > 0) {
+						if (elements.length) {
 							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 							const first = elements[0]!;
 

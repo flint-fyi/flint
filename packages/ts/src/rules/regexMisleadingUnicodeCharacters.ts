@@ -220,7 +220,7 @@ function* iterateCharacterSequence(
 			case "CharacterSet":
 			case "ClassStringDisjunction":
 			case "ExpressionCharacterClass":
-				if (sequence.length > 0) {
+				if (sequence.length) {
 					yield sequence;
 					sequence = [];
 				}
@@ -233,7 +233,7 @@ function* iterateCharacterSequence(
 		}
 	}
 
-	if (sequence.length > 0) {
+	if (sequence.length) {
 		yield sequence;
 	}
 }

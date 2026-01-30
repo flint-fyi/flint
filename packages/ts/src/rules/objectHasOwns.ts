@@ -47,7 +47,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isObjectLiteralHasOwnProperty(node: AST.Expression) {
 			return (
 				node.kind === SyntaxKind.ObjectLiteralExpression &&
-				node.properties.length === 0
+				!node.properties.length
 			);
 		}
 
