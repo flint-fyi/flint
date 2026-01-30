@@ -7,6 +7,9 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /(?:\b|(?=a))?/;
 `,
+			output: String.raw`
+/(?:|)?/;
+`,
 			snapshot: `
 /(?:\\b|(?=a))?/;
     ~~
@@ -19,6 +22,9 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /(?:\b|a)?/;
 `,
+			output: String.raw`
+/(?:|a)?/;
+`,
 			snapshot: `
 /(?:\\b|a)?/;
     ~~
@@ -28,6 +34,9 @@ ruleTester.describe(rule, {
 		{
 			code: String.raw`
 /(?:^|a)*/;
+`,
+			output: String.raw`
+/(?:|a)*/;
 `,
 			snapshot: `
 /(?:^|a)*/;
@@ -39,6 +48,9 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /(?:$)*/;
 `,
+			output: String.raw`
+/(?:)*/;
+`,
 			snapshot: `
 /(?:$)*/;
     ~
@@ -48,6 +60,9 @@ ruleTester.describe(rule, {
 		{
 			code: String.raw`
 /((\b)+){0,}/;
+`,
+			output: String.raw`
+/(()+){0,}/;
 `,
 			snapshot: `
 /((\\b)+){0,}/;
@@ -59,6 +74,9 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /(?:(?=foo))?/;
 `,
+			output: String.raw`
+/(?:)?/;
+`,
 			snapshot: `
 /(?:(?=foo))?/;
     ~~~~~~~
@@ -68,6 +86,9 @@ ruleTester.describe(rule, {
 		{
 			code: String.raw`
 /(?:(?<=bar))?/;
+`,
+			output: String.raw`
+/(?:)?/;
 `,
 			snapshot: `
 /(?:(?<=bar))?/;
@@ -79,6 +100,9 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /(?:(?!x))?/;
 `,
+			output: String.raw`
+/(?:)?/;
+`,
 			snapshot: `
 /(?:(?!x))?/;
     ~~~~~
@@ -88,6 +112,9 @@ ruleTester.describe(rule, {
 		{
 			code: String.raw`
 /(?:(?<!y))?/;
+`,
+			output: String.raw`
+/(?:)?/;
 `,
 			snapshot: `
 /(?:(?<!y))?/;

@@ -185,6 +185,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 										quantifier: quantifier.raw,
 										raw: assertion.raw,
 									},
+									fix: {
+										range: {
+											begin: patternStart + assertion.start,
+											end: patternStart + assertion.end,
+										},
+										text: "",
+									},
 									message: "unnecessaryOptionalAssertion",
 									range: {
 										begin: patternStart + assertion.start,
