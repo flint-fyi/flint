@@ -47,7 +47,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						(node.expression.name.text !== "toLowerCase" &&
 							node.expression.name.text !== "toUpperCase") ||
-						node.arguments.length !== 0 ||
+						node.arguments.length ||
 						!ts.isBinaryExpression(node.parent)
 					) {
 						return;
