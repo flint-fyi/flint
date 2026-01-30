@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports ARIA roles missing their required ARIA properties.",
 		id: "roleRequiredAriaProps",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingRequiredProps: {

@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports escape backspace (`[\\b]`) in character classes.",
 		id: "regexEscapeBackspaces",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		escapeBackspace: {
