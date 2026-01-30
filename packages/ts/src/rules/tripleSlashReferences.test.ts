@@ -1,28 +1,34 @@
-import rule from "./tripleSlashReferences.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./tripleSlashReferences.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `/// <reference path="./types.d.ts" />
+			code: `
+/// <reference path="./types.d.ts" />
 const value = 1;`,
-			snapshot: `/// <reference path="./types.d.ts" />
+			snapshot: `
+/// <reference path="./types.d.ts" />
                      ~~~~~~~~~~~~
                      Triple-slash reference directives are outdated.
 const value = 1;`,
 		},
 		{
-			code: `/// <reference types="node" />
+			code: `
+/// <reference types="node" />
 const process = {};`,
-			snapshot: `/// <reference types="node" />
+			snapshot: `
+/// <reference types="node" />
                       ~~~~
                       Triple-slash reference directives are outdated.
 const process = {};`,
 		},
 		{
-			code: `/// <reference lib="es2020" />
+			code: `
+/// <reference lib="es2020" />
 const value = 1;`,
-			snapshot: `/// <reference lib="es2020" />
+			snapshot: `
+/// <reference lib="es2020" />
                     ~~~~~~
                     Triple-slash reference directives are outdated.
 const value = 1;`,
