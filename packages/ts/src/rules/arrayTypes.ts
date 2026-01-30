@@ -36,7 +36,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports array type syntax that doesn't match the configured style.",
 		id: "arrayTypes",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferArraySyntax: {

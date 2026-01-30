@@ -7,14 +7,14 @@ function isDirective(statement: AST.Statement) {
 	return (
 		statement.kind === SyntaxKind.ExpressionStatement &&
 		statement.expression.kind === SyntaxKind.StringLiteral &&
-		/^use \w+$/.exec(statement.expression.text)
+		/^use \w+$/.test(statement.expression.text)
 	);
 }
 
 function isEmptyStatement(statement: AST.Statement) {
 	switch (statement.kind) {
 		case SyntaxKind.Block:
-			return statement.statements.length === 0;
+			return !statement.statements.length;
 		case SyntaxKind.EmptyStatement:
 			return true;
 		default:

@@ -25,7 +25,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				EnumDeclaration: (node, { sourceFile }) => {
-					if (node.members.length === 0) {
+					if (!node.members.length) {
 						context.report({
 							message: "emptyEnum",
 							range: {

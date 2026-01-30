@@ -124,7 +124,7 @@ function elementsToCharacterClass(elements: CharElement[]): string {
 		}
 	}
 
-	if (parts.length === 0) {
+	if (!parts.length) {
 		return "[]";
 	}
 

@@ -115,7 +115,7 @@ function getNamedGroupsFromExpression(
 				regexInfo.pattern,
 				regexInfo.flags,
 			);
-			if (namedGroups.length > 0) {
+			if (namedGroups.length) {
 				return namedGroups;
 			}
 		}
@@ -294,7 +294,7 @@ function getRegexInfoFromSymbol(
 							regexInfo.pattern,
 							regexInfo.flags,
 						);
-						if (namedGroups.length > 0) {
+						if (namedGroups.length) {
 							return namedGroups;
 						}
 					}
@@ -323,7 +323,7 @@ function getRegexInfoFromSymbol(
 					regexInfo.pattern,
 					regexInfo.flags,
 				);
-				if (namedGroups.length > 0) {
+				if (namedGroups.length) {
 					return namedGroups;
 				}
 			}
@@ -392,7 +392,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const index = Number(argument.text);
-					if (index === 0 || !Number.isInteger(index) || index < 0) {
+					if (index <= 0 || !Number.isInteger(index)) {
 						return;
 					}
 
