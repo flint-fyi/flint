@@ -47,20 +47,17 @@ function isUnnecessaryGroup(group: RegExpAST.Group, pattern: string) {
 	const firstAlternative = group.alternatives[0]!;
 
 	if (group.alternatives.length === 1) {
-		const elements = firstAlternative.elements;
-
-		// Ignore empty groups - handled by a different rule
-		if (elements.length === 0) {
+		if (!firstAlternative.elements.length) {
 			return false;
 		}
 
 		if (group.parent.type === "Quantifier") {
-			if (elements.length !== 1) {
+			if (firstAlternative.elements.length !== 1) {
 				return false;
 			}
 
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const singleElement = elements[0]!;
+			const singleElement = firstAlternative.elements[0]!;
 
 			if (
 				singleElement.type === "Quantifier" ||
