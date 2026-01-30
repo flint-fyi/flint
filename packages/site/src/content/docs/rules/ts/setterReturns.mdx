@@ -1,0 +1,99 @@
+---
+description: "Reports return statements with values inside setters."
+title: "setterReturns"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="setterReturns" />
+
+The `set` syntax binds an object property to a function that will be called when there is an attempt to set that property.
+Setters are expected to have side effects only and not produce a return value.
+Any value returned from a setter is ignored by the JavaScript engine.
+
+This rule reports when a setter contains a `return` statement with a value.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const object = {
+	set value(val) {
+		return val;
+	},
+};
+```
+
+```ts
+class Example {
+	set name(value) {
+		return value;
+	}
+}
+```
+
+```ts
+class Example {
+	set value(val) {
+		if (val > 0) {
+			return val;
+		}
+		this._value = val;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const object = {
+	set value(val) {
+		this._value = val;
+	},
+};
+```
+
+```ts
+class Example {
+	set name(value) {
+		this._name = value;
+	}
+}
+```
+
+```ts
+const object = {
+	set value(val) {
+		if (!val) {
+			return;
+		}
+		this._value = val;
+	},
+};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are using an unusual non-standard tool that modifiers your setters at build time into standard functions, this rule may not be for you.
+
+## Further Reading
+
+- [MDN: setter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set)
+- [MDN: Object.defineProperty()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="setterReturns" />

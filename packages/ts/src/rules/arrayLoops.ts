@@ -24,7 +24,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using `.forEach()` when a for-of loop can be used.",
 		id: "arrayLoops",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferForOf: {
