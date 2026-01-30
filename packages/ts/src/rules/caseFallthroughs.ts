@@ -99,7 +99,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports switch case clauses that fall through unexpectedly.",
 		id: "caseFallthroughs",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unexpectedFallthrough: {

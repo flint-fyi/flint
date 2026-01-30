@@ -4,7 +4,7 @@ import {
 	getTSNodeRange,
 	hasSameTokens,
 	typescriptLanguage,
-	unwrapParenthesizedExpression,
+	unwrapParenthesizedNode,
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
@@ -73,7 +73,7 @@ function getNegativeIndexLengthNode(
 	target: AST.Expression,
 	sourceFile: AST.SourceFile,
 ): NegativeIndexInfo | undefined {
-	const unwrapped = unwrapParenthesizedExpression(node);
+	const unwrapped = unwrapParenthesizedNode(node);
 
 	if (
 		!ts.isBinaryExpression(unwrapped) ||
@@ -82,14 +82,12 @@ function getNegativeIndexLengthNode(
 		return;
 	}
 
-	const right = unwrapParenthesizedExpression(
-		unwrapped.right,
-	) as AST.Expression;
+	const right = unwrapParenthesizedNode(unwrapped.right) as AST.Expression;
 	if (!isPositiveNumericLiteral(right)) {
 		return;
 	}
 
-	const left = unwrapParenthesizedExpression(unwrapped.left) as AST.Expression;
+	const left = unwrapParenthesizedNode(unwrapped.left) as AST.Expression;
 
 	if (isLengthPropertyAccess(left, target, sourceFile)) {
 		return {

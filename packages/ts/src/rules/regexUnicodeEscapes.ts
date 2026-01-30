@@ -45,7 +45,7 @@ function collectSurrogatePairIndices(characters: CharacterInfo[]) {
 }
 
 function isFourDigitUnicodeEscape(raw: string) {
-	return /^\\u[0-9a-fA-F]{4}$/.test(raw);
+	return /^\\u[0-9a-f]{4}$/i.test(raw);
 }
 
 function isHighSurrogate(codePoint: number) {
@@ -61,7 +61,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Enforces consistent Unicode escape style in regex patterns by preferring codepoint escapes.",
 		id: "regexUnicodeEscapes",
-		presets: ["stylistic"],
 	},
 	messages: {
 		preferCodepointEscape: {

@@ -15,7 +15,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports calling a function with a value typed as `any` as an argument.",
 		id: "anyArguments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsafeArgument: {
@@ -77,7 +77,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const anyType = discriminateAnyType(
 						spreadType,
 						typeChecker,
-						program,
 						argument.expression,
 					);
 
@@ -151,7 +150,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const anyType = discriminateAnyType(
 					argumentType,
 					typeChecker,
-					program,
 					argument,
 				);
 
@@ -165,7 +163,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const unsafeResult = isUnsafeAssignment(
 							argumentType,
 							paramInfo.type,
-							typeChecker,
 							argument,
 						);
 						if (unsafeResult) {
@@ -223,16 +220,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression: (node, fileServices) => {
-					checkCallArguments(node, fileServices);
-				},
-				NewExpression: (node, fileServices) => {
-					checkCallArguments(node, fileServices);
-				},
-				TaggedTemplateExpression: (
-					node,
-					{ program, sourceFile, typeChecker },
-				) => {
+				CallExpression: checkCallArguments,
+				NewExpression: checkCallArguments,
+				TaggedTemplateExpression: (node, { sourceFile, typeChecker }) => {
 					const signature = typeChecker.getResolvedSignature(node);
 					if (!signature) {
 						return;
@@ -258,7 +248,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const anyType = discriminateAnyType(
 							expressionType,
 							typeChecker,
-							program,
 							expression,
 						);
 
@@ -269,7 +258,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								const unsafeResult = isUnsafeAssignment(
 									expressionType,
 									parameterType,
-									typeChecker,
 									expression,
 								);
 								if (unsafeResult) {
@@ -395,12 +383,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const tupleTypeArgs = typeChecker.getTypeArguments(tupleType);
 
 			for (const [i, elementType] of tupleTypeArgs.entries()) {
-				const anyType = discriminateAnyType(
-					elementType,
-					typeChecker,
-					program,
-					node,
-				);
+				const anyType = discriminateAnyType(elementType, typeChecker, node);
 
 				if (anyType === AnyType.Safe) {
 					continue;

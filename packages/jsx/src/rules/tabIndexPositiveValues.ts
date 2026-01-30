@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports positive tabIndex values.",
 		id: "tabIndexPositiveValues",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noPositiveTabIndex: {

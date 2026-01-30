@@ -1,6 +1,5 @@
 import { createLanguage } from "@flint.fyi/core";
 
-import { createTextFile } from "./createTextFile.ts";
 import type { TextFileServices, TextNodes } from "./types.ts";
 
 export const textLanguage = createLanguage<TextNodes, TextFileServices>({
@@ -9,11 +8,27 @@ export const textLanguage = createLanguage<TextNodes, TextFileServices>({
 	},
 	createFileFactory: () => {
 		return {
-			prepareFile: (data) => {
+			createFile: (data) => {
 				return {
-					file: createTextFile(data),
+					about: data,
+					services: data,
 				};
 			},
 		};
+	},
+	runFileVisitors: (file, options, runtime) => {
+		if (!runtime.visitors) {
+			return;
+		}
+
+		const visitorServices = { options, ...file.services };
+
+		runtime.visitors.file?.(file.services.sourceText, visitorServices);
+
+		if (runtime.visitors.line) {
+			for (const line of file.services.sourceText.split(/\r\n|\n|\r/)) {
+				runtime.visitors.line(line, visitorServices);
+			}
+		}
 	},
 });

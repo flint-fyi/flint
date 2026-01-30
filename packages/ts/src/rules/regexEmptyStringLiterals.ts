@@ -46,7 +46,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports empty string literals in character classes.",
 		id: "regexEmptyStringLiterals",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyStringLiteral: {
