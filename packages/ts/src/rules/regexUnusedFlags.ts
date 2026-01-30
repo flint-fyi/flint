@@ -155,7 +155,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			const details = getRegExpLiteralDetails(node, services);
 			const unusedFlags = findUnusedFlags(details.pattern, details.flags);
-			if (unusedFlags.length === 0) {
+			if (!unusedFlags.length) {
 				return;
 			}
 
@@ -174,7 +174,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const unusedFlags = findUnusedFlags(construction.raw, construction.flags);
-			if (unusedFlags.length === 0) {
+			if (!unusedFlags.length) {
 				return;
 			}
 
