@@ -4,125 +4,125 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: String.raw`
+			code: `
 /123/i;
 `,
-			snapshot: String.raw`
+			output: `
+/123/;
+`,
+			snapshot: `
 /123/i;
      ~
-     The 'i' flag has no effect because the pattern contains no letters.
+     The \`i\` flag has no effect because the pattern contains no letters.
 `,
 		},
 		{
-			code: String.raw`
-/\d+/i;
+			code: `
+/foo/m;
 `,
-			snapshot: String.raw`
-/\d+/i;
+			output: `
+/foo/;
+`,
+			snapshot: `
+/foo/m;
      ~
-     The 'i' flag has no effect because the pattern contains no letters.
+     The \`m\` flag has no effect because the pattern contains no line anchors.
 `,
 		},
 		{
-			code: String.raw`
-/abc/m;
+			code: `
+/[0-9]+/s;
 `,
-			snapshot: String.raw`
-/abc/m;
-     ~
-     The 'm' flag has no effect because the pattern contains no line anchors.
+			output: `
+/[0-9]+/;
 `,
-		},
-		{
-			code: String.raw`
-/abc/s;
-`,
-			snapshot: String.raw`
-/abc/s;
-     ~
-     The 's' flag has no effect because the pattern contains no dots.
+			snapshot: `
+/[0-9]+/s;
+        ~
+        The \`s\` flag has no effect because the pattern contains no dots.
 `,
 		},
 		{
-			code: String.raw`
-/a\.b/s;
+			code: `
+/123/gi;
 `,
-			snapshot: String.raw`
-/a\.b/s;
+			output: `
+/123/g;
+`,
+			snapshot: `
+/123/gi;
       ~
-      The 's' flag has no effect because the pattern contains no dots.
+      The \`i\` flag has no effect because the pattern contains no letters.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /123/ims;
 `,
-			snapshot: String.raw`
+			output: `
+/123/;
+`,
+			snapshot: `
 /123/ims;
      ~
-     The 'i' flag has no effect because the pattern contains no letters.
+     The \`i\` flag has no effect because the pattern contains no letters.
       ~
-      The 'm' flag has no effect because the pattern contains no line anchors.
+      The \`m\` flag has no effect because the pattern contains no line anchors.
        ~
-       The 's' flag has no effect because the pattern contains no dots.
+       The \`s\` flag has no effect because the pattern contains no dots.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 new RegExp("123", "i");
 `,
-			snapshot: String.raw`
+			output: `
+new RegExp("123", "");
+`,
+			snapshot: `
 new RegExp("123", "i");
                    ~
-                   The 'i' flag has no effect because the pattern contains no letters.
+                   The \`i\` flag has no effect because the pattern contains no letters.
 `,
 		},
 		{
-			code: String.raw`
-RegExp("\\d+", "i");
+			code: `
+RegExp("foo", "m");
 `,
-			snapshot: String.raw`
-RegExp("\\d+", "i");
-                ~
-                The 'i' flag has no effect because the pattern contains no letters.
+			output: `
+RegExp("foo", "");
 `,
-		},
-		{
-			code: String.raw`
-/[0-9]+/i;
-`,
-			snapshot: String.raw`
-/[0-9]+/i;
-        ~
-        The 'i' flag has no effect because the pattern contains no letters.
+			snapshot: `
+RegExp("foo", "m");
+               ~
+               The \`m\` flag has no effect because the pattern contains no line anchors.
 `,
 		},
 		{
-			code: String.raw`
-/\s+/m;
+			code: `
+new RegExp("[0-9]", "gs");
 `,
-			snapshot: String.raw`
-/\s+/m;
-     ~
-     The 'm' flag has no effect because the pattern contains no line anchors.
+			output: `
+new RegExp("[0-9]", "g");
+`,
+			snapshot: `
+new RegExp("[0-9]", "gs");
+                      ~
+                      The \`s\` flag has no effect because the pattern contains no dots.
 `,
 		},
 	],
 	valid: [
-		String.raw`/abc/i;`,
-		String.raw`/[A-Z]/i;`,
-		String.raw`/[a-z0-9]/i;`,
-		String.raw`/^foo/m;`,
-		String.raw`/foo$/m;`,
-		String.raw`/^foo$/m;`,
-		String.raw`/a.b/s;`,
-		String.raw`/foo/;`,
-		String.raw`/foo/g;`,
-		String.raw`/123/;`,
-		String.raw`RegExp("abc", "i");`,
-		String.raw`RegExp("^foo", "m");`,
-		String.raw`RegExp("a.b", "s");`,
-		String.raw`RegExp(variable, "i");`,
-		String.raw`RegExp("abc", flags);`,
+		`/abc/i;`,
+		`/[a-z]/i;`,
+		`/^foo$/m;`,
+		`/./s;`,
+		`/foo.bar/s;`,
+		`/123/;`,
+		`/123/g;`,
+		`new RegExp("abc", "i");`,
+		`new RegExp("^foo$", "m");`,
+		`RegExp(variable, "i");`,
+		`new RegExp(pattern);`,
 	],
 });

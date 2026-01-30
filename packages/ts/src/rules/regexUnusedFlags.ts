@@ -100,13 +100,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		unusedDotAll: {
 			primary:
-				"The 's' flag has no effect because the pattern contains no dots.",
+				"The `s` flag has no effect because the pattern contains no dots.",
 			secondary: ["The dotAll flag only affects the . metacharacter."],
 			suggestions: ["Remove the 's' flag."],
 		},
 		unusedIgnoreCase: {
 			primary:
-				"The 'i' flag has no effect because the pattern contains no letters.",
+				"The `i` flag has no effect because the pattern contains no letters.",
 			secondary: [
 				"The ignoreCase flag only affects matching of ASCII letters (A-Za-z).",
 			],
@@ -114,7 +114,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 		unusedMultiline: {
 			primary:
-				"The 'm' flag has no effect because the pattern contains no line anchors.",
+				"The `m` flag has no effect because the pattern contains no line anchors.",
 			secondary: ["The multiline flag only affects the ^ and $ anchors."],
 			suggestions: ["Remove the 'm' flag."],
 		},
@@ -134,12 +134,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							? "unusedMultiline"
 							: "unusedDotAll";
 
+				const range = {
+					begin: flagsStart + flagIndex,
+					end: flagsStart + flagIndex + 1,
+				};
 				context.report({
-					message,
-					range: {
-						begin: flagsStart + flagIndex,
-						end: flagsStart + flagIndex + 1,
+					fix: {
+						range,
+						text: "",
 					},
+					message,
+					range,
 				});
 			}
 		}
@@ -164,7 +169,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			services: TypeScriptFileServices,
 		) {
 			const construction = getRegExpConstruction(node, services);
-			if (!construction) {
+			if (!construction || construction.args.length < 2) {
 				return;
 			}
 
@@ -173,13 +178,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const args = construction.args;
-			if (args.length < 2) {
-				return;
-			}
-
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const secondArgument = args[1]!;
+			const secondArgument = construction.args[1]!;
 			if (secondArgument.kind !== ts.SyntaxKind.StringLiteral) {
 				return;
 			}
