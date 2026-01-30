@@ -7,10 +7,6 @@ import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isStringType(type: ts.Type) {
-	return (type.flags & ts.TypeFlags.StringLike) !== 0;
-}
-
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
