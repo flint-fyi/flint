@@ -11,17 +11,11 @@ import { ruleCreator } from "./ruleCreator.ts";
 const sizePropertyNames = new Set(["length", "size"]);
 
 function hasLogicalOrFallback(node: AST.Expression) {
-	const parent = node.parent;
-
-	if (
-		ts.isBinaryExpression(parent) &&
-		parent.operatorToken.kind === ts.SyntaxKind.BarBarToken &&
-		parent.left === node
-	) {
-		return true;
-	}
-
-	return false;
+	return (
+		ts.isBinaryExpression(node.parent) &&
+		node.parent.operatorToken.kind === ts.SyntaxKind.BarBarToken &&
+		node.parent.left === node
+	);
 }
 
 function isDoubleNegation(node: AST.Expression) {
@@ -95,37 +89,33 @@ function isNegated(node: AST.PropertyAccessExpression) {
 	return { negated: true, outerNode: node.parent };
 }
 
-function requiresBooleanType(node: AST.Expression): boolean {
-	const parent = node.parent;
+function requiresBooleanType(node: AST.Expression) {
+	switch (node.parent.kind) {
+		case ts.SyntaxKind.ArrowFunction:
+		case ts.SyntaxKind.PropertyDeclaration:
+		case ts.SyntaxKind.ReturnStatement:
+		case ts.SyntaxKind.VariableDeclaration:
+			return true;
 
-	if (ts.isReturnStatement(parent) || ts.isArrowFunction(parent)) {
-		return true;
-	}
+		case ts.SyntaxKind.BinaryExpression:
+			if (
+				node.parent.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
+				node.parent.right === node
+			) {
+				return true;
+			}
 
-	if (ts.isVariableDeclaration(parent) || ts.isPropertyDeclaration(parent)) {
-		return true;
-	}
+			if (
+				node.parent.operatorToken.kind === ts.SyntaxKind.BarBarToken ||
+				node.parent.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
+			) {
+				return node.parent.right === node;
+			}
 
-	if (
-		ts.isBinaryExpression(parent) &&
-		parent.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
-		parent.right === node
-	) {
-		return true;
-	}
+			return false;
 
-	if (ts.isBinaryExpression(parent)) {
-		const op = parent.operatorToken.kind;
-		if (
-			op === ts.SyntaxKind.BarBarToken ||
-			op === ts.SyntaxKind.AmpersandAmpersandToken
-		) {
-			return parent.right === node;
-		}
-	}
-
-	if (ts.isParenthesizedExpression(parent)) {
-		return requiresBooleanType(parent);
+		case ts.SyntaxKind.ParenthesizedExpression:
+			return requiresBooleanType(node.parent.expression);
 	}
 
 	return false;
