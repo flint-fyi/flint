@@ -10,7 +10,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports uses of the eval function.",
 		id: "evals",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noEval: {

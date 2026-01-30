@@ -128,7 +128,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const requiredPlaceholders = messagePlaceholders.get(
 				messageProperty.initializer.text,
 			);
-			if (!requiredPlaceholders || requiredPlaceholders.size === 0) {
+			if (!requiredPlaceholders?.size) {
 				return;
 			}
 
@@ -176,7 +176,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 			}
 
-			if (missingPlaceholders.size > 0) {
+			if (missingPlaceholders.size) {
 				context.report({
 					data: {
 						placeholder: Array.from(missingPlaceholders).join(", "),
