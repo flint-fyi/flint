@@ -1,7 +1,9 @@
 import { parseRegExpLiteral, visitRegExpAST } from "@eslint-community/regexpp";
 import type {
+	Alternative,
 	CapturingGroup,
 	Element,
+	Quantifier,
 	RegExpLiteral,
 } from "@eslint-community/regexpp/ast";
 import {
@@ -13,6 +15,17 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
+
+const allowedFlags = new Set([
+	0x64, // d
+	0x67, // g
+	0x69, // i
+	0x6d, // m
+	0x73, // s
+	0x75, // u
+	0x76, // v
+	0x79, // y
+]);
 
 function elementIsZeroLength(element: Element): boolean {
 	switch (element.type) {
@@ -45,11 +58,15 @@ function findEmptyCapturingGroups(pattern: string, flags: string) {
 
 	visitRegExpAST(ast, {
 		onCapturingGroupEnter(node: CapturingGroup) {
-			const allAlternativesEmpty = node.alternatives.every((alt) =>
-				alt.elements.every(elementIsZeroLength),
+			if (node.name) {
+				return;
+			}
+
+			const onlyEmpty = node.alternatives.every((alternate) =>
+				alternate.elements.every(elementIsZeroLength),
 			);
 
-			if (allAlternativesEmpty) {
+			if (onlyEmpty && !isAllowedException(node)) {
 				results.push(node);
 			}
 		},
@@ -58,11 +75,88 @@ function findEmptyCapturingGroups(pattern: string, flags: string) {
 	return results;
 }
 
+function getSingleQuantifier(alternate: Alternative): Quantifier | undefined {
+	if (alternate.elements.length !== 1) {
+		return undefined;
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const element = alternate.elements[0]!;
+
+	return element.type === "Quantifier" ? element : undefined;
+}
+
+function isAllowedException(node: CapturingGroup): boolean {
+	return node.alternatives.some((alternate) => {
+		const quantifier = getSingleQuantifier(alternate);
+		if (!quantifier) {
+			return false;
+		}
+
+		// (.*) or (.+) - any char quantifier
+		if (
+			quantifier.element.type === "CharacterSet" &&
+			quantifier.element.kind === "any"
+		) {
+			return true;
+		}
+
+		// ([+-]?) or (\}?) - optional single char/class
+		if (quantifier.max === 1) {
+			if (
+				quantifier.element.type === "CharacterClass" &&
+				quantifier.element.elements.length > 0
+			) {
+				return true;
+			}
+			if (
+				quantifier.element.type === "Character" &&
+				quantifier.element.raw.startsWith("\\")
+			) {
+				return true;
+			}
+		}
+
+		if (quantifier.element.type !== "CharacterClass") {
+			return false;
+		}
+
+		// ([\s\S]*?) - space + non-space for matching any text
+		let hasSpace = false;
+		let hasNonSpace = false;
+		for (const child of quantifier.element.elements) {
+			if (child.type === "CharacterSet" && child.kind === "space") {
+				if (child.negate) {
+					hasNonSpace = true;
+				} else {
+					hasSpace = true;
+				}
+			}
+
+			if (hasSpace && hasNonSpace) {
+				return true;
+			}
+		}
+
+		// ([dgimsuyv]*) - flag characters only
+		if (
+			quantifier.element.elements.length > 0 &&
+			quantifier.element.elements.every(
+				(child) => child.type === "Character" && allowedFlags.has(child.value),
+			)
+		) {
+			return true;
+		}
+
+		return false;
+	});
+}
+
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports capturing groups that only capture empty strings.",
 		id: "regexEmptyCapturingGroups",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyCapture: {

@@ -37,10 +37,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: ts.Node,
 			identifierName: string,
 		): boolean | undefined {
-			if (ts.isSpreadElement(node) || ts.isSpreadAssignment(node)) {
-				if (identifierName === getIdentifierName(node.expression)) {
-					return true;
-				}
+			if (
+				(ts.isSpreadElement(node) || ts.isSpreadAssignment(node)) &&
+				identifierName === getIdentifierName(node.expression)
+			) {
+				return true;
 			}
 
 			return ts.forEachChild(node, (child) => {

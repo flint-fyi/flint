@@ -115,7 +115,7 @@ Some other linters are already moving in this direction:
 
 Flint's core architecture is completely agnostic of any specific language.
 Each language provides its own parser, type information services, and any other language-specific hooks.
-Users are of course still be able to write their own plugins for other languages.
+Users are, of course, still able to write their own plugins for other languages.
 
 ### Focused Language Plugins
 
@@ -131,7 +131,7 @@ Flint aims to provide a consistent and high quality user experience for these la
 Two separate tools should be used for those two separate concerns.
 However, _configuring_ two tools is cumbersome for users - especially given that the list of files you'd want to _format_ is almost always roughly the same as the list of files to _lint_.
 
-One of the biggest reasons users move to Biome is that those it performs both _formatting_ and _linting_ with a single `devDependency` and configuration file.
+One of the biggest reasons users move to Biome is that it performs both _formatting_ and _linting_ with a single `devDependency` and configuration file.
 In doing so, they provide a much easier setup and maintenance story, as well as sidestep many common ESLint misconfigurations that lead to performance issues.
 
 Flint embraces the Biome approach of having one tool _coordinate_ others.
@@ -327,7 +327,7 @@ Newer or more recently updated rule messages tend to be more descriptive and spe
 - [`no-useless-assignment`](https://eslint.org/docs/latest/rules/no-useless-assignment): `This assigned value is not used in subsequent statements.`
 
 In practice, users don't generally react well to curt messages.
-They can feel like the linter saying something is _absolutely wrong_, even though most lint rules are sometimes wrong.
+They can feel like the linter is saying that something is _absolutely wrong_, even though most lint rules are sometimes wrong.
 There's a reason why many linters put _"When Not To Use"_ sections in their rule documentation pages.
 
 All rule messages in the Flint project will have consistent phrasing describing the actual problem(s) being reported.
@@ -521,7 +521,7 @@ Linters themselves can validate rule options, such as [ESLint's options schemas]
 You don't get editor intellisense while authoring; instead, you have to use [`@eslint/config-inspector`](https://www.npmjs.com/package/@eslint/config-inspector) or run your config to know whether you've mistyped the name of a rule or an option.
 
 Flint's rules will take a more modern approach.
-They will allow [Standard Schema](https://standardschema.dev) descriptions for rule options, which allows TypeScript-friendly schema validations libraries such as [Zod](https://zod.dev):
+They will allow [Standard Schema](https://standardschema.dev) descriptions for rule options, which enables the use of TypeScript-friendly schema validation libraries such as [Zod](https://zod.dev):
 
 ```ts title="src/rules/someRule.ts"
 import { typescriptLanguage } from "@flint/typescript-language";
@@ -573,7 +573,7 @@ They will be type-safe and validated similarly to plugin rules.
 ### Typed Configuration Files
 
 Flint's hypothesis for configuration files is that it's possible to have a full JavaScript configuration system without confusing users over subtle edge cases.
-Flint's configs will be fully type-safe -including lint rules and their options- and will support workspace configurations.
+Flint's configs will be fully type-safe (including lint rules and their options) and will support workspace configurations.
 Parsing, processing, and other edge case hazards will be handled for users behind-the-scenes.
 
 :::tip
@@ -662,7 +662,7 @@ To support that larger effort, the Flint project:
 
 - Establishes three tiers of project plugins:
   - "Core": Plugins applicable to any project using their language (JavaScript/TypeScript, JSON, Markdown, YAML)
-  - "Focused": Plugins for larger of projects or styles that are applicable to many, but not all, likely Flint users
+  - "Focused": Plugins for larger projects or styles that are applicable to many (but not all) likely Flint users
   - "Incubator": Area-specific plugins that should eventually exist under community governance
 - Keeps a list of over 1,000 popular lint rules for reference, with rules categorized into Flint's plugins
 
@@ -741,9 +741,9 @@ It will use a templating system like [Bingo's Stratum](https://www.create.bingo/
 ### Compatibility Layers
 
 Although Flint is building in most popular existing lint rules into its core project, many users have their own custom ESLint plugins and rules.
-Flint will need to provide a compatibility layer to include and those plugins and rules natively via a Flint configuration file.
+Flint will need to provide a compatibility layer that will allow you to use those plugins and rules natively via a Flint configuration file.
 
-[ESLint's compatibility utilities](https://eslint.org/blog/2024/05/eslint-compatibility-utilities) and [`eslint-plugin-tslint`](https://github.com/typescript-eslint/eslint-plugin-tslint) good references of prior art for compatibility layers.
+[ESLint's compatibility utilities](https://eslint.org/blog/2024/05/eslint-compatibility-utilities) and [`eslint-plugin-tslint`](https://github.com/typescript-eslint/eslint-plugin-tslint) are good references of prior art for compatibility layers.
 
 ### Configuration Migration
 
@@ -757,7 +757,7 @@ Flint's configuration migrator will also provide flags for whether to adopt prac
 
 - Adding any plugins from the [plugin registry](#plugin-registry) relevant to existing project dependencies
 - Enabling the linter's gradual onboardings system for rules previously set to warn
-- If formatting rules were used, remove them and instead coordinate a formatter
+- If formatting rules were used, remove them and instead [coordinate a formatter](#formatting-coordination)
 - Using the recommended configs from the linter and any enabled plugins
 
 Those flags will allow the migration tool to be used as more than just a single-shot utility.
