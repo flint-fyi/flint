@@ -13,7 +13,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 
-const ROOT_ALLOWED = new Set([
+const allowedRoots = new Set([
 	"$",
 	"(",
 	")",
@@ -31,7 +31,7 @@ const ROOT_ALLOWED = new Set([
 	"}",
 ]);
 
-const CLASS_ALWAYS_ALLOWED = new Set(["\\", "]"]);
+const allowedClasses = new Set(["\\", "]"]);
 
 interface Finding {
 	character: string;
@@ -85,51 +85,44 @@ function findUnnecessaryEscapes(pattern: string, flags: string) {
 			}
 
 			if (!currentClass) {
-				if (ROOT_ALLOWED.has(literal)) {
-					return;
+				if (!allowedRoots.has(literal)) {
+					findings.push({
+						character: literal,
+						end: charNode.end,
+						start: charNode.start,
+					});
 				}
-
-				findings.push({
-					character: literal,
-					end: charNode.end,
-					start: charNode.start,
-				});
 				return;
 			}
 
-			if (CLASS_ALWAYS_ALLOWED.has(literal)) {
+			if (allowedClasses.has(literal)) {
 				return;
 			}
 
 			if (literal === "^") {
-				const isFirst = charNode.start === currentClass.start + 1;
-				if (!currentClass.negate && isFirst) {
-					return;
+				if (currentClass.negate || charNode.start !== currentClass.start + 1) {
+					findings.push({
+						character: literal,
+						end: charNode.end,
+						start: charNode.start,
+					});
 				}
-
-				findings.push({
-					character: literal,
-					end: charNode.end,
-					start: charNode.start,
-				});
 				return;
 			}
 
 			if (literal === "-") {
-				const index = currentClass.elements.findIndex(
-					(element) => element.start === charNode.start,
-				);
-				const atEdge =
-					index === 0 || index === currentClass.elements.length - 1;
-				if (!atEdge) {
-					return;
+				if (
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					charNode.start === currentClass.elements[0]!.start ||
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					charNode.start === currentClass.elements.at(-1)!.start
+				) {
+					findings.push({
+						character: literal,
+						end: charNode.end,
+						start: charNode.start,
+					});
 				}
-
-				findings.push({
-					character: literal,
-					end: charNode.end,
-					start: charNode.start,
-				});
 				return;
 			}
 
@@ -155,6 +148,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			primary: "This escape sequence `\\{{ character }}` is unnecessary.",
 			secondary: [
 				"The character `{{ character }}` does not require escaping in this context.",
+				"Removing the escaping backslash will not change the regular expression.",
 			],
 			suggestions: ["Remove the backslash to simplify the pattern."],
 		},

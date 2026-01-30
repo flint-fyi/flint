@@ -10,8 +10,11 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexUnnecessaryEscapes" />
 
-Reports escape sequences in regular expressions where the backslash is unnecessary.
-Escaping a character that doesn't require escaping adds visual noise without changing the regex behavior.
+Backslashes (`\`) are only necessary in regular expressions to escape special characters.
+Using them on non-special characters does not change the regular expression.
+They are often at least visual noise and sometimes a sign of programmer error.
+
+This rule reports escape sequences in regular expressions where the backslash is unnecessary.
 
 ## Examples
 
