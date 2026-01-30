@@ -19,7 +19,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports direct calls to Object.prototype methods on object instances.",
 		id: "objectPrototypeBuiltIns",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		prototypeBuiltIn: {

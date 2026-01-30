@@ -1,0 +1,201 @@
+---
+description: "Reports problematic TypeScript comment directives or requires descriptions after directives."
+title: "tsComments"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="tsComments" />
+
+TypeScript provides several comment directives that can be used to alter how it processes files.
+Using these to suppress TypeScript compiler errors reduces the effectiveness of TypeScript overall.
+Instead, it's generally better to correct the types of code, to make directives unnecessary.
+
+This rule can report on uses of the following comment directives:
+
+- `@ts-expect-error`
+- `@ts-ignore`
+- `@ts-nocheck`
+
+By default, all directives are allowed.
+Use the options to ban specific directives or require descriptions.
+
+## Examples
+
+### Prefer @ts-expect-error over @ts-ignore
+
+`@ts-ignore` permanently suppresses errors even after they're fixed.
+`@ts-expect-error` will report if the next line has no error, helping identify stale suppressions.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// @ts-ignore
+const value: string = 123;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// @ts-expect-error - assigning number to string for testing
+const value: string = 123;
+```
+
+</TabItem>
+</Tabs>
+
+### Avoid @ts-nocheck
+
+`@ts-nocheck` disables type checking for the entire file.
+Prefer fixing errors or using targeted suppressions.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// @ts-nocheck
+const value = unknownFunction();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// @ts-expect-error - unknownFunction is not defined
+const value = unknownFunction();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+Each directive option can be configured with one of the following values:
+
+- `true` — Ban the directive entirely
+- `false` — Allow the directive (default)
+- `"allow-with-description"` — Allow only if a description is provided
+- `{ descriptionFormat: "regex" }` — Allow only if the description matches the regex
+
+### `allowTsExpectError`
+
+Configuration for `@ts-expect-error` directives.
+Default: `false` (allowed).
+
+```ts
+// With { allowTsExpectError: "allow-with-description" }
+
+// ❌ Invalid - no description
+// @ts-expect-error
+const value: string = 123;
+
+// ✅ Valid - has description
+// @ts-expect-error: testing number assignment
+const value: string = 123;
+```
+
+### `allowTsIgnore`
+
+Configuration for `@ts-ignore` directives.
+Default: `false` (allowed).
+
+When banned with `true`, this rule provides a fixer that replaces `@ts-ignore` with `@ts-expect-error`.
+
+```ts
+// With { allowTsIgnore: true }
+
+// ❌ Invalid - ts-ignore is banned, will suggest @ts-expect-error
+// @ts-ignore
+const value: string = 123;
+
+// With { allowTsIgnore: "allow-with-description" }
+
+// ❌ Invalid - no description
+// @ts-ignore
+const value: string = 123;
+
+// ✅ Valid - has description
+// @ts-ignore: legacy code that will be fixed in ISSUE-123
+const value: string = 123;
+```
+
+### `allowTsNocheck`
+
+Configuration for `@ts-nocheck` directives.
+Default: `false` (allowed).
+
+```ts
+// With { allowTsNocheck: true }
+
+// ❌ Invalid - ts-nocheck is banned
+// @ts-nocheck
+const value = unknownFunction();
+```
+
+### `minimumDescriptionLength`
+
+The minimum length required for a description when using `"allow-with-description"`.
+Default: `10`.
+
+```ts
+// With { allowTsExpectError: "allow-with-description", minimumDescriptionLength: 15 }
+
+// ❌ Invalid - description too short
+// @ts-expect-error: test
+const value: string = 123;
+
+// ✅ Valid - description is long enough
+// @ts-expect-error: testing number to string assignment
+const value: string = 123;
+```
+
+### `descriptionFormat`
+
+When using an object configuration, you can specify a `descriptionFormat` regex that the description must match:
+
+```ts
+// With { allowTsExpectError: { descriptionFormat: "^: TS\\d+ because .+$" } }
+
+// ❌ Invalid - description doesn't match format
+// @ts-expect-error: some random reason
+const value: string = 123;
+
+// ✅ Valid - description matches format
+// @ts-expect-error: TS2322 because we need to test this
+const value: string = 123;
+```
+
+### Example Configuration
+
+```json
+{
+	"rules": {
+		"ts/tsComments": {
+			"options": {
+				"allowTsExpectError": "allow-with-description",
+				"allowTsIgnore": true,
+				"allowTsNocheck": true,
+				"minimumDescriptionLength": 10
+			}
+		}
+	}
+}
+```
+
+## When Not To Use It
+
+If you have legacy code with many `@ts-ignore` comments that you cannot immediately migrate,
+you may want to disable this rule temporarily.
+
+## Further Reading
+
+- [TypeScript: Type-Checking JavaScript Files](https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="tsComments" />

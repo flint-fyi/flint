@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports unnecessary `end` argument in `.slice()` calls when it equals the length or is `Infinity`.",
 		id: "arraySliceUnnecessaryEnd",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		unnecessaryEnd: {

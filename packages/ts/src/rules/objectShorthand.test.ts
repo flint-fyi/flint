@@ -271,27 +271,18 @@ const obj = { "name": name };
 		`const obj = { "invalid-identifier": value };`,
 		`const obj = { "123": value };`,
 		`const x = 1; const obj = { "x y": x };`,
-		// Getters and setters
 		`const obj = { get name() { return this._name; } };`,
 		`const obj = { set name(value: string) { this._name = value; } };`,
 		`const obj = { get x() {}, set x(val) {} };`,
-		// Arrow functions with implicit returns
 		`const obj = { fn: (x) => x };`,
-		// Async arrow functions are excluded
 		`const config = { method: async () => { return "data"; } };`,
-		// Spread operator
 		`const obj = { ...other };`,
 		`const obj = { foo, bar, ...baz };`,
 		`const obj = { a: 1, ...other };`,
-		// Computed property names - rule doesn't check computed properties with value mismatch
 		`const obj = { [key]: value };`,
-		// Methods with computed names
 		`const obj = { [key]() {} };`,
-		// Arrow functions in object properties
 		`const obj = { x: () => x };`,
-		// Named function expressions (should not be flagged)
 		`const obj = { a: function a(){} };`,
-		// Multiple properties mixed
 		`const obj = { x: y, y: z, z: 'z' };`,
 	],
 });

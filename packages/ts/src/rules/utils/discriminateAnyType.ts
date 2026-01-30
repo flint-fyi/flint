@@ -18,16 +18,14 @@ export type AnyType = (typeof AnyType)[keyof typeof AnyType];
 export function discriminateAnyType(
 	type: ts.Type,
 	checker: Checker,
-	program: ts.Program,
 	tsNode: ts.Node,
 ): AnyType {
-	return discriminateAnyTypeWorker(type, checker, program, tsNode, new Set());
+	return discriminateAnyTypeWorker(type, checker, tsNode, new Set());
 }
 
 function discriminateAnyTypeWorker(
 	type: ts.Type,
 	checker: Checker,
-	program: ts.Program,
 	tsNode: ts.Node,
 	visited: Set<ts.Type>,
 ) {
@@ -57,7 +55,6 @@ function discriminateAnyTypeWorker(
 				const awaitedAnyType = discriminateAnyTypeWorker(
 					awaitedType,
 					checker,
-					program,
 					tsNode,
 					visited,
 				);

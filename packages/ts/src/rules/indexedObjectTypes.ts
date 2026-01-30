@@ -89,7 +89,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports indexed object types that don't match the configured style.",
 		id: "indexedObjectTypes",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferIndexSignature: {
