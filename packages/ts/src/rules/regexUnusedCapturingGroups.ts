@@ -56,15 +56,27 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const unusedGroups = findUnusedCapturingGroups(pattern, flags);
 
 			for (const group of unusedGroups) {
+				const range = {
+					begin: start + 1 + group.start,
+					end: start + 1 + group.end,
+				};
+
+				const innerContent = group.alternatives.map((alt) => alt.raw).join("|");
+				const nonCapturing = `(?:${innerContent})`;
+
 				context.report({
 					data: {
 						raw: group.raw,
 					},
 					message: "unusedCapture",
-					range: {
-						begin: start + 1 + group.start,
-						end: start + 1 + group.end,
-					},
+					range,
+					suggestions: [
+						{
+							id: "useNonCapturing",
+							range,
+							text: nonCapturing,
+						},
+					],
 				});
 			}
 		}

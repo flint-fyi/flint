@@ -12,6 +12,14 @@ ruleTester.describe(rule, {
  ~~~
  Capturing group \`(a)\` is never referenced.
 `,
+			suggestions: [
+				{
+					id: "useNonCapturing",
+					updated: `
+/(?:a)/;
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -24,6 +32,20 @@ ruleTester.describe(rule, {
     ~~~
     Capturing group \`(b)\` is never referenced.
 `,
+			suggestions: [
+				{
+					id: "useNonCapturing",
+					updated: `
+/(?:a)(b)/;
+`,
+				},
+				{
+					id: "useNonCapturing",
+					updated: `
+/(a)(?:b)/;
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -34,6 +56,14 @@ ruleTester.describe(rule, {
  ~~~~~~~~~~
  Capturing group \`(?<name>a)\` is never referenced.
 `,
+			suggestions: [
+				{
+					id: "useNonCapturing",
+					updated: `
+/(?:a)/;
+`,
+				},
+			],
 		},
 		{
 			code: String.raw`
@@ -44,6 +74,14 @@ ruleTester.describe(rule, {
     ~~~
     Capturing group \`(b)\` is never referenced.
 `,
+			suggestions: [
+				{
+					id: "useNonCapturing",
+					updated: String.raw`
+/(a)(?:b)\1/;
+`,
+				},
+			],
 		},
 		{
 			code: String.raw`
@@ -54,6 +92,14 @@ ruleTester.describe(rule, {
             ~~~~~~~~~~~~
             Capturing group \`(?<second>b)\` is never referenced.
 `,
+			suggestions: [
+				{
+					id: "useNonCapturing",
+					updated: String.raw`
+/(?<first>a)(?:b)\k<first>/;
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -64,6 +110,14 @@ new RegExp("(a)");
             ~~~
             Capturing group \`(a)\` is never referenced.
 `,
+			suggestions: [
+				{
+					id: "useNonCapturing",
+					updated: `
+new RegExp("(?:a)");
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -74,6 +128,14 @@ RegExp("(hello)");
         ~~~~~~~
         Capturing group \`(hello)\` is never referenced.
 `,
+			suggestions: [
+				{
+					id: "useNonCapturing",
+					updated: `
+RegExp("(?:hello)");
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -86,6 +148,20 @@ RegExp("(hello)");
         ~~~~~~~
         Capturing group \`(group)\` is never referenced.
 `,
+			suggestions: [
+				{
+					id: "useNonCapturing",
+					updated: `
+/(?:nested(group))/;
+`,
+				},
+				{
+					id: "useNonCapturing",
+					updated: `
+/(nested(?:group))/;
+`,
+				},
+			],
 		},
 	],
 	valid: [
