@@ -1,69 +1,88 @@
-import rule from "./stringCodePoints.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./stringCodePoints.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-const code = str.charCodeAt(0);
+declare const text: string;
+text.charCodeAt(0);
 `,
 			snapshot: `
-const code = str.charCodeAt(0);
-                 ~~~~~~~~~~
-                 Prefer \`codePointAt\` over \`charCodeAt\` for proper Unicode support.
+declare const text: string;
+text.charCodeAt(0);
+     ~~~~~~~~~~
+     Prefer \`codePointAt\` over \`charCodeAt\` for proper Unicode support.
 `,
 		},
 		{
 			code: `
-const char = String.fromCharCode(65);
+"hello".charCodeAt(0);
 `,
 			snapshot: `
-const char = String.fromCharCode(65);
-                    ~~~~~~~~~~~~
-                    Prefer \`String.fromCodePoint\` over \`String.fromCharCode\` for proper Unicode support.
+"hello".charCodeAt(0);
+        ~~~~~~~~~~
+        Prefer \`codePointAt\` over \`charCodeAt\` for proper Unicode support.
 `,
 		},
 		{
 			code: `
-const emoji = String.fromCharCode(0xD83D, 0xDE00);
+declare const index: number;
+\`template\`.charCodeAt(index);
 `,
 			snapshot: `
-const emoji = String.fromCharCode(0xD83D, 0xDE00);
-                     ~~~~~~~~~~~~
-                     Prefer \`String.fromCodePoint\` over \`String.fromCharCode\` for proper Unicode support.
+declare const index: number;
+\`template\`.charCodeAt(index);
+           ~~~~~~~~~~
+           Prefer \`codePointAt\` over \`charCodeAt\` for proper Unicode support.
 `,
 		},
 		{
 			code: `
-function getCode(text: string) {
-    return text.charCodeAt(text.length - 1);
-}
+String.fromCharCode(65);
 `,
 			snapshot: `
-function getCode(text: string) {
-    return text.charCodeAt(text.length - 1);
-                ~~~~~~~~~~
-                Prefer \`codePointAt\` over \`charCodeAt\` for proper Unicode support.
-}
+String.fromCharCode(65);
+       ~~~~~~~~~~~~
+       Prefer \`String.fromCodePoint\` over \`String.fromCharCode\` for proper Unicode support.
 `,
 		},
 		{
 			code: `
-const reference = String.fromCharCode;
+String.fromCharCode(0x1F600);
 `,
 			snapshot: `
-const reference = String.fromCharCode;
-                         ~~~~~~~~~~~~
-                         Prefer \`String.fromCodePoint\` over \`String.fromCharCode\` for proper Unicode support.
+String.fromCharCode(0x1F600);
+       ~~~~~~~~~~~~
+       Prefer \`String.fromCodePoint\` over \`String.fromCharCode\` for proper Unicode support.
 `,
 		},
 	],
 	valid: [
-		`const code = str.codePointAt(0);`,
-		`const char = String.fromCodePoint(65);`,
-		`const code = charCodeAt(0);`,
-		`const char = OtherClass.fromCharCode(65);`,
-		`const char = fromCharCode(65);`,
-		`const code = str["charCodeAt"](0);`,
+		`declare const text: string; text.codePointAt(0);`,
+		`String.fromCodePoint(65);`,
+		`String.fromCodePoint(0x1F600);`,
+		`
+const obj = {
+	charCodeAt(index: number) {
+		return 0;
+	}
+};
+obj.charCodeAt(0);
+`,
+		`
+class Custom {
+	charCodeAt(index: number) {
+		return index;
+	}
+}
+declare const custom: Custom;
+custom.charCodeAt(0);
+`,
+		`
+const String = { fromCharCode: (code: number) => "" };
+String.fromCharCode(65);
+export {};
+`,
 	],
 });

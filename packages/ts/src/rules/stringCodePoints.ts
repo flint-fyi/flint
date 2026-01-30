@@ -1,7 +1,15 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	isGlobalDeclarationOfName,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+
+function isStringType(type: ts.Type) {
+	return (type.flags & ts.TypeFlags.StringLike) !== 0;
+}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -33,44 +41,38 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile }) {
-					if (!ts.isPropertyAccessExpression(node.expression)) {
-						return;
+				CallExpression(node, { sourceFile, typeChecker }) {
+					if (
+						ts.isPropertyAccessExpression(node.expression) &&
+						node.expression.name.text === "charCodeAt" &&
+						tsutils.isTypeFlagSet(
+							typeChecker.getTypeAtLocation(node.expression.expression),
+							ts.TypeFlags.StringLike,
+						)
+					) {
+						context.report({
+							message: "preferCodePointAt",
+							range: {
+								begin: node.expression.name.getStart(sourceFile),
+								end: node.expression.name.getEnd(),
+							},
+						});
 					}
-
-					const methodName = node.expression.name.text;
-					if (methodName !== "charCodeAt") {
-						return;
-					}
-
-					context.report({
-						message: "preferCodePointAt",
-						range: {
-							begin: node.expression.name.getStart(sourceFile),
-							end: node.expression.name.getEnd(),
-						},
-					});
 				},
-				PropertyAccessExpression(node, { sourceFile }) {
-					if (node.name.text !== "fromCharCode") {
-						return;
+				PropertyAccessExpression(node, { sourceFile, typeChecker }) {
+					if (
+						node.name.text === "fromCharCode" &&
+						ts.isIdentifier(node.expression) &&
+						isGlobalDeclarationOfName(node.expression, "String", typeChecker)
+					) {
+						context.report({
+							message: "preferFromCodePoint",
+							range: {
+								begin: node.name.getStart(sourceFile),
+								end: node.name.getEnd(),
+							},
+						});
 					}
-
-					if (!ts.isIdentifier(node.expression)) {
-						return;
-					}
-
-					if (node.expression.text !== "String") {
-						return;
-					}
-
-					context.report({
-						message: "preferFromCodePoint",
-						range: {
-							begin: node.name.getStart(sourceFile),
-							end: node.name.getEnd(),
-						},
-					});
 				},
 			},
 		};
