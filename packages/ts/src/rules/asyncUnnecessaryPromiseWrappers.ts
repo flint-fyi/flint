@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports unnecessary `Promise.resolve()` or `Promise.reject()` in async contexts.",
 		id: "asyncUnnecessaryPromiseWrappers",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryReject: {
