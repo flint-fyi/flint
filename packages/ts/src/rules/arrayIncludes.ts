@@ -93,7 +93,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `.indexOf()` comparisons that can be replaced with `.includes()`.",
 		id: "arrayIncludes",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferIncludes: {
