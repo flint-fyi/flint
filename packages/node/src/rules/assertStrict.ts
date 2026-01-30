@@ -55,17 +55,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (node.importClause) {
-						if (node.importClause.namedBindings) {
-							if (
-								node.importClause.namedBindings.kind === SyntaxKind.NamedImports
-							) {
-								for (const element of node.importClause.namedBindings
-									.elements) {
-									const importedName =
-										element.propertyName?.text ?? element.name.text;
-									if (importedName === "strict") {
-										return;
-									}
+						if (
+							node.importClause.namedBindings &&
+							node.importClause.namedBindings.kind === SyntaxKind.NamedImports
+						) {
+							for (const element of node.importClause.namedBindings.elements) {
+								const importedName =
+									element.propertyName?.text ?? element.name.text;
+								if (importedName === "strict") {
+									return;
 								}
 							}
 						}

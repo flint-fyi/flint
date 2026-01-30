@@ -83,7 +83,7 @@ function getFilterCall(
 		!ts.isCallExpression(node) ||
 		!ts.isPropertyAccessExpression(node.expression) ||
 		node.expression.name.text !== "filter" ||
-		node.arguments.length === 0 ||
+		!node.arguments.length ||
 		!isArrayType(node.expression.expression, typeChecker)
 	) {
 		return undefined;
@@ -103,7 +103,7 @@ function getFindIndexCall(
 	if (
 		!ts.isPropertyAccessExpression(node.expression) ||
 		!["findIndex", "findLastIndex"].includes(node.expression.name.text) ||
-		node.arguments.length === 0 ||
+		!node.arguments.length ||
 		!isArrayType(node.expression.expression, typeChecker)
 	) {
 		return undefined;

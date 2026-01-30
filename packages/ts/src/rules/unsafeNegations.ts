@@ -1,6 +1,6 @@
 import {
 	typescriptLanguage,
-	unwrapParenthesizedExpression,
+	unwrapParenthesizedNode,
 } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
@@ -37,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const left = unwrapParenthesizedExpression(node.left);
+					const left = unwrapParenthesizedNode(node.left);
 					if (
 						left.kind !== SyntaxKind.PrefixUnaryExpression ||
 						left.operator !== SyntaxKind.ExclamationToken

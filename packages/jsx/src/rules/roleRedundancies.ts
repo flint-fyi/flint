@@ -41,7 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports redundant ARIA roles on elements with implicit roles.",
 		id: "roleRedundancies",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		redundantRole: {

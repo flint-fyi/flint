@@ -34,7 +34,7 @@ function canConvertToBlock(node: yaml.FlowMapping) {
 	for (const child of node.children) {
 		const keyNode = child.children[0];
 		const valueNode = child.children[1];
-		if (keyNode.children.length === 0 || valueNode.children.length === 0) {
+		if (!keyNode.children.length || !valueNode.children.length) {
 			return false;
 		}
 	}
@@ -73,7 +73,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Prefer block-style mappings over flow-style mappings.",
 		id: "blockMappings",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferBlock: {

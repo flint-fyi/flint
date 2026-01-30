@@ -1,3 +1,4 @@
+// flint-disable-file topLevelAwaits
 import { OGImageRoute } from "astro-og-canvas";
 import { getCollection } from "astro:content";
 
