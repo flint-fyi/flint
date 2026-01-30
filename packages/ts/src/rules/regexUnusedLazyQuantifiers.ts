@@ -20,7 +20,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		uselessLazy: {
 			primary:
-				"Lazy quantifier '{{ raw }}' has no effect because the quantifier matches exactly {{ count }} time(s).",
+				"Lazy quantifier `{{ raw }}` has no effect because the quantifier matches exactly {{ count }} time(s).",
 			secondary: [
 				"When a quantifier has fixed bounds (min equals max), there is no choice in how many times to match, so lazy vs greedy is irrelevant.",
 			],
@@ -41,16 +41,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitRegExpAST(regexpAst, {
 				onQuantifierEnter(node) {
 					if (!node.greedy && node.min === node.max) {
+						const range = {
+							begin: patternStart + node.start,
+							end: patternStart + node.end,
+						};
 						context.report({
 							data: {
 								count: node.min,
 								raw: node.raw,
 							},
-							message: "uselessLazy",
-							range: {
-								begin: patternStart + node.start,
-								end: patternStart + node.end,
+							fix: {
+								range,
+								text: node.raw.slice(0, -1),
 							},
+							message: "uselessLazy",
+							range,
 						});
 					}
 				},

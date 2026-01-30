@@ -10,8 +10,8 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexUnusedLazyQuantifiers" />
 
-Reports lazy quantifiers that have no effect because the quantifier matches a fixed number of times.
-When a quantifier has fixed bounds (min equals max), there is no choice in how many times to match, so the lazy modifier `?` is irrelevant.
+When a regular expression quantifier has fixed bounds (min equals max), there is no choice in how many times to match, so the lazy modifier `?` is irrelevant.
+This rule reports lazy quantifiers that have no effect because the quantifier matches a fixed number of times.
 
 ## Examples
 
