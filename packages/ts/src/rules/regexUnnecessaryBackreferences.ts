@@ -13,17 +13,6 @@ import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-type UselessReason =
-	| "backward"
-	| "disjunctive"
-	| "forward"
-	| "intoNegativeLookaround"
-	| "nested";
-
-function getMatchingDirectionFromPath(path: RegExpAST.Node[]) {
-	return path.some(isLookbehind) ? "rtl" : "ltr";
-}
-
 function getPathToRoot(node: RegExpAST.Node) {
 	const path: RegExpAST.Node[] = [];
 	for (
@@ -39,14 +28,14 @@ function getPathToRoot(node: RegExpAST.Node) {
 function getUselessProblem(
 	backreference: RegExpAST.Backreference,
 	group: RegExpAST.CapturingGroup,
-): undefined | UselessReason {
+) {
 	const backrefPath = getPathToRoot(backreference);
-	const groupPath = getPathToRoot(group);
 
 	if (backrefPath.includes(group)) {
 		return "nested";
 	}
 
+	const groupPath = getPathToRoot(group);
 	const backrefPathSet = new Set(backrefPath);
 	let commonAncestor: RegExpAST.Node | undefined;
 	let groupCut: RegExpAST.Node[] = [];
@@ -81,7 +70,8 @@ function getUselessProblem(
 		return "intoNegativeLookaround";
 	}
 
-	const direction = getMatchingDirectionFromPath(backrefPath);
+	const direction = backrefPath.some(isLookbehind) ? "rtl" : "ltr";
+
 	if (direction === "ltr") {
 		if (backreference.end <= group.start) {
 			return "forward";
@@ -95,15 +85,11 @@ function getUselessProblem(
 	return undefined;
 }
 
-function isLookbehind(
-	node: RegExpAST.Node,
-): node is RegExpAST.LookaroundAssertion {
+function isLookbehind(node: RegExpAST.Node) {
 	return node.type === "Assertion" && node.kind === "lookbehind";
 }
 
-function isNegativeLookaround(
-	node: RegExpAST.Node,
-): node is RegExpAST.LookaroundAssertion {
+function isNegativeLookaround(node: RegExpAST.Node) {
 	return (
 		node.type === "Assertion" &&
 		(node.kind === "lookahead" || node.kind === "lookbehind") &&
@@ -125,12 +111,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			secondary: [
 				"In lookbehind assertions, matching proceeds right-to-left, so this backreference is evaluated before the group.",
 			],
+			suggestions: [
+				"Remove the ignored backreference.",
+				"Modify the backreference and/or group to not conflict with each other.",
+			],
 		},
 		disjunctive: {
 			primary:
 				"Backreference '{{ backreference }}' will be ignored because it and the group '{{ group }}' are in different alternatives.",
 			secondary: [
 				"When this backreference is evaluated, the referenced group has not participated in the match.",
+			],
+			suggestions: [
+				"Remove the ignored backreference.",
+				"Modify the backreference and/or group to not conflict with each other.",
 			],
 		},
 		forward: {
@@ -139,6 +133,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			secondary: [
 				"A forward reference to a group that hasn't been matched yet will always match empty.",
 			],
+			suggestions: [
+				"Remove the ignored backreference.",
+				"Modify the backreference and/or group to not conflict with each other.",
+			],
 		},
 		intoNegativeLookaround: {
 			primary:
@@ -146,12 +144,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			secondary: [
 				"When a negative lookaround succeeds, the groups inside it have not matched anything.",
 			],
+			suggestions: [
+				"Remove the ignored backreference.",
+				"Modify the backreference and/or group to not conflict with each other.",
+			],
 		},
 		nested: {
 			primary:
 				"Backreference '{{ backreference }}' will be ignored because it is inside the group it references.",
 			secondary: [
 				"A backreference inside its own group will always match empty since the group hasn't finished capturing yet.",
+			],
+			suggestions: [
+				"Remove the ignored backreference.",
+				"Modify the backreference and/or group to not conflict with each other.",
 			],
 		},
 	},
