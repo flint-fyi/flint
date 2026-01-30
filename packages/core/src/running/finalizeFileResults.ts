@@ -1,9 +1,10 @@
 import { debugForFile } from "debug-for-file";
 
 import { DirectivesFilterer } from "../directives/DirectivesFilterer.ts";
+import { directiveReports } from "../directives/reports/directiveReports.ts";
 import type { LanguageFileDiagnostic } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
-import type { LanguageAndFilesMetadata } from "./types.ts";
+import type { LanguageAndFile } from "./types.ts";
 
 const log = debugForFile(import.meta.filename);
 
@@ -16,7 +17,7 @@ const log = debugForFile(import.meta.filename);
  */
 export function finalizeFileResults(
 	filePath: string,
-	languageAndFilesMetadata: LanguageAndFilesMetadata[],
+	languageAndFiles: LanguageAndFile[],
 	reports: FileReport[],
 	skipDiagnostics?: boolean,
 ) {
@@ -24,18 +25,16 @@ export function finalizeFileResults(
 	const fileDependencies = new Set<string>();
 	const fileDiagnostics: LanguageFileDiagnostic[] = [];
 
-	for (const { fileMetadata, language } of languageAndFilesMetadata) {
-		if (fileMetadata.directives) {
-			log(
-				"Adding %d directives for file %s",
-				fileMetadata.directives,
-				filePath,
-			);
-			directivesFilterer.add(fileMetadata.directives);
+	for (const { file, language } of languageAndFiles) {
+		if (file.directives) {
+			log("Adding %d directives for file %s", file.directives.length, filePath);
+			directivesFilterer.add(file.directives);
 		}
 
-		if (fileMetadata.file.cache?.dependencies) {
-			for (const dependency of fileMetadata.file.cache.dependencies) {
+		const cache = language.getFileCacheImpacts?.(file);
+
+		if (cache?.dependencies) {
+			for (const dependency of cache.dependencies) {
 				if (!fileDependencies.has(dependency)) {
 					log("Adding file dependency %s for file %s", dependency, filePath);
 					fileDependencies.add(dependency);
@@ -43,30 +42,41 @@ export function finalizeFileResults(
 			}
 		}
 
-		if (!skipDiagnostics) {
-			if (fileMetadata.file.getDiagnostics) {
-				log(
-					"Retrieving language %s diagnostics for file %s",
-					language.about.name,
-					filePath,
-				);
-				fileDiagnostics.push(...fileMetadata.file.getDiagnostics());
-				log(
-					"Retrieved language %s diagnostics for file %s",
-					language.about.name,
-					filePath,
-				);
-			}
+		if (!skipDiagnostics && language.getFileDiagnostics) {
+			log(
+				"Retrieving language %s diagnostics for file %s",
+				language.about.name,
+				filePath,
+			);
+			fileDiagnostics.push(...language.getFileDiagnostics(file));
+			log(
+				"Retrieved language %s diagnostics for file %s",
+				language.about.name,
+				filePath,
+			);
 		}
-
-		log("Disposing language %s for file %s", language.about.name, filePath);
-		fileMetadata.file[Symbol.dispose]();
-		log("Disposed language %s for file %s", language.about.name, filePath);
 	}
+
+	const directiveReportsFromCollector: FileReport[] = [];
+	for (const { file } of languageAndFiles) {
+		if (file.reports) {
+			directiveReportsFromCollector.push(...file.reports);
+		}
+	}
+
+	const filterResult = directivesFilterer.filter(reports);
+
+	const unusedDirectiveReports = filterResult.unusedDirectives.map(
+		(directive) => directiveReports.createUnused(directive),
+	);
 
 	return {
 		dependencies: fileDependencies,
 		diagnostics: fileDiagnostics,
-		reports: directivesFilterer.filter(reports),
+		reports: [
+			...filterResult.reports,
+			...directiveReportsFromCollector,
+			...unusedDirectiveReports,
+		],
 	};
 }

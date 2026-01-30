@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer Object.hasOwn() over Object.prototype.hasOwnProperty.call() for checking own properties.",
 		id: "objectHasOwns",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferHasOwn: {

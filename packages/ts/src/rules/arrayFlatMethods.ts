@@ -175,7 +175,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports legacy techniques to flatten arrays instead of using `.flat()`.",
 		id: "arrayFlatMethods",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferFlat: {

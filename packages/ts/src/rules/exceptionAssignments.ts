@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports reassigning exception parameters in catch clauses.",
 		id: "exceptionAssignments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noExAssign: {

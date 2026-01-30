@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports duplicate conditions in if-else-if chains that make code unreachable.",
 		id: "elseIfDuplicates",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		duplicateCondition: {

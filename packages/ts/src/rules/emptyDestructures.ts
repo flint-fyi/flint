@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using empty destructuring patterns that destructure no values.",
 		id: "emptyDestructures",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyPattern: {
