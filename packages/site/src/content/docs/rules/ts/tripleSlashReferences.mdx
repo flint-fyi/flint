@@ -11,11 +11,11 @@ import RuleSummary from "~/components/RuleSummary.astro";
 <RuleSummary plugin="ts" rule="tripleSlashReferences" />
 
 Triple-slash reference directives (`/// <reference />`) are an older TypeScript feature for declaring dependencies between files.
-With modern ES modules and `tsconfig.json` configuration, these directives are rarely needed.
+With modern ECMAScript modules and `tsconfig.json` configuration, these directives are rarely needed.
+
+This rule reports on uses of triple-slash references.
 
 ## Examples
-
-### Path References
 
 <Tabs>
 <TabItem label="❌ Incorrect">
@@ -25,22 +25,6 @@ With modern ES modules and `tsconfig.json` configuration, these directives are r
 export const value = 1;
 ```
 
-</TabItem>
-<TabItem label="✅ Correct">
-
-```ts
-import type { MyType } from "./types";
-export const value: MyType = 1;
-```
-
-</TabItem>
-</Tabs>
-
-### Type References
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
 ```ts
 /// <reference types="node" />
 const path = require("path");
@@ -48,6 +32,11 @@ const path = require("path");
 
 </TabItem>
 <TabItem label="✅ Correct">
+
+```ts
+import type { MyType } from "./types";
+export const value: MyType = 1;
+```
 
 ```ts
 import * as path from "path";
@@ -64,9 +53,11 @@ This rule is not configurable.
 
 In some cases, triple-slash directives are still necessary:
 
-- When working with global type augmentations
+- When working with global type augmentations in a codebase not set up with `tsconfig.json` file inclusions
 - When a file needs to reference a specific declaration file that cannot be resolved through normal module resolution
-- When using `/// <reference lib="..." />` for lib references
+- When using `/// <reference lib="..." />` for lib references in a codebase that overrides them
+
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 

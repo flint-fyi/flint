@@ -12,11 +12,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		noTripleSlashReference: {
 			primary: "Triple-slash reference directives are outdated.",
 			secondary: [
-				"ES module imports are the modern way to declare dependencies.",
+				"ECMAScript module imports are the modern way to declare dependencies.",
 				"Triple-slash references are only needed in specific legacy scenarios.",
 			],
 			suggestions: [
-				"Use ES module imports instead.",
+				"Use ECMAScript module imports instead.",
 				"Configure tsconfig.json to include type definitions.",
 			],
 		},
@@ -24,33 +24,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				SourceFile(node: AST.SourceFile, { sourceFile }) {
-					for (const ref of sourceFile.referencedFiles) {
+				SourceFile(node: AST.SourceFile) {
+					for (const reference of [
+						...node.referencedFiles,
+						...node.typeReferenceDirectives,
+						...node.libReferenceDirectives,
+					]) {
 						context.report({
 							message: "noTripleSlashReference",
 							range: {
-								begin: ref.pos,
-								end: ref.end,
-							},
-						});
-					}
-
-					for (const ref of sourceFile.typeReferenceDirectives) {
-						context.report({
-							message: "noTripleSlashReference",
-							range: {
-								begin: ref.pos,
-								end: ref.end,
-							},
-						});
-					}
-
-					for (const ref of sourceFile.libReferenceDirectives) {
-						context.report({
-							message: "noTripleSlashReference",
-							range: {
-								begin: ref.pos,
-								end: ref.end,
+								begin: reference.pos,
+								end: reference.end,
 							},
 						});
 					}
