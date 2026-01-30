@@ -47,10 +47,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				VariableDeclarationList: (node, { sourceFile, typeChecker }) => {
-					if (
-						!(node.flags & ts.NodeFlags.Const) ||
-						node.declarations.length === 0
-					) {
+					if (!(node.flags & ts.NodeFlags.Const) || !node.declarations.length) {
 						return;
 					}
 

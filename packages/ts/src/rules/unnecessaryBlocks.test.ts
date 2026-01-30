@@ -144,5 +144,15 @@ label: {
     break label;
 }
 `,
+		`
+{
+  using _ = { [Symbol.dispose]: () => { } };
+}
+`,
+		`
+{
+  await using _ = { [Symbol.asyncDispose]: () => { } };
+}
+`,
 	],
 });

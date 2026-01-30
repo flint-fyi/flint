@@ -1,0 +1,122 @@
+---
+description: "Reports unnecessary escape sequences in regular expressions."
+title: "regexUnnecessaryEscapes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryEscapes" />
+
+Backslashes (`\`) are only necessary in regular expressions to escape special characters.
+Using them on non-special characters does not change the regular expression.
+They are often at least visual noise and sometimes a sign of programmer error.
+
+This rule reports escape sequences in regular expressions where the backslash is unnecessary.
+
+## Examples
+
+### Unnecessary Escape at Root
+
+Characters that are not special regex metacharacters don't need to be escaped.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\a/;
+const equals = /\=/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a/;
+const equals = /=/;
+```
+
+</TabItem>
+</Tabs>
+
+### Unnecessary Escape in Character Class
+
+Inside a character class, most characters don't need escaping.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\!]/;
+const caret = /[a\^b]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[!]/;
+const caret = /[a^b]/;
+```
+
+</TabItem>
+</Tabs>
+
+### Hyphen at Edge of Character Class
+
+A hyphen at the start or end of a character class doesn't need escaping.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\-ab]/;
+const trailing = /[ab\-]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[-ab]/;
+const trailing = /[ab-]/;
+```
+
+</TabItem>
+</Tabs>
+
+### Necessary Escapes
+
+Some characters must be escaped to be treated literally.
+
+<Tabs>
+<TabItem label="✅ Correct">
+
+```ts
+const dot = /\./;
+const star = /\*/;
+const bracket = /[\]]/;
+const range = /[a\-b]/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer to escape characters for visual clarity even when not strictly necessary, you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: Escaping](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#escaping)
+- [ECMAScript specification: RegularExpressionLiteral](https://tc39.es/ecma262/#sec-literals-regular-expression-literals)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryEscapes" />

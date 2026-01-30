@@ -37,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports function names that don't match the variable or property they're assigned to.",
 		id: "functionNameMatches",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		mismatch: {
