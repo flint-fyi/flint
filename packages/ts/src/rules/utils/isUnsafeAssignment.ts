@@ -1,4 +1,4 @@
-import type { AST, Checker } from "@flint.fyi/typescript-language";
+import type { AST } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 import * as tsutils from "ts-api-utils";
 import ts, { SyntaxKind } from "typescript";
@@ -14,22 +14,14 @@ import ts, { SyntaxKind } from "typescript";
 export function isUnsafeAssignment(
 	type: ts.Type,
 	receiver: ts.Type,
-	checker: Checker,
 	senderNode: AST.Expression,
 ): false | { receiver: ts.Type; sender: ts.Type } {
-	return isUnsafeAssignmentWorker(
-		type,
-		receiver,
-		checker,
-		senderNode,
-		new Map(),
-	);
+	return isUnsafeAssignmentWorker(type, receiver, senderNode, new Map());
 }
 
 function isUnsafeAssignmentWorker(
 	type: ts.Type,
 	receiver: ts.Type,
-	checker: Checker,
 	senderNode: AST.Expression,
 	visited: Map<ts.Type, Set<ts.Type>>,
 ): false | { receiver: ts.Type; sender: ts.Type } {
@@ -104,7 +96,6 @@ function isUnsafeAssignmentWorker(
 			const unsafe = isUnsafeAssignmentWorker(
 				arg,
 				receiverArg,
-				checker,
 				senderNode,
 				visited,
 			);

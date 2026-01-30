@@ -73,7 +73,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Prefer block-style mappings over flow-style mappings.",
 		id: "blockMappings",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferBlock: {

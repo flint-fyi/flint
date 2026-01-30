@@ -83,7 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports `.sort()` calls on arrays that mutate the original array.",
 		id: "arrayMutableSorts",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferToSorted: {

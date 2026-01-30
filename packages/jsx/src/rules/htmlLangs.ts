@@ -10,7 +10,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports <html> elements without a lang prop.",
 		id: "htmlLangs",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingLang: {
