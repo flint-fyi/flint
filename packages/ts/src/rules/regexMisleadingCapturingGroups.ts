@@ -13,46 +13,135 @@ import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
-function findFollowingElement(capturingGroup: RegExpAST.CapturingGroup) {
-	const parent = capturingGroup.parent;
-	if (parent.type !== "Alternative") {
-		return undefined;
-	}
+function collectFromElement<T>(
+	element: RegExpAST.Element,
+	collector: (el: RegExpAST.Element) => T[],
+): Set<T> {
+	const result = new Set<T>();
 
-	const index = parent.elements.indexOf(capturingGroup);
-	return index === -1 ? undefined : parent.elements[index + 1];
+	forEachInGroup(element, (element) => {
+		for (const item of collector(element)) {
+			result.add(item);
+		}
+		return undefined;
+	});
+
+	return result;
+}
+
+function elementContainsPositiveSet(
+	element: RegExpAST.Element,
+	kind: RegExpAST.CharacterSet["kind"],
+) {
+	return forEachInGroup(
+		element,
+		(el) =>
+			el.type === "CharacterSet" &&
+			hasNegate(el) &&
+			el.kind === kind &&
+			!el.negate,
+	);
+}
+
+function findFollowingElement(capturingGroup: RegExpAST.CapturingGroup) {
+	const info = getAlternativeIndex(capturingGroup);
+	return info?.elements[info.index + 1];
 }
 
 function findPrecedingQuantifier(capturingGroup: RegExpAST.CapturingGroup) {
+	const info = getAlternativeIndex(capturingGroup);
+	if (!info || info.index <= 0) {
+		return undefined;
+	}
+
+	const previous = info.elements[info.index - 1];
+	return previous?.type === "Quantifier" && previous.max > previous.min
+		? previous
+		: undefined;
+}
+
+function forEachInGroup(
+	element: RegExpAST.Element,
+	callback: (element: RegExpAST.Element) => boolean | undefined,
+) {
+	switch (element.type) {
+		case "CapturingGroup":
+		case "Group":
+			for (const alt of element.alternatives) {
+				for (const el of alt.elements) {
+					if (forEachInGroup(el, callback)) {
+						return true;
+					}
+				}
+			}
+			return false;
+
+		case "Quantifier":
+			return forEachInGroup(element.element, callback);
+
+		default:
+			return callback(element) === true;
+	}
+}
+
+function getAlternativeIndex(capturingGroup: RegExpAST.CapturingGroup) {
 	const parent = capturingGroup.parent;
 	if (parent.type !== "Alternative") {
 		return undefined;
 	}
-
 	const index = parent.elements.indexOf(capturingGroup);
-	if (index <= 0) {
-		return undefined;
-	}
+	return index === -1 ? undefined : { elements: parent.elements, index };
+}
 
-	for (let i = index - 1; i >= 0; i--) {
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const element = parent.elements[i]!;
-		if (element.type === "Quantifier" && element.max > element.min) {
-			return element;
+function getCharacterSetType(el: RegExpAST.CharacterSet): string {
+	if (el.kind === "any") {
+		return "set:any";
+	}
+	if (!hasNegate(el)) {
+		return "";
+	}
+	return `set:${el.kind}${el.negate ? ":negated" : ""}`;
+}
+
+function getCharacterValues(
+	elements: RegExpAST.CharacterClassElement[],
+): number[] {
+	const result: number[] = [];
+	for (const el of elements) {
+		if (el.type === "Character") {
+			result.push(el.value);
 		}
 	}
+	return result;
+}
 
-	return undefined;
+function getClassExcludedChars(element: RegExpAST.Element): Set<number> {
+	if (element.type !== "CharacterClass" || !element.negate) {
+		return new Set<number>();
+	}
+	return new Set<number>(getCharacterValues(element.elements));
+}
+
+function getElementCharacters(element: RegExpAST.Element): Set<number> {
+	return collectFromElement<number>(element, (el): number[] => {
+		if (el.type === "Character") {
+			return [el.value];
+		}
+		if (el.type === "CharacterClass") {
+			return getCharacterValues(el.elements);
+		}
+		return [];
+	});
 }
 
 function getEndQuantifier(capturingGroup: RegExpAST.CapturingGroup) {
-	for (const alt of capturingGroup.alternatives) {
-		if (alt.elements.length === 0) {
+	for (const alternative of capturingGroup.alternatives) {
+		if (alternative.elements.length === 0) {
 			continue;
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const last = alt.elements.at(-1)!;
+		const last = alternative.elements.at(-1)!;
 		if (last.type === "Quantifier" && last.max > last.min) {
 			return last;
 		}
@@ -61,52 +150,54 @@ function getEndQuantifier(capturingGroup: RegExpAST.CapturingGroup) {
 	return undefined;
 }
 
-function getMatchableCharacterTypes(element: RegExpAST.Element) {
-	const types = new Set<string>();
+function getFirstElementInGroup(element: RegExpAST.Element) {
+	let current: RegExpAST.Element | undefined = element;
 
-	switch (element.type) {
-		case "CapturingGroup":
-		case "Group":
-			for (const alt of element.alternatives) {
-				for (const child of alt.elements) {
-					for (const type of getMatchableCharacterTypes(child)) {
-						types.add(type);
-					}
-				}
+	while (current) {
+		if (current.type === "Quantifier") {
+			current = current.element;
+			continue;
+		}
+		if (current.type === "Group" || current.type === "CapturingGroup") {
+			const alternative: RegExpAST.Alternative | undefined =
+				current.alternatives[0];
+			if (!alternative) {
+				return undefined;
 			}
-			break;
-
-		case "Character":
-			types.add(`char:${element.value}`);
-			break;
-
-		case "CharacterClass":
-			for (const child of element.elements) {
-				if (child.type === "Character") {
-					types.add(`char:${child.value}`);
-				} else if (child.type === "CharacterSet") {
-					types.add(`set:${child.kind}`);
-				} else if (child.type === "CharacterClassRange") {
-					types.add(`range:${child.min.value}-${child.max.value}`);
-				}
-			}
-			break;
-
-		case "CharacterSet":
-			types.add(`set:${element.kind}`);
-			break;
-
-		case "Quantifier":
-			for (const type of getMatchableCharacterTypes(element.element)) {
-				types.add(type);
-			}
-			break;
-
-		default:
-			break;
+			current = alternative.elements[0];
+			continue;
+		}
+		break;
 	}
 
-	return types;
+	return current;
+}
+
+function getMatchableCharacterTypes(element: RegExpAST.Element) {
+	return collectFromElement(element, (el) => {
+		if (el.type === "Character") {
+			return [`char:${el.value}`];
+		}
+		if (el.type === "CharacterSet") {
+			const type = getCharacterSetType(el);
+			return type ? [type] : [];
+		}
+		if (el.type === "CharacterClass") {
+			return el.elements.flatMap((child) => {
+				if (child.type === "Character") {
+					return [`char:${child.value}`];
+				}
+				if (child.type === "CharacterSet" && hasNegate(child)) {
+					return [`set:${child.kind}${child.negate ? ":negated" : ""}`];
+				}
+				if (child.type === "CharacterClassRange") {
+					return [`range:${child.min.value}-${child.max.value}`];
+				}
+				return [];
+			});
+		}
+		return [];
+	});
 }
 
 function getStartQuantifier(
@@ -139,6 +230,10 @@ function getStartQuantifier(
 	return undefined;
 }
 
+function hasNegate(node: RegExpAST.CharacterSet) {
+	return "negate" in node;
+}
+
 function hasOverlap(a: Set<string>, b: Set<string>) {
 	if (a.has("set:any") || b.has("set:any")) {
 		return true;
@@ -153,12 +248,72 @@ function hasOverlap(a: Set<string>, b: Set<string>) {
 	return false;
 }
 
+function isAllowedEndPattern(
+	endQuantifier: RegExpAST.Quantifier,
+	followingElement: RegExpAST.Element,
+) {
+	return (
+		isDotDelimiterPattern(endQuantifier, followingElement) ||
+		isNegatedSetFollowedByPositive(endQuantifier, followingElement) ||
+		isExcludedDelimiterPattern(endQuantifier, followingElement)
+	);
+}
+
+function isDotDelimiterPattern(
+	endQuantifier: RegExpAST.Quantifier,
+	followingElement: RegExpAST.Element,
+) {
+	return (
+		endQuantifier.element.type === "CharacterSet" &&
+		endQuantifier.element.kind === "any" &&
+		followingElement.type === "Character"
+	);
+}
+
+function isExcludedDelimiterPattern(
+	endQuantifier: RegExpAST.Quantifier,
+	followingElement: RegExpAST.Element,
+) {
+	if (
+		endQuantifier.element.type !== "CharacterClass" ||
+		!endQuantifier.element.negate
+	) {
+		return false;
+	}
+
+	const excluded = getClassExcludedChars(endQuantifier.element);
+	if (!excluded.size) {
+		return false;
+	}
+
+	const followingChars = getElementCharacters(followingElement);
+	for (const character of followingChars) {
+		if (excluded.has(character)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function isNegatedSetFollowedByPositive(
+	endQuantifier: RegExpAST.Quantifier,
+	followingElement: RegExpAST.Element,
+) {
+	return (
+		endQuantifier.element.type === "CharacterSet" &&
+		hasNegate(endQuantifier.element) &&
+		endQuantifier.element.negate &&
+		elementContainsPositiveSet(followingElement, endQuantifier.element.kind)
+	);
+}
+
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports capturing groups that capture less text than their pattern suggests.",
 		id: "regexMisleadingCapturingGroups",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		misleadingEnd: {
@@ -194,59 +349,95 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			visitRegExpAST(regexpAst, {
 				onCapturingGroupEnter(cgNode) {
-					const precedingQuantifier = findPrecedingQuantifier(cgNode);
-					const firstAlternative = cgNode.alternatives[0];
-					if (precedingQuantifier && firstAlternative) {
-						const startQuantifier = getStartQuantifier(firstAlternative, "ltr");
-						if (startQuantifier) {
-							const precedingTypes = getMatchableCharacterTypes(
-								precedingQuantifier.element,
-							);
-							const captureTypes = getMatchableCharacterTypes(
-								startQuantifier.element,
-							);
+					checkMisleadingStart(cgNode, patternStart);
+					checkMisleadingEnd(cgNode, patternStart);
+				},
+			});
+		}
 
-							if (hasOverlap(precedingTypes, captureTypes)) {
-								const behavior =
-									startQuantifier.min === 0
-										? "the empty string"
-										: `only ${startQuantifier.min} character${startQuantifier.min > 1 ? "s" : ""}`;
+		function checkMisleadingStart(
+			capturingGroupNode: RegExpAST.CapturingGroup,
+			patternStart: number,
+		) {
+			const precedingQuantifier = findPrecedingQuantifier(capturingGroupNode);
+			const firstAlternative = capturingGroupNode.alternatives[0];
+			if (!precedingQuantifier || !firstAlternative) {
+				return;
+			}
 
-								context.report({
-									data: {
-										behavior,
-										captureRaw: startQuantifier.raw,
-										precedingRaw: precedingQuantifier.raw,
-									},
-									message: "misleadingStart",
-									range: {
-										begin: patternStart + startQuantifier.start,
-										end: patternStart + startQuantifier.end,
-									},
-								});
-							}
-						}
-					}
+			const startQuantifier = getStartQuantifier(firstAlternative, "ltr");
+			if (!startQuantifier) {
+				return;
+			}
 
-					const endQuantifier = getEndQuantifier(cgNode);
-					const followingElement = findFollowingElement(cgNode);
-					if (endQuantifier && followingElement) {
-						const endTypes = getMatchableCharacterTypes(endQuantifier.element);
-						const followingTypes = getMatchableCharacterTypes(followingElement);
+			if (
+				startQuantifier.element.type === "CharacterSet" &&
+				startQuantifier.element.kind === "any"
+			) {
+				return;
+			}
 
-						if (hasOverlap(endTypes, followingTypes)) {
-							context.report({
-								data: {
-									quantifierRaw: endQuantifier.raw,
-								},
-								message: "misleadingEnd",
-								range: {
-									begin: patternStart + endQuantifier.start,
-									end: patternStart + endQuantifier.end,
-								},
-							});
-						}
-					}
+			const precedingTypes = getMatchableCharacterTypes(
+				precedingQuantifier.element,
+			);
+			const captureTypes = getMatchableCharacterTypes(startQuantifier.element);
+
+			if (!hasOverlap(precedingTypes, captureTypes)) {
+				return;
+			}
+
+			const behavior =
+				startQuantifier.min === 0
+					? "the empty string"
+					: `only ${startQuantifier.min} character${startQuantifier.min > 1 ? "s" : ""}`;
+
+			context.report({
+				data: {
+					behavior,
+					captureRaw: startQuantifier.raw,
+					precedingRaw: precedingQuantifier.raw,
+				},
+				message: "misleadingStart",
+				range: {
+					begin: patternStart + startQuantifier.start,
+					end: patternStart + startQuantifier.end,
+				},
+			});
+		}
+
+		function checkMisleadingEnd(
+			capturingGroupNode: RegExpAST.CapturingGroup,
+			patternStart: number,
+		) {
+			const endQuantifier = getEndQuantifier(capturingGroupNode);
+			if (!endQuantifier) {
+				return;
+			}
+
+			const followingElement = findFollowingElement(capturingGroupNode);
+			if (
+				!followingElement ||
+				isAllowedEndPattern(endQuantifier, followingElement)
+			) {
+				return;
+			}
+
+			const endTypes = getMatchableCharacterTypes(endQuantifier.element);
+			const firstFollowing = getFirstElementInGroup(followingElement);
+			const followingTypes = firstFollowing
+				? getMatchableCharacterTypes(firstFollowing)
+				: new Set<string>();
+
+			if (!hasOverlap(endTypes, followingTypes)) {
+				return;
+			}
+
+			context.report({
+				data: { quantifierRaw: endQuantifier.raw },
+				message: "misleadingEnd",
+				range: {
+					begin: patternStart + endQuantifier.start,
+					end: patternStart + endQuantifier.end,
 				},
 			});
 		}

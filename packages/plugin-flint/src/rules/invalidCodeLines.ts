@@ -101,9 +101,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					describedCases.invalid.forEach((testCase) => {
+					for (const testCase of describedCases.invalid) {
 						checkTestCase(testCase, sourceFile);
-					});
+					}
 				},
 			},
 		};
