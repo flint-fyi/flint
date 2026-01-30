@@ -171,6 +171,7 @@ import parseIntRadixes from "./rules/parseIntRadixes.ts";
 import propertyAccessNotation from "./rules/propertyAccessNotation.ts";
 import recursionOnlyArguments from "./rules/recursionOnlyArguments.ts";
 import redundantTypeConstituents from "./rules/redundantTypeConstituents.ts";
+import restrictedImports from "./rules/restrictedImports.ts";
 import regexAllGlobalFlags from "./rules/regexAllGlobalFlags.ts";
 import regexAmbiguousInvalidity from "./rules/regexAmbiguousInvalidity.ts";
 import regexCharacterClasses from "./rules/regexCharacterClasses.ts";
@@ -482,6 +483,7 @@ export const ts = createPlugin({
 		propertyAccessNotation,
 		recursionOnlyArguments,
 		redundantTypeConstituents,
+		restrictedImports,
 		regexAllGlobalFlags,
 		regexAmbiguousInvalidity,
 		regexCharacterClasses,

@@ -1,0 +1,144 @@
+---
+description: "Restricts specified modules from being imported."
+title: "restrictedImports"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="restrictedImports" />
+
+Some modules should not be used in certain parts of a codebase.
+This rule allows you to restrict specific modules from being imported, either by exact path or by glob pattern.
+It detects static `import` and `export ... from` declarations.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// With paths: ["lodash"]
+import _ from "lodash";
+
+// With paths: [{ name: "utils", importNames: ["dangerousHelper"] }]
+import { dangerousHelper } from "utils";
+
+// With patterns: ["internal/*"]
+import { secret } from "internal/auth";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// With paths: ["lodash"]
+import { pick } from "lodash-es";
+
+// With paths: [{ name: "utils", importNames: ["dangerousHelper"] }]
+import { safeHelper } from "utils";
+
+// With patterns: ["internal/*"]
+import { auth } from "external/auth";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `paths`
+
+- Type: `Array<string | PathConfig>`
+- Default: `[]`
+
+Exact module specifiers to restrict.
+Each entry can be a simple string or a configuration object.
+
+```jsonc
+{
+	"paths": [
+		// Simple: restrict the entire module
+		"lodash",
+
+		// Advanced: restrict specific imports
+		{
+			"name": "utils",
+			"importNames": ["dangerousHelper"],
+			"message": "Use safeHelper instead.",
+		},
+
+		// Allow only certain imports
+		{
+			"name": "react",
+			"allowImportNames": ["useState", "useEffect"],
+		},
+
+		// Allow type-only imports
+		{
+			"name": "internal-types",
+			"allowTypeImports": true,
+		},
+	],
+}
+```
+
+**PathConfig fields:**
+
+| Field              | Type        | Description                                                     |
+| ------------------ | ----------- | --------------------------------------------------------------- |
+| `name`             | `string`    | The module specifier to restrict.                               |
+| `message`          | `string?`   | Custom message shown when the import is restricted.             |
+| `importNames`      | `string[]?` | Only these specific import names are restricted.                |
+| `allowImportNames` | `string[]?` | Only these import names are allowed; all others are restricted. |
+| `allowTypeImports` | `boolean?`  | Whether type-only imports are exempt from the restriction.      |
+
+### `patterns`
+
+- Type: `Array<string | PatternConfig>`
+- Default: `[]`
+
+Glob patterns to match restricted module specifiers.
+
+```jsonc
+{
+	"patterns": [
+		// Simple: restrict by glob
+		"internal/*",
+
+		// Advanced: restrict with options
+		{
+			"group": ["legacy/**", "deprecated/**"],
+			"message": "These modules are deprecated. Use the new API.",
+			"allowTypeImports": true,
+		},
+	],
+}
+```
+
+**PatternConfig fields:**
+
+| Field              | Type        | Description                                                     |
+| ------------------ | ----------- | --------------------------------------------------------------- |
+| `group`            | `string[]`  | Glob patterns to match module specifiers against.               |
+| `message`          | `string?`   | Custom message shown when a matching import is restricted.      |
+| `importNames`      | `string[]?` | Only these specific import names are restricted.                |
+| `allowImportNames` | `string[]?` | Only these import names are allowed; all others are restricted. |
+| `allowTypeImports` | `boolean?`  | Whether type-only imports are exempt from the restriction.      |
+
+## When Not To Use It
+
+If you do not need to restrict any modules from being imported, you do not need this rule.
+This rule requires explicit configuration to do anything, so it has no effect without `paths` or `patterns` options.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [ESLint `no-restricted-imports`](https://eslint.org/docs/latest/rules/no-restricted-imports)
+- [TypeScript-ESLint `no-restricted-imports`](https://typescript-eslint.io/rules/no-restricted-imports)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="restrictedImports" />
