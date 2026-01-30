@@ -212,8 +212,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			pathMap: new Map<string, NormalizedPathConfig[]>(),
 		};
 
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		function ensureInitialized(options: any) {
+		function ensureInitialized(options: unknown) {
 			if (state.initialized) {
 				return;
 			}
