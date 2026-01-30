@@ -47,10 +47,7 @@ function isAbstractClass(node: AST.ClassDeclaration | AST.ClassExpression) {
 }
 
 function isEmptyConstructor(member: AST.ConstructorDeclaration) {
-	return (
-		member.body === undefined ||
-		(member.body.statements.length === 0 && member.parameters.length === 0)
-	);
+	return !member.body?.statements.length && !member.parameters.length;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -116,15 +113,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				if (
-					ts.isPropertyDeclaration(member) ||
-					ts.isMethodDeclaration(member) ||
-					ts.isGetAccessorDeclaration(member) ||
-					ts.isSetAccessorDeclaration(member)
+					(ts.isPropertyDeclaration(member) ||
+						ts.isMethodDeclaration(member) ||
+						ts.isGetAccessorDeclaration(member) ||
+						ts.isSetAccessorDeclaration(member)) &&
+					!hasStaticModifier(member.modifiers)
 				) {
-					if (!hasStaticModifier(member.modifiers)) {
-						hasNonStaticMember = true;
-						break;
-					}
+					hasNonStaticMember = true;
+					break;
 				}
 			}
 
