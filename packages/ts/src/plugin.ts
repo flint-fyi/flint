@@ -243,6 +243,7 @@ import sparseArrays from "./rules/sparseArrays.ts";
 import symbolDescriptions from "./rules/symbolDescriptions.ts";
 import topLevelAwaits from "./rules/topLevelAwaits.ts";
 import tripleSlashReferences from "./rules/tripleSlashReferences.ts";
+import tripleSlashReferenceValidity from "./rules/tripleSlashReferenceValidity.ts";
 import tsComments from "./rules/tsComments.ts";
 import tslintComments from "./rules/tslintComments.ts";
 import typeofComparisons from "./rules/typeofComparisons.ts";
@@ -256,7 +257,6 @@ import unnecessaryConcatenation from "./rules/unnecessaryConcatenation.ts";
 import unsafeNegations from "./rules/unsafeNegations.ts";
 import variableDeletions from "./rules/variableDeletions.ts";
 import voidOperator from "./rules/voidOperator.ts";
-import tripleSlashReferenceValidity from "./rules/tripleSlashReferenceValidity.ts";
 import withStatements from "./rules/withStatements.ts";
 import wrapperObjects from "./rules/wrapperObjects.ts";
 
