@@ -16,6 +16,7 @@
 	"scripts": {
 		"build": "tsdown",
 		"flint": "node --conditions='@flint.fyi/source' packages/flint/bin/index.js",
+		"flint:cache-ignore": "node --conditions='@flint.fyi/source' packages/flint/bin/index.js --cache-ignore",
 		"lint": "eslint . --max-warnings 0",
 		"lint:knip": "knip",
 		"lint:packages": "pnpm dedupe --check",
