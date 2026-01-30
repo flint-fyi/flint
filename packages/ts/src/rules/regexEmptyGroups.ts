@@ -23,7 +23,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports empty groups in regular expressions.",
 		id: "regexEmptyGroups",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyGroup: {

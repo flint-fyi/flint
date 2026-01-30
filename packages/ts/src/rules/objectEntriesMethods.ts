@@ -197,7 +197,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer Object.fromEntries() over reduce patterns that build objects from key-value pairs.",
 		id: "objectEntriesMethods",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferFromEntries: {

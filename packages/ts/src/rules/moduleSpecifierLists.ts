@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Require non-empty specifier lists in import and export statements.",
 		id: "moduleSpecifierLists",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyExportSpecifiers: {

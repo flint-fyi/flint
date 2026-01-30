@@ -243,7 +243,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports characters in regex character classes that appear as single visual characters but are made of multiple code points.",
 		id: "regexMisleadingUnicodeCharacters",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		combiningClass: {

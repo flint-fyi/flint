@@ -43,13 +43,10 @@ export function computeDirectiveRanges(
 
 			case "disable-next-line":
 				return [
-					{
-						lines: {
-							begin: directive.range.begin.line + 1,
-							end: directive.range.end.line + 1,
-						},
-						selections: directive.selections.map(createSelectionMatcher),
-					},
+					createRangedSelectionForDisableNextLine(
+						directive,
+						directive.selections,
+					),
 				];
 		}
 	}
@@ -64,6 +61,21 @@ export function computeDirectiveRanges(
 		"Previous directive is expected to be present by the loop condition",
 	);
 	let currentSelections = previousDirective.selections;
+
+	// Handle the first directive
+	switch (previousDirective.type) {
+		case "disable-lines-begin":
+			// Will be handled after the loop
+			break;
+		case "disable-next-line":
+			rangedSelections.push(
+				createRangedSelectionForDisableNextLine(
+					previousDirective,
+					currentSelections,
+				),
+			);
+			break;
+	}
 
 	for (const directive of directivesSorted.slice(1)) {
 		rangedSelections.push({
@@ -90,16 +102,12 @@ export function computeDirectiveRanges(
 				);
 				break;
 			case "disable-next-line":
-				rangedSelections.push({
-					lines: {
-						begin: directive.range.begin.line + 1,
-						end: directive.range.end.line + 1,
-					},
-					selections: joinSelections(
-						currentSelections,
-						directive.selections,
-					).map(createSelectionMatcher),
-				});
+				rangedSelections.push(
+					createRangedSelectionForDisableNextLine(
+						directive,
+						joinSelections(currentSelections, directive.selections),
+					),
+				);
 				break;
 		}
 
@@ -119,6 +127,19 @@ export function computeDirectiveRanges(
 	}
 
 	return rangedSelections;
+}
+
+function createRangedSelectionForDisableNextLine(
+	directive: CommentDirectiveWithinFile,
+	selections: string[],
+): RangedSelection {
+	return {
+		lines: {
+			begin: directive.range.begin.line + 1,
+			end: directive.range.end.line + 1,
+		},
+		selections: selections.map(createSelectionMatcher),
+	};
 }
 
 function joinSelections(
