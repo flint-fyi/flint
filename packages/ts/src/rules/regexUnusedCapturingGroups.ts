@@ -40,12 +40,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		unusedCapture: {
-			primary: "Capturing group '{{ raw }}' is never referenced.",
+			primary: "Capturing group `{{ raw }}` is never referenced.",
 			secondary: [
-				"Capturing groups that are never backreferenced can be converted to non-capturing groups for clarity.",
+				"Capturing groups that are never backreferenced can be misleading by unintentionally indicating that the group should be captured.",
+				"Non-capturing groups are generally preferred for clarity when the group does not need to be captured.",
 			],
 			suggestions: [
-				"Convert to a non-capturing group: (?:...)",
+				"Convert to a non-capturing group if the capture is not needed.",
 				"Add a backreference if the capture is needed.",
 			],
 		},

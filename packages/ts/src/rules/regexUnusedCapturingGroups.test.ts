@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a)/;
  ~~~
- Capturing group '(a)' is never referenced.
+ Capturing group \`(a)\` is never referenced.
 `,
 		},
 		{
@@ -20,9 +20,9 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a)(b)/;
  ~~~
- Capturing group '(a)' is never referenced.
+ Capturing group \`(a)\` is never referenced.
     ~~~
-    Capturing group '(b)' is never referenced.
+    Capturing group \`(b)\` is never referenced.
 `,
 		},
 		{
@@ -32,27 +32,27 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(?<name>a)/;
  ~~~~~~~~~~
- Capturing group '(?<name>a)' is never referenced.
+ Capturing group \`(?<name>a)\` is never referenced.
 `,
 		},
 		{
 			code: String.raw`
 /(a)(b)\1/;
 `,
-			snapshot: String.raw`
-/(a)(b)\1/;
+			snapshot: `
+/(a)(b)\\1/;
     ~~~
-    Capturing group '(b)' is never referenced.
+    Capturing group \`(b)\` is never referenced.
 `,
 		},
 		{
 			code: String.raw`
 /(?<first>a)(?<second>b)\k<first>/;
 `,
-			snapshot: String.raw`
-/(?<first>a)(?<second>b)\k<first>/;
+			snapshot: `
+/(?<first>a)(?<second>b)\\k<first>/;
             ~~~~~~~~~~~~
-            Capturing group '(?<second>b)' is never referenced.
+            Capturing group \`(?<second>b)\` is never referenced.
 `,
 		},
 		{
@@ -62,7 +62,7 @@ new RegExp("(a)");
 			snapshot: `
 new RegExp("(a)");
             ~~~
-            Capturing group '(a)' is never referenced.
+            Capturing group \`(a)\` is never referenced.
 `,
 		},
 		{
@@ -72,7 +72,7 @@ RegExp("(hello)");
 			snapshot: `
 RegExp("(hello)");
         ~~~~~~~
-        Capturing group '(hello)' is never referenced.
+        Capturing group \`(hello)\` is never referenced.
 `,
 		},
 		{
@@ -82,9 +82,9 @@ RegExp("(hello)");
 			snapshot: `
 /(nested(group))/;
  ~~~~~~~~~~~~~~~
- Capturing group '(nested(group))' is never referenced.
+ Capturing group \`(nested(group))\` is never referenced.
         ~~~~~~~
-        Capturing group '(group)' is never referenced.
+        Capturing group \`(group)\` is never referenced.
 `,
 		},
 	],

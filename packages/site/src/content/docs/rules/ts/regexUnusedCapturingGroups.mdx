@@ -15,15 +15,23 @@ A capturing group without a backreference is considered "unused" and can typical
 
 ## Examples
 
-### Unused Capturing Group
-
-A capturing group with no backreference.
-
 <Tabs>
 <TabItem label="❌ Incorrect">
 
 ```ts
 const pattern = /(a)/;
+```
+
+```ts
+const pattern = /(?<name>a)/;
+```
+
+```ts
+const pattern = /(a)(b)\1/; // (b) is never referenced
+```
+
+```ts
+const pattern = new RegExp("(a)");
 ```
 
 </TabItem>
@@ -35,68 +43,17 @@ const pattern = /(a)\1/;
 const pattern2 = /(?:a)/;
 ```
 
-</TabItem>
-</Tabs>
-
-### Unused Named Capturing Group
-
-Named capturing groups should also have a backreference.
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
-```ts
-const pattern = /(?<name>a)/;
-```
-
-</TabItem>
-<TabItem label="✅ Correct">
-
 ```ts
 const pattern = /(?<name>a)\k<name>/;
 // Or use a non-capturing group
 const pattern2 = /(?:a)/;
 ```
 
-</TabItem>
-</Tabs>
-
-### Partially Used Groups
-
-When multiple capturing groups exist, only the unreferenced ones are reported.
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
-```ts
-const pattern = /(a)(b)\1/; // (b) is never referenced
-```
-
-</TabItem>
-<TabItem label="✅ Correct">
-
 ```ts
 const pattern = /(a)(?:b)\1/;
 // Or reference both groups
 const pattern2 = /(a)(b)\1\2/;
 ```
-
-</TabItem>
-</Tabs>
-
-### RegExp Constructor
-
-The rule also checks regex patterns in `RegExp` constructor calls.
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
-```ts
-const pattern = new RegExp("(a)");
-```
-
-</TabItem>
-<TabItem label="✅ Correct">
 
 ```ts
 const pattern = new RegExp("(a)\\1");
@@ -115,6 +72,7 @@ This rule is not configurable.
 
 If you use capturing groups for purposes other than backreferences within the regex itself (such as extracting matched groups via `match()` or `exec()`), you might prefer to disable this rule.
 However, note that modern JavaScript provides named groups which are more readable for extraction purposes.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 
