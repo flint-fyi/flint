@@ -7,92 +7,92 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /(?:\b|(?=a))?/;
 `,
-			snapshot: String.raw`
-/(?:\b|(?=a))?/;
+			snapshot: `
+/(?:\\b|(?=a))?/;
     ~~
-    Remove unnecessary assertion '\b' inside optional quantifier '(?:\b|(?=a))?'.
+    The assertion \`\\b\` inside optional quantifier \`(?:\\b|(?=a))?\` is unnecessary.
        ~~~~~
-       Remove unnecessary assertion '(?=a)' inside optional quantifier '(?:\b|(?=a))?'.
+       The assertion \`(?=a)\` inside optional quantifier \`(?:\\b|(?=a))?\` is unnecessary.
 `,
 		},
 		{
 			code: String.raw`
 /(?:\b|a)?/;
 `,
-			snapshot: String.raw`
-/(?:\b|a)?/;
+			snapshot: `
+/(?:\\b|a)?/;
     ~~
-    Remove unnecessary assertion '\b' inside optional quantifier '(?:\b|a)?'.
+    The assertion \`\\b\` inside optional quantifier \`(?:\\b|a)?\` is unnecessary.
 `,
 		},
 		{
 			code: String.raw`
 /(?:^|a)*/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /(?:^|a)*/;
     ~
-    Remove unnecessary assertion '^' inside optional quantifier '(?:^|a)*'.
+    The assertion \`^\` inside optional quantifier \`(?:^|a)*\` is unnecessary.
 `,
 		},
 		{
 			code: String.raw`
 /(?:$)*/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /(?:$)*/;
     ~
-    Remove unnecessary assertion '$' inside optional quantifier '(?:$)*'.
+    The assertion \`$\` inside optional quantifier \`(?:$)*\` is unnecessary.
 `,
 		},
 		{
 			code: String.raw`
 /((\b)+){0,}/;
 `,
-			snapshot: String.raw`
-/((\b)+){0,}/;
+			snapshot: `
+/((\\b)+){0,}/;
    ~~
-   Remove unnecessary assertion '\b' inside optional quantifier '((\b)+){0,}'.
+   The assertion \`\\b\` inside optional quantifier \`((\\b)+){0,}\` is unnecessary.
 `,
 		},
 		{
 			code: String.raw`
 /(?:(?=foo))?/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /(?:(?=foo))?/;
     ~~~~~~~
-    Remove unnecessary assertion '(?=foo)' inside optional quantifier '(?:(?=foo))?'.
+    The assertion \`(?=foo)\` inside optional quantifier \`(?:(?=foo))?\` is unnecessary.
 `,
 		},
 		{
 			code: String.raw`
 /(?:(?<=bar))?/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /(?:(?<=bar))?/;
     ~~~~~~~~
-    Remove unnecessary assertion '(?<=bar)' inside optional quantifier '(?:(?<=bar))?'.
+    The assertion \`(?<=bar)\` inside optional quantifier \`(?:(?<=bar))?\` is unnecessary.
 `,
 		},
 		{
 			code: String.raw`
 /(?:(?!x))?/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /(?:(?!x))?/;
     ~~~~~
-    Remove unnecessary assertion '(?!x)' inside optional quantifier '(?:(?!x))?'.
+    The assertion \`(?!x)\` inside optional quantifier \`(?:(?!x))?\` is unnecessary.
 `,
 		},
 		{
 			code: String.raw`
 /(?:(?<!y))?/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /(?:(?<!y))?/;
     ~~~~~~
-    Remove unnecessary assertion '(?<!y)' inside optional quantifier '(?:(?<!y))?'.
+    The assertion \`(?<!y)\` inside optional quantifier \`(?:(?<!y))?\` is unnecessary.
 `,
 		},
 	],
