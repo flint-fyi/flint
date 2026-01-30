@@ -18,8 +18,8 @@ export default ruleCreator.createRule(markdownLanguage, {
 				"Skipping heading ranks can be confusing -especially for automated tools and screen-readers- and should be avoided where possible.",
 			],
 			suggestions: [
-				"Increment heading levels by only one at a time",
-				"Add intermediate heading levels between skipped levels",
+				"Increment heading levels by only one at a time.",
+				"Add intermediate heading levels between skipped levels.",
 			],
 		},
 	},
