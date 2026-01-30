@@ -15,7 +15,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"Assigning `this` to a variable is unnecessary with arrow functions.",
 			secondary: [
 				"Arrow functions preserve the surrounding `this` context automatically.",
-				"Aliasing `this` is a pre-ES6 pattern that is no longer needed.",
+				"Aliasing `this` is a pre-ES2015 pattern that is no longer needed.",
 			],
 			suggestions: [
 				"Use arrow functions to preserve the `this` context.",
@@ -26,16 +26,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				VariableDeclaration(node: AST.VariableDeclaration, { sourceFile }) {
-					if (!node.initializer) {
-						return;
-					}
-
-					if (node.initializer.kind !== ts.SyntaxKind.ThisKeyword) {
-						return;
-					}
-
-					if (!ts.isIdentifier(node.name)) {
+				BinaryExpression(node: AST.BinaryExpression, { sourceFile }) {
+					if (
+						node.operatorToken.kind !== ts.SyntaxKind.EqualsToken ||
+						node.right.kind !== ts.SyntaxKind.ThisKeyword ||
+						!ts.isIdentifier(node.left)
+					) {
 						return;
 					}
 
@@ -47,16 +43,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				},
-				BinaryExpression(node: AST.BinaryExpression, { sourceFile }) {
-					if (node.operatorToken.kind !== ts.SyntaxKind.EqualsToken) {
-						return;
-					}
-
-					if (node.right.kind !== ts.SyntaxKind.ThisKeyword) {
-						return;
-					}
-
-					if (!ts.isIdentifier(node.left)) {
+				VariableDeclaration(node: AST.VariableDeclaration, { sourceFile }) {
+					if (
+						!node.initializer ||
+						node.initializer.kind !== ts.SyntaxKind.ThisKeyword ||
+						!ts.isIdentifier(node.name)
+					) {
 						return;
 					}
 

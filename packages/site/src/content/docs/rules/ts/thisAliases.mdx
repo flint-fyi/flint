@@ -10,12 +10,10 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="thisAliases" />
 
-Before ES6, a common pattern was to assign `this` to a variable (often named `self`, `that`, or `_this`) to preserve the context when using function expressions.
+Before ES2015, a common pattern was to assign `this` to a variable (often named `self`, `that`, or `_this`) to preserve the context when using function expressions.
 With arrow functions, this pattern is no longer necessary because arrow functions automatically preserve the surrounding `this` context.
 
 ## Examples
-
-### Unnecessary this Alias
 
 <Tabs>
 <TabItem label="❌ Incorrect">
@@ -73,7 +71,7 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you're maintaining legacy code that heavily uses `this` aliasing and refactoring to arrow functions would be too costly, you may disable this rule.
+If you're maintaining legacy code that heavily uses `this` aliasing and refactoring to arrow functions would be too costly, you might need to disable this rule.
 
 ## Further Reading
 
