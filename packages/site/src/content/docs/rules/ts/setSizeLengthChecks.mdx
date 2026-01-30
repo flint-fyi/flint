@@ -67,7 +67,10 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-This rule is safe to use and has no known false positives.
+If you have augmented globals to modify how `Array` and/or `Set` and/or `...` spreads behave, this rule may not be for you.
+
+Alternately, if you have a large existing codebase where spreading arrays to gain size is the preferred stylistic convention, it may be difficult to migrate to this rule.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 
