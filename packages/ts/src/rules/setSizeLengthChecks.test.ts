@@ -70,5 +70,13 @@ const result = [...new Set(items)].length + extra;
 		`[...new Set(items)]?.length`,
 		`[...new Set(items)].notLength`,
 		`let items = new Set([]); [...items].length`,
+		`
+class Set {
+    constructor(items: unknown[]) {}
+    length = 0;
+}
+const count = [...new Set(items)].length;
+export {};
+`,
 	],
 });

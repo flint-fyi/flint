@@ -2,58 +2,55 @@ import {
 	type AST,
 	type Checker,
 	getTSNodeRange,
+	isGlobalDeclarationOfName,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isNewSetExpression(expression: AST.Expression): boolean {
+function isNewSetExpression(expression: AST.Expression, typeChecker: Checker) {
 	return (
 		ts.isNewExpression(expression) &&
 		ts.isIdentifier(expression.expression) &&
-		expression.expression.text === "Set"
+		expression.expression.text === "Set" &&
+		isGlobalDeclarationOfName(expression.expression, "Set", typeChecker)
 	);
 }
 
-function isSetExpression(
-	expression: AST.Expression,
-	typeChecker: Checker,
-): boolean {
+function isSetExpression(expression: AST.Expression, typeChecker: Checker) {
 	const unwrapped = unwrapParentheses(expression);
 
-	if (isNewSetExpression(unwrapped)) {
+	if (isNewSetExpression(unwrapped, typeChecker)) {
 		return true;
 	}
 
-	if (ts.isIdentifier(unwrapped)) {
-		const symbol = typeChecker.getSymbolAtLocation(unwrapped);
-		if (!symbol?.valueDeclaration) {
-			return false;
-		}
-
-		if (!ts.isVariableDeclaration(symbol.valueDeclaration)) {
-			return false;
-		}
-
-		const declaration = symbol.valueDeclaration;
-		const variableDeclarationList = declaration.parent;
-
-		if (
-			!ts.isVariableDeclarationList(variableDeclarationList) ||
-			!(variableDeclarationList.flags & ts.NodeFlags.Const)
-		) {
-			return false;
-		}
-
-		if (!declaration.initializer) {
-			return false;
-		}
-
-		return isNewSetExpression(unwrapParentheses(declaration.initializer));
+	if (!ts.isIdentifier(unwrapped)) {
+		return false;
 	}
 
-	return false;
+	const symbol = typeChecker.getSymbolAtLocation(unwrapped);
+	if (
+		!symbol?.valueDeclaration ||
+		!ts.isVariableDeclaration(symbol.valueDeclaration)
+	) {
+		return false;
+	}
+
+	const declaration = symbol.valueDeclaration as AST.VariableDeclaration;
+
+	if (
+		declaration.parent.kind !== ts.SyntaxKind.VariableDeclarationList ||
+		!(declaration.parent.flags & ts.NodeFlags.Const) ||
+		!declaration.initializer
+	) {
+		return false;
+	}
+
+	return isNewSetExpression(
+		unwrapParentheses(declaration.initializer),
+		typeChecker,
+	);
 }
 
 function unwrapParentheses(expression: AST.Expression): AST.Expression {
@@ -75,42 +72,32 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			primary:
 				"Prefer `Set.size` instead of spreading into an array and accessing `.length`.",
 			secondary: [
-				"Set has a built-in `.size` property that avoids creating an intermediate array.",
+				"`Set` has a built-in `.size` property that directly returns the number of elements.",
+				"It is faster and more idiomatic to use that instead of creating an intermediate array.",
 			],
-			suggestions: ["Use `.size` directly on the Set instead."],
+			suggestions: ["Use `.size` directly on the `Set` instead."],
 		},
 	},
 	setup(context) {
 		return {
 			visitors: {
 				PropertyAccessExpression: (node, { sourceFile, typeChecker }) => {
-					if (node.questionDotToken) {
+					if (
+						node.questionDotToken ||
+						node.name.text !== "length" ||
+						!ts.isArrayLiteralExpression(node.expression) ||
+						node.expression.elements.length !== 1
+					) {
 						return;
 					}
 
-					if (node.name.text !== "length") {
-						return;
-					}
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const element = node.expression.elements[0]!;
 
-					const arrayExpression = node.expression;
-
-					if (!ts.isArrayLiteralExpression(arrayExpression)) {
-						return;
-					}
-
-					if (arrayExpression.elements.length !== 1) {
-						return;
-					}
-
-					const element = arrayExpression.elements[0];
-
-					if (!element || !ts.isSpreadElement(element)) {
-						return;
-					}
-
-					const spreadArgument = element.expression;
-
-					if (!isSetExpression(spreadArgument, typeChecker)) {
+					if (
+						!ts.isSpreadElement(element) ||
+						!isSetExpression(element.expression, typeChecker)
+					) {
 						return;
 					}
 
