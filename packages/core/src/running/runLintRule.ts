@@ -2,7 +2,7 @@ import { nullThrows } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 
-import type { AnyLanguageFileDefinition } from "../types/languages.ts";
+import type { AnyLanguageFile } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
 import type { AnyRule } from "../types/rules.ts";
 import type {
@@ -22,7 +22,7 @@ export async function runLintRule(
 	// 1. Set up the rule's runtime, which receives and processes reports
 
 	const reportsByFilePath = new CachedFactory<string, FileReport[]>(() => []);
-	let currentFile: AnyLanguageFileDefinition | undefined;
+	let currentFile: AnyLanguageFile | undefined;
 
 	const ruleRuntime = await rule.setup({
 		report(ruleReport) {
@@ -74,10 +74,9 @@ export async function runLintRule(
 						options as InferredInputObject<(typeof rule)["options"]>,
 					);
 
-				for (const file of languageFiles) {
+				for (const { file, language } of languageFiles) {
 					currentFile = file;
-
-					file.runVisitors(parsedOptions, ruleRuntime);
+					language.runFileVisitors(file, parsedOptions, ruleRuntime);
 				}
 			}
 		}

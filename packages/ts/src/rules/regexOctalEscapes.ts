@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports octal escape sequences in regular expressions.",
 		id: "regexOctalEscapes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unexpected: {

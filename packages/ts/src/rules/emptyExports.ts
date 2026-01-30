@@ -49,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports empty export statements that don't make a file a module.",
 		id: "emptyExports",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		uselessExport: {

@@ -22,7 +22,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports empty block statements that should contain code.",
 		id: "emptyBlocks",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		emptyBlock: {
@@ -56,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			block: AST.Block,
 			sourceFile: AST.SourceFile,
 		): boolean {
-			return block.statements.length === 0 && !hasComments(block, sourceFile);
+			return !block.statements.length && !hasComments(block, sourceFile);
 		}
 
 		return {
@@ -73,7 +73,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 				},
 				CaseBlock: (node, { sourceFile }) => {
-					if (node.clauses.length === 0) {
+					if (!node.clauses.length) {
 						context.report({
 							message: "emptyBlock",
 							range: getTSNodeRange(node, sourceFile),
