@@ -13,6 +13,7 @@ interface CSpellConfigLike {
 
 interface FileTask {
 	documentValidatorTask: Promise<DocumentValidator | undefined>;
+	filePath: string;
 	text: string;
 }
 
@@ -48,10 +49,10 @@ export default ruleCreator.createRule(textLanguage, {
 		return {
 			dependencies: ["cspell.json"],
 			teardown: async () => {
-				for (const { documentValidatorTask, text } of fileTasks) {
+				for (const { documentValidatorTask, filePath, text } of fileTasks) {
 					const documentValidator = await documentValidatorTask;
 					if (!documentValidator) {
-						return undefined;
+						continue;
 					}
 
 					const issues = documentValidator.checkText(
@@ -119,6 +120,7 @@ export default ruleCreator.createRule(textLanguage, {
 
 						context.report({
 							data,
+							filePath,
 							message: replacement ? "issueWithReplacement" : "issue",
 							range: issueRange,
 							suggestions,
@@ -127,12 +129,13 @@ export default ruleCreator.createRule(textLanguage, {
 				}
 			},
 			visitors: {
-				file: (text, { filePathAbsolute }) => {
+				file: (text, { filePath, filePathAbsolute }) => {
 					fileTasks.push({
 						documentValidatorTask: createDocumentValidator(
 							filePathAbsolute,
 							text,
 						),
+						filePath,
 						text,
 					});
 				},

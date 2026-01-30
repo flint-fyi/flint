@@ -1,8 +1,9 @@
 import { nullThrows } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
+import z from "zod";
 
-import { readFileSafeAsJson } from "../running/readFileSafeAsJson.ts";
+import { readFileSafe } from "../running/readFileSafe.ts";
 import type { FileCacheStorage } from "../types/cache.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
 import { cacheFilePath } from "./constants.ts";
@@ -14,24 +15,24 @@ export async function readFromCache(
 	allFilePaths: Set<string>,
 	configFilePath: string,
 ): Promise<Map<string, FileCacheStorage> | undefined> {
-	const rawCache = await readFileSafeAsJson(cacheFilePath);
+	const rawCacheString = await readFileSafe(cacheFilePath);
 
-	if (!rawCache) {
+	if (!rawCacheString) {
 		log("Linting all %d file path(s) due to lack of cache.", allFilePaths.size);
 		return undefined;
 	}
 
-	const parseResult = cacheStorageSchema.safeParse(rawCache);
-	if (!parseResult.success) {
+	const decodeResult = z.safeDecode(cacheStorageSchema, rawCacheString);
+	if (!decodeResult.success) {
 		log(
 			"Linting all %d file path(s) due to invalid cache data: %s",
 			allFilePaths.size,
-			parseResult.error.message,
+			decodeResult.error.message,
 		);
 		return undefined;
 	}
 
-	const cache = parseResult.data;
+	const cache = decodeResult.data;
 
 	// The config file and package.json are hardcoded to always be dependencies of all files
 	for (const filePath of [configFilePath, "package.json"]) {

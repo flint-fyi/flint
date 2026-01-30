@@ -40,7 +40,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Prefer assignment operator shorthand where possible.",
 		id: "operatorAssignmentShorthand",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferShorthand: {

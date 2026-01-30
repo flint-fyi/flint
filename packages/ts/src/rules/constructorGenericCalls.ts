@@ -69,7 +69,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports inconsistent placement of type arguments in constructor calls.",
 		id: "constructorGenericCalls",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferConstructor: {

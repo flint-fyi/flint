@@ -20,7 +20,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer `assert.ok()` over `assert()` for explicit intent and better readability.",
 		id: "assertStyles",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferAssertOk: {
