@@ -2,7 +2,10 @@ import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-const validDirectives = new Set(["path", "types", "lib", "no-default-lib"]);
+const referenceMatcher =
+	/^\/\/\/\s*<\s*reference(?:\s+([\w-]+\s*=\s*"[^"]*"|[\w-]+\s*=\s*'[^']*'|[^\s/>]+))?\s*\/>/i;
+
+const validDirectives = new Set(["lib", "no-default-lib", "path", "types"]);
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -14,7 +17,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		invalidDirective: {
 			primary: "Invalid triple-slash reference directive format.",
 			secondary: [
-				"Only path, types, lib, and no-default-lib directives are allowed.",
+				"Only path, types, lib, and no-default-lib directives are valid TypeScript reference types.",
+				"Triple-slash directives with incorrect reference types don't have any affect on types.",
 			],
 			suggestions: [
 				'Use /// <reference types="..." />, /// <reference path="..." />, /// <reference lib="..." />, or /// <reference no-default-lib="true" />.',
@@ -22,44 +26,50 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
+		function checkLine(line: string, position: number) {
+			const trimmed = line.trimStart();
+			if (!trimmed.startsWith("///")) {
+				return;
+			}
+
+			const referenceMatch = referenceMatcher.exec(trimmed);
+			if (!referenceMatch) {
+				return;
+			}
+
+			const attributes = referenceMatch[1]?.trim();
+			if (attributes) {
+				const attributeMatch = /^([\w-]+)\s*=\s*["'][^"']*["']$/.exec(
+					attributes,
+				);
+				if (
+					attributeMatch &&
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					validDirectives.has(attributeMatch[1]!.toLowerCase())
+				) {
+					return;
+				}
+			}
+
+			context.report({
+				message: "invalidDirective",
+				range: {
+					begin: position + line.indexOf("///"),
+					end: position + line.length,
+				},
+			});
+		}
+
 		return {
 			visitors: {
-				SourceFile(_node, { sourceFile }) {
-					const sourceText = sourceFile.getFullText();
+				SourceFile(node) {
+					const sourceText = node.getFullText();
 					const lines = sourceText.split("\n");
-					let currentPos = 0;
+					let position = 0;
 
 					for (const line of lines) {
-						const trimmed = line.trimStart();
-
-						if (trimmed.startsWith("///")) {
-							const referenceMatch = trimmed.match(
-								/^\/\/\/\s*<\s*reference\s+([^>]*)\s*\/>/i,
-							);
-
-							if (referenceMatch) {
-								const attributes = referenceMatch[1].trim();
-								const attrMatch = attributes.match(
-									/^([\w-]+)\s*=\s*["'][^"']*["']$/,
-								);
-
-								if (
-									!attrMatch ||
-									!validDirectives.has(attrMatch[1].toLowerCase())
-								) {
-									const refStart = line.indexOf("///");
-									context.report({
-										message: "invalidDirective",
-										range: {
-											begin: currentPos + refStart,
-											end: currentPos + line.length,
-										},
-									});
-								}
-							}
-						}
-
-						currentPos += line.length + 1;
+						checkLine(line, position);
+						position += line.length + 1;
 					}
 				},
 			},

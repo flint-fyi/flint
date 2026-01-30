@@ -11,17 +11,20 @@ import RuleSummary from "~/components/RuleSummary.astro";
 <RuleSummary plugin="ts" rule="tripleSlashReferenceValidity" />
 
 Triple-slash reference directives must use valid directive types and proper formatting.
-Only `path`, `types`, `lib`, and `no-default-lib` are valid directive attributes.
+Only `lib`, `no-default-lib`, `path`, and `types` are valid directive attributes.
 
 ## Examples
-
-### Invalid Directive Type
 
 <Tabs>
 <TabItem label="❌ Incorrect">
 
 ```ts
 /// <reference foo="bar" />
+export const value = 1;
+```
+
+```ts
+/// <reference types />
 export const value = 1;
 ```
 
@@ -32,22 +35,6 @@ export const value = 1;
 /// <reference types="node" />
 export const value = 1;
 ```
-
-</TabItem>
-</Tabs>
-
-### Missing Attribute Value
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
-```ts
-/// <reference types />
-export const value = 1;
-```
-
-</TabItem>
-<TabItem label="✅ Correct">
 
 ```ts
 /// <reference types="node" />
@@ -63,7 +50,7 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-This rule should always be enabled to catch malformed triple-slash reference directives.
+If you are using tooling other than TypeScript that uses different triple-slash reference directives, this rule might not be for you.
 
 ## Further Reading
 
