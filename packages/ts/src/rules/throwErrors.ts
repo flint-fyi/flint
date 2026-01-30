@@ -19,23 +19,23 @@ function isBuiltinErrorType(type: ts.Type): boolean {
 	return !!symbol.getDeclarations()?.some(declarationIncludesGlobal);
 }
 
-function isErrorType(type: ts.Type, typeChecker: ts.TypeChecker): boolean {
+function isErrorType(type: ts.Type): boolean {
 	if (isBuiltinErrorType(type)) {
 		return true;
 	}
 
 	if (type.isUnion()) {
-		return type.types.every((t) => isErrorType(t, typeChecker));
+		return type.types.every((t) => isErrorType(t));
 	}
 
 	if (type.isIntersection()) {
-		return type.types.some((t) => isErrorType(t, typeChecker));
+		return type.types.some((t) => isErrorType(t));
 	}
 
 	const baseTypes = type.getBaseTypes();
 	if (baseTypes) {
 		for (const baseType of baseTypes) {
-			if (isErrorType(baseType, typeChecker)) {
+			if (isErrorType(baseType)) {
 				return true;
 			}
 		}
@@ -85,7 +85,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							type,
 							ts.TypeFlags.Any | ts.TypeFlags.Unknown,
 						) ||
-						isErrorType(type, typeChecker)
+						isErrorType(type)
 					) {
 						return;
 					}
