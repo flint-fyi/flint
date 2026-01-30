@@ -22,7 +22,7 @@ function findUnusedCapturingGroups(pattern: string, flags: string) {
 
 	visitRegExpAST(ast, {
 		onCapturingGroupEnter(node: CapturingGroup) {
-			if (node.references.length === 0) {
+			if (!node.references.length) {
 				results.push(node);
 			}
 		},
