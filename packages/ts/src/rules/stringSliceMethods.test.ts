@@ -1,67 +1,67 @@
-import rule from "./stringSliceMethods.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./stringSliceMethods.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-const result = text.substr(1);
+"...".substring(1);
 `,
 			snapshot: `
-const result = text.substr(1);
-                    ~~~~~~
-                    Prefer \`slice\` over the deprecated \`substr\` method.
+"...".substring(1);
+      ~~~~~~~~~
+      Prefer \`slice\` over \`substring\` for more consistent behavior.
 `,
+			suggestions: [
+				{
+					id: "replaceWithSlice",
+					updated: `
+"...".slice(1);
+`,
+				},
+			],
 		},
 		{
 			code: `
-const result = text.substr(1, 5);
-`,
-			snapshot: `
-const result = text.substr(1, 5);
-                    ~~~~~~
-                    Prefer \`slice\` over the deprecated \`substr\` method.
-`,
-		},
-		{
-			code: `
+declare const text: string;
 const result = text.substring(1);
 `,
 			snapshot: `
+declare const text: string;
 const result = text.substring(1);
                     ~~~~~~~~~
                     Prefer \`slice\` over \`substring\` for more consistent behavior.
 `,
+			suggestions: [
+				{
+					id: "replaceWithSlice",
+					updated: `
+declare const text: string;
+const result = text.slice(1);
+`,
+				},
+			],
 		},
 		{
 			code: `
+declare const text: string;
 const result = text.substring(1, 5);
 `,
 			snapshot: `
+declare const text: string;
 const result = text.substring(1, 5);
                     ~~~~~~~~~
                     Prefer \`slice\` over \`substring\` for more consistent behavior.
 `,
-		},
-		{
-			code: `
-const result = "hello".substr(0, 3);
+			suggestions: [
+				{
+					id: "replaceWithSlice",
+					updated: `
+declare const text: string;
+const result = text.slice(1, 5);
 `,
-			snapshot: `
-const result = "hello".substr(0, 3);
-                       ~~~~~~
-                       Prefer \`slice\` over the deprecated \`substr\` method.
-`,
-		},
-		{
-			code: `
-const result = str?.substr(1);
-`,
-			snapshot: `
-const result = str?.substr(1);
-                    ~~~~~~
-                    Prefer \`slice\` over the deprecated \`substr\` method.
-`,
+				},
+			],
 		},
 		{
 			code: `
@@ -76,15 +76,25 @@ function process(input: string) {
                  Prefer \`slice\` over \`substring\` for more consistent behavior.
 }
 `,
+			suggestions: [
+				{
+					id: "replaceWithSlice",
+					updated: `
+function process(input: string) {
+    return input.slice(0, input.length - 1);
+}
+`,
+				},
+			],
 		},
 	],
 	valid: [
-		`const result = text.slice(1);`,
-		`const result = text.slice(1, 5);`,
-		`const result = "hello".slice(0, 3);`,
-		`const result = str?.slice(1);`,
-		`const substr = text.substr;`,
+		`text.slice(1);`,
+		`text.slice(1, 5);`,
+		`"hello".slice(0, 3);`,
+		`str?.slice(1);`,
+		`const substr = text.substr(0);`,
 		`const substring = text.substring;`,
-		`const result = text.trim();`,
+		`text.trim();`,
 	],
 });
