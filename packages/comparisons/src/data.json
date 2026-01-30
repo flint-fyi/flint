@@ -15757,7 +15757,8 @@
 		"flint": {
 			"name": "regexUnnecessaryLookaroundAssertions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15811,7 +15812,8 @@
 		"flint": {
 			"name": "regexUnnecessaryNumericQuantifiers",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15824,7 +15826,8 @@
 		"flint": {
 			"name": "regexUnnecessaryOptionalAssertions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15877,7 +15880,8 @@
 		"flint": {
 			"name": "regexUnusedFlags",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -16735,6 +16739,7 @@
 			"name": "stringSliceMethods",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -16754,7 +16759,8 @@
 		"flint": {
 			"name": "stringStartsEndsWith",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{

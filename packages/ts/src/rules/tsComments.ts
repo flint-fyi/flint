@@ -1,9 +1,11 @@
-import type { ReportInterpolationData } from "@flint.fyi/core";
+import type {
+	MessageForContext,
+	ReportInterpolationData,
+} from "@flint.fyi/core";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import { z } from "zod";
 
-import type { RuleContext } from "../../../core/src/types/context.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 const directiveConfigSchema = z.union([
@@ -45,9 +47,6 @@ type SuppressionDirective = "ts-expect-error" | "ts-ignore" | "ts-nocheck";
 
 const tsDirectiveRegex =
 	/^(?:\/\/\/?|\/\*)\s*@ts-(ignore|expect-error|nocheck|check)(?<description>[\s:*].*)?/i;
-
-type MessageForContext<Context extends RuleContext<never>> =
-	Context extends RuleContext<infer MessageId> ? MessageId : never;
 
 function createFixedComment(
 	text: string,

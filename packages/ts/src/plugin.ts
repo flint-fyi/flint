@@ -230,8 +230,12 @@ import regexUnnecessaryCharacterRanges from "./rules/regexUnnecessaryCharacterRa
 import regexUnnecessaryDisjunctions from "./rules/regexUnnecessaryDisjunctions.ts";
 import regexUnnecessaryDollarReplacements from "./rules/regexUnnecessaryDollarReplacements.ts";
 import regexUnnecessaryEscapes from "./rules/regexUnnecessaryEscapes.ts";
+import regexUnnecessaryLookaroundAssertions from "./rules/regexUnnecessaryLookaroundAssertions.ts";
 import regexUnnecessaryNonCapturingGroups from "./rules/regexUnnecessaryNonCapturingGroups.ts";
+import regexUnnecessaryNumericQuantifiers from "./rules/regexUnnecessaryNumericQuantifiers.ts";
+import regexUnnecessaryOptionalAssertions from "./rules/regexUnnecessaryOptionalAssertions.ts";
 import regexUnusedCapturingGroups from "./rules/regexUnusedCapturingGroups.ts";
+import regexUnusedFlags from "./rules/regexUnusedFlags.ts";
 import regexUnusedLazyQuantifiers from "./rules/regexUnusedLazyQuantifiers.ts";
 import regexUnusedQuantifiers from "./rules/regexUnusedQuantifiers.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
@@ -246,6 +250,8 @@ import sparseArrays from "./rules/sparseArrays.ts";
 import staticMemberOnlyClasses from "./rules/staticMemberOnlyClasses.ts";
 import stringCaseMismatches from "./rules/stringCaseMismatches.ts";
 import stringCodePoints from "./rules/stringCodePoints.ts";
+import stringSliceMethods from "./rules/stringSliceMethods.ts";
+import stringStartsEndsWith from "./rules/stringStartsEndsWith.ts";
 import symbolDescriptions from "./rules/symbolDescriptions.ts";
 import thisAliases from "./rules/thisAliases.ts";
 import thisBeforeSuper from "./rules/thisBeforeSuper.ts";
@@ -505,8 +511,12 @@ export const ts = createPlugin({
 		regexUnnecessaryDisjunctions,
 		regexUnnecessaryDollarReplacements,
 		regexUnnecessaryEscapes,
+		regexUnnecessaryLookaroundAssertions,
 		regexUnnecessaryNonCapturingGroups,
+		regexUnnecessaryNumericQuantifiers,
+		regexUnnecessaryOptionalAssertions,
 		regexUnusedCapturingGroups,
+		regexUnusedFlags,
 		regexUnusedLazyQuantifiers,
 		regexUnusedQuantifiers,
 		returnAssignments,
@@ -521,6 +531,8 @@ export const ts = createPlugin({
 		staticMemberOnlyClasses,
 		stringCaseMismatches,
 		stringCodePoints,
+		stringSliceMethods,
+		stringStartsEndsWith,
 		symbolDescriptions,
 		thisAliases,
 		thisBeforeSuper,
