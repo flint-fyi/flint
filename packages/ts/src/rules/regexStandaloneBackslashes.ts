@@ -18,7 +18,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports standalone backslashes in regex patterns that look like incomplete escape sequences.",
 		id: "regexStandaloneBackslashes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		standaloneBackslash: {

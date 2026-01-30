@@ -158,7 +158,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports class methods that do not use `this`.",
 		id: "classMethodsThis",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		missingThis: {
