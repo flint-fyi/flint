@@ -1,5 +1,5 @@
-import rule from "./throwErrors.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./throwErrors.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -10,7 +10,7 @@ throw "error message";
 			snapshot: `
 throw "error message";
       ~~~~~~~~~~~~~~~
-      Only Error objects should be thrown.
+      Only \`Error\` objects should be thrown.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ throw 42;
 			snapshot: `
 throw 42;
       ~~
-      Only Error objects should be thrown.
+      Only \`Error\` objects should be thrown.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ throw true;
 			snapshot: `
 throw true;
       ~~~~
-      Only Error objects should be thrown.
+      Only \`Error\` objects should be thrown.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ throw undefined;
 			snapshot: `
 throw undefined;
       ~~~~~~~~~
-      Throwing \`undefined\` is not allowed.
+      Only \`Error\` objects should be thrown.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ throw null;
 			snapshot: `
 throw null;
       ~~~~
-      Only Error objects should be thrown.
+      Only \`Error\` objects should be thrown.
 `,
 		},
 		{
@@ -60,7 +60,7 @@ throw { message: "error" };
 			snapshot: `
 throw { message: "error" };
       ~~~~~~~~~~~~~~~~~~~~
-      Only Error objects should be thrown.
+      Only \`Error\` objects should be thrown.
 `,
 		},
 		{
@@ -72,7 +72,7 @@ throw msg;
 const msg = "error";
 throw msg;
       ~~~
-      Only Error objects should be thrown.
+      Only \`Error\` objects should be thrown.
 `,
 		},
 	],
