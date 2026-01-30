@@ -1,4 +1,7 @@
-import { visitRegExpAST } from "@eslint-community/regexpp";
+import {
+	type AST as RegExpAST,
+	visitRegExpAST,
+} from "@eslint-community/regexpp";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import type {
 	AST,
@@ -32,6 +35,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
+		function reportElement(
+			element: RegExpAST.Element,
+			kind: "lookahead" | "lookbehind",
+			patternStart: number,
+		) {
+			if (
+				element.type === "Assertion" &&
+				element.kind === kind &&
+				!element.negate
+			) {
+				context.report({
+					message: kind,
+					range: {
+						begin: patternStart + element.start,
+						end: patternStart + element.end,
+					},
+				});
+			}
+		}
+
 		function checkPattern(
 			pattern: string,
 			patternStart: number,
@@ -52,40 +75,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					for (const alternative of assertion.alternatives) {
-						if (alternative.elements.length === 0) {
+						if (!alternative.elements.length) {
 							continue;
 						}
 
 						if (assertion.kind === "lookahead") {
-							const lastElement = alternative.elements.at(-1);
-							if (
-								lastElement?.type === "Assertion" &&
-								lastElement.kind === "lookahead" &&
-								!lastElement.negate
-							) {
-								context.report({
-									message: "lookahead",
-									range: {
-										begin: patternStart + lastElement.start,
-										end: patternStart + lastElement.end,
-									},
-								});
-							}
+							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							const lastElement = alternative.elements.at(-1)!;
+							reportElement(lastElement, "lookahead", patternStart);
 						} else {
-							const firstElement = alternative.elements[0];
-							if (
-								firstElement?.type === "Assertion" &&
-								firstElement.kind === "lookbehind" &&
-								!firstElement.negate
-							) {
-								context.report({
-									message: "lookbehind",
-									range: {
-										begin: patternStart + firstElement.start,
-										end: patternStart + firstElement.end,
-									},
-								});
-							}
+							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							const firstElement = alternative.elements[0]!;
+							reportElement(firstElement, "lookbehind", patternStart);
 						}
 					}
 				},

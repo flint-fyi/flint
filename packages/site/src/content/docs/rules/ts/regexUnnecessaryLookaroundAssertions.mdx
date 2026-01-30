@@ -24,39 +24,9 @@ A positive lookahead at the end of another lookahead, or a positive lookbehind a
 const pattern = /(?=content(?=nested))/;
 ```
 
-</TabItem>
-<TabItem label="✅ Correct">
-
-```ts
-const pattern = /(?=contentNested)/;
-```
-
-</TabItem>
-</Tabs>
-
-### Unnecessary Lookbehind at Start
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
 ```ts
 const pattern = /(?<=(?<=nested)content)/;
 ```
-
-</TabItem>
-<TabItem label="✅ Correct">
-
-```ts
-const pattern = /(?<=nestedContent)/;
-```
-
-</TabItem>
-</Tabs>
-
-### Negative Parent with Positive Nested
-
-<Tabs>
-<TabItem label="❌ Incorrect">
 
 ```ts
 const pattern = /(?!content(?=nested))/;
@@ -64,6 +34,14 @@ const pattern = /(?!content(?=nested))/;
 
 </TabItem>
 <TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?=contentNested)/;
+```
+
+```ts
+const pattern = /(?<=nestedContent)/;
+```
 
 ```ts
 const pattern = /(?!contentNested)/;
@@ -78,7 +56,7 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you are intentionally structuring patterns with nested lookarounds for clarity or readability, you may disable this rule.
+If you are intentionally structuring patterns with nested lookarounds for clarity or readability, you might prefer to disable this rule.
 
 ## Further Reading
 
