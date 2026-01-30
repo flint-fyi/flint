@@ -220,7 +220,7 @@ function* iterateCharacterSequence(
 			case "CharacterSet":
 			case "ClassStringDisjunction":
 			case "ExpressionCharacterClass":
-				if (sequence.length > 0) {
+				if (sequence.length) {
 					yield sequence;
 					sequence = [];
 				}
@@ -233,7 +233,7 @@ function* iterateCharacterSequence(
 		}
 	}
 
-	if (sequence.length > 0) {
+	if (sequence.length) {
 		yield sequence;
 	}
 }
@@ -243,7 +243,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports characters in regex character classes that appear as single visual characters but are made of multiple code points.",
 		id: "regexMisleadingUnicodeCharacters",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		combiningClass: {

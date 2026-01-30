@@ -53,7 +53,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Enforces using new for constructors that require it, and disallows new for primitive coercion functions.",
 		id: "builtinConstructorNews",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		disallowedNew: {

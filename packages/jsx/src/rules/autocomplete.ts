@@ -107,7 +107,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Ensure the autocomplete attribute is correct and suitable for the form field.",
 		id: "autocomplete",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalid: {
