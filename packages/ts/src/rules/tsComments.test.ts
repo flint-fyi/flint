@@ -76,16 +76,19 @@ const value = 1;
 `,
 		},
 		{
-			code: `/* @ts-ignore */
+			code: `
+/* @ts-ignore */
 const value: string = 123;
 `,
 			options: {
 				allowTsIgnore: true,
 			},
-			output: `/* @ts-expect-error */
+			output: `
+/* @ts-expect-error */
 const value: string = 123;
 `,
-			snapshot: `/* @ts-ignore */
+			snapshot: `
+/* @ts-ignore */
 ~~~~~~~~~~~~~~~~
 Prefer \`@ts-expect-error\` instead of \`@ts-ignore\`, as \`@ts-expect-error\` triggers type errors if it becomes unnecessary.
 const value: string = 123;
@@ -303,7 +306,8 @@ const value: string = 123;
 `,
 		},
 		{
-			code: `/* @ts-ignore: short */
+			code: `
+/* @ts-ignore: short */
 const value: string = 123;
 `,
 			options: {
@@ -311,17 +315,20 @@ const value: string = 123;
 				allowTsNocheck: "allow-with-description",
 				minimumDescriptionLength: 15,
 			},
-			output: `/* @ts-expect-error: short */
+			output: `
+/* @ts-expect-error: short */
 const value: string = 123;
 `,
-			snapshot: `/* @ts-ignore: short */
+			snapshot: `
+/* @ts-ignore: short */
 ~~~~~~~~~~~~~~~~~~~~~~~
 \`@ts-ignore\` should include a description of at least 15 characters.
 const value: string = 123;
 `,
 		},
 		{
-			code: `/* @ts-nocheck */
+			code: `
+/* @ts-nocheck */
 const value = 1;
 `,
 			options: {
@@ -329,7 +336,8 @@ const value = 1;
 				allowTsNocheck: "allow-with-description",
 				minimumDescriptionLength: 15,
 			},
-			snapshot: `/* @ts-nocheck */
+			snapshot: `
+/* @ts-nocheck */
 ~~~~~~~~~~~~~~~~~
 \`@ts-nocheck\` should include a description of at least 15 characters.
 const value = 1;
@@ -433,7 +441,8 @@ const value: string = 123;
 			},
 		},
 		{
-			code: `/* @ts-ignore: this is a long enough description */
+			code: `
+/* @ts-ignore: this is a long enough description */
 const value: string = 123;
 `,
 			options: {
@@ -443,7 +452,8 @@ const value: string = 123;
 			},
 		},
 		{
-			code: `/* @ts-expect-error: this is also valid */
+			code: `
+/* @ts-expect-error: this is also valid */
 const value: string = 123;
 `,
 			options: {
