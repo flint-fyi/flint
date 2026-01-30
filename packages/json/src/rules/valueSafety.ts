@@ -31,7 +31,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description: "Reports JSON values that are unsafe for data interchange.",
 		id: "valueSafety",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		infinity: {

@@ -16,7 +16,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports getter and setter accessors for the same property that are not adjacent.",
 		id: "accessorPairGroups",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		notGrouped: {

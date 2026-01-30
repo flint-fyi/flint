@@ -76,7 +76,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const statements = node.body.statements;
 
 					if (
-						statements.length === 0 ||
+						!statements.length ||
 						hasNamedExport(statements) ||
 						!hasNonExportedMember(statements)
 					) {
