@@ -1,10 +1,20 @@
 import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
+function hasExportModifier(node: AST.Statement) {
+	return !!(
+		ts.canHaveModifiers(node) &&
+		ts
+			.getModifiers(node)
+			?.some((modifier) => modifier.kind === SyntaxKind.ExportKeyword)
+	);
+}
+
 function isInsideFunction(node: ts.Node): boolean {
-	let current = node.parent;
+	let current: ts.Node | undefined = node.parent;
+
 	while (current) {
 		if (
 			ts.isFunctionDeclaration(current) ||
@@ -17,20 +27,23 @@ function isInsideFunction(node: ts.Node): boolean {
 		) {
 			return true;
 		}
-		current = current.parent;
+		current = current.parent as ts.Node | undefined;
 	}
+
 	return false;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
-		description: "Reports top-level await expressions in modules.",
+		description:
+			"Reports top-level await expressions in files that export values.",
 		id: "topLevelAwaits",
 		presets: ["logicalStrict"],
 	},
 	messages: {
 		topLevelAwait: {
-			primary: "Top-level await can block module loading.",
+			primary:
+				"Top-level await in a module file causes imports from the module to wait on the asynchronous work.",
 			secondary: [
 				"Modules using top-level await block their dependents until the await resolves.",
 				"This can cause unexpected delays in application startup.",
@@ -42,10 +55,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
+		let fileHasExports: boolean | undefined;
+
 		return {
 			visitors: {
 				AwaitExpression(node: AST.AwaitExpression, { sourceFile }) {
-					if (isInsideFunction(node)) {
+					if (!fileHasExports || isInsideFunction(node)) {
 						return;
 					}
 
@@ -56,6 +71,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							end: node.expression.getStart(sourceFile),
 						},
 					});
+				},
+				SourceFile(node) {
+					fileHasExports = node.statements.some(
+						(statement) =>
+							hasExportModifier(statement) ||
+							statement.kind === SyntaxKind.ExportAssignment ||
+							statement.kind === SyntaxKind.ExportDeclaration,
+					);
 				},
 			},
 		};
