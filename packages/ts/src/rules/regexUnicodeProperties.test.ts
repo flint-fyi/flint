@@ -13,7 +13,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\p{gc=L}/u;
  ~~~~~~~~
- Remove unnecessary 'gc=' prefix from Unicode property.
+ The 'gc=' prefix is unnecessary for this Unicode property.
 `,
 		},
 		{
@@ -26,7 +26,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\p{gc=Letter}/u;
  ~~~~~~~~~~~~~
- Remove unnecessary 'gc=' prefix from Unicode property.
+ The 'gc=' prefix is unnecessary for this Unicode property.
 `,
 		},
 		{
@@ -39,7 +39,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\p{General_Category=L}/u;
  ~~~~~~~~~~~~~~~~~~~~~~
- Remove unnecessary 'General_Category=' prefix from Unicode property.
+ The 'General_Category=' prefix is unnecessary for this Unicode property.
 `,
 		},
 		{
@@ -52,7 +52,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /\\P{gc=L}/u;
  ~~~~~~~~
- Remove unnecessary 'gc=' prefix from Unicode property.
+ The 'gc=' prefix is unnecessary for this Unicode property.
 `,
 		},
 		{
@@ -65,7 +65,7 @@ new RegExp("\\\\p{L}", "u");
 			snapshot: `
 new RegExp("\\\\p{gc=L}", "u");
             ~~~~~~~~
-            Remove unnecessary 'gc=' prefix from Unicode property.
+            The 'gc=' prefix is unnecessary for this Unicode property.
 `,
 		},
 		{

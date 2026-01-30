@@ -2,6 +2,7 @@ import {
 	type AST as RegExpAST,
 	visitRegExpAST,
 } from "@eslint-community/regexpp";
+import type { ReportInterpolationData } from "@flint.fyi/core";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import type {
 	AST,
@@ -13,6 +14,18 @@ import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
+type CharacterSetWithValue = RegExpAST.CharacterUnicodePropertyCharacterSet & {
+	kind: "property";
+	value: string;
+};
+
+function isPropertyCharacterSetWithValue(
+	characterSet: RegExpAST.CharacterSet,
+): characterSet is CharacterSetWithValue {
+	return characterSet.kind === "property" && !!characterSet.value;
+}
+
+/* spellchecker:disable */
 const scriptShortToLong: Record<string, string> = {
 	Arab: "Arabic",
 	Armn: "Armenian",
@@ -42,30 +55,16 @@ const scriptShortToLong: Record<string, string> = {
 	Zyyy: "Common",
 	Zzzz: "Unknown",
 };
+/* spellchecker:enable */
 
 function getExplicitKey(raw: string) {
 	const match = /^\\p\{([^=]+)=/i.exec(raw);
 	return match ? match[1] : null;
 }
 
-function hasExplicitGeneralCategoryKey(raw: string) {
-	const match = /^\\p\{([^=]+)=/i.exec(raw);
-	if (!match) {
-		return false;
-	}
-	const key = match[1];
-	const lower = key.toLowerCase().replace(/_/g, "");
+function hasCategoryKey(explicitKey: string) {
+	const lower = explicitKey.toLowerCase().replace(/_/g, "");
 	return lower === "gc" || lower === "generalcategory";
-}
-
-function isScriptKey(key: string) {
-	const lower = key.toLowerCase().replace(/_/g, "");
-	return (
-		lower === "sc" ||
-		lower === "script" ||
-		lower === "scx" ||
-		lower === "scriptextensions"
-	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -83,9 +82,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			suggestions: ["Replace '{{ shortName }}' with '{{ longName }}'."],
 		},
 		unnecessaryPrefix: {
-			primary: "Remove unnecessary '{{ key }}=' prefix from Unicode property.",
+			primary:
+				"The '{{ key }}=' prefix is unnecessary for this Unicode property.",
 			secondary: [
-				"The General_Category prefix is not needed for this property.",
+				"Unicode properties may be expressed in several different ways.",
+				"Including the fully-written out category prefix is a more verbose way that is not necessary.",
 			],
 			suggestions: ["Replace '{{ original }}' with '{{ replacement }}'."],
 		},
@@ -106,81 +107,90 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
+			function reportOn(
+				characterSet: RegExpAST.CharacterUnicodePropertyCharacterSet,
+				data: ReportInterpolationData,
+				replacement: string,
+				message: "preferLongScript" | "unnecessaryPrefix",
+			) {
+				const sourceEnd = isStringPattern
+					? characterSet.end + 1
+					: characterSet.end;
+
+				context.report({
+					data,
+					fix: {
+						range: {
+							begin: patternStart + characterSet.start,
+							end: patternStart + sourceEnd,
+						},
+						text: isStringPattern
+							? replacement.replace(/\\/g, "\\\\")
+							: replacement,
+					},
+					message,
+					range: {
+						begin: patternStart + characterSet.start,
+						end: patternStart + characterSet.end,
+					},
+				});
+			}
+
+			function reportOnCategoryKey(
+				characterSet: CharacterSetWithValue,
+				explicitKey: string,
+			) {
+				const open = characterSet.negate ? "\\P{" : "\\p{";
+				const replacement = `${open}${characterSet.value}}`;
+				reportOn(
+					characterSet,
+					{
+						key: explicitKey,
+						original: characterSet.raw,
+						replacement,
+					},
+					replacement,
+					"unnecessaryPrefix",
+				);
+			}
+
+			function reportOnScriptKey(
+				characterSet: CharacterSetWithValue,
+				explicitKey: string,
+			) {
+				const longName = scriptShortToLong[characterSet.value];
+				if (!longName) {
+					return;
+				}
+
+				const open = characterSet.negate ? "\\P{" : "\\p{";
+				const replacement = `${open}${explicitKey}=${longName}}`;
+				reportOn(
+					characterSet,
+					{
+						longName,
+						shortName: characterSet.value,
+					},
+					replacement,
+					"preferLongScript",
+				);
+			}
+
 			visitRegExpAST(regexpAst, {
 				onCharacterSetEnter(characterSet: RegExpAST.CharacterSet) {
-					if (characterSet.kind !== "property") {
-						return;
-					}
-					if (characterSet.value === null) {
+					if (!isPropertyCharacterSetWithValue(characterSet)) {
 						return;
 					}
 
-					const value = characterSet.value;
-					const raw = characterSet.raw;
-
-					if (hasExplicitGeneralCategoryKey(raw)) {
-						const explicitKey = getExplicitKey(raw);
-						const open = characterSet.negate ? "\\P{" : "\\p{";
-						const replacement = `${open}${value}}`;
-						const sourceEnd = isStringPattern
-							? characterSet.end + 1
-							: characterSet.end;
-
-						context.report({
-							data: {
-								key: explicitKey,
-								original: raw,
-								replacement,
-							},
-							fix: {
-								range: {
-									begin: patternStart + characterSet.start,
-									end: patternStart + sourceEnd,
-								},
-								text: isStringPattern
-									? replacement.replace(/\\/g, "\\\\")
-									: replacement,
-							},
-							message: "unnecessaryPrefix",
-							range: {
-								begin: patternStart + characterSet.start,
-								end: patternStart + characterSet.end,
-							},
-						});
+					const explicitKey = getExplicitKey(characterSet.raw);
+					if (!explicitKey) {
 						return;
 					}
 
-					const explicitKey = getExplicitKey(raw);
-					if (explicitKey && isScriptKey(explicitKey)) {
-						const longName = scriptShortToLong[value];
-						if (longName) {
-							const open = characterSet.negate ? "\\P{" : "\\p{";
-							const replacement = `${open}${explicitKey}=${longName}}`;
-							const sourceEnd = isStringPattern
-								? characterSet.end + 1
-								: characterSet.end;
-
-							context.report({
-								data: {
-									longName,
-									shortName: value,
-								},
-								fix: {
-									range: {
-										begin: patternStart + characterSet.start,
-										end: patternStart + sourceEnd,
-									},
-									text: isStringPattern
-										? replacement.replace(/\\/g, "\\\\")
-										: replacement,
-								},
-								message: "preferLongScript",
-								range: {
-									begin: patternStart + characterSet.start,
-									end: patternStart + characterSet.end,
-								},
-							});
-						}
+					if (hasCategoryKey(explicitKey)) {
+						reportOnCategoryKey(characterSet, explicitKey);
+					} else {
+						reportOnScriptKey(characterSet, explicitKey);
 					}
 				},
 			});

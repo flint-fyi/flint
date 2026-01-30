@@ -10,11 +10,13 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexUnicodeProperties" />
 
-Reports inconsistent Unicode property names in regular expressions and suggests more idiomatic forms.
-This rule enforces two conventions:
+Unicode properties may be expressed in several different ways.
+Including the fully-written out category prefix is a more verbose way that is not necessary.
 
-1. **Remove unnecessary `gc=` / `General_Category=` prefix**: Unicode general category properties can be used without the prefix.
-2. **Prefer long Script names**: Short script aliases like `Grek` should use the full name `Greek` for readability.
+This rule detects inconsistent Unicode property names in regular expressions and suggests more idiomatic forms for:
+
+1. Unnecessary `gc=` / `General_Category=` prefix: unicode general category properties can be used without the prefix.
+2. Long script names: short script aliases like `Grek` should use the full name `Greek` for readability.
 
 ## Examples
 
