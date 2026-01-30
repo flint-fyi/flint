@@ -30,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports static elements with event handlers that lack ARIA roles.",
 		id: "staticElementInteractions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingRole: {

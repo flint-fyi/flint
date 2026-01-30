@@ -46,7 +46,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports array methods with callbacks that will never be invoked on arrays with empty slots.",
 		id: "arrayEmptyCallbackSlots",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		neverInvoked: {

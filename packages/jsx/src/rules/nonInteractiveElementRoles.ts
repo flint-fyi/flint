@@ -82,7 +82,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports non-interactive elements with interactive ARIA roles.",
 		id: "nonInteractiveElementRoles",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidRole: {

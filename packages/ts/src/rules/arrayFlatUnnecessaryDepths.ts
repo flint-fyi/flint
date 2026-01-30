@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `1` as the depth argument of `.flat()` since it is the default.",
 		id: "arrayFlatUnnecessaryDepths",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		unnecessaryDepth: {

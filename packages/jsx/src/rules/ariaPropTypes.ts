@@ -236,9 +236,7 @@ function isValidPropertyValue(
 				return false;
 			}
 			const validTokens = tokenValues[propertyName];
-			return validTokens !== undefined
-				? validTokens.has(value.toLowerCase())
-				: true;
+			return validTokens?.has(value.toLowerCase()) ?? true;
 		}
 
 		case "tristate":
@@ -260,7 +258,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports ARIA properties with invalid value types.",
 		id: "ariaPropTypes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidPropType: {

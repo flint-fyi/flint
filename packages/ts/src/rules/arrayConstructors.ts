@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using the `Array` constructor to create arrays instead of array literal syntax.",
 		id: "arrayConstructors",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferLiteral: {
