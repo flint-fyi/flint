@@ -1,5 +1,6 @@
 import {
 	type AST,
+	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -7,15 +8,11 @@ import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function hasDecorators(
-	node: AST.ClassDeclaration | AST.ClassExpression,
-): boolean {
+function hasDecorators(node: AST.ClassDeclaration | AST.ClassExpression) {
 	return node.modifiers?.some(ts.isDecorator) ?? false;
 }
 
-function hasExtendsClause(
-	node: AST.ClassDeclaration | AST.ClassExpression,
-): boolean {
+function hasExtendsClause(node: AST.ClassDeclaration | AST.ClassExpression) {
 	return (
 		node.heritageClauses?.some(
 			(clause) => clause.token === ts.SyntaxKind.ExtendsKeyword,
@@ -23,7 +20,7 @@ function hasExtendsClause(
 	);
 }
 
-function hasPrivateConstructor(node: AST.ConstructorDeclaration): boolean {
+function hasPrivateConstructor(node: AST.ConstructorDeclaration) {
 	return (
 		node.modifiers?.some(
 			(modifier) => modifier.kind === ts.SyntaxKind.PrivateKeyword,
@@ -33,7 +30,7 @@ function hasPrivateConstructor(node: AST.ConstructorDeclaration): boolean {
 
 function hasStaticModifier(
 	modifiers: ts.NodeArray<AST.ModifierLike> | undefined,
-): boolean {
+) {
 	return (
 		modifiers?.some(
 			(modifier) => modifier.kind === ts.SyntaxKind.StaticKeyword,
@@ -41,9 +38,7 @@ function hasStaticModifier(
 	);
 }
 
-function isAbstractClass(
-	node: AST.ClassDeclaration | AST.ClassExpression,
-): boolean {
+function isAbstractClass(node: AST.ClassDeclaration | AST.ClassExpression) {
 	return (
 		node.modifiers?.some(
 			(modifier) => modifier.kind === ts.SyntaxKind.AbstractKeyword,
@@ -51,7 +46,7 @@ function isAbstractClass(
 	);
 }
 
-function isEmptyConstructor(member: AST.ConstructorDeclaration): boolean {
+function isEmptyConstructor(member: AST.ConstructorDeclaration) {
 	return (
 		member.body === undefined ||
 		(member.body.statements.length === 0 && member.parameters.length === 0)
@@ -83,28 +78,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.ClassDeclaration | AST.ClassExpression,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (hasExtendsClause(node)) {
-				return;
-			}
-
-			if (isAbstractClass(node)) {
-				return;
-			}
-
-			if (hasDecorators(node)) {
-				return;
-			}
-
-			const members = node.members;
-
-			if (members.length === 0) {
+			if (
+				hasExtendsClause(node) ||
+				isAbstractClass(node) ||
+				hasDecorators(node) ||
+				!node.members.length
+			) {
 				return;
 			}
 
 			let hasNonStaticMember = false;
 			let hasPrivateConstructorMember = false;
 
-			for (const member of members) {
+			for (const member of node.members) {
 				if (ts.isConstructorDeclaration(member)) {
 					if (hasPrivateConstructor(member)) {
 						hasPrivateConstructorMember = true;
@@ -117,11 +103,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				if (ts.isSemicolonClassElement(member)) {
-					continue;
-				}
-
-				if (ts.isClassStaticBlockDeclaration(member)) {
+				if (
+					ts.isSemicolonClassElement(member) ||
+					ts.isClassStaticBlockDeclaration(member)
+				) {
 					continue;
 				}
 
@@ -143,17 +128,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 			}
 
-			if (hasPrivateConstructorMember) {
+			if (hasPrivateConstructorMember || hasNonStaticMember) {
 				return;
 			}
 
-			if (hasNonStaticMember) {
-				return;
-			}
-
-			const reportRange = node.name
-				? { begin: node.name.getStart(sourceFile), end: node.name.getEnd() }
-				: { begin: node.getStart(sourceFile), end: node.getEnd() };
+			const reportRange = getTSNodeRange(node.name ?? node, sourceFile);
 
 			context.report({
 				message: "noStaticOnlyClass",

@@ -11,7 +11,9 @@ import RuleSummary from "~/components/RuleSummary.astro";
 <RuleSummary plugin="ts" rule="staticMemberOnlyClasses" />
 
 Classes that contain only static members are essentially being used as namespaces.
-In JavaScript and TypeScript, module-level exports are more idiomatic and simpler.
+In JavaScript and TypeScript, objects and module-level exports are more idiomatic and straightforward.
+
+This rule reports on any class that only contains static members.
 
 ## Examples
 
@@ -103,8 +105,9 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If your codebase uses classes as namespaces for organizing related static utilities, you may want to disable this rule.
+If your codebase uses classes as namespaces for organizing related static utilities, and you don't mind the extra complexity of classes, you may want to disable this rule.
 Some frameworks or patterns may also require static-only classes for specific use cases.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 
