@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a{1,1}/;
   ~~~~~
-  Simplify numeric quantifier '{1,1}' to '{1}'.
+  This numeric quantifier \`{1,1}\` can be simplified to \`{1}\`.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a{42,42}/;
   ~~~~~~~
-  Simplify numeric quantifier '{42,42}' to '{42}'.
+  This numeric quantifier \`{42,42}\` can be simplified to \`{42}\`.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(?:ab){2,2}/;
        ~~~~~
-       Simplify numeric quantifier '{2,2}' to '{2}'.
+       This numeric quantifier \`{2,2}\` can be simplified to \`{2}\`.
 `,
 		},
 		{
@@ -40,9 +40,9 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a{1,1}b{2,2}/;
   ~~~~~
-  Simplify numeric quantifier '{1,1}' to '{1}'.
+  This numeric quantifier \`{1,1}\` can be simplified to \`{1}\`.
         ~~~~~
-        Simplify numeric quantifier '{2,2}' to '{2}'.
+        This numeric quantifier \`{2,2}\` can be simplified to \`{2}\`.
 `,
 		},
 		{
@@ -52,7 +52,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /a{1,1}?/;
   ~~~~~~
-  Simplify numeric quantifier '{1,1}?' to '{1}?'.
+  This numeric quantifier \`{1,1}?\` can be simplified to \`{1}?\`.
 `,
 		},
 		{
@@ -62,7 +62,7 @@ new RegExp("a{1,1}");
 			snapshot: `
 new RegExp("a{1,1}");
              ~~~~~
-             Simplify numeric quantifier '{1,1}' to '{1}'.
+             This numeric quantifier \`{1,1}\` can be simplified to \`{1}\`.
 `,
 		},
 	],

@@ -34,11 +34,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		unnecessaryNumericQuantifier: {
-			primary: "Simplify numeric quantifier '{{ raw }}' to '{{ simplified }}'.",
+			primary:
+				"This numeric quantifier `{{ raw }}` can be simplified to `{{ simplified }}`.",
 			secondary: [
 				"Numeric quantifiers with the same minimum and maximum can be written more concisely.",
+				"Using the simpler form results in an easier-to-read regular expression.",
 			],
-			suggestions: ["Replace '{{ raw }}' with '{{ simplified }}'."],
+			suggestions: ["Replace `{{ raw }}` with `{{ simplified }}`."],
 		},
 	},
 	setup(context) {
