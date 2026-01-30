@@ -1,9 +1,16 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 const REGEX_METACHARACTERS = /[+[{(.?*|\\]/;
+
+function escapeString(str: string): string {
+	return str.replace(/["'\\]/g, "\\$&");
+}
 
 function isSimpleString(pattern: string): boolean {
 	return !REGEX_METACHARACTERS.test(pattern);
@@ -12,22 +19,24 @@ function isSimpleString(pattern: string): boolean {
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
-			"Reports regex patterns that can be replaced with startsWith or endsWith.",
+			"Reports regex patterns that can be replaced with `endsWith` or `startsWith`.",
 		id: "stringStartsEndsWith",
-		presets: ["logical"],
+		presets: ["stylistic"],
 	},
 	messages: {
+		preferEndsWith: {
+			primary: "Prefer `endsWith()` over a regex with `$`.",
+			secondary: [
+				"`endsWith` is generally more readable than using a regular expression.",
+			],
+			suggestions: ["Replace the regular expression with `endsWith()`."],
+		},
 		preferStartsWith: {
 			primary: "Prefer `startsWith()` over a regex with `^`.",
 			secondary: [
-				"startsWith is more readable and performs better than regex.",
+				"`startsWith` is generally more readable than using a regular expression.",
 			],
-			suggestions: ["Replace with startsWith()."],
-		},
-		preferEndsWith: {
-			primary: "Prefer `endsWith()` over a regex with `$`.",
-			secondary: ["endsWith is more readable and performs better than regex."],
-			suggestions: ["Replace with endsWith()."],
+			suggestions: ["Replace the regular expression with `startsWith()`."],
 		},
 	},
 	setup(context) {
@@ -48,21 +57,36 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const regexText = callee.text;
-					const match = regexText.match(/^\/(.*)\/([gimsuy]*)$/);
+					const match = /^\/(.*)\/([gimsuy]*)$/.exec(regexText);
 					if (!match) {
 						return;
 					}
 
-					const [, pattern, flags] = match;
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const pattern = match[1]!;
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const flags = match[2]!;
 
 					if (flags.includes("i") || flags.includes("m")) {
 						return;
 					}
 
+					const argument = node.arguments[0];
+					if (!argument) {
+						return;
+					}
+
+					const argumentText = argument.getText(sourceFile);
+					const callRange = getTSNodeRange(node, sourceFile);
+
 					if (pattern.startsWith("^") && !pattern.endsWith("$")) {
 						const stringPart = pattern.slice(1);
 						if (isSimpleString(stringPart)) {
 							context.report({
+								fix: {
+									range: callRange,
+									text: `${argumentText}.startsWith("${escapeString(stringPart)}")`,
+								},
 								message: "preferStartsWith",
 								range: {
 									begin: callee.getStart(sourceFile),
@@ -74,6 +98,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const stringPart = pattern.slice(0, -1);
 						if (isSimpleString(stringPart)) {
 							context.report({
+								fix: {
+									range: callRange,
+									text: `${argumentText}.endsWith("${escapeString(stringPart)}")`,
+								},
 								message: "preferEndsWith",
 								range: {
 									begin: callee.getStart(sourceFile),

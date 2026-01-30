@@ -1,76 +1,104 @@
-import rule from "./stringStartsEndsWith.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./stringStartsEndsWith.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-const result = /^foo/.test(str);
+/^foo/.test(str);
+`,
+			output: `
+str.startsWith("foo");
 `,
 			snapshot: `
-const result = /^foo/.test(str);
-               ~~~~~~
-               Prefer \`startsWith()\` over a regex with \`^\`.
-`,
-		},
-		{
-			code: `
-const result = /bar$/.test(str);
-`,
-			snapshot: `
-const result = /bar$/.test(str);
-               ~~~~~~
-               Prefer \`endsWith()\` over a regex with \`$\`.
-`,
-		},
-		{
-			code: `
-if (/^prefix/.test(input)) {
-    process(input);
-}
-`,
-			snapshot: `
-if (/^prefix/.test(input)) {
-    ~~~~~~~~~
-    Prefer \`startsWith()\` over a regex with \`^\`.
-    process(input);
-}
-`,
-		},
-		{
-			code: `
-const startsWithAt = /^@/.test(name);
-`,
-			snapshot: `
-const startsWithAt = /^@/.test(name);
-                     ~~~~
-                     Prefer \`startsWith()\` over a regex with \`^\`.
-`,
-		},
-		{
-			code: `
-/^ /.test(text);
-`,
-			snapshot: `
-/^ /.test(text);
-~~~~
+/^foo/.test(str);
+~~~~~~
 Prefer \`startsWith()\` over a regex with \`^\`.
+`,
+		},
+		{
+			code: `
+/bar$/.test(str);
+`,
+			output: `
+str.endsWith("bar");
+`,
+			snapshot: `
+/bar$/.test(str);
+~~~~~~
+Prefer \`endsWith()\` over a regex with \`$\`.
+`,
+		},
+		{
+			code: `
+/^hello/.test(myString);
+`,
+			output: `
+myString.startsWith("hello");
+`,
+			snapshot: `
+/^hello/.test(myString);
+~~~~~~~~
+Prefer \`startsWith()\` over a regex with \`^\`.
+`,
+		},
+		{
+			code: `
+/world$/.test(myString);
+`,
+			output: `
+myString.endsWith("world");
+`,
+			snapshot: `
+/world$/.test(myString);
+~~~~~~~~
+Prefer \`endsWith()\` over a regex with \`$\`.
+`,
+		},
+		{
+			code: `
+/^prefix/.test(getValue());
+`,
+			output: `
+getValue().startsWith("prefix");
+`,
+			snapshot: `
+/^prefix/.test(getValue());
+~~~~~~~~~
+Prefer \`startsWith()\` over a regex with \`^\`.
+`,
+		},
+		{
+			code: `
+/suffix$/.test(obj.prop);
+`,
+			output: `
+obj.prop.endsWith("suffix");
+`,
+			snapshot: `
+/suffix$/.test(obj.prop);
+~~~~~~~~~
+Prefer \`endsWith()\` over a regex with \`$\`.
 `,
 		},
 	],
 	valid: [
-		`const result = str.startsWith("foo");`,
-		`const result = str.endsWith("bar");`,
-		`const result = /foo/.test(str);`,
-		`const result = /^foo$/i.test(str);`,
-		`const result = /^foo/i.test(str);`,
-		`const result = /^foo/m.test(str);`,
-		`const result = /^foo$/.test(str);`,
-		`const result = /^foo+/.test(str);`,
-		`const result = /^foo./.test(str);`,
-		`const result = /^[abc]/.test(str);`,
-		`const result = /^foo|bar/.test(str);`,
-		`const result = /^\\w/.test(str);`,
-		`const hasExtension = /\\.js$/.test(filename);`,
+		`/^foo$/.test(str);`,
+		`/foo/.test(str);`,
+		`/^foo/i.test(str);`,
+		`/foo$/i.test(str);`,
+		`/^foo/m.test(str);`,
+		`/foo$/m.test(str);`,
+		`/^foo.*/.test(str);`,
+		`/.*bar$/.test(str);`,
+		`/^foo+/.test(str);`,
+		`/bar+$/.test(str);`,
+		`/^foo[a-z]/.test(str);`,
+		`/[a-z]bar$/.test(str);`,
+		`/^foo?/.test(str);`,
+		`/bar?$/.test(str);`,
+		`str.startsWith("foo");`,
+		`str.endsWith("bar");`,
+		`regex.test(str);`,
 	],
 });
