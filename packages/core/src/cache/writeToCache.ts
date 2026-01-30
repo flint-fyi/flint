@@ -1,11 +1,16 @@
 import { CachedFactory } from "cached-factory";
+import { debugForFile } from "debug-for-file";
 import * as fs from "node:fs/promises";
 import omitEmpty from "omit-empty";
+import z from "zod";
 
 import type { CacheStorage } from "../types/cache.ts";
 import type { LintResults } from "../types/linting.ts";
+import { cacheStorageSchema } from "./cacheSchema.ts";
 import { cacheFileDirectory, cacheFilePath } from "./constants.ts";
 import { getFileTouchTime } from "./getFileTouchTime.ts";
+
+const log = debugForFile(import.meta.filename);
 
 export async function writeToCache(
 	configFileName: string,
@@ -49,5 +54,12 @@ export async function writeToCache(
 	};
 
 	await fs.mkdir(cacheFileDirectory, { recursive: true });
-	await fs.writeFile(cacheFilePath, JSON.stringify(storage, null, "\t"));
+
+	const encoded = z.safeEncode(cacheStorageSchema, storage);
+	if (!encoded.success) {
+		log("Failed to encode cache data: %s", encoded.error.message);
+		return;
+	}
+
+	await fs.writeFile(cacheFilePath, encoded.data);
 }

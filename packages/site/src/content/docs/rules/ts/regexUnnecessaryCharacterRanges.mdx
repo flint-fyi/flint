@@ -1,0 +1,96 @@
+---
+description: "Reports character class ranges that span only one or two characters."
+title: "regexUnnecessaryCharacterRanges"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryCharacterRanges" />
+
+Reports character class ranges that are unnecessary because they span only one or two characters.
+A range like `[a-a]` matches only one character and can be simplified to `[a]`.
+A range like `[a-b]` matches only two adjacent characters and can be written as `[ab]`.
+
+## Examples
+
+### Identity Range
+
+A range where the start and end are the same character.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[a-a]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[a]/;
+```
+
+</TabItem>
+</Tabs>
+
+### Adjacent Range
+
+A range that spans only two consecutive characters.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[a-b]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[ab]/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+The rule also checks regex patterns in `RegExp` constructor calls.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("[0-1]");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("[01]");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the explicit range syntax for readability or consistency, even when it spans only one or two characters, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Character classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Character_classes)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryCharacterRanges" />

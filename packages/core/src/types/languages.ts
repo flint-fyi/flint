@@ -5,9 +5,8 @@ import type { Rule, RuleAbout, RuleDefinition, RuleRuntime } from "./rules.ts";
 import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
 
 export type AnyLanguage = Language<object, object>;
-export type AnyLanguageFileDefinition = LanguageFileDefinition<object, object>;
-export type AnyLanguageFileFactory = LanguageFileFactory<object, object>;
-export type AnyLanguageFileMetadata = LanguageFileMetadata<object, object>;
+export type AnyLanguageFile = LanguageFile<object>;
+export type AnyLanguageFileFactory = LanguageFileFactory<object>;
 
 export type GetLanguageAstNodesByName<InputLanguage extends AnyLanguage> =
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Fixes TS inference.
@@ -63,10 +62,21 @@ export interface Language<
 	AstNodesByName,
 	FileServices extends object,
 > extends LanguageDefinition<AstNodesByName, FileServices> {
-	createFileFactory(
-		host: LinterHost,
-	): LanguageFileFactory<AstNodesByName, FileServices>;
+	createFileFactory(host: LinterHost): LanguageFileFactory<FileServices>;
 	createRule: LanguageCreateRule<AstNodesByName, FileServices>;
+	getFileCacheImpacts?(
+		file: LanguageFile<FileServices>,
+	): LanguageFileCacheImpacts;
+	getFileDiagnostics?(file: LanguageFile<FileServices>): LanguageDiagnostics;
+	runFileVisitors<
+		OptionsSchema extends AnyOptionalSchema | undefined =
+			| AnyOptionalSchema
+			| undefined,
+	>(
+		file: LanguageFile<FileServices>,
+		options: InferredOutputObject<OptionsSchema>,
+		runtime: RuleRuntime<AstNodesByName, FileServices>,
+	): void;
 }
 
 export interface LanguageAbout {
@@ -90,101 +100,62 @@ export interface LanguageDefinition<
 	about: LanguageAbout;
 	createFileFactory(
 		host: LinterHost,
-	): LanguageFileFactoryDefinition<AstNodesByName, FileServices>;
+	): LanguageFileFactoryDefinition<FileServices>;
+	getFileCacheImpacts?(
+		file: LanguageFile<FileServices>,
+	): LanguageFileCacheImpacts;
+	getFileDiagnostics?(file: LanguageFile<FileServices>): LanguageDiagnostics;
+	runFileVisitors<
+		OptionsSchema extends AnyOptionalSchema | undefined =
+			| AnyOptionalSchema
+			| undefined,
+	>(
+		file: LanguageFile<FileServices>,
+		options: InferredOutputObject<OptionsSchema>,
+		runtime: RuleRuntime<AstNodesByName, FileServices>,
+	): void;
 }
 
 export interface LanguageFileCacheImpacts {
 	dependencies: string[];
 }
 
-// TODO: Perhaps the LanguageFile wrappers could be removed altogether?
-// Maybe the Languages themselves should handle diagnostics, runVisitors, etc.?
-// Then we would have 1-2 fewer objects per file...
-
 /**
- * Wraps a file to be linted by any number of rules.
+ * Creates prepared information around files to be linted.
  */
-export interface LanguageFile<
-	AstNodesByName,
-	FileServices extends object,
-> extends Disposable {
-	about: FileAboutData;
-	cache?: LanguageFileCacheImpacts;
-	getDiagnostics?(): LanguageDiagnostics;
-	runVisitors<
-		OptionsSchema extends AnyOptionalSchema | undefined =
-			| AnyOptionalSchema
-			| undefined,
-	>(
-		options: InferredOutputObject<OptionsSchema>,
-		runtime: RuleRuntime<AstNodesByName, FileServices>,
-	): void;
-}
-
-/**
- * Internal definition of how to wrap a file to be linted by any number of rules.
- */
-export interface LanguageFileDefinition<
-	AstNodesByName,
-	FileServices extends object,
-> extends Partial<Disposable> {
-	about: FileAboutData;
-	cache?: LanguageFileCacheImpacts;
-	getDiagnostics?(): LanguageDiagnostics;
-	runVisitors<
-		OptionsSchema extends AnyOptionalSchema | undefined =
-			| AnyOptionalSchema
-			| undefined,
-	>(
-		options: InferredOutputObject<OptionsSchema>,
-		runtime: RuleRuntime<AstNodesByName, FileServices>,
-	): void;
-}
-
-/**
- * Creates wrappers around files to be linted.
- */
-export interface LanguageFileFactory<
-	AstNodesByName,
-	FileServices extends object,
-> extends Disposable {
-	prepareFile(
-		data: FileAboutData,
-	): LanguageFileMetadata<AstNodesByName, FileServices>;
+export interface LanguageFileFactory<FileServices extends object> {
+	createFile(data: FileAboutData): LanguageFile<FileServices>;
 }
 
 /**
  * Prepared information about a file to be linted.
  */
-export interface LanguageFileMetadata<
-	AstNodesByName,
-	FileServices extends object,
-> {
-	directives?: CommentDirective[];
-	file: LanguageFile<AstNodesByName, FileServices>;
-	reports?: FileReport[];
-}
+export type LanguageFile<FileServices extends object> = Disposable &
+	LanguageFileBase<FileServices>;
 
 /**
- * Internal definition of how to create wrappers around files to be linted.
+ * Common information about a file to be linted.
  */
-export interface LanguageFileFactoryDefinition<
-	AstNodesByName,
-	FileServices extends object,
-> extends Partial<Disposable> {
-	prepareFile(
-		data: FileAboutData,
-	): LanguageFileMetadataDefinition<AstNodesByName, FileServices>;
+export interface LanguageFileBase<FileServices extends object> {
+	about: FileAboutData;
+	directives?: CommentDirective[];
+	reports?: FileReport[];
+	services: FileServices;
 }
 
 /**
  * Internal definition of prepared information about a file to be linted.
  */
-export interface LanguageFileMetadataDefinition<
-	AstNodesByName,
-	FileServices extends object,
-> {
-	directives?: CommentDirective[];
-	file: LanguageFileDefinition<AstNodesByName, FileServices>;
-	reports?: FileReport[];
+export type LanguageFileDefinition<FileServices extends object> =
+	LanguageFileBase<FileServices> & Partial<Disposable>;
+
+/**
+ * Internal definition of how to create prepared information about files to be linted.
+ * @remarks
+ * This is the same as {@link LanguageFileFactoryDefinition}, but the created files
+ * are {@link LanguageFileDefinition}s (which do not have to be disposable), rather
+ * than {@link LanguageFile}s (which are always disposable).
+ */
+export interface LanguageFileFactoryDefinition<FileServices extends object> {
+	createFile(data: FileAboutData): LanguageFileDefinition<FileServices>;
 }

@@ -1,0 +1,194 @@
+---
+description: "Reports comparisons that are always true, always false, or can be simplified."
+title: "unnecessaryComparisons"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryComparisons" />
+
+This rule detects comparison patterns that are logically unnecessary, impossible, or can be simplified.
+Such patterns often indicate logic errors, copy-paste mistakes, or overly complex code that should be refactored.
+
+The rule covers several categories of problematic comparisons:
+
+1. Self-comparisons: Comparing a value to itself (e.g., `x === x`)
+2. Impossible ranges: Range checks that can never be satisfied (e.g., `x <= 400 && x > 500`)
+3. Redundant double comparisons: OR patterns that can be simplified (e.g., `x === y || x < y` can become `x <= y`)
+4. Ineffective checks: Redundant bounds in AND chains (e.g., `x < 200 && x <= 299` where the second check is always true when the first is)
+
+## Examples
+
+### Self-Comparisons
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (value === value) {
+	// Always true
+}
+```
+
+```ts
+if (value < value) {
+	// Always false
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (value === otherValue) {
+	// Compare different values
+}
+```
+
+```ts
+// Use Number.isNaN() for NaN checks
+if (Number.isNaN(value)) {
+	// ...
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Impossible Ranges
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// Can never be true: no value is both <= 400 AND > 500
+if (x <= 400 && x > 500) {
+	// Unreachable code
+}
+```
+
+```ts
+// Impossible boundary condition
+if (x < 5 && x >= 5) {
+	// Never executes
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// Valid range: x is between 400 and 500
+if (x >= 400 && x <= 500) {
+	// ...
+}
+```
+
+```ts
+// Valid narrow range
+if (x > 5 && x < 10) {
+	// ...
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Redundant Double Comparisons
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// Can be simplified to: x <= y
+if (x === y || x < y) {
+	// ...
+}
+```
+
+```ts
+// Can be simplified to: x >= y
+if (x === y || x > y) {
+	// ...
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// Use the simpler combined operator
+if (x <= y) {
+	// ...
+}
+```
+
+```ts
+if (x >= y) {
+	// ...
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Ineffective Checks
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// x <= 299 is redundant when x < 200 is already checked
+if (x < 200 && x <= 299) {
+	// The second check adds nothing
+}
+```
+
+```ts
+// x >= 50 is redundant when x > 100 is already checked
+if (x > 100 && x >= 50) {
+	// ...
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// Just use the stronger constraint
+if (x < 200) {
+	// ...
+}
+```
+
+```ts
+// Or use both bounds when they're actually needed
+if (x > 100 && x < 200) {
+	// Valid range check
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase relies on dynamic getters or other side effects that could make seemingly-identical expressions return different values, you might want to disable this rule for those specific cases.
+
+## Further Reading
+
+- [MDN: Comparison operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators)
+- [MDN: Logical AND (&&)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_AND)
+- [MDN: Logical OR (||)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR)
+- [MDN: Number.isNaN()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryComparisons" />

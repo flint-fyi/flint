@@ -3,6 +3,7 @@ import { createCommentDirectiveFileAfterContent } from "./createCommentDirective
 import { createCommentDirectiveNoSelection } from "./createCommentDirectiveNoSelection.ts";
 import { createCommentDirectiveNotPreviouslyDisabled } from "./createCommentDirectiveNotPreviouslyDisabled.ts";
 import { createCommentDirectiveUnknown } from "./createCommentDirectiveUnknown.ts";
+import { createCommentDirectiveUnused } from "./createCommentDirectiveUnused.ts";
 
 export const directiveReports = {
 	createAlreadyDisabled: createCommentDirectiveAlreadyDisabled,
@@ -10,4 +11,5 @@ export const directiveReports = {
 	createNoSelection: createCommentDirectiveNoSelection,
 	createNotPreviouslyDisabled: createCommentDirectiveNotPreviouslyDisabled,
 	createUnknown: createCommentDirectiveUnknown,
+	createUnused: createCommentDirectiveUnused,
 };

@@ -25,7 +25,7 @@ function convertDataAttributeToDatasetKey(
 
 function getMethodDetails(node: AST.CallExpression) {
 	if (
-		node.arguments.length === 0 ||
+		!node.arguments.length ||
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.kind !== SyntaxKind.Identifier
 	) {
