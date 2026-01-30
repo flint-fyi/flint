@@ -17071,6 +17071,7 @@
 		"flint": {
 			"name": "thisBeforeSuper",
 			"plugin": "ts",
+			"preset": "untyped",
 			"status": "implemented"
 		},
 		"oxlint": [

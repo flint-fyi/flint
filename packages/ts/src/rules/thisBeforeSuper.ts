@@ -3,7 +3,70 @@ import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
+function findAllThisOrSuper(
+	node: ts.Node,
+	sourceFile: ts.SourceFile,
+	results: ts.Node[],
+): void {
+	if (isNestedScope(node)) {
+		return;
+	}
+
+	if (node.kind === ts.SyntaxKind.ThisKeyword) {
+		results.push(node);
+		return;
+	}
+
+	if (
+		node.kind === ts.SyntaxKind.SuperKeyword &&
+		ts.isPropertyAccessExpression(node.parent)
+	) {
+		results.push(node);
+		return;
+	}
+
+	ts.forEachChild(node, (child) => {
+		findAllThisOrSuper(child, sourceFile, results);
+	});
+}
+
+function findAllThisOrSuperBeforePosition(
+	node: ts.Node,
+	position: number,
+	sourceFile: ts.SourceFile,
+	results: ts.Node[],
+): void {
+	if (node.getStart(sourceFile) >= position) {
+		return;
+	}
+
+	if (isNestedScope(node)) {
+		return;
+	}
+
+	if (node.kind === ts.SyntaxKind.ThisKeyword) {
+		results.push(node);
+		return;
+	}
+
+	if (
+		node.kind === ts.SyntaxKind.SuperKeyword &&
+		ts.isPropertyAccessExpression(node.parent)
+	) {
+		results.push(node);
+		return;
+	}
+
+	ts.forEachChild(node, (child) => {
+		findAllThisOrSuperBeforePosition(child, position, sourceFile, results);
+	});
+}
+
 function findFirstSuperCall(node: ts.Node): ts.CallExpression | undefined {
+	if (isNestedScope(node)) {
+		return undefined;
+	}
+
 	if (
 		ts.isCallExpression(node) &&
 		node.expression.kind === ts.SyntaxKind.SuperKeyword
@@ -11,44 +74,21 @@ function findFirstSuperCall(node: ts.Node): ts.CallExpression | undefined {
 		return node;
 	}
 
-	let result: ts.CallExpression | undefined;
-	ts.forEachChild(node, (child) => {
-		if (!result) {
-			result = findFirstSuperCall(child);
-		}
+	return ts.forEachChild(node, (child) => {
+		return findFirstSuperCall(child);
 	});
-
-	return result;
 }
 
-function findThisOrSuperBeforePosition(
-	node: ts.Node,
-	position: number,
-	sourceFile: ts.SourceFile,
-): ts.Node | undefined {
-	if (node.getStart(sourceFile) >= position) {
-		return undefined;
-	}
-
-	if (node.kind === ts.SyntaxKind.ThisKeyword) {
-		return node;
-	}
-
-	if (
-		node.kind === ts.SyntaxKind.SuperKeyword &&
-		ts.isPropertyAccessExpression(node.parent)
-	) {
-		return node;
-	}
-
-	let result: ts.Node | undefined;
-	ts.forEachChild(node, (child) => {
-		if (!result) {
-			result = findThisOrSuperBeforePosition(child, position, sourceFile);
-		}
-	});
-
-	return result;
+// TODO: This will be more clean when there is a scope manager
+// https://github.com/flint-fyi/flint/issues/400
+function isNestedScope(node: ts.Node) {
+	return (
+		ts.isFunctionDeclaration(node) ||
+		ts.isFunctionExpression(node) ||
+		ts.isArrowFunction(node) ||
+		ts.isClassDeclaration(node) ||
+		ts.isClassExpression(node)
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -56,9 +96,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `this` or `super` before calling `super()` in derived class constructors.",
 		id: "thisBeforeSuper",
-		presets: ["logical"],
+		presets: ["untyped"],
 	},
 	messages: {
+		superBeforeSuper: {
+			primary:
+				"`super` property access is not allowed before `super()` in derived class constructors.",
+			secondary: [
+				"Accessing `super.property` before calling `super()` throws a ReferenceError.",
+			],
+			suggestions: ["Move `super()` before any use of `super.property`."],
+		},
 		thisBeforeSuper: {
 			primary:
 				"`this` is not allowed before `super()` in derived class constructors.",
@@ -68,60 +116,48 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			],
 			suggestions: ["Move `super()` before any use of `this`."],
 		},
-		superBeforeSuper: {
-			primary:
-				"`super` property access is not allowed before `super()` in derived class constructors.",
-			secondary: [
-				"Accessing `super.property` before calling `super()` throws a ReferenceError.",
-			],
-			suggestions: ["Move `super()` before any use of `super.property`."],
-		},
 	},
 	setup(context) {
 		return {
 			visitors: {
 				Constructor(node: AST.ConstructorDeclaration, { sourceFile }) {
-					const classDeclaration = node.parent;
-					if (
-						!ts.isClassDeclaration(classDeclaration) &&
-						!ts.isClassExpression(classDeclaration)
-					) {
+					if (!node.parent.heritageClauses) {
 						return;
 					}
 
-					if (!classDeclaration.heritageClauses) {
-						return;
-					}
-
-					const hasExtends = classDeclaration.heritageClauses.some(
+					const hasExtends = node.parent.heritageClauses.some(
 						(clause) => clause.token === ts.SyntaxKind.ExtendsKeyword,
 					);
 
-					if (!hasExtends) {
-						return;
-					}
-
-					if (!node.body) {
+					if (!hasExtends || !node.body) {
 						return;
 					}
 
 					const superCall = findFirstSuperCall(node.body);
-					if (!superCall) {
-						return;
+
+					const invalidNodes: ts.Node[] = [];
+
+					if (superCall) {
+						const superCallStart = superCall.getStart(sourceFile);
+						findAllThisOrSuperBeforePosition(
+							node.body,
+							superCallStart,
+							sourceFile,
+							invalidNodes,
+						);
+						for (const arg of superCall.arguments) {
+							findAllThisOrSuper(arg, sourceFile, invalidNodes);
+						}
+					} else {
+						findAllThisOrSuper(node.body, sourceFile, invalidNodes);
 					}
 
-					const superCallStart = superCall.getStart(sourceFile);
-
-					const invalidNode = findThisOrSuperBeforePosition(
-						node.body,
-						superCallStart,
-						sourceFile,
-					);
-
-					if (invalidNode) {
-						const isThis = invalidNode.kind === ts.SyntaxKind.ThisKeyword;
+					for (const invalidNode of invalidNodes) {
 						context.report({
-							message: isThis ? "thisBeforeSuper" : "superBeforeSuper",
+							message:
+								invalidNode.kind === ts.SyntaxKind.ThisKeyword
+									? "thisBeforeSuper"
+									: "superBeforeSuper",
 							range: {
 								begin: invalidNode.getStart(sourceFile),
 								end: invalidNode.getEnd(),

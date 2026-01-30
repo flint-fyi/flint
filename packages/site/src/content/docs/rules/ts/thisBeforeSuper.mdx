@@ -15,8 +15,6 @@ Attempting to access `this` or `super` properties before calling `super()` throw
 
 ## Examples
 
-### this Before super()
-
 <Tabs>
 <TabItem label="❌ Incorrect">
 
@@ -28,26 +26,6 @@ class Child extends Parent {
 	}
 }
 ```
-
-</TabItem>
-<TabItem label="✅ Correct">
-
-```ts
-class Child extends Parent {
-	constructor() {
-		super();
-		this.value = 0;
-	}
-}
-```
-
-</TabItem>
-</Tabs>
-
-### super Property Access Before super()
-
-<Tabs>
-<TabItem label="❌ Incorrect">
 
 ```ts
 class Child extends Parent {
@@ -60,6 +38,15 @@ class Child extends Parent {
 
 </TabItem>
 <TabItem label="✅ Correct">
+
+```ts
+class Child extends Parent {
+	constructor() {
+		super();
+		this.value = 0;
+	}
+}
+```
 
 ```ts
 class Child extends Parent {
@@ -79,8 +66,7 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-This rule catches a runtime error, so there's generally no reason to disable it.
-TypeScript's compiler also catches this error, so this rule provides redundant checking.
+If your code is transpiled in a way that does not match modern ECMAScript semantics, this rule may not be for you.
 
 ## Further Reading
 
