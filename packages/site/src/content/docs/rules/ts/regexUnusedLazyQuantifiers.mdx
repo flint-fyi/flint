@@ -1,0 +1,89 @@
+---
+description: "Reports lazy quantifiers that have no effect because the quantifier is constant."
+title: "regexUnusedLazyQuantifiers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnusedLazyQuantifiers" />
+
+When a regular expression quantifier has fixed bounds (min equals max), there is no choice in how many times to match, so the lazy modifier `?` is irrelevant.
+This rule reports lazy quantifiers that have no effect because the quantifier matches a fixed number of times.
+
+## Examples
+
+### Fixed Count Quantifiers
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a{1}?/;
+const pattern2 = /a{4}?/;
+const pattern3 = /a{2,2}?/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a{1}/;
+const pattern2 = /a{4}/;
+const pattern3 = /a{2,2}/;
+```
+
+</TabItem>
+</Tabs>
+
+### Groups and Character Classes
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(ab){2}?/;
+const pattern2 = /[a-z]{3}?/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(ab){2}/;
+const pattern2 = /[a-z]{3}/;
+```
+
+</TabItem>
+</Tabs>
+
+### Variable Quantifiers (Valid)
+
+These are valid because the quantifier is not constant:
+
+```ts
+const pattern = /a*?/; // min=0, max=Infinity
+const pattern2 = /a+?/; // min=1, max=Infinity
+const pattern3 = /a??/; // min=0, max=1
+const pattern4 = /a{1,3}?/; // min=1, max=3
+const pattern5 = /a{2,}?/; // min=2, max=Infinity
+```
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer explicit lazy modifiers for documentation purposes, even when they have no effect, you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: Quantifier](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Quantifiers)
+- [MDN: Regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnusedLazyQuantifiers" />

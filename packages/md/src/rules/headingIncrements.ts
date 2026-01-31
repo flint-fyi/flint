@@ -17,7 +17,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 				"When increasing the level of a heading from its parent, the level should only ever increment by one.",
 				"Skipping heading ranks can be confusing -especially for automated tools and screen-readers- and should be avoided where possible.",
 			],
-			suggestions: ["TODO"],
+			suggestions: ["Increment heading levels by only one at a time."],
 		},
 	},
 	setup(context) {
