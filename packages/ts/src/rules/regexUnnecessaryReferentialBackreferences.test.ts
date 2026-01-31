@@ -10,7 +10,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a)?b\\1/;
       ~~
-      Ensure capturing group is always matched before backreference '\\1'.
+      Ensure capturing group is always matched before backreference \`\\1\`.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(a)*\\1/;
      ~~
-     Ensure capturing group is always matched before backreference '\\1'.
+     Ensure capturing group is always matched before backreference \`\\1\`.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(?:(a)|b)\\1/;
           ~~
-          Ensure capturing group is always matched before backreference '\\1'.
+          Ensure capturing group is always matched before backreference \`\\1\`.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /(?:(a)|b)+\\1/;
            ~~
-           Ensure capturing group is always matched before backreference '\\1'.
+           Ensure capturing group is always matched before backreference \`\\1\`.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 /((a)|c)+b\\2/;
           ~~
-          Ensure capturing group is always matched before backreference '\\2'.
+          Ensure capturing group is always matched before backreference \`\\2\`.
 `,
 		},
 		{
@@ -60,7 +60,7 @@ new RegExp("(a)?\\1");
 			snapshot: `
 new RegExp("(a)?\\\\1");
                 ~~
-                Ensure capturing group is always matched before backreference '\\1'.
+                Ensure capturing group is always matched before backreference \`\\1\`.
 `,
 		},
 		{
@@ -70,7 +70,7 @@ new RegExp("(a)?\\\\1");
 			snapshot: `
 /(a){0,5}b\\1/;
           ~~
-          Ensure capturing group is always matched before backreference '\\1'.
+          Ensure capturing group is always matched before backreference \`\\1\`.
 `,
 		},
 		{
@@ -80,7 +80,7 @@ new RegExp("(a)?\\\\1");
 			snapshot: `
 /(?:(a)b)*\\1/;
           ~~
-          Ensure capturing group is always matched before backreference '\\1'.
+          Ensure capturing group is always matched before backreference \`\\1\`.
 `,
 		},
 	],

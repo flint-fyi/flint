@@ -166,7 +166,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		potentiallyUselessBackref: {
 			primary:
-				"Ensure capturing group is always matched before backreference '{{ raw }}'.",
+				"Ensure capturing group is always matched before backreference `{{ raw }}`.",
 			secondary: [
 				"This backreference may always be empty because the referenced capturing group might not participate in the match.",
 				"The group may be in an optional quantifier, inside an alternation where some branches don't include it, or reset in a loop.",
@@ -190,19 +190,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			visitRegExpAST(regexpAst, {
 				onBackreferenceEnter(backreference) {
-					const resolved = backreference.resolved;
+					const { resolved } = backreference;
 					const groups = Array.isArray(resolved) ? resolved : [resolved];
 
 					for (const group of groups) {
-						if (groupCanOnlyMatchEmpty(group)) {
-							continue;
-						}
-
-						if (isInsideLookahead(group)) {
-							continue;
-						}
-
-						if (!isBackreferenceAfterGroup(group, backreference)) {
+						if (
+							groupCanOnlyMatchEmpty(group) ||
+							isInsideLookahead(group) ||
+							!isBackreferenceAfterGroup(group, backreference)
+						) {
 							continue;
 						}
 
