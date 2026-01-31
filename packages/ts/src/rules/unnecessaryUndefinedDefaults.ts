@@ -21,6 +21,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		presets: ["logical"],
 	},
 	messages: {
+		unnecessaryArrowBody: {
+			primary: "Prefer an empty block over returning undefined.",
+			secondary: [
+				"Arrow functions that don't return a value can use a block body.",
+				"Explicitly returning undefined as the arrow body is unnecessary.",
+			],
+			suggestions: ["Replace with an empty block body."],
+		},
 		unnecessaryDefault: {
 			primary: "Prefer omitting undefined defaults as they are implicit.",
 			secondary: [
@@ -45,18 +53,73 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			],
 			suggestions: ["Use yield without a value."],
 		},
-		unnecessaryArrowBody: {
-			primary: "Prefer an empty block over returning undefined.",
-			secondary: [
-				"Arrow functions that don't return a value can use a block body.",
-				"Explicitly returning undefined as the arrow body is unnecessary.",
-			],
-			suggestions: ["Replace with an empty block body."],
-		},
 	},
 	setup(context) {
 		return {
 			visitors: {
+				ArrowFunction(node, { sourceFile }) {
+					if (
+						node.body.kind === ts.SyntaxKind.Identifier &&
+						isUndefinedKeyword(node.body)
+					) {
+						context.report({
+							fix: {
+								range: getTSNodeRange(node.body, sourceFile),
+								text: "{}",
+							},
+							message: "unnecessaryArrowBody",
+							range: getTSNodeRange(node.body, sourceFile),
+						});
+					}
+				},
+				BindingElement(node, { sourceFile }) {
+					if (node.initializer && isUndefinedKeyword(node.initializer)) {
+						const nameEnd = node.propertyName
+							? node.propertyName.end
+							: node.name.end;
+						context.report({
+							fix: {
+								range: {
+									begin: nameEnd,
+									end: node.initializer.end,
+								},
+								text: "",
+							},
+							message: "unnecessaryDefault",
+							range: getTSNodeRange(node.initializer, sourceFile),
+						});
+					}
+				},
+				Parameter(node, { sourceFile }) {
+					if (node.initializer && isUndefinedKeyword(node.initializer)) {
+						context.report({
+							fix: {
+								range: {
+									begin: node.name.end,
+									end: node.initializer.end,
+								},
+								text: "",
+							},
+							message: "unnecessaryDefault",
+							range: getTSNodeRange(node.initializer, sourceFile),
+						});
+					}
+				},
+				ReturnStatement(node, { sourceFile }) {
+					if (node.expression && isUndefinedKeyword(node.expression)) {
+						context.report({
+							fix: {
+								range: {
+									begin: node.getStart(sourceFile) + "return".length,
+									end: node.expression.end,
+								},
+								text: "",
+							},
+							message: "unnecessaryReturn",
+							range: getTSNodeRange(node.expression, sourceFile),
+						});
+					}
+				},
 				VariableStatement(node, { sourceFile }) {
 					// Only flag let/var/using with undefined initializers, not const
 					// const x = undefined is semantically meaningful (assigns undefined)
@@ -82,54 +145,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 				},
-				Parameter(node, { sourceFile }) {
-					if (node.initializer && isUndefinedKeyword(node.initializer)) {
-						context.report({
-							fix: {
-								range: {
-									begin: node.name.end,
-									end: node.initializer.end,
-								},
-								text: "",
-							},
-							message: "unnecessaryDefault",
-							range: getTSNodeRange(node.initializer, sourceFile),
-						});
-					}
-				},
-				BindingElement(node, { sourceFile }) {
-					if (node.initializer && isUndefinedKeyword(node.initializer)) {
-						const nameEnd = node.propertyName
-							? node.propertyName.end
-							: node.name.end;
-						context.report({
-							fix: {
-								range: {
-									begin: nameEnd,
-									end: node.initializer.end,
-								},
-								text: "",
-							},
-							message: "unnecessaryDefault",
-							range: getTSNodeRange(node.initializer, sourceFile),
-						});
-					}
-				},
-				ReturnStatement(node, { sourceFile }) {
-					if (node.expression && isUndefinedKeyword(node.expression)) {
-						context.report({
-							fix: {
-								range: {
-									begin: node.getStart(sourceFile) + "return".length,
-									end: node.expression.end,
-								},
-								text: "",
-							},
-							message: "unnecessaryReturn",
-							range: getTSNodeRange(node.expression, sourceFile),
-						});
-					}
-				},
 				YieldExpression(node, { sourceFile }) {
 					if (node.expression && isUndefinedKeyword(node.expression)) {
 						context.report({
@@ -145,21 +160,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							},
 							message: "unnecessaryYield",
 							range: getTSNodeRange(node.expression, sourceFile),
-						});
-					}
-				},
-				ArrowFunction(node, { sourceFile }) {
-					if (
-						node.body.kind === ts.SyntaxKind.Identifier &&
-						isUndefinedKeyword(node.body)
-					) {
-						context.report({
-							fix: {
-								range: getTSNodeRange(node.body, sourceFile),
-								text: "{}",
-							},
-							message: "unnecessaryArrowBody",
-							range: getTSNodeRange(node.body, sourceFile),
 						});
 					}
 				},
