@@ -18350,7 +18350,8 @@
 		"flint": {
 			"name": "unnecessaryUseStricts",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
