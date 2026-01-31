@@ -108,21 +108,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const group = outerQuantifier.element;
-					if (group.type !== "Group") {
+					if (group.type !== "Group" || group.alternatives.length !== 1) {
 						return;
 					}
 
-					if (group.alternatives.length !== 1) {
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const alternative = group.alternatives[0]!;
+
+					if (alternative.elements.length !== 1) {
 						return;
 					}
 
-					const alternative = group.alternatives[0];
-					if (!alternative || alternative.elements.length !== 1) {
-						return;
-					}
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const innerElement = alternative.elements[0]!;
 
-					const innerElement = alternative.elements[0];
-					if (!innerElement || innerElement.type !== "Quantifier") {
+					if (innerElement.type !== "Quantifier") {
 						return;
 					}
 
@@ -130,11 +130,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						innerElement.min,
 						innerElement.max,
 					);
-					if (!innerSimple) {
-						return;
-					}
-
-					if (innerElement.greedy !== outerQuantifier.greedy) {
+					if (!innerSimple || innerElement.greedy !== outerQuantifier.greedy) {
 						return;
 					}
 
@@ -151,6 +147,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						data: {
 							original: outerQuantifier.raw,
 							replacement,
+						},
+						fix: {
+							range: {
+								begin: patternStart + outerQuantifier.start,
+								end: patternStart + outerQuantifier.end,
+							},
+							text: replacement,
 						},
 						message: "unnecessaryNestedQuantifiers",
 						range: {

@@ -7,6 +7,9 @@ ruleTester.describe(rule, {
 			code: `
 /(?:a?)+/;
 `,
+			output: `
+/a*/;
+`,
 			snapshot: `
 /(?:a?)+/;
  ~~~~~~~
@@ -16,6 +19,9 @@ ruleTester.describe(rule, {
 		{
 			code: `
 /(?:a+)+/;
+`,
+			output: `
+/a+/;
 `,
 			snapshot: `
 /(?:a+)+/;
@@ -27,6 +33,9 @@ ruleTester.describe(rule, {
 			code: `
 /(?:a+)*/;
 `,
+			output: `
+/a*/;
+`,
 			snapshot: `
 /(?:a+)*/;
  ~~~~~~~
@@ -36,6 +45,9 @@ ruleTester.describe(rule, {
 		{
 			code: `
 /(?:a?)*/;
+`,
+			output: `
+/a*/;
 `,
 			snapshot: `
 /(?:a?)*/;
@@ -47,6 +59,9 @@ ruleTester.describe(rule, {
 			code: `
 /(?:[a-z]?)+/;
 `,
+			output: `
+/[a-z]*/;
+`,
 			snapshot: `
 /(?:[a-z]?)+/;
  ~~~~~~~~~~~
@@ -56,6 +71,9 @@ ruleTester.describe(rule, {
 		{
 			code: String.raw`
 /(?:\w+)+/;
+`,
+			output: String.raw`
+/\w+/;
 `,
 			snapshot: `
 /(?:\\w+)+/;
@@ -67,6 +85,9 @@ ruleTester.describe(rule, {
 			code: `
 /(?:a??)+?/;
 `,
+			output: `
+/a*?/;
+`,
 			snapshot: `
 /(?:a??)+?/;
  ~~~~~~~~~
@@ -76,6 +97,9 @@ ruleTester.describe(rule, {
 		{
 			code: `
 /(?:a+?)*?/;
+`,
+			output: `
+/a*?/;
 `,
 			snapshot: `
 /(?:a+?)*?/;
@@ -87,6 +111,9 @@ ruleTester.describe(rule, {
 			code: `
 /(?:a*)+/;
 `,
+			output: `
+/a*/;
+`,
 			snapshot: `
 /(?:a*)+/;
  ~~~~~~~
@@ -96,6 +123,9 @@ ruleTester.describe(rule, {
 		{
 			code: `
 /(?:a*)*/;
+`,
+			output: `
+/a*/;
 `,
 			snapshot: `
 /(?:a*)*/;
@@ -107,6 +137,9 @@ ruleTester.describe(rule, {
 			code: `
 new RegExp("(?:a?)+");
 `,
+			output: `
+new RegExp("a*");
+`,
 			snapshot: `
 new RegExp("(?:a?)+");
             ~~~~~~~
@@ -116,6 +149,9 @@ new RegExp("(?:a?)+");
 		{
 			code: `
 RegExp("(?:a+)+");
+`,
+			output: `
+RegExp("a+");
 `,
 			snapshot: `
 RegExp("(?:a+)+");
