@@ -46,7 +46,7 @@
 		"eslint-plugin-n": "17.23.1",
 		"eslint-plugin-package-json": "0.88.2",
 		"eslint-plugin-perfectionist": "5.1.0",
-		"eslint-plugin-regexp": "2.10.0",
+		"eslint-plugin-regexp": "3.0.0",
 		"eslint-plugin-yml": "1.19.0",
 		"flint": "workspace:^",
 		"husky": "9.1.7",
