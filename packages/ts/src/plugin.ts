@@ -138,6 +138,7 @@ import nestedStandaloneIfs from "./rules/nestedStandaloneIfs.ts";
 import newDefinitions from "./rules/newDefinitions.ts";
 import newExpressions from "./rules/newExpressions.ts";
 import newNativeNonConstructors from "./rules/newNativeNonConstructors.ts";
+import nonNullableTypeAssertions from "./rules/nonNullableTypeAssertions.ts";
 import nonNullAssertedNullishCoalesces from "./rules/nonNullAssertedNullishCoalesces.ts";
 import nonNullAssertedOptionalChains from "./rules/nonNullAssertedOptionalChains.ts";
 import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
