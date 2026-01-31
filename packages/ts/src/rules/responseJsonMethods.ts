@@ -12,7 +12,7 @@ function isAcceptableSecondArgument(node: ts.Node) {
 }
 
 function isEmptyObjectLiteral(node: ts.Node) {
-	return ts.isObjectLiteralExpression(node) && node.properties.length === 0;
+	return ts.isObjectLiteralExpression(node) && !node.properties.length;
 }
 
 function isJsonContentTypeHeader(node: ts.Node) {
@@ -85,8 +85,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						!ts.isIdentifier(node.expression) ||
 						node.expression.text !== "Response" ||
-						!node.arguments ||
-						node.arguments.length === 0 ||
+						!node.arguments?.length ||
 						node.arguments.length > 2
 					) {
 						return;
