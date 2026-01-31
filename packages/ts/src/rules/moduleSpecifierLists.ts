@@ -13,7 +13,7 @@ function hasNamedBindings(node: AST.ImportDeclaration) {
 		return false;
 	}
 
-	return !ts.isNamedImports(namedBindings) || namedBindings.elements.length > 0;
+	return !ts.isNamedImports(namedBindings) || !!namedBindings.elements.length;
 }
 
 function hasNamespaceImport(node: AST.ImportDeclaration) {
@@ -26,7 +26,7 @@ function isEmptyNamedImports(node: AST.ImportDeclaration) {
 	return (
 		namedBindings &&
 		ts.isNamedImports(namedBindings) &&
-		namedBindings.elements.length === 0
+		!namedBindings.elements.length
 	);
 }
 
@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Require non-empty specifier lists in import and export statements.",
 		id: "moduleSpecifierLists",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyExportSpecifiers: {
@@ -133,7 +133,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						!ts.isExportDeclaration(node) ||
 						!node.exportClause ||
 						!ts.isNamedExports(node.exportClause) ||
-						node.exportClause.elements.length > 0
+						!!node.exportClause.elements.length
 					) {
 						return;
 					}

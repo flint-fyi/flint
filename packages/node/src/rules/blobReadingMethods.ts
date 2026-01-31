@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer direct Blob reading methods over wrapping in Response for simpler code.",
 		id: "blobReadingMethods",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferBlobMethod: {
@@ -45,8 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						receiver.kind !== SyntaxKind.NewExpression ||
 						receiver.expression.kind !== SyntaxKind.Identifier ||
 						receiver.expression.text !== "Response" ||
-						!receiver.arguments ||
-						receiver.arguments.length === 0
+						!receiver.arguments?.length
 					) {
 						return;
 					}

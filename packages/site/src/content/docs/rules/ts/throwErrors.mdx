@@ -1,0 +1,73 @@
+---
+description: "Reports throwing values that are not Error objects."
+title: "throwErrors"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="throwErrors" />
+
+Only `Error` objects (or objects that extend `Error`) should be thrown.
+Throwing non-`Error` values has several downsides:
+
+- No stack trace information for debugging
+- Inconsistent error handling behavior
+- Cannot use standard error properties like `cause`, `message`, or `name`
+
+This rule reports on any `throw` statement where the value being thrown is not an `Error`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+throw "Something went wrong";
+```
+
+```ts
+throw { message: "error", code: 500 };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+throw new Error("Something went wrong");
+```
+
+```ts
+class HttpError extends Error {
+	constructor(
+		message: string,
+		public code: number,
+	) {
+		super(message);
+		this.name = "HttpError";
+	}
+}
+throw new HttpError("error", 500);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you're working with legacy code that throws non-Error values and refactoring would be too costly, you may disable this rule.
+
+## Further Reading
+
+- [MDN: Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)
+- [MDN: throw](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/throw)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="throwErrors" />

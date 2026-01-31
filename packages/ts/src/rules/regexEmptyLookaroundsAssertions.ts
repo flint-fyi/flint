@@ -16,7 +16,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports empty lookahead and lookbehind assertions in regular expressions.",
 		id: "regexEmptyLookaroundsAssertions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyLookaround: {

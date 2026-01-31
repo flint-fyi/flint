@@ -6,7 +6,7 @@ import type { LinterHost } from "../types/host.ts";
 import type { LintResults } from "../types/linting.ts";
 import type { FileReport } from "../types/reports.ts";
 import type { AnyRule } from "../types/rules.ts";
-import { collectFilesAndMetadata } from "./collectFilesAndMetadata.ts";
+import { collectFilesAndOptions } from "./collectFilesAndOptions.ts";
 import { finalizeFileResults } from "./finalizeFileResults.ts";
 import { runLintRule } from "./runLintRule.ts";
 import type { LanguageFilesWithOptions } from "./types.ts";
@@ -29,26 +29,24 @@ export async function runConfig(
 	const {
 		allFilePaths,
 		cached,
-		languageFileMetadataByFilePath,
+		languageFilesByFilePath,
 		rulesFilesAndOptionsByRule,
-	} = await collectFilesAndMetadata(configDefinition, host, ignoreCache);
+	} = await collectFilesAndOptions(configDefinition, host, ignoreCache);
 
 	// 2. For each lint rule, run it on all files and store each file's results
 	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule);
 
-	// 3. For each file path, finalize output using its language metadata files
+	// 3. For each file path, finalize output using each of its language files
 	const filesResults = new Map(
-		Array.from(languageFileMetadataByFilePath).map(
-			([filePath, languageAndFilesMetadata]) => [
+		Array.from(languageFilesByFilePath).map(([filePath, languageAndFiles]) => [
+			filePath,
+			finalizeFileResults(
 				filePath,
-				finalizeFileResults(
-					filePath,
-					languageAndFilesMetadata,
-					reportsByFilePath.get(filePath).flat(),
-					skipDiagnostics,
-				),
-			],
-		),
+				languageAndFiles,
+				reportsByFilePath.get(filePath).flat(),
+				skipDiagnostics,
+			),
+		]),
 	);
 
 	// 4. Merge cached file results into filesResults

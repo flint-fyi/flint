@@ -1,0 +1,116 @@
+---
+description: "Reports character classes that wrap a single element that does not require brackets."
+title: "regexUnnecessaryCharacterClasses"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryCharacterClasses" />
+
+Reports character classes that wrap a single element that does not require brackets.
+A character class like `[a]` or `[\d]` can be simplified to just `a` or `\d`.
+
+## Examples
+
+### Single Character Class
+
+A character class with a single character can be unwrapped.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[a]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a/;
+```
+
+</TabItem>
+</Tabs>
+
+### Escape Sequence Class
+
+A character class with a single escape sequence can be unwrapped.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\d]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\d/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+The rule also checks regex patterns in `RegExp` constructor calls.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("[a]");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("a");
+```
+
+</TabItem>
+</Tabs>
+
+### Valid Cases
+
+These cases are valid and will not be reported:
+
+```ts
+// Negated classes
+const negated = /[^a]/;
+
+// Backspace escape (has special meaning in character class)
+const backspace = /[\b]/;
+
+// Multiple elements
+const multiple = /[ab]/;
+
+// Character ranges
+const range = /[a-z]/;
+
+// Equals sign (commonly used in regex for readability)
+const equals = /[=]/;
+```
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer to use character classes for consistency or readability, even when they contain only a single element, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Character classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Character_classes)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryCharacterClasses" />
