@@ -40,13 +40,6 @@ const items = getData() as Array<string>;
 </TabItem>
 </Tabs>
 
-Both syntaxes are allowed for `const` assertions since they're beneficial for type narrowing:
-
-```ts
-const value = { name: "test" } as const;
-const value = <const>{ name: "test" };
-```
-
 ## Options
 
 This rule is not configurable.
