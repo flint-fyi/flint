@@ -8023,8 +8023,10 @@
 			"name": "awaitInsidePromiseMethods",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "skipped",
 			"strictness": "strict"
 		},
+		"notes": "Superseded by awaitThenable.",
 		"oxlint": [
 			{
 				"name": "unicorn/no-await-in-promise-methods",
@@ -14319,8 +14321,10 @@
 		"flint": {
 			"name": "promiseExecutorReturns",
 			"plugin": "ts",
-			"preset": "logical"
-		}
+			"preset": "logical",
+			"status": "skipped"
+		},
+		"notes": "Superseded by awaitThenable."
 	},
 	{
 		"eslint": [
@@ -16826,9 +16830,9 @@
 		"flint": {
 			"name": "stringTrimMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"status": "skipped"
 		},
+		"notes": "Superseded by deprecated.",
 		"oxlint": [
 			{
 				"name": "unicorn/prefer-string-trim-start-end",
