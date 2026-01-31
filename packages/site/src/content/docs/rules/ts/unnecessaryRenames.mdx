@@ -1,0 +1,119 @@
+---
+description: "Renames that don't change the identifier name are unnecessary and should use shorthand syntax instead."
+title: "unnecessaryRenames"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryRenames" />
+
+Renaming an identifier to the same name is redundant and adds unnecessary verbosity.
+This applies to import statements, export statements, and destructuring assignments.
+
+## Examples
+
+### Import Statements
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { value as value } from "module";
+```
+
+```ts
+import { foo as foo, bar } from "module";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { value } from "module";
+```
+
+```ts
+import { foo, bar } from "module";
+```
+
+</TabItem>
+</Tabs>
+
+### Export Statements
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+export { data as data };
+```
+
+```ts
+export { default as default };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export { data };
+```
+
+```ts
+export { default };
+```
+
+</TabItem>
+</Tabs>
+
+### Destructuring Assignments
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const { key: key } = object;
+```
+
+```ts
+function example({ param: param }: { param: number }) {
+	return param;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const { key } = object;
+```
+
+```ts
+function example({ param }: { param: number }) {
+	return param;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a large codebase where removing these renames might conflict with automated refactoring tools or cause merge conflicts, you might want to disable this rule temporarily.
+
+## Further Reading
+
+- [MDN: Import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
+- [MDN: Export](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+- [MDN: Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryRenames" />
