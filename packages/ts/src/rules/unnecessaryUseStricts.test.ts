@@ -92,6 +92,15 @@ Unnecessary "use strict" directive.
 export {};
 `,
 		},
+		{
+			code: `"use strict";
+export const value = 42;`,
+			output: `export const value = 42;`,
+			snapshot: `"use strict";
+~~~~~~~~~~~~~
+Unnecessary "use strict" directive.
+export const value = 42;`,
+		},
 	],
 	valid: [
 		`
