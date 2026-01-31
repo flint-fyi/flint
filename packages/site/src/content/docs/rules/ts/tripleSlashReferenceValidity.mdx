@@ -1,0 +1,61 @@
+---
+description: "Reports invalid triple-slash reference directives."
+title: "tripleSlashReferenceValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="tripleSlashReferenceValidity" />
+
+Triple-slash reference directives must use valid directive types and proper formatting.
+Only `lib`, `no-default-lib`, `path`, and `types` are valid directive attributes.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+/// <reference foo="bar" />
+export const value = 1;
+```
+
+```ts
+/// <reference types />
+export const value = 1;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+/// <reference types="node" />
+export const value = 1;
+```
+
+```ts
+/// <reference types="node" />
+export const value = 1;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are using tooling other than TypeScript that uses different triple-slash reference directives, this rule might not be for you.
+
+## Further Reading
+
+- [TypeScript: Triple-Slash Directives](https://www.typescriptlang.org/docs/handbook/triple-slash-directives.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="tripleSlashReferenceValidity" />

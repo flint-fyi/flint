@@ -40,7 +40,7 @@
 		"wrap-ansi": "^9.0.2"
 	},
 	"devDependencies": {
-		"prettier": "3.7.4",
+		"prettier": "3.8.1",
 		"tsdown": "0.19.0-beta.2"
 	},
 	"peerDependencies": {

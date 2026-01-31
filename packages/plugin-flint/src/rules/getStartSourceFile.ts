@@ -41,7 +41,7 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					if (node.arguments.length === 0) {
+					if (!node.arguments.length) {
 						context.report({
 							message: "missingSourceFile",
 							range: getTSNodeRange(node, sourceFile),

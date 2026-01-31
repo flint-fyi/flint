@@ -151,7 +151,6 @@ const obj = {
 };
 const result = obj.getValue.call(obj);
 `,
-		// Test case for the bug: interface with apply/call methods that aren't from Function.prototype
 		`
 interface CustomInterface {
     apply(...args: unknown[]): void;

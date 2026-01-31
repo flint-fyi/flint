@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Disallow the use of the `accessKey` / `accesskey` attribute on JSX elements.",
 		id: "accessKeys",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		avoidAccessKey: {
