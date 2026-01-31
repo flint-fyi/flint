@@ -1,0 +1,161 @@
+---
+description: "Disallows unnecessary explicit undefined in defaults and initializers."
+title: "unnecessaryUndefinedDefaults"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryUndefinedDefaults" />
+
+In JavaScript and TypeScript, `undefined` is the default value for variables without initializers, parameters without defaults, and functions without explicit return values.
+Explicitly specifying `undefined` in these contexts is redundant and can be safely omitted for cleaner code.
+
+## Examples
+
+### Variable Declarations
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+let value = undefined;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+let value;
+```
+
+</TabItem>
+</Tabs>
+
+### Parameter Defaults
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function greet(message = undefined) {
+	console.log(message);
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function greet(message) {
+	console.log(message);
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Destructuring Defaults
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const { name = undefined } = person;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const { name } = person;
+```
+
+</TabItem>
+</Tabs>
+
+### Return Statements
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function process() {
+	return undefined;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function process() {
+	return;
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Yield Expressions
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function* generate() {
+	yield undefined;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function* generate() {
+	yield;
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Arrow Function Bodies
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const noop = () => undefined;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const noop = () => {};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer explicit `undefined` values for documentation purposes, or if you're working with a codebase that consistently uses explicit `undefined` as a style guide, you may want to disable this rule.
+
+Additionally, this rule does not flag `undefined` when passed as an argument to functions or used in object/array literals, as those cases may be semantically meaningful.
+
+## Further Reading
+
+- [MDN: undefined](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined)
+- [MDN: Default parameters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryUndefinedDefaults" />
