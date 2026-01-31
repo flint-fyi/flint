@@ -31,6 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			pattern: string,
 			patternStart: number,
 			flags: string,
+			emptyReplacement: string,
 		) {
 			const regexpAst = parseRegexpAst(pattern, flags);
 			if (!regexpAst) {
@@ -43,15 +44,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
+					const range = {
+						begin: patternStart + node.start,
+						end: patternStart + node.end,
+					};
+					const isWholePattern =
+						node.start === 0 && node.end === pattern.length;
+
 					context.report({
 						data: {
 							raw: node.raw,
 						},
-						message: "uselessZero",
-						range: {
-							begin: patternStart + node.start,
-							end: patternStart + node.end,
+						fix: {
+							range,
+							text: isWholePattern ? emptyReplacement : "",
 						},
+						message: "uselessZero",
+						range,
 					});
 				},
 			});
@@ -62,7 +71,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const details = getRegExpLiteralDetails(node, { sourceFile });
-			checkPattern(details.pattern, details.start, details.flags);
+			checkPattern(details.pattern, details.start, details.flags, "(?:)");
 		}
 
 		function checkRegExpConstructor(
@@ -78,6 +87,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				construction.pattern,
 				construction.start + 1,
 				construction.flags,
+				"",
 			);
 		}
 

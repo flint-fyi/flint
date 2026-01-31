@@ -7,6 +7,9 @@ ruleTester.describe(rule, {
 			code: `
 /a{0}/;
 `,
+			output: `
+/(?:)/;
+`,
 			snapshot: `
 /a{0}/;
  ~~~~
@@ -16,6 +19,9 @@ ruleTester.describe(rule, {
 		{
 			code: `
 /a{0,0}/;
+`,
+			output: `
+/(?:)/;
 `,
 			snapshot: `
 /a{0,0}/;
@@ -27,6 +33,9 @@ ruleTester.describe(rule, {
 			code: `
 /(ab){0}/;
 `,
+			output: `
+/(?:)/;
+`,
 			snapshot: `
 /(ab){0}/;
  ~~~~~~~
@@ -36,6 +45,9 @@ ruleTester.describe(rule, {
 		{
 			code: `
 /[a-z]{0}/;
+`,
+			output: `
+/(?:)/;
 `,
 			snapshot: `
 /[a-z]{0}/;
@@ -47,6 +59,9 @@ ruleTester.describe(rule, {
 			code: `
 new RegExp("a{0}");
 `,
+			output: `
+new RegExp("");
+`,
 			snapshot: `
 new RegExp("a{0}");
             ~~~~
@@ -57,6 +72,9 @@ new RegExp("a{0}");
 			code: `
 /a{0}?/;
 `,
+			output: `
+/(?:)/;
+`,
 			snapshot: `
 /a{0}?/;
  ~~~~~
@@ -66,6 +84,9 @@ new RegExp("a{0}");
 		{
 			code: `
 /(?:foo|bar){0}/;
+`,
+			output: `
+/(?:)/;
 `,
 			snapshot: `
 /(?:foo|bar){0}/;
