@@ -155,15 +155,17 @@ function findTriviallyNestedAssertions(
 				const innerContentStart = innerOpener.length;
 				const innerCloseIndex = findMatchingParen(content, innerContentStart);
 
-				if (innerCloseIndex !== -1 && innerCloseIndex === content.length - 1) {
-					if (!hasQuantifierAfter(content, innerCloseIndex + 1)) {
-						findings.push({
-							end: outerEnd,
-							innerRaw: content,
-							outerRaw: pattern.slice(outerStart, outerEnd),
-							start: outerStart,
-						});
-					}
+				if (
+					innerCloseIndex !== -1 &&
+					innerCloseIndex === content.length - 1 &&
+					!hasQuantifierAfter(content, innerCloseIndex + 1)
+				) {
+					findings.push({
+						end: outerEnd,
+						innerRaw: content,
+						outerRaw: pattern.slice(outerStart, outerEnd),
+						start: outerStart,
+					});
 				}
 			}
 		}
