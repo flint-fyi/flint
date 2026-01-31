@@ -58,10 +58,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				ArrowFunction(node, { sourceFile }) {
-					if (
-						node.body.kind === ts.SyntaxKind.Identifier &&
-						isUndefinedKeyword(node.body)
-					) {
+					if (ts.isExpression(node.body) && isUndefinedKeyword(node.body)) {
 						context.report({
 							fix: {
 								range: getTSNodeRange(node.body, sourceFile),
@@ -74,13 +71,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				BindingElement(node, { sourceFile }) {
 					if (node.initializer && isUndefinedKeyword(node.initializer)) {
-						const nameEnd = node.propertyName
-							? node.propertyName.end
-							: node.name.end;
 						context.report({
 							fix: {
 								range: {
-									begin: nameEnd,
+									begin: node.name.end,
 									end: node.initializer.end,
 								},
 								text: "",

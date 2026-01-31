@@ -145,6 +145,19 @@ function method(first = undefined, second: number) {}
                         Prefer omitting undefined defaults as they are implicit.
 `,
 		},
+		{
+			code: `
+const {prop: renamed = undefined} = object;
+`,
+			output: `
+const {prop: renamed} = object;
+`,
+			snapshot: `
+const {prop: renamed = undefined} = object;
+                       ~~~~~~~~~
+                       Prefer omitting undefined defaults as they are implicit.
+`,
+		},
 	],
 	valid: [
 		"let value;",
