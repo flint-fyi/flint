@@ -138,7 +138,6 @@ import nestedStandaloneIfs from "./rules/nestedStandaloneIfs.ts";
 import newDefinitions from "./rules/newDefinitions.ts";
 import newExpressions from "./rules/newExpressions.ts";
 import newNativeNonConstructors from "./rules/newNativeNonConstructors.ts";
-import nonNullableTypeAssertions from "./rules/nonNullableTypeAssertions.ts";
 import nonNullAssertedNullishCoalesces from "./rules/nonNullAssertedNullishCoalesces.ts";
 import nonNullAssertedOptionalChains from "./rules/nonNullAssertedOptionalChains.ts";
 import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
@@ -263,7 +262,7 @@ import tripleSlashReferences from "./rules/tripleSlashReferences.ts";
 import tripleSlashReferenceValidity from "./rules/tripleSlashReferenceValidity.ts";
 import tsComments from "./rules/tsComments.ts";
 import tslintComments from "./rules/tslintComments.ts";
-import typeAssertions from "./rules/typeAssertions.ts";
+import typeAssertionStyles from "./rules/typeAssertionStyles.ts";
 import typeofComparisons from "./rules/typeofComparisons.ts";
 import unassignedVariables from "./rules/unassignedVariables.ts";
 import undefinedVariables from "./rules/undefinedVariables.ts";
@@ -547,7 +546,7 @@ export const ts = createPlugin({
 		tripleSlashReferenceValidity,
 		tsComments,
 		tslintComments,
-		typeAssertions,
+		typeAssertionStyles,
 		typeofComparisons,
 		unassignedVariables,
 		undefinedVariables,

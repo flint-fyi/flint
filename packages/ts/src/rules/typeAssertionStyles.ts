@@ -18,12 +18,13 @@ function isConstAssertion(node: AST.TypeAssertion, sourceFile: AST.SourceFile) {
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports angle-bracket type assertions.",
-		id: "typeAssertions",
+		id: "typeAssertionStyles",
 		presets: ["stylistic"],
 	},
 	messages: {
 		preferAs: {
-			primary: "Use 'as' syntax for type assertions instead of angle-brackets.",
+			primary:
+				"Prefer `as` syntax for type assertions instead of legacy angle-brackets.",
 			secondary: [
 				"Angle-bracket syntax is ambiguous with JSX.",
 				"The 'as' syntax is clearer and works in all contexts.",

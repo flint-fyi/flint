@@ -17307,7 +17307,7 @@
 			}
 		],
 		"flint": {
-			"name": "typeAssertions",
+			"name": "typeAssertionStyles",
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
