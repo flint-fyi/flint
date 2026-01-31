@@ -19,7 +19,6 @@ export default ruleCreator.createRule(markdownLanguage, {
 			],
 			suggestions: [
 				"Increment heading levels by only one at a time.",
-				"Add intermediate heading levels between skipped levels.",
 			],
 		},
 	},
