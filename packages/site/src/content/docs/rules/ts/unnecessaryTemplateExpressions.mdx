@@ -1,0 +1,94 @@
+---
+description: "Reports template expressions that can be replaced with simpler expressions."
+title: "unnecessaryTemplateExpressions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryTemplateExpressions" />
+
+Template literals with a single substitution and no surrounding text are unnecessarily complex.
+Using the expression directly is clearer and more maintainable.
+
+For example, `` `${value}` `` is functionally equivalent to `String(value)` but adds unnecessary syntax noise.
+Template literals should be reserved for cases where they provide clear value, such as embedding expressions within text or combining multiple values.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const name = "Alice";
+const greeting = `${name}`;
+```
+
+```ts
+const count = 42;
+const message = `${count}`;
+```
+
+```ts
+function getValue() {
+	return "result";
+}
+const output = `${getValue()}`;
+```
+
+```ts
+const isActive = true;
+const status = `${isActive}`;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const name = "Alice";
+const greeting = `Hello, ${name}!`;
+```
+
+```ts
+const firstName = "John";
+const lastName = "Doe";
+const fullName = `${firstName} ${lastName}`;
+```
+
+```ts
+const count = 42;
+const message = `Count: ${count}`;
+```
+
+```ts
+const name = "Alice";
+const greeting = name;
+```
+
+```ts
+const count = 42;
+const countString = String(count);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a coding standard that requires explicit string coercion using template literals for clarity or consistency, you might choose to disable this rule.
+However, in most cases, removing unnecessary template wrappers improves code readability.
+
+## Further Reading
+
+- [MDN: Template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
+- [MDN: String coercion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String#string_coercion)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryTemplateExpressions" />
