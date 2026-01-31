@@ -33,127 +33,155 @@ function analyzeConditionalForNullish(
 	const { condition, whenFalse, whenTrue } = node;
 
 	// Simple truthiness check: x ? x : y
-	if (ts.isIdentifier(condition) && ts.isIdentifier(whenTrue)) {
-		if (condition.text === whenTrue.text) {
-			return {
-				alternate: whenFalse,
-				consequent: whenTrue,
-				operator: "",
-				test: condition,
-			};
-		}
+	if (
+		ts.isIdentifier(condition) &&
+		ts.isIdentifier(whenTrue) &&
+		condition.text === whenTrue.text
+	) {
+		return {
+			alternate: whenFalse,
+			consequent: whenTrue,
+			operator: "",
+			test: condition,
+		};
 	}
 
 	// Negation: !x ? y : x
-	if (ts.isPrefixUnaryExpression(condition)) {
-		if (condition.operator === ts.SyntaxKind.ExclamationToken) {
-			const operand = condition.operand;
-			if (ts.isIdentifier(operand) && ts.isIdentifier(whenFalse)) {
-				if (operand.text === whenFalse.text) {
-					return {
-						alternate: whenTrue,
-						consequent: whenFalse,
-						operator: "!",
-						test: operand,
-					};
-				}
-			}
+	if (
+		ts.isPrefixUnaryExpression(condition) &&
+		condition.operator === ts.SyntaxKind.ExclamationToken
+	) {
+		const operand = condition.operand;
+		if (
+			ts.isIdentifier(operand) &&
+			ts.isIdentifier(whenFalse) &&
+			operand.text === whenFalse.text
+		) {
+			return {
+				alternate: whenTrue,
+				consequent: whenFalse,
+				operator: "!",
+				test: operand,
+			};
 		}
 	}
 
 	// Comparison patterns: x !== null ? x : y
-	if (ts.isBinaryExpression(condition)) {
-		if (isNullLikeComparison(condition)) {
-			const { isNegation, value: testValue } =
-				extractValueFromComparison(condition);
+	if (ts.isBinaryExpression(condition) && isNullLikeComparison(condition)) {
+		const { isNegation, value: testValue } =
+			extractValueFromComparison(condition);
 
-			if (!testValue) {
-				return {};
-			}
-
-			const operator = getComparisonOperator(condition);
-			const [alternate, consequent] = isNegation
-				? [whenFalse, whenTrue]
-				: [whenTrue, whenFalse];
-
-			return {
-				alternate,
-				consequent,
-				operator,
-				test: testValue,
-			};
+		if (!testValue) {
+			return {};
 		}
+
+		const operator = getComparisonOperator(condition);
+		const [alternate, consequent] = isNegation
+			? [whenFalse, whenTrue]
+			: [whenTrue, whenFalse];
+
+		// Verify consequent matches or accesses the test value
+		if (!consequentMatchesTest(consequent, testValue, sourceFile)) {
+			return {};
+		}
+
+		return {
+			alternate,
+			consequent,
+			operator,
+			test: testValue,
+		};
 	}
 
 	// Logical AND pattern: x !== undefined && x !== null ? x : y
-	if (ts.isBinaryExpression(condition)) {
-		if (
-			condition.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
-		) {
-			const leftIsComparison = ts.isBinaryExpression(condition.left)
-				? isNullLikeComparison(condition.left)
-				: false;
-			const rightIsComparison = ts.isBinaryExpression(condition.right)
-				? isNullLikeComparison(condition.right)
-				: false;
+	if (
+		ts.isBinaryExpression(condition) &&
+		condition.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
+	) {
+		const leftIsComparison = ts.isBinaryExpression(condition.left)
+			? isNullLikeComparison(condition.left)
+			: false;
+		const rightIsComparison = ts.isBinaryExpression(condition.right)
+			? isNullLikeComparison(condition.right)
+			: false;
 
-			if (leftIsComparison && rightIsComparison) {
-				const leftComp = condition.left as AST.BinaryExpression;
-				const rightComp = condition.right as AST.BinaryExpression;
+		if (leftIsComparison && rightIsComparison) {
+			const leftComp = condition.left as AST.BinaryExpression;
+			const rightComp = condition.right as AST.BinaryExpression;
 
-				const leftValue = extractValueFromComparison(leftComp).value;
-				const rightValue = extractValueFromComparison(rightComp).value;
+			const leftValue = extractValueFromComparison(leftComp).value;
+			const rightValue = extractValueFromComparison(rightComp).value;
 
-				if (
-					leftValue &&
-					rightValue &&
-					hasSameTokens(leftValue, rightValue, sourceFile)
-				) {
-					return {
-						alternate: whenFalse,
-						consequent: whenTrue,
-						operator: "===",
-						test: leftValue,
-					};
-				}
+			if (
+				leftValue &&
+				rightValue &&
+				hasSameTokens(leftValue, rightValue, sourceFile)
+			) {
+				return {
+					alternate: whenFalse,
+					consequent: whenTrue,
+					operator: "===",
+					test: leftValue,
+				};
 			}
 		}
 	}
 
 	// Logical OR pattern: x === undefined || x === null ? y : x
-	if (ts.isBinaryExpression(condition)) {
-		if (condition.operatorToken.kind === ts.SyntaxKind.BarBarToken) {
-			const leftIsComparison = ts.isBinaryExpression(condition.left)
-				? isNullLikeComparison(condition.left)
-				: false;
-			const rightIsComparison = ts.isBinaryExpression(condition.right)
-				? isNullLikeComparison(condition.right)
-				: false;
+	if (
+		ts.isBinaryExpression(condition) &&
+		condition.operatorToken.kind === ts.SyntaxKind.BarBarToken
+	) {
+		const leftIsComparison = ts.isBinaryExpression(condition.left)
+			? isNullLikeComparison(condition.left)
+			: false;
+		const rightIsComparison = ts.isBinaryExpression(condition.right)
+			? isNullLikeComparison(condition.right)
+			: false;
 
-			if (leftIsComparison && rightIsComparison) {
-				const leftComp = condition.left as AST.BinaryExpression;
-				const rightComp = condition.right as AST.BinaryExpression;
+		if (leftIsComparison && rightIsComparison) {
+			const leftComp = condition.left as AST.BinaryExpression;
+			const rightComp = condition.right as AST.BinaryExpression;
 
-				const leftValue = extractValueFromComparison(leftComp).value;
-				const rightValue = extractValueFromComparison(rightComp).value;
+			const leftValue = extractValueFromComparison(leftComp).value;
+			const rightValue = extractValueFromComparison(rightComp).value;
 
-				if (
-					leftValue &&
-					rightValue &&
-					hasSameTokens(leftValue, rightValue, sourceFile)
-				) {
-					return {
-						alternate: whenTrue,
-						consequent: whenFalse,
-						operator: "===",
-						test: leftValue,
-					};
-				}
+			if (
+				leftValue &&
+				rightValue &&
+				hasSameTokens(leftValue, rightValue, sourceFile)
+			) {
+				return {
+					alternate: whenTrue,
+					consequent: whenFalse,
+					operator: "===",
+					test: leftValue,
+				};
 			}
 		}
 	}
 
 	return {};
+}
+
+function consequentMatchesTest(
+	consequent: AST.Expression,
+	test: AST.Expression,
+	sourceFile: AST.SourceFile,
+): boolean {
+	if (hasSameTokens(consequent, test, sourceFile)) {
+		return true;
+	}
+
+	if (
+		ts.isPropertyAccessExpression(consequent) ||
+		ts.isElementAccessExpression(consequent) ||
+		ts.isCallExpression(consequent)
+	) {
+		return consequentMatchesTest(consequent.expression, test, sourceFile);
+	}
+
+	return false;
 }
 
 function extractAssignmentFromIfStatement(node: AST.IfStatement) {
@@ -433,7 +461,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer nullish coalescing operator (??) over logical OR (||) for nullish values.",
 		id: "nullishCoalescingOperators",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		noStrictNullCheck: {
@@ -499,25 +527,65 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 
 	setup(context) {
+		function getOptionalChainInsertPosition(
+			node: AST.AnyNode,
+			test: AST.AnyNode,
+			sourceFile: AST.SourceFile,
+		) {
+			if (
+				node.kind === ts.SyntaxKind.PropertyAccessExpression ||
+				node.kind === ts.SyntaxKind.ElementAccessExpression
+			) {
+				if (hasSameTokens(node.expression, test, sourceFile)) {
+					return {
+						needsDot: ts.isElementAccessExpression(node),
+						pos: node.expression.getEnd(),
+					};
+				}
+				return getOptionalChainInsertPosition(
+					node.expression,
+					test,
+					sourceFile,
+				);
+			}
+			if (ts.isCallExpression(node)) {
+				return getOptionalChainInsertPosition(
+					node.expression,
+					test,
+					sourceFile,
+				);
+			}
+			return undefined;
+		}
+
 		function createNullishNodesFix(
-			left: AST.AnyNode,
-			right: AST.AnyNode,
+			consequent: AST.AnyNode,
+			alternate: AST.AnyNode,
 			sourceFile: AST.SourceFile,
 			range: CharacterReportRange,
+			test?: AST.AnyNode,
 		) {
-			const testText = sourceFile.text.substring(
-				left.getStart(sourceFile),
-				left.getEnd(),
-			);
-			const alternateText = sourceFile.text.substring(
-				right.getStart(sourceFile),
-				right.getEnd(),
-			);
+			const getText = (node: AST.AnyNode) =>
+				sourceFile.text.substring(node.getStart(sourceFile), node.getEnd());
 
-			return {
-				range,
-				text: `${testText} ?? ${alternateText}`,
-			};
+			let leftText = getText(consequent);
+
+			if (test && test !== consequent) {
+				const insert = getOptionalChainInsertPosition(
+					consequent,
+					test,
+					sourceFile,
+				);
+				if (insert) {
+					const offset = insert.pos - consequent.getStart(sourceFile);
+					leftText =
+						leftText.slice(0, offset) +
+						(insert.needsDot ? "?." : "?") +
+						leftText.slice(offset);
+				}
+			}
+
+			return { range, text: `${leftText} ?? ${getText(alternate)}` };
 		}
 
 		return {
@@ -574,9 +642,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const range = getTSNodeRange(node, sourceFile);
-
 					context.report({
-						fix: createNullishNodesFix(test, alternate, sourceFile, range),
+						fix: createNullishNodesFix(
+							consequent,
+							alternate,
+							sourceFile,
+							range,
+							test,
+						),
 						message: "preferNullishTernary",
 						range,
 					});

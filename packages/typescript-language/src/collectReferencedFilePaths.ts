@@ -72,7 +72,7 @@ function isImportCall(
 	return (
 		ts.isCallExpression(node) &&
 		tsutils.isImportExpression(node.expression) &&
-		node.arguments.length > 0 &&
+		!!node.arguments.length &&
 		ts.isStringLiteral(
 			nullThrows(
 				node.arguments[0],

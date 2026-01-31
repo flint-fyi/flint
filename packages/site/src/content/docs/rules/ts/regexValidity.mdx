@@ -1,0 +1,77 @@
+---
+description: "Reports invalid regular expressions."
+title: "regexValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexValidity" />
+
+It is possible to write regular expression literals that will throw at runtime.
+This includes invalid patterns, invalid flags, duplicate flags, and conflicting flag combinations.
+This rule reports those invalid regular expressions.
+
+## Examples
+
+Invalid Pattern
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = RegExp("(");
+```
+
+```ts
+const pattern = RegExp("abc", "q");
+```
+
+```ts
+const pattern = RegExp("abc", "gg");
+```
+
+```ts
+const pattern = RegExp("abc", "uv");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = RegExp("(abc)");
+```
+
+```ts
+const pattern = RegExp("abc", "g");
+```
+
+```ts
+const pattern = RegExp("abc", "gi");
+```
+
+```ts
+const pattern = RegExp("abc", "u");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are working in an environment with different regular expression semantics than the norm, you may prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: RegExp](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+- [ECMAScript Regular Expression Flags](https://tc39.es/ecma262/#sec-regexp-pattern-flags)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexValidity" />

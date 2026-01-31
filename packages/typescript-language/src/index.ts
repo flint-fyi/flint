@@ -1,9 +1,5 @@
 export { convertTypeScriptDiagnosticToLanguageFileDiagnostic } from "./convertTypeScriptDiagnosticToLanguageFileDiagnostic.ts";
 export {
-	collectTypeScriptFileCacheImpacts,
-	NodeSyntaxKinds,
-} from "./createTypeScriptFileFromProgram.ts";
-export {
 	extractDirectivesFromTypeScriptFile,
 	type ExtractedDirective,
 } from "./directives/parseDirectivesFromTypeScriptFile.ts";
@@ -24,5 +20,5 @@ export { isGlobalDeclaration } from "./utils/isGlobalDeclaration.ts";
 export { isGlobalDeclarationOfName } from "./utils/isGlobalDeclarationOfName.ts";
 export { isGlobalVariable } from "./utils/isGlobalVariable.ts";
 export { isInlineArrayCreation } from "./utils/isInlineArrayCreation.ts";
-export { unwrapParenthesizedExpression } from "./utils/unwrapParenthesizedExpression.ts";
-export { unwrapParenthesizedExpressionsParent } from "./utils/unwrapParentParenthesizedExpressions.ts";
+export { unwrapParenthesizedNode } from "./utils/unwrapParenthesizedNode.ts";
+export { unwrapParentParenthesizedExpressions } from "./utils/unwrapParentParenthesizedExpressions.ts";

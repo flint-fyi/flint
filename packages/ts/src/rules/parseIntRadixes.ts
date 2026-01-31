@@ -68,7 +68,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports parseInt calls that are missing or have an invalid radix parameter.",
 		id: "parseIntRadixes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidRadix: {

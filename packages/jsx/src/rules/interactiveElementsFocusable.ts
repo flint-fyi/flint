@@ -106,7 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports interactive elements that are not focusable via keyboard.",
 		id: "interactiveElementsFocusable",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		notFocusable: {

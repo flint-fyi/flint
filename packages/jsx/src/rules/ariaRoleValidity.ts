@@ -85,7 +85,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports invalid or abstract ARIA roles.",
 		id: "ariaRoleValidity",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidRole: {

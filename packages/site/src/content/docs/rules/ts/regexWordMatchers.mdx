@@ -1,0 +1,113 @@
+---
+description: "Reports character classes that match word characters and could use \\w or \\W instead."
+title: "regexWordMatchers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexWordMatchers" />
+
+JavaScript regular expressions support word matcher escape sequences `\w` and `\W` instead of `[a-zA-Z0-9_]` and `[^a-zA-Z0-9_]`, respectively, for regular expressions.
+Those escape sequences are more concise than writing out the full character class sets.
+
+This rule reports on any character sets that can be replaced by `\w` or `\W` word matchers.
+
+## Examples
+
+### Word Character Class
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[0-9a-zA-Z_]+/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\w+/;
+```
+
+</TabItem>
+</Tabs>
+
+### Negated Word Character Class
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[^0-9a-zA-Z_]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\W/;
+```
+
+</TabItem>
+</Tabs>
+
+### With Ignore Case Flag
+
+When the `i` flag is used, `[a-z]` already covers both lowercase and uppercase letters:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[0-9a-z_]/i;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\w/i;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("[0-9a-zA-Z_]+");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("\\w+");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has an established convention of using explicit character classes for readability, or if you prefer consistency with patterns that use partial word character ranges (like `[a-z0-9]`), you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Character class escape \\w](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_class_escape)
+- [MDN: Character class](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_class)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexWordMatchers" />

@@ -198,7 +198,7 @@ export function createVFSLinterHost(
 			return {
 				[Symbol.dispose]() {
 					watchers.delete(callback);
-					if (watchers.size === 0) {
+					if (!watchers.size) {
 						collection.delete(directoryPathAbsolute);
 					}
 					baseWatcher?.[Symbol.dispose]();
@@ -221,7 +221,7 @@ export function createVFSLinterHost(
 			return {
 				[Symbol.dispose]() {
 					watchers.delete(callback);
-					if (watchers.size === 0) {
+					if (!watchers.size) {
 						fileWatchers.delete(filePathAbsolute);
 					}
 					baseWatcher?.[Symbol.dispose]();

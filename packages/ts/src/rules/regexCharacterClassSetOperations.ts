@@ -65,7 +65,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports lookarounds that can be replaced with character class set operations.",
 		id: "regexCharacterClassSetOperations",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferSetOperation: {
