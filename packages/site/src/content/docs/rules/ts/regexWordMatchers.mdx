@@ -10,8 +10,10 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexWordMatchers" />
 
-Enforces using `\w` instead of `[a-zA-Z0-9_]` and `\W` instead of `[^a-zA-Z0-9_]` in regular expressions.
-The escape sequences are more concise and widely recognized.
+JavaScript regular expressions support word matcher escape sequences `\w` and `\W` instead of `[a-zA-Z0-9_]` and `[^a-zA-Z0-9_]`, respectively, for regular expressions.
+Those escape sequences are more concise than writing out the full character class sets.
+
+This rule reports on any character sets that can be replaced by `\w` or `\W` word matchers.
 
 ## Examples
 
@@ -99,7 +101,7 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If your codebase has an established convention of using explicit character classes for readability, or if you need consistency with patterns that use partial word character ranges (like `[a-z0-9]`), you might prefer to disable this rule.
+If your codebase has an established convention of using explicit character classes for readability, or if you prefer consistency with patterns that use partial word character ranges (like `[a-z0-9]`), you might prefer to disable this rule.
 
 ## Further Reading
 

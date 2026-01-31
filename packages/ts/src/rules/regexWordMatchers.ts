@@ -30,11 +30,10 @@ function findIssues(pattern: string, flags: string): Issue[] {
 	}
 
 	visitRegExpAST(ast, {
-		onCharacterClassEnter(ccNode) {
-			const elements = ccNode.elements;
+		onCharacterClassEnter(characterClassNode) {
 			const expectedCount = hasIgnoreCase ? 3 : 4;
 
-			if (elements.length !== expectedCount) {
+			if (characterClassNode.elements.length !== expectedCount) {
 				return;
 			}
 
@@ -43,7 +42,7 @@ function findIssues(pattern: string, flags: string): Issue[] {
 			let hasUpper = false;
 			let hasUnderscore = false;
 
-			for (const element of elements) {
+			for (const element of characterClassNode.elements) {
 				if (isDigitRange(element)) {
 					if (hasDigit) {
 						return;
@@ -78,10 +77,10 @@ function findIssues(pattern: string, flags: string): Issue[] {
 			}
 
 			issues.push({
-				end: ccNode.end,
-				negated: ccNode.negate,
-				raw: ccNode.raw,
-				start: ccNode.start,
+				end: characterClassNode.end,
+				negated: characterClassNode.negate,
+				raw: characterClassNode.raw,
+				start: characterClassNode.start,
 			});
 		},
 	});
