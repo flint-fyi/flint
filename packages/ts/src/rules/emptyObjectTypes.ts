@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports empty object type literals and empty interfaces that are often used incorrectly.",
 		id: "emptyObjectTypes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyInterface: {

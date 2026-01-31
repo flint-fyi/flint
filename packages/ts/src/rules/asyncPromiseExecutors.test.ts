@@ -63,7 +63,6 @@ const p = new Promise((resolve) => {
 });
 `,
 		`
-// Not a Promise constructor
 new SomethingElse(async (resolve) => {
     resolve();
 });

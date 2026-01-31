@@ -1,0 +1,119 @@
+---
+description: "Reports classes that only contain static members."
+title: "staticMemberOnlyClasses"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="staticMemberOnlyClasses" />
+
+Classes that contain only static members are essentially being used as namespaces.
+In JavaScript and TypeScript, objects and module-level exports are more idiomatic and straightforward.
+
+This rule reports on any class that only contains static members.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class MathUtils {
+	static PI = 3.14159;
+	static add(a: number, b: number) {
+		return a + b;
+	}
+}
+```
+
+```ts
+class Config {
+	static defaultValue = 42;
+	constructor() {}
+}
+```
+
+```ts
+class StaticAccessors {
+	static get value() {
+		return 42;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Person {
+	name: string;
+	constructor(name: string) {
+		this.name = name;
+	}
+}
+```
+
+```ts
+class Counter {
+	static count = 0;
+	value: number = 0;
+}
+```
+
+```ts
+class Child extends Parent {
+	static method() {}
+}
+```
+
+```ts
+abstract class AbstractService {
+	static factory() {}
+}
+```
+
+```ts
+class Singleton {
+	private constructor() {}
+	static instance = new Singleton();
+}
+```
+
+```ts
+@decorator
+class DecoratedClass {
+	static method() {}
+}
+```
+
+```ts
+export const PI = 3.14159;
+export function add(a: number, b: number) {
+	return a + b;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase uses classes as namespaces for organizing related static utilities, and you don't mind the extra complexity of classes, you may want to disable this rule.
+Some frameworks or patterns may also require static-only classes for specific use cases.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+- [MDN: static](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="staticMemberOnlyClasses" />
