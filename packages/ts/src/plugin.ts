@@ -244,7 +244,7 @@ import regexUnusedQuantifiers from "./rules/regexUnusedQuantifiers.ts";
 import regexValidity from "./rules/regexValidity.ts";
 import regexWordMatchers from "./rules/regexWordMatchers.ts";
 import regexZeroQuantifiers from "./rules/regexZeroQuantifiers.ts";
-import responseMethods from "./rules/responseMethods.ts";
+import responseJsonMethods from "./rules/responseJsonMethods.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import sequences from "./rules/sequences.ts";
@@ -462,7 +462,7 @@ export const ts = createPlugin({
 		propertyAccessNotation,
 		recursionOnlyArguments,
 		redundantTypeConstituents,
-		responseMethods,
+		responseJsonMethods,
 		regexAllGlobalFlags,
 		regexAmbiguousInvalidity,
 		regexCharacterClasses,

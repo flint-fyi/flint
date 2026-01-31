@@ -1,6 +1,6 @@
 ---
 description: "Prefer `Response.json()` over `new Response(JSON.stringify(...))` for JSON responses."
-title: "responseMethods"
+title: "responseJsonMethods"
 topic: "rules"
 ---
 
@@ -8,7 +8,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
-<RuleSummary plugin="ts" rule="responseMethods" />
+<RuleSummary plugin="ts" rule="responseJsonMethods" />
 
 The `Response.json()` static method provides a cleaner way to create JSON responses compared to manually calling `new Response(JSON.stringify(data))`.
 Using `Response.json()` is more concise and automatically sets the `Content-Type` header to `application/json`.
@@ -80,4 +80,4 @@ Similarly, if you need to set custom response options like `status` or additiona
 
 ## Equivalents in Other Linters
 
-<RuleEquivalents pluginId="ts" ruleId="responseMethods" />
+<RuleEquivalents pluginId="ts" ruleId="responseJsonMethods" />

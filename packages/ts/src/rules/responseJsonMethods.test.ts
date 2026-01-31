@@ -1,4 +1,4 @@
-import rule from "./responseMethods.ts";
+import rule from "./responseJsonMethods.ts";
 import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
@@ -10,7 +10,7 @@ new Response(JSON.stringify(data))
 			snapshot: `
 new Response(JSON.stringify(data))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use Response.json() instead of new Response(JSON.stringify(...)).
+Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(...))\`.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ new Response(JSON.stringify({ value: 1 }))
 			snapshot: `
 new Response(JSON.stringify({ value: 1 }))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use Response.json() instead of new Response(JSON.stringify(...)).
+Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(...))\`.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ new Response(JSON.stringify(data), {})
 			snapshot: `
 new Response(JSON.stringify(data), {})
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use Response.json() instead of new Response(JSON.stringify(...)).
+Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(...))\`.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ new Response(JSON.stringify(data), { headers: { 'content-type': 'application/jso
 			snapshot: `
 new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json' } })
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use Response.json() instead of new Response(JSON.stringify(...)).
+Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(...))\`.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/jso
 			snapshot: `
 new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json' } })
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use Response.json() instead of new Response(JSON.stringify(...)).
+Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(...))\`.
 `,
 		},
 		{
@@ -60,7 +60,7 @@ new Response(JSON.stringify(data), { headers: { 'content-type': 'application/jso
 			snapshot: `
 new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json; charset=utf-8' } })
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use Response.json() instead of new Response(JSON.stringify(...)).
+Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(...))\`.
 `,
 		},
 		{
@@ -70,7 +70,7 @@ const response = new Response(JSON.stringify({ message: 'ok' }))
 			snapshot: `
 const response = new Response(JSON.stringify({ message: 'ok' }))
                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                 Use Response.json() instead of new Response(JSON.stringify(...)).
+                 Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(...))\`.
 `,
 		},
 	],

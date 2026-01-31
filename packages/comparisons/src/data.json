@@ -16018,12 +16018,12 @@
 	{
 		"biome": [
 			{
-				"name": "useStaticResponseMethods",
-				"url": "https://biomejs.dev/linter/rules/useStaticResponseMethods"
+				"name": "useStaticresponseJsonMethods",
+				"url": "https://biomejs.dev/linter/rules/useStaticresponseJsonMethods"
 			}
 		],
 		"flint": {
-			"name": "responseMethods",
+			"name": "responseJsonMethods",
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
