@@ -1,37 +1,72 @@
-import rule from "./undefinedTypeofChecks.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./undefinedTypeofChecks.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `if (typeof value === "undefined") {}`,
-			snapshot: `if (typeof value === "undefined") {}
+			code: `
+if (typeof value === "undefined") {}
+`,
+			output: `
+if (value === undefined) {}
+`,
+			snapshot: `
+if (typeof value === "undefined") {}
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Use direct undefined comparison instead of typeof.`,
+    This \`typeof\` comparison can be simplified to \`=== undefined\`.
+`,
 		},
 		{
-			code: `if (typeof value !== "undefined") {}`,
-			snapshot: `if (typeof value !== "undefined") {}
+			code: `
+if (typeof value !== "undefined") {}
+`,
+			output: `
+if (value !== undefined) {}
+`,
+			snapshot: `
+if (typeof value !== "undefined") {}
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Use direct undefined comparison instead of typeof.`,
+    This \`typeof\` comparison can be simplified to \`=== undefined\`.
+`,
 		},
 		{
-			code: `const isUndefined = typeof obj.prop === "undefined";`,
-			snapshot: `const isUndefined = typeof obj.prop === "undefined";
+			code: `
+const isUndefined = typeof obj.prop === "undefined";
+`,
+			output: `
+const isUndefined = obj.prop === undefined;
+`,
+			snapshot: `
+const isUndefined = typeof obj.prop === "undefined";
                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                    Use direct undefined comparison instead of typeof.`,
+                    This \`typeof\` comparison can be simplified to \`=== undefined\`.
+`,
 		},
 		{
-			code: `if ("undefined" === typeof value) {}`,
-			snapshot: `if ("undefined" === typeof value) {}
+			code: `
+if ("undefined" === typeof value) {}
+`,
+			output: `
+if (value === undefined) {}
+`,
+			snapshot: `
+if ("undefined" === typeof value) {}
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Use direct undefined comparison instead of typeof.`,
+    This \`typeof\` comparison can be simplified to \`=== undefined\`.
+`,
 		},
 		{
-			code: `if (typeof value == "undefined") {}`,
-			snapshot: `if (typeof value == "undefined") {}
+			code: `
+if (typeof value == "undefined") {}
+`,
+			output: `
+if (value == undefined) {}
+`,
+			snapshot: `
+if (typeof value == "undefined") {}
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Use direct undefined comparison instead of typeof.`,
+    This \`typeof\` comparison can be simplified to \`=== undefined\`.
+`,
 		},
 	],
 	valid: [

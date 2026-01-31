@@ -15,14 +15,18 @@ Direct comparisons are clearer and more concise.
 
 ## Examples
 
-### Basic Check
-
 <Tabs>
 <TabItem label="❌ Incorrect">
 
 ```ts
 if (typeof value === "undefined") {
 	// handle undefined
+}
+```
+
+```ts
+if (typeof value !== "undefined") {
+	// value is defined
 }
 ```
 
@@ -34,23 +38,6 @@ if (value === undefined) {
 	// handle undefined
 }
 ```
-
-</TabItem>
-</Tabs>
-
-### Negated Check
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
-```ts
-if (typeof value !== "undefined") {
-	// value is defined
-}
-```
-
-</TabItem>
-<TabItem label="✅ Correct">
 
 ```ts
 if (value !== undefined) {
