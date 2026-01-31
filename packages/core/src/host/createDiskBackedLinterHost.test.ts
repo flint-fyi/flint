@@ -1,4 +1,3 @@
-// flint-disable-file unnecessaryBlocks
 import fs from "node:fs";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";

@@ -22,7 +22,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports <label> elements without an associated control element.",
 		id: "labelAssociatedControls",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingAssociatedControl: {

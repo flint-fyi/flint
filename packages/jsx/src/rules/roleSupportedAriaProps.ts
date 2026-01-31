@@ -376,7 +376,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports ARIA properties that are not supported by an element's role.",
 		id: "roleSupportedAriaProps",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsupportedProp: {
