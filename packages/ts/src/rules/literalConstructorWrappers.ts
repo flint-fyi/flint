@@ -61,7 +61,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefers literal syntax over constructor function calls for primitive values.",
 		id: "literalConstructorWrappers",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferLiteral: {

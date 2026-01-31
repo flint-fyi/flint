@@ -128,7 +128,7 @@ function isConcatSpread(node: AST.CallExpression, typeChecker: Checker) {
 }
 
 function isEmptyArrayLiteral(node: AST.Expression) {
-	return ts.isArrayLiteralExpression(node) && node.elements.length === 0;
+	return ts.isArrayLiteralExpression(node) && !node.elements.length;
 }
 
 function isIdentityArrowFunction(node: AST.Expression) {
@@ -175,7 +175,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports legacy techniques to flatten arrays instead of using `.flat()`.",
 		id: "arrayFlatMethods",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferFlat: {

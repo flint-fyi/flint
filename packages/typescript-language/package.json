@@ -32,7 +32,7 @@
 		"@flint.fyi/utils": "workspace:^",
 		"@typescript-eslint/project-service": "^8.53.0",
 		"debug-for-file": "^0.2.0",
-		"ts-api-utils": "^2.1.0",
+		"ts-api-utils": "^2.4.0",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
