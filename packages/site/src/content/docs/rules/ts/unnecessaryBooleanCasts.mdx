@@ -10,17 +10,24 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="unnecessaryBooleanCasts" />
 
-Using `!!value` or `Boolean(value)` in boolean contexts is redundant because the value is already coerced to boolean.
+Boolean contexts such as `if` and `while` statements evaluate values for falsiness or truthiness.
+Using `!!value` or `Boolean(value)` in those contexts is redundant because that doesn't change whether the value is falsy or truthy.
+
+This rule reports on boolean casts in already-boolean contexts.
 
 ## Examples
-
-### Double Negation
 
 <Tabs>
 <TabItem label="❌ Incorrect">
 
 ```ts
 if (!!value) {
+	// ...
+}
+```
+
+```ts
+while (Boolean(condition)) {
 	// ...
 }
 ```
@@ -34,23 +41,6 @@ if (value) {
 }
 ```
 
-</TabItem>
-</Tabs>
-
-### Boolean Constructor
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
-```ts
-while (Boolean(condition)) {
-	// ...
-}
-```
-
-</TabItem>
-<TabItem label="✅ Correct">
-
 ```ts
 while (condition) {
 	// ...
@@ -60,25 +50,13 @@ while (condition) {
 </TabItem>
 </Tabs>
 
-### Valid Uses
-
-Converting a value to a boolean for storage or return is valid:
-
-```ts
-const bool = !!value;
-const enabled = Boolean(flag);
-return { active: !!isActive };
-```
-
 ## Options
 
 This rule is not configurable.
 
 ## When Not To Use It
 
-This rule is generally safe to enable.
-However, if you prefer explicit boolean casts for clarity,
-you may want to disable it.
+If you prefer explicit boolean casts for clarity, this rule may not be for you.
 
 ## Further Reading
 

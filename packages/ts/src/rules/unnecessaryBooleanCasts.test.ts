@@ -1,49 +1,176 @@
-import rule from "./unnecessaryBooleanCasts.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./unnecessaryBooleanCasts.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `if (!!value) {}`,
-			snapshot: `if (!!value) {}
+			code: `
+if (!!value) {}
+`,
+			output: `
+if (value) {}
+`,
+			snapshot: `
+if (!!value) {}
     ~~~~~~~
-    Redundant double negation.`,
+    Casting this value to a boolean is unnecessary in this context.
+`,
 		},
 		{
-			code: `while (!!condition) {}`,
-			snapshot: `while (!!condition) {}
+			code: `
+while (!!condition) {}
+`,
+			output: `
+while (condition) {}
+`,
+			snapshot: `
+while (!!condition) {}
        ~~~~~~~~~~~
-       Redundant double negation.`,
+       Casting this value to a boolean is unnecessary in this context.
+`,
 		},
 		{
-			code: `const result = !!flag ? "yes" : "no";`,
-			snapshot: `const result = !!flag ? "yes" : "no";
+			code: `
+const result = !!flag ? "yes" : "no";
+`,
+			output: `
+const result = flag ? "yes" : "no";
+`,
+			snapshot: `
+const result = !!flag ? "yes" : "no";
                ~~~~~~
-               Redundant double negation.`,
+               Casting this value to a boolean is unnecessary in this context.
+`,
 		},
 		{
-			code: `if (Boolean(value)) {}`,
-			snapshot: `if (Boolean(value)) {}
+			code: `
+if (Boolean(value)) {}
+`,
+			output: `
+if (value) {}
+`,
+			snapshot: `
+if (Boolean(value)) {}
     ~~~~~~~~~~~~~~
-    Redundant Boolean() call.`,
+    Casting this value to a boolean is unnecessary in this context.
+`,
 		},
 		{
-			code: `while (Boolean(condition)) {}`,
-			snapshot: `while (Boolean(condition)) {}
+			code: `
+while (Boolean(condition)) {}
+`,
+			output: `
+while (condition) {}
+`,
+			snapshot: `
+while (Boolean(condition)) {}
        ~~~~~~~~~~~~~~~~~~
-       Redundant Boolean() call.`,
+       Casting this value to a boolean is unnecessary in this context.
+`,
 		},
 		{
-			code: `do {} while (!!active);`,
-			snapshot: `do {} while (!!active);
+			code: `
+do {} while (!!active);
+`,
+			output: `
+do {} while (active);
+`,
+			snapshot: `
+do {} while (!!active);
              ~~~~~~~~
-             Redundant double negation.`,
+             Casting this value to a boolean is unnecessary in this context.
+`,
 		},
 		{
-			code: `for (; !!running;) {}`,
-			snapshot: `for (; !!running;) {}
+			code: `
+for (; !!running;) {}
+`,
+			output: `
+for (; running;) {}
+`,
+			snapshot: `
+for (; !!running;) {}
        ~~~~~~~~~
-       Redundant double negation.`,
+       Casting this value to a boolean is unnecessary in this context.
+`,
+		},
+		{
+			code: `
+if (Boolean(fn?.(value))) {}
+`,
+			output: `
+if (fn?.(value)) {}
+`,
+			snapshot: `
+if (Boolean(fn?.(value))) {}
+    ~~~~~~~~~~~~~~~~~~~~
+    Casting this value to a boolean is unnecessary in this context.
+`,
+		},
+		{
+			code: `
+if (!!(value && other)) {}
+`,
+			output: `
+if ((value && other)) {}
+`,
+			snapshot: `
+if (!!(value && other)) {}
+    ~~~~~~~~~~~~~~~~~~
+    Casting this value to a boolean is unnecessary in this context.
+`,
+		},
+		{
+			code: `
+if (!!(value ? left : right)) {}
+`,
+			output: `
+if ((value ? left : right)) {}
+`,
+			snapshot: `
+if (!!(value ? left : right)) {}
+    ~~~~~~~~~~~~~~~~~~~~~~~~
+    Casting this value to a boolean is unnecessary in this context.
+`,
+		},
+		{
+			code: `
+if (Boolean(value && other)) {}
+`,
+			output: `
+if (value && other) {}
+`,
+			snapshot: `
+if (Boolean(value && other)) {}
+    ~~~~~~~~~~~~~~~~~~~~~~~
+    Casting this value to a boolean is unnecessary in this context.
+`,
+		},
+		{
+			code: `
+if (!!(value = other)) {}
+`,
+			output: `
+if ((value = other)) {}
+`,
+			snapshot: `
+if (!!(value = other)) {}
+    ~~~~~~~~~~~~~~~~~
+    Casting this value to a boolean is unnecessary in this context.
+`,
+		},
+		{
+			code: `
+if (Boolean(value = other)) {}
+`,
+			output: `
+if (value = other) {}
+`,
+			snapshot: `
+if (Boolean(value = other)) {}
+    ~~~~~~~~~~~~~~~~~~~~~~
+    Casting this value to a boolean is unnecessary in this context.
+`,
 		},
 	],
 	valid: [

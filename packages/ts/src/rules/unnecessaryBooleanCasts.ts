@@ -1,45 +1,25 @@
-import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { isInBooleanContext } from "./utils/isInBooleanContext.ts";
 
-function isInBooleanContext(node: ts.Node): boolean {
-	const parent = node.parent;
-	if (!parent) {
-		return false;
-	}
-
-	if (ts.isIfStatement(parent) && parent.expression === node) {
-		return true;
-	}
-
-	if (ts.isWhileStatement(parent) && parent.expression === node) {
-		return true;
-	}
-
-	if (ts.isDoStatement(parent) && parent.expression === node) {
-		return true;
-	}
-
-	if (ts.isForStatement(parent) && parent.condition === node) {
-		return true;
-	}
-
-	if (ts.isConditionalExpression(parent) && parent.condition === node) {
-		return true;
-	}
-
-	if (
-		ts.isPrefixUnaryExpression(parent) &&
-		parent.operator === ts.SyntaxKind.ExclamationToken
-	) {
-		return true;
-	}
-
-	return false;
+function getNodeText(node: ts.Node, sourceFile: AST.SourceFile) {
+	return sourceFile.text.slice(node.getStart(sourceFile), node.getEnd());
 }
 
-function isDoubleNegation(node: ts.PrefixUnaryExpression): boolean {
+// TODO: This should make sure the Boolean is the global one...
+function isBooleanCall(node: ts.CallExpression) {
+	return ts.isIdentifier(node.expression) && node.expression.text === "Boolean";
+}
+
+function isDoubleNegation(
+	node: ts.PrefixUnaryExpression,
+): node is typeof node & { operand: AST.PrefixUnaryExpression } {
 	if (node.operator !== ts.SyntaxKind.ExclamationToken) {
 		return false;
 	}
@@ -55,10 +35,6 @@ function isDoubleNegation(node: ts.PrefixUnaryExpression): boolean {
 	return false;
 }
 
-function isBooleanCall(node: ts.CallExpression): boolean {
-	return ts.isIdentifier(node.expression) && node.expression.text === "Boolean";
-}
-
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports unnecessary boolean casts.",
@@ -66,41 +42,54 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		presets: ["logical"],
 	},
 	messages: {
-		doubleNegation: {
-			primary: "Redundant double negation.",
-			secondary: ["The value is already in a boolean context."],
-			suggestions: ["Remove the double negation."],
-		},
-		booleanCall: {
-			primary: "Redundant Boolean() call.",
-			secondary: ["The value is already in a boolean context."],
-			suggestions: ["Remove the Boolean() call."],
+		unnecessary: {
+			primary:
+				"Casting this value to a boolean is unnecessary in this context.",
+			secondary: [
+				"The value is already in a boolean context.",
+				"Using `{{ cast }}` to cast it does not change program behavior.",
+			],
+			suggestions: ["Remove the `{{ cast }}` call."],
 		},
 	},
 	setup(context) {
+		function reportCast(
+			cast: string,
+			outer: AST.AnyNode,
+			inner: AST.AnyNode,
+			sourceFile: AST.SourceFile,
+		) {
+			const range = getTSNodeRange(outer, sourceFile);
+
+			context.report({
+				data: { cast },
+				fix: {
+					range,
+					text: getNodeText(inner, sourceFile),
+				},
+				message: "unnecessary",
+				range,
+			});
+		}
+
 		return {
 			visitors: {
-				PrefixUnaryExpression(node: AST.PrefixUnaryExpression, { sourceFile }) {
-					if (isDoubleNegation(node) && isInBooleanContext(node)) {
-						context.report({
-							message: "doubleNegation",
-							range: {
-								begin: node.getStart(sourceFile),
-								end: node.getEnd(),
-							},
-						});
-					}
-				},
 				CallExpression(node: AST.CallExpression, { sourceFile }) {
-					if (isBooleanCall(node) && isInBooleanContext(node)) {
-						context.report({
-							message: "booleanCall",
-							range: {
-								begin: node.getStart(sourceFile),
-								end: node.getEnd(),
-							},
-						});
+					if (!isBooleanCall(node) || !isInBooleanContext(node)) {
+						return;
 					}
+
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const argument = node.arguments[0]!;
+
+					reportCast("Boolean()", node, argument, sourceFile);
+				},
+				PrefixUnaryExpression(node: AST.PrefixUnaryExpression, { sourceFile }) {
+					if (!isDoubleNegation(node) || !isInBooleanContext(node)) {
+						return;
+					}
+
+					reportCast("!!", node, node.operand.operand, sourceFile);
 				},
 			},
 		};
