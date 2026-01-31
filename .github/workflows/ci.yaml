@@ -47,7 +47,7 @@ jobs:
           fetch-depth: 0 # required so origin/main can be diffed
       - uses: ./.github/actions/prepare
       - name: Cache dependencies and Vite cache
-        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5
         with:
           key: cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite

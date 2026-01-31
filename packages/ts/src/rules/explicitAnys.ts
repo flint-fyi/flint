@@ -18,7 +18,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports explicit uses of the any type.",
 		id: "explicitAnys",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noExplicitAny: {

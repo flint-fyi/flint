@@ -27,6 +27,7 @@ export * from "./types/about.ts";
 export * from "./types/cache.ts";
 export * from "./types/changes.ts";
 export * from "./types/configs.ts";
+export * from "./types/context.ts";
 export * from "./types/directives.ts";
 export * from "./types/formatting.ts";
 export * from "./types/host.ts";

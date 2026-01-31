@@ -1,0 +1,68 @@
+---
+description: "Reports typeof undefined checks."
+title: "undefinedTypeofChecks"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="undefinedTypeofChecks" />
+
+Using `typeof x === "undefined"` is verbose and can be simplified to `x === undefined`.
+Direct comparisons are clearer and more concise.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (typeof value === "undefined") {
+	// handle undefined
+}
+```
+
+```ts
+if (typeof value !== "undefined") {
+	// value is defined
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (value === undefined) {
+	// handle undefined
+}
+```
+
+```ts
+if (value !== undefined) {
+	// value is defined
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+In rare cases where you need to check for undefined in a global scope where `undefined` might be shadowed,
+`typeof` checks are safer.
+However, in modern JavaScript, this is very uncommon.
+
+## Further Reading
+
+- [MDN: undefined](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined)
+- [MDN: typeof](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="undefinedTypeofChecks" />

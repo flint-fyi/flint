@@ -79,7 +79,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const text = sourceFile.getFullText();
 					const allMatches = findIrregularWhitespaces(text);
 
-					if (allMatches.length === 0) {
+					if (!allMatches.length) {
 						return;
 					}
 
