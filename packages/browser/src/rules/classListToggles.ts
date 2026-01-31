@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer using classList.toggle() over conditional classList.add() and classList.remove().",
 		id: "classListToggles",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferToggle: {

@@ -83,7 +83,7 @@ function statementsReturnValue(statements: readonly AST.Statement[]) {
 
 function switchStatementReturnsValue(statement: AST.SwitchStatement) {
 	const clauses = statement.caseBlock.clauses;
-	if (clauses.length === 0) {
+	if (!clauses.length) {
 		return false;
 	}
 

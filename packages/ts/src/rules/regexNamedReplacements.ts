@@ -131,7 +131,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const capturingGroups = getCapturingGroups(regexpAst);
-					if (capturingGroups.length === 0) {
+					if (!capturingGroups.length) {
 						return;
 					}
 

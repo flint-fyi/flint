@@ -9,7 +9,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 		description:
 			"Reports object keys that are not normalized using Unicode normalization forms.",
 		id: "keyNormalization",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnormalizedKey: {

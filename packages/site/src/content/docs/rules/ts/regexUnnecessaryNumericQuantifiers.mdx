@@ -1,0 +1,75 @@
+---
+description: "Reports numeric quantifiers like '{n,n}' that can be simplified to '{n}'."
+title: "regexUnnecessaryNumericQuantifiers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryNumericQuantifiers" />
+
+Reports numeric quantifiers like `{n,n}` where the minimum and maximum are the same, which can be simplified to `{n}`.
+
+## Examples
+
+### Simple Cases
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a{1,1}/;
+```
+
+```ts
+const pattern = /a{42,42}/;
+```
+
+```ts
+const pattern = /a{1,1}?/;
+```
+
+```ts
+const pattern = /(?:ab){2,2}/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a{1}/;
+```
+
+```ts
+const pattern = /a{42}/;
+```
+
+```ts
+const pattern = /a{1}?/;
+```
+
+```ts
+const pattern = /(?:ab){2}/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer to keep unnecessary numeric quantifiers for readability or organizational purposes, you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: Quantifier](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Quantifiers)
+- [MDN: Regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryNumericQuantifiers" />
