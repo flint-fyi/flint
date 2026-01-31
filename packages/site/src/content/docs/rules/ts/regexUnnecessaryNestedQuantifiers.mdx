@@ -10,8 +10,8 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="regexUnnecessaryNestedQuantifiers" />
 
-Reports trivially nested quantifiers in regular expressions that can be simplified.
 When a non-capturing group contains a single quantified element and the group itself is quantified, the nested quantifiers can often be combined into a single quantifier.
+This rule reports trivially nested quantifiers in regular expressions that can be simplified.
 
 ## Examples
 
