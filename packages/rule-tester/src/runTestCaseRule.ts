@@ -55,11 +55,11 @@ export async function runTestCaseRule<
 	}
 	linterHost.vfsUpsertFile(filePathAbsolute, code);
 
-	using file = fileFactories.get(rule.language).prepareFile({
+	using file = fileFactories.get(rule.language).createFile({
 		filePath: fileName,
 		filePathAbsolute,
 		sourceText: code,
-	}).file;
+	});
 
 	const reports: NormalizedReport[] = [];
 
@@ -90,8 +90,7 @@ export async function runTestCaseRule<
 	});
 
 	if (ruleRuntime) {
-		file.runVisitors(options, ruleRuntime);
-
+		rule.language.runFileVisitors(file, options, ruleRuntime);
 		await ruleRuntime.teardown?.();
 	}
 

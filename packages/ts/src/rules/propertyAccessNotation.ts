@@ -90,7 +90,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports bracket notation property access when dot notation can be used.",
 		id: "propertyAccessNotation",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferDotNotation: {

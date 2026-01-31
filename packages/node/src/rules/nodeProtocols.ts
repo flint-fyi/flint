@@ -106,7 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						node.expression.kind === SyntaxKind.Identifier &&
 						node.expression.text === "require" &&
-						node.arguments.length > 0 &&
+						!!node.arguments.length &&
 						isDeclaredInNodeTypes(node.expression, typeChecker)
 					) {
 						checkNode(

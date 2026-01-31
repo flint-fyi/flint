@@ -139,7 +139,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/8071845?v=4",
       "profile": "https://github.com/michaelfaith",
       "contributions": [
-        "ideas"
+        "ideas",
+        "doc"
       ]
     },
     {
@@ -147,6 +148,15 @@
       "name": "Sameer Kolhar",
       "avatar_url": "https://avatars.githubusercontent.com/u/6604943?v=4",
       "profile": "https://www.kolharsam.net",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "yharaskrik",
+      "name": "Jay Bell",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9469090?v=4",
+      "profile": "https://jaybell.me/",
       "contributions": [
         "code"
       ]

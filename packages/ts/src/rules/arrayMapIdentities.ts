@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `.flatMap()` with an identity function that returns its argument unchanged.",
 		id: "arrayMapIdentities",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		identityFlatMap: {

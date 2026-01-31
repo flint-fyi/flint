@@ -49,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						argument.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						argument.expression.name.kind !== SyntaxKind.Identifier ||
 						argument.expression.name.text !== "getTime" ||
-						argument.arguments.length !== 0 ||
+						!!argument.arguments.length ||
 						!isDateType(argument.expression.expression, typeChecker)
 					) {
 						return;
