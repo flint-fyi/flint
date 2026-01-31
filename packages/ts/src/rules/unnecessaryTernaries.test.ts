@@ -12,7 +12,7 @@ const result = condition;
 `,
 			snapshot: `
 const result = condition ? true : false;
-               ~~~~~~~~~~~~~~~~~~~~~~~~~~
+               ~~~~~~~~~~~~~~~~~~~~~~~~
                This ternary expression can be simplified to a boolean expression.
 `,
 		},
@@ -25,7 +25,7 @@ const result = isValid;
 `,
 			snapshot: `
 const result = isValid ? true : false;
-               ~~~~~~~~~~~~~~~~~~~~~~~
+               ~~~~~~~~~~~~~~~~~~~~~~
                This ternary expression can be simplified to a boolean expression.
 `,
 		},
@@ -38,7 +38,7 @@ const result = !condition;
 `,
 			snapshot: `
 const result = condition ? false : true;
-               ~~~~~~~~~~~~~~~~~~~~~~~~~
+               ~~~~~~~~~~~~~~~~~~~~~~~~
                This ternary expression can be simplified to a boolean expression.
 `,
 		},
@@ -51,7 +51,7 @@ const result = !isValid;
 `,
 			snapshot: `
 const result = isValid ? false : true;
-               ~~~~~~~~~~~~~~~~~~~~~~~
+               ~~~~~~~~~~~~~~~~~~~~~~
                This ternary expression can be simplified to a boolean expression.
 `,
 		},
@@ -64,7 +64,7 @@ const result = !(left === right);
 `,
 			snapshot: `
 const result = (left === right) ? false : true;
-               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                This ternary expression can be simplified to a boolean expression.
 `,
 		},
@@ -77,7 +77,7 @@ const result = value || defaultValue;
 `,
 			snapshot: `
 const result = value ? value : defaultValue;
-               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                This ternary expression can be simplified to a logical operator.
 `,
 		},
@@ -90,7 +90,7 @@ const result = data || fallback;
 `,
 			snapshot: `
 const result = data ? data : fallback;
-               ~~~~~~~~~~~~~~~~~~~~~~~
+               ~~~~~~~~~~~~~~~~~~~~~~
                This ternary expression can be simplified to a logical operator.
 `,
 		},
@@ -103,7 +103,7 @@ const result = value || alternative;
 `,
 			snapshot: `
 const result = !value ? alternative : value;
-               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                This ternary expression can be simplified to a logical operator.
 `,
 		},
@@ -116,7 +116,7 @@ const result = data || fallback;
 `,
 			snapshot: `
 const result = !data ? fallback : data;
-               ~~~~~~~~~~~~~~~~~~~~~~~~
+               ~~~~~~~~~~~~~~~~~~~~~~~
                This ternary expression can be simplified to a logical operator.
 `,
 		},
@@ -129,7 +129,7 @@ if (status === "active") {}
 `,
 			snapshot: `
 if (status === "active" ? true : false) {}
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     This ternary expression can be simplified to a boolean expression.
 `,
 		},
@@ -142,7 +142,7 @@ return value > 0;
 `,
 			snapshot: `
 return value > 0 ? true : false;
-       ~~~~~~~~~~~~~~~~~~~~~~~~~
+       ~~~~~~~~~~~~~~~~~~~~~~~~
        This ternary expression can be simplified to a boolean expression.
 `,
 		},
@@ -155,7 +155,7 @@ const isActive = flag1 && flag2;
 `,
 			snapshot: `
 const isActive = flag1 && flag2 ? true : false;
-                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                  This ternary expression can be simplified to a boolean expression.
 `,
 		},
@@ -168,7 +168,7 @@ const isInactive = !(flag1 || flag2);
 `,
 			snapshot: `
 const isInactive = flag1 || flag2 ? false : true;
-                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                    This ternary expression can be simplified to a boolean expression.
 `,
 		},
@@ -181,7 +181,7 @@ const result = nested || other;
 `,
 			snapshot: `
 const result = nested ? nested : other;
-               ~~~~~~~~~~~~~~~~~~~~~~~~
+               ~~~~~~~~~~~~~~~~~~~~~~~
                This ternary expression can be simplified to a logical operator.
 `,
 		},
