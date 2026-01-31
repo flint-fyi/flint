@@ -147,7 +147,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function checkOverloads(
-			signatures: readonly OverloadNode[],
+			signatures: readonly OverloadNode[][],
 			sourceFile: ts.SourceFile,
 			typeParameters?: AST.NodeArray<AST.TypeParameterDeclaration>,
 			ignoreDifferentlyNamedParameters = false,
@@ -155,21 +155,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		): Failure[] {
 			const result: Failure[] = [];
 			const isTypeParameter = getIsTypeParameter(typeParameters);
-			forEachPair(signatures, (a, b) => {
-				const unify = compareSignatures(
-					a,
-					b,
-					{
-						ignoreDifferentlyNamedParameters,
-						ignoreOverloadsWithDifferentJSDoc,
-					},
-					sourceFile,
-					isTypeParameter,
-				);
-				if (unify) {
-					result.push({ only2: signatures.length === 2, unify });
-				}
-			});
+			for (const overloads of signatures) {
+				forEachPair(overloads, (a, b) => {
+					const unify = compareSignatures(
+						a,
+						b,
+						{
+							ignoreDifferentlyNamedParameters,
+							ignoreOverloadsWithDifferentJSDoc,
+						},
+						sourceFile,
+						isTypeParameter,
+					);
+					if (unify) {
+						result.push({ only2: overloads.length === 2, unify });
+					}
+				});
+			}
 			return result;
 		}
 
@@ -230,10 +232,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				for (let i = 0; i < commonParamsLength; i++) {
 					const aParam = a.parameters[i];
 					const bParam = b.parameters[i];
+					if (!aParam || !bParam) {
+						continue;
+					}
 					if (
-						aParam &&
-						bParam &&
-						aParam.kind === bParam.kind &&
 						getStaticParameterName(aParam) !== getStaticParameterName(bParam)
 					) {
 						return false;
@@ -521,7 +523,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 		}
 
-		function getOverloadKey(node: OverloadNode): string | undefined {
+		function getOverloadKey(
+			node: OverloadNode,
+			sourceFile: ts.SourceFile,
+		): string | undefined {
 			switch (node.kind) {
 				case ts.SyntaxKind.CallSignature:
 					return "call";
@@ -541,31 +546,30 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 				case ts.SyntaxKind.MethodDeclaration:
 				case ts.SyntaxKind.MethodSignature: {
-					const nameInfo = getNameFromPropertyName(node.name);
-					if (!nameInfo) {
+					const nameText = getNameFromPropertyName(node.name, sourceFile);
+					if (!nameText) {
 						return undefined;
 					}
 					const staticPrefix = isStatic(node) ? "static" : "instance";
-					return `${staticPrefix}:${nameInfo.type}:${nameInfo.name}`;
+					return `${staticPrefix}:${nameText}`;
 				}
 			}
 		}
 
 		function getNameFromPropertyName(
 			name: AST.PropertyName,
-		): undefined | { name: string; type: "computed" | "normal" | "quoted" } {
+			sourceFile: ts.SourceFile,
+		): string | undefined {
 			switch (name.kind) {
 				case ts.SyntaxKind.ComputedPropertyName:
-					if (ts.isStringLiteral(name.expression)) {
-						return { name: name.expression.text, type: "quoted" };
-					}
-					return undefined;
+					return name.getText(sourceFile);
 				case ts.SyntaxKind.Identifier:
 				case ts.SyntaxKind.NumericLiteral:
+					return name.text;
 				case ts.SyntaxKind.PrivateIdentifier:
-					return { name: name.text, type: "normal" };
+					return `#${name.text}`;
 				case ts.SyntaxKind.StringLiteral:
-					return { name: name.text, type: "quoted" };
+					return name.text;
 				default:
 					return undefined;
 			}
@@ -580,23 +584,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 		}
 
-		function getStaticParameterName(param: AST.Node): string | undefined {
-			if (ts.isIdentifier(param)) {
-				return param.text;
-			}
-			if (ts.isRestElement(param)) {
-				return getStaticParameterName(param.name);
-			}
-			if (ts.isParameter(param)) {
-				if (ts.isIdentifier(param.name)) {
-					return param.name.text;
-				}
-				if (ts.isObjectBindingPattern(param.name)) {
-					return undefined;
-				}
-				if (ts.isArrayBindingPattern(param.name)) {
-					return undefined;
-				}
+		function getStaticParameterName(
+			param: AST.ParameterDeclaration,
+		): string | undefined {
+			if (ts.isIdentifier(param.name)) {
+				return param.name.text;
 			}
 			return undefined;
 		}
@@ -633,14 +625,30 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.Node,
 			sourceFile: ts.SourceFile,
 		): string | undefined {
-			const jsDocs = ts.getJSDocCommentsAndTags(node).filter(ts.isJSDoc);
-			const jsDoc = jsDocs.at(0);
-			return jsDoc?.getText(sourceFile);
+			const commentRanges = ts.getLeadingCommentRanges(
+				sourceFile.text,
+				node.getFullStart(),
+			);
+			if (!commentRanges?.length) {
+				return undefined;
+			}
+			for (let i = commentRanges.length - 1; i >= 0; i--) {
+				const range = commentRanges[i];
+				if (range && range.kind === ts.SyntaxKind.MultiLineCommentTrivia) {
+					return sourceFile.text.slice(range.pos, range.end);
+				}
+			}
+			return undefined;
 		}
 
 		function getCommentTargetNode(node: OverloadNode): AST.Node {
-			if (ts.isFunctionDeclaration(node) && node.modifiers?.length) {
-				return node;
+			if (
+				ts.isFunctionDeclaration(node) &&
+				node.modifiers?.some(
+					(modifier) => modifier.kind === ts.SyntaxKind.DefaultKeyword,
+				)
+			) {
+				return node.parent;
 			}
 			return node;
 		}
@@ -663,57 +671,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			return true;
 		}
 
-		function checkScope(node: ScopeNode, services: TypeScriptFileServices) {
-			const members = getScopeMembers(node);
-			if (!members) {
-				return;
-			}
-			const overloads = new Map<string, OverloadNode[]>();
-			for (const member of members) {
-				if (ts.isFunctionDeclaration(member) && !member.body) {
-					addOverload(overloads, member, getOverloadKey(member));
-					continue;
-				}
-				if (ts.isMethodDeclaration(member) && !member.body) {
-					if (isAccessor(member)) {
-						continue;
-					}
-					addOverload(overloads, member, getOverloadKey(member));
-					continue;
-				}
-				if (ts.isMethodSignature(member)) {
-					if (isAccessor(member)) {
-						continue;
-					}
-					addOverload(overloads, member, getOverloadKey(member));
-					continue;
-				}
-				if (ts.isConstructorDeclaration(member) && !member.body) {
-					addOverload(overloads, member, getOverloadKey(member));
-					continue;
-				}
-				if (ts.isCallSignatureDeclaration(member)) {
-					addOverload(overloads, member, getOverloadKey(member));
-					continue;
-				}
-				if (ts.isConstructSignatureDeclaration(member)) {
-					addOverload(overloads, member, getOverloadKey(member));
-				}
-			}
-
-			const scopeTypeParameters =
-				(node as AST.ClassDeclaration | AST.InterfaceDeclaration)
-					.typeParameters ?? undefined;
-			const failures = checkOverloads(
-				[...overloads.values()].flat(),
-				services.sourceFile,
-				scopeTypeParameters,
-				services.options.ignoreDifferentlyNamedParameters,
-				services.options.ignoreOverloadsWithDifferentJSDoc,
-			);
-			addFailures(failures, services.sourceFile);
-		}
-
 		function collectOverloadGroups(
 			node: ScopeNode,
 			services: TypeScriptFileServices & { options: Options },
@@ -725,33 +682,57 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const overloads = new Map<string, OverloadNode[]>();
 			for (const member of members) {
 				if (ts.isFunctionDeclaration(member) && !member.body) {
-					addOverload(overloads, member, getOverloadKey(member));
+					addOverload(
+						overloads,
+						member,
+						getOverloadKey(member, services.sourceFile),
+					);
 					continue;
 				}
 				if (ts.isMethodDeclaration(member) && !member.body) {
 					if (isAccessor(member)) {
 						continue;
 					}
-					addOverload(overloads, member, getOverloadKey(member));
+					addOverload(
+						overloads,
+						member,
+						getOverloadKey(member, services.sourceFile),
+					);
 					continue;
 				}
 				if (ts.isMethodSignature(member)) {
 					if (isAccessor(member)) {
 						continue;
 					}
-					addOverload(overloads, member, getOverloadKey(member));
+					addOverload(
+						overloads,
+						member,
+						getOverloadKey(member, services.sourceFile),
+					);
 					continue;
 				}
 				if (ts.isConstructorDeclaration(member) && !member.body) {
-					addOverload(overloads, member, getOverloadKey(member));
+					addOverload(
+						overloads,
+						member,
+						getOverloadKey(member, services.sourceFile),
+					);
 					continue;
 				}
 				if (ts.isCallSignatureDeclaration(member)) {
-					addOverload(overloads, member, getOverloadKey(member));
+					addOverload(
+						overloads,
+						member,
+						getOverloadKey(member, services.sourceFile),
+					);
 					continue;
 				}
 				if (ts.isConstructSignatureDeclaration(member)) {
-					addOverload(overloads, member, getOverloadKey(member));
+					addOverload(
+						overloads,
+						member,
+						getOverloadKey(member, services.sourceFile),
+					);
 				}
 			}
 
@@ -759,7 +740,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				(node as AST.ClassDeclaration | AST.InterfaceDeclaration)
 					.typeParameters ?? undefined;
 			const failures = checkOverloads(
-				[...overloads.values()].flat(),
+				[...overloads.values()],
 				services.sourceFile,
 				scopeTypeParameters,
 				services.options.ignoreDifferentlyNamedParameters,
