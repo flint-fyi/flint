@@ -57,7 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports non-interactive elements with positive or zero tabIndex values.",
 		id: "nonInteractiveElementTabIndexes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		nonInteractiveTabIndex: {

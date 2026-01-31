@@ -98,7 +98,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports match() and exec() calls that should use RegExp.prototype.test() for boolean checks.",
 		id: "regexTestMethods",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferTest: {

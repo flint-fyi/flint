@@ -1,0 +1,139 @@
+---
+description: "Reports trivially nested quantifiers in regular expressions that can be simplified."
+title: "regexUnnecessaryNestedQuantifiers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryNestedQuantifiers" />
+
+When a non-capturing group contains a single quantified element and the group itself is quantified, the nested quantifiers can often be combined into a single quantifier.
+This rule reports trivially nested quantifiers in regular expressions that can be simplified.
+
+## Examples
+
+### Optional in One-or-More
+
+`(?:a?)+` can be simplified to `a*` because an optional element repeated one or more times is equivalent to zero or more.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:a?)+/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a*/;
+```
+
+</TabItem>
+</Tabs>
+
+### One-or-More in One-or-More
+
+`(?:a+)+` can be simplified to `a+` because one or more of one or more is still one or more.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:a+)+/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a+/;
+```
+
+</TabItem>
+</Tabs>
+
+### One-or-More in Zero-or-More
+
+`(?:a+)*` can be simplified to `a*` because one or more repeated zero or more times is zero or more.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:a+)*/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a*/;
+```
+
+</TabItem>
+</Tabs>
+
+### Character Classes
+
+The rule also works with character classes and escape sequences.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:[a-z]?)+/;
+const digits = /(?:\d+)+/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[a-z]*/;
+const digits = /\d+/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("(?:a?)+");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("a*");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer to keep the nested structure for readability or documentation purposes, or if you need the specific behavior of the non-capturing group for replacement operations, you might prefer to disable this rule.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Quantifiers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Quantifiers)
+- [MDN: Non-capturing group](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Non-capturing_group)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryNestedQuantifiers" />

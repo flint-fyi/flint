@@ -30,9 +30,7 @@ function findEmptyStringLiterals(pattern: string, flags: string) {
 	visitRegExpAST(ast, {
 		onClassStringDisjunctionEnter(node: ClassStringDisjunction) {
 			if (
-				node.alternatives.every(
-					(alternative) => alternative.elements.length === 0,
-				)
+				node.alternatives.every((alternative) => !alternative.elements.length)
 			) {
 				results.push(node);
 			}
@@ -46,7 +44,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports empty string literals in character classes.",
 		id: "regexEmptyStringLiterals",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyStringLiteral: {

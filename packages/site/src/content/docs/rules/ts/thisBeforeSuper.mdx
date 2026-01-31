@@ -1,0 +1,78 @@
+---
+description: "Reports using `this` or `super` before calling `super()` in derived class constructors."
+title: "thisBeforeSuper"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="thisBeforeSuper" />
+
+In JavaScript, when a class extends another class, the constructor must call `super()` before accessing `this` or `super.property`.
+Attempting to access `this` or `super` properties before calling `super()` throws a `ReferenceError`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Child extends Parent {
+	constructor() {
+		this.value = 0;
+		super();
+	}
+}
+```
+
+```ts
+class Child extends Parent {
+	constructor() {
+		super.initialize();
+		super();
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Child extends Parent {
+	constructor() {
+		super();
+		this.value = 0;
+	}
+}
+```
+
+```ts
+class Child extends Parent {
+	constructor() {
+		super();
+		super.initialize();
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your code is transpiled in a way that does not match modern ECMAScript semantics, this rule may not be for you.
+
+## Further Reading
+
+- [MDN: super](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/super)
+- [MDN: Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="thisBeforeSuper" />
