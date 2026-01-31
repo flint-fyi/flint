@@ -5,17 +5,10 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-/(?=$)/;
-`,
-			snapshot: `
-/(?=$)/;
- ~~~~~
- The lookaround '(?=$)' trivially wraps the assertion '$' and can be simplified.
-`,
-		},
-		{
-			code: `
 /(?=^)/;
+`,
+			output: `
+/^/;
 `,
 			snapshot: `
 /(?=^)/;
@@ -25,57 +18,75 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-/(?=\\b)/;
+/(?=$)/;
+`,
+			output: `
+/$/;
 `,
 			snapshot: `
-/(?=\\b)/;
- ~~~~~~
- The lookaround '(?=\\b)' trivially wraps the assertion '\\b' and can be simplified.
-`,
-		},
-		{
-			code: `
-/(?=\\B)/;
-`,
-			snapshot: `
-/(?=\\B)/;
- ~~~~~~
- The lookaround '(?=\\B)' trivially wraps the assertion '\\B' and can be simplified.
-`,
-		},
-		{
-			code: `
-/(?!$)/;
-`,
-			snapshot: `
-/(?!$)/;
+/(?=$)/;
  ~~~~~
- The lookaround '(?!$)' trivially wraps the assertion '$' and can be simplified.
+ The lookaround '(?=$)' trivially wraps the assertion '$' and can be simplified.
+`,
+		},
+		{
+			code: String.raw`
+/(?=\b)/;
+`,
+			output: String.raw`
+/\b/;
+`,
+			snapshot: String.raw`
+/(?=\b)/;
+ ~~~~~~
+ The lookaround '(?=\b)' trivially wraps the assertion '\b' and can be simplified.
+`,
+		},
+		{
+			code: String.raw`
+/(?!\B)/;
+`,
+			output: String.raw`
+/\B/;
+`,
+			snapshot: String.raw`
+/(?!\B)/;
+ ~~~~~~
+ The lookaround '(?!\B)' trivially wraps the assertion '\B' and can be simplified.
 `,
 		},
 		{
 			code: `
-/(?<=$)/;
+/(?<=^)/;
+`,
+			output: `
+/^/;
 `,
 			snapshot: `
-/(?<=$)/;
+/(?<=^)/;
  ~~~~~~
- The lookaround '(?<=$)' trivially wraps the assertion '$' and can be simplified.
+ The lookaround '(?<=^)' trivially wraps the assertion '^' and can be simplified.
 `,
 		},
 		{
 			code: `
-/(?<!^)/;
+/(?<!$)/;
+`,
+			output: `
+/$/;
 `,
 			snapshot: `
-/(?<!^)/;
+/(?<!$)/;
  ~~~~~~
- The lookaround '(?<!^)' trivially wraps the assertion '^' and can be simplified.
+ The lookaround '(?<!$)' trivially wraps the assertion '$' and can be simplified.
 `,
 		},
 		{
 			code: `
 /(?=(?=a))/;
+`,
+			output: `
+/(?=a)/;
 `,
 			snapshot: `
 /(?=(?=a))/;
@@ -85,75 +96,112 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-/(?<=(?<=a))/;
+/(?=(?!b))/;
+`,
+			output: `
+/(?!b)/;
 `,
 			snapshot: `
-/(?<=(?<=a))/;
- ~~~~~~~~~~~
- The lookaround '(?<=(?<=a))' trivially wraps the assertion '(?<=a)' and can be simplified.
-`,
-		},
-		{
-			code: `
-/(?!(?!a))/;
-`,
-			snapshot: `
-/(?!(?!a))/;
+/(?=(?!b))/;
  ~~~~~~~~~
- The lookaround '(?!(?!a))' trivially wraps the assertion '(?!a)' and can be simplified.
+ The lookaround '(?=(?!b))' trivially wraps the assertion '(?!b)' and can be simplified.
 `,
 		},
 		{
 			code: `
-/(?<!(?<!a))/;
+/(?<=(?<=c))/;
+`,
+			output: `
+/(?<=c)/;
 `,
 			snapshot: `
-/(?<!(?<!a))/;
+/(?<=(?<=c))/;
  ~~~~~~~~~~~
- The lookaround '(?<!(?<!a))' trivially wraps the assertion '(?<!a)' and can be simplified.
+ The lookaround '(?<=(?<=c))' trivially wraps the assertion '(?<=c)' and can be simplified.
 `,
 		},
 		{
 			code: `
-/(?=(?!a))/;
+/(?<!(?<!d))/;
+`,
+			output: `
+/(?<!d)/;
 `,
 			snapshot: `
-/(?=(?!a))/;
- ~~~~~~~~~
- The lookaround '(?=(?!a))' trivially wraps the assertion '(?!a)' and can be simplified.
+/(?<!(?<!d))/;
+ ~~~~~~~~~~~
+ The lookaround '(?<!(?<!d))' trivially wraps the assertion '(?<!d)' and can be simplified.
 `,
 		},
 		{
 			code: `
-new RegExp("(?=$)");
+new RegExp("(?=^)");
+`,
+			output: `
+new RegExp("^");
 `,
 			snapshot: `
-new RegExp("(?=$)");
+new RegExp("(?=^)");
             ~~~~~
-            The lookaround '(?=$)' trivially wraps the assertion '$' and can be simplified.
+            The lookaround '(?=^)' trivially wraps the assertion '^' and can be simplified.
+`,
+		},
+		{
+			code: String.raw`
+new RegExp("(?=\\b)");
+`,
+			output: String.raw`
+new RegExp("\\b");
+`,
+			snapshot: String.raw`
+new RegExp("(?=\\b)");
+            ~~~~~~~
+            The lookaround '(?=\\b)' trivially wraps the assertion '\\b' and can be simplified.
 `,
 		},
 		{
 			code: `
-RegExp("(?=\\\\b)");
+RegExp("(?=$)");
+`,
+			output: `
+RegExp("$");
 `,
 			snapshot: `
-RegExp("(?=\\\\b)");
-        ~~~~~~~
-        The lookaround '(?=\\\\b)' trivially wraps the assertion '\\\\b' and can be simplified.
+RegExp("(?=$)");
+        ~~~~~
+        The lookaround '(?=$)' trivially wraps the assertion '$' and can be simplified.
+`,
+		},
+		{
+			code: `
+/(?=(?=foo))/;
+`,
+			output: `
+/(?=foo)/;
+`,
+			snapshot: `
+/(?=(?=foo))/;
+ ~~~~~~~~~~~
+ The lookaround '(?=(?=foo))' trivially wraps the assertion '(?=foo)' and can be simplified.
 `,
 		},
 	],
 	valid: [
-		`/(?=$a)/;`,
-		`/(?=a$)/;`,
+		`/(?=a)/;`,
+		`/(?!b)/;`,
+		`/(?<=c)/;`,
+		`/(?<!d)/;`,
+		`/(?=^|$)/;`,
 		`/(?=a|b)/;`,
 		`/(?=(?<=a))/;`,
 		`/(?<=(?=a))/;`,
-		`/(?=abc)/;`,
-		`/(?=a(?=b))/;`,
-		`/a$/;`,
+		`/(?=^)+/;`,
+		`/(?=$)*/;`,
+		`/(?=^)?/;`,
+		`/(?=$){2}/;`,
 		`new RegExp(variable);`,
-		`/(?=(?=a)+)/;`,
+		`/^/;`,
+		`/$/;`,
+		String.raw`/\b/;`,
 	],
 });

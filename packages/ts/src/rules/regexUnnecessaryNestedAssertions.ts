@@ -21,6 +21,7 @@ const allLookaroundOpeners = [...lookaheadOpeners, ...lookbehindOpeners];
 
 function findCharacterClassEnd(pattern: string, startIndex: number) {
 	let index = startIndex + 1;
+
 	while (index < pattern.length) {
 		if (pattern[index] === "\\") {
 			index += 2;
@@ -247,6 +248,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						inner: finding.innerRaw,
 						outer: finding.outerRaw,
 					},
+					fix: {
+						range: {
+							begin: start + finding.start,
+							end: start + finding.end,
+						},
+						text: finding.innerRaw,
+					},
 					message: "unnecessaryNesting",
 					range: {
 						begin: start + finding.start,
@@ -275,6 +283,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					data: {
 						inner: finding.innerRaw,
 						outer: finding.outerRaw,
+					},
+					fix: {
+						range: {
+							begin: construction.start + 1 + finding.start,
+							end: construction.start + 1 + finding.end,
+						},
+						text: finding.innerRaw,
 					},
 					message: "unnecessaryNesting",
 					range: {
