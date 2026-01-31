@@ -1,5 +1,5 @@
-import rule from "./unifiedSignatures.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./unifiedSignatures.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
