@@ -272,7 +272,7 @@ import unassignedVariables from "./rules/unassignedVariables.ts";
 import undefinedTypeofChecks from "./rules/undefinedTypeofChecks.ts";
 import undefinedVariables from "./rules/undefinedVariables.ts";
 import unicodeBOMs from "./rules/unicodeBOMs.ts";
-import unnecessaryBind from "./rules/unnecessaryBind.ts";
+import unnecessaryBinds from "./rules/unnecessaryBinds.ts";
 import unnecessaryBlocks from "./rules/unnecessaryBlocks.ts";
 import unnecessaryCatches from "./rules/unnecessaryCatches.ts";
 import unnecessaryComparisons from "./rules/unnecessaryComparisons.ts";
@@ -561,7 +561,7 @@ export const ts = createPlugin({
 		undefinedTypeofChecks,
 		undefinedVariables,
 		unicodeBOMs,
-		unnecessaryBind,
+		unnecessaryBinds,
 		unnecessaryBlocks,
 		unnecessaryCatches,
 		unnecessaryComparisons,

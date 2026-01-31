@@ -1,6 +1,6 @@
 ---
 description: "Reports unnecessary .bind() calls."
-title: "unnecessaryBind"
+title: "unnecessaryBinds"
 topic: "rules"
 ---
 
@@ -8,7 +8,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
-<RuleSummary plugin="ts" rule="unnecessaryBind" />
+<RuleSummary plugin="ts" rule="unnecessaryBinds" />
 
 Using `.bind()` on a function that doesn't use `this` is unnecessary.
 Additionally, using `.bind()` on arrow functions has no effect since arrow functions have lexical `this` binding.
@@ -77,4 +77,4 @@ this rule should not flag those cases.
 
 ## Equivalents in Other Linters
 
-<RuleEquivalents pluginId="ts" ruleId="unnecessaryBind" />
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryBinds" />

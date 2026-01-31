@@ -17684,7 +17684,7 @@
 			}
 		],
 		"flint": {
-			"name": "unnecessaryBind",
+			"name": "unnecessaryBinds",
 			"plugin": "ts",
 			"preset": "logical",
 			"status": "implemented"
