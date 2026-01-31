@@ -15,10 +15,10 @@ This rule identifies operands in these operations that are unnecessary or produc
 
 The rule detects four types of issues:
 
-1. **Disjoint intersection**: Two sets with no common elements intersected together, producing an empty result
-2. **Subset intersection**: A superset operand in an intersection that is redundant
-3. **Disjoint subtraction**: Subtracting a set that shares no elements, which has no effect
-4. **Subset subtraction**: Subtracting a superset, which produces an empty result
+1. Disjoint intersection: two sets with no common elements intersected together, producing an empty result.
+2. Subset intersection: a superset operand in an intersection that is redundant.
+3. Disjoint subtraction: subtracting a set that shares no elements, which has no effect.
+4. Subset subtraction: subtracting a superset, which produces an empty result.
 
 ## Examples
 
@@ -26,56 +26,46 @@ The rule detects four types of issues:
 <TabItem label="❌ Incorrect">
 
 ```ts
-// Disjoint intersection - \w and \s have no common elements
-const pattern = /[\w&&\s]/v;
+/[\w&&\s]/v;
 ```
 
 ```ts
-// Subset intersection - \w is a superset of \d, so \w is redundant
-const pattern = /[\w&&\d]/v;
+/[\w&&\d]/v;
 ```
 
 ```ts
-// Disjoint subtraction - \s has no overlap with \w, subtraction does nothing
-const pattern = /[\w--\s]/v;
+/[\w--\s]/v;
 ```
 
 ```ts
-// Subset subtraction - \w contains all of \d, result is empty
-const pattern = /[\d--\w]/v;
+/[\d--\w]/v;
 ```
 
 ```ts
-// Disjoint intersection with character classes
-const pattern = /[[abc]&&[def]]/v;
+/[[abc]&&[def]]/v;
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```ts
-// Valid subtraction - removes digits from word characters
-const pattern = /[\w--\d]/v;
+/[\w--\d]/v;
 ```
 
 ```ts
-// Valid intersection - finds common elements
-const pattern = /[[a-z]&&[a-m]]/v;
+/[[a-z]&&[a-m]]/v;
 ```
 
 ```ts
-// Valid subtraction - removes vowels from letters
-const pattern = /[[a-z]--[aeiou]]/v;
+/[[a-z]--[aeiou]]/v;
 ```
 
 ```ts
-// Without v flag, set operations are not supported
-const pattern = /[\w&&\s]/;
+/[\w&&\s]/;
 ```
 
 ```ts
-// Simple character class without set operations
-const pattern = /[\w\d]/v;
+/[\w\d]/v;
 ```
 
 </TabItem>
@@ -92,7 +82,6 @@ If you intentionally use set operations that produce empty results for documenta
 ## Further Reading
 
 - [MDN: Unicode character class escape - v-mode character class](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Unicode_character_class_escape#v-mode_character_class)
-- [regexp/no-useless-set-operand](https://ota-meshi.github.io/eslint-plugin-regexp/rules/no-useless-set-operand.html)
 
 ## Equivalents in Other Linters
 

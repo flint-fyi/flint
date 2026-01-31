@@ -3,6 +3,7 @@ import {
 	RegExpParser,
 	visitRegExpAST,
 } from "@eslint-community/regexpp";
+import type { MessageForContext } from "@flint.fyi/core";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import type {
 	AST,
@@ -24,7 +25,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		intersectionDisjoint: {
 			primary:
-				"Simplify set operation: '{{ left }}' and '{{ right }}' are disjoint, so the result is always empty.",
+				"This operation can be simplified: '{{ left }}' and '{{ right }}' are disjoint, so the result is always empty.",
 			secondary: [
 				"When two sets have no common elements, their intersection is empty.",
 				"This likely indicates a mistake in the regular expression.",
@@ -36,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 		intersectionSubset: {
 			primary:
-				"Simplify set operation: '{{ subset }}' is a subset of '{{ superset }}', so the superset operand is redundant.",
+				"This operation can be simplified: '{{ subset }}' is a subset of '{{ superset }}', so the superset operand is redundant.",
 			secondary: [
 				"When one operand is a subset of another in an intersection, the superset is redundant.",
 				"The result is equivalent to just the subset operand.",
@@ -45,7 +46,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 		subtractionDisjoint: {
 			primary:
-				"Simplify set operation: '{{ left }}' and '{{ right }}' are disjoint, so the subtraction has no effect.",
+				"This operation can be simplified: '{{ left }}' and '{{ right }}' are disjoint, so the subtraction has no effect.",
 			secondary: [
 				"Subtracting a set that shares no elements with the left operand does nothing.",
 				"The right operand can be safely removed.",
@@ -57,7 +58,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 		subtractionSubset: {
 			primary:
-				"Simplify set operation: '{{ left }}' is a subset of '{{ right }}', so the result is always empty.",
+				"This operation can be simplified: '{{ left }}' is a subset of '{{ right }}', so the result is always empty.",
 			secondary: [
 				"When you subtract a set that contains all elements of the left operand, the result is empty.",
 				"This likely indicates a mistake in the regular expression.",
@@ -71,81 +72,114 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		const unicodeSetsFlags = { unicode: false, unicodeSets: true };
 
+		function unwrapBrackets(raw: string): string {
+			if (raw.startsWith("[") && raw.endsWith("]")) {
+				return raw.slice(1, -1);
+			}
+			return raw;
+		}
+
+		function report(
+			node: RegExpAST.ClassIntersection | RegExpAST.ClassSubtraction,
+			patternStart: number,
+			canFix: boolean,
+			message: MessageForContext<typeof context>,
+			data: Record<string, string>,
+			fixText?: string,
+		) {
+			const range = {
+				begin: patternStart + node.start,
+				end: patternStart + node.end,
+			};
+			context.report({
+				data,
+				fix: canFix && fixText ? { range, text: fixText } : undefined,
+				message,
+				range,
+			});
+		}
+
 		function checkIntersection(
 			node: RegExpAST.ClassIntersection,
 			patternStart: number,
+			canFix: boolean,
 		) {
 			const leftSet = toUnicodeSet(node.left, unicodeSetsFlags);
 			const rightSet = toUnicodeSet(node.right, unicodeSetsFlags);
 
 			if (leftSet.isDisjointWith(rightSet)) {
-				context.report({
-					data: { left: node.left.raw, right: node.right.raw },
-					message: "intersectionDisjoint",
-					range: {
-						begin: patternStart + node.start,
-						end: patternStart + node.end,
-					},
-				});
+				report(
+					node,
+					patternStart,
+					canFix,
+					"intersectionDisjoint",
+					{ left: node.left.raw, right: node.right.raw },
+					"^^",
+				);
 				return;
 			}
 
 			if (leftSet.isSubsetOf(rightSet)) {
-				context.report({
-					data: { subset: node.left.raw, superset: node.right.raw },
-					message: "intersectionSubset",
-					range: {
-						begin: patternStart + node.start,
-						end: patternStart + node.end,
-					},
-				});
+				report(
+					node,
+					patternStart,
+					canFix,
+					"intersectionSubset",
+					{ subset: node.left.raw, superset: node.right.raw },
+					unwrapBrackets(node.left.raw),
+				);
 				return;
 			}
 
 			if (rightSet.isSubsetOf(leftSet)) {
-				context.report({
-					data: { subset: node.right.raw, superset: node.left.raw },
-					message: "intersectionSubset",
-					range: {
-						begin: patternStart + node.start,
-						end: patternStart + node.end,
-					},
-				});
+				report(
+					node,
+					patternStart,
+					canFix,
+					"intersectionSubset",
+					{ subset: node.right.raw, superset: node.left.raw },
+					unwrapBrackets(node.right.raw),
+				);
 			}
 		}
 
 		function checkSubtraction(
 			node: RegExpAST.ClassSubtraction,
 			patternStart: number,
+			canFix: boolean,
 		) {
 			const leftSet = toUnicodeSet(node.left, unicodeSetsFlags);
 			const rightSet = toUnicodeSet(node.right, unicodeSetsFlags);
 
 			if (leftSet.isDisjointWith(rightSet)) {
-				context.report({
-					data: { left: node.left.raw, right: node.right.raw },
-					message: "subtractionDisjoint",
-					range: {
-						begin: patternStart + node.start,
-						end: patternStart + node.end,
-					},
-				});
+				report(
+					node,
+					patternStart,
+					canFix,
+					"subtractionDisjoint",
+					{ left: node.left.raw, right: node.right.raw },
+					unwrapBrackets(node.left.raw),
+				);
 				return;
 			}
 
 			if (leftSet.isSubsetOf(rightSet)) {
-				context.report({
-					data: { left: node.left.raw, right: node.right.raw },
-					message: "subtractionSubset",
-					range: {
-						begin: patternStart + node.start,
-						end: patternStart + node.end,
-					},
-				});
+				report(
+					node,
+					patternStart,
+					canFix,
+					"subtractionSubset",
+					{ left: node.left.raw, right: node.right.raw },
+					"^^",
+				);
 			}
 		}
 
-		function checkPattern(pattern: string, patternStart: number) {
+		function checkPattern(
+			pattern: string,
+			patternStart: number,
+			canFix: boolean,
+		) {
 			let regexpAst: RegExpAST.Pattern | undefined;
 			try {
 				regexpAst = new RegExpParser().parsePattern(
@@ -160,10 +194,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			visitRegExpAST(regexpAst, {
 				onClassIntersectionEnter(node) {
-					checkIntersection(node, patternStart);
+					checkIntersection(node, patternStart, canFix);
 				},
 				onClassSubtractionEnter(node) {
-					checkSubtraction(node, patternStart);
+					checkSubtraction(node, patternStart, canFix);
 				},
 			});
 		}
@@ -177,7 +211,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			checkPattern(details.pattern, details.start);
+			checkPattern(details.pattern, details.start, true);
 		}
 
 		function checkRegExpConstructor(
@@ -189,7 +223,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			checkPattern(construction.raw, construction.start + 1);
+			checkPattern(construction.raw, construction.start + 1, false);
 		}
 
 		return {
