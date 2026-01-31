@@ -170,17 +170,12 @@ export function createVFSLinterHost(
 			fileMap.set(filePathAbsolute, content);
 			watchEvent(filePathAbsolute, fileEvent);
 		},
-		watchDirectory(
-			directoryPathAbsolute,
-			recursive,
-			callback,
-			pollingInterval,
-		) {
+		watchDirectory(directoryPathAbsolute, callback, options) {
 			directoryPathAbsolute = normalizePath(
 				directoryPathAbsolute,
 				caseSensitiveFS,
 			);
-			const collection = recursive
+			const collection = options.recursive
 				? recursiveDirectoryWatchers
 				: directoryWatchers;
 			let watchers = collection.get(directoryPathAbsolute);
@@ -191,9 +186,8 @@ export function createVFSLinterHost(
 			watchers.add(callback);
 			const baseWatcher = baseHost?.watchDirectory(
 				directoryPathAbsolute,
-				recursive,
 				callback,
-				pollingInterval,
+				options,
 			);
 			return {
 				[Symbol.dispose]() {
@@ -205,7 +199,7 @@ export function createVFSLinterHost(
 				},
 			};
 		},
-		watchFile(filePathAbsolute, callback, pollingInterval) {
+		watchFile(filePathAbsolute, callback, options) {
 			filePathAbsolute = normalizePath(filePathAbsolute, caseSensitiveFS);
 			let watchers = fileWatchers.get(filePathAbsolute);
 			if (watchers == null) {
@@ -216,7 +210,7 @@ export function createVFSLinterHost(
 			const baseWatcher = baseHost?.watchFile(
 				filePathAbsolute,
 				callback,
-				pollingInterval,
+				options,
 			);
 			return {
 				[Symbol.dispose]() {

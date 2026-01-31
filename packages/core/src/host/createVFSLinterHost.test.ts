@@ -409,12 +409,16 @@ describe(createVFSLinterHost, () => {
 			};
 			const host = createVFSLinterHost({ baseHost });
 
-			using _ = host.watchFile("/root/file.txt", vi.fn(), 555);
+			using _ = host.watchFile("/root/file.txt", vi.fn(), {
+				pollingInterval: 555,
+			});
 
 			expect(baseHost.watchFile).toHaveBeenCalledExactlyOnceWith(
 				"/root/file.txt",
 				expect.any(Function),
-				555,
+				{
+					pollingInterval: 555,
+				},
 			);
 		});
 
@@ -444,7 +448,7 @@ describe(createVFSLinterHost, () => {
 				});
 				const onEvent = vi.fn();
 
-				using _ = host.watchDirectory("/root", false, onEvent);
+				using _ = host.watchDirectory("/root", onEvent, { recursive: false });
 				host.vfsUpsertFile("/root/file.txt", "content");
 
 				expect(onEvent).toHaveBeenCalledExactlyOnceWith("/root/file.txt");
@@ -457,7 +461,7 @@ describe(createVFSLinterHost, () => {
 				});
 				const onEvent = vi.fn();
 
-				using _ = host.watchDirectory("/root", false, onEvent);
+				using _ = host.watchDirectory("/root", onEvent, { recursive: false });
 				host.vfsUpsertFile("/root/dir/file.txt", "content");
 
 				expect(onEvent).toHaveBeenCalledExactlyOnceWith("/root/dir");
@@ -470,7 +474,7 @@ describe(createVFSLinterHost, () => {
 				});
 				const onEvent = vi.fn();
 
-				using _ = host.watchDirectory("/", false, onEvent);
+				using _ = host.watchDirectory("/", onEvent, { recursive: false });
 				host.vfsUpsertFile("/root/dir/file.txt", "content");
 
 				expect(onEvent).toHaveBeenCalledExactlyOnceWith("/root");
@@ -483,7 +487,7 @@ describe(createVFSLinterHost, () => {
 				});
 				const onEvent = vi.fn();
 
-				using _ = host.watchDirectory("C:\\", false, onEvent);
+				using _ = host.watchDirectory("C:\\", onEvent, { recursive: false });
 				host.vfsUpsertFile("C:\\file.txt", "content");
 
 				expect(onEvent).toHaveBeenCalledExactlyOnceWith("c:/file.txt");
@@ -497,7 +501,7 @@ describe(createVFSLinterHost, () => {
 				const onEvent = vi.fn();
 
 				host.vfsUpsertFile("/root/file.txt", "content");
-				using _ = host.watchDirectory("/root", false, onEvent);
+				using _ = host.watchDirectory("/root", onEvent, { recursive: false });
 				expect(onEvent).not.toHaveBeenCalled();
 
 				host.vfsUpsertFile("/root/file.txt", "new content");
@@ -512,7 +516,7 @@ describe(createVFSLinterHost, () => {
 				const onEvent = vi.fn();
 
 				host.vfsUpsertFile("/root/file.txt", "content");
-				using _ = host.watchDirectory("/root", false, onEvent);
+				using _ = host.watchDirectory("/root", onEvent, { recursive: false });
 				expect(onEvent).not.toHaveBeenCalled();
 
 				host.vfsDeleteFile("/root/file.txt");
@@ -527,7 +531,7 @@ describe(createVFSLinterHost, () => {
 				const onEvent = vi.fn();
 
 				host.vfsUpsertFile("/root/nested/file.txt", "content");
-				using _ = host.watchDirectory("/root", false, onEvent);
+				using _ = host.watchDirectory("/root", onEvent, { recursive: false });
 				expect(onEvent).not.toHaveBeenCalled();
 
 				host.vfsDeleteFile("/root/nested/file.txt");
@@ -543,7 +547,7 @@ describe(createVFSLinterHost, () => {
 				});
 				const onEvent = vi.fn();
 
-				using _ = host.watchDirectory("/root", true, onEvent);
+				using _ = host.watchDirectory("/root", onEvent, { recursive: true });
 
 				host.vfsUpsertFile("/root/nested/file.txt", "content");
 
@@ -560,7 +564,7 @@ describe(createVFSLinterHost, () => {
 				const onEvent = vi.fn();
 
 				host.vfsUpsertFile("/root/nested/file.txt", "content");
-				using _ = host.watchDirectory("/root", true, onEvent);
+				using _ = host.watchDirectory("/root", onEvent, { recursive: true });
 				expect(onEvent).not.toHaveBeenCalled();
 
 				host.vfsUpsertFile("/root/nested/file.txt", "new content");
@@ -578,7 +582,7 @@ describe(createVFSLinterHost, () => {
 				const onEvent = vi.fn();
 
 				host.vfsUpsertFile("/root/nested/file.txt", "content");
-				using _ = host.watchDirectory("/root", true, onEvent);
+				using _ = host.watchDirectory("/root", onEvent, { recursive: true });
 				expect(onEvent).not.toHaveBeenCalled();
 
 				host.vfsDeleteFile("/root/nested/file.txt");
@@ -598,13 +602,18 @@ describe(createVFSLinterHost, () => {
 			};
 			const host = createVFSLinterHost({ baseHost });
 
-			using _ = host.watchDirectory("/root/file.txt", false, vi.fn(), 555);
+			using _ = host.watchDirectory("/root/file.txt", vi.fn(), {
+				pollingInterval: 555,
+				recursive: false,
+			});
 
 			expect(baseHost.watchDirectory).toHaveBeenCalledExactlyOnceWith(
 				"/root/file.txt",
-				false,
 				expect.any(Function),
-				555,
+				{
+					pollingInterval: 555,
+					recursive: false,
+				},
 			);
 		});
 
@@ -617,7 +626,9 @@ describe(createVFSLinterHost, () => {
 			const host = createVFSLinterHost({ baseHost });
 
 			{
-				using _ = host.watchDirectory("/root/file.txt", false, vi.fn());
+				using _ = host.watchDirectory("/root/file.txt", vi.fn(), {
+					recursive: false,
+				});
 				expect(dispose).not.toHaveBeenCalled();
 			}
 

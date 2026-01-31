@@ -106,10 +106,10 @@ export function createTypeScriptServerHost(
 		watchDirectory(directoryPath, callback, recursive = false) {
 			const watcher = host.watchDirectory(
 				path.resolve(host.getCurrentDirectory(), directoryPath),
-				recursive,
 				(filePathAbsolute) => {
 					callback(filePathAbsolute);
 				},
+				{ recursive },
 			);
 			return {
 				close() {

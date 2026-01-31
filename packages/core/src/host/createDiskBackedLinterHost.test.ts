@@ -121,7 +121,9 @@ describe("createDiskBackedLinterHost", () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
 			const filePath = path.join(integrationRoot, "watch.txt");
 			const onEvent = vi.fn();
-			using _ = host.watchFile(filePath, onEvent, 10);
+			using _ = host.watchFile(filePath, onEvent, {
+				pollingInterval: 10,
+			});
 
 			await sleep(50);
 
@@ -165,7 +167,7 @@ describe("createDiskBackedLinterHost", () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
 			const filePath = path.join(integrationRoot, "watch-recreate.txt");
 			const onEvent = vi.fn();
-			using _ = host.watchFile(filePath, onEvent, 10);
+			using _ = host.watchFile(filePath, onEvent, { pollingInterval: 10 });
 
 			await sleep(50);
 
@@ -193,7 +195,7 @@ describe("createDiskBackedLinterHost", () => {
 			const secondDir = path.join(firstDir, "second");
 			const filePath = path.join(secondDir, "deep.txt");
 			const onEvent = vi.fn();
-			using _ = host.watchFile(filePath, onEvent, 10);
+			using _ = host.watchFile(filePath, onEvent, { pollingInterval: 10 });
 
 			await sleep(50);
 
@@ -255,7 +257,7 @@ describe("createDiskBackedLinterHost", () => {
 			const filePath = path.join(integrationRoot, "disposed.txt");
 			const onEvent = vi.fn();
 			{
-				using _ = host.watchFile(filePath, onEvent, 10);
+				using _ = host.watchFile(filePath, onEvent, { pollingInterval: 10 });
 				await sleep(50);
 				fs.writeFileSync(filePath, "first");
 				await vi.waitFor(() => {
@@ -275,7 +277,7 @@ describe("createDiskBackedLinterHost", () => {
 			const onEvent = vi.fn();
 			fs.writeFileSync(filePath, "first");
 			{
-				using _ = host.watchFile(filePath, onEvent, 10);
+				using _ = host.watchFile(filePath, onEvent, { pollingInterval: 10 });
 				await sleep(50);
 				fs.rmSync(filePath);
 				await vi.waitFor(() => {
@@ -294,7 +296,7 @@ describe("createDiskBackedLinterHost", () => {
 			const targetPath = path.join(integrationRoot, "target.txt");
 			const otherPath = path.join(integrationRoot, "other.txt");
 			const onEvent = vi.fn();
-			using _ = host.watchFile(targetPath, onEvent, 10);
+			using _ = host.watchFile(targetPath, onEvent, { pollingInterval: 10 });
 
 			await sleep(50);
 
@@ -309,7 +311,7 @@ describe("createDiskBackedLinterHost", () => {
 			const dirPath = path.join(integrationRoot, "directory");
 			const onEvent = vi.fn();
 			fs.mkdirSync(dirPath, { recursive: true });
-			using _ = host.watchFile(dirPath, onEvent, 10);
+			using _ = host.watchFile(dirPath, onEvent, { pollingInterval: 10 });
 
 			await sleep(50);
 
@@ -331,7 +333,7 @@ describe("createDiskBackedLinterHost", () => {
 			const filePath = path.join(dirPath, "file.txt");
 			const onEvent = vi.fn();
 			fs.mkdirSync(dirPath, { recursive: true });
-			using _ = host.watchFile(dirPath, onEvent, 10);
+			using _ = host.watchFile(dirPath, onEvent, { pollingInterval: 10 });
 
 			await sleep(50);
 
@@ -349,7 +351,9 @@ describe("createDiskBackedLinterHost", () => {
 			fs.mkdirSync(nestedPath, { recursive: true });
 
 			const onEvent = vi.fn();
-			using _ = host.watchDirectory(directoryPath, false, onEvent);
+			using _ = host.watchDirectory(directoryPath, onEvent, {
+				recursive: false,
+			});
 
 			await sleep(50);
 
@@ -375,7 +379,9 @@ describe("createDiskBackedLinterHost", () => {
 			fs.mkdirSync(nestedPath, { recursive: true });
 			fs.writeFileSync(path.join(directoryPath, "existing.txt"), "content");
 			const onEvent = vi.fn();
-			using _ = host.watchDirectory(directoryPath, true, onEvent);
+			using _ = host.watchDirectory(directoryPath, onEvent, {
+				recursive: true,
+			});
 
 			await sleep(50);
 
@@ -397,7 +403,7 @@ describe("createDiskBackedLinterHost", () => {
 			const baseDir = path.join(integrationRoot, "base-git");
 			fs.mkdirSync(baseDir, { recursive: true });
 			const onEvent = vi.fn();
-			using _ = host.watchDirectory(baseDir, true, onEvent);
+			using _ = host.watchDirectory(baseDir, onEvent, { recursive: true });
 
 			await sleep(50);
 
@@ -418,7 +424,7 @@ describe("createDiskBackedLinterHost", () => {
 			const baseDir = path.join(integrationRoot, "base-node-modules");
 			fs.mkdirSync(baseDir, { recursive: true });
 			const onEvent = vi.fn();
-			using _ = host.watchDirectory(baseDir, true, onEvent);
+			using _ = host.watchDirectory(baseDir, onEvent, { recursive: true });
 
 			await sleep(50);
 
@@ -444,7 +450,7 @@ describe("createDiskBackedLinterHost", () => {
 			const baseDir = path.join(integrationRoot, "lookalike");
 			fs.mkdirSync(baseDir, { recursive: true });
 			const onEvent = vi.fn();
-			using _ = host.watchDirectory(baseDir, true, onEvent);
+			using _ = host.watchDirectory(baseDir, onEvent, { recursive: true });
 
 			await sleep(50);
 
@@ -465,7 +471,10 @@ describe("createDiskBackedLinterHost", () => {
 				host.isCaseSensitiveFS(),
 			);
 			const onEvent = vi.fn();
-			using _ = host.watchDirectory(directoryPath, false, onEvent, 10);
+			using _ = host.watchDirectory(directoryPath, onEvent, {
+				pollingInterval: 10,
+				recursive: false,
+			});
 
 			await sleep(50);
 
@@ -486,7 +495,10 @@ describe("createDiskBackedLinterHost", () => {
 			const onEvent = vi.fn();
 			fs.mkdirSync(directoryPath, { recursive: true });
 
-			using _ = host.watchDirectory(directoryPath, false, onEvent, 10);
+			using _ = host.watchDirectory(directoryPath, onEvent, {
+				pollingInterval: 10,
+				recursive: false,
+			});
 
 			await sleep(50);
 
@@ -516,7 +528,10 @@ describe("createDiskBackedLinterHost", () => {
 				host.isCaseSensitiveFS(),
 			);
 
-			using _ = host.watchDirectory(directoryPath, false, onEvent, 10);
+			using _ = host.watchDirectory(directoryPath, onEvent, {
+				pollingInterval: 10,
+				recursive: false,
+			});
 
 			await sleep(50);
 
@@ -538,7 +553,10 @@ describe("createDiskBackedLinterHost", () => {
 			const directoryPath = path.join(integrationRoot, "recreate-dir");
 			const onEvent = vi.fn();
 			fs.mkdirSync(directoryPath, { recursive: true });
-			using _ = host.watchDirectory(directoryPath, false, onEvent, 10);
+			using _ = host.watchDirectory(directoryPath, onEvent, {
+				pollingInterval: 10,
+				recursive: false,
+			});
 
 			await sleep(50);
 
@@ -595,7 +613,10 @@ describe("createDiskBackedLinterHost", () => {
 				host.isCaseSensitiveFS(),
 			);
 			const onEvent = vi.fn();
-			using _ = host.watchDirectory(directoryPath, false, onEvent, 10);
+			using _ = host.watchDirectory(directoryPath, onEvent, {
+				pollingInterval: 10,
+				recursive: false,
+			});
 
 			await sleep(50);
 

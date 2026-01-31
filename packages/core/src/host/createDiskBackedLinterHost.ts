@@ -23,6 +23,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			normalizedChangedFilePath: null | string,
 			event: LinterHostFileWatcherEvent,
 		) => void,
+		signal: AbortSignal | undefined,
 	): Disposable {
 		const normalizedWatchBasename = normalizedWatchPath.slice(
 			normalizedWatchPath.lastIndexOf("/") + 1,
@@ -53,8 +54,8 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			const watcher = fs
 				.watch(
 					normalizedWatchPath,
-					{ persistent: false, recursive },
-					(event, filename) => {
+					{ persistent: false, recursive, signal },
+					(_event, filename) => {
 						if (unwatched) {
 							return;
 						}
@@ -201,15 +202,12 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 				if (stat.isFile()) {
 					return "file";
 				}
-			} catch {} // eslint-disable-line no-empty
+			} catch {
+				// Fall through to undefined.
+			}
 			return undefined;
 		},
-		watchDirectory(
-			directoryPathAbsolute,
-			recursive,
-			callback,
-			pollingInterval = 2_000,
-		) {
+		watchDirectory(directoryPathAbsolute, callback, options) {
 			directoryPathAbsolute = normalizePath(
 				directoryPathAbsolute,
 				caseSensitiveFS,
@@ -217,8 +215,8 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 
 			return createWatcher(
 				directoryPathAbsolute,
-				recursive,
-				pollingInterval,
+				options.recursive,
+				options.pollingInterval ?? 2_000,
 				(normalizedChangedFilePath) => {
 					normalizedChangedFilePath ??= directoryPathAbsolute;
 					if (normalizedChangedFilePath !== directoryPathAbsolute) {
@@ -237,20 +235,22 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 					}
 					callback(normalizedChangedFilePath);
 				},
+				options.signal,
 			);
 		},
-		watchFile(filePathAbsolute, callback, pollingInterval = 2_000) {
+		watchFile(filePathAbsolute, callback, options) {
 			filePathAbsolute = normalizePath(filePathAbsolute, caseSensitiveFS);
 
 			return createWatcher(
 				filePathAbsolute,
 				false,
-				pollingInterval,
+				options?.pollingInterval ?? 2_000,
 				(normalizedChangedFilePath, event) => {
 					if (normalizedChangedFilePath === filePathAbsolute) {
 						callback(event);
 					}
 				},
+				undefined,
 			);
 		},
 	};

@@ -1,3 +1,5 @@
+import type { Abortable } from "node:events";
+
 export interface LinterHost {
 	getCurrentDirectory(): string;
 	isCaseSensitiveFS(): boolean;
@@ -6,14 +8,13 @@ export interface LinterHost {
 	stat(pathAbsolute: string): "directory" | "file" | undefined;
 	watchDirectory(
 		directoryPathAbsolute: string,
-		recursive: boolean,
 		callback: LinterHostDirectoryWatcher,
-		pollingInterval?: number,
+		options: WatchDirectoryOptions,
 	): Disposable;
 	watchFile(
 		filePathAbsolute: string,
 		callback: LinterHostFileWatcher,
-		pollingInterval?: number,
+		options?: WatchOptions,
 	): Disposable;
 }
 
@@ -31,4 +32,12 @@ export interface VFSLinterHost extends LinterHost {
 	vfsDeleteFile(filePathAbsolute: string): void;
 	vfsListFiles(): ReadonlyMap<string, string>;
 	vfsUpsertFile(filePathAbsolute: string, content: string): void;
+}
+
+export interface WatchDirectoryOptions extends WatchOptions {
+	recursive: boolean;
+}
+
+export interface WatchOptions extends Abortable {
+	pollingInterval?: number;
 }

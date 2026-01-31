@@ -74,8 +74,8 @@ export async function runCli(args: string[]) {
 		return 0;
 	}
 
-	const cwd = process.cwd();
-	const configFileName = await findConfigFileName(cwd);
+	const host = createDiskBackedLinterHost(process.cwd());
+	const configFileName = findConfigFileName(host);
 	if (!configFileName) {
 		console.error("No flint.config.* file found.");
 		console.error(
@@ -88,8 +88,6 @@ export async function runCli(args: string[]) {
 	}
 
 	const getRenderer = createRendererFactory(configFileName, values);
-
-	const host = createDiskBackedLinterHost(cwd);
 
 	if (values.watch) {
 		await runCliWatch(host, configFileName, getRenderer, values);
