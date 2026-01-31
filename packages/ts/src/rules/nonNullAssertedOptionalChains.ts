@@ -82,7 +82,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports non-null assertions on optional chain expressions.",
 		id: "nonNullAssertedOptionalChains",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		nonNullOptionalChain: {

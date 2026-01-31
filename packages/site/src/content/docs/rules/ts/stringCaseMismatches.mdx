@@ -1,0 +1,61 @@
+---
+description: "Reports string case method calls compared against literals with mismatched casing."
+title: "stringCaseMismatches"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="stringCaseMismatches" />
+
+When using `.toLowerCase()` or `.toUpperCase()` in comparisons, the compared string literal must match the expected case.
+Otherwise, the comparison will always produce the same result regardless of input.
+
+For example, `text.toLowerCase() === "VALUE"` will always be `false` because `.toLowerCase()` returns a lowercase string, but `"VALUE"` is uppercase.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+input.toLowerCase() === "VALUE";
+```
+
+```ts
+input.toUpperCase() === "hello";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+input.toLowerCase() === "value";
+```
+
+```ts
+input.toUpperCase() === "HELLO";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have code that intentionally uses mismatched case comparisons for testing or demonstration purposes, this rule might get in your way.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: String.prototype.toLowerCase()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase)
+- [MDN: String.prototype.toUpperCase()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="stringCaseMismatches" />
