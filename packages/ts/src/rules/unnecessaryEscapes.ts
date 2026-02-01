@@ -61,13 +61,13 @@ function findUnnecessaryEscapes(
 			}
 
 			if (nextChar === "x") {
-				if (/^[\dA-F]{2}/i.test(fullText.slice(index + 2, index + 4))) {
+				if (/^[\da-f]{2}/i.test(fullText.slice(index + 2, index + 4))) {
 					index += 4;
 					continue;
 				}
 			} else if (nextChar === "u") {
 				const afterU = fullText.slice(index + 2);
-				if (/^[\dA-F]{4}/i.test(afterU)) {
+				if (/^[\da-f]{4}/i.test(afterU)) {
 					index += 6;
 					continue;
 				}
@@ -75,7 +75,7 @@ function findUnnecessaryEscapes(
 					const closeBrace = afterU.indexOf("}");
 					if (
 						closeBrace > 1 &&
-						/^[\dA-F]+$/i.test(afterU.slice(1, closeBrace))
+						/^[\da-f]+$/i.test(afterU.slice(1, closeBrace))
 					) {
 						index += 3 + closeBrace;
 						continue;
