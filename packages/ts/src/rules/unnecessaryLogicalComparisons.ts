@@ -9,14 +9,6 @@ import { SyntaxKind } from "typescript";
 import { ruleCreator } from "./ruleCreator.ts";
 import { isEqualityOperator } from "./utils/operators.ts";
 
-function isBooleanLiteral(node: AST.Expression): node is AST.BooleanLiteral {
-	const unwrapped = unwrapParenthesizedNode(node);
-	return (
-		unwrapped.kind === SyntaxKind.TrueKeyword ||
-		unwrapped.kind === SyntaxKind.FalseKeyword
-	);
-}
-
 function getBooleanValue(node: AST.BooleanLiteral): boolean {
 	return node.kind === SyntaxKind.TrueKeyword;
 }
@@ -40,6 +32,14 @@ function getSimplifiedExpression(
 
 	// For === false or !== true, negate the variable
 	return `!${variableText}`;
+}
+
+function isBooleanLiteral(node: AST.Expression): node is AST.BooleanLiteral {
+	const unwrapped = unwrapParenthesizedNode(node);
+	return (
+		unwrapped.kind === SyntaxKind.TrueKeyword ||
+		unwrapped.kind === SyntaxKind.FalseKeyword
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -88,11 +88,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					let booleanNode: AST.BooleanLiteral;
 
 					if (leftBoolean) {
-						booleanNode = node.left as AST.BooleanLiteral;
+						booleanNode = node.left;
 						variable = node.right;
 					} else {
 						variable = node.left;
-						booleanNode = node.right as AST.BooleanLiteral;
+						booleanNode = node.right;
 					}
 
 					const booleanValue = getBooleanValue(booleanNode);
