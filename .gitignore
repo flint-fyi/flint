@@ -3,3 +3,4 @@ packages/*/.astro
 packages/*/dist
 packages/*/lib
 tsconfig.vitest-temp.json
+*.tsbuildinfo
