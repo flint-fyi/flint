@@ -68,8 +68,8 @@ const name = "World";
 const greeting = \`Hello \${name}!\`;
 `,
 		`
-const first = "John";
-const last = "Doe";
+const first = "Apple";
+const last = "Banana";
 const full = \`\${first} \${last}\`;
 `,
 	],
