@@ -71,10 +71,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const conditionText = getNodeText(condition, sourceFile);
 						const needsParens =
 							ts.isBinaryExpression(condition) ||
-							ts.isConditionalExpression(condition) ||
-							ts.isCallExpression(condition) ||
-							ts.isPropertyAccessExpression(condition) ||
-							ts.isElementAccessExpression(condition);
+							ts.isConditionalExpression(condition);
 
 						const negatedCondition = needsParens
 							? `!(${conditionText})`

@@ -177,7 +177,7 @@ const isInactive = flag1 || flag2 ? false : true;
 const result = func() ? false : true;
 `,
 			output: `
-const result = !(func());
+const result = !func();
 `,
 			snapshot: `
 const result = func() ? false : true;
@@ -190,7 +190,7 @@ const result = func() ? false : true;
 const result = obj.prop ? false : true;
 `,
 			output: `
-const result = !(obj.prop);
+const result = !obj.prop;
 `,
 			snapshot: `
 const result = obj.prop ? false : true;
@@ -203,7 +203,7 @@ const result = obj.prop ? false : true;
 const result = arr[0] ? false : true;
 `,
 			output: `
-const result = !(arr[0]);
+const result = !arr[0];
 `,
 			snapshot: `
 const result = arr[0] ? false : true;
