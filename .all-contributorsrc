@@ -99,7 +99,8 @@
         "tool",
         "maintenance",
         "bug",
-        "infra"
+        "infra",
+        "doc"
       ]
     },
     {
