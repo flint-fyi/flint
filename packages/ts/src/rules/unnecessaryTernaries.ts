@@ -12,13 +12,6 @@ function getNodeText(node: ts.Node, sourceFile: AST.SourceFile) {
 	return sourceFile.text.slice(node.getStart(sourceFile), node.getEnd());
 }
 
-function isBooleanLiteral(node: AST.Expression): boolean {
-	return (
-		node.kind === ts.SyntaxKind.TrueKeyword ||
-		node.kind === ts.SyntaxKind.FalseKeyword
-	);
-}
-
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
@@ -50,7 +43,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				ConditionalExpression(node: AST.ConditionalExpression, { sourceFile }) {
-					const { condition, whenTrue, whenFalse } = node;
+					const { condition, whenFalse, whenTrue } = node;
 
 					// Pattern 1: condition ? true : false
 					if (
