@@ -82,7 +82,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports non-interactive elements with interactive ARIA roles.",
 		id: "nonInteractiveElementRoles",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidRole: {
@@ -121,10 +121,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (
-				!roleProperty ||
-				roleProperty.kind !== SyntaxKind.JsxAttribute ||
-				!roleProperty.initializer ||
-				roleProperty.initializer.kind !== SyntaxKind.StringLiteral
+				roleProperty?.kind !== SyntaxKind.JsxAttribute ||
+				roleProperty.initializer?.kind !== SyntaxKind.StringLiteral
 			) {
 				return;
 			}

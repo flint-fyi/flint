@@ -1,0 +1,88 @@
+---
+description: "Reports unnecessary operands in regular expression character class set operations."
+title: "regexUnnecessarySetOperands"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessarySetOperands" />
+
+Regular expressions with the `v` flag support character class set operations like intersection (`&&`) and subtraction (`--`).
+This rule identifies operands in these operations that are unnecessary or produce unexpected results.
+
+The rule detects four types of issues:
+
+1. Disjoint intersection: two sets with no common elements intersected together, producing an empty result.
+2. Subset intersection: a superset operand in an intersection that is redundant.
+3. Disjoint subtraction: subtracting a set that shares no elements, which has no effect.
+4. Subset subtraction: subtracting a superset, which produces an empty result.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+/[\w&&\s]/v;
+```
+
+```ts
+/[\w&&\d]/v;
+```
+
+```ts
+/[\w--\s]/v;
+```
+
+```ts
+/[\d--\w]/v;
+```
+
+```ts
+/[[abc]&&[def]]/v;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+/[\w--\d]/v;
+```
+
+```ts
+/[[a-z]&&[a-m]]/v;
+```
+
+```ts
+/[[a-z]--[aeiou]]/v;
+```
+
+```ts
+/[\w&&\s]/;
+```
+
+```ts
+/[\w\d]/v;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use set operations that produce empty results for documentation or testing purposes, you may want to disable this rule.
+
+## Further Reading
+
+- [MDN: Unicode character class escape - v-mode character class](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Unicode_character_class_escape#v-mode_character_class)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessarySetOperands" />

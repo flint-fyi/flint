@@ -20,7 +20,12 @@ function getCharacterClassesIfSimplified(pattern: RegExpAST.Pattern) {
 				return;
 			}
 
-			if (hasMatchingCasePair(charClass.elements)) {
+			const elements = charClass.elements;
+			if (
+				hasMatchingCasePair(elements) &&
+				!isHexSubset(elements) &&
+				!isFullAlphabetMatch(elements)
+			) {
 				characterClasses.push(charClass);
 				simplified = true;
 			}
@@ -55,6 +60,63 @@ function hasMatchingCasePair(elements: RegExpAST.CharacterClassElement[]) {
 		);
 }
 
+function isFullAlphabetMatch(elements: RegExpAST.CharacterClassElement[]) {
+	// Returns true if the class matches exactly [A-Za-z] - intentionally matching any letter
+	let hasFullUpper = false;
+	let hasFullLower = false;
+	let hasOtherLetters = false;
+
+	for (const element of elements) {
+		if (element.type === "CharacterClassRange") {
+			const min = element.min.value;
+			const max = element.max.value;
+			if (min === 0x41 && max === 0x5a) {
+				hasFullUpper = true;
+			} else if (min === 0x61 && max === 0x7a) {
+				hasFullLower = true;
+			} else if (isLetter(min) || isLetter(max)) {
+				hasOtherLetters = true;
+			}
+		} else if (element.type === "Character" && isLetter(element.value)) {
+			hasOtherLetters = true;
+		}
+	}
+
+	return hasFullUpper && hasFullLower && !hasOtherLetters;
+}
+
+function isHexLetter(codePoint: number) {
+	return (
+		(codePoint >= 0x41 && codePoint <= 0x46) || // A-F
+		(codePoint >= 0x61 && codePoint <= 0x66) // a-f
+	);
+}
+
+function isHexSubset(elements: RegExpAST.CharacterClassElement[]) {
+	// Returns true if there is a letter range confined to A-F/a-f
+	let hasHexRange = false;
+	for (const element of elements) {
+		if (element.type === "CharacterClassRange") {
+			const min = element.min.value;
+			const max = element.max.value;
+			const isUpperHexRange = min >= 0x41 && max <= 0x46; // A-F
+			const isLowerHexRange = min >= 0x61 && max <= 0x66; // a-f
+			if (isUpperHexRange || isLowerHexRange) {
+				hasHexRange = true;
+			} else if (isLetter(min) || isLetter(max)) {
+				// Contains a non-hex letter range
+				return false;
+			}
+		} else if (element.type === "Character") {
+			// Individual letters don't qualify as hex subset by themselves
+			if (isLetter(element.value) && !isHexLetter(element.value)) {
+				return false;
+			}
+		}
+	}
+	return hasHexRange;
+}
+
 function isLetter(codePoint: number) {
 	return (
 		(codePoint >= 0x41 && codePoint <= 0x5a) ||
@@ -75,7 +137,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports regex patterns that can be simplified by using the i (ignore case) flag.",
 		id: "regexIgnoreCaseFlags",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		useIgnoreCase: {

@@ -6,7 +6,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports files with Unicode Byte Order Marks (BOMs).",
 		id: "unicodeBOMs",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		noBOM: {

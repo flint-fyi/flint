@@ -144,7 +144,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports union and intersection type constituents that are redundant or override other types.",
 		id: "redundantTypeConstituents",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		errorTypeOverrides: {
@@ -277,7 +277,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 
-					if (seenUnionTypes.size > 0) {
+					if (seenUnionTypes.size) {
 						for (const [typeRef, typeValues] of seenUnionTypes) {
 							let primitiveFlag: ts.TypeFlags | undefined;
 							for (const { typeFlags } of typeValues) {

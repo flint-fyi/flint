@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports duplicate conditions in if-else-if chains that make code unreachable.",
 		id: "elseIfDuplicates",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		duplicateCondition: {
@@ -48,10 +48,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					});
 				}
 
-				if (
-					!current.elseStatement ||
-					current.elseStatement.kind !== SyntaxKind.IfStatement
-				) {
+				if (current.elseStatement?.kind !== SyntaxKind.IfStatement) {
 					break;
 				}
 
