@@ -177,8 +177,8 @@ function formatLocation(
 	let output = "";
 	output += color(relativeFileName, COLOR.Cyan);
 	output += ":";
-	output += color(`${line + 1}`, COLOR.Yellow);
+	output += color(String(line + 1), COLOR.Yellow);
 	output += ":";
-	output += color(`${column + 1}`, COLOR.Yellow);
+	output += color(String(column + 1), COLOR.Yellow);
 	return output;
 }
