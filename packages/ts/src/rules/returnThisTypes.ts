@@ -119,10 +119,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return;
 				}
 
-				if (
-					tsutils.isUnionType(type) &&
-					type.types.some((constituent) => constituent === classType)
-				) {
+				if (tsutils.isUnionType(type) && type.types.includes(classType)) {
 					hasReturnClassType = true;
 					return true;
 				}
