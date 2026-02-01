@@ -48,10 +48,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					});
 				}
 
-				if (
-					!current.elseStatement ||
-					current.elseStatement.kind !== SyntaxKind.IfStatement
-				) {
+				if (current.elseStatement?.kind !== SyntaxKind.IfStatement) {
 					break;
 				}
 

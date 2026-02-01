@@ -1,0 +1,70 @@
+---
+description: 'Reports unnecessary "use strict" directives in ES modules and classes.'
+title: "unnecessaryUseStricts"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryUseStricts" />
+
+ECMAScript modules and class bodies are automatically in strict mode.
+The `"use strict"` directive has no effect in these contexts and is redundant.
+
+This rule reports on `"use strict"` directives that can be safely removed.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+"use strict";
+
+export function calculate(value: number) {
+	return value * 2;
+}
+
+export class Calculator {
+	add(a: number, b: number) {
+		return a + b;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export function calculate(value: number) {
+	return value * 2;
+}
+
+export class Calculator {
+	add(a: number, b: number) {
+		return a + b;
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are working in a JavaScript environment with non-standard semantics, or otherwise have tooling that requires you to use seemingly redundant `"use strict"` directives, this rule might not be for you.
+
+## Further Reading
+
+- [MDN: Strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode)
+- [MDN: JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryUseStricts" />
