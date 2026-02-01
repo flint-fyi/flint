@@ -1,41 +1,12 @@
 import {
+	type AST,
 	getTSNodeRange,
+	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
-
-function checkUnnecessaryRename(
-	node: ts.BindingElement | ts.ExportSpecifier | ts.ImportSpecifier,
-	sourceFile: ts.SourceFile,
-	context: {
-		report: (options: {
-			fix?: { range: { begin: number; end: number }; text: string };
-			message: string;
-			range: { begin: number; end: number };
-		}) => void;
-	},
-) {
-	if (
-		!node.propertyName ||
-		!ts.isIdentifier(node.propertyName) ||
-		!ts.isIdentifier(node.name)
-	) {
-		return;
-	}
-
-	if (node.propertyName.text === node.name.text) {
-		context.report({
-			fix: {
-				range: getTSNodeRange(node, sourceFile),
-				text: node.name.text,
-			},
-			message: "unnecessaryRename",
-			range: getTSNodeRange(node, sourceFile),
-		});
-	}
-}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -55,17 +26,32 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
+		function checkUnnecessaryRename(
+			node: AST.BindingElement | AST.ExportSpecifier | AST.ImportSpecifier,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
+			if (
+				node.propertyName &&
+				ts.isIdentifier(node.propertyName) &&
+				ts.isIdentifier(node.name) &&
+				node.propertyName.text === node.name.text
+			) {
+				context.report({
+					fix: {
+						range: getTSNodeRange(node, sourceFile),
+						text: node.name.text,
+					},
+					message: "unnecessaryRename",
+					range: getTSNodeRange(node, sourceFile),
+				});
+			}
+		}
+
 		return {
 			visitors: {
-				BindingElement(node, { sourceFile }) {
-					checkUnnecessaryRename(node, sourceFile, context);
-				},
-				ExportSpecifier(node, { sourceFile }) {
-					checkUnnecessaryRename(node, sourceFile, context);
-				},
-				ImportSpecifier(node, { sourceFile }) {
-					checkUnnecessaryRename(node, sourceFile, context);
-				},
+				BindingElement: checkUnnecessaryRename,
+				ExportSpecifier: checkUnnecessaryRename,
+				ImportSpecifier: checkUnnecessaryRename,
 			},
 		};
 	},
