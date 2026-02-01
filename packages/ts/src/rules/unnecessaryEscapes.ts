@@ -95,7 +95,7 @@ function findUnnecessaryEscapes(
 				continue;
 			}
 
-			if (nextChar !== quoteChar || quoteChar === "`") {
+			if (nextChar !== quoteChar) {
 				escapes.push({
 					character: nextChar,
 					end: index + 2,
