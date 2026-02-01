@@ -10,7 +10,7 @@ const value = Math.min(5, 10);
 			snapshot: `
 const value = Math.min(5, 10);
               ~~~~~~~~~~~~~~~
-              Math.min with all constant arguments always returns 5.
+              This \`Math.min\` with all constant arguments will always return \`5\`.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ const value = Math.max(3, 7);
 			snapshot: `
 const value = Math.max(3, 7);
               ~~~~~~~~~~~~~~
-              Math.max with all constant arguments always returns 7.
+              This \`Math.max\` with all constant arguments will always return \`7\`.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ const value = Math.min(10, 5, 15);
 			snapshot: `
 const value = Math.min(10, 5, 15);
               ~~~~~~~~~~~~~~~~~~~
-              Math.min with all constant arguments always returns 5.
+              This \`Math.min\` with all constant arguments will always return \`5\`.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ const value = Math.max(1, 2, 3, 4);
 			snapshot: `
 const value = Math.max(1, 2, 3, 4);
               ~~~~~~~~~~~~~~~~~~~~
-              Math.max with all constant arguments always returns 4.
+              This \`Math.max\` with all constant arguments will always return \`4\`.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ const value = Math.min(100);
 			snapshot: `
 const value = Math.min(100);
               ~~~~~~~~~~~~~
-              Math.min with all constant arguments always returns 100.
+              This \`Math.min\` with all constant arguments will always return \`100\`.
 `,
 		},
 		{
@@ -60,7 +60,7 @@ const value = Math.max(-5, -10);
 			snapshot: `
 const value = Math.max(-5, -10);
               ~~~~~~~~~~~~~~~~~
-              Math.max with all constant arguments always returns -5.
+              This \`Math.max\` with all constant arguments will always return \`-5\`.
 `,
 		},
 		{
@@ -70,7 +70,7 @@ const value = Math.min(-5, 0, 5);
 			snapshot: `
 const value = Math.min(-5, 0, 5);
               ~~~~~~~~~~~~~~~~~~
-              Math.min with all constant arguments always returns -5.
+              This \`Math.min\` with all constant arguments will always return \`-5\`.
 `,
 		},
 		{
@@ -80,7 +80,7 @@ const value = Math.min((5), (10));
 			snapshot: `
 const value = Math.min((5), (10));
               ~~~~~~~~~~~~~~~~~~~
-              Math.min with all constant arguments always returns 5.
+              This \`Math.min\` with all constant arguments will always return \`5\`.
 `,
 		},
 		{
@@ -90,7 +90,7 @@ const value = Math.max(5, Math.min(10, x));
 			snapshot: `
 const value = Math.max(5, Math.min(10, x));
               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-              Incorrect clamping pattern: Math.max(5, Math.min(10, x)) should be Math.min(10, Math.max(5, x)).
+              Incorrect clamping pattern: \`Math.max(5, Math.min(10, x))\` should be \`Math.min(10, Math.max(5, x))\`.
 `,
 		},
 		{
@@ -100,7 +100,7 @@ const value = Math.max(0, Math.min(100, value));
 			snapshot: `
 const value = Math.max(0, Math.min(100, value));
               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-              Incorrect clamping pattern: Math.max(0, Math.min(100, x)) should be Math.min(100, Math.max(0, x)).
+              Incorrect clamping pattern: \`Math.max(0, Math.min(100, x))\` should be \`Math.min(100, Math.max(0, x))\`.
 `,
 		},
 		{
@@ -110,7 +110,7 @@ const value = Math.max(10, Math.min(20, input));
 			snapshot: `
 const value = Math.max(10, Math.min(20, input));
               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-              Incorrect clamping pattern: Math.max(10, Math.min(20, x)) should be Math.min(20, Math.max(10, x)).
+              Incorrect clamping pattern: \`Math.max(10, Math.min(20, x))\` should be \`Math.min(20, Math.max(10, x))\`.
 `,
 		},
 		{
@@ -120,7 +120,7 @@ const value = Math.max(-10, Math.min(10, score));
 			snapshot: `
 const value = Math.max(-10, Math.min(10, score));
               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-              Incorrect clamping pattern: Math.max(-10, Math.min(10, x)) should be Math.min(10, Math.max(-10, x)).
+              Incorrect clamping pattern: \`Math.max(-10, Math.min(10, x))\` should be \`Math.min(10, Math.max(-10, x))\`.
 `,
 		},
 		{
@@ -130,7 +130,7 @@ const result = Math.max(5, Math.min(x, 10));
 			snapshot: `
 const result = Math.max(5, Math.min(x, 10));
                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-               Incorrect clamping pattern: Math.max(5, Math.min(10, x)) should be Math.min(10, Math.max(5, x)).
+               Incorrect clamping pattern: \`Math.max(5, Math.min(10, x))\` should be \`Math.min(10, Math.max(5, x))\`.
 `,
 		},
 	],

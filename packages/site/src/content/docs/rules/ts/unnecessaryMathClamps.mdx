@@ -10,13 +10,13 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="unnecessaryMathClamps" />
 
-Math.min and Math.max are commonly used to constrain values to specific ranges.
+`Math.min` and `Math.max` are commonly used to constrain values to specific ranges.
 However, when all arguments are constant values, the result is always predictable and should be replaced with the constant directly.
-Additionally, nested Math.min/max calls used for clamping must follow the correct pattern to work as intended.
+Additionally, nested `Math.min/max` calls are often accidentally swapped to never return a value in-range
+
+This rule reports on `Math.min` and `Math.max` calls that don't correctly clamp.
 
 ## Examples
-
-### Constant Arguments
 
 <Tabs>
 <TabItem label="❌ Incorrect">
@@ -29,6 +29,10 @@ const minimum = Math.min(5, 10);
 const maximum = Math.max(3, 7, 2);
 ```
 
+```ts
+const clamped = Math.max(0, Math.min(100, value));
+```
+
 </TabItem>
 <TabItem label="✅ Correct">
 
@@ -39,21 +43,6 @@ const minimum = 5;
 ```ts
 const maximum = 7;
 ```
-
-</TabItem>
-</Tabs>
-
-### Incorrect Clamping Pattern
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
-```ts
-const clamped = Math.max(0, Math.min(100, value));
-```
-
-</TabItem>
-<TabItem label="✅ Correct">
 
 ```ts
 const clamped = Math.min(100, Math.max(0, value));

@@ -10,13 +10,9 @@ import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-interface MathMethodInfo {
-	arguments: AST.Expression[];
-	method: "max" | "min";
-	node: AST.CallExpression;
-}
-
-function extractNumericLiteral(node: AST.Expression): number | undefined {
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
+function extractNumericLiteral(node: AST.Expression) {
 	const unwrapped = unwrapParenthesizedNode(node);
 
 	if (unwrapped.kind === SyntaxKind.NumericLiteral) {
@@ -42,22 +38,13 @@ function extractNumericLiteral(node: AST.Expression): number | undefined {
 	return undefined;
 }
 
-function getMathMethodInfo(
-	node: AST.Expression,
-	typeChecker: Checker,
-): MathMethodInfo | undefined {
+function getMathMethodInfo(node: AST.Expression, typeChecker: Checker) {
 	const unwrapped = unwrapParenthesizedNode(node);
 
 	if (
 		unwrapped.kind !== SyntaxKind.CallExpression ||
 		unwrapped.questionDotToken ||
-		unwrapped.arguments.length < 1
-	) {
-		return undefined;
-	}
-
-	// Check if there are any spread elements - if so, we can't analyze this
-	if (
+		unwrapped.arguments.length < 1 ||
 		unwrapped.arguments.some((arg) => arg.kind === SyntaxKind.SpreadElement)
 	) {
 		return undefined;
@@ -86,7 +73,7 @@ function isMathMethod(
 	node: AST.Expression,
 	methodName: string,
 	typeChecker: Checker,
-): boolean {
+) {
 	return (
 		node.kind === SyntaxKind.PropertyAccessExpression &&
 		!node.questionDotToken &&
@@ -107,22 +94,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		constantArguments: {
 			primary:
-				"Math.{{method}} with all constant arguments always returns {{result}}.",
+				"This `Math.{{ method }}` with all constant arguments will always return `{{ result }}`.",
 			secondary: [
-				"When all arguments to Math.{{method}} are constants, the result is always the same value.",
-				"Replace this call with the constant {{result}} directly.",
+				"When all arguments to `Math.{{ method }}` are constants, the result is always the same value.",
+				"You can replace this call with the constant `{{ result }}` directly.",
 			],
-			suggestions: ["Replace with the constant value {{result}}."],
+			suggestions: ["Replace with the constant value `{{ result }}`."],
 		},
 		incorrectClampOrder: {
 			primary:
-				"Incorrect clamping pattern: Math.{{outerMethod}}({{min}}, Math.{{innerMethod}}({{max}}, x)) should be Math.min({{max}}, Math.max({{min}}, x)).",
+				"Incorrect clamping pattern: `Math.{{ outerMethod }}({{ min }}, Math.{{ innerMethod }}({{ max }}, x))` should be `Math.min({{max}}, Math.max({{min}}, x))`.",
 			secondary: [
-				"To clamp a value between a minimum and maximum, use Math.min(max, Math.max(min, value)).",
+				"To clamp a value between a minimum and maximum, use `Math.min(max, Math.max(min, value))`.",
 				"The current pattern will not correctly constrain the value to the intended range.",
 			],
 			suggestions: [
-				"Use the correct clamping pattern: Math.min(max, Math.max(min, value)).",
+				"Use the correct clamping pattern: `Math.min(max, Math.max(min, value))`.",
 			],
 		},
 	},
@@ -169,9 +156,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// Pattern: Math.max(min, Math.min(max, x)) is incorrect
 					// Correct: Math.min(max, Math.max(min, x))
 					if (outerInfo.arguments.length === 2) {
-						const [firstArg, secondArg] = outerInfo.arguments;
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						const firstArgument = outerInfo.arguments[0]!;
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						const secondArgument = outerInfo.arguments[1]!;
 
-						const innerInfo = getMathMethodInfo(secondArg, typeChecker);
+						const innerInfo = getMathMethodInfo(secondArgument, typeChecker);
 
 						if (
 							innerInfo &&
@@ -185,7 +175,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								return;
 							}
 
-							const outerConstant = extractNumericLiteral(firstArg);
+							const outerConstant = extractNumericLiteral(firstArgument);
 							const innerConstantFirst = extractNumericLiteral(innerFirstArg);
 							const innerConstantSecond = extractNumericLiteral(innerSecondArg);
 
