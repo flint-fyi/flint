@@ -56,8 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (node.importClause) {
 						if (
-							node.importClause.namedBindings &&
-							node.importClause.namedBindings.kind === SyntaxKind.NamedImports
+							node.importClause.namedBindings?.kind === SyntaxKind.NamedImports
 						) {
 							for (const element of node.importClause.namedBindings.elements) {
 								const importedName =

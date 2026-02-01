@@ -45,8 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				VariableDeclaration(node: AST.VariableDeclaration, { sourceFile }) {
 					if (
-						!node.initializer ||
-						node.initializer.kind !== ts.SyntaxKind.ThisKeyword ||
+						node.initializer?.kind !== ts.SyntaxKind.ThisKeyword ||
 						!ts.isIdentifier(node.name)
 					) {
 						return;

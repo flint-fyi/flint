@@ -62,9 +62,7 @@ export default defineConfig(
 			jsdoc.configs["flat/logical-typescript-error"],
 			jsdoc.configs["flat/stylistic-typescript-error"],
 			n.configs["flat/recommended"],
-			// https://github.com/azat-io/eslint-plugin-perfectionist/issues/655
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			perfectionist.configs!["recommended-natural"] as Linter.Config,
+			perfectionist.configs["recommended-natural"],
 			regexp.configs["flat/recommended"],
 			tseslint.configs.strictTypeChecked,
 			tseslint.configs.stylisticTypeChecked,
@@ -84,6 +82,14 @@ export default defineConfig(
 			"@typescript-eslint/no-unnecessary-condition": [
 				"error",
 				{ allowConstantLoopConditions: true },
+			],
+			"@typescript-eslint/no-unused-vars": [
+				"error",
+				{
+					enableAutofixRemoval: {
+						imports: true,
+					},
+				},
 			],
 			"@typescript-eslint/restrict-template-expressions": [
 				"error",

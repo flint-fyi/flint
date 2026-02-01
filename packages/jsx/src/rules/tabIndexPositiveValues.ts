@@ -63,8 +63,7 @@ function getInitializerValue(initializer: AST.JsxAttributeValue) {
 	}
 
 	if (initializer.kind === SyntaxKind.JsxExpression) {
-		return initializer.expression &&
-			initializer.expression.kind === SyntaxKind.NumericLiteral
+		return initializer.expression?.kind === SyntaxKind.NumericLiteral
 			? Number(initializer.expression.text)
 			: undefined;
 	}
