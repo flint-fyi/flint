@@ -19,7 +19,7 @@ export function foo() {
 			snapshot: `
 "use strict";
 ~~~~~~~~~~~~~
-Unnecessary "use strict" directive.
+This \`"use strict"\` directive is redundant and can be safely removed.
 
 export function foo() {
     return 42;
@@ -38,7 +38,7 @@ export const value = 10;
 			snapshot: `
 'use strict';
 ~~~~~~~~~~~~~
-Unnecessary "use strict" directive.
+This \`"use strict"\` directive is redundant and can be safely removed.
 
 export const value = 10;
 `,
@@ -55,7 +55,7 @@ import { something } from "./module";
 			snapshot: `
 "use strict";
 ~~~~~~~~~~~~~
-Unnecessary "use strict" directive.
+This \`"use strict"\` directive is redundant and can be safely removed.
 
 import { something } from "./module";
 `,
@@ -72,7 +72,7 @@ export default class MyClass {}
 			snapshot: `
 "use strict";
 ~~~~~~~~~~~~~
-Unnecessary "use strict" directive.
+This \`"use strict"\` directive is redundant and can be safely removed.
 
 export default class MyClass {}
 `,
@@ -88,18 +88,24 @@ export {};
 			snapshot: `
 "use strict";
 ~~~~~~~~~~~~~
-Unnecessary "use strict" directive.
+This \`"use strict"\` directive is redundant and can be safely removed.
 export {};
 `,
 		},
 		{
-			code: `"use strict";
-export const value = 42;`,
-			output: `export const value = 42;`,
-			snapshot: `"use strict";
+			code: `
+"use strict";
+export const value = 42;
+`,
+			output: `
+export const value = 42;
+`,
+			snapshot: `
+"use strict";
 ~~~~~~~~~~~~~
-Unnecessary "use strict" directive.
-export const value = 42;`,
+This \`"use strict"\` directive is redundant and can be safely removed.
+export const value = 42;
+`,
 		},
 	],
 	valid: [

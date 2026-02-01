@@ -10,8 +10,10 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="unnecessaryUseStricts" />
 
-ES modules and class bodies are automatically in strict mode.
+ECMAScript modules and class bodies are automatically in strict mode.
 The `"use strict"` directive has no effect in these contexts and is redundant.
+
+This rule reports on `"use strict"` directives that can be safely removed.
 
 ## Examples
 
@@ -56,8 +58,7 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you are working with non-module scripts that need to be executed in strict mode, you should not use this rule.
-This rule only flags `"use strict"` directives in ES modules (files with import or export statements).
+If you are working in a JavaScript environment with non-standard semantics, or otherwise have tooling that requires you to use seemingly redundant `"use strict"` directives, this rule might not be for you.
 
 ## Further Reading
 

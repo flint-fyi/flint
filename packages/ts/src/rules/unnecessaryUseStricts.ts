@@ -1,4 +1,8 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+	type AST,
+} from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -12,12 +16,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		unnecessaryUseStrict: {
-			primary: 'Unnecessary "use strict" directive.',
+			primary:
+				'This `"use strict"` directive is redundant and can be safely removed.',
 			secondary: [
-				"ES modules and class bodies are automatically in strict mode.",
-				'The "use strict" directive has no effect and is redundant.',
+				"ECMAScript modules and class bodies are automatically in strict mode.",
+				'The `"use strict"` directive has no effect and is redundant.',
 			],
-			suggestions: ['Remove the "use strict" directive.'],
+			suggestions: ['Remove the `"use strict"` directive.'],
 		},
 	},
 	setup(context) {
@@ -28,17 +33,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const firstStatement = node.statements[0];
-					if (
-						!firstStatement ||
-						!ts.isExpressionStatement(firstStatement) ||
-						!ts.isStringLiteral(firstStatement.expression)
-					) {
-						return;
-					}
+					const firstStatement = node.statements[0]!;
 
-					const text = firstStatement.expression.text;
-					if (text !== "use strict") {
+					if (
+						!ts.isExpressionStatement(firstStatement) ||
+						!ts.isStringLiteral(firstStatement.expression) ||
+						firstStatement.expression.text !== "use strict"
+					) {
 						return;
 					}
 
@@ -56,10 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							text: "",
 						},
 						message: "unnecessaryUseStrict",
-						range: {
-							begin: firstStatement.getStart(sourceFile),
-							end: firstStatement.getEnd(),
-						},
+						range: getTSNodeRange(firstStatement, sourceFile),
 					});
 				},
 			},
