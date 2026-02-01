@@ -1,6 +1,5 @@
-// flint-disable-file unnecessaryEscapes
-import rule from "./unnecessaryEscapes.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./unnecessaryEscapes.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

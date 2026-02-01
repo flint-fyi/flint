@@ -8,17 +8,17 @@ import ts from "typescript";
 import { ruleCreator } from "./ruleCreator.ts";
 
 const validEscapes = new Set([
+	"0",
+	'"',
+	"'",
+	"\\",
+	"`",
 	"b",
 	"f",
 	"n",
 	"r",
 	"t",
 	"v",
-	"0",
-	"\\",
-	"'",
-	'"',
-	"`",
 ]);
 
 interface UnnecessaryEscape {
@@ -61,13 +61,13 @@ function findUnnecessaryEscapes(
 			}
 
 			if (nextChar === "x") {
-				if (/^[0-9A-Fa-f]{2}/.test(fullText.slice(index + 2, index + 4))) {
+				if (/^[\dA-F]{2}/i.test(fullText.slice(index + 2, index + 4))) {
 					index += 4;
 					continue;
 				}
 			} else if (nextChar === "u") {
 				const afterU = fullText.slice(index + 2);
-				if (/^[0-9A-Fa-f]{4}/.test(afterU)) {
+				if (/^[\dA-F]{4}/i.test(afterU)) {
 					index += 6;
 					continue;
 				}
@@ -75,7 +75,7 @@ function findUnnecessaryEscapes(
 					const closeBrace = afterU.indexOf("}");
 					if (
 						closeBrace > 1 &&
-						/^[0-9A-Fa-f]+$/.test(afterU.slice(1, closeBrace))
+						/^[\dA-F]+$/i.test(afterU.slice(1, closeBrace))
 					) {
 						index += 3 + closeBrace;
 						continue;
@@ -83,7 +83,7 @@ function findUnnecessaryEscapes(
 				}
 			} else if (nextChar === "c") {
 				const charAfterC = fullText[index + 2];
-				if (charAfterC && /[A-Za-z]/.test(charAfterC)) {
+				if (charAfterC && /[a-z]/i.test(charAfterC)) {
 					index += 3;
 					continue;
 				}
@@ -143,7 +143,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			let quoteChar = "'";
 
 			if (node.kind === ts.SyntaxKind.StringLiteral) {
-				quoteChar = fullText[0] === '"' ? '"' : "'";
+				quoteChar = fullText.startsWith('"') ? '"' : "'";
 			} else {
 				quoteChar = "`";
 			}
