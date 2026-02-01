@@ -29,14 +29,14 @@ interface UnnecessaryEscape {
 
 function findUnnecessaryEscapes(
 	fullText: string,
-	quoteChar: string,
+	quoteCharacter: string,
 ): UnnecessaryEscape[] {
 	const escapes: UnnecessaryEscape[] = [];
 
 	let startIndex = 1;
 	let endIndex = fullText.length - 1;
 
-	if (quoteChar === "`") {
+	if (quoteCharacter === "`") {
 		if (fullText.endsWith("${")) {
 			endIndex = fullText.length - 2;
 		}
@@ -48,24 +48,33 @@ function findUnnecessaryEscapes(
 	let index = startIndex;
 
 	while (index < endIndex) {
-		if (fullText[index] === "\\") {
-			const nextChar = fullText[index + 1];
+		if (fullText[index] !== "\\") {
+			index += 1;
+			continue;
+		}
 
-			if (!nextChar || index + 1 >= endIndex) {
+		const nextCharacter = fullText[index + 1];
+
+		if (!nextCharacter || index + 1 >= endIndex) {
+			break;
+		}
+
+		if (validEscapes.has(nextCharacter)) {
+			index += 2;
+			continue;
+		}
+
+		switch (nextCharacter) {
+			case "c": {
+				const characterAfterC = fullText[index + 2];
+				if (characterAfterC && /[a-z]/i.test(characterAfterC)) {
+					index += 3;
+					continue;
+				}
 				break;
 			}
 
-			if (validEscapes.has(nextChar)) {
-				index += 2;
-				continue;
-			}
-
-			if (nextChar === "x") {
-				if (/^[\da-f]{2}/i.test(fullText.slice(index + 2, index + 4))) {
-					index += 4;
-					continue;
-				}
-			} else if (nextChar === "u") {
+			case "u": {
 				const afterU = fullText.slice(index + 2);
 				if (/^[\da-f]{4}/i.test(afterU)) {
 					index += 6;
@@ -81,32 +90,32 @@ function findUnnecessaryEscapes(
 						continue;
 					}
 				}
-			} else if (nextChar === "c") {
-				const charAfterC = fullText[index + 2];
-				if (charAfterC && /[a-z]/i.test(charAfterC)) {
-					index += 3;
+				break;
+			}
+
+			case "x":
+				if (/^[\da-f]{2}/i.test(fullText.slice(index + 2, index + 4))) {
+					index += 4;
 					continue;
 				}
-			} else if (/[1-7]/.test(nextChar)) {
-				index += 2;
-				continue;
-			} else if (/[89]/.test(nextChar)) {
-				index += 2;
-				continue;
-			}
+				break;
 
-			if (nextChar !== quoteChar) {
-				escapes.push({
-					character: nextChar,
-					end: index + 2,
-					start: index,
-				});
-			}
-
-			index += 2;
-		} else {
-			index += 1;
+			default:
+				if (/[1-9]/.test(nextCharacter)) {
+					index += 2;
+					continue;
+				}
 		}
+
+		if (nextCharacter !== quoteCharacter) {
+			escapes.push({
+				character: nextCharacter,
+				end: index + 2,
+				start: index,
+			});
+		}
+
+		index += 2;
 	}
 
 	return escapes;
