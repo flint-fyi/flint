@@ -10,6 +10,12 @@ import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
+interface MathMethodInfo {
+	arguments: AST.Expression[];
+	method: "max" | "min";
+	node: AST.CallExpression;
+}
+
 function extractNumericLiteral(node: AST.Expression): number | undefined {
 	const unwrapped = unwrapParenthesizedNode(node);
 
@@ -36,27 +42,6 @@ function extractNumericLiteral(node: AST.Expression): number | undefined {
 	return undefined;
 }
 
-function isMathMethod(
-	node: AST.Expression,
-	methodName: string,
-	typeChecker: Checker,
-): boolean {
-	return (
-		node.kind === SyntaxKind.PropertyAccessExpression &&
-		!node.questionDotToken &&
-		node.name.kind === SyntaxKind.Identifier &&
-		node.name.text === methodName &&
-		node.expression.kind === SyntaxKind.Identifier &&
-		isGlobalDeclarationOfName(node.expression, "Math", typeChecker)
-	);
-}
-
-interface MathMethodInfo {
-	arguments: AST.Expression[];
-	method: "max" | "min";
-	node: AST.CallExpression;
-}
-
 function getMathMethodInfo(
 	node: AST.Expression,
 	typeChecker: Checker,
@@ -80,7 +65,7 @@ function getMathMethodInfo(
 
 	if (isMathMethod(unwrapped.expression, "min", typeChecker)) {
 		return {
-			arguments: unwrapped.arguments as AST.Expression[],
+			arguments: unwrapped.arguments,
 			method: "min",
 			node: unwrapped,
 		};
@@ -88,13 +73,28 @@ function getMathMethodInfo(
 
 	if (isMathMethod(unwrapped.expression, "max", typeChecker)) {
 		return {
-			arguments: unwrapped.arguments as AST.Expression[],
+			arguments: unwrapped.arguments,
 			method: "max",
 			node: unwrapped,
 		};
 	}
 
 	return undefined;
+}
+
+function isMathMethod(
+	node: AST.Expression,
+	methodName: string,
+	typeChecker: Checker,
+): boolean {
+	return (
+		node.kind === SyntaxKind.PropertyAccessExpression &&
+		!node.questionDotToken &&
+		node.name.kind === SyntaxKind.Identifier &&
+		node.name.text === methodName &&
+		node.expression.kind === SyntaxKind.Identifier &&
+		isGlobalDeclarationOfName(node.expression, "Math", typeChecker)
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -136,15 +136,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					// Check for all constant arguments
-					const numericValues = outerInfo.arguments.map((arg) =>
-						extractNumericLiteral(arg),
-					);
+					const numericValues: number[] = [];
+					let allNumeric = true;
 
-					if (numericValues.every((val) => val !== undefined)) {
+					for (const arg of outerInfo.arguments) {
+						const value = extractNumericLiteral(arg);
+						if (value === undefined) {
+							allNumeric = false;
+							break;
+						}
+						numericValues.push(value);
+					}
+
+					if (allNumeric) {
 						const result =
 							outerInfo.method === "min"
-								? Math.min(...(numericValues as number[]))
-								: Math.max(...(numericValues as number[]));
+								? Math.min(...numericValues)
+								: Math.max(...numericValues);
 
 						context.report({
 							data: {
@@ -161,7 +169,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// Pattern: Math.max(min, Math.min(max, x)) is incorrect
 					// Correct: Math.min(max, Math.max(min, x))
 					if (outerInfo.arguments.length === 2) {
-						const [firstArg, secondArg] = outerInfo.arguments;
+						const firstArg = outerInfo.arguments[0];
+						const secondArg = outerInfo.arguments[1];
 
 						if (!firstArg || !secondArg) {
 							return;
@@ -175,8 +184,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							innerInfo.arguments.length === 2
 						) {
 							const outerConstant = extractNumericLiteral(firstArg);
-							const innerConstant = extractNumericLiteral(
-								innerInfo.arguments[0]!,
+							const innerConstantFirst = extractNumericLiteral(
+								innerInfo.arguments[0],
+							);
+							const innerConstantSecond = extractNumericLiteral(
+								innerInfo.arguments[1],
 							);
 
 							// Incorrect pattern: Math.max(min, Math.min(max, x))
@@ -185,13 +197,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								outerInfo.method === "max" &&
 								innerInfo.method === "min" &&
 								outerConstant !== undefined &&
-								innerConstant !== undefined &&
-								outerConstant < innerConstant
+								innerConstantFirst !== undefined &&
+								outerConstant < innerConstantFirst
 							) {
 								context.report({
 									data: {
 										innerMethod: innerInfo.method,
-										max: String(innerConstant),
+										max: String(innerConstantFirst),
 										min: String(outerConstant),
 										outerMethod: outerInfo.method,
 									},
@@ -202,20 +214,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 
 							// Also check if arguments are flipped
-							const innerConstantFlipped = extractNumericLiteral(
-								innerInfo.arguments[1]!,
-							);
 							if (
 								outerInfo.method === "max" &&
 								innerInfo.method === "min" &&
 								outerConstant !== undefined &&
-								innerConstantFlipped !== undefined &&
-								outerConstant < innerConstantFlipped
+								innerConstantSecond !== undefined &&
+								outerConstant < innerConstantSecond
 							) {
 								context.report({
 									data: {
 										innerMethod: innerInfo.method,
-										max: String(innerConstantFlipped),
+										max: String(innerConstantSecond),
 										min: String(outerConstant),
 										outerMethod: outerInfo.method,
 									},

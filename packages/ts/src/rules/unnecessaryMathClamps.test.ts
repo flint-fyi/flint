@@ -1,5 +1,5 @@
-import rule from "./unnecessaryMathClamps.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./unnecessaryMathClamps.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
