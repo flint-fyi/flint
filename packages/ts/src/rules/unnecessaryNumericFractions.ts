@@ -38,14 +38,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const raw = node.getText(sourceFile);
 
 					// Legacy octal numbers (0777) and prefixed numbers (0o1234, 0x123, 0b101) cannot have a dot
-					const match = raw.match(
-						/^(?<before>[\d_]*)(?<dotAndFractions>\.[\d_]*)(?<after>.*)$/,
-					);
-					if (!match?.groups) {
+					const regex = /^([\d_]*)(\.[\d_]*)(?:e[+-]?\d+)?$/;
+					const match = regex.exec(raw);
+					if (!match) {
 						return;
 					}
 
-					const { before, dotAndFractions, after } = match.groups;
+					const before = match[1] ?? "";
+					const dotAndFractions = match[2] ?? "";
+					const after = raw.slice(before.length + dotAndFractions.length);
 
 					// Remove trailing zeros and underscores (and dot if all zeros)
 					// But keep at least one digit if there are non-zero digits

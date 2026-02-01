@@ -1,5 +1,5 @@
-import rule from "./unnecessaryNumericFractions.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./unnecessaryNumericFractions.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
