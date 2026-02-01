@@ -51,8 +51,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					text += getTextContent(child);
 				} else if (
 					child.kind === SyntaxKind.JsxExpression &&
-					child.expression &&
-					child.expression.kind === SyntaxKind.StringLiteral
+					child.expression?.kind === SyntaxKind.StringLiteral
 				) {
 					text += child.expression.text;
 				}

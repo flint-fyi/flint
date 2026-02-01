@@ -91,7 +91,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						property.name.text === "aria-activedescendant",
 				);
 
-				if (ariaProperty && ariaProperty.kind === SyntaxKind.JsxAttribute) {
+				if (ariaProperty?.kind === SyntaxKind.JsxAttribute) {
 					context.report({
 						message: "missingTabIndex",
 						range: getTSNodeRange(ariaProperty, sourceFile),

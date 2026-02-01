@@ -35,11 +35,10 @@ function hasOtherModuleIndicator(statements: readonly AST.Statement[]) {
 function isEmptyNamedExport(
 	node: AST.Statement,
 ): node is AST.ExportDeclaration {
-	return !!(
+	return (
 		node.kind === SyntaxKind.ExportDeclaration &&
 		!node.moduleSpecifier &&
-		node.exportClause &&
-		node.exportClause.kind === SyntaxKind.NamedExports &&
+		node.exportClause?.kind === SyntaxKind.NamedExports &&
 		!node.exportClause.elements.length
 	);
 }

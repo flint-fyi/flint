@@ -154,10 +154,7 @@ function isSpreadAccumulatorPattern(callback: AST.ArrowFunction) {
 	}
 
 	const firstParam = callback.parameters[0];
-	if (
-		firstParam === undefined ||
-		firstParam.name.kind !== SyntaxKind.Identifier
-	) {
+	if (firstParam?.name.kind !== SyntaxKind.Identifier) {
 		return false;
 	}
 

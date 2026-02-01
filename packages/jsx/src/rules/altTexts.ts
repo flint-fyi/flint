@@ -98,8 +98,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				} else if (properties.initializer.kind === SyntaxKind.JsxExpression) {
 					const { expression } = properties.initializer;
 					if (
-						expression &&
-						expression.kind === SyntaxKind.Identifier &&
+						expression?.kind === SyntaxKind.Identifier &&
 						expression.text === "undefined"
 					) {
 						context.report({
@@ -125,10 +124,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (
-				typeAttribute &&
-				typeAttribute.kind === SyntaxKind.JsxAttribute &&
-				typeAttribute.initializer &&
-				typeAttribute.initializer.kind === SyntaxKind.StringLiteral &&
+				typeAttribute?.kind === SyntaxKind.JsxAttribute &&
+				typeAttribute.initializer?.kind === SyntaxKind.StringLiteral &&
 				typeAttribute.initializer.text === "image"
 			) {
 				checkAltAttribute(
