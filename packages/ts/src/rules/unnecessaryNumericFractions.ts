@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		danglingDot: {
-			primary: "Prefer {{ fixed }} over {{ raw }} to avoid a dangling dot.",
+			primary: "Prefer `{{ fixed }}` over `{{ raw }}` to avoid a dangling dot.",
 			secondary: [
 				"Numeric literals with dangling dots (e.g., `1.`) are harder to read and can be confusing.",
 				"The dot doesn't add any precision information to the number.",
@@ -23,7 +23,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 		zeroFraction: {
 			primary:
-				"Prefer {{ fixed }} over {{ raw }} to avoid an unnecessary zero fraction.",
+				"Prefer `{{ fixed }}` over `{{ raw }}` to avoid an unnecessary zero fraction.",
 			secondary: [
 				"Numeric literals with zero fractions (e.g., `1.0`) are unnecessarily verbose.",
 				"The zero fraction doesn't add any precision information to the number.",
@@ -44,8 +44,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const before = match[1] ?? "";
-					const dotAndFractions = match[2] ?? "";
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const before = match[1]!;
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const dotAndFractions = match[2]!;
 					const after = raw.slice(before.length + dotAndFractions.length);
 
 					// Remove trailing zeros and underscores (and dot if all zeros)
@@ -59,8 +61,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const isDanglingDot = dotAndFractions === ".";
-
 					context.report({
 						data: {
 							fixed,
@@ -70,7 +70,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							range: getTSNodeRange(node, sourceFile),
 							text: fixed,
 						},
-						message: isDanglingDot ? "danglingDot" : "zeroFraction",
+						message: dotAndFractions === "." ? "danglingDot" : "zeroFraction",
 						range: getTSNodeRange(node, sourceFile),
 					});
 				},

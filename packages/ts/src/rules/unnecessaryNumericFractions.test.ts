@@ -13,7 +13,7 @@ const value = 1;
 			snapshot: `
 const value = 1.0;
               ~~~
-              Prefer 1 over 1.0 to avoid an unnecessary zero fraction.
+              Prefer \`1\` over \`1.0\` to avoid an unnecessary zero fraction.
 `,
 		},
 		{
@@ -26,7 +26,7 @@ const value = 1;
 			snapshot: `
 const value = 1.;
               ~~
-              Prefer 1 over 1. to avoid a dangling dot.
+              Prefer \`1\` over \`1.\` to avoid a dangling dot.
 `,
 		},
 		{
@@ -39,7 +39,7 @@ const value = 1;
 			snapshot: `
 const value = 1.00;
               ~~~~
-              Prefer 1 over 1.00 to avoid an unnecessary zero fraction.
+              Prefer \`1\` over \`1.00\` to avoid an unnecessary zero fraction.
 `,
 		},
 		{
@@ -52,7 +52,7 @@ const value = 1;
 			snapshot: `
 const value = 1.000;
               ~~~~~
-              Prefer 1 over 1.000 to avoid an unnecessary zero fraction.
+              Prefer \`1\` over \`1.000\` to avoid an unnecessary zero fraction.
 `,
 		},
 		{
@@ -65,7 +65,7 @@ const value = 1;
 			snapshot: `
 const value = 1.0000;
               ~~~~~~
-              Prefer 1 over 1.0000 to avoid an unnecessary zero fraction.
+              Prefer \`1\` over \`1.0000\` to avoid an unnecessary zero fraction.
 `,
 		},
 		{
@@ -78,7 +78,7 @@ const value = 13;
 			snapshot: `
 const value = 13.0;
               ~~~~
-              Prefer 13 over 13.0 to avoid an unnecessary zero fraction.
+              Prefer \`13\` over \`13.0\` to avoid an unnecessary zero fraction.
 `,
 		},
 		{
@@ -91,7 +91,7 @@ const value = 1;
 			snapshot: `
 const value = 1.000_000;
               ~~~~~~~~~
-              Prefer 1 over 1.000_000 to avoid an unnecessary zero fraction.
+              Prefer \`1\` over \`1.000_000\` to avoid an unnecessary zero fraction.
 `,
 		},
 		{
@@ -104,7 +104,7 @@ const value = 1_000;
 			snapshot: `
 const value = 1_000.000_000;
               ~~~~~~~~~~~~~
-              Prefer 1_000 over 1_000.000_000 to avoid an unnecessary zero fraction.
+              Prefer \`1_000\` over \`1_000.000_000\` to avoid an unnecessary zero fraction.
 `,
 		},
 		{
@@ -117,7 +117,7 @@ const value = 1.2;
 			snapshot: `
 const value = 1.20000;
               ~~~~~~~
-              Prefer 1.2 over 1.20000 to avoid an unnecessary zero fraction.
+              Prefer \`1.2\` over \`1.20000\` to avoid an unnecessary zero fraction.
 `,
 		},
 		{
@@ -130,7 +130,7 @@ const value = 1e10;
 			snapshot: `
 const value = 1.0e10;
               ~~~~~~
-              Prefer 1e10 over 1.0e10 to avoid an unnecessary zero fraction.
+              Prefer \`1e10\` over \`1.0e10\` to avoid an unnecessary zero fraction.
 `,
 		},
 	],
