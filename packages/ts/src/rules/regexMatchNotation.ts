@@ -210,10 +210,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const firstArgument = args[0];
 
-			if (
-				!firstArgument ||
-				firstArgument.kind !== ts.SyntaxKind.StringLiteral
-			) {
+			if (firstArgument?.kind !== ts.SyntaxKind.StringLiteral) {
 				return;
 			}
 

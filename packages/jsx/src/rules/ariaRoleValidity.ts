@@ -120,10 +120,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					property.name.kind === SyntaxKind.Identifier,
 			);
 
-			if (
-				!roleProperty?.initializer ||
-				roleProperty.initializer.kind !== SyntaxKind.StringLiteral
-			) {
+			if (roleProperty?.initializer?.kind !== SyntaxKind.StringLiteral) {
 				return;
 			}
 

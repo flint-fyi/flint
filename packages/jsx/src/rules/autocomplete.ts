@@ -147,8 +147,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (
-				!autocomplete ||
-				autocomplete.kind !== SyntaxKind.JsxAttribute ||
+				autocomplete?.kind !== SyntaxKind.JsxAttribute ||
 				!autocomplete.initializer
 			) {
 				return;

@@ -58,10 +58,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (
-				!roleAttribute ||
-				roleAttribute.kind !== SyntaxKind.JsxAttribute ||
-				!roleAttribute.initializer ||
-				roleAttribute.initializer.kind !== SyntaxKind.StringLiteral
+				roleAttribute?.kind !== SyntaxKind.JsxAttribute ||
+				roleAttribute.initializer?.kind !== SyntaxKind.StringLiteral
 			) {
 				return;
 			}

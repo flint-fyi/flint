@@ -106,8 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				) {
 					if (
 						property.name.text === "role" &&
-						property.initializer &&
-						property.initializer.kind === SyntaxKind.StringLiteral &&
+						property.initializer?.kind === SyntaxKind.StringLiteral &&
 						!nonInteractiveRoles.has(property.initializer.text)
 					) {
 						return;
