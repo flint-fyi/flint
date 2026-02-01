@@ -169,12 +169,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// Pattern: Math.max(min, Math.min(max, x)) is incorrect
 					// Correct: Math.min(max, Math.max(min, x))
 					if (outerInfo.arguments.length === 2) {
-						const firstArg = outerInfo.arguments[0];
-						const secondArg = outerInfo.arguments[1];
-
-						if (!firstArg || !secondArg) {
-							return;
-						}
+						const [firstArg, secondArg] = outerInfo.arguments;
 
 						const innerInfo = getMathMethodInfo(secondArg, typeChecker);
 
