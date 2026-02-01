@@ -143,14 +143,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						!node.condition ||
 						!node.incrementor ||
-						!node.initializer ||
-						node.initializer.kind !== SyntaxKind.VariableDeclarationList
+						node.initializer?.kind !== SyntaxKind.VariableDeclarationList
 					) {
 						return;
 					}
 
 					const declaration = node.initializer.declarations.at(0);
-					if (!declaration || declaration.name.kind !== SyntaxKind.Identifier) {
+					if (declaration?.name.kind !== SyntaxKind.Identifier) {
 						return;
 					}
 

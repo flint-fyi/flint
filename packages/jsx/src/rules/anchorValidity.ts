@@ -58,14 +58,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					property.name.text === "href",
 			);
 
-			if (!hrefProperty || hrefProperty.kind !== SyntaxKind.JsxAttribute) {
+			if (hrefProperty?.kind !== SyntaxKind.JsxAttribute) {
 				return undefined;
 			}
 
-			if (
-				hrefProperty.initializer &&
-				hrefProperty.initializer.kind === SyntaxKind.StringLiteral
-			) {
+			if (hrefProperty.initializer?.kind === SyntaxKind.StringLiteral) {
 				return hrefProperty.initializer.text;
 			}
 

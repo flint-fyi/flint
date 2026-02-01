@@ -145,11 +145,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const thenCall = getClassListMethodCall(thenBlockStatement);
 					const elseCall = getClassListMethodCall(elseBlockStatement);
 
-					if (
-						!thenCall ||
-						!elseCall ||
-						thenCall.className !== elseCall.className
-					) {
+					if (!thenCall || thenCall.className !== elseCall?.className) {
 						return;
 					}
 
@@ -163,7 +159,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 
 						const elseInfo = getObjectAndClassName(elseBlockStatement);
-						if (!elseInfo || thenInfo.object !== elseInfo.object) {
+						if (thenInfo.object !== elseInfo?.object) {
 							return;
 						}
 

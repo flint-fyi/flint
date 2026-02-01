@@ -78,10 +78,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (
-				roleProperty &&
-				roleProperty.kind === SyntaxKind.JsxAttribute &&
-				roleProperty.initializer &&
-				roleProperty.initializer.kind === SyntaxKind.StringLiteral &&
+				roleProperty?.kind === SyntaxKind.JsxAttribute &&
+				roleProperty.initializer?.kind === SyntaxKind.StringLiteral &&
 				roleProperty.initializer.text === implicitRole
 			) {
 				const range = getTSNodeRange(roleProperty, sourceFile);
