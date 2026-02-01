@@ -10,8 +10,13 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="returnThisTypes" />
 
-When a class method returns `this`, using the polymorphic `this` type instead of the explicit class name preserves method chaining behavior in subclasses.
-This ensures that subclass methods return the subclass type, not the parent class type.
+[Method chaining](https://en.wikipedia.org/wiki/Method_chaining) is a pattern in object-oriented programming where class methods return the instance of the class being called.
+TypeScript provides a special polymorphic `this` type to facilitate method chaining.
+When a base class method returns `this`, calling that method on any sub-classes will be known to return the specific sub-class, rather than the general base class.
+
+Class methods that explicitly declare a return type of the class name instead of this make it harder for extending classes to call that method: the returned object will be typed as the base class, not the derived class.
+
+This rule reports on class methods that declare their return type as that specific class name rather rather than `this`.
 
 ## Examples
 
@@ -98,7 +103,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you intentionally want to restrict method chaining to the exact class type and prevent subclasses from inheriting the fluent interface, you may want to disable this rule for specific methods.
+If you intentionally want to restrict method chaining to the exact class type and prevent subclasses from inheriting the fluent interface, this rule might not be for you.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for specific cases instead of completely disabling this rule.
 
 ## Further Reading
 
