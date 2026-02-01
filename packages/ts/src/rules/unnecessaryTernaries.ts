@@ -15,7 +15,7 @@ function getNodeText(node: ts.Node, sourceFile: AST.SourceFile) {
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
-			"Reports ternary expressions that can be simplified to boolean expressions or logical operators.",
+			"Reports ternary expressions that can be simplified to boolean expressions or logical operators",
 		id: "unnecessaryTernaries",
 		presets: ["stylistic", "stylisticStrict"],
 	},
@@ -71,7 +71,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const conditionText = getNodeText(condition, sourceFile);
 						const needsParens =
 							ts.isBinaryExpression(condition) ||
-							ts.isConditionalExpression(condition);
+							ts.isConditionalExpression(condition) ||
+							ts.isCallExpression(condition) ||
+							ts.isPropertyAccessExpression(condition) ||
+							ts.isElementAccessExpression(condition);
 
 						const negatedCondition = needsParens
 							? `!(${conditionText})`

@@ -174,6 +174,45 @@ const isInactive = flag1 || flag2 ? false : true;
 		},
 		{
 			code: `
+const result = func() ? false : true;
+`,
+			output: `
+const result = !(func());
+`,
+			snapshot: `
+const result = func() ? false : true;
+               ~~~~~~~~~~~~~~~~~~~~~
+               This ternary expression can be simplified to a boolean expression.
+`,
+		},
+		{
+			code: `
+const result = obj.prop ? false : true;
+`,
+			output: `
+const result = !(obj.prop);
+`,
+			snapshot: `
+const result = obj.prop ? false : true;
+               ~~~~~~~~~~~~~~~~~~~~~~~
+               This ternary expression can be simplified to a boolean expression.
+`,
+		},
+		{
+			code: `
+const result = arr[0] ? false : true;
+`,
+			output: `
+const result = !(arr[0]);
+`,
+			snapshot: `
+const result = arr[0] ? false : true;
+               ~~~~~~~~~~~~~~~~~~~~~
+               This ternary expression can be simplified to a boolean expression.
+`,
+		},
+		{
+			code: `
 const result = nested ? nested : other;
 `,
 			output: `
