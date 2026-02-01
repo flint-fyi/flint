@@ -83,6 +83,14 @@ export default defineConfig(
 				"error",
 				{ allowConstantLoopConditions: true },
 			],
+			"@typescript-eslint/no-unused-vars": [
+				"error",
+				{
+					enableAutofixRemoval: {
+						imports: true,
+					},
+				},
+			],
 			"@typescript-eslint/restrict-template-expressions": [
 				"error",
 				{ allowNumber: true },

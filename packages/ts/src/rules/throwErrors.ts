@@ -12,7 +12,7 @@ import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
 function isBuiltinErrorType(type: ts.Type): boolean {
 	const symbol = type.getSymbol();
-	if (!symbol || symbol.getName() !== "Error") {
+	if (symbol?.getName() !== "Error") {
 		return false;
 	}
 
