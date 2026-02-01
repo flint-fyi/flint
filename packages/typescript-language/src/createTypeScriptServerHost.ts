@@ -116,7 +116,7 @@ export function createTypeScriptServerHost(
 				(filePathAbsolute) => {
 					callback(filePathAbsolute);
 				},
-				{ recursive },
+				{ ignoredPaths: ["/node_modules", "/.git", "/.jj"], recursive },
 			);
 			return {
 				close() {
@@ -142,6 +142,7 @@ export function createTypeScriptServerHost(
 					}
 					callback(filePath, eventKind);
 				},
+				{ ignoredPaths: ["/node_modules", "/.git", "/.jj"] },
 			);
 			return {
 				close() {
