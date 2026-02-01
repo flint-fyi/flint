@@ -1,7 +1,6 @@
 import {
 	getTSNodeRange,
 	typescriptLanguage,
-	type AST,
 } from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
@@ -33,6 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const firstStatement = node.statements[0]!;
 
 					if (
