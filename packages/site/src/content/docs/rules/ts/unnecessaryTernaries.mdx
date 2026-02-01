@@ -11,12 +11,12 @@ import RuleSummary from "~/components/RuleSummary.astro";
 <RuleSummary plugin="ts" rule="unnecessaryTernaries" />
 
 Ternary expressions can sometimes be simplified to more concise and readable forms.
+In particular:
+
+1. Boolean ternaries: ternary expressions that return `true` or `false` based on a condition can be simplified to the condition itself or its negation.
+2. Redundant ternaries: ternary expressions where the consequent duplicates the condition can be replaced with a logical OR operator (`||`).
+
 This rule detects and reports ternary expressions that can be replaced with boolean expressions or logical operators.
-
-Two main patterns are detected:
-
-1. **Boolean ternaries**: Ternary expressions that return `true` or `false` based on a condition can be simplified to the condition itself or its negation.
-2. **Redundant ternaries**: Ternary expressions where the consequent duplicates the condition can be replaced with a logical OR operator (`||`).
 
 ## Examples
 
@@ -67,7 +67,7 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you have a large codebase with established patterns using ternary expressions for clarity, or if your team prefers explicit ternary expressions over logical operators, this rule might not be suitable for your project.
+If you have a large codebase with established patterns using ternary expressions for clarity, or if your team prefers explicit ternary expressions over logical operators, this rule might not be for you.
 
 ## Further Reading
 

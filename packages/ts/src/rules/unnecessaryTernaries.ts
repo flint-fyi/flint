@@ -45,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				ConditionalExpression(node: AST.ConditionalExpression, { sourceFile }) {
 					const { condition, whenFalse, whenTrue } = node;
 
-					// Pattern 1: condition ? true : false
+					// condition ? true : false
 					if (
 						whenTrue.kind === ts.SyntaxKind.TrueKeyword &&
 						whenFalse.kind === ts.SyntaxKind.FalseKeyword
@@ -62,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					// Pattern 2: condition ? false : true
+					// condition ? false : true
 					if (
 						whenTrue.kind === ts.SyntaxKind.FalseKeyword &&
 						whenFalse.kind === ts.SyntaxKind.TrueKeyword
@@ -88,7 +88,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					// Pattern 3: condition ? condition : alternate (when they're equivalent)
+					// condition ? condition : alternate (when they're equivalent)
 					if (hasSameTokens(condition, whenTrue, sourceFile)) {
 						const range = getTSNodeRange(node, sourceFile);
 						const conditionText = getNodeText(condition, sourceFile);
@@ -105,7 +105,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					// Pattern 4: !condition ? alternate : condition
+					// !condition ? alternate : condition
 					if (
 						ts.isPrefixUnaryExpression(condition) &&
 						condition.operator === ts.SyntaxKind.ExclamationToken &&
