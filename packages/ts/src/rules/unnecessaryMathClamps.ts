@@ -65,7 +65,7 @@ function getMathMethodInfo(
 
 	if (isMathMethod(unwrapped.expression, "min", typeChecker)) {
 		return {
-			arguments: unwrapped.arguments,
+			arguments: Array.from(unwrapped.arguments),
 			method: "min",
 			node: unwrapped,
 		};
@@ -73,7 +73,7 @@ function getMathMethodInfo(
 
 	if (isMathMethod(unwrapped.expression, "max", typeChecker)) {
 		return {
-			arguments: unwrapped.arguments,
+			arguments: Array.from(unwrapped.arguments),
 			method: "max",
 			node: unwrapped,
 		};
@@ -183,13 +183,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							innerInfo.method !== outerInfo.method &&
 							innerInfo.arguments.length === 2
 						) {
+							const innerFirstArg = innerInfo.arguments[0];
+							const innerSecondArg = innerInfo.arguments[1];
+
+							if (!innerFirstArg || !innerSecondArg) {
+								return;
+							}
+
 							const outerConstant = extractNumericLiteral(firstArg);
-							const innerConstantFirst = extractNumericLiteral(
-								innerInfo.arguments[0],
-							);
-							const innerConstantSecond = extractNumericLiteral(
-								innerInfo.arguments[1],
-							);
+							const innerConstantFirst = extractNumericLiteral(innerFirstArg);
+							const innerConstantSecond = extractNumericLiteral(innerSecondArg);
 
 							// Incorrect pattern: Math.max(min, Math.min(max, x))
 							// where outer is max and inner is min, and min < max
