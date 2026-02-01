@@ -11400,8 +11400,7 @@
 		"flint": {
 			"name": "invalidThis",
 			"plugin": "ts",
-			"preset": "untyped",
-			"status": "implemented"
+			"preset": "untyped"
 		}
 	},
 	{
