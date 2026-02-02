@@ -1,4 +1,5 @@
 import type { WithExitKeys } from "@flint.fyi/core";
+
 import type * as AST from "./types/ast.ts";
 
 // TODO: Surely there's a better way to do this...

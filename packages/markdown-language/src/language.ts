@@ -51,7 +51,7 @@ export const markdownLanguage = createLanguage<
 			const key = node.type;
 
 			// @ts-expect-error -- This should work...?
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
 			visitors[key]?.(node, visitorServices);
 
 			// @ts-expect-error -- This should work...?
