@@ -130,6 +130,7 @@ export default defineConfig({
 	markdown: {
 		remarkPlugins: [remarkHeadingId],
 	},
+	output: "server",
 	redirects: {
 		"/discord": "https://discord.gg/cFK3RAUDhy",
 	},
