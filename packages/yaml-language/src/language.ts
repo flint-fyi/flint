@@ -35,9 +35,16 @@ export const yamlLanguage = createLanguage<YamlNodesByName, YamlFileServices>({
 		const { visitors } = runtime;
 		const visitorServices = { options, ...file.services };
 
-		visit(file.services.root, (node) => {
-			// @ts-expect-error -- This should work...?
-			visitors[node.type]?.(node, visitorServices);
-		});
+		visit(
+			file.services.root,
+			(node) => {
+				// @ts-expect-error -- This should work...?
+				visitors[node.type]?.(node, visitorServices);
+			},
+			(node) => {
+				// @ts-expect-error -- This should work...?
+				visitors[`${node.type}:exit`]?.(node, visitorServices);
+			},
+		);
 	},
 });

@@ -1,3 +1,4 @@
+import type { WithExitKeys } from "@flint.fyi/core";
 import type * as AST from "./types/ast.ts";
 
 // TODO: Surely there's a better way to do this...
@@ -199,3 +200,5 @@ export interface TypeScriptNodesByName {
 	WithStatement: AST.WithStatement;
 	YieldExpression: AST.YieldExpression;
 }
+
+export type TypeScriptNodeVisitors = WithExitKeys<TypeScriptNodesByName>;
