@@ -38,7 +38,6 @@ export const jsonLanguage = createLanguage<JsonNodeVisitors, JsonFileServices>({
 			const key = ts.SyntaxKind[node.kind] as keyof typeof visitors;
 
 			// @ts-expect-error -- This should work...?
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			visitors[key]?.(node, visitorServices);
 
 			node.forEachChild(visit);
