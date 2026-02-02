@@ -38,7 +38,12 @@ export async function runLintRule(
 
 			reportsByFilePath.get(filePath).push({
 				...ruleReport,
-				about: rule.about,
+				about: {
+					...rule.about,
+					id: rule.about.pluginId
+						? `${rule.about.pluginId}/${rule.about.id}`
+						: rule.about.id,
+				},
 				fix:
 					ruleReport.fix && !Array.isArray(ruleReport.fix)
 						? [ruleReport.fix]

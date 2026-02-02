@@ -43,6 +43,13 @@ export interface Rule<
 
 export interface RuleAbout extends BaseAbout {
 	description: string;
+
+	/**
+	 * ID of the plugin parent of this rule, if this is part of a plugin.
+	 * @example "ts"
+	 */
+	pluginId?: string;
+
 	presets?: string[];
 }
 

@@ -50,10 +50,10 @@ export function getFirstEnumValues<
 
 		if (!(original[key] in result)) {
 			// 🤷 enums are tricky to type.
-			// flint-disable-lines-begin explicitAnys
+			// flint-disable-lines-begin ts/explicitAnys
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
 			result[original[key]] = key as any;
-			// flint-disable-lines-end explicitAnys
+			// flint-disable-lines-end ts/explicitAnys
 		}
 	}
 

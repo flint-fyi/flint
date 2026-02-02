@@ -3,7 +3,7 @@ export class FlintAssertionError extends Error {
 		super(`Flint bug: ${message}.`);
 		const issueUrl = buildIssueUrl(message, this.stack);
 		// The message uses this.stack, which isn't available before super()
-		// flint-disable-next-line errorSubclassProperties
+		// flint-disable-next-line ts/errorSubclassProperties
 		this.message = `Flint bug: ${message}. Please report it here: ${issueUrl}`;
 		this.name = "FlintAssertionError";
 		if (this.stack) {
