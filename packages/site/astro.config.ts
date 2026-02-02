@@ -1,5 +1,6 @@
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
+import vercel from "@astrojs/vercel/serverless";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
 import { defineConfig } from "astro/config";
 import { remarkHeadingId } from "remark-custom-heading-id";
@@ -8,6 +9,9 @@ import starlightLinksValidator from "starlight-links-validator";
 import starlightSidebarTopics from "starlight-sidebar-topics";
 
 export default defineConfig({
+	adapter: vercel({
+		edgeMiddleware: true,
+	}),
 	integrations: [
 		konamiEmojiBlast(),
 		starlight({

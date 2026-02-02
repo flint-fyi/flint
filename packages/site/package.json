@@ -16,6 +16,7 @@
 		"@astrojs/check": "^0.9.5",
 		"@astrojs/react": "^4.4.2",
 		"@astrojs/starlight": "^0.37.0",
+		"@astrojs/vercel": "^9.0.4",
 		"@flint.fyi/browser": "workspace:^",
 		"@flint.fyi/comparisons": "workspace:^",
 		"@flint.fyi/jsx": "workspace:^",
