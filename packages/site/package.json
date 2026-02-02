@@ -47,5 +47,8 @@
 	"devDependencies": {
 		"@types/markdown-it": "14.1.2",
 		"sharp": "0.34.5"
+	},
+	"engines": {
+		"node": ">=24.0.0"
 	}
 }
