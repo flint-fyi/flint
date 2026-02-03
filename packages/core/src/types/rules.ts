@@ -86,14 +86,9 @@ export type RuleSetup<
 
 export type RuleTeardown = () => PromiseOrSync<undefined>;
 
-export type RuleVisitor<ASTNode, VisitorServices extends object> = (
-	node: ASTNode,
-	services: VisitorServices,
-) => void;
-
 export type RuleVisitors<AstNodesByName, VisitorServices extends object> = {
-	[Kind in keyof AstNodesByName]?: RuleVisitor<
-		AstNodesByName[Kind],
-		VisitorServices
-	>;
+	[Kind in keyof AstNodesByName]?: (
+		node: AstNodesByName[keyof AstNodesByName],
+		services: VisitorServices,
+	) => void;
 };
