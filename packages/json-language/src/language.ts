@@ -1,7 +1,7 @@
 import { createLanguage } from "@flint.fyi/core";
 import * as ts from "typescript";
 
-import type { JsonNodeVisitors } from "./nodes.ts";
+import type { JsonNodesByName, JsonNodeVisitors } from "./nodes.ts";
 
 export interface JsonFileServices {
 	sourceFile: ts.JsonSourceFile;
@@ -35,15 +35,14 @@ export const jsonLanguage = createLanguage<JsonNodeVisitors, JsonFileServices>({
 		const visitorServices = { options, ...file.services };
 
 		const visit = (node: ts.Node) => {
-			const key = ts.SyntaxKind[node.kind] as keyof typeof visitors;
+			const key = ts.SyntaxKind[node.kind] as keyof JsonNodesByName;
 
-			// @ts-expect-error -- This should work...?
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
 			visitors[key]?.(node, visitorServices);
 
 			node.forEachChild(visit);
 
-			// @ts-expect-error -- This should work...?
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
 			visitors[`${key}:exit`]?.(node, visitorServices);
 		};
 

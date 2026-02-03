@@ -50,11 +50,10 @@ export const markdownLanguage = createLanguage<
 		visit(file.services.root, (node) => {
 			const key = node.type;
 
-			// @ts-expect-error -- This should work...?
-
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
 			visitors[key]?.(node, visitorServices);
 
-			// @ts-expect-error -- This should work...?
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
 			visitors[`${key}:exit`]?.(node, visitorServices);
 		});
 	},
