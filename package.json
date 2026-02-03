@@ -19,7 +19,6 @@
 		"flint:cache-ignore": "node --conditions='@flint.fyi/source' packages/flint/bin/index.js --cache-ignore",
 		"lint": "eslint . --max-warnings 0",
 		"lint:knip": "knip",
-		"lint:packages": "pnpm dedupe --check",
 		"prepare": "husky",
 		"start:site": "pnpm --filter=site prebuild && pnpm --filter=site start",
 		"test": "vitest --typecheck"
