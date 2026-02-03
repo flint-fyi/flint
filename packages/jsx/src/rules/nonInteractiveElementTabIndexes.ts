@@ -88,7 +88,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			if (attr.initializer.kind === SyntaxKind.JsxExpression) {
 				const expr = attr.initializer.expression;
-				if (expr && expr.kind === SyntaxKind.NumericLiteral) {
+				if (expr?.kind === SyntaxKind.NumericLiteral) {
 					const value = parseInt(expr.text, 10);
 					return Number.isNaN(value) ? undefined : value;
 				}
@@ -106,10 +106,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (
-				roleProperty &&
-				roleProperty.kind === SyntaxKind.JsxAttribute &&
-				roleProperty.initializer &&
-				roleProperty.initializer.kind === SyntaxKind.StringLiteral
+				roleProperty?.kind === SyntaxKind.JsxAttribute &&
+				roleProperty.initializer?.kind === SyntaxKind.StringLiteral
 			) {
 				return roleProperty.initializer.text;
 			}
@@ -143,10 +141,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					property.name.text === "tabIndex",
 			);
 
-			if (
-				!tabIndexProperty ||
-				tabIndexProperty.kind !== SyntaxKind.JsxAttribute
-			) {
+			if (tabIndexProperty?.kind !== SyntaxKind.JsxAttribute) {
 				return;
 			}
 

@@ -107,7 +107,7 @@ function getTypeValue(attribute: AST.JsxAttribute): string | undefined {
 
 	if (attribute.initializer.kind === SyntaxKind.JsxExpression) {
 		const expr = attribute.initializer.expression;
-		if (expr && expr.kind === SyntaxKind.StringLiteral) {
+		if (expr?.kind === SyntaxKind.StringLiteral) {
 			return expr.text;
 		}
 	}

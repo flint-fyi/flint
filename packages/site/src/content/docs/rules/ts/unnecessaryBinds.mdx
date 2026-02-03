@@ -1,0 +1,80 @@
+---
+description: "Reports unnecessary .bind() calls."
+title: "unnecessaryBinds"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryBinds" />
+
+Using `.bind()` on a function that doesn't use `this` is unnecessary.
+Additionally, using `.bind()` on arrow functions has no effect since arrow functions have lexical `this` binding.
+
+## Examples
+
+### Functions Without this
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const handler = function () {
+	console.log("hello");
+}.bind(this);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const handler = function () {
+	console.log("hello");
+};
+```
+
+</TabItem>
+</Tabs>
+
+### Arrow Functions
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const callback = (() => {
+	this.process();
+}).bind(context);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const callback = () => {
+	this.process();
+};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you use `.bind()` with additional arguments to create partially applied functions,
+this rule should not flag those cases.
+
+## Further Reading
+
+- [MDN: Function.prototype.bind()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind)
+- [Arrow Functions and this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions#no_separate_this)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryBinds" />

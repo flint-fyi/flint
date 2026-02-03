@@ -88,6 +88,22 @@ function getSingleQuantifier(alternate: Alternative): Quantifier | undefined {
 
 function isAllowedException(node: CapturingGroup): boolean {
 	return node.alternatives.some((alternate) => {
+		// ([\d_]*) - optional character class that can be followed by required content
+		// (\.[\d_]*) - required character followed by optional quantifier
+		if (alternate.elements.length) {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			if (isCharacterClassWithZeroMinimum(alternate.elements[0]!)) {
+				return true;
+			}
+			if (
+				alternate.elements.length === 2 &&
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				isCharacterClassWithZeroMinimum(alternate.elements[1]!)
+			) {
+				return true;
+			}
+		}
+
 		const quantifier = getSingleQuantifier(alternate);
 		if (!quantifier) {
 			return false;
@@ -150,6 +166,14 @@ function isAllowedException(node: CapturingGroup): boolean {
 
 		return false;
 	});
+}
+
+function isCharacterClassWithZeroMinimum(element: Element) {
+	return (
+		element.type === "Quantifier" &&
+		element.min === 0 &&
+		element.element.type === "CharacterClass"
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

@@ -8023,8 +8023,10 @@
 			"name": "awaitInsidePromiseMethods",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "skipped",
 			"strictness": "strict"
 		},
+		"notes": "Superseded by awaitThenable.",
 		"oxlint": [
 			{
 				"name": "unicorn/no-await-in-promise-methods",
@@ -14319,8 +14321,10 @@
 		"flint": {
 			"name": "promiseExecutorReturns",
 			"plugin": "ts",
-			"preset": "logical"
-		}
+			"preset": "logical",
+			"status": "skipped"
+		},
+		"notes": "Superseded by awaitThenable."
 	},
 	{
 		"eslint": [
@@ -15785,7 +15789,8 @@
 		"flint": {
 			"name": "regexUnnecessaryNestedQuantifiers",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15841,7 +15846,8 @@
 		"flint": {
 			"name": "regexUnnecessaryReferentialBackreferences",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15854,7 +15860,8 @@
 		"flint": {
 			"name": "regexUnnecessarySetOperands",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15967,7 +15974,8 @@
 		"flint": {
 			"name": "regexZeroQuantifiers",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -16011,14 +16019,15 @@
 	{
 		"biome": [
 			{
-				"name": "useStaticResponseMethods",
-				"url": "https://biomejs.dev/linter/rules/useStaticResponseMethods"
+				"name": "useStaticresponseJsonMethods",
+				"url": "https://biomejs.dev/linter/rules/useStaticresponseJsonMethods"
 			}
 		],
 		"flint": {
-			"name": "responseMethods",
+			"name": "responseJsonMethods",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -16229,6 +16238,7 @@
 			"name": "returnThisTypes",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -16826,9 +16836,9 @@
 		"flint": {
 			"name": "stringTrimMethods",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"status": "skipped"
 		},
+		"notes": "Superseded by deprecated.",
 		"oxlint": [
 			{
 				"name": "unicorn/prefer-string-trim-start-end",
@@ -17582,6 +17592,7 @@
 			"name": "undefinedTypeofChecks",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -17678,9 +17689,10 @@
 			}
 		],
 		"flint": {
-			"name": "unnecessaryBind",
+			"name": "unnecessaryBinds",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -17737,7 +17749,8 @@
 		"flint": {
 			"name": "unnecessaryBooleanCasts",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -17916,7 +17929,8 @@
 		"flint": {
 			"name": "unnecessaryEscapes",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -17999,7 +18013,8 @@
 		"flint": {
 			"name": "unnecessaryMathClamps",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -18018,7 +18033,8 @@
 		"flint": {
 			"name": "unnecessaryNumericFractions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -18170,6 +18186,7 @@
 			"name": "unnecessaryTernaries",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -18338,7 +18355,8 @@
 		"flint": {
 			"name": "unnecessaryUseStricts",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{

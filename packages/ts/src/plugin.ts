@@ -232,16 +232,22 @@ import regexUnnecessaryDollarReplacements from "./rules/regexUnnecessaryDollarRe
 import regexUnnecessaryEscapes from "./rules/regexUnnecessaryEscapes.ts";
 import regexUnnecessaryLookaroundAssertions from "./rules/regexUnnecessaryLookaroundAssertions.ts";
 import regexUnnecessaryNestedAssertions from "./rules/regexUnnecessaryNestedAssertions.ts";
+import regexUnnecessaryNestedQuantifiers from "./rules/regexUnnecessaryNestedQuantifiers.ts";
 import regexUnnecessaryNonCapturingGroups from "./rules/regexUnnecessaryNonCapturingGroups.ts";
 import regexUnnecessaryNumericQuantifiers from "./rules/regexUnnecessaryNumericQuantifiers.ts";
 import regexUnnecessaryOptionalAssertions from "./rules/regexUnnecessaryOptionalAssertions.ts";
+import regexUnnecessaryReferentialBackreferences from "./rules/regexUnnecessaryReferentialBackreferences.ts";
+import regexUnnecessarySetOperands from "./rules/regexUnnecessarySetOperands.ts";
 import regexUnusedCapturingGroups from "./rules/regexUnusedCapturingGroups.ts";
 import regexUnusedFlags from "./rules/regexUnusedFlags.ts";
 import regexUnusedLazyQuantifiers from "./rules/regexUnusedLazyQuantifiers.ts";
 import regexUnusedQuantifiers from "./rules/regexUnusedQuantifiers.ts";
 import regexValidity from "./rules/regexValidity.ts";
 import regexWordMatchers from "./rules/regexWordMatchers.ts";
+import regexZeroQuantifiers from "./rules/regexZeroQuantifiers.ts";
+import responseJsonMethods from "./rules/responseJsonMethods.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
+import returnThisTypes from "./rules/returnThisTypes.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import sequences from "./rules/sequences.ts";
 import setSizeLengthChecks from "./rules/setSizeLengthChecks.ts";
@@ -268,12 +274,20 @@ import tslintComments from "./rules/tslintComments.ts";
 import typeAssertionStyles from "./rules/typeAssertionStyles.ts";
 import typeofComparisons from "./rules/typeofComparisons.ts";
 import unassignedVariables from "./rules/unassignedVariables.ts";
+import undefinedTypeofChecks from "./rules/undefinedTypeofChecks.ts";
 import undefinedVariables from "./rules/undefinedVariables.ts";
 import unicodeBOMs from "./rules/unicodeBOMs.ts";
+import unnecessaryBinds from "./rules/unnecessaryBinds.ts";
 import unnecessaryBlocks from "./rules/unnecessaryBlocks.ts";
+import unnecessaryBooleanCasts from "./rules/unnecessaryBooleanCasts.ts";
 import unnecessaryCatches from "./rules/unnecessaryCatches.ts";
 import unnecessaryComparisons from "./rules/unnecessaryComparisons.ts";
 import unnecessaryConcatenation from "./rules/unnecessaryConcatenation.ts";
+import unnecessaryEscapes from "./rules/unnecessaryEscapes.ts";
+import unnecessaryMathClamps from "./rules/unnecessaryMathClamps.ts";
+import unnecessaryNumericFractions from "./rules/unnecessaryNumericFractions.ts";
+import unnecessaryTernaries from "./rules/unnecessaryTernaries.ts";
+import unnecessaryUseStricts from "./rules/unnecessaryUseStricts.ts";
 import unsafeNegations from "./rules/unsafeNegations.ts";
 import variableDeletions from "./rules/variableDeletions.ts";
 import voidOperator from "./rules/voidOperator.ts";
@@ -313,6 +327,7 @@ export const ts = createPlugin({
 		arrayMapIdentities,
 		arrayMutableReverses,
 		arrayMutableSorts,
+		arrayReduceTypeArguments,
 		arraySliceUnnecessaryEnd,
 		arraySomeMethods,
 		arrayTernarySpreadingConsistency,
@@ -453,7 +468,6 @@ export const ts = createPlugin({
 		parseIntRadixes,
 		propertyAccessNotation,
 		recursionOnlyArguments,
-		arrayReduceTypeArguments,
 		redundantTypeConstituents,
 		regexAllGlobalFlags,
 		regexAmbiguousInvalidity,
@@ -518,16 +532,22 @@ export const ts = createPlugin({
 		regexUnnecessaryEscapes,
 		regexUnnecessaryLookaroundAssertions,
 		regexUnnecessaryNestedAssertions,
+		regexUnnecessaryNestedQuantifiers,
 		regexUnnecessaryNonCapturingGroups,
 		regexUnnecessaryNumericQuantifiers,
 		regexUnnecessaryOptionalAssertions,
+		regexUnnecessaryReferentialBackreferences,
+		regexUnnecessarySetOperands,
 		regexUnusedCapturingGroups,
 		regexUnusedFlags,
 		regexUnusedLazyQuantifiers,
 		regexUnusedQuantifiers,
 		regexValidity,
 		regexWordMatchers,
+		regexZeroQuantifiers,
+		responseJsonMethods,
 		returnAssignments,
+		returnThisTypes,
 		selfAssignments,
 		sequences,
 		setSizeLengthChecks,
@@ -554,12 +574,20 @@ export const ts = createPlugin({
 		typeAssertionStyles,
 		typeofComparisons,
 		unassignedVariables,
+		undefinedTypeofChecks,
 		undefinedVariables,
 		unicodeBOMs,
+		unnecessaryBinds,
 		unnecessaryBlocks,
+		unnecessaryBooleanCasts,
 		unnecessaryCatches,
 		unnecessaryComparisons,
 		unnecessaryConcatenation,
+		unnecessaryEscapes,
+		unnecessaryMathClamps,
+		unnecessaryNumericFractions,
+		unnecessaryTernaries,
+		unnecessaryUseStricts,
 		unsafeNegations,
 		variableDeletions,
 		voidOperator,

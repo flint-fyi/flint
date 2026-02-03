@@ -8,6 +8,7 @@ import ts from "typescript";
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { isBuiltinSymbolLike } from "./utils/isBuiltinSymbolLike.ts";
+import { isInBooleanContext } from "./utils/isInBooleanContext.ts";
 
 function getRegexFlags(node: AST.Expression, sourceFile: AST.SourceFile) {
 	switch (node.kind) {
@@ -39,47 +40,6 @@ function getRegexFlags(node: AST.Expression, sourceFile: AST.SourceFile) {
 
 		default:
 			return undefined;
-	}
-}
-
-function isInBooleanContext(node: AST.AnyNode): boolean {
-	switch (node.parent.kind) {
-		case ts.SyntaxKind.AsExpression:
-		case ts.SyntaxKind.NonNullExpression:
-		case ts.SyntaxKind.ParenthesizedExpression:
-			return isInBooleanContext(node.parent);
-
-		case ts.SyntaxKind.BinaryExpression: {
-			return (
-				node.parent.operatorToken.kind ===
-					ts.SyntaxKind.AmpersandAmpersandToken ||
-				node.parent.operatorToken.kind === ts.SyntaxKind.BarBarToken
-			);
-		}
-
-		case ts.SyntaxKind.CallExpression: {
-			return (
-				ts.isIdentifier(node.parent.expression) &&
-				node.parent.expression.text === "Boolean" &&
-				node.parent.arguments.length === 1 &&
-				node.parent.arguments[0] === node
-			);
-		}
-
-		case ts.SyntaxKind.ConditionalExpression:
-		case ts.SyntaxKind.ForStatement:
-			return node.parent.condition === node;
-
-		case ts.SyntaxKind.DoStatement:
-		case ts.SyntaxKind.IfStatement:
-		case ts.SyntaxKind.WhileStatement:
-			return node.parent.expression === node;
-
-		case ts.SyntaxKind.PrefixUnaryExpression:
-			return node.parent.operator === ts.SyntaxKind.ExclamationToken;
-
-		default:
-			return false;
 	}
 }
 

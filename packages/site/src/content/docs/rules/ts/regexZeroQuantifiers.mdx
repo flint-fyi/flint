@@ -1,0 +1,116 @@
+---
+description: "Reports quantifiers with a maximum of zero, which are useless."
+title: "regexZeroQuantifiers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexZeroQuantifiers" />
+
+Reports quantifiers with a maximum of zero (`{0}` or `{0,0}`), which are useless because they match zero occurrences (the empty string).
+A quantifier with a maximum of 0 means the quantified element will never be matched, so both the quantifier and its element can be removed.
+
+## Examples
+
+### Simple Element with Zero Quantifier
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a{0}/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a?/;
+```
+
+</TabItem>
+</Tabs>
+
+The `{0}` quantifier means `a` will never be matched, making the entire quantified expression useless.
+
+### Zero Range Quantifier
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a{0,0}/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a{0,1}/;
+```
+
+</TabItem>
+</Tabs>
+
+The `{0,0}` quantifier also means exactly zero matches, making it equivalent to an empty match.
+
+### Group with Zero Quantifier
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(ab){0}/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(ab)?/;
+```
+
+</TabItem>
+</Tabs>
+
+The group `(ab)` with `{0}` will never match anything useful.
+
+### Character Class with Zero Quantifier
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[a-z]{0}/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[a-z]*/;
+```
+
+</TabItem>
+</Tabs>
+
+The character class `[a-z]` with `{0}` will never match any character.
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+There is no valid use case for a quantifier with a maximum of 0, so this rule should generally always be enabled.
+
+## Further Reading
+
+- [MDN: Quantifier](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Quantifiers)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexZeroQuantifiers" />

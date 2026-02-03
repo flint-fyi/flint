@@ -99,7 +99,8 @@
         "tool",
         "maintenance",
         "bug",
-        "infra"
+        "infra",
+        "doc"
       ]
     },
     {
@@ -119,7 +120,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/4674486?v=4",
       "profile": "https://barrymichaeldoyle.com",
       "contributions": [
-        "infra"
+        "infra",
+        "maintenance"
       ]
     },
     {
@@ -140,7 +142,10 @@
       "profile": "https://github.com/michaelfaith",
       "contributions": [
         "ideas",
-        "doc"
+        "doc",
+        "bug",
+        "maintenance",
+        "tool"
       ]
     },
     {
