@@ -12,6 +12,7 @@ import { runLintRule } from "./runLintRule.ts";
 import type { LanguageFilesWithOptions } from "./types.ts";
 
 export interface RunConfigOptions {
+	cacheLocation?: string | undefined;
 	ignoreCache?: boolean;
 	skipDiagnostics?: boolean;
 }
@@ -19,7 +20,11 @@ export interface RunConfigOptions {
 export async function runConfig(
 	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
-	{ ignoreCache, skipDiagnostics }: RunConfigOptions,
+	{
+		cacheLocation: cacheLocationOverride,
+		ignoreCache,
+		skipDiagnostics,
+	}: RunConfigOptions,
 ): Promise<LintResults> {
 	// 1. Based on the original config definition, collect:
 	//   - The full list of all file paths to be linted
@@ -31,7 +36,12 @@ export async function runConfig(
 		cached,
 		languageFilesByFilePath,
 		rulesFilesAndOptionsByRule,
-	} = await collectFilesAndOptions(configDefinition, host, ignoreCache);
+	} = await collectFilesAndOptions(
+		configDefinition,
+		host,
+		ignoreCache,
+		cacheLocationOverride,
+	);
 
 	// 2. For each lint rule, run it on all files and store each file's results
 	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule);
@@ -63,7 +73,12 @@ export async function runConfig(
 	// 5. Write the results to cache, then return them! We did it!
 	const lintResults = { allFilePaths, cached, filesResults };
 
-	await writeToCache(configDefinition.filePath, lintResults);
+	await writeToCache(
+		configDefinition.filePath,
+		lintResults,
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- we want to fallback when the override is an empty string
+		cacheLocationOverride || configDefinition.cacheLocation,
+	);
 
 	return lintResults;
 }

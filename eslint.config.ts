@@ -52,6 +52,7 @@ export default defineConfig(
 		"packages/*/lib",
 		"packages/fixtures",
 		"pnpm-lock.yaml",
+		"coverage",
 	]),
 	{ linterOptions: { reportUnusedDisableDirectives: "error" } },
 	{

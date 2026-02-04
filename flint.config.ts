@@ -4,6 +4,7 @@ import { spelling } from "@flint.fyi/spelling";
 import { defineConfig, globs, json, md, ts, yaml } from "flint";
 
 export default defineConfig({
+	ignore: ["coverage/"],
 	use: [
 		{
 			files: json.files.all,

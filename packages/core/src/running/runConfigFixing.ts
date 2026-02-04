@@ -11,6 +11,7 @@ const log = debugForFile(import.meta.filename);
 const maximumIterations = 10;
 
 export interface RunConfigFixingOptions {
+	cacheLocation?: string | undefined;
 	ignoreCache: boolean;
 	requestedSuggestions: Set<string>;
 	skipDiagnostics: boolean;
@@ -20,6 +21,7 @@ export async function runConfigFixing(
 	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
 	{
+		cacheLocation,
 		ignoreCache,
 		requestedSuggestions,
 		skipDiagnostics,
@@ -41,6 +43,7 @@ export async function runConfigFixing(
 		// Or, at least it should all be virtual...
 		// https://github.com/flint-fyi/flint/issues/73
 		const lintResults = await runConfig(configDefinition, host, {
+			cacheLocation,
 			ignoreCache,
 			skipDiagnostics,
 		});

@@ -44,6 +44,7 @@ export async function collectFilesAndOptions(
 	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
 	ignoreCache: boolean | undefined,
+	cacheLocationOverride: string | undefined,
 ): Promise<CollectedFilesAndOptions> {
 	// 1. Collect all file paths to lint and the 'use' rule configuration groups
 	const { allFilePaths, useDefinitions } =
@@ -52,7 +53,12 @@ export async function collectFilesAndOptions(
 	// 2. Retrieve any past cached results from those files
 	const cached = ignoreCache
 		? undefined
-		: await readFromCache(allFilePaths, configDefinition.filePath);
+		: await readFromCache(
+				allFilePaths,
+				configDefinition.filePath,
+				// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- we want to fallback when the override is an empty string
+				cacheLocationOverride || configDefinition.cacheLocation,
+			);
 
 	// 3. For each rule, create a map of the files it's enabled on & with which options
 	const rulesOptionsByFile = collectRulesOptionsByFile(useDefinitions);

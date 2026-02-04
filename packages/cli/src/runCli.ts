@@ -29,6 +29,9 @@ export async function runCli(args: string[]) {
 			"    Whether to ignore any existing cache data on disk. This will cause a full re-lint of all linted files.",
 		);
 		console.log("");
+		console.log("  --cache-location <path>");
+		console.log("    The path to the cache file or directory to use.");
+		console.log("");
 		console.log("  --fix");
 		console.log("    Enables auto-fixing 'fixes' from rule reports.");
 		console.log("");

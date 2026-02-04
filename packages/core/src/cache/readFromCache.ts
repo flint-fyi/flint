@@ -5,7 +5,7 @@ import { debugForFile } from "debug-for-file";
 import { readFileSafe } from "../running/readFileSafe.ts";
 import type { FileCacheStorage } from "../types/cache.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
-import { cacheFilePath } from "./constants.ts";
+import { getCacheFilePath } from "./getCacheFilePath.ts";
 import { getFileTouchTime } from "./getFileTouchTime.ts";
 
 const log = debugForFile(import.meta.filename);
@@ -13,7 +13,9 @@ const log = debugForFile(import.meta.filename);
 export async function readFromCache(
 	allFilePaths: Set<string>,
 	configFilePath: string,
+	cacheLocation: string | undefined,
 ): Promise<Map<string, FileCacheStorage> | undefined> {
+	const cacheFilePath = getCacheFilePath(cacheLocation);
 	const rawCacheString = await readFileSafe(cacheFilePath);
 
 	if (!rawCacheString) {

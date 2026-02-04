@@ -27,6 +27,19 @@ export default defineConfig({
 });
 ```
 
+### `cacheLocation`
+
+Override the default location for Flint's cache file.
+This can be either a direct path to a json file, or the directory where the `flint.json` cache file will be stored.
+The default value is `node_modules/.cache/flint.json`.
+
+You can open this file in an editor to see which files are cached, as well as dependencies of those files.
+
+:::tip
+You can also override the value in this config using the `--cache-location` CLI flag.
+See [CLI > --cache-location](https://www.flint.fyi/cli#--cache-location) for more.
+:::
+
 ### `ignore`
 
 A list of glob patterns to ignore from linting.
