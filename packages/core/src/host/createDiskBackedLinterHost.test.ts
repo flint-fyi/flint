@@ -23,8 +23,6 @@ function findUpNodeModules(startDir: string): string {
 	}
 }
 
-/* eslint @typescript-eslint/no-unused-vars: ["error", { "varsIgnorePattern": "^_$" }] */
-
 describe("createDiskBackedLinterHost", () => {
 	const integrationRoot = path.join(
 		findUpNodeModules(import.meta.dirname),

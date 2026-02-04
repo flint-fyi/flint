@@ -2,8 +2,6 @@ import { describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "./createVFSLinterHost.ts";
 
-/* eslint @typescript-eslint/no-unused-vars: ["error", { "varsIgnorePattern": "^_$" }] */
-
 describe(createVFSLinterHost, () => {
 	it("normalizes cwd", () => {
 		const host = createVFSLinterHost({

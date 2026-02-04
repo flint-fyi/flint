@@ -23,8 +23,8 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			normalizedChangedFilePath: null | string,
 			event: LinterHostFileWatcherEvent,
 		) => void,
-		signal: AbortSignal | undefined,
 	): Disposable {
+		const controller = new AbortController();
 		const normalizedWatchBasename = normalizedWatchPath.slice(
 			normalizedWatchPath.lastIndexOf("/") + 1,
 		);
@@ -54,7 +54,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			const watcher = fs
 				.watch(
 					normalizedWatchPath,
-					{ persistent: false, recursive, signal },
+					{ persistent: false, recursive, signal: controller.signal },
 					(_event, filename) => {
 						if (unwatched) {
 							return;
@@ -153,6 +153,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		}
 		return {
 			[Symbol.dispose]() {
+				controller.abort();
 				unwatch();
 			},
 		};
@@ -235,7 +236,6 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 					}
 					callback(normalizedChangedFilePath);
 				},
-				options.signal,
 			);
 		},
 		watchFile(filePathAbsolute, callback, options) {
@@ -250,7 +250,6 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 						callback(event);
 					}
 				},
-				undefined,
 			);
 		},
 	};

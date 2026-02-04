@@ -15,7 +15,6 @@ export async function runCliWatch(
 	getRenderer: () => Renderer,
 	values: OptionsValues,
 ) {
-	const abortController = new AbortController();
 	const cwd = host.getCurrentDirectory();
 
 	log("Running single-run CLI once before watching");
@@ -45,7 +44,7 @@ export async function runCliWatch(
 			);
 
 			renderer.onQuit?.(() => {
-				abortController.abort();
+				watcher[Symbol.dispose]();
 				resolve();
 			});
 
@@ -76,9 +75,8 @@ export async function runCliWatch(
 		}, 100);
 
 		log("Watching cwd:", cwd);
-		host.watchDirectory(cwd, rerun, {
+		const watcher = host.watchDirectory(cwd, rerun, {
 			recursive: true,
-			signal: abortController.signal,
 		});
 	});
 }

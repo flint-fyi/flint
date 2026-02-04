@@ -1,5 +1,3 @@
-import type { Abortable } from "node:events";
-
 export interface LinterHost {
 	getCurrentDirectory(): string;
 	isCaseSensitiveFS(): boolean;
@@ -38,6 +36,6 @@ export interface WatchDirectoryOptions extends WatchOptions {
 	recursive: boolean;
 }
 
-export interface WatchOptions extends Abortable {
+export interface WatchOptions {
 	pollingInterval?: number;
 }
