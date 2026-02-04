@@ -1,4 +1,4 @@
-// flint-disable-file ts.escapeSequenceCasing
+// flint-disable-file ts/escapeSequenceCasing
 import rule from "./regexInvisibleCharacters.ts";
 import { ruleTester } from "./ruleTester.ts";
 

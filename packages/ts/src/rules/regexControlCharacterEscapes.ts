@@ -1,4 +1,4 @@
-// flint-disable-file ts.escapeSequenceCasing
+// flint-disable-file ts/escapeSequenceCasing
 import {
 	type AST,
 	type TypeScriptFileServices,
