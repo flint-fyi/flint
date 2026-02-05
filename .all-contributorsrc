@@ -146,7 +146,8 @@
         "doc",
         "bug",
         "maintenance",
-        "tool"
+        "tool",
+        "code"
       ]
     },
     {
