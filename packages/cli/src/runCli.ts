@@ -75,7 +75,7 @@ export async function runCli(args: string[]) {
 	}
 
 	const host = createDiskBackedLinterHost(process.cwd());
-	const configFileName = findConfigFileName(host);
+	const configFileName = await findConfigFileName(host);
 	if (!configFileName) {
 		console.error("No flint.config.* file found.");
 		console.error(

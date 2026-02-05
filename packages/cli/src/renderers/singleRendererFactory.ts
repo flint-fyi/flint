@@ -19,6 +19,7 @@ export const singleRendererFactory: RendererFactory = {
 						continue;
 					}
 
+					// TODO: Can we re-use the sourcefile representation?
 					const sourceFileText = await fs.readFile(filePath, "utf-8");
 
 					const body = presenter.renderFile({

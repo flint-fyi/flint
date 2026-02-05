@@ -77,6 +77,7 @@ export async function runConfig(
 	const lintResults = { allFilePaths, cached, filesResults };
 
 	await writeToCache(
+		host,
 		configDefinition.filePath,
 		lintResults,
 		cacheLocationOverride,

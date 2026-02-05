@@ -1,6 +1,7 @@
 import { CachedFactory } from "cached-factory";
 
 import type { FileChange } from "../types/changes.ts";
+import type { LinterHost } from "../types/host.ts";
 import type { FileResults } from "../types/linting.ts";
 import type { FileReport } from "../types/reports.ts";
 import { flatten } from "../utils/arrays.ts";
@@ -8,6 +9,7 @@ import { createReportSuggestionKey } from "./createReportSuggestionKey.ts";
 import { resolveChange } from "./resolveChange.ts";
 
 export async function resolveChangesByFile(
+	host: LinterHost,
 	filesResults: Map<string, FileResults>,
 	requestedSuggestions: Set<string>,
 ) {
@@ -20,13 +22,18 @@ export async function resolveChangesByFile(
 	}
 
 	async function collectReportSuggestions(
+		host: LinterHost,
 		absoluteFilePath: string,
 		report: FileReport,
 	) {
 		for (const suggestion of report.suggestions ?? []) {
 			const key = createReportSuggestionKey(report, suggestion);
 			if (requestedSuggestions.has(key)) {
-				const resolved = await resolveChange(suggestion, absoluteFilePath);
+				const resolved = await resolveChange(
+					host,
+					suggestion,
+					absoluteFilePath,
+				);
 
 				for (const change of flatten(resolved)) {
 					changesByFile.get(change.filePath).push(change);
@@ -40,7 +47,7 @@ export async function resolveChangesByFile(
 			async ([absoluteFilePath, fileResults]) => {
 				for (const report of fileResults.reports) {
 					collectReportFix(absoluteFilePath, report);
-					await collectReportSuggestions(absoluteFilePath, report);
+					await collectReportSuggestions(host, absoluteFilePath, report);
 				}
 			},
 		),

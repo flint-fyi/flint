@@ -9,10 +9,11 @@ const candidatesOrdered = [
 	"flint.config.js",
 ];
 
-export function findConfigFileName(host: LinterHost) {
-	const children = new Set(
-		host.readDirectorySync(host.getCurrentDirectory()).map((file) => file.name),
+export async function findConfigFileName(host: LinterHost) {
+	const currentDirectoryContents = await host.readDirectory(
+		host.getCurrentDirectory(),
 	);
+	const children = new Set(currentDirectoryContents.map((file) => file.name));
 
 	const fileName = candidatesOrdered.find((candidate) =>
 		children.has(candidate),

@@ -1,8 +1,14 @@
 export interface LinterHost {
 	fileTypeSync(pathAbsolute: string): "directory" | "file" | undefined;
 	getCurrentDirectory(): string;
+	getFileTouchTime(filePath: string): Promise<number>;
+	getFileTouchTimeSync(filePath: string): number;
 	isCaseSensitiveFS(): boolean;
+	readDirectory(
+		directoryPathAbsolute: string,
+	): Promise<LinterHostDirectoryEntry[]>;
 	readDirectorySync(directoryPathAbsolute: string): LinterHostDirectoryEntry[];
+	readFile(filePathAbsolute: string): Promise<string | undefined>;
 	readFileSync(filePathAbsolute: string): string | undefined;
 	watchDirectorySync(
 		directoryPathAbsolute: string,
@@ -14,6 +20,8 @@ export interface LinterHost {
 		callback: LinterHostFileWatcher,
 		options?: WatchOptions,
 	): Disposable;
+	writeFile(filePathAbsolute: string, content: string): Promise<void>;
+	writeFileSync(filePathAbsolute: string, content: string): void;
 }
 
 export interface LinterHostDirectoryEntry {

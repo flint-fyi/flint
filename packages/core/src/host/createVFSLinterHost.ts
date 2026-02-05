@@ -105,8 +105,20 @@ export function createVFSLinterHost(
 		getCurrentDirectory() {
 			return cwd;
 		},
+		async getFileTouchTime(filePath) {
+			return await Promise.try(() => this.getFileTouchTimeSync(filePath));
+		},
+		getFileTouchTimeSync() {
+			// TODO: uhh... this probably doesn't work amazingly
+			return Date.now();
+		},
 		isCaseSensitiveFS() {
 			return caseSensitiveFS;
+		},
+		async readDirectory(directoryPathAbsolute) {
+			return await Promise.try(() =>
+				this.readDirectorySync(directoryPathAbsolute),
+			);
 		},
 		readDirectorySync(directoryPathAbsolute) {
 			directoryPathAbsolute =
@@ -142,6 +154,9 @@ export function createVFSLinterHost(
 							.filter(({ name }) => !result.has(name))
 					: []),
 			];
+		},
+		async readFile(filePathAbsolute) {
+			return await Promise.try(() => this.readFileSync(filePathAbsolute));
 		},
 		readFileSync(filePathAbsolute) {
 			filePathAbsolute = normalizePath(filePathAbsolute, caseSensitiveFS);
@@ -221,6 +236,14 @@ export function createVFSLinterHost(
 					baseWatcher?.[Symbol.dispose]();
 				},
 			};
+		},
+		async writeFile(filePathAbsolute, content) {
+			await Promise.try(() => {
+				this.vfsUpsertFile(filePathAbsolute, content);
+			});
+		},
+		writeFileSync(filePathAbsolute, content) {
+			this.vfsUpsertFile(filePathAbsolute, content);
 		},
 	};
 }

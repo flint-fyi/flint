@@ -102,7 +102,7 @@ describe("createDiskBackedLinterHost", () => {
 			fs.symlinkSync(filePath, fileLink);
 			fs.symlinkSync(missingPath, brokenLink);
 
-			const entries = host.readDirectory(integrationRoot);
+			const entries = host.readDirectorySync(integrationRoot);
 			const sortedEntries = entries
 				.map((entry) => ({ name: entry.name, type: entry.type }))
 				.toSorted((a, b) => a.name.localeCompare(b.name));

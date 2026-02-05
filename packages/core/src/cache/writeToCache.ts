@@ -5,14 +5,15 @@ import { dirname } from "node:path";
 import omitEmpty from "omit-empty";
 
 import type { CacheStorage } from "../types/cache.ts";
+import type { LinterHost } from "../types/host.ts";
 import type { LintResults } from "../types/linting.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
 import { getCacheFilePath } from "./getCacheFilePath.ts";
-import { getFileTouchTime } from "./getFileTouchTime.ts";
 
 const log = debugForFile(import.meta.filename);
 
 export async function writeToCache(
+	host: LinterHost,
 	configFileName: string,
 	lintResults: LintResults,
 	cacheLocation: string | undefined,
@@ -28,8 +29,8 @@ export async function writeToCache(
 
 	const storage: CacheStorage = {
 		configs: {
-			[configFileName]: getFileTouchTime(configFileName),
-			"package.json": getFileTouchTime("package.json"),
+			[configFileName]: await host.getFileTouchTime(configFileName),
+			"package.json": await host.getFileTouchTime("package.json"),
 		},
 		files: {
 			...Object.fromEntries(

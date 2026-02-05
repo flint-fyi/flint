@@ -331,7 +331,7 @@ describe(createVFSLinterHost, () => {
 		});
 	});
 
-	describe("watchFile", () => {
+	describe("watchFileSync", () => {
 		it("reports creation", () => {
 			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
 			const onEvent = vi.fn();
@@ -401,7 +401,7 @@ describe(createVFSLinterHost, () => {
 		it("propagates correct params to base host watcher", () => {
 			const baseHost = {
 				...createVFSLinterHost({ caseSensitive: true, cwd: "/root" }),
-				watchFile: vi.fn(() => ({
+				watchFileSync: vi.fn(() => ({
 					[Symbol.dispose]: vi.fn(),
 				})),
 			};
@@ -411,7 +411,7 @@ describe(createVFSLinterHost, () => {
 				pollingInterval: 555,
 			});
 
-			expect(baseHost.watchFile).toHaveBeenCalledExactlyOnceWith(
+			expect(baseHost.watchFileSync).toHaveBeenCalledExactlyOnceWith(
 				"/root/file.txt",
 				expect.any(Function),
 				{
@@ -424,7 +424,7 @@ describe(createVFSLinterHost, () => {
 			const dispose = vi.fn();
 			const baseHost = {
 				...createVFSLinterHost({ caseSensitive: true, cwd: "/root" }),
-				watchFile: () => ({ [Symbol.dispose]: dispose }),
+				watchFileSync: () => ({ [Symbol.dispose]: dispose }),
 			};
 			const host = createVFSLinterHost({ baseHost });
 
@@ -437,7 +437,7 @@ describe(createVFSLinterHost, () => {
 		});
 	});
 
-	describe("watchDirectory", () => {
+	describe("watchDirectorySync", () => {
 		describe("non-recursive", () => {
 			it("reports file creation", () => {
 				const host = createVFSLinterHost({
@@ -612,7 +612,7 @@ describe(createVFSLinterHost, () => {
 		it("propagates correct params to base host watcher", () => {
 			const baseHost = {
 				...createVFSLinterHost({ caseSensitive: true, cwd: "/root" }),
-				watchDirectory: vi.fn(() => ({
+				watchDirectorySync: vi.fn(() => ({
 					[Symbol.dispose]: vi.fn(),
 				})),
 			};
@@ -623,7 +623,7 @@ describe(createVFSLinterHost, () => {
 				recursive: false,
 			});
 
-			expect(baseHost.watchDirectory).toHaveBeenCalledExactlyOnceWith(
+			expect(baseHost.watchDirectorySync).toHaveBeenCalledExactlyOnceWith(
 				"/root/file.txt",
 				expect.any(Function),
 				{
@@ -637,7 +637,7 @@ describe(createVFSLinterHost, () => {
 			const dispose = vi.fn();
 			const baseHost = {
 				...createVFSLinterHost({ caseSensitive: true, cwd: "/root" }),
-				watchDirectory: () => ({ [Symbol.dispose]: dispose }),
+				watchDirectorySync: () => ({ [Symbol.dispose]: dispose }),
 			};
 			const host = createVFSLinterHost({ baseHost });
 

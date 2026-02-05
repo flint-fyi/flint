@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import * as fsSync from "node:fs";
 import path from "node:path";
 
 import type {
@@ -177,8 +178,41 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		getCurrentDirectory() {
 			return cwd;
 		},
+		async getFileTouchTime(filePath) {
+			const stat = await fs.promises.stat(filePath);
+			return stat.mtimeMs;
+		},
+		getFileTouchTimeSync(filePath) {
+			return fsSync.statSync(filePath).mtimeMs;
+		},
 		isCaseSensitiveFS() {
 			return caseSensitiveFS;
+		},
+		async readDirectory(directoryPathAbsolute) {
+			const result: LinterHostDirectoryEntry[] = [];
+			const dirents = await fs.promises.readdir(directoryPathAbsolute, {
+				withFileTypes: true,
+			});
+
+			for (const entry of dirents) {
+				let stat: Pick<typeof entry, "isDirectory" | "isFile"> = entry;
+				if (entry.isSymbolicLink()) {
+					try {
+						stat = await fs.promises.stat(
+							path.join(directoryPathAbsolute, entry.name),
+						);
+					} catch {
+						continue;
+					}
+				}
+				if (stat.isDirectory()) {
+					result.push({ name: entry.name, type: "directory" });
+				} else if (stat.isFile()) {
+					result.push({ name: entry.name, type: "file" });
+				}
+			}
+
+			return result;
 		},
 		readDirectorySync(directoryPathAbsolute) {
 			const result: LinterHostDirectoryEntry[] = [];
@@ -187,7 +221,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			});
 
 			for (const entry of dirents) {
-				let stat = entry as Pick<typeof entry, "isDirectory" | "isFile">;
+				let stat: Pick<typeof entry, "isDirectory" | "isFile"> = entry;
 				if (entry.isSymbolicLink()) {
 					try {
 						stat = fs.statSync(path.join(directoryPathAbsolute, entry.name));
@@ -197,13 +231,15 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 				}
 				if (stat.isDirectory()) {
 					result.push({ name: entry.name, type: "directory" });
-				}
-				if (stat.isFile()) {
+				} else if (stat.isFile()) {
 					result.push({ name: entry.name, type: "file" });
 				}
 			}
 
 			return result;
+		},
+		async readFile(filePathAbsolute) {
+			return await fs.promises.readFile(filePathAbsolute, "utf8");
 		},
 		readFileSync(filePathAbsolute) {
 			return fs.readFileSync(filePathAbsolute, "utf8");
@@ -251,6 +287,12 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 					}
 				},
 			);
+		},
+		async writeFile(filePathAbsolute, content) {
+			await fs.promises.writeFile(filePathAbsolute, content, "utf8");
+		},
+		writeFileSync(filePathAbsolute, content) {
+			fsSync.writeFileSync(filePathAbsolute, content, "utf8");
 		},
 	};
 }

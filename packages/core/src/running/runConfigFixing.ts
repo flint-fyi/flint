@@ -39,7 +39,7 @@ export async function runConfigFixing(
 		);
 
 		// TODO: Investigate reusing file contents from previous iterations.
-		// Why read file many time when few do trick?
+		// Why read file many times when only a few will do the trick?
 		// Or, at least it should all be virtual...
 		// https://github.com/flint-fyi/flint/issues/73
 		const lintResults = await runConfig(configDefinition, host, {
@@ -51,6 +51,7 @@ export async function runConfigFixing(
 		log("Applying fixes from file results.");
 
 		const fixedFilePaths = await applyChangesToFiles(
+			host,
 			lintResults.filesResults,
 			requestedSuggestions,
 		);

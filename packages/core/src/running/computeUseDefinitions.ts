@@ -26,8 +26,8 @@ export interface ConfigUseDefinitionWithFiles extends ConfigUseDefinition {
 }
 
 export async function computeUseDefinitions(
-	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
+	configDefinition: ProcessedConfigDefinition,
 ): Promise<ComputedUseDefinitions> {
 	log("Collecting files from %d use pattern(s)", configDefinition.use.length);
 
