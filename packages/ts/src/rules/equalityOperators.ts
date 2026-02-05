@@ -20,7 +20,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferStrictEquality: {
 			primary:
-				"Use strict equality ('{{ strictOperator }}') instead of '{{ looseOperator }}'.",
+				"Use the more precise strict equality ('{{ strictOperator }}') instead of the loose '{{ looseOperator }}'.",
 			secondary: [
 				"The loose equality operators '=='/'!=' perform arcane type coercion and are difficult to reason about.",
 				"Use strict equality operators '==='/'!==' instead.",
