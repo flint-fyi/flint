@@ -10,12 +10,14 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="equalityOperators" />
 
-The loose equality operators (`==` and `!=`) perform arcane type coercion before comparison, which can lead to unexpected and confusing behavior.
+The loose equality operators (`==` and `!=`) perform type coercion before comparison, which can lead to surprising and confusing behavior.
 Strict equality operators (`===` and `!==`) compare both value and type without coercion, making comparisons more predictable.
 Therefore, it is almost always preferable to use the strict equality operators.
 
-**Note:** This rule only handles comparisons where neither operand is a nullish literal (`null` or `undefined`).
+:::note
+This rule only handles comparisons where neither operand is a nullish literal (`null` or `undefined`).
 Null/undefined checks are the one major exception to the rule that strict equality is always preferable, and linting around them is handled by the [nullishCheckStyle](/rules/ts/nullishCheckStyle) rule.
+:::
 
 ## Examples
 
@@ -59,7 +61,7 @@ This rule has no options.
 ## When Not To Use It
 
 If your codebase has specific requirements for using loose equality operators in certain niche contexts, you may want to use a disable comment for those specific cases.
-However, such cases are exceedingly rare.
+For example, if you intentionally deal with numbers and strings interchangeably, and are accustomed to directly comparing them, this rule you might not be for you.
 
 ## Related Rules
 
