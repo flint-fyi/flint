@@ -11,7 +11,7 @@ const candidatesOrdered = [
 
 export function findConfigFileName(host: LinterHost) {
 	const children = new Set(
-		host.readDirectory(host.getCurrentDirectory()).map((file) => file.name),
+		host.readDirectorySync(host.getCurrentDirectory()).map((file) => file.name),
 	);
 
 	const fileName = candidatesOrdered.find((candidate) =>

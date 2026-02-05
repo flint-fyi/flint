@@ -1,15 +1,15 @@
 export interface LinterHost {
+	fileTypeSync(pathAbsolute: string): "directory" | "file" | undefined;
 	getCurrentDirectory(): string;
 	isCaseSensitiveFS(): boolean;
-	readDirectory(directoryPathAbsolute: string): LinterHostDirectoryEntry[];
-	readFile(filePathAbsolute: string): string | undefined;
-	stat(pathAbsolute: string): "directory" | "file" | undefined;
-	watchDirectory(
+	readDirectorySync(directoryPathAbsolute: string): LinterHostDirectoryEntry[];
+	readFileSync(filePathAbsolute: string): string | undefined;
+	watchDirectorySync(
 		directoryPathAbsolute: string,
 		callback: LinterHostDirectoryWatcher,
 		options: WatchDirectoryOptions,
 	): Disposable;
-	watchFile(
+	watchFileSync(
 		filePathAbsolute: string,
 		callback: LinterHostFileWatcher,
 		options?: WatchOptions,

@@ -160,13 +160,27 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 	}
 
 	return {
+		fileTypeSync(pathAbsolute) {
+			try {
+				const stat = fs.statSync(pathAbsolute);
+				if (stat.isDirectory()) {
+					return "directory";
+				}
+				if (stat.isFile()) {
+					return "file";
+				}
+			} catch {
+				// Fall through to undefined.
+			}
+			return undefined;
+		},
 		getCurrentDirectory() {
 			return cwd;
 		},
 		isCaseSensitiveFS() {
 			return caseSensitiveFS;
 		},
-		readDirectory(directoryPathAbsolute) {
+		readDirectorySync(directoryPathAbsolute) {
 			const result: LinterHostDirectoryEntry[] = [];
 			const dirents = fs.readdirSync(directoryPathAbsolute, {
 				withFileTypes: true,
@@ -191,24 +205,10 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 
 			return result;
 		},
-		readFile(filePathAbsolute) {
+		readFileSync(filePathAbsolute) {
 			return fs.readFileSync(filePathAbsolute, "utf8");
 		},
-		stat(pathAbsolute) {
-			try {
-				const stat = fs.statSync(pathAbsolute);
-				if (stat.isDirectory()) {
-					return "directory";
-				}
-				if (stat.isFile()) {
-					return "file";
-				}
-			} catch {
-				// Fall through to undefined.
-			}
-			return undefined;
-		},
-		watchDirectory(directoryPathAbsolute, callback, options) {
+		watchDirectorySync(directoryPathAbsolute, callback, options) {
 			directoryPathAbsolute = normalizePath(
 				directoryPathAbsolute,
 				caseSensitiveFS,
@@ -238,7 +238,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 				},
 			);
 		},
-		watchFile(filePathAbsolute, callback, options) {
+		watchFileSync(filePathAbsolute, callback, options) {
 			filePathAbsolute = normalizePath(filePathAbsolute, caseSensitiveFS);
 
 			return createWatcher(

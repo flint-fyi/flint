@@ -75,7 +75,7 @@ export async function runCliWatch(
 		}, 100);
 
 		log("Watching cwd:", cwd);
-		const watcher = host.watchDirectory(cwd, rerun, {
+		const watcher = host.watchDirectorySync(cwd, rerun, {
 			recursive: true,
 		});
 	});

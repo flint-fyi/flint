@@ -9,14 +9,14 @@ import type { LinterHost } from "../types/host.ts";
 export function createEphemeralLinterHost(baseHost: LinterHost): LinterHost {
 	return {
 		...baseHost,
-		watchDirectory() {
+		watchDirectorySync() {
 			return {
 				[Symbol.dispose]() {
 					// Intentionally empty to satisfy the Disposable interface.
 				},
 			};
 		},
-		watchFile() {
+		watchFileSync() {
 			return {
 				[Symbol.dispose]() {
 					// Intentionally empty to satisfy the Disposable interface.
