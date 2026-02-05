@@ -9913,12 +9913,19 @@
 				"url": "https://eslint.org/docs/latest/rules/eqeqeq"
 			}
 		],
-		"flint": {
-			"name": "equalityOperators",
-			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
-		},
+		"flint": [
+			{
+				"name": "equalityOperators",
+				"plugin": "ts",
+				"preset": "logical",
+				"status": "implemented"
+			},
+			{
+				"name": "nullishCheckStyle",
+				"plugin": "ts",
+				"status": "implemented"
+			}
+		],
 		"notes": "Default ESLint's \"smart\" to true",
 		"oxlint": [
 			{
