@@ -403,7 +403,7 @@ importers:
         specifier: workspace:^
         version: link:../rule-tester
       '@types/mdast':
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4
       tsdown:
         specifier: 0.20.1
