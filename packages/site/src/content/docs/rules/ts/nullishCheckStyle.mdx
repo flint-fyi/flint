@@ -29,8 +29,10 @@ foo != undefined; // same as previous line
 
 This rule enforces that a consistent style is used for `null`/`undefined` checks.
 
-**Note:** This rule only handles comparisons where the equality operators are used as part of a null check.
+:::note
+This rule only handles comparisons where the equality operators are used as part of a null check.
 See the [equalityOperators](/rules/ts/equalityOperators) rule for linting `==`/`!=` in general.
+:::
 
 ## Options
 
@@ -141,13 +143,14 @@ if (foo === null) {
 
 ### `looseNullishComparisonStyle`
 
-**Type:** `"prefer-null" | "ignore"`
+**Type:** `"prefer-null" | "prefer-undefined"| "ignore"`
 **Default:** `"prefer-null"`
 
 Since `x == null` and `x == undefined` are equivalent, this option allows enforcing that the same choice is used consistently.
-No option is provided to prefer `== undefined`, since `== null` is equivalent and shorter.
 
 #### `"prefer-null"`
+
+This is the default simply because `== null` is 5 characters shorter than `== undefined`.
 
 Examples of code with `{ looseNullishComparisonStyle: "prefer-null" }`:
 
@@ -177,6 +180,43 @@ if (x == null) {
 
 ```ts
 if (foo != null) {
+	// code...
+}
+```
+
+</TabItem>
+</Tabs>
+
+#### `"prefer-undefined"`
+
+Examples of code with `{ looseNullishComparisonStyle: "prefer-null" }`:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (x == null) {
+	// code...
+}
+```
+
+```ts
+if (foo != null) {
+	// code...
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (x == undefined) {
+	// code...
+}
+```
+
+```ts
+if (foo != undefined) {
 	// code...
 }
 ```

@@ -38,7 +38,7 @@ a != null
 			code: `
 a != null
 `,
-			options: { nullishComparisonStrictness: "strict" },
+			options: { nullishComparisonStrictness: "triple-equals" },
 			snapshot: `
 a != null
   ~~~~~~~
@@ -57,7 +57,7 @@ a !== null
 			code: `
 null != a
 `,
-			options: { nullishComparisonStrictness: "strict" },
+			options: { nullishComparisonStrictness: "triple-equals" },
 			snapshot: `
 null != a
 ~~~~~~~
@@ -94,7 +94,7 @@ null != a
 			code: `
 a != undefined
 `,
-			options: { nullishComparisonStrictness: "either" },
+			options: { nullishComparisonStrictness: "ignore" },
 			output: `
 a != null
 `,
@@ -108,7 +108,7 @@ a != undefined
 			code: `
 undefined != a
 `,
-			options: { nullishComparisonStrictness: "either" },
+			options: { nullishComparisonStrictness: "ignore" },
 			output: `
 null != a
 `,
@@ -128,31 +128,31 @@ Compare with 'null' rather than 'undefined'.
 			code: `
 undefined === foo
 `,
-			options: { nullishComparisonStrictness: "strict" },
+			options: { nullishComparisonStrictness: "triple-equals" },
 		},
 		{
 			code: `
 undefined === foo
 `,
-			options: { nullishComparisonStrictness: "either" },
+			options: { nullishComparisonStrictness: "ignore" },
 		},
 		{
 			code: `
 a != undefined
 `,
-			options: { looseNullishComparisonStyle: "either" },
+			options: { looseNullishComparisonStyle: "ignore" },
 		},
 		{
 			code: `
 a !== null
 `,
-			options: { nullishComparisonStrictness: "strict" },
+			options: { nullishComparisonStrictness: "triple-equals" },
 		},
 		{
 			code: `
 null !== a
 `,
-			options: { nullishComparisonStrictness: "strict" },
+			options: { nullishComparisonStrictness: "triple-equals" },
 		},
 		// Non-nullish comparisons should not be handled by this rule
 		"a == b",

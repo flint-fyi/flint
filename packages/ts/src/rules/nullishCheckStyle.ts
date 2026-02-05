@@ -2,6 +2,7 @@ import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import { isNullKeyword } from "ts-api-utils";
 import { z } from "zod";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -39,6 +40,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"Replace '{{ strictOperator }}' with '{{ looseOperator }}'.",
 			],
 		},
+		preferLooseUndefined: {
+			primary: "Compare with 'undefined' rather than 'null'.",
+			secondary: [
+				"`x == null` and `x == undefined` are equivalent to each other; both check `x === null || x === undefined`.",
+				"Use `x == undefined`.",
+			],
+			suggestions: ["Replace 'null' with 'undefined'."],
+		},
 		preferStrictNullish: {
 			primary:
 				"Use strict equality ('{{ strictOperator }}') for nullish comparisons.",
@@ -51,11 +60,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	options: {
-		looseNullishComparisonStyle: z.enum(["null", "either"]).default("null"),
+		looseNullishComparisonStyle: z
+			.enum(["prefer-null", "prefer-undefined", "ignore"])
+			.default("prefer-null"),
 
 		nullishComparisonStrictness: z
-			.enum(["strict", "loose", "either"])
-			.default("loose"),
+			.enum(["double-equals", "triple-equals", "ignore"])
+			.default("double-equals"),
 	},
 	setup(context) {
 		return {
@@ -85,7 +96,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// beyond this point, exactly one of the operands is a nullish literal.
 
 					if (
-						options.nullishComparisonStrictness === "loose" &&
+						options.nullishComparisonStrictness === "double-equals" &&
 						!isLooseComparison
 					) {
 						const looseOperator = toLooseOperator(operator);
@@ -120,7 +131,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (
-						options.nullishComparisonStrictness === "strict" &&
+						options.nullishComparisonStrictness === "triple-equals" &&
 						isLooseComparison
 					) {
 						const strictOperator = toStrictOperator(operator);
@@ -154,35 +165,63 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (
-						isLooseComparison &&
-						options.looseNullishComparisonStyle === "null"
-					) {
-						const leftIsUndefined = isUndefinedIdentifier(node.left);
-						const rightIsUndefined = isUndefinedIdentifier(node.right);
+					if (isLooseComparison) {
+						if (options.looseNullishComparisonStyle === "prefer-null") {
+							const leftIsUndefined = isUndefinedIdentifier(node.left);
+							const rightIsUndefined = isUndefinedIdentifier(node.right);
 
-						if (leftIsUndefined || rightIsUndefined) {
-							context.report({
-								fix: [
-									{
-										range: getTSNodeRange(
-											leftIsUndefined ? node.left : node.right,
-											sourceFile,
-										),
-										text: "null",
-									},
-								],
-								message: "preferLooseNull",
-								range: leftIsUndefined
-									? {
-											begin: node.left.getStart(sourceFile),
-											end: node.operatorToken.getEnd(),
-										}
-									: {
-											begin: node.operatorToken.getStart(sourceFile),
-											end: node.right.getEnd(),
+							if (leftIsUndefined || rightIsUndefined) {
+								context.report({
+									fix: [
+										{
+											range: getTSNodeRange(
+												leftIsUndefined ? node.left : node.right,
+												sourceFile,
+											),
+											text: "null",
 										},
-							});
+									],
+									message: "preferLooseNull",
+									range: leftIsUndefined
+										? {
+												begin: node.left.getStart(sourceFile),
+												end: node.operatorToken.getEnd(),
+											}
+										: {
+												begin: node.operatorToken.getStart(sourceFile),
+												end: node.right.getEnd(),
+											},
+								});
+							}
+						} else if (
+							options.looseNullishComparisonStyle === "prefer-undefined"
+						) {
+							const leftIsNull = isNullKeyword(node.left);
+							const rightIsNull = isNullKeyword(node.right);
+
+							if (leftIsNull || rightIsNull) {
+								context.report({
+									fix: [
+										{
+											range: getTSNodeRange(
+												leftIsNull ? node.left : node.right,
+												sourceFile,
+											),
+											text: "undefined",
+										},
+									],
+									message: "preferLooseUndefined",
+									range: leftIsNull
+										? {
+												begin: node.left.getStart(sourceFile),
+												end: node.operatorToken.getEnd(),
+											}
+										: {
+												begin: node.operatorToken.getStart(sourceFile),
+												end: node.right.getEnd(),
+											},
+								});
+							}
 						}
 					}
 				},
