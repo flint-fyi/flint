@@ -36,13 +36,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				BinaryExpression: (node, { sourceFile }) => {
 					const operator = toEqualityOperator(node.operatorToken.kind);
 					if (operator == null) {
-						// Only inspect equality comparisons
-						return;
-					}
-
-					const isLooseComparison = operator === "==" || operator === "!=";
-					if (!isLooseComparison) {
-						// Strict comparisons are always ok
 						return;
 					}
 
@@ -51,23 +44,30 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const strictOperator = toStrictOperator(operator);
-					const operatorRange = getTSNodeRange(node.operatorToken, sourceFile);
-					context.report({
-						data: {
-							looseOperator: operator,
-							strictOperator,
-						},
-						message: "preferStrictEquality",
-						range: operatorRange,
-						suggestions: [
-							{
-								id: "useStrictOperator",
-								range: operatorRange,
-								text: strictOperator,
+					const isLooseComparison = operator === "==" || operator === "!=";
+
+					if (isLooseComparison) {
+						const strictOperator = toStrictOperator(operator);
+						const operatorRange = getTSNodeRange(
+							node.operatorToken,
+							sourceFile,
+						);
+						context.report({
+							data: {
+								looseOperator: operator,
+								strictOperator,
 							},
-						],
-					});
+							message: "preferStrictEquality",
+							range: operatorRange,
+							suggestions: [
+								{
+									id: "useStrictOperator",
+									range: operatorRange,
+									text: strictOperator,
+								},
+							],
+						});
+					}
 				},
 			},
 		};
