@@ -56,8 +56,7 @@ export async function collectFilesAndOptions(
 		: await readFromCache(
 				allFilePaths,
 				configDefinition.filePath,
-				// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- we want to fallback when the override is an empty string
-				cacheLocationOverride || configDefinition.cacheLocation,
+				cacheLocationOverride,
 			);
 
 	// 3. For each rule, create a map of the files it's enabled on & with which options

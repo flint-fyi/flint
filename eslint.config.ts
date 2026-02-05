@@ -92,6 +92,10 @@ export default defineConfig(
 					},
 				},
 			],
+			"@typescript-eslint/prefer-nullish-coalescing": [
+				"error",
+				{ ignorePrimitives: true },
+			],
 			"@typescript-eslint/restrict-template-expressions": [
 				"error",
 				{ allowNumber: true },

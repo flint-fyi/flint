@@ -21,11 +21,14 @@ export async function runConfig(
 	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
 	{
-		cacheLocation: cacheLocationOverride,
+		cacheLocation: cacheLocationFromCli,
 		ignoreCache,
 		skipDiagnostics,
 	}: RunConfigOptions,
 ): Promise<LintResults> {
+	const cacheLocationOverride =
+		cacheLocationFromCli || configDefinition.cacheLocation;
+
 	// 1. Based on the original config definition, collect:
 	//   - The full list of all file paths to be linted
 	//   - Any cached results amongst those file paths
@@ -76,8 +79,7 @@ export async function runConfig(
 	await writeToCache(
 		configDefinition.filePath,
 		lintResults,
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- we want to fallback when the override is an empty string
-		cacheLocationOverride || configDefinition.cacheLocation,
+		cacheLocationOverride,
 	);
 
 	return lintResults;
