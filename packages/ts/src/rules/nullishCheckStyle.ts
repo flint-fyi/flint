@@ -73,27 +73,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				BinaryExpression: (node, { options, sourceFile }) => {
 					const operator = toEqualityOperator(node.operatorToken.kind);
+
 					if (operator == null) {
-						// not an equality comparison
 						return;
 					}
-
-					const isLooseComparison = operator === "==" || operator === "!=";
 
 					const leftIsNullish = isNullishLiteral(node.left);
 					const rightIsNullish = isNullishLiteral(node.right);
 
-					if (!(leftIsNullish || rightIsNullish)) {
-						// No nullish literals - not handled by this rule
+					// this rule only considers comparisons where exactly one side is a nullish literal
+					if (leftIsNullish === rightIsNullish) {
 						return;
 					}
 
-					if (leftIsNullish && rightIsNullish) {
-						// Both are nullish - edge case not handled by this rule
-						return;
-					}
-
-					// beyond this point, exactly one of the operands is a nullish literal.
+					const isLooseComparison = operator === "==" || operator === "!=";
 
 					if (
 						options.nullishComparisonStrictness === "double-equals" &&
