@@ -12,7 +12,7 @@ import {
 	toEqualityOperator,
 	toLooseOperator,
 	toStrictOperator,
-} from "./utils/equalityOperatorUtils.ts";
+} from "./utils/equalityOperators.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
