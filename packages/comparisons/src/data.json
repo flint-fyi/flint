@@ -14336,8 +14336,10 @@
 		"flint": {
 			"name": "promiseFinallyReturns",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "skipped"
 		},
+		"notes": "Largely covered by returnVoidSafety.",
 		"oxlint": [
 			{
 				"name": "promise/no-return-in-finally",
@@ -16247,6 +16249,19 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-return-this-type.html"
 			}
 		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "@typescript-eslint/strict-void-returns",
+				"url": "https://typescript-eslint.io/rules/strict-void-returns"
+			}
+		],
+		"flint": {
+			"name": "returnVoidSafety",
+			"plugin": "ts",
+			"preset": "logicalStrict"
+		}
 	},
 	{
 		"biome": [
