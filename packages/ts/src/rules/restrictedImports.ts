@@ -8,7 +8,7 @@ import { z } from "zod";
 import { ruleCreator } from "./ruleCreator.ts";
 
 const pathConfigSchema = z.object({
-	allowImportNames: z
+	allowNames: z
 		.array(z.string())
 		.optional()
 		.describe("Import names that are explicitly allowed from this module."),
@@ -16,19 +16,19 @@ const pathConfigSchema = z.object({
 		.boolean()
 		.optional()
 		.describe("Whether type-only imports from this module are allowed."),
-	importNames: z
-		.array(z.string())
-		.optional()
-		.describe("Specific import names to restrict from this module."),
 	message: z
 		.string()
 		.optional()
 		.describe("A custom message to display when this module is restricted."),
-	name: z.string().describe("The module specifier to restrict."),
+	name: z
+		.array(z.string())
+		.optional()
+		.describe("Specific import names to restrict from this module."),
+	source: z.string().describe("The module specifier to restrict."),
 });
 
 const patternConfigSchema = z.object({
-	allowImportNames: z
+	allowNames: z
 		.array(z.string())
 		.optional()
 		.describe(
@@ -41,16 +41,16 @@ const patternConfigSchema = z.object({
 	group: z
 		.array(z.string())
 		.describe("Glob patterns to match module specifiers against."),
-	importNames: z
-		.array(z.string())
-		.optional()
-		.describe("Specific import names to restrict from matching modules."),
 	message: z
 		.string()
 		.optional()
 		.describe(
 			"A custom message to display when a matching module is restricted.",
 		),
+	name: z
+		.array(z.string())
+		.optional()
+		.describe("Specific import names to restrict from matching modules."),
 });
 
 interface ImportedName {
@@ -59,18 +59,18 @@ interface ImportedName {
 }
 
 interface NormalizedPathConfig {
-	allowImportNames?: string[] | undefined;
+	allowNames?: string[] | undefined;
 	allowTypeImports?: boolean | undefined;
-	importNames?: string[] | undefined;
 	message?: string | undefined;
+	name?: string[] | undefined;
 }
 
 interface NormalizedPatternConfig {
-	allowImportNames?: string[] | undefined;
+	allowNames?: string[] | undefined;
 	allowTypeImports?: boolean | undefined;
 	group: RegExp[];
-	importNames?: string[] | undefined;
 	message?: string | undefined;
+	name?: string[] | undefined;
 }
 
 function globToRegExp(pattern: string) {
@@ -84,25 +84,25 @@ function globToRegExp(pattern: string) {
 }
 
 function hasNameRestrictions(config: {
-	allowImportNames?: string[] | undefined;
-	importNames?: string[] | undefined;
+	allowNames?: string[] | undefined;
+	name?: string[] | undefined;
 }) {
-	return Boolean(config.importNames ?? config.allowImportNames);
+	return Boolean(config.name ?? config.allowNames);
 }
 
 function isNameRestricted(
-	name: string,
+	importName: string,
 	config: {
-		allowImportNames?: string[] | undefined;
-		importNames?: string[] | undefined;
+		allowNames?: string[] | undefined;
+		name?: string[] | undefined;
 	},
 ) {
-	if (config.importNames) {
-		return config.importNames.includes(name);
+	if (config.name) {
+		return config.name.includes(importName);
 	}
 
-	if (config.allowImportNames) {
-		return !config.allowImportNames.includes(name);
+	if (config.allowNames) {
+		return !config.allowNames.includes(importName);
 	}
 
 	return true;
@@ -116,7 +116,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		everythingRestricted: {
 			primary:
-				"* import is invalid because '{{ importNames }}' from '{{ source }}' is restricted.",
+				"* import is invalid because '{{ restrictedNames }}' from '{{ source }}' is restricted.",
 			secondary: [
 				"This import uses a namespace or wildcard import, but specific names from this module are restricted.",
 				"Consider importing only the allowed names explicitly.",
@@ -127,7 +127,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 		everythingRestrictedWithMessage: {
 			primary:
-				"* import is invalid because '{{ importNames }}' from '{{ source }}' is restricted. {{ customMessage }}",
+				"* import is invalid because '{{ restrictedNames }}' from '{{ source }}' is restricted. {{ customMessage }}",
 			secondary: [
 				"This import uses a namespace or wildcard import, but specific names from this module are restricted.",
 			],
@@ -223,21 +223,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				paths: (
 					| string
 					| {
-							allowImportNames?: string[] | undefined;
+							allowNames?: string[] | undefined;
 							allowTypeImports?: boolean | undefined;
-							importNames?: string[] | undefined;
 							message?: string | undefined;
-							name: string;
+							name?: string[] | undefined;
+							source: string;
 					  }
 				)[];
 				patterns: (
 					| string
 					| {
-							allowImportNames?: string[] | undefined;
+							allowNames?: string[] | undefined;
 							allowTypeImports?: boolean | undefined;
 							group: string[];
-							importNames?: string[] | undefined;
 							message?: string | undefined;
+							name?: string[] | undefined;
 					  }
 				)[];
 			};
@@ -248,14 +248,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					existing.push({});
 					state.pathMap.set(pathEntry, existing);
 				} else {
-					const existing = state.pathMap.get(pathEntry.name) ?? [];
+					const existing = state.pathMap.get(pathEntry.source) ?? [];
 					existing.push({
-						allowImportNames: pathEntry.allowImportNames,
+						allowNames: pathEntry.allowNames,
 						allowTypeImports: pathEntry.allowTypeImports,
-						importNames: pathEntry.importNames,
 						message: pathEntry.message,
+						name: pathEntry.name,
 					});
-					state.pathMap.set(pathEntry.name, existing);
+					state.pathMap.set(pathEntry.source, existing);
 				}
 			}
 
@@ -266,11 +266,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					});
 				} else {
 					state.normalizedPatterns.push({
-						allowImportNames: patternEntry.allowImportNames,
+						allowNames: patternEntry.allowNames,
 						allowTypeImports: patternEntry.allowTypeImports,
 						group: patternEntry.group.map(globToRegExp),
-						importNames: patternEntry.importNames,
 						message: patternEntry.message,
+						name: patternEntry.name,
 					});
 				}
 			}
@@ -311,7 +311,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							context.report({
 								data: {
 									customMessage: config.message ?? "",
-									importNames: config.importNames?.join("', '") ?? "",
+									restrictedNames: config.name?.join("', '") ?? "",
 									source,
 								},
 								message: config.message
@@ -372,7 +372,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						context.report({
 							data: {
 								customMessage: pattern.message ?? "",
-								importNames: pattern.importNames?.join("', '") ?? "",
+								restrictedNames: pattern.name?.join("', '") ?? "",
 								source,
 							},
 							message: pattern.message

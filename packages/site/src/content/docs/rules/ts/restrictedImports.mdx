@@ -23,7 +23,7 @@ It detects static `import` and `export ... from` declarations.
 // With paths: ["lodash"]
 import _ from "lodash";
 
-// With paths: [{ name: "utils", importNames: ["dangerousHelper"] }]
+// With paths: [{ source: "utils", name: ["dangerousHelper"] }]
 import { dangerousHelper } from "utils";
 
 // With patterns: ["internal/*"]
@@ -37,7 +37,7 @@ import { secret } from "internal/auth";
 // With paths: ["lodash"]
 import { pick } from "lodash-es";
 
-// With paths: [{ name: "utils", importNames: ["dangerousHelper"] }]
+// With paths: [{ source: "utils", name: ["dangerousHelper"] }]
 import { safeHelper } from "utils";
 
 // With patterns: ["internal/*"]
@@ -65,20 +65,20 @@ Each entry can be a simple string or a configuration object.
 
 		// Advanced: restrict specific imports
 		{
-			"name": "utils",
-			"importNames": ["dangerousHelper"],
+			"source": "utils",
+			"name": ["dangerousHelper"],
 			"message": "Use safeHelper instead.",
 		},
 
 		// Allow only certain imports
 		{
-			"name": "react",
-			"allowImportNames": ["useState", "useEffect"],
+			"source": "react",
+			"allowNames": ["useState", "useEffect"],
 		},
 
 		// Allow type-only imports
 		{
-			"name": "internal-types",
+			"source": "internal-types",
 			"allowTypeImports": true,
 		},
 	],
@@ -89,10 +89,10 @@ Each entry can be a simple string or a configuration object.
 
 | Field              | Type        | Description                                                     |
 | ------------------ | ----------- | --------------------------------------------------------------- |
-| `name`             | `string`    | The module specifier to restrict.                               |
+| `source`           | `string`    | The module specifier to restrict.                               |
 | `message`          | `string?`   | Custom message shown when the import is restricted.             |
-| `importNames`      | `string[]?` | Only these specific import names are restricted.                |
-| `allowImportNames` | `string[]?` | Only these import names are allowed; all others are restricted. |
+| `name`             | `string[]?` | Only these specific import names are restricted.                |
+| `allowNames`       | `string[]?` | Only these import names are allowed; all others are restricted. |
 | `allowTypeImports` | `boolean?`  | Whether type-only imports are exempt from the restriction.      |
 
 ### `patterns`
@@ -124,9 +124,20 @@ Glob patterns to match restricted module specifiers.
 | ------------------ | ----------- | --------------------------------------------------------------- |
 | `group`            | `string[]`  | Glob patterns to match module specifiers against.               |
 | `message`          | `string?`   | Custom message shown when a matching import is restricted.      |
-| `importNames`      | `string[]?` | Only these specific import names are restricted.                |
-| `allowImportNames` | `string[]?` | Only these import names are allowed; all others are restricted. |
+| `name`             | `string[]?` | Only these specific import names are restricted.                |
+| `allowNames`       | `string[]?` | Only these import names are allowed; all others are restricted. |
 | `allowTypeImports` | `boolean?`  | Whether type-only imports are exempt from the restriction.      |
+
+## Relationship to TypeOrValueSpecifier
+
+This rule's option schema aligns with [TypeOrValueSpecifier](https://typescript-eslint.io/packages/type-utils/type-or-value-specifier/) naming conventions where possible:
+
+- `name` identifies specific export identifiers, matching TypeOrValueSpecifier's `name` field
+- `source` identifies the module specifier, avoiding a clash with TypeOrValueSpecifier's `name` (which means "identifier")
+- `allowNames` follows the same `name`-based convention
+
+TypeOrValueSpecifier's `from` discriminator (`'file' | 'lib' | 'package'`) is not used here because this rule matches against raw import specifier strings rather than resolving declaration sources.
+The `group` field for glob patterns and `allowTypeImports` for syntax-level type-import exemptions have no TypeOrValueSpecifier equivalent.
 
 ## When Not To Use It
 

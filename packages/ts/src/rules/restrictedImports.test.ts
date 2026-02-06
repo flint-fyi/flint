@@ -24,7 +24,7 @@ import foo from "forbidden";
 				paths: [
 					{
 						message: "Use 'allowed-mod' instead.",
-						name: "forbidden",
+						source: "forbidden",
 					},
 				],
 			},
@@ -41,8 +41,8 @@ import { badExport } from "mod";
 			options: {
 				paths: [
 					{
-						importNames: ["badExport"],
-						name: "mod",
+						name: ["badExport"],
+						source: "mod",
 					},
 				],
 			},
@@ -59,8 +59,8 @@ import foo from "mod";
 			options: {
 				paths: [
 					{
-						importNames: ["default"],
-						name: "mod",
+						name: ["default"],
+						source: "mod",
 					},
 				],
 			},
@@ -77,8 +77,8 @@ import * as ns from "mod";
 			options: {
 				paths: [
 					{
-						importNames: ["badExport"],
-						name: "mod",
+						name: ["badExport"],
+						source: "mod",
 					},
 				],
 			},
@@ -108,8 +108,8 @@ import { notAllowed } from "mod";
 			options: {
 				paths: [
 					{
-						allowImportNames: ["allowed"],
-						name: "mod",
+						allowNames: ["allowed"],
+						source: "mod",
 					},
 				],
 			},
@@ -158,7 +158,7 @@ import { badName } from "utils/helpers";
 				patterns: [
 					{
 						group: ["utils/*"],
-						importNames: ["badName"],
+						name: ["badName"],
 					},
 				],
 			},
@@ -202,7 +202,7 @@ import { foo } from "mod";
 				paths: [
 					{
 						allowTypeImports: true,
-						name: "mod",
+						source: "mod",
 					},
 				],
 			},
@@ -220,8 +220,8 @@ import { type A, b } from "mod";
 				paths: [
 					{
 						allowTypeImports: true,
-						importNames: ["A", "b"],
-						name: "mod",
+						name: ["A", "b"],
+						source: "mod",
 					},
 				],
 			},
@@ -238,9 +238,9 @@ import { badExport } from "mod";
 			options: {
 				paths: [
 					{
-						importNames: ["badExport"],
 						message: "Use goodExport instead.",
-						name: "mod",
+						name: ["badExport"],
+						source: "mod",
 					},
 				],
 			},
@@ -257,9 +257,9 @@ import * as ns from "mod";
 			options: {
 				paths: [
 					{
-						importNames: ["a", "b"],
 						message: "Import specific allowed names.",
-						name: "mod",
+						name: ["a", "b"],
+						source: "mod",
 					},
 				],
 			},
@@ -276,8 +276,8 @@ export * from "mod";
 			options: {
 				paths: [
 					{
-						importNames: ["secret"],
-						name: "mod",
+						name: ["secret"],
+						source: "mod",
 					},
 				],
 			},
@@ -301,7 +301,7 @@ export * from "mod";
 				paths: [
 					{
 						allowTypeImports: true,
-						name: "mod",
+						source: "mod",
 					},
 				],
 			},
@@ -311,8 +311,8 @@ export * from "mod";
 			options: {
 				paths: [
 					{
-						allowImportNames: ["allowed"],
-						name: "mod",
+						allowNames: ["allowed"],
+						source: "mod",
 					},
 				],
 			},
@@ -322,8 +322,8 @@ export * from "mod";
 			options: {
 				paths: [
 					{
-						importNames: ["badExport"],
-						name: "mod",
+						name: ["badExport"],
+						source: "mod",
 					},
 				],
 			},
@@ -340,8 +340,8 @@ export * from "mod";
 			options: {
 				paths: [
 					{
-						importNames: ["badExport"],
-						name: "mod",
+						name: ["badExport"],
+						source: "mod",
 					},
 				],
 			},
@@ -352,8 +352,8 @@ export * from "mod";
 				paths: [
 					{
 						allowTypeImports: true,
-						importNames: ["A"],
-						name: "mod",
+						name: ["A"],
+						source: "mod",
 					},
 				],
 			},
@@ -369,7 +369,7 @@ export * from "mod";
 			options: {
 				patterns: [
 					{
-						allowImportNames: ["allowed"],
+						allowNames: ["allowed"],
 						group: ["utils/*"],
 					},
 				],
@@ -381,7 +381,7 @@ export * from "mod";
 				paths: [
 					{
 						allowTypeImports: true,
-						name: "mod",
+						source: "mod",
 					},
 				],
 			},
