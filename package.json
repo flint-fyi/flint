@@ -38,7 +38,7 @@
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",
 		"@types/node": "24.10.1",
-		"@vitest/coverage-v8": "^4.0.18",
+		"@vitest/coverage-v8": "4.0.18",
 		"@vitest/eslint-plugin": "1.6.1",
 		"console-fail-test": "0.6.1",
 		"eslint": "9.39.1",
