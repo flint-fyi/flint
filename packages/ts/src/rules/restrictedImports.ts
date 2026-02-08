@@ -3,7 +3,7 @@ import {
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
