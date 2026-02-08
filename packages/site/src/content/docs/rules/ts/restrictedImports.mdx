@@ -130,14 +130,42 @@ Glob patterns to match restricted module specifiers.
 
 ## Relationship to TypeOrValueSpecifier
 
-This rule's option schema aligns with [TypeOrValueSpecifier](https://typescript-eslint.io/packages/type-utils/type-or-value-specifier/) naming conventions where possible:
+Flint has [standardized on `TypeOrValueSpecifier`](https://typescript-eslint.io/packages/type-utils/type-or-value-specifier/) for specifying types or values in rule options.
+This rule's option schema aligns with TypeOrValueSpecifier naming conventions where possible, but cannot use the format directly.
 
-- `name` identifies specific export identifiers, matching TypeOrValueSpecifier's `name` field
-- `source` identifies the module specifier, avoiding a clash with TypeOrValueSpecifier's `name` (which means "identifier")
-- `allowNames` follows the same `name`-based convention
+### Why TypeOrValueSpecifier doesn't apply directly
 
-TypeOrValueSpecifier's `from` discriminator (`'file' | 'lib' | 'package'`) is not used here because this rule matches against raw import specifier strings rather than resolving declaration sources.
-The `group` field for glob patterns and `allowTypeImports` for syntax-level type-import exemptions have no TypeOrValueSpecifier equivalent.
+TypeOrValueSpecifier is designed for **semantic resolution** — its `from` discriminator (`'file' | 'lib' | 'package'`) tells the type checker where to look up an actual declaration.
+This rule operates **syntactically**: it matches the raw string in `import X from "specifier"` without resolving types or declarations.
+
+A raw import specifier like `"react"`, `"./utils"`, or `"#internal/helpers"` doesn't map cleanly to TypeOrValueSpecifier's `from` categories without type-checker resolution.
+Flint's [commitment](https://flint.fyi/blog/what-flint-does-differently/#type-or-value-specifiers) to TypeOrValueSpecifier is scoped to specifying _types or values_ — this rule specifies import restriction patterns, which is a different concept.
+
+### Naming alignment
+
+Where TypeOrValueSpecifier concepts apply, this rule uses the same field names:
+
+| restrictedImports  | TypeOrValueSpecifier | Relationship                                                                                                                                                       |
+| ------------------ | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `name`             | `name`               | Direct alignment — both identify specific export identifiers.                                                                                                      |
+| `allowNames`       | —                    | Extension of the `name` convention for inverse matching. No TypeOrValueSpecifier equivalent.                                                                       |
+| `source`           | `package` / `path`   | Analogous role (identifies the origin module), but uses a neutral term because TypeOrValueSpecifier's `from` discriminator doesn't apply to raw specifier strings. |
+| `group`            | —                    | No equivalent. Glob-based module specifier matching is specific to import restrictions.                                                                            |
+| `allowTypeImports` | —                    | No equivalent. Syntax-level `import type` exemption.                                                                                                               |
+| `message`          | —                    | No equivalent. Restriction-specific metadata.                                                                                                                      |
+
+Notably, ESLint's [`no-restricted-imports`](https://eslint.org/docs/latest/rules/no-restricted-imports) uses `name` for the module specifier and `importNames` for identifiers.
+This rule deliberately inverts that convention so that `name` means "identifier" — matching TypeOrValueSpecifier's `name` field — and uses `source` for the module specifier to avoid the clash.
+
+### TypeOrValueSpecifier fields not used
+
+| TypeOrValueSpecifier field                  | Why not used                                                                                                                |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `from` (`'file'` \| `'lib'` \| `'package'`) | Semantic discriminator for resolved declaration origins. This rule matches raw specifier strings without resolution.        |
+| `package`                                   | Requires `from: 'package'` resolution. Not all specifier strings are package names (e.g., relative paths, subpath imports). |
+| `path`                                      | Requires `from: 'file'` resolution. The rule matches the literal import string, not a resolved file path.                   |
+
+If Flint later adds a semantic version of this rule — one that resolves declarations via the type checker — that rule would use the full TypeOrValueSpecifier format with its `from` discriminator.
 
 ## When Not To Use It
 
