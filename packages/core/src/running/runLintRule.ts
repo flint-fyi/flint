@@ -26,6 +26,7 @@ export async function runLintRule(
 
 	const ruleRuntime = await rule.setup({
 		report(ruleReport) {
+			// TODO: what if report is called asynchronously?
 			if (!currentFile) {
 				throw new Error(
 					"`filePath` not provided in a rule report() not called by a visitor.",

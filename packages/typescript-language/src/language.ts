@@ -1,17 +1,27 @@
-import { createLanguage, type FileAboutData } from "@flint.fyi/core";
+import {
+	createLanguage,
+	type FileAboutData,
+	type InferredOutputObject,
+	type LanguageDiagnostics,
+	type LanguageFile,
+	type LanguageFileDefinition,
+	type RuleRuntime,
+} from "@flint.fyi/core";
 import { assert } from "@flint.fyi/utils";
 import { createProjectService } from "@typescript-eslint/project-service";
 import { debugForFile } from "debug-for-file";
+import path from "node:path";
 import * as ts from "typescript";
 
 import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
 import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 import { getFirstEnumValues } from "./getFirstEnumValues.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
-import { getTypeScriptFileDiagnostics } from "./getTypeScriptFileDiagnostics.ts";
 import type { TypeScriptNodesByName } from "./nodes.ts";
 import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
+import packageJson from "../package.json" with { type: "json" };
+import { convertTypeScriptDiagnosticToLanguageFileDiagnostic } from "./convertTypeScriptDiagnosticToLanguageFileDiagnostic.ts";
 
 export interface TypeScriptFileServices {
 	program: ts.Program;
@@ -21,7 +31,50 @@ export interface TypeScriptFileServices {
 
 const log = debugForFile(import.meta.filename);
 
-const NodeSyntaxKinds = getFirstEnumValues(ts.SyntaxKind);
+export const NodeSyntaxKinds = getFirstEnumValues(ts.SyntaxKind);
+
+type VolarLanguageFileDefinition = LanguageFileDefinition<any> & {
+	__volarServices: {
+		getDiagnostics(): LanguageDiagnostics;
+		runVisitors(
+			file: LanguageFile<any>,
+			options: InferredOutputObject<any>,
+			runtime: RuleRuntime<any, any>,
+		): void;
+	};
+};
+type VolarCreateFile = (
+	data: FileAboutData,
+	program: ts.Program,
+	sourceFile: AST.SourceFile,
+) => VolarLanguageFileDefinition;
+
+type GlobalLanguageState = {
+	packageVersion: string;
+	volarCreateFile: VolarCreateFile | null;
+};
+const globalTyped = globalThis as typeof globalThis & {
+	_flintTypeScriptLanguageState?: GlobalLanguageState;
+};
+
+assert(
+	globalTyped._flintTypeScriptLanguageState == null,
+	`Two different versions of ${packageJson.name} are imported: ${packageJson.version} and ${globalTyped._flintTypeScriptLanguageState?.packageVersion}`,
+);
+
+const languageState: GlobalLanguageState =
+	(globalTyped._flintTypeScriptLanguageState = {
+		packageVersion: packageJson.version,
+		volarCreateFile: null,
+	});
+
+export function setVolarCreateFile(prepare: VolarCreateFile) {
+	assert(
+		languageState.volarCreateFile == null,
+		"setVolarPrepareFile is expected to be called only once",
+	);
+	languageState.volarCreateFile = prepare;
+}
 
 export const typescriptLanguage = createLanguage<
 	TypeScriptNodesByName,
@@ -67,15 +120,35 @@ export const typescriptLanguage = createLanguage<
 				`Could not retrieve source file for: ${data.filePathAbsolute}`,
 			);
 
+			const fileExtension = path.extname(data.filePathAbsolute);
+			if (isTypeScriptCoreSupportedExtension(fileExtension)) {
+				return {
+					...parseDirectivesFromTypeScriptFile(sourceFile as AST.SourceFile),
+					about: data,
+					language: typescriptLanguage,
+					services: {
+						program,
+						sourceFile,
+						typeChecker: program.getTypeChecker(),
+					},
+					[Symbol.dispose]() {
+						service.closeClientFile(data.filePathAbsolute);
+					},
+				};
+			}
+
+			assert(
+				languageState.volarCreateFile,
+				`Expected volarCreateFile to be registered for ${data.filePathAbsolute} file`,
+			);
+
+			// TODO: report unknown extension
 			return {
-				...parseDirectivesFromTypeScriptFile(sourceFile as AST.SourceFile),
-				about: data,
-				language: typescriptLanguage,
-				services: {
+				...languageState.volarCreateFile(
+					data,
 					program,
-					sourceFile,
-					typeChecker: program.getTypeChecker(),
-				},
+					sourceFile as AST.SourceFile,
+				),
 				[Symbol.dispose]() {
 					service.closeClientFile(data.filePathAbsolute);
 				},
@@ -86,9 +159,27 @@ export const typescriptLanguage = createLanguage<
 	},
 
 	getFileCacheImpacts: getTypeScriptFileCacheImpacts,
-	getFileDiagnostics: getTypeScriptFileDiagnostics,
+	getFileDiagnostics(file) {
+		if ("__volarServices" in file) {
+			return (
+				file as VolarLanguageFileDefinition
+			).__volarServices.getDiagnostics();
+		}
+		return ts
+			.getPreEmitDiagnostics(file.services.program, file.services.sourceFile)
+			.map(convertTypeScriptDiagnosticToLanguageFileDiagnostic);
+	},
 	runFileVisitors(file, options, runtime) {
 		if (!runtime.visitors) {
+			return;
+		}
+
+		if ("__volarServices" in file) {
+			(file as VolarLanguageFileDefinition).__volarServices.runVisitors(
+				file,
+				options,
+				runtime,
+			);
 			return;
 		}
 
@@ -105,3 +196,23 @@ export const typescriptLanguage = createLanguage<
 		visit(file.services.sourceFile);
 	},
 });
+
+function isTypeScriptCoreSupportedExtension(extname: string) {
+	switch (extname) {
+		case ".ts":
+		case ".tsx":
+		case ".d.ts":
+		case ".js":
+		case ".jsx":
+		case ".cts":
+		case ".d.cts":
+		case ".cjs":
+		case ".mts":
+		case ".d.mts":
+		case ".mjs":
+		case ".json":
+			return true;
+		default:
+			return false;
+	}
+}

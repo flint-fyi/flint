@@ -9,6 +9,8 @@ import {
 	normalizePath,
 	type RuleAbout,
 	type VFSLinterHost,
+	type FileReport,
+	type CharacterReportRange,
 } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 import type { CachedFactory } from "cached-factory";
@@ -61,12 +63,22 @@ export async function runTestCaseRule<
 		sourceText: code,
 	});
 
-	const reports: NormalizedReport[] = [];
+	const reports: FileReport[] = [];
 
 	const ruleRuntime = await rule.setup({
 		report(ruleReport) {
+			let range = ruleReport.range;
+			if ("adjustReportRange" in file) {
+				const r = file.adjustReportRange(ruleReport.range);
+				if (r == null) {
+					return;
+				}
+				range = r;
+			}
+			// TODO: support fixes and suggestions
 			reports.push({
 				...ruleReport,
+				about: rule.about,
 				fix:
 					ruleReport.fix && !Array.isArray(ruleReport.fix)
 						? [ruleReport.fix]
@@ -76,14 +88,8 @@ export async function runTestCaseRule<
 					`Message should be defined (${ruleReport.message}) when reporting for rule "${rule.about.id}"`,
 				),
 				range: {
-					begin: getColumnAndLineOfPosition(
-						file.about.sourceText,
-						ruleReport.range.begin,
-					),
-					end: getColumnAndLineOfPosition(
-						file.about.sourceText,
-						ruleReport.range.end,
-					),
+					begin: getColumnAndLineOfPosition(file.about.sourceText, range.begin),
+					end: getColumnAndLineOfPosition(file.about.sourceText, range.end),
 				},
 			});
 		},

@@ -9,7 +9,9 @@ import type { AnyRule } from "../types/rules.ts";
 import { collectFilesAndOptions } from "./collectFilesAndOptions.ts";
 import { finalizeFileResults } from "./finalizeFileResults.ts";
 import { runLintRule } from "./runLintRule.ts";
-import type { LanguageFilesWithOptions } from "./types.ts";
+import type { LanguageAndFile, LanguageFilesWithOptions } from "./types.ts";
+import type { Language } from "../types/languages.ts";
+import { assert } from "@flint.fyi/utils";
 
 export interface RunConfigOptions {
 	cacheLocation?: string | undefined;
@@ -47,7 +49,10 @@ export async function runConfig(
 	);
 
 	// 2. For each lint rule, run it on all files and store each file's results
-	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule);
+	const reportsByFilePath = await runRules(
+		rulesFilesAndOptionsByRule,
+		languageFilesByFilePath,
+	);
 
 	// 3. For each file path, finalize output using each of its language files
 	const filesResults = new Map(
@@ -87,16 +92,44 @@ export async function runConfig(
 
 async function runRules(
 	rulesFilesAndOptionsByRule: Map<AnyRule, LanguageFilesWithOptions[]>,
+	languageFilesByFilePath: Map<string, LanguageAndFile[]>,
 ) {
-	const reportsByFilePath = new CachedFactory<string, FileReport[]>(() => []);
+	const reportsByFilePath = new CachedFactory<
+		string,
+		CachedFactory<Language<unknown, object>, FileReport[]>
+	>(() => new CachedFactory(() => []));
 
 	for (const [rule, filesAndOptions] of rulesFilesAndOptionsByRule) {
 		const ruleReportsByFilePath = await runLintRule(rule, filesAndOptions);
 
 		for (const [filePath, ruleReports] of ruleReportsByFilePath) {
-			reportsByFilePath.get(filePath).push(...ruleReports);
+			reportsByFilePath
+				.get(filePath)
+				.get(rule.language)
+				.push(...ruleReports);
 		}
 	}
 
-	return reportsByFilePath;
+	return new CachedFactory<string, FileReport[]>((filePath) => {
+		const reports: FileReport[] = [];
+		const languageFiles = languageFilesByFilePath.get(filePath);
+		for (const [language, fileReports] of reportsByFilePath
+			.get(filePath)
+			.entries()) {
+			// TODO: support for cross-language rules
+			// https://github.com/flint-fyi/flint/issues/1253#issuecomment-3869997023
+			if (languageFiles != null) {
+				const relatedLanguageFiles = languageFiles
+					.filter((f) => f.language === language)
+					.map((f) => f.file);
+				// TODO: is this correct?
+				// assert(relatedLanguageFiles.length <= 1, '')
+				const file = relatedLanguageFiles[0]!;
+				reports.push(...(file.adjustReports?.(fileReports) ?? fileReports));
+			} else {
+				reports.push(...fileReports);
+			}
+		}
+		return reports;
+	});
 }

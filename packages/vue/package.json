@@ -1,0 +1,54 @@
+{
+	"name": "@flint.fyi/vue",
+	"version": "0.0.1",
+	"description": "[Experimental] Vue.js language plugin for Flint.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/vue"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "JoshuaKGoldberg",
+		"email": "npm@joshuakgoldberg.com"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": {
+			"@flint.fyi/source": "./src/index.ts",
+			"default": "./lib/index.js"
+		}
+	},
+	"files": [
+		"lib/",
+		"!lib/**/*.map"
+	],
+	"scripts": {
+		"test": "vitest --typecheck --project vue"
+	},
+	"dependencies": {
+		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
+		"@flint.fyi/utils": "workspace:^",
+		"@flint.fyi/vue-language": "workspace:^",
+		"scslre": "^0.3.0",
+		"ts-api-utils": "^2.4.0",
+		"typescript": "^5.9.0 || ^6.0.0"
+	},
+	"devDependencies": {
+		"@flint.fyi/rule-tester": "workspace:^",
+		"tsdown": "0.20.1",
+		"vitest": "4.0.15",
+		"vue": "~3.5.27"
+	},
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"exports": {
+			".": "./lib/index.js"
+		}
+	}
+}
