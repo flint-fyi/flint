@@ -1,7 +1,7 @@
 /**
  * https://zod.dev/codecs#useful-codecs
  */
-
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports -- TODO: Use Zod Mini in core package
 import z from "zod/v4";
 
 export const jsonCodec = <T extends z.core.$ZodType>(schema: T) =>

@@ -1,4 +1,4 @@
-export * from "./cache/constants.ts";
+export * from "./cache/getCacheFilePath.ts";
 export { writeToCache } from "./cache/writeToCache.ts";
 export { applyChangesToText } from "./changing/applyChangesToText.ts";
 export { defineConfig } from "./configs/defineConfig.ts";

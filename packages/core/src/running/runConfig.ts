@@ -12,6 +12,7 @@ import { runLintRule } from "./runLintRule.ts";
 import type { LanguageFilesWithOptions } from "./types.ts";
 
 export interface RunConfigOptions {
+	cacheLocation?: string | undefined;
 	ignoreCache?: boolean;
 	skipDiagnostics?: boolean;
 }
@@ -19,8 +20,15 @@ export interface RunConfigOptions {
 export async function runConfig(
 	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
-	{ ignoreCache, skipDiagnostics }: RunConfigOptions,
+	{
+		cacheLocation: cacheLocationFromCli,
+		ignoreCache,
+		skipDiagnostics,
+	}: RunConfigOptions,
 ): Promise<LintResults> {
+	const cacheLocationOverride =
+		cacheLocationFromCli || configDefinition.cacheLocation;
+
 	// 1. Based on the original config definition, collect:
 	//   - The full list of all file paths to be linted
 	//   - Any cached results amongst those file paths
@@ -31,7 +39,12 @@ export async function runConfig(
 		cached,
 		languageFilesByFilePath,
 		rulesFilesAndOptionsByRule,
-	} = await collectFilesAndOptions(configDefinition, host, ignoreCache);
+	} = await collectFilesAndOptions(
+		configDefinition,
+		host,
+		ignoreCache,
+		cacheLocationOverride,
+	);
 
 	// 2. For each lint rule, run it on all files and store each file's results
 	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule);
@@ -63,7 +76,11 @@ export async function runConfig(
 	// 5. Write the results to cache, then return them! We did it!
 	const lintResults = { allFilePaths, cached, filesResults };
 
-	await writeToCache(configDefinition.filePath, lintResults);
+	await writeToCache(
+		configDefinition.filePath,
+		lintResults,
+		cacheLocationOverride,
+	);
 
 	return lintResults;
 }

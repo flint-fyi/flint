@@ -25,6 +25,14 @@ export interface Config {
  */
 export interface ConfigDefinition {
 	/**
+	 * Location to store the flint cache file.
+	 * This can be either a direct path to a json file, or the directory where the `flint.json` cache file will be stored.
+	 * @default `node_modules/.cache/flint.json`
+	 * @see {@link https://flint.fyi/configuration#cacheLocation|flint.fyi/configuration#cacheLocation}
+	 */
+	cacheLocation?: string;
+
+	/**
 	 * @see https://github.com/flint-fyi/flint/issues/64
 	 */
 	from?: string;

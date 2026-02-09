@@ -12,9 +12,6 @@ export async function* createDetailedReport(
 	sourceFileText: string,
 	width: number,
 ) {
-	const urlFriendly = `flint.fyi/rules/${report.about.id}`;
-	const url = `https://${urlFriendly}`;
-
 	yield indenter;
 	yield wrapIfNeeded(
 		chalk.hex(ColorCodes.primaryMessage),
@@ -22,7 +19,11 @@ export async function* createDetailedReport(
 			chalk.hex(ColorCodes.ruleBracket)("["),
 			chalk
 				.hex(ColorCodes.reportAboutId)
-				.bold(`\u001B]8;;${url}\u0007${report.about.id}\u001B]8;;\u0007`),
+				.bold(
+					report.about.url
+						? formatUrl(report.about.url, report.about.id)
+						: report.about.id,
+				),
 			chalk.hex(ColorCodes.ruleBracket)("]"),
 			" ",
 			formatReport(report.data, report.message.primary),
@@ -68,8 +69,16 @@ export async function* createDetailedReport(
 		yield "\n";
 	}
 
-	yield `${indenter} `;
-	yield chalk
-		.hex(ColorCodes.ruleUrl)
-		.italic(`→ \u001B]8;;${url}\u0007${urlFriendly}\u001B]8;;\u0007`);
+	if (report.about.url) {
+		yield `${indenter} `;
+		yield chalk
+			.hex(ColorCodes.ruleUrl)
+			.italic(
+				`→ ${formatUrl(report.about.url, report.about.url.replace(/^https:\/\//, ""))}`,
+			);
+	}
+}
+
+function formatUrl(url: string, text: string) {
+	return `\u001B]8;;${url}\u0007${text}\u001B]8;;\u0007`;
 }

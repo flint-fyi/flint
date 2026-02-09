@@ -4,6 +4,9 @@ export const options = {
 	"cache-ignore": {
 		type: "boolean",
 	},
+	"cache-location": {
+		type: "string",
+	},
 	fix: {
 		type: "boolean",
 	},

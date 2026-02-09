@@ -1,4 +1,4 @@
-import type { LintResults } from "@flint.fyi/core";
+import type { LinterHost, LintResults } from "@flint.fyi/core";
 import { normalizePath } from "@flint.fyi/core";
 import debounce from "debounce";
 import { debugForFile } from "debug-for-file";
@@ -11,12 +11,13 @@ import { runCliOnce } from "./runCliOnce.ts";
 const log = debugForFile(import.meta.filename);
 
 export async function runCliWatch(
+	host: LinterHost,
 	configFileName: string,
 	getRenderer: () => Renderer,
 	values: OptionsValues,
 ) {
 	const abortController = new AbortController();
-	const cwd = process.cwd();
+	const cwd = host.getCurrentDirectory();
 
 	log("Running single-run CLI once before watching");
 
@@ -29,6 +30,7 @@ export async function runCliWatch(
 			currentRenderer = renderer;
 
 			runCliOnce(
+				host,
 				configFileName,
 				renderer,
 				initial ? values : { ...values, "cache-ignore": false },

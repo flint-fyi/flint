@@ -1,12 +1,11 @@
 import { nullThrows } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
-import z from "zod";
 
 import { readFileSafe } from "../running/readFileSafe.ts";
 import type { FileCacheStorage } from "../types/cache.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
-import { cacheFilePath } from "./constants.ts";
+import { getCacheFilePath } from "./getCacheFilePath.ts";
 import { getFileTouchTime } from "./getFileTouchTime.ts";
 
 const log = debugForFile(import.meta.filename);
@@ -14,7 +13,9 @@ const log = debugForFile(import.meta.filename);
 export async function readFromCache(
 	allFilePaths: Set<string>,
 	configFilePath: string,
+	cacheLocation: string | undefined,
 ): Promise<Map<string, FileCacheStorage> | undefined> {
+	const cacheFilePath = getCacheFilePath(cacheLocation);
 	const rawCacheString = await readFileSafe(cacheFilePath);
 
 	if (!rawCacheString) {
@@ -22,7 +23,7 @@ export async function readFromCache(
 		return undefined;
 	}
 
-	const decodeResult = z.safeDecode(cacheStorageSchema, rawCacheString);
+	const decodeResult = cacheStorageSchema.safeDecode(rawCacheString);
 	if (!decodeResult.success) {
 		log(
 			"Linting all %d file path(s) due to invalid cache data: %s",

@@ -85,7 +85,8 @@
       "contributions": [
         "bug",
         "maintenance",
-        "ideas"
+        "ideas",
+        "test"
       ]
     },
     {
@@ -99,7 +100,8 @@
         "tool",
         "maintenance",
         "bug",
-        "infra"
+        "infra",
+        "doc"
       ]
     },
     {
@@ -119,7 +121,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/4674486?v=4",
       "profile": "https://barrymichaeldoyle.com",
       "contributions": [
-        "infra"
+        "infra",
+        "maintenance"
       ]
     },
     {
@@ -141,7 +144,11 @@
       "contributions": [
         "ideas",
         "doc",
-        "bug"
+        "bug",
+        "maintenance",
+        "tool",
+        "code",
+        "infra"
       ]
     },
     {
@@ -158,6 +165,15 @@
       "name": "Jay Bell",
       "avatar_url": "https://avatars.githubusercontent.com/u/9469090?v=4",
       "profile": "https://jaybell.me/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "tibisabau",
+      "name": "Tiberiu Sabău",
+      "avatar_url": "https://avatars.githubusercontent.com/u/96194994?v=4",
+      "profile": "https://github.com/tibisabau",
       "contributions": [
         "code"
       ]

@@ -1,7 +1,6 @@
 import {
-	createDiskBackedLinterHost,
-	createEphemeralLinterHost,
 	isConfig,
+	type LinterHost,
 	runConfig,
 	runConfigFixing,
 	validateConfigDefinition,
@@ -17,12 +16,13 @@ import type { Renderer } from "./renderers/types.ts";
 const log = debugForFile(import.meta.filename);
 
 export async function runCliOnce(
+	host: LinterHost,
 	configFileName: string,
 	renderer: Renderer,
 	values: OptionsValues,
 ) {
 	const { default: config } = (await import(
-		pathToFileURL(path.join(process.cwd(), configFileName)).href
+		pathToFileURL(path.join(host.getCurrentDirectory(), configFileName)).href
 	)) as {
 		default: unknown;
 	};
@@ -55,17 +55,18 @@ export async function runCliOnce(
 
 	const skipDiagnostics = !!values["skip-diagnostics"];
 
-	const host = createEphemeralLinterHost(
-		createDiskBackedLinterHost(process.cwd()),
-	);
-
 	const lintResults = await (values.fix
 		? runConfigFixing(configDefinition, host, {
+				cacheLocation: values["cache-location"],
 				ignoreCache,
 				requestedSuggestions: new Set(values["fix-suggestions"]),
 				skipDiagnostics,
 			})
-		: runConfig(configDefinition, host, { ignoreCache, skipDiagnostics }));
+		: runConfig(configDefinition, host, {
+				cacheLocation: values["cache-location"],
+				ignoreCache,
+				skipDiagnostics,
+			}));
 
 	// TODO: Eventually, it'd be nice to move everything fully in-memory.
 	// This would be better for performance to avoid excess file system I/O.
