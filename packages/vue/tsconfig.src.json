@@ -11,6 +11,7 @@
 	"references": [
 		{ "path": "../core" },
 		{ "path": "../typescript-language" },
+		{ "path": "../volar-language" },
 		{ "path": "../vue-language" },
 		{ "path": "../utils" }
 	]

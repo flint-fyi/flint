@@ -923,12 +923,15 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
+      '@flint.fyi/volar-language':
+        specifier: workspace:^
+        version: link:../volar-language
       '@flint.fyi/vue-language':
         specifier: workspace:^
         version: link:../vue-language
-      scslre:
-        specifier: ^0.3.0
-        version: 0.3.0
+      '@vue/compiler-dom':
+        specifier: ^3.5.0
+        version: 3.5.27
       ts-api-utils:
         specifier: ^2.4.0
         version: 2.4.0(typescript@5.9.3)

@@ -13,6 +13,8 @@ import {
 	type AnyRuleDefinition,
 	createLanguage,
 	type Language,
+	type RuleContext,
+	type RuleReport,
 } from "@flint.fyi/core";
 import { setTSProgramCreationProxy } from "@flint.fyi/ts-patch";
 import { proxyCreateProgram } from "@volar/typescript/lib/node/proxyCreateProgram.js";
@@ -28,6 +30,7 @@ import {
 	type AST,
 	type Checker,
 	type ExtractedDirective,
+	type TypeScriptFileServices,
 	type TypeScriptNodesByName,
 } from "@flint.fyi/typescript-language";
 
@@ -330,6 +333,12 @@ setVolarCreateFile((data, program, sourceFile) => {
 		},
 
 		adjustReportRange(range) {
+			if (range.begin < 0) {
+				return {
+					begin: -range.begin,
+					end: range.end,
+				};
+			}
 			return translateRange(map, range.begin, range.end);
 		},
 		__volarServices: {
@@ -346,6 +355,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 
 					node.forEachChild(visit);
 				};
+				visit(sourceFile);
 				// Visit only statements that have a mapping to the source code
 				// to avoid doing extra work
 				Statements: for (const statement of sourceFile.statements) {
@@ -426,10 +436,16 @@ export function translateRange(
 
 export function createVolarBasedLanguage<FileServices extends object>(
 	initializer: VolarLanguagePluginInitializer<FileServices>,
-): Language<TypeScriptNodesByName, FileServices> {
+): Language<
+	TypeScriptNodesByName,
+	TypeScriptFileServices & Partial<FileServices>
+> {
 	pluginInitializers.add(initializer);
 	return {
-		...createLanguage<TypeScriptNodesByName, FileServices>({
+		...createLanguage<
+			TypeScriptNodesByName,
+			TypeScriptFileServices & Partial<FileServices>
+		>({
 			about: {
 				name: "Volar.js-based language",
 			},
@@ -451,4 +467,18 @@ export function createVolarBasedLanguage<FileServices extends object>(
 			} as UnsafeAnyRule;
 		},
 	};
+}
+
+export function reportSourceCode<T extends string>(
+	context: RuleContext<T>,
+	report: RuleReport<T>,
+) {
+	// TODO: suggestions, fixes
+	context.report({
+		...report,
+		range: {
+			begin: -report.range.begin,
+			end: report.range.end,
+		},
+	});
 }
