@@ -78,7 +78,6 @@ export interface Language<
 		options: InferredOutputObject<OptionsSchema>,
 		runtime: RuleRuntime<AstNodesByName, FileServices>,
 	): void;
-	adjustReports?(filePath: string, reports: FileReport[]): FileReport[];
 }
 
 export interface LanguageAbout {

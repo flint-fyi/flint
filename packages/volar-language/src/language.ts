@@ -1,3 +1,4 @@
+import path from "node:path";
 import {
 	getColumnAndLineOfPosition,
 	isSuggestionForFiles,
@@ -103,50 +104,80 @@ setTSProgramCreationProxy(
 		new Proxy(function () {} as unknown as typeof createProgram, {
 			apply(target, thisArg, args) {
 				let volarLanguage = null as null | VolarLanguage<string>;
-				const proxied = proxyCreateProgram(ts, createProgram, (ts, options) => {
-					assert(
-						options.host != null,
-						"createProgram was called without compiler host",
-					);
-
-					const languagePlugins = Array.from(pluginInitializers)
-						.map((initializer) => initializer(ts, options))
-						.flatMap(({ languagePlugins, createFile }) =>
-							languagePlugins.map((plugin) => {
-								if (plugin.typescript == null) {
-									return plugin;
-								}
-
-								(
-									plugin as VolarLanguagePluginWithCreateFile
-								).__flintCreateFile = createFile;
-
-								const { getServiceScript } = plugin.typescript;
-								plugin.typescript.getServiceScript = (root) => {
-									const script = getServiceScript(root);
-									if (script == null) {
-										return script;
+				const createProgramProxy = new Proxy(createProgram, {
+					apply(target, thisArg, [options]: [ts.CreateProgramOptions]) {
+						assert(options.host != null, "Expected options.host to be defined");
+						const patchedGetSourceFile = options.host.getSourceFile;
+						options.host.getSourceFile = (...args) => {
+							try {
+								return patchedGetSourceFile(...args);
+							} catch (e) {
+								if (e instanceof Error && e.message === "!!sourceScript") {
+									const fileExtension = path.extname(args[0]);
+									let message = "Unknown extension.";
+									switch (fileExtension) {
+										case ".astro":
+											message = "Did you install & import @flint.fyi/astro?";
+											break;
+										case ".mdx":
+											message = "Did you install & import @flint.fyi/mdx?";
+											break;
+										case ".vue":
+											message = "Did you install & import @flint.fyi/vue?";
+											break;
 									}
-									return {
-										...script,
-										// Leading offset is useful for LanguageService [1], but we don't use it.
-										// The Vue language plugin doesn't provide preventLeadingOffset [2], so we
-										// have to provide it ourselves.
-										//
-										// [1] https://github.com/volarjs/volar.js/discussions/188
-										// [2] https://github.com/vuejs/language-tools/blob/fd05a1c92c9af63e6af1eab926084efddf7c46c3/packages/language-core/lib/languagePlugin.ts#L113-L130
-										preventLeadingOffset: true,
-									};
-								};
 
-								return plugin;
-							}),
-						);
-					return {
-						languagePlugins,
-						setup: (lang) => (volarLanguage = lang),
-					};
+									throw new Error(`Cannot process ${args[0]}. ${message}`);
+								}
+								throw e;
+							}
+						};
+						return Reflect.apply(target, thisArg, args);
+					},
 				});
+				const proxied = proxyCreateProgram(
+					ts,
+					createProgramProxy,
+					(ts, options) => {
+						const languagePlugins = Array.from(pluginInitializers)
+							.map((initializer) => initializer(ts, options))
+							.flatMap(({ languagePlugins, createFile }) =>
+								languagePlugins.map((plugin) => {
+									if (plugin.typescript == null) {
+										return plugin;
+									}
+
+									(
+										plugin as VolarLanguagePluginWithCreateFile
+									).__flintCreateFile = createFile;
+
+									const { getServiceScript } = plugin.typescript;
+									plugin.typescript.getServiceScript = (root) => {
+										const script = getServiceScript(root);
+										if (script == null) {
+											return script;
+										}
+										return {
+											...script,
+											// Leading offset is useful for LanguageService [1], but we don't use it.
+											// The Vue language plugin doesn't provide preventLeadingOffset [2], so we
+											// have to provide it ourselves.
+											//
+											// [1] https://github.com/volarjs/volar.js/discussions/188
+											// [2] https://github.com/vuejs/language-tools/blob/fd05a1c92c9af63e6af1eab926084efddf7c46c3/packages/language-core/lib/languagePlugin.ts#L113-L130
+											preventLeadingOffset: true,
+										};
+									};
+
+									return plugin;
+								}),
+							);
+						return {
+							languagePlugins,
+							setup: (lang) => (volarLanguage = lang),
+						};
+					},
+				);
 
 				const program: ProxiedTSProgram = Reflect.apply(proxied, thisArg, args);
 

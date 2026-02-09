@@ -121,7 +121,7 @@ export const typescriptLanguage = createLanguage<
 			);
 
 			const fileExtension = path.extname(data.filePathAbsolute);
-			if (isTypeScriptCoreSupportedExtension(fileExtension)) {
+			if (typeScriptCoreSupportedExtensions.has(fileExtension)) {
 				return {
 					...parseDirectivesFromTypeScriptFile(sourceFile as AST.SourceFile),
 					about: data,
@@ -137,12 +137,23 @@ export const typescriptLanguage = createLanguage<
 				};
 			}
 
-			assert(
-				languageState.volarCreateFile,
-				`Expected volarCreateFile to be registered for ${data.filePathAbsolute} file`,
-			);
+			if (languageState.volarCreateFile == null) {
+				let message = "Unknown extension.";
+				switch (fileExtension) {
+					case ".astro":
+						message = "Did you install & import @flint.fyi/astro?";
+						break;
+					case ".mdx":
+						message = "Did you install & import @flint.fyi/mdx?";
+						break;
+					case ".vue":
+						message = "Did you install & import @flint.fyi/vue?";
+						break;
+				}
 
-			// TODO: report unknown extension
+				throw new Error(`Cannot process ${sourceFile.fileName}. ${message}`);
+			}
+
 			return {
 				...languageState.volarCreateFile(
 					data,
@@ -197,22 +208,17 @@ export const typescriptLanguage = createLanguage<
 	},
 });
 
-function isTypeScriptCoreSupportedExtension(extname: string) {
-	switch (extname) {
-		case ".ts":
-		case ".tsx":
-		case ".d.ts":
-		case ".js":
-		case ".jsx":
-		case ".cts":
-		case ".d.cts":
-		case ".cjs":
-		case ".mts":
-		case ".d.mts":
-		case ".mjs":
-		case ".json":
-			return true;
-		default:
-			return false;
-	}
-}
+const typeScriptCoreSupportedExtensions: ReadonlySet<string> = new Set([
+	".ts",
+	".tsx",
+	".d.ts",
+	".js",
+	".jsx",
+	".cts",
+	".d.cts",
+	".cjs",
+	".mts",
+	".d.mts",
+	".mjs",
+	".json",
+]);

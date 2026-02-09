@@ -90,7 +90,7 @@ export async function runLintRule(
 				about: rule.about,
 				message: nullThrows(
 					rule.messages[ruleReport.message],
-					`Message should be defined (${ruleReport.message}) when reporting for rule "${rule.about.id}"`,
+					`Rule "${rule.about.id}" reported message "${ruleReport.message}" which is not defined in its messages.`,
 				),
 				range: {
 					begin: getColumnAndLineOfPosition(
