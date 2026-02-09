@@ -98,107 +98,55 @@ type VolarLanguagePluginWithCreateFile = VolarLanguagePlugin & {
 	__flintCreateFile?: VolarBasedLanguageCreateFile<object> | undefined;
 };
 
-// https://github.com/volarjs/volar.js/pull/299
-type CompilerHostSourceFileGetterStorage = { sourceFile: ts.SourceFile | null };
-const compilerHostSourceFileGetterStorage =
-	new AsyncLocalStorage<CompilerHostSourceFileGetterStorage>();
-
 setTSProgramCreationProxy(
 	(ts, createProgram) =>
 		new Proxy(function () {} as unknown as typeof createProgram, {
 			apply(target, thisArg, args) {
 				let volarLanguage = null as null | VolarLanguage<string>;
-				const createProgramProxy = new Proxy(createProgram, {
-					apply(target, thisArg, [options]: [ts.CreateProgramOptions]) {
-						assert(options.host != null, "Expected options.host to be defined");
-						const patchedGetSourceFile = options.host.getSourceFile;
-						options.host.getSourceFile = (...args) => {
-							const store: CompilerHostSourceFileGetterStorage = {
-								sourceFile: null,
-							};
-							const result = compilerHostSourceFileGetterStorage.run(
-								store,
-								() => patchedGetSourceFile(...args),
-							);
-							if (result != null) {
-								assert(
-									store.sourceFile,
-									"sourceFile in compilerHostSourceFileGetterStorage expected to be set",
-								);
-								assert(
-									"scriptKind" in store.sourceFile &&
-										typeof store.sourceFile.scriptKind === "number",
-									"ts.SourceFile doesn't have scriptKind property",
-								);
-								assert(
-									"scriptKind" in result &&
-										typeof result.scriptKind === "number",
-									"ts.SourceFile doesn't have scriptKind property",
-								);
-								store.sourceFile.scriptKind = result.scriptKind;
-							}
-							return result;
-						};
-						return Reflect.apply(target, thisArg, args);
-					},
-				});
-				const proxied = proxyCreateProgram(
-					ts,
-					createProgramProxy,
-					(ts, options) => {
-						assert(
-							options.host != null,
-							"createProgram was called without compiler host",
-						);
-						const originalGetSourceFile = options.host.getSourceFile;
-						options.host.getSourceFile = (...args) => {
-							const file = originalGetSourceFile(...args);
-							const store = compilerHostSourceFileGetterStorage.getStore();
-							if (store != null && file != null) {
-								store.sourceFile = file;
-							}
-							return file;
-						};
+				const proxied = proxyCreateProgram(ts, createProgram, (ts, options) => {
+					assert(
+						options.host != null,
+						"createProgram was called without compiler host",
+					);
 
-						const languagePlugins = Array.from(pluginInitializers)
-							.map((initializer) => initializer(ts, options))
-							.flatMap(({ languagePlugins, createFile }) =>
-								languagePlugins.map((plugin) => {
-									if (plugin.typescript == null) {
-										return plugin;
-									}
-
-									(
-										plugin as VolarLanguagePluginWithCreateFile
-									).__flintCreateFile = createFile;
-
-									const { getServiceScript } = plugin.typescript;
-									plugin.typescript.getServiceScript = (root) => {
-										const script = getServiceScript(root);
-										if (script == null) {
-											return script;
-										}
-										return {
-											...script,
-											// Leading offset is useful for LanguageService [1], but we don't use it.
-											// The Vue language plugin doesn't provide preventLeadingOffset [2], so we
-											// have to provide it ourselves.
-											//
-											// [1] https://github.com/volarjs/volar.js/discussions/188
-											// [2] https://github.com/vuejs/language-tools/blob/fd05a1c92c9af63e6af1eab926084efddf7c46c3/packages/language-core/lib/languagePlugin.ts#L113-L130
-											preventLeadingOffset: true,
-										};
-									};
-
+					const languagePlugins = Array.from(pluginInitializers)
+						.map((initializer) => initializer(ts, options))
+						.flatMap(({ languagePlugins, createFile }) =>
+							languagePlugins.map((plugin) => {
+								if (plugin.typescript == null) {
 									return plugin;
-								}),
-							);
-						return {
-							languagePlugins,
-							setup: (lang) => (volarLanguage = lang),
-						};
-					},
-				);
+								}
+
+								(
+									plugin as VolarLanguagePluginWithCreateFile
+								).__flintCreateFile = createFile;
+
+								const { getServiceScript } = plugin.typescript;
+								plugin.typescript.getServiceScript = (root) => {
+									const script = getServiceScript(root);
+									if (script == null) {
+										return script;
+									}
+									return {
+										...script,
+										// Leading offset is useful for LanguageService [1], but we don't use it.
+										// The Vue language plugin doesn't provide preventLeadingOffset [2], so we
+										// have to provide it ourselves.
+										//
+										// [1] https://github.com/volarjs/volar.js/discussions/188
+										// [2] https://github.com/vuejs/language-tools/blob/fd05a1c92c9af63e6af1eab926084efddf7c46c3/packages/language-core/lib/languagePlugin.ts#L113-L130
+										preventLeadingOffset: true,
+									};
+								};
+
+								return plugin;
+							}),
+						);
+					return {
+						languagePlugins,
+						setup: (lang) => (volarLanguage = lang),
+					};
+				});
 
 				const program: ProxiedTSProgram = Reflect.apply(proxied, thisArg, args);
 
@@ -355,7 +303,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 
 					node.forEachChild(visit);
 				};
-				visit(sourceFile);
+				visitors.SourceFile?.(sourceFile, visitorServices);
 				// Visit only statements that have a mapping to the source code
 				// to avoid doing extra work
 				Statements: for (const statement of sourceFile.statements) {
