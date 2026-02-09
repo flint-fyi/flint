@@ -68,21 +68,56 @@ export async function runTestCaseRule<
 	const ruleRuntime = await rule.setup({
 		report(ruleReport) {
 			let range = ruleReport.range;
-			if ("adjustReportRange" in file) {
-				const r = file.adjustReportRange(ruleReport.range);
+			let fixes =
+				ruleReport.fix && !Array.isArray(ruleReport.fix)
+					? [ruleReport.fix]
+					: ruleReport.fix;
+			let suggestions = ruleReport.suggestions;
+
+			const { adjustReportRange } = file;
+			if (adjustReportRange != null) {
+				const r = adjustReportRange(ruleReport.range);
 				if (r == null) {
 					return;
 				}
 				range = r;
+				if (fixes != null) {
+					fixes = fixes
+						.map((fix) => {
+							const range = adjustReportRange(fix.range);
+							return (
+								range && {
+									...fix,
+									range,
+								}
+							);
+						})
+						.filter((f) => f != null);
+				}
+				if (suggestions != null) {
+					suggestions = suggestions
+						.map((s) => {
+							if ("files" in s) {
+								// TODO: support cross-file suggestions
+								return null;
+							}
+							const range = adjustReportRange(s.range);
+							return (
+								range && {
+									...s,
+									range,
+								}
+							);
+						})
+						.filter((s) => s != null);
+				}
 			}
-			// TODO: support fixes and suggestions
+
 			reports.push({
 				...ruleReport,
+				fix: fixes,
+				suggestions,
 				about: rule.about,
-				fix:
-					ruleReport.fix && !Array.isArray(ruleReport.fix)
-						? [ruleReport.fix]
-						: ruleReport.fix,
 				message: nullThrows(
 					rule.messages[ruleReport.message],
 					`Message should be defined (${ruleReport.message}) when reporting for rule "${rule.about.id}"`,

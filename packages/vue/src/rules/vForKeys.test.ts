@@ -1,5 +1,5 @@
 import { ruleTester } from "./ruleTester.ts";
-import rule from "./vForKey.ts";
+import rule from "./vForKeys.ts";
 
 ruleTester.describe(rule, {
 	invalid: [

@@ -8,7 +8,7 @@ import { reportSourceCode } from "@flint.fyi/volar-language";
 export default vueLanguage.createRule({
 	about: {
 		description: "Reports v-for directives without a valid key binding.",
-		id: "vForKey",
+		id: "vForKeys",
 		preset: "logical",
 	},
 	messages: {

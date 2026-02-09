@@ -1,4 +1,4 @@
-import { nullThrows } from "@flint.fyi/utils";
+import { assert, nullThrows } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 
@@ -26,7 +26,7 @@ export async function runLintRule(
 
 	const ruleRuntime = await rule.setup({
 		report(ruleReport) {
-			// TODO: what if report is called asynchronously?
+			// TODO: what if report is called asynchronously? maybe we can use AsyncLocalStorage?
 			if (!currentFile) {
 				throw new Error(
 					"`filePath` not provided in a rule report() not called by a visitor.",
@@ -37,25 +37,69 @@ export async function runLintRule(
 
 			log("Adding %s report for file path %s", ruleReport.message, filePath);
 
+			let range = ruleReport.range;
+			let fixes =
+				ruleReport.fix && !Array.isArray(ruleReport.fix)
+					? [ruleReport.fix]
+					: ruleReport.fix;
+			let suggestions = ruleReport.suggestions;
+
+			const { adjustReportRange } = currentFile;
+			if (adjustReportRange != null) {
+				const r = adjustReportRange(ruleReport.range);
+				if (r == null) {
+					return;
+				}
+				range = r;
+				if (fixes != null) {
+					fixes = fixes
+						.map((fix) => {
+							const range = adjustReportRange(fix.range);
+							return (
+								range && {
+									...fix,
+									range,
+								}
+							);
+						})
+						.filter((f) => f != null);
+				}
+				if (suggestions != null) {
+					suggestions = suggestions
+						.map((s) => {
+							if ("files" in s) {
+								// TODO: support cross-file suggestions
+								return null;
+							}
+							const range = adjustReportRange(s.range);
+							return (
+								range && {
+									...s,
+									range,
+								}
+							);
+						})
+						.filter((s) => s != null);
+				}
+			}
+
 			reportsByFilePath.get(filePath).push({
 				...ruleReport,
+				fix: fixes,
+				suggestions,
 				about: rule.about,
-				fix:
-					ruleReport.fix && !Array.isArray(ruleReport.fix)
-						? [ruleReport.fix]
-						: ruleReport.fix,
 				message: nullThrows(
 					rule.messages[ruleReport.message],
-					`Rule "${rule.about.id}" reported message "${ruleReport.message}" which is not defined in its messages.`,
+					`Message should be defined (${ruleReport.message}) when reporting for rule "${rule.about.id}"`,
 				),
 				range: {
 					begin: getColumnAndLineOfPosition(
 						currentFile.about.sourceText,
-						ruleReport.range.begin,
+						range.begin,
 					),
 					end: getColumnAndLineOfPosition(
 						currentFile.about.sourceText,
-						ruleReport.range.end,
+						range.end,
 					),
 				},
 			});

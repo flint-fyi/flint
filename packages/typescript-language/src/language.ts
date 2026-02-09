@@ -68,12 +68,12 @@ const languageState: GlobalLanguageState =
 		volarCreateFile: null,
 	});
 
-export function setVolarCreateFile(prepare: VolarCreateFile) {
+export function setVolarCreateFile(create: VolarCreateFile) {
 	assert(
 		languageState.volarCreateFile == null,
-		"setVolarPrepareFile is expected to be called only once",
+		"setVolarCreateFile is expected to be called only once",
 	);
-	languageState.volarCreateFile = prepare;
+	languageState.volarCreateFile = create;
 }
 
 export const typescriptLanguage = createLanguage<
