@@ -6,5 +6,16 @@
 		"types": ["node"]
 	},
 	"extends": "../../tsconfig.base.json",
-	"include": ["tests", "vitest.setup.ts"]
+	"include": ["tests", "vitest.setup.ts"],
+	"references": [
+		{
+			"path": "../core"
+		},
+		{
+			"path": "../spelling"
+		},
+		{
+			"path": "../ts"
+		}
+	]
 }
