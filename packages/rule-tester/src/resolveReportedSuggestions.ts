@@ -63,9 +63,7 @@ function resolveReportedSuggestionForFiles(
 						return [
 							filePath,
 							suggestionCasesExpected.map((suggestionCaseExpected) => {
-								const changes = suggestionReported.files[filePath]?.(
-									suggestionCaseExpected.original,
-								);
+								const changes = suggestionReported.files[filePath];
 								return {
 									original: suggestionCaseExpected.original,
 									updated: changes
