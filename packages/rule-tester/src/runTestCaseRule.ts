@@ -64,6 +64,7 @@ export async function runTestCaseRule<
 	const reports: NormalizedReport[] = [];
 
 	const ruleRuntime = await rule.setup({
+		host: linterHost,
 		report(ruleReport) {
 			reports.push({
 				...ruleReport,
