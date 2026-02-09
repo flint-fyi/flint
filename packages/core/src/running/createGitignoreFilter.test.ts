@@ -17,9 +17,6 @@ describe("createGitignoreFilter", () => {
 		});
 	});
 
-	// root/
-	// └── src/
-	//     └── file.ts
 	it("returns true for files when no .gitignore exists", () => {
 		const filePath = path.join(integrationRoot, "src", "file.ts");
 		host.vfsUpsertFile(filePath, "content");
@@ -28,10 +25,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(filePath)).toBe(true);
 	});
 
-	// root/
-	// ├── .gitignore   (# comment, *.log, # comment)
-	// ├── debug.log    ❌ ignored
-	// └── index.ts     ✓ not ignored
 	it("ignores comments and empty lines", () => {
 		host.vfsUpsertFile(
 			path.join(integrationRoot, ".gitignore"),
@@ -45,10 +38,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(tsFile)).toBe(true);
 	});
 
-	// root/
-	// ├── .gitignore   (#comment.txt, \#real.txt)
-	// ├── comment.txt      ✓ not ignored (# is comment)
-	// └── #real.txt        ❌ ignored (escaped #)
 	it("handles escaped hash at the beginning", () => {
 		host.vfsUpsertFile(
 			path.join(integrationRoot, ".gitignore"),
@@ -62,10 +51,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(hashFile)).toBe(false);
 	});
 
-	// root/
-	// ├── .gitignore   (*.log    - 4 non-escaped trailing spaces)
-	// ├── test.log         ❌ ignored (trailing spaces are automatically removed)
-	// └── test.txt         ✓ not ignored
 	it("handles non-escaped trailing spaces (automatically removed)", () => {
 		host.vfsUpsertFile(
 			path.join(integrationRoot, ".gitignore"),
@@ -79,15 +64,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(txtFile)).toBe(true);
 	});
 
-	// root/
-	// ├── .gitignore   (file\ with\ space<space>, file\ with\ escapedSpace\ )
-	// │                 ↑ non-escaped trailing space (will be removed)
-	// │                 ↑ escaped trailing space (will be kept)
-	// ├── file with space<space>          ❌ ignored (matches first pattern after trailing space removed)
-	// ├── file with space                 ✓ not ignored (extra space, doesn't match)
-	// ├── file with escapedSpace<space>   ❌ ignored (matches second pattern with escaped trailing space)
-	// ├── file with space.js              ✓ not ignored
-	// └── normal.txt                      ✓ not ignored
 	it("handles escaped trailing spaces", () => {
 		host.vfsUpsertFile(
 			path.join(integrationRoot, ".gitignore"),
@@ -119,11 +95,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(normalFile)).toBe(true);
 	});
 
-	// root/
-	// ├── .gitignore   (  *.log with leading spaces)
-	// ├── test.log         ✓ not ignored (leading spaces prevent matching)
-	// ├──   test.log       ❌ ignored (matched by pattern with leading spaces)
-	// └── test.txt         ✓ not ignored
 	it("treats leading spaces as part of the pattern", () => {
 		host.vfsUpsertFile(path.join(integrationRoot, ".gitignore"), "  *.log");
 		const logFile = path.join(integrationRoot, "test.log");
@@ -136,11 +107,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(txtFile)).toBe(true);
 	});
 
-	// root/
-	// ├── .gitignore       (*.log, !important.log)
-	// ├── debug.log        ❌ ignored
-	// ├── !important.log   ❌ ignored
-	// └── important.log    ✓ not ignored (negated)
 	it("handles negation patterns", () => {
 		host.vfsUpsertFile(
 			path.join(integrationRoot, ".gitignore"),
@@ -156,9 +122,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(importantLog)).toBe(true);
 	});
 
-	// root/
-	// ├── .gitignore   (\!literal.txt)
-	// └── !literal.txt     ❌ ignored (escaped !)
 	it("handles escaped exclamation mark at the beginning", () => {
 		host.vfsUpsertFile(
 			path.join(integrationRoot, ".gitignore"),
@@ -170,13 +133,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(literal)).toBe(false);
 	});
 
-	// root/
-	// ├── .gitignore   (parent/, !parent/child.txt)
-	// ├── parent/
-	// │   ├── child.txt    ❌ ignored (parent dir excluded)
-	// │   └── nested/
-	// │       └── file.txt ❌ ignored (parent dir excluded)
-	// └── other.txt        ✓ not ignored
 	it("cannot re-include files when parent directory is excluded", () => {
 		host.vfsUpsertFile(
 			path.join(integrationRoot, ".gitignore"),
@@ -197,14 +153,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(otherFile)).toBe(true);
 	});
 
-	// root/
-	// ├── .gitignore         (/build)
-	// ├── build/
-	// │   └── output.js      ❌ ignored (root /build)
-	// └── src/
-	//     ├── build/
-	//     │   └── output.js  ✓ not ignored
-	//     └── index.ts       ✓ not ignored
 	it("handles absolute path patterns with leading slash", () => {
 		host.vfsUpsertFile(path.join(integrationRoot, ".gitignore"), "/build");
 		const rootBuild = path.join(integrationRoot, "build", "output.js");
@@ -217,63 +165,11 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(srcBuild)).toBe(true);
 	});
 
-	// root/
-	// └── src/
-	//     ├── .gitignore   (foo/bar.js - pattern with slash in middle)
-	//     ├── foo/
-	//     │   └── bar.js       ❌ ignored (relative to src/)
-	//     ├── nested/
-	//     │   └── foo/
-	//     │       └── bar.js   ✓ not ignored (slash makes it relative, not recursive)
-	//     └── baz.js           ✓ not ignored
-	it("handles patterns with slash in the middle", () => {
-		const srcDir = path.join(integrationRoot, "src");
-		host.vfsUpsertFile(path.join(srcDir, ".gitignore"), "foo/bar.js");
-
-		const directMatch = path.join(srcDir, "foo", "bar.js");
-		const nestedMatch = path.join(srcDir, "nested", "foo", "bar.js");
-		const otherFile = path.join(srcDir, "baz.js");
-
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
-		expect(gitignoreFilter(directMatch)).toBe(false);
-		expect(gitignoreFilter(nestedMatch)).toBe(true);
-		expect(gitignoreFilter(otherFile)).toBe(true);
-	});
-
-	// root/
-	// └── src/
-	//     ├── .gitignore   (*.js - no slash, matches any depth)
-	//     ├── foo/
-	//     │   └── bar.js       ❌ ignored (matches at any depth)
-	//     ├── nested/
-	//     │   └── deep/
-	//     │       └── test.js  ❌ ignored (matches at any depth)
-	//     └── baz.js           ❌ ignored
-	it("handles patterns without slash (match at any level)", () => {
-		const srcDir = path.join(integrationRoot, "src");
-		host.vfsUpsertFile(path.join(srcDir, ".gitignore"), "*.js");
-
-		const directFile = path.join(srcDir, "baz.js");
-		const nestedFile = path.join(srcDir, "foo", "bar.js");
-		const deepFile = path.join(srcDir, "nested", "deep", "test.js");
-
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
-		expect(gitignoreFilter(directFile)).toBe(false);
-		expect(gitignoreFilter(nestedFile)).toBe(false);
-		expect(gitignoreFilter(deepFile)).toBe(false);
-	});
-
-	// root/
-	// ├── .gitignore   (build/)
-	// ├── build/           ❌ ignored (directory)
-	// │   └── output.js    ❌ ignored
-	// ├── build.js         ✓ not ignored (file, not directory)
-	// └── src/
-	//     └── build/       ❌ ignored (matches at any depth because no leading/middle slash)
 	it("handles trailing slash (directories only)", () => {
 		host.vfsUpsertFile(path.join(integrationRoot, ".gitignore"), "build/");
 		const buildDir = path.join(integrationRoot, "build", "output.js");
-		const buildFile = path.join(integrationRoot, "build.js");
+		const buildLiteralFile = path.join(integrationRoot, "build");
+		const buildJsFile = path.join(integrationRoot, "build.js");
 		const nestedBuildDir = path.join(
 			integrationRoot,
 			"src",
@@ -283,41 +179,11 @@ describe("createGitignoreFilter", () => {
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
 		expect(gitignoreFilter(buildDir)).toBe(false);
-		expect(gitignoreFilter(buildFile)).toBe(true);
+		expect(gitignoreFilter(buildLiteralFile)).toBe(true);
+		expect(gitignoreFilter(buildJsFile)).toBe(true);
 		expect(gitignoreFilter(nestedBuildDir)).toBe(false);
 	});
 
-	// root/
-	// ├── .gitignore   (build/)
-	// ├── build/           ❌ ignored
-	// │   └── output.js    ❌ ignored
-	// ├── build.js         ✓ not ignored (file, not directory)
-	// └── src/
-	//     └── build/      	❌ ignored
-	it("handles trailing slash (directory only)", () => {
-		host.vfsUpsertFile(path.join(integrationRoot, ".gitignore"), "build/");
-		const buildDir = path.join(integrationRoot, "build", "output.js");
-		const buildFile = path.join(integrationRoot, "build.js");
-		const nestedBuildDir = path.join(
-			integrationRoot,
-			"src",
-			"build",
-			"file.js",
-		);
-
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
-		expect(gitignoreFilter(buildDir)).toBe(false);
-		expect(gitignoreFilter(buildFile)).toBe(true);
-		expect(gitignoreFilter(nestedBuildDir)).toBe(false);
-	});
-
-	// root/
-	// ├── .gitignore   (/build/)
-	// ├── build/           ❌ ignored (anchored directory)
-	// │   └── output.js    ❌ ignored
-	// ├── build.js         ✓ not ignored (file, not directory)
-	// └── src/
-	//     └── build/       ✓ not ignored (/build/ is anchored to root only)
 	it("handles leading and trailing slash (anchored directory)", () => {
 		host.vfsUpsertFile(path.join(integrationRoot, ".gitignore"), "/build/");
 		const buildDir = path.join(integrationRoot, "build", "output.js");
@@ -335,13 +201,34 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(nestedBuildDir)).toBe(true);
 	});
 
-	// root/
-	// ├── .gitignore     (*.log, dist/)
-	// ├── debug.log      ❌ ignored
-	// ├── dist/
-	// │   └── bundle.js  ❌ ignored
-	// └── src/
-	//     └── index.ts   ✓ not ignored
+	it("handles patterns with slash in the middle", () => {
+		const srcDir = path.join(integrationRoot, "src");
+		host.vfsUpsertFile(path.join(srcDir, ".gitignore"), "foo/bar.js");
+
+		const directMatch = path.join(srcDir, "foo", "bar.js");
+		const nestedMatch = path.join(srcDir, "nested", "foo", "bar.js");
+		const otherFile = path.join(srcDir, "baz.js");
+
+		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		expect(gitignoreFilter(directMatch)).toBe(false);
+		expect(gitignoreFilter(nestedMatch)).toBe(true);
+		expect(gitignoreFilter(otherFile)).toBe(true);
+	});
+
+	it("handles patterns without slash (match at any level)", () => {
+		const srcDir = path.join(integrationRoot, "src");
+		host.vfsUpsertFile(path.join(srcDir, ".gitignore"), "*.js");
+
+		const directFile = path.join(srcDir, "baz.js");
+		const nestedFile = path.join(srcDir, "foo", "bar.js");
+		const deepFile = path.join(srcDir, "nested", "deep", "test.js");
+
+		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		expect(gitignoreFilter(directFile)).toBe(false);
+		expect(gitignoreFilter(nestedFile)).toBe(false);
+		expect(gitignoreFilter(deepFile)).toBe(false);
+	});
+
 	it("handles asterisk wildcard", () => {
 		host.vfsUpsertFile(
 			path.join(integrationRoot, ".gitignore"),
@@ -357,16 +244,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(srcFile)).toBe(true);
 	});
 
-	// root/
-	// ├── .gitignore   (test?.js, file[0-9].txt)
-	// ├── test1.js         ❌ ignored (? matches one char)
-	// ├── test2.js         ❌ ignored
-	// ├── test.js          ✓ not ignored (? requires one char)
-	// ├── test12.js        ✓ not ignored (? matches only one char)
-	// ├── file1.txt        ❌ ignored (range [0-9])
-	// ├── file5.txt        ❌ ignored
-	// ├── fileA.txt        ✓ not ignored
-	// └── other.js         ✓ not ignored
 	it("handles wildcards and character ranges", () => {
 		host.vfsUpsertFile(
 			path.join(integrationRoot, ".gitignore"),
@@ -392,14 +269,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(other)).toBe(true);
 	});
 
-	// root/
-	// ├── .gitignore   (**/foo)
-	// ├── foo              ❌ ignored
-	// ├── bar/
-	// │   └── foo          ❌ ignored
-	// └── deep/
-	//     └── nested/
-	//         └── foo      ❌ ignored
 	it("handles leading double asterisk pattern", () => {
 		host.vfsUpsertFile(path.join(integrationRoot, ".gitignore"), "**/foo");
 		const rootFoo = path.join(integrationRoot, "foo");
@@ -414,13 +283,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(otherFile)).toBe(true);
 	});
 
-	// root/
-	// ├── .gitignore   (abc/**)
-	// ├── abc/
-	// │   ├── file.js      ❌ ignored
-	// │   └── deep/
-	// │       └── nested.js ❌ ignored
-	// └── other.js         ✓ not ignored
 	it("handles trailing double asterisk pattern", () => {
 		host.vfsUpsertFile(path.join(integrationRoot, ".gitignore"), "abc/**");
 		const abcFile = path.join(integrationRoot, "abc", "file.js");
@@ -433,16 +295,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(otherFile)).toBe(true);
 	});
 
-	// root/
-	// ├── .gitignore   (a/**/b)
-	// ├── a/
-	// │   ├── b            ❌ ignored (zero directories)
-	// │   ├── x/
-	// │   │   └── b        ❌ ignored (one directory)
-	// │   └── x/
-	// │       └── y/
-	// │           └── b    ❌ ignored (two directories)
-	// └── other            ✓ not ignored
 	it("handles middle double asterisk pattern", () => {
 		host.vfsUpsertFile(path.join(integrationRoot, ".gitignore"), "a/**/b");
 		const aB = path.join(integrationRoot, "a", "b");
@@ -457,15 +309,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(other)).toBe(true);
 	});
 
-	// root/
-	// ├── .gitignore       (*.log)
-	// ├── root.log         ❌ ignored (root .gitignore)
-	// └── src/
-	//     ├── .gitignore   (temp/)
-	//     ├── src.log      ❌ ignored (inherited from root .gitignore)
-	//     ├── temp/
-	//     │   └── cache.txt ❌ ignored (src/.gitignore)
-	//     └── index.ts     ✓ not ignored
 	it("handles nested .gitignore files", () => {
 		host.vfsUpsertFile(path.join(integrationRoot, ".gitignore"), "*.log");
 		const srcDir = path.join(integrationRoot, "src");
@@ -483,11 +326,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(srcFile)).toBe(true);
 	});
 
-	// root/
-	// └── src/
-	//     ├── .gitignore         (*.generated.ts, !/keep.generated.ts)
-	//     ├── api.generated.ts   ❌ ignored (matches *.generated.ts)
-	//     └── keep.generated.ts  ✓ not ignored (negated with !/keep.generated.ts)
 	it("handles negation with leading slash in subdirectory", () => {
 		const srcDir = path.join(integrationRoot, "src");
 		host.vfsUpsertFile(
@@ -503,14 +341,6 @@ describe("createGitignoreFilter", () => {
 		expect(gitignoreFilter(keptFile)).toBe(true);
 	});
 
-	// root/
-	// └── src/
-	//     ├── .gitignore   (dist - unanchored, matches at any depth)
-	//     ├── dist/
-	//     │   └── bundle.js        ❌ ignored
-	//     └── nested/
-	//         └── dist/
-	//             └── bundle.js    ❌ ignored (matches at any depth)
 	it("handles unanchored pattern in nested .gitignore (should match any depth)", () => {
 		const srcDir = path.join(integrationRoot, "src");
 		host.vfsUpsertFile(path.join(srcDir, ".gitignore"), "dist");
