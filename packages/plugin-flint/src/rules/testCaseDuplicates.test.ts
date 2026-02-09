@@ -141,6 +141,30 @@ ruleTester.describe(rule, {
             
 `,
 		},
+		{
+			code: `
+                ruleTester.describe(rule, {
+                    valid: [
+                        { code: "a", files: { "b.ts": "{}" } },
+                        { code: "a", files: { "b.ts": "{}" } },
+                    ],
+                    invalid: []
+                });
+            
+`,
+			snapshot: `
+                ruleTester.describe(rule, {
+                    valid: [
+                        { code: "a", files: { "b.ts": "{}" } },
+                        { code: "a", files: { "b.ts": "{}" } },
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                        This test code already appeared in a previous test.
+                    ],
+                    invalid: []
+                });
+            
+`,
+		},
 	],
 	valid: [
 		`
@@ -178,6 +202,15 @@ ruleTester.describe(rule, {
                 valid: [
                     { code: \`a\`, fileName: "b.ts", options: { c: "d" } },
                     { code: \`a\`, fileName: "c.ts", options: { c: "d" } },
+                ],
+                invalid: []
+            });
+        `,
+		`
+            ruleTester.describe(rule, {
+                valid: [
+                    { code: \`a\`, files: { "b.ts": "{}" } },
+                    { code: \`a\`, files: { "c.ts": "{}" } },
                 ],
                 invalid: []
             });

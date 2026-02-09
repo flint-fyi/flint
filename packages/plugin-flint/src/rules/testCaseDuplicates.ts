@@ -39,6 +39,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const key = JSON.stringify({
 					code: testCase.code,
 					fileName: testCase.fileName,
+					files: testCase.files,
 					options: testCase.options,
 				});
 
