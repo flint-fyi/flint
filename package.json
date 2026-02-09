@@ -60,7 +60,7 @@
 		"prettier-plugin-packagejson": "3.0.0",
 		"prettier-plugin-sentences-per-line": "0.2.0",
 		"prettier-plugin-sh": "0.18.0",
-		"rimraf": "^6.1.2",
+		"rimraf": "6.1.2",
 		"tsdown": "0.20.2",
 		"typescript": "5.9.3",
 		"typescript-eslint": "8.54.0",

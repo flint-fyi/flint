@@ -110,7 +110,7 @@ importers:
         specifier: 0.18.0
         version: 0.18.0(prettier@3.8.1)
       rimraf:
-        specifier: ^6.1.2
+        specifier: 6.1.2
         version: 6.1.2
       tsdown:
         specifier: 0.20.2
