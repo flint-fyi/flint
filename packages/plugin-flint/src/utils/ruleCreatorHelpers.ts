@@ -94,23 +94,34 @@ export function getStringOriginalQuote(
 	return text[0] ?? '"';
 }
 
+export function isCreateRuleCall(node: AST.CallExpression): boolean {
+	return (
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.name.text === "createRule"
+	);
+}
+
+export function isLanguageCreateRule(
+	node: AST.CallExpression,
+	typeChecker: ts.TypeChecker,
+): boolean {
+	return isCreateRuleCall(node) && !isRuleCreatorCreateRule(node, typeChecker);
+}
+
 // TODO: Maybe need to check it more strictly
 // https://github.com/flint-fyi/flint/issues/152
 export function isRuleCreatorCreateRule(
 	node: AST.CallExpression,
 	typeChecker: ts.TypeChecker,
 ): boolean {
-	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
+	if (!isCreateRuleCall(node)) {
 		return false;
 	}
 
-	const propertyAccess = node.expression;
+	const propertyAccess = node.expression as AST.PropertyAccessExpression;
 	const type = typeChecker.getTypeAtLocation(propertyAccess.expression);
-	const typeName = type.getSymbol()?.getName();
 
-	return (
-		typeName === "RuleCreator" && propertyAccess.name.text === "createRule"
-	);
+	return type.getSymbol()?.getName() === "RuleCreator";
 }
 
 // TODO: Maybe need to check it more strictly
