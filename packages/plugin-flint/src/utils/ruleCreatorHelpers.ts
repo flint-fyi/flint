@@ -94,18 +94,15 @@ export function getStringOriginalQuote(
 	return text[0] ?? '"';
 }
 
-export function isCreateRuleCall(node: AST.CallExpression): boolean {
-	return (
-		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
-		node.expression.name.text === "createRule"
-	);
-}
-
 export function isLanguageCreateRule(
 	node: AST.CallExpression,
 	typeChecker: ts.TypeChecker,
 ): boolean {
-	return isCreateRuleCall(node) && !isRuleCreatorCreateRule(node, typeChecker);
+	return (
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.name.text === "createRule" &&
+		!isRuleCreatorCreateRule(node, typeChecker)
+	);
 }
 
 // TODO: Maybe need to check it more strictly
@@ -114,14 +111,16 @@ export function isRuleCreatorCreateRule(
 	node: AST.CallExpression,
 	typeChecker: ts.TypeChecker,
 ): boolean {
-	if (!isCreateRuleCall(node)) {
-		return false;
+	if (
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.name.text === "createRule"
+	) {
+		const propertyAccess = node.expression;
+		const type = typeChecker.getTypeAtLocation(propertyAccess.expression);
+
+		return type.getSymbol()?.getName() === "RuleCreator";
 	}
-
-	const propertyAccess = node.expression as AST.PropertyAccessExpression;
-	const type = typeChecker.getTypeAtLocation(propertyAccess.expression);
-
-	return type.getSymbol()?.getName() === "RuleCreator";
+	return false;
 }
 
 // TODO: Maybe need to check it more strictly
