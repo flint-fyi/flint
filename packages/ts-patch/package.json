@@ -20,18 +20,9 @@
 	],
 	"type": "module",
 	"exports": {
-		".": {
-			"@flint.fyi/source": "./src/index.ts",
-			"default": "./lib/index.js"
-		},
-		"./install-patch": {
-			"@flint.fyi/source": "./src/install-patch.ts",
-			"default": "./lib/install-patch.js"
-		},
-		"./install-patch-hooks": {
-			"@flint.fyi/source": "./src/install-patch-hooks.ts",
-			"default": "./lib/install-patch-hooks.js"
-		}
+		".": "./src/index.ts",
+		"./install-patch": "./src/install-patch.ts",
+		"./install-patch-hooks": "./src/install-patch-hooks.ts"
 	},
 	"files": [
 		"lib/",

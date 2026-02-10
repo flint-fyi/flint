@@ -103,7 +103,8 @@ export default ruleCreator.createRule(markdownLanguage, {
 						}
 					}
 
-					// TODO: Add :exit selectors, so this rule can report after traversal?
+					// TODO: Add :exit selectors, so this rule can report after traversal
+					// https://github.com/flint-fyi/flint/issues/2271
 					visit(node);
 
 					// Check all fragment links

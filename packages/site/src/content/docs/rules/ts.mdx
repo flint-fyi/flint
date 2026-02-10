@@ -138,7 +138,7 @@ import { defineConfig, ts } from "flint";
 export default defineConfig({
 	use: [
 		{
-			files: ts.files.all,
+			files: ts.files.javascript,
 			rules: ts.presets.untyped,
 		},
 	],
@@ -154,6 +154,8 @@ For long-lived projects, Flint recommends using this only as a stopgap measure p
 
 ## Selectors
 
-Flint's TypeScript plugin provides the following file selector:
+Flint's TypeScript plugin provides the following file selectors:
 
-- `all`: `**/*.{cjs,js,jsx,mjs,ts,tsx}`
+- `all`: `**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}`
+- `javascript`: `**/*.{cjs,js,jsx,mjs}`
+- `typescript`: `**/*.{cts,mts,ts,tsx}`
