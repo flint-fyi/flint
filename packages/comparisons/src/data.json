@@ -3877,7 +3877,7 @@
 		"flint": {
 			"name": "moduleAssignments",
 			"plugin": "next",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -5923,7 +5923,7 @@
 		"flint": {
 			"name": "functionComponentThisReferences",
 			"plugin": "react",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -6043,7 +6043,7 @@
 		"flint": {
 			"name": "propertyValidity",
 			"plugin": "react",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -6056,7 +6056,7 @@
 		"flint": {
 			"name": "propTypes",
 			"plugin": "react",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -6490,7 +6490,7 @@
 		"flint": {
 			"name": "namespaceValidity",
 			"plugin": "solid",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -6557,7 +6557,7 @@
 		"flint": {
 			"name": "reactLikeDeps",
 			"plugin": "solid",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -6570,7 +6570,7 @@
 		"flint": {
 			"name": "reactLikeProps",
 			"plugin": "solid",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -6623,7 +6623,7 @@
 		"flint": {
 			"name": "stylePropValidity",
 			"plugin": "solid",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -7181,7 +7181,7 @@
 		"flint": {
 			"name": "arrayCallbackReturns",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -8279,7 +8279,7 @@
 		"flint": {
 			"name": "caseDeclarations",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -8464,7 +8464,7 @@
 		"flint": {
 			"name": "classAssignments",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -8484,7 +8484,7 @@
 		"flint": {
 			"name": "classFieldDeclarations",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -8528,7 +8528,7 @@
 		"flint": {
 			"name": "classMemberDuplicates",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -8795,7 +8795,7 @@
 		"flint": {
 			"name": "constantAssignments",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -8892,7 +8892,7 @@
 		"flint": {
 			"name": "constructorReturns",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -8924,7 +8924,7 @@
 		"flint": {
 			"name": "constructorSupers",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -9150,7 +9150,7 @@
 		"flint": {
 			"name": "defaultParameterLast",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -9420,7 +9420,7 @@
 		"flint": {
 			"name": "duplicateArguments",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -10250,7 +10250,7 @@
 		"flint": {
 			"name": "exportUniqueNames",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -10468,7 +10468,7 @@
 		"flint": {
 			"name": "functionAssignments",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -10719,7 +10719,7 @@
 		"flint": {
 			"name": "getterReturns",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -10771,7 +10771,7 @@
 		"flint": {
 			"name": "globalAssignments",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -10803,7 +10803,7 @@
 		"flint": {
 			"name": "globalObjectCalls",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -11019,7 +11019,7 @@
 		"flint": {
 			"name": "importAssignments",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -11400,7 +11400,7 @@
 		"flint": {
 			"name": "invalidThis",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -12989,7 +12989,7 @@
 		"flint": {
 			"name": "nativeObjectExtensions",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -13163,7 +13163,7 @@
 		"flint": {
 			"name": "newNativeNonConstructors",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -13801,7 +13801,7 @@
 		"flint": {
 			"name": "objectKeyDuplicates",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -13828,7 +13828,7 @@
 		"flint": {
 			"name": "objectProto",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -13951,7 +13951,7 @@
 		"flint": {
 			"name": "octalEscapes",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -13965,7 +13965,7 @@
 		"flint": {
 			"name": "octalNumbers",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -16328,7 +16328,7 @@
 		"flint": {
 			"name": "sequences",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -16395,7 +16395,7 @@
 		"flint": {
 			"name": "setterReturns",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -16427,7 +16427,7 @@
 		"flint": {
 			"name": "shadowedRestrictedNames",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -17093,7 +17093,7 @@
 		"flint": {
 			"name": "thisBeforeSuper",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -17463,7 +17463,7 @@
 		"flint": {
 			"name": "typeofComparisons",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -17508,7 +17508,7 @@
 		"flint": {
 			"name": "unassignedVariables",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -17618,7 +17618,7 @@
 		"flint": {
 			"name": "undefinedVariables",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -18394,7 +18394,7 @@
 		"flint": {
 			"name": "unreachableStatements",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		},
 		"oxlint": [
 			{
@@ -18520,7 +18520,7 @@
 		"flint": {
 			"name": "unsafeNegations",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -18546,7 +18546,7 @@
 		"flint": {
 			"name": "unsafeOptionalChains",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		},
 		"oxlint": [
 			{
@@ -18832,7 +18832,7 @@
 		"flint": {
 			"name": "usageBeforeDefinition",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -18858,7 +18858,7 @@
 		"flint": {
 			"name": "useStrictDirectives",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -18896,7 +18896,7 @@
 		"flint": {
 			"name": "variableBlockScopeUsage",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		},
 		"oxlint": [
 			{
@@ -18963,7 +18963,7 @@
 		"flint": {
 			"name": "variableDeletions",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -18999,7 +18999,7 @@
 		"flint": {
 			"name": "variableRedeclarations",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		},
 		"oxlint": [
 			{
@@ -19088,7 +19088,7 @@
 		"flint": {
 			"name": "withStatements",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [

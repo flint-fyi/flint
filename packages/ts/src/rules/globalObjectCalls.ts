@@ -15,7 +15,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports calling global objects like Math, JSON, or Reflect as functions.",
 		id: "globalObjectCalls",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noGlobalObjectCall: {

@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports attempting to assign to read-only global variables such as undefined, NaN, Infinity, Object, etc.",
 		id: "globalAssignments",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noGlobalAssign: {

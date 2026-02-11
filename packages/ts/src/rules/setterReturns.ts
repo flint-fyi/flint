@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports return statements with values inside setters.",
 		id: "setterReturns",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noSetterReturn: {

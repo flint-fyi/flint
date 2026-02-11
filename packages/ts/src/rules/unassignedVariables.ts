@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports variables that are declared but never assigned a value.",
 		id: "unassignedVariables",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noUnassigned: {

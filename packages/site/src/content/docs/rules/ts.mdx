@@ -18,7 +18,7 @@ Flint's TypeScript plugin provides the following presets:
 | **[`logicalStrict`](#logicalstrict)**     | ☑️ When Ready | Additional rules for finding bugs and enforcing good logical practices. |
 | **[`stylistic`](#stylistic)**             | ✅ Always     | Common rules for consistent styling and best stylistic practices.       |
 | **[`stylisticStrict`](#stylisticstrict)** | ☑️ When Ready | Additional rules for consistent styling and best stylistic practices.   |
-| **[`untyped`](#untyped)**                 |               | Extra rules for files that aren't type-checked by TypeScript.           |
+| **[`javascript`](#javascript)**           |               | Extra rules for files that aren't type-checked by TypeScript.           |
 
 If you are just getting started with linting, Flint recommends using the [`logical`](#logical) and [`stylistic`](#stylistic) presets:
 
@@ -128,7 +128,7 @@ export default defineConfig({
 
 This preset's rules are a superset of those in [`stylistic`](#stylistic).
 
-### `untyped`
+### `javascript`
 
 Rules that fill in rudimentary safety practices that would normally be caught by TypeScript.
 
@@ -139,13 +139,13 @@ export default defineConfig({
 	use: [
 		{
 			files: ts.files.javascript,
-			rules: ts.presets.untyped,
+			rules: ts.presets.javascript,
 		},
 	],
 });
 ```
 
-The `untyped` preset is broadly applicable for JavaScript files that aren't type-checked by TypeScript.
+The `javascript` preset is broadly applicable for JavaScript files that aren't type-checked by TypeScript.
 For long-lived projects, Flint recommends using this only as a stopgap measure pending converting files fully to TypeScript.
 
 ## Rules
