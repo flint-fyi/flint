@@ -20,22 +20,18 @@ The querySelector methods use CSS selectors, which are more powerful, widely und
 <TabItem label="❌ Incorrect">
 
 ```typescript
-// @errors: 2584
 const element = document.getElementById("myId");
 ```
 
 ```typescript
-// @errors: 2584
 const elements = document.getElementsByClassName("myClass");
 ```
 
 ```typescript
-// @errors: 2584
 const divs = document.getElementsByTagName("div");
 ```
 
 ```typescript
-// @errors: 2584
 const elements = document.getElementsByTagNameNS(
 	"http://www.w3.org/1999/xhtml",
 	"div",
@@ -46,22 +42,18 @@ const elements = document.getElementsByTagNameNS(
 <TabItem label="✅ Correct">
 
 ```typescript
-// @errors: 2584
 const element = document.querySelector("#myId");
 ```
 
 ```typescript
-// @errors: 2584
 const elements = document.querySelectorAll(".myClass");
 ```
 
 ```typescript
-// @errors: 2584
 const divs = document.querySelectorAll("div");
 ```
 
 ```typescript
-// @errors: 2584
 // For namespaced elements, use attribute selectors or specific namespaced query methods
 const svgElements = document.querySelectorAll('svg, [xmlns*="svg"]');
 ```

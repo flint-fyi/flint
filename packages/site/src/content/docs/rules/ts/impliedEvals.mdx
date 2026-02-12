@@ -26,17 +26,14 @@ These "implied evals" have the same problems as `eval()`: they're difficult to a
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2769
 setTimeout("alert('Hello');", 1000);
 ```
 
 ```ts
-// @errors: 2769
 setInterval("counter++;", 100);
 ```
 
 ```ts
-// @errors: 2769
 const code = "console.log('executed');";
 setTimeout(code, 0);
 ```

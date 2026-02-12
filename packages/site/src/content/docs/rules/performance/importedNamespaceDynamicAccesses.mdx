@@ -22,7 +22,7 @@ This can significantly reduce bundle size, especially for large libraries where 
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @noErrors
+// @errors: 2834 -- NodeNext requires file extensions
 import * as utils from "./utils";
 
 function getValue(key: string) {
@@ -31,7 +31,9 @@ function getValue(key: string) {
 ```
 
 ```ts
-// @noErrors
+// @errors: 2307 -- Fictional module
+declare function getMethodName(): string;
+// ---cut---
 import * as api from "api-library";
 const method = getMethodName();
 api[method]();
@@ -41,7 +43,7 @@ api[method]();
 <TabItem label="✅ Correct">
 
 ```ts
-// @noErrors
+// @errors: 2834 -- NodeNext requires file extensions
 import * as utils from "./utils";
 
 function getValue(key: string) {
@@ -50,7 +52,9 @@ function getValue(key: string) {
 ```
 
 ```ts
-// @noErrors
+// @errors: 2307 -- Fictional module
+declare const condition: boolean;
+// ---cut---
 import { method1, method2 } from "api-library";
 const method = condition ? method1 : method2;
 method();

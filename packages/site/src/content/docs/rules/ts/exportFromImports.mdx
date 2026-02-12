@@ -21,7 +21,7 @@ It can be done in a single `export...from` declaration, which is more concise an
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @noErrors
+// @errors: 2307 -- Fictional module
 import defaultExport from "./foo.js";
 export default defaultExport;
 ```
@@ -30,7 +30,7 @@ export default defaultExport;
 <TabItem label="✅ Correct">
 
 ```ts
-// @noErrors
+// @errors: 2307 -- Fictional module
 export { default } from "./foo.js";
 ```
 
@@ -43,7 +43,7 @@ export { default } from "./foo.js";
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @noErrors
+// @errors: 2307 -- Fictional module
 import { named } from "./foo.js";
 export { named };
 ```
@@ -52,7 +52,7 @@ export { named };
 <TabItem label="✅ Correct">
 
 ```ts
-// @noErrors
+// @errors: 2307 -- Fictional module
 export { named } from "./foo.js";
 ```
 
@@ -65,7 +65,7 @@ export { named } from "./foo.js";
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @noErrors
+// @errors: 2307 -- Fictional module
 import * as namespace from "./foo.js";
 export { namespace };
 ```
@@ -74,7 +74,7 @@ export { namespace };
 <TabItem label="✅ Correct">
 
 ```ts
-// @noErrors
+// @errors: 2307 -- Fictional module
 export * as namespace from "./foo.js";
 ```
 
@@ -87,7 +87,7 @@ export * as namespace from "./foo.js";
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @noErrors
+// @errors: 2307 -- Fictional module
 import defaultExport, { named } from "./foo.js";
 export default defaultExport;
 export { defaultExport as renamedDefault, named, named as renamedNamed };
@@ -97,7 +97,7 @@ export { defaultExport as renamedDefault, named, named as renamedNamed };
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2307
+// @errors: 2307 -- Fictional module
 export {
 	default,
 	default as renamedDefault,

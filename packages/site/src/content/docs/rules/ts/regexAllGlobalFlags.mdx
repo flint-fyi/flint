@@ -25,7 +25,6 @@ This rule detects regex literals and `RegExp` constructor calls that are missing
 ```
 
 ```ts
-// @errors: 2550
 "hello world".replaceAll(/o/, "0");
 ```
 
@@ -42,7 +41,6 @@ text.matchAll(new RegExp("e"));
 ```
 
 ```ts
-// @errors: 2550
 "hello world".replaceAll(/o/g, "0");
 ```
 
@@ -52,7 +50,6 @@ text.matchAll(new RegExp("e", "g"));
 ```
 
 ```ts
-// @errors: 2550
 "hello world".replaceAll("o", "0");
 ```
 

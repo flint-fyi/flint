@@ -21,12 +21,12 @@ Using a top-level `import type` declaration ensures the entire import statement 
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @noErrors
+// @errors: 2305 -- Not exported from "flint"
 import { type A } from "flint";
 ```
 
 ```ts
-// @noErrors
+// @errors: 2305 -- Not exported from "flint"
 import { type A, type B } from "flint";
 ```
 
@@ -34,12 +34,12 @@ import { type A, type B } from "flint";
 <TabItem label="✅ Correct">
 
 ```ts
-// @noErrors
+// @errors: 2305 -- Not exported from "flint"
 import type { A, B } from "flint";
 ```
 
 ```ts
-// @noErrors
+// @errors: 2305 -- Not exported from "flint"
 // Mixed type and value imports are allowed
 import { type A, value } from "flint";
 ```

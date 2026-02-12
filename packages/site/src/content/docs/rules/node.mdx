@@ -21,7 +21,6 @@ Flint's Node.js plugin provides the following presets:
 If you are just getting started with linting, Flint recommends using the [`logical`](#logical) and [`stylistic`](#stylistic) presets:
 
 ```ts title="flint.config.ts"
-// @noErrors
 import { node } from "@flint.fyi/node";
 import { defineConfig, ts } from "flint";
 
@@ -38,7 +37,6 @@ export default defineConfig({
 If you are experienced with both Markdown and linting, Flint recommends additionally using the [`stylisticStrict`](#stylisticstrict) preset:
 
 ```ts title="flint.config.ts"
-// @noErrors
 import { node } from "@flint.fyi/node";
 import { defineConfig, ts } from "flint";
 
@@ -61,7 +59,7 @@ Coming soon: more expansive documentation on choosing and combining plugins & pr
 Rules that find bugs and enforce good Node.js and general server-side best practices for most-to-all JavaScript and TypeScript files.
 
 ```ts title="flint.config.ts"
-// @noErrors
+// @errors: 2305 -- Not re-exported from "flint"
 import { defineConfig, node } from "flint";
 
 export default defineConfig({
@@ -79,7 +77,6 @@ export default defineConfig({
 Rules that enforce consistent styling and best stylistic practices for most-to-all JavaScript and TypeScript files dealing with Node.js APIs.
 
 ```ts title="flint.config.ts"
-// @noErrors
 import { node } from "@flint.fyi/node";
 import { defineConfig, ts } from "flint";
 
@@ -99,7 +96,6 @@ Additional stylistic rules that enforce best practices which are not always stra
 These rules are recommended for projects where a majority of developers are experienced with both Node.js and using a linter.
 
 ```ts title="flint.config.ts"
-// @noErrors
 import { node } from "@flint.fyi/node";
 import { defineConfig, ts } from "flint";
 

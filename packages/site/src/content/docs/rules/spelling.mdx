@@ -17,7 +17,7 @@ See the [CSpell spell checker documentation](https://cspell.org) for more detail
 Rules that run CSpell to find likely spell-checking mistakes.
 
 ```ts title="flint.config.ts"
-// @noErrors
+// @errors: 2305 -- Not re-exported from "flint"
 import { defineConfig, globs, spelling } from "flint";
 
 export default defineConfig({

@@ -15,7 +15,6 @@ import PluginTop from "~/components/PluginTop.astro";
 Rules that find bugs and enforce good practices for Flint plugins and rules.
 
 ```ts title="flint.config.ts"
-// @noErrors
 import { flint } from "@flint.fyi/plugin-flint";
 import { defineConfig, ts } from "flint";
 
@@ -35,7 +34,7 @@ Additional logical rules that enforce best practices which are not always straig
 These rules are recommended for projects where a majority of developers are experienced with both JavaScript/TypeScript and writing plugins for a linter.
 
 ```ts title="flint.config.ts"
-// @noErrors
+// @errors: 2339 -- Preset not yet defined
 import { flint } from "@flint.fyi/plugin-flint";
 import { defineConfig, ts } from "flint";
 
@@ -56,7 +55,6 @@ This preset's rules are a superset of those in [`logical`](#logical).
 Rules that enforce consistent styling and best stylistic practices for most-to-all Flint plugins.
 
 ```ts title="flint.config.ts"
-// @noErrors
 import { flint } from "@flint.fyi/plugin-flint";
 import { defineConfig, ts } from "flint";
 

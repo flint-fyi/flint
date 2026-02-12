@@ -50,14 +50,12 @@ const exists = {}.hasOwnProperty.call(obj, "prop");
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2550
 declare const obj: any;
 // ---cut---
 const hasKey = Object.hasOwn(obj, "key");
 ```
 
 ```ts
-// @errors: 2550
 declare const obj: any;
 // ---cut---
 if (Object.hasOwn(obj, "prop")) {
@@ -66,14 +64,12 @@ if (Object.hasOwn(obj, "prop")) {
 ```
 
 ```ts
-// @errors: 2550
 declare const obj: any;
 // ---cut---
 const result = Object.hasOwn(obj, "key");
 ```
 
 ```ts
-// @errors: 2550
 declare const obj: any;
 // ---cut---
 const exists = Object.hasOwn(obj, "prop");
