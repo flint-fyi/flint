@@ -20,6 +20,11 @@ This rule helps catch typos and missing declarations early in development.
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const first: any;
+declare const result: any;
+declare const second: any;
+declare const undefinedVar: any;
+// ---cut---
 console.log(undefinedVar);
 
 function calculate() {
@@ -33,6 +38,7 @@ const value = first + second;
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 2451
 const value = 5;
 console.log(value);
 

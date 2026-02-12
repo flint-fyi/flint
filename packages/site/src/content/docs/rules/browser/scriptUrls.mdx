@@ -22,6 +22,8 @@ Use event handlers or proper JavaScript functions instead of `javascript:` URLs.
 <TabItem label="❌ Incorrect">
 
 ```typescript
+declare const location: any;
+// ---cut---
 location.href = "javascript:void(0)";
 ```
 
@@ -34,6 +36,8 @@ const link = `javascript:void(0)`;
 ```
 
 ```typescript
+declare const window: any;
+// ---cut---
 window.location = "javascript:doSomething()";
 ```
 

@@ -19,6 +19,10 @@ This allows snapshot `~` characters to appear visually underneath the flagged co
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 1127 1136 1160 2796
+declare const rule: any;
+declare const ruleTester: any;
+// ---cut---
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -34,6 +38,10 @@ Rule report message.
 ```
 
 ```ts
+// @errors: 1127 1136 1160 2796
+declare const rule: any;
+declare const ruleTester: any;
+// ---cut---
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -51,6 +59,10 @@ Rule report message.
 ```
 
 ```ts
+// @errors: 1127 1136 1160 2796
+declare const rule: any;
+declare const ruleTester: any;
+// ---cut---
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -67,6 +79,10 @@ Rule report message.\`,
 ```
 
 ```ts
+// @errors: 1127 1136 1160 2796
+declare const rule: any;
+declare const ruleTester: any;
+// ---cut---
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -85,6 +101,10 @@ Rule report message.
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 1127 1136 1160 2796
+declare const rule: any;
+declare const ruleTester: any;
+// ---cut---
 ruleTester.describe(rule, {
     valid: [],
     invalid: [
@@ -100,6 +120,10 @@ ruleTester.describe(rule, {
 ```
 
 ```ts
+// @errors: 1127 1136 1160 2796
+declare const rule: any;
+declare const ruleTester: any;
+// ---cut---
 ruleTester.describe(rule, {
     valid: [],
     invalid: [

@@ -21,21 +21,33 @@ This can lead to unexpected behavior and runtime errors that are difficult to de
 {/* prettier-ignore-start */}
 
 ```ts
+declare const doSomething: any;
+declare const expression: any;
+declare const identifier: any;
+// ---cut---
 const value = identifier(expression)
 doSomething();
 ```
 
 ```ts
+declare const getArray: any;
+// ---cut---
 const data = getArray
 [0].value;
 ```
 
 ```ts
+declare const calculate: any;
+// ---cut---
 const result = calculate
 `template literal`;
 ```
 
 ```ts
+declare const b: any;
+declare const c: any;
+declare const d: any;
+// ---cut---
 function process() {
 	const a = b
 	(c || d).execute();
@@ -48,21 +60,33 @@ function process() {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const expression: any;
+declare const identifier: any;
+// ---cut---
 const value = identifier;
 expression.doSomething();
 ```
 
 ```ts
+// @errors: 2551
+declare const getArray: any;
+// ---cut---
 const data = getArray;
 [0].value;
 ```
 
 ```ts
+declare const calculate: any;
+// ---cut---
 const result = calculate;
 `template literal`;
 ```
 
 ```ts
+declare const b: any;
+declare const c: any;
+declare const d: any;
+// ---cut---
 function process() {
 	const a = b;
 	(c || d).execute();

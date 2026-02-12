@@ -50,6 +50,8 @@ const objectWithoutPrototype = Object.create(null);
 ```
 
 ```ts
+declare const source: any;
+// ---cut---
 const copy = Object.assign({}, source);
 ```
 

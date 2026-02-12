@@ -24,6 +24,7 @@ Note that `{` in JSX text will automatically be parsed as the start of a JSX exp
 <TabItem label="❌ Incorrect">
 
 ```tsx
+// @errors: 1382
 <div>Greater than > sign</div>
 ```
 
@@ -36,12 +37,16 @@ Note that `{` in JSX text will automatically be parsed as the start of a JSX exp
 ```
 
 ```tsx
+// @errors: 1005
+declare const brace: any;
+// ---cut---
 <div>Opening { brace</div>
 ```
 
 Note: This will cause a syntax error as `{` starts a JSX expression.
 
 ```tsx
+// @errors: 1381
 <div>Closing } brace</div>
 ```
 

@@ -23,6 +23,7 @@ This rule reports on numeric literals with a preceding `0`.
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 1121
 const permissions = 0755; // Evaluates to 493, not 755!
 const value = 077; // Evaluates to 63, not 77!
 const numbers = [01, 02, 03, 04, 05, 06, 07];
@@ -32,6 +33,7 @@ const numbers = [01, 02, 03, 04, 05, 06, 07];
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 2451
 // Use explicit octal syntax if you intended octal
 const permissions = 0o755; // Clearly octal: 493 in decimal
 const value = 0o77; // Clearly octal: 63 in decimal

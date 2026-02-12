@@ -53,6 +53,8 @@ export const Fruits = {
 Whether to allow namespaces declared with the `declare` keyword.
 
 ```ts
+declare const ts: any;
+// ---cut---
 ts.rules({
 	namespaceDeclarations: {
 		allowDeclarations: true,
@@ -84,6 +86,8 @@ declare namespace Values {
 ### `allowDefinitionFiles`
 
 ```ts
+declare const ts: any;
+// ---cut---
 ts.rules({
 	namespaceDeclarations: {
 		allowDefinitionFiles: true,

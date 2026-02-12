@@ -21,6 +21,7 @@ This rule reports on any element that is focusable -either inherently or via `ta
 <TabItem label="❌ Incorrect">
 
 ```tsx
+// @errors: 2322
 <div aria-hidden="true" tabIndex="0" />
 ```
 
@@ -48,6 +49,7 @@ This rule reports on any element that is focusable -either inherently or via `ta
 ```
 
 ```tsx
+// @errors: 2322
 <button aria-hidden="true" tabIndex="-1" />
 ```
 

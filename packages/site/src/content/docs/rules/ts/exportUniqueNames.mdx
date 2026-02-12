@@ -19,11 +19,13 @@ This can lead to confusion and runtime errors when consuming the module.
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2323 2484
 export const value = 1;
 export { value };
 ```
 
 ```ts
+// @errors: 2300
 const a = 1;
 const b = 2;
 export { a };

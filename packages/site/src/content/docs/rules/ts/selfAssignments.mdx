@@ -19,18 +19,29 @@ These assignments serve no purpose and should be removed or corrected to assign 
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2588
+declare const value: any;
+// ---cut---
 value = value;
 ```
 
 ```ts
+// @errors: 2588
+declare const count: any;
+// ---cut---
 count &&= count;
 ```
 
 ```ts
+declare const flags: any;
+// ---cut---
 flags.value ||= flags.value;
 ```
 
 ```ts
+// @errors: 2588
+declare const data: any;
+// ---cut---
 data ??= data;
 ```
 
@@ -38,18 +49,34 @@ data ??= data;
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 2588
+declare const newValue: any;
+declare const value: any;
+// ---cut---
 value = newValue;
 ```
 
 ```ts
+// @errors: 2588
+declare const count: any;
+declare const otherCount: any;
+// ---cut---
 count &&= otherCount;
 ```
 
 ```ts
+// @errors: 2588
+declare const defaultFlag: any;
+declare const flag: any;
+// ---cut---
 flag ||= defaultFlag;
 ```
 
 ```ts
+// @errors: 2588
+declare const data: any;
+declare const fallbackData: any;
+// ---cut---
 data ??= fallbackData;
 ```
 

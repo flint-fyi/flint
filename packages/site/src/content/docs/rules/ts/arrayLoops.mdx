@@ -32,6 +32,7 @@ array.forEach((element) => {
 ```
 
 ```ts
+// @errors: 2349
 declare const array: string[];
 array.forEach(function (item) {
 	process(item);
@@ -39,6 +40,8 @@ array.forEach(function (item) {
 ```
 
 ```ts
+declare const handle: any;
+// ---cut---
 [1, 2, 3].forEach((value) => {
 	handle(value);
 });
@@ -55,6 +58,7 @@ for (const element of array) {
 ```
 
 ```ts
+// @errors: 2349
 declare const array: string[];
 for (const item of array) {
 	process(item);

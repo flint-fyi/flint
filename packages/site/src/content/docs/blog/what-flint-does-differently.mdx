@@ -524,6 +524,7 @@ Flint's rules will take a more modern approach.
 They will allow [Standard Schema](https://standardschema.dev) descriptions for rule options, which enables the use of TypeScript-friendly schema validation libraries such as [Zod](https://zod.dev):
 
 ```ts title="src/rules/someRule.ts"
+// @noErrors
 import { typescriptLanguage } from "@flint/typescript-language";
 import { z } from "zod";
 
@@ -538,6 +539,7 @@ export const someRule = typescriptLanguage.createRule({
 ```
 
 ```ts title="flint.config.ts"
+// @noErrors
 import { defineConfig, ts } from "flint";
 import { someRule } from "./src/rules/someRule.ts";
 
@@ -601,6 +603,7 @@ Flint will provide:
 Here's an example of Flint's `RuleTester` in practice:
 
 ```ts title="forInArrays.test.ts"
+// @noErrors
 import rule from "./forInArrays.ts";
 import { ruleTester } from "./ruleTester.ts";
 

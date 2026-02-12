@@ -22,14 +22,17 @@ This rule reports import and export statements that have empty braces with no sp
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @noErrors
 import {} from "module";
 ```
 
 ```ts
+// @noErrors
 import defaultExport from "module";
 ```
 
 ```ts
+// @noErrors
 export {} from "module";
 ```
 
@@ -37,26 +40,32 @@ export {} from "module";
 <TabItem label="✅ Correct">
 
 ```ts
+// @noErrors
 import { something } from "module";
 ```
 
 ```ts
+// @noErrors
 import "module";
 ```
 
 ```ts
+// @noErrors
 import defaultExport from "module";
 ```
 
 ```ts
+// @noErrors
 import * as namespace from "module";
 ```
 
 ```ts
+// @noErrors
 export { something } from "module";
 ```
 
 ```ts
+// @noErrors
 export * from "module";
 ```
 

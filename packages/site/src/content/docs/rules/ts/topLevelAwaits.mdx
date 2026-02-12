@@ -23,6 +23,7 @@ While convenient for standalone files run like scripts, it can cause issues if t
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2307
 const config = await import("./config.json");
 export const apiUrl = config.apiUrl;
 ```
@@ -36,6 +37,9 @@ export { data };
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 2307 2749
+declare const Config: any;
+// ---cut---
 let config: Config;
 
 export async function getConfig() {

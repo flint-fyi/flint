@@ -27,11 +27,17 @@ value = value || 1;
 ```
 
 ```ts
+// @errors: 2749
+declare const Config: any;
+declare const getDefaultConfig: any;
+// ---cut---
 let config: Config | undefined;
 config = config ?? getDefaultConfig();
 ```
 
 ```ts
+declare const isFeatureAvailable: any;
+// ---cut---
 let enabled = false;
 enabled = enabled && isFeatureAvailable();
 ```
@@ -45,11 +51,17 @@ value ||= 1;
 ```
 
 ```ts
+// @errors: 2749
+declare const Config: any;
+declare const getDefaultConfig: any;
+// ---cut---
 let config: Config | undefined;
 config ??= getDefaultConfig();
 ```
 
 ```ts
+declare const isFeatureAvailable: any;
+// ---cut---
 let enabled = false;
 enabled &&= isFeatureAvailable();
 ```

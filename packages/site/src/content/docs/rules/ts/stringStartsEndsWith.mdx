@@ -22,6 +22,8 @@ This rule detects regex `.test()` calls that check for simple string prefixes or
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const str: any;
+// ---cut---
 const hasPrefix = /^foo/.test(str);
 ```
 
@@ -29,6 +31,8 @@ const hasPrefix = /^foo/.test(str);
 <TabItem label="✅ Correct">
 
 ```ts
+declare const str: any;
+// ---cut---
 const hasPrefix = str.startsWith("foo");
 ```
 
@@ -41,6 +45,8 @@ const hasPrefix = str.startsWith("foo");
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const str: any;
+// ---cut---
 const hasSuffix = /bar$/.test(str);
 ```
 
@@ -48,6 +54,8 @@ const hasSuffix = /bar$/.test(str);
 <TabItem label="✅ Correct">
 
 ```ts
+declare const str: any;
+// ---cut---
 const hasSuffix = str.endsWith("bar");
 ```
 

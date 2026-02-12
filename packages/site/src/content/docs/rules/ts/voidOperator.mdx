@@ -21,6 +21,9 @@ Using `undefined` directly is clearer and more explicit.
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const action: any;
+declare const doSomething: any;
+// ---cut---
 const value = void 0;
 
 function process() {
@@ -34,6 +37,9 @@ const callback = () => void action();
 <TabItem label="✅ Correct">
 
 ```ts
+declare const action: any;
+declare const doSomething: any;
+// ---cut---
 const value = undefined;
 
 function process() {

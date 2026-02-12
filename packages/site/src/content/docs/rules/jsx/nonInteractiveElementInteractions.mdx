@@ -30,15 +30,21 @@ This is required for WCAG 4.1.2 compliance.
 ```
 
 ```tsx
-<main onKeyDown={handler}>Content</main>
+declare const handler: any;
+// ---cut---
+<main onKeyDown={handler}>Content</main>;
 ```
 
 ```tsx
-<img onClick={handleClick} src="image.png" />
+declare const handleClick: any;
+// ---cut---
+<img onClick={handleClick} src="image.png" />;
 ```
 
 ```tsx
-<section onClick={handler} role="article" />
+declare const handler: any;
+// ---cut---
+<section onClick={handler} role="article" />;
 ```
 
 </TabItem>
@@ -61,7 +67,9 @@ This is required for WCAG 4.1.2 compliance.
 ```
 
 ```tsx
-<section onClick={handler} role="button" />
+declare const handler: any;
+// ---cut---
+<section onClick={handler} role="button" />;
 ```
 
 </TabItem>

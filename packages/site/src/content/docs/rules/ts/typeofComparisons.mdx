@@ -22,24 +22,39 @@ This rule enforces that `typeof` expressions are only compared to valid string l
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2367
+declare const processString: any;
+declare const value: any;
+// ---cut---
 if (typeof value === "strnig") {
 	processString(value);
 }
 ```
 
 ```ts
+// @errors: 2367
+declare const callback: any;
+// ---cut---
 if (typeof callback !== "fucntion") {
 	throw new Error("Invalid callback");
 }
 ```
 
 ```ts
+// @errors: 2367
+declare const data: any;
+declare const initialize: any;
+// ---cut---
 if (typeof data == "undefimed") {
 	initialize();
 }
 ```
 
 ```ts
+// @errors: 2367
+declare const calculate: any;
+declare const count: any;
+// ---cut---
 if (typeof count === "nunber") {
 	calculate(count);
 }
@@ -49,24 +64,35 @@ if (typeof count === "nunber") {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const processString: any;
+declare const value: any;
+// ---cut---
 if (typeof value === "string") {
 	processString(value);
 }
 ```
 
 ```ts
+declare const callback: any;
+// ---cut---
 if (typeof callback !== "function") {
 	throw new Error("Invalid callback");
 }
 ```
 
 ```ts
+declare const data: any;
+declare const initialize: any;
+// ---cut---
 if (typeof data == "undefined") {
 	initialize();
 }
 ```
 
 ```ts
+declare const calculate: any;
+declare const count: any;
+// ---cut---
 if (typeof count === "number") {
 	calculate(count);
 }

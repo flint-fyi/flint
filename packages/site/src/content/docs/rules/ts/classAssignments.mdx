@@ -19,16 +19,19 @@ Class declarations are typically intended to be immutable references, and reassi
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2629
 class MyClass {}
 MyClass = 0;
 ```
 
 ```ts
+// @errors: 2629
 class Counter {}
 Counter++;
 ```
 
 ```ts
+// @errors: 2629
 class Data {}
 Data = null;
 ```

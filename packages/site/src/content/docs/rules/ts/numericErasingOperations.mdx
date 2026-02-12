@@ -21,18 +21,26 @@ The entire expression can be replaced with `0` directly.
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const x: any;
+// ---cut---
 const value = x * 0;
 ```
 
 ```ts
+declare const x: any;
+// ---cut---
 const value = 0 * x;
 ```
 
 ```ts
+declare const x: any;
+// ---cut---
 const value = x & 0;
 ```
 
 ```ts
+declare const x: any;
+// ---cut---
 const value = 0 / x;
 ```
 
@@ -44,14 +52,22 @@ const value = 0;
 ```
 
 ```ts
+declare const x: any;
+// ---cut---
 const value = x * 1;
 ```
 
 ```ts
+declare const mask: any;
+declare const x: any;
+// ---cut---
 const value = x & mask;
 ```
 
 ```ts
+declare const divisor: any;
+declare const x: any;
+// ---cut---
 const value = x / divisor;
 ```
 

@@ -21,7 +21,9 @@ Without proper tabIndex, keyboard users cannot reach the element to interact wit
 <TabItem label="❌ Incorrect">
 
 ```tsx
-<div aria-activedescendant={someID} />
+declare const someID: any;
+// ---cut---
+<div aria-activedescendant={someID} />;
 ```
 
 ```tsx
@@ -32,19 +34,27 @@ Without proper tabIndex, keyboard users cannot reach the element to interact wit
 <TabItem label="✅ Correct">
 
 ```tsx
-<div aria-activedescendant={someID} tabIndex={0} />
+declare const someID: any;
+// ---cut---
+<div aria-activedescendant={someID} tabIndex={0} />;
 ```
 
 ```tsx
-<div aria-activedescendant={someID} tabIndex={-1} />
+declare const someID: any;
+// ---cut---
+<div aria-activedescendant={someID} tabIndex={-1} />;
 ```
 
 ```tsx
-<input aria-activedescendant={someID} />
+declare const someID: any;
+// ---cut---
+<input aria-activedescendant={someID} />;
 ```
 
 ```tsx
-<button aria-activedescendant={someID} />
+declare const someID: any;
+// ---cut---
+<button aria-activedescendant={someID} />;
 ```
 
 </TabItem>

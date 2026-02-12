@@ -32,10 +32,14 @@ const toNumber = function (value) {
 ```
 
 ```ts
+declare const values: any;
+// ---cut---
 const truthy = values.filter((value) => value);
 ```
 
 ```ts
+declare const values: any;
+// ---cut---
 const hasTruthy = values.some((item) => item);
 ```
 
@@ -51,10 +55,14 @@ const toNumber = Number;
 ```
 
 ```ts
+declare const values: any;
+// ---cut---
 const truthy = values.filter(Boolean);
 ```
 
 ```ts
+declare const values: any;
+// ---cut---
 const hasTruthy = values.some(Boolean);
 ```
 

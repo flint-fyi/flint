@@ -30,11 +30,13 @@ export {};
 ```
 
 ```ts
+// @noErrors
 export * from "module";
 export {};
 ```
 
 ```ts
+// @noErrors
 import { something } from "module";
 export {};
 ```
@@ -47,6 +49,7 @@ export const value = {};
 ```
 
 ```ts
+// @noErrors
 export * from "module";
 ```
 
@@ -55,6 +58,7 @@ export {};
 ```
 
 ```ts
+// @noErrors
 import { something } from "module";
 
 console.log(something);

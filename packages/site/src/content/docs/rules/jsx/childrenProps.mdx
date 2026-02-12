@@ -23,7 +23,9 @@ This makes the JSX more readable and maintainable by following the standard JSX 
 ```
 
 ```tsx
-<Component children={<span>Test</span>} />
+declare const Component: any;
+// ---cut---
+<Component children={<span>Test</span>} />;
 ```
 
 ```tsx
@@ -38,9 +40,11 @@ This makes the JSX more readable and maintainable by following the standard JSX 
 ```
 
 ```tsx
+declare const Component: any;
+// ---cut---
 <Component>
 	<span>Test</span>
-</Component>
+</Component>;
 ```
 
 ```tsx

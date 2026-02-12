@@ -21,10 +21,14 @@ The global methods `isFinite()` and `isNaN()` coerce their arguments to numbers 
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const value: any;
+// ---cut---
 isNaN(value);
 ```
 
 ```ts
+declare const value: any;
+// ---cut---
 isFinite(value);
 ```
 
@@ -36,10 +40,14 @@ const value = NaN;
 <TabItem label="✅ Correct">
 
 ```ts
+declare const value: any;
+// ---cut---
 Number.isNaN(value);
 ```
 
 ```ts
+declare const value: any;
+// ---cut---
 Number.isFinite(value);
 ```
 

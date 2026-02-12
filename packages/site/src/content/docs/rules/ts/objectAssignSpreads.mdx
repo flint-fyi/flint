@@ -21,14 +21,21 @@ This rule flags cases where `Object.assign({}, source)` or `Object.assign({ prop
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const source: any;
+// ---cut---
 const clone = Object.assign({}, source);
 ```
 
 ```ts
+declare const defaults: any;
+declare const userConfig: any;
+// ---cut---
 const merged = Object.assign({}, defaults, userConfig);
 ```
 
 ```ts
+declare const data: any;
+// ---cut---
 const extended = Object.assign({ id: 1 }, data);
 ```
 
@@ -40,14 +47,21 @@ const result = Object.assign({ name: "test" });
 <TabItem label="✅ Correct">
 
 ```ts
+declare const source: any;
+// ---cut---
 const clone = { ...source };
 ```
 
 ```ts
+declare const defaults: any;
+declare const userConfig: any;
+// ---cut---
 const merged = { ...defaults, ...userConfig };
 ```
 
 ```ts
+declare const data: any;
+// ---cut---
 const extended = { id: 1, ...data };
 ```
 
@@ -56,6 +70,9 @@ const result = { name: "test" };
 ```
 
 ```ts
+declare const existingObject: any;
+declare const newProperties: any;
+// ---cut---
 Object.assign(existingObject, newProperties);
 ```
 

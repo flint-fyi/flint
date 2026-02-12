@@ -32,12 +32,15 @@ for (let i = 10; i >= 0; i++) {
 ```
 
 ```ts
+// @errors: 2349
 for (let i = 0; i < 10; i -= 1) {
 	process(i);
 }
 ```
 
 ```ts
+declare const handle: any;
+// ---cut---
 const step = -2;
 for (let i = 0; i < 10; i += step) {
 	handle(i);
@@ -60,12 +63,15 @@ for (let i = 10; i >= 0; i--) {
 ```
 
 ```ts
+// @errors: 2349
 for (let i = 0; i < 10; i += 1) {
 	process(i);
 }
 ```
 
 ```ts
+declare const handle: any;
+// ---cut---
 for (let i = 10; i > 0; i -= 1) {
 	handle(i);
 }

@@ -20,14 +20,20 @@ Equality comparisons (`===`, `==`) will always be `false`, and inequality compar
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const text: any;
+// ---cut---
 text.charAt(0) === "ab";
 ```
 
 ```ts
+declare const text: any;
+// ---cut---
 "abc" === text.charAt(0);
 ```
 
 ```ts
+declare const text: any;
+// ---cut---
 text.charAt(0) !== "hello";
 ```
 
@@ -35,14 +41,20 @@ text.charAt(0) !== "hello";
 <TabItem label="✅ Correct">
 
 ```ts
+declare const text: any;
+// ---cut---
 text.charAt(0) === "a";
 ```
 
 ```ts
+declare const text: any;
+// ---cut---
 text.slice(0, 2) === "ab";
 ```
 
 ```ts
+declare const text: any;
+// ---cut---
 text.startsWith("ab");
 ```
 

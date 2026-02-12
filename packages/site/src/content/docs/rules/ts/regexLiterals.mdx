@@ -46,11 +46,15 @@ const pattern = /(?:)/;
 ```
 
 ```ts
+declare const userInput: any;
+// ---cut---
 // Dynamic patterns are fine
 const pattern = new RegExp(userInput);
 ```
 
 ```ts
+declare const flags: any;
+// ---cut---
 // Dynamic flags are fine
 const pattern = new RegExp("abc", flags);
 ```

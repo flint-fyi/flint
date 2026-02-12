@@ -22,6 +22,8 @@ This rule reports using `charCodeAt` or `fromCharCode` instead of `codePointAt` 
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const text: any;
+// ---cut---
 const code = text.charCodeAt(0);
 ```
 
@@ -33,6 +35,8 @@ const char = String.fromCharCode(128512);
 <TabItem label="✅ Correct">
 
 ```ts
+declare const text: any;
+// ---cut---
 const code = text.codePointAt(0);
 ```
 

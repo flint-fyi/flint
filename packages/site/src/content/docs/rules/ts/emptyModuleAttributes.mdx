@@ -19,18 +19,22 @@ An empty `with {}` clause provides no additional information and should be remov
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @noErrors
 import data from "./data.json" with {};
 ```
 
 ```ts
+// @noErrors
 import { x } from "./module" with {};
 ```
 
 ```ts
+// @noErrors
 export { x } from "./module" with {};
 ```
 
 ```ts
+// @noErrors
 export * from "./module" with {};
 ```
 
@@ -38,18 +42,22 @@ export * from "./module" with {};
 <TabItem label="✅ Correct">
 
 ```ts
+// @noErrors
 import data from "./data.json" with { type: "json" };
 ```
 
 ```ts
+// @noErrors
 import { x } from "./module";
 ```
 
 ```ts
+// @noErrors
 export { x } from "./module";
 ```
 
 ```ts
+// @noErrors
 import styles from "./styles.css" with { type: "css" };
 ```
 

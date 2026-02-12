@@ -21,6 +21,8 @@ These methods return `-1` when an element is not found, so checking against `-1`
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const values: any;
+// ---cut---
 const index = values.indexOf("test");
 if (index < 0) {
 	// not found
@@ -28,6 +30,8 @@ if (index < 0) {
 ```
 
 ```ts
+declare const values: any;
+// ---cut---
 const index = values.indexOf("test");
 if (index >= 0) {
 	// found
@@ -35,6 +39,8 @@ if (index >= 0) {
 ```
 
 ```ts
+declare const values: any;
+// ---cut---
 const index = values.indexOf("test");
 if (index > -1) {
 	// found
@@ -45,6 +51,8 @@ if (index > -1) {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const values: any;
+// ---cut---
 const index = values.indexOf("test");
 if (index === -1) {
 	// not found
@@ -52,6 +60,8 @@ if (index === -1) {
 ```
 
 ```ts
+declare const values: any;
+// ---cut---
 const index = values.indexOf("test");
 if (index !== -1) {
 	// found
@@ -59,6 +69,8 @@ if (index !== -1) {
 ```
 
 ```ts
+declare const values: any;
+// ---cut---
 if (values.findIndex((value) => value > 10) === -1) {
 	// not found
 }

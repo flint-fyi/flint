@@ -19,6 +19,9 @@ They can expose sensitive information to users and clutter the browser console.
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2749
+declare const User: any;
+// ---cut---
 function processUser(user: User) {
 	console.log("Processing user:", user);
 	return user.name;
@@ -29,6 +32,9 @@ function processUser(user: User) {
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 2749
+declare const User: any;
+// ---cut---
 function processUser(user: User) {
 	return user.name;
 }

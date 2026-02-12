@@ -35,6 +35,7 @@ array.filter((value) => value > 0).shift();
 ```
 
 ```ts
+// @errors: 2550
 declare const array: number[];
 array.filter((value) => value > 0).at(0);
 ```
@@ -45,6 +46,7 @@ array.filter((value) => value > 0).pop();
 ```
 
 ```ts
+// @errors: 2550
 declare const array: number[];
 array.filter((value) => value > 0).at(-1);
 ```
@@ -58,6 +60,7 @@ array.find((value) => value > 0);
 ```
 
 ```ts
+// @errors: 2550
 declare const array: number[];
 array.findLast((value) => value > 0);
 ```

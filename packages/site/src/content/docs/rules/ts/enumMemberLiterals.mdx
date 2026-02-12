@@ -54,6 +54,8 @@ enum Foo {
 ```
 
 ```ts
+declare const getValue: any;
+// ---cut---
 enum Foo {
 	a = getValue(),
 }

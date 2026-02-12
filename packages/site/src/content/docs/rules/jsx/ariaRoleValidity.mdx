@@ -45,7 +45,9 @@ This is required for WCAG 4.1.2 compliance.
 ```
 
 ```tsx
-<div role={dynamicRole} />
+declare const dynamicRole: any;
+// ---cut---
+<div role={dynamicRole} />;
 ```
 
 ```tsx

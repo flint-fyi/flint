@@ -19,6 +19,9 @@ If a constructor has side effects that you want to trigger, it's better to make 
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const EventEmitter: any;
+declare const MyClass: any;
+// ---cut---
 // Constructing an object without using it
 new MyClass();
 
@@ -32,6 +35,10 @@ function initialize() {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const EventEmitter: any;
+declare const MyClass: any;
+declare const handleData: any;
+// ---cut---
 // Store the constructed object
 const instance = new MyClass();
 

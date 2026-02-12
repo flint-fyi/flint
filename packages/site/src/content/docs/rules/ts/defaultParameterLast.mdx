@@ -37,6 +37,7 @@ const fn = (x = 0, y: number) => x + y;
 ```
 
 ```ts
+// @errors: 1016
 function example(a?: number, b: number) {
 	return (a ?? 0) + b;
 }

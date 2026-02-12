@@ -22,6 +22,7 @@ This can significantly reduce bundle size, especially for large libraries where 
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @noErrors
 import * as utils from "./utils";
 
 function getValue(key: string) {
@@ -30,6 +31,7 @@ function getValue(key: string) {
 ```
 
 ```ts
+// @noErrors
 import * as api from "api-library";
 const method = getMethodName();
 api[method]();
@@ -39,6 +41,7 @@ api[method]();
 <TabItem label="✅ Correct">
 
 ```ts
+// @noErrors
 import * as utils from "./utils";
 
 function getValue(key: string) {
@@ -47,6 +50,7 @@ function getValue(key: string) {
 ```
 
 ```ts
+// @noErrors
 import { method1, method2 } from "api-library";
 const method = condition ? method1 : method2;
 method();

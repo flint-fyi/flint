@@ -21,12 +21,16 @@ This rule reports on boolean casts in already-boolean contexts.
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const value: any;
+// ---cut---
 if (!!value) {
 	// ...
 }
 ```
 
 ```ts
+declare const condition: any;
+// ---cut---
 while (Boolean(condition)) {
 	// ...
 }
@@ -36,12 +40,16 @@ while (Boolean(condition)) {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const value: any;
+// ---cut---
 if (value) {
 	// ...
 }
 ```
 
 ```ts
+declare const condition: any;
+// ---cut---
 while (condition) {
 	// ...
 }

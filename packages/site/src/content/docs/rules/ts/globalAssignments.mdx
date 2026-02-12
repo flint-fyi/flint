@@ -20,6 +20,7 @@ In strict mode, reassigning these globals will throw a TypeError at runtime.
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2322 2539 2739
 undefined = 1;
 
 NaN = 42;
@@ -32,6 +33,7 @@ Array = function () {};
 ```
 
 ```ts
+// @errors: 2539
 let count = 5;
 undefined += count;
 
@@ -56,6 +58,7 @@ const myArray = function () {};
 ```
 
 ```ts
+// @errors: 2322
 let count = 5;
 let undefinedValue = undefined;
 undefinedValue = count;

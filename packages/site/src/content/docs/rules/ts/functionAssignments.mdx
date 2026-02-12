@@ -19,6 +19,7 @@ Function declarations are hoisted to the top of their scope, and reassigning the
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2630
 function calculate(value: number): number {
 	return value * 2;
 }
@@ -27,6 +28,7 @@ calculate = (value: number) => value * 3;
 ```
 
 ```ts
+// @errors: 2630
 function processData(): void {
 	console.log("Processing...");
 }
@@ -35,6 +37,7 @@ processData = null;
 ```
 
 ```ts
+// @errors: 2630
 function getValue(): number {
 	return 42;
 }
@@ -54,6 +57,7 @@ const result = calculate(10);
 ```
 
 ```ts
+// @errors: 2588
 const processData = function (): void {
 	console.log("Processing...");
 };

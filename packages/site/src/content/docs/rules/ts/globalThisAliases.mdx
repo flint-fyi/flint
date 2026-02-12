@@ -21,14 +21,21 @@ Using `window`, `self`, or `global` ties your code to specific environments (bro
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const window: any;
+// ---cut---
 const value = window.localStorage;
 ```
 
 ```ts
+declare const handler: any;
+declare const window: any;
+// ---cut---
 window.addEventListener("load", handler);
 ```
 
 ```ts
+declare const self: any;
+// ---cut---
 const ref = self;
 ```
 
@@ -40,6 +47,8 @@ const value = globalThis.localStorage;
 ```
 
 ```ts
+declare const handler: any;
+// ---cut---
 globalThis.addEventListener("load", handler);
 ```
 

@@ -21,20 +21,28 @@ Using `Object.hasOwn()` avoids potential issues with objects that don't inherit 
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const obj: any;
+// ---cut---
 const hasKey = obj.hasOwnProperty("key");
 ```
 
 ```ts
+declare const obj: any;
+// ---cut---
 if (obj.hasOwnProperty("prop")) {
 	console.log("Has property");
 }
 ```
 
 ```ts
+declare const obj: any;
+// ---cut---
 const result = Object.prototype.hasOwnProperty.call(obj, "key");
 ```
 
 ```ts
+declare const obj: any;
+// ---cut---
 const exists = {}.hasOwnProperty.call(obj, "prop");
 ```
 
@@ -42,20 +50,32 @@ const exists = {}.hasOwnProperty.call(obj, "prop");
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 2550
+declare const obj: any;
+// ---cut---
 const hasKey = Object.hasOwn(obj, "key");
 ```
 
 ```ts
+// @errors: 2550
+declare const obj: any;
+// ---cut---
 if (Object.hasOwn(obj, "prop")) {
 	console.log("Has property");
 }
 ```
 
 ```ts
+// @errors: 2550
+declare const obj: any;
+// ---cut---
 const result = Object.hasOwn(obj, "key");
 ```
 
 ```ts
+// @errors: 2550
+declare const obj: any;
+// ---cut---
 const exists = Object.hasOwn(obj, "prop");
 ```
 

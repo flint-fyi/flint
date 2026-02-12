@@ -20,6 +20,8 @@ Descriptive names ending in "Error", are also acceptable (e.g., `innerError`, `p
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const doSomething: any;
+// ---cut---
 try {
 	doSomething();
 } catch (e) {
@@ -28,6 +30,9 @@ try {
 ```
 
 ```ts
+declare const path: any;
+declare const readFile: any;
+// ---cut---
 try {
 	readFile(path);
 } catch (err) {
@@ -36,6 +41,8 @@ try {
 ```
 
 ```ts
+declare const doSomething: any;
+// ---cut---
 try {
 	doSomething();
 } catch (_) {
@@ -47,6 +54,8 @@ try {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const doSomething: any;
+// ---cut---
 try {
 	doSomething();
 } catch (error) {
@@ -55,6 +64,9 @@ try {
 ```
 
 ```ts
+declare const path: any;
+declare const readFile: any;
+// ---cut---
 try {
 	readFile(path);
 } catch (fileError) {
@@ -63,6 +75,8 @@ try {
 ```
 
 ```ts
+declare const doSomething: any;
+// ---cut---
 try {
 	doSomething();
 } catch {

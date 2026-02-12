@@ -27,7 +27,9 @@ This is required for WCAG 4.1.2 compliance.
 ```
 
 ```tsx
-<span onKeyDown={handler} />
+declare const handler: any;
+// ---cut---
+<span onKeyDown={handler} />;
 ```
 
 </TabItem>
@@ -38,7 +40,9 @@ This is required for WCAG 4.1.2 compliance.
 ```
 
 ```tsx
-<span onKeyDown={handler} role="link" />
+declare const handler: any;
+// ---cut---
+<span onKeyDown={handler} role="link" />;
 ```
 
 ```tsx

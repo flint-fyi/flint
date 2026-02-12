@@ -19,6 +19,9 @@ without any additional configuration (like `options`, `errors`, etc.), it can be
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const rule: any;
+declare const ruleTester: any;
+// ---cut---
 ruleTester.describe(rule, {
 	valid: ["a", { code: "a" }],
 	invalid: [],
@@ -29,6 +32,9 @@ ruleTester.describe(rule, {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const rule: any;
+declare const ruleTester: any;
+// ---cut---
 ruleTester.describe(rule, {
 	valid: ["a", "a"],
 	invalid: [],
@@ -36,6 +42,9 @@ ruleTester.describe(rule, {
 ```
 
 ```ts
+declare const rule: any;
+declare const ruleTester: any;
+// ---cut---
 ruleTester.describe(rule, {
 	valid: [
 		{ code: "a", fileName: "b.ts" },

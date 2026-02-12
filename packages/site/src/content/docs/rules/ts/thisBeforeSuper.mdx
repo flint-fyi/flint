@@ -19,6 +19,9 @@ Attempting to access `this` or `super` properties before calling `super()` throw
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2339 17009
+declare const Parent: any;
+// ---cut---
 class Child extends Parent {
 	constructor() {
 		this.value = 0;
@@ -28,6 +31,9 @@ class Child extends Parent {
 ```
 
 ```ts
+// @errors: 17011
+declare const Parent: any;
+// ---cut---
 class Child extends Parent {
 	constructor() {
 		super.initialize();
@@ -40,6 +46,9 @@ class Child extends Parent {
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 2339
+declare const Parent: any;
+// ---cut---
 class Child extends Parent {
 	constructor() {
 		super();
@@ -49,6 +58,8 @@ class Child extends Parent {
 ```
 
 ```ts
+declare const Parent: any;
+// ---cut---
 class Child extends Parent {
 	constructor() {
 		super();

@@ -32,18 +32,24 @@ This is required for WCAG 2.1.1 compliance.
 ```
 
 ```tsx
-<span onClick={handler} />
+declare const handler: any;
+// ---cut---
+<span onClick={handler} />;
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```tsx
-<div onClick={() => {}} onKeyDown={handler} />
+declare const handler: any;
+// ---cut---
+<div onClick={() => {}} onKeyDown={handler} />;
 ```
 
 ```tsx
-<div onClick={() => {}} onKeyUp={handler} />
+declare const handler: any;
+// ---cut---
+<div onClick={() => {}} onKeyUp={handler} />;
 ```
 
 ```tsx
@@ -55,7 +61,9 @@ This is required for WCAG 2.1.1 compliance.
 ```
 
 ```tsx
-<CustomElement onClick={() => {}} aria-hidden="true" />
+declare const CustomElement: any;
+// ---cut---
+<CustomElement onClick={() => {}} aria-hidden="true" />;
 ```
 
 </TabItem>

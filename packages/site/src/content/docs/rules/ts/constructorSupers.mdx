@@ -22,6 +22,9 @@ This rule reports code that appears to violate either requirement.
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2339 2377 17009
+declare const Parent: any;
+// ---cut---
 class Child extends Parent {
 	constructor() {
 		this.value = 1;
@@ -30,6 +33,9 @@ class Child extends Parent {
 ```
 
 ```ts
+// @errors: 2339 2377 17009
+declare const Parent: any;
+// ---cut---
 class Child extends Parent {
 	constructor(name: string) {
 		this.name = name;
@@ -38,6 +44,7 @@ class Child extends Parent {
 ```
 
 ```ts
+// @errors: 2335
 class Example {
 	constructor() {
 		super();
@@ -49,6 +56,9 @@ class Example {
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 2339
+declare const Parent: any;
+// ---cut---
 class Child extends Parent {
 	constructor() {
 		super();
@@ -58,6 +68,9 @@ class Child extends Parent {
 ```
 
 ```ts
+// @errors: 2339
+declare const Parent: any;
+// ---cut---
 class Child extends Parent {
 	constructor(name: string) {
 		super(name);
@@ -67,6 +80,7 @@ class Child extends Parent {
 ```
 
 ```ts
+// @errors: 2339
 class Example {
 	constructor() {
 		this.value = 1;
@@ -75,6 +89,8 @@ class Example {
 ```
 
 ```ts
+declare const Parent: any;
+// ---cut---
 class Child extends Parent {
 	value = 1;
 }

@@ -58,7 +58,9 @@ This is required for WCAG 3.1.2 compliance.
 ```
 
 ```tsx
-<div lang={language}>Content</div>
+declare const language: any;
+// ---cut---
+<div lang={language}>Content</div>;
 ```
 
 </TabItem>

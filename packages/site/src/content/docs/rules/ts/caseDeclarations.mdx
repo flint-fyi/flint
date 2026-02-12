@@ -20,6 +20,11 @@ Wrapping the contents of case clauses in curly braces creates a proper block sco
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2451 2454
+declare const fetchAdminData: any;
+declare const fetchUserData: any;
+declare const processData: any;
+// ---cut---
 function processValue(value: number): string {
 	switch (value) {
 		case 1:
@@ -52,6 +57,10 @@ function handleType(type: string): void {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const fetchAdminData: any;
+declare const fetchUserData: any;
+declare const processData: any;
+// ---cut---
 function processValue(value: number): string {
 	switch (value) {
 		case 1: {

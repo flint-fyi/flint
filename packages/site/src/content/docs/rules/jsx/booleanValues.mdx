@@ -27,7 +27,9 @@ The shorthand syntax is more concise and idiomatic in JSX, reducing visual noise
 ```
 
 ```tsx
-<Component isActive={true} />
+declare const Component: any;
+// ---cut---
+<Component isActive={true} />;
 ```
 
 </TabItem>
@@ -42,7 +44,9 @@ The shorthand syntax is more concise and idiomatic in JSX, reducing visual noise
 ```
 
 ```tsx
-<Component isActive />
+declare const Component: any;
+// ---cut---
+<Component isActive />;
 ```
 
 ```tsx
@@ -50,7 +54,10 @@ The shorthand syntax is more concise and idiomatic in JSX, reducing visual noise
 ```
 
 ```tsx
-<Component isActive={someCondition} />
+declare const Component: any;
+declare const someCondition: any;
+// ---cut---
+<Component isActive={someCondition} />;
 ```
 
 </TabItem>

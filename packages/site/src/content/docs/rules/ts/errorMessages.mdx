@@ -57,10 +57,15 @@ throw new TypeError("Expected a number");
 ```
 
 ```ts
+declare const max: any;
+declare const min: any;
+// ---cut---
 throw new RangeError(`Value must be between ${min} and ${max}`);
 ```
 
 ```ts
+declare const getErrorMessage: any;
+// ---cut---
 throw new Error(getErrorMessage());
 ```
 

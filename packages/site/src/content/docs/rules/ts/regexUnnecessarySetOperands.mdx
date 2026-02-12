@@ -26,22 +26,27 @@ The rule detects four types of issues:
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 1501
 /[\w&&\s]/v;
 ```
 
 ```ts
+// @errors: 1501
 /[\w&&\d]/v;
 ```
 
 ```ts
+// @errors: 1501
 /[\w--\s]/v;
 ```
 
 ```ts
+// @errors: 1501
 /[\d--\w]/v;
 ```
 
 ```ts
+// @errors: 1501
 /[[abc]&&[def]]/v;
 ```
 
@@ -49,14 +54,17 @@ The rule detects four types of issues:
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 1501
 /[\w--\d]/v;
 ```
 
 ```ts
+// @errors: 1501
 /[[a-z]&&[a-m]]/v;
 ```
 
 ```ts
+// @errors: 1501
 /[[a-z]--[aeiou]]/v;
 ```
 
@@ -65,6 +73,7 @@ The rule detects four types of issues:
 ```
 
 ```ts
+// @errors: 1501
 /[\w\d]/v;
 ```
 

@@ -21,6 +21,8 @@ The `Object.is()` method correctly distinguishes between `-0` and `+0`, making i
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const value: any;
+// ---cut---
 function checkValue(value: number) {
 	if (value === -0) {
 		return "negative zero";
@@ -43,6 +45,8 @@ if (value >= -0) {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const value: any;
+// ---cut---
 function checkValue(value: number) {
 	if (Object.is(value, -0)) {
 		return "negative zero";

@@ -19,12 +19,18 @@ Doing so provides no added benefit for testing and is unnecessary.
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const rule: any;
+declare const ruleTester: any;
+// ---cut---
 ruleTester.describe(rule, {
 	valid: ["a", "a"],
 });
 ```
 
 ```ts
+declare const rule: any;
+declare const ruleTester: any;
+// ---cut---
 ruleTester.describe(rule, {
 	invalid: [
 		{
@@ -55,12 +61,18 @@ ruleTester.describe(rule, {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const rule: any;
+declare const ruleTester: any;
+// ---cut---
 ruleTester.describe(rule, {
 	valid: ["a", "b"],
 });
 ```
 
 ```ts
+declare const rule: any;
+declare const ruleTester: any;
+// ---cut---
 ruleTester.describe(rule, {
 	invalid: [
 		{

@@ -20,26 +20,39 @@ Attempting to reassign a const variable results in a runtime error.
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2588
 const value = 1;
 value = 2;
 ```
 
 ```ts
+// @errors: 2588
+declare const getOtherValue: any;
+declare const getValue: any;
+// ---cut---
 const result = getValue();
 result = getOtherValue();
 ```
 
 ```ts
+// @errors: 2588
 const counter = 0;
 counter++;
 ```
 
 ```ts
+// @errors: 2588
+declare const object: any;
+// ---cut---
 const { property } = object;
 property = "new value";
 ```
 
 ```ts
+// @errors: 2588
+declare const items: any;
+declare const processItem: any;
+// ---cut---
 for (const item of items) {
 	item = processItem(item);
 }
@@ -64,11 +77,16 @@ array.push(4);
 ```
 
 ```ts
+declare const object: any;
+// ---cut---
 const { property } = object;
 console.log(property);
 ```
 
 ```ts
+declare const items: any;
+declare const processItem: any;
+// ---cut---
 for (let item of items) {
 	item = processItem(item);
 }

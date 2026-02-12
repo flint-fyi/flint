@@ -22,6 +22,7 @@ The same sequence (e.g., `\2`) may be a character or a backreference depending o
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 1487
 const pattern = /\07/;
 ```
 
@@ -41,6 +42,7 @@ const pattern = /\x07/;
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 1534
 const pattern = /\7/;
 ```
 
@@ -60,6 +62,7 @@ const pattern = /\x07/;
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 1534
 const pattern = /\1\2/;
 ```
 

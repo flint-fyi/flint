@@ -46,18 +46,24 @@ class Foo {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const doSomething: any;
+// ---cut---
 function foo() {
 	doSomething();
 }
 ```
 
 ```ts
+declare const doSomething: any;
+// ---cut---
 const foo = function () {
 	doSomething();
 };
 ```
 
 ```ts
+declare const doSomething: any;
+// ---cut---
 const foo = () => doSomething();
 ```
 

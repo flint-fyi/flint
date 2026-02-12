@@ -26,6 +26,8 @@ parseInt("071");
 ```
 
 ```ts
+declare const someValue: any;
+// ---cut---
 parseInt(someValue);
 ```
 
@@ -53,6 +55,8 @@ parseInt("071", 8);
 ```
 
 ```ts
+declare const someValue: any;
+// ---cut---
 Number.parseInt(someValue, 10);
 ```
 
@@ -61,6 +65,8 @@ parseInt("10", 16);
 ```
 
 ```ts
+declare const radix: any;
+// ---cut---
 parseInt("10", radix);
 ```
 

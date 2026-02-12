@@ -25,12 +25,16 @@ The `Array.isArray()` method reliably detects arrays regardless of which realm t
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const value: any;
+// ---cut---
 if (value instanceof Array) {
 	value.forEach(console.log);
 }
 ```
 
 ```ts
+declare const data: any;
+// ---cut---
 const isArray = data instanceof Array;
 ```
 
@@ -38,12 +42,16 @@ const isArray = data instanceof Array;
 <TabItem label="✅ Correct">
 
 ```ts
+declare const value: any;
+// ---cut---
 if (Array.isArray(value)) {
 	value.forEach(console.log);
 }
 ```
 
 ```ts
+declare const data: any;
+// ---cut---
 const isArray = Array.isArray(data);
 ```
 

@@ -18,6 +18,11 @@ When reporting linting issues, it's common to include dynamic data in the messag
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2749
+declare const RuleContext: any;
+declare const _: any;
+declare const ruleCreator: any;
+// ---cut---
 ruleCreator.createRule(_, {
 	messages: {
 		messagesId: {
@@ -38,6 +43,11 @@ ruleCreator.createRule(_, {
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 2749
+declare const RuleContext: any;
+declare const _: any;
+declare const ruleCreator: any;
+// ---cut---
 ruleCreator.createRule(_, {
 	messages: {
 		messagesId: {

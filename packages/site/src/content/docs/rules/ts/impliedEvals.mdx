@@ -26,14 +26,17 @@ These "implied evals" have the same problems as `eval()`: they're difficult to a
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2769
 setTimeout("alert('Hello');", 1000);
 ```
 
 ```ts
+// @errors: 2769
 setInterval("counter++;", 100);
 ```
 
 ```ts
+// @errors: 2769
 const code = "console.log('executed');";
 setTimeout(code, 0);
 ```
@@ -43,6 +46,8 @@ new Function("a", "b", "return a + b");
 ```
 
 ```ts
+declare const window: any;
+// ---cut---
 window.setTimeout("doSomething()", 100);
 ```
 
@@ -50,18 +55,25 @@ window.setTimeout("doSomething()", 100);
 <TabItem label="✅ Correct">
 
 ```ts
+declare const alert: any;
+// ---cut---
 setTimeout(() => {
 	alert("Hello");
 }, 1000);
 ```
 
 ```ts
+// @errors: 2588
+declare const counter: any;
+// ---cut---
 setInterval(() => {
 	counter++;
 }, 100);
 ```
 
 ```ts
+declare const myCallback: any;
+// ---cut---
 setTimeout(myCallback, 0);
 ```
 
@@ -70,6 +82,9 @@ const add = (a: number, b: number) => a + b;
 ```
 
 ```ts
+declare const context: any;
+declare const handler: any;
+// ---cut---
 setTimeout(handler.bind(context), 100);
 ```
 

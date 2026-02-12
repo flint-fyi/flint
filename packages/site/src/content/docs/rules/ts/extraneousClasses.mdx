@@ -88,6 +88,8 @@ export const MAX_SIZE = 100;
 ```
 
 ```ts
+declare const Base: any;
+// ---cut---
 class Derived extends Base {
 	static helper() {
 		return 42;
@@ -147,6 +149,8 @@ When set to `true`, allows any extraneous class that includes a decorator.
 This is useful for frameworks that use decorators to configure classes.
 
 ```ts
+declare const Injectable: any;
+// ---cut---
 // Valid with { allowWithDecorator: true }
 @Injectable()
 class Service {}

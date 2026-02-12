@@ -19,6 +19,10 @@ These patterns are typically mistakes or leftover code from refactoring where va
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const array: any;
+declare const items: any;
+declare const object: any;
+// ---cut---
 const {} = object;
 const [] = array;
 
@@ -35,6 +39,10 @@ for (const {} of items) {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const array: any;
+declare const items: any;
+declare const person: any;
+// ---cut---
 const { name, age } = person;
 const [first, second] = array;
 

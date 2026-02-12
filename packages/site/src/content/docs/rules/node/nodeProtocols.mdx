@@ -20,6 +20,7 @@ The protocol is supported in Node.js 16+ and is the recommended way to import bu
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @noErrors
 import fs from "fs";
 
 import path from "path";
@@ -35,6 +36,7 @@ const crypto = require("crypto");
 <TabItem label="✅ Correct">
 
 ```ts
+// @noErrors
 import fs from "node:fs";
 
 import path from "node:path";

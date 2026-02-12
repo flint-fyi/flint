@@ -22,6 +22,9 @@ Empty catch blocks are also allowed when they contain comments explaining why th
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const condition: any;
+declare const value: any;
+// ---cut---
 if (condition) {
 }
 
@@ -37,6 +40,11 @@ switch (value) {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const condition: any;
+declare const doSomething: any;
+declare const processItem: any;
+declare const value: any;
+// ---cut---
 if (condition) {
 	doSomething();
 }

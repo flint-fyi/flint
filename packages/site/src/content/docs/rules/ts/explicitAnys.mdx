@@ -35,6 +35,8 @@ TypeScript's `--noImplicitAny` compiler option reports _implied_ `any`s, but doe
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const getResponse: any;
+// ---cut---
 const value: any = getResponse();
 ```
 
@@ -45,6 +47,8 @@ function process(input: any): void {
 ```
 
 ```ts
+declare const fetchData: any;
+// ---cut---
 function getData(): any {
 	return fetchData();
 }
@@ -54,6 +58,8 @@ function getData(): any {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const getResponse: any;
+// ---cut---
 const value: unknown = getResponse();
 ```
 
@@ -66,6 +72,8 @@ function process(input: unknown): void {
 ```
 
 ```ts
+declare const fetchData: any;
+// ---cut---
 interface Data {
 	property: string;
 }

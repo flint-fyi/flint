@@ -20,6 +20,7 @@ The null character escape sequence `\0` (when not followed by an octal digit) is
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 1487
 const message = "Hello\07World";
 const path = "C:\01\02\03";
 const octal = "\377";

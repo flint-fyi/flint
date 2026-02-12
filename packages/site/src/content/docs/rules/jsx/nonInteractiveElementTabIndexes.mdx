@@ -21,6 +21,7 @@ Non-interactive elements can use `tabIndex="-1"` if they need to be programmatic
 <TabItem label="❌ Incorrect">
 
 ```tsx
+// @errors: 2322
 <div tabIndex="0" />
 ```
 
@@ -29,6 +30,7 @@ Non-interactive elements can use `tabIndex="-1"` if they need to be programmatic
 ```
 
 ```tsx
+// @errors: 2322
 <div role="article" tabIndex="0" />
 ```
 
@@ -40,14 +42,17 @@ Non-interactive elements can use `tabIndex="-1"` if they need to be programmatic
 ```
 
 ```tsx
+// @errors: 2322
 <div tabIndex="-1" />
 ```
 
 ```tsx
+// @errors: 2322
 <button tabIndex="0" />
 ```
 
 ```tsx
+// @errors: 2322
 <div role="button" tabIndex="0" />
 ```
 

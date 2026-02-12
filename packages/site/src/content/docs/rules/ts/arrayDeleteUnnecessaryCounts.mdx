@@ -39,6 +39,7 @@ array.splice(0, Number.POSITIVE_INFINITY);
 ```
 
 ```ts
+// @errors: 2550
 declare const array: number[];
 array.toSpliced(1, array.length);
 ```

@@ -26,6 +26,8 @@ function getValue() {
 ```
 
 ```ts
+declare const calculate: any;
+// ---cut---
 function process() {
 	let result;
 	return (result = calculate());
@@ -33,6 +35,9 @@ function process() {
 ```
 
 ```ts
+// @errors: 2588
+declare const value: any;
+// ---cut---
 const arrow = () => (value = 42);
 ```
 
@@ -54,6 +59,8 @@ function getValue() {
 ```
 
 ```ts
+declare const calculate: any;
+// ---cut---
 function process() {
 	let result = calculate();
 	return result;

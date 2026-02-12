@@ -64,6 +64,8 @@ class Counter {
 ```
 
 ```ts
+declare const Parent: any;
+// ---cut---
 class Child extends Parent {
 	static method() {}
 }
@@ -83,6 +85,8 @@ class Singleton {
 ```
 
 ```ts
+declare const decorator: any;
+// ---cut---
 @decorator
 class DecoratedClass {
 	static method() {}

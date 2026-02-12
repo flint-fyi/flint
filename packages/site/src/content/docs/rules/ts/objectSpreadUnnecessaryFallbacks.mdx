@@ -21,18 +21,26 @@ This rule reports when an object spread fallback is an empty object.
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const options: any;
+// ---cut---
 const merged = { ...(options || {}) };
 ```
 
 ```ts
+declare const settings: any;
+// ---cut---
 const config = { ...(settings ?? {}) };
 ```
 
 ```ts
+declare const getValue: any;
+// ---cut---
 const result = { ...(getValue() || {}) };
 ```
 
 ```ts
+declare const nested: any;
+// ---cut---
 const data = { ...(nested.property ?? {}) };
 ```
 
@@ -40,22 +48,32 @@ const data = { ...(nested.property ?? {}) };
 <TabItem label="✅ Correct">
 
 ```ts
+declare const options: any;
+// ---cut---
 const merged = { ...options };
 ```
 
 ```ts
+declare const settings: any;
+// ---cut---
 const config = { ...settings };
 ```
 
 ```ts
+declare const getValue: any;
+// ---cut---
 const result = { ...getValue() };
 ```
 
 ```ts
+declare const nested: any;
+// ---cut---
 const data = { ...nested.property };
 ```
 
 ```ts
+declare const options: any;
+// ---cut---
 const merged = { ...(options || { defaultValue: true }) };
 ```
 

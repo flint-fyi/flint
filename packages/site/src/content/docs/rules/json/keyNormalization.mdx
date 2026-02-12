@@ -82,6 +82,8 @@ Each normalization form has specific characteristics:
 - **NFKD**: Compatibility Decomposition
 
 ```ts
+declare const json: any;
+// ---cut---
 json.rules({
 	keyNormalization: {
 		form: "NFD",

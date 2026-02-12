@@ -28,6 +28,7 @@ object?.property!;
 ```
 
 ```ts
+// @errors: 2722
 declare const object: { method?: () => string } | undefined;
 
 object?.method()!;
@@ -49,6 +50,7 @@ object?.property;
 ```
 
 ```ts
+// @errors: 2722
 declare const object: { method?: () => string } | undefined;
 
 object?.method();

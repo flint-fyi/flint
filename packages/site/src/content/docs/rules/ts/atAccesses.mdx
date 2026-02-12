@@ -19,14 +19,20 @@ The `.at()` method provides a cleaner syntax for accessing elements from the end
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const array: any;
+// ---cut---
 const last = array[array.length - 1];
 ```
 
 ```ts
+declare const items: any;
+// ---cut---
 const secondLast = items[items.length - 2];
 ```
 
 ```ts
+declare const text: any;
+// ---cut---
 const lastChar = text[text.length - 1];
 ```
 
@@ -34,22 +40,33 @@ const lastChar = text[text.length - 1];
 <TabItem label="✅ Correct">
 
 ```ts
+declare const array: any;
+// ---cut---
 const last = array.at(-1);
 ```
 
 ```ts
+declare const items: any;
+// ---cut---
 const secondLast = items.at(-2);
 ```
 
 ```ts
+declare const text: any;
+// ---cut---
 const lastChar = text.at(-1);
 ```
 
 ```ts
+declare const array: any;
+// ---cut---
 const first = array[0];
 ```
 
 ```ts
+declare const array: any;
+declare const dynamicIndex: any;
+// ---cut---
 const element = array[dynamicIndex];
 ```
 

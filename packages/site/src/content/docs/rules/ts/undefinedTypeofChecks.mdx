@@ -19,12 +19,16 @@ Direct comparisons are clearer and more concise.
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const value: any;
+// ---cut---
 if (typeof value === "undefined") {
 	// handle undefined
 }
 ```
 
 ```ts
+declare const value: any;
+// ---cut---
 if (typeof value !== "undefined") {
 	// value is defined
 }
@@ -34,12 +38,16 @@ if (typeof value !== "undefined") {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const value: any;
+// ---cut---
 if (value === undefined) {
 	// handle undefined
 }
 ```
 
 ```ts
+declare const value: any;
+// ---cut---
 if (value !== undefined) {
 	// value is defined
 }

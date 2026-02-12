@@ -32,6 +32,7 @@ function* generatorThatReturns() {
 ```
 
 ```ts
+// @errors: 2339
 class Collection {
 	*iterator() {
 		this.process();
@@ -59,6 +60,7 @@ function* range(start: number, end: number) {
 ```
 
 ```ts
+// @errors: 2339
 class Collection {
 	*iterator() {
 		yield* this.items;

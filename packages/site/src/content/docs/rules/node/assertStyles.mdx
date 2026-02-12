@@ -20,12 +20,14 @@ The explicit method call clarifies the assertion's purpose, making it immediatel
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @noErrors
 import assert from "node:assert";
 
 assert(divide(10, 2) === 5);
 ```
 
 ```ts
+// @noErrors
 import { strict as assert } from "node:assert";
 
 assert(value);
@@ -35,18 +37,21 @@ assert(value);
 <TabItem label="✅ Correct">
 
 ```ts
+// @noErrors
 import assert from "node:assert";
 
 assert.ok(divide(10, 2) === 5);
 ```
 
 ```ts
+// @noErrors
 import { strict as assert } from "node:assert";
 
 assert.ok(value);
 ```
 
 ```ts
+// @noErrors
 import assert from "node:assert";
 
 assert.strictEqual(actual, expected);

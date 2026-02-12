@@ -21,6 +21,8 @@ TypeScript's `--noImplicitAny` compiler option does not catch this case.
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const getValue: any;
+// ---cut---
 let value;
 value = getValue();
 ```
@@ -34,11 +36,15 @@ count = 0;
 <TabItem label="✅ Correct">
 
 ```ts
+declare const getValue: any;
+// ---cut---
 let value: string;
 value = getValue();
 ```
 
 ```ts
+declare const getValue: any;
+// ---cut---
 let value = getValue();
 ```
 

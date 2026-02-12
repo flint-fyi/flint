@@ -25,10 +25,13 @@ Specifying an explicit type makes the button's behavior clear and prevents accid
 ```
 
 ```tsx
-<button onClick={handleClick}>Submit</button>
+declare const handleClick: any;
+// ---cut---
+<button onClick={handleClick}>Submit</button>;
 ```
 
 ```tsx
+// @errors: 2322
 <button type="invalid">Click</button>
 ```
 

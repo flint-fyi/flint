@@ -20,18 +20,22 @@ These escape sequences are not supported in strict mode in all environments and 
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 1488
 const value = "\8";
 ```
 
 ```ts
+// @errors: 1488
 const message = "w\8less";
 ```
 
 ```ts
+// @errors: 1488
 const date = "December 1\9";
 ```
 
 ```ts
+// @errors: 1488
 const text = "Don't use \8 and \9 escapes.";
 ```
 

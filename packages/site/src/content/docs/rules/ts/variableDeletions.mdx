@@ -20,6 +20,7 @@ In non-strict mode, it will silently fail and return false without actually dele
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 1102 2703
 let count = 5;
 delete count;
 
@@ -32,6 +33,7 @@ function calculate(value: number) {
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 2322 2790
 let count = 5;
 count = undefined;
 

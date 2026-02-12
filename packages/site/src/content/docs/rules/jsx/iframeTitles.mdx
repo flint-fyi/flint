@@ -44,7 +44,9 @@ This is required for WCAG 2.4.1 and 4.1.2 compliance.
 ```
 
 ```tsx
-<iframe title={uniqueTitle} />
+declare const uniqueTitle: any;
+// ---cut---
+<iframe title={uniqueTitle} />;
 ```
 
 ```tsx

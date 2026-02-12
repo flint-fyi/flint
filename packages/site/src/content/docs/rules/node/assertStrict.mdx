@@ -20,6 +20,7 @@ Strict mode provides better error messages with diffs and more reliable equality
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @noErrors
 import assert from "assert";
 
 import assert from "node:assert";
@@ -31,6 +32,7 @@ import { deepEqual } from "node:assert";
 <TabItem label="✅ Correct">
 
 ```ts
+// @noErrors
 import assert from "assert/strict";
 
 import assert from "node:assert/strict";

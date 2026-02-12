@@ -22,18 +22,26 @@ Always specify a target origin (for example, `'https://example.com'` or `'*'` fo
 <TabItem label="❌ Incorrect">
 
 ```typescript
+declare const window: any;
+// ---cut---
 window.postMessage("message");
 ```
 
 ```typescript
+declare const self: any;
+// ---cut---
 self.postMessage("message");
 ```
 
 ```typescript
+declare const parent: any;
+// ---cut---
 parent.postMessage("message");
 ```
 
 ```typescript
+declare const top: any;
+// ---cut---
 top.postMessage("message");
 ```
 
@@ -41,22 +49,32 @@ top.postMessage("message");
 <TabItem label="✅ Correct">
 
 ```typescript
+declare const window: any;
+// ---cut---
 window.postMessage("message", "https://example.com");
 ```
 
 ```typescript
+declare const window: any;
+// ---cut---
 window.postMessage("message", "*");
 ```
 
 ```typescript
+declare const self: any;
+// ---cut---
 self.postMessage("message", "https://example.com");
 ```
 
 ```typescript
+declare const parent: any;
+// ---cut---
 parent.postMessage("message", "*");
 ```
 
 ```typescript
+declare const worker: any;
+// ---cut---
 // Worker, MessagePort, and other postMessage calls are not affected
 worker.postMessage("message");
 ```

@@ -19,18 +19,29 @@ This can lead to unexpected items being iterated over when the object inherits f
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const doSomething: any;
+declare const object: any;
+// ---cut---
 for (const key in object) {
 	doSomething(key);
 }
 ```
 
 ```ts
+declare const doSomething: any;
+declare const object: any;
+// ---cut---
 for (const key in object) {
 	doSomething(key);
 }
 ```
 
 ```ts
+declare const condition: any;
+declare const doSomething: any;
+declare const doSomethingElse: any;
+declare const object: any;
+// ---cut---
 for (const key in object) {
 	if (condition) {
 		doSomething(key);
@@ -43,6 +54,10 @@ for (const key in object) {
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 2550
+declare const doSomething: any;
+declare const object: any;
+// ---cut---
 for (const key in object) {
 	if (Object.hasOwn(object, key)) {
 		doSomething(key);
@@ -51,6 +66,10 @@ for (const key in object) {
 ```
 
 ```ts
+// @errors: 2550
+declare const doSomething: any;
+declare const object: any;
+// ---cut---
 for (const key in object) {
 	if (!Object.hasOwn(object, key)) {
 		continue;
@@ -60,6 +79,9 @@ for (const key in object) {
 ```
 
 ```ts
+declare const doSomething: any;
+declare const object: any;
+// ---cut---
 for (const key in object) {
 	if (Object.prototype.hasOwnProperty.call(object, key)) {
 		doSomething(key);
@@ -68,10 +90,14 @@ for (const key in object) {
 ```
 
 ```ts
+declare const object: any;
+// ---cut---
 for (const key in object);
 ```
 
 ```ts
+declare const object: any;
+// ---cut---
 for (const key in object) {
 }
 ```

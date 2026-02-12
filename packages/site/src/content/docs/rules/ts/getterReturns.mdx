@@ -21,6 +21,7 @@ This rule reports when a getter does not explicitly `return` a value.
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 2378
 const object = {
 	get value() {
 		console.log("accessed");
@@ -29,6 +30,7 @@ const object = {
 ```
 
 ```ts
+// @errors: 2339 2378
 class Example {
 	get value() {
 		this.compute();
@@ -48,6 +50,7 @@ class Example {
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 2551
 const object = {
 	get value() {
 		return this._value;
@@ -56,6 +59,7 @@ const object = {
 ```
 
 ```ts
+// @errors: 2551
 class Example {
 	get value() {
 		return this._value;
@@ -64,6 +68,7 @@ class Example {
 ```
 
 ```ts
+// @errors: 2339
 class Example {
 	get value() {
 		if (this.condition) {

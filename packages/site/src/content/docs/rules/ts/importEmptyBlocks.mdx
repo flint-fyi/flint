@@ -19,14 +19,17 @@ This rule detects such empty blocks to help keep imports clean and intentional.
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @noErrors
 import {} from "mod";
 ```
 
 ```ts
+// @noErrors
 import Default from "mod";
 ```
 
 ```ts
+// @noErrors
 import type {} from "mod";
 ```
 
@@ -34,18 +37,22 @@ import type {} from "mod";
 <TabItem label="✅ Correct">
 
 ```ts
+// @noErrors
 import { named } from "mod";
 ```
 
 ```ts
+// @noErrors
 import Default from "mod";
 ```
 
 ```ts
+// @noErrors
 import * as mod from "mod";
 ```
 
 ```ts
+// @noErrors
 import "mod"; // Side-effect imports are allowed
 ```
 

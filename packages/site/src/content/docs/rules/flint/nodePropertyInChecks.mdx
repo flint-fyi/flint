@@ -18,6 +18,8 @@ Using the `in` operator to check for the existence of properties on TypeScript A
 <TabItem label="❌ Incorrect">
 
 ```ts
+declare const node: any;
+// ---cut---
 if ("CallExpression" in node) {
 }
 ```
@@ -26,6 +28,9 @@ if ("CallExpression" in node) {
 <TabItem label="✅ Correct">
 
 ```ts
+declare const node: any;
+declare const ts: any;
+// ---cut---
 if (ts.isCallExpression(node)) {
 }
 ```

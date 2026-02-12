@@ -79,6 +79,7 @@ const pattern = /[\u{0041}-\u{005A}]/u;
 <TabItem label="❌ Incorrect">
 
 ```ts
+// @errors: 1501
 const pattern = /\u0041/v;
 ```
 
@@ -86,6 +87,7 @@ const pattern = /\u0041/v;
 <TabItem label="✅ Correct">
 
 ```ts
+// @errors: 1501
 const pattern = /\u{0041}/v;
 ```
 

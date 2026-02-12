@@ -32,11 +32,13 @@ array.flatMap((value) => value);
 ```
 
 ```ts
+// @errors: 2769
 declare const array: number[][];
 [].concat(...array);
 ```
 
 ```ts
+// @errors: 2345
 declare const array: number[][];
 [].concat.apply([], array);
 ```
@@ -52,6 +54,8 @@ Array.prototype.concat.call([], ...array);
 ```
 
 ```ts
+declare const _: any;
+// ---cut---
 declare const array: number[][];
 _.flatten(array);
 ```
