@@ -21,7 +21,10 @@ This rule reports on uses of triple-slash references.
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 6053 -- Fictional file
+// @filename: types.d.ts
+export {};
+// @filename: index.ts
+// ---cut---
 /// <reference path="./types.d.ts" />
 export const value = 1;
 ```

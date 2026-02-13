@@ -19,7 +19,10 @@ An empty `with {}` clause provides no additional information and should be remov
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2307 -- Fictional file
+// @filename: data.json
+{ "key": "value" }
+// @filename: index.ts
+// ---cut---
 import data from "./data.json" with {};
 ```
 
@@ -42,7 +45,10 @@ export * from "./module" with {};
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2307 -- Fictional file
+// @filename: data.json
+{ "key": "value" }
+// @filename: index.ts
+// ---cut---
 import data from "./data.json" with { type: "json" };
 ```
 
@@ -57,7 +63,10 @@ export { x } from "./module";
 ```
 
 ```ts
-// @errors: 2307 -- Fictional file
+// @filename: styles.css
+.container { display: flex; }
+// @filename: index.ts
+// ---cut---
 import styles from "./styles.css" with { type: "css" };
 ```
 
