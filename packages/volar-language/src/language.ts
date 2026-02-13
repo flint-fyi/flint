@@ -1,7 +1,6 @@
 import path from "node:path";
 import {
 	getColumnAndLineOfPosition,
-	isSuggestionForFiles,
 	DirectivesCollector,
 	type FileReport,
 	type LanguageFileCacheImpacts,
@@ -10,7 +9,6 @@ import {
 	type CharacterReportRange,
 	type NormalizedReportRangeObject,
 	type FileAboutData,
-	type Suggestion,
 	type AnyRuleDefinition,
 	createLanguage,
 	type Language,
@@ -42,7 +40,6 @@ import type {
 	SourceScript as VolarSourceScript,
 } from "@volar/language-core";
 import type { TypeScriptServiceScript as VolarTypeScriptServiceScript } from "@volar/typescript";
-import { AsyncLocalStorage } from "node:async_hooks";
 import { assert, FlintAssertionError } from "@flint.fyi/utils";
 import type { UnsafeAnyRule } from "../../core/src/plugins/createPlugin.ts";
 

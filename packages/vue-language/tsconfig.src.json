@@ -12,7 +12,7 @@
 		{ "path": "../core" },
 		{ "path": "../ts-patch" },
 		{ "path": "../typescript-language" },
-		{ "path": "../volar-language" },
-		{ "path": "../utils" }
+		{ "path": "../utils" },
+		{ "path": "../volar-language" }
 	]
 }

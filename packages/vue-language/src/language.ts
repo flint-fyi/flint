@@ -25,8 +25,6 @@ export interface VueServices {
 		map: VolarMapper;
 		sfc: RootNode;
 		virtualCode: VueVirtualCode;
-		// TODO: can we type MessageId?
-		// reportSfc: RuleReporter<string>;
 	};
 }
 
@@ -60,7 +58,6 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 			],
 			createFile({
 				data,
-				program,
 				sourceFile,
 				volarLanguage,
 				sourceScript,
@@ -164,7 +161,6 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 						vueServices: {
 							codegen,
 							map,
-							// reportSfc: reportTranslated,
 							sfc: sfcAst,
 							virtualCode,
 						},

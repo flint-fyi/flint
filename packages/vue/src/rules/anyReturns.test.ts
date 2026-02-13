@@ -1,6 +1,6 @@
-import rule from "../../../ts/lib/rules/anyReturns.js";
-import { vueLanguage } from "@flint.fyi/vue-language";
+import rule from "../../../ts/src/rules/anyReturns.ts";
 import { ruleTester } from "./ruleTester.js";
+import "@flint.fyi/vue-language";
 
 const myComponentFixture = {
 	"MyComponent.vue": `
@@ -12,7 +12,7 @@ defineProps<{ foo: () => string }>();
 	`,
 };
 
-ruleTester.describe(vueLanguage.createRule(rule), {
+ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `

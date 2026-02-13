@@ -25,7 +25,7 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project vue-language"
+		"test": "vitest --project vue-language"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
@@ -36,7 +36,6 @@
 		"@volar/language-core": "2.4.28",
 		"@vue/compiler-dom": "^3.5.0",
 		"@vue/language-core": "3.2.1",
-		"ts-api-utils": "^2.1.0",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {

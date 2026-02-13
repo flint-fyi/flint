@@ -10,9 +10,10 @@
 	"exclude": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
 	"references": [
 		{ "path": "../core" },
+		{ "path": "../ts" },
 		{ "path": "../typescript-language" },
+		{ "path": "../utils" },
 		{ "path": "../volar-language" },
-		{ "path": "../vue-language" },
-		{ "path": "../utils" }
+		{ "path": "../vue-language" }
 	]
 }
