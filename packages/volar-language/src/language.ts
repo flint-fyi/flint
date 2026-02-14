@@ -327,9 +327,15 @@ setVolarCreateFile((data, program, sourceFile) => {
 				const visitorServices = { options, ...file.services };
 				let lastMappingIdx = 0;
 				const visit = (node: ts.Node) => {
-					visitors[NodeSyntaxKinds[node.kind]]?.(node, visitorServices);
+					const key = NodeSyntaxKinds[node.kind] as keyof TypeScriptNodesByName;
+
+					// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+					visitors[key]?.(node, visitorServices);
 
 					node.forEachChild(visit);
+
+					// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+					visitors[`${key}:exit`]?.(node, visitorServices);
 				};
 				visitors.SourceFile?.(sourceFile, visitorServices);
 				// Visit only statements that have a mapping to the source code

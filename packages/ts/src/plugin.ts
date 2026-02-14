@@ -294,9 +294,14 @@ import voidOperator from "./rules/voidOperator.ts";
 import withStatements from "./rules/withStatements.ts";
 import wrapperObjects from "./rules/wrapperObjects.ts";
 
+const jsFiles = ["**/*.{cjs,js,jsx,mjs}"];
+const tsFiles = ["**/*.{cts,mts,ts,tsx}"];
+
 export const ts = createPlugin({
 	files: {
-		all: ["**/*.{cjs,js,jsx,mjs,ts,tsx}"],
+		all: [...jsFiles, ...tsFiles],
+		javascript: jsFiles,
+		typescript: tsFiles,
 	},
 	name: "TypeScript",
 	rules: [

@@ -16,7 +16,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports negating the left operand of `in` or `instanceof` relations.",
 		id: "unsafeNegations",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		preferNegatingRelation: {

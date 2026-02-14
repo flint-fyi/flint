@@ -7,7 +7,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using legacy octal numeric literals.",
 		id: "octalNumbers",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noOctalNumber: {

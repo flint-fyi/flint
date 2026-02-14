@@ -156,7 +156,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		preferModernMath: {
-			primary: "Prefer `{{replacement}}` over `{{description}}`.",
+			primary: "Prefer `{{ replacement }}` over `{{ description }}`.",
 			secondary: [
 				"Modern Math methods are clearer and more explicit about their purpose.",
 				"These methods have been available since ES2015 and are well-supported in all modern environments.",

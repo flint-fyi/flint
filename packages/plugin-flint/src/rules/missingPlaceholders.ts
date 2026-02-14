@@ -5,7 +5,23 @@ import {
 } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
+import {
+	findMessagesProperty,
+	forEachMessageString,
+	isRuleContextReport,
+	isRuleCreatorCreateRule,
+} from "../utils/ruleCreatorHelpers.ts";
 import { ruleCreator } from "./ruleCreator.ts";
+
+function extractPlaceholders(text: string): Set<string> {
+	const placeholders = new Set<string>();
+	for (const match of text.matchAll(/\{\{\s*(\w+)\s*\}\}/g)) {
+		if (match[1]) {
+			placeholders.add(match[1]);
+		}
+	}
+	return placeholders;
+}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -28,75 +44,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		const messagePlaceholders = new Map<string, Set<string>>();
 
 		function checkMessageInCreateRule(ruleCreatorNode: AST.CallExpression) {
-			const args = ruleCreatorNode.arguments[1];
-			if (args?.kind !== SyntaxKind.ObjectLiteralExpression) {
+			const messagesProperty = findMessagesProperty(ruleCreatorNode);
+			if (!messagesProperty) {
 				return;
 			}
 
-			const messagesProperty = args.properties.find((prop) => {
-				return (
-					prop.kind === SyntaxKind.PropertyAssignment &&
-					prop.name.kind === SyntaxKind.Identifier &&
-					prop.name.text === "messages"
-				);
-			});
-
-			if (
-				messagesProperty?.kind !== SyntaxKind.PropertyAssignment ||
-				messagesProperty.initializer.kind !== SyntaxKind.ObjectLiteralExpression
-			) {
-				return;
-			}
-
-			const placeholderPattern = /\{\{\s*(\w+)\s*\}\}/g;
-
-			for (const prop of messagesProperty.initializer.properties) {
-				if (
-					prop.kind !== SyntaxKind.PropertyAssignment ||
-					prop.name.kind !== SyntaxKind.Identifier ||
-					prop.initializer.kind !== SyntaxKind.ObjectLiteralExpression
-				) {
-					continue;
-				}
-
-				const placeholders = new Set<string>();
-
-				prop.initializer.properties.forEach((messageProp) => {
-					if (
-						messageProp.kind === SyntaxKind.PropertyAssignment &&
-						messageProp.name.kind === SyntaxKind.Identifier
-					) {
-						if (messageProp.initializer.kind === SyntaxKind.StringLiteral) {
-							const text = messageProp.initializer.text;
-							let match = placeholderPattern.exec(text);
-							while (match !== null) {
-								if (match[1]) {
-									placeholders.add(match[1]);
-								}
-								match = placeholderPattern.exec(text);
-							}
+			for (const ctx of forEachMessageString(messagesProperty)) {
+				const placeholders = extractPlaceholders(ctx.node.text);
+				if (placeholders.size) {
+					const existing = messagePlaceholders.get(ctx.messageId);
+					if (existing) {
+						for (const p of placeholders) {
+							existing.add(p);
 						}
-
-						if (
-							messageProp.initializer.kind === SyntaxKind.ArrayLiteralExpression
-						) {
-							messageProp.initializer.elements.forEach((el) => {
-								if (el.kind === SyntaxKind.StringLiteral) {
-									const text = el.text;
-									let match = placeholderPattern.exec(text);
-									while (match !== null) {
-										if (match[1]) {
-											placeholders.add(match[1]);
-										}
-										match = placeholderPattern.exec(text);
-									}
-								}
-							});
-						}
+					} else {
+						messagePlaceholders.set(ctx.messageId, placeholders);
 					}
-				});
-
-				messagePlaceholders.set(prop.name.text, placeholders);
+				}
 			}
 		}
 
@@ -190,36 +154,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression(node, { sourceFile, typeChecker }) {
-					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
-						return;
-					}
-
-					const propertyAccess = node.expression;
-
-					const type = typeChecker.getTypeAtLocation(propertyAccess.expression);
-					const typeName = type.getSymbol()?.getName();
-
-					// TODO: Maybe need to check it more strictly
-					// https://github.com/flint-fyi/flint/issues/152
-					if (
-						typeName === "RuleCreator" &&
-						propertyAccess.name.text === "createRule"
-					) {
+					if (isRuleCreatorCreateRule(node, typeChecker)) {
 						checkMessageInCreateRule(node);
 						return;
 					}
 
-					// TODO: Maybe need to check it more strictly
-					// https://github.com/flint-fyi/flint/issues/152
-					if (
-						typeName === "RuleContext" &&
-						propertyAccess.name.text === "report"
-					) {
+					if (isRuleContextReport(node, typeChecker)) {
 						populateMessageInCreateRule(node, sourceFile);
 						return;
 					}
 				},
-				Program() {
+				SourceFile() {
 					messagePlaceholders.clear();
 				},
 			},

@@ -17,7 +17,7 @@ import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
 import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 import { getFirstEnumValues } from "./getFirstEnumValues.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
-import type { TypeScriptNodesByName } from "./nodes.ts";
+import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
 import packageJson from "../package.json" with { type: "json" };
@@ -37,9 +37,9 @@ type VolarLanguageFileDefinition = LanguageFileDefinition<any> & {
 	__volarServices: {
 		getDiagnostics(): LanguageDiagnostics;
 		runVisitors(
-			file: LanguageFile<any>,
+			file: LanguageFile<TypeScriptFileServices>,
 			options: InferredOutputObject<any>,
-			runtime: RuleRuntime<any, any>,
+			runtime: RuleRuntime<TypeScriptNodesByName, TypeScriptFileServices>,
 		): void;
 	};
 };
@@ -77,7 +77,7 @@ export function setVolarCreateFile(create: VolarCreateFile) {
 }
 
 export const typescriptLanguage = createLanguage<
-	TypeScriptNodesByName,
+	TypeScriptNodeVisitors,
 	TypeScriptFileServices
 >({
 	about: {
@@ -198,10 +198,15 @@ export const typescriptLanguage = createLanguage<
 		const visitorServices = { options, ...file.services };
 
 		const visit = (node: ts.Node) => {
-			// @ts-expect-error - This should work...?
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			visitors[NodeSyntaxKinds[node.kind]]?.(node, visitorServices);
+			const key = NodeSyntaxKinds[node.kind] as keyof TypeScriptNodesByName;
+
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+			visitors[key]?.(node, visitorServices);
+
 			node.forEachChild(visit);
+
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+			visitors[`${key}:exit`]?.(node, visitorServices);
 		};
 
 		visit(file.services.sourceFile);

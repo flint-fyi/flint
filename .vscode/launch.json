@@ -19,7 +19,6 @@
 			"sourceMaps": true,
 			"console": "integratedTerminal",
 			"internalConsoleOptions": "neverOpen",
-			"runtimeArgs": ["--conditions='@flint.fyi/source'"],
 			"args": "--cache-ignore"
 		}
 	]

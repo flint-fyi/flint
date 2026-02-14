@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports unnecessary duplicate keys that override previous values.",
 		id: "objectKeyDuplicates",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		duplicateKey: {

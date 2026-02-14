@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports duplicate class member names that will be overwritten.",
 		id: "classMemberDuplicates",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		duplicateMember: {

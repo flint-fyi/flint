@@ -15,10 +15,7 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": {
-			"@flint.fyi/source": "./src/index.ts",
-			"default": "./lib/index.js"
-		}
+		".": "./src/index.ts"
 	},
 	"files": [
 		"lib/",
@@ -31,6 +28,7 @@
 		"@flint.fyi/utils": "workspace:^",
 		"cached-factory": "^0.1.0",
 		"debug-for-file": "^0.2.0",
+		"ignore": "^7.0.5",
 		"omit-empty": "^1.0.0",
 		"zod": "^4.2.1"
 	},
