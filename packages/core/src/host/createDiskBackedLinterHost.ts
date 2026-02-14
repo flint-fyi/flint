@@ -1,5 +1,4 @@
 import fs from "node:fs";
-import * as fsSync from "node:fs";
 import path from "node:path";
 
 import type {
@@ -181,36 +180,39 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return stat.mtimeMs;
 		},
 		getFileTouchTimeSync(filePath) {
-			return fsSync.statSync(filePath).mtimeMs;
+			return fs.statSync(filePath).mtimeMs;
 		},
 		isCaseSensitiveFS() {
 			return caseSensitiveFS;
 		},
 		async readDirectory(directoryPathAbsolute) {
-			const result: LinterHostDirectoryEntry[] = [];
 			const dirents = await fs.promises.readdir(directoryPathAbsolute, {
 				withFileTypes: true,
 			});
 
-			for (const entry of dirents) {
-				let stat: Pick<typeof entry, "isDirectory" | "isFile"> = entry;
-				if (entry.isSymbolicLink()) {
-					try {
-						stat = await fs.promises.stat(
-							path.join(directoryPathAbsolute, entry.name),
-						);
-					} catch {
-						continue;
+			const result = await Promise.all(
+				dirents.map(async (entry): Promise<[] | LinterHostDirectoryEntry> => {
+					let stat: Pick<typeof entry, "isDirectory" | "isFile"> = entry;
+					if (entry.isSymbolicLink()) {
+						try {
+							stat = await fs.promises.stat(
+								path.join(directoryPathAbsolute, entry.name),
+							);
+						} catch {
+							return [];
+						}
 					}
-				}
-				if (stat.isDirectory()) {
-					result.push({ name: entry.name, type: "directory" });
-				} else if (stat.isFile()) {
-					result.push({ name: entry.name, type: "file" });
-				}
-			}
+					if (stat.isDirectory()) {
+						return { name: entry.name, type: "directory" };
+					} else if (stat.isFile()) {
+						return { name: entry.name, type: "file" };
+					}
 
-			return result;
+					return [];
+				}),
+			);
+
+			return result.flat();
 		},
 		readDirectorySync(directoryPathAbsolute) {
 			const result: LinterHostDirectoryEntry[] = [];
@@ -298,7 +300,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			await fs.promises.writeFile(filePathAbsolute, content, "utf8");
 		},
 		writeFileSync(filePathAbsolute, content) {
-			fsSync.writeFileSync(filePathAbsolute, content, "utf8");
+			fs.writeFileSync(filePathAbsolute, content, "utf8");
 		},
 	};
 }
