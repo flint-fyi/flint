@@ -1,0 +1,62 @@
+---
+description: "Reports plugin rules created directly with language instead of through RuleCreator."
+title: "ruleCreationMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="flint" rule="ruleCreationMethods" />
+
+Plugin rules should be created through `RuleCreator` instead of calling `language.createRule()` directly.
+Direct language creation bypasses the standardized rule metadata and documentation provided by `RuleCreator`, which adds the `docs` property and ensures consistent rule structure across plugins.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+
+export default typescriptLanguage.createRule({
+	about: {
+		description: "My rule",
+		id: "myRule",
+		presets: ["logical"],
+	},
+	setup(context) {
+		return { visitors: {} };
+	},
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { RuleCreator } from "@flint.fyi/core";
+
+const ruleCreator = new RuleCreator({ presets: ["logical"] });
+
+export default ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "My rule",
+		id: "myRule",
+		presets: ["logical"],
+	},
+	setup(context) {
+		return { visitors: {} };
+	},
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.

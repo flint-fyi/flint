@@ -22,8 +22,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"RuleCreator adds the `docs` property and ensures consistent rule structure across plugins.",
 			],
 			suggestions: [
-				"Import RuleCreator from `@flint.fyi/core` and instantiate a ruleCreator (e.g. `const ruleCreator = new RuleCreator({ presets: [...] })`).",
-				"Use `ruleCreator.createRule(language, { ... })` instead of `language.createRule({ ... })`.",
+				"Create an instance of RuleCreator from `@flint.fyi/core` (e.g. `const ruleCreator = new RuleCreator({ presets: [...] })`), then use `ruleCreator.createRule(language, { ... })` instead of `language.createRule({ ... })`.",
 			],
 		},
 	},

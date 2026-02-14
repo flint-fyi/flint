@@ -1,8 +1,6 @@
 import rule from "./ruleCreationMethods.ts";
 import { ruleTester } from "./ruleTester.ts";
 
-const DefineRuleCreator = `interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; }`;
-
 ruleTester.describe(rule, {
 	invalid: [
 		{
@@ -38,18 +36,7 @@ export default typescriptLanguage.createRule({
 	],
 	valid: [
 		`
-${DefineRuleCreator}
-declare const ruleCreator: RuleCreator;
-
-export default ruleCreator.createRule(_, {
-	messages: {},
-	setup(context) {
-		return { visitors: {} };
-	}
-});
-`,
-		`
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; }
 declare const ruleCreator: RuleCreator;
 
 export default ruleCreator.createRule(_, {
