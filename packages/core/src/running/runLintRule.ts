@@ -1,4 +1,4 @@
-import { assert, nullThrows } from "@flint.fyi/utils";
+import { nullThrows } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 
@@ -51,43 +51,39 @@ export async function runLintRule(
 					return;
 				}
 				range = r;
-				if (fixes != null) {
-					fixes = fixes
-						.map((fix) => {
-							const range = adjustReportRange(fix.range);
-							return (
-								range && {
-									...fix,
-									range,
-								}
-							);
-						})
-						.filter((f) => f != null);
-				}
-				if (suggestions != null) {
-					suggestions = suggestions
-						.map((s) => {
-							if ("files" in s) {
-								// TODO: support cross-file suggestions
-								return null;
+				fixes &&= fixes
+					.map((fix) => {
+						const range = adjustReportRange(fix.range);
+						return (
+							range && {
+								...fix,
+								range,
 							}
-							const range = adjustReportRange(s.range);
-							return (
-								range && {
-									...s,
-									range,
-								}
-							);
-						})
-						.filter((s) => s != null);
-				}
+						);
+					})
+					.filter((f) => f != null);
+
+				suggestions &&= suggestions
+					.map((s) => {
+						if ("files" in s) {
+							// TODO: support cross-file suggestions
+							return null;
+						}
+						const range = adjustReportRange(s.range);
+						return (
+							range && {
+								...s,
+								range,
+							}
+						);
+					})
+					.filter((s) => s != null);
 			}
 
 			reportsByFilePath.get(filePath).push({
 				...ruleReport,
-				fix: fixes,
-				suggestions,
 				about: rule.about,
+				fix: fixes,
 				message: nullThrows(
 					rule.messages[ruleReport.message],
 					`Rule "${rule.about.id}" reported message "${ruleReport.message}" which is not defined in its messages.`,
@@ -102,6 +98,7 @@ export async function runLintRule(
 						range.end,
 					),
 				},
+				suggestions,
 			});
 		},
 	});

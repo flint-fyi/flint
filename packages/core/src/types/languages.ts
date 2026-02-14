@@ -139,9 +139,11 @@ export type LanguageFile<FileServices extends object> = Disposable &
  */
 export interface LanguageFileBase<FileServices extends object> {
 	about: FileAboutData;
+	adjustReportRange?: (
+		range: CharacterReportRange,
+	) => CharacterReportRange | null;
 	directives?: CommentDirective[];
 	reports?: FileReport[];
-	adjustReportRange?(range: CharacterReportRange): CharacterReportRange | null;
 	services: FileServices;
 }
 

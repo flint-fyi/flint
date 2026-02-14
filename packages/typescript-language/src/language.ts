@@ -1,4 +1,5 @@
 import {
+	type AnyOptionalSchema,
 	createLanguage,
 	type FileAboutData,
 	type InferredOutputObject,
@@ -13,6 +14,8 @@ import { debugForFile } from "debug-for-file";
 import path from "node:path";
 import * as ts from "typescript";
 
+import packageJson from "../package.json" with { type: "json" };
+import { convertTypeScriptDiagnosticToLanguageFileDiagnostic } from "./convertTypeScriptDiagnosticToLanguageFileDiagnostic.ts";
 import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
 import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 import { getFirstEnumValues } from "./getFirstEnumValues.ts";
@@ -20,8 +23,6 @@ import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.t
 import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
-import packageJson from "../package.json" with { type: "json" };
-import { convertTypeScriptDiagnosticToLanguageFileDiagnostic } from "./convertTypeScriptDiagnosticToLanguageFileDiagnostic.ts";
 
 export interface TypeScriptFileServices {
 	program: ts.Program;
@@ -33,25 +34,25 @@ const log = debugForFile(import.meta.filename);
 
 export const NodeSyntaxKinds = getFirstEnumValues(ts.SyntaxKind);
 
-type VolarLanguageFileDefinition = LanguageFileDefinition<any> & {
-	__volarServices: {
-		getDiagnostics(): LanguageDiagnostics;
-		runVisitors(
-			file: LanguageFile<TypeScriptFileServices>,
-			options: InferredOutputObject<any>,
-			runtime: RuleRuntime<TypeScriptNodesByName, TypeScriptFileServices>,
-		): void;
-	};
-};
+interface GlobalLanguageState {
+	packageVersion: string;
+	volarCreateFile: null | VolarCreateFile;
+}
 type VolarCreateFile = (
 	data: FileAboutData,
 	program: ts.Program,
 	sourceFile: AST.SourceFile,
 ) => VolarLanguageFileDefinition;
 
-type GlobalLanguageState = {
-	packageVersion: string;
-	volarCreateFile: VolarCreateFile | null;
+type VolarLanguageFileDefinition = LanguageFileDefinition<object> & {
+	__volarServices: {
+		getDiagnostics(): LanguageDiagnostics;
+		runVisitors(
+			file: LanguageFile<TypeScriptFileServices>,
+			options: InferredOutputObject<AnyOptionalSchema | undefined>,
+			runtime: RuleRuntime<TypeScriptNodeVisitors, TypeScriptFileServices>,
+		): void;
+	};
 };
 const globalTyped = globalThis as typeof globalThis & {
 	_flintTypeScriptLanguageState?: GlobalLanguageState;
@@ -214,16 +215,16 @@ export const typescriptLanguage = createLanguage<
 });
 
 const typeScriptCoreSupportedExtensions: ReadonlySet<string> = new Set([
-	".ts",
-	".tsx",
-	".d.ts",
-	".js",
-	".jsx",
+	".cjs",
 	".cts",
 	".d.cts",
-	".cjs",
-	".mts",
 	".d.mts",
-	".mjs",
+	".d.ts",
+	".js",
 	".json",
+	".jsx",
+	".mjs",
+	".mts",
+	".ts",
+	".tsx",
 ]);

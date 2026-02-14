@@ -3,14 +3,13 @@ import {
 	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
 	type AnyRule,
+	type FileReport,
 	getColumnAndLineOfPosition,
 	type InferredOutputObject,
 	type NormalizedReport,
 	normalizePath,
 	type RuleAbout,
 	type VFSLinterHost,
-	type FileReport,
-	type CharacterReportRange,
 } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 import type { CachedFactory } from "cached-factory";
@@ -81,43 +80,38 @@ export async function runTestCaseRule<
 					return;
 				}
 				range = r;
-				if (fixes != null) {
-					fixes = fixes
-						.map((fix) => {
-							const range = adjustReportRange(fix.range);
-							return (
-								range && {
-									...fix,
-									range,
-								}
-							);
-						})
-						.filter((f) => f != null);
-				}
-				if (suggestions != null) {
-					suggestions = suggestions
-						.map((s) => {
-							if ("files" in s) {
-								// TODO: support cross-file suggestions
-								return null;
+				fixes &&= fixes
+					.map((fix) => {
+						const range = adjustReportRange(fix.range);
+						return (
+							range && {
+								...fix,
+								range,
 							}
-							const range = adjustReportRange(s.range);
-							return (
-								range && {
-									...s,
-									range,
-								}
-							);
-						})
-						.filter((s) => s != null);
-				}
+						);
+					})
+					.filter((f) => f != null);
+				suggestions &&= suggestions
+					.map((s) => {
+						if ("files" in s) {
+							// TODO: support cross-file suggestions
+							return null;
+						}
+						const range = adjustReportRange(s.range);
+						return (
+							range && {
+								...s,
+								range,
+							}
+						);
+					})
+					.filter((s) => s != null);
 			}
 
 			reports.push({
 				...ruleReport,
-				fix: fixes,
-				suggestions,
 				about: rule.about,
+				fix: fixes,
 				message: nullThrows(
 					rule.messages[ruleReport.message],
 					`Message should be defined (${ruleReport.message}) when reporting for rule "${rule.about.id}"`,
@@ -126,6 +120,7 @@ export async function runTestCaseRule<
 					begin: getColumnAndLineOfPosition(file.about.sourceText, range.begin),
 					end: getColumnAndLineOfPosition(file.about.sourceText, range.end),
 				},
+				suggestions,
 			});
 		},
 	});
