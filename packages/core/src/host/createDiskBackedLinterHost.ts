@@ -239,10 +239,18 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return result;
 		},
 		async readFile(filePathAbsolute) {
-			return await fs.promises.readFile(filePathAbsolute, "utf8");
+			try {
+				return await fs.promises.readFile(filePathAbsolute, "utf8");
+			} catch {
+				return undefined;
+			}
 		},
 		readFileSync(filePathAbsolute) {
-			return fs.readFileSync(filePathAbsolute, "utf8");
+			try {
+				return fs.readFileSync(filePathAbsolute, "utf8");
+			} catch {
+				return undefined;
+			}
 		},
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
 			directoryPathAbsolute = normalizePath(
