@@ -6,7 +6,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function isUsingVariableStatement(node: AST.AnyNode) {
 	return (
-		node.kind == SyntaxKind.VariableStatement &&
+		node.kind === SyntaxKind.VariableStatement &&
 		isNodeFlagSet(node.declarationList, ts.NodeFlags.Using)
 	);
 }

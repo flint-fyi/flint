@@ -92,8 +92,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			// const foo1: () => Set<string> = () => new Set<any>();
 			// the return type of the arrow function is Set<any> even though the variable is typed as Set<string>
 			let functionType =
-				functionNode.kind == SyntaxKind.FunctionExpression ||
-				functionNode.kind == SyntaxKind.ArrowFunction
+				functionNode.kind === SyntaxKind.FunctionExpression ||
+				functionNode.kind === SyntaxKind.ArrowFunction
 					? typeChecker.getContextualType(functionNode)
 					: typeChecker.getTypeAtLocation(functionNode);
 			functionType ??= typeChecker.getTypeAtLocation(functionNode);
@@ -249,7 +249,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				ArrowFunction: (node, fileService) => {
-					if (node.body.kind != SyntaxKind.Block) {
+					if (node.body.kind !== SyntaxKind.Block) {
 						checkReturn(node.body, node.body, fileService);
 					}
 				},

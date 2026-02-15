@@ -3,7 +3,7 @@ import {
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import { isNullKeyword } from "ts-api-utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import {

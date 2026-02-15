@@ -1,4 +1,4 @@
-import { unwrapParenthesizedExpression } from "@flint.fyi/typescript-language";
+import { unwrapParenthesizedNode } from "@flint.fyi/typescript-language";
 import type { AST } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
@@ -9,7 +9,7 @@ export function isNullishLiteral(node: AST.Expression): boolean {
 }
 
 export function isUndefinedIdentifier(node: AST.Expression): boolean {
-	const unwrapped = unwrapParenthesizedExpression(node);
+	const unwrapped = unwrapParenthesizedNode(node);
 	return (
 		unwrapped.kind === SyntaxKind.Identifier && unwrapped.text === "undefined"
 	);
@@ -53,6 +53,6 @@ export function toStrictOperator(operator: EqualityOperator): EqualityOperator {
 }
 
 function isNullLiteral(node: AST.Expression): boolean {
-	const unwrapped = unwrapParenthesizedExpression(node);
+	const unwrapped = unwrapParenthesizedNode(node);
 	return unwrapped.kind === SyntaxKind.NullKeyword;
 }
