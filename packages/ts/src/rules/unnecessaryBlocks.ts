@@ -30,29 +30,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			// Valid blocks: function bodies, arrow functions, class/interface bodies, etc.
 			if (
-				parent.kind === SyntaxKind.FunctionDeclaration ||
-				parent.kind === SyntaxKind.FunctionExpression ||
-				parent.kind === SyntaxKind.ArrowFunction ||
-				parent.kind === SyntaxKind.MethodDeclaration ||
-				parent.kind === SyntaxKind.Constructor ||
-				parent.kind === SyntaxKind.GetAccessor ||
-				parent.kind === SyntaxKind.SetAccessor ||
-				parent.kind === SyntaxKind.ModuleBlock
+				parent.kind == SyntaxKind.FunctionDeclaration ||
+				parent.kind == SyntaxKind.FunctionExpression ||
+				parent.kind == SyntaxKind.ArrowFunction ||
+				parent.kind == SyntaxKind.MethodDeclaration ||
+				parent.kind == SyntaxKind.Constructor ||
+				parent.kind == SyntaxKind.GetAccessor ||
+				parent.kind == SyntaxKind.SetAccessor ||
+				parent.kind == SyntaxKind.ModuleBlock
 			) {
 				return true;
 			}
 
 			// Valid blocks: control flow statements
 			if (
-				parent.kind === SyntaxKind.IfStatement ||
-				parent.kind === SyntaxKind.ForStatement ||
-				parent.kind === SyntaxKind.ForInStatement ||
-				parent.kind === SyntaxKind.ForOfStatement ||
-				parent.kind === SyntaxKind.WhileStatement ||
-				parent.kind === SyntaxKind.DoStatement ||
-				parent.kind === SyntaxKind.WithStatement ||
-				parent.kind === SyntaxKind.TryStatement ||
-				parent.kind === SyntaxKind.CatchClause
+				parent.kind == SyntaxKind.IfStatement ||
+				parent.kind == SyntaxKind.ForStatement ||
+				parent.kind == SyntaxKind.ForInStatement ||
+				parent.kind == SyntaxKind.ForOfStatement ||
+				parent.kind == SyntaxKind.WhileStatement ||
+				parent.kind == SyntaxKind.DoStatement ||
+				parent.kind == SyntaxKind.WithStatement ||
+				parent.kind == SyntaxKind.TryStatement ||
+				parent.kind == SyntaxKind.CatchClause
 			) {
 				return true;
 			}
@@ -60,14 +60,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			// Valid block: switch case/default clause with block
 			// In ES6+, blocks in switch cases create scope for let/const
 			if (
-				parent.kind === SyntaxKind.CaseClause ||
-				parent.kind === SyntaxKind.DefaultClause
+				parent.kind == SyntaxKind.CaseClause ||
+				parent.kind == SyntaxKind.DefaultClause
 			) {
 				return true;
 			}
 
 			// Valid block: labeled statement
-			if (parent.kind === SyntaxKind.LabeledStatement) {
+			if (parent.kind == SyntaxKind.LabeledStatement) {
 				return true;
 			}
 
