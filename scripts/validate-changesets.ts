@@ -29,7 +29,7 @@ async function validateChangesets(files: string[]): Promise<void> {
 
 			if (CONVENTIONAL_PATTERN.test(summary)) {
 				const found = summary.split("\n")[0];
-				const recommended = found.replace(CONVENTIONAL_PATTERN, "").trim();
+				const recommended = found?.replace(CONVENTIONAL_PATTERN, "").trim();
 				console.error(`\x1b[31m❌ Error in ${basename(filePath)}:\x1b[0m`);
 				console.error(
 					`   Changesets should be human-readable. Do not use conventional commit prefixes.`,
