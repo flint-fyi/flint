@@ -10,7 +10,7 @@ a == b
 			snapshot: `
 a == b
   ~~
-  Use strict equality ('===') instead of '=='.
+  Use the more precise strict equality ('===') instead of the loose '=='.
 `,
 			suggestions: [
 				{
@@ -28,7 +28,7 @@ x != y
 			snapshot: `
 x != y
   ~~
-  Use strict equality ('!==') instead of '!='.
+  Use the more precise strict equality ('!==') instead of the loose '!='.
 `,
 			suggestions: [
 				{
@@ -46,7 +46,7 @@ x !== y
 			snapshot: `
 5 == value
   ~~
-  Use strict equality ('===') instead of '=='.
+  Use the more precise strict equality ('===') instead of the loose '=='.
 `,
 			suggestions: [
 				{
