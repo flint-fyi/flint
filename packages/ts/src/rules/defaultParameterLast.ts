@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Enforce default parameters to be last.",
 		id: "defaultParameterLast",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		defaultParameterLast: {

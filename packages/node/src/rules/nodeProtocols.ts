@@ -4,7 +4,7 @@ import {
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { isDeclaredInNodeTypes } from "./utils/isDeclaredInNodeTypes.ts";
 
@@ -87,7 +87,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function checkNode(node: AST.Expression, sourceFile: ts.SourceFile) {
+		function checkNode(node: AST.Expression, sourceFile: AST.SourceFile) {
 			if (
 				node.kind === SyntaxKind.StringLiteral &&
 				nodeBuiltinModules.has(node.text) &&
@@ -106,7 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						node.expression.kind === SyntaxKind.Identifier &&
 						node.expression.text === "require" &&
-						node.arguments.length > 0 &&
+						!!node.arguments.length &&
 						isDeclaredInNodeTypes(node.expression, typeChecker)
 					) {
 						checkNode(

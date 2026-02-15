@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports member access on a value with type `any`.",
 		id: "anyMemberAccess",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsafeComputedMemberAccess: {
@@ -95,7 +95,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkMemberExpression(
 			node: AST.ElementAccessExpression | AST.PropertyAccessExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		) {
 			if (reportedChains.has(node) || isInHeritageClause(node)) {
@@ -129,7 +129,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkComputedKey(
 			node: AST.ElementAccessExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		) {
 			const keyNode = node.argumentExpression;

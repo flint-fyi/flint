@@ -13,7 +13,7 @@ function endsWithTerminatingStatement(statements: ts.NodeArray<AST.Statement>) {
 function hasFallthroughComment(
 	clause: AST.CaseClause | AST.DefaultClause,
 	nextClause: AST.CaseClause | AST.DefaultClause,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): boolean {
 	const sourceText = sourceFile.getFullText();
 	const commentRanges = ts.getLeadingCommentRanges(
@@ -69,7 +69,7 @@ function isTerminatingStatement(node: AST.Statement): boolean {
 				node.caseBlock.clauses.some(ts.isDefaultClause) &&
 				node.caseBlock.clauses.every(
 					(clause) =>
-						clause.statements.length === 0 ||
+						!clause.statements.length ||
 						endsWithTerminatingStatement(clause.statements),
 				)
 			);
@@ -99,7 +99,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports switch case clauses that fall through unexpectedly.",
 		id: "caseFallthroughs",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unexpectedFallthrough: {
@@ -130,7 +130,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const nextClause = node.caseBlock.clauses[i + 1]!;
 
 						if (
-							clause.statements.length === 0 ||
+							!clause.statements.length ||
 							endsWithTerminatingStatement(clause.statements) ||
 							hasFallthroughComment(clause, nextClause, sourceFile)
 						) {

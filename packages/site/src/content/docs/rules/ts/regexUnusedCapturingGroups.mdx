@@ -1,0 +1,85 @@
+---
+description: "Reports capturing groups in regular expressions that are never referenced."
+title: "regexUnusedCapturingGroups"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnusedCapturingGroups" />
+
+Reports capturing groups in regular expressions that have no backreferences.
+A capturing group without a backreference is considered "unused" and can typically be converted to a non-capturing group for clarity.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(a)/;
+```
+
+```ts
+const pattern = /(?<name>a)/;
+```
+
+```ts
+const pattern = /(a)(b)\1/; // (b) is never referenced
+```
+
+```ts
+const pattern = new RegExp("(a)");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)\1/;
+// Or use a non-capturing group
+const pattern2 = /(?:a)/;
+```
+
+```ts
+const pattern = /(?<name>a)\k<name>/;
+// Or use a non-capturing group
+const pattern2 = /(?:a)/;
+```
+
+```ts
+const pattern = /(a)(?:b)\1/;
+// Or reference both groups
+const pattern2 = /(a)(b)\1\2/;
+```
+
+```ts
+const pattern = new RegExp("(a)\\1");
+// Or use a non-capturing group
+const pattern2 = new RegExp("(?:a)");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you use capturing groups for purposes other than backreferences within the regex itself (such as extracting matched groups via `match()` or `exec()`), you might prefer to disable this rule.
+However, note that modern JavaScript provides named groups which are more readable for extraction purposes.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Capturing groups](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Capturing_group)
+- [MDN: Backreferences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Backreference)
+- [MDN: Named capturing groups](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Named_capturing_group)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnusedCapturingGroups" />

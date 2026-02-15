@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports <iframe> elements without a title prop.",
 		id: "iframeTitles",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingTitle: {
@@ -51,7 +51,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				);
 			});
 
-			if (!titleAttribute || titleAttribute.kind !== SyntaxKind.JsxAttribute) {
+			if (titleAttribute?.kind !== SyntaxKind.JsxAttribute) {
 				context.report({
 					message: "missingTitle",
 					range: getTSNodeRange(tagName, sourceFile),

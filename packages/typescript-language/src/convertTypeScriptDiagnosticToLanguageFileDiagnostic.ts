@@ -2,7 +2,6 @@
 // ...which notes:
 // Adapted from: https://github.com/microsoft/TypeScript/blob/78c16795cdee70b9d9f0f248b6dbb6ba50994a59/src/compiler/program.ts#L680-L811
 
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import {
@@ -79,16 +78,16 @@ function formatDiagnostic(diagnostic: TSBasedDiagnostic) {
 	return output;
 }
 
-const gutterStyleSequence = "\u001b[7m";
+const gutterStyleSequence = "\u001B[7m";
 const ellipsis = "...";
 const gutterSeparator = " ";
-const resetEscapeSequence = "\u001b[0m";
+const resetEscapeSequence = "\u001B[0m";
 const COLOR = {
-	Blue: "\u001b[94m",
-	Cyan: "\u001b[96m",
-	Grey: "\u001b[90m",
-	Red: "\u001b[91m",
-	Yellow: "\u001b[93m",
+	Blue: "\u001B[94m",
+	Cyan: "\u001B[96m",
+	Grey: "\u001B[90m",
+	Red: "\u001B[91m",
+	Yellow: "\u001B[93m",
 };
 
 function displayFilename(name: string) {

@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `.filter()[0]` instead of `.find()` when looking for a single element.",
 		id: "arrayFinds",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferFind: {
@@ -38,7 +38,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const arrayText = node.expression.expression.getText(sourceFile);
+					const arrayText =
+						node.expression.expression.expression.getText(sourceFile);
 					const filterArgumentsText = node.expression.arguments
 						.map((arg) => arg.getText(sourceFile))
 						.join(", ");
@@ -67,7 +68,7 @@ function isFilterCall(
 	return (
 		ts.isCallExpression(node) &&
 		ts.isPropertyAccessExpression(node.expression) &&
-		node.arguments.length !== 0 &&
+		!!node.arguments.length &&
 		node.expression.name.text === "filter" &&
 		typeChecker.isArrayType(
 			typeChecker.getTypeAtLocation(node.expression.expression),

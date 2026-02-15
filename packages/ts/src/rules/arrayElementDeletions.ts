@@ -11,7 +11,7 @@ import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocati
 function buildSpliceReplacement(
 	node: AST.DeleteExpression,
 	elementAccess: AST.ElementAccessExpression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): string {
 	const children = elementAccess.getChildren(sourceFile);
 	const openBracket = children.find(
@@ -40,7 +40,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using the `delete` operator on array values.",
 		id: "arrayElementDeletions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noArrayDelete: {

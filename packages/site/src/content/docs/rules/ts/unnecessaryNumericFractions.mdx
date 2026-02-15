@@ -1,0 +1,76 @@
+---
+description: "Reports numeric literals with unnecessary zero fractions or dangling dots."
+title: "unnecessaryNumericFractions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryNumericFractions" />
+
+Numeric literals with trailing zero fractions (e.g., `1.0`) or dangling dots (e.g., `1.`) are unnecessarily verbose and can be confusing.
+The zero fraction or dangling dot doesn't add any precision information to the number.
+
+This rule reports numeric literals with unnecessary zero fractions or dangling dots.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = 1.0;
+```
+
+```ts
+const value = 13.0;
+```
+
+```ts
+const value = 1;
+```
+
+```ts
+const value = 1.2;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = 1;
+```
+
+```ts
+const value = 13;
+```
+
+```ts
+const value = 1;
+```
+
+```ts
+const value = 1.2;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer explicit zero fractions or dangling dots in numeric literals for stylistic consistency, this rule may not be for you.
+
+## Further Reading
+
+- [MDN: Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
+- [MDN: Grammar and types - Numeric literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#numeric_literals)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryNumericFractions" />

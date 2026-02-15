@@ -1,0 +1,118 @@
+---
+description: "Reports empty alternatives in regular expressions that may indicate a mistake."
+title: "regexEmptyAlternatives"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexEmptyAlternatives" />
+
+Empty alternatives in regular expressions match zero characters.
+While sometimes intentional, they often indicate a mistake such as a typo or incomplete pattern.
+
+## Examples
+
+### Empty Alternative at End
+
+An empty alternative at the end of a group or pattern.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a|/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a?/;
+```
+
+</TabItem>
+</Tabs>
+
+### Empty Alternative at Start
+
+An empty alternative at the start of a group or pattern.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /|a/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a?/;
+```
+
+</TabItem>
+</Tabs>
+
+### Empty Alternative in Groups
+
+Empty alternatives in capturing and non-capturing groups.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(a|)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)?/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+The rule also checks regex patterns in `RegExp` constructor calls.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("a|b|");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("a|b");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use empty alternatives to make a pattern optional and prefer this style over quantifiers, you might prefer to disable this rule.
+Some developers find `(a|)` more readable than `a?` for complex patterns.
+
+## Further Reading
+
+- [MDN: Disjunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Disjunction)
+- [MDN: Quantifier](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Quantifier)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexEmptyAlternatives" />

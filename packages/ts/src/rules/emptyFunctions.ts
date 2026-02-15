@@ -7,7 +7,7 @@ import ts, { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function hasComments(block: AST.Block, sourceFile: ts.SourceFile) {
+function hasComments(block: AST.Block, sourceFile: AST.SourceFile) {
 	const fullText = sourceFile.getFullText();
 	const openBrace = block.getStart(sourceFile);
 	const closeBrace = block.getEnd();
@@ -16,8 +16,8 @@ function hasComments(block: AST.Block, sourceFile: ts.SourceFile) {
 	return /\S+/.test(innerText.trim());
 }
 
-function isEmptyBlock(block: AST.Block, sourceFile: ts.SourceFile) {
-	return block.statements.length === 0 && !hasComments(block, sourceFile);
+function isEmptyBlock(block: AST.Block, sourceFile: AST.SourceFile) {
+	return !block.statements.length && !hasComments(block, sourceFile);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -45,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkFunctionBody(
 			node: ts.Node,
 			body: AST.Block | undefined,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (body && isEmptyBlock(body, sourceFile)) {
 				context.report({

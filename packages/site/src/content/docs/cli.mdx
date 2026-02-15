@@ -3,7 +3,7 @@ description: "Running Flint on your command line."
 title: CLI
 ---
 
-import { PackageManagers } from "starlight-package-managers";
+import PackageManagers from "~/components/PackageManagers.astro";
 
 Flint's CLI comes as part of the [`flint` npm package](https://npmjs.com/package/flint).
 You can run it with `npx` or an equivalent:
@@ -17,9 +17,18 @@ This will cause a full re-lint of all linted files.
 
 <PackageManagers args="--cache-ignore" pkg="flint" type="dlx" />
 
+## `--cache-location`
+
+Override the default location for Flint's cache file.
+This can be either a direct path to a json file, or the directory where the `flint.json` cache file will be stored.
+The default value is `node_modules/.cache/flint.json`.
+
+You can open this file in an editor to see which files are cached, as well as dependencies of those files.
+
 :::tip
-Flint stores linting caches under `node_modules/.cache/flint.json`.
-Open that file in an editor to see which files are cached as well as dependencies between files.
+This value can also be set in your Flint configuration.
+Values applied on the command line will override any value defined in the config file.
+See [Configuration > cacheLocation](https://www.flint.fyi/configuration#cacheLocation) for more.
 :::
 
 ## `--fix`
@@ -95,7 +104,7 @@ Run with `--interactive --watch` to use both modes.
 
 Which ["presenter"](/glossary#presenter) to output results using: `brief` _(default)_ or `detailed`.
 
-<PackageManagers arg="--presenter detailed" pkg="flint" type="dlx" />
+<PackageManagers args="--presenter detailed" pkg="flint" type="dlx" />
 
 The `brief` presenter shows a terse output with just file locations, primary report messages, and report IDs.
 

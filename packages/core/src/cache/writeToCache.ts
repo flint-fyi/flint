@@ -1,15 +1,21 @@
 import { CachedFactory } from "cached-factory";
+import { debugForFile } from "debug-for-file";
 import * as fs from "node:fs/promises";
+import { dirname } from "node:path";
 import omitEmpty from "omit-empty";
 
 import type { CacheStorage } from "../types/cache.ts";
 import type { LintResults } from "../types/linting.ts";
-import { cacheFileDirectory, cacheFilePath } from "./constants.ts";
+import { cacheStorageSchema } from "./cacheSchema.ts";
+import { getCacheFilePath } from "./getCacheFilePath.ts";
 import { getFileTouchTime } from "./getFileTouchTime.ts";
+
+const log = debugForFile(import.meta.filename);
 
 export async function writeToCache(
 	configFileName: string,
 	lintResults: LintResults,
+	cacheLocation: string | undefined,
 ) {
 	const fileDependents = new CachedFactory(() => new Set<string>());
 	const timestamp = Date.now();
@@ -48,6 +54,16 @@ export async function writeToCache(
 		},
 	};
 
+	const cacheFilePath = getCacheFilePath(cacheLocation);
+	const cacheFileDirectory = dirname(cacheFilePath);
+
 	await fs.mkdir(cacheFileDirectory, { recursive: true });
-	await fs.writeFile(cacheFilePath, JSON.stringify(storage, null, "\t"));
+
+	const encoded = cacheStorageSchema.safeEncode(storage);
+	if (!encoded.success) {
+		log("Failed to encode cache data: %s", encoded.error.message);
+		return;
+	}
+
+	await fs.writeFile(cacheFilePath, encoded.data);
 }

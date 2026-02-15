@@ -13,7 +13,7 @@ parentNode.removeChild(childNode);
 declare const parentNode: HTMLElement;
 declare const childNode: HTMLElement;
 childNode.remove();
-			`,
+`,
 			snapshot: `
 declare const parentNode: HTMLElement;
 declare const childNode: HTMLElement;
@@ -30,7 +30,7 @@ element.parentNode.removeChild(element);
 			output: `
 declare const element: HTMLElement;
 element.remove();
-			`,
+`,
 			snapshot: `
 declare const element: HTMLElement;
 element.parentNode.removeChild(element);

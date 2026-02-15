@@ -1,0 +1,84 @@
+---
+description: "Reports parseInt calls that are missing or have an invalid radix parameter."
+title: "parseIntRadixes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="parseIntRadixes" />
+
+When using the `parseInt()` function it is common to omit the second argument, the radix, and let the function try to determine from the first argument what type of number it is.
+By default, `parseInt()` will autodetect decimal and hexadecimal (via `0x` prefix).
+Prior to ECMAScript 5, `parseInt()` also autodetected octal literals, which caused problems because many developers assumed a leading `0` would be ignored.
+
+This confusion led to the suggestion that you always use the radix parameter to `parseInt()` to eliminate unintended consequences.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+parseInt("071");
+```
+
+```ts
+parseInt(someValue);
+```
+
+```ts
+Number.parseInt("071");
+```
+
+```ts
+parseInt("10", 1);
+```
+
+```ts
+parseInt("10", 37);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+parseInt("071", 10);
+```
+
+```ts
+parseInt("071", 8);
+```
+
+```ts
+Number.parseInt(someValue, 10);
+```
+
+```ts
+parseInt("10", 16);
+```
+
+```ts
+parseInt("10", radix);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are confident that your codebase always uses decimal strings without leading zeros, it may be preferable to disable this rule.
+
+## Further Reading
+
+- [MDN: parseInt()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="parseIntRadixes" />

@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using the deprecated __proto__ property to access or modify an object's prototype.",
 		id: "objectProto",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noProto: {

@@ -14,8 +14,6 @@ export type Checker = CheckerOverrides &
 	Omit<TypeChecker, keyof CheckerOverrides>;
 
 interface CheckerOverrides {
-	/** Fix Expression _Brand check */
-	getContextualType(node: AST.Expression | ts.Expression): Type | undefined;
 	getResolvedSignature(
 		node:
 			| AST.CallExpression
@@ -26,7 +24,6 @@ interface CheckerOverrides {
 			| AST.TaggedTemplateExpression
 			| ts.CallLikeExpression,
 	): Signature | undefined;
-	getTypeFromTypeNode(node: AST.TypeNode | ts.TypeNode): Type;
 	/** Improve narrowing, borrow from typescript-eslint */
 	isArrayType(type: Type): type is TypeReference;
 	isTupleType(type: Type): type is TupleTypeReference;

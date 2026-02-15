@@ -74,20 +74,14 @@ const doSomething = () => {};
 			code: `const doSomething = () => {};`,
 			options: { allowArrowFunctions: true, style: "declaration" },
 		},
-		{
-			code: `
+		`
 function overloaded(value: string): string;
 function overloaded(value: number): number;
 function overloaded(value: number | string): number | string {
     return value;
 }
 `,
-		},
-		{
-			code: `const callback = (value: number) => value * 2;`,
-		},
-		{
-			code: `const items = [1, 2, 3].map((value) => value * 2);`,
-		},
+		`const callback = (value: number) => value * 2;`,
+		`const items = [1, 2, 3].map((value) => value * 2);`,
 	],
 });

@@ -20,7 +20,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports variable declarations that shadow JavaScript's restricted names.",
 		id: "shadowedRestrictedNames",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		shadowedRestrictedName: {
@@ -37,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkIdentifier(
 			node: AST.Identifier,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			if (restrictedNames.has(node.text)) {
 				context.report({
@@ -52,7 +52,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkBindingName(
 			name: AST.BindingName,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			if (name.kind === SyntaxKind.Identifier) {
 				checkIdentifier(name, sourceFile);
@@ -67,7 +67,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkParameters(
 			parameters: ts.NodeArray<AST.ParameterDeclaration>,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			for (const parameter of parameters) {
 				checkBindingName(parameter.name, sourceFile);

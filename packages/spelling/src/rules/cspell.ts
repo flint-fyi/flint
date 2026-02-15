@@ -1,6 +1,8 @@
+import type { Suggestion } from "@flint.fyi/core";
 import { textLanguage } from "@flint.fyi/text-language";
 import { parseJsonSafe } from "@flint.fyi/utils";
 import type { DocumentValidator } from "cspell-lib";
+import { suggestionsForWord } from "cspell-lib";
 
 import { createDocumentValidator } from "./createDocumentValidator.ts";
 import { ruleCreator } from "./ruleCreator.ts";
@@ -11,7 +13,24 @@ interface CSpellConfigLike {
 
 interface FileTask {
 	documentValidatorTask: Promise<DocumentValidator | undefined>;
+	filePath: string;
 	text: string;
+}
+
+function createIssueMessage(withReplacement?: boolean) {
+	return {
+		primary: 'Forbidden or unknown word: "{{ word }}".',
+		secondary: [
+			'The word "{{ word }}" is not in the project\'s dictionary (cspell.json).',
+			"If it's intentional, add it to cspell.json under `words`.",
+		],
+		suggestions: [
+			'Add "{{ word }}" to dictionary.',
+			...(withReplacement
+				? ['Replace with "{{ replacement }}" or another known word.']
+				: []),
+		],
+	};
 }
 
 export default ruleCreator.createRule(textLanguage, {
@@ -21,18 +40,8 @@ export default ruleCreator.createRule(textLanguage, {
 		presets: ["logical"],
 	},
 	messages: {
-		issue: {
-			primary: 'Forbidden or unknown word: "{{ word }}".',
-			secondary: [
-				"The word '{{ word }}' is not in the project's dictionary (cspell.json).",
-				"If this is a valid term, consider adding it to 'cspell.json' under 'words'.",
-			],
-			suggestions: [
-				"Add '{{ word }}' to the project's dictionary.",
-				// TODO: update this message when we've implemented "suggestions for typos":https://github.com/flint-fyi/flint/issues/1403
-				"Correct the spelling if this was a typo.",
-			],
-		},
+		issue: createIssueMessage(),
+		issueWithReplacement: createIssueMessage(true),
 	},
 	setup(context) {
 		const fileTasks: FileTask[] = [];
@@ -40,10 +49,10 @@ export default ruleCreator.createRule(textLanguage, {
 		return {
 			dependencies: ["cspell.json"],
 			teardown: async () => {
-				for (const { documentValidatorTask, text } of fileTasks) {
+				for (const { documentValidatorTask, filePath, text } of fileTasks) {
 					const documentValidator = await documentValidatorTask;
 					if (!documentValidator) {
-						return undefined;
+						continue;
 					}
 
 					const issues = documentValidator.checkText(
@@ -52,55 +61,81 @@ export default ruleCreator.createRule(textLanguage, {
 						undefined,
 					);
 
-					for (const issue of issues) {
-						context.report({
-							data: {
-								word: issue.text,
-							},
-							message: "issue",
-							range: {
-								begin: issue.offset,
-								end: issue.offset + (issue.length ?? issue.text.length),
-							},
-							suggestions: [
-								{
-									files: {
-										"cspell.json": (text) => {
-											const original = parseJsonSafe(
-												text,
-											) as CSpellConfigLike | null;
-											const words = original?.words ?? [];
+					const finalizedSettings = documentValidator.getFinalizedDocSettings();
 
-											return words.includes(issue.text)
-												? []
-												: [
-														{
-															range: {
-																begin: 0,
-																end: text.length,
-															},
-															text: JSON.stringify({
-																...original,
-																words: [...words, issue.text],
-															}),
+					for (const issue of issues) {
+						const issueRange = {
+							begin: issue.offset,
+							end: issue.offset + (issue.length ?? issue.text.length),
+						};
+
+						const suggestionsResults = await suggestionsForWord(issue.text, {
+							...finalizedSettings,
+							numSuggestions: 1,
+						});
+						const firstSuggestion = suggestionsResults.suggestions[0];
+						const isValidSuggestion =
+							firstSuggestion &&
+							!firstSuggestion.forbidden &&
+							!firstSuggestion.noSuggest;
+
+						const replacement = isValidSuggestion
+							? (firstSuggestion.wordAdjustedToMatchCase ??
+								firstSuggestion.word)
+							: undefined;
+
+						const data: Record<string, string> = {
+							word: issue.text,
+							...(replacement && { replacement }),
+						};
+
+						const suggestions: Suggestion[] = [
+							{
+								files: {
+									"cspell.json": (text) => {
+										const original = parseJsonSafe(
+											text,
+										) as CSpellConfigLike | null;
+										const words = original?.words ?? [];
+
+										return words.includes(issue.text)
+											? []
+											: [
+													{
+														range: {
+															begin: 0,
+															end: text.length,
 														},
-													];
-										},
+														text: JSON.stringify({
+															...original,
+															words: [...words, issue.text],
+														}),
+													},
+												];
 									},
-									id: "addWordToWords",
 								},
-							],
+								id: "addWordToWords",
+							},
+						];
+
+						context.report({
+							data,
+							filePath,
+							message: replacement ? "issueWithReplacement" : "issue",
+							range: issueRange,
+							suggestions,
 						});
 					}
 				}
 			},
 			visitors: {
-				file: (text, { filePathAbsolute }) => {
+				file: (text, { filePath, filePathAbsolute }) => {
 					fileTasks.push({
 						documentValidatorTask: createDocumentValidator(
 							filePathAbsolute,
 							text,
 						),
+						filePath,
 						text,
 					});
 				},

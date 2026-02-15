@@ -3,7 +3,7 @@ import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 const validTypeofValues = new Set([
 	"bigint",
@@ -36,7 +36,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports typeof expressions that compare impossible string literals.",
 		id: "typeofComparisons",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		invalidValue: {
@@ -55,7 +55,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkComparison(
 			node: AST.BinaryExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const leftTypeofOperand = getTypeofOperand(node.left);
 			const rightTypeofOperand = getTypeofOperand(node.right);

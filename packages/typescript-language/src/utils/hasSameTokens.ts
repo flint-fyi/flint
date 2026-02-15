@@ -1,15 +1,15 @@
 import ts from "typescript";
 
 import type * as AST from "../types/ast.ts";
-import { unwrapParenthesizedExpression } from "./unwrapParenthesizedExpression.ts";
+import { unwrapParenthesizedNode } from "./unwrapParenthesizedNode.ts";
 
 export function hasSameTokens(
-	nodeA: AST.Expression,
-	nodeB: AST.Expression,
-	sourceFile: ts.SourceFile,
+	nodeA: AST.AnyNode,
+	nodeB: AST.AnyNode,
+	sourceFile: AST.SourceFile,
 ): boolean {
-	const queueA: ts.Node[] = [unwrapParenthesizedExpression(nodeA)];
-	const queueB: ts.Node[] = [unwrapParenthesizedExpression(nodeB)];
+	const queueA: ts.Node[] = [unwrapParenthesizedNode(nodeA)];
+	const queueB: ts.Node[] = [unwrapParenthesizedNode(nodeB)];
 
 	while (true) {
 		const currentA = queueA.shift();
@@ -47,7 +47,7 @@ export function hasSameTokens(
 function areSameToken(
 	nodeA: ts.Node,
 	nodeB: ts.Node,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): boolean {
 	if (
 		ts.isIdentifier(nodeA) ||

@@ -42,10 +42,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			context.report({
 				data: { declarationType: "function declaration" },
 				message: "implicitGlobal",
-				range: getTSNodeRange(
-					node.name,
-					sourceFile as unknown as ts.SourceFile,
-				),
+				range: getTSNodeRange(node.name, sourceFile),
 			});
 		}
 
@@ -67,10 +64,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					context.report({
 						data: { declarationType: "var declaration" },
 						message: "implicitGlobal",
-						range: getTSNodeRange(
-							declaration.name,
-							sourceFile as unknown as ts.SourceFile,
-						),
+						range: getTSNodeRange(declaration.name, sourceFile),
 					});
 				}
 			}

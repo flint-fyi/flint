@@ -15,7 +15,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports `Promise` catch callback parameters that are not typed as unknown.",
 		id: "catchCallbackTypes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferUnknown: {
@@ -78,10 +78,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkCallbackParameter(
 			callback: AST.Expression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
-			if (!ts.isFunctionLike(callback) || callback.parameters.length === 0) {
+			if (!ts.isFunctionLike(callback) || !callback.parameters.length) {
 				return;
 			}
 

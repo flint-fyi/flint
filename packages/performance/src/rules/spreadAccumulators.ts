@@ -37,10 +37,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: ts.Node,
 			identifierName: string,
 		): boolean | undefined {
-			if (ts.isSpreadElement(node) || ts.isSpreadAssignment(node)) {
-				if (identifierName === getIdentifierName(node.expression)) {
-					return true;
-				}
+			if (
+				(ts.isSpreadElement(node) || ts.isSpreadAssignment(node)) &&
+				identifierName === getIdentifierName(node.expression)
+			) {
+				return true;
 			}
 
 			return ts.forEachChild(node, (child) => {
@@ -48,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			});
 		}
 
-		function checkAssignmentInLoop(node: ts.Node, sourceFile: ts.SourceFile) {
+		function checkAssignmentInLoop(node: ts.Node, sourceFile: AST.SourceFile) {
 			if (
 				ts.isBinaryExpression(node) &&
 				node.operatorToken.kind === ts.SyntaxKind.EqualsToken
@@ -73,7 +74,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkBinaryEqualsExpression(
 			node: ts.BinaryExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const leftName = getIdentifierName(node.left);
 			if (!leftName || !hasSpreadOfIdentifier(node.right, leftName)) {

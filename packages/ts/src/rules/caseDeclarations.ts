@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports lexical declarations in case clauses without wrapping them in blocks.",
 		id: "caseDeclarations",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		unexpectedLexicalDeclaration: {
@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function getLexicalDeclaration(
 			statements: ts.NodeArray<AST.Statement>,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): ts.Node | undefined {
 			for (const statement of statements) {
 				if (

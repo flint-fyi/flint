@@ -12,7 +12,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 // https://github.com/flint-fyi/flint/issues/1298
 function getPropertyName(
 	accessor: AST.GetAccessorDeclaration | AST.SetAccessorDeclaration,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	return ts.isIdentifier(accessor.name) ||
 		ts.isStringLiteral(accessor.name) ||
@@ -25,7 +25,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports recursive access to this within getters and setters.",
 		id: "accessorThisRecursion",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noGetterRecursion: {

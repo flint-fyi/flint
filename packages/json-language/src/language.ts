@@ -1,33 +1,51 @@
 import { createLanguage } from "@flint.fyi/core";
-import fsSync from "node:fs";
-import type * as ts from "typescript";
+import * as ts from "typescript";
 
-import { createTypeScriptJsonFile } from "./createJsonFile.ts";
-import type { JsonNodesByName } from "./nodes.ts";
+import type { JsonNodesByName, JsonNodeVisitors } from "./nodes.ts";
 
 export interface JsonFileServices {
 	sourceFile: ts.JsonSourceFile;
 }
 
-export const jsonLanguage = createLanguage<JsonNodesByName, JsonFileServices>({
+export const jsonLanguage = createLanguage<JsonNodeVisitors, JsonFileServices>({
 	about: {
 		name: "JSON",
 	},
 	createFileFactory: () => {
 		return {
-			prepareFromDisk: (data) => {
+			createFile: (data) => {
+				const sourceFile = ts.parseJsonText(
+					data.filePathAbsolute,
+					data.sourceText,
+				);
+
 				return {
-					file: createTypeScriptJsonFile({
-						...data,
-						sourceText: fsSync.readFileSync(data.filePathAbsolute, "utf8"),
-					}),
-				};
-			},
-			prepareFromVirtual: (data) => {
-				return {
-					file: createTypeScriptJsonFile(data),
+					about: data,
+					services: { sourceFile },
 				};
 			},
 		};
+	},
+	runFileVisitors: (file, options, runtime) => {
+		if (!runtime.visitors) {
+			return;
+		}
+
+		const { visitors } = runtime;
+		const visitorServices = { options, ...file.services };
+
+		const visit = (node: ts.Node) => {
+			const key = ts.SyntaxKind[node.kind] as keyof JsonNodesByName;
+
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+			visitors[key]?.(node, visitorServices);
+
+			node.forEachChild(visit);
+
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+			visitors[`${key}:exit`]?.(node, visitorServices);
+		};
+
+		file.services.sourceFile.forEachChild(visit);
 	},
 });

@@ -7,7 +7,7 @@ import type * as AST from "./types/ast.ts";
 
 export function collectReferencedFilePaths(
 	program: ts.Program,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	const modulePaths = new Set<string>();
 
@@ -72,7 +72,7 @@ function isImportCall(
 	return (
 		ts.isCallExpression(node) &&
 		tsutils.isImportExpression(node.expression) &&
-		node.arguments.length > 0 &&
+		!!node.arguments.length &&
 		ts.isStringLiteral(
 			nullThrows(
 				node.arguments[0],

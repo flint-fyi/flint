@@ -35,18 +35,10 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{
-			code: `<div onMouseOver={() => void 0} onFocus={() => void 0} />`,
-		},
-		{
-			code: `<div onMouseOut={() => void 0} onBlur={() => void 0} />`,
-		},
-		{
-			code: `<div onFocus={() => void 0} />`,
-		},
-		{
-			code: `<div />`,
-		},
-		{ code: `<button onClick={handler} />` },
+		`<div onMouseOver={() => void 0} onFocus={() => void 0} />`,
+		`<div onMouseOut={() => void 0} onBlur={() => void 0} />`,
+		`<div onFocus={() => void 0} />`,
+		`<div />`,
+		`<button onClick={handler} />`,
 	],
 });

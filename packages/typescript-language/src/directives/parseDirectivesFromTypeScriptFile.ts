@@ -4,9 +4,9 @@ import {
 } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 import * as tsutils from "ts-api-utils";
-import type ts from "typescript";
 
 import { normalizeRange } from "../normalizeRange.ts";
+import type * as AST from "../types/ast.ts";
 
 export interface ExtractedDirective {
 	range: NormalizedReportRangeObject;
@@ -14,7 +14,9 @@ export interface ExtractedDirective {
 	type: string;
 }
 
-export function extractDirectivesFromTypeScriptFile(sourceFile: ts.SourceFile) {
+export function extractDirectivesFromTypeScriptFile(
+	sourceFile: AST.SourceFile,
+) {
 	const directives: ExtractedDirective[] = [];
 
 	tsutils.forEachComment(sourceFile, (fullText, sourceRange) => {
@@ -43,7 +45,7 @@ export function extractDirectivesFromTypeScriptFile(sourceFile: ts.SourceFile) {
 	return directives;
 }
 
-export function parseDirectivesFromTypeScriptFile(sourceFile: ts.SourceFile) {
+export function parseDirectivesFromTypeScriptFile(sourceFile: AST.SourceFile) {
 	const collector = new DirectivesCollector(
 		sourceFile.statements.at(0)?.getStart(sourceFile) ?? sourceFile.text.length,
 	);

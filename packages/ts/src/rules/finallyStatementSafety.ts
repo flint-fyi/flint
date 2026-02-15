@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports control flow statements in `finally` blocks that can override control flow in `try`/`catch` blocks.",
 		id: "finallyStatementSafety",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsafeFinally: {

@@ -55,42 +55,24 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		{ code: `<input type="text" />` },
-		{ code: `<input type="text" autocomplete="name" />` },
-		{
-			code: `<input type="text" autocomplete="email" />`,
-		},
-		{ code: `<input type="text" autocomplete="off" />` },
-		{ code: `<input type="text" autocomplete="on" />` },
-		{
-			code: `<input type="text" autocomplete="username" />`,
-		},
-		{
-			code: `<input type="password" autocomplete="current-password" />`,
-		},
-		{
-			code: `<input type="password" autocomplete="new-password" />`,
-		},
-		{ code: `<input type="tel" autocomplete="tel" />` },
-		{ code: `<input type="url" autocomplete="url" />` },
-		{
-			code: `<input type="text" autocomplete="billing street-address" />`,
-		},
-		{
-			code: `<input type="text" autocomplete="shipping postal-code" />`,
-		},
-		{
-			code: `<input type="text" autocomplete="billing country" />`,
-		},
-		{ code: `<input type="text" autocomplete />` },
-		{
-			code: `<input type="text" autocomplete={otherValue} />`,
-		},
-		{
-			code: `<input type="text" autocomplete={otherValue || "name"} />`,
-		},
-		{ code: `<div autocomplete="invalid" />` },
-		{ code: `<Foo autocomplete="bar" />` },
-		{ code: `<button type="submit" />` },
+		`<input type="text" />`,
+		`<input type="text" autocomplete="name" />`,
+		`<input type="text" autocomplete="email" />`,
+		`<input type="text" autocomplete="off" />`,
+		`<input type="text" autocomplete="on" />`,
+		`<input type="text" autocomplete="username" />`,
+		`<input type="password" autocomplete="current-password" />`,
+		`<input type="password" autocomplete="new-password" />`,
+		`<input type="tel" autocomplete="tel" />`,
+		`<input type="url" autocomplete="url" />`,
+		`<input type="text" autocomplete="billing street-address" />`,
+		`<input type="text" autocomplete="shipping postal-code" />`,
+		`<input type="text" autocomplete="billing country" />`,
+		`<input type="text" autocomplete />`,
+		`<input type="text" autocomplete={otherValue} />`,
+		`<input type="text" autocomplete={otherValue || "name"} />`,
+		`<div autocomplete="invalid" />`,
+		`<Foo autocomplete="bar" />`,
+		`<button type="submit" />`,
 	],
 });

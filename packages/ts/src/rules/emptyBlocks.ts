@@ -3,7 +3,7 @@ import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 const allowedParents = new Set([
 	SyntaxKind.ArrowFunction,
@@ -22,7 +22,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports empty block statements that should contain code.",
 		id: "emptyBlocks",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		emptyBlock: {
@@ -37,7 +37,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function hasComments(block: AST.Block, sourceFile: ts.SourceFile): boolean {
+		function hasComments(
+			block: AST.Block,
+			sourceFile: AST.SourceFile,
+		): boolean {
 			const fullText = sourceFile.getFullText();
 
 			const openBrace = block.getStart(sourceFile);
@@ -51,9 +54,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isEmptyBlock(
 			block: AST.Block,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): boolean {
-			return block.statements.length === 0 && !hasComments(block, sourceFile);
+			return !block.statements.length && !hasComments(block, sourceFile);
 		}
 
 		return {
@@ -70,7 +73,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 				},
 				CaseBlock: (node, { sourceFile }) => {
-					if (node.clauses.length === 0) {
+					if (!node.clauses.length) {
 						context.report({
 							message: "emptyBlock",
 							range: getTSNodeRange(node, sourceFile),

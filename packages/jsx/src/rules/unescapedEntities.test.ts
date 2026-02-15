@@ -5,79 +5,87 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-<div>Greater than > sign</div>`,
+<div>Greater than > sign</div>
+`,
 			snapshot: `
 <div>Greater than > sign</div>
                   ~
-                  This unescaped entity \`>\` may not render properly.`,
+                  This unescaped entity \`>\` may not render properly.
+`,
 		},
 		{
 			code: `
-<span>Double "quote" example</span>`,
+<span>Double "quote" example</span>
+`,
 			snapshot: `
 <span>Double "quote" example</span>
              ~
              This unescaped entity \`"\` may not render properly.
                    ~
-                   This unescaped entity \`"\` may not render properly.`,
+                   This unescaped entity \`"\` may not render properly.
+`,
 		},
 		{
 			code: `
-<p>Single 'quote' example</p>`,
+<p>Single 'quote' example</p>
+`,
 			snapshot: `
 <p>Single 'quote' example</p>
           ~
           This unescaped entity \`'\` may not render properly.
                 ~
-                This unescaped entity \`'\` may not render properly.`,
+                This unescaped entity \`'\` may not render properly.
+`,
 		},
 		{
 			code: `
-<div>Closing } brace</div>`,
+<div>Closing } brace</div>
+`,
 			snapshot: `
 <div>Closing } brace</div>
              ~
-             This unescaped entity \`}\` may not render properly.`,
+             This unescaped entity \`}\` may not render properly.
+`,
 		},
 		{
 			code: `
-<Component>Text with > and "</Component>`,
+<Component>Text with > and "</Component>
+`,
 			snapshot: `
 <Component>Text with > and "</Component>
                      ~
                      This unescaped entity \`>\` may not render properly.
                            ~
-                           This unescaped entity \`"\` may not render properly.`,
+                           This unescaped entity \`"\` may not render properly.
+`,
 		},
 		{
 			code: `
-<div>Multiple >> problems</div>`,
+<div>Multiple >> problems</div>
+`,
 			snapshot: `
 <div>Multiple >> problems</div>
               ~
               This unescaped entity \`>\` may not render properly.
                ~
-               This unescaped entity \`>\` may not render properly.`,
+               This unescaped entity \`>\` may not render properly.
+`,
 		},
 	],
 	valid: [
-		{ code: `<div>Regular text</div>` },
-		{ code: `<div>Text with &gt; entity</div>` },
-		{ code: `<div>Text with &quot; entity</div>` },
-		{ code: `<div>Text with &#39; entity</div>` },
-		{ code: `<div>Text with &#125; entity</div>` },
-		{ code: `<div>{'>'}{'<'}</div>` },
-		{ code: `<div>{'"'}</div>` },
-		{ code: `<div>{"'"}</div>` },
-		{ code: `<div>{'}'}</div>` },
-		{ code: `<div>No special characters here</div>` },
-		{
-			code: `<div>
+		`<div>Regular text</div>`,
+		`<div>Text with &gt; entity</div>`,
+		`<div>Text with &quot; entity</div>`,
+		`<div>Text with &#39; entity</div>`,
+		`<div>Text with &#125; entity</div>`,
+		`<div>{'>'}{'<'}</div>`,
+		`<div>{'"'}</div>`,
+		`<div>{"'"}</div>`,
+		`<div>{'}'}</div>`,
+		`<div>No special characters here</div>`,
+		`<div>
     Regular text content
 </div>`,
-		},
-		{
-			code: `<a href="https://example.com">Link</a>`,
-		},
+		`<a href="https://example.com">Link</a>`,
 	],
 });

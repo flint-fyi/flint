@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports variables that are declared but never assigned a value.",
 		id: "unassignedVariables",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noUnassigned: {
@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function hasAssignments(
 			identifier: AST.Identifier,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
 			// TODO (#400): Switch to scope analysis

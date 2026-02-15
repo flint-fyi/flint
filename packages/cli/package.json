@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/cli",
-	"version": "0.16.1",
+	"version": "0.17.0",
 	"description": "[Experimental] Command-line interface for Flint.",
 	"repository": {
 		"type": "git",
@@ -15,10 +15,7 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": {
-			"@flint.fyi/source": "./src/index.ts",
-			"default": "./lib/index.js"
-		}
+		".": "./src/index.ts"
 	},
 	"files": [
 		"lib/",
@@ -40,8 +37,8 @@
 		"wrap-ansi": "^9.0.2"
 	},
 	"devDependencies": {
-		"prettier": "3.7.4",
-		"tsdown": "0.19.0-beta.2"
+		"prettier": "3.8.1",
+		"tsdown": "0.20.1"
 	},
 	"peerDependencies": {
 		"prettier": "^3.7.4"

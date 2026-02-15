@@ -1,0 +1,100 @@
+---
+description: "Detect function parameters only used in recursive calls."
+title: "recursionOnlyArguments"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="recursionOnlyArguments" />
+
+Parameters that are only passed through to recursive calls without being used in the function body serve no functional purpose.
+This pattern often indicates a mistake where a parameter was intended to be used but is only being forwarded through recursive calls.
+Such parameters increase cognitive complexity, may impact performance, and suggest the function is only useful internally for iteration or recursion.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function process(data, unusedParam) {
+	if (data.length === 0) {
+		return;
+	}
+	process(data.slice(1), unusedParam);
+}
+```
+
+```ts
+function traverse(node, depth) {
+	if (!node) {
+		return;
+	}
+	traverse(node.left, depth);
+	traverse(node.right, depth);
+}
+```
+
+```ts
+const recurse = (value) => {
+	return recurse(value);
+};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function process(data) {
+	if (data.length === 0) {
+		return;
+	}
+	process(data.slice(1));
+}
+```
+
+```ts
+function traverse(node, depth) {
+	if (!node) {
+		return;
+	}
+	console.log(`Depth: ${depth}`);
+	traverse(node.left, depth + 1);
+	traverse(node.right, depth + 1);
+}
+```
+
+```ts
+function factorial(n) {
+	if (n <= 1) {
+		return 1;
+	}
+	return n * factorial(n - 1);
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+This rule might get in your way if you have functions where parameters are intentionally passed through for API consistency or future extensibility, even if they're not currently used in the function body itself.
+Doing so is rare and typically indicates a design issue that should be addressed.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [Wikipedia: Tail call](https://en.wikipedia.org/wiki/Tail_call)
+- [Wikipedia: Recursion (computer science)](<https://en.wikipedia.org/wiki/Recursion_(computer_science)>)
+- [MDN: Functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="recursionOnlyArguments" />

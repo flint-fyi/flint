@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports unnecessary `end` argument in `.slice()` calls when it equals the length or is `Infinity`.",
 		id: "arraySliceUnnecessaryEnd",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		unnecessaryEnd: {
@@ -88,7 +88,7 @@ function isInfinity(node: AST.Expression) {
 function isLengthOfReceiver(
 	receiver: AST.Expression,
 	endArgument: AST.Expression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	return (
 		ts.isPropertyAccessExpression(endArgument) &&
@@ -100,7 +100,7 @@ function isLengthOfReceiver(
 function isUnnecessaryEnd(
 	receiver: AST.Expression,
 	endArgument: AST.Expression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	return (
 		isInfinity(endArgument) ||

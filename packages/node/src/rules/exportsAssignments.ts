@@ -4,11 +4,11 @@ import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 function isLocalExportsVariable(
 	node: AST.Identifier,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 	typeChecker: Checker,
 ) {
 	return typeChecker

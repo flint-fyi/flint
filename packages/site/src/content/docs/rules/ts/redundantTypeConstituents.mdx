@@ -1,0 +1,90 @@
+---
+description: "Reports union and intersection type constituents that are redundant or override other types."
+title: "redundantTypeConstituents"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="redundantTypeConstituents" />
+
+Some types can override other types in a union or intersection, making certain constituents redundant.
+TypeScript's set theory of types includes cases where a constituent type might be useless in the parent union or intersection.
+
+Within `|` unions:
+
+- `any` and `unknown` override all other union members
+- `never` is dropped from unions (except in return type position)
+- Primitive types like `string` override their literal types like `"hello"`
+
+Within `&` intersections:
+
+- `any` and `never` override all other intersection members
+- `unknown` is dropped from intersections
+- Literal types like `"hello"` override their primitive types like `string`
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+type A = number | any;
+```
+
+```ts
+type B = string | "literal";
+```
+
+```ts
+type C = number & never;
+```
+
+```ts
+type D = unknown & string;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+type A = number | string;
+```
+
+```ts
+type B = "a" | "b";
+```
+
+```ts
+type C = number & object;
+```
+
+```ts
+type D = string & { brand: symbol };
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+Some projects choose to occasionally include a redundant type constituent for documentation purposes.
+For example, some unions intentionally include a redundant `string` in unions containing `unknown` to indicate intent.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [TypeScript Handbook: Union Types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types)
+- [TypeScript Handbook: Intersection Types](https://www.typescriptlang.org/docs/handbook/2/objects.html#intersection-types)
+- [Wikipedia: Bottom Type](https://en.wikipedia.org/wiki/Bottom_type)
+- [Wikipedia: Top Type](https://en.wikipedia.org/wiki/Top_type)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="redundantTypeConstituents" />

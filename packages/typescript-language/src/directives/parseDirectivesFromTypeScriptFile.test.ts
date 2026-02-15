@@ -1,6 +1,7 @@
 import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
+import type * as AST from "../types/ast.ts";
 import { parseDirectivesFromTypeScriptFile } from "./parseDirectivesFromTypeScriptFile.ts";
 
 describe(parseDirectivesFromTypeScriptFile, () => {
@@ -10,7 +11,7 @@ describe(parseDirectivesFromTypeScriptFile, () => {
 			"// unrelated",
 			ts.ScriptTarget.ESNext,
 			true,
-		);
+		) as AST.SourceFile;
 
 		const actual = parseDirectivesFromTypeScriptFile(sourceFile);
 
@@ -30,7 +31,7 @@ describe(parseDirectivesFromTypeScriptFile, () => {
             `,
 			ts.ScriptTarget.ESNext,
 			true,
-		);
+		) as AST.SourceFile;
 
 		const actual = parseDirectivesFromTypeScriptFile(sourceFile);
 

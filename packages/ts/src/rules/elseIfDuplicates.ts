@@ -4,7 +4,7 @@ import {
 	hasSameTokens,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports duplicate conditions in if-else-if chains that make code unreachable.",
 		id: "elseIfDuplicates",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		duplicateCondition: {
@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkIfStatement(
 			node: AST.IfStatement,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const seen: AST.Expression[] = [];
 			let current: AST.IfStatement = node;
@@ -48,10 +48,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					});
 				}
 
-				if (
-					!current.elseStatement ||
-					current.elseStatement.kind !== SyntaxKind.IfStatement
-				) {
+				if (current.elseStatement?.kind !== SyntaxKind.IfStatement) {
 					break;
 				}
 

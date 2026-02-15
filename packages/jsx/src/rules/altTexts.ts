@@ -4,7 +4,7 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 const alternateProperties = new Set(["aria-label", "aria-labelledby", "title"]);
 
@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports elements that require alt text but are missing it.",
 		id: "altTexts",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingAlt: {
@@ -57,7 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			attributes: AST.JsxAttributes,
 			tagName: AST.JsxTagNameExpression,
 			elementName: string,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const properties = attributes.properties.find(
 				(attr) =>
@@ -98,8 +98,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				} else if (properties.initializer.kind === SyntaxKind.JsxExpression) {
 					const { expression } = properties.initializer;
 					if (
-						expression &&
-						expression.kind === SyntaxKind.Identifier &&
+						expression?.kind === SyntaxKind.Identifier &&
 						expression.text === "undefined"
 					) {
 						context.report({
@@ -115,7 +114,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkInputElement(
 			attributes: AST.JsxAttributes,
 			tagName: AST.JsxTagNameExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const typeAttribute = attributes.properties.find(
 				(properties) =>
@@ -124,26 +123,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					properties.name.text === "type",
 			);
 
-			if (typeAttribute && typeAttribute.kind === SyntaxKind.JsxAttribute) {
-				if (
-					typeAttribute.initializer &&
-					typeAttribute.initializer.kind === SyntaxKind.StringLiteral &&
-					typeAttribute.initializer.text === "image"
-				) {
-					checkAltAttribute(
-						attributes,
-						tagName,
-						"input[type='image']",
-						sourceFile,
-					);
-				}
+			if (
+				typeAttribute?.kind === SyntaxKind.JsxAttribute &&
+				typeAttribute.initializer?.kind === SyntaxKind.StringLiteral &&
+				typeAttribute.initializer.text === "image"
+			) {
+				checkAltAttribute(
+					attributes,
+					tagName,
+					"input[type='image']",
+					sourceFile,
+				);
 			}
 		}
 
 		function checkObjectAccessibility(
 			attributes: AST.JsxAttributes,
 			tagName: AST.JsxTagNameExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (
 				!attributes.properties.some(

@@ -17,6 +17,7 @@ packages:
 peerDependencyRules:
   allowedVersions:
     astro: "5"
+    vitest: "4"
 
 shellEmulator: true
 strictDepBuilds: true

@@ -6,6 +6,9 @@ import type { Language } from "./languages.ts";
 import type { ReportMessageData } from "./reports.ts";
 import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
 
+/**
+ * A single lint rule, as used by users in configs.
+ */
 export type AnyRule<
 	About extends RuleAbout = RuleAbout,
 	OptionsSchema extends AnyOptionalSchema | undefined =
@@ -40,6 +43,7 @@ export interface Rule<
 
 export interface RuleAbout extends BaseAbout {
 	description: string;
+	presets?: string[];
 }
 
 /**
@@ -82,14 +86,14 @@ export type RuleSetup<
 
 export type RuleTeardown = () => PromiseOrSync<undefined>;
 
-export type RuleVisitor<ASTNode, FileServices extends object> = (
+export type RuleVisitor<ASTNode, VisitorServices extends object> = (
 	node: ASTNode,
-	services: FileServices,
+	services: VisitorServices,
 ) => void;
 
-export type RuleVisitors<AstNodesByName, FileServices extends object> = {
+export type RuleVisitors<AstNodesByName, VisitorServices extends object> = {
 	[Kind in keyof AstNodesByName]?: RuleVisitor<
 		AstNodesByName[Kind],
-		FileServices
+		VisitorServices
 	>;
 };

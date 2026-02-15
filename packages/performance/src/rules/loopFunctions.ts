@@ -124,7 +124,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				| AST.ForStatement
 				| AST.WhileStatement,
 			loopVariables: Set<string>,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			if (tsutils.isFunctionScopeBoundary(node)) {
 				if (referencesLoopVariable(node, loopVariables)) {
@@ -178,7 +178,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const loopVariables = getLoopVariables(node);
-			if (loopVariables.size > 0) {
+			if (loopVariables.size) {
 				checkFunctionInLoop(node.statement, node, loopVariables, sourceFile);
 			}
 		}

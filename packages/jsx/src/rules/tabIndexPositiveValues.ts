@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports positive tabIndex values.",
 		id: "tabIndexPositiveValues",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noPositiveTabIndex: {
@@ -59,12 +59,11 @@ function getInitializerValue(initializer: AST.JsxAttributeValue) {
 	if (initializer.kind === SyntaxKind.StringLiteral) {
 		const parsed = Number(initializer.text);
 
-		return isNaN(parsed) ? undefined : parsed;
+		return Number.isNaN(parsed) ? undefined : parsed;
 	}
 
 	if (initializer.kind === SyntaxKind.JsxExpression) {
-		return initializer.expression &&
-			initializer.expression.kind === SyntaxKind.NumericLiteral
+		return initializer.expression?.kind === SyntaxKind.NumericLiteral
 			? Number(initializer.expression.text)
 			: undefined;
 	}

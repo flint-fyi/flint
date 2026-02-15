@@ -1,5 +1,22 @@
 # @flint.fyi/plugin-flint
 
+## 0.3.0
+
+### Minor Changes
+
+- 3353692: feat: split languages into dedicated packages
+- eb198c2: feat(plugin-flint): add getStartSourceFile rule to require sourceFile parameter
+
+### Patch Changes
+
+- 6a5e553: feat(core): add RuleCreator class
+- Updated dependencies [6a5e553]
+- Updated dependencies [2fb9715]
+- Updated dependencies [3353692]
+- Updated dependencies [3561386]
+  - @flint.fyi/core@0.19.0
+  - @flint.fyi/typescript-language@0.16.0
+
 ## 0.2.2
 
 ### Patch Changes

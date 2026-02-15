@@ -1,0 +1,70 @@
+---
+description: "Reports unnecessary Math.min and Math.max calls with constant arguments or incorrect clamping patterns."
+title: "unnecessaryMathClamps"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryMathClamps" />
+
+`Math.min` and `Math.max` are commonly used to constrain values to specific ranges.
+However, when all arguments are constant values, the result is always predictable and should be replaced with the constant directly.
+Additionally, nested `Math.min/max` calls are often accidentally swapped to never return a value in-range
+
+This rule reports on `Math.min` and `Math.max` calls that don't correctly clamp.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const minimum = Math.min(5, 10);
+```
+
+```ts
+const maximum = Math.max(3, 7, 2);
+```
+
+```ts
+const clamped = Math.max(0, Math.min(100, value));
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const minimum = 5;
+```
+
+```ts
+const maximum = 7;
+```
+
+```ts
+const clamped = Math.min(100, Math.max(0, value));
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a codebase that intentionally uses Math.min/max with constants for code generation or readability purposes, you might choose to disable this rule.
+However, in most cases, replacing constant Math operations with their computed results makes the code more efficient and clearer.
+
+## Further Reading
+
+- [MDN: Math.min()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/min)
+- [MDN: Math.max()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryMathClamps" />

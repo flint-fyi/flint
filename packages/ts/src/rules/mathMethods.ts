@@ -6,7 +6,7 @@ import {
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { skipParentheses } from "./utils/skipParentheses.ts";
@@ -128,7 +128,7 @@ function isMathProperty(
 
 function isPowerTwoExpression(
 	node: AST.Expression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ): boolean {
 	const unwrapped = skipParentheses(node);
 
@@ -156,7 +156,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	messages: {
 		preferModernMath: {
-			primary: "Prefer `{{replacement}}` over `{{description}}`.",
+			primary: "Prefer `{{ replacement }}` over `{{ description }}`.",
 			secondary: [
 				"Modern Math methods are clearer and more explicit about their purpose.",
 				"These methods have been available since ES2015 and are well-supported in all modern environments.",

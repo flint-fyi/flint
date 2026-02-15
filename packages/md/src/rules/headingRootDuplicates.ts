@@ -60,7 +60,8 @@ export default ruleCreator.createRule(markdownLanguage, {
 						}
 					}
 
-					// TODO: Add :exit selectors, so this rule can report after traversal?
+					// TODO: Add :exit selectors, so this rule can report after traversal
+					// https://github.com/flint-fyi/flint/issues/2268
 					visit(root);
 
 					if (h1HeadingRanges.length > 1) {

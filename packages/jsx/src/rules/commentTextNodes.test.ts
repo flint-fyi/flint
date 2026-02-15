@@ -5,71 +5,69 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-<div>// This looks like a comment</div>`,
+<div>// This looks like a comment</div>
+`,
 			snapshot: `
 <div>// This looks like a comment</div>
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     This text looks like a comment but will be rendered as text in the JSX output.`,
+     This text looks like a comment but will be rendered as text in the JSX output.
+`,
 		},
 		{
 			code: `
-<div>/* This also looks like a comment */</div>`,
+<div>/* This also looks like a comment */</div>
+`,
 			snapshot: `
 <div>/* This also looks like a comment */</div>
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     This text looks like a comment but will be rendered as text in the JSX output.`,
+     This text looks like a comment but will be rendered as text in the JSX output.
+`,
 		},
 		{
 			code: `
 <span>
     // comment text
-</span>`,
+</span>
+`,
 			snapshot: `
 <span>
     // comment text
     ~~~~~~~~~~~~~~~
     This text looks like a comment but will be rendered as text in the JSX output.
 </span>
+
 `,
 		},
 		{
 			code: `
 <p>
     /* inline comment */
-</p>`,
+</p>
+`,
 			snapshot: `
 <p>
     /* inline comment */
     ~~~~~~~~~~~~~~~~~~~~
     This text looks like a comment but will be rendered as text in the JSX output.
 </p>
+
 `,
 		},
 	],
 	valid: [
-		{ code: `<div>Regular text</div>` },
-		{ code: `<div>{/* This is a real comment */}</div>` },
-		{
-			code: `<div>
+		`<div>Regular text</div>`,
+		`<div>{/* This is a real comment */}</div>`,
+		`<div>
     {/* Comment inside expression */}
     Text content
 </div>`,
-		},
-		{ code: `<span>No comment syntax here</span>` },
-		{
-			code: `<div>
+		`<span>No comment syntax here</span>`,
+		`<div>
     {// Single line comment in expression
     }
 </div>`,
-		},
-		{
-			code: `<a href="https://example.com">Link</a>`,
-		},
-		{
-			code: `<div>Text before // comment syntax</div>`,
-		},
-		{
-			code: `<div>Text before /* comment */ syntax</div>`,
-		},
+		`<a href="https://example.com">Link</a>`,
+		`<div>Text before // comment syntax</div>`,
+		`<div>Text before /* comment */ syntax</div>`,
 	],
 });

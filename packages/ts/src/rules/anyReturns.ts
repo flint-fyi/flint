@@ -1,6 +1,7 @@
 import {
 	type AST,
-	type Checker,
+	getTSNodeRange,
+	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
@@ -12,12 +13,11 @@ import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { getThisExpression } from "./utils/getThisExpression.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
-
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports returning a value with type `any` from a function.",
 		id: "anyReturns",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsafeReturn: {
@@ -44,7 +44,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 		unsafeReturnThis: {
 			primary:
-				"Unsafe return of a value of type `{{ type }}`. `this` is typed as `any`.",
+				"Unsafe return of a value of type {{ type }}. `this` is typed as `any`.",
 			secondary: [
 				"Returning `this` when it is implicitly typed as `any` introduces type-unsafe behavior.",
 				"This can allow unexpected types to propagate through your codebase, potentially causing runtime errors.",
@@ -59,17 +59,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkReturn(
 			returnNode: AST.Expression,
 			reportingNode: ts.Node,
-			program: ts.Program,
-			typeChecker: Checker,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		): void {
 			const type = typeChecker.getTypeAtLocation(returnNode);
 
-			const anyType = discriminateAnyType(
-				type,
-				typeChecker,
-				program,
-				returnNode,
-			);
+			const anyType = discriminateAnyType(type, typeChecker, returnNode);
 			const functionNode = ts.findAncestor(
 				returnNode,
 				// TODO: I believe isFunctionLikeDeclaration was incorrectly marked
@@ -222,10 +216,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									: "`any[]`",
 					},
 					message,
-					range: {
-						begin: reportingNode.getStart(),
-						end: reportingNode.getEnd(),
-					},
+					range: getTSNodeRange(reportingNode, sourceFile),
 				});
 				return;
 			}
@@ -236,7 +227,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const result = isUnsafeAssignment(
 					returnNodeType,
 					functionReturnType,
-					typeChecker,
 					returnNode,
 				);
 				if (!result) {
@@ -250,10 +240,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						sender: typeChecker.typeToString(sender),
 					},
 					message: "unsafeReturnAssignment",
-					range: {
-						begin: reportingNode.getStart(),
-						end: reportingNode.getEnd(),
-					},
+					range: getTSNodeRange(reportingNode, sourceFile),
 				});
 				return;
 			}
@@ -261,14 +248,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				ArrowFunction: (node, { program, typeChecker }) => {
+				ArrowFunction: (node, fileService) => {
 					if (node.body.kind != SyntaxKind.Block) {
-						checkReturn(node.body, node.body, program, typeChecker);
+						checkReturn(node.body, node.body, fileService);
 					}
 				},
-				ReturnStatement: (node, { program, typeChecker }) => {
+				ReturnStatement: (node, fileService) => {
 					if (node.expression != null) {
-						checkReturn(node.expression, node, program, typeChecker);
+						checkReturn(node.expression, node, fileService);
 					}
 				},
 			},

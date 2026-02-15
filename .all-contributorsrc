@@ -84,7 +84,9 @@
       "profile": "https://github.com/auvred",
       "contributions": [
         "bug",
-        "maintenance"
+        "maintenance",
+        "ideas",
+        "test"
       ]
     },
     {
@@ -98,7 +100,8 @@
         "tool",
         "maintenance",
         "bug",
-        "infra"
+        "infra",
+        "doc"
       ]
     },
     {
@@ -107,7 +110,9 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/53019676?v=4",
       "profile": "https://github.com/kirkwaiblinger",
       "contributions": [
-        "code"
+        "code",
+        "maintenance",
+        "ideas"
       ]
     },
     {
@@ -116,7 +121,61 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/4674486?v=4",
       "profile": "https://barrymichaeldoyle.com",
       "contributions": [
+        "infra",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "kovsu",
+      "name": "Konv Suu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/82451257?v=4",
+      "profile": "https://github.com/kovsu",
+      "contributions": [
+        "doc",
+        "code",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "michaelfaith",
+      "name": "michael faith",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8071845?v=4",
+      "profile": "https://github.com/michaelfaith",
+      "contributions": [
+        "ideas",
+        "doc",
+        "bug",
+        "maintenance",
+        "tool",
+        "code",
         "infra"
+      ]
+    },
+    {
+      "login": "kolharsam",
+      "name": "Sameer Kolhar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6604943?v=4",
+      "profile": "https://www.kolharsam.net",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "yharaskrik",
+      "name": "Jay Bell",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9469090?v=4",
+      "profile": "https://jaybell.me/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "tibisabau",
+      "name": "Tiberiu Sabău",
+      "avatar_url": "https://avatars.githubusercontent.com/u/96194994?v=4",
+      "profile": "https://github.com/tibisabau",
+      "contributions": [
+        "code"
       ]
     }
   ],

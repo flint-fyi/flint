@@ -62,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports non-interactive elements with interactive event handlers.",
 		id: "nonInteractiveElementInteractions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidHandler: {
@@ -106,8 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				) {
 					if (
 						property.name.text === "role" &&
-						property.initializer &&
-						property.initializer.kind === SyntaxKind.StringLiteral &&
+						property.initializer?.kind === SyntaxKind.StringLiteral &&
 						!nonInteractiveRoles.has(property.initializer.text)
 					) {
 						return;

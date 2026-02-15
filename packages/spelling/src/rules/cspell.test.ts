@@ -7,12 +7,14 @@ ruleTester.describe(rule, {
 		{
 			code: `
                 incorect
-            `,
+            
+`,
 			snapshot: `
                 incorect
                 ~~~~~~~~
                 Forbidden or unknown word: "incorect".
-            `,
+            
+`,
 			suggestions: [
 				{
 					files: {
@@ -32,6 +34,80 @@ ruleTester.describe(rule, {
 							{
 								original: `{"words":["existing"]}`,
 								updated: '{"words":["existing","incorect"]}',
+							},
+						],
+					},
+					id: "addWordToWords",
+				},
+			],
+		},
+		{
+			code: `
+                const myarray = [];
+            
+`,
+			snapshot: `
+                const myarray = [];
+                      ~~~~~~~
+                      Forbidden or unknown word: "myarray".
+            
+`,
+			suggestions: [
+				{
+					files: {
+						"cspell.json": [
+							{
+								original: ``,
+								updated: '{"words":["myarray"]}',
+							},
+							{
+								original: `{}`,
+								updated: '{"words":["myarray"]}',
+							},
+							{
+								original: `{"words":[]}`,
+								updated: '{"words":["myarray"]}',
+							},
+							{
+								original: `{"words":["existing"]}`,
+								updated: '{"words":["existing","myarray"]}',
+							},
+						],
+					},
+					id: "addWordToWords",
+				},
+			],
+		},
+		{
+			code: `
+                qwertyuiop
+            
+`,
+			snapshot: `
+                qwertyuiop
+                ~~~~~~~~~~
+                Forbidden or unknown word: "qwertyuiop".
+            
+`,
+			suggestions: [
+				{
+					files: {
+						"cspell.json": [
+							{
+								original: ``,
+								updated: '{"words":["qwertyuiop"]}',
+							},
+							{
+								original: `{}`,
+								updated: '{"words":["qwertyuiop"]}',
+							},
+							{
+								original: `{"words":[]}`,
+								updated: '{"words":["qwertyuiop"]}',
+							},
+							{
+								original: `{"words":["existing"]}`,
+								updated: '{"words":["existing","qwertyuiop"]}',
 							},
 						],
 					},

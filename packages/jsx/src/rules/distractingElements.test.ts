@@ -5,43 +5,49 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-<marquee />`,
+<marquee />
+`,
 			snapshot: `
 <marquee />
  ~~~~~~~
- The <marquee> element is distracting and deprecated.`,
+ The <marquee> element is distracting and deprecated.
+`,
 		},
 		{
 			code: `
-<blink />`,
+<blink />
+`,
 			snapshot: `
 <blink />
  ~~~~~
- The <blink> element is distracting and deprecated.`,
+ The <blink> element is distracting and deprecated.
+`,
 		},
 		{
 			code: `
-<marquee>Hello</marquee>`,
+<marquee>Hello</marquee>
+`,
 			snapshot: `
 <marquee>Hello</marquee>
  ~~~~~~~
- The <marquee> element is distracting and deprecated.`,
+ The <marquee> element is distracting and deprecated.
+`,
 		},
 		{
 			code: `
-<BLINK>Alert!</BLINK>`,
+<BLINK>Alert!</BLINK>
+`,
 			snapshot: `
 <BLINK>Alert!</BLINK>
  ~~~~~
- The <blink> element is distracting and deprecated.`,
+ The <blink> element is distracting and deprecated.
+`,
 		},
 	],
 	valid: [
-		{ code: `<div />` },
-		{ code: `<span>Text</span>` },
-		{ code: `<button>Click me</button>` },
-		{
-			code: `<div className="marquee-style">Animated</div>`,
-		},
+		`<div />`,
+		`<span>Text</span>`,
+		`<button>Click me</button>`,
+		`<div className="marquee-style">Animated</div>`,
 	],
 });

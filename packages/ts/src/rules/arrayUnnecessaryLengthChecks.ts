@@ -8,7 +8,7 @@ import * as ts from "typescript";
 function haveSameArrayExpression(
 	expr1: AST.Expression,
 	expr2: AST.Expression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	return expr1.getText(sourceFile) === expr2.getText(sourceFile);
 }
@@ -32,12 +32,14 @@ function isLengthNonZeroCheck(node: AST.BinaryExpression) {
 		}
 	}
 
-	if (operatorToken.kind === ts.SyntaxKind.GreaterThanToken) {
-		if (isLengthProperty(left) && isZero(right)) {
-			return {
-				arrayExpression: left.expression,
-			};
-		}
+	if (
+		operatorToken.kind === ts.SyntaxKind.GreaterThanToken &&
+		isLengthProperty(left) &&
+		isZero(right)
+	) {
+		return {
+			arrayExpression: left.expression,
+		};
 	}
 
 	return undefined;

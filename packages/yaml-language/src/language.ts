@@ -1,10 +1,9 @@
 import { createLanguage } from "@flint.fyi/core";
-import fsSync from "node:fs";
-import type * as yamlParser from "yaml-unist-parser";
+import { visit } from "unist-util-visit";
+import * as yamlParser from "yaml-unist-parser";
 
-import { createYamlFile } from "./createYamlFile.ts";
+import { parseDirectivesFromYamlFile } from "./directives/parseDirectivesFromYamlFile.ts";
 import type { YamlNodesByName } from "./nodes.ts";
-import { prepareYamlFile } from "./prepareYamlFile.ts";
 
 export interface YamlFileServices {
 	root: yamlParser.Root;
@@ -17,17 +16,37 @@ export const yamlLanguage = createLanguage<YamlNodesByName, YamlFileServices>({
 	},
 	createFileFactory: () => {
 		return {
-			prepareFromDisk: (data) => {
-				const sourceText = fsSync.readFileSync(data.filePathAbsolute, "utf8");
-				const { languageFile, root } = createYamlFile({ ...data, sourceText });
+			createFile: (data) => {
+				const root = yamlParser.parse(data.sourceText);
 
-				return prepareYamlFile(languageFile, root, sourceText);
-			},
-			prepareFromVirtual: (data) => {
-				const { languageFile, root } = createYamlFile(data);
-
-				return prepareYamlFile(languageFile, root, data.sourceText);
+				return {
+					...parseDirectivesFromYamlFile(root, data.sourceText),
+					about: data,
+					services: { root, sourceText: data.sourceText },
+				};
 			},
 		};
+	},
+	runFileVisitors: (file, options, runtime) => {
+		if (!runtime.visitors) {
+			return;
+		}
+
+		const { visitors } = runtime;
+		const visitorServices = { options, ...file.services };
+
+		visit(
+			file.services.root,
+			(node) => {
+				// @ts-expect-error -- This should work...?
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+				visitors[node.type]?.(node, visitorServices);
+			},
+			(node) => {
+				// @ts-expect-error -- This should work...?
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+				visitors[`${node.type}:exit`]?.(node, visitorServices);
+			},
+		);
 	},
 });

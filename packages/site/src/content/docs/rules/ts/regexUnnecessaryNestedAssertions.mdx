@@ -1,0 +1,72 @@
+---
+description: "Reports trivially nested assertions in regular expressions that can be simplified."
+title: "regexUnnecessaryNestedAssertions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryNestedAssertions" />
+
+Regular expression lookarounds are trivially nested when it contains exactly one element that is itself an assertion (anchor or another lookaround of the same direction).
+Such lookarounds are unnecessary and can be simplified.
+This rule reports those lookarounds.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?=$)/;
+const boundary = /(?=\b)/;
+```
+
+```ts
+const pattern = /(?=(?=a))/;
+const behind = /(?<=(?<=a))/;
+```
+
+```ts
+const pattern = new RegExp("(?=$)");
+const boundary = RegExp("(?=\\b)");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /$/;
+const boundary = /\b/;
+```
+
+```ts
+const pattern = /(?=a)/;
+const behind = /(?<=a)/;
+```
+
+```ts
+const pattern = new RegExp("$");
+const boundary = RegExp("\\b");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally keep nested regular expression structures for code clarity or documentation purposes, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Lookahead and lookbehind assertions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Assertions#lookahead_assertion)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryNestedAssertions" />

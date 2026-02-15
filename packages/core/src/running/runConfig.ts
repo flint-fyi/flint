@@ -2,23 +2,33 @@ import { CachedFactory } from "cached-factory";
 
 import { writeToCache } from "../cache/writeToCache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
+import type { LinterHost } from "../types/host.ts";
 import type { LintResults } from "../types/linting.ts";
 import type { FileReport } from "../types/reports.ts";
 import type { AnyRule } from "../types/rules.ts";
-import { collectFilesAndMetadata } from "./collectFilesAndMetadata.ts";
+import { collectFilesAndOptions } from "./collectFilesAndOptions.ts";
 import { finalizeFileResults } from "./finalizeFileResults.ts";
 import { runLintRule } from "./runLintRule.ts";
 import type { LanguageFilesWithOptions } from "./types.ts";
 
 export interface RunConfigOptions {
+	cacheLocation?: string | undefined;
 	ignoreCache?: boolean;
 	skipDiagnostics?: boolean;
 }
 
 export async function runConfig(
 	configDefinition: ProcessedConfigDefinition,
-	{ ignoreCache, skipDiagnostics }: RunConfigOptions,
+	host: LinterHost,
+	{
+		cacheLocation: cacheLocationFromCli,
+		ignoreCache,
+		skipDiagnostics,
+	}: RunConfigOptions,
 ): Promise<LintResults> {
+	const cacheLocationOverride =
+		cacheLocationFromCli || configDefinition.cacheLocation;
+
 	// 1. Based on the original config definition, collect:
 	//   - The full list of all file paths to be linted
 	//   - Any cached results amongst those file paths
@@ -27,26 +37,29 @@ export async function runConfig(
 	const {
 		allFilePaths,
 		cached,
-		languageFileMetadataByFilePath,
+		languageFilesByFilePath,
 		rulesFilesAndOptionsByRule,
-	} = await collectFilesAndMetadata(configDefinition, ignoreCache);
+	} = await collectFilesAndOptions(
+		configDefinition,
+		host,
+		ignoreCache,
+		cacheLocationOverride,
+	);
 
 	// 2. For each lint rule, run it on all files and store each file's results
 	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule);
 
-	// 3. For each file path, finalize output using its language metadata files
+	// 3. For each file path, finalize output using each of its language files
 	const filesResults = new Map(
-		Array.from(languageFileMetadataByFilePath).map(
-			([filePath, languageAndFilesMetadata]) => [
+		Array.from(languageFilesByFilePath).map(([filePath, languageAndFiles]) => [
+			filePath,
+			finalizeFileResults(
 				filePath,
-				finalizeFileResults(
-					filePath,
-					languageAndFilesMetadata,
-					reportsByFilePath.get(filePath).flat(),
-					skipDiagnostics,
-				),
-			],
-		),
+				languageAndFiles,
+				reportsByFilePath.get(filePath).flat(),
+				skipDiagnostics,
+			),
+		]),
 	);
 
 	// 4. Merge cached file results into filesResults
@@ -63,7 +76,11 @@ export async function runConfig(
 	// 5. Write the results to cache, then return them! We did it!
 	const lintResults = { allFilePaths, cached, filesResults };
 
-	await writeToCache(configDefinition.filePath, lintResults);
+	await writeToCache(
+		configDefinition.filePath,
+		lintResults,
+		cacheLocationOverride,
+	);
 
 	return lintResults;
 }

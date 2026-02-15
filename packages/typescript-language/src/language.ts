@@ -1,40 +1,112 @@
-import { createLanguage } from "@flint.fyi/core";
-import type * as ts from "typescript";
+import { createLanguage, type FileAboutData } from "@flint.fyi/core";
+import { assert } from "@flint.fyi/utils";
+import { createProjectService } from "@typescript-eslint/project-service";
+import { debugForFile } from "debug-for-file";
+import * as ts from "typescript";
 
-import type { TypeScriptNodesByName } from "./nodes.ts";
-import { prepareTypeScriptBasedLanguage } from "./prepareTypeScriptBasedLanguage.ts";
-import { prepareTypeScriptFile } from "./prepareTypeScriptFile.ts";
+import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
+import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
+import { getFirstEnumValues } from "./getFirstEnumValues.ts";
+import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
+import { getTypeScriptFileDiagnostics } from "./getTypeScriptFileDiagnostics.ts";
+import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
+import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
 
 export interface TypeScriptFileServices {
 	program: ts.Program;
-	sourceFile: ts.SourceFile;
+	sourceFile: AST.SourceFile;
 	typeChecker: Checker;
 }
 
+const log = debugForFile(import.meta.filename);
+
+const NodeSyntaxKinds = getFirstEnumValues(ts.SyntaxKind);
+
 export const typescriptLanguage = createLanguage<
-	TypeScriptNodesByName,
+	TypeScriptNodeVisitors,
 	TypeScriptFileServices
 >({
 	about: {
 		name: "TypeScript",
 	},
-	createFileFactory: () => {
-		const language = prepareTypeScriptBasedLanguage();
+	createFileFactory: (host) => {
+		const { service } = createProjectService({
+			host: createTypeScriptServerHost(host),
+		});
 
-		return {
-			prepareFromDisk(data) {
-				return prepareTypeScriptFile(
-					data,
-					language.createFromDisk(data.filePathAbsolute),
-				);
-			},
-			prepareFromVirtual(data) {
-				return prepareTypeScriptFile(
-					data,
-					language.createFromVirtual(data.filePathAbsolute, data.sourceText),
-				);
-			},
+		function createFile(data: FileAboutData) {
+			log("Opening client file:", data.filePathAbsolute);
+			service.openClientFile(data.filePathAbsolute);
+
+			log("Retrieving client services:", data.filePathAbsolute);
+			const scriptInfo = service.getScriptInfo(data.filePathAbsolute);
+			assert(
+				scriptInfo != null,
+				`Could not find script info for file: ${data.filePathAbsolute}`,
+			);
+
+			const defaultProject = service.getDefaultProjectForFile(
+				scriptInfo.fileName,
+				true,
+			);
+			assert(
+				defaultProject != null,
+				`Could not find default project for file: ${data.filePathAbsolute}`,
+			);
+
+			const program = defaultProject.getLanguageService(true).getProgram();
+			assert(
+				program != null,
+				`Could not retrieve program for file: ${data.filePathAbsolute}`,
+			);
+
+			const sourceFile = program.getSourceFile(data.filePathAbsolute);
+			assert(
+				sourceFile != null,
+				`Could not retrieve source file for: ${data.filePathAbsolute}`,
+			);
+
+			return {
+				...parseDirectivesFromTypeScriptFile(sourceFile as AST.SourceFile),
+				about: data,
+				language: typescriptLanguage,
+				services: {
+					program,
+					sourceFile,
+					typeChecker: program.getTypeChecker(),
+				},
+				[Symbol.dispose]() {
+					service.closeClientFile(data.filePathAbsolute);
+				},
+			};
+		}
+
+		return { createFile };
+	},
+
+	getFileCacheImpacts: getTypeScriptFileCacheImpacts,
+	getFileDiagnostics: getTypeScriptFileDiagnostics,
+	runFileVisitors(file, options, runtime) {
+		if (!runtime.visitors) {
+			return;
+		}
+
+		const { visitors } = runtime;
+		const visitorServices = { options, ...file.services };
+
+		const visit = (node: ts.Node) => {
+			const key = NodeSyntaxKinds[node.kind] as keyof TypeScriptNodesByName;
+
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+			visitors[key]?.(node, visitorServices);
+
+			node.forEachChild(visit);
+
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+			visitors[`${key}:exit`]?.(node, visitorServices);
 		};
+
+		visit(file.services.sourceFile);
 	},
 });

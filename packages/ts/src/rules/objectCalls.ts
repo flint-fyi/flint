@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer `{}` object literal notation or `Object.create` instead of calling or constructing `Object`.",
 		id: "objectCalls",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferObjectLiteral: {
