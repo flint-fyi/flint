@@ -32,7 +32,7 @@
 		"execa": "9.6.1",
 		"flint": "workspace:^",
 		"vitest": "4.0.18",
-		"vitest-ansi-serializer": "0.1.2"
+		"vitest-ansi-serializer": "0.2.1"
 	},
 	"engines": {
 		"node": ">=24.0.0"

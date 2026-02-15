@@ -268,8 +268,8 @@ importers:
         specifier: 4.0.18
         version: 4.0.18(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
       vitest-ansi-serializer:
-        specifier: 0.1.2
-        version: 0.1.2(vitest@4.0.18(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2))
+        specifier: 0.2.1
+        version: 0.2.1(vitest@4.0.18(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2))
 
   packages/flint:
     dependencies:
@@ -5480,10 +5480,10 @@ packages:
       vite:
         optional: true
 
-  vitest-ansi-serializer@0.1.2:
-    resolution: {integrity: sha512-9GHM76QixD3bwEPvbuZXWSJfTZKiTml5WuFxk41MlB/ZrSdsIyePaZoG6kA+xDmQepVbzmW1ozg2s0iSpEOp+Q==}
+  vitest-ansi-serializer@0.2.1:
+    resolution: {integrity: sha512-IC60vT8raDlHwk2tZAy9wfetJMJkVOGC50jyjcC1HTYBAYfJEXVeKe72Jd5Jzcw1Xt73Nri2cdE98p+K2mnDrA==}
     peerDependencies:
-      vitest: ^3.1.1
+      vitest: ^3.0.0 || ^4.0.0
 
   vitest@4.0.15:
     resolution: {integrity: sha512-n1RxDp8UJm6N0IbJLQo+yzLZ2sQCDyl1o0LeugbPWf8+8Fttp29GghsQBjYJVmWq3gBFfe9Hs1spR44vovn2wA==}
@@ -11130,7 +11130,7 @@ snapshots:
     optionalDependencies:
       vite: 6.4.1(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
 
-  vitest-ansi-serializer@0.1.2(vitest@4.0.18(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)):
+  vitest-ansi-serializer@0.2.1(vitest@4.0.18(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)):
     dependencies:
       vitest: 4.0.18(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.2)
 
