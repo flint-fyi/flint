@@ -17,8 +17,8 @@ export default defineConfig({
 					setupFiles: [
 						"console-fail-test/setup",
 						"@flint.fyi/ts-patch/install-patch-hooks",
-						...(name === "e2e" ? ["./vitest.setup.ts"] : []),
 					],
+					snapshotSerializers: name === "e2e" ? ["vitest-ansi-serializer"] : [],
 					testTimeout: 10_000,
 					typecheck: {
 						enabled: true,

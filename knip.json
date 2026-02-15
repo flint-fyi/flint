@@ -2,7 +2,6 @@
 	"$schema": "./node_modules/knip/schema.json",
 	"ignore": ["packages/e2e/**/*"],
 	"ignoreExportsUsedInFile": { "interface": true, "type": true },
-	"ignoreUnresolved": ["./vitest.setup.ts"],
 	"treatConfigHintsAsErrors": true,
 	"workspaces": {
 		".": {
