@@ -24,9 +24,6 @@
 		"start:site": "pnpm --filter=site prebuild && pnpm --filter=site start",
 		"test": "vitest --typecheck"
 	},
-	"lint-staged": {
-		"*": "prettier --ignore-unknown --write"
-	},
 	"devDependencies": {
 		"@arethetypeswrong/core": "0.18.2",
 		"@changesets/cli": "2.29.7",
