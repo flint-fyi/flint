@@ -7,4 +7,4 @@
 "@flint.fyi/md": patch
 ---
 
-feat: added `:exit` listeners to JSON, Markdown, and TypeScript
+added `:exit` listeners to JSON, Markdown, and TypeScript

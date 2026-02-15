@@ -2,4 +2,4 @@
 "@flint.fyi/ts": patch
 ---
 
-fix(ts): switch octalEscapes to javascript
+switch octalEscapes to javascript

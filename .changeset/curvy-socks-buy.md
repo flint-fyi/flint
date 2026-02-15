@@ -5,4 +5,4 @@
 "@flint.fyi/typescript-language": minor
 ---
 
-feat: use LinterHost for linting
+use LinterHost for linting
