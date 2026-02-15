@@ -7,11 +7,21 @@ import dataOriginal from "./data.json" with { type: "json" };
 
 const dataFilePath = path.join(import.meta.dirname, "data.json");
 
-const dataSorted = dataOriginal.toSorted((a, b) =>
-	a.flint.plugin === b.flint.plugin
+const dataSorted = dataOriginal.toSorted((a, b) => {
+	if (Array.isArray(a.flint) && Array.isArray(b.flint)) {
+		return 0;
+	}
+	if (Array.isArray(a.flint)) {
+		return -1;
+	}
+	if (Array.isArray(b.flint)) {
+		return 1;
+	}
+
+	return a.flint.plugin === b.flint.plugin
 		? a.flint.name.localeCompare(b.flint.name)
-		: a.flint.plugin.localeCompare(b.flint.plugin),
-);
+		: a.flint.plugin.localeCompare(b.flint.plugin);
+});
 
 if (!isDeepStrictEqual(dataOriginal, dataSorted)) {
 	console.log("Writing to:", dataFilePath);
