@@ -45,7 +45,8 @@ Don't worry if you get this wrong: you can always change the PR title after send
 Check [previously merged PRs](https://github.com/flint-fyi/flint/pulls?q=is%3Apr+is%3Amerged+-label%3Adependencies+) for reference.
 
 Finally, if your PR includes any user-facing changes, run `pnpm changeset` to [add a proper changeset](https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md).
-You can copy the exact title from the PR.
+This should _not_ use traditional conventional commit syntax, and should instead reflect what you would want the user to see in the changelog.
+For example, everything _after_ the initial colon in a commit title would be sufficient.
 This will allow our release automation to version packages appropriately when the next release happens.
 
 #### Draft PRs
