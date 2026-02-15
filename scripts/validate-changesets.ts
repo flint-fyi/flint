@@ -18,11 +18,11 @@ async function validateChangesets(files: string[]): Promise<void> {
 			// ---
 			// Human readable summary <--- We want this part
 			const parts = content.split("---");
-			const summary = parts[parts.length - 1]?.trim();
+			const summary = parts.at(-1)?.trim();
 
 			if (!summary) {
 				console.error(
-					`\x1b[31m❌ Error in ${basename(filePath)}:\x1b[0m Summary is empty.`,
+					`\x1B[31M❌ Error in ${basename(filePath)}:\x1B[0m Summary is empty.`,
 				);
 				return false;
 			}
@@ -30,7 +30,7 @@ async function validateChangesets(files: string[]): Promise<void> {
 			if (CONVENTIONAL_PATTERN.test(summary)) {
 				const found = summary.split("\n")[0];
 				const recommended = found?.replace(CONVENTIONAL_PATTERN, "").trim();
-				console.error(`\x1b[31m❌ Error in ${basename(filePath)}:\x1b[0m`);
+				console.error(`\x1B[31M❌ Error in ${basename(filePath)}:\x1B[0M`);
 				console.error(
 					`   Changesets should be human-readable. Do not use conventional commit prefixes.`,
 				);
@@ -38,9 +38,9 @@ async function validateChangesets(files: string[]): Promise<void> {
 				console.error(`   Recommended: "${recommended}"\n`);
 				return false;
 			}
-		} catch (err) {
-			const message = err instanceof Error ? err.message : String(err);
-			console.error(`\x1b[31mFailed to process ${filePath}:\x1b[0m ${message}`);
+		} catch (error) {
+			const message = error instanceof Error ? error.message : String(error);
+			console.error(`\x1B[31MFailed to process ${filePath}:\x1B[0M ${message}`);
 			return false;
 		}
 		return true;
@@ -56,6 +56,6 @@ async function validateChangesets(files: string[]): Promise<void> {
 // lint-staged passes files as arguments
 const stagedFiles = process.argv.slice(2);
 
-if (stagedFiles.length > 0) {
-	void validateChangesets(stagedFiles);
+if (stagedFiles.length) {
+	await validateChangesets(stagedFiles);
 }
