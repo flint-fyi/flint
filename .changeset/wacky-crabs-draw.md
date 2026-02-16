@@ -2,4 +2,4 @@
 "@flint.fyi/rule-tester": minor
 ---
 
-allow configuring virtual fixture files
+Allow configuring virtual fixture files.

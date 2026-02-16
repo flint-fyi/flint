@@ -8,6 +8,24 @@ import { styleText } from "node:util";
 const CONVENTIONAL_PATTERN =
 	/^(?:feat|fix|chore|docs|style|refactor|perf|test|build|ci)(?:\(.*\))?!?: /i;
 
+const validations = [
+	{
+		message:
+			"Changesets should be human-readable. Do not use conventional commit prefixes.",
+		transform: (input: string) =>
+			input.replace(CONVENTIONAL_PATTERN, "").trim(),
+	},
+	{
+		message: "Changelog entries should be in sentence case.",
+		transform: (input: string) => {
+			if (!input) {
+				return input;
+			}
+			return input.charAt(0).toUpperCase() + input.slice(1);
+		},
+	},
+];
+
 async function validateChangesets(files: string[]): Promise<void> {
 	const tasks = files.map(async (filePath): Promise<boolean> => {
 		try {
@@ -28,13 +46,30 @@ async function validateChangesets(files: string[]): Promise<void> {
 				return false;
 			}
 
-			if (CONVENTIONAL_PATTERN.test(summary)) {
-				const found = summary.split("\n")[0];
-				const recommended = found?.replace(CONVENTIONAL_PATTERN, "").trim();
-				console.error(styleText("red", `❌ Error in ${basename(filePath)}:`));
+			const found = summary.split("\n")[0];
+			const errors: string[] = [];
+			let recommended = found;
+
+			if (!recommended) {
 				console.error(
-					`   Changesets should be human-readable. Do not use conventional commit prefixes.`,
+					`${styleText("red", `❌ Error in ${basename(filePath)}:`)} No changeset summary found.`,
 				);
+				return false;
+			}
+
+			for (const { message, transform } of validations) {
+				const transformed = transform(recommended);
+				if (transformed !== recommended) {
+					errors.push(message);
+					recommended = transformed;
+				}
+			}
+
+			if (errors.length) {
+				console.error(styleText("red", `❌ Error in ${basename(filePath)}:`));
+				for (const error of errors) {
+					console.error(`   - ${error}`);
+				}
 				console.error(`   Found: "${found}"`);
 				console.error(`   Recommended: "${recommended}"\n`);
 				return false;

@@ -4,4 +4,4 @@
 "@flint.fyi/cli": minor
 ---
 
-add support for overriding default cache location
+Add support for overriding default cache location.

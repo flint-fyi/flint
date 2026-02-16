@@ -8,4 +8,4 @@
 "@flint.fyi/rule-tester": patch
 ---
 
-unify language file factory methods using Linter Host
+Unify language file factory methods using `LinterHost`.

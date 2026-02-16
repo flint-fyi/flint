@@ -3,4 +3,4 @@
 "@flint.fyi/ts": patch
 ---
 
-remove regexNamedCaptureGroups, regexUnicodeEscapes from presets
+Remove `regexNamedCaptureGroups` and `regexUnicodeEscapes` from presets.

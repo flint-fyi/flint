@@ -4,4 +4,4 @@
 "@flint.fyi/site": patch
 ---
 
-change `untyped` preset name to `javascript`
+Change `untyped` preset name to `javascript`.

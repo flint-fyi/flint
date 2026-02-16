@@ -2,4 +2,4 @@
 "@flint.fyi/ts": patch
 ---
 
-[nullishCoalescingOperators] better ternary handling
+Use better ternary handling in `nullishCoalescingOperators`.

@@ -2,4 +2,4 @@
 "@flint.fyi/ts": patch
 ---
 
-assorted bugs in regex rules
+Fix assorted bugs in regex rules.
