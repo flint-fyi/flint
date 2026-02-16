@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
+import { styleText } from "node:util";
 
 /**
  * Patterns that indicate conventional commit formatting.
@@ -22,7 +23,7 @@ async function validateChangesets(files: string[]): Promise<void> {
 
 			if (!summary) {
 				console.error(
-					`\x1B[31M❌ Error in ${basename(filePath)}:\x1B[0m Summary is empty.`,
+					`${styleText("red", `❌ Error in ${basename(filePath)}:`)} Summary is empty.`,
 				);
 				return false;
 			}
@@ -30,7 +31,9 @@ async function validateChangesets(files: string[]): Promise<void> {
 			if (CONVENTIONAL_PATTERN.test(summary)) {
 				const found = summary.split("\n")[0];
 				const recommended = found?.replace(CONVENTIONAL_PATTERN, "").trim();
-				console.error(`\x1B[31M❌ Error in ${basename(filePath)}:\x1B[0M`);
+				console.error(
+					`${styleText("red", `❌ Error in ${basename(filePath)}:`)}`,
+				);
 				console.error(
 					`   Changesets should be human-readable. Do not use conventional commit prefixes.`,
 				);
@@ -40,7 +43,9 @@ async function validateChangesets(files: string[]): Promise<void> {
 			}
 		} catch (error) {
 			const message = error instanceof Error ? error.message : String(error);
-			console.error(`\x1B[31MFailed to process ${filePath}:\x1B[0M ${message}`);
+			console.error(
+				`${styleText("red", `Failed to process ${filePath}:`)} ${message}`,
+			);
 			return false;
 		}
 		return true;
