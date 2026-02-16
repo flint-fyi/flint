@@ -31,9 +31,7 @@ async function validateChangesets(files: string[]): Promise<void> {
 			if (CONVENTIONAL_PATTERN.test(summary)) {
 				const found = summary.split("\n")[0];
 				const recommended = found?.replace(CONVENTIONAL_PATTERN, "").trim();
-				console.error(
-					`${styleText("red", `❌ Error in ${basename(filePath)}:`)}`,
-				);
+				console.error(styleText("red", `❌ Error in ${basename(filePath)}:`));
 				console.error(
 					`   Changesets should be human-readable. Do not use conventional commit prefixes.`,
 				);
