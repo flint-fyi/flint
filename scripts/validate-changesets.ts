@@ -24,6 +24,19 @@ const validations = [
 			return input.charAt(0).toUpperCase() + input.slice(1);
 		},
 	},
+	{
+		message: "Changelog entries should use ending punctuation.",
+		transform: (input: string) => {
+			if (!input) {
+				return input;
+			}
+			const trimmed = input.trim();
+			if (/[.!?]$/.test(trimmed)) {
+				return trimmed;
+			}
+			return trimmed + ".";
+		},
+	},
 ];
 
 async function validateChangesets(files: string[]): Promise<void> {
