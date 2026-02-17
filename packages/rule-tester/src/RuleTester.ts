@@ -194,13 +194,14 @@ export class RuleTester {
 		}
 
 		test(
-			"files" in testCase
-				? JSON.stringify(
-						{ [testCase.fileName]: testCase.code, ...testCase.files },
-						null,
-						2,
-					)
-				: testCase.code,
+			testCase.name ??
+				("files" in testCase
+					? JSON.stringify(
+							{ [testCase.fileName]: testCase.code, ...testCase.files },
+							null,
+							2,
+						)
+					: testCase.code),
 			() => {
 				if (testCase.files != null) {
 					assert.notEqual(

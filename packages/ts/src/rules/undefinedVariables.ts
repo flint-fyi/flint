@@ -7,7 +7,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using variables that are not defined.",
 		id: "undefinedVariables",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		undefinedVariable: {

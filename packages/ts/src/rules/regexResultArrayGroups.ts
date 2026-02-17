@@ -371,13 +371,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferGroups: {
 			primary:
-				"Use `.groups.{{name}}` instead of numeric index for the named capturing group '{{name}}'.",
+				"Use `.groups.{{ name }}` instead of numeric index for the named capturing group '{{ name }}'.",
 			secondary: [
 				"When a regex has named capturing groups, accessing them by name is more readable and maintainable.",
 				"Numeric indices are fragile and can break if the regex pattern is modified.",
 			],
 			suggestions: [
-				"Replace the indexed access with `.groups.{{name}}`.",
+				"Replace the indexed access with `.groups.{{ name }}`.",
 				"Use the named capturing group syntax for better code clarity.",
 			],
 		},

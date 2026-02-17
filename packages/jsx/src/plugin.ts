@@ -45,7 +45,15 @@ import tabIndexPositiveValues from "./rules/tabIndexPositiveValues.ts";
 import unescapedEntities from "./rules/unescapedEntities.ts";
 import unnecessaryFragments from "./rules/unnecessaryFragments.ts";
 
+const jsFiles = ["**/*.jsx"];
+const tsFiles = ["**/*.tsx"];
+
 export const jsx = createPlugin({
+	files: {
+		all: [...jsFiles, ...tsFiles],
+		javascript: jsFiles,
+		typescript: tsFiles,
+	},
 	name: "JSX",
 	rules: [
 		accessKeys,

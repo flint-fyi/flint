@@ -1,9 +1,19 @@
+name: Post Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  issues: write
+  pull-requests: write
+
 jobs:
   post-release:
     name: Post Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
       - uses: apexskier/github-release-commenter@e7813a9625eabd79a875b4bc4046cfcae377ab34 # v1
@@ -17,13 +27,3 @@ jobs:
             * [GitHub releases]({release_link})
 
             Cheers! 📦🚀
-
-name: Post Release
-
-on:
-  release:
-    types: [published]
-
-permissions:
-  issues: write
-  pull-requests: write

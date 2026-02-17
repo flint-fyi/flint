@@ -42,12 +42,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		mismatch: {
 			primary:
-				"Function name `{{functionName}}` does not match assigned name `{{assignedName}}`.",
+				"Function name `{{ functionName }}` does not match assigned name `{{ assignedName }}`.",
 			secondary: [
 				"When a named function expression is assigned to a variable or property, the function name should match to avoid confusion.",
 			],
 			suggestions: [
-				"Rename the function to `{{assignedName}}`",
+				"Rename the function to `{{ assignedName }}`",
 				"Use an anonymous function.",
 			],
 		},

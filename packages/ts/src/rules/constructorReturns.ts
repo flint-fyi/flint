@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports returning values from constructor functions.",
 		id: "constructorReturns",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noConstructorReturn: {

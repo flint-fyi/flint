@@ -4,19 +4,20 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
 	test: {
+		coverage: {
+			provider: "v8",
+		},
 		projects: readdirSync(path.join(import.meta.dirname, "packages")).map(
 			(name) => ({
-				ssr: {
-					resolve: { conditions: ["@flint.fyi/source"] },
-				},
 				test: {
 					clearMocks: true,
-					include: ["**/src/**/*.test.ts"],
+					include: ["**/src/**/*.test.ts", "**/tests/**/*.test.ts"],
 					name,
 					root: path.join(import.meta.dirname, "packages", name),
 					setupFiles: [
 						"console-fail-test/setup",
 						"@flint.fyi/ts-patch/install-patch-hooks",
+						...(name === "e2e" ? ["./vitest.setup.ts"] : []),
 					],
 					testTimeout: 10_000,
 					typecheck: {

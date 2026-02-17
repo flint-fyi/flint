@@ -86,12 +86,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		outOfRange: {
 			primary:
-				"The argument `{{value}}` is out of range for `{{method}}`. Use a value between {{min}} and {{max}}.",
+				"The argument `{{ value }}` is out of range for `{{ method }}`. Use a value between {{ min }} and {{ max }}.",
 			secondary: [
-				"Passing an out-of-range argument to `{{method}}` will throw a RangeError at runtime.",
+				"Passing an out-of-range argument to `{{ method }}` will throw a RangeError at runtime.",
 			],
 			suggestions: [
-				"Check the documentation for `{{method}}` to see the valid range of values.",
+				"Check the documentation for `{{ method }}` to see the valid range of values.",
 			],
 		},
 	},

@@ -1,4 +1,4 @@
-export * from "./cache/constants.ts";
+export * from "./cache/getCacheFilePath.ts";
 export { writeToCache } from "./cache/writeToCache.ts";
 export { applyChangesToText } from "./changing/applyChangesToText.ts";
 export { defineConfig } from "./configs/defineConfig.ts";
@@ -40,6 +40,7 @@ export * from "./types/ranges.ts";
 export * from "./types/reports.ts";
 export * from "./types/rules.ts";
 export * from "./types/shapes.ts";
+export * from "./types/visitors.ts";
 export { binarySearch } from "./utils/arrays.ts";
 export * from "./utils/getColumnAndLineOfPosition.ts";
 export * from "./utils/predicates.ts";

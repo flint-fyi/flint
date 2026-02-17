@@ -83,7 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports extending the prototype of native JavaScript objects.",
 		id: "nativeObjectExtensions",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noExtendNative: {

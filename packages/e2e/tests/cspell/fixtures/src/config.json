@@ -1,0 +1,8 @@
+{
+	"appName": "MyApplication",
+	"descripion": "A sample configuration file",
+	"settings": {
+		"enableLogging": true,
+		"maxRetries": 3
+	}
+}

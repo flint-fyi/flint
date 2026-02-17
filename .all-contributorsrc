@@ -85,7 +85,8 @@
       "contributions": [
         "bug",
         "maintenance",
-        "ideas"
+        "ideas",
+        "test"
       ]
     },
     {
@@ -145,7 +146,9 @@
         "doc",
         "bug",
         "maintenance",
-        "tool"
+        "tool",
+        "code",
+        "infra"
       ]
     },
     {
@@ -164,6 +167,24 @@
       "profile": "https://jaybell.me/",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "tibisabau",
+      "name": "Tiberiu Sabău",
+      "avatar_url": "https://avatars.githubusercontent.com/u/96194994?v=4",
+      "profile": "https://github.com/tibisabau",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "cylewaitforit",
+      "name": "cylewaitforit",
+      "avatar_url": "https://avatars.githubusercontent.com/u/54253392?v=4",
+      "profile": "https://github.com/cylewaitforit",
+      "contributions": [
+        "doc"
       ]
     }
   ],
