@@ -51,6 +51,10 @@ export default defineConfig({
 											link: "project/code-of-conduct",
 										},
 										{ label: "Contributing", link: "project/contributing" },
+										{
+											label: "Contributing with AI",
+											link: "project/contributing-with-ai",
+										},
 										{ label: "Development", link: "project/development" },
 										{ label: "Maintenance", link: "project/maintenance" },
 										{ label: "Team", link: "project/team" },
