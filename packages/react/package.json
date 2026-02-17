@@ -2,6 +2,7 @@
 	"name": "@flint.fyi/react",
 	"version": "0.1.3",
 	"description": "[Experimental] A Flint plugin for React code.",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
