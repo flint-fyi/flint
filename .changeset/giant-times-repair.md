@@ -2,4 +2,4 @@
 "@flint.fyi/core": minor
 ---
 
-feat(core): factor in plugin IDs for comment directives
+factor in plugin IDs for comment directives
