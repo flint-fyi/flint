@@ -16,6 +16,7 @@
 		{ "path": "./packages/cli" },
 		{ "path": "./packages/comparisons" },
 		{ "path": "./packages/core" },
+		{ "path": "./packages/e2e" },
 		{ "path": "./packages/flint" },
 		{ "path": "./packages/json" },
 		{ "path": "./packages/json-language" },

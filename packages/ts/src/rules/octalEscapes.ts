@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using octal escape sequences in string literals.",
 		id: "octalEscapes",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noOctalEscape: {

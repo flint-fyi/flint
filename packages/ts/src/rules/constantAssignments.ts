@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports attempting to reassign variables declared with const.",
 		id: "constantAssignments",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noConstAssign: {

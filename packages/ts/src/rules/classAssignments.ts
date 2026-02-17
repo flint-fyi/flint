@@ -9,7 +9,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports reassigning class declarations.",
 		id: "classAssignments",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noClassAssign: {

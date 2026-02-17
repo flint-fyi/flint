@@ -10,7 +10,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using the comma operator in expressions.",
 		id: "sequences",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noSequences: {

@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Disallows using `new` with global non-constructor functions like Symbol and BigInt.",
 		id: "newNativeNonConstructors",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noNewNonConstructor: {

@@ -20,7 +20,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports variable declarations that shadow JavaScript's restricted names.",
 		id: "shadowedRestrictedNames",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		shadowedRestrictedName: {
