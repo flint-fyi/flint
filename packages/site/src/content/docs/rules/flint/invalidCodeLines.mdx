@@ -20,8 +20,10 @@ This allows snapshot `~` characters to appear visually underneath the flagged co
 
 ```ts
 // @errors: 1127 1136 1160 2796
-declare const rule: any;
-declare const ruleTester: any;
+import type { AnyRule } from "@flint.fyi/core";
+import type { RuleTester } from "@flint.fyi/rule-tester";
+declare const rule: AnyRule;
+declare const ruleTester: RuleTester;
 // ---cut---
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
@@ -39,8 +41,10 @@ Rule report message.
 
 ```ts
 // @errors: 1127 1136 1160 2796
-declare const rule: any;
-declare const ruleTester: any;
+import type { AnyRule } from "@flint.fyi/core";
+import type { RuleTester } from "@flint.fyi/rule-tester";
+declare const rule: AnyRule;
+declare const ruleTester: RuleTester;
 // ---cut---
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
@@ -60,8 +64,10 @@ Rule report message.
 
 ```ts
 // @errors: 1127 1136 1160 2796
-declare const rule: any;
-declare const ruleTester: any;
+import type { AnyRule } from "@flint.fyi/core";
+import type { RuleTester } from "@flint.fyi/rule-tester";
+declare const rule: AnyRule;
+declare const ruleTester: RuleTester;
 // ---cut---
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
@@ -80,8 +86,10 @@ Rule report message.\`,
 
 ```ts
 // @errors: 1127 1136 1160 2796
-declare const rule: any;
-declare const ruleTester: any;
+import type { AnyRule } from "@flint.fyi/core";
+import type { RuleTester } from "@flint.fyi/rule-tester";
+declare const rule: AnyRule;
+declare const ruleTester: RuleTester;
 // ---cut---
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
@@ -102,8 +110,10 @@ Rule report message.
 
 ```ts
 // @errors: 1127 1136 1160 2796
-declare const rule: any;
-declare const ruleTester: any;
+import type { AnyRule } from "@flint.fyi/core";
+import type { RuleTester } from "@flint.fyi/rule-tester";
+declare const rule: AnyRule;
+declare const ruleTester: RuleTester;
 // ---cut---
 ruleTester.describe(rule, {
     valid: [],
@@ -121,8 +131,10 @@ ruleTester.describe(rule, {
 
 ```ts
 // @errors: 1127 1136 1160 2796
-declare const rule: any;
-declare const ruleTester: any;
+import type { AnyRule } from "@flint.fyi/core";
+import type { RuleTester } from "@flint.fyi/rule-tester";
+declare const rule: AnyRule;
+declare const ruleTester: RuleTester;
 // ---cut---
 ruleTester.describe(rule, {
     valid: [],

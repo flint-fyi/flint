@@ -19,8 +19,10 @@ without any additional configuration (like `options`, `errors`, etc.), it can be
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const rule: any;
-declare const ruleTester: any;
+import type { AnyRule } from "@flint.fyi/core";
+import type { RuleTester } from "@flint.fyi/rule-tester";
+declare const rule: AnyRule;
+declare const ruleTester: RuleTester;
 // ---cut---
 ruleTester.describe(rule, {
 	valid: ["a", { code: "a" }],
@@ -32,8 +34,10 @@ ruleTester.describe(rule, {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const rule: any;
-declare const ruleTester: any;
+import type { AnyRule } from "@flint.fyi/core";
+import type { RuleTester } from "@flint.fyi/rule-tester";
+declare const rule: AnyRule;
+declare const ruleTester: RuleTester;
 // ---cut---
 ruleTester.describe(rule, {
 	valid: ["a", "a"],
@@ -42,8 +46,10 @@ ruleTester.describe(rule, {
 ```
 
 ```ts
-declare const rule: any;
-declare const ruleTester: any;
+import type { AnyRule } from "@flint.fyi/core";
+import type { RuleTester } from "@flint.fyi/rule-tester";
+declare const rule: AnyRule;
+declare const ruleTester: RuleTester;
 // ---cut---
 ruleTester.describe(rule, {
 	valid: [

@@ -19,8 +19,10 @@ Doing so provides no added benefit for testing and is unnecessary.
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const rule: any;
-declare const ruleTester: any;
+import type { AnyRule } from "@flint.fyi/core";
+import type { RuleTester } from "@flint.fyi/rule-tester";
+declare const rule: AnyRule;
+declare const ruleTester: RuleTester;
 // ---cut---
 ruleTester.describe(rule, {
 	valid: ["a", "a"],
@@ -28,8 +30,10 @@ ruleTester.describe(rule, {
 ```
 
 ```ts
-declare const rule: any;
-declare const ruleTester: any;
+import type { AnyRule } from "@flint.fyi/core";
+import type { RuleTester } from "@flint.fyi/rule-tester";
+declare const rule: AnyRule;
+declare const ruleTester: RuleTester;
 // ---cut---
 ruleTester.describe(rule, {
 	invalid: [
@@ -61,8 +65,10 @@ ruleTester.describe(rule, {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const rule: any;
-declare const ruleTester: any;
+import type { AnyRule } from "@flint.fyi/core";
+import type { RuleTester } from "@flint.fyi/rule-tester";
+declare const rule: AnyRule;
+declare const ruleTester: RuleTester;
 // ---cut---
 ruleTester.describe(rule, {
 	valid: ["a", "b"],
@@ -70,8 +76,10 @@ ruleTester.describe(rule, {
 ```
 
 ```ts
-declare const rule: any;
-declare const ruleTester: any;
+import type { AnyRule } from "@flint.fyi/core";
+import type { RuleTester } from "@flint.fyi/rule-tester";
+declare const rule: AnyRule;
+declare const ruleTester: RuleTester;
 // ---cut---
 ruleTester.describe(rule, {
 	invalid: [

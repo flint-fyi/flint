@@ -23,26 +23,26 @@ Additionally, `innerText` is slower because it requires layout information.
 <TabItem label="❌ Incorrect">
 
 ```typescript
-declare const element: any;
+declare const element: HTMLElement;
 // ---cut---
 const text = element.innerText;
 ```
 
 ```typescript
-declare const element: any;
+declare const element: HTMLElement;
 // ---cut---
 element.innerText = "Hello";
 ```
 
 ```typescript
-declare const node: any;
+declare const node: HTMLElement;
 // ---cut---
 const content = node.innerText;
 ```
 
 ```typescript
-declare const div: any;
-declare const value: any;
+declare const div: HTMLDivElement;
+declare const value: string;
 // ---cut---
 div.innerText = value;
 ```
@@ -51,26 +51,26 @@ div.innerText = value;
 <TabItem label="✅ Correct">
 
 ```typescript
-declare const element: any;
+declare const element: HTMLElement;
 // ---cut---
 const text = element.textContent;
 ```
 
 ```typescript
-declare const element: any;
+declare const element: HTMLElement;
 // ---cut---
 element.textContent = "Hello";
 ```
 
 ```typescript
-declare const node: any;
+declare const node: HTMLElement;
 // ---cut---
 const content = node.textContent;
 ```
 
 ```typescript
-declare const div: any;
-declare const value: any;
+declare const div: HTMLDivElement;
+declare const value: string;
 // ---cut---
 div.textContent = value;
 ```

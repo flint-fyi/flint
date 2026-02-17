@@ -43,8 +43,6 @@ new Function("a", "b", "return a + b");
 ```
 
 ```ts
-declare const window: any;
-// ---cut---
 window.setTimeout("doSomething()", 100);
 ```
 
@@ -52,8 +50,6 @@ window.setTimeout("doSomething()", 100);
 <TabItem label="✅ Correct">
 
 ```ts
-declare const alert: any;
-// ---cut---
 setTimeout(() => {
 	alert("Hello");
 }, 1000);

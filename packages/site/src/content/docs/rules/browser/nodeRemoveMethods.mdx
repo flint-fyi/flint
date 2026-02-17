@@ -21,26 +21,26 @@ Modern browsers support `Node.remove()`, making it the preferred approach for re
 <TabItem label="❌ Incorrect">
 
 ```typescript
-declare const childNode: any;
-declare const parentNode: any;
+declare const childNode: ChildNode;
+declare const parentNode: Node;
 // ---cut---
 parentNode.removeChild(childNode);
 ```
 
 ```typescript
-declare const element: any;
+declare const element: HTMLElement;
 // ---cut---
 element.parentNode.removeChild(element);
 ```
 
 ```typescript
-declare const node: any;
+declare const node: ChildNode;
 // ---cut---
 node.parentElement.removeChild(node);
 ```
 
 ```typescript
-declare const footer: any;
+declare const footer: HTMLElement;
 // ---cut---
 document.body.removeChild(footer);
 ```
@@ -49,25 +49,25 @@ document.body.removeChild(footer);
 <TabItem label="✅ Correct">
 
 ```typescript
-declare const childNode: any;
+declare const childNode: ChildNode;
 // ---cut---
 childNode.remove();
 ```
 
 ```typescript
-declare const element: any;
+declare const element: HTMLElement;
 // ---cut---
 element.remove();
 ```
 
 ```typescript
-declare const node: any;
+declare const node: ChildNode;
 // ---cut---
 node.remove();
 ```
 
 ```typescript
-declare const footer: any;
+declare const footer: HTMLElement;
 // ---cut---
 footer.remove();
 ```

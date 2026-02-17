@@ -605,6 +605,9 @@ importers:
       '@flint.fyi/comparisons':
         specifier: workspace:^
         version: link:../comparisons
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
       '@flint.fyi/jsx':
         specifier: workspace:^
         version: link:../jsx
@@ -617,9 +620,15 @@ importers:
       '@flint.fyi/plugin-flint':
         specifier: workspace:^
         version: link:../plugin-flint
+      '@flint.fyi/rule-tester':
+        specifier: workspace:^
+        version: link:../rule-tester
       '@flint.fyi/spelling':
         specifier: workspace:^
         version: link:../spelling
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
       '@konami-emoji-blast/astro':
         specifier: ^0.2.0
         version: 0.2.0(astro@5.18.0(@types/node@24.11.0)(jiti@2.6.1)(rollup@4.59.0)(typescript@5.9.3)(yaml@2.8.2))(konami-emoji-blast@0.6.0)
