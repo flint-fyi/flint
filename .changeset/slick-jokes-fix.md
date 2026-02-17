@@ -2,4 +2,4 @@
 "@flint.fyi/rule-tester": patch
 ---
 
-add optional `name` prop
+Add optional `name` prop
