@@ -19,13 +19,13 @@ If you're not using VS Code, use the equivalent extensions for your editor.
 
 ## Building
 
-Run TypeScript's builder mode locally to build source files from `src/` into output files in `lib/`:
+Run tsdown locally to build source files from `src/` into output files in `lib/`:
 
 ```shell
 pnpm build
 ```
 
-Add `--watch` to run the builder in a watch mode that continuously recreates `lib/` as you save files:
+Add `--watch` to run the build in watch mode, which will continuously rebuild `lib/` as you update files:
 
 ```shell
 pnpm build --watch
@@ -94,9 +94,9 @@ To add a new rule, `{ruleName}` to an existing Flint plugin `{plugin}`:
    - `packages/{plugin}/src/rules/{ruleName}.ts`
    - `packages/{plugin}/src/rules/{ruleName}.test.ts`
    - `packages/site/src/content/docs/rules/{plugin}/{ruleName}.mdx`
-2. Updating existing files that reference rules:
-   - `packages/{plugin}/src/plugin.ts`: adding the rule in alphabetical order to `rules`
-   - `packages/comparisons/src/data.json`: marking the rule as `"status": "implemented"`
+2. Update existing files that reference rules:
+   - `packages/{plugin}/src/plugin.ts`: add the rule in alphabetical order to `rules`
+   - `packages/comparisons/src/data.json`: mark the rule as `"status": "implemented"`
 3. Try to follow these best practices when writing the rule's documentation and tests:
    - In documentation, see the sections present in other rules and fill them out
      - In _Further Reading_ documentation, find at least one first-party source such as MDN
