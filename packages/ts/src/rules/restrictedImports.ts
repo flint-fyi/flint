@@ -60,25 +60,6 @@ function getSpecifierNames(
 	return Array.isArray(specifier.name) ? specifier.name : [specifier.name];
 }
 
-function isFromPackage(fileName: string, packageName: string): boolean {
-	if (fileName.includes(`/node_modules/${packageName}/`)) {
-		return true;
-	}
-
-	if (!packageName.startsWith("@")) {
-		if (fileName.includes(`/node_modules/@types/${packageName}/`)) {
-			return true;
-		}
-	} else {
-		const normalized = packageName.replace("@", "").replace("/", "__");
-		if (fileName.includes(`/node_modules/@types/${normalized}/`)) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
 function isFromFile(
 	declarationFileName: string,
 	specifiedPath: string | undefined,
@@ -102,8 +83,23 @@ function isFromFile(
 	);
 }
 
-function normalizePath(filePath: string): string {
-	return filePath.replace(/\\/g, "/").replace(/\/index\.(ts|js|tsx|jsx)$/, "");
+function isFromPackage(fileName: string, packageName: string): boolean {
+	if (fileName.includes(`/node_modules/${packageName}/`)) {
+		return true;
+	}
+
+	if (!packageName.startsWith("@")) {
+		if (fileName.includes(`/node_modules/@types/${packageName}/`)) {
+			return true;
+		}
+	} else {
+		const normalized = packageName.replace("@", "").replace("/", "__");
+		if (fileName.includes(`/node_modules/@types/${normalized}/`)) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 function matchesSpecifier(
@@ -113,10 +109,11 @@ function matchesSpecifier(
 	program: ts.Program,
 ): boolean {
 	const names = getSpecifierNames(specifier);
-	if (names !== undefined) {
-		if (importedName === undefined || !names.includes(importedName)) {
-			return false;
-		}
+	if (
+		names !== undefined &&
+		(importedName === undefined || !names.includes(importedName))
+	) {
+		return false;
 	}
 
 	return declarations.some((declaration) => {
@@ -130,6 +127,20 @@ function matchesSpecifier(
 				return isFromPackage(fileName, specifier.package);
 		}
 	});
+}
+
+function normalizePath(filePath: string): string {
+	return filePath
+		.replace(/\\/g, "/")
+		.replace(/\/index\.(?:ts|js|tsx|jsx)$/, "");
+}
+
+function resolveModuleDeclarations(
+	moduleSpecifier: ts.Expression,
+	typeChecker: ts.TypeChecker,
+): ts.Declaration[] | undefined {
+	const symbol = typeChecker.getSymbolAtLocation(moduleSpecifier);
+	return symbol?.getDeclarations();
 }
 
 function resolveSymbolDeclarations(
@@ -146,14 +157,6 @@ function resolveSymbolDeclarations(
 	}
 
 	return symbol.getDeclarations();
-}
-
-function resolveModuleDeclarations(
-	moduleSpecifier: ts.Expression,
-	typeChecker: ts.TypeChecker,
-): ts.Declaration[] | undefined {
-	const symbol = typeChecker.getSymbolAtLocation(moduleSpecifier);
-	return symbol?.getDeclarations();
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

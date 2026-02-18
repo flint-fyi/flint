@@ -23,7 +23,7 @@ import { dangerous } from "./restricted";
 			},
 			snapshot: `
 import { dangerous } from "./restricted";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 'dangerous' import from './restricted' is restricted.
 `,
 		},
@@ -48,7 +48,7 @@ import { dangerous } from "./restricted";
 			},
 			snapshot: `
 import { dangerous } from "./restricted";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 'dangerous' import from './restricted' is restricted. Use safeFn instead.
 `,
 		},
@@ -71,8 +71,8 @@ import { helper } from "./restricted";
 			},
 			snapshot: `
 import { helper } from "./restricted";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'./restricted' import is restricted.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'helper' import from './restricted' is restricted.
 `,
 		},
 		{
@@ -94,7 +94,7 @@ import * as ns from "./restricted";
 			},
 			snapshot: `
 import * as ns from "./restricted";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 './restricted' import is restricted.
 `,
 		},
@@ -118,7 +118,7 @@ import * as ns from "./restricted";
 			},
 			snapshot: `
 import * as ns from "./restricted";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 * import is invalid because 'badExport' from './restricted' is restricted.
 `,
 		},
@@ -142,8 +142,8 @@ import { foo } from "./restricted";
 			},
 			snapshot: `
 import { foo } from "./restricted";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'./restricted' import is restricted.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'foo' import from './restricted' is restricted.
 `,
 		},
 		{
@@ -167,7 +167,7 @@ import { type A, b } from "./restricted";
 			},
 			snapshot: `
 import { type A, b } from "./restricted";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 'b' import from './restricted' is restricted.
 `,
 		},
@@ -191,7 +191,7 @@ export { dangerous } from "./restricted";
 			},
 			snapshot: `
 export { dangerous } from "./restricted";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 'dangerous' import from './restricted' is restricted.
 `,
 		},
@@ -214,7 +214,7 @@ export * from "./restricted";
 			},
 			snapshot: `
 export * from "./restricted";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 './restricted' import is restricted.
 `,
 		},
@@ -238,7 +238,7 @@ export * from "./restricted";
 			},
 			snapshot: `
 export * from "./restricted";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 * import is invalid because 'badExport' from './restricted' is restricted.
 `,
 		},
@@ -262,7 +262,7 @@ import foo from "./restricted";
 			},
 			snapshot: `
 import foo from "./restricted";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 'default' import from './restricted' is restricted.
 `,
 		},
@@ -287,7 +287,7 @@ import * as ns from "./restricted";
 			},
 			snapshot: `
 import * as ns from "./restricted";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 * import is invalid because 'a', 'b' from './restricted' is restricted. Import specific allowed names.
 `,
 		},
