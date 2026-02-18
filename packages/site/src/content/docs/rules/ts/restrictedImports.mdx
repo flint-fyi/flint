@@ -11,8 +11,8 @@ import RuleSummary from "~/components/RuleSummary.astro";
 <RuleSummary plugin="ts" rule="restrictedImports" />
 
 Some modules should not be used in certain parts of a codebase.
-This rule allows you to restrict specific modules from being imported, either by exact path or by glob pattern.
-It detects static `import` and `export ... from` declarations.
+This rule allows you to restrict specific modules from being imported using [`TypeOrValueSpecifier`](https://typescript-eslint.io/packages/type-utils/type-or-value-specifier/) to identify targets.
+It resolves imports semantically via the type checker, so restrictions match based on where declarations originate rather than raw import specifier strings.
 
 ## Examples
 
@@ -20,28 +20,28 @@ It detects static `import` and `export ... from` declarations.
 <TabItem label="❌ Incorrect">
 
 ```ts
-// With paths: ["lodash"]
+// With restrictions: [{ specifier: { from: "package", package: "lodash" } }]
 import _ from "lodash";
 
-// With paths: [{ source: "utils", name: ["dangerousHelper"] }]
-import { dangerousHelper } from "utils";
+// With restrictions: [{ specifier: { from: "package", name: "useState", package: "react" } }]
+import { useState } from "react";
 
-// With patterns: ["internal/*"]
-import { secret } from "internal/auth";
+// With restrictions: [{ specifier: { from: "file", path: "./internal/secret.ts" } }]
+import { secret } from "./internal/secret";
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```ts
-// With paths: ["lodash"]
+// With restrictions: [{ specifier: { from: "package", package: "lodash" } }]
 import { pick } from "lodash-es";
 
-// With paths: [{ source: "utils", name: ["dangerousHelper"] }]
-import { safeHelper } from "utils";
+// With restrictions: [{ specifier: { from: "package", name: "useState", package: "react" } }]
+import { useEffect } from "react";
 
-// With patterns: ["internal/*"]
-import { auth } from "external/auth";
+// With restrictions: [{ specifier: { from: "file", path: "./internal/secret.ts" }, allowTypeImports: true }]
+import type { SecretType } from "./internal/secret";
 ```
 
 </TabItem>
@@ -49,132 +49,77 @@ import { auth } from "external/auth";
 
 ## Options
 
-### `paths`
+### `restrictions`
 
-- Type: `Array<string | PathConfig>`
+- Type: `Array<Restriction>`
 - Default: `[]`
 
-Exact module specifiers to restrict.
-Each entry can be a simple string or a configuration object.
+Each restriction identifies an import target using a `TypeOrValueSpecifier` and optional metadata.
 
 ```jsonc
 {
-	"paths": [
-		// Simple: restrict the entire module
-		"lodash",
-
-		// Advanced: restrict specific imports
+	"restrictions": [
+		// Restrict a specific export from a package
 		{
-			"source": "utils",
-			"name": ["dangerousHelper"],
-			"message": "Use safeHelper instead.",
+			"specifier": {
+				"from": "package",
+				"name": "useState",
+				"package": "react",
+			},
+			"message": "Use our custom useStateWrapper instead.",
 		},
 
-		// Allow only certain imports
+		// Restrict an entire package
 		{
-			"source": "react",
-			"allowNames": ["useState", "useEffect"],
+			"specifier": { "from": "package", "package": "lodash" },
+			"message": "Use lodash-es for tree-shaking.",
 		},
 
-		// Allow type-only imports
+		// Restrict a local file, but allow type-only imports
 		{
-			"source": "internal-types",
+			"specifier": {
+				"from": "file",
+				"path": "./src/internal/secret.ts",
+			},
 			"allowTypeImports": true,
+		},
+
+		// Restrict a built-in lib type
+		{
+			"specifier": { "from": "lib", "name": "eval" },
 		},
 	],
 }
 ```
 
-**PathConfig fields:**
+**Restriction fields:**
 
-| Field              | Type        | Description                                                     |
-| ------------------ | ----------- | --------------------------------------------------------------- |
-| `source`           | `string`    | The module specifier to restrict.                               |
-| `message`          | `string?`   | Custom message shown when the import is restricted.             |
-| `name`             | `string[]?` | Only these specific import names are restricted.                |
-| `allowNames`       | `string[]?` | Only these import names are allowed; all others are restricted. |
-| `allowTypeImports` | `boolean?`  | Whether type-only imports are exempt from the restriction.      |
+| Field              | Type                   | Description                                                |
+| ------------------ | ---------------------- | ---------------------------------------------------------- |
+| `specifier`        | `TypeOrValueSpecifier` | Identifies the restricted import target (see below).       |
+| `message`          | `string?`              | Custom message shown when the restriction is triggered.    |
+| `allowTypeImports` | `boolean?`             | Whether type-only imports are exempt from the restriction. |
 
-### `patterns`
+**TypeOrValueSpecifier shapes:**
 
-- Type: `Array<string | PatternConfig>`
-- Default: `[]`
+| Variant   | Fields                     | Description                                      |
+| --------- | -------------------------- | ------------------------------------------------ |
+| `package` | `from`, `package`, `name?` | Matches exports from an npm package.             |
+| `file`    | `from`, `path?`, `name?`   | Matches exports from a local file.               |
+| `lib`     | `from`, `name?`            | Matches exports from TypeScript's built-in libs. |
 
-Glob patterns to match restricted module specifiers.
-
-```jsonc
-{
-	"patterns": [
-		// Simple: restrict by glob
-		"internal/*",
-
-		// Advanced: restrict with options
-		{
-			"group": ["legacy/**", "deprecated/**"],
-			"message": "These modules are deprecated. Use the new API.",
-			"allowTypeImports": true,
-		},
-	],
-}
-```
-
-**PatternConfig fields:**
-
-| Field              | Type        | Description                                                     |
-| ------------------ | ----------- | --------------------------------------------------------------- |
-| `group`            | `string[]`  | Glob patterns to match module specifiers against.               |
-| `message`          | `string?`   | Custom message shown when a matching import is restricted.      |
-| `name`             | `string[]?` | Only these specific import names are restricted.                |
-| `allowNames`       | `string[]?` | Only these import names are allowed; all others are restricted. |
-| `allowTypeImports` | `boolean?`  | Whether type-only imports are exempt from the restriction.      |
-
-## Relationship to TypeOrValueSpecifier
-
-Flint has [standardized on `TypeOrValueSpecifier`](https://typescript-eslint.io/packages/type-utils/type-or-value-specifier/) for specifying types or values in rule options.
-This rule's option schema aligns with TypeOrValueSpecifier naming conventions where possible, but cannot use the format directly.
-
-### Why TypeOrValueSpecifier doesn't apply directly
-
-TypeOrValueSpecifier is designed for **semantic resolution** — its `from` discriminator (`'file' | 'lib' | 'package'`) tells the type checker where to look up an actual declaration.
-This rule operates **syntactically**: it matches the raw string in `import X from "specifier"` without resolving types or declarations.
-
-A raw import specifier like `"react"`, `"./utils"`, or `"#internal/helpers"` doesn't map cleanly to TypeOrValueSpecifier's `from` categories without type-checker resolution.
-Flint's [commitment](https://flint.fyi/blog/what-flint-does-differently/#type-or-value-specifiers) to TypeOrValueSpecifier is scoped to specifying _types or values_ — this rule specifies import restriction patterns, which is a different concept.
-
-### Naming alignment
-
-Where TypeOrValueSpecifier concepts apply, this rule uses the same field names:
-
-| restrictedImports  | TypeOrValueSpecifier | Relationship                                                                                                                                                       |
-| ------------------ | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `name`             | `name`               | Direct alignment — both identify specific export identifiers.                                                                                                      |
-| `allowNames`       | —                    | Extension of the `name` convention for inverse matching. No TypeOrValueSpecifier equivalent.                                                                       |
-| `source`           | `package` / `path`   | Analogous role (identifies the origin module), but uses a neutral term because TypeOrValueSpecifier's `from` discriminator doesn't apply to raw specifier strings. |
-| `group`            | —                    | No equivalent. Glob-based module specifier matching is specific to import restrictions.                                                                            |
-| `allowTypeImports` | —                    | No equivalent. Syntax-level `import type` exemption.                                                                                                               |
-| `message`          | —                    | No equivalent. Restriction-specific metadata.                                                                                                                      |
-
-Notably, ESLint's [`no-restricted-imports`](https://eslint.org/docs/latest/rules/no-restricted-imports) uses `name` for the module specifier and `importNames` for identifiers.
-This rule deliberately inverts that convention so that `name` means "identifier" — matching TypeOrValueSpecifier's `name` field — and uses `source` for the module specifier to avoid the clash.
-
-### TypeOrValueSpecifier fields not used
-
-| TypeOrValueSpecifier field                  | Why not used                                                                                                                |
-| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `from` (`'file'` \| `'lib'` \| `'package'`) | Semantic discriminator for resolved declaration origins. This rule matches raw specifier strings without resolution.        |
-| `package`                                   | Requires `from: 'package'` resolution. Not all specifier strings are package names (e.g., relative paths, subpath imports). |
-| `path`                                      | Requires `from: 'file'` resolution. The rule matches the literal import string, not a resolved file path.                   |
-
-If Flint later adds a semantic version of this rule — one that resolves declarations via the type checker — that rule would use the full TypeOrValueSpecifier format with its `from` discriminator.
+When `name` is omitted, all exports from the matched source are restricted.
+When `name` is provided (as a string or array of strings), only those specific exports are restricted.
 
 ## When Not To Use It
 
 If you do not need to restrict any modules from being imported, you do not need this rule.
-This rule requires explicit configuration to do anything, so it has no effect without `paths` or `patterns` options.
+This rule requires explicit configuration to do anything, so it has no effect without `restrictions`.
 You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for specific situations instead of completely disabling this rule.
 
 ## Further Reading
 
+- [TypeOrValueSpecifier format](https://typescript-eslint.io/packages/type-utils/type-or-value-specifier/)
 - [ESLint `no-restricted-imports`](https://eslint.org/docs/latest/rules/no-restricted-imports)
 - [TypeScript-ESLint `no-restricted-imports`](https://typescript-eslint.io/rules/no-restricted-imports)
 

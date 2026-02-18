@@ -5,383 +5,389 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-import foo from "forbidden";
+import { dangerous } from "./restricted";
 `,
-			options: {
-				paths: ["forbidden"],
+			files: {
+				"restricted.ts": `export const dangerous = 42;`,
 			},
-			snapshot: `
-import foo from "forbidden";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'forbidden' import is restricted from being used.
-`,
-		},
-		{
-			code: `
-import foo from "forbidden";
-`,
 			options: {
-				paths: [
+				restrictions: [
 					{
-						message: "Use 'allowed-mod' instead.",
-						source: "forbidden",
+						specifier: {
+							from: "file",
+							name: "dangerous",
+							path: "./restricted.ts",
+						},
 					},
 				],
 			},
 			snapshot: `
-import foo from "forbidden";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'forbidden' import is restricted from being used. Use 'allowed-mod' instead.
+import { dangerous } from "./restricted";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'dangerous' import from './restricted' is restricted.
 `,
 		},
 		{
 			code: `
-import { badExport } from "mod";
+import { dangerous } from "./restricted";
 `,
+			files: {
+				"restricted.ts": `export const dangerous = 42;`,
+			},
 			options: {
-				paths: [
+				restrictions: [
 					{
-						name: ["badExport"],
-						source: "mod",
+						message: "Use safeFn instead.",
+						specifier: {
+							from: "file",
+							name: "dangerous",
+							path: "./restricted.ts",
+						},
 					},
 				],
 			},
 			snapshot: `
-import { badExport } from "mod";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'badExport' import from 'mod' is restricted.
+import { dangerous } from "./restricted";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'dangerous' import from './restricted' is restricted. Use safeFn instead.
 `,
 		},
 		{
 			code: `
-import foo from "mod";
+import { helper } from "./restricted";
 `,
+			files: {
+				"restricted.ts": `export const helper = 42;`,
+			},
 			options: {
-				paths: [
+				restrictions: [
 					{
-						name: ["default"],
-						source: "mod",
+						specifier: {
+							from: "file",
+							path: "./restricted.ts",
+						},
 					},
 				],
 			},
 			snapshot: `
-import foo from "mod";
-~~~~~~~~~~~~~~~~~~~~~~
-'default' import from 'mod' is restricted.
-`,
-		},
-		{
-			code: `
-import * as ns from "mod";
-`,
-			options: {
-				paths: [
-					{
-						name: ["badExport"],
-						source: "mod",
-					},
-				],
-			},
-			snapshot: `
-import * as ns from "mod";
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-* import is invalid because 'badExport' from 'mod' is restricted.
-`,
-		},
-		{
-			code: `
-import "forbidden";
-`,
-			options: {
-				paths: ["forbidden"],
-			},
-			snapshot: `
-import "forbidden";
-~~~~~~~~~~~~~~~~~~~
-'forbidden' import is restricted from being used.
-`,
-		},
-		{
-			code: `
-import { notAllowed } from "mod";
-`,
-			options: {
-				paths: [
-					{
-						allowNames: ["allowed"],
-						source: "mod",
-					},
-				],
-			},
-			snapshot: `
-import { notAllowed } from "mod";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'notAllowed' import from 'mod' is restricted.
-`,
-		},
-		{
-			code: `
-import foo from "internal/secret";
-`,
-			options: {
-				patterns: ["internal/*"],
-			},
-			snapshot: `
-import foo from "internal/secret";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'internal/secret' import is restricted from being used by a pattern.
-`,
-		},
-		{
-			code: `
-import foo from "internal/secret";
-`,
-			options: {
-				patterns: [
-					{
-						group: ["internal/*"],
-						message: "Do not import from internal modules.",
-					},
-				],
-			},
-			snapshot: `
-import foo from "internal/secret";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'internal/secret' import is restricted from being used by a pattern. Do not import from internal modules.
-`,
-		},
-		{
-			code: `
-import { badName } from "utils/helpers";
-`,
-			options: {
-				patterns: [
-					{
-						group: ["utils/*"],
-						name: ["badName"],
-					},
-				],
-			},
-			snapshot: `
-import { badName } from "utils/helpers";
+import { helper } from "./restricted";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'badName' import from 'utils/helpers' is restricted.
+'./restricted' import is restricted.
 `,
 		},
 		{
 			code: `
-export { foo } from "forbidden";
+import * as ns from "./restricted";
 `,
+			files: {
+				"restricted.ts": `export const helper = 42;`,
+			},
 			options: {
-				paths: ["forbidden"],
+				restrictions: [
+					{
+						specifier: {
+							from: "file",
+							path: "./restricted.ts",
+						},
+					},
+				],
 			},
 			snapshot: `
-export { foo } from "forbidden";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'forbidden' import is restricted from being used.
+import * as ns from "./restricted";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'./restricted' import is restricted.
 `,
 		},
 		{
 			code: `
-export * from "forbidden";
+import * as ns from "./restricted";
 `,
+			files: {
+				"restricted.ts": `export const badExport = 42;`,
+			},
 			options: {
-				paths: ["forbidden"],
+				restrictions: [
+					{
+						specifier: {
+							from: "file",
+							name: "badExport",
+							path: "./restricted.ts",
+						},
+					},
+				],
 			},
 			snapshot: `
-export * from "forbidden";
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-'forbidden' import is restricted from being used.
+import * as ns from "./restricted";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* import is invalid because 'badExport' from './restricted' is restricted.
 `,
 		},
 		{
 			code: `
-import { foo } from "mod";
+import { foo } from "./restricted";
 `,
+			files: {
+				"restricted.ts": `export const foo = 42;`,
+			},
 			options: {
-				paths: [
+				restrictions: [
 					{
 						allowTypeImports: true,
-						source: "mod",
+						specifier: {
+							from: "file",
+							path: "./restricted.ts",
+						},
 					},
 				],
 			},
 			snapshot: `
-import { foo } from "mod";
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-'mod' import is restricted from being used.
+import { foo } from "./restricted";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'./restricted' import is restricted.
 `,
 		},
 		{
 			code: `
-import { type A, b } from "mod";
+import { type A, b } from "./restricted";
 `,
+			files: {
+				"restricted.ts": `export type A = string; export const b = 42;`,
+			},
 			options: {
-				paths: [
+				restrictions: [
 					{
 						allowTypeImports: true,
-						name: ["A", "b"],
-						source: "mod",
+						specifier: {
+							from: "file",
+							name: ["A", "b"],
+							path: "./restricted.ts",
+						},
 					},
 				],
 			},
 			snapshot: `
-import { type A, b } from "mod";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'b' import from 'mod' is restricted.
+import { type A, b } from "./restricted";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'b' import from './restricted' is restricted.
 `,
 		},
 		{
 			code: `
-import { badExport } from "mod";
+export { dangerous } from "./restricted";
 `,
+			files: {
+				"restricted.ts": `export const dangerous = 42;`,
+			},
 			options: {
-				paths: [
+				restrictions: [
 					{
-						message: "Use goodExport instead.",
-						name: ["badExport"],
-						source: "mod",
+						specifier: {
+							from: "file",
+							name: "dangerous",
+							path: "./restricted.ts",
+						},
 					},
 				],
 			},
 			snapshot: `
-import { badExport } from "mod";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'badExport' import from 'mod' is restricted. Use goodExport instead.
+export { dangerous } from "./restricted";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'dangerous' import from './restricted' is restricted.
 `,
 		},
 		{
 			code: `
-import * as ns from "mod";
+export * from "./restricted";
 `,
+			files: {
+				"restricted.ts": `export const helper = 42;`,
+			},
 			options: {
-				paths: [
+				restrictions: [
+					{
+						specifier: {
+							from: "file",
+							path: "./restricted.ts",
+						},
+					},
+				],
+			},
+			snapshot: `
+export * from "./restricted";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'./restricted' import is restricted.
+`,
+		},
+		{
+			code: `
+export * from "./restricted";
+`,
+			files: {
+				"restricted.ts": `export const badExport = 42;`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "file",
+							name: "badExport",
+							path: "./restricted.ts",
+						},
+					},
+				],
+			},
+			snapshot: `
+export * from "./restricted";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* import is invalid because 'badExport' from './restricted' is restricted.
+`,
+		},
+		{
+			code: `
+import foo from "./restricted";
+`,
+			files: {
+				"restricted.ts": `const foo = 42; export default foo;`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "file",
+							name: "default",
+							path: "./restricted.ts",
+						},
+					},
+				],
+			},
+			snapshot: `
+import foo from "./restricted";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'default' import from './restricted' is restricted.
+`,
+		},
+		{
+			code: `
+import * as ns from "./restricted";
+`,
+			files: {
+				"restricted.ts": `export const a = 1; export const b = 2;`,
+			},
+			options: {
+				restrictions: [
 					{
 						message: "Import specific allowed names.",
-						name: ["a", "b"],
-						source: "mod",
+						specifier: {
+							from: "file",
+							name: ["a", "b"],
+							path: "./restricted.ts",
+						},
 					},
 				],
 			},
 			snapshot: `
-import * as ns from "mod";
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-* import is invalid because 'a', 'b' from 'mod' is restricted. Import specific allowed names.
-`,
-		},
-		{
-			code: `
-export * from "mod";
-`,
-			options: {
-				paths: [
-					{
-						name: ["secret"],
-						source: "mod",
-					},
-				],
-			},
-			snapshot: `
-export * from "mod";
-~~~~~~~~~~~~~~~~~~~~
-* import is invalid because 'secret' from 'mod' is restricted.
+import * as ns from "./restricted";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* import is invalid because 'a', 'b' from './restricted' is restricted. Import specific allowed names.
 `,
 		},
 	],
 	valid: [
 		{
-			code: `import foo from "allowed";`,
+			code: `import { allowed } from "./allowed";`,
+			files: {
+				"allowed.ts": `export const allowed = 42;`,
+			},
 			options: {
-				paths: ["forbidden"],
+				restrictions: [
+					{
+						specifier: {
+							from: "file",
+							path: "./restricted.ts",
+						},
+					},
+				],
 			},
 		},
 		{
-			code: `import type { Foo } from "mod";`,
+			code: `import { safeExport } from "./restricted";`,
+			files: {
+				"restricted.ts": `export const safeExport = 1; export const badExport = 2;`,
+			},
 			options: {
-				paths: [
+				restrictions: [
+					{
+						specifier: {
+							from: "file",
+							name: "badExport",
+							path: "./restricted.ts",
+						},
+					},
+				],
+			},
+		},
+		{
+			code: `import type { Foo } from "./restricted";`,
+			files: {
+				"restricted.ts": `export type Foo = string;`,
+			},
+			options: {
+				restrictions: [
 					{
 						allowTypeImports: true,
-						source: "mod",
+						specifier: {
+							from: "file",
+							path: "./restricted.ts",
+						},
 					},
 				],
 			},
 		},
 		{
-			code: `import { allowed } from "mod";`,
+			code: `import { type Foo } from "./restricted";`,
+			files: {
+				"restricted.ts": `export type Foo = string; export const bar = 42;`,
+			},
 			options: {
-				paths: [
+				restrictions: [
 					{
-						allowNames: ["allowed"],
-						source: "mod",
+						allowTypeImports: true,
+						specifier: {
+							from: "file",
+							name: "Foo",
+							path: "./restricted.ts",
+						},
 					},
 				],
-			},
-		},
-		{
-			code: `import { goodExport } from "mod";`,
-			options: {
-				paths: [
-					{
-						name: ["badExport"],
-						source: "mod",
-					},
-				],
-			},
-		},
-		{
-			code: `import foo from "external/lib";`,
-			options: {
-				patterns: ["internal/*"],
 			},
 		},
 		`import foo from "anything";`,
 		{
-			code: `import "mod";`,
-			options: {
-				paths: [
-					{
-						name: ["badExport"],
-						source: "mod",
-					},
-				],
-			},
-		},
-		{
-			code: `import { type A } from "mod";`,
-			options: {
-				paths: [
-					{
-						allowTypeImports: true,
-						name: ["A"],
-						source: "mod",
-					},
-				],
-			},
-		},
-		{
 			code: `const foo = 1; export { foo };`,
 			options: {
-				paths: ["forbidden"],
-			},
-		},
-		{
-			code: `import { allowed } from "utils/helpers";`,
-			options: {
-				patterns: [
+				restrictions: [
 					{
-						allowNames: ["allowed"],
-						group: ["utils/*"],
+						specifier: {
+							from: "file",
+							path: "./restricted.ts",
+						},
 					},
 				],
 			},
 		},
 		{
-			code: `export type { Foo } from "mod";`,
+			code: `export type { Foo } from "./restricted";`,
+			files: {
+				"restricted.ts": `export type Foo = string;`,
+			},
 			options: {
-				paths: [
+				restrictions: [
 					{
 						allowTypeImports: true,
-						source: "mod",
+						specifier: {
+							from: "file",
+							path: "./restricted.ts",
+						},
 					},
 				],
 			},
