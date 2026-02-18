@@ -35,7 +35,7 @@ Only time will tell.
 
 In the meantime, come talk about it on the [Flint Discord](https://flint.fyi/discord).
 
-👉 See [flint.fyi](https://flint.fyi/) for additional documentation.
+👉 See [flint.fyi](https://flint.fyi) for additional documentation.
 
 ## Why?
 
