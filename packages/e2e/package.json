@@ -13,15 +13,10 @@
 		"name": "JoshuaKGoldberg",
 		"email": "npm@joshuakgoldberg.com"
 	},
-	"sideEffects": false,
 	"type": "module",
 	"exports": {
 		".": "./package.json"
 	},
-	"files": [
-		"fixtures/",
-		"tests/"
-	],
 	"scripts": {
 		"flint": "flint",
 		"test": "vitest --project e2e"
