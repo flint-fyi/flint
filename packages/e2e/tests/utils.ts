@@ -1,4 +1,6 @@
+import { normalizePath } from "@flint.fyi/utils";
 import { execa } from "execa";
+import { isFileSystemCaseSensitive } from "flint";
 
 declare global {
 	// TODO[typescript>=6.0]: Remove this declaration.
@@ -24,7 +26,7 @@ declare global {
  * slashes and replaces the given cwd with `&lt;cwd&gt;` so snapshots are portable.
  */
 export function normalizeOutput(stdout: string, cwd: string): string {
-	const normalizedCwd = cwd.replace(/\\/g, "/");
+	const normalizedCwd = normalizePath(cwd, isFileSystemCaseSensitive());
 	return stdout
 		.replace(/\\/g, "/")
 		.replace(new RegExp(RegExp.escape(normalizedCwd), "gi"), "<cwd>");

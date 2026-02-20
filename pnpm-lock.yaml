@@ -258,6 +258,9 @@ importers:
       '@flint.fyi/ts':
         specifier: workspace:^
         version: link:../ts
+      '@flint.fyi/utils':
+        specifier: workspace:^
+        version: link:../utils
       execa:
         specifier: 9.6.1
         version: 9.6.1
