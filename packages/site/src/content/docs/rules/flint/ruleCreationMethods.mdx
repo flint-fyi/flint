@@ -60,3 +60,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 ## Options
 
 This rule is not configurable.
+
+## When Not To Use It
+
+If you are developing internal plugins or core packages that need to call `language.createRule()` directly,
+such as the `RuleCreator` implementation itself, you can safely disable this rule.
