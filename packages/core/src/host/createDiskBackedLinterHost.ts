@@ -1,3 +1,4 @@
+import { normalizePath } from "@flint.fyi/utils";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -7,7 +8,6 @@ import type {
 	LinterHostFileWatcherEvent,
 } from "../types/host.ts";
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
-import { normalizePath } from "./normalizePath.ts";
 
 const ignoredPaths = ["/node_modules", "/.git", "/.jj"];
 

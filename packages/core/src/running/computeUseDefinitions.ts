@@ -1,8 +1,8 @@
+import { normalizePath } from "@flint.fyi/utils";
 import { debugForFile } from "debug-for-file";
 import * as fs from "node:fs/promises";
 import path from "node:path";
 
-import { normalizePath } from "../host/normalizePath.ts";
 import type {
 	ConfigRuleDefinition,
 	ConfigUseDefinition,

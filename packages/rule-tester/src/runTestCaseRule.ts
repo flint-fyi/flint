@@ -5,11 +5,11 @@ import {
 	type AnyRule,
 	type InferredOutputObject,
 	type NormalizedReport,
-	normalizePath,
 	processRuleReport,
 	type RuleAbout,
 	type VFSLinterHost,
 } from "@flint.fyi/core";
+import { normalizePath } from "@flint.fyi/utils";
 import type { CachedFactory } from "cached-factory";
 import assert from "node:assert/strict";
 import path from "node:path";

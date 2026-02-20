@@ -1,5 +1,5 @@
 import type { LinterHost, LintResults } from "@flint.fyi/core";
-import { normalizePath } from "@flint.fyi/core";
+import { normalizePath } from "@flint.fyi/utils";
 import debounce from "debounce";
 import { debugForFile } from "debug-for-file";
 import * as fs from "node:fs";

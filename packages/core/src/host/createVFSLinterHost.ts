@@ -1,3 +1,5 @@
+import { normalizedDirname, normalizePath } from "@flint.fyi/utils";
+
 import type {
 	LinterHost,
 	LinterHostDirectoryEntry,
@@ -7,7 +9,6 @@ import type {
 	VFSLinterHost,
 } from "../types/host.ts";
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
-import { normalizedDirname, normalizePath } from "./normalizePath.ts";
 
 export type CreateVFSLinterHostOpts =
 	| {
