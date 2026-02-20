@@ -1,4 +1,3 @@
-// flint-disable-file ruleCreationMethods
 import type {
 	AnyLanguage,
 	GetLanguageAstNodesByName,
@@ -49,6 +48,7 @@ export class RuleCreator<Presets extends string> {
 	> {
 		// Use RuleCreator.createRule instead of Language.createRule
 		// But this is the original implementation
+		// flint-disable-next-line flint/ruleCreationMethods
 		return language.createRule({
 			...rule,
 			about: {
