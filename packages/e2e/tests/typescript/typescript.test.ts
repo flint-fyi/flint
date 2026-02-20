@@ -12,8 +12,8 @@ describe("typescript", () => {
 		expect(normalizeOutput(stdout, cwd)).toMatchInlineSnapshot(`
 			"<dim>Linting with <cyan><bold>flint.config.ts</bold></fg><dim>...</fg>
 
-			<underline><cwd>/fixtures/src/with-issues.ts</underline>
-			<dim>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>debuggerStatements</fg>
+			<underline>/users/dukese01/developer/flint/packages/e2e/tests/typescript/fixtures/src/with-issues.ts</underline>
+			<dim>  2:2</fg>  Debugger statements should not be used in production code.  <yellow>ts/debuggerStatements</fg>
 
 			<red>✖ Found <bold>1 report</bold> across <bold>1 file</bold>.</fg>
 			<red></fg>"

@@ -13,15 +13,15 @@ describe("cspell", () => {
 		expect(normalizeOutput(stdout, cwd)).toMatchInlineSnapshot(`
 			"<dim>Linting with <cyan><bold>flint.config.ts</bold></fg><dim>...</fg>
 
-			<underline><cwd>/fixtures/CONTRIBUTING.md</underline>
+			<underline>/users/dukese01/developer/flint/packages/e2e/tests/cspell/fixtures/contributing.md</underline>
 			<dim>  2:62</fg>  Forbidden or unknown word: "projet".      <yellow>cspell</fg>
 			<dim>  3:43</fg>  Forbidden or unknown word: "repositry".   <yellow>cspell</fg>
 			<dim>  9:1</fg>   Forbidden or unknown word: "establised".  <yellow>cspell</fg>
 
-			<underline><cwd>/fixtures/src/config.json</underline>
+			<underline>/users/dukese01/developer/flint/packages/e2e/tests/cspell/fixtures/src/config.json</underline>
 			<dim>  2:30</fg>  Forbidden or unknown word: "descripion".  <yellow>cspell</fg>
 
-			<underline><cwd>/fixtures/src/utils.ts</underline>
+			<underline>/users/dukese01/developer/flint/packages/e2e/tests/cspell/fixtures/src/utils.ts</underline>
 			<dim>  3:9</fg>    Forbidden or unknown word: "functon".     <yellow>cspell</fg>
 			<dim>  10:19</fg>  Forbidden or unknown word: "diference".   <yellow>cspell</fg>
 			<dim>  12:17</fg>  Forbidden or unknown word: "diffarence".  <yellow>cspell</fg>
