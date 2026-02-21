@@ -63,5 +63,5 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you are developing internal plugins or core packages that need to call `language.createRule()` directly,
-such as the `RuleCreator` implementation itself, you can safely disable this rule.
+If you are developing plugins that are only intended for internal use or tooling that
+will need to call `language.createRule()` directly, you can safely disable this rule.
