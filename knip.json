@@ -12,7 +12,7 @@
 			"entry": ["src/sort-data.ts"]
 		},
 		"packages/site": {
-			"entry": ["src/components/*.astro", "ec.config.mjs"],
+			"entry": ["src/components/*.astro"],
 			"ignoreDependencies": ["sharp"]
 		}
 	}
