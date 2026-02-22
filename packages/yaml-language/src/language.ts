@@ -1,5 +1,4 @@
 import { createLanguage } from "@flint.fyi/core";
-import { visit } from "unist-util-visit";
 import * as yamlParser from "yaml-unist-parser";
 
 import { parseDirectivesFromYamlFile } from "./directives/parseDirectivesFromYamlFile.ts";
@@ -35,18 +34,22 @@ export const yamlLanguage = createLanguage<YamlNodesByName, YamlFileServices>({
 		const { visitors } = runtime;
 		const visitorServices = { options, ...file.services };
 
-		visit(
-			file.services.root,
-			(node) => {
-				// @ts-expect-error -- This should work...?
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-				visitors[node.type]?.(node, visitorServices);
-			},
-			(node) => {
-				// @ts-expect-error -- This should work...?
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-				visitors[`${node.type}:exit`]?.(node, visitorServices);
-			},
-		);
+		const visit = (node: yamlParser.Node) => {
+			const key = node.type;
+
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+			visitors[key]?.(node, visitorServices);
+
+			if ("children" in node && Array.isArray(node.children)) {
+				for (const child of node.children as yamlParser.Node[]) {
+					visit(child);
+				}
+			}
+
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+			visitors[`${key}:exit`]?.(node, visitorServices);
+		};
+
+		visit(file.services.root);
 	},
 });

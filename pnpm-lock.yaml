@@ -855,9 +855,6 @@ importers:
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
-      unist-util-visit:
-        specifier: ^5.0.0
-        version: 5.1.0
       yaml-unist-parser:
         specifier: ^3.0.0
         version: 3.1.0

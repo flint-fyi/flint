@@ -3,7 +3,7 @@ import type * as mdast from "mdast";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { gfmFromMarkdown } from "mdast-util-gfm";
 import { gfm } from "micromark-extension-gfm";
-import { visit } from "unist-util-visit";
+import type { Node } from "unist";
 
 import { parseDirectivesFromMarkdownFile } from "./directives/parseDirectivesFromMarkdownFile.ts";
 import type { MarkdownNodeVisitors, WithPosition } from "./nodes.ts";
@@ -47,14 +47,22 @@ export const markdownLanguage = createLanguage<
 		const { visitors } = runtime;
 		const visitorServices = { options, ...file.services };
 
-		visit(file.services.root, (node) => {
+		const visit = (node: Node) => {
 			const key = node.type;
 
 			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
 			visitors[key]?.(node, visitorServices);
 
+			if ("children" in node && Array.isArray(node.children)) {
+				for (const child of node.children as Node[]) {
+					visit(child);
+				}
+			}
+
 			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
 			visitors[`${key}:exit`]?.(node, visitorServices);
-		});
+		};
+
+		visit(file.services.root);
 	},
 });
