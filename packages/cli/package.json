@@ -2,6 +2,7 @@
 	"name": "@flint.fyi/cli",
 	"version": "0.17.0",
 	"description": "[Experimental] Command-line interface for Flint.",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",

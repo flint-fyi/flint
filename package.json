@@ -3,6 +3,7 @@
 	"version": "0.12.0",
 	"private": true,
 	"description": "[Experimental] Monorepo for Flint: a fast, friendly linter. ❤️‍🔥",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git"

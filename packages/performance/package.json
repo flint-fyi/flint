@@ -2,6 +2,7 @@
 	"name": "@flint.fyi/performance",
 	"version": "0.2.0",
 	"description": "[Experimental] A Flint plugin for performant code.",
+	"homepage": "https://www.flint.fyi/rules/performance",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",

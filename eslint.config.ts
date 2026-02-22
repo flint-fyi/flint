@@ -252,5 +252,8 @@ export default defineConfig(
 	{
 		extends: [packageJson.configs["recommended-publishable"]],
 		files: [["packages/*/package.json", "!packages/site/package.json"]],
+		rules: {
+			"package-json/require-homepage": ["error", { ignorePrivate: true }],
+		},
 	},
 );
