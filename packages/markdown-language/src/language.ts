@@ -6,7 +6,11 @@ import { gfm } from "micromark-extension-gfm";
 import type { Node } from "unist";
 
 import { parseDirectivesFromMarkdownFile } from "./directives/parseDirectivesFromMarkdownFile.ts";
-import type { MarkdownNodeVisitors, WithPosition } from "./nodes.ts";
+import type {
+	MarkdownNodesByName,
+	MarkdownNodeVisitors,
+	WithPosition,
+} from "./nodes.ts";
 
 export interface MarkdownFileServices {
 	root: WithPosition<mdast.Root>;
@@ -48,7 +52,7 @@ export const markdownLanguage = createLanguage<
 		const visitorServices = { options, ...file.services };
 
 		const visit = (node: Node) => {
-			const key = node.type;
+			const key = node.type as keyof MarkdownNodesByName;
 
 			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
 			visitors[key]?.(node, visitorServices);

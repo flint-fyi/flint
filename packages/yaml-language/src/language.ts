@@ -2,14 +2,14 @@ import { createLanguage } from "@flint.fyi/core";
 import * as yamlParser from "yaml-unist-parser";
 
 import { parseDirectivesFromYamlFile } from "./directives/parseDirectivesFromYamlFile.ts";
-import type { YamlNodesByName } from "./nodes.ts";
+import type { YamlNodesByName, YamlNodeVisitors } from "./nodes.ts";
 
 export interface YamlFileServices {
 	root: yamlParser.Root;
 	sourceText: string;
 }
 
-export const yamlLanguage = createLanguage<YamlNodesByName, YamlFileServices>({
+export const yamlLanguage = createLanguage<YamlNodeVisitors, YamlFileServices>({
 	about: {
 		name: "YAML",
 	},
@@ -35,7 +35,7 @@ export const yamlLanguage = createLanguage<YamlNodesByName, YamlFileServices>({
 		const visitorServices = { options, ...file.services };
 
 		const visit = (node: yamlParser.Node) => {
-			const key = node.type;
+			const key = node.type as keyof YamlNodesByName;
 
 			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
 			visitors[key]?.(node, visitorServices);
