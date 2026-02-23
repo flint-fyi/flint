@@ -89,7 +89,7 @@ export function createVFSLinterHost(
 			}
 		}
 	}
-	return {
+	const host: VFSLinterHost = {
 		fileTypeSync(pathAbsolute) {
 			pathAbsolute = normalizePath(pathAbsolute, caseSensitiveFS);
 			for (const filePath of fileMap.keys()) {
@@ -105,8 +105,9 @@ export function createVFSLinterHost(
 		getCurrentDirectory() {
 			return cwd;
 		},
+		// eslint-disable-next-line @typescript-eslint/require-await
 		async getFileTouchTime(filePath) {
-			return await Promise.try(() => this.getFileTouchTimeSync(filePath));
+			return host.getFileTouchTimeSync(filePath);
 		},
 		getFileTouchTimeSync() {
 			// TODO: uhh... this probably doesn't work amazingly
@@ -115,10 +116,9 @@ export function createVFSLinterHost(
 		isCaseSensitiveFS() {
 			return caseSensitiveFS;
 		},
+		// eslint-disable-next-line @typescript-eslint/require-await
 		async readDirectory(directoryPathAbsolute) {
-			return await Promise.try(() =>
-				this.readDirectorySync(directoryPathAbsolute),
-			);
+			return host.readDirectorySync(directoryPathAbsolute);
 		},
 		readDirectorySync(directoryPathAbsolute) {
 			directoryPathAbsolute =
@@ -155,8 +155,9 @@ export function createVFSLinterHost(
 					: []),
 			];
 		},
+		// eslint-disable-next-line @typescript-eslint/require-await
 		async readFile(filePathAbsolute) {
-			return await Promise.try(() => this.readFileSync(filePathAbsolute));
+			return host.readFileSync(filePathAbsolute);
 		},
 		readFileSync(filePathAbsolute) {
 			filePathAbsolute = normalizePath(filePathAbsolute, caseSensitiveFS);
@@ -237,13 +238,14 @@ export function createVFSLinterHost(
 				},
 			};
 		},
+		// eslint-disable-next-line @typescript-eslint/require-await
 		async writeFile(filePathAbsolute, content) {
-			await Promise.try(() => {
-				this.vfsUpsertFile(filePathAbsolute, content);
-			});
+			host.vfsUpsertFile(filePathAbsolute, content);
 		},
 		writeFileSync(filePathAbsolute, content) {
-			this.vfsUpsertFile(filePathAbsolute, content);
+			host.vfsUpsertFile(filePathAbsolute, content);
 		},
 	};
+
+	return host;
 }
