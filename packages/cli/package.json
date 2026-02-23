@@ -35,7 +35,7 @@
 		"debug-for-file": "^0.2.0",
 		"text-table-fast": "^0.1.0",
 		"typescript": "^5.9.3 || ^6.0.0",
-		"wrap-ansi": "^9.0.2"
+		"wrap-ansi": "^10.0.0"
 	},
 	"devDependencies": {
 		"prettier": "3.8.1",
