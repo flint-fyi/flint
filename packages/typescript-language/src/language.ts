@@ -37,7 +37,7 @@ export const typescriptLanguage = createLanguage<
 
 		function createFile(data: FileAboutData) {
 			log("Opening client file:", data.filePathAbsolute);
-			service.openClientFile(data.filePathAbsolute);
+			service.openClientFile(data.filePathAbsolute, data.sourceText);
 
 			log("Retrieving client services:", data.filePathAbsolute);
 			const scriptInfo = service.getScriptInfo(data.filePathAbsolute);
