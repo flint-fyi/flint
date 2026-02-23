@@ -69,7 +69,7 @@ export async function runCliWatch(
 				return;
 			}
 
-			const normalizedPath = normalizePath(fileName, true);
+			const normalizedPath = normalizePath(fileName);
 
 			const shouldRerun = shouldRerunForFileChange(
 				normalizedPath,

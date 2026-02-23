@@ -49,10 +49,7 @@ export async function computeUseDefinitions(
 			)
 				.map((entry) =>
 					entry.isFile()
-						? normalizePath(
-								path.join(entry.parentPath, entry.name),
-								host.isCaseSensitiveFS(),
-							)
+						? normalizePath(path.join(entry.parentPath, entry.name))
 						: null,
 				)
 				.filter(

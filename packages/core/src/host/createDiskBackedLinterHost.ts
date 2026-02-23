@@ -13,7 +13,7 @@ const ignoredPaths = ["/node_modules", "/.git", "/.jj"];
 
 export function createDiskBackedLinterHost(cwd: string): LinterHost {
 	const caseSensitiveFS = isFileSystemCaseSensitive();
-	cwd = normalizePath(cwd, caseSensitiveFS);
+	cwd = normalizePath(cwd);
 
 	function createWatcher(
 		normalizedWatchPath: string,
@@ -35,7 +35,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			existsNow: boolean | null = null,
 		) {
 			if (changedFileName != null) {
-				changedFileName = normalizePath(changedFileName, caseSensitiveFS);
+				changedFileName = normalizePath(changedFileName);
 			}
 			existsNow ??= fs.existsSync(normalizedWatchPath);
 			if (existsNow) {
@@ -80,7 +80,6 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 							) {
 								changedPath = normalizePath(
 									path.resolve(normalizedWatchPath, filename),
-									caseSensitiveFS,
 								);
 							}
 							if (statAndEmitIfChanged(changedPath)) {
@@ -93,10 +92,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 							statAndEmitIfChanged(
 								filename == null
 									? null
-									: normalizePath(
-											path.resolve(normalizedWatchPath, filename),
-											caseSensitiveFS,
-										),
+									: normalizePath(path.resolve(normalizedWatchPath, filename)),
 							)
 						) {
 							return;
@@ -210,10 +206,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			callback,
 			pollingInterval = 2_000,
 		) {
-			directoryPathAbsolute = normalizePath(
-				directoryPathAbsolute,
-				caseSensitiveFS,
-			);
+			directoryPathAbsolute = normalizePath(directoryPathAbsolute);
 
 			return createWatcher(
 				directoryPathAbsolute,
@@ -240,7 +233,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			);
 		},
 		watchFile(filePathAbsolute, callback, pollingInterval = 2_000) {
-			filePathAbsolute = normalizePath(filePathAbsolute, caseSensitiveFS);
+			filePathAbsolute = normalizePath(filePathAbsolute);
 
 			return createWatcher(
 				filePathAbsolute,

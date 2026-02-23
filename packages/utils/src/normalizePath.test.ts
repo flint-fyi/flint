@@ -1,36 +1,50 @@
 import { describe, expect, it } from "vitest";
 
-import { normalizedDirname, normalizePath } from "./normalizePath.ts";
+import { normalizedDirname, normalizePath, pathKey } from "./normalizePath.ts";
 
 describe("normalizePath", () => {
 	it("normalizes Windows path", () => {
-		const normalized = normalizePath("C:\\my-PATH\\foo\\", false);
+		const normalized = normalizePath("C:\\my-PATH\\foo\\");
 
-		expect(normalized).toEqual("c:/my-path/foo");
+		expect(normalized).toEqual("C:/my-PATH/foo");
 	});
 
 	it("normalizes POSIX path", () => {
-		const normalized = normalizePath("/my-PATH/foo/", true);
+		const normalized = normalizePath("/my-PATH/foo/");
 
 		expect(normalized).toEqual("/my-PATH/foo");
 	});
 
 	it("strips unnecessary path segments", () => {
-		const normalized = normalizePath("/foo//bar/../baz/.//", true);
+		const normalized = normalizePath("/foo//bar/../baz/.//");
 
 		expect(normalized).toEqual("/foo/baz");
 	});
 
 	it("doesn't strip root '/'", () => {
-		const normalized = normalizePath("/", true);
+		const normalized = normalizePath("/");
 
 		expect(normalized).toEqual("/");
 	});
 
 	it("doesn't strip root 'C:\\'", () => {
-		const normalized = normalizePath("C:\\", false);
+		const normalized = normalizePath("C:\\");
 
-		expect(normalized).toEqual("c:/");
+		expect(normalized).toEqual("C:/");
+	});
+});
+
+describe("pathKey", () => {
+	it("preserves case on case-sensitive FS", () => {
+		const key = pathKey("/My-PATH/Foo", true);
+
+		expect(key).toEqual("/My-PATH/Foo");
+	});
+
+	it("lowercases on case-insensitive FS", () => {
+		const key = pathKey("C:\\My-PATH\\Foo\\", false);
+
+		expect(key).toEqual("c:/my-path/foo");
 	});
 });
 

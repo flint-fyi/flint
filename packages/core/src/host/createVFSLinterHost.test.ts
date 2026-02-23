@@ -15,14 +15,29 @@ describe(createVFSLinterHost, () => {
 		expect(host.isCaseSensitiveFS()).toEqual(true);
 	});
 
-	it("normalizes cwd case-insensitively", () => {
+	it("normalizes cwd without lowercasing", () => {
 		const host = createVFSLinterHost({
 			caseSensitive: false,
 			cwd: "C:\\HELLO\\world\\",
 		});
 
-		expect(host.getCurrentDirectory()).toEqual("c:/hello/world");
+		expect(host.getCurrentDirectory()).toEqual("C:/HELLO/world");
 		expect(host.isCaseSensitiveFS()).toEqual(false);
+	});
+
+	it("handles case-insensitive operations", () => {
+		const baseHost = createVFSLinterHost({
+			caseSensitive: false,
+			cwd: "/root",
+		});
+		const host = createVFSLinterHost({ baseHost });
+
+		host.vfsUpsertFile("/root/file.ts", "fake content");
+		host.vfsUpsertFile("/root/FILE.ts", "real content");
+		host.vfsUpsertFile("/root/otheR-File.ts", "other content");
+
+		expect(host.readFile("/root/file.ts")).toEqual("real content");
+		expect(host.readFile("/root/OTHER-file.ts")).toEqual("other content");
 	});
 
 	it("inherits cwd and case sensitivity from base host", () => {
@@ -486,7 +501,7 @@ describe(createVFSLinterHost, () => {
 				using _ = host.watchDirectory("C:\\", false, onEvent);
 				host.vfsUpsertFile("C:\\file.txt", "content");
 
-				expect(onEvent).toHaveBeenCalledExactlyOnceWith("c:/file.txt");
+				expect(onEvent).toHaveBeenCalledExactlyOnceWith("C:/file.txt");
 			});
 
 			it("reports file editing", () => {
