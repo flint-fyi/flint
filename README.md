@@ -8,7 +8,7 @@
 <p align="center">
 	<!-- prettier-ignore-start -->
 	<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 16" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-16-21bb42.svg" /></a>
+	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 17" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-17-21bb42.svg" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 	<!-- prettier-ignore-end -->
 	<a href="https://github.com/flint-fyi/flint/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
@@ -34,6 +34,8 @@ It might become a real linter.
 Only time will tell.
 
 In the meantime, come talk about it on the [Flint Discord](https://flint.fyi/discord).
+
+👉 See [flint.fyi](https://flint.fyi) for additional documentation.
 
 ## Why?
 
@@ -87,6 +89,7 @@ Thanks! ❤️‍🔥
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/bmclear"><img src="https://avatars.githubusercontent.com/u/7715393?v=4?s=100" width="100px;" alt="bmclear"/><br /><sub><b>bmclear</b></sub></a><br /><a href="#maintenance-bmclear" title="Maintenance">🚧</a> <a href="https://github.com/flint-fyi/flint/commits?author=bmclear" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/cylewaitforit"><img src="https://avatars.githubusercontent.com/u/54253392?v=4?s=100" width="100px;" alt="cylewaitforit"/><br /><sub><b>cylewaitforit</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/commits?author=cylewaitforit" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/michaelfaith"><img src="https://avatars.githubusercontent.com/u/8071845?v=4?s=100" width="100px;" alt="michael faith"/><br /><sub><b>michael faith</b></sub></a><br /><a href="#ideas-michaelfaith" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/flint-fyi/flint/commits?author=michaelfaith" title="Documentation">📖</a> <a href="https://github.com/flint-fyi/flint/issues?q=author%3Amichaelfaith" title="Bug reports">🐛</a> <a href="#maintenance-michaelfaith" title="Maintenance">🚧</a> <a href="#tool-michaelfaith" title="Tools">🔧</a> <a href="https://github.com/flint-fyi/flint/commits?author=michaelfaith" title="Code">💻</a> <a href="#infra-michaelfaith" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     </tr>
   </tbody>

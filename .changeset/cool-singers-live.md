@@ -2,4 +2,4 @@
 "@flint.fyi/comparisons": patch
 ---
 
-fix(comparisons): mark three superseded rules as such
+Mark three superseded rules as such.

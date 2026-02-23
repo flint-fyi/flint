@@ -1,8 +1,8 @@
+// flint-disable-file ts/topLevelAwaits
 import type { GetStaticPathsOptions } from "astro";
 
 import { getStaticPaths } from "../pages/og/[...path]";
 
-// flint-disable-next-line topLevelAwaits
 const routes = await getStaticPaths({} as GetStaticPathsOptions);
 
 const paths = new Set(routes.map(({ params }) => params.path));

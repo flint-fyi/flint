@@ -50,6 +50,7 @@ export class RuleCreator<Presets extends string> {
 			...rule,
 			about: {
 				...rule.about,
+				pluginId: this.#options.pluginId,
 				url: this.#options.docs(rule.about.id),
 			},
 		});

@@ -75,9 +75,10 @@ export async function runCli(args: string[]) {
 	}
 
 	const host = createDiskBackedLinterHost(process.cwd());
+	const cwd = host.getCurrentDirectory();
 	const configFileName = await findConfigFileName(host);
 	if (!configFileName) {
-		console.error("No flint.config.* file found.");
+		console.error(`No flint.config.* file found in ${cwd}.`);
 		console.error(
 			"The Flint CLI auto-initializer is not yet implemented. Check back soon!",
 		);

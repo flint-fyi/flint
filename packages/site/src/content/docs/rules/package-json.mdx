@@ -12,11 +12,12 @@ import PluginTop from "~/components/PluginTop.astro";
 
 Flint's package.json plugin provides the following preset:
 
-| Preset                    | Recommended | Description                                                             |
-| ------------------------- | ----------- | ----------------------------------------------------------------------- |
-| **[`logical`](#logical)** | ✅ Always   | Common rules for finding bugs and good practices in package.json files. |
+| Preset                        | Recommended | Description                                                             |
+| ----------------------------- | ----------- | ----------------------------------------------------------------------- |
+| **[`logical`](#logical)**     | ✅ Always   | Common rules for finding bugs and good practices in package.json files. |
+| **[`stylistic`](#stylistic)** | ✅ Always   | Common rules for consistent styling and best stylistic practices.       |
 
-Flint recommends using the [`logical`](#logical) preset:
+Flint recommends using the [`logical`](#logical) and [`stylistic`](#stylistic) presets:
 
 ```ts title="flint.config.ts"
 import { defineConfig, packageJson } from "flint";
@@ -25,7 +26,7 @@ export default defineConfig({
 	use: [
 		{
 			files: packageJson.files.all,
-			rules: [packageJson.presets.logical],
+			rules: [packageJson.presets.logical, packageJson.presets.stylistic],
 		},
 	],
 });
@@ -47,6 +48,23 @@ export default defineConfig({
 		{
 			files: packageJson.files.all,
 			rules: packageJson.presets.logical,
+		},
+	],
+});
+```
+
+### `stylistic`
+
+Rules that enforce consistent styling and best stylistic practices for most-to-all package.json files.
+
+```ts title="flint.config.ts"
+import { defineConfig, packageJson } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: packageJson.files.all,
+			rules: packageJson.presets.stylistic,
 		},
 	],
 });
