@@ -23,25 +23,29 @@ export async function resolveChangesByFile(
 		absoluteFilePath: string,
 		report: FileReport,
 	) {
-		for (const suggestion of report.suggestions ?? []) {
-			const key = createReportSuggestionKey(report, suggestion);
-			if (requestedSuggestions.has(key)) {
-				const resolved = await resolveChange(suggestion, absoluteFilePath);
+		await Promise.all(
+			(report.suggestions ?? []).map(async (suggestion) => {
+				const key = createReportSuggestionKey(report, suggestion);
+				if (requestedSuggestions.has(key)) {
+					const resolved = await resolveChange(suggestion, absoluteFilePath);
 
-				for (const change of flatten(resolved)) {
-					changesByFile.get(change.filePath).push(change);
+					for (const change of flatten(resolved)) {
+						changesByFile.get(change.filePath).push(change);
+					}
 				}
-			}
-		}
+			}),
+		);
 	}
 
 	await Promise.all(
 		Array.from(filesResults.entries()).map(
 			async ([absoluteFilePath, fileResults]) => {
-				for (const report of fileResults.reports) {
-					collectReportFix(absoluteFilePath, report);
-					await collectReportSuggestions(absoluteFilePath, report);
-				}
+				return await Promise.all(
+					fileResults.reports.map(async (report) => {
+						collectReportFix(absoluteFilePath, report);
+						await collectReportSuggestions(absoluteFilePath, report);
+					}),
+				);
 			},
 		),
 	);
