@@ -30,3 +30,16 @@ export function pathKey(path: string, caseSensitiveFS: boolean): PathKey {
 	const norm = normalizePath(path);
 	return (caseSensitiveFS ? norm : norm.toLowerCase()) as PathKey;
 }
+
+/**
+ * Creates a {@link PathKey} with a trailing slash for directory prefix
+ * matching. {@link pathKey} normalizes internally, which strips trailing
+ * slashes, so we append one after to enable `startsWith` checks against
+ * file keys.
+ */
+export function pathKeyDirSlash(
+	path: string,
+	caseSensitiveFS: boolean,
+): PathKey {
+	return (pathKey(path, caseSensitiveFS) + "/") as PathKey;
+}

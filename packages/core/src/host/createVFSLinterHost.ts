@@ -3,6 +3,7 @@ import {
 	normalizePath,
 	pathKey,
 	type PathKey,
+	pathKeyDirSlash,
 } from "@flint.fyi/utils";
 
 import type {
@@ -71,16 +72,6 @@ export function createVFSLinterHost(
 		Set<LinterHostDirectoryWatcher>
 	>();
 
-	/**
-	 * Creates a {@link PathKey} with a trailing slash for directory prefix
-	 * matching. {@link pathKey} normalizes internally, which strips trailing
-	 * slashes, so we append one after to enable `startsWith` checks against
-	 * file keys.
-	 */
-	function keySlashOf(p: string): PathKey {
-		return (pathKey(p, caseSensitiveFS) + "/") as PathKey;
-	}
-
 	function watchEvent(
 		normalizedFilePathAbsolute: string,
 		fileEvent: LinterHostFileWatcherEvent,
@@ -127,7 +118,7 @@ export function createVFSLinterHost(
 		readDirectory(directoryPathAbsolute) {
 			const dirNorm = normalizePath(directoryPathAbsolute);
 			const dirNormSlash = dirNorm.endsWith("/") ? dirNorm : dirNorm + "/";
-			const dirKeySlash = keySlashOf(dirNorm);
+			const dirKeySlash = pathKeyDirSlash(dirNorm, caseSensitiveFS);
 			const result = new Map<string, LinterHostDirectoryEntry>();
 
 			for (const [fileKey, file] of fileMap) {
@@ -180,7 +171,7 @@ export function createVFSLinterHost(
 		stat(pathAbsolute) {
 			pathAbsolute = normalizePath(pathAbsolute);
 			const key = pathKey(pathAbsolute, caseSensitiveFS);
-			const keySlash = keySlashOf(pathAbsolute);
+			const keySlash = pathKeyDirSlash(pathAbsolute, caseSensitiveFS);
 			for (const fileKey of fileMap.keys()) {
 				if (key === fileKey) {
 					return "file";

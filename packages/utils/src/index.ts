@@ -6,6 +6,7 @@ export {
 	normalizePath,
 	pathKey,
 	type PathKey,
+	pathKeyDirSlash,
 } from "./normalizePath.ts";
 export * from "./parseJsonSafe.ts";
 export * from "./promises.ts";

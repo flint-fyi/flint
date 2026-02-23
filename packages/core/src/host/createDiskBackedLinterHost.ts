@@ -1,4 +1,4 @@
-import { normalizePath } from "@flint.fyi/utils";
+import { normalizePath, pathKey, pathKeyDirSlash } from "@flint.fyi/utils";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -207,6 +207,11 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			pollingInterval = 2_000,
 		) {
 			directoryPathAbsolute = normalizePath(directoryPathAbsolute);
+			const dirKey = pathKey(directoryPathAbsolute, caseSensitiveFS);
+			const dirKeySlash = pathKeyDirSlash(
+				directoryPathAbsolute,
+				caseSensitiveFS,
+			);
 
 			return createWatcher(
 				directoryPathAbsolute,
@@ -214,9 +219,13 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 				pollingInterval,
 				(normalizedChangedFilePath) => {
 					normalizedChangedFilePath ??= directoryPathAbsolute;
-					if (normalizedChangedFilePath !== directoryPathAbsolute) {
+					const changedKey = pathKey(
+						normalizedChangedFilePath,
+						caseSensitiveFS,
+					);
+					if (changedKey !== dirKey) {
 						let relative = normalizedChangedFilePath;
-						if (relative.startsWith(directoryPathAbsolute + "/")) {
+						if (changedKey.startsWith(dirKeySlash)) {
 							relative = relative.slice(directoryPathAbsolute.length);
 						}
 						for (const ignored of ignoredPaths) {
@@ -234,13 +243,17 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		},
 		watchFile(filePathAbsolute, callback, pollingInterval = 2_000) {
 			filePathAbsolute = normalizePath(filePathAbsolute);
+			const watchKey = pathKey(filePathAbsolute, caseSensitiveFS);
 
 			return createWatcher(
 				filePathAbsolute,
 				false,
 				pollingInterval,
 				(normalizedChangedFilePath, event) => {
-					if (normalizedChangedFilePath === filePathAbsolute) {
+					if (
+						normalizedChangedFilePath != null &&
+						pathKey(normalizedChangedFilePath, caseSensitiveFS) === watchKey
+					) {
 						callback(event);
 					}
 				},
