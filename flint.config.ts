@@ -1,4 +1,5 @@
 import { node } from "@flint.fyi/node";
+import { performance } from "@flint.fyi/performance";
 import { flint } from "@flint.fyi/plugin-flint";
 import { spelling } from "@flint.fyi/spelling";
 import { defineConfig, globs, json, md, ts, yaml } from "flint";
@@ -24,6 +25,8 @@ export default defineConfig({
 				flint.presets.stylistic,
 				node.presets.logicalStrict,
 				node.presets.stylisticStrict,
+				performance.presets.logical,
+				performance.rules({ loopFunctions: false }),
 				ts.presets.logicalStrict,
 				ts.presets.stylisticStrict,
 				ts.rules({

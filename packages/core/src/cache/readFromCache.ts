@@ -50,6 +50,7 @@ export async function readFromCache(
 			cache.configs[filePath],
 			"Cache timestamp is expected to be present",
 		);
+		// flint-disable-next-line performance/loopAwaits
 		const timestampTouched = await host.getFileTouchTime(filePath);
 		if (timestampTouched > timestampCached) {
 			log(
@@ -93,6 +94,7 @@ export async function readFromCache(
 		}
 
 		const timestampCached = fileCached.timestamp;
+		// flint-disable-next-line performance/loopAwaits
 		const timestampTouched = await host.getFileTouchTime(filePath);
 		if (timestampTouched > timestampCached) {
 			log(

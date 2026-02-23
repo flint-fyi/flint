@@ -94,17 +94,21 @@ async function runRules(
 ) {
 	const reportsByFilePath = new CachedFactory<string, FileReport[]>(() => []);
 
-	for (const [rule, filesAndOptions] of rulesFilesAndOptionsByRule) {
-		const ruleReportsByFilePath = await runLintRule(
-			rule,
-			filesAndOptions,
-			host,
-		);
+	await Promise.all(
+		Array.from(rulesFilesAndOptionsByRule).map(
+			async ([rule, filesAndOptions]) => {
+				const ruleReportsByFilePath = await runLintRule(
+					rule,
+					filesAndOptions,
+					host,
+				);
 
-		for (const [filePath, ruleReports] of ruleReportsByFilePath) {
-			reportsByFilePath.get(filePath).push(...ruleReports);
-		}
-	}
+				for (const [filePath, ruleReports] of ruleReportsByFilePath) {
+					reportsByFilePath.get(filePath).push(...ruleReports);
+				}
+			},
+		),
+	);
 
 	return reportsByFilePath;
 }

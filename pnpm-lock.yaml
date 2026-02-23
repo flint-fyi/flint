@@ -31,6 +31,9 @@ importers:
       '@flint.fyi/node':
         specifier: workspace:^
         version: link:packages/node
+      '@flint.fyi/performance':
+        specifier: workspace:^
+        version: link:packages/performance
       '@flint.fyi/plugin-flint':
         specifier: workspace:^
         version: link:packages/plugin-flint
