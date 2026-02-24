@@ -31,9 +31,6 @@ export default ruleCreator.createRule(markdownLanguage, {
 
 		return {
 			visitors: {
-				root() {
-					h1HeadingRanges.length = 0;
-				},
 				heading(node) {
 					if (node.depth === 1) {
 						h1HeadingRanges.push({
@@ -49,6 +46,9 @@ export default ruleCreator.createRule(markdownLanguage, {
 							end: node.position.end.offset,
 						});
 					}
+				},
+				root() {
+					h1HeadingRanges.length = 0;
 				},
 				"root:exit"() {
 					if (h1HeadingRanges.length > 1) {

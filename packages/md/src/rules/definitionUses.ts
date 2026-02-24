@@ -31,10 +31,6 @@ export default ruleCreator.createRule(markdownLanguage, {
 
 		return {
 			visitors: {
-				root() {
-					definitions.clear();
-					usedIdentifiers.clear();
-				},
 				definition(node) {
 					if (node.identifier === "//") {
 						return;
@@ -54,6 +50,10 @@ export default ruleCreator.createRule(markdownLanguage, {
 				},
 				linkReference(node) {
 					usedIdentifiers.add(node.identifier.toLowerCase());
+				},
+				root() {
+					definitions.clear();
+					usedIdentifiers.clear();
 				},
 				"root:exit"() {
 					for (const [normalizedIdentifier, definition] of definitions) {

@@ -36,12 +36,26 @@ export default ruleCreator.createRule(markdownLanguage, {
 
 		return {
 			visitors: {
+				definition(node) {
+					definitions.add(node.identifier.toLowerCase());
+				},
 				root() {
 					definitions.clear();
 					references.length = 0;
 				},
-				definition(node) {
-					definitions.add(node.identifier.toLowerCase());
+				"root:exit"() {
+					for (const reference of references) {
+						if (!definitions.has(reference.identifier.toLowerCase())) {
+							context.report({
+								data: { identifier: reference.identifier },
+								message: "missingLabel",
+								range: {
+									begin: reference.begin,
+									end: reference.end,
+								},
+							});
+						}
+					}
 				},
 				text(node) {
 					let match: null | RegExpExecArray;
@@ -72,20 +86,6 @@ export default ruleCreator.createRule(markdownLanguage, {
 						const end = begin + identifier.length;
 
 						references.push({ begin, end, identifier });
-					}
-				},
-				"root:exit"() {
-					for (const reference of references) {
-						if (!definitions.has(reference.identifier.toLowerCase())) {
-							context.report({
-								data: { identifier: reference.identifier },
-								message: "missingLabel",
-								range: {
-									begin: reference.begin,
-									end: reference.end,
-								},
-							});
-						}
 					}
 				},
 			},

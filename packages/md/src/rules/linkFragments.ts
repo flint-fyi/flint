@@ -50,13 +50,6 @@ export default ruleCreator.createRule(markdownLanguage, {
 
 		return {
 			visitors: {
-				root() {
-					slugger.reset();
-					validFragments.clear();
-					// Always allow #top as it's a standard browser fragment
-					validFragments.add("top");
-					linksToCheck.length = 0;
-				},
 				heading(node) {
 					const headingText = collectText(node);
 
@@ -89,6 +82,13 @@ export default ruleCreator.createRule(markdownLanguage, {
 							});
 						}
 					}
+				},
+				root() {
+					slugger.reset();
+					validFragments.clear();
+					// Always allow #top as it's a standard browser fragment
+					validFragments.add("top");
+					linksToCheck.length = 0;
 				},
 				"root:exit"() {
 					// Check all fragment links
