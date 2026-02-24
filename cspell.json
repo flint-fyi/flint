@@ -4,6 +4,7 @@
 		".all-contributorsrc",
 		".github",
 		"CHANGELOG.md",
+		"changelog.md",
 		"lib",
 		"node_modules",
 		"packages/comparisons/src/data.json",
