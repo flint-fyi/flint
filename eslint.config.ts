@@ -251,9 +251,9 @@ export default defineConfig(
 	},
 	{
 		extends: [packageJson.configs["recommended-publishable"]],
-		files: [["packages/*/package.json", "!packages/site/package.json"]],
+		files: ["packages/*/package.json"],
 		rules: {
-			"package-json/require-homepage": ["error", { ignorePrivate: true }],
+			"package-json/require-homepage": "error",
 		},
 	},
 );
