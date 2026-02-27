@@ -44,6 +44,13 @@ export function parseTestCase(
 			node.kind == SyntaxKind.StringLiteral ||
 			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
+	const name = findProperty(
+		node.properties,
+		"name",
+		(node) =>
+			node.kind == SyntaxKind.StringLiteral ||
+			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
+	);
 	const options = findProperty(
 		node.properties,
 		"options",
@@ -53,10 +60,12 @@ export function parseTestCase(
 	return {
 		code: code.text,
 		fileName: fileName?.text,
+		name: name?.text,
 		nodes: {
 			case: node,
 			code,
 			fileName,
+			name,
 			options,
 		},
 		options: options && tsAstToLiteral(options),
@@ -88,6 +97,13 @@ export function parseTestCaseInvalid(
 			node.kind == SyntaxKind.StringLiteral ||
 			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
+	const name = findProperty(
+		node.properties,
+		"name",
+		(node) =>
+			node.kind == SyntaxKind.StringLiteral ||
+			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
+	);
 	const options = findProperty(
 		node.properties,
 		"options",
@@ -107,10 +123,12 @@ export function parseTestCaseInvalid(
 	return {
 		code: code.text,
 		fileName: fileName?.text,
+		name: name?.text,
 		nodes: {
 			case: node,
 			code,
 			fileName,
+			name,
 			options,
 			snapshot,
 		},

@@ -57,6 +57,7 @@ export async function runConfig(
 				filePath,
 				languageAndFiles,
 				reportsByFilePath.get(filePath).flat(),
+				host,
 				skipDiagnostics,
 			),
 		]),
