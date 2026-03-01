@@ -2,6 +2,7 @@
 	"name": "@flint.fyi/browser",
 	"version": "0.2.0",
 	"description": "[Experimental] A Flint plugin for browser code.",
+	"homepage": "https://www.flint.fyi/rules/browser",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",

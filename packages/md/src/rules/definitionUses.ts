@@ -1,6 +1,4 @@
 import { markdownLanguage } from "@flint.fyi/markdown-language";
-import type { WithPosition } from "@flint.fyi/markdown-language";
-import type { Definition, ImageReference, Node, Root } from "mdast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -25,58 +23,39 @@ export default ruleCreator.createRule(markdownLanguage, {
 		},
 	},
 	setup(context) {
+		const definitions = new Map<
+			string,
+			{ begin: number; end: number; identifier: string }
+		>();
+		const usedIdentifiers = new Set<string>();
+
 		return {
 			visitors: {
-				root(root: WithPosition<Root>) {
-					const definitions = new Map<
-						string,
-						{ begin: number; end: number; identifier: string }
-					>();
-					const usedIdentifiers = new Set<string>();
-
-					function visitDefinition(node: Definition) {
-						if (
-							node.identifier === "//" ||
-							node.position?.start.offset === undefined ||
-							node.position.end.offset === undefined
-						) {
-							return;
-						}
-
-						const begin = node.position.start.offset;
-						const end = begin + node.identifier.length + 2;
-
-						definitions.set(node.identifier.toLowerCase(), {
-							begin,
-							end,
-							identifier: node.identifier,
-						});
+				definition(node) {
+					if (node.identifier === "//") {
+						return;
 					}
 
-					function visit(node: Node): void {
-						switch (node.type) {
-							case "definition":
-								visitDefinition(node as Definition);
-								break;
-							case "imageReference":
-							case "linkReference":
-								usedIdentifiers.add(
-									(node as ImageReference).identifier.toLowerCase(),
-								);
-								break;
-						}
+					const begin = node.position.start.offset;
+					const end = begin + node.identifier.length + 2;
 
-						if ("children" in node && Array.isArray(node.children)) {
-							for (const child of node.children as Node[]) {
-								visit(child);
-							}
-						}
-					}
-
-					// TODO: Add :exit selectors, so this rule can report after traversal
-					// https://github.com/flint-fyi/flint/issues/2267
-					visit(root);
-
+					definitions.set(node.identifier.toLowerCase(), {
+						begin,
+						end,
+						identifier: node.identifier,
+					});
+				},
+				imageReference(node) {
+					usedIdentifiers.add(node.identifier.toLowerCase());
+				},
+				linkReference(node) {
+					usedIdentifiers.add(node.identifier.toLowerCase());
+				},
+				root() {
+					definitions.clear();
+					usedIdentifiers.clear();
+				},
+				"root:exit"() {
 					for (const [normalizedIdentifier, definition] of definitions) {
 						if (!usedIdentifiers.has(normalizedIdentifier)) {
 							context.report({

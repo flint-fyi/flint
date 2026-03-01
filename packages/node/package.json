@@ -2,6 +2,7 @@
 	"name": "@flint.fyi/node",
 	"version": "0.2.0",
 	"description": "[Experimental] A Flint plugin for Node.js code.",
+	"homepage": "https://www.flint.fyi/rules/node",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",

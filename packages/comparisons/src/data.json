@@ -862,6 +862,20 @@
 	{
 		"eslint": [
 			{
+				"name": "eslint-plugin-eslint-plugin/unique-test-case-names",
+				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/unique-test-case-names.md"
+			}
+		],
+		"flint": {
+			"name": "testCaseNameDuplicates",
+			"plugin": "flint",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "eslint-plugin-eslint-plugin/no-only-tests",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-only-tests.md"
 			}
@@ -7260,8 +7274,7 @@
 		],
 		"flint": {
 			"name": "yamlKeys",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"plugin": "sorting"
 		}
 	},
 	{

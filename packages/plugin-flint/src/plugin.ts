@@ -7,6 +7,7 @@ import nodePropertyInChecks from "./rules/nodePropertyInChecks.ts";
 import placeholderFormats from "./rules/placeholderFormats.ts";
 import ruleCreationMethods from "./rules/ruleCreationMethods.ts";
 import testCaseDuplicates from "./rules/testCaseDuplicates.ts";
+import testCaseNameDuplicates from "./rules/testCaseNameDuplicates.ts";
 import testShorthands from "./rules/testShorthands.ts";
 
 export const flint = createPlugin({
@@ -15,6 +16,7 @@ export const flint = createPlugin({
 		getStartSourceFile,
 		invalidCodeLines,
 		testCaseDuplicates,
+		testCaseNameDuplicates,
 		missingPlaceholders,
 		ruleCreationMethods,
 		placeholderFormats,

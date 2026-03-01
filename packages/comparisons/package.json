@@ -2,6 +2,7 @@
 	"name": "@flint.fyi/comparisons",
 	"version": "0.2.0",
 	"description": "Comparisons of common lint rules across Flint and other web linters.",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",

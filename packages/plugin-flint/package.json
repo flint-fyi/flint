@@ -2,6 +2,7 @@
 	"name": "@flint.fyi/plugin-flint",
 	"version": "0.3.0",
 	"description": "[Experimental] A Flint plugin for linting Flint plugins.",
+	"homepage": "https://www.flint.fyi/rules/flint",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",

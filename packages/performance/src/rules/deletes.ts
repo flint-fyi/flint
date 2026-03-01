@@ -6,6 +6,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using the delete operator.",
 		id: "deletes",
+		presets: ["logical"],
 	},
 	messages: {
 		noDelete: {
