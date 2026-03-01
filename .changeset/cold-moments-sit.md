@@ -1,6 +1,5 @@
 ---
 "@flint.fyi/jsx": minor
-"@flint.fyi/site": patch
 ---
 
 Add file selectors.

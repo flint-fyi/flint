@@ -4,11 +4,12 @@
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.json"
 	},
 	"extends": "./tsconfig.base.json",
+	"files": ["./packages/flint/bin/index.js", "./lint-staged.config.js"],
 	"include": [
 		"./@types/*/*.ts",
 		"./*.ts",
 		"./packages/*/tsdown.config.ts",
-		"./packages/*/bin/index.js"
+		"./scripts/*.ts"
 	],
 	"references": [
 		{ "path": "./packages/astro" },

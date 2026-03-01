@@ -2,6 +2,7 @@
 	"name": "@flint.fyi/ts",
 	"version": "0.16.0",
 	"description": "[Experimental] TypeScript language plugin for Flint.",
+	"homepage": "https://www.flint.fyi/rules/ts",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",

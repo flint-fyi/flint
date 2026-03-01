@@ -2,6 +2,7 @@
 	"name": "@flint.fyi/text-language",
 	"version": "0.15.0",
 	"description": "[Experimental] Plain text language for Flint.",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",

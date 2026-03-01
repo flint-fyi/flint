@@ -2,4 +2,4 @@
 "@flint.fyi/core": minor
 ---
 
-feat: unused directive tracking and reporting
+Unused directive tracking and reporting.

@@ -2,6 +2,7 @@
 	"name": "@flint.fyi/next",
 	"version": "0.2.0",
 	"description": "[Experimental] A Flint plugin for Next.js code.",
+	"homepage": "https://www.flint.fyi/rules/next",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",

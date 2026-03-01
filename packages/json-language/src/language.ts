@@ -46,6 +46,6 @@ export const jsonLanguage = createLanguage<JsonNodeVisitors, JsonFileServices>({
 			visitors[`${key}:exit`]?.(node, visitorServices);
 		};
 
-		file.services.sourceFile.forEachChild(visit);
+		visit(file.services.sourceFile);
 	},
 });
