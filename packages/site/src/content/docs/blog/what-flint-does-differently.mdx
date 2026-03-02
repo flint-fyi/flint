@@ -528,14 +528,7 @@ import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { z } from "zod";
 
 export const someRule = typescriptLanguage.createRule({
-	about: { description: "Reports something.", id: "someRule" },
-	messages: {
-		reported: {
-			primary: "Something was reported.",
-			secondary: [],
-			suggestions: [],
-		},
-	},
+	// ...
 	options: {
 		option: z.string().optional(),
 	},
