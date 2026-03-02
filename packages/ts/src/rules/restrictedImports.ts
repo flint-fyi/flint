@@ -51,6 +51,77 @@ const restrictionSchema = z.object({
 
 type Restriction = z.infer<typeof restrictionSchema>;
 
+type WildcardMessageId =
+	| "moduleRestricted"
+	| "moduleRestrictedWithMessage"
+	| "namespaceRestricted"
+	| "namespaceRestrictedWithMessage";
+
+function checkWildcardRestrictions(
+	restrictions: Restriction[],
+	moduleDeclarations: ts.Declaration[],
+	source: string,
+	topLevelTypeOnly: boolean,
+	range: ReturnType<typeof getTSNodeRange>,
+	program: ts.Program,
+	report: (arg: {
+		data: Record<string, string>;
+		message: WildcardMessageId;
+		range: ReturnType<typeof getTSNodeRange>;
+	}) => void,
+) {
+	for (const restriction of restrictions) {
+		if (restriction.allowTypeImports && topLevelTypeOnly) {
+			continue;
+		}
+
+		const names = getSpecifierNames(restriction.specifier);
+		if (names !== undefined) {
+			if (
+				matchesSpecifier(
+					undefined,
+					moduleDeclarations,
+					{
+						...restriction.specifier,
+						name: undefined,
+					} as TypeOrValueSpecifier,
+					program,
+				)
+			) {
+				report({
+					data: {
+						customMessage: restriction.message ?? "",
+						restrictedNames: names.join("', '"),
+						source,
+					},
+					message: restriction.message
+						? "namespaceRestrictedWithMessage"
+						: "namespaceRestricted",
+					range,
+				});
+			}
+		} else if (
+			matchesSpecifier(
+				undefined,
+				moduleDeclarations,
+				restriction.specifier,
+				program,
+			)
+		) {
+			report({
+				data: {
+					customMessage: restriction.message ?? "",
+					source,
+				},
+				message: restriction.message
+					? "moduleRestrictedWithMessage"
+					: "moduleRestricted",
+				range,
+			});
+		}
+	}
+}
+
 // Location-checking helpers follow the same approach as @typescript-eslint/type-utils.
 // We can't use typeMatchesSpecifier directly because it operates on ts.Type objects
 // and checks the type's symbol name, which doesn't match variable names for value
@@ -337,56 +408,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							return;
 						}
 
-						for (const restriction of restrictions) {
-							if (restriction.allowTypeImports && topLevelTypeOnly) {
-								continue;
-							}
-
-							const names = getSpecifierNames(restriction.specifier);
-							if (names !== undefined) {
-								if (
-									matchesSpecifier(
-										undefined,
-										moduleDeclarations,
-										{
-											...restriction.specifier,
-											name: undefined,
-										} as TypeOrValueSpecifier,
-										program,
-									)
-								) {
-									context.report({
-										data: {
-											customMessage: restriction.message ?? "",
-											restrictedNames: names.join("', '"),
-											source,
-										},
-										message: restriction.message
-											? "namespaceRestrictedWithMessage"
-											: "namespaceRestricted",
-										range,
-									});
-								}
-							} else if (
-								matchesSpecifier(
-									undefined,
-									moduleDeclarations,
-									restriction.specifier,
-									program,
-								)
-							) {
-								context.report({
-									data: {
-										customMessage: restriction.message ?? "",
-										source,
-									},
-									message: restriction.message
-										? "moduleRestrictedWithMessage"
-										: "moduleRestricted",
-									range,
-								});
-							}
-						}
+						checkWildcardRestrictions(
+							restrictions,
+							moduleDeclarations,
+							source,
+							topLevelTypeOnly,
+							range,
+							program,
+							context.report,
+						);
 					}
 				},
 				ImportDeclaration: (
@@ -545,57 +575,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					for (const restriction of restrictions) {
-						if (restriction.allowTypeImports && topLevelTypeOnly) {
-							continue;
-						}
-
-						const names = getSpecifierNames(restriction.specifier);
-						if (names !== undefined) {
-							// Name-specific restriction on a namespace import
-							if (
-								matchesSpecifier(
-									undefined,
-									moduleDeclarations,
-									{
-										...restriction.specifier,
-										name: undefined,
-									} as TypeOrValueSpecifier,
-									program,
-								)
-							) {
-								context.report({
-									data: {
-										customMessage: restriction.message ?? "",
-										restrictedNames: names.join("', '"),
-										source,
-									},
-									message: restriction.message
-										? "namespaceRestrictedWithMessage"
-										: "namespaceRestricted",
-									range,
-								});
-							}
-						} else if (
-							matchesSpecifier(
-								undefined,
-								moduleDeclarations,
-								restriction.specifier,
-								program,
-							)
-						) {
-							context.report({
-								data: {
-									customMessage: restriction.message ?? "",
-									source,
-								},
-								message: restriction.message
-									? "moduleRestrictedWithMessage"
-									: "moduleRestricted",
-								range,
-							});
-						}
-					}
+					checkWildcardRestrictions(
+						restrictions,
+						moduleDeclarations,
+						source,
+						topLevelTypeOnly,
+						range,
+						program,
+						context.report,
+					);
 				},
 			},
 		};
