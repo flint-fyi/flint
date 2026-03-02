@@ -26,27 +26,22 @@ The rule detects four types of issues:
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 /[\w&&\s]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 /[\w&&\d]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 /[\w--\s]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 /[\d--\w]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 /[[abc]&&[def]]/v;
 ```
 
@@ -54,17 +49,14 @@ The rule detects four types of issues:
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 /[\w--\d]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 /[[a-z]&&[a-m]]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 /[[a-z]--[aeiou]]/v;
 ```
 
@@ -73,7 +65,6 @@ The rule detects four types of issues:
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 /[\w\d]/v;
 ```
 

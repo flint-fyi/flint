@@ -26,27 +26,22 @@ The rule detects four types of simplifications:
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[a&&[^b]]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[a--[^b]]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[[^a]&&[^b]]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[[^a][^b]]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[^\S\P{ASCII}]/v;
 ```
 
@@ -54,37 +49,30 @@ const pattern = /[^\S\P{ASCII}]/v;
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[a--b]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[a&&b]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[^ab]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[^a&&b]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[\s&&\p{ASCII}]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[a&&b]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[a--b]/v;
 ```
 

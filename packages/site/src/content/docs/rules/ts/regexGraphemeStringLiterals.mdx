@@ -22,17 +22,14 @@ If you need to match multi-character strings, use regular alternation with a non
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[\q{abc}]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[\q{a|bc}]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[\q{hello|world}]/v;
 ```
 
@@ -40,27 +37,22 @@ const pattern = /[\q{hello|world}]/v;
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[\q{a|b|c}]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[\q{©️|®️}]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[\q{🇦🇨|🇦🇩}]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[\q{👨‍👩‍👧‍👦}]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 // Use regular alternation for multi-character strings
 const pattern = /(?:hello|world)/v;
 ```

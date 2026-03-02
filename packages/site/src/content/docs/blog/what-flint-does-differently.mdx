@@ -543,7 +543,10 @@ export const someRule = typescriptLanguage.createRule({
 // @noErrors
 // @filename: src/rules/someRule.ts
 import type { AnyRule } from "@flint.fyi/core";
-export declare const someRule: (options: { option: string }) => AnyRule;
+export declare const someRule: (options: { option: string }) => AnyRule<{
+	id: "someRule";
+	description: string;
+}>;
 // @filename: flint.config.ts
 // ---cut---
 import { defineConfig, ts } from "flint";

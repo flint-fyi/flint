@@ -19,19 +19,16 @@ These are more readable and performant than using lookarounds to achieve the sam
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 // Negative lookahead can be subtraction
 const pattern = /(?!\d)\w/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 // Positive lookbehind can be intersection
 const pattern = /\w(?<=\d)/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 // Positive lookahead can be intersection
 const pattern = /(?=\d)\w/v;
 ```
@@ -40,19 +37,16 @@ const pattern = /(?=\d)\w/v;
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 // Use subtraction instead of negative lookahead
 const pattern = /[\w--\d]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 // Use intersection instead of positive lookbehind
 const pattern = /[\w&&\d]/v;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 // Use intersection instead of positive lookahead
 const pattern = /[\w&&\d]/v;
 ```
@@ -63,7 +57,6 @@ const pattern = /(?!\d)\w/;
 ```
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 // Complex lookarounds cannot be converted
 const pattern = /(?!abc)\w/v;
 ```

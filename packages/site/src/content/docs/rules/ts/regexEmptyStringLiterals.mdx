@@ -23,7 +23,6 @@ A `\q{}` with no content matches the empty string.
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[\q{}]/v;
 ```
 
@@ -31,7 +30,6 @@ const pattern = /[\q{}]/v;
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[\q{a}]/v;
 ```
 
@@ -46,7 +44,6 @@ Even with other elements in the character class, an empty `\q{}` is reported.
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[a\q{}]/v;
 ```
 
@@ -54,7 +51,6 @@ const pattern = /[a\q{}]/v;
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[a]?/v;
 ```
 
@@ -90,7 +86,6 @@ If the string literal has at least one non-empty alternative, it is valid.
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 1501 -- v-flag requires esnext target
 const pattern = /[\q{a|}]/v;
 ```
 

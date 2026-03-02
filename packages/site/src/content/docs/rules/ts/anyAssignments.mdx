@@ -22,7 +22,7 @@ It also checks generic type arguments to ensure you don't pass an unsafe `any` i
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const someFunction: any;
+declare const someFunction: () => unknown;
 // ---cut---
 const value = someFunction() as any;
 ```
@@ -36,7 +36,7 @@ const items = [] as any[];
 ```
 
 ```ts
-declare const getArray: any;
+declare const getArray: () => unknown[];
 // ---cut---
 const [first, second] = getArray() as any[];
 ```
@@ -46,7 +46,7 @@ const value: Set<string> = new Set<any>();
 ```
 
 ```ts
-declare const getItems: any;
+declare const getItems: () => unknown[];
 // ---cut---
 const items: string[] = [...(getItems() as any[])];
 ```
@@ -55,13 +55,13 @@ const items: string[] = [...(getItems() as any[])];
 <TabItem label="✅ Correct">
 
 ```ts
-declare const someFunction: any;
+declare const someFunction: () => unknown;
 // ---cut---
 const value: any = someFunction() as any;
 ```
 
 ```ts
-declare const someFunction: any;
+declare const someFunction: () => unknown;
 // ---cut---
 const value: unknown = someFunction() as any;
 ```
@@ -75,7 +75,7 @@ const value: Set<any> = new Set<any>();
 ```
 
 ```ts
-declare const getItems: any;
+declare const getItems: () => unknown[];
 // ---cut---
 const items: unknown[] = [...(getItems() as any[])];
 ```

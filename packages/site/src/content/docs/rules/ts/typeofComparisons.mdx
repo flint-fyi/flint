@@ -32,7 +32,7 @@ if (typeof value === "strnig") {
 ```
 
 ```ts
-// @errors: 2367
+// @errors: 2367 -- misspelled typeof is always false
 declare const callback: unknown;
 // ---cut---
 if (typeof callback !== "fucntion") {
@@ -41,7 +41,7 @@ if (typeof callback !== "fucntion") {
 ```
 
 ```ts
-// @errors: 2367
+// @errors: 2367 -- misspelled typeof is always false
 declare const data: unknown;
 declare const initialize: () => void;
 // ---cut---

@@ -12,6 +12,7 @@ export default {
 			twoslashOptions: {
 				vfsRoot: fileURLToPath(new URL("../..", import.meta.url)),
 				compilerOptions: {
+					target: 99, // ESNext
 					module: 199, // NodeNext
 					moduleResolution: 99, // NodeNext
 					jsx: 4, // react-jsx
