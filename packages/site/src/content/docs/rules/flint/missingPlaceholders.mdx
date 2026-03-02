@@ -19,7 +19,7 @@ When reporting linting issues, it's common to include dynamic data in the messag
 
 ```ts
 // @noErrors -- simplified rule definition omits required fields like 'about'
-import { RuleCreator } from "@flint.fyi/core";
+import { RuleCreator, type RuleContext } from "@flint.fyi/core";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 const ruleCreator = new RuleCreator({
 	docs: () => "",
@@ -27,9 +27,6 @@ const ruleCreator = new RuleCreator({
 	presets: [] as string[],
 });
 const _ = typescriptLanguage;
-interface RuleContext {
-	report(options: Record<string, unknown>): void;
-}
 // ---cut---
 ruleCreator.createRule(_, {
 	messages: {
@@ -52,7 +49,7 @@ ruleCreator.createRule(_, {
 
 ```ts
 // @noErrors -- simplified rule definition omits required fields like 'about'
-import { RuleCreator } from "@flint.fyi/core";
+import { RuleCreator, type RuleContext } from "@flint.fyi/core";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 const ruleCreator = new RuleCreator({
 	docs: () => "",
@@ -60,9 +57,6 @@ const ruleCreator = new RuleCreator({
 	presets: [] as string[],
 });
 const _ = typescriptLanguage;
-interface RuleContext {
-	report(options: Record<string, unknown>): void;
-}
 // ---cut---
 ruleCreator.createRule(_, {
 	messages: {

@@ -38,8 +38,6 @@ Note that `{` in JSX text will automatically be parsed as the start of a JSX exp
 
 ```tsx
 // @errors: 1005 -- unescaped JSX entity causes parse error
-declare const brace: unknown;
-// ---cut---
 <div>Opening { brace</div>
 ```
 

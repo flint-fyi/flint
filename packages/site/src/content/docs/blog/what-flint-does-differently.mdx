@@ -524,13 +524,14 @@ Flint's rules will take a more modern approach.
 They will allow [Standard Schema](https://standardschema.dev) descriptions for rule options, which enables the use of TypeScript-friendly schema validation libraries such as [Zod](https://zod.dev):
 
 ```ts title="src/rules/someRule.ts"
+// @noErrors
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { z } from "zod";
 
 export const someRule = typescriptLanguage.createRule({
 	// ...
 	options: {
-		option: z.string().optional(),
+		option: z.string();
 	},
 	setup(context) {
 		// ...
@@ -539,8 +540,10 @@ export const someRule = typescriptLanguage.createRule({
 ```
 
 ```ts title="flint.config.ts"
+// @noErrors
 // @filename: src/rules/someRule.ts
-export declare const someRule: (options: { option: string }) => any;
+import type { AnyRule } from "@flint.fyi/core";
+export declare const someRule: (options: { option: string }) => AnyRule;
 // @filename: flint.config.ts
 // ---cut---
 import { defineConfig, ts } from "flint";
