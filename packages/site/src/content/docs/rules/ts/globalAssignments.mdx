@@ -20,7 +20,7 @@ In strict mode, reassigning these globals will throw a TypeError at runtime.
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2322 2539 2739
+// @errors: 2322 2539 2739 -- TS catches read-only global reassignment
 undefined = 1;
 
 NaN = 42;
@@ -33,7 +33,7 @@ Array = function () {};
 ```
 
 ```ts
-// @errors: 2539
+// @errors: 2539 -- TS catches read-only global modification
 let count = 5;
 undefined += count;
 
@@ -58,7 +58,7 @@ const myArray = function () {};
 ```
 
 ```ts
-// @errors: 2322
+// @errors: 2322 -- 'undefined' inferred as literal type, not assignable from number
 let count = 5;
 let undefinedValue = undefined;
 undefinedValue = count;

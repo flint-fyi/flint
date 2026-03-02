@@ -22,7 +22,7 @@ Assignments involving variables, function calls, or other dynamic expressions ar
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2339
+// @errors: 2339 -- undeclared class field
 class Example {
 	constructor() {
 		this.value = "hello";
@@ -40,7 +40,7 @@ class MyError extends Error {
 ```
 
 ```ts
-// @errors: 2339
+// @errors: 2339 -- undeclared class field
 class Counter {
 	constructor() {
 		this.count = 0;
@@ -76,7 +76,7 @@ class Counter {
 ```
 
 ```ts
-// @errors: 2339
+// @errors: 2339 -- undeclared class field
 class Example {
 	constructor(value: string) {
 		this.value = value;

@@ -20,7 +20,7 @@ Wrapping the contents of case clauses in curly braces creates a proper block sco
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2451 2454
+// @errors: 2451 2454 -- case scope leaks declarations across clauses
 declare const fetchAdminData: () => unknown;
 declare const fetchUserData: () => unknown;
 declare const processData: (data: unknown) => void;

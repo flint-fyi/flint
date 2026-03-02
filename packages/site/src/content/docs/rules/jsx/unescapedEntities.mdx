@@ -24,7 +24,7 @@ Note that `{` in JSX text will automatically be parsed as the start of a JSX exp
 <TabItem label="❌ Incorrect">
 
 ```tsx
-// @errors: 1382
+// @errors: 1382 -- unescaped JSX entity causes parse error
 <div>Greater than > sign</div>
 ```
 
@@ -37,7 +37,7 @@ Note that `{` in JSX text will automatically be parsed as the start of a JSX exp
 ```
 
 ```tsx
-// @errors: 1005
+// @errors: 1005 -- unescaped JSX entity causes parse error
 declare const brace: unknown;
 // ---cut---
 <div>Opening { brace</div>
@@ -46,7 +46,7 @@ declare const brace: unknown;
 Note: This will cause a syntax error as `{` starts a JSX expression.
 
 ```tsx
-// @errors: 1381
+// @errors: 1381 -- unescaped JSX entity causes parse error
 <div>Closing } brace</div>
 ```
 

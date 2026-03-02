@@ -20,7 +20,7 @@ This typically indicates a copy-paste error or incomplete refactoring.
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2366
+// @errors: 2366 -- function lacks return in all code paths
 function getStatus(code: number): string {
 	switch (code) {
 		case 200:
@@ -53,7 +53,7 @@ function handleInput(value: string): void {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2366
+// @errors: 2366 -- function lacks return in all code paths
 function getStatus(code: number): string {
 	switch (code) {
 		case 200:

@@ -32,13 +32,13 @@ array.flatMap((value) => value);
 ```
 
 ```ts
-// @errors: 2769
+// @errors: 2769 -- no matching overload for flat()
 declare const array: number[][];
 [].concat(...array);
 ```
 
 ```ts
-// @errors: 2345
+// @errors: 2345 -- argument type mismatch
 declare const array: number[][];
 [].concat.apply([], array);
 ```

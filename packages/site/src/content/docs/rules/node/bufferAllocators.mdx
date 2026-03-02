@@ -23,7 +23,7 @@ Use `Buffer.alloc()` for creating a Buffer of a specific size with zero-filled m
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2451
+// @errors: 2451 -- multiple const buffer declarations in same block
 const buffer = new Buffer("7468697320697320612074c3a97374", "hex");
 
 const buffer = new Buffer([0x62, 0x75, 0x66, 0x66, 0x65, 0x72]);
@@ -35,7 +35,7 @@ const buffer = new Buffer(10);
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2451
+// @errors: 2451 -- multiple const buffer declarations in same block
 const buffer = Buffer.from("7468697320697320612074c3a97374", "hex");
 
 const buffer = Buffer.from([0x62, 0x75, 0x66, 0x66, 0x65, 0x72]);

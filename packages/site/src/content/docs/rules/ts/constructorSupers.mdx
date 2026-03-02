@@ -22,7 +22,7 @@ This rule reports code that appears to violate either requirement.
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2377 17009
+// @errors: 2377 17009 -- TS catches missing super() call
 declare class Parent {}
 // ---cut---
 class Child extends Parent {
@@ -33,7 +33,7 @@ class Child extends Parent {
 ```
 
 ```ts
-// @errors: 2377 17009
+// @errors: 2377 17009 -- TS catches missing super() call
 declare class Parent {
 	constructor(name: string);
 }
@@ -46,7 +46,7 @@ class Child extends Parent {
 ```
 
 ```ts
-// @errors: 2335
+// @errors: 2335 -- super() not allowed in non-derived class
 class Example {
 	constructor() {
 		super();
@@ -58,7 +58,7 @@ class Example {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2339
+// @errors: 2339 -- undeclared class field
 declare class Parent {}
 // ---cut---
 class Child extends Parent {
@@ -70,7 +70,7 @@ class Child extends Parent {
 ```
 
 ```ts
-// @errors: 2339
+// @errors: 2339 -- undeclared class field
 declare class Parent {
 	constructor(name: string);
 }
@@ -84,7 +84,7 @@ class Child extends Parent {
 ```
 
 ```ts
-// @errors: 2339
+// @errors: 2339 -- undeclared class field
 class Example {
 	constructor() {
 		this.value = 1;

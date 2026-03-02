@@ -19,7 +19,7 @@ Function declarations are hoisted to the top of their scope, and reassigning the
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2630
+// @errors: 2630 -- cannot assign to a function
 function calculate(value: number): number {
 	return value * 2;
 }
@@ -28,7 +28,7 @@ calculate = (value: number) => value * 3;
 ```
 
 ```ts
-// @errors: 2630
+// @errors: 2630 -- cannot assign to a function
 function processData(): void {
 	console.log("Processing...");
 }
@@ -37,7 +37,7 @@ processData = null;
 ```
 
 ```ts
-// @errors: 2630
+// @errors: 2630 -- cannot assign to a function
 function getValue(): number {
 	return 42;
 }
@@ -57,7 +57,7 @@ const result = calculate(10);
 ```
 
 ```ts
-// @errors: 2588
+// @errors: 2588 -- cannot assign to const
 const processData = function (): void {
 	console.log("Processing...");
 };

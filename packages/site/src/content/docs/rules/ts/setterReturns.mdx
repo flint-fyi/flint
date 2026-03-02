@@ -22,7 +22,7 @@ This rule reports when a setter contains a `return` statement with a value.
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2408
+// @errors: 2408 -- setter cannot return a value
 const object = {
 	set value(val) {
 		return val;
@@ -31,7 +31,7 @@ const object = {
 ```
 
 ```ts
-// @errors: 2408
+// @errors: 2408 -- setter cannot return a value
 class Example {
 	set name(value) {
 		return value;
@@ -40,7 +40,7 @@ class Example {
 ```
 
 ```ts
-// @errors: 2408 2551
+// @errors: 2408 2551 -- setter cannot return, property typo
 class Example {
 	set value(val) {
 		if (val > 0) {
@@ -55,7 +55,7 @@ class Example {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2551
+// @errors: 2551 -- property typo (did you mean?)
 const object = {
 	set value(val) {
 		this._value = val;
@@ -64,7 +64,7 @@ const object = {
 ```
 
 ```ts
-// @errors: 2551
+// @errors: 2551 -- property typo (did you mean?)
 class Example {
 	set name(value) {
 		this._name = value;
@@ -73,7 +73,7 @@ class Example {
 ```
 
 ```ts
-// @errors: 2551
+// @errors: 2551 -- property typo (did you mean?)
 const object = {
 	set value(val) {
 		if (!val) {

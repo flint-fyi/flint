@@ -20,7 +20,7 @@ In non-strict mode, it will silently fail and return false without actually dele
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 1102 2703
+// @errors: 1102 2703 -- 'delete' on identifier forbidden in strict mode
 let count = 5;
 delete count;
 
@@ -33,7 +33,7 @@ function calculate(value: number) {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2322 2790
+// @errors: 2322 2790 -- delete operand must be optional
 let count = 5;
 count = undefined;
 

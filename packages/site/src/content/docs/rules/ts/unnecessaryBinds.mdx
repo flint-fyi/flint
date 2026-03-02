@@ -44,7 +44,7 @@ const handler = function () {
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2532
+// @errors: 2532 -- object is possibly undefined
 declare const context: Record<string, unknown>;
 // ---cut---
 const callback = (() => {
@@ -56,7 +56,7 @@ const callback = (() => {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2532
+// @errors: 2532 -- object is possibly undefined
 const callback = () => {
 	this.process();
 };

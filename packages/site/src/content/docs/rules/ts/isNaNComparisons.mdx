@@ -21,7 +21,7 @@ To reliably check if a value is `NaN`, use `Number.isNaN()` instead.
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2845
+// @errors: 2845 -- NaN comparison always returns false/true
 declare const value: number;
 // ---cut---
 if (value === NaN) {
@@ -30,7 +30,7 @@ if (value === NaN) {
 ```
 
 ```ts
-// @errors: 2845
+// @errors: 2845 -- NaN comparison always returns false/true
 declare const result: number;
 // ---cut---
 const isNotANumber = result !== NaN;

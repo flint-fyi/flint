@@ -19,7 +19,7 @@ Use `!(left in right)` or `!(left instanceof Right)` to negate the relation as i
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2360 2358
+// @errors: 2360 2358 -- TS catches invalid operand types for in/instanceof
 declare class Constructor {}
 declare const key: string;
 declare const object: Record<string, unknown>;

@@ -32,7 +32,7 @@ function* generatorThatReturns() {
 ```
 
 ```ts
-// @errors: 2339
+// @errors: 2339 -- undeclared class field
 class Collection {
 	*iterator() {
 		this.process();
@@ -60,7 +60,7 @@ function* range(start: number, end: number) {
 ```
 
 ```ts
-// @errors: 2339
+// @errors: 2339 -- undeclared class field
 class Collection {
 	*iterator() {
 		yield* this.items;

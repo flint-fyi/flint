@@ -21,12 +21,12 @@ This is required for WCAG 2.4.3 compliance.
 <TabItem label="❌ Incorrect">
 
 ```tsx
-// @errors: 2322
+// @errors: 2322 -- string value not assignable to number prop
 <span tabIndex="5">content</span>
 ```
 
 ```tsx
-// @errors: 2322
+// @errors: 2322 -- string value not assignable to number prop
 <span tabIndex="1">content</span>
 ```
 
@@ -38,12 +38,12 @@ This is required for WCAG 2.4.3 compliance.
 <TabItem label="✅ Correct">
 
 ```tsx
-// @errors: 2322
+// @errors: 2322 -- string value not assignable to number prop
 <span tabIndex="0">content</span>
 ```
 
 ```tsx
-// @errors: 2322
+// @errors: 2322 -- string value not assignable to number prop
 <span tabIndex="-1">content</span>
 ```
 

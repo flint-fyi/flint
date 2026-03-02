@@ -34,7 +34,7 @@ const value = obj["__proto__"];
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2448
+// @errors: 2448 -- variable used before declaration
 declare const prototype: object;
 // ---cut---
 const proto = Object.getPrototypeOf(obj);

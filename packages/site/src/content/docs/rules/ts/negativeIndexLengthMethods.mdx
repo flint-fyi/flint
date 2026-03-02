@@ -62,7 +62,7 @@ values.slice(-2, -1);
 ```
 
 ```ts
-// @errors: 2550
+// @errors: 2550 -- did you mean a different method?
 const values = [1, 2, 3];
 values.at(-1);
 ```
@@ -73,7 +73,7 @@ values.splice(-1, 1);
 ```
 
 ```ts
-// @errors: 2550
+// @errors: 2550 -- did you mean a different method?
 const values = [1, 2, 3];
 values.with(-1, 99);
 ```

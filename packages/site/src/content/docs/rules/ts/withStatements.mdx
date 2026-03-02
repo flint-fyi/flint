@@ -20,7 +20,7 @@ If an object doesn't have an expected variable, you'll end up modifying a global
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 1101 2410
+// @errors: 1101 2410 -- 'with' statement forbidden in strict/module mode
 declare const container: Record<string, Record<string, unknown>>;
 // ---cut---
 with (container.property) {

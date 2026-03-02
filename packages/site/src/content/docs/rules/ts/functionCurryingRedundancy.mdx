@@ -58,7 +58,7 @@ callback("hello");
 ```
 
 ```ts
-// @errors: 2683
+// @errors: 2683 -- 'this' implicitly has type 'any'
 // Using .call() with a meaningful context
 const obj = { value: 10 };
 function getValue() {
