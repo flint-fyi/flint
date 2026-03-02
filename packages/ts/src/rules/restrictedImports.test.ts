@@ -291,6 +291,252 @@ import * as ns from "./restricted";
 * import is invalid because 'a', 'b' from './restricted' is restricted. Import specific allowed names.
 `,
 		},
+		// from: "file" — side-effect import
+		{
+			code: `
+import "./restricted";
+`,
+			files: {
+				"restricted.ts": `export const x = 42;`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "file",
+							path: "./restricted.ts",
+						},
+					},
+				],
+			},
+			snapshot: `
+import "./restricted";
+~~~~~~~~~~~~~~~~~~~~~~
+'./restricted' import is restricted.
+`,
+		},
+		// from: "package" — named import with name restriction
+		{
+			code: `
+import { restricted } from "test-pkg";
+`,
+			files: {
+				"test-pkg.d.ts": `declare module "test-pkg" { export const restricted: number; export const allowed: number; }`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "package",
+							name: "restricted",
+							package: "test-pkg",
+						},
+					},
+				],
+			},
+			snapshot: `
+import { restricted } from "test-pkg";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'restricted' import from 'test-pkg' is restricted.
+`,
+		},
+		// from: "package" — whole-module restriction on named import
+		{
+			code: `
+import { anything } from "test-pkg";
+`,
+			files: {
+				"test-pkg.d.ts": `declare module "test-pkg" { export const anything: number; }`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "package",
+							package: "test-pkg",
+						},
+					},
+				],
+			},
+			snapshot: `
+import { anything } from "test-pkg";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'anything' import from 'test-pkg' is restricted.
+`,
+		},
+		// from: "package" — namespace import with whole-module restriction
+		{
+			code: `
+import * as pkg from "test-pkg";
+`,
+			files: {
+				"test-pkg.d.ts": `declare module "test-pkg" { export const a: number; }`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "package",
+							package: "test-pkg",
+						},
+					},
+				],
+			},
+			snapshot: `
+import * as pkg from "test-pkg";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'test-pkg' import is restricted.
+`,
+		},
+		// from: "package" — namespace import with name restriction
+		{
+			code: `
+import * as pkg from "test-pkg";
+`,
+			files: {
+				"test-pkg.d.ts": `declare module "test-pkg" { export const badExport: number; }`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "package",
+							name: "badExport",
+							package: "test-pkg",
+						},
+					},
+				],
+			},
+			snapshot: `
+import * as pkg from "test-pkg";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* import is invalid because 'badExport' from 'test-pkg' is restricted.
+`,
+		},
+		// from: "package" — with custom message
+		{
+			code: `
+import { restricted } from "test-pkg";
+`,
+			files: {
+				"test-pkg.d.ts": `declare module "test-pkg" { export const restricted: number; }`,
+			},
+			options: {
+				restrictions: [
+					{
+						message: "Use alternative-pkg instead.",
+						specifier: {
+							from: "package",
+							name: "restricted",
+							package: "test-pkg",
+						},
+					},
+				],
+			},
+			snapshot: `
+import { restricted } from "test-pkg";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'restricted' import from 'test-pkg' is restricted. Use alternative-pkg instead.
+`,
+		},
+		// from: "package" — export { x } from restricted package
+		{
+			code: `
+export { restricted } from "test-pkg";
+`,
+			files: {
+				"test-pkg.d.ts": `declare module "test-pkg" { export const restricted: number; }`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "package",
+							name: "restricted",
+							package: "test-pkg",
+						},
+					},
+				],
+			},
+			snapshot: `
+export { restricted } from "test-pkg";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'restricted' import from 'test-pkg' is restricted.
+`,
+		},
+		// from: "package" — export * from restricted package
+		{
+			code: `
+export * from "test-pkg";
+`,
+			files: {
+				"test-pkg.d.ts": `declare module "test-pkg" { export const a: number; }`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "package",
+							package: "test-pkg",
+						},
+					},
+				],
+			},
+			snapshot: `
+export * from "test-pkg";
+~~~~~~~~~~~~~~~~~~~~~~~~~
+'test-pkg' import is restricted.
+`,
+		},
+		// from: "package" — side-effect import
+		{
+			code: `
+import "test-pkg";
+`,
+			files: {
+				"test-pkg.d.ts": `declare module "test-pkg" { export const x: number; }`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "package",
+							package: "test-pkg",
+						},
+					},
+				],
+			},
+			snapshot: `
+import "test-pkg";
+~~~~~~~~~~~~~~~~~~
+'test-pkg' import is restricted.
+`,
+		},
+		// from: "package" — value import restricted even with allowTypeImports
+		{
+			code: `
+import { restricted } from "test-pkg";
+`,
+			files: {
+				"test-pkg.d.ts": `declare module "test-pkg" { export const restricted: number; export type MyType = string; }`,
+			},
+			options: {
+				restrictions: [
+					{
+						allowTypeImports: true,
+						specifier: {
+							from: "package",
+							package: "test-pkg",
+						},
+					},
+				],
+			},
+			snapshot: `
+import { restricted } from "test-pkg";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'restricted' import from 'test-pkg' is restricted.
+`,
+		},
 	],
 	valid: [
 		{
@@ -387,6 +633,95 @@ import * as ns from "./restricted";
 						specifier: {
 							from: "file",
 							path: "./restricted.ts",
+						},
+					},
+				],
+			},
+		},
+		// from: "file" — side-effect import from non-restricted file
+		{
+			code: `import "./allowed";`,
+			files: {
+				"allowed.ts": `export const x = 42;`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "file",
+							path: "./restricted.ts",
+						},
+					},
+				],
+			},
+		},
+		// from: "package" — import from non-restricted package
+		{
+			code: `import { something } from "other-pkg";`,
+			files: {
+				"other-pkg.d.ts": `declare module "other-pkg" { export const something: number; }`,
+				"test-pkg.d.ts": `declare module "test-pkg" { export const x: number; }`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "package",
+							package: "test-pkg",
+						},
+					},
+				],
+			},
+		},
+		// from: "package" — import unrestricted name from restricted package
+		{
+			code: `import { allowed } from "test-pkg";`,
+			files: {
+				"test-pkg.d.ts": `declare module "test-pkg" { export const allowed: number; export const restricted: number; }`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "package",
+							name: "restricted",
+							package: "test-pkg",
+						},
+					},
+				],
+			},
+		},
+		// from: "package" — type-only import with allowTypeImports
+		{
+			code: `import type { MyType } from "test-pkg";`,
+			files: {
+				"test-pkg.d.ts": `declare module "test-pkg" { export type MyType = string; }`,
+			},
+			options: {
+				restrictions: [
+					{
+						allowTypeImports: true,
+						specifier: {
+							from: "package",
+							package: "test-pkg",
+						},
+					},
+				],
+			},
+		},
+		// from: "package" — name restriction doesn't apply to side-effect imports
+		{
+			code: `import "test-pkg";`,
+			files: {
+				"test-pkg.d.ts": `declare module "test-pkg" { export const restricted: number; }`,
+			},
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "package",
+							name: "restricted",
+							package: "test-pkg",
 						},
 					},
 				],
