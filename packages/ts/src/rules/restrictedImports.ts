@@ -1,3 +1,4 @@
+import { normalizePath } from "@flint.fyi/core";
 import {
 	declarationIncludesGlobal,
 	getTSNodeRange,
@@ -50,9 +51,13 @@ const restrictionSchema = z.object({
 
 type Restriction = z.infer<typeof restrictionSchema>;
 
-function getSpecifierNames(
-	specifier: TypeOrValueSpecifier,
-): string[] | undefined {
+// Location-checking helpers follow the same approach as @typescript-eslint/type-utils.
+// We can't use typeMatchesSpecifier directly because it operates on ts.Type objects
+// and checks the type's symbol name, which doesn't match variable names for value
+// imports with primitive/structural types (e.g., `const x = 42` has type "number",
+// not "x").
+
+function getSpecifierNames(specifier: TypeOrValueSpecifier) {
 	if (specifier.name === undefined) {
 		return undefined;
 	}
@@ -60,46 +65,82 @@ function getSpecifierNames(
 	return Array.isArray(specifier.name) ? specifier.name : [specifier.name];
 }
 
+function isDeclaredInModuleBlock(
+	declaration: ts.Declaration,
+	packageName: string,
+) {
+	let current: ts.Node = declaration;
+	while (!ts.isSourceFile(current)) {
+		if (
+			ts.isModuleDeclaration(current) &&
+			!(current.flags & ts.NodeFlags.Namespace) &&
+			ts.isStringLiteral(current.name) &&
+			current.name.text === packageName
+		) {
+			return true;
+		}
+		current = current.parent;
+	}
+	return false;
+}
+
 function isFromFile(
-	declarationFileName: string,
+	sourceFile: ts.SourceFile,
 	specifiedPath: string | undefined,
 	program: ts.Program,
-): boolean {
+) {
 	if (specifiedPath === undefined) {
 		return (
-			!declarationFileName.includes("/node_modules/") &&
-			!/\/lib\.[^/]*\.d\.ts$/.test(declarationFileName)
+			!sourceFile.fileName.includes("/node_modules/") &&
+			!program.isSourceFileDefaultLibrary(sourceFile)
 		);
 	}
 
-	const absolutePath = path.resolve(
-		program.getCurrentDirectory(),
-		specifiedPath,
-	);
+	const caseSensitive = ts.sys.useCaseSensitiveFileNames;
 	return (
-		normalizePath(declarationFileName) === normalizePath(absolutePath) ||
-		normalizePath(declarationFileName) ===
-			normalizePath(absolutePath.replace(/\.ts$/, ""))
+		normalizePath(sourceFile.fileName, caseSensitive) ===
+		normalizePath(
+			path.resolve(program.getCurrentDirectory(), specifiedPath),
+			caseSensitive,
+		)
 	);
 }
 
-function isFromPackage(fileName: string, packageName: string): boolean {
-	if (fileName.includes(`/node_modules/${packageName}/`)) {
+function isFromPackage(
+	declaration: ts.Declaration,
+	packageName: string,
+	program: ts.Program,
+) {
+	if (isDeclaredInModuleBlock(declaration, packageName)) {
 		return true;
 	}
 
-	if (!packageName.startsWith("@")) {
-		if (fileName.includes(`/node_modules/@types/${packageName}/`)) {
-			return true;
-		}
-	} else {
-		const normalized = packageName.replace("@", "").replace("/", "__");
-		if (fileName.includes(`/node_modules/@types/${normalized}/`)) {
-			return true;
-		}
+	const sourceFile = declaration.getSourceFile();
+
+	if (!program.isSourceFileFromExternalLibrary(sourceFile)) {
+		return false;
 	}
 
-	return false;
+	const typesPackageName = packageName.replace(/^@([^/]+)\//, "$1__");
+
+	// Use the program's sourceFileToPackageName mapping when available,
+	// following the same approach as @typescript-eslint/type-utils.
+	const pkgName = (
+		program as unknown as {
+			sourceFileToPackageName?: ReadonlyMap<string, string>;
+		}
+	).sourceFileToPackageName?.get(
+		(sourceFile as unknown as { path: string }).path,
+	);
+
+	if (pkgName != null) {
+		return pkgName === packageName || pkgName === typesPackageName;
+	}
+
+	return (
+		sourceFile.fileName.includes(`/node_modules/${packageName}/`) ||
+		sourceFile.fileName.includes(`/node_modules/@types/${typesPackageName}/`)
+	);
 }
 
 function matchesSpecifier(
@@ -107,7 +148,7 @@ function matchesSpecifier(
 	declarations: ts.Declaration[],
 	specifier: TypeOrValueSpecifier,
 	program: ts.Program,
-): boolean {
+) {
 	const names = getSpecifierNames(specifier);
 	if (
 		names !== undefined &&
@@ -117,28 +158,21 @@ function matchesSpecifier(
 	}
 
 	return declarations.some((declaration) => {
-		const fileName = declaration.getSourceFile().fileName;
 		switch (specifier.from) {
 			case "file":
-				return isFromFile(fileName, specifier.path, program);
+				return isFromFile(declaration.getSourceFile(), specifier.path, program);
 			case "lib":
 				return declarationIncludesGlobal(declaration);
 			case "package":
-				return isFromPackage(fileName, specifier.package);
+				return isFromPackage(declaration, specifier.package, program);
 		}
 	});
-}
-
-function normalizePath(filePath: string): string {
-	return filePath
-		.replace(/\\/g, "/")
-		.replace(/\/index\.(?:ts|js|tsx|jsx)$/, "");
 }
 
 function resolveModuleDeclarations(
 	moduleSpecifier: ts.Expression,
 	typeChecker: ts.TypeChecker,
-): ts.Declaration[] | undefined {
+) {
 	const symbol = typeChecker.getSymbolAtLocation(moduleSpecifier);
 	return symbol?.getDeclarations();
 }
@@ -146,7 +180,7 @@ function resolveModuleDeclarations(
 function resolveSymbolDeclarations(
 	nameNode: ts.Node,
 	typeChecker: ts.TypeChecker,
-): ts.Declaration[] | undefined {
+) {
 	let symbol = typeChecker.getSymbolAtLocation(nameNode);
 	if (!symbol) {
 		return undefined;
