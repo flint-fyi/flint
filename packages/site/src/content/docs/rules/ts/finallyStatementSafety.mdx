@@ -20,7 +20,7 @@ The `finally` block always executes, and its control flow statements take preced
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const fetchData: any;
+declare const fetchData: () => unknown;
 // ---cut---
 function processData() {
 	try {
@@ -44,8 +44,8 @@ function handleError() {
 ```
 
 ```ts
-declare const items: any;
-declare const processItem: any;
+declare const items: unknown[];
+declare const processItem: (item: unknown) => void;
 // ---cut---
 for (let i = 0; i < items.length; i++) {
 	try {
@@ -60,8 +60,8 @@ for (let i = 0; i < items.length; i++) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const cleanup: any;
-declare const fetchData: any;
+declare const cleanup: () => void;
+declare const fetchData: () => unknown;
 // ---cut---
 function processData() {
 	try {
@@ -73,7 +73,7 @@ function processData() {
 ```
 
 ```ts
-declare const cleanup: any;
+declare const cleanup: () => void;
 // ---cut---
 function handleError() {
 	try {
@@ -88,9 +88,9 @@ function handleError() {
 ```
 
 ```ts
-declare const cleanup: any;
-declare const items: any;
-declare const processItem: any;
+declare const cleanup: () => void;
+declare const items: unknown[];
+declare const processItem: (item: unknown) => void;
 // ---cut---
 for (let i = 0; i < items.length; i++) {
 	try {

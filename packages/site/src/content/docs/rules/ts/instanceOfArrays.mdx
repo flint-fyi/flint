@@ -25,7 +25,7 @@ The `Array.isArray()` method reliably detects arrays regardless of which realm t
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const value: any;
+declare const value: unknown;
 // ---cut---
 if (value instanceof Array) {
 	value.forEach(console.log);
@@ -33,7 +33,7 @@ if (value instanceof Array) {
 ```
 
 ```ts
-declare const data: any;
+declare const data: unknown;
 // ---cut---
 const isArray = data instanceof Array;
 ```
@@ -42,7 +42,7 @@ const isArray = data instanceof Array;
 <TabItem label="✅ Correct">
 
 ```ts
-declare const value: any;
+declare const value: unknown;
 // ---cut---
 if (Array.isArray(value)) {
 	value.forEach(console.log);
@@ -50,7 +50,7 @@ if (Array.isArray(value)) {
 ```
 
 ```ts
-declare const data: any;
+declare const data: unknown;
 // ---cut---
 const isArray = Array.isArray(data);
 ```

@@ -60,19 +60,19 @@ const text = "123";
 ```
 
 ```ts
-declare const someVariable: any;
+declare const someVariable: string;
 // ---cut---
 const text = `${someVariable}`;
 ```
 
 ```ts
-declare const variable: any;
+declare const variable: number;
 // ---cut---
 const value = BigInt(variable);
 ```
 
 ```ts
-declare const variable: any;
+declare const variable: unknown;
 // ---cut---
 const value = Boolean(variable);
 ```

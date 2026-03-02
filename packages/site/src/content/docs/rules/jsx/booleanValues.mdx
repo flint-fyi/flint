@@ -27,7 +27,8 @@ The shorthand syntax is more concise and idiomatic in JSX, reducing visual noise
 ```
 
 ```tsx
-declare const Component: any;
+import React from "react";
+declare const Component: React.FC;
 // ---cut---
 <Component isActive={true} />;
 ```
@@ -44,7 +45,8 @@ declare const Component: any;
 ```
 
 ```tsx
-declare const Component: any;
+import React from "react";
+declare const Component: React.FC;
 // ---cut---
 <Component isActive />;
 ```
@@ -54,8 +56,9 @@ declare const Component: any;
 ```
 
 ```tsx
-declare const Component: any;
-declare const someCondition: any;
+import React from "react";
+declare const Component: React.FC;
+declare const someCondition: boolean;
 // ---cut---
 <Component isActive={someCondition} />;
 ```

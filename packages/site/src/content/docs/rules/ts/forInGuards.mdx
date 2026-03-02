@@ -19,8 +19,8 @@ This can lead to unexpected items being iterated over when the object inherits f
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const doSomething: any;
-declare const object: any;
+declare const doSomething: (key: string) => void;
+declare const object: Record<string, unknown>;
 // ---cut---
 for (const key in object) {
 	doSomething(key);
@@ -28,8 +28,8 @@ for (const key in object) {
 ```
 
 ```ts
-declare const doSomething: any;
-declare const object: any;
+declare const doSomething: (key: string) => void;
+declare const object: Record<string, unknown>;
 // ---cut---
 for (const key in object) {
 	doSomething(key);
@@ -37,10 +37,10 @@ for (const key in object) {
 ```
 
 ```ts
-declare const condition: any;
-declare const doSomething: any;
-declare const doSomethingElse: any;
-declare const object: any;
+declare const condition: boolean;
+declare const doSomething: (key: string) => void;
+declare const doSomethingElse: (key: string) => void;
+declare const object: Record<string, unknown>;
 // ---cut---
 for (const key in object) {
 	if (condition) {
@@ -54,8 +54,8 @@ for (const key in object) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const doSomething: any;
-declare const object: any;
+declare const doSomething: (key: string) => void;
+declare const object: Record<string, unknown>;
 // ---cut---
 for (const key in object) {
 	if (Object.hasOwn(object, key)) {
@@ -65,8 +65,8 @@ for (const key in object) {
 ```
 
 ```ts
-declare const doSomething: any;
-declare const object: any;
+declare const doSomething: (key: string) => void;
+declare const object: Record<string, unknown>;
 // ---cut---
 for (const key in object) {
 	if (!Object.hasOwn(object, key)) {
@@ -77,8 +77,8 @@ for (const key in object) {
 ```
 
 ```ts
-declare const doSomething: any;
-declare const object: any;
+declare const doSomething: (key: string) => void;
+declare const object: Record<string, unknown>;
 // ---cut---
 for (const key in object) {
 	if (Object.prototype.hasOwnProperty.call(object, key)) {
@@ -88,13 +88,13 @@ for (const key in object) {
 ```
 
 ```ts
-declare const object: any;
+declare const object: Record<string, unknown>;
 // ---cut---
 for (const key in object);
 ```
 
 ```ts
-declare const object: any;
+declare const object: Record<string, unknown>;
 // ---cut---
 for (const key in object) {
 }

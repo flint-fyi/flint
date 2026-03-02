@@ -21,32 +21,32 @@ This can lead to unexpected behavior and runtime errors that are difficult to de
 {/* prettier-ignore-start */}
 
 ```ts
-declare const doSomething: any;
-declare const expression: any;
-declare const identifier: any;
+declare const doSomething: () => void;
+declare const expression: string;
+declare const identifier: (arg: string) => string;
 // ---cut---
 const value = identifier(expression)
 doSomething();
 ```
 
 ```ts
-declare const getArray: any;
+declare const getArray: { value: string }[];
 // ---cut---
 const data = getArray
 [0].value;
 ```
 
 ```ts
-declare const calculate: any;
+declare const calculate: (strings: TemplateStringsArray) => string;
 // ---cut---
 const result = calculate
 `template literal`;
 ```
 
 ```ts
-declare const b: any;
-declare const c: any;
-declare const d: any;
+declare const b: (arg: { execute(): void }) => { execute(): void };
+declare const c: { execute(): void } | undefined;
+declare const d: { execute(): void };
 // ---cut---
 function process() {
 	const a = b
@@ -60,8 +60,8 @@ function process() {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const expression: any;
-declare const identifier: any;
+declare const expression: { doSomething(): void };
+declare const identifier: string;
 // ---cut---
 const value = identifier;
 expression.doSomething();
@@ -69,23 +69,23 @@ expression.doSomething();
 
 ```ts
 // @errors: 2551
-declare const getArray: any;
+declare const getArray: { value: string }[];
 // ---cut---
 const data = getArray;
 [0].value;
 ```
 
 ```ts
-declare const calculate: any;
+declare const calculate: (strings: TemplateStringsArray) => string;
 // ---cut---
 const result = calculate;
 `template literal`;
 ```
 
 ```ts
-declare const b: any;
-declare const c: any;
-declare const d: any;
+declare const b: string;
+declare const c: { execute(): void } | undefined;
+declare const d: { execute(): void };
 // ---cut---
 function process() {
 	const a = b;

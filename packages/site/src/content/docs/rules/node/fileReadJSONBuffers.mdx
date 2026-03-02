@@ -23,25 +23,25 @@ The file can be read as a buffer, and `JSON.parse()` will handle the buffer dire
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const fs: any;
+import fs from "node:fs/promises";
 // ---cut---
 const packageJson = JSON.parse(await fs.readFile("./package.json", "utf8"));
 ```
 
 ```ts
-declare const fs: any;
+import fs from "node:fs/promises";
 // ---cut---
 const data = JSON.parse(await fs.readFile("./data.json", "utf-8"));
 ```
 
 ```ts
-declare const fs: any;
+import fs from "node:fs";
 // ---cut---
 const config = JSON.parse(fs.readFileSync("./config.json", "utf8"));
 ```
 
 ```ts
-declare const fs: any;
+import fs from "node:fs";
 // ---cut---
 const settings = JSON.parse(
 	fs.readFileSync("./settings.json", { encoding: "utf-8" }),
@@ -52,25 +52,25 @@ const settings = JSON.parse(
 <TabItem label="✅ Correct">
 
 ```ts
-declare const fs: any;
+import fs from "node:fs/promises";
 // ---cut---
 const packageJson = JSON.parse(await fs.readFile("./package.json"));
 ```
 
 ```ts
-declare const fs: any;
+import fs from "node:fs/promises";
 // ---cut---
 const data = JSON.parse(await fs.readFile("./data.json"));
 ```
 
 ```ts
-declare const fs: any;
+import fs from "node:fs";
 // ---cut---
 const config = JSON.parse(fs.readFileSync("./config.json"));
 ```
 
 ```ts
-declare const fs: any;
+import fs from "node:fs";
 // ---cut---
 const settings = JSON.parse(fs.readFileSync("./settings.json"));
 ```

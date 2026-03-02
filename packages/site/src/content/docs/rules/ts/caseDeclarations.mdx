@@ -21,9 +21,9 @@ Wrapping the contents of case clauses in curly braces creates a proper block sco
 
 ```ts
 // @errors: 2451 2454
-declare const fetchAdminData: any;
-declare const fetchUserData: any;
-declare const processData: any;
+declare const fetchAdminData: () => unknown;
+declare const fetchUserData: () => unknown;
+declare const processData: (data: unknown) => void;
 // ---cut---
 function processValue(value: number): string {
 	switch (value) {
@@ -57,9 +57,9 @@ function handleType(type: string): void {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const fetchAdminData: any;
-declare const fetchUserData: any;
-declare const processData: any;
+declare const fetchAdminData: () => unknown;
+declare const fetchUserData: () => unknown;
+declare const processData: (data: unknown) => void;
 // ---cut---
 function processValue(value: number): string {
 	switch (value) {

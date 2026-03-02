@@ -23,7 +23,8 @@ This makes the JSX more readable and maintainable by following the standard JSX 
 ```
 
 ```tsx
-declare const Component: any;
+import React from "react";
+declare const Component: React.FC;
 // ---cut---
 <Component children={<span>Test</span>} />;
 ```
@@ -40,7 +41,8 @@ declare const Component: any;
 ```
 
 ```tsx
-declare const Component: any;
+import React from "react";
+declare const Component: React.FC;
 // ---cut---
 <Component>
 	<span>Test</span>

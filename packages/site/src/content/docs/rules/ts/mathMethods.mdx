@@ -26,38 +26,38 @@ This rule flags legacy patterns that can be replaced with:
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const x: any;
+declare const x: number;
 // ---cut---
 const log10Value = Math.log(x) * Math.LOG10E;
 ```
 
 ```ts
-declare const x: any;
+declare const x: number;
 // ---cut---
 const log10Value = Math.log(x) / Math.LN10;
 ```
 
 ```ts
-declare const x: any;
+declare const x: number;
 // ---cut---
 const log2Value = Math.log(x) * Math.LOG2E;
 ```
 
 ```ts
-declare const x: any;
+declare const x: number;
 // ---cut---
 const log2Value = Math.log(x) / Math.LN2;
 ```
 
 ```ts
-declare const x: any;
+declare const x: number;
 // ---cut---
 const absolute = Math.sqrt(x ** 2);
 ```
 
 ```ts
-declare const x: any;
-declare const y: any;
+declare const x: number;
+declare const y: number;
 // ---cut---
 const distance = Math.sqrt(x ** 2 + y ** 2);
 ```
@@ -66,26 +66,26 @@ const distance = Math.sqrt(x ** 2 + y ** 2);
 <TabItem label="✅ Correct">
 
 ```ts
-declare const x: any;
+declare const x: number;
 // ---cut---
 const log10Value = Math.log10(x);
 ```
 
 ```ts
-declare const x: any;
+declare const x: number;
 // ---cut---
 const log2Value = Math.log2(x);
 ```
 
 ```ts
-declare const x: any;
+declare const x: number;
 // ---cut---
 const absolute = Math.abs(x);
 ```
 
 ```ts
-declare const x: any;
-declare const y: any;
+declare const x: number;
+declare const y: number;
 // ---cut---
 const distance = Math.hypot(x, y);
 ```

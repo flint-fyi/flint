@@ -22,28 +22,28 @@ It only reports cases where the `this` argument is not changed, meaning the spre
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const args: any;
-declare const foo: any;
+declare const args: unknown[];
+declare const foo: (...args: unknown[]) => void;
 // ---cut---
 foo.apply(undefined, args);
 ```
 
 ```ts
-declare const args: any;
-declare const foo: any;
+declare const args: unknown[];
+declare const foo: (...args: unknown[]) => void;
 // ---cut---
 foo.apply(null, args);
 ```
 
 ```ts
-declare const args: any;
-declare const obj: any;
+declare const args: unknown[];
+declare const obj: { foo: (...args: unknown[]) => void };
 // ---cut---
 obj.foo.apply(obj, args);
 ```
 
 ```ts
-declare const numbers: any;
+declare const numbers: number[];
 // ---cut---
 Math.max.apply(Math, numbers);
 ```
@@ -52,35 +52,35 @@ Math.max.apply(Math, numbers);
 <TabItem label="✅ Correct">
 
 ```ts
-declare const args: any;
-declare const foo: any;
+declare const args: unknown[];
+declare const foo: (...args: unknown[]) => void;
 // ---cut---
 foo(...args);
 ```
 
 ```ts
-declare const args: any;
-declare const obj: any;
+declare const args: unknown[];
+declare const obj: { foo: (...args: unknown[]) => void };
 // ---cut---
 obj.foo(...args);
 ```
 
 ```ts
-declare const numbers: any;
+declare const numbers: number[];
 // ---cut---
 Math.max(...numbers);
 ```
 
 ```ts
-declare const args: any;
-declare const foo: any;
-declare const otherThis: any;
+declare const args: unknown[];
+declare const foo: (...args: unknown[]) => void;
+declare const otherThis: unknown;
 // ---cut---
 foo.apply(otherThis, args);
 ```
 
 ```ts
-declare const foo: any;
+declare const foo: (...args: unknown[]) => void;
 // ---cut---
 foo.apply(null, [1, 2, 3]);
 ```

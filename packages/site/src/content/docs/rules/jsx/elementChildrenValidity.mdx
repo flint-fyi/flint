@@ -33,7 +33,8 @@ These elements, such as `<br>`, `<img>`, and `<input>`, are self-closing by defi
 ```
 
 ```tsx
-declare const expression: any;
+import React from "react";
+declare const expression: React.ReactNode;
 // ---cut---
 <hr>{expression}</hr>;
 ```

@@ -25,7 +25,7 @@ This rule encourages consistent use of `slice()` because:
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 const result = text.substr(1, 5);
 ```
@@ -34,7 +34,7 @@ const result = text.substr(1, 5);
 <TabItem label="✅ Correct">
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 const result = text.slice(1, 6);
 ```
@@ -48,7 +48,7 @@ const result = text.slice(1, 6);
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 const result = text.substring(1, 5);
 ```
@@ -57,7 +57,7 @@ const result = text.substring(1, 5);
 <TabItem label="✅ Correct">
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 const result = text.slice(1, 5);
 ```
@@ -71,7 +71,7 @@ const result = text.slice(1, 5);
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 const last = text.substring(text.length - 3);
 ```
@@ -80,7 +80,7 @@ const last = text.substring(text.length - 3);
 <TabItem label="✅ Correct">
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 const last = text.slice(-3);
 ```

@@ -19,10 +19,10 @@ Use `!(left in right)` or `!(left instanceof Right)` to negate the relation as i
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2322 2358
-declare const Constructor: any;
-declare const key: any;
-declare const object: any;
+// @errors: 2360 2358
+declare class Constructor {}
+declare const key: string;
+declare const object: Record<string, unknown>;
 // ---cut---
 if ((!key) in object) {
 }
@@ -38,9 +38,9 @@ if ((!key) in object) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const Constructor: any;
-declare const key: any;
-declare const object: any;
+declare class Constructor {}
+declare const key: string;
+declare const object: Record<string, unknown>;
 // ---cut---
 if (!(key in object)) {
 }

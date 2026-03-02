@@ -22,7 +22,7 @@ To reliably check if a value is `NaN`, use `Number.isNaN()` instead.
 
 ```ts
 // @errors: 2845
-declare const value: any;
+declare const value: number;
 // ---cut---
 if (value === NaN) {
 	console.log("value is NaN");
@@ -31,13 +31,13 @@ if (value === NaN) {
 
 ```ts
 // @errors: 2845
-declare const result: any;
+declare const result: number;
 // ---cut---
 const isNotANumber = result !== NaN;
 ```
 
 ```ts
-declare const value: any;
+declare const value: number;
 // ---cut---
 if (value > NaN) {
 	console.log("comparison result");
@@ -48,7 +48,7 @@ if (value > NaN) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const value: any;
+declare const value: number;
 // ---cut---
 if (Number.isNaN(value)) {
 	console.log("value is NaN");
@@ -56,7 +56,7 @@ if (Number.isNaN(value)) {
 ```
 
 ```ts
-declare const result: any;
+declare const result: number;
 // ---cut---
 const isNotANumber = !Number.isNaN(result);
 ```

@@ -28,7 +28,7 @@ This rule reports on any `JSON.parse(JSON.stringify())` that can be replaced wit
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const obj: any;
+declare const obj: Record<string, unknown>;
 // ---cut---
 const clone = JSON.parse(JSON.stringify(obj));
 ```
@@ -43,7 +43,7 @@ function deepCopy<T>(value: T): T {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const obj: any;
+declare const obj: Record<string, unknown>;
 // ---cut---
 const clone = structuredClone(obj);
 ```

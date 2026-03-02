@@ -25,8 +25,8 @@ This rule reports calls to `String.prototype.match()` and `RegExp.prototype.exec
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const pattern: any;
-declare const text: any;
+declare const pattern: RegExp;
+declare const text: string;
 // ---cut---
 if (pattern.exec(text)) {
 	console.log("found");
@@ -37,8 +37,8 @@ if (pattern.exec(text)) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const pattern: any;
-declare const text: any;
+declare const pattern: RegExp;
+declare const text: string;
 // ---cut---
 if (pattern.test(text)) {
 	console.log("found");
@@ -54,7 +54,7 @@ if (pattern.test(text)) {
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 if (text.match(/search/)) {
 	console.log("found");
@@ -65,7 +65,7 @@ if (text.match(/search/)) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 if (/search/.test(text)) {
 	console.log("found");
@@ -81,7 +81,7 @@ if (/search/.test(text)) {
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 const notFound = !text.match(/pattern/);
 ```
@@ -90,7 +90,7 @@ const notFound = !text.match(/pattern/);
 <TabItem label="✅ Correct">
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 const notFound = !/pattern/.test(text);
 ```
@@ -103,7 +103,7 @@ const notFound = !/pattern/.test(text);
 When the regex has a global flag, the rule reports but does not auto-fix because `.test()` behavior differs:
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 // Reports but does not auto-fix
 if (text.match(/pattern/g)) {
@@ -115,8 +115,8 @@ if (text.match(/pattern/g)) {
 Using the result of `exec()` or `match()` is valid:
 
 ```ts
-declare const pattern: any;
-declare const text: any;
+declare const pattern: RegExp;
+declare const text: string;
 // ---cut---
 const matches = text.match(/(\w+)/);
 const group = pattern.exec(text)?.[1];

@@ -19,13 +19,13 @@ The angle-bracket syntax is ambiguous with JSX and should be avoided.
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const raw: any;
+declare const raw: unknown;
 // ---cut---
 const value = <string>raw;
 ```
 
 ```ts
-declare const getData: any;
+declare const getData: () => unknown;
 // ---cut---
 const items = <Array<string>>getData();
 ```
@@ -34,13 +34,13 @@ const items = <Array<string>>getData();
 <TabItem label="✅ Correct">
 
 ```ts
-declare const raw: any;
+declare const raw: unknown;
 // ---cut---
 const value = raw as string;
 ```
 
 ```ts
-declare const getData: any;
+declare const getData: () => unknown;
 // ---cut---
 const items = getData() as Array<string>;
 ```

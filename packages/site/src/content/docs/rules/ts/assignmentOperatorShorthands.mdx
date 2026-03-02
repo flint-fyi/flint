@@ -27,16 +27,15 @@ value = value || 1;
 ```
 
 ```ts
-// @errors: 2749
-declare const Config: any;
-declare const getDefaultConfig: any;
+type Config = Record<string, unknown>;
+declare const getDefaultConfig: () => Config;
 // ---cut---
 let config: Config | undefined;
 config = config ?? getDefaultConfig();
 ```
 
 ```ts
-declare const isFeatureAvailable: any;
+declare const isFeatureAvailable: () => boolean;
 // ---cut---
 let enabled = false;
 enabled = enabled && isFeatureAvailable();
@@ -51,16 +50,15 @@ value ||= 1;
 ```
 
 ```ts
-// @errors: 2749
-declare const Config: any;
-declare const getDefaultConfig: any;
+type Config = Record<string, unknown>;
+declare const getDefaultConfig: () => Config;
 // ---cut---
 let config: Config | undefined;
 config ??= getDefaultConfig();
 ```
 
 ```ts
-declare const isFeatureAvailable: any;
+declare const isFeatureAvailable: () => boolean;
 // ---cut---
 let enabled = false;
 enabled &&= isFeatureAvailable();

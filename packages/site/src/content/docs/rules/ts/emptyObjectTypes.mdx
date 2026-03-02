@@ -67,9 +67,12 @@ type NonNullable<T> = T & {};
 ```
 
 ```ts
-// @errors: 2749
-declare const Bar: any;
-declare const Foo: any;
+declare interface Foo {
+	name: string;
+}
+declare interface Bar {
+	value: number;
+}
 // ---cut---
 // Empty interface extending multiple interfaces is allowed
 interface Combined extends Foo, Bar {}

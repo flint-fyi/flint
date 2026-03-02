@@ -20,7 +20,7 @@ This is often a mistake, such as forgetting to initialize a variable or assign t
 
 ```ts
 // @errors: 2454
-declare const processValue: any;
+declare const processValue: (value: unknown) => void;
 // ---cut---
 let value;
 console.log(value);
@@ -38,7 +38,7 @@ processValue(unassigned);
 <TabItem label="✅ Correct">
 
 ```ts
-declare const processValue: any;
+declare const processValue: (value: unknown) => void;
 // ---cut---
 let value = 42;
 console.log(value);

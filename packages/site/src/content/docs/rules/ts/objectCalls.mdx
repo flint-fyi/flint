@@ -50,7 +50,7 @@ const objectWithoutPrototype = Object.create(null);
 ```
 
 ```ts
-declare const source: any;
+declare const source: Record<string, unknown>;
 // ---cut---
 const copy = Object.assign({}, source);
 ```

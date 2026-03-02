@@ -24,7 +24,7 @@ This rule reports when:
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const items: any;
+declare const items: string[];
 // ---cut---
 const count = [...new Set(items)].length;
 ```
@@ -35,7 +35,7 @@ const count = [...uniqueItems].length;
 ```
 
 ```ts
-declare const items: any;
+declare const items: string[];
 // ---cut---
 const count = [...new Set(items)].length;
 ```
@@ -44,7 +44,7 @@ const count = [...new Set(items)].length;
 <TabItem label="✅ Correct">
 
 ```ts
-declare const items: any;
+declare const items: string[];
 // ---cut---
 const count = new Set(items).size;
 ```
@@ -55,14 +55,14 @@ const count = uniqueItems.size;
 ```
 
 ```ts
-declare const items: any;
+declare const items: string[];
 // ---cut---
 // Spread is fine when the array is actually used
 const uniqueArray = [...new Set(items)];
 ```
 
 ```ts
-declare const items: any;
+declare const items: string[];
 // ---cut---
 // Not a Set, so spreading to get length is acceptable
 const count = [...items].length;

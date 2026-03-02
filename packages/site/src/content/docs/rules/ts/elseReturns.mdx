@@ -34,9 +34,9 @@ function getValue(condition: boolean) {
 ```
 
 ```ts
-declare const compute: any;
-declare const defaultValue: any;
-declare const fallback: any;
+declare const compute: () => unknown;
+declare const defaultValue: () => unknown;
+declare const fallback: () => unknown;
 // ---cut---
 function process(a: boolean, b: boolean) {
 	if (a) {
@@ -63,9 +63,9 @@ function getValue(condition: boolean) {
 ```
 
 ```ts
-declare const compute: any;
-declare const defaultValue: any;
-declare const fallback: any;
+declare const compute: () => unknown;
+declare const defaultValue: () => unknown;
+declare const fallback: () => unknown;
 // ---cut---
 function process(a: boolean, b: boolean) {
 	if (a) {

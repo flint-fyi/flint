@@ -23,7 +23,7 @@ This rule reports indexed access on regex result arrays when the index correspon
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 const regex = /a(?<foo>b)c/;
 const match = regex.exec(text);
@@ -36,8 +36,8 @@ if (match) {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 18048
-declare const text: any;
+// @errors: 18048 -- .groups is possibly undefined on RegExpMatchArray
+declare const text: string;
 // ---cut---
 const regex = /a(?<foo>b)c/;
 const match = regex.exec(text);
@@ -65,7 +65,7 @@ if (result) {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 18048
+// @errors: 18048 -- .groups is possibly undefined on RegExpMatchArray
 const result = "text".match(/a(?<foo>b)c/);
 if (result) {
 	const value = result.groups.foo;
@@ -91,7 +91,7 @@ for (const match of matches) {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 18048
+// @errors: 18048 -- .groups is possibly undefined on RegExpMatchArray
 const matches = "text".matchAll(/a(?<foo>b)c/g);
 for (const match of matches) {
 	const value = match.groups.foo;
@@ -109,7 +109,7 @@ When a regex has both named and unnamed capturing groups, only access to the nam
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 const regex = /(a)(?<bar>b)c/;
 const match = regex.exec(text);
@@ -123,8 +123,8 @@ if (match) {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 18048
-declare const text: any;
+// @errors: 18048 -- .groups is possibly undefined on RegExpMatchArray
+declare const text: string;
 // ---cut---
 const regex = /(a)(?<bar>b)c/;
 const match = regex.exec(text);
@@ -142,8 +142,8 @@ if (match) {
 Using named groups correctly:
 
 ```ts
-// @errors: 18048
-declare const text: any;
+// @errors: 18048 -- .groups is possibly undefined on RegExpMatchArray
+declare const text: string;
 // ---cut---
 const regex = /a(?<foo>b)c/;
 const match = regex.exec(text);
@@ -155,7 +155,7 @@ if (match) {
 Accessing unnamed capturing groups by index:
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 const regex = /a(b)c/;
 const match = regex.exec(text);
@@ -167,7 +167,7 @@ if (match) {
 Accessing match index 0 (the full match):
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 const regex = /a(?<foo>b)c/;
 const match = regex.exec(text);

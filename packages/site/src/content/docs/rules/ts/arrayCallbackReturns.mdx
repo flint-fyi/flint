@@ -21,7 +21,7 @@ If you don't need the return value, consider using `forEach` instead.
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const values: any;
+declare const values: number[];
 // ---cut---
 const result = values.map((value) => {
 	console.log(value);
@@ -29,8 +29,8 @@ const result = values.map((value) => {
 ```
 
 ```ts
-declare const target: any;
-declare const values: any;
+declare const target: number;
+declare const values: number[];
 // ---cut---
 const found = values.find((value) => {
 	value === target;
@@ -38,7 +38,7 @@ const found = values.find((value) => {
 ```
 
 ```ts
-declare const values: any;
+declare const values: number[];
 // ---cut---
 const total = values.reduce((sum, value) => {
 	sum + value;
@@ -46,7 +46,7 @@ const total = values.reduce((sum, value) => {
 ```
 
 ```ts
-declare const values: any;
+declare const values: number[];
 // ---cut---
 const valid = values.every((value) => {
 	value > 0;
@@ -57,7 +57,7 @@ const valid = values.every((value) => {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const values: any;
+declare const values: number[];
 // ---cut---
 const result = values.map((value) => {
 	return value * 2;
@@ -65,14 +65,14 @@ const result = values.map((value) => {
 ```
 
 ```ts
-declare const values: any;
+declare const values: number[];
 // ---cut---
 const result = values.map((value) => value * 2);
 ```
 
 ```ts
-declare const target: any;
-declare const values: any;
+declare const target: number;
+declare const values: number[];
 // ---cut---
 const found = values.find((value) => {
 	return value === target;
@@ -80,7 +80,7 @@ const found = values.find((value) => {
 ```
 
 ```ts
-declare const values: any;
+declare const values: number[];
 // ---cut---
 const total = values.reduce((sum, value) => {
 	return sum + value;
@@ -88,7 +88,7 @@ const total = values.reduce((sum, value) => {
 ```
 
 ```ts
-declare const values: any;
+declare const values: number[];
 // ---cut---
 values.forEach((value) => {
 	console.log(value);

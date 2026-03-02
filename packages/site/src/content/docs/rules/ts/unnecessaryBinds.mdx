@@ -45,7 +45,7 @@ const handler = function () {
 
 ```ts
 // @errors: 2532
-declare const context: any;
+declare const context: Record<string, unknown>;
 // ---cut---
 const callback = (() => {
 	this.process();

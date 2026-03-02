@@ -21,7 +21,7 @@ These methods return `-1` when an element is not found, so checking against `-1`
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const values: any;
+declare const values: string[];
 // ---cut---
 const index = values.indexOf("test");
 if (index < 0) {
@@ -30,7 +30,7 @@ if (index < 0) {
 ```
 
 ```ts
-declare const values: any;
+declare const values: string[];
 // ---cut---
 const index = values.indexOf("test");
 if (index >= 0) {
@@ -39,7 +39,7 @@ if (index >= 0) {
 ```
 
 ```ts
-declare const values: any;
+declare const values: string[];
 // ---cut---
 const index = values.indexOf("test");
 if (index > -1) {
@@ -51,7 +51,7 @@ if (index > -1) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const values: any;
+declare const values: string[];
 // ---cut---
 const index = values.indexOf("test");
 if (index === -1) {
@@ -60,7 +60,7 @@ if (index === -1) {
 ```
 
 ```ts
-declare const values: any;
+declare const values: string[];
 // ---cut---
 const index = values.indexOf("test");
 if (index !== -1) {
@@ -69,7 +69,7 @@ if (index !== -1) {
 ```
 
 ```ts
-declare const values: any;
+declare const values: number[];
 // ---cut---
 if (values.findIndex((value) => value > 10) === -1) {
 	// not found

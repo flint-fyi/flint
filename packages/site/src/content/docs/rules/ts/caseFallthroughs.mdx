@@ -22,9 +22,9 @@ Intentional fallthrough can be indicated with a comment containing "falls throug
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const doSomething: any;
-declare const doSomethingElse: any;
-declare const value: any;
+declare const doSomething: () => void;
+declare const doSomethingElse: () => void;
+declare const value: number;
 // ---cut---
 switch (value) {
 	case 1:
@@ -36,8 +36,8 @@ switch (value) {
 ```
 
 ```ts
-declare const condition: any;
-declare const value: any;
+declare const condition: boolean;
+declare const value: number;
 // ---cut---
 switch (value) {
 	case 1:
@@ -53,9 +53,9 @@ switch (value) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const doSomething: any;
-declare const doSomethingElse: any;
-declare const value: any;
+declare const doSomething: () => void;
+declare const doSomethingElse: () => void;
+declare const value: number;
 // ---cut---
 switch (value) {
 	case 1:
@@ -68,8 +68,8 @@ switch (value) {
 ```
 
 ```ts
-declare const doSomething: any;
-declare const value: any;
+declare const doSomething: () => void;
+declare const value: number;
 // ---cut---
 switch (value) {
 	case 1:
@@ -80,9 +80,9 @@ switch (value) {
 ```
 
 ```ts
-declare const doSomething: any;
-declare const doSomethingElse: any;
-declare const value: any;
+declare const doSomething: () => void;
+declare const doSomethingElse: () => void;
+declare const value: number;
 // ---cut---
 switch (value) {
 	case 1:
@@ -96,7 +96,9 @@ switch (value) {
 
 ```ts
 // @errors: 1108
-declare const value: any;
+declare const first: () => number;
+declare const second: () => number;
+declare const value: number;
 // ---cut---
 switch (value) {
 	case 1:

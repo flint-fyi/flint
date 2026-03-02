@@ -19,8 +19,8 @@ In modern JavaScript and TypeScript, blocks primarily serve to create lexical sc
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const computeValue: any;
-declare const processValue: any;
+declare const computeValue: () => number;
+declare const processValue: (value: number) => void;
 // ---cut---
 {
 	const temporaryValue = computeValue();
@@ -29,7 +29,7 @@ declare const processValue: any;
 ```
 
 ```ts
-declare const calculate: any;
+declare const calculate: () => number;
 // ---cut---
 function processData() {
 	{
@@ -43,15 +43,15 @@ function processData() {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const computeValue: any;
-declare const processValue: any;
+declare const computeValue: () => number;
+declare const processValue: (value: number) => void;
 // ---cut---
 const temporaryValue = computeValue();
 processValue(temporaryValue);
 ```
 
 ```ts
-declare const calculate: any;
+declare const calculate: () => number;
 // ---cut---
 function processData() {
 	const result = calculate();
@@ -60,9 +60,9 @@ function processData() {
 ```
 
 ```ts
-declare const condition: any;
-declare const getValue: any;
-declare const processValue: any;
+declare const condition: boolean;
+declare const getValue: () => number;
+declare const processValue: (value: number) => void;
 // ---cut---
 // Valid: block is part of control flow
 if (condition) {
@@ -72,8 +72,8 @@ if (condition) {
 ```
 
 ```ts
-declare const getA: any;
-declare const type: any;
+declare const getA: () => string;
+declare const type: string;
 // ---cut---
 // Valid: block creates scope in switch case
 switch (type) {

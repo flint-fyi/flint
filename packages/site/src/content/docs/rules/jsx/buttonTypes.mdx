@@ -25,7 +25,7 @@ Specifying an explicit type makes the button's behavior clear and prevents accid
 ```
 
 ```tsx
-declare const handleClick: any;
+declare const handleClick: () => void;
 // ---cut---
 <button onClick={handleClick}>Submit</button>;
 ```

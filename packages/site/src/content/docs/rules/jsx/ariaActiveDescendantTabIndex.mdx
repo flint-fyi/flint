@@ -21,7 +21,7 @@ Without proper tabIndex, keyboard users cannot reach the element to interact wit
 <TabItem label="❌ Incorrect">
 
 ```tsx
-declare const someID: any;
+declare const someID: string;
 // ---cut---
 <div aria-activedescendant={someID} />;
 ```
@@ -34,25 +34,25 @@ declare const someID: any;
 <TabItem label="✅ Correct">
 
 ```tsx
-declare const someID: any;
+declare const someID: string;
 // ---cut---
 <div aria-activedescendant={someID} tabIndex={0} />;
 ```
 
 ```tsx
-declare const someID: any;
+declare const someID: string;
 // ---cut---
 <div aria-activedescendant={someID} tabIndex={-1} />;
 ```
 
 ```tsx
-declare const someID: any;
+declare const someID: string;
 // ---cut---
 <input aria-activedescendant={someID} />;
 ```
 
 ```tsx
-declare const someID: any;
+declare const someID: string;
 // ---cut---
 <button aria-activedescendant={someID} />;
 ```

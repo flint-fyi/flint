@@ -30,7 +30,7 @@ async function processItems(items: string[]) {
 ```
 
 ```ts
-declare const database: any;
+declare const database: { update(id: number): Promise<void> };
 // ---cut---
 async function updateRecords(ids: number[]) {
 	let i = 0;
@@ -52,7 +52,7 @@ async function processItems(items: string[]) {
 ```
 
 ```ts
-declare const database: any;
+declare const database: { update(id: number): Promise<void> };
 // ---cut---
 async function updateRecords(ids: number[]) {
 	await Promise.all(ids.map((id) => database.update(id)));

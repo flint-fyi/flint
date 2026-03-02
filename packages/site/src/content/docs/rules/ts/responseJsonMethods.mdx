@@ -21,7 +21,7 @@ This rule flags cases where `new Response(JSON.stringify(data))` can be replaced
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const data: any;
+declare const data: Record<string, unknown>;
 // ---cut---
 new Response(JSON.stringify(data));
 ```
@@ -31,13 +31,13 @@ new Response(JSON.stringify({ message: "ok" }));
 ```
 
 ```ts
-declare const data: any;
+declare const data: Record<string, unknown>;
 // ---cut---
 new Response(JSON.stringify(data), {});
 ```
 
 ```ts
-declare const data: any;
+declare const data: Record<string, unknown>;
 // ---cut---
 new Response(JSON.stringify(data), {
 	headers: { "content-type": "application/json" },
@@ -48,7 +48,7 @@ new Response(JSON.stringify(data), {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const data: any;
+declare const data: Record<string, unknown>;
 // ---cut---
 Response.json(data);
 ```
@@ -58,19 +58,19 @@ Response.json({ message: "ok" });
 ```
 
 ```ts
-declare const data: any;
+declare const data: Record<string, unknown>;
 // ---cut---
 new Response(JSON.stringify(data, null, 2));
 ```
 
 ```ts
-declare const data: any;
+declare const data: Record<string, unknown>;
 // ---cut---
 new Response(JSON.stringify(data), { status: 404 });
 ```
 
 ```ts
-declare const text: any;
+declare const text: string;
 // ---cut---
 new Response(text);
 ```

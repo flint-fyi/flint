@@ -26,7 +26,7 @@ function getValue() {
 ```
 
 ```ts
-declare const calculate: any;
+declare const calculate: () => number;
 // ---cut---
 function process() {
 	let result;
@@ -35,8 +35,8 @@ function process() {
 ```
 
 ```ts
-// @errors: 2588
-declare const value: any;
+// @errors: 2588 -- assigning to a const is the point of this bad example
+declare const value: number;
 // ---cut---
 const arrow = () => (value = 42);
 ```
@@ -59,7 +59,7 @@ function getValue() {
 ```
 
 ```ts
-declare const calculate: any;
+declare const calculate: () => number;
 // ---cut---
 function process() {
 	let result = calculate();

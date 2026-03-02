@@ -40,7 +40,7 @@ array.forEach(function (item) {
 ```
 
 ```ts
-declare const handle: any;
+declare const handle: (value: number) => void;
 // ---cut---
 [1, 2, 3].forEach((value) => {
 	handle(value);

@@ -37,8 +37,8 @@ export { data };
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2307 2749
-declare const Config: any;
+// @errors: 2307
+type Config = Record<string, unknown>;
 // ---cut---
 let config: Config;
 

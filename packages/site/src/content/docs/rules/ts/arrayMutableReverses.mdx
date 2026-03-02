@@ -24,7 +24,7 @@ const reversed = values.reverse();
 ```
 
 ```ts
-declare const doSomething: any;
+declare const doSomething: (values: string[]) => void;
 // ---cut---
 const items = ["a", "b", "c"];
 doSomething(items.reverse());
@@ -44,7 +44,7 @@ const reversed = values.toReversed();
 ```
 
 ```ts
-declare const doSomething: any;
+declare const doSomething: (values: string[]) => void;
 // ---cut---
 const items = ["a", "b", "c"];
 doSomething(items.toReversed());

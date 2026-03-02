@@ -20,11 +20,7 @@ This rule helps catch typos and missing declarations early in development.
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const first: any;
-declare const result: any;
-declare const second: any;
-declare const undefinedVar: any;
-// ---cut---
+// @noErrors -- rule demonstrates undefined variable errors which can't be shown with declarations
 console.log(undefinedVar);
 
 function calculate() {

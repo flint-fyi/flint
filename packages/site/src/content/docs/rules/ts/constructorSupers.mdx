@@ -23,7 +23,7 @@ This rule reports code that appears to violate either requirement.
 
 ```ts
 // @errors: 2377 17009
-declare const Parent: any;
+declare class Parent {}
 // ---cut---
 class Child extends Parent {
 	constructor() {
@@ -34,7 +34,9 @@ class Child extends Parent {
 
 ```ts
 // @errors: 2377 17009
-declare const Parent: any;
+declare class Parent {
+	constructor(name: string);
+}
 // ---cut---
 class Child extends Parent {
 	constructor(name: string) {
@@ -57,7 +59,7 @@ class Example {
 
 ```ts
 // @errors: 2339
-declare const Parent: any;
+declare class Parent {}
 // ---cut---
 class Child extends Parent {
 	constructor() {
@@ -69,7 +71,9 @@ class Child extends Parent {
 
 ```ts
 // @errors: 2339
-declare const Parent: any;
+declare class Parent {
+	constructor(name: string);
+}
 // ---cut---
 class Child extends Parent {
 	constructor(name: string) {
@@ -89,7 +93,7 @@ class Example {
 ```
 
 ```ts
-declare const Parent: any;
+declare class Parent {}
 // ---cut---
 class Child extends Parent {
 	value = 1;

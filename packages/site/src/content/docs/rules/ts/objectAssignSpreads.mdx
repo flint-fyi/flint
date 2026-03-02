@@ -21,20 +21,20 @@ This rule flags cases where `Object.assign({}, source)` or `Object.assign({ prop
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const source: any;
+declare const source: Record<string, unknown>;
 // ---cut---
 const clone = Object.assign({}, source);
 ```
 
 ```ts
-declare const defaults: any;
-declare const userConfig: any;
+declare const defaults: Record<string, unknown>;
+declare const userConfig: Record<string, unknown>;
 // ---cut---
 const merged = Object.assign({}, defaults, userConfig);
 ```
 
 ```ts
-declare const data: any;
+declare const data: Record<string, unknown>;
 // ---cut---
 const extended = Object.assign({ id: 1 }, data);
 ```
@@ -47,20 +47,20 @@ const result = Object.assign({ name: "test" });
 <TabItem label="✅ Correct">
 
 ```ts
-declare const source: any;
+declare const source: Record<string, unknown>;
 // ---cut---
 const clone = { ...source };
 ```
 
 ```ts
-declare const defaults: any;
-declare const userConfig: any;
+declare const defaults: Record<string, unknown>;
+declare const userConfig: Record<string, unknown>;
 // ---cut---
 const merged = { ...defaults, ...userConfig };
 ```
 
 ```ts
-declare const data: any;
+declare const data: Record<string, unknown>;
 // ---cut---
 const extended = { id: 1, ...data };
 ```
@@ -70,8 +70,8 @@ const result = { name: "test" };
 ```
 
 ```ts
-declare const existingObject: any;
-declare const newProperties: any;
+declare const existingObject: Record<string, unknown>;
+declare const newProperties: Record<string, unknown>;
 // ---cut---
 Object.assign(existingObject, newProperties);
 ```

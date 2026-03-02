@@ -31,10 +31,10 @@ Note that this rule will not flag cases where:
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const condition: any;
-declare const doSomething: any;
-declare const doSomethingElse: any;
-declare const otherCondition: any;
+declare const condition: boolean;
+declare const doSomething: () => void;
+declare const doSomethingElse: () => void;
+declare const otherCondition: boolean;
 // ---cut---
 if (condition) {
 	doSomething();
@@ -49,10 +49,10 @@ if (condition) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const condition: any;
-declare const doSomething: any;
-declare const doSomethingElse: any;
-declare const otherCondition: any;
+declare const condition: boolean;
+declare const doSomething: () => void;
+declare const doSomethingElse: () => void;
+declare const otherCondition: boolean;
 // ---cut---
 if (condition) {
 	doSomething();
@@ -70,9 +70,9 @@ if (condition) {
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const a: any;
-declare const b: any;
-declare const doSomething: any;
+declare const a: boolean;
+declare const b: boolean;
+declare const doSomething: () => void;
 // ---cut---
 if (a) {
 	if (b) {
@@ -85,9 +85,9 @@ if (a) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const a: any;
-declare const b: any;
-declare const doSomething: any;
+declare const a: boolean;
+declare const b: boolean;
+declare const doSomething: () => void;
 // ---cut---
 if (a && b) {
 	doSomething();
@@ -105,10 +105,10 @@ When combining conditions, the rule correctly handles operator precedence by add
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const a: any;
-declare const b: any;
-declare const c: any;
-declare const doSomething: any;
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare const doSomething: () => void;
 // ---cut---
 if (a || b) {
 	if (c) {
@@ -121,10 +121,10 @@ if (a || b) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const a: any;
-declare const b: any;
-declare const c: any;
-declare const doSomething: any;
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare const doSomething: () => void;
 // ---cut---
 if ((a || b) && c) {
 	doSomething();

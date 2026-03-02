@@ -22,9 +22,9 @@ This rule enforces that `typeof` expressions are only compared to valid string l
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2367
-declare const processString: any;
-declare const value: any;
+// @errors: 2367 2345 -- misspelled typeof doesn't narrow unknown
+declare const processString: (value: string) => void;
+declare const value: unknown;
 // ---cut---
 if (typeof value === "strnig") {
 	processString(value);
@@ -33,7 +33,7 @@ if (typeof value === "strnig") {
 
 ```ts
 // @errors: 2367
-declare const callback: any;
+declare const callback: unknown;
 // ---cut---
 if (typeof callback !== "fucntion") {
 	throw new Error("Invalid callback");
@@ -42,8 +42,8 @@ if (typeof callback !== "fucntion") {
 
 ```ts
 // @errors: 2367
-declare const data: any;
-declare const initialize: any;
+declare const data: unknown;
+declare const initialize: () => void;
 // ---cut---
 if (typeof data == "undefimed") {
 	initialize();
@@ -51,9 +51,9 @@ if (typeof data == "undefimed") {
 ```
 
 ```ts
-// @errors: 2367
-declare const calculate: any;
-declare const count: any;
+// @errors: 2367 2345 -- misspelled typeof doesn't narrow unknown
+declare const calculate: (value: number) => void;
+declare const count: unknown;
 // ---cut---
 if (typeof count === "nunber") {
 	calculate(count);
@@ -64,8 +64,8 @@ if (typeof count === "nunber") {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const processString: any;
-declare const value: any;
+declare const processString: (value: string) => void;
+declare const value: unknown;
 // ---cut---
 if (typeof value === "string") {
 	processString(value);
@@ -73,7 +73,7 @@ if (typeof value === "string") {
 ```
 
 ```ts
-declare const callback: any;
+declare const callback: unknown;
 // ---cut---
 if (typeof callback !== "function") {
 	throw new Error("Invalid callback");
@@ -81,8 +81,8 @@ if (typeof callback !== "function") {
 ```
 
 ```ts
-declare const data: any;
-declare const initialize: any;
+declare const data: unknown;
+declare const initialize: () => void;
 // ---cut---
 if (typeof data == "undefined") {
 	initialize();
@@ -90,8 +90,8 @@ if (typeof data == "undefined") {
 ```
 
 ```ts
-declare const calculate: any;
-declare const count: any;
+declare const calculate: (value: number) => void;
+declare const count: unknown;
 // ---cut---
 if (typeof count === "number") {
 	calculate(count);

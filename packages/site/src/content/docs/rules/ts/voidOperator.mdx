@@ -21,8 +21,8 @@ Using `undefined` directly is clearer and more explicit.
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const action: any;
-declare const doSomething: any;
+declare const action: () => void;
+declare const doSomething: () => void;
 // ---cut---
 const value = void 0;
 
@@ -37,8 +37,8 @@ const callback = () => void action();
 <TabItem label="✅ Correct">
 
 ```ts
-declare const action: any;
-declare const doSomething: any;
+declare const action: () => void;
+declare const doSomething: () => void;
 // ---cut---
 const value = undefined;
 

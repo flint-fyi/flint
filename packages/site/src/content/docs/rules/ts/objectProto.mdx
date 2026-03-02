@@ -20,8 +20,8 @@ Direct manipulation of an object's prototype can lead to "hidden classes" in Jav
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const obj: any;
-declare const prototype: any;
+declare const obj: Record<string, unknown>;
+declare const prototype: object;
 // ---cut---
 const proto = obj.__proto__;
 
@@ -35,7 +35,7 @@ const value = obj["__proto__"];
 
 ```ts
 // @errors: 2448
-declare const prototype: any;
+declare const prototype: object;
 // ---cut---
 const proto = Object.getPrototypeOf(obj);
 

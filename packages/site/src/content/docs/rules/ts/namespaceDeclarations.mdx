@@ -53,7 +53,7 @@ export const Fruits = {
 Whether to allow namespaces declared with the `declare` keyword.
 
 ```ts
-declare const ts: any;
+import { ts } from "flint";
 // ---cut---
 ts.rules({
 	namespaceDeclarations: {
@@ -86,7 +86,7 @@ declare namespace Values {
 ### `allowDefinitionFiles`
 
 ```ts
-declare const ts: any;
+import { ts } from "flint";
 // ---cut---
 ts.rules({
 	namespaceDeclarations: {

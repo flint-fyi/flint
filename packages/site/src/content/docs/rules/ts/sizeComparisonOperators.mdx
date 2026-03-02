@@ -62,7 +62,7 @@ if (!items.length) {
 ```
 
 ```ts
-declare const doSomething: any;
+declare const doSomething: () => void;
 // ---cut---
 declare const items: string[];
 items.length && doSomething();
@@ -100,7 +100,7 @@ if (!items.length) {
 ```
 
 ```ts
-declare const doSomething: any;
+declare const doSomething: () => void;
 // ---cut---
 declare const items: string[];
 items.length && doSomething();

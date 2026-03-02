@@ -27,8 +27,8 @@ value = 2;
 
 ```ts
 // @errors: 2588
-declare const getOtherValue: any;
-declare const getValue: any;
+declare const getOtherValue: () => string;
+declare const getValue: () => string;
 // ---cut---
 const result = getValue();
 result = getOtherValue();
@@ -42,7 +42,7 @@ counter++;
 
 ```ts
 // @errors: 2588
-declare const object: any;
+declare const object: { property: string };
 // ---cut---
 const { property } = object;
 property = "new value";
@@ -50,8 +50,8 @@ property = "new value";
 
 ```ts
 // @errors: 2588
-declare const items: any;
-declare const processItem: any;
+declare const items: string[];
+declare const processItem: (item: string) => string;
 // ---cut---
 for (const item of items) {
 	item = processItem(item);
@@ -77,15 +77,15 @@ array.push(4);
 ```
 
 ```ts
-declare const object: any;
+declare const object: { property: string };
 // ---cut---
 const { property } = object;
 console.log(property);
 ```
 
 ```ts
-declare const items: any;
-declare const processItem: any;
+declare const items: string[];
+declare const processItem: (item: string) => string;
 // ---cut---
 for (let item of items) {
 	item = processItem(item);

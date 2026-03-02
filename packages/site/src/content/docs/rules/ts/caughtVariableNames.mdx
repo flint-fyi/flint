@@ -20,7 +20,7 @@ Descriptive names ending in "Error", are also acceptable (e.g., `innerError`, `p
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const doSomething: any;
+declare const doSomething: () => void;
 // ---cut---
 try {
 	doSomething();
@@ -30,8 +30,8 @@ try {
 ```
 
 ```ts
-declare const path: any;
-declare const readFile: any;
+declare const path: string;
+declare const readFile: (path: string) => void;
 // ---cut---
 try {
 	readFile(path);
@@ -41,7 +41,7 @@ try {
 ```
 
 ```ts
-declare const doSomething: any;
+declare const doSomething: () => void;
 // ---cut---
 try {
 	doSomething();
@@ -54,7 +54,7 @@ try {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const doSomething: any;
+declare const doSomething: () => void;
 // ---cut---
 try {
 	doSomething();
@@ -64,8 +64,8 @@ try {
 ```
 
 ```ts
-declare const path: any;
-declare const readFile: any;
+declare const path: string;
+declare const readFile: (path: string) => void;
 // ---cut---
 try {
 	readFile(path);
@@ -75,7 +75,7 @@ try {
 ```
 
 ```ts
-declare const doSomething: any;
+declare const doSomething: () => void;
 // ---cut---
 try {
 	doSomething();

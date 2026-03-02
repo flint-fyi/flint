@@ -20,8 +20,8 @@ Prefer writing separate expressions or statements instead.
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const computeValue: any;
-declare const doSideEffect: any;
+declare const computeValue: () => number;
+declare const doSideEffect: () => void;
 // ---cut---
 const result = (doSideEffect(), computeValue());
 ```
@@ -30,8 +30,8 @@ const result = (doSideEffect(), computeValue());
 <TabItem label="✅ Correct">
 
 ```ts
-declare const computeValue: any;
-declare const doSideEffect: any;
+declare const computeValue: () => number;
+declare const doSideEffect: () => void;
 // ---cut---
 doSideEffect();
 const result = computeValue();

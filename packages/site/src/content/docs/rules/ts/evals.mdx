@@ -26,7 +26,7 @@ Using `eval()` has several problems:
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const getUserInput: any;
+declare const getUserInput: () => string;
 // ---cut---
 const code = getUserInput();
 eval(code);

@@ -20,10 +20,10 @@ Duplicate conditions typically indicate a copy-paste error or a logic mistake in
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const handleActive: any;
-declare const handlePending: any;
-declare const handlePendingAgain: any;
-declare const status: any;
+declare const handleActive: () => void;
+declare const handlePending: () => void;
+declare const handlePendingAgain: () => void;
+declare const status: string;
 // ---cut---
 if (status === "pending") {
 	handlePending();
@@ -35,12 +35,12 @@ if (status === "pending") {
 ```
 
 ```ts
-declare const isActive: any;
-declare const isPending: any;
-declare const isValid: any;
-declare const processPending: any;
-declare const processValid: any;
-declare const processValidAgain: any;
+declare const isActive: boolean;
+declare const isPending: boolean;
+declare const isValid: boolean;
+declare const processPending: () => void;
+declare const processValid: () => void;
+declare const processValidAgain: () => void;
 // ---cut---
 if (isValid && isActive) {
 	processValid();
@@ -52,10 +52,10 @@ if (isValid && isActive) {
 ```
 
 ```ts
-declare const count: any;
-declare const handleOne: any;
-declare const handleOneAgain: any;
-declare const handleTwo: any;
+declare const count: number;
+declare const handleOne: () => void;
+declare const handleOneAgain: () => void;
+declare const handleTwo: () => void;
 // ---cut---
 if (count === 1) {
 	handleOne();
@@ -70,10 +70,10 @@ if (count === 1) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const handleActive: any;
-declare const handleCompleted: any;
-declare const handlePending: any;
-declare const status: any;
+declare const handleActive: () => void;
+declare const handleCompleted: () => void;
+declare const handlePending: () => void;
+declare const status: string;
 // ---cut---
 if (status === "pending") {
 	handlePending();
@@ -85,12 +85,12 @@ if (status === "pending") {
 ```
 
 ```ts
-declare const isActive: any;
-declare const isPending: any;
-declare const isValid: any;
-declare const processInactive: any;
-declare const processPending: any;
-declare const processValid: any;
+declare const isActive: boolean;
+declare const isPending: boolean;
+declare const isValid: boolean;
+declare const processInactive: () => void;
+declare const processPending: () => void;
+declare const processValid: () => void;
 // ---cut---
 if (isValid && isActive) {
 	processValid();
@@ -102,10 +102,10 @@ if (isValid && isActive) {
 ```
 
 ```ts
-declare const count: any;
-declare const handleOne: any;
-declare const handleThree: any;
-declare const handleTwo: any;
+declare const count: number;
+declare const handleOne: () => void;
+declare const handleThree: () => void;
+declare const handleTwo: () => void;
 // ---cut---
 if (count === 1) {
 	handleOne();

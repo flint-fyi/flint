@@ -27,7 +27,7 @@ const result = new Promise(async (resolve, reject) => {
 ```
 
 ```ts
-declare const asyncOperation: any;
+declare const asyncOperation: () => Promise<unknown>;
 // ---cut---
 new Promise(async function (resolve, reject) {
 	try {

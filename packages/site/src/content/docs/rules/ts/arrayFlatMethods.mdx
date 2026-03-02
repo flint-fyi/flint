@@ -54,7 +54,7 @@ Array.prototype.concat.call([], ...array);
 ```
 
 ```ts
-declare const _: any;
+declare const _: { flatten<T>(arr: T[][]): T[] };
 // ---cut---
 declare const array: number[][];
 _.flatten(array);

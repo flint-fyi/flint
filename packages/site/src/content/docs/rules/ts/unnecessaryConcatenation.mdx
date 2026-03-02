@@ -36,8 +36,8 @@ const multiLine = "This is a very long string that continues on the next line";
 ```
 
 ```ts
-declare const basePath: any;
-declare const name: any;
+declare const basePath: string;
+declare const name: string;
 // ---cut---
 // Concatenating with variables is allowed
 const greeting = "Hello" + name;
@@ -45,7 +45,7 @@ const fullPath = basePath + "/file.txt";
 ```
 
 ```ts
-declare const name: any;
+declare const name: string;
 // ---cut---
 // Template literals are a better choice for string interpolation
 const template = `Hello ${name}`;

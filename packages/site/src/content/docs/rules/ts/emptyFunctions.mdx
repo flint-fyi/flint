@@ -46,7 +46,7 @@ class Foo {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const doSomething: any;
+declare const doSomething: () => void;
 // ---cut---
 function foo() {
 	doSomething();
@@ -54,7 +54,7 @@ function foo() {
 ```
 
 ```ts
-declare const doSomething: any;
+declare const doSomething: () => void;
 // ---cut---
 const foo = function () {
 	doSomething();
@@ -62,7 +62,7 @@ const foo = function () {
 ```
 
 ```ts
-declare const doSomething: any;
+declare const doSomething: () => void;
 // ---cut---
 const foo = () => doSomething();
 ```

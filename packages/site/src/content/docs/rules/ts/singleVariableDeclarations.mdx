@@ -33,10 +33,10 @@ for (let index = 0, length = 10; index < length; index++) {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2451
-declare const dimensions: any;
-declare const items: any;
-declare const object: any;
+// @errors: 2451 -- variables redeclared from the incorrect example above
+declare const dimensions: [number, number];
+declare const items: string[];
+declare const object: { first: string; second: string };
 // ---cut---
 let first;
 let second;
