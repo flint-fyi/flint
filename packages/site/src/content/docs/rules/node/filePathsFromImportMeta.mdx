@@ -29,7 +29,7 @@ const filename = fileURLToPath(import.meta.url);
 ```
 
 ```ts
-declare const fileURLToPath: (url: string | URL) => string;
+import { fileURLToPath } from "node:url";
 import path from "node:path";
 // ---cut---
 const dirname = path.dirname(fileURLToPath(import.meta.url));
