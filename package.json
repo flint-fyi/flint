@@ -51,7 +51,7 @@
 		"husky": "9.1.7",
 		"jiti": "2.6.1",
 		"knip": "5.85.0",
-		"lint-staged": "16.2.7",
+		"lint-staged": "16.3.0",
 		"prettier": "3.8.1",
 		"prettier-plugin-astro": "0.14.1",
 		"prettier-plugin-curly": "0.4.1",
