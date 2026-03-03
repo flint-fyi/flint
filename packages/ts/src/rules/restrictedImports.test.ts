@@ -360,7 +360,7 @@ import { anything } from "test-pkg";
 			},
 			snapshot: `
 import { anything } from "test-pkg";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 'anything' import from 'test-pkg' is restricted.
 `,
 		},
@@ -384,7 +384,7 @@ import * as pkg from "test-pkg";
 			},
 			snapshot: `
 import * as pkg from "test-pkg";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 'test-pkg' import is restricted.
 `,
 		},
@@ -409,7 +409,7 @@ import * as pkg from "test-pkg";
 			},
 			snapshot: `
 import * as pkg from "test-pkg";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 * import is invalid because 'badExport' from 'test-pkg' is restricted.
 `,
 		},
