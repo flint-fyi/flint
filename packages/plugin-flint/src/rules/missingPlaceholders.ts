@@ -95,11 +95,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const dataProperty = findProperty(
-				properties,
-				"data",
-				(node): node is AST.ObjectLiteralExpression =>
-					node.kind === SyntaxKind.ObjectLiteralExpression,
+			const dataProperty = properties.find(
+				(prop): prop is AST.PropertyAssignment =>
+					prop.kind === SyntaxKind.PropertyAssignment &&
+					prop.name.kind === SyntaxKind.Identifier &&
+					prop.name.text === "data",
 			);
 			if (!dataProperty) {
 				context.report({
@@ -112,8 +112,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
+			if (
+				dataProperty.initializer.kind !== SyntaxKind.ObjectLiteralExpression
+			) {
+				return;
+			}
+
 			const dataKeys = new Set<string>();
-			dataProperty.properties.forEach((prop) => {
+			dataProperty.initializer.properties.forEach((prop) => {
 				if (
 					prop.kind === SyntaxKind.PropertyAssignment &&
 					prop.name.kind === SyntaxKind.Identifier
