@@ -4,7 +4,7 @@ import {
 } from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
-import { getRuleTesterDescribedCases } from "../getRuleTesterDescribedCases.ts";
+import { getRuleTesterDescribedCases } from "../utils/getRuleTesterDescribedCases.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

@@ -5,9 +5,12 @@ import {
 } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
+import { findProperty } from "../utils/findProperty.ts";
 import {
 	findMessagesProperty,
 	forEachMessageString,
+} from "../utils/messageHelpers.ts";
+import {
 	isRuleContextReport,
 	isRuleCreatorCreateRule,
 } from "../utils/ruleCreatorHelpers.ts";
@@ -74,35 +77,30 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const properties = args.properties;
-			const messageProperty = properties.find((prop) => {
-				return (
-					prop.kind === SyntaxKind.PropertyAssignment &&
-					prop.name.kind === SyntaxKind.Identifier &&
-					prop.name.text === "message"
-				);
-			});
+			const messageProperty = findProperty(
+				properties,
+				"message",
+				(node): node is AST.StringLiteral =>
+					node.kind === SyntaxKind.StringLiteral,
+			);
 
-			if (
-				messageProperty?.kind !== SyntaxKind.PropertyAssignment ||
-				messageProperty.initializer.kind !== SyntaxKind.StringLiteral
-			) {
+			if (!messageProperty) {
 				return;
 			}
 
 			const requiredPlaceholders = messagePlaceholders.get(
-				messageProperty.initializer.text,
+				messageProperty.text,
 			);
 			if (!requiredPlaceholders?.size) {
 				return;
 			}
 
-			const dataProperty = properties.find((prop) => {
-				return (
-					prop.kind === SyntaxKind.PropertyAssignment &&
-					prop.name.kind === SyntaxKind.Identifier &&
-					prop.name.text === "data"
-				);
-			});
+			const dataProperty = findProperty(
+				properties,
+				"data",
+				(node): node is AST.ObjectLiteralExpression =>
+					node.kind === SyntaxKind.ObjectLiteralExpression,
+			);
 			if (!dataProperty) {
 				context.report({
 					data: {
@@ -114,15 +112,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (
-				dataProperty.kind !== SyntaxKind.PropertyAssignment ||
-				dataProperty.initializer.kind !== SyntaxKind.ObjectLiteralExpression
-			) {
-				return;
-			}
-
 			const dataKeys = new Set<string>();
-			dataProperty.initializer.properties.forEach((prop) => {
+			dataProperty.properties.forEach((prop) => {
 				if (
 					prop.kind === SyntaxKind.PropertyAssignment &&
 					prop.name.kind === SyntaxKind.Identifier
@@ -164,7 +155,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 				},
-				SourceFile() {
+				"SourceFile:exit"() {
 					messagePlaceholders.clear();
 				},
 			},
