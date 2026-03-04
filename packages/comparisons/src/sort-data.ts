@@ -8,14 +8,8 @@ import dataOriginal from "./data.json" with { type: "json" };
 const dataFilePath = path.join(import.meta.dirname, "data.json");
 
 const dataSorted = dataOriginal.toSorted((a, b) => {
-	if (Array.isArray(a.flint) && Array.isArray(b.flint)) {
+	if (Array.isArray(a.flint) || Array.isArray(b.flint)) {
 		return 0;
-	}
-	if (Array.isArray(a.flint)) {
-		return -1;
-	}
-	if (Array.isArray(b.flint)) {
-		return 1;
 	}
 
 	return a.flint.plugin === b.flint.plugin

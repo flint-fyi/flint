@@ -66,7 +66,11 @@ function renderFlintRuleDescription(flint: FlintRuleReference) {
 	return description ? <InlineMarkdown markdown={description} /> : null;
 }
 
-function renderImplemented(comparisons: Comparison[]) {
+type FlattenedComparison = Omit<Comparison, "flint"> & {
+	flint: FlintRuleReference;
+};
+
+function renderImplemented(comparisons: FlattenedComparison[]) {
 	const count = comparisons.filter(
 		(comparison) => comparison.flint.status === "implemented",
 	).length;
@@ -87,7 +91,20 @@ export function RulesTable({
 }: RulesTableProps) {
 	const comparator = createRuleComparator(sortBy);
 
-	const values = comparisons
+	// Flatten comparisons with multiple flint rules into separate entries
+	const flattenedComparisons: FlattenedComparison[] = comparisons.flatMap(
+		(comparison) => {
+			if (Array.isArray(comparison.flint)) {
+				return comparison.flint.map((flint) => ({
+					...comparison,
+					flint,
+				}));
+			}
+			return [{ ...comparison, flint: comparison.flint }];
+		},
+	);
+
+	const values = flattenedComparisons
 		.filter((comparison) => {
 			if ((comparison.flint.status === "skipped") === implementing) {
 				return false;
@@ -122,8 +139,10 @@ export function RulesTable({
 					<th>{implementing ? "Preset" : "Notes"}</th>
 				</thead>
 				<tbody>
-					{values.map((comparison) => (
-						<tr key={comparison.flint.name}>
+					{values.map((comparison, index) => (
+						<tr
+							key={`${comparison.flint.plugin}/${comparison.flint.name}-${index}`}
+						>
 							<td
 								className={clsx(
 									styles.ruleNameCell,

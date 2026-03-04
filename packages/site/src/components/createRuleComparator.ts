@@ -5,11 +5,15 @@ export type RuleComparator = (a: Comparison, b: Comparison) => number;
 export type RuleSortBy = "name" | "preset";
 
 export function createRuleComparator(sortBy?: RuleSortBy): RuleComparator {
-	if (sortBy === "name") {
-		return (a, b) => a.flint.name.localeCompare(b.flint.name);
-	}
-
 	return (a, b) => {
+		if (Array.isArray(a.flint) || Array.isArray(b.flint)) {
+			return 0;
+		}
+
+		if (sortBy === "name") {
+			return a.flint.name.localeCompare(b.flint.name);
+		}
+
 		if (a.flint.preset !== b.flint.preset) {
 			if (!a.flint.preset) {
 				return 1;
