@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/next",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "[Experimental] A Flint plugin for Next.js code.",
 	"homepage": "https://www.flint.fyi/rules/next",
 	"repository": {

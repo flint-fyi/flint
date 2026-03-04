@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/text-language",
-	"version": "0.15.0",
+	"version": "0.15.1",
 	"description": "[Experimental] Plain text language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
