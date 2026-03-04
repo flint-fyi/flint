@@ -48,8 +48,8 @@ export function parseTestCase(
 		node.properties,
 		"name",
 		(node) =>
-			node.kind == SyntaxKind.StringLiteral ||
-			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
+			node.kind === SyntaxKind.StringLiteral ||
+			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
 	const options = findProperty(
 		node.properties,
@@ -101,8 +101,8 @@ export function parseTestCaseInvalid(
 		node.properties,
 		"name",
 		(node) =>
-			node.kind == SyntaxKind.StringLiteral ||
-			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
+			node.kind === SyntaxKind.StringLiteral ||
+			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
 	const options = findProperty(
 		node.properties,
