@@ -6,8 +6,8 @@ import {
 } from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
-import { getRuleTesterDescribedCases } from "../getRuleTesterDescribedCases.ts";
-import type { ParsedTestCaseInvalid } from "../types.ts";
+import { getRuleTesterDescribedCases } from "../utils/getRuleTesterDescribedCases.ts";
+import type { ParsedTestCaseInvalid } from "../utils/types.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

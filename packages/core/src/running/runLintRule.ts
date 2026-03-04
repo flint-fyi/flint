@@ -1,4 +1,3 @@
-import { nullThrows } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 
@@ -9,8 +8,8 @@ import type {
 	InferredInputObject,
 	InferredOutputObject,
 } from "../types/shapes.ts";
-import { getColumnAndLineOfPosition } from "../utils/getColumnAndLineOfPosition.ts";
 import { parseOptions } from "./parseOptions.ts";
+import { processRuleReport } from "./processRuleReport.ts";
 import type { LanguageFilesWithOptions } from "./types.ts";
 
 const log = debugForFile(import.meta.filename);
@@ -36,28 +35,9 @@ export async function runLintRule(
 
 			log("Adding %s report for file path %s", ruleReport.message, filePath);
 
-			reportsByFilePath.get(filePath).push({
-				...ruleReport,
-				about: rule.about,
-				fix:
-					ruleReport.fix && !Array.isArray(ruleReport.fix)
-						? [ruleReport.fix]
-						: ruleReport.fix,
-				message: nullThrows(
-					rule.messages[ruleReport.message],
-					`Rule "${rule.about.id}" reported message "${ruleReport.message}" which is not defined in its messages.`,
-				),
-				range: {
-					begin: getColumnAndLineOfPosition(
-						currentFile.about.sourceText,
-						ruleReport.range.begin,
-					),
-					end: getColumnAndLineOfPosition(
-						currentFile.about.sourceText,
-						ruleReport.range.end,
-					),
-				},
-			});
+			reportsByFilePath
+				.get(filePath)
+				.push(processRuleReport(currentFile, rule, ruleReport));
 		},
 	});
 

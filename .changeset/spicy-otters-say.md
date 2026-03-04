@@ -2,4 +2,4 @@
 "@flint.fyi/core": patch
 ---
 
-feat(core): support nested .gitignore files in filtering
+Support nested `.gitignore` files in filtering.

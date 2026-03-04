@@ -13,6 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Disallow computed member access on imported namespace identifiers.",
 		id: "importedNamespaceDynamicAccesses",
+		presets: ["logical"],
 	},
 	messages: {
 		noDynamicAccess: {

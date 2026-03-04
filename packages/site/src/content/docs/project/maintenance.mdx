@@ -1,0 +1,47 @@
+---
+description: "How the Flint team manages the day-to-day development of the Flint project."
+title: Maintenance
+---
+
+:::note
+This page contains the guidelines for members of the [Flint team](/project/team).
+If you're interested in contributing, welcome!
+See [Contributing](/project/contributing) for how to work effectively with us.
+
+:::
+
+The Flint project tries to keep to a casual maintenance flow.
+We hold friendly conversations in the open on GitHub issues and try to gain consensus from team members on the best courses of action.
+
+## Issues Triage
+
+When reviewing open issues, feel free to write your opinion on them and/or emoji: even if it's just in agreement with what others have stated.
+
+- If an issue is still in its [waiting period](#waiting-periods), add the `status: in discussion` label
+- Otherwise, if it's ready to accept a PR, add `status: accepting prs`
+
+Try to create an issue for any area of work that would qualify for a [waiting period](#waiting-periods).
+This gives other team members a chance to learn about your intentions -- especially newer ones ramping up on the project.
+
+### Pull Request Reviews
+
+As with issues, pull requests should go through a [waiting period](#waiting-periods) before merge.
+Additionally, for nontrivial pull requests, please don't merge until at least one member from the [Committer group](/project/team#committers) _and_ the [Maintainers group](/project/team#maintainers) has approved.
+
+1. If you request changes on a pull request, add the `status: waiting for author`
+   - This label will be removed automatically if an author re-requests review
+2. If you give a pull request its first approval, add the `1 approval` label
+3. Once a pull request has approval from both teams, add the `ready to merge` label
+
+Waiting for both team members' approval helps the team feel ownership and stay informed about changes.
+Approval from the [project lead](/project/team#project-lead) is intentionally not required, as we don't want to fall into a [BDFL](https://en.wikipedia.org/wiki/Benevolent_dictator_for_life) system.
+
+## Waiting Periods
+
+We leave nontrivial issues and pull requests open for some time following any significant change to give team members a chance to weigh in.
+
+- For anything clearly good and straightforward (e.g. small typo fixes, reproducible user-facing crashes, trivial dependency bumps, etc.), no waiting period is necessary.
+- For anything _really_ big (e.g. major rearchitectures), wait 5 business days.
+- For anything else: wait 2 business days.
+
+Use your best judgment and ✨ vibes ✨ interpretation for what category issues and pull requests fall under and what constitutes a significant change.

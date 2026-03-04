@@ -45,17 +45,13 @@ Adding `--fix` will instruct Flint to continuously re-run (up to 10 times), fixi
 Enables auto-fixing any number of specific ["suggestions"](/glossary#suggestion) from rule reports.
 
 <PackageManagers
-	args="--fix-suggestions cspell:addWordToWords"
+	args="--fix-suggestions spelling/cspell:addWordToWords"
 	pkg="flint"
 	type="dlx"
 />
 
 Unlike [`--fix`](#--fix), `--fix-suggestions` requires passing in explicit names of suggestions to apply.
-Suggestion names are comprised of the rule name, and a suggestion ID, all joined by `:`.
-
-:::note
-[🚀 Feature: Comment directives and suggestions should prefix with plugin IDs](https://github.com/flint-fyi/flint/issues/248) will soon change suggestion keys.
-:::
+Suggestion names are comprised of the rule plugin `/` rule name `:` suggestion ID.
 
 ## `--help`
 
@@ -133,7 +129,7 @@ Linting with flint.config.ts...
 │  It also returns the index key (`i`) as a string, which is not the expected numeric type for array indices.
 │
 │  Suggestion: Use a construct more suited for arrays, such as a for-of loop (`for (const i of o)`).
-│  → flint.fyi/rules/forInArrays
+│  → flint.fyi/rules/ts/forInArrays
 │
 ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 

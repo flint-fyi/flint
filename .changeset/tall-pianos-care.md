@@ -9,4 +9,4 @@
 "@flint.fyi/ts": patch
 ---
 
-fix(rule-tester): also validate output
+Also validate output when testing rules.
