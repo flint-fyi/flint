@@ -13,7 +13,7 @@ export const singleRendererFactory: RendererFactory = {
 					console.log(line);
 				}
 			},
-			async render({ formattingResults, lintResults }) {
+			async render({ duration, formattingResults, lintResults }) {
 				for (const [filePath, fileResults] of lintResults.filesResults) {
 					if (!fileResults.reports.length) {
 						continue;
@@ -36,6 +36,7 @@ export const singleRendererFactory: RendererFactory = {
 				}
 
 				const summary = presenter.summarize({
+					duration,
 					formattingResults,
 					lintResults,
 				});
