@@ -727,5 +727,33 @@ import { restricted } from "test-pkg";
 				],
 			},
 		},
+		// Side-effect import from unresolvable module should not crash
+		{
+			code: `import "nonexistent-module";`,
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "package",
+							package: "nonexistent-module",
+						},
+					},
+				],
+			},
+		},
+		// Namespace import from unresolvable module should not crash
+		{
+			code: `import * as ns from "nonexistent-module";`,
+			options: {
+				restrictions: [
+					{
+						specifier: {
+							from: "package",
+							package: "nonexistent-module",
+						},
+					},
+				],
+			},
+		},
 	],
 });

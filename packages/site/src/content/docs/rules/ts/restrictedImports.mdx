@@ -10,9 +10,8 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="restrictedImports" />
 
-Some modules should not be used in certain parts of a codebase.
+Over time, many codebases develop restrictions on which modules can be imported in which areas.
 This rule allows you to restrict specific modules from being imported using [`TypeOrValueSpecifier`](https://typescript-eslint.io/packages/type-utils/type-or-value-specifier/) to identify targets.
-It resolves imports semantically via the type checker, so restrictions match based on where declarations originate rather than raw import specifier strings.
 
 ## Examples
 
