@@ -51,6 +51,7 @@ export default defineConfig(
 		"packages/*/dist",
 		"packages/*/lib",
 		"packages/fixtures",
+		"packages/e2e/tests/**/fixtures/**",
 		"pnpm-lock.yaml",
 		"coverage",
 	]),
@@ -90,6 +91,7 @@ export default defineConfig(
 					enableAutofixRemoval: {
 						imports: true,
 					},
+					ignoreUsingDeclarations: true,
 				},
 			],
 			"@typescript-eslint/prefer-nullish-coalescing": [
@@ -219,6 +221,16 @@ export default defineConfig(
 		rules: { "@typescript-eslint/no-unsafe-assignment": "off" },
 		settings: { vitest: { typecheck: true } },
 	},
+	// E2E tests and configs live next to fixture package.json (no vitest/execa/@flint.fyi/ts); allow packages/e2e devDependencies
+	// E2E runs on Node >=24 (see packages/e2e/package.json engines), so import.meta.dirname is supported
+	{
+		files: ["packages/e2e/tests/**/*.ts"],
+		rules: {
+			"n/no-extraneous-import": "off",
+			"n/no-unpublished-import": "off",
+			"n/no-unsupported-features/node-builtins": "off",
+		},
+	},
 	{
 		extends: [
 			// https://github.com/ota-meshi/eslint-plugin-yml/issues/510
@@ -228,10 +240,6 @@ export default defineConfig(
 		files: ["**/*.{yml,yaml}"],
 		rules: {
 			"yml/file-extension": "error",
-			"yml/sort-keys": [
-				"error",
-				{ order: { type: "asc" }, pathPattern: "^.*$" },
-			],
 			"yml/sort-sequence-values": [
 				"error",
 				{ order: { type: "asc" }, pathPattern: "^.*$" },
@@ -240,9 +248,13 @@ export default defineConfig(
 	},
 	{
 		extends: [packageJson.configs.recommended, packageJson.configs.stylistic],
+		ignores: ["packages/e2e/tests/**/package.json"],
 	},
 	{
 		extends: [packageJson.configs["recommended-publishable"]],
-		files: [["packages/*/package.json", "!packages/site/package.json"]],
+		files: ["packages/*/package.json"],
+		rules: {
+			"package-json/require-homepage": "error",
+		},
 	},
 );

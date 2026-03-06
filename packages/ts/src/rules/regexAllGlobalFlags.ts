@@ -51,9 +51,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		missingGlobalFlag: {
 			primary:
-				"The regex argument to `{{method}}()` requires the global (`g`) flag.",
+				"The regex argument to `{{ method }}()` requires the global (`g`) flag.",
 			secondary: [
-				"String.prototype.{{method}}() throws a TypeError at runtime if the regex argument lacks the global flag.",
+				"String.prototype.{{ method }}() throws a TypeError at runtime if the regex argument lacks the global flag.",
 			],
 			suggestions: ["Add the global (g) flag to the regex."],
 		},

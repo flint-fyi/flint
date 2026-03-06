@@ -2,21 +2,21 @@ import { nullThrows } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 
-import { readFileSafe } from "../running/readFileSafe.ts";
 import type { FileCacheStorage } from "../types/cache.ts";
+import type { LinterHost } from "../types/host.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
 import { getCacheFilePath } from "./getCacheFilePath.ts";
-import { getFileTouchTime } from "./getFileTouchTime.ts";
 
 const log = debugForFile(import.meta.filename);
 
 export async function readFromCache(
+	host: LinterHost,
 	allFilePaths: Set<string>,
 	configFilePath: string,
 	cacheLocation: string | undefined,
 ): Promise<Map<string, FileCacheStorage> | undefined> {
 	const cacheFilePath = getCacheFilePath(cacheLocation);
-	const rawCacheString = await readFileSafe(cacheFilePath);
+	const rawCacheString = await host.readFile(cacheFilePath);
 
 	if (!rawCacheString) {
 		log("Linting all %d file path(s) due to lack of cache.", allFilePaths.size);
@@ -50,7 +50,7 @@ export async function readFromCache(
 			cache.configs[filePath],
 			"Cache timestamp is expected to be present",
 		);
-		const timestampTouched = getFileTouchTime(filePath);
+		const timestampTouched = await host.getFileTouchTime(filePath);
 		if (timestampTouched > timestampCached) {
 			log(
 				"Linting all %d file path(s) due to %s touch timestamp %d after cache timestamp %d",
@@ -93,7 +93,7 @@ export async function readFromCache(
 		}
 
 		const timestampCached = fileCached.timestamp;
-		const timestampTouched = getFileTouchTime(filePath);
+		const timestampTouched = await host.getFileTouchTime(filePath);
 		if (timestampTouched > timestampCached) {
 			log(
 				"Directly invalidating cache for: %s due to touch timestamp %d after cache timestamp %d",

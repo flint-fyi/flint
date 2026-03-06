@@ -12,6 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using await expressions inside loops.",
 		id: "loopAwaits",
+		presets: ["logical"],
 	},
 	messages: {
 		noAwaitInLoop: {

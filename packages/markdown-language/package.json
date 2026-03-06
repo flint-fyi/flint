@@ -1,7 +1,8 @@
 {
 	"name": "@flint.fyi/markdown-language",
-	"version": "0.15.0",
+	"version": "0.15.1",
 	"description": "[Experimental] Markdown language for Flint.",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -15,10 +16,7 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": {
-			"@flint.fyi/source": "./src/index.ts",
-			"default": "./lib/index.js"
-		}
+		".": "./src/index.ts"
 	},
 	"files": [
 		"lib/",

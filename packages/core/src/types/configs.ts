@@ -45,15 +45,17 @@ export interface ConfigDefinition {
 	ignore?: string[];
 
 	/**
+	 * For a root config, you can define a list of "projects" using glob patterns.
+	 * @example `projects: ["packages/*"]`
+	 * @see https://github.com/flint-fyi/flint/issues/64
+	 */
+	projects?: string[];
+
+	/**
 	 * Specifies the files to be linted alongside the rules and settings to lint with.
 	 * @see {@link https://flint.fyi/configuration#use|flint.fyi/configuration#use}
 	 */
 	use: ConfigUseDefinition[];
-
-	/**
-	 * @see https://github.com/flint-fyi/flint/issues/64
-	 */
-	workspaces?: string[];
 }
 
 /**

@@ -50,9 +50,11 @@ export default ruleCreator.createRule(textLanguage, {
 		const cwd = context.host.getCurrentDirectory();
 		const cspellJsonPath = path.resolve(cwd, "cspell.json");
 
-		const configText = context.host.readFile(cspellJsonPath);
-		const config =
-			(parseJsonSafe(configText) as CSpellConfigLike | undefined) ?? {};
+		const configTextPromise = context.host.readFile(cspellJsonPath);
+		const configPromise = configTextPromise.then(
+			(configText) =>
+				(parseJsonSafe(configText) as CSpellConfigLike | undefined) ?? {},
+		);
 
 		return {
 			dependencies: ["cspell.json"],
@@ -97,6 +99,11 @@ export default ruleCreator.createRule(textLanguage, {
 							...(replacement && { replacement }),
 						};
 
+						const [configText, config] = await Promise.all([
+							configTextPromise,
+							configPromise,
+						]);
+
 						const words = config.words ?? [];
 						const suggestions: Suggestion[] = [
 							{
@@ -133,11 +140,8 @@ export default ruleCreator.createRule(textLanguage, {
 			visitors: {
 				file: (text, { filePath, filePathAbsolute }) => {
 					fileTasks.push({
-						documentValidatorTask: createDocumentValidator(
-							cwd,
-							filePathAbsolute,
-							text,
-							config,
+						documentValidatorTask: configPromise.then((config) =>
+							createDocumentValidator(cwd, filePathAbsolute, text, config),
 						),
 						filePath,
 						text,

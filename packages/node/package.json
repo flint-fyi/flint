@@ -1,7 +1,8 @@
 {
 	"name": "@flint.fyi/node",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "[Experimental] A Flint plugin for Node.js code.",
+	"homepage": "https://www.flint.fyi/rules/node",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -15,10 +16,7 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": {
-			"@flint.fyi/source": "./src/index.ts",
-			"default": "./lib/index.js"
-		}
+		".": "./src/index.ts"
 	},
 	"files": [
 		"lib/",

@@ -9,7 +9,7 @@ import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesF
 import { getFirstEnumValues } from "./getFirstEnumValues.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
 import { getTypeScriptFileDiagnostics } from "./getTypeScriptFileDiagnostics.ts";
-import type { TypeScriptNodesByName } from "./nodes.ts";
+import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
 
@@ -24,7 +24,7 @@ const log = debugForFile(import.meta.filename);
 const NodeSyntaxKinds = getFirstEnumValues(ts.SyntaxKind);
 
 export const typescriptLanguage = createLanguage<
-	TypeScriptNodesByName,
+	TypeScriptNodeVisitors,
 	TypeScriptFileServices
 >({
 	about: {
@@ -96,10 +96,15 @@ export const typescriptLanguage = createLanguage<
 		const visitorServices = { options, ...file.services };
 
 		const visit = (node: ts.Node) => {
-			// @ts-expect-error - This should work...?
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			visitors[NodeSyntaxKinds[node.kind]]?.(node, visitorServices);
+			const key = NodeSyntaxKinds[node.kind] as keyof TypeScriptNodesByName;
+
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+			visitors[key]?.(node, visitorServices);
+
 			node.forEachChild(visit);
+
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+			visitors[`${key}:exit`]?.(node, visitorServices);
 		};
 
 		visit(file.services.sourceFile);

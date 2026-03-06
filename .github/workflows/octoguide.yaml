@@ -1,13 +1,3 @@
-jobs:
-  octoguide:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: OctoGuide/bot@e32639b1839e810d13613f21f417ebf6e90b821a # 0.21.3
-        with:
-          config: strict
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          include-associations: "FIRST_TIMER,FIRST_TIME_CONTRIBUTOR,CONTRIBUTOR"
-
 name: OctoGuide
 
 on:
@@ -43,3 +33,13 @@ permissions:
   discussions: write
   issues: write
   pull-requests: write
+
+jobs:
+  octoguide:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: OctoGuide/bot@e32639b1839e810d13613f21f417ebf6e90b821a # 0.21.3
+        with:
+          config: strict
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          include-associations: "FIRST_TIMER,FIRST_TIME_CONTRIBUTOR,CONTRIBUTOR"

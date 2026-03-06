@@ -208,9 +208,20 @@ export default defineConfig({
 You can also disable specific rules inline in your code using [comment directives](/directives).
 This is useful when you need to suppress a rule for a specific line, block, or file.
 
-### Workspaces
+### Projects
+
+Similar to Vitest projects and pnpm workspaces, Flint projects help you organize your configurations modularly when working in a monorepo environment.
+A configuration at the root of your repo can use `projects` to define a list of glob patterns corresponding to project-level Flint configurations that you'd like to contribute to the top-level Flint execution.
+
+```ts title="flint.config.ts"
+import { defineConfig } from "flint";
+
+export default defineConfig({
+	projects: ["packages/*"],
+});
+```
 
 :::danger
-Flint configuration workspaces are not yet implemented.
-See [flint-fyi/flint#64 🚀 Feature: Config file workspaces support](https://github.com/flint-fyi/flint/issues/64) for details.
+This feature has not been implemented yet.
+If you'd like to get involved and contribute or just find out more, see [flint-fyi/flint#64 🚀 Feature: Config file projects support](https://github.com/flint-fyi/flint/issues/64) for details.
 :::

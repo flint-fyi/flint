@@ -103,7 +103,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 		incorrectClampOrder: {
 			primary:
-				"Incorrect clamping pattern: `Math.{{ outerMethod }}({{ min }}, Math.{{ innerMethod }}({{ max }}, x))` should be `Math.min({{max}}, Math.max({{min}}, x))`.",
+				"Incorrect clamping pattern: `Math.{{ outerMethod }}({{ min }}, Math.{{ innerMethod }}({{ max }}, x))` should be `Math.min({{ max }}, Math.max({{ min }}, x))`.",
 			secondary: [
 				"To clamp a value between a minimum and maximum, use `Math.min(max, Math.max(min, value))`.",
 				"The current pattern will not correctly constrain the value to the intended range.",

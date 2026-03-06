@@ -95,12 +95,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferDotNotation: {
 			primary:
-				"Prefer the cleaner dot notation instead of bracket notation for `{{key}}`.",
+				"Prefer the cleaner dot notation instead of bracket notation for `{{ key }}`.",
 			secondary: [
 				"Dot notation is more concise and easier to read.",
 				"Bracket notation should only be used when the property name is not a valid identifier or is a reserved word.",
 			],
-			suggestions: ['Replace `["{{key}}"]` with `.{{key}}`.'],
+			suggestions: ['Replace `["{{ key }}"]` with `.{{ key }}`.'],
 		},
 	},
 	options: {

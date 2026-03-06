@@ -7,7 +7,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports getter functions that do not return values.",
 		id: "getterReturns",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		missingReturn: {

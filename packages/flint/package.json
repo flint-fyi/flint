@@ -2,6 +2,7 @@
 	"name": "flint",
 	"version": "0.16.0",
 	"description": "[Experimental] A fast, friendly linter. ❤️‍🔥",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -15,10 +16,7 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": {
-			"@flint.fyi/source": "./src/index.ts",
-			"default": "./lib/index.js"
-		}
+		".": "./src/index.ts"
 	},
 	"bin": {
 		"flint": "bin/index.js"

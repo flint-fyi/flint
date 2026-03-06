@@ -149,7 +149,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		errorTypeOverrides: {
 			primary:
-				"{{typeName}} is an 'error' type that acts as 'any' and overrides all other types in this {{container}} type.",
+				"{{ typeName }} is an 'error' type that acts as 'any' and overrides all other types in this {{ container }} type.",
 			secondary: [
 				"Error types that resolve to 'any' make the entire union or intersection effectively 'any'.",
 				"This typically indicates a type reference that TypeScript couldn't resolve.",
@@ -157,7 +157,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			suggestions: ["Remove the redundant type constituent."],
 		},
 		literalOverridden: {
-			primary: "{{literal}} is overridden by {{primitive}} in this union type.",
+			primary:
+				"{{ literal }} is overridden by {{ primitive }} in this union type.",
 			secondary: [
 				"When a primitive type like 'string' is in a union with a string literal, the literal is redundant.",
 				"The primitive type already includes all possible literal values.",
@@ -166,25 +167,25 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 		overridden: {
 			primary:
-				"{{typeName}} is overridden by other types in this {{container}} type.",
+				"{{ typeName }} is overridden by other types in this {{ container }} type.",
 			secondary: [
-				"This type constituent has no effect because it is subsumed by other types in the {{container}}.",
+				"This type constituent has no effect because it is subsumed by other types in the {{ container }}.",
 				"Consider removing it to simplify the type.",
 			],
 			suggestions: ["Remove the redundant type."],
 		},
 		overrides: {
 			primary:
-				"{{typeName}} overrides all other types in this {{container}} type.",
+				"{{ typeName }} overrides all other types in this {{ container }} type.",
 			secondary: [
-				"This type makes all other constituents in the {{container}} redundant.",
+				"This type makes all other constituents in the {{ container }} redundant.",
 				"Consider simplifying to just this type.",
 			],
 			suggestions: ["Simplify to just this type."],
 		},
 		primitiveOverridden: {
 			primary:
-				"{{primitive}} is overridden by {{literal}} in this intersection type.",
+				"{{ primitive }} is overridden by {{ literal }} in this intersection type.",
 			secondary: [
 				"When a primitive type intersects with its literal type, the result is the literal type.",
 				"The primitive type is redundant in this intersection.",
