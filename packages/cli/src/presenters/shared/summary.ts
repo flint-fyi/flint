@@ -9,10 +9,6 @@ export interface SummaryCounts {
 	fixable: number;
 }
 
-function formatDuration(ms: number) {
-	return ms >= 1000 ? `${(ms / 1000).toFixed(2)}s` : `${Math.round(ms)}ms`;
-}
-
 export function* presentSummary(
 	counts: SummaryCounts,
 	{ duration, formattingResults, lintResults }: PresenterSummarizeContext,
@@ -81,4 +77,8 @@ export function* presentSummary(
 	yield chalk.gray(
 		`Finished in ${formatDuration(duration)} on ${pluralize(lintResults.allFilePaths.size, "file")} with ${pluralize(lintResults.ruleCount, "rule")}.\n`,
 	);
+}
+
+function formatDuration(ms: number) {
+	return ms >= 1000 ? `${(ms / 1000).toFixed(2)}s` : `${Math.round(ms)}ms`;
 }
