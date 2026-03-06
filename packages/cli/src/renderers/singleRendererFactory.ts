@@ -13,12 +13,13 @@ export const singleRendererFactory: RendererFactory = {
 					console.log(line);
 				}
 			},
-			async render({ formattingResults, lintResults }) {
+			async render({ duration, formattingResults, lintResults }) {
 				for (const [filePath, fileResults] of lintResults.filesResults) {
 					if (!fileResults.reports.length) {
 						continue;
 					}
 
+					// TODO: Can we re-use the sourcefile representation?
 					const sourceFileText = await fs.readFile(filePath, "utf-8");
 
 					const body = presenter.renderFile({
@@ -35,6 +36,7 @@ export const singleRendererFactory: RendererFactory = {
 				}
 
 				const summary = presenter.summarize({
+					duration,
 					formattingResults,
 					lintResults,
 				});

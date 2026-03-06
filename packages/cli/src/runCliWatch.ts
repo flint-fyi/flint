@@ -1,8 +1,7 @@
 import type { LinterHost, LintResults } from "@flint.fyi/core";
-import { normalizePath } from "@flint.fyi/utils";
+import { pathKey } from "@flint.fyi/utils";
 import debounce from "debounce";
 import { debugForFile } from "debug-for-file";
-import * as fs from "node:fs";
 
 import type { OptionsValues } from "./options.ts";
 import type { Renderer } from "./renderers/types.ts";
@@ -16,8 +15,8 @@ export async function runCliWatch(
 	getRenderer: () => Renderer,
 	values: OptionsValues,
 ) {
-	const abortController = new AbortController();
 	const cwd = host.getCurrentDirectory();
+	const isCaseSensitiveFS = host.isCaseSensitiveFS();
 
 	log("Running single-run CLI once before watching");
 
@@ -46,7 +45,7 @@ export async function runCliWatch(
 			);
 
 			renderer.onQuit?.(() => {
-				abortController.abort();
+				watcher[Symbol.dispose]();
 				resolve();
 			});
 
@@ -56,20 +55,7 @@ export async function runCliWatch(
 		currentRenderer = startNewTask(true);
 
 		const rerun = debounce((fileName: string) => {
-			if (
-				fileName.startsWith("node_modules/.cache") ||
-				fileName.startsWith(".git") ||
-				fileName.startsWith(".jj") ||
-				fileName.startsWith(".turbo")
-			) {
-				log(
-					"Skipping re-running watch mode for ignored change to: %s",
-					fileName,
-				);
-				return;
-			}
-
-			const normalizedPath = normalizePath(fileName);
+			const normalizedPath = pathKey(fileName, isCaseSensitiveFS);
 
 			const shouldRerun = shouldRerunForFileChange(
 				normalizedPath,
@@ -90,18 +76,9 @@ export async function runCliWatch(
 		}, 100);
 
 		log("Watching cwd:", cwd);
-		fs.watch(
-			cwd,
-			{
-				recursive: true,
-				signal: abortController.signal,
-			},
-			(_, fileName) => {
-				if (fileName) {
-					rerun(fileName);
-				}
-			},
-		);
+		const watcher = host.watchDirectorySync(cwd, rerun, {
+			recursive: true,
+		});
 	});
 }
 

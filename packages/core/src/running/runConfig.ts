@@ -75,9 +75,11 @@ export async function runConfig(
 	}
 
 	// 5. Write the results to cache, then return them! We did it!
-	const lintResults = { allFilePaths, cached, filesResults };
+	const ruleCount = rulesFilesAndOptionsByRule.size;
+	const lintResults = { allFilePaths, cached, filesResults, ruleCount };
 
 	await writeToCache(
+		host,
 		configDefinition.filePath,
 		lintResults,
 		cacheLocationOverride,
@@ -91,9 +93,14 @@ async function runRules(
 ) {
 	const reportsByFilePath = new CachedFactory<string, FileReport[]>(() => []);
 
+	const promises = [];
 	for (const [rule, filesAndOptions] of rulesFilesAndOptionsByRule) {
-		const ruleReportsByFilePath = await runLintRule(rule, filesAndOptions);
+		const ruleReportsByFilePath = runLintRule(rule, filesAndOptions);
 
+		promises.push(ruleReportsByFilePath);
+	}
+	const rulesResults = await Promise.all(promises);
+	for (const ruleReportsByFilePath of rulesResults) {
 		for (const [filePath, ruleReports] of ruleReportsByFilePath) {
 			reportsByFilePath.get(filePath).push(...ruleReports);
 		}

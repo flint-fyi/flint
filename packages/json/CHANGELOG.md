@@ -1,5 +1,27 @@
 # @flint/json
 
+## 0.16.1
+
+### Patch Changes
+
+- 7403874: Also validate output when testing rules.
+- Updated dependencies [4c99c11]
+- Updated dependencies [b3a637a]
+- Updated dependencies [e257ec4]
+- Updated dependencies [d612d50]
+- Updated dependencies [4b32a64]
+- Updated dependencies [fe76156]
+- Updated dependencies [db34436]
+- Updated dependencies [f2f2c8b]
+- Updated dependencies [442a3f4]
+- Updated dependencies [5c64fbb]
+- Updated dependencies [3eaea9e]
+- Updated dependencies [267fe8d]
+- Updated dependencies [011fbf2]
+- Updated dependencies [9697278]
+  - @flint.fyi/core@0.20.0
+  - @flint.fyi/json-language@0.16.1
+
 ## 0.16.0
 
 ### Minor Changes

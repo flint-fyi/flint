@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/cli",
-	"version": "0.17.0",
+	"version": "0.18.0",
 	"description": "[Experimental] Command-line interface for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -28,7 +28,7 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"@shikijs/cli": "^3.13.0",
+		"@shikijs/cli": "^4.0.0",
 		"chalk": "^5.6.2",
 		"cli-cursor": "^5.0.0",
 		"debounce": "^3.0.0",

@@ -8,8 +8,8 @@ import {
 	findMessagesProperty,
 	forEachMessageString,
 	getStringOriginalQuote,
-	isRuleCreatorCreateRule,
-} from "../utils/ruleCreatorHelpers.ts";
+} from "../utils/messageHelpers.ts";
+import { isRuleCreatorCreateRule } from "../utils/ruleCreatorHelpers.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function formatPlaceholders(text: string): string {

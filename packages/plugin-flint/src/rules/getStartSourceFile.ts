@@ -5,8 +5,9 @@ import {
 import { SyntaxKind } from "typescript";
 
 import { isTSNode } from "../utils/isTSNode.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Requires passing `sourceFile` to `getStart()` for better performance.",

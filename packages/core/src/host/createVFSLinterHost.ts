@@ -108,14 +108,40 @@ export function createVFSLinterHost(
 			}
 		}
 	}
-	return {
+	const host: VFSLinterHost = {
+		fileTypeSync(pathAbsolute) {
+			pathAbsolute = normalizePath(pathAbsolute);
+			const key = pathKey(pathAbsolute, caseSensitiveFS);
+			const keySlash = pathKeyDirSlash(pathAbsolute, caseSensitiveFS);
+			for (const fileKey of fileMap.keys()) {
+				if (key === fileKey) {
+					return "file";
+				}
+				if (fileKey.startsWith(keySlash)) {
+					return "directory";
+				}
+			}
+			return baseHost?.fileTypeSync(pathAbsolute);
+		},
 		getCurrentDirectory() {
 			return cwd;
+		},
+		// eslint-disable-next-line @typescript-eslint/require-await
+		async getFileTouchTime(filePath) {
+			return host.getFileTouchTimeSync(filePath);
+		},
+		getFileTouchTimeSync() {
+			// TODO: uhh... this probably doesn't work amazingly
+			return Date.now();
 		},
 		isCaseSensitiveFS() {
 			return caseSensitiveFS;
 		},
-		readDirectory(directoryPathAbsolute) {
+		// eslint-disable-next-line @typescript-eslint/require-await
+		async readDirectory(directoryPathAbsolute) {
+			return host.readDirectorySync(directoryPathAbsolute);
+		},
+		readDirectorySync(directoryPathAbsolute) {
 			const dirNorm = normalizePath(directoryPathAbsolute);
 			const dirNormSlash = dirNorm.endsWith("/") ? dirNorm : dirNorm + "/";
 			const dirKeySlash = pathKeyDirSlash(dirNorm, caseSensitiveFS);
@@ -147,9 +173,9 @@ export function createVFSLinterHost(
 
 			return [
 				...result.values(),
-				...(baseHost?.stat(directoryPathAbsolute) === "directory"
+				...(baseHost?.fileTypeSync(directoryPathAbsolute) === "directory"
 					? baseHost
-							.readDirectory(directoryPathAbsolute)
+							.readDirectorySync(directoryPathAbsolute)
 							.filter(
 								({ name }) =>
 									!result.has(caseSensitiveFS ? name : name.toLowerCase()),
@@ -157,30 +183,20 @@ export function createVFSLinterHost(
 					: []),
 			];
 		},
-		readFile(filePathAbsolute) {
+		// eslint-disable-next-line @typescript-eslint/require-await
+		async readFile(filePathAbsolute) {
+			return host.readFileSync(filePathAbsolute);
+		},
+		readFileSync(filePathAbsolute) {
 			filePathAbsolute = normalizePath(filePathAbsolute);
 			const file = fileMap.get(pathKey(filePathAbsolute, caseSensitiveFS));
 			if (file != null) {
 				return file.content;
 			}
-			if (baseHost?.stat(filePathAbsolute) === "file") {
-				return baseHost.readFile(filePathAbsolute);
+			if (baseHost?.fileTypeSync(filePathAbsolute) === "file") {
+				return baseHost.readFileSync(filePathAbsolute);
 			}
 			return undefined;
-		},
-		stat(pathAbsolute) {
-			pathAbsolute = normalizePath(pathAbsolute);
-			const key = pathKey(pathAbsolute, caseSensitiveFS);
-			const keySlash = pathKeyDirSlash(pathAbsolute, caseSensitiveFS);
-			for (const fileKey of fileMap.keys()) {
-				if (key === fileKey) {
-					return "file";
-				}
-				if (fileKey.startsWith(keySlash)) {
-					return "directory";
-				}
-			}
-			return baseHost?.stat(pathAbsolute);
 		},
 		vfsDeleteFile(filePathAbsolute) {
 			filePathAbsolute = normalizePath(filePathAbsolute);
@@ -204,15 +220,10 @@ export function createVFSLinterHost(
 			fileMap.set(key, { content, path: storedPath });
 			watchEvent(storedPath, fileEvent);
 		},
-		watchDirectory(
-			directoryPathAbsolute,
-			recursive,
-			callback,
-			pollingInterval,
-		) {
+		watchDirectorySync(directoryPathAbsolute, callback, options) {
 			directoryPathAbsolute = normalizePath(directoryPathAbsolute);
 			const key = pathKey(directoryPathAbsolute, caseSensitiveFS);
-			const collection = recursive
+			const collection = options.recursive
 				? recursiveDirectoryWatchers
 				: directoryWatchers;
 			let watchers = collection.get(key);
@@ -221,11 +232,10 @@ export function createVFSLinterHost(
 				collection.set(key, watchers);
 			}
 			watchers.add(callback);
-			const baseWatcher = baseHost?.watchDirectory(
+			const baseWatcher = baseHost?.watchDirectorySync(
 				directoryPathAbsolute,
-				recursive,
 				callback,
-				pollingInterval,
+				options,
 			);
 			return {
 				[Symbol.dispose]() {
@@ -237,19 +247,20 @@ export function createVFSLinterHost(
 				},
 			};
 		},
-		watchFile(filePathAbsolute, callback, pollingInterval) {
+		watchFileSync(filePathAbsolute, callback, options) {
 			filePathAbsolute = normalizePath(filePathAbsolute);
 			const key = pathKey(filePathAbsolute, caseSensitiveFS);
 			let watchers = fileWatchers.get(key);
+
 			if (watchers == null) {
 				watchers = new Set();
 				fileWatchers.set(key, watchers);
 			}
 			watchers.add(callback);
-			const baseWatcher = baseHost?.watchFile(
+			const baseWatcher = baseHost?.watchFileSync(
 				filePathAbsolute,
 				callback,
-				pollingInterval,
+				options,
 			);
 			return {
 				[Symbol.dispose]() {
@@ -261,5 +272,14 @@ export function createVFSLinterHost(
 				},
 			};
 		},
+		// eslint-disable-next-line @typescript-eslint/require-await
+		async writeFile(filePathAbsolute, content) {
+			host.vfsUpsertFile(filePathAbsolute, content);
+		},
+		writeFileSync(filePathAbsolute, content) {
+			host.vfsUpsertFile(filePathAbsolute, content);
+		},
 	};
+
+	return host;
 }

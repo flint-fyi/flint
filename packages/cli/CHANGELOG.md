@@ -1,5 +1,31 @@
 # @flint/cli
 
+## 0.18.0
+
+### Minor Changes
+
+- e257ec4: Use `LinterHost` for linting.
+- 6c3453b: Filter file changes in watch mode by cache.
+- fe76156: Add support for overriding default cache location.
+
+### Patch Changes
+
+- 5c64fbb: Preserve report url through cache serialization.
+- Updated dependencies [4c99c11]
+- Updated dependencies [b3a637a]
+- Updated dependencies [e257ec4]
+- Updated dependencies [d612d50]
+- Updated dependencies [4b32a64]
+- Updated dependencies [fe76156]
+- Updated dependencies [db34436]
+- Updated dependencies [f2f2c8b]
+- Updated dependencies [442a3f4]
+- Updated dependencies [5c64fbb]
+- Updated dependencies [3eaea9e]
+- Updated dependencies [267fe8d]
+- Updated dependencies [011fbf2]
+  - @flint.fyi/core@0.20.0
+
 ## 0.17.0
 
 ### Minor Changes

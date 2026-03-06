@@ -799,6 +799,14 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "ruleCreationMethods",
+			"plugin": "flint",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "eslint-plugin-eslint-plugin/require-meta-docs-description",

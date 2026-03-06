@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import z from "zod/v4";
 
 import { createLanguage } from "../languages/createLanguage.ts";
+import { RuleCreator } from "../rules/RuleCreator.ts";
 import { createPlugin } from "./createPlugin.ts";
 
 const stubLanguage = createLanguage({
@@ -12,7 +13,13 @@ const stubLanguage = createLanguage({
 
 const stubMessages = { "": { primary: "", secondary: [], suggestions: [] } };
 
-const ruleStandalone = stubLanguage.createRule({
+const ruleCreator = new RuleCreator({
+	docs: (ruleId) => `https://flint.fyi/rules/stub/${ruleId.toLowerCase()}`,
+	pluginId: "stub",
+	presets: ["first", "second"],
+});
+
+const ruleStandalone = ruleCreator.createRule(stubLanguage, {
 	about: {
 		description: "",
 		id: "standalone",
@@ -22,7 +29,7 @@ const ruleStandalone = stubLanguage.createRule({
 	setup: vi.fn(),
 });
 
-const ruleWithOptionalOption = stubLanguage.createRule({
+const ruleWithOptionalOption = ruleCreator.createRule(stubLanguage, {
 	about: {
 		description: "",
 		id: "withOptionalOption",

@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/rule-tester",
-	"version": "0.15.2",
+	"version": "0.16.0",
 	"description": "[Experimental] Rule unit tests for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
