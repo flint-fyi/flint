@@ -35,6 +35,7 @@
 		"@flint.fyi/plugin-flint": "workspace:^",
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",
+		"@types/mdast": "4.0.4",
 		"@types/node": "24.11.0",
 		"@vitest/coverage-v8": "4.0.18",
 		"@vitest/eslint-plugin": "1.6.1",
@@ -62,6 +63,8 @@
 		"tsdown": "0.20.2",
 		"typescript": "5.9.3",
 		"typescript-eslint": "8.56.0",
+		"unist-util-visit": "5.1.0",
+		"vfile": "6.0.3",
 		"vitest": "4.0.18"
 	},
 	"packageManager": "pnpm@10.30.0",

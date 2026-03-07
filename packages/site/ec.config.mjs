@@ -8,7 +8,6 @@ import ecTwoSlash from "expressive-code-twoslash";
 export default {
 	plugins: [
 		ecTwoSlash({
-			explicitTrigger: false,
 			twoslashOptions: {
 				vfsRoot: fileURLToPath(new URL("../..", import.meta.url)),
 				compilerOptions: {

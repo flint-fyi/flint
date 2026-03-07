@@ -7,6 +7,8 @@ import starlightBlog from "starlight-blog";
 import starlightLinksValidator from "starlight-links-validator";
 import starlightSidebarTopics from "starlight-sidebar-topics";
 
+import { remarkAutoTwoslash } from "./src/plugins/remark-auto-twoslash.ts";
+
 export default defineConfig({
 	integrations: [
 		konamiEmojiBlast(),
@@ -141,7 +143,10 @@ export default defineConfig({
 		react(),
 	],
 	markdown: {
-		remarkPlugins: [remarkHeadingId],
+		remarkPlugins: [
+			remarkAutoTwoslash({ exclude: /content\/docs\/(?:blog|rules)/ }),
+			remarkHeadingId,
+		],
 	},
 	redirects: {
 		"/discord": "https://discord.gg/cFK3RAUDhy",
