@@ -45,7 +45,6 @@ const now = Date();
 ```
 
 ```ts
-// @errors: 2348 -- TS catches non-callable constructor
 const map = Map([["key", "value"]]);
 ```
 
@@ -73,14 +72,10 @@ const map = new Map([["key", "value"]]);
 ```
 
 ```ts
-declare const value: unknown;
-// ---cut---
 const str = String(value);
 ```
 
 ```ts
-declare const value: unknown;
-// ---cut---
 const num = Number(value);
 ```
 

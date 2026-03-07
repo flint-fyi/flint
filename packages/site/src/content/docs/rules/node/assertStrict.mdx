@@ -20,7 +20,6 @@ Strict mode provides better error messages with diffs and more reliable equality
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2300 -- Intentional duplicate identifiers
 import assert from "assert";
 
 import assert from "node:assert";
@@ -32,7 +31,6 @@ import { deepEqual } from "node:assert";
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2300 -- Intentional duplicate identifiers
 import assert from "assert/strict";
 
 import assert from "node:assert/strict";

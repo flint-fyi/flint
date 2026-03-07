@@ -30,13 +30,11 @@ export {};
 ```
 
 ```ts
-// @errors: 2498 -- Fictional module
 export * from "module";
 export {};
 ```
 
 ```ts
-// @errors: 2305 -- Fictional module export
 import { something } from "module";
 export {};
 ```
@@ -49,7 +47,6 @@ export const value = {};
 ```
 
 ```ts
-// @errors: 2498 -- Fictional module
 export * from "module";
 ```
 
@@ -58,7 +55,6 @@ export {};
 ```
 
 ```ts
-// @errors: 2305 -- Fictional module export
 import { something } from "module";
 
 console.log(something);

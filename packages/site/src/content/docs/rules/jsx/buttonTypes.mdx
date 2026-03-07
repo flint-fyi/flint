@@ -25,13 +25,10 @@ Specifying an explicit type makes the button's behavior clear and prevents accid
 ```
 
 ```tsx
-declare const handleClick: () => void;
-// ---cut---
-<button onClick={handleClick}>Submit</button>;
+<button onClick={handleClick}>Submit</button>
 ```
 
 ```tsx
-// @errors: 2322 -- JSX prop type mismatch
 <button type="invalid">Click</button>
 ```
 

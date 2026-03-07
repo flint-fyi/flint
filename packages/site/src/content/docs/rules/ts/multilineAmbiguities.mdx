@@ -21,33 +21,21 @@ This can lead to unexpected behavior and runtime errors that are difficult to de
 {/* prettier-ignore-start */}
 
 ```ts
-declare const doSomething: () => void;
-declare const expression: string;
-declare const identifier: (arg: string) => string;
-// ---cut---
 const value = identifier(expression)
 doSomething();
 ```
 
 ```ts
-declare const getArray: { value: string }[];
-// ---cut---
 const data = getArray
 [0].value;
 ```
 
 ```ts
-declare const calculate: (strings: TemplateStringsArray) => string;
-// ---cut---
 const result = calculate
 `template literal`;
 ```
 
 ```ts
-declare const b: (arg: { execute(): void }) => { execute(): void };
-declare const c: { execute(): void } | undefined;
-declare const d: { execute(): void };
-// ---cut---
 function process() {
 	const a = b
 	(c || d).execute();
@@ -60,33 +48,21 @@ function process() {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const expression: { doSomething(): void };
-declare const identifier: string;
-// ---cut---
 const value = identifier;
 expression.doSomething();
 ```
 
 ```ts
-// @errors: 2551 -- property typo (did you mean?)
-declare const getArray: { value: string }[];
-// ---cut---
 const data = getArray;
 [0].value;
 ```
 
 ```ts
-declare const calculate: (strings: TemplateStringsArray) => string;
-// ---cut---
 const result = calculate;
 `template literal`;
 ```
 
 ```ts
-declare const b: string;
-declare const c: { execute(): void } | undefined;
-declare const d: { execute(): void };
-// ---cut---
 function process() {
 	const a = b;
 	(c || d).execute();

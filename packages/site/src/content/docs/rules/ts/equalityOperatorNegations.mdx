@@ -20,19 +20,12 @@ This converts the left operand to a boolean before comparing, which is rarely th
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const doSomething: () => void;
-declare const value: boolean;
-// ---cut---
 if (!value === true) {
 	doSomething();
 }
 ```
 
 ```ts
-// @errors: 2367 -- comparison appears unintentional
-declare const count: number;
-declare const handleEmpty: () => void;
-// ---cut---
 if (!count === 0) {
 	handleEmpty();
 }
@@ -42,27 +35,18 @@ if (!count === 0) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const doSomething: () => void;
-declare const value: boolean;
-// ---cut---
 if (value !== true) {
 	doSomething();
 }
 ```
 
 ```ts
-declare const doSomething: () => void;
-declare const value: boolean;
-// ---cut---
 if (!(value === true)) {
 	doSomething();
 }
 ```
 
 ```ts
-declare const count: number;
-declare const handleEmpty: () => void;
-// ---cut---
 if (count !== 0) {
 	handleEmpty();
 }

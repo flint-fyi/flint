@@ -21,12 +21,10 @@ This is required for WCAG 1.3.1 and 4.1.1 compliance.
 <TabItem label="❌ Incorrect">
 
 ```tsx
-// @errors: 2322 -- scope prop only valid on <th>
 <div scope />
 ```
 
 ```tsx
-// @errors: 2322 -- scope prop only valid on <th>
 <div scope="col" />
 ```
 
@@ -46,9 +44,7 @@ This is required for WCAG 1.3.1 and 4.1.1 compliance.
 ```
 
 ```tsx
-declare const scope: string;
-// ---cut---
-<th scope={scope} />;
+<th scope={scope} />
 ```
 
 ```tsx

@@ -22,7 +22,6 @@ When the `u` (unicode) or `v` (unicode sets) flag is present, JavaScript already
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 1125 1487 1534 -- TS flags the same Annex B regex syntax issues
 // Octal escapes in regex patterns
 const re1 = /\1/;
 const re2 = /\07/;
@@ -48,7 +47,6 @@ const re10 = new RegExp("\\1");
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 1534 -- TS flags the escape sequence
 // Use hexadecimal escapes instead of octal
 const re1 = /\x01/;
 const re2 = /\x07/;

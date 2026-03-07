@@ -32,7 +32,6 @@ array.forEach((element) => {
 ```
 
 ```ts
-// @errors: 2349 -- this expression is not callable
 declare const array: string[];
 array.forEach(function (item) {
 	process(item);
@@ -40,8 +39,6 @@ array.forEach(function (item) {
 ```
 
 ```ts
-declare const handle: (value: number) => void;
-// ---cut---
 [1, 2, 3].forEach((value) => {
 	handle(value);
 });
@@ -58,7 +55,6 @@ for (const element of array) {
 ```
 
 ```ts
-// @errors: 2349 -- this expression is not callable
 declare const array: string[];
 for (const item of array) {
 	process(item);

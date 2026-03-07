@@ -20,10 +20,6 @@ Bracket notation should be reserved for cases where it is necessary, such as whe
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const data: Record<string, Record<string, unknown>>;
-declare const obj: Record<string, unknown>;
-declare const person: Record<string, unknown>;
-// ---cut---
 const value = obj["property"];
 
 obj["value"] = 123;
@@ -46,10 +42,6 @@ container["privateProperty"] = 123;
 <TabItem label="✅ Correct">
 
 ```ts
-declare const data: Record<string, Record<string, unknown>>;
-declare const obj: Record<string, unknown>;
-declare const person: Record<string, unknown>;
-// ---cut---
 const value = obj.property;
 
 obj.value = 123;
@@ -71,10 +63,6 @@ container["privateProperty"] = 123;
 ```
 
 ```ts
-declare const getKey: () => string;
-declare const obj: Record<string, unknown>;
-declare const variable: string;
-// ---cut---
 // Bracket notation is allowed for non-identifier keys
 const value = obj["key with spaces"];
 

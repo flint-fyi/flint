@@ -23,27 +23,18 @@ These properties provide direct access to directory and file paths without requi
 <TabItem label="❌ Incorrect">
 
 ```ts
-import { fileURLToPath } from "node:url";
-// ---cut---
 const filename = fileURLToPath(import.meta.url);
 ```
 
 ```ts
-import { fileURLToPath } from "node:url";
-import path from "node:path";
-// ---cut---
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 ```
 
 ```ts
-import path from "node:path";
-// ---cut---
 const dirname = path.dirname(import.meta.filename);
 ```
 
 ```ts
-import { fileURLToPath } from "node:url";
-// ---cut---
 const url = fileURLToPath(new URL(".", import.meta.url));
 ```
 

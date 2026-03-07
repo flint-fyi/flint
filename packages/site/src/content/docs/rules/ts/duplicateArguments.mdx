@@ -20,21 +20,18 @@ Even in non-strict mode, only the last parameter with a given name is accessible
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2300 -- TS catches duplicate parameter names
 function calculateTotal(value, value) {
 	return value * 2;
 }
 ```
 
 ```ts
-// @errors: 2300 -- TS catches duplicate parameter names
 function process(first, second, first) {
 	return first + second;
 }
 ```
 
 ```ts
-// @errors: 2300 -- TS catches duplicate parameter names
 const handler = (data, data) => {
 	console.log(data);
 };

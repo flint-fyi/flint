@@ -19,7 +19,6 @@ This can lead to confusion and bugs, especially when maintaining the code.
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2393 -- duplicate function implementation
 class Foo {
 	bar() {}
 	bar() {}
@@ -27,7 +26,6 @@ class Foo {
 ```
 
 ```ts
-// @errors: 2300 -- duplicate identifier
 class Foo {
 	get bar() {
 		return 1;
@@ -39,7 +37,6 @@ class Foo {
 ```
 
 ```ts
-// @errors: 2300 -- duplicate identifier
 class Foo {
 	bar = 1;
 	bar = 2;

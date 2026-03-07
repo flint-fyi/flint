@@ -21,10 +21,6 @@ This rule reports on uses of triple-slash references.
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @filename: types.d.ts
-export {};
-// @filename: index.ts
-// ---cut---
 /// <reference path="./types.d.ts" />
 export const value = 1;
 ```
@@ -38,7 +34,6 @@ const path = require("path");
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2834 -- NodeNext requires file extensions
 import type { MyType } from "./types";
 export const value: MyType = 1;
 ```

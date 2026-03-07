@@ -20,21 +20,14 @@ Calling these methods directly on objects can lead to errors or security vulnera
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const object: Record<string, unknown>;
-// ---cut---
 const hasKey = object.hasOwnProperty("key");
 ```
 
 ```ts
-declare const object: Record<string, unknown>;
-declare const other: Record<string, unknown>;
-// ---cut---
 const isPrototypeOf = object.isPrototypeOf(other);
 ```
 
 ```ts
-declare const object: Record<string, unknown>;
-// ---cut---
 const isEnumerable = object.propertyIsEnumerable("prop");
 ```
 
@@ -42,21 +35,14 @@ const isEnumerable = object.propertyIsEnumerable("prop");
 <TabItem label="✅ Correct">
 
 ```ts
-declare const object: Record<string, unknown>;
-// ---cut---
 const hasKey = Object.prototype.hasOwnProperty.call(object, "key");
 ```
 
 ```ts
-declare const object: Record<string, unknown>;
-declare const other: Record<string, unknown>;
-// ---cut---
 const isPrototypeOf = Object.prototype.isPrototypeOf.call(object, other);
 ```
 
 ```ts
-declare const object: Record<string, unknown>;
-// ---cut---
 const isEnumerable = {}.propertyIsEnumerable.call(object, "prop");
 ```
 

@@ -20,7 +20,6 @@ Attempting to call them as functions or instantiate them with `new` will result 
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2349 2351 -- TS catches non-callable/constructable expressions
 const result = Math();
 
 const data = JSON();
@@ -34,8 +33,6 @@ const instance = new Atomics();
 <TabItem label="✅ Correct">
 
 ```ts
-declare const buffer: Int32Array;
-// ---cut---
 const value = Math.abs(-5);
 
 const parsed = JSON.parse("{}");

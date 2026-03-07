@@ -57,8 +57,6 @@ parent.postMessage("message", "*");
 ```
 
 ```typescript
-declare const worker: Worker;
-// ---cut---
 // Worker, MessagePort, and other postMessage calls are not affected
 worker.postMessage("message");
 ```

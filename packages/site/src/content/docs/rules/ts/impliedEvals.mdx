@@ -56,16 +56,12 @@ setTimeout(() => {
 ```
 
 ```ts
-declare let counter: number;
-// ---cut---
 setInterval(() => {
 	counter++;
 }, 100);
 ```
 
 ```ts
-declare const myCallback: () => void;
-// ---cut---
 setTimeout(myCallback, 0);
 ```
 
@@ -74,9 +70,6 @@ const add = (a: number, b: number) => a + b;
 ```
 
 ```ts
-declare const context: Record<string, unknown>;
-declare const handler: () => void;
-// ---cut---
 setTimeout(handler.bind(context), 100);
 ```
 

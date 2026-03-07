@@ -19,11 +19,6 @@ Use `!(left in right)` or `!(left instanceof Right)` to negate the relation as i
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2360 2358 -- TS catches invalid operand types for in/instanceof
-declare class Constructor {}
-declare const key: string;
-declare const object: Record<string, unknown>;
-// ---cut---
 if ((!key) in object) {
 }
 
@@ -38,10 +33,6 @@ if ((!key) in object) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare class Constructor {}
-declare const key: string;
-declare const object: Record<string, unknown>;
-// ---cut---
 if (!(key in object)) {
 }
 

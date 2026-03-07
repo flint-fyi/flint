@@ -32,24 +32,18 @@ This is required for WCAG 2.1.1 compliance.
 ```
 
 ```tsx
-declare const handler: () => void;
-// ---cut---
-<span onClick={handler} />;
+<span onClick={handler} />
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```tsx
-declare const handler: () => void;
-// ---cut---
-<div onClick={() => {}} onKeyDown={handler} />;
+<div onClick={() => {}} onKeyDown={handler} />
 ```
 
 ```tsx
-declare const handler: () => void;
-// ---cut---
-<div onClick={() => {}} onKeyUp={handler} />;
+<div onClick={() => {}} onKeyUp={handler} />
 ```
 
 ```tsx
@@ -61,10 +55,7 @@ declare const handler: () => void;
 ```
 
 ```tsx
-import React from "react";
-declare const CustomElement: React.FC;
-// ---cut---
-<CustomElement onClick={() => {}} aria-hidden="true" />;
+<CustomElement onClick={() => {}} aria-hidden="true" />
 ```
 
 </TabItem>

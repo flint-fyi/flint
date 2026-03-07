@@ -31,11 +31,6 @@ Note that this rule will not flag cases where:
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const condition: boolean;
-declare const doSomething: () => void;
-declare const doSomethingElse: () => void;
-declare const otherCondition: boolean;
-// ---cut---
 if (condition) {
 	doSomething();
 } else {
@@ -49,11 +44,6 @@ if (condition) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const condition: boolean;
-declare const doSomething: () => void;
-declare const doSomethingElse: () => void;
-declare const otherCondition: boolean;
-// ---cut---
 if (condition) {
 	doSomething();
 } else if (otherCondition) {
@@ -70,10 +60,6 @@ if (condition) {
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const a: boolean;
-declare const b: boolean;
-declare const doSomething: () => void;
-// ---cut---
 if (a) {
 	if (b) {
 		doSomething();
@@ -85,10 +71,6 @@ if (a) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const a: boolean;
-declare const b: boolean;
-declare const doSomething: () => void;
-// ---cut---
 if (a && b) {
 	doSomething();
 }
@@ -105,11 +87,6 @@ When combining conditions, the rule correctly handles operator precedence by add
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const a: boolean;
-declare const b: boolean;
-declare const c: boolean;
-declare const doSomething: () => void;
-// ---cut---
 if (a || b) {
 	if (c) {
 		doSomething();
@@ -121,11 +98,6 @@ if (a || b) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const a: boolean;
-declare const b: boolean;
-declare const c: boolean;
-declare const doSomething: () => void;
-// ---cut---
 if ((a || b) && c) {
 	doSomething();
 }

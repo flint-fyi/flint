@@ -20,7 +20,6 @@ This rule helps catch typos and missing declarations early in development.
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @noErrors -- rule demonstrates undefined variable errors which can't be shown with declarations
 console.log(undefinedVar);
 
 function calculate() {
@@ -34,7 +33,6 @@ const value = first + second;
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2451 -- redeclared block-scoped variable
 const value = 5;
 console.log(value);
 

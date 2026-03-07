@@ -19,8 +19,6 @@ The exception parameter contains important information about what went wrong, an
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const processData: () => void;
-// ---cut---
 try {
 	processData();
 } catch (error) {
@@ -30,8 +28,6 @@ try {
 ```
 
 ```ts
-declare const validateInput: () => void;
-// ---cut---
 try {
 	validateInput();
 } catch (exception) {
@@ -44,8 +40,6 @@ try {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const processData: () => void;
-// ---cut---
 try {
 	processData();
 } catch (error) {
@@ -55,9 +49,6 @@ try {
 ```
 
 ```ts
-// @errors: 18046 -- 'await' has no effect on this expression
-declare const validateInput: () => void;
-// ---cut---
 try {
 	validateInput();
 } catch (exception) {

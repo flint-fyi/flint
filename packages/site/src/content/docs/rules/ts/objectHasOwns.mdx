@@ -21,28 +21,20 @@ Using `Object.hasOwn()` avoids potential issues with objects that don't inherit 
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const obj: Record<string, unknown>;
-// ---cut---
 const hasKey = obj.hasOwnProperty("key");
 ```
 
 ```ts
-declare const obj: Record<string, unknown>;
-// ---cut---
 if (obj.hasOwnProperty("prop")) {
 	console.log("Has property");
 }
 ```
 
 ```ts
-declare const obj: Record<string, unknown>;
-// ---cut---
 const result = Object.prototype.hasOwnProperty.call(obj, "key");
 ```
 
 ```ts
-declare const obj: Record<string, unknown>;
-// ---cut---
 const exists = {}.hasOwnProperty.call(obj, "prop");
 ```
 
@@ -50,28 +42,20 @@ const exists = {}.hasOwnProperty.call(obj, "prop");
 <TabItem label="✅ Correct">
 
 ```ts
-declare const obj: Record<string, unknown>;
-// ---cut---
 const hasKey = Object.hasOwn(obj, "key");
 ```
 
 ```ts
-declare const obj: Record<string, unknown>;
-// ---cut---
 if (Object.hasOwn(obj, "prop")) {
 	console.log("Has property");
 }
 ```
 
 ```ts
-declare const obj: Record<string, unknown>;
-// ---cut---
 const result = Object.hasOwn(obj, "key");
 ```
 
 ```ts
-declare const obj: Record<string, unknown>;
-// ---cut---
 const exists = Object.hasOwn(obj, "prop");
 ```
 

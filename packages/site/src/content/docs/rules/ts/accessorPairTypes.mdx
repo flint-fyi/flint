@@ -21,7 +21,6 @@ This rule reports cases where a getter and setter have the same name but the get
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2551 -- property typo (did you mean?)
 class Example {
 	get value(): string {
 		return this._value;
@@ -43,7 +42,6 @@ interface Config {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2551 -- property typo (did you mean?)
 class Example {
 	get value(): string {
 		return this._value;
@@ -55,7 +53,6 @@ class Example {
 ```
 
 ```ts
-// @errors: 2551 -- property typo (did you mean?)
 class Example {
 	get value(): string {
 		return this._value;

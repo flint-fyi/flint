@@ -20,11 +20,6 @@ Duplicate conditions typically indicate a copy-paste error or a logic mistake in
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const handleActive: () => void;
-declare const handlePending: () => void;
-declare const handlePendingAgain: () => void;
-declare const status: string;
-// ---cut---
 if (status === "pending") {
 	handlePending();
 } else if (status === "active") {
@@ -35,13 +30,6 @@ if (status === "pending") {
 ```
 
 ```ts
-declare const isActive: boolean;
-declare const isPending: boolean;
-declare const isValid: boolean;
-declare const processPending: () => void;
-declare const processValid: () => void;
-declare const processValidAgain: () => void;
-// ---cut---
 if (isValid && isActive) {
 	processValid();
 } else if (isPending) {
@@ -52,11 +40,6 @@ if (isValid && isActive) {
 ```
 
 ```ts
-declare const count: number;
-declare const handleOne: () => void;
-declare const handleOneAgain: () => void;
-declare const handleTwo: () => void;
-// ---cut---
 if (count === 1) {
 	handleOne();
 } else if (count === 2) {
@@ -70,11 +53,6 @@ if (count === 1) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const handleActive: () => void;
-declare const handleCompleted: () => void;
-declare const handlePending: () => void;
-declare const status: string;
-// ---cut---
 if (status === "pending") {
 	handlePending();
 } else if (status === "active") {
@@ -85,13 +63,6 @@ if (status === "pending") {
 ```
 
 ```ts
-declare const isActive: boolean;
-declare const isPending: boolean;
-declare const isValid: boolean;
-declare const processInactive: () => void;
-declare const processPending: () => void;
-declare const processValid: () => void;
-// ---cut---
 if (isValid && isActive) {
 	processValid();
 } else if (isPending) {
@@ -102,11 +73,6 @@ if (isValid && isActive) {
 ```
 
 ```ts
-declare const count: number;
-declare const handleOne: () => void;
-declare const handleThree: () => void;
-declare const handleTwo: () => void;
-// ---cut---
 if (count === 1) {
 	handleOne();
 } else if (count === 2) {

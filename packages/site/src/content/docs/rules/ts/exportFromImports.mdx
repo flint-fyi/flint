@@ -21,11 +21,6 @@ It can be done in a single `export...from` declaration, which is more concise an
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @filename: foo.js
-export default "defaultExport";
-export const named = "named";
-// @filename: index.ts
-// ---cut---
 import defaultExport from "./foo.js";
 export default defaultExport;
 ```
@@ -34,11 +29,6 @@ export default defaultExport;
 <TabItem label="✅ Correct">
 
 ```ts
-// @filename: foo.js
-export default "defaultExport";
-export const named = "named";
-// @filename: index.ts
-// ---cut---
 export { default } from "./foo.js";
 ```
 
@@ -51,11 +41,6 @@ export { default } from "./foo.js";
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @filename: foo.js
-export default "defaultExport";
-export const named = "named";
-// @filename: index.ts
-// ---cut---
 import { named } from "./foo.js";
 export { named };
 ```
@@ -64,11 +49,6 @@ export { named };
 <TabItem label="✅ Correct">
 
 ```ts
-// @filename: foo.js
-export default "defaultExport";
-export const named = "named";
-// @filename: index.ts
-// ---cut---
 export { named } from "./foo.js";
 ```
 
@@ -81,11 +61,6 @@ export { named } from "./foo.js";
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @filename: foo.js
-export default "defaultExport";
-export const named = "named";
-// @filename: index.ts
-// ---cut---
 import * as namespace from "./foo.js";
 export { namespace };
 ```
@@ -94,11 +69,6 @@ export { namespace };
 <TabItem label="✅ Correct">
 
 ```ts
-// @filename: foo.js
-export default "defaultExport";
-export const named = "named";
-// @filename: index.ts
-// ---cut---
 export * as namespace from "./foo.js";
 ```
 
@@ -111,11 +81,6 @@ export * as namespace from "./foo.js";
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @filename: foo.js
-export default "defaultExport";
-export const named = "named";
-// @filename: index.ts
-// ---cut---
 import defaultExport, { named } from "./foo.js";
 export default defaultExport;
 export { defaultExport as renamedDefault, named, named as renamedNamed };
@@ -125,11 +90,6 @@ export { defaultExport as renamedDefault, named, named as renamedNamed };
 <TabItem label="✅ Correct">
 
 ```ts
-// @filename: foo.js
-export default "defaultExport";
-export const named = "named";
-// @filename: index.ts
-// ---cut---
 export {
 	default,
 	default as renamedDefault,

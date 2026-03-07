@@ -19,25 +19,18 @@ An empty `with {}` clause provides no additional information and should be remov
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @filename: data.json
-{ "key": "value" }
-// @filename: index.ts
-// ---cut---
 import data from "./data.json" with {};
 ```
 
 ```ts
-// @errors: 2834 -- NodeNext requires file extensions
 import { x } from "./module" with {};
 ```
 
 ```ts
-// @errors: 2834 -- NodeNext requires file extensions
 export { x } from "./module" with {};
 ```
 
 ```ts
-// @errors: 2834 -- NodeNext requires file extensions
 export * from "./module" with {};
 ```
 
@@ -45,28 +38,18 @@ export * from "./module" with {};
 <TabItem label="✅ Correct">
 
 ```ts
-// @filename: data.json
-{ "key": "value" }
-// @filename: index.ts
-// ---cut---
 import data from "./data.json" with { type: "json" };
 ```
 
 ```ts
-// @errors: 2834 -- NodeNext requires file extensions
 import { x } from "./module";
 ```
 
 ```ts
-// @errors: 2834 -- NodeNext requires file extensions
 export { x } from "./module";
 ```
 
 ```ts
-// @filename: styles.css
-.container { display: flex; }
-// @filename: index.ts
-// ---cut---
 import styles from "./styles.css" with { type: "css" };
 ```
 

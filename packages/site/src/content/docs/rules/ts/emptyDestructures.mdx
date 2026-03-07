@@ -19,10 +19,6 @@ These patterns are typically mistakes or leftover code from refactoring where va
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const array: unknown[];
-declare const items: Record<string, unknown>[];
-declare const object: Record<string, unknown>;
-// ---cut---
 const {} = object;
 const [] = array;
 
@@ -39,14 +35,10 @@ for (const {} of items) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const array: string[];
-declare const items: { item: string }[];
-declare const person: { name: string; age: number };
-// ---cut---
 const { name, age } = person;
 const [first, second] = array;
 
-function process({ id, value }: { id: string; value: number }) {
+function process({ id, value }) {
 	console.log(id, value);
 }
 
@@ -56,7 +48,7 @@ for (const { item } of items) {
 
 // Empty object/array literals are fine (not destructuring)
 const empty = {};
-const emptyArray: unknown[] = [];
+const emptyArray = [];
 ```
 
 </TabItem>

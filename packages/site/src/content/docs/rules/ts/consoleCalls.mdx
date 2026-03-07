@@ -19,10 +19,6 @@ They can expose sensitive information to users and clutter the browser console.
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare interface User {
-	name: string;
-}
-// ---cut---
 function processUser(user: User) {
 	console.log("Processing user:", user);
 	return user.name;
@@ -33,10 +29,6 @@ function processUser(user: User) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare interface User {
-	name: string;
-}
-// ---cut---
 function processUser(user: User) {
 	return user.name;
 }

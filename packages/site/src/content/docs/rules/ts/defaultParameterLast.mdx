@@ -37,7 +37,6 @@ const fn = (x = 0, y: number) => x + y;
 ```
 
 ```ts
-// @errors: 1016 -- required parameter after optional
 function example(a?: number, b: number) {
 	return (a ?? 0) + b;
 }

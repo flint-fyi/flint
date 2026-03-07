@@ -37,7 +37,6 @@ export {} from "module";
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2305 -- Fictional module export
 import { something } from "module";
 ```
 
@@ -54,12 +53,10 @@ import * as namespace from "module";
 ```
 
 ```ts
-// @errors: 2305 -- Fictional module export
 export { something } from "module";
 ```
 
 ```ts
-// @errors: 2498 -- Fictional module
 export * from "module";
 ```
 

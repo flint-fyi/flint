@@ -21,14 +21,10 @@ For example, `text.toLowerCase() === "VALUE"` will always be `false` because `.t
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const input: string;
-// ---cut---
 input.toLowerCase() === "VALUE";
 ```
 
 ```ts
-declare const input: string;
-// ---cut---
 input.toUpperCase() === "hello";
 ```
 
@@ -36,14 +32,10 @@ input.toUpperCase() === "hello";
 <TabItem label="✅ Correct">
 
 ```ts
-declare const input: string;
-// ---cut---
 input.toLowerCase() === "value";
 ```
 
 ```ts
-declare const input: string;
-// ---cut---
 input.toUpperCase() === "HELLO";
 ```
 

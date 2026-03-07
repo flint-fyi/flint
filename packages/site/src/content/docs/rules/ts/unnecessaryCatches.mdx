@@ -20,8 +20,6 @@ Errors will propagate naturally without the catch clause, making it redundant.
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const readFileSync: (path: string) => string;
-// ---cut---
 async function fetchData() {
 	try {
 		return await fetch("/api/data");
@@ -44,8 +42,6 @@ function processFile(path: string) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const readFileSync: (path: string) => string;
-// ---cut---
 async function fetchData() {
 	try {
 		return await fetch("/api/data");

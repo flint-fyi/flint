@@ -19,7 +19,6 @@ When a property has both a getter and a setter, defining them adjacent to each o
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2551 -- property typo (did you mean?)
 class Example {
 	get value() {
 		return this._value;
@@ -32,7 +31,6 @@ class Example {
 ```
 
 ```ts
-// @errors: 2551 -- property typo (did you mean?)
 const object = {
 	get value() {
 		return this._value;
@@ -48,7 +46,6 @@ const object = {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2551 -- property typo (did you mean?)
 class Example {
 	get value() {
 		return this._value;
@@ -61,7 +58,6 @@ class Example {
 ```
 
 ```ts
-// @errors: 2551 -- property typo (did you mean?)
 const object = {
 	get value() {
 		return this._value;

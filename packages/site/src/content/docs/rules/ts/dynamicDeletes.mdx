@@ -22,22 +22,15 @@ Dynamically adding and removing keys from objects can cause edge case bugs relat
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const obj: Record<string, unknown>;
-// ---cut---
 const key = "property";
 delete obj[key];
 ```
 
 ```ts
-declare const getKey: () => string;
-declare const obj: Record<string, unknown>;
-// ---cut---
 delete obj[getKey()];
 ```
 
 ```ts
-declare const arr: Record<number, unknown>;
-// ---cut---
 const i = 0;
 delete arr[i];
 ```
@@ -46,20 +39,14 @@ delete arr[i];
 <TabItem label="✅ Correct">
 
 ```ts
-declare const obj: Record<string, unknown>;
-// ---cut---
 delete obj.property;
 ```
 
 ```ts
-declare const obj: Record<string, unknown>;
-// ---cut---
 delete obj["literal"];
 ```
 
 ```ts
-declare const obj: Record<number, unknown>;
-// ---cut---
 delete obj[0];
 ```
 

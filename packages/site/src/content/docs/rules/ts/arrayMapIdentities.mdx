@@ -19,22 +19,16 @@ The `.flat()` method is more concise and clearly expresses the intent to flatten
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const values: number[][];
-// ---cut---
 const result = values.flatMap((value) => value);
 ```
 
 ```ts
-declare const values: number[][];
-// ---cut---
 const result = values.flatMap((item) => {
 	return item;
 });
 ```
 
 ```ts
-declare const values: number[][];
-// ---cut---
 const result = values.flatMap(function (element) {
 	return element;
 });
@@ -44,27 +38,18 @@ const result = values.flatMap(function (element) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const values: number[][];
-// ---cut---
 const result = values.flat();
 ```
 
 ```ts
-declare const values: { children: string[] }[];
-// ---cut---
 const result = values.flatMap((value) => value.children);
 ```
 
 ```ts
-declare const values: { extras: number[] }[];
-// ---cut---
 const result = values.flatMap((value) => [value, ...value.extras]);
 ```
 
 ```ts
-declare const transform: (value: number) => number[];
-declare const values: number[];
-// ---cut---
 const result = values.flatMap((value) => transform(value));
 ```
 

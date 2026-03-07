@@ -19,17 +19,14 @@ These functions should be called directly without `new` to create their respecti
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2350 -- TS catches non-constructable calls
 const symbol = new Symbol("description");
 ```
 
 ```ts
-// @errors: 2350 -- TS catches non-constructable calls
 const bigNumber = new BigInt(42);
 ```
 
 ```ts
-// @errors: 2350 -- TS catches non-constructable calls
 function create() {
 	return new BigInt(100);
 }

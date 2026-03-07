@@ -23,9 +23,6 @@ These operations have constant time complexity (O(1)) per iteration, resulting i
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2322 -- empty array infers as never[]
-declare const items: string[];
-// ---cut---
 let array = [];
 for (const item of items) {
 	array = [...array, item];
@@ -33,7 +30,6 @@ for (const item of items) {
 ```
 
 ```ts
-// @errors: 2322 -- empty array infers as never[]
 let numbers = [];
 for (let i = 0; i < 10; i++) {
 	numbers = [...numbers, i * 2];
@@ -41,8 +37,6 @@ for (let i = 0; i < 10; i++) {
 ```
 
 ```ts
-declare const entries: [string, unknown][];
-// ---cut---
 let object = {};
 for (const [key, value] of entries) {
 	object = { ...object, [key]: value };
@@ -53,9 +47,6 @@ for (const [key, value] of entries) {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2345 -- empty array infers as never[]
-declare const items: string[];
-// ---cut---
 let array = [];
 for (const item of items) {
 	array.push(item);
@@ -63,7 +54,6 @@ for (const item of items) {
 ```
 
 ```ts
-// @errors: 2345 -- empty array infers as never[]
 let numbers = [];
 for (let i = 0; i < 10; i++) {
 	numbers.push(i * 2);
@@ -71,9 +61,6 @@ for (let i = 0; i < 10; i++) {
 ```
 
 ```ts
-// @errors: 7053 -- no index signature on {}
-declare const entries: [string, unknown][];
-// ---cut---
 let object = {};
 for (const [key, value] of entries) {
 	object[key] = value;

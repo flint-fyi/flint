@@ -20,8 +20,6 @@ The Response wrapper adds unnecessary complexity when the Blob already provides 
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const blob: Blob;
-// ---cut---
 const text = await new Response(blob).text();
 
 const arrayBuffer = await new Response(blob).arrayBuffer();
@@ -33,8 +31,6 @@ const bytes = await new Response(blob).bytes();
 <TabItem label="✅ Correct">
 
 ```ts
-declare const blob: Blob;
-// ---cut---
 const text = await blob.text();
 
 const arrayBuffer = await blob.arrayBuffer();

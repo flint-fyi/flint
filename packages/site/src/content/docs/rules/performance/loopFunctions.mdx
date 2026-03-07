@@ -22,7 +22,6 @@ This behavior is a common source of bugs in JavaScript applications, especially 
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2345 -- empty array infers as never[]
 const handlers = [];
 for (let i = 0; i < 5; i++) {
 	handlers.push(function () {
@@ -33,8 +32,6 @@ for (let i = 0; i < 5; i++) {
 ```
 
 ```ts
-declare const button: HTMLButtonElement;
-// ---cut---
 const items = ["a", "b", "c"];
 for (let i = 0; i < items.length; i++) {
 	button.addEventListener("click", () => {
@@ -47,7 +44,6 @@ for (let i = 0; i < items.length; i++) {
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2345 -- empty array infers as never[]
 const handlers = [];
 for (let i = 0; i < 5; i++) {
 	handlers.push(
@@ -61,8 +57,6 @@ for (let i = 0; i < 5; i++) {
 ```
 
 ```ts
-declare const button: HTMLButtonElement;
-// ---cut---
 function createHandler(item: string) {
 	return () => {
 		console.log(item);
@@ -76,8 +70,6 @@ for (let i = 0; i < items.length; i++) {
 ```
 
 ```ts
-declare const items: string[];
-// ---cut---
 const handlers = items.map((item) => () => {
 	console.log(item);
 });

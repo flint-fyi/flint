@@ -19,26 +19,18 @@ These assignments serve no purpose and should be removed or corrected to assign 
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare let value: string;
-// ---cut---
 value = value;
 ```
 
 ```ts
-declare let count: number;
-// ---cut---
 count &&= count;
 ```
 
 ```ts
-declare let flags: Record<string, unknown>;
-// ---cut---
 flags.value ||= flags.value;
 ```
 
 ```ts
-declare let data: string;
-// ---cut---
 data ??= data;
 ```
 
@@ -46,30 +38,18 @@ data ??= data;
 <TabItem label="✅ Correct">
 
 ```ts
-declare const newValue: string;
-declare let value: string;
-// ---cut---
 value = newValue;
 ```
 
 ```ts
-declare let count: number;
-declare const otherCount: number;
-// ---cut---
 count &&= otherCount;
 ```
 
 ```ts
-declare const defaultFlag: string;
-declare let flag: string;
-// ---cut---
 flag ||= defaultFlag;
 ```
 
 ```ts
-declare let data: string;
-declare const fallbackData: string;
-// ---cut---
 data ??= fallbackData;
 ```
 

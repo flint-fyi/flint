@@ -19,13 +19,11 @@ Only `lib`, `no-default-lib`, `path`, and `types` are valid directive attributes
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 1084 -- Intentionally invalid reference
 /// <reference foo="bar" />
 export const value = 1;
 ```
 
 ```ts
-// @errors: 1084 -- Intentionally invalid reference
 /// <reference types />
 export const value = 1;
 ```

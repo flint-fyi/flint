@@ -18,16 +18,6 @@ When reporting linting issues, it's common to include dynamic data in the messag
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @noErrors -- simplified rule definition omits required fields like 'about'
-import { RuleCreator, type RuleContext } from "@flint.fyi/core";
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
-const ruleCreator = new RuleCreator({
-	docs: () => "",
-	pluginId: "flint",
-	presets: [] as string[],
-});
-const _ = typescriptLanguage;
-// ---cut---
 ruleCreator.createRule(_, {
 	messages: {
 		messagesId: {
@@ -48,16 +38,6 @@ ruleCreator.createRule(_, {
 <TabItem label="✅ Correct">
 
 ```ts
-// @noErrors -- simplified rule definition omits required fields like 'about'
-import { RuleCreator, type RuleContext } from "@flint.fyi/core";
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
-const ruleCreator = new RuleCreator({
-	docs: () => "",
-	pluginId: "flint",
-	presets: [] as string[],
-});
-const _ = typescriptLanguage;
-// ---cut---
 ruleCreator.createRule(_, {
 	messages: {
 		messagesId: {

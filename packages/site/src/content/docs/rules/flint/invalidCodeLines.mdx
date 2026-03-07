@@ -19,85 +19,65 @@ This allows snapshot `~` characters to appear visually underneath the flagged co
 <TabItem label="❌ Incorrect">
 
 ```ts
-import type { AnyRule } from "@flint.fyi/core";
-import type { RuleTester } from "@flint.fyi/rule-tester";
-declare const rule: AnyRule;
-declare const ruleTester: RuleTester;
-// ---cut---
 ruleTester.describe(rule, {
-	valid: ["a", "a"],
-	invalid: [
-		{
-			code: "",
-			snapshot: `
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: "",
+        snapshot: \`
 ~
 Rule report message.
-`,
-		},
-	],
+\`,
+      }
+    ],
 });
 ```
 
 ```ts
-import type { AnyRule } from "@flint.fyi/core";
-import type { RuleTester } from "@flint.fyi/rule-tester";
-declare const rule: AnyRule;
-declare const ruleTester: RuleTester;
-// ---cut---
 ruleTester.describe(rule, {
-	valid: ["a", "a"],
-	invalid: [
-		{
-			code: `console.log(
-);`,
-			snapshot: `console.log(
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: \`console.log(
+);\`,
+        snapshot: \`console.log(
 );
 ~
 Rule report message.
-`,
-		},
-	],
+\`,
+      }
+    ],
 });
 ```
 
 ```ts
-import type { AnyRule } from "@flint.fyi/core";
-import type { RuleTester } from "@flint.fyi/rule-tester";
-declare const rule: AnyRule;
-declare const ruleTester: RuleTester;
-// ---cut---
 ruleTester.describe(rule, {
-	valid: ["a", "a"],
-	invalid: [
-		{
-			code: `
-console.log();`,
-			snapshot: `
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: \`
+console.log();\`,
+        snapshot: \`
 console.log();
 ~
-Rule report message.`,
-		},
-	],
+Rule report message.\`,
+      }
+    ],
 });
 ```
 
 ```ts
-import type { AnyRule } from "@flint.fyi/core";
-import type { RuleTester } from "@flint.fyi/rule-tester";
-declare const rule: AnyRule;
-declare const ruleTester: RuleTester;
-// ---cut---
 ruleTester.describe(rule, {
-	valid: ["a", "a"],
-	invalid: [
-		{
-			code: `console.log();`,
-			snapshot: `console.log();
+    valid: ['a', 'a'],
+    invalid: [
+      {
+        code: \`console.log();\`,
+        snapshot: \`console.log();
 ~~~~~~~~~~~~~
 Rule report message.
-`,
-		},
-	],
+\`,
+      }
+    ],
 });
 ```
 
@@ -105,45 +85,35 @@ Rule report message.
 <TabItem label="✅ Correct">
 
 ```ts
-import type { AnyRule } from "@flint.fyi/core";
-import type { RuleTester } from "@flint.fyi/rule-tester";
-declare const rule: AnyRule;
-declare const ruleTester: RuleTester;
-// ---cut---
 ruleTester.describe(rule, {
-	valid: [],
-	invalid: [
-		{
-			code: `
-`,
-			snapshot: `
+    valid: [],
+    invalid: [
+    {
+        code: \`
+\`,
+        snapshot: \`
 ~
-`,
-		},
-	],
+\`,
+}
+    ],
 });
 ```
 
 ```ts
-import type { AnyRule } from "@flint.fyi/core";
-import type { RuleTester } from "@flint.fyi/rule-tester";
-declare const rule: AnyRule;
-declare const ruleTester: RuleTester;
-// ---cut---
 ruleTester.describe(rule, {
-	valid: [],
-	invalid: [
-		{
-			code: `
+    valid: [],
+    invalid: [
+    {
+        code: \`
 console.log();
-`,
-			snapshot: `
+\`,
+        snapshot: \`
 console.log();
 ~~~~~~~~~~~~~
 Rule report message.
-`,
-		},
-	],
+\`,
+}
+    ],
 });
 ```
 

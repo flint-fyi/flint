@@ -19,12 +19,6 @@ Attempting to access `this` or `super` properties before calling `super()` throw
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 17009 -- TS catches 'this' before super()
-declare class Parent {
-	value: number;
-	constructor();
-}
-// ---cut---
 class Child extends Parent {
 	constructor() {
 		this.value = 0;
@@ -34,12 +28,6 @@ class Child extends Parent {
 ```
 
 ```ts
-// @errors: 17011 -- TS catches super property access before super()
-declare class Parent {
-	constructor();
-	initialize(): void;
-}
-// ---cut---
 class Child extends Parent {
 	constructor() {
 		super.initialize();
@@ -52,11 +40,6 @@ class Child extends Parent {
 <TabItem label="✅ Correct">
 
 ```ts
-declare class Parent {
-	value: number;
-	constructor();
-}
-// ---cut---
 class Child extends Parent {
 	constructor() {
 		super();
@@ -66,11 +49,6 @@ class Child extends Parent {
 ```
 
 ```ts
-declare class Parent {
-	constructor();
-	initialize(): void;
-}
-// ---cut---
 class Child extends Parent {
 	constructor() {
 		super();

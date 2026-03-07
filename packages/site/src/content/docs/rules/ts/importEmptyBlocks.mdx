@@ -19,17 +19,14 @@ This rule detects such empty blocks to help keep imports clean and intentional.
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2307 -- Fictional module
 import {} from "mod";
 ```
 
 ```ts
-// @errors: 2307 -- Fictional module
 import Default from "mod";
 ```
 
 ```ts
-// @errors: 2307 -- Fictional module
 import type {} from "mod";
 ```
 
@@ -37,17 +34,14 @@ import type {} from "mod";
 <TabItem label="✅ Correct">
 
 ```ts
-// @errors: 2307 -- Fictional module
 import { named } from "mod";
 ```
 
 ```ts
-// @errors: 2307 -- Fictional module
 import Default from "mod";
 ```
 
 ```ts
-// @errors: 2307 -- Fictional module
 import * as mod from "mod";
 ```
 

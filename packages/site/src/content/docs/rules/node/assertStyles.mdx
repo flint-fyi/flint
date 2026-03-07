@@ -20,16 +20,12 @@ The explicit method call clarifies the assertion's purpose, making it immediatel
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare function divide(a: number, b: number): number;
-// ---cut---
 import assert from "node:assert";
 
 assert(divide(10, 2) === 5);
 ```
 
 ```ts
-declare const value: unknown;
-// ---cut---
 import { strict as assert } from "node:assert";
 
 assert(value);
@@ -39,25 +35,18 @@ assert(value);
 <TabItem label="✅ Correct">
 
 ```ts
-declare function divide(a: number, b: number): number;
-// ---cut---
 import assert from "node:assert";
 
 assert.ok(divide(10, 2) === 5);
 ```
 
 ```ts
-declare const value: unknown;
-// ---cut---
 import { strict as assert } from "node:assert";
 
 assert.ok(value);
 ```
 
 ```ts
-declare const actual: unknown;
-declare const expected: unknown;
-// ---cut---
 import assert from "node:assert";
 
 assert.strictEqual(actual, expected);

@@ -28,16 +28,12 @@ The rule covers several categories of problematic comparisons:
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const value: number;
-// ---cut---
 if (value === value) {
 	// Always true
 }
 ```
 
 ```ts
-declare const value: number;
-// ---cut---
 if (value < value) {
 	// Always false
 }
@@ -47,17 +43,12 @@ if (value < value) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const otherValue: number;
-declare const value: number;
-// ---cut---
 if (value === otherValue) {
 	// Compare different values
 }
 ```
 
 ```ts
-declare const value: number;
-// ---cut---
 // Use Number.isNaN() for NaN checks
 if (Number.isNaN(value)) {
 	// ...
@@ -73,8 +64,6 @@ if (Number.isNaN(value)) {
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const x: number;
-// ---cut---
 // Can never be true: no value is both <= 400 AND > 500
 if (x <= 400 && x > 500) {
 	// Unreachable code
@@ -82,8 +71,6 @@ if (x <= 400 && x > 500) {
 ```
 
 ```ts
-declare const x: number;
-// ---cut---
 // Impossible boundary condition
 if (x < 5 && x >= 5) {
 	// Never executes
@@ -94,8 +81,6 @@ if (x < 5 && x >= 5) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const x: number;
-// ---cut---
 // Valid range: x is between 400 and 500
 if (x >= 400 && x <= 500) {
 	// ...
@@ -103,8 +88,6 @@ if (x >= 400 && x <= 500) {
 ```
 
 ```ts
-declare const x: number;
-// ---cut---
 // Valid narrow range
 if (x > 5 && x < 10) {
 	// ...
@@ -120,9 +103,6 @@ if (x > 5 && x < 10) {
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const x: number;
-declare const y: number;
-// ---cut---
 // Can be simplified to: x <= y
 if (x === y || x < y) {
 	// ...
@@ -130,9 +110,6 @@ if (x === y || x < y) {
 ```
 
 ```ts
-declare const x: number;
-declare const y: number;
-// ---cut---
 // Can be simplified to: x >= y
 if (x === y || x > y) {
 	// ...
@@ -143,9 +120,6 @@ if (x === y || x > y) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const x: number;
-declare const y: number;
-// ---cut---
 // Use the simpler combined operator
 if (x <= y) {
 	// ...
@@ -153,9 +127,6 @@ if (x <= y) {
 ```
 
 ```ts
-declare const x: number;
-declare const y: number;
-// ---cut---
 if (x >= y) {
 	// ...
 }
@@ -170,8 +141,6 @@ if (x >= y) {
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const x: number;
-// ---cut---
 // x <= 299 is redundant when x < 200 is already checked
 if (x < 200 && x <= 299) {
 	// The second check adds nothing
@@ -179,8 +148,6 @@ if (x < 200 && x <= 299) {
 ```
 
 ```ts
-declare const x: number;
-// ---cut---
 // x >= 50 is redundant when x > 100 is already checked
 if (x > 100 && x >= 50) {
 	// ...
@@ -191,8 +158,6 @@ if (x > 100 && x >= 50) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const x: number;
-// ---cut---
 // Just use the stronger constraint
 if (x < 200) {
 	// ...
@@ -200,8 +165,6 @@ if (x < 200) {
 ```
 
 ```ts
-declare const x: number;
-// ---cut---
 // Or use both bounds when they're actually needed
 if (x > 100 && x < 200) {
 	// Valid range check

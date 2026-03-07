@@ -19,9 +19,6 @@ In modern JavaScript and TypeScript, blocks primarily serve to create lexical sc
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const computeValue: () => number;
-declare const processValue: (value: number) => void;
-// ---cut---
 {
 	const temporaryValue = computeValue();
 	processValue(temporaryValue);
@@ -29,8 +26,6 @@ declare const processValue: (value: number) => void;
 ```
 
 ```ts
-declare const calculate: () => number;
-// ---cut---
 function processData() {
 	{
 		const result = calculate();
@@ -43,16 +38,11 @@ function processData() {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const computeValue: () => number;
-declare const processValue: (value: number) => void;
-// ---cut---
 const temporaryValue = computeValue();
 processValue(temporaryValue);
 ```
 
 ```ts
-declare const calculate: () => number;
-// ---cut---
 function processData() {
 	const result = calculate();
 	console.log(result);
@@ -60,10 +50,6 @@ function processData() {
 ```
 
 ```ts
-declare const condition: boolean;
-declare const getValue: () => number;
-declare const processValue: (value: number) => void;
-// ---cut---
 // Valid: block is part of control flow
 if (condition) {
 	const value = getValue();
@@ -72,9 +58,6 @@ if (condition) {
 ```
 
 ```ts
-declare const getA: () => string;
-declare const type: string;
-// ---cut---
 // Valid: block creates scope in switch case
 switch (type) {
 	case "a": {

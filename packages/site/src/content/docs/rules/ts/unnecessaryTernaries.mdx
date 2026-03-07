@@ -24,28 +24,18 @@ This rule detects and reports ternary expressions that can be replaced with bool
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const status: string;
-// ---cut---
 const isActive = status === "active" ? true : false;
 ```
 
 ```ts
-declare const status: string;
-// ---cut---
 const isInactive = status === "active" ? false : true;
 ```
 
 ```ts
-declare const defaultValue: unknown;
-declare const value: unknown;
-// ---cut---
 const result = value ? value : defaultValue;
 ```
 
 ```ts
-declare const alternative: unknown;
-declare const value: unknown;
-// ---cut---
 const result = !value ? alternative : value;
 ```
 
@@ -53,28 +43,18 @@ const result = !value ? alternative : value;
 <TabItem label="✅ Correct">
 
 ```ts
-declare const status: string;
-// ---cut---
 const isActive = status === "active";
 ```
 
 ```ts
-declare const status: string;
-// ---cut---
 const isInactive = !(status === "active");
 ```
 
 ```ts
-declare const defaultValue: unknown;
-declare const value: unknown;
-// ---cut---
 const result = value || defaultValue;
 ```
 
 ```ts
-declare const alternative: unknown;
-declare const value: unknown;
-// ---cut---
 const result = value || alternative;
 ```
 

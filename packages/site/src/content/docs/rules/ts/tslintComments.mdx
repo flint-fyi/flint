@@ -41,8 +41,6 @@ const value = 1;
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const getData: () => unknown;
-// ---cut---
 // tslint:disable-next-line
 const value: any = getData();
 ```
@@ -51,8 +49,6 @@ const value: any = getData();
 <TabItem label="✅ Correct">
 
 ```ts
-declare const getData: () => unknown;
-// ---cut---
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const value: any = getData();
 ```

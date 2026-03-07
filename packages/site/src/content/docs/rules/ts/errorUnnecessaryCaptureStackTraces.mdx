@@ -18,7 +18,6 @@ Calling [`Error.captureStackTrace()`](https://developer.mozilla.org/en-US/docs/W
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2377 17009 -- TS catches missing super() call
 class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace(this, MyError);
@@ -47,7 +46,6 @@ class MyError extends Error {
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2377 17009 -- TS catches missing super() call
 class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace?.(this, MyError);
@@ -76,7 +74,6 @@ class MyError extends Error {
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2377 17009 -- TS catches missing super() call
 class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace(this, this.constructor);
@@ -105,7 +102,6 @@ class MyError extends Error {
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2377 17009 -- TS catches missing super() call
 class MyError extends Error {
 	constructor() {
 		Error.captureStackTrace(this, new.target);

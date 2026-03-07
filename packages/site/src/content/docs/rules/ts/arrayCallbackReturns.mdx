@@ -21,33 +21,24 @@ If you don't need the return value, consider using `forEach` instead.
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const values: number[];
-// ---cut---
 const result = values.map((value) => {
 	console.log(value);
 });
 ```
 
 ```ts
-declare const target: number;
-declare const values: number[];
-// ---cut---
 const found = values.find((value) => {
 	value === target;
 });
 ```
 
 ```ts
-declare const values: number[];
-// ---cut---
 const total = values.reduce((sum, value) => {
 	sum + value;
 }, 0);
 ```
 
 ```ts
-declare const values: number[];
-// ---cut---
 const valid = values.every((value) => {
 	value > 0;
 });
@@ -57,39 +48,28 @@ const valid = values.every((value) => {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const values: number[];
-// ---cut---
 const result = values.map((value) => {
 	return value * 2;
 });
 ```
 
 ```ts
-declare const values: number[];
-// ---cut---
 const result = values.map((value) => value * 2);
 ```
 
 ```ts
-declare const target: number;
-declare const values: number[];
-// ---cut---
 const found = values.find((value) => {
 	return value === target;
 });
 ```
 
 ```ts
-declare const values: number[];
-// ---cut---
 const total = values.reduce((sum, value) => {
 	return sum + value;
 }, 0);
 ```
 
 ```ts
-declare const values: number[];
-// ---cut---
 values.forEach((value) => {
 	console.log(value);
 });

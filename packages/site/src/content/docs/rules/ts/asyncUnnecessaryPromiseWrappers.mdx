@@ -32,14 +32,10 @@ async function failWithError() {
 ```
 
 ```ts
-declare const promise: Promise<unknown>;
-// ---cut---
 promise.then(() => Promise.resolve(42));
 ```
 
 ```ts
-declare const promise: Promise<unknown>;
-// ---cut---
 promise.catch(() => Promise.reject(new Error("error")));
 ```
 
@@ -59,14 +55,10 @@ async function failWithError() {
 ```
 
 ```ts
-declare const promise: Promise<unknown>;
-// ---cut---
 promise.then(() => 42);
 ```
 
 ```ts
-declare const promise: Promise<unknown>;
-// ---cut---
 promise.catch(() => {
 	throw new Error("error");
 });

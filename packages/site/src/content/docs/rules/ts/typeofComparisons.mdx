@@ -22,39 +22,24 @@ This rule enforces that `typeof` expressions are only compared to valid string l
 <TabItem label="❌ Incorrect">
 
 ```ts
-// @errors: 2367 2345 -- misspelled typeof doesn't narrow unknown
-declare const processString: (value: string) => void;
-declare const value: unknown;
-// ---cut---
 if (typeof value === "strnig") {
 	processString(value);
 }
 ```
 
 ```ts
-// @errors: 2367 -- misspelled typeof is always false
-declare const callback: unknown;
-// ---cut---
 if (typeof callback !== "fucntion") {
 	throw new Error("Invalid callback");
 }
 ```
 
 ```ts
-// @errors: 2367 -- misspelled typeof is always false
-declare const data: unknown;
-declare const initialize: () => void;
-// ---cut---
 if (typeof data == "undefimed") {
 	initialize();
 }
 ```
 
 ```ts
-// @errors: 2367 2345 -- misspelled typeof doesn't narrow unknown
-declare const calculate: (value: number) => void;
-declare const count: unknown;
-// ---cut---
 if (typeof count === "nunber") {
 	calculate(count);
 }
@@ -64,35 +49,24 @@ if (typeof count === "nunber") {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const processString: (value: string) => void;
-declare const value: unknown;
-// ---cut---
 if (typeof value === "string") {
 	processString(value);
 }
 ```
 
 ```ts
-declare const callback: unknown;
-// ---cut---
 if (typeof callback !== "function") {
 	throw new Error("Invalid callback");
 }
 ```
 
 ```ts
-declare const data: unknown;
-declare const initialize: () => void;
-// ---cut---
 if (typeof data == "undefined") {
 	initialize();
 }
 ```
 
 ```ts
-declare const calculate: (value: number) => void;
-declare const count: unknown;
-// ---cut---
 if (typeof count === "number") {
 	calculate(count);
 }

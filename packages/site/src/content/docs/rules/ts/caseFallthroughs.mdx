@@ -22,10 +22,6 @@ Intentional fallthrough can be indicated with a comment containing "falls throug
 <TabItem label="❌ Incorrect">
 
 ```ts
-declare const doSomething: () => void;
-declare const doSomethingElse: () => void;
-declare const value: number;
-// ---cut---
 switch (value) {
 	case 1:
 		doSomething();
@@ -36,9 +32,6 @@ switch (value) {
 ```
 
 ```ts
-declare const condition: boolean;
-declare const value: number;
-// ---cut---
 switch (value) {
 	case 1:
 		if (condition) {
@@ -53,10 +46,6 @@ switch (value) {
 <TabItem label="✅ Correct">
 
 ```ts
-declare const doSomething: () => void;
-declare const doSomethingElse: () => void;
-declare const value: number;
-// ---cut---
 switch (value) {
 	case 1:
 		doSomething();
@@ -68,9 +57,6 @@ switch (value) {
 ```
 
 ```ts
-declare const doSomething: () => void;
-declare const value: number;
-// ---cut---
 switch (value) {
 	case 1:
 	case 2:
@@ -80,10 +66,6 @@ switch (value) {
 ```
 
 ```ts
-declare const doSomething: () => void;
-declare const doSomethingElse: () => void;
-declare const value: number;
-// ---cut---
 switch (value) {
 	case 1:
 		doSomething();
@@ -95,11 +77,6 @@ switch (value) {
 ```
 
 ```ts
-// @errors: 1108 -- break statement outside of loop/switch
-declare const first: () => number;
-declare const second: () => number;
-declare const value: number;
-// ---cut---
 switch (value) {
 	case 1:
 		return first();
