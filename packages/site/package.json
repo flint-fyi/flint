@@ -51,6 +51,6 @@
 	"devDependencies": {
 		"@types/markdown-it": "14.1.2",
 		"sharp": "0.34.5",
-		"zod": "^4.2.1"
+		"zod": "4.3.6"
 	}
 }
