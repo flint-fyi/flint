@@ -144,7 +144,9 @@ export default defineConfig({
 	],
 	markdown: {
 		remarkPlugins: [
-			remarkAutoTwoslash({ exclude: /content\/docs\/(?:blog|rules)/ }),
+			remarkAutoTwoslash({
+				excludes: [/content\/docs\/blog/, /content\/docs\/rules\/\w+\/\w+/],
+			}),
 			remarkHeadingId,
 		],
 	},

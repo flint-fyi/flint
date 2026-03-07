@@ -3,14 +3,14 @@ import { visit } from "unist-util-visit";
 import type { VFile } from "vfile";
 
 export interface RemarkAutoTwoslashOptions {
-	exclude: RegExp;
+	excludes: RegExp[];
 }
 
-export function remarkAutoTwoslash({ exclude }: RemarkAutoTwoslashOptions) {
+export function remarkAutoTwoslash({ excludes }: RemarkAutoTwoslashOptions) {
 	return function createTransformer() {
 		return function transformer(tree: Root, file: VFile): void {
 			const filePath = file.path || "";
-			if (exclude.test(filePath)) {
+			if (excludes.some((exclude) => exclude.test(filePath))) {
 				return;
 			}
 
