@@ -413,7 +413,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       unist-util-visit:
-        specifier: ^5.0.0
+        specifier: ^5.1.0
         version: 5.1.0
     devDependencies:
       tsdown:
@@ -698,6 +698,9 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      unist-util-visit:
+        specifier: 5.1.0
+        version: 5.1.0
     devDependencies:
       '@types/markdown-it':
         specifier: 14.1.2
