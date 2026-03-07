@@ -2,12 +2,11 @@ import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
 import { defineConfig } from "astro/config";
+import { remarkAddTwoslash } from "remark-add-twoslash";
 import { remarkHeadingId } from "remark-custom-heading-id";
 import starlightBlog from "starlight-blog";
 import starlightLinksValidator from "starlight-links-validator";
 import starlightSidebarTopics from "starlight-sidebar-topics";
-
-import { remarkAutoTwoslash } from "./src/plugins/remark-auto-twoslash.ts";
 
 export default defineConfig({
 	integrations: [
@@ -144,7 +143,7 @@ export default defineConfig({
 	],
 	markdown: {
 		remarkPlugins: [
-			remarkAutoTwoslash({
+			remarkAddTwoslash({
 				excludes: [/content\/docs\/blog/, /content\/docs\/rules\/\w+\/\w+/],
 			}),
 			remarkHeadingId,
