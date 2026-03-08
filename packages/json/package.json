@@ -1,7 +1,8 @@
 {
 	"name": "@flint.fyi/json",
-	"version": "0.16.0",
+	"version": "0.16.1",
 	"description": "[Experimental] JSON plugin for Flint.",
+	"homepage": "https://www.flint.fyi/rules/json",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",

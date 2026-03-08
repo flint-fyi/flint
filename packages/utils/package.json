@@ -2,6 +2,7 @@
 	"name": "@flint.fyi/utils",
 	"version": "0.14.0",
 	"description": "[Experimental] Shared utilities used by @flint/core and at least one other package.",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",

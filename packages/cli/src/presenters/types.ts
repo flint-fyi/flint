@@ -32,6 +32,7 @@ export interface PresenterInitializeContext {
 }
 
 export interface PresenterSummarizeContext {
+	duration: number;
 	formattingResults: FormattingResults;
 	lintResults: LintResultsMaybeWithChanges;
 }

@@ -14,7 +14,7 @@ Flint configs must default-export the result of calling the [`defineConfig`](#de
 Defines a new configuration for linting.
 It takes in an object with one required property, [`use`](#use):
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -49,7 +49,7 @@ This can be a `string`, any level deep array of `string`s, or an object containi
 
 This `ignore` directive ignores all files under `src/legacy/`:
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -77,7 +77,7 @@ This can be a `string`, any level deep array of `string`s, or an object containi
 
 For example, this `files` selector matches all TypeScript test files by extension and in a directory:
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -101,7 +101,7 @@ In addition to plain `string`s, `files` selectors can also be objects with two p
 
 For example, this `files` selector matches all TypeScript source files that don't have a `*.test.*` extension:
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -124,7 +124,7 @@ These may be arrays of rules, such as from presets exported by plugins, and/or c
 
 For example, this `rules` entry enables all the recommended logical and stylistic TypeScript rules:
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -148,7 +148,7 @@ That method takes in an object where the keys are rule names and values are what
 
 For example, this `rules` entry disables one rule and reconfigures another:
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -181,7 +181,7 @@ Includes all files previously selected by the configuration.
 
 For example, this config enables the [spelling plugin](/rules/spelling) on all files that are being linted, which includes multiple languages:
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { spelling } from "@flint.fyi/spelling";
 import { defineConfig, globs, md, ts } from "flint";
 
@@ -218,6 +218,9 @@ import { defineConfig } from "flint";
 
 export default defineConfig({
 	projects: ["packages/*"],
+	use: [
+		// ...
+	],
 });
 ```
 

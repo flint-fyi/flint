@@ -1,3 +1,11 @@
+name: 🐛 General Bug
+description: Report a non-rule-specific bug with Flint, its integrations, or its plugins
+
+title: "🐛 Bug: <short description of the bug>"
+
+labels:
+  - "type: bug"
+
 body:
   - attributes:
       description: If any of these required steps are not taken, we may not be able to review your issue. Help us to help you!
@@ -26,12 +34,3 @@ body:
       label: Additional Info
     id: additional_info
     type: textarea
-
-description: Report a non-rule-specific bug with Flint, its integrations, or its plugins
-
-labels:
-  - "type: bug"
-
-name: 🐛 General Bug
-
-title: "🐛 Bug: <short description of the bug>"

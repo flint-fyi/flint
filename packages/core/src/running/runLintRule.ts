@@ -1,4 +1,3 @@
-import { nullThrows } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 
@@ -9,8 +8,8 @@ import type {
 	InferredInputObject,
 	InferredOutputObject,
 } from "../types/shapes.ts";
-import { getColumnAndLineOfPosition } from "../utils/getColumnAndLineOfPosition.ts";
 import { parseOptions } from "./parseOptions.ts";
+import { processRuleReport } from "./processRuleReport.ts";
 import type { LanguageFilesWithOptions } from "./types.ts";
 
 const log = debugForFile(import.meta.filename);
@@ -37,69 +36,11 @@ export async function runLintRule(
 
 			log("Adding %s report for file path %s", ruleReport.message, filePath);
 
-			let range = ruleReport.range;
-			let fixes =
-				ruleReport.fix && !Array.isArray(ruleReport.fix)
-					? [ruleReport.fix]
-					: ruleReport.fix;
-			let suggestions = ruleReport.suggestions;
-
-			const { adjustReportRange } = currentFile;
-			if (adjustReportRange != null) {
-				const r = adjustReportRange(ruleReport.range);
-				if (r == null) {
-					return;
-				}
-				range = r;
-				fixes &&= fixes
-					.map((fix) => {
-						const range = adjustReportRange(fix.range);
-						return (
-							range && {
-								...fix,
-								range,
-							}
-						);
-					})
-					.filter((f) => f != null);
-
-				suggestions &&= suggestions
-					.map((s) => {
-						if ("files" in s) {
-							// TODO: support cross-file suggestions
-							return null;
-						}
-						const range = adjustReportRange(s.range);
-						return (
-							range && {
-								...s,
-								range,
-							}
-						);
-					})
-					.filter((s) => s != null);
+			const processedReport = processRuleReport(currentFile, rule, ruleReport);
+			if (processedReport == null) {
+				return;
 			}
-
-			reportsByFilePath.get(filePath).push({
-				...ruleReport,
-				about: rule.about,
-				fix: fixes,
-				message: nullThrows(
-					rule.messages[ruleReport.message],
-					`Rule "${rule.about.id}" reported message "${ruleReport.message}" which is not defined in its messages.`,
-				),
-				range: {
-					begin: getColumnAndLineOfPosition(
-						currentFile.about.sourceText,
-						range.begin,
-					),
-					end: getColumnAndLineOfPosition(
-						currentFile.about.sourceText,
-						range.end,
-					),
-				},
-				suggestions,
-			});
+			reportsByFilePath.get(filePath).push(processedReport);
 		},
 	});
 

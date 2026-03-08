@@ -14,6 +14,7 @@ export interface RendererAbout {
 }
 
 export interface RendererContext {
+	duration: number;
 	formattingResults: FormattingResults;
 	ignoreCache: boolean;
 	lintResults: LintResults;

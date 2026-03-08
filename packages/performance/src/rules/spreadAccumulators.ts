@@ -13,6 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports spread operations that accumulate values in loops, causing quadratic time complexity.",
 		id: "spreadAccumulators",
+		presets: ["logical"],
 	},
 	messages: {
 		noAccumulatingSpread: {

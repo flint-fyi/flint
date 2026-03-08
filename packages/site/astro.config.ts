@@ -2,6 +2,7 @@ import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
 import { defineConfig } from "astro/config";
+import { remarkAddTwoslash } from "remark-add-twoslash";
 import { remarkHeadingId } from "remark-custom-heading-id";
 import starlightBlog from "starlight-blog";
 import starlightLinksValidator from "starlight-links-validator";
@@ -43,7 +44,24 @@ export default defineConfig({
 								{ label: "Configuration", link: "configuration" },
 								{ label: "Glossary", link: "glossary" },
 								{ label: "FAQs", link: "faqs" },
-								{ label: "Team", link: "team" },
+								{
+									collapsed: true,
+									items: [
+										{
+											label: "Code of Conduct",
+											link: "project/code-of-conduct",
+										},
+										{ label: "Contributing", link: "project/contributing" },
+										{
+											label: "Contributing with AI",
+											link: "project/contributing-with-ai",
+										},
+										{ label: "Development", link: "project/development" },
+										{ label: "Maintenance", link: "project/maintenance" },
+										{ label: "Team", link: "project/team" },
+									],
+									label: "Project",
+								},
 							],
 							label: "About",
 							link: "about",
@@ -124,10 +142,16 @@ export default defineConfig({
 		react(),
 	],
 	markdown: {
-		remarkPlugins: [remarkHeadingId],
+		remarkPlugins: [
+			remarkAddTwoslash({
+				excludes: [/content\/docs\/blog/, /content\/docs\/rules\/\w+\/\w+/],
+			}),
+			remarkHeadingId,
+		],
 	},
 	redirects: {
 		"/discord": "https://discord.gg/cFK3RAUDhy",
+		"/team": "/project/team",
 	},
 	site: "https://flint.fyi",
 	vite: {

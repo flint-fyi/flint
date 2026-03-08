@@ -3,15 +3,14 @@ import {
 	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
 	type AnyRule,
-	type FileReport,
-	getColumnAndLineOfPosition,
 	type InferredOutputObject,
 	type NormalizedReport,
 	normalizePath,
+	processRuleReport,
 	type RuleAbout,
 	type VFSLinterHost,
+	type FileReport,
 } from "@flint.fyi/core";
-import { nullThrows } from "@flint.fyi/utils";
 import type { CachedFactory } from "cached-factory";
 import assert from "node:assert/strict";
 import path from "node:path";
@@ -66,62 +65,11 @@ export async function runTestCaseRule<
 
 	const ruleRuntime = await rule.setup({
 		report(ruleReport) {
-			let range = ruleReport.range;
-			let fixes =
-				ruleReport.fix && !Array.isArray(ruleReport.fix)
-					? [ruleReport.fix]
-					: ruleReport.fix;
-			let suggestions = ruleReport.suggestions;
-
-			const { adjustReportRange } = file;
-			if (adjustReportRange != null) {
-				const r = adjustReportRange(ruleReport.range);
-				if (r == null) {
-					return;
-				}
-				range = r;
-				fixes &&= fixes
-					.map((fix) => {
-						const range = adjustReportRange(fix.range);
-						return (
-							range && {
-								...fix,
-								range,
-							}
-						);
-					})
-					.filter((f) => f != null);
-				suggestions &&= suggestions
-					.map((s) => {
-						if ("files" in s) {
-							// TODO: support cross-file suggestions
-							return null;
-						}
-						const range = adjustReportRange(s.range);
-						return (
-							range && {
-								...s,
-								range,
-							}
-						);
-					})
-					.filter((s) => s != null);
+			const processedReport = processRuleReport(file, rule, ruleReport);
+			if (processedReport == null) {
+				return;
 			}
-
-			reports.push({
-				...ruleReport,
-				about: rule.about,
-				fix: fixes,
-				message: nullThrows(
-					rule.messages[ruleReport.message],
-					`Message should be defined (${ruleReport.message}) when reporting for rule "${rule.about.id}"`,
-				),
-				range: {
-					begin: getColumnAndLineOfPosition(file.about.sourceText, range.begin),
-					end: getColumnAndLineOfPosition(file.about.sourceText, range.end),
-				},
-				suggestions,
-			});
+			reports.push(processedReport);
 		},
 	});
 

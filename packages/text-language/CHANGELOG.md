@@ -1,5 +1,25 @@
 # @flint.fyi/text-language
 
+## 0.15.1
+
+### Patch Changes
+
+- db34436: Unify language file factory methods using `LinterHost`.
+- Updated dependencies [4c99c11]
+- Updated dependencies [b3a637a]
+- Updated dependencies [e257ec4]
+- Updated dependencies [d612d50]
+- Updated dependencies [4b32a64]
+- Updated dependencies [fe76156]
+- Updated dependencies [db34436]
+- Updated dependencies [f2f2c8b]
+- Updated dependencies [442a3f4]
+- Updated dependencies [5c64fbb]
+- Updated dependencies [3eaea9e]
+- Updated dependencies [267fe8d]
+- Updated dependencies [011fbf2]
+  - @flint.fyi/core@0.20.0
+
 ## 0.15.0
 
 ### Minor Changes

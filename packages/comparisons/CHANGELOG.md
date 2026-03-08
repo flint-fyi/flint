@@ -1,5 +1,16 @@
 # @flint.fyi/comparisons
 
+## 0.2.1
+
+### Patch Changes
+
+- a22b5b2: Mark three superseded rules as such.
+- bc632d1: Remove `regexNamedCaptureGroups` and `regexUnicodeEscapes` from presets.
+- bb3e1b2: Add `testCaseNameDuplicates` rule.
+- 506602f: Change `untyped` preset name to `javascript`.
+- bc65fe7: Remove `yamlKeys` from the Sorting plugin presets.
+- 1915940: update package-json comparison data
+
 ## 0.2.0
 
 ### Minor Changes

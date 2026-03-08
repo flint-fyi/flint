@@ -61,6 +61,7 @@ const reportMessageDataSchema = z.object({
 
 const baseAboutSchema = z.object({
 	id: z.string(),
+	url: z.string().optional(),
 });
 
 const reportInterpolationDataSchema = z.record(

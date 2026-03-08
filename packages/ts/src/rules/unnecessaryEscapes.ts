@@ -149,7 +149,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const fullText = node.getText(sourceFile);
-			let quoteChar = "'";
+			let quoteChar: string;
 
 			if (node.kind === ts.SyntaxKind.StringLiteral) {
 				quoteChar = fullText.startsWith('"') ? '"' : "'";

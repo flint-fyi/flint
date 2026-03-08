@@ -2,6 +2,7 @@
 	"name": "@flint.fyi/ts-patch",
 	"version": "0.13.5",
 	"description": "[Experimental] Utilities for patching TypeScript used by @flint/core.",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/flint-fyi/flint",

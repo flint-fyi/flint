@@ -47,8 +47,8 @@ ruleCreator.createRule(_, {
 	setup(context: RuleContext) {
 		context.report({
 			message: "messagesId",
-			~~~~~~~~~~~~~~~~~~~~~
-			Message template requires placeholders in the data object.
+			         ~~~~~~~~~~~~
+			         Message template requires placeholders in the data object.
 		});
 	}
 });

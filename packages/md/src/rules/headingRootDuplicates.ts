@@ -1,6 +1,4 @@
 import { markdownLanguage } from "@flint.fyi/markdown-language";
-import type { WithPosition } from "@flint.fyi/markdown-language";
-import type { Heading, Html, Node, Root } from "mdast";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -26,44 +24,33 @@ export default ruleCreator.createRule(markdownLanguage, {
 		},
 	},
 	setup(context) {
+		const h1HeadingRanges: {
+			begin: number;
+			end: number;
+		}[] = [];
+
 		return {
 			visitors: {
-				root(root: WithPosition<Root>) {
-					const h1HeadingRanges: {
-						begin: number;
-						end: number;
-					}[] = [];
-
-					function isH1(node: WithPosition<Node>) {
-						switch (node.type) {
-							case "heading":
-								return (node as Heading).depth === 1;
-							case "html":
-								return /<h1[\s>]/i.test((node as Html).value);
-							default:
-								return false;
-						}
+				heading(node) {
+					if (node.depth === 1) {
+						h1HeadingRanges.push({
+							begin: node.position.start.offset,
+							end: node.position.end.offset,
+						});
 					}
-
-					function visit(node: WithPosition<Node>): void {
-						if (isH1(node)) {
-							h1HeadingRanges.push({
-								begin: node.position.start.offset,
-								end: node.position.end.offset,
-							});
-						}
-
-						if ("children" in node && Array.isArray(node.children)) {
-							for (const child of node.children as WithPosition<Node>[]) {
-								visit(child);
-							}
-						}
+				},
+				html(node) {
+					if (/<h1[\s>]/i.test(node.value)) {
+						h1HeadingRanges.push({
+							begin: node.position.start.offset,
+							end: node.position.end.offset,
+						});
 					}
-
-					// TODO: Add :exit selectors, so this rule can report after traversal
-					// https://github.com/flint-fyi/flint/issues/2268
-					visit(root);
-
+				},
+				root() {
+					h1HeadingRanges.length = 0;
+				},
+				"root:exit"() {
 					if (h1HeadingRanges.length > 1) {
 						for (const range of h1HeadingRanges.slice(1)) {
 							context.report({
