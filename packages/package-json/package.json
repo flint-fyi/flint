@@ -30,7 +30,7 @@
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
-		"tsdown": "0.20.1"
+		"tsdown": "0.21.0"
 	},
 	"engines": {
 		"node": ">=24.0.0"
