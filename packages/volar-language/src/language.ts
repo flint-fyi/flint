@@ -23,10 +23,10 @@ import {
 	type ExtractedDirective,
 	NodeSyntaxKinds,
 	setVolarCreateFile,
+	throwUnknownLanguageExtension,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 	type TypeScriptNodesByName,
-	throwUnknownLanguageExtension,
 } from "@flint.fyi/typescript-language";
 import { assert, FlintAssertionError, nullThrows } from "@flint.fyi/utils";
 import type {
@@ -114,7 +114,7 @@ setTSProgramCreationProxy(
 			} as unknown as typeof createProgram,
 			{
 				apply(target, thisArg, args: unknown[]) {
-					let volarLanguage: null | VolarLanguage<string> = null;
+					let volarLanguage = null as null | VolarLanguage<string>;
 					const createProgramProxy = new Proxy(createProgram, {
 						apply(target, thisArg, [options]: [ts.CreateProgramOptions]) {
 							assert(

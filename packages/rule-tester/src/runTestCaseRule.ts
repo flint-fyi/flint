@@ -3,13 +3,13 @@ import {
 	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
 	type AnyRule,
+	type FileReport,
 	type InferredOutputObject,
 	type NormalizedReport,
 	normalizePath,
 	processRuleReport,
 	type RuleAbout,
 	type VFSLinterHost,
-	type FileReport,
 } from "@flint.fyi/core";
 import type { CachedFactory } from "cached-factory";
 import assert from "node:assert/strict";

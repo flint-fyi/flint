@@ -220,9 +220,9 @@ const typeScriptCoreSupportedExtensions: ReadonlySet<string> = new Set([
 
 const fileExtToFlintPlugin: Record<string, string> = {
 	".astro": "@flint.fyi/astro",
-	".svelte": "@flint.fyi/svelte",
 	".ember": "@flint.fyi/ember",
 	".mdx": "@flint.fyi/mdx",
+	".svelte": "@flint.fyi/svelte",
 	".vue": "@flint.fyi/vue",
 };
 
