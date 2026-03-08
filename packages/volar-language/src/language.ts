@@ -6,6 +6,7 @@ import {
 	type FileAboutData,
 	type FileReport,
 	getColumnAndLineOfPosition,
+	isSuggestionForFiles,
 	type Language,
 	type LanguageDiagnostics,
 	type LanguageFileCacheImpacts,
@@ -452,14 +453,35 @@ export function reportSourceCode<T extends string>(
 	context: RuleContext<T>,
 	report: RuleReport<T>,
 ) {
-	// TODO: suggestions, fixes
 	context.report({
 		...report,
-		range: {
-			begin: -report.range.begin,
-			end: report.range.end,
-		},
+		fix: (report.fix && !Array.isArray(report.fix)
+			? [report.fix]
+			: report.fix
+		)?.map((change) => ({
+			...change,
+			range: sourceCodeRange(change.range),
+		})),
+		range: sourceCodeRange(report.range),
+		suggestions: report.suggestions
+			?.map((suggestion) => {
+				if (isSuggestionForFiles(suggestion)) {
+					// TODO: support cross-file suggestions
+					return null;
+				}
+				return {
+					...suggestion,
+					range: sourceCodeRange(suggestion.range),
+				};
+			})
+			.filter((s) => s != null),
 	});
+}
+function sourceCodeRange(range: CharacterReportRange): CharacterReportRange {
+	return {
+		begin: -range.begin,
+		end: range.end,
+	};
 }
 
 function translateRange(
