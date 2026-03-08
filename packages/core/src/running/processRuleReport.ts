@@ -21,11 +21,11 @@ export function processRuleReport(
 	let suggestions = ruleReport.suggestions;
 	const { adjustReportRange } = currentFile;
 	if (adjustReportRange != null) {
-		const r = adjustReportRange(ruleReport.range);
-		if (r == null) {
+		const adjustedRange = adjustReportRange(ruleReport.range);
+		if (adjustedRange == null) {
 			return null;
 		}
-		range = r;
+		range = adjustedRange;
 		fix &&= fix
 			.map((fix) => {
 				const range = adjustReportRange(fix.range);

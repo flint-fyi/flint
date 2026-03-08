@@ -26,8 +26,9 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 	type TypeScriptNodesByName,
+	throwUnknownLanguageExtension,
 } from "@flint.fyi/typescript-language";
-import { assert, FlintAssertionError } from "@flint.fyi/utils";
+import { assert, FlintAssertionError, nullThrows } from "@flint.fyi/utils";
 import type {
 	Language as VolarLanguage,
 	LanguagePlugin as VolarLanguagePlugin,
@@ -37,7 +38,6 @@ import type {
 import type { TypeScriptServiceScript as VolarTypeScriptServiceScript } from "@volar/typescript";
 // eslint-disable-next-line no-restricted-syntax
 import { proxyCreateProgram } from "@volar/typescript/lib/node/proxyCreateProgram.js";
-import path from "node:path";
 import ts from "typescript";
 
 import type { UnsafeAnyRule } from "../../core/src/plugins/createPlugin.ts";
@@ -51,17 +51,19 @@ type VolarLanguagePluginInitializer<FileServices extends object> = (
 	languagePlugins: VolarLanguagePlugin<string>[];
 };
 
+const stateSymbol = Symbol.for("@flint.fyi/volar-language/state");
+
 const globalTyped = globalThis as typeof globalThis & {
-	_flintVolarLanguageState?: {
+	[stateSymbol]?: {
 		packageVersion: string;
 		pluginInitializers: Set<VolarLanguagePluginInitializer<object>>;
 	};
 };
 assert(
-	globalTyped._flintVolarLanguageState == null,
-	`Two different versions of ${packageJson.name} are imported: ${packageJson.version} and ${globalTyped._flintVolarLanguageState?.packageVersion}`,
+	globalTyped[stateSymbol] == null,
+	`Two different versions of ${packageJson.name} are imported: ${packageJson.version} and ${globalTyped[stateSymbol]?.packageVersion}`,
 );
-const { pluginInitializers } = (globalTyped._flintVolarLanguageState = {
+const { pluginInitializers } = (globalTyped[stateSymbol] = {
 	packageVersion: packageJson.version,
 	pluginInitializers: new Set(),
 });
@@ -78,7 +80,11 @@ export interface VolarBasedLanguageCreateFileContext {
 }
 
 type ProxiedTSProgram = ts.Program & {
-	__flintVolarLanguage?: undefined | VolarLanguage<string>;
+	[stateSymbol]?:
+		| undefined
+		| {
+				volarLanguage: VolarLanguage<string>;
+		  };
 };
 
 type VolarBasedLanguageCreateFile<FileServices extends object> = (
@@ -93,7 +99,11 @@ type VolarBasedLanguageCreateFile<FileServices extends object> = (
 };
 
 type VolarLanguagePluginWithCreateFile = VolarLanguagePlugin & {
-	__flintCreateFile?: undefined | VolarBasedLanguageCreateFile<object>;
+	[stateSymbol]?:
+		| undefined
+		| {
+				createFile: VolarBasedLanguageCreateFile<object>;
+		  };
 };
 
 setTSProgramCreationProxy(
@@ -104,7 +114,7 @@ setTSProgramCreationProxy(
 			} as unknown as typeof createProgram,
 			{
 				apply(target, thisArg, args: unknown[]) {
-					let volarLanguage = null as null | VolarLanguage<string>;
+					let volarLanguage: null | VolarLanguage<string> = null;
 					const createProgramProxy = new Proxy(createProgram, {
 						apply(target, thisArg, [options]: [ts.CreateProgramOptions]) {
 							assert(
@@ -122,21 +132,7 @@ setTSProgramCreationProxy(
 										error instanceof Error &&
 										error.message === "!!sourceScript"
 									) {
-										const fileExtension = path.extname(args[0]);
-										let message = "Unknown extension.";
-										switch (fileExtension) {
-											case ".astro":
-												message = "Did you install & import @flint.fyi/astro?";
-												break;
-											case ".mdx":
-												message = "Did you install & import @flint.fyi/mdx?";
-												break;
-											case ".vue":
-												message = "Did you install & import @flint.fyi/vue?";
-												break;
-										}
-
-										throw new Error(`Cannot process ${args[0]}. ${message}`);
+										throwUnknownLanguageExtension(args[0]);
 									}
 									throw error;
 								}
@@ -156,9 +152,8 @@ setTSProgramCreationProxy(
 											return plugin;
 										}
 
-										(
-											plugin as VolarLanguagePluginWithCreateFile
-										).__flintCreateFile = createFile;
+										(plugin as VolarLanguagePluginWithCreateFile)[stateSymbol] =
+											{ createFile };
 
 										const getServiceScript =
 											plugin.typescript.getServiceScript.bind(
@@ -201,7 +196,7 @@ setTSProgramCreationProxy(
 
 					assert(volarLanguage != null, "Expected volarLanguage to be set");
 
-					program.__flintVolarLanguage ??= volarLanguage;
+					program[stateSymbol] ??= { volarLanguage };
 
 					return program;
 				},
@@ -210,8 +205,10 @@ setTSProgramCreationProxy(
 );
 
 setVolarCreateFile((data, program, sourceFile) => {
-	const volarLanguage = (program as ProxiedTSProgram).__flintVolarLanguage;
-	assert(volarLanguage != null, "TypeScript wasn't proxied with Volar.js");
+	const volarLanguage = nullThrows(
+		(program as ProxiedTSProgram)[stateSymbol]?.volarLanguage,
+		"TypeScript wasn't proxied with Volar.js",
+	);
 
 	const sourceScript = volarLanguage.scripts.get(sourceFile.fileName);
 
@@ -228,11 +225,10 @@ setVolarCreateFile((data, program, sourceFile) => {
 		`Volar.js sourceScript.generated.languagePlugin.typescript for ${sourceFile.fileName} is undefined`,
 	);
 
-	const createFile = (
-		sourceScript.generated.languagePlugin as VolarLanguagePluginWithCreateFile
-	).__flintCreateFile;
-	assert(
-		createFile != null,
+	const createFile = nullThrows(
+		(
+			sourceScript.generated.languagePlugin as VolarLanguagePluginWithCreateFile
+		)[stateSymbol]?.createFile,
 		`Volar.js language plugin for script (${sourceFile.fileName}) with language id ${sourceScript.generated.root.languageId} doesn't have __flintCreateFile property`,
 	);
 
@@ -252,12 +248,10 @@ setVolarCreateFile((data, program, sourceFile) => {
 		};
 	}
 
-	const serviceScript =
+	const serviceScript = nullThrows(
 		sourceScript.generated.languagePlugin.typescript.getServiceScript(
 			sourceScript.generated.root,
-		);
-	assert(
-		serviceScript != null,
+		),
 		`Volar.js service script for ${sourceFile.fileName} is undefined`,
 	);
 
@@ -294,11 +288,15 @@ setVolarCreateFile((data, program, sourceFile) => {
 
 	const translatedDirectives = [...(directives ?? [])];
 
-	for (const d of extractDirectivesFromTypeScriptFile(sourceFile)) {
-		const range = translateRange(map, d.range.begin.raw, d.range.end.raw);
+	for (const directive of extractDirectivesFromTypeScriptFile(sourceFile)) {
+		const range = translateRange(
+			map,
+			directive.range.begin.raw,
+			directive.range.end.raw,
+		);
 		if (range != null) {
 			translatedDirectives.push({
-				...d,
+				...directive,
 				range: normalizeSourceRange(range),
 			});
 		}
@@ -342,15 +340,12 @@ setVolarCreateFile((data, program, sourceFile) => {
 						if (currentMapping == null) {
 							break Statements;
 						}
-						const currentMappingOffset = currentMapping.generatedOffsets[0];
-						const currentMappingLength =
-							currentMapping.generatedLengths?.[0] ?? currentMapping.lengths[0];
-						assert(
-							currentMappingOffset != null,
+						const currentMappingOffset = nullThrows(
+							currentMapping.generatedOffsets[0],
 							"Expected mapping to have at least one generated offset",
 						);
-						assert(
-							currentMappingLength != null,
+						const currentMappingLength = nullThrows(
+							currentMapping.generatedLengths?.[0] ?? currentMapping.lengths[0],
 							"Expected mapping to have at least one length",
 						);
 						if (

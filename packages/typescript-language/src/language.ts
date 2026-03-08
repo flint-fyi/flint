@@ -54,20 +54,22 @@ type VolarLanguageFileDefinition = LanguageFileDefinition<object> & {
 		): void;
 	};
 };
+
+const stateSymbol = Symbol.for("@flint.fyi/typescript-language/state");
+
 const globalTyped = globalThis as typeof globalThis & {
-	_flintTypeScriptLanguageState?: GlobalLanguageState;
+	[stateSymbol]?: GlobalLanguageState;
 };
 
 assert(
-	globalTyped._flintTypeScriptLanguageState == null,
-	`Two different versions of ${packageJson.name} are imported: ${packageJson.version} and ${globalTyped._flintTypeScriptLanguageState?.packageVersion}`,
+	globalTyped[stateSymbol] == null,
+	`Two different versions of ${packageJson.name} are imported: ${packageJson.version} and ${globalTyped[stateSymbol]?.packageVersion}`,
 );
 
-const languageState: GlobalLanguageState =
-	(globalTyped._flintTypeScriptLanguageState = {
-		packageVersion: packageJson.version,
-		volarCreateFile: null,
-	});
+const languageState: GlobalLanguageState = (globalTyped[stateSymbol] = {
+	packageVersion: packageJson.version,
+	volarCreateFile: null,
+});
 
 export function setVolarCreateFile(create: VolarCreateFile) {
 	assert(
@@ -139,20 +141,7 @@ export const typescriptLanguage = createLanguage<
 			}
 
 			if (languageState.volarCreateFile == null) {
-				let message = "Unknown extension.";
-				switch (fileExtension) {
-					case ".astro":
-						message = "Did you install & import @flint.fyi/astro?";
-						break;
-					case ".mdx":
-						message = "Did you install & import @flint.fyi/mdx?";
-						break;
-					case ".vue":
-						message = "Did you install & import @flint.fyi/vue?";
-						break;
-				}
-
-				throw new Error(`Cannot process ${sourceFile.fileName}. ${message}`);
+				throwUnknownLanguageExtension(data.filePathAbsolute);
 			}
 
 			return {
@@ -228,3 +217,19 @@ const typeScriptCoreSupportedExtensions: ReadonlySet<string> = new Set([
 	".ts",
 	".tsx",
 ]);
+
+const fileExtToFlintPlugin: Record<string, string> = {
+	".astro": "@flint.fyi/astro",
+	".svelte": "@flint.fyi/svelte",
+	".ember": "@flint.fyi/ember",
+	".mdx": "@flint.fyi/mdx",
+	".vue": "@flint.fyi/vue",
+};
+
+export function throwUnknownLanguageExtension(filename: string): never {
+	const pluginName = fileExtToFlintPlugin[path.extname(filename)];
+	const message = pluginName
+		? `Did you install & import ${pluginName}?`
+		: "Unknown extension.";
+	throw new Error(`Cannot process ${filename}. ${message}`);
+}
