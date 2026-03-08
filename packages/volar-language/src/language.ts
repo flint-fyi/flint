@@ -439,7 +439,7 @@ export function createVolarBasedLanguage<FileServices extends object>(
 			},
 		}),
 		createRule: (ruleDefinition: AnyRuleDefinition) => {
-			// flint-disable-next-line anyReturns
+			// flint-disable-next-line ts/anyReturns
 			return {
 				...ruleDefinition,
 				language: typescriptLanguage,
