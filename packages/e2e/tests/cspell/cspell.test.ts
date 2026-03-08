@@ -27,7 +27,9 @@ describe("cspell", () => {
 			<dim>  12:17</fg>  Forbidden or unknown word: "diffarence".  <yellow>spelling/cspell</fg>
 
 			<red>✖ Found <bold>7 reports</bold> across <bold>3 files</bold>.</fg>
-			<red></fg>"
+			<red></fg>
+			<dim>Finished in <time> on 4 files with 1 rule.</fg>
+			<dim></fg>"
 		`);
 		// cspell:enable
 	});

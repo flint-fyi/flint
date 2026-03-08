@@ -6,7 +6,10 @@ import { execa } from "execa";
  */
 export function normalizeOutput(stdout: string, cwd: string): string {
 	const normalizedCwd = cwd.replace(/\\/g, "/");
-	return stdout.replace(/\\/g, "/").split(normalizedCwd).join("<cwd>");
+	return stdout
+		.replace(/\\/g, "/")
+		.replace(new RegExp(normalizedCwd, "gi"), "<cwd>")
+		.replace(/Finished in \S+/g, "Finished in <time>");
 }
 
 /**

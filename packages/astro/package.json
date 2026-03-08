@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/astro",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "[Experimental] A Flint plugin for Astro code.",
 	"homepage": "https://flint.fyi/rules/astro",
 	"repository": {
@@ -30,7 +30,7 @@
 		"typescript": "^5.9.3"
 	},
 	"devDependencies": {
-		"tsdown": "0.20.1"
+		"tsdown": "0.21.0"
 	},
 	"engines": {
 		"node": ">=24.0.0"

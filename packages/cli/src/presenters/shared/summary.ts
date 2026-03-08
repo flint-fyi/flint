@@ -11,7 +11,7 @@ export interface SummaryCounts {
 
 export function* presentSummary(
 	counts: SummaryCounts,
-	{ formattingResults, lintResults }: PresenterSummarizeContext,
+	{ duration, formattingResults, lintResults }: PresenterSummarizeContext,
 ) {
 	if (lintResults.changed?.size) {
 		yield chalk.green(
@@ -72,4 +72,13 @@ export function* presentSummary(
 			yield `  ${chalk.gray(dirtyFile)}\n`;
 		}
 	}
+
+	yield "\n";
+	yield chalk.gray(
+		`Finished in ${formatDuration(duration)} on ${pluralize(lintResults.allFilePaths.size, "file")} with ${pluralize(lintResults.ruleCount, "rule")}.\n`,
+	);
+}
+
+function formatDuration(ms: number) {
+	return ms >= 1000 ? `${(ms / 1000).toFixed(2)}s` : `${Math.round(ms)}ms`;
 }

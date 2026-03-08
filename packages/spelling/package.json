@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/spelling",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "[Experimental] A spell-checker plugin for Flint powered by CSpell.",
 	"homepage": "https://www.flint.fyi/rules/spelling",
 	"repository": {
@@ -34,7 +34,7 @@
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
-		"tsdown": "0.20.1",
+		"tsdown": "0.21.0",
 		"vitest": "4.0.15"
 	},
 	"engines": {

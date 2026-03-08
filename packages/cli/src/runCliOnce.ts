@@ -47,6 +47,8 @@ export async function runCliOnce(
 	log("Running with Flint in single-run mode with config: %s", configFileName);
 	renderer.announce();
 
+	const startTime = performance.now();
+
 	const configDefinition = {
 		...config.definition,
 		filePath: configFileName,
@@ -73,7 +75,14 @@ export async function runCliOnce(
 	// https://github.com/flint-fyi/flint/issues/73
 	const formattingResults = await runPrettier(lintResults, values.fix);
 
-	await renderer.render({ formattingResults, ignoreCache, lintResults });
+	const duration = performance.now() - startTime;
+
+	await renderer.render({
+		duration,
+		formattingResults,
+		ignoreCache,
+		lintResults,
+	});
 
 	if (formattingResults.dirty.size && !formattingResults.written) {
 		return { exitCode: 1, lintResults };
