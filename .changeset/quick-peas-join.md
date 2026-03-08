@@ -5,4 +5,4 @@
 "@flint.fyi/volar-language": minor
 ---
 
-feat: introduce Volar.js meta-language
+Introduce Volar.js meta-language.
