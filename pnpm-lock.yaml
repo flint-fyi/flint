@@ -865,11 +865,11 @@ importers:
         version: 5.9.3
     devDependencies:
       tsdown:
-        specifier: 0.20.1
-        version: 0.20.1(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.19.1)(synckit@0.11.12)(typescript@5.9.3)
+        specifier: 0.21.0
+        version: 0.21.0(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.19.1)(synckit@0.11.12)(typescript@5.9.3)
       vitest:
         specifier: 4.0.15
-        version: 4.0.15(@types/node@24.11.0)(jiti@2.6.1)(yaml@2.8.2)
+        version: 4.0.15(@types/node@24.12.0)(jiti@2.6.1)(yaml@2.8.2)
 
   packages/yaml:
     dependencies:
