@@ -31,7 +31,7 @@
 		"cached-factory": "^0.1.0"
 	},
 	"devDependencies": {
-		"tsdown": "0.20.1",
+		"tsdown": "0.21.0",
 		"vitest": "4.0.15"
 	},
 	"engines": {

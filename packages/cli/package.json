@@ -39,7 +39,7 @@
 	},
 	"devDependencies": {
 		"prettier": "3.8.1",
-		"tsdown": "0.20.1"
+		"tsdown": "0.21.0"
 	},
 	"peerDependencies": {
 		"prettier": "^3.7.4"
