@@ -86,9 +86,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (!messageProperty) {
-				// TODO: It might be async template literal or other expression
-				// In the case we can't determine the message ID here
-				// So don't report any unused message IDs in this file
+				// TODO: It might be a template literal, variable reference, or other dynamic expression.
+				// We can't statically determine the message ID here,
+				// so don't report any unused message IDs in this file.
 				unusedMessageIds.clear();
 				return;
 			}
