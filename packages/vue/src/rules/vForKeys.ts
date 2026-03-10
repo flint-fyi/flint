@@ -1,9 +1,10 @@
 import type { CharacterReportRange } from "@flint.fyi/core";
-import { nullThrows } from "@flint.fyi/utils";
+import { assert, nullThrows } from "@flint.fyi/utils";
 import { reportSourceCode } from "@flint.fyi/volar-language";
 import { vueLanguage } from "@flint.fyi/vue-language";
 import * as vue from "@vue/compiler-dom";
 import ts from "typescript";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(vueLanguage, {
@@ -66,13 +67,10 @@ export default ruleCreator.createRule(vueLanguage, {
 					};
 
 					const toGeneratedLocationOrThrow = (sourceLocation: number) => {
-						const generated = toGeneratedLocation(sourceLocation);
-						if (generated == null) {
-							throw new Error(
-								`Could not map source location ${sourceLocation} to generated location`,
-							);
-						}
-						return generated;
+						return nullThrows(
+							toGeneratedLocation(sourceLocation),
+							"Unable to map source location to generated location",
+						);
 					};
 
 					const { sfc } = vueServices;
@@ -118,9 +116,7 @@ export default ruleCreator.createRule(vueLanguage, {
 							return;
 						}
 
-						if (keyProp.arg == null) {
-							throw new Error("Expected keyProp.arg to be non-null");
-						}
+						assert(keyProp.arg != null, "Expected keyProp.arg to be non-null");
 
 						let reportRange: CharacterReportRange;
 						let valueRange: CharacterReportRange;

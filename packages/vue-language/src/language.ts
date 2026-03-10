@@ -130,10 +130,6 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 
 				return {
 					directives,
-					firstStatementPosition:
-						sfcAst.children.find((c) => c.type !== NodeTypes.COMMENT)?.loc.start
-							.offset ?? sourceText.length,
-					// cache: collectTypeScriptFileCacheImpacts(program, sourceFile),
 					extraContext: {
 						vueServices: {
 							codegen,
@@ -142,6 +138,9 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 							virtualCode,
 						},
 					},
+					firstStatementPosition:
+						sfcAst.children.find((c) => c.type !== NodeTypes.COMMENT)?.loc.start
+							.offset ?? sourceText.length,
 					getDiagnostics() {
 						return (virtualCode.vueSfc?.errors ?? []).map((e) => {
 							const fileName = sourceFile.fileName.startsWith("./")
@@ -150,8 +149,7 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 							let code = "VUE";
 							let loc = "";
 							if ("code" in e) {
-								// TODO: think about codes
-								code += "999999" + e.code.toString();
+								code += e.code.toString();
 								loc =
 									e.loc != null
 										? `:${e.loc.start.line}:${e.loc.start.column}`
