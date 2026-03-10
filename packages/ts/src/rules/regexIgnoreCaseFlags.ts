@@ -124,21 +124,13 @@ function isLetter(codePoint: number) {
 	);
 }
 
-function toLowerCase(codePoint: number) {
-	return codePoint >= 0x41 && codePoint <= 0x5a ? codePoint + 0x20 : codePoint;
-}
-
-function toUpperCase(codePoint: number) {
-	return codePoint >= 0x61 && codePoint <= 0x7a ? codePoint - 0x20 : codePoint;
-}
-
 function simplifyCharacterClass(
 	pattern: string,
 	charClass: RegExpAST.CharacterClass,
 ): string {
 	const elements = charClass.elements;
 	const keptCharacters = new Set<number>();
-	const rangesToKeep: Array<{ max: number; min: number }> = [];
+	const rangesToKeep: { max: number; min: number }[] = [];
 
 	// First pass: collect all characters that should be kept (lowercase versions)
 	for (const element of elements) {
@@ -199,6 +191,14 @@ function simplifyCharacterClass(
 	const after = pattern.slice(charClass.end);
 
 	return before + result + after;
+}
+
+function toLowerCase(codePoint: number) {
+	return codePoint >= 0x41 && codePoint <= 0x5a ? codePoint + 0x20 : codePoint;
+}
+
+function toUpperCase(codePoint: number) {
+	return codePoint >= 0x61 && codePoint <= 0x7a ? codePoint - 0x20 : codePoint;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
