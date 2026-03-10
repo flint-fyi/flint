@@ -1,11 +1,12 @@
 import type { CharacterReportRange } from "@flint.fyi/core";
+import { nullThrows } from "@flint.fyi/utils";
+import { reportSourceCode } from "@flint.fyi/volar-language";
+import { vueLanguage } from "@flint.fyi/vue-language";
 import * as vue from "@vue/compiler-dom";
 import ts from "typescript";
+import { ruleCreator } from "./ruleCreator.ts";
 
-import { vueLanguage } from "@flint.fyi/vue-language";
-import { reportSourceCode } from "@flint.fyi/volar-language";
-
-export default vueLanguage.createRule({
+export default ruleCreator.createRule(vueLanguage, {
 	about: {
 		description: "Reports v-for directives without a valid key binding.",
 		id: "vForKeys",
@@ -56,9 +57,12 @@ export default vueLanguage.createRule({
 					}
 
 					const toGeneratedLocation = (sourceLocation: number) => {
-						return Array.from(
-							vueServices.map.toGeneratedLocation(sourceLocation),
-						)?.[0]?.[0];
+						for (const [loc] of vueServices.map.toGeneratedLocation(
+							sourceLocation,
+						)) {
+							return loc;
+						}
+						return undefined;
 					};
 
 					const toGeneratedLocationOrThrow = (sourceLocation: number) => {
@@ -131,18 +135,35 @@ export default vueLanguage.createRule({
 								vueServices.map.toGeneratedLocation(
 									keyProp.arg.loc.start.offset,
 								),
-							).filter(([, m]) => m.lengths[0]! > 0);
+							).filter(
+								([, m]) =>
+									nullThrows(
+										m.lengths[0],
+										"Expected mapping to have at least one range",
+									) > 0,
+							);
 
 							// |key|: |key|
 							//        ^^^^^
 							// |key|: __VLS_ctx.|key|
 							//                  ^^^^^
-							const valueMapping = generatedLocations[1]![1];
+							const valueMapping = nullThrows(
+								generatedLocations[1],
+								"Expected :key two have two mappings",
+							)[1];
 
+							const generatedBegin = nullThrows(
+								valueMapping.generatedOffsets[0],
+								"Expected mapping to have at least one range",
+							);
 							valueRange = {
-								begin: valueMapping.generatedOffsets[0]!,
+								begin: generatedBegin,
 								end:
-									valueMapping.generatedOffsets[0]! + valueMapping.lengths[0]!,
+									generatedBegin +
+									nullThrows(
+										valueMapping.lengths[0],
+										"Expected mapping to have at least one range",
+									),
 							};
 						} else {
 							reportRange = {
@@ -218,6 +239,7 @@ export default vueLanguage.createRule({
 						}
 					};
 
+					// TODO: add vue: listeners to the language
 					function visitTag(node: vue.TemplateChildNode) {
 						if (node.type === vue.NodeTypes.ELEMENT) {
 							let forDirective: null | vue.DirectiveNode = null;
@@ -250,10 +272,14 @@ export default vueLanguage.createRule({
 								checkFor(forDirective, forParseResult, keyProp);
 							}
 
-							node.children.forEach(visitTag);
+							for (const child of node.children) {
+								visitTag(child);
+							}
 						}
 					}
-					templateBlock.children.forEach(visitTag);
+					for (const child of templateBlock.children) {
+						visitTag(child);
+					}
 				},
 			},
 		};

@@ -876,15 +876,9 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      '@flint.fyi/ts':
-        specifier: workspace:^
-        version: link:../ts
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
-      '@flint.fyi/utils':
-        specifier: workspace:^
-        version: link:../utils
       '@flint.fyi/volar-language':
         specifier: workspace:^
         version: link:../volar-language
@@ -894,9 +888,6 @@ importers:
       '@vue/compiler-dom':
         specifier: ^3.5.0
         version: 3.5.30
-      ts-api-utils:
-        specifier: ^2.4.0
-        version: 2.4.0(typescript@5.9.3)
       typescript:
         specifier: ^5.9.0 || ^6.0.0
         version: 5.9.3
@@ -916,9 +907,6 @@ importers:
 
   packages/vue-language:
     dependencies:
-      '@flint.fyi/core':
-        specifier: workspace:^
-        version: link:../core
       '@flint.fyi/ts-patch':
         specifier: workspace:^
         version: link:../ts-patch

@@ -1,11 +1,13 @@
 import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
+import type { ExtractedDirective } from "@flint.fyi/typescript-language";
+import { assert } from "@flint.fyi/utils";
 import { createVolarBasedLanguage } from "@flint.fyi/volar-language";
 import type { Mapper as VolarMapper } from "@volar/language-core";
 import {
-	parse as vueParse,
 	NodeTypes,
 	type RootNode,
 	type TemplateChildNode,
+	parse as vueParse,
 } from "@vue/compiler-dom";
 import {
 	createVueLanguagePlugin,
@@ -14,8 +16,6 @@ import {
 	tsCodegen,
 	VueVirtualCode,
 } from "@vue/language-core";
-import { type ExtractedDirective } from "@flint.fyi/typescript-language";
-import { assert } from "@flint.fyi/utils";
 
 setTSExtraSupportedExtensions([".vue"]);
 
@@ -28,7 +28,8 @@ export interface VueServices {
 	};
 }
 
-type VueCodegen = typeof tsCodegen extends WeakMap<any, infer V> ? V : never;
+type VueCodegen =
+	typeof tsCodegen extends WeakMap<WeakKey, infer V> ? V : never;
 
 export const vueLanguage = createVolarBasedLanguage<VueServices>(
 	(ts, options) => {
@@ -48,20 +49,12 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 					)
 		).vueOptions;
 		return {
-			languagePlugins: [
-				createVueLanguagePlugin<string>(
-					ts,
-					options.options,
-					vueCompilerOptions,
-					(id) => id,
-				),
-			],
 			createFile({
 				data,
-				sourceFile,
-				volarLanguage,
-				sourceScript,
 				serviceScript,
+				sourceFile,
+				sourceScript,
+				volarLanguage,
 			}) {
 				const sourceText = sourceScript.snapshot.getText(
 					0,
@@ -79,20 +72,23 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 				const sfcAst = vueParse(sourceText, {
 					comments: true,
 					expressionPlugins: ["typescript"],
+					onError: () => {
+						// We ignore errors because virtual code already provides them,
+						// and it also provides them with sourceText-based locations,
+						// so we don't have to remap them. Oh, and it also contains errors from
+						// other blocks rather than only <template> as well.
+						// If we don't provide this callback, @vue/compiler-core will throw.
+					},
 					parseMode: "html",
-					// We ignore errors because virtual code already provides them,
-					// and it also provides them with sourceText-based locations,
-					// so we don't have to remap them. Oh, and it also contains errors from
-					// other blocks rather than only <template> as well.
-					// If we don't provide this callback, @vue/compiler-core will throw.
-					onError: () => {},
 				});
 
 				// TODO: extract directives from other blocks too
 				const directives: ExtractedDirective[] = [];
 				function visitTemplate(elem: TemplateChildNode) {
 					if (elem.type === NodeTypes.ELEMENT) {
-						elem.children.forEach(visitTemplate);
+						for (const child of elem.children) {
+							visitTemplate(child);
+						}
 						return;
 					}
 					if (elem.type !== NodeTypes.COMMENT) {
@@ -128,7 +124,9 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 						type,
 					});
 				}
-				sfcAst.children.forEach(visitTemplate);
+				for (const child of sfcAst.children) {
+					visitTemplate(child);
+				}
 
 				return {
 					directives,
@@ -136,6 +134,14 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 						sfcAst.children.find((c) => c.type !== NodeTypes.COMMENT)?.loc.start
 							.offset ?? sourceText.length,
 					// cache: collectTypeScriptFileCacheImpacts(program, sourceFile),
+					extraContext: {
+						vueServices: {
+							codegen,
+							map,
+							sfc: sfcAst,
+							virtualCode,
+						},
+					},
 					getDiagnostics() {
 						return (virtualCode.vueSfc?.errors ?? []).map((e) => {
 							const fileName = sourceFile.fileName.startsWith("./")
@@ -148,7 +154,7 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 								code += "999999" + e.code.toString();
 								loc =
 									e.loc != null
-										? `:${e.loc?.start.line}:${e.loc?.start.column}`
+										? `:${e.loc.start.line}:${e.loc.start.column}`
 										: "";
 							}
 							return {
@@ -157,16 +163,16 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 							};
 						});
 					},
-					extraContext: {
-						vueServices: {
-							codegen,
-							map,
-							sfc: sfcAst,
-							virtualCode,
-						},
-					},
 				};
 			},
+			languagePlugins: [
+				createVueLanguagePlugin<string>(
+					ts,
+					options.options,
+					vueCompilerOptions,
+					(id) => id,
+				),
+			],
 		};
 	},
 );

@@ -1,6 +1,7 @@
-import rule from "../../../ts/src/rules/anyReturns.ts";
-import { ruleTester } from "./ruleTester.js";
 import "@flint.fyi/vue-language";
+
+import rule from "../../../ts/src/rules/anyReturns.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 const myComponentFixture = {
 	"MyComponent.vue": `
@@ -21,7 +22,8 @@ ruleTester.describe(rule, {
 		return 1 as any
 	}
 </script>
-			`,
+			
+`,
 			snapshot: `
 <script lang="ts" setup>
 	function foo() {
@@ -30,7 +32,8 @@ ruleTester.describe(rule, {
 		Unsafe return of a value of type \`any\`.
 	}
 </script>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -43,7 +46,8 @@ ruleTester.describe(rule, {
 <template>
 	<MyComponent :foo="() => foo"/>
 </template>
-			`,
+			
+`,
 			files: myComponentFixture,
 			snapshot: `
 <script lang="ts" setup>
@@ -57,7 +61,8 @@ ruleTester.describe(rule, {
 	                         ~~~
 	                         Unsafe return of a value of type \`any\`.
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -73,7 +78,8 @@ ruleTester.describe(rule, {
 		foo,
 	] as any"/>
 </template>
-			`,
+			
+`,
 			files: myComponentFixture,
 			snapshot: `
 <script lang="ts" setup>
@@ -93,7 +99,8 @@ ruleTester.describe(rule, {
 	] as any"/>
 	~~~~~~~~
 </template>
-			`,
+			
+`,
 		},
 	],
 	valid: [

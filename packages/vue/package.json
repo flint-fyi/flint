@@ -27,13 +27,10 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"@flint.fyi/ts": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
-		"@flint.fyi/utils": "workspace:^",
 		"@flint.fyi/volar-language": "workspace:^",
 		"@flint.fyi/vue-language": "workspace:^",
 		"@vue/compiler-dom": "^3.5.0",
-		"ts-api-utils": "^2.4.0",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {

@@ -8,28 +8,32 @@ ruleTester.describe(rule, {
 <template>
 	<template v-for="item in [1, 2]"></template>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <template>
 	<template v-for="item in [1, 2]"></template>
 	          ~~~~~
 	          Elements using v-for must include a unique :key to ensure correct reactivity and DOM stability.
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
 <template>
 	<div v-for="item in [1, 2]"></div>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <template>
 	<div v-for="item in [1, 2]"></div>
 	     ~~~~~
 	     Elements using v-for must include a unique :key to ensure correct reactivity and DOM stability.
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -38,7 +42,8 @@ ruleTester.describe(rule, {
 		<p></p>
 	</div>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <template>
 	<div v-for="item in [1, 2]">
@@ -47,7 +52,8 @@ ruleTester.describe(rule, {
 		<p></p>
 	</div>
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -56,7 +62,8 @@ ruleTester.describe(rule, {
 		<p></p>
 	</template>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <template>
 	<template v-for="item in [1, 2]">
@@ -65,7 +72,8 @@ ruleTester.describe(rule, {
 		<p></p>
 	</template>
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -74,7 +82,8 @@ ruleTester.describe(rule, {
 		<img v-for="item in [1, 2]"/>
 	</div>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <template>
 	<div>
@@ -83,7 +92,8 @@ ruleTester.describe(rule, {
 		     Elements using v-for must include a unique :key to ensure correct reactivity and DOM stability.
 	</div>
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -92,7 +102,8 @@ ruleTester.describe(rule, {
 		<img v-for="item in [1, 2]"/>
 	</div>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <template>
 	<div v-if="true">
@@ -101,7 +112,8 @@ ruleTester.describe(rule, {
 		     Elements using v-for must include a unique :key to ensure correct reactivity and DOM stability.
 	</div>
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -111,7 +123,8 @@ ruleTester.describe(rule, {
 		<img v-for="item in [1, 2]"/>
 	</div>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <template>
 	<div v-if="true"></div>
@@ -121,7 +134,8 @@ ruleTester.describe(rule, {
 		     Elements using v-for must include a unique :key to ensure correct reactivity and DOM stability.
 	</div>
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -130,7 +144,8 @@ ruleTester.describe(rule, {
 		<img v-for="item in [1, 2]"/>
 	</div>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <template>
 	<div v-for="i in [1, 2]" :key="i">
@@ -139,7 +154,8 @@ ruleTester.describe(rule, {
 		     Elements using v-for must include a unique :key to ensure correct reactivity and DOM stability.
 	</div>
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -154,7 +170,8 @@ ruleTester.describe(rule, {
 	></div>
 </template>
 		},
-			`,
+			
+`,
 			snapshot: `
 <script setup lang="ts">
 	declare const key: number
@@ -169,7 +186,8 @@ ruleTester.describe(rule, {
 	></div>
 </template>
 		},
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -180,7 +198,8 @@ ruleTester.describe(rule, {
 	></div>
 </template>
 		},
-			`,
+			
+`,
 			snapshot: `
 <template>
 	<div
@@ -191,7 +210,8 @@ ruleTester.describe(rule, {
 	></div>
 </template>
 		},
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -201,7 +221,8 @@ ruleTester.describe(rule, {
 		:key="5"
 	></div>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <template>
 	<div
@@ -211,7 +232,8 @@ ruleTester.describe(rule, {
 		      The :key on this v-for element does not reference the iteration variable.
 	></div>
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -221,7 +243,8 @@ ruleTester.describe(rule, {
 		key=item
 	></div>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <template>
 	<div
@@ -231,7 +254,8 @@ ruleTester.describe(rule, {
 		    Static key values prevent Vue from tracking changes in v-for lists.
 	></div>
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -241,7 +265,8 @@ ruleTester.describe(rule, {
 		key='item'
 	></div>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <template>
 	<div
@@ -251,7 +276,8 @@ ruleTester.describe(rule, {
 		     Static key values prevent Vue from tracking changes in v-for lists.
 	></div>
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -261,7 +287,8 @@ ruleTester.describe(rule, {
 		key="item"
 	></div>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <template>
 	<div
@@ -271,7 +298,8 @@ ruleTester.describe(rule, {
 		     Static key values prevent Vue from tracking changes in v-for lists.
 	></div>
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -285,7 +313,8 @@ ruleTester.describe(rule, {
 		:key
 	></div>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <script lang="ts" setup>
 	const key = 5
@@ -299,7 +328,8 @@ ruleTester.describe(rule, {
 		The :key on this v-for element does not reference the iteration variable.
 	></div>
 </template>
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -313,7 +343,8 @@ ruleTester.describe(rule, {
 		v-bind:key
 	></div>
 </template>
-			`,
+			
+`,
 			snapshot: `
 <script lang="ts" setup>
 	const key = 5
@@ -327,7 +358,8 @@ ruleTester.describe(rule, {
 		The :key on this v-for element does not reference the iteration variable.
 	></div>
 </template>
-			`,
+			
+`,
 		},
 	],
 	valid: [
