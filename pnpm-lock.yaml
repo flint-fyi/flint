@@ -941,9 +941,6 @@ importers:
       vitest:
         specifier: 4.0.15
         version: 4.0.15(@types/node@24.12.0)(jiti@2.6.1)(yaml@2.8.2)
-      vue:
-        specifier: ~3.5.26
-        version: 3.5.30(typescript@5.9.3)
 
   packages/yaml:
     dependencies:

@@ -37,8 +37,7 @@
 	},
 	"devDependencies": {
 		"tsdown": "0.21.0",
-		"vitest": "4.0.15",
-		"vue": "~3.5.26"
+		"vitest": "4.0.15"
 	},
 	"engines": {
 		"node": ">=24.0.0"
