@@ -8,6 +8,7 @@ import placeholderFormats from "./rules/placeholderFormats.ts";
 import ruleCreationMethods from "./rules/ruleCreationMethods.ts";
 import testCaseDuplicates from "./rules/testCaseDuplicates.ts";
 import testCaseNameDuplicates from "./rules/testCaseNameDuplicates.ts";
+import testCaseNonStaticCode from "./rules/testCaseNonStaticCode.ts";
 import testShorthands from "./rules/testShorthands.ts";
 
 export const flint = createPlugin({
@@ -15,6 +16,7 @@ export const flint = createPlugin({
 	rules: [
 		getStartSourceFile,
 		invalidCodeLines,
+		testCaseNonStaticCode,
 		testCaseDuplicates,
 		testCaseNameDuplicates,
 		missingPlaceholders,
