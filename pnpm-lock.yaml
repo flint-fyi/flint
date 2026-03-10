@@ -879,6 +879,9 @@ importers:
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
+      '@flint.fyi/utils':
+        specifier: workspace:^
+        version: link:../utils
       '@flint.fyi/volar-language':
         specifier: workspace:^
         version: link:../volar-language
