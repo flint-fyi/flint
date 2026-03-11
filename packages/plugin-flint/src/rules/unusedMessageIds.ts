@@ -79,6 +79,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
+			// TODO: Use a util like getStaticValue
+			// https://github.com/flint-fyi/flint/issues/1298
 			const messageProperty = findProperty(
 				args.properties,
 				"message",
