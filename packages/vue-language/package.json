@@ -26,7 +26,6 @@
 		"test": "vitest --project vue-language"
 	},
 	"dependencies": {
-		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
@@ -37,6 +36,7 @@
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/core": "workspace:^",
 		"tsdown": "0.21.0",
 		"vitest": "4.0.15"
 	},
