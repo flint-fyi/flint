@@ -3,6 +3,7 @@ import { textLanguage } from "@flint.fyi/text-language";
 import { parseJsonSafe } from "@flint.fyi/utils";
 import type { DocumentValidator } from "cspell-lib";
 import { suggestionsForWord } from "cspell-lib";
+import path from "node:path";
 
 import { createDocumentValidator } from "./createDocumentValidator.ts";
 import { ruleCreator } from "./ruleCreator.ts";
@@ -45,6 +46,15 @@ export default ruleCreator.createRule(textLanguage, {
 	},
 	setup(context) {
 		const fileTasks: FileTask[] = [];
+
+		const cwd = context.host.getCurrentDirectory();
+		const cspellJsonPath = path.resolve(cwd, "cspell.json");
+
+		const configTextPromise = context.host.readFile(cspellJsonPath);
+		const configPromise = configTextPromise.then(
+			(configText) =>
+				(parseJsonSafe(configText) as CSpellConfigLike | undefined) ?? {},
+		);
 
 		return {
 			dependencies: ["cspell.json"],
@@ -89,30 +99,29 @@ export default ruleCreator.createRule(textLanguage, {
 							...(replacement && { replacement }),
 						};
 
+						const [configText, config] = await Promise.all([
+							configTextPromise,
+							configPromise,
+						]);
+
+						const words = config.words ?? [];
 						const suggestions: Suggestion[] = [
 							{
 								files: {
-									"cspell.json": (text) => {
-										const original = parseJsonSafe(
-											text,
-										) as CSpellConfigLike | null;
-										const words = original?.words ?? [];
-
-										return words.includes(issue.text)
-											? []
-											: [
-													{
-														range: {
-															begin: 0,
-															end: text.length,
-														},
-														text: JSON.stringify({
-															...original,
-															words: [...words, issue.text],
-														}),
+									"cspell.json": words.includes(issue.text)
+										? []
+										: [
+												{
+													range: {
+														begin: 0,
+														end: configText?.length ?? 0,
 													},
-												];
-									},
+													text: JSON.stringify({
+														...config,
+														words: [...words, issue.text],
+													}),
+												},
+											],
 								},
 								id: "addWordToWords",
 							},
@@ -131,9 +140,8 @@ export default ruleCreator.createRule(textLanguage, {
 			visitors: {
 				file: (text, { filePath, filePathAbsolute }) => {
 					fileTasks.push({
-						documentValidatorTask: createDocumentValidator(
-							filePathAbsolute,
-							text,
+						documentValidatorTask: configPromise.then((config) =>
+							createDocumentValidator(cwd, filePathAbsolute, text, config),
 						),
 						filePath,
 						text,

@@ -14,8 +14,7 @@ export async function applyChangesToFiles(
 ) {
 	log("Resolving changes from results.");
 
-	const changesByFile = await resolveChangesByFile(
-		host,
+	const changesByFile = resolveChangesByFile(
 		filesResults,
 		requestedSuggestions,
 	);

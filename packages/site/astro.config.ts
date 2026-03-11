@@ -2,6 +2,7 @@ import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
 import { defineConfig } from "astro/config";
+import { remarkAddTwoslash } from "remark-add-twoslash";
 import { remarkHeadingId } from "remark-custom-heading-id";
 import starlightBlog from "starlight-blog";
 import starlightLinksValidator from "starlight-links-validator";
@@ -141,7 +142,12 @@ export default defineConfig({
 		react(),
 	],
 	markdown: {
-		remarkPlugins: [remarkHeadingId],
+		remarkPlugins: [
+			remarkAddTwoslash({
+				excludes: [/content\/docs\/blog/, /content\/docs\/rules\/\w+\/\w+/],
+			}),
+			remarkHeadingId,
+		],
 	},
 	redirects: {
 		"/discord": "https://discord.gg/cFK3RAUDhy",

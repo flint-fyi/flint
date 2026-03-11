@@ -464,12 +464,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
-		noStrictNullCheck: {
-			primary:
-				"This rule requires the `strictNullChecks` compiler option to be turned on to function correctly.",
-			secondary: [],
-			suggestions: [],
-		},
 		preferNullish: {
 			primary:
 				"Prefer nullish coalescing operator (`??`) over logical OR (`||`) for nullish checks.",

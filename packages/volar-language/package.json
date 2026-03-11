@@ -1,0 +1,50 @@
+{
+	"name": "@flint.fyi/volar-language",
+	"version": "0.0.1",
+	"description": "[Experimental] Volar.js language for Flint.",
+	"homepage": "https://flint.fyi",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/volar-language"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "JoshuaKGoldberg",
+		"email": "npm@joshuakgoldberg.com"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"files": [
+		"lib/",
+		"!lib/**/*.map"
+	],
+	"scripts": {
+		"test": "vitest --typecheck --project volar-language"
+	},
+	"dependencies": {
+		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/ts-patch": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
+		"@flint.fyi/utils": "workspace:^",
+		"@volar/language-core": "2.4.28",
+		"@volar/typescript": "2.4.28",
+		"typescript": "^5.9.0 || ^6.0.0"
+	},
+	"devDependencies": {
+		"tsdown": "0.21.0",
+		"vitest": "4.0.15"
+	},
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"exports": {
+			".": "./lib/index.js"
+		}
+	}
+}

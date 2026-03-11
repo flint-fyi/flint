@@ -1,9 +1,9 @@
-import type { AST } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
+import type { AST, Checker } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
 
 export function isLanguageCreateRule(
 	node: AST.CallExpression,
-	typeChecker: ts.TypeChecker,
+	typeChecker: Checker,
 ): boolean {
 	return (
 		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
@@ -12,29 +12,11 @@ export function isLanguageCreateRule(
 	);
 }
 
-// TODO: Maybe need to check it more strictly
-// https://github.com/flint-fyi/flint/issues/152
-export function isRuleCreatorCreateRule(
+function isTypedMethodCall(
 	node: AST.CallExpression,
-	typeChecker: ts.TypeChecker,
-): boolean {
-	if (
-		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
-		node.expression.name.text === "createRule"
-	) {
-		const propertyAccess = node.expression;
-		const type = typeChecker.getTypeAtLocation(propertyAccess.expression);
-
-		return type.getSymbol()?.getName() === "RuleCreator";
-	}
-	return false;
-}
-
-// TODO: Maybe need to check it more strictly
-// https://github.com/flint-fyi/flint/issues/152
-export function isRuleContextReport(
-	node: AST.CallExpression,
-	typeChecker: ts.TypeChecker,
+	typeChecker: Checker,
+	leftType: string,
+	rightCall: string,
 ): boolean {
 	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 		return false;
@@ -44,5 +26,17 @@ export function isRuleContextReport(
 	const type = typeChecker.getTypeAtLocation(propertyAccess.expression);
 	const typeName = type.getSymbol()?.getName();
 
-	return typeName === "RuleContext" && propertyAccess.name.text === "report";
+	// TODO: Maybe need to check it more strictly
+	// https://github.com/flint-fyi/flint/issues/152
+	return typeName === leftType && propertyAccess.name.text === rightCall;
 }
+
+export const isRuleCreatorCreateRule = (
+	node: AST.CallExpression,
+	typeChecker: Checker,
+) => isTypedMethodCall(node, typeChecker, "RuleCreator", "createRule");
+
+export const isRuleContextReport = (
+	node: AST.CallExpression,
+	typeChecker: Checker,
+) => isTypedMethodCall(node, typeChecker, "RuleContext", "report");

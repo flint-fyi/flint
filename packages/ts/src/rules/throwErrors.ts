@@ -62,11 +62,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"Create a custom `Error` class for specific error types.",
 			],
 		},
-		throwUndefined: {
-			primary: "Throwing `undefined` is not allowed.",
-			secondary: ["Throwing undefined provides no useful information."],
-			suggestions: ["Throw an Error object with a descriptive message."],
-		},
 	},
 	setup(context) {
 		return {

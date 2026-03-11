@@ -9,6 +9,7 @@ import ruleCreationMethods from "./rules/ruleCreationMethods.ts";
 import testCaseDuplicates from "./rules/testCaseDuplicates.ts";
 import testCaseNameDuplicates from "./rules/testCaseNameDuplicates.ts";
 import testShorthands from "./rules/testShorthands.ts";
+import unusedMessageIds from "./rules/unusedMessageIds.ts";
 
 export const flint = createPlugin({
 	name: "Flint",
@@ -17,6 +18,7 @@ export const flint = createPlugin({
 		invalidCodeLines,
 		testCaseDuplicates,
 		testCaseNameDuplicates,
+		unusedMessageIds,
 		missingPlaceholders,
 		ruleCreationMethods,
 		placeholderFormats,

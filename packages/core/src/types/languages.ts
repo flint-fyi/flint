@@ -1,5 +1,6 @@
 import type { CommentDirective } from "./directives.ts";
 import type { LinterHost } from "./host.ts";
+import type { CharacterReportRange } from "./ranges.ts";
 import type { FileReport } from "./reports.ts";
 import type { Rule, RuleAbout, RuleDefinition, RuleRuntime } from "./rules.ts";
 import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
@@ -138,6 +139,9 @@ export type LanguageFile<FileServices extends object> = Disposable &
  */
 export interface LanguageFileBase<FileServices extends object> {
 	about: FileAboutData;
+	adjustReportRange?: (
+		range: CharacterReportRange,
+	) => CharacterReportRange | null;
 	directives?: CommentDirective[];
 	reports?: FileReport[];
 	services: FileServices;

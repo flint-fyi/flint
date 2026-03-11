@@ -30,7 +30,7 @@
 	},
 	"devDependencies": {
 		"eslint": "10.0.2",
-		"tsdown": "0.20.1",
+		"tsdown": "0.21.0",
 		"vitest": "4.0.15"
 	},
 	"engines": {
