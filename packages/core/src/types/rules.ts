@@ -16,6 +16,12 @@ export type AnyRule<
 		| undefined,
 > = Rule<About, unknown, object, string, OptionsSchema>;
 
+export type AnyRuleDefinition<
+	OptionsSchema extends AnyOptionalSchema | undefined =
+		| AnyOptionalSchema
+		| undefined,
+> = RuleDefinition<RuleAbout, unknown, object, string, OptionsSchema>;
+
 export type UnsafeAnyRule<About extends RuleAbout = RuleAbout> = Rule<
 	About,
 	// TODO: How to make these types work with createPlugin.test.ts & co.?
@@ -28,12 +34,6 @@ export type UnsafeAnyRule<About extends RuleAbout = RuleAbout> = Rule<
 	/* eslint-enable @typescript-eslint/no-explicit-any */
 	// flint-disable-lines-end ts/explicitAnys
 >;
-
-export type AnyRuleDefinition<
-	OptionsSchema extends AnyOptionalSchema | undefined =
-		| AnyOptionalSchema
-		| undefined,
-> = RuleDefinition<RuleAbout, unknown, object, string, OptionsSchema>;
 
 /**
  * A single lint rule, as used by users in configs.
