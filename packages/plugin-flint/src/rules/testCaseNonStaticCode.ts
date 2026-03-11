@@ -8,7 +8,7 @@ import ts from "typescript";
 import { getRuleTesterCaseArrays } from "../utils/getRuleTesterCaseArrays.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-function getCodeProperty(node: ts.ObjectLiteralExpression) {
+function getCodeProperty(node: AST.ObjectLiteralExpression) {
 	return node.properties.find((property) => {
 		if (ts.isPropertyAssignment(property)) {
 			const name = property.name;
@@ -25,11 +25,11 @@ function getCodeProperty(node: ts.ObjectLiteralExpression) {
 	});
 }
 
-function isStaticString(node: ts.Expression) {
+function isStaticString(node: AST.Expression) {
 	return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node);
 }
 
-function isStringRawNoSubstitution(node: ts.Expression) {
+function isStringRawNoSubstitution(node: AST.Expression) {
 	if (!ts.isTaggedTemplateExpression(node)) {
 		return false;
 	}
@@ -62,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function checkTestCase(
-			testCase: ts.Expression,
+			testCase: AST.Expression,
 			sourceFile: AST.SourceFile,
 		) {
 			if (
