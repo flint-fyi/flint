@@ -14,6 +14,7 @@ import {
 	type RuleContext,
 	type RuleReport,
 	type SourceFileWithLineMap,
+	type UnsafeAnyRule,
 } from "@flint.fyi/core";
 import { setTSProgramCreationProxy } from "@flint.fyi/ts-patch";
 import {
@@ -41,7 +42,6 @@ import type { TypeScriptServiceScript as VolarTypeScriptServiceScript } from "@v
 import { proxyCreateProgram } from "@volar/typescript/lib/node/proxyCreateProgram.js";
 import ts from "typescript";
 
-import type { UnsafeAnyRule } from "../../core/src/plugins/createPlugin.ts";
 import packageJson from "../package.json" with { type: "json" };
 
 type VolarLanguagePluginInitializer<FileServices extends object> = (
