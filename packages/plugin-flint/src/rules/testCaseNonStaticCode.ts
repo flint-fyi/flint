@@ -3,44 +3,49 @@ import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getRuleTesterCaseArrays } from "../utils/getRuleTesterCaseArrays.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function getCodeProperty(node: AST.ObjectLiteralExpression) {
 	return node.properties.find((property) => {
-		if (ts.isPropertyAssignment(property)) {
+		if (property.kind === SyntaxKind.PropertyAssignment) {
 			const name = property.name;
 			return (
-				(ts.isIdentifier(name) || ts.isStringLiteral(name)) &&
+				(name.kind === SyntaxKind.Identifier ||
+					name.kind === SyntaxKind.StringLiteral) &&
 				name.text === "code"
 			);
 		}
 
 		return (
-			ts.isShorthandPropertyAssignment(property) &&
+			property.kind === SyntaxKind.ShorthandPropertyAssignment &&
 			property.name.text === "code"
 		);
 	});
 }
 
 function isStaticString(node: AST.Expression) {
-	return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node);
+	return (
+		node.kind === SyntaxKind.StringLiteral ||
+		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral
+	);
 }
 
 function isStringRawNoSubstitution(node: AST.Expression) {
-	if (!ts.isTaggedTemplateExpression(node)) {
+	if (node.kind !== SyntaxKind.TaggedTemplateExpression) {
 		return false;
 	}
 
 	const tag = node.tag;
 	return (
-		ts.isPropertyAccessExpression(tag) &&
-		ts.isIdentifier(tag.expression) &&
+		tag.kind === SyntaxKind.PropertyAccessExpression &&
+		tag.expression.kind === SyntaxKind.Identifier &&
 		tag.expression.text === "String" &&
+		tag.name.kind === SyntaxKind.Identifier &&
 		tag.name.text === "raw" &&
-		ts.isNoSubstitutionTemplateLiteral(node.template)
+		node.template.kind === SyntaxKind.NoSubstitutionTemplateLiteral
 	);
 }
 
@@ -66,14 +71,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			sourceFile: AST.SourceFile,
 		) {
 			if (
-				ts.isOmittedExpression(testCase) ||
+				testCase.kind === SyntaxKind.OmittedExpression ||
 				isStaticString(testCase) ||
 				isStringRawNoSubstitution(testCase)
 			) {
 				return;
 			}
 
-			if (!ts.isObjectLiteralExpression(testCase)) {
+			if (testCase.kind !== SyntaxKind.ObjectLiteralExpression) {
 				const range = getTSNodeRange(testCase, sourceFile);
 				context.report({
 					message: "nonStaticTestCaseCode",
@@ -85,7 +90,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const codeProperty = getCodeProperty(testCase);
 			if (!codeProperty) {
 				// No `code` property, but has a spread assignment ({ ...x })
-				if (testCase.properties.some(ts.isSpreadAssignment)) {
+				if (
+					testCase.properties.some(
+						(node) => node.kind === SyntaxKind.SpreadAssignment,
+					)
+				) {
 					const range = getTSNodeRange(testCase, sourceFile);
 					context.report({
 						message: "nonStaticTestCaseCode",
@@ -97,7 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			// `{ code: "a" }`
-			if (ts.isPropertyAssignment(codeProperty)) {
+			if (codeProperty.kind === SyntaxKind.PropertyAssignment) {
 				if (
 					isStaticString(codeProperty.initializer) ||
 					isStringRawNoSubstitution(codeProperty.initializer)
@@ -114,7 +123,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			// `{ code }`
-			if (ts.isShorthandPropertyAssignment(codeProperty)) {
+			if (codeProperty.kind === SyntaxKind.ShorthandPropertyAssignment) {
 				const range = getTSNodeRange(codeProperty.name, sourceFile);
 				context.report({
 					message: "nonStaticTestCaseCode",
