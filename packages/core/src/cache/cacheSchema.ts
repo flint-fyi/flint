@@ -1,9 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports -- TODO: Use Zod Mini in core package
 import z from "zod/v4";
 
-import type { SuggestionForFile } from "../types/changes.ts";
 import { jsonCodec } from "../utils/codecs.ts";
-import { isSuggestionForFiles } from "../utils/predicates.ts";
 
 const characterReportRangeSchema = z.object({
 	begin: z.number(),
@@ -35,17 +33,8 @@ const suggestionForFileSchema = changeBaseSchema.extend({
 	text: z.string(),
 });
 
-// Note: SuggestionForFiles cannot be cached because functions aren't serializable.
 const suggestionForFilesSchema = changeBaseSchema.extend({
-	files: z.record(
-		z.string(),
-		z
-			.function({
-				input: z.tuple([z.string()]),
-				output: z.array(fixSchema),
-			})
-			.optional(),
-	),
+	files: z.record(z.string(), z.array(fixSchema).optional()),
 });
 
 const suggestionSchema = z.union([
@@ -76,16 +65,7 @@ const fileReportSchema = z.object({
 	fix: z.array(fixSchema).optional(),
 	message: reportMessageDataSchema,
 	range: normalizedReportRangeObjectSchema,
-	suggestions: z
-		.codec(z.array(suggestionForFileSchema), z.array(suggestionSchema), {
-			decode: (suggestions) => suggestions,
-			encode: (suggestions) =>
-				suggestions.filter(
-					(change): change is SuggestionForFile =>
-						!isSuggestionForFiles(change),
-				),
-		})
-		.optional(),
+	suggestions: z.array(suggestionSchema).optional(),
 });
 
 const languageFileDiagnosticSchema = z.object({

@@ -64,6 +64,7 @@ export async function runTestCaseRule<
 	const reports: FileReport[] = [];
 
 	const ruleRuntime = await rule.setup({
+		host: linterHost,
 		report(ruleReport) {
 			const processedReport = processRuleReport(file, rule, ruleReport);
 			if (processedReport == null) {
