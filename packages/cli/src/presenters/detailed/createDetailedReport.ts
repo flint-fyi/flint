@@ -57,8 +57,6 @@ export async function* createDetailedReport(
 				].join(""),
 			)
 			.join("\n");
-
-		yield "\n";
 	} else {
 		yield `${indenter} `;
 		yield wrapIfNeeded(
@@ -66,11 +64,10 @@ export async function* createDetailedReport(
 			`  Suggestion: ${formatSuggestion(report.data, nullThrows(report.message.suggestions[0], `Report ${report.about.id} message should have at least one suggestion`))}`,
 			width,
 		);
-		yield "\n";
 	}
 
 	if (report.about.url) {
-		yield `${indenter} `;
+		yield `\n${indenter}\n${indenter} `;
 		yield chalk
 			.hex(ColorCodes.ruleUrl)
 			.italic(

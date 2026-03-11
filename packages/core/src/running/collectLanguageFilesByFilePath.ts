@@ -24,7 +24,8 @@ export function collectLanguageFilesByFilePath(
 				filePath,
 				filePathAbsolute: makeAbsolute(filePath),
 				sourceText: nullThrows(
-					host.readFile(filePath),
+					// TODO: switch to read this async
+					host.readFileSync(filePath),
 					`Expected ${filePath} to exist`,
 				),
 			}),

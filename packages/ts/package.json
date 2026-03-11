@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/ts",
-	"version": "0.16.0",
+	"version": "0.17.0",
 	"description": "[Experimental] TypeScript language plugin for Flint.",
 	"homepage": "https://www.flint.fyi/rules/ts",
 	"repository": {
@@ -38,7 +38,7 @@
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
-		"tsdown": "0.20.1",
+		"tsdown": "0.21.0",
 		"vitest": "4.0.15"
 	},
 	"engines": {

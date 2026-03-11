@@ -48,14 +48,15 @@ export async function collectFilesAndOptions(
 ): Promise<CollectedFilesAndOptions> {
 	// 1. Collect all file paths to lint and the 'use' rule configuration groups
 	const { allFilePaths, useDefinitions } = await computeUseDefinitions(
-		configDefinition,
 		host,
+		configDefinition,
 	);
 
 	// 2. Retrieve any past cached results from those files
 	const cached = ignoreCache
 		? undefined
 		: await readFromCache(
+				host,
 				allFilePaths,
 				configDefinition.filePath,
 				cacheLocationOverride,

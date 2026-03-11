@@ -21,11 +21,15 @@ This rule helps catch typos and missing declarations early in development.
 
 ```ts
 console.log(undefinedVar);
+```
 
+```ts
 function calculate() {
 	return result;
 }
+```
 
+```ts
 const value = first + second;
 ```
 
@@ -35,12 +39,16 @@ const value = first + second;
 ```ts
 const value = 5;
 console.log(value);
+```
 
+```ts
 function calculate(input: number) {
 	const result = input * 2;
 	return result;
 }
+```
 
+```ts
 const first = 1;
 const second = 2;
 const value = first + second;

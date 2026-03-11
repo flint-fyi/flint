@@ -1,7 +1,7 @@
 name: 🐛 Lint Rule Bug
 description: Report a bug specific to a lint rule provided by Flint
 
-title: "🐛 Bug: [plugin.ruleName] <short description of the bug>"
+title: "🐛 Bug: [plugin/ruleName] <short description of the bug>"
 
 labels:
   - "type: bug"

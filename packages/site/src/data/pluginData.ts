@@ -75,7 +75,7 @@ const pluginDataById = {
 		},
 		description:
 			"Rules for linting `.md` files containing Markdown, the lightweight markup language.",
-		id: "markdown",
+		id: "md",
 		name: "Markdown",
 	},
 	next: {

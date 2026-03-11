@@ -1,9 +1,11 @@
+import type { LinterHost } from "./host.ts";
 import type { RuleReport } from "./reports.ts";
 
 export type MessageForContext<Context extends RuleContext<never>> =
 	Context extends RuleContext<infer MessageId> ? MessageId : never;
 
 export interface RuleContext<MessageId extends string> {
+	host: LinterHost;
 	report: RuleReporter<MessageId>;
 }
 

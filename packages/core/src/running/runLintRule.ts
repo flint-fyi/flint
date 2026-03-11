@@ -2,6 +2,7 @@ import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 import { AsyncLocalStorage } from "node:async_hooks";
 
+import type { LinterHost } from "../types/host.ts";
 import type { AnyLanguageFile } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
 import type { AnyRule } from "../types/rules.ts";
@@ -20,6 +21,7 @@ const fileStorage = new AsyncLocalStorage<AnyLanguageFile>();
 export async function runLintRule(
 	rule: AnyRule,
 	filesAndOptions: LanguageFilesWithOptions[],
+	host: LinterHost,
 ) {
 	// 1. Set up the rule's runtime, which receives and processes reports
 
@@ -27,6 +29,7 @@ export async function runLintRule(
 	const fileByPath = new Map<string, AnyLanguageFile>();
 
 	const ruleRuntime = await rule.setup({
+		host,
 		report(ruleReport) {
 			const currentFile = fileStorage.getStore();
 			const filePath = ruleReport.filePath ?? currentFile?.about.filePath;
@@ -47,9 +50,11 @@ export async function runLintRule(
 
 			log("Adding %s report for file path %s", ruleReport.message, filePath);
 
-			reportsByFilePath
-				.get(filePath)
-				.push(processRuleReport(targetFile, rule, ruleReport));
+			const processedReport = processRuleReport(targetFile, rule, ruleReport);
+			if (processedReport == null) {
+				return;
+			}
+			reportsByFilePath.get(filePath).push(processedReport);
 		},
 	});
 

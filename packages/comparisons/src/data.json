@@ -799,6 +799,14 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "ruleCreationMethods",
+			"plugin": "flint",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "eslint-plugin-eslint-plugin/require-meta-docs-description",
@@ -846,6 +854,20 @@
 		],
 		"flint": {
 			"name": "testCaseDuplicates",
+			"plugin": "flint",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "eslint-plugin-eslint-plugin/unique-test-case-names",
+				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/unique-test-case-names.md"
+			}
+		],
+		"flint": {
+			"name": "testCaseNameDuplicates",
 			"plugin": "flint",
 			"preset": "logical",
 			"status": "implemented"
@@ -7252,8 +7274,7 @@
 		],
 		"flint": {
 			"name": "yamlKeys",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"plugin": "sorting"
 		}
 	},
 	{

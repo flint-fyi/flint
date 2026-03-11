@@ -54,7 +54,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 				.watch(
 					normalizedWatchPath,
 					{ persistent: false, recursive },
-					(event, filename) => {
+					(_event, filename) => {
 						if (unwatched) {
 							return;
 						}
@@ -158,20 +158,70 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 	}
 
 	return {
+		fileTypeSync(pathAbsolute) {
+			try {
+				const stat = fs.statSync(pathAbsolute);
+				if (stat.isDirectory()) {
+					return "directory";
+				}
+				if (stat.isFile()) {
+					return "file";
+				}
+			} catch {
+				// Fall through to undefined.
+			}
+			return undefined;
+		},
 		getCurrentDirectory() {
 			return cwd;
+		},
+		async getFileTouchTime(filePath) {
+			const stat = await fs.promises.stat(filePath);
+			return stat.mtimeMs;
+		},
+		getFileTouchTimeSync(filePath) {
+			return fs.statSync(filePath).mtimeMs;
 		},
 		isCaseSensitiveFS() {
 			return caseSensitiveFS;
 		},
-		readDirectory(directoryPathAbsolute) {
+		async readDirectory(directoryPathAbsolute) {
+			const dirents = await fs.promises.readdir(directoryPathAbsolute, {
+				withFileTypes: true,
+			});
+
+			const result = await Promise.all(
+				dirents.map(async (entry): Promise<[] | LinterHostDirectoryEntry> => {
+					let stat: Pick<typeof entry, "isDirectory" | "isFile"> = entry;
+					if (entry.isSymbolicLink()) {
+						try {
+							stat = await fs.promises.stat(
+								path.join(directoryPathAbsolute, entry.name),
+							);
+						} catch {
+							return [];
+						}
+					}
+					if (stat.isDirectory()) {
+						return { name: entry.name, type: "directory" };
+					} else if (stat.isFile()) {
+						return { name: entry.name, type: "file" };
+					}
+
+					return [];
+				}),
+			);
+
+			return result.flat();
+		},
+		readDirectorySync(directoryPathAbsolute) {
 			const result: LinterHostDirectoryEntry[] = [];
 			const dirents = fs.readdirSync(directoryPathAbsolute, {
 				withFileTypes: true,
 			});
 
 			for (const entry of dirents) {
-				let stat = entry as Pick<typeof entry, "isDirectory" | "isFile">;
+				let stat: Pick<typeof entry, "isDirectory" | "isFile"> = entry;
 				if (entry.isSymbolicLink()) {
 					try {
 						stat = fs.statSync(path.join(directoryPathAbsolute, entry.name));
@@ -181,35 +231,28 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 				}
 				if (stat.isDirectory()) {
 					result.push({ name: entry.name, type: "directory" });
-				}
-				if (stat.isFile()) {
+				} else if (stat.isFile()) {
 					result.push({ name: entry.name, type: "file" });
 				}
 			}
 
 			return result;
 		},
-		readFile(filePathAbsolute) {
-			return fs.readFileSync(filePathAbsolute, "utf8");
-		},
-		stat(pathAbsolute) {
+		async readFile(filePathAbsolute) {
 			try {
-				const stat = fs.statSync(pathAbsolute);
-				if (stat.isDirectory()) {
-					return "directory";
-				}
-				if (stat.isFile()) {
-					return "file";
-				}
-			} catch {} // eslint-disable-line no-empty
-			return undefined;
+				return await fs.promises.readFile(filePathAbsolute, "utf8");
+			} catch {
+				return undefined;
+			}
 		},
-		watchDirectory(
-			directoryPathAbsolute,
-			recursive,
-			callback,
-			pollingInterval = 2_000,
-		) {
+		readFileSync(filePathAbsolute) {
+			try {
+				return fs.readFileSync(filePathAbsolute, "utf8");
+			} catch {
+				return undefined;
+			}
+		},
+		watchDirectorySync(directoryPathAbsolute, callback, options) {
 			directoryPathAbsolute = normalizePath(
 				directoryPathAbsolute,
 				caseSensitiveFS,
@@ -217,8 +260,8 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 
 			return createWatcher(
 				directoryPathAbsolute,
-				recursive,
-				pollingInterval,
+				options.recursive,
+				options.pollingInterval ?? 2_000,
 				(normalizedChangedFilePath) => {
 					normalizedChangedFilePath ??= directoryPathAbsolute;
 					if (normalizedChangedFilePath !== directoryPathAbsolute) {
@@ -239,19 +282,25 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 				},
 			);
 		},
-		watchFile(filePathAbsolute, callback, pollingInterval = 2_000) {
+		watchFileSync(filePathAbsolute, callback, options) {
 			filePathAbsolute = normalizePath(filePathAbsolute, caseSensitiveFS);
 
 			return createWatcher(
 				filePathAbsolute,
 				false,
-				pollingInterval,
+				options?.pollingInterval ?? 2_000,
 				(normalizedChangedFilePath, event) => {
 					if (normalizedChangedFilePath === filePathAbsolute) {
 						callback(event);
 					}
 				},
 			);
+		},
+		async writeFile(filePathAbsolute, content) {
+			await fs.promises.writeFile(filePathAbsolute, content, "utf8");
+		},
+		writeFileSync(filePathAbsolute, content) {
+			fs.writeFileSync(filePathAbsolute, content, "utf8");
 		},
 	};
 }

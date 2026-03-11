@@ -47,7 +47,7 @@ export async function runConfig(
 	);
 
 	// 2. For each lint rule, run it on all files and store each file's results
-	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule);
+	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule, host);
 
 	// 3. For each file path, finalize output using each of its language files
 	const filesResults = new Map(
@@ -57,6 +57,7 @@ export async function runConfig(
 				filePath,
 				languageAndFiles,
 				reportsByFilePath.get(filePath).flat(),
+				host,
 				skipDiagnostics,
 			),
 		]),
@@ -74,9 +75,11 @@ export async function runConfig(
 	}
 
 	// 5. Write the results to cache, then return them! We did it!
-	const lintResults = { allFilePaths, cached, filesResults };
+	const ruleCount = rulesFilesAndOptionsByRule.size;
+	const lintResults = { allFilePaths, cached, filesResults, ruleCount };
 
 	await writeToCache(
+		host,
 		configDefinition.filePath,
 		lintResults,
 		cacheLocationOverride,
@@ -87,11 +90,16 @@ export async function runConfig(
 
 async function runRules(
 	rulesFilesAndOptionsByRule: Map<AnyRule, LanguageFilesWithOptions[]>,
+	host: LinterHost,
 ) {
 	const reportsByFilePath = new CachedFactory<string, FileReport[]>(() => []);
 
 	for (const [rule, filesAndOptions] of rulesFilesAndOptionsByRule) {
-		const ruleReportsByFilePath = await runLintRule(rule, filesAndOptions);
+		const ruleReportsByFilePath = await runLintRule(
+			rule,
+			filesAndOptions,
+			host,
+		);
 
 		for (const [filePath, ruleReports] of ruleReportsByFilePath) {
 			reportsByFilePath.get(filePath).push(...ruleReports);

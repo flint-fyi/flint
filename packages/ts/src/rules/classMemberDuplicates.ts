@@ -63,7 +63,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					? seenMembers.static
 					: seenMembers.instance;
 
-				let isDuplicate = false;
+				let isDuplicate: boolean;
 				if (key.group === "values") {
 					isDuplicate =
 						namespace.values.has(key.text) ||

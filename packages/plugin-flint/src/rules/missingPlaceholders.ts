@@ -5,9 +5,12 @@ import {
 } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
+import { findProperty } from "../utils/findProperty.ts";
 import {
 	findMessagesProperty,
 	forEachMessageString,
+} from "../utils/messageHelpers.ts";
+import {
 	isRuleContextReport,
 	isRuleCreatorCreateRule,
 } from "../utils/ruleCreatorHelpers.ts";
@@ -74,35 +77,30 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const properties = args.properties;
-			const messageProperty = properties.find((prop) => {
-				return (
-					prop.kind === SyntaxKind.PropertyAssignment &&
-					prop.name.kind === SyntaxKind.Identifier &&
-					prop.name.text === "message"
-				);
-			});
+			const messageProperty = findProperty(
+				properties,
+				"message",
+				(node): node is AST.StringLiteral =>
+					node.kind === SyntaxKind.StringLiteral,
+			);
 
-			if (
-				messageProperty?.kind !== SyntaxKind.PropertyAssignment ||
-				messageProperty.initializer.kind !== SyntaxKind.StringLiteral
-			) {
+			if (!messageProperty) {
 				return;
 			}
 
 			const requiredPlaceholders = messagePlaceholders.get(
-				messageProperty.initializer.text,
+				messageProperty.text,
 			);
 			if (!requiredPlaceholders?.size) {
 				return;
 			}
 
-			const dataProperty = properties.find((prop) => {
-				return (
+			const dataProperty = properties.find(
+				(prop): prop is AST.PropertyAssignment =>
 					prop.kind === SyntaxKind.PropertyAssignment &&
 					prop.name.kind === SyntaxKind.Identifier &&
-					prop.name.text === "data"
-				);
-			});
+					prop.name.text === "data",
+			);
 			if (!dataProperty) {
 				context.report({
 					data: {
@@ -115,7 +113,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				dataProperty.kind !== SyntaxKind.PropertyAssignment ||
 				dataProperty.initializer.kind !== SyntaxKind.ObjectLiteralExpression
 			) {
 				return;
@@ -164,7 +161,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 				},
-				SourceFile() {
+				"SourceFile:exit"() {
 					messagePlaceholders.clear();
 				},
 			},

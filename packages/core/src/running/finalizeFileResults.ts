@@ -1,7 +1,10 @@
 import { debugForFile } from "debug-for-file";
+import { resolve } from "node:path";
 
 import { DirectivesFilterer } from "../directives/DirectivesFilterer.ts";
 import { directiveReports } from "../directives/reports/directiveReports.ts";
+import { normalizePath } from "../host/normalizePath.ts";
+import type { LinterHost } from "../types/host.ts";
 import type { LanguageFileDiagnostic } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
 import type { LanguageAndFile } from "./types.ts";
@@ -19,6 +22,7 @@ export function finalizeFileResults(
 	filePath: string,
 	languageAndFiles: LanguageAndFile[],
 	reports: FileReport[],
+	host: LinterHost,
 	skipDiagnostics?: boolean,
 ) {
 	const directivesFilterer = new DirectivesFilterer();
@@ -35,9 +39,13 @@ export function finalizeFileResults(
 
 		if (cache?.dependencies) {
 			for (const dependency of cache.dependencies) {
-				if (!fileDependencies.has(dependency)) {
-					log("Adding file dependency %s for file %s", dependency, filePath);
-					fileDependencies.add(dependency);
+				const normalized = normalizePath(
+					resolve(dependency),
+					host.isCaseSensitiveFS(),
+				);
+				if (!fileDependencies.has(normalized)) {
+					log("Adding file dependency %s for file %s", normalized, filePath);
+					fileDependencies.add(normalized);
 				}
 			}
 		}
