@@ -1,9 +1,9 @@
 import {
-	normalizedDirname,
+	dirnameKey,
+	normalizeDirname,
 	normalizePath,
 	pathKey,
 	type PathKey,
-	pathKeyDirSlash,
 } from "@flint.fyi/utils";
 
 import type {
@@ -61,7 +61,7 @@ export function createVFSLinterHost(
 
 	interface VfsFile {
 		content: string;
-		path: string;
+		path: PathKey;
 	}
 
 	const fileMap = new Map<PathKey, VfsFile>();
@@ -73,17 +73,15 @@ export function createVFSLinterHost(
 	>();
 
 	function watchEvent(
-		normalizedFilePathAbsolute: string,
+		normalizedFilePathAbsolute: PathKey,
 		fileEvent: LinterHostFileWatcherEvent,
 	) {
-		for (const watcher of fileWatchers.get(
-			pathKey(normalizedFilePathAbsolute, caseSensitiveFS),
-		) ?? []) {
+		for (const watcher of fileWatchers.get(normalizedFilePathAbsolute) ?? []) {
 			watcher(fileEvent);
 		}
 
-		let currentFile = normalizedFilePathAbsolute;
-		let currentDir = normalizedDirname(currentFile);
+		let currentFile: string = normalizedFilePathAbsolute;
+		let currentDir = normalizeDirname(currentFile);
 		do {
 			for (const watcher of directoryWatchers.get(
 				pathKey(currentDir, caseSensitiveFS),
@@ -91,10 +89,10 @@ export function createVFSLinterHost(
 				watcher(currentFile);
 			}
 			currentFile = currentDir;
-			currentDir = normalizedDirname(currentFile);
+			currentDir = normalizeDirname(currentFile);
 		} while (currentFile !== currentDir);
 
-		let dir = normalizedDirname(normalizedFilePathAbsolute);
+		let dir = normalizeDirname(normalizedFilePathAbsolute);
 		while (true) {
 			for (const watcher of recursiveDirectoryWatchers.get(
 				pathKey(dir, caseSensitiveFS),
@@ -102,7 +100,7 @@ export function createVFSLinterHost(
 				watcher(normalizedFilePathAbsolute);
 			}
 			const prevDir = dir;
-			dir = normalizedDirname(dir);
+			dir = normalizeDirname(dir);
 			if (prevDir === dir) {
 				break;
 			}
@@ -112,7 +110,7 @@ export function createVFSLinterHost(
 		fileTypeSync(pathAbsolute) {
 			pathAbsolute = normalizePath(pathAbsolute);
 			const key = pathKey(pathAbsolute, caseSensitiveFS);
-			const keySlash = pathKeyDirSlash(pathAbsolute, caseSensitiveFS);
+			const keySlash = dirnameKey(pathAbsolute, caseSensitiveFS);
 			for (const fileKey of fileMap.keys()) {
 				if (key === fileKey) {
 					return "file";
@@ -144,7 +142,7 @@ export function createVFSLinterHost(
 		readDirectorySync(directoryPathAbsolute) {
 			const dirNorm = normalizePath(directoryPathAbsolute);
 			const dirNormSlash = dirNorm.endsWith("/") ? dirNorm : dirNorm + "/";
-			const dirKeySlash = pathKeyDirSlash(dirNorm, caseSensitiveFS);
+			const dirKeySlash = dirnameKey(dirNorm, caseSensitiveFS);
 			const result = new Map<string, LinterHostDirectoryEntry>();
 
 			for (const [fileKey, file] of fileMap) {
@@ -163,11 +161,8 @@ export function createVFSLinterHost(
 						type: "directory",
 					};
 				}
-				const nameKey = caseSensitiveFS
-					? dirent.name
-					: dirent.name.toLowerCase();
-				if (!result.get(nameKey)) {
-					result.set(nameKey, dirent);
+				if (!result.get(dirent.name)) {
+					result.set(dirent.name, dirent);
 				}
 			}
 
@@ -215,7 +210,8 @@ export function createVFSLinterHost(
 			filePathAbsolute = normalizePath(filePathAbsolute);
 			const key = pathKey(filePathAbsolute, caseSensitiveFS);
 			const existing = fileMap.get(key);
-			const storedPath = existing?.path ?? filePathAbsolute;
+			// TODO: Thread PathKey through the rest of the core.
+			const storedPath = existing?.path ?? (filePathAbsolute as PathKey);
 			const fileEvent = existing != null ? "changed" : "created";
 			fileMap.set(key, { content, path: storedPath });
 			watchEvent(storedPath, fileEvent);

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { normalizedDirname, normalizePath, pathKey } from "./normalizePath.ts";
+import { normalizeDirname, normalizePath, pathKey } from "./normalizePath.ts";
 
 describe("normalizePath", () => {
 	it("normalizes Windows path", () => {
@@ -50,37 +50,37 @@ describe("pathKey", () => {
 
 describe("normalizedDirname", () => {
 	it("works with Windows path", () => {
-		const dirname = normalizedDirname("c:/foo/bar");
+		const dirname = normalizeDirname("c:/foo/bar");
 
 		expect(dirname).toEqual("c:/foo");
 	});
 
 	it("recognizes Windows root", () => {
-		const dirname = normalizedDirname("c:/foo");
+		const dirname = normalizeDirname("c:/foo");
 
 		expect(dirname).toEqual("c:/");
 	});
 
 	it("recognizes bare Windows root", () => {
-		const dirname = normalizedDirname("c:/");
+		const dirname = normalizeDirname("c:/");
 
 		expect(dirname).toEqual("c:/");
 	});
 
 	it("works with POSIX path", () => {
-		const dirname = normalizedDirname("/foo/bar");
+		const dirname = normalizeDirname("/foo/bar");
 
 		expect(dirname).toEqual("/foo");
 	});
 
 	it("recognizes POSIX root", () => {
-		const dirname = normalizedDirname("/foo");
+		const dirname = normalizeDirname("/foo");
 
 		expect(dirname).toEqual("/");
 	});
 
 	it("recognizes bare POSIX root", () => {
-		const dirname = normalizedDirname("/");
+		const dirname = normalizeDirname("/");
 
 		expect(dirname).toEqual("/");
 	});

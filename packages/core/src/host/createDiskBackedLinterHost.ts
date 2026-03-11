@@ -1,4 +1,4 @@
-import { normalizePath, pathKey, pathKeyDirSlash } from "@flint.fyi/utils";
+import { dirnameKey, normalizePath, pathKey } from "@flint.fyi/utils";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -251,10 +251,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
 			directoryPathAbsolute = normalizePath(directoryPathAbsolute);
 			const dirKey = pathKey(directoryPathAbsolute, caseSensitiveFS);
-			const dirKeySlash = pathKeyDirSlash(
-				directoryPathAbsolute,
-				caseSensitiveFS,
-			);
+			const dirKeySlash = dirnameKey(directoryPathAbsolute, caseSensitiveFS);
 
 			return createWatcher(
 				directoryPathAbsolute,
