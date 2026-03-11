@@ -31,10 +31,9 @@ export async function runLintRule(
 	const ruleRuntime = await rule.setup({
 		host,
 		report(ruleReport) {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const filePath =
-				ruleReport.filePath ?? fileStorage.getStore()!.about.filePath;
-			const targetFile = fileByPath.get(filePath);
+			const targetFile = ruleReport.filePath
+				? fileByPath.get(ruleReport.filePath)
+				: fileStorage.getStore();
 
 			if (targetFile == null) {
 				throw new Error(
@@ -42,13 +41,18 @@ export async function runLintRule(
 				);
 			}
 
-			log("Adding %s report for file path %s", ruleReport.message, filePath);
-
 			const processedReport = processRuleReport(targetFile, rule, ruleReport);
 			if (processedReport == null) {
 				return;
 			}
-			reportsByFilePath.get(filePath).push(processedReport);
+
+			log(
+				"Adding %s report for file path %s",
+				ruleReport.message,
+				targetFile.about.filePath,
+			);
+
+			reportsByFilePath.get(targetFile.about.filePath).push(processedReport);
 		},
 	});
 
