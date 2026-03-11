@@ -31,20 +31,14 @@ export async function runLintRule(
 	const ruleRuntime = await rule.setup({
 		host,
 		report(ruleReport) {
-			const currentFile = fileStorage.getStore();
-			const filePath = ruleReport.filePath ?? currentFile?.about.filePath;
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const filePath =
+				ruleReport.filePath ?? fileStorage.getStore()!.about.filePath;
+			const targetFile = fileByPath.get(filePath);
 
-			if (!filePath) {
+			if (targetFile == null) {
 				throw new Error(
-					"`filePath` not provided in a rule report() not called by a visitor.",
-				);
-			}
-
-			const targetFile = currentFile ?? fileByPath.get(filePath);
-
-			if (!targetFile) {
-				throw new Error(
-					`Rule "${rule.about.id}" reported on file "${filePath}" which is not part of the current lint run.`,
+					`Rule "${rule.about.id}" reported on file "${ruleReport.filePath}" which is not part of the current lint run.`,
 				);
 			}
 
@@ -60,6 +54,12 @@ export async function runLintRule(
 
 	// 2. If the rule requested a runtime presence, ...
 
+	for (const { languageFiles } of filesAndOptions) {
+		for (const { file } of languageFiles) {
+			fileByPath.set(file.about.filePath, file);
+		}
+	}
+
 	if (ruleRuntime) {
 		// 2a. If the rule has visitors, run them on every file to lint, with options
 		if (ruleRuntime.visitors) {
@@ -72,7 +72,6 @@ export async function runLintRule(
 					);
 
 				for (const { file, language } of languageFiles) {
-					fileByPath.set(file.about.filePath, file);
 					fileStorage.run(file, () => {
 						language.runFileVisitors(file, parsedOptions, ruleRuntime);
 					});
