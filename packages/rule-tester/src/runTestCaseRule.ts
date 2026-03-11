@@ -3,6 +3,7 @@ import {
 	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
 	type AnyRule,
+	type FileReport,
 	type InferredOutputObject,
 	type NormalizedReport,
 	normalizePath,
@@ -60,12 +61,16 @@ export async function runTestCaseRule<
 		sourceText: code,
 	});
 
-	const reports: NormalizedReport[] = [];
+	const reports: FileReport[] = [];
 
 	const ruleRuntime = await rule.setup({
 		host: linterHost,
 		report(ruleReport) {
-			reports.push(processRuleReport(file, rule, ruleReport));
+			const processedReport = processRuleReport(file, rule, ruleReport);
+			if (processedReport == null) {
+				return;
+			}
+			reports.push(processedReport);
 		},
 	});
 

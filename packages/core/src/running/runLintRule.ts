@@ -28,6 +28,7 @@ export async function runLintRule(
 	const ruleRuntime = await rule.setup({
 		host,
 		report(ruleReport) {
+			// TODO: what if report is called asynchronously? maybe we can use AsyncLocalStorage?
 			if (!currentFile) {
 				throw new Error(
 					"`filePath` not provided in a rule report() not called by a visitor.",
@@ -38,9 +39,11 @@ export async function runLintRule(
 
 			log("Adding %s report for file path %s", ruleReport.message, filePath);
 
-			reportsByFilePath
-				.get(filePath)
-				.push(processRuleReport(currentFile, rule, ruleReport));
+			const processedReport = processRuleReport(currentFile, rule, ruleReport);
+			if (processedReport == null) {
+				return;
+			}
+			reportsByFilePath.get(filePath).push(processedReport);
 		},
 	});
 

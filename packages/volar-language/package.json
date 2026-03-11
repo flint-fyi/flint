@@ -1,12 +1,12 @@
 {
-	"name": "@flint.fyi/typescript-language",
-	"version": "0.17.0",
-	"description": "[Experimental] TypeScript language for Flint.",
+	"name": "@flint.fyi/volar-language",
+	"version": "0.0.1",
+	"description": "[Experimental] Volar.js language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
-		"directory": "packages/typescript-language"
+		"directory": "packages/volar-language"
 	},
 	"license": "MIT",
 	"author": {
@@ -23,14 +23,15 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project typescript-language"
+		"test": "vitest --typecheck --project volar-language"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/ts-patch": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"@typescript-eslint/project-service": "^8.53.0",
-		"debug-for-file": "^0.2.0",
-		"ts-api-utils": "^2.4.0",
+		"@volar/language-core": "2.4.28",
+		"@volar/typescript": "2.4.28",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
