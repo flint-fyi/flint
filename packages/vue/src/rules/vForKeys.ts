@@ -1,5 +1,5 @@
 import type { CharacterReportRange } from "@flint.fyi/core";
-import { assert, nullThrows } from "@flint.fyi/utils";
+import { nullThrows } from "@flint.fyi/utils";
 import { reportSourceCode } from "@flint.fyi/volar-language";
 import { vueLanguage } from "@flint.fyi/vue-language";
 import * as vue from "@vue/compiler-dom";
@@ -52,15 +52,13 @@ export default ruleCreator.createRule(vueLanguage, {
 		return {
 			visitors: {
 				SourceFile(node, services) {
-					const { vueServices } = services;
-					if (vueServices == null) {
+					if (services.vue == null) {
 						return;
 					}
+					const { map, sfc } = services.vue;
 
 					const toGeneratedLocation = (sourceLocation: number) => {
-						for (const [loc] of vueServices.map.toGeneratedLocation(
-							sourceLocation,
-						)) {
+						for (const [loc] of map.toGeneratedLocation(sourceLocation)) {
 							return loc;
 						}
 						return undefined;
@@ -73,7 +71,6 @@ export default ruleCreator.createRule(vueLanguage, {
 						);
 					};
 
-					const { sfc } = vueServices;
 					const templateBlock = sfc.children.find(
 						(c): c is vue.ElementNode =>
 							c.type === vue.NodeTypes.ELEMENT && c.tag === "template",
@@ -116,8 +113,6 @@ export default ruleCreator.createRule(vueLanguage, {
 							return;
 						}
 
-						assert(keyProp.arg != null, "Expected keyProp.arg to be non-null");
-
 						let reportRange: CharacterReportRange;
 						let valueRange: CharacterReportRange;
 
@@ -128,8 +123,9 @@ export default ruleCreator.createRule(vueLanguage, {
 								end: keyProp.loc.end.offset,
 							};
 							const generatedLocations = Array.from(
-								vueServices.map.toGeneratedLocation(
-									keyProp.arg.loc.start.offset,
+								map.toGeneratedLocation(
+									nullThrows(keyProp.arg, "Expected keyProp.arg to be non-null")
+										.loc.start.offset,
 								),
 							).filter(
 								([, m]) =>
@@ -167,19 +163,8 @@ export default ruleCreator.createRule(vueLanguage, {
 								end: keyProp.exp.loc.end.offset,
 							};
 
-							const valueBegin = toGeneratedLocation(
-								keyProp.exp.loc.start.offset,
-							);
-							if (valueBegin == null) {
-								// Bug in vue/language-tools: virtual code is not generated for <template :key="">
-								// https://github.com/vuejs/language-tools/issues/4539
-								// Blocked on:
-								// https://github.com/vuejs/core/issues/11322 -> https://github.com/vuejs/core/pull/11323
-								return;
-							}
-
 							valueRange = {
-								begin: valueBegin,
+								begin: toGeneratedLocationOrThrow(keyProp.exp.loc.start.offset),
 								end: toGeneratedLocationOrThrow(keyProp.exp.loc.end.offset),
 							};
 						}
@@ -196,7 +181,7 @@ export default ruleCreator.createRule(vueLanguage, {
 							}));
 
 						// TODO(perf): use ScopeManager instead
-						// https://github.com/JoshuaKGoldberg/flint/issues/400
+						// https://github.com/flint-fyi/flint/issues/400
 						const find = (current: ts.Node) => {
 							const currentBegin = current.getStart(node);
 							const currentEnd = current.getEnd();

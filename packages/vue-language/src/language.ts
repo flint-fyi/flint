@@ -1,14 +1,8 @@
 import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
-import type { ExtractedDirective } from "@flint.fyi/typescript-language";
-import { assert } from "@flint.fyi/utils";
+import { assert, nullThrows } from "@flint.fyi/utils";
 import { createVolarBasedLanguage } from "@flint.fyi/volar-language";
 import type { Mapper as VolarMapper } from "@volar/language-core";
-import {
-	NodeTypes,
-	type RootNode,
-	type TemplateChildNode,
-	parse as vueParse,
-} from "@vue/compiler-dom";
+import { NodeTypes, type RootNode, parse as vueParse } from "@vue/compiler-dom";
 import {
 	createVueLanguagePlugin,
 	createParsedCommandLine as createVueParsedCommandLine,
@@ -17,10 +11,13 @@ import {
 	VueVirtualCode,
 } from "@vue/language-core";
 
+import { extractTemplateDirectives } from "./extractTemplateDirectives.ts";
+import { vueParsingErrorsToLanguageDiagnostics } from "./vueParsingErrorsToLanguageDiagnostics.ts";
+
 setTSExtraSupportedExtensions([".vue"]);
 
 export interface VueServices {
-	vueServices: {
+	vue: {
 		codegen: VueCodegen;
 		map: VolarMapper;
 		sfc: RootNode;
@@ -34,20 +31,27 @@ type VueCodegen =
 export const vueLanguage = createVolarBasedLanguage<VueServices>(
 	(ts, options) => {
 		const { configFilePath } = options.options;
+		const host = options.host
+			? {
+					...options.host,
+					useCaseSensitiveFileNames: options.host.useCaseSensitiveFileNames(),
+				}
+			: ts.sys;
 		const vueCompilerOptions = (
 			typeof configFilePath === "string"
 				? createVueParsedCommandLine(
 						ts,
-						ts.sys,
+						host,
 						configFilePath.replaceAll("\\", "/"),
 					)
 				: createVueParsedCommandLineByJson(
 						ts,
-						ts.sys,
-						(options.host ?? ts.sys).getCurrentDirectory(),
+						host,
+						host.getCurrentDirectory(),
 						{},
 					)
 		).vueOptions;
+
 		return {
 			createFile({
 				data,
@@ -60,10 +64,14 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 					0,
 					sourceScript.snapshot.getLength(),
 				);
-				const virtualCode = sourceScript.generated.root as VueVirtualCode;
-				const codegen = tsCodegen.get(virtualCode.sfc);
+				const virtualCode = sourceScript.generated.root;
 				assert(
-					codegen != null,
+					virtualCode instanceof VueVirtualCode,
+					"Expected sourceScript.generated.root to be VueServiceCode",
+				);
+
+				const codegen = nullThrows(
+					tsCodegen.get(virtualCode.sfc),
 					`tsCodegen for ${data.filePathAbsolute} is undefined`,
 				);
 
@@ -82,56 +90,11 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 					parseMode: "html",
 				});
 
-				// TODO: extract directives from other blocks too
-				const directives: ExtractedDirective[] = [];
-				function visitTemplate(elem: TemplateChildNode) {
-					if (elem.type === NodeTypes.ELEMENT) {
-						for (const child of elem.children) {
-							visitTemplate(child);
-						}
-						return;
-					}
-					if (elem.type !== NodeTypes.COMMENT) {
-						return;
-					}
-					const match = /\s*flint-(\S+)(?:\s+(.+))?/.exec(elem.content);
-					if (match == null) {
-						return;
-					}
-					const [, type, selection] = match;
-					assert(
-						type != null,
-						"Expected RegExp to provide first capturing group",
-					);
-					assert(
-						selection != null,
-						"Expected RegExp to provide second capturing group",
-					);
-					directives.push({
-						range: {
-							begin: {
-								column: elem.loc.start.column - 1,
-								line: elem.loc.start.line - 1,
-								raw: elem.loc.start.offset,
-							},
-							end: {
-								column: elem.loc.end.column - 1,
-								line: elem.loc.end.line - 1,
-								raw: elem.loc.end.offset,
-							},
-						},
-						selection,
-						type,
-					});
-				}
-				for (const child of sfcAst.children) {
-					visitTemplate(child);
-				}
-
 				return {
-					directives,
+					// TODO: extract directives from other blocks too
+					directives: extractTemplateDirectives(sfcAst),
 					extraContext: {
-						vueServices: {
+						vue: {
 							codegen,
 							map,
 							sfc: sfcAst,
@@ -142,24 +105,13 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 						sfcAst.children.find((c) => c.type !== NodeTypes.COMMENT)?.loc.start
 							.offset ?? sourceText.length,
 					getDiagnostics() {
-						return (virtualCode.vueSfc?.errors ?? []).map((e) => {
-							const fileName = sourceFile.fileName.startsWith("./")
+						return vueParsingErrorsToLanguageDiagnostics(
+							sourceFile.fileName.startsWith("./")
 								? sourceFile.fileName.slice(2)
-								: sourceFile.fileName.slice(process.cwd().length + 1);
-							let code = "VUE";
-							let loc = "";
-							if ("code" in e) {
-								code += e.code.toString();
-								loc =
-									e.loc != null
-										? `:${e.loc.start.line}:${e.loc.start.column}`
-										: "";
-							}
-							return {
-								code,
-								text: `${fileName}${loc} - ${code}: ${e.name} - ${e.message}`,
-							};
-						});
+								: // TODO: use LinterHost.getCurrentDirectory()
+									sourceFile.fileName.slice(process.cwd().length + 1),
+							virtualCode.vueSfc?.errors ?? [],
+						);
 					},
 				};
 			},

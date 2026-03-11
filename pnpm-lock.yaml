@@ -910,6 +910,9 @@ importers:
 
   packages/vue-language:
     dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
       '@flint.fyi/ts-patch':
         specifier: workspace:^
         version: link:../ts-patch
