@@ -8,7 +8,7 @@ import {
 	type LanguageFileDefinition,
 	type RuleRuntime,
 } from "@flint.fyi/core";
-import { assert } from "@flint.fyi/utils";
+import { assert, nullThrows } from "@flint.fyi/utils";
 import { createProjectService } from "@typescript-eslint/project-service";
 import { debugForFile } from "debug-for-file";
 import path from "node:path";
@@ -96,30 +96,23 @@ export const typescriptLanguage = createLanguage<
 			service.openClientFile(data.filePathAbsolute);
 
 			log("Retrieving client services:", data.filePathAbsolute);
-			const scriptInfo = service.getScriptInfo(data.filePathAbsolute);
-			assert(
-				scriptInfo != null,
+			const scriptInfo = nullThrows(
+				service.getScriptInfo(data.filePathAbsolute),
 				`Could not find script info for file: ${data.filePathAbsolute}`,
 			);
 
-			const defaultProject = service.getDefaultProjectForFile(
-				scriptInfo.fileName,
-				true,
-			);
-			assert(
-				defaultProject != null,
+			const defaultProject = nullThrows(
+				service.getDefaultProjectForFile(scriptInfo.fileName, true),
 				`Could not find default project for file: ${data.filePathAbsolute}`,
 			);
 
-			const program = defaultProject.getLanguageService(true).getProgram();
-			assert(
-				program != null,
+			const program = nullThrows(
+				defaultProject.getLanguageService(true).getProgram(),
 				`Could not retrieve program for file: ${data.filePathAbsolute}`,
 			);
 
-			const sourceFile = program.getSourceFile(data.filePathAbsolute);
-			assert(
-				sourceFile != null,
+			const sourceFile = nullThrows(
+				program.getSourceFile(data.filePathAbsolute),
 				`Could not retrieve source file for: ${data.filePathAbsolute}`,
 			);
 

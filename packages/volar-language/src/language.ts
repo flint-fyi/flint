@@ -114,7 +114,7 @@ setTSProgramCreationProxy(
 				/* for apply */
 			} as unknown as typeof createProgram,
 			{
-				apply(target, thisArg, args: unknown[]) {
+				apply(_, thisArg, args: unknown[]) {
 					let volarLanguage = null as null | VolarLanguage<string>;
 					const createProgramProxy = new Proxy(createProgram, {
 						apply(target, thisArg, [options]: [ts.CreateProgramOptions]) {
