@@ -13776,6 +13776,14 @@
 		]
 	},
 	{
+		"flint": {
+			"name": "nullishCheckStyle",
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "@typescript-eslint/prefer-nullish-coalescing",
