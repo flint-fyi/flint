@@ -3,13 +3,14 @@ import {
 	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
 	type AnyRule,
+	type FileReport,
 	type InferredOutputObject,
 	type NormalizedReport,
-	normalizePath,
 	processRuleReport,
 	type RuleAbout,
 	type VFSLinterHost,
 } from "@flint.fyi/core";
+import { normalizePath, pathKey } from "@flint.fyi/utils";
 import type { CachedFactory } from "cached-factory";
 import assert from "node:assert/strict";
 import path from "node:path";
@@ -33,17 +34,17 @@ export async function runTestCaseRule<
 ): Promise<NormalizedReport[]> {
 	const filePathAbsolute = normalizePath(
 		path.resolve(linterHost.getCurrentDirectory(), fileName),
-		linterHost.isCaseSensitiveFS(),
 	);
+	const caseSensitive = linterHost.isCaseSensitiveFS();
+	const targetKey = pathKey(filePathAbsolute, caseSensitive);
 	for (const oldFile of linterHost.vfsListFiles().keys()) {
-		if (oldFile !== filePathAbsolute) {
+		if (pathKey(oldFile, caseSensitive) !== targetKey) {
 			linterHost.vfsDeleteFile(oldFile);
 		}
 	}
 	for (const [name, content] of Object.entries(files ?? {})) {
 		const filePath = normalizePath(
 			path.resolve(linterHost.getCurrentDirectory(), name),
-			linterHost.isCaseSensitiveFS(),
 		);
 		assert.notEqual(
 			filePath,
@@ -60,11 +61,16 @@ export async function runTestCaseRule<
 		sourceText: code,
 	});
 
-	const reports: NormalizedReport[] = [];
+	const reports: FileReport[] = [];
 
 	const ruleRuntime = await rule.setup({
+		host: linterHost,
 		report(ruleReport) {
-			reports.push(processRuleReport(file, rule, ruleReport));
+			const processedReport = processRuleReport(file, rule, ruleReport);
+			if (processedReport == null) {
+				return;
+			}
+			reports.push(processedReport);
 		},
 	});
 

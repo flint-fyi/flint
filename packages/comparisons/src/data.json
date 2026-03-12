@@ -860,6 +860,14 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "testCaseNonStaticCode",
+			"plugin": "flint",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "eslint-plugin-eslint-plugin/unique-test-case-names",

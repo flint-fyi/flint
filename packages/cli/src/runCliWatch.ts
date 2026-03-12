@@ -1,5 +1,5 @@
 import type { LinterHost, LintResults } from "@flint.fyi/core";
-import { normalizePath } from "@flint.fyi/core";
+import { pathKey } from "@flint.fyi/utils";
 import debounce from "debounce";
 import { debugForFile } from "debug-for-file";
 
@@ -16,6 +16,7 @@ export async function runCliWatch(
 	values: OptionsValues,
 ) {
 	const cwd = host.getCurrentDirectory();
+	const isCaseSensitiveFS = host.isCaseSensitiveFS();
 
 	log("Running single-run CLI once before watching");
 
@@ -54,7 +55,7 @@ export async function runCliWatch(
 		currentRenderer = startNewTask(true);
 
 		const rerun = debounce((fileName: string) => {
-			const normalizedPath = normalizePath(fileName, true);
+			const normalizedPath = pathKey(fileName, isCaseSensitiveFS);
 
 			const shouldRerun = shouldRerunForFileChange(
 				normalizedPath,

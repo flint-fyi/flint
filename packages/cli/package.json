@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/cli",
-	"version": "0.17.0",
+	"version": "0.18.0",
 	"description": "[Experimental] Command-line interface for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -39,7 +39,7 @@
 	},
 	"devDependencies": {
 		"prettier": "3.8.1",
-		"tsdown": "0.20.1"
+		"tsdown": "0.21.0"
 	},
 	"peerDependencies": {
 		"prettier": "^3.7.4"

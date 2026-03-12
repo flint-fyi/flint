@@ -25,6 +25,7 @@
 	"devDependencies": {
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
+		"@flint.fyi/utils": "workspace:^",
 		"execa": "9.6.1",
 		"flint": "workspace:^",
 		"vitest": "4.0.18",

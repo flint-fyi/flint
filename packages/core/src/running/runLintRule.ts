@@ -1,6 +1,7 @@
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 
+import type { LinterHost } from "../types/host.ts";
 import type { AnyLanguageFile } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
 import type { AnyRule } from "../types/rules.ts";
@@ -17,6 +18,7 @@ const log = debugForFile(import.meta.filename);
 export async function runLintRule(
 	rule: AnyRule,
 	filesAndOptions: LanguageFilesWithOptions[],
+	host: LinterHost,
 ) {
 	// 1. Set up the rule's runtime, which receives and processes reports
 
@@ -24,7 +26,9 @@ export async function runLintRule(
 	let currentFile: AnyLanguageFile | undefined;
 
 	const ruleRuntime = await rule.setup({
+		host,
 		report(ruleReport) {
+			// TODO: what if report is called asynchronously? maybe we can use AsyncLocalStorage?
 			if (!currentFile) {
 				throw new Error(
 					"`filePath` not provided in a rule report() not called by a visitor.",
@@ -35,9 +39,11 @@ export async function runLintRule(
 
 			log("Adding %s report for file path %s", ruleReport.message, filePath);
 
-			reportsByFilePath
-				.get(filePath)
-				.push(processRuleReport(currentFile, rule, ruleReport));
+			const processedReport = processRuleReport(currentFile, rule, ruleReport);
+			if (processedReport == null) {
+				return;
+			}
+			reportsByFilePath.get(filePath).push(processedReport);
 		},
 	});
 

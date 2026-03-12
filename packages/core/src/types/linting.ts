@@ -12,6 +12,7 @@ export interface LintResults {
 	allFilePaths: Set<string>;
 	cached: Map<string, FileCacheStorage> | undefined;
 	filesResults: Map<string, FileResults>;
+	ruleCount: number;
 }
 
 export interface LintResultsMaybeWithChanges extends LintResults {

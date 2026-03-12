@@ -14,7 +14,6 @@ export {
 	type CreateVFSLinterHostOpts,
 } from "./host/createVFSLinterHost.ts";
 export { isFileSystemCaseSensitive } from "./host/isFileSystemCaseSensitive.ts";
-export { normalizedDirname, normalizePath } from "./host/normalizePath.ts";
 export { createLanguage } from "./languages/createLanguage.ts";
 export { createPlugin } from "./plugins/createPlugin.ts";
 export { formatReport } from "./reporting/formatReport.ts";

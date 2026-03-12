@@ -14,6 +14,7 @@ export interface ParsedTestCaseNodes {
 	case: ts.Node;
 	code: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral;
 	fileName?: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral | undefined;
+	files?: AST.ObjectLiteralExpression | undefined;
 	name?: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral | undefined;
 	options?: AST.ObjectLiteralExpression | undefined;
 }

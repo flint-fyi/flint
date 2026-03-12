@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/yaml-language",
-	"version": "0.15.0",
+	"version": "0.15.1",
 	"description": "[Experimental] YAML language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -31,7 +31,7 @@
 		"yaml-unist-parser": "^3.0.0"
 	},
 	"devDependencies": {
-		"tsdown": "0.20.1",
+		"tsdown": "0.21.0",
 		"vitest": "4.0.15"
 	},
 	"engines": {
