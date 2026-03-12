@@ -47,7 +47,7 @@ export function parseTestCase(
 	const files = findProperty(
 		node.properties,
 		"files",
-		(node) => node.kind == SyntaxKind.ObjectLiteralExpression,
+		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
 	const name = findProperty(
 		node.properties,
@@ -107,7 +107,7 @@ export function parseTestCaseInvalid(
 	const files = findProperty(
 		node.properties,
 		"files",
-		(node) => node.kind == SyntaxKind.ObjectLiteralExpression,
+		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
 	const name = findProperty(
 		node.properties,
