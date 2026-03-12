@@ -1,6 +1,7 @@
 import {
 	type AST,
 	declarationIncludesGlobal,
+	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -62,6 +63,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"Create a custom `Error` class for specific error types.",
 			],
 		},
+		throwUndefined: {
+			primary: "Throwing `undefined` provides no context and is hard to debug.",
+			secondary: [
+				"Throw an `Error` to preserve stack trace and debugging details.",
+				"If you need a custom error type, extend `Error`.",
+			],
+			suggestions: [
+				'Throw a new `Error`: `throw new Error("message")`.',
+				"Create a custom `Error` class for specific error types.",
+			],
+		},
 	},
 	setup(context) {
 		return {
@@ -85,12 +97,25 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
+					// TODO: Consider using getStaticValue once available
+					// https://github.com/flint-fyi/flint/issues/1298
+					if (
+						type.isUnion()
+							? type.types.every((t) =>
+									tsutils.isTypeFlagSet(t, ts.TypeFlags.Undefined),
+								)
+							: tsutils.isTypeFlagSet(type, ts.TypeFlags.Undefined)
+					) {
+						context.report({
+							message: "throwUndefined",
+							range: getTSNodeRange(node.expression, sourceFile),
+						});
+						return;
+					}
+
 					context.report({
 						message: "throwError",
-						range: {
-							begin: node.expression.getStart(sourceFile),
-							end: node.expression.getEnd(),
-						},
+						range: getTSNodeRange(node.expression, sourceFile),
 					});
 				},
 			},

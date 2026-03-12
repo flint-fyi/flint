@@ -18,6 +18,7 @@ Throwing non-`Error` values has several downsides:
 - Cannot use standard error properties like `cause`, `message`, or `name`
 
 This rule reports on any `throw` statement where the value being thrown is not an `Error`.
+Throwing `undefined` is flagged with a dedicated message, as it provides no context and is especially hard to debug.
 
 ## Examples
 
@@ -30,6 +31,10 @@ throw "Something went wrong";
 
 ```ts
 throw { message: "error", code: 500 };
+```
+
+```ts
+throw undefined;
 ```
 
 </TabItem>
