@@ -20,7 +20,7 @@ export interface Comparison {
 	biome?: LinterRuleReference[];
 	deno?: LinterRuleReference[];
 	eslint?: LinterRuleReference[];
-	flint: FlintRuleReference | FlintRuleReference[];
+	flint: FlintRuleReference;
 	markdownlint?: LinterRuleReference[];
 	notes?: string;
 	oxlint?: LinterRuleReference[];

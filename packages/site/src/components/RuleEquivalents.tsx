@@ -10,11 +10,6 @@ export interface RuleEquivalentsProps {
 export function RuleEquivalents({ pluginId, ruleId }: RuleEquivalentsProps) {
 	const comparison = getComparisonByFlintId(pluginId, ruleId);
 
-	// Handle case where comparison is not found (shouldn't happen but defensive)
-	if (!comparison) {
-		return null;
-	}
-
 	return (
 		<ul>
 			{(Object.entries(linterNames) as [Linter, string][]).map(
