@@ -11,7 +11,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./.github/actions/prepare
       - run: pnpm run build # Ensure packages pass attw, etc.
       - run: pnpm run -r build # Build packages/site
@@ -19,14 +19,14 @@ jobs:
     name: Dedupe Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./.github/actions/prepare
       - run: pnpm dedupe --check --prefer-offline
   flint:
     name: Flint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./.github/actions/prepare
       - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
       - run: pnpm run flint
@@ -34,7 +34,7 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./.github/actions/prepare
       - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
       - run: pnpm run lint
@@ -42,7 +42,7 @@ jobs:
     name: Lint Knip
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./.github/actions/prepare
       - run: pnpm run build # Knip requires all exports to be generated.
       - run: pnpm run lint:knip
@@ -50,21 +50,22 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0 # required so origin/main can be diffed
+          filter: "tree:0"
       - uses: ./.github/actions/prepare
-      - name: Cache dependencies and Vite cache
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5
+      - name: Cache Vite cache
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
         with:
-          key: cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
       - run: pnpm exec tsc -b # For types tests
       - run: pnpm run build -W ./packages/ts-patch/ # vitest-dev/vitest#9429
       - # Run partial test pass on PRs (only changed files)
         if: ${{ github.event_name == 'pull_request' }}
         name: Run affected tests
-        run: pnpm run test --changed "origin/main"
+        run: pnpm run test --changed origin/${{ github.base_ref }}
       - # On main, run the full test suite w/ type checking
         if: ${{ github.ref == 'refs/heads/main' }}
         name: Run full test suite

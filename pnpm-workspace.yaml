@@ -2,6 +2,10 @@ autoInstallPeers: false
 
 disallowWorkspaceCycles: true
 
+engineStrict: true
+
+nodeVersion: 24.0.0
+
 onlyBuiltDependencies:
   - esbuild@0.25.11
   - sharp@0.34.5

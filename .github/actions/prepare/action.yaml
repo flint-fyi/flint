@@ -4,11 +4,14 @@ name: Prepare
 
 runs:
   steps:
-    - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4
-    - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
+    - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
       with:
-        cache: pnpm
+        cache: true
+    - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+      with:
         node-version: 24.14.0
     - run: pnpm install --frozen-lockfile
       shell: bash
+      env:
+        HUSKY: 0
   using: composite
