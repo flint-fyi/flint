@@ -60,7 +60,6 @@ jobs:
           key: cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
       - run: pnpm exec tsc -b # For types tests
-      - run: pnpm run build -W ./packages/ts-patch/ # vitest-dev/vitest#9429
       - # Run partial test pass on PRs (only changed files)
         if: ${{ github.event_name == 'pull_request' }}
         name: Run affected tests
