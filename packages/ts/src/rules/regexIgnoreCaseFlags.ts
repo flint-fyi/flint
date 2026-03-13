@@ -135,13 +135,12 @@ function simplifyCharacterClass(
 	// First pass: collect all characters that should be kept (lowercase versions)
 	for (const element of elements) {
 		if (element.type === "Character") {
-			const char = element.value;
-			if (isLetter(char)) {
+			if (isLetter(element.value)) {
 				// Keep lowercase version
-				keptCharacters.add(toLowerCase(char));
+				keptCharacters.add(toLowerCase(element.value));
 			} else {
 				// Keep non-letters as-is
-				keptCharacters.add(char);
+				keptCharacters.add(element.value);
 			}
 		} else if (element.type === "CharacterClassRange") {
 			const min = element.min.value;
