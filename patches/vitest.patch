@@ -1,0 +1,27 @@
+diff --git a/dist/chunks/index.456_DGfR.js b/dist/chunks/index.456_DGfR.js
+index 0777423afcd449117aab77856bbcefe044f45391..4d2cee001d16fd9fc12875193174b3ea2d375b15 100644
+--- a/dist/chunks/index.456_DGfR.js
++++ b/dist/chunks/index.456_DGfR.js
+@@ -2819,17 +2819,17 @@ class Typechecker {
+ 	async spawn() {
+ 		const { root, watch, typecheck } = this.project.config;
+ 		const args = [
+-			"--noEmit",
++			"--build",
+ 			"--pretty",
+ 			"false",
+-			"--incremental",
+-			"--tsBuildInfoFile",
+-			join(process.versions.pnp ? join(nodeos__default.tmpdir(), this.project.hash) : distDir, "tsconfig.tmp.tsbuildinfo")
++			// "--incremental",
++			// "--tsBuildInfoFile",
++			// join(process.versions.pnp ? join(nodeos__default.tmpdir(), this.project.hash) : distDir, "tsconfig.tmp.tsbuildinfo")
+ 		];
+ 		// use builtin watcher because it's faster
+ 		if (watch) args.push("--watch");
+ 		if (typecheck.allowJs) args.push("--allowJs", "--checkJs");
+-		if (typecheck.tsconfig) args.push("-p", resolve$1(root, typecheck.tsconfig));
++		// if (typecheck.tsconfig) args.push("-p", resolve$1(root, typecheck.tsconfig));
+ 		this._output = "";
+ 		this._startTime = performance$1.now();
+ 		const child = x(typecheck.checker, args, {

@@ -7,6 +7,6 @@
 	},
 	"extends": "../../tsconfig.base.json",
 	"include": ["src"],
-	"exclude": ["src/**/*.test.ts", "src/**/*.test-d.ts"],
-	"references": [{ "path": "../utils" }]
+	"exclude": ["src/**/*.test.ts"],
+	"references": []
 }

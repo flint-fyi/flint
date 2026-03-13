@@ -6,6 +6,6 @@
 		"types": ["node"]
 	},
 	"extends": "../../tsconfig.base.json",
-	"include": ["src/**/*.test.ts"],
+	"include": ["src/**/*.test.ts", "src/**/*.test-d.ts"],
 	"references": [{ "path": "./tsconfig.src.json" }]
 }

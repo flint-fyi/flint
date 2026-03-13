@@ -23,13 +23,13 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project comparisons"
+		"test": "vitest --project comparisons"
 	},
 	"dependencies": {
 		"prettier": "3.8.1"
 	},
 	"devDependencies": {
-		"eslint": "10.0.2",
+		"eslint": "10.0.1",
 		"tsdown": "0.21.0",
 		"vitest": "4.0.15"
 	},

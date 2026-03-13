@@ -16,14 +16,14 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsdown",
-		"clean": "rimraf -g \"**/node_modules\"",
+		"clean": "rimraf -g \"**/node_modules\" \"**/lib\"",
 		"flint": "node packages/flint/bin/index.js",
 		"flint:cache-ignore": "node packages/flint/bin/index.js --cache-ignore",
 		"lint": "eslint . --max-warnings 0",
 		"lint:knip": "knip",
 		"prepare": "husky",
 		"start:site": "pnpm --filter=site prebuild && pnpm --filter=site start",
-		"test": "vitest --typecheck"
+		"test": "vitest"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/core": "0.18.2",
@@ -36,7 +36,7 @@
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",
 		"@types/node": "24.12.0",
-		"@vitest/coverage-v8": "4.0.18",
+		"@vitest/coverage-v8": "4.0.15",
 		"@vitest/eslint-plugin": "1.6.1",
 		"console-fail-test": "0.6.1",
 		"eslint": "10.0.1",
@@ -62,7 +62,7 @@
 		"tsdown": "0.21.0",
 		"typescript": "5.9.3",
 		"typescript-eslint": "8.57.0",
-		"vitest": "4.0.18"
+		"vitest": "4.0.15"
 	},
 	"packageManager": "pnpm@10.32.0",
 	"engines": {
