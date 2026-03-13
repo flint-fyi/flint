@@ -1,4 +1,4 @@
-import { normalizePath } from "@flint.fyi/core";
+import { pathKey } from "@flint.fyi/utils";
 import path from "node:path";
 import ts from "typescript";
 
@@ -16,8 +16,8 @@ export function isFromFile(
 
 	const caseSensitive = ts.sys.useCaseSensitiveFileNames;
 	return (
-		normalizePath(sourceFile.fileName, caseSensitive) ===
-		normalizePath(
+		pathKey(sourceFile.fileName, caseSensitive) ===
+		pathKey(
 			path.resolve(program.getCurrentDirectory(), specifiedPath),
 			caseSensitive,
 		)
