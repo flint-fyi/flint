@@ -14,12 +14,12 @@ describe("cspell", () => {
 			"<dim>Linting with <cyan><bold>flint.config.ts</bold></fg><dim>...</fg>
 
 			<underline><cwd>/fixtures/CONTRIBUTING.md</underline>
-			<dim>  2:62</fg>  Forbidden or unknown word: "projet".      <yellow>spelling/cspell</fg>
-			<dim>  3:43</fg>  Forbidden or unknown word: "repositry".   <yellow>spelling/cspell</fg>
-			<dim>  9:1</fg>   Forbidden or unknown word: "establised".  <yellow>spelling/cspell</fg>
+			<dim>  3:50</fg>   Forbidden or unknown word: "projet".      <yellow>spelling/cspell</fg>
+			<dim>  7:14</fg>   Forbidden or unknown word: "repositry".   <yellow>spelling/cspell</fg>
+			<dim>  13:37</fg>  Forbidden or unknown word: "establised".  <yellow>spelling/cspell</fg>
 
 			<underline><cwd>/fixtures/src/config.json</underline>
-			<dim>  2:30</fg>  Forbidden or unknown word: "descripion".  <yellow>spelling/cspell</fg>
+			<dim>  3:3</fg>  Forbidden or unknown word: "descripion".  <yellow>spelling/cspell</fg>
 
 			<underline><cwd>/fixtures/src/utils.ts</underline>
 			<dim>  3:9</fg>    Forbidden or unknown word: "functon".     <yellow>spelling/cspell</fg>
