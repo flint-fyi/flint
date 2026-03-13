@@ -119,10 +119,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			),
 	},
 	setup(context) {
-		if (!context.options.restrictions.length) {
-			return { visitors: {} };
-		}
-
 		function checkWildcardRestrictions(
 			restrictions: Restriction[],
 			moduleDeclarations: ts.Declaration[],
