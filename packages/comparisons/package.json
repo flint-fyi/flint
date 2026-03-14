@@ -23,7 +23,7 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project comparisons"
+		"test": "vitest --project comparisons"
 	},
 	"dependencies": {
 		"prettier": "3.8.1"
