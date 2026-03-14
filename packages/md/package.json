@@ -33,9 +33,9 @@
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
-		"@types/mdast": "4.0.4",
-		"tsdown": "0.21.0",
-		"vitest": "4.0.15"
+		"@types/mdast": "catalog:dev",
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"

@@ -1,4 +1,73 @@
+packages:
+  - packages/*
+
 autoInstallPeers: false
+
+catalogs:
+  dev:
+    "@arethetypeswrong/core": 0.18.2
+    "@changesets/cli": 2.30.0
+    "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
+    "@eslint/js": 10.0.1
+    "@eslint/markdown": 7.5.1
+    "@types/language-tags": 1.0.4
+    "@types/mdast": 4.0.4
+    "@types/node": 24.12.0
+    "@types/omit-empty": 1.0.4
+    "@vitest/coverage-v8": 4.0.18
+    "@vitest/eslint-plugin": 1.6.1
+    console-fail-test: 0.6.1
+    eslint: 10.0.2
+    eslint-plugin-jsdoc: 62.8.0
+    eslint-plugin-jsonc: 3.1.0
+    eslint-plugin-n: 17.24.0
+    eslint-plugin-package-json: 0.90.0
+    eslint-plugin-perfectionist: 5.6.0
+    eslint-plugin-regexp: 3.1.0
+    eslint-plugin-yml: 3.3.0
+    execa: 9.6.1
+    husky: 9.1.7
+    jiti: 2.6.1
+    knip: 5.86.0
+    lint-staged: 16.3.0
+    prettier: 3.8.1
+    prettier-plugin-astro: 0.14.1
+    prettier-plugin-curly: 0.4.1
+    prettier-plugin-packagejson: 3.0.0
+    prettier-plugin-sentences-per-line: 0.2.0
+    prettier-plugin-sh: 0.18.0
+    rimraf: 6.1.2
+    tsdown: 0.21.0
+    typescript: 5.9.3
+    typescript-eslint: 8.57.0
+    vitest: 4.0.18
+    vitest-ansi-serializer: 0.2.1
+    zod: 4.3.6
+
+  site:
+    "@astrojs/check": 0.9.6
+    "@astrojs/react": 4.4.2
+    "@astrojs/starlight": 0.37.7
+    "@konami-emoji-blast/astro": 0.2.0
+    "@types/markdown-it": 14.1.2
+    "@types/react": 19.2.14
+    "@types/react-dom": 19.2.3
+    astro: 5.18.0
+    astro-og-canvas: 0.10.1
+    canvaskit-wasm: 0.40.0
+    clsx: 2.1.1
+    expressive-code-twoslash: 0.6.0
+    konami-emoji-blast: 0.6.0
+    markdown-it: 14.1.1
+    react: 19.2.4
+    react-dom: 19.2.4
+    remark-add-twoslash: 0.0.1
+    remark-custom-heading-id: 2.0.0
+    sharp: 0.34.5
+    starlight-blog: 0.25.3
+    starlight-links-validator: 0.19.2
+    starlight-package-managers: 0.12.0
+    starlight-sidebar-topics: 0.6.2
 
 disallowWorkspaceCycles: true
 
@@ -12,16 +81,7 @@ onlyBuiltDependencies:
 
 overrides:
   read-package-up: 12.0.0
-  read-pkg: 10.0.0
   unicorn-magic: 0.4.0
-
-packages:
-  - packages/*
-
-peerDependencyRules:
-  allowedVersions:
-    astro: "5"
-    vitest: "4"
 
 shellEmulator: true
 strictDepBuilds: true
