@@ -8,7 +8,7 @@ export const collections = {
 	docs: defineCollection({
 		loader: docsLoader(),
 		schema: docsSchema({
-			extend: (context) => blogSchema(context).merge(topicSchema),
+			extend: (context) => blogSchema(context).extend(topicSchema.shape),
 		}),
 	}),
 };
