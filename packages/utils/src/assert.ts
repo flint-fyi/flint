@@ -23,6 +23,8 @@ export function nullThrows<T>(x: T, message: string): NonNullable<T> {
 	assert(x != null, message);
 	return x;
 }
+
+/** @internal */
 export function sanitizeStackTrace(stack: string): string {
 	const pathRegex = /(?:[a-z]:\\|\/)[^:\s)]+:\d+(?::\d+)?/gi;
 	return stack.replace(pathRegex, (match) => {

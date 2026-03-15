@@ -27,13 +27,13 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"@flint.fyi/yaml-language": "workspace:^",
-		"yaml-unist-parser": "^3.0.0"
+		"@flint.fyi/yaml-language": "workspace:^"
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
 		"tsdown": "catalog:dev",
-		"vitest": "catalog:dev"
+		"vitest": "catalog:dev",
+		"yaml-unist-parser": "^3.0.0"
 	},
 	"engines": {
 		"node": ">=24.0.0"
