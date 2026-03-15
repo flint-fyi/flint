@@ -47,7 +47,7 @@ catalogs:
   site:
     "@astrojs/check": 0.9.6
     "@astrojs/react": 4.4.2
-    "@astrojs/starlight": 0.37.7
+    "@astrojs/starlight": 0.38.1
     "@konami-emoji-blast/astro": 0.2.0
     "@types/markdown-it": 14.1.2
     "@types/react": 19.2.14
