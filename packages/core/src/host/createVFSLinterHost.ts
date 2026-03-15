@@ -61,7 +61,7 @@ export function createVFSLinterHost(
 
 	interface VfsFile {
 		content: string;
-		path: PathKey;
+		path: string;
 	}
 
 	const fileMap = new Map<PathKey, VfsFile>();
@@ -73,10 +73,11 @@ export function createVFSLinterHost(
 	>();
 
 	function watchEvent(
-		normalizedFilePathAbsolute: PathKey,
+		normalizedFilePathAbsolute: string,
 		fileEvent: LinterHostFileWatcherEvent,
 	) {
-		for (const watcher of fileWatchers.get(normalizedFilePathAbsolute) ?? []) {
+		const fileKey = pathKey(normalizedFilePathAbsolute, caseSensitiveFS);
+		for (const watcher of fileWatchers.get(fileKey) ?? []) {
 			watcher(fileEvent);
 		}
 
@@ -108,7 +109,6 @@ export function createVFSLinterHost(
 	}
 	const host: VFSLinterHost = {
 		fileTypeSync(pathAbsolute) {
-			pathAbsolute = normalizePath(pathAbsolute);
 			const key = pathKey(pathAbsolute, caseSensitiveFS);
 			const keySlash = dirnameKey(pathAbsolute, caseSensitiveFS);
 			for (const fileKey of fileMap.keys()) {
@@ -183,8 +183,8 @@ export function createVFSLinterHost(
 			return host.readFileSync(filePathAbsolute);
 		},
 		readFileSync(filePathAbsolute) {
-			filePathAbsolute = normalizePath(filePathAbsolute);
-			const file = fileMap.get(pathKey(filePathAbsolute, caseSensitiveFS));
+			const key = pathKey(filePathAbsolute, caseSensitiveFS);
+			const file = fileMap.get(key);
 			if (file != null) {
 				return file.content;
 			}
@@ -194,7 +194,6 @@ export function createVFSLinterHost(
 			return undefined;
 		},
 		vfsDeleteFile(filePathAbsolute) {
-			filePathAbsolute = normalizePath(filePathAbsolute);
 			const key = pathKey(filePathAbsolute, caseSensitiveFS);
 			const file = fileMap.get(key);
 			if (file == null) {
@@ -207,17 +206,14 @@ export function createVFSLinterHost(
 			return new Map(Array.from(fileMap.values(), (f) => [f.path, f.content]));
 		},
 		vfsUpsertFile(filePathAbsolute, content) {
-			filePathAbsolute = normalizePath(filePathAbsolute);
 			const key = pathKey(filePathAbsolute, caseSensitiveFS);
 			const existing = fileMap.get(key);
-			// TODO: Thread PathKey through the rest of the core.
-			const storedPath = existing?.path ?? (filePathAbsolute as PathKey);
+			const storedPath = existing?.path ?? normalizePath(filePathAbsolute);
 			const fileEvent = existing != null ? "changed" : "created";
 			fileMap.set(key, { content, path: storedPath });
 			watchEvent(storedPath, fileEvent);
 		},
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
-			directoryPathAbsolute = normalizePath(directoryPathAbsolute);
 			const key = pathKey(directoryPathAbsolute, caseSensitiveFS);
 			const collection = options.recursive
 				? recursiveDirectoryWatchers
@@ -244,7 +240,6 @@ export function createVFSLinterHost(
 			};
 		},
 		watchFileSync(filePathAbsolute, callback, options) {
-			filePathAbsolute = normalizePath(filePathAbsolute);
 			const key = pathKey(filePathAbsolute, caseSensitiveFS);
 			let watchers = fileWatchers.get(key);
 
