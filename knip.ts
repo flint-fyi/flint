@@ -59,6 +59,10 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/plugin-flint": {
+			ignoreDependencies: [
+				// It's bugging IDK.
+				"@flint.fyi/rule-tester!",
+			],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/site": {
