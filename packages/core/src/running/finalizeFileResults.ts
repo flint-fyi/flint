@@ -1,9 +1,9 @@
+import { pathKey } from "@flint.fyi/utils";
 import { debugForFile } from "debug-for-file";
 import { resolve } from "node:path";
 
 import { DirectivesFilterer } from "../directives/DirectivesFilterer.ts";
 import { directiveReports } from "../directives/reports/directiveReports.ts";
-import { normalizePath } from "../host/normalizePath.ts";
 import type { LinterHost } from "../types/host.ts";
 import type { LanguageFileDiagnostic } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
@@ -39,7 +39,7 @@ export function finalizeFileResults(
 
 		if (cache?.dependencies) {
 			for (const dependency of cache.dependencies) {
-				const normalized = normalizePath(
+				const normalized = pathKey(
 					resolve(dependency),
 					host.isCaseSensitiveFS(),
 				);

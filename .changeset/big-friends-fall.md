@@ -5,4 +5,4 @@
 "@flint.fyi/spelling": patch
 ---
 
-feat: pass host to rules
+Pass host to rules.

@@ -2,7 +2,7 @@ import { CachedFactory } from "cached-factory";
 
 import type { FilesValues } from "../types/files.ts";
 import type { Plugin, PluginPresets } from "../types/plugins.ts";
-import type { Rule, RuleAbout } from "../types/rules.ts";
+import type { RuleAbout, UnsafeAnyRule } from "../types/rules.ts";
 
 export type CreatePluginOptions<
 	About extends RuleAbout,
@@ -30,19 +30,6 @@ export interface CreatePluginOptionsWithoutFiles<
 	name: string;
 	rules: Rules;
 }
-
-export type UnsafeAnyRule<About extends RuleAbout = RuleAbout> = Rule<
-	About,
-	// TODO: How to make these types work with createPlugin.test.ts & co.?
-	// flint-disable-lines-begin ts/explicitAnys
-	/* eslint-disable @typescript-eslint/no-explicit-any */
-	any,
-	any,
-	any,
-	any
-	/* eslint-enable @typescript-eslint/no-explicit-any */
-	// flint-disable-lines-end ts/explicitAnys
->;
 
 export function createPlugin<
 	const About extends RuleAbout,

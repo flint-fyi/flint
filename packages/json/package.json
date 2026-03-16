@@ -28,13 +28,13 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/json-language": "workspace:^",
-		"typescript": "^5.9.0 || ^6.0.0",
-		"zod": "^4.2.1"
+		"typescript": "^5.9.3 || ^6.0.0",
+		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
-		"tsdown": "0.21.0",
-		"vitest": "4.0.15"
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"

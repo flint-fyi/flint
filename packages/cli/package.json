@@ -38,8 +38,8 @@
 		"wrap-ansi": "^10.0.0"
 	},
 	"devDependencies": {
-		"prettier": "3.8.1",
-		"tsdown": "0.21.0"
+		"prettier": "catalog:dev",
+		"tsdown": "catalog:dev"
 	},
 	"peerDependencies": {
 		"prettier": "^3.7.4"
