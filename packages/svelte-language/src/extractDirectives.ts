@@ -13,7 +13,7 @@ export function extractDirectives(
 	const directives: ExtractedDirective[] = [];
 
 	function visit(
-		node: AST.Text | AST.Tag | AST.ElementLike | AST.Block | AST.Comment,
+		node: AST.Block | AST.Comment | AST.ElementLike | AST.Tag | AST.Text,
 	) {
 		if ("fragment" in node) {
 			for (const child of node.fragment.nodes) {

@@ -2,10 +2,11 @@ import {
 	getPositionOfColumnAndLine,
 	type SourceFileWithLineMap,
 } from "@flint.fyi/core";
-import { ruleCreator } from "./ruleCreator.ts";
 import { svelteLanguage } from "@flint.fyi/svelte-language";
 import { reportSourceCode } from "@flint.fyi/volar-language";
 import type { AST } from "svelte/compiler";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(svelteLanguage, {
 	about: {
@@ -39,34 +40,34 @@ export default ruleCreator.createRule(svelteLanguage, {
 					};
 					function visit(
 						node:
-							| AST.Text
-							| AST.Tag
-							| AST.ElementLike
 							| AST.Block
-							| AST.Comment,
+							| AST.Comment
+							| AST.ElementLike
+							| AST.Tag
+							| AST.Text,
 					) {
 						if (node.type === "RegularElement") {
 							switch (node.name) {
-								case "head":
 								case "body":
-								case "window":
 								case "document":
 								case "element":
+								case "head":
 								case "options":
+								case "window":
 									reportSourceCode(context, {
+										data: {
+											element: node.name,
+										},
 										message: "rawSpecialElement",
 										range: {
 											begin: getPositionOfColumnAndLine(sourceText, {
-												line: node.name_loc.start.line - 1,
 												column: node.name_loc.start.column,
+												line: node.name_loc.start.line - 1,
 											}),
 											end: getPositionOfColumnAndLine(sourceText, {
-												line: node.name_loc.end.line - 1,
 												column: node.name_loc.end.column,
+												line: node.name_loc.end.line - 1,
 											}),
-										},
-										data: {
-											element: node.name,
 										},
 									});
 							}

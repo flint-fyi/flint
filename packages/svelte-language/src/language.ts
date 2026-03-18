@@ -1,18 +1,17 @@
+import type {
+	LanguageDiagnostics,
+	SourceFileWithLineMap,
+} from "@flint.fyi/core";
 import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
 import { createVolarBasedLanguage } from "@flint.fyi/volar-language";
+import { type AST, parse } from "svelte/compiler";
 
 import { extractDirectives } from "./extractDirectives.ts";
-import { parse, type AST } from "svelte/compiler";
 import {
 	errorToLanguageDiagnostic,
 	virtualCodeDiagnostics,
 	volarLanguagePlugin,
 } from "./volarLanguagePlugin.ts";
-import type {
-	LanguageDiagnostics,
-	LanguageFileDiagnostic,
-	SourceFileWithLineMap,
-} from "@flint.fyi/core";
 
 setTSExtraSupportedExtensions([".svelte"]);
 
@@ -34,7 +33,7 @@ export const svelteLanguage = createVolarBasedLanguage<SvelteServices>(
 				const source: SourceFileWithLineMap = { text: sourceText };
 				const virtualCode = sourceScript.generated.root;
 				let ast: AST.Root;
-				let diagnostics: LanguageDiagnostics = [];
+				const diagnostics: LanguageDiagnostics = [];
 				try {
 					ast = parse(sourceText, {
 						modern: true,
@@ -44,18 +43,18 @@ export const svelteLanguage = createVolarBasedLanguage<SvelteServices>(
 						errorToLanguageDiagnostic(sourceFile.fileName, error),
 					);
 					ast = {
-						type: "Root",
 						comments: [],
 						css: null,
-						start: 0,
 						end: 0,
-						module: null,
 						fragment: {
-							type: "Fragment",
 							nodes: [],
+							type: "Fragment",
 						},
 						instance: null,
+						module: null,
 						options: null,
+						start: 0,
+						type: "Root",
 					};
 				}
 				const codegenDiagnostic = virtualCodeDiagnostics.get(virtualCode);
@@ -63,10 +62,17 @@ export const svelteLanguage = createVolarBasedLanguage<SvelteServices>(
 					diagnostics.push(codegenDiagnostic);
 				}
 				return {
+					directives: extractDirectives(ast, source),
+					extraContext: {
+						svelte: {
+							ast,
+							sourceText,
+						},
+					},
 					firstStatementPosition: Math.min(
 						...[
 							ast.fragment.nodes.find(
-								(node) => node.type !== "Text" || node.data.trim().length > 0,
+								(node) => node.type !== "Text" || !!node.data.trim().length,
 							)?.start,
 							ast.module?.start,
 							ast.instance?.start,
@@ -75,15 +81,8 @@ export const svelteLanguage = createVolarBasedLanguage<SvelteServices>(
 							sourceText.length,
 						].filter((pos) => typeof pos === "number"),
 					),
-					directives: extractDirectives(ast, source),
 					getDiagnostics() {
 						return diagnostics;
-					},
-					extraContext: {
-						svelte: {
-							ast,
-							sourceText,
-						},
 					},
 				};
 			},

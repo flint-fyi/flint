@@ -5,16 +5,14 @@ import {
 } from "@flint.fyi/core";
 import { decode } from "@jridgewell/sourcemap-codec";
 import {
-	forEachEmbeddedCode,
 	type CodeMapping,
+	forEachEmbeddedCode,
 	type LanguagePlugin,
 	type VirtualCode,
 } from "@volar/language-core";
 import path from "node:path";
 import url from "node:url";
-import util from "node:util";
-import type { CompileError } from "svelte/compiler";
-import { svelte2tsx, internalHelpers } from "svelte2tsx";
+import { internalHelpers, svelte2tsx } from "svelte2tsx";
 import type * as ts from "typescript";
 
 const sveltePath = path.dirname(
@@ -30,20 +28,13 @@ export function volarLanguagePlugin(
 ): LanguagePlugin<string> {
 	const cwd =
 		typeof options.options.configFilePath === "string"
-			? options.options.configFilePath
+			? path.dirname(options.options.configFilePath)
 			: (options.host ?? ts.sys).getCurrentDirectory();
 	return {
-		getLanguageId(fileName) {
-			if (fileName.endsWith(".svelte")) {
-				return "svelte";
-			}
-		},
 		createVirtualCode(fileName, languageId, snapshot) {
 			if (languageId === "svelte") {
 				return {
-					id: "root",
-					languageId,
-					snapshot,
+					codegenStacks: [],
 					embeddedCodes: [
 						getEmbeddedTsCode(
 							ts,
@@ -52,22 +43,17 @@ export function volarLanguagePlugin(
 							snapshot.getText(0, snapshot.getLength()),
 						),
 					],
+					id: "root",
+					languageId,
 					mappings: [],
-					codegenStacks: [],
+					snapshot,
 				};
 			}
 		},
-		updateVirtualCode(fileName, virtualCode, snapshot) {
-			virtualCode.snapshot = snapshot;
-			virtualCode.embeddedCodes = [
-				getEmbeddedTsCode(
-					ts,
-					cwd,
-					fileName,
-					snapshot.getText(0, snapshot.getLength()),
-				),
-			];
-			return virtualCode;
+		getLanguageId(fileName) {
+			if (fileName.endsWith(".svelte")) {
+				return "svelte";
+			}
 		},
 		typescript: {
 			extraFileExtensions: [
@@ -82,12 +68,24 @@ export function volarLanguagePlugin(
 					if (code.id === "tsx") {
 						return {
 							code,
-							scriptKind: 4,
 							extension: ".tsx",
+							scriptKind: 4,
 						};
 					}
 				}
 			},
+		},
+		updateVirtualCode(fileName, virtualCode, snapshot) {
+			virtualCode.snapshot = snapshot;
+			virtualCode.embeddedCodes = [
+				getEmbeddedTsCode(
+					ts,
+					cwd,
+					fileName,
+					snapshot.getText(0, snapshot.getLength()),
+				),
+			];
+			return virtualCode;
 		},
 	};
 }
@@ -96,6 +94,28 @@ export const virtualCodeDiagnostics = new WeakMap<
 	VirtualCode,
 	LanguageFileDiagnostic
 >();
+
+export function errorToLanguageDiagnostic(
+	fileName: string,
+	error: unknown,
+): LanguageFileDiagnostic {
+	if (typeof error != "object" || error == null) {
+		return {
+			text: `${fileName} - Unknown error`,
+		};
+	}
+	const loc =
+		"position" in error && Array.isArray(error.position)
+			? `:${error.position[0]}:${error.position[1]}`
+			: "";
+	const res: LanguageFileDiagnostic = {
+		text: `${fileName}${loc} - ${"message" in error && typeof error.message === "string" ? error.message : "Codegen error"}`,
+	};
+	if ("code" in error && typeof error.code === "string") {
+		res.code = error.code;
+	}
+	return res;
+}
 
 // adapted from https://github.com/withastro/astro/blob/a19140fd11efbc635a391d176da54b0dc5e4a99c/packages/language-tools/ts-plugin/src/astro2tsx.ts
 function getEmbeddedTsCode(
@@ -125,17 +145,17 @@ function getEmbeddedTsCode(
 		};
 		const mappings: CodeMapping[] = [];
 
-		let current: {
+		let current: null | {
 			genOffset: number;
 			sourceOffset: number;
-		} | null = null;
+		} = null;
 
 		for (const [genLine, segments] of v3Mappings.entries()) {
 			for (const segment of segments) {
 				const genCharacter = segment[0];
 				const genOffset = getPositionOfColumnAndLine(serviceTextWithLineMap, {
-					line: genLine,
 					column: genCharacter,
+					line: genLine,
 				});
 				if (current != null) {
 					let length = genOffset - current.genOffset;
@@ -159,27 +179,30 @@ function getEmbeddedTsCode(
 					}
 					if (length > 0) {
 						const lastMapping = mappings.at(-1);
+						// mappings always contain one range
+						/* eslint-disable @typescript-eslint/no-non-null-assertion */
 						if (
 							lastMapping &&
-							lastMapping.generatedOffsets[0]! + lastMapping.lengths[0]! ===
-								current.genOffset &&
-							lastMapping.sourceOffsets[0]! + lastMapping.lengths[0]! ===
-								current.sourceOffset
+							current.genOffset ===
+								lastMapping.generatedOffsets[0]! + lastMapping.lengths[0]! &&
+							current.sourceOffset ===
+								lastMapping.sourceOffsets[0]! + lastMapping.lengths[0]!
 						) {
 							lastMapping.lengths[0]! += length;
+							/* eslint-enable @typescript-eslint/no-non-null-assertion */
 						} else {
 							mappings.push({
-								sourceOffsets: [current.sourceOffset],
+								data: {
+									completion: true,
+									format: false,
+									navigation: true,
+									semantic: true,
+									structure: false,
+									verification: true,
+								},
 								generatedOffsets: [current.genOffset],
 								lengths: [length],
-								data: {
-									verification: true,
-									completion: true,
-									semantic: true,
-									navigation: true,
-									structure: false,
-									format: false,
-								},
+								sourceOffsets: [current.sourceOffset],
 							});
 						}
 					}
@@ -189,8 +212,8 @@ function getEmbeddedTsCode(
 					const sourceOffset = getPositionOfColumnAndLine(
 						sourceTextWithLineMap,
 						{
-							line: segment[2],
 							column: segment[3],
+							line: segment[2],
 						},
 					);
 					current = {
@@ -207,65 +230,43 @@ function getEmbeddedTsCode(
 			svelteTsxFiles.map((p) => `import ${JSON.stringify(p)}`).join("\n");
 
 		return {
+			embeddedCodes: [],
 			id: "tsx",
 			languageId: "typescriptreact",
+			mappings,
 			snapshot: {
-				getText(start, end) {
-					return codeWithTypes.substring(start, end);
+				getChangeRange() {
+					return undefined;
 				},
 				getLength() {
 					return codeWithTypes.length;
 				},
-				getChangeRange() {
-					return undefined;
+				getText(start, end) {
+					return codeWithTypes.substring(start, end);
 				},
 			},
-			mappings: mappings,
-			embeddedCodes: [],
 		};
 	} catch (error) {
 		const diagnostic = errorToLanguageDiagnostic(fileName, error);
 		const code: VirtualCode = {
+			embeddedCodes: [],
 			id: "tsx",
 			languageId: "typescriptreact",
+			mappings: [],
 			snapshot: {
-				getText() {
-					return "";
+				getChangeRange() {
+					return undefined;
 				},
 				getLength() {
 					return 0;
 				},
-				getChangeRange() {
-					return undefined;
+				getText() {
+					return "";
 				},
 			},
-			mappings: [],
-			embeddedCodes: [],
 		};
 
 		virtualCodeDiagnostics.set(code, diagnostic);
 		return code;
 	}
-}
-
-export function errorToLanguageDiagnostic(
-	fileName: string,
-	error: unknown,
-): LanguageFileDiagnostic {
-	if (typeof error != "object" || error == null) {
-		return {
-			text: `${fileName} - Unknown error`,
-		};
-	}
-	const loc =
-		"position" in error && Array.isArray(error.position)
-			? `:${error.position[0]}:${error.position[1]}`
-			: "";
-	const res: LanguageFileDiagnostic = {
-		text: `${fileName}${loc} - ${"message" in error ? error.message : "Codegen error"}`,
-	};
-	if ("code" in error && typeof error.code === "string") {
-		res.code = error.code;
-	}
-	return res;
 }
