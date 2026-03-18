@@ -1097,7 +1097,7 @@ importers:
         specifier: catalog:dev
         version: 4.1.0(@types/node@24.12.0)(esbuild@0.27.4)(jiti@2.6.1)(yaml@2.8.2)
       vue:
-        specifier: ~3.5.27
+        specifier: 3.5.30
         version: 3.5.30(typescript@5.9.3)
 
   packages/vue-language:

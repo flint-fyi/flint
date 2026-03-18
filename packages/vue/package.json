@@ -39,7 +39,7 @@
 		"@flint.fyi/rule-tester": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev",
-		"vue": "~3.5.27"
+		"vue": "3.5.30"
 	},
 	"engines": {
 		"node": ">=24.0.0"
