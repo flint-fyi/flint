@@ -13,7 +13,7 @@
 		"name": "JoshuaKGoldberg",
 		"email": "npm@joshuakgoldberg.com"
 	},
-	"sideEffects": false,
+	"sideEffects": true,
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts"
