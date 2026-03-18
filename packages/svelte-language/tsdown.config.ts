@@ -12,7 +12,7 @@ export default defineConfig({
 		devExports: true,
 		packageJson: false,
 	},
-	// TODO: rolldown bug
+	// probably a bug in Rolldown: [MISSING_EXPORT] Warning: "AST" is not exported by "../../node_modules/.pnpm/svelte@5.54.0/node_modules/svelte/types/index.d.ts"
 	failOnWarn: false,
 	fixedExtension: false,
 	outDir: "lib",

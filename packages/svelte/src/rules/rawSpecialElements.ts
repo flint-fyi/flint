@@ -9,7 +9,8 @@ import type { AST } from "svelte/compiler";
 
 export default ruleCreator.createRule(svelteLanguage, {
 	about: {
-		description: "TODO",
+		description:
+			"Reports raw special Svelte elements that should use the `svelte:` prefix.",
 		id: "rawSpecialElements",
 		preset: "logical",
 	},
@@ -18,9 +19,12 @@ export default ruleCreator.createRule(svelteLanguage, {
 		// flint-disable-next-line flint/unusedMessageIds
 		rawSpecialElement: {
 			primary:
-				"TODO: don't use `{{ element }}` tag, use `svelte:{{ element }}` instead",
-			secondary: ["TODO"],
-			suggestions: ["TODO"],
+				"Use `svelte:{{ element }}` instead of raw `{{ element }}` for this special Svelte element.",
+			secondary: [
+				"These elements are special in Svelte and must be written with the `svelte:` prefix.",
+				"The raw element form worked in older Svelte versions but is invalid in Svelte 5.",
+			],
+			suggestions: ["Prefix the special element with `svelte:`."],
 		},
 	},
 	setup(context) {
@@ -71,7 +75,6 @@ export default ruleCreator.createRule(svelteLanguage, {
 							for (const child of node.fragment.nodes) {
 								visit(child);
 							}
-							node.fragment.nodes.forEach(visit);
 						}
 					}
 					for (const child of services.svelte.ast.fragment.nodes) {

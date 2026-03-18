@@ -1,5 +1,5 @@
-import rule from "./rawSpecialElements.js";
-import { ruleTester } from "./ruleTester.js";
+import rule from "./rawSpecialElements.ts";
+import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -12,7 +12,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 <head>
  ~~~~
- TODO: don't use \`head\` tag, use \`svelte:head\` instead
+ Use \`svelte:head\` instead of raw \`head\` for this special Svelte element.
   <title>Title</title>
 </head>
 			`,
@@ -24,7 +24,7 @@ ruleTester.describe(rule, {
 			snapshot: `
 <body></body>
  ~~~~
- TODO: don't use \`head\` tag, use \`svelte:head\` instead
+ Use \`svelte:body\` instead of raw \`body\` for this special Svelte element.
 			`,
 		},
 		{
@@ -32,9 +32,9 @@ ruleTester.describe(rule, {
 <window></window>
 			`,
 			snapshot: `
-<body></body>
- ~~~~
- TODO: don't use \`head\` tag, use \`svelte:head\` instead
+<window></window>
+ ~~~~~~
+ Use \`svelte:window\` instead of raw \`window\` for this special Svelte element.
 			`,
 		},
 		{
@@ -42,9 +42,9 @@ ruleTester.describe(rule, {
 <document></document>
 			`,
 			snapshot: `
-<body></body>
- ~~~~
- TODO: don't use \`head\` tag, use \`svelte:head\` instead
+<document></document>
+ ~~~~~~~~
+ Use \`svelte:document\` instead of raw \`document\` for this special Svelte element.
 			`,
 		},
 		{
@@ -52,9 +52,9 @@ ruleTester.describe(rule, {
 <element></element>
 			`,
 			snapshot: `
-<body></body>
- ~~~~
- TODO: don't use \`head\` tag, use \`svelte:head\` instead
+<element></element>
+ ~~~~~~~
+ Use \`svelte:element\` instead of raw \`element\` for this special Svelte element.
 			`,
 		},
 		{
@@ -62,9 +62,9 @@ ruleTester.describe(rule, {
 <options></options>
 			`,
 			snapshot: `
-<body></body>
- ~~~~
- TODO: don't use \`head\` tag, use \`svelte:head\` instead
+<options></options>
+ ~~~~~~~
+ Use \`svelte:options\` instead of raw \`options\` for this special Svelte element.
 			`,
 		},
 	],
@@ -74,7 +74,7 @@ ruleTester.describe(rule, {
 		"<svelte:body></svelte:body>",
 		"<svelte:window></svelte:window>",
 		"<svelte:document></svelte:document>",
-		"<svelte:element></svelte:element>",
+		"<svelte:element this={{}}></svelte:element>",
 		"<svelte:options></svelte:options>",
 	],
 });

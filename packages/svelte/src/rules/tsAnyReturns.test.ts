@@ -24,7 +24,7 @@ ruleTester.describe(rule, {
 		~~~~~~~~~~~~~~~
 		Unsafe return of a value of type \`any\`.
 	}
-</svelte>
+</script>
 `,
 		},
 		{

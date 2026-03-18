@@ -1,74 +1,50 @@
-import type { Node, RootNode } from "@astrojs/compiler/types";
+import {
+	getColumnAndLineOfPosition,
+	type SourceFileWithLineMap,
+} from "@flint.fyi/core";
 import type { ExtractedDirective } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
+import type { AST } from "svelte/compiler";
 
-export function extractDirectives(ast: RootNode) {
+export function extractDirectives(
+	ast: AST.Root,
+	source: SourceFileWithLineMap,
+) {
 	const directives: ExtractedDirective[] = [];
 
-	function visit(node: Node) {
-		if ("children" in node) {
-			for (const child of node.children) {
+	function visit(
+		node: AST.Text | AST.Tag | AST.ElementLike | AST.Block | AST.Comment,
+	) {
+		if ("fragment" in node) {
+			for (const child of node.fragment.nodes) {
 				visit(child);
 			}
+		}
+		if (node.type !== "Comment") {
 			return;
 		}
-		if (node.type !== "comment") {
-			return;
-		}
-		// flint-disable-next-line ts/regexEmptyCapturingGroups
-		const match = /(\s*)(flint-(\S+)(?:\s+(.+))?)/.exec(node.value);
+		const match = /\s*flint-(\S+)(?:\s+(.+))?/.exec(node.data);
 		if (match == null) {
 			return;
 		}
-		const [, space, directive, type, selection] = match;
-		const spaceLen = nullThrows(
-			space,
-			"Expected RegExp to provide first capturing group",
-		).length;
-		const directiveLen = nullThrows(
-			directive,
-			"Expected RegExp to provide second capturing group",
-		).trimEnd().length;
-		const position = nullThrows(
-			node.position,
-			"Expected node.position to be defined",
-		);
-		const end = nullThrows(
-			position.end,
-			"Expected node.position.end to be defined",
-		);
+		const [, type, selection] = match;
 		directives.push({
 			range: {
-				begin: {
-					column: position.start.column - 1 + spaceLen,
-					line: position.start.line - 1,
-					raw: position.start.offset + spaceLen,
-				},
-				end:
-					end.line === position.start.line
-						? {
-								column: position.start.column - 1 + spaceLen + directiveLen,
-								line: end.line - 1,
-								raw: position.start.offset + spaceLen + directiveLen,
-							}
-						: {
-								column: end.column - 1,
-								line: end.line - 1,
-								raw: end.offset,
-							},
+				begin: getColumnAndLineOfPosition(source, node.start),
+				end: getColumnAndLineOfPosition(source, node.end),
 			},
 			selection: nullThrows(
 				selection,
-				"Expected RegExp to provide third capturing group",
+				"Expected RegExp to provide second capturing group",
 			),
 			type: nullThrows(
 				type,
-				"Expected RegExp to provide fourth capturing group",
+				"Expected RegExp to provide first capturing group",
 			),
 		});
 	}
 
-	for (const child of ast.children) {
+	for (const child of ast.fragment.nodes) {
 		visit(child);
 	}
 
