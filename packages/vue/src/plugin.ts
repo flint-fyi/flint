@@ -1,7 +1,7 @@
 import { createPlugin } from "@flint.fyi/core";
+import { ts } from "@flint.fyi/ts";
 
 import vForKeys from "./rules/vForKeys.ts";
-import { ts } from "@flint.fyi/ts";
 
 export const vue = createPlugin({
 	files: {
