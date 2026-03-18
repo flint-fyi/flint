@@ -5,6 +5,8 @@ import { getLanguagePlugin } from "@astrojs/ts-plugin/dist/language.js";
 import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
 import { createVolarBasedLanguage } from "@flint.fyi/volar-language";
 
+import { extractDirectives } from "./extractDirectives.ts";
+
 setTSExtraSupportedExtensions([".astro"]);
 
 export interface AstroServices {
@@ -22,6 +24,7 @@ export const astroLanguage = createVolarBasedLanguage<AstroServices>(() => {
 			);
 			const { ast, diagnostics } = parse(sourceText, { position: true });
 			return {
+				directives: extractDirectives(ast),
 				extraContext: {
 					astro: {
 						ast,
