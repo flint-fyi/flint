@@ -1,12 +1,12 @@
 import { createPlugin } from "@flint.fyi/core";
 import { ts } from "@flint.fyi/ts";
 
-import setHtmlDirectives from "./rules/setHtmlDirectives.ts";
+import rawSpecialElements from "./rules/rawSpecialElements.ts";
 
-export const astro = createPlugin({
+export const svelte = createPlugin({
 	files: {
-		all: [ts.files.all, "**/*.astro"],
+		all: [ts.files.all, "**/*.svelte"],
 	},
-	name: "Astro",
-	rules: [setHtmlDirectives],
+	name: "Svelte",
+	rules: [rawSpecialElements],
 });

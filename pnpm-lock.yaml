@@ -969,12 +969,12 @@ importers:
 
   packages/svelte-language:
     dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
       '@flint.fyi/ts-patch':
         specifier: workspace:^
         version: link:../ts-patch
-      '@flint.fyi/typescript-language':
-        specifier: workspace:^
-        version: link:../typescript-language
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
@@ -994,6 +994,9 @@ importers:
         specifier: ^5.9.0 || ^6.0.0
         version: 5.9.3
     devDependencies:
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
       svelte:
         specifier: ^5.54.0
         version: 5.54.0

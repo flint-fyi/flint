@@ -4,7 +4,7 @@ import { describe, it } from "vitest";
 
 export const ruleTester = new RuleTester({
 	defaults: {
-		fileName: "file.astro",
+		fileName: "file.svelte",
 		files: createRuleTesterTSConfig(),
 	},
 	describe,

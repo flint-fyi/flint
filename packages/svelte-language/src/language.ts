@@ -1,45 +1,41 @@
-import { parse } from "@astrojs/compiler/sync";
-import type { RootNode } from "@astrojs/compiler/types";
-// eslint-disable-next-line no-restricted-syntax
-import { getLanguagePlugin } from "@astrojs/ts-plugin/dist/language.js";
 import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
 import { createVolarBasedLanguage } from "@flint.fyi/volar-language";
 
 import { extractDirectives } from "./extractDirectives.ts";
+import { parse, type AST } from "svelte/compiler";
+import { volarLanguagePlugin } from "./volarLanguagePlugin.ts";
 
-setTSExtraSupportedExtensions([".astro"]);
+setTSExtraSupportedExtensions([".svelte"]);
 
-export interface AstroServices {
-	astro: {
-		ast: RootNode;
+export interface SvelteServices {
+	svelte: {
+		ast: AST.Root;
+		sourceText: string;
 	};
 }
 
-export const astroLanguage = createVolarBasedLanguage<AstroServices>(() => {
+export const svelteLanguage = createVolarBasedLanguage<SvelteServices>(() => {
 	return {
-		createFile({ sourceFile, sourceScript }) {
+		createFile({ sourceScript }) {
 			const sourceText = sourceScript.snapshot.getText(
 				0,
 				sourceScript.snapshot.getLength(),
 			);
-			const { ast, diagnostics } = parse(sourceText, { position: true });
+			// TODO: report parsing errors?
+			const ast = parse(sourceText, {
+				modern: true,
+			});
 			return {
-				directives: extractDirectives(ast),
+				// TODO: first statement
+				firstStatementPosition: sourceText.length,
 				extraContext: {
-					astro: {
+					svelte: {
 						ast,
+						sourceText,
 					},
-				},
-				firstStatementPosition:
-					ast.children[0]?.position?.start.offset ?? sourceText.length,
-				getDiagnostics() {
-					return diagnostics.map((diagnostic) => ({
-						code: `ASTRO${diagnostic.code}`,
-						text: `${sourceFile.fileName}:${diagnostic.location.line}:${diagnostic.location.column} - ${diagnostic.text}${diagnostic.hint ? ` (${diagnostic.hint})` : ""}`,
-					}));
 				},
 			};
 		},
-		languagePlugins: [getLanguagePlugin()],
+		languagePlugins: [volarLanguagePlugin],
 	};
 });

@@ -12,7 +12,8 @@ export default defineConfig({
 		devExports: true,
 		packageJson: false,
 	},
-	failOnWarn: true,
+	// TODO: rolldown bug
+	failOnWarn: false,
 	fixedExtension: false,
 	outDir: "lib",
 	unbundle: true,

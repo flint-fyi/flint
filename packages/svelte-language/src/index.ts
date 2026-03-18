@@ -1,1 +1,1 @@
-export { astroLanguage } from "./language.ts";
+export { svelteLanguage } from "./language.ts";
