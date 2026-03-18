@@ -1,12 +1,12 @@
 {
-	"name": "@flint.fyi/typescript-language",
-	"version": "0.17.0",
-	"description": "[Experimental] TypeScript language for Flint.",
+	"name": "@flint.fyi/vue-language",
+	"version": "0.0.1",
+	"description": "[Experimental] Vue.js language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
-		"directory": "packages/typescript-language"
+		"directory": "packages/vue-language"
 	},
 	"license": "MIT",
 	"author": {
@@ -23,17 +23,20 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project typescript-language"
+		"test": "vitest --project vue-language"
 	},
 	"dependencies": {
-		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/ts-patch": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"@typescript-eslint/project-service": "^8.53.0",
-		"debug-for-file": "^0.2.0",
-		"ts-api-utils": "^2.4.0",
+		"@flint.fyi/volar-language": "workspace:^",
+		"@volar/language-core": "2.4.28",
+		"@vue/compiler-dom": "^3.5.0",
+		"@vue/language-core": "3.2.1",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/core": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

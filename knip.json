@@ -19,6 +19,9 @@
 				"sharp",
 				"zod"
 			]
+		},
+		"packages/vue": {
+			"ignoreDependencies": ["vue"]
 		}
 	}
 }

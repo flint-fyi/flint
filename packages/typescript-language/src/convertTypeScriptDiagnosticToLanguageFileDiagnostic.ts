@@ -94,6 +94,7 @@ function displayFilename(name: string) {
 	if (name.startsWith("./")) {
 		return name.slice(2);
 	}
+	// TODO: use LinterHost.getCurrentDirectory()
 	return name.slice(process.cwd().length + 1);
 }
 

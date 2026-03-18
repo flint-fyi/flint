@@ -1,19 +1,19 @@
 {
-	"name": "@flint.fyi/typescript-language",
-	"version": "0.17.0",
-	"description": "[Experimental] TypeScript language for Flint.",
+	"name": "@flint.fyi/vue",
+	"version": "0.0.1",
+	"description": "[Experimental] Vue.js language plugin for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
-		"directory": "packages/typescript-language"
+		"directory": "packages/vue"
 	},
 	"license": "MIT",
 	"author": {
 		"name": "JoshuaKGoldberg",
 		"email": "npm@joshuakgoldberg.com"
 	},
-	"sideEffects": true,
+	"sideEffects": false,
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts"
@@ -23,19 +23,23 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project typescript-language"
+		"test": "vitest --project vue"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/ts": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"@typescript-eslint/project-service": "^8.53.0",
-		"debug-for-file": "^0.2.0",
-		"ts-api-utils": "^2.4.0",
+		"@flint.fyi/volar-language": "workspace:^",
+		"@flint.fyi/vue-language": "workspace:^",
+		"@vue/compiler-dom": "^3.5.0",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/rule-tester": "workspace:^",
 		"tsdown": "catalog:dev",
-		"vitest": "catalog:dev"
+		"vitest": "catalog:dev",
+		"vue": "~3.5.27"
 	},
 	"engines": {
 		"node": ">=24.0.0"
