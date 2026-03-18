@@ -1,5 +1,5 @@
-import rule from "./setHtmlDirectives.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./setHtmlDirectives.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
