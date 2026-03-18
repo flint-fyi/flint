@@ -27,6 +27,7 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/ts": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"@flint.fyi/volar-language": "workspace:^",
@@ -36,8 +37,8 @@
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
-		"tsdown": "0.21.0",
-		"vitest": "4.0.15",
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev",
 		"vue": "~3.5.27"
 	},
 	"engines": {
