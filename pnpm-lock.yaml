@@ -324,6 +324,40 @@ importers:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.19.1)(synckit@0.11.12)(typescript@5.9.3)
 
+  packages/astro-language:
+    dependencies:
+      '@astrojs/compiler':
+        specifier: ^3.0.1
+        version: 3.0.1
+      '@astrojs/ts-plugin':
+        specifier: ^1.10.7
+        version: 1.10.7
+      '@flint.fyi/ts-patch':
+        specifier: workspace:^
+        version: link:../ts-patch
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
+      '@flint.fyi/utils':
+        specifier: workspace:^
+        version: link:../utils
+      '@flint.fyi/volar-language':
+        specifier: workspace:^
+        version: link:../volar-language
+      typescript:
+        specifier: ^5.9.0 || ^6.0.0
+        version: 5.9.3
+    devDependencies:
+      '@flint.fyi/rule-tester':
+        specifier: workspace:^
+        version: link:../rule-tester
+      tsdown:
+        specifier: catalog:dev
+        version: 0.21.0(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.19.1)(synckit@0.11.12)(typescript@5.9.3)
+      vitest:
+        specifier: catalog:dev
+        version: 4.1.0(@types/node@24.12.0)(esbuild@0.27.4)(jiti@2.6.1)(yaml@2.8.2)
+
   packages/browser:
     dependencies:
       '@flint.fyi/core':
@@ -1122,6 +1156,9 @@ packages:
   '@astrojs/compiler@2.13.1':
     resolution: {integrity: sha512-f3FN83d2G/v32ipNClRKgYv30onQlMZX1vCeZMjPsMMPl1mDpmbl0+N5BYo4S/ofzqJyS5hvwacEo0CCVDn/Qg==}
 
+  '@astrojs/compiler@3.0.1':
+    resolution: {integrity: sha512-z97oYbdebO5aoWzuJ/8q5hLK232+17KcLZ7cJ8BCWk6+qNzVxn/gftC0KzMBUTD8WAaBkPpNSQK6PXLnNrZ0CA==}
+
   '@astrojs/internal-helpers@0.7.5':
     resolution: {integrity: sha512-vreGnYSSKhAjFJCWAwe/CNhONvoc5lokxtRoZims+0wa3KbHBdPHSSthJsKxPd8d/aic6lWKpRTYGY/hsgK6EA==}
 
@@ -1179,6 +1216,9 @@ packages:
   '@astrojs/telemetry@3.3.0':
     resolution: {integrity: sha512-UFBgfeldP06qu6khs/yY+q1cDAaArM2/7AEIqQ9Cuvf7B1hNLq0xDrZkct+QoIGyjq56y8IaE2I3CTvG99mlhQ==}
     engines: {node: 18.20.8 || ^20.3.0 || >=22.0.0}
+
+  '@astrojs/ts-plugin@1.10.7':
+    resolution: {integrity: sha512-CFJQgMLxi7F21VMcLBuAQmD9KrnT/ACfhZgdhsmVzOcb5Lscu7MIUl/ZxYDviXqDnhDBF1JzYOj+kusJlGmG8w==}
 
   '@astrojs/yaml2ts@0.2.3':
     resolution: {integrity: sha512-PJzRmgQzUxI2uwpdX2lXSHtP4G8ocp24/t+bZyf5Fy0SZLSF9f9KXZoMlFM/XCGue+B0nH/2IZ7FpBYQATBsCg==}
@@ -6182,6 +6222,8 @@ snapshots:
 
   '@astrojs/compiler@2.13.1': {}
 
+  '@astrojs/compiler@3.0.1': {}
+
   '@astrojs/internal-helpers@0.7.5': {}
 
   '@astrojs/internal-helpers@0.7.6': {}
@@ -6367,6 +6409,16 @@ snapshots:
       which-pm-runs: 1.1.0
     transitivePeerDependencies:
       - supports-color
+
+  '@astrojs/ts-plugin@1.10.7':
+    dependencies:
+      '@astrojs/compiler': 2.13.1
+      '@astrojs/yaml2ts': 0.2.3
+      '@jridgewell/sourcemap-codec': 1.5.5
+      '@volar/language-core': 2.4.28
+      '@volar/typescript': 2.4.28
+      semver: 7.7.4
+      vscode-languageserver-textdocument: 1.0.12
 
   '@astrojs/yaml2ts@0.2.3':
     dependencies:
