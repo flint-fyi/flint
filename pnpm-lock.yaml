@@ -947,9 +947,6 @@ importers:
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
-      '@flint.fyi/utils':
-        specifier: workspace:^
-        version: link:../utils
       '@flint.fyi/volar-language':
         specifier: workspace:^
         version: link:../volar-language
@@ -990,6 +987,9 @@ importers:
       '@volar/language-core':
         specifier: 2.4.28
         version: 2.4.28
+      svelte:
+        specifier: ^4.0.0 || ^5.0.0
+        version: 5.54.0
       svelte2tsx:
         specifier: ^0.7.52
         version: 0.7.52(svelte@5.54.0)(typescript@5.9.3)
@@ -1000,9 +1000,6 @@ importers:
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
-      svelte:
-        specifier: ^5.54.0
-        version: 5.54.0
       tsdown:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.19.1)(synckit@0.11.12)(typescript@5.9.3)
