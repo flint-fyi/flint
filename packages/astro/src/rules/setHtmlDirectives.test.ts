@@ -10,7 +10,7 @@ let string = 'this string contains some <strong>HTML!!!</strong>'
 ---
 
 <p set:html={string}></p>
-			`,
+`,
 			snapshot: `
 ---
 let string = 'this string contains some <strong>HTML!!!</strong>'
@@ -19,21 +19,21 @@ let string = 'this string contains some <strong>HTML!!!</strong>'
 <p set:html={string}></p>
    ~~~~~~~~
    Avoid using \`set:html\`. Astro does not escape its value.
-			`,
+`,
 		},
 		{
 			code: `
 <div>
 	<p set:html=\`this string contains some <strong>HTML!!!</strong>\`></p>
 </div>
-			`,
+`,
 			snapshot: `
 <div>
 	<p set:html=\`this string contains some <strong>HTML!!!</strong>\`></p>
 	   ~~~~~~~~
 	   Avoid using \`set:html\`. Astro does not escape its value.
 </div>
-			`,
+`,
 		},
 	],
 	valid: [

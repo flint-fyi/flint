@@ -35,7 +35,6 @@
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
-		"@flint.fyi/rule-tester": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

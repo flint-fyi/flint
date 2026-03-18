@@ -372,9 +372,6 @@ importers:
         specifier: ^5.9.0 || ^6.0.0
         version: 5.9.3
     devDependencies:
-      '@flint.fyi/rule-tester':
-        specifier: workspace:^
-        version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.19.1)(synckit@0.11.12)(typescript@5.9.3)

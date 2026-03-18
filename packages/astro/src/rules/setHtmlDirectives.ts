@@ -2,6 +2,7 @@ import type { Node } from "@astrojs/compiler/types";
 import { astroLanguage } from "@flint.fyi/astro-language";
 import { nullThrows } from "@flint.fyi/utils";
 import { reportSourceCode } from "@flint.fyi/volar-language";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(astroLanguage, {
@@ -54,7 +55,9 @@ export default ruleCreator.createRule(astroLanguage, {
 							}
 						}
 						if ("children" in node) {
-							node.children.forEach(visit);
+							for (const child of node.children) {
+								visit(child);
+							}
 						}
 					}
 					for (const child of services.astro.ast.children) {

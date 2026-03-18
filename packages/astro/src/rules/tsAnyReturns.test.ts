@@ -16,7 +16,8 @@ function foo() {
 	return 1 as any
 }
 ---
-			`,
+			
+`,
 			snapshot: `
 ---
 function foo() {
@@ -25,7 +26,8 @@ function foo() {
 	Unsafe return of a value of type \`any\`.
 }
 ---
-			`,
+			
+`,
 		},
 		{
 			code: `
@@ -36,7 +38,8 @@ function foo() {
 		}
 	}
 </div>
-			`,
+			
+`,
 			snapshot: `
 <div>
 	{
@@ -47,7 +50,8 @@ function foo() {
 		}
 	}
 </div>
-			`,
+			
+`,
 		},
 	],
 	valid: [
@@ -60,7 +64,7 @@ function foo() {
 	return MyComponent
 }
 ---
-			`,
+`,
 			files: myComponentFixture,
 		},
 	],
