@@ -1,0 +1,480 @@
+---
+authors:
+  name: auvred
+  title: Maintainer
+  picture: /team/auvred.webp
+  url: https://github.com/auvred
+date: 2026-03-18
+excerpt:
+  The traditional ESLint approach to linting TS-based languages has been a pain for a very long time.
+  It is hard to configure, and it has a lot of limitations that don't allow type-aware rules to work as well as they should.
+  Learn how Flint's architecture solves this once and for all!
+title: Flawless type-aware linting for Astro, Svelte, and Vue
+---
+
+## What are TS-based languages?
+
+React, Solid, and other frameworks that rely only on TSX/JSX and don't introduce any new syntax are easy to lint!
+The TypeScript compiler supports `.tsx` and `.jsx` files natively, so any linter rule that works for `.ts` is capable of linting `.tsx` without any loss in functionality.
+
+However, some frameworks extend pure TypeScript syntax with their language-specific additions.
+This means that files written in such languages can't be linted by TS-only rules as is.
+Moreover, they introduce non-standard file extensions.
+
+Linting these languages from a _syntax-only_ perspective is not that hard.
+We can call the corresponding parser to get the AST and report errors based on AST visiting only.
+
+However, syntax-only linting is often not enough to catch all bugs.
+That's why people seek a way to enable [type-aware linting](https://typescript-eslint.io/blog/typed-linting) for these languages.
+
+What's the current state of type-aware linting for extension languages?
+
+## `no-unsafe-*` rules and embedded JS expressions
+
+This applies to all type-aware rules, but `@typescript-eslint/no-unsafe-*` rules break more often than others.
+The problem is that imports from files with custom extensions aren't supported by TypeScript natively.
+So all imports from `.astro`, `.svelte`, or `.vue` are resolved to `any` when files are parsed using `@typescript-eslint/parser` ([1](https://github.com/ota-meshi/eslint-plugin-astro/issues/348), [2](https://github.com/sveltejs/eslint-plugin-svelte/issues/1150), [3](https://github.com/vuejs/vue-eslint-parser/issues/104)).
+
+This problem is partially solved by [@ota-meshi](https://github.com/ota-meshi)'s [`typescript-eslint-parser-for-extra-files`](https://github.com/ota-meshi/typescript-eslint-parser-for-extra-files).
+Still, for some reason, this approach isn't used widely enough.
+
+Another problem is that embedded JS expressions can't be linted with type information.
+
+Throughout this blogpost, Vue will be used in illustrations and examples, but keep in mind that the exact same logic and rules apply for all other extension languages.
+
+```vue {11-13} /(?<!console.)log/ "hello"
+<script lang="ts" setup>
+	function log(msg: string) {
+		console.log(msg);
+	}
+	const hello = "Hello world!";
+</script>
+
+<template>
+	<button
+		@click="
+			() => {
+				log(hello);
+			}
+		"
+	>
+		Click me!
+	</button>
+</template>
+```
+
+Notice how the `@click` event listener is a JS expression that uses variables declared in `<script>`.
+In order to lint this JS expression _properly_, we need the ability to resolve the types used inside it.
+
+Unfortunately, it's not as simple as concatenating all JS expressions into one big file.
+Embedded JS expressions rely on many language-specific quirks that must be taken into account.
+
+Take, for example, the following code:
+
+```vue "data"
+<template>
+	<MyComponent v-slot="{ data }">
+		{{ data.text }}
+	</MyComponent>
+</template>
+```
+
+`data` comes from `MyComponent`'s `v-slot`.
+To know its type, we must resolve the type of `MyComponent`, extract its `v-slot` type, and so on.
+This is why naive concatenation wouldn't work.
+
+This problem is solved by [@johnsoncodehk](https://github.com/johnsoncodehk)'s [`tsslint`](https://github.com/johnsoncodehk/tsslint) (thanks to Volar.js!).
+However, the first problem (`any`-typed imports) is still present in this project.
+
+## How the TypeScript compiler works with extension languages
+
+At some point, every extension-language author wants to type-check their language with TypeScript.
+There are two main difficulties here:
+
+1. TypeScript should perform type-checking of syntax it's unaware of
+2. TypeScript's module resolution system should be able to resolve custom file extensions (so they are not resolved to `any`)
+
+Even though TypeScript can be extended with [Language Service Plugins](https://github.com/microsoft/TypeScript/wiki/Writing-a-Language-Service-Plugin), these plugins can't add new custom syntax to TypeScript.
+Moreover, plugins extend the _editing experience only_, i.e., they can't be used in CLI workflows, such as `tsc --noEmit`.
+
+That's why extension-language authors were required to invent hacks that could force TypeScript to understand their custom languages.
+
+Several different approaches to this problem exist, but one of them stands out...
+
+## What is Volar.js
+
+It all started as part of the Vue Language Tools initiative!
+
+[Johnson Chu](https://github.com/johnsoncodehk/) developed the outstanding language support for Vue.js, and then they noticed the pattern that could be decoupled from Vue Language Tools to support almost any possible TS-based language.
+
+This is how Volar.js was created.
+The Embedded Language Tooling Framework.
+
+What does "embedded" mean?
+
+Well, take for example a Vue Single File Component (SFC):
+
+```vue
+<script lang="ts" setup>
+	const hello = "Hello world!";
+	function log(msg: string) {
+		console.log(msg);
+	}
+</script>
+
+<template>
+	<button
+		@click="
+			() => {
+				log(hello);
+			}
+		"
+	>
+		Click me!
+	</button>
+</template>
+
+<style lang="css">
+	button {
+		font-size: 30px;
+		color: red;
+	}
+</style>
+```
+
+As you may have noticed, this file contains blocks with three different languages: TypeScript (`<script lang="ts">`), HTML (`<template>`), and CSS (`<style lang="css">`).
+The HTML block also has an embedded TypeScript/JavaScript expression inside it.
+
+The purpose of Volar.js is to provide language tool authors with a high-level framework that handles all the complexities -- such as LSP integration, routing of LSP requests to the appropriate embedded language service, type-checking powered by TypeScript, and much more -- so that they can avoid reinventing this _difficult_ wheel again.
+
+But we're particularly interested in its type-checking abilities.
+
+Volar.js allows language authors to create "language plugins" which serve two important purposes:
+
+- They describe custom file extensions
+- They translate custom language syntax into pure TS code that can be type-checked by the TypeScript compiler
+
+Volar.js ships a nice VS Code extension called [Volar Labs](https://volarjs.dev/core-concepts/volar-labs/).
+It will help us understand how custom syntax is translated into TS code.
+
+![Volar.js virtual generated code](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/volar-virtual-code.webp)
+
+As you may notice, all embedded JS expressions, including code from the `<script>` block, are merged into a single TS file.
+They're also transformed in order to be type-checkable.
+For example, variables declared in `<script setup>` are prefixed with `__VLS_ctx.` when used in `<template>`.
+Thanks to this, the type of every identifier used in the `@click` handler can be resolved to its actual value.
+
+This is how `vue-tsc` type-checks `.vue` files internally!
+
+## How Flint utilizes Volar.js for type-aware linting
+
+The new `@flint.fyi/volar-language` package allows creating extension languages with ease.
+In order to add support for a new extension language, a plugin author must provide:
+
+- A list of custom file extensions
+- Volar.js language plugin
+- Optional extra properties that are passed to the rule context
+
+We will explore three stages of linting.
+
+### Initialization
+
+Initialization of an extension language happens implicitly.
+
+Take a look at the example Flint config:
+
+```typescript "import '@flint.fyi/vue'"
+// flint.config.ts
+import { defineConfig } from "flint";
+import "@flint.fyi/vue";
+
+export default defineConfig({
+	// ...
+});
+```
+
+It may seem that nothing is happening here, however, `import '@flint.fyi/vue'` performs a few very important side-effects.
+
+<div class="only-light">
+
+![@flint.fyi/vue-language initialization sequence diagram](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/language-initialization.webp)
+
+</div>
+
+<div class="only-dark">
+
+![@flint.fyi/vue-language initialization sequence diagram](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/language-initialization-dark.webp)
+
+</div>
+
+Let's walk through these side-effects:
+
+1. `@flint.fyi/vue` imports `@flint.fyi/vue-language`
+1. `@flint.fyi/vue-language` imports `@flint.fyi/volar-language`
+1. `@flint.fyi/volar-language` registers global TS program creation proxy
+1. `@flint.fyi/vue-language` registers `.vue` extension as supported by TS globally
+1. `@flint.fyi/vue-language` registers its Volar.js language plugin in a global list
+
+At this point, every TS program created by `@flint.fyi/typescript-language` supports `.vue` files _natively_.
+Yes, it's that simple!
+
+By importing `@flint.fyi/vue`, you enable _all TypeScript-only rules_ to support `.vue` linting.
+No additional configuration needed!
+
+### TS program creation
+
+`@flint.fyi/typescript-language` uses [TypeScript Project Service](https://typescript-eslint.io/blog/project-service/) internally.
+Thanks to the Project Service, lint rules can request type information even for files that aren't included in `tsconfig.json`.
+
+One of the important things that we considered when we were designing Volar.js integration was zero-config support for extension languages in the Project Service.
+
+Let's walk through how Flint does it.
+
+<div class="only-light">
+
+![TS program creation sequence diagram](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/program-creation.webp)
+
+</div>
+
+<div class="only-dark">
+
+![TS program creation sequence diagram](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/program-creation-dark.webp)
+
+</div>
+
+1. The stateful `@flint.fyi/typescript-language` has a single shared instance of the TS Project Service.
+When `@flint.fyi/typescript-language` gets a request to lint a certain file, it opens this file with Project Service.
+Project Service looks through already opened TS programs and searches for the requested file.
+If no existing file is found, Project Service builds a new TS program.
+1. Thanks to Flint's implicit initialization, all TS program creation requests are proxied through a special Flint hook.
+If this hook finds out that the TS program creation needs to be customized by `@flint.fyi/volar-language`, it relays the request to the Volar.js-specific hook.
+`@flint.fyi/volar-language` has access to all Volar.js language plugins registered globally at the initialization stage.
+It then uses Volar.js' [`proxyCreateProgram`](https://github.com/volarjs/volar.js/blob/44d58aee30d1d476c8ad3f6f5581b288d7185d1e/packages/typescript/lib/node/proxyCreateProgram.ts#L33) utility to enhance the default TS program behavior with custom language support.
+1. In our case, the Volar.js language plugin provided by [the official `@vue/language-core`](https://github.com/vuejs/language-tools/tree/94907be4f056f25867e46a117ab18d2782b425d7/packages/language-core) is registered by `@flint.fyi/vue-language` to be used to customize the TS program creation.
+1. When the TS module resolution algorithm decides that it wants to load a `.vue` file, it relays the request to that Volar.js language plugin.
+This way, all `.vue` files are loaded into the TS program as if they were just `.ts` files.
+1. And finally, `@flint.fyi/typescript-language` gets a newly created fully-functioning TS program.
+
+These TS programs created by the Project Service are later used to perform the actual type-checking and type-aware linting.
+
+### Linting
+
+All Flint rules created from languages based on `@flint.fyi/volar-language` can lint `.ts` files as well.
+
+Rule authors can distinguish between `.ts` and `.vue` files by the presence of the `services.vue` property.
+
+For `.vue` files, `services.vue` provides the Vue SFC AST as well as other handy items.
+
+```typescript /services.vue(?= )/ "sfc"
+ruleCreator.createRule(vueLanguage, {
+	setup(context) {
+		return {
+			visitors: {
+				SourceFile(node, services) {
+					if (services.vue == null) {
+						// we're linting .ts file
+					} else {
+						const { sfc } = services.vue;
+						// we're linting .vue file
+					}
+				},
+			},
+		};
+	},
+});
+```
+
+Since the Vue language in Flint is a superset of the TS language, lint rule authors can use both Vue and TS ASTs in order to perform type-aware linting of Vue `<template>`s!
+
+Another benefit of the TS language being a strict subset of the Vue language is that all TS-only lint rules can work on all JS expressions in `.vue` files even if they weren't intended to work there.
+
+To sum up, both Vue and TS files are linted as if they were TS files.
+However, when rules are run on Vue files, they can optionally access the original Vue file AST, the original source text of the `.vue` file, and so on.
+
+## Flint in action!
+
+Let's explore how all of this works!
+
+We have the following project layout:
+
+```
+package.json
+flint.config.ts
+src/
+	index.ts
+	comp.vue
+```
+
+Now, let's look at `flint.config.ts`:
+
+```typescript "ts.files.all, vue.files.all" {11-17}
+// flint.config.ts
+
+import { defineConfig, ts } from "flint";
+import { vue } from "@flint.fyi/vue";
+
+export default defineConfig({
+	use: [
+		{
+			files: [ts.files.all, vue.files.all],
+			rules: [
+				ts.rules({
+					anyReturns: true,
+					anyCalls: true,
+				}),
+				vue.rules({
+					vForKeys: true,
+				}),
+			],
+		},
+	],
+});
+```
+
+Note how the `ts` and `vue` languages coexist in the config without any cross-language configuration.
+
+We configure both Vue and TS rules to run on `**/*.ts` and `**/*.vue` files.
+
+Next, let's look at `src/index.ts`:
+
+```typescript "return comp" "return anyValue"
+// src/index.ts
+
+import comp from "./comp.vue";
+
+function vueComponent() {
+	return comp;
+}
+
+declare const anyValue: any;
+function any() {
+	return anyValue;
+}
+```
+
+Here, we're interested in the results produced by the [`ts/anyReturns`](/rules/ts/anyreturns) rule.
+It reports `return X` statements where the type of `X` is `any`.
+
+In this file, we have two possible candidates for a report.
+
+1. `return comp` -- returns a Vue component.
+This line is reported by ESLint.
+However, we would like Flint not to report it, since this is a legitimate usage.
+2. `return anyValue` -- returns `any`-typed value.
+This is unsafe, so we would like this return statement to be reported.
+
+Let's proceed to `src/comp.vue`:
+
+```vue "anyFunction()" 'v-for="i in 3"'
+// src/comp.vue
+
+<script lang="ts" setup>
+	declare const anyFunction: any;
+</script>
+
+<template>
+	<button
+		@click="
+			() => {
+				anyFunction();
+			}
+		"
+	>
+		Click me!
+	</button>
+
+	<div v-for="i in 3"></div>
+</template>
+```
+
+Here, we're calling `anyFunction` whose type is `any`; we want [`ts/anyCalls`](/rules/ts/anycalls) rule to catch this unsafe behavior.
+Notice how this function is called from the JS expression embedded in the `<template>`.
+ESLint is unable to catch this.
+
+In addition, we introduced `<div v-for="i in 3"></div>`, which lacks a `:key` directive.
+This is unsafe, so we would like Flint to report it as well.
+
+And finally, let's run Flint:
+
+```ansi
+> pnpm flint --presenter detailed
+
+[90mLinting with [36m[1mflint.config.ts[22m[39m[90m...[39m
+[90m╭[39m[38;2;255;119;119m./[39m[1m[38;2;255;73;73msrc/index.ts[39m[22m
+[90m│ [39m
+[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[39m[38;2;238;170;119m[38;2;255;153;153m[1mts/anyReturns[22m[39m[38;2;238;170;119m[38;2;204;170;170m][39m[38;2;208;140;89m Unsafe return of a value of type `any`.[39m
+[90m│ [39m
+[90m│ [39m[38;2;147;147;147m6:18 [39m[90m│[39m function any() { return anyValue }
+[90m│ [39m[90m     │ [39m[38;2;255;73;73m                 ~~~~~~~~~~~~~~~[39m
+[90m│ [39m
+[90m│ [39m [38;2;174;157;140m[3mReturning a value of type `any` or a similar unsafe type defeats TypeScript's type safety guarantees.[23m[39m
+[90m│ [39m [38;2;174;157;140m[3mThis can allow unexpected types to propagate through your codebase, potentially causing runtime errors.[23m[39m
+[90m│ [39m
+[90m│ [39m [38;2;117;168;185mSuggestion: [38;2;187;204;221m[38;2;137;154;171mEnsure the returned value has a well-defined, specific type.[39m[38;2;187;238;255m[38;2;187;204;221m[39m[38;2;187;238;255m[39m
+[90m│ [39m
+[90m│ [39m [38;2;130;164;130m[3m→ flint.fyi/rules/ts/anyreturns[23m[39m
+[90m│ [39m
+[90m╰[39m
+[90m╭[39m[38;2;255;119;119m./[39m[1m[38;2;255;73;73msrc/comp.vue[39m[22m
+[90m│ [39m
+[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[39m[38;2;238;170;119m[38;2;255;153;153m[1mts/anyCalls[22m[39m[38;2;238;170;119m[38;2;204;170;170m][39m[38;2;208;140;89m Unsafe call of `any` typed value.[39m
+[90m│ [39m
+[90m│ [39m[38;2;147;147;147m6:27 [39m[90m│[39m <button @click="() => { anyFunction() }">Click me!</button>
+[90m│ [39m[90m     │ [39m[38;2;255;73;73m                        ~~~~~~~~~~~[39m
+[90m│ [39m
+[90m│ [39m [38;2;174;157;140m[3mCalling a value typed as `any` or `Function` bypasses TypeScript's type checking.[23m[39m
+[90m│ [39m [38;2;174;157;140m[3mTypeScript cannot verify that the value is actually a function, what parameters it expects, or what it returns.[23m[39m
+[90m│ [39m
+[90m│ [39m [38;2;117;168;185mSuggestion: [38;2;187;204;221m[38;2;137;154;171mEnsure the called value has a well-defined function type.[39m[38;2;187;238;255m[38;2;187;204;221m[39m[38;2;187;238;255m[39m
+[90m│ [39m
+[90m│ [39m [38;2;130;164;130m[3m→ flint.fyi/rules/ts/anycalls[23m[39m
+[90m│ [39m
+[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[39m[38;2;238;170;119m[38;2;255;153;153m[1mts/vForKeys[22m[39m[38;2;238;170;119m[38;2;204;170;170m][39m[38;2;208;140;89m Elements using v-for must include a unique :key to ensure correct reactivity and DOM stability.[39m
+[90m│ [39m
+[90m│ [39m[38;2;147;147;147m 8:8 [39m[90m│[39m <div v-for="i in 3"></div>
+[90m│ [39m[90m     │ [39m[38;2;255;73;73m     ~~~~~[39m
+[90m│ [39m
+[90m│ [39m [38;2;174;157;140m[3mA missing :key can cause unpredictable updates during rendering optimizations.[23m[39m
+[90m│ [39m [38;2;174;157;140m[3mWithout a key, Vue may reuse or reorder elements incorrectly, which breaks expected behavior in transitions and stateful components.[23m[39m
+[90m│ [39m
+[90m│ [39m [38;2;117;168;185mSuggestion: [38;2;187;204;221m[38;2;137;154;171mAlways provide a unique :key based on the v-for item, such as an id.[39m[38;2;187;238;255m[38;2;187;204;221m[39m[38;2;187;238;255m[39m
+[90m│ [39m
+[90m│ [39m [38;2;130;164;130m[3m→ flint.fyi/rules/vue/vforkeys[23m[39m
+[90m│ [39m
+[90m╰[39m
+
+[31m✖ Found [1m3 reports[22m across [1m2 files[22m.[39m
+```
+
+Cool! What do we have here:
+
+1. `function vueComponent() { return comp }` is not reported!
+   The type of the `comp` identifier is resolved to a valid Vue component type.
+It's no longer an `any`.
+2. `function any() { return anyValue }` is reported by [`ts/anyReturns`](/rules/ts/anyreturns).
+This shows us that `return comp` wasn't reported not because the rule is broken.
+In fact, it's functioning as expected, reporting all `any`-typed values returned from functions.
+3. `@click="() => { anyFunction() }"` in Vue `<template>` is reported by the [`ts/anyCalls`](/rules/ts/anycalls) rule.
+We can see that the TS-only rule works in Vue templates just fine!
+4. `<div v-for="i in 3"></div>` is reported by `vue/vForKeys`.
+Vue rules can access the Vue AST and analyze it.
+
+## What's next
+
+This was an early technical preview of what Flint is capable of.
+The next steps for Flint would be:
+
+- Stabilize extension languages support
+- Discover potential edge cases of the Volar.js-based linting approach
+- Implement all Astro, Svelte, and Vue rules in their Flint plugins
+- Consider adding support for other TS-based languages, such as MDX, Ember, and others.
+
+### Supporting Flint Financially
+
+Flint can receive donations on its [Open Collective](https://opencollective.com/flintfyi).
+Your financial support will allow us to pay our volunteer contributors and maintainers to tackle more Flint work.
+As thanks, we'll put you under a sponsors list on the [flint.fyi homepage](/).
+
+### Further Reading
+
+See [What Flint Does Differently](/blog/what-flint-does-differently) for a full list of all other innovative decisions Flint makes.
