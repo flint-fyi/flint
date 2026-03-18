@@ -12,6 +12,8 @@
 		{ "path": "../astro-language" },
 		{ "path": "../core" },
 		{ "path": "../ts" },
-		{ "path": "../typescript-language" }
+		{ "path": "../typescript-language" },
+		{ "path": "../utils" },
+		{ "path": "../volar-language" }
 	]
 }

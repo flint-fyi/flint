@@ -313,6 +313,9 @@ importers:
 
   packages/astro:
     dependencies:
+      '@astrojs/compiler':
+        specifier: ^3.0.1
+        version: 3.0.1
       '@flint.fyi/astro-language':
         specifier: workspace:^
         version: link:../astro-language
@@ -325,6 +328,12 @@ importers:
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
+      '@flint.fyi/utils':
+        specifier: workspace:^
+        version: link:../utils
+      '@flint.fyi/volar-language':
+        specifier: workspace:^
+        version: link:../volar-language
       typescript:
         specifier: ^5.9.3 || ^6.0.0
         version: 5.9.3
