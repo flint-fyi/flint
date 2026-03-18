@@ -359,9 +359,6 @@ importers:
       '@flint.fyi/ts-patch':
         specifier: workspace:^
         version: link:../ts-patch
-      '@flint.fyi/typescript-language':
-        specifier: workspace:^
-        version: link:../typescript-language
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
@@ -372,6 +369,9 @@ importers:
         specifier: ^5.9.0 || ^6.0.0
         version: 5.9.3
     devDependencies:
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
       tsdown:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.19.1)(synckit@0.11.12)(typescript@5.9.3)
