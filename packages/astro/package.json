@@ -28,6 +28,8 @@
 	"dependencies": {
 		"@flint.fyi/astro-language": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/ts": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
 		"typescript": "^5.9.3 || ^6.0.0"
 	},
 	"devDependencies": {

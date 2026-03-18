@@ -11,7 +11,7 @@
 	"references": [
 		{ "path": "../astro-language" },
 		{ "path": "../core" },
-		{ "path": "../typescript-language" },
-		{ "path": "../utils" }
+		{ "path": "../ts" },
+		{ "path": "../typescript-language" }
 	]
 }
