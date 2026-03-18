@@ -37,6 +37,10 @@
 		{ "path": "./packages/ts-patch" },
 		{ "path": "./packages/ts" },
 		{ "path": "./packages/typescript-language" },
+		{ "path": "./packages/utils" },
+		{ "path": "./packages/volar-language" },
+		{ "path": "./packages/vue" },
+		{ "path": "./packages/vue-language" },
 		{ "path": "./packages/yaml-language" },
 		{ "path": "./packages/yaml" }
 	]
