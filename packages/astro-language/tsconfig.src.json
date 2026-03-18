@@ -8,5 +8,10 @@
 	"extends": "../../tsconfig.base.json",
 	"include": ["src"],
 	"exclude": ["src/**/*.test.ts"],
-	"references": [{ "path": "../core" }, { "path": "../utils" }]
+	"references": [
+		{ "path": "../ts-patch" },
+		{ "path": "../typescript-language" },
+		{ "path": "../utils" },
+		{ "path": "../volar-language" }
+	]
 }
