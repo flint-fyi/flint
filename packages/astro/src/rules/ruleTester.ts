@@ -5,7 +5,10 @@ import { describe, it } from "vitest";
 export const ruleTester = new RuleTester({
 	defaults: {
 		fileName: "file.astro",
-		files: createRuleTesterTSConfig(),
+		files: createRuleTesterTSConfig({
+			jsx: "preserve",
+			lib: ["dom", "esnext"],
+		}),
 	},
 	describe,
 	diskBackedFSRoot: import.meta.dirname,
