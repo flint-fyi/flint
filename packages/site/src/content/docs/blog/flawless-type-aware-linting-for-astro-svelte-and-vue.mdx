@@ -15,8 +15,7 @@ title: Flawless type-aware linting for Astro, Svelte, and Vue
 ## What are TS-based languages?
 
 Frontend frameworks often introduce their own languages, which extend basic TypeScript syntax with custom features in order to ease the web-development.
-
-This doesn't apply to React, Solid, and other frameworks that rely only on TSX/JSX and don't introduce any new syntax.
+React, Solid, and similar frameworks are exceptions to this pattern, because they rely only on TSX/JSX and do not introduce new syntax.
 The TypeScript compiler supports `.tsx` and `.jsx` files natively, so any linter rule that works for `.ts` is capable of linting `.tsx` without any loss in functionality.
 
 However, some frameworks extend pure TypeScript syntax with their language-specific additions.
@@ -358,7 +357,7 @@ It reports `return X` statements where the type of `X` is `any`.
 In this file, we have two possible candidates for a report.
 
 1. `return comp` -- returns a Vue component.
-This line is reported by ESLint without `typescript-eslint-parser-for-extra-files`.
+This line is reported by ESLint unless you use `typescript-eslint-parser-for-extra-files`.
 However, we would like Flint not to report it, since this is a legitimate usage.
 2. `return anyValue` -- returns `any`-typed value.
 This is unsafe, so we would like this return statement to be reported.
