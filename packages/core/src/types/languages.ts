@@ -1,6 +1,7 @@
 import type { CommentDirective } from "./directives.ts";
 import type { LinterHost } from "./host.ts";
 import type { CharacterReportRange } from "./ranges.ts";
+import type { NormalizedReportRangeObject } from "./reports.ts";
 import type { FileReport } from "./reports.ts";
 import type { Rule, RuleAbout, RuleDefinition, RuleRuntime } from "./rules.ts";
 import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
@@ -86,6 +87,7 @@ export interface LanguageAbout {
 
 export interface LanguageReport {
 	code?: string;
+	range?: NormalizedReportRangeObject;
 	text: string;
 }
 
