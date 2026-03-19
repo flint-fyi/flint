@@ -37,7 +37,7 @@ This applies to all type-aware rules, but `@typescript-eslint/no-unsafe-*` rules
 The problem is that imports from files with custom extensions aren't supported by TypeScript natively.
 So all imports from [`.astro`](https://github.com/ota-meshi/eslint-plugin-astro/issues/348), [`.svelte`](https://github.com/sveltejs/eslint-plugin-svelte/issues/1150), or [`.vue`](https://github.com/vuejs/vue-eslint-parser/issues/104) files are resolved to `any` when files are parsed using `@typescript-eslint/parser`.
 
-This problem is partially solved by [@ota-meshi](https://github.com/ota-meshi)'s [`typescript-eslint-parser-for-extra-files`](https://github.com/ota-meshi/typescript-eslint-parser-for-extra-files).
+This problem is partially solved by [Yosuke Ota](https://github.com/ota-meshi)'s [`typescript-eslint-parser-for-extra-files`](https://github.com/ota-meshi/typescript-eslint-parser-for-extra-files).
 Surprisingly, this approach doesn't seem to be widely known about.
 
 Another problem is that embedded JS expressions can't be linted with type information.
@@ -85,7 +85,7 @@ Take, for example, the following code:
 To know its type, we must resolve the type of `MyComponent`, extract its `v-slot` type, and so on.
 This is why naive concatenation wouldn't work.
 
-[@johnsoncodehk](https://github.com/johnsoncodehk)'s [`tsslint`](https://github.com/johnsoncodehk/tsslint) used Volar.js to solve this problem, though the first problem (`any`-typed imports) is still present.
+[Johnson Chu](https://github.com/johnsoncodehk)'s [`tsslint`](https://github.com/johnsoncodehk/tsslint) used Volar.js to solve this problem, though the first problem (`any`-typed imports) is still present.
 
 ## How the TypeScript compiler works with TS-based languages
 
@@ -108,8 +108,7 @@ It all started as part of the Vue Language Tools initiative!
 
 [Johnson Chu](https://github.com/johnsoncodehk/) developed the outstanding language support for Vue.js, and then they noticed the pattern that could be decoupled from Vue Language Tools to support almost any possible TS-based language.
 
-This is how Volar.js was created.
-The Embedded Language Tooling Framework.
+This is how Volar.js, the "Embedded Language Tooling Framework", was created.
 
 What does "embedded" mean?
 
@@ -184,7 +183,7 @@ Initialization of a language happens implicitly.
 
 Take a look at the example Flint config:
 
-```typescript "import '@flint.fyi/vue'"
+```typescript 'import "@flint.fyi/vue"'
 // flint.config.ts
 import { defineConfig } from "flint";
 import "@flint.fyi/vue";
@@ -390,7 +389,7 @@ Let's proceed to `src/comp.vue`:
 
 Here, we're calling `anyFunction` whose type is `any`; we want [`ts/anyCalls`](/rules/ts/anycalls) rule to catch this unsafe behavior.
 Notice how this function is called from the JS expression embedded in the `<template>`.
-ESLint is unable to catch this.
+ESLint is unable to catch this without `typescript-eslint-parser-for-extra-files`.
 
 In addition, we introduced `<div v-for="i in 3"></div>`, which lacks a `:key` directive.
 This is unsafe, so we would like Flint to report it as well.
@@ -403,13 +402,13 @@ And finally, let's run Flint:
 [90mLinting with [36m[1mflint.config.ts[22m[39m[90m...[39m
 [90m╭[39m[38;2;255;119;119m./[39m[1m[38;2;255;73;73msrc/index.ts[39m[22m
 [90m│ [39m
-[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[39m[38;2;238;170;119m[38;2;255;153;153m[1mts/anyReturns[22m[39m[38;2;238;170;119m[38;2;204;170;170m][39m[38;2;208;140;89m Unsafe return of a value of type `any`.[39m
+[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[39m[38;2;238;170;119m[38;2;225;103;103m[1mts/anyReturns[22m[39m[38;2;238;170;119m[38;2;204;170;170m][39m[38;2;208;140;89m Unsafe return of a value of type `any`.[39m
 [90m│ [39m
 [90m│ [39m[38;2;147;147;147m6:18 [39m[90m│[39m function any() { return anyValue }
 [90m│ [39m[90m     │ [39m[38;2;255;73;73m                 ~~~~~~~~~~~~~~~[39m
 [90m│ [39m
-[90m│ [39m [38;2;174;157;140m[3mReturning a value of type `any` or a similar unsafe type defeats TypeScript's type safety guarantees.[23m[39m
-[90m│ [39m [38;2;174;157;140m[3mThis can allow unexpected types to propagate through your codebase, potentially causing runtime errors.[23m[39m
+[90m│ [39m [38;2;154;137;120m[3mReturning a value of type `any` or a similar unsafe type defeats TypeScript's type safety guarantees.[23m[39m
+[90m│ [39m [38;2;154;137;120m[3mThis can allow unexpected types to propagate through your codebase, potentially causing runtime errors.[23m[39m
 [90m│ [39m
 [90m│ [39m [38;2;117;168;185mSuggestion: [38;2;187;204;221m[38;2;137;154;171mEnsure the returned value has a well-defined, specific type.[39m[38;2;187;238;255m[38;2;187;204;221m[39m[38;2;187;238;255m[39m
 [90m│ [39m
@@ -418,25 +417,25 @@ And finally, let's run Flint:
 [90m╰[39m
 [90m╭[39m[38;2;255;119;119m./[39m[1m[38;2;255;73;73msrc/comp.vue[39m[22m
 [90m│ [39m
-[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[39m[38;2;238;170;119m[38;2;255;153;153m[1mts/anyCalls[22m[39m[38;2;238;170;119m[38;2;204;170;170m][39m[38;2;208;140;89m Unsafe call of `any` typed value.[39m
+[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[39m[38;2;238;170;119m[38;2;225;103;103m[1mts/anyCalls[22m[39m[38;2;238;170;119m[38;2;204;170;170m][39m[38;2;208;140;89m Unsafe call of `any` typed value.[39m
 [90m│ [39m
 [90m│ [39m[38;2;147;147;147m6:27 [39m[90m│[39m <button @click="() => { anyFunction() }">Click me!</button>
 [90m│ [39m[90m     │ [39m[38;2;255;73;73m                        ~~~~~~~~~~~[39m
 [90m│ [39m
-[90m│ [39m [38;2;174;157;140m[3mCalling a value typed as `any` or `Function` bypasses TypeScript's type checking.[23m[39m
-[90m│ [39m [38;2;174;157;140m[3mTypeScript cannot verify that the value is actually a function, what parameters it expects, or what it returns.[23m[39m
+[90m│ [39m [38;2;154;137;120m[3mCalling a value typed as `any` or `Function` bypasses TypeScript's type checking.[23m[39m
+[90m│ [39m [38;2;154;137;120m[3mTypeScript cannot verify that the value is actually a function, what parameters it expects, or what it returns.[23m[39m
 [90m│ [39m
 [90m│ [39m [38;2;117;168;185mSuggestion: [38;2;187;204;221m[38;2;137;154;171mEnsure the called value has a well-defined function type.[39m[38;2;187;238;255m[38;2;187;204;221m[39m[38;2;187;238;255m[39m
 [90m│ [39m
 [90m│ [39m [38;2;130;164;130m[3m→ flint.fyi/rules/ts/anycalls[23m[39m
 [90m│ [39m
-[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[39m[38;2;238;170;119m[38;2;255;153;153m[1mts/vForKeys[22m[39m[38;2;238;170;119m[38;2;204;170;170m][39m[38;2;208;140;89m Elements using v-for must include a unique :key to ensure correct reactivity and DOM stability.[39m
+[90m│ [39m[38;2;238;170;119m[38;2;204;170;170m[[39m[38;2;238;170;119m[38;2;225;103;103m[1mts/vForKeys[22m[39m[38;2;238;170;119m[38;2;204;170;170m][39m[38;2;208;140;89m Elements using v-for must include a unique :key to ensure correct reactivity and DOM stability.[39m
 [90m│ [39m
 [90m│ [39m[38;2;147;147;147m 8:8 [39m[90m│[39m <div v-for="i in 3"></div>
 [90m│ [39m[90m     │ [39m[38;2;255;73;73m     ~~~~~[39m
 [90m│ [39m
-[90m│ [39m [38;2;174;157;140m[3mA missing :key can cause unpredictable updates during rendering optimizations.[23m[39m
-[90m│ [39m [38;2;174;157;140m[3mWithout a key, Vue may reuse or reorder elements incorrectly, which breaks expected behavior in transitions and stateful components.[23m[39m
+[90m│ [39m [38;2;154;137;120m[3mA missing :key can cause unpredictable updates during rendering optimizations.[23m[39m
+[90m│ [39m [38;2;154;137;120m[3mWithout a key, Vue may reuse or reorder elements incorrectly, which breaks expected behavior in transitions and stateful components.[23m[39m
 [90m│ [39m
 [90m│ [39m [38;2;117;168;185mSuggestion: [38;2;187;204;221m[38;2;137;154;171mAlways provide a unique :key based on the v-for item, such as an id.[39m[38;2;187;238;255m[38;2;187;204;221m[39m[38;2;187;238;255m[39m
 [90m│ [39m
@@ -463,12 +462,15 @@ Vue rules can access the Vue AST and analyze it.
 ## What's next
 
 This was an early technical preview of what Flint is capable of.
-The next steps for Flint would be:
+The next steps for Flint are:
 
 - Stabilize TS-based languages support
 - Discover potential edge cases of the Volar.js-based linting approach
 - Implement all Astro, Svelte, and Vue rules in their Flint plugins
 - Consider adding support for other TS-based languages, such as MDX, Ember, and others.
+
+In the meantime, you can try Flint by running `npx flint`.
+You can read more about how to use Flint [here](/about).
 
 ### Supporting Flint Financially
 
