@@ -14,7 +14,9 @@ title: Flawless type-aware linting for Astro, Svelte, and Vue
 
 ## What are TS-based languages?
 
-React, Solid, and other frameworks that rely only on TSX/JSX and don't introduce any new syntax are easy to lint!
+Frontend frameworks often introduce their own languages, which extend basic TypeScript syntax with custom features in order to ease the web-development.
+
+This doesn't apply to React, Solid, and other frameworks that rely only on TSX/JSX and don't introduce any new syntax.
 The TypeScript compiler supports `.tsx` and `.jsx` files natively, so any linter rule that works for `.ts` is capable of linting `.tsx` without any loss in functionality.
 
 However, some frameworks extend pure TypeScript syntax with their language-specific additions.
@@ -27,7 +29,7 @@ We can call the corresponding parser to get the AST and report errors based on A
 However, syntax-only linting is often not enough to catch all bugs.
 That's why people seek a way to enable [type-aware linting](https://typescript-eslint.io/blog/typed-linting) for these languages.
 
-What's the current state of type-aware linting for extension languages?
+What's the current state of type-aware linting for TS-based languages?
 
 ## `no-unsafe-*` rules and embedded JS expressions
 
@@ -40,7 +42,7 @@ Surprisingly, this approach doesn't seem to be widely known about.
 
 Another problem is that embedded JS expressions can't be linted with type information.
 
-Throughout this blogpost, Vue will be used in illustrations and examples, but keep in mind that the exact same logic and rules apply for all other extension languages.
+Throughout this blogpost, Vue will be used in illustrations and examples, but keep in mind that the exact same logic and rules apply for all other TS-based languages.
 
 ```vue {11-13} /(?<!console.)log/ "hello"
 <script lang="ts" setup>
@@ -85,9 +87,9 @@ This is why naive concatenation wouldn't work.
 
 [@johnsoncodehk](https://github.com/johnsoncodehk)'s [`tsslint`](https://github.com/johnsoncodehk/tsslint) used Volar.js to solve this problem, though the first problem (`any`-typed imports) is still present.
 
-## How the TypeScript compiler works with extension languages
+## How the TypeScript compiler works with TS-based languages
 
-At some point, every extension-language author wants to type-check their language with TypeScript.
+At some point, every TS-based-language author wants to type-check their language with TypeScript.
 There are two main difficulties here:
 
 1. TypeScript should perform type-checking of syntax it's unaware of
@@ -96,7 +98,7 @@ There are two main difficulties here:
 Even though TypeScript can be extended with [Language Service Plugins](https://github.com/microsoft/TypeScript/wiki/Writing-a-Language-Service-Plugin), these plugins can't add new custom syntax to TypeScript.
 Moreover, plugins extend the _editing experience only_, i.e., they can't be used in CLI workflows, such as `tsc --noEmit`.
 
-That's why extension-language authors were required to invent hacks that could force TypeScript to understand their custom languages.
+That's why TS-based-language authors were required to invent hacks that could force TypeScript to understand their custom languages.
 
 Several different approaches to this problem exist, but one of them stands out...
 
@@ -167,8 +169,8 @@ This is how `vue-tsc` type-checks `.vue` files internally!
 
 ## How Flint utilizes Volar.js for type-aware linting
 
-The new `@flint.fyi/volar-language` package allows creating extension languages with ease.
-In order to add support for a new extension language, a plugin author must provide:
+The new `@flint.fyi/volar-language` package allows creating TS-based languages with ease.
+In order to add support for a new language, a plugin author must provide:
 
 - A list of custom file extensions
 - Volar.js language plugin
@@ -178,7 +180,7 @@ We will explore three stages of linting.
 
 ### Initialization
 
-Initialization of an extension language happens implicitly.
+Initialization of a language happens implicitly.
 
 Take a look at the example Flint config:
 
@@ -225,7 +227,7 @@ No additional configuration needed!
 `@flint.fyi/typescript-language` uses [TypeScript Project Service](https://typescript-eslint.io/blog/project-service/) internally.
 Thanks to the Project Service, lint rules can request type information even for files that aren't included in `tsconfig.json`.
 
-One of the important things that we considered when we were designing Volar.js integration was zero-config support for extension languages in the Project Service.
+One of the important things that we considered when we were designing Volar.js integration was zero-config support for TS-based languages in the Project Service.
 
 Let's walk through how Flint does it.
 
@@ -396,7 +398,7 @@ This is unsafe, so we would like Flint to report it as well.
 And finally, let's run Flint:
 
 ```ansi
-> pnpm flint --presenter detailed
+> npx flint --presenter detailed
 
 [90mLinting with [36m[1mflint.config.ts[22m[39m[90m...[39m
 [90m╭[39m[38;2;255;119;119m./[39m[1m[38;2;255;73;73msrc/index.ts[39m[22m
@@ -463,7 +465,7 @@ Vue rules can access the Vue AST and analyze it.
 This was an early technical preview of what Flint is capable of.
 The next steps for Flint would be:
 
-- Stabilize extension languages support
+- Stabilize TS-based languages support
 - Discover potential edge cases of the Volar.js-based linting approach
 - Implement all Astro, Svelte, and Vue rules in their Flint plugins
 - Consider adding support for other TS-based languages, such as MDX, Ember, and others.
