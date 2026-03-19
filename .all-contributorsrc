@@ -133,7 +133,8 @@
       "contributions": [
         "doc",
         "code",
-        "maintenance"
+        "maintenance",
+        "bug"
       ]
     },
     {
