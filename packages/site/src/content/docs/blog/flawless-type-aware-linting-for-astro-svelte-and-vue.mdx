@@ -358,7 +358,7 @@ It reports `return X` statements where the type of `X` is `any`.
 In this file, we have two possible candidates for a report.
 
 1. `return comp` -- returns a Vue component.
-This line is reported by ESLint.
+This line is reported by ESLint without `typescript-eslint-parser-for-extra-files`.
 However, we would like Flint not to report it, since this is a legitimate usage.
 2. `return anyValue` -- returns `any`-typed value.
 This is unsafe, so we would like this return statement to be reported.
@@ -389,7 +389,7 @@ Let's proceed to `src/comp.vue`:
 
 Here, we're calling `anyFunction` whose type is `any`; we want [`ts/anyCalls`](/rules/ts/anycalls) rule to catch this unsafe behavior.
 Notice how this function is called from the JS expression embedded in the `<template>`.
-ESLint is unable to catch this without `typescript-eslint-parser-for-extra-files`.
+ESLint is unable to catch this.
 
 In addition, we introduced `<div v-for="i in 3"></div>`, which lacks a `:key` directive.
 This is unsafe, so we would like Flint to report it as well.
