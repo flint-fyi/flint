@@ -1,6 +1,5 @@
 import { parse } from "@astrojs/compiler/sync";
 import type { RootNode } from "@astrojs/compiler/types";
-// eslint-disable-next-line no-restricted-syntax
 import { getLanguagePlugin } from "@astrojs/ts-plugin/dist/language.js";
 import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
 import { createVolarBasedLanguage } from "@flint.fyi/volar-language";

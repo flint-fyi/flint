@@ -23,7 +23,7 @@ const importAlphabet = Alphabet.generateRecommendedAlphabet()
 // https://typescript-eslint.io/troubleshooting/typed-linting/performance#importextensions-enforcing-extensions-are-not-used
 function banJsImportExtension() {
 	const message = `Unexpected use of .js file extension (.js) in import; please use .ts`;
-	const literalAttributeMatcher = `Literal[value=/\\.js$/]`;
+	const literalAttributeMatcher = `Literal[value=/\\..+\\.js$/]`;
 	return [
 		{
 			message,
