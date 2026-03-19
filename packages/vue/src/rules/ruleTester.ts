@@ -5,7 +5,11 @@ import { describe, it } from "vitest";
 export const ruleTester = new RuleTester({
 	defaults: {
 		fileName: "file.vue",
-		files: createRuleTesterTSConfig(),
+		files: createRuleTesterTSConfig({
+			jsx: "preserve",
+			jsxImportSource: "vue",
+			lib: ["dom", "esnext"],
+		}),
 	},
 	describe,
 	diskBackedFSRoot: import.meta.dirname,
