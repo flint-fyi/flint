@@ -33,10 +33,10 @@ What's the current state of type-aware linting for extension languages?
 
 This applies to all type-aware rules, but `@typescript-eslint/no-unsafe-*` rules break more often than others.
 The problem is that imports from files with custom extensions aren't supported by TypeScript natively.
-So all imports from `.astro`, `.svelte`, or `.vue` are resolved to `any` when files are parsed using `@typescript-eslint/parser` ([1](https://github.com/ota-meshi/eslint-plugin-astro/issues/348), [2](https://github.com/sveltejs/eslint-plugin-svelte/issues/1150), [3](https://github.com/vuejs/vue-eslint-parser/issues/104)).
+So all imports from [`.astro`](https://github.com/ota-meshi/eslint-plugin-astro/issues/348), [`.svelte`](https://github.com/sveltejs/eslint-plugin-svelte/issues/1150), or [`.vue`](https://github.com/vuejs/vue-eslint-parser/issues/104) files are resolved to `any` when files are parsed using `@typescript-eslint/parser`.
 
 This problem is partially solved by [@ota-meshi](https://github.com/ota-meshi)'s [`typescript-eslint-parser-for-extra-files`](https://github.com/ota-meshi/typescript-eslint-parser-for-extra-files).
-Still, for some reason, this approach isn't used widely enough.
+Surprisingly, this approach doesn't seem to be widely known about.
 
 Another problem is that embedded JS expressions can't be linted with type information.
 
@@ -83,8 +83,7 @@ Take, for example, the following code:
 To know its type, we must resolve the type of `MyComponent`, extract its `v-slot` type, and so on.
 This is why naive concatenation wouldn't work.
 
-This problem is solved by [@johnsoncodehk](https://github.com/johnsoncodehk)'s [`tsslint`](https://github.com/johnsoncodehk/tsslint) (thanks to Volar.js!).
-However, the first problem (`any`-typed imports) is still present in this project.
+[@johnsoncodehk](https://github.com/johnsoncodehk)'s [`tsslint`](https://github.com/johnsoncodehk/tsslint) used Volar.js to solve this problem, though the first problem (`any`-typed imports) is still present.
 
 ## How the TypeScript compiler works with extension languages
 
@@ -101,7 +100,7 @@ That's why extension-language authors were required to invent hacks that could f
 
 Several different approaches to this problem exist, but one of them stands out...
 
-## What is Volar.js
+## Volar.js
 
 It all started as part of the Vue Language Tools initiative!
 
@@ -193,7 +192,7 @@ export default defineConfig({
 });
 ```
 
-It may seem that nothing is happening here, however, `import '@flint.fyi/vue'` performs a few very important side-effects.
+It may seem that nothing is happening here; however, `import '@flint.fyi/vue'` performs a few very important side-effects.
 
 <div class="only-light">
 
