@@ -42,6 +42,7 @@ export async function runConfigFixing(
 		// Why read file many times when only a few will do the trick?
 		// Or, at least it should all be virtual...
 		// https://github.com/flint-fyi/flint/issues/73
+		// flint-disable-next-line performance/loopAwaits
 		const lintResults = await runConfig(configDefinition, host, {
 			cacheLocation,
 			ignoreCache,
@@ -50,6 +51,7 @@ export async function runConfigFixing(
 
 		log("Applying fixes from file results.");
 
+		// flint-disable-next-line performance/loopAwaits
 		const fixedFilePaths = await applyChangesToFiles(
 			host,
 			lintResults.filesResults,

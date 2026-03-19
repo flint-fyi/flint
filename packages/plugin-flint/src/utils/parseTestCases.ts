@@ -9,8 +9,8 @@ export function parseTestCase(
 	node: AST.Expression,
 ): ParsedTestCase | undefined {
 	if (
-		node.kind == SyntaxKind.StringLiteral ||
-		node.kind == SyntaxKind.NoSubstitutionTemplateLiteral
+		node.kind === SyntaxKind.StringLiteral ||
+		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral
 	) {
 		return {
 			code: node.text,
@@ -21,7 +21,7 @@ export function parseTestCase(
 		};
 	}
 
-	if (node.kind != SyntaxKind.ObjectLiteralExpression) {
+	if (node.kind !== SyntaxKind.ObjectLiteralExpression) {
 		return undefined;
 	}
 
@@ -30,8 +30,8 @@ export function parseTestCase(
 		"code",
 
 		(node) =>
-			node.kind == SyntaxKind.StringLiteral ||
-			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
+			node.kind === SyntaxKind.StringLiteral ||
+			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
 	if (!code) {
 		return undefined;
@@ -41,25 +41,25 @@ export function parseTestCase(
 		node.properties,
 		"fileName",
 		(node) =>
-			node.kind == SyntaxKind.StringLiteral ||
-			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
+			node.kind === SyntaxKind.StringLiteral ||
+			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
 	const files = findProperty(
 		node.properties,
 		"files",
-		(node) => node.kind == SyntaxKind.ObjectLiteralExpression,
+		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
 	const name = findProperty(
 		node.properties,
 		"name",
 		(node) =>
-			node.kind == SyntaxKind.StringLiteral ||
-			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
+			node.kind === SyntaxKind.StringLiteral ||
+			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
 	const options = findProperty(
 		node.properties,
 		"options",
-		(node) => node.kind == SyntaxKind.ObjectLiteralExpression,
+		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
 
 	return {
@@ -90,8 +90,8 @@ export function parseTestCaseInvalid(
 		node.properties,
 		"code",
 		(node) =>
-			node.kind == SyntaxKind.StringLiteral ||
-			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
+			node.kind === SyntaxKind.StringLiteral ||
+			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
 	if (!code) {
 		return undefined;
@@ -101,32 +101,32 @@ export function parseTestCaseInvalid(
 		node.properties,
 		"fileName",
 		(node) =>
-			node.kind == SyntaxKind.StringLiteral ||
-			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
+			node.kind === SyntaxKind.StringLiteral ||
+			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
 	const files = findProperty(
 		node.properties,
 		"files",
-		(node) => node.kind == SyntaxKind.ObjectLiteralExpression,
+		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
 	const name = findProperty(
 		node.properties,
 		"name",
 		(node) =>
-			node.kind == SyntaxKind.StringLiteral ||
-			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
+			node.kind === SyntaxKind.StringLiteral ||
+			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
 	const options = findProperty(
 		node.properties,
 		"options",
-		(node) => node.kind == SyntaxKind.ObjectLiteralExpression,
+		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
 	const snapshot = findProperty(
 		node.properties,
 		"snapshot",
 		(node) =>
-			node.kind == SyntaxKind.StringLiteral ||
-			node.kind == SyntaxKind.NoSubstitutionTemplateLiteral,
+			node.kind === SyntaxKind.StringLiteral ||
+			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
 	);
 	if (!snapshot) {
 		return undefined;

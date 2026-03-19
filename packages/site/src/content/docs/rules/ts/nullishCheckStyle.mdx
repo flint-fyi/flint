@@ -1,0 +1,257 @@
+---
+description: "Enforces consistent use of strict equality or loose equality operators for nullish checks."
+title: "equalityOperators"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="nullishCheckStyle" />
+
+When testing a value for being a nullish value (`null` or `undefined`), one can test for each nullish value separately using the strict equality operators (`===`/`!==`):
+
+```ts
+foo === null; // true if foo is null
+bar !== undefined; // true if bar is anything other undefined
+```
+
+Or, one can conveniently test for both at the same time, using the loose equality operators (`==`/`!=`):
+
+```ts
+foo == null; // true if foo is null OR undefined
+foo == undefined; // same as previous line
+
+foo != null; // true if foo is NEITHER null NOR undefined
+foo != undefined; // same as previous line
+```
+
+This rule enforces that a consistent style is used for `null`/`undefined` checks.
+
+:::note
+This rule only handles comparisons where the equality operators are used as part of a null check.
+See the [equalityOperators](/rules/ts/equalityoperators) rule for linting `==`/`!=` in general.
+:::
+
+## Options
+
+### nullishComparisonStrictness
+
+This option has three possible values: `"double-equals"` (default), `ignore`, and `triple-equals`.
+
+#### `double-equals`
+
+This enforces that null/undefined checks are done using the loose equality operators, i.e. `== null`/`== undefined`.
+
+`"double-equals"` is recommended since most code does not need to care about whether a nullish value is specifically `null` or specifically `undefined`.
+This mirrors the behavior of the built-in language features such as `?.` and `??`, which do not distinguish between nullish values.
+Testing for both values at once also means that null/undefined checks are less likely to be impacted when refactoring.
+
+Examples of code with the `"double-equals"` option:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+```ts
+if (x === null) {
+	// code...
+}
+```
+
+```ts
+if (foo !== undefined) {
+	// code...
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (x == null) {
+	// code...
+}
+```
+
+```ts
+if (x != null) {
+	// code...
+}
+```
+
+</TabItem>
+</Tabs>
+
+#### `"triple-equals"`
+
+This option enforces that the strict equality operators are used for null/undefined checks.
+
+Examples of code with the `"triple-equals"` option:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (x == null) {
+	// code...
+}
+```
+
+```ts
+if (foo != undefined) {
+	// code...
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (x === null || x === undefined) {
+	// code...
+}
+```
+
+```ts
+if (foo !== null && foo !== undefined) {
+	// code...
+}
+```
+
+```ts
+if (bar === null) {
+	// code...
+}
+```
+
+</TabItem>
+</Tabs>
+
+#### `"ignore"`
+
+This option does not enforce any preference between `==` and `===` in null/undefined checks.
+
+Examples of valid code with this option:
+
+```ts
+if (x == null) {
+}
+
+if (foo === null) {
+}
+```
+
+### `looseNullishComparisonStyle`
+
+**Type:** `"prefer-null" | "prefer-undefined"| "ignore"`
+**Default:** `"prefer-null"`
+
+Since `x == null` and `x == undefined` are equivalent, this option allows enforcing that the same choice is used consistently.
+
+#### `"prefer-null"`
+
+This is the default simply because `== null` is 5 characters shorter than `== undefined`.
+
+Examples of code with `{ looseNullishComparisonStyle: "prefer-null" }`:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (x == undefined) {
+	// code...
+}
+```
+
+```ts
+if (foo != undefined) {
+	// code...
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (x == null) {
+	// code...
+}
+```
+
+```ts
+if (foo != null) {
+	// code...
+}
+```
+
+</TabItem>
+</Tabs>
+
+#### `"prefer-undefined"`
+
+Examples of code with `{ looseNullishComparisonStyle: "prefer-null" }`:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (x == null) {
+	// code...
+}
+```
+
+```ts
+if (foo != null) {
+	// code...
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (x == undefined) {
+	// code...
+}
+```
+
+```ts
+if (foo != undefined) {
+	// code...
+}
+```
+
+</TabItem>
+</Tabs>
+
+#### `"ignore"`
+
+Examples of **correct** code with `{ looseNullishComparisonStyle: "ignore" }`:
+
+```ts
+if (x == undefined) {
+}
+```
+
+```ts
+if (foo == null) {
+}
+```
+
+## When Not To Use It
+
+If you do not care about ensuring null/undefined checks are performed consistently in your codebase, you can safely disable this rule.
+
+## Related Rules
+
+- [equalityOperators](/rules/ts/equalityoperators) - Enforces consistent equality operator usage for scenarios other than null/undefined checks.
+
+## Further Reading
+
+- [MDN: Equality comparisons and sameness](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness)
+- [MDN: Strict equality (===)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality)
+- [MDN: Equality (==)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="nullishCheckStyle" />

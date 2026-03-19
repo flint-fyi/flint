@@ -32,6 +32,7 @@
 		"@eslint/js": "catalog:dev",
 		"@eslint/markdown": "catalog:dev",
 		"@flint.fyi/node": "workspace:^",
+		"@flint.fyi/performance": "workspace:^",
 		"@flint.fyi/plugin-flint": "workspace:^",
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",

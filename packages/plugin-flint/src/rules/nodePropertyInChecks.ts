@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				BinaryExpression(node, { sourceFile, typeChecker }) {
 					if (
-						node.operatorToken.kind == SyntaxKind.InKeyword &&
+						node.operatorToken.kind === SyntaxKind.InKeyword &&
 						isTSNode(node.right, typeChecker)
 					) {
 						context.report({

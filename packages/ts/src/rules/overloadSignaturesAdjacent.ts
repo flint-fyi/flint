@@ -58,7 +58,7 @@ function getMemberMethod(
 
 		case SyntaxKind.FunctionDeclaration: {
 			const name = member.name?.text;
-			if (name == undefined) {
+			if (name == null) {
 				return undefined;
 			}
 			return {
@@ -193,7 +193,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			for (const member of members) {
 				const method = getMemberMethod(member);
-				if (method == undefined) {
+				if (method == null) {
 					lastMethod = undefined;
 					continue;
 				}

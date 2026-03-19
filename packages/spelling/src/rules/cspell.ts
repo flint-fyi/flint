@@ -1,8 +1,7 @@
 import type { Suggestion } from "@flint.fyi/core";
 import { textLanguage } from "@flint.fyi/text-language";
 import { parseJsonSafe } from "@flint.fyi/utils";
-import type { DocumentValidator } from "cspell-lib";
-import { suggestionsForWord } from "cspell-lib";
+import { type DocumentValidator, suggestionsForWord } from "cspell-lib";
 import path from "node:path";
 
 import { createDocumentValidator } from "./createDocumentValidator.ts";
@@ -59,83 +58,100 @@ export default ruleCreator.createRule(textLanguage, {
 		return {
 			dependencies: ["cspell.json"],
 			teardown: async () => {
-				for (const { documentValidatorTask, filePath, text } of fileTasks) {
-					const documentValidator = await documentValidatorTask;
-					if (!documentValidator) {
-						continue;
-					}
-
-					const issues = documentValidator.checkText(
-						[0, text.length],
-						undefined,
-						undefined,
-					);
-
-					const finalizedSettings = documentValidator.getFinalizedDocSettings();
-
-					for (const issue of issues) {
-						const issueRange = {
-							begin: issue.offset,
-							end: issue.offset + (issue.length ?? issue.text.length),
+				const tasks = await Promise.all(
+					fileTasks.map(async (task) => {
+						return {
+							documentValidator: await task.documentValidatorTask,
+							task,
 						};
+					}),
+				);
 
-						const suggestionsResults = await suggestionsForWord(issue.text, {
-							...finalizedSettings,
-							numSuggestions: 1,
-						});
-						const firstSuggestion = suggestionsResults.suggestions[0];
-						const isValidSuggestion =
-							firstSuggestion &&
-							!firstSuggestion.forbidden &&
-							!firstSuggestion.noSuggest;
+				await Promise.all(
+					tasks.map(async ({ documentValidator, task: { filePath, text } }) => {
+						if (!documentValidator) {
+							return [];
+						}
 
-						const replacement = isValidSuggestion
-							? (firstSuggestion.wordAdjustedToMatchCase ??
-								firstSuggestion.word)
-							: undefined;
+						const issues = documentValidator.checkText(
+							[0, text.length],
+							undefined,
+							undefined,
+						);
 
-						const data: Record<string, string> = {
-							word: issue.text,
-							...(replacement && { replacement }),
-						};
+						const finalizedSettings =
+							documentValidator.getFinalizedDocSettings();
 
-						const [configText, config] = await Promise.all([
-							configTextPromise,
-							configPromise,
-						]);
+						return await Promise.all(
+							issues.map(async (issue) => {
+								const issueRange = {
+									begin: issue.offset,
+									end: issue.offset + (issue.length ?? issue.text.length),
+								};
 
-						const words = config.words ?? [];
-						const suggestions: Suggestion[] = [
-							{
-								files: {
-									"cspell.json": words.includes(issue.text)
-										? []
-										: [
-												{
-													range: {
-														begin: 0,
-														end: configText?.length ?? 0,
-													},
-													text: JSON.stringify({
-														...config,
-														words: [...words, issue.text],
-													}),
-												},
-											],
-								},
-								id: "addWordToWords",
-							},
-						];
+								const suggestionsResults = await suggestionsForWord(
+									issue.text,
+									{
+										...finalizedSettings,
+										numSuggestions: 1,
+									},
+								);
 
-						context.report({
-							data,
-							filePath,
-							message: replacement ? "issueWithReplacement" : "issue",
-							range: issueRange,
-							suggestions,
-						});
-					}
-				}
+								const firstSuggestion = suggestionsResults.suggestions[0];
+								const isValidSuggestion =
+									firstSuggestion &&
+									!firstSuggestion.forbidden &&
+									!firstSuggestion.noSuggest;
+
+								const replacement = isValidSuggestion
+									? (firstSuggestion.wordAdjustedToMatchCase ??
+										firstSuggestion.word)
+									: undefined;
+
+								const data: Record<string, string> = {
+									word: issue.text,
+									...(replacement && { replacement }),
+								};
+
+								const [configText, config] = await Promise.all([
+									configTextPromise,
+									configPromise,
+								]);
+
+								const words = config.words ?? [];
+								const suggestions: Suggestion[] = [
+									{
+										files: {
+											"cspell.json": words.includes(issue.text)
+												? []
+												: [
+														{
+															range: {
+																begin: 0,
+																end: configText?.length ?? 0,
+															},
+															text: JSON.stringify({
+																...config,
+																words: [...words, issue.text],
+															}),
+														},
+													],
+										},
+										id: "addWordToWords",
+									},
+								];
+
+								context.report({
+									data,
+									filePath,
+									message: replacement ? "issueWithReplacement" : "issue",
+									range: issueRange,
+									suggestions,
+								});
+							}),
+						);
+					}),
+				);
 			},
 			visitors: {
 				file: (text, { filePath, filePathAbsolute }) => {

@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const seen = new Set<string>();
 
 			for (const testCase of testCases) {
-				if (testCase.name == undefined || !testCase.nodes.name) {
+				if (testCase.name == null || !testCase.nodes.name) {
 					continue;
 				}
 
