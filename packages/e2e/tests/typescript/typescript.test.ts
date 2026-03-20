@@ -17,7 +17,7 @@ describe("typescript", () => {
 
 			<red>✖ Found <bold>1 report</bold> across <bold>1 file</bold>.</fg>
 			<red></fg>
-			<dim>Finished in <time> on 2 files with 136 rules.</fg>
+			<dim>Finished in <time> on 2 files with 137 rules.</fg>
 			<dim></fg>"
 		`);
 	});
