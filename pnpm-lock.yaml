@@ -368,6 +368,9 @@ importers:
       '@flint.fyi/volar-language':
         specifier: workspace:^
         version: link:../volar-language
+      typescript:
+        specifier: ^5.9.0 || ^6.0.0
+        version: 5.9.3
     devDependencies:
       '@flint.fyi/typescript-language':
         specifier: workspace:^
