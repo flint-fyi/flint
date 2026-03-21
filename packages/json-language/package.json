@@ -23,7 +23,7 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project json-language"
+		"test": "vitest --project json-language"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",

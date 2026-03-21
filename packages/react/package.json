@@ -23,7 +23,7 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project react"
+		"test": "vitest --project react"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",

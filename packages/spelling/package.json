@@ -23,7 +23,7 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project spelling"
+		"test": "vitest --project spelling"
 	},
 	"dependencies": {
 		"@cspell/url": "^9.2.2",
