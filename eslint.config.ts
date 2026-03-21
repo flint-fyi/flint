@@ -102,17 +102,18 @@ export default defineConfig(
 				"error",
 				{ allowNumber: true },
 			],
+			eqeqeq: ["error", "always", { null: "ignore" }],
 			"jsdoc/check-tag-names": [
 				"error",
 				// https://tsdoc.org/pages/tags/remarks
 				{ definedTags: ["remarks"], typed: true },
 			],
 			"n/no-missing-import": "off",
+
 			"n/no-unsupported-features/node-builtins": [
 				"error",
 				{ allowExperimental: true },
 			],
-
 			// Stylistic concerns that don't interfere with Prettier
 			"logical-assignment-operators": [
 				"error",

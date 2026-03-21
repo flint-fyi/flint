@@ -1,4 +1,4 @@
-import { nullThrows } from "@flint.fyi/utils";
+import { nullThrows, pathKey } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 
@@ -34,6 +34,10 @@ export async function readFromCache(
 	}
 
 	const cache = decodeResult.data;
+	const caseSensitiveFS = host.isCaseSensitiveFS();
+	const allFilePathKeys = new Set(
+		Array.from(allFilePaths, (filePath) => pathKey(filePath, caseSensitiveFS)),
+	);
 
 	// The config file and package.json are hardcoded to always be dependencies of all files
 	for (const filePath of [configFilePath, "package.json"]) {
@@ -50,6 +54,7 @@ export async function readFromCache(
 			cache.configs[filePath],
 			"Cache timestamp is expected to be present",
 		);
+		// flint-disable-next-line performance/loopAwaits
 		const timestampTouched = await host.getFileTouchTime(filePath);
 		if (timestampTouched > timestampCached) {
 			log(
@@ -80,7 +85,7 @@ export async function readFromCache(
 
 		if (fileCached.dependencies) {
 			for (const dependency of fileCached.dependencies) {
-				if (!allFilePaths.has(dependency)) {
+				if (!allFilePathKeys.has(pathKey(dependency, caseSensitiveFS))) {
 					log(
 						"Directly invalidating cache for: %s due to dependency %s not being in linted files cache",
 						filePath,
@@ -93,6 +98,7 @@ export async function readFromCache(
 		}
 
 		const timestampCached = fileCached.timestamp;
+		// flint-disable-next-line performance/loopAwaits
 		const timestampTouched = await host.getFileTouchTime(filePath);
 		if (timestampTouched > timestampCached) {
 			log(
@@ -112,7 +118,7 @@ export async function readFromCache(
 	for (const [filePath, stored] of cached) {
 		if (stored.dependencies) {
 			for (const dependency of stored.dependencies) {
-				fileDependents.get(dependency).add(filePath);
+				fileDependents.get(pathKey(dependency, caseSensitiveFS)).add(filePath);
 			}
 		}
 	}
@@ -121,7 +127,7 @@ export async function readFromCache(
 	const transitivelyImpactedByChanges = Array.from(filePathsToLint);
 
 	for (const filePath of transitivelyImpactedByChanges) {
-		const dependents = fileDependents.get(filePath);
+		const dependents = fileDependents.get(pathKey(filePath, caseSensitiveFS));
 		for (const dependent of dependents) {
 			if (!transitivelyCheckedForChanges.has(dependent)) {
 				log("Transitively invalidating cache for: %s", dependent);

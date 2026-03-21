@@ -112,7 +112,8 @@
       "contributions": [
         "code",
         "maintenance",
-        "ideas"
+        "ideas",
+        "doc"
       ]
     },
     {
@@ -133,7 +134,8 @@
       "contributions": [
         "doc",
         "code",
-        "maintenance"
+        "maintenance",
+        "bug"
       ]
     },
     {

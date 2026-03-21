@@ -89,6 +89,20 @@ export default {
 			// https://github.com/webpro-nl/knip/issues/248
 			ignoreDependencies: ["@volar/language-core!"],
 		},
+		"packages/vue": {
+			ignoreDependencies: [
+				// Needed for compiler output in tests
+				"vue",
+			],
+			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
+		},
+		"packages/vue-language": {
+			ignoreDependencies: [
+				// It's bugging IDK.
+				"@flint.fyi/core!",
+			],
+			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
+		},
 		"packages/yaml": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
