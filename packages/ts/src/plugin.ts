@@ -85,6 +85,7 @@ import enumMemberLiterals from "./rules/enumMemberLiterals.ts";
 import enumValueConsistency from "./rules/enumValueConsistency.ts";
 import enumValueDuplicates from "./rules/enumValueDuplicates.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
+import equalityOperators from "./rules/equalityOperators.ts";
 import errorMessages from "./rules/errorMessages.ts";
 import errorSubclassProperties from "./rules/errorSubclassProperties.ts";
 import errorUnnecessaryCaptureStackTraces from "./rules/errorUnnecessaryCaptureStackTraces.ts";
@@ -143,6 +144,7 @@ import nonNullAssertedNullishCoalesces from "./rules/nonNullAssertedNullishCoale
 import nonNullAssertedOptionalChains from "./rules/nonNullAssertedOptionalChains.ts";
 import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
+import nullishCheckStyle from "./rules/nullishCheckStyle.ts";
 import nullishCoalescingOperators from "./rules/nullishCoalescingOperators.ts";
 import numberMethodRanges from "./rules/numberMethodRanges.ts";
 import numberStaticMethods from "./rules/numberStaticMethods.ts";
@@ -390,6 +392,7 @@ export const ts = createPlugin({
 		enumValueConsistency,
 		enumValueDuplicates,
 		equalityOperatorNegations,
+		equalityOperators,
 		errorMessages,
 		errorSubclassProperties,
 		errorUnnecessaryCaptureStackTraces,
@@ -448,6 +451,7 @@ export const ts = createPlugin({
 		nonNullAssertedOptionalChains,
 		nonNullAssertionPlacement,
 		nonOctalDecimalEscapes,
+		nullishCheckStyle,
 		nullishCoalescingOperators,
 		numberMethodRanges,
 		numberStaticMethods,

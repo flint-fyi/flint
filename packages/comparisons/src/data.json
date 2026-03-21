@@ -10272,7 +10272,8 @@
 		"flint": {
 			"name": "equalityOperators",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"notes": "Default ESLint's \"smart\" to true",
 		"oxlint": [
@@ -13773,6 +13774,14 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-eql-null.html"
 			}
 		]
+	},
+	{
+		"flint": {
+			"name": "nullishCheckStyle",
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
+		}
 	},
 	{
 		"eslint": [
