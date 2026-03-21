@@ -1,15 +1,15 @@
-name: 🐛 General Bug
-description: Report a non-rule-specific bug with Flint, its integrations, or its plugins
+name: ✈️ General Feature
+description: Request that a new non-rule-specific feature be added or an existing feature improved to Flint, its integrations, or its plugins
 
-title: "🐛 Bug: <short description of the bug>"
+title: "🚀 Feature: <short description of the feature>"
 
 labels:
-  - "type: bug"
+  - "type: feature"
 
 body:
   - attributes:
       description: If any of these required steps are not taken, we may not be able to review your issue. Help us to help you!
-      label: Bug Report Checklist
+      label: Feature Request Checklist
       options:
         - label: I am using the latest published version of all Flint packages.
           required: true
@@ -17,20 +17,12 @@ body:
           required: true
     type: checkboxes
   - attributes:
-      description: What did you expect to happen?
-      label: Expected
-    type: textarea
-    validations:
-      required: true
-  - attributes:
-      description: What happened instead?
-      label: Actual
-    id: actual
+      description: What did you expect to be able to do?
+      label: Overview
     type: textarea
     validations:
       required: true
   - attributes:
       description: Any additional info you'd like to provide.
       label: Additional Info
-    id: additional_info
     type: textarea

@@ -1,7 +1,7 @@
-name: 🚀 Lint Rule Feature
-description: Request a feature be added to a lint rule provided by Flint
+name: 🏭 New Lint Rule
+description: Request a new lint rule be added to a plugin provided by Flint
 
-title: "🚀 Feature: [plugin/ruleName] <short description of the feature>"
+title: "🚀 Feature: [plugin] Create rule to <short description of the new lint rule>"
 
 labels:
   - "type: feature"
@@ -20,7 +20,7 @@ body:
     id: plugin
     attributes:
       label: Plugin
-      description: Which plugin does the rule belong to?
+      description: Which plugin would the rule belong to?
       options:
         - Astro
         - Browser
@@ -45,10 +45,20 @@ body:
       required: true
   - type: textarea
     attributes:
-      description: What did you expect to be able to do?
+      description: What do you want the lint rule to do?
       label: Overview
     validations:
       required: true
+  - type: textarea
+    attributes:
+      description: Example code that the rule should allow.
+      label: Reproduction
+      render: TypeScript
+  - type: textarea
+    attributes:
+      description: Example code the rule should report on.
+      label: Reproduction
+      render: TypeScript
   - type: textarea
     attributes:
       description: Any additional info you'd like to provide.
