@@ -36,8 +36,8 @@ export const svelteLanguage = createVolarBasedLanguage<SvelteServices>(
 				const diagnostics: LanguageDiagnostics = [];
 				try {
 					ast = parse(sourceText, {
-						modern: true,
 						loose: true,
+						modern: true,
 					});
 				} catch (error) {
 					diagnostics.push(

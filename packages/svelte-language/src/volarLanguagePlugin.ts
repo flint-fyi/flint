@@ -102,7 +102,7 @@ export function errorToLanguageDiagnostic(
 	fileName: string,
 	error: unknown,
 ): LanguageFileDiagnostic {
-	if (typeof error != "object" || error == null) {
+	if (typeof error !== "object" || error == null) {
 		return {
 			text: `${fileName} - Unknown error`,
 		};
