@@ -32,28 +32,30 @@ export function volarLanguagePlugin(
 			: (options.host ?? ts.sys).getCurrentDirectory();
 	return {
 		createVirtualCode(fileName, languageId, snapshot) {
-			if (languageId === "svelte") {
-				return {
-					codegenStacks: [],
-					embeddedCodes: [
-						getEmbeddedTsCode(
-							ts,
-							cwd,
-							fileName,
-							snapshot.getText(0, snapshot.getLength()),
-						),
-					],
-					id: "root",
-					languageId,
-					mappings: [],
-					snapshot,
-				};
+			if (languageId !== "svelte") {
+				return undefined;
 			}
+			return {
+				codegenStacks: [],
+				embeddedCodes: [
+					getEmbeddedTsCode(
+						ts,
+						cwd,
+						fileName,
+						snapshot.getText(0, snapshot.getLength()),
+					),
+				],
+				id: "root",
+				languageId,
+				mappings: [],
+				snapshot,
+			};
 		},
 		getLanguageId(fileName) {
 			if (fileName.endsWith(".svelte")) {
 				return "svelte";
 			}
+			return undefined;
 		},
 		typescript: {
 			extraFileExtensions: [
@@ -69,10 +71,11 @@ export function volarLanguagePlugin(
 						return {
 							code,
 							extension: ".tsx",
-							scriptKind: 4,
+							scriptKind: 4 satisfies ts.ScriptKind.TSX,
 						};
 					}
 				}
+				return undefined;
 			},
 		},
 		updateVirtualCode(fileName, virtualCode, snapshot) {
