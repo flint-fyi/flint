@@ -16,7 +16,7 @@ export default ruleCreator.createRule(svelteLanguage, {
 		preset: "logical",
 	},
 	messages: {
-		// TODO: support import("@flint.fyi/volar-language").reportSourceCode in flint/unusedMessageIds
+		// TODO: https://github.com/flint-fyi/flint/issues/2470
 		// flint-disable-next-line flint/unusedMessageIds
 		rawSpecialElement: {
 			primary:
