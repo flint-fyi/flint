@@ -13,7 +13,7 @@ excerpt:
 title: Full Type-Aware Linting for Astro, Svelte, and Vue
 ---
 
-## What are TS-based languages?
+## What are TypeScript-based languages?
 
 Frontend frameworks often introduce their own languages that extend basic TypeScript syntax with custom features.
 JSX-based frameworks like React and Solid.js natively work with the TypeScript compiler's `.jsx` and `.tsx` file support.
@@ -26,21 +26,21 @@ However, syntax-only linting is often not enough to catch all bugs.
 [Type-aware linting](https://typescript-eslint.io/blog/typed-linting) allows for significantly more powerful lint rules -- but requires more deep integrations with TypeScript tooling.
 
 We're excited to say that Flint is the first modern linter with full support for typed linting on extension languages.
-Flint uses Volar.js to integrate TypeScript with extension languages, giving lint rules to full type information even in embedded JavaScript expressions within language-specific files.
+Flint uses Volar.js to integrate TypeScript with extension languages, giving lint rules access to full type information even in embedded JavaScript expressions within language-specific files.
 This represents a big leap forward in linting for these languages.
 
-## `no-unsafe-*` rules and embedded JS expressions
+## `no-unsafe-*` rules and embedded JavaScript expressions
 
 This applies to all type-aware rules, but `@typescript-eslint/no-unsafe-*` rules break more often than others.
 The problem is that imports from files with custom extensions aren't supported by TypeScript natively.
 So all imports from [`.astro`](https://github.com/ota-meshi/eslint-plugin-astro/issues/348), [`.svelte`](https://github.com/sveltejs/eslint-plugin-svelte/issues/1150), or [`.vue`](https://github.com/vuejs/vue-eslint-parser/issues/104) files are resolved to `any` when files are parsed using `@typescript-eslint/parser`.
 
 :::note
-[Yosuke Ota](https://github.com/ota-meshi)'s [`typescript-eslint-parser-for-extra-files`](https://github.com/ota-meshi/typescript-eslint-parser-for-extra-files) made progress on providing type information on language files in ESLint.
+[Yosuke Ota](https://github.com/ota-meshi)'s [`typescript-eslint-parser-for-extra-files`](https://github.com/ota-meshi/typescript-eslint-parser-for-extra-files) made progress on providing type information on TypeScript-based language files in ESLint.
 See the library's documentation for more issues and excellent prior art.
 :::
 
-One major user-facing symptom of this problem is that embedded JavaScript expressions in extension languages can't be linted with type information.
+Another major user-facing problem is that embedded JavaScript expressions in extension languages can't be linted with type information.
 For example, traditional linters would not be able to determine type information in the following Vue snippet to know whether the `log(hello);` call is safe.
 
 :::note
@@ -69,7 +69,7 @@ Vue is used in illustrations and examples throughout this post, but similar logi
 ```
 
 Notice how the `@click` event listener is a JavaScript expression that uses variables declared in `<script>`.
-In order to lint this JS expression _properly_, we need the ability to resolve the types used inside it.
+In order to lint this JavaScript expression _properly_, we need the ability to resolve the types used inside it.
 
 Resolving types in extension languages is a difficult technical challenge.
 Unfortunately, it's not solveable by straightforward techniques like concatenating all JavaScript expressions into one big file.
@@ -93,7 +93,7 @@ This is why naive concatenation wouldn't work.
 
 ## Type Checking TypeScript-Based Extension Languages
 
-At some point, every TS-based-language author wants to type-check their language with TypeScript.
+At some point, every TypeScript-based-language author wants to type-check their language with TypeScript.
 There are two main difficulties here:
 
 1. Getting TypeScript to perform type-checking of syntax it's unaware of (so they do not get skipped or throw errors)
@@ -102,7 +102,7 @@ There are two main difficulties here:
 Even though TypeScript can be extended with [Language Service Plugins](https://github.com/microsoft/TypeScript/wiki/Writing-a-Language-Service-Plugin), these plugins can't add new custom syntax to TypeScript.
 Moreover, plugins extend the _editing experience only_, i.e., they can't be used in CLI workflows, such as `tsc --noEmit`.
 
-That's why TS-based-language authors were required to invent hacks that could force TypeScript to understand their custom languages.
+That's why TypeScript-based-language authors were required to invent hacks that could force TypeScript to understand their custom languages.
 
 Several different approaches to this problem exist, but one of them stands out...
 
@@ -110,7 +110,7 @@ Several different approaches to this problem exist, but one of them stands out..
 
 It all started as part of the Vue Language Tools initiative!
 
-[Johnson Chu](https://github.com/johnsoncodehk/) developed the outstanding language support for Vue.js, and then they noticed the pattern that could be decoupled from Vue Language Tools to support almost any possible TS-based language.
+[Johnson Chu](https://github.com/johnsoncodehk/) developed the outstanding language support for Vue.js, and then they noticed the pattern that could be decoupled from Vue Language Tools to support almost any possible TypeScript-based language.
 
 This is how Volar.js, the "Embedded Language Tooling Framework", was created.
 
@@ -156,17 +156,17 @@ But we're particularly interested in its type-checking abilities.
 Volar.js allows language authors to create "language plugins" which serve two important purposes:
 
 - They describe custom file extensions
-- They translate custom language syntax into pure TS code that can be type-checked by the TypeScript compiler
+- They translate custom language syntax into pure TypeScript code that can be type-checked by the TypeScript compiler
 
 ### How Volar.js Works
 
 :::tip
 Volar.js ships a nice VS Code extension called [Volar Labs](https://volarjs.dev/core-concepts/volar-labs/).
-It's helpful in showing how custom syntax is translated into TS code.
+It's helpful in showing how custom syntax is translated into TypeScript code.
 :::
 
 Here's a screenshot showing a `file.vue` source file on the left, compared to the generated `script_ts.ts` equivalent on the right.
-All of `file.vue`'s embedded JavaScript expressions, including code from its `<script>` block, are merged into that single TS file.
+All of `file.vue`'s embedded JavaScript expressions, including code from its `<script>` block, are merged into that single TypeScript file.
 
 ![Volar.js virtual generated code](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/volar-virtual-code.webp)
 
@@ -178,7 +178,7 @@ This is how `vue-tsc` type-checks `.vue` files internally!
 
 ## How Flint utilizes Volar.js for type-aware linting
 
-The new `@flint.fyi/volar-language` package allows creating TS-based languages with ease.
+The new `@flint.fyi/volar-language` package allows creating TypeScript-based languages with ease.
 In order to add support for a new language, a plugin author must provide:
 
 - A list of custom file extensions
@@ -221,51 +221,51 @@ Let's walk through these side-effects:
 
 1. `@flint.fyi/vue` imports `@flint.fyi/vue-language`
 1. `@flint.fyi/vue-language` imports `@flint.fyi/volar-language`
-1. `@flint.fyi/volar-language` registers global TS program creation proxy
-1. `@flint.fyi/vue-language` registers `.vue` extension as supported by TS globally
+1. `@flint.fyi/volar-language` registers global TypeScript program creation proxy
+1. `@flint.fyi/vue-language` registers `.vue` extension as supported by TypeScript globally
 1. `@flint.fyi/vue-language` registers its Volar.js language plugin in a global list
 
-At this point, every TS program created by `@flint.fyi/typescript-language` supports `.vue` files _natively_.
+At this point, every TypeScript program created by `@flint.fyi/typescript-language` supports `.vue` files _natively_.
 Yes, it's that simple!
 
 By importing `@flint.fyi/vue`, you enable _all TypeScript-only rules_ to support `.vue` linting.
 No additional configuration needed!
 
-### TS program creation
+### TypeScript program creation
 
 `@flint.fyi/typescript-language` uses [TypeScript Project Service](https://typescript-eslint.io/blog/project-service/) internally.
 Thanks to the Project Service, lint rules can request type information even for files that aren't included in `tsconfig.json`.
 
-One of the important things that we considered when we were designing Volar.js integration was zero-config support for TS-based languages in the Project Service.
+One of the important things that we considered when we were designing Volar.js integration was zero-config support for TypeScript-based languages in the Project Service.
 
 Let's walk through how Flint does it.
 
 <div class="only-light">
 
-![TS program creation sequence diagram](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/program-creation.webp)
+![TypeScript program creation sequence diagram](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/program-creation.webp)
 
 </div>
 
 <div class="only-dark">
 
-![TS program creation sequence diagram](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/program-creation-dark.webp)
+![TypeScript program creation sequence diagram](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/program-creation-dark.webp)
 
 </div>
 
-1. The stateful `@flint.fyi/typescript-language` has a single shared instance of the TS Project Service.
+1. The stateful `@flint.fyi/typescript-language` has a single shared instance of the TypeScript Project Service.
 When `@flint.fyi/typescript-language` gets a request to lint a certain file, it opens this file with Project Service.
-Project Service looks through already opened TS programs and searches for the requested file.
-If no existing file is found, Project Service builds a new TS program.
-1. Thanks to Flint's implicit initialization, all TS program creation requests are proxied through a special Flint hook.
-If this hook finds out that the TS program creation needs to be customized by `@flint.fyi/volar-language`, it relays the request to the Volar.js-specific hook.
+Project Service looks through already opened TypeScript programs and searches for the requested file.
+If no existing file is found, Project Service builds a new TypeScript program.
+1. Thanks to Flint's implicit initialization, all TypeScript program creation requests are proxied through a special Flint hook.
+If this hook finds out that the TypeScript program creation needs to be customized by `@flint.fyi/volar-language`, it relays the request to the Volar.js-specific hook.
 `@flint.fyi/volar-language` has access to all Volar.js language plugins registered globally at the initialization stage.
-It then uses Volar.js' [`proxyCreateProgram`](https://github.com/volarjs/volar.js/blob/44d58aee30d1d476c8ad3f6f5581b288d7185d1e/packages/typescript/lib/node/proxyCreateProgram.ts#L33) utility to enhance the default TS program behavior with custom language support.
-1. In our case, the Volar.js language plugin provided by [the official `@vue/language-core`](https://github.com/vuejs/language-tools/tree/94907be4f056f25867e46a117ab18d2782b425d7/packages/language-core) is registered by `@flint.fyi/vue-language` to be used to customize the TS program creation.
-1. When the TS module resolution algorithm decides that it wants to load a `.vue` file, it relays the request to that Volar.js language plugin.
-This way, all `.vue` files are loaded into the TS program as if they were just `.ts` files.
-1. And finally, `@flint.fyi/typescript-language` gets a newly created fully-functioning TS program.
+It then uses Volar.js' [`proxyCreateProgram`](https://github.com/volarjs/volar.js/blob/44d58aee30d1d476c8ad3f6f5581b288d7185d1e/packages/typescript/lib/node/proxyCreateProgram.ts#L33) utility to enhance the default TypeScript program behavior with custom language support.
+1. In our case, the Volar.js language plugin provided by [the official `@vue/language-core`](https://github.com/vuejs/language-tools/tree/94907be4f056f25867e46a117ab18d2782b425d7/packages/language-core) is registered by `@flint.fyi/vue-language` to be used to customize the TypeScript program creation.
+1. When the TypeScript module resolution algorithm decides that it wants to load a `.vue` file, it relays the request to that Volar.js language plugin.
+This way, all `.vue` files are loaded into the TypeScript program as if they were just `.ts` files.
+1. And finally, `@flint.fyi/typescript-language` gets a newly created fully-functioning TypeScript program.
 
-These TS programs created by the Project Service are later used to perform the actual type-checking and type-aware linting.
+These TypeScript programs created by the Project Service are later used to perform the actual type-checking and type-aware linting.
 
 ### Linting
 
@@ -294,11 +294,11 @@ ruleCreator.createRule(vueLanguage, {
 });
 ```
 
-Since the Vue language in Flint is a superset of the TS language, lint rule authors can use both Vue and TS ASTs in order to perform type-aware linting of Vue `<template>`s!
+Since the Vue language in Flint is a superset of the TypeScript language, lint rule authors can use both Vue and TypeScript ASTs in order to perform type-aware linting of Vue `<template>`s!
 
-Another benefit of the TS language being a strict subset of the Vue language is that all TS-only lint rules can work on all JS expressions in `.vue` files even if they weren't intended to work there.
+Another benefit of the TypeScript language being a strict subset of the Vue language is that all TypeScript-only lint rules can work on all JavaScript expressions in `.vue` files even if they weren't intended to work there.
 
-To sum up, both Vue and TS files are linted as if they were TS files.
+To sum up, both Vue and TypeScript files are linted as if they were TypeScript files.
 However, when rules are run on Vue files, they can optionally access the original Vue file AST, the original source text of the `.vue` file, and so on.
 
 ## Flint in action!
@@ -343,7 +343,7 @@ export default defineConfig({
 
 Note how the `ts` and `vue` languages coexist in the config without any cross-language configuration.
 
-We configure both Vue and TS rules to run on `**/*.ts` and `**/*.vue` files.
+We configure both Vue and TypeScript rules to run on `**/*.ts` and `**/*.vue` files.
 
 Next, let's look at `src/index.ts`:
 
@@ -398,7 +398,7 @@ Let's proceed to `src/comp.vue`:
 ```
 
 Here, we're calling `anyFunction` whose type is `any`; we want [`ts/anyCalls`](/rules/ts/anycalls) rule to catch this unsafe behavior.
-Notice how this function is called from the JS expression embedded in the `<template>`.
+Notice how this function is called from the JavaScript expression embedded in the `<template>`.
 ESLint is unable to catch this.
 
 In addition, we introduced `<div v-for="i in 3"></div>`, which lacks a `:key` directive.
@@ -465,7 +465,7 @@ It's no longer an `any`.
 This shows us that `return comp` wasn't reported not because the rule is broken.
 In fact, it's functioning as expected, reporting all `any`-typed values returned from functions.
 3. `@click="() => { anyFunction() }"` in Vue `<template>` is reported by the [`ts/anyCalls`](/rules/ts/anycalls) rule.
-We can see that the TS-only rule works in Vue templates just fine!
+We can see that the TypeScript-only rule works in Vue templates just fine!
 4. `<div v-for="i in 3"></div>` is reported by `vue/vForKeys`.
 Vue rules can access the Vue AST and analyze it.
 
@@ -477,7 +477,7 @@ We're excited to show off this early technical preview of the novel architecture
 The next steps for Flint's languages support are:
 
 - Implement all Astro, Svelte, and Vue rules in their Flint plugins
-- Consider adding support for other TS-based languages, such as MDX, Ember, and others.
+- Consider adding support for other TypeScript-based languages, such as MDX, Ember, and others.
 
 In the meantime, you can try Flint by running `npx flint`.
 You can read more about how to use Flint in [Flint > About](/about).
