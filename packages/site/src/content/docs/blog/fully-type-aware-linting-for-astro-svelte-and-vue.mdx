@@ -170,13 +170,13 @@ All of `file.vue`'s embedded JavaScript expressions, including code from its `<s
 
 <div class="only-light">
 
-![Volar.js virtual generated code](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/volar-virtual-code.webp)
+![Volar.js virtual generated code](../../../assets/blog/fully-type-aware-linting-for-astro-svelte-and-vue/volar-virtual-code.webp)
 
 </div>
 
 <div class="only-dark">
 
-![Volar.js virtual generated code](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/volar-virtual-code-dark.webp)
+![Volar.js virtual generated code](../../../assets/blog/fully-type-aware-linting-for-astro-svelte-and-vue/volar-virtual-code-dark.webp)
 
 </div>
 
@@ -184,7 +184,7 @@ Transforming the file in this way allows its variables to be fully type-checkabl
 For example, variables declared in `<script setup>` are prefixed with `__VLS_ctx.` when used in `<template>`.
 Thanks to this, the type of every identifier used in the `@click` handler can be resolved to its actual value in tooling such as type-aware linting.
 
-This is how `vue-tsc` type-checks `.vue` files internally!
+This is how [`vue-tsc`](https://github.com/vuejs/language-tools/tree/94907be4f056f25867e46a117ab18d2782b425d7/packages/tsc) type-checks `.vue` files internally!
 
 ## How Flint utilizes Volar.js for type-aware linting
 
@@ -217,13 +217,13 @@ It may seem that nothing is happening here; however, `import '@flint.fyi/vue'` p
 
 <div class="only-light">
 
-![@flint.fyi/vue-language initialization sequence diagram](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/language-initialization.webp)
+![@flint.fyi/vue-language initialization sequence diagram](../../../assets/blog/fully-type-aware-linting-for-astro-svelte-and-vue/language-initialization.webp)
 
 </div>
 
 <div class="only-dark">
 
-![@flint.fyi/vue-language initialization sequence diagram](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/language-initialization-dark.webp)
+![@flint.fyi/vue-language initialization sequence diagram](../../../assets/blog/fully-type-aware-linting-for-astro-svelte-and-vue/language-initialization-dark.webp)
 
 </div>
 
@@ -252,13 +252,13 @@ Let's walk through how Flint does it.
 
 <div class="only-light">
 
-![TypeScript program creation sequence diagram](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/program-creation.webp)
+![TypeScript program creation sequence diagram](../../../assets/blog/fully-type-aware-linting-for-astro-svelte-and-vue/program-creation.webp)
 
 </div>
 
 <div class="only-dark">
 
-![TypeScript program creation sequence diagram](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/program-creation-dark.webp)
+![TypeScript program creation sequence diagram](../../../assets/blog/fully-type-aware-linting-for-astro-svelte-and-vue/program-creation-dark.webp)
 
 </div>
 
