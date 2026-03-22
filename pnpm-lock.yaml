@@ -846,6 +846,9 @@ importers:
       '@astrojs/starlight':
         specifier: catalog:site
         version: 0.37.7(astro@5.18.0(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.32.0)(rollup@4.59.0)(typescript@5.9.3)(yaml@2.8.2))
+      '@flint.fyi/astro':
+        specifier: workspace:^
+        version: link:../astro
       '@flint.fyi/browser':
         specifier: workspace:^
         version: link:../browser

@@ -170,7 +170,8 @@
 		"flint": {
 			"name": "setHtmlDirectives",
 			"plugin": "astro",
-			"preset": "security"
+			"preset": "security",
+			"status": "implemented"
 		}
 	},
 	{
