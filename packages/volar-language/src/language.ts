@@ -8,8 +8,8 @@ import {
 	getColumnAndLineOfPosition,
 	isSuggestionForFiles,
 	type Language,
-	type LanguageDiagnostics,
 	type LanguageFileCacheImpacts,
+	type LanguageReports,
 	type NormalizedReportRangeObject,
 	type RuleContext,
 	type RuleReport,
@@ -20,7 +20,7 @@ import { setTSProgramCreationProxy } from "@flint.fyi/ts-patch";
 import {
 	type AST,
 	type Checker,
-	convertTypeScriptDiagnosticToLanguageFileDiagnostic,
+	convertTypeScriptDiagnosticToLanguageReport,
 	extractDirectivesFromTypeScriptFile,
 	type ExtractedDirective,
 	NodeSyntaxKinds,
@@ -95,7 +95,7 @@ type VolarBasedLanguageCreateFile<FileServices extends object> = (
 	directives?: ExtractedDirective[];
 	extraContext?: FileServices;
 	firstStatementPosition: number;
-	getDiagnostics?: () => LanguageDiagnostics;
+	getLanguageReports?: () => LanguageReports;
 	reports?: FileReport[];
 };
 
@@ -274,7 +274,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 		directives,
 		extraContext,
 		firstStatementPosition,
-		getDiagnostics,
+		getLanguageReports,
 		reports,
 	} = createFile({
 		data,
@@ -367,10 +367,10 @@ setVolarCreateFile((data, program, sourceFile) => {
 				visit(sourceFile.endOfFileToken);
 			},
 			// TODO: cache
-			getDiagnostics() {
+			getLanguageReports() {
 				return [
 					...ts.getPreEmitDiagnostics(program, sourceFile).map((diagnostic) =>
-						convertTypeScriptDiagnosticToLanguageFileDiagnostic({
+						convertTypeScriptDiagnosticToLanguageReport({
 							...diagnostic,
 							// For some unknown reason, Volar doesn't set file.text to sourceText
 							// when preventLeadingOffset is true, so we have to do it ourselves
@@ -383,7 +383,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 								: diagnostic.file,
 						}),
 					),
-					...(getDiagnostics?.() ?? []),
+					...(getLanguageReports?.() ?? []),
 				];
 			},
 		},

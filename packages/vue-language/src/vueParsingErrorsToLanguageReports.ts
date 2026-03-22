@@ -1,10 +1,10 @@
-import type { LanguageDiagnostics } from "@flint.fyi/core";
+import type { LanguageReports } from "@flint.fyi/core";
 import type { CompilerError } from "@vue/compiler-dom";
 
-export function vueParsingErrorsToLanguageDiagnostics(
+export function vueParsingErrorsToLanguageReports(
 	fileName: string,
 	errors: (CompilerError | SyntaxError)[],
-): LanguageDiagnostics {
+): LanguageReports {
 	return errors.map((error) => {
 		let code = "VUE";
 		let loc = "";

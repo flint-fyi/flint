@@ -12,7 +12,7 @@ import {
 } from "@vue/language-core";
 
 import { extractTemplateDirectives } from "./extractTemplateDirectives.ts";
-import { vueParsingErrorsToLanguageDiagnostics } from "./vueParsingErrorsToLanguageDiagnostics.ts";
+import { vueParsingErrorsToLanguageReports } from "./vueParsingErrorsToLanguageReports.ts";
 
 setTSExtraSupportedExtensions([".vue"]);
 
@@ -104,8 +104,8 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 					firstStatementPosition:
 						sfcAst.children.find((c) => c.type !== NodeTypes.COMMENT)?.loc.start
 							.offset ?? sourceText.length,
-					getDiagnostics() {
-						return vueParsingErrorsToLanguageDiagnostics(
+					getLanguageReports() {
+						return vueParsingErrorsToLanguageReports(
 							sourceFile.fileName.startsWith("./")
 								? sourceFile.fileName.slice(2)
 								: // TODO: use LinterHost.getCurrentDirectory()

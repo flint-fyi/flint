@@ -55,19 +55,19 @@ export async function runCliOnce(
 	};
 	const ignoreCache = !!values["cache-ignore"];
 
-	const skipDiagnostics = !!values["skip-diagnostics"];
+	const skipLanguageReports = !!values["skip-language-reports"];
 
 	const lintResults = await (values.fix
 		? runConfigFixing(configDefinition, host, {
 				cacheLocation: values["cache-location"],
 				ignoreCache,
 				requestedSuggestions: new Set(values["fix-suggestions"]),
-				skipDiagnostics,
+				skipLanguageReports,
 			})
 		: runConfig(configDefinition, host, {
 				cacheLocation: values["cache-location"],
 				ignoreCache,
-				skipDiagnostics,
+				skipLanguageReports,
 			}));
 
 	// TODO: Eventually, it'd be nice to move everything fully in-memory.
@@ -89,7 +89,7 @@ export async function runCliOnce(
 	}
 
 	for (const fileResults of lintResults.filesResults.values()) {
-		if (fileResults.diagnostics.length || fileResults.reports.length) {
+		if (fileResults.languageReports.length || fileResults.reports.length) {
 			return { exitCode: 1, lintResults };
 		}
 	}

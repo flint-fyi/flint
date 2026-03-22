@@ -39,7 +39,7 @@ export async function writeToCache(
 					{
 						...omitEmpty({
 							dependencies: Array.from(fileResults.dependencies).sort(),
-							diagnostics: fileResults.diagnostics,
+							languageReports: fileResults.languageReports,
 							reports: fileResults.reports,
 						}),
 						timestamp,
