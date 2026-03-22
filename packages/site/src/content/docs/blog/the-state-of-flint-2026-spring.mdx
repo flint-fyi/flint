@@ -36,7 +36,7 @@ While we expect to continue to spot iterate on it to support future features, we
 
 Flint's biggest core piece of advancement is first-class support for "cross-file" linting: rules that may pull in information from multiple files at a time.
 The most common form of cross-file linting is typed linting, which is linting that uses type information.
-Flint provides full native support for cross-file linting:
+Flint natively provides full support for cross-file linting:
 
 - Its cache factors in cross-file dependencies such as imports and `tsconfig.json` files
 - Rule suggestions may apply changes across files, not just to the file being linted
@@ -61,21 +61,21 @@ The TypeScript language uses those hooks to reuse type information services from
 > - [What Flint Does Differently > Formatting Coordination](/blog/what-flint-does-differently#formatting-coordination)
 > - [What Flint Does Differently > Language Diagnostics Coordination](/blog/what-flint-does-differently#language-diagnostics-coordination)
 
-#### Virtual File System Host
+#### I/O Host
 
-One notable part of `@flint.fyi/core` is a full virtual file system ("VFS" host).
-Meaning: Flint provides an isolated in-memory representation of directories and files for linting to operate on.
-Flint's VFS host defaults to the local file system, but can also be used in other environments.
+One notable part of `@flint.fyi/core` is that we use a virtual file system underlying our I/O host.
+This means that Flint provides an isolated in-memory representation of directories and files for lints to operate on.
+Flint's VFS host defaults to the local file system, but can also be used in other environments such as in-memory unit tests.
 
-Establishing a VFS host early will allow Flint to create well-architected APIs for environments such as in-memory unit tests and web browsers.
-It also allows for a number of performance optimizations, such as the ability to batch file system reads and writes.
+Establishing host architecture early will allow Flint to support environments like isolated tests and [the web](#playground-inspector).
+It also allows for a number of (yet-to-be-implemented) performance optimizations, such as the ability to batch file system reads and writes.
 
 > [What Flint Does Differently > Embeddable By Design](/blog/what-flint-does-differently#embeddable-by-design)
 
 ### CLI
 
-The Flint CLI, or `npx flint`, is the primary -and currently only- way to run Flint.
-It's intentionally analagous to existing lint CLIs such as `npx biome`, `npx eslint`, and `npx oxlit`.
+The Flint CLI, or `flint`, is the primary—and currently only—way to run Flint.
+It's intentionally analagous to existing lint CLIs such as `npx biome`, `npx eslint`, and `npx oxlint`.
 
 `npx flint` is largely feature-complete as of Spring 2026.
 It supports:
@@ -151,7 +151,7 @@ We see most forms of linter documentation as falling into one of three categorie
 These users range from complete linting novices to power users configuring their individual rule options.
 For them, we'll have a glossary, FAQs, introductory docs, and guided walkthroughs of common tasks.
 - **Plugin developer**: showing how to use Flint's APIs to work with custom plugins and write custom rules.
-Man of these users are writing small custom rules to achieve company/project-specific linting tasks.
+Many of these users are writing small custom rules to achieve company/project-specific linting tasks.
 These developers will have reference documentation and sample projects showing how to use Flint.
 - **Linter developer**: someone working on the linter itself, or at least directly using its programmatic APIs.
 These users often want to know how the linter is architected at a high-level.
@@ -175,7 +175,7 @@ Now that Flint's core has been mostly stable for several months, we're looking f
 ### MCP Server
 
 If an LSP server is de facto required for humans in editors, then a [Model Context Protocol ("MCP")](https://en.wikipedia.org/wiki/Model_Context_Protocol) is de facto required for agentic workflows.
-AIs are steadily growing in programmer popularity and power.
+AI is steadily growing in programmer popularity and power.
 Setting up an MCP interface so the linter can directly guide agents through fixing code flaws will be table stakes for any linter soon.
 
 As with LSP, we're looking forward to building up higher-level Flint APIs that can power MCP usage.
@@ -186,7 +186,7 @@ Flint's lint rules goal is to encapsulate roughly _all_ important lint rules com
 That will take time.
 
 Our plan is to continuously add more rules each month, with milestones every two months of development.
-Our optimistic timeline for rule completions will get to ~700 lint rules by the end of 2026.
+Our optimistic timeline for rule completions is to get to ~700 lint rules by the end of 2026.
 Starting with ~400 implemented rules in Spring 2026, that projection is:
 
 1. End of April: ~510 (+110)
@@ -305,12 +305,12 @@ An ESLint compatibility layer will be a high-value add for Flint when it gets cl
 
 ### Playground Inspector
 
-Every other mainstream linter provides an online "playground" where you can preview individual rules on small snippets of source code.
+[Every](https://eslint.org/play) [other](https://typescript-eslint.io.org/play) [mainstream](https://playground.oxc.rs/) [linter](https://biomejs.dev/playground) provides an online "playground" where you can preview individual rules on small snippets of source code.
 These playgrounds are immensely helpful for understanding linters and their rules.
 They're also integrated into the GitHub flow, such as playground reproductions being required for many basic forms of issues.
 
 Creating a playground for Flint will require a lot of architectural and API development.
-The VFS host was a good start, but we still have to undrstand how this will integrate with the configuration system, plugins, and other parts of Flint.
+The VFS host was a good start, but we still have to understand how this will integrate with the configuration system, plugins, and other parts of Flint.
 
 Plus we still have to actually implement the playground's frontend code.
 That'll include an AST explorer, scope analysis visualizer, rule report visualizer, fixer and suggestion actions, and so on.
