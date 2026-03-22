@@ -70,7 +70,7 @@ Flint's VFS host defaults to the local file system, but can also be used in othe
 Establishing host architecture early will allow Flint to support environments like isolated tests and [the web](#playground-inspector).
 It also allows for a number of (yet-to-be-implemented) performance optimizations, such as the ability to batch file system reads and writes.
 
-> [What Flint Does Differently > Embeddable By Design](/blog/what-flint-does-differently#embeddable-by-design)
+> [What Flint Does Differently § Embeddable By Design](/blog/what-flint-does-differently#embeddable-by-design)
 
 ### CLI
 
@@ -110,7 +110,7 @@ As of Spring 2026, the Flint monorepo has implemented:
 Flint's implemented rules intentionally span the gamut of linting checks.
 They include behavior from the core ESLint and typescript-eslint projects, plugins such as [eslint-plugin-regexp](https://ota-meshi.github.io/eslint-plugin-regexp), and languages such as JSON and Markdown.
 
-> [What Flint Does Differently > Common Core Rules](/blog/what-flint-does-differently#common-core-rules)
+> [What Flint Does Differently § Common Core Rules](/blog/what-flint-does-differently#common-core-rules)
 
 ### Volar and Vue Integrations
 
@@ -124,13 +124,24 @@ We've used it for a first-class `@flint.fyi/vue` language plugin that provides V
 Through its Volar and Vue integrations, Flint has true support for typed lint rules in Vue templates.
 Rather than default to `any` for cross-file values imported into Vue templates, Flint is able to use Volar tooling to determine their actual TypeScript types.
 
-> [What Flint Does Differently > Built-In TypeScript Extensibility](/blog/what-flint-does-differently#built-in-typescript-extensibility)
-> [What Flint Does Differently > Focused Language Plugins](/blog/what-flint-does-differently#focused-language-plugins)
+> [What Flint Does Differently § Built-In TypeScript Extensibility](/blog/what-flint-does-differently#built-in-typescript-extensibility)
+> [What Flint Does Differently § Focused Language Plugins](/blog/what-flint-does-differently#focused-language-plugins)
 
 ## Coming Next
 
 We're thrilled about the progress Flint's made in 2025 and early 2026.
 The project is set up to show off best-in-class linting and tooling around it.
+
+For each of these areas, you can subscribe to the issue to see updates as they come in.
+You can also help us prioritize issues by adding 👍 reaction on them.
+
+### Assorted Rule Utilities
+
+Most rules slated for implementation in Flint are either implemented already or ready to be implemented.
+However, there are some utilities present in other linters that still need to be implemented in Flint: most notably, a [scope manager](https://eslint.org/docs/latest/extend/scope-manager-interface).
+As we roll out more lint rules in 2026, we'll finish implementing utilities such as the scope manager.
+
+> [flint#400 🚀 Feature: Create a scope manager for TypeScript](https://github.com/flint-fyi/flint/issues/400)
 
 ### Configuration Initializer
 
@@ -141,7 +152,8 @@ Most users speed through this process and miss a lot of useful potential plugins
 Flint will provide a configuration initializer CLI that reads a user's `package.json` to determine the suggested plugins for the project.
 The initial 2026 version of this initializer will rely on metadata provided in Flint's first-party plugins to determine which match the project being initialized.
 
-> [What Flint Does Differently > Config Initializer](/blog/what-flint-does-differently#config-initializer)
+> - [flint#2479 🚀 Feature: Implement the config initializer](https://github.com/flint-fyi/flint/issues/2479)
+> - [What Flint Does Differently § Config Initializer](/blog/what-flint-does-differently#config-initializer)
 
 ### Documentation Expansion
 
@@ -160,7 +172,8 @@ For them, we plan to have full architecture documentation, Node.js API reference
 The glossary and FAQs were started in 2025.
 We plan on fleshing out most or all the rest of that documentation as the project solidifies its architecture and best practices through 2026.
 
-> [What Flint Does Differently > Shared Glossary](/blog/what-flint-does-differently#shared-glossary)
+> - [What Flint Does Differently § Comprehensive Rule Documentation](/blog/what-flint-does-differently#comprehensive-rule-documentation)
+> - [What Flint Does Differently § Shared Glossary](/blog/what-flint-does-differently#shared-glossary)
 
 ### Editor Integrations (LSP)
 
@@ -198,7 +211,7 @@ Starting with ~400 implemented rules in Spring 2026, that projection is:
 We expect the number of rules added each month to go down as easier rules are tackled first.
 For example, most of the rules we expect to add from [eslint-plugin-package-json](https://github.com/michaelfaith/eslint-plugin-package-json) in April are straightforward or even auto-generated from schemas.
 
-> [What Flint Does Differently > Common Core Rules](/blog/what-flint-does-differently#common-core-rules)
+> [What Flint Does Differently § Common Core Rules](/blog/what-flint-does-differently#common-core-rules)
 
 :::tip
 Expect a blog post later this year on how the Flint project is using a combination of AI and manual review to create dozens of high quality lint rule (re-)implementations a month.
@@ -224,7 +237,8 @@ We need to understand the tradeoffs between FFI and IPC, async vs sync, and so o
 Our 2026 goal is to have a near-complete understanding of how we _could_ build true hybrid linting for Flint with typescript-go.
 We may have a prototype of it working by the end of the year.
 
-> [What Flint Does Differently > Hybrid Core](/blog/what-flint-does-differently#hybrid-core)
+> - [flint#1320 🚀 Feature: Performance](https://github.com/flint-fyi/flint/issues/1320)
+> - [What Flint Does Differently § Hybrid Core](/blog/what-flint-does-differently#hybrid-core)
 
 ## Estimated for 2027
 
@@ -257,7 +271,7 @@ Part of that tooling will be ways to register plugins in a shared community regi
 We haven't yet completed the core work on first-party plugins, so we don't believe this will land soon.
 It is a core part of Flint's story that we know we will have out by the end of 2027 at the latest.
 
-> [What Flint Does Differently > Plugin Registry](/blog/what-flint-does-differently#plugin-registry)
+> [What Flint Does Differently § Plugin Registry](/blog/what-flint-does-differently#plugin-registry)
 
 ### Configuration Migrator
 
@@ -269,7 +283,7 @@ Flint is not yet ready for real world users to try it out.
 We believe helping users migrate from to Flint will not be a priority until Flint is alpha-ready.
 Therefore, although we see a configuration migrator as being an important part of Flint's story, it likely won't be prioritized in 2026.
 
-> [What Flint Does Differently > Configuration Migration](/blog/what-flint-does-differently#configuration-migration)
+> [What Flint Does Differently § Configuration Migration](/blog/what-flint-does-differently#configuration-migration)
 
 ### Configuration Projects / Workspaces
 
@@ -281,7 +295,7 @@ Most modern userland projects are on ESLint flat config which does not support p
 
 So, while we do plan on working on this, it's not slated for 2026.
 
-> [What Flint Does Differently > Typed Configuration Files](/blog/what-flint-does-differently#typed-configuration-files)
+> [What Flint Does Differently § Typed Configuration Files](/blog/what-flint-does-differently#typed-configuration-files)
 
 ### Configuration Inspector
 
@@ -305,9 +319,9 @@ An ESLint compatibility layer will be a high-value add for Flint when it gets cl
 
 ### Playground Inspector
 
-[Every](https://eslint.org/play) [other](https://typescript-eslint.io.org/play) [mainstream](https://playground.oxc.rs/) [linter](https://biomejs.dev/playground) provides an online "playground" where you can preview individual rules on small snippets of source code.
+[Every](https://eslint.org/play "ESLint's playground") [other](https://typescript-eslint.io/play "typescript-eslint's playground") [mainstream](https://playground.oxc.rs "Oxc's playground") [linter](https://biomejs.dev/playground "Biome's playground") provides an online "playground" where you can preview individual rules on small snippets of source code.
 These playgrounds are immensely helpful for understanding linters and their rules.
-They're also integrated into the GitHub flow, such as playground reproductions being required for many basic forms of issues.
+They're also integrated into those projects' contributing and maintenance flows, such as playground reproductions being required for many basic forms of issues.
 
 Creating a playground for Flint will require a lot of architectural and API development.
 The VFS host was a good start, but we still have to understand how this will integrate with the configuration system, plugins, and other parts of Flint.
