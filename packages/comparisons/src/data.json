@@ -889,9 +889,10 @@
 			}
 		],
 		"flint": {
-			"name": "testCaseOnlies",
+			"name": "testCaseOnlines",
 			"plugin": "flint",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -20202,7 +20203,7 @@
 			}
 		],
 		"flint": {
-			"name": "testCaseOnlies",
+			"name": "testCaseOnlines",
 			"plugin": "vitest",
 			"status": "skipped"
 		},
