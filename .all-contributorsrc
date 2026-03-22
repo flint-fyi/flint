@@ -199,6 +199,15 @@
         "doc",
         "ideas"
       ]
+    },
+    {
+      "login": "sigmabrogz",
+      "name": "Sigmabro",
+      "avatar_url": "https://avatars.githubusercontent.com/u/122412346?v=4",
+      "profile": "https://github.com/Sigmabrogz",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
