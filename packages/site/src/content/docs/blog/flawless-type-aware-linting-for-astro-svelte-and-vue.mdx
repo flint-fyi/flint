@@ -168,7 +168,17 @@ It's helpful in showing how custom syntax is translated into TypeScript code.
 Here's a screenshot showing a `file.vue` source file on the left, compared to the generated `script_ts.ts` equivalent on the right.
 All of `file.vue`'s embedded JavaScript expressions, including code from its `<script>` block, are merged into that single TypeScript file.
 
+<div class="only-light">
+
 ![Volar.js virtual generated code](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/volar-virtual-code.webp)
+
+</div>
+
+<div class="only-dark">
+
+![Volar.js virtual generated code](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/volar-virtual-code-dark.webp)
+
+</div>
 
 Transforming the file in this way allows its variables to be fully type-checkable.
 For example, variables declared in `<script setup>` are prefixed with `__VLS_ctx.` when used in `<template>`.
