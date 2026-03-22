@@ -124,38 +124,31 @@ This is how Volar.js, the "Embedded Language Tooling Framework", was created.
 
 What does "embedded" mean?
 
-Well, take for example a Vue Single File Component (SFC):
+Well, take for example a Vue Single File Component (SFC).
+This file contains blocks with three different languages: TypeScript (`<script lang="ts">`), HTML (`<template>`), and CSS (`<style lang="css">`).
+The HTML block also has an embedded TypeScript/JavaScript expression inside it.
 
 ```vue
 <script lang="ts" setup>
-	const hello = "Hello world!";
-	function log(msg: string) {
-		console.log(msg);
-	}
+	// TypeScript code...
 </script>
 
 <template>
 	<button
 		@click="
 			() => {
-				log(hello);
+				/* TypeScript code... */
 			}
 		"
 	>
-		Click me!
+		<!-- HTML code... -->
 	</button>
 </template>
 
 <style lang="css">
-	button {
-		font-size: 30px;
-		color: red;
-	}
+	/* CSS code... */
 </style>
 ```
-
-As you may have noticed, this file contains blocks with three different languages: TypeScript (`<script lang="ts">`), HTML (`<template>`), and CSS (`<style lang="css">`).
-The HTML block also has an embedded TypeScript/JavaScript expression inside it.
 
 The purpose of Volar.js is to provide language tool authors with a high-level framework that handles all the complexities -- such as LSP integration, routing of LSP requests to the appropriate embedded language service, type-checking powered by TypeScript, and much more -- so that they can avoid reinventing this _difficult_ wheel again.
 
