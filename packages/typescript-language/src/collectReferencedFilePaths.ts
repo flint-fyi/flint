@@ -20,13 +20,16 @@ export function collectReferencedFilePaths(
 			host,
 		);
 
-		if (resolved.resolvedModule?.isExternalLibraryImport === false) {
-			return path.relative(
-				process.cwd(),
-				resolved.resolvedModule.resolvedFileName,
-			);
+		if (resolved.resolvedModule === undefined) {
+			return undefined;
 		}
-		return undefined;
+
+		const filePath = path.relative(
+			host.getCurrentDirectory!(),
+			resolved.resolvedModule.resolvedFileName,
+		);
+
+		return filePath.includes("node_modules/") ? undefined : filePath;
 	}
 
 	function visit(node: ts.Node) {
