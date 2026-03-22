@@ -1,5 +1,5 @@
 ---
-date: 2026-03-18T14:59:23Z
+date: 2026-03-23T14:59:23Z
 description: Flint's been under active development for almost a year.
   Let's cover what's been done, what's coming up next, and what's being pushed to the backlog.
 excerpt: Hello, and welcome to the first State of Flint blog post!
@@ -28,9 +28,9 @@ For this first post, we'll cover progress made from Flint's start in 2025 and th
 Flint's "Core" package, `@flint.fyi/core`, contains the main primitives for setting up a linter runtime, defining plugins for that runtime, and creating rules for those plugins.
 It also provides low-level Node.js APIs for running linting on one or more files.
 
-`@flint.fyi/core` is "initially" feature-complete as of Spring 2026.
-The main pieces of functionality all work as expected.
-While we expect to continue to spot iterate on it to support future features, we have no major known work items in the backlog for it that block known future work.
+`@flint.fyi/core` is, compared to other linters, feature-complete as of Spring 2026.
+The main pieces of functionality needed for linting all work as expected.
+While we expect to continue to spot iterate on it to support future features and add utilities such as scope analysis, we otherwise have no major known work items in the backlog for it that block known future work.
 
 #### Cross-File Linting
 
@@ -55,7 +55,7 @@ Doing so can reduce tooling configuration complexity, as well as reduce the amou
 
 This has been implemented in Flint.
 Flint runs Prettier on all linted files after linting, piping through its own `--fix` flag to format files if requested.
-Flint also provides languages with API hooks to define their own "diagnostics" that can be reported.
+Flint also provides languages with API hooks to define their own language reports (sometimes called "diagnostics") that can be reported.
 The TypeScript language uses those hooks to reuse type information services from linting and report type errors.
 
 > - [What Flint Does Differently > Formatting Coordination](/blog/what-flint-does-differently#formatting-coordination)
@@ -91,7 +91,7 @@ It supports:
 - `--watch` mode to re-run on files as they save changes
 
 In fact, we've been running Flint in CI alongside ESLint and other checks for the majority of the Flint project.
-We've found it to be stable.
+Our next step will be to start flighting it in personal projects of members of the Flint team.
 
 > - [What Flint Does Differently > Comprehensive Rule Reports](/blog/what-flint-does-differently#comprehensive-rule-reports)
 > - [What Flint Does Differently > Interactive and Watch CLI Modes](/blog/what-flint-does-differently#interactive-and-watch-cli-modes)
@@ -99,7 +99,7 @@ We've found it to be stable.
 ### Lint Rule Progress
 
 The Flint project encapsulates more than just a solid linter foundation and CLI.
-It's also meant to explore a having a cohesive, comprehensive set of lint rules applicable to modern users of the linter.
+It's also meant to explore having a cohesive, comprehensive set of lint rules applicable to modern users of the linter.
 We expect to end up with roughly 1,000 rules implemented in the Flint monorepo, and roughly half of those rules to be in Flint's TypeScript plugin.
 
 As of Spring 2026, the Flint monorepo has implemented:
