@@ -11,45 +11,67 @@ export function collectReferencedFilePaths(
 	sourceFile: AST.SourceFile,
 ) {
 	const modulePaths = new Set<string>();
+	const cwd = host.getCurrentDirectory?.() ?? process.cwd();
+	const compilerOptions = program.getCompilerOptions();
+	const useCaseSensitiveFileNames =
+		host.useCaseSensitiveFileNames ?? ts.sys.useCaseSensitiveFileNames;
+	const getCanonicalFileName = (fileName: string) =>
+		useCaseSensitiveFileNames ? fileName : fileName.toLowerCase();
+	const moduleResolutionCache = ts.createModuleResolutionCache(
+		cwd,
+		getCanonicalFileName,
+		compilerOptions,
+	);
+	const referencedProjectFiles = collectReferencedProjectFiles(program);
 
-	function resolveModulePath(moduleSpecifier: string): string | undefined {
+	function resolveModulePath(
+		moduleSpecifier: ts.StringLiteralLike,
+	): string | undefined {
 		const resolved = ts.resolveModuleName(
-			moduleSpecifier,
+			moduleSpecifier.text,
 			sourceFile.fileName,
-			program.getCompilerOptions(),
+			compilerOptions,
 			host,
+			moduleResolutionCache,
+			undefined,
+			program.getModeForUsageLocation(sourceFile, moduleSpecifier),
 		);
 
 		if (resolved.resolvedModule === undefined) {
 			return undefined;
 		}
 
-		const filePath = path.relative(
-			host.getCurrentDirectory!(),
-			resolved.resolvedModule.resolvedFileName,
-		);
+		const { resolvedFileName } = resolved.resolvedModule;
 
-		return filePath.includes("node_modules/") ? undefined : filePath;
+		if (
+			resolved.resolvedModule.isExternalLibraryImport === false ||
+			referencedProjectFiles.has(resolvedFileName) ||
+			!isNodeModulesPath(resolvedFileName)
+		) {
+			return path.relative(cwd, resolvedFileName);
+		}
+
+		return undefined;
 	}
 
 	function visit(node: ts.Node) {
-		let path: string | undefined;
+		let moduleSpecifier: ts.StringLiteralLike | undefined;
 
 		if (isImportDeclaration(node)) {
 			// import { x } from "./foo";
-			path = node.moduleSpecifier.text;
+			moduleSpecifier = node.moduleSpecifier;
 		} else if (isImportCall(node)) {
 			// const x = import("./foo")
-			path = node.arguments[0].text;
+			moduleSpecifier = node.arguments[0];
 		} else if (isAwaitImportCall(node)) {
 			// const x = await import("./foo")
-			path = node.expression.arguments[0].text;
+			moduleSpecifier = node.expression.arguments[0];
 		} else if (isImportTypeNode(node)) {
 			// type T = import("./foo") or type T = typeof import("./foo");
-			path = node.argument.literal.text;
+			moduleSpecifier = node.argument.literal;
 		}
 
-		const resolvedPath = path && resolveModulePath(path);
+		const resolvedPath = moduleSpecifier && resolveModulePath(moduleSpecifier);
 		if (resolvedPath) {
 			modulePaths.add(resolvedPath);
 		}
@@ -60,6 +82,29 @@ export function collectReferencedFilePaths(
 	visit(sourceFile);
 
 	return Array.from(modulePaths);
+}
+
+function collectReferencedProjectFiles(
+	program: ts.Program,
+): ReadonlySet<string> {
+	const referencedFiles = new Set<string>();
+	const pendingReferences = [...(program.getResolvedProjectReferences() ?? [])];
+
+	for (const reference of pendingReferences) {
+		if (reference == null) {
+			continue;
+		}
+
+		for (const fileName of reference.commandLine.fileNames) {
+			referencedFiles.add(fileName);
+		}
+
+		if (reference.references) {
+			pendingReferences.push(...reference.references);
+		}
+	}
+
+	return referencedFiles;
 }
 
 function isAwaitImportCall(node: ts.Node): node is AST.AwaitExpression & {
@@ -100,4 +145,8 @@ function isImportTypeNode(node: ts.Node): node is ts.ImportTypeNode & {
 		ts.isLiteralTypeNode(node.argument) &&
 		ts.isStringLiteral(node.argument.literal)
 	);
+}
+
+function isNodeModulesPath(filePath: string) {
+	return filePath.split(path.sep).includes("node_modules");
 }

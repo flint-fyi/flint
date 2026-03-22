@@ -1006,6 +1006,9 @@ importers:
       '@typescript-eslint/project-service':
         specifier: ^8.53.0
         version: 8.57.1(typescript@5.9.3)
+      cached-factory:
+        specifier: ^0.1.0
+        version: 0.1.0
       debug-for-file:
         specifier: ^0.2.0
         version: 0.2.0
