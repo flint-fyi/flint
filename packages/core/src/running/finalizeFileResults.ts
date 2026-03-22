@@ -35,7 +35,7 @@ export function finalizeFileResults(
 			directivesFilterer.add(file.directives);
 		}
 
-		const cache = language.getFileCacheImpacts?.(file);
+		const cache = language.getFileCacheImpacts?.(host, file);
 
 		if (cache?.dependencies) {
 			for (const dependency of cache.dependencies) {

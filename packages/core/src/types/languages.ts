@@ -66,6 +66,7 @@ export interface Language<
 	createFileFactory(host: LinterHost): LanguageFileFactory<FileServices>;
 	createRule: LanguageCreateRule<AstNodesByName, FileServices>;
 	getFileCacheImpacts?(
+		host: LinterHost,
 		file: LanguageFile<FileServices>,
 	): LanguageFileCacheImpacts;
 	getFileDiagnostics?(file: LanguageFile<FileServices>): LanguageDiagnostics;
@@ -103,6 +104,7 @@ export interface LanguageDefinition<
 		host: LinterHost,
 	): LanguageFileFactoryDefinition<FileServices>;
 	getFileCacheImpacts?(
+		host: LinterHost,
 		file: LanguageFile<FileServices>,
 	): LanguageFileCacheImpacts;
 	getFileDiagnostics?(file: LanguageFile<FileServices>): LanguageDiagnostics;

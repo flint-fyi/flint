@@ -6,6 +6,7 @@ import ts from "typescript";
 import type * as AST from "./types/ast.ts";
 
 export function collectReferencedFilePaths(
+	host: ts.ModuleResolutionHost,
 	program: ts.Program,
 	sourceFile: AST.SourceFile,
 ) {
@@ -16,9 +17,7 @@ export function collectReferencedFilePaths(
 			moduleSpecifier,
 			sourceFile.fileName,
 			program.getCompilerOptions(),
-			// TODO: Eventually, the file system should be abstracted
-			// https://github.com/flint-fyi/flint/issues/73
-			ts.sys,
+			host,
 		);
 
 		if (resolved.resolvedModule?.isExternalLibraryImport === false) {

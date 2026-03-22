@@ -6,10 +6,12 @@ import {
 	type LanguageDiagnostics,
 	type LanguageFile,
 	type LanguageFileDefinition,
+	type LinterHost,
 	type RuleRuntime,
 } from "@flint.fyi/core";
 import { assert, nullThrows } from "@flint.fyi/utils";
 import { createProjectService } from "@typescript-eslint/project-service";
+import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 import path from "node:path";
 import * as ts from "typescript";
@@ -79,6 +81,11 @@ export function setVolarCreateFile(create: VolarCreateFile) {
 	languageState.volarCreateFile = create;
 }
 
+const typeScriptServerHosts = new CachedFactory<
+	LinterHost,
+	ts.server.ServerHost
+>((host) => createTypeScriptServerHost(host));
+
 export const typescriptLanguage = createLanguage<
 	TypeScriptNodeVisitors,
 	TypeScriptFileServices
@@ -88,7 +95,7 @@ export const typescriptLanguage = createLanguage<
 	},
 	createFileFactory: (host) => {
 		const { service } = createProjectService({
-			host: createTypeScriptServerHost(host),
+			host: typeScriptServerHosts.get(host),
 		});
 
 		function createFile(data: FileAboutData) {
@@ -152,7 +159,8 @@ export const typescriptLanguage = createLanguage<
 		return { createFile };
 	},
 
-	getFileCacheImpacts: getTypeScriptFileCacheImpacts,
+	getFileCacheImpacts: (host, file) =>
+		getTypeScriptFileCacheImpacts(typeScriptServerHosts.get(host), file),
 	getFileDiagnostics(file) {
 		if ("__volarServices" in file) {
 			return (

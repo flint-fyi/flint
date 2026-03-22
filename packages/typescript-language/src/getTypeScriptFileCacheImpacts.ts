@@ -1,9 +1,11 @@
 import type { LanguageFile, LanguageFileCacheImpacts } from "@flint.fyi/core";
+import type ts from "typescript";
 
 import { collectReferencedFilePaths } from "./collectReferencedFilePaths.ts";
 import type { TypeScriptFileServices } from "./language.ts";
 
 export function getTypeScriptFileCacheImpacts(
+	host: ts.ModuleResolutionHost,
 	file: LanguageFile<TypeScriptFileServices>,
 ): LanguageFileCacheImpacts {
 	return {
@@ -13,6 +15,7 @@ export function getTypeScriptFileCacheImpacts(
 			"tsconfig.json",
 
 			...collectReferencedFilePaths(
+				host,
 				file.services.program,
 				file.services.sourceFile,
 			),
