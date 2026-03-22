@@ -89,7 +89,11 @@ Take, for example, the following code that uses a custom Vue component:
 To know its type, we must resolve the type of `MyComponent`, extract its `v-slot` type, and so on.
 This is why naive concatenation wouldn't work.
 
-[Johnson Chu](https://github.com/johnsoncodehk)'s [`tsslint`](https://github.com/johnsoncodehk/tsslint) used Volar.js to solve this problem, though the first problem (`any`-typed imports) is still present.
+[Johnson Chu](https://github.com/johnsoncodehk)'s [`tsslint`](https://github.com/johnsoncodehk/tsslint) ("The lightest TypeScript semantic linting solution in JS") used Volar.js to solve this problem, though the first problem (`any`-typed imports) is still present.
+It supports loading Volar.js language plugins for Astro, MDX, Vue, and Vue Vine.
+Thanks to this, it supports type-aware linting for these languages.
+However, it lacks the TypeScript patching mechanism required to resolve custom file extensions to concrete types instead of `any`.
+It also does not expose custom language ASTs to lint rules.
 
 ## Type Checking TypeScript-Based Extension Languages
 
@@ -104,7 +108,11 @@ Moreover, plugins extend the _editing experience only_, i.e., they can't be used
 
 That's why TypeScript-based-language authors were required to invent hacks that could force TypeScript to understand their custom languages.
 
-Several different approaches to this problem exist, but one of them stands out...
+Several different approaches to this problem exist.
+For example, [`svelte-check`](https://github.com/sveltejs/language-tools/tree/master/packages/svelte-check) and [`ngtsc`](https://github.com/angular/angular/tree/main/packages/compiler-cli/src/ngtsc) both use TypeScript compiler to type-check custom syntax.
+However, they use different approaches, which makes it difficult to unify them within a single linting architecture.
+
+Thankfully, there is a tool that can provide unified type-checking for custom languages.
 
 ## Volar.js
 
@@ -487,7 +495,7 @@ We're excited to show off this early technical preview of the novel architecture
 The next steps for Flint's languages support are:
 
 - Implement all Astro, Svelte, and Vue rules in their Flint plugins
-- Consider adding support for other TypeScript-based languages, such as MDX, Ember, and others.
+- Investigate support for other TypeScript-based languages such as Ember and MDX
 
 In the meantime, you can try Flint by running `npx flint`.
 You can read more about how to use Flint in [Flint > About](/about).
