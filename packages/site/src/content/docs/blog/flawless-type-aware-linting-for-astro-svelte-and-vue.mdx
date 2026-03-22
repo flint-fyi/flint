@@ -6,29 +6,28 @@ authors:
   url: https://github.com/auvred
 date: 2026-03-18
 excerpt:
-  The traditional ESLint approach to linting TS-based languages has been a pain for a very long time.
-  It is hard to configure, and it has a lot of limitations that don't allow type-aware rules to work as well as they should.
+  Traditional approaches to linting TypeScript-based languages have had significant drawbacks for many years.
+  They're often difficult to configure and come with limitations that prevent rules from fully understanding the types of code.
+  Flint introduces a comprehensive Volar.js-based architecture that enables fully type-aware lint rules for languages like Astro, Svelte, and Vue.
   Learn how Flint's architecture solves this once and for all!
-title: Flawless type-aware linting for Astro, Svelte, and Vue
+title: Full Type-Aware Linting for Astro, Svelte, and Vue
 ---
 
 ## What are TS-based languages?
 
-Frontend frameworks often introduce their own languages, which extend basic TypeScript syntax with custom features in order to ease the web-development.
-React, Solid, and similar frameworks are exceptions to this pattern, because they rely only on TSX/JSX and do not introduce new syntax.
-The TypeScript compiler supports `.tsx` and `.jsx` files natively, so any linter rule that works for `.ts` is capable of linting `.tsx` without any loss in functionality.
+Frontend frameworks often introduce their own languages that extend basic TypeScript syntax with custom features.
+JSX-based frameworks like React and Solid.js natively work with the TypeScript compiler's `.jsx` and `.tsx` file support.
+But more extensive frameworks like Astro, Solid, and Vue that add language-specific additions and non-standard file extensions need more tooling to work well with TypeScript.
 
-However, some frameworks extend pure TypeScript syntax with their language-specific additions.
-This means that files written in such languages can't be linted by TS-only rules as is.
-Moreover, they introduce non-standard file extensions.
-
-Linting these languages from a _syntax-only_ perspective is not that hard.
-We can call the corresponding parser to get the AST and report errors based on AST visiting only.
+Traditional linters such as ESLint have been able to work with those languages on a _syntax-only_ level.
+They can use the languages' provided parsers to get an AST for the languages' contents and report errors purely based on that AST.
 
 However, syntax-only linting is often not enough to catch all bugs.
-That's why people seek a way to enable [type-aware linting](https://typescript-eslint.io/blog/typed-linting) for these languages.
+[Type-aware linting](https://typescript-eslint.io/blog/typed-linting) allows for significantly more powerful lint rules -- but requires more deep integrations with TypeScript tooling.
 
-What's the current state of type-aware linting for TS-based languages?
+We're excited to say that Flint is the first modern linter with full support for typed linting on extension languages.
+Flint uses Volar.js to integrate TypeScript with extension languages, giving lint rules to full type information even in embedded JavaScript expressions within language-specific files.
+This represents a big leap forward in linting for these languages.
 
 ## `no-unsafe-*` rules and embedded JS expressions
 
@@ -36,12 +35,17 @@ This applies to all type-aware rules, but `@typescript-eslint/no-unsafe-*` rules
 The problem is that imports from files with custom extensions aren't supported by TypeScript natively.
 So all imports from [`.astro`](https://github.com/ota-meshi/eslint-plugin-astro/issues/348), [`.svelte`](https://github.com/sveltejs/eslint-plugin-svelte/issues/1150), or [`.vue`](https://github.com/vuejs/vue-eslint-parser/issues/104) files are resolved to `any` when files are parsed using `@typescript-eslint/parser`.
 
-This problem is partially solved by [Yosuke Ota](https://github.com/ota-meshi)'s [`typescript-eslint-parser-for-extra-files`](https://github.com/ota-meshi/typescript-eslint-parser-for-extra-files).
-Surprisingly, this approach doesn't seem to be widely known about.
+:::note
+[Yosuke Ota](https://github.com/ota-meshi)'s [`typescript-eslint-parser-for-extra-files`](https://github.com/ota-meshi/typescript-eslint-parser-for-extra-files) made progress on providing type information on language files in ESLint.
+See the library's documentation for more issues and excellent prior art.
+:::
 
-Another problem is that embedded JS expressions can't be linted with type information.
+One major user-facing symptom of this problem is that embedded JavaScript expressions in extension languages can't be linted with type information.
+For example, traditional linters would not be able to determine type information in the following Vue snippet to know whether the `log(hello);` call is safe.
 
-Throughout this blogpost, Vue will be used in illustrations and examples, but keep in mind that the exact same logic and rules apply for all other TS-based languages.
+:::note
+Vue is used in illustrations and examples throughout this post, but similar logic and rules apply for all other TypeScript-based languages.
+:::
 
 ```vue {11-13} /(?<!console.)log/ "hello"
 <script lang="ts" setup>
@@ -64,13 +68,14 @@ Throughout this blogpost, Vue will be used in illustrations and examples, but ke
 </template>
 ```
 
-Notice how the `@click` event listener is a JS expression that uses variables declared in `<script>`.
+Notice how the `@click` event listener is a JavaScript expression that uses variables declared in `<script>`.
 In order to lint this JS expression _properly_, we need the ability to resolve the types used inside it.
 
-Unfortunately, it's not as simple as concatenating all JS expressions into one big file.
-Embedded JS expressions rely on many language-specific quirks that must be taken into account.
+Resolving types in extension languages is a difficult technical challenge.
+Unfortunately, it's not solveable by straightforward techniques like concatenating all JavaScript expressions into one big file.
+Embedded JavaScript expressions rely on many language-specific quirks that must be taken into account.
 
-Take, for example, the following code:
+Take, for example, the following code that uses a custom Vue component:
 
 ```vue "data"
 <template>
@@ -86,13 +91,13 @@ This is why naive concatenation wouldn't work.
 
 [Johnson Chu](https://github.com/johnsoncodehk)'s [`tsslint`](https://github.com/johnsoncodehk/tsslint) used Volar.js to solve this problem, though the first problem (`any`-typed imports) is still present.
 
-## How the TypeScript compiler works with TS-based languages
+## Type Checking TypeScript-Based Extension Languages
 
 At some point, every TS-based-language author wants to type-check their language with TypeScript.
 There are two main difficulties here:
 
-1. TypeScript should perform type-checking of syntax it's unaware of
-2. TypeScript's module resolution system should be able to resolve custom file extensions (so they are not resolved to `any`)
+1. Getting TypeScript to perform type-checking of syntax it's unaware of (so they do not get skipped or throw errors)
+2. Resolving custom file extensions in TypeScript's existing module resolution system (so they are not resolved to `any`)
 
 Even though TypeScript can be extended with [Language Service Plugins](https://github.com/microsoft/TypeScript/wiki/Writing-a-Language-Service-Plugin), these plugins can't add new custom syntax to TypeScript.
 Moreover, plugins extend the _editing experience only_, i.e., they can't be used in CLI workflows, such as `tsc --noEmit`.
@@ -153,15 +158,21 @@ Volar.js allows language authors to create "language plugins" which serve two im
 - They describe custom file extensions
 - They translate custom language syntax into pure TS code that can be type-checked by the TypeScript compiler
 
+### How Volar.js Works
+
+:::tip
 Volar.js ships a nice VS Code extension called [Volar Labs](https://volarjs.dev/core-concepts/volar-labs/).
-It will help us understand how custom syntax is translated into TS code.
+It's helpful in showing how custom syntax is translated into TS code.
+:::
+
+Here's a screenshot showing a `file.vue` source file on the left, compared to the generated `script_ts.ts` equivalent on the right.
+All of `file.vue`'s embedded JavaScript expressions, including code from its `<script>` block, are merged into that single TS file.
 
 ![Volar.js virtual generated code](../../../assets/blog/flawless-type-aware-linting-for-astro-svelte-and-vue/volar-virtual-code.webp)
 
-As you may notice, all embedded JS expressions, including code from the `<script>` block, are merged into a single TS file.
-They're also transformed in order to be type-checkable.
+Transforming the file in this way allows its variables to be fully type-checkable.
 For example, variables declared in `<script setup>` are prefixed with `__VLS_ctx.` when used in `<template>`.
-Thanks to this, the type of every identifier used in the `@click` handler can be resolved to its actual value.
+Thanks to this, the type of every identifier used in the `@click` handler can be resolved to its actual value in tooling such as type-aware linting.
 
 This is how `vue-tsc` type-checks `.vue` files internally!
 
@@ -460,16 +471,16 @@ Vue rules can access the Vue AST and analyze it.
 
 ## What's next
 
-This was an early technical preview of what Flint is capable of.
-The next steps for Flint are:
+Flint is still in its early pre-alpha stages.
+We're excited to show off this early technical preview of the novel architecture we're building into the linter.
 
-- Stabilize TS-based languages support
-- Discover potential edge cases of the Volar.js-based linting approach
+The next steps for Flint's languages support are:
+
 - Implement all Astro, Svelte, and Vue rules in their Flint plugins
 - Consider adding support for other TS-based languages, such as MDX, Ember, and others.
 
 In the meantime, you can try Flint by running `npx flint`.
-You can read more about how to use Flint [here](/about).
+You can read more about how to use Flint in [Flint > About](/about).
 
 ### Supporting Flint Financially
 
@@ -479,4 +490,4 @@ As thanks, we'll put you under a sponsors list on the [flint.fyi homepage](/).
 
 ### Further Reading
 
-See [What Flint Does Differently](/blog/what-flint-does-differently) for a full list of all other innovative decisions Flint makes.
+See [What Flint Does Differently](/blog/what-flint-does-differently) for a large list of the other architectural decisions Flint is trying out.
