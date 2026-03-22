@@ -1,5 +1,5 @@
 import { ruleTester } from "./ruleTester.ts";
-import rule from "./testCaseOnlines.ts";
+import rule from "./testCaseOnlyFlag.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
