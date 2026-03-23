@@ -31,7 +31,7 @@ export const astroLanguage = createVolarBasedLanguage<AstroServices>(() => {
 				},
 				firstStatementPosition:
 					ast.children[0]?.position?.start.offset ?? sourceText.length,
-				getDiagnostics() {
+				getLanguageReports() {
 					return diagnostics.map((diagnostic) => ({
 						code: `ASTRO${diagnostic.code}`,
 						text: `${sourceFile.fileName}:${diagnostic.location.line}:${diagnostic.location.column} - ${diagnostic.text}${diagnostic.hint ? ` (${diagnostic.hint})` : ""}`,
