@@ -201,7 +201,7 @@ In order to add support for a new language, a plugin author must provide:
 - Volar.js language plugin
 - Optional extra properties that are passed to the rule context
 
-We will explore three stages of linting.
+Now, let's explore how this works from a user's perspective.
 
 ### Initialization
 
@@ -219,73 +219,12 @@ export default defineConfig({
 });
 ```
 
-It may seem that nothing is happening here; however, `import '@flint.fyi/vue'` performs a few very important side-effects.
-
-<div class="only-light">
-
-![@flint.fyi/vue-language initialization sequence diagram](../../../assets/blog/fully-type-aware-linting-for-astro-svelte-and-vue/language-initialization.webp)
-
-</div>
-
-<div class="only-dark">
-
-![@flint.fyi/vue-language initialization sequence diagram](../../../assets/blog/fully-type-aware-linting-for-astro-svelte-and-vue/language-initialization-dark.webp)
-
-</div>
-
-Let's walk through these side-effects:
-
-1. `@flint.fyi/vue` imports `@flint.fyi/vue-language`
-1. `@flint.fyi/vue-language` imports `@flint.fyi/volar-language`
-1. `@flint.fyi/volar-language` registers global TypeScript program creation proxy
-1. `@flint.fyi/vue-language` registers `.vue` extension as supported by TypeScript globally
-1. `@flint.fyi/vue-language` registers its Volar.js language plugin in a global list
-
-At this point, every TypeScript program created by `@flint.fyi/typescript-language` supports `.vue` files _natively_.
-Yes, it's that simple!
-
 By importing `@flint.fyi/vue`, you enable _all TypeScript-only rules_ to support `.vue` linting.
 No additional configuration needed!
 
-### TypeScript program creation
+### Lint rules
 
-`@flint.fyi/typescript-language` uses [TypeScript Project Service](https://typescript-eslint.io/blog/project-service/) internally.
-Thanks to the Project Service, lint rules can request type information even for files that aren't included in `tsconfig.json`.
-
-One of the important things that we considered when we were designing Volar.js integration was zero-config support for TypeScript-based languages in the Project Service.
-
-Let's walk through how Flint does it.
-
-<div class="only-light">
-
-![TypeScript program creation sequence diagram](../../../assets/blog/fully-type-aware-linting-for-astro-svelte-and-vue/program-creation.webp)
-
-</div>
-
-<div class="only-dark">
-
-![TypeScript program creation sequence diagram](../../../assets/blog/fully-type-aware-linting-for-astro-svelte-and-vue/program-creation-dark.webp)
-
-</div>
-
-1. The stateful `@flint.fyi/typescript-language` has a single shared instance of the TypeScript Project Service.
-When `@flint.fyi/typescript-language` gets a request to lint a certain file, it opens this file with Project Service.
-Project Service looks through already opened TypeScript programs and searches for the requested file.
-If no existing file is found, Project Service builds a new TypeScript program.
-1. Thanks to Flint's implicit initialization, all TypeScript program creation requests are proxied through a special Flint hook.
-If this hook finds out that the TypeScript program creation needs to be customized by `@flint.fyi/volar-language`, it relays the request to the Volar.js-specific hook.
-`@flint.fyi/volar-language` has access to all Volar.js language plugins registered globally at the initialization stage.
-It then uses Volar.js' [`proxyCreateProgram`](https://github.com/volarjs/volar.js/blob/44d58aee30d1d476c8ad3f6f5581b288d7185d1e/packages/typescript/lib/node/proxyCreateProgram.ts#L33) utility to enhance the default TypeScript program behavior with custom language support.
-1. In our case, the Volar.js language plugin provided by [the official `@vue/language-core`](https://github.com/vuejs/language-tools/tree/94907be4f056f25867e46a117ab18d2782b425d7/packages/language-core) is registered by `@flint.fyi/vue-language` to be used to customize the TypeScript program creation.
-1. When the TypeScript module resolution algorithm decides that it wants to load a `.vue` file, it relays the request to that Volar.js language plugin.
-This way, all `.vue` files are loaded into the TypeScript program as if they were just `.ts` files.
-1. And finally, `@flint.fyi/typescript-language` gets a newly created fully-functioning TypeScript program.
-
-These TypeScript programs created by the Project Service are later used to perform the actual type-checking and type-aware linting.
-
-### Linting
-
-All Flint rules created from languages based on `@flint.fyi/volar-language` can lint `.ts` files as well.
+All Flint Volar.js-based rules can lint `.ts` files as well.
 
 Rule authors can distinguish between `.ts` and `.vue` files by the presence of the `services.vue` property.
 
