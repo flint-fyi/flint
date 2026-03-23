@@ -123,7 +123,7 @@ That's why TypeScript-based-language authors often have to resort to workarounds
 
 Several different approaches to this problem exist.
 For example, [`svelte-check`](https://github.com/sveltejs/language-tools/tree/master/packages/svelte-check) and [`ngtsc`](https://github.com/angular/angular/tree/main/packages/compiler-cli/src/ngtsc) both use TypeScript compiler to type-check custom syntax.
-However, they use drastically different approaches: svelte-check does ABC API thing, whereas ngtsc does DEF API thing.
+However, they use drastically different approaches: svelte-check adapts TypeScript Language Service to look at one translated component at a time, whereas ngtsc extends the compilation itself with framework-generated checking code and then asks TypeScript to analyze that larger synthetic program.
 Unifying those two and potentially other embedded languages' TypeScript compiler workarounds into a single linting architecture would be difficult and unsustainable.
 
 Thankfully, there is a tool that can provide unified type-checking for custom languages.
