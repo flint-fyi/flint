@@ -5,12 +5,15 @@ authors:
   picture: /team/auvred.webp
   url: https://github.com/auvred
 date: 2026-03-18
+description:
+  Flint introduces a comprehensive Volar.js-based architecture that enables fully type-aware lint rules for languages like Astro, Svelte, and Vue.
+  Learn how Flint's architecture solves this once and for all!
 excerpt:
   Traditional approaches to linting TypeScript-based languages have had significant drawbacks for many years.
   They're often difficult to configure and come with limitations that prevent rules from fully understanding the types of code.
   Flint introduces a comprehensive Volar.js-based architecture that enables fully type-aware lint rules for languages like Astro, Svelte, and Vue.
   Learn how Flint's architecture solves this once and for all!
-title: Full Type-Aware Linting for Astro, Svelte, and Vue
+title: Fully Type-Aware Linting for Astro, Svelte, and Vue
 ---
 
 ## What are TypeScript-based languages?
@@ -29,11 +32,13 @@ We're excited to say that Flint is the first modern linter with full support for
 Flint uses Volar.js to integrate TypeScript with extension languages, giving lint rules access to full type information even in embedded JavaScript expressions within language-specific files.
 This represents a big leap forward in linting for these languages.
 
-## `no-unsafe-*` rules and embedded JavaScript expressions
+## Problem Statement: Typed Linting Rules and Embedded JavaScript Expressions
 
-This applies to all type-aware rules, but `@typescript-eslint/no-unsafe-*` rules break more often than others.
+Most linters today directly call to TypeScript's type checker for type information on all source files.
+This works well for file types such as `.js`, `.ts`, and `.tsx` that TypeScript natively supports.
 The problem is that imports from files with custom extensions aren't supported by TypeScript natively.
-So all imports from [`.astro`](https://github.com/ota-meshi/eslint-plugin-astro/issues/348), [`.svelte`](https://github.com/sveltejs/eslint-plugin-svelte/issues/1150), or [`.vue`](https://github.com/vuejs/vue-eslint-parser/issues/104) files are resolved to `any` when files are parsed using `@typescript-eslint/parser`.
+So all imports from [`.astro`](https://github.com/ota-meshi/eslint-plugin-astro/issues/348), [`.svelte`](https://github.com/sveltejs/eslint-plugin-svelte/issues/1150), or [`.vue`](https://github.com/vuejs/vue-eslint-parser/issues/104) files are resolved to `any` when files are parsed.
+The biggest symptom of this problem is that the `@typescript-eslint/no-unsafe-*` rules report items imported from files with these custom extensions as unsafe.
 
 :::note
 [Yosuke Ota](https://github.com/ota-meshi)'s [`typescript-eslint-parser-for-extra-files`](https://github.com/ota-meshi/typescript-eslint-parser-for-extra-files) made progress on providing type information on TypeScript-based language files in ESLint.
