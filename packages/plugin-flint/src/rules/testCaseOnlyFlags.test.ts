@@ -1,5 +1,5 @@
 import { ruleTester } from "./ruleTester.ts";
-import rule from "./testCaseOnlyFlag.ts";
+import rule from "./testCaseOnlyFlags.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -11,7 +11,7 @@ ruleTester.describe(rule, {
 					],
 					invalid: []
 				});
-			
+
 `,
 			snapshot: `
 				ruleTester.describe(rule, {
@@ -22,7 +22,7 @@ ruleTester.describe(rule, {
 					],
 					invalid: []
 				});
-			
+
 `,
 		},
 		{
@@ -33,7 +33,7 @@ ruleTester.describe(rule, {
 						{ code: "a", only: true, snapshot: "" },
 					]
 				});
-			
+
 `,
 			snapshot: `
 				ruleTester.describe(rule, {
@@ -44,7 +44,7 @@ ruleTester.describe(rule, {
 						             Do not commit test cases with \`only: true\`.
 					]
 				});
-			
+
 `,
 		},
 	],

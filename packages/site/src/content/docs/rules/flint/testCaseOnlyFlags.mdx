@@ -1,6 +1,6 @@
 ---
 description: "Reports test cases that are marked `only: true`."
-title: "testCaseOnlyFlag"
+title: "testCaseOnlyFlags"
 topic: "rules"
 ---
 
@@ -8,7 +8,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
-<RuleSummary plugin="flint" rule="testCaseOnlyFlag" />
+<RuleSummary plugin="flint" rule="testCaseOnlyFlags" />
 
 Rule tester cases can temporarily use `only: true` during local debugging.
 That flag should not be committed, because it prevents the rest of the rule test suite from running.
@@ -58,4 +58,4 @@ This rule is not configurable.
 
 ## Equivalents in Other Linters
 
-<RuleEquivalents pluginId="flint" ruleId="testCaseOnlyFlag" />
+<RuleEquivalents pluginId="flint" ruleId="testCaseOnlyFlags" />

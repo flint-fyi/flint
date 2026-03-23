@@ -12,7 +12,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports test cases that are marked `only: true`.",
-		id: "testCaseOnlyFlag",
+		id: "testCaseOnlyFlags",
 		presets: ["logical"],
 	},
 	messages: {
