@@ -10275,7 +10275,7 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"notes": "Default ESLint's \"smart\" to true",
+		"notes": "Default similar to ESLint's \"{ \"null\": \"ignore\" }\" to true",
 		"oxlint": [
 			{
 				"name": "eslint/eqeqeq",
@@ -13764,9 +13764,9 @@
 			}
 		],
 		"flint": {
-			"name": "nullComparisons",
+			"name": "nullishCheckStyle",
 			"plugin": "ts",
-			"status": "skipped"
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -13774,14 +13774,6 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-eql-null.html"
 			}
 		]
-	},
-	{
-		"flint": {
-			"name": "nullishCheckStyle",
-			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
-		}
 	},
 	{
 		"eslint": [

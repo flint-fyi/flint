@@ -7,6 +7,9 @@ ruleTester.describe(rule, {
 			code: `
 /[aA]/;
 `,
+			output: `
+/[a]/i;
+`,
 			snapshot: `
 /[aA]/;
  ~~~~
@@ -17,9 +20,25 @@ ruleTester.describe(rule, {
 			code: `
 /[aAbBcC]/;
 `,
+			output: `
+/[abc]/i;
+`,
 			snapshot: `
 /[aAbBcC]/;
  ~~~~~~~~
+ This character class can be simplified by using the \`i\` flag.
+`,
+		},
+		{
+			code: `
+/[0-9aAbB]/;
+`,
+			output: `
+/[0-9ab]/i;
+`,
+			snapshot: `
+/[0-9aAbB]/;
+ ~~~~~~~~~
  This character class can be simplified by using the \`i\` flag.
 `,
 		},

@@ -23,7 +23,7 @@ export const options = {
 	presenter: {
 		type: "string",
 	},
-	"skip-diagnostics": {
+	"skip-language-reports": {
 		multiple: true,
 		type: "string",
 	},

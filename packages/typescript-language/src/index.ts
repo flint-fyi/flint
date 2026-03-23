@@ -1,4 +1,4 @@
-export { convertTypeScriptDiagnosticToLanguageFileDiagnostic } from "./convertTypeScriptDiagnosticToLanguageFileDiagnostic.ts";
+export { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
 export {
 	extractDirectivesFromTypeScriptFile,
 	type ExtractedDirective,
