@@ -1,5 +1,5 @@
 ---
-date: 2026-03-23T14:59:23Z
+date: 2026-03-30T14:59:23Z
 description: Flint's been under active development for almost a year.
   Let's cover what's been done, what's coming up next, and what's being pushed to the backlog.
 excerpt: Hello, and welcome to the first State of Flint blog post!
@@ -91,7 +91,7 @@ It supports:
 - `--watch` mode to re-run on files as they save changes
 
 In fact, we've been running Flint in CI alongside ESLint and other checks for the majority of the Flint project.
-Our next step will be to start flighting it in personal projects of members of the Flint team.
+Our next step will be to start using it in personal projects of members of the Flint team.
 
 > - [What Flint Does Differently > Comprehensive Rule Reports](/blog/what-flint-does-differently#comprehensive-rule-reports)
 > - [What Flint Does Differently > Interactive and Watch CLI Modes](/blog/what-flint-does-differently#interactive-and-watch-cli-modes)
@@ -172,6 +172,9 @@ For them, we plan to have full architecture documentation, Node.js API reference
 The glossary and FAQs were started in 2025.
 We plan on fleshing out most or all the rest of that documentation as the project solidifies its architecture and best practices through 2026.
 
+> - [flint#67 🚀 Feature: Create a templated docs page for each core plugin](https://github.com/flint-fyi/flint/issues/67)
+> - [flint#1053 🚀 Feature: Documentation Generator](https://github.com/flint-fyi/flint/issues/1053)
+> - [flint#1150 📝 Documentation: Add architecture docs for Flint itself](https://github.com/flint-fyi/flint/issues/1150)
 > - [What Flint Does Differently § Comprehensive Rule Documentation](/blog/what-flint-does-differently#comprehensive-rule-documentation)
 > - [What Flint Does Differently § Shared Glossary](/blog/what-flint-does-differently#shared-glossary)
 
@@ -185,6 +188,8 @@ Flint will provide a [Language Server Protocol ("LSP")](https://en.wikipedia.org
 Doing so will enable most users of the linter to integrate Flint into their editor.
 Now that Flint's core has been mostly stable for several months, we're looking forward to building up higher-level APIs that can power LSP usage.
 
+> - [flint#2462 🚀 Feature: LSP](https://github.com/flint-fyi/flint/issues/2462)
+
 ### MCP Server
 
 If an LSP server is de facto required for humans in editors, then a [Model Context Protocol ("MCP")](https://en.wikipedia.org/wiki/Model_Context_Protocol) is de facto required for agentic workflows.
@@ -192,6 +197,8 @@ AI is steadily growing in programmer popularity and power.
 Setting up an MCP interface so the linter can directly guide agents through fixing code flaws will be table stakes for any linter soon.
 
 As with LSP, we're looking forward to building up higher-level Flint APIs that can power MCP usage.
+
+> [flint#977 🚀 Feature: Add MCP integration package](https://github.com/flint-fyi/flint/issues/977)
 
 ### More Lint Rules
 
