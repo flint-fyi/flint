@@ -1,0 +1,142 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "Flint Comparisons Data",
+	"description": "Maps linting rules across tools (Flint, ESLint, Biome, Oxlint, Deno, markdownlint) for comparison.",
+	"type": "array",
+	"items": {
+		"type": "object",
+		"required": ["flint"],
+		"additionalProperties": false,
+		"properties": {
+			"flint": {
+				"type": "object",
+				"required": ["name", "plugin"],
+				"additionalProperties": false,
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "The Flint rule name.",
+						"minLength": 1
+					},
+					"plugin": {
+						"type": "string",
+						"description": "The Flint plugin this rule belongs to.",
+						"enum": [
+							"astro",
+							"browser",
+							"flint",
+							"json",
+							"jsx",
+							"md",
+							"next",
+							"node",
+							"nuxt",
+							"package-json",
+							"performance",
+							"react",
+							"solid",
+							"sorting",
+							"spelling",
+							"svelte",
+							"ts",
+							"vitest",
+							"vue",
+							"yaml"
+						]
+					},
+					"preset": {
+						"type": "string",
+						"description": "The preset this rule belongs to.",
+						"enum": [
+							"config",
+							"javascript",
+							"logical",
+							"logicalStrict",
+							"none",
+							"security",
+							"sorting",
+							"stylistic"
+						]
+					},
+					"status": {
+						"type": "string",
+						"description": "The implementation status of the rule.",
+						"enum": ["implemented", "skipped"]
+					},
+					"strictness": {
+						"type": "string",
+						"description": "The strictness level of the rule.",
+						"enum": ["strict"]
+					}
+				},
+				"if": {
+					"properties": { "status": { "const": "skipped" } },
+					"required": ["status"]
+				},
+				"then": {
+					"properties": {
+						"preset": false,
+						"strictness": false
+					}
+				}
+			},
+			"eslint": {
+				"type": "array",
+				"description": "Equivalent ESLint rule(s).",
+				"items": {
+					"$ref": "#/$defs/toolRule"
+				}
+			},
+			"biome": {
+				"type": "array",
+				"description": "Equivalent Biome rule(s).",
+				"items": {
+					"$ref": "#/$defs/toolRule"
+				}
+			},
+			"oxlint": {
+				"type": "array",
+				"description": "Equivalent Oxlint rule(s).",
+				"items": {
+					"$ref": "#/$defs/toolRule"
+				}
+			},
+			"deno": {
+				"type": "array",
+				"description": "Equivalent Deno lint rule(s).",
+				"items": {
+					"$ref": "#/$defs/toolRule"
+				}
+			},
+			"markdownlint": {
+				"type": "array",
+				"description": "Equivalent markdownlint rule(s).",
+				"items": {
+					"$ref": "#/$defs/toolRule"
+				}
+			},
+			"notes": {
+				"type": "string",
+				"description": "Additional notes about this rule mapping."
+			}
+		}
+	},
+	"$defs": {
+		"toolRule": {
+			"type": "object",
+			"required": ["name", "url"],
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "The rule name in the external tool."
+				},
+				"url": {
+					"type": "string",
+					"format": "uri",
+					"description": "URL to the rule's documentation."
+				}
+			}
+		}
+	}
+}
