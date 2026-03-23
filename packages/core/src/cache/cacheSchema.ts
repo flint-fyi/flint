@@ -68,14 +68,14 @@ const fileReportSchema = z.object({
 	suggestions: z.array(suggestionSchema).optional(),
 });
 
-const languageFileDiagnosticSchema = z.object({
+const languageReportSchema = z.object({
 	code: z.string().optional(),
 	text: z.string(),
 });
 
 const fileCacheStorageSchema = z.object({
 	dependencies: z.array(z.string()).optional(),
-	diagnostics: z.array(languageFileDiagnosticSchema).optional(),
+	languageReports: z.array(languageReportSchema).optional(),
 	reports: z.array(fileReportSchema).optional(),
 	timestamp: z.number(),
 });

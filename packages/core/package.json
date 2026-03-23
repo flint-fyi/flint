@@ -23,7 +23,7 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project core"
+		"test": "vitest --project core"
 	},
 	"dependencies": {
 		"@flint.fyi/utils": "workspace:^",

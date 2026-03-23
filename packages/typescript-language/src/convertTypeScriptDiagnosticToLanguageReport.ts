@@ -7,15 +7,15 @@
 import {
 	getColumnAndLineOfPosition,
 	getPositionOfColumnAndLine,
-	type LanguageFileDiagnostic,
+	type LanguageReport,
 	type SourceFileWithLineMapAndFileName,
 } from "@flint.fyi/core";
-import ts, { flattenDiagnosticMessageText } from "typescript";
+import ts from "typescript";
 
-export interface TSBasedDiagnostic extends TSBasedDiagnosticRelatedInformation {
-	relatedInformation?: TSBasedDiagnosticRelatedInformation[];
+export interface TSDiagnostic extends TSDiagnosticRelatedInformation {
+	relatedInformation?: TSDiagnosticRelatedInformation[];
 }
-export interface TSBasedDiagnosticRelatedInformation {
+export interface TSDiagnosticRelatedInformation {
 	code: number;
 	file: SourceFileWithLineMapAndFileName | undefined;
 	length: number | undefined;
@@ -23,12 +23,12 @@ export interface TSBasedDiagnosticRelatedInformation {
 	start: number | undefined;
 }
 
-export function convertTypeScriptDiagnosticToLanguageFileDiagnostic(
-	diagnostic: TSBasedDiagnostic,
-): LanguageFileDiagnostic {
+export function convertTypeScriptDiagnosticToLanguageReport(
+	diagnostic: TSDiagnostic,
+): LanguageReport {
 	return {
 		code: `TS${diagnostic.code}`,
-		text: formatDiagnostic(diagnostic),
+		text: formatReport(diagnostic),
 	};
 }
 
@@ -36,7 +36,7 @@ function color(text: string, formatStyle: string) {
 	return formatStyle + text + resetEscapeSequence;
 }
 
-function formatDiagnostic(diagnostic: TSBasedDiagnostic) {
+function formatReport(diagnostic: TSDiagnostic) {
 	let output = "";
 
 	if (diagnostic.file !== undefined) {
@@ -71,7 +71,7 @@ function formatDiagnostic(diagnostic: TSBasedDiagnostic) {
 				output += formatCodeSpan(file, start!, length!, indent, COLOR.Cyan);
 			}
 			output += "\n";
-			output += indent + flattenDiagnosticMessageText(messageText, "\n");
+			output += indent + ts.flattenDiagnosticMessageText(messageText, "\n");
 		}
 	}
 

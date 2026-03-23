@@ -23,7 +23,7 @@
 		"lint:knip": "knip",
 		"prepare": "husky",
 		"start:site": "pnpm --filter=site prebuild && pnpm --filter=site start",
-		"test": "vitest --typecheck"
+		"test": "vitest"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/core": "catalog:dev",

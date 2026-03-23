@@ -50,9 +50,9 @@ export async function runCli(args: string[]) {
 			"    Which 'presenter' to output results using: brief (default) or detailed.",
 		);
 		console.log("");
-		console.log("  --skip-diagnostics");
+		console.log("  --skip-language-reports");
 		console.log(
-			"    Whether to skip reporting language 'diagnostics' after linting.",
+			"    Whether to skip generating language reports after linting.",
 		);
 		console.log("");
 		console.log("  --version");

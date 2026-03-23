@@ -68,7 +68,7 @@ export interface Language<
 	getFileCacheImpacts?(
 		file: LanguageFile<FileServices>,
 	): LanguageFileCacheImpacts;
-	getFileDiagnostics?(file: LanguageFile<FileServices>): LanguageDiagnostics;
+	getLanguageReports?(file: LanguageFile<FileServices>): LanguageReports;
 	runFileVisitors<
 		OptionsSchema extends AnyOptionalSchema | undefined =
 			| AnyOptionalSchema
@@ -84,12 +84,12 @@ export interface LanguageAbout {
 	name: string;
 }
 
-export type LanguageDiagnostics = LanguageFileDiagnostic[];
-
-export interface LanguageFileDiagnostic {
+export interface LanguageReport {
 	code?: string;
 	text: string;
 }
+
+export type LanguageReports = LanguageReport[];
 
 /**
  * The definition of a language, as provided to language creators internally.
@@ -105,7 +105,7 @@ export interface LanguageDefinition<
 	getFileCacheImpacts?(
 		file: LanguageFile<FileServices>,
 	): LanguageFileCacheImpacts;
-	getFileDiagnostics?(file: LanguageFile<FileServices>): LanguageDiagnostics;
+	getLanguageReports?(file: LanguageFile<FileServices>): LanguageReports;
 	runFileVisitors<
 		OptionsSchema extends AnyOptionalSchema | undefined =
 			| AnyOptionalSchema

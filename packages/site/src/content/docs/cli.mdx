@@ -136,16 +136,16 @@ Linting with flint.config.ts...
 ✖ Found 1 report across 1 file.
 ```
 
-## `--skip-diagnostics`
+## `--skip-language-reports`
 
-Whether to skip reporting language "diagnostics" after linting.
+Whether to skip generating language reports after linting.
 
-<PackageManagers args="--skip-diagnostics" pkg="flint" type="dlx" />
+<PackageManagers args="--skip-language-reports" pkg="flint" type="dlx" />
 
 Language plugins such as Flint's TypeScript plugin are able to report additional checks from the languages after linting.
 For example, Flint's core TypeScript plugin reports TypeScript type errors (effectively running `tsc --noEmit`) by re-using the TypeScript type services used in linting.
 
-`--skip-diagnostics` can be used to disable those checks.
+`--skip-language-reports` can be used to disable those checks.
 You may wish to do this for performance and/or if you run tools like `tsc` separately from Flint.
 
 ## `--version`

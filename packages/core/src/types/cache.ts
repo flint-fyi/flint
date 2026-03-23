@@ -1,4 +1,4 @@
-import type { LanguageFileDiagnostic } from "./languages.ts";
+import type { LanguageReport } from "./languages.ts";
 import type { FileReport } from "./reports.ts";
 
 export interface CacheStorage {
@@ -13,7 +13,7 @@ export interface FileCacheImpacts {
 }
 
 export interface FileCacheStorage extends FileCacheImpacts {
-	diagnostics?: LanguageFileDiagnostic[];
+	languageReports?: LanguageReport[];
 
 	/**
 	 * Reports from the last time the file was linted.

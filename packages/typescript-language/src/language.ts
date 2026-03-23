@@ -3,9 +3,9 @@ import {
 	createLanguage,
 	type FileAboutData,
 	type InferredOutputObject,
-	type LanguageDiagnostics,
 	type LanguageFile,
 	type LanguageFileDefinition,
+	type LanguageReports,
 	type RuleRuntime,
 } from "@flint.fyi/core";
 import { assert, nullThrows } from "@flint.fyi/utils";
@@ -15,7 +15,7 @@ import path from "node:path";
 import * as ts from "typescript";
 
 import packageJson from "../package.json" with { type: "json" };
-import { convertTypeScriptDiagnosticToLanguageFileDiagnostic } from "./convertTypeScriptDiagnosticToLanguageFileDiagnostic.ts";
+import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
 import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
 import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 import { getFirstEnumValues } from "./getFirstEnumValues.ts";
@@ -46,7 +46,7 @@ type VolarCreateFile = (
 
 type VolarLanguageFileDefinition = LanguageFileDefinition<object> & {
 	__volarServices: {
-		getDiagnostics(): LanguageDiagnostics;
+		getLanguageReports(): LanguageReports;
 		runVisitors(
 			file: LanguageFile<TypeScriptFileServices>,
 			options: InferredOutputObject<AnyOptionalSchema | undefined>,
@@ -153,15 +153,15 @@ export const typescriptLanguage = createLanguage<
 	},
 
 	getFileCacheImpacts: getTypeScriptFileCacheImpacts,
-	getFileDiagnostics(file) {
+	getLanguageReports(file) {
 		if ("__volarServices" in file) {
 			return (
 				file as VolarLanguageFileDefinition
-			).__volarServices.getDiagnostics();
+			).__volarServices.getLanguageReports();
 		}
 		return ts
 			.getPreEmitDiagnostics(file.services.program, file.services.sourceFile)
-			.map(convertTypeScriptDiagnosticToLanguageFileDiagnostic);
+			.map(convertTypeScriptDiagnosticToLanguageReport);
 	},
 	runFileVisitors(file, options, runtime) {
 		if (!runtime.visitors) {
