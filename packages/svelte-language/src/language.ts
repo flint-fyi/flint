@@ -1,15 +1,12 @@
-import type {
-	LanguageDiagnostics,
-	SourceFileWithLineMap,
-} from "@flint.fyi/core";
+import type { LanguageReports, SourceFileWithLineMap } from "@flint.fyi/core";
 import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
 import { createVolarBasedLanguage } from "@flint.fyi/volar-language";
 import { type AST, parse } from "svelte/compiler";
 
 import { extractDirectives } from "./extractDirectives.ts";
 import {
-	errorToLanguageDiagnostic,
-	virtualCodeDiagnostics,
+	errorToLanguageReport,
+	virtualCodeReports,
 	volarLanguagePlugin,
 } from "./volarLanguagePlugin.ts";
 
@@ -33,16 +30,14 @@ export const svelteLanguage = createVolarBasedLanguage<SvelteServices>(
 				const source: SourceFileWithLineMap = { text: sourceText };
 				const virtualCode = sourceScript.generated.root;
 				let ast: AST.Root;
-				const diagnostics: LanguageDiagnostics = [];
+				const reports: LanguageReports = [];
 				try {
 					ast = parse(sourceText, {
 						loose: true,
 						modern: true,
 					});
 				} catch (error) {
-					diagnostics.push(
-						errorToLanguageDiagnostic(sourceFile.fileName, error),
-					);
+					reports.push(errorToLanguageReport(sourceFile.fileName, error));
 					ast = {
 						comments: [],
 						css: null,
@@ -58,9 +53,9 @@ export const svelteLanguage = createVolarBasedLanguage<SvelteServices>(
 						type: "Root",
 					};
 				}
-				const codegenDiagnostic = virtualCodeDiagnostics.get(virtualCode);
-				if (codegenDiagnostic != null) {
-					diagnostics.push(codegenDiagnostic);
+				const codegenReport = virtualCodeReports.get(virtualCode);
+				if (codegenReport != null) {
+					reports.push(codegenReport);
 				}
 				return {
 					directives: extractDirectives(ast, source),
@@ -82,8 +77,8 @@ export const svelteLanguage = createVolarBasedLanguage<SvelteServices>(
 							sourceText.length,
 						].filter((pos) => typeof pos === "number"),
 					),
-					getDiagnostics() {
-						return diagnostics;
+					getLanguageReports() {
+						return reports;
 					},
 				};
 			},

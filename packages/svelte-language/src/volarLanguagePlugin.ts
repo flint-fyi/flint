@@ -1,6 +1,6 @@
 import {
 	getPositionOfColumnAndLine,
-	type LanguageFileDiagnostic,
+	type LanguageReport,
 	type SourceFileWithLineMap,
 } from "@flint.fyi/core";
 import { decode } from "@jridgewell/sourcemap-codec";
@@ -93,15 +93,12 @@ export function volarLanguagePlugin(
 	};
 }
 
-export const virtualCodeDiagnostics = new WeakMap<
-	VirtualCode,
-	LanguageFileDiagnostic
->();
+export const virtualCodeReports = new WeakMap<VirtualCode, LanguageReport>();
 
-export function errorToLanguageDiagnostic(
+export function errorToLanguageReport(
 	fileName: string,
 	error: unknown,
-): LanguageFileDiagnostic {
+): LanguageReport {
 	if (typeof error !== "object" || error == null) {
 		return {
 			text: `${fileName} - Unknown error`,
@@ -111,7 +108,7 @@ export function errorToLanguageDiagnostic(
 		"position" in error && Array.isArray(error.position)
 			? `:${error.position[0]}:${error.position[1]}`
 			: "";
-	const res: LanguageFileDiagnostic = {
+	const res: LanguageReport = {
 		text: `${fileName}${loc} - ${"message" in error && typeof error.message === "string" ? error.message : "Codegen error"}`,
 	};
 	if ("code" in error && typeof error.code === "string") {
@@ -250,7 +247,7 @@ function getEmbeddedTsCode(
 			},
 		};
 	} catch (error) {
-		const diagnostic = errorToLanguageDiagnostic(fileName, error);
+		const report = errorToLanguageReport(fileName, error);
 		const code: VirtualCode = {
 			embeddedCodes: [],
 			id: "tsx",
@@ -269,7 +266,7 @@ function getEmbeddedTsCode(
 			},
 		};
 
-		virtualCodeDiagnostics.set(code, diagnostic);
+		virtualCodeReports.set(code, report);
 		return code;
 	}
 }
