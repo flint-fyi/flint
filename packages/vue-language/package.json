@@ -48,5 +48,8 @@
 		"exports": {
 			".": "./lib/index.js"
 		}
+	},
+	"inlinedDependencies": {
+		"zod": "4.3.6"
 	}
 }
