@@ -983,7 +983,8 @@
 		"flint": {
 			"name": "unusedMessageIds",
 			"plugin": "flint",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
