@@ -1,7 +1,7 @@
 <h1 align="center">Flint</h1>
 
 <p align="center">
-	[Experimental] Monorepo for Flint: a fast, friendly linter.
+	[Experimental] A fast, friendly linter for JavaScript, TypeScript, and more.
 	❤️‍🔥
 </p>
 
@@ -19,36 +19,21 @@
 
 <img align="right" alt="A flaming heart atop a brown linter-style squiggly line" height="128" src="docs/flint.png" width="105">
 
-**Flint** is an experimental new linter.
-It's a proof-of-concept to explore the concepts in the following blog posts:
+**Flint** is an experimental new _"hybrid"_ linter: one that combines...
 
-- [Hybrid Linters: The Best of Both Worlds](https://www.joshuakgoldberg.com/blog/hybrid-linters-the-best-of-both-worlds)
-- [If I Wrote a Linter, Part 1: Architecture](https://www.joshuakgoldberg.com/blog/if-i-wrote-a-linter-part-1-architecture)
-- [If I Wrote a Linter, Part 2: Developer Experience](https://www.joshuakgoldberg.com/blog/if-i-wrote-a-linter-part-2-developer-experience)
-- [If I Wrote a Linter, Part 3: Ecosystem](https://www.joshuakgoldberg.com/blog/if-i-wrote-a-linter-part-3-ecosystem)
-- [If I Wrote a Linter, Part 4: Summary](https://www.joshuakgoldberg.com/blog/if-i-wrote-a-linter-part-4-summary)
-
-This project might go nowhere.
-It might show some of those ideas to be wrong.
-It might become a real linter.
-Only time will tell.
-
-In the meantime, come talk about it on the [Flint Discord](https://flint.fyi/discord).
-
-👉 See [flint.fyi](https://flint.fyi) for additional documentation.
-
-## Why?
-
-Flint is an attempt at a "hybrid" linter: one that combines...
-
-- **Ergonomics**: the ease of writing rules in JavaScript or TypeScript
-- **Performance**: some of the speed of native linters by parsing and type checking with typescript-go
+- 😌 **Ergonomics**: the ease of writing rules in JavaScript or TypeScript
+- ⚡️ **Performance**: much of the speed of native linters with intelligent caching and native code for bottleneck operations
 
 It also brings in several improvements over traditional linter paradigms:
 
-- **Streamlined configuration**: flexible configuration files that still preserve readability
-- **Type-aware caching**: significantly improving performance when linting changes to large repositories
-- **Unified core**: promoting popular rules to the core project for easier, more reliable inclusion
+- 📄 **Streamlined configuration**: flexible configuration files that still preserve readability
+- 🏭 **Type-aware caching**: significantly improving performance when linting changes to large repositories
+- ♾️ **Unified core**: promoting popular rules to the core project for easier, more reliable inclusion
+
+For deep dives into Flint, see:
+
+- **[Introducing Flint](https://www.flint.fyi/blog/introducing-flint)**: the core hypotheses Flint is testing out, with why we hope they succeed.
+- **[What Flint Does Differently](https://www.flint.fyi/blog/what-flint-does-differently)**: a full list of the core, developer, and end-user design differences in Flint compared to other linters.
 
 ## Usage
 
