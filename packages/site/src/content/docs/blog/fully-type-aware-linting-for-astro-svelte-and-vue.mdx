@@ -36,7 +36,7 @@ However, syntax-only linting is often not enough to catch all bugs.
 [Type-aware linting](https://typescript-eslint.io/blog/typed-linting) allows for significantly more powerful lint rules -- but requires more deep integrations with TypeScript tooling.
 
 Flint's goals include providing a complete linting experience out-of-the-box.
-That includes full typed linting without any additional configuration.
+That includes full typed linting without any additional configuration file settings.
 To provide this for users, we needed to finally solve long-standing questions around how to fully lint extension languages and their embedded code with TypeScript.
 
 ### Typed Rules and Embedded JavaScript Expressions
@@ -99,14 +99,6 @@ Take, for example, the following code that uses a custom Vue component:
 
 `data` comes from `MyComponent`'s `v-slot`.
 To know its type, we must resolve the type of `MyComponent`, extract its `v-slot` type, and resolve its type based on Vue-specific logic.
-
-[Johnson Chu](https://github.com/johnsoncodehk)'s [`tsslint`](https://github.com/johnsoncodehk/tsslint) ("The lightest TypeScript semantic linting solution in JS") used Volar.js to solve the problem of type-aware linting for TypeScript-based languages.
-Thanks to Volar.js language plugins, it achieved linting support for Astro, MDX, Vue, and Vue Vine.
-In doing so, `tsslint` solved one of the gaps in typed linting: linting extension language files on their own.
-
-Flint builds on `tsslint`'s feature set by additionally solving the first problem of `any`-typed imports from extension language files.
-Flint includes a dynamic TypeScript patching mechanism required to resolve custom file extensions to concrete types instead of `any`.
-It also exposes custom language ASTs to lint rules, which allows lint rules to fully operate on both native TypeScript files as well as extension language files.
 
 ### Type Checking TypeScript-Based Extension Languages
 
@@ -206,6 +198,16 @@ Thanks to this, the type of every identifier used in the `@click` handler can be
 
 This is how [`vue-tsc`](https://github.com/vuejs/language-tools/tree/94907be4f056f25867e46a117ab18d2782b425d7/packages/tsc) type-checks `.vue` files internally!
 
+### Prior Art
+
+[Johnson Chu](https://github.com/johnsoncodehk)'s [`tsslint`](https://github.com/johnsoncodehk/tsslint) ("The lightest TypeScript semantic linting solution in JS") used Volar.js to solve the problem of type-aware linting for TypeScript-based languages.
+Thanks to Volar.js language plugins, it achieved linting support for Astro, MDX, Vue, and Vue Vine.
+In doing so, `tsslint` solved one of the gaps in typed linting: linting extension language files on their own.
+
+Flint builds on `tsslint`'s feature set by additionally solving the first problem of `any`-typed imports from extension language files.
+Flint includes a dynamic TypeScript patching mechanism required to resolve custom file extensions to concrete types instead of `any`.
+It also exposes custom language ASTs to lint rules, which allows lint rules to fully operate on both native TypeScript files as well as extension language files.
+
 ## Using Volar.js for Type-Aware Linting
 
 Flint's `@flint.fyi/volar-language` package allows creating TypeScript-based languages with full typed linting support.
@@ -219,14 +221,15 @@ Now, let's explore how this works from a user's perspective.
 
 ### Initialization
 
-Initialization of a language happens implicitly.
+Flint Volar-based languages are able to register themselves with Flint implicitly: users' configurations don't have to wrangle any extra settings to work with the languages.
+Importing from a language package is enough to get Flint ready to lint the language's extension syntax.
 
-Take a look at the example Flint config:
+Take a look at this Flint config structure that imports Flint's Vue language:
 
-```typescript 'import "@flint.fyi/vue"'
+```typescript 'import { vue } from "@flint.fyi/vue"'
 // flint.config.ts
 import { defineConfig } from "flint";
-import "@flint.fyi/vue";
+import { vue } from "@flint.fyi/vue";
 
 export default defineConfig({
 	// ...
@@ -236,7 +239,7 @@ export default defineConfig({
 By importing `@flint.fyi/vue`, you enable _all TypeScript-only rules_ to support `.vue` linting.
 No additional configuration needed!
 
-### Lint rules
+### Lint Rules
 
 All Flint Volar.js-based rules can lint `.ts` files as well.
 
@@ -443,7 +446,7 @@ We can see that the TypeScript-only rule works in JavaScript expressions embedde
 4. `<div v-for="i in 3"></div>` is reported by `vue/vForKeys`.
 Vue rules can access the Vue AST and analyze it.
 
-## What's next
+## What's Next
 
 Flint is still in its early pre-alpha stages.
 We're excited to show off this early technical preview of the novel architecture we're building into the linter.
@@ -452,6 +455,9 @@ The next steps for Flint's languages support are:
 
 - Implement all Astro, Svelte, and Vue rules in their Flint plugins
 - Investigate support for other TypeScript-based languages such as Ember and MDX
+
+If you're wondering what Flint's broader roadmap looks like, when you'll be able to try more of this out, or why some of it isn't available yet, that's coming next.
+Our next blog post will dig into the project's timelines for this year and the next.
 
 If you're interested in helping build out a new experimental linter, we'd love to have you join us.
 At the very least, see [About](/about) for how to get started using Flint as a user.
