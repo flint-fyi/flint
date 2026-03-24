@@ -32,6 +32,7 @@
 .name {
 	font-size: var(--sl-text-lg);
 	margin-right: 1rem;
+	white-space: nowrap;
 }
 
 .description {
