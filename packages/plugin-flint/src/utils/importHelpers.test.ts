@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -8,8 +8,8 @@ import {
 
 function parseAndFind<T extends ts.Node>(
 	code: string,
-	kind: SyntaxKind,
-): T | undefined {
+	isMatch: (node: ts.Node) => node is T,
+): T {
 	const sourceFile = ts.createSourceFile(
 		"test.ts",
 		code,
@@ -20,8 +20,12 @@ function parseAndFind<T extends ts.Node>(
 	let found: T | undefined;
 
 	function visit(node: ts.Node) {
-		if (node.kind === kind && !found) {
-			found = node as T;
+		if (found) {
+			return;
+		}
+
+		if (isMatch(node)) {
+			found = node;
 			return;
 		}
 
@@ -29,15 +33,20 @@ function parseAndFind<T extends ts.Node>(
 	}
 
 	visit(sourceFile);
-	return found;
+
+	if (found) {
+		return found;
+	}
+
+	throw new Error("Expected node was not found in source file.");
 }
 
 describe("isImportedBindingFromModule", () => {
 	it("returns true for an ImportSpecifier from the matching module", () => {
 		const specifier = parseAndFind<ts.ImportSpecifier>(
 			`import { foo } from "my-module";`,
-			SyntaxKind.ImportSpecifier,
-		)!;
+			ts.isImportSpecifier,
+		);
 
 		expect(isImportedBindingFromModule(specifier, "my-module")).toBe(true);
 	});
@@ -45,8 +54,8 @@ describe("isImportedBindingFromModule", () => {
 	it("returns true for a NamespaceImport from the matching module", () => {
 		const nsImport = parseAndFind<ts.NamespaceImport>(
 			`import * as ns from "my-module";`,
-			SyntaxKind.NamespaceImport,
-		)!;
+			ts.isNamespaceImport,
+		);
 
 		expect(isImportedBindingFromModule(nsImport, "my-module")).toBe(true);
 	});
@@ -54,8 +63,8 @@ describe("isImportedBindingFromModule", () => {
 	it("returns false for an ImportSpecifier from a different module", () => {
 		const specifier = parseAndFind<ts.ImportSpecifier>(
 			`import { foo } from "other-module";`,
-			SyntaxKind.ImportSpecifier,
-		)!;
+			ts.isImportSpecifier,
+		);
 
 		expect(isImportedBindingFromModule(specifier, "my-module")).toBe(false);
 	});
@@ -63,8 +72,8 @@ describe("isImportedBindingFromModule", () => {
 	it("returns false for a NamespaceImport from a different module", () => {
 		const nsImport = parseAndFind<ts.NamespaceImport>(
 			`import * as ns from "other-module";`,
-			SyntaxKind.NamespaceImport,
-		)!;
+			ts.isNamespaceImport,
+		);
 
 		expect(isImportedBindingFromModule(nsImport, "my-module")).toBe(false);
 	});
@@ -72,8 +81,8 @@ describe("isImportedBindingFromModule", () => {
 	it("returns false for a non-import node", () => {
 		const identifier = parseAndFind<ts.Identifier>(
 			`const x = 1;`,
-			SyntaxKind.Identifier,
-		)!;
+			ts.isIdentifier,
+		);
 
 		expect(isImportedBindingFromModule(identifier, "my-module")).toBe(false);
 	});
@@ -83,8 +92,8 @@ describe("isImportedSpecifierFromModule", () => {
 	it("returns true for a matching named import", () => {
 		const specifier = parseAndFind<ts.ImportSpecifier>(
 			`import { reportSourceCode } from "@flint.fyi/volar-language";`,
-			SyntaxKind.ImportSpecifier,
-		)!;
+			ts.isImportSpecifier,
+		);
 
 		expect(
 			isImportedSpecifierFromModule(
@@ -98,8 +107,8 @@ describe("isImportedSpecifierFromModule", () => {
 	it("returns true for a renamed import matching the original name", () => {
 		const specifier = parseAndFind<ts.ImportSpecifier>(
 			`import { reportSourceCode as report } from "@flint.fyi/volar-language";`,
-			SyntaxKind.ImportSpecifier,
-		)!;
+			ts.isImportSpecifier,
+		);
 
 		expect(
 			isImportedSpecifierFromModule(
@@ -113,8 +122,8 @@ describe("isImportedSpecifierFromModule", () => {
 	it("returns false when the imported name does not match", () => {
 		const specifier = parseAndFind<ts.ImportSpecifier>(
 			`import { otherFunction } from "@flint.fyi/volar-language";`,
-			SyntaxKind.ImportSpecifier,
-		)!;
+			ts.isImportSpecifier,
+		);
 
 		expect(
 			isImportedSpecifierFromModule(
@@ -128,8 +137,8 @@ describe("isImportedSpecifierFromModule", () => {
 	it("returns false when the module does not match", () => {
 		const specifier = parseAndFind<ts.ImportSpecifier>(
 			`import { reportSourceCode } from "other-module";`,
-			SyntaxKind.ImportSpecifier,
-		)!;
+			ts.isImportSpecifier,
+		);
 
 		expect(
 			isImportedSpecifierFromModule(
@@ -143,8 +152,8 @@ describe("isImportedSpecifierFromModule", () => {
 	it("returns false for a NamespaceImport", () => {
 		const nsImport = parseAndFind<ts.NamespaceImport>(
 			`import * as ns from "@flint.fyi/volar-language";`,
-			SyntaxKind.NamespaceImport,
-		)!;
+			ts.isNamespaceImport,
+		);
 
 		expect(
 			isImportedSpecifierFromModule(
