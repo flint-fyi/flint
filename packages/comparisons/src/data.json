@@ -860,6 +860,14 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "testCaseNonStaticCode",
+			"plugin": "flint",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "eslint-plugin-eslint-plugin/unique-test-case-names",
@@ -868,14 +876,6 @@
 		],
 		"flint": {
 			"name": "testCaseNameDuplicates",
-			"plugin": "flint",
-			"preset": "logical",
-			"status": "implemented"
-		}
-	},
-	{
-		"flint": {
-			"name": "testCaseNonStaticCode",
 			"plugin": "flint",
 			"preset": "logical",
 			"status": "implemented"
@@ -5141,19 +5141,6 @@
 	{
 		"eslint": [
 			{
-				"name": "package-json/require-exports",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/require-exports.md"
-			}
-		],
-		"flint": {
-			"name": "exportsPresence",
-			"plugin": "package-json",
-			"preset": "logical"
-		}
-	},
-	{
-		"eslint": [
-			{
 				"name": "package-json/exports-subpaths-style",
 				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/exports-subpaths-style.md"
 			}
@@ -5162,6 +5149,19 @@
 			"name": "exportsSubpathsStyle",
 			"plugin": "package-json",
 			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-exports",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/require-exports.md"
+			}
+		],
+		"flint": {
+			"name": "exportsPresence",
+			"plugin": "package-json",
+			"preset": "logical"
 		}
 	},
 	{
@@ -7250,19 +7250,6 @@
 	{
 		"eslint": [
 			{
-				"name": "@typescript-eslint/sort-type-constituents",
-				"url": "https://typescript-eslint.io/rules/sort-type-constituents"
-			}
-		],
-		"flint": {
-			"name": "typeConstituents",
-			"plugin": "sorting",
-			"preset": "stylistic"
-		}
-	},
-	{
-		"eslint": [
-			{
 				"name": "perfectionist/sort-union-types",
 				"url": "https://perfectionist.dev/rules/sort-union-types"
 			}
@@ -8431,32 +8418,6 @@
 		}
 	},
 	{
-		"biome": [
-			{
-				"name": "useaccessorPairGroups",
-				"url": "https://biomejs.dev/linter/rules/useaccessorPairGroups"
-			}
-		],
-		"eslint": [
-			{
-				"name": "grouped-accessor-pairs",
-				"url": "https://eslint.org/docs/latest/rules/grouped-accessor-pairs"
-			}
-		],
-		"flint": {
-			"name": "accessorPairGroups",
-			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/grouped-accessor-pairs",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/grouped-accessor-pairs.html"
-			}
-		]
-	},
-	{
 		"eslint": [
 			{
 				"name": "accessor-pairs",
@@ -8468,26 +8429,6 @@
 			"plugin": "ts",
 			"status": "skipped"
 		}
-	},
-	{
-		"eslint": [
-			{
-				"name": "@typescript-eslint/related-getter-setter-pairs",
-				"url": "https://typescript-eslint.io/rules/related-getter-setter-pairs"
-			}
-		],
-		"flint": {
-			"name": "accessorPairTypes",
-			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "typescript/related-getter-setter-pairs",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/related-getter-setter-pairs.html"
-			}
-		]
 	},
 	{
 		"eslint": [
@@ -9147,27 +9088,6 @@
 			{
 				"name": "unicorn/no-array-reduce",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-reduce.html"
-			}
-		]
-	},
-	{
-		"eslint": [
-			{
-				"name": "@typescript-eslint/prefer-reduce-type-parameter",
-				"url": "https://typescript-eslint.io/rules/prefer-reduce-type-parameter"
-			}
-		],
-		"flint": {
-			"name": "arrayReduceTypeArguments",
-			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
-		},
-		"oxlint": [
-			{
-				"name": "typescript/prefer-reduce-type-parameter",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-reduce-type-parameter.html"
 			}
 		]
 	},
@@ -10399,26 +10319,6 @@
 			"plugin": "ts",
 			"status": "skipped"
 		}
-	},
-	{
-		"eslint": [
-			{
-				"name": "@typescript-eslint/consistent-generic-constructors",
-				"url": "https://typescript-eslint.io/rules/consistent-generic-constructors"
-			}
-		],
-		"flint": {
-			"name": "constructorGenericCalls",
-			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "typescript/consistent-generic-constructors",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/consistent-generic-constructors.html"
-			}
-		]
 	},
 	{
 		"biome": [
@@ -11886,38 +11786,6 @@
 	{
 		"biome": [
 			{
-				"name": "noUnsafeFinally",
-				"url": "https://biomejs.dev/linter/rules/noUnsafeFinally"
-			}
-		],
-		"deno": [
-			{
-				"name": "no-unsafe-finally",
-				"url": "https://docs.deno.com/lint/rules/no-unsafe-finally"
-			}
-		],
-		"eslint": [
-			{
-				"name": "no-unsafe-finally",
-				"url": "https://eslint.org/docs/latest/rules/no-unsafe-finally"
-			}
-		],
-		"flint": {
-			"status": "implemented",
-			"name": "finallyStatementSafety",
-			"plugin": "ts",
-			"preset": "logical"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/no-unsafe-finally",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unsafe-finally.html"
-			}
-		]
-	},
-	{
-		"biome": [
-			{
 				"name": "noFloatingPromises",
 				"url": "https://biomejs.dev/linter/rules/noFloatingPromises"
 			}
@@ -12024,26 +11892,6 @@
 		]
 	},
 	{
-		"eslint": [
-			{
-				"name": "prefer-spread",
-				"url": "https://eslint.org/docs/latest/rules/prefer-spread"
-			}
-		],
-		"flint": {
-			"name": "functionApplySpreads",
-			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/prefer-spread",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-spread.html"
-			}
-		]
-	},
-	{
 		"biome": [
 			{
 				"name": "noFunctionAssign",
@@ -12078,20 +11926,20 @@
 	{
 		"eslint": [
 			{
-				"name": "no-useless-call",
-				"url": "https://eslint.org/docs/latest/rules/no-useless-call"
+				"name": "prefer-spread",
+				"url": "https://eslint.org/docs/latest/rules/prefer-spread"
 			}
 		],
 		"flint": {
-			"name": "functionCurryingRedundancy",
+			"name": "functionApplySpreads",
 			"plugin": "ts",
-			"preset": "logical",
+			"preset": "stylistic",
 			"status": "implemented"
 		},
 		"oxlint": [
 			{
-				"name": "eslint/no-useless-call",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-call.html"
+				"name": "eslint/prefer-spread",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-spread.html"
 			}
 		]
 	},
@@ -12275,6 +12123,26 @@
 		]
 	},
 	{
+		"eslint": [
+			{
+				"name": "@typescript-eslint/consistent-generic-constructors",
+				"url": "https://typescript-eslint.io/rules/consistent-generic-constructors"
+			}
+		],
+		"flint": {
+			"name": "constructorGenericCalls",
+			"plugin": "ts",
+			"preset": "stylistic",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "typescript/consistent-generic-constructors",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/consistent-generic-constructors.html"
+			}
+		]
+	},
+	{
 		"biome": [
 			{
 				"name": "useGetterReturn",
@@ -12303,6 +12171,26 @@
 			{
 				"name": "eslint/getter-return",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/getter-return.html"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "@typescript-eslint/related-getter-setter-pairs",
+				"url": "https://typescript-eslint.io/rules/related-getter-setter-pairs"
+			}
+		],
+		"flint": {
+			"name": "accessorPairTypes",
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "typescript/related-getter-setter-pairs",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/related-getter-setter-pairs.html"
 			}
 		]
 	},
@@ -12398,6 +12286,32 @@
 			{
 				"name": "unicorn/prefer-global-this",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-global-this.html"
+			}
+		]
+	},
+	{
+		"biome": [
+			{
+				"name": "useaccessorPairGroups",
+				"url": "https://biomejs.dev/linter/rules/useaccessorPairGroups"
+			}
+		],
+		"eslint": [
+			{
+				"name": "grouped-accessor-pairs",
+				"url": "https://eslint.org/docs/latest/rules/grouped-accessor-pairs"
+			}
+		],
+		"flint": {
+			"name": "accessorPairGroups",
+			"plugin": "ts",
+			"preset": "stylistic",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/grouped-accessor-pairs",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/grouped-accessor-pairs.html"
 			}
 		]
 	},
@@ -12614,25 +12528,6 @@
 			{
 				"name": "import/no-duplicates",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-duplicates.html"
-			}
-		]
-	},
-	{
-		"eslint": [
-			{
-				"name": "no-duplicate-imports",
-				"url": "https://eslint.org/docs/latest/rules/no-duplicate-imports"
-			}
-		],
-		"flint": {
-			"name": "importDuplicates",
-			"plugin": "ts",
-			"preset": "stylistic"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/no-duplicate-imports",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-duplicate-imports.html"
 			}
 		]
 	},
@@ -12972,38 +12867,6 @@
 			"preset": "logical",
 			"strictness": "strict"
 		}
-	},
-	{
-		"biome": [
-			{
-				"name": "noIrregularWhitespace",
-				"url": "https://biomejs.dev/linter/rules/no-irregular-whitespace"
-			}
-		],
-		"deno": [
-			{
-				"name": "no-irregular-whitespace",
-				"url": "https://docs.deno.com/lint/rules/no-irregular-whitespace"
-			}
-		],
-		"eslint": [
-			{
-				"name": "no-irregular-whitespace",
-				"url": "https://eslint.org/docs/latest/rules/no-irregular-whitespace"
-			}
-		],
-		"flint": {
-			"name": "irregularWhitespaces",
-			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/no-irregular-whitespace",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-irregular-whitespace.html"
-			}
-		]
 	},
 	{
 		"biome": [
@@ -14758,6 +14621,83 @@
 	{
 		"eslint": [
 			{
+				"name": "no-duplicate-imports",
+				"url": "https://eslint.org/docs/latest/rules/no-duplicate-imports"
+			}
+		],
+		"flint": {
+			"name": "importDuplicates",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-duplicate-imports",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-duplicate-imports.html"
+			}
+		]
+	},
+	{
+		"biome": [
+			{
+				"name": "noIrregularWhitespace",
+				"url": "https://biomejs.dev/linter/rules/no-irregular-whitespace"
+			}
+		],
+		"deno": [
+			{
+				"name": "no-irregular-whitespace",
+				"url": "https://docs.deno.com/lint/rules/no-irregular-whitespace"
+			}
+		],
+		"eslint": [
+			{
+				"name": "no-irregular-whitespace",
+				"url": "https://eslint.org/docs/latest/rules/no-irregular-whitespace"
+			}
+		],
+		"flint": {
+			"name": "irregularWhitespaces",
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-irregular-whitespace",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-irregular-whitespace.html"
+			}
+		]
+	},
+	{
+		"biome": [
+			{
+				"name": "useConsistentBuiltinInstantiation",
+				"url": "https://biomejs.dev/linter/rules/use-consistent-builtin-instantiation/"
+			}
+		],
+		"eslint": [
+			{
+				"name": "no-new-wrappers",
+				"url": "https://eslint.org/docs/latest/rules/no-new-wrappers"
+			}
+		],
+		"flint": {
+			"name": "wrapperObjects",
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-new-wrappers",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-new-wrappers.html"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
 				"name": "@typescript-eslint/non-nullable-type-assertion-style",
 				"url": "https://typescript-eslint.io/rules/non-nullable-type-assertion-style"
 			}
@@ -16089,6 +16029,27 @@
 			{
 				"name": "oxc/only-used-in-recursion",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/only-used-in-recursion.html"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "@typescript-eslint/prefer-reduce-type-parameter",
+				"url": "https://typescript-eslint.io/rules/prefer-reduce-type-parameter"
+			}
+		],
+		"flint": {
+			"name": "arrayReduceTypeArguments",
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented",
+			"strictness": "strict"
+		},
+		"oxlint": [
+			{
+				"name": "typescript/prefer-reduce-type-parameter",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-reduce-type-parameter.html"
 			}
 		]
 	},
@@ -17782,6 +17743,38 @@
 	{
 		"biome": [
 			{
+				"name": "noSelfCompare",
+				"url": "https://biomejs.dev/linter/rules/noSelfCompare"
+			}
+		],
+		"deno": [
+			{
+				"name": "no-self-compare",
+				"url": "https://docs.deno.com/lint/rules/no-self-compare"
+			}
+		],
+		"eslint": [
+			{
+				"name": "no-self-compare",
+				"url": "https://eslint.org/docs/latest/rules/no-self-compare"
+			}
+		],
+		"flint": {
+			"name": "unnecessaryComparisons",
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-self-compare",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-self-compare.html"
+			}
+		]
+	},
+	{
+		"biome": [
+			{
 				"name": "noCommaOperator",
 				"url": "https://biomejs.dev/linter/rules/noCommaOperator"
 			}
@@ -18781,19 +18774,6 @@
 	{
 		"eslint": [
 			{
-				"name": "@typescript-eslint/typedef",
-				"url": "https://typescript-eslint.io/rules/typedef"
-			}
-		],
-		"flint": {
-			"name": "typeAnnotations",
-			"plugin": "ts",
-			"status": "skipped"
-		}
-	},
-	{
-		"eslint": [
-			{
 				"name": "@typescript-eslint/consistent-type-assertions",
 				"url": "https://typescript-eslint.io/rules/consistent-type-assertions"
 			}
@@ -18842,6 +18822,32 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-duplicate-type-constituents.html"
 			}
 		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "@typescript-eslint/sort-type-constituents",
+				"url": "https://typescript-eslint.io/rules/sort-type-constituents"
+			}
+		],
+		"flint": {
+			"name": "typeConstituents",
+			"plugin": "sorting",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@typescript-eslint/typedef",
+				"url": "https://typescript-eslint.io/rules/typedef"
+			}
+		],
+		"flint": {
+			"name": "typeAnnotations",
+			"plugin": "ts",
+			"status": "skipped"
+		}
 	},
 	{
 		"biome": [
@@ -19240,38 +19246,6 @@
 		]
 	},
 	{
-		"biome": [
-			{
-				"name": "noSelfCompare",
-				"url": "https://biomejs.dev/linter/rules/noSelfCompare"
-			}
-		],
-		"deno": [
-			{
-				"name": "no-self-compare",
-				"url": "https://docs.deno.com/lint/rules/no-self-compare"
-			}
-		],
-		"eslint": [
-			{
-				"name": "no-self-compare",
-				"url": "https://eslint.org/docs/latest/rules/no-self-compare"
-			}
-		],
-		"flint": {
-			"name": "unnecessaryComparisons",
-			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/no-self-compare",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-self-compare.html"
-			}
-		]
-	},
-	{
 		"flint": {
 			"name": "unnecessaryComparisons",
 			"plugin": "ts",
@@ -19418,6 +19392,26 @@
 			"preset": "stylistic",
 			"status": "implemented"
 		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "no-useless-call",
+				"url": "https://eslint.org/docs/latest/rules/no-useless-call"
+			}
+		],
+		"flint": {
+			"name": "functionCurryingRedundancy",
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-useless-call",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-call.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -19910,6 +19904,38 @@
 			{
 				"name": "typescript/no-unsafe-enum-comparison",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unsafe-enum-comparison.html"
+			}
+		]
+	},
+	{
+		"biome": [
+			{
+				"name": "noUnsafeFinally",
+				"url": "https://biomejs.dev/linter/rules/noUnsafeFinally"
+			}
+		],
+		"deno": [
+			{
+				"name": "no-unsafe-finally",
+				"url": "https://docs.deno.com/lint/rules/no-unsafe-finally"
+			}
+		],
+		"eslint": [
+			{
+				"name": "no-unsafe-finally",
+				"url": "https://eslint.org/docs/latest/rules/no-unsafe-finally"
+			}
+		],
+		"flint": {
+			"status": "implemented",
+			"name": "finallyStatementSafety",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-unsafe-finally",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unsafe-finally.html"
 			}
 		]
 	},
@@ -20529,32 +20555,6 @@
 			{
 				"name": "eslint/no-with",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-with.html"
-			}
-		]
-	},
-	{
-		"biome": [
-			{
-				"name": "useConsistentBuiltinInstantiation",
-				"url": "https://biomejs.dev/linter/rules/use-consistent-builtin-instantiation/"
-			}
-		],
-		"eslint": [
-			{
-				"name": "no-new-wrappers",
-				"url": "https://eslint.org/docs/latest/rules/no-new-wrappers"
-			}
-		],
-		"flint": {
-			"name": "wrapperObjects",
-			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/no-new-wrappers",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-new-wrappers.html"
 			}
 		]
 	},
