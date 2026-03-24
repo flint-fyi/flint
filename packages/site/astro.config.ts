@@ -109,6 +109,7 @@ export default defineConfig({
 										{ label: "Nuxt", link: "rules/nuxt" },
 										{ label: "React", link: "rules/react" },
 										{ label: "SolidJS", link: "rules/solid" },
+										{ label: "Svelte", link: "rules/svelte" },
 										{ label: "Vitest", link: "rules/vitest" },
 										{ label: "Vue", link: "rules/vue" },
 									],
