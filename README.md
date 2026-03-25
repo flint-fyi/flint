@@ -22,7 +22,7 @@
 **Flint** is an experimental new _"hybrid"_ linter: one that combines...
 
 - 😌 **Ergonomics**: the ease of writing rules in JavaScript or TypeScript
-- ⚡️ **Performance**: much of the speed of native linters with intelligent caching and native code for bottleneck operations
+- ⚡️ **Performance**: much of the speed of native linters with intelligent caching and native code for bottlenecking operations
 
 It also brings in several improvements over traditional linter paradigms:
 
