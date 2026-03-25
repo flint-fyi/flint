@@ -26,9 +26,9 @@
 
 It also brings in several improvements over traditional linter paradigms:
 
-- 📄 **Streamlined configuration**: flexible configuration files that still preserve readability
-- 🏭 **Type-aware caching**: significantly improving performance when linting changes to large repositories
-- ♾️ **Unified core**: promoting popular rules to the core project for easier, more reliable inclusion
+- Streamlined configuration: flexible configuration files that still preserve readability
+- Type-aware caching: significantly improving performance when linting changes to large repositories
+- Unified core: promoting popular rules to the core project for easier, more reliable inclusion
 
 For deep dives into Flint, see:
 
