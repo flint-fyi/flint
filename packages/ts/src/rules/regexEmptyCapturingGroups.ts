@@ -30,9 +30,7 @@ function findEmptyCapturingGroups(pattern: string, flags: string) {
 				return;
 			}
 
-			const onlyEmpty = isZeroLength(node, ast.flags);
-
-			if (onlyEmpty) {
+			if (isZeroLength(node, ast.flags)) {
 				results.push(node);
 			}
 		},
