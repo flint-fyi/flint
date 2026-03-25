@@ -1,7 +1,6 @@
 import { parseRegExpLiteral, visitRegExpAST } from "@eslint-community/regexpp";
 import type {
 	CapturingGroup,
-	Element,
 	RegExpLiteral,
 } from "@eslint-community/regexpp/ast";
 import {
@@ -9,29 +8,11 @@ import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import { isZeroLength } from "regexp-ast-analysis";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
 import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
-
-function elementIsZeroLength(element: Element): boolean {
-	switch (element.type) {
-		case "Assertion":
-			return true;
-
-		case "CapturingGroup":
-		case "Group":
-			return element.alternatives.every((alt) =>
-				alt.elements.every(elementIsZeroLength),
-			);
-
-		case "Quantifier":
-			return element.max === 0 || elementIsZeroLength(element.element);
-
-		default:
-			return false;
-	}
-}
 
 function findEmptyCapturingGroups(pattern: string, flags: string) {
 	const results: CapturingGroup[] = [];
@@ -49,9 +30,7 @@ function findEmptyCapturingGroups(pattern: string, flags: string) {
 				return;
 			}
 
-			const onlyEmpty = node.alternatives.every((alternate) =>
-				alternate.elements.every(elementIsZeroLength),
-			);
+			const onlyEmpty = isZeroLength(node, ast.flags);
 
 			if (onlyEmpty) {
 				results.push(node);
