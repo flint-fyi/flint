@@ -1,37 +1,30 @@
-# Only formatter and auto-format are set so each contributor's
-# global language-server config is preserved.
+# Only formatter is set so each contributor's global language-server
+# config is preserved. auto-format is enabled in config.toml.
 
 [[language]]
 name = "javascript"
 formatter = { command = "npx", args = ["prettier", "--parser", "babel"] }
-auto-format = true
 
 [[language]]
 name = "jsx"
 formatter = { command = "npx", args = ["prettier", "--parser", "babel"] }
-auto-format = true
 
 [[language]]
 name = "typescript"
 formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
-auto-format = true
 
 [[language]]
 name = "tsx"
 formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
-auto-format = true
 
 [[language]]
 name = "json"
 formatter = { command = "npx", args = ["prettier", "--parser", "json"] }
-auto-format = true
 
 [[language]]
 name = "markdown"
 formatter = { command = "npx", args = ["prettier", "--parser", "markdown"] }
-auto-format = true
 
 [[language]]
 name = "yaml"
 formatter = { command = "npx", args = ["prettier", "--parser", "yaml"] }
-auto-format = true
