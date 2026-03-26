@@ -773,6 +773,15 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "pluginRuleOrdering",
+			"plugin": "flint",
+			"preset": "stylistic",
+			"strictness": "strict",
+			"status": "implemented"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "eslint-plugin-eslint-plugin/meta-property-ordering",
