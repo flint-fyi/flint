@@ -32,11 +32,8 @@ export function convertTypeScriptDiagnosticToLanguageReport(
 		...(diagnostic.file !== undefined &&
 			diagnostic.start !== undefined && {
 				range: {
-					begin: getColumnAndLineOfPosition(diagnostic.file, diagnostic.start),
-					end: getColumnAndLineOfPosition(
-						diagnostic.file,
-						diagnostic.start + (diagnostic.length ?? 0),
-					),
+					begin: diagnostic.start,
+					end: diagnostic.start + (diagnostic.length ?? 0),
 				},
 			}),
 	};
