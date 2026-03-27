@@ -87,6 +87,52 @@ makePlugin({
 });
 `,
 		},
+		{
+			code: `
+import { createPlugin as makePlugin } from "@flint.fyi/core";
+
+declare const regexCharacterClasses: any;
+declare const regexCharacterClassRanges: any;
+
+makePlugin({
+	name: "Plugin",
+	rules: [
+		regexCharacterClassRanges,
+		regexCharacterClasses,
+	],
+});
+`,
+			output: `
+import { createPlugin as makePlugin } from "@flint.fyi/core";
+
+declare const regexCharacterClasses: any;
+declare const regexCharacterClassRanges: any;
+
+makePlugin({
+	name: "Plugin",
+	rules: [
+		regexCharacterClasses,
+		regexCharacterClassRanges,
+	],
+});
+`,
+			snapshot: `
+import { createPlugin as makePlugin } from "@flint.fyi/core";
+
+declare const regexCharacterClasses: any;
+declare const regexCharacterClassRanges: any;
+
+makePlugin({
+	name: "Plugin",
+	rules: [
+		regexCharacterClassRanges,
+		~~~~~~~~~~~~~~~~~~~~~~~~~
+		Flint plugin rules should be listed in alphabetical order.
+		regexCharacterClasses,
+	],
+});
+`,
+		},
 	],
 	valid: [
 		`
@@ -100,6 +146,20 @@ makePlugin({
 	rules: [
 		alphaRule,
 		betaRule,
+	],
+});
+`,
+		`
+import { createPlugin as makePlugin } from "@flint.fyi/core";
+
+declare const regexCharacterClasses: any;
+declare const regexCharacterClassRanges: any;
+
+makePlugin({
+	name: "Plugin",
+	rules: [
+		regexCharacterClasses,
+		regexCharacterClassRanges,
 	],
 });
 `,

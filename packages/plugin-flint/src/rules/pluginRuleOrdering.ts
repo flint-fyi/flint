@@ -8,12 +8,19 @@ import ts, { SyntaxKind } from "typescript";
 import { findProperty } from "../utils/findProperty.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
-function compareAscii(left: string, right: string) {
-	if (left === right) {
-		return 0;
+function compareRuleNames(left: string, right: string) {
+	const leftLower = left.toLowerCase();
+	const rightLower = right.toLowerCase();
+
+	if (leftLower === rightLower) {
+		if (left === right) {
+			return 0;
+		}
+
+		return left < right ? -1 : 1;
 	}
 
-	return left < right ? -1 : 1;
+	return leftLower < rightLower ? -1 : 1;
 }
 
 function hasCommentsInArray(
@@ -83,6 +90,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			array: AST.ArrayLiteralExpression,
 			sourceFile: AST.SourceFile,
 		) {
+			// TODO: Skip arrays containing spreads or other non-Identifier elements.
 			const elements = array.elements.filter(
 				(element): element is AST.Identifier =>
 					element.kind === SyntaxKind.Identifier,
@@ -95,7 +103,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const names = elements.map((element) => element.text);
-			const sorted = [...names].toSorted(compareAscii);
+			const sorted = [...names].toSorted(compareRuleNames);
 			const firstOutOfOrderIndex = names.findIndex(
 				(name, index) => name !== sorted[index],
 			);
@@ -109,7 +117,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const sortedElements = [...elements].sort((a, b) =>
-				compareAscii(a.text, b.text),
+				compareRuleNames(a.text, b.text),
 			);
 			const fix = hasCommentsInArray(array, sourceFile)
 				? undefined
