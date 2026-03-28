@@ -236,6 +236,11 @@ Implementing hybrid linting is a daunting, difficult task.
 No project has implemented quite the level of Go-to-TypeScript communication that Flint will need to work with typescript-go.
 Doing so will require significant research and experimentation into developing and understanding the various techniques that Flint could use.
 
+:::tip
+Flint's work on typed linting is predominantly built on [auvred's type-aware linting performance investigations](https://github.com/auvred/hybrid-type-aware-linting-performance).
+See that repository for a deep dive on different strategies, as well as motivations to use synchronous FFI.
+:::
+
 We plan on focusing our 2026 performance work into two areas:
 
 - **Benchmarking:** tooling that creates real-world-like projects and measures how Flint compares to other linters.
