@@ -63,7 +63,7 @@ The TypeScript language uses those hooks to reuse type information services from
 
 #### I/O Host
 
-One notable part of `@flint.fyi/core` is that we use a virtual file system as the underlying I/O host.
+Notably, `@flint.fyi/core` abstracts away I/O to the `LinterHost`, which allows you to plug in an a virtual file system.
 This means that Flint provides an isolated in-memory representation of directories and files for lints to operate on.
 Flint's VFS host defaults to the local file system, but can also be used in other environments such as in-memory unit tests.
 
