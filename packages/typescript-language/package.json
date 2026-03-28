@@ -13,7 +13,7 @@
 		"name": "JoshuaKGoldberg",
 		"email": "npm@joshuakgoldberg.com"
 	},
-	"sideEffects": false,
+	"sideEffects": true,
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts"
@@ -23,7 +23,7 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project typescript-language"
+		"test": "vitest --project typescript-language"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
@@ -34,8 +34,8 @@
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
-		"tsdown": "0.21.0",
-		"vitest": "4.0.15"
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"

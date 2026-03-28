@@ -1,10 +1,10 @@
+import { normalizePath } from "@flint.fyi/utils";
 import fs from "node:fs";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createDiskBackedLinterHost } from "./createDiskBackedLinterHost.ts";
-import { normalizePath } from "./normalizePath.ts";
 
 const INTEGRATION_DIR_NAME = ".flint-disk-backed-linter-host-integration-tests";
 
@@ -41,9 +41,7 @@ describe("createDiskBackedLinterHost", () => {
 	it("normalizes cwd", () => {
 		const host = createDiskBackedLinterHost(integrationRoot + "/dir/..");
 
-		expect(host.getCurrentDirectory()).toEqual(
-			normalizePath(integrationRoot, host.isCaseSensitiveFS()),
-		);
+		expect(host.getCurrentDirectory()).toEqual(normalizePath(integrationRoot));
 	});
 
 	it("stats files and directories", () => {
@@ -366,10 +364,7 @@ describe("createDiskBackedLinterHost", () => {
 			fs.writeFileSync(nestedFile, "nested");
 			fs.writeFileSync(directFile, "direct");
 
-			const normalizedDirect = normalizePath(
-				directFile,
-				host.isCaseSensitiveFS(),
-			);
+			const normalizedDirect = normalizePath(directFile);
 
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(normalizedDirect);
@@ -392,10 +387,7 @@ describe("createDiskBackedLinterHost", () => {
 			const nestedFile = path.join(nestedPath, "nested.txt");
 			fs.writeFileSync(nestedFile, "nested");
 
-			const normalizedNested = normalizePath(
-				nestedFile,
-				host.isCaseSensitiveFS(),
-			);
+			const normalizedNested = normalizePath(nestedFile);
 
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(normalizedNested);
@@ -415,10 +407,7 @@ describe("createDiskBackedLinterHost", () => {
 			fs.writeFileSync(path.join(baseDir, ".git", "config"), "content");
 			fs.writeFileSync(path.join(baseDir, "src.txt"), "content");
 
-			const normalizedFile = normalizePath(
-				path.join(baseDir, "src.txt"),
-				host.isCaseSensitiveFS(),
-			);
+			const normalizedFile = normalizePath(path.join(baseDir, "src.txt"));
 			await sleep(50);
 			expect(onEvent).toHaveBeenCalledWith(normalizedFile);
 		});
@@ -441,10 +430,7 @@ describe("createDiskBackedLinterHost", () => {
 			);
 			fs.writeFileSync(path.join(baseDir, "src.txt"), "content");
 
-			const normalizedFile = normalizePath(
-				path.join(baseDir, "src.txt"),
-				host.isCaseSensitiveFS(),
-			);
+			const normalizedFile = normalizePath(path.join(baseDir, "src.txt"));
 			await sleep(50);
 			expect(onEvent).toHaveBeenCalledWith(normalizedFile);
 		});
@@ -461,7 +447,7 @@ describe("createDiskBackedLinterHost", () => {
 			const filePath = path.join(baseDir, ".gitignore");
 			fs.writeFileSync(filePath, "content");
 
-			const normalizedFile = normalizePath(filePath, host.isCaseSensitiveFS());
+			const normalizedFile = normalizePath(filePath);
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(normalizedFile);
 			});
@@ -470,10 +456,7 @@ describe("createDiskBackedLinterHost", () => {
 		it("emits when watching directory is created", async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
 			const directoryPath = path.join(integrationRoot, "recreate-dir");
-			const normalizedDirectory = normalizePath(
-				directoryPath,
-				host.isCaseSensitiveFS(),
-			);
+			const normalizedDirectory = normalizePath(directoryPath);
 			const onEvent = vi.fn();
 			using _ = host.watchDirectorySync(directoryPath, onEvent, {
 				pollingInterval: 10,
@@ -492,10 +475,7 @@ describe("createDiskBackedLinterHost", () => {
 		it("emits when watching directory is deleted", async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
 			const directoryPath = path.join(integrationRoot, "recreate-dir");
-			const normalizedDirectory = normalizePath(
-				directoryPath,
-				host.isCaseSensitiveFS(),
-			);
+			const normalizedDirectory = normalizePath(directoryPath);
 			const onEvent = vi.fn();
 			fs.mkdirSync(directoryPath, { recursive: true });
 
@@ -521,16 +501,10 @@ describe("createDiskBackedLinterHost", () => {
 
 			const firstFile = path.join(directoryPath, "first.txt");
 			fs.writeFileSync(firstFile, "first");
-			const normalizedFirst = normalizePath(
-				firstFile,
-				host.isCaseSensitiveFS(),
-			);
+			const normalizedFirst = normalizePath(firstFile);
 			const secondFile = path.join(directoryPath, "second.txt");
 			fs.writeFileSync(secondFile, "second");
-			const normalizedSecond = normalizePath(
-				secondFile,
-				host.isCaseSensitiveFS(),
-			);
+			const normalizedSecond = normalizePath(secondFile);
 
 			using _ = host.watchDirectorySync(directoryPath, onEvent, {
 				pollingInterval: 10,
@@ -567,10 +541,7 @@ describe("createDiskBackedLinterHost", () => {
 			const firstFile = path.join(directoryPath, "first.txt");
 			fs.writeFileSync(firstFile, "first");
 
-			const normalizedFirst = normalizePath(
-				firstFile,
-				host.isCaseSensitiveFS(),
-			);
+			const normalizedFirst = normalizePath(firstFile);
 
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(normalizedFirst);
@@ -579,10 +550,7 @@ describe("createDiskBackedLinterHost", () => {
 
 			fs.rmSync(directoryPath, { force: true, recursive: true });
 
-			const normalizedDirectory = normalizePath(
-				directoryPath,
-				host.isCaseSensitiveFS(),
-			);
+			const normalizedDirectory = normalizePath(directoryPath);
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(normalizedDirectory);
 			});
@@ -597,10 +565,7 @@ describe("createDiskBackedLinterHost", () => {
 			const secondFile = path.join(directoryPath, "second.txt");
 			fs.writeFileSync(secondFile, "second");
 
-			const normalizedSecond = normalizePath(
-				secondFile,
-				host.isCaseSensitiveFS(),
-			);
+			const normalizedSecond = normalizePath(secondFile);
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(normalizedSecond);
 			});
@@ -608,14 +573,8 @@ describe("createDiskBackedLinterHost", () => {
 
 		it("correctly reports when dir and its child have the same name", async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
-			const directoryPath = normalizePath(
-				path.join(integrationRoot, "dir"),
-				host.isCaseSensitiveFS(),
-			);
-			const subDirectoryPath = normalizePath(
-				path.join(directoryPath, "dir"),
-				host.isCaseSensitiveFS(),
-			);
+			const directoryPath = normalizePath(path.join(integrationRoot, "dir"));
+			const subDirectoryPath = normalizePath(path.join(directoryPath, "dir"));
 			const onEvent = vi.fn();
 			using _ = host.watchDirectorySync(directoryPath, onEvent, {
 				pollingInterval: 10,

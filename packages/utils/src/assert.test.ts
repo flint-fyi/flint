@@ -6,49 +6,49 @@ describe("assert", () => {
 	it("throws on null", () => {
 		expect(() => {
 			assert(null, "MSG");
-		}).toThrowError("MSG");
+		}).toThrow("MSG");
 	});
 
 	it("throws on undefined", () => {
 		expect(() => {
 			assert(undefined, "MSG");
-		}).toThrowError("MSG");
+		}).toThrow("MSG");
 	});
 
 	it("throws on false", () => {
 		expect(() => {
 			assert(false, "MSG");
-		}).toThrowError("MSG");
+		}).toThrow("MSG");
 	});
 
 	it("doesn't throw on true", () => {
 		expect(() => {
 			assert(true, "MSG");
-		}).not.toThrowError();
+		}).not.toThrow();
 	});
 
 	it("doesn't throw on obj", () => {
 		expect(() => {
 			assert({}, "MSG");
-		}).not.toThrowError();
+		}).not.toThrow();
 	});
 });
 
 describe("nullThrows", () => {
 	it("throws on null", () => {
-		expect(() => nullThrows(null, "MSG")).toThrowError("MSG");
+		expect(() => nullThrows(null, "MSG")).toThrow("MSG");
 	});
 
 	it("throws on undefined", () => {
-		expect(() => nullThrows(undefined, "MSG")).toThrowError("MSG");
+		expect(() => nullThrows(undefined, "MSG")).toThrow("MSG");
 	});
 
 	it("doesn't throw on false", () => {
-		expect(() => nullThrows(false, "MSG")).not.toThrowError();
+		expect(() => nullThrows(false, "MSG")).not.toThrow();
 	});
 
 	it("doesn't throw on obj", () => {
-		expect(() => nullThrows({}, "MSG")).not.toThrowError();
+		expect(() => nullThrows({}, "MSG")).not.toThrow();
 	});
 });
 

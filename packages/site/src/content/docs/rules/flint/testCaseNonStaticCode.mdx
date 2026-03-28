@@ -1,0 +1,65 @@
+---
+description: "Test case code should be a static string literal."
+title: "testCaseNonStaticCode"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="flint" rule="testCaseNonStaticCode" />
+
+Test case `code` values should be static string literals (`''`, `""`, or `` ` ` ``).
+Dynamically generating test cases with variables, function calls, template interpolations, or spreads can make individual test cases harder to tweak, encourage catch-all tests, and make the tests difficult to statically analyze.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const code = "a";
+ruleTester.describe(rule, {
+	valid: [code],
+	invalid: [],
+});
+```
+
+```ts
+ruleTester.describe(rule, {
+	valid: [{ code: getCode() }],
+	invalid: [],
+});
+```
+
+```ts
+ruleTester.describe(rule, {
+	valid: [{ code: `a${b}` }],
+	invalid: [],
+});
+```
+
+```ts
+ruleTester.describe(rule, {
+	valid: [{ ...baseCase }],
+	invalid: [],
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+ruleTester.describe(rule, {
+	valid: ["a", "b", `c`],
+	invalid: [],
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.

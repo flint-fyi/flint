@@ -23,7 +23,7 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project yaml"
+		"test": "vitest --project yaml"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
@@ -32,8 +32,8 @@
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
-		"tsdown": "0.21.0",
-		"vitest": "4.0.15"
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"

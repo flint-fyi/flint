@@ -30,10 +30,10 @@ const consoleMethods = new Set([
 
 function isConsoleMethodCall(node: AST.Expression, typeChecker: Checker) {
 	return (
-		node.kind == SyntaxKind.PropertyAccessExpression &&
-		node.expression.kind == SyntaxKind.Identifier &&
+		node.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.kind === SyntaxKind.Identifier &&
 		node.expression.text === "console" &&
-		node.name.kind == SyntaxKind.Identifier &&
+		node.name.kind === SyntaxKind.Identifier &&
 		consoleMethods.has(node.name.text) &&
 		isDeclaredInNodeTypes(node.expression, typeChecker)
 	);
@@ -82,7 +82,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							"Argument is expected to be present by the loop condition",
 						);
 						if (
-							argument.kind != SyntaxKind.StringLiteral ||
+							argument.kind !== SyntaxKind.StringLiteral ||
 							!argument.text.length
 						) {
 							continue;

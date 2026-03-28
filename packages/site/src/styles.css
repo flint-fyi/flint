@@ -56,3 +56,11 @@ table code {
 		object-position: right;
 	}
 }
+
+:root[data-theme="light"] .only-dark {
+	display: none;
+}
+
+:root[data-theme="dark"] .only-light {
+	display: none;
+}

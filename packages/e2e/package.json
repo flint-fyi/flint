@@ -25,10 +25,11 @@
 	"devDependencies": {
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
-		"execa": "9.6.1",
+		"@flint.fyi/utils": "workspace:^",
+		"execa": "catalog:dev",
 		"flint": "workspace:^",
-		"vitest": "4.0.18",
-		"vitest-ansi-serializer": "0.2.1"
+		"vitest": "catalog:dev",
+		"vitest-ansi-serializer": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"

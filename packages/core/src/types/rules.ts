@@ -22,6 +22,19 @@ export type AnyRuleDefinition<
 		| undefined,
 > = RuleDefinition<RuleAbout, unknown, object, string, OptionsSchema>;
 
+export type UnsafeAnyRule<About extends RuleAbout = RuleAbout> = Rule<
+	About,
+	// TODO: How to make these types work with createPlugin.test.ts & co.?
+	// flint-disable-lines-begin ts/explicitAnys
+	/* eslint-disable @typescript-eslint/no-explicit-any */
+	any,
+	any,
+	any,
+	any
+	/* eslint-enable @typescript-eslint/no-explicit-any */
+	// flint-disable-lines-end ts/explicitAnys
+>;
+
 /**
  * A single lint rule, as used by users in configs.
  */

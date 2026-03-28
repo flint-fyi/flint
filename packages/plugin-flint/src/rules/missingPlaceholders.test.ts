@@ -1,15 +1,12 @@
 import rule from "./missingPlaceholders.ts";
 import { ruleTester } from "./ruleTester.ts";
 
-const DefineRuleCreator = `interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; }`;
-const DefineRuleContext = `interface RuleContext { report(descriptor: { messageId: string; data?: Record<string, string> }): void; }`;
-
 ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-${DefineRuleCreator}
-${DefineRuleContext}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
+interface RuleContext { report(descriptor: { messageId: string; data?: Record<string, string> }): void; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -30,8 +27,8 @@ ruleCreator.createRule(_, {
 });
 `,
 			snapshot: `
-${DefineRuleCreator}
-${DefineRuleContext}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
+interface RuleContext { report(descriptor: { messageId: string; data?: Record<string, string> }): void; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -57,8 +54,8 @@ ruleCreator.createRule(_, {
 	],
 	valid: [
 		`
-${DefineRuleCreator}
-${DefineRuleContext}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
+interface RuleContext { report(descriptor: { messageId: string; data?: Record<string, string> }): void; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {

@@ -23,14 +23,14 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project solid"
+		"test": "vitest --project solid"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"typescript": "^5.9.3"
+		"typescript": "^5.9.3 || ^6.0.0"
 	},
 	"devDependencies": {
-		"tsdown": "0.21.0"
+		"tsdown": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"

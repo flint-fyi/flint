@@ -8,18 +8,19 @@ import {
 	getColumnAndLineOfPosition,
 	isSuggestionForFiles,
 	type Language,
-	type LanguageDiagnostics,
 	type LanguageFileCacheImpacts,
+	type LanguageReports,
 	type NormalizedReportRangeObject,
 	type RuleContext,
 	type RuleReport,
 	type SourceFileWithLineMap,
+	type UnsafeAnyRule,
 } from "@flint.fyi/core";
 import { setTSProgramCreationProxy } from "@flint.fyi/ts-patch";
 import {
 	type AST,
 	type Checker,
-	convertTypeScriptDiagnosticToLanguageFileDiagnostic,
+	convertTypeScriptDiagnosticToLanguageReport,
 	extractDirectivesFromTypeScriptFile,
 	type ExtractedDirective,
 	NodeSyntaxKinds,
@@ -41,7 +42,6 @@ import type { TypeScriptServiceScript as VolarTypeScriptServiceScript } from "@v
 import { proxyCreateProgram } from "@volar/typescript/lib/node/proxyCreateProgram.js";
 import ts from "typescript";
 
-import type { UnsafeAnyRule } from "../../core/src/plugins/createPlugin.ts";
 import packageJson from "../package.json" with { type: "json" };
 
 type VolarLanguagePluginInitializer<FileServices extends object> = (
@@ -95,7 +95,7 @@ type VolarBasedLanguageCreateFile<FileServices extends object> = (
 	directives?: ExtractedDirective[];
 	extraContext?: FileServices;
 	firstStatementPosition: number;
-	getDiagnostics?: () => LanguageDiagnostics;
+	getLanguageReports?: () => LanguageReports;
 	reports?: FileReport[];
 };
 
@@ -114,7 +114,7 @@ setTSProgramCreationProxy(
 				/* for apply */
 			} as unknown as typeof createProgram,
 			{
-				apply(target, thisArg, args: unknown[]) {
+				apply(_, thisArg, args: unknown[]) {
 					let volarLanguage = null as null | VolarLanguage<string>;
 					const createProgramProxy = new Proxy(createProgram, {
 						apply(target, thisArg, [options]: [ts.CreateProgramOptions]) {
@@ -274,7 +274,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 		directives,
 		extraContext,
 		firstStatementPosition,
-		getDiagnostics,
+		getLanguageReports,
 		reports,
 	} = createFile({
 		data,
@@ -367,10 +367,10 @@ setVolarCreateFile((data, program, sourceFile) => {
 				visit(sourceFile.endOfFileToken);
 			},
 			// TODO: cache
-			getDiagnostics() {
+			getLanguageReports() {
 				return [
 					...ts.getPreEmitDiagnostics(program, sourceFile).map((diagnostic) =>
-						convertTypeScriptDiagnosticToLanguageFileDiagnostic({
+						convertTypeScriptDiagnosticToLanguageReport({
 							...diagnostic,
 							// For some unknown reason, Volar doesn't set file.text to sourceText
 							// when preventLeadingOffset is true, so we have to do it ourselves
@@ -383,7 +383,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 								: diagnostic.file,
 						}),
 					),
-					...(getDiagnostics?.() ?? []),
+					...(getLanguageReports?.() ?? []),
 				];
 			},
 		},

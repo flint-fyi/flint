@@ -1,13 +1,11 @@
 import rule from "./placeholderFormats.ts";
 import { ruleTester } from "./ruleTester.ts";
 
-const DefineRuleCreator = `interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; }`;
-
 ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -19,7 +17,7 @@ ruleCreator.createRule(_, {
 });
 `,
 			output: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -31,7 +29,7 @@ ruleCreator.createRule(_, {
 });
 `,
 			snapshot: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -47,7 +45,7 @@ ruleCreator.createRule(_, {
 		},
 		{
 			code: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -59,7 +57,7 @@ ruleCreator.createRule(_, {
 });
 `,
 			output: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -71,7 +69,7 @@ ruleCreator.createRule(_, {
 });
 `,
 			snapshot: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -87,7 +85,7 @@ ruleCreator.createRule(_, {
 		},
 		{
 			code: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -99,7 +97,7 @@ ruleCreator.createRule(_, {
 });
 `,
 			output: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -111,7 +109,7 @@ ruleCreator.createRule(_, {
 });
 `,
 			snapshot: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -127,7 +125,7 @@ ruleCreator.createRule(_, {
 		},
 		{
 			code: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -139,7 +137,7 @@ ruleCreator.createRule(_, {
 });
 `,
 			output: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -151,7 +149,7 @@ ruleCreator.createRule(_, {
 });
 `,
 			snapshot: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -167,7 +165,7 @@ ruleCreator.createRule(_, {
 		},
 		{
 			code: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -179,7 +177,7 @@ ruleCreator.createRule(_, {
 });
 `,
 			output: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -191,7 +189,7 @@ ruleCreator.createRule(_, {
 });
 `,
 			snapshot: `
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -208,7 +206,7 @@ ruleCreator.createRule(_, {
 	],
 	valid: [
 		`
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -220,7 +218,7 @@ ruleCreator.createRule(_, {
 });
 `,
 		`
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {
@@ -232,7 +230,7 @@ ruleCreator.createRule(_, {
 });
 `,
 		`
-${DefineRuleCreator}
+interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
 declare const ruleCreator: RuleCreator;
 
 ruleCreator.createRule(_, {

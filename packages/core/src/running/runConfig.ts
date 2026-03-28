@@ -14,7 +14,7 @@ import type { LanguageFilesWithOptions } from "./types.ts";
 export interface RunConfigOptions {
 	cacheLocation?: string | undefined;
 	ignoreCache?: boolean;
-	skipDiagnostics?: boolean;
+	skipLanguageReports?: boolean;
 }
 
 export async function runConfig(
@@ -23,7 +23,7 @@ export async function runConfig(
 	{
 		cacheLocation: cacheLocationFromCli,
 		ignoreCache,
-		skipDiagnostics,
+		skipLanguageReports,
 	}: RunConfigOptions,
 ): Promise<LintResults> {
 	const cacheLocationOverride =
@@ -58,7 +58,7 @@ export async function runConfig(
 				languageAndFiles,
 				reportsByFilePath.get(filePath).flat(),
 				host,
-				skipDiagnostics,
+				skipLanguageReports,
 			),
 		]),
 	);
@@ -68,7 +68,7 @@ export async function runConfig(
 		for (const [filePath, cachedStorage] of cached) {
 			filesResults.set(filePath, {
 				dependencies: new Set(cachedStorage.dependencies),
-				diagnostics: cachedStorage.diagnostics ?? [],
+				languageReports: cachedStorage.languageReports ?? [],
 				reports: cachedStorage.reports ?? [],
 			});
 		}
@@ -94,17 +94,21 @@ async function runRules(
 ) {
 	const reportsByFilePath = new CachedFactory<string, FileReport[]>(() => []);
 
-	for (const [rule, filesAndOptions] of rulesFilesAndOptionsByRule) {
-		const ruleReportsByFilePath = await runLintRule(
-			rule,
-			filesAndOptions,
-			host,
-		);
+	await Promise.all(
+		Array.from(rulesFilesAndOptionsByRule).map(
+			async ([rule, filesAndOptions]) => {
+				const ruleReportsByFilePath = await runLintRule(
+					rule,
+					filesAndOptions,
+					host,
+				);
 
-		for (const [filePath, ruleReports] of ruleReportsByFilePath) {
-			reportsByFilePath.get(filePath).push(...ruleReports);
-		}
-	}
+				for (const [filePath, ruleReports] of ruleReportsByFilePath) {
+					reportsByFilePath.get(filePath).push(...ruleReports);
+				}
+			},
+		),
+	);
 
 	return reportsByFilePath;
 }

@@ -14,21 +14,32 @@ export const singleRendererFactory: RendererFactory = {
 				}
 			},
 			async render({ duration, formattingResults, lintResults }) {
-				for (const [filePath, fileResults] of lintResults.filesResults) {
-					if (!fileResults.reports.length) {
+				const fileContexts = await Promise.all(
+					lintResults.filesResults
+						.entries()
+						.map(async ([filePath, fileResults]) => {
+							if (!fileResults.reports.length) {
+								return undefined;
+							}
+
+							// TODO: Can we re-use the sourcefile representation?
+							const sourceFileText = await fs.readFile(filePath, "utf-8");
+							return {
+								file: {
+									filePath,
+									text: sourceFileText,
+								},
+								reports: fileResults.reports,
+							};
+						}),
+				);
+
+				for (const context of fileContexts) {
+					if (context === undefined) {
 						continue;
 					}
 
-					// TODO: Can we re-use the sourcefile representation?
-					const sourceFileText = await fs.readFile(filePath, "utf-8");
-
-					const body = presenter.renderFile({
-						file: {
-							filePath,
-							text: sourceFileText,
-						},
-						reports: fileResults.reports,
-					});
+					const body = presenter.renderFile(context);
 
 					for (const line of await Array.fromAsync(body)) {
 						process.stdout.write(line);

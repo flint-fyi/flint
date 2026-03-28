@@ -860,6 +860,14 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "testCaseNonStaticCode",
+			"plugin": "flint",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "eslint-plugin-eslint-plugin/unique-test-case-names",
@@ -10264,9 +10272,10 @@
 		"flint": {
 			"name": "equalityOperators",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
-		"notes": "Default ESLint's \"smart\" to true",
+		"notes": "Default similar to ESLint's \"{ \"null\": \"ignore\" }\" to true",
 		"oxlint": [
 			{
 				"name": "eslint/eqeqeq",
@@ -13755,9 +13764,9 @@
 			}
 		],
 		"flint": {
-			"name": "nullComparisons",
+			"name": "nullishCheckStyle",
 			"plugin": "ts",
-			"status": "skipped"
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
