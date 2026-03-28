@@ -68,6 +68,7 @@ This means that Flint provides an isolated in-memory representation of directori
 Flint's VFS host defaults to the local file system, but can also be used in other environments such as in-memory unit tests.
 
 Establishing host architecture early will allow Flint to support environments like isolated tests and [the web](#playground-inspector).
+They're able to run setup and teardown logic, as well as operate on multiple not-yet-saved files in text editors at a time.
 It also allows for a number of (yet-to-be-implemented) performance optimizations, such as the ability to batch file system reads and writes.
 
 > [What Flint Does Differently § Embeddable By Design](/blog/what-flint-does-differently#embeddable-by-design)
