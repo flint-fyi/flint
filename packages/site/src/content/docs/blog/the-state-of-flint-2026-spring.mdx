@@ -28,7 +28,7 @@ For this first post, we'll cover progress made from Flint's start in 2025 and th
 Flint's "Core" package, `@flint.fyi/core`, contains the main primitives for setting up a linter runtime, defining plugins for that runtime, and creating rules for those plugins.
 It also provides low-level Node.js APIs for running linting on one or more files.
 
-`@flint.fyi/core` is, compared to other linters, feature-complete as of Spring 2026.
+When it comes to the offerings of most traditional linters, `@flint.fyi/core` is feature-complete as of Spring 2026.
 The main pieces of functionality needed for linting all work as expected.
 While we expect to continue to spot iterate on it to support future features and add utilities such as scope analysis, we otherwise have no major known work items in the backlog for it that block known future work.
 
@@ -45,8 +45,8 @@ Flint natively provides full support for cross-file linting:
 Flint already provides several core rules that make use of these features in ways most or all other linters do not.
 Its experimental spell-checking rule, for example, provides suggestions to add unknown words to the user's dictionary file.
 
-> - [What Flint Does Differently > Cross File Caching](/blog/what-flint-does-differently#cross-file-caching)
-> - [What Flint Does Differently > Rich Cross File Fixes](/blog/what-flint-does-differently#rich-cross-file-fixes)
+> - [What Flint Does Differently § Cross File Caching](/blog/what-flint-does-differently#cross-file-caching)
+> - [What Flint Does Differently § Rich Cross File Fixes](/blog/what-flint-does-differently#rich-cross-file-fixes)
 
 #### Tooling Coordination
 
@@ -63,7 +63,7 @@ The TypeScript language uses those hooks to reuse type information services from
 
 #### I/O Host
 
-One notable part of `@flint.fyi/core` is that we use a virtual file system underlying our I/O host.
+One notable part of `@flint.fyi/core` is that we use a virtual file system as the underlying I/O host.
 This means that Flint provides an isolated in-memory representation of directories and files for lints to operate on.
 Flint's VFS host defaults to the local file system, but can also be used in other environments such as in-memory unit tests.
 
@@ -93,8 +93,8 @@ It supports:
 In fact, we've been running Flint in CI alongside ESLint and other checks for the majority of the Flint project.
 Our next step will be to start using it in personal projects of members of the Flint team.
 
-> - [What Flint Does Differently > Comprehensive Rule Reports](/blog/what-flint-does-differently#comprehensive-rule-reports)
-> - [What Flint Does Differently > Interactive and Watch CLI Modes](/blog/what-flint-does-differently#interactive-and-watch-cli-modes)
+> - [What Flint Does Differently § Comprehensive Rule Reports](/blog/what-flint-does-differently#comprehensive-rule-reports)
+> - [What Flint Does Differently § Interactive and Watch CLI Modes](/blog/what-flint-does-differently#interactive-and-watch-cli-modes)
 
 ### Lint Rule Progress
 
@@ -112,7 +112,7 @@ They include behavior from the core ESLint and typescript-eslint projects, plugi
 
 > [What Flint Does Differently § Common Core Rules](/blog/what-flint-does-differently#common-core-rules)
 
-### Volar and Vue Integrations
+### Volar, Astro, Svelte, and Vue Integrations
 
 Flint's goal of best-in-class, fully-featured linting necessitates first-class support for "extension" languages such as Astro, Svelte, and Vue.
 This is done with the excellent [Volar](https://volarjs.dev) embedded language tooling framework.
@@ -124,8 +124,9 @@ We've used it for a first-class `@flint.fyi/vue` language plugin that provides V
 Through its Volar and Vue integrations, Flint has true support for typed lint rules in Vue templates.
 Rather than default to `any` for cross-file values imported into Vue templates, Flint is able to use Volar tooling to determine their actual TypeScript types.
 
-> [What Flint Does Differently § Built-In TypeScript Extensibility](/blog/what-flint-does-differently#built-in-typescript-extensibility)
-> [What Flint Does Differently § Focused Language Plugins](/blog/what-flint-does-differently#focused-language-plugins)
+> - [What Flint Does Differently § Built-In TypeScript Extensibility](/blog/what-flint-does-differently#built-in-typescript-extensibility)
+> - [What Flint Does Differently § Focused Language Plugins](/blog/what-flint-does-differently#focused-language-plugins)
+> - [Fully Type-Aware Linting for Astro, Svelte, and Vue](/blog/fully-type-aware-linting-for-astro-svelte-and-vue)
 
 ## Coming Next
 
@@ -188,7 +189,7 @@ Flint will provide a [Language Server Protocol ("LSP")](https://en.wikipedia.org
 Doing so will enable most users of the linter to integrate Flint into their editor.
 Now that Flint's core has been mostly stable for several months, we're looking forward to building up higher-level APIs that can power LSP usage.
 
-> - [flint#2462 🚀 Feature: LSP](https://github.com/flint-fyi/flint/issues/2462)
+> [flint#2462 🚀 Feature: LSP](https://github.com/flint-fyi/flint/issues/2462)
 
 ### MCP Server
 
@@ -347,7 +348,7 @@ Hybrid linting is contingent on using the upcoming TypeScript 7 written in Go fo
 As noted in [Performance Deep Dives](#performance-deep-dives), we have a lot of work to do before we know how best to integrate with typescript-go (TypeScript 7 / "Corsa").
 TypeScript 7 doesn't even have a stabilized API yet!
 
-We expect to only lay the groundwork for understanding Go-to-TypeScript communication in 2026.
+We expect to only lay the groundwork for understanding Go-to-JavaScript communication in 2026.
 Implementing full hybrid linting for Flint likely won't happen until 2027.
 
 ## Closing Thoughts
