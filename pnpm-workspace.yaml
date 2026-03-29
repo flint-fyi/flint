@@ -9,7 +9,7 @@ catalogs:
     "@changesets/cli": 2.30.0
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
     "@eslint/js": 10.0.1
-    "@eslint/markdown": 7.5.1
+    "@eslint/markdown": 8.0.0
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
     "@types/node": 24.12.0
