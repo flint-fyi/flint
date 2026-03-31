@@ -97,7 +97,6 @@ export default defineConfig({
 										{ label: "JSX", link: "rules/jsx" },
 										{ label: "Node", link: "rules/node" },
 										{ label: "Performance", link: "rules/performance" },
-										{ label: "Sorting", link: "rules/sorting" },
 										{ label: "Spelling", link: "rules/spelling" },
 									],
 									label: "Focused Plugins",

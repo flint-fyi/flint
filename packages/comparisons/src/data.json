@@ -7,9 +7,9 @@
 			}
 		],
 		"flint": {
-			"name": "attributesSorting",
+			"name": "attributesOrder",
 			"plugin": "astro",
-			"preset": "stylistic"
+			"preset": "sorting"
 		}
 	},
 	{
@@ -2490,7 +2490,7 @@
 			"plugin": "jsx",
 			"status": "skipped"
 		},
-		"notes": "Superseded by sorting plugin"
+		"notes": "Superseded by jsx sorting preset"
 	},
 	{
 		"eslint": [
@@ -5524,9 +5524,9 @@
 			}
 		],
 		"flint": {
-			"name": "propertyOrdering",
+			"name": "propertyOrder",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6047,7 +6047,7 @@
 			"plugin": "react",
 			"status": "skipped"
 		},
-		"notes": "Handled by sorting plugin."
+		"notes": "Handled by ts sorting preset."
 	},
 	{
 		"eslint": [
@@ -6171,7 +6171,7 @@
 			"plugin": "react",
 			"status": "skipped"
 		},
-		"notes": "Handled by sorting plugin."
+		"notes": "Handled by ts sorting preset."
 	},
 	{
 		"eslint": [
@@ -6452,7 +6452,7 @@
 			"plugin": "react",
 			"status": "skipped"
 		},
-		"notes": "Handled by sorting plugin."
+		"notes": "Handled by ts sorting preset."
 	},
 	{
 		"eslint": [
@@ -7007,9 +7007,9 @@
 			}
 		],
 		"flint": {
-			"name": "classes",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "classesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7020,9 +7020,9 @@
 			}
 		],
 		"flint": {
-			"name": "decorators",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "decoratorsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7033,9 +7033,9 @@
 			}
 		],
 		"flint": {
-			"name": "exports",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "exportsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7046,9 +7046,9 @@
 			}
 		],
 		"flint": {
-			"name": "heritageClauses",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "heritageClausesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7059,9 +7059,9 @@
 			}
 		],
 		"flint": {
-			"name": "interfaces",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "interfacesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7072,9 +7072,9 @@
 			}
 		],
 		"flint": {
-			"name": "intersectionTypes",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "intersectionTypesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7085,9 +7085,9 @@
 			}
 		],
 		"flint": {
-			"name": "jsdocTags",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "jsdocTagsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7102,9 +7102,9 @@
 			}
 		],
 		"flint": {
-			"name": "jsonKeys",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "jsonKeysOrder",
+			"plugin": "json",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7115,9 +7115,9 @@
 			}
 		],
 		"flint": {
-			"name": "jsxProps",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "propsOrder",
+			"plugin": "jsx",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7128,9 +7128,9 @@
 			}
 		],
 		"flint": {
-			"name": "maps",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "mapsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7141,9 +7141,9 @@
 			}
 		],
 		"flint": {
-			"name": "modules",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "modulesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7158,9 +7158,9 @@
 			}
 		],
 		"flint": {
-			"name": "objects",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "objectsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		},
 		"oxlint": [
 			{
@@ -7177,9 +7177,9 @@
 			}
 		],
 		"flint": {
-			"name": "objectTypes",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "objectTypesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7190,9 +7190,9 @@
 			}
 		],
 		"flint": {
-			"name": "packageCollections",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "packageCollectionsOrder",
+			"plugin": "package-json",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7203,9 +7203,9 @@
 			}
 		],
 		"flint": {
-			"name": "regexFlags",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "regexFlagsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7216,9 +7216,9 @@
 			}
 		],
 		"flint": {
-			"name": "regexLists",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "regexListsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7229,9 +7229,9 @@
 			}
 		],
 		"flint": {
-			"name": "sets",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "setsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7242,9 +7242,9 @@
 			}
 		],
 		"flint": {
-			"name": "switchCases",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "switchCasesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7255,9 +7255,9 @@
 			}
 		],
 		"flint": {
-			"name": "typeConstituents",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "typeConstituentsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7268,9 +7268,9 @@
 			}
 		],
 		"flint": {
-			"name": "unionTypes",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "unionTypesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7281,9 +7281,9 @@
 			}
 		],
 		"flint": {
-			"name": "variableDeclarations",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "variableDeclarationsOrder",
+			"plugin": "yaml",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -7294,8 +7294,8 @@
 			}
 		],
 		"flint": {
-			"name": "yamlKeys",
-			"plugin": "sorting"
+			"name": "yamlKeysOrder",
+			"plugin": "yaml"
 		}
 	},
 	{
@@ -7306,9 +7306,9 @@
 			}
 		],
 		"flint": {
-			"name": "yamlSequenceValues",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "yamlSequenceValuesOrder",
+			"plugin": "yaml",
+			"preset": "sorting"
 		}
 	},
 	{

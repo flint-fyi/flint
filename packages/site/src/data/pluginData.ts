@@ -155,17 +155,6 @@ const pluginDataById = {
 		id: "solid",
 		name: "SolidJS",
 	},
-	sorting: {
-		colors: {
-			flame: "#4B32C3",
-			heart: "#FFFFFF",
-			squiggly: "#232327",
-		},
-		description:
-			"Rules that automatically sort any and all possible aspects of code alphabetically, such as imports and properties.",
-		id: "sorting",
-		name: "Sorting",
-	},
 	spelling: {
 		colors: {
 			flame: "#B51A00",
@@ -248,7 +237,6 @@ export const pluginDataByGroup: Record<string, Record<string, PluginData>> = {
 		jsx: pluginDataById.jsx,
 		node: pluginDataById.node,
 		performance: pluginDataById.performance,
-		sorting: pluginDataById.sorting,
 		spelling: pluginDataById.spelling,
 	},
 	incubator: {
