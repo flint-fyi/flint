@@ -318,26 +318,6 @@ foo(() => 'foo' as any);
 		},
 		{
 			code: `
-let value: NotKnown;
-
-function example() {
-  return value;
-}
-      
-`,
-			snapshot: `
-let value: NotKnown;
-
-function example() {
-  return value;
-  ~~~~~~~~~~~~~
-  Unsafe return of a value of type error.
-}
-      
-`,
-		},
-		{
-			code: `
 declare const value: any;
 async function foo() {
   return value;

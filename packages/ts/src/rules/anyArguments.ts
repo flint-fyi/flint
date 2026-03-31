@@ -10,6 +10,16 @@ import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
+function formatAnyLikeType(type: ts.Type, anyType: AnyType) {
+	return tsutils.isIntrinsicErrorType(type) ? "error" : anyType;
+}
+
+function formatReportedType(type: ts.Type, typeChecker: Checker) {
+	return tsutils.isIntrinsicErrorType(type)
+		? "error"
+		: typeChecker.typeToString(type);
+}
+
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
@@ -80,7 +90,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						argument.expression,
 					);
 
-					if (anyType !== AnyType.Safe) {
+					if (
+						anyType !== AnyType.Safe ||
+						tsutils.isIntrinsicErrorType(spreadType)
+					) {
 						const restParameter = parameters.at(-1);
 						if (restParameter) {
 							const restType = typeChecker.getTypeOfSymbol(restParameter);
@@ -108,7 +121,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						context.report({
 							data: {
-								type: anyType,
+								type: formatAnyLikeType(spreadType, anyType),
 							},
 							message: "unsafeSpread",
 							range: {
@@ -131,8 +144,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						if (tupleResult) {
 							context.report({
 								data: {
-									paramType: typeChecker.typeToString(tupleResult.paramType),
-									type: "any",
+									paramType: formatReportedType(
+										tupleResult.paramType,
+										typeChecker,
+									),
+									type: tupleResult.type,
 								},
 								message: "unsafeTupleSpread",
 								range: {
@@ -168,8 +184,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						if (unsafeResult) {
 							context.report({
 								data: {
-									paramType: typeChecker.typeToString(unsafeResult.receiver),
-									type: typeChecker.typeToString(unsafeResult.sender),
+									paramType: formatReportedType(
+										unsafeResult.receiver,
+										typeChecker,
+									),
+									type: formatReportedType(unsafeResult.sender, typeChecker),
 								},
 								message: "unsafeArgument",
 								range: {
@@ -205,8 +224,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				context.report({
 					data: {
-						paramType: typeChecker.typeToString(parameterInfo.type),
-						type: anyType,
+						paramType: formatReportedType(parameterInfo.type, typeChecker),
+						type: formatAnyLikeType(argumentType, anyType),
 					},
 					message: "unsafeArgument",
 					range: {
@@ -263,10 +282,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								if (unsafeResult) {
 									context.report({
 										data: {
-											paramType: typeChecker.typeToString(
+											paramType: formatReportedType(
 												unsafeResult.receiver,
+												typeChecker,
 											),
-											type: typeChecker.typeToString(unsafeResult.sender),
+											type: formatReportedType(
+												unsafeResult.sender,
+												typeChecker,
+											),
 										},
 										message: "unsafeArgument",
 										range: {
@@ -297,8 +320,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						context.report({
 							data: {
-								paramType: typeChecker.typeToString(parameterType),
-								type: anyType,
+								paramType: formatReportedType(parameterType, typeChecker),
+								type: formatAnyLikeType(expressionType, anyType),
 							},
 							message: "unsafeArgument",
 							range: {
@@ -379,7 +402,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			typeChecker: Checker,
 			program: ts.Program,
 			node: ts.Node,
-		): undefined | { paramType: ts.Type } {
+		): undefined | { paramType: ts.Type; type: string } {
 			const tupleTypeArgs = typeChecker.getTypeArguments(tupleType);
 
 			for (const [i, elementType] of tupleTypeArgs.entries()) {
@@ -409,7 +432,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				return { paramType: parameterType };
+				return {
+					paramType: parameterType,
+					type: formatAnyLikeType(elementType, anyType),
+				};
 			}
 
 			return undefined;

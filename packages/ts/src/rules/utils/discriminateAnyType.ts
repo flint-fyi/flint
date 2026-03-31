@@ -33,20 +33,23 @@ function discriminateAnyTypeWorker(
 		return AnyType.Safe;
 	}
 	visited.add(type);
-	if (tsutils.isTypeFlagSet(type, ts.TypeFlags.Any)) {
+	if (
+		tsutils.isTypeFlagSet(type, ts.TypeFlags.Any) &&
+		!tsutils.isIntrinsicErrorType(type)
+	) {
 		return AnyType.Any;
 	}
-	if (
-		checker.isArrayType(type) &&
-		tsutils.isTypeFlagSet(
-			nullThrows(
-				checker.getTypeArguments(type)[0],
-				"Array type should have at least one type argument",
-			),
-			ts.TypeFlags.Any,
-		)
-	) {
-		return AnyType.AnyArray;
+	if (checker.isArrayType(type)) {
+		const elementType = nullThrows(
+			checker.getTypeArguments(type)[0],
+			"Array type should have at least one type argument",
+		);
+		if (
+			tsutils.isTypeFlagSet(elementType, ts.TypeFlags.Any) &&
+			!tsutils.isIntrinsicErrorType(elementType)
+		) {
+			return AnyType.AnyArray;
+		}
 	}
 	for (const part of tsutils.typeConstituents(type)) {
 		if (tsutils.isThenableType(checker, tsNode, part)) {
@@ -58,7 +61,10 @@ function discriminateAnyTypeWorker(
 					tsNode,
 					visited,
 				);
-				if (awaitedAnyType === AnyType.Any) {
+				if (
+					awaitedAnyType === AnyType.Any &&
+					!tsutils.isIntrinsicErrorType(awaitedType)
+				) {
 					return AnyType.PromiseAny;
 				}
 			}
