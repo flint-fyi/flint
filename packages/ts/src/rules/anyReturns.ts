@@ -62,8 +62,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		): void {
 			const type = typeChecker.getTypeAtLocation(returnNode);
-
-			const anyType = discriminateAnyType(type, typeChecker, returnNode);
 			const functionNode = ts.findAncestor(
 				returnNode,
 				// TODO: I believe isFunctionLikeDeclaration was incorrectly marked
@@ -86,6 +84,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				returnNode,
 				typeChecker,
 			);
+			const anyType = tsutils.isIntrinsicErrorType(returnNodeType)
+				? AnyType.Any
+				: discriminateAnyType(type, typeChecker, returnNode);
 
 			// function expressions will not have their return type modified based on receiver typing
 			// so we have to use the contextual typing in these cases, i.e.
