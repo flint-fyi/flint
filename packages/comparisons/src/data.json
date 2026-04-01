@@ -7282,7 +7282,7 @@
 		],
 		"flint": {
 			"name": "variableDeclarationsOrder",
-			"plugin": "yaml",
+			"plugin": "ts",
 			"preset": "sorting"
 		}
 	},
