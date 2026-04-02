@@ -109,6 +109,7 @@ export default defineConfig({
 										{ label: "Nuxt", link: "rules/nuxt" },
 										{ label: "React", link: "rules/react" },
 										{ label: "SolidJS", link: "rules/solid" },
+										{ label: "Svelte", link: "rules/svelte" },
 										{ label: "Vitest", link: "rules/vitest" },
 										{ label: "Vue", link: "rules/vue" },
 									],
@@ -155,6 +156,14 @@ export default defineConfig({
 	},
 	site: "https://flint.fyi",
 	vite: {
+		define: {
+			// @astrojs/ts-plugin is "type":"commonjs"
+			// __filename is not defined in ES module scope
+			//   Stack trace:
+			//     at D (file:///home/runner/work/flint/flint/packages/site/dist/chunks/getRuleForPlugin_C5J7xdaO.mjs:68627:687)
+			//     at requireAstro2tsx (file:///home/runner/work/flint/flint/packages/site/dist/chunks/getRuleForPlugin_C5J7xdaO.mjs:69379:17)
+			__filename: "import.meta.filename",
+		},
 		resolve: {
 			conditions: ["node", "import", "default", "browser"],
 		},

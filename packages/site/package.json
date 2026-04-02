@@ -16,6 +16,7 @@
 		"@astrojs/check": "catalog:site",
 		"@astrojs/react": "catalog:site",
 		"@astrojs/starlight": "catalog:site",
+		"@flint.fyi/astro": "workspace:^",
 		"@flint.fyi/browser": "workspace:^",
 		"@flint.fyi/comparisons": "workspace:^",
 		"@flint.fyi/core": "workspace:^",

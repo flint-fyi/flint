@@ -1,19 +1,19 @@
 {
-	"name": "@flint.fyi/astro",
-	"version": "0.2.1",
-	"description": "[Experimental] A Flint plugin for Astro code.",
-	"homepage": "https://flint.fyi/rules/astro",
+	"name": "@flint.fyi/astro-language",
+	"version": "0.0.1",
+	"description": "[Experimental] Astro language for Flint.",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
-		"directory": "packages/astro"
+		"directory": "packages/astro-language"
 	},
 	"license": "MIT",
 	"author": {
 		"name": "JoshuaKGoldberg",
 		"email": "npm@joshuakgoldberg.com"
 	},
-	"sideEffects": false,
+	"sideEffects": true,
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts"
@@ -23,20 +23,18 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --project astro"
+		"test": "vitest --project astro-language"
 	},
 	"dependencies": {
 		"@astrojs/compiler": "^3.0.1",
-		"@flint.fyi/astro-language": "workspace:^",
-		"@flint.fyi/core": "workspace:^",
-		"@flint.fyi/ts": "workspace:^",
-		"@flint.fyi/typescript-language": "workspace:^",
+		"@astrojs/ts-plugin": "^1.10.7",
+		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"@flint.fyi/volar-language": "workspace:^",
-		"typescript": "^5.9.3 || ^6.0.0"
+		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
-		"@flint.fyi/rule-tester": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

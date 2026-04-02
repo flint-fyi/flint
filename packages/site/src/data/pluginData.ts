@@ -177,6 +177,17 @@ const pluginDataById = {
 		id: "spelling",
 		name: "Spelling",
 	},
+	svelte: {
+		colors: {
+			flame: "#FF3E00",
+			heart: "#FDBA32",
+			squiggly: "#4A4A55",
+		},
+		description:
+			"Rules for Svelte, a UI framework that uses a compiler to let you write breathtakingly concise components that do minimal work in the browser.",
+		id: "svelte",
+		name: "Svelte",
+	},
 	ts: {
 		colors: {
 			flame: "#2D78C7",
@@ -186,7 +197,7 @@ const pluginDataById = {
 		description:
 			"Rules for linting JavaScript and TypeScript code, including the latest and greatest powerful typed linting rules.",
 		id: "ts",
-		name: "TypeScript (and JavaScript)",
+		name: "TypeScript (and JavaScript)",
 	},
 	vitest: {
 		colors: {
@@ -246,6 +257,7 @@ export const pluginDataByGroup: Record<string, Record<string, PluginData>> = {
 		nuxt: pluginDataById.nuxt,
 		react: pluginDataById.react,
 		solid: pluginDataById.solid,
+		svelte: pluginDataById.svelte,
 		vitest: pluginDataById.vitest,
 		vue: pluginDataById.vue,
 	},

@@ -38,7 +38,6 @@ import type {
 	SourceScript as VolarSourceScript,
 } from "@volar/language-core";
 import type { TypeScriptServiceScript as VolarTypeScriptServiceScript } from "@volar/typescript";
-// eslint-disable-next-line no-restricted-syntax
 import { proxyCreateProgram } from "@volar/typescript/lib/node/proxyCreateProgram.js";
 import ts from "typescript";
 

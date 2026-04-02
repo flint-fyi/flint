@@ -9,7 +9,7 @@ catalogs:
     "@changesets/cli": 2.30.0
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
     "@eslint/js": 10.0.1
-    "@eslint/markdown": 7.5.1
+    "@eslint/markdown": 8.0.0
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
     "@types/node": 24.12.0
@@ -17,7 +17,7 @@ catalogs:
     "@vitest/coverage-v8": 4.1.0
     "@vitest/eslint-plugin": 1.6.1
     console-fail-test: 0.6.1
-    eslint: 10.0.2
+    eslint: 10.1.0
     eslint-plugin-jsdoc: 62.8.0
     eslint-plugin-jsonc: 3.1.0
     eslint-plugin-n: 17.24.0
