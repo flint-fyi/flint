@@ -29,5 +29,11 @@
 	],
 	"eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
 	"js/ts.tsdk.path": "node_modules/typescript/lib",
-	"js/ts.tsserver.experimental.enableProjectDiagnostics": true
+	"js/ts.tsserver.experimental.enableProjectDiagnostics": true,
+	"json.schemas": [
+		{
+			"fileMatch": ["packages/comparisons/src/data.json"],
+			"url": "./packages/comparisons/src/data.schema.json"
+		}
+	]
 }
