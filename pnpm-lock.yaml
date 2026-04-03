@@ -373,8 +373,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       debug-for-file:
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.3.0
+        version: 0.3.0
       text-table-fast:
         specifier: ^0.1.0
         version: 0.1.0
@@ -417,8 +417,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       debug-for-file:
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.3.0
+        version: 0.3.0
       ignore:
         specifier: ^7.0.5
         version: 7.0.5
@@ -1007,8 +1007,8 @@ importers:
         specifier: ^8.53.0
         version: 8.57.1(typescript@5.9.3)
       debug-for-file:
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.3.0
+        version: 0.3.0
       ts-api-utils:
         specifier: ^2.4.0
         version: 2.5.0(typescript@5.9.3)
@@ -3857,8 +3857,8 @@ packages:
     resolution: {integrity: sha512-64byRbF0/AirwbuHqB3/ZpMG9/nckDa6ZA0yd6UnaQNwbbemCOwvz2sL5sjXLHhZHADyiwLm0M5qMhltUUx+TA==}
     engines: {node: '>=20'}
 
-  debug-for-file@0.2.0:
-    resolution: {integrity: sha512-2w8an7kqhP8LXvU+riM7azVfAV3uEzE1lOsQFhrLI1K+kQZEbCK+nigYHK5GrgUvwvVNbWnlMkUM3kLbeJ0bPA==}
+  debug-for-file@0.3.0:
+    resolution: {integrity: sha512-lNLeXhrTvbnRvSbFE7wnnUXZeK/pcDkipCOvSka3HvTEu/BNPyP3UFEnx4i9RHxIhf+oEJXJ+zOFvtwAA2vOGA==}
     engines: {node: '>=18.3.0'}
 
   debug@4.4.3:
@@ -9214,8 +9214,9 @@ snapshots:
 
   debounce@3.0.0: {}
 
-  debug-for-file@0.2.0:
+  debug-for-file@0.3.0:
     dependencies:
+      '@types/debug': 4.1.13
       debug: 4.4.3
       read-package-up: 12.0.0
     transitivePeerDependencies:
