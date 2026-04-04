@@ -76,8 +76,8 @@ catalogs:
       specifier: 2.6.1
       version: 2.6.1
     knip:
-      specifier: 6.1.0
-      version: 6.1.0
+      specifier: 6.2.0
+      version: 6.2.0
     lint-staged:
       specifier: 16.4.0
       version: 16.4.0
@@ -276,7 +276,7 @@ importers:
         version: 2.6.1
       knip:
         specifier: catalog:dev
-        version: 6.1.0
+        version: 6.2.0
       lint-staged:
         specifier: catalog:dev
         version: 16.4.0
@@ -4777,8 +4777,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@6.1.0:
-    resolution: {integrity: sha512-n5eVbJP7HXmwTsiJcELWJe2O1ESxyCTNxJzRTIECDYDTM465qnqk7fL2dv6ae3NUFvFWorZvGlh9mcwxwJ5Xgw==}
+  knip@6.2.0:
+    resolution: {integrity: sha512-4OMUMJARvNble8e8TeFv12flp4fKzAITrQec1eKO4g2eA4HnNqEa8CXy2UOPLjuYuAETpe0N0r25jF9yY9FLig==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -10316,7 +10316,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@6.1.0:
+  knip@6.2.0:
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       fast-glob: 3.3.3
