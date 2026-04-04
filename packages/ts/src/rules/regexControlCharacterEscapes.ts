@@ -1,4 +1,4 @@
-// flint-disable-file escapeSequenceCasing
+// flint-disable-file ts/escapeSequenceCasing
 import {
 	type AST,
 	type TypeScriptFileServices,
@@ -91,7 +91,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports control characters that are not escaped using standard escape sequences.",
 		id: "regexControlCharacterEscapes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferStandardEscape: {

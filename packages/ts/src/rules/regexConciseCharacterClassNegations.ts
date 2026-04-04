@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports negated character classes that can use shorthand escapes.",
 		id: "regexConciseCharacterClassNegations",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferNegatedEscape: {

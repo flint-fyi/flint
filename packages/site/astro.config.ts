@@ -2,6 +2,7 @@ import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
 import { defineConfig } from "astro/config";
+import { remarkAddTwoslash } from "remark-add-twoslash";
 import { remarkHeadingId } from "remark-custom-heading-id";
 import starlightBlog from "starlight-blog";
 import starlightLinksValidator from "starlight-links-validator";
@@ -43,7 +44,24 @@ export default defineConfig({
 								{ label: "Configuration", link: "configuration" },
 								{ label: "Glossary", link: "glossary" },
 								{ label: "FAQs", link: "faqs" },
-								{ label: "Team", link: "team" },
+								{
+									collapsed: true,
+									items: [
+										{
+											label: "Code of Conduct",
+											link: "project/code-of-conduct",
+										},
+										{ label: "Contributing", link: "project/contributing" },
+										{
+											label: "Contributing with AI",
+											link: "project/contributing-with-ai",
+										},
+										{ label: "Development", link: "project/development" },
+										{ label: "Maintenance", link: "project/maintenance" },
+										{ label: "Team", link: "project/team" },
+									],
+									label: "Project",
+								},
 							],
 							label: "About",
 							link: "about",
@@ -79,7 +97,6 @@ export default defineConfig({
 										{ label: "JSX", link: "rules/jsx" },
 										{ label: "Node", link: "rules/node" },
 										{ label: "Performance", link: "rules/performance" },
-										{ label: "Sorting", link: "rules/sorting" },
 										{ label: "Spelling", link: "rules/spelling" },
 									],
 									label: "Focused Plugins",
@@ -91,6 +108,7 @@ export default defineConfig({
 										{ label: "Nuxt", link: "rules/nuxt" },
 										{ label: "React", link: "rules/react" },
 										{ label: "SolidJS", link: "rules/solid" },
+										{ label: "Svelte", link: "rules/svelte" },
 										{ label: "Vitest", link: "rules/vitest" },
 										{ label: "Vue", link: "rules/vue" },
 									],
@@ -124,13 +142,27 @@ export default defineConfig({
 		react(),
 	],
 	markdown: {
-		remarkPlugins: [remarkHeadingId],
+		remarkPlugins: [
+			remarkAddTwoslash({
+				excludes: [/content\/docs\/blog/, /content\/docs\/rules\/\w+\/\w+/],
+			}),
+			remarkHeadingId,
+		],
 	},
 	redirects: {
 		"/discord": "https://discord.gg/cFK3RAUDhy",
+		"/team": "/project/team",
 	},
 	site: "https://flint.fyi",
 	vite: {
+		define: {
+			// @astrojs/ts-plugin is "type":"commonjs"
+			// __filename is not defined in ES module scope
+			//   Stack trace:
+			//     at D (file:///home/runner/work/flint/flint/packages/site/dist/chunks/getRuleForPlugin_C5J7xdaO.mjs:68627:687)
+			//     at requireAstro2tsx (file:///home/runner/work/flint/flint/packages/site/dist/chunks/getRuleForPlugin_C5J7xdaO.mjs:69379:17)
+			__filename: "import.meta.filename",
+		},
 		resolve: {
 			conditions: ["node", "import", "default", "browser"],
 		},

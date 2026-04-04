@@ -37,8 +37,9 @@ export function createTypeScriptServerHost(
 		},
 		directoryExists(directoryPath) {
 			return (
-				host.stat(path.resolve(host.getCurrentDirectory(), directoryPath)) ===
-				"directory"
+				host.fileTypeSync(
+					path.resolve(host.getCurrentDirectory(), directoryPath),
+				) === "directory"
 			);
 		},
 		exit() {
@@ -46,7 +47,9 @@ export function createTypeScriptServerHost(
 		},
 		fileExists(filePath) {
 			return (
-				host.stat(path.resolve(host.getCurrentDirectory(), filePath)) === "file"
+				host.fileTypeSync(
+					path.resolve(host.getCurrentDirectory(), filePath),
+				) === "file"
 			);
 		},
 		readDirectory(directoryPath, extensions, exclude, include, depth) {
@@ -69,7 +72,9 @@ export function createTypeScriptServerHost(
 				try {
 					fs.readdirSync = originalReadDirSync;
 					return host
-						.readDirectory(path.resolve(host.getCurrentDirectory(), readPath))
+						.readDirectorySync(
+							path.resolve(host.getCurrentDirectory(), readPath),
+						)
 						.map(
 							(dirent) =>
 								new DirentCtor(
@@ -99,17 +104,19 @@ export function createTypeScriptServerHost(
 			}
 		},
 		readFile(filePath) {
-			return host.readFile(path.resolve(host.getCurrentDirectory(), filePath));
+			return host.readFileSync(
+				path.resolve(host.getCurrentDirectory(), filePath),
+			);
 		},
 		setImmediate: timers.setImmediate,
 		setTimeout: timers.setTimeout,
 		watchDirectory(directoryPath, callback, recursive = false) {
-			const watcher = host.watchDirectory(
+			const watcher = host.watchDirectorySync(
 				path.resolve(host.getCurrentDirectory(), directoryPath),
-				recursive,
 				(filePathAbsolute) => {
 					callback(filePathAbsolute);
 				},
+				{ recursive },
 			);
 			return {
 				close() {
@@ -118,7 +125,7 @@ export function createTypeScriptServerHost(
 			};
 		},
 		watchFile(filePath, callback) {
-			const watcher = host.watchFile(
+			const watcher = host.watchFileSync(
 				path.resolve(host.getCurrentDirectory(), filePath),
 				(event) => {
 					let eventKind: ts.FileWatcherEventKind;

@@ -17,7 +17,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using the void operator on expressions that are already void or undefined.",
 		id: "meaninglessVoidOperators",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		meaninglessVoid: {

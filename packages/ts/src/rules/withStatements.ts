@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using with statements",
 		id: "withStatements",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		withStatement: {

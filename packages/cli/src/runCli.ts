@@ -1,3 +1,7 @@
+import {
+	createDiskBackedLinterHost,
+	createEphemeralLinterHost,
+} from "@flint.fyi/core";
 import { parseArgs } from "node:util";
 
 import packageData from "../package.json" with { type: "json" };
@@ -25,6 +29,9 @@ export async function runCli(args: string[]) {
 			"    Whether to ignore any existing cache data on disk. This will cause a full re-lint of all linted files.",
 		);
 		console.log("");
+		console.log("  --cache-location <path>");
+		console.log("    The path to the cache file or directory to use.");
+		console.log("");
 		console.log("  --fix");
 		console.log("    Enables auto-fixing 'fixes' from rule reports.");
 		console.log("");
@@ -43,9 +50,9 @@ export async function runCli(args: string[]) {
 			"    Which 'presenter' to output results using: brief (default) or detailed.",
 		);
 		console.log("");
-		console.log("  --skip-diagnostics");
+		console.log("  --skip-language-reports");
 		console.log(
-			"    Whether to skip reporting language 'diagnostics' after linting.",
+			"    Whether to skip generating language reports after linting.",
 		);
 		console.log("");
 		console.log("  --version");
@@ -67,9 +74,11 @@ export async function runCli(args: string[]) {
 		return 0;
 	}
 
-	const configFileName = await findConfigFileName(process.cwd());
+	const host = createDiskBackedLinterHost(process.cwd());
+	const cwd = host.getCurrentDirectory();
+	const configFileName = await findConfigFileName(host);
 	if (!configFileName) {
-		console.error("No flint.config.* file found.");
+		console.error(`No flint.config.* file found in ${cwd}.`);
 		console.error(
 			"The Flint CLI auto-initializer is not yet implemented. Check back soon!",
 		);
@@ -82,13 +91,18 @@ export async function runCli(args: string[]) {
 	const getRenderer = createRendererFactory(configFileName, values);
 
 	if (values.watch) {
-		await runCliWatch(configFileName, getRenderer, values);
+		await runCliWatch(host, configFileName, getRenderer, values);
 		console.log("👋 Thanks for using Flint!");
 		return 0;
 	}
 
 	const renderer = getRenderer();
-	const { exitCode } = await runCliOnce(configFileName, renderer, values);
+	const { exitCode } = await runCliOnce(
+		createEphemeralLinterHost(host),
+		configFileName,
+		renderer,
+		values,
+	);
 
 	renderer.dispose?.();
 

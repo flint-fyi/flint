@@ -1,6 +1,6 @@
 import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 import ts from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -158,7 +158,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports class methods that do not use `this`.",
 		id: "classMethodsThis",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		missingThis: {

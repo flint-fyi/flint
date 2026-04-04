@@ -4,8 +4,8 @@ import {
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 
-import { getRuleTesterDescribedCases } from "../getRuleTesterDescribedCases.ts";
-import type { ParsedTestCase } from "../types.ts";
+import { getRuleTesterDescribedCases } from "../utils/getRuleTesterDescribedCases.ts";
+import type { ParsedTestCase } from "../utils/types.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -39,6 +39,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const key = JSON.stringify({
 					code: testCase.code,
 					fileName: testCase.fileName,
+					files: testCase.files,
 					options: testCase.options,
 				});
 

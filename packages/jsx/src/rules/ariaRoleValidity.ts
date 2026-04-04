@@ -85,7 +85,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports invalid or abstract ARIA roles.",
 		id: "ariaRoleValidity",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidRole: {
@@ -120,10 +120,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					property.name.kind === SyntaxKind.Identifier,
 			);
 
-			if (
-				!roleProperty?.initializer ||
-				roleProperty.initializer.kind !== SyntaxKind.StringLiteral
-			) {
+			if (roleProperty?.initializer?.kind !== SyntaxKind.StringLiteral) {
 				return;
 			}
 

@@ -42,7 +42,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						!namedBindings ||
 						!ts.isNamedImports(namedBindings) ||
-						namedBindings.elements.length === 0 ||
+						!namedBindings.elements.length ||
 						namedBindings.elements.some((element) => !element.isTypeOnly)
 					) {
 						return;

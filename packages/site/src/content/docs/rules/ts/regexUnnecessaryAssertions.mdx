@@ -1,0 +1,122 @@
+---
+description: "Reports assertions in regular expressions that always reject."
+title: "regexUnnecessaryAssertions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryAssertions" />
+
+Reports assertions in regular expressions that always reject.
+These patterns will never match because the assertion contradicts its surrounding context.
+
+## Examples
+
+### Word Boundary Between Same Character Types
+
+A word boundary (`\b`) always rejects when placed between two word characters or two non-word characters.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a\bb/;
+const pattern2 = /-\b-/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a\b-/;
+const pattern2 = /-\ba/;
+```
+
+</TabItem>
+</Tabs>
+
+### Negated Word Boundary at Transition
+
+A negated word boundary (`\B`) always rejects when there is a word/non-word transition.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a\B-/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a\Ba/;
+```
+
+</TabItem>
+</Tabs>
+
+### Anchors Not at Pattern Boundaries
+
+Start (`^`) and end (`$`) anchors always reject when not at pattern boundaries (without the multiline flag).
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a^b/;
+const pattern2 = /a$b/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /^ab/;
+const pattern2 = /ab$/;
+const pattern3 = /a^b/m;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+The rule also checks regex patterns in `RegExp` constructor calls.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("a\\bb");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("a\\b-");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are working with dynamically constructed regex patterns where the simplified detection may cause false positives, you may disable this rule.
+
+## Further Reading
+
+- [MDN: Assertions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Assertions)
+- [MDN: Word boundary assertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Word_boundary_assertion)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryAssertions" />

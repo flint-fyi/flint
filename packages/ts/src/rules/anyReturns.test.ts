@@ -583,13 +583,11 @@ function foo() {
   return true;
 }
     `,
-		// this actually types as `never[]`
 		`
 function foo() {
   return [];
 }
     `,
-		// explicit any return type is allowed, if you want to be unsafe like that
 		`
 function foo(): any {
   return {} as any;
@@ -603,13 +601,11 @@ foo((): any => 'foo' as any);
 declare function foo(arg: null | (() => any)): void;
 foo((): any => 'foo' as any);
     `,
-		// explicit any array return type is allowed, if you want to be unsafe like that
 		`
 function foo(): any[] {
   return [] as any[];
 }
     `,
-		// explicit any generic return type is allowed, if you want to be unsafe like that
 		`
 function foo(): Set<any> {
   return new Set<any>();
@@ -630,7 +626,6 @@ function foo(): object {
   return Promise.resolve({} as any);
 }
     `,
-		// TODO - this should error, but it's hard to detect, as the type references are different
 		`
 function foo(): ReadonlySet<number> {
   return new Set<any>();
@@ -653,7 +648,6 @@ function foo(): Set<number> {
         return { prop: '' } as Foo;
       }
     `,
-		// TS 3.9 changed this to be safe
 		`
       function fn<T extends any>(x: T) {
         return x;
@@ -684,13 +678,11 @@ function foo(): Set<number> {
         return Promise.resolve(x as any);
       }
     `,
-		// https://github.com/typescript-eslint/typescript-eslint/issues/2109
 		`
       function test(): Map<string, string> {
         return new Map();
       }
     `,
-		// https://github.com/typescript-eslint/typescript-eslint/issues/3549
 		`
       function foo(): any {
         return [] as any[];

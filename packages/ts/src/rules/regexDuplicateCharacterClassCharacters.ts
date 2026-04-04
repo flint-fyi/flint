@@ -127,7 +127,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports duplicate characters in regular expression character classes.",
 		id: "regexDuplicateCharacterClassCharacters",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		duplicate: {

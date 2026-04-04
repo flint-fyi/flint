@@ -17,7 +17,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports mouse events without corresponding keyboard events.",
 		id: "mouseEventKeyEvents",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingKeyEvent: {

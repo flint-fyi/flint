@@ -17,7 +17,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports returning a value with type `any` from a function.",
 		id: "anyReturns",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsafeReturn: {
@@ -59,18 +59,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkReturn(
 			returnNode: AST.Expression,
 			reportingNode: ts.Node,
-			fileService: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		): void {
-			const { program, sourceFile, typeChecker } = fileService;
-
 			const type = typeChecker.getTypeAtLocation(returnNode);
 
-			const anyType = discriminateAnyType(
-				type,
-				typeChecker,
-				program,
-				returnNode,
-			);
+			const anyType = discriminateAnyType(type, typeChecker, returnNode);
 			const functionNode = ts.findAncestor(
 				returnNode,
 				// TODO: I believe isFunctionLikeDeclaration was incorrectly marked
@@ -79,10 +72,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				// However, isFunctionLike also checks for signature-like nodes,
 				// whereas isFunctionLikeDeclaration checks only for function-like nodes.
 				/* eslint-disable @typescript-eslint/no-deprecated */
-				// flint-disable-lines-begin deprecated
+				// flint-disable-lines-begin ts/deprecated
 				tsutils.isFunctionLikeDeclaration,
 				/* eslint-enable @typescript-eslint/no-deprecated */
-				// flint-disable-lines-end deprecated
+				// flint-disable-lines-end ts/deprecated
 			);
 			if (!functionNode) {
 				return;
@@ -99,8 +92,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			// const foo1: () => Set<string> = () => new Set<any>();
 			// the return type of the arrow function is Set<any> even though the variable is typed as Set<string>
 			let functionType =
-				functionNode.kind == SyntaxKind.FunctionExpression ||
-				functionNode.kind == SyntaxKind.ArrowFunction
+				functionNode.kind === SyntaxKind.FunctionExpression ||
+				functionNode.kind === SyntaxKind.ArrowFunction
 					? typeChecker.getContextualType(functionNode)
 					: typeChecker.getTypeAtLocation(functionNode);
 			functionType ??= typeChecker.getTypeAtLocation(functionNode);
@@ -234,7 +227,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const result = isUnsafeAssignment(
 					returnNodeType,
 					functionReturnType,
-					typeChecker,
 					returnNode,
 				);
 				if (!result) {
@@ -257,7 +249,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				ArrowFunction: (node, fileService) => {
-					if (node.body.kind != SyntaxKind.Block) {
+					if (node.body.kind !== SyntaxKind.Block) {
 						checkReturn(node.body, node.body, fileService);
 					}
 				},

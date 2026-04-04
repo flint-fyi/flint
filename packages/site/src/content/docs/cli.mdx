@@ -3,7 +3,7 @@ description: "Running Flint on your command line."
 title: CLI
 ---
 
-import { PackageManagers } from "starlight-package-managers";
+import PackageManagers from "~/components/PackageManagers.astro";
 
 Flint's CLI comes as part of the [`flint` npm package](https://npmjs.com/package/flint).
 You can run it with `npx` or an equivalent:
@@ -17,9 +17,18 @@ This will cause a full re-lint of all linted files.
 
 <PackageManagers args="--cache-ignore" pkg="flint" type="dlx" />
 
+## `--cache-location`
+
+Override the default location for Flint's cache file.
+This can be either a direct path to a json file, or the directory where the `flint.json` cache file will be stored.
+The default value is `node_modules/.cache/flint.json`.
+
+You can open this file in an editor to see which files are cached, as well as dependencies of those files.
+
 :::tip
-Flint stores linting caches under `node_modules/.cache/flint.json`.
-Open that file in an editor to see which files are cached as well as dependencies between files.
+This value can also be set in your Flint configuration.
+Values applied on the command line will override any value defined in the config file.
+See [Configuration > cacheLocation](https://www.flint.fyi/configuration#cacheLocation) for more.
 :::
 
 ## `--fix`
@@ -36,17 +45,13 @@ Adding `--fix` will instruct Flint to continuously re-run (up to 10 times), fixi
 Enables auto-fixing any number of specific ["suggestions"](/glossary#suggestion) from rule reports.
 
 <PackageManagers
-	args="--fix-suggestions cspell:addWordToWords"
+	args="--fix-suggestions spelling/cspell:addWordToWords"
 	pkg="flint"
 	type="dlx"
 />
 
 Unlike [`--fix`](#--fix), `--fix-suggestions` requires passing in explicit names of suggestions to apply.
-Suggestion names are comprised of the rule name, and a suggestion ID, all joined by `:`.
-
-:::note
-[🚀 Feature: Comment directives and suggestions should prefix with plugin IDs](https://github.com/flint-fyi/flint/issues/248) will soon change suggestion keys.
-:::
+Suggestion names are comprised of the rule plugin `/` rule name `:` suggestion ID.
 
 ## `--help`
 
@@ -124,23 +129,23 @@ Linting with flint.config.ts...
 │  It also returns the index key (`i`) as a string, which is not the expected numeric type for array indices.
 │
 │  Suggestion: Use a construct more suited for arrays, such as a for-of loop (`for (const i of o)`).
-│  → flint.fyi/rules/forInArrays
+│  → flint.fyi/rules/ts/forInArrays
 │
 ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ✖ Found 1 report across 1 file.
 ```
 
-## `--skip-diagnostics`
+## `--skip-language-reports`
 
-Whether to skip reporting language "diagnostics" after linting.
+Whether to skip generating language reports after linting.
 
-<PackageManagers args="--skip-diagnostics" pkg="flint" type="dlx" />
+<PackageManagers args="--skip-language-reports" pkg="flint" type="dlx" />
 
 Language plugins such as Flint's TypeScript plugin are able to report additional checks from the languages after linting.
 For example, Flint's core TypeScript plugin reports TypeScript type errors (effectively running `tsc --noEmit`) by re-using the TypeScript type services used in linting.
 
-`--skip-diagnostics` can be used to disable those checks.
+`--skip-language-reports` can be used to disable those checks.
 You may wish to do this for performance and/or if you run tools like `tsc` separately from Flint.
 
 ## `--version`

@@ -10,7 +10,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports empty named import blocks.",
 		id: "importEmptyBlocks",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noEmptyNamedBlocksOnly: {

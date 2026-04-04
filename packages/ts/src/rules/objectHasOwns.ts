@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer Object.hasOwn() over Object.prototype.hasOwnProperty.call() for checking own properties.",
 		id: "objectHasOwns",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferHasOwn: {
@@ -47,7 +47,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isObjectLiteralHasOwnProperty(node: AST.Expression) {
 			return (
 				node.kind === SyntaxKind.ObjectLiteralExpression &&
-				node.properties.length === 0
+				!node.properties.length
 			);
 		}
 

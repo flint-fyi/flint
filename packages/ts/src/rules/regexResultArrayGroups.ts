@@ -115,7 +115,7 @@ function getNamedGroupsFromExpression(
 				regexInfo.pattern,
 				regexInfo.flags,
 			);
-			if (namedGroups.length > 0) {
+			if (namedGroups.length) {
 				return namedGroups;
 			}
 		}
@@ -294,7 +294,7 @@ function getRegexInfoFromSymbol(
 							regexInfo.pattern,
 							regexInfo.flags,
 						);
-						if (namedGroups.length > 0) {
+						if (namedGroups.length) {
 							return namedGroups;
 						}
 					}
@@ -323,7 +323,7 @@ function getRegexInfoFromSymbol(
 					regexInfo.pattern,
 					regexInfo.flags,
 				);
-				if (namedGroups.length > 0) {
+				if (namedGroups.length) {
 					return namedGroups;
 				}
 			}
@@ -371,13 +371,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		preferGroups: {
 			primary:
-				"Use `.groups.{{name}}` instead of numeric index for the named capturing group '{{name}}'.",
+				"Use `.groups.{{ name }}` instead of numeric index for the named capturing group '{{ name }}'.",
 			secondary: [
 				"When a regex has named capturing groups, accessing them by name is more readable and maintainable.",
 				"Numeric indices are fragile and can break if the regex pattern is modified.",
 			],
 			suggestions: [
-				"Replace the indexed access with `.groups.{{name}}`.",
+				"Replace the indexed access with `.groups.{{ name }}`.",
 				"Use the named capturing group syntax for better code clarity.",
 			],
 		},
@@ -392,7 +392,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const index = Number(argument.text);
-					if (index === 0 || !Number.isInteger(index) || index < 0) {
+					if (index <= 0 || !Number.isInteger(index)) {
 						return;
 					}
 

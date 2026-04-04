@@ -17,7 +17,7 @@ function isArrayFilterCall(
 		ts.isCallExpression(node) &&
 		ts.isPropertyAccessExpression(node.expression) &&
 		node.expression.name.text === "filter" &&
-		node.arguments.length > 0 &&
+		!!node.arguments.length &&
 		node.arguments.length <= 2 &&
 		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
 	);
@@ -45,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `.filter()` when only the first or last matching element is needed.",
 		id: "arrayFilteredFinds",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferFind: {
@@ -82,7 +82,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					switch (methodName) {
 						case "pop":
 							if (
-								node.arguments.length === 0 &&
+								!node.arguments.length &&
 								isArrayFilterCall(objectExpression, typeChecker)
 							) {
 								context.report({
@@ -94,7 +94,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						case "shift":
 							if (
-								node.arguments.length === 0 &&
+								!node.arguments.length &&
 								isArrayFilterCall(objectExpression, typeChecker)
 							) {
 								context.report({

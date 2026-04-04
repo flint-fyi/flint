@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Flags using `new` with `Boolean`, `Number`, or `String`, which creates wrapper objects instead of primitives.",
 		id: "wrapperObjects",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		wrapperObject: {

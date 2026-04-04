@@ -67,7 +67,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return typeOnlyImports.has(exportedName);
 					});
 
-					if (allTypeOnly && node.exportClause.elements.length > 0) {
+					if (allTypeOnly && !!node.exportClause.elements.length) {
 						context.report({
 							message: "useExportType",
 							range: getTSNodeRange(node, sourceFile),

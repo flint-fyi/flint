@@ -11,13 +11,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Disallow providing a body with GET or HEAD fetch requests.",
 		id: "fetchMethodBodies",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noBody: {
-			primary: "`body` is not allowed when the request method is `{{method}}`.",
+			primary:
+				"`body` is not allowed when the request method is `{{ method }}`.",
 			secondary: [
-				"The Fetch API will throw a `TypeError` at runtime if a body is provided with a `{{method}}` request.",
+				"The Fetch API will throw a `TypeError` at runtime if a body is provided with a `{{ method }}` request.",
 			],
 			suggestions: [
 				"Remove the `body` property from the options.",

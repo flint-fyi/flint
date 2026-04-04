@@ -31,12 +31,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			const children = node.children.filter(
 				(child) =>
-					child.kind !== SyntaxKind.JsxText || child.text.trim().length > 0,
+					child.kind !== SyntaxKind.JsxText || !!child.text.trim().length,
 			);
 
 			let childType: string | undefined;
 
-			if (children.length === 0) {
+			if (!children.length) {
 				childType = "no children";
 			} else if (children.length === 1) {
 				childType = "a single child";

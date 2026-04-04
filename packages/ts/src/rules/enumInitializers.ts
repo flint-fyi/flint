@@ -10,7 +10,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports enum members without explicit initial values.",
 		id: "enumInitializers",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		defineInitializer: {

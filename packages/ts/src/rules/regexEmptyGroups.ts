@@ -15,7 +15,7 @@ import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 function isEmptyGroup(group: RegExpAST.CapturingGroup | RegExpAST.Group) {
 	return group.alternatives.every(
-		(alternative) => alternative.elements.length === 0,
+		(alternative) => !alternative.elements.length,
 	);
 }
 
@@ -23,7 +23,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports empty groups in regular expressions.",
 		id: "regexEmptyGroups",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyGroup: {

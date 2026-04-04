@@ -4,7 +4,7 @@ import {
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import ts from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -157,7 +157,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				? { begin: node.name.getStart(sourceFile), end: node.name.getEnd() }
 				: { begin: node.getStart(sourceFile), end: node.getEnd() };
 
-			if (realMembers.length === 0) {
+			if (!realMembers.length) {
 				for (const member of node.members) {
 					if (
 						ts.isConstructorDeclaration(member) &&
@@ -216,13 +216,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (onlyStatic) {
-				if (!options.allowStaticOnly) {
-					context.report({
-						message: "onlyStatic",
-						range: reportRange,
-					});
-				}
+			if (onlyStatic && !options.allowStaticOnly) {
+				context.report({
+					message: "onlyStatic",
+					range: reportRange,
+				});
 			}
 		}
 

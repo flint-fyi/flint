@@ -7,8 +7,50 @@ ruleTester.describe(rule, {
 		{
 			code: `
                 incorect
+`,
+			snapshot: `
+                incorect
+                ~~~~~~~~
+                Forbidden or unknown word: "incorect".
+`,
+			suggestions: [
+				{
+					files: {
+						"cspell.json": [
+							{ original: ``, updated: '{"words":["incorect"]}' },
+						],
+					},
+					id: "addWordToWords",
+				},
+			],
+		},
+		{
+			code: `
+                incorect
+`,
+			files: { "cspell.json": "{}" },
+			snapshot: `
+                incorect
+                ~~~~~~~~
+                Forbidden or unknown word: "incorect".
+`,
+			suggestions: [
+				{
+					files: {
+						"cspell.json": [
+							{ original: `{}`, updated: '{"words":["incorect"]}' },
+						],
+					},
+					id: "addWordToWords",
+				},
+			],
+		},
+		{
+			code: `
+                incorect
             
 `,
+			files: { "cspell.json": '{"words":[]}' },
 			snapshot: `
                 incorect
                 ~~~~~~~~
@@ -19,18 +61,29 @@ ruleTester.describe(rule, {
 				{
 					files: {
 						"cspell.json": [
-							{
-								original: ``,
-								updated: '{"words":["incorect"]}',
-							},
-							{
-								original: `{}`,
-								updated: '{"words":["incorect"]}',
-							},
-							{
-								original: `{"words":[]}`,
-								updated: '{"words":["incorect"]}',
-							},
+							{ original: `{"words":[]}`, updated: '{"words":["incorect"]}' },
+						],
+					},
+					id: "addWordToWords",
+				},
+			],
+		},
+		{
+			code: `
+                incorect
+            
+`,
+			files: { "cspell.json": '{"words":["existing"]}' },
+			snapshot: `
+                incorect
+                ~~~~~~~~
+                Forbidden or unknown word: "incorect".
+            
+`,
+			suggestions: [
+				{
+					files: {
+						"cspell.json": [
 							{
 								original: `{"words":["existing"]}`,
 								updated: '{"words":["existing","incorect"]}',
@@ -55,19 +108,74 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					files: {
+						"cspell.json": [{ original: ``, updated: '{"words":["myarray"]}' }],
+					},
+					id: "addWordToWords",
+				},
+			],
+		},
+		{
+			code: `
+                const myarray = [];
+            
+`,
+			files: { "cspell.json": "{}" },
+			snapshot: `
+                const myarray = [];
+                      ~~~~~~~
+                      Forbidden or unknown word: "myarray".
+            
+`,
+			suggestions: [
+				{
+					files: {
 						"cspell.json": [
-							{
-								original: ``,
-								updated: '{"words":["myarray"]}',
-							},
-							{
-								original: `{}`,
-								updated: '{"words":["myarray"]}',
-							},
-							{
-								original: `{"words":[]}`,
-								updated: '{"words":["myarray"]}',
-							},
+							{ original: `{}`, updated: '{"words":["myarray"]}' },
+						],
+					},
+					id: "addWordToWords",
+				},
+			],
+		},
+		{
+			code: `
+                const myarray = [];
+            
+`,
+			files: { "cspell.json": '{"words":[]}' },
+			snapshot: `
+                const myarray = [];
+                      ~~~~~~~
+                      Forbidden or unknown word: "myarray".
+            
+`,
+			suggestions: [
+				{
+					files: {
+						"cspell.json": [
+							{ original: `{"words":[]}`, updated: '{"words":["myarray"]}' },
+						],
+					},
+					id: "addWordToWords",
+				},
+			],
+		},
+		{
+			code: `
+                const myarray = [];
+            
+`,
+			files: { "cspell.json": '{"words":["existing"]}' },
+			snapshot: `
+                const myarray = [];
+                      ~~~~~~~
+                      Forbidden or unknown word: "myarray".
+            
+`,
+			suggestions: [
+				{
+					files: {
+						"cspell.json": [
 							{
 								original: `{"words":["existing"]}`,
 								updated: '{"words":["existing","myarray"]}',
@@ -93,18 +201,75 @@ ruleTester.describe(rule, {
 				{
 					files: {
 						"cspell.json": [
-							{
-								original: ``,
-								updated: '{"words":["qwertyuiop"]}',
-							},
-							{
-								original: `{}`,
-								updated: '{"words":["qwertyuiop"]}',
-							},
-							{
-								original: `{"words":[]}`,
-								updated: '{"words":["qwertyuiop"]}',
-							},
+							{ original: ``, updated: '{"words":["qwertyuiop"]}' },
+						],
+					},
+					id: "addWordToWords",
+				},
+			],
+		},
+		{
+			code: `
+                qwertyuiop
+            
+`,
+			files: { "cspell.json": "{}" },
+			snapshot: `
+                qwertyuiop
+                ~~~~~~~~~~
+                Forbidden or unknown word: "qwertyuiop".
+            
+`,
+			suggestions: [
+				{
+					files: {
+						"cspell.json": [
+							{ original: `{}`, updated: '{"words":["qwertyuiop"]}' },
+						],
+					},
+					id: "addWordToWords",
+				},
+			],
+		},
+		{
+			code: `
+                qwertyuiop
+            
+`,
+			files: { "cspell.json": '{"words":[]}' },
+			snapshot: `
+                qwertyuiop
+                ~~~~~~~~~~
+                Forbidden or unknown word: "qwertyuiop".
+            
+`,
+			suggestions: [
+				{
+					files: {
+						"cspell.json": [
+							{ original: `{"words":[]}`, updated: '{"words":["qwertyuiop"]}' },
+						],
+					},
+					id: "addWordToWords",
+				},
+			],
+		},
+		{
+			code: `
+                qwertyuiop
+            
+`,
+			files: { "cspell.json": '{"words":["existing"]}' },
+			snapshot: `
+                qwertyuiop
+                ~~~~~~~~~~
+                Forbidden or unknown word: "qwertyuiop".
+            
+`,
+			suggestions: [
+				{
+					files: {
+						"cspell.json": [
 							{
 								original: `{"words":["existing"]}`,
 								updated: '{"words":["existing","qwertyuiop"]}',

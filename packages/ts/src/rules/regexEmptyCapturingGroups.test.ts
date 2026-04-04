@@ -183,5 +183,12 @@ RegExp("(\\\\b)");
 		`new RegExp("(a)");`,
 		`new RegExp(variable);`,
 		`/(a|b|c)/;`,
+		String.raw`/^([\d_]*)(\.[\d_]*)(?:e[+-]?\d+)?$/`,
+		String.raw`/!?\[(?<left>[^[[\]\\]*)\]\[(?<right>[^\]\\]*)\]/g;`,
+		String.raw`/^([+-]?(?:\d+(?:\.\d+)?|\.\d+))(e)([+-]?)(\d+)$/i;`,
+		String.raw`/^(\\u\{?)([\dA-Fa-f]+)(\}?)$/u;`,
+		String.raw`/^\/(.*)\/([dgimsuyv]*)$/;`,
+		String.raw`/^\/(.+)\/([dgimsuyv]*)$/;`,
+		String.raw`/<!--([\s\S]*?)-->/g;`,
 	],
 });

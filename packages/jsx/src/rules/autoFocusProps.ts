@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports autoFocus props that are not set to false.",
 		id: "autoFocusProps",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noAutoFocus: {
@@ -41,7 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			if (property.initializer.kind === SyntaxKind.JsxExpression) {
 				const expr = property.initializer.expression;
-				if (expr && expr.kind === SyntaxKind.FalseKeyword) {
+				if (expr?.kind === SyntaxKind.FalseKeyword) {
 					return true;
 				}
 			}

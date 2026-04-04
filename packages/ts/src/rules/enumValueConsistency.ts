@@ -21,10 +21,11 @@ function getEnumMemberKind(member: AST.EnumMember, typeChecker: Checker) {
 		if ((type.flags & ts.TypeFlags.NumberLike) !== 0) {
 			return enumMemberKinds.Number;
 		}
-	} else if (type.isStringLiteral()) {
-		if ((type.flags & ts.TypeFlags.StringLike) !== 0) {
-			return enumMemberKinds.String;
-		}
+	} else if (
+		type.isStringLiteral() &&
+		(type.flags & ts.TypeFlags.StringLike) !== 0
+	) {
+		return enumMemberKinds.String;
 	}
 
 	return enumMemberKinds.Unknown;
@@ -34,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports enums that contain both string and number members.",
 		id: "enumValueConsistency",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		mixedTypes: {

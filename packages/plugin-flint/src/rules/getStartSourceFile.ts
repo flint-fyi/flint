@@ -5,8 +5,9 @@ import {
 import { SyntaxKind } from "typescript";
 
 import { isTSNode } from "../utils/isTSNode.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Requires passing `sourceFile` to `getStart()` for better performance.",
@@ -41,7 +42,7 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					if (node.arguments.length === 0) {
+					if (!node.arguments.length) {
 						context.report({
 							message: "missingSourceFile",
 							range: getTSNodeRange(node, sourceFile),

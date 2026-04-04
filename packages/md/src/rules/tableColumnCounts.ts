@@ -28,7 +28,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 		return {
 			visitors: {
 				table: (node) => {
-					if (node.children.length === 0) {
+					if (!node.children.length) {
 						return;
 					}
 

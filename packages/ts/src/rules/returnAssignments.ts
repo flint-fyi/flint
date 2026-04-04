@@ -2,7 +2,7 @@ import {
 	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
-	unwrapParenthesizedExpression,
+	unwrapParenthesizedNode,
 } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import { SyntaxKind } from "typescript";
@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using assignment expressions in return statements.",
 		id: "returnAssignments",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		noReturnAssign: {
@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.ConciseBody | AST.Expression,
 			sourceFile: AST.SourceFile,
 		): void {
-			const unwrapped = unwrapParenthesizedExpression(node);
+			const unwrapped = unwrapParenthesizedNode(node);
 
 			if (
 				unwrapped.kind === SyntaxKind.BinaryExpression &&

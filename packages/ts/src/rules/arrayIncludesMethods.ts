@@ -53,7 +53,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `Array#some()` with simple equality checks that can be replaced with `.includes()`.",
 		id: "arrayIncludesMethods",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferIncludes: {

@@ -7,7 +7,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports empty static initialization blocks within class declarations.",
 		id: "emptyStaticBlocks",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		emptyStaticBlock: {
