@@ -8,18 +8,20 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
-		description: "Reports exports that should use 'export type' syntax.",
+		description:
+			"Allows enforcing that type-only exports should use `export type` syntax.",
 		id: "typeExports",
 		presets: ["stylistic"],
 	},
 	messages: {
 		useExportType: {
-			primary: "Use 'export type' for type-only exports.",
+			primary: "Prefer `export type` for type-only exports.",
 			secondary: [
 				"This export only contains types, not runtime values.",
-				"Using 'export type' improves tree-shaking and makes intent clear.",
+				"Type-only exports can be explicitly indicated with `export type`.",
+				"This project is set to enforce using `export type` when possible.",
 			],
-			suggestions: ["Change to 'export type { ... }'."],
+			suggestions: ["Change to `export type { ... }`."],
 		},
 	},
 	setup(context) {
@@ -27,11 +29,35 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				ImportDeclaration(node, { sourceFile }) {
-					if (node.importClause?.isTypeOnly) {
-						const namedBindings = node.importClause.namedBindings;
-						if (namedBindings && ts.isNamedImports(namedBindings)) {
-							for (const element of namedBindings.elements) {
+				ExportDeclaration(node, { sourceFile }) {
+					if (
+						!node.isTypeOnly &&
+						node.exportClause?.kind === ts.SyntaxKind.NamedExports &&
+						node.exportClause.elements.every(
+							(element) =>
+								element.isTypeOnly ||
+								typeOnlyImports.has(
+									element.propertyName?.text ?? element.name.text,
+								),
+						)
+					) {
+						context.report({
+							message: "useExportType",
+							range: getTSNodeRange(node, sourceFile),
+						});
+					}
+				},
+				ImportDeclaration(node) {
+					if (!node.importClause) {
+						return;
+					}
+
+					if (node.importClause.isTypeOnly) {
+						if (
+							node.importClause.namedBindings?.kind ===
+							ts.SyntaxKind.NamedImports
+						) {
+							for (const element of node.importClause.namedBindings.elements) {
 								typeOnlyImports.add(element.name.text);
 							}
 						}
@@ -39,39 +65,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							typeOnlyImports.add(node.importClause.name.text);
 						}
 					} else if (
-						node.importClause?.namedBindings &&
-						ts.isNamedImports(node.importClause.namedBindings)
+						node.importClause.namedBindings?.kind === ts.SyntaxKind.NamedImports
 					) {
 						for (const element of node.importClause.namedBindings.elements) {
 							if (element.isTypeOnly) {
 								typeOnlyImports.add(element.name.text);
 							}
 						}
-					}
-				},
-				ExportDeclaration(node, { sourceFile }) {
-					if (node.isTypeOnly) {
-						return;
-					}
-
-					if (!node.exportClause || !ts.isNamedExports(node.exportClause)) {
-						return;
-					}
-
-					const allTypeOnly = node.exportClause.elements.every((element) => {
-						if (element.isTypeOnly) {
-							return true;
-						}
-						const exportedName =
-							element.propertyName?.text ?? element.name.text;
-						return typeOnlyImports.has(exportedName);
-					});
-
-					if (allTypeOnly && !!node.exportClause.elements.length) {
-						context.report({
-							message: "useExportType",
-							range: getTSNodeRange(node, sourceFile),
-						});
 					}
 				},
 			},

@@ -1,5 +1,5 @@
-import rule from "./typeExports.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./typeExports.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -12,7 +12,7 @@ export { User };
 import type { User } from "./types";
 export { User };
 ~~~~~~~~~~~~~~~~
-Use 'export type' for type-only exports.
+Prefer \`export type\` for type-only exports.
 `,
 		},
 		{
@@ -24,7 +24,7 @@ export { User, Post };
 import type { User, Post } from "./types";
 export { User, Post };
 ~~~~~~~~~~~~~~~~~~~~~~
-Use 'export type' for type-only exports.
+Prefer \`export type\` for type-only exports.
 `,
 		},
 		{
@@ -36,7 +36,7 @@ export { User };
 import { type User } from "./types";
 export { User };
 ~~~~~~~~~~~~~~~~
-Use 'export type' for type-only exports.
+Prefer \`export type\` for type-only exports.
 `,
 		},
 	],

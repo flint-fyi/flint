@@ -10,8 +10,11 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="typeExports" />
 
-Using `export type` for type-only exports improves tree-shaking and makes the intent explicit.
-When exporting symbols that were imported using `import type`, use `export type` instead.
+TypeScript allows specifying a `type` keyword on exports to indicate that the export exists only in the type system, not at runtime.
+This makes it more clear that the exports are type-only, which helps clarify code and also allows transpilers to drop exports without knowing the types of the dependencies.
+
+Using `type` on exports can be preferable in many project setups.
+This rule can be enabled to enforce that if something is a type-only construct, such as an `interface`, any exports of it must be `export type`.
 
 ## Examples
 
@@ -63,11 +66,20 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you prefer not to distinguish between type and value exports, you can disable this rule.
+If you use [TypeScript's `--isolatedModules` compiler option](https://www.typescriptlang.org/tsconfig/isolatedModules.html), the type checker will error if a type is not re-exported using `export type`.
+This rule may be less useful in those cases.
+
+If you specifically want to use both export kinds for stylistic reasons, or don't wish to enforce one style over the other, you can avoid this rule.
+Many projects, such as those using bundlers like Vite and Webpack, don't need explicit `export type`s.
+Those projects may prefer omitting the `type` from `export`s and/or `import`s for brevity.
+
+Keep in mind that inconsistent style can harm readability in a project.
+We recommend picking a single option for this rule that works best for your project.
 
 ## Further Reading
 
 - [TypeScript: Type-Only Imports and Exports](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export)
+- [typescript-eslint: Consistent Type Imports and Exports: Why and How](https://typescript-eslint.io/blog/consistent-type-imports-and-exports-why-and-how/)
 
 ## Equivalents in Other Linters
 
