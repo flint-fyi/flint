@@ -18,6 +18,6 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/prepare
-      - uses: JoshuaKGoldberg/all-contributors-auto-action@944abe4387e751b5bbb38616cb25cf4a4ca998f2 # v0.5.0
+      - uses: JoshuaKGoldberg/all-contributors-auto-action@587a3a5844b0104abb911a69a1a84ec645292f5e # v0.6.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
