@@ -401,7 +401,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 		},
 		directives: collected.directives,
 		language: typescriptLanguage,
-
+		redundantDirectives: collected.redundantDirectives,
 		reports: [...collected.reports, ...(reports ?? [])],
 		services: {
 			program,

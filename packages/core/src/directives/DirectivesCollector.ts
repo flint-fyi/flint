@@ -3,14 +3,21 @@ import type {
 	FileReport,
 	NormalizedReportRangeObject,
 } from "../types/reports.ts";
+import { createSelectionMatcher } from "./createSelectionMatcher.ts";
 import { isCommentDirectiveType } from "./predicates.ts";
 import { directiveReports } from "./reports/directiveReports.ts";
 
+interface CollectedSelection {
+	matcher: RegExp;
+	selection: string;
+}
+
 export class DirectivesCollector {
 	#directives: CommentDirective[] = [];
+	#redundantDirectives: CommentDirective[] = [];
 	#reports: FileReport[] = [];
-	#selectionsForFile = new Set<string>();
-	#selectionsForRanges = new Set<string>();
+	#selectionsForFile: CollectedSelection[] = [];
+	#selectionsForRanges: CollectedSelection[] = [];
 
 	#statementsStartIndex: number;
 
@@ -56,14 +63,10 @@ export class DirectivesCollector {
 	collect() {
 		return {
 			directives: this.#directives,
+			redundantDirectives: this.#redundantDirectives,
 			reports: this.#reports,
 		};
 	}
-
-	// TODO: These selection validators only check for this.#selections.has.
-	// However, that doesn't match on asterisks/wildcard selectors.
-	// Eventually they should more accurately check for wildcard overlaps.
-	// https://github.com/flint-fyi/flint/issues/245
 
 	#validateDisableFileDirective(directive: CommentDirective) {
 		if (directive.range.begin.raw > this.#statementsStartIndex) {
@@ -74,12 +77,13 @@ export class DirectivesCollector {
 		}
 
 		for (const selection of directive.selections) {
-			if (this.#selectionsForFile.has(selection)) {
+			if (selectionAlreadyDisabled(this.#selectionsForFile, selection)) {
+				this.#redundantDirectives.push(directive);
 				this.#reports.push(
 					directiveReports.createAlreadyDisabled(directive, selection),
 				);
 			} else {
-				this.#selectionsForFile.add(selection);
+				this.#selectionsForFile.push(createCollectedSelection(selection));
 			}
 		}
 	}
@@ -87,22 +91,26 @@ export class DirectivesCollector {
 	#validateDisableLinesBeginDirective(directive: CommentDirective) {
 		for (const selection of directive.selections) {
 			if (
-				this.#selectionsForFile.has(selection) ||
-				this.#selectionsForRanges.has(selection)
+				selectionAlreadyDisabled(this.#selectionsForFile, selection) ||
+				selectionAlreadyDisabled(this.#selectionsForRanges, selection)
 			) {
+				this.#redundantDirectives.push(directive);
 				this.#reports.push(
 					directiveReports.createAlreadyDisabled(directive, selection),
 				);
 			} else {
-				this.#selectionsForRanges.add(selection);
+				this.#selectionsForRanges.push(createCollectedSelection(selection));
 			}
 		}
 	}
 
 	#validateDisableLinesEndDirective(directive: CommentDirective) {
 		for (const selection of directive.selections) {
-			if (this.#selectionsForRanges.has(selection)) {
-				this.#selectionsForRanges.delete(selection);
+			const selectionIndex = this.#selectionsForRanges.findIndex(
+				(collectedSelection) => collectedSelection.selection === selection,
+			);
+			if (selectionIndex !== -1) {
+				this.#selectionsForRanges.splice(selectionIndex, 1);
 			} else {
 				this.#reports.push(
 					directiveReports.createNotPreviouslyDisabled(
@@ -117,13 +125,30 @@ export class DirectivesCollector {
 	#validateDisableNextLineDirective(directive: CommentDirective) {
 		for (const selection of directive.selections) {
 			if (
-				this.#selectionsForFile.has(selection) ||
-				this.#selectionsForRanges.has(selection)
+				selectionAlreadyDisabled(this.#selectionsForFile, selection) ||
+				selectionAlreadyDisabled(this.#selectionsForRanges, selection)
 			) {
+				this.#redundantDirectives.push(directive);
 				this.#reports.push(
 					directiveReports.createAlreadyDisabled(directive, selection),
 				);
 			}
 		}
 	}
+}
+
+function createCollectedSelection(selection: string): CollectedSelection {
+	return {
+		matcher: createSelectionMatcher(selection),
+		selection,
+	};
+}
+
+function selectionAlreadyDisabled(
+	collectedSelections: CollectedSelection[],
+	selection: string,
+) {
+	return collectedSelections.some((collectedSelection) =>
+		collectedSelection.matcher.test(selection),
+	);
 }

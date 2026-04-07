@@ -66,17 +66,27 @@ export function finalizeFileResults(
 	}
 
 	const directiveReportsFromCollector: FileReport[] = [];
+	const redundantDirectives = new Set<string>();
 	for (const { file } of languageAndFiles) {
 		if (file.reports) {
 			directiveReportsFromCollector.push(...file.reports);
+		}
+
+		for (const directive of file.redundantDirectives ?? []) {
+			redundantDirectives.add(JSON.stringify(directive));
 		}
 	}
 
 	const filterResult = directivesFilterer.filter(reports);
 
-	const unusedDirectiveReports = filterResult.unusedDirectives.map(
-		(directive) => directiveReports.createUnused(directive),
-	);
+	const unusedDirectiveReports: FileReport[] = [];
+	for (const directive of filterResult.unusedDirectives) {
+		if (redundantDirectives.has(JSON.stringify(directive))) {
+			continue;
+		}
+
+		unusedDirectiveReports.push(directiveReports.createUnused(directive));
+	}
 
 	return {
 		dependencies: fileDependencies,

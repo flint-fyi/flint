@@ -30,6 +30,7 @@ describe(DirectivesCollector, () => {
 
 		expect(actual).toEqual({
 			directives: [],
+			redundantDirectives: [],
 			reports: [directiveReports.createUnknown("other", range)],
 		});
 	});
@@ -44,6 +45,7 @@ describe(DirectivesCollector, () => {
 
 		expect(actual).toEqual({
 			directives: [],
+			redundantDirectives: [],
 			reports: [directiveReports.createNoSelection("disable-file", range)],
 		});
 	});
@@ -65,6 +67,7 @@ describe(DirectivesCollector, () => {
 						type: "disable-file",
 					},
 				],
+				redundantDirectives: [],
 				reports: [directiveReports.createFileAfterContent(range)],
 			});
 		});
@@ -90,6 +93,13 @@ describe(DirectivesCollector, () => {
 						type: "disable-file",
 					},
 				],
+				redundantDirectives: [
+					{
+						range: createRange(1),
+						selections: ["b", "c"],
+						type: "disable-file",
+					},
+				],
 				reports: [
 					directiveReports.createAlreadyDisabled(
 						{
@@ -98,6 +108,47 @@ describe(DirectivesCollector, () => {
 							type: "disable-file",
 						},
 						"b",
+					),
+				],
+			});
+		});
+
+		it("generates a report when a directive selection is covered by a previous wildcard selection", () => {
+			const collector = new DirectivesCollector(2);
+
+			collector.add(createRange(0), "a*", "disable-file");
+			collector.add(createRange(1), "ab*", "disable-file");
+
+			const actual = collector.collect();
+
+			expect(actual).toEqual({
+				directives: [
+					{
+						range: createRange(0),
+						selections: ["a*"],
+						type: "disable-file",
+					},
+					{
+						range: createRange(1),
+						selections: ["ab*"],
+						type: "disable-file",
+					},
+				],
+				redundantDirectives: [
+					{
+						range: createRange(1),
+						selections: ["ab*"],
+						type: "disable-file",
+					},
+				],
+				reports: [
+					directiveReports.createAlreadyDisabled(
+						{
+							range: createRange(1),
+							selections: ["ab*"],
+							type: "disable-file",
+						},
+						"ab*",
 					),
 				],
 			});
@@ -119,6 +170,7 @@ describe(DirectivesCollector, () => {
 						type: "disable-file",
 					},
 				],
+				redundantDirectives: [],
 				reports: [directiveReports.createFileAfterContent(range)],
 			});
 		});
@@ -140,6 +192,13 @@ describe(DirectivesCollector, () => {
 						selections: ["a", "b"],
 						type: "disable-file",
 					},
+					{
+						range: createRange(1),
+						selections: ["b", "c"],
+						type: "disable-next-line",
+					},
+				],
+				redundantDirectives: [
 					{
 						range: createRange(1),
 						selections: ["b", "c"],
@@ -180,6 +239,13 @@ describe(DirectivesCollector, () => {
 						type: "disable-lines-begin",
 					},
 				],
+				redundantDirectives: [
+					{
+						range: createRange(1),
+						selections: ["b", "c"],
+						type: "disable-lines-begin",
+					},
+				],
 				reports: [
 					directiveReports.createAlreadyDisabled(
 						{
@@ -188,6 +254,47 @@ describe(DirectivesCollector, () => {
 							type: "disable-lines-begin",
 						},
 						"b",
+					),
+				],
+			});
+		});
+
+		it("generates a report when a directive selection is covered by a previous file wildcard selection", () => {
+			const collector = new DirectivesCollector(2);
+
+			collector.add(createRange(0), "a*", "disable-file");
+			collector.add(createRange(1), "ab*", "disable-lines-begin");
+
+			const actual = collector.collect();
+
+			expect(actual).toEqual({
+				directives: [
+					{
+						range: createRange(0),
+						selections: ["a*"],
+						type: "disable-file",
+					},
+					{
+						range: createRange(1),
+						selections: ["ab*"],
+						type: "disable-lines-begin",
+					},
+				],
+				redundantDirectives: [
+					{
+						range: createRange(1),
+						selections: ["ab*"],
+						type: "disable-lines-begin",
+					},
+				],
+				reports: [
+					directiveReports.createAlreadyDisabled(
+						{
+							range: createRange(1),
+							selections: ["ab*"],
+							type: "disable-lines-begin",
+						},
+						"ab*",
 					),
 				],
 			});
@@ -216,6 +323,7 @@ describe(DirectivesCollector, () => {
 						type: "disable-lines-end",
 					},
 				],
+				redundantDirectives: [],
 				reports: [
 					directiveReports.createNotPreviouslyDisabled(createRange(1), "c"),
 				],
@@ -239,6 +347,13 @@ describe(DirectivesCollector, () => {
 						selections: ["a", "b"],
 						type: "disable-file",
 					},
+					{
+						range: createRange(1),
+						selections: ["b", "c"],
+						type: "disable-next-line",
+					},
+				],
+				redundantDirectives: [
 					{
 						range: createRange(1),
 						selections: ["b", "c"],
@@ -279,6 +394,13 @@ describe(DirectivesCollector, () => {
 						type: "disable-next-line",
 					},
 				],
+				redundantDirectives: [
+					{
+						range: createRange(1),
+						selections: ["b", "c"],
+						type: "disable-next-line",
+					},
+				],
 				reports: [
 					directiveReports.createAlreadyDisabled(
 						{
@@ -287,6 +409,47 @@ describe(DirectivesCollector, () => {
 							type: "disable-next-line",
 						},
 						"b",
+					),
+				],
+			});
+		});
+
+		it("generates a report when a directive selection is covered by a previous wildcard selection", () => {
+			const collector = new DirectivesCollector(2);
+
+			collector.add(createRange(0), "a*", "disable-lines-begin");
+			collector.add(createRange(1), "ab*", "disable-next-line");
+
+			const actual = collector.collect();
+
+			expect(actual).toEqual({
+				directives: [
+					{
+						range: createRange(0),
+						selections: ["a*"],
+						type: "disable-lines-begin",
+					},
+					{
+						range: createRange(1),
+						selections: ["ab*"],
+						type: "disable-next-line",
+					},
+				],
+				redundantDirectives: [
+					{
+						range: createRange(1),
+						selections: ["ab*"],
+						type: "disable-next-line",
+					},
+				],
+				reports: [
+					directiveReports.createAlreadyDisabled(
+						{
+							range: createRange(1),
+							selections: ["ab*"],
+							type: "disable-next-line",
+						},
+						"ab*",
 					),
 				],
 			});
