@@ -13,8 +13,6 @@ export default ruleCreator.createRule(astroLanguage, {
 		preset: "security",
 	},
 	messages: {
-		// TODO: support import("@flint.fyi/volar-language").reportSourceCode in flint/unusedMessageIds
-		// flint-disable-next-line flint/unusedMessageIds
 		setHtml: {
 			primary: "Avoid using `set:html`. Astro does not escape its value.",
 			secondary: [
