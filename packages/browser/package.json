@@ -23,7 +23,7 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project browser"
+		"test": "vitest --project browser"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",

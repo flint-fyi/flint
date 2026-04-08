@@ -14,7 +14,7 @@ export interface RunConfigFixingOptions {
 	cacheLocation?: string | undefined;
 	ignoreCache: boolean;
 	requestedSuggestions: Set<string>;
-	skipDiagnostics: boolean;
+	skipLanguageReports: boolean;
 }
 
 export async function runConfigFixing(
@@ -24,7 +24,7 @@ export async function runConfigFixing(
 		cacheLocation,
 		ignoreCache,
 		requestedSuggestions,
-		skipDiagnostics,
+		skipLanguageReports,
 	}: RunConfigFixingOptions,
 ): Promise<LintResultsWithChanges> {
 	let changed = new Set<string>();
@@ -46,7 +46,7 @@ export async function runConfigFixing(
 		const lintResults = await runConfig(configDefinition, host, {
 			cacheLocation,
 			ignoreCache,
-			skipDiagnostics,
+			skipLanguageReports,
 		});
 
 		log("Applying fixes from file results.");

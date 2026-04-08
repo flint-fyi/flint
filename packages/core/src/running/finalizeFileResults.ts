@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 import { DirectivesFilterer } from "../directives/DirectivesFilterer.ts";
 import { directiveReports } from "../directives/reports/directiveReports.ts";
 import type { LinterHost } from "../types/host.ts";
-import type { LanguageFileDiagnostic } from "../types/languages.ts";
+import type { LanguageReport } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
 import type { LanguageAndFile } from "./types.ts";
 
@@ -14,7 +14,7 @@ const log = debugForFile(import.meta.filename);
 /**
  * For a single file path, collects its:
  *   - Cache dependencies: from each language file
- *   - Diagnostics: from each language file (if not skipped)
+ *   - LanguageReport: from each language file (if not skipped)
  *   - Reports: from rules reports by file path
  * ...and then disposes of each language file.
  */
@@ -23,11 +23,11 @@ export function finalizeFileResults(
 	languageAndFiles: LanguageAndFile[],
 	reports: FileReport[],
 	host: LinterHost,
-	skipDiagnostics?: boolean,
+	skipLanguageReports?: boolean,
 ) {
 	const directivesFilterer = new DirectivesFilterer();
 	const fileDependencies = new Set<string>();
-	const fileDiagnostics: LanguageFileDiagnostic[] = [];
+	const languageReports: LanguageReport[] = [];
 
 	for (const { file, language } of languageAndFiles) {
 		if (file.directives) {
@@ -50,15 +50,15 @@ export function finalizeFileResults(
 			}
 		}
 
-		if (!skipDiagnostics && language.getFileDiagnostics) {
+		if (!skipLanguageReports && language.getLanguageReports) {
 			log(
-				"Retrieving language %s diagnostics for file %s",
+				"Retrieving %s language reports for file %s",
 				language.about.name,
 				filePath,
 			);
-			fileDiagnostics.push(...language.getFileDiagnostics(file));
+			languageReports.push(...language.getLanguageReports(file));
 			log(
-				"Retrieved language %s diagnostics for file %s",
+				"Retrieved %s language reports for file %s",
 				language.about.name,
 				filePath,
 			);
@@ -80,7 +80,7 @@ export function finalizeFileResults(
 
 	return {
 		dependencies: fileDependencies,
-		diagnostics: fileDiagnostics,
+		languageReports,
 		reports: [
 			...filterResult.reports,
 			...directiveReportsFromCollector,

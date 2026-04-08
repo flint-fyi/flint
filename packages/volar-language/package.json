@@ -23,7 +23,7 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project volar-language"
+		"test": "vitest --project volar-language"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",

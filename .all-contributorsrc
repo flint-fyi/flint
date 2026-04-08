@@ -13,7 +13,8 @@
         "maintenance",
         "projectManagement",
         "tool",
-        "bug"
+        "bug",
+        "test"
       ],
       "login": "JoshuaKGoldberg",
       "name": "Josh Goldberg ✨",
@@ -86,7 +87,8 @@
         "bug",
         "maintenance",
         "ideas",
-        "test"
+        "test",
+        "doc"
       ]
     },
     {
@@ -195,7 +197,17 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/5475199?v=4",
       "profile": "http://www.irrationalmindsthinkalike.com",
       "contributions": [
-        "doc"
+        "doc",
+        "ideas"
+      ]
+    },
+    {
+      "login": "sigmabrogz",
+      "name": "Sigmabro",
+      "avatar_url": "https://avatars.githubusercontent.com/u/122412346?v=4",
+      "profile": "https://github.com/Sigmabrogz",
+      "contributions": [
+        "code"
       ]
     }
   ],

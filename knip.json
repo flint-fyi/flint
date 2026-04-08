@@ -16,7 +16,6 @@
 				"@flint.fyi/core",
 				"@flint.fyi/rule-tester",
 				"@flint.fyi/typescript-language",
-				"sharp",
 				"zod"
 			]
 		},

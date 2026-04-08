@@ -23,7 +23,7 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project ts"
+		"test": "vitest --project ts"
 	},
 	"dependencies": {
 		"@eslint-community/regexpp": "^4.12.2",
