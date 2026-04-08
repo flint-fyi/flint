@@ -6,6 +6,15 @@ import { DirectivesFilterer } from "./DirectivesFilterer.ts";
 
 let nextDirectiveId = 0;
 
+function createDirective(
+	overrides: Omit<CommentDirective, "id">,
+): CommentDirective {
+	return {
+		id: `directive-${nextDirectiveId++}`,
+		...overrides,
+	};
+}
+
 function createReport(forLine: number, id: string) {
 	return {
 		about: { id },
@@ -27,15 +36,6 @@ function createReport(forLine: number, id: string) {
 			},
 		},
 	} satisfies FileReport;
-}
-
-function createDirective(
-	overrides: Omit<CommentDirective, "id">,
-): CommentDirective {
-	return {
-		id: `directive-${nextDirectiveId++}`,
-		...overrides,
-	};
 }
 
 describe(DirectivesFilterer, () => {
