@@ -1,7 +1,19 @@
 import { describe, expect, it } from "vitest";
 
+import type { CommentDirectiveWithinFile } from "../types/directives.ts";
 import { computeDirectiveRanges } from "./computeDirectiveRanges.ts";
 import { createSelectionMatcher } from "./createSelectionMatcher.ts";
+
+let nextDirectiveId = 0;
+
+function createDirective(
+	overrides: Omit<CommentDirectiveWithinFile, "id">,
+): CommentDirectiveWithinFile {
+	return {
+		id: `directive-${nextDirectiveId++}`,
+		...overrides,
+	};
+}
 
 function createDirectiveRange(forLine: number) {
 	return {
@@ -26,11 +38,11 @@ describe(computeDirectiveRanges, () => {
 
 	it("returns a single range when one disable-lines-begin directive is provided", () => {
 		const actual = computeDirectiveRanges([
-			{
+			createDirective({
 				range: createDirectiveRange(0),
 				selections: ["aaa"],
 				type: "disable-lines-begin",
-			},
+			}),
 		]);
 
 		expect(actual).toEqual([
@@ -46,11 +58,11 @@ describe(computeDirectiveRanges, () => {
 
 	it("returns a single range when one disable-next-line directive is provided", () => {
 		const actual = computeDirectiveRanges([
-			{
+			createDirective({
 				range: createDirectiveRange(0),
 				selections: ["aaa"],
 				type: "disable-next-line",
-			},
+			}),
 		]);
 
 		expect(actual).toEqual([
@@ -66,16 +78,16 @@ describe(computeDirectiveRanges, () => {
 
 	it("returns two ranges when a disable-lines-begin and then an equivalent disable-lines-end are provided", () => {
 		const actual = computeDirectiveRanges([
-			{
+			createDirective({
 				range: createDirectiveRange(0),
 				selections: ["aaa", "bbb"],
 				type: "disable-lines-begin",
-			},
-			{
+			}),
+			createDirective({
 				range: createDirectiveRange(3),
 				selections: ["aaa", "bbb"],
 				type: "disable-lines-end",
-			},
+			}),
 		]);
 
 		expect(actual).toEqual([
@@ -94,16 +106,16 @@ describe(computeDirectiveRanges, () => {
 
 	it("returns three ranges when a disable-lines-begin and then a partial disable-lines-end are provided", () => {
 		const actual = computeDirectiveRanges([
-			{
+			createDirective({
 				range: createDirectiveRange(0),
 				selections: ["aaa", "bbb"],
 				type: "disable-lines-begin",
-			},
-			{
+			}),
+			createDirective({
 				range: createDirectiveRange(3),
 				selections: ["aaa"],
 				type: "disable-lines-end",
-			},
+			}),
 		]);
 
 		expect(actual).toEqual([
@@ -129,16 +141,16 @@ describe(computeDirectiveRanges, () => {
 
 	it("returns three ranges when a disable-lines-begin and then a disable-next-line are provided", () => {
 		const actual = computeDirectiveRanges([
-			{
+			createDirective({
 				range: createDirectiveRange(0),
 				selections: ["aaa", "bbb"],
 				type: "disable-lines-begin",
-			},
-			{
+			}),
+			createDirective({
 				range: createDirectiveRange(1),
 				selections: ["ccc"],
 				type: "disable-next-line",
-			},
+			}),
 		]);
 
 		expect(actual).toEqual([
@@ -178,11 +190,11 @@ describe(computeDirectiveRanges, () => {
 
 	it("treats regex metacharacters literally except for * wildcards", () => {
 		const actual = computeDirectiveRanges([
-			{
+			createDirective({
 				range: createDirectiveRange(0),
 				selections: ["file.name*test"],
 				type: "disable-next-line",
-			},
+			}),
 		]);
 
 		expect(actual[0]?.selections[0]?.test("file.name.test")).toBe(true);

@@ -1,6 +1,7 @@
 import type { NormalizedReportRangeObject } from "./reports.ts";
 
 export interface CommentDirective {
+	id: string;
 	range: NormalizedReportRangeObject;
 	selections: string[];
 	type: CommentDirectiveType;
