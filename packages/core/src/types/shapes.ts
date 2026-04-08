@@ -7,11 +7,11 @@ import type * as z from "zod/v4/core";
 export type AnyOptionalSchema = Record<string, z.$ZodDefault | z.$ZodOptional>;
 
 export type OptionalObjectSchema<OptionsSchema extends AnyOptionalSchema> =
-	z.$ZodObject<OptionsSchema, z.$strict> &
+	z.$ZodObject<OptionsSchema> &
 		z.$ZodType<
 			Record<string, unknown>,
 			Record<string, unknown>,
-			z.$ZodObjectInternals<OptionsSchema, z.$strict>
+			z.$ZodObjectInternals<OptionsSchema>
 		>;
 
 /**
