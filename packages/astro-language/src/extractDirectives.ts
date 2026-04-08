@@ -15,7 +15,6 @@ export function extractDirectives(ast: RootNode) {
 		if (node.type !== "comment") {
 			return;
 		}
-		// flint-disable-next-line ts/regexEmptyCapturingGroups
 		const match = /(\s*)(flint-(\S+)(?:\s+(.+))?)/.exec(node.value);
 		if (match == null) {
 			return;
