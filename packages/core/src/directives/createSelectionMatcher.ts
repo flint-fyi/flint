@@ -1,10 +1,22 @@
-// TODO: Replace this minimal *-only glob matcher with a dedicated library
-// such as minimatch if directive selection syntax expands.
-// https://github.com/flint-fyi/flint/issues/245
-export function createSelectionMatcher(selection: string) {
-	return new RegExp(`^${escapeForRegExp(selection).replaceAll("\\*", ".*")}$`);
+declare global {
+	// TODO[typescript>=6.0]: Remove this declaration.
+	// https://github.com/microsoft/TypeScript/pull/63046
+	export interface RegExpConstructor {
+		/**
+		 * Escapes any RegExp syntax characters in the input string, returning a
+		 * new string that can be safely interpolated into a RegExp as a literal
+		 * string to match.
+		 * @example
+		 * ```ts
+		 * const regExp = new RegExp(RegExp.escape("foo.bar"));
+		 * regExp.test("foo.bar"); // true
+		 * regExp.test("foo!bar"); // false
+		 * ```
+		 */
+		escape(string: string): string;
+	}
 }
 
-function escapeForRegExp(value: string) {
-	return value.replaceAll(/[$()*+.?[\\\]^{|}]/g, "\\$&");
+export function createSelectionMatcher(selection: string) {
+	return new RegExp(`^${RegExp.escape(selection).replaceAll("\\*", ".*")}$`);
 }
