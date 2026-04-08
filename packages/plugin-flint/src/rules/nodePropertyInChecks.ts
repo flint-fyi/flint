@@ -4,7 +4,7 @@ import {
 } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { isTSNode } from "../utils/isTSNode.ts";
+import { isTypeFromTS } from "../utils/isTypeFromTS.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				BinaryExpression(node, { sourceFile, typeChecker }) {
 					if (
 						node.operatorToken.kind === SyntaxKind.InKeyword &&
-						isTSNode(node.right, typeChecker)
+						isTypeFromTS(node.right, typeChecker, "Node")
 					) {
 						context.report({
 							message: "nodePropertyInChecks",

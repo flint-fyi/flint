@@ -14,8 +14,6 @@ export default ruleCreator.createRule(vueLanguage, {
 		preset: "logical",
 	},
 	messages: {
-		// TODO: support import("@flint.fyi/volar-language").reportSourceCode in flint/unusedMessageIds
-		// flint-disable-next-line flint/unusedMessageIds
 		invalidKey: {
 			primary:
 				"The :key on this v-for element does not reference the iteration variable.",
@@ -27,7 +25,6 @@ export default ruleCreator.createRule(vueLanguage, {
 				"Bind the :key to something derived from the v-for item, like item.id or the index if no unique identifier exists.",
 			],
 		},
-		// flint-disable-next-line flint/unusedMessageIds
 		missingKey: {
 			primary:
 				"Elements using v-for must include a unique :key to ensure correct reactivity and DOM stability.",
@@ -39,7 +36,6 @@ export default ruleCreator.createRule(vueLanguage, {
 				"Always provide a unique :key based on the v-for item, such as an id.",
 			],
 		},
-		// flint-disable-next-line flint/unusedMessageIds
 		staticKey: {
 			primary:
 				"Static key values prevent Vue from tracking changes in v-for lists.",
