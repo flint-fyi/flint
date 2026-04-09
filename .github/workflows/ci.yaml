@@ -46,8 +46,16 @@ jobs:
       - uses: ./.github/actions/prepare
       - run: pnpm run build # Knip requires all exports to be generated.
       - run: pnpm run lint:knip
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ./.github/actions/prepare
+      - run: pnpm exec tsc -b
   test:
     name: Test
+    needs: typecheck
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -60,7 +68,6 @@ jobs:
         with:
           key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
-      - run: pnpm exec tsc -b # For types tests
       - # Run partial test pass on PRs (only changed files), excluding e2e.
         if: ${{ github.event_name == 'pull_request' }}
         name: Run affected tests except e2e
@@ -71,11 +78,11 @@ jobs:
         run: pnpm run test --project='!e2e'
   test_e2e:
     name: Test E2E
+    needs: typecheck
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          fetch-depth: 0
           filter: "tree:0"
       - uses: ./.github/actions/prepare
       - name: Cache Vite cache
@@ -83,8 +90,5 @@ jobs:
         with:
           key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
-      - run: pnpm exec tsc -b # For types tests
-      - # On PRs and main, always run e2e regardless of changed files.
-        if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/main' }}
-        name: Run e2e test suite
+      - name: Run e2e test suite
         run: pnpm run test --project e2e
