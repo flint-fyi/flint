@@ -1,6 +1,6 @@
 import type { FilesValue } from "./files.ts";
-import type { AnyRule, Rule, RuleAbout } from "./rules.ts";
-import type { AnyOptionalSchema, InferredInputObject } from "./shapes.ts";
+import type { AnyRule, RuleAbout } from "./rules.ts";
+import type { InferredInputObject } from "./shapes.ts";
 
 /**
  * A Flint plugin containing a set of rules and presets.
@@ -28,10 +28,13 @@ export interface Plugin<
 	 * Preset lists of rules to enable on files.
 	 * @see {@link https://flint.fyi/glossary#preset|flint.fyi/glossary#preset}
 	 */
-	presets: PluginPresets<
-		About,
-		NonNullable<Rules[number]["about"]["presets"]>[number]
-	>;
+	presets: PluginPresets<Rules>;
+
+	/**
+	 * Retrieves a preset list of rules to enable on files.
+	 * Throws if the preset is not implemented at runtime.
+	 */
+	preset(name: PluginPresetName<Rules>): Rules[number][];
 
 	/**
 	 * Defines rules to configure or disable on files in a config.
@@ -44,14 +47,12 @@ export interface Plugin<
 	rulesById: Map<string, Rules[number]>;
 }
 
-export type PluginPresets<
-	About extends RuleAbout,
-	Presets extends string | undefined,
-> = Partial<
-	Record<
-		Presets extends string ? Presets : never,
-		Rule<About, object, object, string, AnyOptionalSchema | undefined>[]
-	>
+export type PluginPresetName<Rules extends AnyRule[]> = NonNullable<
+	Rules[number]["about"]["presets"]
+>[number];
+
+export type PluginPresets<Rules extends AnyRule[]> = Partial<
+	Record<PluginPresetName<Rules>, Rules[number][]>
 >;
 
 /**

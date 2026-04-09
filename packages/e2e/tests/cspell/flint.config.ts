@@ -5,7 +5,7 @@ export default defineConfig({
 	use: [
 		{
 			files: "fixtures/**",
-			rules: spelling.presets.logical,
+			rules: spelling.preset("logical"),
 		},
 	],
 });

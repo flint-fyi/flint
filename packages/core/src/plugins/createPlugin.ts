@@ -1,3 +1,4 @@
+import { nullThrows } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 
 import type { FilesValues } from "../types/files.ts";
@@ -51,6 +52,11 @@ export function createPlugin<
 		// @ts-expect-error -- TODO: Figure this out...?
 		files,
 		name,
+		preset: (presetName) =>
+			nullThrows(
+				presets[presetName],
+				`Expected preset to exist: ${presetName}`,
+			),
 		presets,
 		// @ts-expect-error -- TODO: Figure out what to assert...?
 		rules: (configuration) => {
@@ -77,5 +83,7 @@ function collectPresetsFromRules<const About extends RuleAbout>(
 		}
 	}
 
-	return Object.fromEntries(presets.entries()) as PluginPresets<About, string>;
+	return Object.fromEntries(presets.entries()) as PluginPresets<
+		UnsafeAnyRule<About>[]
+	>;
 }
