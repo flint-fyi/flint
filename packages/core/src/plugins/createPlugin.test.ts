@@ -1,6 +1,8 @@
-import { describe, expect, it, vi } from "vitest";
+import { assertType, describe, expect, it, vi } from "vitest";
 import z from "zod/v4";
 
+import { defineConfig } from "../configs/defineConfig.ts";
+import { validateConfigDefinition } from "../configs/validateConfigDefinition.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
 import { createPlugin } from "./createPlugin.ts";
@@ -16,7 +18,7 @@ const stubMessages = { "": { primary: "", secondary: [], suggestions: [] } };
 const ruleCreator = new RuleCreator({
 	docs: (ruleId) => `https://flint.fyi/rules/stub/${ruleId.toLowerCase()}`,
 	pluginId: "stub",
-	presets: ["first", "second"],
+	presets: ["first", "second", "third"],
 });
 
 const ruleStandalone = ruleCreator.createRule(stubLanguage, {
@@ -55,6 +57,16 @@ describe(createPlugin, () => {
 				second: [ruleWithOptionalOption],
 			});
 		});
+
+		it("types unused presets as possibly undefined", () => {
+			// @ts-expect-error -- Unused presets aren't guaranteed to exist at runtime.
+			assertType<typeof plugin.presets.third>(undefined);
+
+			defineConfig({
+				// @ts-expect-error -- Unused presets aren't guaranteed to exist at runtime.
+				use: [{ files: "**/*.ts", rules: plugin.presets.third }],
+			});
+		});
 	});
 
 	describe("rules", () => {
@@ -70,6 +82,21 @@ describe(createPlugin, () => {
 					rule: ruleWithOptionalOption,
 				},
 			]);
+		});
+	});
+
+	describe(validateConfigDefinition, () => {
+		it("reports nested undefined rules instead of allowing a runtime crash", () => {
+			const error = validateConfigDefinition(
+				{
+					// @ts-expect-error -- Unused presets aren't guaranteed to exist at runtime.
+					use: [{ files: "**/*.ts", rules: [plugin.presets.third] }],
+				},
+				"flint.config.ts",
+			);
+
+			expect(error).toContain("Invalid configuration in flint.config.ts");
+			expect(error).toContain("at use[0]");
 		});
 	});
 });

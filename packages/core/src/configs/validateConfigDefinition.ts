@@ -1,8 +1,11 @@
+import { inspect } from "node:util";
+
 import type { AnyLevelDeep } from "../types/arrays.ts";
 import type {
 	ConfigDefinition,
 	ConfigRuleDefinition,
 } from "../types/configs.ts";
+import { flatten } from "../utils/arrays.ts";
 
 export function validateConfigDefinition(
 	definition: ConfigDefinition,
@@ -12,11 +15,17 @@ export function validateConfigDefinition(
 		rulesValue: AnyLevelDeep<ConfigRuleDefinition> | undefined,
 		useIndex: number,
 	) => {
-		return rulesValue
-			? undefined
-			: `Invalid configuration in ${configFilePath}
+		const flattenedRules = rulesValue
+			? (flatten(rulesValue) as (ConfigRuleDefinition | undefined)[])
+			: undefined;
+
+		if (flattenedRules && !flattenedRules.includes(undefined)) {
+			return undefined;
+		}
+
+		return `Invalid configuration in ${configFilePath}
   at use[${useIndex}]
-  Received: ${String(rulesValue)}
+  Received: ${inspect(rulesValue)}
 
 This often happens when a preset or rule doesn't exist.
 Common causes:

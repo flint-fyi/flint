@@ -47,9 +47,11 @@ export interface Plugin<
 export type PluginPresets<
 	About extends RuleAbout,
 	Presets extends string | undefined,
-> = Record<
-	Presets extends string ? Presets : never,
-	Rule<About, object, object, string, AnyOptionalSchema | undefined>[]
+> = Partial<
+	Record<
+		Presets extends string ? Presets : never,
+		Rule<About, object, object, string, AnyOptionalSchema | undefined>[]
+	>
 >;
 
 /**
