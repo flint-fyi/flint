@@ -24,8 +24,7 @@ export const options = {
 		type: "string",
 	},
 	"skip-language-reports": {
-		multiple: true,
-		type: "string",
+		type: "boolean",
 	},
 	version: {
 		type: "boolean",
