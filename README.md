@@ -8,7 +8,7 @@
 <p align="center">
 	<!-- prettier-ignore-start -->
 	<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 19" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-19-21bb42.svg" /></a>
+	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 20" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-20-21bb42.svg" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 	<!-- prettier-ignore-end -->
 	<a href="https://github.com/flint-fyi/flint/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
@@ -74,6 +74,7 @@ Thanks! ❤️‍🔥
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="http://www.irrationalmindsthinkalike.com"><img src="https://avatars.githubusercontent.com/u/5475199?v=4?s=100" width="100px;" alt="Tyler C Laprade, CFA"/><br /><sub><b>Tyler C Laprade, CFA</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/commits?author=tylerlaprade" title="Documentation">📖</a> <a href="#ideas-tylerlaprade" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Yonava"><img src="https://avatars.githubusercontent.com/u/76519301?v=4?s=100" width="100px;" alt="Yona Alexander Voss-Andreae"/><br /><sub><b>Yona Alexander Voss-Andreae</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/commits?author=yonava" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/auvred"><img src="https://avatars.githubusercontent.com/u/61150013?v=4?s=100" width="100px;" alt="auvred"/><br /><sub><b>auvred</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/issues?q=author%3Aauvred" title="Bug reports">🐛</a> <a href="#maintenance-auvred" title="Maintenance">🚧</a> <a href="#ideas-auvred" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/flint-fyi/flint/commits?author=auvred" title="Tests">⚠️</a> <a href="https://github.com/flint-fyi/flint/commits?author=auvred" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/bmclear"><img src="https://avatars.githubusercontent.com/u/7715393?v=4?s=100" width="100px;" alt="bmclear"/><br /><sub><b>bmclear</b></sub></a><br /><a href="#maintenance-bmclear" title="Maintenance">🚧</a> <a href="https://github.com/flint-fyi/flint/commits?author=bmclear" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/cylewaitforit"><img src="https://avatars.githubusercontent.com/u/54253392?v=4?s=100" width="100px;" alt="cylewaitforit"/><br /><sub><b>cylewaitforit</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/commits?author=cylewaitforit" title="Documentation">📖</a></td>
