@@ -1019,7 +1019,7 @@ importers:
         specifier: workspace:^
         version: link:../rule-tester
       svelte:
-        specifier: ^5.54.0
+        specifier: 5.54.0
         version: 5.54.0
       tsdown:
         specifier: catalog:dev

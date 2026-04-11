@@ -35,7 +35,7 @@
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
-		"svelte": "^5.54.0",
+		"svelte": "5.54.0",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
