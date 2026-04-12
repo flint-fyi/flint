@@ -34,6 +34,8 @@
 		{ "path": "./packages/react" },
 		{ "path": "./packages/solid" },
 		{ "path": "./packages/spelling" },
+		{ "path": "./packages/svelte" },
+		{ "path": "./packages/svelte-language" },
 		{ "path": "./packages/text-language" },
 		{ "path": "./packages/ts-patch" },
 		{ "path": "./packages/ts" },
