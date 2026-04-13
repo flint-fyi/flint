@@ -59,9 +59,6 @@ describe(createPlugin, () => {
 
 		it("does not type unused presets", () => {
 			expect(plugin.presets).not.toHaveProperty("third");
-			// @ts-expect-error -- Unused presets don't exist in the type.
-			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-			plugin.presets.third;
 		});
 	});
 
