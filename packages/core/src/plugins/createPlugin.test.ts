@@ -78,6 +78,13 @@ describe(createPlugin, () => {
 		});
 	});
 
+	describe("rulesById", () => {
+		it("stores rules by ID for keyed lookup", () => {
+			expect(plugin.rulesById.standalone).toBe(ruleStandalone);
+			expect(plugin.rulesById.withOptionalOption).toBe(ruleWithOptionalOption);
+		});
+	});
+
 	describe(validateConfigDefinition, () => {
 		it("reports nested undefined rules instead of allowing a runtime crash", () => {
 			const error = validateConfigDefinition(
