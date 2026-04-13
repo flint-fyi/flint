@@ -5,7 +5,7 @@ export default defineConfig({
 	use: [
 		{
 			files: "fixtures/**/*.ts",
-			rules: ts.preset("logical"),
+			rules: ts.presets.logical,
 		},
 	],
 });

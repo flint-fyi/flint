@@ -31,12 +31,6 @@ export interface Plugin<
 	presets: PluginPresets<Rules>;
 
 	/**
-	 * Retrieves a preset list of rules to enable on files.
-	 * Throws if the preset is not implemented at runtime.
-	 */
-	preset(name: PluginPresetName<Rules>): Rules[number][];
-
-	/**
 	 * Defines rules to configure or disable on files in a config.
 	 */
 	rules: PluginRulesFactory<Rules>;
@@ -47,12 +41,16 @@ export interface Plugin<
 	rulesById: Map<string, Rules[number]>;
 }
 
-export type PluginPresetName<Rules extends AnyRule[]> = NonNullable<
-	Rules[number]["about"]["presets"]
->[number];
+export type PluginPresetName<Rules extends AnyRule[]> =
+	Rules[number] extends infer R
+		? R extends { about: { presets: readonly (infer P extends string)[] } }
+			? P
+			: never
+		: never;
 
-export type PluginPresets<Rules extends AnyRule[]> = Partial<
-	Record<PluginPresetName<Rules>, Rules[number][]>
+export type PluginPresets<Rules extends AnyRule[]> = Record<
+	PluginPresetName<Rules>,
+	Rules[number][]
 >;
 
 /**

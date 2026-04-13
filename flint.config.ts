@@ -9,11 +9,11 @@ export default defineConfig({
 	use: [
 		{
 			files: json.files.all,
-			rules: json.preset("logical"),
+			rules: json.presets.logical,
 		},
 		{
 			files: md.files.all,
-			rules: md.preset("logicalStrict"),
+			rules: md.presets.logicalStrict,
 		},
 		{
 			files: {
@@ -21,15 +21,15 @@ export default defineConfig({
 				include: ts.files.all,
 			},
 			rules: [
-				flint.preset("logical"),
-				flint.preset("stylistic"),
-				flint.preset("stylisticStrict"),
-				node.preset("logicalStrict"),
-				node.preset("stylisticStrict"),
-				performance.preset("logical"),
+				flint.presets.logical,
+				flint.presets.stylistic,
+				flint.presets.stylisticStrict,
+				node.presets.logicalStrict,
+				node.presets.stylisticStrict,
+				performance.presets.logical,
 				performance.rules({ loopFunctions: false }),
-				ts.preset("logicalStrict"),
-				ts.preset("stylisticStrict"),
+				ts.presets.logicalStrict,
+				ts.presets.stylisticStrict,
 				ts.rules({
 					// Pending https://github.com/flint-fyi/flint/issues/2165
 					objectShorthand: false,
@@ -41,11 +41,11 @@ export default defineConfig({
 				exclude: ["pnpm-lock.yaml"],
 				include: yaml.files.all,
 			},
-			rules: yaml.preset("logical"),
+			rules: yaml.presets.logical,
 		},
 		{
 			files: globs.all,
-			rules: spelling.preset("logical"),
+			rules: spelling.presets.logical,
 		},
 	],
 });

@@ -1,4 +1,4 @@
-import { assertType, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import z from "zod/v4";
 
 import { validateConfigDefinition } from "../configs/validateConfigDefinition.ts";
@@ -57,19 +57,10 @@ describe(createPlugin, () => {
 			});
 		});
 
-		it("types unused presets as possibly undefined", () => {
-			// @ts-expect-error -- Unused presets aren't guaranteed to exist at runtime.
-			assertType<typeof plugin.presets.third>(undefined);
-		});
-
-		it("returns used presets from preset()", () => {
-			expect(plugin.preset("first")).toEqual([ruleStandalone]);
-			expect(plugin.preset("second")).toEqual([ruleWithOptionalOption]);
-		});
-
-		it("rejects unused presets in preset()", () => {
-			// @ts-expect-error -- Unused presets aren't valid preset() arguments.
-			assertType<Parameters<typeof plugin.preset>[0]>("third");
+		it("does not type unused presets", () => {
+			expect(plugin.presets).not.toHaveProperty("third");
+			// @ts-expect-error -- Unused presets don't exist in the type.
+			void plugin.presets.third;
 		});
 	});
 

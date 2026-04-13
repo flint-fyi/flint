@@ -38,7 +38,6 @@ export class RuleCreator<Presets extends string> {
 	): Rule<
 		// We can't put this in the constraint or else inference fails for some reason.
 		About & {
-			presets?: Presets[];
 			url: string;
 		},
 		object,
