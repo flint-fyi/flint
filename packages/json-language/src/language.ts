@@ -1,11 +1,19 @@
 import { createLanguage } from "@flint.fyi/core";
 import * as ts from "typescript";
 
-import type { JsonNodesByName, JsonNodeVisitors } from "./nodes.ts";
+import type {
+	JsonNodeName,
+	JsonNodesByName,
+	JsonNodeVisitors,
+} from "./nodes.ts";
 
 export interface JsonFileServices {
 	sourceFile: ts.JsonSourceFile;
 }
+
+const kindOverrides = new Map<ts.SyntaxKind, JsonNodeName>([
+	[ts.SyntaxKind.SourceFile, "JsonSourceFile"],
+] as const);
 
 export const jsonLanguage = createLanguage<JsonNodeVisitors, JsonFileServices>({
 	about: {
@@ -35,7 +43,9 @@ export const jsonLanguage = createLanguage<JsonNodeVisitors, JsonFileServices>({
 		const visitorServices = { options, ...file.services };
 
 		const visit = (node: ts.Node) => {
-			const key = ts.SyntaxKind[node.kind] as keyof JsonNodesByName;
+			const key =
+				kindOverrides.get(node.kind) ??
+				(ts.SyntaxKind[node.kind] as keyof JsonNodesByName);
 
 			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
 			visitors[key]?.(node, visitorServices);

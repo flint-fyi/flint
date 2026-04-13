@@ -745,10 +745,19 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
+      '@flint.fyi/json-language':
+        specifier: workspace:^
+        version: link:../json-language
+      package-json-validator:
+        specifier: ^1.4.0
+        version: 1.4.0
       typescript:
         specifier: ^5.9.0 || ^6.0.0
         version: 5.9.3
     devDependencies:
+      '@flint.fyi/rule-tester':
+        specifier: workspace:^
+        version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.19.1)(synckit@0.11.12)(typescript@5.9.3)
@@ -5360,6 +5369,10 @@ packages:
 
   package-json-validator@1.3.1:
     resolution: {integrity: sha512-RfUMqyBoLa1qcPsKNAksnVDRuzDvLi//RqfMbf52RNMKsm+cWR/3Cfe6hvrTS/ATtEwvtm/57dPggXsau6++uA==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+
+  package-json-validator@1.4.0:
+    resolution: {integrity: sha512-Nb1qg9Z7Om/r3kw3gZfKbFvFC6e0Cj38Zc5NS2LCogxqbUCbFLTjlvRKk/9doMvaAyrzUVwrR0si/opLru4CHw==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
 
   package-manager-detector@0.2.11:
@@ -11191,6 +11204,12 @@ snapshots:
   package-json-from-dist@1.0.1: {}
 
   package-json-validator@1.3.1:
+    dependencies:
+      semver: 7.7.4
+      validate-npm-package-license: 3.0.4
+      validate-npm-package-name: 7.0.2
+
+  package-json-validator@1.4.0:
     dependencies:
       semver: 7.7.4
       validate-npm-package-license: 3.0.4
