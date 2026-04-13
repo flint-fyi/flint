@@ -1,13 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import type { CommentDirective } from "../types/directives.ts";
 import type { LinterHost } from "../types/host.ts";
 import { finalizeFileResults } from "./finalizeFileResults.ts";
 import type { LanguageAndFile } from "./types.ts";
-
-const noop = () => {
-	// Intentional no-op for required test doubles.
-};
 
 function createDirective(
 	overrides: Partial<CommentDirective> = {},
@@ -50,7 +46,7 @@ describe(finalizeFileResults, () => {
 						directives: [unusedDirective],
 						redundantDirectives: [redundantDirective],
 						services: {},
-						[Symbol.dispose]: noop,
+						[Symbol.dispose]: vi.fn(),
 					},
 					language: {
 						about: { name: "test" },
@@ -60,7 +56,7 @@ describe(finalizeFileResults, () => {
 						createRule() {
 							throw new Error("Not implemented in test.");
 						},
-						runFileVisitors: noop,
+						runFileVisitors: vi.fn(),
 					},
 				} satisfies LanguageAndFile,
 			],
