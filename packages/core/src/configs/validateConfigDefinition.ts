@@ -27,11 +27,11 @@ export function validateConfigDefinition(
   at use[${useIndex}]
   Received: ${inspect(rulesValue)}
 
-This often happens when a preset or rule doesn't exist.
+This usually means a rule or preset resolved to \`undefined\` at runtime.
 Common causes:
-  • Typo in the preset or rule name
-  • Using a preset that hasn't been implemented yet
+  • Typo in the rule or preset name
   • Importing from the wrong package
+  • Using untyped or dynamically constructed config
 `;
 	};
 

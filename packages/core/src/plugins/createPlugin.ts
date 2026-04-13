@@ -2,7 +2,7 @@ import { CachedFactory } from "cached-factory";
 
 import type { FilesValues } from "../types/files.ts";
 import type { Plugin, PluginPresets } from "../types/plugins.ts";
-import type { RuleAbout, UnsafeAnyRule } from "../types/rules.ts";
+import type { AnyRule, RuleAbout, UnsafeAnyRule } from "../types/rules.ts";
 
 export type CreatePluginOptions<
 	About extends RuleAbout,
@@ -64,10 +64,11 @@ export function createPlugin<
 	};
 }
 
-function collectPresetsFromRules<const About extends RuleAbout>(
-	rules: UnsafeAnyRule<About>[],
-) {
-	const presets = new CachedFactory<string, UnsafeAnyRule<About>[]>(() => []);
+function collectPresetsFromRules<
+	const About extends RuleAbout,
+	const Rules extends AnyRule<About>[],
+>(rules: Rules) {
+	const presets = new CachedFactory<string, Rules[number][]>(() => []);
 
 	for (const rule of rules) {
 		if (rule.about.presets) {
@@ -77,7 +78,5 @@ function collectPresetsFromRules<const About extends RuleAbout>(
 		}
 	}
 
-	return Object.fromEntries(presets.entries()) as PluginPresets<
-		UnsafeAnyRule<About>[]
-	>;
+	return Object.fromEntries(presets.entries()) as PluginPresets<Rules>;
 }
