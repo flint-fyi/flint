@@ -328,9 +328,6 @@ importers:
       '@flint.fyi/ts':
         specifier: workspace:^
         version: link:../ts
-      '@flint.fyi/typescript-language':
-        specifier: workspace:^
-        version: link:../typescript-language
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
@@ -344,6 +341,9 @@ importers:
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
       tsdown:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.19.1)(synckit@0.11.12)(typescript@5.9.3)
@@ -362,6 +362,9 @@ importers:
       '@flint.fyi/ts-patch':
         specifier: workspace:^
         version: link:../ts-patch
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
@@ -372,9 +375,6 @@ importers:
         specifier: ^5.9.0 || ^6.0.0
         version: 5.9.3
     devDependencies:
-      '@flint.fyi/typescript-language':
-        specifier: workspace:^
-        version: link:../typescript-language
       tsdown:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.19.1)(synckit@0.11.12)(typescript@5.9.3)
@@ -1002,9 +1002,6 @@ importers:
       '@flint.fyi/ts':
         specifier: workspace:^
         version: link:../ts
-      '@flint.fyi/typescript-language':
-        specifier: workspace:^
-        version: link:../typescript-language
       '@flint.fyi/volar-language':
         specifier: workspace:^
         version: link:../volar-language
@@ -1015,6 +1012,9 @@ importers:
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
       svelte:
         specifier: 5.55.2
         version: 5.55.2(@typescript-eslint/types@8.58.2)
@@ -1033,6 +1033,9 @@ importers:
       '@flint.fyi/ts-patch':
         specifier: workspace:^
         version: link:../ts-patch
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
@@ -1055,9 +1058,6 @@ importers:
         specifier: ^5.9.0 || ^6.0.0
         version: 5.9.3
     devDependencies:
-      '@flint.fyi/typescript-language':
-        specifier: workspace:^
-        version: link:../typescript-language
       tsdown:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.19.1)(synckit@0.11.12)(typescript@5.9.3)
@@ -1246,6 +1246,9 @@ importers:
       '@flint.fyi/volar-language':
         specifier: workspace:^
         version: link:../volar-language
+      '@volar/language-core':
+        specifier: 2.4.28
+        version: 2.4.28
       '@vue/compiler-dom':
         specifier: ^3.5.0
         version: 3.5.30
@@ -1259,9 +1262,6 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      '@volar/language-core':
-        specifier: 2.4.28
-        version: 2.4.28
       tsdown:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.19.1)(synckit@0.11.12)(typescript@5.9.3)

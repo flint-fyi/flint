@@ -5,6 +5,7 @@ const scriptBodyExtractor = /<script\b[^>]*>(?<body>[\s\S]*?)<\/script>/g;
 
 export default {
 	compilers: {
+		// https://github.com/webpro-nl/knip/issues/1629
 		astro: (text) => {
 			const scripts: string[] = [];
 			const frontmatter = frontmatterMatcher.exec(text);
@@ -28,6 +29,13 @@ export default {
 		".": {
 			entry: ["*.config.{js,ts}"],
 			project: ["*.config.{js,ts}", "scripts/**/*.ts"],
+		},
+		"packages/astro": {
+			ignoreDependencies: [
+				// https://github.com/webpro-nl/knip/issues/248
+				"@astrojs/compiler!",
+			],
+			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/browser": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
@@ -74,12 +82,12 @@ export default {
 
 				// https://github.com/JoshuaKGoldberg/emoji-blast/issues/969
 				"konami-emoji-blast!",
-
-				// https://docs.astro.build/en/reference/errors/missing-sharp/
-				"sharp",
 			],
 		},
 		"packages/spelling": {
+			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
+		},
+		"packages/svelte": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/ts": {
@@ -100,6 +108,9 @@ export default {
 			ignoreDependencies: [
 				// It's bugging IDK.
 				"@flint.fyi/core!",
+
+				// https://github.com/webpro-nl/knip/issues/248
+				"@volar/language-core!",
 			],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
