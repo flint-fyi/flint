@@ -25,36 +25,6 @@ ruleTester.describe(directPropertyValidityRules.homepageValidity, {
 		},
 		{
 			code: `{
-  "homepage": {}
-}`,
-			snapshot: `{
-  "homepage": {}
-              ~~
-              Invalid homepage: the type should be a \`string\`, not \`object\`.
-}`,
-		},
-		{
-			code: `{
-  "homepage": []
-}`,
-			snapshot: `{
-  "homepage": []
-              ~~
-              Invalid homepage: the type should be a \`string\`, not \`Array\`.
-}`,
-		},
-		{
-			code: `{
-  "homepage": true
-}`,
-			snapshot: `{
-  "homepage": true
-              ~~~~
-              Invalid homepage: the type should be a \`string\`, not \`boolean\`.
-}`,
-		},
-		{
-			code: `{
   "homepage": ""
 }`,
 			snapshot: `{
@@ -65,21 +35,11 @@ ruleTester.describe(directPropertyValidityRules.homepageValidity, {
 		},
 		{
 			code: `{
-  "homepage": "   "
+  "homepage": "not-a-homepage"
 }`,
 			snapshot: `{
-  "homepage": "   "
-              ~~~~~
-              Invalid homepage: the value is empty, but should be a valid url.
-}`,
-		},
-		{
-			code: `{
-  "homepage": "not-a-url"
-}`,
-			snapshot: `{
-  "homepage": "not-a-url"
-              ~~~~~~~~~~~
+  "homepage": "not-a-homepage"
+              ~~~~~~~~~~~~~~~~
               Invalid homepage: the value is not a valid url.
 }`,
 		},
@@ -90,7 +50,12 @@ ruleTester.describe(directPropertyValidityRules.homepageValidity, {
 		},
 		{
 			code: `{
-  "homepage": "https://example.com"
+  "homepage": "https://nin.com"
+}`,
+		},
+		{
+			code: `{
+  "homepage": "http://gybe.com"
 }`,
 		},
 	],

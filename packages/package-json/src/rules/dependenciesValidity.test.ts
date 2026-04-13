@@ -25,6 +25,16 @@ ruleTester.describe(directPropertyValidityRules.dependenciesValidity, {
 		},
 		{
 			code: `{
+  "dependencies": "./script.js"
+}`,
+			snapshot: `{
+  "dependencies": "./script.js"
+                  ~~~~~~~~~~~~~
+                  Invalid dependencies: the type should be \`object\`, not \`string\`.
+}`,
+		},
+		{
+			code: `{
   "dependencies": []
 }`,
 			snapshot: `{
@@ -35,12 +45,32 @@ ruleTester.describe(directPropertyValidityRules.dependenciesValidity, {
 		},
 		{
 			code: `{
-  "dependencies": "string"
+  "dependencies": {
+    "david": "bowie",
+    "trent": 123,
+    "the-fragile": null,
+    "pink-floyd": {},
+    "childish-gambino": "workspace"
+  }
 }`,
 			snapshot: `{
-  "dependencies": "string"
-                  ~~~~~~~~
-                  Invalid dependencies: the type should be \`object\`, not \`string\`.
+  "dependencies": {
+    "david": "bowie",
+    ~~~~~~~~~~~~~~~~
+    Invalid dependencies: invalid version range for dependency david: bowie.
+    "trent": 123,
+    ~~~~~~~~~~~~
+    Invalid dependencies: dependency version for trent should be a string: 123.
+    "the-fragile": null,
+    ~~~~~~~~~~~~~~~~~~~
+    Invalid dependencies: dependency version for the-fragile should be a string: null.
+    "pink-floyd": {},
+    ~~~~~~~~~~~~~~~~
+    Invalid dependencies: dependency version for pink-floyd should be a string: [object Object].
+    "childish-gambino": "workspace"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Invalid dependencies: invalid version range for dependency childish-gambino: workspace.
+  }
 }`,
 		},
 	],
@@ -55,7 +85,18 @@ ruleTester.describe(directPropertyValidityRules.dependenciesValidity, {
 		},
 		{
 			code: `{
-  "dependencies": { "lodash": "^4.0.0" }
+  "dependencies": {
+    "silver-mt-zion": "^1.2.3",
+    "nin": "file:./nin",
+    "gybe": "catalog:",
+    "radiohead": "git+https://github.com/user/repo.git",
+    "sigur-ros": "https://example.com/sigur-ros.tgz",
+    "explosions-in-the-sky": "workspace:^",
+    "alt-j": "workspace:~",
+    "run-the-jewels": "workspace:*",
+    "thee-silver-mt-zion": "workspace:^1.2.3",
+    "efrim-manuel-menuck": "npm:bar@^1.0.0"
+  }
 }`,
 		},
 	],

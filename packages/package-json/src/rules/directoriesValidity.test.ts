@@ -33,6 +33,16 @@ ruleTester.describe(directPropertyValidityRules.directoriesValidity, {
                  Invalid directories: the type should be \`object\`, not \`array\`.
 }`,
 		},
+		{
+			code: `{
+  "directories": "./script.js"
+}`,
+			snapshot: `{
+  "directories": "./script.js"
+                 ~~~~~~~~~~~~~
+                 Invalid directories: the type should be \`object\`, not \`string\`.
+}`,
+		},
 	],
 	valid: [
 		{

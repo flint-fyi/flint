@@ -15,6 +15,16 @@ ruleTester.describe(directPropertyValidityRules.configValidity, {
 		},
 		{
 			code: `{
+  "config": 123
+}`,
+			snapshot: `{
+  "config": 123
+            ~~~
+            Invalid config: the type should be \`object\`, not \`number\`.
+}`,
+		},
+		{
+			code: `{
   "config": "string"
 }`,
 			snapshot: `{
@@ -33,6 +43,16 @@ ruleTester.describe(directPropertyValidityRules.configValidity, {
             Invalid config: the type should be \`object\`, not \`array\`.
 }`,
 		},
+		{
+			code: `{
+  "config": []
+}`,
+			snapshot: `{
+  "config": []
+            ~~
+            Invalid config: the type should be \`object\`, not \`array\`.
+}`,
+		},
 	],
 	valid: [
 		{
@@ -46,6 +66,16 @@ ruleTester.describe(directPropertyValidityRules.configValidity, {
 		{
 			code: `{
   "config": { "port": 8080 }
+}`,
+		},
+		{
+			code: `{
+  "config": { "silver-mt-zion": "node ./silver-mt-zion.js", "nin": "node ./nin.js" }
+}`,
+		},
+		{
+			code: `{
+  "config": { "silver-mt-zion": {"leadSinger": "Efrim Manuel Menuck"}, "nin": "node ./nin.js" }
 }`,
 		},
 	],

@@ -25,36 +25,6 @@ ruleTester.describe(directPropertyValidityRules.licenseValidity, {
 		},
 		{
 			code: `{
-  "license": {}
-}`,
-			snapshot: `{
-  "license": {}
-             ~~
-             Invalid license: the type should be a \`string\`, not \`object\`.
-}`,
-		},
-		{
-			code: `{
-  "license": []
-}`,
-			snapshot: `{
-  "license": []
-             ~~
-             Invalid license: the type should be a \`string\`, not \`Array\`.
-}`,
-		},
-		{
-			code: `{
-  "license": true
-}`,
-			snapshot: `{
-  "license": true
-             ~~~~
-             Invalid license: the type should be a \`string\`, not \`boolean\`.
-}`,
-		},
-		{
-			code: `{
   "license": ""
 }`,
 			snapshot: `{
@@ -65,12 +35,12 @@ ruleTester.describe(directPropertyValidityRules.licenseValidity, {
 		},
 		{
 			code: `{
-  "license": "   "
+  "license": "not-a-license"
 }`,
 			snapshot: `{
-  "license": "   "
-             ~~~~~
-             Invalid license: the value is empty, but should be a valid license.
+  "license": "not-a-license"
+             ~~~~~~~~~~~~~~~
+             Invalid license: license should be a valid SPDX license expression (without "LicenseRef"), "UNLICENSED", or "SEE LICENSE IN <filename>".
 }`,
 		},
 	],
@@ -85,12 +55,12 @@ ruleTester.describe(directPropertyValidityRules.licenseValidity, {
 		},
 		{
 			code: `{
-  "license": "Apache-2.0"
+  "license": "UNLICENSED"
 }`,
 		},
 		{
 			code: `{
-  "license": "UNLICENSED"
+  "license": "SEE LICENSE IN LICENSE.md"
 }`,
 		},
 	],

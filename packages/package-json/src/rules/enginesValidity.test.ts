@@ -43,6 +43,52 @@ ruleTester.describe(directPropertyValidityRules.enginesValidity, {
              Invalid engines: the type should be \`object\`, not \`string\`.
 }`,
 		},
+		{
+			code: `{
+  "engines": {
+    "npm": 123
+  }
+}`,
+			snapshot: `{
+  "engines": {
+    "npm": 123
+    ~~~~~~~~~~
+    Invalid engines: the value of property "npm" should be a string.
+  }
+}`,
+		},
+		{
+			code: `{
+  "engines": {
+    "invalid-bin": ""
+  }
+}`,
+			snapshot: `{
+  "engines": {
+    "invalid-bin": ""
+    ~~~~~~~~~~~~~~~~~
+    Invalid engines: the value of property "invalid-bin" is empty, but should be a semver range.
+  }
+}`,
+		},
+		{
+			code: `{
+  "engines": {
+    "": "invalid-key",
+    "   ": "invalid-key"
+  }
+}`,
+			snapshot: `{
+  "engines": {
+    "": "invalid-key",
+    ~~~~~~~~~~~~~~~~~
+    Invalid engines: property 0 has an empty key, but should be a runtime or package manager.
+    "   ": "invalid-key"
+    ~~~~~~~~~~~~~~~~~~~~
+    Invalid engines: property 1 has an empty key, but should be a runtime or package manager.
+  }
+}`,
+		},
 	],
 	valid: [
 		{
@@ -56,7 +102,16 @@ ruleTester.describe(directPropertyValidityRules.enginesValidity, {
 		{
 			code: `{
   "engines": {
-    "node": "^20.0.0"
+    "node": "^24.11.0"
+  }
+}`,
+		},
+		{
+			code: `{
+  "engines": {
+    "node": "^24.11.0",
+    "npm": "Please use pnpm",
+    "pnpm": "^10"
   }
 }`,
 		},

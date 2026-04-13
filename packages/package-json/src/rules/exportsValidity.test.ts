@@ -43,6 +43,66 @@ ruleTester.describe(directPropertyValidityRules.exportsValidity, {
              Invalid exports: the value is empty, but should be an entry point path.
 }`,
 		},
+		{
+			code: `{
+  "exports": {
+    "./invalid": 123
+  }
+}`,
+			snapshot: `{
+  "exports": {
+    "./invalid": 123
+    ~~~~~~~~~~~~~~~~
+    Invalid exports: the value of "./invalid" should be either an entry point path or an object of export conditions.
+  }
+}`,
+		},
+		{
+			code: `{
+  "exports": {
+    "./invalid": ""
+  }
+}`,
+			snapshot: `{
+  "exports": {
+    "./invalid": ""
+    ~~~~~~~~~~~~~~~
+    Invalid exports: the value of "./invalid" is empty, but should be an entry point path.
+  }
+}`,
+		},
+		{
+			code: `{
+  "exports": {
+    "": "invalid"
+  }
+}`,
+			snapshot: `{
+  "exports": {
+    "": "invalid"
+    ~~~~~~~~~~~~~
+    Invalid exports: property 0 has an empty key, but should be an export condition.
+  }
+}`,
+		},
+		{
+			code: `{
+  "exports": {
+    "": "invalid",
+    "   ": "invalid"
+  }
+}`,
+			snapshot: `{
+  "exports": {
+    "": "invalid",
+    ~~~~~~~~~~~~~
+    Invalid exports: property 0 has an empty key, but should be an export condition.
+    "   ": "invalid"
+    ~~~~~~~~~~~~~~~~
+    Invalid exports: property 1 has an empty key, but should be an export condition.
+  }
+}`,
+		},
 	],
 	valid: [
 		{
@@ -57,6 +117,16 @@ ruleTester.describe(directPropertyValidityRules.exportsValidity, {
 			code: `{
   "exports": {
     ".": "./index.js"
+  }
+}`,
+		},
+		{
+			code: `{
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
   }
 }`,
 		},

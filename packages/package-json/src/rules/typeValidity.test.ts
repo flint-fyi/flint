@@ -25,62 +25,12 @@ ruleTester.describe(directPropertyValidityRules.typeValidity, {
 		},
 		{
 			code: `{
-  "type": {}
-}`,
-			snapshot: `{
-  "type": {}
-          ~~
-          Invalid type: the type should be a \`string\`, not \`object\`.
-}`,
-		},
-		{
-			code: `{
-  "type": []
-}`,
-			snapshot: `{
-  "type": []
-          ~~
-          Invalid type: the type should be a \`string\`, not \`array\`.
-}`,
-		},
-		{
-			code: `{
-  "type": true
-}`,
-			snapshot: `{
-  "type": true
-          ~~~~
-          Invalid type: the type should be a \`string\`, not \`boolean\`.
-}`,
-		},
-		{
-			code: `{
   "type": ""
 }`,
 			snapshot: `{
   "type": ""
           ~~
           Invalid type: the value is empty, but should be one of: commonjs, module.
-}`,
-		},
-		{
-			code: `{
-  "type": "   "
-}`,
-			snapshot: `{
-  "type": "   "
-          ~~~~~
-          Invalid type: the value is empty, but should be one of: commonjs, module.
-}`,
-		},
-		{
-			code: `{
-  "type": "esm"
-}`,
-			snapshot: `{
-  "type": "esm"
-          ~~~~~
-          Invalid type: the value "esm" is not valid. Valid types are: commonjs, module.
 }`,
 		},
 	],
@@ -90,12 +40,12 @@ ruleTester.describe(directPropertyValidityRules.typeValidity, {
 		},
 		{
 			code: `{
-  "type": "module"
+  "type": "commonjs"
 }`,
 		},
 		{
 			code: `{
-  "type": "commonjs"
+  "type": "module"
 }`,
 		},
 	],

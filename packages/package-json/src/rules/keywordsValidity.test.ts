@@ -25,12 +25,54 @@ ruleTester.describe(directPropertyValidityRules.keywordsValidity, {
 		},
 		{
 			code: `{
+  "keywords": "invalid"
+}`,
+			snapshot: `{
+  "keywords": "invalid"
+              ~~~~~~~~~
+              Invalid keywords: the type should be \`Array\`, not \`string\`.
+}`,
+		},
+		{
+			code: `{
   "keywords": {}
 }`,
 			snapshot: `{
   "keywords": {}
               ~~
               Invalid keywords: the type should be \`Array\`, not \`object\`.
+}`,
+		},
+		{
+			code: `{
+  "keywords": {
+    "invalid-bin": 123
+  }
+}`,
+			snapshot: `{
+  "keywords": {
+              ~
+              Invalid keywords: the type should be \`Array\`, not \`object\`.
+    "invalid-bin": 123
+    ~~~~~~~~~~~~~~~~~~
+  }
+  ~
+}`,
+		},
+		{
+			code: `{
+  "keywords": ["valid", "", 123, null, {}]
+}`,
+			snapshot: `{
+  "keywords": ["valid", "", 123, null, {}]
+                        ~~
+                        Invalid keywords: item at index 1 is empty, but should be a keyword string.
+                            ~~~
+                            Invalid keywords: item at index 2 should be a string, not \`number\`.
+                                 ~~~~
+                                 Invalid keywords: item at index 3 should be a string, not \`null\`.
+                                       ~~
+                                       Invalid keywords: item at index 4 should be a string, not \`object\`.
 }`,
 		},
 	],
@@ -45,7 +87,7 @@ ruleTester.describe(directPropertyValidityRules.keywordsValidity, {
 		},
 		{
 			code: `{
-  "keywords": ["lint", "json"]
+  "keywords": ["nin", "A Silver Mt. Zion"]
 }`,
 		},
 	],

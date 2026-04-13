@@ -25,12 +25,54 @@ ruleTester.describe(directPropertyValidityRules.workspacesValidity, {
 		},
 		{
 			code: `{
+  "workspaces": "invalid"
+}`,
+			snapshot: `{
+  "workspaces": "invalid"
+                ~~~~~~~~~
+                Invalid workspaces: the type should be \`Array\`, not \`string\`.
+}`,
+		},
+		{
+			code: `{
   "workspaces": {}
 }`,
 			snapshot: `{
   "workspaces": {}
                 ~~
                 Invalid workspaces: the type should be \`Array\`, not \`object\`.
+}`,
+		},
+		{
+			code: `{
+  "workspaces": {
+    "invalid-bin": 123
+  }
+}`,
+			snapshot: `{
+  "workspaces": {
+                ~
+                Invalid workspaces: the type should be \`Array\`, not \`object\`.
+    "invalid-bin": 123
+    ~~~~~~~~~~~~~~~~~~
+  }
+  ~
+}`,
+		},
+		{
+			code: `{
+  "workspaces": ["valid", "", 123, null, {}]
+}`,
+			snapshot: `{
+  "workspaces": ["valid", "", 123, null, {}]
+                          ~~
+                          Invalid workspaces: item at index 1 is empty, but should be a file path or glob pattern.
+                              ~~~
+                              Invalid workspaces: item at index 2 should be a string, not \`number\`.
+                                   ~~~~
+                                   Invalid workspaces: item at index 3 should be a string, not \`null\`.
+                                         ~~
+                                         Invalid workspaces: item at index 4 should be a string, not \`object\`.
 }`,
 		},
 	],
@@ -45,7 +87,7 @@ ruleTester.describe(directPropertyValidityRules.workspacesValidity, {
 		},
 		{
 			code: `{
-  "workspaces": ["packages/*"]
+  "workspaces": ["./app", "./packages/*"]
 }`,
 		},
 	],

@@ -80,7 +80,7 @@ ruleTester.describe(directPropertyValidityRules.descriptionValidity, {
 		},
 		{
 			code: `{
-  "description": "A cool package"
+  "description": "The Fragile"
 }`,
 		},
 	],

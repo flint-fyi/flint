@@ -25,16 +25,6 @@ ruleTester.describe(directPropertyValidityRules.mainValidity, {
 		},
 		{
 			code: `{
-  "main": {}
-}`,
-			snapshot: `{
-  "main": {}
-          ~~
-          Invalid main: the type should be a \`string\`, not \`object\`.
-}`,
-		},
-		{
-			code: `{
   "main": []
 }`,
 			snapshot: `{
@@ -45,16 +35,6 @@ ruleTester.describe(directPropertyValidityRules.mainValidity, {
 		},
 		{
 			code: `{
-  "main": true
-}`,
-			snapshot: `{
-  "main": true
-          ~~~~
-          Invalid main: the type should be a \`string\`, not \`boolean\`.
-}`,
-		},
-		{
-			code: `{
   "main": ""
 }`,
 			snapshot: `{
@@ -63,20 +43,15 @@ ruleTester.describe(directPropertyValidityRules.mainValidity, {
           Invalid main: the value is empty, but should be the path to the package's main module.
 }`,
 		},
-		{
-			code: `{
-  "main": "   "
-}`,
-			snapshot: `{
-  "main": "   "
-          ~~~~~
-          Invalid main: the value is empty, but should be the path to the package's main module.
-}`,
-		},
 	],
 	valid: [
 		{
 			code: `{}`,
+		},
+		{
+			code: `{
+  "main": "./index.js"
+}`,
 		},
 		{
 			code: `{

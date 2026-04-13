@@ -25,12 +25,82 @@ ruleTester.describe(directPropertyValidityRules.scriptsValidity, {
 		},
 		{
 			code: `{
+  "scripts": "./script.js"
+}`,
+			snapshot: `{
+  "scripts": "./script.js"
+             ~~~~~~~~~~~~~
+             Invalid scripts: the type should be \`object\`, not \`string\`.
+}`,
+		},
+		{
+			code: `{
   "scripts": ["tsc"]
 }`,
 			snapshot: `{
   "scripts": ["tsc"]
              ~~~~~~~
              Invalid scripts: the type should be \`object\`, not \`array\`.
+}`,
+		},
+		{
+			code: `{
+  "scripts": {
+    "invalid": 123
+  }
+}`,
+			snapshot: `{
+  "scripts": {
+    "invalid": 123
+    ~~~~~~~~~~~~~~
+    Invalid scripts: the value of property "invalid" should be a string.
+  }
+}`,
+		},
+		{
+			code: `{
+  "scripts": {
+    "invalid": ""
+  }
+}`,
+			snapshot: `{
+  "scripts": {
+    "invalid": ""
+    ~~~~~~~~~~~~~
+    Invalid scripts: the value of property "invalid" is empty, but should be a script command.
+  }
+}`,
+		},
+		{
+			code: `{
+  "scripts": {
+    "": "invalid"
+  }
+}`,
+			snapshot: `{
+  "scripts": {
+    "": "invalid"
+    ~~~~~~~~~~~~~
+    Invalid scripts: property 0 has an empty key, but should be a script name.
+  }
+}`,
+		},
+		{
+			code: `{
+  "scripts": {
+    "": "invalid",
+    "   ": "invalid"
+  }
+}`,
+			snapshot: `{
+  "scripts": {
+    "": "invalid",
+    ~~~~~~~~~~~~~
+    Invalid scripts: property 0 has an empty key, but should be a script name.
+    "   ": "invalid"
+    ~~~~~~~~~~~~~~~~
+    Invalid scripts: property 1 has an empty key, but should be a script name.
+  }
 }`,
 		},
 	],
@@ -40,12 +110,12 @@ ruleTester.describe(directPropertyValidityRules.scriptsValidity, {
 		},
 		{
 			code: `{
-  "scripts": {}
+  "scripts": { "silver-mt-zion": "node ./silver-mt-zion.js" }
 }`,
 		},
 		{
 			code: `{
-  "scripts": { "build": "tsc", "test": "vitest" }
+  "scripts": { "silver-mt-zion": "node ./silver-mt-zion.js", "nin": "node ./nin.js" }
 }`,
 		},
 	],

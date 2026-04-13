@@ -4832,7 +4832,8 @@
 		"flint": {
 			"name": "authorValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4870,7 +4871,8 @@
 		"flint": {
 			"name": "binValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4907,7 +4909,8 @@
 		"flint": {
 			"name": "bundleDependenciesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4932,7 +4935,8 @@
 		"flint": {
 			"name": "configValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4957,7 +4961,8 @@
 		"flint": {
 			"name": "contributorsValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4982,7 +4987,8 @@
 		"flint": {
 			"name": "cpuValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5007,7 +5013,8 @@
 		"flint": {
 			"name": "dependenciesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5058,7 +5065,8 @@
 		"flint": {
 			"name": "descriptionValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5083,7 +5091,8 @@
 		"flint": {
 			"name": "devDependenciesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5108,7 +5117,8 @@
 		"flint": {
 			"name": "directoriesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5146,7 +5156,8 @@
 		"flint": {
 			"name": "enginesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5185,7 +5196,8 @@
 		"flint": {
 			"name": "exportsValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5223,7 +5235,8 @@
 		"flint": {
 			"name": "filesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5248,7 +5261,8 @@
 		"flint": {
 			"name": "homepageValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5273,7 +5287,8 @@
 		"flint": {
 			"name": "keywordsValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5299,7 +5314,8 @@
 		"flint": {
 			"name": "licenseValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5329,6 +5345,20 @@
 	{
 		"eslint": [
 			{
+				"name": "package-json/valid-main",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-main.md"
+			}
+		],
+		"flint": {
+			"name": "manValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "package-json/valid-man",
 				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-man.md"
 			}
@@ -5336,7 +5366,8 @@
 		"flint": {
 			"name": "manValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5361,7 +5392,8 @@
 		"flint": {
 			"name": "moduleValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5412,7 +5444,8 @@
 		"flint": {
 			"name": "optionalDependenciesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5437,7 +5470,8 @@
 		"flint": {
 			"name": "osValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5487,7 +5521,8 @@
 		"flint": {
 			"name": "peerDependenciesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5524,7 +5559,8 @@
 		"flint": {
 			"name": "privateValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5575,7 +5611,8 @@
 		"flint": {
 			"name": "publishConfigValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5627,7 +5664,8 @@
 		"flint": {
 			"name": "repositoryValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5665,7 +5703,8 @@
 		"flint": {
 			"name": "scriptsValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5691,7 +5730,8 @@
 		"flint": {
 			"name": "sideEffectsValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5729,7 +5769,8 @@
 		"flint": {
 			"name": "typeValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5768,7 +5809,8 @@
 		"flint": {
 			"name": "workspacesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{

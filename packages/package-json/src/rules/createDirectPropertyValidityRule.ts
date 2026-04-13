@@ -22,6 +22,7 @@ export function createDirectPropertyValidityRule(
 		about: {
 			description: `Enforce that the \`${propertyName}\`${propertyNameAliases.length ? ` (also: ${propertyNameAliases.map((alias) => `\`${alias}\``).join(", ")})` : ""} property is valid.`,
 			id,
+			presets: ["logical"],
 		},
 		messages: {
 			validationError: {

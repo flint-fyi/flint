@@ -25,12 +25,44 @@ ruleTester.describe(directPropertyValidityRules.filesValidity, {
 		},
 		{
 			code: `{
-  "files": {}
+  "files": "invalid"
 }`,
 			snapshot: `{
-  "files": {}
-           ~~
+  "files": "invalid"
+           ~~~~~~~~~
+           Invalid files: the type should be \`Array\`, not \`string\`.
+}`,
+		},
+		{
+			code: `{
+  "files": {
+    "invalid-bin": 123
+  }
+}`,
+			snapshot: `{
+  "files": {
+           ~
            Invalid files: the type should be \`Array\`, not \`object\`.
+    "invalid-bin": 123
+    ~~~~~~~~~~~~~~~~~~
+  }
+  ~
+}`,
+		},
+		{
+			code: `{
+  "files": ["valid", "", 123, null, {}]
+}`,
+			snapshot: `{
+  "files": ["valid", "", 123, null, {}]
+                     ~~
+                     Invalid files: item at index 1 is empty, but should be a file pattern.
+                         ~~~
+                         Invalid files: item at index 2 should be a string, not \`number\`.
+                              ~~~~
+                              Invalid files: item at index 3 should be a string, not \`null\`.
+                                    ~~
+                                    Invalid files: item at index 4 should be a string, not \`object\`.
 }`,
 		},
 	],
@@ -45,7 +77,7 @@ ruleTester.describe(directPropertyValidityRules.filesValidity, {
 		},
 		{
 			code: `{
-  "files": ["dist", "lib"]
+  "files": ["CHANGELOG.md", "dist/"]
 }`,
 		},
 	],

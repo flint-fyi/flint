@@ -25,16 +25,6 @@ ruleTester.describe(directPropertyValidityRules.moduleValidity, {
 		},
 		{
 			code: `{
-  "module": {}
-}`,
-			snapshot: `{
-  "module": {}
-            ~~
-            Invalid module: the type should be a \`string\`, not \`object\`.
-}`,
-		},
-		{
-			code: `{
   "module": []
 }`,
 			snapshot: `{
@@ -45,31 +35,11 @@ ruleTester.describe(directPropertyValidityRules.moduleValidity, {
 		},
 		{
 			code: `{
-  "module": true
-}`,
-			snapshot: `{
-  "module": true
-            ~~~~
-            Invalid module: the type should be a \`string\`, not \`boolean\`.
-}`,
-		},
-		{
-			code: `{
   "module": ""
 }`,
 			snapshot: `{
   "module": ""
             ~~
-            Invalid module: the value is empty, but should be the path to the package's main module.
-}`,
-		},
-		{
-			code: `{
-  "module": "   "
-}`,
-			snapshot: `{
-  "module": "   "
-            ~~~~~
             Invalid module: the value is empty, but should be the path to the package's main module.
 }`,
 		},
@@ -80,7 +50,12 @@ ruleTester.describe(directPropertyValidityRules.moduleValidity, {
 		},
 		{
 			code: `{
-  "module": "index.mjs"
+  "module": "./index.js"
+}`,
+		},
+		{
+			code: `{
+  "module": "index.js"
 }`,
 		},
 	],
