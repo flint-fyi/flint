@@ -1,3 +1,4 @@
+import type { ConfigRuleDefinitionObject } from "./configs.ts";
 import type { FilesValue } from "./files.ts";
 import type { AnyRule, RuleAbout } from "./rules.ts";
 import type { InferredInputObject } from "./shapes.ts";
@@ -38,8 +39,20 @@ export interface Plugin<
 	/**
 	 * A map of rule IDs to the rule definitions.
 	 */
-	rulesById: Map<string, Rules[number]>;
+	rulesById: PluginRulesById<Rules>;
 }
+
+export type PluginConfiguredRule<Rule extends AnyRule> =
+	ConfigRuleDefinitionObject & {
+		options: Rule["options"] extends undefined
+			? boolean
+			: boolean | InferredInputObject<Rule["options"]>;
+		rule: Rule;
+	};
+
+export type PluginConfiguredRules<Rules extends AnyRule[]> = {
+	[Rule in Rules[number] as Rule["about"]["id"]]: PluginConfiguredRule<Rule>;
+}[Rules[number]["about"]["id"]][];
 
 export type PluginPresetName<Rules extends AnyRule[]> =
 	Rules[number] extends infer R
@@ -53,13 +66,17 @@ export type PluginPresets<Rules extends AnyRule[]> = Record<
 	Rules[number][]
 >;
 
+export type PluginRulesById<Rules extends AnyRule[]> = {
+	[Rule in Rules[number] as Rule["about"]["id"]]: Rule;
+};
+
 /**
  * Defines rules to configure or disable on files in a config.
  * @param ruleOptions Pairs rule IDs with options, or `false` to disable them.
  */
 export type PluginRulesFactory<Rules extends AnyRule[]> = (
 	rulesOptions: PluginRulesOptions<Rules>,
-) => Rules;
+) => PluginConfiguredRules<Rules>;
 
 export type PluginRulesOptions<Rules extends AnyRule[]> = {
 	[Rule in Rules[number] as Rule["about"]["id"]]?: Rule["options"] extends undefined

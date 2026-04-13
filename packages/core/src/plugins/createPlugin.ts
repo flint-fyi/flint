@@ -1,13 +1,19 @@
 import { CachedFactory } from "cached-factory";
 
 import type { FilesValues } from "../types/files.ts";
-import type { Plugin, PluginPresets } from "../types/plugins.ts";
-import type { AnyRule, RuleAbout, UnsafeAnyRule } from "../types/rules.ts";
+import type {
+	Plugin,
+	PluginConfiguredRules,
+	PluginPresets,
+	PluginRulesById,
+	PluginRulesOptions,
+} from "../types/plugins.ts";
+import type { AnyRule, RuleAbout } from "../types/rules.ts";
 
 export type CreatePluginOptions<
 	About extends RuleAbout,
 	FilesKey extends string | undefined,
-	Rules extends UnsafeAnyRule<About>[],
+	Rules extends AnyRule<About>[],
 > = FilesKey extends undefined
 	? CreatePluginOptionsWithoutFiles<About, Rules>
 	: CreatePluginOptionsWithFiles<About, FilesKey & string, Rules>;
@@ -15,7 +21,7 @@ export type CreatePluginOptions<
 export interface CreatePluginOptionsWithFiles<
 	About extends RuleAbout,
 	FilesKey extends string,
-	Rules extends UnsafeAnyRule<About>[],
+	Rules extends AnyRule<About>[],
 > {
 	files: Record<FilesKey, FilesValues>;
 	name: string;
@@ -24,7 +30,7 @@ export interface CreatePluginOptionsWithFiles<
 
 export interface CreatePluginOptionsWithoutFiles<
 	About extends RuleAbout,
-	Rules extends UnsafeAnyRule<About>[],
+	Rules extends AnyRule<About>[],
 > {
 	files?: never;
 	name: string;
@@ -34,7 +40,7 @@ export interface CreatePluginOptionsWithoutFiles<
 export function createPlugin<
 	const About extends RuleAbout,
 	const FilesKey extends string | undefined,
-	const Rules extends UnsafeAnyRule<About>[],
+	const Rules extends AnyRule<About>[],
 >({
 	files,
 	name,
@@ -45,20 +51,23 @@ export function createPlugin<
 	Rules
 > {
 	const presets = collectPresetsFromRules(rules);
-	const rulesById = new Map(rules.map((rule) => [rule.about.id, rule]));
+	const rulesById = Object.fromEntries(
+		rules.map((rule) => [rule.about.id, rule]),
+	) as PluginRulesById<Rules>;
 
 	return {
-		// @ts-expect-error -- TODO: Figure this out...?
-		files,
+		files: files as Plugin<About, FilesKey, Rules>["files"],
 		name,
 		presets,
-		// @ts-expect-error -- TODO: Figure out what to assert...?
 		rules: (configuration) => {
-			return Object.entries(configuration).map(([id, options]) => ({
-				options,
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				rule: rulesById.get(id)!,
-			}));
+			return Object.entries(configuration).map(([id, options]) =>
+				createConfiguredRule(
+					rulesById,
+					id as keyof PluginRulesOptions<Rules> & string,
+					options as PluginRulesOptions<Rules>[keyof PluginRulesOptions<Rules> &
+						string],
+				),
+			) as PluginConfiguredRules<Rules>;
 		},
 		rulesById,
 	};
@@ -79,4 +88,18 @@ function collectPresetsFromRules<
 	}
 
 	return Object.fromEntries(presets.entries()) as PluginPresets<Rules>;
+}
+
+function createConfiguredRule<
+	const Rules extends AnyRule[],
+	const RuleId extends keyof PluginRulesOptions<Rules> & string,
+>(
+	rulesById: PluginRulesById<Rules>,
+	id: RuleId,
+	options: PluginRulesOptions<Rules>[RuleId],
+) {
+	return {
+		options,
+		rule: rulesById[id],
+	};
 }
