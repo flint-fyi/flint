@@ -23,7 +23,7 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project utils"
+		"test": "vitest --project utils"
 	},
 	"devDependencies": {
 		"tsdown": "catalog:dev",

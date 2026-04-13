@@ -4,7 +4,7 @@ import chalk from "chalk";
 import { textTable } from "text-table-fast";
 
 import { presentHeader } from "./shared/header.ts";
-import { presentDiagnostics } from "./shared/presentDiagnostics.ts";
+import { presentLanguageReports } from "./shared/presentLanguageReports.ts";
 import { presentSummary } from "./shared/summary.ts";
 import type { PresenterFactory } from "./types.ts";
 
@@ -47,7 +47,7 @@ export const briefPresenterFactory: PresenterFactory = {
 			},
 			*summarize(summaryContext) {
 				yield* presentSummary(counts, summaryContext);
-				yield* presentDiagnostics(summaryContext.lintResults.filesResults);
+				yield* presentLanguageReports(summaryContext.lintResults.filesResults);
 			},
 		};
 	},

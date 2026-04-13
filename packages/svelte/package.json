@@ -1,0 +1,51 @@
+{
+	"name": "@flint.fyi/svelte",
+	"version": "0.0.1",
+	"description": "[Experimental] Svelte language plugin for Flint.",
+	"homepage": "https://flint.fyi/rules/svelte",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/svelte"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "JoshuaKGoldberg",
+		"email": "npm@joshuakgoldberg.com"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"files": [
+		"lib/",
+		"!lib/**/*.map"
+	],
+	"scripts": {
+		"test": "vitest --project svelte"
+	},
+	"dependencies": {
+		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/svelte-language": "workspace:^",
+		"@flint.fyi/ts": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
+		"@flint.fyi/volar-language": "workspace:^",
+		"typescript": "^5.9.3 || ^6.0.0"
+	},
+	"devDependencies": {
+		"@flint.fyi/rule-tester": "workspace:^",
+		"svelte": "5.55.2",
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
+	},
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"exports": {
+			".": "./lib/index.js"
+		}
+	}
+}

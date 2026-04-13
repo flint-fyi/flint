@@ -69,7 +69,7 @@ describe("cacheStorageSchema decoding", () => {
 			files: {
 				"src/index.ts": {
 					dependencies: ["src/utils.ts"],
-					diagnostics: [{ text: "Error" }],
+					languageReports: [{ text: "Error" }],
 					timestamp: 123,
 				},
 			},
@@ -85,7 +85,7 @@ describe("cacheStorageSchema decoding", () => {
 			files: {
 				"src/index.ts": {
 					dependencies: ["src/utils.ts"],
-					diagnostics: [{ code: "TS1234", text: "Error message" }],
+					languageReports: [{ code: "TS1234", text: "Error message" }],
 					reports: [
 						{
 							about: { id: "test-rule" },
