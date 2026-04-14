@@ -7,6 +7,20 @@ import type { ReportMessageData } from "./reports.ts";
 import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
 
 /**
+ * The minimal structural subset of a rule needed for plugin configuration.
+ * Prefer this over {@link AnyRule} in constraints that only need `about` and `options`.
+ */
+export interface RuleBase<
+	About extends RuleAbout = RuleAbout,
+	OptionsSchema extends AnyOptionalSchema | undefined =
+		| AnyOptionalSchema
+		| undefined,
+> {
+	about: About;
+	options?: OptionsSchema;
+}
+
+/**
  * A single lint rule, as used by users in configs.
  */
 export type AnyRule<

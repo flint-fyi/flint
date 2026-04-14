@@ -1,6 +1,6 @@
 import type { ConfigRuleDefinitionObject } from "./configs.ts";
 import type { FilesValue } from "./files.ts";
-import type { AnyRule, RuleAbout } from "./rules.ts";
+import type { RuleAbout, RuleBase } from "./rules.ts";
 import type { InferredInputObject } from "./shapes.ts";
 
 /**
@@ -10,7 +10,7 @@ import type { InferredInputObject } from "./shapes.ts";
 export interface Plugin<
 	About extends RuleAbout,
 	FilesKey extends string | undefined,
-	Rules extends AnyRule<About>[],
+	Rules extends RuleBase<About>[],
 > {
 	/**
 	 * Selectors of files this plugin suggests applying its rules to.
@@ -42,7 +42,7 @@ export interface Plugin<
 	rulesById: PluginRulesById<Rules>;
 }
 
-export type PluginConfiguredRule<Rule extends AnyRule> =
+export type PluginConfiguredRule<Rule extends RuleBase> =
 	ConfigRuleDefinitionObject & {
 		options: Rule["options"] extends undefined
 			? boolean
@@ -50,23 +50,23 @@ export type PluginConfiguredRule<Rule extends AnyRule> =
 		rule: Rule;
 	};
 
-export type PluginConfiguredRules<Rules extends AnyRule[]> = {
+export type PluginConfiguredRules<Rules extends RuleBase[]> = {
 	[Rule in Rules[number] as Rule["about"]["id"]]: PluginConfiguredRule<Rule>;
 }[Rules[number]["about"]["id"]][];
 
-export type PluginPresetName<Rules extends AnyRule[]> =
+export type PluginPresetName<Rules extends RuleBase[]> =
 	Rules[number] extends infer R
 		? R extends { about: { presets: readonly (infer P extends string)[] } }
 			? P
 			: never
 		: never;
 
-export type PluginPresets<Rules extends AnyRule[]> = Record<
+export type PluginPresets<Rules extends RuleBase[]> = Record<
 	PluginPresetName<Rules>,
 	Rules[number][]
 >;
 
-export type PluginRulesById<Rules extends AnyRule[]> = {
+export type PluginRulesById<Rules extends RuleBase[]> = {
 	[Rule in Rules[number] as Rule["about"]["id"]]: Rule;
 };
 
@@ -74,11 +74,11 @@ export type PluginRulesById<Rules extends AnyRule[]> = {
  * Defines rules to configure or disable on files in a config.
  * @param ruleOptions Pairs rule IDs with options, or `false` to disable them.
  */
-export type PluginRulesFactory<Rules extends AnyRule[]> = (
+export type PluginRulesFactory<Rules extends RuleBase[]> = (
 	rulesOptions: PluginRulesOptions<Rules>,
 ) => PluginConfiguredRules<Rules>;
 
-export type PluginRulesOptions<Rules extends AnyRule[]> = {
+export type PluginRulesOptions<Rules extends RuleBase[]> = {
 	[Rule in Rules[number] as Rule["about"]["id"]]?: Rule["options"] extends undefined
 		? boolean
 		: boolean | InferredInputObject<Rule["options"]>;

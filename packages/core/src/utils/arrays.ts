@@ -2,16 +2,18 @@ import { nullThrows } from "@flint.fyi/utils";
 
 import type { AnyLevelDeep } from "../types/arrays.ts";
 
-export function flatten<T>(values: AnyLevelDeep<T>): T[] {
+type Flatten<T> = T extends unknown[] ? Flatten<T[number]> : T[];
+
+export function flatten<T>(values: AnyLevelDeep<T>): Flatten<T> {
 	if (!Array.isArray(values)) {
-		return [values];
+		return [values] as Flatten<T>;
 	}
 
 	return values.flat(
 		// When using Infinity, TS’s native flattening errors with:
 		// Type instantiation is excessively deep and possibly infinite.
 		Infinity as 0,
-	) as T[];
+	) as Flatten<T>;
 }
 
 /**

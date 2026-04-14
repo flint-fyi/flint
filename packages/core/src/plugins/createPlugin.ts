@@ -8,12 +8,12 @@ import type {
 	PluginRulesById,
 	PluginRulesOptions,
 } from "../types/plugins.ts";
-import type { AnyRule, RuleAbout } from "../types/rules.ts";
+import type { RuleAbout, RuleBase } from "../types/rules.ts";
 
 export type CreatePluginOptions<
 	About extends RuleAbout,
 	FilesKey extends string | undefined,
-	Rules extends AnyRule<About>[],
+	Rules extends RuleBase<About>[],
 > = FilesKey extends undefined
 	? CreatePluginOptionsWithoutFiles<About, Rules>
 	: CreatePluginOptionsWithFiles<About, FilesKey & string, Rules>;
@@ -21,7 +21,7 @@ export type CreatePluginOptions<
 export interface CreatePluginOptionsWithFiles<
 	About extends RuleAbout,
 	FilesKey extends string,
-	Rules extends AnyRule<About>[],
+	Rules extends RuleBase<About>[],
 > {
 	files: Record<FilesKey, FilesValues>;
 	name: string;
@@ -30,7 +30,7 @@ export interface CreatePluginOptionsWithFiles<
 
 export interface CreatePluginOptionsWithoutFiles<
 	About extends RuleAbout,
-	Rules extends AnyRule<About>[],
+	Rules extends RuleBase<About>[],
 > {
 	files?: never;
 	name: string;
@@ -40,7 +40,7 @@ export interface CreatePluginOptionsWithoutFiles<
 export function createPlugin<
 	const About extends RuleAbout,
 	const FilesKey extends string | undefined,
-	const Rules extends AnyRule<About>[],
+	const Rules extends RuleBase<About>[],
 >({
 	files,
 	name,
@@ -75,7 +75,7 @@ export function createPlugin<
 
 function collectPresetsFromRules<
 	const About extends RuleAbout,
-	const Rules extends AnyRule<About>[],
+	const Rules extends RuleBase<About>[],
 >(rules: Rules) {
 	const presets = new CachedFactory<string, Rules[number][]>(() => []);
 
@@ -91,7 +91,7 @@ function collectPresetsFromRules<
 }
 
 function createConfiguredRule<
-	const Rules extends AnyRule[],
+	const Rules extends RuleBase[],
 	const RuleId extends keyof PluginRulesOptions<Rules> & string,
 >(
 	rulesById: PluginRulesById<Rules>,
