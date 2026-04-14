@@ -2,4 +2,4 @@
 "@flint.fyi/jsx": patch
 ---
 
-fix: jsx/autoFocusProps no longer double reports ts issue
+Prevent `jsx/autoFocusProps` from double reporting ts issues.
