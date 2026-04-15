@@ -5,7 +5,6 @@ import type {
 	ConfigDefinition,
 	ConfigRuleDefinition,
 } from "../types/configs.ts";
-import { flatten } from "../utils/arrays.ts";
 
 export function validateConfigDefinition(
 	definition: ConfigDefinition,
@@ -15,15 +14,9 @@ export function validateConfigDefinition(
 		rulesValue: AnyLevelDeep<ConfigRuleDefinition> | undefined,
 		useIndex: number,
 	) => {
-		const flattenedRules = rulesValue
-			? (flatten(rulesValue) as (ConfigRuleDefinition | undefined)[])
-			: undefined;
-
-		if (flattenedRules && !flattenedRules.includes(undefined)) {
-			return undefined;
-		}
-
-		return `Invalid configuration in ${configFilePath}
+		return rulesValue
+			? undefined
+			: `Invalid configuration in ${configFilePath}
   at use[${useIndex}]
   Received: ${inspect(rulesValue)}
 

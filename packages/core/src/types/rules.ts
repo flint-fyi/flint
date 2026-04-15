@@ -7,20 +7,6 @@ import type { ReportMessageData } from "./reports.ts";
 import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
 
 /**
- * The minimal structural subset of a rule needed for plugin configuration.
- * Prefer this over {@link AnyRule} in constraints that only need `about` and `options`.
- */
-export interface RuleBase<
-	About extends RuleAbout = RuleAbout,
-	OptionsSchema extends AnyOptionalSchema | undefined =
-		| AnyOptionalSchema
-		| undefined,
-> {
-	about: About;
-	options?: OptionsSchema;
-}
-
-/**
  * A single lint rule, as used by users in configs.
  */
 export type AnyRule<
@@ -36,6 +22,10 @@ export type AnyRuleDefinition<
 		| undefined,
 > = RuleDefinition<RuleAbout, unknown, object, string, OptionsSchema>;
 
+/**
+ * Prefer explicitly setting the {@linkcode Rule} type arguments,
+ * or, barring that, use {@linkcode AnyRule}.
+ */
 export type UnsafeAnyRule<About extends RuleAbout = RuleAbout> = Rule<
 	About,
 	// TODO: How to make these types work with createPlugin.test.ts & co.?
@@ -68,7 +58,7 @@ export interface Rule<
 	language: Language<AstNodesByName, FileServices>;
 }
 
-export interface RuleAbout extends BaseAbout {
+export interface RuleAbout<Presets = string> extends BaseAbout {
 	description: string;
 
 	/**
@@ -77,7 +67,7 @@ export interface RuleAbout extends BaseAbout {
 	 */
 	pluginId?: string;
 
-	presets?: string[];
+	presets?: Presets[];
 }
 
 /**

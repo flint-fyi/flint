@@ -3,17 +3,15 @@ import { CachedFactory } from "cached-factory";
 import type { FilesValues } from "../types/files.ts";
 import type {
 	Plugin,
-	PluginConfiguredRules,
 	PluginPresets,
-	PluginRulesById,
-	PluginRulesOptions,
+	PluginRulesFactory,
 } from "../types/plugins.ts";
-import type { RuleAbout, RuleBase } from "../types/rules.ts";
+import type { AnyRule, RuleAbout, UnsafeAnyRule } from "../types/rules.ts";
 
 export type CreatePluginOptions<
 	About extends RuleAbout,
 	FilesKey extends string | undefined,
-	Rules extends RuleBase<About>[],
+	Rules extends UnsafeAnyRule<About>[],
 > = FilesKey extends undefined
 	? CreatePluginOptionsWithoutFiles<About, Rules>
 	: CreatePluginOptionsWithFiles<About, FilesKey & string, Rules>;
@@ -21,7 +19,7 @@ export type CreatePluginOptions<
 export interface CreatePluginOptionsWithFiles<
 	About extends RuleAbout,
 	FilesKey extends string,
-	Rules extends RuleBase<About>[],
+	Rules extends UnsafeAnyRule<About>[],
 > {
 	files: Record<FilesKey, FilesValues>;
 	name: string;
@@ -30,7 +28,7 @@ export interface CreatePluginOptionsWithFiles<
 
 export interface CreatePluginOptionsWithoutFiles<
 	About extends RuleAbout,
-	Rules extends RuleBase<About>[],
+	Rules extends UnsafeAnyRule<About>[],
 > {
 	files?: never;
 	name: string;
@@ -40,7 +38,7 @@ export interface CreatePluginOptionsWithoutFiles<
 export function createPlugin<
 	const About extends RuleAbout,
 	const FilesKey extends string | undefined,
-	const Rules extends RuleBase<About>[],
+	const Rules extends UnsafeAnyRule<About>[],
 >({
 	files,
 	name,
@@ -51,36 +49,32 @@ export function createPlugin<
 	Rules
 > {
 	const presets = collectPresetsFromRules(rules);
-	const rulesById = Object.fromEntries(
-		rules.map((rule) => [rule.about.id, rule]),
-	) as PluginRulesById<Rules>;
+	const rulesById = new Map(rules.map((rule) => [rule.about.id, rule]));
 
 	return {
+		// TODO: Figure this out...?
 		files: files as Plugin<About, FilesKey, Rules>["files"],
 		name,
 		presets,
-		rules: (configuration) => {
-			return Object.entries(configuration).map(([id, options]) =>
-				createConfiguredRule(
-					rulesById,
-					id as keyof PluginRulesOptions<Rules> & string,
-					options as PluginRulesOptions<Rules>[keyof PluginRulesOptions<Rules> &
-						string],
-				),
-			) as PluginConfiguredRules<Rules>;
-		},
+		rules: ((configuration) => {
+			return Object.entries(configuration).map(([id, options]) => ({
+				options,
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				rule: rulesById.get(id)!,
+			}));
+		}) as PluginRulesFactory<Rules>,
 		rulesById,
 	};
 }
 
 function collectPresetsFromRules<
 	const About extends RuleAbout,
-	const Rules extends RuleBase<About>[],
+	const Rules extends AnyRule<About>[],
 >(rules: Rules) {
-	const presets = new CachedFactory<string, Rules[number][]>(() => []);
+	const presets = new CachedFactory<string, UnsafeAnyRule<About>[]>(() => []);
 
 	for (const rule of rules) {
-		if (rule.about.presets) {
+		if (rule.about.presets !== undefined) {
 			for (const preset of rule.about.presets) {
 				presets.get(preset).push(rule);
 			}
@@ -88,18 +82,4 @@ function collectPresetsFromRules<
 	}
 
 	return Object.fromEntries(presets.entries()) as PluginPresets<Rules>;
-}
-
-function createConfiguredRule<
-	const Rules extends RuleBase[],
-	const RuleId extends keyof PluginRulesOptions<Rules> & string,
->(
-	rulesById: PluginRulesById<Rules>,
-	id: RuleId,
-	options: PluginRulesOptions<Rules>[RuleId],
-) {
-	return {
-		options,
-		rule: rulesById[id],
-	};
 }

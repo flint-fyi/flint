@@ -27,11 +27,11 @@ export function getRuleForPlugin(pluginId: string, ruleId: string): AnyRule {
 	}
 
 	const plugin = plugins[pluginId as keyof typeof plugins];
-	if (!(ruleId in plugin.rulesById)) {
+	const rule = plugin.rulesById.get(ruleId);
+
+	if (!rule) {
 		throw new Error(`Unknown rule for ${pluginId}: ${ruleId}.`);
 	}
-
-	const rule = plugin.rulesById[ruleId as keyof typeof plugin.rulesById];
 
 	return rule as AnyRule;
 }
@@ -45,11 +45,11 @@ export function getRuleForPluginSafe(
 	}
 
 	const plugin = plugins[pluginId as keyof typeof plugins];
-	if (!(ruleId in plugin.rulesById)) {
+	const rule = plugin.rulesById.get(ruleId);
+
+	if (!rule) {
 		return undefined;
 	}
-
-	const rule = plugin.rulesById[ruleId as keyof typeof plugin.rulesById];
 
 	return rule as AnyRule;
 }

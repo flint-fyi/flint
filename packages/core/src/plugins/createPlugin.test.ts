@@ -1,7 +1,6 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, expectTypeOf, it, vi } from "vitest";
 import z from "zod/v4";
 
-import { validateConfigDefinition } from "../configs/validateConfigDefinition.ts";
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
 import { createPlugin } from "./createPlugin.ts";
@@ -58,7 +57,7 @@ describe(createPlugin, () => {
 		});
 
 		it("does not type unused presets", () => {
-			expect(plugin.presets).not.toHaveProperty("third");
+			expectTypeOf(plugin.presets).not.toHaveProperty("third");
 		});
 	});
 
@@ -76,27 +75,18 @@ describe(createPlugin, () => {
 				},
 			]);
 		});
-	});
 
-	describe("rulesById", () => {
-		it("stores rules by ID for keyed lookup", () => {
-			expect(plugin.rulesById.standalone).toBe(ruleStandalone);
-			expect(plugin.rulesById.withOptionalOption).toBe(ruleWithOptionalOption);
-		});
-	});
+		it("types rule settings according to each rule's options", () => {
+			expectTypeOf(plugin.rules).toBeCallableWith({
+				standalone: true,
+				withOptionalOption: { value: "abc" },
+			});
 
-	describe(validateConfigDefinition, () => {
-		it("reports nested undefined rules instead of allowing a runtime crash", () => {
-			const error = validateConfigDefinition(
-				{
-					// @ts-expect-error -- Unused presets aren't guaranteed to exist at runtime.
-					use: [{ files: "**/*.ts", rules: [plugin.presets.third] }],
-				},
-				"flint.config.ts",
-			);
+			// @ts-expect-error -- Rules without options can only be configured with booleans.
+			plugin.rules({ standalone: { value: "abc" } });
 
-			expect(error).toContain("Invalid configuration in flint.config.ts");
-			expect(error).toContain("at use[0]");
+			// @ts-expect-error -- Rule option values must match the rule's schema.
+			plugin.rules({ withOptionalOption: { value: 123 } });
 		});
 	});
 });

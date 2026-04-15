@@ -20,35 +20,84 @@ export class RuleCreator<Presets extends string> {
 	}
 
 	createRule<
-		const About extends RuleAbout,
+		const About extends RuleAbout<Presets>,
+		const Language extends AnyLanguage,
+		const MessageId extends string,
+	>(
+		language: Language,
+		rule: RuleDefinition<
+			About,
+			GetLanguageAstNodesByName<Language>,
+			GetLanguageFileServices<Language>,
+			MessageId,
+			undefined
+		>,
+	): Rule<
+		About & { pluginId: string; url: string },
+		object,
+		object,
+		MessageId,
+		undefined
+	>;
+	createRule<
+		const About extends RuleAbout<Presets>,
 		const Language extends AnyLanguage,
 		const MessageId extends string,
 		const OptionsSchema extends AnyOptionalSchema,
 	>(
 		language: Language,
 		rule: RuleDefinition<
-			About & {
-				presets?: Presets[];
-			},
+			About,
 			GetLanguageAstNodesByName<Language>,
 			GetLanguageFileServices<Language>,
 			MessageId,
 			OptionsSchema
 		>,
 	): Rule<
-		// We can't put this in the constraint or else inference fails for some reason.
-		About & {
-			url: string;
-		},
+		About & { pluginId: string; url: string },
+		object,
+		object,
+		MessageId,
+		OptionsSchema
+	>;
+	createRule<
+		const About extends RuleAbout<Presets>,
+		const Language extends AnyLanguage,
+		const MessageId extends string,
+		const OptionsSchema extends AnyOptionalSchema | undefined,
+	>(
+		language: Language,
+		rule: RuleDefinition<
+			About,
+			GetLanguageAstNodesByName<Language>,
+			GetLanguageFileServices<Language>,
+			MessageId,
+			OptionsSchema
+		>,
+	): Rule<
+		About & { pluginId: string; url: string },
 		object,
 		object,
 		MessageId,
 		OptionsSchema
 	> {
-		// Use RuleCreator.createRule instead of Language.createRule
-		// But this is the original implementation
-		// flint-disable-next-line flint/ruleCreationMethods
-		return language.createRule({
+		return (
+			language.createRule as (
+				definition: RuleDefinition<
+					About & { pluginId: string; url: string },
+					GetLanguageAstNodesByName<Language>,
+					GetLanguageFileServices<Language>,
+					MessageId,
+					OptionsSchema
+				>,
+			) => Rule<
+				About & { pluginId: string; url: string },
+				object,
+				object,
+				MessageId,
+				OptionsSchema
+			>
+		)({
 			...rule,
 			about: {
 				...rule.about,

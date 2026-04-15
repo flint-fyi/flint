@@ -14,6 +14,7 @@
 		"module": "NodeNext",
 		"moduleDetection": "force",
 		"moduleResolution": "NodeNext",
+		"noErrorTruncation": true,
 		"noImplicitOverride": true,
 		"noUncheckedIndexedAccess": true,
 		"noUncheckedSideEffectImports": true,
