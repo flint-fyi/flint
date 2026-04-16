@@ -40,7 +40,6 @@ describe(parseDirectivesFromTypeScriptFile, () => {
 			{
 			  "directives": [
 			    {
-			      "id": "directive-0",
 			      "range": {
 			        "begin": {
 			          "column": 16,
@@ -59,7 +58,6 @@ describe(parseDirectivesFromTypeScriptFile, () => {
 			      "type": "disable-file",
 			    },
 			    {
-			      "id": "directive-1",
 			      "range": {
 			        "begin": {
 			          "column": 16,
