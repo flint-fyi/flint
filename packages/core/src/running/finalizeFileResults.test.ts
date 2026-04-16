@@ -31,7 +31,6 @@ function createDirective(
 describe(finalizeFileResults, () => {
 	it("does not create an unused directive report for a redundant matching directive", () => {
 		const redundantDirective = createDirective();
-		const unusedDirective = createDirective();
 
 		const actual = finalizeFileResults(
 			"/test.ts",
@@ -43,7 +42,7 @@ describe(finalizeFileResults, () => {
 							filePathAbsolute: "/test.ts",
 							sourceText: "",
 						},
-						directives: [unusedDirective],
+						directives: [redundantDirective],
 						redundantDirectives: [redundantDirective],
 						services: {},
 						[Symbol.dispose]: vi.fn(),
