@@ -4,15 +4,10 @@ import type { CommentDirectiveWithinFile } from "../types/directives.ts";
 import { computeDirectiveRanges } from "./computeDirectiveRanges.ts";
 import { createSelectionMatcher } from "./createSelectionMatcher.ts";
 
-let nextDirectiveId = 0;
-
 function createDirective(
-	overrides: Omit<CommentDirectiveWithinFile, "id">,
+	overrides: CommentDirectiveWithinFile,
 ): CommentDirectiveWithinFile {
-	return {
-		id: `directive-${nextDirectiveId++}`,
-		...overrides,
-	};
+	return overrides;
 }
 
 function createDirectiveRange(forLine: number) {

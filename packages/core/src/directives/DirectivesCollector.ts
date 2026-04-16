@@ -14,7 +14,6 @@ interface CollectedSelection {
 
 export class DirectivesCollector {
 	#directives: CommentDirective[] = [];
-	#nextDirectiveId = 0;
 	#redundantDirectives: CommentDirective[] = [];
 	#reports: FileReport[] = [];
 	#selectionsForFile: CollectedSelection[] = [];
@@ -42,7 +41,6 @@ export class DirectivesCollector {
 			.split(/\s+/)
 			.map((text) => text.trim());
 		const directive: CommentDirective = {
-			id: `directive-${this.#nextDirectiveId++}`,
 			range,
 			selections,
 			type,

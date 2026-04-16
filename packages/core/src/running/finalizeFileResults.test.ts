@@ -9,7 +9,6 @@ function createDirective(
 	overrides: Partial<CommentDirective> = {},
 ): CommentDirective {
 	return {
-		id: "directive-0",
 		range: {
 			begin: {
 				column: 0,

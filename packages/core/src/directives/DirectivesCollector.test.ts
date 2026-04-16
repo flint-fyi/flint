@@ -62,7 +62,6 @@ describe(DirectivesCollector, () => {
 			expect(actual).toEqual({
 				directives: [
 					{
-						id: "directive-0",
 						range,
 						selections: ["*"],
 						type: "disable-file",
@@ -84,13 +83,11 @@ describe(DirectivesCollector, () => {
 			expect(actual).toEqual({
 				directives: [
 					{
-						id: "directive-0",
 						range: createRange(0),
 						selections: ["a", "b"],
 						type: "disable-file",
 					},
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["b", "c"],
 						type: "disable-file",
@@ -98,7 +95,6 @@ describe(DirectivesCollector, () => {
 				],
 				redundantDirectives: [
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["b", "c"],
 						type: "disable-file",
@@ -107,7 +103,6 @@ describe(DirectivesCollector, () => {
 				reports: [
 					directiveReports.createAlreadyDisabled(
 						{
-							id: "directive-1",
 							range: createRange(1),
 							selections: ["c"],
 							type: "disable-file",
@@ -129,13 +124,11 @@ describe(DirectivesCollector, () => {
 			expect(actual).toEqual({
 				directives: [
 					{
-						id: "directive-0",
 						range: createRange(0),
 						selections: ["a*"],
 						type: "disable-file",
 					},
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["ab*"],
 						type: "disable-file",
@@ -143,7 +136,6 @@ describe(DirectivesCollector, () => {
 				],
 				redundantDirectives: [
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["ab*"],
 						type: "disable-file",
@@ -152,7 +144,6 @@ describe(DirectivesCollector, () => {
 				reports: [
 					directiveReports.createAlreadyDisabled(
 						{
-							id: "directive-1",
 							range: createRange(1),
 							selections: ["ab*"],
 							type: "disable-file",
@@ -174,7 +165,6 @@ describe(DirectivesCollector, () => {
 			expect(actual).toEqual({
 				directives: [
 					{
-						id: "directive-0",
 						range,
 						selections: ["a"],
 						type: "disable-file",
@@ -198,13 +188,11 @@ describe(DirectivesCollector, () => {
 			expect(actual).toEqual({
 				directives: [
 					{
-						id: "directive-0",
 						range: createRange(0),
 						selections: ["a", "b"],
 						type: "disable-file",
 					},
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["b", "c"],
 						type: "disable-next-line",
@@ -212,7 +200,6 @@ describe(DirectivesCollector, () => {
 				],
 				redundantDirectives: [
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["b", "c"],
 						type: "disable-next-line",
@@ -221,7 +208,6 @@ describe(DirectivesCollector, () => {
 				reports: [
 					directiveReports.createAlreadyDisabled(
 						{
-							id: "directive-1",
 							range: createRange(1),
 							selections: ["b", "c"],
 							type: "disable-next-line",
@@ -243,13 +229,11 @@ describe(DirectivesCollector, () => {
 			expect(actual).toEqual({
 				directives: [
 					{
-						id: "directive-0",
 						range: createRange(0),
 						selections: ["a", "b"],
 						type: "disable-lines-begin",
 					},
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["b", "c"],
 						type: "disable-lines-begin",
@@ -257,7 +241,6 @@ describe(DirectivesCollector, () => {
 				],
 				redundantDirectives: [
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["b", "c"],
 						type: "disable-lines-begin",
@@ -266,7 +249,6 @@ describe(DirectivesCollector, () => {
 				reports: [
 					directiveReports.createAlreadyDisabled(
 						{
-							id: "directive-1",
 							range: createRange(1),
 							selections: ["c"],
 							type: "disable-lines-begin",
@@ -288,13 +270,11 @@ describe(DirectivesCollector, () => {
 			expect(actual).toEqual({
 				directives: [
 					{
-						id: "directive-0",
 						range: createRange(0),
 						selections: ["a*"],
 						type: "disable-file",
 					},
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["ab*"],
 						type: "disable-lines-begin",
@@ -302,7 +282,6 @@ describe(DirectivesCollector, () => {
 				],
 				redundantDirectives: [
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["ab*"],
 						type: "disable-lines-begin",
@@ -311,7 +290,6 @@ describe(DirectivesCollector, () => {
 				reports: [
 					directiveReports.createAlreadyDisabled(
 						{
-							id: "directive-1",
 							range: createRange(1),
 							selections: ["ab*"],
 							type: "disable-lines-begin",
@@ -335,13 +313,11 @@ describe(DirectivesCollector, () => {
 			expect(actual).toEqual({
 				directives: [
 					{
-						id: "directive-0",
 						range: createRange(0),
 						selections: ["a", "b"],
 						type: "disable-lines-begin",
 					},
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["b", "c"],
 						type: "disable-lines-end",
@@ -367,13 +343,11 @@ describe(DirectivesCollector, () => {
 			expect(actual).toEqual({
 				directives: [
 					{
-						id: "directive-0",
 						range: createRange(0),
 						selections: ["a", "b"],
 						type: "disable-file",
 					},
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["b", "c"],
 						type: "disable-next-line",
@@ -381,7 +355,6 @@ describe(DirectivesCollector, () => {
 				],
 				redundantDirectives: [
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["b", "c"],
 						type: "disable-next-line",
@@ -390,7 +363,6 @@ describe(DirectivesCollector, () => {
 				reports: [
 					directiveReports.createAlreadyDisabled(
 						{
-							id: "directive-1",
 							range: createRange(1),
 							selections: ["c"],
 							type: "disable-next-line",
@@ -412,13 +384,11 @@ describe(DirectivesCollector, () => {
 			expect(actual).toEqual({
 				directives: [
 					{
-						id: "directive-0",
 						range: createRange(0),
 						selections: ["a", "b"],
 						type: "disable-lines-begin",
 					},
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["b", "c"],
 						type: "disable-next-line",
@@ -426,7 +396,6 @@ describe(DirectivesCollector, () => {
 				],
 				redundantDirectives: [
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["b", "c"],
 						type: "disable-next-line",
@@ -435,7 +404,6 @@ describe(DirectivesCollector, () => {
 				reports: [
 					directiveReports.createAlreadyDisabled(
 						{
-							id: "directive-1",
 							range: createRange(1),
 							selections: ["b", "c"],
 							type: "disable-next-line",
@@ -457,13 +425,11 @@ describe(DirectivesCollector, () => {
 			expect(actual).toEqual({
 				directives: [
 					{
-						id: "directive-0",
 						range: createRange(0),
 						selections: ["a*"],
 						type: "disable-lines-begin",
 					},
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["ab*"],
 						type: "disable-next-line",
@@ -471,7 +437,6 @@ describe(DirectivesCollector, () => {
 				],
 				redundantDirectives: [
 					{
-						id: "directive-1",
 						range: createRange(1),
 						selections: ["ab*"],
 						type: "disable-next-line",
@@ -480,7 +445,6 @@ describe(DirectivesCollector, () => {
 				reports: [
 					directiveReports.createAlreadyDisabled(
 						{
-							id: "directive-1",
 							range: createRange(1),
 							selections: ["ab*"],
 							type: "disable-next-line",

@@ -4,15 +4,8 @@ import type { CommentDirective } from "../types/directives.ts";
 import type { FileReport } from "../types/reports.ts";
 import { DirectivesFilterer } from "./DirectivesFilterer.ts";
 
-let nextDirectiveId = 0;
-
-function createDirective(
-	overrides: Omit<CommentDirective, "id">,
-): CommentDirective {
-	return {
-		id: `directive-${nextDirectiveId++}`,
-		...overrides,
-	};
+function createDirective(overrides: CommentDirective): CommentDirective {
+	return overrides;
 }
 
 function createReport(forLine: number, id: string) {
