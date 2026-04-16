@@ -33,13 +33,10 @@ export class RuleCreator<Presets extends string> {
 			MessageId,
 			OptionsSchema
 		>,
-	): Rule<
-		About & { pluginId: string; url: string },
-		object,
-		object,
-		MessageId,
-		OptionsSchema
-	> {
+	): Rule<About & { pluginId: string; url: string }, MessageId, OptionsSchema> {
+		// Use RuleCreator.createRule instead of Language.createRule
+		// But this is the original implementation
+		// flint-disable-next-line flint/ruleCreationMethods
 		return language.createRule({
 			...rule,
 			about: {

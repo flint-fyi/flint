@@ -3,6 +3,7 @@ import z from "zod/v4";
 
 import { createLanguage } from "../languages/createLanguage.ts";
 import { RuleCreator } from "../rules/RuleCreator.ts";
+import type { AnyLanguage } from "../types/languages.ts";
 import { createPlugin } from "./createPlugin.ts";
 
 const stubLanguage = createLanguage({
@@ -87,6 +88,10 @@ describe(createPlugin, () => {
 
 			// @ts-expect-error -- Rule option values must match the rule's schema.
 			plugin.rules({ withOptionalOption: { value: 123 } });
+		});
+
+		it("erases language internals from public rules", () => {
+			expectTypeOf(ruleStandalone.language).toEqualTypeOf<AnyLanguage>();
 		});
 	});
 });

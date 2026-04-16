@@ -1,5 +1,4 @@
 import {
-	type AnyRuleDefinition,
 	type CharacterReportRange,
 	createLanguage,
 	DirectivesCollector,
@@ -14,7 +13,6 @@ import {
 	type RuleContext,
 	type RuleReport,
 	type SourceFileWithLineMap,
-	type UnsafeAnyRule,
 } from "@flint.fyi/core";
 import { setTSProgramCreationProxy } from "@flint.fyi/ts-patch";
 import {
@@ -438,12 +436,11 @@ export function createVolarBasedLanguage<FileServices extends object>(
 				);
 			},
 		}),
-		createRule: (ruleDefinition: AnyRuleDefinition) => {
-			// flint-disable-next-line ts/anyReturns
+		createRule: (ruleDefinition) => {
 			return {
 				...ruleDefinition,
 				language: typescriptLanguage,
-			} as UnsafeAnyRule;
+			};
 		},
 	};
 }

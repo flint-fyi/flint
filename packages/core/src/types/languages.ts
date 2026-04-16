@@ -33,7 +33,7 @@ export type LanguageCreateRule<AstNodesByName, FileServices extends object> = <
 		MessageId,
 		OptionsSchema
 	>,
-) => Rule<About, object, object, MessageId, OptionsSchema>;
+) => Rule<About, MessageId, OptionsSchema>;
 
 /**
  * Description of a file's representation in the file system.
