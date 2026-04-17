@@ -2,4 +2,4 @@
 "@flint.fyi/core": patch
 ---
 
-fix(preset): add TS errors when preset is defined in types not used
+Fix rule types to reinstate well-typed configurations
