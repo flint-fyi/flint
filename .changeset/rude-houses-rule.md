@@ -8,4 +8,4 @@
 "@flint.fyi/vue-language": patch
 ---
 
-feat(core): report redundant wildcard comment directives
+Report redundant wildcard comment directives.
