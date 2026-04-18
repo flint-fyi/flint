@@ -4,42 +4,57 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.manValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "man": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "man": null
          ~~~~
          Invalid man: the value is \`null\`, but should be an \`Array\` or a \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "man": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "man": 123
          ~~~
          Invalid man: the type should be \`Array\` or \`string\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "man": ""
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "man": ""
          ~~
          Invalid man: the value is empty, but should be the path to a man file.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "man": {
     "invalid-bin": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "man": {
          ~
          Invalid man: the type should be \`Array\` or \`string\`, not \`object\`.
@@ -47,10 +62,12 @@ ruleTester.describe(directPropertyValidityRules.manValidity, {
     ~~~~~~~~~~~~~~~~~~
   }
   ~
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "man": [
     "./man/doc.one",
     "./man/doc.gz",
@@ -61,8 +78,10 @@ ruleTester.describe(directPropertyValidityRules.manValidity, {
     null,
     {}
   ]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "man": [
     "./man/doc.one",
     ~~~~~~~~~~~~~~~
@@ -89,7 +108,8 @@ ruleTester.describe(directPropertyValidityRules.manValidity, {
     ~~
     Invalid man: item at index 7 should be a string, not \`object\`.
   ]
-}`,
+}
+`,
 		},
 	],
 	valid: [

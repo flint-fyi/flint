@@ -4,54 +4,74 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.configValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "config": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "config": null
             ~~~~
             Invalid config: the value is \`null\`, but should be an \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "config": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "config": 123
             ~~~
             Invalid config: the type should be \`object\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "config": "string"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "config": "string"
             ~~~~~~~~
             Invalid config: the type should be \`object\`, not \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "config": ["array", "of", "values"]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "config": ["array", "of", "values"]
             ~~~~~~~~~~~~~~~~~~~~~~~~~
             Invalid config: the type should be \`object\`, not \`array\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "config": []
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "config": []
             ~~
             Invalid config: the type should be \`object\`, not \`array\`.
-}`,
+}
+`,
 		},
 	],
 	valid: [

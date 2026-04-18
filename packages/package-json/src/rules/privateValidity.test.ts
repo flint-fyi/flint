@@ -4,54 +4,74 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.privateValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "private": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "private": null
              ~~~~
              Invalid private: the value is \`null\`, but should be a \`boolean\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "private": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "private": 123
              ~~~
              Invalid private: the type should be a \`boolean\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "private": {}
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "private": {}
              ~~
              Invalid private: the type should be a \`boolean\`, not \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "private": []
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "private": []
              ~~
              Invalid private: the type should be a \`boolean\`, not \`Array\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "private": "true"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "private": "true"
              ~~~~~~
              Invalid private: the type should be a \`boolean\`, not \`string\`.
-}`,
+}
+`,
 		},
 	],
 	valid: [

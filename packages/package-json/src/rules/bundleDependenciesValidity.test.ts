@@ -4,42 +4,57 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.bundleDependenciesValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "bundleDependencies": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bundleDependencies": null
                         ~~~~
                         Invalid bundleDependencies: the value is \`null\`, but should be an \`Array\` or a \`boolean\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bundleDependencies": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bundleDependencies": 123
                         ~~~
                         Invalid bundleDependencies: the type should be \`Array\` or \`boolean\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bundleDependencies": "invalid"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bundleDependencies": "invalid"
                         ~~~~~~~~~
                         Invalid bundleDependencies: the type should be \`Array\` or \`boolean\`, not \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bundleDependencies": {
     "invalid-bin": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bundleDependencies": {
                         ~
                         Invalid bundleDependencies: the type should be \`Array\` or \`boolean\`, not \`object\`.
@@ -47,28 +62,36 @@ ruleTester.describe(directPropertyValidityRules.bundleDependenciesValidity, {
     ~~~~~~~~~~~~~~~~~~
   }
   ~
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bundleDependencies": {}
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bundleDependencies": {}
                         ~~
                         Invalid bundleDependencies: the type should be \`Array\` or \`boolean\`, not \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bundleDependencies": [
     "valid",
     "",
     123,
     null
   ]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bundleDependencies": [
     "valid",
     "",
@@ -81,45 +104,61 @@ ruleTester.describe(directPropertyValidityRules.bundleDependenciesValidity, {
     ~~~~
     Invalid bundleDependencies: item at index 3 should be a string, not \`null\`.
   ]
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bundledDependencies": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bundledDependencies": null
                          ~~~~
                          Invalid bundleDependencies: the value is \`null\`, but should be an \`Array\` or a \`boolean\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bundledDependencies": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bundledDependencies": 123
                          ~~~
                          Invalid bundleDependencies: the type should be \`Array\` or \`boolean\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bundledDependencies": "invalid"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bundledDependencies": "invalid"
                          ~~~~~~~~~
                          Invalid bundleDependencies: the type should be \`Array\` or \`boolean\`, not \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bundledDependencies": {
     "invalid-bin": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bundledDependencies": {
                          ~
                          Invalid bundleDependencies: the type should be \`Array\` or \`boolean\`, not \`object\`.
@@ -127,28 +166,36 @@ ruleTester.describe(directPropertyValidityRules.bundleDependenciesValidity, {
     ~~~~~~~~~~~~~~~~~~
   }
   ~
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bundledDependencies": {}
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bundledDependencies": {}
                          ~~
                          Invalid bundleDependencies: the type should be \`Array\` or \`boolean\`, not \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bundledDependencies": [
     "valid",
     "",
     123,
     null
   ]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bundledDependencies": [
     "valid",
     "",
@@ -161,7 +208,8 @@ ruleTester.describe(directPropertyValidityRules.bundleDependenciesValidity, {
     ~~~~
     Invalid bundleDependencies: item at index 3 should be a string, not \`null\`.
   ]
-}`,
+}
+`,
 		},
 	],
 	valid: [

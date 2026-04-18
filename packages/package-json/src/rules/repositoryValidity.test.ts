@@ -4,68 +4,91 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.repositoryValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "repository": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "repository": null
                 ~~~~
                 Invalid repository: the value is \`null\`, but should be an \`object\` or a \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "repository": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "repository": 123
                 ~~~
                 Invalid repository: the type should be \`object\` or \`string\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "repository": ["git", "url"]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "repository": ["git", "url"]
                 ~~~~~~~~~~~~~~
                 Invalid repository: the type should be \`object\` or \`string\`, not \`Array\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "repository": ""
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "repository": ""
                 ~~
                 Invalid repository: the value is empty, but should be repository shorthand string.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "repository": {
     "type": "git",
     "url": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "repository": {
     "type": "git",
     "url": 123
     ~~~~~~~~~~
     Invalid repository: the value of property "url" should be a string.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "repository": {
     "directory": "packages/lib-a"
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "repository": {
                 ~
                 Invalid repository: repository is missing property "type", which should be the type of repository this is (e.g. "git").
@@ -77,57 +100,78 @@ ruleTester.describe(directPropertyValidityRules.repositoryValidity, {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   }
   ~
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "repository": "svn:npm/example"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "repository": "svn:npm/example"
                 ~~~~~~~~~~~~~~~~~
                 Invalid repository: the value "svn:npm/example" is invalid; it should be the shorthand for a repository (e.g. "github:npm/example").
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "repository": "eslint-plugin-package-json"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "repository": "eslint-plugin-package-json"
                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 Invalid repository: the value "eslint-plugin-package-json" is invalid; it should be the shorthand for a repository (e.g. "github:npm/example").
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "repository": "git:npm/example"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "repository": "git:npm/example"
                 ~~~~~~~~~~~~~~~~~
                 Invalid repository: the value "git:npm/example" is invalid; it should be the shorthand for a repository (e.g. "github:npm/example").
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "repository": "github:npm/example/repo"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "repository": "github:npm/example/repo"
                 ~~~~~~~~~~~~~~~~~~~~~~~~~
                 Invalid repository: the value "github:npm/example/repo" is invalid; it should be the shorthand for a repository (e.g. "github:npm/example").
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "repository": "org/user/repo"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "repository": "org/user/repo"
                 ~~~~~~~~~~~~~~~
                 Invalid repository: the value "org/user/repo" is invalid; it should be the shorthand for a repository (e.g. "github:npm/example").
-}`,
+}
+`,
 		},
 	],
 	valid: [

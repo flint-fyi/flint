@@ -35,52 +35,208 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 		},
 		{
 			code: `{
-  "publishConfig": ["array", "of", "values"]
+  "publishConfig": {
+    "access": "not right"
+  }
 }`,
 			snapshot: `{
-  "publishConfig": ["array", "of", "values"]
-                   ~~~~~~~~~~~~~~~~~~~~~~~~~
-                   Invalid publishConfig: the type should be \`object\`, not \`Array\`.
+  "publishConfig": {
+    "access": "not right"
+    ~~~~~~~~~~~~~~~~~~~~~
+    Invalid publishConfig: the value "not right" is not valid. Valid types are: public, restricted.
+  }
 }`,
 		},
 		{
 			code: `{
   "publishConfig": {
-    "access": "not right",
-    "bin": "",
-    "cpu": ["", "   "],
-    "directory": "",
-    "exports": {
-      "": "./dist/index.js",
-      "./secondary": ""
-    },
-    "main": "",
-    "provenance": null,
+    "access": ""
+  }
+}`,
+			snapshot: `{
+  "publishConfig": {
+    "access": ""
+    ~~~~~~~~~~~~
+    Invalid publishConfig: the value is empty, but should be "public" or "restricted".
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "access": []
+  }
+}`,
+			snapshot: `{
+  "publishConfig": {
+    "access": []
+    ~~~~~~~~~~~~
+    Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "bin": ""
+  }
+}`,
+			snapshot: `{
+  "publishConfig": {
+    "bin": ""
+    ~~~~~~~~~
+    Invalid publishConfig: the value is empty, but should be a relative path.
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "bin": 123
+  }
+}`,
+			snapshot: `{
+  "publishConfig": {
+    "bin": 123
+    ~~~~~~~~~~
+    Invalid publishConfig: the type should be \`string\` or \`object\`, not \`number\`.
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "cpu": 123
+  }
+}`,
+			snapshot: `{
+  "publishConfig": {
+    "cpu": 123
+    ~~~~~~~~~~
+    Invalid publishConfig: the type should be \`Array\`, not \`number\`.
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "directory": ""
+  }
+}`,
+			snapshot: `{
+  "publishConfig": {
+    "directory": ""
+    ~~~~~~~~~~~~~~~
+    Invalid publishConfig: the value is empty, but should be the path to a subdirectory.
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "directory": 123
+  }
+}`,
+			snapshot: `{
+  "publishConfig": {
+    "directory": 123
+    ~~~~~~~~~~~~~~~~
+    Invalid publishConfig: the type should be a \`string\`, not \`number\`.
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "directory": []
+  }
+}`,
+			snapshot: `{
+  "publishConfig": {
+    "directory": []
+    ~~~~~~~~~~~~~~~
+    Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "main": ""
+  }
+}`,
+			snapshot: `{
+  "publishConfig": {
+    "main": ""
+    ~~~~~~~~~~
+    Invalid publishConfig: the value is empty, but should be the path to the package's main module.
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "main": 123
+  }
+}`,
+			snapshot: `{
+  "publishConfig": {
+    "main": 123
+    ~~~~~~~~~~~
+    Invalid publishConfig: the type should be a \`string\`, not \`number\`.
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "provenance": null
+  }
+}`,
+			snapshot: `{
+  "publishConfig": {
+    "provenance": null
+    ~~~~~~~~~~~~~~~~~~
+    Invalid publishConfig: the value is \`null\`, but should be a \`boolean\`.
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "provenance": 123
+  }
+}`,
+			snapshot: `{
+  "publishConfig": {
+    "provenance": 123
+    ~~~~~~~~~~~~~~~~~
+    Invalid publishConfig: the type should be a \`boolean\`, not \`number\`.
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "provenance": []
+  }
+}`,
+			snapshot: `{
+  "publishConfig": {
+    "provenance": []
+    ~~~~~~~~~~~~~~~~
+    Invalid publishConfig: the type should be a \`boolean\`, not \`Array\`.
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
     "tag": ""
   }
 }`,
 			snapshot: `{
   "publishConfig": {
-    "access": "not right",
-    ~~~~~~~~~~~~~~~~~~~~~
-    Invalid publishConfig: the value "not right" is not valid. Valid types are: public, restricted.
-    "bin": "",
-    ~~~~~~~~~
-    Invalid publishConfig: the value is empty, but should be a relative path.
-    "cpu": ["", "   "],
-    "directory": "",
-    ~~~~~~~~~~~~~~~
-    Invalid publishConfig: the value is empty, but should be the path to a subdirectory.
-    "exports": {
-      "": "./dist/index.js",
-      "./secondary": ""
-    },
-    "main": "",
-    ~~~~~~~~~~
-    Invalid publishConfig: the value is empty, but should be the path to the package's main module.
-    "provenance": null,
-    ~~~~~~~~~~~~~~~~~~
-    Invalid publishConfig: the value is \`null\`, but should be a \`boolean\`.
     "tag": ""
     ~~~~~~~~~
     Invalid publishConfig: the value is empty, but should be a release tag.
@@ -90,43 +246,11 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 		{
 			code: `{
   "publishConfig": {
-    "access": "",
-    "bin": 123,
-    "cpu": 123,
-    "directory": 123,
-    "exports": {
-      "": 123,
-      "./secondary": null
-    },
-    "main": 123,
-    "provenance": 123,
     "tag": 123
   }
 }`,
 			snapshot: `{
   "publishConfig": {
-    "access": "",
-    ~~~~~~~~~~~~
-    Invalid publishConfig: the value is empty, but should be "public" or "restricted".
-    "bin": 123,
-    ~~~~~~~~~~
-    Invalid publishConfig: the type should be \`string\` or \`object\`, not \`number\`.
-    "cpu": 123,
-    ~~~~~~~~~~
-    Invalid publishConfig: the type should be \`Array\`, not \`number\`.
-    "directory": 123,
-    ~~~~~~~~~~~~~~~~
-    Invalid publishConfig: the type should be a \`string\`, not \`number\`.
-    "exports": {
-      "": 123,
-      "./secondary": null
-    },
-    "main": 123,
-    ~~~~~~~~~~~
-    Invalid publishConfig: the type should be a \`string\`, not \`number\`.
-    "provenance": 123,
-    ~~~~~~~~~~~~~~~~~
-    Invalid publishConfig: the type should be a \`boolean\`, not \`number\`.
     "tag": 123
     ~~~~~~~~~~
     Invalid publishConfig: the type should be a \`string\`, not \`number\`.
@@ -136,23 +260,11 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 		{
 			code: `{
   "publishConfig": {
-    "access": [],
-    "directory": [],
-    "provenance": [],
     "tag": []
   }
 }`,
 			snapshot: `{
   "publishConfig": {
-    "access": [],
-    ~~~~~~~~~~~~
-    Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
-    "directory": [],
-    ~~~~~~~~~~~~~~~
-    Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
-    "provenance": [],
-    ~~~~~~~~~~~~~~~~
-    Invalid publishConfig: the type should be a \`boolean\`, not \`Array\`.
     "tag": []
     ~~~~~~~~~
     Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
@@ -172,26 +284,80 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 		{
 			code: `{
   "publishConfig": {
-    "access": "restricted",
-    "bin": "./bin/cli.js",
-    "cpu": ["arm64", "x64"],
-    "directory": "dist",
-    "exports": {
-      ".": "./dist/index.js",
-      "./secondary": "./dist/secondary.js"
-    },
-    "main": "./dist/index.js",
-    "provenance": true,
-    "tag": "dev"
+    "access": "restricted"
   }
 }`,
 		},
 		{
 			code: `{
   "publishConfig": {
-    "access": null,
-    "cpu": [],
+    "access": null
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "bin": "./bin/cli.js"
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "cpu": ["arm64", "x64"]
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "cpu": []
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "directory": "dist"
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
     "exports": "./dist/index.js"
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./secondary": "./dist/secondary.js"
+    }
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "main": "./dist/index.js"
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "provenance": true
+  }
+}`,
+		},
+		{
+			code: `{
+  "publishConfig": {
+    "tag": "dev"
   }
 }`,
 		},

@@ -4,44 +4,60 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.directoriesValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "directories": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "directories": null
                  ~~~~
                  Invalid directories: the value is \`null\`, but should be an \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "directories": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "directories": 123
                  ~~~
                  Invalid directories: the type should be \`object\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "directories": ["dist/bin", "docs"]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "directories": ["dist/bin", "docs"]
                  ~~~~~~~~~~~~~~~~~~~~
                  Invalid directories: the type should be \`object\`, not \`array\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "directories": "./script.js"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "directories": "./script.js"
                  ~~~~~~~~~~~~~
                  Invalid directories: the type should be \`object\`, not \`string\`.
-}`,
+}
+`,
 		},
 	],
 	valid: [

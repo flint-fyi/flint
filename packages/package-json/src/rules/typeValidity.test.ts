@@ -4,34 +4,46 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.typeValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "type": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "type": null
           ~~~~
           Invalid type: the value is \`null\`, but should be a \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "type": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "type": 123
           ~~~
           Invalid type: the type should be a \`string\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "type": ""
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "type": ""
           ~~
           Invalid type: the value is empty, but should be one of: commonjs, module.
-}`,
+}
+`,
 		},
 	],
 	valid: [

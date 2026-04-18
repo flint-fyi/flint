@@ -4,81 +4,108 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.enginesValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "engines": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "engines": null
              ~~~~
              Invalid engines: the value is \`null\`, but should be an \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "engines": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "engines": 123
              ~~~
              Invalid engines: the type should be \`object\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "engines": ["node"]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "engines": ["node"]
              ~~~~~~~~
              Invalid engines: the type should be \`object\`, not \`Array\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "engines": "node"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "engines": "node"
              ~~~~~~
              Invalid engines: the type should be \`object\`, not \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "engines": {
     "npm": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "engines": {
     "npm": 123
     ~~~~~~~~~~
     Invalid engines: the value of property "npm" should be a string.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "engines": {
     "invalid-bin": ""
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "engines": {
     "invalid-bin": ""
     ~~~~~~~~~~~~~~~~~
     Invalid engines: the value of property "invalid-bin" is empty, but should be a semver range.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "engines": {
     "": "invalid-key",
     "   ": "invalid-key"
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "engines": {
     "": "invalid-key",
     ~~~~~~~~~~~~~~~~~
@@ -87,7 +114,8 @@ ruleTester.describe(directPropertyValidityRules.enginesValidity, {
     ~~~~~~~~~~~~~~~~~~~~
     Invalid engines: property 1 has an empty key, but should be a runtime or package manager.
   }
-}`,
+}
+`,
 		},
 	],
 	valid: [

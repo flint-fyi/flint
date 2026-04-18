@@ -4,52 +4,71 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.keywordsValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "keywords": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "keywords": null
               ~~~~
               Invalid keywords: the value is \`null\`, but should be an \`Array\` of strings.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "keywords": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "keywords": 123
               ~~~
               Invalid keywords: the type should be \`Array\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "keywords": "invalid"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "keywords": "invalid"
               ~~~~~~~~~
               Invalid keywords: the type should be \`Array\`, not \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "keywords": {}
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "keywords": {}
               ~~
               Invalid keywords: the type should be \`Array\`, not \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "keywords": {
     "invalid-bin": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "keywords": {
               ~
               Invalid keywords: the type should be \`Array\`, not \`object\`.
@@ -57,13 +76,17 @@ ruleTester.describe(directPropertyValidityRules.keywordsValidity, {
     ~~~~~~~~~~~~~~~~~~
   }
   ~
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "keywords": ["valid", "", 123, null, {}]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "keywords": ["valid", "", 123, null, {}]
                         ~~
                         Invalid keywords: item at index 1 is empty, but should be a keyword string.
@@ -73,7 +96,8 @@ ruleTester.describe(directPropertyValidityRules.keywordsValidity, {
                                  Invalid keywords: item at index 3 should be a string, not \`null\`.
                                        ~~
                                        Invalid keywords: item at index 4 should be a string, not \`object\`.
-}`,
+}
+`,
 		},
 	],
 	valid: [

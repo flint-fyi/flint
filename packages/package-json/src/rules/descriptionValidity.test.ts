@@ -4,74 +4,102 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.descriptionValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "description": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "description": null
                  ~~~~
                  Invalid description: the value is \`null\`, but should be a \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "description": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "description": 123
                  ~~~
                  Invalid description: the type should be a \`string\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "description": {}
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "description": {}
                  ~~
                  Invalid description: the type should be a \`string\`, not \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "description": []
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "description": []
                  ~~
                  Invalid description: the type should be a \`string\`, not \`Array\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "description": true
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "description": true
                  ~~~~
                  Invalid description: the type should be a \`string\`, not \`boolean\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "description": ""
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "description": ""
                  ~~
                  Invalid description: the value is empty, but should be a description.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "description": "   "
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "description": "   "
                  ~~~~~
                  Invalid description: the value is empty, but should be a description.
-}`,
+}
+`,
 		},
 	],
 	valid: [

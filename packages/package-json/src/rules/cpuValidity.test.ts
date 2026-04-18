@@ -4,50 +4,69 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.cpuValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "cpu": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "cpu": null
          ~~~~
          Invalid cpu: the value is \`null\`, but should be an \`Array\` of strings.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "cpu": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "cpu": 123
          ~~~
          Invalid cpu: the type should be \`Array\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "cpu": {}
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "cpu": {}
          ~~
          Invalid cpu: the type should be \`Array\`, not \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "cpu": "./script.js"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "cpu": "./script.js"
          ~~~~~~~~~~~~~
          Invalid cpu: the type should be \`Array\`, not \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "cpu": ["", true, 123, {}, []]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "cpu": ["", true, 123, {}, []]
           ~~
           Invalid cpu: item at index 0 is empty, but should be the name of a CPU architecture.
@@ -59,19 +78,24 @@ ruleTester.describe(directPropertyValidityRules.cpuValidity, {
                          Invalid cpu: item at index 3 should be a string, not \`object\`.
                              ~~
                              Invalid cpu: item at index 4 should be a string, not \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "cpu": ["silver-mt-zion", "nin"]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "cpu": ["silver-mt-zion", "nin"]
           ~~~~~~~~~~~~~~~~
           Invalid cpu: the value "silver-mt-zion" is not valid. Valid CPU values are: arm, arm64, ia32, loong64, mips, mipsel, ppc64, riscv64, s390, s390x, x64.
                             ~~~~~
                             Invalid cpu: the value "nin" is not valid. Valid CPU values are: arm, arm64, ia32, loong64, mips, mipsel, ppc64, riscv64, s390, s390x, x64.
-}`,
+}
+`,
 		},
 	],
 	valid: [

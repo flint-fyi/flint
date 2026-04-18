@@ -4,44 +4,60 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.mainValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "main": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "main": null
           ~~~~
           Invalid main: the value is \`null\`, but should be a \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "main": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "main": 123
           ~~~
           Invalid main: the type should be a \`string\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "main": []
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "main": []
           ~~
           Invalid main: the type should be a \`string\`, not \`Array\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "main": ""
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "main": ""
           ~~
           Invalid main: the value is empty, but should be the path to the package's main module.
-}`,
+}
+`,
 		},
 	],
 	valid: [

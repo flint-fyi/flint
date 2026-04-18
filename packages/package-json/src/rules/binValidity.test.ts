@@ -4,95 +4,126 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.binValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "bin": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bin": null
          ~~~~
          Invalid bin: the value is \`null\`, but should be a \`string\` or an \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bin": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bin": 123
          ~~~
          Invalid bin: the type should be \`string\` or \`object\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bin": ["./cli.js"]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bin": ["./cli.js"]
          ~~~~~~~~~~~~
          Invalid bin: the type should be \`string\` or \`object\`, not \`array\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bin": ""
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bin": ""
          ~~
          Invalid bin: the value is empty, but should be a relative path.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bin": {
     "invalid-bin": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bin": {
     "invalid-bin": 123
     ~~~~~~~~~~~~~~~~~~
     Invalid bin: the value of property "invalid-bin" should be a string.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bin": {
     "invalid-bin": ""
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bin": {
     "invalid-bin": ""
     ~~~~~~~~~~~~~~~~~
     Invalid bin: the value of property "invalid-bin" is empty, but should be a relative path.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bin": {
     "": "invalid-key"
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bin": {
     "": "invalid-key"
     ~~~~~~~~~~~~~~~~~
     Invalid bin: property 0 has an empty key, but should be a valid command name.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "bin": {
     "": "invalid-key",
     "   ": "invalid-key"
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "bin": {
     "": "invalid-key",
     ~~~~~~~~~~~~~~~~~
@@ -101,7 +132,8 @@ ruleTester.describe(directPropertyValidityRules.binValidity, {
     ~~~~~~~~~~~~~~~~~~~~
     Invalid bin: property 1 has an empty key, but should be a valid command name.
   }
-}`,
+}
+`,
 		},
 	],
 	valid: [

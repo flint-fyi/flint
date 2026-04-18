@@ -4,100 +4,228 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.optionalDependenciesValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "optionalDependencies": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "optionalDependencies": null
                           ~~~~
                           Invalid optionalDependencies: the value is \`null\`, but should be a record of dependencies.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "optionalDependencies": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "optionalDependencies": 123
                           ~~~
                           Invalid optionalDependencies: the type should be \`object\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "optionalDependencies": "./script.js"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "optionalDependencies": "./script.js"
                           ~~~~~~~~~~~~~
                           Invalid optionalDependencies: the type should be \`object\`, not \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "optionalDependencies": []
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "optionalDependencies": []
                           ~~
                           Invalid optionalDependencies: the type should be \`object\`, not \`array\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "optionalDependencies": {
-    "david": "bowie",
-    "trent": 123,
-    "the-fragile": null,
-    "pink-floyd": {},
-    "childish-gambino": "workspace"
+    "example": "bowie"
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "optionalDependencies": {
-    "david": "bowie",
-    ~~~~~~~~~~~~~~~~
-    Invalid optionalDependencies: invalid version range for dependency david: bowie.
-    "trent": 123,
-    ~~~~~~~~~~~~
-    Invalid optionalDependencies: dependency version for trent should be a string: 123.
-    "the-fragile": null,
-    ~~~~~~~~~~~~~~~~~~~
-    Invalid optionalDependencies: dependency version for the-fragile should be a string: null.
-    "pink-floyd": {},
-    ~~~~~~~~~~~~~~~~
-    Invalid optionalDependencies: dependency version for pink-floyd should be a string: [object Object].
-    "childish-gambino": "workspace"
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Invalid optionalDependencies: invalid version range for dependency childish-gambino: workspace.
+    "example": "bowie"
+    ~~~~~~~~~~~~~~~~~~
+    Invalid optionalDependencies: invalid version range for dependency example: bowie.
   }
-}`,
+}
+`,
+		},
+		{
+			code: `
+{
+  "optionalDependencies": {
+    "example": 123
+  }
+}
+`,
+			snapshot: `
+{
+  "optionalDependencies": {
+    "example": 123
+    ~~~~~~~~~~~~~~
+    Invalid optionalDependencies: dependency version for example should be a string: 123.
+  }
+}
+`,
+		},
+		{
+			code: `
+{
+  "optionalDependencies": {
+    "example": null
+  }
+}
+`,
+			snapshot: `
+{
+  "optionalDependencies": {
+    "example": null
+    ~~~~~~~~~~~~~~~
+    Invalid optionalDependencies: dependency version for example should be a string: null.
+  }
+}
+`,
+		},
+		{
+			code: `
+{
+  "optionalDependencies": {
+    "example": {}
+  }
+}
+`,
+			snapshot: `
+{
+  "optionalDependencies": {
+    "example": {}
+    ~~~~~~~~~~~~~
+    Invalid optionalDependencies: dependency version for example should be a string: [object Object].
+  }
+}
+`,
+		},
+		{
+			code: `
+{
+  "optionalDependencies": {
+    "example": "workspace"
+  }
+}
+`,
+			snapshot: `
+{
+  "optionalDependencies": {
+    "example": "workspace"
+    ~~~~~~~~~~~~~~~~~~~~~~
+    Invalid optionalDependencies: invalid version range for dependency example: workspace.
+  }
+}
+`,
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`
+{
   "optionalDependencies": {}
-}`,
-		},
-		{
-			code: `{
+}
+`,
+		`
+{
   "optionalDependencies": {
-    "silver-mt-zion": "^1.2.3",
-    "nin": "file:./nin",
-    "gybe": "catalog:",
-    "radiohead": "git+https://github.com/user/repo.git",
-    "sigur-ros": "https://example.com/sigur-ros.tgz",
-    "explosions-in-the-sky": "workspace:^",
-    "alt-j": "workspace:~",
-    "run-the-jewels": "workspace:*",
-    "thee-silver-mt-zion": "workspace:^1.2.3",
-    "efrim-manuel-menuck": "npm:bar@^1.0.0"
+    "example": "^1.2.3"
   }
-}`,
-		},
+}
+`,
+		`
+{
+  "optionalDependencies": {
+    "example": "file:./example"
+  }
+}
+`,
+		`
+{
+  "optionalDependencies": {
+    "example": "catalog:"
+  }
+}
+`,
+		`
+{
+  "optionalDependencies": {
+    "example": "git+https://github.com/user/repo.git"
+  }
+}
+`,
+		`
+{
+  "optionalDependencies": {
+    "example": "https://example.com/example.tgz"
+  }
+}
+`,
+		`
+{
+  "optionalDependencies": {
+    "example": "workspace:^"
+  }
+}
+`,
+		`
+{
+  "optionalDependencies": {
+    "example": "workspace:~"
+  }
+}
+`,
+		`
+{
+  "optionalDependencies": {
+    "example": "workspace:*"
+  }
+}
+`,
+		`
+{
+  "optionalDependencies": {
+    "example": "workspace:^1.2.3"
+  }
+}
+`,
+		`
+{
+  "optionalDependencies": {
+    "example": "npm:example@^1.0.0"
+  }
+}
+`,
 	],
 });

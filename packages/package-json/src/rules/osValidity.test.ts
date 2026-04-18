@@ -4,52 +4,71 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.osValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "os": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "os": null
         ~~~~
         Invalid os: the value is \`null\`, but should be an \`Array\` of strings.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "os": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "os": 123
         ~~~
         Invalid os: the type should be \`Array\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "os": "invalid"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "os": "invalid"
         ~~~~~~~~~
         Invalid os: the type should be \`Array\`, not \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "os": {}
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "os": {}
         ~~
         Invalid os: the type should be \`Array\`, not \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "os": {
     "invalid-bin": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "os": {
         ~
         Invalid os: the type should be \`Array\`, not \`object\`.
@@ -57,13 +76,17 @@ ruleTester.describe(directPropertyValidityRules.osValidity, {
     ~~~~~~~~~~~~~~~~~~
   }
   ~
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "os": ["invalid", "", 123, null, {}]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "os": ["invalid", "", 123, null, {}]
          ~~~~~~~~~
          Invalid os: the value "invalid" is not valid. Valid OS values are: aix, android, darwin, freebsd, linux, openbsd, sunos, win32.
@@ -75,7 +98,8 @@ ruleTester.describe(directPropertyValidityRules.osValidity, {
                              Invalid os: item at index 3 should be a string, not \`null\`.
                                    ~~
                                    Invalid os: item at index 4 should be a string, not \`object\`.
-}`,
+}
+`,
 		},
 	],
 	valid: [

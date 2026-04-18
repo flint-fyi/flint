@@ -4,95 +4,126 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.exportsValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "exports": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "exports": null
              ~~~~
              Invalid exports: the value is \`null\`, but should be an \`object\` or \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "exports": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "exports": 123
              ~~~
              Invalid exports: the type should be \`object\` or \`string\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "exports": ["./index.js"]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "exports": ["./index.js"]
              ~~~~~~~~~~~~~~
              Invalid exports: the type should be \`object\` or \`string\`, not \`Array\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "exports": ""
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "exports": ""
              ~~
              Invalid exports: the value is empty, but should be an entry point path.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "exports": {
     "./invalid": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "exports": {
     "./invalid": 123
     ~~~~~~~~~~~~~~~~
     Invalid exports: the value of "./invalid" should be either an entry point path or an object of export conditions.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "exports": {
     "./invalid": ""
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "exports": {
     "./invalid": ""
     ~~~~~~~~~~~~~~~
     Invalid exports: the value of "./invalid" is empty, but should be an entry point path.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "exports": {
     "": "invalid"
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "exports": {
     "": "invalid"
     ~~~~~~~~~~~~~
     Invalid exports: property 0 has an empty key, but should be an export condition.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "exports": {
     "": "invalid",
     "   ": "invalid"
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "exports": {
     "": "invalid",
     ~~~~~~~~~~~~~
@@ -101,7 +132,8 @@ ruleTester.describe(directPropertyValidityRules.exportsValidity, {
     ~~~~~~~~~~~~~~~~
     Invalid exports: property 1 has an empty key, but should be an export condition.
   }
-}`,
+}
+`,
 		},
 	],
 	valid: [

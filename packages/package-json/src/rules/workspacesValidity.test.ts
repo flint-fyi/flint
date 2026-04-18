@@ -4,52 +4,71 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.workspacesValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "workspaces": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "workspaces": null
                 ~~~~
                 Invalid workspaces: the value is \`null\`, but should be an \`Array\` of strings.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "workspaces": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "workspaces": 123
                 ~~~
                 Invalid workspaces: the type should be \`Array\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "workspaces": "invalid"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "workspaces": "invalid"
                 ~~~~~~~~~
                 Invalid workspaces: the type should be \`Array\`, not \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "workspaces": {}
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "workspaces": {}
                 ~~
                 Invalid workspaces: the type should be \`Array\`, not \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "workspaces": {
     "invalid-bin": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "workspaces": {
                 ~
                 Invalid workspaces: the type should be \`Array\`, not \`object\`.
@@ -57,13 +76,17 @@ ruleTester.describe(directPropertyValidityRules.workspacesValidity, {
     ~~~~~~~~~~~~~~~~~~
   }
   ~
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "workspaces": ["valid", "", 123, null, {}]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "workspaces": ["valid", "", 123, null, {}]
                           ~~
                           Invalid workspaces: item at index 1 is empty, but should be a file path or glob pattern.
@@ -73,22 +96,26 @@ ruleTester.describe(directPropertyValidityRules.workspacesValidity, {
                                    Invalid workspaces: item at index 3 should be a string, not \`null\`.
                                          ~~
                                          Invalid workspaces: item at index 4 should be a string, not \`object\`.
-}`,
+}
+`,
 		},
 	],
 	valid: [
 		{
-			code: `{}`,
+			code: `{}
+`,
 		},
 		{
 			code: `{
   "workspaces": []
-}`,
+}
+`,
 		},
 		{
 			code: `{
   "workspaces": ["./app", "./packages/*"]
-}`,
+}
+`,
 		},
 	],
 });

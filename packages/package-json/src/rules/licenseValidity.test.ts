@@ -4,44 +4,60 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.licenseValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "license": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "license": null
              ~~~~
              Invalid license: the value is \`null\`, but should be a \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "license": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "license": 123
              ~~~
              Invalid license: the type should be a \`string\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "license": ""
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "license": ""
              ~~
              Invalid license: the value is empty, but should be a valid license.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "license": "not-a-license"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "license": "not-a-license"
              ~~~~~~~~~~~~~~~
              Invalid license: license should be a valid SPDX license expression (without "LicenseRef"), "UNLICENSED", or "SEE LICENSE IN <filename>".
-}`,
+}
+`,
 		},
 	],
 	valid: [

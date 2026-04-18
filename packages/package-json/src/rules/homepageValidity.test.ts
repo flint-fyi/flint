@@ -4,44 +4,60 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.homepageValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "homepage": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "homepage": null
               ~~~~
               Invalid homepage: the value is \`null\`, but should be a \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "homepage": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "homepage": 123
               ~~~
               Invalid homepage: the type should be a \`string\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "homepage": ""
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "homepage": ""
               ~~
               Invalid homepage: the value is empty, but should be a valid url.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "homepage": "not-a-homepage"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "homepage": "not-a-homepage"
               ~~~~~~~~~~~~~~~~
               Invalid homepage: the value is not a valid url.
-}`,
+}
+`,
 		},
 	],
 	valid: [
@@ -50,12 +66,12 @@ ruleTester.describe(directPropertyValidityRules.homepageValidity, {
 		},
 		{
 			code: `{
-  "homepage": "https://nin.com"
+  "homepage": "https://flint.fyi"
 }`,
 		},
 		{
 			code: `{
-  "homepage": "http://gybe.com"
+  "homepage": "http://typescriptlang.org"
 }`,
 		},
 	],

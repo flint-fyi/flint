@@ -20,7 +20,7 @@ export function createDirectPropertyValidityRule(
 
 	const rule = ruleCreator.createRule(jsonLanguage, {
 		about: {
-			description: `Enforce that the \`${propertyName}\`${propertyNameAliases.length ? ` (also: ${propertyNameAliases.map((alias) => `\`${alias}\``).join(", ")})` : ""} property is valid.`,
+			description: `Enforces that the \`${propertyName}\`${propertyNameAliases.length ? ` (also: ${propertyNameAliases.map((alias) => `\`${alias}\``).join(", ")})` : ""} property is valid.`,
 			id,
 			presets: ["logical"],
 		},
@@ -46,7 +46,7 @@ export function createDirectPropertyValidityRule(
 				node: JsonNode,
 				sourceFile: ts.JsonSourceFile,
 			) {
-				if (result.errorMessages.length === 0) {
+				if (!result.errorMessages.length) {
 					return;
 				}
 

@@ -4,50 +4,69 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.contributorsValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "contributors": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "contributors": null
                   ~~~~
                   Invalid contributors: the type should be an \`Array\` of objects with at least a \`name\` property, and optionally \`email\` and \`url\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "contributors": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "contributors": 123
                   ~~~
                   Invalid contributors: the type should be an \`Array\` of objects with at least a \`name\` property, and optionally \`email\` and \`url\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "contributors": "./script.js"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "contributors": "./script.js"
                   ~~~~~~~~~~~~~
                   Invalid contributors: the type should be an \`Array\` of objects with at least a \`name\` property, and optionally \`email\` and \`url\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "contributors": {}
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "contributors": {}
                   ~~
                   Invalid contributors: the type should be an \`Array\` of objects with at least a \`name\` property, and optionally \`email\` and \`url\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "contributors": ["string", true, 123, {}, []]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "contributors": ["string", true, 123, {}, []]
                    ~~~~~~~~
                    Invalid contributors: item 0 is invalid; it should be a person object with at least a \`name\`.
@@ -59,10 +78,12 @@ ruleTester.describe(directPropertyValidityRules.contributorsValidity, {
                                         Invalid contributors: item 3 is invalid; it should be a person object with at least a \`name\`.
                                             ~~
                                             Invalid contributors: item 4 is invalid; it should be a person object with at least a \`name\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "contributors": [
     {
       "name": "",
@@ -75,8 +96,10 @@ ruleTester.describe(directPropertyValidityRules.contributorsValidity, {
       "web": ".com"
     }
   ]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "contributors": [
     {
       "name": "",
@@ -99,7 +122,8 @@ ruleTester.describe(directPropertyValidityRules.contributorsValidity, {
       Invalid contributors: url is not valid: .com.
     }
   ]
-}`,
+}
+`,
 		},
 	],
 	valid: [

@@ -1,0 +1,50 @@
+---
+description: "Enforce that the `dependencies` property is valid."
+title: "dependenciesValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="dependenciesValidity" />
+
+The rule checks that, if present, the `dependencies` property is an object where each key is a valid package name and each value is a valid version range.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"dependencies": {
+		"invalid-version": "catalob:"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"dependencies": {
+		"nin": "catalog:",
+		"thee-silver-mt-zion": "^1.2.3",
+		"david-bowie": "*"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't validate dependency versions in your projects, you can disable this rule.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="dependenciesValidity" />

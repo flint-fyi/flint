@@ -4,42 +4,57 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.filesValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "files": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "files": null
            ~~~~
            Invalid files: the value is \`null\`, but should be an \`Array\` of strings.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "files": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "files": 123
            ~~~
            Invalid files: the type should be \`Array\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "files": "invalid"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "files": "invalid"
            ~~~~~~~~~
            Invalid files: the type should be \`Array\`, not \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "files": {
     "invalid-bin": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "files": {
            ~
            Invalid files: the type should be \`Array\`, not \`object\`.
@@ -47,13 +62,17 @@ ruleTester.describe(directPropertyValidityRules.filesValidity, {
     ~~~~~~~~~~~~~~~~~~
   }
   ~
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "files": ["valid", "", 123, null, {}]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "files": ["valid", "", 123, null, {}]
                      ~~
                      Invalid files: item at index 1 is empty, but should be a file pattern.
@@ -63,7 +82,8 @@ ruleTester.describe(directPropertyValidityRules.filesValidity, {
                               Invalid files: item at index 3 should be a string, not \`null\`.
                                     ~~
                                     Invalid files: item at index 4 should be a string, not \`object\`.
-}`,
+}
+`,
 		},
 	],
 	valid: [

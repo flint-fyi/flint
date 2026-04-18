@@ -4,100 +4,216 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.dependenciesValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "dependencies": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "dependencies": null
                   ~~~~
                   Invalid dependencies: the value is \`null\`, but should be a record of dependencies.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "dependencies": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "dependencies": 123
                   ~~~
                   Invalid dependencies: the type should be \`object\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "dependencies": "./script.js"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "dependencies": "./script.js"
                   ~~~~~~~~~~~~~
                   Invalid dependencies: the type should be \`object\`, not \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "dependencies": []
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "dependencies": []
                   ~~
                   Invalid dependencies: the type should be \`object\`, not \`array\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "dependencies": {
-    "david": "bowie",
-    "trent": 123,
-    "the-fragile": null,
-    "pink-floyd": {},
-    "childish-gambino": "workspace"
+    "example": "bowie"
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "dependencies": {
-    "david": "bowie",
-    ~~~~~~~~~~~~~~~~
-    Invalid dependencies: invalid version range for dependency david: bowie.
-    "trent": 123,
-    ~~~~~~~~~~~~
-    Invalid dependencies: dependency version for trent should be a string: 123.
-    "the-fragile": null,
-    ~~~~~~~~~~~~~~~~~~~
-    Invalid dependencies: dependency version for the-fragile should be a string: null.
-    "pink-floyd": {},
-    ~~~~~~~~~~~~~~~~
-    Invalid dependencies: dependency version for pink-floyd should be a string: [object Object].
-    "childish-gambino": "workspace"
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Invalid dependencies: invalid version range for dependency childish-gambino: workspace.
+    "example": "bowie"
+    ~~~~~~~~~~~~~~~~~~
+    Invalid dependencies: invalid version range for dependency example: bowie.
   }
-}`,
+}
+`,
+		},
+		{
+			code: `
+{
+  "dependencies": {
+    "example": 123
+  }
+}
+`,
+			snapshot: `
+{
+  "dependencies": {
+    "example": 123
+    ~~~~~~~~~~~~~~
+    Invalid dependencies: dependency version for example should be a string: 123.
+  }
+}
+`,
+		},
+		{
+			code: `
+{
+  "dependencies": {
+    "example": null
+  }
+}
+`,
+			snapshot: `
+{
+  "dependencies": {
+    "example": null
+    ~~~~~~~~~~~~~~~
+    Invalid dependencies: dependency version for example should be a string: null.
+  }
+}
+`,
+		},
+		{
+			code: `
+{
+  "dependencies": {
+    "example": {}
+  }
+}
+`,
+			snapshot: `
+{
+  "dependencies": {
+    "example": {}
+    ~~~~~~~~~~~~~
+    Invalid dependencies: dependency version for example should be a string: [object Object].
+  }
+}
+`,
+		},
+		{
+			code: `
+{
+  "dependencies": {
+    "example": "workspace"
+  }
+}
+`,
+			snapshot: `
+{
+  "dependencies": {
+    "example": "workspace"
+    ~~~~~~~~~~~~~~~~~~~~~~
+    Invalid dependencies: invalid version range for dependency example: workspace.
+  }
+}
+`,
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
-  "dependencies": {}
-}`,
-		},
-		{
-			code: `{
+		`{}
+`,
+		`{ "dependencies": {} }
+`,
+		`{
   "dependencies": {
-    "silver-mt-zion": "^1.2.3",
-    "nin": "file:./nin",
-    "gybe": "catalog:",
-    "radiohead": "git+https://github.com/user/repo.git",
-    "sigur-ros": "https://example.com/sigur-ros.tgz",
-    "explosions-in-the-sky": "workspace:^",
-    "alt-j": "workspace:~",
-    "run-the-jewels": "workspace:*",
-    "thee-silver-mt-zion": "workspace:^1.2.3",
-    "efrim-manuel-menuck": "npm:bar@^1.0.0"
+    "example": "^1.2.3"
   }
-}`,
-		},
+}
+`,
+		`{
+  "dependencies": {
+    "example": "file:./example"
+  }
+}
+`,
+		`{
+  "dependencies": {
+    "example": "catalog:"
+  }
+}
+`,
+		`{
+  "dependencies": {
+    "example": "git+https://github.com/user/repo.git"
+  }
+}
+`,
+		`{
+  "dependencies": {
+    "example": "https://example.com/example.tgz"
+  }
+}
+`,
+		`{
+  "dependencies": {
+    "example": "workspace:^"
+  }
+}
+`,
+		`{
+  "dependencies": {
+    "example": "workspace:~"
+  }
+}
+`,
+		`{
+  "dependencies": {
+    "example": "workspace:*"
+  }
+}
+`,
+		`{
+  "dependencies": {
+    "example": "workspace:^1.2.3"
+  }
+}
+`,
+		`{
+  "dependencies": {
+    "example": "npm:example@^1.0.0"
+  }
+}
+`,
 	],
 });

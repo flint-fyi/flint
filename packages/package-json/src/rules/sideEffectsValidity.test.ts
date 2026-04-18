@@ -4,52 +4,71 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.sideEffectsValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "sideEffects": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "sideEffects": null
                  ~~~~
                  Invalid sideEffects: the value is \`null\`, but should be a \`boolean\` or an \`Array\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "sideEffects": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "sideEffects": 123
                  ~~~
                  Invalid sideEffects: the type should be \`boolean\` or \`Array\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "sideEffects": "invalid"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "sideEffects": "invalid"
                  ~~~~~~~~~
                  Invalid sideEffects: the type should be \`boolean\` or \`Array\`, not \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "sideEffects": {}
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "sideEffects": {}
                  ~~
                  Invalid sideEffects: the type should be \`boolean\` or \`Array\`, not \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "sideEffects": {
     "invalid-bin": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "sideEffects": {
                  ~
                  Invalid sideEffects: the type should be \`boolean\` or \`Array\`, not \`object\`.
@@ -57,13 +76,17 @@ ruleTester.describe(directPropertyValidityRules.sideEffectsValidity, {
     ~~~~~~~~~~~~~~~~~~
   }
   ~
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "sideEffects": ["valid", "", 123, null]
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "sideEffects": ["valid", "", 123, null]
                            ~~
                            Invalid sideEffects: item at index 1 is empty, but should be a path to a file with side effects or a glob pattern.
@@ -71,32 +94,31 @@ ruleTester.describe(directPropertyValidityRules.sideEffectsValidity, {
                                Invalid sideEffects: item at index 2 should be a string, not \`number\`.
                                     ~~~~
                                     Invalid sideEffects: item at index 3 should be a string, not \`null\`.
-}`,
+}
+`,
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`
+{
   "sideEffects": true
-}`,
-		},
-		{
-			code: `{
+}
+`,
+		`
+{
   "sideEffects": false
-}`,
-		},
-		{
-			code: `{
+}
+`,
+		`
+{
   "sideEffects": []
-}`,
-		},
-		{
-			code: `{
-  "sideEffects": ["nin", "silver-mt-zion"]
-}`,
-		},
+}
+`,
+		`
+{
+  "sideEffects": ["example-one", "example-two"]
+}
+`,
 	],
 });
