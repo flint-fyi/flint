@@ -37,7 +37,8 @@ This rule checks that the `workspaces` property is an array of non-empty strings
 
 ## When Not To Use It
 
-If you don't use workspaces in your project, you can disable this rule.
+If you don't need compliance with npm's `workspacesValidity` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
 
 ## Equivalents in Other Linters
 
