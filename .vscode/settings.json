@@ -35,8 +35,5 @@
 			"fileMatch": ["packages/comparisons/src/data.json"],
 			"url": "./packages/comparisons/src/data.schema.json"
 		}
-	],
-	"[mdx]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	}
+	]
 }
