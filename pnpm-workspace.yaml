@@ -6,7 +6,7 @@ autoInstallPeers: false
 catalogs:
   dev:
     "@arethetypeswrong/core": 0.18.2
-    "@changesets/cli": 2.30.0
+    "@changesets/cli": 2.31.0
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
     "@eslint/js": 10.0.1
     "@eslint/markdown": 8.0.0
