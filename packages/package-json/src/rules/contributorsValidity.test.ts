@@ -87,11 +87,11 @@ ruleTester.describe(directPropertyValidityRules.contributorsValidity, {
   "contributors": [
     {
       "name": "",
-      "email": "barney",
-      "url": "rubble"
+      "email": "invalid",
+      "url": "other"
     },
     {
-      "name": "fred",
+      "name": "first",
       "email": "person",
       "web": ".com"
     }
@@ -105,17 +105,17 @@ ruleTester.describe(directPropertyValidityRules.contributorsValidity, {
       "name": "",
       ~~~~~~~~~~
       Invalid contributors: name should not be empty.
-      "email": "barney",
-      ~~~~~~~~~~~~~~~~~
-      Invalid contributors: email is not valid: barney.
-      "url": "rubble"
-      ~~~~~~~~~~~~~~~
-      Invalid contributors: url is not valid: rubble.
+      "email": "invalid",
+      ~~~~~~~~~~~~~~~~~~
+      Invalid contributors: email is not valid: invalid.
+      "url": "other"
+      ~~~~~~~~~~~~~~
+      Invalid contributors: url is not valid: other.
     },
     {
-      "name": "fred",
+      "name": "first",
       "email": "person",
-      ~~~~~~~~~~~~~~~~~~~~~
+      ~~~~~~~~~~~~~~~~~
       Invalid contributors: email is not valid: person.
       "web": ".com"
       ~~~~~~~~~~~~~
@@ -132,7 +132,7 @@ ruleTester.describe(directPropertyValidityRules.contributorsValidity, {
   "contributors": []
 }`,
 		`{
-  "contributors": [{"name": "Fred Stone", "email": "fred@example.com", "web": "https://example.com"}]
+  "contributors": [{"name": "First Last", "email": "first@flint.fyi", "web": "https://flint.fyi"}]
 }`,
 	],
 });
