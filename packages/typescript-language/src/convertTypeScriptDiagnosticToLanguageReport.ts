@@ -29,6 +29,13 @@ export function convertTypeScriptDiagnosticToLanguageReport(
 	return {
 		code: `TS${diagnostic.code}`,
 		text: formatReport(diagnostic),
+		...(diagnostic.file !== undefined &&
+			diagnostic.start !== undefined && {
+				range: {
+					begin: diagnostic.start,
+					end: diagnostic.start + (diagnostic.length ?? 0),
+				},
+			}),
 	};
 }
 
