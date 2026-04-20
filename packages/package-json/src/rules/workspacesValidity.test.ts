@@ -101,21 +101,15 @@ ruleTester.describe(directPropertyValidityRules.workspacesValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}
+		`{}
 `,
-		},
-		{
-			code: `{
+		`{
   "workspaces": []
 }
 `,
-		},
-		{
-			code: `{
+		`{
   "workspaces": ["./app", "./packages/*"]
 }
 `,
-		},
 	],
 });

@@ -47,18 +47,12 @@ ruleTester.describe(directPropertyValidityRules.typeValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "type": "commonjs"
 }`,
-		},
-		{
-			code: `{
+		`{
   "type": "module"
 }`,
-		},
 	],
 });

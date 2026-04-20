@@ -103,13 +103,9 @@ ruleTester.describe(directPropertyValidityRules.descriptionValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "description": "The Fragile"
 }`,
-		},
 	],
 });

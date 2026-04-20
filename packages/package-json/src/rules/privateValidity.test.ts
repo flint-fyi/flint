@@ -75,18 +75,12 @@ ruleTester.describe(directPropertyValidityRules.privateValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "private": true
 }`,
-		},
-		{
-			code: `{
+		`{
   "private": false
 }`,
-		},
 	],
 });

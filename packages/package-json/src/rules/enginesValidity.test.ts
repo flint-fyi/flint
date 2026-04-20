@@ -119,29 +119,21 @@ ruleTester.describe(directPropertyValidityRules.enginesValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "engines": {}
 }`,
-		},
-		{
-			code: `{
+		`{
   "engines": {
     "node": "^24.11.0"
   }
 }`,
-		},
-		{
-			code: `{
+		`{
   "engines": {
     "node": "^24.11.0",
     "npm": "Please use pnpm",
     "pnpm": "^10"
   }
 }`,
-		},
 	],
 });

@@ -61,18 +61,12 @@ ruleTester.describe(directPropertyValidityRules.homepageValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "homepage": "https://flint.fyi"
 }`,
-		},
-		{
-			code: `{
+		`{
   "homepage": "http://typescriptlang.org"
 }`,
-		},
 	],
 });

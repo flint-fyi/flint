@@ -113,18 +113,12 @@ ruleTester.describe(directPropertyValidityRules.manValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "man": []
 }`,
-		},
-		{
-			code: `{
+		`{
   "man": ["./man/doc.1", "./man/doc.2.gz"]
 }`,
-		},
 	],
 });

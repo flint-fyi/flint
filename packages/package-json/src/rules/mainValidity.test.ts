@@ -61,18 +61,12 @@ ruleTester.describe(directPropertyValidityRules.mainValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "main": "./index.js"
 }`,
-		},
-		{
-			code: `{
+		`{
   "main": "index.js"
 }`,
-		},
 	],
 });

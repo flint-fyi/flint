@@ -75,28 +75,18 @@ ruleTester.describe(directPropertyValidityRules.configValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "config": {}
 }`,
-		},
-		{
-			code: `{
+		`{
   "config": { "port": 8080 }
 }`,
-		},
-		{
-			code: `{
+		`{
   "config": { "silver-mt-zion": "node ./silver-mt-zion.js", "nin": "node ./nin.js" }
 }`,
-		},
-		{
-			code: `{
-  "config": { "silver-mt-zion": {"leadSinger": "Efrim Manuel Menuck"}, "nin": "node ./nin.js" }
+		`{
+  "config": { "silver-mt-zion": {"leadSinger": "Alex Manual Example"}, "nin": "node ./nin.js" }
 }`,
-		},
 	],
 });

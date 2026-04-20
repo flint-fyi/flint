@@ -137,38 +137,24 @@ ruleTester.describe(directPropertyValidityRules.binValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "bin": "./cli.js"
 }`,
-		},
-		{
-			code: `{
+		`{
   "bin": { "my-cli": "./cli.js" }
 }`,
-		},
-		{
-			code: `{
+		`{
   "bin": "silver-mt-zion.js"
 }`,
-		},
-		{
-			code: `{
+		`{
   "bin": { "silver-mt-zion": "silver-mt-zion.js" }
 }`,
-		},
-		{
-			code: `{
+		`{
   "bin": { "silver-mt-zion": "silver-mt-zion.js", "nin": "./nin.js" }
 }`,
-		},
-		{
-			code: `{
+		`{
   "bin": { "silverMtZion": "silver-mt-zion.js", "NIN": "./nin.js" }
 }`,
-		},
 	],
 });

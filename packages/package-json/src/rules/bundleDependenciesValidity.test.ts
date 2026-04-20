@@ -213,48 +213,30 @@ ruleTester.describe(directPropertyValidityRules.bundleDependenciesValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "bundleDependencies": []
 }`,
-		},
-		{
-			code: `{
+		`{
   "bundleDependencies": ["nin", "silver-mt-zion"]
 }`,
-		},
-		{
-			code: `{
+		`{
   "bundleDependencies": true
 }`,
-		},
-		{
-			code: `{
+		`{
   "bundleDependencies": false
 }`,
-		},
-		{
-			code: `{
+		`{
   "bundledDependencies": true
 }`,
-		},
-		{
-			code: `{
+		`{
   "bundledDependencies": false
 }`,
-		},
-		{
-			code: `{
+		`{
   "bundledDependencies": []
 }`,
-		},
-		{
-			code: `{
+		`{
   "bundledDependencies": ["nin", "silver-mt-zion"]
 }`,
-		},
 	],
 });

@@ -353,65 +353,46 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "publishConfig": {}
 }`,
-		},
-		{
-			code: `{
+		`{
   "publishConfig": {
     "access": "restricted"
   }
 }`,
-		},
-		{
-			code: `{
+		`{
   "publishConfig": {
     "access": null
   }
 }`,
-		},
-		{
-			code: `{
+		`{
   "publishConfig": {
     "bin": "./bin/cli.js"
   }
 }`,
-		},
-		{
-			code: `{
+		`{
   "publishConfig": {
     "cpu": ["arm64", "x64"]
   }
 }`,
-		},
-		{
-			code: `{
+		`{
   "publishConfig": {
     "cpu": []
   }
 }`,
-		},
-		{
-			code: `{
+		`{
   "publishConfig": {
     "directory": "dist"
   }
 }`,
-		},
-		{
-			code: `{
+		`{
   "publishConfig": {
     "exports": "./dist/index.js"
   }
 }`,
-		},
-		{
-			code: `{
+		`{
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
@@ -419,27 +400,20 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
     }
   }
 }`,
-		},
-		{
-			code: `{
+		`{
   "publishConfig": {
     "main": "./dist/index.js"
   }
 }`,
-		},
-		{
-			code: `{
+		`{
   "publishConfig": {
     "provenance": true
   }
 }`,
-		},
-		{
-			code: `{
+		`{
   "publishConfig": {
     "tag": "dev"
   }
 }`,
-		},
 	],
 });

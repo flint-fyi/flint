@@ -5350,7 +5350,7 @@
 			}
 		],
 		"flint": {
-			"name": "manValidity",
+			"name": "mainValidity",
 			"plugin": "package-json",
 			"preset": "logical",
 			"status": "implemented"

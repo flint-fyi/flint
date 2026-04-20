@@ -61,21 +61,15 @@ ruleTester.describe(directPropertyValidityRules.directoriesValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "directories": {}
 }`,
-		},
-		{
-			code: `{
+		`{
   "directories": {
     "bin": "dist/bin",
     "man": "docs"
   }
 }`,
-		},
 	],
 });

@@ -137,23 +137,16 @@ ruleTester.describe(directPropertyValidityRules.exportsValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "exports": "./index.js"
 }`,
-		},
-		{
-			code: `{
+		`{
   "exports": {
     ".": "./index.js"
   }
 }`,
-		},
-		{
-			code: `{
+		`{
   "exports": {
     ".": {
       "types": "./index.d.ts",
@@ -161,6 +154,5 @@ ruleTester.describe(directPropertyValidityRules.exportsValidity, {
     }
   }
 }`,
-		},
 	],
 });

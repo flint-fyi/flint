@@ -61,23 +61,15 @@ ruleTester.describe(directPropertyValidityRules.licenseValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "license": "MIT"
 }`,
-		},
-		{
-			code: `{
+		`{
   "license": "UNLICENSED"
 }`,
-		},
-		{
-			code: `{
+		`{
   "license": "SEE LICENSE IN LICENSE.md"
 }`,
-		},
 	],
 });

@@ -175,55 +175,130 @@ ruleTester.describe(directPropertyValidityRules.repositoryValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		...[
-			"git+https://github.com/michaelfaith/eslint-plugin-package-json.git",
-			"https://github.com/michaelfaith/eslint-plugin-package-json",
-			"https://github.com/michaelfaith/eslint-plugin-package-json.git",
-			"http://github.com/michaelfaith/eslint-plugin-package-json.git",
-			"git://github.com/michaelfaith/eslint-plugin-package-json.git",
-			"git://github.com/michaelfaith/eslint-plugin-package-json",
-			"git@github.com:michaelfaith/eslint-plugin-package-json.git",
-		].flatMap((value) => [
-			{
-				code: `{
-  "repository": {
-    "type": "git",
-    "url": "${value}",
-    "directory": "packages/a"
-  }
+		`{}`,
+		`{
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/example-user/example-repo.git",
+		"directory": "packages/a"
+	}
 }`,
-				name: `${value} (with directory)`,
-			},
-			{
-				code: `{
-  "repository": {
-    "type": "git",
-    "url": "${value}"
-  }
+		`{
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/example-user/example-repo.git"
+	}
 }`,
-				name: `${value} (without directory)`,
-			},
-		]),
-		...[
-			"npm/example",
-			"github:npm/example",
-			"gist:11081aaa281",
-			"bitbucket:user/repo",
-			"gitlab:user/repo",
-			"github:some-user/some-repo",
-			"github:user-name/repo-name",
-			"some-user/some-repo",
-			"user-name/repo.js",
-			"bitbucket:my-org/my-repo",
-			"gitlab:some.user/some.repo",
-		].map((value) => ({
-			code: `{
-  "repository": "${value}"
+		`{
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/example-user/example-repo",
+		"directory": "packages/a"
+	}
 }`,
-			name: value,
-		})),
+		`{
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/example-user/example-repo"
+	}
+}`,
+		`{
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/example-user/example-repo.git",
+		"directory": "packages/a"
+	}
+}`,
+		`{
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/example-user/example-repo.git"
+	}
+}`,
+		`{
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/example-user/example-repo.git",
+		"directory": "packages/a"
+	}
+}`,
+		`{
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/example-user/example-repo.git"
+	}
+}`,
+		`{
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/example-user/example-repo.git",
+		"directory": "packages/a"
+	}
+}`,
+		`{
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/example-user/example-repo.git"
+	}
+}`,
+		`{
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/example-user/example-repo",
+		"directory": "packages/a"
+	}
+}`,
+		`{
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/example-user/example-repo"
+	}
+}`,
+		`{
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:example-user/example-repo.git",
+		"directory": "packages/a"
+	}
+}`,
+		`{
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:example-user/example-repo.git"
+	}
+}`,
+		`{
+	"repository": "npm/example"
+}`,
+		`{
+	"repository": "github:npm/example"
+}`,
+		`{
+	"repository": "gist:11081aaa281"
+}`,
+		`{
+	"repository": "bitbucket:user/repo"
+}`,
+		`{
+	"repository": "gitlab:user/repo"
+}`,
+		`{
+	"repository": "github:some-user/some-repo"
+}`,
+		`{
+	"repository": "github:user-name/repo-name"
+}`,
+		`{
+	"repository": "some-user/some-repo"
+}`,
+		`{
+	"repository": "user-name/repo.js"
+}`,
+		`{
+	"repository": "bitbucket:my-org/my-repo"
+}`,
+		`{
+	"repository": "gitlab:some.user/some.repo"
+}`,
 	],
 });

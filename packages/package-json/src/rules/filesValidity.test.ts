@@ -87,18 +87,12 @@ ruleTester.describe(directPropertyValidityRules.filesValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "files": []
 }`,
-		},
-		{
-			code: `{
+		`{
   "files": ["CHANGELOG.md", "dist/"]
 }`,
-		},
 	],
 });

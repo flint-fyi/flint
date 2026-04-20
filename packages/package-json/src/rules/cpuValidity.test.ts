@@ -1,3 +1,5 @@
+// cspell:ignore loong64 riscv64
+
 import { directPropertyValidityRules } from "./directPropertyValidityRules.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -99,18 +101,12 @@ ruleTester.describe(directPropertyValidityRules.cpuValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "cpu": []
 }`,
-		},
-		{
-			code: `{
+		`{
   "cpu": ["arm", "x64"]
 }`,
-		},
 	],
 });

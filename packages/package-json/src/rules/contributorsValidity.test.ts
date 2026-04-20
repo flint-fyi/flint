@@ -92,7 +92,7 @@ ruleTester.describe(directPropertyValidityRules.contributorsValidity, {
     },
     {
       "name": "fred",
-      "email": "flintstone",
+      "email": "person",
       "web": ".com"
     }
   ]
@@ -114,9 +114,9 @@ ruleTester.describe(directPropertyValidityRules.contributorsValidity, {
     },
     {
       "name": "fred",
-      "email": "flintstone",
+      "email": "person",
       ~~~~~~~~~~~~~~~~~~~~~
-      Invalid contributors: email is not valid: flintstone.
+      Invalid contributors: email is not valid: person.
       "web": ".com"
       ~~~~~~~~~~~~~
       Invalid contributors: url is not valid: .com.
@@ -127,18 +127,12 @@ ruleTester.describe(directPropertyValidityRules.contributorsValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "contributors": []
 }`,
-		},
-		{
-			code: `{
-  "contributors": [{"name": "Fred Flintston", "email": "f@flintstone.com", "web": "https://flintstone.com"}]
+		`{
+  "contributors": [{"name": "Fred Stone", "email": "fred@example.com", "web": "https://example.com"}]
 }`,
-		},
 	],
 });

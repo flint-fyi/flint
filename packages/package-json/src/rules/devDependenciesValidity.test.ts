@@ -151,95 +151,71 @@ ruleTester.describe(directPropertyValidityRules.devDependenciesValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}
+		`{}
 `,
-		},
-		{
-			code: `{
+		`{
   "devDependencies": {}
 }
 `,
-		},
-		{
-			code: `{
+		`{
   "devDependencies": {
     "example": "^1.2.3"
   }
 }
 `,
-		},
-		{
-			code: `{
+		`{
   "devDependencies": {
     "example": "file:./example"
   }
 }
 `,
-		},
-		{
-			code: `{
+		`{
   "devDependencies": {
     "example": "catalog:"
   }
 }
 `,
-		},
-		{
-			code: `{
+		`{
   "devDependencies": {
     "example": "git+https://github.com/user/repo.git"
   }
 }
 `,
-		},
-		{
-			code: `{
+		`{
   "devDependencies": {
     "example": "https://example.com/example.tgz"
   }
 }
 `,
-		},
-		{
-			code: `{
+		`{
   "devDependencies": {
     "example": "workspace:^"
   }
 }
 `,
-		},
-		{
-			code: `{
+		`{
   "devDependencies": {
     "example": "workspace:~"
   }
 }
 `,
-		},
-		{
-			code: `{
+		`{
   "devDependencies": {
     "example": "workspace:*"
   }
 }
 `,
-		},
-		{
-			code: `{
+		`{
   "devDependencies": {
     "example": "workspace:^1.2.3"
   }
 }
 `,
-		},
-		{
-			code: `{
+		`{
   "devDependencies": {
     "example": "npm:example@^1.0.0"
   }
 }
 `,
-		},
 	],
 });

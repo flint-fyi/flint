@@ -103,18 +103,12 @@ ruleTester.describe(directPropertyValidityRules.osValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "os": []
 }`,
-		},
-		{
-			code: `{
+		`{
   "os": ["win32", "linux"]
 }`,
-		},
 	],
 });

@@ -101,18 +101,12 @@ ruleTester.describe(directPropertyValidityRules.keywordsValidity, {
 		},
 	],
 	valid: [
-		{
-			code: `{}`,
-		},
-		{
-			code: `{
+		`{}`,
+		`{
   "keywords": []
 }`,
-		},
-		{
-			code: `{
+		`{
   "keywords": ["nin", "A Silver Mt. Zion"]
 }`,
-		},
 	],
 });
