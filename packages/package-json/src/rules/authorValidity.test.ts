@@ -90,12 +90,12 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
 		{
 			code: `
 {
-  "author": "John <invalid>"
+  "author": "Name <invalid>"
 }
 `,
 			snapshot: `
 {
-  "author": "John <invalid>"
+  "author": "Name <invalid>"
             ~~~~~~~~~~~~~~~~
             Invalid author: email is not valid: invalid.
 }
@@ -104,12 +104,12 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
 		{
 			code: `
 {
-  "author": "John (not-url)"
+  "author": "Name (not-url)"
 }
 `,
 			snapshot: `
 {
-  "author": "John (not-url)"
+  "author": "Name (not-url)"
             ~~~~~~~~~~~~~~~~
             Invalid author: url is not valid: not-url.
 }
@@ -118,12 +118,12 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
 		{
 			code: `
 {
-  "author": "<john@example.com>"
+  "author": "<name@example.com>"
 }
 `,
 			snapshot: `
 {
-  "author": "<john@example.com>"
+  "author": "<name@example.com>"
             ~~~~~~~~~~~~~~~~~~~~
             Invalid author: person should have a name.
 }
@@ -147,7 +147,7 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
 			code: `
 {
   "author": {
-    "email": "john@example.com"
+    "email": "name@example.com"
   }
 }
 `,
@@ -156,7 +156,7 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
   "author": {
             ~
             Invalid author: the type should be a \`string\` or an \`object\` with at least a \`name\` property.
-    "email": "john@example.com"
+    "email": "name@example.com"
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
   }
   ~
@@ -203,7 +203,7 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
 			code: `
 {
   "author": {
-    "name": "John",
+    "name": "Name",
     "email": "invalid"
   }
 }
@@ -211,7 +211,7 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
 			snapshot: `
 {
   "author": {
-    "name": "John",
+    "name": "Name",
     "email": "invalid"
     ~~~~~~~~~~~~~~~~~~
     Invalid author: email is not valid: invalid.
@@ -223,7 +223,7 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
 			code: `
 {
   "author": {
-    "name": "John",
+    "name": "Name",
     "url": "invalid"
   }
 }
@@ -231,7 +231,7 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
 			snapshot: `
 {
   "author": {
-    "name": "John",
+    "name": "Name",
     "url": "invalid"
     ~~~~~~~~~~~~~~~~
     Invalid author: url is not valid: invalid.
@@ -242,12 +242,12 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
 		{
 			code: `
 {
-  "author": "John <invalid-email> (invalid-url)"
+  "author": "Name <invalid-email> (invalid-url)"
 }
 `,
 			snapshot: `
 {
-  "author": "John <invalid-email> (invalid-url)"
+  "author": "Name <invalid-email> (invalid-url)"
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Invalid author: email is not valid: invalid-email.
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -261,39 +261,39 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
 {}`,
 		`
 {
-  "author": "John Doe" }
+  "author": "First Last" }
 `,
 		`
 {
-  "author": "John <john@example.com>" }
+  "author": "Name <name@example.com>" }
 `,
 		`
 {
-  "author": "John (https://example.com)" }
+  "author": "Name (https://example.com)" }
 `,
 		`
 {
-  "author": "John <john@example.com> (https://example.com)" }
+  "author": "Name <name@example.com> (https://example.com)" }
 `,
 		`
 {
   "author": {
-    "name": "John"
+    "name": "Name"
   }
 }
 `,
 		`
 {
   "author": {
-    "name": "John",
-    "email": "john@example.com"
+    "name": "Name",
+    "email": "name@example.com"
   }
 }
 `,
 		`
 {
   "author": {
-    "name": "John",
+    "name": "Name",
     "url": "https://example.com"
   }
 }
@@ -301,8 +301,8 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
 		`
 {
   "author": {
-    "name": "John",
-    "email": "john@example.com",
+    "name": "Name",
+    "email": "name@example.com",
     "url": "https://example.com"
   }
 }
