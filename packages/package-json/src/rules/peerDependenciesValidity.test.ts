@@ -4,11 +4,13 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "peerDependencies": null
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
   "peerDependencies": null
                       ~~~~
                       Invalid peerDependencies: the value is \`null\`, but should be a record of dependencies.
@@ -16,11 +18,13 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "peerDependencies": 123
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
   "peerDependencies": 123
                       ~~~
                       Invalid peerDependencies: the type should be \`object\`, not \`number\`.
@@ -28,11 +32,13 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "peerDependencies": "./script.js"
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
   "peerDependencies": "./script.js"
                       ~~~~~~~~~~~~~
                       Invalid peerDependencies: the type should be \`object\`, not \`string\`.
@@ -40,11 +46,13 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "peerDependencies": []
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
   "peerDependencies": []
                       ~~
                       Invalid peerDependencies: the type should be \`object\`, not \`array\`.
@@ -52,13 +60,15 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "peerDependencies": {
     "example": "bowie"
   }
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
   "peerDependencies": {
     "example": "bowie"
     ~~~~~~~~~~~~~~~~~~
@@ -68,13 +78,15 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "peerDependencies": {
     "example": 123
   }
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
   "peerDependencies": {
     "example": 123
     ~~~~~~~~~~~~~~
@@ -84,13 +96,15 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "peerDependencies": {
     "example": null
   }
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
   "peerDependencies": {
     "example": null
     ~~~~~~~~~~~~~~~
@@ -100,13 +114,15 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "peerDependencies": {
     "example": {}
   }
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
   "peerDependencies": {
     "example": {}
     ~~~~~~~~~~~~~
@@ -116,13 +132,15 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "peerDependencies": {
     "example": "workspace"
   }
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
   "peerDependencies": {
     "example": "workspace"
     ~~~~~~~~~~~~~~~~~~~~~~

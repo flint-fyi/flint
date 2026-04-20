@@ -4,272 +4,352 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "publishConfig": null
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": null
                    ~~~~
                    Invalid publishConfig: the value is \`null\`, but should be an \`object\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": 123
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": 123
                    ~~~
                    Invalid publishConfig: the type should be \`object\`, not \`number\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": "string"
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": "string"
                    ~~~~~~~~
                    Invalid publishConfig: the type should be \`object\`, not \`string\`.
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "access": "not right"
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "access": "not right"
     ~~~~~~~~~~~~~~~~~~~~~
     Invalid publishConfig: the value "not right" is not valid. Valid types are: public, restricted.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "access": ""
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "access": ""
     ~~~~~~~~~~~~
     Invalid publishConfig: the value is empty, but should be "public" or "restricted".
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "access": []
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "access": []
     ~~~~~~~~~~~~
     Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "bin": ""
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "bin": ""
     ~~~~~~~~~
     Invalid publishConfig: the value is empty, but should be a relative path.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "bin": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "bin": 123
     ~~~~~~~~~~
     Invalid publishConfig: the type should be \`string\` or \`object\`, not \`number\`.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "cpu": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "cpu": 123
     ~~~~~~~~~~
     Invalid publishConfig: the type should be \`Array\`, not \`number\`.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "directory": ""
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "directory": ""
     ~~~~~~~~~~~~~~~
     Invalid publishConfig: the value is empty, but should be the path to a subdirectory.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "directory": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "directory": 123
     ~~~~~~~~~~~~~~~~
     Invalid publishConfig: the type should be a \`string\`, not \`number\`.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "directory": []
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "directory": []
     ~~~~~~~~~~~~~~~
     Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "main": ""
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "main": ""
     ~~~~~~~~~~
     Invalid publishConfig: the value is empty, but should be the path to the package's main module.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "main": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "main": 123
     ~~~~~~~~~~~
     Invalid publishConfig: the type should be a \`string\`, not \`number\`.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "provenance": null
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "provenance": null
     ~~~~~~~~~~~~~~~~~~
     Invalid publishConfig: the value is \`null\`, but should be a \`boolean\`.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "provenance": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "provenance": 123
     ~~~~~~~~~~~~~~~~~
     Invalid publishConfig: the type should be a \`boolean\`, not \`number\`.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "provenance": []
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "provenance": []
     ~~~~~~~~~~~~~~~~
     Invalid publishConfig: the type should be a \`boolean\`, not \`Array\`.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "tag": ""
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "tag": ""
     ~~~~~~~~~
     Invalid publishConfig: the value is empty, but should be a release tag.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "tag": 123
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "tag": 123
     ~~~~~~~~~~
     Invalid publishConfig: the type should be a \`string\`, not \`number\`.
   }
-}`,
+}
+`,
 		},
 		{
-			code: `{
+			code: `
+{
   "publishConfig": {
     "tag": []
   }
-}`,
-			snapshot: `{
+}
+`,
+			snapshot: `
+{
   "publishConfig": {
     "tag": []
     ~~~~~~~~~
     Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
   }
-}`,
+}
+`,
 		},
 	],
 	valid: [
