@@ -273,6 +273,20 @@ fn(...tuple);
 		},
 		{
 			code: `
+declare function fn(arg: string): void;
+const tuple = [notKnownValue] as const;
+fn(...tuple);
+`,
+			snapshot: `
+declare function fn(arg: string): void;
+const tuple = [notKnownValue] as const;
+fn(...tuple);
+   ~~~~~~~~
+   Unsafe spread of tuple type. The argument is of type \`error\` assigned to parameter of type \`string\`.
+`,
+		},
+		{
+			code: `
 declare const a: any;
 declare const b: any;
 declare function fn(...args: [number, string]): void;

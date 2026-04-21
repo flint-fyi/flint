@@ -6,6 +6,7 @@ import ts from "typescript";
 export const AnyType = {
 	Any: "any",
 	AnyArray: "any[]",
+	Error: "error",
 	PromiseAny: "Promise<any>",
 	Safe: "safe",
 } as const;
@@ -13,7 +14,7 @@ export type AnyType = (typeof AnyType)[keyof typeof AnyType];
 
 /**
  * @returns `AnyType.Any` if the type is `any`, `AnyType.AnyArray` if the type is `any[]` or `readonly any[]`, `AnyType.PromiseAny` if the type is `Promise&lt;any>`,
- * otherwise it returns `AnyType.Safe`.
+ * `AnyType.Error` if the type is an intrinsic error type, otherwise it returns `AnyType.Safe`.
  */
 export function discriminateAnyType(
 	type: ts.Type,
@@ -33,11 +34,8 @@ function discriminateAnyTypeWorker(
 		return AnyType.Safe;
 	}
 	visited.add(type);
-	if (
-		tsutils.isTypeFlagSet(type, ts.TypeFlags.Any) &&
-		!tsutils.isIntrinsicErrorType(type)
-	) {
-		return AnyType.Any;
+	if (tsutils.isTypeFlagSet(type, ts.TypeFlags.Any)) {
+		return tsutils.isIntrinsicErrorType(type) ? AnyType.Error : AnyType.Any;
 	}
 	if (checker.isArrayType(type)) {
 		const elementType = nullThrows(

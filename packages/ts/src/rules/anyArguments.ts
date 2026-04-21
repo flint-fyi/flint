@@ -10,10 +10,6 @@ import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
-function formatAnyLikeType(type: ts.Type, anyType: AnyType) {
-	return tsutils.isIntrinsicErrorType(type) ? "error" : anyType;
-}
-
 function formatReportedType(type: ts.Type, typeChecker: Checker) {
 	return tsutils.isIntrinsicErrorType(type)
 		? "error"
@@ -90,10 +86,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						argument.expression,
 					);
 
-					if (
-						anyType !== AnyType.Safe ||
-						tsutils.isIntrinsicErrorType(spreadType)
-					) {
+					if (anyType !== AnyType.Safe) {
 						const restParameter = parameters.at(-1);
 						if (restParameter) {
 							const restType = typeChecker.getTypeOfSymbol(restParameter);
@@ -121,7 +114,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						context.report({
 							data: {
-								type: formatAnyLikeType(spreadType, anyType),
+								type: anyType,
 							},
 							message: "unsafeSpread",
 							range: {
@@ -225,7 +218,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				context.report({
 					data: {
 						paramType: formatReportedType(parameterInfo.type, typeChecker),
-						type: formatAnyLikeType(argumentType, anyType),
+						type: anyType,
 					},
 					message: "unsafeArgument",
 					range: {
@@ -321,7 +314,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						context.report({
 							data: {
 								paramType: formatReportedType(parameterType, typeChecker),
-								type: formatAnyLikeType(expressionType, anyType),
+								type: anyType,
 							},
 							message: "unsafeArgument",
 							range: {
@@ -434,7 +427,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				return {
 					paramType: parameterType,
-					type: formatAnyLikeType(elementType, anyType),
+					type: anyType,
 				};
 			}
 
