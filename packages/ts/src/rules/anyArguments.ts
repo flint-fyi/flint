@@ -8,13 +8,8 @@ import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
+import { formatReportedType } from "./utils/formatReportedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
-
-function formatReportedType(type: ts.Type, typeChecker: Checker) {
-	return tsutils.isIntrinsicErrorType(type)
-		? "error"
-		: typeChecker.typeToString(type);
-}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
