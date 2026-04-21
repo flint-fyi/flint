@@ -42,7 +42,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							ts.isIdentifier(caseNode.properties[0].name) &&
 							caseNode.properties[0].name.text === "code"
 						) {
+							let fix;
+							if (ts.isPropertyAssignment(caseNode.properties[0])) {
+								fix = {
+									range: getTSNodeRange(caseNode, sourceFile),
+									text: caseNode.properties[0].initializer.getText(sourceFile),
+								};
+							}
 							context.report({
+								fix,
 								message: "testShorthands",
 								range: getTSNodeRange(caseNode.properties[0], sourceFile),
 							});
