@@ -6,7 +6,7 @@ autoInstallPeers: false
 catalogs:
   dev:
     "@arethetypeswrong/core": 0.18.2
-    "@changesets/cli": 2.30.0
+    "@changesets/cli": 2.31.0
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
     "@eslint/js": 10.0.1
     "@eslint/markdown": 8.0.0
@@ -22,13 +22,13 @@ catalogs:
     eslint-plugin-jsonc: 3.1.0
     eslint-plugin-n: 17.24.0
     eslint-plugin-package-json: 0.91.0
-    eslint-plugin-perfectionist: 5.8.0
+    eslint-plugin-perfectionist: 5.9.0
     eslint-plugin-regexp: 3.1.0
     eslint-plugin-yml: 3.3.0
     execa: 9.6.1
     husky: 9.1.7
     jiti: 2.6.1
-    knip: 6.3.0
+    knip: 6.4.0
     lint-staged: 16.4.0
     prettier: 3.8.1
     prettier-plugin-astro: 0.14.1
