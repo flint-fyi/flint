@@ -6,6 +6,7 @@ import ts from "typescript";
 
 import { getRuleTesterDescribedCases } from "../utils/getRuleTesterDescribedCases.ts";
 import { ruleCreator } from "./ruleCreator.ts";
+import type { FileChange } from "@flint.fyi/core";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -42,7 +43,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							ts.isIdentifier(caseNode.properties[0].name) &&
 							caseNode.properties[0].name.text === "code"
 						) {
-							let fix;
+							let fix: FileChange | undefined;
 							if (ts.isPropertyAssignment(caseNode.properties[0])) {
 								fix = {
 									range: getTSNodeRange(caseNode, sourceFile),
