@@ -1,3 +1,4 @@
+import type { FileChange } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
 	typescriptLanguage,
@@ -6,7 +7,6 @@ import ts from "typescript";
 
 import { getRuleTesterDescribedCases } from "../utils/getRuleTesterDescribedCases.ts";
 import { ruleCreator } from "./ruleCreator.ts";
-import type { FileChange } from "@flint.fyi/core";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
