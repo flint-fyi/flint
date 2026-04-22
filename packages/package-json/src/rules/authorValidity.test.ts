@@ -175,8 +175,8 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
 {
   "author": {
     "name": ""
-    ~~~~~~~~~~
-    Invalid author: name should not be empty.
+            ~~
+            Invalid author: name should not be empty.
   }
 }
 `,
@@ -193,8 +193,8 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
 {
   "author": {
     "name": "    "
-    ~~~~~~~~~~~~~~
-    Invalid author: name should not be empty.
+            ~~~~~~
+            Invalid author: name should not be empty.
   }
 }
 `,
@@ -213,8 +213,8 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
   "author": {
     "name": "Name",
     "email": "invalid"
-    ~~~~~~~~~~~~~~~~~~
-    Invalid author: email is not valid: invalid.
+             ~~~~~~~~~
+             Invalid author: email is not valid: invalid.
   }
 }
 `,
@@ -233,8 +233,8 @@ ruleTester.describe(directPropertyValidityRules.authorValidity, {
   "author": {
     "name": "Name",
     "url": "invalid"
-    ~~~~~~~~~~~~~~~~
-    Invalid author: url is not valid: invalid.
+           ~~~~~~~~~
+           Invalid author: url is not valid: invalid.
   }
 }
 `,

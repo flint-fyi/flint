@@ -71,8 +71,8 @@ ruleTester.describe(directPropertyValidityRules.enginesValidity, {
 {
   "engines": {
     "npm": 123
-    ~~~~~~~~~~
-    Invalid engines: the value of property "npm" should be a string.
+           ~~~
+           Invalid engines: the value of property "npm" should be a string.
   }
 }
 `,
@@ -89,8 +89,8 @@ ruleTester.describe(directPropertyValidityRules.enginesValidity, {
 {
   "engines": {
     "invalid-bin": ""
-    ~~~~~~~~~~~~~~~~~
-    Invalid engines: the value of property "invalid-bin" is empty, but should be a semver range.
+                   ~~
+                   Invalid engines: the value of property "invalid-bin" is empty, but should be a semver range.
   }
 }
 `,
@@ -108,11 +108,11 @@ ruleTester.describe(directPropertyValidityRules.enginesValidity, {
 {
   "engines": {
     "": "invalid-key",
-    ~~~~~~~~~~~~~~~~~
-    Invalid engines: property 0 has an empty key, but should be a runtime or package manager.
+        ~~~~~~~~~~~~~
+        Invalid engines: property 0 has an empty key, but should be a runtime or package manager.
     "   ": "invalid-key"
-    ~~~~~~~~~~~~~~~~~~~~
-    Invalid engines: property 1 has an empty key, but should be a runtime or package manager.
+           ~~~~~~~~~~~~~
+           Invalid engines: property 1 has an empty key, but should be a runtime or package manager.
   }
 }
 `,

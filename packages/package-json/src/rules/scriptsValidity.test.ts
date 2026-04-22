@@ -71,8 +71,8 @@ ruleTester.describe(directPropertyValidityRules.scriptsValidity, {
 {
   "scripts": {
     "invalid": 123
-    ~~~~~~~~~~~~~~
-    Invalid scripts: the value of property "invalid" should be a string.
+               ~~~
+               Invalid scripts: the value of property "invalid" should be a string.
   }
 }
 `,
@@ -89,8 +89,8 @@ ruleTester.describe(directPropertyValidityRules.scriptsValidity, {
 {
   "scripts": {
     "invalid": ""
-    ~~~~~~~~~~~~~
-    Invalid scripts: the value of property "invalid" is empty, but should be a script command.
+               ~~
+               Invalid scripts: the value of property "invalid" is empty, but should be a script command.
   }
 }
 `,
@@ -107,8 +107,8 @@ ruleTester.describe(directPropertyValidityRules.scriptsValidity, {
 {
   "scripts": {
     "": "invalid"
-    ~~~~~~~~~~~~~
-    Invalid scripts: property 0 has an empty key, but should be a script name.
+        ~~~~~~~~~
+        Invalid scripts: property 0 has an empty key, but should be a script name.
   }
 }
 `,
@@ -126,11 +126,11 @@ ruleTester.describe(directPropertyValidityRules.scriptsValidity, {
 {
   "scripts": {
     "": "invalid",
-    ~~~~~~~~~~~~~
-    Invalid scripts: property 0 has an empty key, but should be a script name.
+        ~~~~~~~~~
+        Invalid scripts: property 0 has an empty key, but should be a script name.
     "   ": "invalid"
-    ~~~~~~~~~~~~~~~~
-    Invalid scripts: property 1 has an empty key, but should be a script name.
+           ~~~~~~~~~
+           Invalid scripts: property 1 has an empty key, but should be a script name.
   }
 }
 `,

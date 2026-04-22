@@ -71,8 +71,8 @@ ruleTester.describe(directPropertyValidityRules.binValidity, {
 {
   "bin": {
     "invalid-bin": 123
-    ~~~~~~~~~~~~~~~~~~
-    Invalid bin: the value of property "invalid-bin" should be a string.
+                   ~~~
+                   Invalid bin: the value of property "invalid-bin" should be a string.
   }
 }
 `,
@@ -89,8 +89,8 @@ ruleTester.describe(directPropertyValidityRules.binValidity, {
 {
   "bin": {
     "invalid-bin": ""
-    ~~~~~~~~~~~~~~~~~
-    Invalid bin: the value of property "invalid-bin" is empty, but should be a relative path.
+                   ~~
+                   Invalid bin: the value of property "invalid-bin" is empty, but should be a relative path.
   }
 }
 `,
@@ -107,8 +107,8 @@ ruleTester.describe(directPropertyValidityRules.binValidity, {
 {
   "bin": {
     "": "invalid-key"
-    ~~~~~~~~~~~~~~~~~
-    Invalid bin: property 0 has an empty key, but should be a valid command name.
+        ~~~~~~~~~~~~~
+        Invalid bin: property 0 has an empty key, but should be a valid command name.
   }
 }
 `,
@@ -126,11 +126,11 @@ ruleTester.describe(directPropertyValidityRules.binValidity, {
 {
   "bin": {
     "": "invalid-key",
-    ~~~~~~~~~~~~~~~~~
-    Invalid bin: property 0 has an empty key, but should be a valid command name.
+        ~~~~~~~~~~~~~
+        Invalid bin: property 0 has an empty key, but should be a valid command name.
     "   ": "invalid-key"
-    ~~~~~~~~~~~~~~~~~~~~
-    Invalid bin: property 1 has an empty key, but should be a valid command name.
+           ~~~~~~~~~~~~~
+           Invalid bin: property 1 has an empty key, but should be a valid command name.
   }
 }
 `,

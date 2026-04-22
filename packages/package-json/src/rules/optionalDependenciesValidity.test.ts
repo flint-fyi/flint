@@ -71,8 +71,8 @@ ruleTester.describe(directPropertyValidityRules.optionalDependenciesValidity, {
 {
   "optionalDependencies": {
     "example": "bowie"
-    ~~~~~~~~~~~~~~~~~~
-    Invalid optionalDependencies: invalid version range for dependency example: bowie.
+               ~~~~~~~
+               Invalid optionalDependencies: invalid version range for dependency example: bowie.
   }
 }
 `,
@@ -89,8 +89,8 @@ ruleTester.describe(directPropertyValidityRules.optionalDependenciesValidity, {
 {
   "optionalDependencies": {
     "example": 123
-    ~~~~~~~~~~~~~~
-    Invalid optionalDependencies: dependency version for example should be a string: 123.
+               ~~~
+               Invalid optionalDependencies: dependency version for example should be a string: 123.
   }
 }
 `,
@@ -107,8 +107,8 @@ ruleTester.describe(directPropertyValidityRules.optionalDependenciesValidity, {
 {
   "optionalDependencies": {
     "example": null
-    ~~~~~~~~~~~~~~~
-    Invalid optionalDependencies: dependency version for example should be a string: null.
+               ~~~~
+               Invalid optionalDependencies: dependency version for example should be a string: null.
   }
 }
 `,
@@ -125,8 +125,8 @@ ruleTester.describe(directPropertyValidityRules.optionalDependenciesValidity, {
 {
   "optionalDependencies": {
     "example": {}
-    ~~~~~~~~~~~~~
-    Invalid optionalDependencies: dependency version for example should be a string: [object Object].
+               ~~
+               Invalid optionalDependencies: dependency version for example should be a string: [object Object].
   }
 }
 `,
@@ -143,8 +143,8 @@ ruleTester.describe(directPropertyValidityRules.optionalDependenciesValidity, {
 {
   "optionalDependencies": {
     "example": "workspace"
-    ~~~~~~~~~~~~~~~~~~~~~~
-    Invalid optionalDependencies: invalid version range for dependency example: workspace.
+               ~~~~~~~~~~~
+               Invalid optionalDependencies: invalid version range for dependency example: workspace.
   }
 }
 `,

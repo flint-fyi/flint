@@ -71,8 +71,8 @@ ruleTester.describe(directPropertyValidityRules.exportsValidity, {
 {
   "exports": {
     "./invalid": 123
-    ~~~~~~~~~~~~~~~~
-    Invalid exports: the value of "./invalid" should be either an entry point path or an object of export conditions.
+                 ~~~
+                 Invalid exports: the value of "./invalid" should be either an entry point path or an object of export conditions.
   }
 }
 `,
@@ -89,8 +89,8 @@ ruleTester.describe(directPropertyValidityRules.exportsValidity, {
 {
   "exports": {
     "./invalid": ""
-    ~~~~~~~~~~~~~~~
-    Invalid exports: the value of "./invalid" is empty, but should be an entry point path.
+                 ~~
+                 Invalid exports: the value of "./invalid" is empty, but should be an entry point path.
   }
 }
 `,
@@ -107,8 +107,8 @@ ruleTester.describe(directPropertyValidityRules.exportsValidity, {
 {
   "exports": {
     "": "invalid"
-    ~~~~~~~~~~~~~
-    Invalid exports: property 0 has an empty key, but should be an export condition.
+        ~~~~~~~~~
+        Invalid exports: property 0 has an empty key, but should be an export condition.
   }
 }
 `,
@@ -126,11 +126,11 @@ ruleTester.describe(directPropertyValidityRules.exportsValidity, {
 {
   "exports": {
     "": "invalid",
-    ~~~~~~~~~~~~~
-    Invalid exports: property 0 has an empty key, but should be an export condition.
+        ~~~~~~~~~
+        Invalid exports: property 0 has an empty key, but should be an export condition.
     "   ": "invalid"
-    ~~~~~~~~~~~~~~~~
-    Invalid exports: property 1 has an empty key, but should be an export condition.
+           ~~~~~~~~~
+           Invalid exports: property 1 has an empty key, but should be an export condition.
   }
 }
 `,

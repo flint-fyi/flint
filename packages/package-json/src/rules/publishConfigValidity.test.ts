@@ -57,8 +57,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "access": "not right"
-    ~~~~~~~~~~~~~~~~~~~~~
-    Invalid publishConfig: the value "not right" is not valid. Valid types are: public, restricted.
+              ~~~~~~~~~~~
+              Invalid publishConfig: the value "not right" is not valid. Valid types are: public, restricted.
   }
 }
 `,
@@ -75,8 +75,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "access": ""
-    ~~~~~~~~~~~~
-    Invalid publishConfig: the value is empty, but should be "public" or "restricted".
+              ~~
+              Invalid publishConfig: the value is empty, but should be "public" or "restricted".
   }
 }
 `,
@@ -93,8 +93,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "access": []
-    ~~~~~~~~~~~~
-    Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
+              ~~
+              Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
   }
 }
 `,
@@ -111,8 +111,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "bin": ""
-    ~~~~~~~~~
-    Invalid publishConfig: the value is empty, but should be a relative path.
+           ~~
+           Invalid publishConfig: the value is empty, but should be a relative path.
   }
 }
 `,
@@ -129,8 +129,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "bin": 123
-    ~~~~~~~~~~
-    Invalid publishConfig: the type should be \`string\` or \`object\`, not \`number\`.
+           ~~~
+           Invalid publishConfig: the type should be \`string\` or \`object\`, not \`number\`.
   }
 }
 `,
@@ -147,8 +147,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "cpu": 123
-    ~~~~~~~~~~
-    Invalid publishConfig: the type should be \`Array\`, not \`number\`.
+           ~~~
+           Invalid publishConfig: the type should be \`Array\`, not \`number\`.
   }
 }
 `,
@@ -165,8 +165,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "directory": ""
-    ~~~~~~~~~~~~~~~
-    Invalid publishConfig: the value is empty, but should be the path to a subdirectory.
+                 ~~
+                 Invalid publishConfig: the value is empty, but should be the path to a subdirectory.
   }
 }
 `,
@@ -183,8 +183,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "directory": 123
-    ~~~~~~~~~~~~~~~~
-    Invalid publishConfig: the type should be a \`string\`, not \`number\`.
+                 ~~~
+                 Invalid publishConfig: the type should be a \`string\`, not \`number\`.
   }
 }
 `,
@@ -201,8 +201,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "directory": []
-    ~~~~~~~~~~~~~~~
-    Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
+                 ~~
+                 Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
   }
 }
 `,
@@ -219,8 +219,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "main": ""
-    ~~~~~~~~~~
-    Invalid publishConfig: the value is empty, but should be the path to the package's main module.
+            ~~
+            Invalid publishConfig: the value is empty, but should be the path to the package's main module.
   }
 }
 `,
@@ -237,8 +237,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "main": 123
-    ~~~~~~~~~~~
-    Invalid publishConfig: the type should be a \`string\`, not \`number\`.
+            ~~~
+            Invalid publishConfig: the type should be a \`string\`, not \`number\`.
   }
 }
 `,
@@ -255,8 +255,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "provenance": null
-    ~~~~~~~~~~~~~~~~~~
-    Invalid publishConfig: the value is \`null\`, but should be a \`boolean\`.
+                  ~~~~
+                  Invalid publishConfig: the value is \`null\`, but should be a \`boolean\`.
   }
 }
 `,
@@ -273,8 +273,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "provenance": 123
-    ~~~~~~~~~~~~~~~~~
-    Invalid publishConfig: the type should be a \`boolean\`, not \`number\`.
+                  ~~~
+                  Invalid publishConfig: the type should be a \`boolean\`, not \`number\`.
   }
 }
 `,
@@ -291,8 +291,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "provenance": []
-    ~~~~~~~~~~~~~~~~
-    Invalid publishConfig: the type should be a \`boolean\`, not \`Array\`.
+                  ~~
+                  Invalid publishConfig: the type should be a \`boolean\`, not \`Array\`.
   }
 }
 `,
@@ -309,8 +309,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "tag": ""
-    ~~~~~~~~~
-    Invalid publishConfig: the value is empty, but should be a release tag.
+           ~~
+           Invalid publishConfig: the value is empty, but should be a release tag.
   }
 }
 `,
@@ -327,8 +327,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "tag": 123
-    ~~~~~~~~~~
-    Invalid publishConfig: the type should be a \`string\`, not \`number\`.
+           ~~~
+           Invalid publishConfig: the type should be a \`string\`, not \`number\`.
   }
 }
 `,
@@ -345,8 +345,8 @@ ruleTester.describe(directPropertyValidityRules.publishConfigValidity, {
 {
   "publishConfig": {
     "tag": []
-    ~~~~~~~~~
-    Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
+           ~~
+           Invalid publishConfig: the type should be a \`string\`, not \`Array\`.
   }
 }
 `,

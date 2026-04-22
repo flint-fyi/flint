@@ -76,7 +76,9 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 						const childNode = node.properties[childResult.index]!;
 						reportIssues(
 							childResult,
-							childNode as unknown as ts.ObjectLiteralExpression,
+							(childNode.kind === ts.SyntaxKind.PropertyAssignment
+								? childNode.initializer
+								: childNode) as JsonNode,
 							sourceFile,
 						);
 					}

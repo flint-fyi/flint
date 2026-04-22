@@ -73,8 +73,8 @@ ruleTester.describe(directPropertyValidityRules.repositoryValidity, {
   "repository": {
     "type": "git",
     "url": 123
-    ~~~~~~~~~~
-    Invalid repository: the value of property "url" should be a string.
+           ~~~
+           Invalid repository: the value of property "url" should be a string.
   }
 }
 `,

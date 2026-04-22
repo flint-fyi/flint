@@ -103,23 +103,23 @@ ruleTester.describe(directPropertyValidityRules.contributorsValidity, {
   "contributors": [
     {
       "name": "",
-      ~~~~~~~~~~
-      Invalid contributors: name should not be empty.
+              ~~
+              Invalid contributors: name should not be empty.
       "email": "invalid",
-      ~~~~~~~~~~~~~~~~~~
-      Invalid contributors: email is not valid: invalid.
+               ~~~~~~~~~
+               Invalid contributors: email is not valid: invalid.
       "url": "other"
-      ~~~~~~~~~~~~~~
-      Invalid contributors: url is not valid: other.
+             ~~~~~~~
+             Invalid contributors: url is not valid: other.
     },
     {
       "name": "first",
       "email": "person",
-      ~~~~~~~~~~~~~~~~~
-      Invalid contributors: email is not valid: person.
+               ~~~~~~~~
+               Invalid contributors: email is not valid: person.
       "web": ".com"
-      ~~~~~~~~~~~~~
-      Invalid contributors: url is not valid: .com.
+             ~~~~~~
+             Invalid contributors: url is not valid: .com.
     }
   ]
 }
