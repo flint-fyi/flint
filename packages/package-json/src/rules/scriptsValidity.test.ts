@@ -140,12 +140,12 @@ ruleTester.describe(directPropertyValidityRules.scriptsValidity, {
 		`{}`,
 		`
 {
-  "scripts": { "silver-mt-zion": "node ./silver-mt-zion.js" }
+  "scripts": { "first": "node ./first.js" }
 }
 	`,
 		`
 {
-  "scripts": { "silver-mt-zion": "node ./silver-mt-zion.js", "nin": "node ./nin.js" }
+  "scripts": { "first": "node ./first.js", "second": "node ./second.js" }
 }
 	`,
 	],

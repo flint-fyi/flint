@@ -106,7 +106,7 @@ ruleTester.describe(directPropertyValidityRules.keywordsValidity, {
   "keywords": []
 }`,
 		`{
-  "keywords": ["nin", "A Silver Mt. Zion"]
+  "keywords": ["first","Second"]
 }`,
 	],
 });

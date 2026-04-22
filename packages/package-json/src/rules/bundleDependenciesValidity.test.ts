@@ -218,7 +218,7 @@ ruleTester.describe(directPropertyValidityRules.bundleDependenciesValidity, {
   "bundleDependencies": []
 }`,
 		`{
-  "bundleDependencies": ["nin", "silver-mt-zion"]
+  "bundleDependencies": ["first", "second"]
 }`,
 		`{
   "bundleDependencies": true
@@ -236,7 +236,7 @@ ruleTester.describe(directPropertyValidityRules.bundleDependenciesValidity, {
   "bundledDependencies": []
 }`,
 		`{
-  "bundledDependencies": ["nin", "silver-mt-zion"]
+  "bundledDependencies": ["first", "second"]
 }`,
 	],
 });

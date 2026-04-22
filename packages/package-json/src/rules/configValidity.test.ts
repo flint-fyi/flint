@@ -83,10 +83,10 @@ ruleTester.describe(directPropertyValidityRules.configValidity, {
   "config": { "port": 8080 }
 }`,
 		`{
-  "config": { "silver-mt-zion": "node ./silver-mt-zion.js", "nin": "node ./nin.js" }
+  "config": { "first": { "node": "./first.js" }, "second": "node ./second.js" }
 }`,
 		`{
-  "config": { "silver-mt-zion": {"leadSinger": "Alex Manual Example"}, "nin": "node ./nin.js" }
+  "config": { "first": { "value": "First" }, "second": "node ./second.js" }
 }`,
 	],
 });

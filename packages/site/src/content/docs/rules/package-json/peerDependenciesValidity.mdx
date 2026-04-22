@@ -17,6 +17,8 @@ The rule checks that, if present, the `peerDependencies` property is an object w
 <Tabs>
 <TabItem label="❌ Incorrect">
 
+<!-- cspell:disable -->
+
 ```json
 {
 	"peerDependencies": {
@@ -25,14 +27,16 @@ The rule checks that, if present, the `peerDependencies` property is an object w
 }
 ```
 
+<!-- cspell:enable -->
+
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```json
 {
 	"peerDependencies": {
-		"nin": "catalog:",
-		"thee-silver-mt-zion": "^1.2.3",
+		"first": "catalog:",
+		"thee-"first"": "^1.2.3",
 		"david-bowie": "*"
 	}
 }

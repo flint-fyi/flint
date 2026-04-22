@@ -86,16 +86,16 @@ ruleTester.describe(directPropertyValidityRules.cpuValidity, {
 		{
 			code: `
 {
-  "cpu": ["silver-mt-zion", "nin"]
+  "cpu": ["first", "second"]
 }
 `,
 			snapshot: `
 {
-  "cpu": ["silver-mt-zion", "nin"]
-          ~~~~~~~~~~~~~~~~
-          Invalid cpu: the value "silver-mt-zion" is not valid. Valid CPU values are: arm, arm64, ia32, loong64, mips, mipsel, ppc64, riscv64, s390, s390x, x64.
-                            ~~~~~
-                            Invalid cpu: the value "nin" is not valid. Valid CPU values are: arm, arm64, ia32, loong64, mips, mipsel, ppc64, riscv64, s390, s390x, x64.
+  "cpu": ["first", "second"]
+          ~~~~~~~
+          Invalid cpu: the value "first" is not valid. Valid CPU values are: arm, arm64, ia32, loong64, mips, mipsel, ppc64, riscv64, s390, s390x, x64.
+                            ~~~~~~~~
+                            Invalid cpu: the value "second" is not valid. Valid CPU values are: arm, arm64, ia32, loong64, mips, mipsel, ppc64, riscv64, s390, s390x, x64.
 }
 `,
 		},

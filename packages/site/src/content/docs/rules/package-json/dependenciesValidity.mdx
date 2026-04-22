@@ -17,6 +17,8 @@ The rule checks that, if present, the `dependencies` property is an object where
 <Tabs>
 <TabItem label="❌ Incorrect">
 
+<!-- cspell:disable -->
+
 ```json
 {
 	"dependencies": {
@@ -25,15 +27,17 @@ The rule checks that, if present, the `dependencies` property is an object where
 }
 ```
 
+<!-- cspell:enable -->
+
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```json
 {
 	"dependencies": {
-		"nin": "catalog:",
-		"thee-silver-mt-zion": "^1.2.3",
-		"david-bowie": "*"
+		"first": "catalog:",
+		"second": "^1.2.3",
+		"third": "*"
 	}
 }
 ```
