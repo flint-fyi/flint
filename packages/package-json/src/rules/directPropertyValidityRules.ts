@@ -83,6 +83,6 @@ export const directPropertyValidityRules = Object.fromEntries(
 			propertyNameAliases,
 			propertyValidator,
 		);
-		return [id as ValidityRuleName, rule] as const;
+		return [id, rule] as const;
 	}),
-) as unknown as Record<ValidityRuleName, AnyRule>;
+) as Record<ValidityRuleName, AnyRule>;

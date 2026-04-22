@@ -11,12 +11,12 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 export type PropertyValidator = (value: unknown) => Result;
 
-export function createDirectPropertyValidityRule(
-	propertyName: string,
+export function createDirectPropertyValidityRule<PropertyName extends string>(
+	propertyName: PropertyName,
 	propertyNameAliases: readonly string[],
 	propertyValidator: PropertyValidator,
 ) {
-	const id = `${propertyName}Validity`;
+	const id = `${propertyName}Validity` as const;
 	const propertyNames = new Set([propertyName, ...propertyNameAliases]);
 
 	const rule = ruleCreator.createRule(jsonLanguage, {
