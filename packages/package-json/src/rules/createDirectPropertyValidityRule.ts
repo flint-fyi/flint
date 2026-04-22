@@ -1,3 +1,4 @@
+import type { AnyRule } from "@flint.fyi/core";
 import {
 	getJsonNodeRange,
 	jsonLanguage,
@@ -19,7 +20,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 	const id = `${propertyName}Validity` as const;
 	const propertyNames = new Set([propertyName, ...propertyNameAliases]);
 
-	const rule = ruleCreator.createRule(jsonLanguage, {
+	const rule: AnyRule = ruleCreator.createRule(jsonLanguage, {
 		about: {
 			description: `Enforces that the \`${propertyName}\`${propertyNameAliases.length ? ` (also: ${propertyNameAliases.map((alias) => `\`${alias}\``).join(", ")})` : ""} property is valid.`,
 			id,
