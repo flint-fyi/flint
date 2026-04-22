@@ -63,6 +63,9 @@ export default {
 		"packages/node": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
+		"packages/package-json": {
+			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
+		},
 		"packages/performance": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
