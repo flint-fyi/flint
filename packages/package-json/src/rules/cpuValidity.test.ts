@@ -94,8 +94,8 @@ ruleTester.describe(directPropertyValidityRules.cpuValidity, {
   "cpu": ["first", "second"]
           ~~~~~~~
           Invalid cpu: the value "first" is not valid. Valid CPU values are: arm, arm64, ia32, loong64, mips, mipsel, ppc64, riscv64, s390, s390x, x64.
-                            ~~~~~~~~
-                            Invalid cpu: the value "second" is not valid. Valid CPU values are: arm, arm64, ia32, loong64, mips, mipsel, ppc64, riscv64, s390, s390x, x64.
+                   ~~~~~~~~
+                   Invalid cpu: the value "second" is not valid. Valid CPU values are: arm, arm64, ia32, loong64, mips, mipsel, ppc64, riscv64, s390, s390x, x64.
 }
 `,
 		},

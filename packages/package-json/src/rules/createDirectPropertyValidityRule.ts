@@ -6,6 +6,7 @@ import {
 import type { Result } from "package-json-validator";
 import ts from "typescript";
 
+import { getPackagePropertiesOfNames } from "./getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export type PropertyValidator = (value: unknown) => Result;
@@ -101,28 +102,11 @@ export function createDirectPropertyValidityRule(
 			return {
 				visitors: {
 					JsonSourceFile: (node: ts.JsonSourceFile, { sourceFile }) => {
-						if (node.statements.length !== 1) {
-							return;
-						}
-
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-						const root = node.statements[0]!;
-						if (
-							root.expression.kind !== ts.SyntaxKind.ObjectLiteralExpression
-						) {
-							return;
-						}
-
-						for (const property of root.expression.properties) {
-							if (
-								property.name?.kind === ts.SyntaxKind.StringLiteral &&
-								propertyNames.has(property.name.text)
-							) {
-								checkValue(
-									(property as ts.PropertyAssignment).initializer as JsonNode,
-									sourceFile,
-								);
-							}
+						for (const initializer of getPackagePropertiesOfNames(
+							node,
+							propertyNames,
+						)) {
+							checkValue(initializer, sourceFile);
 						}
 					},
 				},
