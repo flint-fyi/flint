@@ -30,13 +30,13 @@
 		"@flint.fyi/astro-language": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
-		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"@flint.fyi/volar-language": "workspace:^",
 		"typescript": "^5.9.3 || ^6.0.0"
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

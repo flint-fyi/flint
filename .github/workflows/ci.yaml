@@ -46,6 +46,7 @@ jobs:
       - uses: ./.github/actions/prepare
       - run: pnpm run build # Knip requires all exports to be generated.
       - run: pnpm run lint:knip
+      - run: pnpm run lint:knip:prod
   typecheck:
     name: Typecheck
     runs-on: ubuntu-latest

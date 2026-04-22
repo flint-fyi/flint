@@ -500,3 +500,5 @@ function translateRange(
 	}
 	return null;
 }
+
+export type { Language } from "@flint.fyi/core";
