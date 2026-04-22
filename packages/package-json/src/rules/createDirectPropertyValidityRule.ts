@@ -28,7 +28,7 @@ export function createDirectPropertyValidityRule(
 			validationError: {
 				primary: `Invalid ${propertyName}: {{ error }}.`,
 				secondary: [
-					`Although this value is valid JSON, the package.json ${propertyName} property is restricted in what it may contain.`,
+					`Although this value is valid JSON, the package.json \`${propertyName}\` property is restricted in what it may contain.`,
 				],
 				suggestions: ["Correct the value to the expected type."],
 			},
