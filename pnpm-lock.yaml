@@ -76,8 +76,8 @@ catalogs:
       specifier: 2.6.1
       version: 2.6.1
     knip:
-      specifier: 6.5.0
-      version: 6.5.0
+      specifier: 6.6.0
+      version: 6.6.0
     lint-staged:
       specifier: 16.4.0
       version: 16.4.0
@@ -276,7 +276,7 @@ importers:
         version: 2.6.1
       knip:
         specifier: catalog:dev
-        version: 6.5.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
+        version: 6.6.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
       lint-staged:
         specifier: catalog:dev
         version: 16.4.0
@@ -4866,8 +4866,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@6.5.0:
-    resolution: {integrity: sha512-84xSq/g8CtPWLJcY5WZeGWj/pbqQxJRC7iXTTutB0MkMm260hKxlzIXSTnxuTuIxre2MBSokhLkfth8dQQYVPQ==}
+  knip@6.6.0:
+    resolution: {integrity: sha512-IT1YDiHyRctYYsuZNBd/ZiGoa7HmCaxs+ZrWxCfYjQKPG6QyRqMfkteqC+rBuMymBJeLXyBnRa7hn95O+sGG8Q==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -10426,16 +10426,15 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@6.5.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2):
+  knip@6.6.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2):
     dependencies:
-      '@nodelib/fs.walk': 1.2.8
+      fdir: 6.5.0(picomatch@4.0.4)
       formatly: 0.3.0
       get-tsconfig: 4.14.0
       jiti: 2.6.1
       minimist: 1.2.8
       oxc-parser: 0.126.0
       oxc-resolver: 11.19.1(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
-      picocolors: 1.1.1
       picomatch: 4.0.4
       smol-toml: 1.6.1
       strip-json-comments: 5.0.3
