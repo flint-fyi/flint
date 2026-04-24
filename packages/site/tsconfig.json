@@ -1,12 +1,11 @@
 {
 	"compilerOptions": {
-		"baseUrl": ".",
 		"composite": true,
 		"jsx": "react-jsx",
 		"jsxImportSource": "react",
 		"noEmit": false,
 		"paths": {
-			"~/*": ["src/*"]
+			"~/*": ["./src/*"]
 		},
 		"target": "esnext",
 		"emitDeclarationOnly": true
