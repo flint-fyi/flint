@@ -1,5 +1,6 @@
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
+import vercel from "@astrojs/vercel";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
 import { defineConfig } from "astro/config";
 import { remarkAddTwoslash } from "remark-add-twoslash";
@@ -9,17 +10,20 @@ import starlightLinksValidator from "starlight-links-validator";
 import starlightSidebarTopics from "starlight-sidebar-topics";
 
 export default defineConfig({
+	adapter: vercel({
+		edgeMiddleware: true,
+	}),
 	integrations: [
 		konamiEmojiBlast(),
 		starlight({
 			components: {
-				Footer: "src/components/Footer.astro",
-				Head: "src/components/Head.astro",
+				Footer: "./src/components/Footer.astro",
+				Head: "./src/components/Head.astro",
 			},
-			customCss: ["src/styles.css"],
+			customCss: ["./src/styles.css"],
 			favicon: "/logo.png",
 			logo: {
-				src: "src/assets/logo.png",
+				src: "./src/assets/logo.png",
 			},
 			plugins: [
 				starlightBlog({
@@ -149,6 +153,7 @@ export default defineConfig({
 			remarkHeadingId,
 		],
 	},
+	output: "static",
 	redirects: {
 		"/discord": "https://discord.gg/cFK3RAUDhy",
 		"/team": "/project/team",
