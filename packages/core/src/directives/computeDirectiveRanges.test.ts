@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { computeDirectiveRanges } from "./computeDirectiveRanges.ts";
+import { createSelectionMatcher } from "./createSelectionMatcher.ts";
 
 function createDirectiveRange(forLine: number) {
 	return {
@@ -38,7 +39,7 @@ describe(computeDirectiveRanges, () => {
 					begin: 1,
 					end: Infinity,
 				},
-				selections: [/^aaa$/],
+				selections: [createSelectionMatcher("aaa")],
 			},
 		]);
 	});
@@ -58,7 +59,7 @@ describe(computeDirectiveRanges, () => {
 					begin: 1,
 					end: 1,
 				},
-				selections: [/^aaa$/],
+				selections: [createSelectionMatcher("aaa")],
 			},
 		]);
 	});
@@ -83,7 +84,10 @@ describe(computeDirectiveRanges, () => {
 					begin: 1,
 					end: 3,
 				},
-				selections: [/^aaa$/, /^bbb$/],
+				selections: [
+					createSelectionMatcher("aaa"),
+					createSelectionMatcher("bbb"),
+				],
 			},
 		]);
 	});
@@ -108,14 +112,17 @@ describe(computeDirectiveRanges, () => {
 					begin: 1,
 					end: 3,
 				},
-				selections: [/^aaa$/, /^bbb$/],
+				selections: [
+					createSelectionMatcher("aaa"),
+					createSelectionMatcher("bbb"),
+				],
 			},
 			{
 				lines: {
 					begin: 4,
 					end: Infinity,
 				},
-				selections: [/^bbb$/],
+				selections: [createSelectionMatcher("bbb")],
 			},
 		]);
 	});
@@ -140,22 +147,45 @@ describe(computeDirectiveRanges, () => {
 					begin: 1,
 					end: 1,
 				},
-				selections: [/^aaa$/, /^bbb$/],
+				selections: [
+					createSelectionMatcher("aaa"),
+					createSelectionMatcher("bbb"),
+				],
 			},
 			{
 				lines: {
 					begin: 2,
 					end: 2,
 				},
-				selections: [/^aaa$/, /^bbb$/, /^ccc$/],
+				selections: [
+					createSelectionMatcher("aaa"),
+					createSelectionMatcher("bbb"),
+					createSelectionMatcher("ccc"),
+				],
 			},
 			{
 				lines: {
 					begin: 3,
 					end: Infinity,
 				},
-				selections: [/^aaa$/, /^bbb$/],
+				selections: [
+					createSelectionMatcher("aaa"),
+					createSelectionMatcher("bbb"),
+				],
 			},
 		]);
+	});
+
+	it("treats regex metacharacters literally except for * wildcards", () => {
+		const actual = computeDirectiveRanges([
+			{
+				range: createDirectiveRange(0),
+				selections: ["file.name*test"],
+				type: "disable-next-line",
+			},
+		]);
+
+		expect(actual[0]?.selections[0]?.test("file.name.test")).toBe(true);
+		expect(actual[0]?.selections[0]?.test("file1name.test")).toBe(false);
 	});
 });

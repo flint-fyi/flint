@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 
+import type { CommentDirective } from "../types/directives.ts";
 import type { FileReport } from "../types/reports.ts";
 import { DirectivesFilterer } from "./DirectivesFilterer.ts";
+
+function createDirective(overrides: CommentDirective): CommentDirective {
+	return overrides;
+}
 
 function createReport(forLine: number, id: string) {
 	return {
@@ -43,7 +48,7 @@ describe(DirectivesFilterer, () => {
 		it("returns all reports when no directives apply to them", () => {
 			const filterer = new DirectivesFilterer();
 
-			const directive = {
+			const directive = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -58,7 +63,7 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["*other*"],
 				type: "disable-next-line" as const,
-			};
+			});
 
 			filterer.add([directive]);
 
@@ -76,7 +81,7 @@ describe(DirectivesFilterer, () => {
 			const filterer = new DirectivesFilterer();
 
 			filterer.add([
-				{
+				createDirective({
 					range: {
 						begin: {
 							column: 0,
@@ -91,7 +96,7 @@ describe(DirectivesFilterer, () => {
 					},
 					selections: ["example"],
 					type: "disable-next-line",
-				},
+				}),
 			]);
 
 			const reports = [createReport(0, "example"), createReport(1, "example")];
@@ -107,7 +112,7 @@ describe(DirectivesFilterer, () => {
 		it("identifies unused file directives that don't match any reports", () => {
 			const filterer = new DirectivesFilterer();
 
-			const unusedDirective = {
+			const unusedDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -122,7 +127,7 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["*other*"],
 				type: "disable-file" as const,
-			};
+			});
 
 			filterer.add([unusedDirective]);
 
@@ -139,7 +144,7 @@ describe(DirectivesFilterer, () => {
 		it("does not include used file directives in unusedDirectives", () => {
 			const filterer = new DirectivesFilterer();
 
-			const usedDirective = {
+			const usedDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -154,7 +159,7 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["example"],
 				type: "disable-file" as const,
-			};
+			});
 
 			filterer.add([usedDirective]);
 
@@ -171,7 +176,7 @@ describe(DirectivesFilterer, () => {
 		it("identifies only unused file directives when some are used and some are not", () => {
 			const filterer = new DirectivesFilterer();
 
-			const usedDirective = {
+			const usedDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -186,9 +191,9 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["example"],
 				type: "disable-file" as const,
-			};
+			});
 
-			const unusedDirective1 = {
+			const unusedDirective1 = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -203,9 +208,9 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["*other*"],
 				type: "disable-file" as const,
-			};
+			});
 
-			const unusedDirective2 = {
+			const unusedDirective2 = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -220,7 +225,7 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["*unused*"],
 				type: "disable-file" as const,
-			};
+			});
 
 			filterer.add([usedDirective, unusedDirective1, unusedDirective2]);
 
@@ -237,7 +242,7 @@ describe(DirectivesFilterer, () => {
 		it("identifies unused file directives when directive has multiple selections and none match", () => {
 			const filterer = new DirectivesFilterer();
 
-			const unusedDirective = {
+			const unusedDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -252,7 +257,7 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["rule1", "rule2", "rule3"],
 				type: "disable-file" as const,
-			};
+			});
 
 			filterer.add([unusedDirective]);
 
@@ -269,7 +274,7 @@ describe(DirectivesFilterer, () => {
 		it("does not identify file directive as unused when at least one selection matches", () => {
 			const filterer = new DirectivesFilterer();
 
-			const usedDirective = {
+			const usedDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -284,7 +289,7 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["rule1", "example", "rule3"],
 				type: "disable-file" as const,
-			};
+			});
 
 			filterer.add([usedDirective]);
 
@@ -301,7 +306,7 @@ describe(DirectivesFilterer, () => {
 		it("marks disable-lines-begin as used when its range suppresses a report", () => {
 			const filterer = new DirectivesFilterer();
 
-			const beginDirective = {
+			const beginDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -316,7 +321,7 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["example"],
 				type: "disable-lines-begin" as const,
-			};
+			});
 
 			filterer.add([beginDirective]);
 
@@ -334,7 +339,7 @@ describe(DirectivesFilterer, () => {
 		it("marks disable-lines-end as used when its range suppresses a report", () => {
 			const filterer = new DirectivesFilterer();
 
-			const beginDirective = {
+			const beginDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -349,9 +354,9 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["example"],
 				type: "disable-lines-begin" as const,
-			};
+			});
 
-			const endDirective = {
+			const endDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -366,7 +371,7 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["example"],
 				type: "disable-lines-end" as const,
-			};
+			});
 
 			filterer.add([beginDirective, endDirective]);
 
@@ -384,7 +389,7 @@ describe(DirectivesFilterer, () => {
 		it("marks both begin and end as unused when block doesn't suppress any reports", () => {
 			const filterer = new DirectivesFilterer();
 
-			const beginDirective = {
+			const beginDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -399,9 +404,9 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["other-rule"],
 				type: "disable-lines-begin" as const,
-			};
+			});
 
-			const endDirective = {
+			const endDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -416,7 +421,7 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["other-rule"],
 				type: "disable-lines-end" as const,
-			};
+			});
 
 			filterer.add([beginDirective, endDirective]);
 
@@ -434,7 +439,7 @@ describe(DirectivesFilterer, () => {
 		it("marks unclosed disable-lines-begin as used when it suppresses a report", () => {
 			const filterer = new DirectivesFilterer();
 
-			const beginDirective = {
+			const beginDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -449,7 +454,7 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["example"],
 				type: "disable-lines-begin" as const,
-			};
+			});
 
 			filterer.add([beginDirective]);
 
@@ -467,7 +472,7 @@ describe(DirectivesFilterer, () => {
 		it("only marks directives as used when their selections match the suppressed report", () => {
 			const filterer = new DirectivesFilterer();
 
-			const usedBeginDirective = {
+			const usedBeginDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -482,9 +487,9 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["example"],
 				type: "disable-lines-begin" as const,
-			};
+			});
 
-			const usedEndDirective = {
+			const usedEndDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -499,10 +504,10 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["example"],
 				type: "disable-lines-end" as const,
-			};
+			});
 
 			// Different block that doesn't match any reports
-			const unusedBeginDirective = {
+			const unusedBeginDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -517,9 +522,9 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["other-rule"],
 				type: "disable-lines-begin" as const,
-			};
+			});
 
-			const unusedEndDirective = {
+			const unusedEndDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -534,7 +539,7 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["other-rule"],
 				type: "disable-lines-end" as const,
-			};
+			});
 
 			filterer.add([
 				usedBeginDirective,
@@ -558,7 +563,7 @@ describe(DirectivesFilterer, () => {
 			const filterer = new DirectivesFilterer();
 
 			// First block - should be marked as used (suppresses the report)
-			const usedBeginDirective = {
+			const usedBeginDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -573,9 +578,9 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["example"],
 				type: "disable-lines-begin" as const,
-			};
+			});
 
-			const usedEndDirective = {
+			const usedEndDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -590,11 +595,11 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["example"],
 				type: "disable-lines-end" as const,
-			};
+			});
 
 			// Second block with SAME selection - should NOT be marked as used
 			// because no reports fall within its range
-			const unusedBeginDirective = {
+			const unusedBeginDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -609,9 +614,9 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["example"],
 				type: "disable-lines-begin" as const,
-			};
+			});
 
-			const unusedEndDirective = {
+			const unusedEndDirective = createDirective({
 				range: {
 					begin: {
 						column: 0,
@@ -626,7 +631,7 @@ describe(DirectivesFilterer, () => {
 				},
 				selections: ["example"],
 				type: "disable-lines-end" as const,
-			};
+			});
 
 			filterer.add([
 				usedBeginDirective,
@@ -651,24 +656,24 @@ describe(DirectivesFilterer, () => {
 			const filterer = new DirectivesFilterer();
 
 			// disable-next-line at line 3, covers only line 4
-			const usedNextLine = {
+			const usedNextLine = createDirective({
 				range: {
 					begin: { column: 0, line: 3, raw: 3 },
 					end: { column: 0, line: 3, raw: 3 },
 				},
 				selections: ["example"],
 				type: "disable-next-line" as const,
-			};
+			});
 
 			// disable-next-line at line 10, covers only line 11
-			const unusedNextLine = {
+			const unusedNextLine = createDirective({
 				range: {
 					begin: { column: 0, line: 10, raw: 10 },
 					end: { column: 0, line: 10, raw: 10 },
 				},
 				selections: ["example"],
 				type: "disable-next-line" as const,
-			};
+			});
 
 			filterer.add([usedNextLine, unusedNextLine]);
 

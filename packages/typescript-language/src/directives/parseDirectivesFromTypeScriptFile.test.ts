@@ -17,6 +17,7 @@ describe(parseDirectivesFromTypeScriptFile, () => {
 
 		expect(actual).toEqual({
 			directives: [],
+			redundantDirectives: [],
 			reports: [],
 		});
 	});
@@ -75,6 +76,7 @@ describe(parseDirectivesFromTypeScriptFile, () => {
 			      "type": "disable-next-line",
 			    },
 			  ],
+			  "redundantDirectives": [],
 			  "reports": [
 			    {
 			      "about": {

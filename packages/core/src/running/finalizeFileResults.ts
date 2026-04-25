@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 
 import { DirectivesFilterer } from "../directives/DirectivesFilterer.ts";
 import { directiveReports } from "../directives/reports/directiveReports.ts";
+import type { CommentDirective } from "../types/directives.ts";
 import type { LinterHost } from "../types/host.ts";
 import type { LanguageReport } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
@@ -66,17 +67,27 @@ export function finalizeFileResults(
 	}
 
 	const directiveReportsFromCollector: FileReport[] = [];
+	const redundantDirectives = new Set<CommentDirective>();
 	for (const { file } of languageAndFiles) {
 		if (file.reports) {
 			directiveReportsFromCollector.push(...file.reports);
+		}
+
+		for (const directive of file.redundantDirectives ?? []) {
+			redundantDirectives.add(directive);
 		}
 	}
 
 	const filterResult = directivesFilterer.filter(reports);
 
-	const unusedDirectiveReports = filterResult.unusedDirectives.map(
-		(directive) => directiveReports.createUnused(directive),
-	);
+	const unusedDirectiveReports: FileReport[] = [];
+	for (const directive of filterResult.unusedDirectives) {
+		if (redundantDirectives.has(directive)) {
+			continue;
+		}
+
+		unusedDirectiveReports.push(directiveReports.createUnused(directive));
+	}
 
 	return {
 		dependencies: fileDependencies,

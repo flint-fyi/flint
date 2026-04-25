@@ -144,6 +144,7 @@ export interface LanguageFileBase<FileServices extends object> {
 		range: CharacterReportRange,
 	) => CharacterReportRange | null;
 	directives?: CommentDirective[];
+	redundantDirectives?: CommentDirective[];
 	reports?: FileReport[];
 	services: FileServices;
 }
