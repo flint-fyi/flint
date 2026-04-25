@@ -4,21 +4,25 @@ import { ruleTester } from "../ruleTester.ts";
 ruleTester.describe(directPropertyPresenceRules.typesPresence, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`types\` is expected to be present.
 }
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "other": true
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`types\` is expected to be present.
   "other": true

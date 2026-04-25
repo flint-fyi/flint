@@ -4,21 +4,25 @@ import { ruleTester } from "../ruleTester.ts";
 ruleTester.describe(directPropertyPresenceRules.keywordsPresence, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`keywords\` is expected to be present.
 }
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "other": true
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`keywords\` is expected to be present.
   "other": true

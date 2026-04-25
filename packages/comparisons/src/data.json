@@ -5405,6 +5405,20 @@
 	{
 		"eslint": [
 			{
+				"name": "package-json/valid-main",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-main.md"
+			}
+		],
+		"flint": {
+			"name": "mainValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "package-json/require-man",
 				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/806"
 			}

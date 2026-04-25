@@ -4,21 +4,25 @@ import { ruleTester } from "../ruleTester.ts";
 ruleTester.describe(directPropertyPresenceRules.devDependenciesPresence, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`devDependencies\` is expected to be present.
 }
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "other": true
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`devDependencies\` is expected to be present.
   "other": true

@@ -13,13 +13,19 @@ export function RuleEquivalents({ pluginId, ruleId }: RuleEquivalentsProps) {
 	return (
 		<ul>
 			{(Object.entries(linterNames) as [Linter, string][]).map(
-				([linter, linterName]) =>
-					comparison[linter] && (
-						<li key={linter}>
-							{linterName}:{" "}
-							<RuleEquivalentLinks comparison={comparison} linter={linter} />
-						</li>
-					),
+				([linter, linterName]) => {
+					if (!comparison?.[linter]) {
+						console.log({ comparison, pluginId, ruleId });
+					}
+					return (
+						comparison[linter] && (
+							<li key={linter}>
+								{linterName}:{" "}
+								<RuleEquivalentLinks comparison={comparison} linter={linter} />
+							</li>
+						)
+					);
+				},
 			)}
 		</ul>
 	);
