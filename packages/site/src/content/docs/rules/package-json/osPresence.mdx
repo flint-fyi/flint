@@ -1,0 +1,55 @@
+---
+description: "Enforce that the `os` property is present."
+title: "osPresence"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="osPresence" />
+
+npm requires that the `os` field in `package.json` is present.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"os": ["x64"]
+}
+```
+
+```json
+{
+	"name": "my-repository",
+	"os": ["x64"]
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your package doesn't need to specify an `os`, you can disable this rule.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="osPresence" />

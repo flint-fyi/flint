@@ -1,0 +1,55 @@
+---
+description: "Enforce that the `sideEffects` property is present."
+title: "sideEffectsPresence"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="sideEffectsPresence" />
+
+npm requires that the `sideEffects` field in `package.json` is present.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"sideEffects": false
+}
+```
+
+```json
+{
+	"name": "my-repository",
+	"sideEffects": false
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your package doesn't need to specify `sideEffects`, you can disable this rule.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="sideEffectsPresence" />
