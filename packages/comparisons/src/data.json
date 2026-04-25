@@ -4890,6 +4890,18 @@
 	{
 		"eslint": [
 			{
+				"name": "package-json/valid-bugs",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bugs.md"
+			}
+		],
+		"flint": {
+			"name": "bugsValidity",
+			"plugin": "package-json"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "package-json/require-bundleDependencies",
 				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-bundleDependencies.md"
 			}
@@ -5098,6 +5110,20 @@
 	{
 		"eslint": [
 			{
+				"name": "package-json/valid-devEngines",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-devEngines.md"
+			}
+		],
+		"flint": {
+			"name": "devEnginesValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "package-json/require-directories",
 				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/802"
 			}
@@ -5249,6 +5275,20 @@
 		"flint": {
 			"name": "fundingPresence",
 			"plugin": "package-json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-funding",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-funding.md"
+			}
+		],
+		"flint": {
+			"name": "fundingValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5419,7 +5459,8 @@
 		"flint": {
 			"name": "nameValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5484,6 +5525,20 @@
 		"flint": {
 			"name": "packageManagerPresence",
 			"plugin": "package-json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-packageManager",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-packageManager.md"
+			}
+		],
+		"flint": {
+			"name": "packageManagerValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5784,6 +5839,20 @@
 			"name": "versionPresence",
 			"plugin": "package-json",
 			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-version",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-version.md"
+			}
+		],
+		"flint": {
+			"name": "versionValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
