@@ -1,6 +1,6 @@
 import { createPlugin } from "@flint.fyi/core";
 
-import { directPropertyValidityRules } from "./rules/directPropertyValidityRules.ts";
+import { directPropertyValidityRules } from "./directPropertyValidityRules.ts";
 
 export const packageJson = createPlugin({
 	files: {
