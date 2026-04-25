@@ -4,11 +4,13 @@ import { ruleTester } from "../ruleTester.ts";
 ruleTester.describe(directPropertyValidityRules.nameValidity, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
 	"name": null
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 	"name": null
 	        ~~~~
 	        Invalid name: the value is \`null\`, but should be a \`string\`.
@@ -16,11 +18,13 @@ ruleTester.describe(directPropertyValidityRules.nameValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
 	"name": 123
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 	"name": 123
 	        ~~~
 	        Invalid name: the type should be a \`string\`, not \`number\`.
@@ -28,11 +32,13 @@ ruleTester.describe(directPropertyValidityRules.nameValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
 	"name": ""
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 	"name": ""
 	        ~~
 	        Invalid name: the value is empty, but should be a valid name.
@@ -40,11 +46,13 @@ ruleTester.describe(directPropertyValidityRules.nameValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
 	"name": "excited!"
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 	"name": "excited!"
 	        ~~~~~~~~~~
 	        Invalid name: name can no longer contain special characters ("~'!()*").
@@ -52,11 +60,13 @@ ruleTester.describe(directPropertyValidityRules.nameValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
 	"name": "$!"
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 	"name": "$!"
 	        ~~~~
 	        Invalid name: name can only contain URL-friendly characters.
@@ -66,11 +76,13 @@ ruleTester.describe(directPropertyValidityRules.nameValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
 	"name": " leading-space:and:weird:chars!"
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 	"name": " leading-space:and:weird:chars!"
 	        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	        Invalid name: name cannot contain leading or trailing spaces.
@@ -82,12 +94,14 @@ ruleTester.describe(directPropertyValidityRules.nameValidity, {
 `,
 		},
 		{
-			code: `{
+			code: `
+{
 	"name": "InvalidPackageNameWithPrivateFalse",
 	"private": false
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 	"name": "InvalidPackageNameWithPrivateFalse",
 	        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	        Invalid name: name can no longer contain capital letters.
