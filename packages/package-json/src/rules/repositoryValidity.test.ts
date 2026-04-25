@@ -1,5 +1,5 @@
-import { directPropertyValidityRules } from "./directPropertyValidityRules.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { directPropertyValidityRules } from "../directPropertyValidityRules.ts";
+import { ruleTester } from "../ruleTester.ts";
 
 ruleTester.describe(directPropertyValidityRules.repositoryValidity, {
 	invalid: [
