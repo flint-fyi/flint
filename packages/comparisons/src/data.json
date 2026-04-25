@@ -4819,7 +4819,8 @@
 		],
 		"flint": {
 			"name": "authorPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4858,7 +4859,15 @@
 		],
 		"flint": {
 			"name": "binPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "browserPresence",
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4884,7 +4893,8 @@
 		],
 		"flint": {
 			"name": "bugsPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4896,7 +4906,8 @@
 		],
 		"flint": {
 			"name": "bundleDependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4922,7 +4933,8 @@
 		],
 		"flint": {
 			"name": "configPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4948,7 +4960,8 @@
 		],
 		"flint": {
 			"name": "contributorsPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4974,7 +4987,8 @@
 		],
 		"flint": {
 			"name": "cpuPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5000,7 +5014,8 @@
 		],
 		"flint": {
 			"name": "dependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5052,6 +5067,7 @@
 		"flint": {
 			"name": "descriptionPresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5078,7 +5094,8 @@
 		],
 		"flint": {
 			"name": "devDependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5096,6 +5113,13 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "devEnginesPresence",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "package-json/require-directories",
@@ -5104,7 +5128,8 @@
 		],
 		"flint": {
 			"name": "directoriesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5143,7 +5168,8 @@
 		],
 		"flint": {
 			"name": "enginesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5170,6 +5196,7 @@
 		"flint": {
 			"name": "exportsPresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5209,7 +5236,8 @@
 		],
 		"flint": {
 			"name": "filesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5248,7 +5276,8 @@
 		],
 		"flint": {
 			"name": "fundingPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5274,7 +5303,8 @@
 		],
 		"flint": {
 			"name": "keywordsPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5301,6 +5331,7 @@
 		"flint": {
 			"name": "licensePresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5327,7 +5358,8 @@
 		],
 		"flint": {
 			"name": "mainPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5339,7 +5371,8 @@
 		],
 		"flint": {
 			"name": "manPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5350,7 +5383,7 @@
 			}
 		],
 		"flint": {
-			"name": "mainValidity",
+			"name": "manValidity",
 			"plugin": "package-json",
 			"preset": "logical",
 			"status": "implemented"
@@ -5379,7 +5412,8 @@
 		],
 		"flint": {
 			"name": "modulePresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5406,6 +5440,7 @@
 		"flint": {
 			"name": "namePresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5431,7 +5466,8 @@
 		],
 		"flint": {
 			"name": "optionalDependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5457,7 +5493,8 @@
 		],
 		"flint": {
 			"name": "osPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5483,7 +5520,8 @@
 		],
 		"flint": {
 			"name": "packageManagerPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5500,6 +5538,13 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "peerDependenciesMetaPresence",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "package-json/require-peerDependencies",
@@ -5508,7 +5553,8 @@
 		],
 		"flint": {
 			"name": "peerDependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5546,7 +5592,8 @@
 		],
 		"flint": {
 			"name": "privatePresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5585,7 +5632,8 @@
 		],
 		"flint": {
 			"name": "publishConfigPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5638,6 +5686,7 @@
 		"flint": {
 			"name": "repositoryPresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5690,7 +5739,8 @@
 		],
 		"flint": {
 			"name": "scriptsPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5717,6 +5767,7 @@
 		"flint": {
 			"name": "sideEffectsPresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5744,6 +5795,7 @@
 		"flint": {
 			"name": "typePresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5756,7 +5808,8 @@
 		],
 		"flint": {
 			"name": "typesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5783,6 +5836,7 @@
 		"flint": {
 			"name": "versionPresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5797,6 +5851,13 @@
 			"name": "versionValidity",
 			"plugin": "package-json",
 			"preset": "logical"
+		}
+	},
+	{
+		"flint": {
+			"name": "workspacesPresence",
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{

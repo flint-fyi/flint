@@ -29,7 +29,8 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/json-language": "workspace:^",
 		"package-json-validator": "^1.4.0",
-		"typescript": "^5.9.0 || ^6.0.0"
+		"typescript": "^5.9.0 || ^6.0.0",
+		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
