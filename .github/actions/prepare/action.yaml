@@ -9,7 +9,7 @@ runs:
         cache: true
     - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
       with:
-        node-version: 24.14.0
+        node-version: 24.15.0
     - run: pnpm install --frozen-lockfile
       shell: bash
       env:
