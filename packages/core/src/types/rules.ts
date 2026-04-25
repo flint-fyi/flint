@@ -22,6 +22,10 @@ export type AnyRuleDefinition<
 		| undefined,
 > = RuleDefinition<RuleAbout, unknown, object, string, OptionsSchema>;
 
+/**
+ * Prefer explicitly setting the {@linkcode Rule} type arguments,
+ * or, barring that, use {@linkcode AnyRule}.
+ */
 export type UnsafeAnyRule<About extends RuleAbout = RuleAbout> = Rule<
 	About,
 	// TODO: How to make these types work with createPlugin.test.ts & co.?
@@ -54,7 +58,7 @@ export interface Rule<
 	language: Language<AstNodesByName, FileServices>;
 }
 
-export interface RuleAbout extends BaseAbout {
+export interface RuleAbout<Presets = string> extends BaseAbout {
 	description: string;
 
 	/**
@@ -63,7 +67,7 @@ export interface RuleAbout extends BaseAbout {
 	 */
 	pluginId?: string;
 
-	presets?: string[];
+	presets?: Presets[];
 }
 
 /**

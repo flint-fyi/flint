@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, expectTypeOf, it, vi } from "vitest";
 import z from "zod/v4";
 
 import { createLanguage } from "../languages/createLanguage.ts";
@@ -16,7 +16,7 @@ const stubMessages = { "": { primary: "", secondary: [], suggestions: [] } };
 const ruleCreator = new RuleCreator({
 	docs: (ruleId) => `https://flint.fyi/rules/stub/${ruleId.toLowerCase()}`,
 	pluginId: "stub",
-	presets: ["first", "second"],
+	presets: ["first", "second", "third"],
 });
 
 const ruleStandalone = ruleCreator.createRule(stubLanguage, {
@@ -55,6 +55,10 @@ describe(createPlugin, () => {
 				second: [ruleWithOptionalOption],
 			});
 		});
+
+		it("does not type unused presets", () => {
+			expectTypeOf(plugin.presets).not.toHaveProperty("third");
+		});
 	});
 
 	describe("rules", () => {
@@ -70,6 +74,19 @@ describe(createPlugin, () => {
 					rule: ruleWithOptionalOption,
 				},
 			]);
+		});
+
+		it("types rule settings according to each rule's options", () => {
+			expectTypeOf(plugin.rules).toBeCallableWith({
+				standalone: true,
+				withOptionalOption: { value: "abc" },
+			});
+
+			// @ts-expect-error -- Rules without options can only be configured with booleans.
+			plugin.rules({ standalone: { value: "abc" } });
+
+			// @ts-expect-error -- Rule option values must match the rule's schema.
+			plugin.rules({ withOptionalOption: { value: 123 } });
 		});
 	});
 });
