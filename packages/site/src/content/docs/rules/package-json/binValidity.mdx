@@ -1,0 +1,56 @@
+---
+description: "Enforce that the `bin` property is valid."
+title: "binValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="binValidity" />
+
+This rule checks that the `bin` property is either a non-empty string or an object.
+If the value is an object, it should only consist of non-empty string values.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"bin": {
+		"invalid-bin": 123
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"bin": "./bin/cli.js"
+}
+```
+
+```json
+{
+	"bin": {
+		"my-cli": "./bin/cli.js"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `bin` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="binValidity" />

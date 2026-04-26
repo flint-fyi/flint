@@ -6,19 +6,26 @@ ruleTester.describe(rule, {
 		{
 			code: `
                 ruleTester.describe(rule, {
-                    valid: ['a', { code: 'a' }],
+                    valid: ['a', { code: 'b' }],
                     invalid: []
                 });
-            
+
+`,
+			output: `
+                ruleTester.describe(rule, {
+                    valid: ['a', 'b'],
+                    invalid: []
+                });
+
 `,
 			snapshot: `
                 ruleTester.describe(rule, {
-                    valid: ['a', { code: 'a' }],
+                    valid: ['a', { code: 'b' }],
                                    ~~~~~~~~~
                                    Use string shorthand for test cases with only a code property.
                     invalid: []
                 });
-            
+
 `,
 		},
 		{
@@ -27,26 +34,36 @@ ruleTester.describe(rule, {
                     valid: [
                         'a',
                         {
-                          code: 'a'
+                          code: 'b'
                         }
                     ],
                     invalid: []
                 });
-            
+
+`,
+			output: `
+                ruleTester.describe(rule, {
+                    valid: [
+                        'a',
+                        'b'
+                    ],
+                    invalid: []
+                });
+
 `,
 			snapshot: `
                 ruleTester.describe(rule, {
                     valid: [
                         'a',
                         {
-                          code: 'a'
+                          code: 'b'
                           ~~~~~~~~~
                           Use string shorthand for test cases with only a code property.
                         }
                     ],
                     invalid: []
                 });
-            
+
 `,
 		},
 	],

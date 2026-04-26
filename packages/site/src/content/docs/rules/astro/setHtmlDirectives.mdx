@@ -1,0 +1,75 @@
+---
+description: "Reports using Astro's `set:html` directive, which injects content without escaping."
+title: "setHtmlDirectives"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="astro" rule="setHtmlDirectives" />
+
+Astro's `set:html` directive injects raw HTML into the page without escaping it first.
+That makes it similar to setting `innerHTML` in the browser.
+If the value is not fully trusted or sanitized first, it can introduce cross-site scripting (XSS) vulnerabilities.
+
+This rule reports any use of `set:html`.
+Prefer normal Astro expressions when you want text content to be escaped automatically, or `set:text` when you want to set plain text explicitly.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```astro
+---
+const html = await getPostBody();
+---
+
+<article set:html={html} />
+```
+
+```astro
+<p set:html={`Hello, <strong>world!</strong>`} />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```astro
+---
+const html = await getPostBody();
+---
+
+<article>{html}</article>
+```
+
+```astro
+---
+const html = await getPostBody();
+---
+
+<article set:text={html} />
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project intentionally renders HTML from a source you fully trust, or from content that has already been sanitized, this rule may be too strict.
+In those cases, consider disabling the rule for the specific line or file and documenting why the HTML is safe.
+
+## Further Reading
+
+- [Astro Docs: Template directives reference - `set:html`](https://docs.astro.build/en/reference/directives-reference/#sethtml)
+- [MDN: Cross-site scripting (XSS)](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="astro" ruleId="setHtmlDirectives" />

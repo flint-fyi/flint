@@ -15,16 +15,6 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-<div autoFocus="true" />
-`,
-			snapshot: `
-<div autoFocus="true" />
-     ~~~~~~~~~~~~~~~~
-     The \`autoFocus\` prop disruptively forces unintuitive focus behavior.
-`,
-		},
-		{
-			code: `
 <div autoFocus={true} />
 `,
 			snapshot: `
@@ -47,6 +37,8 @@ ruleTester.describe(rule, {
 	valid: [
 		`<div />`,
 		`<div autoFocus="false" />`,
+		// String literals are already caught by TypeScript as a type error, no need to double-report.
+		`<div autoFocus="true" />`,
 		`<div autoFocus={false} />`,
 		`<input type="text" />`,
 	],

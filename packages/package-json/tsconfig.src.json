@@ -7,6 +7,6 @@
 	},
 	"extends": "../../tsconfig.base.json",
 	"include": ["src"],
-	"exclude": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
+	"exclude": ["src/**/*.test.ts", "src/ruleTester.ts"],
 	"references": [{ "path": "../core" }, { "path": "../json-language" }]
 }

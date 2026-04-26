@@ -30,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports and auto-fixes message placeholders that are not formatted as `{{ placeholder }}`.",
 		id: "placeholderFormats",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		placeholderFormats: {

@@ -1,0 +1,75 @@
+---
+description: "Enforce that the `exports` property is valid."
+title: "exportsValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="exportsValidity" />
+
+The rule checks that, if present, the `exports` property is a string or object.
+If it's a string, it should be a path to an entry point.
+If it's an export condition object, its properties should have values that are either a path to an entry point, or another exports condition object.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"exports": {
+		"import": true
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"exports": "./index.js"
+}
+```
+
+```json
+{
+	"exports": {
+		".": "./index.js",
+		"./secondary": "./secondary.js"
+	}
+}
+```
+
+```json
+{
+	"exports": {
+		".": {
+			"import": {
+				"types": "./esm/index.d.mts",
+				"default": "./esm/index.mjs"
+			},
+			"require": {
+				"types": "./cjs/index.d.cts",
+				"default": "./cjs/index.cjs"
+			}
+		}
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `exports` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="exportsValidity" />

@@ -1,0 +1,97 @@
+---
+description: "Enforce that the `author` property is valid."
+title: "authorValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="authorValidity" />
+
+npm requires that the `author` field in `package.json` follows certain specifications if it is present.
+The field can be either a string or an object with specific properties.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"author": ""
+}
+```
+
+```json
+{
+	"author": null
+}
+```
+
+```json
+{
+	"author": "Name <invalid>"
+}
+```
+
+```json
+{
+	"author": {}
+}
+```
+
+```json
+{
+	"author": {
+		"name": "Name",
+		"email": "invalid"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"author": "First Last"
+}
+```
+
+```json
+{
+	"author": "Name <name@example.com>"
+}
+```
+
+```json
+{
+	"author": {
+		"name": "Name"
+	}
+}
+```
+
+```json
+{
+	"author": {
+		"name": "Name",
+		"email": "name@example.com",
+		"url": "https://example.com"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `author` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="authorValidity" />

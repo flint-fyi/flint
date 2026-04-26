@@ -125,21 +125,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-/(a?)?/;
+/(a{0})/;
 `,
 			snapshot: `
-/(a?)?/;
- ~~~~
- This capturing group captures only empty strings.
-`,
-		},
-		{
-			code: `
-/(a*)/;
-`,
-			snapshot: `
-/(a*)/;
- ~~~~
+/(a{0})/;
+ ~~~~~~
  This capturing group captures only empty strings.
 `,
 		},
@@ -174,7 +164,10 @@ RegExp("(\\\\b)");
 		`/(?!a)/;`,
 		`/(a|b)/;`,
 		`/(a|)/;`,
+		`/(a?)/;`,
 		`/(a+)/;`,
+		`/(a*)/;`,
+		`/(a?)?/;`,
 		`/(a{1,})/;`,
 		`/([a-z])/;`,
 		`/(\\d)/;`,

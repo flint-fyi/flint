@@ -1,5 +1,5 @@
 import type { AST, Checker } from "@flint.fyi/typescript-language";
-import ts from "typescript";
+import type { Type } from "typescript";
 
 export function isTypeFromTS(
 	node: AST.Expression,
@@ -7,47 +7,44 @@ export function isTypeFromTS(
 	typeName: string,
 ) {
 	const type = typeChecker.getTypeAtLocation(node);
+	const visited = new Set<Type>();
 
-	return isTypeFromTSRecursive(type, typeChecker, typeName);
-}
-
-function isTypeFromTSRecursive(
-	type: ts.Type,
-	typeChecker: Checker,
-	typeName: string,
-): boolean {
-	// `xx | ts[typeName]` or `xx & ts[typeName]`
-	if (type.isUnionOrIntersection()) {
-		return type.types.some((subType) =>
-			isTypeFromTSRecursive(subType, typeChecker, typeName),
-		);
-	}
-
-	const symbol = type.getSymbol();
-
-	if (symbol?.getName() === typeName) {
-		const declarations = symbol.getDeclarations();
-
-		const isFromTS = declarations?.some((declaration) => {
-			const sourceFile = declaration.getSourceFile().fileName;
-			return (
-				sourceFile.includes("node_modules/typescript") &&
-				sourceFile.endsWith(".d.ts")
-			);
-		});
-
-		if (isFromTS) {
-			return true;
+	function check(type: Type): boolean {
+		if (visited.has(type)) {
+			return false;
 		}
+
+		visited.add(type);
+
+		// `xx | ts[typeName]` or `xx & ts[typeName]`
+		if (type.isUnionOrIntersection()) {
+			return type.types.some((subType) => check(subType));
+		}
+
+		const symbol = type.getSymbol();
+
+		if (symbol?.getName() === typeName) {
+			const declarations = symbol.getDeclarations();
+
+			return (
+				declarations?.some((declaration) => {
+					const sourceFile = declaration.getSourceFile().fileName;
+					return (
+						sourceFile.includes("node_modules/typescript") &&
+						sourceFile.endsWith(".d.ts")
+					);
+				}) ?? false
+			);
+		}
+
+		// CustomNode extends ts[typeName]
+		const bases = type.getBaseTypes();
+		if (bases?.length) {
+			return bases.some((baseType) => check(baseType));
+		}
+
+		return false;
 	}
 
-	// CustomNode extends ts[typeName]
-	const bases = type.getBaseTypes();
-	if (bases?.length) {
-		return bases.some((baseType) =>
-			isTypeFromTSRecursive(baseType, typeChecker, typeName),
-		);
-	}
-
-	return false;
+	return check(type);
 }

@@ -53,9 +53,9 @@ export async function runCliOnce(
 		...config.definition,
 		filePath: configFileName,
 	};
-	const ignoreCache = !!values["cache-ignore"];
+	const ignoreCache = values["cache-ignore"] ?? false;
 
-	const skipLanguageReports = !!values["skip-language-reports"];
+	const skipLanguageReports = values["skip-language-reports"] ?? false;
 
 	const lintResults = await (values.fix
 		? runConfigFixing(configDefinition, host, {

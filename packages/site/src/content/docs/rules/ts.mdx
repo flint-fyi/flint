@@ -16,6 +16,7 @@ Flint's TypeScript plugin provides the following presets:
 | ----------------------------------------- | ------------- | ----------------------------------------------------------------------- |
 | **[`logical`](#logical)**                 | ✅ Always     | Common rules for finding bugs and enforcing good logical practices.     |
 | **[`logicalStrict`](#logicalstrict)**     | ☑️ When Ready | Additional rules for finding bugs and enforcing good logical practices. |
+| **[`sorting`](#sorting)**                 | ☑️ When Ready | Common rules sorting various aspects of code.                           |
 | **[`stylistic`](#stylistic)**             | ✅ Always     | Common rules for consistent styling and best stylistic practices.       |
 | **[`stylisticStrict`](#stylisticstrict)** | ☑️ When Ready | Additional rules for consistent styling and best stylistic practices.   |
 | **[`javascript`](#javascript)**           |               | Extra rules for files that aren't type-checked by TypeScript.           |
@@ -90,6 +91,23 @@ export default defineConfig({
 ```
 
 This preset's rules are a superset of those in [`logical`](#logical).
+
+### `sorting`
+
+Rules that enforce consistent ordering of various aspects of code.
+
+```ts title="flint.config.ts"
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: ts.files.all,
+			rules: ts.presets.sorting,
+		},
+	],
+});
+```
 
 ### `stylistic`
 

@@ -36,7 +36,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (property.initializer.kind === SyntaxKind.StringLiteral) {
-				return property.initializer.text === "false";
+				// Any string value is already a TypeScript type error for boolean props,
+				// so we don't need to report on them here.
+				return true;
 			}
 
 			if (property.initializer.kind === SyntaxKind.JsxExpression) {

@@ -26,11 +26,11 @@
 		"test": "vitest --project spelling"
 	},
 	"dependencies": {
-		"@cspell/url": "^9.2.2",
+		"@cspell/url": "^10.0.0",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/text-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"cspell-lib": "^9.2.2"
+		"cspell-lib": "^10.0.0"
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",

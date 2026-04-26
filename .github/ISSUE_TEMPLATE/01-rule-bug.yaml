@@ -20,7 +20,7 @@ body:
     id: plugin
     attributes:
       label: Plugin
-      description: What plugin does the rule belong to?
+      description: Which plugin does the rule belong to?
       options:
         - Astro
         - Browser
@@ -35,7 +35,6 @@ body:
         - Performance
         - React
         - SolidJS
-        - Sorting
         - Spelling
         - TypeScript
         - Vitest
