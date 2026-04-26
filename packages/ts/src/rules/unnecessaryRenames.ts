@@ -90,26 +90,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			});
 		}
 
-		function checkBindingElement(
-			node: AST.BindingElement,
-			sourceFile: AST.SourceFile,
-		) {
-			if (
-				node.propertyName?.kind !== ts.SyntaxKind.ComputedPropertyName &&
-				node.name.kind === ts.SyntaxKind.Identifier &&
-				getModuleNameText(node.propertyName) === getModuleNameText(node.name)
-			) {
-				reportUnnecessaryRename(
-					node,
-					false,
-					{
-						begin: node.name.getStart(sourceFile),
-						end: node.getEnd(),
-					},
-					sourceFile,
-				);
-			}
-		}
 		function checkExportOrImportSpecifier(
 			original: AST.ExportSpecifier | AST.ImportSpecifier,
 			rangeNode: AST.AnyNode,
@@ -167,29 +147,37 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 		}
 
-		function checkDestructuringAssignment(
-			node: AST.BinaryExpression,
-			sourceFile: AST.SourceFile,
-		) {
-			if (node.operatorToken.kind !== ts.SyntaxKind.EqualsToken) {
-				return;
-			}
-
-			const left = unwrapParenthesizedNode(node.left);
-			if (left.kind !== ts.SyntaxKind.ObjectLiteralExpression) {
-				return;
-			}
-
-			checkObjectLiteralDestructuring(left, sourceFile);
-		}
-
 		return {
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
-					checkDestructuringAssignment(node, sourceFile);
+					if (node.operatorToken.kind !== ts.SyntaxKind.EqualsToken) {
+						return;
+					}
+
+					const left = unwrapParenthesizedNode(node.left);
+					if (left.kind !== ts.SyntaxKind.ObjectLiteralExpression) {
+						return;
+					}
+
+					checkObjectLiteralDestructuring(left, sourceFile);
 				},
 				BindingElement: (node, { sourceFile }) => {
-					checkBindingElement(node, sourceFile);
+					if (
+						node.propertyName?.kind !== ts.SyntaxKind.ComputedPropertyName &&
+						node.name.kind === ts.SyntaxKind.Identifier &&
+						getModuleNameText(node.propertyName) ===
+							getModuleNameText(node.name)
+					) {
+						reportUnnecessaryRename(
+							node,
+							false,
+							{
+								begin: node.name.getStart(sourceFile),
+								end: node.getEnd(),
+							},
+							sourceFile,
+						);
+					}
 				},
 				ExportSpecifier: (node, { sourceFile }) => {
 					if (node.propertyName) {
