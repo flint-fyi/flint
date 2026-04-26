@@ -5323,6 +5323,20 @@
 	{
 		"eslint": [
 			{
+				"name": "package-json/require-homepage",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-homepage.md"
+			}
+		],
+		"flint": {
+			"name": "homepagePresence",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "package-json/valid-homepage",
 				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-homepage.md"
 			}
