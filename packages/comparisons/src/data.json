@@ -4801,7 +4801,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-attribution",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/require-attribution.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-attribution.md"
 			}
 		],
 		"flint": {
@@ -4814,7 +4814,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-author",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-author.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-author.md"
 			}
 		],
 		"flint": {
@@ -4826,7 +4826,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-author",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-author.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-author.md"
 			}
 		],
 		"flint": {
@@ -4840,7 +4840,7 @@
 		"eslint": [
 			{
 				"name": "package-json/bin-name-casing",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/bin-name-casing.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/bin-name-casing.md"
 			}
 		],
 		"flint": {
@@ -4853,7 +4853,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-bin",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/796"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/796"
 			}
 		],
 		"flint": {
@@ -4865,7 +4865,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-bin",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bin.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bin.md"
 			}
 		],
 		"flint": {
@@ -4879,7 +4879,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-bugs",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-bugs.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-bugs.md"
 			}
 		],
 		"flint": {
@@ -4891,7 +4891,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-bugs",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bugs.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bugs.md"
 			}
 		],
 		"flint": {
@@ -4903,7 +4903,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-bundleDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-bundleDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-bundleDependencies.md"
 			}
 		],
 		"flint": {
@@ -4915,7 +4915,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-bundleDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bundleDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bundleDependencies.md"
 			}
 		],
 		"flint": {
@@ -4929,7 +4929,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-config",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/798"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/798"
 			}
 		],
 		"flint": {
@@ -4941,7 +4941,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-config",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-config.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-config.md"
 			}
 		],
 		"flint": {
@@ -4955,7 +4955,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-contributors",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/799"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/799"
 			}
 		],
 		"flint": {
@@ -4967,7 +4967,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-contributors",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/valid-contributors.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/valid-contributors.md"
 			}
 		],
 		"flint": {
@@ -4981,7 +4981,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-cpu",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/800"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/800"
 			}
 		],
 		"flint": {
@@ -4993,7 +4993,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-cpu",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-cpu.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-cpu.md"
 			}
 		],
 		"flint": {
@@ -5007,7 +5007,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-dependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-dependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-dependencies.md"
 			}
 		],
 		"flint": {
@@ -5019,7 +5019,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-dependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-dependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-dependencies.md"
 			}
 		],
 		"flint": {
@@ -5033,7 +5033,7 @@
 		"eslint": [
 			{
 				"name": "package-json/restrict-dependency-ranges",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/restrict-dependency-ranges.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/restrict-dependency-ranges.md"
 			}
 		],
 		"flint": {
@@ -5045,7 +5045,7 @@
 		"eslint": [
 			{
 				"name": "package-json/unique-dependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/unique-dependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/unique-dependencies.md"
 			}
 		],
 		"flint": {
@@ -5058,7 +5058,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-description",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-description.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-description.md"
 			}
 		],
 		"flint": {
@@ -5071,7 +5071,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-description",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-description.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-description.md"
 			}
 		],
 		"flint": {
@@ -5085,7 +5085,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-devDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-devDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-devDependencies.md"
 			}
 		],
 		"flint": {
@@ -5097,7 +5097,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-devDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-devDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-devDependencies.md"
 			}
 		],
 		"flint": {
@@ -5111,7 +5111,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-devEngines",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-devEngines.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-devEngines.md"
 			}
 		],
 		"flint": {
@@ -5125,7 +5125,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-directories",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/802"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/802"
 			}
 		],
 		"flint": {
@@ -5137,7 +5137,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-directories",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-directories.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-directories.md"
 			}
 		],
 		"flint": {
@@ -5151,7 +5151,7 @@
 		"eslint": [
 			{
 				"name": "package-json/no-empty-fields",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/no-empty-fields.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/no-empty-fields.md"
 			}
 		],
 		"flint": {
@@ -5164,7 +5164,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-engines",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-engines.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-engines.md"
 			}
 		],
 		"flint": {
@@ -5176,7 +5176,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-engines",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-engines.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-engines.md"
 			}
 		],
 		"flint": {
@@ -5190,7 +5190,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-exports",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/require-exports.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-exports.md"
 			}
 		],
 		"flint": {
@@ -5203,7 +5203,7 @@
 		"eslint": [
 			{
 				"name": "package-json/exports-subpaths-style",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/exports-subpaths-style.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/exports-subpaths-style.md"
 			}
 		],
 		"flint": {
@@ -5216,7 +5216,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-exports",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-exports.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-exports.md"
 			}
 		],
 		"flint": {
@@ -5230,7 +5230,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-files",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-files.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-files.md"
 			}
 		],
 		"flint": {
@@ -5242,7 +5242,7 @@
 		"eslint": [
 			{
 				"name": "package-json/no-redundant-files",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/no-redundant-files.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/no-redundant-files.md"
 			}
 		],
 		"flint": {
@@ -5255,7 +5255,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-files",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-files.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-files.md"
 			}
 		],
 		"flint": {
@@ -5269,7 +5269,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-funding",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/804"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/804"
 			}
 		],
 		"flint": {
@@ -5281,7 +5281,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-funding",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-funding.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-funding.md"
 			}
 		],
 		"flint": {
@@ -5295,7 +5295,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-homepage",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-homepage.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-homepage.md"
 			}
 		],
 		"flint": {
@@ -5309,7 +5309,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-keywords",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-keywords.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-keywords.md"
 			}
 		],
 		"flint": {
@@ -5321,7 +5321,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-keywords",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-keywords.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-keywords.md"
 			}
 		],
 		"flint": {
@@ -5335,7 +5335,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-license",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/require-license.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-license.md"
 			}
 		],
 		"flint": {
@@ -5348,7 +5348,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-license",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-license.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-license.md"
 			}
 		],
 		"flint": {
@@ -5362,7 +5362,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-main",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/805"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/805"
 			}
 		],
 		"flint": {
@@ -5374,7 +5374,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-man",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/806"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/806"
 			}
 		],
 		"flint": {
@@ -5386,7 +5386,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-main",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-main.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-main.md"
 			}
 		],
 		"flint": {
@@ -5400,7 +5400,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-man",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-man.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-man.md"
 			}
 		],
 		"flint": {
@@ -5414,7 +5414,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-module",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/807"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/807"
 			}
 		],
 		"flint": {
@@ -5426,7 +5426,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-module",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-module.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-module.md"
 			}
 		],
 		"flint": {
@@ -5440,7 +5440,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-name",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-name.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-name.md"
 			}
 		],
 		"flint": {
@@ -5453,7 +5453,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-name",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-name.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-name.md"
 			}
 		],
 		"flint": {
@@ -5467,7 +5467,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-optionalDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-optionalDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-optionalDependencies.md"
 			}
 		],
 		"flint": {
@@ -5479,7 +5479,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-optionalDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-optionalDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-optionalDependencies.md"
 			}
 		],
 		"flint": {
@@ -5493,7 +5493,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-os",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/810"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/810"
 			}
 		],
 		"flint": {
@@ -5505,7 +5505,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-os",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-os.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-os.md"
 			}
 		],
 		"flint": {
@@ -5519,7 +5519,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-packageManager",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/1546"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/1546"
 			}
 		],
 		"flint": {
@@ -5531,7 +5531,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-packageManager",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-packageManager.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-packageManager.md"
 			}
 		],
 		"flint": {
@@ -5545,7 +5545,7 @@
 		"eslint": [
 			{
 				"name": "package-json/specify-peers-locally",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/specify-peers-locally.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/specify-peers-locally.md"
 			}
 		],
 		"flint": {
@@ -5558,7 +5558,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-peerDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-peerDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-peerDependencies.md"
 			}
 		],
 		"flint": {
@@ -5570,7 +5570,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-peerDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-peerDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-peerDependencies.md"
 			}
 		],
 		"flint": {
@@ -5584,7 +5584,7 @@
 		"eslint": [
 			{
 				"name": "package-json/restrict-private-properties",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/restrict-private-properties.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/restrict-private-properties.md"
 			}
 		],
 		"flint": {
@@ -5596,7 +5596,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-private",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/813"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/813"
 			}
 		],
 		"flint": {
@@ -5608,7 +5608,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-private",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-private.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-private.md"
 			}
 		],
 		"flint": {
@@ -5622,7 +5622,7 @@
 		"eslint": [
 			{
 				"name": "package-json/order-properties",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/order-properties.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/order-properties.md"
 			}
 		],
 		"flint": {
@@ -5635,7 +5635,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-publishConfig",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/814"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/814"
 			}
 		],
 		"flint": {
@@ -5647,7 +5647,7 @@
 		"eslint": [
 			{
 				"name": "package-json/no-redundant-publishConfig",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/no-redundant-publishConfig.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/no-redundant-publishConfig.md"
 			}
 		],
 		"flint": {
@@ -5660,7 +5660,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-publishConfig",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-publishConfig.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-publishConfig.md"
 			}
 		],
 		"flint": {
@@ -5674,7 +5674,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-repository-directory",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-repository-directory.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-repository-directory.md"
 			}
 		],
 		"flint": {
@@ -5687,7 +5687,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-repository",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/require-repository.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-repository.md"
 			}
 		],
 		"flint": {
@@ -5700,7 +5700,7 @@
 		"eslint": [
 			{
 				"name": "package-json/repository-shorthand",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/repository-shorthand.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/repository-shorthand.md"
 			}
 		],
 		"flint": {
@@ -5713,7 +5713,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-repository",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-repository.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-repository.md"
 			}
 		],
 		"flint": {
@@ -5727,7 +5727,7 @@
 		"eslint": [
 			{
 				"name": "package-json/scripts-name-casing",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/scripts-name-casing.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/scripts-name-casing.md"
 			}
 		],
 		"flint": {
@@ -5740,7 +5740,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-scripts",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/require-scripts.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-scripts.md"
 			}
 		],
 		"flint": {
@@ -5752,7 +5752,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-scripts",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-scripts.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-scripts.md"
 			}
 		],
 		"flint": {
@@ -5766,7 +5766,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-sideEffects",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/require-sideEffects.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-sideEffects.md"
 			}
 		],
 		"flint": {
@@ -5779,7 +5779,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-sideEffects",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/docs/rules/valid-sideEffects.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/valid-sideEffects.md"
 			}
 		],
 		"flint": {
@@ -5793,7 +5793,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-type",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-type.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-type.md"
 			}
 		],
 		"flint": {
@@ -5806,7 +5806,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-types",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-types.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-types.md"
 			}
 		],
 		"flint": {
@@ -5818,7 +5818,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-type",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-type.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-type.md"
 			}
 		],
 		"flint": {
@@ -5832,7 +5832,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-version",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-version.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-version.md"
 			}
 		],
 		"flint": {
@@ -5845,7 +5845,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-version",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-version.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-version.md"
 			}
 		],
 		"flint": {
@@ -5859,7 +5859,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-version",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-version.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-version.md"
 			}
 		],
 		"flint": {
@@ -5872,7 +5872,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-workspaces",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-workspaces.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-workspaces.md"
 			}
 		],
 		"flint": {
@@ -7308,7 +7308,7 @@
 		"eslint": [
 			{
 				"name": "package-json/sort-collections",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/sort-collections.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/sort-collections.md"
 			}
 		],
 		"flint": {
