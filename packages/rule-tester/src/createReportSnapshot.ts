@@ -1,4 +1,9 @@
-import { formatReport, type NormalizedReport } from "@flint.fyi/core";
+import {
+	formatReport,
+	getColumnAndLineOfPosition,
+	type NormalizedReport,
+	type NormalizedReportRangeObject,
+} from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 
 export function createReportSnapshot(
@@ -15,7 +20,7 @@ export function createReportSnapshot(
 }
 
 function createReportSnapshotAt(sourceText: string, report: NormalizedReport) {
-	const { begin, end } = report.range;
+	const { begin, end } = getActualRange(sourceText, report.range);
 	const lineStartIndex = sourceText.lastIndexOf("\n", begin.raw) + 1;
 	let lineEndIndex = sourceText.indexOf("\n", end.raw);
 	if (lineEndIndex < 0) {
@@ -55,4 +60,21 @@ function createReportSnapshotAt(sourceText: string, report: NormalizedReport) {
 		output.join("\n") +
 		sourceText.slice(lineEndIndex)
 	);
+}
+
+function getActualRange(
+	sourceText: string,
+	originalRange: NormalizedReportRangeObject,
+) {
+	let { begin, end } = originalRange;
+
+	while (sourceText[begin.raw] === "\n") {
+		begin = getColumnAndLineOfPosition(sourceText, begin.raw + 1);
+		end = getColumnAndLineOfPosition(
+			sourceText,
+			Math.min(end.raw + 1, sourceText.length),
+		);
+	}
+
+	return { begin, end };
 }
