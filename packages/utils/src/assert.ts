@@ -40,7 +40,7 @@ export function sanitizeStackTrace(stack: string): string {
 
 function buildIssueUrl(message: string, stack: string | undefined): string {
 	const issueUrl = new URL("https://github.com/flint-fyi/flint/issues/new");
-	issueUrl.searchParams.set("template", "03-general-bug.yaml");
+	issueUrl.searchParams.set("template", "04-general-bug.yaml");
 
 	const sanitizedStack = stack
 		? sanitizeStackTrace(stack)
