@@ -1,0 +1,121 @@
+---
+description: "Renames that don't change the identifier name are unnecessary and should use shorthand syntax instead."
+title: "unnecessaryRenames"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryRenames" />
+
+Renaming an identifier to the same name is redundant and adds unnecessary verbosity.
+This rule reports locations that can be simplified to remove the renaming.
+
+## Examples
+
+### Import Statements
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { value as value } from "module";
+```
+
+```ts
+import { first as first, second } from "module";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { value } from "module";
+```
+
+```ts
+import { first, second } from "module";
+```
+
+</TabItem>
+</Tabs>
+
+### Export Statements
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+export { data as data };
+```
+
+```ts
+export { default as default };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export { data };
+```
+
+```ts
+export { default };
+```
+
+</TabItem>
+</Tabs>
+
+### Destructuring Assignments
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const { key: key } = object;
+```
+
+```ts
+function example({ value: value }: { value: number }) {
+	return value;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const { key } = object;
+```
+
+```ts
+function example({ value }: { value: number }) {
+	return value;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally prefer explicit renames to the same value for some stylistic or tooling reason, this rule might not be for you.
+For example, if your codebase uses tooling that relies on renames being present, you might not be able to apply this rule's fixes.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
+- [MDN: Export](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+- [MDN: Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryRenames" />
