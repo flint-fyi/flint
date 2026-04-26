@@ -31,7 +31,7 @@ const validations = [
 				return input;
 			}
 			const trimmed = input.trim();
-			if (/[.!?]$/.test(trimmed)) {
+			if (/[\.!?]$/.test(trimmed)) {
 				return trimmed;
 			}
 			return trimmed + ".";
