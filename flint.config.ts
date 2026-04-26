@@ -1,9 +1,11 @@
 import { node } from "@flint.fyi/node";
+import { performance } from "@flint.fyi/performance";
 import { flint } from "@flint.fyi/plugin-flint";
 import { spelling } from "@flint.fyi/spelling";
 import { defineConfig, globs, json, md, ts, yaml } from "flint";
 
 export default defineConfig({
+	ignore: ["coverage/", "packages/e2e/tests/**/fixtures/**/*"],
 	use: [
 		{
 			files: json.files.all,
@@ -20,8 +22,12 @@ export default defineConfig({
 			},
 			rules: [
 				flint.presets.logical,
+				flint.presets.stylistic,
+				flint.presets.stylisticStrict,
 				node.presets.logicalStrict,
 				node.presets.stylisticStrict,
+				performance.presets.logical,
+				performance.rules({ loopFunctions: false }),
 				ts.presets.logicalStrict,
 				ts.presets.stylisticStrict,
 				ts.rules({

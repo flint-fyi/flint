@@ -1,67 +1,3 @@
-jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-      - uses: ./.github/actions/prepare
-      - run: pnpm run build # Ensure packages pass attw, etc.
-      - run: pnpm run -r build # Build packages/site
-  flint:
-    name: Flint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-      - uses: ./.github/actions/prepare
-      - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
-      - run: pnpm run flint
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-      - uses: ./.github/actions/prepare
-      - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
-      - run: pnpm run lint
-  lint_knip:
-    name: Lint Knip
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-      - uses: ./.github/actions/prepare
-      - run: pnpm run build # Knip requires all exports to be generated.
-      - run: pnpm run lint:knip
-  lint_packages:
-    name: Lint Packages
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-      - uses: ./.github/actions/prepare
-      - run: pnpm run lint:packages
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-        with:
-          fetch-depth: 0 # required so origin/main can be diffed
-      - uses: ./.github/actions/prepare
-      - name: Cache dependencies and Vite cache
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5
-        with:
-          key: cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          path: node_modules/.vite
-      - run: pnpm exec tsc -b # For types tests
-      - run: pnpm run build -W ./packages/ts-patch/ # vitest-dev/vitest#9429
-      - # Run partial test pass on PRs (only changed files)
-        if: ${{ github.event_name == 'pull_request' }}
-        name: Run affected tests
-        run: pnpm run test --changed "origin/main"
-      - # On main, run the full test suite w/ type checking
-        if: ${{ github.ref == 'refs/heads/main' }}
-        name: Run full test suite
-        run: pnpm run test
-
 name: CI
 
 on:
@@ -69,3 +5,89 @@ on:
   push:
     branches:
       - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ./.github/actions/prepare
+      - run: pnpm run build # Ensure packages pass attw, etc.
+      - run: pnpm run -r build # Build packages/site
+  dedupe_check:
+    name: Dedupe Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ./.github/actions/prepare
+      - run: pnpm dedupe --check --prefer-offline
+  flint:
+    name: Flint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ./.github/actions/prepare
+      - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
+      - run: pnpm run flint
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ./.github/actions/prepare
+      - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
+      - run: pnpm run lint
+  lint_knip:
+    name: Lint Knip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ./.github/actions/prepare
+      - run: pnpm run build # Knip requires all exports to be generated.
+      - run: pnpm run lint:knip
+      - run: pnpm run lint:knip:prod
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ./.github/actions/prepare
+      - run: pnpm exec tsc -b
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0 # required so origin/main can be diffed
+          filter: "tree:0"
+      - uses: ./.github/actions/prepare
+      - name: Cache Vite cache
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        with:
+          key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          path: node_modules/.vite
+      - # Run partial test pass on PRs (only changed files), excluding e2e.
+        if: ${{ github.event_name == 'pull_request' }}
+        name: Run affected tests except e2e
+        run: pnpm run test --changed origin/${{ github.base_ref }} --project='!e2e'
+      - # On main, run the full non-e2e test suite.
+        if: ${{ github.ref == 'refs/heads/main' }}
+        name: Run full test suite except e2e
+        run: pnpm run test --project='!e2e'
+  test_e2e:
+    name: Test E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          filter: "tree:0"
+      - uses: ./.github/actions/prepare
+      - name: Cache Vite cache
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        with:
+          key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          path: node_modules/.vite
+      - name: Run e2e test suite
+        run: pnpm run test --project e2e

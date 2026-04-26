@@ -44,15 +44,23 @@ export async function collectFilesAndOptions(
 	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
 	ignoreCache: boolean | undefined,
+	cacheLocationOverride: string | undefined,
 ): Promise<CollectedFilesAndOptions> {
 	// 1. Collect all file paths to lint and the 'use' rule configuration groups
-	const { allFilePaths, useDefinitions } =
-		await computeUseDefinitions(configDefinition);
+	const { allFilePaths, useDefinitions } = await computeUseDefinitions(
+		host,
+		configDefinition,
+	);
 
 	// 2. Retrieve any past cached results from those files
 	const cached = ignoreCache
 		? undefined
-		: await readFromCache(allFilePaths, configDefinition.filePath);
+		: await readFromCache(
+				host,
+				allFilePaths,
+				configDefinition.filePath,
+				cacheLocationOverride,
+			);
 
 	// 3. For each rule, create a map of the files it's enabled on & with which options
 	const rulesOptionsByFile = collectRulesOptionsByFile(useDefinitions);

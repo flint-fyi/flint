@@ -45,7 +45,15 @@ import tabIndexPositiveValues from "./rules/tabIndexPositiveValues.ts";
 import unescapedEntities from "./rules/unescapedEntities.ts";
 import unnecessaryFragments from "./rules/unnecessaryFragments.ts";
 
+const jsFiles = ["**/*.jsx"];
+const tsFiles = ["**/*.tsx"];
+
 export const jsx = createPlugin({
+	files: {
+		all: [...jsFiles, ...tsFiles],
+		javascript: jsFiles,
+		typescript: tsFiles,
+	},
 	name: "JSX",
 	rules: [
 		accessKeys,
@@ -68,12 +76,12 @@ export const jsx = createPlugin({
 		clickEventKeyEvents,
 		commentTextNodes,
 		distractingElements,
-		propDuplicates,
+		elementChildrenValidity,
 		headingContents,
 		htmlLangs,
 		iframeTitles,
-		interactiveElementsFocusable,
 		interactiveElementRoles,
+		interactiveElementsFocusable,
 		labelAssociatedControls,
 		langValidity,
 		mediaCaptions,
@@ -81,6 +89,7 @@ export const jsx = createPlugin({
 		nonInteractiveElementInteractions,
 		nonInteractiveElementRoles,
 		nonInteractiveElementTabIndexes,
+		propDuplicates,
 		roleRedundancies,
 		roleRequiredAriaProps,
 		roleSupportedAriaProps,
@@ -91,6 +100,5 @@ export const jsx = createPlugin({
 		tabIndexPositiveValues,
 		unescapedEntities,
 		unnecessaryFragments,
-		elementChildrenValidity,
 	],
 });

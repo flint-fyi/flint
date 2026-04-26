@@ -2,6 +2,7 @@
 	"name": "@flint.fyi/ts-patch",
 	"version": "0.13.5",
 	"description": "[Experimental] Utilities for patching TypeScript used by @flint/core.",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/flint-fyi/flint",
@@ -20,26 +21,17 @@
 	],
 	"type": "module",
 	"exports": {
-		".": {
-			"@flint.fyi/source": "./src/index.ts",
-			"default": "./lib/index.js"
-		},
-		"./install-patch": {
-			"@flint.fyi/source": "./src/install-patch.ts",
-			"default": "./lib/install-patch.js"
-		},
-		"./install-patch-hooks": {
-			"@flint.fyi/source": "./src/install-patch-hooks.ts",
-			"default": "./lib/install-patch-hooks.js"
-		}
+		".": "./src/index.ts",
+		"./install-patch": "./src/install-patch.ts",
+		"./install-patch-hooks": "./src/install-patch-hooks.ts"
 	},
 	"files": [
 		"lib/",
 		"!lib/**/*.map"
 	],
 	"devDependencies": {
-		"tsdown": "0.19.0-beta.2",
-		"typescript": "5.9.3"
+		"tsdown": "catalog:dev",
+		"typescript": "catalog:dev"
 	},
 	"peerDependencies": {
 		"typescript": "^5.9.3 || ^6.0.0"

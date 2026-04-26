@@ -1,0 +1,53 @@
+---
+description: "Enforce that the `contributors` property is valid."
+title: "contributorsValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="contributorsValidity" />
+
+This rule checks that the `contributors` property is an array of objects.
+Each object should have at least a `name`, and optionally `email` and `url`.
+If present, `email` and `url` should be valid formats.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"contributors": "Example Contributor"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"contributors": [
+		{
+			"name": "Example Contributor",
+			"email": "example@flint.fyi",
+			"url": "https://flint.fyi"
+		}
+	]
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `contributors` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="contributorsValidity" />

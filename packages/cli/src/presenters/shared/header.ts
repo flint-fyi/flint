@@ -1,6 +1,4 @@
-import { cacheFilePath } from "@flint.fyi/core";
 import chalk from "chalk";
-import fs from "node:fs";
 
 import type { PresenterInitializeContext } from "../types.ts";
 
@@ -16,15 +14,7 @@ export function* presentHeader({
 			: `Running with ${configFileNameText} in --watch mode (start time: ${Date.now()})...`,
 	);
 
-	if (!ignoreCache) {
-		return;
+	if (ignoreCache) {
+		yield chalk.gray(`--cache-ignore specified, ignoring the cache...`);
 	}
-
-	const cacheExists = fs.existsSync(cacheFilePath);
-
-	yield chalk.gray(
-		cacheExists
-			? `--cache-ignore: ignoring cache file at ${cacheFilePath}`
-			: `--cache-ignore specified but no cache exists at ${cacheFilePath}`,
-	);
 }

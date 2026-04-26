@@ -1,7 +1,8 @@
 {
 	"name": "@flint.fyi/cli",
-	"version": "0.17.0",
+	"version": "0.18.0",
 	"description": "[Experimental] Command-line interface for Flint.",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -15,33 +16,30 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": {
-			"@flint.fyi/source": "./src/index.ts",
-			"default": "./lib/index.js"
-		}
+		".": "./src/index.ts"
 	},
 	"files": [
 		"lib/",
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project cli"
+		"test": "vitest --project cli"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
-		"@shikijs/cli": "^3.13.0",
+		"@shikijs/cli": "^4.0.0",
 		"chalk": "^5.6.2",
 		"cli-cursor": "^5.0.0",
 		"debounce": "^3.0.0",
-		"debug-for-file": "^0.2.0",
+		"debug-for-file": "^0.3.0",
 		"text-table-fast": "^0.1.0",
 		"typescript": "^5.9.3 || ^6.0.0",
-		"wrap-ansi": "^9.0.2"
+		"wrap-ansi": "^10.0.0"
 	},
 	"devDependencies": {
-		"prettier": "3.8.1",
-		"tsdown": "0.19.0-beta.2"
+		"prettier": "catalog:dev",
+		"tsdown": "catalog:dev"
 	},
 	"peerDependencies": {
 		"prettier": "^3.7.4"

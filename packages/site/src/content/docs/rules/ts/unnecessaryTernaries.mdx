@@ -1,0 +1,80 @@
+---
+description: "Reports ternary expressions that can be simplified to boolean expressions or logical operators"
+title: "unnecessaryTernaries"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryTernaries" />
+
+Ternary expressions can sometimes be simplified to more concise and readable forms.
+In particular:
+
+1. Boolean ternaries: ternary expressions that return `true` or `false` based on a condition can be simplified to the condition itself or its negation.
+2. Redundant ternaries: ternary expressions where the consequent duplicates the condition can be replaced with a logical OR operator (`||`).
+
+This rule detects and reports ternary expressions that can be replaced with boolean expressions or logical operators.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const isActive = status === "active" ? true : false;
+```
+
+```ts
+const isInactive = status === "active" ? false : true;
+```
+
+```ts
+const result = value ? value : defaultValue;
+```
+
+```ts
+const result = !value ? alternative : value;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const isActive = status === "active";
+```
+
+```ts
+const isInactive = !(status === "active");
+```
+
+```ts
+const result = value || defaultValue;
+```
+
+```ts
+const result = value || alternative;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a large codebase with established patterns using ternary expressions for clarity, or if your team prefers explicit ternary expressions over logical operators, this rule might not be for you.
+
+## Further Reading
+
+- [MDN: Conditional (ternary) operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator)
+- [MDN: Logical OR (||)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR)
+- [MDN: Logical NOT (!)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryTernaries" />

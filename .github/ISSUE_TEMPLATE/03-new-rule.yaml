@@ -1,0 +1,64 @@
+name: 🏭 New Lint Rule
+description: Request a new lint rule be added to a plugin provided by Flint
+
+title: "🚀 Feature: [plugin] Create rule to <short description of the new lint rule>"
+
+labels:
+  - "type: feature"
+
+body:
+  - type: checkboxes
+    attributes:
+      description: If any of these required steps are not taken, we may not be able to review your issue. Help us to help you!
+      label: Feature Request Checklist
+      options:
+        - label: I am using the latest published version of all Flint packages.
+          required: true
+        - label: I have [searched for related issues](https://github.com/flint-fyi/flint/issues?q=is%3Aissue) and found none that matched my issue.
+          required: true
+  - type: dropdown
+    id: plugin
+    attributes:
+      label: Plugin
+      description: Which plugin would the rule belong to?
+      options:
+        - Astro
+        - Browser
+        - Flint
+        - JSON
+        - JSX
+        - Markdown
+        - Next
+        - Node
+        - Nuxt
+        - PackageJSON
+        - Performance
+        - React
+        - SolidJS
+        - Spelling
+        - TypeScript
+        - Vitest
+        - Vue
+        - YAML
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      description: What do you want the lint rule to do?
+      label: Overview
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      description: Example code that the rule should allow.
+      label: Reproduction
+      render: TypeScript
+  - type: textarea
+    attributes:
+      description: Example code the rule should report on.
+      label: Reproduction
+      render: TypeScript
+  - type: textarea
+    attributes:
+      description: Any additional info you'd like to provide.
+      label: Additional Info

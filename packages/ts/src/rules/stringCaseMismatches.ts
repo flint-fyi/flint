@@ -27,12 +27,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		mismatch: {
 			primary:
-				"This `{{method}}()` call is compared against a string that is not {{expectedCase}}.",
+				"This `{{ method }}()` call is compared against a string that is not {{ expectedCase }}.",
 			secondary: [
-				"The comparison will always be {{result}} because the casing doesn't match.",
+				"The comparison will always be {{ result }} because the casing doesn't match.",
 			],
 			suggestions: [
-				'Change the compared string to {{expectedCase}}: "{{corrected}}".',
+				'Change the compared string to {{ expectedCase }}: "{{ corrected }}".',
 			],
 		},
 	},

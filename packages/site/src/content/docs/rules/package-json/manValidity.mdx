@@ -1,0 +1,52 @@
+---
+description: "Enforce that the `man` property is valid."
+title: "manValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="manValidity" />
+
+This rule checks that the `man` property is a string or an array of strings.
+The string(s) must end with a number (and optionally `.gz`).
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"man": ["./man/doc.md"]
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"man": ["./man/doc.1", "./man/doc.2"]
+}
+```
+
+```json
+{
+	"man": "./man/doc.1"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `main` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="manValidity" />

@@ -14,7 +14,7 @@ Flint configs must default-export the result of calling the [`defineConfig`](#de
 Defines a new configuration for linting.
 It takes in an object with one required property, [`use`](#use):
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -27,6 +27,19 @@ export default defineConfig({
 });
 ```
 
+### `cacheLocation`
+
+Override the default location for Flint's cache file.
+This can be either a direct path to a json file, or the directory where the `flint.json` cache file will be stored.
+The default value is `node_modules/.cache/flint.json`.
+
+You can open this file in an editor to see which files are cached, as well as dependencies of those files.
+
+:::tip
+You can also override the value in this config using the `--cache-location` CLI flag.
+See [CLI > --cache-location](https://www.flint.fyi/cli#--cache-location) for more.
+:::
+
 ### `ignore`
 
 A list of glob patterns to ignore from linting.
@@ -36,7 +49,7 @@ This can be a `string`, any level deep array of `string`s, or an object containi
 
 This `ignore` directive ignores all files under `src/legacy/`:
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -64,7 +77,7 @@ This can be a `string`, any level deep array of `string`s, or an object containi
 
 For example, this `files` selector matches all TypeScript test files by extension and in a directory:
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -88,7 +101,7 @@ In addition to plain `string`s, `files` selectors can also be objects with two p
 
 For example, this `files` selector matches all TypeScript source files that don't have a `*.test.*` extension:
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -111,7 +124,7 @@ These may be arrays of rules, such as from presets exported by plugins, and/or c
 
 For example, this `rules` entry enables all the recommended logical and stylistic TypeScript rules:
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -135,7 +148,7 @@ That method takes in an object where the keys are rule names and values are what
 
 For example, this `rules` entry disables one rule and reconfigures another:
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
@@ -168,7 +181,7 @@ Includes all files previously selected by the configuration.
 
 For example, this config enables the [spelling plugin](/rules/spelling) on all files that are being linted, which includes multiple languages:
 
-```ts twoslash title="flint.config.ts"
+```ts title="flint.config.ts"
 import { spelling } from "@flint.fyi/spelling";
 import { defineConfig, globs, md, ts } from "flint";
 
@@ -195,9 +208,23 @@ export default defineConfig({
 You can also disable specific rules inline in your code using [comment directives](/directives).
 This is useful when you need to suppress a rule for a specific line, block, or file.
 
-### Workspaces
+### Projects
+
+Similar to Vitest projects and pnpm workspaces, Flint projects help you organize your configurations modularly when working in a monorepo environment.
+A configuration at the root of your repo can use `projects` to define a list of glob patterns corresponding to project-level Flint configurations that you'd like to contribute to the top-level Flint execution.
+
+```ts title="flint.config.ts"
+import { defineConfig } from "flint";
+
+export default defineConfig({
+	projects: ["packages/*"],
+	use: [
+		// ...
+	],
+});
+```
 
 :::danger
-Flint configuration workspaces are not yet implemented.
-See [flint-fyi/flint#64 🚀 Feature: Config file workspaces support](https://github.com/flint-fyi/flint/issues/64) for details.
+This feature has not been implemented yet.
+If you'd like to get involved and contribute or just find out more, see [flint-fyi/flint#64 🚀 Feature: Config file projects support](https://github.com/flint-fyi/flint/issues/64) for details.
 :::

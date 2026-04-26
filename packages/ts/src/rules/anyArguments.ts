@@ -8,6 +8,7 @@ import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
+import { formatReportedType } from "./utils/formatReportedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -131,8 +132,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						if (tupleResult) {
 							context.report({
 								data: {
-									paramType: typeChecker.typeToString(tupleResult.paramType),
-									type: "any",
+									paramType: formatReportedType(
+										tupleResult.paramType,
+										typeChecker,
+									),
+									type: tupleResult.type,
 								},
 								message: "unsafeTupleSpread",
 								range: {
@@ -168,8 +172,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						if (unsafeResult) {
 							context.report({
 								data: {
-									paramType: typeChecker.typeToString(unsafeResult.receiver),
-									type: typeChecker.typeToString(unsafeResult.sender),
+									paramType: formatReportedType(
+										unsafeResult.receiver,
+										typeChecker,
+									),
+									type: formatReportedType(unsafeResult.sender, typeChecker),
 								},
 								message: "unsafeArgument",
 								range: {
@@ -205,7 +212,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				context.report({
 					data: {
-						paramType: typeChecker.typeToString(parameterInfo.type),
+						paramType: formatReportedType(parameterInfo.type, typeChecker),
 						type: anyType,
 					},
 					message: "unsafeArgument",
@@ -263,10 +270,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								if (unsafeResult) {
 									context.report({
 										data: {
-											paramType: typeChecker.typeToString(
+											paramType: formatReportedType(
 												unsafeResult.receiver,
+												typeChecker,
 											),
-											type: typeChecker.typeToString(unsafeResult.sender),
+											type: formatReportedType(
+												unsafeResult.sender,
+												typeChecker,
+											),
 										},
 										message: "unsafeArgument",
 										range: {
@@ -297,7 +308,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						context.report({
 							data: {
-								paramType: typeChecker.typeToString(parameterType),
+								paramType: formatReportedType(parameterType, typeChecker),
 								type: anyType,
 							},
 							message: "unsafeArgument",
@@ -379,7 +390,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			typeChecker: Checker,
 			program: ts.Program,
 			node: ts.Node,
-		): undefined | { paramType: ts.Type } {
+		): undefined | { paramType: ts.Type; type: string } {
 			const tupleTypeArgs = typeChecker.getTypeArguments(tupleType);
 
 			for (const [i, elementType] of tupleTypeArgs.entries()) {
@@ -409,7 +420,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				return { paramType: parameterType };
+				return {
+					paramType: parameterType,
+					type: anyType,
+				};
 			}
 
 			return undefined;

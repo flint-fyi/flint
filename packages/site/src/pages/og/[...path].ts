@@ -1,4 +1,4 @@
-// flint-disable-file topLevelAwaits
+// flint-disable-file ts/topLevelAwaits
 import { OGImageRoute } from "astro-og-canvas";
 import { getCollection } from "astro:content";
 
@@ -21,7 +21,7 @@ export const { GET, getStaticPaths } = await OGImageRoute({
 			path: "./public/logo.png",
 			size: [138],
 		},
-		padding: 80,
+		padding: 70,
 		title: data.title,
 	}),
 	pages,

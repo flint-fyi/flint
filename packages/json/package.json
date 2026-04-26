@@ -1,7 +1,8 @@
 {
 	"name": "@flint.fyi/json",
-	"version": "0.16.0",
+	"version": "0.16.1",
 	"description": "[Experimental] JSON plugin for Flint.",
+	"homepage": "https://www.flint.fyi/rules/json",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -15,28 +16,25 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": {
-			"@flint.fyi/source": "./src/index.ts",
-			"default": "./lib/index.js"
-		}
+		".": "./src/index.ts"
 	},
 	"files": [
 		"lib/",
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project json"
+		"test": "vitest --project json"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/json-language": "workspace:^",
-		"typescript": "^5.9.0 || ^6.0.0",
-		"zod": "^4.2.1"
+		"typescript": "^5.9.3 || ^6.0.0",
+		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
-		"tsdown": "0.19.0-beta.2",
-		"vitest": "4.0.15"
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"

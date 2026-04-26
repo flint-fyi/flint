@@ -85,6 +85,7 @@ import enumMemberLiterals from "./rules/enumMemberLiterals.ts";
 import enumValueConsistency from "./rules/enumValueConsistency.ts";
 import enumValueDuplicates from "./rules/enumValueDuplicates.ts";
 import equalityOperatorNegations from "./rules/equalityOperatorNegations.ts";
+import equalityOperators from "./rules/equalityOperators.ts";
 import errorMessages from "./rules/errorMessages.ts";
 import errorSubclassProperties from "./rules/errorSubclassProperties.ts";
 import errorUnnecessaryCaptureStackTraces from "./rules/errorUnnecessaryCaptureStackTraces.ts";
@@ -143,6 +144,7 @@ import nonNullAssertedNullishCoalesces from "./rules/nonNullAssertedNullishCoale
 import nonNullAssertedOptionalChains from "./rules/nonNullAssertedOptionalChains.ts";
 import nonNullAssertionPlacement from "./rules/nonNullAssertionPlacement.ts";
 import nonOctalDecimalEscapes from "./rules/nonOctalDecimalEscapes.ts";
+import nullishCheckStyle from "./rules/nullishCheckStyle.ts";
 import nullishCoalescingOperators from "./rules/nullishCoalescingOperators.ts";
 import numberMethodRanges from "./rules/numberMethodRanges.ts";
 import numberStaticMethods from "./rules/numberStaticMethods.ts";
@@ -247,6 +249,7 @@ import regexWordMatchers from "./rules/regexWordMatchers.ts";
 import regexZeroQuantifiers from "./rules/regexZeroQuantifiers.ts";
 import responseJsonMethods from "./rules/responseJsonMethods.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
+import returnThisTypes from "./rules/returnThisTypes.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import sequences from "./rules/sequences.ts";
 import setSizeLengthChecks from "./rules/setSizeLengthChecks.ts";
@@ -282,7 +285,11 @@ import unnecessaryBooleanCasts from "./rules/unnecessaryBooleanCasts.ts";
 import unnecessaryCatches from "./rules/unnecessaryCatches.ts";
 import unnecessaryComparisons from "./rules/unnecessaryComparisons.ts";
 import unnecessaryConcatenation from "./rules/unnecessaryConcatenation.ts";
+import unnecessaryEscapes from "./rules/unnecessaryEscapes.ts";
+import unnecessaryMathClamps from "./rules/unnecessaryMathClamps.ts";
+import unnecessaryNumericFractions from "./rules/unnecessaryNumericFractions.ts";
 import unnecessaryRenames from "./rules/unnecessaryRenames.ts";
+import unnecessaryTernaries from "./rules/unnecessaryTernaries.ts";
 import unnecessaryUseStricts from "./rules/unnecessaryUseStricts.ts";
 import unsafeNegations from "./rules/unsafeNegations.ts";
 import variableDeletions from "./rules/variableDeletions.ts";
@@ -290,9 +297,14 @@ import voidOperator from "./rules/voidOperator.ts";
 import withStatements from "./rules/withStatements.ts";
 import wrapperObjects from "./rules/wrapperObjects.ts";
 
+const jsFiles = ["**/*.{cjs,js,jsx,mjs}"];
+const tsFiles = ["**/*.{cts,mts,ts,tsx}"];
+
 export const ts = createPlugin({
 	files: {
-		all: ["**/*.{cjs,js,jsx,mjs,ts,tsx}"],
+		all: [...jsFiles, ...tsFiles],
+		javascript: jsFiles,
+		typescript: tsFiles,
 	},
 	name: "TypeScript",
 	rules: [
@@ -381,6 +393,7 @@ export const ts = createPlugin({
 		enumValueConsistency,
 		enumValueDuplicates,
 		equalityOperatorNegations,
+		equalityOperators,
 		errorMessages,
 		errorSubclassProperties,
 		errorUnnecessaryCaptureStackTraces,
@@ -439,6 +452,7 @@ export const ts = createPlugin({
 		nonNullAssertedOptionalChains,
 		nonNullAssertionPlacement,
 		nonOctalDecimalEscapes,
+		nullishCheckStyle,
 		nullishCoalescingOperators,
 		numberMethodRanges,
 		numberStaticMethods,
@@ -465,7 +479,6 @@ export const ts = createPlugin({
 		propertyAccessNotation,
 		recursionOnlyArguments,
 		redundantTypeConstituents,
-		responseJsonMethods,
 		regexAllGlobalFlags,
 		regexAmbiguousInvalidity,
 		regexCharacterClasses,
@@ -542,7 +555,9 @@ export const ts = createPlugin({
 		regexValidity,
 		regexWordMatchers,
 		regexZeroQuantifiers,
+		responseJsonMethods,
 		returnAssignments,
+		returnThisTypes,
 		selfAssignments,
 		sequences,
 		setSizeLengthChecks,
@@ -578,7 +593,11 @@ export const ts = createPlugin({
 		unnecessaryCatches,
 		unnecessaryComparisons,
 		unnecessaryConcatenation,
+		unnecessaryEscapes,
+		unnecessaryMathClamps,
+		unnecessaryNumericFractions,
 		unnecessaryRenames,
+		unnecessaryTernaries,
 		unnecessaryUseStricts,
 		unsafeNegations,
 		variableDeletions,

@@ -1,7 +1,8 @@
 {
 	"name": "flint",
-	"version": "0.16.0",
+	"version": "0.15.0",
 	"description": "[Experimental] A fast, friendly linter. ❤️‍🔥",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -15,10 +16,7 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": {
-			"@flint.fyi/source": "./src/index.ts",
-			"default": "./lib/index.js"
-		}
+		".": "./src/index.ts"
 	},
 	"bin": {
 		"flint": "bin/index.js"
@@ -29,7 +27,7 @@
 		"!lib/bin/**"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project flint"
+		"test": "vitest --project flint"
 	},
 	"dependencies": {
 		"@flint.fyi/cli": "workspace:",
@@ -40,11 +38,11 @@
 		"@flint.fyi/ts": "workspace:",
 		"@flint.fyi/ts-patch": "workspace:",
 		"@flint.fyi/yaml": "workspace:",
-		"typescript": "^5.9.3"
+		"typescript": "^5.9.3 || ^6.0.0"
 	},
 	"devDependencies": {
-		"prettier": "3.8.1",
-		"tsdown": "0.19.0-beta.2"
+		"prettier": "catalog:dev",
+		"tsdown": "catalog:dev"
 	},
 	"peerDependencies": {
 		"prettier": "^3.7.4"

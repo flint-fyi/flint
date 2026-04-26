@@ -96,7 +96,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `this` or `super` before calling `super()` in derived class constructors.",
 		id: "thisBeforeSuper",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		superBeforeSuper: {

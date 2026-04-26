@@ -12,15 +12,23 @@ import { runLintRule } from "./runLintRule.ts";
 import type { LanguageFilesWithOptions } from "./types.ts";
 
 export interface RunConfigOptions {
+	cacheLocation?: string | undefined;
 	ignoreCache?: boolean;
-	skipDiagnostics?: boolean;
+	skipLanguageReports?: boolean;
 }
 
 export async function runConfig(
 	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
-	{ ignoreCache, skipDiagnostics }: RunConfigOptions,
+	{
+		cacheLocation: cacheLocationFromCli,
+		ignoreCache,
+		skipLanguageReports,
+	}: RunConfigOptions,
 ): Promise<LintResults> {
+	const cacheLocationOverride =
+		cacheLocationFromCli || configDefinition.cacheLocation;
+
 	// 1. Based on the original config definition, collect:
 	//   - The full list of all file paths to be linted
 	//   - Any cached results amongst those file paths
@@ -31,10 +39,15 @@ export async function runConfig(
 		cached,
 		languageFilesByFilePath,
 		rulesFilesAndOptionsByRule,
-	} = await collectFilesAndOptions(configDefinition, host, ignoreCache);
+	} = await collectFilesAndOptions(
+		configDefinition,
+		host,
+		ignoreCache,
+		cacheLocationOverride,
+	);
 
 	// 2. For each lint rule, run it on all files and store each file's results
-	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule);
+	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule, host);
 
 	// 3. For each file path, finalize output using each of its language files
 	const filesResults = new Map(
@@ -44,7 +57,8 @@ export async function runConfig(
 				filePath,
 				languageAndFiles,
 				reportsByFilePath.get(filePath).flat(),
-				skipDiagnostics,
+				host,
+				skipLanguageReports,
 			),
 		]),
 	);
@@ -54,32 +68,47 @@ export async function runConfig(
 		for (const [filePath, cachedStorage] of cached) {
 			filesResults.set(filePath, {
 				dependencies: new Set(cachedStorage.dependencies),
-				diagnostics: cachedStorage.diagnostics ?? [],
+				languageReports: cachedStorage.languageReports ?? [],
 				reports: cachedStorage.reports ?? [],
 			});
 		}
 	}
 
 	// 5. Write the results to cache, then return them! We did it!
-	const lintResults = { allFilePaths, cached, filesResults };
+	const ruleCount = rulesFilesAndOptionsByRule.size;
+	const lintResults = { allFilePaths, cached, filesResults, ruleCount };
 
-	await writeToCache(configDefinition.filePath, lintResults);
+	await writeToCache(
+		host,
+		configDefinition.filePath,
+		lintResults,
+		cacheLocationOverride,
+	);
 
 	return lintResults;
 }
 
 async function runRules(
 	rulesFilesAndOptionsByRule: Map<AnyRule, LanguageFilesWithOptions[]>,
+	host: LinterHost,
 ) {
 	const reportsByFilePath = new CachedFactory<string, FileReport[]>(() => []);
 
-	for (const [rule, filesAndOptions] of rulesFilesAndOptionsByRule) {
-		const ruleReportsByFilePath = await runLintRule(rule, filesAndOptions);
+	await Promise.all(
+		Array.from(rulesFilesAndOptionsByRule).map(
+			async ([rule, filesAndOptions]) => {
+				const ruleReportsByFilePath = await runLintRule(
+					rule,
+					filesAndOptions,
+					host,
+				);
 
-		for (const [filePath, ruleReports] of ruleReportsByFilePath) {
-			reportsByFilePath.get(filePath).push(...ruleReports);
-		}
-	}
+				for (const [filePath, ruleReports] of ruleReportsByFilePath) {
+					reportsByFilePath.get(filePath).push(...ruleReports);
+				}
+			},
+		),
+	);
 
 	return reportsByFilePath;
 }

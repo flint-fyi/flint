@@ -1,0 +1,38 @@
+# Prettier as the project formatter, matching .vscode/settings.json.
+# Only formatter and auto-format are set so each contributor's
+# global language-server config is preserved.
+
+[[language]]
+name = "javascript"
+auto-format = true
+formatter = { command = "npx", args = ["prettier", "--parser", "babel"] }
+
+[[language]]
+name = "jsx"
+auto-format = true
+formatter = { command = "npx", args = ["prettier", "--parser", "babel"] }
+
+[[language]]
+name = "typescript"
+auto-format = true
+formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
+
+[[language]]
+name = "tsx"
+auto-format = true
+formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
+
+[[language]]
+name = "json"
+auto-format = true
+formatter = { command = "npx", args = ["prettier", "--parser", "json"] }
+
+[[language]]
+name = "markdown"
+auto-format = true
+formatter = { command = "npx", args = ["prettier", "--parser", "markdown"] }
+
+[[language]]
+name = "yaml"
+auto-format = true
+formatter = { command = "npx", args = ["prettier", "--parser", "yaml"] }

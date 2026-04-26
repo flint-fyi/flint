@@ -1,4 +1,9 @@
+import type { WithExitKeys } from "@flint.fyi/core";
 import type * as ts from "typescript";
+
+export type JsonNode = JsonNodesByName[JsonNodeName];
+
+export type JsonNodeName = keyof JsonNodesByName;
 
 export interface JsonNodesByName {
 	ArrayLiteralExpression: ts.ArrayLiteralExpression;
@@ -11,3 +16,5 @@ export interface JsonNodesByName {
 	ObjectLiteralExpression: ts.ObjectLiteralExpression;
 	StringLiteral: ts.StringLiteral;
 }
+
+export type JsonNodeVisitors = WithExitKeys<JsonNodesByName>;

@@ -4,6 +4,9 @@ export const options = {
 	"cache-ignore": {
 		type: "boolean",
 	},
+	"cache-location": {
+		type: "string",
+	},
 	fix: {
 		type: "boolean",
 	},
@@ -20,9 +23,8 @@ export const options = {
 	presenter: {
 		type: "string",
 	},
-	"skip-diagnostics": {
-		multiple: true,
-		type: "string",
+	"skip-language-reports": {
+		type: "boolean",
 	},
 	version: {
 		type: "boolean",

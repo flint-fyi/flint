@@ -1,4 +1,4 @@
-export * from "./cache/constants.ts";
+export * from "./cache/getCacheFilePath.ts";
 export { writeToCache } from "./cache/writeToCache.ts";
 export { applyChangesToText } from "./changing/applyChangesToText.ts";
 export { defineConfig } from "./configs/defineConfig.ts";
@@ -14,12 +14,12 @@ export {
 	type CreateVFSLinterHostOpts,
 } from "./host/createVFSLinterHost.ts";
 export { isFileSystemCaseSensitive } from "./host/isFileSystemCaseSensitive.ts";
-export { normalizedDirname, normalizePath } from "./host/normalizePath.ts";
 export { createLanguage } from "./languages/createLanguage.ts";
 export { createPlugin } from "./plugins/createPlugin.ts";
 export { formatReport } from "./reporting/formatReport.ts";
 export * from "./rules/RuleCreator.ts";
 export { parseOptions } from "./running/parseOptions.ts";
+export { processRuleReport } from "./running/processRuleReport.ts";
 export { runConfig } from "./running/runConfig.ts";
 export { runConfigFixing } from "./running/runConfigFixing.ts";
 export { runLintRule } from "./running/runLintRule.ts";
@@ -39,6 +39,7 @@ export * from "./types/ranges.ts";
 export * from "./types/reports.ts";
 export * from "./types/rules.ts";
 export * from "./types/shapes.ts";
+export * from "./types/visitors.ts";
 export { binarySearch } from "./utils/arrays.ts";
 export * from "./utils/getColumnAndLineOfPosition.ts";
 export * from "./utils/predicates.ts";

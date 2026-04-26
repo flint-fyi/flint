@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports attempting to delete variables with the delete operator.",
 		id: "variableDeletions",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noDeleteVar: {

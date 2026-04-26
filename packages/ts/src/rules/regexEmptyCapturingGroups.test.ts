@@ -125,21 +125,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-/(a?)?/;
+/(a{0})/;
 `,
 			snapshot: `
-/(a?)?/;
- ~~~~
- This capturing group captures only empty strings.
-`,
-		},
-		{
-			code: `
-/(a*)/;
-`,
-			snapshot: `
-/(a*)/;
- ~~~~
+/(a{0})/;
+ ~~~~~~
  This capturing group captures only empty strings.
 `,
 		},
@@ -174,7 +164,10 @@ RegExp("(\\\\b)");
 		`/(?!a)/;`,
 		`/(a|b)/;`,
 		`/(a|)/;`,
+		`/(a?)/;`,
 		`/(a+)/;`,
+		`/(a*)/;`,
+		`/(a?)?/;`,
 		`/(a{1,})/;`,
 		`/([a-z])/;`,
 		`/(\\d)/;`,
@@ -183,6 +176,7 @@ RegExp("(\\\\b)");
 		`new RegExp("(a)");`,
 		`new RegExp(variable);`,
 		`/(a|b|c)/;`,
+		String.raw`/^([\d_]*)(\.[\d_]*)(?:e[+-]?\d+)?$/`,
 		String.raw`/!?\[(?<left>[^[[\]\\]*)\]\[(?<right>[^\]\\]*)\]/g;`,
 		String.raw`/^([+-]?(?:\d+(?:\.\d+)?|\.\d+))(e)([+-]?)(\d+)$/i;`,
 		String.raw`/^(\\u\{?)([\dA-Fa-f]+)(\}?)$/u;`,
