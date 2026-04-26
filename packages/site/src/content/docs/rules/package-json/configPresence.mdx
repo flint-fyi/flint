@@ -1,6 +1,6 @@
 ---
-description: "Enforce that the `author` property is present."
-title: "authorPresence"
+description: "Enforce that the `config` property is present."
+title: "configPresence"
 topic: "rules"
 ---
 
@@ -8,9 +8,9 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
-<RuleSummary plugin="package-json" rule="authorPresence" />
+<RuleSummary plugin="package-json" rule="configPresence" />
 
-npm requires that the `author` field in `package.json` is present.
+npm requires that the `config` field in `package.json` is present.
 
 ## Examples
 
@@ -31,11 +31,14 @@ npm requires that the `author` field in `package.json` is present.
 <TabItem label="✅ Correct">
 
 ```json
-{}
+{
+	"config": { "port": 8080 }
+}
 ```
 
 ```json
 {
+	"config": { "port": 8080 },
 	"name": "my-repository"
 }
 ```
@@ -45,9 +48,8 @@ npm requires that the `author` field in `package.json` is present.
 
 ## When Not To Use It
 
-If your package doesn't need to specify a name, you can disable this rule.
-For example, if your package is local-only and is never published online or made open source, naming may not be relevant for you.
+If your package doesn't need to specify `config`, you can disable this rule.
 
 ## Equivalents in Other Linters
 
-<RuleEquivalents pluginId="package-json" ruleId="authorPresence" />
+<RuleEquivalents pluginId="package-json" ruleId="configPresence" />
