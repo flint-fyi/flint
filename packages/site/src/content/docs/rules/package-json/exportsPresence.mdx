@@ -46,6 +46,15 @@ npm requires that the `exports` field in `package.json` is present.
 </TabItem>
 </Tabs>
 
+## Options
+
+### `ignorePrivate`
+
+Whether the property should still be required when the package's `private` property is `true`.
+Defaults to `false`.
+
+This option can be useful if the rule is enabled on many `package.json` files and some files differ in privacy.
+
 ## When Not To Use It
 
 If your package doesn't need to specify `exports`, you can disable this rule.
