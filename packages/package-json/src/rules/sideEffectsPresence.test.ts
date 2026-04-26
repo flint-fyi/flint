@@ -4,25 +4,21 @@ import { ruleTester } from "../ruleTester.ts";
 ruleTester.describe(directPropertyPresenceRules.sideEffectsPresence, {
 	invalid: [
 		{
-			code: `
-{
+			code: `{
 }
 `,
-			snapshot: `
-{
+			snapshot: `{
 ~
 Property \`sideEffects\` is expected to be present.
 }
 `,
 		},
 		{
-			code: `
-{
+			code: `{
   "other": true
 }
 `,
-			snapshot: `
-{
+			snapshot: `{
 ~
 Property \`sideEffects\` is expected to be present.
   "other": true

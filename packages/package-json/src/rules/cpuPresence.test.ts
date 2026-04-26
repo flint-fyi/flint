@@ -4,25 +4,21 @@ import { ruleTester } from "../ruleTester.ts";
 ruleTester.describe(directPropertyPresenceRules.cpuPresence, {
 	invalid: [
 		{
-			code: `
-{
+			code: `{
 }
 `,
-			snapshot: `
-{
+			snapshot: `{
 ~
 Property \`cpu\` is expected to be present.
 }
 `,
 		},
 		{
-			code: `
-{
+			code: `{
   "other": true
 }
 `,
-			snapshot: `
-{
+			snapshot: `{
 ~
 Property \`cpu\` is expected to be present.
   "other": true

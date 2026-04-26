@@ -4,25 +4,21 @@ import { ruleTester } from "../ruleTester.ts";
 ruleTester.describe(directPropertyPresenceRules.workspacesPresence, {
 	invalid: [
 		{
-			code: `
-{
+			code: `{
 }
 `,
-			snapshot: `
-{
+			snapshot: `{
 ~
 Property \`workspaces\` is expected to be present.
 }
 `,
 		},
 		{
-			code: `
-{
+			code: `{
   "other": true
 }
 `,
-			snapshot: `
-{
+			snapshot: `{
 ~
 Property \`workspaces\` is expected to be present.
   "other": true
