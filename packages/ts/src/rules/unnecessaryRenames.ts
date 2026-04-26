@@ -136,12 +136,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					continue;
 				}
 
-				const replacementRange = getTSNodeRange(replacementNode, sourceFile);
-
 				reportUnnecessaryRename(
 					property,
 					parenthesizesTarget,
-					replacementRange,
+					getTSNodeRange(replacementNode, sourceFile),
 					sourceFile,
 				);
 			}
