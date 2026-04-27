@@ -44,7 +44,7 @@ export function createPlugin<
 	FilesKey,
 	Rules
 > {
-	const presets = collectPresetsFromRules(rules);
+	const presets = collectPresetsFromRules<About, Rules>(rules);
 	const rulesById = new Map(rules.map((rule) => [rule.about.id, rule]));
 
 	return {
@@ -64,9 +64,15 @@ export function createPlugin<
 	};
 }
 
-function collectPresetsFromRules<const About extends RuleAbout>(
-	rules: UnsafeAnyRule<About>[],
-) {
+function collectPresetsFromRules<
+	const About extends RuleAbout,
+	const Rules extends UnsafeAnyRule<About>[],
+>(
+	rules: Rules,
+): PluginPresets<
+	About,
+	NonNullable<Rules[number]["about"]["presets"]>[number]
+> {
 	const presets = new CachedFactory<string, UnsafeAnyRule<About>[]>(() => []);
 
 	for (const rule of rules) {
@@ -77,5 +83,8 @@ function collectPresetsFromRules<const About extends RuleAbout>(
 		}
 	}
 
-	return Object.fromEntries(presets.entries()) as PluginPresets<About, string>;
+	return Object.fromEntries(presets.entries()) as PluginPresets<
+		About,
+		NonNullable<Rules[number]["about"]["presets"]>[number]
+	>;
 }

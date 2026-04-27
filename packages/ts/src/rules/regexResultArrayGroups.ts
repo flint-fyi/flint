@@ -127,7 +127,7 @@ function getNamedGroupsFromExpression(
 		ts.isTypeAssertionExpression(unwrapped)
 	) {
 		return getNamedGroupsFromExpression(
-			unwrapped.expression as AST.Expression,
+			unwrapped.expression,
 			typeChecker,
 			sourceFile,
 		);
@@ -162,11 +162,7 @@ function getRegexFromExecCall(
 	}
 
 	const regexObject = node.expression.expression;
-	return getRegexInfoFromExpression(
-		regexObject as AST.Expression,
-		typeChecker,
-		sourceFile,
-	);
+	return getRegexInfoFromExpression(regexObject, typeChecker, sourceFile);
 }
 
 function getRegexFromMatchAllCall(
@@ -396,7 +392,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const object = skipParentheses(node.expression as AST.Expression);
+					const object = skipParentheses(node.expression);
 					const objectType = typeChecker.getTypeAtLocation(object);
 
 					if (isAnyType(objectType)) {

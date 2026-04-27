@@ -36,7 +36,7 @@ export function getRuleForPlugin(pluginId: string, ruleId: string): AnyRule {
 		throw new Error(`Unknown rule for ${pluginId}: ${ruleId}.`);
 	}
 
-	return rule as AnyRule;
+	return rule;
 }
 
 export function getRuleForPluginSafe(
@@ -54,5 +54,5 @@ export function getRuleForPluginSafe(
 		return undefined;
 	}
 
-	return rule as AnyRule;
+	return rule;
 }
