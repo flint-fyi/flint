@@ -25,10 +25,41 @@ Property \`peerDependencies\` is expected to be present.
 }
 `,
 		},
+		{
+			code: `{
+  "private": true
+}
+`,
+			options: { ignorePrivate: false },
+			snapshot: `{
+~
+Property \`peerDependencies\` is expected to be present.
+  "private": true
+}
+`,
+		},
+		{
+			code: `{
+  "private": true
+}
+`,
+			snapshot: `{
+~
+Property \`peerDependencies\` is expected to be present.
+  "private": true
+}
+`,
+		},
 	],
 	valid: [
 		`{
   "peerDependencies": {}
 }`,
+		{
+			code: `{
+  "private": true
+}`,
+			options: { ignorePrivate: true },
+		},
 	],
 });

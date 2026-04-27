@@ -25,10 +25,41 @@ Property \`optionalDependencies\` is expected to be present.
 }
 `,
 		},
+		{
+			code: `{
+  "private": true
+}
+`,
+			options: { ignorePrivate: false },
+			snapshot: `{
+~
+Property \`optionalDependencies\` is expected to be present.
+  "private": true
+}
+`,
+		},
+		{
+			code: `{
+  "private": true
+}
+`,
+			snapshot: `{
+~
+Property \`optionalDependencies\` is expected to be present.
+  "private": true
+}
+`,
+		},
 	],
 	valid: [
 		`{
   "optionalDependencies": {}
 }`,
+		{
+			code: `{
+  "private": true
+}`,
+			options: { ignorePrivate: true },
+		},
 	],
 });

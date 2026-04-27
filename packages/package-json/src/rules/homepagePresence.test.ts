@@ -25,10 +25,41 @@ Property \`homepage\` is expected to be present.
 }
 `,
 		},
+		{
+			code: `{
+  "private": true
+}
+`,
+			options: { ignorePrivate: false },
+			snapshot: `{
+~
+Property \`homepage\` is expected to be present.
+  "private": true
+}
+`,
+		},
+		{
+			code: `{
+  "private": true
+}
+`,
+			snapshot: `{
+~
+Property \`homepage\` is expected to be present.
+  "private": true
+}
+`,
+		},
 	],
 	valid: [
 		`{
   "homepage": {}
 }`,
+		{
+			code: `{
+  "private": true
+}`,
+			options: { ignorePrivate: true },
+		},
 	],
 });

@@ -25,10 +25,41 @@ Property \`bin\` is expected to be present.
 }
 `,
 		},
+		{
+			code: `{
+  "private": true
+}
+`,
+			options: { ignorePrivate: false },
+			snapshot: `{
+~
+Property \`bin\` is expected to be present.
+  "private": true
+}
+`,
+		},
+		{
+			code: `{
+  "private": true
+}
+`,
+			snapshot: `{
+~
+Property \`bin\` is expected to be present.
+  "private": true
+}
+`,
+		},
 	],
 	valid: [
 		`{
   "bin": "https://example.com"
 }`,
+		{
+			code: `{
+  "private": true
+}`,
+			options: { ignorePrivate: true },
+		},
 	],
 });

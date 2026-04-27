@@ -25,10 +25,27 @@ Property \`version\` is expected to be present.
 }
 `,
 		},
+		{
+			code: `{
+  "private": true
+}
+`,
+			options: { ignorePrivate: false },
+			snapshot: `{
+~
+Property \`version\` is expected to be present.
+  "private": true
+}
+`,
+		},
 	],
 	valid: [
 		`{
   "version": "0.0.0"
 }`,
+		`{
+  "private": true
+}
+`,
 	],
 });

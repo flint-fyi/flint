@@ -25,10 +25,41 @@ Property \`keywords\` is expected to be present.
 }
 `,
 		},
+		{
+			code: `{
+  "private": true
+}
+`,
+			options: { ignorePrivate: false },
+			snapshot: `{
+~
+Property \`keywords\` is expected to be present.
+  "private": true
+}
+`,
+		},
+		{
+			code: `{
+  "private": true
+}
+`,
+			snapshot: `{
+~
+Property \`keywords\` is expected to be present.
+  "private": true
+}
+`,
+		},
 	],
 	valid: [
 		`{
   "keywords": {}
 }`,
+		{
+			code: `{
+  "private": true
+}`,
+			options: { ignorePrivate: true },
+		},
 	],
 });

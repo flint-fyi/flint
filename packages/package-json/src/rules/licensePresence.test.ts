@@ -25,10 +25,26 @@ Property \`license\` is expected to be present.
 }
 `,
 		},
+		{
+			code: `{
+  "private": true
+}
+`,
+			options: { ignorePrivate: false },
+			snapshot: `{
+~
+Property \`license\` is expected to be present.
+  "private": true
+}
+`,
+		},
 	],
 	valid: [
 		`{
   "license": {}
+}`,
+		`{
+  "private": true
 }`,
 	],
 });

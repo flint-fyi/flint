@@ -44,7 +44,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 			},
 		},
 		options: {
-			ignorePrivateDefault: z
+			ignorePrivate: z
 				.boolean()
 				.default(ignorePrivateDefault)
 				.describe(
@@ -54,7 +54,11 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 		setup(context) {
 			return {
 				visitors: {
-					JsonSourceFile: (node: ts.JsonSourceFile) => {
+					JsonSourceFile: (node: ts.JsonSourceFile, { options }) => {
+						if (options.ignorePrivate && isPrivatePackage(node)) {
+							return;
+						}
+
 						if (!getPackagePropertyOfName(node, propertyName)) {
 							context.report({
 								data: { propertyName },
@@ -69,4 +73,13 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 	});
 
 	return { id, rule };
+}
+
+function isPrivatePackage(node: ts.JsonSourceFile) {
+	const privacy = getPackagePropertyOfName(node, "private");
+
+	return (
+		privacy?.kind === ts.SyntaxKind.PropertyAssignment &&
+		privacy.initializer.kind === ts.SyntaxKind.TrueKeyword
+	);
 }

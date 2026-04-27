@@ -25,10 +25,26 @@ Property \`name\` is expected to be present.
 }
 `,
 		},
+		{
+			code: `{
+  "private": true
+}
+`,
+			options: { ignorePrivate: false },
+			snapshot: `{
+~
+Property \`name\` is expected to be present.
+  "private": true
+}
+`,
+		},
 	],
 	valid: [
 		`{
-  "name": {}
+  "name": "my-repository"
+}`,
+		`{
+  "private": true
 }`,
 	],
 });
