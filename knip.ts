@@ -1,27 +1,6 @@
 import type { KnipConfig } from "knip";
 
-const frontmatterMatcher = /^---\r?\n([\s\S]*?)\r?\n---/;
-const scriptBodyExtractor = /<script\b[^>]*>(?<body>[\s\S]*?)<\/script>/g;
-
 export default {
-	compilers: {
-		// https://github.com/webpro-nl/knip/issues/1629
-		astro: (text) => {
-			const scripts: string[] = [];
-			const frontmatter = frontmatterMatcher.exec(text);
-			if (frontmatter?.[1]) {
-				// Emulate `ignoreExportsUsedInFile.interface` by transforming `export interface Props` into `interface Props`.
-				scripts.push(frontmatter[1].replace(/\bexport\b/g, ""));
-			}
-			let scriptMatch: null | RegExpExecArray;
-			while ((scriptMatch = scriptBodyExtractor.exec(text))) {
-				if (scriptMatch.groups?.body) {
-					scripts.push(scriptMatch.groups.body);
-				}
-			}
-			return scripts.join("\n");
-		},
-	},
 	ignore: ["packages/e2e/**/*"],
 	ignoreExportsUsedInFile: { interface: true, type: true },
 	treatConfigHintsAsErrors: true,
