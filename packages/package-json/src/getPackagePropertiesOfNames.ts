@@ -1,8 +1,8 @@
-import type { JsonFileServices, JsonNode } from "@flint.fyi/json-language";
+import type { JsonNode, JsonSourceFile } from "@flint.fyi/json-language";
 import ts from "typescript";
 
 export function* getPackagePropertiesOfNames(
-	sourceFile: JsonFileServices["sourceFile"],
+	sourceFile: JsonSourceFile,
 	propertyNames: ReadonlySet<string>,
 ) {
 	if (sourceFile.statements.length !== 1) {

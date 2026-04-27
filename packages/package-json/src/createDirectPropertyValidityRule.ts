@@ -1,9 +1,9 @@
 import type { AnyRule } from "@flint.fyi/core";
 import {
 	getJsonNodeRange,
-	type JsonFileServices,
 	jsonLanguage,
 	type JsonNode,
+	type JsonSourceFile,
 } from "@flint.fyi/json-language";
 import type { Result } from "package-json-validator";
 import ts from "typescript";
@@ -37,10 +37,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 			},
 		},
 		setup(context) {
-			function checkValue(
-				node: JsonNode,
-				sourceFile: JsonFileServices["sourceFile"],
-			) {
+			function checkValue(node: JsonNode, sourceFile: JsonSourceFile) {
 				const value: unknown = JSON.parse(node.getText(sourceFile));
 				const result = propertyValidator(value);
 
@@ -50,7 +47,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 			function reportIssues(
 				result: Result,
 				node: JsonNode,
-				sourceFile: JsonFileServices["sourceFile"],
+				sourceFile: JsonSourceFile,
 			) {
 				if (!result.errorMessages.length) {
 					return;
