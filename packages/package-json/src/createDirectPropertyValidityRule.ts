@@ -1,5 +1,6 @@
 import type { AnyRule } from "@flint.fyi/core";
 import {
+	type AST,
 	getJsonNodeRange,
 	jsonLanguage,
 	type JsonNode,
@@ -36,7 +37,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 			},
 		},
 		setup(context) {
-			function checkValue(node: JsonNode, sourceFile: ts.JsonSourceFile) {
+			function checkValue(node: JsonNode, sourceFile: AST.SourceFile) {
 				const value: unknown = JSON.parse(node.getText(sourceFile));
 				const result = propertyValidator(value);
 
@@ -46,7 +47,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 			function reportIssues(
 				result: Result,
 				node: JsonNode,
-				sourceFile: ts.JsonSourceFile,
+				sourceFile: AST.SourceFile,
 			) {
 				if (!result.errorMessages.length) {
 					return;
@@ -92,11 +93,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 					for (const childResult of childrenWithIssues) {
 						const childNode = node.elements[childResult.index];
 						if (childNode) {
-							reportIssues(
-								childResult,
-								childNode as unknown as ts.ObjectLiteralExpression,
-								sourceFile,
-							);
+							reportIssues(childResult, childNode as JsonNode, sourceFile);
 						}
 					}
 				}
@@ -104,7 +101,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 
 			return {
 				visitors: {
-					JsonSourceFile: (node: ts.JsonSourceFile, { sourceFile }) => {
+					JsonSourceFile: (node, { sourceFile }) => {
 						for (const initializer of getPackagePropertiesOfNames(
 							node,
 							propertyNames,

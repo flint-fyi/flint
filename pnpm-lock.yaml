@@ -585,6 +585,9 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
       typescript:
         specifier: ^5.9.0 || ^6.0.0
         version: 5.9.3

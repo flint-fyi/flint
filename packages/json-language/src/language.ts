@@ -1,4 +1,5 @@
 import { createLanguage } from "@flint.fyi/core";
+import type { AST } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
 import type {
@@ -8,7 +9,7 @@ import type {
 } from "./nodes.ts";
 
 export interface JsonFileServices {
-	sourceFile: ts.JsonSourceFile;
+	sourceFile: AST.SourceFile;
 }
 
 const kindOverrides = new Map<ts.SyntaxKind, JsonNodeName>([
@@ -25,7 +26,7 @@ export const jsonLanguage = createLanguage<JsonNodeVisitors, JsonFileServices>({
 				const sourceFile = ts.parseJsonText(
 					data.filePathAbsolute,
 					data.sourceText,
-				);
+				) as AST.SourceFile;
 
 				return {
 					about: data,
