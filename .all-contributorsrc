@@ -1,243 +1,246 @@
 {
-  "badgeTemplate": "\t<a href=\"#contributors\" target=\"_blank\"><img alt=\"👪 All Contributors: <%= contributors.length %>\" src=\"https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-<%= contributors.length %>-21bb42.svg\" /></a>",
-  "commitType": "docs",
-  "contributors": [
-    {
-      "avatar_url": "https://avatars.githubusercontent.com/u/3335181?v=4",
-      "contributions": [
-        "code",
-        "content",
-        "doc",
-        "ideas",
-        "infra",
-        "maintenance",
-        "projectManagement",
-        "tool",
-        "bug",
-        "test"
-      ],
-      "login": "JoshuaKGoldberg",
-      "name": "Josh Goldberg ✨",
-      "profile": "http://www.joshuakgoldberg.com"
-    },
-    {
-      "login": "ArnaudBarre",
-      "name": "Arnaud Barré",
-      "avatar_url": "https://avatars.githubusercontent.com/u/14235743?v=4",
-      "profile": "https://github.com/ArnaudBarre",
-      "contributions": [
-        "ideas"
-      ]
-    },
-    {
-      "login": "donisaac",
-      "name": "Don Isaac",
-      "avatar_url": "https://avatars.githubusercontent.com/u/22823424?v=4",
-      "profile": "https://donisaac.dev",
-      "contributions": [
-        "maintenance",
-        "test"
-      ]
-    },
-    {
-      "login": "bmclear",
-      "name": "bmclear",
-      "avatar_url": "https://avatars.githubusercontent.com/u/7715393?v=4",
-      "profile": "https://github.com/bmclear",
-      "contributions": [
-        "maintenance",
-        "code"
-      ]
-    },
-    {
-      "login": "christopher-buss",
-      "name": "Christopher Buss",
-      "avatar_url": "https://avatars.githubusercontent.com/u/32301681?v=4",
-      "profile": "https://christopher-buss.gitbook.io/portfolio",
-      "contributions": [
-        "code",
-        "bug"
-      ]
-    },
-    {
-      "login": "jasikpark",
-      "name": "Caleb Jasik",
-      "avatar_url": "https://avatars.githubusercontent.com/u/10626596?v=4",
-      "profile": "http://jasik.xyz",
-      "contributions": [
-        "bug"
-      ]
-    },
-    {
-      "login": "lo1tuma",
-      "name": "Mathias Schreck",
-      "avatar_url": "https://avatars.githubusercontent.com/u/169170?v=4",
-      "profile": "https://github.com/lo1tuma",
-      "contributions": [
-        "bug",
-        "ideas"
-      ]
-    },
-    {
-      "login": "auvred",
-      "name": "auvred",
-      "avatar_url": "https://avatars.githubusercontent.com/u/61150013?v=4",
-      "profile": "https://github.com/auvred",
-      "contributions": [
-        "bug",
-        "maintenance",
-        "ideas",
-        "test",
-        "doc"
-      ]
-    },
-    {
-      "login": "lishaduck",
-      "name": "Eli",
-      "avatar_url": "https://avatars.githubusercontent.com/u/88557639?v=4",
-      "profile": "http://lishaduck.github.io",
-      "contributions": [
-        "ideas",
-        "code",
-        "tool",
-        "maintenance",
-        "bug",
-        "infra",
-        "doc"
-      ]
-    },
-    {
-      "login": "kirkwaiblinger",
-      "name": "Kirk Waiblinger",
-      "avatar_url": "https://avatars.githubusercontent.com/u/53019676?v=4",
-      "profile": "https://github.com/kirkwaiblinger",
-      "contributions": [
-        "code",
-        "maintenance",
-        "ideas",
-        "doc"
-      ]
-    },
-    {
-      "login": "barrymichaeldoyle",
-      "name": "Barry Michael Doyle",
-      "avatar_url": "https://avatars.githubusercontent.com/u/4674486?v=4",
-      "profile": "https://barrymichaeldoyle.com",
-      "contributions": [
-        "infra",
-        "maintenance",
-        "code"
-      ]
-    },
-    {
-      "login": "kovsu",
-      "name": "Konv Suu",
-      "avatar_url": "https://avatars.githubusercontent.com/u/82451257?v=4",
-      "profile": "https://github.com/kovsu",
-      "contributions": [
-        "doc",
-        "code",
-        "maintenance",
-        "bug"
-      ]
-    },
-    {
-      "login": "michaelfaith",
-      "name": "michael faith",
-      "avatar_url": "https://avatars.githubusercontent.com/u/8071845?v=4",
-      "profile": "https://github.com/michaelfaith",
-      "contributions": [
-        "ideas",
-        "doc",
-        "bug",
-        "maintenance",
-        "tool",
-        "code",
-        "infra"
-      ]
-    },
-    {
-      "login": "kolharsam",
-      "name": "Sameer Kolhar",
-      "avatar_url": "https://avatars.githubusercontent.com/u/6604943?v=4",
-      "profile": "https://www.kolharsam.net",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "yharaskrik",
-      "name": "Jay Bell",
-      "avatar_url": "https://avatars.githubusercontent.com/u/9469090?v=4",
-      "profile": "https://jaybell.me/",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "tibisabau",
-      "name": "Tiberiu Sabău",
-      "avatar_url": "https://avatars.githubusercontent.com/u/96194994?v=4",
-      "profile": "https://github.com/tibisabau",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "cylewaitforit",
-      "name": "cylewaitforit",
-      "avatar_url": "https://avatars.githubusercontent.com/u/54253392?v=4",
-      "profile": "https://github.com/cylewaitforit",
-      "contributions": [
-        "doc"
-      ]
-    },
-    {
-      "login": "tylerlaprade",
-      "name": "Tyler C Laprade, CFA",
-      "avatar_url": "https://avatars.githubusercontent.com/u/5475199?v=4",
-      "profile": "http://www.irrationalmindsthinkalike.com",
-      "contributions": [
-        "doc",
-        "ideas",
-        "code"
-      ]
-    },
-    {
-      "login": "sigmabrogz",
-      "name": "Sigmabro",
-      "avatar_url": "https://avatars.githubusercontent.com/u/122412346?v=4",
-      "profile": "https://github.com/Sigmabrogz",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "yonava",
-      "name": "Yona Alexander Voss-Andreae",
-      "avatar_url": "https://avatars.githubusercontent.com/u/76519301?v=4",
-      "profile": "https://github.com/Yonava",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "techmannih",
-      "name": "Manish chaudhary ",
-      "avatar_url": "https://avatars.githubusercontent.com/u/125847751?v=4",
-      "profile": "https://techmannih.me",
-      "contributions": [
-        "ideas"
-      ]
-    }
-  ],
-  "contributorsPerLine": 7,
-  "contributorsSortAlphabetically": true,
-  "files": [
-    "README.md"
-  ],
-  "projectName": "flint",
-  "projectOwner": "flint-fyi",
-  "repoType": "github",
-  "commitConvention": "angular"
+	"badgeTemplate": "\t<a href=\"#contributors\" target=\"_blank\"><img alt=\"👪 All Contributors: <%= contributors.length %>\" src=\"https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-<%= contributors.length %>-21bb42.svg\" /></a>",
+	"commitType": "docs",
+	"contributors": [
+		{
+			"avatar_url": "https://avatars.githubusercontent.com/u/3335181?v=4",
+			"contributions": [
+				"code",
+				"content",
+				"doc",
+				"ideas",
+				"infra",
+				"maintenance",
+				"projectManagement",
+				"tool",
+				"bug",
+				"test",
+				"blog"
+			],
+			"login": "JoshuaKGoldberg",
+			"name": "Josh Goldberg ✨",
+			"profile": "http://www.joshuakgoldberg.com"
+		},
+		{
+			"login": "ArnaudBarre",
+			"name": "Arnaud Barré",
+			"avatar_url": "https://avatars.githubusercontent.com/u/14235743?v=4",
+			"profile": "https://github.com/ArnaudBarre",
+			"contributions": [
+				"ideas"
+			]
+		},
+		{
+			"login": "donisaac",
+			"name": "Don Isaac",
+			"avatar_url": "https://avatars.githubusercontent.com/u/22823424?v=4",
+			"profile": "https://donisaac.dev",
+			"contributions": [
+				"maintenance",
+				"test"
+			]
+		},
+		{
+			"login": "bmclear",
+			"name": "bmclear",
+			"avatar_url": "https://avatars.githubusercontent.com/u/7715393?v=4",
+			"profile": "https://github.com/bmclear",
+			"contributions": [
+				"maintenance",
+				"code"
+			]
+		},
+		{
+			"login": "christopher-buss",
+			"name": "Christopher Buss",
+			"avatar_url": "https://avatars.githubusercontent.com/u/32301681?v=4",
+			"profile": "https://christopher-buss.gitbook.io/portfolio",
+			"contributions": [
+				"code",
+				"bug"
+			]
+		},
+		{
+			"login": "jasikpark",
+			"name": "Caleb Jasik",
+			"avatar_url": "https://avatars.githubusercontent.com/u/10626596?v=4",
+			"profile": "http://jasik.xyz",
+			"contributions": [
+				"bug"
+			]
+		},
+		{
+			"login": "lo1tuma",
+			"name": "Mathias Schreck",
+			"avatar_url": "https://avatars.githubusercontent.com/u/169170?v=4",
+			"profile": "https://github.com/lo1tuma",
+			"contributions": [
+				"bug",
+				"ideas"
+			]
+		},
+		{
+			"login": "auvred",
+			"name": "auvred",
+			"avatar_url": "https://avatars.githubusercontent.com/u/61150013?v=4",
+			"profile": "https://github.com/auvred",
+			"contributions": [
+				"bug",
+				"maintenance",
+				"ideas",
+				"test",
+				"doc",
+				"blog"
+			]
+		},
+		{
+			"login": "lishaduck",
+			"name": "Eli",
+			"avatar_url": "https://avatars.githubusercontent.com/u/88557639?v=4",
+			"profile": "http://lishaduck.github.io",
+			"contributions": [
+				"ideas",
+				"code",
+				"tool",
+				"maintenance",
+				"bug",
+				"infra",
+				"doc"
+			]
+		},
+		{
+			"login": "kirkwaiblinger",
+			"name": "Kirk Waiblinger",
+			"avatar_url": "https://avatars.githubusercontent.com/u/53019676?v=4",
+			"profile": "https://github.com/kirkwaiblinger",
+			"contributions": [
+				"code",
+				"maintenance",
+				"ideas",
+				"doc"
+			]
+		},
+		{
+			"login": "barrymichaeldoyle",
+			"name": "Barry Michael Doyle",
+			"avatar_url": "https://avatars.githubusercontent.com/u/4674486?v=4",
+			"profile": "https://barrymichaeldoyle.com",
+			"contributions": [
+				"infra",
+				"maintenance",
+				"code"
+			]
+		},
+		{
+			"login": "kovsu",
+			"name": "Konv Suu",
+			"avatar_url": "https://avatars.githubusercontent.com/u/82451257?v=4",
+			"profile": "https://github.com/kovsu",
+			"contributions": [
+				"doc",
+				"code",
+				"maintenance",
+				"bug"
+			]
+		},
+		{
+			"login": "michaelfaith",
+			"name": "michael faith",
+			"avatar_url": "https://avatars.githubusercontent.com/u/8071845?v=4",
+			"profile": "https://github.com/michaelfaith",
+			"contributions": [
+				"ideas",
+				"doc",
+				"bug",
+				"maintenance",
+				"tool",
+				"code",
+				"infra"
+			]
+		},
+		{
+			"login": "kolharsam",
+			"name": "Sameer Kolhar",
+			"avatar_url": "https://avatars.githubusercontent.com/u/6604943?v=4",
+			"profile": "https://www.kolharsam.net",
+			"contributions": [
+				"code",
+				"maintenance"
+			]
+		},
+		{
+			"login": "yharaskrik",
+			"name": "Jay Bell",
+			"avatar_url": "https://avatars.githubusercontent.com/u/9469090?v=4",
+			"profile": "https://jaybell.me/",
+			"contributions": [
+				"code"
+			]
+		},
+		{
+			"login": "tibisabau",
+			"name": "Tiberiu Sabău",
+			"avatar_url": "https://avatars.githubusercontent.com/u/96194994?v=4",
+			"profile": "https://github.com/tibisabau",
+			"contributions": [
+				"code"
+			]
+		},
+		{
+			"login": "cylewaitforit",
+			"name": "cylewaitforit",
+			"avatar_url": "https://avatars.githubusercontent.com/u/54253392?v=4",
+			"profile": "https://github.com/cylewaitforit",
+			"contributions": [
+				"doc"
+			]
+		},
+		{
+			"login": "tylerlaprade",
+			"name": "Tyler C Laprade, CFA",
+			"avatar_url": "https://avatars.githubusercontent.com/u/5475199?v=4",
+			"profile": "http://www.irrationalmindsthinkalike.com",
+			"contributions": [
+				"doc",
+				"ideas",
+				"code"
+			]
+		},
+		{
+			"login": "sigmabrogz",
+			"name": "Sigmabro",
+			"avatar_url": "https://avatars.githubusercontent.com/u/122412346?v=4",
+			"profile": "https://github.com/Sigmabrogz",
+			"contributions": [
+				"code"
+			]
+		},
+		{
+			"login": "yonava",
+			"name": "Yona Alexander Voss-Andreae",
+			"avatar_url": "https://avatars.githubusercontent.com/u/76519301?v=4",
+			"profile": "https://github.com/Yonava",
+			"contributions": [
+				"code"
+			]
+		},
+		{
+			"login": "techmannih",
+			"name": "Manish chaudhary ",
+			"avatar_url": "https://avatars.githubusercontent.com/u/125847751?v=4",
+			"profile": "https://techmannih.me",
+			"contributions": [
+				"ideas"
+			]
+		}
+	],
+	"contributorsPerLine": 7,
+	"contributorsSortAlphabetically": true,
+	"files": [
+		"README.md"
+	],
+	"projectName": "flint",
+	"projectOwner": "flint-fyi",
+	"repoType": "github",
+	"commitConvention": "angular"
 }
