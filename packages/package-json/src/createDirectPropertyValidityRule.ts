@@ -6,7 +6,7 @@ import {
 	type JsonSourceFile,
 } from "@flint.fyi/json-language";
 import type { Result } from "package-json-validator";
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getPackagePropertiesOfNames } from "./getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "./ruleCreator.ts";
@@ -70,7 +70,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 				);
 				// If the value is an object, and has child results with issues, then report those too
 				if (
-					node.kind === ts.SyntaxKind.ObjectLiteralExpression &&
+					node.kind === SyntaxKind.ObjectLiteralExpression &&
 					childrenWithIssues.length
 				) {
 					for (const childResult of childrenWithIssues) {
@@ -78,7 +78,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 						const childNode = node.properties[childResult.index]!;
 						reportIssues(
 							childResult,
-							(childNode.kind === ts.SyntaxKind.PropertyAssignment
+							(childNode.kind === SyntaxKind.PropertyAssignment
 								? childNode.initializer
 								: childNode) as JsonNode,
 							sourceFile,
@@ -87,7 +87,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 				}
 				// If the value is an array, and has child results with issues, then report those too
 				else if (
-					node.kind === ts.SyntaxKind.ArrayLiteralExpression &&
+					node.kind === SyntaxKind.ArrayLiteralExpression &&
 					childrenWithIssues.length
 				) {
 					for (const childResult of childrenWithIssues) {
