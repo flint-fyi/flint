@@ -36,7 +36,8 @@ export function* presentSummary(
 				...(counts.fixable
 					? [
 							" (",
-							chalk.bold(pluralize(counts.fixable, "fixable with --fix")),
+							chalk.bold(pluralize(counts.fixable, "fixable")),
+							" with --fix",
 							")",
 						]
 					: []),

@@ -25,7 +25,8 @@ export function printSummary(filesWithReportResults: [string, FileResults][]) {
 			...(counts.fixable
 				? [
 						" (",
-						chalk.bold(pluralize(counts.fixable, "fixable with --fix")),
+						chalk.bold(pluralize(counts.fixable, "fixable")),
+						" with --fix",
 						")",
 					]
 				: []),
