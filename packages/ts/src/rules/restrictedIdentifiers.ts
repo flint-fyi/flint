@@ -24,13 +24,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		presets: ["stylisticStrict"],
 	},
 	messages: {
-		restrictedIdentifier: {
+		restricted: {
 			primary: "Identifier '{{ name }}' is restricted.",
-			secondary: [
-				"This identifier name is on this project's denylist.",
-				"{{ reason }}.",
+			secondary: ["This identifier name is on this project's denylist."],
+			suggestions: [
+				"Rename the identifier to something allowed in the project.",
 			],
-			suggestions: ["Rename the identifier to something more specific."],
 		},
 	},
 	options: {
@@ -50,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			context.report({
 				data: { name: node.name.text },
-				message: "restrictedIdentifier",
+				message: "restricted",
 				range: getTSNodeRange(node.name, sourceFile),
 			});
 		}
