@@ -35,9 +35,29 @@ describe("createReportSnapshot", () => {
 		},
 		{
 			expected: `
-{}
-~
+
 Property \`example\` is expected to be present.
+{}
+`,
+			reports: [
+				createReport(
+					`
+{}
+`,
+					0,
+					0,
+					"Property `example` is expected to be present.",
+				),
+			],
+			sourceText: `
+{}
+`,
+		},
+		{
+			expected: `
+
+Property \`example\` is expected to be present.
+{}
 `,
 			reports: [
 				createReport(
@@ -55,9 +75,9 @@ Property \`example\` is expected to be present.
 		},
 		{
 			expected: `
-{}
-~
-Property \`example\` is expected to be present.`,
+
+Property \`example\` is expected to be present.
+{}`,
 			reports: [
 				createReport(
 					`
@@ -73,9 +93,9 @@ Property \`example\` is expected to be present.`,
 		{
 			expected: `
 
-{}
-~
-Property \`example\` is expected to be present.`,
+Property \`example\` is expected to be present.
+
+{}`,
 			reports: [
 				createReport(
 					`
@@ -93,10 +113,10 @@ Property \`example\` is expected to be present.`,
 		{
 			expected: `
 
+Property \`example\` is expected to be present.
 
-{}
-~
-Property \`example\` is expected to be present.`,
+
+{}`,
 			reports: [
 				createReport(
 					`
@@ -132,9 +152,9 @@ Property \`example\` is expected to be present.
 		},
 		{
 			expected: `
-{
-~
+
 Property \`example\` is expected to be present.
+{
   "other": true
 }
 `,

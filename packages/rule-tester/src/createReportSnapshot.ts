@@ -1,8 +1,7 @@
 import {
 	formatReport,
-	getColumnAndLineOfPosition,
+	getPositionOfColumnAndLine,
 	type NormalizedReport,
-	type NormalizedReportRangeObject,
 } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 
@@ -20,9 +19,13 @@ export function createReportSnapshot(
 }
 
 function createReportSnapshotAt(sourceText: string, report: NormalizedReport) {
-	const { begin, end } = getActualRange(sourceText, report.range);
-	const lineStartIndex = sourceText.lastIndexOf("\n", begin.raw) + 1;
-	let lineEndIndex = sourceText.indexOf("\n", end.raw);
+	const { begin, end } = getDisplayedRange(sourceText, report.range);
+	const lineStartIndex = begin.raw - begin.column;
+	const lineEndStartIndex = getPositionOfColumnAndLine(sourceText, {
+		column: 0,
+		line: end.line,
+	});
+	let lineEndIndex = sourceText.indexOf("\n", lineEndStartIndex);
 	if (lineEndIndex < 0) {
 		lineEndIndex = sourceText.length;
 	}
@@ -62,19 +65,33 @@ function createReportSnapshotAt(sourceText: string, report: NormalizedReport) {
 	);
 }
 
-function getActualRange(
+function getDisplayedRange(
 	sourceText: string,
-	originalRange: NormalizedReportRangeObject,
+	{ begin, end }: NormalizedReport["range"],
 ) {
-	let { begin, end } = originalRange;
-
-	while (sourceText[begin.raw] === "\n") {
-		begin = getColumnAndLineOfPosition(sourceText, begin.raw + 1);
-		end = getColumnAndLineOfPosition(
-			sourceText,
-			Math.min(end.raw + 1, sourceText.length),
-		);
+	// Most displayed ranges are normal: the end column shows at least one ~.
+	if (end.column > 0 || end.line === begin.line) {
+		return { begin, end };
 	}
 
-	return { begin, end };
+	// For ranges ending at column 0 of a later line, snap the end back to the
+	// previous line so the snapshot underlines the last covered line instead.
+	const endLine = end.line - 1;
+	const endLineStartIndex = getPositionOfColumnAndLine(sourceText, {
+		column: 0,
+		line: endLine,
+	});
+	const endLineEndIndex = sourceText.indexOf("\n", endLineStartIndex);
+
+	return {
+		begin,
+		end: {
+			column:
+				endLineEndIndex < 0
+					? sourceText.length - endLineStartIndex
+					: endLineEndIndex - endLineStartIndex,
+			line: endLine,
+			raw: Math.max(endLineEndIndex, endLineStartIndex),
+		},
+	};
 }

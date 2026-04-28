@@ -9,9 +9,9 @@ ruleTester.describe(rule, {
 `,
 
 			snapshot: `
+
+This file contains no meaningful code.
 // just a comment
-
-This file contains no meaningful code.
 `,
 		},
 		{
@@ -31,9 +31,9 @@ comment */
 "use strict";
 `,
 			snapshot: `
+
+This file contains no meaningful code.
 "use strict";
-
-This file contains no meaningful code.
 `,
 		},
 		{
@@ -41,9 +41,9 @@ This file contains no meaningful code.
 'use strict';
 `,
 			snapshot: `
+
+This file contains no meaningful code.
 'use strict';
-
-This file contains no meaningful code.
 `,
 		},
 		{
@@ -51,9 +51,9 @@ This file contains no meaningful code.
 "use asm";
 `,
 			snapshot: `
+
+This file contains no meaningful code.
 "use asm";
-
-This file contains no meaningful code.
 `,
 		},
 		{
@@ -61,9 +61,9 @@ This file contains no meaningful code.
 ;
 `,
 			snapshot: `
+
+This file contains no meaningful code.
 ;
-
-This file contains no meaningful code.
 `,
 		},
 		{
@@ -71,9 +71,9 @@ This file contains no meaningful code.
 ;;;
 `,
 			snapshot: `
-;;;
 
 This file contains no meaningful code.
+;;;
 `,
 		},
 		{
@@ -81,9 +81,9 @@ This file contains no meaningful code.
 {}
 `,
 			snapshot: `
-{}
 
 This file contains no meaningful code.
+{}
 `,
 		},
 		{
@@ -93,9 +93,9 @@ This file contains no meaningful code.
 ;
 `,
 			snapshot: `
-// Comment
 
 This file contains no meaningful code.
+// Comment
 "use strict";
 ;
 `,
