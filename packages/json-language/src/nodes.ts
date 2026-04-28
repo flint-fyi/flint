@@ -45,5 +45,15 @@ export type JsonObjectExpressionStatement = Omit<
 };
 
 export type JsonSourceFile = Omit<AST.SourceFile, "statements"> & {
-	readonly statements: ts.NodeArray<JsonObjectExpressionStatement>;
+	readonly statements: JsonStatements;
 };
+
+interface JsonStatements extends ts.ReadonlyTextRange {
+	readonly 0?: JsonObjectExpressionStatement;
+	readonly length: 0 | 1;
+
+	/**
+	 * {@linkcode ts.NodeArray.hasTrailingComma}
+	 */
+	readonly hasTrailingComma: boolean;
+}
