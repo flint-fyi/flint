@@ -5,5 +5,5 @@ export const ruleCreator = new RuleCreator<
 >({
 	docs: (ruleId) =>
 		`https://flint.fyi/rules/package-json/${ruleId.toLowerCase()}`,
-	pluginId: "json",
+	pluginId: "package-json",
 });
