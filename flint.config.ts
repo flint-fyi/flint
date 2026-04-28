@@ -12,7 +12,7 @@ export default defineConfig({
 			rules: json.presets.logical,
 		},
 		{
-			files: md.files.all,
+			files: [md.files.all, ".changeset/*.md", ".github/**/*.md"],
 			rules: md.presets.logicalStrict,
 		},
 		{
@@ -44,7 +44,7 @@ export default defineConfig({
 			rules: yaml.presets.logical,
 		},
 		{
-			files: globs.all,
+			files: [globs.all, "**/*.mdx"],
 			rules: spelling.presets.logical,
 		},
 	],
