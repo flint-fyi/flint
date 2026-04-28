@@ -11,6 +11,9 @@ export function collectLanguageFilesByFilePath(
 	rulesOptionsByFile: Map<AnyRule, Map<string, unknown>>,
 	host: LinterHost,
 ) {
+	const filePathsByLanguage = new CachedFactory<AnyLanguage, Set<string>>(
+		() => new Set(),
+	);
 	const languageFilesByFilePath = new CachedFactory<
 		string,
 		Map<AnyLanguage, AnyLanguageFile>
@@ -31,6 +34,27 @@ export function collectLanguageFilesByFilePath(
 			}),
 		);
 	});
+
+	for (const [rule, optionsByFile] of rulesOptionsByFile) {
+		for (const [filePath] of optionsByFile) {
+			// If the file has cached results, don't bother making files for it
+			if (cached?.has(filePath)) {
+				continue;
+			}
+
+			filePathsByLanguage.get(rule.language).add(filePath);
+		}
+	}
+
+	for (const [language, filePaths] of filePathsByLanguage.entries()) {
+		const orderedFilePaths = language.orderFilePaths
+			? language.orderFilePaths([...filePaths], host)
+			: filePaths;
+
+		for (const filePath of orderedFilePaths) {
+			languageFilesByLanguage.get(language).get(filePath);
+		}
+	}
 
 	for (const [rule, optionsByFile] of rulesOptionsByFile) {
 		for (const [filePath] of optionsByFile) {
