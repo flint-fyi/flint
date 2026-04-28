@@ -34,7 +34,6 @@ const properties = [
 	["packageManager"],
 	["peerDependencies"],
 	["peerDependenciesMeta"],
-	["private"],
 	["publishConfig"],
 	["repository"],
 	["scripts"],

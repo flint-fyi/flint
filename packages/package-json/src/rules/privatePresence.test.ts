@@ -1,7 +1,7 @@
-import { directPropertyPresenceRules } from "../directPropertyPresenceRules.ts";
 import { ruleTester } from "../ruleTester.ts";
+import privatePresence from "./privatePresence.ts";
 
-ruleTester.describe(directPropertyPresenceRules.privatePresence, {
+ruleTester.describe(privatePresence, {
 	invalid: [
 		{
 			code: `{
