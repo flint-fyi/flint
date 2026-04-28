@@ -51,12 +51,12 @@ body:
   - type: textarea
     attributes:
       description: Example code that the rule should allow.
-      label: Reproduction
+      label: Allowed
       render: TypeScript
   - type: textarea
     attributes:
       description: Example code the rule should report on.
-      label: Reproduction
+      label: Reported
       render: TypeScript
   - type: textarea
     attributes:

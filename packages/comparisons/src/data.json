@@ -899,9 +899,10 @@
 			}
 		],
 		"flint": {
-			"name": "testCaseOnlies",
+			"name": "testCaseOnlyFlags",
 			"plugin": "flint",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -17798,7 +17799,8 @@
 		],
 		"flint": {
 			"name": "restrictedIdentifiers",
-			"plugin": "ts"
+			"plugin": "ts",
+			"status": "implemented"
 		}
 	},
 	{
@@ -21510,7 +21512,7 @@
 			}
 		],
 		"flint": {
-			"name": "testCaseOnlies",
+			"name": "testCaseOnlyFlags",
 			"plugin": "vitest",
 			"status": "skipped"
 		},
