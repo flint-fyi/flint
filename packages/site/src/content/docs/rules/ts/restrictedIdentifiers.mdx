@@ -13,9 +13,21 @@ import RuleSummary from "~/components/RuleSummary.astro";
 Some projects like to ban specific identifiers, or names, in code.
 This rule provides a `deny` option that can be used to disallow specific identifier names.
 
-## Examples
+## Options
 
-With `deny: ['cb', 'val']`:
+### `deny`
+
+> Type: `string[]`
+
+Identifier names to globally disallow.
+
+```ts
+json.rules({
+	restrictedIdentifiers: {
+		deny: ["cb", "val"],
+	},
+});
+```
 
 <Tabs>
 <TabItem label="❌ Incorrect">
@@ -57,10 +69,6 @@ import data from "lib";
 
 </TabItem>
 </Tabs>
-
-## Options
-
-This rule is not configurable.
 
 ## When Not To Use It
 
