@@ -187,6 +187,28 @@ export default defineConfig(
 		},
 	},
 	{
+		files: ["packages/site/**/*.ts"],
+		rules: {
+			"@typescript-eslint/no-restricted-imports": [
+				"error",
+				{
+					paths: [
+						{
+							message: "Use astro/zod instead of the main Zod package.",
+							name: "zod",
+						},
+					],
+					patterns: [
+						{
+							group: ["zod/*"],
+							message: "Use astro/zod instead of the main Zod package.",
+						},
+					],
+				},
+			],
+		},
+	},
+	{
 		extends: [
 			// https://github.com/ota-meshi/eslint-plugin-jsonc/issues/385
 			jsonc.configs["flat/recommended-with-json"] as unknown as Linter.Config[],

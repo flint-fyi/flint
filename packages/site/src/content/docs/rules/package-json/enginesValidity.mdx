@@ -1,0 +1,49 @@
+---
+description: "Enforce that the `engines` property is valid."
+title: "enginesValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="enginesValidity" />
+
+This rule checks that the `engines` property is an object with non-empty string values.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"engines": {
+		"node": 24
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"engines": {
+		"node": "^24.11.0"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `engines` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="enginesValidity" />

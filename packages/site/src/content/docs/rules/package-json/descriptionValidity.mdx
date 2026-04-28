@@ -1,0 +1,57 @@
+---
+description: "Enforce that the `description` property is valid."
+title: "descriptionValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="descriptionValidity" />
+
+This rule ensures that the `description` field is a non-empty string.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"description": ""
+}
+```
+
+```json
+{
+	"description": null
+}
+```
+
+```json
+{
+	"description": {}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"description": "The Fragile"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `description` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="descriptionValidity" />

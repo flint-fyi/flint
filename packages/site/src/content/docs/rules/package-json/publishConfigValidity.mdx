@@ -1,0 +1,51 @@
+---
+description: "Enforce that the `publishConfig` property is valid."
+title: "publishConfigValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="publishConfigValidity" />
+
+This rule checks that the `publishConfig` property is an object.
+Each property that maps to an existing package.json property (e.g. `exports`) must pass the same validations as the top-level property.
+Properties that don't map to top-level fields (e.g. `access`) have their own validations based on the npm spec.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"publishConfig": {
+		"provenance": "true"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"publishConfig": {
+		"provenance": true
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `publishConfig` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="publishConfigValidity" />

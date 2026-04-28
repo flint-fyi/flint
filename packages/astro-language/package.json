@@ -29,12 +29,12 @@
 		"@astrojs/compiler": "^3.0.1",
 		"@astrojs/ts-plugin": "^1.10.7",
 		"@flint.fyi/ts-patch": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"@flint.fyi/volar-language": "workspace:^",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
-		"@flint.fyi/typescript-language": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

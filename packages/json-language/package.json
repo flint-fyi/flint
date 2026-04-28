@@ -27,6 +27,7 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {

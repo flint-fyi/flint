@@ -5,7 +5,7 @@ import { node } from "@flint.fyi/node";
 import { performance } from "@flint.fyi/performance";
 import { flint } from "@flint.fyi/plugin-flint";
 import { spelling } from "@flint.fyi/spelling";
-import { type AnyRule, json, md, ts, yaml } from "flint";
+import { type AnyRule, json, md, packageJson, ts, yaml } from "flint";
 
 const plugins = {
 	astro,
@@ -15,6 +15,7 @@ const plugins = {
 	jsx,
 	md,
 	node,
+	"package-json": packageJson,
 	performance,
 	spelling,
 	ts,

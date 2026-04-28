@@ -71,6 +71,7 @@ export interface LanguageAbout {
 
 export interface LanguageReport {
 	code?: string;
+	range?: CharacterReportRange;
 	text: string;
 }
 

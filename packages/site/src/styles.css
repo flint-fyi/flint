@@ -31,6 +31,14 @@
 	--sl-color-black: #ffffff;
 }
 
+html[data-theme="light"] .only-dark {
+	display: none;
+}
+
+html[data-theme="dark"] .only-light {
+	display: none;
+}
+
 /* General customizations. */
 :root {
 	--sl-content-width: 56rem;

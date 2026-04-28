@@ -331,7 +331,7 @@ let value: NotKnown;
 function example() {
   return value;
   ~~~~~~~~~~~~~
-  Unsafe return of a value of type error.
+  Unsafe return of a value of type \`error\`.
 }
       
 `,

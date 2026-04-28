@@ -1,0 +1,45 @@
+---
+description: "Enforce that the `workspaces` property is valid."
+title: "workspacesValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="workspacesValidity" />
+
+This rule checks that the `workspaces` property is an array of non-empty strings.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"workspaces": "./packages/*"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"workspaces": ["./app", "./packages/*"]
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `workspacesValidity` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="workspacesValidity" />

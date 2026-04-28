@@ -1,0 +1,49 @@
+---
+description: "Enforce that the `license` property is valid."
+title: "licenseValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="licenseValidity" />
+
+This rule checks that the `license` property is a string containing a valid SPDX license, "UNLICENSED", or a note referencing a license file (e.g. "SEE LICENSE IN LICENSE.md").
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"license": "GPL3"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"license": "GPL-3.0-only"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `license` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Further Reading
+
+- [SPDX Documentation](https://spdx.org/licenses)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="licenseValidity" />
