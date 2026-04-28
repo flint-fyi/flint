@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-maps */
 import { describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";
@@ -58,8 +59,8 @@ describe(collectLanguageFilesByFilePath, () => {
 			[
 				plainRule,
 				new Map([
-					["/root/a.ts", {}],
 					["/root/b.ts", {}],
+					["/root/a.ts", {}],
 				]),
 			],
 		]);

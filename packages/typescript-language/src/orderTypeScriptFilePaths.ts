@@ -32,39 +32,30 @@ export function orderTypeScriptFilePaths(
 	const serverHost = createTypeScriptServerHost(host);
 	const parseHost: ts.ParseConfigFileHost = {
 		...serverHost,
-		getCurrentDirectory: () => cwd,
 		onUnRecoverableConfigFileDiagnostic() {
 			// Keep ordering best-effort; ProjectService reports config diagnostics.
 		},
-		useCaseSensitiveFileNames: caseSensitiveFS,
 	};
 	const configByDirectory = new Map<PathKey, string | undefined>();
 	const parsedConfigByPath = new Map<PathKey, ParsedConfigInfo | undefined>();
 	const configByFile = new Map<PathKey, string>();
 
 	function comparePaths(a: string, b: string) {
-		return toComparablePath(a).localeCompare(toComparablePath(b));
-	}
-
-	function toComparablePath(filePath: string) {
-		const normalized = normalizePath(filePath);
-		return caseSensitiveFS ? normalized : normalized.toLowerCase();
-	}
-
-	function getPathKey(filePath: string) {
-		return pathKey(filePath, caseSensitiveFS);
+		return pathKey(a, caseSensitiveFS).localeCompare(
+			pathKey(b, caseSensitiveFS),
+		);
 	}
 
 	function findConfigFile(directoryPath: string) {
 		const directoryPathNormalized = normalizePath(directoryPath);
-		const directoryKey = getPathKey(directoryPathNormalized);
+		const directoryKey = pathKey(directoryPathNormalized, caseSensitiveFS);
 		if (configByDirectory.has(directoryKey)) {
 			return configByDirectory.get(directoryKey);
 		}
 
 		const configPath = ts.findConfigFile(
 			directoryPathNormalized,
-			parseHost.fileExists,
+			(path) => parseHost.fileExists(path),
 			tsConfigFileName,
 		);
 		const normalizedConfigPath =
@@ -77,7 +68,7 @@ export function orderTypeScriptFilePaths(
 	}
 
 	function getParsedConfig(configPath: string) {
-		const configKey = getPathKey(configPath);
+		const configKey = pathKey(configPath, caseSensitiveFS);
 		if (parsedConfigByPath.has(configKey)) {
 			return parsedConfigByPath.get(configKey);
 		}
@@ -113,7 +104,7 @@ export function orderTypeScriptFilePaths(
 		const visiting = new Set<PathKey>();
 
 		function visit(currentConfigPath: string) {
-			const configKey = getPathKey(currentConfigPath);
+			const configKey = pathKey(currentConfigPath, caseSensitiveFS);
 			if (seen.has(configKey) || visiting.has(configKey)) {
 				return;
 			}
@@ -139,7 +130,8 @@ export function orderTypeScriptFilePaths(
 			absolute,
 			original,
 			rootConfig,
-			rootConfigKey: rootConfig == null ? undefined : getPathKey(rootConfig),
+			rootConfigKey:
+				rootConfig == null ? undefined : pathKey(rootConfig, caseSensitiveFS),
 		};
 	});
 	const rootConfigs = Array.from(
@@ -150,25 +142,28 @@ export function orderTypeScriptFilePaths(
 		),
 	).sort(comparePaths);
 	const fileInfoByPath = new Map(
-		fileInfos.map((fileInfo) => [getPathKey(fileInfo.absolute), fileInfo]),
+		fileInfos.map((fileInfo) => [
+			pathKey(fileInfo.absolute, caseSensitiveFS),
+			fileInfo,
+		]),
 	);
 	const configRanks = new Map<PathKey, number>();
 
 	for (const rootConfig of rootConfigs) {
-		const rootConfigKey = getPathKey(rootConfig);
+		const rootConfigKey = pathKey(rootConfig, caseSensitiveFS);
 		for (const config of collectConfigsTopologically(rootConfig)) {
-			const configKey = getPathKey(config);
+			const configKey = pathKey(config, caseSensitiveFS);
 			if (!configRanks.has(configKey)) {
 				configRanks.set(configKey, configRanks.size);
 			}
 
 			for (const fileName of getParsedConfig(config)?.fileNames ?? []) {
-				const fileInfo = fileInfoByPath.get(getPathKey(fileName));
+				const fileInfo = fileInfoByPath.get(pathKey(fileName, caseSensitiveFS));
 				if (fileInfo?.rootConfigKey !== rootConfigKey) {
 					continue;
 				}
 
-				const fileKey = getPathKey(fileInfo.absolute);
+				const fileKey = pathKey(fileInfo.absolute, caseSensitiveFS);
 				if (!configByFile.has(fileKey)) {
 					configByFile.set(fileKey, config);
 				}
@@ -178,16 +173,20 @@ export function orderTypeScriptFilePaths(
 
 	return fileInfos
 		.toSorted((a, b) => {
-			const configA = configByFile.get(getPathKey(a.absolute)) ?? a.rootConfig;
-			const configB = configByFile.get(getPathKey(b.absolute)) ?? b.rootConfig;
+			const configA =
+				configByFile.get(pathKey(a.absolute, caseSensitiveFS)) ?? a.rootConfig;
+			const configB =
+				configByFile.get(pathKey(b.absolute, caseSensitiveFS)) ?? b.rootConfig;
 			const rankA =
 				configA == null
 					? Number.MAX_SAFE_INTEGER
-					: (configRanks.get(getPathKey(configA)) ?? Number.MAX_SAFE_INTEGER);
+					: (configRanks.get(pathKey(configA, caseSensitiveFS)) ??
+						Number.MAX_SAFE_INTEGER);
 			const rankB =
 				configB == null
 					? Number.MAX_SAFE_INTEGER
-					: (configRanks.get(getPathKey(configB)) ?? Number.MAX_SAFE_INTEGER);
+					: (configRanks.get(pathKey(configB, caseSensitiveFS)) ??
+						Number.MAX_SAFE_INTEGER);
 
 			return rankA - rankB || comparePaths(a.absolute, b.absolute);
 		})
