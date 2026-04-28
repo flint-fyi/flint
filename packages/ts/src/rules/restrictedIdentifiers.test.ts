@@ -7,6 +7,7 @@ ruleTester.describe(rule, {
 			code: `
 const data = 1;
 `,
+			options: { deny: ["data"] },
 			snapshot: `
 const data = 1;
       ~~~~
@@ -15,18 +16,9 @@ const data = 1;
 		},
 		{
 			code: `
-let callback = () => {};
-`,
-			snapshot: `
-let callback = () => {};
-    ~~~~~~~~
-    Identifier 'callback' is restricted.
-`,
-		},
-		{
-			code: `
 function data() {}
 `,
+			options: { deny: ["data"] },
 			snapshot: `
 function data() {}
          ~~~~
@@ -37,6 +29,7 @@ function data() {}
 			code: `
 function fn(data) {}
 `,
+			options: { deny: ["data"] },
 			snapshot: `
 function fn(data) {}
             ~~~~
@@ -47,6 +40,7 @@ function fn(data) {}
 			code: `
 function fn(callback, e) {}
 `,
+			options: { deny: ["callback", "e"] },
 			snapshot: `
 function fn(callback, e) {}
             ~~~~~~~~
@@ -59,6 +53,7 @@ function fn(callback, e) {}
 			code: `
 class data {}
 `,
+			options: { deny: ["data"] },
 			snapshot: `
 class data {}
       ~~~~
@@ -69,6 +64,7 @@ class data {}
 			code: `
 import data from 'lib';
 `,
+			options: { deny: ["data"] },
 			snapshot: `
 import data from 'lib';
        ~~~~
@@ -79,6 +75,7 @@ import data from 'lib';
 			code: `
 import { data } from 'lib';
 `,
+			options: { deny: ["data"] },
 			snapshot: `
 import { data } from 'lib';
          ~~~~
@@ -89,6 +86,7 @@ import { data } from 'lib';
 			code: `
 import { foo as data } from 'lib';
 `,
+			options: { deny: ["data"] },
 			snapshot: `
 import { foo as data } from 'lib';
                 ~~~~
@@ -99,6 +97,7 @@ import { foo as data } from 'lib';
 			code: `
 import * as data from 'lib';
 `,
+			options: { deny: ["data"] },
 			snapshot: `
 import * as data from 'lib';
             ~~~~

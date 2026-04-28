@@ -10,29 +10,30 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="restrictedIdentifiers" />
 
-Generic or ambiguous identifier names can make code harder to understand.
-This rule disallows specific identifier names that are too vague or commonly overused.
-Using more descriptive names improves code readability and maintainability.
+Some projects like to ban specific identifiers, or names, in code.
+This rule provides a `deny` option that can be used to disallow specific identifier names.
 
 ## Examples
+
+With `deny: ['cb', 'val']`:
 
 <Tabs>
 <TabItem label="❌ Incorrect">
 
 ```ts
-const data = fetchUsers();
+const val = fetchUsers();
 ```
 
 ```ts
-function callback() {}
+function cb() {}
 ```
 
 ```ts
-function process(data, callback) {}
+function process(val, cb) {}
 ```
 
 ```ts
-import data from "lib";
+import val from "lib";
 ```
 
 </TabItem>
@@ -51,7 +52,7 @@ function process(users, onComplete) {}
 ```
 
 ```ts
-import userData from "lib";
+import data from "lib";
 ```
 
 </TabItem>
@@ -63,7 +64,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If your codebase has established conventions using names like `data` or `callback`, and changing them would require significant refactoring, you may disable this rule.
+This rule is only relevant for projects that have established conventions of names that should not be used.
+If you're not particular about banning specific identifier names, you likely don't need this rule.
 
 ## Equivalents in Other Linters
 

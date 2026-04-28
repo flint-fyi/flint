@@ -1,9 +1,21 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+import ts from "typescript";
+import z from "zod/v4";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-const denylist = new Set(["callback", "cb", "data", "e", "err"]);
+interface Options {
+	deny?: string[] | undefined;
+}
+
+interface VisitorServices extends TypeScriptFileServices {
+	options: Options;
+}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -15,65 +27,43 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		restrictedIdentifier: {
 			primary: "Identifier '{{ name }}' is restricted.",
 			secondary: [
-				"This identifier name is on the denylist. Consider using a more descriptive name.",
+				"This identifier name is on this project's denylist.",
+				"{{ reason }}.",
 			],
 			suggestions: ["Rename the identifier to something more specific."],
 		},
 	},
+	options: {
+		deny: z.array(z.string()).optional(),
+	},
 	setup(context) {
-		const reportIfRestricted = (
-			identifier: ts.Identifier,
-			sourceFile: ts.SourceFile,
-		) => {
-			const name = identifier.text;
-
-			if (!denylist.has(name)) {
+		function checkNode(
+			node: AST.AnyNode & { name?: AST.BindingName | undefined },
+			{ options, sourceFile }: VisitorServices,
+		) {
+			if (
+				node.name?.kind !== ts.SyntaxKind.Identifier ||
+				!options.deny?.includes(node.name.text)
+			) {
 				return;
 			}
 
 			context.report({
-				data: { name },
+				data: { name: node.name.text },
 				message: "restrictedIdentifier",
-				range: {
-					begin: identifier.getStart(sourceFile),
-					end: identifier.getEnd(),
-				},
+				range: getTSNodeRange(node.name, sourceFile),
 			});
-		};
+		}
 
 		return {
 			visitors: {
-				ClassDeclaration: (node, { sourceFile }) => {
-					if (node.name) {
-						reportIfRestricted(node.name, sourceFile);
-					}
-				},
-				FunctionDeclaration: (node, { sourceFile }) => {
-					if (node.name) {
-						reportIfRestricted(node.name, sourceFile);
-					}
-				},
-				ImportClause: (node, { sourceFile }) => {
-					if (node.name) {
-						reportIfRestricted(node.name, sourceFile);
-					}
-				},
-				ImportSpecifier: (node, { sourceFile }) => {
-					reportIfRestricted(node.name, sourceFile);
-				},
-				NamespaceImport: (node, { sourceFile }) => {
-					reportIfRestricted(node.name, sourceFile);
-				},
-				Parameter: (node, { sourceFile }) => {
-					if (ts.isIdentifier(node.name)) {
-						reportIfRestricted(node.name, sourceFile);
-					}
-				},
-				VariableDeclaration: (node, { sourceFile }) => {
-					if (ts.isIdentifier(node.name)) {
-						reportIfRestricted(node.name, sourceFile);
-					}
-				},
+				ClassDeclaration: checkNode,
+				FunctionDeclaration: checkNode,
+				ImportClause: checkNode,
+				ImportSpecifier: checkNode,
+				NamespaceImport: checkNode,
+				Parameter: checkNode,
+				VariableDeclaration: checkNode,
 			},
 		};
 	},
