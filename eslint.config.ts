@@ -46,6 +46,7 @@ function banJsImportExtension() {
 export default defineConfig(
 	globalIgnores([
 		"**/*.snap",
+		"**/.playwright-mcp/**",
 		"**/node_modules",
 		"packages/*/.astro",
 		"packages/*/dist",

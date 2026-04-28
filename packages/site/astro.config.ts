@@ -15,6 +15,10 @@ export default defineConfig({
 			components: {
 				Footer: "src/components/Footer.astro",
 				Head: "src/components/Head.astro",
+				Header: "src/components/Header.astro",
+				PageFrame: "src/components/PageFrame.astro",
+				PageSidebar: "src/components/PageSidebar.astro",
+				ThemeSelect: "src/components/ThemeSelect.astro",
 			},
 			customCss: ["src/styles.css"],
 			favicon: "/logo.png",
@@ -31,6 +35,7 @@ export default defineConfig({
 							url: "https://joshuakgoldberg.com",
 						},
 					},
+					navigation: "none",
 				}),
 				starlightLinksValidator(),
 				starlightSidebarTopics(
@@ -119,7 +124,10 @@ export default defineConfig({
 							link: "rules",
 						},
 					],
-					{ exclude: ["/blog", "/blog/**/*"] },
+					{
+						exclude: ["/blog", "/blog/**/*"],
+						topics: { about: ["/playground"] },
+					},
 				),
 			],
 			social: [

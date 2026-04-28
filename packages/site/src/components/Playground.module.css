@@ -1,0 +1,1173 @@
+.playground {
+	border: 1px solid var(--sl-color-hairline-shade);
+	border-radius: 0;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	margin-block: 0;
+	overflow: hidden;
+	padding: 0;
+	background: var(--sl-color-bg);
+	box-shadow: none;
+}
+
+.sidebar {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	min-height: 0;
+	min-width: 0;
+	overflow: hidden;
+}
+
+.sidebar > .fileExplorer {
+	flex: 1;
+}
+
+.settingsPanel {
+	background: var(--sl-color-gray-6);
+	border: 0;
+	border-bottom: 1px solid var(--sl-color-hairline-shade);
+	border-radius: 0;
+	display: grid;
+	gap: 0.35rem;
+	padding: 0.4rem;
+}
+
+.sidebarButton {
+	align-items: center;
+	background: var(--sl-color-bg);
+	border: 1px solid var(--sl-color-hairline-shade);
+	border-radius: 0;
+	color: var(--sl-color-gray-1);
+	cursor: pointer;
+	display: inline-flex;
+	font-family: inherit;
+	font-size: var(--sl-text-xs);
+	font-weight: 600;
+	justify-content: center;
+	letter-spacing: 0.01em;
+	line-height: 1;
+	min-height: 1.65rem;
+	padding: 0.35rem 0.55rem;
+	transition:
+		background 0.12s ease,
+		border-color 0.12s ease,
+		color 0.12s ease;
+}
+
+.sidebarButton:hover {
+	background: var(--sl-color-gray-6);
+	border-color: var(--sl-color-accent);
+	color: var(--sl-color-accent-high);
+}
+
+.sidebarButton:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: 2px;
+}
+
+.fileExplorer {
+	--pg-file-text: 0.78rem;
+	--pg-file-btn: 0.54rem;
+	--pg-rename-font: 11px;
+	--pg-rename-pad-y: 0;
+	--pg-rename-pad-x: 0.1rem;
+	--pg-file-row-height: 1.9rem;
+	--pg-file-pad-y: 0;
+	--pg-file-pad-x: 0.4rem;
+	--pg-file-border: 1px;
+	background: var(--sl-color-gray-6);
+	border: 0;
+	border-radius: 0;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	min-width: 0;
+	overflow: hidden;
+}
+
+.fileExplorerHeader {
+	align-items: center;
+	background: var(--sl-color-bg);
+	border-bottom: 1px solid var(--sl-color-hairline-shade);
+	display: flex;
+	flex-shrink: 0;
+	gap: 0.4rem;
+	justify-content: space-between;
+	padding: 0.4rem 0.55rem;
+}
+
+.fileExplorerTitle {
+	color: var(--sl-color-gray-3);
+	font-size: 0.65rem;
+	font-weight: 600;
+	letter-spacing: 0.09em;
+	line-height: 1;
+	text-transform: uppercase;
+}
+
+.fileExplorerAdd {
+	align-items: center;
+	background: transparent;
+	border: 1px solid var(--sl-color-hairline-shade);
+	border-radius: 0.2rem;
+	box-sizing: border-box;
+	color: var(--sl-color-gray-2);
+	cursor: pointer;
+	display: inline-flex;
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: 13px;
+	font-weight: 600;
+	justify-content: center;
+	line-height: 0;
+	height: 1.25rem;
+	min-height: 0;
+	min-width: 0;
+	padding: 0;
+	width: 1.25rem;
+}
+
+.fileExplorerAdd:hover {
+	border-color: var(--sl-color-accent);
+	color: var(--sl-color-accent-high);
+}
+
+.fileExplorerAdd:focus-visible {
+	outline: 1px solid var(--sl-color-accent);
+	outline-offset: 1px;
+}
+
+.fileList {
+	flex: 1;
+	list-style: none;
+	margin: 0;
+	min-height: 0;
+	overflow-y: auto;
+	padding: 0.25rem;
+}
+
+.fileListItem {
+	animation: fileListItemIn 140ms ease-out;
+	margin: 0;
+	max-height: var(--pg-file-row-height);
+	overflow: hidden;
+	padding: 0;
+}
+
+.fileListItemRemoving {
+	animation: fileListItemOut 160ms ease-in forwards;
+	pointer-events: none;
+}
+
+.fileRow {
+	align-items: center;
+	background: transparent;
+	border-radius: 0;
+	display: flex;
+	gap: 0;
+	min-height: var(--pg-file-row-height);
+	min-width: 0;
+	overflow: hidden;
+	position: relative;
+}
+
+.fileRow:hover {
+	background: var(--sl-color-bg);
+}
+
+.fileRowActive {
+	background: var(--sl-color-accent-low);
+}
+
+.fileRowActive:hover {
+	background: var(--sl-color-accent-low);
+}
+
+.fileRowRemoving {
+	background: var(--sl-color-bg);
+}
+
+:root[data-theme="light"] .fileRowActive {
+	box-shadow: inset 2px 0 0 var(--sl-color-accent);
+}
+
+.fileRowMain {
+	align-items: center;
+	flex: 1;
+	background: transparent;
+	border: var(--pg-file-border) solid transparent;
+	border-radius: 0;
+	color: var(--sl-color-gray-1);
+	cursor: pointer;
+	display: flex;
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: var(--pg-file-text);
+	height: var(--pg-file-row-height);
+	line-height: 1.3;
+	min-width: 0;
+	padding: var(--pg-file-pad-y) var(--pg-file-pad-x);
+	text-align: start;
+}
+
+.fileRowMain:hover {
+	color: var(--sl-color-gray-1);
+}
+
+.fileRowMain:focus-visible {
+	outline: 1px solid var(--sl-color-accent);
+	outline-offset: 0;
+	z-index: 1;
+}
+
+.fileRowMainLabel {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.fileRowRenameInput {
+	background: var(--sl-color-bg);
+	border: var(--pg-file-border) solid transparent;
+	border-radius: 0;
+	box-sizing: border-box;
+	color: var(--sl-color-gray-1);
+	display: block;
+	flex: 1 1 0;
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: var(--pg-file-text);
+	height: var(--pg-file-row-height);
+	line-height: 1.3;
+	margin: 0;
+	max-width: 100%;
+	min-inline-size: 0;
+	min-width: 0;
+	outline: none;
+	overflow: hidden;
+	padding: var(--pg-file-pad-y) var(--pg-file-pad-x);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	width: 100%;
+}
+
+.fileRowRenameInput:focus {
+	box-shadow: inset 0 0 0 1px var(--sl-color-accent);
+}
+
+.fileRowActions {
+	align-items: center;
+	background: var(--sl-color-gray-6);
+	border-radius: 0;
+	display: inline-flex;
+	flex-shrink: 0;
+	gap: 0.1rem;
+	height: var(--pg-file-row-height);
+	opacity: 0;
+	padding-inline: 0.16rem;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transition: opacity 0.1s ease;
+}
+
+.fileRow::before {
+	background: linear-gradient(
+		to right,
+		transparent,
+		var(--sl-color-gray-6) 60%
+	);
+	border-radius: 0;
+	content: "";
+	height: 100%;
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transition: opacity 0.1s ease;
+	width: 1.25rem;
+}
+
+.fileRow:hover::before {
+	background: linear-gradient(to right, transparent, var(--sl-color-bg) 60%);
+	opacity: 1;
+}
+
+.fileRow:has(.fileRowBtn:focus-visible)::before {
+	background: linear-gradient(to right, transparent, var(--sl-color-bg) 60%);
+	opacity: 1;
+}
+
+.fileRowRenaming::before {
+	content: none;
+}
+
+.fileRowActive .fileRowActions {
+	background: var(--sl-color-accent-low);
+}
+
+.fileRowActive::before {
+	background: linear-gradient(
+		to right,
+		transparent,
+		var(--sl-color-accent-low) 60%
+	);
+}
+
+.fileRow:hover .fileRowActions,
+.fileRow:has(.fileRowBtn:focus-visible) .fileRowActions {
+	background: var(--sl-color-bg);
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.fileRowActive:hover::before,
+.fileRowActive:has(.fileRowBtn:focus-visible)::before {
+	background: linear-gradient(
+		to right,
+		transparent,
+		var(--sl-color-accent-low) 60%
+	);
+}
+
+.fileRowActive:hover .fileRowActions,
+.fileRowActive:has(.fileRowBtn:focus-visible) .fileRowActions {
+	background: var(--sl-color-accent-low);
+}
+
+.fileRowBtn {
+	align-items: center;
+	background: transparent;
+	border: none;
+	border-radius: 0.2rem;
+	color: var(--sl-color-gray-3);
+	cursor: pointer;
+	display: inline-flex;
+	font: inherit;
+	font-size: var(--pg-file-btn);
+	font-weight: 500;
+	letter-spacing: 0;
+	line-height: 1;
+	padding: 0.12rem 0.24rem;
+	text-transform: none;
+	white-space: nowrap;
+}
+
+.fileRowBtnRename {
+	align-items: center;
+	display: inline-flex;
+	font-size: var(--pg-rename-font);
+	font-weight: 500;
+	height: 1rem;
+	justify-content: center;
+	letter-spacing: 0;
+	line-height: 1;
+	min-height: 0;
+	padding: var(--pg-rename-pad-y) var(--pg-rename-pad-x);
+	border: 1px solid var(--sl-color-hairline-shade);
+	border-radius: 0.2rem;
+	background: var(--sl-color-bg);
+	color: var(--sl-color-gray-2);
+	text-transform: none;
+}
+
+.fileRowBtnRename:hover {
+	border-color: var(--sl-color-accent);
+	color: var(--sl-color-accent-high);
+	background: var(--sl-color-gray-6);
+}
+
+.fileRowActive .fileRowBtnRename {
+	background: var(--sl-color-bg);
+	border-color: var(--sl-color-gray-4);
+	color: var(--sl-color-gray-2);
+}
+
+.fileRowActive .fileRowBtnRename:hover {
+	border-color: var(--sl-color-accent);
+	color: var(--sl-color-accent-high);
+	background: var(--sl-color-gray-6);
+}
+
+.fileRowBtn:hover:not(.fileRowBtnRename) {
+	background: var(--sl-color-gray-6);
+	color: var(--sl-color-gray-1);
+}
+
+.fileRowBtnDanger {
+	aspect-ratio: 1;
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: 12px;
+	height: 1rem;
+	justify-content: center;
+	line-height: 0;
+	min-height: 0;
+	min-width: 0;
+	padding: 0;
+	width: 1rem;
+}
+
+.fileRowBtnDanger:hover {
+	background: transparent;
+	color: #e05555;
+}
+
+.fileRowBtn:focus-visible {
+	outline: 1px solid var(--sl-color-accent);
+	outline-offset: 0;
+	z-index: 1;
+}
+
+:global(.playground-doc .playground-shell) .fileRowBtnRename {
+	align-items: center;
+	display: inline-flex;
+	font-size: var(--pg-rename-font);
+	height: 1rem;
+	justify-content: center;
+	line-height: 1;
+	min-height: 0;
+	padding: var(--pg-rename-pad-y) var(--pg-rename-pad-x);
+}
+
+:global(.playground-doc .playground-shell) .fileRowBtnDanger {
+	aspect-ratio: 1;
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: 12px;
+	height: 1rem;
+	line-height: 0;
+	min-height: 0;
+	min-width: 0;
+	padding: 0;
+	width: 1rem;
+}
+
+@keyframes fileListItemIn {
+	from {
+		max-height: 0;
+		opacity: 0;
+		transform: translateY(-0.2rem);
+	}
+
+	to {
+		max-height: var(--pg-file-row-height);
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes fileListItemOut {
+	from {
+		max-height: var(--pg-file-row-height);
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	to {
+		max-height: 0;
+		opacity: 0;
+		transform: translateX(-0.25rem);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.fileListItem,
+	.fileListItemRemoving {
+		animation-duration: 1ms;
+	}
+}
+
+.editor,
+.diagnosticsPanel,
+.panel {
+	background: var(--sl-color-gray-6);
+	border: 1px solid var(--sl-color-hairline-shade);
+	border-radius: 0;
+	min-width: 0;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+
+.diagnosticsTabs,
+.outputTabs {
+	align-items: center;
+	border-bottom: 1px solid var(--sl-color-hairline-shade);
+	display: flex;
+	flex-wrap: nowrap;
+	gap: 0;
+	justify-content: flex-start;
+	padding: 0;
+	flex-shrink: 0;
+	background: var(--sl-color-bg);
+}
+
+.outputTabs {
+	padding: 0.3rem;
+	gap: 0.25rem;
+	flex-wrap: wrap;
+}
+
+.diagnosticsTab,
+.outputTab {
+	appearance: none;
+	align-items: center;
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 0.3rem;
+	color: var(--sl-color-gray-2);
+	cursor: pointer;
+	display: inline-flex;
+	font: inherit;
+	font-size: var(--sl-text-xs);
+	font-weight: 600;
+	line-height: 1;
+	margin: 0;
+	min-height: 1.6rem;
+	padding: 0.3rem 0.6rem;
+}
+
+.diagnosticsTab {
+	border-block: 0;
+	border-inline-start: 0;
+	border-inline-end-color: var(--sl-color-hairline-shade);
+	border-radius: 0;
+	color: var(--sl-color-gray-2);
+	font-size: var(--sl-text-sm);
+	font-weight: 600;
+	justify-content: center;
+	min-height: 2rem;
+	padding: 0.35rem 0.65rem;
+}
+
+.diagnosticsTab[aria-disabled="true"] {
+	cursor: default;
+	opacity: 0.75;
+}
+
+.diagnosticsTab[aria-selected="true"] {
+	background: var(--sl-color-gray-6);
+	color: var(--sl-color-gray-1);
+}
+
+.diagnosticsTab:focus-visible,
+.outputTab:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: -2px;
+}
+
+.outputTab[aria-selected="true"] {
+	background: var(--sl-color-gray-6);
+	border-color: var(--sl-color-hairline-shade);
+	color: var(--sl-color-gray-1);
+}
+
+.panelTitle {
+	font-size: var(--sl-text-xs);
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	line-height: 1;
+	margin: 0;
+	padding-block: 0.2rem;
+	text-transform: uppercase;
+	color: var(--sl-color-gray-2);
+}
+
+.editorBody {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.mainColumn {
+	display: grid;
+	min-height: 0;
+	min-width: 0;
+	overflow: hidden;
+}
+
+.mainColumn > .editor {
+	min-height: 0;
+}
+
+.mainColumn > .diagnosticsPanel {
+	min-height: 0;
+}
+
+.diagnosticsBody {
+	flex: 1;
+	min-height: 0;
+	overflow: auto;
+	padding: 0;
+}
+
+.codeMirror {
+	flex: 1;
+	min-height: 0;
+}
+
+/*
+ * One typography context for gutter + scroller (siblings under .cm-editor).
+ * CodeMirror's base theme sets line-height: 1.4 on .cm-scroller only; leaving
+ * .cm-editor at a different ratio desyncs caret / active-line from text lines.
+ */
+.codeMirror :global(.cm-editor) {
+	--pg-cm-line-height: 1.55;
+
+	height: 100%;
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: 0.9rem;
+	line-height: var(--pg-cm-line-height);
+}
+
+.codeMirror :global(.cm-scroller) {
+	min-height: 0;
+	line-height: var(--pg-cm-line-height);
+}
+
+.codeMirror :global(.cm-gutters) {
+	font-family: inherit;
+	font-size: inherit;
+	line-height: var(--pg-cm-line-height);
+}
+
+.codeMirror :global(.cm-lineNumbers .cm-gutterElement) {
+	padding: 0 0.45rem 0 0.7rem;
+	min-width: 1.75rem;
+}
+
+.codeMirror :global(.cm-content) {
+	padding: 0.6rem 0;
+}
+
+.codeMirror :global(.cm-line) {
+	padding: 0 0.75rem 0 0.6rem;
+}
+
+.codeMirror :global(.cm-editor.cm-focused) {
+	outline: 2px solid var(--sl-color-accent-low);
+	outline-offset: -1px;
+}
+
+.panelBody {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	overflow: auto;
+	padding: 0.55rem 0.65rem;
+}
+
+.empty {
+	color: var(--sl-color-gray-2);
+	margin: 0;
+	font-size: var(--sl-text-sm);
+	line-height: 1.5;
+}
+
+.diagnostics {
+	display: block;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.diagnostics > li {
+	border-bottom: 1px solid
+		color-mix(in srgb, var(--sl-color-hairline-shade), transparent 35%);
+}
+
+.diagnostic {
+	width: 100%;
+	text-align: start;
+	border: 0;
+	border-radius: 0;
+	padding: 0.4rem 0.65rem 0.45rem 0.6rem;
+	background: transparent;
+	cursor: pointer;
+	font: inherit;
+	color: inherit;
+	transition: background 0.1s ease;
+}
+
+.diagnostic:hover {
+	background: color-mix(in srgb, var(--sl-color-accent), transparent 92%);
+}
+
+.diagnostic:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: -2px;
+}
+
+.sevError {
+	box-shadow: inset 3px 0 0 #e05555;
+}
+
+.sevWarning {
+	box-shadow: inset 3px 0 0 #d4a024;
+}
+
+.sevInfo {
+	box-shadow: inset 3px 0 0 var(--sl-color-gray-3);
+}
+
+.sevSuggestion {
+	box-shadow: inset 3px 0 0 var(--sl-color-accent-high);
+}
+
+.diagnosticHeader {
+	align-items: center;
+	display: flex;
+	flex-wrap: nowrap;
+	gap: 0.45rem;
+	justify-content: flex-start;
+	min-width: 0;
+}
+
+.diagnosticDot {
+	display: inline-block;
+	width: 0.55rem;
+	height: 0.55rem;
+	border-radius: 50%;
+	flex-shrink: 0;
+	background: var(--sl-color-gray-3);
+}
+
+.dotError {
+	background: #e05555;
+}
+
+.dotWarning {
+	background: #d4a024;
+}
+
+.dotInfo {
+	background: var(--sl-color-gray-3);
+}
+
+.dotSuggestion {
+	background: var(--sl-color-accent-high);
+}
+
+.diagnosticCode {
+	color: var(--sl-color-accent-high);
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: var(--sl-text-xs);
+	font-weight: 600;
+	line-height: 1.3;
+	flex: 0 0 auto;
+	max-width: 34%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.diagnosticLocation {
+	color: var(--sl-color-gray-3);
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: var(--sl-text-xs);
+	margin-inline-start: auto;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 32%;
+	min-width: 0;
+	flex: 0 1 auto;
+}
+
+.diagnosticLocationSep {
+	color: var(--sl-color-gray-4);
+	margin-inline: 0.05rem;
+}
+
+.diagnosticLocationLn {
+	color: var(--sl-color-gray-2);
+}
+
+.diagnosticSnippet {
+	background: color-mix(in srgb, var(--sl-color-gray-5), transparent 45%);
+	border: 1px solid
+		color-mix(in srgb, var(--sl-color-hairline-shade), transparent 30%);
+	border-radius: 0;
+	color: var(--sl-color-gray-2);
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: var(--sl-text-xs);
+	line-height: 1.35;
+	margin: 0.35rem 0 0 1rem;
+	overflow-x: auto;
+	padding: 0.25rem 0.4rem;
+}
+
+.diagnosticMessage {
+	font-size: var(--sl-text-sm);
+	line-height: 1.35;
+	color: var(--sl-color-gray-1);
+	min-width: 4rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.consoleLog,
+.consoleEmpty {
+	color: var(--sl-color-gray-2);
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: var(--sl-text-xs);
+	line-height: 1.45;
+	min-height: 100%;
+	padding: 0.6rem 0;
+}
+
+.consoleEmpty {
+	padding-inline: 0.75rem;
+}
+
+.consoleCommand {
+	align-items: center;
+	color: var(--sl-color-gray-3);
+	display: flex;
+	gap: 0.35rem;
+	padding: 0 0.75rem 0.45rem;
+}
+
+.consolePrompt {
+	color: var(--sl-color-accent-high);
+	display: inline-flex;
+	font-weight: 700;
+	line-height: 1;
+	margin-inline-end: 0;
+}
+
+.consoleSuccess {
+	color: var(--sl-color-green-high, #2e8b57);
+}
+
+.consoleDiagnostic {
+	appearance: none;
+	background: transparent;
+	border: 0;
+	border-top: 1px solid
+		color-mix(in srgb, var(--sl-color-hairline-shade), transparent 40%);
+	color: inherit;
+	cursor: pointer;
+	display: block;
+	font: inherit;
+	margin: 0;
+	padding: 0.5rem 0.75rem 0.6rem;
+	text-align: start;
+	width: 100%;
+}
+
+.consoleDiagnostic:hover {
+	background: color-mix(in srgb, var(--sl-color-accent), transparent 94%);
+}
+
+.consoleDiagnostic:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: -2px;
+}
+
+.consoleMeta {
+	align-items: center;
+	display: flex;
+	gap: 0.45rem;
+	min-width: 0;
+	white-space: nowrap;
+}
+
+.consoleLocation {
+	color: var(--sl-color-gray-2);
+	flex: 0 1 auto;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.consoleRule {
+	color: var(--sl-color-gray-3);
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}
+
+.consoleBadge {
+	background: var(--sl-color-gray-5);
+	color: var(--sl-color-gray-1);
+	font-family: inherit;
+	font-size: 0.68rem;
+	font-weight: 700;
+	line-height: 1;
+	padding: 0.2rem 0.35rem;
+	text-transform: uppercase;
+}
+
+.consoleMessage {
+	color: var(--sl-color-gray-1);
+	font-weight: 600;
+	margin-block-start: 0.45rem;
+	padding-inline-start: 1rem;
+}
+
+.consoleMessage::before {
+	content: "!";
+	display: inline-block;
+	font-weight: 800;
+	margin-inline: -1rem 0.45rem;
+}
+
+.consoleMessage.dotError {
+	background: transparent;
+	color: #e05555;
+}
+
+.consoleMessage.dotWarning {
+	background: transparent;
+	color: #d4a024;
+}
+
+.consoleMessage.dotInfo {
+	background: transparent;
+	color: var(--sl-color-gray-2);
+}
+
+.consoleMessage.dotSuggestion {
+	background: transparent;
+	color: var(--sl-color-accent-high);
+}
+
+.consoleFrame {
+	color: var(--sl-color-gray-2);
+	font: inherit;
+	margin: 0.5rem 0 0;
+	overflow-x: auto;
+	padding: 0;
+	white-space: pre;
+}
+
+.astRoot {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: var(--sl-text-xs);
+	line-height: 1.4;
+	min-height: 0;
+}
+
+.astCaption {
+	color: var(--sl-color-gray-3);
+	font-family: inherit;
+	font-size: var(--sl-text-xs);
+	margin: 0;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.astToolbar {
+	align-items: center;
+	display: flex;
+	gap: 0.5rem;
+	justify-content: space-between;
+	margin-block-end: 0.55rem;
+	min-width: 0;
+}
+
+.astViewToggle {
+	background: var(--sl-color-bg);
+	border: 1px solid var(--sl-color-hairline-shade);
+	border-radius: 0;
+	display: inline-flex;
+	flex-shrink: 0;
+	gap: 0.1rem;
+	padding: 0.12rem;
+}
+
+.astViewButton {
+	appearance: none;
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 0;
+	color: var(--sl-color-gray-2);
+	cursor: pointer;
+	display: inline-flex;
+	font: inherit;
+	font-size: var(--sl-text-xs);
+	font-weight: 600;
+	line-height: 1;
+	margin: 0;
+	min-height: 1.35rem;
+	padding: 0.22rem 0.45rem;
+}
+
+.astViewButton[aria-pressed="true"] {
+	background: var(--sl-color-gray-6);
+	border-color: var(--sl-color-hairline-shade);
+	color: var(--sl-color-gray-1);
+}
+
+.astViewButton:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: 2px;
+}
+
+.astJsonEditor {
+	background: var(--sl-color-bg);
+	border: 1px solid var(--sl-color-hairline-shade);
+	border-radius: 0;
+	flex: 1;
+	min-height: 0;
+	overflow: auto;
+}
+
+.astJsonEditor :global(.cm-content) {
+	padding-block: 0.45rem;
+}
+
+.astJsonEditor :global(.cm-gutterElement) {
+	font-size: var(--sl-text-xs);
+}
+
+.astNode {
+	margin: 0;
+}
+
+.astRow {
+	display: flex;
+	align-items: baseline;
+	flex-wrap: wrap;
+	gap: 0.35rem 0.5rem;
+	padding: 0.15rem 0;
+}
+
+.astToggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.35rem;
+	height: 1.35rem;
+	padding: 0;
+	border: none;
+	border-radius: 0.3rem;
+	background: transparent;
+	color: var(--sl-color-gray-2);
+	cursor: pointer;
+	font: inherit;
+	flex-shrink: 0;
+}
+
+.astToggle:hover {
+	background: var(--sl-color-gray-6);
+	color: var(--sl-color-gray-1);
+}
+
+.astToggle:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: 1px;
+}
+
+.astToggleIcon {
+	font-size: 0.7rem;
+	line-height: 1;
+}
+
+.astToggleSpacer {
+	display: inline-block;
+	width: 1.35rem;
+	flex-shrink: 0;
+}
+
+.astKind {
+	color: var(--sl-color-accent-high);
+	font-weight: 600;
+}
+
+.astText {
+	background: var(--sl-color-gray-6);
+	border-radius: 0.25rem;
+	color: var(--sl-color-gray-1);
+	padding: 0.06rem 0.3rem;
+	font-size: 0.92em;
+}
+
+.astRange {
+	color: var(--sl-color-gray-3);
+	margin-inline-start: auto;
+	white-space: nowrap;
+}
+
+.astChildren {
+	padding-inline-start: 0.5rem;
+	margin-inline-start: 0.35rem;
+	border-inline-start: 1px solid var(--sl-color-hairline-shade);
+}
+
+.workspace {
+	display: grid;
+	flex: 1;
+	min-height: 0;
+	min-width: 0;
+	overflow: hidden;
+}
+
+.workspace > .sidebar,
+.workspace > .mainColumn,
+.workspace > .panel {
+	min-height: 0;
+}
+
+.columnResizeHandle,
+.rowResizeHandle {
+	appearance: none;
+	background: var(--sl-color-bg);
+	border: 0;
+	margin: 0;
+	padding: 0;
+	position: relative;
+	z-index: 2;
+}
+
+.columnResizeHandle {
+	border-inline: 1px solid var(--sl-color-hairline-shade);
+	cursor: col-resize;
+	min-width: 0.5rem;
+}
+
+.rowResizeHandle {
+	border-block: 1px solid var(--sl-color-hairline-shade);
+	cursor: row-resize;
+	min-height: 0.5rem;
+}
+
+.columnResizeHandle:hover,
+.columnResizeHandle:focus-visible,
+.rowResizeHandle:hover,
+.rowResizeHandle:focus-visible {
+	background: var(--sl-color-accent-low);
+	outline: none;
+}

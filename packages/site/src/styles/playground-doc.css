@@ -1,0 +1,102 @@
+/*
+ * Playground page: the app lives under `.sl-markdown-content`, so Starlight’s
+ * prose stack (sibling gaps, `astro-island` first-child margin, list/heading
+ * rhythm, etc.) would otherwise apply. The `not-content` class on the outer
+ * wrapper is Starlight’s supported opt-out for custom UI (see markdown.css).
+ * `.playground-shell` rules below still normalize any remaining globals.
+ */
+
+.playground-doc {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: var(--sl-content-width);
+	margin-inline: auto;
+	isolation: isolate;
+}
+
+/* Full-width app strip: no doc column / no intro rhythm */
+.playground-doc--app {
+	max-width: none;
+	margin-inline: 0;
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	width: 100%;
+}
+
+.playground-doc *,
+.playground-doc *::before,
+.playground-doc *::after {
+	box-sizing: border-box;
+}
+
+/* Intro copy: stable rhythm (non-app playground pages only) */
+.playground-doc:not(.playground-doc--app) > p {
+	margin-block: 0 0.65rem;
+	max-width: 65ch;
+	line-height: 1.55;
+}
+
+.playground-doc .playground-shell {
+	width: 100%;
+	min-width: 0;
+	margin-block-start: 1.25rem;
+}
+
+.playground-doc--app .playground-shell {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	margin-block-start: 0;
+	overflow: hidden;
+}
+
+/* Undo Starlight / MD prose on the interactive shell */
+.playground-doc .playground-shell :where(ul, ol) {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.playground-doc .playground-shell li {
+	margin: 0;
+	padding: 0;
+}
+
+/* Buttons inside the app (diagnostic rows, AST toggles); not tablist tabs—those need module typography. */
+.playground-doc .playground-shell :where(button:not([role="tab"]), input) {
+	font: inherit;
+	line-height: inherit;
+	color: inherit;
+}
+
+.playground-doc .playground-shell input {
+	background: inherit;
+}
+
+.playground-doc .playground-shell code {
+	background: none;
+	padding: 0;
+	border-radius: 0;
+	font-size: inherit;
+}
+
+.playground-doc .playground-shell pre {
+	margin: 0;
+	border: none;
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	tab-size: 2;
+	white-space: pre;
+	overflow-x: auto;
+}
+
+.playground-doc .playground-shell .cm-editor {
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+}

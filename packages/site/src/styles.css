@@ -72,3 +72,87 @@ table code {
 :root[data-theme="dark"] .only-light {
 	display: none;
 }
+
+/*
+ * Playground route: fill the viewport under the nav (compact, app-like shell).
+ * Mirrors Biome-style playground pages: no doc title band, no footer, flush content.
+ */
+.playground-frame.page {
+	height: 100dvh;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.playground-frame .main-frame {
+	flex: 1;
+	height: 100dvh;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+.playground-frame .lg\:sl-flex {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.playground-frame .main-pane {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.playground-frame main {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	padding: 0;
+}
+
+.playground-frame main > .content-panel:first-of-type {
+	display: none;
+}
+
+.playground-frame main > .content-panel:last-of-type {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	padding: 0;
+	border: none;
+}
+
+.playground-frame main > .content-panel:last-of-type .sl-container {
+	max-width: none;
+	margin-inline: 0;
+	width: 100%;
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.playground-frame .sl-container > .sl-markdown-content {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	overflow: hidden;
+}
+
+.playground-frame .sl-container > * + * {
+	margin-top: 0;
+}

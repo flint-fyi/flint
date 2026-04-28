@@ -3,19 +3,31 @@ import type { StarlightRouteData } from "@astrojs/starlight/route-data";
 import Default from "@astrojs/starlight/components/Footer.astro";
 
 export type Props = StarlightRouteData;
+
+const isPlayground = Astro.locals.starlightRoute.entry.id === "playground";
 ---
 
-<Default {...Astro.props}>
-	<slot />
-</Default>
+{
+	isPlayground ? null : (
+		<>
+			<Default {...Astro.props}>
+				<slot />
+			</Default>
 
-<div class="credits">
-	Made with ❤️‍🔥 around the world by
-	<a href="/team">the Flint team</a> and <a
-		href="http://github.com/flint-fyi/flint/contributors"
-		target="_blank">contributors</a
-	>.
-</div>
+			<div class="credits">
+				Made with ❤️‍🔥 around the world by
+				<a href="/team">the Flint team</a> and
+				<a
+					href="http://github.com/flint-fyi/flint/contributors"
+					target="_blank"
+				>
+					contributors
+				</a>
+				.
+			</div>
+		</>
+	)
+}
 
 <style>
 	.credits {

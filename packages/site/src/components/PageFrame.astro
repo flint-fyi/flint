@@ -1,0 +1,116 @@
+---
+import MobileMenuToggle from "@astrojs/starlight/components/MobileMenuToggle.astro";
+
+const { hasSidebar, entry } = Astro.locals.starlightRoute;
+const isPlayground = entry.id === "playground";
+---
+
+<div class:list={["page sl-flex", { "playground-frame": isPlayground }]}>
+	<header class="header"><slot name="header" /></header>
+	{
+		hasSidebar && !isPlayground && (
+			<nav
+				class="sidebar print:hidden"
+				aria-label={Astro.locals.t("sidebarNav.accessibleLabel")}
+			>
+				<MobileMenuToggle />
+				<div id="starlight__sidebar" class="sidebar-pane">
+					<div class="sidebar-content sl-flex">
+						<slot name="sidebar" />
+					</div>
+				</div>
+			</nav>
+		)
+	}
+	<div class="main-frame"><slot /></div>
+</div>
+
+<style>
+	@layer starlight.core {
+		.page {
+			flex-direction: column;
+			min-height: 100vh;
+		}
+
+		.header {
+			background-color: var(--sl-color-bg-nav);
+			border-bottom: 1px solid var(--sl-color-hairline-shade);
+			height: var(--sl-nav-height);
+			inset-block-start: 0;
+			inset-inline-start: 0;
+			padding: var(--sl-nav-pad-y) var(--sl-nav-pad-x);
+			padding-inline-end: var(--sl-nav-pad-x);
+			position: fixed;
+			width: 100%;
+			z-index: var(--sl-z-index-navbar);
+		}
+
+		:global([data-has-sidebar]) .header {
+			padding-inline-end: calc(
+				var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size)
+			);
+		}
+
+		.playground-frame {
+			--sl-content-inline-start: 0px;
+			--sl-content-width: 100%;
+			--sl-mobile-toc-height: 0px;
+		}
+
+		.playground-frame .header {
+			padding-inline-end: var(--sl-nav-pad-x);
+		}
+
+		.sidebar-pane {
+			background-color: var(--sl-color-black);
+			inset-block: var(--sl-nav-height) 0;
+			inset-inline-start: 0;
+			overflow-y: auto;
+			position: fixed;
+			visibility: var(--sl-sidebar-visibility, hidden);
+			width: 100%;
+			z-index: var(--sl-z-index-menu);
+		}
+
+		:global([aria-expanded="true"]) ~ .sidebar-pane {
+			--sl-sidebar-visibility: visible;
+		}
+
+		.sidebar-content {
+			flex-direction: column;
+			gap: 1rem;
+			height: 100%;
+			min-height: max-content;
+			padding: 1rem var(--sl-sidebar-pad-x) 0;
+		}
+
+		@media (min-width: 50rem) {
+			.sidebar-content::after {
+				content: "";
+				padding-bottom: 1px;
+			}
+		}
+
+		.main-frame {
+			padding-inline-start: var(--sl-content-inline-start);
+			padding-top: calc(var(--sl-nav-height) + var(--sl-mobile-toc-height));
+		}
+
+		.playground-frame .main-frame {
+			padding-inline-start: 0;
+		}
+
+		@media (min-width: 50rem) {
+			:global([data-has-sidebar]) .header {
+				padding-inline-end: var(--sl-nav-pad-x);
+			}
+
+			.sidebar-pane {
+				--sl-sidebar-visibility: visible;
+				background-color: var(--sl-color-bg-sidebar);
+				border-inline-end: 1px solid var(--sl-color-hairline-shade);
+				width: var(--sl-sidebar-width);
+			}
+		}
+	}
+</style>

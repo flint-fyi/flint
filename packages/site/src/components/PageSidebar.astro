@@ -1,0 +1,7 @@
+---
+import DefaultPageSidebar from "@astrojs/starlight/components/PageSidebar.astro";
+
+const isPlayground = Astro.locals.starlightRoute.entry.id === "playground";
+---
+
+{!isPlayground && <DefaultPageSidebar />}
