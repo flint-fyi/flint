@@ -1,6 +1,7 @@
+import type { JsonSourceFile } from "@flint.fyi/json-language";
 import ts from "typescript";
 
-export function getPackageProperties(sourceFile: ts.JsonSourceFile) {
+export function getPackageProperties(sourceFile: JsonSourceFile) {
 	if (sourceFile.statements.length !== 1) {
 		return undefined;
 	}
