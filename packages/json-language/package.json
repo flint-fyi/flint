@@ -1,7 +1,8 @@
 {
 	"name": "@flint.fyi/json-language",
-	"version": "0.16.0",
+	"version": "0.16.1",
 	"description": "[Experimental] JSON language for Flint.",
+	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -15,25 +16,22 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": {
-			"@flint.fyi/source": "./src/index.ts",
-			"default": "./lib/index.js"
-		}
+		".": "./src/index.ts"
 	},
 	"files": [
 		"lib/",
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project json-language"
+		"test": "vitest --project json-language"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
-		"tsdown": "0.19.0-beta.2",
-		"vitest": "4.0.15"
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"

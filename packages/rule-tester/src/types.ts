@@ -12,6 +12,7 @@ export interface TestCase<
 	code: string;
 	fileName?: string | undefined;
 	files?: Record<string, string> | undefined;
+	name?: string | undefined;
 
 	/**
 	 * Run only this test case. Useful for debugging.

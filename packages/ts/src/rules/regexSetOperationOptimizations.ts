@@ -25,7 +25,7 @@ function collectIntersectionOperands(
 		operand = operand.left;
 	}
 
-	return [operand, ...operands.reverse()];
+	return [operand, ...operands.toReversed()];
 }
 
 function getParsedElement(pattern: string, unicodeSets: boolean) {
@@ -131,7 +131,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports set operations in regular expressions that can be simplified.",
 		id: "regexSetOperationOptimizations",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		toIntersection: {

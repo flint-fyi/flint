@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports constructors of derived classes that do not call `super()`, and constructors of non-derived classes that call `super()`.",
 		id: "constructorSupers",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		missingSuperCall: {

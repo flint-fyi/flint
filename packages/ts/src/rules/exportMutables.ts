@@ -19,7 +19,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports exporting mutable bindings (let or var).",
 		id: "exportMutables",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noMutableExport: {

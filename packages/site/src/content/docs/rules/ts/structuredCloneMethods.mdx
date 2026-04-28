@@ -1,0 +1,72 @@
+---
+description: "Reports JSON.parse(JSON.stringify()) patterns that can use structuredClone."
+title: "structuredCloneMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="structuredCloneMethods" />
+
+The `JSON.parse(JSON.stringify())` pattern has long been used for deep cloning objects in JavaScript.
+However, the modern `structuredClone()` API provides a native, more robust alternative.
+
+Benefits of `structuredClone()` include:
+
+- Native API with better performance
+- Proper handling circular references
+- Support for more data types (Date, RegExp, Map, Set, ArrayBuffer, etc.)
+- Meaningful thrown errors for non-cloneable values
+
+This rule reports on any `JSON.parse(JSON.stringify())` that can be replaced with `structuredClone()`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const clone = JSON.parse(JSON.stringify(obj));
+```
+
+```ts
+function deepCopy<T>(value: T): T {
+	return JSON.parse(JSON.stringify(value));
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const clone = structuredClone(obj);
+```
+
+```ts
+function deepCopy<T>(value: T): T {
+	return structuredClone(value);
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project relies on the different, older semantics of `JSON`, you might need to disable this rule.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: structuredClone()](https://developer.mozilla.org/en-US/docs/Web/API/structuredClone)
+- [MDN: The structured clone algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="structuredCloneMethods" />

@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports heading elements without accessible content.",
 		id: "headingContents",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyHeading: {
@@ -36,7 +36,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const tagName =
-				node.kind == SyntaxKind.JsxElement
+				node.kind === SyntaxKind.JsxElement
 					? node.openingElement.tagName
 					: node.tagName;
 
@@ -48,7 +48,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const attributes =
-				node.kind == SyntaxKind.JsxElement
+				node.kind === SyntaxKind.JsxElement
 					? node.openingElement.attributes
 					: node.attributes;
 
@@ -75,7 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.kind === SyntaxKind.JsxElement &&
 				node.children.some((child) => {
 					if (child.kind === SyntaxKind.JsxText) {
-						return child.text.trim().length > 0;
+						return !!child.text.trim().length;
 					}
 					return (
 						child.kind === SyntaxKind.JsxElement ||

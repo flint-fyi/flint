@@ -45,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.kind !== SyntaxKind.Identifier ||
-						node.arguments.length !== 0
+						!!node.arguments.length
 					) {
 						return;
 					}

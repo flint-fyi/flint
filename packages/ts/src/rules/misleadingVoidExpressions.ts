@@ -90,7 +90,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Require expressions of type void to appear in statement position.",
 		id: "misleadingVoidExpressions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		voidExpressionArrow: {

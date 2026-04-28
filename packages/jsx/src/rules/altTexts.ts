@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports elements that require alt text but are missing it.",
 		id: "altTexts",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingAlt: {
@@ -88,26 +88,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (properties.kind === SyntaxKind.JsxAttribute) {
-				if (!properties.initializer) {
+			if (
+				properties.kind === SyntaxKind.JsxAttribute &&
+				properties.initializer?.kind === SyntaxKind.JsxExpression
+			) {
+				const { expression } = properties.initializer;
+				if (
+					expression?.kind === SyntaxKind.Identifier &&
+					expression.text === "undefined"
+				) {
 					context.report({
 						data: { element: elementName },
 						message: "missingAlt",
 						range: getTSNodeRange(tagName, sourceFile),
 					});
-				} else if (properties.initializer.kind === SyntaxKind.JsxExpression) {
-					const { expression } = properties.initializer;
-					if (
-						expression &&
-						expression.kind === SyntaxKind.Identifier &&
-						expression.text === "undefined"
-					) {
-						context.report({
-							data: { element: elementName },
-							message: "missingAlt",
-							range: getTSNodeRange(tagName, sourceFile),
-						});
-					}
 				}
 			}
 		}
@@ -124,19 +118,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					properties.name.text === "type",
 			);
 
-			if (typeAttribute && typeAttribute.kind === SyntaxKind.JsxAttribute) {
-				if (
-					typeAttribute.initializer &&
-					typeAttribute.initializer.kind === SyntaxKind.StringLiteral &&
-					typeAttribute.initializer.text === "image"
-				) {
-					checkAltAttribute(
-						attributes,
-						tagName,
-						"input[type='image']",
-						sourceFile,
-					);
-				}
+			if (
+				typeAttribute?.kind === SyntaxKind.JsxAttribute &&
+				typeAttribute.initializer?.kind === SyntaxKind.StringLiteral &&
+				typeAttribute.initializer.text === "image"
+			) {
+				checkAltAttribute(
+					attributes,
+					tagName,
+					"input[type='image']",
+					sourceFile,
+				);
 			}
 		}
 

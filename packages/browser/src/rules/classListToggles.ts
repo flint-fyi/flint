@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer using classList.toggle() over conditional classList.add() and classList.remove().",
 		id: "classListToggles",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferToggle: {
@@ -39,7 +39,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return undefined;
 			}
 
-			if (expression.expression.kind != SyntaxKind.PropertyAccessExpression) {
+			if (expression.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 				return undefined;
 			}
 
@@ -47,21 +47,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const method = propertyAccess.name;
 
 			if (
-				method.kind != SyntaxKind.Identifier ||
+				method.kind !== SyntaxKind.Identifier ||
 				(method.text !== "add" && method.text !== "remove")
 			) {
 				return undefined;
 			}
 
 			if (
-				propertyAccess.expression.kind != SyntaxKind.PropertyAccessExpression
+				propertyAccess.expression.kind !== SyntaxKind.PropertyAccessExpression
 			) {
 				return undefined;
 			}
 
 			const classList = propertyAccess.expression;
 			if (
-				classList.name.kind != SyntaxKind.Identifier ||
+				classList.name.kind !== SyntaxKind.Identifier ||
 				classList.name.text !== "classList"
 			) {
 				return undefined;
@@ -76,7 +76,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				args[0],
 				"Argument is expected to be present by earlier length check",
 			);
-			if (arg.kind != SyntaxKind.StringLiteral) {
+			if (arg.kind !== SyntaxKind.StringLiteral) {
 				return undefined;
 			}
 
@@ -101,7 +101,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				propertyAccess.expression as AST.PropertyAccessExpression;
 			const object = classList.expression;
 
-			if (object.kind != SyntaxKind.Identifier) {
+			if (object.kind !== SyntaxKind.Identifier) {
 				return undefined;
 			}
 
@@ -122,11 +122,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const thenBlock =
-						thenStatement.kind == SyntaxKind.Block
+						thenStatement.kind === SyntaxKind.Block
 							? thenStatement.statements
 							: [thenStatement];
 					const elseBlock: readonly AST.Statement[] =
-						elseStatement.kind == SyntaxKind.Block
+						elseStatement.kind === SyntaxKind.Block
 							? elseStatement.statements
 							: [elseStatement];
 
@@ -145,11 +145,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const thenCall = getClassListMethodCall(thenBlockStatement);
 					const elseCall = getClassListMethodCall(elseBlockStatement);
 
-					if (
-						!thenCall ||
-						!elseCall ||
-						thenCall.className !== elseCall.className
-					) {
+					if (!thenCall || thenCall.className !== elseCall?.className) {
 						return;
 					}
 
@@ -163,7 +159,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 
 						const elseInfo = getObjectAndClassName(elseBlockStatement);
-						if (!elseInfo || thenInfo.object !== elseInfo.object) {
+						if (thenInfo.object !== elseInfo?.object) {
 							return;
 						}
 

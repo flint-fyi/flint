@@ -22,7 +22,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports comparisons with -0 that may not behave as expected.",
 		id: "negativeZeroComparisons",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unexpectedNegativeZeroComparison: {

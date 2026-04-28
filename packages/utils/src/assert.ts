@@ -3,7 +3,7 @@ export class FlintAssertionError extends Error {
 		super(`Flint bug: ${message}.`);
 		const issueUrl = buildIssueUrl(message, this.stack);
 		// The message uses this.stack, which isn't available before super()
-		// flint-disable-next-line errorSubclassProperties
+		// flint-disable-next-line ts/errorSubclassProperties
 		this.message = `Flint bug: ${message}. Please report it here: ${issueUrl}`;
 		this.name = "FlintAssertionError";
 		if (this.stack) {
@@ -23,6 +23,8 @@ export function nullThrows<T>(x: T, message: string): NonNullable<T> {
 	assert(x != null, message);
 	return x;
 }
+
+/** @internal */
 export function sanitizeStackTrace(stack: string): string {
 	const pathRegex = /(?:[a-z]:\\|\/)[^:\s)]+:\d+(?::\d+)?/gi;
 	return stack.replace(pathRegex, (match) => {
@@ -38,7 +40,7 @@ export function sanitizeStackTrace(stack: string): string {
 
 function buildIssueUrl(message: string, stack: string | undefined): string {
 	const issueUrl = new URL("https://github.com/flint-fyi/flint/issues/new");
-	issueUrl.searchParams.set("template", "03-general-bug.yaml");
+	issueUrl.searchParams.set("template", "04-general-bug.yaml");
 
 	const sanitizedStack = stack
 		? sanitizeStackTrace(stack)

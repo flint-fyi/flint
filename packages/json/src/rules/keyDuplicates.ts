@@ -1,6 +1,6 @@
 import { jsonLanguage } from "@flint.fyi/json-language";
 import ts from "typescript";
-import z from "zod";
+import z from "zod/v4";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -9,7 +9,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 		description:
 			"Reports unnecessary duplicate keys that override previous values.",
 		id: "keyDuplicates",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		duplicateKey: {

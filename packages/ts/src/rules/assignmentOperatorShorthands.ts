@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Prefer logical assignment operator shorthand expressions.",
 		id: "assignmentOperatorShorthands",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferShorthand: {

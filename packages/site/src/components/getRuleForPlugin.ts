@@ -1,18 +1,21 @@
+import { astro } from "@flint.fyi/astro";
 import { browser } from "@flint.fyi/browser";
 import { jsx } from "@flint.fyi/jsx";
 import { node } from "@flint.fyi/node";
 import { performance } from "@flint.fyi/performance";
 import { flint } from "@flint.fyi/plugin-flint";
 import { spelling } from "@flint.fyi/spelling";
-import { type AnyRule, json, md, ts, yaml } from "flint";
+import { type AnyRule, json, md, packageJson, ts, yaml } from "flint";
 
 const plugins = {
+	astro,
 	browser,
 	flint,
 	json,
 	jsx,
 	md,
 	node,
+	"package-json": packageJson,
 	performance,
 	spelling,
 	ts,

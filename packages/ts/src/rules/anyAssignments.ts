@@ -6,7 +6,9 @@ import {
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
+import { formatReportedType } from "./utils/formatReportedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
 function isTypeAny(type: ts.Type): boolean {
@@ -26,14 +28,12 @@ function isTypeAnyOrUnknown(type: ts.Type): boolean {
 	return tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown);
 }
 
-import { ruleCreator } from "./ruleCreator.ts";
-
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports assigning a value with type `any` to variables and properties.",
 		id: "anyAssignments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsafeArrayDestructure: {
@@ -67,7 +67,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			suggestions: ["Ensure the spread array has compatible element types."],
 		},
 		unsafeAssignment: {
-			primary: "Unsafe assignment of a value of type {{ type }}.",
+			primary: "Unsafe assignment of a value of type `{{ type }}`.",
 			secondary: [
 				"Assigning a value of type `any` or a similar unsafe type defeats TypeScript's type safety guarantees.",
 				"This can allow unexpected types to propagate through your codebase, potentially causing runtime errors.",
@@ -292,12 +292,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			reportNode: ts.Node,
 			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
-			program: ts.Program,
 		): boolean {
 			const anyType = discriminateAnyType(
 				initializerType,
 				typeChecker,
-				program,
 				initializer,
 			);
 
@@ -305,12 +303,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				if (anyType !== AnyType.Safe) {
 					context.report({
 						data: {
-							type:
-								anyType === AnyType.Any
-									? "`any`"
-									: anyType === AnyType.PromiseAny
-										? "`Promise<any>`"
-										: "`any[]`",
+							type: anyType,
 						},
 						message: "unsafeAssignment",
 						range: {
@@ -330,7 +323,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const result = isUnsafeAssignment(
 				initializerType,
 				declaredType,
-				typeChecker,
 				initializer,
 			);
 			if (!result) {
@@ -339,8 +331,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			context.report({
 				data: {
-					receiver: typeChecker.typeToString(result.receiver),
-					sender: typeChecker.typeToString(result.sender),
+					receiver: formatReportedType(result.receiver, typeChecker),
+					sender: formatReportedType(result.sender, typeChecker),
 				},
 				message: "unsafeAssignmentToVariable",
 				range: {
@@ -396,8 +388,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 				},
-
-				Parameter: (node, { program, sourceFile, typeChecker }) => {
+				Parameter: (node, { sourceFile, typeChecker }) => {
 					if (!node.initializer) {
 						return;
 					}
@@ -436,7 +427,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node,
 						sourceFile,
 						typeChecker,
-						program,
 					);
 				},
 
@@ -449,16 +439,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const parent = node.parent;
-					if (!ts.isObjectLiteralExpression(parent)) {
+					if (!ts.isObjectLiteralExpression(node.parent)) {
 						return;
 					}
 
-					const contextualType = typeChecker.getContextualType(parent);
+					const contextualType = typeChecker.getContextualType(node.parent);
 					if (!contextualType) {
 						return;
 					}
 
+					// TODO: Use a util like getStaticValue
+					// https://github.com/flint-fyi/flint/issues/1298
 					let key: string | undefined;
 					if (ts.isIdentifier(node.name)) {
 						key = node.name.text;
@@ -487,7 +478,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					context.report({
-						data: { type: "`any`" },
+						data: { type: "any" },
 						message: "unsafeAssignment",
 						range: {
 							begin: node.getStart(sourceFile),
@@ -495,8 +486,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				},
-
-				PropertyDeclaration: (node, { program, sourceFile, typeChecker }) => {
+				PropertyDeclaration: (node, { sourceFile, typeChecker }) => {
 					if (!node.initializer) {
 						return;
 					}
@@ -515,10 +505,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node,
 						sourceFile,
 						typeChecker,
-						program,
 					);
 				},
-
 				ShorthandPropertyAssignment: (node, { sourceFile, typeChecker }) => {
 					const initializerType = typeChecker.getTypeAtLocation(node.name);
 
@@ -551,7 +539,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					context.report({
-						data: { type: "`any`" },
+						data: { type: "any" },
 						message: "unsafeAssignment",
 						range: {
 							begin: node.getStart(sourceFile),
@@ -559,8 +547,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				},
-
-				VariableDeclaration: (node, { program, sourceFile, typeChecker }) => {
+				VariableDeclaration: (node, { sourceFile, typeChecker }) => {
 					if (!node.initializer) {
 						return;
 					}
@@ -600,7 +587,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node,
 						sourceFile,
 						typeChecker,
-						program,
 					);
 				},
 			},

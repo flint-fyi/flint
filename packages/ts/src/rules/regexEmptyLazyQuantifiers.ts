@@ -17,7 +17,7 @@ function* extractLazyEndQuantifiers(
 	alternatives: RegExpAST.Alternative[],
 ): IterableIterator<RegExpAST.Quantifier> {
 	for (const { elements } of alternatives) {
-		if (elements.length === 0) {
+		if (!elements.length) {
 			continue;
 		}
 

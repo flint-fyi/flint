@@ -142,7 +142,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports function parameters that are only used in recursive calls.",
 		id: "recursionOnlyArguments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		onlyUsedInRecursion: {

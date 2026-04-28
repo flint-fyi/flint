@@ -1,0 +1,62 @@
+---
+description: "Reports usage of charCodeAt and fromCharCode instead of their codePoint equivalents."
+title: "stringCodePoints"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="stringCodePoints" />
+
+JavaScript's original `charCodeAt` and `String.fromCharCode` methods only properly handle characters in the Basic Multilingual Plane (BMP), which includes code points from U+0000 to U+FFFF.
+Characters outside this range, such as many emoji and less common scripts, require two UTF-16 code units (a surrogate pair) and are not handled correctly by these methods.
+The modern `codePointAt` and `String.fromCodePoint` methods correctly handle all Unicode code points, including those that require surrogate pairs.
+
+This rule reports using `charCodeAt` or `fromCharCode` instead of `codePointAt` or `fromCodePoint`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const code = text.charCodeAt(0);
+```
+
+```ts
+const char = String.fromCharCode(128512);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const code = text.codePointAt(0);
+```
+
+```ts
+const char = String.fromCodePoint(128512);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you're intentionally working with UTF-16 code units or need to support very old JavaScript environments that don't have `codePointAt` and `fromCodePoint`, you may need to disable this rule.
+
+## Further Reading
+
+- [MDN: String.prototype.codePointAt()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/codePointAt)
+- [MDN: String.fromCodePoint()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/fromCodePoint)
+- [JavaScript has a Unicode problem](https://mathiasbynens.be/notes/javascript-unicode)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="stringCodePoints" />

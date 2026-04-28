@@ -36,7 +36,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports typeof expressions that compare impossible string literals.",
 		id: "typeofComparisons",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		invalidValue: {

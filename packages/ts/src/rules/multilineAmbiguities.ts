@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports ambiguous multiline expressions that could be misinterpreted.",
 		id: "multilineAmbiguities",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		ambiguity: {
@@ -52,7 +52,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile }) => {
-					if (node.arguments.length === 0 || node.questionDotToken) {
+					if (!node.arguments.length || node.questionDotToken) {
 						return;
 					}
 

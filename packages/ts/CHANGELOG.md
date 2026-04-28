@@ -1,5 +1,35 @@
 # @flint/ts
 
+## 0.17.0
+
+### Minor Changes
+
+- b0c6505: Add `javascript` and `typescript` file selectors, and add missing `cts` and `mts` extensions to `all`.
+- 506602f: Change `untyped` preset name to `javascript`.
+
+### Patch Changes
+
+- c723008: Switch `octalEscapes` to javascript.
+- b6609d7: Use better ternary handling in `nullishCoalescingOperators`.
+- bc632d1: Remove `regexNamedCaptureGroups` and `regexUnicodeEscapes` from presets.
+- 7403874: Also validate output when testing rules.
+- 65f983c: Fix assorted bugs in regex rules.
+- Updated dependencies [4c99c11]
+- Updated dependencies [b3a637a]
+- Updated dependencies [e257ec4]
+- Updated dependencies [d612d50]
+- Updated dependencies [4b32a64]
+- Updated dependencies [fe76156]
+- Updated dependencies [db34436]
+- Updated dependencies [f2f2c8b]
+- Updated dependencies [442a3f4]
+- Updated dependencies [5c64fbb]
+- Updated dependencies [3eaea9e]
+- Updated dependencies [267fe8d]
+- Updated dependencies [011fbf2]
+  - @flint.fyi/core@0.20.0
+  - @flint.fyi/typescript-language@0.17.0
+
 ## 0.16.0
 
 ### Minor Changes

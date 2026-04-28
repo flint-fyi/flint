@@ -18,7 +18,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports inconsistent styles for checking element existence using index methods.",
 		id: "arrayExistenceChecksConsistency",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferEqualsMinusOne: {

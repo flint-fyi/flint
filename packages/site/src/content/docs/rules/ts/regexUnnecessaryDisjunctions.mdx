@@ -1,0 +1,110 @@
+---
+description: "Reports single-character alternatives in string disjunctions."
+title: "regexUnnecessaryDisjunctions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryDisjunctions" />
+
+Reports single-character alternatives inside `\q{...}` string disjunctions in regular expressions using the `v` flag.
+When a string disjunction alternative contains only one character, that character can be placed directly in the surrounding character class instead.
+
+## Examples
+
+### Single-Character Alternative Only
+
+A string disjunction containing only a single-character alternative is unnecessary.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\q{a}]/v;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[a]/v;
+```
+
+</TabItem>
+</Tabs>
+
+### Mixed-Length Alternatives
+
+When a string disjunction has both single-character and multi-character alternatives, the single-character ones can be extracted.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\q{a|bc}]/v;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[a\q{bc}]/v;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+The rule also checks regex patterns in `RegExp` constructor calls.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("[\\q{a}]", "v");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("[a]", "v");
+```
+
+</TabItem>
+</Tabs>
+
+### Multi-Character Alternatives Are Valid
+
+String disjunctions with only multi-character alternatives are valid.
+
+<Tabs>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[\q{ab|cd}]/v;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer to keep single-character alternatives inside `\q{...}` for consistency or readability, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Unicode character class escape](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Unicode_character_class_escape)
+- [TC39 proposal: RegExp set notation + properties of strings](https://github.com/tc39/proposal-regexp-v-flag)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryDisjunctions" />

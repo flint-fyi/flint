@@ -10,7 +10,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports JSX text nodes that contain comment syntax but are rendered as text.",
 		id: "commentTextNodes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		commentAsText: {

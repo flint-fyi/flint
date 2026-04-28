@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports autoFocus props that are not set to false.",
 		id: "autoFocusProps",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noAutoFocus: {
@@ -36,12 +36,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (property.initializer.kind === SyntaxKind.StringLiteral) {
-				return property.initializer.text === "false";
+				// Any string value is already a TypeScript type error for boolean props,
+				// so we don't need to report on them here.
+				return true;
 			}
 
 			if (property.initializer.kind === SyntaxKind.JsxExpression) {
 				const expr = property.initializer.expression;
-				if (expr && expr.kind === SyntaxKind.FalseKeyword) {
+				if (expr?.kind === SyntaxKind.FalseKeyword) {
 					return true;
 				}
 			}

@@ -13,6 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports function declarations and expressions inside loops that reference variables modified by the loop.",
 		id: "loopFunctions",
+		presets: ["logical"],
 	},
 	messages: {
 		noFunctionInLoop: {
@@ -178,7 +179,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const loopVariables = getLoopVariables(node);
-			if (loopVariables.size > 0) {
+			if (loopVariables.size) {
 				checkFunctionInLoop(node.statement, node, loopVariables, sourceFile);
 			}
 		}

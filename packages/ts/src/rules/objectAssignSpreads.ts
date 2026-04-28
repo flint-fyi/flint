@@ -52,7 +52,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer object spread syntax over `Object.assign()` when the first argument is an object literal.",
 		id: "objectAssignSpreads",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferObjectLiteral: {

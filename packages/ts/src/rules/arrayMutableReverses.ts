@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports `.reverse()` calls on arrays that mutate the original array.",
 		id: "arrayMutableReverses",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferToReversed: {

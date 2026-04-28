@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports scope props on non-th elements.",
 		id: "scopeProps",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidScope: {

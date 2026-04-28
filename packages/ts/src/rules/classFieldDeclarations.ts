@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports assigning literal values to `this` in constructors instead of using class field declarations.",
 		id: "classFieldDeclarations",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		preferClassField: {

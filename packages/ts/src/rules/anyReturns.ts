@@ -13,15 +13,16 @@ import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 import { getThisExpression } from "./utils/getThisExpression.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
+
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports returning a value with type `any` from a function.",
 		id: "anyReturns",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsafeReturn: {
-			primary: "Unsafe return of a value of type {{ type }}.",
+			primary: "Unsafe return of a value of type `{{ type }}`.",
 			secondary: [
 				"Returning a value of type `any` or a similar unsafe type defeats TypeScript's type safety guarantees.",
 				"This can allow unexpected types to propagate through your codebase, potentially causing runtime errors.",
@@ -44,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 		unsafeReturnThis: {
 			primary:
-				"Unsafe return of a value of type {{ type }}. `this` is typed as `any`.",
+				"Unsafe return of a value of type `{{ type }}`. `this` is typed as `any`.",
 			secondary: [
 				"Returning `this` when it is implicitly typed as `any` introduces type-unsafe behavior.",
 				"This can allow unexpected types to propagate through your codebase, potentially causing runtime errors.",
@@ -59,18 +60,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkReturn(
 			returnNode: AST.Expression,
 			reportingNode: ts.Node,
-			fileService: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		): void {
-			const { program, sourceFile, typeChecker } = fileService;
-
 			const type = typeChecker.getTypeAtLocation(returnNode);
-
-			const anyType = discriminateAnyType(
-				type,
-				typeChecker,
-				program,
-				returnNode,
-			);
 			const functionNode = ts.findAncestor(
 				returnNode,
 				// TODO: I believe isFunctionLikeDeclaration was incorrectly marked
@@ -79,10 +71,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				// However, isFunctionLike also checks for signature-like nodes,
 				// whereas isFunctionLikeDeclaration checks only for function-like nodes.
 				/* eslint-disable @typescript-eslint/no-deprecated */
-				// flint-disable-lines-begin deprecated
+				// flint-disable-lines-begin ts/deprecated
 				tsutils.isFunctionLikeDeclaration,
 				/* eslint-enable @typescript-eslint/no-deprecated */
-				// flint-disable-lines-end deprecated
+				// flint-disable-lines-end ts/deprecated
 			);
 			if (!functionNode) {
 				return;
@@ -93,14 +85,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				returnNode,
 				typeChecker,
 			);
+			const anyType = tsutils.isIntrinsicErrorType(returnNodeType)
+				? AnyType.Error
+				: discriminateAnyType(type, typeChecker, returnNode);
 
 			// function expressions will not have their return type modified based on receiver typing
 			// so we have to use the contextual typing in these cases, i.e.
 			// const foo1: () => Set<string> = () => new Set<any>();
 			// the return type of the arrow function is Set<any> even though the variable is typed as Set<string>
 			let functionType =
-				functionNode.kind == SyntaxKind.FunctionExpression ||
-				functionNode.kind == SyntaxKind.ArrowFunction
+				functionNode.kind === SyntaxKind.FunctionExpression ||
+				functionNode.kind === SyntaxKind.ArrowFunction
 					? typeChecker.getContextualType(functionNode)
 					: typeChecker.getTypeAtLocation(functionNode);
 			functionType ??= typeChecker.getTypeAtLocation(functionNode);
@@ -151,7 +146,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				for (const signature of callSignatures) {
 					const functionReturnType = signature.getReturnType();
 					if (
-						anyType === AnyType.Any &&
+						(anyType === AnyType.Any || anyType === AnyType.Error) &&
 						tsutils.isTypeFlagSet(functionReturnType, ts.TypeFlags.Unknown)
 					) {
 						return;
@@ -190,7 +185,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				let message: "unsafeReturn" | "unsafeReturnThis" = "unsafeReturn";
-				const isErrorType = tsutils.isIntrinsicErrorType(returnNodeType);
 
 				if (
 					!tsutils.isStrictCompilerOptionEnabled(
@@ -214,13 +208,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				// If the function return type was not unknown/unknown[], mark usage as unsafeReturn.
 				context.report({
 					data: {
-						type: isErrorType
-							? "error"
-							: anyType === AnyType.Any
-								? "`any`"
-								: anyType === AnyType.PromiseAny
-									? "`Promise<any>`"
-									: "`any[]`",
+						type: anyType,
 					},
 					message,
 					range: getTSNodeRange(reportingNode, sourceFile),
@@ -234,7 +222,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const result = isUnsafeAssignment(
 					returnNodeType,
 					functionReturnType,
-					typeChecker,
 					returnNode,
 				);
 				if (!result) {
@@ -257,7 +244,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				ArrowFunction: (node, fileService) => {
-					if (node.body.kind != SyntaxKind.Block) {
+					if (node.body.kind !== SyntaxKind.Block) {
 						checkReturn(node.body, node.body, fileService);
 					}
 				},

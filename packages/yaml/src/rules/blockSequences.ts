@@ -9,10 +9,9 @@ function buildBlockSequenceFix(
 	const items: string[] = [];
 
 	for (const item of node.children) {
-		if (item.children.length > 0) {
+		if (item.children.length) {
 			const child = item.children[0];
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const itemText = getNodeText(child!, sourceText);
+			const itemText = getNodeText(child, sourceText);
 			items.push(`\n${indent}- ${itemText}`);
 		}
 	}
@@ -53,7 +52,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Prefer block style sequences over flow style sequences.",
 		id: "blockSequences",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		flowSequence: {

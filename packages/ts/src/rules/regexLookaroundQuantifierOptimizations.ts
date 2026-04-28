@@ -18,7 +18,7 @@ function* extractInvalidQuantifiers(
 	kind: "lookahead" | "lookbehind",
 ): IterableIterator<RegExpAST.Quantifier> {
 	for (const { elements } of alternatives) {
-		if (elements.length === 0) {
+		if (!elements.length) {
 			continue;
 		}
 
@@ -33,10 +33,11 @@ function* extractInvalidQuantifiers(
 				break;
 
 			case "Quantifier":
-				if (last.min !== last.max) {
-					if (!hasCapturingGroupDescendant(last.element)) {
-						yield last;
-					}
+				if (
+					last.min !== last.max &&
+					!hasCapturingGroupDescendant(last.element)
+				) {
+					yield last;
 				}
 				break;
 		}

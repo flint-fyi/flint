@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports lexical declarations in case clauses without wrapping them in blocks.",
 		id: "caseDeclarations",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		unexpectedLexicalDeclaration: {

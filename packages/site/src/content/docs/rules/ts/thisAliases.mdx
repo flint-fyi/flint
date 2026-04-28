@@ -1,0 +1,83 @@
+---
+description: "Reports assigning `this` to a variable."
+title: "thisAliases"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="thisAliases" />
+
+Before ES2015, a common pattern was to assign `this` to a variable (often named `self`, `that`, or `_this`) to preserve the context when using function expressions.
+With arrow functions, this pattern is no longer necessary because arrow functions automatically preserve the surrounding `this` context.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Example {
+	value = 10;
+
+	method() {
+		const self = this;
+		setTimeout(function () {
+			console.log(self.value);
+		}, 100);
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Example {
+	value = 10;
+
+	method() {
+		setTimeout(() => {
+			console.log(this.value);
+		}, 100);
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Destructuring is Allowed
+
+Destructuring properties from `this` is allowed because it's extracting specific values, not aliasing the context:
+
+```ts
+class Component {
+	props = { title: "Hello" };
+	state = { count: 0 };
+
+	render() {
+		const { props, state } = this;
+		return `${props.title}: ${state.count}`;
+	}
+}
+```
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you're maintaining legacy code that heavily uses `this` aliasing and refactoring to arrow functions would be too costly, you might need to disable this rule.
+
+## Further Reading
+
+- [MDN: Arrow function expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
+- [MDN: this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="thisAliases" />

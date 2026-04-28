@@ -95,7 +95,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports type assertions that can be replaced with non-null assertions.",
 		id: "nonNullableTypeAssertions",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferNonNullAssertion: {

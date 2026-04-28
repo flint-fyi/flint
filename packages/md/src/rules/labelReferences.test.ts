@@ -56,17 +56,17 @@ ruleTester.describe(rule, {
 		`
 [Flint][flint]
 
-[flint]: https://eslint.org
+[flint]: https://flint.fyi
 `,
 		`
 [flint][]
 
-[flint]: https://eslint.org
+[flint]: https://flint.fyi
 `,
 		`
 [flint]
 
-[flint]: https://eslint.org
+[flint]: https://flint.fyi
 `,
 		`
 ![Logo][logo]

@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer `{}` object literal notation or `Object.create` instead of calling or constructing `Object`.",
 		id: "objectCalls",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferObjectLiteral: {
@@ -37,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		): void {
 			if (
-				node.expression.kind != SyntaxKind.Identifier ||
+				node.expression.kind !== SyntaxKind.Identifier ||
 				!isGlobalDeclarationOfName(node.expression, "Object", typeChecker)
 			) {
 				return;

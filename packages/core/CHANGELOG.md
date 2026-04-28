@@ -1,5 +1,26 @@
 # @flint/core
 
+## 0.20.0
+
+### Minor Changes
+
+- e257ec4: Use `LinterHost` for linting.
+- 4b32a64: Factor in plugin IDs for comment directives.
+- fe76156: Add support for overriding default cache location.
+- db34436: Unify language file factory methods using `LinterHost`.
+- 442a3f4: Validate config rules on loading.
+- 3eaea9e: Unused directive tracking and reporting.
+
+### Patch Changes
+
+- 4c99c11: Implement schema validation for cache data.
+- b3a637a: Add `:exit` listeners to JSON, Markdown, and TypeScript.
+- d612d50: Convert gitignore patterns to glob exclude patterns.
+- f2f2c8b: Speed up teardowns.
+- 5c64fbb: Preserve report url through cache serialization.
+- 267fe8d: Support nested `.gitignore` files in filtering.
+- 011fbf2: Normalize file dependencies to ensure cache hits.
+
 ## 0.19.0
 
 ### Minor Changes

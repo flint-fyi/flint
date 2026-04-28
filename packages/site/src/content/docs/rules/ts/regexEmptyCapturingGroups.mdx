@@ -59,20 +59,20 @@ const pattern = /\b/;
 
 ### Zero-Length Quantifiers
 
-A quantifier with `min=0` like `*` or `?` applied to all elements means the group can match zero characters.
+A quantifier that never repeats its content, such as `{0}`, means the group captures nothing.
 
 <Tabs>
 <TabItem label="❌ Incorrect">
 
 ```ts
-const pattern = /(a*)/;
+const pattern = /(a{0})/;
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```ts
-const pattern = /(a+)/;
+const pattern = /(a*)/;
 ```
 
 </TabItem>

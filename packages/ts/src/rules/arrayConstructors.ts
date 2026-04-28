@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using the `Array` constructor to create arrays instead of array literal syntax.",
 		id: "arrayConstructors",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferLiteral: {
@@ -72,7 +72,7 @@ function getSoleArgument(node: AST.CallExpression | AST.NewExpression) {
 }
 
 function shouldAllowCallOrNew(node: AST.CallExpression | AST.NewExpression) {
-	if (node.typeArguments && node.typeArguments.length > 0) {
+	if (node.typeArguments && !!node.typeArguments.length) {
 		return true;
 	}
 

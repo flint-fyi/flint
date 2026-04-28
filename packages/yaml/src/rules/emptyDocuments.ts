@@ -29,7 +29,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 			visitors: {
 				document: (node, { root }) => {
 					const [documentHead, documentBody] = node.children;
-					if (documentBody.children.length !== 0) {
+					if (documentBody.children.length) {
 						return;
 					}
 

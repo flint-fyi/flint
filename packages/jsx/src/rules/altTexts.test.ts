@@ -15,16 +15,6 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-<img src="foo.jpg" alt />
-`,
-			snapshot: `
-<img src="foo.jpg" alt />
- ~~~
- img element is missing alt text for non-visual users.
-`,
-		},
-		{
-			code: `
 <img src="foo.jpg" alt={undefined} />
 `,
 			snapshot: `
@@ -75,5 +65,10 @@ ruleTester.describe(rule, {
 		`<object aria-label="Video" />`,
 		`<object title="Movie" />`,
 		`<div>Not an image element</div>`,
+		// Known non-string values are covered by TypeScript — no need to double-report
+		`<img src="foo.jpg" alt />`,
+		`<img src="foo.jpg" alt={[]} />`,
+		`<img src="foo.jpg" alt={{}} />`,
+		`<img src="foo.jpg" alt={123} />`,
 	],
 });

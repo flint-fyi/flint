@@ -17,7 +17,7 @@ function hasComments(block: AST.Block, sourceFile: AST.SourceFile) {
 }
 
 function isEmptyBlock(block: AST.Block, sourceFile: AST.SourceFile) {
-	return block.statements.length === 0 && !hasComments(block, sourceFile);
+	return !block.statements.length && !hasComments(block, sourceFile);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

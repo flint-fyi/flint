@@ -19,7 +19,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports regular expressions with exponential or polynomial backtracking.",
 		id: "regexSuperLinearBacktracking",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		self: {
