@@ -51,7 +51,7 @@ Nothing is simple to everyone.
 Example: don't say "If ABC, just do XYZ" - that "just" implies things are easy or simple.
 
 Never say "This rule should always be enabled." or similar.
-But also don't suggest allowing inaccessible frontends or other bad practices.
+But also don't suggest allowing inaccessible frontend UIs or other bad practices.
 You should always suggest a legitimate reason not to use it.
 For stylistic rules that might be that the user already has a large difficult-to-refactor project.
 For JSX/accessibility rules it might be that they have a framework doing it for them.
