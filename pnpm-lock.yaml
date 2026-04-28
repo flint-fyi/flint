@@ -76,8 +76,8 @@ catalogs:
       specifier: 2.6.1
       version: 2.6.1
     knip:
-      specifier: 6.6.2
-      version: 6.6.2
+      specifier: 6.7.0
+      version: 6.7.0
     lint-staged:
       specifier: 16.4.0
       version: 16.4.0
@@ -276,7 +276,7 @@ importers:
         version: 2.6.1
       knip:
         specifier: catalog:dev
-        version: 6.6.2(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
+        version: 6.7.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
       lint-staged:
         specifier: catalog:dev
         version: 16.4.0
@@ -4723,8 +4723,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@6.6.2:
-    resolution: {integrity: sha512-ma2p+SvgIs1GZZLUV9QJrLkb9gGNBQHk7fcrtt3aVhiW2XEXH/yfMOU88F7ZdriYuBYkB53djPNYMWb2pKVl/g==}
+  knip@6.7.0:
+    resolution: {integrity: sha512-ckL51NDH1YJxnv1kNB0iUdDngB4f/e9Igz8uIqYfmNDoyOFmmk1V0WFv3LQ7/hzC63b2Z9X41gGUE9eOWrZpaA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -10139,7 +10139,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@6.6.2(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2):
+  knip@6.7.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2):
     dependencies:
       fdir: 6.5.0(picomatch@4.0.4)
       formatly: 0.3.0
