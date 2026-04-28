@@ -45,5 +45,6 @@ export type JsonObjectExpressionStatement = Omit<
 };
 
 export type JsonSourceFile = Omit<AST.SourceFile, "statements"> & {
-	readonly statements: ts.NodeArray<JsonObjectExpressionStatement>;
+	readonly statements: readonly [JsonObjectExpressionStatement?] &
+		ts.NodeArray<JsonObjectExpressionStatement>;
 };
