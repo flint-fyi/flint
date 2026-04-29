@@ -21,14 +21,7 @@ export function createReportSnapshot(
 function createReportSnapshotAt(sourceText: string, report: NormalizedReport) {
 	const { begin, end } = getDisplayedRange(sourceText, report.range);
 	const lineStartIndex = begin.raw - begin.column;
-	const lineEndStartIndex = getPositionOfColumnAndLine(sourceText, {
-		column: 0,
-		line: end.line,
-	});
-	let lineEndIndex = sourceText.indexOf("\n", lineEndStartIndex);
-	if (lineEndIndex < 0) {
-		lineEndIndex = sourceText.length;
-	}
+	const lineEndIndex = getLineBounds(sourceText, end.line).end;
 	const lines = sourceText.slice(lineStartIndex, lineEndIndex).split("\n");
 	const output: string[] = [];
 
@@ -76,22 +69,51 @@ function getDisplayedRange(
 
 	// For ranges ending at column 0 of a later line, snap the end back to the
 	// previous line so the snapshot underlines the last covered line instead.
-	const endLine = end.line - 1;
-	const endLineStartIndex = getPositionOfColumnAndLine(sourceText, {
-		column: 0,
-		line: endLine,
-	});
-	const endLineEndIndex = sourceText.indexOf("\n", endLineStartIndex);
+	const previousLine = getLineBounds(sourceText, end.line - 1);
+
+	if (begin.line === previousLine.line && previousLine.text === "") {
+		const currentLine = getLineBounds(sourceText, end.line);
+
+		if (currentLine.text !== "") {
+			return {
+				begin: {
+					column: 0,
+					line: currentLine.line,
+					raw: currentLine.start,
+				},
+				end: {
+					column: 1,
+					line: currentLine.line,
+					raw: currentLine.start + 1,
+				},
+			};
+		}
+	}
 
 	return {
 		begin,
 		end: {
-			column:
-				endLineEndIndex < 0
-					? sourceText.length - endLineStartIndex
-					: endLineEndIndex - endLineStartIndex,
-			line: endLine,
-			raw: Math.max(endLineEndIndex, endLineStartIndex),
+			column: previousLine.text.length,
+			line: previousLine.line,
+			raw: previousLine.end,
 		},
+	};
+}
+
+function getLineBounds(sourceText: string, line: number) {
+	const start = getPositionOfColumnAndLine(sourceText, {
+		column: 0,
+		line,
+	});
+	let end = sourceText.indexOf("\n", start);
+	if (end < 0) {
+		end = sourceText.length;
+	}
+
+	return {
+		end,
+		line,
+		start,
+		text: sourceText.slice(start, end),
 	};
 }
