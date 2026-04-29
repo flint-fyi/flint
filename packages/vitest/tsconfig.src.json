@@ -11,7 +11,7 @@
 		"../typescript-language/src/directives",
 		"../typescript-language/src/types"
 	],
-	"exclude": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
+	"exclude": ["src/**/*.test.ts", "src/ruleTester.ts"],
 	"references": [
 		{ "path": "../core" },
 		{ "path": "../typescript-language" },

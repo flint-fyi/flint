@@ -1,5 +1,5 @@
 import rule from "./nodeTestImports.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { ruleTester } from "../ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
