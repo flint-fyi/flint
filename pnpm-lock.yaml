@@ -229,6 +229,9 @@ importers:
       '@flint.fyi/ts-patch':
         specifier: workspace:^
         version: link:packages/ts-patch
+      '@flint.fyi/vitest':
+        specifier: workspace:^
+        version: link:packages/vitest
       '@types/node':
         specifier: catalog:dev
         version: 24.12.0
@@ -1175,6 +1178,28 @@ importers:
 
   packages/utils:
     devDependencies:
+      tsdown:
+        specifier: catalog:dev
+        version: 0.21.0(@arethetypeswrong/core@0.18.2)(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(oxc-resolver@11.19.1(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2))(synckit@0.11.12)(typescript@5.9.3)
+      vitest:
+        specifier: catalog:dev
+        version: 4.1.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.0)(esbuild@0.27.4)(jiti@2.6.1)(yaml@2.8.3)
+
+  packages/vitest:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
+      typescript:
+        specifier: ^5.9.3 || ^6.0.0
+        version: 5.9.3
+    devDependencies:
+      '@flint.fyi/rule-tester':
+        specifier: workspace:^
+        version: link:../rule-tester
       tsdown:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(oxc-resolver@11.19.1(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2))(synckit@0.11.12)(typescript@5.9.3)

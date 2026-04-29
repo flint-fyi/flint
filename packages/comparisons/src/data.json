@@ -21327,7 +21327,8 @@
 		"flint": {
 			"name": "nodeTestImports",
 			"plugin": "vitest",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
