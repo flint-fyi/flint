@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
-		noDelete: {
+		nodeTestImport: {
 			primary: "This `node:test` import will not work when using Vitest.",
 			secondary: [
 				"Test runners such as `node:test` and Vitest are not cross-compatible.",
@@ -49,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								text: "vitest",
 							},
 						],
-						message: "noDelete",
+						message: "nodeTestImport",
 						range,
 					});
 				},

@@ -8,5 +8,5 @@ export const vitest = createPlugin({
 		all: configDefaults.include,
 	},
 	name: "Vitest",
-	rules: [deletes],
+	rules: [nodeTestImports],
 });
