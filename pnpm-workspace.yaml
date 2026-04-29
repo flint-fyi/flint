@@ -78,8 +78,6 @@ disallowWorkspaceCycles: true
 
 engineStrict: true
 
-minimumReleaseAge: 10080
-
 nodeVersion: 24.0.0
 
 overrides:
