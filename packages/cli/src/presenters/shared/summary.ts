@@ -34,12 +34,7 @@ export function* presentSummary(
 				" across ",
 				chalk.bold(pluralize(counts.files, "file")),
 				...(counts.fixable
-					? [
-							" (",
-							chalk.bold(pluralize(counts.fixable, "fixable")),
-							" with --fix",
-							")",
-						]
+					? [" (", chalk.bold(`${counts.fixable} fixable with --fix`), ")"]
 					: []),
 				".\n",
 			].join(""),

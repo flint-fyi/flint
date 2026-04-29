@@ -39,7 +39,8 @@
 	},
 	"devDependencies": {
 		"prettier": "catalog:dev",
-		"tsdown": "catalog:dev"
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
 	},
 	"peerDependencies": {
 		"prettier": "^3.7.4"

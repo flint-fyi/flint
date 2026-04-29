@@ -23,12 +23,7 @@ export function printSummary(filesWithReportResults: [string, FileResults][]) {
 			" across ",
 			chalk.bold(pluralize(counts.files, "file")),
 			...(counts.fixable
-				? [
-						" (",
-						chalk.bold(pluralize(counts.fixable, "fixable")),
-						" with --fix",
-						")",
-					]
+				? [" (", chalk.bold(`${counts.fixable} fixable with --fix`), ")"]
 				: []),
 			".",
 		].join(""),
