@@ -21,22 +21,6 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./.github/actions/prepare
       - run: pnpm build
-
-      - name: Debugging
-        run: |
-          pnpm -v
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git status
-          git diff
-
-          git add -A
-          git commit -m "debugging"
-
-          git push --force origin HEAD:debugging
-
       - env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         name: Create Release Pull Request
