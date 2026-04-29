@@ -751,6 +751,9 @@ importers:
       '@flint.fyi/json-language':
         specifier: workspace:^
         version: link:../json-language
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
       package-json-validator:
         specifier: ^1.4.0
         version: 1.4.0

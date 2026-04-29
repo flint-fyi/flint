@@ -4,21 +4,25 @@ import { ruleTester } from "../ruleTester.ts";
 ruleTester.describe(directPropertyPresenceRules.osPresence, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`os\` is expected to be present.
 }
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "other": true
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`os\` is expected to be present.
   "other": true
@@ -26,12 +30,14 @@ Property \`os\` is expected to be present.
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "private": true
 }
 `,
 			options: { ignorePrivate: false },
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`os\` is expected to be present.
   "private": true
@@ -39,11 +45,13 @@ Property \`os\` is expected to be present.
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "private": true
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`os\` is expected to be present.
   "private": true

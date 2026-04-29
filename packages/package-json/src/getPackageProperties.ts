@@ -1,7 +1,10 @@
 import type { JsonSourceFile } from "@flint.fyi/json-language";
+import type { AST } from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
-export function getPackageProperties(sourceFile: JsonSourceFile) {
+export function getPackageProperties(
+	sourceFile: JsonSourceFile,
+): ts.NodeArray<AST.ObjectLiteralElementLike> | undefined {
 	if (sourceFile.statements.length !== 1) {
 		return undefined;
 	}

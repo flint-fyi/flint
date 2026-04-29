@@ -1,5 +1,6 @@
 import type { AnyRule } from "@flint.fyi/core";
 import { jsonLanguage } from "@flint.fyi/json-language";
+import type { JsonSourceFile } from "@flint.fyi/json-language";
 import ts from "typescript";
 import { z } from "zod/v4";
 
@@ -54,7 +55,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 		setup(context) {
 			return {
 				visitors: {
-					JsonSourceFile: (node: ts.JsonSourceFile, { options }) => {
+					JsonSourceFile: (node, { options }) => {
 						if (options.ignorePrivate && isPrivatePackage(node)) {
 							return;
 						}
@@ -75,7 +76,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 	return { id, rule };
 }
 
-function isPrivatePackage(node: ts.JsonSourceFile) {
+function isPrivatePackage(node: JsonSourceFile) {
 	const privacy = getPackagePropertyOfName(node, "private");
 
 	return (

@@ -4,21 +4,25 @@ import { ruleTester } from "../ruleTester.ts";
 ruleTester.describe(directPropertyPresenceRules.licensePresence, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`license\` is expected to be present.
 }
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "other": true
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`license\` is expected to be present.
   "other": true
@@ -26,12 +30,14 @@ Property \`license\` is expected to be present.
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "private": true
 }
 `,
 			options: { ignorePrivate: false },
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`license\` is expected to be present.
   "private": true

@@ -4,21 +4,25 @@ import privatePresence from "./privatePresence.ts";
 ruleTester.describe(privatePresence, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`private\` is expected to be present.
 }
 `,
 		},
 		{
-			code: `{
+			code: `
+{
   "other": true
 }
 `,
-			snapshot: `{
+			snapshot: `
+{
 ~
 Property \`private\` is expected to be present.
   "other": true
