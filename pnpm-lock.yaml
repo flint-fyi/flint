@@ -469,8 +469,8 @@ importers:
         specifier: workspace:^
         version: link:../utils
       cached-factory:
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.2.0
+        version: 0.2.0
       debug-for-file:
         specifier: ^0.3.0
         version: 0.3.0
@@ -846,8 +846,8 @@ importers:
         specifier: workspace:^
         version: link:../utils
       cached-factory:
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.2.0
+        version: 0.2.0
     devDependencies:
       tsdown:
         specifier: catalog:dev
@@ -3658,8 +3658,8 @@ packages:
     resolution: {integrity: sha512-tixWYgm5ZoOD+3g6UTea91eow5z6AAHaho3g0V9CNSNb45gM8SmflpAc+GRd1InC4AqN/07Unrgp56Y94N9hJQ==}
     engines: {node: '>=20.19.0'}
 
-  cached-factory@0.1.0:
-    resolution: {integrity: sha512-IGOSWu+NuED5UzCRmBeqQPZ8z7SkgrD/nN67W2iY1Qv83CVhevyMexkGclJ86saXisIqxoOnbeiTWvsCHRqJBw==}
+  cached-factory@0.2.0:
+    resolution: {integrity: sha512-6XGkilRVhace8gARfWVvkjyWoazCp21VUQXdDyWEcAz3sHSwXji76srbLfJ6BcHRAZveW9ICYprhqsdoRYZ+YQ==}
     engines: {node: '>=18'}
 
   caniuse-lite@1.0.30001780:
@@ -8941,7 +8941,7 @@ snapshots:
 
   cac@7.0.0: {}
 
-  cached-factory@0.1.0: {}
+  cached-factory@0.2.0: {}
 
   caniuse-lite@1.0.30001780: {}
 
