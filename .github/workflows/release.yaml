@@ -22,6 +22,7 @@ jobs:
       - uses: ./.github/actions/prepare
       - run: pnpm build
       - run: git status
+      - run: git diff
       - env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         name: Create Release Pull Request
