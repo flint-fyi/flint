@@ -1,0 +1,54 @@
+---
+description: "Enforce that the `optionalDependencies` property is valid."
+title: "optionalDependenciesValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="optionalDependenciesValidity" />
+
+The rule checks that, if present, the `optionalDependencies` property is an object where each key is a valid package name and each value is a valid version range.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"optionalDependencies": {
+		"invalid-version": "catalob:"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"optionalDependencies": {
+		"first": "catalog:",
+		"thee-"first"": "^1.2.3",
+		"david-bowie": "*"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `optionalDependencies` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents
+	pluginId="package-json"
+	ruleId="optionalDependenciesValidity"
+/>

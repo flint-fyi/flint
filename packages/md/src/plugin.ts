@@ -37,7 +37,7 @@ export const md = createPlugin({
 		linkContents,
 		linkFragments,
 		mediaSyntaxReversals,
-		tableColumnCounts,
 		referenceLikeUrls,
+		tableColumnCounts,
 	],
 });

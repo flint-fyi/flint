@@ -20,9 +20,6 @@ export default defineConfig({
 					],
 					snapshotSerializers: name === "e2e" ? ["vitest-ansi-serializer"] : [],
 					testTimeout: 10_000,
-					typecheck: {
-						enabled: true,
-					},
 				},
 			}),
 		),

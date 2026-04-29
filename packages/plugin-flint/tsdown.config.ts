@@ -15,5 +15,5 @@ export default defineConfig({
 	failOnWarn: true,
 	fixedExtension: false,
 	outDir: "lib",
-	unbundle: true,
+	unbundle: false,
 });

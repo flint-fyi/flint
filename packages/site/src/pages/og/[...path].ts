@@ -21,7 +21,7 @@ export const { GET, getStaticPaths } = await OGImageRoute({
 			path: "./public/logo.png",
 			size: [138],
 		},
-		padding: 80,
+		padding: 70,
 		title: data.title,
 	}),
 	pages,

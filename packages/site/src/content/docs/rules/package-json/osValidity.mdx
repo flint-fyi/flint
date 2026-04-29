@@ -1,0 +1,47 @@
+---
+description: "Enforce that the `os` property is valid."
+title: "osValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="osValidity" />
+
+This rule checks that the `os` property is an array where all items are valid OS values: "aix", "android", "darwin", "freebsd", "linux", "openbsd", "sunos", and "win32".
+
+These values are the list of possible `process.platform` values [documented by Node](https://nodejs.org/api/process.html#processplatform).
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"os": ["x64"]
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"os": ["linux", "win32"]
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `osValidity` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="osValidity" />

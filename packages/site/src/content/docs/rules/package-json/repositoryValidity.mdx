@@ -1,0 +1,58 @@
+---
+description: "Enforce that the `repository` property is valid."
+title: "repositoryValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="repositoryValidity" />
+
+This rule checks that the `repository` property is either an object or a string.
+If it's an object, it should have `type`, `url`, and optionally `directory`.
+If it's a string, it should be a shorthand repo string from a supported provider.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"repository": {
+		"url": "git+https://github.com/michaelfaith/eslint-plugin-package-json.git"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"repository": "github:michaelfaith/eslint-plugin-package-json"
+}
+```
+
+```json
+{
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/michaelfaith/eslint-plugin-package-json.git"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `repository` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="repositoryValidity" />

@@ -30,8 +30,8 @@
 		"!lib/**/*.map"
 	],
 	"devDependencies": {
-		"tsdown": "0.21.0",
-		"typescript": "5.9.3"
+		"tsdown": "catalog:dev",
+		"typescript": "catalog:dev"
 	},
 	"peerDependencies": {
 		"typescript": "^5.9.3 || ^6.0.0"

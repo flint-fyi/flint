@@ -1,6 +1,7 @@
 import type { CharacterReportRange } from "@flint.fyi/core";
 import {
 	type AST,
+	type Checker,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -8,14 +9,64 @@ import { SyntaxKind } from "typescript";
 
 import { findProperty } from "../utils/findProperty.ts";
 import {
+	isImportedBindingFromModule,
+	isImportedSpecifierFromModule,
+} from "../utils/importHelpers.ts";
+import {
 	isRuleContextReport,
 	isRuleCreatorCreateRule,
 } from "../utils/ruleCreatorHelpers.ts";
 import { ruleCreator } from "./ruleCreator.ts";
+
+const volarLanguagePackageName = "@flint.fyi/volar-language";
+
+function isVolarReportSourceCodeCall(
+	node: AST.CallExpression,
+	typeChecker: Checker,
+) {
+	// import { reportSourceCode } from "@flint.fyi/volar-language";
+	// reportSourceCode(...)
+	if (node.expression.kind === SyntaxKind.Identifier) {
+		return (
+			typeChecker
+				.getSymbolAtLocation(node.expression)
+				?.getDeclarations()
+				?.some((declaration) =>
+					isImportedSpecifierFromModule(
+						declaration,
+						volarLanguagePackageName,
+						"reportSourceCode",
+					),
+				) ?? false
+		);
+	}
+
+	// import * as VolarLanguage from "@flint.fyi/volar-language";
+	// VolarLanguage.reportSourceCode(...)
+	if (
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.expression.kind === SyntaxKind.Identifier &&
+		node.expression.name.text === "reportSourceCode"
+	) {
+		return (
+			typeChecker
+				.getSymbolAtLocation(node.expression.expression)
+				?.getDeclarations()
+				?.some(
+					(declaration) =>
+						declaration.kind === SyntaxKind.NamespaceImport &&
+						isImportedBindingFromModule(declaration, volarLanguagePackageName),
+				) ?? false
+		);
+	}
+
+	return false;
+}
+
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
-			"Reports message IDs defined in the messages object that are never used in context.report calls.",
+			"Reports message IDs defined in the messages object that are never used in recognized report calls.",
 		id: "unusedMessageIds",
 		presets: ["logical"],
 	},
@@ -23,7 +74,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		unusedMessageIds: {
 			primary: "Message ID '{{ messageId }}' is defined but never used.",
 			secondary: [
-				"This message ID is declared in the messages object but is not referenced in any context.report call.",
+				"This message ID is declared in the messages object but is not referenced in any `context.report()` or built-in Flint report helper call.",
 				"Remove unused message IDs to keep the rule configuration clean and maintainable.",
 			],
 			suggestions: ["Remove the unused message ID from the messages object."],
@@ -68,12 +119,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 		}
 
-		function detectMessageIdUsage(node: AST.CallExpression) {
+		function detectMessageIdUsage(
+			node: AST.CallExpression,
+			reportArgumentIndex: number,
+		) {
 			if (!unusedMessageIds.size) {
 				return;
 			}
 
-			const args = node.arguments[0];
+			const args = node.arguments[reportArgumentIndex];
 			if (args?.kind !== SyntaxKind.ObjectLiteralExpression) {
 				unusedMessageIds.clear();
 				return;
@@ -107,7 +161,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (isRuleContextReport(node, typeChecker)) {
-						detectMessageIdUsage(node);
+						detectMessageIdUsage(node, 0);
+						return;
+					}
+
+					if (isVolarReportSourceCodeCall(node, typeChecker)) {
+						detectMessageIdUsage(node, 1);
 						return;
 					}
 				},

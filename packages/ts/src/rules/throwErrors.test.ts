@@ -40,7 +40,19 @@ throw undefined;
 			snapshot: `
 throw undefined;
       ~~~~~~~~~
-      Only \`Error\` objects should be thrown.
+      Throwing \`undefined\` provides no context and is hard to debug.
+`,
+		},
+		{
+			code: `
+const maybe: Error | undefined = undefined;
+throw maybe;
+`,
+			snapshot: `
+const maybe: Error | undefined = undefined;
+throw maybe;
+      ~~~~~
+      Throwing \`undefined\` provides no context and is hard to debug.
 `,
 		},
 		{
@@ -182,6 +194,13 @@ throw new MyError();
 		`throw new TypeError("invalid type");`,
 		`throw new RangeError("out of range");`,
 		`const error = new Error(); throw error;`,
+		`
+let maybe: Error | undefined;
+if (!maybe) {
+  maybe = new Error("fallback");
+}
+throw maybe;
+`,
 		`
 class CustomError extends Error {}
 throw new CustomError();

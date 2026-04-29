@@ -1,0 +1,51 @@
+---
+description: "Enforce that the `devDependencies` property is valid."
+title: "devDependenciesValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="devDependenciesValidity" />
+
+The rule checks that, if present, the `devDependencies` property is an object where each key is a valid package name and each value is a valid version range.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"devDependencies": {
+		"invalid-version": "catalob:"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"devDependencies": {
+		"first": "catalog:",
+		"thee-"first"": "^1.2.3",
+		"david-bowie": "*"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `devDependencies` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="devDependenciesValidity" />

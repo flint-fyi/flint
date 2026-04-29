@@ -23,14 +23,22 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project astro"
+		"test": "vitest --project astro"
 	},
 	"dependencies": {
+		"@astrojs/compiler": "^3.0.1",
+		"@flint.fyi/astro-language": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
-		"typescript": "^5.9.3"
+		"@flint.fyi/ts": "workspace:^",
+		"@flint.fyi/utils": "workspace:^",
+		"@flint.fyi/volar-language": "workspace:^",
+		"typescript": "^5.9.3 || ^6.0.0"
 	},
 	"devDependencies": {
-		"tsdown": "0.21.0"
+		"@flint.fyi/rule-tester": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"

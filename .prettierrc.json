@@ -8,5 +8,6 @@
 		"prettier-plugin-sentences-per-line",
 		"prettier-plugin-sh"
 	],
-	"useTabs": true
+	"useTabs": true,
+	"vueIndentScriptAndStyle": true
 }

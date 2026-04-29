@@ -13,7 +13,8 @@
         "maintenance",
         "projectManagement",
         "tool",
-        "bug"
+        "bug",
+        "test"
       ],
       "login": "JoshuaKGoldberg",
       "name": "Josh Goldberg ✨",
@@ -86,7 +87,9 @@
         "bug",
         "maintenance",
         "ideas",
-        "test"
+        "test",
+        "doc",
+        "code"
       ]
     },
     {
@@ -112,7 +115,8 @@
       "contributions": [
         "code",
         "maintenance",
-        "ideas"
+        "ideas",
+        "doc"
       ]
     },
     {
@@ -122,7 +126,8 @@
       "profile": "https://barrymichaeldoyle.com",
       "contributions": [
         "infra",
-        "maintenance"
+        "maintenance",
+        "code"
       ]
     },
     {
@@ -133,7 +138,8 @@
       "contributions": [
         "doc",
         "code",
-        "maintenance"
+        "maintenance",
+        "bug"
       ]
     },
     {
@@ -193,7 +199,36 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/5475199?v=4",
       "profile": "http://www.irrationalmindsthinkalike.com",
       "contributions": [
-        "doc"
+        "doc",
+        "ideas",
+        "code"
+      ]
+    },
+    {
+      "login": "sigmabrogz",
+      "name": "Sigmabro",
+      "avatar_url": "https://avatars.githubusercontent.com/u/122412346?v=4",
+      "profile": "https://github.com/Sigmabrogz",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "yonava",
+      "name": "Yona Alexander Voss-Andreae",
+      "avatar_url": "https://avatars.githubusercontent.com/u/76519301?v=4",
+      "profile": "https://github.com/Yonava",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "techmannih",
+      "name": "Manish chaudhary ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/125847751?v=4",
+      "profile": "https://techmannih.me",
+      "contributions": [
+        "ideas"
       ]
     }
   ],

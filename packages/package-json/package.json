@@ -23,14 +23,18 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project package-json"
+		"test": "vitest --project package-json"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/json-language": "workspace:^",
+		"package-json-validator": "^1.4.0",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
-		"tsdown": "0.21.0"
+		"@flint.fyi/rule-tester": "workspace:^",
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"

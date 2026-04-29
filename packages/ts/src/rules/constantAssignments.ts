@@ -29,14 +29,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function collectBindingElements(name: AST.BindingName): AST.Identifier[] {
-			if (name.kind == SyntaxKind.Identifier) {
+			if (name.kind === SyntaxKind.Identifier) {
 				return [name];
 			}
 
 			const identifiers: AST.Identifier[] = [];
 
 			for (const element of name.elements) {
-				if (element.kind == SyntaxKind.BindingElement) {
+				if (element.kind === SyntaxKind.BindingElement) {
 					identifiers.push(...collectBindingElements(element.name));
 				}
 			}

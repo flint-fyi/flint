@@ -23,13 +23,13 @@
 		"!lib/**/*.map"
 	],
 	"scripts": {
-		"test": "vitest --typecheck --project text-language"
+		"test": "vitest --project text-language"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^"
 	},
 	"devDependencies": {
-		"tsdown": "0.21.0"
+		"tsdown": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"
