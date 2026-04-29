@@ -1,6 +1,10 @@
 packages:
   - packages/*
 
+allowBuilds:
+  esbuild@0.27.4: true
+  sharp@0.34.5: true
+
 autoInstallPeers: false
 
 catalogs:
@@ -36,7 +40,6 @@ catalogs:
     prettier-plugin-packagejson: 3.0.0
     prettier-plugin-sentences-per-line: 0.2.0
     prettier-plugin-sh: 0.18.0
-    rimraf: 6.1.2
     tsdown: 0.21.0
     typescript: 5.9.3
     typescript-eslint: 8.58.1
@@ -69,15 +72,15 @@ catalogs:
     starlight-package-managers: 0.12.0
     starlight-sidebar-topics: 0.7.1
 
+dedupePeers: true
+
 disallowWorkspaceCycles: true
 
 engineStrict: true
 
-nodeVersion: 24.0.0
+minimumReleaseAge: 10080
 
-onlyBuiltDependencies:
-  - esbuild@0.25.11
-  - sharp@0.34.5
+nodeVersion: 24.0.0
 
 overrides:
   read-package-up: 12.0.0
@@ -88,5 +91,5 @@ peerDependencyRules:
     "@konami-emoji-blast/astro@0.2.0>astro": "6"
 
 shellEmulator: true
-strictDepBuilds: true
+
 strictPeerDependencies: true
