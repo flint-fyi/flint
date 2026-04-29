@@ -18,22 +18,27 @@ export type Props = StarlightRouteData;
 		>.
 	</div>
 
-	<a href="https://www.netlify.com">
-		<img
-			alt="Deploys by Netlify"
-			class="dark"
-			src="https://www.netlify.com/assets/badges/netlify-badge-color-accent.svg"
-		/>
-		<img
-			alt="Deploys by Netlify"
-			class="light"
-			src="https://www.netlify.com/assets/badges/netlify-badge-color-bg.svg"
-		/>
-	</a>
+	{
+		Astro.url.pathname === "/" && (
+			<a href="https://www.netlify.com">
+				<img
+					alt="Deploys by Netlify"
+					class="dark"
+					src="https://www.netlify.com/assets/badges/netlify-badge-color-accent.svg"
+				/>
+				<img
+					alt="Deploys by Netlify"
+					class="light"
+					src="https://www.netlify.com/assets/badges/netlify-badge-color-bg.svg"
+				/>
+			</a>
+		)
+	}
 </footer>
 
 <style>
 	footer {
+		align-items: center;
 		display: flex;
 		flex-direction: column;
 		text-align: center;
@@ -50,6 +55,7 @@ export type Props = StarlightRouteData;
 	.credits a {
 		color: var(--sl-color-gray-2);
 	}
+
 	:global(html[data-theme="dark"]) .light,
 	:global(html[data-theme="light"]) .dark {
 		display: none;
