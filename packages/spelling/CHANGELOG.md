@@ -1,5 +1,20 @@
 # @flint.fyi/spelling
 
+## 0.2.2
+
+### Patch Changes
+
+- 4fc0eef: Pass host to rules.
+- 1539f14: Improve performance by a factor of 2.
+- Updated dependencies [4fc0eef]
+- Updated dependencies [57fa268]
+- Updated dependencies [dde886f]
+- Updated dependencies [1539f14]
+- Updated dependencies [0702aa2]
+- Updated dependencies [cb7e8a8]
+- Updated dependencies [d3f5d17]
+  - @flint.fyi/core@0.21.0
+
 ## 0.2.1
 
 ### Patch Changes

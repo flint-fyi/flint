@@ -1,5 +1,21 @@
 # @flint/core
 
+## 0.21.0
+
+### Minor Changes
+
+- 4fc0eef: Pass host to rules.
+- 57fa268: Add optional character range to language reports.
+- cb7e8a8: Change "diagnostics" nomenclature to "language reports".
+All external references to the term diagnostic or diagnostics are now using the term language report instead.
+
+### Patch Changes
+
+- dde886f: Incorrect line numbers for rules that report during teardown.
+- 1539f14: Improve performance by a factor of 2.
+- 0702aa2: Introduce Volar.js meta-language.
+- d3f5d17: Use `pathKey` for cache dependency invalidation to preserve lint cache hits.
+
 ## 0.20.0
 
 ### Minor Changes

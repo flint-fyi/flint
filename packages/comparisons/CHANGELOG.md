@@ -1,5 +1,18 @@
 # @flint.fyi/comparisons
 
+## 0.3.0
+
+### Minor Changes
+
+- 07e1011: Remove the Sorting plugin and move the underlying rules to their corresponding language plugins.
+
+### Patch Changes
+
+- 6d013fe: Added direct validity rules.
+- 94403c7: Added direct presence rules.
+- fb59513: Update eslint-plugin-package-json owner to michaelfaith.
+- 6d013fe: Add in missing already-present validator rules.
+
 ## 0.2.1
 
 ### Patch Changes
