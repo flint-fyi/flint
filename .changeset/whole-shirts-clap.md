@@ -2,4 +2,4 @@
 "@flint.fyi/rule-tester": patch
 ---
 
-Account for leading \ns in report snapshots.
+Fixed handling for zero-width ~ lines.
