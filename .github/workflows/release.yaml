@@ -32,9 +32,9 @@ jobs:
           git status
 
           git add -A
-          git diff --cached || git commit -m "debugging"
+          git diff --cached --check || git commit -m "debugging"
 
-          git push origin HEAD:debugging
+          git push --force origin HEAD:debugging
 
       - env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
