@@ -30,9 +30,10 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git status
+          git diff
 
           git add -A
-          git diff --cached --check || git commit -m "debugging"
+          git commit -m "debugging"
 
           git push --force origin HEAD:debugging
 
