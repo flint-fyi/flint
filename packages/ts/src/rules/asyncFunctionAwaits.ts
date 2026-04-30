@@ -1,21 +1,23 @@
+import {
+	type AST,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
-import {
-	type TypeScriptFileServices,
-	typescriptLanguage,
-} from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports async functions that do not use await.",
 		id: "asyncFunctionAwaits",
-		preset: "logical",
+		presets: ["logicalStrict"],
 	},
 	messages: {
 		missingAwait: {
 			primary:
-				"Async functions should contain an await expression or return a Promise.",
+				"This function is marked `async` but does not contain an `await` expression or return a Promise.",
 			secondary: [
 				"Async functions always wrap their return value in a Promise, which adds overhead if you're not using await.",
 				"This may indicate incomplete implementation or leftover code after refactoring.",
@@ -38,37 +40,24 @@ export default typescriptLanguage.createRule({
 
 		function checkFunction(
 			node:
-				| ts.ArrowFunction
-				| ts.FunctionDeclaration
-				| ts.FunctionExpression
-				| ts.MethodDeclaration,
+				| AST.ArrowFunction
+				| AST.FunctionDeclaration
+				| AST.FunctionExpression
+				| AST.MethodDeclaration,
 			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			const asyncModifier = node.modifiers?.find(
-				(mod) => mod.kind === ts.SyntaxKind.AsyncKeyword,
+				(modifier) => modifier.kind === ts.SyntaxKind.AsyncKeyword,
 			);
 
-			if (!asyncModifier) {
-				return;
-			}
-
-			if (node.asteriskToken) {
-				return;
-			}
-
-			if (!node.body) {
-				return;
-			}
-
-			if (isEmptyBody(node.body)) {
-				return;
-			}
-
-			if (bodyContainsAwait(node.body)) {
-				return;
-			}
-
-			if (bodyReturnsThenable(node.body, typeChecker)) {
+			if (
+				!asyncModifier ||
+				node.asteriskToken ||
+				!node.body ||
+				isEmptyBody(node.body) ||
+				bodyContainsAwait(node.body) ||
+				bodyReturnsThenable(node.body, typeChecker)
+			) {
 				return;
 			}
 
@@ -83,6 +72,7 @@ export default typescriptLanguage.createRule({
 	},
 });
 
+// TODO: Use a scope analyzer (#400)?
 function bodyContainsAwait(body: ts.Block | ts.Expression) {
 	function checkForAwait(node: ts.Node): boolean | undefined {
 		if (ts.isAwaitExpression(node)) {
@@ -129,23 +119,9 @@ function bodyReturnsThenable(
 }
 
 function isEmptyBody(body: ts.Block | ts.Expression) {
-	if (!ts.isBlock(body)) {
-		return false;
-	}
-
-	return body.statements.length === 0;
+	return ts.isBlock(body) && body.statements.length === 0;
 }
 
 function isThenable(node: ts.Expression, typeChecker: ts.TypeChecker) {
-	const type = typeChecker.getTypeAtLocation(node);
-	const thenProperty = type.getProperty("then");
-
-	if (!thenProperty) {
-		return false;
-	}
-
-	const thenType = typeChecker.getTypeOfSymbol(thenProperty);
-	const callSignatures = thenType.getCallSignatures();
-
-	return callSignatures.length > 0;
+	return tsutils.isThenableType(typeChecker, node);
 }

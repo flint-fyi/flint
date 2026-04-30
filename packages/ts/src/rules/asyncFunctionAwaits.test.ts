@@ -12,7 +12,7 @@ async function doSomething() {
 			snapshot: `
 async function doSomething() {
 ~~~~~
-Async functions should contain an await expression or return a Promise.
+This function is marked \`async\` but does not contain an \`await\` expression or return a Promise.
     console.log("no await");
 }
 `,
@@ -26,7 +26,7 @@ const fn = async () => {
 			snapshot: `
 const fn = async () => {
            ~~~~~
-           Async functions should contain an await expression or return a Promise.
+           This function is marked \`async\` but does not contain an \`await\` expression or return a Promise.
     return 42;
 };
 `,
@@ -40,7 +40,7 @@ const fn = async function() {
 			snapshot: `
 const fn = async function() {
            ~~~~~
-           Async functions should contain an await expression or return a Promise.
+           This function is marked \`async\` but does not contain an \`await\` expression or return a Promise.
     return "hello";
 };
 `,
@@ -57,7 +57,7 @@ class Example {
 class Example {
     async method() {
     ~~~~~
-    Async functions should contain an await expression or return a Promise.
+    This function is marked \`async\` but does not contain an \`await\` expression or return a Promise.
         this.doSomething();
     }
 }
@@ -74,7 +74,7 @@ async function nestedAwait() {
 			snapshot: `
 async function nestedAwait() {
 ~~~~~
-Async functions should contain an await expression or return a Promise.
+This function is marked \`async\` but does not contain an \`await\` expression or return a Promise.
     const inner = async () => {
         await Promise.resolve();
     };
@@ -88,7 +88,7 @@ const fn = async () => 42;
 			snapshot: `
 const fn = async () => 42;
            ~~~~~
-           Async functions should contain an await expression or return a Promise.
+           This function is marked \`async\` but does not contain an \`await\` expression or return a Promise.
 `,
 		},
 		{
@@ -100,7 +100,7 @@ async function returnsNonThenable() {
 			snapshot: `
 async function returnsNonThenable() {
 ~~~~~
-Async functions should contain an await expression or return a Promise.
+This function is marked \`async\` but does not contain an \`await\` expression or return a Promise.
     return { value: 42 };
 }
 `,
@@ -152,15 +152,16 @@ async function returnsPromise(): Promise<number> {
 }
 `,
 		`
-async function callsAsyncFunction() {
-    return fetch("/api");
+async function returnsPromiseFromCall() {
+    return Promise.resolve(42);
 }
 `,
 		`
 async function emptyFunction() {}
 `,
 		`
-const fn = async () => fetch("/api");
+const fn = async (condition: boolean) =>
+    condition ? Promise.resolve(42) : 42;
 `,
 		`
 async function conditionalReturn(condition: boolean) {
