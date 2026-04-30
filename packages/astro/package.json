@@ -26,7 +26,7 @@
 		"test": "vitest --project astro"
 	},
 	"dependencies": {
-		"@astrojs/compiler": "^3.0.1",
+		"@astrojs/compiler": "^4.0.0",
 		"@flint.fyi/astro-language": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
