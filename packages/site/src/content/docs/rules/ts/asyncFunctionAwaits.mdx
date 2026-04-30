@@ -10,10 +10,11 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="asyncFunctionAwaits" />
 
-Async functions always wrap their return value in a Promise, which adds overhead if you're not using await.
-An async function without await expressions may indicate incomplete implementation or leftover code after refactoring.
+Functions can be marked as `async` to allow `await` expressions used inside of them.
+The `async` keyword adds a small amount of conceptual and runtime overhead.
+An async function without `await` expressions may indicate incomplete implementation or leftover code after refactoring.
 
-The TypeScript-aware version of this rule also allows async functions that return Promises, since marking such functions as `async` ensures thrown errors are properly wrapped in rejected Promises.
+This rule reports on any function that is marked as `async` but neither includes an `await` nor returns a `Promise`.
 
 ## Examples
 
@@ -82,6 +83,9 @@ This rule is not configurable.
 
 If you intentionally use `async` functions without `await` to ensure thrown errors are wrapped in rejected Promises, you may want to disable this rule.
 This pattern is sometimes used when you want consistent error handling through Promise rejection rather than thrown exceptions.
+
+Alternately, if you are writing prototype code where many functions intentionally can be missing their implementation, this rule may get in your way.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
 
 ## Further Reading
 
