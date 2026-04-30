@@ -4848,7 +4848,8 @@
 		"flint": {
 			"name": "binNameCasing",
 			"plugin": "package-json",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
