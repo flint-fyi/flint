@@ -61,7 +61,8 @@
 		"flint": {
 			"name": "clientOnlyDirectiveValues",
 			"plugin": "astro",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
