@@ -888,6 +888,9 @@ importers:
       '@flint.fyi/spelling':
         specifier: workspace:^
         version: link:../spelling
+      '@flint.fyi/vitest':
+        specifier: workspace:^
+        version: link:../vitest
       '@types/react':
         specifier: catalog:site
         version: 19.2.14

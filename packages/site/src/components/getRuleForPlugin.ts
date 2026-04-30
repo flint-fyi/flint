@@ -5,6 +5,7 @@ import { node } from "@flint.fyi/node";
 import { performance } from "@flint.fyi/performance";
 import { flint } from "@flint.fyi/plugin-flint";
 import { spelling } from "@flint.fyi/spelling";
+import { vitest } from "@flint.fyi/vitest";
 import { type AnyRule, json, md, packageJson, ts, yaml } from "flint";
 
 const plugins = {
@@ -19,6 +20,7 @@ const plugins = {
 	performance,
 	spelling,
 	ts,
+	vitest,
 	yaml,
 };
 
