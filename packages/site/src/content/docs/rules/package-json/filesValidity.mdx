@@ -40,6 +40,14 @@ This rule checks that the `files` property is an array of non-empty strings.
 If you don't need compliance with npm's `files` field specification, you can disable this rule.
 For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
 
+## Related Rules
+
+- [filesPresence](/rules/package-json/filespresence) - Enforces that the `files` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `files`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#files)
+
 ## Equivalents in Other Linters
 
 <RuleEquivalents pluginId="package-json" ruleId="filesValidity" />

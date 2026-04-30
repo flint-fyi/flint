@@ -40,6 +40,14 @@ This rule checks that the `workspaces` property is an array of non-empty strings
 If you don't need compliance with npm's `workspacesValidity` field specification, you can disable this rule.
 For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
 
+## Related Rules
+
+- [workspacesPresence](/rules/package-json/workspacespresence) - Enforces that the `workspaces` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `workspaces`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#workspaces)
+
 ## Equivalents in Other Linters
 
 <RuleEquivalents pluginId="package-json" ruleId="workspacesValidity" />

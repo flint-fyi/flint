@@ -1,5 +1,21 @@
 # @flint/rule-tester
 
+## 0.16.1
+
+### Patch Changes
+
+- 4fc0eef: Pass host to rules.
+- 0702aa2: Introduce Volar.js meta-language.
+- 7d93f37: Fixed handling for zero-width ~ lines.
+- Updated dependencies [4fc0eef]
+- Updated dependencies [57fa268]
+- Updated dependencies [dde886f]
+- Updated dependencies [1539f14]
+- Updated dependencies [0702aa2]
+- Updated dependencies [cb7e8a8]
+- Updated dependencies [d3f5d17]
+  - @flint.fyi/core@0.21.0
+
 ## 0.16.0
 
 ### Minor Changes
