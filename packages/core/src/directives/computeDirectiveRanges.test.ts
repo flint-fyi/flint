@@ -20,6 +20,7 @@ function createDirectiveRange(beginLine: number, endLine = beginLine) {
 describe(computeDirectiveRanges, () => {
 	it("returns [] when no directives are provided", () => {
 		const actual = computeDirectiveRanges([]);
+
 		expect(actual).toEqual([]);
 	});
 

@@ -39,7 +39,7 @@ export default defineConfig({
 		},
 		{
 			files: vitest.files.all,
-			rules: vitest.presets.logicalStrict,
+			rules: [vitest.presets.logicalStrict, vitest.presets.stylisticStrict],
 		},
 		{
 			files: {

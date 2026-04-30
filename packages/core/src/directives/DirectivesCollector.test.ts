@@ -342,6 +342,7 @@ describe(DirectivesCollector, () => {
 
 			// First collect — no deferred next-line directives yet
 			const first = collector.collect();
+
 			expect(first.reports).toHaveLength(0);
 
 			// Add a deferred next-line that overlaps with the begin
@@ -349,6 +350,7 @@ describe(DirectivesCollector, () => {
 
 			// Second collect — must pick up the new deferred directive
 			const second = collector.collect();
+
 			expect(second.reports).toHaveLength(1);
 		});
 
@@ -360,6 +362,7 @@ describe(DirectivesCollector, () => {
 
 			// First collect — no begin block yet, so 0 reports
 			const first = collector.collect();
+
 			expect(first.reports).toHaveLength(0);
 
 			// Add a begin that covers line 5
@@ -367,6 +370,7 @@ describe(DirectivesCollector, () => {
 
 			// Second collect — line 5 is now covered by the begin, should report alreadyDisabled
 			const second = collector.collect();
+
 			expect(second.reports).toHaveLength(1);
 		});
 

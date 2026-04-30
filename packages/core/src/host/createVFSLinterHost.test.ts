@@ -352,8 +352,11 @@ describe(createVFSLinterHost, () => {
 			const onEvent = vi.fn();
 
 			using _ = host.watchFileSync("/root/file.txt", onEvent);
+
 			expect(onEvent).not.toHaveBeenCalled();
+
 			host.vfsUpsertFile("/root/file.txt", "content");
+
 			expect(onEvent).toHaveBeenCalledExactlyOnceWith("created");
 		});
 
@@ -406,6 +409,7 @@ describe(createVFSLinterHost, () => {
 			const onEvent = vi.fn();
 
 			using _ = host.watchFileSync("/root/file.txt", onEvent);
+
 			expect(onEvent).not.toHaveBeenCalled();
 
 			baseHost.vfsUpsertFile("/root/file.txt", "content");
@@ -445,6 +449,7 @@ describe(createVFSLinterHost, () => {
 
 			{
 				using _ = host.watchFileSync("/root/file.txt", vi.fn());
+
 				expect(dispose).not.toHaveBeenCalled();
 			}
 
@@ -523,9 +528,11 @@ describe(createVFSLinterHost, () => {
 				using _ = host.watchDirectorySync("/root", onEvent, {
 					recursive: false,
 				});
+
 				expect(onEvent).not.toHaveBeenCalled();
 
 				host.vfsUpsertFile("/root/file.txt", "new content");
+
 				expect(onEvent).toHaveBeenCalledExactlyOnceWith("/root/file.txt");
 			});
 
@@ -540,9 +547,11 @@ describe(createVFSLinterHost, () => {
 				using _ = host.watchDirectorySync("/root", onEvent, {
 					recursive: false,
 				});
+
 				expect(onEvent).not.toHaveBeenCalled();
 
 				host.vfsDeleteFile("/root/file.txt");
+
 				expect(onEvent).toHaveBeenCalledExactlyOnceWith("/root/file.txt");
 			});
 
@@ -557,9 +566,11 @@ describe(createVFSLinterHost, () => {
 				using _ = host.watchDirectorySync("/root", onEvent, {
 					recursive: false,
 				});
+
 				expect(onEvent).not.toHaveBeenCalled();
 
 				host.vfsDeleteFile("/root/nested/file.txt");
+
 				expect(onEvent).toHaveBeenCalledExactlyOnceWith("/root/nested");
 			});
 		});
@@ -594,6 +605,7 @@ describe(createVFSLinterHost, () => {
 				using _ = host.watchDirectorySync("/root", onEvent, {
 					recursive: true,
 				});
+
 				expect(onEvent).not.toHaveBeenCalled();
 
 				host.vfsUpsertFile("/root/nested/file.txt", "new content");
@@ -614,6 +626,7 @@ describe(createVFSLinterHost, () => {
 				using _ = host.watchDirectorySync("/root", onEvent, {
 					recursive: true,
 				});
+
 				expect(onEvent).not.toHaveBeenCalled();
 
 				host.vfsDeleteFile("/root/nested/file.txt");
@@ -660,6 +673,7 @@ describe(createVFSLinterHost, () => {
 				using _ = host.watchDirectorySync("/root/file.txt", vi.fn(), {
 					recursive: false,
 				});
+
 				expect(dispose).not.toHaveBeenCalled();
 			}
 
