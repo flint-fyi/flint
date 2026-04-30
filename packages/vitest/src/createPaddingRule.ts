@@ -143,8 +143,8 @@ export function createPaddingRule(about: VitestRuleAbout, targetName: string) {
 
 				if (
 					next &&
-					// TODO: File an investigation issue around EOF types
-					// @ts-expect-error -- AST types seem to be missing this?
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore -- https://github.com/flint-fyi/flint/issues/2711
 					next.kind !== ts.SyntaxKind.EndOfFileToken &&
 					!nodeIsTargetBlock(next)
 				) {
