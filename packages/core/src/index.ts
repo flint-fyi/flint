@@ -128,7 +128,6 @@ export type {
 	RuleTeardown,
 	RuleVisitor,
 	RuleVisitors,
-	UnsafeAnyRule,
 } from "./types/rules.ts";
 export type {
 	AnyOptionalSchema,
@@ -136,7 +135,7 @@ export type {
 	InferredOutputObject,
 	OptionalObjectSchema,
 } from "./types/shapes.ts";
-export type { Simplify, WithExitKeys } from "./types/visitors.ts";
+export type { WithExitKeys } from "./types/visitors.ts";
 export { binarySearch } from "./utils/arrays.ts";
 export {
 	getColumnAndLineOfPosition,
