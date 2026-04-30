@@ -1,5 +1,25 @@
 # @flint.fyi/package-json
 
+## 0.17.0
+
+### Minor Changes
+
+- 6d013fe: Added direct validity rules.
+- 94403c7: Added direct presence rules.
+- 6d013fe: Add in missing already-present validator rules.
+
+### Patch Changes
+
+- Updated dependencies [4fc0eef]
+- Updated dependencies [57fa268]
+- Updated dependencies [dde886f]
+- Updated dependencies [1539f14]
+- Updated dependencies [0702aa2]
+- Updated dependencies [cb7e8a8]
+- Updated dependencies [d3f5d17]
+  - @flint.fyi/core@0.21.0
+  - @flint.fyi/typescript-language@0.18.0
+
 ## 0.16.1
 
 ### Patch Changes

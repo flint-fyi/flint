@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/typescript-language",
-	"version": "0.17.0",
+	"version": "0.18.0",
 	"description": "[Experimental] TypeScript language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
