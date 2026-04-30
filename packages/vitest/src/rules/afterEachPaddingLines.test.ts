@@ -1,27 +1,26 @@
 import { ruleTester } from "../ruleTester.ts";
-import rule from "./afterAllPaddingLines.ts";
+import rule from "./afterEachPaddingLines.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
 const someText = 'abc';
-afterAll(() => {
+afterEach(() => {
 });
 describe('someText', () => {
   const something = 'abc';
   // A comment
-  afterAll(() => {
+  afterEach(() => {
     // stuff
   });
-  afterAll(() => {
+  afterEach(() => {
     // other stuff
   });
 });
-
 describe('someText', () => {
   const something = 'abc';
-  afterAll(() => {
+  afterEach(() => {
     // stuff
   });
 });
@@ -29,58 +28,56 @@ describe('someText', () => {
 			output: `
 const someText = 'abc';
 
-afterAll(() => {
+afterEach(() => {
 });
 
 describe('someText', () => {
   const something = 'abc';
 
   // A comment
-  afterAll(() => {
+  afterEach(() => {
     // stuff
   });
 
-  afterAll(() => {
+  afterEach(() => {
     // other stuff
   });
 });
-
 describe('someText', () => {
   const something = 'abc';
 
-  afterAll(() => {
+  afterEach(() => {
     // stuff
   });
 });
 `,
 			snapshot: `
 const someText = 'abc';
-afterAll(() => {
-~~~~~~~~
-This statement should be separated from a neighboring \`afterAll\` block by a blank line.
+afterEach(() => {
+~~~~~~~~~
+This statement should be separated from a neighboring \`afterEach\` block by a blank line.
 });
 describe('someText', () => {
 ~~~~~~~~
-This statement should be separated from a neighboring \`afterAll\` block by a blank line.
+This statement should be separated from a neighboring \`afterEach\` block by a blank line.
   const something = 'abc';
   // A comment
-  afterAll(() => {
-  ~~~~~~~~
-  This statement should be separated from a neighboring \`afterAll\` block by a blank line.
+  afterEach(() => {
+  ~~~~~~~~~
+  This statement should be separated from a neighboring \`afterEach\` block by a blank line.
     // stuff
   });
-  afterAll(() => {
-  ~~~~~~~~
-  This statement should be separated from a neighboring \`afterAll\` block by a blank line.
+  afterEach(() => {
+  ~~~~~~~~~
+  This statement should be separated from a neighboring \`afterEach\` block by a blank line.
     // other stuff
   });
 });
-
 describe('someText', () => {
   const something = 'abc';
-  afterAll(() => {
-  ~~~~~~~~
-  This statement should be separated from a neighboring \`afterAll\` block by a blank line.
+  afterEach(() => {
+  ~~~~~~~~~
+  This statement should be separated from a neighboring \`afterEach\` block by a blank line.
     // stuff
   });
 });
@@ -91,26 +88,25 @@ describe('someText', () => {
 		`
 const someText = 'abc';
 
-afterAll(() => {
+afterEach(() => {
 });
 
 describe('someText', () => {
   const something = 'abc';
 
   // A comment
-  afterAll(() => {
+  afterEach(() => {
     // stuff
   });
 
-  afterAll(() => {
+  afterEach(() => {
     // other stuff
   });
 });
-
 describe('someText', () => {
   const something = 'abc';
 
-  afterAll(() => {
+  afterEach(() => {
     // stuff
   });
 });

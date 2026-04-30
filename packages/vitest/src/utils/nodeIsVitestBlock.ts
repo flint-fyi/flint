@@ -16,10 +16,6 @@ const knownBlockNames = new Set([
 	"xtest",
 ]);
 
-export type VitestBlock = AST.CallExpression & {
-	// ...
-};
-
 export function nodeIsVitestBlock(node: AST.CallExpression) {
 	// TODO: Use a util like getStaticValue
 	// https://github.com/flint-fyi/flint/issues/1298

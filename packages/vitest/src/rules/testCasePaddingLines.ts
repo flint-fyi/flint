@@ -2,9 +2,10 @@ import { createBlockPaddingRule } from "../createBlockPaddingRule.ts";
 
 export default createBlockPaddingRule(
 	{
-		description: "Enforces padding around `afterAll` blocks.",
-		id: "afterAllPaddingLines",
+		description: "Enforces padding around `test` blocks.",
+		id: "testCasePaddingLines",
 		presets: ["stylisticStrict"],
 	},
-	"afterAll",
+	["test", "it", "fit", "xit", "xtest"],
+	{ blockName: "test" },
 );
