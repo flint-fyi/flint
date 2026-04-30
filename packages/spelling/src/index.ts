@@ -1,1 +1,1 @@
-export * from "./plugin.ts";
+export { spelling } from "./plugin.ts";

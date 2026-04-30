@@ -4,9 +4,14 @@ export {
 	type ExtractedDirective,
 } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 export { getTSNodeRange } from "./getTSNodeRange.ts";
-export * from "./language.ts";
-export type * from "./nodes.ts";
-export type { TypeScriptNodesByName } from "./nodes.ts";
+export {
+	NodeSyntaxKinds,
+	setVolarCreateFile,
+	throwUnknownLanguageExtension,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "./language.ts";
+export type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 export type * as AST from "./types/ast.ts";
 export type { Checker } from "./types/checker.ts";
 export { createRuleTesterTSConfig } from "./utils/createRuleTesterTSConfig.ts";
