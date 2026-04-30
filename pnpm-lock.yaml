@@ -876,12 +876,21 @@ importers:
       '@flint.fyi/comparisons':
         specifier: workspace:^
         version: link:../comparisons
+      '@flint.fyi/json':
+        specifier: workspace:^
+        version: link:../json
       '@flint.fyi/jsx':
         specifier: workspace:^
         version: link:../jsx
+      '@flint.fyi/md':
+        specifier: workspace:^
+        version: link:../md
       '@flint.fyi/node':
         specifier: workspace:^
         version: link:../node
+      '@flint.fyi/package-json':
+        specifier: workspace:^
+        version: link:../package-json
       '@flint.fyi/performance':
         specifier: workspace:^
         version: link:../performance
@@ -891,9 +900,15 @@ importers:
       '@flint.fyi/spelling':
         specifier: workspace:^
         version: link:../spelling
+      '@flint.fyi/ts':
+        specifier: workspace:^
+        version: link:../ts
       '@flint.fyi/vitest':
         specifier: workspace:^
         version: link:../vitest
+      '@flint.fyi/yaml':
+        specifier: workspace:^
+        version: link:../yaml
       '@types/react':
         specifier: catalog:site
         version: 19.2.14
@@ -909,9 +924,6 @@ importers:
       clsx:
         specifier: catalog:site
         version: 2.1.1
-      flint:
-        specifier: workspace:^
-        version: link:../flint
       konami-emoji-blast:
         specifier: catalog:site
         version: 0.6.0

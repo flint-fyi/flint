@@ -58,7 +58,6 @@ export default {
 		"packages/site": {
 			ignoreDependencies: [
 				// Needed for Twoslash
-				"@flint.fyi/core",
 				"@flint.fyi/typescript-language",
 				"zod",
 
