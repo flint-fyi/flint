@@ -143,6 +143,8 @@ export function createPaddingRule(about: VitestRuleAbout, targetName: string) {
 
 				if (
 					next &&
+					// TODO: File an investigation issue around EOF types
+					// @ts-expect-error -- AST types seem to be missing this?
 					next.kind !== ts.SyntaxKind.EndOfFileToken &&
 					!nodeIsTargetBlock(next)
 				) {
