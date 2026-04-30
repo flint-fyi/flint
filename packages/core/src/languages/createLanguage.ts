@@ -1,10 +1,9 @@
 import { debugForFile } from "debug-for-file";
 
 import type {
-	CreateRule,
 	FileAboutData,
-	FileDiskData,
 	Language,
+	LanguageCreateRule,
 	LanguageDefinition,
 } from "../types/languages.ts";
 import type { AnyRuleDefinition } from "../types/rules.ts";
@@ -12,42 +11,29 @@ import { makeDisposable } from "./makeDisposable.ts";
 
 const log = debugForFile(import.meta.filename);
 
-export function createLanguage<AstNodesByName, FileServices extends object>(
-	languageDefinition: LanguageDefinition<AstNodesByName, FileServices>,
-) {
+export function createLanguage<
+	AstNodesByName,
+	FileServices extends object = object,
+>(languageDefinition: LanguageDefinition<AstNodesByName, FileServices>) {
 	const language: Language<AstNodesByName, FileServices> = {
 		...languageDefinition,
 
-		createFileFactory() {
+		createFileFactory(host) {
 			log(
 				"Creating file factory for language: %s",
 				languageDefinition.about.name,
 			);
 
-			const fileFactoryDefinition = languageDefinition.createFileFactory();
+			const fileFactoryDefinition = languageDefinition.createFileFactory(host);
+
+			const fileFactory = {
+				...fileFactoryDefinition,
+				createFile: (data: FileAboutData) => {
+					return makeDisposable(fileFactoryDefinition.createFile(data));
+				},
+			};
 
 			log("Created file factory.");
-
-			const fileFactory = makeDisposable({
-				...fileFactoryDefinition,
-				prepareFromDisk: (data: FileAboutData) => {
-					const { file, ...rest } = fileFactoryDefinition.prepareFromDisk(data);
-
-					return {
-						file: makeDisposable(file),
-						...rest,
-					};
-				},
-				prepareFromVirtual: (data: FileDiskData) => {
-					const { file, ...rest } =
-						fileFactoryDefinition.prepareFromVirtual(data);
-
-					return {
-						file: makeDisposable(file),
-						...rest,
-					};
-				},
-			});
 
 			return fileFactory;
 		},
@@ -57,7 +43,7 @@ export function createLanguage<AstNodesByName, FileServices extends object>(
 				...ruleDefinition,
 				language,
 			};
-		}) as CreateRule<AstNodesByName, FileServices>,
+		}) as LanguageCreateRule<AstNodesByName, FileServices>,
 	};
 
 	return language;

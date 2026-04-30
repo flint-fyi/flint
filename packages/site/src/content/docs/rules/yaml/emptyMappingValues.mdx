@@ -1,0 +1,67 @@
+---
+description: "Reports empty mapping values."
+title: "emptyMappingValues"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="yaml" rule="emptyMappingValues" />
+
+Empty values in YAML mappings can lead to unexpected runtime behavior.
+Parsers may interpret them as null, empty strings, or other values depending on the implementation.
+If an empty value is intentional, use an explicit `null` to clarify intent.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```yaml
+name:
+```
+
+```yaml
+config:
+  host:
+  port: 8080
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```yaml
+name: null
+```
+
+```yaml
+name: ""
+```
+
+```yaml
+config:
+  host: localhost
+  port: 8080
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project intentionally uses empty mapping values to represent null values and you have consistent parser behavior, you may not need this rule.
+Projects with established conventions around implicit null values in YAML may also choose to disable this rule.
+
+## Further Reading
+
+- [YAML Specification - Mapping](https://yaml.org/spec/1.2.2/#mapping)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="yaml" ruleId="emptyMappingValues" />

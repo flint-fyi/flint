@@ -1,16 +1,19 @@
+import {
+	type AST,
+	isFunction,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import { isFunction } from "../utils/isFunction.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using `.apply()` or `.call()` or  when the context (`this` value) provides no benefit.",
 		id: "functionCurryingRedundancy",
-		preset: "logical",
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryCall: {
@@ -87,23 +90,24 @@ export default typescriptLanguage.createRule({
 function createApplyFixText(
 	functionExpression: string,
 	methodArguments: AST.Expression[],
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
-	if (methodArguments.length > 0) {
-		const argsArray = nullThrows(
-			methodArguments[0],
-			"First argument is expected to be present by prior length check",
-		);
-		return `${functionExpression}(...${argsArray.getText(sourceFile)})`;
-	} else {
+	if (!methodArguments.length) {
 		return `${functionExpression}()`;
 	}
+
+	const argsArray = nullThrows(
+		methodArguments[0],
+		"First argument is expected to be present by prior length check",
+	);
+
+	return `${functionExpression}(...${argsArray.getText(sourceFile)})`;
 }
 
 function createCallFixText(
 	functionExpression: string,
 	methodArguments: AST.Expression[],
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	const argsText = methodArguments
 		.map((arg) => arg.getText(sourceFile))

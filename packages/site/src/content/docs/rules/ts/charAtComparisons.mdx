@@ -1,0 +1,67 @@
+---
+description: "Reports comparing charAt() results with strings longer than one character."
+title: "charAtComparisons"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="charAtComparisons" />
+
+The `charAt` method returns a string of exactly one character.
+If the return value is compared with a string of length greater than one, the comparison will always evaluate to the same result.
+Equality comparisons (`===`, `==`) will always be `false`, and inequality comparisons (`!==`, `!=`) will always be `true`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+text.charAt(0) === "ab";
+```
+
+```ts
+"abc" === text.charAt(0);
+```
+
+```ts
+text.charAt(0) !== "hello";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+text.charAt(0) === "a";
+```
+
+```ts
+text.slice(0, 2) === "ab";
+```
+
+```ts
+text.startsWith("ab");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+This rule catches a specific programming error with no legitimate use cases.
+There is no reason to disable this rule.
+
+## Further Reading
+
+- [MDN documentation on String.prototype.charAt()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charAt)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="charAtComparisons" />

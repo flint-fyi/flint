@@ -1,0 +1,86 @@
+---
+description: "Reports functions that wrap native coercion functions like `String`, `Number`, `BigInt`, `Boolean`, or `Symbol`."
+title: "builtinCoercions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="builtinCoercions" />
+
+JavaScript's built-in coercion functions `Boolean`, `BigInt`, `Number`, `String`, and `Symbol` can be passed directly where a function is expected.
+Wrapping them in another function adds unnecessary indirection and reduces code clarity.
+
+This rule also detects identity functions used as callbacks to array filtering methods like `.filter()`, `.some()`, `.every()`, `.find()`, `.findIndex()`, `.findLast()`, and `.findLastIndex()`.
+These identity functions are equivalent to passing `Boolean` directly, which filters out falsy values.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const toString = (value) => String(value);
+```
+
+```ts
+const toNumber = function (value) {
+	return Number(value);
+};
+```
+
+```ts
+const truthy = values.filter((value) => value);
+```
+
+```ts
+const hasTruthy = values.some((item) => item);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const toString = String;
+```
+
+```ts
+const toNumber = Number;
+```
+
+```ts
+const truthy = values.filter(Boolean);
+```
+
+```ts
+const hasTruthy = values.some(Boolean);
+```
+
+```ts
+const transform = (value) => String(value) + "!";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the explicit function wrapper style for consistency with other callbacks that do transform their arguments, you may disable this rule.
+Some codebases may prefer the visual consistency of always using arrow functions in callbacks, even when a direct function reference would work.
+
+## Further Reading
+
+- [MDN: String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)
+- [MDN: Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
+- [MDN: Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+- [MDN: Array.prototype.filter()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="builtinCoercions" />

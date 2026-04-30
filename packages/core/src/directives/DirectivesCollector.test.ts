@@ -4,16 +4,16 @@ import type { NormalizedReportRangeObject } from "../types/reports.ts";
 import { DirectivesCollector } from "./DirectivesCollector.ts";
 import { directiveReports } from "./reports/directiveReports.ts";
 
-function createRange(forPosition: number) {
+function createRange(forPosition: number, beginLine = 0, endLine = 1) {
 	return {
 		begin: {
 			column: 0,
-			line: 0,
+			line: beginLine,
 			raw: forPosition,
 		},
 		end: {
 			column: 0,
-			line: 1,
+			line: endLine,
 			raw: forPosition + 1,
 		},
 	} satisfies NormalizedReportRangeObject;
@@ -100,6 +100,26 @@ describe(DirectivesCollector, () => {
 						"b",
 					),
 				],
+			});
+		});
+
+		it("deduplicates repeated selections in a single directive", () => {
+			const collector = new DirectivesCollector(0);
+			const range = createRange(0);
+
+			collector.add(range, "a a b", "disable-file");
+
+			const actual = collector.collect();
+
+			expect(actual).toEqual({
+				directives: [
+					{
+						range,
+						selections: ["a", "b"],
+						type: "disable-file",
+					},
+				],
+				reports: [],
 			});
 		});
 
@@ -289,6 +309,93 @@ describe(DirectivesCollector, () => {
 						"b",
 					),
 				],
+			});
+		});
+
+		it("does not report already disabled for multiple disable-next-line directives sharing an extended line", () => {
+			const collector = new DirectivesCollector(0);
+
+			collector.add(createRange(0, 0, 2), "aaa", "disable-next-line");
+			collector.add(createRange(2, 1, 2), "aaa", "disable-next-line");
+
+			expect(collector.collect()).toEqual({
+				directives: [
+					{
+						range: createRange(0, 0, 2),
+						selections: ["aaa"],
+						type: "disable-next-line",
+					},
+					{
+						range: createRange(2, 1, 2),
+						selections: ["aaa"],
+						type: "disable-next-line",
+					},
+				],
+				reports: [],
+			});
+		});
+
+		it("validates newly added deferred directives on a subsequent collect() after more add() calls", () => {
+			const collector = new DirectivesCollector(0);
+
+			collector.add(createRange(0, 0, 0), "aaa", "disable-lines-begin");
+
+			// First collect — no deferred next-line directives yet
+			const first = collector.collect();
+			expect(first.reports).toHaveLength(0);
+
+			// Add a deferred next-line that overlaps with the begin
+			collector.add(createRange(4, 2, 4), "aaa", "disable-next-line");
+
+			// Second collect — must pick up the new deferred directive
+			const second = collector.collect();
+			expect(second.reports).toHaveLength(1);
+		});
+
+		it("reports already disabled when a begin directive is added after a deferred next-line was already collected", () => {
+			const collector = new DirectivesCollector(0);
+
+			// Add a deferred next-line targeting line 5
+			collector.add(createRange(0, 0, 4), "aaa", "disable-next-line");
+
+			// First collect — no begin block yet, so 0 reports
+			const first = collector.collect();
+			expect(first.reports).toHaveLength(0);
+
+			// Add a begin that covers line 5
+			collector.add(createRange(6, 3, 3), "aaa", "disable-lines-begin");
+
+			// Second collect — line 5 is now covered by the begin, should report alreadyDisabled
+			const second = collector.collect();
+			expect(second.reports).toHaveLength(1);
+		});
+
+		it("does not report already disabled when an intervening end closes the selection before the target line", () => {
+			const collector = new DirectivesCollector(0);
+
+			collector.add(createRange(0, 0, 0), "aaa", "disable-lines-begin");
+			collector.add(createRange(2, 1, 3), "aaa", "disable-next-line");
+			collector.add(createRange(4, 2, 2), "aaa", "disable-lines-end");
+
+			expect(collector.collect()).toEqual({
+				directives: [
+					{
+						range: createRange(0, 0, 0),
+						selections: ["aaa"],
+						type: "disable-lines-begin",
+					},
+					{
+						range: createRange(2, 1, 3),
+						selections: ["aaa"],
+						type: "disable-next-line",
+					},
+					{
+						range: createRange(4, 2, 2),
+						selections: ["aaa"],
+						type: "disable-lines-end",
+					},
+				],
+				reports: [],
 			});
 		});
 	});

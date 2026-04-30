@@ -1,19 +1,22 @@
+import {
+	typescriptLanguage,
+	unwrapParenthesizedNode,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
-
-import { typescriptLanguage } from "../language.ts";
-import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
 
 const operatorStrings = new Map([
 	[SyntaxKind.InKeyword, "in"],
 	[SyntaxKind.InstanceOfKeyword, "instanceof"],
 ]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports negating the left operand of `in` or `instanceof` relations.",
 		id: "unsafeNegations",
-		preset: "untyped",
+		presets: ["javascript"],
 	},
 	messages: {
 		preferNegatingRelation: {
@@ -34,7 +37,7 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					const left = unwrapParenthesizedExpression(node.left);
+					const left = unwrapParenthesizedNode(node.left);
 					if (
 						left.kind !== SyntaxKind.PrefixUnaryExpression ||
 						left.operator !== SyntaxKind.ExclamationToken

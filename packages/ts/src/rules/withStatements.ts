@@ -1,12 +1,14 @@
-import { typescriptLanguage } from "../language.ts";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
 const withKeyword = "with";
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using with statements",
 		id: "withStatements",
-		preset: "untyped",
+		presets: ["javascript"],
 	},
 	messages: {
 		withStatement: {
@@ -24,12 +26,12 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		return {
 			visitors: {
-				WithStatement: (node) => {
+				WithStatement: (node, { sourceFile }) => {
 					context.report({
 						message: "withStatement",
 						range: {
-							begin: node.getStart(),
-							end: node.getStart() + withKeyword.length,
+							begin: node.getStart(sourceFile),
+							end: node.getStart(sourceFile) + withKeyword.length,
 						},
 					});
 				},

@@ -56,16 +56,14 @@ function resolveReportedSuggestionForFiles(
 	}
 
 	return Object.fromEntries(
-		testCaseNormalized.suggestions
-			.map((suggestionExpected): [string, TestSuggestionFileCase[]][] => {
+		testCaseNormalized.suggestions.flatMap(
+			(suggestionExpected): [string, TestSuggestionFileCase[]][] => {
 				return Object.entries(suggestionExpected.files).map(
 					([filePath, suggestionCasesExpected]) => {
 						return [
 							filePath,
 							suggestionCasesExpected.map((suggestionCaseExpected) => {
-								const changes = suggestionReported.files[filePath]?.(
-									suggestionCaseExpected.original,
-								);
+								const changes = suggestionReported.files[filePath];
 								return {
 									original: suggestionCaseExpected.original,
 									updated: changes
@@ -79,7 +77,7 @@ function resolveReportedSuggestionForFiles(
 						];
 					},
 				);
-			})
-			.flat(),
+			},
+		),
 	);
 }

@@ -1,5 +1,73 @@
 # @flint/ts
 
+## 0.18.0
+
+### Minor Changes
+
+- dce37c5: Add rules equalityOperators and nullishCheckStyle
+
+### Patch Changes
+
+- 61d1fdf: Add auto-fixer for regexIgnoreCaseFlags rule.
+- ea6be9e: Enhance error handling by preventing undefined throws.
+- ced10a1: Report TypeScript intrinsic error types separately from `any`.
+- e2c96c6: Avoid reporting potentially-empty regex capturing groups.
+- Updated dependencies [4fc0eef]
+- Updated dependencies [57fa268]
+- Updated dependencies [dde886f]
+- Updated dependencies [1539f14]
+- Updated dependencies [0702aa2]
+- Updated dependencies [cb7e8a8]
+- Updated dependencies [d3f5d17]
+  - @flint.fyi/core@0.21.0
+  - @flint.fyi/typescript-language@0.18.0
+
+## 0.17.0
+
+### Minor Changes
+
+- b0c6505: Add `javascript` and `typescript` file selectors, and add missing `cts` and `mts` extensions to `all`.
+- 506602f: Change `untyped` preset name to `javascript`.
+
+### Patch Changes
+
+- c723008: Switch `octalEscapes` to javascript.
+- b6609d7: Use better ternary handling in `nullishCoalescingOperators`.
+- bc632d1: Remove `regexNamedCaptureGroups` and `regexUnicodeEscapes` from presets.
+- 7403874: Also validate output when testing rules.
+- 65f983c: Fix assorted bugs in regex rules.
+- Updated dependencies [4c99c11]
+- Updated dependencies [b3a637a]
+- Updated dependencies [e257ec4]
+- Updated dependencies [d612d50]
+- Updated dependencies [4b32a64]
+- Updated dependencies [fe76156]
+- Updated dependencies [db34436]
+- Updated dependencies [f2f2c8b]
+- Updated dependencies [442a3f4]
+- Updated dependencies [5c64fbb]
+- Updated dependencies [3eaea9e]
+- Updated dependencies [267fe8d]
+- Updated dependencies [011fbf2]
+  - @flint.fyi/core@0.20.0
+  - @flint.fyi/typescript-language@0.17.0
+
+## 0.16.0
+
+### Minor Changes
+
+- 3353692: feat: split languages into dedicated packages
+
+### Patch Changes
+
+- 6a5e553: feat(core): add RuleCreator class
+- Updated dependencies [6a5e553]
+- Updated dependencies [2fb9715]
+- Updated dependencies [3353692]
+- Updated dependencies [3561386]
+  - @flint.fyi/core@0.19.0
+  - @flint.fyi/typescript-language@0.16.0
+
 ## 0.15.1
 
 ### Patch Changes

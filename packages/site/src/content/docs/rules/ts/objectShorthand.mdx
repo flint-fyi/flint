@@ -1,0 +1,140 @@
+---
+description: "Object property and method definitions can use shorthand syntax when the key matches the value identifier or when a function expression is assigned."
+title: "objectShorthand"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="objectShorthand" />
+
+ES2015 introduced shorthand syntax for object literals, allowing more concise property and method definitions.
+When a property value is an identifier with the same name as the property key, or when a function expression is assigned to a property, shorthand syntax can be used.
+
+## Examples
+
+### Property Shorthand
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const name = "Alice";
+const user = { name: name };
+```
+
+```ts
+const value = 42;
+const settings = { value: value, other: true };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const name = "Alice";
+const user = { name };
+```
+
+```ts
+const value = 42;
+const settings = { value, other: true };
+```
+
+</TabItem>
+</Tabs>
+
+### Method Shorthand
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const config = {
+	handler: function () {
+		return "result";
+	},
+};
+```
+
+```ts
+const service = {
+	load: async function () {
+		return await Promise.resolve("data");
+	},
+};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const config = {
+	handler() {
+		return "result";
+	},
+};
+```
+
+```ts
+const service = {
+	async load() {
+		return await Promise.resolve("data");
+	},
+};
+```
+
+</TabItem>
+</Tabs>
+
+### Generator Methods
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const iterator = {
+	values: function* () {
+		yield 1;
+		yield 2;
+	},
+};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const iterator = {
+	*values() {
+		yield 1;
+		yield 2;
+	},
+};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project targets environments that don't support ES2015 shorthand syntax, this rule should be disabled.
+
+Arrow functions used as property values that rely on lexical `this`, `arguments`, `super`, or `new.target` bindings are not flagged by this rule, as converting them to method shorthand would change their behavior.
+
+Some codebases prefer explicit property assignments for consistency or clarity, particularly when mixing shorthand and longform syntax in the same object literal.
+
+## Further Reading
+
+- [MDN: Shorthand property names](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#property_definitions)
+- [MDN: Shorthand method definitions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="objectShorthand" />

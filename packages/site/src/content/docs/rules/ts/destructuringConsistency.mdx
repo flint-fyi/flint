@@ -1,0 +1,80 @@
+---
+description: "Use destructured variables over properties for consistency."
+title: "destructuringConsistency"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="destructuringConsistency" />
+
+After destructuring properties from an object, access those properties through the destructured variables rather than the original object.
+Mixing destructured variables with property access on the same object leads to inconsistent code.
+
+This rule reports property accesses that use a previously destructured property.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const obj = { a: 1, b: 2 };
+const { a } = obj;
+console.log(obj.a);
+```
+
+```ts
+const data = { name: "test", value: 10 };
+const { name, value } = data;
+console.log(data.name);
+```
+
+```ts
+const config = { port: 3000, host: "localhost" };
+const { port } = config;
+const url = config.host + ":" + config.port;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const obj = { a: 1, b: 2 };
+const { a } = obj;
+console.log(a);
+```
+
+```ts
+const data = { name: "test", value: 10 };
+const { name, value } = data;
+console.log(name);
+```
+
+```ts
+const obj = { a: 1, b: 2 };
+const { a } = obj;
+console.log(obj.b);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase intentionally mixes destructured access with property access for clarity or other reasons, you may disable this rule.
+Some patterns may require accessing the original object even after destructuring.
+
+## Further Reading
+
+- [MDN documentation on Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="destructuringConsistency" />

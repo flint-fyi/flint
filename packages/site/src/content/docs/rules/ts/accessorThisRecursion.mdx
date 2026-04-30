@@ -1,0 +1,81 @@
+---
+description: "Prevent recursive access to this within getters and setters."
+title: "accessorThisRecursion"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="accessorThisRecursion" />
+
+Accessing `this.propertyName` inside a getter or setter for `propertyName` triggers that same accessor again, causing infinite recursion and a stack overflow error at runtime.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Example {
+	get name() {
+		return this.name;
+	}
+
+	set value(newValue: number) {
+		this.value = newValue;
+	}
+}
+
+const obj = {
+	get count() {
+		return this.count;
+	},
+};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Example {
+	private _name: string = "";
+	private _value: number = 0;
+
+	get name() {
+		return this._name;
+	}
+
+	set value(newValue: number) {
+		this._value = newValue;
+	}
+}
+
+const obj = {
+	_count: 0,
+	get count() {
+		return this._count;
+	},
+};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+There's no reason to disable this rule, as recursive accessor access always causes a runtime error.
+
+## Further Reading
+
+- [MDN: getter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get)
+- [MDN: setter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="accessorThisRecursion" />

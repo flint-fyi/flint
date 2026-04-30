@@ -1,0 +1,76 @@
+---
+description: "Disallow using the delete operator on computed key expressions."
+title: "dynamicDeletes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="dynamicDeletes" />
+
+Deleting dynamically computed keys can be dangerous and is often not well optimized.
+Using the `delete` operator on keys that aren't runtime constants could be a sign you're using the wrong data structures.
+
+Consider using a `Map` or `Set` if you're using an object as a key-value collection.
+Dynamically adding and removing keys from objects can cause edge case bugs related to hidden properties and non-configurable properties.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const key = "property";
+delete obj[key];
+```
+
+```ts
+delete obj[getKey()];
+```
+
+```ts
+const i = 0;
+delete arr[i];
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+delete obj.property;
+```
+
+```ts
+delete obj["literal"];
+```
+
+```ts
+delete obj[0];
+```
+
+```ts
+const map = new Map<string, number>();
+map.delete("key");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+When you know your keys are safe to delete and you've considered the performance and safety implications, you may disable this rule for those specific situations.
+
+## Further Reading
+
+- [MDN documentation on the delete operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete)
+- [MDN documentation on Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="dynamicDeletes" />

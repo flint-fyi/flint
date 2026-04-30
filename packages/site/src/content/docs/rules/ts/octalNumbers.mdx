@@ -36,14 +36,20 @@ const numbers = [01, 02, 03, 04, 05, 06, 07];
 const permissions = 0o755; // Clearly octal: 493 in decimal
 const value = 0o77; // Clearly octal: 63 in decimal
 const numbers = [0o1, 0o2, 0o3, 0o4, 0o5, 0o6, 0o7];
+```
 
+```ts
 // Or use decimal if you meant the decimal value
 const permissions = 755; // Clearly decimal
 const value = 77; // Clearly decimal
+```
 
+```ts
 // The number zero is allowed
 const zero = 0;
+```
 
+```ts
 // Other number formats are allowed
 const decimal = 123;
 const hex = 0xff;

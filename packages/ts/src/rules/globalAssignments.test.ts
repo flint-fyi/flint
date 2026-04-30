@@ -107,6 +107,14 @@ Read-only global variables should not be reassigned or modified.
 			code: `
 window = {};
 `,
+			files: {
+				"tsconfig.json": `{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"lib": ["esnext", "DOM"]
+	}
+}`,
+			},
 			snapshot: `
 window = {};
 ~~~~~~

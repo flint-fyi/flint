@@ -1,0 +1,89 @@
+---
+description: "Reports using `.length` or `Infinity` as the `deleteCount` or `skipCount` argument of `Array#splice()` or `Array#toSpliced()`."
+title: "arrayDeleteUnnecessaryCounts"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayDeleteUnnecessaryCounts" />
+
+When calling `Array#splice(start, deleteCount)` or `Array#toSpliced(start, skipCount)`, omitting the second argument will delete or skip all elements after the start index.
+Using `.length` or `Infinity` as this argument is redundant and makes the code less clear.
+
+This rule reports when:
+
+- The array's `.length` property is passed as the second argument
+- `Infinity` or `Number.POSITIVE_INFINITY` is passed as the second argument
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const array: number[];
+array.splice(1, array.length);
+```
+
+```ts
+declare const array: number[];
+array.splice(0, Infinity);
+```
+
+```ts
+declare const array: number[];
+array.splice(0, Number.POSITIVE_INFINITY);
+```
+
+```ts
+declare const array: number[];
+array.toSpliced(1, array.length);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const array: number[];
+array.splice(1);
+```
+
+```ts
+declare const array: number[];
+array.splice(1, 2);
+```
+
+```ts
+declare const array: number[];
+array.splice(1, array.length - 1);
+```
+
+```ts
+declare const other: number[];
+declare const array: number[];
+array.splice(1, other.length);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the explicit style of passing `.length` or `Infinity` to make the intent clearer, you can disable this rule.
+Some teams may find the explicit version more readable, especially for developers less familiar with the splice method's default behavior.
+
+## Further Reading
+
+- [MDN: Array.prototype.splice()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice)
+- [MDN: Array.prototype.toSpliced()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSpliced)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayDeleteUnnecessaryCounts" />

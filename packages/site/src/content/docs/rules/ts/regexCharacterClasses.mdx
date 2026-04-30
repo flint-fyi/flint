@@ -1,0 +1,90 @@
+---
+description: "Reports regex alternations that can be simplified to character classes."
+title: "regexCharacterClasses"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexCharacterClasses" />
+
+Character classes in regular expressions are more efficient than alternations because they don't require backtracking.
+When multiple single-character alternatives are used in a regex pattern, they can be combined into a character class for better performance and readability.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a|b|c/;
+```
+
+```ts
+const digits = /1|2|3|4|5/;
+```
+
+```ts
+const mixed = /a|b|[cd]/;
+```
+
+```ts
+const withSets = /\w|\d|x/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[abc]/;
+```
+
+```ts
+const digits = /[12345]/;
+```
+
+```ts
+const mixed = /[abcd]/;
+```
+
+```ts
+const withSets = /[\w\dx]/;
+```
+
+```ts
+// Two alternatives are allowed (below the default threshold)
+const twoChars = /a|b/;
+```
+
+```ts
+// Multi-character alternatives cannot be simplified
+const multiChar = /ab|cd/;
+```
+
+```ts
+// Alternations with word boundaries or other assertions
+const withBoundary = /a|b|c\b/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the readability of explicit alternations over character classes, or if your codebase has specific conventions around regex formatting, you might prefer to disable this rule.
+Some developers find alternations easier to read when the alternatives represent distinct concepts rather than a set of characters.
+
+## Further Reading
+
+- [MDN: Regular expressions - Character classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Character_classes)
+- [MDN: Regular expressions - Disjunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Disjunction)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexCharacterClasses" />

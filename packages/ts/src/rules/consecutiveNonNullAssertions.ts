@@ -1,12 +1,13 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports unnecessary extra non-null assertions.",
 		id: "consecutiveNonNullAssertions",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		consecutiveNonNullAssertion: {
@@ -26,18 +27,19 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					const range = {
-						begin: node.end - 1,
-						end: node.parent.end,
-					};
-
 					context.report({
 						fix: {
-							range,
+							range: {
+								begin: node.end,
+								end: node.parent.end,
+							},
 							text: "",
 						},
 						message: "consecutiveNonNullAssertion",
-						range,
+						range: {
+							begin: node.end - 1,
+							end: node.parent.end,
+						},
 					});
 				},
 			},

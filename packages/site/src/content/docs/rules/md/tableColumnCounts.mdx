@@ -1,0 +1,79 @@
+---
+description: "Reports table rows with column counts that don't match the header."
+title: "tableColumnCounts"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="md" rule="tableColumnCounts" />
+
+In Markdown flavors that support tables, data rows should not have more cells than the header row.
+When a data row has more cells than the header, extra cells can lead to lost data or rendering issues.
+This rule helps ensure table consistency by preventing data rows from exceeding the header's column count.
+
+Note that rows with fewer cells than the header are allowed, as they render correctly with empty cells.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```markdown
+| Head1 | Head2 |
+| ----- | ----- | ---- |
+| R1C1  | R1C2  | R1C3 |
+```
+
+```markdown
+| A   |
+| --- | --- |
+| 1   | 2   |
+```
+
+```markdown
+| Header | Header | Header |
+| ------ | ------ | ------ | ----- |
+| Cell   | Cell   | Cell   | Extra |
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```markdown
+| Header | Header |
+| ------ | ------ |
+| Cell   | Cell   |
+| Cell   | Cell   |
+```
+
+```markdown
+| Header | Header | Header |
+| ------ | ------ | ------ |
+| Cell   | Cell   |        |
+```
+
+```markdown
+| Col A | Col B | Col C |
+| ----- | ----- | ----- |
+| 1     |       | 3     |
+| 4     | 5     |
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you have a non-standard Markdown processing pipeline that handles tables with extra cells correctly, you might choose to disable this rule.
+However, adhering to this rule is recommended for typical GFM rendering and data consistency.
+
+## Further Reading
+
+- [GitHub Flavored Markdown Tables](https://github.github.com/gfm/#tables-extension-)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="md" ruleId="tableColumnCounts" />

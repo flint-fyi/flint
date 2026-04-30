@@ -1,10 +1,10 @@
-import { formatReportPrimary, hasFix } from "@flint.fyi/core";
+import { formatReport, hasFix } from "@flint.fyi/core";
 import { makeAbsolute } from "@flint.fyi/utils";
-import { styleText } from "node:util";
+import chalk from "chalk";
 import { textTable } from "text-table-fast";
 
 import { presentHeader } from "./shared/header.ts";
-import { presentDiagnostics } from "./shared/presentDiagnostics.ts";
+import { presentLanguageReports } from "./shared/presentLanguageReports.ts";
 import { presentSummary } from "./shared/summary.ts";
 import type { PresenterFactory } from "./types.ts";
 
@@ -23,23 +23,22 @@ export const briefPresenterFactory: PresenterFactory = {
 				counts.fixable += reports.filter(hasFix).length;
 
 				yield "\n";
-				yield styleText("underline", makeAbsolute(file.filePath));
+				yield chalk.underline(makeAbsolute(file.filePath));
 				yield "\n";
 
 				yield textTable(
 					reports
-						.sort((a, b) =>
+						.toSorted((a, b) =>
 							a.range.begin.line === b.range.begin.line
 								? a.range.begin.column - b.range.begin.column
 								: a.range.begin.line - b.range.begin.line,
 						)
 						.map((report) => [
-							styleText(
-								"gray",
+							chalk.gray(
 								`  ${report.range.begin.line + 1}:${report.range.begin.column + 1}`,
 							),
-							formatReportPrimary(report),
-							styleText("yellow", report.about.id),
+							formatReport(report.data, report.message.primary),
+							chalk.yellow(report.about.id),
 							"\n",
 						]),
 				);
@@ -48,7 +47,7 @@ export const briefPresenterFactory: PresenterFactory = {
 			},
 			*summarize(summaryContext) {
 				yield* presentSummary(counts, summaryContext);
-				yield* presentDiagnostics(summaryContext.lintResults.filesResults);
+				yield* presentLanguageReports(summaryContext.lintResults.filesResults);
 			},
 		};
 	},

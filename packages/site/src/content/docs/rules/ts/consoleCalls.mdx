@@ -1,0 +1,55 @@
+---
+description: "Console method calls should not be used in production code."
+title: "consoleCalls"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="consoleCalls" />
+
+Console methods like `console.log`, `console.warn`, and `console.error` are useful during development but should typically be removed before shipping to production.
+They can expose sensitive information to users and clutter the browser console.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function processUser(user: User) {
+	console.log("Processing user:", user);
+	return user.name;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function processUser(user: User) {
+	return user.name;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project intentionally uses console methods for logging in production, such as in a Node.js server application, you might choose to disable this rule.
+You might also disable it if you have a build step that strips console calls from production builds.
+
+## Further Reading
+
+- [MDN documentation on `console`](https://developer.mozilla.org/en-US/docs/Web/API/Console)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="consoleCalls" />

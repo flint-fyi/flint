@@ -1,0 +1,67 @@
+---
+description: "Reports inconsistent types when spreading a ternary in an array literal."
+title: "arrayTernarySpreadingConsistency"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayTernarySpreadingConsistency" />
+
+When spreading a ternary expression in an array literal, prefer using consistent types for both branches.
+Mixing arrays with empty strings as fallbacks reduces code clarity.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const condition = true;
+const result = [1, ...(condition ? [2, 3] : "")];
+```
+
+```ts
+const flag = false;
+const items = [...(flag ? "abc" : [])];
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const condition = true;
+const result = [1, ...(condition ? [2, 3] : [])];
+```
+
+```ts
+const flag = false;
+const items = [...(flag ? "abc" : "")];
+```
+
+```ts
+const value = true;
+const array = [0, ...(value ? [1] : [2])];
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use mixed types in ternary spreads for specific edge cases, or if your codebase has established patterns that mix array and string types, you may want to disable this rule.
+
+## Further Reading
+
+- [MDN: Spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
+- [MDN: Conditional (ternary) operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayTernarySpreadingConsistency" />

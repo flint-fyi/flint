@@ -1,0 +1,76 @@
+---
+description: "Prefer assignment operator shorthand where possible."
+title: "operatorAssignmentShorthand"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="operatorAssignmentShorthand" />
+
+JavaScript provides shorthand operators that combine variable assignment and mathematical operations.
+These operators make code more concise and express intent more clearly.
+
+For example, `x = x + y` can be written as `x += y`.
+This rule applies to the operators `+=`, `-=`, `*=`, `/=`, `%=`, `**=`, `<<=`, `>>=`, `>>>=`, `&=`, `^=`, and `|=`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+let value = 0;
+value = value + 1;
+```
+
+```ts
+let count = 5;
+count = count * 2;
+```
+
+```ts
+const object = { property: 0 };
+object.property = object.property - 1;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+let value = 0;
+value += 1;
+```
+
+```ts
+let count = 5;
+count *= 2;
+```
+
+```ts
+const object = { property: 0 };
+object.property -= 1;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support environments that do not have all assignment operators, you may need to avoid using some shorthand operators.
+You may also prefer the more explicit expanded form if you find it more readable in specific cases.
+
+## Further Reading
+
+- [MDN: Assignment operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Assignment)
+- [ESLint: operator-assignment](https://eslint.org/docs/latest/rules/operator-assignment)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="operatorAssignmentShorthand" />

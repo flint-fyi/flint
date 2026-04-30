@@ -1,0 +1,68 @@
+---
+description: "Reports using `.filter()[0]` instead of `.find()` when looking for a single element."
+title: "arrayFinds"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayFinds" />
+
+When searching for the first item in an array matching a condition, using `.filter(...)[0]` is less efficient than using `.find(...)`.
+The `.find()` method stops searching after finding the first match, whereas `.filter()` iterates through the entire array.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const values = [1, 2, 3, 4, 5];
+const first = values.filter((value) => value > 3)[0];
+```
+
+```ts
+const users = [{ name: "Alice" }, { name: "Bob" }];
+const user = users.filter((user) => user.name === "Alice")[0];
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const values = [1, 2, 3, 4, 5];
+const first = values.find((value) => value > 3);
+```
+
+```ts
+const users = [{ name: "Alice" }, { name: "Bob" }];
+const user = users.find((user) => user.name === "Alice");
+```
+
+```ts
+const values = [1, 2, 3, 4, 5];
+const allPositive = values.filter((value) => value > 0);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use `.filter(...)[0]` to execute side effects in the callback on all array elements before returning the first match, you may want to disable this rule.
+However, this pattern is unusual and may indicate a need for code refactoring.
+
+## Further Reading
+
+- [MDN: Array.prototype.find()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find)
+- [MDN: Array.prototype.filter()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayFinds" />

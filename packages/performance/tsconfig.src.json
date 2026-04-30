@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.src.json",
+		"rootDir": "src/",
+		"outDir": "lib/",
+		"types": []
+	},
+	"extends": "../../tsconfig.base.json",
+	"include": [
+		"src",
+		"../typescript-language/src/directives",
+		"../typescript-language/src/types"
+	],
+	"exclude": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
+	"references": [
+		{ "path": "../core" },
+		{ "path": "../typescript-language" },
+		{ "path": "../utils" }
+	]
+}

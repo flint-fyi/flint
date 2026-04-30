@@ -1,0 +1,169 @@
+import type { Suggestion } from "@flint.fyi/core";
+import { textLanguage } from "@flint.fyi/text-language";
+import { parseJsonSafe } from "@flint.fyi/utils";
+import { type DocumentValidator, suggestionsForWord } from "cspell-lib";
+import path from "node:path";
+
+import { createDocumentValidator } from "./createDocumentValidator.ts";
+import { ruleCreator } from "./ruleCreator.ts";
+
+interface CSpellConfigLike {
+	words?: string[];
+}
+
+interface FileTask {
+	documentValidatorTask: Promise<DocumentValidator | undefined>;
+	filePath: string;
+	text: string;
+}
+
+function createIssueMessage(withReplacement?: boolean) {
+	return {
+		primary: 'Forbidden or unknown word: "{{ word }}".',
+		secondary: [
+			'The word "{{ word }}" is not in the project\'s dictionary (cspell.json).',
+			"If it's intentional, add it to cspell.json under `words`.",
+		],
+		suggestions: [
+			'Add "{{ word }}" to dictionary.',
+			...(withReplacement
+				? ['Replace with "{{ replacement }}" or another known word.']
+				: []),
+		],
+	};
+}
+
+export default ruleCreator.createRule(textLanguage, {
+	about: {
+		description: "Runs the CSpell spell checker on any source code file.",
+		id: "cspell",
+		presets: ["logical"],
+	},
+	messages: {
+		issue: createIssueMessage(),
+		issueWithReplacement: createIssueMessage(true),
+	},
+	setup(context) {
+		const fileTasks: FileTask[] = [];
+
+		const cwd = context.host.getCurrentDirectory();
+		const cspellJsonPath = path.resolve(cwd, "cspell.json");
+
+		const configTextPromise = context.host.readFile(cspellJsonPath);
+		const configPromise = configTextPromise.then(
+			(configText) =>
+				(parseJsonSafe(configText) as CSpellConfigLike | undefined) ?? {},
+		);
+
+		return {
+			dependencies: ["cspell.json"],
+			teardown: async () => {
+				const tasks = await Promise.all(
+					fileTasks.map(async (task) => {
+						return {
+							documentValidator: await task.documentValidatorTask,
+							task,
+						};
+					}),
+				);
+
+				await Promise.all(
+					tasks.map(async ({ documentValidator, task: { filePath, text } }) => {
+						if (!documentValidator) {
+							return [];
+						}
+
+						const issues = documentValidator.checkText(
+							[0, text.length],
+							undefined,
+							undefined,
+						);
+
+						const finalizedSettings =
+							documentValidator.getFinalizedDocSettings();
+
+						return await Promise.all(
+							issues.map(async (issue) => {
+								const issueRange = {
+									begin: issue.offset,
+									end: issue.offset + (issue.length ?? issue.text.length),
+								};
+
+								const suggestionsResults = await suggestionsForWord(
+									issue.text,
+									{
+										...finalizedSettings,
+										numSuggestions: 1,
+									},
+								);
+
+								const firstSuggestion = suggestionsResults.suggestions[0];
+								const isValidSuggestion =
+									firstSuggestion &&
+									!firstSuggestion.forbidden &&
+									!firstSuggestion.noSuggest;
+
+								const replacement = isValidSuggestion
+									? (firstSuggestion.wordAdjustedToMatchCase ??
+										firstSuggestion.word)
+									: undefined;
+
+								const data: Record<string, string> = {
+									word: issue.text,
+									...(replacement && { replacement }),
+								};
+
+								const [configText, config] = await Promise.all([
+									configTextPromise,
+									configPromise,
+								]);
+
+								const words = config.words ?? [];
+								const suggestions: Suggestion[] = [
+									{
+										files: {
+											"cspell.json": words.includes(issue.text)
+												? []
+												: [
+														{
+															range: {
+																begin: 0,
+																end: configText?.length ?? 0,
+															},
+															text: JSON.stringify({
+																...config,
+																words: [...words, issue.text],
+															}),
+														},
+													],
+										},
+										id: "addWordToWords",
+									},
+								];
+
+								context.report({
+									data,
+									filePath,
+									message: replacement ? "issueWithReplacement" : "issue",
+									range: issueRange,
+									suggestions,
+								});
+							}),
+						);
+					}),
+				);
+			},
+			visitors: {
+				file: (text, { filePath, filePathAbsolute }) => {
+					fileTasks.push({
+						documentValidatorTask: configPromise.then((config) =>
+							createDocumentValidator(cwd, filePathAbsolute, text, config),
+						),
+						filePath,
+						text,
+					});
+				},
+			},
+		};
+	},
+});

@@ -1,0 +1,73 @@
+---
+description: "Reports replacement string references to capturing groups that do not exist in the pattern."
+title: "regexUnnecessaryDollarReplacements"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryDollarReplacements" />
+
+When using `String.prototype.replace()` or `String.prototype.replaceAll()` with a replacement string, referencing capturing groups that do not exist in the pattern is likely a mistake.
+This includes numeric references like `$3` when only two groups exist, or named references like `$<middle>` when no such named group exists.
+These invalid references will be treated as literal text in the output, which is rarely the intended behavior.
+
+This rule reports dollar replacements that are either invalid or unnecessary.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const result = "ab".replace(/(a)(b)/, "$3");
+```
+
+```ts
+const result = "ab".replace(/a/, "$1");
+```
+
+```ts
+const result = "ab".replace(/(?<first>a)/, "$<middle>");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const result = "ab".replace(/(a)(b)/, "$2$1");
+```
+
+```ts
+const result = "ab".replace(/(?<first>a)/, "$<first>");
+```
+
+```ts
+const result = "ab".replace(/a/, "$&");
+```
+
+```ts
+const result = "ab".replace(/a/, "$$1");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use invalid dollar replacements as literal text (though this is rare and confusing), you might want to disable this rule.
+Consider escaping the dollar sign with `$$` instead for clarity.
+
+## Further Reading
+
+- [MDN: String.prototype.replace()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryDollarReplacements" />

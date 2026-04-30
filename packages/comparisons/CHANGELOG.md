@@ -1,5 +1,45 @@
 # @flint.fyi/comparisons
 
+## 0.3.1
+
+### Patch Changes
+
+- 9cdc819: Added initial Vitest plugin with `nodeTestImports` rule.
+
+## 0.3.0
+
+### Minor Changes
+
+- 07e1011: Remove the Sorting plugin and move the underlying rules to their corresponding language plugins.
+
+### Patch Changes
+
+- 6d013fe: Added direct validity rules.
+- 94403c7: Added direct presence rules.
+- fb59513: Update eslint-plugin-package-json owner to michaelfaith.
+- 6d013fe: Add in missing already-present validator rules.
+
+## 0.2.1
+
+### Patch Changes
+
+- a22b5b2: Mark three superseded rules as such.
+- bc632d1: Remove `regexNamedCaptureGroups` and `regexUnicodeEscapes` from presets.
+- bb3e1b2: Add `testCaseNameDuplicates` rule.
+- 506602f: Change `untyped` preset name to `javascript`.
+- bc65fe7: Remove `yamlKeys` from the Sorting plugin presets.
+- 1915940: update package-json comparison data
+
+## 0.2.0
+
+### Minor Changes
+
+- 3353692: feat: split languages into dedicated packages
+
+### Patch Changes
+
+- 56463f0: fix(comparisons): mark import/no-extraneous-dependencies as superseded by Knip
+
 ## 0.1.4
 
 ### Patch Changes

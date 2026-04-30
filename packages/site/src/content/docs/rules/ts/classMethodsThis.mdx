@@ -1,0 +1,131 @@
+---
+description: "Reports class methods that do not use `this`."
+title: "classMethodsThis"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="classMethodsThis" />
+
+Class methods that don't use `this` are often better suited as static methods or standalone functions.
+Instance methods that don't access instance state can be misleading and suggest a design issue.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Calculator {
+	add(a: number, b: number) {
+		return a + b;
+	}
+}
+```
+
+```ts
+class Formatter {
+	format(value: string) {
+		return value.trim().toLowerCase();
+	}
+}
+```
+
+```ts
+class Handler {
+	get type() {
+		return "default";
+	}
+}
+```
+
+```ts
+class Processor {
+	handler = () => {
+		return Math.random();
+	};
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Calculator {
+	add(a: number, b: number) {
+		return this.precision(a + b);
+	}
+}
+```
+
+```ts
+class Calculator {
+	static add(a: number, b: number) {
+		return a + b;
+	}
+}
+```
+
+```ts
+function add(a: number, b: number) {
+	return a + b;
+}
+```
+
+```ts
+class Counter {
+	private count = 0;
+
+	get value() {
+		return this.count;
+	}
+}
+```
+
+```ts
+class Base {
+	method(): void {}
+}
+
+class Derived extends Base {
+	override method() {
+		console.log("overridden");
+	}
+}
+```
+
+```ts
+interface Handler {
+	handle(): void;
+}
+
+class MyHandler implements Handler {
+	handle() {
+		console.log("handled");
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has many classes that implement external interfaces or extend base classes where methods are expected to exist without using `this`, this rule may produce false positives.
+Some frameworks require instance methods for dependency injection or other patterns even when they don't use `this`.
+
+## Further Reading
+
+- [MDN: Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+- [MDN: static](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="classMethodsThis" />

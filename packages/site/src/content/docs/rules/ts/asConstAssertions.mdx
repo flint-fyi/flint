@@ -1,0 +1,75 @@
+---
+description: "Reports using explicit literal types when `as const` can be used."
+title: "asConstAssertions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="asConstAssertions" />
+
+There are two common ways to tell TypeScript that a literal value should be interpreted as its literal type rather than a general primitive type:
+
+- `as const`: telling TypeScript to infer the literal type automatically
+- `as` with an explicit literal type: explicitly telling TypeScript the literal type
+
+`as const` is generally preferred as it doesn't require repeating the literal value.
+This rule reports when an explicit literal type can be replaced with `as const`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+let value: 2 = 2;
+```
+
+```ts
+let value = "hello" as "hello";
+```
+
+```ts
+const flag: true = true;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+let value = 2 as const;
+```
+
+```ts
+let value = "hello" as const;
+```
+
+```ts
+let value = "hello" as string;
+```
+
+```ts
+const flag = true as const;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase consistently uses explicit literal types for documentation purposes, or if you don't have a preference between the two styles, you may disable this rule.
+
+## Further Reading
+
+- [TypeScript: const assertions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions)
+- [TypeScript: Literal Types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#literal-types)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="asConstAssertions" />

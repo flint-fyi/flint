@@ -1,0 +1,95 @@
+---
+description: "Reports using `.filter()` when only the first or last matching element is needed."
+title: "arrayFilteredFinds"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayFilteredFinds" />
+
+Using `.filter()` to get only the first or last matching element creates an unnecessary intermediate array.
+The `.find()` method is more efficient as it stops iteration once a match is found.
+Similarly, `.findLast()` is more efficient for finding the last matching element.
+
+This rule reports:
+
+- `.filter()[0]` or `.filter().shift()` or `.filter().at(0)` → prefer `.find()`
+- `.filter().pop()` or `.filter().at(-1)` → prefer `.findLast()`
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const array: number[];
+array.filter((value) => value > 0)[0];
+```
+
+```ts
+declare const array: number[];
+array.filter((value) => value > 0).shift();
+```
+
+```ts
+declare const array: number[];
+array.filter((value) => value > 0).at(0);
+```
+
+```ts
+declare const array: number[];
+array.filter((value) => value > 0).pop();
+```
+
+```ts
+declare const array: number[];
+array.filter((value) => value > 0).at(-1);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const array: number[];
+array.find((value) => value > 0);
+```
+
+```ts
+declare const array: number[];
+array.findLast((value) => value > 0);
+```
+
+```ts
+declare const array: number[];
+const filtered = array.filter((value) => value > 0);
+```
+
+```ts
+declare const array: number[];
+array.filter((value) => value > 0).length;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need the full filtered array for other purposes beyond accessing the first element, you can disable this rule.
+However, in most cases where only the first match is needed, `.find()` is the better choice.
+
+## Further Reading
+
+- [MDN: Array.prototype.find()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find)
+- [MDN: Array.prototype.findLast()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLast)
+- [MDN: Array.prototype.filter()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayFilteredFinds" />

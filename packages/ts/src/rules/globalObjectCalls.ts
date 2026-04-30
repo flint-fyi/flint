@@ -1,20 +1,21 @@
-import ts, { SyntaxKind } from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
+import { getTSNodeRange } from "@flint.fyi/typescript-language";
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
-} from "../language.ts";
-import * as AST from "../types/ast.ts";
+} from "@flint.fyi/typescript-language";
+import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
 
 const globalObjects = new Set(["Atomics", "JSON", "Math", "Reflect"]);
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports calling global objects like Math, JSON, or Reflect as functions.",
 		id: "globalObjectCalls",
-		preset: "untyped",
+		presets: ["javascript"],
 	},
 	messages: {
 		noGlobalObjectCall: {
@@ -32,7 +33,7 @@ export default typescriptLanguage.createRule({
 		function reportGlobalObjectCall(
 			expression: AST.Expression,
 			name: string,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
 			context.report({
 				data: { name },

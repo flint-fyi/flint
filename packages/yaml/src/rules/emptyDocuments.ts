@@ -1,13 +1,14 @@
+import { yamlLanguage } from "@flint.fyi/yaml-language";
 import type * as yaml from "yaml-unist-parser";
 
-import { yamlLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default yamlLanguage.createRule({
+export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description:
 			"Reports empty YAML documents that contain only document markers.",
 		id: "emptyDocuments",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		emptyDocument: {
@@ -28,7 +29,7 @@ export default yamlLanguage.createRule({
 			visitors: {
 				document: (node, { root }) => {
 					const [documentHead, documentBody] = node.children;
-					if (documentBody.children.length !== 0) {
+					if (documentBody.children.length) {
 						return;
 					}
 

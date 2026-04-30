@@ -1,10 +1,11 @@
+import {
+	type AST,
+	getTSNodeRange,
+	isGlobalDeclaration,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import ts, { SyntaxKind } from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
+import { SyntaxKind } from "typescript";
 
 function convertToLiteral(value: string, radix: number): string {
 	const parsed = Number.parseInt(value, radix);
@@ -46,12 +47,14 @@ function getStringValue(node: AST.Expression): string | undefined {
 		: undefined;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports parseInt calls with binary, hexadecimal, or octal strings that can be replaced with numeric literals.",
 		id: "numericLiteralParsing",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferLiteral: {
@@ -66,7 +69,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		function checkParseIntCall(
 			node: AST.CallExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (node.arguments.length !== 2) {
 				return;
@@ -113,17 +116,14 @@ export default typescriptLanguage.createRule({
 							checkParseIntCall(node, sourceFile);
 						}
 					} else if (
-						node.expression.kind === SyntaxKind.PropertyAccessExpression
+						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+						node.expression.expression.kind === SyntaxKind.Identifier &&
+						node.expression.expression.text === "Number" &&
+						node.expression.name.kind === SyntaxKind.Identifier &&
+						node.expression.name.text === "parseInt" &&
+						isGlobalDeclaration(node.expression.expression, typeChecker)
 					) {
-						if (
-							node.expression.expression.kind === SyntaxKind.Identifier &&
-							node.expression.expression.text === "Number" &&
-							node.expression.name.kind === SyntaxKind.Identifier &&
-							node.expression.name.text === "parseInt" &&
-							isGlobalDeclaration(node.expression.expression, typeChecker)
-						) {
-							checkParseIntCall(node, sourceFile);
-						}
+						checkParseIntCall(node, sourceFile);
 					}
 				},
 			},

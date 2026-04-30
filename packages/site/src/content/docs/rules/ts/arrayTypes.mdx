@@ -1,0 +1,75 @@
+---
+description: "Reports using `Array<T>` or `ReadonlyArray<T>` instead of `T[]` or `readonly T[]`."
+title: "arrayTypes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayTypes" />
+
+TypeScript provides two equivalent ways to define an array type: `T[]` and `Array<T>`.
+Using the shorthand `T[]` syntax consistently is more concise and idiomatic.
+
+This rule reports when `Array<T>` or `ReadonlyArray<T>` is used instead of the shorthand syntax.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const values: Array<string> = [];
+```
+
+```ts
+function process(items: Array<number>): void {}
+```
+
+```ts
+type StringArray = Array<string>;
+```
+
+```ts
+const values: ReadonlyArray<string> = [];
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const values: string[] = [];
+```
+
+```ts
+function process(items: number[]): void {}
+```
+
+```ts
+type StringArray = string[];
+```
+
+```ts
+const values: readonly string[] = [];
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase uses `Array<T>` consistently, or if you prefer the generic syntax for its explicit nature, you may disable this rule.
+
+## Further Reading
+
+- [TypeScript: Array Types](https://www.typescriptlang.org/docs/handbook/2/objects.html#the-array-type)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayTypes" />

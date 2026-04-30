@@ -1,4 +1,4 @@
-import type { FileReport } from "@flint.fyi/core";
+import { type FileReport, formatReport } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 import chalk from "chalk";
 
@@ -12,9 +12,6 @@ export async function* createDetailedReport(
 	sourceFileText: string,
 	width: number,
 ) {
-	const urlFriendly = `flint.fyi/rules/${report.about.id}`;
-	const url = `https://${urlFriendly}`;
-
 	yield indenter;
 	yield wrapIfNeeded(
 		chalk.hex(ColorCodes.primaryMessage),
@@ -22,10 +19,14 @@ export async function* createDetailedReport(
 			chalk.hex(ColorCodes.ruleBracket)("["),
 			chalk
 				.hex(ColorCodes.reportAboutId)
-				.bold(`\u001b]8;;${url}\u0007${report.about.id}\u001b]8;;\u0007`),
+				.bold(
+					report.about.url
+						? formatUrl(report.about.url, report.about.id)
+						: report.about.id,
+				),
 			chalk.hex(ColorCodes.ruleBracket)("]"),
 			" ",
-			report.message.primary,
+			formatReport(report.data, report.message.primary),
 		].join(""),
 		width,
 	);
@@ -38,7 +39,7 @@ export async function* createDetailedReport(
 	yield " ";
 	yield wrapIfNeeded(
 		chalk.hex(ColorCodes.secondaryMessage).italic,
-		report.message.secondary.join(`\n`),
+		formatReport(report.data, report.message.secondary.join(`\n`)),
 		width,
 	);
 	yield `\n${indenter}\n`;
@@ -47,25 +48,34 @@ export async function* createDetailedReport(
 		yield indenter;
 		yield chalk.hex(ColorCodes.suggestionTextHighlight)(" Suggestions:");
 		yield "\n";
-		yield* report.message.suggestions.map((suggestion) =>
-			[
-				indenter,
-				chalk.hex(ColorCodes.suggestionMessage)("  • "),
-				formatSuggestion(suggestion),
-			].join("\n"),
-		);
+		yield* report.message.suggestions
+			.map((suggestion) =>
+				[
+					indenter,
+					chalk.hex(ColorCodes.suggestionMessage)("  • "),
+					formatSuggestion(report.data, suggestion),
+				].join(""),
+			)
+			.join("\n");
 	} else {
 		yield `${indenter} `;
 		yield wrapIfNeeded(
 			chalk.hex(ColorCodes.suggestionTextHighlight),
-			`  Suggestion: ${formatSuggestion(nullThrows(report.message.suggestions[0], `Report ${report.about.id} message should have at least one suggestion`))}`,
+			`  Suggestion: ${formatSuggestion(report.data, nullThrows(report.message.suggestions[0], `Report ${report.about.id} message should have at least one suggestion`))}`,
 			width,
 		);
-		yield "\n";
 	}
 
-	yield `${indenter} `;
-	yield chalk
-		.hex(ColorCodes.ruleUrl)
-		.italic(`→ \u001b]8;;${url}\u0007${urlFriendly}\u001b]8;;\u0007`);
+	if (report.about.url) {
+		yield `\n${indenter}\n${indenter} `;
+		yield chalk
+			.hex(ColorCodes.ruleUrl)
+			.italic(
+				`→ ${formatUrl(report.about.url, report.about.url.replace(/^https:\/\//, ""))}`,
+			);
+	}
+}
+
+function formatUrl(url: string, text: string) {
+	return `\u001B]8;;${url}\u0007${text}\u001B]8;;\u0007`;
 }

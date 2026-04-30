@@ -1,0 +1,70 @@
+---
+description: "Reports using legacy global functions instead of `Number` static methods."
+title: "numberStaticMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="numberStaticMethods" />
+
+This rule enforces using `Number` static methods and properties instead of global equivalents.
+
+The global methods `isFinite()` and `isNaN()` coerce their arguments to numbers before checking, which can lead to unexpected behavior.
+`Number.isNaN()` and `Number.isFinite()` do not perform coercion and are more predictable.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+isNaN(value);
+```
+
+```ts
+isFinite(value);
+```
+
+```ts
+const value = NaN;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+Number.isNaN(value);
+```
+
+```ts
+Number.isFinite(value);
+```
+
+```ts
+const value = Number.NaN;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are targeting older JavaScript environments that do not support `Number.isNaN()` or `Number.isFinite()`, you may need to continue using the global versions.
+Additionally, if you intentionally rely on the type coercion behavior of the global `isNaN()` and `isFinite()` functions, disabling this rule may be appropriate.
+
+## Further Reading
+
+- [MDN: Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
+- [MDN: Number.isNaN()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN)
+- [MDN: Number.isFinite()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isFinite)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="numberStaticMethods" />

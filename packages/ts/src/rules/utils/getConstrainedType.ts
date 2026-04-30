@@ -1,5 +1,4 @@
-import type * as AST from "../../types/ast.ts";
-import type { Checker } from "../../types/checker.ts";
+import type { AST, Checker } from "@flint.fyi/typescript-language";
 
 export function getConstrainedTypeAtLocation(
 	node: AST.Expression,

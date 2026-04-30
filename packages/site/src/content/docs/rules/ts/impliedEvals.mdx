@@ -1,0 +1,97 @@
+---
+description: "Reports using string arguments in setTimeout, setInterval, setImmediate, execScript, or the Function constructor."
+title: "impliedEvals"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="impliedEvals" />
+
+JavaScript's `eval()` function is generally discouraged because it executes arbitrary strings as code, making programs harder to analyze and creating potential security vulnerabilities.
+Several other APIs similarly evaluate strings as code:
+
+- `setTimeout()` and `setInterval()` accept a string as their first argument
+- `setImmediate()` accepts a string as its first argument
+- `execScript()` (Internet Explorer only) accepts a string
+- The `Function` constructor creates functions from strings
+
+These "implied evals" have the same problems as `eval()`: they're difficult to analyze statically, prevent many optimizations, and can introduce security risks if the string contains untrusted content.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+setTimeout("alert('Hello');", 1000);
+```
+
+```ts
+setInterval("counter++;", 100);
+```
+
+```ts
+const code = "console.log('executed');";
+setTimeout(code, 0);
+```
+
+```ts
+new Function("a", "b", "return a + b");
+```
+
+```ts
+window.setTimeout("doSomething()", 100);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+setTimeout(() => {
+	alert("Hello");
+}, 1000);
+```
+
+```ts
+setInterval(() => {
+	counter++;
+}, 100);
+```
+
+```ts
+setTimeout(myCallback, 0);
+```
+
+```ts
+const add = (a: number, b: number) => a + b;
+```
+
+```ts
+setTimeout(handler.bind(context), 100);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a specific use case that requires dynamic code evaluation and you've carefully considered the security implications, you might disable this rule for those specific instances.
+For example, certain build tools or code playgrounds may legitimately need to use these APIs with string arguments.
+Consider using Flint disable comments for those specific lines rather than disabling the rule entirely.
+
+## Further Reading
+
+- [MDN: eval()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval)
+- [MDN: setTimeout()](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout)
+- [MDN: Function constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="impliedEvals" />

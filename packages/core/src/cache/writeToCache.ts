@@ -1,15 +1,22 @@
 import { CachedFactory } from "cached-factory";
+import { debugForFile } from "debug-for-file";
 import * as fs from "node:fs/promises";
+import { dirname } from "node:path";
 import omitEmpty from "omit-empty";
 
 import type { CacheStorage } from "../types/cache.ts";
+import type { LinterHost } from "../types/host.ts";
 import type { LintResults } from "../types/linting.ts";
-import { cacheFileDirectory, cacheFilePath } from "./constants.ts";
-import { getFileTouchTime } from "./getFileTouchTime.ts";
+import { cacheStorageSchema } from "./cacheSchema.ts";
+import { getCacheFilePath } from "./getCacheFilePath.ts";
+
+const log = debugForFile(import.meta.filename);
 
 export async function writeToCache(
+	host: LinterHost,
 	configFileName: string,
 	lintResults: LintResults,
+	cacheLocation: string | undefined,
 ) {
 	const fileDependents = new CachedFactory(() => new Set<string>());
 	const timestamp = Date.now();
@@ -22,8 +29,8 @@ export async function writeToCache(
 
 	const storage: CacheStorage = {
 		configs: {
-			[configFileName]: getFileTouchTime(configFileName),
-			"package.json": getFileTouchTime("package.json"),
+			[configFileName]: await host.getFileTouchTime(configFileName),
+			"package.json": await host.getFileTouchTime("package.json"),
 		},
 		files: {
 			...Object.fromEntries(
@@ -32,7 +39,7 @@ export async function writeToCache(
 					{
 						...omitEmpty({
 							dependencies: Array.from(fileResults.dependencies).sort(),
-							diagnostics: fileResults.diagnostics,
+							languageReports: fileResults.languageReports,
 							reports: fileResults.reports,
 						}),
 						timestamp,
@@ -48,6 +55,16 @@ export async function writeToCache(
 		},
 	};
 
+	const cacheFilePath = getCacheFilePath(cacheLocation);
+	const cacheFileDirectory = dirname(cacheFilePath);
+
 	await fs.mkdir(cacheFileDirectory, { recursive: true });
-	await fs.writeFile(cacheFilePath, JSON.stringify(storage, null, "\t"));
+
+	const encoded = cacheStorageSchema.safeEncode(storage);
+	if (!encoded.success) {
+		log("Failed to encode cache data: %s", encoded.error.message);
+		return;
+	}
+
+	await fs.writeFile(cacheFilePath, encoded.data);
 }

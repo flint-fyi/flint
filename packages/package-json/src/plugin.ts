@@ -1,9 +1,17 @@
 import { createPlugin } from "@flint.fyi/core";
 
+import { directPropertyPresenceRules } from "./directPropertyPresenceRules.ts";
+import { directPropertyValidityRules } from "./directPropertyValidityRules.ts";
+import privatePresence from "./rules/privatePresence.ts";
+
 export const packageJson = createPlugin({
 	files: {
 		all: ["**/package.json"],
 	},
 	name: "PackageJSON",
-	rules: [],
+	rules: [
+		privatePresence,
+		...Object.values(directPropertyPresenceRules),
+		...Object.values(directPropertyValidityRules),
+	],
 });

@@ -1,0 +1,69 @@
+---
+description: "Reports `context.report()` calls missing data for message placeholders."
+title: "missingPlaceholders"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="flint" rule="missingPlaceholders" />
+
+When reporting linting issues, it's common to include dynamic data in the message using placeholders.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+ruleCreator.createRule(_, {
+	messages: {
+		messagesId: {
+			primary: "This is a message with a {{placeholder}}",
+			secondary: [""],
+			suggestions: [""],
+		},
+	},
+	setup(context: RuleContext) {
+		context.report({
+			message: "messagesId",
+		});
+	},
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+ruleCreator.createRule(_, {
+	messages: {
+		messagesId: {
+			primary: "This is a message with a {{placeholder}}",
+			secondary: [""],
+			suggestions: [""],
+		},
+	},
+	setup(context: RuleContext) {
+		context.report({
+			data: {
+				placeholder: "value",
+			},
+			message: "messagesId",
+		});
+	},
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="flint" ruleId="missingPlaceholders" />

@@ -1,0 +1,89 @@
+---
+description: "Reports Promise catch callback parameters that are not typed as unknown."
+title: "catchCallbackTypes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="catchCallbackTypes" />
+
+TypeScript's `useUnknownInCatchVariables` compiler option only affects synchronous catch clauses, not Promise callbacks.
+Promise rejection values can be anything, so the callback parameter in `.catch()` and the second argument to `.then()` should be typed as `unknown` to force proper type narrowing before use.
+
+Without an explicit `unknown` type annotation, the catch callback parameter is implicitly typed as `any`, undermining type safety.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+Promise.resolve().catch((error) => {
+	console.log(error);
+});
+```
+
+```ts
+Promise.resolve().catch((error: any) => {
+	console.log(error);
+});
+```
+
+```ts
+Promise.resolve().then(
+	() => {},
+	(error) => {
+		console.log(error);
+	},
+);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+Promise.resolve().catch((error: unknown) => {
+	if (error instanceof Error) {
+		console.log(error.message);
+	}
+});
+```
+
+```ts
+Promise.resolve().then(
+	() => {},
+	(error: unknown) => {
+		console.log(error);
+	},
+);
+```
+
+```ts
+Promise.resolve().catch(() => {
+	console.log("error occurred");
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase is not yet able to enable `useUnknownInCatchVariables`, it may be similarly difficult to enable this rule.
+If you have modified the global type declarations to make `then()` and `catch()` callbacks use the `unknown` type without an explicit type annotation, you do not need this rule.
+
+## Further Reading
+
+- [TypeScript 4.4 Release Notes - useUnknownInCatchVariables](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-4.html#useunknownincatchvariables)
+- [MDN documentation on Promise.prototype.catch()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="catchCallbackTypes" />

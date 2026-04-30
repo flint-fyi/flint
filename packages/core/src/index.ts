@@ -1,22 +1,25 @@
-export * from "./cache/constants.ts";
+export * from "./cache/getCacheFilePath.ts";
 export { writeToCache } from "./cache/writeToCache.ts";
 export { applyChangesToText } from "./changing/applyChangesToText.ts";
 export { defineConfig } from "./configs/defineConfig.ts";
 export { isConfig } from "./configs/isConfig.ts";
+export { validateConfigDefinition } from "./configs/validateConfigDefinition.ts";
 export { DirectivesCollector } from "./directives/DirectivesCollector.ts";
 export { directiveReports } from "./directives/reports/directiveReports.ts";
 export { globs } from "./globs/index.ts";
 export { createDiskBackedLinterHost } from "./host/createDiskBackedLinterHost.ts";
+export { createEphemeralLinterHost } from "./host/createEphemeralLinterHost.ts";
 export {
 	createVFSLinterHost,
 	type CreateVFSLinterHostOpts,
 } from "./host/createVFSLinterHost.ts";
 export { isFileSystemCaseSensitive } from "./host/isFileSystemCaseSensitive.ts";
-export { normalizedDirname, normalizePath } from "./host/normalizePath.ts";
 export { createLanguage } from "./languages/createLanguage.ts";
 export { createPlugin } from "./plugins/createPlugin.ts";
-export { formatReportPrimary } from "./reporting/formatReportPrimary.ts";
+export { formatReport } from "./reporting/formatReport.ts";
+export * from "./rules/RuleCreator.ts";
 export { parseOptions } from "./running/parseOptions.ts";
+export { processRuleReport } from "./running/processRuleReport.ts";
 export { runConfig } from "./running/runConfig.ts";
 export { runConfigFixing } from "./running/runConfigFixing.ts";
 export { runLintRule } from "./running/runLintRule.ts";
@@ -24,6 +27,7 @@ export * from "./types/about.ts";
 export * from "./types/cache.ts";
 export * from "./types/changes.ts";
 export * from "./types/configs.ts";
+export * from "./types/context.ts";
 export * from "./types/directives.ts";
 export * from "./types/formatting.ts";
 export * from "./types/host.ts";
@@ -35,6 +39,7 @@ export * from "./types/ranges.ts";
 export * from "./types/reports.ts";
 export * from "./types/rules.ts";
 export * from "./types/shapes.ts";
+export * from "./types/visitors.ts";
 export { binarySearch } from "./utils/arrays.ts";
 export * from "./utils/getColumnAndLineOfPosition.ts";
 export * from "./utils/predicates.ts";

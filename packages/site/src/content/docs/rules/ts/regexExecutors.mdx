@@ -1,0 +1,100 @@
+---
+description: "Reports String.prototype.match calls that can be replaced with RegExp.prototype.exec."
+title: "regexExecutors"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexExecutors" />
+
+Reports calls to `String.prototype.match()` that should use `RegExp.prototype.exec()` instead.
+When a regular expression does not have the global flag (`g`), both methods behave identically, but `exec()` is clearer in intent and may be slightly faster.
+
+## Examples
+
+### String Literal with Regex Literal
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const result = "something".match(/thing/);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const result = /thing/.exec("something");
+```
+
+</TabItem>
+</Tabs>
+
+### Variable with Regex
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const text = "something";
+const result = text.match(/pattern/);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const text = "something";
+const result = /pattern/.exec(text);
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const result = "something".match(new RegExp("thing"));
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const result = new RegExp("thing").exec("something");
+```
+
+</TabItem>
+</Tabs>
+
+### Global Flag (Valid)
+
+Using the global flag with `match()` is valid because it returns all matches:
+
+```ts
+const allMatches = "one two three".match(/\w+/g);
+```
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer consistent use of `String.prototype.match()` regardless of whether the global flag is present, you may disable this rule.
+
+## Further Reading
+
+- [MDN: String.prototype.match()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match)
+- [MDN: RegExp.prototype.exec()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexExecutors" />

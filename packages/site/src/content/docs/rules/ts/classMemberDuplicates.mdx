@@ -1,0 +1,90 @@
+---
+description: "Class members should not have duplicate names."
+title: "classMemberDuplicates"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="classMemberDuplicates" />
+
+Duplicate class members are legal in JavaScript, but only the last definition is used.
+This can lead to confusion and bugs, especially when maintaining the code.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Foo {
+	bar() {}
+	bar() {}
+}
+```
+
+```ts
+class Foo {
+	get bar() {
+		return 1;
+	}
+	get bar() {
+		return 2;
+	}
+}
+```
+
+```ts
+class Foo {
+	bar = 1;
+	bar = 2;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Foo {
+	bar() {}
+	baz() {}
+}
+```
+
+```ts
+class Foo {
+	get bar() {
+		return 1;
+	}
+	set bar(value) {}
+}
+```
+
+```ts
+class Foo {
+	bar() {}
+	static bar() {}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+This rule should generally always be enabled.
+There is no valid use case for duplicate class member names.
+
+## Further Reading
+
+- [MDN documentation on classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="classMemberDuplicates" />

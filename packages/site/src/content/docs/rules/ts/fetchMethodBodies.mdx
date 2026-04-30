@@ -1,0 +1,83 @@
+---
+description: "Disallow providing a body with GET or HEAD fetch requests."
+title: "fetchMethodBodies"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="fetchMethodBodies" />
+
+The Fetch API throws a `TypeError` at runtime when the request method is `GET` or `HEAD` and a body is provided.
+This rule detects `fetch()` calls and `new Request()` calls that provide a body with a `GET` or `HEAD` method.
+
+HTTP methods `GET` and `HEAD` are intended to retrieve data without sending a request body.
+Per the Fetch specification, providing a body with these methods is invalid and will cause the browser or runtime to throw an error.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const response = await fetch("/api", { body: "data" });
+```
+
+```ts
+const response = await fetch("/api", { method: "GET", body: "data" });
+```
+
+```ts
+const response = await fetch("/api", { method: "HEAD", body: "data" });
+```
+
+```ts
+const request = new Request("/api", { body: "data" });
+```
+
+```ts
+const request = new Request("/api", { method: "GET", body: "data" });
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const response = await fetch("/api");
+```
+
+```ts
+const response = await fetch("/api", { method: "POST", body: "data" });
+```
+
+```ts
+const response = await fetch("/api", { method: "PUT", body: "data" });
+```
+
+```ts
+const request = new Request("/api", { method: "POST", body: "data" });
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase uses a custom `fetch` wrapper or polyfill that accepts different options, this rule might produce false positives.
+You can disable it for files that use such wrappers.
+
+## Further Reading
+
+- [MDN: fetch()](https://developer.mozilla.org/en-US/docs/Web/API/fetch)
+- [MDN: Request()](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request)
+- [Fetch Living Standard](https://fetch.spec.whatwg.org/)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="fetchMethodBodies" />

@@ -1,0 +1,81 @@
+---
+description: "Reports using `.map().flat()` when `.flatMap()` can be used."
+title: "arrayFlatMapMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayFlatMapMethods" />
+
+`Array.prototype.flatMap()` combines mapping and flattening in a single step.
+Using `.map().flat()` creates an intermediate array that is immediately discarded, which is less efficient.
+This rule reports when `.map().flat()` can be replaced with `.flatMap()`.
+
+The rule only applies when `.flat()` is called with no arguments or with a depth of `1`, since `.flatMap()` always flattens to a depth of one level.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const array: number[];
+array.map((value) => [value, value * 2]).flat();
+```
+
+```ts
+declare const strings: string[];
+strings.map((value) => value.split(",")).flat();
+```
+
+```ts
+declare const array: number[];
+array.map((value) => [value]).flat(1);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const array: number[];
+array.flatMap((value) => [value, value * 2]);
+```
+
+```ts
+declare const strings: string[];
+strings.flatMap((value) => value.split(","));
+```
+
+```ts
+declare const array: number[];
+array.map((value) => [[value]]).flat(2);
+```
+
+```ts
+declare const array: number[];
+array.flat();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the explicit two-step approach of `.map().flat()` for readability, or if your codebase has a large number of existing uses that would be difficult to refactor, you may disable this rule.
+
+## Further Reading
+
+- [MDN: Array.prototype.flatMap()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap)
+- [MDN: Array.prototype.flat()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat)
+- [MDN: Array.prototype.map()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayFlatMapMethods" />

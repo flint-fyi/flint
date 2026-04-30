@@ -1,0 +1,109 @@
+---
+description: "Prefer negative index over `.length - index` for slice, at, splice, and similar methods."
+title: "negativeIndexLengthMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="negativeIndexLengthMethods" />
+
+Array methods like `.at()`, `.slice()`, and `.splice()` accept negative indices to access elements from the end of an array or string.
+Using `array.slice(array.length - 2)` is less readable than `array.slice(-2)`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const values = [1, 2, 3];
+values.slice(values.length - 2);
+```
+
+```ts
+const values = [1, 2, 3];
+values.slice(values.length - 2, values.length - 1);
+```
+
+```ts
+const values = [1, 2, 3];
+values.at(values.length - 1);
+```
+
+```ts
+const values = [1, 2, 3];
+values.splice(values.length - 1, 1);
+```
+
+```ts
+const values = [1, 2, 3];
+values.with(values.length - 1, 99);
+```
+
+```ts
+const values = [1, 2, 3];
+Array.prototype.slice.call(values, values.length - 2);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const values = [1, 2, 3];
+values.slice(-2);
+```
+
+```ts
+const values = [1, 2, 3];
+values.slice(-2, -1);
+```
+
+```ts
+const values = [1, 2, 3];
+values.at(-1);
+```
+
+```ts
+const values = [1, 2, 3];
+values.splice(-1, 1);
+```
+
+```ts
+const values = [1, 2, 3];
+values.with(-1, 99);
+```
+
+```ts
+const values = [1, 2, 3];
+Array.prototype.slice.call(values, -2);
+```
+
+```ts
+const values = [1, 2, 3];
+values.slice(1, 2);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer explicit `.length - index` calculations for documentation purposes, or if you have a codebase convention that requires them for readability in certain contexts, you may want to disable this rule.
+
+## Further Reading
+
+- [MDN: Array.prototype.at()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at)
+- [MDN: Array.prototype.slice()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice)
+- [MDN: Array.prototype.splice()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice)
+- [MDN: Array.prototype.with()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/with)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="negativeIndexLengthMethods" />

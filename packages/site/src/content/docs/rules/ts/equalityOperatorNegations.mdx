@@ -1,0 +1,74 @@
+---
+description: "Reports negated expressions on the left side of equality checks."
+title: "equalityOperatorNegations"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="equalityOperatorNegations" />
+
+Using a negated expression as the left operand of an equality check is almost always a mistake.
+The logical not operator (`!`) has higher precedence than equality operators, so `!a === b` is evaluated as `(!a) === b`, not `!(a === b)`.
+This converts the left operand to a boolean before comparing, which is rarely the intended behavior.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (!value === true) {
+	doSomething();
+}
+```
+
+```ts
+if (!count === 0) {
+	handleEmpty();
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (value !== true) {
+	doSomething();
+}
+```
+
+```ts
+if (!(value === true)) {
+	doSomething();
+}
+```
+
+```ts
+if (count !== 0) {
+	handleEmpty();
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally compare a negated boolean value with an equality operator, you may want to disable this rule.
+However, such code would be clearer if rewritten to use the opposite equality operator without the negation.
+
+## Further Reading
+
+- [MDN: Operator precedence](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_precedence)
+- [MDN: Logical NOT](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_NOT)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="equalityOperatorNegations" />

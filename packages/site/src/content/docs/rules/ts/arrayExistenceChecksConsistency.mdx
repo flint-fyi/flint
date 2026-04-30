@@ -1,0 +1,86 @@
+---
+description: "Reports inconsistent styles for checking element existence using index methods."
+title: "arrayExistenceChecksConsistency"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayExistenceChecksConsistency" />
+
+Enforces consistent style for element existence checks with `indexOf()`, `lastIndexOf()`, `findIndex()`, and `findLastIndex()`.
+
+Prefer using `index === -1` to check if an element does not exist and `index !== -1` to check if an element does exist.
+These methods return `-1` when an element is not found, so checking against `-1` is more explicit and precise than using broad comparisons like `< 0` or `>= 0`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const index = values.indexOf("test");
+if (index < 0) {
+	// not found
+}
+```
+
+```ts
+const index = values.indexOf("test");
+if (index >= 0) {
+	// found
+}
+```
+
+```ts
+const index = values.indexOf("test");
+if (index > -1) {
+	// found
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const index = values.indexOf("test");
+if (index === -1) {
+	// not found
+}
+```
+
+```ts
+const index = values.indexOf("test");
+if (index !== -1) {
+	// found
+}
+```
+
+```ts
+if (values.findIndex((value) => value > 10) === -1) {
+	// not found
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has an established convention using `< 0` or `>= 0` for index checks, you may disable this rule.
+Some developers find the comparison style more readable in certain contexts.
+
+## Further Reading
+
+- [MDN: Array.prototype.indexOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf)
+- [MDN: Array.prototype.findIndex()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayExistenceChecksConsistency" />

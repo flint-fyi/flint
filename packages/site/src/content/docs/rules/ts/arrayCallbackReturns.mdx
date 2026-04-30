@@ -1,0 +1,98 @@
+---
+description: "Reports missing return statements in callbacks of array methods."
+title: "arrayCallbackReturns"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayCallbackReturns" />
+
+Array methods like `map`, `filter`, `find`, `some`, `every`, and `reduce` rely on return values from their callbacks to function correctly.
+Forgetting to include a `return` statement in these callbacks is a common mistake that can lead to unexpected results.
+
+If you don't need the return value, consider using `forEach` instead.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const result = values.map((value) => {
+	console.log(value);
+});
+```
+
+```ts
+const found = values.find((value) => {
+	value === target;
+});
+```
+
+```ts
+const total = values.reduce((sum, value) => {
+	sum + value;
+}, 0);
+```
+
+```ts
+const valid = values.every((value) => {
+	value > 0;
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const result = values.map((value) => {
+	return value * 2;
+});
+```
+
+```ts
+const result = values.map((value) => value * 2);
+```
+
+```ts
+const found = values.find((value) => {
+	return value === target;
+});
+```
+
+```ts
+const total = values.reduce((sum, value) => {
+	return sum + value;
+}, 0);
+```
+
+```ts
+values.forEach((value) => {
+	console.log(value);
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use array methods without return values in callbacks (relying on side effects), you may want to disable this rule.
+However, using `forEach` for side-effect-only iterations is more idiomatic.
+
+## Further Reading
+
+- [MDN: Array.prototype.map()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
+- [MDN: Array.prototype.filter()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
+- [MDN: Array.prototype.reduce()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayCallbackReturns" />

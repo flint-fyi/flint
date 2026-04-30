@@ -1,0 +1,139 @@
+---
+description: "Reports backreferences in regular expressions that will always match empty or fail."
+title: "regexUnnecessaryBackreferences"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryBackreferences" />
+
+Reports backreferences in regular expressions that will always match empty or fail to match.
+These backreferences are useless because they reference capturing groups that haven't captured anything at the time the backreference is evaluated.
+
+## Examples
+
+### Nested Backreference
+
+A backreference inside its own capturing group will always match empty since the group hasn't finished capturing yet.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(a\1)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)\1/;
+```
+
+</TabItem>
+</Tabs>
+
+### Forward Reference
+
+A backreference that appears before the group it references will always match empty since the group hasn't been matched yet.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\1(a)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)\1/;
+```
+
+</TabItem>
+</Tabs>
+
+### Disjunctive Backreference
+
+A backreference in a different alternative from its group will always match empty since the group's alternative wasn't taken.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(a)|\1/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)\1|b/;
+```
+
+</TabItem>
+</Tabs>
+
+### Negative Lookaround
+
+A backreference to a group inside a negative lookaround will always match empty since the group wasn't matched.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?!(a))\w\1/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?=(a))\w\1/;
+```
+
+</TabItem>
+</Tabs>
+
+### Lookbehind Direction
+
+In lookbehind assertions, matching proceeds right-to-left, so a backreference after its group is a backward reference.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?<=(a)\1)b/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?<=\1(a))b/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are intentionally using backreferences that match empty strings for specific pattern-matching logic, you might want to disable this rule.
+However, in most cases, these patterns indicate a mistake in the regular expression.
+
+## Further Reading
+
+- [MDN: Backreferences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Groups_and_backreferences)
+- [MDN: Lookahead and lookbehind assertions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookahead_assertion)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryBackreferences" />

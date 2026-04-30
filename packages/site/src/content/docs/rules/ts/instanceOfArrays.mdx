@@ -1,0 +1,69 @@
+---
+description: "Reports using `instanceof Array` instead of `Array.isArray()`."
+title: "instanceOfArrays"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="instanceOfArrays" />
+
+Using `instanceof Array` to check if a value is an array has two potential issues:
+
+1. **Cross-realm failures**: In JavaScript, each execution context (such as an iframe or web worker) has its own global scope with its own `Array` constructor.
+When arrays are passed between contexts, `instanceof Array` returns `false` because the array was created with a different `Array` constructor.
+
+2. **Array-like objects**: Some objects like `arguments` have array-like behavior but are not instances of `Array`.
+
+The `Array.isArray()` method reliably detects arrays regardless of which realm they were created in.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (value instanceof Array) {
+	value.forEach(console.log);
+}
+```
+
+```ts
+const isArray = data instanceof Array;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (Array.isArray(value)) {
+	value.forEach(console.log);
+}
+```
+
+```ts
+const isArray = Array.isArray(data);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are certain that your code will never receive arrays from other execution contexts (such as iframes) and you don't need to handle array-like objects, you might not need this rule.
+Some projects with those characteristics prefer to stick with `instanceof` for consistency with other class instance checks.
+
+## Further Reading
+
+- [MDN: Array.isArray()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray)
+- [MDN: instanceof](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="instanceOfArrays" />

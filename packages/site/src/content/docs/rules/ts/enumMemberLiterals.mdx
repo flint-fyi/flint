@@ -1,0 +1,113 @@
+---
+description: "Requires all enum members to be literal values."
+title: "enumMemberLiterals"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="enumMemberLiterals" />
+
+TypeScript allows enum members to be initialized with various expressions.
+However, using computed values can lead to unexpected results because enums create their own scope where each enum member becomes a variable.
+
+For example, in this code:
+
+```ts
+const imOutside = 2;
+enum Foo {
+	a = 1,
+	b = a,
+	c = imOutside,
+}
+```
+
+`Foo.b` will be `1` (referencing `Foo.a`), but `Foo.c` will also be `1` because `imOutside` is shadowed by the auto-incremented value.
+
+This rule requires all enum members to use literal values (strings or numbers) to prevent such confusion.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+enum Foo {
+	a = 1,
+	b = a,
+}
+```
+
+```ts
+const x = 1;
+enum Foo {
+	a = x,
+}
+```
+
+```ts
+enum Foo {
+	a = 1 + 2,
+}
+```
+
+```ts
+enum Foo {
+	a = getValue(),
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+enum Foo {
+	a = 1,
+	b = 2,
+}
+```
+
+```ts
+enum Foo {
+	a = "hello",
+	b = "world",
+}
+```
+
+```ts
+enum Foo {
+	a = -1,
+	b = +2,
+}
+```
+
+```ts
+enum Foo {
+	a,
+	b,
+	c,
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you want to use computed expressions as enum values and understand the scoping implications, you may prefer to disable this rule.
+Some projects intentionally use enums as "opaque" entities where the values are not important.
+
+## Further Reading
+
+- [TypeScript ESLint: prefer-literal-enum-member](https://typescript-eslint.io/rules/prefer-literal-enum-member)
+- [Biome: useLiteralEnumMembers](https://biomejs.dev/linter/rules/useLiteralEnumMembers)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="enumMemberLiterals" />

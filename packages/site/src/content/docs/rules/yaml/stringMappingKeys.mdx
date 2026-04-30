@@ -1,0 +1,82 @@
+---
+description: "Enforces mapping keys to be strings."
+title: "stringMappingKeys"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="yaml" rule="stringMappingKeys" />
+
+YAML allows mapping keys of any type, including numbers, booleans, arrays, and objects.
+However, most programming languages and data interchange formats expect mapping keys to be strings.
+Non-string keys can cause interoperability issues, parsing failures, or unexpected type coercion when YAML documents are processed by different tools.
+
+This rule reports on mapping keys that aren't strings.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```yaml
+123: "numeric key"
+```
+
+```yaml
+true: "boolean key"
+```
+
+```yaml
+null: "null key"
+```
+
+```yaml
+[1, 2]: "array key"
+```
+
+```yaml
+{ a: b }: "object key"
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```yaml
+"123": "quoted numeric string"
+```
+
+```yaml
+"true": "quoted boolean string"
+```
+
+```yaml
+name: "string key"
+```
+
+```yaml
+"key with spaces": "quoted string"
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your YAML documents are only consumed by tools that support non-string keys and you intentionally use typed keys for semantic purposes, you may not need this rule.
+Some specialized YAML use cases, such as configuration files for specific frameworks, may rely on non-string keys.
+
+## Further Reading
+
+- [YAML 1.2 Specification: Mapping](https://yaml.org/spec/1.2.2/#mapping)
+- [YAML 1.2 Specification: Failsafe Schema](https://yaml.org/spec/1.2.2/#failsafe-schema)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="yaml" ruleId="stringMappingKeys" />

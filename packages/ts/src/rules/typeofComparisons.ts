@@ -1,8 +1,9 @@
-import ts, { SyntaxKind } from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
 
 const validTypeofValues = new Set([
 	"bigint",
@@ -28,12 +29,14 @@ function getTypeofOperand(node: AST.Expression) {
 	return node.kind === SyntaxKind.TypeOfExpression && node.expression;
 }
 
-export default typescriptLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports typeof expressions that compare impossible string literals.",
 		id: "typeofComparisons",
-		preset: "untyped",
+		presets: ["javascript"],
 	},
 	messages: {
 		invalidValue: {
@@ -52,7 +55,7 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		function checkComparison(
 			node: AST.BinaryExpression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const leftTypeofOperand = getTypeofOperand(node.left);
 			const rightTypeofOperand = getTypeofOperand(node.right);

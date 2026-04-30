@@ -1,0 +1,78 @@
+---
+description: "Reports declared namespaces that implicitly export all members."
+title: "namespaceImplicitAmbientImports"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="namespaceImplicitAmbientImports" />
+
+When a declared namespace has no named export statements, all its members are implicitly exported.
+This can lead to unintended exports and make it harder to understand what the namespace exposes.
+
+Adding an `export {};` statement at the top of the namespace disables this implicit export behavior and allows you to explicitly control which members are exported.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare namespace Values {
+	type Value = 1;
+}
+```
+
+```ts
+declare namespace Api {
+	interface Request {}
+	interface Response {}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare namespace Values {
+	export type Value = 1;
+}
+```
+
+```ts
+declare namespace Api {
+	export {};
+	type Request = unknown;
+	type Response = unknown;
+	export type { Request, Response };
+}
+```
+
+```ts
+declare namespace Internal {
+	export {};
+	type PrivateType = 1;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your project intentionally relies on the implicit export behavior of declared namespaces for brevity, you may not want to enable this rule.
+Some codebases with extensive legacy type declarations may find it impractical to add explicit exports to every namespace.
+
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [TypeScript Handbook: Declaration Merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)
+- [TypeScript Handbook: Namespaces](https://www.typescriptlang.org/docs/handbook/namespaces.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="namespaceImplicitAmbientImports" />

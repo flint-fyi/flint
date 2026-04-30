@@ -1,0 +1,74 @@
+---
+description: "Reports enum members without explicit initial values."
+title: "enumInitializers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="enumInitializers" />
+
+TypeScript enums assign sequentially increasing numbers to members that don't have explicit values.
+This behavior can cause unintended value changes if enum members are reordered, added, or removed.
+Explicitly initializing each enum member prevents these issues and makes the code's intent clearer.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+enum Status {
+	Pending,
+	Active,
+	Completed,
+}
+```
+
+```ts
+enum Direction {
+	Up,
+	Down,
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+enum Status {
+	Pending = 0,
+	Active = 1,
+	Completed = 2,
+}
+```
+
+```ts
+enum Direction {
+	Up = "Up",
+	Down = "Down",
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If the numeric values of enum members are not important to your project, you may not need this rule.
+This can be the case when enums are only used for type safety and the actual runtime values are never inspected or stored externally.
+
+## Further Reading
+
+- [TypeScript handbook: Enums](https://www.typescriptlang.org/docs/handbook/enums.html)
+- [MDN: Enumerations](https://developer.mozilla.org/en-US/docs/Glossary/Enumerated)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="enumInitializers" />

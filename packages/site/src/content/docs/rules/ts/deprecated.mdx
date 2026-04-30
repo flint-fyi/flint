@@ -1,0 +1,99 @@
+---
+description: "Disallow using code marked as @deprecated."
+title: "deprecated"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="deprecated" />
+
+The [JSDoc `@deprecated` tag](https://jsdoc.app/tags-deprecated) documents code that should no longer be used.
+TypeScript already visually indicates deprecated code with strikethrough styling, but does not produce errors for using it.
+Using deprecated code often leads to maintenance issues when that code is eventually removed.
+
+This rule reports references to code marked with `@deprecated`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+/** @deprecated Use newFunction instead */
+function oldFunction() {
+	return "old";
+}
+
+oldFunction();
+```
+
+```ts
+class Example {
+	/** @deprecated Use newMethod instead */
+	oldMethod() {}
+
+	test() {
+		this.oldMethod();
+	}
+}
+```
+
+```ts
+/** @deprecated Use NewClass instead */
+class OldClass {}
+
+const instance = new OldClass();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function newFunction() {
+	return "new";
+}
+
+newFunction();
+```
+
+```ts
+class Example {
+	newMethod() {}
+
+	test() {
+		this.newMethod();
+	}
+}
+```
+
+```ts
+/** @deprecated This is deprecated but not used */
+function unused() {}
+
+function active() {}
+active();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If portions of your project heavily use deprecated APIs and have no plan for migrating to non-deprecated alternatives, you may disable this rule in those portions.
+Some legacy code may need to continue using deprecated APIs until a migration can be planned.
+
+## Further Reading
+
+- [JSDoc @deprecated tag documentation](https://jsdoc.app/tags-deprecated)
+- [TypeScript JSDoc reference for @deprecated](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="deprecated" />

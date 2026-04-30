@@ -1,0 +1,74 @@
+---
+description: "Prefer `Date.now()` to get the number of milliseconds since the Unix Epoch."
+title: "dateNowTimestamps"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="dateNowTimestamps" />
+
+[`Date.now()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now) is shorter and more efficient than alternatives like `new Date().getTime()` because it avoids unnecessary instantiation of `Date` objects.
+
+This rule reports patterns that create a `Date` object only to immediately extract the timestamp, such as:
+
+- `new Date().getTime()`
+- `new Date().valueOf()`
+- `+new Date()`
+- `Number(new Date())`
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const timestamp = new Date().getTime();
+```
+
+```ts
+const timestamp = new Date().valueOf();
+```
+
+```ts
+const timestamp = +new Date();
+```
+
+```ts
+const timestamp = Number(new Date());
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const timestamp = Date.now();
+```
+
+```ts
+const date = new Date();
+const formattedDate = date.toISOString();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase intentionally uses `new Date().getTime()` or similar patterns for stylistic consistency, you may disable this rule.
+Some older codebases may prefer the more explicit instantiation pattern.
+
+## Further Reading
+
+- [MDN documentation on Date.now()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now)
+- [MDN documentation on Date.prototype.getTime()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="dateNowTimestamps" />

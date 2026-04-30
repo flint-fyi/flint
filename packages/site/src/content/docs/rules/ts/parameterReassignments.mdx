@@ -1,0 +1,72 @@
+---
+description: "Disallow reassignment of function parameters."
+title: "parameterReassignments"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="parameterReassignments" />
+
+Reassigning function parameters can make code harder to understand and debug.
+The parameter's original value becomes lost, making it difficult to trace what value the parameter had at different points in the function.
+
+Using a new variable instead makes the intent clearer and preserves the original parameter value.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function process(value: string) {
+	value = value.trim();
+	return value;
+}
+```
+
+```ts
+const fn = (count: number) => {
+	count = count + 1;
+	return count;
+};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function process(value: string) {
+	const trimmed = value.trim();
+	return trimmed;
+}
+```
+
+```ts
+const fn = (count: number) => {
+	const incremented = count + 1;
+	return incremented;
+};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase intentionally reuses parameter variables for intermediate calculations, this rule might no be for you.
+For example, if you prefer writing very small functions and feel confident you and any fellow developers won't misunderstand the code, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Parameter](https://developer.mozilla.org/en-US/docs/Glossary/Parameter)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="parameterReassignments" />

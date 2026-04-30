@@ -1,0 +1,83 @@
+---
+description: "Prefer the spread operator over `.apply()` calls."
+title: "functionApplySpreads"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="functionApplySpreads" />
+
+Before ES2015, one had to use `Function.prototype.apply()` to call variadic functions with an array of arguments.
+In ES2015 and later, the spread operator (`...`) provides cleaner syntax for the same purpose.
+
+This rule flags usage of `.apply()` when it can be replaced with spread syntax.
+It only reports cases where the `this` argument is not changed, meaning the spread replacement is safe.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+foo.apply(undefined, args);
+```
+
+```ts
+foo.apply(null, args);
+```
+
+```ts
+obj.foo.apply(obj, args);
+```
+
+```ts
+Math.max.apply(Math, numbers);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+foo(...args);
+```
+
+```ts
+obj.foo(...args);
+```
+
+```ts
+Math.max(...numbers);
+```
+
+```ts
+foo.apply(otherThis, args);
+```
+
+```ts
+foo.apply(null, [1, 2, 3]);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+This rule should not be used if you need to target ES5 or earlier JavaScript environments that don't support the spread operator.
+
+If you have code that intentionally uses `.apply()` for readability or other reasons, you may want to disable this rule.
+
+## Further Reading
+
+- [MDN: Spread syntax (...)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
+- [MDN: Function.prototype.apply()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="functionApplySpreads" />

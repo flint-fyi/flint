@@ -1,10 +1,12 @@
-import { markdownLanguage } from "../language.ts";
+import { markdownLanguage } from "@flint.fyi/markdown-language";
 
-export default markdownLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports heading levels incrementing by more than one.",
 		id: "headingIncrements",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		levelSkip: {
@@ -15,7 +17,7 @@ export default markdownLanguage.createRule({
 				"When increasing the level of a heading from its parent, the level should only ever increment by one.",
 				"Skipping heading ranks can be confusing -especially for automated tools and screen-readers- and should be avoided where possible.",
 			],
-			suggestions: ["TODO"],
+			suggestions: ["Increment heading levels by only one at a time."],
 		},
 	},
 	setup(context) {

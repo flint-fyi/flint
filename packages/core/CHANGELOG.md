@@ -1,5 +1,54 @@
 # @flint/core
 
+## 0.21.0
+
+### Minor Changes
+
+- 4fc0eef: Pass host to rules.
+- 57fa268: Add optional character range to language reports.
+- cb7e8a8: Change "diagnostics" nomenclature to "language reports".
+All external references to the term diagnostic or diagnostics are now using the term language report instead.
+
+### Patch Changes
+
+- dde886f: Incorrect line numbers for rules that report during teardown.
+- 1539f14: Improve performance by a factor of 2.
+- 0702aa2: Introduce Volar.js meta-language.
+- d3f5d17: Use `pathKey` for cache dependency invalidation to preserve lint cache hits.
+
+## 0.20.0
+
+### Minor Changes
+
+- e257ec4: Use `LinterHost` for linting.
+- 4b32a64: Factor in plugin IDs for comment directives.
+- fe76156: Add support for overriding default cache location.
+- db34436: Unify language file factory methods using `LinterHost`.
+- 442a3f4: Validate config rules on loading.
+- 3eaea9e: Unused directive tracking and reporting.
+
+### Patch Changes
+
+- 4c99c11: Implement schema validation for cache data.
+- b3a637a: Add `:exit` listeners to JSON, Markdown, and TypeScript.
+- d612d50: Convert gitignore patterns to glob exclude patterns.
+- f2f2c8b: Speed up teardowns.
+- 5c64fbb: Preserve report url through cache serialization.
+- 267fe8d: Support nested `.gitignore` files in filtering.
+- 011fbf2: Normalize file dependencies to ensure cache hits.
+
+## 0.19.0
+
+### Minor Changes
+
+- 6a5e553: feat(core): add RuleCreator class
+- 3353692: feat: split languages into dedicated packages
+- 3561386: feat(core): introduce `LinterHost`
+
+### Patch Changes
+
+- 2fb9715: feat(cli): dynamic data replacement in message
+
 ## 0.18.1
 
 ### Patch Changes

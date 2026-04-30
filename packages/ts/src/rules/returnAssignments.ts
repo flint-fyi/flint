@@ -1,16 +1,19 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+	unwrapParenthesizedNode,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using assignment expressions in return statements.",
 		id: "returnAssignments",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		noReturnAssign: {
@@ -28,9 +31,9 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		function checkForAssignment(
 			node: AST.ConciseBody | AST.Expression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		): void {
-			const unwrapped = unwrapParenthesizedExpression(node);
+			const unwrapped = unwrapParenthesizedNode(node);
 
 			if (
 				unwrapped.kind === SyntaxKind.BinaryExpression &&

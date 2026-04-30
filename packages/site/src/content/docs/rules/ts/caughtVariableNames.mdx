@@ -1,0 +1,90 @@
+---
+description: "Enforces a consistent naming convention for catch clause error variables."
+title: "caughtVariableNames"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="caughtVariableNames" />
+
+Consistent naming of catch clause parameters improves code readability.
+The preferred name is `error`, which clearly indicates the purpose of the variable.
+Descriptive names ending in "Error", are also acceptable (e.g., `innerError`, `parseError`).
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+try {
+	doSomething();
+} catch (e) {
+	console.log(e);
+}
+```
+
+```ts
+try {
+	readFile(path);
+} catch (err) {
+	console.log(err);
+}
+```
+
+```ts
+try {
+	doSomething();
+} catch (_) {
+	console.log("error occurred");
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+try {
+	doSomething();
+} catch (error) {
+	console.log(error);
+}
+```
+
+```ts
+try {
+	readFile(path);
+} catch (fileError) {
+	console.log(fileError);
+}
+```
+
+```ts
+try {
+	doSomething();
+} catch {
+	console.log("error occurred");
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has established conventions using different names like `e`, `err`, or `ex`, and changing them would require significant refactoring, you may disable this rule.
+
+## Further Reading
+
+- [MDN documentation on try...catch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="caughtVariableNames" />

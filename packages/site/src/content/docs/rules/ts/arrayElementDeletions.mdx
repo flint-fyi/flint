@@ -1,0 +1,80 @@
+---
+description: "Reports using the `delete` operator on array values."
+title: "arrayElementDeletions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayElementDeletions" />
+
+When using the `delete` operator with an array value, the array's `length` property is not affected, but the element at the specified index is removed and leaves an empty slot in the array.
+This creates a sparse array, which can lead to unexpected behavior when iterating or checking array properties.
+
+The recommended way to remove an element from an array is by using the `Array#splice()` method, which properly updates the array's length and shifts remaining elements.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const array: number[];
+delete array[0];
+```
+
+```ts
+const items = [1, 2, 3];
+delete items[1];
+```
+
+```ts
+declare const matrix: number[][];
+delete matrix[0][1];
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const array: number[];
+array.splice(0, 1);
+```
+
+```ts
+const items = [1, 2, 3];
+items.splice(1, 1);
+```
+
+```ts
+declare const obj: { [key: string]: number };
+delete obj["key"];
+```
+
+```ts
+declare const map: Map<string, number>;
+map.delete("key");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally want to create sparse arrays with empty slots, you can disable this rule.
+Some codebases may use sparse arrays for specific algorithms or memory optimization purposes.
+
+## Further Reading
+
+- [MDN: delete operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete)
+- [MDN: Array.prototype.splice()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayElementDeletions" />

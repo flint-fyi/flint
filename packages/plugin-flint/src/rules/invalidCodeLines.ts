@@ -1,15 +1,21 @@
-import { getTSNodeRange, typescriptLanguage } from "@flint.fyi/ts";
-import ts, { SyntaxKind } from "typescript";
+import type { FileChange } from "@flint.fyi/core";
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+import ts from "typescript";
 
-import { getRuleTesterDescribedCases } from "../getRuleTesterDescribedCases.ts";
-import type { ParsedTestCaseInvalid } from "../types.ts";
+import { getRuleTesterDescribedCases } from "../utils/getRuleTesterDescribedCases.ts";
+import type { ParsedTestCaseInvalid } from "../utils/types.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports cases for invalid code that isn't formatted across lines.",
 		id: "invalidCodeLines",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		singleLineTest: {
@@ -28,55 +34,63 @@ export default typescriptLanguage.createRule({
 	setup(context) {
 		function checkTestCase(
 			testCase: ParsedTestCaseInvalid,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
-			if (!testCase.code.startsWith("\n")) {
+			const fix = [
+				...createNewlineFixes(testCase.code, testCase.nodes.code, sourceFile),
+				...createNewlineFixes(
+					testCase.snapshot,
+					testCase.nodes.snapshot,
+					sourceFile,
+				),
+			];
+
+			if (fix.length) {
 				context.report({
-					fix: [
-						createFixForCode(testCase, sourceFile),
-						createFixForSnapshot(testCase, sourceFile),
-					],
+					fix,
 					message: "singleLineTest",
 					range: getTSNodeRange(testCase.nodes.code, sourceFile),
 				});
 			}
 		}
 
-		function createFixForCode(
-			testCase: ParsedTestCaseInvalid,
-			sourceFile: ts.SourceFile,
+		function createNewlineFixes(
+			code: string,
+			node: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral,
+			sourceFile: AST.SourceFile,
 		) {
-			if (testCase.nodes.code.kind === SyntaxKind.StringLiteral) {
-				return {
-					range: getTSNodeRange(testCase.nodes.code, sourceFile),
-					text: `\`\n${testCase.code}\n\``,
-				};
+			if (node.kind === ts.SyntaxKind.StringLiteral) {
+				return [
+					{
+						range: getTSNodeRange(node, sourceFile),
+						text: `\`\n${code}\n\``,
+					},
+				];
 			}
 
-			const begin = testCase.nodes.code.getStart(sourceFile) + 1;
+			const changes: FileChange[] = [];
 
-			return {
-				range: {
-					begin,
-					end: begin,
-				},
-				text: "\n",
-			};
-		}
+			if (!code.startsWith("\n")) {
+				changes.push({
+					range: {
+						begin: node.getStart(sourceFile) + 1,
+						end: node.getStart(sourceFile) + 1,
+					},
+					text: "\n",
+				});
+			}
 
-		function createFixForSnapshot(
-			testCase: ParsedTestCaseInvalid,
-			sourceFile: ts.SourceFile,
-		) {
-			const begin = testCase.nodes.snapshot.getStart(sourceFile) + 1;
+			if (!code.endsWith("\n")) {
+				changes.push({
+					range: {
+						begin: node.getEnd() - 1,
+						end: node.getEnd() - 1,
+					},
+					text: "\n",
+				});
+			}
 
-			return {
-				range: {
-					begin,
-					end: begin,
-				},
-				text: "\n",
-			};
+			return changes;
 		}
 
 		return {
@@ -87,9 +101,9 @@ export default typescriptLanguage.createRule({
 						return;
 					}
 
-					describedCases.invalid.forEach((testCase) => {
+					for (const testCase of describedCases.invalid) {
 						checkTestCase(testCase, sourceFile);
-					});
+					}
 				},
 			},
 		};

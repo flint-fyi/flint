@@ -1,0 +1,83 @@
+---
+description: "Reports invisible characters in regex patterns that should use escape sequences instead."
+title: "regexInvisibleCharacters"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexInvisibleCharacters" />
+
+Invisible characters like tabs, non-breaking spaces, zero-width spaces, and other whitespace characters are difficult to distinguish visually.
+When these characters appear literally in regex patterns, they can lead to confusion and hard-to-debug issues.
+Using explicit escape sequences makes the intent clear and the code more maintainable.
+
+Regular spaces (U+0020) are allowed since they are commonly visible in most editors and fonts.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// Tab character embedded in regex (invisible)
+const pattern = /	/;
+```
+
+```ts
+// Non-breaking space embedded in regex
+const pattern = / /;
+```
+
+```ts
+// Zero-width space embedded in regex
+const pattern = /​/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\x09/;
+```
+
+```ts
+const pattern = /\xA0/;
+```
+
+```ts
+const pattern = /\u200B/;
+```
+
+```ts
+// Regular space is allowed
+const pattern = / /;
+```
+
+```ts
+// Standard escape sequences are fine
+const pattern = /\t\n\r/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have tooling that renders invisible characters distinctively, or if your codebase intentionally uses literal invisible characters in regex patterns for specific matching requirements, you might prefer to disable this rule.
+Some specialized text processing may require literal invisible character matching.
+
+## Further Reading
+
+- [MDN: Regular expressions - Character escape](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_escape)
+- [Unicode General Category Zs (Space Separator)](https://www.compart.com/en/unicode/category/Zs)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexInvisibleCharacters" />

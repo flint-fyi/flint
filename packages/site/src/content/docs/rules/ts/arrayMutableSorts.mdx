@@ -1,0 +1,73 @@
+---
+description: "Reports `.sort()` calls on arrays that mutate the original array."
+title: "arrayMutableSorts"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayMutableSorts" />
+
+The `.sort()` method mutates the original array in place.
+Using `.toSorted()` instead returns a new sorted array without modifying the original, making code more predictable and avoiding unintended side effects.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const values = [3, 1, 2];
+const sorted = values.sort();
+```
+
+```ts
+const items = [3, 1, 2];
+const sorted = items.sort((a, b) => a - b);
+```
+
+```ts
+const data = [3, 1, 2];
+const result = [...data].sort();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const values = [3, 1, 2];
+const sorted = values.toSorted();
+```
+
+```ts
+const items = [3, 1, 2];
+const sorted = items.toSorted((a, b) => a - b);
+```
+
+```ts
+const values = [3, 1, 2];
+values.sort();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally want to mutate the original array in place, or if you're working in an environment that doesn't support `.toSorted()` (ES2023+), you may want to disable this rule.
+Note that `.sort()` is still allowed when used as a standalone expression statement since the mutation is likely intentional in that case.
+
+## Further Reading
+
+- [MDN: Array.prototype.sort()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
+- [MDN: Array.prototype.toSorted()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayMutableSorts" />

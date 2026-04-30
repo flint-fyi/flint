@@ -1,6 +1,5 @@
+import { yamlLanguage } from "@flint.fyi/yaml-language";
 import type * as yaml from "yaml-unist-parser";
-
-import { yamlLanguage } from "../language.ts";
 
 /**
  * Calculate the expected indentation for a flow mapping's pairs when converted to block style.
@@ -35,7 +34,7 @@ function canConvertToBlock(node: yaml.FlowMapping) {
 	for (const child of node.children) {
 		const keyNode = child.children[0];
 		const valueNode = child.children[1];
-		if (keyNode.children.length === 0 || valueNode.children.length === 0) {
+		if (!keyNode.children.length || !valueNode.children.length) {
 			return false;
 		}
 	}
@@ -68,11 +67,13 @@ function convertToBlock(node: yaml.FlowMapping, sourceText: string) {
 	return "\n" + pairs.join("\n");
 }
 
-export default yamlLanguage.createRule({
+import { ruleCreator } from "./ruleCreator.ts";
+
+export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Prefer block-style mappings over flow-style mappings.",
 		id: "blockMappings",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferBlock: {
@@ -89,11 +90,19 @@ export default yamlLanguage.createRule({
 		return {
 			visitors: {
 				flowMapping: (node, { sourceText }) => {
+					const fixStart = (() => {
+						let start = node.position.start.offset;
+						while (start > 0 && sourceText[start - 1] === " ") {
+							start--;
+						}
+						return start;
+					})();
+
 					context.report({
 						fix: canConvertToBlock(node)
 							? {
 									range: {
-										begin: node.position.start.offset,
+										begin: fixStart,
 										end: node.position.end.offset,
 									},
 									text: convertToBlock(node, sourceText),

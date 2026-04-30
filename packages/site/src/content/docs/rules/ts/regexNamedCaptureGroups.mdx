@@ -1,0 +1,73 @@
+---
+description: "Reports capturing groups in regular expressions that do not have a name."
+title: "regexNamedCaptureGroups"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexNamedCaptureGroups" />
+
+Named capture groups (`(?<name>...)`) provide several advantages over numbered capture groups:
+
+- They make regex patterns more self-documenting
+- They are easier to reference in replacement strings
+- They don't break when the order of groups changes
+- They work better with destructuring in match results
+
+If a capture is not actually needed, consider using a non-capturing group `(?:...)` instead.
+
+This rule reports capturing groups in regular expressions that do not have a name.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /([0-9]{4})-([0-9]{2})-([0-9]{2})/;
+```
+
+```ts
+const pattern = /(foo)(bar)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})/;
+```
+
+```ts
+// Non-capturing groups when capture is not needed
+const pattern = /(?:foo)(?:bar)/;
+```
+
+```ts
+// Mix of named and non-capturing groups
+const pattern = /(?<protocol>https?):\/\/(?:www\.)?(?<domain>[^/]+)/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a large codebase with many existing unnamed capture groups that would be difficult to refactor, you might prefer to disable this rule.
+Some developers also find numbered groups sufficient for simple regex patterns with few groups.
+
+## Further Reading
+
+- [MDN: Regular expressions - Named capturing group](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Named_capturing_group)
+- [MDN: Regular expressions - Non-capturing group](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Non-capturing_group)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexNamedCaptureGroups" />

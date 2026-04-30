@@ -1,0 +1,88 @@
+---
+description: "Reports using `.forEach()` when a for-of loop can be used."
+title: "arrayLoops"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayLoops" />
+
+`for...of` loops offer several benefits over the `.forEach()` method:
+
+- Ability to exit early with `break` or `return`
+- Ability to skip iterations with `continue`
+- TypeScript type narrowing works properly since no function boundary is crossed
+- Often better performance
+
+This rule reports when `.forEach()` is called on arrays.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const array: number[];
+array.forEach((element) => {
+	console.log(element);
+});
+```
+
+```ts
+declare const array: string[];
+array.forEach(function (item) {
+	process(item);
+});
+```
+
+```ts
+[1, 2, 3].forEach((value) => {
+	handle(value);
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const array: number[];
+for (const element of array) {
+	console.log(element);
+}
+```
+
+```ts
+declare const array: string[];
+for (const item of array) {
+	process(item);
+}
+```
+
+```ts
+declare const array: number[];
+array.map((element) => element * 2);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the functional style of `.forEach()`, or if your codebase uses it extensively for consistency, you may disable this rule.
+Note that this rule intentionally does not flag `.forEach()` on `Set` or `Map` since those cannot be as naturally replaced with for-of in all cases.
+
+## Further Reading
+
+- [MDN: for...of statement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of)
+- [MDN: Array.prototype.forEach()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayLoops" />

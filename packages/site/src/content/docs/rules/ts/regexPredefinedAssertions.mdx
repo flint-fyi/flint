@@ -1,0 +1,81 @@
+---
+description: "Reports regex lookarounds that can be replaced with predefined assertions."
+title: "regexPredefinedAssertions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexPredefinedAssertions" />
+
+Regular expressions support predefined assertions like `\b` (word boundary), `\B` (non-word boundary), `^` (start of string), and `$` (end of string).
+These are more concise and communicate intent more directly than equivalent lookaround patterns.
+
+This rule reports lookarounds that can be simplified:
+
+- `(?=\w)` and `(?<=\w)` → `\B` (non-word boundary)
+- `(?!\w)` and `(?<!\w)` → `\b` (word boundary)
+- `(?<!.)` at pattern start → `^` (start of string)
+- `(?!.)` at pattern end → `$` (end of string)
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a(?=\w)b/;
+```
+
+```ts
+const pattern = /a(?!\w)b/;
+```
+
+```ts
+const pattern = /(?<!.)abc/;
+```
+
+```ts
+const pattern = /abc(?!.)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a\Bb/;
+```
+
+```ts
+const pattern = /a\bb/;
+```
+
+```ts
+const pattern = /^abc/;
+```
+
+```ts
+const pattern = /abc$/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the explicitness of lookaround assertions for documentation purposes, or if you need to maintain consistency with more complex patterns that require lookarounds, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Regular expressions - Assertions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Assertions)
+- [MDN: Regular expressions - Word boundary assertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Word_boundary_assertion)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexPredefinedAssertions" />

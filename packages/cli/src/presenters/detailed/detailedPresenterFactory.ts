@@ -2,7 +2,7 @@ import { hasFix } from "@flint.fyi/core";
 import chalk from "chalk";
 
 import { presentHeader } from "../shared/header.ts";
-import { presentDiagnostics } from "../shared/presentDiagnostics.ts";
+import { presentLanguageReports } from "../shared/presentLanguageReports.ts";
 import { presentSummary } from "../shared/summary.ts";
 import type { PresenterFactory } from "../types.ts";
 import { ColorCodes, indenter } from "./constants.ts";
@@ -55,7 +55,7 @@ export const detailedPresenterFactory: PresenterFactory = {
 			},
 			*summarize(summaryContext) {
 				yield* presentSummary(counts, summaryContext);
-				yield* presentDiagnostics(summaryContext.lintResults.filesResults);
+				yield* presentLanguageReports(summaryContext.lintResults.filesResults);
 			},
 		};
 	},

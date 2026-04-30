@@ -3,13 +3,17 @@ import {
 	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
 	type AnyRule,
-	getColumnAndLineOfPosition,
+	type FileReport,
 	type InferredOutputObject,
 	type NormalizedReport,
+	processRuleReport,
 	type RuleAbout,
+	type VFSLinterHost,
 } from "@flint.fyi/core";
-import { nullThrows } from "@flint.fyi/utils";
+import { normalizePath, pathKey } from "@flint.fyi/utils";
 import type { CachedFactory } from "cached-factory";
+import assert from "node:assert/strict";
+import path from "node:path";
 
 import type { TestCaseNormalized } from "./normalizeTestCase.ts";
 
@@ -24,46 +28,54 @@ export async function runTestCaseRule<
 	OptionsSchema extends AnyOptionalSchema | undefined,
 >(
 	fileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>,
+	linterHost: VFSLinterHost,
 	{ options, rule }: Required<TestCaseRuleConfiguration<OptionsSchema>>,
-	{ code, fileName }: TestCaseNormalized,
+	{ code, fileName, files }: TestCaseNormalized,
 ): Promise<NormalizedReport[]> {
-	using file = fileFactories.get(rule.language).prepareFromVirtual({
-		filePath: fileName,
-		filePathAbsolute: fileName,
-		sourceText: code,
-	}).file;
+	const filePathAbsolute = normalizePath(
+		path.resolve(linterHost.getCurrentDirectory(), fileName),
+	);
+	const caseSensitive = linterHost.isCaseSensitiveFS();
+	const targetKey = pathKey(filePathAbsolute, caseSensitive);
+	for (const oldFile of linterHost.vfsListFiles().keys()) {
+		if (pathKey(oldFile, caseSensitive) !== targetKey) {
+			linterHost.vfsDeleteFile(oldFile);
+		}
+	}
+	for (const [name, content] of Object.entries(files ?? {})) {
+		const filePath = normalizePath(
+			path.resolve(linterHost.getCurrentDirectory(), name),
+		);
+		assert.notEqual(
+			filePath,
+			filePathAbsolute,
+			`Expected 'files' not to shadow '${fileName}'`,
+		);
+		linterHost.vfsUpsertFile(filePath, content);
+	}
+	linterHost.vfsUpsertFile(filePathAbsolute, code);
 
-	const reports: NormalizedReport[] = [];
+	using file = fileFactories.get(rule.language).createFile({
+		filePath: fileName,
+		filePathAbsolute,
+		sourceText: code,
+	});
+
+	const reports: FileReport[] = [];
 
 	const ruleRuntime = await rule.setup({
+		host: linterHost,
 		report(ruleReport) {
-			reports.push({
-				...ruleReport,
-				fix:
-					ruleReport.fix && !Array.isArray(ruleReport.fix)
-						? [ruleReport.fix]
-						: ruleReport.fix,
-				message: nullThrows(
-					rule.messages[ruleReport.message],
-					`Message should be defined (${ruleReport.message}) when reporting for rule "${rule.about.id}"`,
-				),
-				range: {
-					begin: getColumnAndLineOfPosition(
-						file.about.sourceText,
-						ruleReport.range.begin,
-					),
-					end: getColumnAndLineOfPosition(
-						file.about.sourceText,
-						ruleReport.range.end,
-					),
-				},
-			});
+			const processedReport = processRuleReport(file, rule, ruleReport);
+			if (processedReport == null) {
+				return;
+			}
+			reports.push(processedReport);
 		},
 	});
 
 	if (ruleRuntime) {
-		file.runVisitors(options, ruleRuntime);
-
+		rule.language.runFileVisitors(file, options, ruleRuntime);
 		await ruleRuntime.teardown?.();
 	}
 

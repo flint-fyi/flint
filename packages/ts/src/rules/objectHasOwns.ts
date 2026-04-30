@@ -1,17 +1,19 @@
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+import type { AST, Checker } from "@flint.fyi/typescript-language";
+import { isGlobalDeclarationOfName } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import type { Checker } from "../types/checker.ts";
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Prefer Object.hasOwn() over Object.prototype.hasOwnProperty.call() for checking own properties.",
 		id: "objectHasOwns",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferHasOwn: {
@@ -45,7 +47,7 @@ export default typescriptLanguage.createRule({
 		function isObjectLiteralHasOwnProperty(node: AST.Expression) {
 			return (
 				node.kind === SyntaxKind.ObjectLiteralExpression &&
-				node.properties.length === 0
+				!node.properties.length
 			);
 		}
 

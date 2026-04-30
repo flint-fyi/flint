@@ -1,0 +1,87 @@
+---
+description: "Reports using `Array#some()` with simple equality checks that can be replaced with `.includes()`."
+title: "arrayIncludesMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arrayIncludesMethods" />
+
+`Array.prototype.some()` is intended for more complex predicate checks.
+When the callback only performs a simple equality check (`x === value` or `x == value`), `.includes()` is more readable and expressive.
+
+This rule reports when `.some()` can be simplified to `.includes()`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+declare const array: string[];
+array.some((item) => item === "value");
+```
+
+```ts
+declare const array: string[];
+array.some((item) => "value" === item);
+```
+
+```ts
+declare const array: number[];
+declare const target: number;
+array.some((element) => element === target);
+```
+
+```ts
+declare const array: string[];
+array.some(function (item) {
+	return item === "value";
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+declare const array: string[];
+array.includes("value");
+```
+
+```ts
+declare const array: string[];
+array.some((item) => item.startsWith("v"));
+```
+
+```ts
+declare const array: number[];
+array.some((item) => item > 0);
+```
+
+```ts
+declare const array: object[];
+array.some((item) => item.id === 1);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase uses `.some()` for consistency even with simple equality checks, or if you have a large number of existing uses that would be difficult to refactor, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Array.prototype.includes()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
+- [MDN: Array.prototype.some()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arrayIncludesMethods" />

@@ -1,0 +1,168 @@
+---
+description: "Reports classes used as static namespaces."
+title: "extraneousClasses"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="extraneousClasses" />
+
+Classes that contain only static members or only a constructor can be replaced with simpler constructs.
+Static-only classes are often used as namespaces, but in JavaScript and TypeScript, individual module exports serve this purpose better.
+Classes with only a constructor can typically be replaced with standalone functions.
+
+Using classes as static namespaces has several drawbacks:
+
+- Wrapper classes add cognitive complexity without structural improvements
+- Contents are already organized by being in a module
+- IDEs provide better suggestions for module exports than static class properties
+- Static analysis tools can more easily detect unused exports in modules
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Empty {}
+```
+
+```ts
+class OnlyConstructor {
+	constructor() {
+		console.log("init");
+	}
+}
+```
+
+```ts
+class StaticUtils {
+	static format(value: string) {
+		return value.trim();
+	}
+
+	static parse(value: string) {
+		return JSON.parse(value);
+	}
+}
+```
+
+```ts
+class Constants {
+	static readonly VERSION = "1.0.0";
+	static readonly MAX_SIZE = 100;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Example {
+	value = 42;
+}
+```
+
+```ts
+class Example {
+	constructor(public value: number) {}
+}
+```
+
+```ts
+export function format(value: string) {
+	return value.trim();
+}
+
+export function parse(value: string) {
+	return JSON.parse(value);
+}
+```
+
+```ts
+export const VERSION = "1.0.0";
+export const MAX_SIZE = 100;
+```
+
+```ts
+class Derived extends Base {
+	static helper() {
+		return 42;
+	}
+}
+```
+
+```ts
+abstract class Base {
+	abstract getValue(): number;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `allowEmpty`
+
+When set to `true`, allows empty classes with no members.
+
+```ts
+// Valid with { allowEmpty: true }
+class Empty {}
+```
+
+### `allowConstructorOnly`
+
+When set to `true`, allows classes that contain only a constructor.
+
+```ts
+// Valid with { allowConstructorOnly: true }
+class Example {
+	constructor() {
+		console.log("init");
+	}
+}
+```
+
+### `allowStaticOnly`
+
+When set to `true`, allows classes that only contain static members.
+
+```ts
+// Valid with { allowStaticOnly: true }
+class Utils {
+	static format(value: string) {
+		return value.trim();
+	}
+}
+```
+
+### `allowWithDecorator`
+
+When set to `true`, allows any extraneous class that includes a decorator.
+This is useful for frameworks that use decorators to configure classes.
+
+```ts
+// Valid with { allowWithDecorator: true }
+@Injectable()
+class Service {}
+```
+
+## When Not To Use It
+
+If your codebase uses frameworks that rely heavily on class decorators for configuration (such as Angular or NestJS), you may want to enable `allowWithDecorator` for consistency.
+Some legacy codebases may use classes as namespaces extensively, in which case migrating may not be practical.
+
+## Further Reading
+
+- [MDN: Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+- [MDN: static](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static)
+- [TypeScript Handbook: Classes](https://www.typescriptlang.org/docs/handbook/2/classes.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="extraneousClasses" />

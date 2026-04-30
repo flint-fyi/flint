@@ -1,9 +1,12 @@
+import { node } from "@flint.fyi/node";
+import { performance } from "@flint.fyi/performance";
 import { flint } from "@flint.fyi/plugin-flint";
-import { node } from "@flint.fyi/plugin-node";
-import { spelling } from "@flint.fyi/plugin-spelling";
+import { spelling } from "@flint.fyi/spelling";
+import { vitest } from "@flint.fyi/vitest";
 import { defineConfig, globs, json, md, ts, yaml } from "flint";
 
 export default defineConfig({
+	ignore: ["coverage/", "packages/e2e/tests/**/fixtures/**/*"],
 	use: [
 		{
 			files: json.files.all,
@@ -11,7 +14,7 @@ export default defineConfig({
 		},
 		{
 			files: md.files.all,
-			rules: md.presets.logical,
+			rules: md.presets.logicalStrict,
 		},
 		{
 			files: {
@@ -20,11 +23,23 @@ export default defineConfig({
 			},
 			rules: [
 				flint.presets.logical,
-				node.presets.logical,
-				node.presets.stylistic,
-				ts.presets.logical,
-				ts.presets.stylistic,
+				flint.presets.stylistic,
+				flint.presets.stylisticStrict,
+				node.presets.logicalStrict,
+				node.presets.stylisticStrict,
+				performance.presets.logical,
+				performance.rules({ loopFunctions: false }),
+				ts.presets.logicalStrict,
+				ts.presets.stylisticStrict,
+				ts.rules({
+					// Pending https://github.com/flint-fyi/flint/issues/2165
+					objectShorthand: false,
+				}),
 			],
+		},
+		{
+			files: vitest.files.all,
+			rules: vitest.presets.logicalStrict,
 		},
 		{
 			files: {

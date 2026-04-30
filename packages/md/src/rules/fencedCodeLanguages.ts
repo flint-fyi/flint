@@ -1,13 +1,14 @@
+import { markdownLanguage } from "@flint.fyi/markdown-language";
+import type { WithPosition } from "@flint.fyi/markdown-language";
 import type { Code, Node, Root } from "mdast";
 
-import { markdownLanguage } from "../language.ts";
-import type { WithPosition } from "../nodes.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
-export default markdownLanguage.createRule({
+export default ruleCreator.createRule(markdownLanguage, {
 	about: {
 		description: "Reports fenced code blocks without a language specified.",
 		id: "fencedCodeLanguages",
-		preset: "stylistic",
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		missingLanguage: {
@@ -28,21 +29,20 @@ export default markdownLanguage.createRule({
 			visitors: {
 				root(node: WithPosition<Root>) {
 					function visit(node: Node): void {
-						if (node.type === "code") {
-							if (
-								!(node as Code).lang &&
-								node.position?.start.offset !== undefined &&
-								node.position.end.offset !== undefined
-							) {
-								context.report({
-									message: "missingLanguage",
-									range: {
-										begin: node.position.start.offset,
-										end: node.position.end.offset,
-									},
-								});
-								return;
-							}
+						if (
+							node.type === "code" &&
+							!(node as Code).lang &&
+							node.position?.start.offset !== undefined &&
+							node.position.end.offset !== undefined
+						) {
+							context.report({
+								message: "missingLanguage",
+								range: {
+									begin: node.position.start.offset,
+									end: node.position.end.offset,
+								},
+							});
+							return;
 						}
 
 						if ("children" in node && Array.isArray(node.children)) {

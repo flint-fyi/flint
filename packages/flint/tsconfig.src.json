@@ -11,6 +11,7 @@
 		{ "path": "../core" },
 		{ "path": "../json" },
 		{ "path": "../md" },
+		{ "path": "../package-json" },
 		{ "path": "../ts" },
 		{ "path": "../yaml" }
 	]

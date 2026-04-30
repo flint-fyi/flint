@@ -1,0 +1,68 @@
+---
+description: "Prefer passing a `Date` directly to the `Date` constructor when cloning, rather than calling `getTime()`."
+title: "dateConstructorClones"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="dateConstructorClones" />
+
+The [`Date` constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date) can clone a `Date` object directly when passed as an argument.
+Calling `.getTime()` first is unnecessary since ES2015.
+
+Before ES2015, `new Date(date)` converted the `date` to a string first, making it unreliable for cloning.
+Modern JavaScript runtimes pass the date value directly, making the `.getTime()` call redundant.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const original = new Date();
+const clone = new Date(original.getTime());
+```
+
+```ts
+function cloneDate(date: Date) {
+	return new Date(date.getTime());
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const original = new Date();
+const clone = new Date(original);
+```
+
+```ts
+function cloneDate(date: Date) {
+	return new Date(date);
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase needs to support pre-ES2015 environments where `new Date(date)` behavior was unreliable, or if you have manually changed global aspects of `Date` such as the `.getTime()` method, you may need to disable this rule.
+However, most modern codebases target ES2015 or later and can use the direct approach.
+
+## Further Reading
+
+- [MDN documentation on Date constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date)
+- [MDN documentation on Date.prototype.getTime()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="dateConstructorClones" />

@@ -1,0 +1,86 @@
+---
+description: "Reports character class elements that can be simplified to ranges."
+title: "regexCharacterClassRanges"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexCharacterClassRanges" />
+
+Character class ranges in regular expressions are more concise than listing individual consecutive characters.
+When four or more consecutive characters appear in a character class, they can be combined into a range for better readability.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const letters = /[abcd]/;
+```
+
+```ts
+const digits = /[0123]/;
+```
+
+```ts
+const uppercase = /[ABCD]/;
+```
+
+```ts
+const mixedWithRange = /[a-cd]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const letters = /[a-d]/;
+```
+
+```ts
+const digits = /[0-3]/;
+```
+
+```ts
+const uppercase = /[A-D]/;
+```
+
+```ts
+// Three consecutive characters are allowed (below the threshold)
+const short = /[abc]/;
+```
+
+```ts
+// Non-consecutive characters cannot be simplified
+const vowels = /[aeiou]/;
+```
+
+```ts
+// Existing ranges are already optimal
+const allLetters = /[a-z]/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer listing individual characters for clarity (for example, when the characters represent specific values rather than a range), you might prefer to disable this rule.
+Some developers find explicit character lists easier to understand when the character set represents distinct concepts.
+
+## Further Reading
+
+- [MDN: Regular expressions - Character classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Character_classes)
+- [MDN: Character class escape](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_class_escape)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexCharacterClassRanges" />

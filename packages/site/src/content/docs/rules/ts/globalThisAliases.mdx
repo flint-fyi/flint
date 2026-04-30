@@ -1,0 +1,69 @@
+---
+description: "Reports using window, self, or global instead of globalThis."
+title: "globalThisAliases"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="globalThisAliases" />
+
+This rule enforces the use of `globalThis` over environment-specific global object aliases like `window`, `self`, and `global`.
+
+`globalThis` is the standard way to access the global object across all JavaScript environments.
+Using `window`, `self`, or `global` ties your code to specific environments (browser, web worker, or Node.js).
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = window.localStorage;
+```
+
+```ts
+window.addEventListener("load", handler);
+```
+
+```ts
+const ref = self;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = globalThis.localStorage;
+```
+
+```ts
+globalThis.addEventListener("load", handler);
+```
+
+```ts
+const ref = globalThis;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are targeting a specific environment and want to make that explicit in your code, you might choose to use environment-specific globals.
+Additionally, some older environments may not support `globalThis`, though polyfills are available.
+
+## Further Reading
+
+- [MDN: globalThis](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis)
+- [MDN: window](https://developer.mozilla.org/en-US/docs/Web/API/Window)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="globalThisAliases" />

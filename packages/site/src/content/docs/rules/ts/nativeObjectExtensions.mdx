@@ -1,0 +1,101 @@
+---
+description: "Reports extending the prototype of native JavaScript objects."
+title: "nativeObjectExtensions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="nativeObjectExtensions" />
+
+Extending native JavaScript prototypes like `Array.prototype` or `Object.prototype` affects all instances of that type across the entire codebase.
+This can cause conflicts with other libraries that expect standard prototype behavior.
+Future ECMAScript versions may add methods with the same name, causing unexpected behavior when those methods are overwritten.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+Array.prototype.custom = function () {
+	return this;
+};
+```
+
+```ts
+Object.prototype.method = 123;
+```
+
+```ts
+String.prototype.toTitleCase = function () {
+	return this.charAt(0).toUpperCase() + this.slice(1);
+};
+```
+
+```ts
+Object.defineProperty(Array.prototype, "custom", {
+	value: function () {},
+});
+```
+
+```ts
+Object.defineProperties(Object.prototype, {
+	method: { value: 123 },
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function customArrayMethod<T>(array: T[]): T[] {
+	return array;
+}
+```
+
+```ts
+class ExtendedArray<T> extends Array<T> {
+	custom() {
+		return this;
+	}
+}
+```
+
+```ts
+function toTitleCase(value: string) {
+	return value.charAt(0).toUpperCase() + value.slice(1);
+}
+```
+
+```ts
+const arrayUtils = {
+	custom<T>(array: T[]) {
+		return array;
+	},
+};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are developing a polyfill library that intentionally adds missing standard methods to native prototypes, you may need to disable this rule.
+Some frameworks also extend native prototypes as part of their core design, though this is increasingly rare in modern JavaScript development.
+
+## Further Reading
+
+- [MDN: Inheritance and the prototype chain](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)
+- [MDN: Object.defineProperty()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+- [MDN: Object.prototype](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/prototype)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="nativeObjectExtensions" />

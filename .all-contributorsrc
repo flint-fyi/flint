@@ -13,7 +13,8 @@
         "maintenance",
         "projectManagement",
         "tool",
-        "bug"
+        "bug",
+        "test"
       ],
       "login": "JoshuaKGoldberg",
       "name": "Josh Goldberg ✨",
@@ -84,7 +85,11 @@
       "profile": "https://github.com/auvred",
       "contributions": [
         "bug",
-        "maintenance"
+        "maintenance",
+        "ideas",
+        "test",
+        "doc",
+        "code"
       ]
     },
     {
@@ -98,7 +103,8 @@
         "tool",
         "maintenance",
         "bug",
-        "infra"
+        "infra",
+        "doc"
       ]
     },
     {
@@ -107,7 +113,122 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/53019676?v=4",
       "profile": "https://github.com/kirkwaiblinger",
       "contributions": [
+        "code",
+        "maintenance",
+        "ideas",
+        "doc"
+      ]
+    },
+    {
+      "login": "barrymichaeldoyle",
+      "name": "Barry Michael Doyle",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4674486?v=4",
+      "profile": "https://barrymichaeldoyle.com",
+      "contributions": [
+        "infra",
+        "maintenance",
         "code"
+      ]
+    },
+    {
+      "login": "kovsu",
+      "name": "Konv Suu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/82451257?v=4",
+      "profile": "https://github.com/kovsu",
+      "contributions": [
+        "doc",
+        "code",
+        "maintenance",
+        "bug"
+      ]
+    },
+    {
+      "login": "michaelfaith",
+      "name": "michael faith",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8071845?v=4",
+      "profile": "https://github.com/michaelfaith",
+      "contributions": [
+        "ideas",
+        "doc",
+        "bug",
+        "maintenance",
+        "tool",
+        "code",
+        "infra"
+      ]
+    },
+    {
+      "login": "kolharsam",
+      "name": "Sameer Kolhar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6604943?v=4",
+      "profile": "https://www.kolharsam.net",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "yharaskrik",
+      "name": "Jay Bell",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9469090?v=4",
+      "profile": "https://jaybell.me/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "tibisabau",
+      "name": "Tiberiu Sabău",
+      "avatar_url": "https://avatars.githubusercontent.com/u/96194994?v=4",
+      "profile": "https://github.com/tibisabau",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "cylewaitforit",
+      "name": "cylewaitforit",
+      "avatar_url": "https://avatars.githubusercontent.com/u/54253392?v=4",
+      "profile": "https://github.com/cylewaitforit",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "tylerlaprade",
+      "name": "Tyler C Laprade, CFA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5475199?v=4",
+      "profile": "http://www.irrationalmindsthinkalike.com",
+      "contributions": [
+        "doc",
+        "ideas",
+        "code"
+      ]
+    },
+    {
+      "login": "sigmabrogz",
+      "name": "Sigmabro",
+      "avatar_url": "https://avatars.githubusercontent.com/u/122412346?v=4",
+      "profile": "https://github.com/Sigmabrogz",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "yonava",
+      "name": "Yona Alexander Voss-Andreae",
+      "avatar_url": "https://avatars.githubusercontent.com/u/76519301?v=4",
+      "profile": "https://github.com/Yonava",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "techmannih",
+      "name": "Manish chaudhary ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/125847751?v=4",
+      "profile": "https://techmannih.me",
+      "contributions": [
+        "ideas"
       ]
     }
   ],
@@ -117,7 +238,7 @@
     "README.md"
   ],
   "projectName": "flint",
-  "projectOwner": "JoshuaKGoldberg",
+  "projectOwner": "flint-fyi",
   "repoType": "github",
   "commitConvention": "angular"
 }

@@ -1,0 +1,92 @@
+---
+description: "Reports function names that don't match the variable or property they're assigned to."
+title: "functionNameMatches"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="functionNameMatches" />
+
+When a named function expression is assigned to a variable or property, the function name should match the assigned name.
+Mismatched names can cause confusion when debugging or reading stack traces, as the function name shown may differ from the variable used in code.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = function other() {};
+```
+
+```ts
+let value = function other() {};
+```
+
+```ts
+const object = { value: function other() {} };
+```
+
+```ts
+class Example {
+	value = function other() {};
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = function value() {};
+```
+
+```ts
+const value = function () {};
+```
+
+```ts
+const value = () => {};
+```
+
+```ts
+const object = { value: function value() {} };
+```
+
+```ts
+const object = { value: function () {} };
+```
+
+```ts
+class Example {
+	value = function value() {};
+}
+```
+
+```ts
+class Example {
+	#value = function other() {};
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use different names for function expressions and their assigned variables (e.g., for specific debugging purposes), you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: function expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/function)
+- [MDN: Function.name](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="functionNameMatches" />

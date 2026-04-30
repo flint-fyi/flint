@@ -1,0 +1,136 @@
+---
+description: "Reports backreferences that may reference a capturing group that was not matched."
+title: "regexUnnecessaryReferentialBackreferences"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryReferentialBackreferences" />
+
+It is possible to make a referenced group of a backreference not matched because some other path leads to the backreference.
+In that case the backreference will trivially accept (e.g. `/(?:(a)|b)\1/`).
+This can happen when the group is inside an optional quantifier, inside an alternation where some branches don't include it, or when the group can be reset in a loop.
+Similarly, this can will happen if the captured text of the referenced group was reset before reaching the backreference.
+
+This rule reports backreferences that may always be empty because the referenced capturing group might not participate in the match.
+
+## Examples
+
+### Optional Capturing Group
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(a)?b\1/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)b\1/;
+```
+
+</TabItem>
+</Tabs>
+
+### Zero-or-More Quantifier
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(a)*\1/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)+\1/;
+```
+
+</TabItem>
+</Tabs>
+
+### Alternation Without Group
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:(a)|b)\1/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)\1/;
+```
+
+</TabItem>
+</Tabs>
+
+### Group Reset in Loop
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:(a)|b)+\1/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(a)+\1/;
+```
+
+</TabItem>
+</Tabs>
+
+### Lookahead Ensures Match
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(a)?b\1/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?=(a))\1b/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use backreferences that may be empty to match optional content conditionally, you may want to disable this rule.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for specific cases instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Groups and backreferences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Groups_and_backreferences)
+- [MDN: Regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents
+	pluginId="ts"
+	ruleId="regexUnnecessaryReferentialBackreferences"
+/>

@@ -1,0 +1,77 @@
+---
+description: "Reports unnecessary `end` argument in `.slice()` calls when it equals the length or is `Infinity`."
+title: "arraySliceUnnecessaryEnd"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="arraySliceUnnecessaryEnd" />
+
+When calling `.slice(start, end)` on arrays or strings, omitting the `end` argument defaults it to the object's length.
+Passing `.length` or `Infinity` explicitly as the `end` argument is unnecessary and reduces readability.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const values = [1, 2, 3];
+const result = values.slice(1, values.length);
+```
+
+```ts
+const text = "hello";
+const result = text.slice(1, text.length);
+```
+
+```ts
+const items = [1, 2, 3];
+const result = items.slice(0, Infinity);
+```
+
+```ts
+const data = [1, 2, 3];
+const result = data.slice(0, Number.POSITIVE_INFINITY);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const values = [1, 2, 3];
+const result = values.slice(1);
+```
+
+```ts
+const text = "hello";
+const result = text.slice(1);
+```
+
+```ts
+const values = [1, 2, 3];
+const result = values.slice(1, 2);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer explicit `end` arguments for documentation purposes, or if you have a codebase convention that requires them, you may want to disable this rule.
+
+## Further Reading
+
+- [MDN: Array.prototype.slice()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice)
+- [MDN: String.prototype.slice()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/slice)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="arraySliceUnnecessaryEnd" />

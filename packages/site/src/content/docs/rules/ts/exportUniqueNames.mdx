@@ -1,0 +1,64 @@
+---
+description: "Reports duplicate export names in a module."
+title: "exportUniqueNames"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="exportUniqueNames" />
+
+Having multiple exports with the same name creates ambiguity about which value is exported.
+This can lead to confusion and runtime errors when consuming the module.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+export const value = 1;
+export { value };
+```
+
+```ts
+const a = 1;
+const b = 2;
+export { a };
+export { b as a };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export const value = 1;
+```
+
+```ts
+const a = 1;
+const b = 2;
+export { a, b };
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+This rule catches actual errors, so you should generally keep it enabled.
+TypeScript itself will catch many of these cases, but this rule provides earlier feedback.
+
+## Further Reading
+
+- [MDN: export](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="exportUniqueNames" />

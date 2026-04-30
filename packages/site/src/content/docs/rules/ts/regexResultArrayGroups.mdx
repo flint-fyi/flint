@@ -1,0 +1,177 @@
+---
+description: "Reports indexed access on regex result arrays when named capturing groups should be used."
+title: "regexResultArrayGroups"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexResultArrayGroups" />
+
+When a regular expression has named capturing groups, accessing the matched values through `.groups.name` is more readable and maintainable than using numeric indices like `result[1]`.
+Numeric indices are fragile because they can break if the regex pattern is modified (e.g., adding a new capturing group before the one you're accessing).
+
+This rule reports indexed access on regex result arrays when the index corresponds to a named capturing group.
+
+## Examples
+
+### RegExp.prototype.exec()
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const regex = /a(?<foo>b)c/;
+const match = regex.exec(text);
+if (match) {
+	const value = match[1];
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const regex = /a(?<foo>b)c/;
+const match = regex.exec(text);
+if (match) {
+	const value = match.groups.foo;
+}
+```
+
+</TabItem>
+</Tabs>
+
+### String.prototype.match()
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const result = "text".match(/a(?<foo>b)c/);
+if (result) {
+	const value = result[1];
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const result = "text".match(/a(?<foo>b)c/);
+if (result) {
+	const value = result.groups.foo;
+}
+```
+
+</TabItem>
+</Tabs>
+
+### String.prototype.matchAll()
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const matches = "text".matchAll(/a(?<foo>b)c/g);
+for (const match of matches) {
+	const value = match[1];
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const matches = "text".matchAll(/a(?<foo>b)c/g);
+for (const match of matches) {
+	const value = match.groups.foo;
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Mixed Named and Unnamed Groups
+
+When a regex has both named and unnamed capturing groups, only access to the named groups is reported:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const regex = /(a)(?<bar>b)c/;
+const match = regex.exec(text);
+if (match) {
+	const first = match[1];
+	const second = match[2];
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const regex = /(a)(?<bar>b)c/;
+const match = regex.exec(text);
+if (match) {
+	const first = match[1];
+	const second = match.groups.bar;
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Valid Uses
+
+Using named groups correctly:
+
+```ts
+const regex = /a(?<foo>b)c/;
+const match = regex.exec(text);
+if (match) {
+	const value = match.groups.foo;
+}
+```
+
+Accessing unnamed capturing groups by index:
+
+```ts
+const regex = /a(b)c/;
+const match = regex.exec(text);
+if (match) {
+	const value = match[1];
+}
+```
+
+Accessing match index 0 (the full match):
+
+```ts
+const regex = /a(?<foo>b)c/;
+const match = regex.exec(text);
+if (match) {
+	const fullMatch = match[0];
+}
+```
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have a codebase that consistently uses numeric indices for all capturing groups, migrating to named groups may require significant refactoring.
+You might also prefer to disable this rule if you prefer the brevity of numeric indices over the clarity of named groups.
+
+## Further Reading
+
+- [MDN: Named capturing groups](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Named_capturing_group)
+- [MDN: RegExp.prototype.exec()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec)
+- [MDN: String.prototype.match()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexResultArrayGroups" />

@@ -1,0 +1,99 @@
+---
+description: "Reports for-in loops without an if statement to filter inherited properties."
+title: "forInGuards"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="forInGuards" />
+
+Looping over objects with a `for-in` loop will include properties inherited through the prototype chain.
+This can lead to unexpected items being iterated over when the object inherits from a non-standard prototype.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+for (const key in object) {
+	doSomething(key);
+}
+```
+
+```ts
+for (const key in object) {
+	doSomething(key);
+}
+```
+
+```ts
+for (const key in object) {
+	if (condition) {
+		doSomething(key);
+	}
+	doSomethingElse(key);
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+for (const key in object) {
+	if (Object.hasOwn(object, key)) {
+		doSomething(key);
+	}
+}
+```
+
+```ts
+for (const key in object) {
+	if (!Object.hasOwn(object, key)) {
+		continue;
+	}
+	doSomething(key);
+}
+```
+
+```ts
+for (const key in object) {
+	if (Object.prototype.hasOwnProperty.call(object, key)) {
+		doSomething(key);
+	}
+}
+```
+
+```ts
+for (const key in object);
+```
+
+```ts
+for (const key in object) {
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are certain that the objects you iterate over do not have inherited properties from custom prototypes, you might choose to disable this rule.
+This is common when iterating over plain objects created with object literals or `Object.create(null)`.
+
+## Further Reading
+
+- [MDN: for...in](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in)
+- [MDN: Object.hasOwn()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn)
+- [MDN: Object.prototype.hasOwnProperty()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwnProperty)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="forInGuards" />

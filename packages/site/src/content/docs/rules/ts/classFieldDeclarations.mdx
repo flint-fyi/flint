@@ -1,0 +1,103 @@
+---
+description: "Reports assigning literal values to `this` in constructors instead of using class field declarations."
+title: "classFieldDeclarations"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="classFieldDeclarations" />
+
+When a class constructor assigns a literal value to a property, the assignment can be replaced with a class field declaration.
+Class field declarations are more concise and clearly express the intent of initializing properties with default values.
+
+This rule only reports assignments of literal values (strings, numbers, booleans, `null`).
+Assignments involving variables, function calls, or other dynamic expressions are not flagged.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Example {
+	constructor() {
+		this.value = "hello";
+	}
+}
+```
+
+```ts
+class MyError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "MyError";
+	}
+}
+```
+
+```ts
+class Counter {
+	constructor() {
+		this.count = 0;
+		this.enabled = true;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Example {
+	value = "hello";
+}
+```
+
+```ts
+class MyError extends Error {
+	name = "MyError";
+
+	constructor(message: string) {
+		super(message);
+	}
+}
+```
+
+```ts
+class Counter {
+	count = 0;
+	enabled = true;
+}
+```
+
+```ts
+class Example {
+	constructor(value: string) {
+		this.value = value;
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer to keep all property initialization in the constructor for consistency, or if your codebase targets environments that do not support class field declarations, you may disable this rule.
+Some teams may also prefer the constructor style when properties need to be initialized in a specific order relative to `super()` calls.
+
+## Further Reading
+
+- [MDN: Public class fields](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields)
+- [MDN: Private properties](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_properties)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="classFieldDeclarations" />
