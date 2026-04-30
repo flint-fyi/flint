@@ -29,15 +29,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		return {
-			visitors: {
-				ArrowFunction: checkFunction,
-				FunctionDeclaration: checkFunction,
-				FunctionExpression: checkFunction,
-				MethodDeclaration: checkFunction,
-			},
-		};
-
 		function checkFunction(
 			node:
 				| AST.ArrowFunction
@@ -69,6 +60,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 			});
 		}
+
+		return {
+			visitors: {
+				ArrowFunction: checkFunction,
+				FunctionDeclaration: checkFunction,
+				FunctionExpression: checkFunction,
+				MethodDeclaration: checkFunction,
+			},
+		};
 	},
 });
 
@@ -98,12 +98,12 @@ function bodyReturnsThenable(
 	typeChecker: ts.TypeChecker,
 ) {
 	if (!ts.isBlock(body)) {
-		return isThenable(body, typeChecker);
+		return tsutils.isThenableType(typeChecker, body);
 	}
 
 	function checkReturnStatements(node: ts.Node): boolean | undefined {
 		if (ts.isReturnStatement(node) && node.expression) {
-			if (isThenable(node.expression, typeChecker)) {
+			if (tsutils.isThenableType(typeChecker, node.expression)) {
 				return true;
 			}
 		}
@@ -120,8 +120,4 @@ function bodyReturnsThenable(
 
 function isEmptyBody(body: ts.Block | ts.Expression) {
 	return ts.isBlock(body) && body.statements.length === 0;
-}
-
-function isThenable(node: ts.Expression, typeChecker: ts.TypeChecker) {
-	return tsutils.isThenableType(typeChecker, node);
 }
