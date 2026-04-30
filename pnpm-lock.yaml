@@ -331,6 +331,9 @@ importers:
       '@flint.fyi/ts':
         specifier: workspace:^
         version: link:../ts
+      '@flint.fyi/typescript-language':
+        specifier: workspace:^
+        version: link:../typescript-language
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
@@ -344,9 +347,6 @@ importers:
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
-      '@flint.fyi/typescript-language':
-        specifier: workspace:^
-        version: link:../typescript-language
       tsdown:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(oxc-resolver@11.19.1(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2))(synckit@0.11.12)(typescript@5.9.3)
