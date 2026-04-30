@@ -1,5 +1,11 @@
 # @flint.fyi/comparisons
 
+## 0.3.1
+
+### Patch Changes
+
+- 9cdc819: Added initial Vitest plugin with `nodeTestImports` rule.
+
 ## 0.3.0
 
 ### Minor Changes
