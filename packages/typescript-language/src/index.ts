@@ -1,4 +1,7 @@
-export { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
+export {
+	convertTypeScriptDiagnosticToLanguageReport,
+	type TSDiagnostic,
+} from "./convertTypeScriptDiagnosticToLanguageReport.ts";
 export {
 	extractDirectivesFromTypeScriptFile,
 	type ExtractedDirective,
@@ -19,7 +22,10 @@ export { declarationIncludesGlobal } from "./utils/declarationIncludesGlobal.ts"
 export { getDeclarationsIfGlobal } from "./utils/getDeclarationsIfGlobal.ts";
 export { getModifyingReferences } from "./utils/getModifyingReferences.ts";
 export { hasSameTokens } from "./utils/hasSameTokens.ts";
-export { isBuiltinArrayMethod } from "./utils/isBuiltinArrayMethod.ts";
+export {
+	type BuiltInArrayMethodNode,
+	isBuiltinArrayMethod,
+} from "./utils/isBuiltinArrayMethod.ts";
 export { isFunction } from "./utils/isFunction.ts";
 export { isGlobalDeclaration } from "./utils/isGlobalDeclaration.ts";
 export { isGlobalDeclarationOfName } from "./utils/isGlobalDeclarationOfName.ts";
