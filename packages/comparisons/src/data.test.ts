@@ -15,7 +15,9 @@ describe("data.json", () => {
 				comparison.flint.plugin,
 				comparison.flint.name,
 			);
+
 			expect(seenIds).not.toContain(id);
+
 			seenIds.add(id);
 		}
 	});
