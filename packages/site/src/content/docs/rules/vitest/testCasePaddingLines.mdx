@@ -1,0 +1,132 @@
+---
+description: "Enforces padding around `test` blocks."
+title: "testCasePaddingLines"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vitest" rule="testCasePaddingLines" />
+
+Blank lines around `test()` and `it()` blocks make individual cases read like separate units.
+That spacing is especially helpful in suites with many neighboring cases, focused tests, or skipped tests.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { it, test } from "vitest";
+
+const first = "bar";
+const second = "baz";
+it(first, () => {
+	// ...
+});
+it.only(second, () => {
+	// ...
+});
+test("third", () => {
+	// ...
+});
+test("fourth", () => {
+	// ...
+});
+```
+
+```ts
+import { describe, expect, it, test } from "vitest";
+
+describe("nested", () => {
+	const thing = 123;
+	test("one", () => {
+		expect(thing).toBe(123);
+	});
+	// With a comment
+	it("two", () => {
+		expect(thing).toBe(123);
+	});
+	test.skip("three", () => {
+		// ...
+	});
+	it.skip("four", () => {
+		// ...
+	});
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { it, test } from "vitest";
+
+const first = "bar";
+const second = "baz";
+
+it(first, () => {
+	// ...
+});
+
+it.only(second, () => {
+	// ...
+});
+
+test("third", () => {
+	// ...
+});
+
+test("fourth", () => {
+	// ...
+});
+```
+
+```ts
+import { describe, expect, it, test } from "vitest";
+
+describe("nested", () => {
+	const thing = 123;
+
+	test("one", () => {
+		expect(thing).toBe(123);
+	});
+
+	// With a comment
+	it("two", () => {
+		expect(thing).toBe(123);
+	});
+
+	test.skip("three", () => {
+		// ...
+	});
+
+	it.skip("four", () => {
+		// ...
+	});
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project keeps very small test files and prefers denser case lists, the extra blank lines from this rule may not be worth it.
+That can be reasonable when each suite contains only a handful of short tests.
+
+## Further Reading
+
+- [Vitest API: Test](https://vitest.dev/api/test)
+- [Vitest Guide: Filtering Tests](https://vitest.dev/guide/filtering)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vitest" ruleId="testCasePaddingLines" />

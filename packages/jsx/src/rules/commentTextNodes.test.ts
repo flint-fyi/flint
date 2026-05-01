@@ -35,7 +35,6 @@ ruleTester.describe(rule, {
     ~~~~~~~~~~~~~~~
     This text looks like a comment but will be rendered as text in the JSX output.
 </span>
-
 `,
 		},
 		{
@@ -50,7 +49,6 @@ ruleTester.describe(rule, {
     ~~~~~~~~~~~~~~~~~~~~
     This text looks like a comment but will be rendered as text in the JSX output.
 </p>
-
 `,
 		},
 	],

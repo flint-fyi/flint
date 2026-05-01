@@ -1,0 +1,56 @@
+---
+description: "Reports package.json bin command names that are not kebab case."
+title: "repositoryShorthand"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="repositoryShorthand" />
+
+npm used to allow `repository` values to be provided as string values like this.`,
+The npm systems would normalize them to full objects behind-the-scenes on publish.`,
+npm no longer allows these kinds of differences between local `package.json` files and published contents.`,
+
+This rule reports on any legacy `repository` shorthand string value, and fixes it to the normalized object form.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"repository": "flint-fyi/flint"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/flint-fyi/flint"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If a package intentionally publishes under a different set of tooling than npm, your tooling may allow or even prefer repository shorthand.
+In that case this rule may not be for you.
+
+## Further Reading
+
+- [npm/cli#7299 [DOCS] package.json#repository should clarify normalization steps and future plans.](https://github.com/npm/cli/issues/7299)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="repositoryShorthand" />

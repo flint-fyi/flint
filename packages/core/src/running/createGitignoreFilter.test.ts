@@ -22,6 +22,7 @@ describe("createGitignoreFilter", () => {
 		host.vfsUpsertFile(filePath, "content");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(filePath)).toBe(true);
 	});
 
@@ -34,6 +35,7 @@ describe("createGitignoreFilter", () => {
 		const tsFile = path.join(integrationRoot, "index.ts");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(logFile)).toBe(false);
 		expect(gitignoreFilter(tsFile)).toBe(true);
 	});
@@ -47,6 +49,7 @@ describe("createGitignoreFilter", () => {
 		const hashFile = path.join(integrationRoot, "#real.txt");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(comment)).toBe(true);
 		expect(gitignoreFilter(hashFile)).toBe(false);
 	});
@@ -60,6 +63,7 @@ describe("createGitignoreFilter", () => {
 		const txtFile = path.join(integrationRoot, "test.txt");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(logFile)).toBe(false);
 		expect(gitignoreFilter(txtFile)).toBe(true);
 	});
@@ -102,6 +106,7 @@ describe("createGitignoreFilter", () => {
 		const txtFile = path.join(integrationRoot, "test.txt");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(logFile)).toBe(true);
 		expect(gitignoreFilter(logFileWithSpaces)).toBe(false);
 		expect(gitignoreFilter(txtFile)).toBe(true);
@@ -117,6 +122,7 @@ describe("createGitignoreFilter", () => {
 		const importantLogNegated = path.join(integrationRoot, "!important.log");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(debugLog)).toBe(false);
 		expect(gitignoreFilter(importantLogNegated)).toBe(false);
 		expect(gitignoreFilter(importantLog)).toBe(true);
@@ -130,6 +136,7 @@ describe("createGitignoreFilter", () => {
 		const literal = path.join(integrationRoot, "!literal.txt");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(literal)).toBe(false);
 	});
 
@@ -148,6 +155,7 @@ describe("createGitignoreFilter", () => {
 		const otherFile = path.join(integrationRoot, "other.txt");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(childFile)).toBe(false);
 		expect(gitignoreFilter(nestedFile)).toBe(false);
 		expect(gitignoreFilter(otherFile)).toBe(true);
@@ -160,6 +168,7 @@ describe("createGitignoreFilter", () => {
 		const srcBuild = path.join(integrationRoot, "src", "build", "output.js");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(rootBuild)).toBe(false);
 		expect(gitignoreFilter(srcFile)).toBe(true);
 		expect(gitignoreFilter(srcBuild)).toBe(true);
@@ -178,6 +187,7 @@ describe("createGitignoreFilter", () => {
 		);
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(buildDir)).toBe(false);
 		expect(gitignoreFilter(buildLiteralFile)).toBe(true);
 		expect(gitignoreFilter(buildJsFile)).toBe(true);
@@ -196,6 +206,7 @@ describe("createGitignoreFilter", () => {
 		);
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(buildDir)).toBe(false);
 		expect(gitignoreFilter(buildFile)).toBe(true);
 		expect(gitignoreFilter(nestedBuildDir)).toBe(true);
@@ -210,6 +221,7 @@ describe("createGitignoreFilter", () => {
 		const otherFile = path.join(srcDir, "baz.js");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(directMatch)).toBe(false);
 		expect(gitignoreFilter(nestedMatch)).toBe(true);
 		expect(gitignoreFilter(otherFile)).toBe(true);
@@ -224,6 +236,7 @@ describe("createGitignoreFilter", () => {
 		const deepFile = path.join(srcDir, "nested", "deep", "test.js");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(directFile)).toBe(false);
 		expect(gitignoreFilter(nestedFile)).toBe(false);
 		expect(gitignoreFilter(deepFile)).toBe(false);
@@ -239,6 +252,7 @@ describe("createGitignoreFilter", () => {
 		const srcFile = path.join(integrationRoot, "src", "index.ts");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(logFile)).toBe(false);
 		expect(gitignoreFilter(distFile)).toBe(false);
 		expect(gitignoreFilter(srcFile)).toBe(true);
@@ -259,6 +273,7 @@ describe("createGitignoreFilter", () => {
 		const other = path.join(integrationRoot, "other.js");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(test1)).toBe(false);
 		expect(gitignoreFilter(test2)).toBe(false);
 		expect(gitignoreFilter(testNoChar)).toBe(true);
@@ -277,6 +292,7 @@ describe("createGitignoreFilter", () => {
 		const otherFile = path.join(integrationRoot, "other.txt");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(rootFoo)).toBe(false);
 		expect(gitignoreFilter(barFoo)).toBe(false);
 		expect(gitignoreFilter(deepFoo)).toBe(false);
@@ -290,6 +306,7 @@ describe("createGitignoreFilter", () => {
 		const otherFile = path.join(integrationRoot, "other.js");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(abcFile)).toBe(false);
 		expect(gitignoreFilter(abcDeep)).toBe(false);
 		expect(gitignoreFilter(otherFile)).toBe(true);
@@ -303,6 +320,7 @@ describe("createGitignoreFilter", () => {
 		const other = path.join(integrationRoot, "other");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(aB)).toBe(false);
 		expect(gitignoreFilter(aXB)).toBe(false);
 		expect(gitignoreFilter(aXYB)).toBe(false);
@@ -320,6 +338,7 @@ describe("createGitignoreFilter", () => {
 		const srcFile = path.join(srcDir, "index.ts");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(rootLog)).toBe(false);
 		expect(gitignoreFilter(srcLog)).toBe(false);
 		expect(gitignoreFilter(srcTemp)).toBe(false);
@@ -337,6 +356,7 @@ describe("createGitignoreFilter", () => {
 		const keptFile = path.join(srcDir, "keep.generated.ts");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(ignoredFile)).toBe(false);
 		expect(gitignoreFilter(keptFile)).toBe(true);
 	});
@@ -349,6 +369,7 @@ describe("createGitignoreFilter", () => {
 		const nestedDist = path.join(srcDir, "nested", "dist", "bundle.js");
 
 		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+
 		expect(gitignoreFilter(srcDist)).toBe(false);
 		expect(gitignoreFilter(nestedDist)).toBe(false);
 	});

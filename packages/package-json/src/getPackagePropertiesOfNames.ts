@@ -1,26 +1,29 @@
-import type { JsonNode } from "@flint.fyi/json-language";
-import ts from "typescript";
+import type { JsonNode, JsonSourceFile } from "@flint.fyi/json-language";
+import { SyntaxKind } from "typescript";
+
+import { getPackageProperties } from "./getPackageProperties.ts";
 
 export function* getPackagePropertiesOfNames(
-	sourceFile: ts.JsonSourceFile,
-	propertyNames: Set<string>,
+	sourceFile: JsonSourceFile,
+	propertyNames: ReadonlySet<string>,
 ) {
-	if (sourceFile.statements.length !== 1) {
+	const properties = getPackageProperties(sourceFile);
+	if (!properties) {
 		return;
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const root = sourceFile.statements[0]!;
-	if (root.expression.kind !== ts.SyntaxKind.ObjectLiteralExpression) {
+	const root = sourceFile.statements[0];
+	if (root?.expression.kind !== SyntaxKind.ObjectLiteralExpression) {
 		return;
 	}
 
 	for (const property of root.expression.properties) {
 		if (
-			property.name?.kind === ts.SyntaxKind.StringLiteral &&
+			property.kind === SyntaxKind.PropertyAssignment &&
+			property.name.kind === SyntaxKind.StringLiteral &&
 			propertyNames.has(property.name.text)
 		) {
-			yield (property as ts.PropertyAssignment).initializer as JsonNode;
+			yield property.initializer as JsonNode;
 		}
 	}
 }

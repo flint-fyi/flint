@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/react",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"description": "[Experimental] A Flint plugin for React code.",
 	"homepage": "https://www.flint.fyi/rules/react",
 	"repository": {

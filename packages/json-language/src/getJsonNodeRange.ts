@@ -1,11 +1,10 @@
 import type { CharacterReportRange } from "@flint.fyi/core";
-import type * as ts from "typescript";
 
-import type { JsonNode } from "./nodes.ts";
+import type { JsonNode, JsonSourceFile } from "./nodes.ts";
 
 export function getJsonNodeRange(
 	node: JsonNode,
-	sourceFile: ts.JsonSourceFile,
+	sourceFile: JsonSourceFile,
 ): CharacterReportRange {
 	return {
 		begin: node.getStart(sourceFile),

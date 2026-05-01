@@ -10,6 +10,7 @@ import ruleCreationMethods from "./rules/ruleCreationMethods.ts";
 import testCaseDuplicates from "./rules/testCaseDuplicates.ts";
 import testCaseNameDuplicates from "./rules/testCaseNameDuplicates.ts";
 import testCaseNonStaticCode from "./rules/testCaseNonStaticCode.ts";
+import testCaseOnlyFlags from "./rules/testCaseOnlyFlags.ts";
 import testShorthands from "./rules/testShorthands.ts";
 import unusedMessageIds from "./rules/unusedMessageIds.ts";
 
@@ -26,6 +27,7 @@ export const flint = createPlugin({
 		testCaseDuplicates,
 		testCaseNameDuplicates,
 		testCaseNonStaticCode,
+		testCaseOnlyFlags,
 		testShorthands,
 		unusedMessageIds,
 	],

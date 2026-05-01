@@ -1,5 +1,25 @@
 # @flint.fyi/typescript-language
 
+## 0.18.0
+
+### Minor Changes
+
+- 57fa268: Add optional character range to language reports.
+- cb7e8a8: Change "diagnostics" nomenclature to "language reports".
+All external references to the term diagnostic or diagnostics are now using the term language report instead.
+
+### Patch Changes
+
+- 0702aa2: Introduce Volar.js meta-language.
+- Updated dependencies [4fc0eef]
+- Updated dependencies [57fa268]
+- Updated dependencies [dde886f]
+- Updated dependencies [1539f14]
+- Updated dependencies [0702aa2]
+- Updated dependencies [cb7e8a8]
+- Updated dependencies [d3f5d17]
+  - @flint.fyi/core@0.21.0
+
 ## 0.17.0
 
 ### Minor Changes

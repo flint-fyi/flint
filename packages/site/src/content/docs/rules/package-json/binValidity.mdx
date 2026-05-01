@@ -51,6 +51,14 @@ If the value is an object, it should only consist of non-empty string values.
 If you don't need compliance with npm's `bin` field specification, you can disable this rule.
 For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
 
+## Related Rules
+
+- [binPresence](/rules/package-json/binpresence) - Enforces that the `bin` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `bin`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bin)
+
 ## Equivalents in Other Linters
 
 <RuleEquivalents pluginId="package-json" ruleId="binValidity" />
