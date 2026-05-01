@@ -4913,6 +4913,12 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "browserValidity",
+			"plugin": "package-json"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "package-json/require-bundleDependencies",
@@ -5324,6 +5330,12 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "gypfileValidity",
+			"plugin": "package-json"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "package-json/require-homepage",
@@ -5376,6 +5388,12 @@
 			"plugin": "package-json",
 			"preset": "logical",
 			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "libcValidity",
+			"plugin": "package-json"
 		}
 	},
 	{
@@ -5640,6 +5658,12 @@
 			"name": "peerDependenciesMetaPresence",
 			"plugin": "package-json",
 			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "peerDependenciesMetaValidity",
+			"plugin": "package-json"
 		}
 	},
 	{

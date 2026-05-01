@@ -2,6 +2,7 @@ import type { AnyRule } from "@flint.fyi/core";
 import {
 	validateAuthor,
 	validateBin,
+	validateBrowser,
 	validateBugs,
 	validateBundleDependencies,
 	validateConfig,
@@ -16,8 +17,10 @@ import {
 	validateExports,
 	validateFiles,
 	validateFunding,
+	validateGypfile,
 	validateHomepage,
 	validateKeywords,
+	validateLibc,
 	validateLicense,
 	validateMain,
 	validateMan,
@@ -26,6 +29,7 @@ import {
 	validateOs,
 	validatePackageManager,
 	validatePeerDependencies,
+	validatePeerDependenciesMeta,
 	validatePrivate,
 	validatePublishConfig,
 	validateRepository,
@@ -39,8 +43,12 @@ import {
 import { createDirectPropertyValidityRule } from "./createDirectPropertyValidityRule.ts";
 
 const properties = [
+	["gypfile", validateGypfile],
+	["libc", validateLibc],
+	["peerDependenciesMeta", validatePeerDependenciesMeta],
 	["author", validateAuthor],
 	["bin", validateBin],
+	["browser", validateBrowser],
 	["bugs", validateBugs],
 	[
 		"bundleDependencies",
