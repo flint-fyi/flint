@@ -5798,7 +5798,8 @@
 		"flint": {
 			"name": "repositoryShorthand",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
