@@ -21260,6 +21260,19 @@
 	{
 		"eslint": [
 			{
+				"name": "require-top-level-describe",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/require-top-level-describe.md"
+			}
+		],
+		"flint": {
+			"name": "maxiumumDescribesPerFile",
+			"plugin": "vitest",
+			"status": "skipped"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "max-expects",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/max-expects.md"
 			}
