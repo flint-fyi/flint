@@ -23,7 +23,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports duplicate export names in a module.",
 		id: "exportUniqueNames",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		duplicateExport: {

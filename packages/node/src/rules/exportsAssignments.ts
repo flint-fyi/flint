@@ -19,10 +19,10 @@ function isLocalExportsVariable(
 
 function isModuleExportsAccess(node: AST.Expression) {
 	return (
-		node.kind == SyntaxKind.PropertyAccessExpression &&
-		node.expression.kind == SyntaxKind.Identifier &&
+		node.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.kind === SyntaxKind.Identifier &&
 		node.expression.text === "module" &&
-		node.name.kind == SyntaxKind.Identifier &&
+		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === "exports"
 	);
 }
@@ -31,7 +31,7 @@ function isModuleExportsAccessAssignment(
 	node: AST.Expression | AST.ExpressionParent,
 ) {
 	return (
-		node.kind == SyntaxKind.BinaryExpression &&
+		node.kind === SyntaxKind.BinaryExpression &&
 		node.operatorToken.kind === SyntaxKind.EqualsToken &&
 		isModuleExportsAccess(node.left)
 	);
@@ -62,8 +62,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				BinaryExpression: (node, { sourceFile, typeChecker }) => {
 					if (
-						node.operatorToken.kind == SyntaxKind.EqualsToken &&
-						node.left.kind == SyntaxKind.Identifier &&
+						node.operatorToken.kind === SyntaxKind.EqualsToken &&
+						node.left.kind === SyntaxKind.Identifier &&
 						node.left.text === "exports" &&
 						!isLocalExportsVariable(node.left, sourceFile, typeChecker) &&
 						!isModuleExportsAccessAssignment(node.right) &&

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import z from "zod";
+import z from "zod/v4";
 
 import type { CacheStorage } from "../types/cache.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
@@ -19,6 +19,7 @@ describe("cacheStorageSchema decoding", () => {
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
+
 		expect(result.success).toBe(true);
 	});
 
@@ -31,6 +32,7 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -43,6 +45,7 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -60,6 +63,7 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -69,13 +73,14 @@ describe("cacheStorageSchema decoding", () => {
 			files: {
 				"src/index.ts": {
 					dependencies: ["src/utils.ts"],
-					diagnostics: [{ text: "Error" }],
+					languageReports: [{ text: "Error" }],
 					timestamp: 123,
 				},
 			},
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
+
 		expect(result.success).toBe(true);
 	});
 
@@ -85,7 +90,7 @@ describe("cacheStorageSchema decoding", () => {
 			files: {
 				"src/index.ts": {
 					dependencies: ["src/utils.ts"],
-					diagnostics: [{ code: "TS1234", text: "Error message" }],
+					languageReports: [{ code: "TS1234", text: "Error message" }],
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -106,6 +111,7 @@ describe("cacheStorageSchema decoding", () => {
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
+
 		expect(result.success).toBe(true);
 	});
 
@@ -144,6 +150,7 @@ describe("cacheStorageSchema decoding", () => {
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
+
 		expect(result.success).toBe(true);
 	});
 
@@ -174,16 +181,19 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
 	it("rejects null input", () => {
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(null));
+
 		expect(result.success).toBe(false);
 	});
 
 	it("rejects undefined input", () => {
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(undefined));
+
 		expect(result.success).toBe(false);
 	});
 
@@ -197,6 +207,7 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -228,6 +239,7 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -260,6 +272,7 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 });
@@ -279,6 +292,7 @@ describe("cacheStorageSchema", () => {
 		};
 
 		const encoded = z.encode(cacheStorageSchema, validCache);
+
 		expect(typeof encoded).toBe("string");
 		expect(JSON.parse(encoded)).toEqual(validCache);
 	});
@@ -295,6 +309,7 @@ describe("cacheStorageSchema", () => {
 		const json = JSON.stringify(validCache);
 
 		const decoded = z.decode(cacheStorageSchema, json);
+
 		expect(decoded).toEqual(validCache);
 	});
 
@@ -308,6 +323,7 @@ describe("cacheStorageSchema", () => {
 			cacheStorageSchema,
 			invalidCache as unknown as z.output<typeof cacheStorageSchema>,
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -318,6 +334,7 @@ describe("cacheStorageSchema", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidJson),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -331,6 +348,7 @@ describe("cacheStorageSchema", () => {
 			cacheStorageSchema,
 			JSON.stringify(validJsonInvalidSchema),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -389,50 +407,9 @@ describe("toSerializableCacheStorage encoding", () => {
 							},
 							suggestions: [
 								{ id: "fix-1", range: { begin: 0, end: 5 }, text: "fixed" },
-							],
-						},
-					],
-					timestamp: 123,
-				},
-			},
-		};
-
-		const result = z.decode(
-			cacheStorageSchema,
-			z.encode(cacheStorageSchema, cache),
-		);
-
-		expect(result.files["src/index.ts"]?.reports?.[0]?.suggestions).toEqual([
-			{ id: "fix-1", range: { begin: 0, end: 5 }, text: "fixed" },
-		]);
-	});
-
-	it("filters out SuggestionForFiles (with functions)", () => {
-		const cache: CacheStorage = {
-			configs: { "package.json": 123 },
-			files: {
-				"src/index.ts": {
-					reports: [
-						{
-							about: { id: "test-rule" },
-							message: {
-								primary: "Error",
-								secondary: [],
-								suggestions: [],
-							},
-							range: {
-								begin: { column: 0, line: 0, raw: 0 },
-								end: { column: 5, line: 0, raw: 5 },
-							},
-							suggestions: [
-								// SuggestionForFile - should be kept
-								{ id: "fix-1", range: { begin: 0, end: 5 }, text: "fixed" },
-								// SuggestionForFiles - should be filtered out
 								{
 									files: {
-										"other.ts": () => [
-											{ range: { begin: 0, end: 1 }, text: "x" },
-										],
+										"other.ts": [{ range: { begin: 0, end: 1 }, text: "x" }],
 									},
 									id: "multi-fix",
 								},
@@ -449,9 +426,14 @@ describe("toSerializableCacheStorage encoding", () => {
 			z.encode(cacheStorageSchema, cache),
 		);
 
-		// Only the SuggestionForFile should remain
 		expect(result.files["src/index.ts"]?.reports?.[0]?.suggestions).toEqual([
 			{ id: "fix-1", range: { begin: 0, end: 5 }, text: "fixed" },
+			{
+				files: {
+					"other.ts": [{ range: { begin: 0, end: 1 }, text: "x" }],
+				},
+				id: "multi-fix",
+			},
 		]);
 	});
 
@@ -528,7 +510,7 @@ describe("toSerializableCacheStorage encoding", () => {
 								{ id: "fix-1", range: { begin: 0, end: 5 }, text: "fixed" },
 								// This would fail validation if not filtered
 								{
-									files: { "other.ts": () => [] },
+									files: { "other.ts": [] },
 									id: "multi-fix",
 								},
 							],

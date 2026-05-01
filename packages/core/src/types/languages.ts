@@ -1,5 +1,6 @@
 import type { CommentDirective } from "./directives.ts";
 import type { LinterHost } from "./host.ts";
+import type { CharacterReportRange } from "./ranges.ts";
 import type { FileReport } from "./reports.ts";
 import type { Rule, RuleAbout, RuleDefinition, RuleRuntime } from "./rules.ts";
 import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
@@ -67,7 +68,7 @@ export interface Language<
 	getFileCacheImpacts?(
 		file: LanguageFile<FileServices>,
 	): LanguageFileCacheImpacts;
-	getFileDiagnostics?(file: LanguageFile<FileServices>): LanguageDiagnostics;
+	getLanguageReports?(file: LanguageFile<FileServices>): LanguageReports;
 	runFileVisitors<
 		OptionsSchema extends AnyOptionalSchema | undefined =
 			| AnyOptionalSchema
@@ -83,12 +84,13 @@ export interface LanguageAbout {
 	name: string;
 }
 
-export type LanguageDiagnostics = LanguageFileDiagnostic[];
-
-export interface LanguageFileDiagnostic {
+export interface LanguageReport {
 	code?: string;
+	range?: CharacterReportRange;
 	text: string;
 }
+
+export type LanguageReports = LanguageReport[];
 
 /**
  * The definition of a language, as provided to language creators internally.
@@ -104,7 +106,7 @@ export interface LanguageDefinition<
 	getFileCacheImpacts?(
 		file: LanguageFile<FileServices>,
 	): LanguageFileCacheImpacts;
-	getFileDiagnostics?(file: LanguageFile<FileServices>): LanguageDiagnostics;
+	getLanguageReports?(file: LanguageFile<FileServices>): LanguageReports;
 	runFileVisitors<
 		OptionsSchema extends AnyOptionalSchema | undefined =
 			| AnyOptionalSchema
@@ -138,6 +140,9 @@ export type LanguageFile<FileServices extends object> = Disposable &
  */
 export interface LanguageFileBase<FileServices extends object> {
 	about: FileAboutData;
+	adjustReportRange?: (
+		range: CharacterReportRange,
+	) => CharacterReportRange | null;
 	directives?: CommentDirective[];
 	reports?: FileReport[];
 	services: FileServices;

@@ -124,6 +124,74 @@ function isLetter(codePoint: number) {
 	);
 }
 
+function simplifyCharacterClass(
+	pattern: string,
+	charClass: RegExpAST.CharacterClass,
+): string {
+	const elements = charClass.elements;
+	const keptCharacters = new Set<number>();
+	const rangesToKeep: { max: number; min: number }[] = [];
+
+	// First pass: collect all characters that should be kept (lowercase versions)
+	for (const element of elements) {
+		if (element.type === "Character") {
+			if (isLetter(element.value)) {
+				// Keep lowercase version
+				keptCharacters.add(toLowerCase(element.value));
+			} else {
+				// Keep non-letters as-is
+				keptCharacters.add(element.value);
+			}
+		} else if (element.type === "CharacterClassRange") {
+			const min = element.min.value;
+			const max = element.max.value;
+
+			// Handle ranges that span letters
+			const minIsUpper = min >= 0x41 && min <= 0x5a; // A-Z
+			const maxIsUpper = max >= 0x41 && max <= 0x5a;
+			const minIsLower = min >= 0x61 && min <= 0x7a; // a-z
+			const maxIsLower = max >= 0x61 && max <= 0x7a;
+
+			// If it's an uppercase letter range, convert to lowercase
+			if (minIsUpper && maxIsUpper) {
+				rangesToKeep.push({
+					max: toLowerCase(max),
+					min: toLowerCase(min),
+				});
+			} else if (minIsLower && maxIsLower) {
+				// Already lowercase, keep as-is
+				rangesToKeep.push({ max, min });
+			} else {
+				// Mixed or non-letter range, keep as-is
+				rangesToKeep.push({ max, min });
+			}
+		}
+	}
+
+	// Build the simplified character class
+	let result = "[";
+
+	// Add ranges first
+	for (const range of rangesToKeep) {
+		result += String.fromCodePoint(range.min);
+		result += "-";
+		result += String.fromCodePoint(range.max);
+	}
+
+	// Add individual characters
+	for (const char of [...keptCharacters].sort((a, b) => a - b)) {
+		result += String.fromCodePoint(char);
+	}
+
+	result += "]";
+
+	// Replace the character class in the original pattern
+	const before = pattern.slice(0, charClass.start);
+	const after = pattern.slice(charClass.end);
+
+	return before + result + after;
+}
+
 function toLowerCase(codePoint: number) {
 	return codePoint >= 0x41 && codePoint <= 0x5a ? codePoint + 0x20 : codePoint;
 }
@@ -178,8 +246,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const nodeRange = getTSNodeRange(node, sourceFile);
 
+					// Simplify all character classes and add the i flag
+					let simplifiedPattern = pattern;
+					// Process in reverse order to preserve offsets
+					for (const charClass of [...characterClasses].reverse()) {
+						simplifiedPattern = simplifyCharacterClass(
+							simplifiedPattern,
+							charClass,
+						);
+					}
+					const fixedText = `/${simplifiedPattern}/${flags}i`;
+
 					for (const charClass of characterClasses) {
 						context.report({
+							fix: {
+								range: nodeRange,
+								text: fixedText,
+							},
 							message: "useIgnoreCase",
 							range: {
 								begin: nodeRange.begin + 1 + charClass.start,

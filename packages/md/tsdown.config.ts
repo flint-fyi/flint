@@ -9,7 +9,7 @@ export default defineConfig({
 	dts: { build: true, incremental: true },
 	entry: ["src/index.ts"],
 	exports: {
-		devExports: "@flint.fyi/source",
+		devExports: true,
 		packageJson: false,
 	},
 	failOnWarn: true,

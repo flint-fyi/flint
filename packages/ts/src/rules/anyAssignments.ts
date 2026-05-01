@@ -6,7 +6,9 @@ import {
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
+import { formatReportedType } from "./utils/formatReportedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
 function isTypeAny(type: ts.Type): boolean {
@@ -25,8 +27,6 @@ function isTypeAnyArray(type: ts.Type, checker: Checker): boolean {
 function isTypeAnyOrUnknown(type: ts.Type): boolean {
 	return tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown);
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -67,7 +67,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			suggestions: ["Ensure the spread array has compatible element types."],
 		},
 		unsafeAssignment: {
-			primary: "Unsafe assignment of a value of type {{ type }}.",
+			primary: "Unsafe assignment of a value of type `{{ type }}`.",
 			secondary: [
 				"Assigning a value of type `any` or a similar unsafe type defeats TypeScript's type safety guarantees.",
 				"This can allow unexpected types to propagate through your codebase, potentially causing runtime errors.",
@@ -303,12 +303,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				if (anyType !== AnyType.Safe) {
 					context.report({
 						data: {
-							type:
-								anyType === AnyType.Any
-									? "`any`"
-									: anyType === AnyType.PromiseAny
-										? "`Promise<any>`"
-										: "`any[]`",
+							type: anyType,
 						},
 						message: "unsafeAssignment",
 						range: {
@@ -336,8 +331,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			context.report({
 				data: {
-					receiver: typeChecker.typeToString(result.receiver),
-					sender: typeChecker.typeToString(result.sender),
+					receiver: formatReportedType(result.receiver, typeChecker),
+					sender: formatReportedType(result.sender, typeChecker),
 				},
 				message: "unsafeAssignmentToVariable",
 				range: {
@@ -483,7 +478,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					context.report({
-						data: { type: "`any`" },
+						data: { type: "any" },
 						message: "unsafeAssignment",
 						range: {
 							begin: node.getStart(sourceFile),
@@ -544,7 +539,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					context.report({
-						data: { type: "`any`" },
+						data: { type: "any" },
 						message: "unsafeAssignment",
 						range: {
 							begin: node.getStart(sourceFile),

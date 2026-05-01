@@ -1,16 +1,15 @@
 import { createLanguage } from "@flint.fyi/core";
-import { visit } from "unist-util-visit";
 import * as yamlParser from "yaml-unist-parser";
 
 import { parseDirectivesFromYamlFile } from "./directives/parseDirectivesFromYamlFile.ts";
-import type { YamlNodesByName } from "./nodes.ts";
+import type { YamlNodesByName, YamlNodeVisitors } from "./nodes.ts";
 
 export interface YamlFileServices {
 	root: yamlParser.Root;
 	sourceText: string;
 }
 
-export const yamlLanguage = createLanguage<YamlNodesByName, YamlFileServices>({
+export const yamlLanguage = createLanguage<YamlNodeVisitors, YamlFileServices>({
 	about: {
 		name: "YAML",
 	},
@@ -35,9 +34,22 @@ export const yamlLanguage = createLanguage<YamlNodesByName, YamlFileServices>({
 		const { visitors } = runtime;
 		const visitorServices = { options, ...file.services };
 
-		visit(file.services.root, (node) => {
-			// @ts-expect-error -- This should work...?
-			visitors[node.type]?.(node, visitorServices);
-		});
+		const visit = (node: yamlParser.Node) => {
+			const key = node.type as keyof YamlNodesByName;
+
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+			visitors[key]?.(node, visitorServices);
+
+			if ("children" in node && Array.isArray(node.children)) {
+				for (const child of node.children as yamlParser.Node[]) {
+					visit(child);
+				}
+			}
+
+			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+			visitors[`${key}:exit`]?.(node, visitorServices);
+		};
+
+		visit(file.services.root);
 	},
 });

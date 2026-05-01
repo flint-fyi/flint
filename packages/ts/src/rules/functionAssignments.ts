@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports reassigning variables declared with function declarations.",
 		id: "functionAssignments",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noFunctionAssignment: {

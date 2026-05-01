@@ -20,10 +20,14 @@ Each variable declaration should be on its own line to make the code easier to r
 
 ```ts
 let first, second, third;
+```
 
+```ts
 const width = 100,
 	height = 200;
+```
 
+```ts
 for (let index = 0, length = 10; index < length; index++) {
 	console.log(index);
 }
@@ -36,14 +40,20 @@ for (let index = 0, length = 10; index < length; index++) {
 let first;
 let second;
 let third;
+```
 
+```ts
 const width = 100;
 const height = 200;
+```
 
+```ts
 // Destructuring is allowed (single binding pattern)
 const { first, second } = object;
 const [width, height] = dimensions;
+```
 
+```ts
 // For-of and for-in loops are fine
 for (const item of items) {
 	console.log(item);

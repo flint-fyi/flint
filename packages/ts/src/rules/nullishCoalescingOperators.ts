@@ -8,7 +8,7 @@ import {
 } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import ts from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -464,12 +464,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
-		noStrictNullCheck: {
-			primary:
-				"This rule requires the `strictNullChecks` compiler option to be turned on to function correctly.",
-			secondary: [],
-			suggestions: [],
-		},
 		preferNullish: {
 			primary:
 				"Prefer nullish coalescing operator (`??`) over logical OR (`||`) for nullish checks.",

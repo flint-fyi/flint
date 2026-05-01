@@ -1,0 +1,80 @@
+---
+description: "Disallows specific identifier names in binding positions."
+title: "restrictedIdentifiers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="restrictedIdentifiers" />
+
+Some projects like to ban specific identifiers, or names, in code.
+This rule provides a `deny` option that can be used to disallow specific identifier names.
+
+## Options
+
+### `deny`
+
+> Type: `string[]`
+
+Identifier names to globally disallow.
+
+```ts
+json.rules({
+	restrictedIdentifiers: {
+		deny: ["cb", "val"],
+	},
+});
+```
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const val = fetchUsers();
+```
+
+```ts
+function cb() {}
+```
+
+```ts
+function process(val, cb) {}
+```
+
+```ts
+import val from "lib";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const users = fetchUsers();
+```
+
+```ts
+function onComplete() {}
+```
+
+```ts
+function process(users, onComplete) {}
+```
+
+```ts
+import data from "lib";
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+This rule is only relevant for projects that have established conventions of names that should not be used.
+If you're not particular about banning specific identifier names, you likely don't need this rule.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="restrictedIdentifiers" />

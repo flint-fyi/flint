@@ -7,9 +7,9 @@
 			}
 		],
 		"flint": {
-			"name": "attributesSorting",
+			"name": "attributesOrder",
 			"plugin": "astro",
-			"preset": "stylistic"
+			"preset": "sorting"
 		}
 	},
 	{
@@ -170,7 +170,8 @@
 		"flint": {
 			"name": "setHtmlDirectives",
 			"plugin": "astro",
-			"preset": "security"
+			"preset": "security",
+			"status": "implemented"
 		}
 	},
 	{
@@ -773,6 +774,15 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "pluginRuleOrdering",
+			"plugin": "flint",
+			"preset": "stylistic",
+			"strictness": "strict",
+			"status": "implemented"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "eslint-plugin-eslint-plugin/meta-property-ordering",
@@ -796,6 +806,14 @@
 			"name": "ruleAboutChangers",
 			"plugin": "flint",
 			"status": "skipped"
+		}
+	},
+	{
+		"flint": {
+			"name": "ruleCreationMethods",
+			"plugin": "flint",
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -854,14 +872,37 @@
 	{
 		"eslint": [
 			{
+				"name": "eslint-plugin-eslint-plugin/unique-test-case-names",
+				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/unique-test-case-names.md"
+			}
+		],
+		"flint": {
+			"name": "testCaseNameDuplicates",
+			"plugin": "flint",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "testCaseNonStaticCode",
+			"plugin": "flint",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "eslint-plugin-eslint-plugin/no-only-tests",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-only-tests.md"
 			}
 		],
 		"flint": {
-			"name": "testCaseOnlies",
+			"name": "testCaseOnlyFlags",
 			"plugin": "flint",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -953,7 +994,8 @@
 		"flint": {
 			"name": "unusedMessageIds",
 			"plugin": "flint",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -2460,7 +2502,7 @@
 			"plugin": "jsx",
 			"status": "skipped"
 		},
-		"notes": "Superseded by sorting plugin"
+		"notes": "Superseded by jsx sorting preset"
 	},
 	{
 		"eslint": [
@@ -3877,7 +3919,7 @@
 		"flint": {
 			"name": "moduleAssignments",
 			"plugin": "next",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -4759,50 +4801,113 @@
 	{
 		"eslint": [
 			{
+				"name": "package-json/require-attribution",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-attribution.md"
+			}
+		],
+		"flint": {
+			"name": "attribution",
+			"plugin": "package-json",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "package-json/require-author",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-author.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-author.md"
 			}
 		],
 		"flint": {
 			"name": "authorPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-author",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-author.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-author.md"
 			}
 		],
 		"flint": {
 			"name": "authorValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/bin-name-casing",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/bin-name-casing.md"
+			}
+		],
+		"flint": {
+			"name": "binNameCasing",
+			"plugin": "package-json",
+			"preset": "stylistic",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-bin",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/796"
+			}
+		],
+		"flint": {
+			"name": "binPresence",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "browserPresence",
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-bin",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bin.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bin.md"
 			}
 		],
 		"flint": {
 			"name": "binValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/require-bugs",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-bugs.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-bugs.md"
 			}
 		],
 		"flint": {
 			"name": "bugsPresence",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-bugs",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bugs.md"
+			}
+		],
+		"flint": {
+			"name": "bugsValidity",
 			"plugin": "package-json"
 		}
 	},
@@ -4810,83 +4915,142 @@
 		"eslint": [
 			{
 				"name": "package-json/require-bundleDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-bundleDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-bundleDependencies.md"
 			}
 		],
 		"flint": {
 			"name": "bundleDependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-bundleDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bundleDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bundleDependencies.md"
 			}
 		],
 		"flint": {
 			"name": "bundleDependenciesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-config",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/798"
+			}
+		],
+		"flint": {
+			"name": "configPresence",
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-config",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-config.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-config.md"
 			}
 		],
 		"flint": {
 			"name": "configValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-contributors",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/799"
+			}
+		],
+		"flint": {
+			"name": "contributorsPresence",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-contributors",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/valid-contributors.md"
+			}
+		],
+		"flint": {
+			"name": "contributorsValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-cpu",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/800"
+			}
+		],
+		"flint": {
+			"name": "cpuPresence",
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-cpu",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-cpu.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-cpu.md"
 			}
 		],
 		"flint": {
 			"name": "cpuValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/require-dependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-dependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-dependencies.md"
 			}
 		],
 		"flint": {
 			"name": "dependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-dependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-dependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-dependencies.md"
 			}
 		],
 		"flint": {
 			"name": "dependenciesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/restrict-dependency-ranges",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/restrict-dependency-ranges.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/restrict-dependency-ranges.md"
 			}
 		],
 		"flint": {
@@ -4898,7 +5062,7 @@
 		"eslint": [
 			{
 				"name": "package-json/unique-dependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/unique-dependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/unique-dependencies.md"
 			}
 		],
 		"flint": {
@@ -4911,12 +5075,13 @@
 		"eslint": [
 			{
 				"name": "package-json/require-description",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-description.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-description.md"
 			}
 		],
 		"flint": {
 			"name": "descriptionPresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -4924,58 +5089,96 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-description",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-description.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-description.md"
 			}
 		],
 		"flint": {
 			"name": "descriptionValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/require-devDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-devDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-devDependencies.md"
 			}
 		],
 		"flint": {
 			"name": "devDependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-devDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-devDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-devDependencies.md"
 			}
 		],
 		"flint": {
 			"name": "devDependenciesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "devEnginesPresence",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-devEngines",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-devEngines.md"
+			}
+		],
+		"flint": {
+			"name": "devEnginesValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-directories",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/802"
+			}
+		],
+		"flint": {
+			"name": "directoriesPresence",
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-directories",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-directories.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-directories.md"
 			}
 		],
 		"flint": {
 			"name": "directoriesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/no-empty-fields",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/no-empty-fields.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/no-empty-fields.md"
 			}
 		],
 		"flint": {
@@ -4988,44 +5191,88 @@
 		"eslint": [
 			{
 				"name": "package-json/require-engines",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-engines.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-engines.md"
 			}
 		],
 		"flint": {
 			"name": "enginesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
-				"name": "package-json/valid-exports",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-exports.md"
+				"name": "package-json/valid-engines",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-engines.md"
 			}
 		],
 		"flint": {
-			"name": "exportsValidity",
+			"name": "enginesValidity",
 			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-exports",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-exports.md"
+			}
+		],
+		"flint": {
+			"name": "exportsPresence",
+			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
 	{
 		"eslint": [
 			{
+				"name": "package-json/exports-subpaths-style",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/exports-subpaths-style.md"
+			}
+		],
+		"flint": {
+			"name": "exportsSubpathsStyle",
+			"plugin": "package-json",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-exports",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-exports.md"
+			}
+		],
+		"flint": {
+			"name": "exportsValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "package-json/require-files",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-files.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-files.md"
 			}
 		],
 		"flint": {
 			"name": "filesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/no-redundant-files",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/no-redundant-files.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/no-redundant-files.md"
 			}
 		],
 		"flint": {
@@ -5038,63 +5285,109 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-files",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-files.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-files.md"
 			}
 		],
 		"flint": {
 			"name": "filesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-funding",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/804"
+			}
+		],
+		"flint": {
+			"name": "fundingPresence",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-funding",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-funding.md"
+			}
+		],
+		"flint": {
+			"name": "fundingValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-homepage",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-homepage.md"
+			}
+		],
+		"flint": {
+			"name": "homepagePresence",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-homepage",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-homepage.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-homepage.md"
 			}
 		],
 		"flint": {
 			"name": "homepageValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/require-keywords",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-keywords.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-keywords.md"
 			}
 		],
 		"flint": {
 			"name": "keywordsPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-keywords",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-keywords.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-keywords.md"
 			}
 		],
 		"flint": {
 			"name": "keywordsValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
-				"name": "package-json/license-required",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/license-required.md"
+				"name": "package-json/require-license",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-license.md"
 			}
 		],
 		"flint": {
-			"name": "licenseRequired",
+			"name": "licensePresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5102,13 +5395,66 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-license",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-license.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-license.md"
 			}
 		],
 		"flint": {
 			"name": "licenseValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-main",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/805"
+			}
+		],
+		"flint": {
+			"name": "mainPresence",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-man",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/806"
+			}
+		],
+		"flint": {
+			"name": "manPresence",
+			"plugin": "package-json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-main",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-main.md"
+			}
+		],
+		"flint": {
+			"name": "mainValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-man",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/806"
+			}
+		],
+		"flint": {
+			"name": "manPresence",
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5119,34 +5465,64 @@
 			}
 		],
 		"flint": {
-			"name": "mainValidity",
+			"name": "manValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-man",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-man.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-man.md"
 			}
 		],
 		"flint": {
 			"name": "manValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-module",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/807"
+			}
+		],
+		"flint": {
+			"name": "modulePresence",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-module",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-module.md"
+			}
+		],
+		"flint": {
+			"name": "moduleValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/require-name",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-name.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-name.md"
 			}
 		],
 		"flint": {
 			"name": "namePresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5154,100 +5530,218 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-name",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-name.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-name.md"
 			}
 		],
 		"flint": {
 			"name": "nameValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/require-optionalDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-optionalDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-optionalDependencies.md"
 			}
 		],
 		"flint": {
 			"name": "optionalDependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-optionalDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-optionalDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-optionalDependencies.md"
 			}
 		],
 		"flint": {
 			"name": "optionalDependenciesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-os",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/810"
+			}
+		],
+		"flint": {
+			"name": "osPresence",
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-os",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-os.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-os.md"
 			}
 		],
 		"flint": {
 			"name": "osValidity",
 			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-packageManager",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/1546"
+			}
+		],
+		"flint": {
+			"name": "packageManagerPresence",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-packageManager",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-packageManager.md"
+			}
+		],
+		"flint": {
+			"name": "packageManagerValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/specify-peers-locally",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/specify-peers-locally.md"
+			}
+		],
+		"flint": {
+			"name": "peerDependenciesInstallation",
+			"plugin": "package-json",
 			"preset": "logical"
+		}
+	},
+	{
+		"flint": {
+			"name": "peerDependenciesMetaPresence",
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/require-peerDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-peerDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-peerDependencies.md"
 			}
 		],
 		"flint": {
 			"name": "peerDependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-peerDependencies",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-peerDependencies.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-peerDependencies.md"
 			}
 		],
 		"flint": {
 			"name": "peerDependenciesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/restrict-private-properties",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/restrict-private-properties.md"
+			}
+		],
+		"flint": {
+			"name": "privatePackageProperties",
+			"plugin": "package-json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-private",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/813"
+			}
+		],
+		"flint": {
+			"name": "privatePresence",
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-private",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-private.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-private.md"
 			}
 		],
 		"flint": {
 			"name": "privateValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/order-properties",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/order-properties.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/order-properties.md"
 			}
 		],
 		"flint": {
-			"name": "propertyOrdering",
+			"name": "propertyOrder",
+			"plugin": "package-json",
+			"preset": "sorting"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-publishConfig",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/814"
+			}
+		],
+		"flint": {
+			"name": "publishConfigPresence",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/no-redundant-publishConfig",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/no-redundant-publishConfig.md"
+			}
+		],
+		"flint": {
+			"name": "publishConfigRedundancy",
 			"plugin": "package-json",
 			"preset": "logical"
 		}
@@ -5256,20 +5750,21 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-publishConfig",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-publishConfig.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-publishConfig.md"
 			}
 		],
 		"flint": {
 			"name": "publishConfigValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-repository-directory",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-repository-directory.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-repository-directory.md"
 			}
 		],
 		"flint": {
@@ -5281,8 +5776,22 @@
 	{
 		"eslint": [
 			{
+				"name": "package-json/require-repository",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-repository.md"
+			}
+		],
+		"flint": {
+			"name": "repositoryPresence",
+			"plugin": "package-json",
+			"status": "implemented",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "package-json/repository-shorthand",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/repository-shorthand.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/repository-shorthand.md"
 			}
 		],
 		"flint": {
@@ -5295,51 +5804,95 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-repository",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-repository.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-repository.md"
 			}
 		],
 		"flint": {
 			"name": "repositoryValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/scripts-name-casing",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/scripts-name-casing.md"
+			}
+		],
+		"flint": {
+			"name": "scriptsNameCasing",
+			"plugin": "package-json",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-scripts",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-scripts.md"
+			}
+		],
+		"flint": {
+			"name": "scriptsPresence",
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-scripts",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-scripts.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-scripts.md"
 			}
 		],
 		"flint": {
 			"name": "scriptsValidity",
 			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-sideEffects",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-sideEffects.md"
+			}
+		],
+		"flint": {
+			"name": "sideEffectsPresence",
+			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-sideEffects",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/valid-sideEffects.md"
+			}
+		],
+		"flint": {
+			"name": "sideEffectsValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/require-type",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-type.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-type.md"
 			}
 		],
 		"flint": {
 			"name": "typePresence",
 			"plugin": "package-json",
-			"preset": "logical"
-		}
-	},
-	{
-		"eslint": [
-			{
-				"name": "package-json/type-required",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/type-required.md"
-			}
-		],
-		"flint": {
-			"name": "typeRequired",
-			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5347,37 +5900,40 @@
 		"eslint": [
 			{
 				"name": "package-json/require-types",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-types.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-types.md"
 			}
 		],
 		"flint": {
 			"name": "typesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/valid-type",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-type.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-type.md"
 			}
 		],
 		"flint": {
 			"name": "typeValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/require-version",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-version.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-version.md"
 			}
 		],
 		"flint": {
 			"name": "versionPresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5385,7 +5941,21 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-version",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-version.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-version.md"
+			}
+		],
+		"flint": {
+			"name": "versionValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-version",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-version.md"
 			}
 		],
 		"flint": {
@@ -5395,16 +5965,24 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "workspacesPresence",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "package-json/valid-workspaces",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-workspaces.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-workspaces.md"
 			}
 		],
 		"flint": {
 			"name": "workspacesValidity",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5694,7 +6272,7 @@
 			"plugin": "react",
 			"status": "skipped"
 		},
-		"notes": "Handled by sorting plugin."
+		"notes": "Handled by ts sorting preset."
 	},
 	{
 		"eslint": [
@@ -5818,7 +6396,7 @@
 			"plugin": "react",
 			"status": "skipped"
 		},
-		"notes": "Handled by sorting plugin."
+		"notes": "Handled by ts sorting preset."
 	},
 	{
 		"eslint": [
@@ -5923,7 +6501,7 @@
 		"flint": {
 			"name": "functionComponentThisReferences",
 			"plugin": "react",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -6043,7 +6621,7 @@
 		"flint": {
 			"name": "propertyValidity",
 			"plugin": "react",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -6056,7 +6634,7 @@
 		"flint": {
 			"name": "propTypes",
 			"plugin": "react",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -6099,7 +6677,7 @@
 			"plugin": "react",
 			"status": "skipped"
 		},
-		"notes": "Handled by sorting plugin."
+		"notes": "Handled by ts sorting preset."
 	},
 	{
 		"eslint": [
@@ -6490,7 +7068,7 @@
 		"flint": {
 			"name": "namespaceValidity",
 			"plugin": "solid",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -6557,7 +7135,7 @@
 		"flint": {
 			"name": "reactLikeDeps",
 			"plugin": "solid",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -6570,7 +7148,7 @@
 		"flint": {
 			"name": "reactLikeProps",
 			"plugin": "solid",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -6623,7 +7201,7 @@
 		"flint": {
 			"name": "stylePropValidity",
 			"plugin": "solid",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -6654,9 +7232,9 @@
 			}
 		],
 		"flint": {
-			"name": "classes",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "classesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6667,9 +7245,9 @@
 			}
 		],
 		"flint": {
-			"name": "decorators",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "decoratorsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6680,9 +7258,9 @@
 			}
 		],
 		"flint": {
-			"name": "exports",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "exportsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6693,9 +7271,9 @@
 			}
 		],
 		"flint": {
-			"name": "heritageClauses",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "heritageClausesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6706,9 +7284,9 @@
 			}
 		],
 		"flint": {
-			"name": "interfaces",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "interfacesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6719,9 +7297,9 @@
 			}
 		],
 		"flint": {
-			"name": "intersectionTypes",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "intersectionTypesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6732,9 +7310,9 @@
 			}
 		],
 		"flint": {
-			"name": "jsdocTags",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "jsdocTagsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6749,9 +7327,9 @@
 			}
 		],
 		"flint": {
-			"name": "jsonKeys",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "jsonKeysOrder",
+			"plugin": "json",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6762,9 +7340,9 @@
 			}
 		],
 		"flint": {
-			"name": "jsxProps",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "propsOrder",
+			"plugin": "jsx",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6775,9 +7353,9 @@
 			}
 		],
 		"flint": {
-			"name": "maps",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "mapsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6788,9 +7366,9 @@
 			}
 		],
 		"flint": {
-			"name": "modules",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "modulesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6805,9 +7383,9 @@
 			}
 		],
 		"flint": {
-			"name": "objects",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "objectsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		},
 		"oxlint": [
 			{
@@ -6824,22 +7402,22 @@
 			}
 		],
 		"flint": {
-			"name": "objectTypes",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "objectTypesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
 		"eslint": [
 			{
 				"name": "package-json/sort-collections",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/sort-collections.md"
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/sort-collections.md"
 			}
 		],
 		"flint": {
-			"name": "packageCollections",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "packageCollectionsOrder",
+			"plugin": "package-json",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6850,9 +7428,9 @@
 			}
 		],
 		"flint": {
-			"name": "regexFlags",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "regexFlagsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6863,9 +7441,9 @@
 			}
 		],
 		"flint": {
-			"name": "regexLists",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "regexListsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6876,9 +7454,9 @@
 			}
 		],
 		"flint": {
-			"name": "sets",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "setsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6889,9 +7467,22 @@
 			}
 		],
 		"flint": {
-			"name": "switchCases",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "switchCasesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@typescript-eslint/sort-type-constituents",
+				"url": "https://typescript-eslint.io/rules/sort-type-constituents"
+			}
+		],
+		"flint": {
+			"name": "typeConstituentsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6902,9 +7493,9 @@
 			}
 		],
 		"flint": {
-			"name": "unionTypes",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "unionTypesOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6915,9 +7506,9 @@
 			}
 		],
 		"flint": {
-			"name": "variableDeclarations",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "variableDeclarationsOrder",
+			"plugin": "ts",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6928,9 +7519,8 @@
 			}
 		],
 		"flint": {
-			"name": "yamlKeys",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "yamlKeysOrder",
+			"plugin": "yaml"
 		}
 	},
 	{
@@ -6941,9 +7531,9 @@
 			}
 		],
 		"flint": {
-			"name": "yamlSequenceValues",
-			"plugin": "sorting",
-			"preset": "stylistic"
+			"name": "yamlSequenceValuesOrder",
+			"plugin": "yaml",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -6963,6 +7553,1098 @@
 	{
 		"eslint": [
 			{
+				"name": "svelte/no-store-async",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-store-async/"
+			}
+		],
+		"flint": {
+			"name": "asyncStores",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-at-debug-tags",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/"
+			}
+		],
+		"flint": {
+			"name": "atDebugTags",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-at-html-tags",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-html-tags/"
+			}
+		],
+		"flint": {
+			"name": "atHtmlTags",
+			"plugin": "svelte",
+			"preset": "security"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-spaces-around-equal-signs-in-attribute",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-spaces-around-equal-signs-in-attribute/"
+			}
+		],
+		"flint": {
+			"name": "attributeEqualSignSpaces",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/sort-attributes",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/sort-attributes/"
+			}
+		],
+		"flint": {
+			"name": "attributeOrdering",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Superseded by the sorting plugin's jsxProps rules."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/max-attributes-per-line",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/max-attributes-per-line/"
+			}
+		],
+		"flint": {
+			"name": "attributesLineLimits",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/block-lang",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/block-lang/"
+			}
+		],
+		"flint": {
+			"name": "blockLang",
+			"plugin": "svelte",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/button-has-type",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/button-has-type/"
+			}
+		],
+		"flint": {
+			"name": "buttonTypes",
+			"plugin": "svelte",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/prefer-class-directive",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-class-directive/"
+			}
+		],
+		"flint": {
+			"name": "classDirectives",
+			"plugin": "svelte",
+			"preset": "stylistic",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/comment-directive",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/comment-directive/"
+			}
+		],
+		"flint": {
+			"name": "commentDirectives",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Generally handled by parsers."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/prefer-const",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const/"
+			}
+		],
+		"flint": {
+			"name": "constVariables",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Superseded by js plugin's constVariables rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/derived-has-same-inputs-outputs",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/derived-has-same-inputs-outputs/"
+			}
+		],
+		"flint": {
+			"name": "derivedCallbackNamingConsistency",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/prefer-destructured-store-props",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/"
+			}
+		],
+		"flint": {
+			"name": "destructuredStoreProps",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-dupe-else-if-blocks",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks/"
+			}
+		],
+		"flint": {
+			"name": "duplicateElseIfBlocks",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-dupe-on-directives",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-on-directives/"
+			}
+		],
+		"flint": {
+			"name": "duplicateOnDirectives",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-dupe-style-properties",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-style-properties/"
+			}
+		],
+		"flint": {
+			"name": "duplicateStyleProperties",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-dupe-use-directives",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-use-directives/"
+			}
+		],
+		"flint": {
+			"name": "duplicateUseDirectives",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-dynamic-slot-name",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/"
+			}
+		],
+		"flint": {
+			"name": "dynamicSlotNames",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Deprecated. Now handled by the Svelte compiler."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/require-each-key",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-each-key/"
+			}
+		],
+		"flint": {
+			"name": "eachBlockKeys",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/require-event-dispatcher-types",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-dispatcher-types/"
+			}
+		],
+		"flint": {
+			"name": "eventDispatcherTypes",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/require-event-prefix",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-prefix/"
+			}
+		],
+		"flint": {
+			"name": "eventPrefixes",
+			"plugin": "svelte",
+			"preset": "stylistic",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-extra-reactive-curlies",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-extra-reactive-curlies/"
+			}
+		],
+		"flint": {
+			"name": "extraReactiveCurlies",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/first-attribute-linebreak",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/first-attribute-linebreak/"
+			}
+		],
+		"flint": {
+			"name": "firstAttributeLinebreaks",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-reactive-functions",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-functions/"
+			}
+		],
+		"flint": {
+			"name": "functionReactivity",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-goto-without-base",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-goto-without-base/"
+			}
+		],
+		"flint": {
+			"name": "gotosLackingBase",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Deprecated. Superseded by unresolvedNavigations."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/html-closing-bracket-new-line",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/html-closing-bracket-new-line/"
+			}
+		],
+		"flint": {
+			"name": "htmlClosingBracketNewLine",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/html-closing-bracket-spacing",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/html-closing-bracket-spacing/"
+			}
+		],
+		"flint": {
+			"name": "htmlClosingBracketSpacings",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/spaced-html-comment",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/spaced-html-comment/"
+			}
+		],
+		"flint": {
+			"name": "htmlCommentSpacing",
+			"plugin": "svelte",
+			"preset": "stylistic",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/html-quotes",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/html-quotes/"
+			}
+		],
+		"flint": {
+			"name": "htmlQuotes",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-ignored-unsubscribe",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-ignored-unsubscribe/"
+			}
+		],
+		"flint": {
+			"name": "ignoredUnsubscribes",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-immutable-reactive-statements",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-immutable-reactive-statements/"
+			}
+		],
+		"flint": {
+			"name": "immutableReactiveStatements",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/indent",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/indent/"
+			}
+		],
+		"flint": {
+			"name": "indentation",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/infinite-reactive-loop",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/infinite-reactive-loop/"
+			}
+		],
+		"flint": {
+			"name": "infiniteReactivityLoops",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-inline-styles",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inline-styles/"
+			}
+		],
+		"flint": {
+			"name": "inlineStyles",
+			"plugin": "svelte",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-inner-declarations",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inner-declarations/"
+			}
+		],
+		"flint": {
+			"name": "innerDeclarations",
+			"plugin": "svelte",
+			"status": "skipped"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-inspect",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inspect/"
+			}
+		],
+		"flint": {
+			"name": "inspectRunes",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/valid-prop-names-in-kit-pages",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/"
+			}
+		],
+		"flint": {
+			"name": "kitPagePropNames",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/max-lines-per-block",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/max-lines-per-block/"
+			}
+		],
+		"flint": {
+			"name": "linesPerBlockLimits",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Overly opinionated."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-reactive-literals",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-literals/"
+			}
+		],
+		"flint": {
+			"name": "literalReactivity",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-dom-manipulating",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/"
+			}
+		],
+		"flint": {
+			"name": "manualDomManipulations",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-add-event-listener",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-add-event-listener/"
+			}
+		],
+		"flint": {
+			"name": "manualEventListeners",
+			"plugin": "svelte",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-object-in-text-mustaches",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/"
+			}
+		],
+		"flint": {
+			"name": "mustacheObjects",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/mustache-spacing",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/mustache-spacing/"
+			}
+		],
+		"flint": {
+			"name": "mustacheSpacings",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-navigation-without-base",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/"
+			}
+		],
+		"flint": {
+			"name": "navigationLackingBase",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Deprecated. Superseded by unresolvedNavigations."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-not-function-handler",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/"
+			}
+		],
+		"flint": {
+			"name": "nonFunctionHandlers",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/require-optimized-style-attribute",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/"
+			}
+		],
+		"flint": {
+			"name": "optimizedStyleAttributes",
+			"plugin": "svelte",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-export-load-in-svelte-module-in-kit-pages",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-export-load-in-svelte-module-in-kit-pages/"
+			}
+		],
+		"flint": {
+			"name": "pageLoaders",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-reactive-reassign",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-reassign/"
+			}
+		],
+		"flint": {
+			"name": "reactiveReassignments",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-restricted-html-elements",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-restricted-html-elements/"
+			}
+		],
+		"flint": {
+			"name": "restrictedHtmlElements",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Superseded by js plugin's restrictedSyntax rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/consistent-selector-style",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/consistent-selector-style/"
+			}
+		],
+		"flint": {
+			"name": "selectorConsistency",
+			"plugin": "svelte",
+			"preset": "stylistic",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/html-self-closing",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/html-self-closing/"
+			}
+		],
+		"flint": {
+			"name": "selfClosingHtmlElements",
+			"plugin": "svelte",
+			"preset": "stylistic",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/shorthand-attribute",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/shorthand-attribute/"
+			}
+		],
+		"flint": {
+			"name": "shorthandAttributes",
+			"plugin": "svelte",
+			"preset": "stylistic",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/shorthand-directive",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/shorthand-directive/"
+			}
+		],
+		"flint": {
+			"name": "shorthandDirectives",
+			"plugin": "svelte",
+			"preset": "stylistic",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-shorthand-style-property-overrides",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-shorthand-style-property-overrides/"
+			}
+		],
+		"flint": {
+			"name": "shorthandStylePropertyOverrides",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/experimental-require-slot-types",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/experimental-require-slot-types/"
+			}
+		],
+		"flint": {
+			"name": "slotTypes",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-raw-special-elements",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-raw-special-elements/"
+			}
+		],
+		"flint": {
+			"name": "specialElementPrefixes",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/require-store-callbacks-use-set-param",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-callbacks-use-set-param/"
+			}
+		],
+		"flint": {
+			"name": "storeCallbackSetParameters",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/require-stores-init",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-stores-init/"
+			}
+		],
+		"flint": {
+			"name": "storeInitializations",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/require-store-reactive-access",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-reactive-access/"
+			}
+		],
+		"flint": {
+			"name": "storeReactiveAccess",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/experimental-require-strict-events",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/experimental-require-strict-events/"
+			}
+		],
+		"flint": {
+			"name": "strictEvents",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Svelte 4-exclusive rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/prefer-style-directive",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-style-directive/"
+			}
+		],
+		"flint": {
+			"name": "styleDirectives",
+			"plugin": "svelte",
+			"preset": "stylistic",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-svelte-internal",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-svelte-internal/"
+			}
+		],
+		"flint": {
+			"name": "svelteInternalImports",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/prefer-svelte-reactivity",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-svelte-reactivity/"
+			}
+		],
+		"flint": {
+			"name": "svelteReactivityClasses",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/system",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/system/"
+			}
+		],
+		"flint": {
+			"name": "svelteSystem",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Generally handled by parsers."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-target-blank",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-target-blank/"
+			}
+		],
+		"flint": {
+			"name": "targetBlankLinks",
+			"plugin": "svelte",
+			"preset": "security",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-top-level-browser-globals",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-top-level-browser-globals/"
+			}
+		],
+		"flint": {
+			"name": "topLevelBrowserGlobals",
+			"plugin": "svelte",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-trailing-spaces",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-trailing-spaces/"
+			}
+		],
+		"flint": {
+			"name": "trailingSpaces",
+			"plugin": "svelte",
+			"status": "skipped"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-unknown-style-directive-property",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property/"
+			}
+		],
+		"flint": {
+			"name": "unknownStyleDirectiveProperties",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/@typescript-eslint/no-unnecessary-condition",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/@typescript-eslint/no-unnecessary-condition/"
+			}
+		],
+		"flint": {
+			"name": "unnecessaryConditions",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Deprecated. No longer needed when using svelte-eslint-parser>=v0.19.0."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-unnecessary-state-wrap",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unnecessary-state-wrap/"
+			}
+		],
+		"flint": {
+			"name": "unnecessaryStateWraps",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-navigation-without-resolve",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-resolve/"
+			}
+		],
+		"flint": {
+			"name": "unresolvedNavigations",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-unused-class-name",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-class-name/"
+			}
+		],
+		"flint": {
+			"name": "unusedClassNames",
+			"plugin": "svelte",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-unused-props",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-props/"
+			}
+		],
+		"flint": {
+			"name": "unusedProps",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-unused-svelte-ignore",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/"
+			}
+		],
+		"flint": {
+			"name": "unusedSvelteIgnores",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-useless-children-snippet",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-children-snippet/"
+			}
+		],
+		"flint": {
+			"name": "uselessChildrenSnippets",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/no-useless-mustaches",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/"
+			}
+		],
+		"flint": {
+			"name": "uselessMustaches",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/valid-compile",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-compile/"
+			}
+		],
+		"flint": {
+			"name": "validCompilations",
+			"plugin": "svelte",
+			"status": "skipped"
+		},
+		"notes": "Provided by language reports."
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/valid-each-key",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-each-key/"
+			}
+		],
+		"flint": {
+			"name": "validEachKeys",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/valid-style-parse",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-style-parse/"
+			}
+		],
+		"flint": {
+			"name": "validStyleParsing",
+			"plugin": "svelte",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "svelte/prefer-writable-derived",
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-writable-derived/"
+			}
+		],
+		"flint": {
+			"name": "writableDerivedStores",
+			"plugin": "svelte",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "unicorn/prevent-abbreviations",
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prevent-abbreviations.md"
 			}
@@ -6972,6 +8654,32 @@
 			"plugin": "ts",
 			"status": "skipped"
 		}
+	},
+	{
+		"biome": [
+			{
+				"name": "useaccessorPairGroups",
+				"url": "https://biomejs.dev/linter/rules/useaccessorPairGroups"
+			}
+		],
+		"eslint": [
+			{
+				"name": "grouped-accessor-pairs",
+				"url": "https://eslint.org/docs/latest/rules/grouped-accessor-pairs"
+			}
+		],
+		"flint": {
+			"name": "accessorPairGroups",
+			"plugin": "ts",
+			"preset": "stylistic",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/grouped-accessor-pairs",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/grouped-accessor-pairs.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -6985,6 +8693,26 @@
 			"plugin": "ts",
 			"status": "skipped"
 		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@typescript-eslint/related-getter-setter-pairs",
+				"url": "https://typescript-eslint.io/rules/related-getter-setter-pairs"
+			}
+		],
+		"flint": {
+			"name": "accessorPairTypes",
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "typescript/related-getter-setter-pairs",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/related-getter-setter-pairs.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -7181,7 +8909,7 @@
 		"flint": {
 			"name": "arrayCallbackReturns",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -7644,6 +9372,27 @@
 			{
 				"name": "unicorn/no-array-reduce",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-reduce.html"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "@typescript-eslint/prefer-reduce-type-parameter",
+				"url": "https://typescript-eslint.io/rules/prefer-reduce-type-parameter"
+			}
+		],
+		"flint": {
+			"name": "arrayReduceTypeArguments",
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented",
+			"strictness": "strict"
+		},
+		"oxlint": [
+			{
+				"name": "typescript/prefer-reduce-type-parameter",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-reduce-type-parameter.html"
 			}
 		]
 	},
@@ -8279,7 +10028,7 @@
 		"flint": {
 			"name": "caseDeclarations",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -8464,7 +10213,7 @@
 		"flint": {
 			"name": "classAssignments",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -8484,7 +10233,7 @@
 		"flint": {
 			"name": "classFieldDeclarations",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -8528,7 +10277,7 @@
 		"flint": {
 			"name": "classMemberDuplicates",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -8795,7 +10544,7 @@
 		"flint": {
 			"name": "constantAssignments",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -8877,6 +10626,26 @@
 		}
 	},
 	{
+		"eslint": [
+			{
+				"name": "@typescript-eslint/consistent-generic-constructors",
+				"url": "https://typescript-eslint.io/rules/consistent-generic-constructors"
+			}
+		],
+		"flint": {
+			"name": "constructorGenericCalls",
+			"plugin": "ts",
+			"preset": "stylistic",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "typescript/consistent-generic-constructors",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/consistent-generic-constructors.html"
+			}
+		]
+	},
+	{
 		"biome": [
 			{
 				"name": "noConstructorReturn",
@@ -8892,7 +10661,7 @@
 		"flint": {
 			"name": "constructorReturns",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -8924,7 +10693,7 @@
 		"flint": {
 			"name": "constructorSupers",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -9150,7 +10919,7 @@
 		"flint": {
 			"name": "defaultParameterLast",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -9420,7 +11189,7 @@
 		"flint": {
 			"name": "duplicateArguments",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -9920,9 +11689,10 @@
 		"flint": {
 			"name": "equalityOperators",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
-		"notes": "Default ESLint's \"smart\" to true",
+		"notes": "Default similar to ESLint's \"{ \"null\": \"ignore\" }\" to true",
 		"oxlint": [
 			{
 				"name": "eslint/eqeqeq",
@@ -10250,7 +12020,7 @@
 		"flint": {
 			"name": "exportUniqueNames",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -10335,6 +12105,38 @@
 			{
 				"name": "unicorn/filename-case",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/filename-case.html"
+			}
+		]
+	},
+	{
+		"biome": [
+			{
+				"name": "noUnsafeFinally",
+				"url": "https://biomejs.dev/linter/rules/noUnsafeFinally"
+			}
+		],
+		"deno": [
+			{
+				"name": "no-unsafe-finally",
+				"url": "https://docs.deno.com/lint/rules/no-unsafe-finally"
+			}
+		],
+		"eslint": [
+			{
+				"name": "no-unsafe-finally",
+				"url": "https://eslint.org/docs/latest/rules/no-unsafe-finally"
+			}
+		],
+		"flint": {
+			"status": "implemented",
+			"name": "finallyStatementSafety",
+			"plugin": "ts",
+			"preset": "logical"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-unsafe-finally",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unsafe-finally.html"
 			}
 		]
 	},
@@ -10447,6 +12249,26 @@
 		]
 	},
 	{
+		"eslint": [
+			{
+				"name": "prefer-spread",
+				"url": "https://eslint.org/docs/latest/rules/prefer-spread"
+			}
+		],
+		"flint": {
+			"name": "functionApplySpreads",
+			"plugin": "ts",
+			"preset": "stylistic",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/prefer-spread",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-spread.html"
+			}
+		]
+	},
+	{
 		"biome": [
 			{
 				"name": "noFunctionAssign",
@@ -10468,7 +12290,7 @@
 		"flint": {
 			"name": "functionAssignments",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -10481,20 +12303,20 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-spread",
-				"url": "https://eslint.org/docs/latest/rules/prefer-spread"
+				"name": "no-useless-call",
+				"url": "https://eslint.org/docs/latest/rules/no-useless-call"
 			}
 		],
 		"flint": {
-			"name": "functionApplySpreads",
+			"name": "functionCurryingRedundancy",
 			"plugin": "ts",
-			"preset": "stylistic",
+			"preset": "logical",
 			"status": "implemented"
 		},
 		"oxlint": [
 			{
-				"name": "eslint/prefer-spread",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-spread.html"
+				"name": "eslint/no-useless-call",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-call.html"
 			}
 		]
 	},
@@ -10678,26 +12500,6 @@
 		]
 	},
 	{
-		"eslint": [
-			{
-				"name": "@typescript-eslint/consistent-generic-constructors",
-				"url": "https://typescript-eslint.io/rules/consistent-generic-constructors"
-			}
-		],
-		"flint": {
-			"name": "constructorGenericCalls",
-			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "typescript/consistent-generic-constructors",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/consistent-generic-constructors.html"
-			}
-		]
-	},
-	{
 		"biome": [
 			{
 				"name": "useGetterReturn",
@@ -10719,33 +12521,13 @@
 		"flint": {
 			"name": "getterReturns",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
 			{
 				"name": "eslint/getter-return",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/getter-return.html"
-			}
-		]
-	},
-	{
-		"eslint": [
-			{
-				"name": "@typescript-eslint/related-getter-setter-pairs",
-				"url": "https://typescript-eslint.io/rules/related-getter-setter-pairs"
-			}
-		],
-		"flint": {
-			"name": "accessorPairTypes",
-			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "typescript/related-getter-setter-pairs",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/related-getter-setter-pairs.html"
 			}
 		]
 	},
@@ -10771,7 +12553,7 @@
 		"flint": {
 			"name": "globalAssignments",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -10803,7 +12585,7 @@
 		"flint": {
 			"name": "globalObjectCalls",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -10841,32 +12623,6 @@
 			{
 				"name": "unicorn/prefer-global-this",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-global-this.html"
-			}
-		]
-	},
-	{
-		"biome": [
-			{
-				"name": "useaccessorPairGroups",
-				"url": "https://biomejs.dev/linter/rules/useaccessorPairGroups"
-			}
-		],
-		"eslint": [
-			{
-				"name": "grouped-accessor-pairs",
-				"url": "https://eslint.org/docs/latest/rules/grouped-accessor-pairs"
-			}
-		],
-		"flint": {
-			"name": "accessorPairGroups",
-			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/grouped-accessor-pairs",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/grouped-accessor-pairs.html"
 			}
 		]
 	},
@@ -11019,7 +12775,7 @@
 		"flint": {
 			"name": "importAssignments",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -11083,6 +12839,25 @@
 			{
 				"name": "import/no-duplicates",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-duplicates.html"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "no-duplicate-imports",
+				"url": "https://eslint.org/docs/latest/rules/no-duplicate-imports"
+			}
+		],
+		"flint": {
+			"name": "importDuplicates",
+			"plugin": "ts",
+			"preset": "stylistic"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-duplicate-imports",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-duplicate-imports.html"
 			}
 		]
 	},
@@ -11400,7 +13175,7 @@
 		"flint": {
 			"name": "invalidThis",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -11422,6 +13197,38 @@
 			"preset": "logical",
 			"strictness": "strict"
 		}
+	},
+	{
+		"biome": [
+			{
+				"name": "noIrregularWhitespace",
+				"url": "https://biomejs.dev/linter/rules/no-irregular-whitespace"
+			}
+		],
+		"deno": [
+			{
+				"name": "no-irregular-whitespace",
+				"url": "https://docs.deno.com/lint/rules/no-irregular-whitespace"
+			}
+		],
+		"eslint": [
+			{
+				"name": "no-irregular-whitespace",
+				"url": "https://eslint.org/docs/latest/rules/no-irregular-whitespace"
+			}
+		],
+		"flint": {
+			"name": "irregularWhitespaces",
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-irregular-whitespace",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-irregular-whitespace.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -12989,7 +14796,7 @@
 		"flint": {
 			"name": "nativeObjectExtensions",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -13163,90 +14970,13 @@
 		"flint": {
 			"name": "newNativeNonConstructors",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
 			{
 				"name": "eslint/no-new-native-nonconstructor",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-new-native-nonconstructor.html"
-			}
-		]
-	},
-	{
-		"eslint": [
-			{
-				"name": "no-duplicate-imports",
-				"url": "https://eslint.org/docs/latest/rules/no-duplicate-imports"
-			}
-		],
-		"flint": {
-			"name": "importDuplicates",
-			"plugin": "ts",
-			"preset": "stylistic"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/no-duplicate-imports",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-duplicate-imports.html"
-			}
-		]
-	},
-	{
-		"biome": [
-			{
-				"name": "noIrregularWhitespace",
-				"url": "https://biomejs.dev/linter/rules/no-irregular-whitespace"
-			}
-		],
-		"deno": [
-			{
-				"name": "no-irregular-whitespace",
-				"url": "https://docs.deno.com/lint/rules/no-irregular-whitespace"
-			}
-		],
-		"eslint": [
-			{
-				"name": "no-irregular-whitespace",
-				"url": "https://eslint.org/docs/latest/rules/no-irregular-whitespace"
-			}
-		],
-		"flint": {
-			"name": "irregularWhitespaces",
-			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/no-irregular-whitespace",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-irregular-whitespace.html"
-			}
-		]
-	},
-	{
-		"biome": [
-			{
-				"name": "useConsistentBuiltinInstantiation",
-				"url": "https://biomejs.dev/linter/rules/use-consistent-builtin-instantiation/"
-			}
-		],
-		"eslint": [
-			{
-				"name": "no-new-wrappers",
-				"url": "https://eslint.org/docs/latest/rules/no-new-wrappers"
-			}
-		],
-		"flint": {
-			"name": "wrapperObjects",
-			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/no-new-wrappers",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-new-wrappers.html"
 			}
 		]
 	},
@@ -13411,9 +15141,9 @@
 			}
 		],
 		"flint": {
-			"name": "nullComparisons",
+			"name": "nullishCheckStyle",
 			"plugin": "ts",
-			"status": "skipped"
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -13801,7 +15531,7 @@
 		"flint": {
 			"name": "objectKeyDuplicates",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -13828,7 +15558,7 @@
 		"flint": {
 			"name": "objectProto",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -13951,7 +15681,7 @@
 		"flint": {
 			"name": "octalEscapes",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -13965,7 +15695,7 @@
 		"flint": {
 			"name": "octalNumbers",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -14336,8 +16066,10 @@
 		"flint": {
 			"name": "promiseFinallyReturns",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "skipped"
 		},
+		"notes": "Largely covered by returnVoidSafety.",
 		"oxlint": [
 			{
 				"name": "promise/no-return-in-finally",
@@ -14582,27 +16314,6 @@
 			{
 				"name": "oxc/only-used-in-recursion",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/only-used-in-recursion.html"
-			}
-		]
-	},
-	{
-		"eslint": [
-			{
-				"name": "@typescript-eslint/prefer-reduce-type-parameter",
-				"url": "https://typescript-eslint.io/rules/prefer-reduce-type-parameter"
-			}
-		],
-		"flint": {
-			"name": "arrayReduceTypeArguments",
-			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented",
-			"strictness": "strict"
-		},
-		"oxlint": [
-			{
-				"name": "typescript/prefer-reduce-type-parameter",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-reduce-type-parameter.html"
 			}
 		]
 	},
@@ -16089,7 +17800,8 @@
 		],
 		"flint": {
 			"name": "restrictedIdentifiers",
-			"plugin": "ts"
+			"plugin": "ts",
+			"status": "implemented"
 		}
 	},
 	{
@@ -16238,6 +17950,7 @@
 			"name": "returnThisTypes",
 			"plugin": "ts",
 			"preset": "logical",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -16246,6 +17959,19 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-return-this-type.html"
 			}
 		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "@typescript-eslint/strict-void-returns",
+				"url": "https://typescript-eslint.io/rules/strict-void-returns"
+			}
+		],
+		"flint": {
+			"name": "returnVoidSafety",
+			"plugin": "ts",
+			"preset": "logicalStrict"
+		}
 	},
 	{
 		"biome": [
@@ -16282,38 +18008,6 @@
 	{
 		"biome": [
 			{
-				"name": "noSelfCompare",
-				"url": "https://biomejs.dev/linter/rules/noSelfCompare"
-			}
-		],
-		"deno": [
-			{
-				"name": "no-self-compare",
-				"url": "https://docs.deno.com/lint/rules/no-self-compare"
-			}
-		],
-		"eslint": [
-			{
-				"name": "no-self-compare",
-				"url": "https://eslint.org/docs/latest/rules/no-self-compare"
-			}
-		],
-		"flint": {
-			"name": "unnecessaryComparisons",
-			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/no-self-compare",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-self-compare.html"
-			}
-		]
-	},
-	{
-		"biome": [
-			{
 				"name": "noCommaOperator",
 				"url": "https://biomejs.dev/linter/rules/noCommaOperator"
 			}
@@ -16327,7 +18021,7 @@
 		"flint": {
 			"name": "sequences",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		}
 	},
@@ -16394,7 +18088,7 @@
 		"flint": {
 			"name": "setterReturns",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -16426,7 +18120,7 @@
 		"flint": {
 			"name": "shadowedRestrictedNames",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -17092,7 +18786,7 @@
 		"flint": {
 			"name": "thisBeforeSuper",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -17313,6 +19007,19 @@
 	{
 		"eslint": [
 			{
+				"name": "@typescript-eslint/typedef",
+				"url": "https://typescript-eslint.io/rules/typedef"
+			}
+		],
+		"flint": {
+			"name": "typeAnnotations",
+			"plugin": "ts",
+			"status": "skipped"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "@typescript-eslint/consistent-type-assertions",
 				"url": "https://typescript-eslint.io/rules/consistent-type-assertions"
 			}
@@ -17361,32 +19068,6 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-duplicate-type-constituents.html"
 			}
 		]
-	},
-	{
-		"eslint": [
-			{
-				"name": "@typescript-eslint/sort-type-constituents",
-				"url": "https://typescript-eslint.io/rules/sort-type-constituents"
-			}
-		],
-		"flint": {
-			"name": "typeConstituents",
-			"plugin": "sorting",
-			"preset": "stylistic"
-		}
-	},
-	{
-		"eslint": [
-			{
-				"name": "@typescript-eslint/typedef",
-				"url": "https://typescript-eslint.io/rules/typedef"
-			}
-		],
-		"flint": {
-			"name": "typeAnnotations",
-			"plugin": "ts",
-			"status": "skipped"
-		}
 	},
 	{
 		"biome": [
@@ -17462,7 +19143,7 @@
 		"flint": {
 			"name": "typeofComparisons",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -17507,7 +19188,7 @@
 		"flint": {
 			"name": "unassignedVariables",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -17617,7 +19298,7 @@
 		"flint": {
 			"name": "undefinedVariables",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -17785,6 +19466,38 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noSelfCompare",
+				"url": "https://biomejs.dev/linter/rules/noSelfCompare"
+			}
+		],
+		"deno": [
+			{
+				"name": "no-self-compare",
+				"url": "https://docs.deno.com/lint/rules/no-self-compare"
+			}
+		],
+		"eslint": [
+			{
+				"name": "no-self-compare",
+				"url": "https://eslint.org/docs/latest/rules/no-self-compare"
+			}
+		],
+		"flint": {
+			"name": "unnecessaryComparisons",
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-self-compare",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-self-compare.html"
+			}
+		]
+	},
+	{
 		"flint": {
 			"name": "unnecessaryComparisons",
 			"plugin": "ts",
@@ -17928,28 +19641,9 @@
 		"flint": {
 			"name": "unnecessaryEscapes",
 			"plugin": "ts",
-			"preset": "stylistic"
-		}
-	},
-	{
-		"eslint": [
-			{
-				"name": "no-useless-call",
-				"url": "https://eslint.org/docs/latest/rules/no-useless-call"
-			}
-		],
-		"flint": {
-			"name": "functionCurryingRedundancy",
-			"plugin": "ts",
-			"preset": "logical",
+			"preset": "stylistic",
 			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/no-useless-call",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-call.html"
-			}
-		]
+		}
 	},
 	{
 		"biome": [
@@ -18011,7 +19705,8 @@
 		"flint": {
 			"name": "unnecessaryMathClamps",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -18030,7 +19725,8 @@
 		"flint": {
 			"name": "unnecessaryNumericFractions",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -18088,7 +19784,8 @@
 		"flint": {
 			"name": "unnecessaryRenames",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -18183,6 +19880,7 @@
 			"name": "unnecessaryTernaries",
 			"plugin": "ts",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -18351,7 +20049,8 @@
 		"flint": {
 			"name": "unnecessaryUseStricts",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -18389,7 +20088,7 @@
 		"flint": {
 			"name": "unreachableStatements",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		},
 		"oxlint": [
 			{
@@ -18443,38 +20142,6 @@
 		]
 	},
 	{
-		"biome": [
-			{
-				"name": "noUnsafeFinally",
-				"url": "https://biomejs.dev/linter/rules/noUnsafeFinally"
-			}
-		],
-		"deno": [
-			{
-				"name": "no-unsafe-finally",
-				"url": "https://docs.deno.com/lint/rules/no-unsafe-finally"
-			}
-		],
-		"eslint": [
-			{
-				"name": "no-unsafe-finally",
-				"url": "https://eslint.org/docs/latest/rules/no-unsafe-finally"
-			}
-		],
-		"flint": {
-			"status": "implemented",
-			"name": "finallyStatementSafety",
-			"plugin": "ts",
-			"preset": "logical"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/no-unsafe-finally",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unsafe-finally.html"
-			}
-		]
-	},
-	{
 		"eslint": [
 			{
 				"name": "@typescript-eslint/no-unsafe-function-type",
@@ -18515,7 +20182,7 @@
 		"flint": {
 			"name": "unsafeNegations",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -18541,7 +20208,7 @@
 		"flint": {
 			"name": "unsafeOptionalChains",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		},
 		"oxlint": [
 			{
@@ -18827,7 +20494,7 @@
 		"flint": {
 			"name": "usageBeforeDefinition",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -18853,7 +20520,7 @@
 		"flint": {
 			"name": "useStrictDirectives",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		}
 	},
 	{
@@ -18891,7 +20558,7 @@
 		"flint": {
 			"name": "variableBlockScopeUsage",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		},
 		"oxlint": [
 			{
@@ -18958,7 +20625,7 @@
 		"flint": {
 			"name": "variableDeletions",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -18994,7 +20661,7 @@
 		"flint": {
 			"name": "variableRedeclarations",
 			"plugin": "ts",
-			"preset": "untyped"
+			"preset": "javascript"
 		},
 		"oxlint": [
 			{
@@ -19083,13 +20750,39 @@
 		"flint": {
 			"name": "withStatements",
 			"plugin": "ts",
-			"preset": "untyped",
+			"preset": "javascript",
 			"status": "implemented"
 		},
 		"oxlint": [
 			{
 				"name": "eslint/no-with",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-with.html"
+			}
+		]
+	},
+	{
+		"biome": [
+			{
+				"name": "useConsistentBuiltinInstantiation",
+				"url": "https://biomejs.dev/linter/rules/use-consistent-builtin-instantiation/"
+			}
+		],
+		"eslint": [
+			{
+				"name": "no-new-wrappers",
+				"url": "https://eslint.org/docs/latest/rules/no-new-wrappers"
+			}
+		],
+		"flint": {
+			"name": "wrapperObjects",
+			"plugin": "ts",
+			"preset": "logical",
+			"status": "implemented"
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-new-wrappers",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-new-wrappers.html"
 			}
 		]
 	},
@@ -19117,7 +20810,8 @@
 			"name": "afterAllPaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -19158,7 +20852,8 @@
 			"name": "allPaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -19172,7 +20867,8 @@
 			"name": "beforeAllPaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -19186,7 +20882,8 @@
 			"name": "beforeEachPaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -19310,7 +21007,8 @@
 			"name": "describePaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -19391,7 +21089,8 @@
 			"name": "expectGroupPaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -19636,7 +21335,8 @@
 		"flint": {
 			"name": "nodeTestImports",
 			"plugin": "vitest",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -19821,7 +21521,7 @@
 			}
 		],
 		"flint": {
-			"name": "testCaseOnlies",
+			"name": "testCaseOnlyFlags",
 			"plugin": "vitest",
 			"status": "skipped"
 		},
@@ -19838,7 +21538,8 @@
 			"name": "testCasePaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
