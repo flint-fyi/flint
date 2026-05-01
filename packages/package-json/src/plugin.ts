@@ -13,8 +13,8 @@ export const packageJson = createPlugin({
 	name: "PackageJSON",
 	rules: [
 		binNameCasing,
-		scriptsNameCasing,
 		privatePresence,
+		scriptsNameCasing,
 		...Object.values(directPropertyPresenceRules),
 		...Object.values(directPropertyValidityRules),
 	],
