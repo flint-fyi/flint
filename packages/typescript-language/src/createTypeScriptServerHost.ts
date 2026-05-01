@@ -1,4 +1,4 @@
-import type { LinterHost } from "@flint.fyi/core";
+import { commonlyIgnoredPaths, type LinterHost } from "@flint.fyi/core";
 import { assert, FlintAssertionError } from "@flint.fyi/utils";
 import fs from "node:fs";
 import path from "node:path";
@@ -116,7 +116,7 @@ export function createTypeScriptServerHost(
 				(filePathAbsolute) => {
 					callback(filePathAbsolute);
 				},
-				{ ignoredPaths: ["/node_modules", "/.git", "/.jj"], recursive },
+				{ ignoredPaths: commonlyIgnoredPaths, recursive },
 			);
 			return {
 				close() {
@@ -142,7 +142,7 @@ export function createTypeScriptServerHost(
 					}
 					callback(filePath, eventKind);
 				},
-				{ ignoredPaths: ["/node_modules", "/.git", "/.jj"] },
+				{ ignoredPaths: commonlyIgnoredPaths },
 			);
 			return {
 				close() {

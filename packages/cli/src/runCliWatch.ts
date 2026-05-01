@@ -1,4 +1,9 @@
-import type { LinterHost, LintResults } from "@flint.fyi/core";
+import {
+	type LinterHost,
+	type LintResults,
+	nodeModulesCache,
+	vcsDirs,
+} from "@flint.fyi/core";
 import { pathKey } from "@flint.fyi/utils";
 import debounce from "debounce";
 import { debugForFile } from "debug-for-file";
@@ -77,7 +82,7 @@ export async function runCliWatch(
 
 		log("Watching cwd:", cwd);
 		const watcher = host.watchDirectorySync(cwd, rerun, {
-			ignoredPaths: ["/node_modules/.cache", "/.git", "/.jj"],
+			ignoredPaths: [nodeModulesCache, ...vcsDirs],
 			recursive: true,
 		});
 	});
