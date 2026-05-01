@@ -46,15 +46,15 @@ export interface Rule<
 }
 
 export interface RuleAbout<Presets = string> extends BaseAbout {
-	description: string;
+	readonly description: string;
 
 	/**
 	 * ID of the plugin parent of this rule, if this is part of a plugin.
 	 * @example "ts"
 	 */
-	pluginId?: string;
+	readonly pluginId?: string;
 
-	presets?: readonly Presets[];
+	readonly presets?: readonly Presets[];
 }
 
 /**

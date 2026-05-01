@@ -1,3 +1,4 @@
+import type { ExactObject } from "../types/exact.ts";
 import type {
 	AnyLanguage,
 	GetLanguageAstNodesByName,
@@ -11,13 +12,7 @@ export interface RuleCreatorOptions {
 	pluginId: string;
 }
 
-type ExactRuleAbout<Value, Shape> = Record<
-	Exclude<keyof Value, keyof Shape>,
-	never
-> &
-	Value;
-
-export class RuleCreator<About extends RuleAbout> {
+export class RuleCreator<const About extends RuleAbout = RuleAbout> {
 	#options: RuleCreatorOptions;
 
 	constructor(options: RuleCreatorOptions) {
@@ -32,14 +27,14 @@ export class RuleCreator<About extends RuleAbout> {
 	>(
 		language: Language,
 		rule: RuleDefinition<
-			ExactRuleAbout<RuleDefinitionAbout, About>,
+			ExactObject<RuleDefinitionAbout, About>,
 			GetLanguageAstNodesByName<Language>,
 			GetLanguageFileServices<Language>,
 			MessageId,
 			OptionsSchema
 		>,
 	): Rule<
-		RuleDefinitionAbout & { pluginId: string; url: string },
+		RuleDefinitionAbout & { readonly pluginId: string; readonly url: string },
 		MessageId,
 		OptionsSchema
 	> {
