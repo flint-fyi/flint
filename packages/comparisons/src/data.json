@@ -4909,13 +4909,15 @@
 		],
 		"flint": {
 			"name": "bugsValidity",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
 		"flint": {
 			"name": "browserValidity",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5332,7 +5334,8 @@
 	{
 		"flint": {
 			"name": "gypfileValidity",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5393,7 +5396,8 @@
 	{
 		"flint": {
 			"name": "libcValidity",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5637,7 +5641,8 @@
 	{
 		"flint": {
 			"name": "peerDependenciesMetaValidity",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15070,7 +15075,6 @@
 			"name": "nonNullAssertions",
 			"plugin": "ts",
 			"preset": "logical",
-			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -15135,7 +15139,8 @@
 		"flint": {
 			"name": "nullishCoalescingOperators",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15629,7 +15634,8 @@
 		"flint": {
 			"name": "objectTypeDefinitions",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -15795,8 +15801,7 @@
 		"flint": {
 			"name": "parameterPropertyAssignment",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
+			"preset": "logical"
 		},
 		"oxlint": [
 			{
@@ -17586,7 +17591,8 @@
 		"flint": {
 			"name": "regexUnusedLazyQuantifiers",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -18734,7 +18740,8 @@
 		"flint": {
 			"name": "thisAliases",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -20787,6 +20794,7 @@
 			"name": "afterEachPaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -21528,6 +21536,7 @@
 			"name": "testCasesWithinDescribes",
 			"plugin": "vitest",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
