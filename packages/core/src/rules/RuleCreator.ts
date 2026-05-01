@@ -11,6 +11,12 @@ export interface RuleCreatorOptions {
 	pluginId: string;
 }
 
+type ExactRuleAbout<Value, Shape> = Record<
+	Exclude<keyof Value, keyof Shape>,
+	never
+> &
+	Value;
+
 export class RuleCreator<About extends RuleAbout> {
 	#options: RuleCreatorOptions;
 
@@ -20,18 +26,23 @@ export class RuleCreator<About extends RuleAbout> {
 
 	createRule<
 		const Language extends AnyLanguage,
+		const RuleDefinitionAbout extends About,
 		const MessageId extends string,
 		OptionsSchema extends AnyOptionalSchema | undefined = undefined,
 	>(
 		language: Language,
 		rule: RuleDefinition<
-			About,
+			ExactRuleAbout<RuleDefinitionAbout, About>,
 			GetLanguageAstNodesByName<Language>,
 			GetLanguageFileServices<Language>,
 			MessageId,
 			OptionsSchema
 		>,
-	): Rule<About & { pluginId: string; url: string }, MessageId, OptionsSchema> {
+	): Rule<
+		RuleDefinitionAbout & { pluginId: string; url: string },
+		MessageId,
+		OptionsSchema
+	> {
 		// Use RuleCreator.createRule instead of Language.createRule
 		// But this is the original implementation
 		// flint-disable-next-line flint/ruleCreationMethods

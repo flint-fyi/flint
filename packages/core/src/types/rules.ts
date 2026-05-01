@@ -54,7 +54,7 @@ export interface RuleAbout<Presets = string> extends BaseAbout {
 	 */
 	pluginId?: string;
 
-	presets?: Presets[];
+	presets?: readonly Presets[];
 }
 
 /**

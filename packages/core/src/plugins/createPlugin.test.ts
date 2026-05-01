@@ -17,7 +17,6 @@ const stubMessages = { "": { primary: "", secondary: [], suggestions: [] } };
 const ruleCreator = new RuleCreator({
 	docs: (ruleId) => `https://flint.fyi/rules/stub/${ruleId.toLowerCase()}`,
 	pluginId: "stub",
-	presets: ["first", "second", "third"],
 });
 
 const ruleStandalone = ruleCreator.createRule(stubLanguage, {
@@ -59,6 +58,20 @@ describe(createPlugin, () => {
 
 		it("does not type unused presets", () => {
 			expectTypeOf(plugin.presets).not.toHaveProperty("third");
+		});
+
+		// eslint-disable-next-line vitest/expect-expect
+		it("types rule about properties exactly", () => {
+			ruleCreator.createRule(stubLanguage, {
+				about: {
+					description: "",
+					id: "withInvalidPresetProperty",
+					// @ts-expect-error -- Rule about metadata must use presets, not preset.
+					preset: "first",
+				},
+				messages: stubMessages,
+				setup: vi.fn(),
+			});
 		});
 	});
 
