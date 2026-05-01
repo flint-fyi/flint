@@ -20,8 +20,8 @@ export class RuleCreator<const About extends RuleAbout = RuleAbout> {
 	}
 
 	createRule<
-		const Language extends AnyLanguage,
 		const RuleDefinitionAbout extends About,
+		const Language extends AnyLanguage,
 		const MessageId extends string,
 		OptionsSchema extends AnyOptionalSchema | undefined = undefined,
 	>(
