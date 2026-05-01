@@ -57,6 +57,9 @@ export default {
 		},
 		"packages/site": {
 			ignoreDependencies: [
+				// It's bugging IDK.
+				"@flint.fyi/core!",
+
 				// Needed for Twoslash
 				"@flint.fyi/typescript-language",
 				"zod",
