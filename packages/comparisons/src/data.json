@@ -5077,7 +5077,8 @@
 		"flint": {
 			"name": "dependencyUniqueness",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
