@@ -6,7 +6,7 @@ import {
 import type { AST } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { getPackagePropertyAssignmentsOfNames } from "../getPackagePropertyAssignmentsOfNames.ts";
+import { getPackageProperties } from "../getPackageProperties.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 const dependencyPropertyNames = new Set([
@@ -259,10 +259,15 @@ export default ruleCreator.createRule(jsonLanguage, {
 						}
 					}
 
-					for (const property of getPackagePropertyAssignmentsOfNames(
-						node,
-						dependencyPropertyNames,
-					)) {
+					for (const property of getPackageProperties(node) ?? []) {
+						if (
+							property.kind !== SyntaxKind.PropertyAssignment ||
+							property.name.kind !== SyntaxKind.StringLiteral ||
+							!dependencyPropertyNames.has(property.name.text)
+						) {
+							continue;
+						}
+
 						const initializer = property.initializer;
 
 						if (initializer.kind === SyntaxKind.ArrayLiteralExpression) {
