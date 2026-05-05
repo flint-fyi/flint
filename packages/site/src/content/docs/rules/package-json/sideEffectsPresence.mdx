@@ -1,0 +1,68 @@
+---
+description: "Enforce that the `sideEffects` property is present."
+title: "sideEffectsPresence"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="sideEffectsPresence" />
+
+npm requires that the `sideEffects` field in `package.json` is present.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"sideEffects": false
+}
+```
+
+```json
+{
+	"name": "my-repository",
+	"sideEffects": false
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `ignorePrivate`
+
+Whether the property should still be required when the package's `private` property is `true`.
+Defaults to `false`.
+
+This option can be useful if the rule is enabled on many `package.json` files and some files differ in privacy.
+
+## When Not To Use It
+
+If your package doesn't need to specify `sideEffects`, you can disable this rule.
+
+## Related Rules
+
+- [sideEffectsValidity](/rules/package-json/sideeffectsvalidity) - Enforces that the `sideEffects` property is valid.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="sideEffectsPresence" />

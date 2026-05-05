@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/volar-language",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "[Experimental] Volar.js language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {

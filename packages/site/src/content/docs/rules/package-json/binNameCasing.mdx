@@ -1,0 +1,62 @@
+---
+description: "Reports package.json bin command names that are not kebab case."
+title: "binNameCasing"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="binNameCasing" />
+
+The object form of `bin` maps command names to executable files.
+Those command names are what users run after installing the package globally or linking it into another project.
+
+This rule enforces kebab-case command names, such as `my-command`, to match common CLI naming conventions.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"bin": {
+		"invalidCommand": "./bin/cli.js"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"bin": {
+		"valid-command": "./bin/cli.js"
+	}
+}
+```
+
+```json
+{
+	"bin": "./bin/cli.js"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If a package intentionally publishes command names with another casing style for a non-standard preference, disable this rule for that package.
+
+## Further Reading
+
+- [npm package.json: `bin`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bin)
+- [MDN: Kebab case](https://developer.mozilla.org/en-US/docs/Glossary/Kebab_case)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="binNameCasing" />

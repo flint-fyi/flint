@@ -1,0 +1,64 @@
+---
+description: "Enforce that the `private` property is present."
+title: "privatePresence"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="privatePresence" />
+
+npm requires that the `private` field in `package.json` is present.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your package doesn't need to specify `private`, you can disable this rule.
+
+## Related Rules
+
+- [privateValidity](/rules/package-json/privatevalidity) - Enforces that the `private` property is valid.
+
+## Further Reading
+
+- [npm: `package.json` > `private`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#private)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="privatePresence" />

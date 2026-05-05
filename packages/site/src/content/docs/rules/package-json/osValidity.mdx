@@ -42,6 +42,14 @@ These values are the list of possible `process.platform` values [documented by N
 If you don't need compliance with npm's `osValidity` field specification, you can disable this rule.
 For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
 
+## Related Rules
+
+- [osPresence](/rules/package-json/ospresence) - Enforces that the `os` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `os`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#os)
+
 ## Equivalents in Other Linters
 
 <RuleEquivalents pluginId="package-json" ruleId="osValidity" />

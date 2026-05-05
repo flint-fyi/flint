@@ -37,6 +37,7 @@
 		"@flint.fyi/plugin-flint": "workspace:^",
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",
+		"@flint.fyi/vitest": "workspace:^",
 		"@types/node": "catalog:dev",
 		"@vitest/coverage-v8": "catalog:dev",
 		"@vitest/eslint-plugin": "catalog:dev",

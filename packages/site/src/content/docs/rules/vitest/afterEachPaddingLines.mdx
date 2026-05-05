@@ -1,0 +1,114 @@
+---
+description: "Enforces padding around `afterEach` blocks."
+title: "afterEachPaddingLines"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vitest" rule="afterEachPaddingLines" />
+
+Blank lines around `afterEach()` hooks make per-test cleanup easier to spot when reading a suite.
+They also keep teardown steps visually distinct from setup, assertions, and neighboring hooks.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { afterEach, describe } from "vitest";
+
+const cleanup = {
+	reset() {},
+};
+afterEach(() => {
+	cleanup.reset();
+});
+describe("cache", () => {
+	// ...
+});
+```
+
+```ts
+import { afterEach, describe } from "vitest";
+
+describe("worker", () => {
+	const cache = {
+		clear() {},
+	};
+	const mocks = {
+		restore() {},
+	};
+	afterEach(() => {
+		cache.clear();
+	});
+	afterEach(() => {
+		mocks.restore();
+	});
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { afterEach, describe } from "vitest";
+
+const cleanup = {
+	reset() {},
+};
+
+afterEach(() => {
+	cleanup.reset();
+});
+
+describe("cache", () => {
+	// ...
+});
+```
+
+```ts
+import { afterEach, describe } from "vitest";
+
+describe("worker", () => {
+	const cache = {
+		clear() {},
+	};
+	const mocks = {
+		restore() {},
+	};
+
+	afterEach(() => {
+		cache.clear();
+	});
+
+	afterEach(() => {
+		mocks.restore();
+	});
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your team prefers keeping `afterEach()` hooks tightly attached to the statements they clean up, the extra vertical space from this rule may not help.
+That can be reasonable in very small files where the teardown flow is already obvious.
+
+## Further Reading
+
+- [Vitest API: Hooks](https://vitest.dev/api/hooks.html)
+- [Vitest Guide: Setup and Teardown](https://vitest.dev/guide/learn/setup-teardown)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vitest" ruleId="afterEachPaddingLines" />

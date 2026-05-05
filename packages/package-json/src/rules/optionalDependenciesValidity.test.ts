@@ -63,24 +63,6 @@ ruleTester.describe(directPropertyValidityRules.optionalDependenciesValidity, {
 			code: `
 {
   "optionalDependencies": {
-    "example": "bowie"
-  }
-}
-`,
-			snapshot: `
-{
-  "optionalDependencies": {
-    "example": "bowie"
-               ~~~~~~~
-               Invalid optionalDependencies: invalid version range for dependency example: bowie.
-  }
-}
-`,
-		},
-		{
-			code: `
-{
-  "optionalDependencies": {
     "example": 123
   }
 }
@@ -90,7 +72,7 @@ ruleTester.describe(directPropertyValidityRules.optionalDependenciesValidity, {
   "optionalDependencies": {
     "example": 123
                ~~~
-               Invalid optionalDependencies: dependency version for example should be a string: 123.
+               Invalid optionalDependencies: dependency version for \`example\` should be a string: 123.
   }
 }
 `,
@@ -108,7 +90,7 @@ ruleTester.describe(directPropertyValidityRules.optionalDependenciesValidity, {
   "optionalDependencies": {
     "example": null
                ~~~~
-               Invalid optionalDependencies: dependency version for example should be a string: null.
+               Invalid optionalDependencies: dependency version for \`example\` should be a string: null.
   }
 }
 `,
@@ -126,25 +108,7 @@ ruleTester.describe(directPropertyValidityRules.optionalDependenciesValidity, {
   "optionalDependencies": {
     "example": {}
                ~~
-               Invalid optionalDependencies: dependency version for example should be a string: [object Object].
-  }
-}
-`,
-		},
-		{
-			code: `
-{
-  "optionalDependencies": {
-    "example": "workspace"
-  }
-}
-`,
-			snapshot: `
-{
-  "optionalDependencies": {
-    "example": "workspace"
-               ~~~~~~~~~~~
-               Invalid optionalDependencies: invalid version range for dependency example: workspace.
+               Invalid optionalDependencies: dependency version for \`example\` should be a string: [object Object].
   }
 }
 `,
@@ -175,6 +139,13 @@ ruleTester.describe(directPropertyValidityRules.optionalDependenciesValidity, {
 {
   "optionalDependencies": {
     "example": "catalog:"
+  }
+}
+`,
+		`
+{
+  "optionalDependencies": {
+    "example": "bowie"
   }
 }
 `,
@@ -217,6 +188,13 @@ ruleTester.describe(directPropertyValidityRules.optionalDependenciesValidity, {
 {
   "optionalDependencies": {
     "example": "workspace:^1.2.3"
+  }
+}
+`,
+		`
+{
+  "optionalDependencies": {
+    "example": "workspace"
   }
 }
 `,

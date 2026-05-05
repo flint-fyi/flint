@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/core",
-	"version": "0.20.0",
+	"version": "0.21.0",
 	"description": "[Experimental] Core building blocks for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -27,7 +27,7 @@
 	},
 	"dependencies": {
 		"@flint.fyi/utils": "workspace:^",
-		"cached-factory": "^0.1.0",
+		"cached-factory": "^0.2.0",
 		"debug-for-file": "^0.3.0",
 		"ignore": "^7.0.5",
 		"omit-empty": "^1.0.0",
