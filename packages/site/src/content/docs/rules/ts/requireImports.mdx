@@ -10,8 +10,11 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="requireImports" />
 
-CommonJS `require()` imports are the legacy module system for Node.js.
-ES modules (`import`/`export`) are now the standard in modern JavaScript and TypeScript, providing better static analysis, tree-shaking, and overall tooling support.
+ECMAScript Modules (`import`/`export`), or "ESM", are the standard module system in modern JavaScript and TypeScript.
+They providing better static analysis, tree-shaking, and overall tooling support over other legacy module systems such as legacy CommonJS (CJS) `require()` calls.
+For modern projects, it's generally preferable to use ESM over CJS.
+
+This rule reports on any instances of legacy `require()` calls.
 
 ## Examples
 

@@ -10,7 +10,7 @@ const x = require('lib');
 			snapshot: `
 const x = require('lib');
           ~~~~~~~
-          Use ES module imports instead of CommonJS require().
+          Prefer ESM \`import\` statements over legacy CommonJS \`require()\` calls.
 `,
 		},
 		{
@@ -20,7 +20,7 @@ var x = require('lib');
 			snapshot: `
 var x = require('lib');
         ~~~~~~~
-        Use ES module imports instead of CommonJS require().
+        Prefer ESM \`import\` statements over legacy CommonJS \`require()\` calls.
 `,
 		},
 		{
@@ -30,7 +30,7 @@ let x = require('lib');
 			snapshot: `
 let x = require('lib');
         ~~~~~~~
-        Use ES module imports instead of CommonJS require().
+        Prefer ESM \`import\` statements over legacy CommonJS \`require()\` calls.
 `,
 		},
 		{
@@ -40,7 +40,7 @@ require('lib');
 			snapshot: `
 require('lib');
 ~~~~~~~
-Use ES module imports instead of CommonJS require().
+Prefer ESM \`import\` statements over legacy CommonJS \`require()\` calls.
 `,
 		},
 		{
@@ -50,7 +50,7 @@ import x = require('lib');
 			snapshot: `
 import x = require('lib');
            ~~~~~~~~~~~~~~
-           Use ES module imports instead of CommonJS require().
+           Prefer ESM \`import\` statements over legacy CommonJS \`require()\` calls.
 `,
 		},
 		{
@@ -60,7 +60,7 @@ const { x, y } = require('lib');
 			snapshot: `
 const { x, y } = require('lib');
                  ~~~~~~~
-                 Use ES module imports instead of CommonJS require().
+                 Prefer ESM \`import\` statements over legacy CommonJS \`require()\` calls.
 `,
 		},
 	],

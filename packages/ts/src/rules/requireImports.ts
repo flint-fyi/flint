@@ -6,7 +6,11 @@ import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
+// TODO: This will be more clean when there is a scope manager
+// https://github.com/flint-fyi/flint/issues/400
 function isGlobalRequire(node: ts.Expression, typeChecker: ts.TypeChecker) {
+	// TODO: Use a util like getStaticValue
+	// https://github.com/flint-fyi/flint/issues/1298
 	if (!ts.isIdentifier(node) || node.text !== "require") {
 		return false;
 	}
@@ -21,10 +25,9 @@ function isGlobalRequire(node: ts.Expression, typeChecker: ts.TypeChecker) {
 		return true;
 	}
 
-	return declarations.every((declaration) => {
-		const sourceFile = declaration.getSourceFile();
-		return sourceFile.isDeclarationFile;
-	});
+	return declarations.every(
+		(declaration) => declaration.getSourceFile().isDeclarationFile,
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -32,17 +35,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports CommonJS require() imports in favor of ES module imports.",
 		id: "requireImports",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noRequireImports: {
-			primary: "Use ES module imports instead of CommonJS require().",
+			primary:
+				"Prefer ESM `import` statements over legacy CommonJS `require()` calls.",
 			secondary: [
-				"ES modules provide better static analysis, tree-shaking, and are the standard in modern JavaScript/TypeScript.",
+				"ESM (EcmaScript Modules) provide better static analysis, tree-shaking, and are the standard in modern JavaScript/TypeScript.",
+				"CJS (CommonJS) `require()` calls are a legacy pattern that don't play as well with modern tooling.",
+				"It's generally preferable in modern projects to prefer ESM over CJS.",
 			],
 			suggestions: [
-				"Convert to: import x from 'lib'",
-				"Convert to: import { x } from 'lib'",
+				"Convert this CJS `require()` call to an ESM `import` statement.",
 			],
 		},
 	},
