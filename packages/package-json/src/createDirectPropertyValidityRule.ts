@@ -3,9 +3,10 @@ import {
 	getJsonNodeRange,
 	jsonLanguage,
 	type JsonNode,
+	type JsonSourceFile,
 } from "@flint.fyi/json-language";
 import type { Result } from "package-json-validator";
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { getPackagePropertiesOfNames } from "./getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "./ruleCreator.ts";
@@ -36,7 +37,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 			},
 		},
 		setup(context) {
-			function checkValue(node: JsonNode, sourceFile: ts.JsonSourceFile) {
+			function checkValue(node: JsonNode, sourceFile: JsonSourceFile) {
 				const value: unknown = JSON.parse(node.getText(sourceFile));
 				const result = propertyValidator(value);
 
@@ -46,7 +47,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 			function reportIssues(
 				result: Result,
 				node: JsonNode,
-				sourceFile: ts.JsonSourceFile,
+				sourceFile: JsonSourceFile,
 			) {
 				if (!result.errorMessages.length) {
 					return;
@@ -69,7 +70,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 				);
 				// If the value is an object, and has child results with issues, then report those too
 				if (
-					node.kind === ts.SyntaxKind.ObjectLiteralExpression &&
+					node.kind === SyntaxKind.ObjectLiteralExpression &&
 					childrenWithIssues.length
 				) {
 					for (const childResult of childrenWithIssues) {
@@ -77,7 +78,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 						const childNode = node.properties[childResult.index]!;
 						reportIssues(
 							childResult,
-							(childNode.kind === ts.SyntaxKind.PropertyAssignment
+							(childNode.kind === SyntaxKind.PropertyAssignment
 								? childNode.initializer
 								: childNode) as JsonNode,
 							sourceFile,
@@ -86,17 +87,13 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 				}
 				// If the value is an array, and has child results with issues, then report those too
 				else if (
-					node.kind === ts.SyntaxKind.ArrayLiteralExpression &&
+					node.kind === SyntaxKind.ArrayLiteralExpression &&
 					childrenWithIssues.length
 				) {
 					for (const childResult of childrenWithIssues) {
 						const childNode = node.elements[childResult.index];
 						if (childNode) {
-							reportIssues(
-								childResult,
-								childNode as unknown as ts.ObjectLiteralExpression,
-								sourceFile,
-							);
+							reportIssues(childResult, childNode as JsonNode, sourceFile);
 						}
 					}
 				}
@@ -104,7 +101,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 
 			return {
 				visitors: {
-					JsonSourceFile: (node: ts.JsonSourceFile, { sourceFile }) => {
+					JsonSourceFile: (node, { sourceFile }) => {
 						for (const initializer of getPackagePropertiesOfNames(
 							node,
 							propertyNames,

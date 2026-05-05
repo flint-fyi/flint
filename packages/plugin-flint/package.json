@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/plugin-flint",
-	"version": "0.4.0",
+	"version": "0.5.0",
 	"description": "[Experimental] A Flint plugin for linting Flint plugins.",
 	"homepage": "https://www.flint.fyi/rules/flint",
 	"repository": {

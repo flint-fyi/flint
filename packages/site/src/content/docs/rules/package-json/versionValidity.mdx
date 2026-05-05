@@ -1,0 +1,53 @@
+---
+description: "Enforce that the `version` property is valid."
+title: "versionValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="versionValidity" />
+
+The rule checks that the `version` property is a semver version string.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"version": 1
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"version": "1.0.0"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `version` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Related Rules
+
+- [versionPresence](/rules/package-json/versionpresence) - Enforces that the `version` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `version`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#version)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="versionValidity" />

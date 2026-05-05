@@ -61,7 +61,8 @@
 		"flint": {
 			"name": "clientOnlyDirectiveValues",
 			"plugin": "astro",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -899,9 +900,10 @@
 			}
 		],
 		"flint": {
-			"name": "testCaseOnlies",
+			"name": "testCaseOnlyFlags",
 			"plugin": "flint",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -2681,7 +2683,7 @@
 			}
 		],
 		"flint": {
-			"name": "scriptUrls",
+			"name": "targetBlanks",
 			"plugin": "jsx",
 			"status": "skipped"
 		},
@@ -3103,7 +3105,7 @@
 	},
 	{
 		"flint": {
-			"name": "headingBlankLines",
+			"name": "headingAfterHashClosingSpaces",
 			"plugin": "md",
 			"status": "skipped"
 		},
@@ -3117,7 +3119,7 @@
 	},
 	{
 		"flint": {
-			"name": "headingClosingSpaceMultiples",
+			"name": "headingBlankLines",
 			"plugin": "md",
 			"status": "skipped"
 		},
@@ -4819,7 +4821,8 @@
 		],
 		"flint": {
 			"name": "authorPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4846,7 +4849,8 @@
 		"flint": {
 			"name": "binNameCasing",
 			"plugin": "package-json",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4858,7 +4862,15 @@
 		],
 		"flint": {
 			"name": "binPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "browserPresence",
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4884,7 +4896,8 @@
 		],
 		"flint": {
 			"name": "bugsPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4896,7 +4909,15 @@
 		],
 		"flint": {
 			"name": "bugsValidity",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "browserValidity",
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4908,7 +4929,8 @@
 		],
 		"flint": {
 			"name": "bundleDependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4934,7 +4956,8 @@
 		],
 		"flint": {
 			"name": "configPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4960,7 +4983,8 @@
 		],
 		"flint": {
 			"name": "contributorsPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -4986,7 +5010,8 @@
 		],
 		"flint": {
 			"name": "cpuPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5012,7 +5037,8 @@
 		],
 		"flint": {
 			"name": "dependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5064,6 +5090,7 @@
 		"flint": {
 			"name": "descriptionPresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5090,7 +5117,8 @@
 		],
 		"flint": {
 			"name": "devDependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5104,6 +5132,13 @@
 			"name": "devDependenciesValidity",
 			"plugin": "package-json",
 			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "devEnginesPresence",
+			"plugin": "package-json",
 			"status": "implemented"
 		}
 	},
@@ -5130,7 +5165,8 @@
 		],
 		"flint": {
 			"name": "directoriesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5169,7 +5205,8 @@
 		],
 		"flint": {
 			"name": "enginesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5196,6 +5233,7 @@
 		"flint": {
 			"name": "exportsPresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5235,7 +5273,8 @@
 		],
 		"flint": {
 			"name": "filesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5274,7 +5313,8 @@
 		],
 		"flint": {
 			"name": "fundingPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5286,6 +5326,27 @@
 		],
 		"flint": {
 			"name": "fundingValidity",
+			"plugin": "package-json",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "gypfileValidity",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-homepage",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/HEAD/docs/rules/require-homepage.md"
+			}
+		],
+		"flint": {
+			"name": "homepagePresence",
 			"plugin": "package-json",
 			"preset": "logical",
 			"status": "implemented"
@@ -5314,7 +5375,8 @@
 		],
 		"flint": {
 			"name": "keywordsPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5332,6 +5394,13 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "libcValidity",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "package-json/require-license",
@@ -5341,6 +5410,7 @@
 		"flint": {
 			"name": "licensePresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5367,19 +5437,8 @@
 		],
 		"flint": {
 			"name": "mainPresence",
-			"plugin": "package-json"
-		}
-	},
-	{
-		"eslint": [
-			{
-				"name": "package-json/require-man",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/806"
-			}
-		],
-		"flint": {
-			"name": "manPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5393,6 +5452,19 @@
 			"name": "mainValidity",
 			"plugin": "package-json",
 			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/require-man",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/806"
+			}
+		],
+		"flint": {
+			"name": "manPresence",
+			"plugin": "package-json",
 			"status": "implemented"
 		}
 	},
@@ -5419,7 +5491,8 @@
 		],
 		"flint": {
 			"name": "modulePresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5446,6 +5519,7 @@
 		"flint": {
 			"name": "namePresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5472,7 +5546,8 @@
 		],
 		"flint": {
 			"name": "optionalDependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5498,7 +5573,8 @@
 		],
 		"flint": {
 			"name": "osPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5524,7 +5600,8 @@
 		],
 		"flint": {
 			"name": "packageManagerPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5555,6 +5632,20 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "peerDependenciesMetaPresence",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
+		"flint": {
+			"name": "peerDependenciesMetaValidity",
+			"plugin": "package-json",
+			"status": "implemented"
+		}
+	},
+	{
 		"eslint": [
 			{
 				"name": "package-json/require-peerDependencies",
@@ -5563,7 +5654,8 @@
 		],
 		"flint": {
 			"name": "peerDependenciesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5601,7 +5693,8 @@
 		],
 		"flint": {
 			"name": "privatePresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5640,7 +5733,8 @@
 		],
 		"flint": {
 			"name": "publishConfigPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5693,6 +5787,7 @@
 		"flint": {
 			"name": "repositoryPresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5706,7 +5801,8 @@
 		"flint": {
 			"name": "repositoryShorthand",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5733,7 +5829,8 @@
 		"flint": {
 			"name": "scriptsNameCasing",
 			"plugin": "package-json",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5745,7 +5842,8 @@
 		],
 		"flint": {
 			"name": "scriptsPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5772,6 +5870,7 @@
 		"flint": {
 			"name": "sideEffectsPresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5799,6 +5898,7 @@
 		"flint": {
 			"name": "typePresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5811,7 +5911,8 @@
 		],
 		"flint": {
 			"name": "typesPresence",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5838,6 +5939,7 @@
 		"flint": {
 			"name": "versionPresence",
 			"plugin": "package-json",
+			"status": "implemented",
 			"preset": "logical"
 		}
 	},
@@ -5856,16 +5958,10 @@
 		}
 	},
 	{
-		"eslint": [
-			{
-				"name": "package-json/valid-version",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-version.md"
-			}
-		],
 		"flint": {
-			"name": "versionValidity",
+			"name": "workspacesPresence",
 			"plugin": "package-json",
-			"preset": "logical"
+			"status": "implemented"
 		}
 	},
 	{
@@ -6235,7 +6331,7 @@
 			}
 		],
 		"flint": {
-			"name": "crossComponentPropTypes",
+			"name": "deprecated",
 			"plugin": "react",
 			"status": "skipped"
 		},
@@ -12723,6 +12819,10 @@
 	{
 		"eslint": [
 			{
+				"name": "no-duplicate-imports",
+				"url": "https://eslint.org/docs/latest/rules/no-duplicate-imports"
+			},
+			{
 				"name": "import/no-duplicates",
 				"url": "https://github.com/import-js/eslint-plugin-import/blob/HEAD/docs/rules/no-duplicates.md"
 			}
@@ -12730,31 +12830,12 @@
 		"flint": {
 			"name": "importDuplicates",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "logical"
 		},
 		"oxlint": [
 			{
 				"name": "import/no-duplicates",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-duplicates.html"
-			}
-		]
-	},
-	{
-		"eslint": [
-			{
-				"name": "no-duplicate-imports",
-				"url": "https://eslint.org/docs/latest/rules/no-duplicate-imports"
-			}
-		],
-		"flint": {
-			"name": "importDuplicates",
-			"plugin": "ts",
-			"preset": "stylistic"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/no-duplicate-imports",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-duplicate-imports.html"
 			}
 		]
 	},
@@ -14994,7 +15075,6 @@
 			"name": "nonNullAssertions",
 			"plugin": "ts",
 			"preset": "logical",
-			"status": "implemented",
 			"strictness": "strict"
 		},
 		"oxlint": [
@@ -15059,7 +15139,8 @@
 		"flint": {
 			"name": "nullishCoalescingOperators",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		}
 	},
 	{
@@ -15553,7 +15634,8 @@
 		"flint": {
 			"name": "objectTypeDefinitions",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -15719,8 +15801,7 @@
 		"flint": {
 			"name": "parameterPropertyAssignment",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
+			"preset": "logical"
 		},
 		"oxlint": [
 			{
@@ -17510,7 +17591,8 @@
 		"flint": {
 			"name": "regexUnusedLazyQuantifiers",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -17602,7 +17684,8 @@
 		"flint": {
 			"name": "requireImports",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -17697,7 +17780,8 @@
 		],
 		"flint": {
 			"name": "restrictedIdentifiers",
-			"plugin": "ts"
+			"plugin": "ts",
+			"status": "implemented"
 		}
 	},
 	{
@@ -18657,7 +18741,8 @@
 		"flint": {
 			"name": "thisAliases",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -19390,17 +19475,7 @@
 			{
 				"name": "eslint/no-self-compare",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-self-compare.html"
-			}
-		]
-	},
-	{
-		"flint": {
-			"name": "unnecessaryComparisons",
-			"plugin": "ts",
-			"preset": "logical",
-			"status": "implemented"
-		},
-		"oxlint": [
+			},
 			{
 				"name": "oxc/const-comparisons",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/const-comparisons.html"
@@ -20705,7 +20780,8 @@
 			"name": "afterAllPaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -20719,6 +20795,7 @@
 			"name": "afterEachPaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -20746,7 +20823,8 @@
 			"name": "allPaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -20760,7 +20838,8 @@
 			"name": "beforeAllPaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -20774,7 +20853,8 @@
 			"name": "beforeEachPaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -20898,7 +20978,8 @@
 			"name": "describePaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -20949,7 +21030,7 @@
 			}
 		],
 		"flint": {
-			"name": "equalityMatchers",
+			"name": "toBeMatchers",
 			"plugin": "vitest",
 			"status": "skipped"
 		},
@@ -20979,7 +21060,8 @@
 			"name": "expectGroupPaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -21147,6 +21229,19 @@
 	{
 		"eslint": [
 			{
+				"name": "require-top-level-describe",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/require-top-level-describe.md"
+			}
+		],
+		"flint": {
+			"name": "maxiumumDescribesPerFile",
+			"plugin": "vitest",
+			"status": "skipped"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "max-expects",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/max-expects.md"
 			}
@@ -21224,7 +21319,8 @@
 		"flint": {
 			"name": "nodeTestImports",
 			"plugin": "vitest",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -21409,7 +21505,7 @@
 			}
 		],
 		"flint": {
-			"name": "testCaseOnlies",
+			"name": "testCaseOnlyFlags",
 			"plugin": "vitest",
 			"status": "skipped"
 		},
@@ -21426,7 +21522,8 @@
 			"name": "testCasePaddingLines",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		}
 	},
 	{
@@ -21440,6 +21537,7 @@
 			"name": "testCasesWithinDescribes",
 			"plugin": "vitest",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},
@@ -21656,20 +21754,6 @@
 			"plugin": "vitest",
 			"preset": "stylistic"
 		}
-	},
-	{
-		"eslint": [
-			{
-				"name": "no-importing-vitest-globals",
-				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-importing-vitest-globals.md"
-			}
-		],
-		"flint": {
-			"name": "vitestGlobalImports",
-			"plugin": "vitest",
-			"status": "skipped"
-		},
-		"notes": "For a no-longer-recommended globals style."
 	},
 	{
 		"eslint": [

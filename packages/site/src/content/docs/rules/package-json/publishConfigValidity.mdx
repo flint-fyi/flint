@@ -46,6 +46,14 @@ Properties that don't map to top-level fields (e.g. `access`) have their own val
 If you don't need compliance with npm's `publishConfig` field specification, you can disable this rule.
 For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
 
+## Related Rules
+
+- [publishConfigPresence](/rules/package-json/publishconfigpresence) - Enforces that the `publishConfig` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `publishConfig`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#publishconfig)
+
 ## Equivalents in Other Linters
 
 <RuleEquivalents pluginId="package-json" ruleId="publishConfigValidity" />
