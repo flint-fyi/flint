@@ -452,10 +452,6 @@ importers:
 
   packages/comparisons:
     dependencies:
-      prettier:
-        specifier: 3.8.1
-        version: 3.8.1
-    devDependencies:
       '@flint.fyi/astro':
         specifier: workspace:^
         version: link:../astro
@@ -480,6 +476,10 @@ importers:
       '@flint.fyi/vitest':
         specifier: workspace:^
         version: link:../vitest
+      prettier:
+        specifier: 3.8.1
+        version: 3.8.1
+    devDependencies:
       eslint:
         specifier: catalog:dev
         version: 10.3.0(jiti@2.6.1)
