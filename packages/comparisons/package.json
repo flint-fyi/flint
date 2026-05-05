@@ -34,11 +34,11 @@
 		"@flint.fyi/plugin-flint": "workspace:^",
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/vitest": "workspace:^",
+		"flint": "workspace:^",
 		"prettier": "3.8.1"
 	},
 	"devDependencies": {
 		"eslint": "catalog:dev",
-		"flint": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
