@@ -14,8 +14,8 @@ catalogs:
     "@types/mdast": 4.0.4
     "@types/node": 24.12.0
     "@types/omit-empty": 1.0.4
-    "@vitest/coverage-v8": 4.1.0
-    "@vitest/eslint-plugin": 1.6.1
+    "@vitest/coverage-v8": 4.1.5
+    "@vitest/eslint-plugin": 1.6.16
     console-fail-test: 0.6.1
     eslint: 10.3.0
     eslint-plugin-jsdoc: 62.9.0
@@ -37,10 +37,10 @@ catalogs:
     prettier-plugin-sentences-per-line: 0.2.0
     prettier-plugin-sh: 0.18.0
     rimraf: 6.1.2
-    tsdown: 0.21.0
+    tsdown: 0.21.10
     typescript: 5.9.3
     typescript-eslint: 8.58.1
-    vitest: 4.1.0
+    vitest: 4.1.5
     vitest-ansi-serializer: 0.2.1
     zod: 4.4.1
 
@@ -80,8 +80,15 @@ onlyBuiltDependencies:
   - sharp@0.34.5
 
 overrides:
+  brace-expansion@>=4.0.0 <5.0.5: 5.0.5
+  defu@<=6.1.4: 6.1.7
+  fast-xml-parser@<5.7.0: 5.7.0
+  picomatch@<2.3.2: 2.3.2
+  postcss@<8.5.10: 8.5.10
   read-package-up: 12.0.0
   unicorn-magic: 0.4.0
+  vitest>vite: 8.0.10
+  yaml@>=2.0.0 <2.8.3: 2.8.3
 
 peerDependencyRules:
   allowedVersions:
