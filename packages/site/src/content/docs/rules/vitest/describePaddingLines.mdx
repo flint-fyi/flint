@@ -1,0 +1,116 @@
+---
+description: "Enforces padding around `describe` blocks."
+title: "describePaddingLines"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vitest" rule="describePaddingLines" />
+
+Blank lines around `describe()` blocks make suite boundaries easier to recognize.
+That helps nested suites read like separate sections instead of blending into surrounding setup and declarations.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { describe } from "vitest";
+
+const suiteName = "text";
+// A comment before describe
+describe(suiteName, () => {
+	describe("trimmed", () => {
+		// ...
+	});
+	describe("raw", () => {
+		// ...
+	});
+});
+describe.skip("skipped", () => {
+	// ...
+});
+```
+
+```ts
+import { describe } from "vitest";
+
+describe.only("focused", () => {
+	// ...
+});
+describe.skip("later", () => {
+	// ...
+});
+const skippedName = "another";
+describe.skip(skippedName, () => {
+	// ...
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { describe } from "vitest";
+
+const suiteName = "text";
+
+// A comment before describe
+describe(suiteName, () => {
+	describe("trimmed", () => {
+		// ...
+	});
+
+	describe("raw", () => {
+		// ...
+	});
+});
+
+describe.skip("skipped", () => {
+	// ...
+});
+```
+
+```ts
+import { describe } from "vitest";
+
+describe.only("focused", () => {
+	// ...
+});
+
+describe.skip("later", () => {
+	// ...
+});
+
+const skippedName = "another";
+
+describe.skip(skippedName, () => {
+	// ...
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your team intentionally treats small `describe()` blocks like inline grouping rather than visual sections, the added blank lines may feel too spread out.
+That can be reasonable in short files with only one or two tiny suites.
+
+## Further Reading
+
+- [Vitest API](https://vitest.dev/api/)
+- [Vitest Guide: Filtering Tests](https://vitest.dev/guide/filtering)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vitest" ruleId="describePaddingLines" />

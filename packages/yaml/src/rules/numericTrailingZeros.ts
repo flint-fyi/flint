@@ -17,7 +17,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Reports trailing zeros in numeric values.",
 		id: "numericTrailingZeros",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		trailingZeros: {

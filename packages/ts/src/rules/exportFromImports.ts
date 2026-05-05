@@ -63,7 +63,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports imports that are re-exported and could use export...from syntax instead.",
 		id: "exportFromImports",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferExportDefaultFrom: {

@@ -1,37 +1,43 @@
-import { nullThrows } from "@flint.fyi/utils";
+import { nullThrows, pathKey } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 
-import { readFileSafeAsJson } from "../running/readFileSafeAsJson.ts";
 import type { FileCacheStorage } from "../types/cache.ts";
+import type { LinterHost } from "../types/host.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
-import { cacheFilePath } from "./constants.ts";
-import { getFileTouchTime } from "./getFileTouchTime.ts";
+import { getCacheFilePath } from "./getCacheFilePath.ts";
 
 const log = debugForFile(import.meta.filename);
 
 export async function readFromCache(
+	host: LinterHost,
 	allFilePaths: Set<string>,
 	configFilePath: string,
+	cacheLocation: string | undefined,
 ): Promise<Map<string, FileCacheStorage> | undefined> {
-	const rawCache = await readFileSafeAsJson(cacheFilePath);
+	const cacheFilePath = getCacheFilePath(cacheLocation);
+	const rawCacheString = await host.readFile(cacheFilePath);
 
-	if (!rawCache) {
+	if (!rawCacheString) {
 		log("Linting all %d file path(s) due to lack of cache.", allFilePaths.size);
 		return undefined;
 	}
 
-	const parseResult = cacheStorageSchema.safeParse(rawCache);
-	if (!parseResult.success) {
+	const decodeResult = cacheStorageSchema.safeDecode(rawCacheString);
+	if (!decodeResult.success) {
 		log(
 			"Linting all %d file path(s) due to invalid cache data: %s",
 			allFilePaths.size,
-			parseResult.error.message,
+			decodeResult.error.message,
 		);
 		return undefined;
 	}
 
-	const cache = parseResult.data;
+	const cache = decodeResult.data;
+	const caseSensitiveFS = host.isCaseSensitiveFS();
+	const allFilePathKeys = new Set(
+		Array.from(allFilePaths, (filePath) => pathKey(filePath, caseSensitiveFS)),
+	);
 
 	// The config file and package.json are hardcoded to always be dependencies of all files
 	for (const filePath of [configFilePath, "package.json"]) {
@@ -48,7 +54,8 @@ export async function readFromCache(
 			cache.configs[filePath],
 			"Cache timestamp is expected to be present",
 		);
-		const timestampTouched = getFileTouchTime(filePath);
+		// flint-disable-next-line performance/loopAwaits
+		const timestampTouched = await host.getFileTouchTime(filePath);
 		if (timestampTouched > timestampCached) {
 			log(
 				"Linting all %d file path(s) due to %s touch timestamp %d after cache timestamp %d",
@@ -78,7 +85,7 @@ export async function readFromCache(
 
 		if (fileCached.dependencies) {
 			for (const dependency of fileCached.dependencies) {
-				if (!allFilePaths.has(dependency)) {
+				if (!allFilePathKeys.has(pathKey(dependency, caseSensitiveFS))) {
 					log(
 						"Directly invalidating cache for: %s due to dependency %s not being in linted files cache",
 						filePath,
@@ -91,7 +98,8 @@ export async function readFromCache(
 		}
 
 		const timestampCached = fileCached.timestamp;
-		const timestampTouched = getFileTouchTime(filePath);
+		// flint-disable-next-line performance/loopAwaits
+		const timestampTouched = await host.getFileTouchTime(filePath);
 		if (timestampTouched > timestampCached) {
 			log(
 				"Directly invalidating cache for: %s due to touch timestamp %d after cache timestamp %d",
@@ -110,7 +118,7 @@ export async function readFromCache(
 	for (const [filePath, stored] of cached) {
 		if (stored.dependencies) {
 			for (const dependency of stored.dependencies) {
-				fileDependents.get(dependency).add(filePath);
+				fileDependents.get(pathKey(dependency, caseSensitiveFS)).add(filePath);
 			}
 		}
 	}
@@ -119,7 +127,7 @@ export async function readFromCache(
 	const transitivelyImpactedByChanges = Array.from(filePathsToLint);
 
 	for (const filePath of transitivelyImpactedByChanges) {
-		const dependents = fileDependents.get(filePath);
+		const dependents = fileDependents.get(pathKey(filePath, caseSensitiveFS));
 		for (const dependent of dependents) {
 			if (!transitivelyCheckedForChanges.has(dependent)) {
 				log("Transitively invalidating cache for: %s", dependent);

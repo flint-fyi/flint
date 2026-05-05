@@ -1,0 +1,110 @@
+---
+description: "Enforces padding around `afterAll` blocks."
+title: "afterAllPaddingLines"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vitest" rule="afterAllPaddingLines" />
+
+Blank lines around `afterAll()` blocks make teardown code easier to spot when scanning a test file.
+They also keep long-lived cleanup logic visually separated from neighboring test setup and suite definitions.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { afterAll, describe } from "vitest";
+
+const server = {
+	close() {},
+};
+afterAll(() => {
+	server.close();
+});
+describe("server", () => {});
+```
+
+```ts
+import { afterAll, describe } from "vitest";
+
+describe("worker", () => {
+	const cache = {
+		clear() {},
+	};
+	const queue = {
+		stop() {},
+	};
+	afterAll(() => {
+		cache.clear();
+	});
+	afterAll(() => {
+		queue.stop();
+	});
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { afterAll, describe } from "vitest";
+
+const server = {
+	close() {},
+};
+
+afterAll(() => {
+	server.close();
+});
+
+describe("server", () => {});
+```
+
+```ts
+import { afterAll, describe } from "vitest";
+
+describe("worker", () => {
+	const cache = {
+		clear() {},
+	};
+	const queue = {
+		stop() {},
+	};
+
+	afterAll(() => {
+		cache.clear();
+	});
+
+	afterAll(() => {
+		queue.stop();
+	});
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your team intentionally keeps `afterAll()` hooks tightly grouped with surrounding setup or suite declarations, the extra blank lines from this rule might add more vertical space than value.
+That can be reasonable in very small test files where the teardown flow is already obvious.
+
+## Further Reading
+
+- [Vitest API: Hooks](https://vitest.dev/api/hooks.html)
+- [Vitest Guide: Setup and Teardown](https://vitest.dev/guide/learn/setup-teardown)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vitest" ruleId="afterAllPaddingLines" />

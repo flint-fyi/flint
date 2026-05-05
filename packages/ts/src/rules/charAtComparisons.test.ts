@@ -94,7 +94,6 @@ if (value.charAt(5) === "test") {
 		`declare const text: string; text.startsWith('ab');`,
 		`declare const text: string; text.includes('ab');`,
 		`declare const text: string; text[0] === 'a';`,
-		// Userland charAt method should not trigger the rule
 		`
 const obj = {
 	charAt(index: number) {

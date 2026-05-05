@@ -81,17 +81,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports when number method arguments are outside their valid range.",
 		id: "numberMethodRanges",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		outOfRange: {
 			primary:
-				"The argument `{{value}}` is out of range for `{{method}}`. Use a value between {{min}} and {{max}}.",
+				"The argument `{{ value }}` is out of range for `{{ method }}`. Use a value between {{ min }} and {{ max }}.",
 			secondary: [
-				"Passing an out-of-range argument to `{{method}}` will throw a RangeError at runtime.",
+				"Passing an out-of-range argument to `{{ method }}` will throw a RangeError at runtime.",
 			],
 			suggestions: [
-				"Check the documentation for `{{method}}` to see the valid range of values.",
+				"Check the documentation for `{{ method }}` to see the valid range of values.",
 			],
 		},
 	},
@@ -99,7 +99,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile }) => {
-					if (node.arguments.length === 0) {
+					if (!node.arguments.length) {
 						return;
 					}
 

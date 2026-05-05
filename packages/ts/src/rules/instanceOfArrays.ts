@@ -2,7 +2,7 @@ import {
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
-	unwrapParenthesizedExpression,
+	unwrapParenthesizedNode,
 } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `instanceof Array` instead of `Array.isArray()`.",
 		id: "instanceOfArrays",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		useArrayIsArray: {
@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const right = unwrapParenthesizedExpression(node.right);
+					const right = unwrapParenthesizedNode(node.right);
 					if (
 						right.kind !== SyntaxKind.Identifier ||
 						right.text !== "Array" ||

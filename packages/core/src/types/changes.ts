@@ -39,17 +39,10 @@ export type Fix = FileChange;
 export type Suggestion = SuggestionForFile | SuggestionForFiles;
 
 /**
- * Generates text change data for a file based on its text content.
- * @param text Original text content of the file.
- * @returns Any number of text changes to be made to the file.
- */
-export type SuggestionForFileGenerator = (text: string) => FileChange[];
-
-/**
  * A suggestion that applies to one or more separate files.
  */
 export interface SuggestionForFiles extends ChangeBase {
-	files: Partial<Record<string, SuggestionForFileGenerator>>;
+	files: Partial<Record<string, FileChange[]>>;
 }
 
 /**

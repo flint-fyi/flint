@@ -1,0 +1,53 @@
+---
+description: "Enforce that the `keywords` property is valid."
+title: "keywordsValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="keywordsValidity" />
+
+This rule checks that the `keywords` property is an array of non-empty strings.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"keywords": "first"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"keywords": ["first", "second"]
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `keywords` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Related Rules
+
+- [keywordsPresence](/rules/package-json/keywordspresence) - Enforces that the `keywords` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `keywords`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#keywords)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="keywordsValidity" />

@@ -6,7 +6,7 @@
 		"types": ["node"]
 	},
 	"extends": "../../tsconfig.base.json",
-	"include": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
+	"include": ["src/**/*.test.ts", "src/ruleTester.ts"],
 	"references": [
 		{ "path": "../rule-tester" },
 		{ "path": "./tsconfig.src.json" }

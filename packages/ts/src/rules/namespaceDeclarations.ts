@@ -4,7 +4,7 @@ import {
 } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import ts, { SyntaxKind } from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using legacy `namespace` declarations.",
 		id: "namespaceDeclarations",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferModules: {

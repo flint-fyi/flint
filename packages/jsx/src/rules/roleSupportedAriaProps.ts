@@ -376,7 +376,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports ARIA properties that are not supported by an element's role.",
 		id: "roleSupportedAriaProps",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsupportedProp: {
@@ -411,10 +411,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			const role =
-				roleProperty &&
-				roleProperty.kind === SyntaxKind.JsxAttribute &&
-				roleProperty.initializer &&
-				roleProperty.initializer.kind === SyntaxKind.StringLiteral
+				roleProperty?.kind === SyntaxKind.JsxAttribute &&
+				roleProperty.initializer?.kind === SyntaxKind.StringLiteral
 					? roleProperty.initializer.text.toLowerCase()
 					: implicitRoles[elementName];
 

@@ -1,0 +1,84 @@
+---
+description: "Reports capturing groups at pattern boundaries that can be replaced with lookaround assertions."
+title: "regexLookaroundAssertions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexLookaroundAssertions" />
+
+When a capturing group is at the start or end of a regex pattern and is only used to re-insert matched text in the replacement string (e.g., `$1`), it can be replaced with a lookaround assertion.
+
+- A capturing group at the **start** like `/(prefix)rest/` can become a lookbehind: `/(?<=prefix)rest/`
+- A capturing group at the **end** like `/rest(suffix)/` can become a lookahead: `/rest(?=suffix)/`
+
+Doing so simplifies the replacement string since the matched text stays in place automatically.
+It can also make the regular expression easier to read and easier for engines to optimize for faster performance.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const result = "JavaScript".replace(/(Java)Script/, "$1");
+```
+
+```ts
+const result = "JavaScript".replace(/Java(Script)/, "Type$1");
+```
+
+```ts
+const result = "prefix-text-suffix".replace(
+	/(prefix-)text(-suffix)/,
+	"$1new$2",
+);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const result = "JavaScript".replace(/(?<=Java)Script/, "");
+```
+
+```ts
+const result = "JavaScript".replace(/Java(?=Script)/, "Type");
+```
+
+```ts
+const result = "prefix-text-suffix".replace(
+	/(?<=prefix-)text(?=-suffix)/,
+	"new",
+);
+```
+
+```ts
+// Groups not at boundaries are fine
+const result = "abc".replace(/a(b)c/, "$1");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer explicit capturing groups for clarity, or if your team is less familiar with lookaround syntax, you might prefer to disable this rule.
+Some regex engines in other languages have limited or no lookaround support, so if you're sharing patterns across environments, indexed replacements may be more portable.
+
+## Further Reading
+
+- [MDN: Lookahead assertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookahead_assertion)
+- [MDN: Lookbehind assertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookbehind_assertion)
+- [MDN: String.prototype.replace()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexLookaroundAssertions" />

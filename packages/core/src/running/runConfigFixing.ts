@@ -11,18 +11,20 @@ const log = debugForFile(import.meta.filename);
 const maximumIterations = 10;
 
 export interface RunConfigFixingOptions {
+	cacheLocation?: string | undefined;
 	ignoreCache: boolean;
 	requestedSuggestions: Set<string>;
-	skipDiagnostics: boolean;
+	skipLanguageReports: boolean;
 }
 
 export async function runConfigFixing(
 	configDefinition: ProcessedConfigDefinition,
 	host: LinterHost,
 	{
+		cacheLocation,
 		ignoreCache,
 		requestedSuggestions,
-		skipDiagnostics,
+		skipLanguageReports,
 	}: RunConfigFixingOptions,
 ): Promise<LintResultsWithChanges> {
 	let changed = new Set<string>();
@@ -37,17 +39,21 @@ export async function runConfigFixing(
 		);
 
 		// TODO: Investigate reusing file contents from previous iterations.
-		// Why read file many time when few do trick?
+		// Why read file many times when only a few will do the trick?
 		// Or, at least it should all be virtual...
 		// https://github.com/flint-fyi/flint/issues/73
+		// flint-disable-next-line performance/loopAwaits
 		const lintResults = await runConfig(configDefinition, host, {
+			cacheLocation,
 			ignoreCache,
-			skipDiagnostics,
+			skipLanguageReports,
 		});
 
 		log("Applying fixes from file results.");
 
+		// flint-disable-next-line performance/loopAwaits
 		const fixedFilePaths = await applyChangesToFiles(
+			host,
 			lintResults.filesResults,
 			requestedSuggestions,
 		);

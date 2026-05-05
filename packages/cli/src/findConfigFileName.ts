@@ -1,4 +1,4 @@
-import fs from "node:fs/promises";
+import type { LinterHost } from "@flint.fyi/core";
 
 const candidatesOrdered = [
 	"flint.config.ts",
@@ -9,8 +9,11 @@ const candidatesOrdered = [
 	"flint.config.js",
 ];
 
-export async function findConfigFileName(directory: string) {
-	const children = new Set(await fs.readdir(directory));
+export async function findConfigFileName(host: LinterHost) {
+	const currentDirectoryContents = await host.readDirectory(
+		host.getCurrentDirectory(),
+	);
+	const children = new Set(currentDirectoryContents.map((file) => file.name));
 
 	const fileName = candidatesOrdered.find((candidate) =>
 		children.has(candidate),

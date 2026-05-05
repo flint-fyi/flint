@@ -157,7 +157,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 			}
 
-			if (properties.size > 0) {
+			if (properties.size) {
 				destructuredObjects.push({
 					declarationEnd: node.getEnd(),
 					destructuredProperties: properties,

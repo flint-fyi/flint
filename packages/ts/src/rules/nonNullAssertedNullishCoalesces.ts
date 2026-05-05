@@ -109,17 +109,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (node.expression.kind === ts.SyntaxKind.Identifier) {
-						if (
-							hasNoAssignmentBeforeNode(
-								node.expression,
-								node,
-								sourceFile,
-								typeChecker,
-							)
-						) {
-							return;
-						}
+					if (
+						node.expression.kind === ts.SyntaxKind.Identifier &&
+						hasNoAssignmentBeforeNode(
+							node.expression,
+							node,
+							sourceFile,
+							typeChecker,
+						)
+					) {
+						return;
 					}
 
 					const range = getTSNodeRange(node, sourceFile);

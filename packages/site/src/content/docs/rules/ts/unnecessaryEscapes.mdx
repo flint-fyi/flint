@@ -1,0 +1,107 @@
+---
+description: "Reports unnecessary escape sequences in string literals and template strings."
+title: "unnecessaryEscapes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryEscapes" />
+
+Escape sequences in JavaScript strings serve specific purposes like representing special characters (`\n`, `\t`) or characters that are difficult to type directly.
+However, many characters don't need escaping, and unnecessary escapes reduce code readability without providing any benefit.
+
+## Examples
+
+### Unnecessary Letter Escapes
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const message = "\a\d\e";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const message = "ade";
+```
+
+</TabItem>
+</Tabs>
+
+### Unnecessary Symbol Escapes
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = "\[\]";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = "[]";
+```
+
+</TabItem>
+</Tabs>
+
+### Valid Escape Sequences
+
+<Tabs>
+<TabItem label="✅ Correct">
+
+```ts
+const newline = "\n";
+const tab = "\t";
+const unicode = "\u00A9";
+const hex = "\xA9";
+const backslash = "\\";
+```
+
+</TabItem>
+</Tabs>
+
+### Template Literals
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const template = `prefix \@ suffix`;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const template = `prefix @ suffix`;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have legacy code with many unnecessary escapes and refactoring would be too costly, you may disable this rule.
+However, the rule provides automatic fixes that make cleanup straightforward.
+
+## Further Reading
+
+- [MDN: Escape sequences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#escape_sequences)
+- [MDN: String literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#string_literals)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryEscapes" />

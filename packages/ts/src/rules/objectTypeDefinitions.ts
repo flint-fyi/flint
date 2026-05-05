@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer interface declarations over type aliases for object types.",
 		id: "objectTypeDefinitions",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferInterface: {

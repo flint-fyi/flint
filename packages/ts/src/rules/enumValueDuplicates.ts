@@ -45,7 +45,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports enum members with duplicate values.",
 		id: "enumValueDuplicates",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		duplicateValue: {

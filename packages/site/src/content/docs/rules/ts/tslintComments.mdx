@@ -1,0 +1,74 @@
+---
+description: "Reports TSLint disable/enable comments."
+title: "tslintComments"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="tslintComments" />
+
+TSLint has been deprecated in favor of ESLint with TypeScript support.
+TSLint disable/enable comments no longer have any effect and should be removed.
+
+## Examples
+
+### Disable Comments
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// tslint:disable
+const value = 1;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = 1;
+```
+
+</TabItem>
+</Tabs>
+
+### Line-specific Comments
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// tslint:disable-next-line
+const value: any = getData();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const value: any = getData();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are still in the process of migrating from TSLint to Flint and need to keep both running, you may want to disable this rule while you are still running TSLint.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for specific cases instead of completely disabling this rule.
+
+## Further Reading
+
+- [TSLint Deprecation Notice](https://medium.com/palantir/tslint-in-2019-1a144c2317a9)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="tslintComments" />

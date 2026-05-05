@@ -15,7 +15,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports calling a value with type `any`.",
 		id: "anyCalls",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsafeCall: {

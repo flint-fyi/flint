@@ -1,0 +1,121 @@
+---
+description: "Reports regular expression flags that have no effect on the pattern."
+title: "regexUnusedFlags"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnusedFlags" />
+
+Reports regular expression flags that have no effect on the pattern.
+Unused flags add unnecessary complexity and may mislead readers about the regex's behavior.
+
+## Examples
+
+### Unused `i` Flag (ignoreCase)
+
+The `i` flag is useless when the pattern contains no ASCII letters (A-Za-z).
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /123/i;
+const digits = /\d+/i;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /abc/i;
+const alphanumeric = /[a-z0-9]+/i;
+```
+
+</TabItem>
+</Tabs>
+
+### Unused `m` Flag (multiline)
+
+The `m` flag is useless when the pattern contains no `^` or `$` anchors.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /abc/m;
+const whitespace = /\s+/m;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /^abc/m;
+const lineEnd = /foo$/m;
+```
+
+</TabItem>
+</Tabs>
+
+### Unused `s` Flag (dotAll)
+
+The `s` flag is useless when the pattern contains no `.` metacharacters.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /abc/s;
+const escaped = /a\.b/s;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a.b/s;
+const multiline = /.*content.*/s;
+```
+
+</TabItem>
+</Tabs>
+
+### Multiple Unused Flags
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /123/ims;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /123/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you add flags preemptively to patterns you intend to extend later, you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: Regular expression flags](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#advanced_searching_with_flags)
+- [MDN: RegExp](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnusedFlags" />

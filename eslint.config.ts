@@ -23,7 +23,7 @@ const importAlphabet = Alphabet.generateRecommendedAlphabet()
 // https://typescript-eslint.io/troubleshooting/typed-linting/performance#importextensions-enforcing-extensions-are-not-used
 function banJsImportExtension() {
 	const message = `Unexpected use of .js file extension (.js) in import; please use .ts`;
-	const literalAttributeMatcher = `Literal[value=/\\.js$/]`;
+	const literalAttributeMatcher = `Literal[value=/\\..+\\.js$/]`;
 	return [
 		{
 			message,
@@ -51,7 +51,9 @@ export default defineConfig(
 		"packages/*/dist",
 		"packages/*/lib",
 		"packages/fixtures",
+		"packages/e2e/tests/**/fixtures/**",
 		"pnpm-lock.yaml",
+		"coverage",
 	]),
 	{ linterOptions: { reportUnusedDisableDirectives: "error" } },
 	{
@@ -62,9 +64,7 @@ export default defineConfig(
 			jsdoc.configs["flat/logical-typescript-error"],
 			jsdoc.configs["flat/stylistic-typescript-error"],
 			n.configs["flat/recommended"],
-			// https://github.com/azat-io/eslint-plugin-perfectionist/issues/655
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			perfectionist.configs!["recommended-natural"] as Linter.Config,
+			perfectionist.configs["recommended-natural"],
 			regexp.configs["flat/recommended"],
 			tseslint.configs.strictTypeChecked,
 			tseslint.configs.stylisticTypeChecked,
@@ -85,21 +85,35 @@ export default defineConfig(
 				"error",
 				{ allowConstantLoopConditions: true },
 			],
+			"@typescript-eslint/no-unused-vars": [
+				"error",
+				{
+					enableAutofixRemoval: {
+						imports: true,
+					},
+					ignoreUsingDeclarations: true,
+				},
+			],
+			"@typescript-eslint/prefer-nullish-coalescing": [
+				"error",
+				{ ignorePrimitives: true },
+			],
 			"@typescript-eslint/restrict-template-expressions": [
 				"error",
 				{ allowNumber: true },
 			],
+			eqeqeq: ["error", "always", { null: "ignore" }],
 			"jsdoc/check-tag-names": [
 				"error",
 				// https://tsdoc.org/pages/tags/remarks
 				{ definedTags: ["remarks"], typed: true },
 			],
 			"n/no-missing-import": "off",
+
 			"n/no-unsupported-features/node-builtins": [
 				"error",
 				{ allowExperimental: true },
 			],
-
 			// Stylistic concerns that don't interfere with Prettier
 			"logical-assignment-operators": [
 				"error",
@@ -113,6 +127,15 @@ export default defineConfig(
 			// https://github.com/eslint-community/eslint-plugin-n/issues/472
 			"n/no-unpublished-bin": "off",
 
+			// Restrict imports
+			"@typescript-eslint/no-restricted-imports": [
+				"error",
+				{
+					message: "Use zod/v4 for the modern v4 API instead.",
+					name: "zod",
+				},
+			],
+			// Use no-restricted-syntax to target e.g. `type Foo = typeof import('foo.js')` as well.
 			"no-restricted-syntax": ["error", ...banJsImportExtension()],
 
 			"perfectionist/sort-imports": [
@@ -142,6 +165,47 @@ export default defineConfig(
 				],
 			},
 			perfectionist: { partitionByComment: true, type: "natural" },
+		},
+	},
+	{
+		files: ["packages/core/**/*.ts"],
+		ignores: ["packages/core/**/*.test.ts"],
+		rules: {
+			"@typescript-eslint/no-restricted-imports": [
+				"error",
+				{
+					message:
+						"Use Standard Schema for abstractions or Zod Core for parsing.",
+					name: "zod",
+				},
+				{
+					message:
+						"Use Standard Schema for abstractions or Zod Core for parsing.",
+					name: "zod/v4",
+				},
+			],
+		},
+	},
+	{
+		files: ["packages/site/**/*.ts"],
+		rules: {
+			"@typescript-eslint/no-restricted-imports": [
+				"error",
+				{
+					paths: [
+						{
+							message: "Use astro/zod instead of the main Zod package.",
+							name: "zod",
+						},
+					],
+					patterns: [
+						{
+							group: ["zod/*"],
+							message: "Use astro/zod instead of the main Zod package.",
+						},
+					],
+				},
+			],
 		},
 	},
 	{
@@ -180,6 +244,16 @@ export default defineConfig(
 		rules: { "@typescript-eslint/no-unsafe-assignment": "off" },
 		settings: { vitest: { typecheck: true } },
 	},
+	// E2E tests and configs live next to fixture package.json (no vitest/execa/@flint.fyi/ts); allow packages/e2e devDependencies
+	// E2E runs on Node >=24 (see packages/e2e/package.json engines), so import.meta.dirname is supported
+	{
+		files: ["packages/e2e/tests/**/*.ts"],
+		rules: {
+			"n/no-extraneous-import": "off",
+			"n/no-unpublished-import": "off",
+			"n/no-unsupported-features/node-builtins": "off",
+		},
+	},
 	{
 		extends: [
 			// https://github.com/ota-meshi/eslint-plugin-yml/issues/510
@@ -189,10 +263,6 @@ export default defineConfig(
 		files: ["**/*.{yml,yaml}"],
 		rules: {
 			"yml/file-extension": "error",
-			"yml/sort-keys": [
-				"error",
-				{ order: { type: "asc" }, pathPattern: "^.*$" },
-			],
 			"yml/sort-sequence-values": [
 				"error",
 				{ order: { type: "asc" }, pathPattern: "^.*$" },
@@ -201,9 +271,13 @@ export default defineConfig(
 	},
 	{
 		extends: [packageJson.configs.recommended, packageJson.configs.stylistic],
+		ignores: ["packages/e2e/tests/**/package.json"],
 	},
 	{
 		extends: [packageJson.configs["recommended-publishable"]],
-		files: [["packages/*/package.json", "!packages/site/package.json"]],
+		files: ["packages/*/package.json"],
+		rules: {
+			"package-json/require-homepage": "error",
+		},
 	},
 );

@@ -203,10 +203,10 @@ function isValidPropertyValue(
 			);
 
 		case "id":
-			return typeof value === "string" && value.length > 0;
+			return typeof value === "string" && !!value.length;
 
 		case "idlist":
-			return typeof value === "string" && value.trim().length > 0;
+			return typeof value === "string" && !!value.trim().length;
 
 		case "integer":
 			if (typeof value === "number") {
@@ -236,9 +236,7 @@ function isValidPropertyValue(
 				return false;
 			}
 			const validTokens = tokenValues[propertyName];
-			return validTokens !== undefined
-				? validTokens.has(value.toLowerCase())
-				: true;
+			return validTokens?.has(value.toLowerCase()) ?? true;
 		}
 
 		case "tristate":
@@ -260,7 +258,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports ARIA properties with invalid value types.",
 		id: "ariaPropTypes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		invalidPropType: {

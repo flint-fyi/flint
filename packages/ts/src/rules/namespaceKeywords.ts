@@ -11,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `module` keyword instead of `namespace` for TypeScript namespaces.",
 		id: "namespaceKeywords",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferNamespace: {

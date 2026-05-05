@@ -25,14 +25,22 @@ export function getRegExpConstruction(
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const firstArgument = args[0]!;
 
-	if (firstArgument.kind !== ts.SyntaxKind.StringLiteral) {
+	// TODO: Use a util like getStaticValue
+	// https://github.com/flint-fyi/flint/issues/1298
+	if (
+		firstArgument.kind !== ts.SyntaxKind.StringLiteral &&
+		firstArgument.kind !== ts.SyntaxKind.NoSubstitutionTemplateLiteral
+	) {
 		return;
 	}
 
 	let flags = "";
 	if (args.length >= 2) {
 		const flagsArg = args[1];
-		if (flagsArg?.kind === ts.SyntaxKind.StringLiteral) {
+		if (
+			flagsArg?.kind === ts.SyntaxKind.StringLiteral ||
+			flagsArg?.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral
+		) {
 			const flagsText = flagsArg.getText(sourceFile);
 			flags = flagsText.slice(1, -1);
 		}
