@@ -11,7 +11,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 <RuleSummary plugin="package-json" rule="dependencyUniqueness" />
 
 This rule reports dependency names that are repeated in the same `package.json` dependency collection.
-For consistency with `eslint-plugin-package-json`, it also reports dependency names that appear in `devDependencies` or `peerDependencies` when they are already declared in `dependencies`.
+It also reports dependency names repeated from `dependencies` into `devDependencies` or `peerDependencies`.
 
 ## Examples
 
@@ -57,13 +57,13 @@ For consistency with `eslint-plugin-package-json`, it also reports dependency na
 
 ## When Not To Use It
 
-If your package intentionally repeats dependency names across dependency collections, such as to mirror a runtime dependency into `peerDependencies`, you can disable this rule.
+If your package intentionally repeats dependency names across dependency collections, such as to mirror a runtime dependency into `peerDependencies`, this rule might not be for you.
+Doing so is generally unnecessary with most mainstream package managers, but other tooling might add in the need to do so.
 
 ## Further Reading
 
 - [npm: `package.json` > `dependencies`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#dependencies)
 - [npm: `package.json` > `peerDependencies`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#peerdependencies)
-- [eslint-plugin-package-json: `unique-dependencies`](https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/unique-dependencies.md)
 
 ## Equivalents in Other Linters
 
