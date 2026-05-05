@@ -25,7 +25,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports missing return statements in callbacks of array methods.",
 		id: "arrayCallbackReturns",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		missingReturn: {

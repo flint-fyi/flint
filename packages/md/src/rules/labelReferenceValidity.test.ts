@@ -53,7 +53,7 @@ Check out [Flint][ ] for more info.
 		`
 [flint][]
 
-[flint]: https://eslint.org
+[flint]: https://flint.fyi
 `,
 		`
 [link][ref]
@@ -63,7 +63,7 @@ Check out [Flint][ ] for more info.
 		`
 Check out [fLint][] for more info.
 
-[flint]: https://eslint.org
+[flint]: https://flint.fyi
 `,
 		`[valid]`,
 	],

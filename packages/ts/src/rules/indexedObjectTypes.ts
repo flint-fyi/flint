@@ -5,7 +5,7 @@ import {
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -89,7 +89,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports indexed object types that don't match the configured style.",
 		id: "indexedObjectTypes",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferIndexSignature: {

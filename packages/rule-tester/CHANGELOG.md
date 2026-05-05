@@ -1,5 +1,48 @@
 # @flint/rule-tester
 
+## 0.16.1
+
+### Patch Changes
+
+- 4fc0eef: Pass host to rules.
+- 0702aa2: Introduce Volar.js meta-language.
+- 7d93f37: Fixed handling for zero-width ~ lines.
+- Updated dependencies [4fc0eef]
+- Updated dependencies [57fa268]
+- Updated dependencies [dde886f]
+- Updated dependencies [1539f14]
+- Updated dependencies [0702aa2]
+- Updated dependencies [cb7e8a8]
+- Updated dependencies [d3f5d17]
+  - @flint.fyi/core@0.21.0
+
+## 0.16.0
+
+### Minor Changes
+
+- e257ec4: Use `LinterHost` for linting.
+- 7b164bd: Allow configuring virtual fixture files.
+
+### Patch Changes
+
+- db34436: Unify language file factory methods using `LinterHost`.
+- 8e80246: Add optional `name` prop
+- 7403874: Also validate output when testing rules.
+- Updated dependencies [4c99c11]
+- Updated dependencies [b3a637a]
+- Updated dependencies [e257ec4]
+- Updated dependencies [d612d50]
+- Updated dependencies [4b32a64]
+- Updated dependencies [fe76156]
+- Updated dependencies [db34436]
+- Updated dependencies [f2f2c8b]
+- Updated dependencies [442a3f4]
+- Updated dependencies [5c64fbb]
+- Updated dependencies [3eaea9e]
+- Updated dependencies [267fe8d]
+- Updated dependencies [011fbf2]
+  - @flint.fyi/core@0.20.0
+
 ## 0.15.2
 
 ### Patch Changes

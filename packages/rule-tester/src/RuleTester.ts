@@ -81,7 +81,7 @@ export class RuleTester {
 					)
 				: undefined;
 		const { files: defaultFiles = {} } = defaults;
-		if (Object.keys(defaultFiles).length > 0) {
+		if (Object.keys(defaultFiles).length) {
 			const vfs = createVFSLinterHost(
 				baseHost == null ? { cwd: process.cwd() } : { baseHost },
 			);
@@ -194,13 +194,14 @@ export class RuleTester {
 		}
 
 		test(
-			"files" in testCase
-				? JSON.stringify(
-						{ [testCase.fileName]: testCase.code, ...testCase.files },
-						null,
-						2,
-					)
-				: testCase.code,
+			testCase.name ??
+				("files" in testCase
+					? JSON.stringify(
+							{ [testCase.fileName]: testCase.code, ...testCase.files },
+							null,
+							2,
+						)
+					: testCase.code),
 			() => {
 				if (testCase.files != null) {
 					assert.notEqual(

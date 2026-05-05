@@ -13,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports functions with duplicate parameter names in their signatures.",
 		id: "duplicateArguments",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		duplicateParam: {

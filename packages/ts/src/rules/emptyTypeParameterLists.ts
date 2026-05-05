@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports empty type parameter lists in type aliases and interfaces.",
 		id: "emptyTypeParameterLists",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		emptyTypeParameters: {

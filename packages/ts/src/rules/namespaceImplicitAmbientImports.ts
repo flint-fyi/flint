@@ -67,8 +67,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							(modifier) => modifier.kind === SyntaxKind.DeclareKeyword,
 						) ||
 						node.name.kind !== SyntaxKind.Identifier ||
-						!node.body ||
-						node.body.kind !== SyntaxKind.ModuleBlock
+						node.body?.kind !== SyntaxKind.ModuleBlock
 					) {
 						return;
 					}
@@ -76,7 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const statements = node.body.statements;
 
 					if (
-						statements.length === 0 ||
+						!statements.length ||
 						hasNamedExport(statements) ||
 						!hasNonExportedMember(statements)
 					) {

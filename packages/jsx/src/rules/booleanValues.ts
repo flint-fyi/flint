@@ -35,8 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				if (
 					property.kind === SyntaxKind.JsxAttribute &&
 					property.name.kind === SyntaxKind.Identifier &&
-					property.initializer &&
-					property.initializer.kind === SyntaxKind.JsxExpression &&
+					property.initializer?.kind === SyntaxKind.JsxExpression &&
 					property.initializer.expression?.kind === SyntaxKind.TrueKeyword
 				) {
 					context.report({

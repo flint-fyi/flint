@@ -35,11 +35,10 @@ function hasOtherModuleIndicator(statements: readonly AST.Statement[]) {
 function isEmptyNamedExport(
 	node: AST.Statement,
 ): node is AST.ExportDeclaration {
-	return !!(
+	return (
 		node.kind === SyntaxKind.ExportDeclaration &&
 		!node.moduleSpecifier &&
-		node.exportClause &&
-		node.exportClause.kind === SyntaxKind.NamedExports &&
+		node.exportClause?.kind === SyntaxKind.NamedExports &&
 		!node.exportClause.elements.length
 	);
 }
@@ -49,7 +48,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports empty export statements that don't make a file a module.",
 		id: "emptyExports",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		uselessExport: {

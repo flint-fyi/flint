@@ -25,7 +25,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 		return {
 			visitors: {
 				sequenceItem: (node) => {
-					if (node.children.length === 0) {
+					if (!node.children.length) {
 						context.report({
 							message: "emptyEntry",
 							range: {

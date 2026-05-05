@@ -1,3 +1,4 @@
+// flint-disable-file ts/topLevelAwaits
 import type { GetStaticPathsOptions } from "astro";
 
 import { getStaticPaths } from "../pages/og/[...path]";

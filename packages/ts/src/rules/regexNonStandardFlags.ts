@@ -15,7 +15,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports non-standard regular expression flags.",
 		id: "regexNonStandardFlags",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unexpected: {

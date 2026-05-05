@@ -59,7 +59,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `.findIndex()` or `.findLastIndex()` with simple equality checks that can be replaced with `.indexOf()` or `.lastIndexOf()`.",
 		id: "arrayIndexOfMethods",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferIndexOf: {

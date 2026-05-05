@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports inconsistent types when spreading a ternary in an array literal.",
 		id: "arrayTernarySpreadingConsistency",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		inconsistentTypes: {
@@ -91,7 +91,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 });
 
 function isEmptyArray(node: ts.Expression) {
-	return ts.isArrayLiteralExpression(node) && node.elements.length === 0;
+	return ts.isArrayLiteralExpression(node) && !node.elements.length;
 }
 
 function isEmptyStringLike(node: ts.Expression) {

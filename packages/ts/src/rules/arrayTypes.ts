@@ -5,7 +5,7 @@ import {
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -36,7 +36,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports array type syntax that doesn't match the configured style.",
 		id: "arrayTypes",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferArraySyntax: {

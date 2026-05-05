@@ -1,6 +1,6 @@
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -79,7 +79,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const text = sourceFile.getFullText();
 					const allMatches = findIrregularWhitespaces(text);
 
-					if (allMatches.length === 0) {
+					if (!allMatches.length) {
 						return;
 					}
 

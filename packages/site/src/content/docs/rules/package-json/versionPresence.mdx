@@ -1,0 +1,73 @@
+---
+description: "Enforce that the `version` property is present."
+title: "versionPresence"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="versionPresence" />
+
+This rule checks that the `version` property is present.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"version": "0.0.1"
+}
+```
+
+```json
+{
+	"version": "0.0.1",
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `ignorePrivate`
+
+Whether the property should still be required when the package's `private` property is `true`.
+Defaults to `true`.
+
+This option can be useful if the rule is enabled on many `package.json` files and some files differ in privacy.
+
+## When Not To Use It
+
+If your package doesn't need to specify a version, you can disable this rule.
+For example, if your package is local-only and is never published online or made open source, versioning may not be relevant for you.
+
+## Related Rules
+
+- [versionValidity](/rules/package-json/versionvalidity) - Enforces that the `version` property is valid.
+
+## Further Reading
+
+- [npm: `package.json` > `version`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#version)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="versionPresence" />

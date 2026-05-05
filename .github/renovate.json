@@ -9,5 +9,13 @@
 	"labels": ["dependencies"],
 	"minimumReleaseAge": "7 days",
 	"patch": { "enabled": false },
-	"postUpdateOptions": ["pnpmDedupe"]
+	"postUpdateOptions": ["pnpmDedupe"],
+	"packageRules": [
+		{
+			"extends": ["monorepo:astro"],
+			"matchSourceUrls": ["https://github.com/withastro/starlight"],
+			"matchPackageNames": ["@astrojs/*"],
+			"groupName": "astro"
+		}
+	]
 }

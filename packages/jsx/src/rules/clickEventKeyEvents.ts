@@ -20,7 +20,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports onClick without keyboard event handlers.",
 		id: "clickEventKeyEvents",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingKeyEvent: {

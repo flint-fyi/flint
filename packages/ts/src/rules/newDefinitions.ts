@@ -54,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports misleading constructor and `new` definitions in interfaces and classes.",
 		id: "newDefinitions",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		classMethodNamedNew: {

@@ -49,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							return;
 
 						case ts.SyntaxKind.Block: {
-							if (node.statement.statements.length === 0) {
+							if (!node.statement.statements.length) {
 								return;
 							}
 

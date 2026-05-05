@@ -1,9 +1,12 @@
+import type { WithExitKeys } from "@flint.fyi/core";
 import type * as mdast from "mdast";
 import type { Point, Position } from "unist";
 
 export interface MarkdownNodesByName extends RootContentMapWithChildren {
 	root: WithPosition<mdast.Root>;
 }
+
+export type MarkdownNodeVisitors = WithExitKeys<MarkdownNodesByName>;
 
 /**
  * A version of {@link Point} where the `offset` always exists.

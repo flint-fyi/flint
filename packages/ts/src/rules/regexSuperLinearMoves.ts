@@ -153,7 +153,7 @@ function isAnchoredAtStart(pattern: RegExpAST.Pattern) {
 }
 
 function isMatchAll(characterClass: RegExpAST.CharacterClass) {
-	return characterClass.negate && characterClass.elements.length === 0;
+	return characterClass.negate && !characterClass.elements.length;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

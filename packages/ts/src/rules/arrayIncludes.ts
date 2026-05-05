@@ -15,7 +15,7 @@ function hasIncludesMethod(node: AST.Expression, typeChecker: Checker) {
 
 	return (
 		includesProperty &&
-		typeChecker.getTypeOfSymbol(includesProperty).getCallSignatures().length > 0
+		!!typeChecker.getTypeOfSymbol(includesProperty).getCallSignatures().length
 	);
 }
 
@@ -93,7 +93,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `.indexOf()` comparisons that can be replaced with `.includes()`.",
 		id: "arrayIncludes",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferIncludes: {

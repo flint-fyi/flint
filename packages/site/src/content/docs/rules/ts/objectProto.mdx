@@ -21,9 +21,13 @@ Direct manipulation of an object's prototype can lead to "hidden classes" in Jav
 
 ```ts
 const proto = obj.__proto__;
+```
 
+```ts
 obj.__proto__ = prototype;
+```
 
+```ts
 const value = obj["__proto__"];
 ```
 
@@ -32,9 +36,13 @@ const value = obj["__proto__"];
 
 ```ts
 const proto = Object.getPrototypeOf(obj);
+```
 
+```ts
 Object.setPrototypeOf(obj, prototype);
+```
 
+```ts
 const obj = Object.create(prototype);
 ```
 

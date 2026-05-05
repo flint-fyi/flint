@@ -57,8 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (
-				!ariaHiddenProperty ||
-				ariaHiddenProperty.kind !== SyntaxKind.JsxAttribute ||
+				ariaHiddenProperty?.kind !== SyntaxKind.JsxAttribute ||
 				!isAriaHiddenTrue(ariaHiddenProperty)
 			) {
 				return;
@@ -94,8 +93,8 @@ function findTabIndexValue(
 ) {
 	const tabIndexProperty = node.attributes.properties.find(
 		(property): property is AST.JsxAttribute =>
-			property.kind == SyntaxKind.JsxAttribute &&
-			property.name.kind == SyntaxKind.Identifier &&
+			property.kind === SyntaxKind.JsxAttribute &&
+			property.name.kind === SyntaxKind.Identifier &&
 			property.name.text.toLowerCase() === "tabindex",
 	);
 
@@ -103,14 +102,14 @@ function findTabIndexValue(
 		return undefined;
 	}
 
-	if (tabIndexProperty.initializer.kind == SyntaxKind.JsxExpression) {
+	if (tabIndexProperty.initializer.kind === SyntaxKind.JsxExpression) {
 		const expression = tabIndexProperty.initializer.expression;
-		if (expression && expression.kind == SyntaxKind.NumericLiteral) {
+		if (expression?.kind === SyntaxKind.NumericLiteral) {
 			return Number(expression.text);
 		}
 	}
 
-	if (tabIndexProperty.initializer.kind == SyntaxKind.StringLiteral) {
+	if (tabIndexProperty.initializer.kind === SyntaxKind.StringLiteral) {
 		return Number(tabIndexProperty.initializer.text);
 	}
 
@@ -128,7 +127,7 @@ function isAriaHiddenTrue(ariaHiddenProperty: AST.JsxAttribute) {
 
 	if (ariaHiddenProperty.initializer.kind === SyntaxKind.JsxExpression) {
 		const expression = ariaHiddenProperty.initializer.expression;
-		if (expression && expression.kind === SyntaxKind.TrueKeyword) {
+		if (expression?.kind === SyntaxKind.TrueKeyword) {
 			return true;
 		}
 	}

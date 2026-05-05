@@ -67,7 +67,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports obscure character ranges in regular expressions.",
 		id: "regexObscureRanges",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		obscure: {

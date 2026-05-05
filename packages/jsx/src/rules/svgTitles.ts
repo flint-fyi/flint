@@ -12,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports <svg> elements without a <title> child element.",
 		id: "svgTitles",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		missingTitle: {
@@ -75,7 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const tagName =
-				node.kind == SyntaxKind.JsxElement
+				node.kind === SyntaxKind.JsxElement
 					? node.openingElement.tagName
 					: node.tagName;
 
@@ -87,7 +87,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const attributes =
-				node.kind == SyntaxKind.JsxElement
+				node.kind === SyntaxKind.JsxElement
 					? node.openingElement.attributes
 					: node.attributes;
 
@@ -96,7 +96,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				node.kind == SyntaxKind.JsxElement &&
+				node.kind === SyntaxKind.JsxElement &&
 				node.children.some(isTitleElement)
 			) {
 				return;

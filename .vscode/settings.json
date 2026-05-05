@@ -12,8 +12,7 @@
 	},
 	"[yaml]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
 	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": "explicit",
-		"source.removeUnusedImports": "explicit"
+		"source.fixAll.eslint": "explicit"
 	},
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnSave": true,
@@ -29,6 +28,12 @@
 		"yaml"
 	],
 	"eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
-	"typescript.tsdk": "node_modules/typescript/lib",
-	"typescript.tsserver.experimental.enableProjectDiagnostics": true
+	"js/ts.tsdk.path": "node_modules/typescript/lib",
+	"js/ts.tsserver.experimental.enableProjectDiagnostics": true,
+	"json.schemas": [
+		{
+			"fileMatch": ["packages/comparisons/src/data.json"],
+			"url": "./packages/comparisons/src/data.schema.json"
+		}
+	]
 }

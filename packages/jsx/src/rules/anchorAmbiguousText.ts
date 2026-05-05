@@ -49,13 +49,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					text += child.text;
 				} else if (child.kind === SyntaxKind.JsxElement) {
 					text += getTextContent(child);
-				} else if (child.kind === SyntaxKind.JsxExpression) {
-					if (
-						child.expression &&
-						child.expression.kind === SyntaxKind.StringLiteral
-					) {
-						text += child.expression.text;
-					}
+				} else if (
+					child.kind === SyntaxKind.JsxExpression &&
+					child.expression?.kind === SyntaxKind.StringLiteral
+				) {
+					text += child.expression.text;
 				}
 			}
 

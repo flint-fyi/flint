@@ -11,9 +11,10 @@ import { makeDisposable } from "./makeDisposable.ts";
 
 const log = debugForFile(import.meta.filename);
 
-export function createLanguage<AstNodesByName, FileServices extends object>(
-	languageDefinition: LanguageDefinition<AstNodesByName, FileServices>,
-) {
+export function createLanguage<
+	AstNodesByName,
+	FileServices extends object = object,
+>(languageDefinition: LanguageDefinition<AstNodesByName, FileServices>) {
 	const language: Language<AstNodesByName, FileServices> = {
 		...languageDefinition,
 
@@ -25,19 +26,14 @@ export function createLanguage<AstNodesByName, FileServices extends object>(
 
 			const fileFactoryDefinition = languageDefinition.createFileFactory(host);
 
-			log("Created file factory.");
-
-			const fileFactory = makeDisposable({
+			const fileFactory = {
 				...fileFactoryDefinition,
-				prepareFile: (data: FileAboutData) => {
-					const { file, ...rest } = fileFactoryDefinition.prepareFile(data);
-
-					return {
-						file: makeDisposable(file),
-						...rest,
-					};
+				createFile: (data: FileAboutData) => {
+					return makeDisposable(fileFactoryDefinition.createFile(data));
 				},
-			});
+			};
+
+			log("Created file factory.");
 
 			return fileFactory;
 		},

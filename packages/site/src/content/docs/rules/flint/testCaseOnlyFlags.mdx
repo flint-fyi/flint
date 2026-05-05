@@ -1,0 +1,61 @@
+---
+description: "Reports test cases that are marked `only: true`."
+title: "testCaseOnlyFlags"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="flint" rule="testCaseOnlyFlags" />
+
+Rule tester cases can temporarily use `only: true` during local debugging.
+That flag should not be committed, because it prevents the rest of the rule test suite from running.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+ruleTester.describe(rule, {
+	valid: [{ code: "a", only: true }],
+	invalid: [],
+});
+```
+
+```ts
+ruleTester.describe(rule, {
+	valid: [],
+	invalid: [{ code: "a", only: true, snapshot: "..." }],
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+ruleTester.describe(rule, {
+	valid: [{ code: "a" }],
+	invalid: [],
+});
+```
+
+```ts
+ruleTester.describe(rule, {
+	valid: [],
+	invalid: [{ code: "a", snapshot: "..." }],
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="flint" ruleId="testCaseOnlyFlags" />

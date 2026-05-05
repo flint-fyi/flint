@@ -9,7 +9,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports switch statements where the default clause is not last.",
 		id: "defaultCaseLast",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		defaultCaseShouldBeLast: {

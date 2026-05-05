@@ -12,9 +12,10 @@ import PluginTop from "~/components/PluginTop.astro";
 
 Flint's JSON plugin provides the following preset:
 
-| Preset                    | Recommended | Description                                                     |
-| ------------------------- | ----------- | --------------------------------------------------------------- |
-| **[`logical`](#logical)** | ✅ Always   | Common rules for finding bugs and good practices in JSON files. |
+| Preset                    | Recommended   | Description                                                     |
+| ------------------------- | ------------- | --------------------------------------------------------------- |
+| **[`logical`](#logical)** | ✅ Always     | Common rules for finding bugs and good practices in JSON files. |
+| **[`sorting`](#sorting)** | ☑️ When Ready | Common rules sorting various aspects of code.                   |
 
 Flint recommends using the [`logical`](#logical) preset:
 
@@ -47,6 +48,23 @@ export default defineConfig({
 		{
 			files: json.files.all,
 			rules: json.presets.logical,
+		},
+	],
+});
+```
+
+### `sorting`
+
+Rules that enforce consistent ordering of various aspects of code.
+
+```ts title="flint.config.ts"
+import { defineConfig, json } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: json.files.all,
+			rules: json.presets.sorting,
 		},
 	],
 });

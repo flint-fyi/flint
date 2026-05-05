@@ -1,4 +1,3 @@
-// flint-disable-file escapeSequenceCasing -- Control character patterns need lowercase escapes
 import {
 	type AST,
 	type TypeScriptFileServices,
@@ -94,7 +93,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports control characters in regular expressions.",
 		id: "regexControlCharacters",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unexpectedControlChar: {
@@ -146,7 +145,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const args = node.arguments;
-			if (!args || args.length === 0) {
+			if (!args?.length) {
 				return;
 			}
 

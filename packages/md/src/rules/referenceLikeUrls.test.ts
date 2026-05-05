@@ -99,7 +99,7 @@ This link uses a URL 'EXAMPLE' that matches a definition identifier.
 [mercury]: https://example.com/mercury/
 `,
 		`
-[Flint](ftps://eslint.org) is a great tool.
+[Flint](https://flint.fyi) is a great tool.
 `,
 		`
 ![Mercury][mercury]
