@@ -1,5 +1,13 @@
 # @flint.fyi/package-json
 
+## 0.17.1
+
+### Patch Changes
+
+- 111f8ee: Added package-json/repositoryShorthand rule.
+- bfcc3e3: Add `binNameCasing` rule.
+- 36d8bb1: Added package-json-validator@1.5.0 validity rules.
+
 ## 0.17.0
 
 ### Minor Changes

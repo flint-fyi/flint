@@ -1,5 +1,16 @@
 # @flint.fyi/comparisons
 
+## 0.3.2
+
+### Patch Changes
+
+- 111f8ee: Added package-json/repositoryShorthand rule.
+- c35722a: Ban duplicate Flint rules in comparisons data.
+- 36d8bb1: Added package-json-validator@1.5.0 validity rules.
+- 6f2a1b2: Added testCasesWithinDescribes rule.
+- 8eed0f6: Added remaining \*Padding\* rules.
+- 3eee30e: Added `afterAllPaddingLines` rule.
+
 ## 0.3.1
 
 ### Patch Changes
