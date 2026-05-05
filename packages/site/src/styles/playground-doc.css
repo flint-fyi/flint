@@ -24,6 +24,7 @@
 	flex-direction: column;
 	overflow: hidden;
 	width: 100%;
+	overscroll-behavior: none;
 }
 
 .playground-doc *,
@@ -52,6 +53,7 @@
 	flex-direction: column;
 	margin-block-start: 0;
 	overflow: hidden;
+	overscroll-behavior: none;
 }
 
 /* Undo Starlight / MD prose on the interactive shell */
@@ -66,16 +68,9 @@
 	padding: 0;
 }
 
-/* Buttons inside the app (diagnostic rows, AST toggles); not tablist tabs—those need module typography. */
-.playground-doc .playground-shell :where(button:not([role="tab"]), input) {
-	font: inherit;
-	line-height: inherit;
-	color: inherit;
-}
-
-.playground-doc .playground-shell input {
-	background: inherit;
-}
+/* Do not reset `button`/`input` font here: `.playground-shell` only renders <Playground />, and CSS
+ * modules (.sidebarButton, .diagnostic, …) rely on declared font sizes. A broad `font: inherit` was
+ * winning over those classes via selector weight and undoing typography. */
 
 .playground-doc .playground-shell code {
 	background: none;
@@ -92,7 +87,6 @@
 		Menlo, monospace;
 	tab-size: 2;
 	white-space: pre;
-	overflow-x: auto;
 }
 
 .playground-doc .playground-shell .cm-editor {

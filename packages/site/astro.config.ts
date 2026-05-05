@@ -45,6 +45,7 @@ export default defineConfig({
 							id: "about",
 							items: [
 								{ label: "About Flint", link: "about" },
+								{ label: "Playground", link: "playground" },
 								{ label: "CLI", link: "cli" },
 								{ label: "Configuration", link: "configuration" },
 								{ label: "Glossary", link: "glossary" },

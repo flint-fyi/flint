@@ -1,4 +1,9 @@
 .playground {
+	--pg-sev-error: #e05555;
+	--pg-sev-warning: #d4a024;
+	--pg-sev-info: var(--sl-color-gray-3);
+	--pg-sev-suggestion: var(--sl-color-accent-high);
+
 	border: 1px solid var(--sl-color-hairline-shade);
 	border-radius: 0;
 	display: flex;
@@ -10,6 +15,20 @@
 	padding: 0;
 	background: var(--sl-color-bg);
 	box-shadow: none;
+}
+
+/* Scroll viewports: avoid rubber-band / scroll chaining into Starlight shell or document. */
+.diagnosticsBody,
+.panelBody,
+.fileList,
+.astBody,
+.astJsonEditor,
+.compactPanelScroll,
+.compactAstPanel,
+.compactMainTabBar,
+.compactFileTabBar,
+.codeMirror :global(.cm-scroller) {
+	overscroll-behavior: contain;
 }
 
 .sidebar {
@@ -26,31 +45,38 @@
 }
 
 .settingsPanel {
+	align-items: center;
+	align-content: flex-start;
 	background: var(--sl-color-gray-6);
 	border: 0;
 	border-bottom: 1px solid var(--sl-color-hairline-shade);
 	border-radius: 0;
-	display: grid;
-	gap: 0.35rem;
-	padding: 0.4rem;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 0.18rem 0.22rem;
+	justify-content: flex-start;
+	min-width: 0;
+	padding: 0.2rem 0.3rem;
 }
 
 .sidebarButton {
 	align-items: center;
 	background: var(--sl-color-bg);
 	border: 1px solid var(--sl-color-hairline-shade);
-	border-radius: 0;
+	border-radius: 0.3rem;
 	color: var(--sl-color-gray-1);
 	cursor: pointer;
 	display: inline-flex;
+	flex: 0 0 auto;
 	font-family: inherit;
-	font-size: var(--sl-text-xs);
+	font-size: 0.6rem;
 	font-weight: 600;
 	justify-content: center;
-	letter-spacing: 0.01em;
-	line-height: 1;
-	min-height: 1.65rem;
-	padding: 0.35rem 0.55rem;
+	letter-spacing: 0.02em;
+	line-height: 1.15;
+	min-height: 0.92rem;
+	padding: 0.03rem 0.26rem;
 	transition:
 		background 0.12s ease,
 		border-color 0.12s ease,
@@ -64,19 +90,49 @@
 }
 
 .sidebarButton:focus-visible {
-	outline: 2px solid var(--sl-color-accent);
-	outline-offset: 2px;
+	outline: 1px solid var(--sl-color-accent);
+	outline-offset: 1px;
+}
+
+.sidebarButton:disabled {
+	cursor: not-allowed;
+	opacity: 0.52;
+}
+
+.sidebarButton:disabled:hover {
+	background: var(--sl-color-bg);
+	border-color: var(--sl-color-hairline-shade);
+	color: var(--sl-color-gray-1);
+}
+
+.sidebarButtonCopyUrl {
+	box-sizing: border-box;
+	flex: 0 0 auto;
+	inline-size: 4rem;
+	justify-content: center;
+	white-space: nowrap;
+}
+
+.sidebarButtonCopyUrlDone {
+	gap: 0.12rem;
+}
+
+.sidebarButtonCopiedMark {
+	color: var(--sl-color-green-high, #2e8b57);
+	flex-shrink: 0;
+	font-weight: 800;
+	line-height: 1;
 }
 
 .fileExplorer {
-	--pg-file-text: 0.78rem;
-	--pg-file-btn: 0.54rem;
-	--pg-rename-font: 11px;
+	--pg-file-text: 0.7rem;
+	--pg-file-btn: 0.5rem;
+	--pg-rename-font: 10px;
 	--pg-rename-pad-y: 0;
-	--pg-rename-pad-x: 0.1rem;
-	--pg-file-row-height: 1.9rem;
+	--pg-rename-pad-x: 0.08rem;
+	--pg-file-row-height: 1.62rem;
 	--pg-file-pad-y: 0;
-	--pg-file-pad-x: 0.4rem;
+	--pg-file-pad-x: 0.32rem;
 	--pg-file-border: 1px;
 	background: var(--sl-color-gray-6);
 	border: 0;
@@ -94,14 +150,14 @@
 	border-bottom: 1px solid var(--sl-color-hairline-shade);
 	display: flex;
 	flex-shrink: 0;
-	gap: 0.4rem;
+	gap: 0.28rem;
 	justify-content: space-between;
-	padding: 0.4rem 0.55rem;
+	padding: 0.26rem 0.38rem;
 }
 
 .fileExplorerTitle {
 	color: var(--sl-color-gray-3);
-	font-size: 0.65rem;
+	font-size: 0.58rem;
 	font-weight: 600;
 	letter-spacing: 0.09em;
 	line-height: 1;
@@ -112,7 +168,7 @@
 	align-items: center;
 	background: transparent;
 	border: 1px solid var(--sl-color-hairline-shade);
-	border-radius: 0.2rem;
+	border-radius: 0.18rem;
 	box-sizing: border-box;
 	color: var(--sl-color-gray-2);
 	cursor: pointer;
@@ -120,15 +176,15 @@
 	font-family:
 		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
 		Menlo, monospace;
-	font-size: 13px;
+	font-size: 11px;
 	font-weight: 600;
 	justify-content: center;
 	line-height: 0;
-	height: 1.25rem;
+	height: 1.08rem;
 	min-height: 0;
 	min-width: 0;
 	padding: 0;
-	width: 1.25rem;
+	width: 1.08rem;
 }
 
 .fileExplorerAdd:hover {
@@ -147,7 +203,7 @@
 	margin: 0;
 	min-height: 0;
 	overflow-y: auto;
-	padding: 0.25rem;
+	padding: 0.18rem;
 }
 
 .fileListItem {
@@ -367,14 +423,14 @@
 	display: inline-flex;
 	font-size: var(--pg-rename-font);
 	font-weight: 500;
-	height: 1rem;
+	height: 0.92rem;
 	justify-content: center;
 	letter-spacing: 0;
 	line-height: 1;
 	min-height: 0;
 	padding: var(--pg-rename-pad-y) var(--pg-rename-pad-x);
 	border: 1px solid var(--sl-color-hairline-shade);
-	border-radius: 0.2rem;
+	border-radius: 0.18rem;
 	background: var(--sl-color-bg);
 	color: var(--sl-color-gray-2);
 	text-transform: none;
@@ -408,19 +464,19 @@
 	font-family:
 		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
 		Menlo, monospace;
-	font-size: 12px;
-	height: 1rem;
+	font-size: 11px;
+	height: 0.92rem;
 	justify-content: center;
 	line-height: 0;
 	min-height: 0;
 	min-width: 0;
 	padding: 0;
-	width: 1rem;
+	width: 0.92rem;
 }
 
 .fileRowBtnDanger:hover {
 	background: transparent;
-	color: #e05555;
+	color: var(--pg-sev-error);
 }
 
 .fileRowBtn:focus-visible {
@@ -433,7 +489,7 @@
 	align-items: center;
 	display: inline-flex;
 	font-size: var(--pg-rename-font);
-	height: 1rem;
+	height: 0.92rem;
 	justify-content: center;
 	line-height: 1;
 	min-height: 0;
@@ -445,13 +501,13 @@
 	font-family:
 		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
 		Menlo, monospace;
-	font-size: 12px;
-	height: 1rem;
+	font-size: 11px;
+	height: 0.92rem;
 	line-height: 0;
 	min-height: 0;
 	min-width: 0;
 	padding: 0;
-	width: 1rem;
+	width: 0.92rem;
 }
 
 @keyframes fileListItemIn {
@@ -623,7 +679,7 @@
 /*
  * One typography context for gutter + scroller (siblings under .cm-editor).
  * CodeMirror's base theme sets line-height: 1.4 on .cm-scroller only; leaving
- * .cm-editor at a different ratio desyncs caret / active-line from text lines.
+ * .cm-editor at a different ratio de-syncs caret / active-line from text lines.
  */
 .codeMirror :global(.cm-editor) {
 	--pg-cm-line-height: 1.55;
@@ -698,7 +754,7 @@
 	text-align: start;
 	border: 0;
 	border-radius: 0;
-	padding: 0.4rem 0.65rem 0.45rem 0.6rem;
+	padding: 0.5rem 0.75rem 0.55rem 0.7rem;
 	background: transparent;
 	cursor: pointer;
 	font: inherit;
@@ -716,53 +772,44 @@
 }
 
 .sevError {
-	box-shadow: inset 3px 0 0 #e05555;
+	box-shadow: inset 3px 0 0 var(--pg-sev-error);
 }
 
 .sevWarning {
-	box-shadow: inset 3px 0 0 #d4a024;
+	box-shadow: inset 3px 0 0 var(--pg-sev-warning);
 }
 
 .sevInfo {
-	box-shadow: inset 3px 0 0 var(--sl-color-gray-3);
+	box-shadow: inset 3px 0 0 var(--pg-sev-info);
 }
 
 .sevSuggestion {
-	box-shadow: inset 3px 0 0 var(--sl-color-accent-high);
-}
-
-.diagnosticHeader {
-	align-items: center;
-	display: flex;
-	flex-wrap: nowrap;
-	gap: 0.45rem;
-	justify-content: flex-start;
-	min-width: 0;
-}
-
-.diagnosticDot {
-	display: inline-block;
-	width: 0.55rem;
-	height: 0.55rem;
-	border-radius: 50%;
-	flex-shrink: 0;
-	background: var(--sl-color-gray-3);
+	box-shadow: inset 3px 0 0 var(--pg-sev-suggestion);
 }
 
 .dotError {
-	background: #e05555;
+	--pg-diagnostic-severity: var(--pg-sev-error);
 }
 
 .dotWarning {
-	background: #d4a024;
+	--pg-diagnostic-severity: var(--pg-sev-warning);
 }
 
 .dotInfo {
-	background: var(--sl-color-gray-3);
+	--pg-diagnostic-severity: var(--pg-sev-info);
 }
 
 .dotSuggestion {
-	background: var(--sl-color-accent-high);
+	--pg-diagnostic-severity: var(--pg-sev-suggestion);
+}
+
+.diagnosticHeader {
+	align-items: baseline;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.28rem 0.45rem;
+	justify-content: flex-start;
+	min-width: 0;
 }
 
 .diagnosticCode {
@@ -774,10 +821,158 @@
 	font-weight: 600;
 	line-height: 1.3;
 	flex: 0 0 auto;
-	max-width: 34%;
+	max-width: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.cmDiagnosticCode {
+	color: var(--sl-color-accent-high);
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-weight: 700;
+}
+
+.cmDiagnosticMessage {
+	display: block;
+	line-height: 1.35;
+	overflow-wrap: anywhere;
+}
+
+a.cmDiagnosticCodeLink {
+	color: var(--sl-color-text-accent);
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+a.cmDiagnosticCodeLink:hover,
+a.cmDiagnosticCodeLink:focus-visible {
+	text-decoration: underline;
+	text-underline-offset: 0.18em;
+}
+
+:global(.cm-tooltip.cm-tooltip-lint) {
+	padding: 0.04rem 0 !important;
+	max-width: min(42rem, calc(100vw - 2rem));
+	background: var(--sl-color-bg, var(--sl-color-black));
+	color: var(--sl-color-white);
+	font-family: var(--sl-font, var(--__sl-font, sans-serif));
+	border: 1px solid
+		color-mix(in srgb, var(--sl-color-hairline-shade), transparent 25%);
+	border-radius: 0.4rem;
+	box-shadow:
+		0 4px 12px rgb(0 0 0 / 14%),
+		0 1px 3px rgb(0 0 0 / 8%);
+	overflow: hidden;
+}
+
+:global(.cm-lintRange-error),
+:global(.cm-lintRange-warning),
+:global(.cm-lint-marker-error),
+:global(.cm-lint-marker-warning) {
+	cursor: help;
+}
+
+:global(.cm-lintRange-error) {
+	background-image: url("../assets/playground/squiggle-error.svg") !important;
+}
+
+:global(.cm-lintRange-warning) {
+	background-image: url("../assets/playground/squiggle-warning.svg") !important;
+}
+
+:global(.cm-gutter-lint .cm-gutterElement) {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+}
+
+:global(.cm-lint-marker) {
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 0.92rem 0.92rem;
+	content: none !important;
+}
+
+:global(.cm-lint-marker-error) {
+	background-image: url("../assets/playground/severity-error.svg") !important;
+}
+
+:global(.cm-lint-marker-warning) {
+	background-image: url("../assets/playground/severity-warning.svg") !important;
+}
+
+:global(.cm-tooltip-lint .cm-diagnostic) {
+	padding: 0.34rem 0.62rem 0.38rem 0.78rem !important;
+	line-height: 1.35 !important;
+	font-size: var(--sl-text-sm);
+	font-family: inherit;
+	border-left: 0;
+	border-bottom: 1px solid
+		color-mix(in srgb, var(--sl-color-hairline-shade), transparent 50%);
+	box-shadow: inset 3px 0 0 var(--sl-color-gray-3);
+}
+
+:global(.cm-tooltip-lint .cm-diagnosticText) {
+	line-height: 1.35 !important;
+}
+
+:global(.cm-tooltip-lint .cm-diagnostic:last-child) {
+	border-bottom: 0;
+}
+
+:global(.cm-tooltip-lint .cm-diagnostic-error) {
+	box-shadow: inset 3px 0 0 var(--pg-sev-error);
+}
+
+:global(.cm-tooltip-lint .cm-diagnostic-warning) {
+	box-shadow: inset 3px 0 0 var(--pg-sev-warning);
+}
+
+:global(.cm-tooltip-lint .cm-diagnostic-info) {
+	box-shadow: inset 3px 0 0 var(--pg-sev-info);
+}
+
+:global(.cm-tooltip-lint .cm-diagnostic-hint) {
+	box-shadow: inset 3px 0 0 var(--pg-sev-suggestion);
+}
+
+:global(.cm-tooltip-lint .cm-diagnosticSource) {
+	display: block;
+	width: fit-content;
+	margin-top: 0.65rem;
+	padding: 0.22rem 0.48rem;
+	background: var(--sl-color-gray-5);
+	color: var(--sl-color-gray-1);
+	font-size: 0.65rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	line-height: 1;
+	text-transform: uppercase;
+	border-radius: 0.24rem;
+	opacity: 0.75;
+}
+
+a.diagnosticCodeLink {
+	color: var(--sl-color-text-accent);
+	font-weight: 700;
+	text-decoration: none;
+	border-radius: 0.2rem;
+}
+
+a.diagnosticCodeLink:hover {
+	text-decoration: underline;
+	text-underline-offset: 0.18em;
+}
+
+a.diagnosticCodeLink:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: 2px;
 }
 
 .diagnosticLocation {
@@ -786,13 +981,17 @@
 		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
 		Menlo, monospace;
 	font-size: var(--sl-text-xs);
-	margin-inline-start: auto;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	max-width: 32%;
 	min-width: 0;
-	flex: 0 1 auto;
+	max-width: 100%;
+}
+
+.diagnosticMeta {
+	display: flex;
+	margin-block-start: 0.14rem;
+	min-width: 0;
 }
 
 .diagnosticLocationSep {
@@ -805,9 +1004,10 @@
 }
 
 .diagnosticSnippet {
-	background: color-mix(in srgb, var(--sl-color-gray-5), transparent 45%);
-	border: 1px solid
-		color-mix(in srgb, var(--sl-color-hairline-shade), transparent 30%);
+	background: color-mix(in srgb, var(--sl-color-gray-5), transparent 68%);
+	border: 0;
+	border-inline-start: 1px solid
+		color-mix(in srgb, var(--sl-color-gray-3), transparent 35%);
 	border-radius: 0;
 	color: var(--sl-color-gray-2);
 	font-family:
@@ -815,9 +1015,11 @@
 		Menlo, monospace;
 	font-size: var(--sl-text-xs);
 	line-height: 1.35;
-	margin: 0.35rem 0 0 1rem;
-	overflow-x: auto;
-	padding: 0.25rem 0.4rem;
+	margin: 0.34rem 0 0;
+	/* `clip` instead of `auto` so the <pre> never becomes a scroll container —
+	 * otherwise it captures vertical wheel events from the diagnostics list on macOS. */
+	overflow: clip;
+	padding: 0.18rem 0.45rem;
 }
 
 .diagnosticMessage {
@@ -825,9 +1027,7 @@
 	line-height: 1.35;
 	color: var(--sl-color-gray-1);
 	min-width: 4rem;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+	overflow-wrap: anywhere;
 }
 
 .consoleLog,
@@ -912,6 +1112,23 @@
 	text-underline-offset: 0.15em;
 }
 
+a.consoleRuleLink {
+	color: var(--sl-color-text-accent);
+	font-weight: 700;
+	text-decoration: none;
+	border-radius: 0.2rem;
+}
+
+a.consoleRuleLink:hover {
+	text-decoration: underline;
+	text-underline-offset: 0.18em;
+}
+
+a.consoleRuleLink:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: 2px;
+}
+
 .consoleBadge {
 	background: var(--sl-color-gray-5);
 	color: var(--sl-color-gray-1);
@@ -924,44 +1141,50 @@
 }
 
 .consoleMessage {
+	align-items: flex-start;
 	color: var(--sl-color-gray-1);
+	display: flex;
+	gap: 0.45rem;
 	font-weight: 600;
 	margin-block-start: 0.45rem;
-	padding-inline-start: 1rem;
 }
 
-.consoleMessage::before {
-	content: "!";
+.consoleIcon {
 	display: inline-block;
-	font-weight: 800;
-	margin-inline: -1rem 0.45rem;
+	flex: 0 0 auto;
+	height: 0.95rem;
+	margin-block-start: 0.1rem;
+	width: 0.95rem;
+}
+
+.consoleIcon.dotInfo,
+.consoleIcon.dotSuggestion {
+	background: var(--pg-diagnostic-severity);
+	border-radius: 50%;
 }
 
 .consoleMessage.dotError {
-	background: transparent;
-	color: #e05555;
+	color: var(--pg-sev-error);
 }
 
 .consoleMessage.dotWarning {
-	background: transparent;
-	color: #d4a024;
+	color: var(--pg-sev-warning);
 }
 
 .consoleMessage.dotInfo {
-	background: transparent;
 	color: var(--sl-color-gray-2);
 }
 
 .consoleMessage.dotSuggestion {
-	background: transparent;
-	color: var(--sl-color-accent-high);
+	color: var(--pg-sev-suggestion);
 }
 
 .consoleFrame {
 	color: var(--sl-color-gray-2);
 	font: inherit;
 	margin: 0.5rem 0 0;
-	overflow-x: auto;
+	/* `clip` so this <pre> never captures vertical wheel events from the console list. */
+	overflow: clip;
 	padding: 0;
 	white-space: pre;
 }
@@ -976,6 +1199,24 @@
 	font-size: var(--sl-text-xs);
 	line-height: 1.4;
 	min-height: 0;
+	min-width: 0;
+	overflow: hidden;
+}
+
+.astBody {
+	box-sizing: border-box;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: flex-start;
+	align-self: stretch;
+	min-height: 0;
+	min-width: 0;
+	overflow: auto;
+	overflow-x: auto;
+	overflow-y: auto;
+	scrollbar-gutter: stable;
+	width: 100%;
 }
 
 .astCaption {
@@ -984,6 +1225,7 @@
 	font-size: var(--sl-text-xs);
 	margin: 0;
 	min-width: 0;
+	flex: 1 1 auto;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -992,10 +1234,20 @@
 .astToolbar {
 	align-items: center;
 	display: flex;
+	flex-shrink: 0;
+	flex-wrap: nowrap;
 	gap: 0.5rem;
 	justify-content: space-between;
 	margin-block-end: 0.55rem;
+	min-height: 0;
 	min-width: 0;
+	overflow-x: auto;
+	overflow-y: visible;
+	scrollbar-width: thin;
+}
+
+.astToolbar::-webkit-scrollbar {
+	height: 4px;
 }
 
 .astViewToggle {
@@ -1037,12 +1289,15 @@
 }
 
 .astJsonEditor {
+	align-self: stretch;
 	background: var(--sl-color-bg);
 	border: 1px solid var(--sl-color-hairline-shade);
 	border-radius: 0;
-	flex: 1;
+	flex: 1 1 0;
 	min-height: 0;
-	overflow: auto;
+	min-width: 0;
+	overflow: hidden;
+	width: 100%;
 }
 
 .astJsonEditor :global(.cm-content) {
@@ -1053,16 +1308,71 @@
 	font-size: var(--sl-text-xs);
 }
 
+/* Scroll width = tree + end padding so trailing pos:end isn't hidden under overlay scrollbars. */
+.astTreeScroll {
+	box-sizing: border-box;
+	display: inline-block;
+	max-width: none;
+	min-width: 100%;
+	padding-inline-start: 0.15rem;
+	padding-inline-end: max(14px, env(safe-area-inset-inline-end, 0px));
+	vertical-align: top;
+	width: max-content;
+}
+
 .astNode {
+	box-sizing: border-box;
 	margin: 0;
+	min-width: min-content;
+	width: fit-content;
+	max-width: none;
 }
 
 .astRow {
 	display: flex;
 	align-items: baseline;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	gap: 0.35rem 0.5rem;
+	min-width: max-content;
+	max-width: none;
 	padding: 0.15rem 0;
+}
+
+.astKind {
+	color: var(--sl-color-accent-high);
+	flex-shrink: 0;
+	font-weight: 600;
+}
+
+.astText {
+	background: var(--sl-color-gray-6);
+	border-radius: 0.25rem;
+	color: var(--sl-color-gray-1);
+	padding: 0.06rem 0.3rem;
+	font-size: 0.92em;
+	flex-shrink: 1;
+	max-width: 18rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.astRange {
+	color: var(--sl-color-gray-3);
+	flex-shrink: 0;
+	font-variant-numeric: tabular-nums;
+	margin-inline-start: auto;
+	white-space: nowrap;
+}
+
+.astChildren {
+	box-sizing: border-box;
+	min-width: min-content;
+	margin-inline-start: 0.35rem;
+	padding-inline-start: 0.5rem;
+	border-inline-start: 1px solid var(--sl-color-hairline-shade);
+	width: fit-content;
+	max-width: none;
 }
 
 .astToggle {
@@ -1102,37 +1412,247 @@
 	flex-shrink: 0;
 }
 
-.astKind {
-	color: var(--sl-color-accent-high);
-	font-weight: 600;
-}
-
-.astText {
-	background: var(--sl-color-gray-6);
-	border-radius: 0.25rem;
-	color: var(--sl-color-gray-1);
-	padding: 0.06rem 0.3rem;
-	font-size: 0.92em;
-}
-
-.astRange {
-	color: var(--sl-color-gray-3);
-	margin-inline-start: auto;
-	white-space: nowrap;
-}
-
-.astChildren {
-	padding-inline-start: 0.5rem;
-	margin-inline-start: 0.35rem;
-	border-inline-start: 1px solid var(--sl-color-hairline-shade);
-}
-
 .workspace {
 	display: grid;
 	flex: 1;
 	min-height: 0;
 	min-width: 0;
 	overflow: hidden;
+}
+
+.workspaceCompact {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+	min-width: 0;
+	overflow: hidden;
+}
+
+.compactMainTabBar {
+	align-items: center;
+	background: var(--sl-color-bg);
+	border-bottom: 1px solid var(--sl-color-hairline-shade);
+	display: flex;
+	flex-shrink: 0;
+	flex-wrap: nowrap;
+	gap: 0.25rem;
+	justify-content: flex-start;
+	overflow-x: auto;
+	padding: 0.3rem 0.35rem;
+	scrollbar-width: thin;
+}
+
+.compactMainTabBar::-webkit-scrollbar {
+	height: 4px;
+}
+
+.compactPrimaryBody {
+	display: grid;
+	flex: 1;
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr;
+	min-height: 0;
+	min-width: 0;
+	overflow: hidden;
+	position: relative;
+}
+
+.compactPrimaryBody > .compactPanel[hidden] {
+	display: none !important;
+}
+
+.compactCodeColumn {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	grid-column: 1;
+	grid-row: 1;
+	min-height: 0;
+	min-width: 0;
+	overflow: hidden;
+	position: relative;
+}
+
+.compactCodeColumn > .editor {
+	flex: 1;
+	min-height: 0;
+	min-width: 0;
+}
+
+.compactFileTabRow {
+	align-items: stretch;
+	background: var(--sl-color-gray-6);
+	border-bottom: 1px solid var(--sl-color-hairline-shade);
+	display: flex;
+	flex-direction: row;
+	flex-shrink: 0;
+	flex-wrap: nowrap;
+	min-height: 2rem;
+	min-width: 0;
+}
+
+.compactFileTabBar {
+	align-items: center;
+	display: flex;
+	flex: 1;
+	flex-shrink: 1;
+	flex-wrap: nowrap;
+	gap: 0;
+	justify-content: flex-start;
+	min-height: 0;
+	min-width: 0;
+	overflow-x: auto;
+	padding: 0 0 0 0.2rem;
+	scrollbar-width: thin;
+}
+
+.compactFileTabBar::-webkit-scrollbar {
+	height: 4px;
+}
+
+.compactFileTab {
+	appearance: none;
+	align-items: center;
+	background: transparent;
+	border: 1px solid transparent;
+	border-block: 0;
+	border-inline-start: 0;
+	border-inline-end-color: var(--sl-color-hairline-shade);
+	border-radius: 0;
+	color: var(--sl-color-gray-2);
+	cursor: pointer;
+	display: inline-flex;
+	flex: 0 0 auto;
+	font: inherit;
+	font-size: var(--sl-text-sm);
+	font-weight: 600;
+	justify-content: center;
+	line-height: 1;
+	margin: 0;
+	min-height: 2rem;
+	padding: 0.35rem 0.65rem;
+	white-space: nowrap;
+}
+
+.compactFileTab[aria-selected="true"] {
+	background: var(--sl-color-bg);
+	color: var(--sl-color-gray-1);
+}
+
+.compactFileTab:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: -2px;
+}
+
+.compactFileTabAdd {
+	appearance: none;
+	align-items: center;
+	align-self: stretch;
+	background: transparent;
+	border: 1px solid transparent;
+	border-inline-start: 1px solid var(--sl-color-hairline-shade);
+	border-radius: 0;
+	box-sizing: border-box;
+	color: var(--sl-color-gray-2);
+	cursor: pointer;
+	display: inline-flex;
+	flex: 0 0 auto;
+	flex-shrink: 0;
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: 13px;
+	font-weight: 700;
+	justify-content: center;
+	line-height: 0;
+	min-height: 2rem;
+	min-width: 2.25rem;
+	padding: 0;
+}
+
+.compactFileTabAdd:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: -2px;
+}
+
+.compactTab {
+	appearance: none;
+	align-items: center;
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 0.3rem;
+	color: var(--sl-color-gray-2);
+	cursor: pointer;
+	display: inline-flex;
+	flex: 0 0 auto;
+	font: inherit;
+	font-size: var(--sl-text-xs);
+	font-weight: 600;
+	line-height: 1;
+	margin: 0;
+	min-height: 1.6rem;
+	padding: 0.3rem 0.55rem;
+	white-space: nowrap;
+}
+
+.compactTab[aria-selected="true"] {
+	background: var(--sl-color-gray-6);
+	border-color: var(--sl-color-hairline-shade);
+	color: var(--sl-color-gray-1);
+}
+
+.compactTab:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: -2px;
+}
+
+.compactScrollPad {
+	flex: 1;
+}
+
+.compactAstPanel {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+	overflow: hidden;
+	padding-block: 0.35rem;
+	padding-inline: 0.45rem;
+}
+
+.compactPanel {
+	display: flex;
+	flex-direction: column;
+	grid-column: 1;
+	grid-row: 1;
+	min-height: 0;
+	min-width: 0;
+	overflow: hidden;
+	position: relative;
+}
+
+.compactPanelScroll {
+	flex: 1;
+	min-height: 0;
+	overflow: auto;
+}
+
+/* AST pane: horizontal scrolling lives in .astBody only — avoids split scroll extents. */
+.compactAstPanel.compactPanelScroll {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.sidebarCompactWrap {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+}
+
+.sidebarCompactWrap .settingsPanel + .fileExplorer {
+	flex: 1;
 }
 
 .workspace > .sidebar,

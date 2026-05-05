@@ -1,8 +1,9 @@
 import { javascript } from "@codemirror/lang-javascript";
 import {
 	type Diagnostic as CmDiagnostic,
+	forceLinting,
 	lintGutter,
-	setDiagnostics,
+	linter,
 } from "@codemirror/lint";
 import { type EditorView } from "@codemirror/view";
 import CodeMirror from "@uiw/react-codemirror";
@@ -13,9 +14,14 @@ import {
 	useMemo,
 	useRef,
 	useState,
+	type Dispatch,
 	type PointerEvent as ReactPointerEvent,
+	type RefObject,
+	type SetStateAction,
 } from "react";
 
+import severityErrorIcon from "../assets/playground/severity-error.svg?url";
+import severityWarningIcon from "../assets/playground/severity-warning.svg?url";
 import styles from "./Playground.module.css";
 import type {
 	PlaygroundAstNode,
@@ -25,6 +31,13 @@ import type {
 	PlaygroundRequest,
 	PlaygroundResult,
 } from "../playground/types.ts";
+
+const SEVERITY_ICON_URLS: Partial<
+	Record<PlaygroundDiagnosticCategory, string>
+> = {
+	error: severityErrorIcon,
+	warning: severityWarningIcon,
+};
 
 const DEFAULT_PLAYGROUND_TSX = `import { pi } from "./math";
 
@@ -72,6 +85,63 @@ interface SharedWorkspace {
 }
 
 type DiagnosticsTab = "console" | "diagnostics";
+
+/** Compact layout: one top tab strip (Settings → Code → Diagnostics → Console → AST). */
+type PlaygroundCompactTab =
+	| "ast"
+	| "code"
+	| "console"
+	| "diagnostics"
+	| "settings";
+
+const COMPACT_LAYOUT_MAX_CSS_PX = 999;
+
+function useCompactPlaygroundLayout(): boolean {
+	const [compact, setCompact] = useState(() => {
+		if (typeof globalThis.matchMedia !== "function") {
+			return false;
+		}
+
+		return globalThis.matchMedia(`(max-width: ${COMPACT_LAYOUT_MAX_CSS_PX}px)`)
+			.matches;
+	});
+
+	useEffect(() => {
+		if (typeof globalThis.matchMedia !== "function") {
+			return;
+		}
+
+		const mq = globalThis.matchMedia(
+			`(max-width: ${COMPACT_LAYOUT_MAX_CSS_PX}px)`,
+		);
+
+		const sync = () => {
+			setCompact(mq.matches);
+		};
+
+		sync();
+		mq.addEventListener("change", sync);
+
+		return () => {
+			mq.removeEventListener("change", sync);
+		};
+	}, []);
+
+	return compact;
+}
+
+/** Stable id suffix for file path (use in tab `id` attributes). */
+function filePathTabIdSuffix(path: string): string {
+	let out = "";
+
+	for (const char of path) {
+		out += /^[a-z0-9]$/iu.test(char) ? char.toLowerCase() : "-";
+	}
+
+	const slug = out.replace(/-+/gu, "-").replace(/^-+|-+$/gu, "");
+
+	return slug.length > 0 ? slug : "file";
+}
 
 function encodeWorkspace(workspace: SharedWorkspace): string {
 	const json = JSON.stringify(workspace);
@@ -147,6 +217,71 @@ function isDefaultWorkspace(
 	return true;
 }
 
+/** Matches workspace after Clear: single empty `/playground.tsx` only. */
+function isClearedWorkspace(
+	paths: string[],
+	files: Record<string, string>,
+): boolean {
+	if (paths.length !== 1 || paths[0] !== "/playground.tsx") {
+		return false;
+	}
+
+	if (Object.keys(files).length !== 1) {
+		return false;
+	}
+
+	return files["/playground.tsx"] === "";
+}
+
+/**
+ * Forwards wheel events that land anywhere in `panelRef` (including its tab
+ * strip and any inner element that would otherwise capture wheel) to
+ * `scrollerRef`. Capture phase + non-passive so we run before any descendant
+ * scroll container can claim the event.
+ */
+function useWheelForward(
+	panelRef: RefObject<HTMLElement | null>,
+	scrollerRef: RefObject<HTMLElement | null>,
+): void {
+	useEffect(() => {
+		const panel = panelRef.current;
+		const scroller = scrollerRef.current;
+
+		if (!panel || !scroller) {
+			return;
+		}
+
+		const handler = (event: WheelEvent) => {
+			let deltaX = event.deltaX;
+			let deltaY = event.deltaY;
+
+			if (event.deltaMode === 1) {
+				deltaX *= 16;
+				deltaY *= 16;
+			} else if (event.deltaMode === 2) {
+				deltaX *= scroller.clientWidth;
+				deltaY *= scroller.clientHeight;
+			}
+
+			if (deltaX === 0 && deltaY === 0) {
+				return;
+			}
+
+			event.preventDefault();
+			scroller.scrollBy({ left: deltaX, top: deltaY });
+		};
+
+		panel.addEventListener("wheel", handler, {
+			capture: true,
+			passive: false,
+		});
+
+		return () => {
+			panel.removeEventListener("wheel", handler, { capture: true });
+		};
+	}, [panelRef, scrollerRef]);
+}
+
 function useStarlightTheme(): "light" | "dark" {
 	const [theme, setTheme] = useState<"light" | "dark">(() =>
 		typeof document === "undefined" ||
@@ -210,12 +345,35 @@ function toCmDiagnostics(
 
 		const from = Math.max(0, Math.min(diagnostic.start, docLength));
 		const to = Math.max(from, Math.min(diagnostic.end, docLength));
+		const ruleLabel = `${diagnostic.source}:${diagnostic.code}`;
+		const docsHref = getRuleDocsHref(diagnostic);
 
 		out.push({
 			from,
-			message: `${diagnostic.source}:${diagnostic.code} — ${diagnostic.message}`,
+			message: `${ruleLabel} — ${diagnostic.message}`,
+			renderMessage: () => {
+				const wrap = document.createElement("span");
+				wrap.className = styles.cmDiagnosticMessage;
+
+				if (docsHref) {
+					const link = document.createElement("a");
+					link.className = styles.cmDiagnosticCodeLink;
+					link.href = docsHref;
+					link.textContent = ruleLabel;
+					link.title = `View docs for ${ruleLabel}`;
+					wrap.appendChild(link);
+				} else {
+					const code = document.createElement("strong");
+					code.className = styles.cmDiagnosticCode;
+					code.textContent = ruleLabel;
+					wrap.appendChild(code);
+				}
+
+				wrap.appendChild(document.createTextNode(` — ${diagnostic.message}`));
+
+				return wrap;
+			},
 			severity: cmSeverity(diagnostic.category),
-			source: diagnostic.source,
 			to: from === to ? Math.min(docLength, from + 1) : to,
 		});
 	}
@@ -310,6 +468,41 @@ function getCaretMarker(
 	return `${" ".repeat(markerStart - 1)}${"^".repeat(markerLength)}`;
 }
 
+const RULE_DOCS_CATEGORIES = new Set([
+	"astro",
+	"browser",
+	"flint",
+	"json",
+	"jsx",
+	"md",
+	"node",
+	"package-json",
+	"performance",
+	"spelling",
+	"ts",
+	"yaml",
+]);
+
+function getRuleDocsHref(diagnostic: PlaygroundDiagnostic): string | undefined {
+	if (diagnostic.source !== "flint") {
+		return undefined;
+	}
+
+	const slashIndex = diagnostic.code.indexOf("/");
+	if (slashIndex <= 0) {
+		return undefined;
+	}
+
+	const category = diagnostic.code.slice(0, slashIndex);
+	const rule = diagnostic.code.slice(slashIndex + 1);
+
+	if (!rule || !RULE_DOCS_CATEGORIES.has(category)) {
+		return undefined;
+	}
+
+	return `/rules/${category}/${rule}`.toLowerCase();
+}
+
 function categoryShortLabel(category: PlaygroundDiagnosticCategory): string {
 	switch (category) {
 		case "error": {
@@ -360,36 +553,55 @@ function Diagnostics({
 				const sourceText = files[diagnostic.fileName] ?? "";
 				const location = getLocation(sourceText, diagnostic.start);
 				const snippet = getLineSnippet(sourceText, location.line);
+				const docsHref = getRuleDocsHref(diagnostic);
+				const ruleLabel = `${diagnostic.source}:${diagnostic.code}`;
+				const goToSource = () => {
+					onGoTo(diagnostic.fileName, diagnostic.start);
+				};
 
 				return (
 					<li
 						key={`${diagnostic.fileName}-${diagnostic.source}-${diagnostic.code}-${diagnostic.start}`}
 					>
-						<button
+						<div
 							aria-label={`${categoryShortLabel(diagnostic.category)} in ${diagnostic.fileName} at line ${location.line}: ${diagnostic.message}`}
 							className={clsx(
 								styles.diagnostic,
 								severitySurface[diagnostic.category],
 							)}
-							onClick={() => {
-								onGoTo(diagnostic.fileName, diagnostic.start);
+							onClick={goToSource}
+							onKeyDown={(event) => {
+								if (event.key === "Enter" || event.key === " ") {
+									event.preventDefault();
+									goToSource();
+								}
 							}}
-							type="button"
+							role="button"
+							tabIndex={0}
 						>
 							<div className={styles.diagnosticHeader}>
-								<span
-									aria-hidden="true"
-									className={clsx(
-										styles.diagnosticDot,
-										severityDotClass[diagnostic.category],
-									)}
-								/>
-								<span className={styles.diagnosticCode}>
-									{diagnostic.source}:{diagnostic.code}
-								</span>
+								{docsHref ? (
+									<a
+										className={clsx(
+											styles.diagnosticCode,
+											styles.diagnosticCodeLink,
+										)}
+										href={docsHref}
+										onClick={(event) => {
+											event.stopPropagation();
+										}}
+										title={`View docs for ${ruleLabel}`}
+									>
+										{ruleLabel}
+									</a>
+								) : (
+									<span className={styles.diagnosticCode}>{ruleLabel}</span>
+								)}
 								<span className={styles.diagnosticMessage}>
 									{diagnostic.message}
 								</span>
+							</div>
+							<div className={styles.diagnosticMeta}>
 								<span className={styles.diagnosticLocation}>
 									{diagnostic.fileName}
 									<span className={styles.diagnosticLocationSep}>:</span>
@@ -401,7 +613,7 @@ function Diagnostics({
 							{snippet ? (
 								<pre className={styles.diagnosticSnippet}>{snippet}</pre>
 							) : null}
-						</button>
+						</div>
 					</li>
 				);
 			})}
@@ -438,24 +650,45 @@ function ConsoleDiagnostics({
 				const location = getLocation(sourceText, diagnostic.start);
 				const sourceLine = getSourceLine(sourceText, location.line);
 				const marker = getCaretMarker(diagnostic, location, sourceLine);
+				const docsHref = getRuleDocsHref(diagnostic);
+				const ruleLabel = `${diagnostic.source}/${diagnostic.code}`;
+				const goToSource = () => {
+					onGoTo(diagnostic.fileName, diagnostic.start);
+				};
 
 				return (
-					<button
+					<div
 						aria-label={`${categoryShortLabel(diagnostic.category)} in ${diagnostic.fileName} at line ${location.line}: ${diagnostic.message}`}
 						className={styles.consoleDiagnostic}
 						key={`${diagnostic.fileName}-${diagnostic.source}-${diagnostic.code}-${diagnostic.start}`}
-						onClick={() => {
-							onGoTo(diagnostic.fileName, diagnostic.start);
+						onClick={goToSource}
+						onKeyDown={(event) => {
+							if (event.key === "Enter" || event.key === " ") {
+								event.preventDefault();
+								goToSource();
+							}
 						}}
-						type="button"
+						role="button"
+						tabIndex={0}
 					>
 						<div className={styles.consoleMeta}>
 							<span className={styles.consoleLocation}>
 								{diagnostic.fileName}:{location.line}:{location.column}
 							</span>
-							<span className={styles.consoleRule}>
-								{diagnostic.source}/{diagnostic.code}
-							</span>
+							{docsHref ? (
+								<a
+									className={clsx(styles.consoleRule, styles.consoleRuleLink)}
+									href={docsHref}
+									onClick={(event) => {
+										event.stopPropagation();
+									}}
+									title={`View docs for ${ruleLabel}`}
+								>
+									{ruleLabel}
+								</a>
+							) : (
+								<span className={styles.consoleRule}>{ruleLabel}</span>
+							)}
 							<span className={styles.consoleBadge}>
 								{categoryShortLabel(diagnostic.category)}
 							</span>
@@ -466,6 +699,22 @@ function ConsoleDiagnostics({
 								severityDotClass[diagnostic.category],
 							)}
 						>
+							{SEVERITY_ICON_URLS[diagnostic.category] ? (
+								<img
+									alt=""
+									aria-hidden="true"
+									className={styles.consoleIcon}
+									src={SEVERITY_ICON_URLS[diagnostic.category]}
+								/>
+							) : (
+								<span
+									aria-hidden="true"
+									className={clsx(
+										styles.consoleIcon,
+										severityDotClass[diagnostic.category],
+									)}
+								/>
+							)}
 							{diagnostic.message}
 						</div>
 						<pre className={styles.consoleFrame}>
@@ -473,7 +722,7 @@ function ConsoleDiagnostics({
 								{`${location.line.toString().padStart(4, " ")} | ${sourceLine}\n     | ${marker}`}
 							</code>
 						</pre>
-					</button>
+					</div>
 				);
 			})}
 		</div>
@@ -549,7 +798,9 @@ function Ast({
 	return (
 		<div className={styles.astRoot}>
 			<div className={styles.astToolbar}>
-				<p className={styles.astCaption}>Root: {activePath}</p>
+				<p className={styles.astCaption} title={`Root: ${activePath}`}>
+					Root: {activePath}
+				</p>
 				<div className={styles.astViewToggle} aria-label="AST view mode">
 					<button
 						aria-pressed={viewMode === "node"}
@@ -573,25 +824,249 @@ function Ast({
 					</button>
 				</div>
 			</div>
-			{viewMode === "node" ? (
-				<AstTree depth={0} node={ast} />
-			) : (
-				<CodeMirror
-					basicSetup={{
-						foldGutter: true,
-						highlightActiveLine: false,
-						highlightActiveLineGutter: false,
-						lineNumbers: true,
-					}}
-					className={clsx(styles.codeMirror, styles.astJsonEditor)}
-					editable={false}
-					extensions={astJsonExtensions}
-					height="100%"
-					theme={theme}
-					value={astJson}
-				/>
-			)}
+			<div className={styles.astBody}>
+				{viewMode === "node" ? (
+					<div className={styles.astTreeScroll}>
+						<AstTree depth={0} node={ast} />
+					</div>
+				) : (
+					<CodeMirror
+						basicSetup={{
+							foldGutter: true,
+							highlightActiveLine: false,
+							highlightActiveLineGutter: false,
+							lineNumbers: true,
+						}}
+						className={clsx(styles.codeMirror, styles.astJsonEditor)}
+						editable={false}
+						extensions={astJsonExtensions}
+						height="100%"
+						theme={theme}
+						value={astJson}
+					/>
+				)}
+			</div>
 		</div>
+	);
+}
+
+interface PlaygroundSettingsContentProps {
+	activePath: string;
+	addFile: () => void;
+	clearWorkspace: () => void;
+	commitRename: (oldPath: string, rawName: string) => void;
+	completeRemoveFile: (path: string) => void;
+	copyShareUrl: () => void;
+	copyState: "copied" | "idle";
+	clearWorkspaceDisabled: boolean;
+	paths: string[];
+	removeFile: (path: string) => void;
+	renameInputRef: RefObject<HTMLInputElement | null>;
+	removingPaths: Set<string>;
+	renamingPath: string | null;
+	resetWorkspace: () => void;
+	resetWorkspaceDisabled: boolean;
+	setActivePath: Dispatch<SetStateAction<string>>;
+	setRenamingPath: Dispatch<SetStateAction<string | null>>;
+	skipRenameCommit: { current: boolean };
+}
+
+function PlaygroundSettingsContent({
+	activePath,
+	addFile,
+	clearWorkspace,
+	copyShareUrl,
+	copyState,
+	clearWorkspaceDisabled,
+	paths,
+	commitRename,
+	completeRemoveFile,
+	removeFile,
+	removingPaths,
+	renameInputRef,
+	renamingPath,
+	resetWorkspace,
+	resetWorkspaceDisabled,
+	setActivePath,
+	setRenamingPath,
+	skipRenameCommit,
+}: PlaygroundSettingsContentProps) {
+	return (
+		<>
+			<div className={styles.settingsPanel}>
+				<button
+					className={styles.sidebarButton}
+					disabled={clearWorkspaceDisabled}
+					onClick={clearWorkspace}
+					title={
+						clearWorkspaceDisabled
+							? "Workspace is already cleared"
+							: "Remove all files and keep one empty playground file"
+					}
+					type="button"
+				>
+					Clear
+				</button>
+				<button
+					className={styles.sidebarButton}
+					disabled={resetWorkspaceDisabled}
+					onClick={resetWorkspace}
+					title={
+						resetWorkspaceDisabled
+							? "Already using the default example workspace"
+							: "Restore the default example files"
+					}
+					type="button"
+				>
+					Reset
+				</button>
+				<button
+					className={clsx(
+						styles.sidebarButton,
+						styles.sidebarButtonCopyUrl,
+						copyState === "copied" && styles.sidebarButtonCopyUrlDone,
+					)}
+					onClick={copyShareUrl}
+					type="button"
+				>
+					{copyState === "copied" ? (
+						<>
+							<span
+								aria-hidden="true"
+								className={styles.sidebarButtonCopiedMark}
+							>
+								✓
+							</span>
+							<span>Copied</span>
+						</>
+					) : (
+						"Copy URL"
+					)}
+				</button>
+			</div>
+
+			<div aria-label="Virtual project files" className={styles.fileExplorer}>
+				<div className={styles.fileExplorerHeader}>
+					<span className={styles.fileExplorerTitle}>Files</span>
+					<button
+						aria-label="New file"
+						className={styles.fileExplorerAdd}
+						onClick={addFile}
+						type="button"
+					>
+						+
+					</button>
+				</div>
+				<ul className={styles.fileList}>
+					{paths.map((path) => {
+						const label = path.replace(/^\//u, "");
+						const isActive = path === activePath;
+						const isRenaming = renamingPath === path;
+						const isRemoving = removingPaths.has(path);
+						const canRemove =
+							paths.filter((p) => !removingPaths.has(p)).length > 1;
+
+						return (
+							<li
+								className={clsx(
+									styles.fileListItem,
+									isRemoving && styles.fileListItemRemoving,
+								)}
+								key={path}
+								onAnimationEnd={() => {
+									if (isRemoving) {
+										completeRemoveFile(path);
+									}
+								}}
+							>
+								<div
+									className={clsx(
+										styles.fileRow,
+										isActive && styles.fileRowActive,
+										isRenaming && styles.fileRowRenaming,
+										isRemoving && styles.fileRowRemoving,
+									)}
+								>
+									{isRenaming ? (
+										<input
+											aria-label={`Rename ${path}`}
+											className={styles.fileRowRenameInput}
+											defaultValue={label}
+											key={path}
+											title={label}
+											onBlur={(event) => {
+												if (skipRenameCommit.current) {
+													skipRenameCommit.current = false;
+													setRenamingPath(null);
+
+													return;
+												}
+
+												commitRename(path, event.target.value);
+												setRenamingPath(null);
+											}}
+											onKeyDown={(event) => {
+												if (event.key === "Enter") {
+													event.currentTarget.blur();
+												} else if (event.key === "Escape") {
+													event.preventDefault();
+													skipRenameCommit.current = true;
+													setRenamingPath(null);
+												}
+											}}
+											ref={renameInputRef}
+										/>
+									) : (
+										<button
+											className={styles.fileRowMain}
+											onClick={() => {
+												setActivePath(path);
+											}}
+											title={label}
+											type="button"
+										>
+											<span className={styles.fileRowMainLabel}>{label}</span>
+										</button>
+									)}
+									{!isRenaming ? (
+										<div className={styles.fileRowActions}>
+											<button
+												className={clsx(
+													styles.fileRowBtn,
+													styles.fileRowBtnRename,
+												)}
+												onClick={() => {
+													setRenamingPath(path);
+												}}
+												type="button"
+											>
+												rename
+											</button>
+											{canRemove ? (
+												<button
+													aria-label={`Remove ${path}`}
+													className={clsx(
+														styles.fileRowBtn,
+														styles.fileRowBtnDanger,
+													)}
+													onClick={(event) => {
+														event.stopPropagation();
+														removeFile(path);
+													}}
+													type="button"
+												>
+													×
+												</button>
+											) : null}
+										</div>
+									) : null}
+								</div>
+							</li>
+						);
+					})}
+				</ul>
+			</div>
+		</>
 	);
 }
 
@@ -607,11 +1082,15 @@ export function Playground() {
 	const requestId = useRef(0);
 	const workerRef = useRef<Worker | undefined>(undefined);
 	const editorViewRef = useRef<EditorView | null>(null);
+	const resultRef = useRef<PlaygroundResult | undefined>(undefined);
 	const pendingGoTo = useRef<{ fileName: string; pos: number } | null>(null);
 	const renameInputRef = useRef<HTMLInputElement | null>(null);
 	const skipRenameCommit = useRef(false);
 	const workspaceRef = useRef<HTMLDivElement | null>(null);
 	const mainColumnRef = useRef<HTMLDivElement | null>(null);
+	const diagnosticsPanelRef = useRef<HTMLDivElement | null>(null);
+	const diagnosticsBodyRef = useRef<HTMLDivElement | null>(null);
+	useWheelForward(diagnosticsPanelRef, diagnosticsBodyRef);
 	const [renamingPath, setRenamingPath] = useState<string | null>(null);
 	const [removingPaths, setRemovingPaths] = useState<Set<string>>(
 		() => new Set(),
@@ -621,6 +1100,9 @@ export function Playground() {
 	const [editorPercent, setEditorPercent] = useState(62);
 	const [diagnosticsTab, setDiagnosticsTab] =
 		useState<DiagnosticsTab>("diagnostics");
+	const compactLayout = useCompactPlaygroundLayout();
+	const [compactTab, setCompactTab] = useState<PlaygroundCompactTab>("code");
+	resultRef.current = result;
 
 	const extensions = useMemo(() => {
 		const isJsx = activePath.endsWith(".tsx") || activePath.endsWith(".jsx");
@@ -630,6 +1112,13 @@ export function Playground() {
 				jsx: isJsx,
 				typescript: true,
 			}),
+			linter((view) =>
+				toCmDiagnostics(
+					resultRef.current?.diagnostics ?? [],
+					activePath,
+					view.state.doc.length,
+				),
+			),
 			lintGutter(),
 		];
 	}, [activePath]);
@@ -817,13 +1306,7 @@ export function Playground() {
 			return;
 		}
 
-		const cmDiagnostics = toCmDiagnostics(
-			diagnostics,
-			activePath,
-			view.state.doc.length,
-		);
-
-		view.dispatch(setDiagnostics(view.state, cmDiagnostics));
+		forceLinting(view);
 	}, [activePath, diagnostics]);
 
 	const goToDiagnostic = useCallback(
@@ -1058,253 +1541,225 @@ export function Playground() {
 
 	const activeSource = files[activePath] ?? "";
 
+	const workspaceIsDefault = useMemo(
+		() => isDefaultWorkspace(paths, files, activePath),
+		[activePath, files, paths],
+	);
+
+	const workspaceIsCleared = useMemo(
+		() => isClearedWorkspace(paths, files),
+		[files, paths],
+	);
+
+	const playgroundSettingsProps: PlaygroundSettingsContentProps = {
+		activePath,
+		addFile,
+		clearWorkspace,
+		clearWorkspaceDisabled: workspaceIsCleared,
+		commitRename,
+		completeRemoveFile,
+		copyShareUrl,
+		copyState,
+		paths,
+		removeFile,
+		renameInputRef,
+		removingPaths,
+		renamingPath,
+		resetWorkspace,
+		resetWorkspaceDisabled: workspaceIsDefault,
+		setActivePath,
+		setRenamingPath,
+		skipRenameCommit,
+	};
+
 	return (
 		<section className={styles.playground} aria-label="Flint playground">
-			<div
-				className={styles.workspace}
-				ref={workspaceRef}
-				style={{
-					gridTemplateColumns: `${sidebarWidth}px 0.5rem ${mainWidth}px 0.5rem minmax(${MIN_OUTPUT_WIDTH}px, 1fr)`,
-				}}
-			>
-				<aside className={styles.sidebar} aria-label="Playground settings">
-					<div className={styles.settingsPanel}>
+			{compactLayout ? (
+				<div className={styles.workspaceCompact}>
+					<div
+						className={styles.compactMainTabBar}
+						role="tablist"
+						aria-label="Playground"
+					>
 						<button
-							className={styles.sidebarButton}
-							onClick={clearWorkspace}
+							aria-controls="pg-compact-pane-settings"
+							aria-selected={compactTab === "settings"}
+							className={styles.compactTab}
+							id="pg-compact-tab-settings"
+							onClick={() => {
+								setCompactTab("settings");
+							}}
+							role="tab"
 							type="button"
 						>
-							Clear
+							Settings
 						</button>
 						<button
-							className={styles.sidebarButton}
-							onClick={resetWorkspace}
+							aria-controls="pg-compact-pane-code"
+							aria-selected={compactTab === "code"}
+							className={styles.compactTab}
+							id="pg-compact-tab-code"
+							onClick={() => {
+								setCompactTab("code");
+							}}
+							role="tab"
 							type="button"
 						>
-							Reset
+							Code
 						</button>
 						<button
-							className={styles.sidebarButton}
-							onClick={copyShareUrl}
+							aria-controls="pg-compact-pane-diagnostics"
+							aria-selected={compactTab === "diagnostics"}
+							className={styles.compactTab}
+							id="pg-compact-tab-diagnostics"
+							onClick={() => {
+								setCompactTab("diagnostics");
+							}}
+							role="tab"
 							type="button"
 						>
-							{copyState === "copied" ? "Copied" : "Copy URL"}
+							Diagnostics
+						</button>
+						<button
+							aria-controls="pg-compact-pane-console"
+							aria-selected={compactTab === "console"}
+							className={styles.compactTab}
+							id="pg-compact-tab-console"
+							onClick={() => {
+								setCompactTab("console");
+							}}
+							role="tab"
+							type="button"
+						>
+							Console
+						</button>
+						<button
+							aria-controls="pg-compact-pane-ast"
+							aria-selected={compactTab === "ast"}
+							className={styles.compactTab}
+							id="pg-compact-tab-ast"
+							onClick={() => {
+								setCompactTab("ast");
+							}}
+							role="tab"
+							type="button"
+						>
+							AST
 						</button>
 					</div>
-
-					<div
-						aria-label="Virtual project files"
-						className={styles.fileExplorer}
-					>
-						<div className={styles.fileExplorerHeader}>
-							<span className={styles.fileExplorerTitle}>Files</span>
-							<button
-								aria-label="New file"
-								className={styles.fileExplorerAdd}
-								onClick={addFile}
-								type="button"
+					<div className={styles.compactPrimaryBody}>
+						<div
+							aria-labelledby="pg-compact-tab-settings"
+							className={styles.compactPanel}
+							hidden={compactTab !== "settings"}
+							id="pg-compact-pane-settings"
+							role="tabpanel"
+						>
+							<div
+								className={clsx(
+									styles.compactPanelScroll,
+									styles.compactScrollPad,
+								)}
 							>
-								+
-							</button>
+								<div className={styles.sidebarCompactWrap}>
+									<PlaygroundSettingsContent {...playgroundSettingsProps} />
+								</div>
+							</div>
 						</div>
-						<ul className={styles.fileList}>
-							{paths.map((path) => {
-								const label = path.replace(/^\//u, "");
-								const isActive = path === activePath;
-								const isRenaming = renamingPath === path;
-								const isRemoving = removingPaths.has(path);
-								const canRemove =
-									paths.filter((p) => !removingPaths.has(p)).length > 1;
-
-								return (
-									<li
-										className={clsx(
-											styles.fileListItem,
-											isRemoving && styles.fileListItemRemoving,
-										)}
-										key={path}
-										onAnimationEnd={() => {
-											if (isRemoving) {
-												completeRemoveFile(path);
-											}
-										}}
+						<div
+							aria-labelledby="pg-compact-tab-code"
+							className={styles.compactPanel}
+							hidden={compactTab !== "code"}
+							id="pg-compact-pane-code"
+							role="tabpanel"
+						>
+							<div className={styles.compactCodeColumn}>
+								<div className={styles.compactFileTabRow}>
+									<div
+										className={styles.compactFileTabBar}
+										role="tablist"
+										aria-label="Project files"
 									>
-										<div
-											className={clsx(
-												styles.fileRow,
-												isActive && styles.fileRowActive,
-												isRenaming && styles.fileRowRenaming,
-												isRemoving && styles.fileRowRemoving,
-											)}
-										>
-											{isRenaming ? (
-												<input
-													aria-label={`Rename ${path}`}
-													className={styles.fileRowRenameInput}
-													defaultValue={label}
-													key={path}
-													title={label}
-													onBlur={(event) => {
-														if (skipRenameCommit.current) {
-															skipRenameCommit.current = false;
-															setRenamingPath(null);
+										{paths.map((path) => {
+											const label = path.replace(/^\//u, "");
+											const suffix = filePathTabIdSuffix(path);
 
-															return;
-														}
-
-														commitRename(path, event.target.value);
-														setRenamingPath(null);
-													}}
-													onKeyDown={(event) => {
-														if (event.key === "Enter") {
-															event.currentTarget.blur();
-														} else if (event.key === "Escape") {
-															event.preventDefault();
-															skipRenameCommit.current = true;
-															setRenamingPath(null);
-														}
-													}}
-													ref={renameInputRef}
-												/>
-											) : (
+											return (
 												<button
-													className={styles.fileRowMain}
+													aria-controls="pg-compact-code-editor-panel"
+													aria-selected={path === activePath}
+													className={styles.compactFileTab}
+													id={`pg-file-tab-${suffix}`}
+													key={path}
 													onClick={() => {
 														setActivePath(path);
 													}}
+													role="tab"
 													title={label}
 													type="button"
 												>
-													<span className={styles.fileRowMainLabel}>
-														{label}
-													</span>
+													{label}
 												</button>
-											)}
-											{!isRenaming ? (
-												<div className={styles.fileRowActions}>
-													<button
-														className={clsx(
-															styles.fileRowBtn,
-															styles.fileRowBtnRename,
-														)}
-														onClick={() => {
-															setRenamingPath(path);
-														}}
-														type="button"
-													>
-														rename
-													</button>
-													{canRemove ? (
-														<button
-															aria-label={`Remove ${path}`}
-															className={clsx(
-																styles.fileRowBtn,
-																styles.fileRowBtnDanger,
-															)}
-															onClick={(event) => {
-																event.stopPropagation();
-																removeFile(path);
-															}}
-															type="button"
-														>
-															×
-														</button>
-													) : null}
-												</div>
-											) : null}
-										</div>
-									</li>
-								);
-							})}
-						</ul>
-					</div>
-				</aside>
-
-				<button
-					aria-label="Resize settings pane"
-					className={styles.columnResizeHandle}
-					onPointerDown={(event) => {
-						startColumnResize("left", event);
-					}}
-					type="button"
-				/>
-
-				<div
-					className={styles.mainColumn}
-					ref={mainColumnRef}
-					style={{
-						gridTemplateRows: `minmax(8rem, ${editorPercent}%) 0.5rem minmax(6rem, 1fr)`,
-					}}
-				>
-					<div className={styles.editor}>
-						<div className={styles.editorBody}>
-							<CodeMirror
-								basicSetup={{
-									foldGutter: false,
-									highlightActiveLineGutter: true,
-									highlightActiveLine: true,
-								}}
-								className={styles.codeMirror}
-								extensions={extensions}
-								height="100%"
-								key={activePath}
-								onChange={(value) => {
-									setFiles((prev) => ({ ...prev, [activePath]: value }));
-								}}
-								onCreateEditor={(view) => {
-									editorViewRef.current = view;
-								}}
-								theme={starlightTheme}
-								value={activeSource}
-							/>
+											);
+										})}
+									</div>
+									<button
+										aria-label="Manage files in Settings"
+										className={styles.compactFileTabAdd}
+										onClick={() => {
+											setCompactTab("settings");
+										}}
+										type="button"
+									>
+										+
+									</button>
+								</div>
+								<div
+									className={styles.editor}
+									aria-labelledby={`pg-file-tab-${filePathTabIdSuffix(activePath)}`}
+									id="pg-compact-code-editor-panel"
+									role="tabpanel"
+								>
+									<div className={styles.editorBody}>
+										<CodeMirror
+											basicSetup={{
+												foldGutter: false,
+												highlightActiveLineGutter: true,
+												highlightActiveLine: true,
+											}}
+											className={styles.codeMirror}
+											extensions={extensions}
+											height="100%"
+											key={activePath}
+											onChange={(value) => {
+												setFiles((prev) => ({
+													...prev,
+													[activePath]: value,
+												}));
+											}}
+											onCreateEditor={(view) => {
+												editorViewRef.current = view;
+											}}
+											theme={starlightTheme}
+											value={activeSource}
+										/>
+									</div>
+								</div>
+							</div>
 						</div>
-					</div>
-
-					<button
-						aria-label="Resize code and diagnostics panes"
-						className={styles.rowResizeHandle}
-						onPointerDown={startRowResize}
-						type="button"
-					/>
-
-					<div className={styles.diagnosticsPanel}>
 						<div
-							className={styles.diagnosticsTabs}
-							role="tablist"
-							aria-label="Code output"
+							aria-labelledby="pg-compact-tab-diagnostics"
+							className={clsx(
+								styles.compactPanel,
+								styles.compactPanelScroll,
+								styles.compactScrollPad,
+							)}
+							hidden={compactTab !== "diagnostics"}
+							id="pg-compact-pane-diagnostics"
+							role="tabpanel"
 						>
-							<button
-								aria-selected={diagnosticsTab === "diagnostics"}
-								className={styles.diagnosticsTab}
-								onClick={() => {
-									setDiagnosticsTab("diagnostics");
-								}}
-								role="tab"
-								type="button"
-							>
-								Diagnostics
-							</button>
-							<button
-								aria-selected={diagnosticsTab === "console"}
-								className={styles.diagnosticsTab}
-								onClick={() => {
-									setDiagnosticsTab("console");
-								}}
-								role="tab"
-								type="button"
-							>
-								Console
-							</button>
-						</div>
-						<div className={styles.diagnosticsBody}>
 							{error ? (
 								<p className={styles.empty}>{error}</p>
-							) : diagnosticsTab === "console" ? (
-								<ConsoleDiagnostics
-									diagnostics={sortedDiagnostics}
-									files={files}
-									onGoTo={goToDiagnostic}
-								/>
 							) : (
 								<Diagnostics
 									diagnostics={sortedDiagnostics}
@@ -1313,42 +1768,196 @@ export function Playground() {
 								/>
 							)}
 						</div>
-					</div>
-				</div>
-
-				<button
-					aria-label="Resize output pane"
-					className={styles.columnResizeHandle}
-					onPointerDown={(event) => {
-						startColumnResize("right", event);
-					}}
-					type="button"
-				/>
-
-				<div className={styles.panel}>
-					<div className={styles.outputTabs} role="tablist" aria-label="Output">
-						<button
-							aria-selected="true"
-							className={styles.outputTab}
-							role="tab"
-							type="button"
+						<div
+							aria-labelledby="pg-compact-tab-console"
+							className={clsx(
+								styles.compactPanel,
+								styles.compactPanelScroll,
+								styles.compactScrollPad,
+							)}
+							hidden={compactTab !== "console"}
+							id="pg-compact-pane-console"
+							role="tabpanel"
 						>
-							AST
-						</button>
-					</div>
-					<div aria-label="AST" className={styles.panelBody} role="tabpanel">
-						{error ? (
-							<p className={styles.empty}>{error}</p>
-						) : (
-							<Ast
-								activePath={result?.activePath ?? activePath}
-								ast={result?.ast}
-								theme={starlightTheme}
-							/>
-						)}
+							{error ? (
+								<p className={styles.empty}>{error}</p>
+							) : (
+								<ConsoleDiagnostics
+									diagnostics={sortedDiagnostics}
+									files={files}
+									onGoTo={goToDiagnostic}
+								/>
+							)}
+						</div>
+						<div
+							aria-labelledby="pg-compact-tab-ast"
+							className={clsx(
+								styles.compactPanel,
+								styles.compactPanelScroll,
+								styles.compactAstPanel,
+							)}
+							hidden={compactTab !== "ast"}
+							id="pg-compact-pane-ast"
+							role="tabpanel"
+						>
+							{error ? (
+								<p className={styles.empty}>{error}</p>
+							) : (
+								<Ast
+									activePath={result?.activePath ?? activePath}
+									ast={result?.ast}
+									theme={starlightTheme}
+								/>
+							)}
+						</div>
 					</div>
 				</div>
-			</div>
+			) : (
+				<div
+					className={styles.workspace}
+					ref={workspaceRef}
+					style={{
+						gridTemplateColumns: `${sidebarWidth}px 0.5rem ${mainWidth}px 0.5rem minmax(${MIN_OUTPUT_WIDTH}px, 1fr)`,
+					}}
+				>
+					<aside className={styles.sidebar} aria-label="Playground settings">
+						<PlaygroundSettingsContent {...playgroundSettingsProps} />
+					</aside>
+
+					<button
+						aria-label="Resize settings pane"
+						className={styles.columnResizeHandle}
+						onPointerDown={(event) => {
+							startColumnResize("left", event);
+						}}
+						type="button"
+					/>
+
+					<div
+						className={styles.mainColumn}
+						ref={mainColumnRef}
+						style={{
+							gridTemplateRows: `minmax(8rem, ${editorPercent}%) 0.5rem minmax(6rem, 1fr)`,
+						}}
+					>
+						<div className={styles.editor}>
+							<div className={styles.editorBody}>
+								<CodeMirror
+									basicSetup={{
+										foldGutter: false,
+										highlightActiveLineGutter: true,
+										highlightActiveLine: true,
+									}}
+									className={styles.codeMirror}
+									extensions={extensions}
+									height="100%"
+									key={activePath}
+									onChange={(value) => {
+										setFiles((prev) => ({ ...prev, [activePath]: value }));
+									}}
+									onCreateEditor={(view) => {
+										editorViewRef.current = view;
+									}}
+									theme={starlightTheme}
+									value={activeSource}
+								/>
+							</div>
+						</div>
+
+						<button
+							aria-label="Resize code and diagnostics panes"
+							className={styles.rowResizeHandle}
+							onPointerDown={startRowResize}
+							type="button"
+						/>
+
+						<div className={styles.diagnosticsPanel} ref={diagnosticsPanelRef}>
+							<div
+								className={styles.diagnosticsTabs}
+								role="tablist"
+								aria-label="Code output"
+							>
+								<button
+									aria-selected={diagnosticsTab === "diagnostics"}
+									className={styles.diagnosticsTab}
+									onClick={() => {
+										setDiagnosticsTab("diagnostics");
+									}}
+									role="tab"
+									type="button"
+								>
+									Diagnostics
+								</button>
+								<button
+									aria-selected={diagnosticsTab === "console"}
+									className={styles.diagnosticsTab}
+									onClick={() => {
+										setDiagnosticsTab("console");
+									}}
+									role="tab"
+									type="button"
+								>
+									Console
+								</button>
+							</div>
+							<div className={styles.diagnosticsBody} ref={diagnosticsBodyRef}>
+								{error ? (
+									<p className={styles.empty}>{error}</p>
+								) : diagnosticsTab === "console" ? (
+									<ConsoleDiagnostics
+										diagnostics={sortedDiagnostics}
+										files={files}
+										onGoTo={goToDiagnostic}
+									/>
+								) : (
+									<Diagnostics
+										diagnostics={sortedDiagnostics}
+										files={files}
+										onGoTo={goToDiagnostic}
+									/>
+								)}
+							</div>
+						</div>
+					</div>
+
+					<button
+						aria-label="Resize output pane"
+						className={styles.columnResizeHandle}
+						onPointerDown={(event) => {
+							startColumnResize("right", event);
+						}}
+						type="button"
+					/>
+
+					<div className={styles.panel}>
+						<div
+							className={styles.outputTabs}
+							role="tablist"
+							aria-label="Output"
+						>
+							<button
+								aria-selected="true"
+								className={styles.outputTab}
+								role="tab"
+								type="button"
+							>
+								AST
+							</button>
+						</div>
+						<div aria-label="AST" className={styles.panelBody} role="tabpanel">
+							{error ? (
+								<p className={styles.empty}>{error}</p>
+							) : (
+								<Ast
+									activePath={result?.activePath ?? activePath}
+									ast={result?.ast}
+									theme={starlightTheme}
+								/>
+							)}
+						</div>
+					</div>
+				</div>
+			)}
 		</section>
 	);
 }

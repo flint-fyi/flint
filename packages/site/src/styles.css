@@ -77,45 +77,62 @@ table code {
  * Playground route: fill the viewport under the nav (compact, app-like shell).
  * Mirrors Biome-style playground pages: no doc title band, no footer, flush content.
  */
+html:has(.playground-frame.page),
+body:has(.playground-frame.page) {
+	height: 100%;
+	overflow: hidden;
+	overscroll-behavior: none;
+}
+
 .playground-frame.page {
 	height: 100dvh;
+	max-height: 100%;
 	display: flex;
 	flex-direction: column;
+	flex-shrink: 0;
 	overflow: hidden;
+	overscroll-behavior: none;
 }
 
 .playground-frame .main-frame {
-	flex: 1;
-	height: 100dvh;
+	flex: 1 1 0;
 	min-height: 0;
+	min-width: 0;
 	display: flex;
 	flex-direction: column;
 	box-sizing: border-box;
 	overflow: hidden;
+	overscroll-behavior: none;
 }
 
 .playground-frame .lg\:sl-flex {
 	flex: 1;
 	min-height: 0;
+	min-width: 0;
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	overscroll-behavior: none;
 }
 
 .playground-frame .main-pane {
 	flex: 1;
 	min-height: 0;
+	min-width: 0;
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	overscroll-behavior: none;
 }
 
 .playground-frame main {
 	flex: 1;
 	min-height: 0;
+	min-width: 0;
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	overscroll-behavior: none;
 	padding: 0;
 }
 
@@ -126,9 +143,11 @@ table code {
 .playground-frame main > .content-panel:last-of-type {
 	flex: 1;
 	min-height: 0;
+	min-width: 0;
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	overscroll-behavior: none;
 	padding: 0;
 	border: none;
 }
@@ -139,18 +158,22 @@ table code {
 	width: 100%;
 	flex: 1;
 	min-height: 0;
+	min-width: 0;
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	overscroll-behavior: none;
 }
 
 .playground-frame .sl-container > .sl-markdown-content {
 	flex: 1;
 	min-height: 0;
+	min-width: 0;
 	display: flex;
 	flex-direction: column;
 	margin: 0;
 	overflow: hidden;
+	overscroll-behavior: contain;
 }
 
 .playground-frame .sl-container > * + * {
