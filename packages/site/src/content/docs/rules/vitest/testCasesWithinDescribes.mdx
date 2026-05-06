@@ -1,0 +1,68 @@
+---
+description: "Reports importing from `node:test`."
+title: "testCasesWithinDescribes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vitest" rule="testCasesWithinDescribes" />
+
+Vitest allows declaring standalone hooks and tests: those not in a parent `describe()` block.
+Some repositories prefer to always include those in a `describe()` for consistent test case grouping.
+
+This rule reports on any hook or test declaration not in a parent `describe()` block.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+beforeEach(() => {
+	// ...
+});
+
+test("...", () => {
+	// ...
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+describe("...", () => {
+	beforeEach(() => {
+		// ...
+	});
+
+	test("...", () => {
+		// ...
+	});
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you don't want to have all hooks and tests declared in `describe()` blocks, this rule might not be for you.
+For example, smaller and/or tightly-organized repositories often have one test file per component or function under test, and so are organized into groups that way already.
+
+## Further Reading
+
+- [Vitest API: Describe](https://vitest.dev/api/describe)
+- [Vitest API: Test](https://vitest.dev/api/test)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vitest" ruleId="testCasesWithinDescribes" />

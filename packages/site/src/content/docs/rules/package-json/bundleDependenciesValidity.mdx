@@ -48,6 +48,14 @@ If the value is an array, it should only consist of non-empty strings.
 If you don't need compliance with npm's `bundleDependencies` field specification, you can disable this rule.
 For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
 
+## Related Rules
+
+- [bundleDependenciesPresence](/rules/package-json/bundledependenciespresence) - Enforces that the `bundleDependencies` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `bundleDependencies`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bundledependencies)
+
 ## Equivalents in Other Linters
 
 <RuleEquivalents pluginId="package-json" ruleId="bundleDependenciesValidity" />

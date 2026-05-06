@@ -23,7 +23,6 @@ jobs:
       - run: pnpm build
       - env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          NPM_TOKEN: ""
         name: Create Release Pull Request
         uses: changesets/action@v1
         with:

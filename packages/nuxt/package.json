@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/nuxt",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"description": "[Experimental] A Flint plugin for Nuxt code.",
 	"homepage": "https://www.flint.fyi/rules/nuxt",
 	"repository": {

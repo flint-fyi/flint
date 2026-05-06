@@ -1,0 +1,102 @@
+---
+description: "Enforces padding around `expect` groups."
+title: "expectGroupPaddingLines"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vitest" rule="expectGroupPaddingLines" />
+
+Keeping related `expect()` calls together and separating them from setup or other statements makes assertions easier to scan.
+This rule enforces blank lines around assertion groups while still allowing consecutive `expect()` or `expectTypeOf()` calls to stay grouped.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { expect, test } from "vitest";
+
+test("value", () => {
+	let count = 123;
+	expect(count).toEqual(123);
+	expect(123).toEqual(count);
+	count = 456;
+	expect(count).toEqual(456);
+});
+```
+
+```ts
+import { expectTypeOf, test } from "vitest";
+
+test("types", () => {
+	const value = 123;
+	expectTypeOf(value).toBeNumber();
+	expectTypeOf(value).toBeNumber();
+	const text = "abc";
+	// Comment
+	expectTypeOf(text).toBeString();
+	expectTypeOf(text).toBeString();
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { expect, test } from "vitest";
+
+test("value", () => {
+	let count = 123;
+
+	expect(count).toEqual(123);
+	expect(123).toEqual(count);
+
+	count = 456;
+
+	expect(count).toEqual(456);
+});
+```
+
+```ts
+import { expectTypeOf, test } from "vitest";
+
+test("types", () => {
+	const value = 123;
+
+	expectTypeOf(value).toBeNumber();
+	expectTypeOf(value).toBeNumber();
+
+	const text = "abc";
+
+	// Comment
+	expectTypeOf(text).toBeString();
+	expectTypeOf(text).toBeString();
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your team prefers mixing setup, logging, and assertions without extra whitespace, this rule may feel too rigid.
+That can be reasonable in very short tests where assertion boundaries are already obvious.
+
+## Further Reading
+
+- [Vitest API: expect](https://vitest.dev/api/expect)
+- [Vitest API: expectTypeOf](https://vitest.dev/api/expect-typeof)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vitest" ruleId="expectGroupPaddingLines" />

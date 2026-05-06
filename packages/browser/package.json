@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/browser",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"description": "[Experimental] A Flint plugin for browser code.",
 	"homepage": "https://www.flint.fyi/rules/browser",
 	"repository": {

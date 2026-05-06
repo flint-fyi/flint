@@ -1,0 +1,74 @@
+---
+name: "Enforce that the `name` property is valid."
+title: "nameValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="nameValidity" />
+
+This rule ensures that the `name` field is a string matching the npm specification:
+
+- It must be a string rather than any other data type
+- It should pass [`validate-npm-package-name`](https://www.npmjs.com/package/validate-npm-package-name) validation
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"name": ""
+}
+```
+
+```json
+{
+	"name": null
+}
+```
+
+```json
+{
+	"name": "Invalid Name"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+```json
+{
+	"name": "@scoped/my-repository"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `name` field specification, you can disable this rule.
+For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Related Rules
+
+- [namePresence](/rules/package-json/namepresence) - Enforces that the `name` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `name`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#name)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="nameValidity" />
