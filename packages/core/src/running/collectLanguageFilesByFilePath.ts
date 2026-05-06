@@ -16,7 +16,7 @@ export function collectLanguageFilesByFilePath(
 	);
 	const languageFilesByFilePath = new CachedFactory<
 		string,
-		Map<AnyLanguage, AnyLanguageFile>
+		Map<AnyLanguage, AnyLanguageFile | undefined>
 	>(() => new Map());
 
 	const languageFilesByLanguage = new CachedFactory((language: AnyLanguage) => {
@@ -43,29 +43,20 @@ export function collectLanguageFilesByFilePath(
 			}
 
 			filePathsByLanguage.get(rule.language).add(filePath);
+			languageFilesByFilePath.get(filePath).set(rule.language, undefined);
 		}
 	}
 
 	for (const [language, filePaths] of filePathsByLanguage.entries()) {
+		const languageFiles = languageFilesByLanguage.get(language);
 		const orderedFilePaths = language.orderFilePaths
 			? language.orderFilePaths([...filePaths], host)
 			: filePaths;
 
 		for (const filePath of orderedFilePaths) {
-			languageFilesByLanguage.get(language).get(filePath);
-		}
-	}
-
-	for (const [rule, optionsByFile] of rulesOptionsByFile) {
-		for (const [filePath] of optionsByFile) {
-			// If the file has cached results, don't bother making files for it
-			if (cached?.has(filePath)) {
-				continue;
-			}
-
-			const file = languageFilesByLanguage.get(rule.language).get(filePath);
-
-			languageFilesByFilePath.get(filePath).set(rule.language, file);
+			languageFilesByFilePath
+				.get(filePath)
+				.set(language, languageFiles.get(filePath));
 		}
 	}
 
@@ -74,7 +65,10 @@ export function collectLanguageFilesByFilePath(
 			([filePath, filesByLanguage]) => [
 				filePath,
 				Array.from(filesByLanguage.entries()).map(([language, file]) => ({
-					file,
+					file: nullThrows(
+						file,
+						"Language file is expected to be present by the map",
+					),
 					language,
 				})),
 			],
