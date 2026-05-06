@@ -14,7 +14,8 @@
         "projectManagement",
         "tool",
         "bug",
-        "test"
+        "test",
+        "blog"
       ],
       "login": "JoshuaKGoldberg",
       "name": "Josh Goldberg ✨",
@@ -89,7 +90,8 @@
         "ideas",
         "test",
         "doc",
-        "code"
+        "code",
+        "blog"
       ]
     },
     {
@@ -163,7 +165,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/6604943?v=4",
       "profile": "https://www.kolharsam.net",
       "contributions": [
-        "code"
+        "code",
+        "maintenance"
       ]
     },
     {

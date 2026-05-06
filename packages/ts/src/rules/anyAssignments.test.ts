@@ -321,5 +321,15 @@ const bar: any = 1;
 const foo: Foo = { bar };
 `,
 		`const [{ [\`x\${1}\`]: x }] = [{ [\`x\`]: 1 }] as [{ [\`x\`]: any }];`,
+		`
+declare const intrinsicError: NotKnown;
+
+const log = intrinsicError;
+`,
+		`
+declare const intrinsicError: NotKnown;
+
+const log: string = intrinsicError;
+`,
 	],
 });
