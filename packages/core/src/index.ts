@@ -45,7 +45,6 @@ export type {
 	ConfigRuleDefinition,
 	ConfigRuleDefinitionObject,
 	ConfigUseDefinition,
-	ProcessedConfigDefinition,
 } from "./types/configs.ts";
 export type {
 	MessageForContext,
