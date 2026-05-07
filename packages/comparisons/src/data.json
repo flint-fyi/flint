@@ -4809,7 +4809,8 @@
 		"flint": {
 			"name": "attribution",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{

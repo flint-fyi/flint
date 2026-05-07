@@ -2,6 +2,7 @@ import { createPlugin } from "@flint.fyi/core";
 
 import { directPropertyPresenceRules } from "./directPropertyPresenceRules.ts";
 import { directPropertyValidityRules } from "./directPropertyValidityRules.ts";
+import attribution from "./rules/attribution.ts";
 import binNameCasing from "./rules/binNameCasing.ts";
 import dependencyUniqueness from "./rules/dependencyUniqueness.ts";
 import privatePresence from "./rules/privatePresence.ts";
@@ -14,6 +15,7 @@ export const packageJson = createPlugin({
 	},
 	name: "PackageJSON",
 	rules: [
+		attribution,
 		binNameCasing,
 		dependencyUniqueness,
 		privatePresence,
