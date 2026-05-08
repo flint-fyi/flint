@@ -1,5 +1,6 @@
 import { normalizePath } from "@flint.fyi/utils";
 import { execa } from "execa";
+import path from "node:path";
 
 declare global {
 	// TODO[typescript>=6.0]: Remove this declaration.
@@ -33,6 +34,11 @@ export function normalizeOutput(stdout: string, cwd: string): string {
 		.replace(/Finished in \S+/g, "Finished in <time>");
 }
 
+const flintBinPath = path.resolve(
+	import.meta.dirname,
+	"../../flint/bin/index.js",
+);
+
 /**
  * Runs the flint CLI with color output enabled.
  */
@@ -41,5 +47,5 @@ export function runFlint(cwd: string, args: string[] = []) {
 		cwd,
 		env: { FORCE_COLOR: "1" },
 		reject: false,
-	})`npx flint ${args}`;
+	})`node ${flintBinPath} ${args}`;
 }
