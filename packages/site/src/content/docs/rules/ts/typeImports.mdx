@@ -10,19 +10,22 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="ts" rule="typeImports" />
 
-Using `import type` for type-only imports improves tree-shaking and makes the intent explicit.
-When an import is only used in type positions (type annotations, interfaces, type aliases),
-it should use `import type` syntax.
+TypeScript's `import type` syntax marks imports that exist only for type checking.
+Those imports are removed from emitted JavaScript without requiring the transpiler to understand the imported module's types.
+
+This rule reports regular imports when every used imported binding from that declaration is referenced only in type positions.
+It also reports `import()` type annotations, because top-level imports keep type dependencies visible with the rest of the module's dependencies.
 
 ## Examples
 
-### Type-Only Named Import
+### Type-only named imports
 
 <Tabs>
 <TabItem label="❌ Incorrect">
 
 ```ts
 import { User } from "./types";
+
 type Admin = User & { isAdmin: boolean };
 ```
 
@@ -31,28 +34,90 @@ type Admin = User & { isAdmin: boolean };
 
 ```ts
 import type { User } from "./types";
+
 type Admin = User & { isAdmin: boolean };
 ```
 
 </TabItem>
 </Tabs>
 
-### Type Annotations
+### Mixed type and value imports
 
 <Tabs>
 <TabItem label="❌ Incorrect">
 
 ```ts
-import { Config } from "./config";
-function setup(config: Config): void {}
+import { User, createUser } from "./users";
+
+type Admin = User & { isAdmin: boolean };
+const user = createUser();
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
 
 ```ts
-import type { Config } from "./config";
-function setup(config: Config): void {}
+import type { User } from "./users";
+import { createUser } from "./users";
+
+type Admin = User & { isAdmin: boolean };
+const user = createUser();
+```
+
+</TabItem>
+</Tabs>
+
+### Default and namespace imports
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import User from "./types";
+
+type Admin = User & { isAdmin: boolean };
+```
+
+```ts
+import * as Types from "./types";
+
+type Admin = Types.User & { isAdmin: boolean };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import type User from "./types";
+
+type Admin = User & { isAdmin: boolean };
+```
+
+```ts
+import type * as Types from "./types";
+
+type Admin = Types.User & { isAdmin: boolean };
+```
+
+</TabItem>
+</Tabs>
+
+### `import()` type annotations
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+type User = import("./types").User;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import type { User } from "./types";
+
+type Admin = User & { isAdmin: boolean };
 ```
 
 </TabItem>
@@ -60,15 +125,64 @@ function setup(config: Config): void {}
 
 ## Options
 
-This rule is not configurable.
+### `prefer`
+
+`prefer` controls whether the rule expects type-only imports or regular imports for bindings used only as types.
+It defaults to `"type-imports"`.
+
+- `"type-imports"` reports regular imports that are used only as types.
+- `"no-type-imports"` reports `import type` declarations and inline `type` import specifiers.
+
+Examples of incorrect code with `{ prefer: "no-type-imports" }`:
+
+```ts
+import type { User } from "./types";
+
+type Admin = User & { isAdmin: boolean };
+```
+
+```ts
+import { type User, createUser } from "./users";
+
+type Admin = User & { isAdmin: boolean };
+const user = createUser();
+```
+
+### `import()` type annotations
+
+`import()` type annotations are always reported.
+Use top-level `import type` declarations instead.
+
+Examples of incorrect code:
+
+```ts
+type User = import("./types").User;
+```
+
+```ts
+let value: import("./types").User;
+```
+
+### `fixStyle`
+
+`fixStyle` is accepted for compatibility with equivalent rule configurations.
+Flint does not currently provide a fixer for this rule, so both `"separate-type-imports"` and `"inline-type-imports"` report the same imports.
+
+## Decorator Metadata Caveat
+
+When a file contains decorators and the TypeScript compiler options enable both `experimentalDecorators` and `emitDecoratorMetadata`, TypeScript can emit runtime metadata for types that appear only in type annotations.
+In that configuration, this rule does not report import declarations from decorated files because changing those imports to `import type` can change emitted decorator metadata.
 
 ## When Not To Use It
 
-If you prefer not to distinguish between type and value imports, you can disable this rule.
+If your project intentionally keeps type-only dependencies in regular imports, configure `{ prefer: "no-type-imports" }` or disable this rule.
+If your project already relies on TypeScript's `verbatimModuleSyntax` errors for import consistency, you may not need this rule because the compiler will reject many of the same import forms.
 
 ## Further Reading
 
 - [TypeScript: Type-Only Imports and Exports](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export)
+- [TypeScript: `verbatimModuleSyntax`](https://www.typescriptlang.org/tsconfig/#verbatimModuleSyntax)
+- [TypeScript 4.5: Type Modifiers on Import Names](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html#type-modifiers-on-import-names)
 
 ## Equivalents in Other Linters
 
