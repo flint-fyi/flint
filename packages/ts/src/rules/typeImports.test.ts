@@ -8,6 +8,10 @@ ruleTester.describe(rule, {
 import { Type } from "./types";
 type Alias = Type & { extra: boolean };
 `,
+			output: `
+import type { Type } from "./types";
+type Alias = Type & { extra: boolean };
+`,
 			snapshot: `
 import { Type } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -22,6 +26,12 @@ interface Component {
     property: Type;
 }
 `,
+			output: `
+import type { Type } from "./types";
+interface Component {
+    property: Type;
+}
+`,
 			snapshot: `
 import { Type } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -36,6 +46,10 @@ interface Component {
 import { Type } from "./types";
 function setup(value: Type): void {}
 `,
+			output: `
+import type { Type } from "./types";
+function setup(value: Type): void {}
+`,
 			snapshot: `
 import { Type } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,6 +60,10 @@ function setup(value: Type): void {}
 		{
 			code: `
 import Type from "./types";
+type Alias = Type & { extra: boolean };
+`,
+			output: `
+import type Type from "./types";
 type Alias = Type & { extra: boolean };
 `,
 			snapshot: `
@@ -60,6 +78,10 @@ type Alias = Type & { extra: boolean };
 import * as Types from "./types";
 type Alias = Types.Type;
 `,
+			output: `
+import type * as Types from "./types";
+type Alias = Types.Type;
+`,
 			snapshot: `
 import * as Types from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -70,6 +92,12 @@ type Alias = Types.Type;
 		{
 			code: `
 import { Type, createValue } from "./values";
+type Alias = Type & { extra: boolean };
+const value = createValue();
+`,
+			output: `
+import type { Type} from "./values";
+import { createValue } from "./values";
 type Alias = Type & { extra: boolean };
 const value = createValue();
 `,
@@ -86,6 +114,10 @@ const value = createValue();
 import { Type as AliasType, Role as Access } from "./types";
 type Alias = AliasType & { access: Access };
 `,
+			output: `
+import type { Type as AliasType, Role as Access } from "./types";
+type Alias = AliasType & { access: Access };
+`,
 			snapshot: `
 import { Type as AliasType, Role as Access } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -98,6 +130,10 @@ type Alias = AliasType & { access: Access };
 import Type from "./types";
 type TypeConstructor = typeof Type;
 `,
+			output: `
+import type Type from "./types";
+type TypeConstructor = typeof Type;
+`,
 			snapshot: `
 import Type from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -108,6 +144,10 @@ type TypeConstructor = typeof Type;
 		{
 			code: `
 import types from "./types";
+type Alias = types.Type;
+`,
+			output: `
+import type types from "./types";
 type Alias = types.Type;
 `,
 			snapshot: `
@@ -122,6 +162,10 @@ type Alias = types.Type;
 import { Type } from "./types";
 export type { Type };
 `,
+			output: `
+import type { Type } from "./types";
+export type { Type };
+`,
 			snapshot: `
 import { Type } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -132,6 +176,10 @@ export type { Type };
 		{
 			code: `
 import Type from "./types";
+export = {} as Type;
+`,
+			output: `
+import type Type from "./types";
 export = {} as Type;
 `,
 			snapshot: `
@@ -146,6 +194,10 @@ export = {} as Type;
 import { Type } from "./types";
 class Value implements Type {}
 `,
+			output: `
+import type { Type } from "./types";
+class Value implements Type {}
+`,
 			snapshot: `
 import { Type } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -156,6 +208,12 @@ class Value implements Type {}
 		{
 			code: `
 import * as constants from "./constants";
+type Values = {
+    [constants.value]: readonly string[];
+};
+`,
+			output: `
+import type * as constants from "./constants";
 type Values = {
     [constants.value]: readonly string[];
 };
@@ -171,20 +229,14 @@ type Values = {
 		},
 		{
 			code: `
-type Type = import("./types").Type;
-`,
-			snapshot: `
-type Type = import("./types").Type;
-            ~~~~~~~~~~~~~~~~~~~~~~
-            Prefer top-level imports over \`import()\` type annotations.
-`,
-		},
-		{
-			code: `
 import type { Type } from "./types";
 type Alias = Type;
 `,
 			options: { prefer: "no-type-imports" },
+			output: `
+import { Type } from "./types";
+type Alias = Type;
+`,
 			snapshot: `
 import type { Type } from "./types";
        ~~~~
@@ -199,6 +251,11 @@ type Alias = Type;
 const value = createValue();
 `,
 			options: { prefer: "no-type-imports" },
+			output: `
+import { Type, createValue } from "./values";
+type Alias = Type;
+const value = createValue();
+`,
 			snapshot: `
 import { type Type, createValue } from "./values";
          ~~~~~
@@ -210,6 +267,12 @@ const value = createValue();
 		{
 			code: `
 import { Type, createValue, type Role } from "./values";
+type Alias = Type & { role: Role };
+const value = createValue();
+`,
+			output: `
+import type { Type} from "./values";
+import { createValue, type Role } from "./values";
 type Alias = Type & { role: Role };
 const value = createValue();
 `,
@@ -227,6 +290,10 @@ import { Type, Role } from "./types";
 type Alias = Type & { role: Role };
 `,
 			options: { fixStyle: "inline-type-imports" },
+			output: `
+import { type Type, type Role } from "./types";
+type Alias = Type & { role: Role };
+`,
 			snapshot: `
 import { Type, Role } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -320,6 +387,7 @@ import React from "react";
 
 export const Component: React.FC = () => <div />;
 `,
+			fileName: "file.tsx",
 		},
 		{
 			code: `
@@ -327,6 +395,7 @@ import { Fragment } from "react";
 
 export const Component: Fragment = () => <>content</>;
 `,
+			fileName: "file.tsx",
 		},
 		{
 			code: `

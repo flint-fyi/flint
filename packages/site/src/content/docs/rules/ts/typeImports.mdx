@@ -14,7 +14,6 @@ TypeScript's `import type` syntax marks imports that exist only for type checkin
 Those imports are removed from emitted JavaScript without requiring the transpiler to understand the imported module's types.
 
 This rule reports regular imports when every used imported binding from that declaration is referenced only in type positions.
-It also reports `import()` type annotations, because top-level imports keep type dependencies visible with the rest of the module's dependencies.
 
 ## Examples
 
@@ -97,27 +96,6 @@ type Admin = User & { isAdmin: boolean };
 import type * as Types from "./types";
 
 type Admin = Types.User & { isAdmin: boolean };
-```
-
-</TabItem>
-</Tabs>
-
-### `import()` type annotations
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
-```ts
-type User = import("./types").User;
-```
-
-</TabItem>
-<TabItem label="✅ Correct">
-
-```ts
-import type { User } from "./types";
-
-type Admin = User & { isAdmin: boolean };
 ```
 
 </TabItem>
