@@ -339,14 +339,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			],
 			suggestions: ["Change this declaration to use 'import type'."],
 		},
-		useImportType: {
-			primary: "Use 'import type' for type-only imports.",
-			secondary: [
-				"This import is only used in type positions.",
-				"Using 'import type' improves tree-shaking and makes intent clear.",
-			],
-			suggestions: ["Change to 'import type { ... }'."],
-		},
 	},
 	options: {
 		fixStyle: z
@@ -541,7 +533,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							) {
 								context.report({
 									fix,
-									message: "useImportType",
+									message: "typeOverValue",
 									range: getTSNodeRange(report.node, sourceFile),
 								});
 								continue;
@@ -556,7 +548,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									typeImports: formatWordList(importNames),
 								},
 								fix,
-								message: "useImportType",
+								message: "someImportsAreOnlyTypes",
 								range: getTSNodeRange(report.node, sourceFile),
 							});
 						}

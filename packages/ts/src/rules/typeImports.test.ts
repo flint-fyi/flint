@@ -15,7 +15,7 @@ type Alias = Type & { extra: boolean };
 			snapshot: `
 import { Type } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+All imports in this declaration are only used as types. Use 'import type'.
 type Alias = Type & { extra: boolean };
 `,
 		},
@@ -35,7 +35,7 @@ interface Component {
 			snapshot: `
 import { Type } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+All imports in this declaration are only used as types. Use 'import type'.
 interface Component {
     property: Type;
 }
@@ -53,7 +53,7 @@ function setup(value: Type): void {}
 			snapshot: `
 import { Type } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+All imports in this declaration are only used as types. Use 'import type'.
 function setup(value: Type): void {}
 `,
 		},
@@ -69,7 +69,7 @@ type Alias = Type & { extra: boolean };
 			snapshot: `
 import Type from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+All imports in this declaration are only used as types. Use 'import type'.
 type Alias = Type & { extra: boolean };
 `,
 		},
@@ -85,7 +85,7 @@ type Alias = Types.Type;
 			snapshot: `
 import * as Types from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+All imports in this declaration are only used as types. Use 'import type'.
 type Alias = Types.Type;
 `,
 		},
@@ -104,7 +104,7 @@ const value = createValue();
 			snapshot: `
 import { Type, createValue } from "./values";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+Imports "Type" are only used as types.
 type Alias = Type & { extra: boolean };
 const value = createValue();
 `,
@@ -121,7 +121,7 @@ type Alias = AliasType & { access: Access };
 			snapshot: `
 import { Type as AliasType, Role as Access } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+All imports in this declaration are only used as types. Use 'import type'.
 type Alias = AliasType & { access: Access };
 `,
 		},
@@ -137,7 +137,7 @@ type TypeConstructor = typeof Type;
 			snapshot: `
 import Type from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+All imports in this declaration are only used as types. Use 'import type'.
 type TypeConstructor = typeof Type;
 `,
 		},
@@ -153,7 +153,7 @@ type Alias = types.Type;
 			snapshot: `
 import types from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+All imports in this declaration are only used as types. Use 'import type'.
 type Alias = types.Type;
 `,
 		},
@@ -169,7 +169,7 @@ export type { Type };
 			snapshot: `
 import { Type } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+All imports in this declaration are only used as types. Use 'import type'.
 export type { Type };
 `,
 		},
@@ -185,7 +185,7 @@ export = {} as Type;
 			snapshot: `
 import Type from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+All imports in this declaration are only used as types. Use 'import type'.
 export = {} as Type;
 `,
 		},
@@ -201,7 +201,7 @@ class Value implements Type {}
 			snapshot: `
 import { Type } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+All imports in this declaration are only used as types. Use 'import type'.
 class Value implements Type {}
 `,
 		},
@@ -221,7 +221,7 @@ type Values = {
 			snapshot: `
 import * as constants from "./constants";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+All imports in this declaration are only used as types. Use 'import type'.
 type Values = {
     [constants.value]: readonly string[];
 };
@@ -279,7 +279,7 @@ const value = createValue();
 			snapshot: `
 import { Type, createValue, type Role } from "./values";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+Imports "Type" are only used as types.
 type Alias = Type & { role: Role };
 const value = createValue();
 `,
@@ -297,7 +297,7 @@ type Alias = Type & { role: Role };
 			snapshot: `
 import { Type, Role } from "./types";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Use 'import type' for type-only imports.
+All imports in this declaration are only used as types. Use 'import type'.
 type Alias = Type & { role: Role };
 `,
 		},
