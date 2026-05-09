@@ -309,7 +309,8 @@ function isTypeQueryReference(node: AST.Identifier) {
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
-		description: "Reports imports that should use 'import type' syntax.",
+		description:
+			"Reports imports that do not match the configured type import style.",
 		id: "typeImports",
 		presets: ["stylistic"],
 	},
