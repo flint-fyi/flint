@@ -729,18 +729,50 @@ function ConsoleDiagnostics({
 	);
 }
 
-function AstTree({ depth, node }: { depth: number; node: PlaygroundAstNode }) {
+function AstTree({
+	depth,
+	node,
+	onGoTo,
+	source,
+}: {
+	depth: number;
+	node: PlaygroundAstNode;
+	onGoTo: (pos: number, end: number) => void;
+	source: string;
+}) {
 	const [open, setOpen] = useState(depth < 1);
 	const hasChildren = !!node.children.length;
+	const startLoc = getLocation(source, node.pos);
+	const endLoc = getLocation(source, node.end);
+	const locationLabel =
+		startLoc.line === endLoc.line
+			? `Ln ${startLoc.line}, Col ${startLoc.column}–${endLoc.column}`
+			: `Ln ${startLoc.line}:${startLoc.column} → Ln ${endLoc.line}:${endLoc.column}`;
+	const goTo = () => {
+		onGoTo(node.pos, node.end);
+	};
 
 	return (
 		<div className={styles.astNode}>
-			<div className={styles.astRow}>
+			<div
+				className={styles.astRow}
+				onClick={goTo}
+				onKeyDown={(event) => {
+					if (event.key === "Enter" || event.key === " ") {
+						event.preventDefault();
+						goTo();
+					}
+				}}
+				role="button"
+				tabIndex={0}
+				title={`Go to source (${locationLabel})`}
+			>
 				{hasChildren ? (
 					<button
 						aria-expanded={open}
 						className={styles.astToggle}
-						onClick={() => {
+						onClick={(event) => {
+							event.stopPropagation();
 							setOpen(!open);
 						}}
 						type="button"
@@ -754,7 +786,7 @@ function AstTree({ depth, node }: { depth: number; node: PlaygroundAstNode }) {
 				{node.text != null ? (
 					<code className={styles.astText}>{node.text}</code>
 				) : null}
-				<span className={styles.astRange} title="Span in source">
+				<span className={styles.astRange} title={locationLabel}>
 					{node.pos}:{node.end}
 				</span>
 			</div>
@@ -765,6 +797,8 @@ function AstTree({ depth, node }: { depth: number; node: PlaygroundAstNode }) {
 							depth={depth + 1}
 							key={`${child.pos}-${child.kind}-${index}`}
 							node={child}
+							onGoTo={onGoTo}
+							source={source}
 						/>
 					))}
 				</div>
@@ -778,10 +812,14 @@ type AstViewMode = "node" | "json";
 function Ast({
 	activePath,
 	ast,
+	onGoTo,
+	source,
 	theme,
 }: {
 	activePath: string;
 	ast: PlaygroundAstNode | undefined;
+	onGoTo: (pos: number, end: number) => void;
+	source: string;
 	theme: "dark" | "light";
 }) {
 	const [viewMode, setViewMode] = useState<AstViewMode>("node");
@@ -827,7 +865,7 @@ function Ast({
 			<div className={styles.astBody}>
 				{viewMode === "node" ? (
 					<div className={styles.astTreeScroll}>
-						<AstTree depth={0} node={ast} />
+						<AstTree depth={0} node={ast} onGoTo={onGoTo} source={source} />
 					</div>
 				) : (
 					<CodeMirror
@@ -1083,7 +1121,11 @@ export function Playground() {
 	const workerRef = useRef<Worker | undefined>(undefined);
 	const editorViewRef = useRef<EditorView | null>(null);
 	const resultRef = useRef<PlaygroundResult | undefined>(undefined);
-	const pendingGoTo = useRef<{ fileName: string; pos: number } | null>(null);
+	const pendingGoTo = useRef<{
+		end?: number;
+		fileName: string;
+		pos: number;
+	} | null>(null);
 	const renameInputRef = useRef<HTMLInputElement | null>(null);
 	const skipRenameCommit = useRef(false);
 	const workspaceRef = useRef<HTMLDivElement | null>(null);
@@ -1186,7 +1228,7 @@ export function Playground() {
 		};
 	}, []);
 
-	const focusEditor = useCallback((pos: number) => {
+	const focusEditor = useCallback((pos: number, end?: number) => {
 		const view = editorViewRef.current;
 
 		if (!view) {
@@ -1195,7 +1237,10 @@ export function Playground() {
 
 		view.focus();
 		view.dispatch({
-			selection: { anchor: pos },
+			selection:
+				end !== undefined && end !== pos
+					? { anchor: pos, head: end }
+					: { anchor: pos },
 			scrollIntoView: true,
 		});
 	}, []);
@@ -1208,7 +1253,7 @@ export function Playground() {
 
 		pendingGoTo.current = null;
 		const id = globalThis.setTimeout(() => {
-			focusEditor(pending.pos);
+			focusEditor(pending.pos, pending.end);
 		}, 0);
 
 		return () => {
@@ -1321,6 +1366,23 @@ export function Playground() {
 			focusEditor(pos);
 		},
 		[activePath, focusEditor],
+	);
+
+	const astFileName = result?.activePath ?? activePath;
+	const astSource = files[astFileName] ?? "";
+
+	const goToAstNode = useCallback(
+		(pos: number, end: number) => {
+			if (astFileName !== activePath) {
+				pendingGoTo.current = { end, fileName: astFileName, pos };
+				setActivePath(astFileName);
+
+				return;
+			}
+
+			focusEditor(pos, end);
+		},
+		[activePath, astFileName, focusEditor],
 	);
 
 	const addFile = useCallback(() => {
@@ -1804,8 +1866,10 @@ export function Playground() {
 								<p className={styles.empty}>{error}</p>
 							) : (
 								<Ast
-									activePath={result?.activePath ?? activePath}
+									activePath={astFileName}
 									ast={result?.ast}
+									onGoTo={goToAstNode}
+									source={astSource}
 									theme={starlightTheme}
 								/>
 							)}
@@ -1949,8 +2013,10 @@ export function Playground() {
 								<p className={styles.empty}>{error}</p>
 							) : (
 								<Ast
-									activePath={result?.activePath ?? activePath}
+									activePath={astFileName}
 									ast={result?.ast}
+									onGoTo={goToAstNode}
+									source={astSource}
 									theme={starlightTheme}
 								/>
 							)}

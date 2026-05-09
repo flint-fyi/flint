@@ -1329,13 +1329,26 @@ a.consoleRuleLink:focus-visible {
 }
 
 .astRow {
+	border-radius: 0.2rem;
+	cursor: pointer;
 	display: flex;
 	align-items: baseline;
 	flex-wrap: nowrap;
 	gap: 0.35rem 0.5rem;
 	min-width: max-content;
 	max-width: none;
-	padding: 0.15rem 0;
+	padding: 0.15rem 0.25rem;
+	transition: background 0.1s ease;
+}
+
+.astRow:hover {
+	background: color-mix(in srgb, var(--sl-color-accent), transparent 92%);
+}
+
+.astRow:focus-visible {
+	background: color-mix(in srgb, var(--sl-color-accent), transparent 88%);
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: -2px;
 }
 
 .astKind {
