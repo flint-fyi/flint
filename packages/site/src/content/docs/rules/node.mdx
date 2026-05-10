@@ -1,1 +1,116 @@
---- description: "Node.js linting rules provided by Flint." title: "Node.js Plugin" ---  import { RulesTable } from "~/components/RulesTable.tsx"; import PluginTop from "~/components/PluginTop.astro";  <PluginTop pluginId="node" />  ## Presets  Flint's Node.js plugin provides the following presets:  | Preset                                    | Recommended   | Description                                                                             | | ----------------------------------------- | ------------- | --------------------------------------------------------------------------------------- | | **[`logical`](#logical)**                 | ✅ Always     | Common rules for finding bugs and enforcing good logical practices in Node.js files.   | | **[`stylistic`](#stylistic)**             | ✅ Always     | Common rules for consistent styling and best stylistic practices in Node.js files.     | | **[`stylisticStrict`](#stylisticstrict)** | ☑️ When Ready | Additional rules for consistent styling and best stylistic practices in Node.js files. |  If you are just getting started with linting, Flint recommends using the [`logical`](#logical) and [`stylistic`](#stylistic) presets:  ```ts title="flint.config.ts" import { node } from "@flint.fyi/node"; import { defineConfig, ts } from "flint";  export default defineConfig({ 	use: [ 		{ 			files: ts.files.all, 			rules: [node.presets.logical, node.presets.stylistic], 		}, 	], }); ```  If you are experienced with both Node.js and linting, Flint recommends additionally using the [`stylisticStrict`](#stylisticstrict) preset:  ```ts title="flint.config.ts" import { node } from "@flint.fyi/node"; import { defineConfig, ts } from "flint";  export default defineConfig({ 	use: [ 		{ 			files: ts.files.all, 			rules: [node.presets.logical, node.presets.stylisticStrict], 		}, 	], }); ```  :::note Coming soon: more expansive documentation on choosing and combining plugins & presets with Flint. :::  ### `logical`  Rules that find bugs and enforce good Node.js and general server-side best practices for most-to-all JavaScript and TypeScript files.  ```ts title="flint.config.ts" import { node } from "@flint.fyi/node"; import { defineConfig } from "flint";  export default defineConfig({ 	use: [ 		{ 			files: node.files.all, 			rules: node.presets.logical, 		}, 	], }); ```  ### `stylistic`  Rules that enforce consistent styling and best stylistic practices for most-to-all JavaScript and TypeScript files dealing with Node.js APIs.  ```ts title="flint.config.ts" import { node } from "@flint.fyi/node"; import { defineConfig, ts } from "flint";  export default defineConfig({ 	use: [ 		{ 			files: ts.files.all, 			rules: node.presets.stylistic, 		}, 	], }); ```  ### `stylisticStrict`  Additional stylistic rules that enforce best practices which are not always straightforward to implement. These rules are recommended for projects where a majority of developers are experienced with both Node.js and using a linter.  ```ts title="flint.config.ts" import { node } from "@flint.fyi/node"; import { defineConfig, ts } from "flint";  export default defineConfig({ 	use: [ 		{ 			files: ts.files.all, 			rules: node.presets.stylisticStrict, 		}, 	], }); ```  This preset's rules are a superset of those in [`stylistic`](#stylistic).  ## Rules  <RulesTable implementing plugin="node" />
+---
+description: "Node.js linting rules provided by Flint."
+title: "Node.js Plugin"
+---
+
+import { RulesTable } from "~/components/RulesTable.tsx";
+import PluginTop from "~/components/PluginTop.astro";
+
+<PluginTop pluginId="node" />
+
+## Presets
+
+Flint's Node.js plugin provides the following presets:
+
+| Preset                                    | Recommended   | Description                                                                             |
+| ----------------------------------------- | ------------- | --------------------------------------------------------------------------------------- |
+| **[`logical`](#logical)**                 | ✅ Always     | Common rules for finding bugs and enforcing good logical practices in Node.js files.   |
+| **[`stylistic`](#stylistic)**             | ✅ Always     | Common rules for consistent styling and best stylistic practices in Node.js files.     |
+| **[`stylisticStrict`](#stylisticstrict)** | ☑️ When Ready | Additional rules for consistent styling and best stylistic practices in Node.js files. |
+
+If you are just getting started with linting, Flint recommends using the [`logical`](#logical) and [`stylistic`](#stylistic) presets:
+
+```ts title="flint.config.ts"
+import { node } from "@flint.fyi/node";
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: ts.files.all,
+			rules: [node.presets.logical, node.presets.stylistic],
+		},
+	],
+});
+```
+
+If you are experienced with both Node.js and linting, Flint recommends additionally using the [`stylisticStrict`](#stylisticstrict) preset:
+
+```ts title="flint.config.ts"
+import { node } from "@flint.fyi/node";
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: ts.files.all,
+			rules: [node.presets.logical, node.presets.stylisticStrict],
+		},
+	],
+});
+```
+
+:::note
+Coming soon: more expansive documentation on choosing and combining plugins & presets with Flint.
+:::
+
+### `logical`
+
+Rules that find bugs and enforce good Node.js and general server-side best practices for most-to-all JavaScript and TypeScript files.
+
+```ts title="flint.config.ts"
+import { node } from "@flint.fyi/node";
+import { defineConfig } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: node.files.all,
+			rules: node.presets.logical,
+		},
+	],
+});
+```
+
+### `stylistic`
+
+Rules that enforce consistent styling and best stylistic practices for most-to-all JavaScript and TypeScript files dealing with Node.js APIs.
+
+```ts title="flint.config.ts"
+import { node } from "@flint.fyi/node";
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: ts.files.all,
+			rules: node.presets.stylistic,
+		},
+	],
+});
+```
+
+### `stylisticStrict`
+
+Additional stylistic rules that enforce best practices which are not always straightforward to implement.
+These rules are recommended for projects where a majority of developers are experienced with both Node.js and using a linter.
+
+```ts title="flint.config.ts"
+import { node } from "@flint.fyi/node";
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: ts.files.all,
+			rules: node.presets.stylisticStrict,
+		},
+	],
+});
+```
+
+This preset's rules are a superset of those in [`stylistic`](#stylistic).
+
+## Rules
+
+<RulesTable implementing plugin="node" />
