@@ -38,7 +38,7 @@ catalogs:
     prettier-plugin-sh: 0.18.0
     rimraf: 6.1.2
     tsdown: 0.21.0
-    typescript: 5.9.3
+    typescript: 6.0.3
     typescript-eslint: 8.58.1
     vitest: 4.1.0
     vitest-ansi-serializer: 0.2.1
