@@ -307,25 +307,6 @@ In that configuration, this rule does not report import declarations from decora
 This caveat only applies to legacy experimental decorators with emitted decorator metadata.
 Files using stable decorators without `emitDecoratorMetadata` are reported normally.
 
-## JSX and React Caveat
-
-React's classic JSX transform can require the `React` import at runtime even when TypeScript syntax only mentions it in a type annotation.
-For `.tsx` files, this rule does not report imports from `"react"` when JSX syntax is present.
-
-Examples of code this rule allows in `.tsx` files:
-
-```tsx
-import React from "react";
-
-export const Component: React.FC = () => <div />;
-```
-
-```tsx
-import { Fragment } from "react";
-
-export const Component: Fragment = () => <>content</>;
-```
-
 ## Comparison with `verbatimModuleSyntax`
 
 TypeScript's `verbatimModuleSyntax` compiler option also distinguishes type-only imports from value imports.

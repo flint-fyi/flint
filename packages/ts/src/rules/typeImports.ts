@@ -396,7 +396,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const hasJsx = sourceFile.fileName.endsWith("sx");
 					const compilerOptions = program.getCompilerOptions();
 					if (
 						compilerOptions.experimentalDecorators &&
@@ -496,10 +495,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						if (typeSpecifiers.length) {
 							const source = getImportSource(statement, sourceFile);
-							if (source === "react" && hasJsx) {
-								continue;
-							}
-
 							const sourceImports = sourceImportsMap[source];
 							if (!sourceImports) {
 								continue;

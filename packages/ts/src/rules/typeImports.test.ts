@@ -383,22 +383,6 @@ const value = Type;
 `,
 		{
 			code: `
-import React from "react";
-
-export const Component: React.FC = () => <div />;
-`,
-			fileName: "file.tsx",
-		},
-		{
-			code: `
-import { Fragment } from "react";
-
-export const Component: Fragment = () => <>content</>;
-`,
-			fileName: "file.tsx",
-		},
-		{
-			code: `
 import { Type } from "./types";
 type Alias = Type & { extra: boolean };
 `,
