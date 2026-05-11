@@ -10,7 +10,7 @@ import type { AnyOptionalSchema } from "../types/shapes.ts";
 export interface RuleCreatorOptions<Presets extends string> {
 	docs: (ruleId: string) => string;
 	pluginId: string;
-	presets?: readonly Presets[];
+	presets: readonly Presets[];
 }
 
 export class RuleCreator<
