@@ -7,21 +7,21 @@ import type { AST } from "@flint.fyi/typescript-language";
 export function getArrayElementRemovalSuggestion(
 	sourceFile: JsonSourceFile,
 	element: AST.Expression,
-	containerNode: AST.ArrayLiteralExpression,
+	arrayNode: AST.ArrayLiteralExpression,
 ) {
-	const index = containerNode.elements.findIndex((item) => item === element);
-	const previous = index > 0 ? containerNode.elements[index - 1] : undefined;
-	const next =
-		index < containerNode.elements.length - 1
-			? containerNode.elements[index + 1]
-			: undefined;
-
-	if (containerNode.elements.length === 1) {
+	if (arrayNode.elements.length === 1) {
 		return {
-			range: getJsonNodeRange(containerNode, sourceFile),
+			range: getJsonNodeRange(arrayNode, sourceFile),
 			text: "[]",
 		};
 	}
+
+	const index = arrayNode.elements.indexOf(element);
+	const previous = index > 0 ? arrayNode.elements[index - 1] : undefined;
+	const next =
+		index < arrayNode.elements.length - 1
+			? arrayNode.elements[index + 1]
+			: undefined;
 
 	if (next) {
 		return {
@@ -57,11 +57,6 @@ export function getObjectPropertyRemovalSuggestion(
 	property: AST.PropertyAssignment,
 	properties: readonly AST.ObjectLiteralElementLike[],
 ) {
-	const index = properties.indexOf(property);
-	const previous = index > 0 ? properties[index - 1] : undefined;
-	const next =
-		index < properties.length - 1 ? properties[index + 1] : undefined;
-
 	if (properties.length === 1) {
 		const begin = sourceFile.text.lastIndexOf(
 			"{",
@@ -77,6 +72,11 @@ export function getObjectPropertyRemovalSuggestion(
 			text: "{}",
 		};
 	}
+
+	const index = properties.indexOf(property);
+	const previous = index > 0 ? properties[index - 1] : undefined;
+	const next =
+		index < properties.length - 1 ? properties[index + 1] : undefined;
 
 	if (next) {
 		return {
