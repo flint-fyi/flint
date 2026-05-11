@@ -45,7 +45,7 @@ export interface Rule<
 	language: AnyLanguage;
 }
 
-export interface RuleAbout<Presets = string> extends BaseAbout {
+export interface RuleAbout<Presets extends string = string> extends BaseAbout {
 	readonly description: string;
 
 	/**

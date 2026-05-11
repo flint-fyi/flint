@@ -7,7 +7,7 @@ import type {
 import type { Rule, RuleAbout, RuleDefinition } from "../types/rules.ts";
 import type { AnyOptionalSchema } from "../types/shapes.ts";
 
-export interface RuleCreatorOptions<Presets> {
+export interface RuleCreatorOptions<Presets extends string> {
 	docs: (ruleId: string) => string;
 	pluginId: string;
 	presets?: readonly Presets[];
