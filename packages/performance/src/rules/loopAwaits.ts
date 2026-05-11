@@ -1,10 +1,11 @@
 import {
 	type AST,
+	forEachChild,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -29,8 +30,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function checkForAwaitExpressions(
-			node: ts.Node,
-			loopNode: ts.Node,
+			node: AST.AnyNode,
+			loopNode:
+				| AST.DoStatement
+				| AST.ForInStatement
+				| AST.ForOfStatement
+				| AST.ForStatement
+				| AST.WhileStatement,
 			sourceFile: AST.SourceFile,
 		): void {
 			if (node.kind === SyntaxKind.AwaitExpression) {
@@ -56,13 +62,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			ts.forEachChild(node, (child) => {
+			forEachChild(node, (child) => {
 				checkForAwaitExpressions(child, loopNode, sourceFile);
 			});
 		}
 
 		function checkNode(
-			node: ts.Node & { statement: ts.Node },
+			node:
+				| AST.DoStatement
+				| AST.ForInStatement
+				| AST.ForOfStatement
+				| AST.ForStatement
+				| AST.WhileStatement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			checkForAwaitExpressions(node.statement, node, sourceFile);

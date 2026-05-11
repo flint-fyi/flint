@@ -25,7 +25,7 @@ Example: instead of messages like _"Octal escape sequences should not be used in
 
 ## AST Node Handling
 
-When you have an `AST.Expression` or `AST.*Declaration`, check whether nodes are certain types using a comparision like `node.kind === ts.SyntaxKind.BinaryExpression`.
+When you have an `AST.Expression` or `AST.*Declaration`, check whether nodes are certain types using a comparison like `node.kind === ts.SyntaxKind.BinaryExpression`.
 
 When you have a `ts.Node` type, however, you'll have to use `ts.is*` checks such as `ts.isBinaryExpression`, or failing that `tsutils` from `ts-api-utils` to get nice type narrowing.
 

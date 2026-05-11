@@ -1,5 +1,6 @@
 import {
 	type AST,
+	forEachChild,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -80,15 +81,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			name: AST.BindingName,
 			variables: Set<string>,
 		): void {
-			if (ts.isIdentifier(name)) {
+			if (name.kind === SyntaxKind.Identifier) {
 				variables.add(name.text);
-			} else if (ts.isArrayBindingPattern(name)) {
+			} else if (name.kind === SyntaxKind.ArrayBindingPattern) {
 				for (const element of name.elements) {
-					if (ts.isBindingElement(element)) {
+					if (element.kind === SyntaxKind.BindingElement) {
 						addBindingNames(element.name, variables);
 					}
 				}
-			} else if (ts.isObjectBindingPattern(name)) {
+			} else {
 				for (const element of name.elements) {
 					addBindingNames(element.name, variables);
 				}
@@ -96,28 +97,45 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function referencesLoopVariable(
-			node: ts.Node,
+			node: AST.AnyNode,
 			loopVariables: Set<string>,
 		): boolean | undefined {
-			if (ts.isIdentifier(node) && loopVariables.has(node.text)) {
+			if (node.kind === SyntaxKind.Identifier && loopVariables.has(node.text)) {
 				return true;
 			}
 
-			return ts.forEachChild(node, (child) => {
+			return forEachChild(node, (child) => {
 				return (
-					!tsutils.isFunctionScopeBoundary(child) &&
-					!ts.isDoStatement(child) &&
-					!ts.isForInStatement(child) &&
-					!ts.isForOfStatement(child) &&
-					!ts.isForStatement(child) &&
-					!ts.isWhileStatement(child) &&
+					child.kind !== SyntaxKind.ArrowFunction &&
+					child.kind !== SyntaxKind.CallSignature &&
+					child.kind !== SyntaxKind.ClassDeclaration &&
+					child.kind !== SyntaxKind.ClassExpression &&
+					child.kind !== SyntaxKind.Constructor &&
+					child.kind !== SyntaxKind.ConstructorType &&
+					child.kind !== SyntaxKind.ConstructSignature &&
+					child.kind !== SyntaxKind.EnumDeclaration &&
+					child.kind !== SyntaxKind.FunctionDeclaration &&
+					child.kind !== SyntaxKind.FunctionExpression &&
+					child.kind !== SyntaxKind.FunctionType &&
+					child.kind !== SyntaxKind.GetAccessor &&
+					child.kind !== SyntaxKind.MethodDeclaration &&
+					child.kind !== SyntaxKind.MethodSignature &&
+					child.kind !== SyntaxKind.ModuleDeclaration &&
+					child.kind !== SyntaxKind.SetAccessor &&
+					(child.kind !== SyntaxKind.SourceFile ||
+						!ts.isExternalModule(child)) &&
+					child.kind !== SyntaxKind.DoStatement &&
+					child.kind !== SyntaxKind.ForInStatement &&
+					child.kind !== SyntaxKind.ForOfStatement &&
+					child.kind !== SyntaxKind.ForStatement &&
+					child.kind !== SyntaxKind.WhileStatement &&
 					referencesLoopVariable(child, loopVariables)
 				);
 			});
 		}
 
 		function checkFunctionInLoop(
-			node: ts.Node,
+			node: AST.AnyNode,
 			loopNode:
 				| AST.DoStatement
 				| AST.ForInStatement
@@ -132,11 +150,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const start = node.getStart(sourceFile);
 					let keyword = "function";
 
-					if (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node)) {
+					if (
+						node.kind === SyntaxKind.FunctionDeclaration ||
+						node.kind === SyntaxKind.FunctionExpression
+					) {
 						keyword = "function";
-					} else if (ts.isArrowFunction(node)) {
+					} else if (node.kind === SyntaxKind.ArrowFunction) {
 						const firstToken = node.getFirstToken(sourceFile);
-						if (firstToken && ts.isIdentifier(firstToken)) {
+						if (firstToken?.kind === SyntaxKind.Identifier) {
 							keyword = firstToken.text;
 						} else {
 							keyword = "(";
@@ -155,16 +176,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				ts.isDoStatement(node) ||
-				ts.isForInStatement(node) ||
-				ts.isForOfStatement(node) ||
-				ts.isForStatement(node) ||
-				ts.isWhileStatement(node)
+				node.kind === SyntaxKind.DoStatement ||
+				node.kind === SyntaxKind.ForInStatement ||
+				node.kind === SyntaxKind.ForOfStatement ||
+				node.kind === SyntaxKind.ForStatement ||
+				node.kind === SyntaxKind.WhileStatement
 			) {
 				return;
 			}
 
-			ts.forEachChild(node, (child) => {
+			forEachChild(node, (child) => {
 				checkFunctionInLoop(child, loopNode, loopVariables, sourceFile);
 			});
 		}

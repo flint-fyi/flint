@@ -1,5 +1,9 @@
-import { jsonLanguage } from "@flint.fyi/json-language";
-import ts from "typescript";
+import {
+	forEachChild,
+	jsonLanguage,
+	type JsonNode,
+} from "@flint.fyi/json-language";
+import ts, { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -170,13 +174,13 @@ export default ruleCreator.createRule(jsonLanguage, {
 			}
 		}
 
-		function checkNode(node: ts.Node, sourceFile: ts.SourceFile) {
-			if (ts.isNumericLiteral(node)) {
+		function checkNode(node: JsonNode, sourceFile: ts.SourceFile) {
+			if (node.kind === SyntaxKind.NumericLiteral) {
 				checkNumericLiteral(node, sourceFile);
-			} else if (ts.isStringLiteral(node)) {
+			} else if (node.kind === SyntaxKind.StringLiteral) {
 				checkStringLiteral(node, sourceFile);
 			} else {
-				node.forEachChild((child) => {
+				forEachChild(node, (child) => {
 					checkNode(child, sourceFile);
 				});
 			}
