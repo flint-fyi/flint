@@ -7,11 +7,8 @@ import type { AST } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
-import {
-	getArrayElementRemovalSuggestion,
-	getObjectPropertyRemovalSuggestion,
-} from "../getJsonRemovalSuggestion.ts";
-import { getPackageProperties } from "../getPackageProperties.ts";
+import { removeArrayElement } from "../removeArrayElement.ts";
+import { removeObjectProperty } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 export default ruleCreator.createRule(jsonLanguage, {
@@ -22,12 +19,12 @@ export default ruleCreator.createRule(jsonLanguage, {
 		presets: ["logical"],
 	},
 	messages: {
-		emptyExpression: {
-			primary: "This empty value does not add package metadata.",
+		emptyElement: {
+			primary: "This empty element does not add package metadata.",
 			secondary: [
 				"Empty arrays and objects in package.json often come from placeholder fields or incomplete configuration.",
 			],
-			suggestions: ["Remove the empty value."],
+			suggestions: ["Remove the empty element."],
 		},
 		emptyField: {
 			primary: "This empty field does not add package metadata.",
@@ -73,30 +70,24 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 			for (const property of element.properties) {
 				if (
-					property.kind !== SyntaxKind.PropertyAssignment ||
-					property.name.kind !== SyntaxKind.StringLiteral
+					property.kind === SyntaxKind.PropertyAssignment &&
+					property.name.kind === SyntaxKind.StringLiteral
 				) {
-					continue;
+					checkPropertyValue(property, sourceFile, element);
 				}
-
-				checkPropertyValue(
-					property.initializer,
-					sourceFile,
-					property,
-					element.properties,
-				);
 			}
 		}
 
 		function checkPropertyValue(
-			value: AST.Expression,
-			sourceFile: JsonSourceFile,
 			property: AST.PropertyAssignment,
-			properties: readonly AST.ObjectLiteralElementLike[],
+			sourceFile: JsonSourceFile,
+			objectNode: AST.ObjectLiteralExpression,
 		) {
+			const value = property.initializer;
+
 			if (value.kind === SyntaxKind.ArrayLiteralExpression) {
 				if (!value.elements.length) {
-					reportPropertyValue(sourceFile, property, properties);
+					reportPropertyValue(property, sourceFile, objectNode);
 					return;
 				}
 
@@ -112,24 +103,17 @@ export default ruleCreator.createRule(jsonLanguage, {
 			}
 
 			if (!value.properties.length) {
-				reportPropertyValue(sourceFile, property, properties);
+				reportPropertyValue(property, sourceFile, objectNode);
 				return;
 			}
 
 			for (const nestedProperty of value.properties) {
 				if (
-					nestedProperty.kind !== SyntaxKind.PropertyAssignment ||
-					nestedProperty.name.kind !== SyntaxKind.StringLiteral
+					nestedProperty.kind === SyntaxKind.PropertyAssignment &&
+					nestedProperty.name.kind === SyntaxKind.StringLiteral
 				) {
-					continue;
+					checkPropertyValue(nestedProperty, sourceFile, value);
 				}
-
-				checkPropertyValue(
-					nestedProperty.initializer,
-					sourceFile,
-					nestedProperty,
-					value.properties,
-				);
 			}
 		}
 
@@ -138,14 +122,14 @@ export default ruleCreator.createRule(jsonLanguage, {
 			sourceFile: JsonSourceFile,
 			arrayNode: AST.ArrayLiteralExpression,
 		) {
-			const { range, text } = getArrayElementRemovalSuggestion(
+			const { range, text } = removeArrayElement(
 				sourceFile,
 				element,
 				arrayNode,
 			);
 
 			context.report({
-				message: "emptyExpression",
+				message: "emptyElement",
 				range: getJsonNodeRange(element, sourceFile),
 				suggestions: [
 					{
@@ -158,18 +142,18 @@ export default ruleCreator.createRule(jsonLanguage, {
 		}
 
 		function reportPropertyValue(
-			sourceFile: JsonSourceFile,
 			property: AST.PropertyAssignment,
-			properties: readonly AST.ObjectLiteralElementLike[],
+			sourceFile: JsonSourceFile,
+			objectNode: AST.ObjectLiteralExpression,
 		) {
 			if (property.name.kind !== SyntaxKind.StringLiteral) {
 				return;
 			}
 
-			const { range, text } = getObjectPropertyRemovalSuggestion(
+			const { range, text } = removeObjectProperty(
 				sourceFile,
 				property,
-				properties,
+				objectNode,
 			);
 
 			context.report({
@@ -189,28 +173,24 @@ export default ruleCreator.createRule(jsonLanguage, {
 			visitors: {
 				JsonSourceFile(node, { options, sourceFile }) {
 					const ignoredProperties = new Set(options.ignoreProperties);
-					const properties = getPackageProperties(node) ?? [];
 
-					for (const property of properties) {
+					if (node.statements.length !== 1) {
+						return;
+					}
+
+					const expression = node.statements[0]?.expression;
+					if (expression?.kind !== SyntaxKind.ObjectLiteralExpression) {
+						return;
+					}
+
+					for (const property of expression.properties) {
 						if (
-							property.kind !== SyntaxKind.PropertyAssignment ||
-							property.name.kind !== SyntaxKind.StringLiteral
+							property.kind === SyntaxKind.PropertyAssignment &&
+							property.name.kind === SyntaxKind.StringLiteral &&
+							!ignoredProperties.has(property.name.text)
 						) {
-							continue;
+							checkPropertyValue(property, sourceFile, expression);
 						}
-
-						const propertyName = property.name.text;
-
-						if (ignoredProperties.has(propertyName)) {
-							continue;
-						}
-
-						checkPropertyValue(
-							property.initializer,
-							sourceFile,
-							property,
-							properties,
-						);
 					}
 				},
 			},

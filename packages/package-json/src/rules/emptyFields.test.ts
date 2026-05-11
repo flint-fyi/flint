@@ -80,7 +80,7 @@ ruleTester.describe(rule, {
     "workspaces": [
         {},
         ~~
-        This empty value does not add package metadata.
+        This empty element does not add package metadata.
         {
             "packages": ["packages/*"]
         }
@@ -191,7 +191,7 @@ ruleTester.describe(rule, {
 {
     "workspaces": [[], "packages/*"]
                    ~~
-                   This empty value does not add package metadata.
+                   This empty element does not add package metadata.
 }
 `,
 			suggestions: [

@@ -2,11 +2,9 @@ import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import type { AST } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import {
-	getArrayElementRemovalSuggestion,
-	getObjectPropertyRemovalSuggestion,
-} from "../getJsonRemovalSuggestion.ts";
 import { getPackageProperties } from "../getPackageProperties.ts";
+import { removeArrayElement } from "../removeArrayElement.ts";
+import { removeObjectProperty } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 const dependencyPropertyNames = new Set([
@@ -71,7 +69,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 								continue;
 							}
 
-							const { range, text } = getArrayElementRemovalSuggestion(
+							const { range, text } = removeArrayElement(
 								sourceFile,
 								element,
 								initializer,
@@ -111,10 +109,10 @@ export default ruleCreator.createRule(jsonLanguage, {
 								continue;
 							}
 
-							const { range, text } = getObjectPropertyRemovalSuggestion(
+							const { range, text } = removeObjectProperty(
 								sourceFile,
 								dependency,
-								initializer.properties,
+								initializer,
 							);
 
 							context.report({
@@ -142,10 +140,10 @@ export default ruleCreator.createRule(jsonLanguage, {
 									continue;
 								}
 
-								const { range, text } = getObjectPropertyRemovalSuggestion(
+								const { range, text } = removeObjectProperty(
 									sourceFile,
 									dependency,
-									dependencyGroup.properties,
+									dependencyGroup,
 								);
 
 								context.report({
