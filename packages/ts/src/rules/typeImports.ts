@@ -343,7 +343,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	options: {
 		fixStyle: z
 			.enum(["inline-type-imports", "separate-type-imports"])
-			.default("separate-type-imports"),
+			.default("inline-type-imports"),
 		prefer: z.enum(["no-type-imports", "type-imports"]).default("type-imports"),
 	},
 	setup(context) {

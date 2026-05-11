@@ -9,7 +9,7 @@ import { Type } from "./types";
 type Alias = Type & { extra: boolean };
 `,
 			output: `
-import type { Type } from "./types";
+import { type Type } from "./types";
 type Alias = Type & { extra: boolean };
 `,
 			snapshot: `
@@ -27,7 +27,7 @@ interface Component {
 }
 `,
 			output: `
-import type { Type } from "./types";
+import { type Type } from "./types";
 interface Component {
     property: Type;
 }
@@ -47,7 +47,7 @@ import { Type } from "./types";
 function setup(value: Type): void {}
 `,
 			output: `
-import type { Type } from "./types";
+import { type Type } from "./types";
 function setup(value: Type): void {}
 `,
 			snapshot: `
@@ -115,7 +115,7 @@ import { Type as AliasType, Role as Access } from "./types";
 type Alias = AliasType & { access: Access };
 `,
 			output: `
-import type { Type as AliasType, Role as Access } from "./types";
+import { type Type as AliasType, type Role as Access } from "./types";
 type Alias = AliasType & { access: Access };
 `,
 			snapshot: `
@@ -163,7 +163,7 @@ import { Type } from "./types";
 export type { Type };
 `,
 			output: `
-import type { Type } from "./types";
+import { type Type } from "./types";
 export type { Type };
 `,
 			snapshot: `
@@ -195,7 +195,7 @@ import { Type } from "./types";
 class Value implements Type {}
 `,
 			output: `
-import type { Type } from "./types";
+import { type Type } from "./types";
 class Value implements Type {}
 `,
 			snapshot: `
@@ -289,9 +289,9 @@ const value = createValue();
 import { Type, Role } from "./types";
 type Alias = Type & { role: Role };
 `,
-			options: { fixStyle: "inline-type-imports" },
+			options: { fixStyle: "separate-type-imports" },
 			output: `
-import { type Type, type Role } from "./types";
+import type { Type, Role } from "./types";
 type Alias = Type & { role: Role };
 `,
 			snapshot: `

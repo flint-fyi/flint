@@ -241,10 +241,10 @@ const user = createUser();
 ### `fixStyle`
 
 `fixStyle` controls how auto-fixes are written when `prefer` is `"type-imports"`.
-It defaults to `"separate-type-imports"`.
+It defaults to `"inline-type-imports"`.
 
-- `"separate-type-imports"` adds top-level type-only declarations such as `import type { User } from "./types"`.
 - `"inline-type-imports"` adds inline type specifiers such as `import { type User } from "./types"` when TypeScript syntax allows it.
+- `"separate-type-imports"` adds top-level type-only declarations such as `import type { User } from "./types"`.
 
 <Tabs>
 <TabItem label="❌ Incorrect">
