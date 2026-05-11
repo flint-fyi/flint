@@ -1,11 +1,11 @@
-import {
-	getJsonNodeRange,
-	jsonLanguage,
-	type JsonSourceFile,
-} from "@flint.fyi/json-language";
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import type { AST } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
+import {
+	getArrayElementRemovalSuggestion,
+	getObjectPropertyRemovalSuggestion,
+} from "../getJsonRemovalSuggestion.ts";
 import { getPackageProperties } from "../getPackageProperties.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -23,102 +23,6 @@ const crossGroupDependencyPropertyNames = new Set([
 	"devDependencies",
 	"peerDependencies",
 ]);
-
-function getArrayElementRemovalSuggestion(
-	sourceFile: JsonSourceFile,
-	element: AST.Expression,
-	containerNode: AST.ArrayLiteralExpression,
-) {
-	const index = containerNode.elements.findIndex((item) => item === element);
-	const previous = index > 0 ? containerNode.elements[index - 1] : undefined;
-	const next =
-		index < containerNode.elements.length - 1
-			? containerNode.elements[index + 1]
-			: undefined;
-
-	if (containerNode.elements.length === 1) {
-		return {
-			range: getJsonNodeRange(containerNode, sourceFile),
-			text: "[]",
-		};
-	}
-
-	if (next) {
-		return {
-			range: {
-				begin: element.getStart(sourceFile),
-				end: next.getStart(sourceFile),
-			},
-			text: "",
-		};
-	}
-
-	if (previous) {
-		return {
-			range: {
-				begin: previous.end,
-				end: element.end,
-			},
-			text: "",
-		};
-	}
-
-	return {
-		range: {
-			begin: element.getStart(sourceFile),
-			end: element.end,
-		},
-		text: "",
-	};
-}
-
-function getObjectPropertyRemovalSuggestion(
-	sourceFile: JsonSourceFile,
-	property: AST.PropertyAssignment,
-	containerNode: AST.ObjectLiteralExpression,
-) {
-	const index = containerNode.properties.findIndex((item) => item === property);
-	const previous = index > 0 ? containerNode.properties[index - 1] : undefined;
-	const next =
-		index < containerNode.properties.length - 1
-			? containerNode.properties[index + 1]
-			: undefined;
-
-	if (containerNode.properties.length === 1) {
-		return {
-			range: getJsonNodeRange(containerNode, sourceFile),
-			text: "{}",
-		};
-	}
-
-	if (next) {
-		return {
-			range: {
-				begin: property.getStart(sourceFile),
-				end: next.getStart(sourceFile),
-			},
-			text: "",
-		};
-	}
-
-	if (previous) {
-		return {
-			range: {
-				begin: previous.end,
-				end: property.end,
-			},
-			text: "",
-		};
-	}
-
-	return {
-		range: {
-			begin: property.getStart(sourceFile),
-			end: property.end,
-		},
-		text: "",
-	};
-}
 
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
@@ -210,7 +114,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							const { range, text } = getObjectPropertyRemovalSuggestion(
 								sourceFile,
 								dependency,
-								initializer,
+								initializer.properties,
 							);
 
 							context.report({
@@ -241,7 +145,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 								const { range, text } = getObjectPropertyRemovalSuggestion(
 									sourceFile,
 									dependency,
-									dependencyGroup,
+									dependencyGroup.properties,
 								);
 
 								context.report({

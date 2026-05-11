@@ -5195,7 +5195,8 @@
 		"flint": {
 			"name": "emptyFields",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
