@@ -20,16 +20,16 @@ catalogs:
     eslint: 10.3.0
     eslint-plugin-jsdoc: 62.9.0
     eslint-plugin-jsonc: 3.1.0
-    eslint-plugin-n: 17.24.0
+    eslint-plugin-n: 18.0.0
     eslint-plugin-package-json: 0.91.0
     eslint-plugin-perfectionist: 5.9.0
     eslint-plugin-regexp: 3.1.0
     eslint-plugin-yml: 3.3.0
     execa: 9.6.1
     husky: 9.1.7
-    jiti: 2.6.1
-    knip: 6.11.0
-    lint-staged: 16.4.0
+    jiti: 2.7.0
+    knip: 6.12.0
+    lint-staged: 17.0.2
     prettier: 3.8.1
     prettier-plugin-astro: 0.14.1
     prettier-plugin-curly: 0.4.1
@@ -48,16 +48,16 @@ catalogs:
     "@astrojs/check": 0.9.7
     "@astrojs/react": 5.0.0
     "@astrojs/starlight": 0.38.1
-    "@konami-emoji-blast/astro": 0.2.0
+    "@konami-emoji-blast/astro": 0.3.0
     "@types/markdown-it": 14.1.2
     "@types/react": 19.2.14
     "@types/react-dom": 19.2.3
-    astro: 6.2.0
+    astro: 6.3.0
     astro-og-canvas: 0.11.0
     canvaskit-wasm: 0.41.0
     clsx: 2.1.1
     expressive-code-twoslash: 0.6.0
-    konami-emoji-blast: 0.6.0
+    konami-emoji-blast: 0.7.0
     markdown-it: 14.1.1
     react: 19.2.4
     react-dom: 19.2.4

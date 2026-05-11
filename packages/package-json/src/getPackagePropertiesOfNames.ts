@@ -12,12 +12,7 @@ export function* getPackagePropertiesOfNames(
 		return;
 	}
 
-	const root = sourceFile.statements[0];
-	if (root?.expression.kind !== SyntaxKind.ObjectLiteralExpression) {
-		return;
-	}
-
-	for (const property of root.expression.properties) {
+	for (const property of properties) {
 		if (
 			property.kind === SyntaxKind.PropertyAssignment &&
 			property.name.kind === SyntaxKind.StringLiteral &&

@@ -32,8 +32,8 @@ It also brings in several improvements over traditional linter paradigms:
 
 For deep dives into Flint, see:
 
-- **[Introducing Flint](https://www.flint.fyi/blog/introducing-flint)**: the core hypotheses Flint is testing out, with why we hope they succeed.
-- **[What Flint Does Differently](https://www.flint.fyi/blog/what-flint-does-differently)**: a full list of the core, developer, and end-user design differences in Flint compared to other linters.
+- **[Introducing Flint](https://flint.fyi/blog/introducing-flint)**: the core hypotheses Flint is testing out, with why we hope they succeed.
+- **[What Flint Does Differently](https://flint.fyi/blog/what-flint-does-differently)**: a full list of the core, developer, and end-user design differences in Flint compared to other linters.
 
 ## Usage
 

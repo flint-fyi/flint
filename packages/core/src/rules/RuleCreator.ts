@@ -20,32 +20,20 @@ export class RuleCreator<Presets extends string> {
 	}
 
 	createRule<
-		const About extends RuleAbout,
+		const About extends RuleAbout<Presets>,
 		const Language extends AnyLanguage,
 		const MessageId extends string,
-		const OptionsSchema extends AnyOptionalSchema,
+		OptionsSchema extends AnyOptionalSchema | undefined = undefined,
 	>(
 		language: Language,
 		rule: RuleDefinition<
-			About & {
-				presets?: Presets[];
-			},
+			About,
 			GetLanguageAstNodesByName<Language>,
 			GetLanguageFileServices<Language>,
 			MessageId,
 			OptionsSchema
 		>,
-	): Rule<
-		// We can't put this in the constraint or else inference fails for some reason.
-		About & {
-			presets?: Presets[];
-			url: string;
-		},
-		object,
-		object,
-		MessageId,
-		OptionsSchema
-	> {
+	): Rule<About & { pluginId: string; url: string }, MessageId, OptionsSchema> {
 		// Use RuleCreator.createRule instead of Language.createRule
 		// But this is the original implementation
 		// flint-disable-next-line flint/ruleCreationMethods

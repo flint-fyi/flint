@@ -2,7 +2,7 @@ import type { PromiseOrSync } from "@flint.fyi/utils";
 
 import type { BaseAbout } from "./about.ts";
 import type { RuleContext } from "./context.ts";
-import type { Language } from "./languages.ts";
+import type { AnyLanguage } from "./languages.ts";
 import type { ReportMessageData } from "./reports.ts";
 import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
 
@@ -14,7 +14,7 @@ export type AnyRule<
 	OptionsSchema extends AnyOptionalSchema | undefined =
 		| AnyOptionalSchema
 		| undefined,
-> = Rule<About, unknown, object, string, OptionsSchema>;
+> = Rule<About, string, OptionsSchema>;
 
 export type AnyRuleDefinition<
 	OptionsSchema extends AnyOptionalSchema | undefined =
@@ -22,39 +22,30 @@ export type AnyRuleDefinition<
 		| undefined,
 > = RuleDefinition<RuleAbout, unknown, object, string, OptionsSchema>;
 
-export type UnsafeAnyRule<About extends RuleAbout = RuleAbout> = Rule<
-	About,
+/**
+ * Prefer explicitly setting the {@linkcode Rule} type arguments,
+ * or, barring that, use {@linkcode AnyRule}.
+ */
+export type UnsafeAnyRule<About extends RuleAbout = RuleAbout> =
 	// TODO: How to make these types work with createPlugin.test.ts & co.?
 	// flint-disable-lines-begin ts/explicitAnys
 	/* eslint-disable @typescript-eslint/no-explicit-any */
-	any,
-	any,
-	any,
-	any
-	/* eslint-enable @typescript-eslint/no-explicit-any */
-	// flint-disable-lines-end ts/explicitAnys
->;
+	Rule<About, any, any>;
+/* eslint-enable @typescript-eslint/no-explicit-any */
+// flint-disable-lines-end ts/explicitAnys
 
 /**
  * A single lint rule, as used by users in configs.
  */
 export interface Rule<
 	About extends RuleAbout,
-	AstNodesByName,
-	FileServices extends object,
 	MessageId extends string,
 	OptionsSchema extends AnyOptionalSchema | undefined,
-> extends RuleDefinition<
-	About,
-	AstNodesByName,
-	FileServices,
-	MessageId,
-	OptionsSchema
-> {
-	language: Language<AstNodesByName, FileServices>;
+> extends RuleDefinition<About, object, object, MessageId, OptionsSchema> {
+	language: AnyLanguage;
 }
 
-export interface RuleAbout extends BaseAbout {
+export interface RuleAbout<Presets = string> extends BaseAbout {
 	description: string;
 
 	/**
@@ -63,7 +54,7 @@ export interface RuleAbout extends BaseAbout {
 	 */
 	pluginId?: string;
 
-	presets?: string[];
+	presets?: Presets[];
 }
 
 /**
