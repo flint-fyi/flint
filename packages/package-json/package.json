@@ -1,8 +1,8 @@
 {
 	"name": "@flint.fyi/package-json",
-	"version": "0.17.0",
+	"version": "0.17.1",
 	"description": "[Experimental] package.json plugin for Flint.",
-	"homepage": "https://www.flint.fyi/rules/package-json",
+	"homepage": "https://flint.fyi/rules/package-json",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -29,7 +29,8 @@
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/json-language": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
-		"package-json-validator": "^1.4.0",
+		"change-case": "^5.4.4",
+		"package-json-validator": "^1.5.0",
 		"typescript": "^5.9.0 || ^6.0.0",
 		"zod": "^4.3.6"
 	},

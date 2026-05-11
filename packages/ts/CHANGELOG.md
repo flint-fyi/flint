@@ -1,5 +1,11 @@
 # @flint/ts
 
+## 0.18.1
+
+### Patch Changes
+
+- c3de2bb: Ignore intrinsic error types in `anyAssignments` rule.
+
 ## 0.18.0
 
 ### Minor Changes

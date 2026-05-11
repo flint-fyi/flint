@@ -1,0 +1,88 @@
+---
+description: "Reports package.json scripts command keys that are not kebab case."
+title: "scriptsNameCasing"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="scriptsNameCasing" />
+
+`scripts` maps command keys to executable commands.
+Users generally expect those command keys to be in kebab-case naming, optionally with `:` to delineate nested commands.
+
+This rule enforces kebab-case command names, such as `my-command`, to match common that CLI naming conventions.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"scripts": {
+		"Key": "flint"
+	}
+}
+```
+
+```json
+{
+	"scripts": {
+		"invalidKey": "flint"
+	}
+}
+```
+
+```json
+{
+	"scripts": {
+		"Invalid-Key": "flint"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"scripts": {
+		"key": "flint"
+	}
+}
+```
+
+```json
+{
+	"scripts": {
+		"valid-key": "flint"
+	}
+}
+```
+
+```json
+{
+	"scripts": {
+		"valid:key": "flint"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If a package intentionally uses script names with another casing style for a non-standard preference, this rule may not be for you.
+
+## Further Reading
+
+- [npm package.json: `scripts`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#scripts)
+- [MDN: Kebab case](https://developer.mozilla.org/en-US/docs/Glossary/Kebab_case)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="scriptsNameCasing" />

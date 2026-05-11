@@ -1,6 +1,12 @@
 {
 	"$schema": "http://json.schemastore.org/prettierrc",
-	"overrides": [{ "files": ".nvmrc", "options": { "parser": "yaml" } }],
+	"overrides": [
+		{
+			"files": ".all-contributorsrc",
+			"options": { "parser": "json-stringify", "useTabs": false }
+		},
+		{ "files": ".nvmrc", "options": { "parser": "yaml" } }
+	],
 	"plugins": [
 		"prettier-plugin-astro",
 		"prettier-plugin-curly",

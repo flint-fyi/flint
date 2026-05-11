@@ -1,0 +1,79 @@
+---
+description: "Reports CommonJS require() imports in favor of ES module imports."
+title: "requireImports"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="requireImports" />
+
+ECMAScript Modules (`import`/`export`), or "ESM", are the standard module system in modern JavaScript and TypeScript.
+They providing better static analysis, tree-shaking, and overall tooling support over other legacy module systems such as legacy CommonJS (CJS) `require()` calls.
+For modern projects, it's generally preferable to use ESM over CJS.
+
+This rule reports on any instances of legacy `require()` calls.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const lib = require("lib");
+```
+
+```ts
+var utils = require("./utils");
+```
+
+```ts
+const { x, y } = require("lib");
+```
+
+```ts
+import lib = require("lib");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import lib from "lib";
+```
+
+```ts
+import * as utils from "./utils";
+```
+
+```ts
+import { x, y } from "lib";
+```
+
+```ts
+import type { SomeType } from "lib";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are working in a CommonJS-only environment where ES modules are not supported, you may want to disable this rule.
+Some legacy Node.js projects or specific tooling may require CommonJS syntax.
+
+## Further Reading
+
+- [MDN: JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
+- [Node.js: ECMAScript modules](https://nodejs.org/api/esm.html)
+- [TypeScript: Modules](https://www.typescriptlang.org/docs/handbook/modules.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="requireImports" />

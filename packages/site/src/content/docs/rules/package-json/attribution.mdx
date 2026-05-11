@@ -1,0 +1,119 @@
+---
+description: "Enforces that package.json declares author or contributor attribution."
+title: "attribution"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="attribution" />
+
+Package attribution identifies the people responsible for creating, maintaining, or contributing to a package.
+npm supports attribution through either the `author` property or the `contributors` property.
+
+This rule enforces that public packages include `author` or a non-empty `contributors`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{}
+```
+
+```json
+{
+	"contributors": []
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"author": "Flint Contributors"
+}
+```
+
+```json
+{
+	"contributors": ["Flint Contributors"]
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `ignorePrivate`
+
+> Type: `boolean`
+>
+> Default: `true`
+
+Whether attribution requirements should be skipped when the package's `private` property is `true`.
+
+This option is useful for monorepos that contain private support packages that are never published.
+
+```ts
+packageJson.rules({
+	attribution: {
+		ignorePrivate: false,
+	},
+});
+```
+
+### `preferContributorsOnly`
+
+> Type: `boolean`
+>
+> Default: `false`
+
+Whether only contributors should be accepted for package attribution.
+
+This option is useful for projects that want all package attribution to use the same `contributors` shape.
+
+```ts
+packageJson.rules({
+	attribution: {
+		preferContributorsOnly: true,
+	},
+});
+```
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"author": "Flint Contributors"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"contributors": ["Flint Contributors"]
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If package ownership is tracked outside `package.json`, such as in an internal service catalog or repository CODEOWNERS policy, this rule might not be for you.
+
+If you already enable [`authorPresence`](/rules/package-json/authorpresence) or [`contributorsPresence`](/rules/package-json/contributorspresence), this rule is redundant and would double-report.
+Pick `attribution` when either property is acceptable, or pick the more specific rule when you want to require one in particular.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="attribution" />

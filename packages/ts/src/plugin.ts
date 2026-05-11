@@ -247,6 +247,7 @@ import regexUnusedQuantifiers from "./rules/regexUnusedQuantifiers.ts";
 import regexValidity from "./rules/regexValidity.ts";
 import regexWordMatchers from "./rules/regexWordMatchers.ts";
 import regexZeroQuantifiers from "./rules/regexZeroQuantifiers.ts";
+import requireImports from "./rules/requireImports.ts";
 import responseJsonMethods from "./rules/responseJsonMethods.ts";
 import restrictedIdentifiers from "./rules/restrictedIdentifiers.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
@@ -556,6 +557,8 @@ export const ts = createPlugin({
 		regexValidity,
 		regexWordMatchers,
 		regexZeroQuantifiers,
+		requireImports,
+		requireImports,
 		responseJsonMethods,
 		restrictedIdentifiers,
 		returnAssignments,

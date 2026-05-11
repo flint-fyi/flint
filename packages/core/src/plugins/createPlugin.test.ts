@@ -17,6 +17,7 @@ const stubMessages = { "": { primary: "", secondary: [], suggestions: [] } };
 const ruleCreator = new RuleCreator({
 	docs: (ruleId) => `https://flint.fyi/rules/stub/${ruleId.toLowerCase()}`,
 	pluginId: "stub",
+	presets: ["first", "second", "third"],
 });
 
 const ruleStandalone = ruleCreator.createRule(stubLanguage, {
