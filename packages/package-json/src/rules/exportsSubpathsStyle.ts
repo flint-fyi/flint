@@ -24,7 +24,7 @@ function getSingleRootSubpath(node: AST.ObjectLiteralExpression) {
 
 function isImplicitRootExportsObject(node: AST.ObjectLiteralExpression) {
 	return (
-		node.properties.length > 0 &&
+		node.properties.length &&
 		node.properties.every(
 			(property) =>
 				property.kind === SyntaxKind.PropertyAssignment &&
