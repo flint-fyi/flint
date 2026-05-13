@@ -8,17 +8,8 @@
 export class AsyncLocalStorage<T> {
 	#stack: T[] = [];
 
-	getStore(): T | undefined {
-		return this.#stack[this.#stack.length - 1];
-	}
-
-	run<R>(store: T, callback: () => R): R {
-		this.#stack.push(store);
-		try {
-			return callback();
-		} finally {
-			this.#stack.pop();
-		}
+	disable(): void {
+		this.#stack = [];
 	}
 
 	enterWith(store: T): void {
@@ -36,8 +27,17 @@ export class AsyncLocalStorage<T> {
 		}
 	}
 
-	disable(): void {
-		this.#stack = [];
+	getStore(): T | undefined {
+		return this.#stack[this.#stack.length - 1];
+	}
+
+	run<R>(store: T, callback: () => R): R {
+		this.#stack.push(store);
+		try {
+			return callback();
+		} finally {
+			this.#stack.pop();
+		}
 	}
 }
 

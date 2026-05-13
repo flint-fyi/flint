@@ -11,14 +11,14 @@ export const clearInterval: typeof globalThis.clearInterval =
 	globalThis.clearInterval;
 
 // Workers don't have setImmediate. Approximate with a minimal-delay timeout.
-export function setImmediate(callback: (...args: unknown[]) => void): unknown {
-	return globalThis.setTimeout(callback, 0);
-}
-
 export function clearImmediate(id: unknown): void {
 	if (typeof id === "number") {
 		globalThis.clearTimeout(id);
 	}
+}
+
+export function setImmediate(callback: (...args: unknown[]) => void): unknown {
+	return globalThis.setTimeout(callback, 0);
 }
 
 const timers = {

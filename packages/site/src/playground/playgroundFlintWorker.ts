@@ -31,12 +31,29 @@ import type {
 // `clearImmediate` as bare globals. `npm-package-arg` (transitive of
 // `@flint.fyi/package-json`) references `process` similarly. Workers don't
 // have any of these, so polyfill before any Flint module loads.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- the polyfill
-// shapes intentionally don't match Node's full Process / typeof setImmediate.
-const globalScope = globalThis as any;
+//
+// We can't extend the global `Window` type cleanly because the polyfill
+// shapes intentionally don't match Node's full `Process` / `typeof
+// setImmediate`. Reach in via an interface that describes only what we
+// assign — TypeScript treats the cast as adding optional properties rather
+// than overriding existing ones.
+interface WorkerPolyfillGlobals {
+	clearImmediate?: (id: unknown) => void;
+	process?: {
+		argv: string[];
+		cwd: () => string;
+		env: Record<string, string>;
+		platform: string;
+	};
+	setImmediate?: (cb: (...args: unknown[]) => void) => unknown;
+}
+
+const globalScope = globalThis as typeof globalThis & WorkerPolyfillGlobals;
 if (typeof globalScope.setImmediate !== "function") {
 	globalScope.setImmediate = (cb: (...args: unknown[]) => void) =>
-		globalThis.setTimeout(cb as () => void, 0);
+		globalThis.setTimeout(() => {
+			cb();
+		}, 0);
 }
 if (typeof globalScope.clearImmediate !== "function") {
 	globalScope.clearImmediate = (id: unknown) => {
@@ -59,18 +76,9 @@ if (typeof globalScope.process !== "object") {
 // in a Vite plugin transform of `createTypeScriptServerHost.ts` instead — see
 // `astro.config.ts`'s `playground-ts-sys-shim` plugin.
 
-type CoreModule = typeof import("@flint.fyi/core");
-type TsPluginModule = typeof import("@flint.fyi/ts");
-type JsonPluginModule = typeof import("@flint.fyi/json");
-type MdPluginModule = typeof import("@flint.fyi/md");
-type YamlPluginModule = typeof import("@flint.fyi/yaml");
-type PackageJsonPluginModule = typeof import("@flint.fyi/package-json");
 type BrowserPluginModule = typeof import("@flint.fyi/browser");
-type NodePluginModule = typeof import("@flint.fyi/node");
-type PerformancePluginModule = typeof import("@flint.fyi/performance");
-type JsxPluginModule = typeof import("@flint.fyi/jsx");
-type FlintPluginModule = typeof import("@flint.fyi/plugin-flint");
-type FlintNamespace = {
+type CoreModule = typeof import("@flint.fyi/core");
+interface FlintNamespace {
 	browserPlugin: BrowserPluginModule["browser"];
 	createVFSLinterHost: CoreModule["createVFSLinterHost"];
 	flintPlugin: FlintPluginModule["flint"];
@@ -83,54 +91,61 @@ type FlintNamespace = {
 	runConfig: CoreModule["runConfig"];
 	tsPlugin: TsPluginModule["ts"];
 	yamlPlugin: YamlPluginModule["yaml"];
-};
+}
+type FlintPluginModule = typeof import("@flint.fyi/plugin-flint");
+type JsonPluginModule = typeof import("@flint.fyi/json");
+type JsxPluginModule = typeof import("@flint.fyi/jsx");
+type MdPluginModule = typeof import("@flint.fyi/md");
+type NodePluginModule = typeof import("@flint.fyi/node");
+type PackageJsonPluginModule = typeof import("@flint.fyi/package-json");
+type PerformancePluginModule = typeof import("@flint.fyi/performance");
+type TsPluginModule = typeof import("@flint.fyi/ts");
+type YamlPluginModule = typeof import("@flint.fyi/yaml");
 
 let flintPromise: Promise<FlintNamespace> | undefined;
 
 function loadFlint(): Promise<FlintNamespace> {
-	if (!flintPromise) {
-		flintPromise = (async () => {
-			const [
-				core,
-				tsPlugin,
-				jsonPlugin,
-				mdPlugin,
-				yamlPlugin,
-				packageJsonPlugin,
-				browserPlugin,
-				nodePlugin,
-				performancePlugin,
-				jsxPlugin,
-				flintPlugin,
-			] = await Promise.all([
-				import("@flint.fyi/core") as Promise<CoreModule>,
-				import("@flint.fyi/ts") as Promise<TsPluginModule>,
-				import("@flint.fyi/json") as Promise<JsonPluginModule>,
-				import("@flint.fyi/md") as Promise<MdPluginModule>,
-				import("@flint.fyi/yaml") as Promise<YamlPluginModule>,
-				import("@flint.fyi/package-json") as Promise<PackageJsonPluginModule>,
-				import("@flint.fyi/browser") as Promise<BrowserPluginModule>,
-				import("@flint.fyi/node") as Promise<NodePluginModule>,
-				import("@flint.fyi/performance") as Promise<PerformancePluginModule>,
-				import("@flint.fyi/jsx") as Promise<JsxPluginModule>,
-				import("@flint.fyi/plugin-flint") as Promise<FlintPluginModule>,
-			]);
-			return {
-				browserPlugin: browserPlugin.browser,
-				createVFSLinterHost: core.createVFSLinterHost,
-				flintPlugin: flintPlugin.flint,
-				jsonPlugin: jsonPlugin.json,
-				jsxPlugin: jsxPlugin.jsx,
-				mdPlugin: mdPlugin.md,
-				nodePlugin: nodePlugin.node,
-				packageJsonPlugin: packageJsonPlugin.packageJson,
-				performancePlugin: performancePlugin.performance,
-				runConfig: core.runConfig,
-				tsPlugin: tsPlugin.ts,
-				yamlPlugin: yamlPlugin.yaml,
-			};
-		})();
-	}
+	flintPromise ||= (async () => {
+		const [
+			core,
+			tsPlugin,
+			jsonPlugin,
+			mdPlugin,
+			yamlPlugin,
+			packageJsonPlugin,
+			browserPlugin,
+			nodePlugin,
+			performancePlugin,
+			jsxPlugin,
+			flintPlugin,
+		] = await Promise.all([
+			import("@flint.fyi/core"),
+			import("@flint.fyi/ts"),
+			import("@flint.fyi/json"),
+			import("@flint.fyi/md"),
+			import("@flint.fyi/yaml"),
+			import("@flint.fyi/package-json"),
+			import("@flint.fyi/browser"),
+			import("@flint.fyi/node"),
+			import("@flint.fyi/performance"),
+			import("@flint.fyi/jsx"),
+			import("@flint.fyi/plugin-flint"),
+		]);
+		return {
+			browserPlugin: browserPlugin.browser,
+			createVFSLinterHost: core.createVFSLinterHost,
+			flintPlugin: flintPlugin.flint,
+			jsonPlugin: jsonPlugin.json,
+			jsxPlugin: jsxPlugin.jsx,
+			mdPlugin: mdPlugin.md,
+			nodePlugin: nodePlugin.node,
+			packageJsonPlugin: packageJsonPlugin.packageJson,
+			performancePlugin: performancePlugin.performance,
+			runConfig: core.runConfig,
+			tsPlugin: tsPlugin.ts,
+			yamlPlugin: yamlPlugin.yaml,
+		};
+	})();
 	return flintPromise;
 }
 
@@ -139,16 +154,46 @@ const VFS_CWD = "/playground";
 /** Synthetic config "file path" used by runConfig's cache machinery. */
 const VIRTUAL_CONFIG_PATH = `${VFS_CWD}/flint.config.ts`;
 
-interface ReportWithFilePath {
-	report: import("@flint.fyi/core").FileReport;
-	absolutePath: string;
-}
-
 interface PluginEntry {
-	id: string;
 	files: unknown;
+	id: string;
 	label: string;
 	presets: Record<string, unknown>;
+}
+
+interface ReportWithFilePath {
+	absolutePath: string;
+	report: import("@flint.fyi/core").FileReport;
+}
+
+function buildAst(
+	files: PlaygroundRequest["files"],
+	activePath: string,
+): PlaygroundAstNode | undefined {
+	const file = files.find((f) => f.path === activePath);
+	if (!file) {
+		return undefined;
+	}
+
+	const sourceFile = ts.createSourceFile(
+		activePath,
+		file.content,
+		ts.ScriptTarget.Latest,
+		true,
+		scriptKindForPath(activePath),
+	);
+
+	return serializeNode(sourceFile, sourceFile);
+}
+
+async function buildSchema(): Promise<PlaygroundSchema> {
+	const plugins = await getPlugins();
+	const pluginSchemas: PlaygroundPluginSchema[] = plugins.map((plugin) => ({
+		id: plugin.id,
+		label: plugin.label,
+		presets: Object.keys(plugin.presets).sort(),
+	}));
+	return { plugins: pluginSchemas };
 }
 
 async function getPlugins(): Promise<PluginEntry[]> {
@@ -234,34 +279,16 @@ async function getPlugins(): Promise<PluginEntry[]> {
 	];
 }
 
-async function buildSchema(): Promise<PlaygroundSchema> {
-	const plugins = await getPlugins();
-	const pluginSchemas: PlaygroundPluginSchema[] = plugins.map((plugin) => ({
-		id: plugin.id,
-		label: plugin.label,
-		presets: Object.keys(plugin.presets).sort(),
-	}));
-	return { plugins: pluginSchemas };
-}
-
-function pickEnabledPresets(
-	pluginPresets: Record<string, unknown>,
-	selection: Record<string, boolean> | undefined,
-): unknown[] {
-	if (!selection) {
-		return [];
+function interpolate(
+	template: string,
+	data: Record<string, boolean | number | string> | undefined,
+): string {
+	if (!data) {
+		return template;
 	}
-	const out: unknown[] = [];
-	for (const [name, enabled] of Object.entries(selection)) {
-		if (!enabled) {
-			continue;
-		}
-		const preset = pluginPresets[name];
-		if (preset != null) {
-			out.push(preset);
-		}
-	}
-	return out;
+	return template.replace(/\{\{\s*(\w+)\s*\}\}/g, (match, key: string) =>
+		key in data ? String(data[key]) : match,
+	);
 }
 
 async function lintWorkspace(
@@ -316,16 +343,24 @@ async function lintWorkspace(
 	return out;
 }
 
-function interpolate(
-	template: string,
-	data: Record<string, boolean | number | string> | undefined,
-): string {
-	if (!data) {
-		return template;
+function pickEnabledPresets(
+	pluginPresets: Record<string, unknown>,
+	selection: Record<string, boolean> | undefined,
+): unknown[] {
+	if (!selection) {
+		return [];
 	}
-	return template.replace(/\{\{\s*(\w+)\s*\}\}/g, (match, key: string) =>
-		key in data ? String(data[key]) : match,
-	);
+	const out: unknown[] = [];
+	for (const [name, enabled] of Object.entries(selection)) {
+		if (!enabled) {
+			continue;
+		}
+		const preset = pluginPresets[name];
+		if (preset != null) {
+			out.push(preset);
+		}
+	}
+	return out;
 }
 
 function reportToDiagnostic(entry: ReportWithFilePath): PlaygroundDiagnostic {
@@ -342,26 +377,6 @@ function reportToDiagnostic(entry: ReportWithFilePath): PlaygroundDiagnostic {
 		source: "flint",
 		start: entry.report.range.begin.raw,
 	};
-}
-
-function buildAst(
-	files: PlaygroundRequest["files"],
-	activePath: string,
-): PlaygroundAstNode | undefined {
-	const file = files.find((f) => f.path === activePath);
-	if (!file) {
-		return undefined;
-	}
-
-	const sourceFile = ts.createSourceFile(
-		activePath,
-		file.content,
-		ts.ScriptTarget.Latest,
-		true,
-		scriptKindForPath(activePath),
-	);
-
-	return serializeNode(sourceFile, sourceFile);
 }
 
 function scriptKindForPath(fileName: string): ts.ScriptKind {

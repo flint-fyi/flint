@@ -13,15 +13,11 @@ type FileLister = () => ReadonlyMap<string, string>;
 
 let vfsListFiles: FileLister | undefined;
 
-export function registerVFSFiles(lister: FileLister): void {
-	vfsListFiles = lister;
-}
-
 interface DirentLike {
+	isDirectory(): boolean;
+	isFile(): boolean;
 	name: string;
 	parentPath: string;
-	isFile(): boolean;
-	isDirectory(): boolean;
 }
 
 interface GlobOptions {
@@ -62,10 +58,10 @@ export async function* glob(
 
 		const lastSlash = absolutePath.lastIndexOf("/");
 		yield {
+			isDirectory: () => false,
+			isFile: () => true,
 			name: absolutePath.slice(lastSlash + 1),
 			parentPath: absolutePath.slice(0, lastSlash),
-			isFile: () => true,
-			isDirectory: () => false,
 		};
 	}
 }
@@ -74,12 +70,16 @@ export async function mkdir(): Promise<void> {
 	// No-op: cache writes to a non-existent virtual filesystem.
 }
 
-export async function writeFile(): Promise<void> {
-	// No-op: same reason as mkdir.
-}
-
 export async function readFile(): Promise<string> {
 	throw unimplemented("readFile");
+}
+
+export function registerVFSFiles(lister: FileLister): void {
+	vfsListFiles = lister;
+}
+
+export async function writeFile(): Promise<void> {
+	// No-op: same reason as mkdir.
 }
 
 function unimplemented(name: string): Error {
@@ -169,8 +169,8 @@ const fsPromises = {
 	lstat,
 	mkdir,
 	opendir,
-	readFile,
 	readdir,
+	readFile,
 	readlink,
 	realpath,
 	registerVFSFiles,
@@ -197,7 +197,7 @@ function toMatcher(pattern: string): (path: string) => boolean {
 	let regex = "";
 	let i = 0;
 	while (i < pattern.length) {
-		const c = pattern[i]!;
+		const c = pattern[i];
 		if (c === "*" && pattern[i + 1] === "*") {
 			// `**/` matches any number of directories (including zero); `**`
 			// alone matches anything.

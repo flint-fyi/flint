@@ -11,11 +11,11 @@ export function debugForFile(_filePath?: string): Debugger {
 	return () => {};
 }
 
-export function generateNamespace(): string {
+export function filePathToNamespace(): string {
 	return "";
 }
 
-export function filePathToNamespace(): string {
+export function generateNamespace(): string {
 	return "";
 }
 

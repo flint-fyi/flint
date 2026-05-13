@@ -39,6 +39,12 @@ export interface PlaygroundFile {
  * The set of valid preset names is discovered at runtime from the worker's
  * {@link PlaygroundSchema}, never hardcoded in the UI.
  */
+export interface PlaygroundPluginSchema {
+	id: string;
+	label: string;
+	presets: string[];
+}
+
 export type PlaygroundPresetSelection = Record<string, Record<string, boolean>>;
 
 export interface PlaygroundRequest {
@@ -58,10 +64,4 @@ export interface PlaygroundResult {
 
 export interface PlaygroundSchema {
 	plugins: PlaygroundPluginSchema[];
-}
-
-export interface PlaygroundPluginSchema {
-	id: string;
-	label: string;
-	presets: string[];
 }

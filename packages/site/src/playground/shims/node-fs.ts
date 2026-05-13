@@ -11,21 +11,13 @@ import * as fsPromises from "./node-fs-promises.ts";
 
 export class Dirent {
 	name: string;
-	#type: number;
 	parentPath: string;
+	#type: number;
 
 	constructor(name: string, type: number, parentPath: string) {
 		this.name = name;
 		this.#type = type;
 		this.parentPath = parentPath;
-	}
-
-	isFile(): boolean {
-		return this.#type === 1;
-	}
-
-	isDirectory(): boolean {
-		return this.#type === 2;
 	}
 
 	isBlockDevice(): boolean {
@@ -36,15 +28,23 @@ export class Dirent {
 		return false;
 	}
 
-	isSymbolicLink(): boolean {
-		return false;
+	isDirectory(): boolean {
+		return this.#type === 2;
 	}
 
 	isFIFO(): boolean {
 		return false;
 	}
 
+	isFile(): boolean {
+		return this.#type === 1;
+	}
+
 	isSocket(): boolean {
+		return false;
+	}
+
+	isSymbolicLink(): boolean {
 		return false;
 	}
 }
@@ -101,8 +101,6 @@ export const Stats = sentinel as never;
 export const promises = fsPromises;
 
 const fs: Record<string, unknown> = {
-	Dirent,
-	Stats,
 	accessSync,
 	appendFileSync,
 	chmodSync,
@@ -111,21 +109,23 @@ const fs: Record<string, unknown> = {
 	copyFileSync,
 	createReadStream,
 	createWriteStream,
+	Dirent,
 	existsSync,
 	fstatSync,
 	linkSync,
 	lstatSync,
 	mkdirSync,
-	openSync,
 	opendirSync,
+	openSync,
 	promises,
-	readFileSync,
 	readdirSync,
+	readFileSync,
 	readlinkSync,
 	realpathSync,
 	renameSync,
-	rmSync,
 	rmdirSync,
+	rmSync,
+	Stats,
 	statSync,
 	symlinkSync,
 	truncateSync,

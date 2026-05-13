@@ -12,10 +12,10 @@ export function cwd(): string {
 }
 
 const proc = {
-	platform,
-	env,
 	argv,
 	cwd,
+	env,
+	platform,
 };
 
 export default proc;

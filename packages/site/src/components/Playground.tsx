@@ -1,7 +1,6 @@
 import { javascript } from "@codemirror/lang-javascript";
 import {
 	type Diagnostic as CmDiagnostic,
-	forceLinting,
 	lintGutter,
 	linter,
 } from "@codemirror/lint";
@@ -1326,7 +1325,6 @@ export function Playground() {
 	const requestId = useRef(0);
 	const workerRef = useRef<Worker | undefined>(undefined);
 	const editorViewRef = useRef<EditorView | null>(null);
-	const resultRef = useRef<PlaygroundResult | undefined>(undefined);
 	const pendingGoTo = useRef<{
 		end?: number;
 		fileName: string;
@@ -1350,7 +1348,11 @@ export function Playground() {
 		useState<DiagnosticsTab>("diagnostics");
 	const compactLayout = useCompactPlaygroundLayout();
 	const [compactTab, setCompactTab] = useState<PlaygroundCompactTab>("code");
-	resultRef.current = result;
+
+	const activeDiagnostics = useMemo(
+		() => (result?.diagnostics ?? []).filter((d) => d.fileName === activePath),
+		[result, activePath],
+	);
 
 	const extensions = useMemo(() => {
 		const isJsx = activePath.endsWith(".tsx") || activePath.endsWith(".jsx");
@@ -1361,15 +1363,11 @@ export function Playground() {
 				typescript: true,
 			}),
 			linter((view) =>
-				toCmDiagnostics(
-					resultRef.current?.diagnostics ?? [],
-					activePath,
-					view.state.doc.length,
-				),
+				toCmDiagnostics(activeDiagnostics, activePath, view.state.doc.length),
 			),
 			lintGutter(),
 		];
-	}, [activePath]);
+	}, [activePath, activeDiagnostics]);
 
 	useEffect(() => {
 		const hash = globalThis.location.hash.replace(/^#/u, "");
@@ -1564,16 +1562,6 @@ export function Playground() {
 		() => sortDiagnostics(files, diagnostics),
 		[files, diagnostics],
 	);
-
-	useEffect(() => {
-		const view = editorViewRef.current;
-
-		if (!view) {
-			return;
-		}
-
-		forceLinting(view);
-	}, [activePath, diagnostics]);
 
 	const goToDiagnostic = useCallback(
 		(fileName: string, pos: number) => {
