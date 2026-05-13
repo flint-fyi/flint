@@ -5,6 +5,8 @@ import {
 import * as path from "node:path";
 import ts from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
+
 function canonicalize(filePath: string) {
 	const resolvedPath = path.resolve(filePath);
 	return ts.sys.useCaseSensitiveFileNames
@@ -33,7 +35,7 @@ function isSelfImport(
 	return canonicalize(resolvedFileName) === canonicalize(currentFilePath);
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports when a module imports itself.",
 		id: "importSelf",
