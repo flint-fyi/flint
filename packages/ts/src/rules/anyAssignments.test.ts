@@ -119,28 +119,6 @@ const value = anyValue;
 		},
 		{
 			code: `
-const value = notKnownValue;
-`,
-			snapshot: `
-const value = notKnownValue;
-      ~~~~~~~~~~~~~~~~~~~~~
-      Unsafe assignment of a value of type \`error\`.
-`,
-		},
-		{
-			code: `
-let value: NotKnown;
-const named: string = value;
-`,
-			snapshot: `
-let value: NotKnown;
-const named: string = value;
-      ~~~~~~~~~~~~~~~~~~~~~
-      Unsafe assignment of type \`error\` to variable of type \`string\`.
-`,
-		},
-		{
-			code: `
 const [x] = [1] as [any];
 `,
 			snapshot: `
@@ -321,5 +299,15 @@ const bar: any = 1;
 const foo: Foo = { bar };
 `,
 		`const [{ [\`x\${1}\`]: x }] = [{ [\`x\`]: 1 }] as [{ [\`x\`]: any }];`,
+		`
+declare const intrinsicError: NotKnown;
+
+const log = intrinsicError;
+`,
+		`
+declare const intrinsicError: NotKnown;
+
+const log: string = intrinsicError;
+`,
 	],
 });

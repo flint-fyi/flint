@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/node",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"description": "[Experimental] A Flint plugin for Node.js code.",
 	"homepage": "https://www.flint.fyi/rules/node",
 	"repository": {

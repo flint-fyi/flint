@@ -44,6 +44,14 @@ This rule checks that the `engines` property is an object with non-empty string 
 If you don't need compliance with npm's `engines` field specification, you can disable this rule.
 For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
 
+## Related Rules
+
+- [enginesPresence](/rules/package-json/enginespresence) - Enforces that the `engines` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `engines`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#engines)
+
 ## Equivalents in Other Linters
 
 <RuleEquivalents pluginId="package-json" ruleId="enginesValidity" />

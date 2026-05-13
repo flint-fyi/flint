@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/markdown-language",
-	"version": "0.15.1",
+	"version": "0.15.2",
 	"description": "[Experimental] Markdown language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {

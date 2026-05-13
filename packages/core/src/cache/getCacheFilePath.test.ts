@@ -17,11 +17,13 @@ describe(getCacheFilePath, () => {
 
 	it("should return the provided path unchanged when it ends with .json", () => {
 		const provided = join("custom", "cache.json");
+
 		expect(getCacheFilePath(provided)).toBe(provided);
 	});
 
 	it("should append the default filename when a directory is provided", () => {
 		const providedDir = join("custom", "cache-dir");
+
 		expect(getCacheFilePath(providedDir)).toBe(
 			join(providedDir, defaultCacheFileName),
 		);
@@ -33,6 +35,7 @@ describe(getCacheFilePath, () => {
 
 	it("should be case-insensitive when checking for the .json suffix", () => {
 		const providedUpper = join("custom", "CACHE.JSON");
+
 		expect(getCacheFilePath(providedUpper)).toBe(providedUpper);
 	});
 });

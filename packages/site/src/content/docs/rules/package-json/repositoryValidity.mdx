@@ -22,7 +22,7 @@ If it's a string, it should be a shorthand repo string from a supported provider
 ```json
 {
 	"repository": {
-		"url": "git+https://github.com/michaelfaith/eslint-plugin-package-json.git"
+		"url": "git+https://github.com/flint-fyi/flint.git"
 	}
 }
 ```
@@ -32,7 +32,7 @@ If it's a string, it should be a shorthand repo string from a supported provider
 
 ```json
 {
-	"repository": "github:michaelfaith/eslint-plugin-package-json"
+	"repository": "github:flint-fyi/flint"
 }
 ```
 
@@ -40,7 +40,7 @@ If it's a string, it should be a shorthand repo string from a supported provider
 {
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/michaelfaith/eslint-plugin-package-json.git"
+		"url": "git+https://github.com/flint-fyi/flint.git"
 	}
 }
 ```
@@ -52,6 +52,14 @@ If it's a string, it should be a shorthand repo string from a supported provider
 
 If you don't need compliance with npm's `repository` field specification, you can disable this rule.
 For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+
+## Related Rules
+
+- [repositoryPresence](/rules/package-json/repositorypresence) - Enforces that the `repository` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `repository`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#repository)
 
 ## Equivalents in Other Linters
 

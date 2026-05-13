@@ -19,6 +19,7 @@ describe("cacheStorageSchema decoding", () => {
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
+
 		expect(result.success).toBe(true);
 	});
 
@@ -31,6 +32,7 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -43,6 +45,7 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -60,6 +63,7 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -76,6 +80,7 @@ describe("cacheStorageSchema decoding", () => {
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
+
 		expect(result.success).toBe(true);
 	});
 
@@ -106,6 +111,7 @@ describe("cacheStorageSchema decoding", () => {
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
+
 		expect(result.success).toBe(true);
 	});
 
@@ -144,6 +150,7 @@ describe("cacheStorageSchema decoding", () => {
 		};
 
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
+
 		expect(result.success).toBe(true);
 	});
 
@@ -174,16 +181,19 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
 	it("rejects null input", () => {
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(null));
+
 		expect(result.success).toBe(false);
 	});
 
 	it("rejects undefined input", () => {
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(undefined));
+
 		expect(result.success).toBe(false);
 	});
 
@@ -197,6 +207,7 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -228,6 +239,7 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -260,6 +272,7 @@ describe("cacheStorageSchema decoding", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidCache),
 		);
+
 		expect(result.success).toBe(false);
 	});
 });
@@ -279,6 +292,7 @@ describe("cacheStorageSchema", () => {
 		};
 
 		const encoded = z.encode(cacheStorageSchema, validCache);
+
 		expect(typeof encoded).toBe("string");
 		expect(JSON.parse(encoded)).toEqual(validCache);
 	});
@@ -295,6 +309,7 @@ describe("cacheStorageSchema", () => {
 		const json = JSON.stringify(validCache);
 
 		const decoded = z.decode(cacheStorageSchema, json);
+
 		expect(decoded).toEqual(validCache);
 	});
 
@@ -308,6 +323,7 @@ describe("cacheStorageSchema", () => {
 			cacheStorageSchema,
 			invalidCache as unknown as z.output<typeof cacheStorageSchema>,
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -318,6 +334,7 @@ describe("cacheStorageSchema", () => {
 			cacheStorageSchema,
 			JSON.stringify(invalidJson),
 		);
+
 		expect(result.success).toBe(false);
 	});
 
@@ -331,6 +348,7 @@ describe("cacheStorageSchema", () => {
 			cacheStorageSchema,
 			JSON.stringify(validJsonInvalidSchema),
 		);
+
 		expect(result.success).toBe(false);
 	});
 

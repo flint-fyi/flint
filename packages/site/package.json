@@ -26,6 +26,7 @@
 		"@flint.fyi/performance": "workspace:^",
 		"@flint.fyi/plugin-flint": "workspace:^",
 		"@flint.fyi/spelling": "workspace:^",
+		"@flint.fyi/vitest": "workspace:^",
 		"@types/react": "catalog:site",
 		"@uiw/react-codemirror": "^4.25.9",
 		"astro": "catalog:site",
