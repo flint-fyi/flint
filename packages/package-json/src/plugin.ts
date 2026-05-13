@@ -5,6 +5,7 @@ import { directPropertyValidityRules } from "./directPropertyValidityRules.ts";
 import attribution from "./rules/attribution.ts";
 import binNameCasing from "./rules/binNameCasing.ts";
 import dependencyUniqueness from "./rules/dependencyUniqueness.ts";
+import emptyFields from "./rules/emptyFields.ts";
 import privatePresence from "./rules/privatePresence.ts";
 import repositoryShorthand from "./rules/repositoryShorthand.ts";
 import scriptsNameCasing from "./rules/scriptsNameCasing.ts";
@@ -18,6 +19,7 @@ export const packageJson = createPlugin({
 		attribution,
 		binNameCasing,
 		dependencyUniqueness,
+		emptyFields,
 		privatePresence,
 		repositoryShorthand,
 		scriptsNameCasing,
