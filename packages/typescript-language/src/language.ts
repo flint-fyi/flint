@@ -88,9 +88,8 @@ export const typescriptLanguage = createLanguage<
 		name: "TypeScript",
 	},
 	createFileFactory: (host) => {
-		const newLocal = createTypeScriptServerHost(host);
 		const { service } = createProjectService({
-			host: newLocal,
+			host: createTypeScriptServerHost(host),
 		});
 
 		function createFile(data: FileAboutData) {
