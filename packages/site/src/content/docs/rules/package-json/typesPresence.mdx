@@ -58,7 +58,8 @@ This option can be useful if the rule is enabled on many `package.json` files an
 ## When Not To Use It
 
 If your package generates `.d.t.s` files only in locations TypeScript will automatically detect, or does not publish TypeScript declarations, you can disable this rule.
-For example, a JavaScript-only package without declaration files may not need a `types` field.
+Most projects generally don't need this rule because they use files with sibling declarations detected as `exports`.
+Alternately, a non-public JavaScript-only package without declaration files may not need a `types` field or types at all.
 
 ## Related Rules
 
