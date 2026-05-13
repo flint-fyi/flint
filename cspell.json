@@ -63,8 +63,11 @@
 		"extlang",
 		"Fallthroughs",
 		"falsiness",
+		"fdescribe",
 		"Focusables",
+		"frontmatter",
 		"generalcategory",
+		"gypfile",
 		"idlist",
 		"impp",
 		"joshuakgoldberg",
@@ -118,7 +121,10 @@
 		"Waiblinger",
 		"webauthn",
 		"WHATWG",
+		"xdescribe",
 		"xobi",
+		"xobi",
+		"xtest",
 		"Yosuke"
 	]
 }

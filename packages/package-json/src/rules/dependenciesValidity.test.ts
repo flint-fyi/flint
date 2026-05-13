@@ -63,24 +63,6 @@ ruleTester.describe(directPropertyValidityRules.dependenciesValidity, {
 			code: `
 {
   "dependencies": {
-    "example": "bowie"
-  }
-}
-`,
-			snapshot: `
-{
-  "dependencies": {
-    "example": "bowie"
-               ~~~~~~~
-               Invalid dependencies: invalid version range for dependency example: bowie.
-  }
-}
-`,
-		},
-		{
-			code: `
-{
-  "dependencies": {
     "example": 123
   }
 }
@@ -90,7 +72,7 @@ ruleTester.describe(directPropertyValidityRules.dependenciesValidity, {
   "dependencies": {
     "example": 123
                ~~~
-               Invalid dependencies: dependency version for example should be a string: 123.
+               Invalid dependencies: dependency version for \`example\` should be a string: 123.
   }
 }
 `,
@@ -108,7 +90,7 @@ ruleTester.describe(directPropertyValidityRules.dependenciesValidity, {
   "dependencies": {
     "example": null
                ~~~~
-               Invalid dependencies: dependency version for example should be a string: null.
+               Invalid dependencies: dependency version for \`example\` should be a string: null.
   }
 }
 `,
@@ -126,25 +108,7 @@ ruleTester.describe(directPropertyValidityRules.dependenciesValidity, {
   "dependencies": {
     "example": {}
                ~~
-               Invalid dependencies: dependency version for example should be a string: [object Object].
-  }
-}
-`,
-		},
-		{
-			code: `
-{
-  "dependencies": {
-    "example": "workspace"
-  }
-}
-`,
-			snapshot: `
-{
-  "dependencies": {
-    "example": "workspace"
-               ~~~~~~~~~~~
-               Invalid dependencies: invalid version range for dependency example: workspace.
+               Invalid dependencies: dependency version for \`example\` should be a string: [object Object].
   }
 }
 `,
@@ -170,6 +134,12 @@ ruleTester.describe(directPropertyValidityRules.dependenciesValidity, {
 		`{
   "dependencies": {
     "example": "catalog:"
+  }
+}
+`,
+		`{
+  "dependencies": {
+    "example": "bowie"
   }
 }
 `,
@@ -206,6 +176,12 @@ ruleTester.describe(directPropertyValidityRules.dependenciesValidity, {
 		`{
   "dependencies": {
     "example": "workspace:^1.2.3"
+  }
+}
+`,
+		`{
+  "dependencies": {
+    "example": "workspace"
   }
 }
 `,

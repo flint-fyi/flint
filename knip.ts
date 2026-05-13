@@ -75,6 +75,9 @@ export default {
 		"packages/ts": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
+		"packages/vitest": {
+			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
+		},
 		"packages/volar-language": {
 			// https://github.com/webpro-nl/knip/issues/248
 			ignoreDependencies: ["@volar/language-core!"],

@@ -1,0 +1,72 @@
+---
+description: "Enforce that the `config` property is present."
+title: "configPresence"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="configPresence" />
+
+npm requires that the `config` field in `package.json` is present.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"config": { "port": 8080 }
+}
+```
+
+```json
+{
+	"config": { "port": 8080 },
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `ignorePrivate`
+
+Whether the property should still be required when the package's `private` property is `true`.
+Defaults to `false`.
+
+This option can be useful if the rule is enabled on many `package.json` files and some files differ in privacy.
+
+## When Not To Use It
+
+If your package doesn't need to specify `config`, you can disable this rule.
+
+## Related Rules
+
+- [configValidity](/rules/package-json/configvalidity) - Enforces that the `config` property is valid.
+
+## Further Reading
+
+- [npm: `package.json` > `config`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#config)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="configPresence" />

@@ -5,28 +5,59 @@ import Default from "@astrojs/starlight/components/Footer.astro";
 export type Props = StarlightRouteData;
 ---
 
-<Default {...Astro.props}>
-	<slot />
-</Default>
+<footer>
+	<Default {...Astro.props}>
+		<slot />
+	</Default>
 
-<div class="credits">
-	Made with ❤️‍🔥 around the world by
-	<a href="/team">the Flint team</a> and <a
-		href="http://github.com/flint-fyi/flint/contributors"
-		target="_blank">contributors</a
-	>.
-</div>
+	<div class="credits">
+		Made with ❤️‍🔥 around the world by
+		<a href="/team">the Flint team</a> and <a
+			href="http://github.com/flint-fyi/flint/contributors"
+			target="_blank">contributors</a
+		>.
+	</div>
+
+	{
+		Astro.url.pathname === "/" && (
+			<a href="https://www.netlify.com">
+				<img
+					alt="Deploys by Netlify"
+					class="dark"
+					src="https://www.netlify.com/assets/badges/netlify-badge-color-accent.svg"
+				/>
+				<img
+					alt="Deploys by Netlify"
+					class="light"
+					src="https://www.netlify.com/assets/badges/netlify-badge-color-bg.svg"
+				/>
+			</a>
+		)
+	}
+</footer>
 
 <style>
+	footer {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+	}
+
 	.credits {
 		border-top: 1px solid var(--sl-color-gray-6);
 		color: var(--sl-color-gray-3);
 		margin-top: clamp(2rem, calc(0.25rem + 6vw), 5rem);
-		padding-top: clamp(1rem, calc(0.125rem + 3vw), 2.5rem);
+		padding: clamp(1rem, calc(0.125rem + 3vw), 2.5rem) 0 2rem;
 		text-align: center;
 	}
 
 	.credits a {
 		color: var(--sl-color-gray-2);
+	}
+
+	:global(html[data-theme="dark"]) .light,
+	:global(html[data-theme="light"]) .dark {
+		display: none;
 	}
 </style>
