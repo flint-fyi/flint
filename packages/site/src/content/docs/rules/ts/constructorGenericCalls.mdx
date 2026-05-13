@@ -1,0 +1,125 @@
+---
+description: "Reports inconsistent placement of type arguments in constructor calls."
+title: "constructorGenericCalls"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="constructorGenericCalls" />
+
+When constructing a generic class, type arguments can be specified on either the left-hand side (as a type annotation) or the right-hand side (as part of the constructor call).
+This rule ensures that type arguments appear consistently on one side of the declaration.
+
+Keeping to one side consistently improves code readability.
+The rule never reports when there are type arguments on both sides, or neither side of the declaration.
+It also doesn't report if the names of the type annotation and the constructor don't match.
+
+## Examples
+
+With the default `"constructor"` style:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const map: Map<string, number> = new Map();
+```
+
+```ts
+const set: Set<string> = new Set();
+```
+
+```ts
+class Example {
+	property: Map<string, number> = new Map();
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const map = new Map<string, number>();
+```
+
+```ts
+const set = new Set<string>();
+```
+
+```ts
+const map: Map<string, number> = new Map<string, number>();
+```
+
+```ts
+const map = new Map();
+```
+
+```ts
+class Example {
+	property = new Map<string, number>();
+}
+```
+
+</TabItem>
+</Tabs>
+
+With the `"type-annotation"` style:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const map = new Map<string, number>();
+```
+
+```ts
+const set = new Set<string>();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const map: Map<string, number> = new Map();
+```
+
+```ts
+const set: Set<string> = new Set();
+```
+
+```ts
+const map: Map<string, number> = new Map<string, number>();
+```
+
+```ts
+const map = new Map();
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `style`
+
+Which side should specify the type arguments:
+
+- `"constructor"` (default): Type arguments should be on the constructor call.
+- `"type-annotation"`: Type arguments should be on the type annotation.
+
+## When Not To Use It
+
+If your codebase prefers to keep an inconsistent preference for one style over the other, you may not need this rule.
+Some teams prefer to use whichever style feels more natural in each context.
+
+## Further Reading
+
+- [TypeScript Handbook: Generics](https://www.typescriptlang.org/docs/handbook/2/generics.html)
+- [MDN: Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="constructorGenericCalls" />

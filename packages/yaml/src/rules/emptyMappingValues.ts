@@ -1,4 +1,5 @@
-import { yamlLanguage } from "../language.ts";
+import { yamlLanguage } from "@flint.fyi/yaml-language";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(yamlLanguage, {
@@ -25,7 +26,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 		return {
 			visitors: {
 				mappingValue: (node) => {
-					if (node.children.length === 0) {
+					if (!node.children.length) {
 						context.report({
 							message: "emptyValue",
 							range: {

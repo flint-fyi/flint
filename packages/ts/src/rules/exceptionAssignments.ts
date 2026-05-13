@@ -1,15 +1,17 @@
+import {
+	type AST,
+	getModifyingReferences,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import { getModifyingReferences } from "../utils/getModifyingReferences.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports reassigning exception parameters in catch clauses.",
 		id: "exceptionAssignments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noExAssign: {
@@ -28,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function collectBindingElements(name: AST.BindingName): AST.Identifier[] {
 			const identifiers: AST.Identifier[] = [];
 
-			if (name.kind == SyntaxKind.Identifier) {
+			if (name.kind === SyntaxKind.Identifier) {
 				identifiers.push(name);
 			} else {
 				for (const element of name.elements) {

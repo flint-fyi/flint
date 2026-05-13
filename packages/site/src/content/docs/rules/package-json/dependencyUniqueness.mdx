@@ -1,0 +1,70 @@
+---
+description: "Reports dependency names that are declared more than once in package.json."
+title: "dependencyUniqueness"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="dependencyUniqueness" />
+
+This rule reports dependency names that are repeated in the same `package.json` dependency collection.
+It also reports dependency names repeated from `dependencies` into `devDependencies` or `peerDependencies`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"dependencies": {
+		"left-pad": "^1.3.0",
+		"left-pad": "^1.3.0"
+	}
+}
+```
+
+```json
+{
+	"dependencies": {
+		"left-pad": "^1.3.0"
+	},
+	"devDependencies": {
+		"left-pad": "^1.3.0"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"dependencies": {
+		"left-pad": "^1.3.0"
+	},
+	"devDependencies": {
+		"vitest": "^4.0.0"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your package intentionally repeats dependency names across dependency collections, such as to mirror a runtime dependency into `peerDependencies`, this rule might not be for you.
+Doing so is generally unnecessary with most mainstream package managers, but other tooling might add in the need to do so.
+
+## Further Reading
+
+- [npm: `package.json` > `dependencies`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#dependencies)
+- [npm: `package.json` > `peerDependencies`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#peerdependencies)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="dependencyUniqueness" />

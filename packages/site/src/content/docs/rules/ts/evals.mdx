@@ -1,0 +1,70 @@
+---
+description: "Reports uses of the eval function."
+title: "evals"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="evals" />
+
+The `eval()` function evaluates a string as JavaScript code.
+This is dangerous because it can execute arbitrary code, potentially leading to security vulnerabilities.
+
+Using `eval()` has several problems:
+
+- Security risks: executing untrusted code can lead to code injection attacks
+- Performance issues: `eval()` prevents JavaScript engine optimizations
+- Debugging difficulty: dynamically executed code is harder to debug and trace
+- CSP violations: many Content Security Policies prohibit `eval()`
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const code = getUserInput();
+eval(code);
+```
+
+```ts
+const result = eval("2 + 2");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const data = '{"name": "John"}';
+const obj = JSON.parse(data);
+```
+
+```ts
+const calculate = (a: number, b: number) => a + b;
+const result = calculate(2, 2);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+In rare cases, `eval()` may be necessary for dynamic code execution, such as in development tools or REPLs.
+If you have a legitimate use case and understand the security implications, you may disable this rule for specific lines.
+Consider using the `Function` constructor as a slightly safer alternative, though it still carries risks.
+
+## Further Reading
+
+- [MDN: eval()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval)
+- [MDN: Never use direct eval()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#never_use_direct_eval!)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="evals" />

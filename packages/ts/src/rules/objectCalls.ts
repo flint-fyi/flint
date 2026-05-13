@@ -1,12 +1,12 @@
-import { SyntaxKind } from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
+import { getTSNodeRange } from "@flint.fyi/typescript-language";
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
-} from "../language.ts";
-import type * as AST from "../types/ast.ts";
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
+} from "@flint.fyi/typescript-language";
+import type { AST } from "@flint.fyi/typescript-language";
+import { isGlobalDeclarationOfName } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -14,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Prefer `{}` object literal notation or `Object.create` instead of calling or constructing `Object`.",
 		id: "objectCalls",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferObjectLiteral: {
@@ -37,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		): void {
 			if (
-				node.expression.kind != SyntaxKind.Identifier ||
+				node.expression.kind !== SyntaxKind.Identifier ||
 				!isGlobalDeclarationOfName(node.expression, "Object", typeChecker)
 			) {
 				return;

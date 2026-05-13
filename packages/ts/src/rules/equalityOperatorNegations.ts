@@ -1,7 +1,9 @@
+import {
+	typescriptLanguage,
+	unwrapParenthesizedNode,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 const equalityOperators = new Set([
@@ -52,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const left = unwrapParenthesizedExpression(node.left);
+					const left = unwrapParenthesizedNode(node.left);
 					if (
 						left.kind !== SyntaxKind.PrefixUnaryExpression ||
 						left.operator !== SyntaxKind.ExclamationToken
@@ -60,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const innerExpression = unwrapParenthesizedExpression(left.operand);
+					const innerExpression = unwrapParenthesizedNode(left.operand);
 					if (
 						innerExpression.kind === SyntaxKind.PrefixUnaryExpression &&
 						innerExpression.operator === SyntaxKind.ExclamationToken

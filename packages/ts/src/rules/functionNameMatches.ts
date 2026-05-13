@@ -1,8 +1,10 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 // TODO: Use a util like getStaticValue
@@ -35,17 +37,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports function names that don't match the variable or property they're assigned to.",
 		id: "functionNameMatches",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		mismatch: {
 			primary:
-				"Function name `{{functionName}}` does not match assigned name `{{assignedName}}`.",
+				"Function name `{{ functionName }}` does not match assigned name `{{ assignedName }}`.",
 			secondary: [
 				"When a named function expression is assigned to a variable or property, the function name should match to avoid confusion.",
 			],
 			suggestions: [
-				"Rename the function to `{{assignedName}}`",
+				"Rename the function to `{{ assignedName }}`",
 				"Use an anonymous function.",
 			],
 		},

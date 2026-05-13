@@ -1,0 +1,81 @@
+---
+description: "Prefer `Set.size` over spreading into an array and accessing `.length`."
+title: "setSizeLengthChecks"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="setSizeLengthChecks" />
+
+Spreading a `Set` into an array just to access `.length` is wasteful.
+`Set` has a built-in `.size` property that provides the same information without creating an intermediate array.
+
+This rule reports when:
+
+- A `Set` (either `new Set()` directly or a `const` variable initialized with a `Set`) is spread into an array literal
+- The array literal immediately accesses `.length`
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const count = [...new Set(items)].length;
+```
+
+```ts
+const uniqueItems = new Set([1, 2, 3]);
+const count = [...uniqueItems].length;
+```
+
+```ts
+const count = [...new Set(items)].length;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const count = new Set(items).size;
+```
+
+```ts
+const uniqueItems = new Set([1, 2, 3]);
+const count = uniqueItems.size;
+```
+
+```ts
+// Spread is fine when the array is actually used
+const uniqueArray = [...new Set(items)];
+```
+
+```ts
+// Not a Set, so spreading to get length is acceptable
+const count = [...items].length;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you have augmented globals to modify how `Array` and/or `Set` and/or `...` spreads behave, this rule may not be for you.
+
+Alternately, if you have a large existing codebase where spreading arrays to gain size is the preferred stylistic convention, it may be difficult to migrate to this rule.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Set.prototype.size](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/size)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="setSizeLengthChecks" />

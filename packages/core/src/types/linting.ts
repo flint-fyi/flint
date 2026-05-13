@@ -1,10 +1,10 @@
 import type { FileCacheStorage } from "./cache.ts";
-import type { LanguageFileDiagnostic } from "./languages.ts";
+import type { LanguageReport } from "./languages.ts";
 import type { FileReport } from "./reports.ts";
 
 export interface FileResults {
 	dependencies: Set<string>;
-	diagnostics: LanguageFileDiagnostic[];
+	languageReports: LanguageReport[];
 	reports: FileReport[];
 }
 
@@ -12,6 +12,7 @@ export interface LintResults {
 	allFilePaths: Set<string>;
 	cached: Map<string, FileCacheStorage> | undefined;
 	filesResults: Map<string, FileResults>;
+	ruleCount: number;
 }
 
 export interface LintResultsMaybeWithChanges extends LintResults {

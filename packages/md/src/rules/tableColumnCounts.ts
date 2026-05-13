@@ -1,4 +1,5 @@
-import { markdownLanguage } from "../language.ts";
+import { markdownLanguage } from "@flint.fyi/markdown-language";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(markdownLanguage, {
@@ -27,7 +28,7 @@ export default ruleCreator.createRule(markdownLanguage, {
 		return {
 			visitors: {
 				table: (node) => {
-					if (node.children.length === 0) {
+					if (!node.children.length) {
 						return;
 					}
 

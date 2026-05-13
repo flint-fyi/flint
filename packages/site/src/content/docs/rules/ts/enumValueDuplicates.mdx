@@ -1,0 +1,100 @@
+---
+description: "Reports enum members with duplicate values."
+title: "enumValueDuplicates"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="enumValueDuplicates" />
+
+TypeScript allows multiple enum members to have the same value.
+However, this is usually unintentional and can lead to bugs that are hard to track down.
+
+When enum members have duplicate values:
+
+- Accessing the enum by value will return only one of the duplicate members
+- The enum's reverse mapping becomes unreliable
+- Code that relies on unique values may behave unexpectedly
+
+This rule reports when enum members are initialized with literal values (strings or numbers) that have already been used by another member.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+enum Status {
+	Active = 1,
+	Inactive = 1,
+}
+```
+
+```ts
+enum Color {
+	Red = "r",
+	Blue = "r",
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+enum Status {
+	Active = 1,
+	Inactive = 2,
+}
+```
+
+```ts
+enum Color {
+	Red = "red",
+	Blue = "blue",
+}
+```
+
+```ts
+enum Direction {
+	Up,
+	Down,
+	Left,
+	Right,
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Scope of Detection
+
+This rule only checks enum members initialized with literal values:
+
+- Numeric literals: `1`, `-5`, `+3`
+- String literals: `"value"`, `'value'`
+- Template literals without substitutions: `` `value` ``
+
+Members without initializers or with computed expressions are not checked:
+
+- Implicit values: `enum E { A, B }` (not checked)
+- Computed values: `enum E { A = getValue() }` (not checked)
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+It can sometimes be useful to include duplicate enum members for specific use cases, such as when renaming an enum member and keeping the old name as an alias until a breaking change.
+You might consider using ESLint disable comments for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [TypeScript Handbook: Enums](https://www.typescriptlang.org/docs/handbook/enums.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="enumValueDuplicates" />

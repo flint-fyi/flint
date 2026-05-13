@@ -1,4 +1,4 @@
-import { makeAbsolute } from "@flint.fyi/utils";
+import { normalizePath } from "@flint.fyi/utils";
 import { debugForFile } from "debug-for-file";
 import * as fs from "node:fs/promises";
 import path from "node:path";
@@ -8,8 +8,9 @@ import type {
 	ConfigUseDefinition,
 	ProcessedConfigDefinition,
 } from "../types/configs.ts";
+import type { LinterHost } from "../types/host.ts";
 import { flatten } from "../utils/arrays.ts";
-import { readGitignore } from "./readGitignore.ts";
+import { createGitignoreFilter } from "./createGitignoreFilter.ts";
 import { resolveUseFilesGlobs } from "./resolveUseFilesGlobs.ts";
 
 const log = debugForFile(import.meta.filename);
@@ -25,14 +26,14 @@ export interface ConfigUseDefinitionWithFiles extends ConfigUseDefinition {
 }
 
 export async function computeUseDefinitions(
+	host: LinterHost,
 	configDefinition: ProcessedConfigDefinition,
 ): Promise<ComputedUseDefinitions> {
 	log("Collecting files from %d use pattern(s)", configDefinition.use.length);
 
 	const allFilePaths = new Set<string>();
-	const gitignore = await readGitignore();
-
-	log("Excluding based on .gitignore: %s", gitignore);
+	const cwd = host.getCurrentDirectory();
+	const gitignoreFilter = createGitignoreFilter(cwd, host);
 
 	const useDefinitions = await Promise.all(
 		configDefinition.use.map(async (use) => {
@@ -40,17 +41,20 @@ export async function computeUseDefinitions(
 			const foundFilePaths = (
 				await Array.fromAsync(
 					fs.glob([globs.include].flat(), {
-						exclude: [...gitignore, ...globs.exclude],
+						cwd,
+						exclude: globs.exclude,
 						withFileTypes: true,
 					}),
 				)
 			)
-				.filter((entry) => entry.isFile())
 				.map((entry) =>
-					path.relative(
-						process.cwd(),
-						makeAbsolute(path.join(entry.parentPath, entry.name)),
-					),
+					entry.isFile()
+						? normalizePath(path.join(entry.parentPath, entry.name))
+						: null,
+				)
+				.filter(
+					(absolutePath): absolutePath is string =>
+						absolutePath !== null && gitignoreFilter(absolutePath),
 				);
 
 			for (const foundFilePath of foundFilePaths) {

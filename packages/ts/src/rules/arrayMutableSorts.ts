@@ -1,8 +1,9 @@
+import {
+	getTSNodeRange,
+	isBuiltinArrayMethod,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import { isBuiltinArrayMethod } from "../utils/isBuiltinArrayMethod.ts";
 
 const methodsReturningNewArray = new Set([
 	"concat",
@@ -82,7 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports `.sort()` calls on arrays that mutate the original array.",
 		id: "arrayMutableSorts",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferToSorted: {
@@ -107,10 +108,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const arrayText = node.expression.expression.getText(sourceFile);
-					const argumentsText =
-						node.arguments.length > 0
-							? node.arguments.map((arg) => arg.getText(sourceFile)).join(", ")
-							: "";
+					const argumentsText = node.arguments.length
+						? node.arguments.map((arg) => arg.getText(sourceFile)).join(", ")
+						: "";
 
 					context.report({
 						fix: {

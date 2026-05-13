@@ -1,0 +1,92 @@
+---
+description: "Reports indexed object types that don't match the configured style."
+title: "indexedObjectTypes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="indexedObjectTypes" />
+
+TypeScript provides two equivalent ways to define indexed object types: `Record<K, V>` and `{ [key: K]: V }`.
+Using one style consistently improves code readability.
+
+This rule enforces consistent usage of either `Record<K, V>` (default) or index signatures.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+interface Data {
+	[key: string]: number;
+}
+```
+
+```ts
+type StringMap = { [key: string]: string };
+```
+
+```ts
+function process(data: { [key: string]: number }): void {}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+type Data = Record<string, number>;
+```
+
+```ts
+type StringMap = Record<string, string>;
+```
+
+```ts
+function process(data: Record<string, number>): void {}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `style`
+
+- `"record"` (default): Prefer `Record<K, V>` over index signatures.
+- `"index-signature"`: Prefer index signatures over `Record<K, V>`.
+
+When set to `"index-signature"`:
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+type Data = Record<string, number>;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+type Data = { [key: string]: number };
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If your project already has an established convention for indexed object types that you don't want to enforce, or if you prefer allowing both styles for flexibility, you may disable this rule.
+
+## Further Reading
+
+- [TypeScript: Index Signatures](https://www.typescriptlang.org/docs/handbook/2/objects.html#index-signatures)
+- [TypeScript: Utility Types - Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="indexedObjectTypes" />

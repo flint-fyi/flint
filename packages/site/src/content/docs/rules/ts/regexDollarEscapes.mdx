@@ -1,0 +1,90 @@
+---
+description: "Reports replacement strings with unescaped `$` that should use `$$`."
+title: "regexDollarEscapes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexDollarEscapes" />
+
+Enforces escaping the `$` character as `$$` when using it literally in the replacement argument of `String.prototype.replace()` and `String.prototype.replaceAll()`.
+
+In these methods, `$` has special meaning for substitution patterns like `$&` (matched substring), `$1` (first capture group), etc.
+An unescaped `$` followed by an unrecognized character will be treated as a literal `$`, but this behavior is confusing and error-prone.
+
+This rule reports unescaped `$` characters in replacement strings that are not valid substitution pattern matchers.
+
+## Examples
+
+### Unescaped Dollar Sign
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const result = "€100".replace(/€/, "$");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const result = "€100".replace(/€/, "$$");
+```
+
+</TabItem>
+</Tabs>
+
+### Dollar Before Invalid Substitution Character
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const result = "abc".replace(/./, "$x");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const result = "abc".replace(/./, "$$x");
+```
+
+</TabItem>
+</Tabs>
+
+### Valid Substitution Patterns
+
+<Tabs>
+<TabItem label="✅ Correct">
+
+```ts
+const matchedSubstring = "abc".replace(/./, "$&");
+const firstGroup = "abc".replace(/(.)/, "$1");
+const namedGroup = "abc".replace(/(?<char>.)/, "$<char>");
+const literalDollar = "abc".replace(/./, "$$");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally rely on the behavior where `$` followed by an unrecognized character produces a literal `$`, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: String.prototype.replace()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_the_replacement)
+- [MDN: String.prototype.replaceAll()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexDollarEscapes" />

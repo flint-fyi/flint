@@ -1,0 +1,76 @@
+---
+description: "Require that function overload signatures be consecutive."
+title: "overloadSignaturesAdjacent"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="overloadSignaturesAdjacent" />
+
+Function overload signatures represent multiple ways a function can be called with different parameter types or return types.
+When overload signatures are separated by other code, it becomes harder to see the full API of a function at a glance.
+Grouping all overload signatures for a function together makes code easier to read and understand.
+
+This rule reports when a function's overload signatures are not adjacent to each other.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function f(x: number): void;
+function other(): void {}
+function f(x: string): void;
+function f(x: number | string): void {}
+```
+
+```ts
+interface I {
+	method(x: number): void;
+	other(): void;
+	method(x: string): void;
+	method(x: number | string): void;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function f(x: number): void;
+function f(x: string): void;
+function f(x: number | string): void {}
+```
+
+```ts
+interface I {
+	method(x: number): void;
+	method(x: string): void;
+	method(x: number | string): void;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+It can sometimes be useful to place overload signatures alongside other meaningful parts of a type.
+For example, if each overload corresponds to a different property, you might wish to place each overload next to its property.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [TypeScript Handbook: Function Overloads](https://www.typescriptlang.org/docs/handbook/2/functions.html#function-overloads)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="overloadSignaturesAdjacent" />

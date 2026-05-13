@@ -134,6 +134,14 @@ Use the spread operator instead of \`.apply()\`.
 const messages = ["hello", "world"];
 console.log.apply(console, messages);
 `,
+			files: {
+				"tsconfig.json": `{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"lib": ["esnext", "DOM"]
+	}
+}`,
+			},
 			output: `
 const messages = ["hello", "world"];
 console.log(...messages);

@@ -1,11 +1,11 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
-} from "../language.ts";
-import * as AST from "../types/ast.ts";
+} from "@flint.fyi/typescript-language";
+import type { AST } from "@flint.fyi/typescript-language";
+import * as tsutils from "ts-api-utils";
+import ts, { SyntaxKind } from "typescript";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

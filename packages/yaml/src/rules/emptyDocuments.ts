@@ -1,6 +1,6 @@
+import { yamlLanguage } from "@flint.fyi/yaml-language";
 import type * as yaml from "yaml-unist-parser";
 
-import { yamlLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(yamlLanguage, {
@@ -29,7 +29,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 			visitors: {
 				document: (node, { root }) => {
 					const [documentHead, documentBody] = node.children;
-					if (documentBody.children.length !== 0) {
+					if (documentBody.children.length) {
 						return;
 					}
 

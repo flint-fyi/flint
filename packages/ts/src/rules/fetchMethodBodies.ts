@@ -1,21 +1,24 @@
-import ts, { SyntaxKind } from "typescript";
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Disallow providing a body with GET or HEAD fetch requests.",
 		id: "fetchMethodBodies",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noBody: {
-			primary: "`body` is not allowed when the request method is `{{method}}`.",
+			primary:
+				"`body` is not allowed when the request method is `{{ method }}`.",
 			secondary: [
-				"The Fetch API will throw a `TypeError` at runtime if a body is provided with a `{{method}}` request.",
+				"The Fetch API will throw a `TypeError` at runtime if a body is provided with a `{{ method }}` request.",
 			],
 			suggestions: [
 				"Remove the `body` property from the options.",
@@ -75,7 +78,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkFetchOptions(
 			node: AST.Expression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (node.kind !== SyntaxKind.ObjectLiteralExpression) {
 				return;
@@ -101,7 +104,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkNode(
 			node: AST.CallExpression | AST.NewExpression,
 			functionName: string,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			if (
 				node.expression.kind === SyntaxKind.Identifier &&

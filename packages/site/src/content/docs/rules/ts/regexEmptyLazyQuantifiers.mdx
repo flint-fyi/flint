@@ -1,0 +1,109 @@
+---
+description: "Reports lazy quantifiers at the end of regular expressions."
+title: "regexEmptyLazyQuantifiers"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexEmptyLazyQuantifiers" />
+
+Reports lazy quantifiers at the end of regular expressions that will never match more than their minimum.
+Lazy quantifiers like `*?`, `+?`, or `{n,m}?` at the end of a pattern are useless because there is nothing after them to require a larger match.
+
+## Examples
+
+### Zero Minimum (Will Match Empty String)
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a*?/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a*?b/;
+```
+
+</TabItem>
+</Tabs>
+
+### One Minimum (Will Match Exactly Once)
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a+?/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a+?b/;
+```
+
+</TabItem>
+</Tabs>
+
+### Range Minimum (Will Match Minimum Times)
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a{3,7}?/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a{3,7}?b/;
+```
+
+</TabItem>
+</Tabs>
+
+### Inside Groups
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:a|bc+?)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?:a|bc+?)d/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you tend to use patterns as a partials (e.g., to combine with other patterns via string concatenation), you might need to disable this rule.
+
+## Further Reading
+
+- [MDN: Quantifier](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Quantifiers)
+- [MDN: Regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexEmptyLazyQuantifiers" />

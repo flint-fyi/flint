@@ -7,7 +7,8 @@ ruleTester.describe(rule, {
 			code: `
 ---
 `,
-			output: ``,
+			output: `
+`,
 			snapshot: `
 ---
 ~~~
@@ -19,7 +20,9 @@ This YAML document contains no content beyond document markers.
 ---
 ...
 `,
-			output: ``,
+			output: `
+
+`,
 			snapshot: `
 ---
 ~~~

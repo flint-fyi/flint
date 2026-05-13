@@ -1,0 +1,97 @@
+---
+description: "Reports empty functions that should contain code or a comment."
+title: "emptyFunctions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="emptyFunctions" />
+
+Empty functions can reduce readability because readers need to guess whether it's intentional or not.
+If a function is intentionally empty, adding a comment makes the intention clear.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function foo() {}
+```
+
+```ts
+const foo = function () {};
+```
+
+```ts
+const foo = () => {};
+```
+
+```ts
+class Foo {
+	bar() {}
+}
+```
+
+```ts
+class Foo {
+	constructor() {}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function foo() {
+	doSomething();
+}
+```
+
+```ts
+const foo = function () {
+	doSomething();
+};
+```
+
+```ts
+const foo = () => doSomething();
+```
+
+```ts
+function foo() {
+	// intentionally empty
+}
+```
+
+```ts
+class Foo {
+	bar() {
+		/* empty */
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer to allow empty functions without comments, you may disable this rule.
+Some codebases use empty functions as no-ops or placeholders intentionally.
+
+## Further Reading
+
+- [ESLint no-empty-function](https://eslint.org/docs/latest/rules/no-empty-function)
+- [TypeScript ESLint no-empty-function](https://typescript-eslint.io/rules/no-empty-function)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="emptyFunctions" />

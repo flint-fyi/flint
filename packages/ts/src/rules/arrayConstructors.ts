@@ -1,9 +1,12 @@
+import {
+	type AST,
+	getTSNodeRange,
+	isGlobalDeclarationOfName,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST, TypeScriptFileServices } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -11,7 +14,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using the `Array` constructor to create arrays instead of array literal syntax.",
 		id: "arrayConstructors",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferLiteral: {
@@ -69,7 +72,7 @@ function getSoleArgument(node: AST.CallExpression | AST.NewExpression) {
 }
 
 function shouldAllowCallOrNew(node: AST.CallExpression | AST.NewExpression) {
-	if (node.typeArguments && node.typeArguments.length > 0) {
+	if (node.typeArguments && !!node.typeArguments.length) {
 		return true;
 	}
 

@@ -1,0 +1,66 @@
+---
+description: "Reports backreferences that do not use the name of their referenced capturing group."
+title: "regexNamedBackreferences"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexNamedBackreferences" />
+
+When a capturing group has a name (e.g., `(?<name>...)`), backreferences to that group should use the named syntax `\k<name>` instead of the numeric syntax `\1`.
+Named backreferences are more readable and maintainable, especially when regex patterns change over time.
+
+This rule reports backreferences that do not use the name of their referenced capturing group.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?<word>\w+)\s+\1/;
+```
+
+```ts
+const pattern = /(?<first>a)(?<second>b)\1\2/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?<word>\w+)\s+\k<word>/;
+```
+
+```ts
+const pattern = /(?<first>a)(?<second>b)\k<first>\k<second>/;
+```
+
+```ts
+// Unnamed groups can use numeric backreferences
+const pattern = /(a)\1/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the brevity of numeric backreferences, or if your codebase has established conventions around using numeric backreferences even for named groups, you might prefer to disable this rule.
+Some teams find numeric backreferences more familiar from other regex dialects.
+
+## Further Reading
+
+- [MDN: Regular expressions - Backreference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Backreference)
+- [MDN: Regular expressions - Named capturing group](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Named_capturing_group)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexNamedBackreferences" />

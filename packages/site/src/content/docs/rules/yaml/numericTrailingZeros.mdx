@@ -1,0 +1,66 @@
+---
+description: "Reports trailing zeros in numeric values."
+title: "numericTrailingZeros"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="yaml" rule="numericTrailingZeros" />
+
+Trailing zeros in decimal numbers are unnecessary and can be removed without changing the numeric value.
+Removing trailing zeros makes numeric values more concise and easier to read.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```yaml
+price: 10.00
+```
+
+```yaml
+rate: 0.100
+```
+
+```yaml
+value: 1.50
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```yaml
+price: 10
+```
+
+```yaml
+rate: 0.1
+```
+
+```yaml
+value: 1.5
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project requires trailing zeros for formatting purposes (e.g., currency display or alignment), you may not need this rule.
+Some systems may require numeric values to have a specific number of decimal places for compatibility.
+
+## Further Reading
+
+- [YAML Specification - Floating-Point](https://yaml.org/spec/1.2.2/#1032-floating-point)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="yaml" ruleId="numericTrailingZeros" />

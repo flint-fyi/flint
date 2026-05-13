@@ -1,0 +1,83 @@
+---
+description: "Prefer `Response.json()` over `new Response(JSON.stringify(...))` for JSON responses."
+title: "responseJsonMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="responseJsonMethods" />
+
+The `Response.json()` static method provides a cleaner way to create JSON responses compared to manually calling `new Response(JSON.stringify(data))`.
+Using `Response.json()` is more concise and automatically sets the `Content-Type` header to `application/json`.
+
+This rule flags cases where `new Response(JSON.stringify(data))` can be replaced with `Response.json(data)`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+new Response(JSON.stringify(data));
+```
+
+```ts
+new Response(JSON.stringify({ message: "ok" }));
+```
+
+```ts
+new Response(JSON.stringify(data), {});
+```
+
+```ts
+new Response(JSON.stringify(data), {
+	headers: { "content-type": "application/json" },
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+Response.json(data);
+```
+
+```ts
+Response.json({ message: "ok" });
+```
+
+```ts
+new Response(JSON.stringify(data, null, 2));
+```
+
+```ts
+new Response(JSON.stringify(data), { status: 404 });
+```
+
+```ts
+new Response(text);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to pass additional options to `JSON.stringify()` like a replacer or space parameter, you'll need to use the manual approach.
+Similarly, if you need to set custom response options like `status` or additional headers beyond `Content-Type`, use `new Response()` directly.
+
+## Further Reading
+
+- [MDN: Response.json()](https://developer.mozilla.org/en-US/docs/Web/API/Response/json_static)
+- [MDN: Response](https://developer.mozilla.org/en-US/docs/Web/API/Response)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="responseJsonMethods" />

@@ -1,0 +1,116 @@
+---
+description: "Reports non-constant quantifiers in lookaround assertions that could be simplified."
+title: "regexLookaroundQuantifierOptimizations"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexLookaroundQuantifierOptimizations" />
+
+Reports non-constant quantifiers in lookaround assertions that could be simplified.
+Lookahead and lookbehind assertions only check whether a pattern matches, not how much text it consumes.
+Non-constant quantifiers at the end of lookaheads or start of lookbehinds can be replaced with their minimum.
+
+## Examples
+
+### Lookahead with Zero Minimum
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?=ba*)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?=b)/;
+```
+
+</TabItem>
+</Tabs>
+
+### Lookahead with One Minimum
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?=ba+)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?=ba)/;
+```
+
+</TabItem>
+</Tabs>
+
+### Lookahead with Range Minimum
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?=a{4,9})/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?=a{4})/;
+```
+
+</TabItem>
+</Tabs>
+
+### Lookbehind Assertions
+
+Lookbehinds match from right to left, so non-constant quantifiers at the start are problematic.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?<=[a-c]*)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?<=)/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are intentionally using non-constant quantifiers in lookarounds for documentation purposes or if you are building patterns dynamically, you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: Lookahead assertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookahead_assertion)
+- [MDN: Lookbehind assertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookbehind_assertion)
+- [MDN: Quantifier](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Quantifiers)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents
+	pluginId="ts"
+	ruleId="regexLookaroundQuantifierOptimizations"
+/>

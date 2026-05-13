@@ -1,6 +1,6 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports catch clauses that only rethrow the caught error without modification.",
 		id: "unnecessaryCatches",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryCatch: {

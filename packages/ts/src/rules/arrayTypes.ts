@@ -1,10 +1,12 @@
+import {
+	type AST,
+	getTSNodeRange,
+	isGlobalDeclaration,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import { isGlobalDeclaration } from "../utils/isGlobalDeclaration.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isSimpleType(typeNode: AST.TypeNode | undefined): boolean {
@@ -34,7 +36,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports array type syntax that doesn't match the configured style.",
 		id: "arrayTypes",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferArraySyntax: {

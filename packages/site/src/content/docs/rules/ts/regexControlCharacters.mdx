@@ -1,0 +1,90 @@
+---
+description: "Reports control characters in regular expressions."
+title: "regexControlCharacters"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexControlCharacters" />
+
+Reports control characters (code points U+0000 through U+001F) in regular expressions.
+Control characters in regex patterns are rarely intentional and can indicate a mistake or copy-paste error.
+
+## Examples
+
+### Hex Escapes
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\x1f/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\x20/;
+```
+
+</TabItem>
+</Tabs>
+
+### Unicode Escapes
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\u001f/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\u0020/;
+```
+
+</TabItem>
+</Tabs>
+
+### Control Character Escapes
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\cA/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your application intentionally processes binary data or protocols that use control characters, and you need to match them in regular expressions, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Control character](https://developer.mozilla.org/en-US/docs/Glossary/Control_character)
+- [MDN: Character escape](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_escape)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexControlCharacters" />

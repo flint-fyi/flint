@@ -1,0 +1,73 @@
+---
+description: "Reports regex patterns that can be replaced with startsWith or endsWith."
+title: "stringStartsEndsWith"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="stringStartsEndsWith" />
+
+Regular expressions with simple `^` or `$` anchors can be replaced with the more readable and performant `startsWith()` and `endsWith()` string methods.
+
+This rule detects regex `.test()` calls that check for simple string prefixes or suffixes and suggests using the dedicated string methods instead.
+
+## Examples
+
+### Prefix Check with ^
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const hasPrefix = /^foo/.test(str);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const hasPrefix = str.startsWith("foo");
+```
+
+</TabItem>
+</Tabs>
+
+### Suffix Check with $
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const hasSuffix = /bar$/.test(str);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const hasSuffix = str.endsWith("bar");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need case-insensitive matching or other regex features, the string methods won't work as direct replacements.
+This rule ignores patterns with the `i` (case-insensitive) or `m` (multiline) flags.
+
+## Further Reading
+
+- [MDN: String.prototype.startsWith()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith)
+- [MDN: String.prototype.endsWith()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="stringStartsEndsWith" />

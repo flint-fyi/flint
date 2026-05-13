@@ -1,0 +1,76 @@
+---
+description: "Reports importing from `node:test`."
+title: "nodeTestImports"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vitest" rule="nodeTestImports" />
+
+Vitest and Node.js's built-in test runner provide similar APIs, but they are different test runners with different execution models and features.
+Importing from `node:test` inside Vitest-targeted files usually means the wrong runner API was imported.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { describe, it } from "node:test";
+
+describe("math", () => {
+	it("adds values", () => {});
+});
+```
+
+```ts
+import * as test from "node:test";
+
+test.describe("math", () => {
+	test.it("subtracts values", () => {});
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { describe, it } from "vitest";
+
+describe("math", () => {
+	it("adds values", () => {});
+});
+```
+
+```ts
+import * as vitest from "vitest";
+
+vitest.describe("math", () => {
+	vitest.it("subtracts values", () => {});
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If a file is intentionally written for Node.js's built-in test runner, you should not apply the Vitest plugin to that file.
+In mixed repositories, prefer separate Flint file globs or config entries so `node:test` files and Vitest files are linted with the right plugin.
+
+## Further Reading
+
+- [Vitest API: Test](https://vitest.dev/api/test)
+- [Node.js: Test runner](https://nodejs.org/api/test.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vitest" ruleId="nodeTestImports" />

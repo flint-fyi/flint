@@ -3,7 +3,6 @@ import { ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
-		// Default style: "array" - reports Array<T> and ReadonlyArray<T>
 		{
 			code: `
 const values: Array<string> = [];
@@ -54,7 +53,6 @@ function process(items: ReadonlyArray<number>): void {}
                         Prefer \`readonly T[]\` over \`ReadonlyArray<T>\`.
 `,
 		},
-		// Style: "array" - explicit
 		{
 			code: `
 const values: Array<string> = [];
@@ -66,7 +64,6 @@ const values: Array<string> = [];
               Prefer \`T[]\` over \`Array<T>\`.
 `,
 		},
-		// Style: "generic" - reports T[] and readonly T[]
 		{
 			code: `
 const values: string[] = [];
@@ -122,7 +119,6 @@ function process(items: readonly number[]): void {}
                         Prefer \`ReadonlyArray<T>\` over \`readonly T[]\`.
 `,
 		},
-		// Style: "array-simple" - reports complex T[] and simple Array<T>
 		{
 			code: `
 const values: Array<string> = [];
@@ -202,7 +198,6 @@ type Obj = { a: string }[];
 		},
 	],
 	valid: [
-		// Default style: "array"
 		`const values: string[] = [];`,
 		`function process(items: number[]): void {}`,
 		`type StringArray = string[];`,
@@ -222,7 +217,6 @@ type ReadonlyArray<T> = { other: T };
 const values: ReadonlyArray<string> = [];
 export {};
 `,
-		// Style: "generic"
 		{
 			code: `const values: Array<string> = [];`,
 			options: { style: "generic" },
@@ -235,7 +229,6 @@ export {};
 			code: `const values: Array<string | number> = [];`,
 			options: { style: "generic" },
 		},
-		// Style: "array-simple"
 		{
 			code: `const values: string[] = [];`,
 			options: { style: "array-simple" },

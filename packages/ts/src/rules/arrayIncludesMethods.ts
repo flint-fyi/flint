@@ -1,8 +1,12 @@
+import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST, Checker } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 import { isDirectEqualityCheck } from "./utils/isDirectEqualityCheck.ts";
 
@@ -44,12 +48,12 @@ function isSomeWithDirectEquality(
 	);
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using `Array#some()` with simple equality checks that can be replaced with `.includes()`.",
 		id: "arrayIncludesMethods",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferIncludes: {

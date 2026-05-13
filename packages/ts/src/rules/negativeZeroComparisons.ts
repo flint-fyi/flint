@@ -1,7 +1,6 @@
-import ts, { SyntaxKind } from "typescript";
+import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
 import {
 	isComparisonOperator,
 	isEqualityOperator,
@@ -23,7 +22,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports comparisons with -0 that may not behave as expected.",
 		id: "negativeZeroComparisons",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unexpectedNegativeZeroComparison: {
@@ -40,7 +39,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function generateObjectIsText(
 			node: AST.BinaryExpression,
 			isNegated: boolean,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const leftText = node.left.getText(sourceFile);
 			const rightText = node.right.getText(sourceFile);

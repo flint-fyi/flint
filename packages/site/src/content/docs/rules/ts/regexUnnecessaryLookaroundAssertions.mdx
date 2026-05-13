@@ -1,0 +1,68 @@
+---
+description: "Reports unnecessary nested lookaround assertions in regular expressions."
+title: "regexUnnecessaryLookaroundAssertions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryLookaroundAssertions" />
+
+Reports unnecessary nested lookaround assertions in regular expressions.
+A positive lookahead at the end of another lookahead, or a positive lookbehind at the start of another lookbehind, is redundant because the nested assertion can be inlined into the parent.
+
+## Examples
+
+### Unnecessary Lookahead at End
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?=content(?=nested))/;
+```
+
+```ts
+const pattern = /(?<=(?<=nested)content)/;
+```
+
+```ts
+const pattern = /(?!content(?=nested))/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?=contentNested)/;
+```
+
+```ts
+const pattern = /(?<=nestedContent)/;
+```
+
+```ts
+const pattern = /(?!contentNested)/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are intentionally structuring patterns with nested lookarounds for clarity or readability, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Lookahead assertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookahead_assertion)
+- [MDN: Lookbehind assertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookbehind_assertion)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryLookaroundAssertions" />

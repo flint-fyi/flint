@@ -1,0 +1,93 @@
+---
+description: "Prefer modern Math methods over legacy patterns."
+title: "mathMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="mathMethods" />
+
+ES2015 introduced several new `Math` methods that simplify common mathematical operations.
+Using these modern methods improves code readability and intent.
+
+This rule flags legacy patterns that can be replaced with:
+
+- `Math.log10()`: Calculates the base-10 logarithm
+- `Math.log2()`: Calculates the base-2 logarithm
+- `Math.hypot()`: Calculates the Euclidean distance (square root of sum of squares)
+- `Math.abs()`: Returns the absolute value
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const log10Value = Math.log(x) * Math.LOG10E;
+```
+
+```ts
+const log10Value = Math.log(x) / Math.LN10;
+```
+
+```ts
+const log2Value = Math.log(x) * Math.LOG2E;
+```
+
+```ts
+const log2Value = Math.log(x) / Math.LN2;
+```
+
+```ts
+const absolute = Math.sqrt(x ** 2);
+```
+
+```ts
+const distance = Math.sqrt(x ** 2 + y ** 2);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const log10Value = Math.log10(x);
+```
+
+```ts
+const log2Value = Math.log2(x);
+```
+
+```ts
+const absolute = Math.abs(x);
+```
+
+```ts
+const distance = Math.hypot(x, y);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support JavaScript environments without ES2015 `Math` methods, you may need to disable this rule.
+
+For projects with existing codebases that use these legacy patterns consistently, refactoring may not be worthwhile.
+
+## Further Reading
+
+- [MDN: Math.log10()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/log10)
+- [MDN: Math.log2()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/log2)
+- [MDN: Math.hypot()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/hypot)
+- [MDN: Math.abs()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/abs)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="mathMethods" />

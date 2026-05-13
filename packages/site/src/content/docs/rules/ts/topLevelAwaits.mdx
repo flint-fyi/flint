@@ -1,0 +1,74 @@
+---
+description: "Reports top-level await expressions in modules."
+title: "topLevelAwaits"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="topLevelAwaits" />
+
+Top-level await ("TLA") allows using `await` at the module level.
+While convenient for standalone files run like scripts, it can cause issues if those files are `import`ed by other modules:
+
+- Modules using top-level await block their dependents until the await resolves
+- This can cause unexpected delays in application startup
+- It makes module loading order slower and sometimes less predictable
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const config = await import("./config.json");
+export const apiUrl = config.apiUrl;
+```
+
+```ts
+const data = await fetch("/api/data").then((r) => r.json());
+export { data };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+let config: Config;
+
+export async function getConfig() {
+	if (!config) {
+		config = await import("./config.json");
+	}
+	return config;
+}
+```
+
+```ts
+export async function fetchData() {
+	return fetch("/api/data").then((r) => r.json());
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you're intentionally using top-level await for module initialization and understand the implications for module loading, you may disable this rule.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Top-level await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#top-level_await)
+- [V8: Top-level await](https://v8.dev/features/top-level-await)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="topLevelAwaits" />

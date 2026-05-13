@@ -1,0 +1,110 @@
+---
+description: "Reports character classes that match no characters."
+title: "regexEmptyCharacterClasses"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexEmptyCharacterClasses" />
+
+Reports empty character classes in regular expressions.
+An empty character class `[]` matches nothing and always fails, which is usually a mistake.
+
+## Examples
+
+### Empty Character Class
+
+An empty character class matches nothing.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[a]/;
+```
+
+</TabItem>
+</Tabs>
+
+### Empty Class in Pattern
+
+An empty character class in a larger pattern causes the entire match to fail.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a[]b/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /ab/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+The rule also checks regex patterns in `RegExp` constructor calls.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("[]");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("[a-z]");
+```
+
+</TabItem>
+</Tabs>
+
+### Negated Empty Class Is Valid
+
+A negated empty character class `[^]` matches any character and is valid.
+
+<Tabs>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[^]/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use empty character classes as a way to create a pattern that never matches (e.g., for testing purposes), you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Character classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Character_classes)
+- [ECMAScript specification: CharacterClass](https://tc39.es/ecma262/#prod-CharacterClass)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexEmptyCharacterClasses" />

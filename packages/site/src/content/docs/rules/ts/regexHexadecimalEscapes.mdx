@@ -1,0 +1,74 @@
+---
+description: "Reports regex character escapes that can be expressed more consistently using hexadecimal escapes."
+title: "regexHexadecimalEscapes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexHexadecimalEscapes" />
+
+Characters in the range 0x00-0xFF can be expressed using either hexadecimal escapes (`\xNN`) or Unicode escapes (`\uNNNN`, `\u{N}`).
+Hexadecimal escapes are more concise for this range and provide a consistent representation.
+This rule enforces the use of hexadecimal escapes for characters that can be represented in two hex digits.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\u000a/;
+```
+
+```ts
+const pattern = /\u{a}/u;
+```
+
+```ts
+const pattern = /\u{00ff}/u;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\x0a/;
+```
+
+```ts
+const pattern = /\xff/u;
+```
+
+```ts
+// Unicode escapes are fine for values > 0xFF
+const pattern = /\u0100/u;
+```
+
+```ts
+// Control characters with standard escapes are fine
+const pattern = /\t\n\r/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase has established conventions around using Unicode escapes for consistency with characters outside the 0x00-0xFF range, you might prefer to disable this rule.
+Some teams prefer the uniformity of always using Unicode escapes regardless of the character value.
+
+## Further Reading
+
+- [MDN: Regular expressions - Character escape](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_escape)
+- [MDN: Lexical grammar - Escape sequences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#escape_sequences)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexHexadecimalEscapes" />

@@ -1,9 +1,7 @@
+import type { AST } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 import * as tsutils from "ts-api-utils";
 import ts, { SyntaxKind } from "typescript";
-
-import type { AST } from "../../index.ts";
-import type { Checker } from "../../types/checker.ts";
 
 /**
  * Does a simple check to see if there is an any being assigned to a non-any type.
@@ -16,22 +14,14 @@ import type { Checker } from "../../types/checker.ts";
 export function isUnsafeAssignment(
 	type: ts.Type,
 	receiver: ts.Type,
-	checker: Checker,
 	senderNode: AST.Expression,
 ): false | { receiver: ts.Type; sender: ts.Type } {
-	return isUnsafeAssignmentWorker(
-		type,
-		receiver,
-		checker,
-		senderNode,
-		new Map(),
-	);
+	return isUnsafeAssignmentWorker(type, receiver, senderNode, new Map());
 }
 
 function isUnsafeAssignmentWorker(
 	type: ts.Type,
 	receiver: ts.Type,
-	checker: Checker,
 	senderNode: AST.Expression,
 	visited: Map<ts.Type, Set<ts.Type>>,
 ): false | { receiver: ts.Type; sender: ts.Type } {
@@ -81,7 +71,7 @@ function isUnsafeAssignmentWorker(
 			senderNode.kind === SyntaxKind.NewExpression &&
 			senderNode.expression.kind === SyntaxKind.Identifier &&
 			senderNode.expression.text === "Map" &&
-			(senderNode.arguments == null || senderNode.arguments.length === 0) &&
+			!senderNode.arguments?.length &&
 			senderNode.typeArguments == null
 		) {
 			// special case to handle `new Map()`
@@ -106,7 +96,6 @@ function isUnsafeAssignmentWorker(
 			const unsafe = isUnsafeAssignmentWorker(
 				arg,
 				receiverArg,
-				checker,
 				senderNode,
 				visited,
 			);

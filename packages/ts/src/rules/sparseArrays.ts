@@ -1,14 +1,14 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports array literals with holes (sparse arrays).",
 		id: "sparseArrays",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		noSparseArray: {
@@ -28,12 +28,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				OmittedExpression: (node, { sourceFile }) => {
-					const parent = node.parent;
-					if (parent.kind !== SyntaxKind.ArrayLiteralExpression) {
+					if (node.parent.kind !== SyntaxKind.ArrayLiteralExpression) {
 						return;
 					}
 
-					const syntaxList = parent
+					const syntaxList = node.parent
 						.getChildren(sourceFile)
 						.find((child) => child.kind === SyntaxKind.SyntaxList);
 

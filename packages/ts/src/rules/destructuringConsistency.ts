@@ -1,8 +1,9 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 
 // TODO (#400): Switch to scope analysis
 function getContainingScope(node: ts.Node) {
@@ -156,7 +157,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 			}
 
-			if (properties.size > 0) {
+			if (properties.size) {
 				destructuredObjects.push({
 					declarationEnd: node.getEnd(),
 					destructuredProperties: properties,

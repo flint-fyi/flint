@@ -1,14 +1,14 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import ts from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports returning values from constructor functions.",
 		id: "constructorReturns",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noConstructorReturn: {

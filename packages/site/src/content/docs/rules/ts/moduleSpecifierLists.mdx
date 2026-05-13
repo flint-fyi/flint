@@ -1,0 +1,82 @@
+---
+description: "Require non-empty specifier lists in import and export statements."
+title: "moduleSpecifierLists"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="moduleSpecifierLists" />
+
+Empty specifier lists in import and export statements like `import {} from 'module'` serve no purpose.
+They can appear due to refactoring or code generation errors.
+If you need to run a module's code without importing any values, use a side-effect import instead.
+
+This rule reports import and export statements that have empty braces with no specifiers.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import {} from "module";
+```
+
+```ts
+import defaultExport from "module";
+```
+
+```ts
+export {} from "module";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { something } from "module";
+```
+
+```ts
+import "module";
+```
+
+```ts
+import defaultExport from "module";
+```
+
+```ts
+import * as namespace from "module";
+```
+
+```ts
+export { something } from "module";
+```
+
+```ts
+export * from "module";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase intentionally uses empty import braces for specific purposes, such as ensuring module execution order or for tooling that processes imports in a special way, you may not need this rule.
+
+## Further Reading
+
+- [MDN: import statement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
+- [MDN: Side effect imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#import_a_module_for_its_side_effects_only)
+- [MDN: export statement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="moduleSpecifierLists" />

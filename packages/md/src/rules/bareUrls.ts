@@ -1,8 +1,7 @@
+import { markdownLanguage } from "@flint.fyi/markdown-language";
+import type { WithPosition } from "@flint.fyi/markdown-language";
 import { nullThrows } from "@flint.fyi/utils";
 import type { Link } from "mdast";
-
-import { markdownLanguage } from "../language.ts";
-import type { WithPosition } from "../nodes.ts";
 
 const urlTester = /(?:https?:\/\/|mailto:)\S+|[\w.+-]+@[\w.-]+\.\w+/gi;
 

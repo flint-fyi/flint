@@ -1,0 +1,87 @@
+---
+description: "Reports mismatched types between getter and setter accessor pairs."
+title: "accessorPairTypes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="accessorPairTypes" />
+
+TypeScript allows defining different types for a getter return and its corresponding setter parameter.
+Defining drastically different types for a getter and setter can be confusing, as it means assigning a property to itself would not work.
+
+This rule reports cases where a getter and setter have the same name but the getter's return type is not assignable to the setter's parameter type.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Example {
+	get value(): string {
+		return this._value;
+	}
+	set value(newValue: number) {
+		this._value = String(newValue);
+	}
+}
+```
+
+```ts
+interface Config {
+	get value(): string;
+	set value(newValue: number);
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Example {
+	get value(): string {
+		return this._value;
+	}
+	set value(newValue: string) {
+		this._value = newValue;
+	}
+}
+```
+
+```ts
+class Example {
+	get value(): string {
+		return this._value;
+	}
+	set value(newValue: string | number) {
+		this._value = String(newValue);
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project needs to model unusual relationships between data, such as older DOM types, this rule might not be for you.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Property accessors](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors)
+- [MDN: getter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get)
+- [MDN: setter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set)
+- [TypeScript 5.1: Unrelated Types for Getters and Setters](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-1.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="accessorPairTypes" />

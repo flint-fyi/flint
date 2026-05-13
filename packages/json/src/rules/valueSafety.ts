@@ -1,6 +1,6 @@
+import { jsonLanguage } from "@flint.fyi/json-language";
 import ts from "typescript";
 
-import { jsonLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER;
@@ -31,7 +31,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description: "Reports JSON values that are unsafe for data interchange.",
 		id: "valueSafety",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		infinity: {

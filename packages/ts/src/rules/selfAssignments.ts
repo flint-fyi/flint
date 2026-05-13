@@ -1,8 +1,10 @@
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
+import { hasSameTokens } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import { hasSameTokens } from "../utils/hasSameTokens.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -10,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports self-assignments which have no effect and are likely errors.",
 		id: "selfAssignments",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		selfAssignment: {

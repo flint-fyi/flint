@@ -1,13 +1,18 @@
 import { collectFilesValues } from "../globs/collectFilesValues.ts";
 import type { AnyLevelDeep } from "../types/arrays.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
-import type { FilesGlobObjectProcessed, FilesValue } from "../types/files.ts";
+import type { FilesValue } from "../types/files.ts";
 import { flatten } from "../utils/arrays.ts";
+
+export interface FilesGlobObjectResolved {
+	exclude: string[];
+	include: string[];
+}
 
 export function resolveUseFilesGlobs(
 	files: AnyLevelDeep<FilesValue> | undefined,
 	configDefinition: ProcessedConfigDefinition,
-): FilesGlobObjectProcessed {
+): FilesGlobObjectResolved {
 	const globs = collectUseFilesGlobsObject(files, configDefinition);
 
 	return {
@@ -19,7 +24,7 @@ export function resolveUseFilesGlobs(
 function collectUseFilesGlobsObject(
 	files: AnyLevelDeep<FilesValue> | undefined,
 	configDefinition: ProcessedConfigDefinition,
-): FilesGlobObjectProcessed {
+): FilesGlobObjectResolved {
 	switch (typeof files) {
 		case "function":
 			return resolveUseFilesGlobs(files(configDefinition), configDefinition);

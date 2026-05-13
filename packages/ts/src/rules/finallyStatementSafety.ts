@@ -1,7 +1,6 @@
+import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -9,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports control flow statements in `finally` blocks that can override control flow in `try`/`catch` blocks.",
 		id: "finallyStatementSafety",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unsafeFinally: {
@@ -35,10 +34,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					function checkStatement(statement: AST.Statement): void {
 						if (
-							statement.kind == SyntaxKind.ReturnStatement ||
-							statement.kind == SyntaxKind.ThrowStatement ||
-							statement.kind == SyntaxKind.BreakStatement ||
-							statement.kind == SyntaxKind.ContinueStatement
+							statement.kind === SyntaxKind.ReturnStatement ||
+							statement.kind === SyntaxKind.ThrowStatement ||
+							statement.kind === SyntaxKind.BreakStatement ||
+							statement.kind === SyntaxKind.ContinueStatement
 						) {
 							const firstToken = statement.getFirstToken(sourceFile);
 							if (!firstToken) {
@@ -56,18 +55,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							});
 						}
 
-						if (statement.kind == SyntaxKind.Block) {
+						if (statement.kind === SyntaxKind.Block) {
 							statement.statements.forEach(checkStatement);
-						} else if (statement.kind == SyntaxKind.IfStatement) {
+						} else if (statement.kind === SyntaxKind.IfStatement) {
 							checkStatement(statement.thenStatement);
 							if (statement.elseStatement) {
 								checkStatement(statement.elseStatement);
 							}
-						} else if (statement.kind == SyntaxKind.SwitchStatement) {
+						} else if (statement.kind === SyntaxKind.SwitchStatement) {
 							statement.caseBlock.clauses.forEach((clause) => {
 								clause.statements.forEach(checkStatement);
 							});
-						} else if (statement.kind == SyntaxKind.LabeledStatement) {
+						} else if (statement.kind === SyntaxKind.LabeledStatement) {
 							checkStatement(statement.statement);
 						}
 					}

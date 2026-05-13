@@ -1,0 +1,69 @@
+---
+description: "Enforce that the `bundleDependencies` property is present."
+title: "bundleDependenciesPresence"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="bundleDependenciesPresence" />
+
+npm requires that the `bundleDependencies` field in `package.json` is present.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `ignorePrivate`
+
+Whether the property should still be required when the package's `private` property is `true`.
+Defaults to `false`.
+
+This option can be useful if the rule is enabled on many `package.json` files and some files differ in privacy.
+
+## When Not To Use It
+
+If your package doesn't need to specify `bundleDependencies`, you can disable this rule.
+
+## Related Rules
+
+- [bundleDependenciesValidity](/rules/package-json/bundledependenciesvalidity) - Enforces that the `bundleDependencies` property is valid.
+
+## Further Reading
+
+- [npm: `package.json` > `bundleDependencies`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bundledependencies)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="bundleDependenciesPresence" />
