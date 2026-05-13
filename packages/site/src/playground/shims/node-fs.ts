@@ -9,6 +9,17 @@
 
 import * as fsPromises from "./node-fs-promises.ts";
 
+// libuv `dirent` type codes — these are what `fs.Dirent`'s `type` field
+// holds in Node, so matching them keeps the shape consistent if a caller
+// passes a type other than file/directory.
+const UV_DIRENT_FILE = 1;
+const UV_DIRENT_DIR = 2;
+const UV_DIRENT_LINK = 3;
+const UV_DIRENT_FIFO = 4;
+const UV_DIRENT_SOCKET = 5;
+const UV_DIRENT_CHAR = 6;
+const UV_DIRENT_BLOCK = 7;
+
 export class Dirent {
 	name: string;
 	parentPath: string;
@@ -21,31 +32,31 @@ export class Dirent {
 	}
 
 	isBlockDevice(): boolean {
-		return false;
+		return this.#type === UV_DIRENT_BLOCK;
 	}
 
 	isCharacterDevice(): boolean {
-		return false;
+		return this.#type === UV_DIRENT_CHAR;
 	}
 
 	isDirectory(): boolean {
-		return this.#type === 2;
+		return this.#type === UV_DIRENT_DIR;
 	}
 
 	isFIFO(): boolean {
-		return false;
+		return this.#type === UV_DIRENT_FIFO;
 	}
 
 	isFile(): boolean {
-		return this.#type === 1;
+		return this.#type === UV_DIRENT_FILE;
 	}
 
 	isSocket(): boolean {
-		return false;
+		return this.#type === UV_DIRENT_SOCKET;
 	}
 
 	isSymbolicLink(): boolean {
-		return false;
+		return this.#type === UV_DIRENT_LINK;
 	}
 }
 
@@ -56,11 +67,13 @@ function unsupported(name: string): never {
 }
 
 const sentinel: unknown = new Proxy(() => undefined, {
-	apply(_target, _this, _args) {
+	apply() {
 		unsupported("<call>");
 	},
-	get(_target, prop) {
-		unsupported(String(prop));
+	get(target, prop) {
+		// Surface both the property and the target shape in the error so
+		// stack traces point at whatever fs method ended up being touched.
+		unsupported(`<get ${String(prop)} on ${typeof target}>`);
 	},
 });
 

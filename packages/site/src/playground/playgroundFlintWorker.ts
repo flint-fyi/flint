@@ -9,8 +9,8 @@
  * trip up Vite's worker bundling).
  *
  * Top-level imports are kept minimal and the heavy plugin set is loaded
- * lazily via `loadFlint()` so module-load failures surface as catchable
- * errors that can be reported through `PlaygroundFailure` instead of dying
+ * lazily via `loadFlint()` so module-load failures throw inside an `await`
+ * we can catch and report through `PlaygroundFailure` instead of dying
  * silently during worker construction.
  */
 
@@ -32,41 +32,32 @@ import type {
 // `@flint.fyi/package-json`) references `process` similarly. Workers don't
 // have any of these, so polyfill before any Flint module loads.
 //
-// We can't extend the global `Window` type cleanly because the polyfill
-// shapes intentionally don't match Node's full `Process` / `typeof
-// setImmediate`. Reach in via an interface that describes only what we
-// assign — TypeScript treats the cast as adding optional properties rather
-// than overriding existing ones.
-interface WorkerPolyfillGlobals {
-	clearImmediate?: (id: unknown) => void;
-	process?: {
-		argv: string[];
-		cwd: () => string;
-		env: Record<string, string>;
-		platform: string;
-	};
-	setImmediate?: (cb: (...args: unknown[]) => void) => unknown;
-}
+// `setImmediate`/`process` have Node-specific extensions on their global
+// types (`__promisify__`, `Process.stdout`, ...) that a browser polyfill
+// can't satisfy without dragging in Node's full surface area. The polyfill
+// shapes here are deliberately partial, so we install them via a
+// `Record<string, unknown>` view to bypass the strict global typings — the
+// few callers in Flint's worker chain only touch the methods provided.
+const polyfillScope = globalThis as unknown as Record<string, unknown>;
 
-const globalScope = globalThis as typeof globalThis & WorkerPolyfillGlobals;
-if (typeof globalScope.setImmediate !== "function") {
-	globalScope.setImmediate = (cb: (...args: unknown[]) => void) =>
+if (typeof polyfillScope.setImmediate !== "function") {
+	polyfillScope.setImmediate = (cb: (...args: unknown[]) => void) =>
 		globalThis.setTimeout(() => {
 			cb();
 		}, 0);
 }
-if (typeof globalScope.clearImmediate !== "function") {
-	globalScope.clearImmediate = (id: unknown) => {
+if (typeof polyfillScope.clearImmediate !== "function") {
+	polyfillScope.clearImmediate = (id: unknown) => {
 		if (typeof id === "number") {
 			globalThis.clearTimeout(id);
 		}
 	};
 }
-if (typeof globalScope.process !== "object") {
-	globalScope.process = {
-		argv: [],
+if (typeof polyfillScope.process !== "object") {
+	polyfillScope.process = {
+		argv: [] as string[],
 		cwd: () => "/playground",
-		env: {},
+		env: {} as Record<string, string>,
 		platform: "linux",
 	};
 }
@@ -105,7 +96,7 @@ type YamlPluginModule = typeof import("@flint.fyi/yaml");
 let flintPromise: Promise<FlintNamespace> | undefined;
 
 function loadFlint(): Promise<FlintNamespace> {
-	flintPromise ||= (async () => {
+	flintPromise ??= (async () => {
 		const [
 			core,
 			tsPlugin,
@@ -424,42 +415,50 @@ function serializeNode(
 
 globalThis.addEventListener(
 	"message",
-	async ({ data }: MessageEvent<PlaygroundRequest>) => {
-		try {
-			const [entries, schema] = await Promise.all([
-				lintWorkspace(data.files, data.presetSelection),
-				buildSchema(),
-			]);
-			const diagnostics: PlaygroundDiagnostic[] =
-				entries.map(reportToDiagnostic);
-
-			const result: PlaygroundResult = {
-				activePath: data.activePath,
-				ast:
-					buildAst(data.files, data.activePath) ??
-					({
-						children: [],
-						end: 0,
-						kind: "SourceFile",
-						pos: 0,
-					} satisfies PlaygroundAstNode),
-				diagnostics,
-				requestId: data.requestId,
-				schema,
-			};
-
-			globalThis.postMessage(result);
-		} catch (error) {
-			const message = error instanceof Error ? error.message : String(error);
-			const stack =
-				error instanceof Error && error.stack
-					? error.stack.split("\n").slice(0, 30).join("\n")
-					: "";
-			const failure: PlaygroundFailure = {
-				error: stack ? `${message}\n\n${stack}` : message,
-				requestId: data.requestId,
-			};
-			globalThis.postMessage(failure);
-		}
+	({ data }: MessageEvent<PlaygroundRequest>) => {
+		// `handleMessage` always reports through `postMessage` and never throws,
+		// but a defensive `.catch` keeps any future regressions from bubbling
+		// out as an unhandled rejection.
+		handleMessage(data).catch(() => {
+			/* swallowed */
+		});
 	},
 );
+
+async function handleMessage(data: PlaygroundRequest): Promise<void> {
+	try {
+		const [entries, schema] = await Promise.all([
+			lintWorkspace(data.files, data.presetSelection),
+			buildSchema(),
+		]);
+		const diagnostics: PlaygroundDiagnostic[] = entries.map(reportToDiagnostic);
+
+		const result: PlaygroundResult = {
+			activePath: data.activePath,
+			ast:
+				buildAst(data.files, data.activePath) ??
+				({
+					children: [],
+					end: 0,
+					kind: "SourceFile",
+					pos: 0,
+				} satisfies PlaygroundAstNode),
+			diagnostics,
+			requestId: data.requestId,
+			schema,
+		};
+
+		globalThis.postMessage(result);
+	} catch (error) {
+		const message = error instanceof Error ? error.message : String(error);
+		const stack =
+			error instanceof Error && error.stack
+				? error.stack.split("\n").slice(0, 30).join("\n")
+				: "";
+		const failure: PlaygroundFailure = {
+			error: stack ? `${message}\n\n${stack}` : message,
+			requestId: data.requestId,
+		};
+		globalThis.postMessage(failure);
+	}
+}

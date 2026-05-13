@@ -33,8 +33,8 @@ export interface PlaygroundFile {
 }
 
 /**
- * Per-plugin preset selection — the keys are the plugin ids we recognise
- * (currently only `"ts"`), the values map preset names to enabled flags.
+ * Per-plugin preset selection — the keys are plugin ids advertised by the
+ * worker schema, the values map preset names to enabled flags.
  *
  * The set of valid preset names is discovered at runtime from the worker's
  * {@link PlaygroundSchema}, never hardcoded in the UI.

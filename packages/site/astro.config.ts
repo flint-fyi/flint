@@ -225,7 +225,7 @@ function playgroundBrowserShimsPlugin(): Plugin {
 			// Only polyfill for the client bundle (and worker bundles, which
 			// share the client environment). Astro's `ssr` and `prerender`
 			// environments run in Node at build time and need the real
-			// `node:*` modules — polyfilling them breaks content sync.
+			// `node:*` modules — shimming them breaks content sync.
 			const envName = this.environment.name;
 			if (envName !== "client") {
 				return undefined;
@@ -267,7 +267,7 @@ function playgroundBrowserShimsPlugin(): Plugin {
 			// Only polyfill for the client bundle (and worker bundles, which
 			// share the client environment). Astro's `ssr` and `prerender`
 			// environments run in Node at build time and need the real
-			// `node:*` modules — polyfilling them breaks content sync.
+			// `node:*` modules — shimming them breaks content sync.
 			if (this.environment.name !== "client") {
 				return undefined;
 			}

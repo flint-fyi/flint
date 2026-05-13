@@ -28,7 +28,12 @@ export class AsyncLocalStorage<T> {
 	}
 
 	getStore(): T | undefined {
-		return this.#stack[this.#stack.length - 1];
+		// This shim only runs inside the browser worker — `Array.prototype.at`
+		// is supported there since 2021. The Node-engines lint rule fires
+		// because the package metadata still advertises `>=16.0.0`, but
+		// nothing in this file ever reaches Node.
+		// eslint-disable-next-line n/no-unsupported-features/es-syntax
+		return this.#stack.at(-1);
 	}
 
 	run<R>(store: T, callback: () => R): R {

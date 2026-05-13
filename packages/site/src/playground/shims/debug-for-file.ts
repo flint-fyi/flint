@@ -7,8 +7,12 @@
 
 type Debugger = (...args: unknown[]) => void;
 
-export function debugForFile(_filePath?: string): Debugger {
-	return () => {};
+const noopDebugger: Debugger = () => {
+	// Intentionally empty: debug() namespaces aren't useful in browser workers.
+};
+
+export function debugForFile(): Debugger {
+	return noopDebugger;
 }
 
 export function filePathToNamespace(): string {

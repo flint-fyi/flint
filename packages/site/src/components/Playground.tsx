@@ -200,11 +200,13 @@ function isValidPresetSelection(
 	if (!value || typeof value !== "object") {
 		return false;
 	}
-	for (const pluginEntry of Object.values(value)) {
+	for (const pluginEntry of Object.values(value as Record<string, unknown>)) {
 		if (!pluginEntry || typeof pluginEntry !== "object") {
 			return false;
 		}
-		for (const enabled of Object.values(pluginEntry)) {
+		for (const enabled of Object.values(
+			pluginEntry as Record<string, unknown>,
+		)) {
 			if (typeof enabled !== "boolean") {
 				return false;
 			}
@@ -269,7 +271,7 @@ function filePathTabIdSuffix(path: string): string {
 
 	const slug = out.replace(/-+/gu, "-").replace(/^-+|-+$/gu, "");
 
-	return slug.length > 0 ? slug : "file";
+	return slug.length ? slug : "file";
 }
 
 function encodeWorkspace(workspace: SharedWorkspace): string {

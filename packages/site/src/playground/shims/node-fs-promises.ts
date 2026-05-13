@@ -30,6 +30,9 @@ export async function* glob(
 	patterns: string | string[],
 	options: GlobOptions = {},
 ): AsyncGenerator<DirentLike, void, void> {
+	// Signature matches `node:fs/promises.glob`'s AsyncIterable contract even
+	// though our VFS lookup is fully synchronous.
+	await Promise.resolve();
 	const files = vfsListFiles?.() ?? new Map<string, string>();
 	const cwd = options.cwd ?? "/";
 	const cwdSlash = cwd.endsWith("/") ? cwd : `${cwd}/`;
@@ -70,8 +73,8 @@ export async function mkdir(): Promise<void> {
 	// No-op: cache writes to a non-existent virtual filesystem.
 }
 
-export async function readFile(): Promise<string> {
-	throw unimplemented("readFile");
+export function readFile(): Promise<string> {
+	return Promise.reject(unimplemented("readFile"));
 }
 
 export function registerVFSFiles(lister: FileLister): void {
@@ -122,11 +125,12 @@ export const lstat = (): Promise<void> => {
 export const opendir = (): Promise<void> => {
 	throw unimplemented("opendir");
 };
-export const readdir = async (): Promise<string[]> => [];
+export const readdir = (): Promise<string[]> => Promise.resolve([]);
 export const readlink = (): Promise<void> => {
 	throw unimplemented("readlink");
 };
-export const realpath = async (path: string): Promise<string> => path;
+export const realpath = (path: string): Promise<string> =>
+	Promise.resolve(path);
 export const rename = (): Promise<void> => {
 	throw unimplemented("rename");
 };
