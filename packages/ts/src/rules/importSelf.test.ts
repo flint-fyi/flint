@@ -5,14 +5,22 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-import foo from "./file";
+import all from "./file";
 `,
 			fileName: "file.ts",
 			snapshot: `
-import foo from "./file";
+import all from "./file";
                 ~~~~~~~~
-                Module imports itself.
+                This module imports itself.
 `,
+			suggestions: [
+				{
+					id: "removeSelfImport",
+					updated: `
+
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -22,8 +30,16 @@ import { value } from "./file";
 			snapshot: `
 import { value } from "./file";
                       ~~~~~~~~
-                      Module imports itself.
+                      This module imports itself.
 `,
+			suggestions: [
+				{
+					id: "removeSelfImport",
+					updated: `
+
+`,
+				},
+			],
 		},
 		{
 			code: `
@@ -33,13 +49,21 @@ import * as mod from "./file";
 			snapshot: `
 import * as mod from "./file";
                      ~~~~~~~~
-                     Module imports itself.
+                     This module imports itself.
 `,
+			suggestions: [
+				{
+					id: "removeSelfImport",
+					updated: `
+
+`,
+				},
+			],
 		},
 	],
 	valid: [
 		{
-			code: `import foo from "./other";`,
+			code: `import other from "./other";`,
 			fileName: "file.ts",
 		},
 		{

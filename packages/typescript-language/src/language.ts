@@ -26,6 +26,7 @@ import type { Checker } from "./types/checker.ts";
 
 export interface TypeScriptFileServices {
 	program: ts.Program;
+	service: ts.server.ProjectService;
 	sourceFile: AST.SourceFile;
 	typeChecker: Checker;
 }
@@ -87,8 +88,9 @@ export const typescriptLanguage = createLanguage<
 		name: "TypeScript",
 	},
 	createFileFactory: (host) => {
+		const newLocal = createTypeScriptServerHost(host);
 		const { service } = createProjectService({
-			host: createTypeScriptServerHost(host),
+			host: newLocal,
 		});
 
 		function createFile(data: FileAboutData) {
@@ -124,6 +126,7 @@ export const typescriptLanguage = createLanguage<
 					language: typescriptLanguage,
 					services: {
 						program,
+						service,
 						sourceFile,
 						typeChecker: program.getTypeChecker(),
 					},

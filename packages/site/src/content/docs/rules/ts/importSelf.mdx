@@ -20,12 +20,12 @@ Self-imports can cause issues with module initialization order and are likely in
 <TabItem label="❌ Incorrect">
 
 ```ts
-// In file: utils.ts
+// utils.ts
 import { helper } from "./utils";
 ```
 
 ```ts
-// In file: index.ts
+// index.ts
 import * as self from "./index";
 ```
 
@@ -33,12 +33,12 @@ import * as self from "./index";
 <TabItem label="✅ Correct">
 
 ```ts
-// In file: utils.ts
+// utils.ts
 import { helper } from "./other-utils";
 ```
 
 ```ts
-// In file: index.ts
+// index.ts
 import { value } from "./module";
 ```
 
@@ -51,7 +51,7 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If you have a specific architectural pattern that intentionally uses self-imports (which is rare), you may disable this rule.
+If you have a rare architectural pattern or other build tooling that intentionally uses self-imports, you may disable this rule.
 However, self-imports typically indicate a code organization problem that should be addressed.
 
 ## Further Reading

@@ -1,49 +1,36 @@
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as path from "node:path";
 import ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-
-function getFileNameWithoutExtension(filePath: string): string {
-	const ext = path.extname(filePath);
-	return ext ? filePath.slice(0, -ext.length) : filePath;
+function canonicalize(filePath: string) {
+	const resolvedPath = path.resolve(filePath);
+	return ts.sys.useCaseSensitiveFileNames
+		? resolvedPath
+		: resolvedPath.toLowerCase();
 }
 
 function isSelfImport(
 	importPath: string,
 	currentFilePath: string,
 	program: ts.Program,
-): boolean {
-	// Skip non-relative imports
-	if (!importPath.startsWith(".")) {
-		return false;
-	}
-
-	const currentDir = path.dirname(currentFilePath);
-	const resolvedImportPath = path.resolve(currentDir, importPath);
-
-	// Try TypeScript's module resolution first
+	service: ts.server.ProjectService,
+) {
 	const resolved = ts.resolveModuleName(
 		importPath,
 		currentFilePath,
 		program.getCompilerOptions(),
-		ts.sys,
+		service.host,
 	);
 
-	if (resolved.resolvedModule) {
-		const resolvedPath = path.resolve(resolved.resolvedModule.resolvedFileName);
-		const normalizedCurrentPath = path.resolve(currentFilePath);
-		return resolvedPath === normalizedCurrentPath;
+	const resolvedFileName = resolved.resolvedModule?.resolvedFileName;
+	if (!resolvedFileName) {
+		return false;
 	}
 
-	// Fallback: simple path comparison for test environments
-	// Compare without extensions
-	const currentWithoutExt = getFileNameWithoutExtension(
-		path.resolve(currentFilePath),
-	);
-	const importWithoutExt = getFileNameWithoutExtension(resolvedImportPath);
-
-	return currentWithoutExt === importWithoutExt;
+	return canonicalize(resolvedFileName) === canonicalize(currentFilePath);
 }
 
 export default typescriptLanguage.createRule({
@@ -54,31 +41,38 @@ export default typescriptLanguage.createRule({
 	},
 	messages: {
 		noSelfImport: {
-			primary: "Module imports itself.",
+			primary: "This module imports itself.",
 			secondary: [
-				"A module importing itself creates a circular dependency that serves no purpose.",
+				"A file (module) importing itself creates a circular dependency that serves no purpose.",
+				"Types and values from the same file can be used direction without an export/import.",
 			],
 			suggestions: [
-				"Remove the self-import, or refactor the code to avoid circular dependencies.",
+				"Remove the self-import.",
+				"Refactor the code to avoid circular dependencies.",
 			],
 		},
 	},
 	setup(context) {
 		return {
 			visitors: {
-				ImportDeclaration: (node, { program, sourceFile }) => {
-					const moduleSpecifier = node.moduleSpecifier;
-					if (!ts.isStringLiteral(moduleSpecifier)) {
+				ImportDeclaration: (node, { program, service, sourceFile }) => {
+					if (!ts.isStringLiteral(node.moduleSpecifier)) {
 						return;
 					}
 
-					const importPath = moduleSpecifier.text;
-					const currentFilePath = sourceFile.fileName;
+					const importPath = node.moduleSpecifier.text;
 
-					if (isSelfImport(importPath, currentFilePath, program)) {
+					if (isSelfImport(importPath, sourceFile.fileName, program, service)) {
 						context.report({
 							message: "noSelfImport",
-							range: getTSNodeRange(moduleSpecifier, sourceFile),
+							range: getTSNodeRange(node.moduleSpecifier, sourceFile),
+							suggestions: [
+								{
+									id: "removeSelfImport",
+									range: getTSNodeRange(node, sourceFile),
+									text: "",
+								},
+							],
 						});
 					}
 				},
