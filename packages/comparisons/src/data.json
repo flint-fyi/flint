@@ -5447,7 +5447,8 @@
 		"flint": {
 			"name": "filesRedundancy",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
