@@ -10,8 +10,12 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="yaml" rule="fileExtensions" />
 
-The `.yaml` extension is the official extension recommended by the YAML specification.
-Using `.yaml` consistently makes file types clearer and avoids confusion.
+YAML files can generally be given either the `.yml` or `.yaml` file extension.
+Both are supported by almost all tooling.
+Choosing one file extension consistently helps keep a repository consistent and avoids confusing.
+
+The `.yaml` extension is recommended by the YAML specification.
+Therefore, this rule defaults to reporting on YAML files with the `.yml` extension.
 
 ## Examples
 
@@ -42,8 +46,8 @@ This rule is not configurable.
 
 ## When Not To Use It
 
-If your project or organization has an established convention of using .yml extensions, you may not need this rule.
-Some ecosystems or tools may prefer or require .yml extensions.
+If your project or organization has an established convention of using `.yml` extensions, you may not need this rule.
+Some ecosystems or tools may prefer or require `.yml` extensions.
 
 ## Further Reading
 
