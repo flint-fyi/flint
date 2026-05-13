@@ -1,0 +1,112 @@
+---
+description: "Reports regular expressions with exponential or polynomial backtracking."
+title: "regexSuperLinearBacktracking"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexSuperLinearBacktracking" />
+
+Reports regular expressions that can cause exponential or polynomial backtracking.
+These patterns can be exploited to cause Regular Expression Denial of Service (ReDoS) attacks, where a malicious input string causes the regex engine to take an extremely long time to process.
+
+## Examples
+
+### Self-Referential Quantifiers
+
+When a quantifier can reach itself through a parent quantifier, it can cause exponential backtracking.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:a+)+/;
+```
+
+```ts
+const pattern = /b(?:a+)+b/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /(?:a)+/;
+```
+
+```ts
+const pattern = /ba+b/;
+```
+
+</TabItem>
+</Tabs>
+
+### Trading Quantifiers
+
+When two quantifiers can exchange characters, it causes polynomial backtracking.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\ba+a+$/;
+```
+
+```ts
+const pattern = /\b\w+a\w+$/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\ba+$/;
+```
+
+```ts
+const pattern = /\b\w+a$/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+The rule also applies to patterns created with the `RegExp` constructor.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("(?:a+)+");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("(?:a)+");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are confident that your regular expressions will only be used with trusted input that cannot be manipulated by attackers, you might consider disabling this rule.
+
+## Further Reading
+
+- [MDN: Regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions)
+- [OWASP: Regular expression Denial of Service - ReDoS](https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexSuperLinearBacktracking" />

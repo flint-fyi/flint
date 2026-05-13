@@ -1,7 +1,7 @@
+import { jsonLanguage } from "@flint.fyi/json-language";
 import ts from "typescript";
-import z from "zod";
+import z from "zod/v4";
 
-import { jsonLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(jsonLanguage, {
@@ -9,7 +9,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 		description:
 			"Reports object keys that are not normalized using Unicode normalization forms.",
 		id: "keyNormalization",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnormalizedKey: {

@@ -67,6 +67,27 @@ export default defineConfig({
 });
 ```
 
+### `stylisticStrict`
+
+Additional stylistic rules that enforce best practices which are nice to keep consistent across Flint plugins.
+These rules are recommended for teams that want the stricter conventions enforced automatically.
+
+```ts title="flint.config.ts"
+import { flint } from "@flint.fyi/plugin-flint";
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: ts.files.all,
+			rules: flint.presets.stylisticStrict,
+		},
+	],
+});
+```
+
+This preset's rules are a superset of those in [`stylistic`](#stylistic).
+
 ## Rules
 
 <RulesTable implementing plugin="flint" />

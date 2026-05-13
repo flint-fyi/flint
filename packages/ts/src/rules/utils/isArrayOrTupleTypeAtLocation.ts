@@ -1,6 +1,6 @@
+import type { AST, Checker } from "@flint.fyi/typescript-language";
 import type ts from "typescript";
 
-import type { AST, Checker } from "../../index.ts";
 import { getConstrainedTypeAtLocation } from "./getConstrainedType.ts";
 import { isTypeRecursive } from "./isTypeRecursive.ts";
 

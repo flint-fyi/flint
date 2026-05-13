@@ -1,6 +1,6 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `.flatMap()` with an identity function that returns its argument unchanged.",
 		id: "arrayMapIdentities",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		identityFlatMap: {

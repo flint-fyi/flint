@@ -1,0 +1,94 @@
+---
+description: "Reports message IDs defined in the messages object that are never used in report calls."
+title: "unusedMessageIds"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="flint" rule="unusedMessageIds" />
+
+Lint rules often declare a `messages` object up front and then reference those message IDs from report calls later on.
+Keeping unused message IDs around makes rules harder to scan and maintain, especially when the message object grows over time.
+
+This rule tracks message usage from `context.report()` calls and Flint's built-in `reportSourceCode()` helper for source-mapped language rules.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+ruleCreator.createRule(_, {
+	messages: {
+		usedMessage: {
+			primary: "This message is used.",
+			secondary: [""],
+			suggestions: [""],
+		},
+		unusedMessage: {
+			primary: "This message is never used.",
+			secondary: [""],
+			suggestions: [""],
+		},
+	},
+	setup(context: RuleContext) {
+		context.report({
+			message: "usedMessage",
+		});
+	},
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+ruleCreator.createRule(_, {
+	messages: {
+		usedMessage: {
+			primary: "This message is used.",
+			secondary: [""],
+			suggestions: [""],
+		},
+	},
+	setup(context: RuleContext) {
+		context.report({
+			message: "usedMessage",
+		});
+	},
+});
+```
+
+```ts
+import { reportSourceCode } from "@flint.fyi/volar-language";
+
+ruleCreator.createRule(_, {
+	messages: {
+		missingKey: {
+			primary: "This message is used from source code.",
+			secondary: [""],
+			suggestions: [""],
+		},
+	},
+	setup(context: RuleContext) {
+		reportSourceCode(context, {
+			message: "missingKey",
+			range,
+		});
+	},
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="flint" ruleId="unusedMessageIds" />

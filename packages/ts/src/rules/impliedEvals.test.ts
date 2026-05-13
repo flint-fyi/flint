@@ -140,12 +140,10 @@ new Function("a", "b", "return a + b");
 		},
 		{
 			code: `
-declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
 const getCode = (): string => "code";
 setTimeout(getCode(), 0);
 `,
 			snapshot: `
-declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
 const getCode = (): string => "code";
 setTimeout(getCode(), 0);
            ~~~~~~~~~

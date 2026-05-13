@@ -6,7 +6,14 @@ export interface FileReport extends NormalizedReport {
 	/**
 	 * Metadata on the rule or other system that created this report.
 	 */
-	about: BaseAbout;
+	about: FileReportAbout;
+}
+
+export interface FileReportAbout extends BaseAbout {
+	/**
+	 * URL to point users to documentation for the report, if one exists.
+	 */
+	url?: string;
 }
 
 export interface FileReportWithFix extends FileReport {

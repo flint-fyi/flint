@@ -1,8 +1,12 @@
 import { CachedFactory } from "cached-factory";
 
 import type { FilesValues } from "../types/files.ts";
-import type { Plugin, PluginPresets } from "../types/plugins.ts";
-import type { Rule, RuleAbout } from "../types/rules.ts";
+import type {
+	Plugin,
+	PluginPresets,
+	PluginRulesFactory,
+} from "../types/plugins.ts";
+import type { AnyRule, RuleAbout, UnsafeAnyRule } from "../types/rules.ts";
 
 export type CreatePluginOptions<
 	About extends RuleAbout,
@@ -31,17 +35,6 @@ export interface CreatePluginOptionsWithoutFiles<
 	rules: Rules;
 }
 
-export type UnsafeAnyRule<About extends RuleAbout = RuleAbout> = Rule<
-	About,
-	// TODO: How to make these types work with createPlugin.test.ts & co.?
-	/* eslint-disable @typescript-eslint/no-explicit-any */
-	any,
-	any,
-	any,
-	any
-	/* eslint-enable @typescript-eslint/no-explicit-any */
->;
-
 export function createPlugin<
 	const About extends RuleAbout,
 	const FilesKey extends string | undefined,
@@ -55,38 +48,38 @@ export function createPlugin<
 	FilesKey,
 	Rules
 > {
-	const presets = collectPresetsFromRules(rules);
+	const presets = collectPresetsFromRules<About, Rules>(rules);
 	const rulesById = new Map(rules.map((rule) => [rule.about.id, rule]));
 
 	return {
-		// @ts-expect-error -- TODO: Figure this out...?
-		files,
+		// TODO: Figure this out...?
+		files: files as Plugin<About, FilesKey, Rules>["files"],
 		name,
 		presets,
-		// @ts-expect-error -- TODO: Figure out what to assert...?
-		rules: (configuration) => {
+		rules: ((configuration) => {
 			return Object.entries(configuration).map(([id, options]) => ({
 				options,
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				rule: rulesById.get(id)!,
 			}));
-		},
+		}) as PluginRulesFactory<Rules>,
 		rulesById,
 	};
 }
 
-function collectPresetsFromRules<const About extends RuleAbout>(
-	rules: UnsafeAnyRule<About>[],
-) {
+function collectPresetsFromRules<
+	const About extends RuleAbout,
+	const Rules extends AnyRule<About>[],
+>(rules: Rules): PluginPresets<Rules> {
 	const presets = new CachedFactory<string, UnsafeAnyRule<About>[]>(() => []);
 
 	for (const rule of rules) {
-		if (rule.about.presets) {
+		if (rule.about.presets !== undefined) {
 			for (const preset of rule.about.presets) {
 				presets.get(preset).push(rule);
 			}
 		}
 	}
 
-	return Object.fromEntries(presets.entries()) as PluginPresets<About, string>;
+	return Object.fromEntries(presets.entries()) as PluginPresets<Rules>;
 }

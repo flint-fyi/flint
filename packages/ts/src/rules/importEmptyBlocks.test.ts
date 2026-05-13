@@ -196,7 +196,7 @@ import Default, {
 import Default /* hello, world */ , { } from "mod";
 `,
 			output: `
-import Default /* hello, world */ from "mod";
+import Default /* hello, world */  from "mod";
 `,
 			snapshot: `
 import Default /* hello, world */ , { } from "mod";
@@ -209,7 +209,7 @@ import Default /* hello, world */ , { } from "mod";
 import Default /* a, b, c */ , {} from "mod";
 `,
 			output: `
-import Default /* a, b, c */ from "mod";
+import Default /* a, b, c */  from "mod";
 `,
 			snapshot: `
 import Default /* a, b, c */ , {} from "mod";
@@ -222,7 +222,7 @@ import Default /* a, b, c */ , {} from "mod";
 import Default /* , */ , { } from "mod";
 `,
 			output: `
-import Default /* , */ from "mod";
+import Default /* , */  from "mod";
 `,
 			snapshot: `
 import Default /* , */ , { } from "mod";

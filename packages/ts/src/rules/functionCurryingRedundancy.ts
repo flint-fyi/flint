@@ -1,9 +1,11 @@
+import {
+	type AST,
+	isFunction,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import { isFunction } from "../utils/isFunction.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -11,7 +13,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using `.apply()` or `.call()` or  when the context (`this` value) provides no benefit.",
 		id: "functionCurryingRedundancy",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		unnecessaryCall: {
@@ -88,9 +90,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 function createApplyFixText(
 	functionExpression: string,
 	methodArguments: AST.Expression[],
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
-	if (methodArguments.length === 0) {
+	if (!methodArguments.length) {
 		return `${functionExpression}()`;
 	}
 
@@ -105,7 +107,7 @@ function createApplyFixText(
 function createCallFixText(
 	functionExpression: string,
 	methodArguments: AST.Expression[],
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
 	const argsText = methodArguments
 		.map((arg) => arg.getText(sourceFile))

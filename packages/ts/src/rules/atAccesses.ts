@@ -1,11 +1,13 @@
+import {
+	type AST,
+	getTSNodeRange,
+	hasSameTokens,
+	typescriptLanguage,
+	unwrapParenthesizedNode,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import { hasSameTokens } from "../utils/hasSameTokens.ts";
-import { unwrapParenthesizedExpression } from "../utils/unwrapParenthesizedExpression.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -84,9 +86,9 @@ function isLeftHandSide(node: AST.ElementAccessExpression) {
 
 function isLengthMinusAccess(
 	node: AST.ElementAccessExpression,
-	sourceFile: ts.SourceFile,
+	sourceFile: AST.SourceFile,
 ) {
-	const argument = unwrapParenthesizedExpression(node.argumentExpression);
+	const argument = unwrapParenthesizedNode(node.argumentExpression);
 
 	if (
 		!ts.isBinaryExpression(argument) ||
@@ -95,7 +97,7 @@ function isLengthMinusAccess(
 		return false;
 	}
 
-	const left = unwrapParenthesizedExpression(argument.left);
+	const left = unwrapParenthesizedNode(argument.left);
 	if (
 		!ts.isPropertyAccessExpression(left) ||
 		left.name.text !== "length" ||
@@ -104,7 +106,7 @@ function isLengthMinusAccess(
 		return false;
 	}
 
-	const right = unwrapParenthesizedExpression(argument.right);
+	const right = unwrapParenthesizedNode(argument.right);
 	if (!ts.isNumericLiteral(right)) {
 		return false;
 	}

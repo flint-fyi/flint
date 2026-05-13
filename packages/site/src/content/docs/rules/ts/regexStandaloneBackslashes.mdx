@@ -1,0 +1,137 @@
+---
+description: "Reports standalone backslashes in regex patterns that look like incomplete escape sequences."
+title: "regexStandaloneBackslashes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexStandaloneBackslashes" />
+
+In non-unicode mode, backslashes followed by certain characters are interpreted as literal backslash characters rather than escape sequences.
+
+For example, `/\c/` (without the unicode flag) is equivalent to `/\\c/` — a literal backslash followed by `c`.
+This behavior is described in [Annex B](https://tc39.es/ecma262/#sec-regular-expressions-patterns) of the ECMAScript specification.
+
+Reports standalone backslashes (`\`) in regex patterns that don't form a valid escape sequence.
+
+## Examples
+
+### Incomplete Control Escape
+
+The `\c` escape requires a letter A-Z to form a valid control escape sequence.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\c/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\cX/;
+```
+
+</TabItem>
+</Tabs>
+
+### Invalid Control Escape Character
+
+Using `\c` with a non-letter character results in a standalone backslash.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /\c1/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /\cA/;
+```
+
+</TabItem>
+</Tabs>
+
+### Inside Character Class
+
+Standalone backslashes can also occur inside character classes.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\c]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[\cA]/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+The rule also checks regex patterns in `RegExp` constructor calls.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("\\c");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("\\cX");
+```
+
+</TabItem>
+</Tabs>
+
+### Valid Escape Sequences
+
+Standard escape sequences like `\n`, `\t`, `\d`, and `\\` are valid and not reported.
+
+<Tabs>
+<TabItem label="✅ Correct">
+
+```ts
+const whitespace = /\n\t\r/;
+const digits = /\d+/;
+const literalBackslash = /\\/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase intentionally uses standalone backslashes in regex patterns and you understand the Annex B behavior, you might prefer to disable this rule.
+
+## Further Reading
+
+- [MDN: Character escape](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_escape)
+- [ECMAScript Annex B: Regular Expressions Patterns](https://tc39.es/ecma262/#sec-regular-expressions-patterns)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexStandaloneBackslashes" />

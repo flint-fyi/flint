@@ -1,0 +1,86 @@
+---
+description: "Reports `client:only` directives without a value, or with a value whose type cannot be a renderer hint string."
+title: "clientOnlyDirectiveValues"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="astro" rule="clientOnlyDirectiveValues" />
+
+Astro's `client:only` directive needs a renderer hint such as `"react"` or `"svelte"`.
+Without that value, or with a value that cannot be a string, Astro does not know which client runtime to load for the component.
+
+This rule reports `client:only` directives that have no value.
+It also reports values whose type cannot possibly be a renderer hint string.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```astro
+---
+import Widget from "./Widget.svelte";
+---
+
+<Widget client:only />
+```
+
+```astro
+---
+import Widget from "./Widget.svelte";
+
+const renderer = 0;
+---
+
+<Widget client:only={renderer} />
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```astro
+---
+import Widget from "./Widget.svelte";
+---
+
+<Widget client:only="svelte" />
+```
+
+```astro
+---
+import Widget from "./Widget.svelte";
+
+const renderer = getRenderer();
+
+function getRenderer(): string {
+	return "svelte";
+}
+---
+
+<Widget client:only={renderer} />
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project intentionally passes non-string values to `client:only` before another transform rewrites them into renderer hints, this rule may be too strict.
+That usually means disabling the rule for the specific line or file and documenting where the final string renderer hint is introduced.
+
+## Further Reading
+
+- [Astro Docs: Template directives reference - `client:only`](https://docs.astro.build/en/reference/directives-reference/#clientonly)
+- [Astro Docs: Missing hint on `client:only` directive](https://docs.astro.build/en/reference/errors/no-client-only-hint/)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="astro" ruleId="clientOnlyDirectiveValues" />

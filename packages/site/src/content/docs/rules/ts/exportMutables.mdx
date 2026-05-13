@@ -1,0 +1,80 @@
+---
+description: "Reports exporting mutable bindings (let or var)."
+title: "exportMutables"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="exportMutables" />
+
+Exporting mutable bindings (`let` or `var`) can lead to confusing behavior.
+When an exported variable is changed, consumers of the module will see the updated value, which can be unexpected and difficult to debug.
+
+This rule requires exported variables to be declared with `const` to ensure they cannot be reassigned.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+export let counter = 0;
+```
+
+```ts
+export var name = "default";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export const counter = 0;
+```
+
+```ts
+export const name = "default";
+```
+
+```ts
+let internalCounter = 0;
+
+export function getCounter() {
+	return internalCounter;
+}
+
+export function increment() {
+	internalCounter++;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Mutation Is Necessary
+
+If you need to expose a value that changes over time, consider these alternatives:
+
+- Export getter and setter functions
+- Export an object with methods to access and modify the value
+- Use a state management pattern
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use mutable exports for module-level state that consumers are expected to observe, you may disable this rule.
+However, this pattern can be confusing and is generally discouraged.
+
+## Further Reading
+
+- [MDN: export](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="exportMutables" />

@@ -1,5 +1,6 @@
-import { typescriptLanguage } from "../language.ts";
-import { getModifyingReferences } from "../utils/getModifyingReferences.ts";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { getModifyingReferences } from "@flint.fyi/typescript-language";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -7,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports reassigning variables declared with function declarations.",
 		id: "functionAssignments",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noFunctionAssignment: {

@@ -1,8 +1,12 @@
+import {
+	type AST,
+	type Checker,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST, Checker } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 import { isArrayOrTupleTypeAtLocation } from "./utils/isArrayOrTupleTypeAtLocation.ts";
 
 function isArrayFilterCall(
@@ -13,7 +17,7 @@ function isArrayFilterCall(
 		ts.isCallExpression(node) &&
 		ts.isPropertyAccessExpression(node.expression) &&
 		node.expression.name.text === "filter" &&
-		node.arguments.length > 0 &&
+		!!node.arguments.length &&
 		node.arguments.length <= 2 &&
 		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
 	);
@@ -36,12 +40,12 @@ function isZeroIndex(node: AST.Expression) {
 	return ts.isNumericLiteral(node) && node.text === "0";
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports using `.filter()` when only the first or last matching element is needed.",
 		id: "arrayFilteredFinds",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferFind: {
@@ -78,7 +82,7 @@ export default typescriptLanguage.createRule({
 					switch (methodName) {
 						case "pop":
 							if (
-								node.arguments.length === 0 &&
+								!node.arguments.length &&
 								isArrayFilterCall(objectExpression, typeChecker)
 							) {
 								context.report({
@@ -90,7 +94,7 @@ export default typescriptLanguage.createRule({
 
 						case "shift":
 							if (
-								node.arguments.length === 0 &&
+								!node.arguments.length &&
 								isArrayFilterCall(objectExpression, typeChecker)
 							) {
 								context.report({

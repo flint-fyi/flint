@@ -1,4 +1,5 @@
-import { typescriptLanguage } from "../language.ts";
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -24,7 +25,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				EnumDeclaration: (node, { sourceFile }) => {
-					if (node.members.length === 0) {
+					if (!node.members.length) {
 						context.report({
 							message: "emptyEnum",
 							range: {

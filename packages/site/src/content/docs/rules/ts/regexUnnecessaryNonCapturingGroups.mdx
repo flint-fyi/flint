@@ -1,0 +1,72 @@
+---
+description: "Reports non-capturing groups that can be removed without changing the meaning of the regex."
+title: "regexUnnecessaryNonCapturingGroups"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnnecessaryNonCapturingGroups" />
+
+Reports non-capturing groups `(?:...)` that serve no purpose and can be removed without changing the meaning of the regular expression.
+
+Note that groups are necessary when:
+
+- They apply a quantifier to multiple elements: `/(?:ab)+/`
+- They group alternations that are not the only element: `/a(?:b|c)d/`
+- Removing them would create escape sequences: `/\x4(?:1)/`
+- They wrap a quantified element for an outer quantifier: `/(?:a{2})+/`
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /(?:abcd)/;
+```
+
+```ts
+const pattern = /(?:a)+/;
+```
+
+```ts
+const pattern = /(?:a|b)/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /abcd/;
+```
+
+```ts
+const pattern = /a+/;
+```
+
+```ts
+const pattern = /a|b/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer to keep non-capturing groups for readability or organizational purposes, you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: Groups and backreferences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Groups_and_backreferences)
+- [MDN: Regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnnecessaryNonCapturingGroups" />

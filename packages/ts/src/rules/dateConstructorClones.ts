@@ -1,9 +1,10 @@
+import {
+	type AST,
+	type Checker,
+	isGlobalDeclarationOfName,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
-
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
-import type { Checker } from "../types/checker.ts";
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
 
 function isDateType(node: AST.Expression, typeChecker: Checker) {
 	return typeChecker.getTypeAtLocation(node).getSymbol()?.getName() === "Date";
@@ -48,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						argument.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						argument.expression.name.kind !== SyntaxKind.Identifier ||
 						argument.expression.name.text !== "getTime" ||
-						argument.arguments.length !== 0 ||
+						!!argument.arguments.length ||
 						!isDateType(argument.expression.expression, typeChecker)
 					) {
 						return;

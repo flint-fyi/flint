@@ -1,0 +1,40 @@
+---
+import Sponsor, { type SponsorData } from "./Sponsor.astro";
+
+// TODO: This should be moved to get sourced from Open Collective.
+// Later on, if and when we get sponsors from Tidelift/thanks.dev/etc, that too.
+const sponsors: SponsorData[] = [
+	{
+		name: "Josh Goldberg 💖",
+		href: "https://github.com/JoshuaKGoldberg",
+		image: "https://avatars.githubusercontent.com/u/3335181",
+	},
+	{
+		name: "Amp",
+		href: "https://ampcode.com?utm_source=flint",
+		image: "https://avatars.githubusercontent.com/u/220109460",
+	},
+	{
+		name: "Mintlify",
+		href: "https://mintlify.com?utm_source=flint",
+		image: "https://avatars.githubusercontent.com/u/93011474",
+	},
+];
+---
+
+<div class="sponsors-list">
+	{sponsors.map((sponsor) => <Sponsor data={sponsor} />)}
+</div>
+
+<style>
+	.sponsors-list {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 1rem;
+		justify-content: center;
+		margin: 0 auto;
+		padding: 1rem 0;
+		width: 100%;
+	}
+</style>

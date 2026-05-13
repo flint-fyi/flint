@@ -1,0 +1,110 @@
+---
+description: "Reports inconsistent notations for matching any character in regular expressions."
+title: "regexMatchNotation"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexMatchNotation" />
+
+Reports inconsistent notations for matching any character in regular expressions.
+There are multiple ways to match any character: `[\s\S]`, `[\S\s]`, `[\d\D]`, `[\w\W]`, `[^]`, and `.` with the `s` (dotAll) flag.
+This rule enforces using `[\s\S]` as the standard notation.
+
+## Examples
+
+### Non-Standard Character Class Order
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\S\s]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[\s\S]/;
+```
+
+</TabItem>
+</Tabs>
+
+### Empty Negated Character Class
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[^]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[\s\S]/;
+```
+
+</TabItem>
+</Tabs>
+
+### Digit and Non-Digit
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\d\D]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[\s\S]/;
+```
+
+</TabItem>
+</Tabs>
+
+### Word and Non-Word
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\w\W]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[\s\S]/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your team has established a different convention for matching any character, or if you prefer the flexibility of using different notations in different contexts, you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: Character classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Character_classes)
+- [MDN: Regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexMatchNotation" />

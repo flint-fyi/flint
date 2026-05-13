@@ -1,0 +1,81 @@
+---
+description: "Prefer object spread syntax over `Object.assign()` when the first argument is an object literal."
+title: "objectAssignSpreads"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="objectAssignSpreads" />
+
+Object spread syntax (`{ ...source }`) provides a more concise and readable way to copy and merge objects compared to `Object.assign()`.
+When `Object.assign()` is called with an object literal as its first argument, the same result can be achieved more idiomatically using spread syntax.
+
+This rule flags cases where `Object.assign({}, source)` or `Object.assign({ prop: value }, source)` can be replaced with `{ ...source }` or `{ prop: value, ...source }`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const clone = Object.assign({}, source);
+```
+
+```ts
+const merged = Object.assign({}, defaults, userConfig);
+```
+
+```ts
+const extended = Object.assign({ id: 1 }, data);
+```
+
+```ts
+const result = Object.assign({ name: "test" });
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const clone = { ...source };
+```
+
+```ts
+const merged = { ...defaults, ...userConfig };
+```
+
+```ts
+const extended = { id: 1, ...data };
+```
+
+```ts
+const result = { name: "test" };
+```
+
+```ts
+Object.assign(existingObject, newProperties);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase needs to support older JavaScript environments (pre-ES2018) that don't have native spread syntax support, you may need to disable this rule or use a transpiler.
+Alternately, some projects may prefer to use `Object.assign()` for its mutability, or may use it in many places where spread syntax is not appropriate and prefer always using it for consistency.
+
+## Further Reading
+
+- [MDN: Spread syntax (...)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
+- [MDN: Object.assign()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="objectAssignSpreads" />

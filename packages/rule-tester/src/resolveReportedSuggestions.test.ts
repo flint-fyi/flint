@@ -61,7 +61,7 @@ describe("resolveReportedSuggestions", () => {
 			suggestions: [
 				{
 					files: {
-						"file.ts": () => [{ range: { begin: 0, end: 3 }, text: "def" }],
+						"file.ts": [{ range: { begin: 0, end: 3 }, text: "def" }],
 					},
 					id: "suggestion-report",
 				},
@@ -89,7 +89,7 @@ describe("resolveReportedSuggestions", () => {
 			suggestions: [
 				{
 					files: {
-						"file.ts": () => [{ range: { begin: 0, end: 3 }, text: "def" }],
+						"file.ts": [{ range: { begin: 0, end: 3 }, text: "def" }],
 					},
 					id: "suggestion-report",
 				},
@@ -117,7 +117,7 @@ describe("resolveReportedSuggestions", () => {
 			suggestions: [
 				{
 					files: {
-						"file.ts": () => [{ range: { begin: 0, end: 3 }, text: "def" }],
+						"file.ts": [{ range: { begin: 0, end: 3 }, text: "def" }],
 					},
 					id: "suggestion-report",
 				},
@@ -157,8 +157,8 @@ describe("resolveReportedSuggestions", () => {
 			suggestions: [
 				{
 					files: {
-						"fileA.ts": () => [{ range: { begin: 0, end: 5 }, text: "def-A" }],
-						"fileB.ts": () => [{ range: { begin: 0, end: 5 }, text: "def-B" }],
+						"fileA.ts": [{ range: { begin: 0, end: 5 }, text: "def-A" }],
+						"fileB.ts": [{ range: { begin: 0, end: 5 }, text: "def-B" }],
 					},
 					id: "suggestion-report",
 				},

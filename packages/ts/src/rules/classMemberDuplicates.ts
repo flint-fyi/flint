@@ -1,8 +1,10 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -10,7 +12,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports duplicate class member names that will be overwritten.",
 		id: "classMemberDuplicates",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		duplicateMember: {
@@ -36,7 +38,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function visitClass(
 			node: AST.ClassDeclaration | AST.ClassExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			{ sourceFile }: { sourceFile: AST.SourceFile },
 		) {
 			const seenMembers = {
 				instance: {
@@ -61,7 +63,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					? seenMembers.static
 					: seenMembers.instance;
 
-				let isDuplicate = false;
+				let isDuplicate: boolean;
 				if (key.group === "values") {
 					isDuplicate =
 						namespace.values.has(key.text) ||

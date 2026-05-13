@@ -1,72 +1,90 @@
+import { pathKey } from "@flint.fyi/utils";
 import { debugForFile } from "debug-for-file";
+import { resolve } from "node:path";
 
 import { DirectivesFilterer } from "../directives/DirectivesFilterer.ts";
-import type { LanguageFileDiagnostic } from "../types/languages.ts";
+import { directiveReports } from "../directives/reports/directiveReports.ts";
+import type { LinterHost } from "../types/host.ts";
+import type { LanguageReport } from "../types/languages.ts";
 import type { FileReport } from "../types/reports.ts";
-import type { LanguageAndFilesMetadata } from "./types.ts";
+import type { LanguageAndFile } from "./types.ts";
 
 const log = debugForFile(import.meta.filename);
 
 /**
  * For a single file path, collects its:
  *   - Cache dependencies: from each language file
- *   - Diagnostics: from each language file (if not skipped)
+ *   - LanguageReport: from each language file (if not skipped)
  *   - Reports: from rules reports by file path
  * ...and then disposes of each language file.
  */
 export function finalizeFileResults(
 	filePath: string,
-	languageAndFilesMetadata: LanguageAndFilesMetadata[],
+	languageAndFiles: LanguageAndFile[],
 	reports: FileReport[],
-	skipDiagnostics?: boolean,
+	host: LinterHost,
+	skipLanguageReports?: boolean,
 ) {
 	const directivesFilterer = new DirectivesFilterer();
 	const fileDependencies = new Set<string>();
-	const fileDiagnostics: LanguageFileDiagnostic[] = [];
+	const languageReports: LanguageReport[] = [];
 
-	for (const { fileMetadata, language } of languageAndFilesMetadata) {
-		if (fileMetadata.directives) {
-			log(
-				"Adding %d directives for file %s",
-				fileMetadata.directives,
-				filePath,
-			);
-			directivesFilterer.add(fileMetadata.directives);
+	for (const { file, language } of languageAndFiles) {
+		if (file.directives) {
+			log("Adding %d directives for file %s", file.directives.length, filePath);
+			directivesFilterer.add(file.directives);
 		}
 
-		if (fileMetadata.file.cache?.dependencies) {
-			for (const dependency of fileMetadata.file.cache.dependencies) {
-				if (!fileDependencies.has(dependency)) {
-					log("Adding file dependency %s for file %s", dependency, filePath);
-					fileDependencies.add(dependency);
+		const cache = language.getFileCacheImpacts?.(file);
+
+		if (cache?.dependencies) {
+			for (const dependency of cache.dependencies) {
+				const normalized = pathKey(
+					resolve(dependency),
+					host.isCaseSensitiveFS(),
+				);
+				if (!fileDependencies.has(normalized)) {
+					log("Adding file dependency %s for file %s", normalized, filePath);
+					fileDependencies.add(normalized);
 				}
 			}
 		}
 
-		if (!skipDiagnostics) {
-			if (fileMetadata.file.getDiagnostics) {
-				log(
-					"Retrieving language %s diagnostics for file %s",
-					language.about.name,
-					filePath,
-				);
-				fileDiagnostics.push(...fileMetadata.file.getDiagnostics());
-				log(
-					"Retrieved language %s diagnostics for file %s",
-					language.about.name,
-					filePath,
-				);
-			}
+		if (!skipLanguageReports && language.getLanguageReports) {
+			log(
+				"Retrieving %s language reports for file %s",
+				language.about.name,
+				filePath,
+			);
+			languageReports.push(...language.getLanguageReports(file));
+			log(
+				"Retrieved %s language reports for file %s",
+				language.about.name,
+				filePath,
+			);
 		}
-
-		log("Disposing language %s for file %s", language.about.name, filePath);
-		fileMetadata.file[Symbol.dispose]();
-		log("Disposed language %s for file %s", language.about.name, filePath);
 	}
+
+	const directiveReportsFromCollector: FileReport[] = [];
+	for (const { file } of languageAndFiles) {
+		if (file.reports) {
+			directiveReportsFromCollector.push(...file.reports);
+		}
+	}
+
+	const filterResult = directivesFilterer.filter(reports);
+
+	const unusedDirectiveReports = filterResult.unusedDirectives.map(
+		(directive) => directiveReports.createUnused(directive),
+	);
 
 	return {
 		dependencies: fileDependencies,
-		diagnostics: fileDiagnostics,
-		reports: directivesFilterer.filter(reports),
+		languageReports,
+		reports: [
+			...filterResult.reports,
+			...directiveReportsFromCollector,
+			...unusedDirectiveReports,
+		],
 	};
 }

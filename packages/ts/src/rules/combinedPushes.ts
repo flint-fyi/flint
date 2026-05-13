@@ -1,8 +1,11 @@
+import {
+	type AST,
+	type Checker,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
-import type { Checker, TypeScriptFileServices } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import type * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -34,7 +37,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 		}
 
-		function getArrayName(node: AST.CallExpression, sourceFile: ts.SourceFile) {
+		function getArrayName(
+			node: AST.CallExpression,
+			sourceFile: AST.SourceFile,
+		) {
 			return (
 				ts.isPropertyAccessExpression(node.expression) &&
 				node.expression.expression.getText(sourceFile)
@@ -43,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isPushCallStatement(
 			statement: AST.Statement,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		) {
 			if (

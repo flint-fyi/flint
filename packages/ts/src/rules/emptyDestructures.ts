@@ -1,8 +1,9 @@
 import {
 	type TypeScriptFileServices,
 	typescriptLanguage,
-} from "../language.ts";
-import type * as AST from "../types/ast.ts";
+} from "@flint.fyi/typescript-language";
+import type { AST } from "@flint.fyi/typescript-language";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -10,7 +11,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using empty destructuring patterns that destructure no values.",
 		id: "emptyDestructures",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		emptyPattern: {
@@ -31,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.ArrayBindingPattern | AST.ObjectBindingPattern,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (node.elements.length === 0) {
+			if (!node.elements.length) {
 				context.report({
 					message: "emptyPattern",
 					range: {

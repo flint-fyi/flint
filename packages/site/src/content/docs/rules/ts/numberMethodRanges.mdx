@@ -1,0 +1,91 @@
+---
+description: "Reports when number method arguments are outside their valid range."
+title: "numberMethodRanges"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="numberMethodRanges" />
+
+Number methods such as `toExponential`, `toFixed`, `toPrecision`, and `toString` have specific valid ranges for their arguments.
+Passing values outside these ranges will throw a `RangeError` at runtime.
+
+This rule flags numeric literal arguments that are outside the valid range:
+
+- `Number.prototype.toExponential(digits)`: digits must be between 0 and 100
+- `Number.prototype.toFixed(digits)`: digits must be between 0 and 100
+- `Number.prototype.toPrecision(precision)`: precision must be between 1 and 100
+- `Number.prototype.toString(radix)`: radix must be between 2 and 36
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const binary = (255).toString(1);
+```
+
+```ts
+const hex = (255).toString(37);
+```
+
+```ts
+const fixed = (3.14159).toFixed(101);
+```
+
+```ts
+const exponential = (12345).toExponential(-1);
+```
+
+```ts
+const precision = (12345).toPrecision(0);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const binary = (255).toString(2);
+```
+
+```ts
+const hex = (255).toString(16);
+```
+
+```ts
+const fixed = (3.14159).toFixed(2);
+```
+
+```ts
+const exponential = (12345).toExponential(5);
+```
+
+```ts
+const precision = (12345).toPrecision(10);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase is a rare one that overrides those native methods, this rule might not be for you.
+
+## Further Reading
+
+- [MDN: Number.prototype.toExponential()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toExponential)
+- [MDN: Number.prototype.toFixed()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed)
+- [MDN: Number.prototype.toPrecision()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toPrecision)
+- [MDN: Number.prototype.toString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="numberMethodRanges" />

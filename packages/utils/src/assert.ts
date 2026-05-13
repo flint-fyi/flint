@@ -2,7 +2,10 @@ export class FlintAssertionError extends Error {
 	constructor(message: string) {
 		super(`Flint bug: ${message}.`);
 		const issueUrl = buildIssueUrl(message, this.stack);
+		// The message uses this.stack, which isn't available before super()
+		// flint-disable-next-line ts/errorSubclassProperties
 		this.message = `Flint bug: ${message}. Please report it here: ${issueUrl}`;
+		this.name = "FlintAssertionError";
 		if (this.stack) {
 			const [, ...rest] = this.stack.split("\n");
 			this.stack = [`FlintAssertionError: ${this.message}`, ...rest].join("\n");
@@ -20,8 +23,10 @@ export function nullThrows<T>(x: T, message: string): NonNullable<T> {
 	assert(x != null, message);
 	return x;
 }
+
+/** @internal */
 export function sanitizeStackTrace(stack: string): string {
-	const pathRegex = /(?:[A-Z]:\\|\/)[^:\s)]+:\d+(?::\d+)?/gi;
+	const pathRegex = /(?:[a-z]:\\|\/)[^:\s)]+:\d+(?::\d+)?/gi;
 	return stack.replace(pathRegex, (match) => {
 		const normalized = match.replace(/\\/g, "/");
 		const nodeModulesIndex = normalized.lastIndexOf("node_modules/");
@@ -35,7 +40,7 @@ export function sanitizeStackTrace(stack: string): string {
 
 function buildIssueUrl(message: string, stack: string | undefined): string {
 	const issueUrl = new URL("https://github.com/flint-fyi/flint/issues/new");
-	issueUrl.searchParams.set("template", "03-general-bug.yaml");
+	issueUrl.searchParams.set("template", "04-general-bug.yaml");
 
 	const sanitizedStack = stack
 		? sanitizeStackTrace(stack)

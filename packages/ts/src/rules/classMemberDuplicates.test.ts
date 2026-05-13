@@ -209,10 +209,10 @@ class Foo {
     bar() {}
     ~~~
     Duplicate class member name 'bar' will be overwritten.
-    ~~~
-    Duplicate class member name 'baz' will be overwritten.
     bar() {}
     baz() {}
+    ~~~
+    Duplicate class member name 'baz' will be overwritten.
     baz() {}
 }
 `,

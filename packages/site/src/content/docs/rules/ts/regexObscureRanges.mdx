@@ -1,0 +1,93 @@
+---
+description: "Reports obscure character ranges in regular expressions."
+title: "regexObscureRanges"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexObscureRanges" />
+
+Character ranges like `A-z` or `0-A` span across non-obvious character sets and can lead to unexpected matching behavior.
+Standard alphanumeric ranges like `a-z`, `A-Z`, and `0-9` are preferable.
+This rule reports obscure character ranges in regular expressions.
+
+## Examples
+
+### Cross-Case Range
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[A-z]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[A-Za-z]/;
+```
+
+</TabItem>
+</Tabs>
+
+The range `A-z` includes characters like `[`, `\`, `]`, `^`, `_`, and backtick in addition to letters.
+
+### Digit to Letter Range
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[0-A]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[0-9A]/;
+```
+
+</TabItem>
+</Tabs>
+
+### Mixed Escape Sequence Range
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[\cA-Z]/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[\cA-\cZ]/;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use non-standard character ranges for specific matching needs, or if your codebase has established patterns that rely on these ranges, you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: Character classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Character_classes)
+- [MDN: Regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexObscureRanges" />

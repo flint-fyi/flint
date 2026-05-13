@@ -1,0 +1,97 @@
+---
+description: "Reports set operations in regular expressions that can be simplified using De Morgan's laws."
+title: "regexSetOperationOptimizations"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexSetOperationOptimizations" />
+
+Regular expressions with the `v` flag support character class set operations like intersection (`&&`) and subtraction (`--`).
+This rule identifies patterns where these set operations can be simplified using De Morgan's laws.
+
+The rule detects four types of simplifications:
+
+1. Intersection to subtraction: `[a&&[^b]]` becomes `[a--b]`
+2. Subtraction to intersection: `[a--[^b]]` becomes `[a&&b]`
+3. Negation of disjunction: `[[^a]&&[^b]]` becomes `[^ab]`
+4. Negation of conjunction: `[[^a][^b]]` becomes `[^a&&b]`
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /[a&&[^b]]/v;
+```
+
+```ts
+const pattern = /[a--[^b]]/v;
+```
+
+```ts
+const pattern = /[[^a]&&[^b]]/v;
+```
+
+```ts
+const pattern = /[[^a][^b]]/v;
+```
+
+```ts
+const pattern = /[^\S\P{ASCII}]/v;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /[a--b]/v;
+```
+
+```ts
+const pattern = /[a&&b]/v;
+```
+
+```ts
+const pattern = /[^ab]/v;
+```
+
+```ts
+const pattern = /[^a&&b]/v;
+```
+
+```ts
+const pattern = /[\s&&\p{ASCII}]/v;
+```
+
+```ts
+const pattern = /[a&&b]/v;
+```
+
+```ts
+const pattern = /[a--b]/v;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the explicit form of set operations with negated operands, or if your codebase needs to support older JavaScript engines that don't fully support the `v` flag, you may want to disable this rule.
+
+## Further Reading
+
+- [MDN: Unicode character class escape - v-mode character class](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Unicode_character_class_escape#v-mode_character_class)
+- [De Morgan's laws - Wikipedia](https://en.wikipedia.org/wiki/De_Morgan%27s_laws)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexSetOperationOptimizations" />

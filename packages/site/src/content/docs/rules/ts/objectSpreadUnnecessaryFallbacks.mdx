@@ -1,0 +1,82 @@
+---
+description: "Reports empty object fallbacks in object spread expressions that have no effect."
+title: "objectSpreadUnnecessaryFallbacks"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="objectSpreadUnnecessaryFallbacks" />
+
+When spreading a value into an object literal, JavaScript handles `undefined` and `null` by skipping them without throwing an error.
+This means that fallback patterns like `{ ...value || {} }` or `{ ...value ?? {} }` are unnecessary.
+
+This rule reports when an object spread fallback is an empty object.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const merged = { ...(options || {}) };
+```
+
+```ts
+const config = { ...(settings ?? {}) };
+```
+
+```ts
+const result = { ...(getValue() || {}) };
+```
+
+```ts
+const data = { ...(nested.property ?? {}) };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const merged = { ...options };
+```
+
+```ts
+const config = { ...settings };
+```
+
+```ts
+const result = { ...getValue() };
+```
+
+```ts
+const data = { ...nested.property };
+```
+
+```ts
+const merged = { ...(options || { defaultValue: true }) };
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the explicit fallback pattern for clarity, even when it's not strictly necessary, you might want to disable this rule.
+Some developers find `{ ...value || {} }` more readable as it explicitly signals the intent to handle potentially nullish values, even though the behavior is identical without the fallback.
+
+## Further Reading
+
+- [MDN: Spread syntax (...)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
+- [MDN: Nullish coalescing operator (??)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)
+- [MDN: Logical OR (||)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="objectSpreadUnnecessaryFallbacks" />

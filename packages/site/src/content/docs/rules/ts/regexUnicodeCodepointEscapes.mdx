@@ -1,0 +1,110 @@
+---
+description: "Reports surrogate pair escapes in regular expressions that can be replaced with Unicode codepoint escapes."
+title: "regexUnicodeCodepointEscapes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnicodeCodepointEscapes" />
+
+Reports surrogate pair escapes in regular expressions that can be replaced with Unicode codepoint escapes.
+When the `u` or `v` flag is present, surrogate pairs like `\uD83D\uDE00` can be written as `\u{1F600}`.
+Unicode codepoint escapes are clearer and more maintainable.
+
+## Examples
+
+### Surrogate Pair in Regex Literal
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const emoji = /\uD83D\uDE00/u;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const emoji = /\u{1F600}/u;
+```
+
+</TabItem>
+</Tabs>
+
+### Surrogate Pair in Character Class
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const emoji = /[\uD83D\uDE00]/u;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const emoji = /[\u{1F600}]/u;
+```
+
+</TabItem>
+</Tabs>
+
+### Surrogate Pair with v Flag
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const emoji = /\uD83D\uDE00/v;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const emoji = /\u{1F600}/v;
+```
+
+</TabItem>
+</Tabs>
+
+### Surrogate Pair in RegExp Constructor
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const emoji = new RegExp("\\uD83D\\uDE00", "u");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const emoji = new RegExp("\\u{1F600}", "u");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you need to support environments that do not support Unicode codepoint escapes, or if you prefer surrogate pairs for consistency with existing code, you might need to disable this rule.
+Without the `u` or `v` flag, surrogate pairs are required for astral characters.
+
+## Further Reading
+
+- [MDN: Unicode character class escape](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Unicode_character_class_escape)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnicodeCodepointEscapes" />

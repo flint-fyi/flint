@@ -1,0 +1,107 @@
+---
+description: "Reports characters in regex character classes that appear as single visual characters but are made of multiple code points."
+title: "regexMisleadingUnicodeCharacters"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexMisleadingUnicodeCharacters" />
+
+Some characters that appear as a single visual unit are actually composed of multiple Unicode code points.
+When these appear in regex character classes, each code point is matched separately, which is typically not the intended behavior.
+
+This rule detects several types of multi-code-point characters in character classes:
+
+- Surrogate pairs: Characters like 👍 that require two UTF-16 code units
+- Combined characters: Base characters with combining marks like Á (A + combining accent)
+- Emoji with modifiers: Emoji with skin tone modifiers like 👶🏻
+- Regional indicator symbols: Flag emoji like 🇯🇵 (two regional indicators)
+- ZWJ sequences: Characters joined with a zero-width joiner like 👨‍👩‍👦
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// Surrogate pair without unicode flag
+const pattern = /[👍]/;
+```
+
+```ts
+// Combined character (A + combining accent)
+const pattern = /[Á]/;
+```
+
+```ts
+// Emoji with skin tone modifier
+const pattern = /[👶🏻]/u;
+```
+
+```ts
+// Regional indicator symbols (flag)
+const pattern = /[🇯🇵]/u;
+```
+
+```ts
+// ZWJ sequence (family emoji)
+const pattern = /[👨‍👩‍👦]/u;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// Unicode flag handles surrogate pairs correctly
+const pattern = /[👍]/u;
+```
+
+```ts
+// Match outside character class
+const pattern = /👍/;
+```
+
+```ts
+// Use precomposed character
+const pattern = /[Á]/;
+```
+
+```ts
+// Match emoji sequence outside character class
+const pattern = /👶🏻/;
+```
+
+```ts
+// Use \q{} syntax with v flag for grapheme clusters
+const pattern = /[\q{👶🏻}]/v;
+```
+
+```ts
+// Solo regional indicator is fine
+const pattern = /[🇯]/u;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally want to match individual code points rather than visual characters, or if your regex pattern specifically needs to match partial Unicode sequences, you might prefer to disable this rule.
+Some specialized text processing may require matching individual surrogate halves or combining marks.
+
+## Further Reading
+
+- [MDN: Regular expressions - Unicode character class escape](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Unicode_character_class_escape)
+- [Unicode Standard Annex #29: Unicode Text Segmentation](https://unicode.org/reports/tr29/)
+- [MDN: RegExp - Unicode flag](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/unicode)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexMisleadingUnicodeCharacters" />

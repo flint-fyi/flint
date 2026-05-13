@@ -1,0 +1,61 @@
+---
+description: "Reports imports that use inline type qualifiers on all specifiers when a top-level type qualifier should be used instead."
+title: "importTypeSideEffects"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="importTypeSideEffects" />
+
+When using TypeScript's `verbatimModuleSyntax` option, imports with inline `type` qualifiers on every specifier (like `import { type A, type B }`) get transpiled to an empty import statement (`import "mod"`).
+This creates an unnecessary side-effect import at runtime.
+
+Using a top-level `import type` declaration ensures the entire import statement is removed during transpilation.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { type A } from "flint";
+```
+
+```ts
+import { type A, type B } from "flint";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import type { A, B } from "flint";
+```
+
+```ts
+// Mixed type and value imports are allowed
+import { type A, value } from "flint";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you're not using TypeScript's `verbatimModuleSyntax` option and your bundler handles import optimization for you, this rule may not be necessary.
+
+## Further Reading
+
+- [TypeScript: verbatimModuleSyntax](https://www.typescriptlang.org/tsconfig#verbatimModuleSyntax)
+- [TypeScript 5.0: Improved Type Imports](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="importTypeSideEffects" />

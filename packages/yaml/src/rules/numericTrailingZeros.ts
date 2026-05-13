@@ -1,6 +1,6 @@
+import { yamlLanguage } from "@flint.fyi/yaml-language";
 import type * as yaml from "yaml-unist-parser";
 
-import { yamlLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasTrailingZeros(value: string) {
@@ -17,7 +17,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Reports trailing zeros in numeric values.",
 		id: "numericTrailingZeros",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		trailingZeros: {

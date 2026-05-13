@@ -1,0 +1,94 @@
+---
+description: "Flags using `new` with `Boolean`, `Number`, or `String`, which creates wrapper objects instead of primitives."
+title: "wrapperObjects"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="wrapperObjects" />
+
+Using `new` with [`Boolean`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean), [`Number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number), or [`String`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) creates object wrappers around primitive values.
+These wrapper objects behave differently from primitives in surprising ways:
+
+```ts
+const primitiveString = "hello";
+const wrappedString = new String("hello");
+
+primitiveString === "hello"; // true
+wrappedString === "hello"; // false - object vs primitive comparison
+
+typeof primitiveString; // "string"
+typeof wrappedString; // "object"
+```
+
+Wrapper objects are almost never intended.
+This rule reports when a wrapper object is created instead of a normal primitive.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const text = new String("hello");
+```
+
+```ts
+const count = new Number(42);
+```
+
+```ts
+const flag = new Boolean(true);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const text = String(value);
+```
+
+```ts
+const count = Number(value);
+```
+
+```ts
+const flag = Boolean(value);
+```
+
+```ts
+const text = "hello";
+```
+
+```ts
+const count = 42;
+```
+
+```ts
+const flag = true;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use object wrappers for primitives, for example to attach custom properties to a value, you may disable this rule.
+However, this pattern is extremely rare in modern JavaScript and TypeScript codebases.
+
+## Further Reading
+
+- [MDN documentation on String primitives and String objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String#string_primitives_and_string_objects)
+- [MDN documentation on Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
+- [MDN documentation on Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="wrapperObjects" />

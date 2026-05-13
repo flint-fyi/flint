@@ -1,0 +1,116 @@
+---
+description: "Reports irregular whitespace characters that can cause issues with code parsing and display."
+title: "irregularWhitespaces"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="irregularWhitespaces" />
+
+Irregular whitespace characters are Unicode characters that look like regular spaces but may be interpreted differently by tools and parsers.
+These include non-breaking spaces (`\u00A0`), zero-width spaces (`\u200B`), and various other Unicode space characters.
+
+They are often accidentally introduced through copy-paste from external sources such as word processors, web pages, or PDFs.
+When present in code, they can cause confusing syntax errors, unexpected behavior in string comparisons, or display issues across different editors.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// Non-breaking space between variable and equals sign
+const value = 1;
+```
+
+```ts
+// Zero-width space in identifier
+const data = 42;
+```
+
+```ts
+// Irregular line terminator
+const result = 1;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// Regular space between variable and equals sign
+const value = 1;
+```
+
+```ts
+// No invisible characters in identifier
+const data = 42;
+```
+
+```ts
+// Standard line break
+const result = 1;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `skipTemplates`
+
+When `true`, irregular whitespace inside template literals is allowed.
+Defaults to `false`.
+
+```ts
+// With skipTemplates: true, this is allowed
+const value = `template with non-breaking space`;
+```
+
+### `skipComments`
+
+When `true`, irregular whitespace inside comments is allowed.
+Defaults to `false`.
+
+```ts
+// With skipComments: true, this is allowed
+// Comment with non-breaking space
+```
+
+### `skipRegularExpressions`
+
+When `true`, irregular whitespace inside regular expression literals is allowed.
+Defaults to `false`.
+
+```ts
+// With skipRegularExpressions: true, this is allowed
+const pattern = / /;
+```
+
+### `skipJSXText`
+
+When `true`, irregular whitespace inside JSX text content is allowed.
+Defaults to `false`.
+
+```tsx
+// With skipJSXText: true, this is allowed
+const element = <div> </div>;
+```
+
+## When Not To Use It
+
+If your codebase intentionally uses irregular whitespace characters for specific purposes, such as matching text that contains non-breaking spaces, you may want to disable this rule or configure the skip options.
+You might also disable this rule if you have other tools in your workflow that already normalize whitespace characters.
+
+## Further Reading
+
+- [MDN: Whitespace in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#white_space)
+- [Unicode Line Breaking Algorithm](https://unicode.org/reports/tr14/)
+- [Wikipedia: Non-breaking space](https://en.wikipedia.org/wiki/Non-breaking_space)
+- [Wikipedia: Zero-width space](https://en.wikipedia.org/wiki/Zero-width_space)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="irregularWhitespaces" />

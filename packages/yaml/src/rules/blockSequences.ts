@@ -1,6 +1,5 @@
+import { yamlLanguage } from "@flint.fyi/yaml-language";
 import type * as yamlParser from "yaml-unist-parser";
-
-import { yamlLanguage } from "../language.ts";
 
 function buildBlockSequenceFix(
 	node: yamlParser.FlowSequence,
@@ -10,10 +9,9 @@ function buildBlockSequenceFix(
 	const items: string[] = [];
 
 	for (const item of node.children) {
-		if (item.children.length > 0) {
+		if (item.children.length) {
 			const child = item.children[0];
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const itemText = getNodeText(child!, sourceText);
+			const itemText = getNodeText(child, sourceText);
 			items.push(`\n${indent}- ${itemText}`);
 		}
 	}
@@ -54,7 +52,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 	about: {
 		description: "Prefer block style sequences over flow style sequences.",
 		id: "blockSequences",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		flowSequence: {
@@ -74,10 +72,17 @@ export default ruleCreator.createRule(yamlLanguage, {
 				flowSequence: (node, services) => {
 					const fixText = buildBlockSequenceFix(node, services.sourceText);
 
+					const sourceText = services.sourceText;
+					let fixBegin = node.position.start.offset;
+
+					while (fixBegin > 0 && sourceText[fixBegin - 1] === " ") {
+						fixBegin--;
+					}
+
 					context.report({
 						fix: {
 							range: {
-								begin: node.position.start.offset,
+								begin: fixBegin,
 								end: node.position.end.offset,
 							},
 							text: fixText,

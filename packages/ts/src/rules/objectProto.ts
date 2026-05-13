@@ -1,6 +1,6 @@
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -8,7 +8,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using the deprecated __proto__ property to access or modify an object's prototype.",
 		id: "objectProto",
-		presets: ["untyped"],
+		presets: ["javascript"],
 	},
 	messages: {
 		noProto: {

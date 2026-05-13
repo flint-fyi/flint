@@ -1,8 +1,9 @@
+import {
+	type AST,
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
-
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
@@ -38,7 +39,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports using explicit literal types when `as const` can be used.",
 		id: "asConstAssertions",
-		presets: ["stylistic"],
+		presets: ["stylistic", "stylisticStrict"],
 	},
 	messages: {
 		preferAsConst: {
@@ -65,7 +66,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			expressionNode: AST.Expression,
 			typeNode: AST.TypeNode,
 			message: "preferAsConst" | "preferAsConstAnnotation",
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 		) {
 			const typeValue = getTextValue(typeNode);
 			if (typeValue === undefined) {

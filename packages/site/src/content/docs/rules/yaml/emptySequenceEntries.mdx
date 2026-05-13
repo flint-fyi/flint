@@ -1,0 +1,74 @@
+---
+description: "Reports empty sequence entries."
+title: "emptySequenceEntries"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="yaml" rule="emptySequenceEntries" />
+
+Empty entries in YAML sequences can lead to unexpected null values in the parsed data.
+If an empty entry is intentional, use explicit `null` to clarify intent.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```yaml
+- one
+-
+- three
+```
+
+```yaml
+items:
+  - first
+  -
+  - third
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```yaml
+- one
+- two
+- three
+```
+
+```yaml
+- one
+- null
+- three
+```
+
+```yaml
+items:
+  - first
+  - second
+  - third
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project intentionally uses empty sequence entries to represent null values and you have consistent parser behavior, you may not need this rule.
+Projects with established conventions around implicit null values in YAML sequences may also choose to disable this rule.
+
+## Further Reading
+
+- [YAML Specification - Sequence](https://yaml.org/spec/1.2.2/#sequence)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="yaml" ruleId="emptySequenceEntries" />

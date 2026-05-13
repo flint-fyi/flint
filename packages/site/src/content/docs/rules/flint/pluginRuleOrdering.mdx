@@ -1,0 +1,57 @@
+---
+description: "Reports Flint plugin rules arrays that are not sorted alphabetically."
+title: "pluginRuleOrdering"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="flint" rule="pluginRuleOrdering" />
+
+Flint plugin `rules` arrays are generally sorted alphabetically by rule identifier.
+Keeping them in order makes it easier to add new rules without deciding where they belong first.
+Alphabetically sorted lists are also easier to search through.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { createPlugin } from "@flint.fyi/core";
+import firstRule from "./rules/firstRule.ts";
+import secondRule from "./rules/secondRule.ts";
+
+export const plugin = createPlugin({
+	name: "Example",
+	rules: [secondRule, firstRule],
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { createPlugin } from "@flint.fyi/core";
+import firstRule from "./rules/firstRule.ts";
+import secondRule from "./rules/secondRule.ts";
+
+export const plugin = createPlugin({
+	name: "Example",
+	rules: [firstRule, secondRule],
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If a flint plugin's `rules` array is intentionally grouped or ordered for some other tooling,
+you may prefer to disable this rule.

@@ -1,0 +1,92 @@
+---
+description: "Reports anonymous functions and classes as the default export."
+title: "namedDefaultExports"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="namedDefaultExports" />
+
+Naming default exports improves codebase searchability by ensuring consistent identifier use for a module's default export, both where it's declared and where it's imported.
+
+Anonymous default exports make it harder to search for all usages of a module's primary export, since consumers can choose any name when importing.
+
+This rule reports anonymous functions and classes that are default exported.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+export default function () {
+	return "value";
+}
+```
+
+```ts
+export default () => {
+	return "value";
+};
+```
+
+```ts
+export default class {
+	getValue() {
+		return 42;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export default function getValue() {
+	return "value";
+}
+```
+
+```ts
+const getValue = () => {
+	return "value";
+};
+export default getValue;
+```
+
+```ts
+export default class Container {
+	getValue() {
+		return 42;
+	}
+}
+```
+
+```ts
+const value = 42;
+export default value;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project does not rely on consistent naming for default exports, or if you prefer the flexibility of allowing anonymous default exports, you can disable this rule.
+Some codebases may have established patterns where anonymous default exports are acceptable.
+
+## Further Reading
+
+- [MDN: export](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+- [MDN: export default](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export#description)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="namedDefaultExports" />

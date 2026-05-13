@@ -1,0 +1,74 @@
+---
+description: "Reports empty import/export attributes that serve no purpose."
+title: "emptyModuleAttributes"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="emptyModuleAttributes" />
+
+Import attributes (using `with {}`) allow specifying metadata about a module import.
+An empty `with {}` clause provides no additional information and should be removed.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import data from "./data.json" with {};
+```
+
+```ts
+import { x } from "./module" with {};
+```
+
+```ts
+export { x } from "./module" with {};
+```
+
+```ts
+export * from "./module" with {};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import data from "./data.json" with { type: "json" };
+```
+
+```ts
+import { x } from "./module";
+```
+
+```ts
+export { x } from "./module";
+```
+
+```ts
+import styles from "./styles.css" with { type: "css" };
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use empty import attributes as placeholders or for tooling purposes, you may disable this rule.
+
+## Further Reading
+
+- [Import Attributes Proposal](https://github.com/tc39/proposal-import-attributes)
+- [MDN: Import attributes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import/with)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="emptyModuleAttributes" />

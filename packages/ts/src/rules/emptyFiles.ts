@@ -1,21 +1,20 @@
+import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "../language.ts";
-import * as AST from "../types/ast.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isDirective(statement: AST.Statement) {
 	return (
 		statement.kind === SyntaxKind.ExpressionStatement &&
 		statement.expression.kind === SyntaxKind.StringLiteral &&
-		/^use \w+$/.exec(statement.expression.text)
+		/^use \w+$/.test(statement.expression.text)
 	);
 }
 
 function isEmptyStatement(statement: AST.Statement) {
 	switch (statement.kind) {
 		case SyntaxKind.Block:
-			return statement.statements.length === 0;
+			return !statement.statements.length;
 		case SyntaxKind.EmptyStatement:
 			return true;
 		default:

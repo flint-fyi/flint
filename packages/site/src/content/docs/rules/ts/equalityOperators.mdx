@@ -1,0 +1,78 @@
+---
+description: "Enforces consistent use of strict equality operators (=== and !==) over loose equality operators (== and !=) for non-nullish comparisons."
+title: "equalityOperators"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="equalityOperators" />
+
+The loose equality operators (`==` and `!=`) perform type coercion before comparison, which can lead to surprising and confusing behavior.
+Strict equality operators (`===` and `!==`) compare both value and type without coercion, making comparisons more predictable.
+Therefore, it is almost always preferable to use the strict equality operators.
+
+:::note
+This rule only handles comparisons where neither operand is a nullish literal (`null` or `undefined`).
+Null/undefined checks are the one major exception to the rule that strict equality is always preferable, and linting around them is handled by the [nullishCheckStyle](/rules/ts/nullishcheckstyle) rule.
+:::
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (value == 5) {
+	doSomething();
+}
+```
+
+```ts
+if (name != "admin") {
+	checkPermissions();
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (value === 5) {
+	doSomething();
+}
+```
+
+```ts
+if (name !== "admin") {
+	checkPermissions();
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule has no options.
+
+## When Not To Use It
+
+If your codebase has specific requirements for using loose equality operators in certain niche contexts, you may want to use a disable comment for those specific cases.
+For example, if you intentionally deal with numbers and strings interchangeably, and are accustomed to directly comparing them, this rule you might not be for you.
+
+## Related Rules
+
+- [nullishCheckStyle](/rules/ts/nullishcheckstyle) - Enforces consistent equality operator usage for nullish comparisons
+
+## Further Reading
+
+- [MDN: Equality comparisons and sameness](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness)
+- [MDN: Strict equality (===)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality)
+- [MDN: Equality (==)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="equalityOperators" />

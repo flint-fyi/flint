@@ -1,0 +1,82 @@
+---
+description: "Reports empty export statements that don't make a file a module."
+title: "emptyExports"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="emptyExports" />
+
+An empty `export {}` statement is sometimes useful in TypeScript code to turn a file that would otherwise be a script into a module.
+Per the [TypeScript Handbook Modules page](https://www.typescriptlang.org/docs/handbook/modules.html):
+
+> In TypeScript, just as in ECMAScript 2015, any file containing a top-level import or export is considered a module.
+> Conversely, a file without any top-level import or export declarations is treated as a script whose contents are available in the global scope.
+
+However, an `export {}` statement does nothing if there are any other top-level import or export statements in a file.
+This rule reports an `export {}` that doesn't do anything in a file already using ES modules.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+export const value = {};
+export {};
+```
+
+```ts
+export * from "module";
+export {};
+```
+
+```ts
+import { something } from "module";
+export {};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+export const value = {};
+```
+
+```ts
+export * from "module";
+```
+
+```ts
+export {};
+```
+
+```ts
+import { something } from "module";
+
+console.log(something);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you don't mind an empty `export {}` at the bottom of files, you likely don't need this rule.
+Some codebases prefer explicit module markers for consistency.
+
+## Further Reading
+
+- [TypeScript Handbook: Modules](https://www.typescriptlang.org/docs/handbook/modules.html)
+- [MDN: JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="emptyExports" />

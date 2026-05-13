@@ -1,0 +1,74 @@
+---
+description: "Reports `matchAll()` and `replaceAll()` calls with regex arguments missing the global flag."
+title: "regexAllGlobalFlags"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexAllGlobalFlags" />
+
+When calling `String.prototype.matchAll()` or `String.prototype.replaceAll()` with a regular expression, the regex must have the global (`g`) flag.
+Without it, JavaScript throws a `TypeError` at runtime.
+
+This rule detects regex literals and `RegExp` constructor calls that are missing the global flag when passed to these methods.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+"hello world".matchAll(/o/);
+```
+
+```ts
+"hello world".replaceAll(/o/, "0");
+```
+
+```ts
+const text = "example";
+text.matchAll(new RegExp("e"));
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+"hello world".matchAll(/o/g);
+```
+
+```ts
+"hello world".replaceAll(/o/g, "0");
+```
+
+```ts
+const text = "example";
+text.matchAll(new RegExp("e", "g"));
+```
+
+```ts
+"hello world".replaceAll("o", "0");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you're transpiling to an environment without `matchAll()` or `replaceAll()` support and have polyfills that don't enforce the global flag requirement, you might want to disable this rule.
+
+## Further Reading
+
+- [MDN: String.prototype.matchAll()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/matchAll)
+- [MDN: String.prototype.replaceAll()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexAllGlobalFlags" />

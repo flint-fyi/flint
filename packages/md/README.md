@@ -1,7 +1,7 @@
 <h1 align="center"><code>@flint.fyi/md</code></h1>
 
 <p align="center">
-	[Experimental] Markdown language plugin for Flint.
+	[Experimental] Markdown plugin for Flint.
 	❤️‍🔥
 </p>
 

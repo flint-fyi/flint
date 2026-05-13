@@ -1,0 +1,123 @@
+---
+description: "Reports match() and exec() calls that should use RegExp.prototype.test() for boolean checks."
+title: "regexTestMethods"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexTestMethods" />
+
+Two common regular expression methods exist for checking whether a pattern exists in a string:
+
+- `exec()`: returns a full matches array, including capture groups, which requires more work than just boolean checking.
+- `test()`: only returns a `boolean`, which is more efficient and semantically clearer when only checking for pattern existence.
+
+This rule reports calls to `String.prototype.match()` and `RegExp.prototype.exec()` that are used in a boolean context.
+
+## Examples
+
+### Using exec() in a Condition
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (pattern.exec(text)) {
+	console.log("found");
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (pattern.test(text)) {
+	console.log("found");
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Using match() in a Condition
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+if (text.match(/search/)) {
+	console.log("found");
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+if (/search/.test(text)) {
+	console.log("found");
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Negation
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const notFound = !text.match(/pattern/);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const notFound = !/pattern/.test(text);
+```
+
+</TabItem>
+</Tabs>
+
+### Global Flag (No Fix)
+
+When the regex has a global flag, the rule reports but does not auto-fix because `.test()` behavior differs:
+
+```ts
+// Reports but does not auto-fix
+if (text.match(/pattern/g)) {
+}
+```
+
+### Using Results (Valid)
+
+Using the result of `exec()` or `match()` is valid:
+
+```ts
+const matches = text.match(/(\w+)/);
+const group = pattern.exec(text)?.[1];
+```
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer the semantics of `exec()` or `match()` even in boolean contexts, you might prefer to disable this rule.
+For example, some developers prefer to always use the same methods for stylistic consistency.
+
+## Further Reading
+
+- [MDN: RegExp.prototype.test()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test)
+- [MDN: String.prototype.match()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match)
+- [MDN: RegExp.prototype.exec()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexTestMethods" />

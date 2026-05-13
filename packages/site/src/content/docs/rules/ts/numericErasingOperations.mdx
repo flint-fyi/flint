@@ -1,0 +1,77 @@
+---
+description: "Reports operations that always result in zero, such as multiplication by zero."
+title: "numericErasingOperations"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="numericErasingOperations" />
+
+This rule reports operations that always result in zero, regardless of the other operand.
+
+These "erasing" operations typically indicate a logic error where the developer may have intended a different operation.
+The entire expression can be replaced with `0` directly.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const value = x * 0;
+```
+
+```ts
+const value = 0 * x;
+```
+
+```ts
+const value = x & 0;
+```
+
+```ts
+const value = 0 / x;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const value = 0;
+```
+
+```ts
+const value = x * 1;
+```
+
+```ts
+const value = x & mask;
+```
+
+```ts
+const value = x / divisor;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are intentionally using these operations for their side effects or as a stylistic choice to indicate the result should be zero, you may want to disable this rule.
+However, in most cases, directly using `0` is clearer.
+
+## Further Reading
+
+- [MDN: Multiplication](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Multiplication)
+- [MDN: Bitwise AND](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_AND)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="numericErasingOperations" />

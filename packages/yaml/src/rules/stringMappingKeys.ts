@@ -1,11 +1,12 @@
-import { yamlLanguage } from "../language.ts";
+import { yamlLanguage } from "@flint.fyi/yaml-language";
+
 import { ruleCreator } from "./ruleCreator.ts";
 
 const boolPattern =
 	/^(?:true|True|TRUE|false|False|FALSE|yes|Yes|YES|no|No|NO|on|On|ON|off|Off|OFF)$/;
-const intPattern = /^[-+]?(?:0|[1-9]\d*|0o[0-7]+|0x[\dA-Fa-f]+)$/;
+const intPattern = /^[-+]?(?:0|[1-9]\d*|0o[0-7]+|0x[\da-f]+)$/i;
 const floatPattern =
-	/^[-+]?(?:\.\d+|\d+(?:\.\d*)?)(?:[eE][-+]?\d+)?$|^[-+]?\.(?:inf|Inf|INF)$|^\.(?:nan|NaN|NAN)$/;
+	/^[-+]?(?:\.\d+|\d+(?:\.\d*)?)(?:e[-+]?\d+)?$|^[-+]?\.inf$|^\.nan$/i;
 const nullPattern = /^(?:~|null|Null|NULL)?$/;
 
 function isNonStringPlainScalar(value: string): boolean {
@@ -40,7 +41,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 		return {
 			visitors: {
 				mappingKey: (node) => {
-					if (node.children.length === 0) {
+					if (!node.children.length) {
 						return;
 					}
 

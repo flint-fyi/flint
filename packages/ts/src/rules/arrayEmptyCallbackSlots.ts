@@ -1,12 +1,15 @@
+import {
+	type AST,
+	getTSNodeRange,
+	isGlobalDeclarationOfName,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import { isGlobalDeclarationOfName } from "../utils/isGlobalDeclarationOfName.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 
 function hasCallbackArgument(callExpression: AST.CallExpression) {
-	if (callExpression.arguments.length === 0) {
+	if (!callExpression.arguments.length) {
 		return false;
 	}
 
@@ -38,12 +41,12 @@ function isNumericLiteral(node: ts.Expression) {
 	return false;
 }
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports array methods with callbacks that will never be invoked on arrays with empty slots.",
 		id: "arrayEmptyCallbackSlots",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		neverInvoked: {

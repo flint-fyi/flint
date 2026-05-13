@@ -1,16 +1,18 @@
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import ts, { SyntaxKind } from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 
-import { getTSNodeRange } from "../getTSNodeRange.ts";
-import { typescriptLanguage } from "../language.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Reports using legacy `namespace` declarations.",
 		id: "namespaceDeclarations",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferModules: {
@@ -60,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						allowDeclarations &&
 						tsutils.includesModifier(
-							node.modifiers as unknown as ts.NodeArray<ts.ModifierLike>,
+							node.modifiers as ts.NodeArray<ts.ModifierLike>,
 							SyntaxKind.DeclareKeyword,
 						)
 					) {

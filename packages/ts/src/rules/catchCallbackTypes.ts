@@ -1,18 +1,21 @@
+import {
+	type AST,
+	type Checker,
+	declarationIncludesGlobal,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
-import type { AST } from "../index.ts";
-import { typescriptLanguage } from "../language.ts";
-import type { Checker } from "../types/checker.ts";
-import { declarationIncludesGlobal } from "../utils/declarationIncludesGlobal.ts";
+import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
-export default typescriptLanguage.createRule({
+export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
 			"Reports `Promise` catch callback parameters that are not typed as unknown.",
 		id: "catchCallbackTypes",
-		presets: ["logical"],
+		presets: ["logical", "logicalStrict"],
 	},
 	messages: {
 		preferUnknown: {
@@ -75,10 +78,10 @@ export default typescriptLanguage.createRule({
 
 		function checkCallbackParameter(
 			callback: AST.Expression,
-			sourceFile: ts.SourceFile,
+			sourceFile: AST.SourceFile,
 			typeChecker: ts.TypeChecker,
 		) {
-			if (!ts.isFunctionLike(callback) || callback.parameters.length === 0) {
+			if (!ts.isFunctionLike(callback) || !callback.parameters.length) {
 				return;
 			}
 

@@ -1,0 +1,92 @@
+---
+description: "Require regex patterns to have the unicode ('u') or unicodeSets ('v') flag for proper Unicode character handling."
+title: "regexUnicodeFlag"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexUnicodeFlag" />
+
+Require regex patterns may opt into the unicode (`u`) or unicodeSets (`v`) flags for proper Unicode character handling.
+Without these flags, regex patterns may fail to match Unicode characters correctly, especially with surrogate pairs like emoji.
+
+## Examples
+
+### Regex Literal Without Unicode Flag
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /abc/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /abc/u;
+```
+
+</TabItem>
+</Tabs>
+
+### Regex Literal With Other Flags
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /abc/gi;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /abc/giu;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("abc");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("abc", "u");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you don't handle unicode characters with regular expressions, or believe you always do so correctly, this rule may cause more noise than is useful.
+
+If you are targeting older JavaScript environments that do not support the `u` flag (ES6+), you may want to disable this rule.
+Note that patterns using escape sequences like `\a` that are invalid in unicode mode will not receive an auto-fix.
+
+## Further Reading
+
+- [MDN: Unicode flag](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/unicode)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexUnicodeFlag" />

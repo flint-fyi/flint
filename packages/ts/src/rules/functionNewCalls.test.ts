@@ -1,6 +1,15 @@
 import rule from "./functionNewCalls.ts";
 import { ruleTester } from "./ruleTester.ts";
 
+const tsconfigWithDomLib = {
+	"tsconfig.json": `{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"lib": ["esnext", "DOM"]
+	}
+}`,
+};
+
 ruleTester.describe(rule, {
 	invalid: [
 		{
@@ -67,6 +76,7 @@ const fn = globalThis.Function("return 1");
 			code: `
 const fn = new window.Function("return 1");
 `,
+			files: tsconfigWithDomLib,
 			snapshot: `
 const fn = new window.Function("return 1");
                ~~~~~~~~~~~~~~~
@@ -77,6 +87,7 @@ const fn = new window.Function("return 1");
 			code: `
 const fn = window.Function("return 1");
 `,
+			files: tsconfigWithDomLib,
 			snapshot: `
 const fn = window.Function("return 1");
            ~~~~~~~~~~~~~~~

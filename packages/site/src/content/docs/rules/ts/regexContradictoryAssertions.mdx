@@ -1,0 +1,96 @@
+---
+description: "Reports elements in regular expressions that contradict assertions."
+title: "regexContradictoryAssertions"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="regexContradictoryAssertions" />
+
+Reports elements in regular expressions that contradict assertions like word boundaries (`\b`).
+These contradictions indicate dead code or unintended behavior in the regex pattern.
+
+## Examples
+
+### Quantifier Always Entered
+
+When a word boundary is between two word characters (or two non-word characters), optional quantifiers following it are always entered.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a\b-?a/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a\b-a/;
+```
+
+</TabItem>
+</Tabs>
+
+### Quantifier Cannot Be Entered
+
+When a word boundary assertion forces a transition that conflicts with the quantifier's element, the quantifier can never match.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = /a\ba*-/;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = /a\b-/;
+```
+
+</TabItem>
+</Tabs>
+
+### RegExp Constructor
+
+The rule also checks regex patterns in `RegExp` constructor calls.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const pattern = new RegExp("a\\b-?a");
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const pattern = new RegExp("a\\b-a");
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use contradictory assertions for documentation purposes or if you're working with dynamically constructed regex patterns where the contradictions are not actually problematic, you may disable this rule.
+
+## Further Reading
+
+- [MDN: Assertions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Assertions)
+- [MDN: Word boundary assertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Word_boundary_assertion)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="regexContradictoryAssertions" />

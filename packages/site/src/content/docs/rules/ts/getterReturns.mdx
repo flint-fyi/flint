@@ -1,0 +1,97 @@
+---
+description: "Reports getter functions that do not return values."
+title: "getterReturns"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="getterReturns" />
+
+The `get` syntax binds an object property to a function that will be called when that property is looked up.
+A getter is expected to return a value; otherwise, accessing the property will return `undefined`, which is likely unintentional.
+
+This rule reports when a getter does not explicitly `return` a value.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+const object = {
+	get value() {
+		console.log("accessed");
+	},
+};
+```
+
+```ts
+class Example {
+	get value() {
+		this.compute();
+	}
+}
+```
+
+```ts
+class Example {
+	get value() {
+		return;
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const object = {
+	get value() {
+		return this._value;
+	},
+};
+```
+
+```ts
+class Example {
+	get value() {
+		return this._value;
+	}
+}
+```
+
+```ts
+class Example {
+	get value() {
+		if (this.condition) {
+			return this.data;
+		}
+		return this.defaultValue;
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+TypeScript's compiler already enforces that getters with an explicit return type must return a value.
+If all getters in your codebase use explicit return types, you might not need this rule.
+However, this rule also catches implicit `undefined` returns in getters that lack return type annotations.
+
+## Further Reading
+
+- [MDN: getter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get)
+- [MDN: Object.defineProperty()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="getterReturns" />
