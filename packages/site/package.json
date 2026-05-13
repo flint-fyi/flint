@@ -21,12 +21,22 @@
 		"@flint.fyi/astro": "workspace:^",
 		"@flint.fyi/browser": "workspace:^",
 		"@flint.fyi/comparisons": "workspace:^",
+		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/json": "workspace:^",
+		"@flint.fyi/json-language": "workspace:^",
 		"@flint.fyi/jsx": "workspace:^",
+		"@flint.fyi/markdown-language": "workspace:^",
+		"@flint.fyi/md": "workspace:^",
 		"@flint.fyi/node": "workspace:^",
+		"@flint.fyi/package-json": "workspace:^",
 		"@flint.fyi/performance": "workspace:^",
 		"@flint.fyi/plugin-flint": "workspace:^",
 		"@flint.fyi/spelling": "workspace:^",
+		"@flint.fyi/ts": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/vitest": "workspace:^",
+		"@flint.fyi/yaml": "workspace:^",
+		"@flint.fyi/yaml-language": "workspace:^",
 		"@types/react": "catalog:site",
 		"@uiw/react-codemirror": "^4.25.9",
 		"astro": "catalog:site",
@@ -36,6 +46,7 @@
 		"flint": "workspace:^",
 		"konami-emoji-blast": "catalog:site",
 		"markdown-it": "catalog:site",
+		"path-browserify": "^1.0.1",
 		"react": "catalog:site",
 		"starlight-package-managers": "catalog:site",
 		"typescript": "catalog:dev"
@@ -43,8 +54,6 @@
 	"devDependencies": {
 		"@astrojs/check": "catalog:site",
 		"@astrojs/react": "catalog:site",
-		"@flint.fyi/core": "workspace:^",
-		"@flint.fyi/typescript-language": "workspace:^",
 		"@konami-emoji-blast/astro": "catalog:site",
 		"@types/markdown-it": "catalog:site",
 		"@types/node": "catalog:dev",
@@ -57,6 +66,7 @@
 		"starlight-blog": "catalog:site",
 		"starlight-links-validator": "catalog:site",
 		"starlight-sidebar-topics": "catalog:site",
+		"vite-plugin-node-polyfills": "^0.26.0",
 		"zod": "catalog:dev"
 	}
 }

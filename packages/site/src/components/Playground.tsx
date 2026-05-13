@@ -28,8 +28,10 @@ import type {
 	PlaygroundDiagnostic,
 	PlaygroundDiagnosticCategory,
 	PlaygroundFailure,
+	PlaygroundPresetSelection,
 	PlaygroundRequest,
 	PlaygroundResult,
+	PlaygroundSchema,
 } from "../playground/types.ts";
 
 const SEVERITY_ICON_URLS: Partial<
@@ -60,13 +62,52 @@ const options = { helper: helper };
 const DEFAULT_MATH_TS = `export const pi = 3;
 `;
 
+const DEFAULT_DEMO_JSON = `{
+	"name": "demo",
+	"name": "duplicate-key"
+}
+`;
+
+const DEFAULT_README_MD = `# Demo
+
+Visit http://example.com for more info.
+
+## Heading
+
+#### Skipped a level
+`;
+
+const DEFAULT_DEMO_YAML = `# YAML demo
+items:
+  - one
+  -
+key: 0.50
+`;
+
+const DEFAULT_PACKAGE_JSON = `{
+	"name": "Demo-App",
+	"version": "1.0.0"
+}
+`;
+
 /** Default virtual project (paths + contents). */
 const DEFAULT_FILES: Record<string, string> = {
+	"/demo.json": DEFAULT_DEMO_JSON,
+	"/demo.yaml": DEFAULT_DEMO_YAML,
 	"/math.ts": DEFAULT_MATH_TS,
+	"/package.json": DEFAULT_PACKAGE_JSON,
 	"/playground.tsx": DEFAULT_PLAYGROUND_TSX,
+	"/README.md": DEFAULT_README_MD,
 };
 
-const INITIAL_PATHS = ["/playground.tsx", "/math.ts"];
+const INITIAL_PATHS = [
+	"/playground.tsx",
+	"/math.ts",
+	"/demo.json",
+	"/demo.yaml",
+	"/README.md",
+	"/package.json",
+];
 
 const MIN_SIDEBAR_WIDTH = 128;
 const MIN_MAIN_WIDTH = 320;
@@ -78,10 +119,99 @@ function clamp(value: number, min: number, max: number): number {
 	return Math.min(max, Math.max(min, value));
 }
 
+/**
+ * Reconcile an existing per-plugin preset selection against an updated schema:
+ * keep the user's choices where the plugin/preset still exists, default any
+ * newly-discovered presets to enabled, and drop entries the worker no longer
+ * advertises.
+ */
+function mergeSelectionWithSchema(
+	prev: PlaygroundPresetSelection,
+	schema: PlaygroundSchema,
+): PlaygroundPresetSelection {
+	const next: PlaygroundPresetSelection = {};
+	let changed = false;
+
+	for (const plugin of schema.plugins) {
+		const existing = prev[plugin.id] ?? {};
+		const pluginSelection: Record<string, boolean> = {};
+		for (const preset of plugin.presets) {
+			if (preset in existing) {
+				pluginSelection[preset] = existing[preset]!;
+			} else {
+				pluginSelection[preset] = true;
+				changed = true;
+			}
+		}
+		// Drop any presets removed from the schema.
+		for (const oldPreset of Object.keys(existing)) {
+			if (!(oldPreset in pluginSelection)) {
+				changed = true;
+			}
+		}
+		next[plugin.id] = pluginSelection;
+	}
+
+	for (const oldPluginId of Object.keys(prev)) {
+		if (!schema.plugins.some((p) => p.id === oldPluginId)) {
+			changed = true;
+		}
+	}
+
+	return changed ? next : prev;
+}
+
 interface SharedWorkspace {
 	activePath: string;
 	files: Record<string, string>;
 	paths: string[];
+	presetSelection?: PlaygroundPresetSelection;
+}
+
+/**
+ * True if every preset in every plugin is enabled. Used to decide whether
+ * preset selection is worth round-tripping through the URL hash — the worker
+ * defaults newly-discovered presets to enabled, so an "everything on" config
+ * is the no-op state and doesn't need to be persisted.
+ */
+function arePresetsAllEnabled(selection: PlaygroundPresetSelection): boolean {
+	for (const plugin of Object.values(selection)) {
+		for (const enabled of Object.values(plugin)) {
+			if (!enabled) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+function clonePresetSelection(
+	selection: PlaygroundPresetSelection,
+): PlaygroundPresetSelection {
+	const out: PlaygroundPresetSelection = {};
+	for (const [pluginId, presets] of Object.entries(selection)) {
+		out[pluginId] = { ...presets };
+	}
+	return out;
+}
+
+function isValidPresetSelection(
+	value: unknown,
+): value is PlaygroundPresetSelection {
+	if (!value || typeof value !== "object") {
+		return false;
+	}
+	for (const pluginEntry of Object.values(value)) {
+		if (!pluginEntry || typeof pluginEntry !== "object") {
+			return false;
+		}
+		for (const enabled of Object.values(pluginEntry)) {
+			if (typeof enabled !== "boolean") {
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 type DiagnosticsTab = "console" | "diagnostics";
@@ -179,10 +309,15 @@ function decodeWorkspace(encoded: string): SharedWorkspace | undefined {
 			return undefined;
 		}
 
+		const presetSelection = isValidPresetSelection(parsed.presetSelection)
+			? clonePresetSelection(parsed.presetSelection)
+			: undefined;
+
 		return {
 			activePath: parsed.activePath,
 			files: parsed.files as Record<string, string>,
 			paths: parsed.paths as string[],
+			...(presetSelection ? { presetSelection } : {}),
 		};
 	} catch {
 		return undefined;
@@ -898,15 +1033,75 @@ interface PlaygroundSettingsContentProps {
 	copyState: "copied" | "idle";
 	clearWorkspaceDisabled: boolean;
 	paths: string[];
+	presetSelection: PlaygroundPresetSelection;
 	removeFile: (path: string) => void;
 	renameInputRef: RefObject<HTMLInputElement | null>;
 	removingPaths: Set<string>;
 	renamingPath: string | null;
 	resetWorkspace: () => void;
 	resetWorkspaceDisabled: boolean;
+	schema: PlaygroundSchema | undefined;
 	setActivePath: Dispatch<SetStateAction<string>>;
 	setRenamingPath: Dispatch<SetStateAction<string | null>>;
 	skipRenameCommit: { current: boolean };
+	togglePreset: (pluginId: string, preset: string, enabled: boolean) => void;
+}
+
+function RuleSelector({
+	presetSelection,
+	schema,
+	togglePreset,
+}: {
+	presetSelection: PlaygroundPresetSelection;
+	schema: PlaygroundSchema | undefined;
+	togglePreset: (pluginId: string, preset: string, enabled: boolean) => void;
+}) {
+	if (!schema || !schema.plugins.length) {
+		return (
+			<div aria-label="Rule presets" className={styles.ruleExplorer}>
+				<div className={styles.ruleExplorerHeader}>
+					<span className={styles.ruleExplorerTitle}>Rules</span>
+				</div>
+				<p className={styles.ruleEmpty}>Loading available presets…</p>
+			</div>
+		);
+	}
+
+	return (
+		<div aria-label="Rule presets" className={styles.ruleExplorer}>
+			<div className={styles.ruleExplorerHeader}>
+				<span className={styles.ruleExplorerTitle}>Rules</span>
+			</div>
+			<div className={styles.ruleGroups}>
+				{schema.plugins.map((plugin) => {
+					const pluginSelection = presetSelection[plugin.id] ?? {};
+					return (
+						<div className={styles.ruleGroup} key={plugin.id}>
+							<span className={styles.ruleGroupTitle}>{plugin.label}</span>
+							{plugin.presets.map((preset) => {
+								const id = `pg-preset-${plugin.id}-${preset}`;
+								const checked = pluginSelection[preset] !== false;
+								return (
+									<label className={styles.ruleRow} htmlFor={id} key={preset}>
+										<input
+											checked={checked}
+											className={styles.ruleCheckbox}
+											id={id}
+											onChange={(event) => {
+												togglePreset(plugin.id, preset, event.target.checked);
+											}}
+											type="checkbox"
+										/>
+										<span className={styles.ruleRowLabel}>{preset}</span>
+									</label>
+								);
+							})}
+						</div>
+					);
+				})}
+			</div>
+		</div>
+	);
 }
 
 function PlaygroundSettingsContent({
@@ -917,6 +1112,7 @@ function PlaygroundSettingsContent({
 	copyState,
 	clearWorkspaceDisabled,
 	paths,
+	presetSelection,
 	commitRename,
 	completeRemoveFile,
 	removeFile,
@@ -925,9 +1121,11 @@ function PlaygroundSettingsContent({
 	renamingPath,
 	resetWorkspace,
 	resetWorkspaceDisabled,
+	schema,
 	setActivePath,
 	setRenamingPath,
 	skipRenameCommit,
+	togglePreset,
 }: PlaygroundSettingsContentProps) {
 	return (
 		<>
@@ -1104,6 +1302,12 @@ function PlaygroundSettingsContent({
 					})}
 				</ul>
 			</div>
+
+			<RuleSelector
+				presetSelection={presetSelection}
+				schema={schema}
+				togglePreset={togglePreset}
+			/>
 		</>
 	);
 }
@@ -1117,6 +1321,8 @@ export function Playground() {
 	const [paths, setPaths] = useState<string[]>(() => [...INITIAL_PATHS]);
 	const [activePath, setActivePath] = useState("/playground.tsx");
 	const [result, setResult] = useState<PlaygroundResult>();
+	const [presetSelection, setPresetSelection] =
+		useState<PlaygroundPresetSelection>({});
 	const requestId = useRef(0);
 	const workerRef = useRef<Worker | undefined>(undefined);
 	const editorViewRef = useRef<EditorView | null>(null);
@@ -1178,6 +1384,10 @@ export function Playground() {
 						: workspace.paths[0]!,
 				);
 
+				if (workspace.presetSelection) {
+					setPresetSelection(workspace.presetSelection);
+				}
+
 				return;
 			}
 		}
@@ -1198,7 +1408,7 @@ export function Playground() {
 
 	useEffect(() => {
 		const worker = new Worker(
-			new URL("../playground/playgroundWorker.ts", import.meta.url),
+			new URL("../playground/playgroundFlintWorker.ts", import.meta.url),
 			{ type: "module" },
 		);
 
@@ -1217,6 +1427,9 @@ export function Playground() {
 
 				setError(undefined);
 				setResult(data);
+				setPresetSelection((prev) =>
+					mergeSelectionWithSchema(prev, data.schema),
+				);
 			},
 		);
 
@@ -1308,6 +1521,7 @@ export function Playground() {
 					content: files[path] ?? "",
 					path,
 				})),
+				presetSelection,
 				requestId: nextRequestId,
 			};
 			worker.postMessage(request);
@@ -1317,13 +1531,20 @@ export function Playground() {
 				filesForShare[path] = files[path] ?? "";
 			}
 
-			if (isDefaultWorkspace(paths, filesForShare, activePath)) {
+			const presetsAreDefault = arePresetsAllEnabled(presetSelection);
+			if (
+				isDefaultWorkspace(paths, filesForShare, activePath) &&
+				presetsAreDefault
+			) {
 				globalThis.history.replaceState(null, "", globalThis.location.pathname);
 			} else {
 				const hash = encodeWorkspace({
 					activePath,
 					files: filesForShare,
 					paths,
+					...(presetsAreDefault
+						? {}
+						: { presetSelection: clonePresetSelection(presetSelection) }),
 				});
 				globalThis.history.replaceState(
 					null,
@@ -1336,7 +1557,7 @@ export function Playground() {
 		return () => {
 			globalThis.clearTimeout(handle);
 		};
-	}, [activePath, files, paths]);
+	}, [activePath, files, paths, presetSelection]);
 
 	const diagnostics = result?.diagnostics ?? [];
 	const sortedDiagnostics = useMemo(
@@ -1366,6 +1587,19 @@ export function Playground() {
 			focusEditor(pos);
 		},
 		[activePath, focusEditor],
+	);
+
+	const togglePreset = useCallback(
+		(pluginId: string, preset: string, enabled: boolean) => {
+			setPresetSelection((prev) => {
+				const pluginEntry = prev[pluginId] ?? {};
+				return {
+					...prev,
+					[pluginId]: { ...pluginEntry, [preset]: enabled },
+				};
+			});
+		},
+		[],
 	);
 
 	const astFileName = result?.activePath ?? activePath;
@@ -1488,6 +1722,8 @@ export function Playground() {
 		setFiles({ ...DEFAULT_FILES });
 		setPaths([...INITIAL_PATHS]);
 		setActivePath("/playground.tsx");
+		// Clear so the next schema merge re-defaults all presets to enabled.
+		setPresetSelection({});
 	}, []);
 
 	const copyShareUrl = useCallback(() => {
@@ -1501,6 +1737,9 @@ export function Playground() {
 				activePath,
 				files: filesForShare,
 				paths,
+				...(arePresetsAllEnabled(presetSelection)
+					? {}
+					: { presetSelection: clonePresetSelection(presetSelection) }),
 			},
 		)}`;
 
@@ -1510,7 +1749,7 @@ export function Playground() {
 				setCopyState("idle");
 			}, 1500);
 		});
-	}, [activePath, files, paths]);
+	}, [activePath, files, paths, presetSelection]);
 
 	const startColumnResize = useCallback(
 		(handle: "left" | "right", event: ReactPointerEvent<HTMLButtonElement>) => {
@@ -1604,8 +1843,10 @@ export function Playground() {
 	const activeSource = files[activePath] ?? "";
 
 	const workspaceIsDefault = useMemo(
-		() => isDefaultWorkspace(paths, files, activePath),
-		[activePath, files, paths],
+		() =>
+			isDefaultWorkspace(paths, files, activePath) &&
+			arePresetsAllEnabled(presetSelection),
+		[activePath, files, paths, presetSelection],
 	);
 
 	const workspaceIsCleared = useMemo(
@@ -1623,15 +1864,18 @@ export function Playground() {
 		copyShareUrl,
 		copyState,
 		paths,
+		presetSelection,
 		removeFile,
 		renameInputRef,
 		removingPaths,
 		renamingPath,
 		resetWorkspace,
 		resetWorkspaceDisabled: workspaceIsDefault,
+		schema: result?.schema,
 		setActivePath,
 		setRenamingPath,
 		skipRenameCommit,
+		togglePreset,
 	};
 
 	return (
@@ -1881,7 +2125,7 @@ export function Playground() {
 					className={styles.workspace}
 					ref={workspaceRef}
 					style={{
-						gridTemplateColumns: `${sidebarWidth}px 0.5rem ${mainWidth}px 0.5rem minmax(${MIN_OUTPUT_WIDTH}px, 1fr)`,
+						gridTemplateColumns: `${sidebarWidth}px var(--pg-resize-handle-size) ${mainWidth}px var(--pg-resize-handle-size) minmax(${MIN_OUTPUT_WIDTH}px, 1fr)`,
 					}}
 				>
 					<aside className={styles.sidebar} aria-label="Playground settings">
@@ -1901,7 +2145,7 @@ export function Playground() {
 						className={styles.mainColumn}
 						ref={mainColumnRef}
 						style={{
-							gridTemplateRows: `minmax(8rem, ${editorPercent}%) 0.5rem minmax(6rem, 1fr)`,
+							gridTemplateRows: `minmax(8rem, ${editorPercent}%) var(--pg-resize-handle-size) minmax(6rem, 1fr)`,
 						}}
 					>
 						<div className={styles.editor}>

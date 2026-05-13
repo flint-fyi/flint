@@ -19,6 +19,7 @@
 		{ "path": "../plugin-flint" },
 		{ "path": "../node" },
 		{ "path": "../performance" },
-		{ "path": "../spelling" }
+		{ "path": "../spelling" },
+		{ "path": "../typescript-language" }
 	]
 }

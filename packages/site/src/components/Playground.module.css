@@ -3,6 +3,7 @@
 	--pg-sev-warning: #d4a024;
 	--pg-sev-info: var(--sl-color-gray-3);
 	--pg-sev-suggestion: var(--sl-color-accent-high);
+	--pg-resize-handle-size: 0.25rem;
 
 	border: 1px solid var(--sl-color-hairline-shade);
 	border-radius: 0;
@@ -37,11 +38,16 @@
 	gap: 0;
 	min-height: 0;
 	min-width: 0;
-	overflow: hidden;
+	/* Scroll the whole settings column so users can reach both files and the
+	 * full rule list. Each plugin's preset checkboxes can push the sidebar
+	 * past the viewport on small heights, especially once all 10 plugins are
+	 * showing. */
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 
 .sidebar > .fileExplorer {
-	flex: 1;
+	flex: 0 0 auto;
 }
 
 .settingsPanel {
@@ -124,6 +130,99 @@
 	line-height: 1;
 }
 
+.ruleExplorer {
+	background: var(--sl-color-gray-6);
+	border-top: 1px solid var(--sl-color-hairline-shade);
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+	min-width: 0;
+}
+
+.ruleExplorerHeader {
+	align-items: center;
+	background: var(--sl-color-bg);
+	border-bottom: 1px solid var(--sl-color-hairline-shade);
+	display: flex;
+	flex-shrink: 0;
+	padding: 0.26rem 0.38rem;
+}
+
+.ruleExplorerTitle {
+	color: var(--sl-color-gray-3);
+	font-size: 0.58rem;
+	font-weight: 600;
+	letter-spacing: 0.09em;
+	line-height: 1;
+	text-transform: uppercase;
+}
+
+.ruleEmpty {
+	color: var(--sl-color-gray-3);
+	font-size: 0.7rem;
+	margin: 0;
+	padding: 0.4rem 0.45rem;
+}
+
+.ruleGroups {
+	display: flex;
+	flex-direction: column;
+	gap: 0.45rem;
+	padding: 0.34rem 0.45rem 0.45rem;
+}
+
+.ruleGroup {
+	display: flex;
+	flex-direction: column;
+	gap: 0.1rem;
+}
+
+.ruleGroupTitle {
+	color: var(--sl-color-gray-2);
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: 0.66rem;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	line-height: 1.2;
+	margin: 0 0 0.18rem;
+}
+
+.ruleRow {
+	align-items: center;
+	cursor: pointer;
+	display: flex;
+	gap: 0.4rem;
+	min-height: 1.2rem;
+	min-width: 0;
+	padding: 0.06rem 0.12rem;
+}
+
+.ruleRow:hover {
+	background: var(--sl-color-bg);
+}
+
+.ruleCheckbox {
+	accent-color: var(--sl-color-accent);
+	cursor: pointer;
+	flex: 0 0 auto;
+	margin: 0;
+}
+
+.ruleRowLabel {
+	color: var(--sl-color-gray-1);
+	flex: 1 1 auto;
+	font-family:
+		ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+		Menlo, monospace;
+	font-size: 0.7rem;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
 .fileExplorer {
 	--pg-file-text: 0.7rem;
 	--pg-file-btn: 0.5rem;
@@ -202,7 +301,9 @@
 	list-style: none;
 	margin: 0;
 	min-height: 0;
-	overflow-y: auto;
+	/* The outer .sidebar scrolls vertically now, so let this list expand
+	 * naturally and reach the sidebar scrollbar. Nested scrolls inside the
+	 * sidebar made the rules section unreachable when the file list grew. */
 	padding: 0.18rem;
 }
 
@@ -1688,13 +1789,13 @@ a.consoleRuleLink:focus-visible {
 .columnResizeHandle {
 	border-inline: 1px solid var(--sl-color-hairline-shade);
 	cursor: col-resize;
-	min-width: 0.5rem;
+	min-width: var(--pg-resize-handle-size);
 }
 
 .rowResizeHandle {
 	border-block: 1px solid var(--sl-color-hairline-shade);
 	cursor: row-resize;
-	min-height: 0.5rem;
+	min-height: var(--pg-resize-handle-size);
 }
 
 .columnResizeHandle:hover,

@@ -8,6 +8,26 @@ import starlightBlog from "starlight-blog";
 import starlightLinksValidator from "starlight-links-validator";
 import starlightSidebarTopics from "starlight-sidebar-topics";
 
+/**
+ * Browser-side aliases for modules that Flint's lint pipeline pulls in but
+ * which break in the playground's web worker. Applied only to the client
+ * environment so the SSR build keeps using the original implementations.
+ *
+ * Add new entries here as the worker surfaces additional failures. Bare
+ * specifiers route through Vite's optimizeDeps for CJS->ESM conversion;
+ * relative paths starting with `./` are resolved against the site src.
+ */
+const browserPolyfillAlias: Record<string, string> = {
+	path: "path-browserify",
+	"node:path": "path-browserify",
+	"node:async_hooks": "./src/playground/shims/node-async-hooks.ts",
+	"node:fs": "./src/playground/shims/node-fs.ts",
+	"node:fs/promises": "./src/playground/shims/node-fs-promises.ts",
+	"node:process": "./src/playground/shims/node-process.ts",
+	"node:timers": "./src/playground/shims/node-timers.ts",
+	"debug-for-file": "./src/playground/shims/debug-for-file.ts",
+};
+
 export default defineConfig({
 	integrations: [
 		konamiEmojiBlast(),
@@ -172,8 +192,111 @@ export default defineConfig({
 			//     at requireAstro2tsx (file:///home/runner/work/flint/flint/packages/site/dist/chunks/getRuleForPlugin_C5J7xdaO.mjs:69379:17)
 			__filename: "import.meta.filename",
 		},
+		optimizeDeps: {
+			// Force CJS->ESM conversion of polyfill packages so named imports
+			// like `import { join } from "node:path"` resolve to real exports.
+			include: ["path-browserify"],
+		},
+		plugins: [playgroundBrowserShimsPlugin()],
 		resolve: {
-			conditions: ["node", "import", "default", "browser"],
+			// `worker` ranked above `browser` so packages like
+			// `decode-named-character-reference` use their non-DOM entry — the
+			// playground worker has no `document`.
+			conditions: ["node", "import", "default", "worker", "browser"],
+		},
+		worker: {
+			// `es` (vs. the default `iife`) lets the worker use dynamic
+			// `import()`/code splitting — our worker lazy-loads Flint plugins
+			// so it can post a meaningful error if a plugin fails to bundle.
+			format: "es",
+			// Vite builds workers with their own plugin pipeline in production,
+			// so register a fresh instance for the worker environment too.
+			plugins: () => [playgroundBrowserShimsPlugin()],
 		},
 	},
 });
+
+function playgroundBrowserShimsPlugin() {
+	return {
+		name: "playground-browser-shims",
+		enforce: "pre" as const,
+		async resolveId(
+			source: string,
+			importer: string | undefined,
+			options: { custom?: unknown; isEntry: boolean },
+		) {
+			// eslint-disable-next-line @typescript-eslint/no-this-alias, @typescript-eslint/no-explicit-any
+			const ctx: any = this;
+			// Only polyfill for the client bundle (and worker bundles, which
+			// share the client environment). Astro's `ssr` and `prerender`
+			// environments run in Node at build time and need the real
+			// `node:*` modules — polyfilling them breaks content sync.
+			const envName = ctx.environment?.name;
+			if (envName && envName !== "client") {
+				return undefined;
+			}
+
+			const target = browserPolyfillAlias[source];
+			if (target) {
+				if (target.startsWith("./")) {
+					return new URL(target, import.meta.url).pathname;
+				}
+				// Resolve bare specifiers from the site package — the actual
+				// importer might live deep in a workspace package whose own
+				// `node_modules` doesn't carry our polyfill deps.
+				const resolved = await ctx.resolve(target, import.meta.url, {
+					...options,
+					skipSelf: true,
+				});
+				return resolved ?? undefined;
+			}
+
+			// Re-route the typescript-language `language.ts` to our
+			// project-service-bypassing browser implementation. Resolve
+			// `source` through Vite first (so package/relative specifiers
+			// turn into absolute paths) before matching by suffix.
+			const resolved = await ctx.resolve(source, importer, {
+				...options,
+				skipSelf: true,
+			});
+			if (resolved?.id.endsWith("typescript-language/src/language.ts")) {
+				return new URL(
+					"./src/playground/shims/typescript-language-language.ts",
+					import.meta.url,
+				).pathname;
+			}
+
+			return undefined;
+		},
+		transform(code: string, id: string) {
+			// eslint-disable-next-line @typescript-eslint/no-this-alias, @typescript-eslint/no-explicit-any
+			const ctx: any = this;
+			// Only polyfill for the client bundle (and worker bundles, which
+			// share the client environment). Astro's `ssr` and `prerender`
+			// environments run in Node at build time and need the real
+			// `node:*` modules — polyfilling them breaks content sync.
+			const envName = ctx.environment?.name;
+			if (envName && envName !== "client") {
+				return undefined;
+			}
+			// `import.meta.filename` is undefined in browsers and Flint's
+			// `isFileSystemCaseSensitive` calls `.slice` on it during host
+			// construction. Replace the expression with a stable synthetic
+			// path — but only in that single file; doing it globally would
+			// also clobber the literal text inside rule message templates.
+			if (!id.endsWith("/isFileSystemCaseSensitive.ts")) {
+				return undefined;
+			}
+			if (!code.includes("import.meta.filename")) {
+				return undefined;
+			}
+			return {
+				code: code.replace(
+					/import\.meta\.filename/g,
+					JSON.stringify("/playground/__synthetic__.ts"),
+				),
+				map: null,
+			};
+		},
+	};
+}
