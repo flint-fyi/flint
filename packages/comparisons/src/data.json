@@ -5684,7 +5684,8 @@
 		],
 		"flint": {
 			"name": "privatePackageProperties",
-			"plugin": "package-json"
+			"plugin": "package-json",
+			"status": "implemented"
 		}
 	},
 	{
