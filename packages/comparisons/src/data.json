@@ -2,8 +2,8 @@
 	{
 		"eslint": [
 			{
-				"name": "astro/sort-attibutes",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/sort-attibutes"
+				"name": "astro/sort-attributes",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/sort-attributes"
 			}
 		],
 		"flint": {
@@ -151,8 +151,8 @@
 	{
 		"eslint": [
 			{
-				"name": "astro/no-conflict-set-directive",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/no-conflict-set-directive"
+				"name": "astro/no-conflict-set-directives",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/no-conflict-set-directives/"
 			}
 		],
 		"flint": {
@@ -1470,8 +1470,8 @@
 	{
 		"eslint": [
 			{
-				"name": "jsx-a11y/anchor-content",
-				"url": "https://github.com/jsx-eslint/eslint-jsx-a11y/blob/HEAD/docs/rules/anchor-content.md"
+				"name": "jsx-a11y/anchor-has-content",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/tree/HEAD/docs/rules/anchor-has-content.md"
 			}
 		],
 		"flint": {
@@ -1852,8 +1852,8 @@
 		],
 		"eslint": [
 			{
-				"name": "react/no-comment-textnodes",
-				"url": "https://github.com/jsx-eslint/eslint-react/blob/master/docs/rules/no-comment-textnodes.md"
+				"name": "react/jsx-no-comment-textnodes",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/jsx-no-comment-textnodes.md"
 			}
 		],
 		"flint": {
@@ -2010,8 +2010,8 @@
 	{
 		"eslint": [
 			{
-				"name": "react/filename-extension",
-				"url": "https://github.com/jsx-eslint/eslint-react/blob/master/docs/rules/filename-extension.md"
+				"name": "react/jsx-filename-extension",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/jsx-filename-extension.md"
 			}
 		],
 		"flint": {
@@ -2193,8 +2193,8 @@
 	{
 		"eslint": [
 			{
-				"name": "jsx-a11y/interactive-elements-focusable",
-				"url": "https://github.com/jsx-eslint/eslint-jsx-a11y/blob/HEAD/docs/rules/interactive-elements-focusable.md"
+				"name": "jsx-a11y/interactive-supports-focus",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/tree/HEAD/docs/rules/interactive-supports-focus.md"
 			}
 		],
 		"flint": {
@@ -2261,8 +2261,8 @@
 	{
 		"eslint": [
 			{
-				"name": "react/no-array-function-lifecycle",
-				"url": "https://github.com/jsx-eslint/eslint-react/blob/master/docs/rules/no-array-function-lifecycle.md"
+				"name": "react/no-arrow-function-lifecycle",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/no-arrow-function-lifecycle.md"
 			}
 		],
 		"flint": {
@@ -2452,8 +2452,8 @@
 		],
 		"eslint": [
 			{
-				"name": "jsx-a11y/no-duplicate-props",
-				"url": "https://github.com/jsx-eslint/eslint-react/blob/master/docs/rules/jsx-no-duplicate-props.md"
+				"name": "react/jsx-no-duplicate-props",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/jsx-no-duplicate-props.md"
 			}
 		],
 		"flint": {
@@ -2480,8 +2480,8 @@
 	{
 		"eslint": [
 			{
-				"name": "react/jsx-first-prop-newline",
-				"url": "https://github.com/jsx-eslint/eslint-react/blob/master/docs/rules/jsx-first-prop-newline.md"
+				"name": "react/jsx-first-prop-new-line",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/jsx-first-prop-new-line.md"
 			}
 		],
 		"flint": {
@@ -2508,8 +2508,8 @@
 	{
 		"eslint": [
 			{
-				"name": "react/jsx-no-multi-spaces",
-				"url": "https://github.com/jsx-eslint/eslint-react/blob/master/docs/rules/jsx-no-multi-spaces.md"
+				"name": "react/jsx-props-no-multi-spaces",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/jsx-props-no-multi-spaces.md"
 			}
 		],
 		"flint": {
@@ -2767,8 +2767,8 @@
 	{
 		"eslint": [
 			{
-				"name": "react/jsx-tag-closing",
-				"url": "https://github.com/jsx-eslint/eslint-react/blob/master/docs/rules/jsx-tag-closing.md"
+				"name": "react/jsx-tag-spacing",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/jsx-tag-spacing.md"
 			}
 		],
 		"flint": {
@@ -3639,8 +3639,8 @@
 	{
 		"eslint": [
 			{
-				"name": "markdown/no-reference-like-url",
-				"url": "https://github.com/eslint/markdown/blob/HEAD/docs/rules/no-reference-like-url.md"
+				"name": "markdown/no-reference-like-urls",
+				"url": "https://github.com/eslint/markdown/blob/main/docs/rules/no-reference-like-urls.md"
 			}
 		],
 		"flint": {
@@ -3920,7 +3920,7 @@
 		"flint": {
 			"name": "moduleAssignments",
 			"plugin": "next",
-			"preset": "javascript"
+			"preset": "logical"
 		}
 	},
 	{
@@ -4373,8 +4373,8 @@
 	{
 		"eslint": [
 			{
-				"name": "n/prefer-global/url-search-params",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global.md"
+				"name": "n/prefer-global/url",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/url.md"
 			}
 		],
 		"flint": {
@@ -4387,7 +4387,7 @@
 		"eslint": [
 			{
 				"name": "n/prefer-global/url-search-params",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global.md"
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/url-search-params.md"
 			}
 		],
 		"flint": {
@@ -4482,8 +4482,8 @@
 	{
 		"eslint": [
 			{
-				"name": "n/no-new-requires",
-				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-new-requires.md"
+				"name": "n/no-new-require",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-new-require.md"
 			}
 		],
 		"flint": {
@@ -4949,12 +4949,6 @@
 		}
 	},
 	{
-		"eslint": [
-			{
-				"name": "package-json/require-config",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/798"
-			}
-		],
 		"flint": {
 			"name": "configPresence",
 			"plugin": "package-json",
@@ -5142,7 +5136,13 @@
 			"name": "devEnginesPresence",
 			"plugin": "package-json",
 			"status": "implemented"
-		}
+		},
+		"eslint": [
+			{
+				"name": "package-json/require-devEngines",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-devEngines.md"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -6123,8 +6123,8 @@
 	{
 		"eslint": [
 			{
-				"name": "react/state-property-placement",
-				"url": "https://github.com/jsx-eslint/eslint-react/blob/master/docs/rules/state-property-placement.md"
+				"name": "react/static-property-placement",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/static-property-placement.md"
 			}
 		],
 		"flint": {
@@ -6259,8 +6259,8 @@
 	{
 		"eslint": [
 			{
-				"name": "react-hooks/sort-comp",
-				"url": "https://react.dev/reference/eslint-react-hooks/lints/sort-comp"
+				"name": "react/sort-comp",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/sort-comp.md"
 			}
 		],
 		"flint": {
@@ -6273,8 +6273,8 @@
 	{
 		"eslint": [
 			{
-				"name": "react/no-multi-component",
-				"url": "https://github.com/jsx-eslint/eslint-react/blob/master/docs/rules/no-multi-component.md"
+				"name": "react/no-multi-comp",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/no-multi-comp.md"
 			}
 		],
 		"flint": {
@@ -6383,8 +6383,8 @@
 	{
 		"eslint": [
 			{
-				"name": "react-hooks/sort-default-props",
-				"url": "https://react.dev/reference/eslint-react-hooks/lints/sort-default-props"
+				"name": "react/sort-default-props",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/sort-default-props.md"
 			}
 		],
 		"flint": {
@@ -6397,8 +6397,8 @@
 	{
 		"eslint": [
 			{
-				"name": "react/destructuring",
-				"url": "https://github.com/jsx-eslint/eslint-react/blob/master/docs/rules/destructuring.md"
+				"name": "react/destructuring-assignment",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/destructuring-assignment.md"
 			}
 		],
 		"flint": {
@@ -6664,8 +6664,8 @@
 	{
 		"eslint": [
 			{
-				"name": "react-hooks/sort-prop-types",
-				"url": "https://react.dev/reference/eslint-react-hooks/lints/sort-prop-types"
+				"name": "react/sort-prop-types",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/sort-prop-types.md"
 			}
 		],
 		"flint": {
@@ -12009,8 +12009,8 @@
 	{
 		"eslint": [
 			{
-				"name": "import/exports",
-				"url": "https://github.com/import-js/eslint-plugin-import/blob/HEAD/docs/rules/exports.md"
+				"name": "import/export",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/export.md"
 			}
 		],
 		"flint": {
@@ -13539,8 +13539,8 @@
 	{
 		"eslint": [
 			{
-				"name": "jsdoc/match-names",
-				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/match-names.md"
+				"name": "jsdoc/match-name",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/match-name.md#repos-sticky-header"
 			}
 		],
 		"flint": {
@@ -13921,8 +13921,8 @@
 	{
 		"eslint": [
 			{
-				"name": "jsdoc/check-syntax, jsdoc/check-types",
-				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/HEAD/docs/rules/check-syntax, jsdoc.md"
+				"name": "jsdoc/check-syntax",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/check-syntax.md#repos-sticky-header"
 			}
 		],
 		"flint": {
@@ -17946,8 +17946,8 @@
 	{
 		"eslint": [
 			{
-				"name": "@typescript-eslint/strict-void-returns",
-				"url": "https://typescript-eslint.io/rules/strict-void-returns"
+				"name": "@typescript-eslint/strict-void-return",
+				"url": "https://typescript-eslint.io/rules/strict-void-return"
 			}
 		],
 		"flint": {
@@ -20775,7 +20775,7 @@
 	{
 		"eslint": [
 			{
-				"name": "padding-around-after-all-blocks",
+				"name": "vitest/padding-around-after-all-blocks",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/padding-around-after-all-blocks.md"
 			}
 		],
@@ -20790,7 +20790,7 @@
 	{
 		"eslint": [
 			{
-				"name": "padding-around-after-each-blocks",
+				"name": "vitest/padding-around-after-each-blocks",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/padding-around-after-each-blocks.md"
 			}
 		],
@@ -20805,7 +20805,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-alias-methods",
+				"name": "vitest/no-alias-methods",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-alias-methods.md"
 			}
 		],
@@ -20818,7 +20818,7 @@
 	{
 		"eslint": [
 			{
-				"name": "padding-around-all",
+				"name": "vitest/padding-around-all",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/padding-around-all.md"
 			}
 		],
@@ -20833,7 +20833,7 @@
 	{
 		"eslint": [
 			{
-				"name": "padding-around-before-all-blocks",
+				"name": "vitest/padding-around-before-all-blocks",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/padding-around-before-all-blocks.md"
 			}
 		],
@@ -20848,7 +20848,7 @@
 	{
 		"eslint": [
 			{
-				"name": "padding-around-before-each-blocks",
+				"name": "vitest/padding-around-before-each-blocks",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/padding-around-before-each-blocks.md"
 			}
 		],
@@ -20863,7 +20863,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-strict-boolean-matchers",
+				"name": "vitest/prefer-strict-boolean-matchers",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-strict-boolean-matchers.md"
 			}
 		],
@@ -20877,7 +20877,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-called-exactly-once-with",
+				"name": "vitest/prefer-called-exactly-once-with",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-called-exactly-once-with.md"
 			}
 		],
@@ -20891,7 +20891,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-called-times",
+				"name": "vitest/prefer-called-times",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-called-times.md"
 			}
 		],
@@ -20905,7 +20905,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-called-with",
+				"name": "vitest/prefer-called-with",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-called-with.md"
 			}
 		],
@@ -20919,7 +20919,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-commented-out-tests",
+				"name": "vitest/no-commented-out-tests",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-commented-out-tests.md"
 			}
 		],
@@ -20933,7 +20933,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-comparison-matcher",
+				"name": "vitest/prefer-comparison-matcher",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-comparison-matcher.md"
 			}
 		],
@@ -20946,7 +20946,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-conditional-expect",
+				"name": "vitest/no-conditional-expect",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-conditional-expect.md"
 			}
 		],
@@ -20960,7 +20960,7 @@
 	{
 		"eslint": [
 			{
-				"name": "valid-describe-callback",
+				"name": "vitest/valid-describe-callback",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/valid-describe-callback.md"
 			}
 		],
@@ -20973,7 +20973,7 @@
 	{
 		"eslint": [
 			{
-				"name": "padding-around-describe-blocks",
+				"name": "vitest/padding-around-describe-blocks",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/padding-around-describe-blocks.md"
 			}
 		],
@@ -20988,7 +20988,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-describe-function-title",
+				"name": "vitest/prefer-describe-function-title",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-describe-function-title.md"
 			}
 		],
@@ -21001,7 +21001,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-each",
+				"name": "vitest/prefer-each",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-each.md"
 			}
 		],
@@ -21014,7 +21014,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-todo",
+				"name": "vitest/prefer-todo",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-todo.md"
 			}
 		],
@@ -21028,7 +21028,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-to-be",
+				"name": "vitest/prefer-to-be",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-to-be.md"
 			}
 		],
@@ -21042,7 +21042,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-equality-matcher",
+				"name": "vitest/prefer-equality-matcher",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-equality-matcher.md"
 			}
 		],
@@ -21055,7 +21055,7 @@
 	{
 		"eslint": [
 			{
-				"name": "padding-around-expect-groups",
+				"name": "vitest/padding-around-expect-groups",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/padding-around-expect-groups.md"
 			}
 		],
@@ -21070,7 +21070,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-expect-resolves",
+				"name": "vitest/prefer-expect-resolves",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-expect-resolves.md"
 			}
 		],
@@ -21083,7 +21083,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-standalone-expect",
+				"name": "vitest/no-standalone-expect",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-standalone-expect.md"
 			}
 		],
@@ -21097,7 +21097,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-expect-type-of",
+				"name": "vitest/prefer-expect-type-of",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-expect-type-of.md"
 			}
 		],
@@ -21110,7 +21110,7 @@
 	{
 		"eslint": [
 			{
-				"name": "valid-expect",
+				"name": "vitest/valid-expect",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/valid-expect.md"
 			}
 		],
@@ -21123,7 +21123,7 @@
 	{
 		"eslint": [
 			{
-				"name": "consistent-test-filename",
+				"name": "vitest/consistent-test-filename",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/consistent-test-filename.md"
 			}
 		],
@@ -21135,7 +21135,7 @@
 	{
 		"eslint": [
 			{
-				"name": "hoisted-apis-on-top",
+				"name": "vitest/hoisted-apis-on-top",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/hoisted-apis-on-top.md"
 			}
 		],
@@ -21149,7 +21149,7 @@
 	{
 		"eslint": [
 			{
-				"name": "require-hook",
+				"name": "vitest/require-hook",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/require-hook.md"
 			}
 		],
@@ -21163,7 +21163,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-duplicate-hooks",
+				"name": "vitest/no-duplicate-hooks",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-duplicate-hooks.md"
 			}
 		],
@@ -21177,7 +21177,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-hooks-in-order",
+				"name": "vitest/prefer-hooks-in-order",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-hooks-in-order.md"
 			}
 		],
@@ -21191,7 +21191,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-hooks",
+				"name": "vitest/no-hooks",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-hooks.md"
 			}
 		],
@@ -21205,7 +21205,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-hooks-on-top",
+				"name": "vitest/prefer-hooks-on-top",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-hooks-on-top.md"
 			}
 		],
@@ -21219,7 +21219,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-import-in-mock",
+				"name": "vitest/prefer-import-in-mock",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-import-in-mock.md"
 			}
 		],
@@ -21232,7 +21232,7 @@
 	{
 		"eslint": [
 			{
-				"name": "require-top-level-describe",
+				"name": "vitest/require-top-level-describe",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/require-top-level-describe.md"
 			}
 		],
@@ -21245,7 +21245,7 @@
 	{
 		"eslint": [
 			{
-				"name": "max-expects",
+				"name": "vitest/max-expects",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/max-expects.md"
 			}
 		],
@@ -21259,7 +21259,7 @@
 	{
 		"eslint": [
 			{
-				"name": "max-nested-describe",
+				"name": "vitest/max-nested-describe",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/max-nested-describe.md"
 			}
 		],
@@ -21273,7 +21273,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-vi-mocked",
+				"name": "vitest/prefer-vi-mocked",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-vi-mocked.md"
 			}
 		],
@@ -21287,7 +21287,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-mocks-import",
+				"name": "vitest/no-mocks-import",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-mocks-import.md"
 			}
 		],
@@ -21301,7 +21301,7 @@
 	{
 		"eslint": [
 			{
-				"name": "require-mock-type-parameters",
+				"name": "vitest/require-mock-type-parameters",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/require-mock-type-parameters.md"
 			}
 		],
@@ -21315,7 +21315,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-import-node-test",
+				"name": "vitest/no-import-node-test",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-import-node-test.md"
 			}
 		],
@@ -21329,7 +21329,7 @@
 	{
 		"eslint": [
 			{
-				"name": "require-awaited-expect-poll",
+				"name": "vitest/require-awaited-expect-poll",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/require-awaited-expect-poll.md"
 			}
 		],
@@ -21343,7 +21343,7 @@
 	{
 		"eslint": [
 			{
-				"name": "valid-expect-in-promise",
+				"name": "vitest/valid-expect-in-promise",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/valid-expect-in-promise.md"
 			}
 		],
@@ -21357,7 +21357,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-mock-promise-shorthand",
+				"name": "vitest/prefer-mock-promise-shorthand",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-mock-promise-shorthand.md"
 			}
 		],
@@ -21370,7 +21370,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-restricted-matchers",
+				"name": "vitest/no-restricted-matchers",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-restricted-matchers.md"
 			}
 		],
@@ -21382,7 +21382,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-restricted-vi-methods",
+				"name": "vitest/no-restricted-vi-methods",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-restricted-vi-methods.md"
 			}
 		],
@@ -21394,7 +21394,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-snapshot-hint",
+				"name": "vitest/prefer-snapshot-hint",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-snapshot-hint.md"
 			}
 		],
@@ -21408,7 +21408,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-interpolation-in-snapshots",
+				"name": "vitest/no-interpolation-in-snapshots",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-interpolation-in-snapshots.md"
 			}
 		],
@@ -21422,7 +21422,7 @@
 	{
 		"eslint": [
 			{
-				"name": "require-local-test-context-for-concurrent-snapshots",
+				"name": "vitest/require-local-test-context-for-concurrent-snapshots",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/require-local-test-context-for-concurrent-snapshots.md"
 			}
 		],
@@ -21435,7 +21435,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-large-snapshots",
+				"name": "vitest/no-large-snapshots",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-large-snapshots.md"
 			}
 		],
@@ -21449,7 +21449,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-spy-on",
+				"name": "vitest/prefer-spy-on",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-spy-on.md"
 			}
 		],
@@ -21463,7 +21463,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-strict-equal",
+				"name": "vitest/prefer-strict-equal",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-strict-equal.md"
 			}
 		],
@@ -21477,7 +21477,7 @@
 	{
 		"eslint": [
 			{
-				"name": "expect-expect",
+				"name": "vitest/expect-expect",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/expect-expect.md"
 			}
 		],
@@ -21490,7 +21490,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-expect-assertions",
+				"name": "vitest/prefer-expect-assertions",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-expect-assertions.md"
 			}
 		],
@@ -21503,7 +21503,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-focused-tests",
+				"name": "vitest/no-focused-tests",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-focused-tests.md"
 			}
 		],
@@ -21517,7 +21517,7 @@
 	{
 		"eslint": [
 			{
-				"name": "padding-around-test-blocks",
+				"name": "vitest/padding-around-test-blocks",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/padding-around-test-blocks.md"
 			}
 		],
@@ -21532,7 +21532,7 @@
 	{
 		"eslint": [
 			{
-				"name": "require-top-level-describe",
+				"name": "vitest/require-top-level-describe",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/require-top-level-describe.md"
 			}
 		],
@@ -21547,7 +21547,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-lowercase-title",
+				"name": "vitest/prefer-lowercase-title",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-lowercase-title.md"
 			}
 		],
@@ -21561,7 +21561,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-conditional-tests",
+				"name": "vitest/no-conditional-tests",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-conditional-tests.md"
 			}
 		],
@@ -21575,7 +21575,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-conditional-in-test",
+				"name": "vitest/no-conditional-in-test",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-conditional-in-test.md"
 			}
 		],
@@ -21589,7 +21589,7 @@
 	{
 		"eslint": [
 			{
-				"name": "consistent-test-it",
+				"name": "vitest/consistent-test-it",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/consistent-test-it.md"
 			}
 		],
@@ -21601,7 +21601,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-disabled-tests",
+				"name": "vitest/no-disabled-tests",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-disabled-tests.md"
 			}
 		],
@@ -21615,7 +21615,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-test-prefixes",
+				"name": "vitest/no-test-prefixes",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-test-prefixes.md"
 			}
 		],
@@ -21628,7 +21628,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-test-return-statement",
+				"name": "vitest/no-test-return-statement",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-test-return-statement.md"
 			}
 		],
@@ -21642,7 +21642,7 @@
 	{
 		"eslint": [
 			{
-				"name": "no-identical-title",
+				"name": "vitest/no-identical-title",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-identical-title.md"
 			}
 		],
@@ -21655,7 +21655,7 @@
 	{
 		"eslint": [
 			{
-				"name": "valid-title",
+				"name": "vitest/valid-title",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/valid-title.md"
 			}
 		],
@@ -21668,7 +21668,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-to-be-object",
+				"name": "vitest/prefer-to-be-object",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-to-be-object.md"
 			}
 		],
@@ -21682,7 +21682,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-to-contain",
+				"name": "vitest/prefer-to-contain",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-to-contain.md"
 			}
 		],
@@ -21695,7 +21695,7 @@
 	{
 		"eslint": [
 			{
-				"name": "warn-todo",
+				"name": "vitest/warn-todo",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/warn-todo.md"
 			}
 		],
@@ -21709,7 +21709,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-to-have-length",
+				"name": "vitest/prefer-to-have-length",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-to-have-length.md"
 			}
 		],
@@ -21722,7 +21722,7 @@
 	{
 		"eslint": [
 			{
-				"name": "require-to-throw-message",
+				"name": "vitest/require-to-throw-message",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/require-to-throw-message.md"
 			}
 		],
@@ -21736,7 +21736,7 @@
 	{
 		"eslint": [
 			{
-				"name": "consistent-vitest-vi",
+				"name": "vitest/consistent-vitest-vi",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/consistent-vitest-vi.md"
 			}
 		],
@@ -21748,7 +21748,7 @@
 	{
 		"eslint": [
 			{
-				"name": "prefer-importing-vitest-globals",
+				"name": "vitest/prefer-importing-vitest-globals",
 				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-importing-vitest-globals.md"
 			}
 		],
@@ -23321,6 +23321,34 @@
 	{
 		"eslint": [
 			{
+				"name": "yml/block-mapping-colon-indicator-newline",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/block-mapping-colon-indicator-newline.html"
+			}
+		],
+		"flint": {
+			"name": "blockMappingColonIndicatorNewlines",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "yml/block-mapping-question-indicator-newline",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/block-mapping-question-indicator-newline.html"
+			}
+		],
+		"flint": {
+			"name": "blockMappingQuestionIndicatorNewlines",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
 				"name": "yml/block-sequence",
 				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/block-sequence.html"
 			}
@@ -23331,6 +23359,20 @@
 			"preset": "stylistic",
 			"status": "implemented"
 		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "yml/block-sequence-hyphen-indicator-newline",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/block-sequence-hyphen-indicator-newline.html"
+			}
+		],
+		"flint": {
+			"name": "blockSequenceHyphenIndicatorNewlines",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
 	},
 	{
 		"eslint": [
@@ -23405,6 +23447,76 @@
 	{
 		"eslint": [
 			{
+				"name": "yml/flow-mapping-curly-newline",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/flow-mapping-curly-newline.html"
+			}
+		],
+		"flint": {
+			"name": "flowMappingCurlyNewlines",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "yml/flow-mapping-curly-spacing",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/flow-mapping-curly-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "flowMappingCurlySpacing",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "yml/flow-sequence-bracket-newline",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/flow-sequence-bracket-newline.html"
+			}
+		],
+		"flint": {
+			"name": "flowSequenceBracketNewlines",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "yml/flow-sequence-bracket-spacing",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/flow-sequence-bracket-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "flowSequenceBracketSpacing",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "yml/indent",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/indent.html"
+			}
+		],
+		"flint": {
+			"name": "indentation",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
 				"name": "yml/no-irregular-whitespace",
 				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/no-irregular-whitespace.html"
 			}
@@ -23418,6 +23530,20 @@
 	{
 		"eslint": [
 			{
+				"name": "yml/key-spacing",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/key-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "keySpacing",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
 				"name": "yml/key-name-casing",
 				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/key-name-casing.html"
 			}
@@ -23426,6 +23552,18 @@
 			"name": "mappingKeyCasing",
 			"plugin": "yaml",
 			"status": "skipped"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "yml/no-multiple-empty-lines",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/no-multiple-empty-lines.html"
+			}
+		],
+		"flint": {
+			"name": "multipleEmptyLines",
+			"plugin": "yaml"
 		}
 	},
 	{
@@ -23446,6 +23584,32 @@
 	{
 		"eslint": [
 			{
+				"name": "yml/quotes",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/quotes.html"
+			}
+		],
+		"flint": {
+			"name": "quotes",
+			"plugin": "yaml"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "yml/spaced-comment",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/spaced-comment.html"
+			}
+		],
+		"flint": {
+			"name": "spacedComments",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
 				"name": "yml/plain-scalar",
 				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/plain-scalar.html"
 			}
@@ -23461,6 +23625,20 @@
 	{
 		"eslint": [
 			{
+				"name": "yml/no-tab-indent",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/no-tab-indent.html"
+			}
+		],
+		"flint": {
+			"name": "tabIndents",
+			"plugin": "yaml",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
 				"name": "yml/require-string-key",
 				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/require-string-key.html"
 			}
@@ -23471,6 +23649,3992 @@
 			"preset": "logical",
 			"status": "implemented",
 			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "yml/vue-custom-block/no-parsing-error",
+				"url": "https://ota-meshi.github.io/eslint-plugin-yml/rules/vue-custom-block/no-parsing-error.html"
+			}
+		],
+		"flint": {
+			"name": "vueCustomBlockParsingErrors",
+			"plugin": "yaml"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/alt-text",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/alt-text/"
+			}
+		],
+		"flint": {
+			"name": "altTexts",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/anchor-ambiguous-text",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/anchor-ambiguous-text/"
+			}
+		],
+		"flint": {
+			"name": "anchorAmbiguousText",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/anchor-has-content",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/anchor-has-content/"
+			}
+		],
+		"flint": {
+			"name": "anchorContent",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/anchor-is-valid",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/anchor-is-valid/"
+			}
+		],
+		"flint": {
+			"name": "anchorValidity",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/aria-activedescendant-has-tabindex",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-activedescendant-has-tabindex/"
+			}
+		],
+		"flint": {
+			"name": "ariaActiveDescendantTabIndex",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/aria-props",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-props/"
+			}
+		],
+		"flint": {
+			"name": "ariaProps",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/aria-proptypes",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-proptypes/"
+			}
+		],
+		"flint": {
+			"name": "ariaPropTypes",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/aria-role",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-role/"
+			}
+		],
+		"flint": {
+			"name": "ariaRoleValidity",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/aria-unsupported-elements",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-unsupported-elements/"
+			}
+		],
+		"flint": {
+			"name": "ariaUnsupportedElements",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/autocomplete-valid",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/autocomplete-valid/"
+			}
+		],
+		"flint": {
+			"name": "autocomplete",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/click-events-have-key-events",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/click-events-have-key-events/"
+			}
+		],
+		"flint": {
+			"name": "clickEventKeyEvents",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/control-has-associated-label",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/control-has-associated-label/"
+			}
+		],
+		"flint": {
+			"name": "controlAssociatedLabels",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/heading-has-content",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/heading-has-content/"
+			}
+		],
+		"flint": {
+			"name": "headingContents",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/html-has-lang",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/html-has-lang/"
+			}
+		],
+		"flint": {
+			"name": "htmlLangs",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/iframe-has-title",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/iframe-has-title/"
+			}
+		],
+		"flint": {
+			"name": "iframeTitles",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/img-redundant-alt",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/img-redundant-alt/"
+			}
+		],
+		"flint": {
+			"name": "imageAltRedundancy",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/interactive-supports-focus",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/interactive-supports-focus/"
+			}
+		],
+		"flint": {
+			"name": "interactiveElementsFocusable",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/label-has-associated-control",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/label-has-associated-control/"
+			}
+		],
+		"flint": {
+			"name": "labelAssociatedControls",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/lang",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/lang/"
+			}
+		],
+		"flint": {
+			"name": "langValidity",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/media-has-caption",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/media-has-caption/"
+			}
+		],
+		"flint": {
+			"name": "mediaCaptions",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/mouse-events-have-key-events",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/mouse-events-have-key-events/"
+			}
+		],
+		"flint": {
+			"name": "mouseEventKeyEvents",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/no-access-key",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-access-key/"
+			}
+		],
+		"flint": {
+			"name": "accessKeys",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/no-aria-hidden-on-focusable",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-aria-hidden-on-focusable/"
+			}
+		],
+		"flint": {
+			"name": "ariaHiddenFocusables",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/no-autofocus",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-autofocus/"
+			}
+		],
+		"flint": {
+			"name": "autoFocusProps",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/no-distracting-elements",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-distracting-elements/"
+			}
+		],
+		"flint": {
+			"name": "distractingElements",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/no-interactive-element-to-noninteractive-role",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-interactive-element-to-noninteractive-role/"
+			}
+		],
+		"flint": {
+			"name": "interactiveElementRoles",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/no-noninteractive-element-interactions",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-noninteractive-element-interactions/"
+			}
+		],
+		"flint": {
+			"name": "nonInteractiveElementInteractions",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/no-noninteractive-element-to-interactive-role",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-noninteractive-element-to-interactive-role/"
+			}
+		],
+		"flint": {
+			"name": "nonInteractiveElementRoles",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/no-noninteractive-tabindex",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-noninteractive-tabindex/"
+			}
+		],
+		"flint": {
+			"name": "nonInteractiveElementTabIndexes",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/no-redundant-roles",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-redundant-roles/"
+			}
+		],
+		"flint": {
+			"name": "roleRedundancies",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/no-static-element-interactions",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-static-element-interactions/"
+			}
+		],
+		"flint": {
+			"name": "staticElementInteractions",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/prefer-tag-over-role",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/prefer-tag-over-role/"
+			}
+		],
+		"flint": {
+			"name": "roleTags",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/role-has-required-aria-props",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/role-has-required-aria-props/"
+			}
+		],
+		"flint": {
+			"name": "roleRequiredAriaProps",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/role-supports-aria-props",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/role-supports-aria-props/"
+			}
+		],
+		"flint": {
+			"name": "roleSupportedAriaProps",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/scope",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/scope/"
+			}
+		],
+		"flint": {
+			"name": "scopeProps",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/jsx-a11y/tabindex-no-positive",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/tabindex-no-positive/"
+			}
+		],
+		"flint": {
+			"name": "tabIndexPositiveValues",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/no-prerender-export-outside-pages",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/no-prerender-export-outside-pages/"
+			}
+		],
+		"flint": {
+			"name": "prerenderExportsOutsidePages",
+			"plugin": "astro"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "astro/semi",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/semi/"
+			}
+		],
+		"flint": {
+			"name": "semicolons",
+			"plugin": "astro",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "erasable-syntax-only/enums",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-erasable-syntax-only/blob/main/docs/rules/enums.md"
+			}
+		],
+		"flint": {
+			"name": "enums",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "erasable-syntax-only/import-aliases",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-erasable-syntax-only/blob/main/docs/rules/import-aliases.md"
+			}
+		],
+		"flint": {
+			"name": "importAliases",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "erasable-syntax-only/namespaces",
+				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-erasable-syntax-only/blob/main/docs/rules/namespaces.md"
+			}
+		],
+		"flint": {
+			"name": "namespaces",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "eslint-plugin-eslint-plugin/no-matching-violation-suggest-message-ids",
+				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/tree/HEAD/docs/rules/no-matching-violation-suggest-message-ids.md"
+			}
+		],
+		"flint": {
+			"name": "suggestionMessageIdMatches",
+			"plugin": "flint"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/dynamic-import-chunkname",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/dynamic-import-chunkname.md"
+			}
+		],
+		"flint": {
+			"name": "dynamicImportChunkNames",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/extensions",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/extensions.md"
+			}
+		],
+		"flint": {
+			"name": "importExtensions",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/imports-first",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/7b25c1cb95ee18acc1531002fd343e1e6031f9ed/docs/rules/imports-first.md"
+			}
+		],
+		"flint": {
+			"name": "importDeclarationsFirst",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/newline-after-import",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/newline-after-import.md"
+			}
+		],
+		"flint": {
+			"name": "importTrailingNewlines",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-amd",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-amd.md"
+			}
+		],
+		"flint": {
+			"name": "amdImports",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-anonymous-default-export",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-anonymous-default-export.md"
+			}
+		],
+		"flint": {
+			"name": "anonymousDefaultExports",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-commonjs",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-commonjs.md"
+			}
+		],
+		"flint": {
+			"name": "commonjsModules",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-default-export",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-default-export.md"
+			}
+		],
+		"flint": {
+			"name": "defaultExports",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-deprecated",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-deprecated.md"
+			}
+		],
+		"flint": {
+			"name": "deprecatedImports",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-dynamic-require",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-dynamic-require.md"
+			}
+		],
+		"flint": {
+			"name": "dynamicRequires",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-import-module-exports",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-import-module-exports.md"
+			}
+		],
+		"flint": {
+			"name": "moduleExportImports",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-internal-modules",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-internal-modules.md"
+			}
+		],
+		"flint": {
+			"name": "internalModules",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-named-as-default",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-named-as-default.md"
+			}
+		],
+		"flint": {
+			"name": "namedDefaultImports",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-named-as-default-member",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-named-as-default-member.md"
+			}
+		],
+		"flint": {
+			"name": "namedDefaultMembers",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-named-default",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-named-default.md"
+			}
+		],
+		"flint": {
+			"name": "namedDefaultSpecifiers",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-named-export",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-named-export.md"
+			}
+		],
+		"flint": {
+			"name": "namedExports",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-nodejs-modules",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-nodejs-modules.md"
+			}
+		],
+		"flint": {
+			"name": "nodeBuiltinImports",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-relative-packages",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-relative-packages.md"
+			}
+		],
+		"flint": {
+			"name": "relativePackageImports",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-relative-parent-imports",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-relative-parent-imports.md"
+			}
+		],
+		"flint": {
+			"name": "parentRelativeImports",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-restricted-paths",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-restricted-paths.md"
+			}
+		],
+		"flint": {
+			"name": "restrictedImportPaths",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-unresolved",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-unresolved.md"
+			}
+		],
+		"flint": {
+			"name": "unresolvedImports",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-unused-modules",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-unused-modules.md"
+			}
+		],
+		"flint": {
+			"name": "unusedModules",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/no-webpack-loader-syntax",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-webpack-loader-syntax.md"
+			}
+		],
+		"flint": {
+			"name": "webpackLoaderSyntax",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/order",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/order.md"
+			}
+		],
+		"flint": {
+			"name": "importDeclarationsOrder",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "import/unambiguous",
+				"url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/unambiguous.md"
+			}
+		],
+		"flint": {
+			"name": "moduleSyntaxDeclarations",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/check-examples",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/check-examples.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocExampleCodeValidity",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/check-types",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/check-types.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocTypeChecks",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/escape-inline-tags",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/escape-inline-tags.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocInlineTagEscapes",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/lines-before-block",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/lines-before-block.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocBlockPaddingLines",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/prefer-import-tag",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/prefer-import-tag.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocImportTags",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/reject-any-type",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/reject-any-type.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocAnyTypes",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/reject-function-type",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/reject-function-type.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocFunctionTypes",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/require-next-description",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-next-description.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocNextDescriptions",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/require-next-type",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-next-type.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocNextTypes",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/require-param-name",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-param-name.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocParameterNamePresence",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/require-property-name",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-property-name.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocPropertyNamePresence",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/require-rejects",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-rejects.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocRejects",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/require-tags",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-tags.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocRequiredTags",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/require-template-description",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-template-description.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocTemplateDescriptions",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/require-throws-description",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-throws-description.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocThrowDescriptions",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/require-throws-type",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-throws-type.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocThrowTypes",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/require-yields-description",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-yields-description.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocYieldDescriptions",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/require-yields-type",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-yields-type.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocYieldTypes",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/ts-method-signature-style",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/ts-method-signature-style.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocTypeScriptMethodSignatureStyles",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/ts-no-empty-object-type",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/ts-no-empty-object-type.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocTypeScriptEmptyObjectTypes",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/ts-no-unnecessary-template-expression",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/ts-no-unnecessary-template-expression.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocTypeScriptUnnecessaryTemplateExpressions",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/ts-prefer-function-type",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/ts-prefer-function-type.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocTypeScriptFunctionTypes",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsdoc/type-formatting",
+				"url": "https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/type-formatting.md#repos-sticky-header"
+			}
+		],
+		"flint": {
+			"name": "jsdocTypeFormatting",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "json/no-duplicate-keys",
+				"url": "https://github.com/eslint/json/tree/main/docs/rules/no-duplicate-keys.md"
+			}
+		],
+		"flint": {
+			"name": "duplicateKeys",
+			"plugin": "json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/array-bracket-newline",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/array-bracket-newline.html"
+			}
+		],
+		"flint": {
+			"name": "arrayBracketNewlines",
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/array-bracket-spacing",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/array-bracket-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "arrayBracketSpaces",
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/array-element-newline",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/array-element-newline.html"
+			}
+		],
+		"flint": {
+			"name": "arrayElementNewlines",
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/auto",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/auto.html"
+			}
+		],
+		"flint": {
+			"name": "automaticJsoncRules",
+			"plugin": "json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/comma-dangle",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/comma-dangle.html"
+			}
+		],
+		"flint": {
+			"name": "trailingCommas",
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/comma-style",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/comma-style.html"
+			}
+		],
+		"flint": {
+			"name": "commaStyles",
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/indent",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/indent.html"
+			}
+		],
+		"flint": {
+			"name": "indentation",
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/key-spacing",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/key-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "keySpaces",
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/no-irregular-whitespace",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-irregular-whitespace.html"
+			}
+		],
+		"flint": {
+			"name": "irregularWhitespace",
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/no-multi-str",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-multi-str.html"
+			}
+		],
+		"flint": {
+			"name": "multilineStrings",
+			"plugin": "json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/no-octal",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-octal.html"
+			}
+		],
+		"flint": {
+			"name": "legacyOctalLiterals",
+			"plugin": "json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/no-regexp-literals",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-regexp-literals.html"
+			}
+		],
+		"flint": {
+			"name": "regexLiterals",
+			"plugin": "json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/no-sparse-arrays",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-sparse-arrays.html"
+			}
+		],
+		"flint": {
+			"name": "sparseArrays",
+			"plugin": "json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/no-useless-escape",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-useless-escape.html"
+			}
+		],
+		"flint": {
+			"name": "unnecessaryEscapes",
+			"plugin": "json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/object-curly-newline",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/object-curly-newline.html"
+			}
+		],
+		"flint": {
+			"name": "objectCurlyNewlines",
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/object-curly-spacing",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/object-curly-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "objectCurlySpaces",
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/object-property-newline",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/object-property-newline.html"
+			}
+		],
+		"flint": {
+			"name": "objectPropertyNewlines",
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/quote-props",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/quote-props.html"
+			}
+		],
+		"flint": {
+			"name": "propertyQuotes",
+			"plugin": "json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/quotes",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/quotes.html"
+			}
+		],
+		"flint": {
+			"name": "stringQuotes",
+			"plugin": "json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/space-unary-ops",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/space-unary-ops.html"
+			}
+		],
+		"flint": {
+			"name": "unaryOperatorSpaces",
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsonc/vue-custom-block/no-parsing-error",
+				"url": "https://ota-meshi.github.io/eslint-plugin-jsonc/rules/vue-custom-block/no-parsing-error.html"
+			}
+		],
+		"flint": {
+			"name": "vueCustomBlockParsingErrors",
+			"plugin": "json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsx-a11y/accessible-emoji",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/tree/HEAD/docs/rules/accessible-emoji.md"
+			}
+		],
+		"flint": {
+			"name": "accessibleEmojis",
+			"plugin": "jsx",
+			"status": "skipped"
+		},
+		"notes": "Deprecated."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsx-a11y/control-has-associated-label",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/main/docs/rules/control-has-associated-label.md"
+			}
+		],
+		"flint": {
+			"name": "controlAssociatedLabels",
+			"plugin": "jsx",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsx-a11y/label-has-for",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/tree/HEAD/docs/rules/label-has-for.md"
+			}
+		],
+		"flint": {
+			"name": "labelForAssociations",
+			"plugin": "jsx",
+			"status": "skipped"
+		},
+		"notes": "Superseded by labelAssociatedControls."
+	},
+	{
+		"eslint": [
+			{
+				"name": "jsx-a11y/no-onchange",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/tree/HEAD/docs/rules/no-onchange.md"
+			}
+		],
+		"flint": {
+			"name": "changeEventHandlers",
+			"plugin": "jsx",
+			"status": "skipped"
+		},
+		"notes": "No longer necessary in modern browsers."
+	},
+	{
+		"eslint": [
+			{
+				"name": "markdown/fenced-code-meta",
+				"url": "https://github.com/eslint/markdown/blob/main/docs/rules/fenced-code-meta.md"
+			}
+		],
+		"flint": {
+			"name": "fencedCodeMeta",
+			"plugin": "md"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "n/no-hide-core-modules",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-hide-core-modules.md"
+			}
+		],
+		"flint": {
+			"name": "coreModuleHiding",
+			"plugin": "node"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "n/no-restricted-import",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-restricted-import.md"
+			}
+		],
+		"flint": {
+			"name": "restrictedImports",
+			"plugin": "node"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "n/no-top-level-await",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/no-top-level-await.md"
+			}
+		],
+		"flint": {
+			"name": "topLevelAwaits",
+			"plugin": "node"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "n/prefer-global/crypto",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/crypto.md"
+			}
+		],
+		"flint": {
+			"name": "globalCrypto",
+			"plugin": "node"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "n/prefer-global/timers",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/prefer-global/timers.md"
+			}
+		],
+		"flint": {
+			"name": "globalTimers",
+			"plugin": "node"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "n/shebang",
+				"url": "https://github.com/eslint-community/eslint-plugin-n/blob/HEAD/docs/rules/hashbang.md"
+			}
+		],
+		"flint": {
+			"name": "shebangs",
+			"plugin": "node"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "nuxt/no-nuxt-config-test-key",
+				"url": "https://eslint.nuxt.com/packages/plugin#nuxtno-nuxt-config-test-key"
+			}
+		],
+		"flint": {
+			"name": "nuxtConfigTestKeys",
+			"plugin": "vue"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "nuxt/no-page-meta-runtime-values",
+				"url": "https://eslint.nuxt.com/packages/plugin#nuxtno-page-meta-runtime-values"
+			}
+		],
+		"flint": {
+			"name": "pageMetaRuntimeValues",
+			"plugin": "vue"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "nuxt/nuxt-config-keys-order",
+				"url": "https://eslint.nuxt.com/packages/plugin#nuxtnuxt-config-keys-order"
+			}
+		],
+		"flint": {
+			"name": "nuxtConfigKeysOrder",
+			"plugin": "vue"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "package-json/valid-package-definition",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-package-definition.md"
+			}
+		],
+		"flint": {
+			"name": "packageDefinitionValidity",
+			"plugin": "package-json"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "perfectionist/sort-array-includes",
+				"url": "https://perfectionist.dev/rules/sort-array-includes"
+			}
+		],
+		"flint": {
+			"name": "arrayIncludesOrder",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "perfectionist/sort-arrays",
+				"url": "https://perfectionist.dev/rules/sort-arrays"
+			}
+		],
+		"flint": {
+			"name": "arraysOrder",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "perfectionist/sort-enums",
+				"url": "https://perfectionist.dev/rules/sort-enums"
+			}
+		],
+		"flint": {
+			"name": "enumsOrder",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "perfectionist/sort-export-attributes",
+				"url": "https://perfectionist.dev/rules/sort-export-attributes"
+			}
+		],
+		"flint": {
+			"name": "exportAttributesOrder",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "perfectionist/sort-exports",
+				"url": "https://perfectionist.dev/rules/sort-exports"
+			}
+		],
+		"flint": {
+			"name": "exportDeclarationsOrder",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "perfectionist/sort-import-attributes",
+				"url": "https://perfectionist.dev/rules/sort-import-attributes"
+			}
+		],
+		"flint": {
+			"name": "importAttributesOrder",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "perfectionist/sort-imports",
+				"url": "https://perfectionist.dev/rules/sort-imports"
+			}
+		],
+		"flint": {
+			"name": "importsOrder",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "perfectionist/sort-named-imports",
+				"url": "https://perfectionist.dev/rules/sort-named-imports"
+			}
+		],
+		"flint": {
+			"name": "importSpecifiersOrder",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "promise/always-return",
+				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/always-return.md"
+			}
+		],
+		"flint": {
+			"name": "promiseReturns",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "promise/catch-or-return",
+				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/catch-or-return.md"
+			}
+		],
+		"flint": {
+			"name": "promiseCatchReturns",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "promise/no-multiple-resolved",
+				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/no-multiple-resolved.md"
+			}
+		],
+		"flint": {
+			"name": "promiseMultipleResolutions",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "promise/no-native",
+				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/no-native.md"
+			}
+		],
+		"flint": {
+			"name": "nativePromises",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "promise/no-new-statics",
+				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/no-new-statics.md"
+			}
+		],
+		"flint": {
+			"name": "promiseStaticConstructors",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "promise/no-promise-in-callback",
+				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/no-promise-in-callback.md"
+			}
+		],
+		"flint": {
+			"name": "promiseCallbackCreations",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "promise/no-return-wrap",
+				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/no-return-wrap.md"
+			}
+		],
+		"flint": {
+			"name": "promiseReturnWrappers",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "promise/spec-only",
+				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/spec-only.md"
+			}
+		],
+		"flint": {
+			"name": "promiseSpecMethods",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "promise/valid-params",
+				"url": "https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/valid-params.md"
+			}
+		],
+		"flint": {
+			"name": "promiseParameterValidity",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "react/jsx-no-undef",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/jsx-no-undef.md"
+			}
+		],
+		"flint": {
+			"name": "undefinedElements",
+			"plugin": "jsx",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "react/jsx-sort-default-props",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/jsx-sort-default-props.md"
+			}
+		],
+		"flint": {
+			"name": "defaultPropsOrder",
+			"plugin": "jsx",
+			"preset": "sorting"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "react/jsx-space-before-closing",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/jsx-space-before-closing.md"
+			}
+		],
+		"flint": {
+			"name": "closingTagSpaces",
+			"plugin": "jsx",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "react/jsx-uses-vars",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/jsx-uses-vars.md"
+			}
+		],
+		"flint": {
+			"name": "variableUses",
+			"plugin": "jsx",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "react/no-unsafe",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/no-unsafe.md"
+			}
+		],
+		"flint": {
+			"name": "unsafeLifecycleMethods",
+			"plugin": "jsx",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "react/prefer-stateless-function",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/prefer-stateless-function.md"
+			}
+		],
+		"flint": {
+			"name": "statelessComponents",
+			"plugin": "jsx",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "react/require-render-return",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/require-render-return.md"
+			}
+		],
+		"flint": {
+			"name": "renderReturns",
+			"plugin": "jsx",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "regexp/sort-character-class-elements",
+				"url": "https://ota-meshi.github.io/eslint-plugin-regexp/rules/sort-character-class-elements.html"
+			}
+		],
+		"flint": {
+			"name": "characterClassElementsOrder",
+			"plugin": "ts"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "solid/jsx-uses-vars",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/jsx-uses-vars.md"
+			}
+		],
+		"flint": {
+			"name": "variableUses",
+			"plugin": "solid"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "solid/prefer-classlist",
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/prefer-classlist.md"
+			}
+		],
+		"flint": {
+			"name": "classListProps",
+			"plugin": "solid"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/consistent-template-literal-escape",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/rules/consistent-template-literal-escape.md"
+			}
+		],
+		"flint": {
+			"name": "templateLiteralEscapesConsistency",
+			"plugin": "ts",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/empty-brace-spaces",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/rules/empty-brace-spaces.md"
+			}
+		],
+		"flint": {
+			"name": "emptyBraceSpaces",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/isolated-functions",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/rules/isolated-functions.md"
+			}
+		],
+		"flint": {
+			"name": "isolatedFunctions",
+			"plugin": "ts",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/no-array-push-push",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/deleted-and-deprecated-rules.md#no-array-push-push"
+			}
+		],
+		"flint": {
+			"name": "arrayPushCalls",
+			"plugin": "ts",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/no-immediate-mutation",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/rules/no-immediate-mutation.md"
+			}
+		],
+		"flint": {
+			"name": "immediateMutations",
+			"plugin": "ts",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/no-instanceof-array",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/deleted-and-deprecated-rules.md#no-instanceof-array"
+			}
+		],
+		"flint": {
+			"name": "arrayInstanceOfChecks",
+			"plugin": "ts",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/no-length-as-slice-end",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/deleted-and-deprecated-rules.md#no-length-as-slice-end"
+			}
+		],
+		"flint": {
+			"name": "sliceEndLengths",
+			"plugin": "ts",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/no-this-assignment",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/rules/no-this-assignment.md"
+			}
+		],
+		"flint": {
+			"name": "thisAssignments",
+			"plugin": "ts",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/no-useless-collection-argument",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/rules/no-useless-collection-argument.md"
+			}
+		],
+		"flint": {
+			"name": "unnecessaryCollectionArguments",
+			"plugin": "ts",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/no-useless-iterator-to-array",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/rules/no-useless-iterator-to-array.md"
+			}
+		],
+		"flint": {
+			"name": "unnecessaryIteratorArrays",
+			"plugin": "ts",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/prefer-response-static-json",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/rules/prefer-response-static-json.md"
+			}
+		],
+		"flint": {
+			"name": "responseStaticJsonMethods",
+			"plugin": "ts",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/prefer-simple-condition-first",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/rules/prefer-simple-condition-first.md"
+			}
+		],
+		"flint": {
+			"name": "simpleConditionOrder",
+			"plugin": "ts",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/prefer-spread",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/rules/prefer-spread.md"
+			}
+		],
+		"flint": {
+			"name": "spreadSyntaxes",
+			"plugin": "ts",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "unicorn/switch-case-break-position",
+				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v64.0.0/docs/rules/switch-case-break-position.md"
+			}
+		],
+		"flint": {
+			"name": "switchCaseBreakPositions",
+			"plugin": "ts",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vitest/consistent-each-for",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/consistent-each-for.md"
+			}
+		],
+		"flint": {
+			"name": "eachForConsistency",
+			"plugin": "vitest"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vitest/no-done-callback",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-done-callback.md"
+			}
+		],
+		"flint": {
+			"name": "doneCallbacks",
+			"plugin": "vitest"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vitest/no-importing-vitest-globals",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-importing-vitest-globals.md"
+			}
+		],
+		"flint": {
+			"name": "vitestGlobalImporting",
+			"plugin": "vitest"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vitest/no-unneeded-async-expect-function",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-unneeded-async-expect-function.md"
+			}
+		],
+		"flint": {
+			"name": "unnecessaryAsyncExpectFunctions",
+			"plugin": "vitest"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vitest/prefer-called-once",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-called-once.md"
+			}
+		],
+		"flint": {
+			"name": "calledOnceAssertions",
+			"plugin": "vitest"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vitest/prefer-to-be-falsy",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-to-be-falsy.md"
+			}
+		],
+		"flint": {
+			"name": "falsyMatchers",
+			"plugin": "vitest"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vitest/prefer-to-be-truthy",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-to-be-truthy.md"
+			}
+		],
+		"flint": {
+			"name": "truthyMatchers",
+			"plugin": "vitest"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vitest/prefer-to-have-been-called-times",
+				"url": "https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-to-have-been-called-times.md"
+			}
+		],
+		"flint": {
+			"name": "toHaveBeenCalledTimesAssertions",
+			"plugin": "vitest"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/array-bracket-newline",
+				"url": "https://eslint.vuejs.org/rules/array-bracket-newline.html"
+			}
+		],
+		"flint": {
+			"name": "arrayBracketNewlines",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/array-bracket-spacing",
+				"url": "https://eslint.vuejs.org/rules/array-bracket-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "arrayBracketSpaces",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/array-element-newline",
+				"url": "https://eslint.vuejs.org/rules/array-element-newline.html"
+			}
+		],
+		"flint": {
+			"name": "arrayElementNewlines",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/arrow-spacing",
+				"url": "https://eslint.vuejs.org/rules/arrow-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "arrowSpaces",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/block-lang",
+				"url": "https://eslint.vuejs.org/rules/block-lang.html"
+			}
+		],
+		"flint": {
+			"name": "blockLanguages",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/block-spacing",
+				"url": "https://eslint.vuejs.org/rules/block-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "blockSpaces",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/block-tag-newline",
+				"url": "https://eslint.vuejs.org/rules/block-tag-newline.html"
+			}
+		],
+		"flint": {
+			"name": "blockTagNewlines",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/brace-style",
+				"url": "https://eslint.vuejs.org/rules/brace-style.html"
+			}
+		],
+		"flint": {
+			"name": "braceStyles",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/camelcase",
+				"url": "https://eslint.vuejs.org/rules/camelcase.html"
+			}
+		],
+		"flint": {
+			"name": "camelCaseNames",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/comma-dangle",
+				"url": "https://eslint.vuejs.org/rules/comma-dangle.html"
+			}
+		],
+		"flint": {
+			"name": "trailingCommas",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/comma-spacing",
+				"url": "https://eslint.vuejs.org/rules/comma-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "commaSpaces",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/comma-style",
+				"url": "https://eslint.vuejs.org/rules/comma-style.html"
+			}
+		],
+		"flint": {
+			"name": "commaStyles",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/comment-directive",
+				"url": "https://eslint.vuejs.org/rules/comment-directive.html"
+			}
+		],
+		"flint": {
+			"name": "commentDirectives",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/component-api-style",
+				"url": "https://eslint.vuejs.org/rules/component-api-style.html"
+			}
+		],
+		"flint": {
+			"name": "componentApiStyles",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/component-name-in-template-casing",
+				"url": "https://eslint.vuejs.org/rules/component-name-in-template-casing.html"
+			}
+		],
+		"flint": {
+			"name": "componentTemplateNameCasing",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/component-options-name-casing",
+				"url": "https://eslint.vuejs.org/rules/component-options-name-casing.html"
+			}
+		],
+		"flint": {
+			"name": "componentOptionNameCasing",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/custom-event-name-casing",
+				"url": "https://eslint.vuejs.org/rules/custom-event-name-casing.html"
+			}
+		],
+		"flint": {
+			"name": "customEventNameCasing",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/define-emits-declaration",
+				"url": "https://eslint.vuejs.org/rules/define-emits-declaration.html"
+			}
+		],
+		"flint": {
+			"name": "defineEmitsDeclarations",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/define-macros-order",
+				"url": "https://eslint.vuejs.org/rules/define-macros-order.html"
+			}
+		],
+		"flint": {
+			"name": "defineMacrosOrder",
+			"plugin": "vue",
+			"preset": "sorting"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/define-props-declaration",
+				"url": "https://eslint.vuejs.org/rules/define-props-declaration.html"
+			}
+		],
+		"flint": {
+			"name": "definePropsDeclarations",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/define-props-destructuring",
+				"url": "https://eslint.vuejs.org/rules/define-props-destructuring.html"
+			}
+		],
+		"flint": {
+			"name": "definePropsDestructuring",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/dot-location",
+				"url": "https://eslint.vuejs.org/rules/dot-location.html"
+			}
+		],
+		"flint": {
+			"name": "dotLocations",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/dot-notation",
+				"url": "https://eslint.vuejs.org/rules/dot-notation.html"
+			}
+		],
+		"flint": {
+			"name": "dotNotation",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/enforce-style-attribute",
+				"url": "https://eslint.vuejs.org/rules/enforce-style-attribute.html"
+			}
+		],
+		"flint": {
+			"name": "styleAttributes",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/eqeqeq",
+				"url": "https://eslint.vuejs.org/rules/eqeqeq.html"
+			}
+		],
+		"flint": {
+			"name": "strictEqualityOperators",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/func-call-spacing",
+				"url": "https://eslint.vuejs.org/rules/func-call-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "functionCallSpaces",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/html-button-has-type",
+				"url": "https://eslint.vuejs.org/rules/html-button-has-type.html"
+			}
+		],
+		"flint": {
+			"name": "buttonTypes",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/html-comment-content-newline",
+				"url": "https://eslint.vuejs.org/rules/html-comment-content-newline.html"
+			}
+		],
+		"flint": {
+			"name": "commentContentNewlines",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/html-comment-content-spacing",
+				"url": "https://eslint.vuejs.org/rules/html-comment-content-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "commentContentSpaces",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/html-comment-indent",
+				"url": "https://eslint.vuejs.org/rules/html-comment-indent.html"
+			}
+		],
+		"flint": {
+			"name": "commentIndentation",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/jsx-uses-vars",
+				"url": "https://eslint.vuejs.org/rules/jsx-uses-vars.html"
+			}
+		],
+		"flint": {
+			"name": "jsxVariableUses",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/key-spacing",
+				"url": "https://eslint.vuejs.org/rules/key-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "keySpaces",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/keyword-spacing",
+				"url": "https://eslint.vuejs.org/rules/keyword-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "keywordSpaces",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/match-component-file-name",
+				"url": "https://eslint.vuejs.org/rules/match-component-file-name.html"
+			}
+		],
+		"flint": {
+			"name": "componentFileNameMatches",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/match-component-import-name",
+				"url": "https://eslint.vuejs.org/rules/match-component-import-name.html"
+			}
+		],
+		"flint": {
+			"name": "componentImportNameMatches",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/max-len",
+				"url": "https://eslint.vuejs.org/rules/max-len.html"
+			}
+		],
+		"flint": {
+			"name": "lineLengths",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/max-lines-per-block",
+				"url": "https://eslint.vuejs.org/rules/max-lines-per-block.html"
+			}
+		],
+		"flint": {
+			"name": "blockLineLimits",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/max-props",
+				"url": "https://eslint.vuejs.org/rules/max-props.html"
+			}
+		],
+		"flint": {
+			"name": "propLimits",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/max-template-depth",
+				"url": "https://eslint.vuejs.org/rules/max-template-depth.html"
+			}
+		],
+		"flint": {
+			"name": "templateDepthLimits",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/multiline-ternary",
+				"url": "https://eslint.vuejs.org/rules/multiline-ternary.html"
+			}
+		],
+		"flint": {
+			"name": "multilineTernaries",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/new-line-between-multi-line-property",
+				"url": "https://eslint.vuejs.org/rules/new-line-between-multi-line-property.html"
+			}
+		],
+		"flint": {
+			"name": "multilinePropertyNewlines",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/next-tick-style",
+				"url": "https://eslint.vuejs.org/rules/next-tick-style.html"
+			}
+		],
+		"flint": {
+			"name": "nextTickStyles",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-bare-strings-in-template",
+				"url": "https://eslint.vuejs.org/rules/no-bare-strings-in-template.html"
+			}
+		],
+		"flint": {
+			"name": "templateBareStrings",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-boolean-default",
+				"url": "https://eslint.vuejs.org/rules/no-boolean-default.html"
+			}
+		],
+		"flint": {
+			"name": "booleanDefaults",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-console",
+				"url": "https://eslint.vuejs.org/rules/no-console.html"
+			}
+		],
+		"flint": {
+			"name": "consoleCalls",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-constant-condition",
+				"url": "https://eslint.vuejs.org/rules/no-constant-condition.html"
+			}
+		],
+		"flint": {
+			"name": "constantConditions",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-custom-modifiers-on-v-model",
+				"url": "https://eslint.vuejs.org/rules/no-custom-modifiers-on-v-model.html"
+			}
+		],
+		"flint": {
+			"name": "customModelModifiers",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-duplicate-attr-inheritance",
+				"url": "https://eslint.vuejs.org/rules/no-duplicate-attr-inheritance.html"
+			}
+		],
+		"flint": {
+			"name": "attributeInheritanceDuplicates",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-duplicate-class-names",
+				"url": "https://eslint.vuejs.org/rules/no-duplicate-class-names.html"
+			}
+		],
+		"flint": {
+			"name": "classNameDuplicates",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-empty-component-block",
+				"url": "https://eslint.vuejs.org/rules/no-empty-component-block.html"
+			}
+		],
+		"flint": {
+			"name": "emptyComponentBlocks",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-empty-pattern",
+				"url": "https://eslint.vuejs.org/rules/no-empty-pattern.html"
+			}
+		],
+		"flint": {
+			"name": "emptyPatterns",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-extra-parens",
+				"url": "https://eslint.vuejs.org/rules/no-extra-parens.html"
+			}
+		],
+		"flint": {
+			"name": "unnecessaryParentheses",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-implicit-coercion",
+				"url": "https://eslint.vuejs.org/rules/no-implicit-coercion.html"
+			}
+		],
+		"flint": {
+			"name": "implicitCoercions",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-import-compiler-macros",
+				"url": "https://eslint.vuejs.org/rules/no-import-compiler-macros.html"
+			}
+		],
+		"flint": {
+			"name": "compilerMacroImports",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-irregular-whitespace",
+				"url": "https://eslint.vuejs.org/rules/no-irregular-whitespace.html"
+			}
+		],
+		"flint": {
+			"name": "irregularWhitespace",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-literals-in-template",
+				"url": "https://eslint.vuejs.org/rules/no-literals-in-template.html"
+			}
+		],
+		"flint": {
+			"name": "templateLiterals",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-loss-of-precision",
+				"url": "https://eslint.vuejs.org/rules/no-loss-of-precision.html"
+			}
+		],
+		"flint": {
+			"name": "precisionLoss",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-multiple-objects-in-class",
+				"url": "https://eslint.vuejs.org/rules/no-multiple-objects-in-class.html"
+			}
+		],
+		"flint": {
+			"name": "classMultipleObjects",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-multiple-template-root",
+				"url": "https://eslint.vuejs.org/rules/no-multiple-template-root.html"
+			}
+		],
+		"flint": {
+			"name": "templateRootMultiplicity",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-negated-condition",
+				"url": "https://eslint.vuejs.org/rules/no-negated-condition.html"
+			}
+		],
+		"flint": {
+			"name": "negatedConditions",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-negated-v-if-condition",
+				"url": "https://eslint.vuejs.org/rules/no-negated-v-if-condition.html"
+			}
+		],
+		"flint": {
+			"name": "negatedIfConditions",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-potential-component-option-typo",
+				"url": "https://eslint.vuejs.org/rules/no-potential-component-option-typo.html"
+			}
+		],
+		"flint": {
+			"name": "componentOptionTypos",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-ref-object-reactivity-loss",
+				"url": "https://eslint.vuejs.org/rules/no-ref-object-reactivity-loss.html"
+			}
+		],
+		"flint": {
+			"name": "refObjectReactivityLoss",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-restricted-block",
+				"url": "https://eslint.vuejs.org/rules/no-restricted-block.html"
+			}
+		],
+		"flint": {
+			"name": "restrictedBlocks",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-restricted-call-after-await",
+				"url": "https://eslint.vuejs.org/rules/no-restricted-call-after-await.html"
+			}
+		],
+		"flint": {
+			"name": "restrictedCallsAfterAwaits",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-restricted-class",
+				"url": "https://eslint.vuejs.org/rules/no-restricted-class.html"
+			}
+		],
+		"flint": {
+			"name": "restrictedClasses",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-restricted-component-names",
+				"url": "https://eslint.vuejs.org/rules/no-restricted-component-names.html"
+			}
+		],
+		"flint": {
+			"name": "restrictedComponentNames",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-restricted-component-options",
+				"url": "https://eslint.vuejs.org/rules/no-restricted-component-options.html"
+			}
+		],
+		"flint": {
+			"name": "restrictedComponentOptions",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-restricted-custom-event",
+				"url": "https://eslint.vuejs.org/rules/no-restricted-custom-event.html"
+			}
+		],
+		"flint": {
+			"name": "restrictedCustomEvents",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-restricted-html-elements",
+				"url": "https://eslint.vuejs.org/rules/no-restricted-html-elements.html"
+			}
+		],
+		"flint": {
+			"name": "restrictedHtmlElements",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-restricted-props",
+				"url": "https://eslint.vuejs.org/rules/no-restricted-props.html"
+			}
+		],
+		"flint": {
+			"name": "restrictedProps",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-restricted-static-attribute",
+				"url": "https://eslint.vuejs.org/rules/no-restricted-static-attribute.html"
+			}
+		],
+		"flint": {
+			"name": "restrictedStaticAttributes",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-restricted-syntax",
+				"url": "https://eslint.vuejs.org/rules/no-restricted-syntax.html"
+			}
+		],
+		"flint": {
+			"name": "restrictedSyntaxes",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-restricted-v-bind",
+				"url": "https://eslint.vuejs.org/rules/no-restricted-v-bind.html"
+			}
+		],
+		"flint": {
+			"name": "restrictedBindDirectives",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-restricted-v-on",
+				"url": "https://eslint.vuejs.org/rules/no-restricted-v-on.html"
+			}
+		],
+		"flint": {
+			"name": "restrictedOnDirectives",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-root-v-if",
+				"url": "https://eslint.vuejs.org/rules/no-root-v-if.html"
+			}
+		],
+		"flint": {
+			"name": "rootIfDirectives",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-setup-props-reactivity-loss",
+				"url": "https://eslint.vuejs.org/rules/no-setup-props-reactivity-loss.html"
+			}
+		],
+		"flint": {
+			"name": "setupPropsReactivityLoss",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-sparse-arrays",
+				"url": "https://eslint.vuejs.org/rules/no-sparse-arrays.html"
+			}
+		],
+		"flint": {
+			"name": "sparseArrays",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-static-inline-styles",
+				"url": "https://eslint.vuejs.org/rules/no-static-inline-styles.html"
+			}
+		],
+		"flint": {
+			"name": "staticInlineStyles",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-template-target-blank",
+				"url": "https://eslint.vuejs.org/rules/no-template-target-blank.html"
+			}
+		],
+		"flint": {
+			"name": "templateTargetBlanks",
+			"plugin": "vue",
+			"preset": "security"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-this-in-before-route-enter",
+				"url": "https://eslint.vuejs.org/rules/no-this-in-before-route-enter.html"
+			}
+		],
+		"flint": {
+			"name": "beforeRouteEnterThisAccesses",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-undef-components",
+				"url": "https://eslint.vuejs.org/rules/no-undef-components.html"
+			}
+		],
+		"flint": {
+			"name": "undefinedComponents",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-undef-directives",
+				"url": "https://eslint.vuejs.org/rules/no-undef-directives.html"
+			}
+		],
+		"flint": {
+			"name": "undefinedDirectives",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-undef-properties",
+				"url": "https://eslint.vuejs.org/rules/no-undef-properties.html"
+			}
+		],
+		"flint": {
+			"name": "undefinedProperties",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-unsupported-features",
+				"url": "https://eslint.vuejs.org/rules/no-unsupported-features.html"
+			}
+		],
+		"flint": {
+			"name": "unsupportedFeatures",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-unused-emit-declarations",
+				"url": "https://eslint.vuejs.org/rules/no-unused-emit-declarations.html"
+			}
+		],
+		"flint": {
+			"name": "unusedEmitDeclarations",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-unused-properties",
+				"url": "https://eslint.vuejs.org/rules/no-unused-properties.html"
+			}
+		],
+		"flint": {
+			"name": "unusedProperties",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-unused-refs",
+				"url": "https://eslint.vuejs.org/rules/no-unused-refs.html"
+			}
+		],
+		"flint": {
+			"name": "unusedRefs",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-use-v-else-with-v-for",
+				"url": "https://eslint.vuejs.org/rules/no-use-v-else-with-v-for.html"
+			}
+		],
+		"flint": {
+			"name": "elseDirectivesWithForDirectives",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-useless-concat",
+				"url": "https://eslint.vuejs.org/rules/no-useless-concat.html"
+			}
+		],
+		"flint": {
+			"name": "unnecessaryConcatenations",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-useless-mustaches",
+				"url": "https://eslint.vuejs.org/rules/no-useless-mustaches.html"
+			}
+		],
+		"flint": {
+			"name": "unnecessaryMustaches",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-useless-v-bind",
+				"url": "https://eslint.vuejs.org/rules/no-useless-v-bind.html"
+			}
+		],
+		"flint": {
+			"name": "unnecessaryBindDirectives",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-v-for-template-key",
+				"url": "https://eslint.vuejs.org/rules/no-v-for-template-key.html"
+			}
+		],
+		"flint": {
+			"name": "templateForKeys",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-v-model-argument",
+				"url": "https://eslint.vuejs.org/rules/no-v-model-argument.html"
+			}
+		],
+		"flint": {
+			"name": "modelDirectiveArguments",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/no-v-text",
+				"url": "https://eslint.vuejs.org/rules/no-v-text.html"
+			}
+		],
+		"flint": {
+			"name": "textDirectives",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/object-curly-newline",
+				"url": "https://eslint.vuejs.org/rules/object-curly-newline.html"
+			}
+		],
+		"flint": {
+			"name": "objectCurlyNewlines",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/object-curly-spacing",
+				"url": "https://eslint.vuejs.org/rules/object-curly-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "objectCurlySpaces",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/object-property-newline",
+				"url": "https://eslint.vuejs.org/rules/object-property-newline.html"
+			}
+		],
+		"flint": {
+			"name": "objectPropertyNewlines",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/object-shorthand",
+				"url": "https://eslint.vuejs.org/rules/object-shorthand.html"
+			}
+		],
+		"flint": {
+			"name": "objectShorthands",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/operator-linebreak",
+				"url": "https://eslint.vuejs.org/rules/operator-linebreak.html"
+			}
+		],
+		"flint": {
+			"name": "operatorLinebreaks",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/padding-line-between-blocks",
+				"url": "https://eslint.vuejs.org/rules/padding-line-between-blocks.html"
+			}
+		],
+		"flint": {
+			"name": "blockPaddingLines",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/padding-line-between-tags",
+				"url": "https://eslint.vuejs.org/rules/padding-line-between-tags.html"
+			}
+		],
+		"flint": {
+			"name": "tagPaddingLines",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/padding-lines-in-component-definition",
+				"url": "https://eslint.vuejs.org/rules/padding-lines-in-component-definition.html"
+			}
+		],
+		"flint": {
+			"name": "componentDefinitionPaddingLines",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/prefer-define-options",
+				"url": "https://eslint.vuejs.org/rules/prefer-define-options.html"
+			}
+		],
+		"flint": {
+			"name": "defineOptionsMacros",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/prefer-prop-type-boolean-first",
+				"url": "https://eslint.vuejs.org/rules/prefer-prop-type-boolean-first.html"
+			}
+		],
+		"flint": {
+			"name": "booleanPropTypePositions",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/prefer-separate-static-class",
+				"url": "https://eslint.vuejs.org/rules/prefer-separate-static-class.html"
+			}
+		],
+		"flint": {
+			"name": "separateStaticClasses",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/prefer-single-event-payload",
+				"url": "https://eslint.vuejs.org/rules/prefer-single-event-payload.html"
+			}
+		],
+		"flint": {
+			"name": "singleEventPayloads",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/prefer-template",
+				"url": "https://eslint.vuejs.org/rules/prefer-template.html"
+			}
+		],
+		"flint": {
+			"name": "templateStrings",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/prefer-true-attribute-shorthand",
+				"url": "https://eslint.vuejs.org/rules/prefer-true-attribute-shorthand.html"
+			}
+		],
+		"flint": {
+			"name": "trueAttributeShorthands",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/prefer-use-template-ref",
+				"url": "https://eslint.vuejs.org/rules/prefer-use-template-ref.html"
+			}
+		],
+		"flint": {
+			"name": "templateRefs",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/prefer-v-model",
+				"url": "https://eslint.vuejs.org/rules/prefer-v-model.html"
+			}
+		],
+		"flint": {
+			"name": "modelDirectives",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/quote-props",
+				"url": "https://eslint.vuejs.org/rules/quote-props.html"
+			}
+		],
+		"flint": {
+			"name": "propertyQuotes",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/require-default-export",
+				"url": "https://eslint.vuejs.org/rules/require-default-export.html"
+			}
+		],
+		"flint": {
+			"name": "defaultExports",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/require-direct-export",
+				"url": "https://eslint.vuejs.org/rules/require-direct-export.html"
+			}
+		],
+		"flint": {
+			"name": "directExports",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/require-emit-validator",
+				"url": "https://eslint.vuejs.org/rules/require-emit-validator.html"
+			}
+		],
+		"flint": {
+			"name": "emitValidators",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/require-explicit-slots",
+				"url": "https://eslint.vuejs.org/rules/require-explicit-slots.html"
+			}
+		],
+		"flint": {
+			"name": "explicitSlots",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/require-expose",
+				"url": "https://eslint.vuejs.org/rules/require-expose.html"
+			}
+		],
+		"flint": {
+			"name": "exposeMacros",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/require-macro-variable-name",
+				"url": "https://eslint.vuejs.org/rules/require-macro-variable-name.html"
+			}
+		],
+		"flint": {
+			"name": "macroVariableNames",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/require-name-property",
+				"url": "https://eslint.vuejs.org/rules/require-name-property.html"
+			}
+		],
+		"flint": {
+			"name": "nameProperties",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/require-prop-comment",
+				"url": "https://eslint.vuejs.org/rules/require-prop-comment.html"
+			}
+		],
+		"flint": {
+			"name": "propComments",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/require-typed-object-prop",
+				"url": "https://eslint.vuejs.org/rules/require-typed-object-prop.html"
+			}
+		],
+		"flint": {
+			"name": "typedObjectProps",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/require-typed-ref",
+				"url": "https://eslint.vuejs.org/rules/require-typed-ref.html"
+			}
+		],
+		"flint": {
+			"name": "typedRefs",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/restricted-component-names",
+				"url": "https://eslint.vuejs.org/rules/restricted-component-names.html"
+			}
+		],
+		"flint": {
+			"name": "restrictedComponentNamesLegacy",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/script-indent",
+				"url": "https://eslint.vuejs.org/rules/script-indent.html"
+			}
+		],
+		"flint": {
+			"name": "scriptIndentation",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/slot-name-casing",
+				"url": "https://eslint.vuejs.org/rules/slot-name-casing.html"
+			}
+		],
+		"flint": {
+			"name": "slotNameCasing",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/sort-keys",
+				"url": "https://eslint.vuejs.org/rules/sort-keys.html"
+			}
+		],
+		"flint": {
+			"name": "keysOrder",
+			"plugin": "vue",
+			"preset": "sorting"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/space-in-parens",
+				"url": "https://eslint.vuejs.org/rules/space-in-parens.html"
+			}
+		],
+		"flint": {
+			"name": "parenthesisSpaces",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/space-infix-ops",
+				"url": "https://eslint.vuejs.org/rules/space-infix-ops.html"
+			}
+		],
+		"flint": {
+			"name": "infixOperatorSpaces",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/space-unary-ops",
+				"url": "https://eslint.vuejs.org/rules/space-unary-ops.html"
+			}
+		],
+		"flint": {
+			"name": "unaryOperatorSpaces",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/static-class-names-order",
+				"url": "https://eslint.vuejs.org/rules/static-class-names-order.html"
+			}
+		],
+		"flint": {
+			"name": "staticClassNamesOrder",
+			"plugin": "vue",
+			"preset": "sorting"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/template-curly-spacing",
+				"url": "https://eslint.vuejs.org/rules/template-curly-spacing.html"
+			}
+		],
+		"flint": {
+			"name": "templateCurlySpaces",
+			"plugin": "vue",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/v-for-delimiter-style",
+				"url": "https://eslint.vuejs.org/rules/v-for-delimiter-style.html"
+			}
+		],
+		"flint": {
+			"name": "forDelimiterStyles",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/v-if-else-key",
+				"url": "https://eslint.vuejs.org/rules/v-if-else-key.html"
+			}
+		],
+		"flint": {
+			"name": "ifElseKeys",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/v-on-handler-style",
+				"url": "https://eslint.vuejs.org/rules/v-on-handler-style.html"
+			}
+		],
+		"flint": {
+			"name": "onHandlerStyles",
+			"plugin": "vue",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/valid-model-definition",
+				"url": "https://eslint.vuejs.org/rules/valid-model-definition.html"
+			}
+		],
+		"flint": {
+			"name": "modelDefinitionValidity",
+			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "vue/valid-v-bind-sync",
+				"url": "https://eslint.vuejs.org/rules/valid-v-bind-sync.html"
+			}
+		],
+		"flint": {
+			"name": "bindSyncValidity",
+			"plugin": "vue",
+			"preset": "logical"
 		}
 	}
 ]

@@ -10,6 +10,7 @@ catalogs:
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
     "@eslint/js": 10.0.1
     "@eslint/markdown": 8.0.0
+    "@typescript-eslint/eslint-plugin": 8.58.1
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
     "@types/node": 24.12.0
@@ -86,6 +87,10 @@ overrides:
 peerDependencyRules:
   allowedVersions:
     "@konami-emoji-blast/astro@0.2.0>astro": "6"
+    eslint-plugin-import>eslint: "10"
+    eslint-plugin-jsx-a11y>eslint: "10"
+    eslint-plugin-react>eslint: "10"
+    eslint-plugin-solid>eslint: "10"
 
 shellEmulator: true
 strictDepBuilds: true

@@ -2,9 +2,31 @@ import { builtinRules } from "eslint/use-at-your-own-risk";
 import { describe, expect, it } from "vitest";
 
 import { comparisons, getComparisonId } from "./index.ts";
-import { groupByLinterAndPlugin } from "./test-util.ts";
+import {
+	findESLintRulesInCore,
+	findESLintRulesInPlugin,
+	pluginsRulesByName,
+} from "./test-util.ts";
 
-const groupedData = groupByLinterAndPlugin(comparisons);
+const skippedESLintRulesByPluginName = new Map([
+	[
+		"react-hooks",
+		new Set([
+			"capitalized-calls",
+			"exhaustive-effect-dependencies",
+			"fbt",
+			"hooks",
+			"invariant",
+			"memo-dependencies",
+			"memoized-effect-dependencies",
+			"no-deriving-state-in-effects",
+			"rule-suppression",
+			"syntax",
+			"todo",
+			"void-use-memo",
+		]),
+	],
+]);
 
 describe("data.json", () => {
 	it("does not include any duplicate Flint rules", () => {
@@ -37,12 +59,64 @@ describe("data.json", () => {
 			);
 
 			const builtinESLintRuleNamesCoveredByFlint = new Set(
-				Object.keys(groupedData.eslint.builtin).sort(),
+				findESLintRulesInCore().map((rule) => rule.name),
 			);
 
 			expect(builtinESLintRuleNamesCoveredByFlint).toEqual(
 				builtinESLintRuleNames,
 			);
+		});
+
+		it.each([
+			"@eslint-community/eslint-comments",
+			"@next/next",
+			"@typescript-eslint",
+			"astro",
+			"erasable-syntax-only",
+			"eslint-plugin-eslint-plugin",
+			"import",
+			"jsdoc",
+			"json",
+			"jsonc",
+			"jsx-a11y",
+			"markdown",
+			"n",
+			"nuxt",
+			"package-json",
+			"perfectionist",
+			"promise",
+			"react",
+			"react-hooks",
+			"regexp",
+			"solid",
+			"svelte",
+			"unicorn",
+			"vitest",
+			"vue",
+			"yml",
+		])("includes all %s rules", (pluginName) => {
+			const rules = pluginsRulesByName.get(pluginName);
+			if (!rules) {
+				throw new Error(`Unknown plugin: ${pluginName}`);
+			}
+
+			const pluginRuleNames = new Set(
+				Object.keys(rules)
+					.filter(
+						(ruleName) =>
+							!skippedESLintRulesByPluginName.get(pluginName)?.has(ruleName),
+					)
+					.map((ruleName) => `${pluginName}/${ruleName}`)
+					.sort(),
+			);
+
+			const pluginESLintRuleNamesCoveredByFlint = new Set(
+				findESLintRulesInPlugin(pluginName)
+					.map((rule) => rule.name)
+					.sort(),
+			);
+
+			expect(pluginESLintRuleNamesCoveredByFlint).toEqual(pluginRuleNames);
 		});
 	});
 });
