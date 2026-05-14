@@ -7,6 +7,7 @@ import binNameCasing from "./rules/binNameCasing.ts";
 import dependencyUniqueness from "./rules/dependencyUniqueness.ts";
 import emptyFields from "./rules/emptyFields.ts";
 import privatePresence from "./rules/privatePresence.ts";
+import publishConfigRedundancy from "./rules/publishConfigRedundancy.ts";
 import repositoryShorthand from "./rules/repositoryShorthand.ts";
 import scriptsNameCasing from "./rules/scriptsNameCasing.ts";
 
@@ -21,6 +22,7 @@ export const packageJson = createPlugin({
 		dependencyUniqueness,
 		emptyFields,
 		privatePresence,
+		publishConfigRedundancy,
 		repositoryShorthand,
 		scriptsNameCasing,
 		...Object.values(directPropertyPresenceRules),
