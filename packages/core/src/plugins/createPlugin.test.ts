@@ -60,6 +60,20 @@ describe(createPlugin, () => {
 		it("does not type unused presets", () => {
 			expectTypeOf(plugin.presets).not.toHaveProperty("third");
 		});
+
+		// eslint-disable-next-line vitest/expect-expect
+		it("types rule about properties exactly", () => {
+			ruleCreator.createRule(stubLanguage, {
+				about: {
+					description: "",
+					id: "withInvalidPresetProperty",
+					// @ts-expect-error -- Rule about metadata must use presets, not preset.
+					preset: "first",
+				},
+				messages: stubMessages,
+				setup: vi.fn(),
+			});
+		});
 	});
 
 	describe("rules", () => {

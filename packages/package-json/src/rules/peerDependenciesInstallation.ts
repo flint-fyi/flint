@@ -59,18 +59,16 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 					for (const dependency of peerDependencies.initializer.properties) {
 						if (
-							dependency.kind !== SyntaxKind.PropertyAssignment ||
-							dependency.name.kind !== SyntaxKind.StringLiteral ||
-							devDependencyNames.has(dependency.name.text)
+							dependency.kind === SyntaxKind.PropertyAssignment &&
+							dependency.name.kind === SyntaxKind.StringLiteral &&
+							!devDependencyNames.has(dependency.name.text)
 						) {
-							continue;
+							context.report({
+								data: { name: dependency.name.text },
+								message: "missingDevDependency",
+								range: getJsonNodeRange(dependency.name, sourceFile),
+							});
 						}
-
-						context.report({
-							data: { name: dependency.name.text },
-							message: "missingDevDependency",
-							range: getJsonNodeRange(dependency.name, sourceFile),
-						});
 					}
 				},
 			},

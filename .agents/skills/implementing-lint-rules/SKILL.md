@@ -25,7 +25,7 @@ Example: instead of messages like _"Octal escape sequences should not be used in
 
 ## AST Node Handling
 
-When you have an `AST.Expression` or `AST.*Declaration`, check whether nodes are certain types using a comparision like `node.kind === ts.SyntaxKind.BinaryExpression`.
+When you have an `AST.Expression` or `AST.*Declaration`, check whether nodes are certain types using a comparison like `node.kind === ts.SyntaxKind.BinaryExpression`.
 
 When you have a `ts.Node` type, however, you'll have to use `ts.is*` checks such as `ts.isBinaryExpression`, or failing that `tsutils` from `ts-api-utils` to get nice type narrowing.
 
@@ -37,7 +37,7 @@ Use `hasSameTokens` or similar.
 
 ## Unit Tests
 
-> Tip: to re-run just the tests for a rule, run `npx vitest run <rulename>`.
+> Tip: to re-run just the tests for a rule, run `npx vitest run <rule-name>`.
 > Example: to rerun tests for the `unnecessaryCatches` rule, run `npx vitest run unnecessaryCatches`.
 
 Look at other rule tests and try to mirror their layouts and styles as much as possible.
