@@ -539,7 +539,7 @@
 		"flint": {
 			"name": "aboutSchemaDescriptions",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -552,7 +552,7 @@
 		"flint": {
 			"name": "aboutSchemas",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -565,7 +565,7 @@
 		"flint": {
 			"name": "aboutSuggestions",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -578,7 +578,7 @@
 		"flint": {
 			"name": "aboutTypes",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -591,7 +591,7 @@
 		"flint": {
 			"name": "deprecatedContextMethods",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -604,7 +604,7 @@
 		"flint": {
 			"name": "deprecatedMessagePlaceholders",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -617,7 +617,7 @@
 		"flint": {
 			"name": "deprecatedMessageStrings",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -630,7 +630,7 @@
 		"flint": {
 			"name": "deprecatedReplacedBy",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -643,7 +643,7 @@
 		"flint": {
 			"name": "deprecatedReportAPIs",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -656,7 +656,7 @@
 		"flint": {
 			"name": "deprecatedRuleFunctions",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -669,7 +669,7 @@
 		"flint": {
 			"name": "deprecatedSchemaDefaults",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -682,7 +682,7 @@
 		"flint": {
 			"name": "deprecatedTextReplacements",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -695,7 +695,7 @@
 		"flint": {
 			"name": "fixerReturns",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -716,7 +716,7 @@
 		"flint": {
 			"name": "messageIdMismatches",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -771,7 +771,7 @@
 		"flint": {
 			"name": "optionDefaults",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -793,7 +793,7 @@
 		"flint": {
 			"name": "propertyOrdering",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "sorting"
 		}
 	},
 	{
@@ -806,7 +806,7 @@
 		"flint": {
 			"name": "ruleAboutChangers",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -916,7 +916,7 @@
 		"flint": {
 			"name": "testNames",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -929,7 +929,7 @@
 		"flint": {
 			"name": "testOutputNulls",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -942,7 +942,7 @@
 		"flint": {
 			"name": "testOutputs",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -955,7 +955,7 @@
 		"flint": {
 			"name": "testPropertyOrders",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "sorting"
 		}
 	},
 	{
@@ -982,7 +982,7 @@
 		"flint": {
 			"name": "unnecessaryTokenRanges",
 			"plugin": "flint",
-			"status": "skipped"
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -1022,7 +1022,7 @@
 		"flint": {
 			"name": "arrayElementsSorting",
 			"plugin": "json",
-			"status": "skipped"
+			"preset": "sorting"
 		}
 	},
 	{
@@ -1161,7 +1161,7 @@
 		"flint": {
 			"name": "keyCasing",
 			"plugin": "json",
-			"status": "skipped"
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -1174,7 +1174,7 @@
 		"flint": {
 			"name": "keyContents",
 			"plugin": "json",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -1347,7 +1347,7 @@
 		"flint": {
 			"name": "topLevelInteroperability",
 			"plugin": "json",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -2140,7 +2140,7 @@
 		"flint": {
 			"name": "imageAltRedundancy",
 			"plugin": "jsx",
-			"status": "skipped"
+			"preset": "logical"
 		},
 		"oxlint": [
 			{
@@ -3024,7 +3024,8 @@
 			"name": "emphasisMarkerSpacing",
 			"plugin": "md",
 			"status": "skipped"
-		}
+		},
+		"notes": "Formatting rule."
 	},
 	{
 		"flint": {
@@ -3304,7 +3305,7 @@
 			"plugin": "md",
 			"status": "skipped"
 		},
-		"notes": "I intend to write a Prettier plugin."
+		"notes": "Formatting rule."
 	},
 	{
 		"flint": {
@@ -3359,7 +3360,7 @@
 		"flint": {
 			"name": "html",
 			"plugin": "md",
-			"status": "skipped"
+			"preset": "security"
 		},
 		"markdownlint": [
 			{
@@ -9447,7 +9448,7 @@
 		"flint": {
 			"name": "arraySortCompareArgument",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "logical"
 		},
 		"oxlint": [
 			{
@@ -10484,7 +10485,7 @@
 		"flint": {
 			"name": "consistentReturns",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "logical"
 		}
 	},
 	{
@@ -10966,7 +10967,7 @@
 		"flint": {
 			"name": "destructuring",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "stylistic"
 		},
 		"oxlint": [
 			{
@@ -11014,7 +11015,7 @@
 		"eslint": [
 			{
 				"name": "@eslint-community/eslint-comments/no-duplicate-disable",
-				"url": "https://eslint-community.github.io/eslint-comments.html"
+				"url": "https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-duplicate-disable.html"
 			}
 		],
 		"flint": {
@@ -11028,7 +11029,7 @@
 		"eslint": [
 			{
 				"name": "@eslint-community/eslint-comments/no-aggregating-enable",
-				"url": "https://eslint-community.github.io/eslint-comments.html"
+				"url": "https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-aggregating-enable.html"
 			}
 		],
 		"flint": {
@@ -11042,7 +11043,7 @@
 		"eslint": [
 			{
 				"name": "@eslint-community/eslint-comments/disable-enable-pair",
-				"url": "https://eslint-community.github.io/eslint-comments.html"
+				"url": "https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/disable-enable-pair.html"
 			}
 		],
 		"flint": {
@@ -11056,7 +11057,7 @@
 		"eslint": [
 			{
 				"name": "@eslint-community/eslint-comments/require-description",
-				"url": "https://eslint-community.github.io/eslint-comments.html"
+				"url": "https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/require-description.html"
 			}
 		],
 		"flint": {
@@ -11070,13 +11071,14 @@
 		"eslint": [
 			{
 				"name": "@eslint-community/eslint-comments/no-restricted-disable",
-				"url": "https://eslint-community.github.io/eslint-comments.html"
+				"url": "https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-restricted-disable.html"
 			}
 		],
 		"flint": {
 			"name": "directiveRestrictedDisables",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "logical",
+			"strictness": "strict"
 		}
 	},
 	{
@@ -11111,7 +11113,7 @@
 		"eslint": [
 			{
 				"name": "@eslint-community/eslint-comments/no-unlimited-disable",
-				"url": "https://eslint-community.github.io/eslint-comments.html"
+				"url": "https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-unlimited-disable.html"
 			}
 		],
 		"flint": {
@@ -11139,7 +11141,7 @@
 		"eslint": [
 			{
 				"name": "@eslint-community/eslint-comments/no-unused-disable",
-				"url": "https://eslint-community.github.io/eslint-comments.html"
+				"url": "https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-unused-disable.html"
 			}
 		],
 		"flint": {
@@ -11153,7 +11155,7 @@
 		"eslint": [
 			{
 				"name": "@eslint-community/eslint-comments/no-unused-enable",
-				"url": "https://eslint-community.github.io/eslint-comments.html"
+				"url": "https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-unused-enable.html"
 			}
 		],
 		"flint": {
@@ -11549,6 +11551,7 @@
 		"flint": {
 			"name": "enumInitializers",
 			"plugin": "ts",
+			"preset": "logical",
 			"status": "implemented"
 		},
 		"oxlint": [
@@ -12431,6 +12434,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Conflicts with Flint's preference for inferred return types.",
 		"oxlint": [
 			{
 				"name": "typescript/explicit-function-return-type",
@@ -14115,6 +14119,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "eslint/no-magic-numbers",
@@ -14336,6 +14341,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "eslint/max-params",
@@ -14392,7 +14398,7 @@
 		"flint": {
 			"name": "memberAccessibility",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -14529,6 +14535,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Conflicts with Flint's preference for inferred return types.",
 		"oxlint": [
 			{
 				"name": "typescript/explicit-module-boundary-types",
@@ -14765,7 +14772,8 @@
 			"name": "namingConventions",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"notes": "Overly opinionated."
 	},
 	{
 		"eslint": [
@@ -15791,8 +15799,10 @@
 		"flint": {
 			"name": "parameterProperties",
 			"plugin": "ts",
+			"preset": "logical",
 			"status": "skipped"
-		}
+		},
+		"notes": "Better suited to an erasable syntax rule."
 	},
 	{
 		"eslint": [
@@ -16268,7 +16278,8 @@
 			"plugin": "ts",
 			"status": "skipped",
 			"strictness": "strict"
-		}
+		},
+		"notes": "Better suited to a functional/immutable-focused plugin."
 	},
 	{
 		"eslint": [
@@ -17708,7 +17719,8 @@
 			"name": "requireVariables",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"notes": "Deprecated in favor of requireImports."
 	},
 	{
 		"biome": [
@@ -17728,13 +17740,14 @@
 		"eslint": [
 			{
 				"name": "@eslint-community/eslint-comments/no-use",
-				"url": "https://eslint-community.github.io/eslint-comments.html"
+				"url": "https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-use.html"
 			}
 		],
 		"flint": {
 			"name": "restrictedDirectives",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "logical",
+			"strictness": "strict"
 		}
 	},
 	{
@@ -17806,7 +17819,8 @@
 		],
 		"flint": {
 			"name": "restrictedImports",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "config"
 		},
 		"oxlint": [
 			{
@@ -17867,7 +17881,8 @@
 		],
 		"flint": {
 			"name": "restrictedTypes",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "config"
 		}
 	},
 	{
@@ -18578,7 +18593,7 @@
 		"flint": {
 			"name": "switchExhaustiveness",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "logical"
 		},
 		"oxlint": [
 			{
@@ -18986,7 +19001,8 @@
 			"name": "typeAliases",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"notes": "Deprecated by typescript-eslint."
 	},
 	{
 		"eslint": [
@@ -18999,7 +19015,8 @@
 			"name": "typeAnnotations",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"notes": "Deprecated by typescript-eslint."
 	},
 	{
 		"eslint": [
@@ -20554,7 +20571,7 @@
 		"flint": {
 			"name": "variableDeclarationInitializations",
 			"plugin": "ts",
-			"status": "skipped"
+			"preset": "stylistic"
 		},
 		"oxlint": [
 			{
@@ -23672,7 +23689,8 @@
 		],
 		"flint": {
 			"name": "altTexts",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23684,7 +23702,8 @@
 		],
 		"flint": {
 			"name": "anchorAmbiguousText",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23696,7 +23715,8 @@
 		],
 		"flint": {
 			"name": "anchorContent",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23708,7 +23728,8 @@
 		],
 		"flint": {
 			"name": "anchorValidity",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23720,7 +23741,8 @@
 		],
 		"flint": {
 			"name": "ariaActiveDescendantTabIndex",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23732,7 +23754,8 @@
 		],
 		"flint": {
 			"name": "ariaProps",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23744,7 +23767,8 @@
 		],
 		"flint": {
 			"name": "ariaPropTypes",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23756,7 +23780,8 @@
 		],
 		"flint": {
 			"name": "ariaRoleValidity",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23768,7 +23793,8 @@
 		],
 		"flint": {
 			"name": "ariaUnsupportedElements",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23780,7 +23806,8 @@
 		],
 		"flint": {
 			"name": "autocomplete",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23792,7 +23819,8 @@
 		],
 		"flint": {
 			"name": "clickEventKeyEvents",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23804,7 +23832,8 @@
 		],
 		"flint": {
 			"name": "controlAssociatedLabels",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23816,7 +23845,8 @@
 		],
 		"flint": {
 			"name": "headingContents",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23828,7 +23858,8 @@
 		],
 		"flint": {
 			"name": "htmlLangs",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23840,7 +23871,8 @@
 		],
 		"flint": {
 			"name": "iframeTitles",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23852,7 +23884,8 @@
 		],
 		"flint": {
 			"name": "imageAltRedundancy",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23864,7 +23897,8 @@
 		],
 		"flint": {
 			"name": "interactiveElementsFocusable",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23876,7 +23910,8 @@
 		],
 		"flint": {
 			"name": "labelAssociatedControls",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23888,7 +23923,8 @@
 		],
 		"flint": {
 			"name": "langValidity",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23900,7 +23936,8 @@
 		],
 		"flint": {
 			"name": "mediaCaptions",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23912,7 +23949,8 @@
 		],
 		"flint": {
 			"name": "mouseEventKeyEvents",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23924,7 +23962,8 @@
 		],
 		"flint": {
 			"name": "accessKeys",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23936,7 +23975,8 @@
 		],
 		"flint": {
 			"name": "ariaHiddenFocusables",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23948,7 +23988,8 @@
 		],
 		"flint": {
 			"name": "autoFocusProps",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23960,7 +24001,8 @@
 		],
 		"flint": {
 			"name": "distractingElements",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23972,7 +24014,8 @@
 		],
 		"flint": {
 			"name": "interactiveElementRoles",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23984,7 +24027,8 @@
 		],
 		"flint": {
 			"name": "nonInteractiveElementInteractions",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -23996,7 +24040,8 @@
 		],
 		"flint": {
 			"name": "nonInteractiveElementRoles",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24008,7 +24053,8 @@
 		],
 		"flint": {
 			"name": "nonInteractiveElementTabIndexes",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24020,7 +24066,8 @@
 		],
 		"flint": {
 			"name": "roleRedundancies",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24032,7 +24079,8 @@
 		],
 		"flint": {
 			"name": "staticElementInteractions",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24044,7 +24092,8 @@
 		],
 		"flint": {
 			"name": "roleTags",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24056,7 +24105,8 @@
 		],
 		"flint": {
 			"name": "roleRequiredAriaProps",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24068,7 +24118,8 @@
 		],
 		"flint": {
 			"name": "roleSupportedAriaProps",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24080,7 +24131,8 @@
 		],
 		"flint": {
 			"name": "scopeProps",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24092,7 +24144,8 @@
 		],
 		"flint": {
 			"name": "tabIndexPositiveValues",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24104,7 +24157,8 @@
 		],
 		"flint": {
 			"name": "prerenderExportsOutsidePages",
-			"plugin": "astro"
+			"plugin": "astro",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24130,7 +24184,8 @@
 		],
 		"flint": {
 			"name": "enums",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24142,7 +24197,8 @@
 		],
 		"flint": {
 			"name": "importAliases",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24155,9 +24211,8 @@
 		"flint": {
 			"name": "namespaces",
 			"plugin": "ts",
-			"status": "skipped"
-		},
-		"notes": "Formatting rule."
+			"preset": "logical"
+		}
 	},
 	{
 		"eslint": [
@@ -24168,7 +24223,8 @@
 		],
 		"flint": {
 			"name": "suggestionMessageIdMatches",
-			"plugin": "flint"
+			"plugin": "flint",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24482,7 +24538,8 @@
 		],
 		"flint": {
 			"name": "jsdocExampleCodeValidity",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24494,7 +24551,8 @@
 		],
 		"flint": {
 			"name": "jsdocTypeChecks",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24506,7 +24564,8 @@
 		],
 		"flint": {
 			"name": "jsdocInlineTagEscapes",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24518,8 +24577,10 @@
 		],
 		"flint": {
 			"name": "jsdocBlockPaddingLines",
-			"plugin": "ts"
-		}
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
 	},
 	{
 		"eslint": [
@@ -24530,7 +24591,8 @@
 		],
 		"flint": {
 			"name": "jsdocImportTags",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24542,7 +24604,8 @@
 		],
 		"flint": {
 			"name": "jsdocAnyTypes",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24554,7 +24617,8 @@
 		],
 		"flint": {
 			"name": "jsdocFunctionTypes",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24566,7 +24630,8 @@
 		],
 		"flint": {
 			"name": "jsdocNextDescriptions",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24578,7 +24643,8 @@
 		],
 		"flint": {
 			"name": "jsdocNextTypes",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24590,7 +24656,8 @@
 		],
 		"flint": {
 			"name": "jsdocParameterNamePresence",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24602,7 +24669,8 @@
 		],
 		"flint": {
 			"name": "jsdocPropertyNamePresence",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24614,7 +24682,8 @@
 		],
 		"flint": {
 			"name": "jsdocRejects",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24626,7 +24695,8 @@
 		],
 		"flint": {
 			"name": "jsdocRequiredTags",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24638,7 +24708,8 @@
 		],
 		"flint": {
 			"name": "jsdocTemplateDescriptions",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24650,7 +24721,8 @@
 		],
 		"flint": {
 			"name": "jsdocThrowDescriptions",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24662,7 +24734,8 @@
 		],
 		"flint": {
 			"name": "jsdocThrowTypes",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24674,7 +24747,8 @@
 		],
 		"flint": {
 			"name": "jsdocYieldDescriptions",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24686,7 +24760,8 @@
 		],
 		"flint": {
 			"name": "jsdocYieldTypes",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24698,7 +24773,8 @@
 		],
 		"flint": {
 			"name": "jsdocTypeScriptMethodSignatureStyles",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24710,7 +24786,8 @@
 		],
 		"flint": {
 			"name": "jsdocTypeScriptEmptyObjectTypes",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24722,7 +24799,8 @@
 		],
 		"flint": {
 			"name": "jsdocTypeScriptUnnecessaryTemplateExpressions",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24734,7 +24812,8 @@
 		],
 		"flint": {
 			"name": "jsdocTypeScriptFunctionTypes",
-			"plugin": "ts"
+			"plugin": "ts",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24746,8 +24825,10 @@
 		],
 		"flint": {
 			"name": "jsdocTypeFormatting",
-			"plugin": "ts"
-		}
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
 	},
 	{
 		"eslint": [
@@ -24758,7 +24839,8 @@
 		],
 		"flint": {
 			"name": "duplicateKeys",
-			"plugin": "json"
+			"plugin": "json",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24812,7 +24894,8 @@
 		],
 		"flint": {
 			"name": "automaticJsoncRules",
-			"plugin": "json"
+			"plugin": "json",
+			"preset": "config"
 		}
 	},
 	{
@@ -24894,7 +24977,8 @@
 		],
 		"flint": {
 			"name": "multilineStrings",
-			"plugin": "json"
+			"plugin": "json",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24906,7 +24990,8 @@
 		],
 		"flint": {
 			"name": "legacyOctalLiterals",
-			"plugin": "json"
+			"plugin": "json",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24918,7 +25003,8 @@
 		],
 		"flint": {
 			"name": "regexLiterals",
-			"plugin": "json"
+			"plugin": "json",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24930,7 +25016,8 @@
 		],
 		"flint": {
 			"name": "sparseArrays",
-			"plugin": "json"
+			"plugin": "json",
+			"preset": "logical"
 		}
 	},
 	{
@@ -24942,7 +25029,8 @@
 		],
 		"flint": {
 			"name": "unnecessaryEscapes",
-			"plugin": "json"
+			"plugin": "json",
+			"preset": "stylistic"
 		}
 	},
 	{
@@ -24996,8 +25084,10 @@
 		],
 		"flint": {
 			"name": "propertyQuotes",
-			"plugin": "json"
-		}
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
 	},
 	{
 		"eslint": [
@@ -25008,8 +25098,10 @@
 		],
 		"flint": {
 			"name": "stringQuotes",
-			"plugin": "json"
-		}
+			"plugin": "json",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule."
 	},
 	{
 		"eslint": [
@@ -25034,7 +25126,8 @@
 		],
 		"flint": {
 			"name": "vueCustomBlockParsingErrors",
-			"plugin": "json"
+			"plugin": "json",
+			"preset": "logical"
 		}
 	},
 	{
@@ -25101,7 +25194,8 @@
 		],
 		"flint": {
 			"name": "fencedCodeMeta",
-			"plugin": "md"
+			"plugin": "md",
+			"preset": "stylistic"
 		}
 	},
 	{

@@ -11,9 +11,11 @@ import eslintPluginPlugin from "eslint-plugin-eslint-plugin";
 import importPlugin from "eslint-plugin-import";
 import jsdocPlugin from "eslint-plugin-jsdoc";
 import jsoncPlugin from "eslint-plugin-jsonc";
+import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 import nodePlugin from "eslint-plugin-n";
 import packageJsonPlugin from "eslint-plugin-package-json";
 import perfectionistPlugin from "eslint-plugin-perfectionist";
+import promisePlugin from "eslint-plugin-promise";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import regexpPlugin from "eslint-plugin-regexp";
@@ -22,14 +24,8 @@ import sveltePlugin from "eslint-plugin-svelte";
 import unicornPlugin from "eslint-plugin-unicorn";
 import vuePlugin from "eslint-plugin-vue";
 import ymlPlugin from "eslint-plugin-yml";
-import { createRequire } from "node:module";
 
 import { comparisons } from "./index.ts";
-
-const require = createRequire(import.meta.url);
-
-const jsxA11yPlugin = require("eslint-plugin-jsx-a11y") as { rules: object };
-const promisePlugin = require("eslint-plugin-promise") as { rules: object };
 
 export function findESLintRulesInCore() {
 	return comparisons.flatMap(
