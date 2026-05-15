@@ -45,7 +45,7 @@ export function findESLintRulesInPlugin(pluginName: string) {
 	);
 }
 
-export const pluginsRulesByName = new Map<string, object | undefined>([
+export const pluginsRulesByName = new Map([
 	["@eslint-community/eslint-comments", eslintCommentsPlugin.rules],
 	["@next/next", nextPlugin.rules],
 	["@typescript-eslint", tseslintPlugin.rules],

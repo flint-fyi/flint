@@ -67,56 +67,32 @@ describe("data.json", () => {
 			);
 		});
 
-		it.each([
-			"@eslint-community/eslint-comments",
-			"@next/next",
-			"@typescript-eslint",
-			"astro",
-			"erasable-syntax-only",
-			"eslint-plugin-eslint-plugin",
-			"import",
-			"jsdoc",
-			"json",
-			"jsonc",
-			"jsx-a11y",
-			"markdown",
-			"n",
-			"nuxt",
-			"package-json",
-			"perfectionist",
-			"promise",
-			"react",
-			"react-hooks",
-			"regexp",
-			"solid",
-			"svelte",
-			"unicorn",
-			"vitest",
-			"vue",
-			"yml",
-		])("includes all %s rules", (pluginName) => {
-			const rules = pluginsRulesByName.get(pluginName);
-			if (!rules) {
-				throw new Error(`Unknown plugin: ${pluginName}`);
-			}
+		it.each(Array.from(pluginsRulesByName.keys()))(
+			"includes all %s rules",
+			(pluginName) => {
+				const rules = pluginsRulesByName.get(pluginName);
+				if (!rules) {
+					throw new Error(`Unknown plugin: ${pluginName}`);
+				}
 
-			const pluginRuleNames = new Set(
-				Object.keys(rules)
-					.filter(
-						(ruleName) =>
-							!skippedESLintRulesByPluginName.get(pluginName)?.has(ruleName),
-					)
-					.map((ruleName) => `${pluginName}/${ruleName}`)
-					.sort(),
-			);
+				const pluginRuleNames = new Set(
+					Object.keys(rules)
+						.filter(
+							(ruleName) =>
+								!skippedESLintRulesByPluginName.get(pluginName)?.has(ruleName),
+						)
+						.map((ruleName) => `${pluginName}/${ruleName}`)
+						.sort(),
+				);
 
-			const pluginESLintRuleNamesCoveredByFlint = new Set(
-				findESLintRulesInPlugin(pluginName)
-					.map((rule) => rule.name)
-					.sort(),
-			);
+				const pluginESLintRuleNamesCoveredByFlint = new Set(
+					findESLintRulesInPlugin(pluginName)
+						.map((rule) => rule.name)
+						.sort(),
+				);
 
-			expect(pluginESLintRuleNamesCoveredByFlint).toEqual(pluginRuleNames);
-		});
+				expect(pluginESLintRuleNamesCoveredByFlint).toEqual(pluginRuleNames);
+			},
+		);
 	});
 });
