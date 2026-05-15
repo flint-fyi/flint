@@ -19,6 +19,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 				"Private packages do not need the `{{ propertyName }}` property.",
 			secondary: [
 				"This package is marked as private, so npm will not publish it.",
+				"Including `{{ propertyName }}` in the `package.json` file does nothing.",
 			],
 			suggestions: ["Remove the property."],
 		},
