@@ -67,14 +67,9 @@ describe("data.json", () => {
 			);
 		});
 
-		it.each(Array.from(pluginsRulesByName.keys()))(
+		it.each(Array.from(pluginsRulesByName.entries()))(
 			"includes all %s rules",
-			(pluginName) => {
-				const rules = pluginsRulesByName.get(pluginName);
-				if (!rules) {
-					throw new Error(`Unknown plugin: ${pluginName}`);
-				}
-
+			(pluginName, rules) => {
 				const pluginRuleNames = new Set(
 					Object.keys(rules)
 						.filter(
