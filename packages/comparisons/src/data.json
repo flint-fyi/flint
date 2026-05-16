@@ -4950,6 +4950,12 @@
 		}
 	},
 	{
+		"eslint": [
+			{
+				"name": "package-json/require-config",
+				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/798"
+			}
+		],
 		"flint": {
 			"name": "configPresence",
 			"plugin": "package-json",
