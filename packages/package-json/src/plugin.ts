@@ -6,6 +6,9 @@ import attribution from "./rules/attribution.ts";
 import binNameCasing from "./rules/binNameCasing.ts";
 import dependencyUniqueness from "./rules/dependencyUniqueness.ts";
 import emptyFields from "./rules/emptyFields.ts";
+import exportsSubpathsStyle from "./rules/exportsSubpathsStyle.ts";
+import peerDependenciesInstallation from "./rules/peerDependenciesInstallation.ts";
+import privatePackageProperties from "./rules/privatePackageProperties.ts";
 import privatePresence from "./rules/privatePresence.ts";
 import repositoryShorthand from "./rules/repositoryShorthand.ts";
 import scriptsNameCasing from "./rules/scriptsNameCasing.ts";
@@ -20,6 +23,9 @@ export const packageJson = createPlugin({
 		binNameCasing,
 		dependencyUniqueness,
 		emptyFields,
+		exportsSubpathsStyle,
+		peerDependenciesInstallation,
+		privatePackageProperties,
 		privatePresence,
 		repositoryShorthand,
 		scriptsNameCasing,
