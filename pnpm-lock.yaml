@@ -492,9 +492,6 @@ importers:
       eslint-plugin-astro:
         specifier: 1.7.0
         version: 1.7.0(eslint@10.3.0(jiti@2.7.0))
-      eslint-plugin-erasable-syntax-only:
-        specifier: 0.4.1
-        version: 0.4.1(@typescript-eslint/parser@8.59.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3))(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
       eslint-plugin-eslint-plugin:
         specifier: 7.3.3
         version: 7.3.3(eslint@10.3.0(jiti@2.7.0))
@@ -4446,14 +4443,6 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: '>=8.57.0'
-
-  eslint-plugin-erasable-syntax-only@0.4.1:
-    resolution: {integrity: sha512-6KWtNpFe/d5vU/gx5mdvARr0W1ADIwGkbgIo+6xUPmNVin1rAKcWjKMAy5soDJurRB8fj0PrrC7Em0xRua4yNg==}
-    engines: {node: '>=20.18.0'}
-    peerDependencies:
-      '@typescript-eslint/parser': '>=8'
-      eslint: '>=9'
-      typescript: '>=5'
 
   eslint-plugin-es-x@7.8.0:
     resolution: {integrity: sha512-7Ds8+wAAoV3T+LAKeu39Y5BzXCrGKrcISfgKEqTS4BDN8SFEDQd0S43jiQ8vIa3wUKD07qitZdfzlenSi8/0qQ==}
@@ -10741,16 +10730,6 @@ snapshots:
       globals: 16.5.0
       postcss: 8.5.8
       postcss-selector-parser: 7.1.1
-    transitivePeerDependencies:
-      - supports-color
-
-  eslint-plugin-erasable-syntax-only@0.4.1(@typescript-eslint/parser@8.59.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3))(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3):
-    dependencies:
-      '@typescript-eslint/parser': 8.59.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
-      '@typescript-eslint/utils': 8.59.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
-      cached-factory: 0.2.0
-      eslint: 10.3.0(jiti@2.7.0)
-      typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
 
