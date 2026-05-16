@@ -11085,8 +11085,7 @@
 		"flint": {
 			"name": "directiveRestrictedDisables",
 			"plugin": "ts",
-			"status": "skipped",
-			"strictness": "strict"
+			"status": "skipped"
 		}
 	},
 	{
@@ -17764,8 +17763,7 @@
 		"flint": {
 			"name": "restrictedDirectives",
 			"plugin": "ts",
-			"status": "skipped",
-			"strictness": "strict"
+			"status": "skipped"
 		}
 	},
 	{
