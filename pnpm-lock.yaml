@@ -477,6 +477,9 @@ importers:
       '@types/eslint-plugin-jsx-a11y':
         specifier: ^6.10.1
         version: 6.10.1(jiti@2.7.0)
+      '@types/eslint-plugin-promise':
+        specifier: ^7.3.0
+        version: 7.3.0
       '@typescript-eslint/eslint-plugin':
         specifier: catalog:dev
         version: 8.58.1(@typescript-eslint/parser@8.59.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3))(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
@@ -3333,6 +3336,12 @@ packages:
 
   '@types/eslint-plugin-jsx-a11y@6.10.1':
     resolution: {integrity: sha512-5RtuPVe0xz8BAhrkn2oww6Uw885atf962Q4fqZo48QdO3EQA7oCEDSXa6optgJ1ZMds3HD9ITK5bfm4AWuoXFQ==}
+
+  '@types/eslint-plugin-promise@7.3.0':
+    resolution: {integrity: sha512-ewgA05z38/jROcbOEs1VFZ5A5rEOYxSQvsWl1xALLUAvwEEdHO7xHS0Y1UQrOgh1w05CUaRIxXyM1HkjeeG5Iw==}
+
+  '@types/eslint@9.6.1':
+    resolution: {integrity: sha512-FXx2pKgId/WyYo2jXw63kk7/+TY7u7AziEJxJAnSFzHlqTAS3Ync6SvgYAN/k4/PQpnnVuzoMuVnByKK2qp0ag==}
 
   '@types/esrecurse@4.3.1':
     resolution: {integrity: sha512-xJBAbDifo5hpffDBuHl0Y8ywswbiAp/Wi7Y/GtAgSlZyIABppyurxVueOPE8LUQOxdlgi6Zqce7uoEpqNTeiUw==}
@@ -9319,6 +9328,15 @@ snapshots:
     transitivePeerDependencies:
       - jiti
       - supports-color
+
+  '@types/eslint-plugin-promise@7.3.0':
+    dependencies:
+      '@types/eslint': 9.6.1
+
+  '@types/eslint@9.6.1':
+    dependencies:
+      '@types/estree': 1.0.8
+      '@types/json-schema': 7.0.15
 
   '@types/esrecurse@4.3.1': {}
 
