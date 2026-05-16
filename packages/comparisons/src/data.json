@@ -4262,7 +4262,7 @@
 			"plugin": "node",
 			"status": "skipped"
 		},
-		"notes": "Superseded by Knip"
+		"notes": "Superseded by Knip."
 	},
 	{
 		"eslint": [
@@ -6980,7 +6980,7 @@
 		"eslint": [
 			{
 				"name": "solid/no-array-handlers",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/no-array-handlers.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-array-handlers.md"
 			}
 		],
 		"flint": {
@@ -6992,7 +6992,7 @@
 		"eslint": [
 			{
 				"name": "solid/components-return-once",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/components-return-once.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/components-return-once.md"
 			}
 		],
 		"flint": {
@@ -7005,7 +7005,7 @@
 		"eslint": [
 			{
 				"name": "solid/jsx-no-duplicate-props",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/jsx-no-duplicate-props.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/jsx-no-duplicate-props.md"
 			}
 		],
 		"flint": {
@@ -7019,7 +7019,7 @@
 		"eslint": [
 			{
 				"name": "solid/event-handlers",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/event-handlers.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/event-handlers.md"
 			}
 		],
 		"flint": {
@@ -7032,7 +7032,7 @@
 		"eslint": [
 			{
 				"name": "solid/prefer-for",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/prefer-for.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/prefer-for.md"
 			}
 		],
 		"flint": {
@@ -7045,7 +7045,7 @@
 		"eslint": [
 			{
 				"name": "solid/no-innerhtml",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/no-innerhtml.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-innerhtml.md"
 			}
 		],
 		"flint": {
@@ -7059,7 +7059,7 @@
 		"eslint": [
 			{
 				"name": "solid/no-unknown-namespaces",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/no-unknown-namespaces.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-unknown-namespaces.md"
 			}
 		],
 		"flint": {
@@ -7072,7 +7072,7 @@
 		"eslint": [
 			{
 				"name": "solid/jsx-no-script-url",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/jsx-no-script-url.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/jsx-no-script-url.md"
 			}
 		],
 		"flint": {
@@ -7080,13 +7080,13 @@
 			"plugin": "solid",
 			"status": "skipped"
 		},
-		"notes": "Superseded by jsx plugin's duplicateProps rule."
+		"notes": "Superseded by jsx plugin's scriptUrls rule."
 	},
 	{
 		"eslint": [
 			{
 				"name": "solid/no-destructure",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/no-destructure.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-destructure.md"
 			}
 		],
 		"flint": {
@@ -7099,7 +7099,7 @@
 		"eslint": [
 			{
 				"name": "solid/no-proxy-apis",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/apis.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-proxy-apis.md"
 			}
 		],
 		"flint": {
@@ -7113,7 +7113,7 @@
 		"eslint": [
 			{
 				"name": "solid/reactivity",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/reactivity.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/reactivity.md"
 			}
 		],
 		"flint": {
@@ -7126,7 +7126,7 @@
 		"eslint": [
 			{
 				"name": "solid/no-react-deps",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/no-react-deps.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-react-deps.md"
 			}
 		],
 		"flint": {
@@ -7139,7 +7139,7 @@
 		"eslint": [
 			{
 				"name": "solid/no-react-specific-props",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/no-react-specific-props.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/no-react-specific-props.md"
 			}
 		],
 		"flint": {
@@ -7152,7 +7152,7 @@
 		"eslint": [
 			{
 				"name": "solid/self-closing-comp",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/self-closing-comp.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/self-closing-comp.md"
 			}
 		],
 		"flint": {
@@ -7160,13 +7160,13 @@
 			"plugin": "solid",
 			"status": "skipped"
 		},
-		"notes": "Superseded by js plugin's selfClosingTags rule."
+		"notes": "Superseded by jsx plugin's selfClosingTags rule."
 	},
 	{
 		"eslint": [
 			{
 				"name": "solid/prefer-show",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/prefer-show.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/prefer-show.md"
 			}
 		],
 		"flint": {
@@ -7179,7 +7179,7 @@
 		"eslint": [
 			{
 				"name": "solid/imports",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/imports.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/imports.md"
 			}
 		],
 		"flint": {
@@ -7192,7 +7192,7 @@
 		"eslint": [
 			{
 				"name": "solid/style-prop",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/style-prop.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/style-prop.md"
 			}
 		],
 		"flint": {
@@ -7205,7 +7205,7 @@
 		"eslint": [
 			{
 				"name": "solid/jsx-no-undef",
-				"url": "https://github.com/solidjs-community/eslint-solid/blob/main/packages/eslint-solid/docs/jsx-no-undef.md"
+				"url": "https://github.com/solidjs-community/eslint-plugin-solid/blob/main/packages/eslint-plugin-solid/docs/jsx-no-undef.md"
 			}
 		],
 		"flint": {
@@ -8027,7 +8027,8 @@
 			"name": "innerDeclarations",
 			"plugin": "svelte",
 			"status": "skipped"
-		}
+		},
+		"notes": "Superseded by ts plugin's innerDeclarations rule."
 	},
 	{
 		"eslint": [
@@ -8464,7 +8465,8 @@
 			"name": "trailingSpaces",
 			"plugin": "svelte",
 			"status": "skipped"
-		}
+		},
+		"notes": "Formatting rule."
 	},
 	{
 		"eslint": [
@@ -11924,6 +11926,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "import/prefer-default-export",
@@ -11963,6 +11966,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "import/group-exports",
@@ -11982,6 +11986,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "import/exports-last",
@@ -12732,6 +12737,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "import/no-absolute-path",
@@ -12815,7 +12821,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
-		"notes": "Handled by TypeScript",
+		"notes": "Handled by TypeScript.",
 		"oxlint": [
 			{
 				"name": "eslint/default",
@@ -12882,7 +12888,7 @@
 			"plugin": "ts",
 			"preset": "none"
 		},
-		"notes": "Superseded by Knip"
+		"notes": "Superseded by Knip."
 	},
 	{
 		"eslint": [
@@ -12896,6 +12902,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "import/first",
@@ -12915,6 +12922,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "import/max-dependencies",
@@ -12934,6 +12942,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Handled by TypeScript.",
 		"oxlint": [
 			{
 				"name": "import/named",
@@ -12953,7 +12962,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
-		"notes": "Handled by TypeScript",
+		"notes": "Handled by TypeScript.",
 		"oxlint": [
 			{
 				"name": "eslint/namespace",
@@ -12973,6 +12982,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "import/no-namespace",
@@ -15959,6 +15969,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "promise/prefer-await-to-callbacks",
@@ -16118,6 +16129,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "promise/no-nesting",
@@ -16137,6 +16149,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "promise/avoid-new",
@@ -16183,6 +16196,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "promise/param-names",
@@ -19166,6 +19180,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "import/no-unassigned-import",
@@ -21147,7 +21162,8 @@
 		"flint": {
 			"name": "filenames",
 			"plugin": "vitest"
-		}
+		},
+		"notes": "Overly opinionated."
 	},
 	{
 		"eslint": [
@@ -21243,8 +21259,7 @@
 		"flint": {
 			"name": "importsInMocks",
 			"plugin": "vitest"
-		},
-		"notes": "Further investigation required: is this a beneficial practice?"
+		}
 	},
 	{
 		"eslint": [
@@ -21257,7 +21272,8 @@
 			"name": "maxiumumDescribesPerFile",
 			"plugin": "vitest",
 			"status": "skipped"
-		}
+		},
+		"notes": "Overly opinionated."
 	},
 	{
 		"eslint": [
@@ -23581,7 +23597,8 @@
 		"flint": {
 			"name": "multipleEmptyLines",
 			"plugin": "yaml"
-		}
+		},
+		"notes": "Formatting rule."
 	},
 	{
 		"eslint": [
@@ -23608,7 +23625,8 @@
 		"flint": {
 			"name": "quotes",
 			"plugin": "yaml"
-		}
+		},
+		"notes": "Formatting rule."
 	},
 	{
 		"eslint": [
@@ -24261,7 +24279,8 @@
 		"flint": {
 			"name": "importDeclarationsFirst",
 			"plugin": "ts"
-		}
+		},
+		"notes": "Deprecated. Superseded by importFirst."
 	},
 	{
 		"eslint": [
@@ -25208,7 +25227,8 @@
 		"flint": {
 			"name": "coreModuleHiding",
 			"plugin": "node"
-		}
+		},
+		"notes": "Deprecated because the rule was based on an invalid assumption."
 	},
 	{
 		"eslint": [
@@ -25268,7 +25288,8 @@
 		"flint": {
 			"name": "shebangs",
 			"plugin": "node"
-		}
+		},
+		"notes": "Superseded by hashbangs."
 	},
 	{
 		"eslint": [
@@ -25279,7 +25300,8 @@
 		],
 		"flint": {
 			"name": "nuxtConfigTestKeys",
-			"plugin": "vue"
+			"plugin": "nuxt",
+			"preset": "logical"
 		}
 	},
 	{
@@ -25291,7 +25313,8 @@
 		],
 		"flint": {
 			"name": "pageMetaRuntimeValues",
-			"plugin": "vue"
+			"plugin": "nuxt",
+			"preset": "logical"
 		}
 	},
 	{
@@ -25303,7 +25326,8 @@
 		],
 		"flint": {
 			"name": "nuxtConfigKeysOrder",
-			"plugin": "vue"
+			"plugin": "nuxt",
+			"preset": "sorting"
 		}
 	},
 	{
@@ -25316,7 +25340,8 @@
 		"flint": {
 			"name": "packageDefinitionValidity",
 			"plugin": "package-json"
-		}
+		},
+		"notes": "Deprecated by eslint-plugin-package-json."
 	},
 	{
 		"eslint": [
@@ -25460,7 +25485,8 @@
 		"flint": {
 			"name": "nativePromises",
 			"plugin": "ts"
-		}
+		},
+		"notes": "Obsolete for modern runtimes."
 	},
 	{
 		"eslint": [
@@ -25648,7 +25674,8 @@
 		"flint": {
 			"name": "classListProps",
 			"plugin": "solid"
-		}
+		},
+		"notes": "Deprecated."
 	},
 	{
 		"eslint": [
@@ -25855,7 +25882,8 @@
 		"flint": {
 			"name": "doneCallbacks",
 			"plugin": "vitest"
-		}
+		},
+		"notes": "Deprecated."
 	},
 	{
 		"eslint": [
@@ -25867,7 +25895,8 @@
 		"flint": {
 			"name": "vitestGlobalImporting",
 			"plugin": "vitest"
-		}
+		},
+		"notes": "Conflicts with vitestGlobalImports."
 	},
 	{
 		"eslint": [
@@ -25890,7 +25919,8 @@
 		],
 		"flint": {
 			"name": "calledOnceAssertions",
-			"plugin": "vitest"
+			"plugin": "vitest",
+			"strictness": "strict"
 		}
 	},
 	{
@@ -25903,7 +25933,8 @@
 		"flint": {
 			"name": "falsyMatchers",
 			"plugin": "vitest"
-		}
+		},
+		"notes": "Overly opinionated."
 	},
 	{
 		"eslint": [
@@ -25915,7 +25946,8 @@
 		"flint": {
 			"name": "truthyMatchers",
 			"plugin": "vitest"
-		}
+		},
+		"notes": "Overly opinionated."
 	},
 	{
 		"eslint": [
