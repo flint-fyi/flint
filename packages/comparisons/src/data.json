@@ -12443,7 +12443,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
-		"notes": "Conflicts with Flint's preference for inferred return types.",
+		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
 				"name": "typescript/explicit-function-return-type",
@@ -15814,8 +15814,7 @@
 			"name": "parameterProperties",
 			"plugin": "ts",
 			"status": "skipped"
-		},
-		"notes": "Better suited to an erasable syntax rule."
+		}
 	},
 	{
 		"eslint": [
@@ -24192,45 +24191,6 @@
 			"status": "skipped"
 		},
 		"notes": "Formatting rule."
-	},
-	{
-		"eslint": [
-			{
-				"name": "erasable-syntax-only/enums",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-erasable-syntax-only/blob/main/docs/rules/enums.md"
-			}
-		],
-		"flint": {
-			"name": "enums",
-			"plugin": "ts",
-			"preset": "logical"
-		}
-	},
-	{
-		"eslint": [
-			{
-				"name": "erasable-syntax-only/import-aliases",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-erasable-syntax-only/blob/main/docs/rules/import-aliases.md"
-			}
-		],
-		"flint": {
-			"name": "importAliases",
-			"plugin": "ts",
-			"preset": "logical"
-		}
-	},
-	{
-		"eslint": [
-			{
-				"name": "erasable-syntax-only/namespaces",
-				"url": "https://github.com/JoshuaKGoldberg/eslint-plugin-erasable-syntax-only/blob/main/docs/rules/namespaces.md"
-			}
-		],
-		"flint": {
-			"name": "namespaces",
-			"plugin": "ts",
-			"preset": "logical"
-		}
 	},
 	{
 		"eslint": [

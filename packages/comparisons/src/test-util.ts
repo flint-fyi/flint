@@ -6,7 +6,6 @@ import nuxtPlugin from "@nuxt/eslint-plugin";
 import tseslintPlugin from "@typescript-eslint/eslint-plugin";
 import vitestPlugin from "@vitest/eslint-plugin";
 import astroPlugin from "eslint-plugin-astro";
-import erasableSyntaxOnlyPlugin from "eslint-plugin-erasable-syntax-only";
 import eslintPluginPlugin from "eslint-plugin-eslint-plugin";
 import importPlugin from "eslint-plugin-import";
 import jsdocPlugin from "eslint-plugin-jsdoc";
@@ -50,7 +49,6 @@ export const pluginsRulesByName = new Map([
 	["@next/next", nextPlugin.rules],
 	["@typescript-eslint", tseslintPlugin.rules],
 	["astro", astroPlugin.rules],
-	["erasable-syntax-only", erasableSyntaxOnlyPlugin.rules],
 	["eslint-plugin-eslint-plugin", eslintPluginPlugin.rules],
 	["import", importPlugin.rules],
 	["jsdoc", jsdocPlugin.rules as object],
