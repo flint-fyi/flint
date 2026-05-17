@@ -104,17 +104,43 @@ export function errorToLanguageReport(
 			text: `${fileName} - Unknown error`,
 		};
 	}
+	const svelteError = isSvelteCompileError(error) ? error : null;
 	const loc =
-		"position" in error && Array.isArray(error.position)
-			? `:${error.position[0]}:${error.position[1]}`
+		svelteError != null
+			? `:${svelteError.start.line}:${svelteError.start.column}`
 			: "";
+	const range =
+		svelteError != null
+			? {
+					begin: svelteError.start.character,
+					end: svelteError.end?.character ?? svelteError.start.character,
+				}
+			: undefined;
 	const res: LanguageReport = {
 		text: `${fileName}${loc} - ${"message" in error && typeof error.message === "string" ? error.message : "Codegen error"}`,
 	};
 	if ("code" in error && typeof error.code === "string") {
 		res.code = error.code;
 	}
+	if (range != null) {
+		res.range = range;
+	}
 	return res;
+}
+
+// https://github.com/sveltejs/svelte/blob/main/packages/svelte/src/compiler/utils/compile_diagnostic.js#L51
+function isSvelteCompileError(error: object): error is {
+	end?: { character: number };
+	start: { character: number; column: number; line: number };
+} {
+	return (
+		"start" in error &&
+		typeof (error as Record<string, unknown>).start === "object" &&
+		(error as Record<string, unknown>).start !== null &&
+		"character" in (error as { start: object }).start &&
+		typeof (error as { start: { character: unknown } }).start.character ===
+			"number"
+	);
 }
 
 // adapted from https://github.com/withastro/astro/blob/a19140fd11efbc635a391d176da54b0dc5e4a99c/packages/language-tools/ts-plugin/src/astro2tsx.ts
