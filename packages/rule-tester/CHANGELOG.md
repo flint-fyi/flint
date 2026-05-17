@@ -1,5 +1,11 @@
 # @flint/rule-tester
 
+## 0.16.2
+
+### Patch Changes
+
+- e4a8233: Sort rule test reports by source position instead of report call order.
+
 ## 0.16.1
 
 ### Patch Changes
