@@ -297,6 +297,38 @@
 	{
 		"eslint": [
 			{
+				"name": "sdl/no-document-domain",
+				"url": "https://github.com/microsoft/eslint-plugin-sdl/blob/main/docs/rules/no-document-domain.md"
+			}
+		],
+		"flint": {
+			"name": "documentDomains",
+			"plugin": "browser",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "document-write/no-document-write",
+				"url": "https://github.com/phanect/eslint-plugin-document-write#readme"
+			},
+			{
+				"name": "sdl/no-document-write",
+				"url": "https://github.com/microsoft/eslint-plugin-sdl/blob/main/docs/rules/no-document-write.md"
+			}
+		],
+		"flint": {
+			"name": "documentWrites",
+			"plugin": "browser",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "unicorn/prefer-add-event-listener",
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-add-event-listener.md"
 			}
