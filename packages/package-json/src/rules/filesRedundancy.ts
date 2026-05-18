@@ -12,6 +12,7 @@ import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
 import { removeArrayElement } from "../removeArrayElement.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
+// Based on https://github.com/npm/npm-packlist/blob/bd54f71a526e77ba7db9671980ee00388f76a5aa/lib/index.js#L272-L290
 const defaultFilePatterns = [
 	/^(\.\/)?package\.json$/,
 	/^(\.\/)?readme($|\.[^/]*[^/~$]$)/i,
