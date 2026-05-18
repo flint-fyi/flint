@@ -1,5 +1,8 @@
 import type { LinterHost } from "../types/host.ts";
 
+/**
+ * Flint config file names in preference order.
+ */
 export const configFileNameCandidates = [
 	"flint.config.ts",
 	"flint.config.mts",
