@@ -1,4 +1,3 @@
-// cspell:ignore LICENCE LICENSE
 import { ruleTester } from "../ruleTester.ts";
 import rule from "./filesRedundancy.ts";
 
@@ -104,6 +103,38 @@ ruleTester.describe(rule, {
   "bin": {
     "run-package": "./bin/run.js"
   },
+  "files": [
+    "dist/"
+  ]
+}
+`,
+				},
+			],
+		},
+		{
+			code: `
+{
+  "files": [
+    "COPYING.md",
+    "dist/"
+  ]
+}
+`,
+			snapshot: `
+{
+  "files": [
+    "COPYING.md",
+    ~~~~~~~~~~~~
+    Declaring "COPYING.md" in \`files\` is unnecessary; it is included by default.
+    "dist/"
+  ]
+}
+`,
+			suggestions: [
+				{
+					id: "removeFilesEntry",
+					updated: `
+{
   "files": [
     "dist/"
   ]

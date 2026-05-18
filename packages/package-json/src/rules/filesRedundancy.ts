@@ -1,4 +1,4 @@
-// cspell:ignore licen LICENCE
+// cspell:ignore LICENCE
 
 import {
 	getJsonNodeRange,
@@ -13,9 +13,11 @@ import { removeArrayElement } from "../removeArrayElement.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 const defaultFilePatterns = [
-	/^(\.\/)?licen(c|s)e(\.|$)/i,
-	/^(\.\/)?readme(\.|$)/i,
-	/^(\.\/)?package\.json$/i,
+	/^(\.\/)?package\.json$/,
+	/^(\.\/)?readme($|\.[^/]*[^/~$]$)/i,
+	/^(\.\/)?copying($|\.[^/]*[^/~$]$)/i,
+	/^(\.\/)?license($|\.[^/]*[^/~$]$)/i,
+	/^(\.\/)?licence($|\.[^/]*[^/~$]$)/i,
 ];
 
 const wildcardsRegex = /[*?[\]{}]/;
@@ -102,8 +104,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 			primary:
 				'Declaring "{{ file }}" in `files` is unnecessary; it is included by default.',
 			secondary: [
-				"`package.json`, README files, and LICENSE or LICENCE files are always included in the published package.",
-				"README and LICENSE or LICENCE entries are matched in any case and with any extension.",
+				"`package.json`, README, COPYING, LICENSE, and LICENCE root files are always included in the published package.",
 			],
 			suggestions: ["Remove the redundant entry."],
 		},

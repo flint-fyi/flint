@@ -8,10 +8,12 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
+{/* cspell:ignore LICENCE */}
+
 <RuleSummary plugin="package-json" rule="filesRedundancy" />
 
 This rule reports entries in `files` that npm includes automatically.
-npm always includes `package.json`, README files, LICENSE or LICENCE files, the file declared in `main`, and files declared in `bin`.
+npm always includes `package.json`, root-level README, COPYING, LICENSE, and LICENCE files, the file declared in `main`, and files declared in `bin`.
 It also reports duplicate `files` entries.
 
 ## Examples
@@ -60,7 +62,7 @@ It also reports duplicate `files` entries.
 ## When Not To Use It
 
 If a package uses a custom publishing tool that does not follow npm's automatic package-file inclusion rules, this rule might not apply.
-For example, another registry tool might require README or entry-point files to be listed explicitly.
+For example, another tool might require README or entry-point files to be listed explicitly.
 
 ## Further Reading
 
