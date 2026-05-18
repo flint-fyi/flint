@@ -6,5 +6,5 @@
 		"types": ["node"]
 	},
 	"extends": "../../tsconfig.base.json",
-	"include": ["src", "src/data.json", "typings"]
+	"include": ["src", "src/data.json"]
 }
