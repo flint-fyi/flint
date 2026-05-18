@@ -532,7 +532,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/require-meta-schema-description",
+				"name": "eslint-plugin/require-meta-schema-description",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-schema-description.md"
 			}
 		],
@@ -545,7 +545,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/require-meta-schema",
+				"name": "eslint-plugin/require-meta-schema",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-schema.md"
 			}
 		],
@@ -558,7 +558,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/require-meta-has-suggestions",
+				"name": "eslint-plugin/require-meta-has-suggestions",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-has-suggestions.md"
 			}
 		],
@@ -571,7 +571,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/require-meta-type",
+				"name": "eslint-plugin/require-meta-type",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-type.md"
 			}
 		],
@@ -584,7 +584,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/no-deprecated-context-methods",
+				"name": "eslint-plugin/no-deprecated-context-methods",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-deprecated-context-methods.md"
 			}
 		],
@@ -597,7 +597,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/prefer-placeholders",
+				"name": "eslint-plugin/prefer-placeholders",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/prefer-placeholders.md"
 			}
 		],
@@ -610,7 +610,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/prefer-message-ids",
+				"name": "eslint-plugin/prefer-message-ids",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/prefer-message-ids.md"
 			}
 		],
@@ -623,7 +623,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/no-meta-replaced-by",
+				"name": "eslint-plugin/no-meta-replaced-by",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-meta-replaced-by.md"
 			}
 		],
@@ -636,7 +636,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/no-deprecated-report-api",
+				"name": "eslint-plugin/no-deprecated-report-api",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-deprecated-report-api.md"
 			}
 		],
@@ -649,7 +649,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/prefer-object-rule",
+				"name": "eslint-plugin/prefer-object-rule",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/prefer-object-rule.md"
 			}
 		],
@@ -662,7 +662,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/no-meta-schema-default",
+				"name": "eslint-plugin/no-meta-schema-default",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-meta-schema-default.md"
 			}
 		],
@@ -675,7 +675,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/prefer-replace-text",
+				"name": "eslint-plugin/prefer-replace-text",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/prefer-replace-text.md"
 			}
 		],
@@ -688,7 +688,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/fixer-return",
+				"name": "eslint-plugin/fixer-return",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/fixer-return.md"
 			}
 		],
@@ -709,7 +709,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/no-missing-message-ids",
+				"name": "eslint-plugin/no-missing-message-ids",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-missing-message-ids.md"
 			}
 		],
@@ -722,7 +722,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/report-message-format",
+				"name": "eslint-plugin/report-message-format",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/report-message-format.md"
 			}
 		],
@@ -736,7 +736,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/no-missing-placeholders",
+				"name": "eslint-plugin/no-missing-placeholders",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-missing-placeholders.md"
 			}
 		],
@@ -750,7 +750,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/no-property-in-node",
+				"name": "eslint-plugin/no-property-in-node",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-property-in-node.md"
 			}
 		],
@@ -764,7 +764,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/require-meta-default-options",
+				"name": "eslint-plugin/require-meta-default-options",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-default-options.md"
 			}
 		],
@@ -786,7 +786,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/meta-property-ordering",
+				"name": "eslint-plugin/meta-property-ordering",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/meta-property-ordering.md"
 			}
 		],
@@ -799,7 +799,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/require-meta-fixable",
+				"name": "eslint-plugin/require-meta-fixable",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-fixable.md"
 			}
 		],
@@ -820,7 +820,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/require-meta-docs-description",
+				"name": "eslint-plugin/require-meta-docs-description",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-docs-description.md"
 			}
 		],
@@ -833,7 +833,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/require-meta-docs-recommended",
+				"name": "eslint-plugin/require-meta-docs-recommended",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-docs-recommended"
 			}
 		],
@@ -846,7 +846,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/require-meta-docs-url",
+				"name": "eslint-plugin/require-meta-docs-url",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-docs-url.md"
 			}
 		],
@@ -859,7 +859,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/no-identical-tests",
+				"name": "eslint-plugin/no-identical-tests",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-identical-tests.md"
 			}
 		],
@@ -873,7 +873,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/unique-test-case-names",
+				"name": "eslint-plugin/unique-test-case-names",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/unique-test-case-names.md"
 			}
 		],
@@ -895,7 +895,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/no-only-tests",
+				"name": "eslint-plugin/no-only-tests",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-only-tests.md"
 			}
 		],
@@ -909,7 +909,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/require-test-case-name",
+				"name": "eslint-plugin/require-test-case-name",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-test-case-name.md"
 			}
 		],
@@ -922,7 +922,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/prefer-output-null",
+				"name": "eslint-plugin/prefer-output-null",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/prefer-output-null.md"
 			}
 		],
@@ -935,7 +935,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/consistent-output",
+				"name": "eslint-plugin/consistent-output",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/consistent-output.md"
 			}
 		],
@@ -948,7 +948,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/test-case-property-ordering",
+				"name": "eslint-plugin/test-case-property-ordering",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/test-case-property-ordering.md"
 			}
 		],
@@ -961,7 +961,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/test-case-shorthand-strings",
+				"name": "eslint-plugin/test-case-shorthand-strings",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/test-case-shorthand-strings.md"
 			}
 		],
@@ -975,7 +975,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/no-useless-token-range",
+				"name": "eslint-plugin/no-useless-token-range",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-useless-token-range.md"
 			}
 		],
@@ -988,7 +988,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/no-unused-message-ids",
+				"name": "eslint-plugin/no-unused-message-ids",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-unused-message-ids.md"
 			}
 		],
@@ -1002,7 +1002,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/no-unused-placeholders",
+				"name": "eslint-plugin/no-unused-placeholders",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/no-unused-placeholders.md"
 			}
 		],
@@ -24290,7 +24290,7 @@
 	{
 		"eslint": [
 			{
-				"name": "eslint-plugin-eslint-plugin/no-matching-violation-suggest-message-ids",
+				"name": "eslint-plugin/no-matching-violation-suggest-message-ids",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/tree/HEAD/docs/rules/no-matching-violation-suggest-message-ids.md"
 			}
 		],
