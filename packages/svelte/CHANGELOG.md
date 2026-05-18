@@ -1,5 +1,12 @@
 # @flint.fyi/svelte
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [97adb66]
+  - @flint.fyi/ts@0.19.0
+
 ## 0.0.2
 
 ### Patch Changes

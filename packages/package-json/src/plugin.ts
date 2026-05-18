@@ -10,6 +10,7 @@ import exportsSubpathsStyle from "./rules/exportsSubpathsStyle.ts";
 import peerDependenciesInstallation from "./rules/peerDependenciesInstallation.ts";
 import privatePackageProperties from "./rules/privatePackageProperties.ts";
 import privatePresence from "./rules/privatePresence.ts";
+import publishConfigRedundancy from "./rules/publishConfigRedundancy.ts";
 import repositoryShorthand from "./rules/repositoryShorthand.ts";
 import scriptsNameCasing from "./rules/scriptsNameCasing.ts";
 
@@ -27,6 +28,7 @@ export const packageJson = createPlugin({
 		peerDependenciesInstallation,
 		privatePackageProperties,
 		privatePresence,
+		publishConfigRedundancy,
 		repositoryShorthand,
 		scriptsNameCasing,
 		...Object.values(directPropertyPresenceRules),

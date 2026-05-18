@@ -1,5 +1,13 @@
 # @flint.fyi/comparisons
 
+## 0.3.3
+
+### Patch Changes
+
+- 432d186: Add the `package-json/dependencyUniqueness` rule.
+- c23b6a6: Added missing package-json rule entries.
+- 320a8ee: Add the `publishConfigRedundancy` rule.
+
 ## 0.3.2
 
 ### Patch Changes
