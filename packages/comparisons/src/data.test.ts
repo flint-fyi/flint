@@ -8,7 +8,9 @@ import {
 	pluginsRulesByName,
 } from "./test-util.ts";
 
-const skippedESLintRulesByPluginName = new Map([
+const excludedESLintRulesByPluginName = new Map([
+	// These rules are exported in the React plugin but not mentioned on react.dev.
+	// We're treating them as an internal implementation detail for now.
 	[
 		"react-hooks",
 		new Set([
@@ -74,7 +76,7 @@ describe("data.json", () => {
 					Object.keys(rules)
 						.filter(
 							(ruleName) =>
-								!skippedESLintRulesByPluginName.get(pluginName)?.has(ruleName),
+								!excludedESLintRulesByPluginName.get(pluginName)?.has(ruleName),
 						)
 						.map((ruleName) => `${pluginName}/${ruleName}`)
 						.sort(),
