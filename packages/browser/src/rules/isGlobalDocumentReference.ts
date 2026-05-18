@@ -19,7 +19,6 @@ export function isGlobalDocumentReference(
 		node.expression.text === "window" &&
 		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === "document" &&
-		isGlobalDeclaration(node.expression, typeChecker) &&
 		isGlobalDeclaration(node.name, typeChecker)
 	);
 }
