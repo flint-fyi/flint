@@ -49,7 +49,7 @@ export const pluginsRulesByName = new Map([
 	["@next/next", nextPlugin.rules],
 	["@typescript-eslint", tseslintPlugin.rules],
 	["astro", astroPlugin.rules],
-	["eslint-plugin-eslint-plugin", eslintPluginPlugin.rules],
+	["eslint-plugin", eslintPluginPlugin.rules],
 	["import", importPlugin.rules],
 	["jsdoc", jsdocPlugin.rules as object],
 	["json", eslintJsonPlugin.rules],
