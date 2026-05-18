@@ -152,7 +152,7 @@
 		"eslint": [
 			{
 				"name": "astro/no-conflict-set-directives",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/no-conflict-set-directives/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/no-conflict-set-directives"
 			}
 		],
 		"flint": {
@@ -4804,7 +4804,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-attribution",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-attribution.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-attribution"
 			}
 		],
 		"flint": {
@@ -4818,7 +4818,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-author",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-author.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-author"
 			}
 		],
 		"flint": {
@@ -4831,7 +4831,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-author",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-author.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-author"
 			}
 		],
 		"flint": {
@@ -4845,7 +4845,7 @@
 		"eslint": [
 			{
 				"name": "package-json/bin-name-casing",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/bin-name-casing.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/bin-name-casing"
 			}
 		],
 		"flint": {
@@ -4859,7 +4859,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-bin",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/796"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-bin"
 			}
 		],
 		"flint": {
@@ -4869,6 +4869,12 @@
 		}
 	},
 	{
+		"eslint": [
+			{
+				"name": "package-json/require-browser",
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-browser"
+			}
+		],
 		"flint": {
 			"name": "browserPresence",
 			"plugin": "package-json",
@@ -4879,7 +4885,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-bin",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bin.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-bin"
 			}
 		],
 		"flint": {
@@ -4893,7 +4899,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-bugs",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-bugs.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-bugs"
 			}
 		],
 		"flint": {
@@ -4906,7 +4912,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-bugs",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bugs.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-bugs"
 			}
 		],
 		"flint": {
@@ -4916,6 +4922,12 @@
 		}
 	},
 	{
+		"eslint": [
+			{
+				"name": "package-json/valid-browser",
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-browser"
+			}
+		],
 		"flint": {
 			"name": "browserValidity",
 			"plugin": "package-json",
@@ -4927,7 +4939,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-bundleDependencies",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-bundleDependencies.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-bundleDependencies"
 			}
 		],
 		"flint": {
@@ -4940,7 +4952,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-bundleDependencies",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-bundleDependencies.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-bundleDependencies"
 			}
 		],
 		"flint": {
@@ -4967,7 +4979,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-config",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-config.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-config"
 			}
 		],
 		"flint": {
@@ -4994,7 +5006,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-contributors",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/valid-contributors.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-contributors"
 			}
 		],
 		"flint": {
@@ -5021,7 +5033,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-cpu",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-cpu.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-cpu"
 			}
 		],
 		"flint": {
@@ -5035,7 +5047,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-dependencies",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-dependencies.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-dependencies"
 			}
 		],
 		"flint": {
@@ -5048,7 +5060,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-dependencies",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-dependencies.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-dependencies"
 			}
 		],
 		"flint": {
@@ -5088,7 +5100,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-description",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-description.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-description"
 			}
 		],
 		"flint": {
@@ -5102,7 +5114,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-description",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-description.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-description"
 			}
 		],
 		"flint": {
@@ -5116,7 +5128,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-devDependencies",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-devDependencies.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-devDependencies"
 			}
 		],
 		"flint": {
@@ -5129,7 +5141,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-devDependencies",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-devDependencies.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-devDependencies"
 			}
 		],
 		"flint": {
@@ -5148,7 +5160,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-devEngines",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-devEngines.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-devEngines"
 			}
 		]
 	},
@@ -5156,7 +5168,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-devEngines",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-devEngines.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-devEngines"
 			}
 		],
 		"flint": {
@@ -5183,7 +5195,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-directories",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-directories.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-directories"
 			}
 		],
 		"flint": {
@@ -5211,7 +5223,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-engines",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-engines.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-engines"
 			}
 		],
 		"flint": {
@@ -5224,7 +5236,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-engines",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-engines.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-engines"
 			}
 		],
 		"flint": {
@@ -5238,7 +5250,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-exports",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-exports.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-exports"
 			}
 		],
 		"flint": {
@@ -5252,7 +5264,7 @@
 		"eslint": [
 			{
 				"name": "package-json/exports-subpaths-style",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/exports-subpaths-style.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/exports-subpaths-style"
 			}
 		],
 		"flint": {
@@ -5266,7 +5278,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-exports",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-exports.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-exports"
 			}
 		],
 		"flint": {
@@ -5280,7 +5292,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-files",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-files.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-files"
 			}
 		],
 		"flint": {
@@ -5306,7 +5318,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-files",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-files.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-files"
 			}
 		],
 		"flint": {
@@ -5320,7 +5332,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-funding",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/804"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-funding"
 			}
 		],
 		"flint": {
@@ -5333,7 +5345,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-funding",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-funding.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-funding"
 			}
 		],
 		"flint": {
@@ -5344,6 +5356,12 @@
 		}
 	},
 	{
+		"eslint": [
+			{
+				"name": "package-json/require-gypfile",
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-gypfile"
+			}
+		],
 		"flint": {
 			"name": "gypfilePresence",
 			"plugin": "package-json",
@@ -5351,6 +5369,12 @@
 		}
 	},
 	{
+		"eslint": [
+			{
+				"name": "package-json/valid-gypfile",
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-gypfile"
+			}
+		],
 		"flint": {
 			"name": "gypfileValidity",
 			"plugin": "package-json",
@@ -5376,7 +5400,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-homepage",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-homepage.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-homepage"
 			}
 		],
 		"flint": {
@@ -5390,7 +5414,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-keywords",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-keywords.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-keywords"
 			}
 		],
 		"flint": {
@@ -5403,7 +5427,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-keywords",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-keywords.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-keywords"
 			}
 		],
 		"flint": {
@@ -5414,6 +5438,12 @@
 		}
 	},
 	{
+		"eslint": [
+			{
+				"name": "package-json/require-libc",
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-libc"
+			}
+		],
 		"flint": {
 			"name": "libcPresence",
 			"plugin": "package-json",
@@ -5421,6 +5451,12 @@
 		}
 	},
 	{
+		"eslint": [
+			{
+				"name": "package-json/valid-libc",
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-libc"
+			}
+		],
 		"flint": {
 			"name": "libcValidity",
 			"plugin": "package-json",
@@ -5432,7 +5468,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-license",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-license.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-license"
 			}
 		],
 		"flint": {
@@ -5446,7 +5482,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-license",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-license.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-license"
 			}
 		],
 		"flint": {
@@ -5460,7 +5496,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-main",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/issues/805"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-main"
 			}
 		],
 		"flint": {
@@ -5473,7 +5509,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-main",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-main.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-main"
 			}
 		],
 		"flint": {
@@ -5500,7 +5536,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-man",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-man.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-man"
 			}
 		],
 		"flint": {
@@ -5527,7 +5563,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-module",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-module.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-module"
 			}
 		],
 		"flint": {
@@ -5541,7 +5577,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-name",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-name.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-name"
 			}
 		],
 		"flint": {
@@ -5555,7 +5591,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-name",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-name.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-name"
 			}
 		],
 		"flint": {
@@ -5569,7 +5605,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-optionalDependencies",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-optionalDependencies.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-optionalDependencies"
 			}
 		],
 		"flint": {
@@ -5582,7 +5618,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-optionalDependencies",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-optionalDependencies.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-optionalDependencies"
 			}
 		],
 		"flint": {
@@ -5609,7 +5645,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-os",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-os.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-os"
 			}
 		],
 		"flint": {
@@ -5636,7 +5672,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-packageManager",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-packageManager.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-packageManager"
 			}
 		],
 		"flint": {
@@ -5650,7 +5686,7 @@
 		"eslint": [
 			{
 				"name": "package-json/specify-peers-locally",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/specify-peers-locally.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/specify-peers-locally"
 			}
 		],
 		"flint": {
@@ -5661,6 +5697,12 @@
 		}
 	},
 	{
+		"eslint": [
+			{
+				"name": "package-json/require-peerDependenciesMeta",
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-peerDependenciesMeta"
+			}
+		],
 		"flint": {
 			"name": "peerDependenciesMetaPresence",
 			"plugin": "package-json",
@@ -5668,6 +5710,12 @@
 		}
 	},
 	{
+		"eslint": [
+			{
+				"name": "package-json/valid-peerDependenciesMeta",
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-peerDependenciesMeta"
+			}
+		],
 		"flint": {
 			"name": "peerDependenciesMetaValidity",
 			"plugin": "package-json",
@@ -5679,7 +5727,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-peerDependencies",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-peerDependencies.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-peerDependencies"
 			}
 		],
 		"flint": {
@@ -5691,8 +5739,21 @@
 	{
 		"eslint": [
 			{
+				"name": "package-json/valid-peerDependenciesMeta-relationship",
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-peerdependenciesmeta-relationship"
+			}
+		],
+		"flint": {
+			"name": "peerDependenciesRelationships",
+			"plugin": "package-json",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "package-json/valid-peerDependencies",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-peerDependencies.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-peerDependencies"
 			}
 		],
 		"flint": {
@@ -5705,8 +5766,20 @@
 	{
 		"eslint": [
 			{
+				"name": "package-json/restrict-top-level-properties",
+				"url": "https://eslint-plugin-package-json.dev/rules/restrict-top-level-properties"
+			}
+		],
+		"flint": {
+			"name": "topLevelPackageProperties",
+			"plugin": "package-json"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "package-json/restrict-private-properties",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/restrict-private-properties.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/restrict-private-properties"
 			}
 		],
 		"flint": {
@@ -5732,7 +5805,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-private",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-private.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-private"
 			}
 		],
 		"flint": {
@@ -5772,7 +5845,7 @@
 		"eslint": [
 			{
 				"name": "package-json/no-redundant-publishConfig",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/no-redundant-publishConfig.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/no-redundant-publishConfig"
 			}
 		],
 		"flint": {
@@ -5786,7 +5859,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-publishConfig",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-publishConfig.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-publishConfig"
 			}
 		],
 		"flint": {
@@ -5800,7 +5873,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-repository-directory",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-repository-directory.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-repository-directory"
 			}
 		],
 		"flint": {
@@ -5813,7 +5886,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-repository",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-repository.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-repository"
 			}
 		],
 		"flint": {
@@ -5841,7 +5914,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-repository",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-repository.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-repository"
 			}
 		],
 		"flint": {
@@ -5855,7 +5928,7 @@
 		"eslint": [
 			{
 				"name": "package-json/scripts-name-casing",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/scripts-name-casing.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/scripts-name-casing"
 			}
 		],
 		"flint": {
@@ -5869,7 +5942,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-scripts",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-scripts.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-scripts"
 			}
 		],
 		"flint": {
@@ -5882,7 +5955,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-scripts",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-scripts.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-scripts"
 			}
 		],
 		"flint": {
@@ -5896,7 +5969,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-sideEffects",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/require-sideEffects.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-sideEffects"
 			}
 		],
 		"flint": {
@@ -5910,7 +5983,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-sideEffects",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/main/docs/rules/valid-sideEffects.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-sideEffects"
 			}
 		],
 		"flint": {
@@ -5924,7 +5997,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-type",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-type.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-type"
 			}
 		],
 		"flint": {
@@ -5938,7 +6011,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-types",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-types.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-types"
 			}
 		],
 		"flint": {
@@ -5951,7 +6024,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-type",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-type.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-type"
 			}
 		],
 		"flint": {
@@ -5965,7 +6038,7 @@
 		"eslint": [
 			{
 				"name": "package-json/require-version",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/require-version.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-version"
 			}
 		],
 		"flint": {
@@ -5979,7 +6052,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-version",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-version.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-version"
 			}
 		],
 		"flint": {
@@ -6000,7 +6073,7 @@
 		"eslint": [
 			{
 				"name": "package-json/valid-workspaces",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-workspaces.md"
+				"url": "https://eslint-plugin-package-json.dev/rules/valid-properties/valid-workspaces"
 			}
 		],
 		"flint": {
@@ -7579,7 +7652,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-store-async",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-store-async/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-store-async"
 			}
 		],
 		"flint": {
@@ -7593,7 +7666,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-at-debug-tags",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-debug-tags/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-debug-tags"
 			}
 		],
 		"flint": {
@@ -7606,7 +7679,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-at-html-tags",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-html-tags/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-at-html-tags"
 			}
 		],
 		"flint": {
@@ -7619,7 +7692,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-spaces-around-equal-signs-in-attribute",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-spaces-around-equal-signs-in-attribute/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-spaces-around-equal-signs-in-attribute"
 			}
 		],
 		"flint": {
@@ -7633,7 +7706,7 @@
 		"eslint": [
 			{
 				"name": "svelte/sort-attributes",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/sort-attributes/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/sort-attributes"
 			}
 		],
 		"flint": {
@@ -7647,7 +7720,7 @@
 		"eslint": [
 			{
 				"name": "svelte/max-attributes-per-line",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/max-attributes-per-line/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/max-attributes-per-line"
 			}
 		],
 		"flint": {
@@ -7661,7 +7734,7 @@
 		"eslint": [
 			{
 				"name": "svelte/block-lang",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/block-lang/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/block-lang"
 			}
 		],
 		"flint": {
@@ -7675,7 +7748,7 @@
 		"eslint": [
 			{
 				"name": "svelte/button-has-type",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/button-has-type/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/button-has-type"
 			}
 		],
 		"flint": {
@@ -7689,7 +7762,7 @@
 		"eslint": [
 			{
 				"name": "svelte/prefer-class-directive",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-class-directive/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-class-directive"
 			}
 		],
 		"flint": {
@@ -7703,7 +7776,7 @@
 		"eslint": [
 			{
 				"name": "svelte/comment-directive",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/comment-directive/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/comment-directive"
 			}
 		],
 		"flint": {
@@ -7717,7 +7790,7 @@
 		"eslint": [
 			{
 				"name": "svelte/prefer-const",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-const"
 			}
 		],
 		"flint": {
@@ -7731,7 +7804,7 @@
 		"eslint": [
 			{
 				"name": "svelte/derived-has-same-inputs-outputs",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/derived-has-same-inputs-outputs/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/derived-has-same-inputs-outputs"
 			}
 		],
 		"flint": {
@@ -7745,7 +7818,7 @@
 		"eslint": [
 			{
 				"name": "svelte/prefer-destructured-store-props",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-destructured-store-props"
 			}
 		],
 		"flint": {
@@ -7759,7 +7832,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-dupe-else-if-blocks",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-else-if-blocks"
 			}
 		],
 		"flint": {
@@ -7772,7 +7845,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-dupe-on-directives",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-on-directives/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-on-directives"
 			}
 		],
 		"flint": {
@@ -7786,7 +7859,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-dupe-style-properties",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-style-properties/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-style-properties"
 			}
 		],
 		"flint": {
@@ -7799,7 +7872,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-dupe-use-directives",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-use-directives/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dupe-use-directives"
 			}
 		],
 		"flint": {
@@ -7812,7 +7885,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-dynamic-slot-name",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dynamic-slot-name"
 			}
 		],
 		"flint": {
@@ -7826,7 +7899,7 @@
 		"eslint": [
 			{
 				"name": "svelte/require-each-key",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-each-key/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-each-key"
 			}
 		],
 		"flint": {
@@ -7839,7 +7912,7 @@
 		"eslint": [
 			{
 				"name": "svelte/require-event-dispatcher-types",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-dispatcher-types/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-dispatcher-types"
 			}
 		],
 		"flint": {
@@ -7853,7 +7926,7 @@
 		"eslint": [
 			{
 				"name": "svelte/require-event-prefix",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-prefix/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-event-prefix"
 			}
 		],
 		"flint": {
@@ -7867,7 +7940,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-extra-reactive-curlies",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-extra-reactive-curlies/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-extra-reactive-curlies"
 			}
 		],
 		"flint": {
@@ -7881,7 +7954,7 @@
 		"eslint": [
 			{
 				"name": "svelte/first-attribute-linebreak",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/first-attribute-linebreak/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/first-attribute-linebreak"
 			}
 		],
 		"flint": {
@@ -7895,7 +7968,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-reactive-functions",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-functions/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-functions"
 			}
 		],
 		"flint": {
@@ -7909,7 +7982,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-goto-without-base",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-goto-without-base/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-goto-without-base"
 			}
 		],
 		"flint": {
@@ -7923,7 +7996,7 @@
 		"eslint": [
 			{
 				"name": "svelte/html-closing-bracket-new-line",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/html-closing-bracket-new-line/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/html-closing-bracket-new-line"
 			}
 		],
 		"flint": {
@@ -7937,7 +8010,7 @@
 		"eslint": [
 			{
 				"name": "svelte/html-closing-bracket-spacing",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/html-closing-bracket-spacing/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/html-closing-bracket-spacing"
 			}
 		],
 		"flint": {
@@ -7951,7 +8024,7 @@
 		"eslint": [
 			{
 				"name": "svelte/spaced-html-comment",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/spaced-html-comment/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/spaced-html-comment"
 			}
 		],
 		"flint": {
@@ -7965,7 +8038,7 @@
 		"eslint": [
 			{
 				"name": "svelte/html-quotes",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/html-quotes/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/html-quotes"
 			}
 		],
 		"flint": {
@@ -7979,7 +8052,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-ignored-unsubscribe",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-ignored-unsubscribe/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-ignored-unsubscribe"
 			}
 		],
 		"flint": {
@@ -7993,7 +8066,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-immutable-reactive-statements",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-immutable-reactive-statements/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-immutable-reactive-statements"
 			}
 		],
 		"flint": {
@@ -8007,7 +8080,7 @@
 		"eslint": [
 			{
 				"name": "svelte/indent",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/indent/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/indent"
 			}
 		],
 		"flint": {
@@ -8021,7 +8094,7 @@
 		"eslint": [
 			{
 				"name": "svelte/infinite-reactive-loop",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/infinite-reactive-loop/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/infinite-reactive-loop"
 			}
 		],
 		"flint": {
@@ -8034,7 +8107,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-inline-styles",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inline-styles/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inline-styles"
 			}
 		],
 		"flint": {
@@ -8048,7 +8121,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-inner-declarations",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inner-declarations/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inner-declarations"
 			}
 		],
 		"flint": {
@@ -8062,7 +8135,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-inspect",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inspect/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-inspect"
 			}
 		],
 		"flint": {
@@ -8075,7 +8148,7 @@
 		"eslint": [
 			{
 				"name": "svelte/valid-prop-names-in-kit-pages",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-prop-names-in-kit-pages"
 			}
 		],
 		"flint": {
@@ -8088,7 +8161,7 @@
 		"eslint": [
 			{
 				"name": "svelte/max-lines-per-block",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/max-lines-per-block/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/max-lines-per-block"
 			}
 		],
 		"flint": {
@@ -8102,7 +8175,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-reactive-literals",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-literals/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-literals"
 			}
 		],
 		"flint": {
@@ -8116,7 +8189,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-dom-manipulating",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-dom-manipulating"
 			}
 		],
 		"flint": {
@@ -8129,7 +8202,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-add-event-listener",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-add-event-listener/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-add-event-listener"
 			}
 		],
 		"flint": {
@@ -8143,7 +8216,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-object-in-text-mustaches",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-object-in-text-mustaches"
 			}
 		],
 		"flint": {
@@ -8156,7 +8229,7 @@
 		"eslint": [
 			{
 				"name": "svelte/mustache-spacing",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/mustache-spacing/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/mustache-spacing"
 			}
 		],
 		"flint": {
@@ -8170,7 +8243,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-navigation-without-base",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-base"
 			}
 		],
 		"flint": {
@@ -8184,7 +8257,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-not-function-handler",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-not-function-handler"
 			}
 		],
 		"flint": {
@@ -8198,7 +8271,7 @@
 		"eslint": [
 			{
 				"name": "svelte/require-optimized-style-attribute",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-optimized-style-attribute"
 			}
 		],
 		"flint": {
@@ -8212,7 +8285,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-export-load-in-svelte-module-in-kit-pages",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-export-load-in-svelte-module-in-kit-pages/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-export-load-in-svelte-module-in-kit-pages"
 			}
 		],
 		"flint": {
@@ -8225,7 +8298,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-reactive-reassign",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-reassign/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-reactive-reassign"
 			}
 		],
 		"flint": {
@@ -8238,7 +8311,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-restricted-html-elements",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-restricted-html-elements/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-restricted-html-elements"
 			}
 		],
 		"flint": {
@@ -8252,7 +8325,7 @@
 		"eslint": [
 			{
 				"name": "svelte/consistent-selector-style",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/consistent-selector-style/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/consistent-selector-style"
 			}
 		],
 		"flint": {
@@ -8266,7 +8339,7 @@
 		"eslint": [
 			{
 				"name": "svelte/html-self-closing",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/html-self-closing/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/html-self-closing"
 			}
 		],
 		"flint": {
@@ -8280,7 +8353,7 @@
 		"eslint": [
 			{
 				"name": "svelte/shorthand-attribute",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/shorthand-attribute/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/shorthand-attribute"
 			}
 		],
 		"flint": {
@@ -8294,7 +8367,7 @@
 		"eslint": [
 			{
 				"name": "svelte/shorthand-directive",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/shorthand-directive/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/shorthand-directive"
 			}
 		],
 		"flint": {
@@ -8308,7 +8381,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-shorthand-style-property-overrides",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-shorthand-style-property-overrides/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-shorthand-style-property-overrides"
 			}
 		],
 		"flint": {
@@ -8321,7 +8394,7 @@
 		"eslint": [
 			{
 				"name": "svelte/experimental-require-slot-types",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/experimental-require-slot-types/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/experimental-require-slot-types"
 			}
 		],
 		"flint": {
@@ -8335,7 +8408,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-raw-special-elements",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-raw-special-elements/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-raw-special-elements"
 			}
 		],
 		"flint": {
@@ -8348,7 +8421,7 @@
 		"eslint": [
 			{
 				"name": "svelte/require-store-callbacks-use-set-param",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-callbacks-use-set-param/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-callbacks-use-set-param"
 			}
 		],
 		"flint": {
@@ -8362,7 +8435,7 @@
 		"eslint": [
 			{
 				"name": "svelte/require-stores-init",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-stores-init/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-stores-init"
 			}
 		],
 		"flint": {
@@ -8376,7 +8449,7 @@
 		"eslint": [
 			{
 				"name": "svelte/require-store-reactive-access",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-reactive-access/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/require-store-reactive-access"
 			}
 		],
 		"flint": {
@@ -8390,7 +8463,7 @@
 		"eslint": [
 			{
 				"name": "svelte/experimental-require-strict-events",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/experimental-require-strict-events/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/experimental-require-strict-events"
 			}
 		],
 		"flint": {
@@ -8404,7 +8477,7 @@
 		"eslint": [
 			{
 				"name": "svelte/prefer-style-directive",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-style-directive/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-style-directive"
 			}
 		],
 		"flint": {
@@ -8418,7 +8491,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-svelte-internal",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-svelte-internal/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-svelte-internal"
 			}
 		],
 		"flint": {
@@ -8431,7 +8504,7 @@
 		"eslint": [
 			{
 				"name": "svelte/prefer-svelte-reactivity",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-svelte-reactivity/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-svelte-reactivity"
 			}
 		],
 		"flint": {
@@ -8444,7 +8517,7 @@
 		"eslint": [
 			{
 				"name": "svelte/system",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/system/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/system"
 			}
 		],
 		"flint": {
@@ -8458,7 +8531,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-target-blank",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-target-blank/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-target-blank"
 			}
 		],
 		"flint": {
@@ -8472,7 +8545,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-top-level-browser-globals",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-top-level-browser-globals/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-top-level-browser-globals"
 			}
 		],
 		"flint": {
@@ -8486,7 +8559,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-trailing-spaces",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-trailing-spaces/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-trailing-spaces"
 			}
 		],
 		"flint": {
@@ -8500,7 +8573,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-unknown-style-directive-property",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unknown-style-directive-property"
 			}
 		],
 		"flint": {
@@ -8513,7 +8586,7 @@
 		"eslint": [
 			{
 				"name": "svelte/@typescript-eslint/no-unnecessary-condition",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/@typescript-eslint/no-unnecessary-condition/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/@typescript-eslint/no-unnecessary-condition"
 			}
 		],
 		"flint": {
@@ -8527,7 +8600,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-unnecessary-state-wrap",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unnecessary-state-wrap/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unnecessary-state-wrap"
 			}
 		],
 		"flint": {
@@ -8540,7 +8613,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-navigation-without-resolve",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-resolve/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-navigation-without-resolve"
 			}
 		],
 		"flint": {
@@ -8553,7 +8626,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-unused-class-name",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-class-name/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-class-name"
 			}
 		],
 		"flint": {
@@ -8567,7 +8640,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-unused-props",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-props/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-props"
 			}
 		],
 		"flint": {
@@ -8580,7 +8653,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-unused-svelte-ignore",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-unused-svelte-ignore"
 			}
 		],
 		"flint": {
@@ -8593,7 +8666,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-useless-children-snippet",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-children-snippet/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-children-snippet"
 			}
 		],
 		"flint": {
@@ -8606,7 +8679,7 @@
 		"eslint": [
 			{
 				"name": "svelte/no-useless-mustaches",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-mustaches/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/no-useless-mustaches"
 			}
 		],
 		"flint": {
@@ -8619,7 +8692,7 @@
 		"eslint": [
 			{
 				"name": "svelte/valid-compile",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-compile/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-compile"
 			}
 		],
 		"flint": {
@@ -8633,7 +8706,7 @@
 		"eslint": [
 			{
 				"name": "svelte/valid-each-key",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-each-key/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-each-key"
 			}
 		],
 		"flint": {
@@ -8646,7 +8719,7 @@
 		"eslint": [
 			{
 				"name": "svelte/valid-style-parse",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-style-parse/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/valid-style-parse"
 			}
 		],
 		"flint": {
@@ -8660,7 +8733,7 @@
 		"eslint": [
 			{
 				"name": "svelte/prefer-writable-derived",
-				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-writable-derived/"
+				"url": "https://sveltejs.github.io/eslint-plugin-svelte/rules/prefer-writable-derived"
 			}
 		],
 		"flint": {
@@ -20790,7 +20863,7 @@
 		"biome": [
 			{
 				"name": "useConsistentBuiltinInstantiation",
-				"url": "https://biomejs.dev/linter/rules/use-consistent-builtin-instantiation/"
+				"url": "https://biomejs.dev/linter/rules/use-consistent-builtin-instantiation"
 			}
 		],
 		"eslint": [
@@ -23723,7 +23796,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/alt-text",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/alt-text/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/alt-text"
 			}
 		],
 		"flint": {
@@ -23736,7 +23809,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/anchor-ambiguous-text",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/anchor-ambiguous-text/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/anchor-ambiguous-text"
 			}
 		],
 		"flint": {
@@ -23749,7 +23822,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/anchor-has-content",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/anchor-has-content/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/anchor-has-content"
 			}
 		],
 		"flint": {
@@ -23762,7 +23835,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/anchor-is-valid",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/anchor-is-valid/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/anchor-is-valid"
 			}
 		],
 		"flint": {
@@ -23775,7 +23848,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/aria-activedescendant-has-tabindex",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-activedescendant-has-tabindex/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-activedescendant-has-tabindex"
 			}
 		],
 		"flint": {
@@ -23788,7 +23861,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/aria-props",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-props/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-props"
 			}
 		],
 		"flint": {
@@ -23801,7 +23874,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/aria-proptypes",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-proptypes/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-proptypes"
 			}
 		],
 		"flint": {
@@ -23814,7 +23887,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/aria-role",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-role/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-role"
 			}
 		],
 		"flint": {
@@ -23827,7 +23900,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/aria-unsupported-elements",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-unsupported-elements/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/aria-unsupported-elements"
 			}
 		],
 		"flint": {
@@ -23840,7 +23913,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/autocomplete-valid",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/autocomplete-valid/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/autocomplete-valid"
 			}
 		],
 		"flint": {
@@ -23853,7 +23926,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/click-events-have-key-events",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/click-events-have-key-events/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/click-events-have-key-events"
 			}
 		],
 		"flint": {
@@ -23866,7 +23939,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/control-has-associated-label",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/control-has-associated-label/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/control-has-associated-label"
 			}
 		],
 		"flint": {
@@ -23879,7 +23952,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/heading-has-content",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/heading-has-content/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/heading-has-content"
 			}
 		],
 		"flint": {
@@ -23892,7 +23965,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/html-has-lang",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/html-has-lang/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/html-has-lang"
 			}
 		],
 		"flint": {
@@ -23905,7 +23978,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/iframe-has-title",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/iframe-has-title/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/iframe-has-title"
 			}
 		],
 		"flint": {
@@ -23918,7 +23991,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/img-redundant-alt",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/img-redundant-alt/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/img-redundant-alt"
 			}
 		],
 		"flint": {
@@ -23931,7 +24004,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/interactive-supports-focus",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/interactive-supports-focus/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/interactive-supports-focus"
 			}
 		],
 		"flint": {
@@ -23944,7 +24017,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/label-has-associated-control",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/label-has-associated-control/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/label-has-associated-control"
 			}
 		],
 		"flint": {
@@ -23957,7 +24030,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/lang",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/lang/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/lang"
 			}
 		],
 		"flint": {
@@ -23970,7 +24043,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/media-has-caption",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/media-has-caption/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/media-has-caption"
 			}
 		],
 		"flint": {
@@ -23983,7 +24056,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/mouse-events-have-key-events",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/mouse-events-have-key-events/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/mouse-events-have-key-events"
 			}
 		],
 		"flint": {
@@ -23996,7 +24069,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/no-access-key",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-access-key/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-access-key"
 			}
 		],
 		"flint": {
@@ -24009,7 +24082,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/no-aria-hidden-on-focusable",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-aria-hidden-on-focusable/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-aria-hidden-on-focusable"
 			}
 		],
 		"flint": {
@@ -24022,7 +24095,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/no-autofocus",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-autofocus/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-autofocus"
 			}
 		],
 		"flint": {
@@ -24035,7 +24108,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/no-distracting-elements",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-distracting-elements/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-distracting-elements"
 			}
 		],
 		"flint": {
@@ -24048,7 +24121,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/no-interactive-element-to-noninteractive-role",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-interactive-element-to-noninteractive-role/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-interactive-element-to-noninteractive-role"
 			}
 		],
 		"flint": {
@@ -24061,7 +24134,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/no-noninteractive-element-interactions",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-noninteractive-element-interactions/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-noninteractive-element-interactions"
 			}
 		],
 		"flint": {
@@ -24074,7 +24147,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/no-noninteractive-element-to-interactive-role",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-noninteractive-element-to-interactive-role/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-noninteractive-element-to-interactive-role"
 			}
 		],
 		"flint": {
@@ -24087,7 +24160,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/no-noninteractive-tabindex",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-noninteractive-tabindex/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-noninteractive-tabindex"
 			}
 		],
 		"flint": {
@@ -24100,7 +24173,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/no-redundant-roles",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-redundant-roles/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-redundant-roles"
 			}
 		],
 		"flint": {
@@ -24113,7 +24186,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/no-static-element-interactions",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-static-element-interactions/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/no-static-element-interactions"
 			}
 		],
 		"flint": {
@@ -24126,7 +24199,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/prefer-tag-over-role",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/prefer-tag-over-role/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/prefer-tag-over-role"
 			}
 		],
 		"flint": {
@@ -24139,7 +24212,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/role-has-required-aria-props",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/role-has-required-aria-props/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/role-has-required-aria-props"
 			}
 		],
 		"flint": {
@@ -24152,7 +24225,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/role-supports-aria-props",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/role-supports-aria-props/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/role-supports-aria-props"
 			}
 		],
 		"flint": {
@@ -24165,7 +24238,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/scope",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/scope/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/scope"
 			}
 		],
 		"flint": {
@@ -24178,7 +24251,7 @@
 		"eslint": [
 			{
 				"name": "astro/jsx-a11y/tabindex-no-positive",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/tabindex-no-positive/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/jsx-a11y/tabindex-no-positive"
 			}
 		],
 		"flint": {
@@ -24191,7 +24264,7 @@
 		"eslint": [
 			{
 				"name": "astro/no-prerender-export-outside-pages",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/no-prerender-export-outside-pages/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/no-prerender-export-outside-pages"
 			}
 		],
 		"flint": {
@@ -24204,7 +24277,7 @@
 		"eslint": [
 			{
 				"name": "astro/semi",
-				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/semi/"
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/semi"
 			}
 		],
 		"flint": {
@@ -25311,19 +25384,6 @@
 			"plugin": "nuxt",
 			"preset": "sorting"
 		}
-	},
-	{
-		"eslint": [
-			{
-				"name": "package-json/valid-package-definition",
-				"url": "https://github.com/michaelfaith/eslint-plugin-package-json/blob/HEAD/docs/rules/valid-package-definition.md"
-			}
-		],
-		"flint": {
-			"name": "packageDefinitionValidity",
-			"plugin": "package-json"
-		},
-		"notes": "Deprecated by eslint-plugin-package-json."
 	},
 	{
 		"eslint": [
