@@ -2,7 +2,6 @@ import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
 
 import { isGlobalDocumentReference } from "./isGlobalDocumentReference.ts";
 import { ruleCreator } from "./ruleCreator.ts";
