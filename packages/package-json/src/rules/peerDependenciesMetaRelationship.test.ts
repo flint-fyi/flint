@@ -4,7 +4,8 @@ import peerDependenciesMetaRelationship from "./peerDependenciesMetaRelationship
 ruleTester.describe(peerDependenciesMetaRelationship, {
 	invalid: [
 		{
-			code: `{
+			code: `
+{
   "peerDependencies": {},
   "peerDependenciesMeta": {
 		"some-dependency": {
@@ -12,7 +13,8 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 		}
 	}
 }`,
-			snapshot: `{
+			snapshot: `
+{
   "peerDependencies": {},
   "peerDependenciesMeta": {
 		"some-dependency": {
@@ -25,7 +27,8 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 			suggestions: [
 				{
 					id: "removeUnnecessaryPeerDependencyMeta",
-					updated: `{
+					updated: `
+{
   "peerDependencies": {},
   "peerDependenciesMeta": {}
 }`,
@@ -33,14 +36,16 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 			],
 		},
 		{
-			code: `{
+			code: `
+{
   "peerDependenciesMeta": {
 		"some-dependency": {
 			"optional": true
 		}
 	}
 }`,
-			snapshot: `{
+			snapshot: `
+{
   "peerDependenciesMeta": {
 		"some-dependency": {
 		~~~~~~~~~~~~~~~~~
@@ -52,14 +57,16 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 			suggestions: [
 				{
 					id: "removeUnnecessaryPeerDependencyMeta",
-					updated: `{
+					updated: `
+{
   "peerDependenciesMeta": {}
 }`,
 				},
 			],
 		},
 		{
-			code: `{
+			code: `
+{
   "peerDependencies": {
 		"one-dependency": "^1.0.0"
 	},
@@ -72,7 +79,8 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 		}
 	}
 }`,
-			snapshot: `{
+			snapshot: `
+{
   "peerDependencies": {
 		"one-dependency": "^1.0.0"
 	},
@@ -90,7 +98,8 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 			suggestions: [
 				{
 					id: "removeUnnecessaryPeerDependencyMeta",
-					updated: `{
+					updated: `
+{
   "peerDependencies": {
 		"one-dependency": "^1.0.0"
 	},
