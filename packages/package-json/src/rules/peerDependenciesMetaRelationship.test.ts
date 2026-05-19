@@ -12,7 +12,8 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 			"optional": true
 		}
 	}
-}`,
+}
+`,
 			snapshot: `
 {
   "peerDependencies": {},
@@ -23,7 +24,8 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 			"optional": true
 		}
 	}
-}`,
+}
+`,
 			suggestions: [
 				{
 					id: "removeUnnecessaryPeerDependencyMeta",
@@ -31,7 +33,8 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 {
   "peerDependencies": {},
   "peerDependenciesMeta": {}
-}`,
+}
+`,
 				},
 			],
 		},
@@ -43,7 +46,8 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 			"optional": true
 		}
 	}
-}`,
+}
+`,
 			snapshot: `
 {
   "peerDependenciesMeta": {
@@ -53,14 +57,16 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 			"optional": true
 		}
 	}
-}`,
+}
+`,
 			suggestions: [
 				{
 					id: "removeUnnecessaryPeerDependencyMeta",
 					updated: `
 {
   "peerDependenciesMeta": {}
-}`,
+}
+`,
 				},
 			],
 		},
@@ -78,7 +84,8 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 			"optional": true
 		}
 	}
-}`,
+}
+`,
 			snapshot: `
 {
   "peerDependencies": {
@@ -94,7 +101,8 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 			"optional": true
 		}
 	}
-}`,
+}
+`,
 			suggestions: [
 				{
 					id: "removeUnnecessaryPeerDependencyMeta",
@@ -108,7 +116,8 @@ ruleTester.describe(peerDependenciesMetaRelationship, {
 			"optional": true
 		}
 	}
-}`,
+}
+`,
 				},
 			],
 		},
