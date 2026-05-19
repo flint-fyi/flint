@@ -68,7 +68,7 @@ function getCachedLocalFileRegex(fileName: string) {
 		return cachedRegex;
 	}
 
-	const regex = new RegExp(`^(\\.\\/)?${baseFileName}$`, "i");
+	const regex = new RegExp(`^(\\.\\/)?${RegExp.escape(baseFileName)}$`, "i");
 	cachedRegexes.set(baseFileName, regex);
 	return regex;
 }
