@@ -5,6 +5,8 @@ import {
 } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
+// TODO: Use a util like getStaticValue
+// https://github.com/flint-fyi/flint/issues/1298
 export function isGlobalDocumentReference(
 	node: AST.Expression,
 	typeChecker: Checker,
@@ -16,7 +18,6 @@ export function isGlobalDocumentReference(
 	return (
 		node.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.kind === SyntaxKind.Identifier &&
-		node.expression.text === "window" &&
 		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === "document" &&
 		isGlobalDeclaration(node.name, typeChecker)

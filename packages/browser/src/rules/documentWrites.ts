@@ -36,7 +36,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const { expression } = node;
 					if (
 						expression.kind === SyntaxKind.PropertyAccessExpression &&
-						expression.name.kind === SyntaxKind.Identifier &&
 						documentWriteNames.has(expression.name.text) &&
 						isGlobalDocumentReference(expression.expression, typeChecker)
 					) {
