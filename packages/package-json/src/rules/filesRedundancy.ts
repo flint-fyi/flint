@@ -68,7 +68,9 @@ function getCachedLocalFileRegex(fileName: string) {
 		return cachedRegex;
 	}
 
-	const regex = new RegExp(`^(\\.\\/)?${RegExp.escape(baseFileName)}$`, "i");
+	// TODO[typescript>=6.0]: Use RegExp.escape.
+	// https://github.com/microsoft/TypeScript/pull/63046
+	const regex = new RegExp(`^(\\.\\/)?${baseFileName}$`, "i");
 	cachedRegexes.set(baseFileName, regex);
 	return regex;
 }
