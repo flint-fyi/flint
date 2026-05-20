@@ -27,7 +27,12 @@ export async function applyChangesToFile(
 
 	log("Writing %d changes to file: %s", changes.length, absoluteFilePath);
 
-	await host.writeFile(absoluteFilePath, updatedFileContent);
+	await host.writeFile(newAbsoluteFilePath, updatedFileContent);
+
+	// should this be an actual rename?
+	if (wip) {
+		host.deleteFile(oldAbsoluteFilePath);
+	}
 
 	log("Wrote changes to file: %s", absoluteFilePath);
 }

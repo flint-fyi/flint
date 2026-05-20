@@ -19,6 +19,10 @@ export interface LinterHost {
 	readDirectorySync(directoryPathAbsolute: string): LinterHostDirectoryEntry[];
 	readFile(filePathAbsolute: string): Promise<string | undefined>;
 	readFileSync(filePathAbsolute: string): string | undefined;
+	renameFile(
+		filePathAbsolute: string,
+		target: string,
+	): Promise<string | undefined>;
 	watchDirectorySync(
 		directoryPathAbsolute: string,
 		callback: LinterHostDirectoryWatcher,
