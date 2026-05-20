@@ -1,7 +1,6 @@
-import { nullThrows } from "@flint.fyi/utils";
-
 import type { CommentDirectiveWithinFile } from "../types/directives.ts";
 import { createSelectionMatcher } from "./createSelectionMatcher.ts";
+import { getDisableNextLineRange } from "./getDisableNextLineRange.ts";
 
 export interface RangedSelection {
 	lines: RangedSelectionLines;
@@ -17,6 +16,13 @@ export interface RangedSelectionLines {
 	end: number;
 }
 
+interface DirectiveEvent {
+	action: "off" | "on";
+	line: number;
+	raw: number;
+	selections: string[];
+}
+
 export function computeDirectiveRanges(
 	directives: CommentDirectiveWithinFile[],
 ) {
@@ -24,136 +30,141 @@ export function computeDirectiveRanges(
 		return [];
 	}
 
-	if (directives.length === 1) {
-		const directive = nullThrows(
-			directives[0],
-			"Directive is expected to be present by previous length check",
-		);
-		switch (directive.type) {
-			case "disable-lines-begin":
-				return [
-					{
-						lines: {
-							begin: directive.range.begin.line + 1,
-							end: Infinity,
-						},
-						selections: directive.selections.map(createSelectionMatcher),
-					},
-				];
+	const events = directivesToEvents(directives);
+	return buildRangesFromEvents(events);
+}
 
-			case "disable-next-line":
-				return [
-					createRangedSelectionForDisableNextLine(
-						directive,
-						directive.selections,
-					),
-				];
-		}
-	}
+function buildRangesFromEvents(events: DirectiveEvent[]) {
+	const ranges: RangedSelection[] = [];
+	const selectionCounts = new Map<string, number>();
+	let segmentStart: null | number = null;
 
-	const directivesSorted = directives.toSorted(
-		(a, b) => a.range.begin.raw - b.range.begin.raw,
-	);
+	for (const event of events) {
+		const activeBeforeEvent = collectActiveSelections(selectionCounts);
 
-	const rangedSelections: RangedSelection[] = [];
-	let previousDirective = nullThrows(
-		directivesSorted[0],
-		"Previous directive is expected to be present by the loop condition",
-	);
-	let currentSelections = previousDirective.selections;
-
-	// Handle the first directive
-	switch (previousDirective.type) {
-		case "disable-lines-begin":
-			// Will be handled after the loop
-			break;
-		case "disable-next-line":
-			rangedSelections.push(
-				createRangedSelectionForDisableNextLine(
-					previousDirective,
-					currentSelections,
-				),
-			);
-			break;
-	}
-
-	for (const directive of directivesSorted.slice(1)) {
-		rangedSelections.push({
-			lines: {
-				begin:
-					previousDirective.range.begin.line +
-					(previousDirective.type === "disable-next-line" ? 2 : 1),
-				end: directive.range.begin.line,
-			},
-			selections: currentSelections.map(createSelectionMatcher),
-		});
-
-		switch (directive.type) {
-			case "disable-lines-begin":
-				currentSelections = joinSelections(
-					currentSelections,
-					directive.selections,
-				);
-				break;
-			case "disable-lines-end":
-				currentSelections = removeSelections(
-					currentSelections,
-					directive.selections,
-				);
-				break;
-			case "disable-next-line":
-				rangedSelections.push(
-					createRangedSelectionForDisableNextLine(
-						directive,
-						joinSelections(currentSelections, directive.selections),
-					),
-				);
-				break;
+		if (
+			activeBeforeEvent.length &&
+			segmentStart != null &&
+			segmentStart < event.line
+		) {
+			ranges.push({
+				lines: {
+					begin: segmentStart,
+					end: event.line - 1,
+				},
+				selections: activeBeforeEvent.map(createSelectionMatcher),
+			});
 		}
 
-		previousDirective = directive;
+		for (const sel of event.selections) {
+			const prev = selectionCounts.get(sel) ?? 0;
+
+			if (event.action === "on") {
+				selectionCounts.set(sel, prev + 1);
+			} else {
+				selectionCounts.set(sel, Math.max(prev - 1, 0));
+			}
+		}
+
+		const activeAfterEvent = collectActiveSelections(selectionCounts);
+		segmentStart = activeAfterEvent.length ? event.line : null;
 	}
 
-	if (currentSelections.length) {
-		rangedSelections.push({
+	const activeFinal = collectActiveSelections(selectionCounts);
+
+	if (activeFinal.length && segmentStart != null) {
+		ranges.push({
 			lines: {
-				begin:
-					previousDirective.range.begin.line +
-					(previousDirective.type === "disable-next-line" ? 2 : 1),
+				begin: segmentStart,
 				end: Infinity,
 			},
-			selections: currentSelections.map(createSelectionMatcher),
+			selections: activeFinal.map(createSelectionMatcher),
 		});
 	}
 
-	return rangedSelections;
+	return ranges;
 }
 
-function createRangedSelectionForDisableNextLine(
-	directive: CommentDirectiveWithinFile,
-	selections: string[],
-): RangedSelection {
-	return {
-		lines: {
-			begin: directive.range.begin.line + 1,
-			end: directive.range.end.line + 1,
-		},
-		selections: selections.map(createSelectionMatcher),
-	};
+function collectActiveSelections(selectionCounts: Map<string, number>) {
+	const result = [];
+
+	for (const [sel, count] of selectionCounts) {
+		if (count > 0) {
+			result.push(sel);
+		}
+	}
+
+	return result;
 }
 
-function joinSelections(
-	currentSelections: string[],
-	selections: string[],
-): string[] {
-	return Array.from(new Set([...currentSelections, ...selections]));
-}
+function directivesToEvents(directives: CommentDirectiveWithinFile[]) {
+	const events: DirectiveEvent[] = [];
+	const activeBegins = new Set<string>();
 
-function removeSelections(
-	currentSelections: string[],
-	selections: string[],
-): string[] {
-	return currentSelections.filter(
-		(selection) => !selections.includes(selection),
+	for (const directive of directives) {
+		switch (directive.type) {
+			case "disable-lines-begin": {
+				const selections = directive.selections.filter(
+					(sel) => !activeBegins.has(sel),
+				);
+				if (selections.length) {
+					for (const sel of selections) {
+						activeBegins.add(sel);
+					}
+					events.push({
+						action: "on",
+						line: directive.range.begin.line + 1,
+						raw: directive.range.begin.raw,
+						selections,
+					});
+				}
+				break;
+			}
+			case "disable-lines-end": {
+				const selections = directive.selections.filter((sel) =>
+					activeBegins.has(sel),
+				);
+				if (selections.length) {
+					for (const sel of selections) {
+						activeBegins.delete(sel);
+					}
+					events.push({
+						action: "off",
+						line: directive.range.begin.line + 1,
+						raw: directive.range.begin.raw,
+						selections,
+					});
+				}
+				break;
+			}
+			case "disable-next-line": {
+				const range = getDisableNextLineRange(directive);
+				events.push(
+					{
+						action: "on",
+						line: range.begin,
+						raw: directive.range.begin.raw,
+						selections: directive.selections,
+					},
+					{
+						action: "off",
+						line: range.end + 1,
+						raw: directive.range.begin.raw,
+						selections: directive.selections,
+					},
+				);
+				break;
+			}
+		}
+	}
+
+	// Sort by line, then by source position, then off-before-on as final tiebreaker
+	events.sort(
+		(a, b) =>
+			a.line - b.line ||
+			a.raw - b.raw ||
+			(a.action === "on" ? 1 : 0) - (b.action === "on" ? 1 : 0),
 	);
+
+	return events;
 }

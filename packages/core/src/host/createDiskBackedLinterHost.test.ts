@@ -131,7 +131,7 @@ describe("createDiskBackedLinterHost", () => {
 
 		it("reports editing", async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
-			const filePath = path.join(integrationRoot, "watch-change.txt");
+			const filePath = path.posix.join(integrationRoot, "watch-change.txt");
 			fs.writeFileSync(filePath, "first");
 			const onEvent = vi.fn();
 			using _ = host.watchFileSync(filePath, onEvent);
@@ -245,6 +245,7 @@ describe("createDiskBackedLinterHost", () => {
 			fs.writeFileSync(filePath, "content");
 
 			await sleep(50);
+
 			expect(onEvent).not.toHaveBeenCalled();
 		});
 
@@ -266,6 +267,7 @@ describe("createDiskBackedLinterHost", () => {
 
 			fs.writeFileSync(filePath, "second");
 			await sleep(50);
+
 			expect(onEvent).not.toHaveBeenCalled();
 		});
 
@@ -288,6 +290,7 @@ describe("createDiskBackedLinterHost", () => {
 
 			fs.writeFileSync(filePath, "second");
 			await sleep(50);
+
 			expect(onEvent).not.toHaveBeenCalled();
 		});
 
@@ -305,6 +308,7 @@ describe("createDiskBackedLinterHost", () => {
 			fs.writeFileSync(otherPath, "content");
 
 			await sleep(50);
+
 			expect(onEvent).not.toHaveBeenCalledWith();
 		});
 
@@ -341,6 +345,7 @@ describe("createDiskBackedLinterHost", () => {
 
 			fs.writeFileSync(filePath, "content");
 			await sleep(50);
+
 			expect(onEvent).not.toHaveBeenCalled();
 		});
 	});
@@ -409,6 +414,7 @@ describe("createDiskBackedLinterHost", () => {
 
 			const normalizedFile = normalizePath(path.join(baseDir, "src.txt"));
 			await sleep(50);
+
 			expect(onEvent).toHaveBeenCalledWith(normalizedFile);
 		});
 
@@ -432,6 +438,7 @@ describe("createDiskBackedLinterHost", () => {
 
 			const normalizedFile = normalizePath(path.join(baseDir, "src.txt"));
 			await sleep(50);
+
 			expect(onEvent).toHaveBeenCalledWith(normalizedFile);
 		});
 

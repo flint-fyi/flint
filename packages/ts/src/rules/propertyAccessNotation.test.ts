@@ -38,10 +38,10 @@ const result = data["items"].first;
 `,
 			snapshot: `
 const result = data["items"]["first"];
-                             ~~~~~~~
-                             Prefer the cleaner dot notation instead of bracket notation for \`first\`.
                     ~~~~~~~
                     Prefer the cleaner dot notation instead of bracket notation for \`items\`.
+                             ~~~~~~~
+                             Prefer the cleaner dot notation instead of bracket notation for \`first\`.
 `,
 		},
 		{
@@ -79,10 +79,10 @@ const value = foo["bar"].baz;
 `,
 			snapshot: `
 const value = foo["bar"]["baz"];
-                         ~~~~~
-                         Prefer the cleaner dot notation instead of bracket notation for \`baz\`.
                   ~~~~~
                   Prefer the cleaner dot notation instead of bracket notation for \`bar\`.
+                         ~~~~~
+                         Prefer the cleaner dot notation instead of bracket notation for \`baz\`.
 `,
 		},
 		{
@@ -133,10 +133,10 @@ const nested = a?.["b"]?.c;
 `,
 			snapshot: `
 const nested = a?.["b"]?.["c"];
-                          ~~~
-                          Prefer the cleaner dot notation instead of bracket notation for \`c\`.
                    ~~~
                    Prefer the cleaner dot notation instead of bracket notation for \`b\`.
+                          ~~~
+                          Prefer the cleaner dot notation instead of bracket notation for \`c\`.
 `,
 		},
 		{

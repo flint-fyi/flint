@@ -1,0 +1,114 @@
+---
+description: "Enforces padding around `beforeAll` blocks."
+title: "beforeAllPaddingLines"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vitest" rule="beforeAllPaddingLines" />
+
+Blank lines around `beforeAll()` hooks make one-time suite setup easier to notice.
+They also separate expensive or shared initialization from nearby suite declarations and other setup code.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { beforeAll, describe } from "vitest";
+
+const database = {
+	connect() {},
+};
+beforeAll(() => {
+	database.connect();
+});
+describe("database", () => {
+	// ...
+});
+```
+
+```ts
+import { beforeAll, describe } from "vitest";
+
+describe("queue", () => {
+	const cache = {
+		warm() {},
+	};
+	const worker = {
+		start() {},
+	};
+	beforeAll(() => {
+		cache.warm();
+	});
+	beforeAll(() => {
+		worker.start();
+	});
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { beforeAll, describe } from "vitest";
+
+const database = {
+	connect() {},
+};
+
+beforeAll(() => {
+	database.connect();
+});
+
+describe("database", () => {
+	// ...
+});
+```
+
+```ts
+import { beforeAll, describe } from "vitest";
+
+describe("queue", () => {
+	const cache = {
+		warm() {},
+	};
+	const worker = {
+		start() {},
+	};
+
+	beforeAll(() => {
+		cache.warm();
+	});
+
+	beforeAll(() => {
+		worker.start();
+	});
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your suites are very small and `beforeAll()` hooks are always immediately adjacent to the state they initialize, the extra spacing may not improve readability.
+That tradeoff can be reasonable when your team prefers denser test files.
+
+## Further Reading
+
+- [Vitest API: Hooks](https://vitest.dev/api/hooks.html)
+- [Vitest Guide: Setup and Teardown](https://vitest.dev/guide/learn/setup-teardown)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vitest" ruleId="beforeAllPaddingLines" />

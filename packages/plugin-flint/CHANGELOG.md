@@ -1,5 +1,29 @@
 # @flint.fyi/plugin-flint
 
+## 0.5.0
+
+### Minor Changes
+
+- fe89590: Add `unusedMessageIds` rule.
+
+### Patch Changes
+
+- 4fc0eef: Pass host to rules.
+- ce55da4: Add `pluginRuleOrdering` rule.
+- 657dff9: Add `testCaseOnlyFlags` rule.
+- 5b72b31: Added a fixer for the `flint/testShorthands` rule.
+It will now replace the test case object with the string equivalent.
+- f0966ab: Add `testCaseNonStaticCode` rule.
+- Updated dependencies [4fc0eef]
+- Updated dependencies [57fa268]
+- Updated dependencies [dde886f]
+- Updated dependencies [1539f14]
+- Updated dependencies [0702aa2]
+- Updated dependencies [cb7e8a8]
+- Updated dependencies [d3f5d17]
+  - @flint.fyi/core@0.21.0
+  - @flint.fyi/typescript-language@0.18.0
+
 ## 0.4.0
 
 ### Minor Changes

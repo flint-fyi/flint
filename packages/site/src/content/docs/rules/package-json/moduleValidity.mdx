@@ -1,5 +1,5 @@
 ---
-description: "Enforce that the `module` property is valid."
+description: "Enforces that the `module` property is valid."
 title: "moduleValidity"
 topic: "rules"
 ---
@@ -11,6 +11,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 <RuleSummary plugin="package-json" rule="moduleValidity" />
 
 This rule checks that the `module` property is a non-empty string.
+The value should be the path to the package's module entry point.
 
 ## Examples
 
@@ -19,12 +20,24 @@ This rule checks that the `module` property is a non-empty string.
 
 ```json
 {
-	"module": ["index.js", "secondary.js"]
+	"module": ""
+}
+```
+
+```json
+{
+	"module": []
 }
 ```
 
 </TabItem>
 <TabItem label="✅ Correct">
+
+```json
+{
+	"module": "./index.js"
+}
+```
 
 ```json
 {
@@ -37,8 +50,16 @@ This rule checks that the `module` property is a non-empty string.
 
 ## When Not To Use It
 
-If you don't need compliance with npm's `module` field specification, you can disable this rule.
-For example, if you use a different package manager that treats the field differently, this rule may not be correct for you.
+If you don't need compliance with this package's `module` field expectations, you can disable this rule.
+For example, if your package uses `exports` instead of `module`, this rule may not be useful for you.
+
+## Related Rules
+
+- [modulePresence](/rules/package-json/modulepresence) - Enforces that the `module` property is present.
+
+## Further Reading
+
+- [Node.js: Package entry points](https://nodejs.org/api/packages.html#package-entry-points)
 
 ## Equivalents in Other Linters
 

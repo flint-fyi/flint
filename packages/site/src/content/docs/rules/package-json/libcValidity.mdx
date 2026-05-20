@@ -1,0 +1,66 @@
+---
+description: "Enforces that the `libc` property is valid."
+title: "libcValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="libcValidity" />
+
+This rule checks that the `libc` property is a non-empty string or an array of non-empty strings.
+Each string should name a libc variant supported by the package.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"libc": ""
+}
+```
+
+```json
+{
+	"libc": ["glibc", "", 123]
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"libc": "glibc"
+}
+```
+
+```json
+{
+	"libc": ["glibc", "musl"]
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `libc` field specification, you can disable this rule.
+For example, if your registry accepts a different way to declare libc compatibility, this rule may not be correct for you.
+
+## Related Rules
+
+- [libcPresence](/rules/package-json/libcpresence) - Enforces that the `libc` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `libc`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#libc)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="libcValidity" />

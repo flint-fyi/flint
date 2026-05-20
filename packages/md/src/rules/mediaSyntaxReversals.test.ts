@@ -59,10 +59,10 @@ Both (link)[url] and !(image)[path] are wrong.
 `,
 			snapshot: `
 Both (link)[url] and !(image)[path] are wrong.
-                     ~~~~~~~~~~~~~~
-                     This image syntax is reversed and will not render as an image.
      ~~~~~~~~~~~
      This link syntax is reversed and will not render as a link.
+                     ~~~~~~~~~~~~~~
+                     This image syntax is reversed and will not render as an image.
 `,
 		},
 	],
