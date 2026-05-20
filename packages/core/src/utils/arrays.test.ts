@@ -1,3 +1,6 @@
+// @vitest/eslint-plugin doesn't recognize itProp.prop() as a test block.
+/* eslint-disable vitest/no-standalone-expect */
+import { fc, it as itProp } from "@fast-check/vitest";
 import { describe, expect, it } from "vitest";
 
 import { binarySearch, flatten } from "./arrays.ts";
@@ -144,5 +147,73 @@ describe("binarySearch", () => {
 				index: 1,
 			});
 		});
+	});
+
+	describe("properties", () => {
+		const sortedArrayAndTarget = fc
+			.tuple(
+				fc.array(fc.integer({ max: 1000, min: -1000 }), { maxLength: 50 }),
+				fc.integer({ max: 1000, min: -1000 }),
+			)
+			.map(
+				([array, target]) =>
+					[[...array].sort((a, b) => a - b), target] as const,
+			);
+
+		const compareFor = (target: number) => (elem: number) =>
+			elem < target ? -1 : elem > target ? 1 : 0;
+
+		itProp.prop([sortedArrayAndTarget])(
+			"no-fallback matches the array when target is present",
+			([array, target]) => {
+				const res = binarySearch(array, compareFor(target));
+				const expectedIndex = array.indexOf(target);
+				const expected =
+					expectedIndex === -1
+						? undefined
+						: { element: target, index: expectedIndex };
+
+				expect(res).toEqual(expected);
+			},
+		);
+
+		itProp.prop([sortedArrayAndTarget])(
+			"fallback-prev returns the rightmost element ≤ target",
+			([array, target]) => {
+				const res = binarySearch(array, compareFor(target), "fallback-prev");
+				let expectedIndex = -1;
+				for (const [index, element] of array.entries()) {
+					if (element <= target) {
+						expectedIndex = index;
+					} else {
+						break;
+					}
+				}
+
+				expect(res).toEqual({
+					element: array[expectedIndex],
+					index: expectedIndex,
+				});
+			},
+		);
+
+		itProp.prop([sortedArrayAndTarget])(
+			"fallback-next returns the leftmost element ≥ target",
+			([array, target]) => {
+				const res = binarySearch(array, compareFor(target), "fallback-next");
+				let expectedIndex = array.length;
+				for (const [index, element] of array.entries()) {
+					if (element >= target) {
+						expectedIndex = index;
+						break;
+					}
+				}
+
+				expect(res).toEqual({
+					element: array[expectedIndex],
+					index: expectedIndex,
+				});
+			},
+		);
 	});
 });

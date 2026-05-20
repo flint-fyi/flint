@@ -1,3 +1,6 @@
+// @vitest/eslint-plugin doesn't recognize testProp.prop() as a test block.
+/* eslint-disable vitest/no-standalone-expect */
+import { fc, test as testProp } from "@fast-check/vitest";
 import { describe, expect, test, vi } from "vitest";
 
 import {
@@ -299,5 +302,41 @@ describe("getPositionOfColumnAndLine", () => {
 		const res = getPositionOfColumnAndLine("012", { column: 3, line: 1 });
 
 		expect(res).toBe(3);
+	});
+
+	describe("properties", () => {
+		// Use LF-only sources to avoid CR/LF boundary ambiguity in roundtrips.
+		const lfSource = fc
+			.array(fc.stringMatching(/^[^\r\n]{0,8}$/), { maxLength: 8 })
+			.map((lines) => lines.join("\n"));
+
+		testProp.prop([lfSource])(
+			"roundtrips position → column/line → position",
+			(source) => {
+				for (let position = 0; position <= source.length; position++) {
+					const columnAndLine = getColumnAndLineOfPosition(source, position);
+					const roundtripped = getPositionOfColumnAndLine(
+						source,
+						columnAndLine,
+					);
+
+					expect(roundtripped).toEqual(position);
+				}
+			},
+		);
+
+		testProp.prop([lfSource])(
+			"column never exceeds the length of its line",
+			(source) => {
+				const lines = source.split("\n");
+				for (let position = 0; position <= source.length; position++) {
+					const { column, line } = getColumnAndLineOfPosition(source, position);
+					const lineText = lines[line] ?? "";
+
+					expect(column).toBeLessThanOrEqual(lineText.length);
+					expect(column).toBeGreaterThanOrEqual(0);
+				}
+			},
+		);
 	});
 });

@@ -34,6 +34,7 @@
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
+		"@fast-check/vitest": "^0.4.1",
 		"@types/omit-empty": "catalog:dev",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"

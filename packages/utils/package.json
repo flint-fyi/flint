@@ -26,6 +26,7 @@
 		"test": "vitest --project utils"
 	},
 	"devDependencies": {
+		"@fast-check/vitest": "^0.4.1",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
