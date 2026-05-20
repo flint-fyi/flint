@@ -3,6 +3,7 @@
 import { fc, it as itProp } from "@fast-check/vitest";
 import { describe, expect, it, vi } from "vitest";
 
+import type { VFSLinterHost } from "../types/host.ts";
 import { createVFSLinterHost } from "./createVFSLinterHost.ts";
 
 describe(createVFSLinterHost, () => {
@@ -915,5 +916,65 @@ describe(createVFSLinterHost, () => {
 				}
 			},
 		);
+
+		itProp.prop([
+			fc.commands(
+				[
+					fc.tuple(vfsPath, content).map(([path, content]) => ({
+						check: () => true,
+						run: (model: Map<string, string>, real: VFSLinterHost) => {
+							real.vfsUpsertFile(path, content);
+							model.set(path, content);
+							assertModelMatchesHost(model, real);
+						},
+						toString: () => `upsert(${path}, ${JSON.stringify(content)})`,
+					})),
+					vfsPath.map((path) => ({
+						check: () => true,
+						run: (model: Map<string, string>, real: VFSLinterHost) => {
+							real.vfsDeleteFile(path);
+							model.delete(path);
+							assertModelMatchesHost(model, real);
+						},
+						toString: () => `delete(${path})`,
+					})),
+					vfsPath.map((path) => ({
+						check: () => true,
+						run: (model: Map<string, string>, real: VFSLinterHost) => {
+							expect(real.readFileSync(path)).toEqual(model.get(path));
+						},
+						toString: () => `read(${path})`,
+					})),
+					fc.constant({
+						check: () => true,
+						run: (model: Map<string, string>, real: VFSLinterHost) => {
+							expect(real.vfsListFiles()).toEqual(model);
+						},
+						toString: () => `listFiles()`,
+					}),
+				],
+				{ maxCommands: 20 },
+			),
+		])("behaves like a Map<path, content> under arbitrary ops", (commands) => {
+			fc.modelRun(
+				() => ({
+					model: new Map<string, string>(),
+					real: createVFSLinterHost({ caseSensitive: true, cwd: "/root" }),
+				}),
+				commands,
+			);
+		});
 	});
 });
+
+function assertModelMatchesHost(
+	model: ReadonlyMap<string, string>,
+	host: VFSLinterHost,
+) {
+	expect(host.vfsListFiles()).toEqual(model);
+
+	for (const [path, content] of model) {
+		expect(host.readFileSync(path)).toEqual(content);
+		expect(host.fileTypeSync(path)).toEqual("file");
+	}
+}
