@@ -1,3 +1,6 @@
+// @vitest/eslint-plugin doesn't recognize itProp.prop() as a test block.
+/* eslint-disable vitest/no-standalone-expect */
+import { fc, it as itProp } from "@fast-check/vitest";
 import { describe, expect, it, vi } from "vitest";
 
 import { createVFSLinterHost } from "./createVFSLinterHost.ts";
@@ -679,5 +682,238 @@ describe(createVFSLinterHost, () => {
 
 			expect(dispose).toHaveBeenCalledExactlyOnceWith();
 		});
+
+		it("invokes every registered watcher on the same path", () => {
+			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+			const a = vi.fn();
+			const b = vi.fn();
+
+			using _a = host.watchDirectorySync("/root", a, { recursive: false });
+			using _b = host.watchDirectorySync("/root", b, { recursive: false });
+
+			host.vfsUpsertFile("/root/file.txt", "content");
+
+			expect(a).toHaveBeenCalledExactlyOnceWith("/root/file.txt");
+			expect(b).toHaveBeenCalledExactlyOnceWith("/root/file.txt");
+		});
+
+		it("only fires non-recursive parent when child is direct", () => {
+			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+			const parent = vi.fn();
+			const grandparent = vi.fn();
+
+			using _p = host.watchDirectorySync("/root/sub", parent, {
+				recursive: false,
+			});
+			using _g = host.watchDirectorySync("/root", grandparent, {
+				recursive: false,
+			});
+
+			host.vfsUpsertFile("/root/sub/deep/file.txt", "content");
+
+			expect(parent).toHaveBeenCalledExactlyOnceWith("/root/sub/deep");
+			expect(grandparent).toHaveBeenCalledExactlyOnceWith("/root/sub");
+		});
+
+		it("fires recursive watcher for every ancestor", () => {
+			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+			const inner = vi.fn();
+			const outer = vi.fn();
+
+			using _i = host.watchDirectorySync("/root/sub", inner, {
+				recursive: true,
+			});
+			using _o = host.watchDirectorySync("/", outer, { recursive: true });
+
+			host.vfsUpsertFile("/root/sub/deep/file.txt", "content");
+
+			expect(inner).toHaveBeenCalledExactlyOnceWith("/root/sub/deep/file.txt");
+			expect(outer).toHaveBeenCalledExactlyOnceWith("/root/sub/deep/file.txt");
+		});
+
+		it("allows re-watching the same path after dispose", () => {
+			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+			const first = vi.fn();
+			const second = vi.fn();
+
+			{
+				using _ = host.watchDirectorySync("/root", first, {
+					recursive: false,
+				});
+			}
+
+			host.vfsUpsertFile("/root/file.txt", "content");
+
+			expect(first).not.toHaveBeenCalled();
+
+			using _ = host.watchDirectorySync("/root", second, { recursive: false });
+			host.vfsUpsertFile("/root/file2.txt", "content");
+
+			expect(second).toHaveBeenCalledExactlyOnceWith("/root/file2.txt");
+		});
+	});
+
+	describe("writeFile", () => {
+		it("sync writeFile creates a file", () => {
+			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+
+			host.writeFileSync("/root/file.txt", "content");
+
+			expect(host.readFileSync("/root/file.txt")).toEqual("content");
+			expect(host.vfsListFiles()).toEqual(
+				new Map([["/root/file.txt", "content"]]),
+			);
+		});
+
+		it("sync writeFile updates an existing file", () => {
+			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+
+			host.vfsUpsertFile("/root/file.txt", "first");
+			host.writeFileSync("/root/file.txt", "second");
+
+			expect(host.readFileSync("/root/file.txt")).toEqual("second");
+		});
+
+		it("sync writeFile fires watcher events", () => {
+			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+			const onEvent = vi.fn();
+
+			using _ = host.watchFileSync("/root/file.txt", onEvent);
+			host.writeFileSync("/root/file.txt", "content");
+			host.writeFileSync("/root/file.txt", "changed");
+
+			expect(onEvent).toHaveBeenNthCalledWith(1, "created");
+			expect(onEvent).toHaveBeenNthCalledWith(2, "changed");
+		});
+
+		it("async writeFile mirrors writeFileSync", async () => {
+			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+
+			await host.writeFile("/root/file.txt", "content");
+
+			expect(host.readFileSync("/root/file.txt")).toEqual("content");
+		});
+	});
+
+	describe("async API", () => {
+		it("readFile mirrors readFileSync", async () => {
+			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+			host.vfsUpsertFile("/root/file.txt", "content");
+
+			await expect(host.readFile("/root/file.txt")).resolves.toEqual("content");
+			await expect(host.readFile("/root/missing.txt")).resolves.toBeUndefined();
+		});
+
+		it("readDirectory mirrors readDirectorySync", async () => {
+			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+			host.vfsUpsertFile("/root/file.txt", "content");
+			host.vfsUpsertFile("/root/sub/nested.txt", "content");
+
+			await expect(host.readDirectory("/root")).resolves.toEqual(
+				host.readDirectorySync("/root"),
+			);
+		});
+
+		it("getFileTouchTime mirrors getFileTouchTimeSync", async () => {
+			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+			host.vfsUpsertFile("/root/file.txt", "content");
+
+			const sync = host.getFileTouchTimeSync("/root/file.txt");
+			const async = await host.getFileTouchTime("/root/file.txt");
+
+			expect(typeof sync).toEqual("number");
+			expect(typeof async).toEqual("number");
+		});
+	});
+
+	describe("vfsListFiles", () => {
+		it("preserves the originally upserted path casing", () => {
+			const host = createVFSLinterHost({ caseSensitive: false, cwd: "/root" });
+			host.vfsUpsertFile("/root/File.TXT", "first");
+			host.vfsUpsertFile("/root/FILE.txt", "second");
+
+			expect(host.vfsListFiles()).toEqual(
+				new Map([["/root/File.TXT", "second"]]),
+			);
+		});
+	});
+
+	describe("invariants", () => {
+		const vfsPath = fc.constantFrom(
+			"/root/a.txt",
+			"/root/b.txt",
+			"/root/sub/c.txt",
+			"/root/sub/d.txt",
+			"/root/sub/deep/e.txt",
+		);
+		const content = fc.string({ maxLength: 32 });
+
+		itProp.prop([vfsPath, content])(
+			"reads back the content that was upserted",
+			(path, content) => {
+				const host = createVFSLinterHost({
+					caseSensitive: true,
+					cwd: "/root",
+				});
+
+				host.vfsUpsertFile(path, content);
+
+				expect(host.readFileSync(path)).toEqual(content);
+				expect(host.fileTypeSync(path)).toEqual("file");
+			},
+		);
+
+		itProp.prop([vfsPath, content])(
+			"removes the file after delete",
+			(path, content) => {
+				const host = createVFSLinterHost({
+					caseSensitive: true,
+					cwd: "/root",
+				});
+
+				host.vfsUpsertFile(path, content);
+				host.vfsDeleteFile(path);
+
+				expect(host.readFileSync(path)).toBeUndefined();
+				expect(host.fileTypeSync(path)).toBeUndefined();
+				expect(host.vfsListFiles().size).toEqual(0);
+			},
+		);
+
+		itProp.prop([fc.array(fc.tuple(vfsPath, content), { maxLength: 10 })])(
+			"listFiles matches the last write for each unique path",
+			(writes) => {
+				const host = createVFSLinterHost({
+					caseSensitive: true,
+					cwd: "/root",
+				});
+				const expected = new Map<string, string>();
+
+				for (const [path, content] of writes) {
+					host.vfsUpsertFile(path, content);
+					expected.set(path, content);
+				}
+
+				expect(host.vfsListFiles()).toEqual(expected);
+			},
+		);
+
+		itProp.prop([fc.uniqueArray(vfsPath, { maxLength: 5 }), content])(
+			"readDirectory only lists immediate children",
+			(paths, content) => {
+				const host = createVFSLinterHost({
+					caseSensitive: true,
+					cwd: "/root",
+				});
+
+				for (const path of paths) {
+					host.vfsUpsertFile(path, content);
+				}
+
+				for (const entry of host.readDirectorySync("/root")) {
+					expect(entry.name).not.toContain("/");
+				}
+			},
+		);
 	});
 });
