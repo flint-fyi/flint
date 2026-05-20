@@ -5744,9 +5744,10 @@
 			}
 		],
 		"flint": {
-			"name": "peerDependenciesRelationships",
+			"name": "peerDependenciesMetaRelationship",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{

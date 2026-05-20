@@ -8,6 +8,7 @@ import dependencyUniqueness from "./rules/dependencyUniqueness.ts";
 import emptyFields from "./rules/emptyFields.ts";
 import exportsSubpathsStyle from "./rules/exportsSubpathsStyle.ts";
 import peerDependenciesInstallation from "./rules/peerDependenciesInstallation.ts";
+import peerDependenciesMetaRelationship from "./rules/peerDependenciesMetaRelationship.ts";
 import privatePackageProperties from "./rules/privatePackageProperties.ts";
 import privatePresence from "./rules/privatePresence.ts";
 import publishConfigRedundancy from "./rules/publishConfigRedundancy.ts";
@@ -26,6 +27,7 @@ export const packageJson = createPlugin({
 		emptyFields,
 		exportsSubpathsStyle,
 		peerDependenciesInstallation,
+		peerDependenciesMetaRelationship,
 		privatePackageProperties,
 		privatePresence,
 		publishConfigRedundancy,
