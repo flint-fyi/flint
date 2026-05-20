@@ -21229,7 +21229,7 @@
 			}
 		],
 		"flint": {
-			"name": "expectTypeOfs",
+			"name": "toBeTypeOfs",
 			"plugin": "vitest",
 			"preset": "stylistic"
 		}
