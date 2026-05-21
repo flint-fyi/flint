@@ -1,6 +1,6 @@
 import type { LinterHost } from "@flint.fyi/core";
 import { normalizePath, pathKey, type PathKey } from "@flint.fyi/utils";
-import path from "node:path";
+import { dirname, resolve } from "pathe";
 import ts from "typescript";
 
 import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
@@ -59,9 +59,7 @@ export function orderTypeScriptFilePaths(
 			tsConfigFileName,
 		);
 		const normalizedConfigPath =
-			configPath == null
-				? undefined
-				: normalizePath(path.resolve(cwd, configPath));
+			configPath == null ? undefined : resolve(cwd, configPath);
 
 		configByDirectory.set(directoryKey, normalizedConfigPath);
 		return normalizedConfigPath;
@@ -83,13 +81,11 @@ export function orderTypeScriptFilePaths(
 				? undefined
 				: {
 						fileNames: parsed.fileNames.map((fileName) =>
-							normalizePath(path.resolve(cwd, fileName)),
+							resolve(cwd, fileName),
 						),
 						references: (parsed.projectReferences ?? [])
 							.map((reference) =>
-								normalizePath(
-									path.resolve(cwd, ts.resolveProjectReferencePath(reference)),
-								),
+								resolve(cwd, ts.resolveProjectReferencePath(reference)),
 							)
 							.sort(comparePaths),
 					};
@@ -124,8 +120,8 @@ export function orderTypeScriptFilePaths(
 	}
 
 	const fileInfos = filePaths.map((original): FilePathInfo => {
-		const absolute = normalizePath(path.resolve(cwd, original));
-		const rootConfig = findConfigFile(path.dirname(absolute));
+		const absolute = resolve(cwd, original);
+		const rootConfig = findConfigFile(dirname(absolute));
 		return {
 			absolute,
 			original,

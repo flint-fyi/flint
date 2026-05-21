@@ -1255,6 +1255,9 @@ importers:
       debug-for-file:
         specifier: ^0.4.0
         version: 0.4.0
+      pathe:
+        specifier: ^2.0.3
+        version: 2.0.3
       ts-api-utils:
         specifier: ^2.4.0
         version: 2.5.0(typescript@5.9.3)
