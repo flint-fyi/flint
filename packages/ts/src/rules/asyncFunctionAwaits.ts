@@ -1,5 +1,6 @@
 import {
 	type AST,
+	getTSNodeRange,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
@@ -54,10 +55,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			context.report({
 				message: "missingAwait",
-				range: {
-					begin: asyncModifier.getStart(sourceFile),
-					end: asyncModifier.getEnd(),
-				},
+				range: getTSNodeRange(asyncModifier, sourceFile),
 			});
 		}
 
