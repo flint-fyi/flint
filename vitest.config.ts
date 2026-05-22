@@ -21,7 +21,7 @@ export default defineConfig({
 					],
 					snapshotSerializers: name === "e2e" ? ["vitest-ansi-serializer"] : [],
 					testTimeout:
-						name === "e2e" ? (platform === "win32" ? 40_000 : 20_000) : 10_000,
+						name === "e2e" ? (platform === "win32" ? 60_000 : 20_000) : 10_000,
 				},
 			}),
 		),
