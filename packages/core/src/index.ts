@@ -2,6 +2,10 @@ export * from "./cache/getCacheFilePath.ts";
 export { writeToCache } from "./cache/writeToCache.ts";
 export { applyChangesToText } from "./changing/applyChangesToText.ts";
 export { defineConfig } from "./configs/defineConfig.ts";
+export {
+	configFileNameCandidates,
+	findConfigFileName,
+} from "./configs/findConfigFileName.ts";
 export { isConfig } from "./configs/isConfig.ts";
 export { validateConfigDefinition } from "./configs/validateConfigDefinition.ts";
 export { DirectivesCollector } from "./directives/DirectivesCollector.ts";

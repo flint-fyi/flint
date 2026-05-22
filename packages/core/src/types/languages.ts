@@ -92,6 +92,7 @@ export interface LanguageDefinition<
 		file: LanguageFile<FileServices>,
 	): LanguageFileCacheImpacts;
 	getLanguageReports?(file: LanguageFile<FileServices>): LanguageReports;
+	orderFilePaths?(filePaths: readonly string[], host: LinterHost): string[];
 	runFileVisitors<
 		OptionsSchema extends AnyOptionalSchema | undefined =
 			| AnyOptionalSchema
