@@ -22,8 +22,8 @@ export default ruleCreator.createRule(yamlLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				root: (node, { filePathAbsolute }) => {
-					const extension = path.extname(filePathAbsolute);
+				root: (node, { filePath }) => {
+					const extension = path.extname(filePath);
 
 					if (extension.toLowerCase() !== ".yml") {
 						return;

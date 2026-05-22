@@ -5,6 +5,15 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+`,
+			fileName: "config.yml",
+			snapshot: `
+
+Use .yaml extension instead of .yml for YAML files.
+`,
+		},
+		{
+			code: `
 key: value
 `,
 			fileName: "config.yml",
