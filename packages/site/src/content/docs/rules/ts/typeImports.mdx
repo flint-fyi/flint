@@ -20,6 +20,10 @@ It can also enforce the opposite style with regular imports instead of `import t
 Using a consistent type import style makes each import's runtime behavior clear.
 The default preference also helps single-file transpilers remove type-only imports without needing type information from the whole project.
 
+:::tip
+If you want to optimize for single-file transpilers, we recommend additionally using [TypeScript's `isolatedModules`](http://aka.ms/tsconfig#isolatedModules) compiler option.
+:::
+
 ## Examples
 
 ### Type-only named imports
