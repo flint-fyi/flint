@@ -219,14 +219,14 @@ ruleTester.describe(rule, {
 /[👨‍👩‍👦]/;
   ~~
   Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
-     ~~
-     Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
-        ~~
-        Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
    ~~~
    Misleading zero-width joiner sequence in character class.
+     ~~
+     Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
       ~~~
       Misleading zero-width joiner sequence in character class.
+        ~~
+        Misleading surrogate pair in character class without the \`u\` or \`v\` flag.
 `,
 			suggestions: [
 				{

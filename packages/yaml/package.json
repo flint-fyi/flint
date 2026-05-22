@@ -2,7 +2,7 @@
 	"name": "@flint.fyi/yaml",
 	"version": "0.15.2",
 	"description": "[Experimental] YAML language plugin for Flint.",
-	"homepage": "https://www.flint.fyi/rules/yaml",
+	"homepage": "https://flint.fyi/rules/yaml",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",

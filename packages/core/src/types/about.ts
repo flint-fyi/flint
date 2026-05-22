@@ -1,3 +1,3 @@
 export interface BaseAbout {
-	id: string;
+	readonly id: string;
 }

@@ -14,9 +14,9 @@ Flint's Node.js plugin provides the following presets:
 
 | Preset                                    | Recommended   | Description                                                                             |
 | ----------------------------------------- | ------------- | --------------------------------------------------------------------------------------- |
-| **[`logical`](#logical)**                 | ✅ Always     | Common rules for finding bugs and enforcing good logical practices in Markdown files.   |
-| **[`stylistic`](#stylistic)**             | ✅ Always     | Common rules for consistent styling and best stylistic practices in Markdown files.     |
-| **[`stylisticStrict`](#stylisticstrict)** | ☑️ When Ready | Additional rules for consistent styling and best stylistic practices in Markdown files. |
+| **[`logical`](#logical)**                 | ✅ Always     | Common rules for finding bugs and enforcing good logical practices in code that uses Node APIs.   |
+| **[`stylistic`](#stylistic)**             | ✅ Always     | Common rules for consistent styling and best stylistic practices in code that uses Node APIs.     |
+| **[`stylisticStrict`](#stylisticstrict)** | ☑️ When Ready | Additional rules for consistent styling and best stylistic practices in code that uses Node APIs. |
 
 If you are just getting started with linting, Flint recommends using the [`logical`](#logical) and [`stylistic`](#stylistic) presets:
 
@@ -34,7 +34,7 @@ export default defineConfig({
 });
 ```
 
-If you are experienced with both Markdown and linting, Flint recommends additionally using the [`stylisticStrict`](#stylisticstrict) preset:
+If you are experienced with both Node.js and linting, Flint recommends additionally using the [`stylisticStrict`](#stylisticstrict) preset:
 
 ```ts title="flint.config.ts"
 import { node } from "@flint.fyi/node";

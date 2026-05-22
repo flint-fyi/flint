@@ -1,0 +1,73 @@
+---
+description: "Enforces that the `bugs` property is valid."
+title: "bugsValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="bugsValidity" />
+
+This rule checks that the `bugs` property is either a URL string or an object with `email` and / or `url` properties.
+If `url` is present, it should be a valid URL.
+If `email` is present, it should be a string.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"bugs": "not-a-url"
+}
+```
+
+```json
+{
+	"bugs": {
+		"extra": true,
+		"email": "name@example.com"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"bugs": "https://example.com/issues"
+}
+```
+
+```json
+{
+	"bugs": {
+		"email": "name@example.com",
+		"url": "https://example.com/issues"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `bugs` field specification, you can disable this rule.
+For example, if you use a package registry that accepts additional bug metadata properties, this rule may not be correct for you.
+
+## Related Rules
+
+- [bugsPresence](/rules/package-json/bugspresence) - Enforces that the `bugs` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `bugs`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bugs)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="bugsValidity" />

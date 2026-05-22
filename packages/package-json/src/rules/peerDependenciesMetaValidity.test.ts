@@ -58,7 +58,7 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesMetaValidity, {
   "peerDependenciesMeta": {
     "package-a": null
                  ~~~~
-                 Invalid peerDependenciesMeta: the value for peer dependency metadata \`package-a\` should be an object, not \`null\`.
+                 Invalid peerDependenciesMeta: the peer dependency metadata for \`package-a\` should be an object, not \`null\`.
   }
 }
 `,
@@ -76,7 +76,7 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesMetaValidity, {
   "peerDependenciesMeta": {
     "package-a": {}
                  ~~
-                 Invalid peerDependenciesMeta: peer dependency metadata for \`package-a\` should contain the \`optional\` property.
+                 Invalid peerDependenciesMeta: the peer dependency metadata for \`package-a\` should contain the \`optional\` property.
   }
 }
 `,
@@ -97,7 +97,7 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesMetaValidity, {
     "package-a": {
       "optional": "yes"
                   ~~~~~
-                  Invalid peerDependenciesMeta: the \`optional\` property for peer dependency metadata \`package-a\` should be a boolean, not \`string\`.
+                  Invalid peerDependenciesMeta: the value should be a boolean, not \`string\`.
     }
   }
 }

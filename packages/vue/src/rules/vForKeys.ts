@@ -11,7 +11,7 @@ export default ruleCreator.createRule(vueLanguage, {
 	about: {
 		description: "Reports v-for directives without a valid key binding.",
 		id: "vForKeys",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidKey: {
