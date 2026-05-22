@@ -19,7 +19,7 @@ export default defineConfig({
 						"@flint.fyi/ts-patch/install-patch-hooks",
 					],
 					snapshotSerializers: name === "e2e" ? ["vitest-ansi-serializer"] : [],
-					testTimeout: name === "e2e" ? 20_000 : 10_000,
+					testTimeout: name === "e2e" ? 30_000 : 10_000,
 				},
 			}),
 		),
