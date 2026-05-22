@@ -564,6 +564,26 @@
 	{
 		"eslint": [
 			{
+				"name": "css/no-invalid-color-hex",
+				"url": "https://ota-meshi.github.io/eslint-plugin-css/rules/no-invalid-color-hex.html"
+			}
+		],
+		"flint": {
+			"name": "hexColorValidity",
+			"plugin": "css",
+			"preset": "logical",
+			"status": "implemented"
+		},
+		"stylelint": [
+			{
+				"name": "color-no-invalid-hex",
+				"url": "https://stylelint.io/user-guide/rules/color-no-invalid-hex"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
 				"name": "eslint-plugin/require-meta-schema-description",
 				"url": "https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-schema-description.md"
 			}

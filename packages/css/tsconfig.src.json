@@ -7,13 +7,6 @@
 	},
 	"extends": "../../tsconfig.base.json",
 	"include": ["src"],
-	"references": [
-		{ "path": "../core" },
-		{ "path": "../css" },
-		{ "path": "../json" },
-		{ "path": "../md" },
-		{ "path": "../package-json" },
-		{ "path": "../ts" },
-		{ "path": "../yaml" }
-	]
+	"exclude": ["src/**/*.test.ts", "src/ruleTester.ts"],
+	"references": [{ "path": "../core" }, { "path": "../css-language" }]
 }
