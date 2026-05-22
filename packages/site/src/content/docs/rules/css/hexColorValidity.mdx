@@ -1,6 +1,6 @@
 ---
-description: "Reports invalid lang attribute values."
-title: "langValidity"
+description: "Reports hex colors with invalid values."
+title: "hexColorValidity"
 topic: "rules"
 ---
 
@@ -8,7 +8,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
-<RuleSummary plugin="css" rule="langValidity" />
+<RuleSummary plugin="css" rule="hexColorValidity" />
 
 CSS values for hex colors must have 3, 4, 6, or 8 digits or letters in `a-f` after the `#`.
 Values with other characters, or the wrong number of characters, are not valid hex colors.
@@ -72,4 +72,4 @@ If you're using a processor that works with seemingly invalid CSS colors, this r
 
 ## Equivalents in Other Linters
 
-<RuleEquivalents pluginId="css" ruleId="langValidity" />
+<RuleEquivalents pluginId="css" ruleId="hexColorValidity" />
