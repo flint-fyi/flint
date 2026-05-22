@@ -42,8 +42,8 @@ const pluginDataById = {
 		},
 		description:
 			"Rules for CSS (Cascading Style Sheets), a browser language for styling documents.",
-		id: "browser",
-		name: "Browser",
+		id: "css",
+		name: "CSS",
 	},
 	flint: {
 		colors: {
