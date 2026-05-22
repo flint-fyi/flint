@@ -166,9 +166,5 @@ export default defineConfig({
 		resolve: {
 			conditions: ["node", "import", "default", "browser"],
 		},
-		ssr: {
-			// https://github.com/withastro/astro/issues/14117
-			noExternal: ["zod"],
-		},
 	},
 });

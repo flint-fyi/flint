@@ -1,8 +1,8 @@
 {
 	"name": "@flint.fyi/yaml",
-	"version": "0.15.1",
+	"version": "0.15.2",
 	"description": "[Experimental] YAML language plugin for Flint.",
-	"homepage": "https://www.flint.fyi/rules/yaml",
+	"homepage": "https://flint.fyi/rules/yaml",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -27,13 +27,13 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"@flint.fyi/yaml-language": "workspace:^",
-		"yaml-unist-parser": "^3.0.0"
+		"@flint.fyi/yaml-language": "workspace:^"
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
 		"tsdown": "catalog:dev",
-		"vitest": "catalog:dev"
+		"vitest": "catalog:dev",
+		"yaml-unist-parser": "3.1.0"
 	},
 	"engines": {
 		"node": ">=24.0.0"

@@ -1,0 +1,98 @@
+---
+description: "Enforces that the `peerDependenciesMeta` property is valid."
+title: "peerDependenciesMetaValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="peerDependenciesMetaValidity" />
+
+This rule checks that the `peerDependenciesMeta` property is an object.
+Each peer dependency metadata value should be an object containing an `optional` boolean and no other properties.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"peerDependenciesMeta": {
+		"example": {}
+	}
+}
+```
+
+```json
+{
+	"peerDependenciesMeta": {
+		"example": {
+			"optional": "yes"
+		}
+	}
+}
+```
+
+```json
+{
+	"peerDependenciesMeta": {
+		"example": {
+			"optional": true,
+			"other": 1
+		}
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"peerDependenciesMeta": {
+		"example": {
+			"optional": true
+		}
+	}
+}
+```
+
+```json
+{
+	"peerDependenciesMeta": {
+		"example": {
+			"optional": false
+		},
+		"example-two": {
+			"optional": true
+		}
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `peerDependenciesMeta` field specification, you can disable this rule.
+For example, if your package manager supports additional metadata keys for peer dependencies, this rule may not be correct for you.
+
+## Related Rules
+
+- [peerDependenciesMetaPresence](/rules/package-json/peerdependenciesmetapresence) - Enforces that the `peerDependenciesMeta` property is present.
+- [peerDependenciesValidity](/rules/package-json/peerdependenciesvalidity) - Enforces that the `peerDependencies` property is valid.
+
+## Further Reading
+
+- [npm: `package.json` > `peerDependenciesMeta`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#peerdependenciesmeta)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents
+	pluginId="package-json"
+	ruleId="peerDependenciesMetaValidity"
+/>

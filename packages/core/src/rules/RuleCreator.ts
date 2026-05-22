@@ -1,3 +1,4 @@
+import type { ExactObject } from "../types/exact.ts";
 import type {
 	AnyLanguage,
 	GetLanguageAstNodesByName,
@@ -9,10 +10,13 @@ import type { AnyOptionalSchema } from "../types/shapes.ts";
 export interface RuleCreatorOptions<Presets extends string> {
 	docs: (ruleId: string) => string;
 	pluginId: string;
-	presets: Presets[];
+	presets: readonly Presets[];
 }
 
-export class RuleCreator<Presets extends string> {
+export class RuleCreator<
+	Presets extends string,
+	const About extends RuleAbout = RuleAbout<Presets>,
+> {
 	#options: RuleCreatorOptions<Presets>;
 
 	constructor(options: RuleCreatorOptions<Presets>) {
@@ -20,29 +24,21 @@ export class RuleCreator<Presets extends string> {
 	}
 
 	createRule<
-		const About extends RuleAbout,
+		const RuleDefinitionAbout extends About,
 		const Language extends AnyLanguage,
 		const MessageId extends string,
-		const OptionsSchema extends AnyOptionalSchema,
+		OptionsSchema extends AnyOptionalSchema | undefined = undefined,
 	>(
 		language: Language,
 		rule: RuleDefinition<
-			About & {
-				presets?: Presets[];
-			},
+			ExactObject<RuleDefinitionAbout, About>,
 			GetLanguageAstNodesByName<Language>,
 			GetLanguageFileServices<Language>,
 			MessageId,
 			OptionsSchema
 		>,
 	): Rule<
-		// We can't put this in the constraint or else inference fails for some reason.
-		About & {
-			presets?: Presets[];
-			url: string;
-		},
-		object,
-		object,
+		RuleDefinitionAbout & { readonly pluginId: string; readonly url: string },
 		MessageId,
 		OptionsSchema
 	> {

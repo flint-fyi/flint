@@ -20,7 +20,7 @@ without any additional configuration (like `options`, `errors`, etc.), it can be
 
 ```ts
 ruleTester.describe(rule, {
-	valid: ["a", { code: "a" }],
+	valid: ["a", { code: "b" }],
 	invalid: [],
 });
 ```
@@ -30,7 +30,7 @@ ruleTester.describe(rule, {
 
 ```ts
 ruleTester.describe(rule, {
-	valid: ["a", "a"],
+	valid: ["a", "b"],
 	invalid: [],
 });
 ```

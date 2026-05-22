@@ -1,0 +1,75 @@
+---
+description: "Enforces that the `bugs` property is present."
+title: "bugsPresence"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="bugsPresence" />
+
+This rule requires the `bugs` field in `package.json` to be present.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"bugs": "https://example.com/issues"
+}
+```
+
+```json
+{
+	"bugs": {
+		"url": "https://example.com/issues"
+	},
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `ignorePrivate`
+
+Whether the property should still be required when the package's `private` property is `true`.
+Defaults to `false`.
+
+This option can be useful if the rule is enabled on many `package.json` files and some files differ in privacy.
+
+## When Not To Use It
+
+If your package does not accept public bug reports, you can disable this rule.
+For example, an internal package may track issues in a private system that should not be exposed in package metadata.
+
+## Related Rules
+
+- [bugsValidity](/rules/package-json/bugsvalidity) - Enforces that the `bugs` property is valid.
+
+## Further Reading
+
+- [npm: `package.json` > `bugs`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bugs)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="bugsPresence" />

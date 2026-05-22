@@ -1,1 +1,5 @@
-export { createVolarBasedLanguage, reportSourceCode } from "./language.ts";
+export {
+	createVolarBasedLanguage,
+	type Language,
+	reportSourceCode,
+} from "./language.ts";

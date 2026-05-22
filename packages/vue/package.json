@@ -1,8 +1,8 @@
 {
 	"name": "@flint.fyi/vue",
-	"version": "0.0.1",
+	"version": "0.1.1",
 	"description": "[Experimental] Vue.js language plugin for Flint.",
-	"homepage": "https://flint.fyi",
+	"homepage": "https://flint.fyi/rules/vue",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -28,7 +28,6 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
-		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"@flint.fyi/volar-language": "workspace:^",
 		"@flint.fyi/vue-language": "workspace:^",
@@ -37,6 +36,7 @@
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
+		"@flint.fyi/typescript-language": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev",
 		"vue": "3.5.30"

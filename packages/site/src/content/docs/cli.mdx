@@ -28,7 +28,7 @@ You can open this file in an editor to see which files are cached, as well as de
 :::tip
 This value can also be set in your Flint configuration.
 Values applied on the command line will override any value defined in the config file.
-See [Configuration > cacheLocation](https://www.flint.fyi/configuration#cacheLocation) for more.
+See [Configuration > cacheLocation](https://flint.fyi/configuration#cacheLocation) for more.
 :::
 
 ## `--fix`
@@ -66,6 +66,8 @@ Whether to run Flint with an interactive "one file at a time" viewer.
 <PackageManagers args="--interactive" pkg="flint" type="dlx" />
 
 Flint's interactive CLI view can be controlled by using the arrow keys printed in the output:
+
+{/* spellchecker: disable */}
 
 <div class="only-dark">
 
@@ -119,6 +121,8 @@ Flint's interactive CLI view can be controlled by using the arrow keys printed i
 
 </div>
 
+{/* spellchecker: enable */}
+
 :::tip
 The `--interactive` mode switches the default [`--presenter`](#--presenter) from `brief` to `detailed`.
 It does not, however, enable `--watch` by default.
@@ -132,6 +136,8 @@ Which ["presenter"](/glossary#presenter) to output results using: `brief` _(defa
 <PackageManagers args="--presenter detailed" pkg="flint" type="dlx" />
 
 The `brief` presenter shows a terse output with just file locations, primary report messages, and report IDs.
+
+{/* spellchecker: disable */}
 
 <div class="only-dark">
 
@@ -211,7 +217,11 @@ The `detailed` presenter shows a rich formatted output containing full report me
 
 </div>
 
+{/* spellchecker: enable */}
+
 ## `--skip-diagnostics`
+
+{/* spellchecker: disable */}
 
 <div class="only-dark">
 
@@ -259,6 +269,8 @@ The `detailed` presenter shows a rich formatted output containing full report me
 ```
 </div>
 
+{/* spellchecker: enable */}
+
 ## `--skip-language-reports`
 
 Whether to skip generating language reports after linting.
@@ -285,3 +297,4 @@ Whether to keep the linting process running, re-linting files as they change.
 
 Flint's `--watch` mode is similar to the watch mode in other developer tools CLIs such as [`tsc --watch`](https://www.typescriptlang.org/docs/handbook/compiler-options.html#:~:text=Watch%20Options,-Flag), [`tsdown --watch`](https://tsdown.dev/options/watch-mode), and [`vitest --watch`](https://vitest.dev/guide/cli.html#watch).
 It will lint files once on startup, then again whenever any linted files are changed on disk.
+```

@@ -1,0 +1,72 @@
+---
+description: "Enforce that the `cpu` property is present."
+title: "cpuPresence"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="cpuPresence" />
+
+npm requires that the `cpu` field in `package.json` is present.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"cpu": ["x64"]
+}
+```
+
+```json
+{
+	"cpu": ["x64"],
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `ignorePrivate`
+
+Whether the property should still be required when the package's `private` property is `true`.
+Defaults to `false`.
+
+This option can be useful if the rule is enabled on many `package.json` files and some files differ in privacy.
+
+## When Not To Use It
+
+If your package doesn't need to specify `cpu`, you can disable this rule.
+
+## Related Rules
+
+- [cpuValidity](/rules/package-json/cpuvalidity) - Enforces that the `cpu` property is valid.
+
+## Further Reading
+
+- [npm: `package.json` > `cpu`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#cpu)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="cpuPresence" />

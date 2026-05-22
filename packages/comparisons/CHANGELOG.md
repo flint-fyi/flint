@@ -1,5 +1,43 @@
 # @flint.fyi/comparisons
 
+## 0.3.3
+
+### Patch Changes
+
+- 432d186: Add the `package-json/dependencyUniqueness` rule.
+- c23b6a6: Added missing package-json rule entries.
+- 320a8ee: Add the `publishConfigRedundancy` rule.
+
+## 0.3.2
+
+### Patch Changes
+
+- 111f8ee: Added package-json/repositoryShorthand rule.
+- c35722a: Ban duplicate Flint rules in comparisons data.
+- 36d8bb1: Added package-json-validator@1.5.0 validity rules.
+- 6f2a1b2: Added testCasesWithinDescribes rule.
+- 8eed0f6: Added remaining \*Padding\* rules.
+- 3eee30e: Added `afterAllPaddingLines` rule.
+
+## 0.3.1
+
+### Patch Changes
+
+- 9cdc819: Added initial Vitest plugin with `nodeTestImports` rule.
+
+## 0.3.0
+
+### Minor Changes
+
+- 07e1011: Remove the Sorting plugin and move the underlying rules to their corresponding language plugins.
+
+### Patch Changes
+
+- 6d013fe: Added direct validity rules.
+- 94403c7: Added direct presence rules.
+- fb59513: Update eslint-plugin-package-json owner to michaelfaith.
+- 6d013fe: Add in missing already-present validator rules.
+
 ## 0.2.1
 
 ### Patch Changes

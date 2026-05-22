@@ -247,7 +247,9 @@ import regexUnusedQuantifiers from "./rules/regexUnusedQuantifiers.ts";
 import regexValidity from "./rules/regexValidity.ts";
 import regexWordMatchers from "./rules/regexWordMatchers.ts";
 import regexZeroQuantifiers from "./rules/regexZeroQuantifiers.ts";
+import requireImports from "./rules/requireImports.ts";
 import responseJsonMethods from "./rules/responseJsonMethods.ts";
+import restrictedIdentifiers from "./rules/restrictedIdentifiers.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import returnThisTypes from "./rules/returnThisTypes.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
@@ -288,6 +290,7 @@ import unnecessaryConcatenation from "./rules/unnecessaryConcatenation.ts";
 import unnecessaryEscapes from "./rules/unnecessaryEscapes.ts";
 import unnecessaryMathClamps from "./rules/unnecessaryMathClamps.ts";
 import unnecessaryNumericFractions from "./rules/unnecessaryNumericFractions.ts";
+import unnecessaryRenames from "./rules/unnecessaryRenames.ts";
 import unnecessaryTernaries from "./rules/unnecessaryTernaries.ts";
 import unnecessaryUseStricts from "./rules/unnecessaryUseStricts.ts";
 import unsafeNegations from "./rules/unsafeNegations.ts";
@@ -554,7 +557,10 @@ export const ts = createPlugin({
 		regexValidity,
 		regexWordMatchers,
 		regexZeroQuantifiers,
+		requireImports,
+		requireImports,
 		responseJsonMethods,
+		restrictedIdentifiers,
 		returnAssignments,
 		returnThisTypes,
 		selfAssignments,
@@ -595,6 +601,7 @@ export const ts = createPlugin({
 		unnecessaryEscapes,
 		unnecessaryMathClamps,
 		unnecessaryNumericFractions,
+		unnecessaryRenames,
 		unnecessaryTernaries,
 		unnecessaryUseStricts,
 		unsafeNegations,

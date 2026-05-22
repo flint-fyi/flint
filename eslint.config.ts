@@ -2,7 +2,6 @@ import eslint from "@eslint/js";
 import markdown from "@eslint/markdown";
 import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import vitest from "@vitest/eslint-plugin";
-import type { Linter } from "eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
 import jsdoc from "eslint-plugin-jsdoc";
 import jsonc from "eslint-plugin-jsonc";
@@ -187,20 +186,34 @@ export default defineConfig(
 		},
 	},
 	{
-		extends: [
-			// https://github.com/ota-meshi/eslint-plugin-jsonc/issues/385
-			jsonc.configs["flat/recommended-with-json"] as unknown as Linter.Config[],
-		],
+		files: ["packages/site/**/*.ts"],
+		rules: {
+			"@typescript-eslint/no-restricted-imports": [
+				"error",
+				{
+					paths: [
+						{
+							message: "Use astro/zod instead of the main Zod package.",
+							name: "zod",
+						},
+					],
+					patterns: [
+						{
+							group: ["zod/*"],
+							message: "Use astro/zod instead of the main Zod package.",
+						},
+					],
+				},
+			],
+		},
+	},
+	{
+		extends: [jsonc.configs["flat/recommended-with-json"]],
 		files: ["**/*.json"],
 		ignores: ["**/tsconfig.json", "**/tsconfig.*.json"],
 	},
 	{
-		extends: [
-			// https://github.com/ota-meshi/eslint-plugin-jsonc/issues/385
-			jsonc.configs[
-				"flat/recommended-with-jsonc"
-			] as unknown as Linter.Config[],
-		],
+		extends: [jsonc.configs["flat/recommended-with-jsonc"]],
 		files: ["**/tsconfig.json", "**/tsconfig.*.json", "**/*.jsonc"],
 	},
 	{
@@ -233,11 +246,7 @@ export default defineConfig(
 		},
 	},
 	{
-		extends: [
-			// https://github.com/ota-meshi/eslint-plugin-yml/issues/510
-			yml.configs["flat/standard"] as unknown as Linter.Config[],
-			yml.configs["flat/prettier"] as unknown as Linter.Config[],
-		],
+		extends: [yml.configs["flat/standard"], yml.configs["flat/prettier"]],
 		files: ["**/*.{yml,yaml}"],
 		rules: {
 			"yml/file-extension": "error",

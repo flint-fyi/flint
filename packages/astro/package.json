@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/astro",
-	"version": "0.2.1",
+	"version": "0.2.3",
 	"description": "[Experimental] A Flint plugin for Astro code.",
 	"homepage": "https://flint.fyi/rules/astro",
 	"repository": {
@@ -26,7 +26,7 @@
 		"test": "vitest --project astro"
 	},
 	"dependencies": {
-		"@astrojs/compiler": "^3.0.1",
+		"@astrojs/compiler": "^4.0.0",
 		"@flint.fyi/astro-language": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",

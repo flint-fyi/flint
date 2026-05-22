@@ -1,6 +1,6 @@
 import { comparisons, getComparisonId } from "@flint.fyi/comparisons";
 
-const comparisonsByFlintId = Object.fromEntries(
+const comparisonsByFlintId = new Map(
 	comparisons.map((comparison) => [
 		getComparisonId(comparison.flint.plugin, comparison.flint.name),
 		comparison,
@@ -8,5 +8,12 @@ const comparisonsByFlintId = Object.fromEntries(
 );
 
 export function getComparisonByFlintId(pluginId: string, ruleId: string) {
-	return comparisonsByFlintId[getComparisonId(pluginId, ruleId)];
+	const comparisonId = getComparisonId(pluginId, ruleId);
+	const comparison = comparisonsByFlintId.get(comparisonId);
+
+	if (!comparison) {
+		throw new Error(`Missing comparison data for: ${comparisonId}`);
+	}
+
+	return comparison;
 }

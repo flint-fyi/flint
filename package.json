@@ -21,6 +21,7 @@
 		"flint:cache-ignore": "node packages/flint/bin/index.js --cache-ignore",
 		"lint": "eslint . --max-warnings 0",
 		"lint:knip": "knip",
+		"lint:knip:prod": "knip --strict",
 		"prepare": "husky",
 		"start:site": "pnpm --filter=site prebuild && pnpm --filter=site start",
 		"test": "vitest"
@@ -36,6 +37,7 @@
 		"@flint.fyi/plugin-flint": "workspace:^",
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",
+		"@flint.fyi/vitest": "workspace:^",
 		"@types/node": "catalog:dev",
 		"@vitest/coverage-v8": "catalog:dev",
 		"@vitest/eslint-plugin": "catalog:dev",

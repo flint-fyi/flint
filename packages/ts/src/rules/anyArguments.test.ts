@@ -273,6 +273,20 @@ fn(...tuple);
 		},
 		{
 			code: `
+declare function fn(arg: string): void;
+const tuple = [notKnownValue] as const;
+fn(...tuple);
+`,
+			snapshot: `
+declare function fn(arg: string): void;
+const tuple = [notKnownValue] as const;
+fn(...tuple);
+   ~~~~~~~~
+   Unsafe spread of tuple type. The argument is of type \`error\` assigned to parameter of type \`string\`.
+`,
+		},
+		{
+			code: `
 declare const a: any;
 declare const b: any;
 declare function fn(...args: [number, string]): void;
@@ -355,6 +369,88 @@ declare function fn(arg?: string): void;
 fn(value);
    ~~~~~
    Unsafe argument of type \`any\` assigned to parameter of type \`string | undefined\`.
+`,
+		},
+		{
+			code: `
+declare function fn(arg: string): void;
+let value: NotKnown;
+fn(value);
+`,
+			snapshot: `
+declare function fn(arg: string): void;
+let value: NotKnown;
+fn(value);
+   ~~~~~
+   Unsafe argument of type \`error\` assigned to parameter of type \`string\`.
+`,
+		},
+		{
+			code: `
+declare function fn(arg: string): void;
+fn(notKnownValue);
+`,
+			snapshot: `
+declare function fn(arg: string): void;
+fn(notKnownValue);
+   ~~~~~~~~~~~~~
+   Unsafe argument of type \`error\` assigned to parameter of type \`string\`.
+`,
+		},
+		{
+			code: `
+declare function fn(...args: string[]): void;
+let values: NotKnown;
+fn(...values);
+`,
+			snapshot: `
+declare function fn(...args: string[]): void;
+let values: NotKnown;
+fn(...values);
+   ~~~~~~~~~
+   Unsafe spread of type \`error\` in function call.
+`,
+		},
+		{
+			code: `
+declare function tag(strings: TemplateStringsArray, arg: number): void;
+let value: NotKnown;
+tag\`\${value}\`;
+`,
+			snapshot: `
+declare function tag(strings: TemplateStringsArray, arg: number): void;
+let value: NotKnown;
+tag\`\${value}\`;
+    ~~~~~~~~
+    Unsafe argument of type \`error\` assigned to parameter of type \`number\`.
+`,
+		},
+		{
+			code: `
+declare function fn(arg: string[]): void;
+let values: NotKnown[];
+fn(values);
+`,
+			snapshot: `
+declare function fn(arg: string[]): void;
+let values: NotKnown[];
+fn(values);
+   ~~~~~~
+   Unsafe argument of type \`NotKnown[]\` assigned to parameter of type \`string[]\`.
+`,
+		},
+		{
+			code: `
+declare function fn(arg: Promise<string>): void;
+let value: Promise<NotKnown>;
+fn(value);
+`,
+			snapshot: `
+declare function fn(arg: Promise<string>): void;
+let value: Promise<NotKnown>;
+fn(value);
+   ~~~~~
+   Unsafe argument of type \`Promise<NotKnown>\` assigned to parameter of type \`Promise<string>\`.
 `,
 		},
 	],

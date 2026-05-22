@@ -6,11 +6,16 @@ import {
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
+import { formatReportedType } from "./utils/formatReportedType.ts";
 import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
 function isTypeAny(type: ts.Type): boolean {
-	return tsutils.isTypeFlagSet(type, ts.TypeFlags.Any);
+	return (
+		tsutils.isTypeFlagSet(type, ts.TypeFlags.Any) &&
+		!tsutils.isIntrinsicErrorType(type)
+	);
 }
 
 function isTypeAnyArray(type: ts.Type, checker: Checker): boolean {
@@ -25,8 +30,6 @@ function isTypeAnyArray(type: ts.Type, checker: Checker): boolean {
 function isTypeAnyOrUnknown(type: ts.Type): boolean {
 	return tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown);
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -67,7 +70,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			suggestions: ["Ensure the spread array has compatible element types."],
 		},
 		unsafeAssignment: {
-			primary: "Unsafe assignment of a value of type {{ type }}.",
+			primary: "Unsafe assignment of a value of type `{{ type }}`.",
 			secondary: [
 				"Assigning a value of type `any` or a similar unsafe type defeats TypeScript's type safety guarantees.",
 				"This can allow unexpected types to propagate through your codebase, potentially causing runtime errors.",
@@ -191,22 +194,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				let key: string | undefined;
 				const propertyName = element.propertyName ?? element.name;
 
-				if (ts.isIdentifier(propertyName)) {
-					key = propertyName.text;
-				} else if (ts.isStringLiteral(propertyName)) {
-					key = propertyName.text;
-				} else if (ts.isNumericLiteral(propertyName)) {
-					key = propertyName.text;
-				} else if (
-					ts.isComputedPropertyName(propertyName) &&
-					ts.isStringLiteral(propertyName.expression)
+				if (
+					ts.isIdentifier(propertyName) ||
+					ts.isStringLiteral(propertyName) ||
+					ts.isNumericLiteral(propertyName)
 				) {
-					key = propertyName.expression.text;
-				} else if (
-					ts.isComputedPropertyName(propertyName) &&
-					ts.isNoSubstitutionTemplateLiteral(propertyName.expression)
-				) {
-					key = propertyName.expression.text;
+					key = propertyName.text;
+				} else if (ts.isComputedPropertyName(propertyName)) {
+					const expression = propertyName.expression;
+					if (
+						ts.isStringLiteral(expression) ||
+						ts.isNoSubstitutionTemplateLiteral(expression)
+					) {
+						key = expression.text;
+					}
 				}
 
 				if (key === undefined) {
@@ -293,6 +294,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			sourceFile: AST.SourceFile,
 			typeChecker: Checker,
 		): boolean {
+			if (tsutils.isIntrinsicErrorType(initializerType)) {
+				return false;
+			}
+
 			const anyType = discriminateAnyType(
 				initializerType,
 				typeChecker,
@@ -303,12 +308,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				if (anyType !== AnyType.Safe) {
 					context.report({
 						data: {
-							type:
-								anyType === AnyType.Any
-									? "`any`"
-									: anyType === AnyType.PromiseAny
-										? "`Promise<any>`"
-										: "`any[]`",
+							type: anyType,
 						},
 						message: "unsafeAssignment",
 						range: {
@@ -336,8 +336,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			context.report({
 				data: {
-					receiver: typeChecker.typeToString(result.receiver),
-					sender: typeChecker.typeToString(result.sender),
+					receiver: formatReportedType(result.receiver, typeChecker),
+					sender: formatReportedType(result.sender, typeChecker),
 				},
 				message: "unsafeAssignmentToVariable",
 				range: {
@@ -456,11 +456,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// TODO: Use a util like getStaticValue
 					// https://github.com/flint-fyi/flint/issues/1298
 					let key: string | undefined;
-					if (ts.isIdentifier(node.name)) {
-						key = node.name.text;
-					} else if (ts.isStringLiteral(node.name)) {
-						key = node.name.text;
-					} else if (ts.isNumericLiteral(node.name)) {
+
+					if (
+						ts.isIdentifier(node.name) ||
+						ts.isStringLiteral(node.name) ||
+						ts.isNumericLiteral(node.name)
+					) {
 						key = node.name.text;
 					}
 
@@ -483,7 +484,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					context.report({
-						data: { type: "`any`" },
+						data: { type: "any" },
 						message: "unsafeAssignment",
 						range: {
 							begin: node.getStart(sourceFile),
@@ -544,7 +545,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					context.report({
-						data: { type: "`any`" },
+						data: { type: "any" },
 						message: "unsafeAssignment",
 						range: {
 							begin: node.getStart(sourceFile),

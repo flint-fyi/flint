@@ -4,6 +4,35 @@
 
 ### Minor Changes
 
+- 0177958: Retry publishing failures.
+
+### Patch Changes
+
+- Updated dependencies [6d013fe]
+- Updated dependencies [4fc0eef]
+- Updated dependencies [61d1fdf]
+- Updated dependencies [ea6be9e]
+- Updated dependencies [ced10a1]
+- Updated dependencies [94403c7]
+- Updated dependencies [57fa268]
+- Updated dependencies [dce37c5]
+- Updated dependencies [e2c96c6]
+- Updated dependencies [dde886f]
+- Updated dependencies [1539f14]
+- Updated dependencies [0702aa2]
+- Updated dependencies [cb7e8a8]
+- Updated dependencies [6d013fe]
+- Updated dependencies [d3f5d17]
+- Updated dependencies [8ae55cf]
+  - @flint.fyi/package-json@0.17.0
+  - @flint.fyi/core@0.21.0
+  - @flint.fyi/ts@0.18.0
+  - @flint.fyi/cli@0.19.0
+
+## 0.16.0
+
+### Minor Changes
+
 - 3353692: feat: split languages into dedicated packages
 
 ### Patch Changes
