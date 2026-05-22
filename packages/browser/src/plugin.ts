@@ -3,6 +3,8 @@ import { createPlugin } from "@flint.fyi/core";
 import alerts from "./rules/alerts.ts";
 import classListToggles from "./rules/classListToggles.ts";
 import documentCookies from "./rules/documentCookies.ts";
+import documentDomains from "./rules/documentDomains.ts";
+import documentWrites from "./rules/documentWrites.ts";
 import eventListenerSubscriptions from "./rules/eventListenerSubscriptions.ts";
 import implicitGlobals from "./rules/implicitGlobals.ts";
 import keyboardEventKeys from "./rules/keyboardEventKeys.ts";
@@ -22,6 +24,8 @@ export const browser = createPlugin({
 		alerts,
 		classListToggles,
 		documentCookies,
+		documentDomains,
+		documentWrites,
 		eventListenerSubscriptions,
 		implicitGlobals,
 		keyboardEventKeys,

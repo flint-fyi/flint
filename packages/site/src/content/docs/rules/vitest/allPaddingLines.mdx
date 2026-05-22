@@ -1,0 +1,113 @@
+---
+description: "Enforces padding around Vitest blocks."
+title: "allPaddingLines"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vitest" rule="allPaddingLines" />
+
+Blank lines between Vitest hooks, suites, test cases, and assertion groups make test files easier to scan.
+This rule applies the same spacing convention across those block types so a file reads with a more consistent rhythm.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { beforeEach, expect, it } from "vitest";
+
+const value = "cherry";
+beforeEach(() => {
+	// ...
+});
+it("does something", () => {
+	const count = 1;
+	expect(count).toBe(1);
+	console.log(value);
+});
+```
+
+```ts
+import { afterAll, describe, expect, test } from "vitest";
+
+const server = {
+	close() {},
+	running: true,
+};
+
+describe("server", () => {
+	afterAll(() => {
+		server.close();
+	});
+	test("responds", () => {
+		expect(server.running).toBe(true);
+	});
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { beforeEach, expect, it } from "vitest";
+
+const value = "cherry";
+
+beforeEach(() => {
+	// ...
+});
+
+it("does something", () => {
+	const count = 1;
+
+	expect(count).toBe(1);
+
+	console.log(value);
+});
+```
+
+```ts
+import { afterAll, describe, expect, test } from "vitest";
+
+const server = {
+	close() {},
+	running: true,
+};
+
+describe("server", () => {
+	afterAll(() => {
+		server.close();
+	});
+
+	test("responds", () => {
+		expect(server.running).toBe(true);
+	});
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you want spacing rules for only one part of Vitest syntax, the narrower padding rules may fit your project better.
+This rule can feel too opinionated for compact test files because it applies one spacing style across multiple kinds of statements.
+
+## Further Reading
+
+- [Vitest API](https://vitest.dev/api/)
+- [Vitest Guide: Mocking](https://vitest.dev/guide/mocking)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vitest" ruleId="allPaddingLines" />

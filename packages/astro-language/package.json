@@ -26,7 +26,7 @@
 		"test": "vitest --project astro-language"
 	},
 	"dependencies": {
-		"@astrojs/compiler": "^3.0.1",
+		"@astrojs/compiler": "^4.0.0",
 		"@astrojs/ts-plugin": "^1.10.7",
 		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
