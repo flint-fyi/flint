@@ -20,7 +20,7 @@ export {
 	jjVcs,
 	nodeModulesCache,
 	nodeModulesDir,
-	vcsDirs,
+	vcsDirectories,
 } from "./host/watcher.ts";
 export { createLanguage } from "./languages/createLanguage.ts";
 export { createPlugin } from "./plugins/createPlugin.ts";

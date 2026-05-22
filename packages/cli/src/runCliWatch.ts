@@ -2,7 +2,7 @@ import {
 	type LinterHost,
 	type LintResults,
 	nodeModulesCache,
-	vcsDirs,
+	vcsDirectories,
 } from "@flint.fyi/core";
 import { pathKey } from "@flint.fyi/utils";
 import debounce from "debounce";
@@ -82,7 +82,7 @@ export async function runCliWatch(
 
 		log("Watching cwd:", cwd);
 		const watcher = host.watchDirectorySync(cwd, rerun, {
-			ignoredPaths: [nodeModulesCache, ...vcsDirs],
+			ignoredPaths: [nodeModulesCache, ...vcsDirectories],
 			recursive: true,
 		});
 	});
