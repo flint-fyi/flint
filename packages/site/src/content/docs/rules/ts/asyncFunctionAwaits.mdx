@@ -82,7 +82,7 @@ This rule is not configurable.
 ## When Not To Use It
 
 If you intentionally use `async` functions without `await` to ensure thrown errors are wrapped in rejected Promises, you may want to disable this rule.
-This pattern is sometimes used when you want consistent error handling through Promise rejection rather than thrown exceptions.
+This pattern can be useful when you want consistent error handling through Promise rejection rather than thrown exceptions.
 
 Alternately, if you are writing prototype code where many functions intentionally can be missing their implementation, this rule may get in your way.
 You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.

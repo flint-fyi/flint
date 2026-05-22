@@ -102,10 +102,12 @@ function bodyReturnsThenable(
 	}
 
 	function checkReturnStatements(node: ts.Node): boolean | undefined {
-		if (ts.isReturnStatement(node) && node.expression) {
-			if (tsutils.isThenableType(typeChecker, node.expression)) {
-				return true;
-			}
+		if (
+			ts.isReturnStatement(node) &&
+			node.expression &&
+			tsutils.isThenableType(typeChecker, node.expression)
+		) {
+			return true;
 		}
 
 		if (tsutils.isFunctionScopeBoundary(node)) {
@@ -119,5 +121,5 @@ function bodyReturnsThenable(
 }
 
 function isEmptyBody(body: ts.Block | ts.Expression) {
-	return ts.isBlock(body) && body.statements.length === 0;
+	return ts.isBlock(body) && !body.statements.length;
 }
