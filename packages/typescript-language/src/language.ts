@@ -21,6 +21,7 @@ import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesF
 import { getFirstEnumValues } from "./getFirstEnumValues.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
 import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
+import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
 import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
 
@@ -163,6 +164,7 @@ export const typescriptLanguage = createLanguage<
 			.getPreEmitDiagnostics(file.services.program, file.services.sourceFile)
 			.map(convertTypeScriptDiagnosticToLanguageReport);
 	},
+	orderFilePaths: orderTypeScriptFilePaths,
 	runFileVisitors(file, options, runtime) {
 		if (!runtime.visitors) {
 			return;

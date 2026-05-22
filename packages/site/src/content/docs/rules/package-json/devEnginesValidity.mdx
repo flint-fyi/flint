@@ -1,0 +1,89 @@
+---
+description: "Enforces that the `devEngines` property is valid."
+title: "devEnginesValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="devEnginesValidity" />
+
+This rule checks that the `devEngines` property is an object with only `cpu`, `libc`, `os`, `packageManager`, and `runtime` properties.
+Each dev engine entry should be an object or array of objects with a `name` property and optional `version` and `onFail` properties.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"devEngines": {
+		"runtime": {}
+	}
+}
+```
+
+```json
+{
+	"devEngines": {
+		"runtime": {
+			"name": 123,
+			"onFail": "kaboom"
+		}
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"devEngines": {
+		"runtime": {
+			"name": "node",
+			"version": "^20.19.0 || >=22.12.0",
+			"onFail": "download"
+		}
+	}
+}
+```
+
+```json
+{
+	"devEngines": {
+		"runtime": [
+			{
+				"name": "node"
+			},
+			{
+				"name": "bun",
+				"onFail": "warn"
+			}
+		]
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `devEngines` field specification, you can disable this rule.
+For example, if your package manager supports additional `devEngines` properties, this rule may not be correct for you.
+
+## Related Rules
+
+- [devEnginesPresence](/rules/package-json/devenginespresence) - Enforces that the `devEngines` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `devEngines`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#devengines)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="devEnginesValidity" />

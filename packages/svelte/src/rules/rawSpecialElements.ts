@@ -13,7 +13,7 @@ export default ruleCreator.createRule(svelteLanguage, {
 		description:
 			"Reports raw special Svelte elements that should use the `svelte:` prefix.",
 		id: "rawSpecialElements",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		rawSpecialElement: {

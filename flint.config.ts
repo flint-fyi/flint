@@ -3,17 +3,24 @@ import { performance } from "@flint.fyi/performance";
 import { flint } from "@flint.fyi/plugin-flint";
 import { spelling } from "@flint.fyi/spelling";
 import { vitest } from "@flint.fyi/vitest";
-import { defineConfig, globs, json, md, ts, yaml } from "flint";
+import { defineConfig, globs, json, md, packageJson, ts, yaml } from "flint";
 
 export default defineConfig({
 	ignore: ["coverage/", "packages/e2e/tests/**/fixtures/**/*"],
 	use: [
 		{
+			files: {
+				exclude: ["packages/e2e/tests/**/package.json"],
+				include: packageJson.files.all,
+			},
+			rules: [packageJson.presets.logical, packageJson.presets.stylistic],
+		},
+		{
 			files: json.files.all,
 			rules: json.presets.logical,
 		},
 		{
-			files: md.files.all,
+			files: [md.files.all, ".changeset/*.md", ".github/**/*.md"],
 			rules: md.presets.logicalStrict,
 		},
 		{
@@ -49,7 +56,7 @@ export default defineConfig({
 			rules: yaml.presets.logical,
 		},
 		{
-			files: globs.all,
+			files: [globs.all, "**/*.mdx"],
 			rules: spelling.presets.logical,
 		},
 	],

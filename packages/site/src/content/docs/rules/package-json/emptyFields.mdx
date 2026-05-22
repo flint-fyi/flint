@@ -1,0 +1,93 @@
+---
+description: "Reports empty package.json fields that do not add package metadata."
+title: "emptyFields"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="emptyFields" />
+
+This rule reports empty arrays and objects in `package.json` fields.
+Empty fields usually add no package metadata, and they can leave readers unsure whether configuration was omitted or left unfinished.
+
+The rule ignores top-level `files` by default because an empty `files` array has npm packaging behavior.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"main": "./lib/index.js",
+	"scripts": {}
+}
+```
+
+```json
+{
+	"main": "./lib/index.js",
+	"simple-git-hooks": {
+		"pre-commit": "pnpm exec nano-staged",
+		"preserveUnused": []
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"main": "./lib/index.js",
+	"scripts": {
+		"test": "vitest"
+	}
+}
+```
+
+```json
+{
+	"files": []
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `ignoreProperties`
+
+> Type: `string[]`
+>
+> Default: `["files"]`
+
+Top-level package properties whose empty array or object values should not be reported.
+
+Use this option for tools that treat an empty package field as meaningful configuration.
+Configured values replace the default list, so include `"files"` if your package relies on npm's handling for an empty `files` array.
+
+```ts
+packageJson.rules({
+	emptyFields: {
+		ignoreProperties: ["files", "browserslist"],
+	},
+});
+```
+
+## When Not To Use It
+
+If a package uses a tool that treats an empty top-level package field as meaningful configuration, configure this rule to ignore that property.
+
+## Further Reading
+
+- [npm: `package.json`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json)
+- [npm: `package.json` > `files`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#files)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="emptyFields" />

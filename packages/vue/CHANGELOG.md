@@ -1,5 +1,12 @@
 # @flint.fyi/vue
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [97adb66]
+  - @flint.fyi/ts@0.19.0
+
 ## 0.1.0
 
 ### Minor Changes

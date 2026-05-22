@@ -1,0 +1,65 @@
+---
+description: "Enforces that the `gypfile` property is valid."
+title: "gypfileValidity"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="gypfileValidity" />
+
+This rule checks that the `gypfile` property is a boolean.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"gypfile": "true"
+}
+```
+
+```json
+{
+	"gypfile": {}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"gypfile": true
+}
+```
+
+```json
+{
+	"gypfile": false
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `gypfile` field specification, you can disable this rule.
+For example, if your package metadata is consumed by tooling that accepts non-boolean `gypfile` values, this rule may not be correct for you.
+
+## Related Rules
+
+- [gypfilePresence](/rules/package-json/gypfilepresence) - Enforces that the `gypfile` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `gypfile`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#gypfile)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="gypfileValidity" />
