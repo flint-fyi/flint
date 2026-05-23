@@ -22,7 +22,6 @@
 		"flint": "bin/index.js"
 	},
 	"files": [
-		"docs/flint.png",
 		"lib/",
 		"!lib/**/*.map",
 		"!lib/bin/**"
