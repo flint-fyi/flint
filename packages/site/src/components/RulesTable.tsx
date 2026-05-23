@@ -2,7 +2,7 @@ import {
 	comparisons,
 	type FlintRuleReference,
 	type Comparison,
-} from "@flint.fyi/comparisons" with { type: "json" };
+} from "@flint.fyi/comparisons";
 import clsx from "clsx";
 
 import styles from "./RulesTable.module.css";
