@@ -10,6 +10,7 @@ export const linterNames = {
 	eslint: "ESLint",
 	markdownlint: "Markdownlint",
 	oxlint: "Oxlint",
+	stylelint: "Stylelint",
 } as const satisfies Record<Linter, string>;
 
 const comparisons = data as Comparison[];
@@ -24,6 +25,7 @@ export interface Comparison {
 	markdownlint?: LinterRuleReference[];
 	notes?: string;
 	oxlint?: LinterRuleReference[];
+	stylelint?: LinterRuleReference[];
 }
 
 export interface FlintRuleReference {
@@ -36,7 +38,13 @@ export interface FlintRuleReference {
 
 export type FlintRuleStatus = "implemented" | "skipped";
 
-export type Linter = "biome" | "deno" | "eslint" | "markdownlint" | "oxlint";
+export type Linter =
+	| "biome"
+	| "deno"
+	| "eslint"
+	| "markdownlint"
+	| "oxlint"
+	| "stylelint";
 
 export interface LinterRuleReference {
 	name: string;
