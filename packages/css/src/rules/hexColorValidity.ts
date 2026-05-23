@@ -2,7 +2,7 @@ import { cssLanguage, getCssNodeRange } from "@flint.fyi/css-language";
 
 import { ruleCreator } from "../ruleCreator.ts";
 
-const validityTester = /^(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
+const validityTester = /^(?:[0-9a-f]{3,4}){1,2}$/i;
 
 export default ruleCreator.createRule(cssLanguage, {
 	about: {
