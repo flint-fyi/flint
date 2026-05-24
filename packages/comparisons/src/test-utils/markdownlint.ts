@@ -19,15 +19,13 @@ export async function findMarkdownlintRules(): Promise<Rule[]> {
 		await Promise.all(
 			fileNames
 				.filter((fileName) => /md\d+\.mjs/.test(fileName))
-				.map(
-					async (fileName) => {
-						const module = (await import(
-							path.join(markdownlintDirectory, fileName)
-						)) as MarkdownlintModule;
+				.map(async (fileName) => {
+					const module = (await import(
+						path.join(markdownlintDirectory, fileName)
+					)) as MarkdownlintModule;
 
-						return module.default;
-					},
-				),
+					return module.default;
+				}),
 		)
 	).flat();
 }
