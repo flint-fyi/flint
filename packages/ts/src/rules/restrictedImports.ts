@@ -119,6 +119,43 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			),
 	},
 	setup(context) {
+		function checkNamedRestrictions(
+			restrictions: Restriction[],
+			declarations: ts.Declaration[],
+			importedName: string,
+			isTypeOnly: boolean,
+			source: string,
+			range: ReturnType<typeof getTSNodeRange>,
+			program: ts.Program,
+		) {
+			for (const restriction of restrictions) {
+				if (restriction.allowTypeImports && isTypeOnly) {
+					continue;
+				}
+
+				if (
+					matchesSpecifier(
+						importedName,
+						declarations,
+						restriction.specifier,
+						program,
+					)
+				) {
+					context.report({
+						data: {
+							customMessage: restriction.message ?? "",
+							importName: importedName,
+							source,
+						},
+						message: restriction.message
+							? "restrictedWithMessage"
+							: "restricted",
+						range,
+					});
+				}
+			}
+		}
+
 		function checkWildcardRestrictions(
 			restrictions: Restriction[],
 			moduleDeclarations: ts.Declaration[],
@@ -210,35 +247,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								continue;
 							}
 
-							for (const restriction of options.restrictions) {
-								if (restriction.allowTypeImports && isTypeOnly) {
-									continue;
-								}
-
-								if (
-									matchesSpecifier(
-										importedName,
-										declarations,
-										restriction.specifier,
-										program,
-									)
-								) {
-									context.report({
-										data: {
-											customMessage: restriction.message ?? "",
-											importName: importedName,
-											source,
-										},
-										message: restriction.message
-											? "restrictedWithMessage"
-											: "restricted",
-										range,
-									});
-								}
-							}
+							checkNamedRestrictions(
+								options.restrictions,
+								declarations,
+								importedName,
+								isTypeOnly,
+								source,
+								range,
+								program,
+							);
 						}
 					} else {
-						// export * from "mod"
 						const moduleDeclarations = resolveModuleDeclarations(
 							node.moduleSpecifier,
 							typeChecker,
@@ -268,9 +287,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const source = node.moduleSpecifier.text;
 					const range = getTSNodeRange(node, sourceFile);
 
-					// Side-effect import: import "mod"
-					// allowTypeImports is not checked here because side-effect
-					// imports cannot be type-only.
 					if (!node.importClause) {
 						const moduleDeclarations = resolveModuleDeclarations(
 							node.moduleSpecifier,
@@ -308,39 +324,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const topLevelTypeOnly =
 						node.importClause.phaseModifier === SyntaxKind.TypeKeyword;
 
-					// Default import: import foo from "mod"
 					if (node.importClause.name) {
 						const declarations = resolveSymbolDeclarations(
 							node.importClause.name,
 							typeChecker,
 						);
 						if (declarations?.length) {
-							for (const restriction of options.restrictions) {
-								if (restriction.allowTypeImports && topLevelTypeOnly) {
-									continue;
-								}
-
-								if (
-									matchesSpecifier(
-										"default",
-										declarations,
-										restriction.specifier,
-										program,
-									)
-								) {
-									context.report({
-										data: {
-											customMessage: restriction.message ?? "",
-											importName: "default",
-											source,
-										},
-										message: restriction.message
-											? "restrictedWithMessage"
-											: "restricted",
-										range,
-									});
-								}
-							}
+							checkNamedRestrictions(
+								options.restrictions,
+								declarations,
+								"default",
+								topLevelTypeOnly,
+								source,
+								range,
+								program,
+							);
 						}
 					}
 
@@ -349,7 +347,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					// Named imports: import { a, b } from "mod"
 					if (ts.isNamedImports(bindings)) {
 						for (const element of bindings.elements) {
 							const isTypeOnly = topLevelTypeOnly || element.isTypeOnly;
@@ -364,38 +361,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								continue;
 							}
 
-							for (const restriction of options.restrictions) {
-								if (restriction.allowTypeImports && isTypeOnly) {
-									continue;
-								}
-
-								if (
-									matchesSpecifier(
-										importedName,
-										declarations,
-										restriction.specifier,
-										program,
-									)
-								) {
-									context.report({
-										data: {
-											customMessage: restriction.message ?? "",
-											importName: importedName,
-											source,
-										},
-										message: restriction.message
-											? "restrictedWithMessage"
-											: "restricted",
-										range,
-									});
-								}
-							}
+							checkNamedRestrictions(
+								options.restrictions,
+								declarations,
+								importedName,
+								isTypeOnly,
+								source,
+								range,
+								program,
+							);
 						}
 
 						return;
 					}
 
-					// Namespace import: import * as ns from "mod"
 					const moduleDeclarations = resolveModuleDeclarations(
 						node.moduleSpecifier,
 						typeChecker,

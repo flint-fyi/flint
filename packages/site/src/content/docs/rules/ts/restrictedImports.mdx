@@ -112,27 +112,15 @@ When `name` is provided (as a string or array of strings), only those specific e
 
 ## Relationship to TypeOrValueSpecifier
 
-This rule adopts the [`TypeOrValueSpecifier`](https://typescript-eslint.io/packages/type-utils/type-or-value-specifier/) config shape from `@typescript-eslint/type-utils`, using the same `from` discriminator (`"file"`, `"lib"`, `"package"`) and field names (`name`, `path`, `package`).
-It uses the same location-checking approach internally — `declare module` block detection, `sourceFileToPackageName`, and `isSourceFileFromExternalLibrary` — following the patterns in typescript-eslint's [`typeDeclaredInPackageDeclarationFile`](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/type-utils/src/typeOrValueSpecifiers/typeDeclaredInPackageDeclarationFile.ts) and related helpers.
+This rule uses the [`TypeOrValueSpecifier`](https://typescript-eslint.io/packages/type-utils/type-or-value-specifier/) config shape from `@typescript-eslint/type-utils` — same `from` discriminator (`"file"`, `"lib"`, `"package"`) and field names (`name`, `path`, `package`).
 
-However, the rule cannot use typescript-eslint's [`typeMatchesSpecifier`](https://typescript-eslint.io/packages/type-utils/#typematchesspecifier) function directly because it operates on `ts.Type` objects and matches by the **type's** symbol name.
-For value imports like `import { x } from "./foo"` where `x` is `42`, the type's symbol is `number` — not `x` — so name matching fails.
-This rule instead resolves the import **symbol's declarations** and checks their origin, which works correctly for both type and value imports.
-
-One deliberate deviation: `name` is **optional** in this rule's specifier (omitting it restricts all exports from the source), whereas typescript-eslint's `TypeOrValueSpecifier` requires `name`.
+One deviation: `name` is **optional** here (omitting it restricts all exports from the source), whereas typescript-eslint's `TypeOrValueSpecifier` requires `name`.
 This enables whole-module restrictions like `{ from: "package", package: "lodash" }`.
 
 ## When Not To Use It
 
 If you do not need to restrict any modules from being imported, you do not need this rule.
 This rule requires explicit configuration to do anything, so it has no effect without `restrictions`.
-You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for specific situations instead of completely disabling this rule.
-
-## Further Reading
-
-- [TypeOrValueSpecifier format](https://typescript-eslint.io/packages/type-utils/type-or-value-specifier/)
-- [ESLint `no-restricted-imports`](https://eslint.org/docs/latest/rules/no-restricted-imports)
-- [TypeScript-ESLint `no-restricted-imports`](https://typescript-eslint.io/rules/no-restricted-imports)
 
 ## Equivalents in Other Linters
 

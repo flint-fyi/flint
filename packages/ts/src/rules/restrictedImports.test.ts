@@ -291,7 +291,6 @@ import * as ns from "./restricted";
 * import is invalid because 'a', 'b' from './restricted' is restricted. Import specific allowed names.
 `,
 		},
-		// from: "file" — side-effect import
 		{
 			code: `
 import "./restricted";
@@ -315,7 +314,6 @@ import "./restricted";
 './restricted' import is restricted.
 `,
 		},
-		// from: "package" — named import with name restriction
 		{
 			code: `
 import { restricted } from "test-pkg";
@@ -340,7 +338,6 @@ import { restricted } from "test-pkg";
 'restricted' import from 'test-pkg' is restricted.
 `,
 		},
-		// from: "package" — whole-module restriction on named import
 		{
 			code: `
 import { anything } from "test-pkg";
@@ -364,7 +361,6 @@ import { anything } from "test-pkg";
 'anything' import from 'test-pkg' is restricted.
 `,
 		},
-		// from: "package" — namespace import with whole-module restriction
 		{
 			code: `
 import * as pkg from "test-pkg";
@@ -388,7 +384,6 @@ import * as pkg from "test-pkg";
 'test-pkg' import is restricted.
 `,
 		},
-		// from: "package" — namespace import with name restriction
 		{
 			code: `
 import * as pkg from "test-pkg";
@@ -413,7 +408,6 @@ import * as pkg from "test-pkg";
 * import is invalid because 'badExport' from 'test-pkg' is restricted.
 `,
 		},
-		// from: "package" — with custom message
 		{
 			code: `
 import { restricted } from "test-pkg";
@@ -439,7 +433,6 @@ import { restricted } from "test-pkg";
 'restricted' import from 'test-pkg' is restricted. Use alternative-pkg instead.
 `,
 		},
-		// from: "package" — export { x } from restricted package
 		{
 			code: `
 export { restricted } from "test-pkg";
@@ -464,7 +457,6 @@ export { restricted } from "test-pkg";
 'restricted' import from 'test-pkg' is restricted.
 `,
 		},
-		// from: "package" — export * from restricted package
 		{
 			code: `
 export * from "test-pkg";
@@ -488,7 +480,6 @@ export * from "test-pkg";
 'test-pkg' import is restricted.
 `,
 		},
-		// from: "package" — side-effect import
 		{
 			code: `
 import "test-pkg";
@@ -512,7 +503,6 @@ import "test-pkg";
 'test-pkg' import is restricted.
 `,
 		},
-		// from: "package" — value import restricted even with allowTypeImports
 		{
 			code: `
 import { restricted } from "test-pkg";
@@ -638,7 +628,6 @@ import { restricted } from "test-pkg";
 				],
 			},
 		},
-		// from: "file" — side-effect import from non-restricted file
 		{
 			code: `import "./allowed";`,
 			files: {
@@ -655,7 +644,6 @@ import { restricted } from "test-pkg";
 				],
 			},
 		},
-		// from: "package" — import from non-restricted package
 		{
 			code: `import { something } from "other-pkg";`,
 			files: {
@@ -673,7 +661,6 @@ import { restricted } from "test-pkg";
 				],
 			},
 		},
-		// from: "package" — import unrestricted name from restricted package
 		{
 			code: `import { allowed } from "test-pkg";`,
 			files: {
@@ -691,7 +678,6 @@ import { restricted } from "test-pkg";
 				],
 			},
 		},
-		// from: "package" — type-only import with allowTypeImports
 		{
 			code: `import type { MyType } from "test-pkg";`,
 			files: {
@@ -709,7 +695,6 @@ import { restricted } from "test-pkg";
 				],
 			},
 		},
-		// from: "package" — name restriction doesn't apply to side-effect imports
 		{
 			code: `import "test-pkg";`,
 			files: {
@@ -727,7 +712,6 @@ import { restricted } from "test-pkg";
 				],
 			},
 		},
-		// Side-effect import from unresolvable module should not crash
 		{
 			code: `import "nonexistent-module";`,
 			options: {
@@ -741,7 +725,6 @@ import { restricted } from "test-pkg";
 				],
 			},
 		},
-		// Namespace import from unresolvable module should not crash
 		{
 			code: `import * as ns from "nonexistent-module";`,
 			options: {
