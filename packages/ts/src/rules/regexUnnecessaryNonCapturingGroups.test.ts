@@ -294,7 +294,6 @@ new RegExp("(?:a)+");
 		String.raw`/\1(?:0)/;`,
 		String.raw`/\1(?:2)/;`,
 		String.raw`/\c(?:A)/;`,
-		String.raw`/\c(?:A)/;`,
 		String.raw`/\u(?:0)041/;`,
 		String.raw`/\u{(?:41)}/;`,
 		String.raw`/\u0(?:0)41/;`,
