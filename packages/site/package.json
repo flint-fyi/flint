@@ -8,7 +8,6 @@
 		"astro": "astro",
 		"prebuild": "astro sync",
 		"build": "pnpm run check && astro build",
-		"build:no-og": "pnpm run check && SKIP_OG=true astro build",
 		"check": "astro check",
 		"dev": "astro dev",
 		"preview": "astro preview",
