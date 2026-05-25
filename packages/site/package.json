@@ -8,6 +8,7 @@
 		"astro": "astro",
 		"prebuild": "astro sync",
 		"build": "astro check && astro build",
+		"build:no-og": "astro check && SKIP_OG=true astro build",
 		"dev": "astro dev",
 		"preview": "astro preview",
 		"start": "astro dev"

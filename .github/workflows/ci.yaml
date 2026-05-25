@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./.github/actions/prepare
       - run: pnpm run build # Ensure packages pass attw, etc.
-      - run: pnpm run -r build # Build packages/site
+      - run: pnpm --filter=site build:no-og # Build packages/site without OG images.
   dedupe_check:
     name: Dedupe Check
     runs-on: ubuntu-latest
