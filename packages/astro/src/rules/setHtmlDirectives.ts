@@ -10,7 +10,7 @@ export default ruleCreator.createRule(astroLanguage, {
 		description:
 			"Reports using Astro's `set:html` directive, which injects content without escaping.",
 		id: "setHtmlDirectives",
-		preset: "security",
+		presets: ["security"],
 	},
 	messages: {
 		setHtml: {

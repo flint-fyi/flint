@@ -131,7 +131,7 @@ describe("createDiskBackedLinterHost", () => {
 
 		it("reports editing", async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
-			const filePath = path.join(integrationRoot, "watch-change.txt");
+			const filePath = path.posix.join(integrationRoot, "watch-change.txt");
 			fs.writeFileSync(filePath, "first");
 			const onEvent = vi.fn();
 			using _ = host.watchFileSync(filePath, onEvent);

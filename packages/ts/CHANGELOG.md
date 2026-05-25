@@ -1,5 +1,11 @@
 # @flint/ts
 
+## 0.19.0
+
+### Minor Changes
+
+- 97adb66: Added requireImports rule.
+
 ## 0.18.1
 
 ### Patch Changes

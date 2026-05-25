@@ -1,6 +1,9 @@
-import type { LinterHost } from "@flint.fyi/core";
+import type { LinterHost } from "../types/host.ts";
 
-const candidatesOrdered = [
+/**
+ * Flint config file names in preference order.
+ */
+export const configFileNameCandidates = [
 	"flint.config.ts",
 	"flint.config.mts",
 	"flint.config.cts",
@@ -15,7 +18,7 @@ export async function findConfigFileName(host: LinterHost) {
 	);
 	const children = new Set(currentDirectoryContents.map((file) => file.name));
 
-	const fileName = candidatesOrdered.find((candidate) =>
+	const fileName = configFileNameCandidates.find((candidate) =>
 		children.has(candidate),
 	);
 

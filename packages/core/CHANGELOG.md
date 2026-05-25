@@ -1,5 +1,11 @@
 # @flint/core
 
+## 0.21.2
+
+### Patch Changes
+
+- 893df4b: fix(preset): add TS errors when preset is defined in types not used
+
 ## 0.21.1
 
 ### Patch Changes

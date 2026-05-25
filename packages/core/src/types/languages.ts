@@ -21,34 +21,19 @@ export type GetLanguageFileServices<InputLanguage extends AnyLanguage> =
 		? FileServices
 		: never;
 
-export interface LanguageCreateRule<
-	AstNodesByName,
-	FileServices extends object,
-> {
-	<const About extends RuleAbout, const MessageId extends string>(
-		definition: RuleDefinition<
-			About,
-			AstNodesByName,
-			FileServices,
-			MessageId,
-			undefined
-		>,
-	): Rule<About, object, object, MessageId, undefined>;
-
-	<
-		const About extends RuleAbout,
-		const MessageId extends string,
-		const OptionsSchema extends AnyOptionalSchema,
-	>(
-		definition: RuleDefinition<
-			About,
-			AstNodesByName,
-			FileServices,
-			MessageId,
-			OptionsSchema
-		>,
-	): Rule<About, object, object, MessageId, OptionsSchema>;
-}
+export type LanguageCreateRule<AstNodesByName, FileServices extends object> = <
+	const About extends RuleAbout,
+	const MessageId extends string,
+	OptionsSchema extends AnyOptionalSchema | undefined = undefined,
+>(
+	definition: RuleDefinition<
+		About,
+		AstNodesByName,
+		FileServices,
+		MessageId,
+		OptionsSchema
+	>,
+) => Rule<About, MessageId, OptionsSchema>;
 
 /**
  * Description of a file's representation in the file system.
@@ -107,6 +92,7 @@ export interface LanguageDefinition<
 		file: LanguageFile<FileServices>,
 	): LanguageFileCacheImpacts;
 	getLanguageReports?(file: LanguageFile<FileServices>): LanguageReports;
+	orderFilePaths?(filePaths: readonly string[], host: LinterHost): string[];
 	runFileVisitors<
 		OptionsSchema extends AnyOptionalSchema | undefined =
 			| AnyOptionalSchema

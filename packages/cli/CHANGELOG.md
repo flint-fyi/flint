@@ -1,5 +1,11 @@
 # @flint/cli
 
+## 0.19.1
+
+### Patch Changes
+
+- fb8d0b6: Correct fixable report counts to say `--fix` instead of `--fixs`.
+
 ## 0.19.0
 
 ### Minor Changes

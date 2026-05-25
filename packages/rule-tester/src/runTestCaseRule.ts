@@ -79,5 +79,9 @@ export async function runTestCaseRule<
 		await ruleRuntime.teardown?.();
 	}
 
-	return reports;
+	return reports.toSorted(
+		(a, b) =>
+			a.range.begin.raw - b.range.begin.raw ||
+			a.range.end.raw - b.range.end.raw,
+	);
 }

@@ -222,7 +222,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/76519301?v=4",
       "profile": "https://github.com/Yonava",
       "contributions": [
-        "code"
+        "code",
+        "doc"
       ]
     },
     {
@@ -232,6 +233,24 @@
       "profile": "https://techmannih.me",
       "contributions": [
         "ideas"
+      ]
+    },
+    {
+      "login": "sarthak-commits",
+      "name": "D4TT BOOST",
+      "avatar_url": "https://avatars.githubusercontent.com/u/203012840?v=4",
+      "profile": "https://github.com/Sarthak-commits",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "mvanhorn",
+      "name": "Matt Van Horn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/455140?v=4",
+      "profile": "https://github.com/mvanhorn",
+      "contributions": [
+        "code"
       ]
     }
   ],
