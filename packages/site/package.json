@@ -14,8 +14,6 @@
 	},
 	"dependencies": {
 		"@astrojs/starlight": "catalog:site",
-		"@flint.fyi/astro": "workspace:^",
-		"@flint.fyi/browser": "workspace:^",
 		"@flint.fyi/comparisons": "workspace:^",
 		"@flint.fyi/css": "workspace:^",
 		"@flint.fyi/jsx": "workspace:^",
@@ -29,7 +27,6 @@
 		"astro-og-canvas": "catalog:site",
 		"canvaskit-wasm": "catalog:site",
 		"clsx": "catalog:site",
-		"flint": "workspace:^",
 		"konami-emoji-blast": "catalog:site",
 		"markdown-it": "catalog:site",
 		"react": "catalog:site",
