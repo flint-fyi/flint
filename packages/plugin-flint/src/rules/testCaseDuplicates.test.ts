@@ -165,6 +165,78 @@ ruleTester.describe(rule, {
             
 `,
 		},
+		{
+			code: `
+                ruleTester.describe(rule, {
+                    valid: [
+                        String.raw\`/[a-z]/;\`,
+                        String.raw\`/[a-z]/;\`,
+                    ],
+                    invalid: []
+                });
+
+`,
+			snapshot: `
+                ruleTester.describe(rule, {
+                    valid: [
+                        String.raw\`/[a-z]/;\`,
+                        String.raw\`/[a-z]/;\`,
+                        ~~~~~~~~~~~~~~~~~~~~
+                        This test code already appeared in a previous test.
+                    ],
+                    invalid: []
+                });
+
+`,
+		},
+		{
+			code: `
+                ruleTester.describe(rule, {
+                    valid: [
+                        { code: String.raw\`/[a-z]/;\` },
+                        { code: String.raw\`/[a-z]/;\` },
+                    ],
+                    invalid: []
+                });
+
+`,
+			snapshot: `
+                ruleTester.describe(rule, {
+                    valid: [
+                        { code: String.raw\`/[a-z]/;\` },
+                        { code: String.raw\`/[a-z]/;\` },
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                        This test code already appeared in a previous test.
+                    ],
+                    invalid: []
+                });
+
+`,
+		},
+		{
+			code: `
+                ruleTester.describe(rule, {
+                    invalid: [
+                        { code: String.raw\`/[a-z]/;\`, snapshot: "a" },
+                        { code: String.raw\`/[a-z]/;\`, snapshot: "b" },
+                    ],
+                    valid: []
+                });
+
+`,
+			snapshot: `
+                ruleTester.describe(rule, {
+                    invalid: [
+                        { code: String.raw\`/[a-z]/;\`, snapshot: "a" },
+                        { code: String.raw\`/[a-z]/;\`, snapshot: "b" },
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                        This test code already appeared in a previous test.
+                    ],
+                    valid: []
+                });
+
+`,
+		},
 	],
 	valid: [
 		`
@@ -211,6 +283,24 @@ ruleTester.describe(rule, {
                 valid: [
                     { code: \`a\`, files: { "b.ts": "{}" } },
                     { code: \`a\`, files: { "c.ts": "{}" } },
+                ],
+                invalid: []
+            });
+        `,
+		`
+            ruleTester.describe(rule, {
+                valid: [
+                    String.raw\`/[a-z]/;\`,
+                    String.raw\`/[0-9]/;\`,
+                ],
+                invalid: []
+            });
+        `,
+		`
+            ruleTester.describe(rule, {
+                valid: [
+                    { code: String.raw\`/[a-z]/;\` },
+                    { code: String.raw\`/[0-9]/;\` },
                 ],
                 invalid: []
             });

@@ -12,10 +12,27 @@ export interface ParsedTestCaseInvalid extends InvalidTestCase {
 
 export interface ParsedTestCaseNodes {
 	case: ts.Node;
-	code: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral;
-	fileName?: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral | undefined;
+	code:
+		| AST.NoSubstitutionTemplateLiteral
+		| AST.StringLiteral
+		| (AST.TaggedTemplateExpression & {
+				template: AST.NoSubstitutionTemplateLiteral;
+		  });
+	fileName?:
+		| AST.NoSubstitutionTemplateLiteral
+		| AST.StringLiteral
+		| (AST.TaggedTemplateExpression & {
+				template: AST.NoSubstitutionTemplateLiteral;
+		  })
+		| undefined;
 	files?: AST.ObjectLiteralExpression | undefined;
-	name?: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral | undefined;
+	name?:
+		| AST.NoSubstitutionTemplateLiteral
+		| AST.StringLiteral
+		| (AST.TaggedTemplateExpression & {
+				template: AST.NoSubstitutionTemplateLiteral;
+		  })
+		| undefined;
 	options?: AST.ObjectLiteralExpression | undefined;
 }
 export interface ParsedTestCaseNodesInvalid extends ParsedTestCaseNodes {

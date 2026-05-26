@@ -5,15 +5,56 @@ import { findProperty } from "./findProperty.ts";
 import { tsAstToLiteral } from "./tsAstToLiteral.ts";
 import type { ParsedTestCase, ParsedTestCaseInvalid } from "./types.ts";
 
+function isStringRawNoSubstitution(
+	node: AST.Expression,
+): node is AST.TaggedTemplateExpression & {
+	template: AST.NoSubstitutionTemplateLiteral;
+} {
+	return (
+		node.kind === SyntaxKind.TaggedTemplateExpression &&
+		node.tag.kind === SyntaxKind.PropertyAccessExpression &&
+		node.tag.expression.kind === SyntaxKind.Identifier &&
+		node.tag.expression.text === "String" &&
+		node.tag.name.kind === SyntaxKind.Identifier &&
+		node.tag.name.text === "raw" &&
+		node.template.kind === SyntaxKind.NoSubstitutionTemplateLiteral
+	);
+}
+
+function isStaticCodeNode(node: AST.Expression): node is
+	| AST.StringLiteral
+	| AST.NoSubstitutionTemplateLiteral
+	| (AST.TaggedTemplateExpression & {
+			template: AST.NoSubstitutionTemplateLiteral;
+	  }) {
+	return (
+		node.kind === SyntaxKind.StringLiteral ||
+		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral ||
+		isStringRawNoSubstitution(node)
+	);
+}
+
+function getCodeText(
+	node:
+		| AST.StringLiteral
+		| AST.NoSubstitutionTemplateLiteral
+		| (AST.TaggedTemplateExpression & {
+				template: AST.NoSubstitutionTemplateLiteral;
+		  }),
+): string {
+	if (node.kind === SyntaxKind.TaggedTemplateExpression) {
+		return node.template.text;
+	}
+
+	return node.text;
+}
+
 export function parseTestCase(
 	node: AST.Expression,
 ): ParsedTestCase | undefined {
-	if (
-		node.kind === SyntaxKind.StringLiteral ||
-		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral
-	) {
+	if (isStaticCodeNode(node)) {
 		return {
-			code: node.text,
+			code: getCodeText(node),
 			nodes: {
 				case: node,
 				code: node,
@@ -25,37 +66,18 @@ export function parseTestCase(
 		return undefined;
 	}
 
-	const code = findProperty(
-		node.properties,
-		"code",
-
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const code = findProperty(node.properties, "code", isStaticCodeNode);
 	if (!code) {
 		return undefined;
 	}
 
-	const fileName = findProperty(
-		node.properties,
-		"fileName",
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const fileName = findProperty(node.properties, "fileName", isStaticCodeNode);
 	const files = findProperty(
 		node.properties,
 		"files",
 		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
-	const name = findProperty(
-		node.properties,
-		"name",
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const name = findProperty(node.properties, "name", isStaticCodeNode);
 	const options = findProperty(
 		node.properties,
 		"options",
@@ -63,10 +85,10 @@ export function parseTestCase(
 	);
 
 	return {
-		code: code.text,
-		fileName: fileName?.text,
+		code: getCodeText(code),
+		fileName: fileName && getCodeText(fileName),
 		files: files && (tsAstToLiteral(files) as Record<string, string>),
-		name: name?.text,
+		name: name && getCodeText(name),
 		nodes: {
 			case: node,
 			code,
@@ -86,57 +108,33 @@ export function parseTestCaseInvalid(
 		return undefined;
 	}
 
-	const code = findProperty(
-		node.properties,
-		"code",
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const code = findProperty(node.properties, "code", isStaticCodeNode);
 	if (!code) {
 		return undefined;
 	}
 
-	const fileName = findProperty(
-		node.properties,
-		"fileName",
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const fileName = findProperty(node.properties, "fileName", isStaticCodeNode);
 	const files = findProperty(
 		node.properties,
 		"files",
 		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
-	const name = findProperty(
-		node.properties,
-		"name",
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const name = findProperty(node.properties, "name", isStaticCodeNode);
 	const options = findProperty(
 		node.properties,
 		"options",
 		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
-	const snapshot = findProperty(
-		node.properties,
-		"snapshot",
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const snapshot = findProperty(node.properties, "snapshot", isStaticCodeNode);
 	if (!snapshot) {
 		return undefined;
 	}
 
 	return {
-		code: code.text,
-		fileName: fileName?.text,
+		code: getCodeText(code),
+		fileName: fileName && getCodeText(fileName),
 		files: files && (tsAstToLiteral(files) as Record<string, string>),
-		name: name?.text,
+		name: name && getCodeText(name),
 		nodes: {
 			case: node,
 			code,
@@ -147,6 +145,6 @@ export function parseTestCaseInvalid(
 			snapshot,
 		},
 		options: options && tsAstToLiteral(options),
-		snapshot: snapshot.text,
+		snapshot: getCodeText(snapshot),
 	};
 }
