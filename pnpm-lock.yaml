@@ -455,6 +455,33 @@ importers:
 
   packages/comparisons:
     dependencies:
+      '@flint.fyi/astro':
+        specifier: workspace:^
+        version: link:../astro
+      '@flint.fyi/browser':
+        specifier: workspace:^
+        version: link:../browser
+      '@flint.fyi/jsx':
+        specifier: workspace:^
+        version: link:../jsx
+      '@flint.fyi/node':
+        specifier: workspace:^
+        version: link:../node
+      '@flint.fyi/performance':
+        specifier: workspace:^
+        version: link:../performance
+      '@flint.fyi/plugin-flint':
+        specifier: workspace:^
+        version: link:../plugin-flint
+      '@flint.fyi/spelling':
+        specifier: workspace:^
+        version: link:../spelling
+      '@flint.fyi/vitest':
+        specifier: workspace:^
+        version: link:../vitest
+      flint:
+        specifier: workspace:^
+        version: link:../flint
       prettier:
         specifier: 3.8.1
         version: 3.8.1
@@ -954,33 +981,9 @@ importers:
       '@astrojs/starlight':
         specifier: catalog:site
         version: 0.38.1(astro@6.3.0(@types/node@24.12.0)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.0)(yaml@2.8.4))
-      '@flint.fyi/astro':
-        specifier: workspace:^
-        version: link:../astro
-      '@flint.fyi/browser':
-        specifier: workspace:^
-        version: link:../browser
       '@flint.fyi/comparisons':
         specifier: workspace:^
         version: link:../comparisons
-      '@flint.fyi/jsx':
-        specifier: workspace:^
-        version: link:../jsx
-      '@flint.fyi/node':
-        specifier: workspace:^
-        version: link:../node
-      '@flint.fyi/performance':
-        specifier: workspace:^
-        version: link:../performance
-      '@flint.fyi/plugin-flint':
-        specifier: workspace:^
-        version: link:../plugin-flint
-      '@flint.fyi/spelling':
-        specifier: workspace:^
-        version: link:../spelling
-      '@flint.fyi/vitest':
-        specifier: workspace:^
-        version: link:../vitest
       '@types/react':
         specifier: catalog:site
         version: 19.2.14
@@ -996,9 +999,6 @@ importers:
       clsx:
         specifier: catalog:site
         version: 2.1.1
-      flint:
-        specifier: workspace:^
-        version: link:../flint
       konami-emoji-blast:
         specifier: catalog:site
         version: 0.7.0
