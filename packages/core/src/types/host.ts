@@ -18,7 +18,7 @@ export interface LinterHost {
 	watchFileSync(
 		filePathAbsolute: string,
 		callback: LinterHostFileWatcher,
-		options?: WatchOptions,
+		options: WatchOptions,
 	): Disposable;
 	writeFile(filePathAbsolute: string, content: string): Promise<void>;
 	writeFileSync(filePathAbsolute: string, content: string): void;
@@ -45,5 +45,6 @@ export interface WatchDirectoryOptions extends WatchOptions {
 }
 
 export interface WatchOptions {
+	ignoredPaths: string[];
 	pollingInterval?: number;
 }

@@ -1,5 +1,12 @@
 # @flint.fyi/solid
 
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
 ## 0.1.5
 
 ### Patch Changes

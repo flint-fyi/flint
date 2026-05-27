@@ -2,11 +2,11 @@ import {
 	comparisons,
 	type FlintRuleReference,
 	type Comparison,
-} from "@flint.fyi/comparisons" with { type: "json" };
+	getRuleForPluginSafe,
+} from "@flint.fyi/comparisons";
 import clsx from "clsx";
 
 import styles from "./RulesTable.module.css";
-import { getRuleForPluginSafe } from "./getRuleForPlugin";
 import { InlineMarkdown } from "./InlineMarkdown";
 import { getPluginData } from "~/data/pluginData";
 import { createRuleComparator } from "./createRuleComparator";

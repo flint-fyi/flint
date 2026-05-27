@@ -6,7 +6,11 @@ import {
 	findESLintRulesInCore,
 	findESLintRulesInPlugin,
 	pluginsRulesByName,
-} from "./test-util.ts";
+} from "./test-utils/eslint.ts";
+import {
+	findMarkdownlintRules,
+	findMarkdownlintRulesInFlint,
+} from "./test-utils/markdownlint.ts";
 
 const excludedESLintRulesByPluginName = new Map([
 	// These rules are exported in the React plugin but not mentioned on react.dev.
@@ -91,5 +95,17 @@ describe("data.json", () => {
 				expect(pluginESLintRuleNamesCoveredByFlint).toEqual(pluginRuleNames);
 			},
 		);
+	});
+
+	it("includes all Markdownlint rules", async () => {
+		const markdownlintRuleNames = (await findMarkdownlintRules())
+			.map((rule) => rule.names.at(-1))
+			.sort();
+
+		const markdownlintRulesCoveredByFlint = findMarkdownlintRulesInFlint()
+			.map((comparison) => comparison.name)
+			.sort();
+
+		expect(markdownlintRuleNames).toEqual(markdownlintRulesCoveredByFlint);
 	});
 });

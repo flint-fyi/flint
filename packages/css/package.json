@@ -1,0 +1,47 @@
+{
+	"name": "@flint.fyi/css",
+	"version": "0.0.1",
+	"description": "[Experimental] A Flint plugin for CSS code.",
+	"homepage": "https://flint.fyi/rules/css",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/css"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"files": [
+		"lib/",
+		"!lib/**/*.map"
+	],
+	"scripts": {
+		"test": "vitest --project css"
+	},
+	"dependencies": {
+		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/css-language": "workspace:^",
+		"typescript": "^5.9.3 || ^6.0.0"
+	},
+	"devDependencies": {
+		"@flint.fyi/rule-tester": "workspace:^",
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
+	},
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"exports": {
+			".": "./lib/index.js"
+		}
+	}
+}

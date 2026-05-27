@@ -297,6 +297,38 @@
 	{
 		"eslint": [
 			{
+				"name": "sdl/no-document-domain",
+				"url": "https://github.com/microsoft/eslint-plugin-sdl/blob/main/docs/rules/no-document-domain.md"
+			}
+		],
+		"flint": {
+			"name": "documentDomains",
+			"plugin": "browser",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "document-write/no-document-write",
+				"url": "https://github.com/phanect/eslint-plugin-document-write#readme"
+			},
+			{
+				"name": "sdl/no-document-write",
+				"url": "https://github.com/microsoft/eslint-plugin-sdl/blob/main/docs/rules/no-document-write.md"
+			}
+		],
+		"flint": {
+			"name": "documentWrites",
+			"plugin": "browser",
+			"preset": "logical",
+			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "unicorn/prefer-add-event-listener",
 				"url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/HEAD/docs/rules/prefer-add-event-listener.md"
 			}
@@ -526,6 +558,26 @@
 			{
 				"name": "unicorn/require-post-message-target-origin",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/require-post-message-target-origin.html"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/no-invalid-color-hex",
+				"url": "https://ota-meshi.github.io/eslint-plugin-css/rules/no-invalid-color-hex.html"
+			}
+		],
+		"flint": {
+			"name": "hexColorValidity",
+			"plugin": "css",
+			"preset": "logical",
+			"status": "implemented"
+		},
+		"stylelint": [
+			{
+				"name": "color-no-invalid-hex",
+				"url": "https://stylelint.io/user-guide/rules/color-no-invalid-hex"
 			}
 		]
 	},
@@ -19218,7 +19270,8 @@
 		"flint": {
 			"name": "typeImports",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -23569,6 +23622,7 @@
 			"name": "fileExtensions",
 			"plugin": "yaml",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},

@@ -41,5 +41,5 @@ export function runFlint(cwd: string, args: string[] = []) {
 		cwd,
 		env: { FORCE_COLOR: "1" },
 		reject: false,
-	})`npx flint ${args}`;
+	})`flint ${args}`;
 }

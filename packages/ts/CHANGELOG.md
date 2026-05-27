@@ -1,5 +1,12 @@
 # @flint/ts
 
+## 0.19.1
+
+### Patch Changes
+
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
 ## 0.19.0
 
 ### Minor Changes
