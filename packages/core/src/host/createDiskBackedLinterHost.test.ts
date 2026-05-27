@@ -434,9 +434,10 @@ describe("createDiskBackedLinterHost", () => {
 			fs.writeFileSync(path.join(baseDir, "src.txt"), "content");
 
 			const normalizedFile = normalizePath(path.join(baseDir, "src.txt"));
-			await sleep(50);
 
-			expect(onEvent).toHaveBeenCalledWith(normalizedFile);
+			await vi.waitFor(() => {
+				expect(onEvent).toHaveBeenCalledWith(normalizedFile);
+			});
 		});
 
 		it("ignores node_modules directories within watched paths", async () => {
@@ -461,9 +462,10 @@ describe("createDiskBackedLinterHost", () => {
 			fs.writeFileSync(path.join(baseDir, "src.txt"), "content");
 
 			const normalizedFile = normalizePath(path.join(baseDir, "src.txt"));
-			await sleep(50);
 
-			expect(onEvent).toHaveBeenCalledWith(normalizedFile);
+			await vi.waitFor(() => {
+				expect(onEvent).toHaveBeenCalledWith(normalizedFile);
+			});
 		});
 
 		it("does not ignore lookalike names such as .gitignore", async () => {
