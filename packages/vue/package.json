@@ -1,8 +1,8 @@
 {
 	"name": "@flint.fyi/vue",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "[Experimental] Vue.js language plugin for Flint.",
-	"homepage": "https://flint.fyi",
+	"homepage": "https://flint.fyi/rules/vue",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",

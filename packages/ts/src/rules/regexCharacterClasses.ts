@@ -249,7 +249,7 @@ function toCharacterClassElement(
 			if (element.negate) {
 				return [element];
 			}
-			return element.elements as CharElement[];
+			return element.elements;
 
 		case "CharacterSet":
 			if (element.kind === "any") {

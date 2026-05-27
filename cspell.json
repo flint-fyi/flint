@@ -1,5 +1,9 @@
 {
-	"dictionaries": ["npm", "node", "typescript"],
+	"dictionaries": [
+		"npm",
+		"node",
+		"typescript"
+	],
 	"ignorePaths": [
 		".all-contributorsrc",
 		".github",
@@ -47,7 +51,9 @@
 		"bradzacher",
 		"codegen",
 		"codemod",
+		"constructables",
 		"contentinfo",
+		"Corsa",
 		"deoptimizations",
 		"destructures",
 		"dgimsuyv",
@@ -67,6 +73,8 @@
 		"joshuakgoldberg",
 		"jridgewell",
 		"kirkwaiblinger",
+		"Konv",
+		"kovsu",
 		"libc",
 		"lishaduck",
 		"lookaheads",
@@ -75,12 +83,17 @@
 		"menuitemcheckbox",
 		"menuitemradio",
 		"metacharacter",
+		"metaframework",
+		"michaelfaith",
 		"Mintlify",
+		"modularly",
 		"Mutables",
+		"ngtsc",
 		"nord",
 		"nrtfvbsd",
 		"oxendict",
 		"Oxlint",
+		"precomposed",
 		"prefault",
 		"rearchitectures",
 		"recurser",
@@ -98,7 +111,10 @@
 		"subtags",
 		"thenables",
 		"treegrid",
+		"triaging",
+		"triggerable",
 		"tsgolint",
+		"tsslint",
 		"twoslash",
 		"typelang",
 		"useStricts",
@@ -107,6 +123,8 @@
 		"WHATWG",
 		"xdescribe",
 		"xobi",
-		"xtest"
+		"xobi",
+		"xtest",
+		"Yosuke"
 	]
 }

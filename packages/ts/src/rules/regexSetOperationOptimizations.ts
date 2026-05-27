@@ -109,10 +109,7 @@ function isFixedPatternEquivalent(
 		return false;
 	}
 
-	const convertedUs = toUnicodeSet(
-		convertedElement as Parameters<typeof toUnicodeSet>[0],
-		flags,
-	);
+	const convertedUs = toUnicodeSet(convertedElement, flags);
 
 	return originalUs.equals(convertedUs);
 }
