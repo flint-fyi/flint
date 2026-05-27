@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-export const linterNameSchema = z.union([
+const linterNameSchema = z.union([
 	z.literal("biome"),
 	z.literal("deno"),
 	z.literal("eslint"),
@@ -16,9 +16,7 @@ const flintRuleStatusSchema = z.union([
 	z.literal("skipped"),
 ]);
 
-export type FlintRuleStatus = z.infer<typeof flintRuleStatusSchema>;
-
-export const flintRuleReferenceSchema = z.object({
+const flintRuleReferenceSchema = z.object({
 	name: linterNameSchema,
 	plugin: z.string(),
 	preset: z.string(),
@@ -33,9 +31,7 @@ const linterRuleReferenceSchema = z.object({
 	url: z.string(),
 });
 
-export type LinterRuleReference = z.infer<typeof linterRuleReferenceSchema>;
-
-export const comparisonSchema = z.object({
+const comparisonSchema = z.object({
 	biome: z.array(linterRuleReferenceSchema).optional(),
 	deno: z.array(linterRuleReferenceSchema).optional(),
 	eslint: z.array(linterRuleReferenceSchema).optional(),
