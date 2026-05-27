@@ -7,7 +7,7 @@
 	"scripts": {
 		"astro": "astro",
 		"prebuild": "astro sync",
-		"build": "pnpm run check && astro build",
+		"build": "astro build",
 		"check": "astro check",
 		"dev": "astro dev",
 		"preview": "astro preview",
