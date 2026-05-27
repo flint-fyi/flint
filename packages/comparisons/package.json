@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "JoshuaKGoldberg",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": false,
 	"type": "module",
@@ -35,13 +35,10 @@
 		"@flint.fyi/plugin-flint": "workspace:^",
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/vitest": "workspace:^",
-		"prettier": "3.8.1",
-		"zod": "^4.3.6"
+		"flint": "workspace:^",
+		"prettier": "3.8.1"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.4.15",
-		"@biomejs/js-api": "^4.0.0",
-		"@biomejs/wasm-nodejs": "^2.4.15",
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
 		"@eslint/json": "1.2.0",
 		"@eslint/markdown": "catalog:dev",
