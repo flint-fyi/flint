@@ -1,5 +1,12 @@
 # @flint.fyi/plugin-astro
 
+## 0.2.4
+
+### Patch Changes
+
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
 ## 0.2.3
 
 ### Patch Changes

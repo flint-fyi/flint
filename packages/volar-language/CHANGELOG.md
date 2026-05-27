@@ -1,5 +1,12 @@
 # @flint.fyi/volar-language
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
 ## 0.1.0
 
 ### Minor Changes
