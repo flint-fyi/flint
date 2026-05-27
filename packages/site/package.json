@@ -44,5 +44,8 @@
 		"starlight-links-validator": "catalog:site",
 		"starlight-sidebar-topics": "catalog:site",
 		"zod": "catalog:dev"
+	},
+	"engines": {
+		"node": ">=24.0.0"
 	}
 }

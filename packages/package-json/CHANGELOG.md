@@ -1,5 +1,16 @@
 # @flint.fyi/package-json
 
+## 0.19.0
+
+### Minor Changes
+
+- 06f86d3: Add `peerDependenciesMetaRelationship` rule.
+
+### Patch Changes
+
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
 ## 0.18.0
 
 ### Minor Changes

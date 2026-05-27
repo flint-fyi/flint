@@ -461,6 +461,9 @@ importers:
       '@flint.fyi/browser':
         specifier: workspace:^
         version: link:../browser
+      '@flint.fyi/css':
+        specifier: workspace:^
+        version: link:../css
       '@flint.fyi/jsx':
         specifier: workspace:^
         version: link:../jsx
@@ -604,6 +607,50 @@ importers:
       '@types/omit-empty':
         specifier: catalog:dev
         version: 1.0.4
+      tsdown:
+        specifier: catalog:dev
+        version: 0.21.0(@arethetypeswrong/core@0.18.2)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(oxc-resolver@11.19.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0))(synckit@0.11.12)(typescript@5.9.3)
+      vitest:
+        specifier: catalog:dev
+        version: 4.1.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@24.12.0)(esbuild@0.27.4)(jiti@2.7.0)(yaml@2.8.4)
+
+  packages/css:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      '@flint.fyi/css-language':
+        specifier: workspace:^
+        version: link:../css-language
+      typescript:
+        specifier: ^5.9.3 || ^6.0.0
+        version: 5.9.3
+    devDependencies:
+      '@flint.fyi/rule-tester':
+        specifier: workspace:^
+        version: link:../rule-tester
+      tsdown:
+        specifier: catalog:dev
+        version: 0.21.0(@arethetypeswrong/core@0.18.2)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(oxc-resolver@11.19.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0))(synckit@0.11.12)(typescript@5.9.3)
+      vitest:
+        specifier: catalog:dev
+        version: 4.1.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@24.12.0)(esbuild@0.27.4)(jiti@2.7.0)(yaml@2.8.4)
+
+  packages/css-language:
+    dependencies:
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      css-tree:
+        specifier: ^3.2.1
+        version: 3.2.1
+      typescript:
+        specifier: ^5.9.0 || ^6.0.0
+        version: 5.9.3
+    devDependencies:
+      '@types/css-tree':
+        specifier: ^2.3.11
+        version: 2.3.11
       tsdown:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(oxc-resolver@11.19.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0))(synckit@0.11.12)(typescript@5.9.3)
@@ -3327,6 +3374,9 @@ packages:
 
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
+
+  '@types/css-tree@2.3.11':
+    resolution: {integrity: sha512-aEokibJOI77uIlqoBOkVbaQGC9zII0A+JH1kcTNKW2CwyYWD8KM6qdo+4c77wD3wZOQfJuNWAr9M4hdk+YhDIg==}
 
   '@types/debug@4.1.13':
     resolution: {integrity: sha512-KSVgmQmzMwPlmtljOomayoR89W4FynCAi3E8PPs7vmDVPe84hT+vGPKkJfThkmXs0x0jAaa9U8uW8bbfyS2fWw==}
@@ -9306,6 +9356,8 @@ snapshots:
     dependencies:
       '@types/deep-eql': 4.0.2
       assertion-error: 2.0.1
+
+  '@types/css-tree@2.3.11': {}
 
   '@types/debug@4.1.13':
     dependencies:
