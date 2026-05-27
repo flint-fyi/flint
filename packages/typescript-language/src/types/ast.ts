@@ -3224,6 +3224,7 @@ export type AnyNode =
 	| NotEmittedStatement
 	| NotEmittedTypeElement
 	| NullLiteral
+	| NullNode
 	| NumberKeyword
 	| NumericLiteral
 	| ObjectBindingPattern

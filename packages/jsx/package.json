@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/jsx",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"description": "[Experimental] A Flint plugin for JSX code.",
 	"homepage": "https://flint.fyi/rules/jsx",
 	"repository": {

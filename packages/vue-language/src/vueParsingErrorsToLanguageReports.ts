@@ -18,6 +18,13 @@ export function vueParsingErrorsToLanguageReports(
 		return {
 			code,
 			text: `${fileName}${loc} - ${code}: ${error.name} - ${error.message}`,
+			...("code" in error &&
+				error.loc != null && {
+					range: {
+						begin: error.loc.start.offset,
+						end: error.loc.end.offset,
+					},
+				}),
 		};
 	});
 }

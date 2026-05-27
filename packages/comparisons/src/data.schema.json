@@ -24,6 +24,7 @@
 						"enum": [
 							"astro",
 							"browser",
+							"css",
 							"flint",
 							"json",
 							"jsx",
@@ -96,6 +97,13 @@
 			"oxlint": {
 				"type": "array",
 				"description": "Equivalent Oxlint rule(s).",
+				"items": {
+					"$ref": "#/$defs/toolRule"
+				}
+			},
+			"stylelint": {
+				"type": "array",
+				"description": "Equivalent Stylelint rule(s).",
 				"items": {
 					"$ref": "#/$defs/toolRule"
 				}
