@@ -11,7 +11,7 @@ export const linterNameSchema = z.union([
 
 export type LinterName = z.infer<typeof linterNameSchema>;
 
-export const flintRuleStatusSchema = z.union([
+const flintRuleStatusSchema = z.union([
 	z.literal("implemented"),
 	z.literal("skipped"),
 ]);
@@ -28,7 +28,7 @@ export const flintRuleReferenceSchema = z.object({
 
 export type FlintRuleReference = z.infer<typeof flintRuleReferenceSchema>;
 
-export const linterRuleReferenceSchema = z.object({
+const linterRuleReferenceSchema = z.object({
 	name: z.string(),
 	url: z.string(),
 });

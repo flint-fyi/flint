@@ -11,6 +11,7 @@ export const linterNames = {
 	eslint: "ESLint",
 	markdownlint: "Markdownlint",
 	oxlint: "Oxlint",
+	stylelint: "Stylelint",
 } as const satisfies Record<LinterName, string>;
 
 const comparisons = data as Comparison[];
