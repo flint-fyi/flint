@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/comparisons",
-	"version": "0.3.3",
+	"version": "0.3.4",
 	"description": "Comparisons of common lint rules across Flint and other web linters.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "JoshuaKGoldberg",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": false,
 	"type": "module",
@@ -28,6 +28,7 @@
 	"dependencies": {
 		"@flint.fyi/astro": "workspace:^",
 		"@flint.fyi/browser": "workspace:^",
+		"@flint.fyi/css": "workspace:^",
 		"@flint.fyi/jsx": "workspace:^",
 		"@flint.fyi/node": "workspace:^",
 		"@flint.fyi/performance": "workspace:^",
@@ -66,6 +67,7 @@
 		"eslint-plugin-unicorn": "64.0.0",
 		"eslint-plugin-vue": "10.9.1",
 		"eslint-plugin-yml": "catalog:dev",
+		"markdownlint": "^0.40.0",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev",
 		"vue-eslint-parser": "10.3.0"

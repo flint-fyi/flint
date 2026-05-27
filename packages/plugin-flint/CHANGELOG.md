@@ -1,5 +1,12 @@
 # @flint.fyi/plugin-flint
 
+## 0.5.1
+
+### Patch Changes
+
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
 ## 0.5.0
 
 ### Minor Changes

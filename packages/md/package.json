@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/md",
-	"version": "0.15.2",
+	"version": "0.15.3",
 	"description": "[Experimental] Markdown plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/md",
 	"repository": {
@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "JoshuaKGoldberg",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": false,
 	"type": "module",

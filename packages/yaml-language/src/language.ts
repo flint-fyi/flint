@@ -5,6 +5,7 @@ import { parseDirectivesFromYamlFile } from "./directives/parseDirectivesFromYam
 import type { YamlNodesByName, YamlNodeVisitors } from "./nodes.ts";
 
 export interface YamlFileServices {
+	filePath: string;
 	root: yamlParser.Root;
 	sourceText: string;
 }
@@ -21,7 +22,11 @@ export const yamlLanguage = createLanguage<YamlNodeVisitors, YamlFileServices>({
 				return {
 					...parseDirectivesFromYamlFile(root, data.sourceText),
 					about: data,
-					services: { root, sourceText: data.sourceText },
+					services: {
+						filePath: data.filePath,
+						root,
+						sourceText: data.sourceText,
+					},
 				};
 			},
 		};

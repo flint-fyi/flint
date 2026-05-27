@@ -34,6 +34,17 @@ const pluginDataById = {
 		id: "browser",
 		name: "Browser",
 	},
+	css: {
+		colors: {
+			flame: "#66309A",
+			heart: "#2862E9",
+			squiggly: "#031E4C",
+		},
+		description:
+			"Rules for CSS (Cascading Style Sheets), a browser language for styling documents.",
+		id: "css",
+		name: "CSS",
+	},
 	flint: {
 		colors: {
 			flame: "#F2BF80",
@@ -241,6 +252,7 @@ export const pluginDataByGroup: Record<string, Record<string, PluginData>> = {
 	},
 	incubator: {
 		astro: pluginDataById.astro,
+		css: pluginDataById.css,
 		next: pluginDataById.next,
 		nuxt: pluginDataById.nuxt,
 		react: pluginDataById.react,

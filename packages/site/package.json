@@ -7,7 +7,8 @@
 	"scripts": {
 		"astro": "astro",
 		"prebuild": "astro sync",
-		"build": "astro check && astro build",
+		"build": "astro build",
+		"check": "astro check",
 		"dev": "astro dev",
 		"preview": "astro preview",
 		"start": "astro dev"
@@ -44,5 +45,8 @@
 		"starlight-links-validator": "catalog:site",
 		"starlight-sidebar-topics": "catalog:site",
 		"zod": "catalog:dev"
+	},
+	"engines": {
+		"node": ">=24.0.0"
 	}
 }

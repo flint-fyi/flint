@@ -17,7 +17,7 @@
 	<img alt="💪 TypeScript: Strict" src="https://img.shields.io/badge/%F0%9F%92%AA_typescript-strict-21bb42.svg" />
 </p>
 
-<img align="right" alt="A flaming heart atop a brown linter-style squiggly line" height="128" src="docs/flint.png" width="105">
+<img align="right" alt="A flaming heart atop a brown linter-style squiggly line" height="128" src="https://flint.fyi/logo.png" width="105">
 
 **Flint** is an experimental new _"hybrid"_ linter: one that combines...
 

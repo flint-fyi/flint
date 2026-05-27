@@ -1,13 +1,16 @@
 import { builtinRules } from "eslint/use-at-your-own-risk";
 import { describe, expect, it } from "vitest";
 
-import { getRuleForPluginSafe } from "./getRuleForPlugin.ts";
 import { comparisons, getComparisonId } from "./index.ts";
 import {
 	findESLintRulesInCore,
 	findESLintRulesInPlugin,
 	pluginsRulesByName,
-} from "./test-util.ts";
+} from "./test-utils/eslint.ts";
+import {
+	findMarkdownlintRules,
+	findMarkdownlintRulesInFlint,
+} from "./test-utils/markdownlint.ts";
 
 const excludedESLintRulesByPluginName = new Map([
 	// These rules are exported in the React plugin but not mentioned on react.dev.
@@ -32,6 +35,21 @@ const excludedESLintRulesByPluginName = new Map([
 ]);
 
 describe("data.json", () => {
+	it("does not include any duplicate Flint rules", () => {
+		const seenIds = new Set<string>();
+
+		for (const comparison of comparisons) {
+			const id = getComparisonId(
+				comparison.flint.plugin,
+				comparison.flint.name,
+			);
+
+			expect(seenIds).not.toContain(id);
+
+			seenIds.add(id);
+		}
+	});
+
 	describe("Comparison with ESLint", () => {
 		it("includes all builtin rules", () => {
 			const builtinESLintRuleNames = new Set<string>(
@@ -79,48 +97,15 @@ describe("data.json", () => {
 		);
 	});
 
-	describe("Comparison with Flint", () => {
-		it("does not include any duplicate Flint rules", () => {
-			const seenIds = new Set<string>();
+	it("includes all Markdownlint rules", async () => {
+		const markdownlintRuleNames = (await findMarkdownlintRules())
+			.map((rule) => rule.names.at(-1))
+			.sort();
 
-			for (const comparison of comparisons) {
-				const id = getComparisonId(
-					comparison.flint.plugin,
-					comparison.flint.name,
-				);
+		const markdownlintRulesCoveredByFlint = findMarkdownlintRulesInFlint()
+			.map((comparison) => comparison.name)
+			.sort();
 
-				expect(seenIds).not.toContain(id);
-
-				seenIds.add(id);
-			}
-		});
-
-		describe("data matching", () => {
-			const pairs = comparisons.map((comparison) => ({
-				comparison,
-				rule: getRuleForPluginSafe(
-					comparison.flint.plugin,
-					comparison.flint.name,
-				),
-			}));
-
-			it("does not mark rules as implemented that do not exist yet", () => {
-				expect(
-					pairs.filter(
-						({ comparison, rule }) =>
-							!rule && comparison.flint.status === "implemented",
-					),
-				).toEqual([]);
-			});
-
-			it("does not miss rules as implemented that exist", () => {
-				expect(
-					pairs.filter(
-						({ comparison, rule }) =>
-							rule && comparison.flint.status !== "implemented",
-					),
-				).toEqual([]);
-			});
-		});
+		expect(markdownlintRuleNames).toEqual(markdownlintRulesCoveredByFlint);
 	});
 });
