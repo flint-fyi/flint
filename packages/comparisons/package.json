@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/comparisons",
-	"version": "0.3.3",
+	"version": "0.3.4",
 	"description": "Comparisons of common lint rules across Flint and other web linters.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -26,6 +26,16 @@
 		"test": "vitest --project comparisons"
 	},
 	"dependencies": {
+		"@flint.fyi/astro": "workspace:^",
+		"@flint.fyi/browser": "workspace:^",
+		"@flint.fyi/css": "workspace:^",
+		"@flint.fyi/jsx": "workspace:^",
+		"@flint.fyi/node": "workspace:^",
+		"@flint.fyi/performance": "workspace:^",
+		"@flint.fyi/plugin-flint": "workspace:^",
+		"@flint.fyi/spelling": "workspace:^",
+		"@flint.fyi/vitest": "workspace:^",
+		"flint": "workspace:^",
 		"prettier": "3.8.1"
 	},
 	"devDependencies": {

@@ -5,45 +5,36 @@ import Default from "@astrojs/starlight/components/Footer.astro";
 export type Props = StarlightRouteData;
 ---
 
-<footer>
-	<Default {...Astro.props}>
-		<slot />
-	</Default>
+<Default {...Astro.props}>
+	<slot />
+</Default>
 
-	<div class="credits">
-		Made with ❤️‍🔥 around the world by
-		<a href="/team">the Flint team</a> and <a
-			href="http://github.com/flint-fyi/flint/contributors"
-			target="_blank">contributors</a
-		>.
-	</div>
+<div class="credits">
+	Made with ❤️‍🔥 around the world by
+	<a href="/team">the Flint team</a> and <a
+		href="http://github.com/flint-fyi/flint/contributors"
+		target="_blank">contributors</a
+	>.
+</div>
 
-	{
-		Astro.url.pathname === "/" && (
-			<a href="https://www.netlify.com">
-				<img
-					alt="Deploys by Netlify"
-					class="dark"
-					src="https://www.netlify.com/assets/badges/netlify-badge-color-accent.svg"
-				/>
-				<img
-					alt="Deploys by Netlify"
-					class="light"
-					src="https://www.netlify.com/assets/badges/netlify-badge-color-bg.svg"
-				/>
-			</a>
-		)
-	}
-</footer>
+{
+	Astro.url.pathname === "/" && (
+		<a href="https://www.netlify.com">
+			<img
+				alt="Deploys by Netlify"
+				class="dark"
+				src="https://www.netlify.com/assets/badges/netlify-badge-color-accent.svg"
+			/>
+			<img
+				alt="Deploys by Netlify"
+				class="light"
+				src="https://www.netlify.com/assets/badges/netlify-badge-color-bg.svg"
+			/>
+		</a>
+	)
+}
 
 <style>
-	footer {
-		align-items: center;
-		display: flex;
-		flex-direction: column;
-		text-align: center;
-	}
-
 	.credits {
 		border-top: 1px solid var(--sl-color-gray-6);
 		color: var(--sl-color-gray-3);
