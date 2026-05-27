@@ -7,6 +7,10 @@ export default {
 	workspaces: {
 		".": {
 			entry: ["*.config.{js,ts}"],
+			ignoreDependencies: [
+				// The changesets CLI isn't directly referenced anywhere, but we need it to create new changesets.
+				"@changesets/cli",
+			],
 			project: ["*.config.{js,ts}", "scripts/**/*.ts"],
 		},
 		"packages/astro": {
