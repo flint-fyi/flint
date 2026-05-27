@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "Josh Goldberg ✨",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"type": "module",
 	"scripts": {
