@@ -13,6 +13,7 @@ import {
 import path from "node:path";
 import url from "node:url";
 import { internalHelpers, svelte2tsx } from "svelte2tsx";
+import type { CompileError } from "svelte/compiler";
 import type * as ts from "typescript";
 
 const sveltePath = path.dirname(
@@ -106,33 +107,26 @@ export function errorToLanguageReport(
 	}
 	const svelteError = isSvelteCompileError(error) ? error : null;
 	const loc =
-		svelteError != null
+		svelteError?.start != null
 			? `:${svelteError.start.line}:${svelteError.start.column}`
 			: "";
-	const range =
-		svelteError != null
-			? {
-					begin: svelteError.start.character,
-					end: svelteError.end?.character ?? svelteError.start.character,
-				}
-			: undefined;
 	const res: LanguageReport = {
 		text: `${fileName}${loc} - ${"message" in error && typeof error.message === "string" ? error.message : "Codegen error"}`,
 	};
+	if (svelteError?.start != null) {
+		res.range = {
+			begin: svelteError.start.character,
+			end: svelteError.end?.character ?? svelteError.start.character,
+		};
+	}
 	if ("code" in error && typeof error.code === "string") {
 		res.code = error.code;
-	}
-	if (range != null) {
-		res.range = range;
 	}
 	return res;
 }
 
-// https://github.com/sveltejs/svelte/blob/main/packages/svelte/src/compiler/utils/compile_diagnostic.js#L51
-function isSvelteCompileError(error: object): error is {
-	end?: { character: number };
-	start: { character: number; column: number; line: number };
-} {
+// https://github.com/sveltejs/svelte/blob/4d8f99a2709e3c02e48d8bc6c77458f4ba49d0e3/packages/svelte/src/compiler/utils/compile_diagnostic.js#L51
+function isSvelteCompileError(error: object): error is CompileError {
 	return (
 		"start" in error &&
 		typeof (error as Record<string, unknown>).start === "object" &&

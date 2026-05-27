@@ -1,7 +1,7 @@
 import { parse } from "@astrojs/compiler/sync";
 import { assert, describe, expect, it } from "vitest";
 
-import { astroCompilerDiagnosticToLanguageReport } from "./language.ts";
+import { astroCompilerDiagnosticToLanguageReport } from "./astroCompilerDiagnosticToLanguageReport.ts";
 
 describe("astroCompilerDiagnosticToLanguageReport", () => {
 	it("location.line and location.column are 1-indexed", () => {
@@ -14,7 +14,7 @@ describe("astroCompilerDiagnosticToLanguageReport", () => {
 
 		const diagnostic = diagnostics[0];
 
-		assert(diagnostic !== undefined);
+		assert.ok(diagnostic !== undefined);
 
 		const report = astroCompilerDiagnosticToLanguageReport(
 			"file.astro",
