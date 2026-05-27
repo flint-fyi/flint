@@ -1031,27 +1031,6 @@ importers:
       '@flint.fyi/comparisons':
         specifier: workspace:^
         version: link:../comparisons
-      '@flint.fyi/css':
-        specifier: workspace:^
-        version: link:../css
-      '@flint.fyi/jsx':
-        specifier: workspace:^
-        version: link:../jsx
-      '@flint.fyi/node':
-        specifier: workspace:^
-        version: link:../node
-      '@flint.fyi/performance':
-        specifier: workspace:^
-        version: link:../performance
-      '@flint.fyi/plugin-flint':
-        specifier: workspace:^
-        version: link:../plugin-flint
-      '@flint.fyi/spelling':
-        specifier: workspace:^
-        version: link:../spelling
-      '@flint.fyi/vitest':
-        specifier: workspace:^
-        version: link:../vitest
       '@types/react':
         specifier: catalog:site
         version: 19.2.14
