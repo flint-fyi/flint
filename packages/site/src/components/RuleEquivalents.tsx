@@ -1,4 +1,4 @@
-import { linterNames, type Linter } from "@flint.fyi/comparisons";
+import { linterNames, type LinterName } from "@flint.fyi/comparisons";
 import { getComparisonByFlintId } from "./comparisonsByFlintId";
 import { RuleEquivalentLinks } from "./RuleEquivalentLinks";
 
@@ -12,7 +12,7 @@ export function RuleEquivalents({ pluginId, ruleId }: RuleEquivalentsProps) {
 
 	return (
 		<ul>
-			{(Object.entries(linterNames) as [Linter, string][]).map(
+			{(Object.entries(linterNames) as [LinterName, string][]).map(
 				([linter, linterName]) =>
 					comparison[linter] && (
 						<li key={linter}>
