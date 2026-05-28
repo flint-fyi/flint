@@ -30,9 +30,6 @@ export default {
 		"packages/css": {
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
 		},
-		"packages/css": {
-			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
-		},
 		"packages/json": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
