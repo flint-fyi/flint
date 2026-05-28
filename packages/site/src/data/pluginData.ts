@@ -37,7 +37,7 @@ const pluginDataById = {
 	css: {
 		colors: {
 			flame: "#66309A",
-			heart: "#E54C21",
+			heart: "#2862E9",
 			squiggly: "#031E4C",
 		},
 		description:

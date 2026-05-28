@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/next",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"description": "[Experimental] A Flint plugin for Next.js code.",
 	"homepage": "https://flint.fyi/rules/next",
 	"repository": {
@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "JoshuaKGoldberg",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": false,
 	"type": "module",

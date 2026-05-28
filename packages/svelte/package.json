@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/svelte",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "[Experimental] Svelte language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/svelte",
 	"repository": {
@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "JoshuaKGoldberg",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": false,
 	"type": "module",

@@ -1,5 +1,13 @@
 # @flint.fyi/browser
 
+## 0.2.3
+
+### Patch Changes
+
+- 9ac0e13: Add `documentDomains` and `documentWrites` rules.
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
 ## 0.2.2
 
 ### Patch Changes

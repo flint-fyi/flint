@@ -24,7 +24,7 @@ import unicornPlugin from "eslint-plugin-unicorn";
 import vuePlugin from "eslint-plugin-vue";
 import ymlPlugin from "eslint-plugin-yml";
 
-import { comparisons } from "./index.ts";
+import { comparisons } from "../index.ts";
 
 export function findESLintRulesInCore() {
 	return comparisons.flatMap(

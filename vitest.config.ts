@@ -1,5 +1,6 @@
 import { readdirSync } from "node:fs";
 import path from "node:path";
+import { platform } from "node:process";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
@@ -19,7 +20,8 @@ export default defineConfig({
 						"@flint.fyi/ts-patch/install-patch-hooks",
 					],
 					snapshotSerializers: name === "e2e" ? ["vitest-ansi-serializer"] : [],
-					testTimeout: name === "e2e" ? 20_000 : 10_000,
+					testTimeout:
+						name === "e2e" ? (platform === "win32" ? 60_000 : 20_000) : 10_000,
 				},
 			}),
 		),

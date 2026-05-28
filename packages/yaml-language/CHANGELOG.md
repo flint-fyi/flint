@@ -1,5 +1,12 @@
 # @flint.fyi/yaml-language
 
+## 0.15.3
+
+### Patch Changes
+
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
 ## 0.15.2
 
 ### Patch Changes

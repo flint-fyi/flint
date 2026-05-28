@@ -19270,7 +19270,8 @@
 		"flint": {
 			"name": "typeImports",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
@@ -23621,6 +23622,7 @@
 			"name": "fileExtensions",
 			"plugin": "yaml",
 			"preset": "stylistic",
+			"status": "implemented",
 			"strictness": "strict"
 		}
 	},

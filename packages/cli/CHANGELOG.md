@@ -1,5 +1,13 @@
 # @flint/cli
 
+## 0.19.2
+
+### Patch Changes
+
+- 61076ad: Extract `findConfigFileName` and `configFileNameCandidates` from `@flint.fyi/cli` into `@flint.fyi/core` so the CLI, the upcoming LSP server, and other consumers can share a single implementation.
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
 ## 0.19.1
 
 ### Patch Changes
