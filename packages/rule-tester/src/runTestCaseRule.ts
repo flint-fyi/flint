@@ -24,6 +24,10 @@ export interface TestCaseRuleConfiguration<
 	rule: AnyRule<RuleAbout, OptionsSchema>;
 }
 
+export interface RunTestCaseRuleOptions {
+	collectLanguageReports?: boolean;
+}
+
 export async function runTestCaseRule<
 	OptionsSchema extends AnyOptionalSchema | undefined,
 >(
@@ -31,7 +35,8 @@ export async function runTestCaseRule<
 	linterHost: VFSLinterHost,
 	{ options, rule }: Required<TestCaseRuleConfiguration<OptionsSchema>>,
 	{ code, fileName, files }: TestCaseNormalized,
-): Promise<NormalizedReport[]> {
+	{ collectLanguageReports = false }: RunTestCaseRuleOptions = {},
+) {
 	const filePathAbsolute = normalizePath(
 		path.resolve(linterHost.getCurrentDirectory(), fileName),
 	);
@@ -79,9 +84,14 @@ export async function runTestCaseRule<
 		await ruleRuntime.teardown?.();
 	}
 
-	return reports.toSorted(
-		(a, b) =>
-			a.range.begin.raw - b.range.begin.raw ||
-			a.range.end.raw - b.range.end.raw,
-	);
+	return {
+		languageReports: collectLanguageReports
+			? (rule.language.getLanguageReports?.(file) ?? [])
+			: [],
+		reports: reports.toSorted(
+			(a, b) =>
+				a.range.begin.raw - b.range.begin.raw ||
+				a.range.end.raw - b.range.end.raw,
+		),
+	};
 }

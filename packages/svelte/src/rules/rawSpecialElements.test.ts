@@ -86,7 +86,7 @@ ruleTester.describe(rule, {
 		"<svelte:body></svelte:body>",
 		"<svelte:window></svelte:window>",
 		"<svelte:document></svelte:document>",
-		"<svelte:element this={{}}></svelte:element>",
+		'<svelte:element this="div"></svelte:element>',
 		"<svelte:options></svelte:options>",
 	],
 });

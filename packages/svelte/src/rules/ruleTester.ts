@@ -3,6 +3,7 @@ import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
 import { describe, it } from "vitest";
 
 export const ruleTester = new RuleTester({
+	assertNoTSErrors: true,
 	defaults: {
 		fileName: "file.svelte",
 		files: createRuleTesterTSConfig({

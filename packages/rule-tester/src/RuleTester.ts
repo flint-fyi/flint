@@ -7,6 +7,7 @@ import {
 	createEphemeralLinterHost,
 	createVFSLinterHost,
 	type InferredInputObject,
+	type LanguageReports,
 	parseOptions,
 	type RuleAbout,
 	type VFSLinterHost,
@@ -30,6 +31,7 @@ export interface RuleTesterDefaults {
 	files?: Record<string, string>;
 }
 export interface RuleTesterOptions {
+	assertNoTSErrors?: boolean;
 	defaults?: RuleTesterDefaults;
 	describe?: TesterSetupDescribe;
 	diskBackedFSRoot?: string;
@@ -61,6 +63,7 @@ export class RuleTester {
 
 	constructor({
 		defaults = {},
+		assertNoTSErrors = false,
 		describe,
 		diskBackedFSRoot,
 		it,
@@ -117,6 +120,7 @@ export class RuleTester {
 
 		this.#testerOptions = {
 			defaults,
+			assertNoTSErrors,
 			describe: defaultTo(describe, scope, "describe"),
 			it,
 			only,
@@ -154,12 +158,16 @@ export class RuleTester {
 		);
 
 		this.#itTestCase(testCaseNormalized, async () => {
-			const reports = await runTestCaseRule(
+			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
 				{ options: parseOptions(rule.options, testCase.options), rule },
 				testCaseNormalized,
+				{
+					collectLanguageReports: this.#testerOptions.assertNoTSErrors,
+				},
 			);
+			assertNoTSErrors(languageReports);
 			const actualSnapshot = createReportSnapshot(testCase.code, reports);
 
 			assert.equal(actualSnapshot, testCase.snapshot);
@@ -227,12 +235,16 @@ export class RuleTester {
 		);
 
 		this.#itTestCase(testCaseNormalized, async () => {
-			const reports = await runTestCaseRule(
+			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
 				{ options: parseOptions(rule.options, testCase.options), rule },
 				testCaseNormalized,
+				{
+					collectLanguageReports: this.#testerOptions.assertNoTSErrors,
+				},
 			);
+			assertNoTSErrors(languageReports);
 
 			if (reports.length) {
 				assert.deepStrictEqual(
@@ -242,6 +254,24 @@ export class RuleTester {
 			}
 		});
 	}
+}
+
+function assertNoTSErrors(languageReports: LanguageReports) {
+	// TODO: Replace this with a structured LanguageReport source when available.
+	const typeScriptReports = languageReports.filter((languageReport) =>
+		languageReport.code?.startsWith("TS"),
+	);
+
+	if (!typeScriptReports.length) {
+		return;
+	}
+
+	assert.fail(
+		[
+			`Expected no TS errors, but found ${typeScriptReports.length}:`,
+			...typeScriptReports.map((languageReport) => languageReport.text),
+		].join("\n\n"),
+	);
 }
 
 function defaultTo<TesterSetup extends TesterSetupDescribe | TesterSetupIt>(
