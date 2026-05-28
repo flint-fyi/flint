@@ -5,7 +5,6 @@ import {
 	type AnyRule,
 	type FileReport,
 	type InferredOutputObject,
-	type NormalizedReport,
 	processRuleReport,
 	type RuleAbout,
 	type VFSLinterHost,
@@ -17,15 +16,15 @@ import path from "node:path";
 
 import type { TestCaseNormalized } from "./normalizeTestCase.ts";
 
+export interface RunTestCaseRuleOptions {
+	collectLanguageReports?: boolean;
+}
+
 export interface TestCaseRuleConfiguration<
 	OptionsSchema extends AnyOptionalSchema | undefined,
 > {
 	options?: InferredOutputObject<OptionsSchema | undefined>;
 	rule: AnyRule<RuleAbout, OptionsSchema>;
-}
-
-export interface RunTestCaseRuleOptions {
-	collectLanguageReports?: boolean;
 }
 
 export async function runTestCaseRule<

@@ -62,8 +62,8 @@ export class RuleTester {
 	#testerOptions: Required<Omit<RuleTesterOptions, "diskBackedFSRoot">>;
 
 	constructor({
-		defaults = {},
 		assertNoTSErrors = false,
+		defaults = {},
 		describe,
 		diskBackedFSRoot,
 		it,
@@ -119,8 +119,8 @@ export class RuleTester {
 		}
 
 		this.#testerOptions = {
-			defaults,
 			assertNoTSErrors,
+			defaults,
 			describe: defaultTo(describe, scope, "describe"),
 			it,
 			only,
