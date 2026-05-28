@@ -1,5 +1,12 @@
 # @flint.fyi/jsx
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
 ## 0.3.1
 
 ### Patch Changes

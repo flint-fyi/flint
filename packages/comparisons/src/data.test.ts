@@ -2,9 +2,37 @@ import { builtinRules } from "eslint/use-at-your-own-risk";
 import { describe, expect, it } from "vitest";
 
 import { comparisons, getComparisonId } from "./index.ts";
-import { groupByLinterAndPlugin } from "./test-util.ts";
+import {
+	findESLintRulesInCore,
+	findESLintRulesInPlugin,
+	pluginsRulesByName,
+} from "./test-utils/eslint.ts";
+import {
+	findMarkdownlintRules,
+	findMarkdownlintRulesInFlint,
+} from "./test-utils/markdownlint.ts";
 
-const groupedData = groupByLinterAndPlugin(comparisons);
+const excludedESLintRulesByPluginName = new Map([
+	// These rules are exported in the React plugin but not mentioned on react.dev.
+	// We're treating them as an internal implementation detail for now.
+	[
+		"react-hooks",
+		new Set([
+			"capitalized-calls",
+			"exhaustive-effect-dependencies",
+			"fbt",
+			"hooks",
+			"invariant",
+			"memo-dependencies",
+			"memoized-effect-dependencies",
+			"no-deriving-state-in-effects",
+			"rule-suppression",
+			"syntax",
+			"todo",
+			"void-use-memo",
+		]),
+	],
+]);
 
 describe("data.json", () => {
 	it("does not include any duplicate Flint rules", () => {
@@ -37,12 +65,47 @@ describe("data.json", () => {
 			);
 
 			const builtinESLintRuleNamesCoveredByFlint = new Set(
-				Object.keys(groupedData.eslint.builtin).sort(),
+				findESLintRulesInCore().map((rule) => rule.name),
 			);
 
 			expect(builtinESLintRuleNamesCoveredByFlint).toEqual(
 				builtinESLintRuleNames,
 			);
 		});
+
+		it.each(Array.from(pluginsRulesByName.entries()))(
+			"includes all %s rules",
+			(pluginName, rules) => {
+				const pluginRuleNames = new Set(
+					Object.keys(rules)
+						.filter(
+							(ruleName) =>
+								!excludedESLintRulesByPluginName.get(pluginName)?.has(ruleName),
+						)
+						.map((ruleName) => `${pluginName}/${ruleName}`)
+						.sort(),
+				);
+
+				const pluginESLintRuleNamesCoveredByFlint = new Set(
+					findESLintRulesInPlugin(pluginName)
+						.map((rule) => rule.name)
+						.sort(),
+				);
+
+				expect(pluginESLintRuleNamesCoveredByFlint).toEqual(pluginRuleNames);
+			},
+		);
+	});
+
+	it("includes all Markdownlint rules", async () => {
+		const markdownlintRuleNames = (await findMarkdownlintRules())
+			.map((rule) => rule.names.at(-1))
+			.sort();
+
+		const markdownlintRulesCoveredByFlint = findMarkdownlintRulesInFlint()
+			.map((comparison) => comparison.name)
+			.sort();
+
+		expect(markdownlintRuleNames).toEqual(markdownlintRulesCoveredByFlint);
 	});
 });

@@ -1,5 +1,31 @@
 # @flint.fyi/package-json
 
+## 0.19.0
+
+### Minor Changes
+
+- 06f86d3: Add `peerDependenciesMetaRelationship` rule.
+
+### Patch Changes
+
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
+## 0.18.0
+
+### Minor Changes
+
+- 432d186: Add the `package-json/dependencyUniqueness` rule.
+- 320a8ee: Add the `publishConfigRedundancy` rule.
+
+### Patch Changes
+
+- 936d935: Add `peerDependenciesInstallation` rule.
+- 32e2925: Add the `emptyFields` rule.
+- 9096ae8: Add the `package-json/attribution` rule.
+- f9de980: Add the `privatePackageProperties` rule.
+- 77f0f53: Add the `exportsSubpathsStyle` rule.
+
 ## 0.17.1
 
 ### Patch Changes
