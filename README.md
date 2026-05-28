@@ -8,7 +8,7 @@
 <p align="center">
 	<!-- prettier-ignore-start -->
 	<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 23" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-23-21bb42.svg" /></a>
+	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 24" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-24-21bb42.svg" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 	<!-- prettier-ignore-end -->
 	<a href="https://github.com/flint-fyi/flint/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
@@ -84,6 +84,7 @@ Thanks! ❤️‍🔥
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/cylewaitforit"><img src="https://avatars.githubusercontent.com/u/54253392?v=4?s=100" width="100px;" alt="cylewaitforit"/><br /><sub><b>cylewaitforit</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/commits?author=cylewaitforit" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/michaelfaith"><img src="https://avatars.githubusercontent.com/u/8071845?v=4?s=100" width="100px;" alt="michael faith"/><br /><sub><b>michael faith</b></sub></a><br /><a href="#ideas-michaelfaith" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/flint-fyi/flint/commits?author=michaelfaith" title="Documentation">📖</a> <a href="https://github.com/flint-fyi/flint/issues?q=author%3Amichaelfaith" title="Bug reports">🐛</a> <a href="#maintenance-michaelfaith" title="Maintenance">🚧</a> <a href="#tool-michaelfaith" title="Tools">🔧</a> <a href="https://github.com/flint-fyi/flint/commits?author=michaelfaith" title="Code">💻</a> <a href="#infra-michaelfaith" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Tamashoo"><img src="https://avatars.githubusercontent.com/u/72484282?v=4?s=100" width="100px;" alt="tamashoo"/><br /><sub><b>tamashoo</b></sub></a><br /><a href="https://github.com/flint-fyi/flint/commits?author=tamashoo" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
