@@ -1,13 +1,17 @@
 import { z } from "zod/v4";
 
-const linterNameSchema = z.union([
-	z.literal("biome"),
-	z.literal("deno"),
-	z.literal("eslint"),
-	z.literal("markdownlint"),
-	z.literal("oxlint"),
-	z.literal("stylelint"),
-]);
+const linterNames = [
+	"biome",
+	"deno",
+	"eslint",
+	"markdownlint",
+	"oxlint",
+	"stylelint",
+];
+
+export const linterNameSchema = z.union(
+	linterNames.map((linterName) => z.literal(linterName)),
+);
 
 export type LinterName = z.infer<typeof linterNameSchema>;
 
@@ -31,15 +35,15 @@ const linterRuleReferenceSchema = z.object({
 	url: z.string(),
 });
 
-const comparisonSchema = z.object({
-	biome: z.array(linterRuleReferenceSchema).optional(),
-	deno: z.array(linterRuleReferenceSchema).optional(),
-	eslint: z.array(linterRuleReferenceSchema).optional(),
+export const comparisonSchema = z.object({
+	...Object.fromEntries(
+		linterNames.map((linterName) => [
+			linterName,
+			z.array(linterRuleReferenceSchema).optional(),
+		]),
+	),
 	flint: flintRuleReferenceSchema,
-	markdownlint: z.array(linterRuleReferenceSchema).optional(),
 	notes: z.string().optional(),
-	oxlint: z.array(linterRuleReferenceSchema).optional(),
-	stylelint: z.array(linterRuleReferenceSchema).optional(),
 });
 
 export type Comparison = z.infer<typeof comparisonSchema>;
