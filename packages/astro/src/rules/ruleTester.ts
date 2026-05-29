@@ -3,7 +3,7 @@ import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
 import { describe, it } from "vitest";
 
 export const ruleTester = new RuleTester({
-	assertNoTSErrors: true,
+	assertNoLanguageReports: true,
 	defaults: {
 		fileName: "file.astro",
 		files: {

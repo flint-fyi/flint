@@ -31,7 +31,7 @@ export interface RuleTesterDefaults {
 	files?: Record<string, string>;
 }
 export interface RuleTesterOptions {
-	assertNoTSErrors?: boolean;
+	assertNoLanguageReports?: boolean;
 	defaults?: RuleTesterDefaults;
 	describe?: TesterSetupDescribe;
 	diskBackedFSRoot?: string;
@@ -62,7 +62,7 @@ export class RuleTester {
 	#testerOptions: Required<Omit<RuleTesterOptions, "diskBackedFSRoot">>;
 
 	constructor({
-		assertNoTSErrors = false,
+		assertNoLanguageReports = false,
 		defaults = {},
 		describe,
 		diskBackedFSRoot,
@@ -119,7 +119,7 @@ export class RuleTester {
 		}
 
 		this.#testerOptions = {
-			assertNoTSErrors,
+			assertNoLanguageReports,
 			defaults,
 			describe: defaultTo(describe, scope, "describe"),
 			it,
@@ -164,10 +164,10 @@ export class RuleTester {
 				{ options: parseOptions(rule.options, testCase.options), rule },
 				testCaseNormalized,
 				{
-					collectLanguageReports: this.#testerOptions.assertNoTSErrors,
+					collectLanguageReports: this.#testerOptions.assertNoLanguageReports,
 				},
 			);
-			assertNoTSErrors(languageReports);
+			assertNoLanguageReports(languageReports);
 			const actualSnapshot = createReportSnapshot(testCase.code, reports);
 
 			assert.equal(actualSnapshot, testCase.snapshot);
@@ -241,10 +241,10 @@ export class RuleTester {
 				{ options: parseOptions(rule.options, testCase.options), rule },
 				testCaseNormalized,
 				{
-					collectLanguageReports: this.#testerOptions.assertNoTSErrors,
+					collectLanguageReports: this.#testerOptions.assertNoLanguageReports,
 				},
 			);
-			assertNoTSErrors(languageReports);
+			assertNoLanguageReports(languageReports);
 
 			if (reports.length) {
 				assert.deepStrictEqual(
@@ -256,22 +256,16 @@ export class RuleTester {
 	}
 }
 
-function assertNoTSErrors(languageReports: LanguageReports) {
-	// TODO: Replace this with a structured LanguageReport source when available.
-	const typeScriptReports = languageReports.filter((languageReport) =>
-		languageReport.code?.startsWith("TS"),
-	);
-
-	if (!typeScriptReports.length) {
-		return;
+function assertNoLanguageReports(languageReports: LanguageReports) {
+	// TODO (#2842): Surface each report's structured source
+	if (languageReports.length) {
+		assert.fail(
+			[
+				`Expected no language reports, but found ${languageReports.length}:`,
+				...languageReports.map((languageReport) => languageReport.text),
+			].join("\n\n"),
+		);
 	}
-
-	assert.fail(
-		[
-			`Expected no TS errors, but found ${typeScriptReports.length}:`,
-			...typeScriptReports.map((languageReport) => languageReport.text),
-		].join("\n\n"),
-	);
 }
 
 function defaultTo<TesterSetup extends TesterSetupDescribe | TesterSetupIt>(
