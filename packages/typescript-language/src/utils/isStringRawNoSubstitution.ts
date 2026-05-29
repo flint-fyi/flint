@@ -1,13 +1,6 @@
 import type { AST } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-export function isStaticString(node: AST.Expression) {
-	return (
-		node.kind === SyntaxKind.StringLiteral ||
-		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral
-	);
-}
-
 export function isStringRawNoSubstitution(
 	node: AST.Expression,
 ): node is AST.TaggedTemplateExpression & {
@@ -17,6 +10,7 @@ export function isStringRawNoSubstitution(
 		return false;
 	}
 
+	// TODO: Name-based only; not type-aware about a shadowed `String`.
 	const tag = node.tag;
 	return (
 		tag.kind === SyntaxKind.PropertyAccessExpression &&

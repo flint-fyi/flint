@@ -1,11 +1,11 @@
-import type { AST } from "@flint.fyi/typescript-language";
+import {
+	type AST,
+	isStaticString,
+	isStringRawNoSubstitution,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
 import { findProperty } from "./findProperty.ts";
-import {
-	isStaticString,
-	isStringRawNoSubstitution,
-} from "./staticStringHelpers.ts";
 import { tsAstToLiteral } from "./tsAstToLiteral.ts";
 import type { ParsedTestCaseCodeNode, ParsedTestCaseInvalid } from "./types.ts";
 
