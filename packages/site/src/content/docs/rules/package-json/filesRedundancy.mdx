@@ -1,0 +1,55 @@
+---
+description: "Prevents adding unnecessary / redundant files."
+title: "filesRedundancy"
+topic: "rules"
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="filesRedundancy" />
+
+This rule checks that the files property doesn't contain any redundant or unnecessary file entries.
+By default, [npm will automatically](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#files) include certain files, based on a number of circumstances.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"files": ["README.md", "CHANGELOG.md", "lib/index.js"],
+	"main": "lib/index.js"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"files": ["CHANGELOG.md"],
+	"main": "lib/index.js"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Suggestions
+
+When this rule reports a redundant file entry, it provides an editor suggestion to remove that entry from the `files` array.
+
+## Related Rules
+
+- [filesValidity](/rules/package-json/filesvalidity) - Enforces that the `files` property is valid.
+
+## Further Reading
+
+- [npm: `package.json` > `files`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#files)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="filesRedundancy" />

@@ -61,7 +61,7 @@ Property \`files\` is expected to be present.
 	],
 	valid: [
 		`{
-  "files": {}
+  "files": []
 }`,
 		{
 			code: `{

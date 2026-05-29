@@ -1,7 +1,7 @@
 import {
 	comparisons,
-	type FlintRuleReference,
 	type Comparison,
+	type FlintRuleReference,
 	getRuleForPluginSafe,
 } from "@flint.fyi/comparisons";
 import clsx from "clsx";
