@@ -1,10 +1,9 @@
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import { SyntaxKind } from "typescript";
 
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
-import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
