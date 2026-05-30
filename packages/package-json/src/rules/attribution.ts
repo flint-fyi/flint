@@ -70,13 +70,12 @@ export default ruleCreator.createRule(jsonLanguage, {
 						"author",
 						"contributors",
 					]);
-					if (options.ignorePrivate) {
-						if (
-							privateNode?.kind === SyntaxKind.PropertyAssignment &&
-							privateNode.initializer.kind === SyntaxKind.TrueKeyword
-						) {
-							return;
-						}
+					if (
+						options.ignorePrivate &&
+						privateNode?.kind === SyntaxKind.PropertyAssignment &&
+						privateNode.initializer.kind === SyntaxKind.TrueKeyword
+					) {
+						return;
 					}
 
 					if (
