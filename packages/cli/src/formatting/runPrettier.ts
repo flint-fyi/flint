@@ -31,6 +31,7 @@ export async function runPrettier(
 	// https://github.com/prettier/prettier/issues/17422
 	await Promise.all(
 		Array.from(allFilePaths).map(async (filePath) => {
+			// TODO: This duplicates the reading of files in languages themselves.
 			const originalFileContent = nullThrows(
 				await host.readFile(filePath),
 				"Expected linted file to exist.",
