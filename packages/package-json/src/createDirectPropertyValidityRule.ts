@@ -19,7 +19,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 	propertyValidator: PropertyValidator,
 ) {
 	const id = `${propertyName}Validity` as const;
-	const propertyNames = new Set([propertyName, ...propertyNameAliases]);
+	const propertyNames = [propertyName, ...propertyNameAliases];
 
 	const rule: AnyRule = ruleCreator.createRule(jsonLanguage, {
 		about: {
@@ -101,12 +101,12 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 
 			return {
 				visitors: {
-					JsonSourceFile: (node, { sourceFile }) => {
-						for (const initializer of getPackagePropertiesOfNames(
-							node,
-							propertyNames,
-						)) {
-							checkValue(initializer, sourceFile);
+					JsonSourceFile: (node) => {
+						const properties = getPackagePropertiesOfNames(node, propertyNames);
+						for (const property of Object.values(properties)) {
+							if (property?.initializer) {
+								checkValue(property.initializer, node);
+							}
 						}
 					},
 				},

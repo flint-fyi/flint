@@ -33,7 +33,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { options, sourceFile }) {
+				JsonSourceFile(node, { options }) {
 					const properties = getPackageProperties(node);
 					const root = node.statements[0];
 
@@ -65,7 +65,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 						}
 
 						const { range, text } = removeObjectProperty(
-							sourceFile,
+							node,
 							property,
 							root.expression,
 						);
@@ -75,7 +75,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 								propertyName: property.name.text,
 							},
 							message: "unnecessaryProperty",
-							range: getJsonNodeRange(property.name, sourceFile),
+							range: getJsonNodeRange(property.name, node),
 							suggestions: [
 								{
 									id: "removePrivatePackageProperty",

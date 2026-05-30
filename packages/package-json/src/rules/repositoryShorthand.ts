@@ -62,7 +62,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile: (node, { sourceFile }) => {
+				JsonSourceFile: (node) => {
 					const property = getPackagePropertyOfName(node, "repository");
 					if (
 						property?.kind !== ts.SyntaxKind.PropertyAssignment ||
@@ -71,7 +71,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 						return;
 					}
 
-					const range = getTSNodeRange(property.initializer, sourceFile);
+					const range = getTSNodeRange(property.initializer, node);
 					const url = createUrl(property.initializer.text);
 
 					context.report({

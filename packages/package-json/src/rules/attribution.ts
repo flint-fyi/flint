@@ -2,7 +2,7 @@ import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 export default ruleCreator.createRule(jsonLanguage, {
@@ -60,19 +60,25 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { options, sourceFile }) {
+				JsonSourceFile(node, { options }) {
+					const {
+						author,
+						contributors,
+						private: privateNode,
+					} = getPackagePropertiesOfNames(node, [
+						"private",
+						"author",
+						"contributors",
+					]);
 					if (options.ignorePrivate) {
-						const isPrivate = getPackagePropertyOfName(node, "private");
-
 						if (
-							isPrivate?.kind === SyntaxKind.PropertyAssignment &&
-							isPrivate.initializer.kind === SyntaxKind.TrueKeyword
+							privateNode?.kind === SyntaxKind.PropertyAssignment &&
+							privateNode.initializer.kind === SyntaxKind.TrueKeyword
 						) {
 							return;
 						}
 					}
 
-					const author = getPackagePropertyOfName(node, "author");
 					if (
 						options.preferContributorsOnly &&
 						author?.kind === SyntaxKind.PropertyAssignment &&
@@ -80,11 +86,10 @@ export default ruleCreator.createRule(jsonLanguage, {
 					) {
 						context.report({
 							message: "preferContributorsOnly",
-							range: getJsonNodeRange(author.name, sourceFile),
+							range: getJsonNodeRange(author.name, node),
 						});
 					}
 
-					const contributors = getPackagePropertyOfName(node, "contributors");
 					if (
 						contributors?.kind === SyntaxKind.PropertyAssignment &&
 						contributors.initializer.kind ===
@@ -93,7 +98,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 					) {
 						context.report({
 							message: "emptyContributors",
-							range: getJsonNodeRange(contributors.initializer, sourceFile),
+							range: getJsonNodeRange(contributors.initializer, node),
 						});
 					}
 

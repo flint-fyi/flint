@@ -17,12 +17,14 @@ export type JsonNodeName = keyof JsonNodesByName;
 export interface JsonNodesByName {
 	ArrayLiteralExpression: AST.ArrayLiteralExpression;
 	BooleanLiteral: AST.BooleanLiteral;
+	JsonExpression: AST.Expression;
 	JsonMinusNumericLiteral: JsonMinusNumericLiteral;
 	JsonObjectExpressionStatement: JsonObjectExpressionStatement;
 	JsonSourceFile: JsonSourceFile;
 	NullLiteral: AST.NullLiteral;
 	NumericLiteral: AST.NumericLiteral;
 	ObjectLiteralExpression: AST.ObjectLiteralExpression;
+	PropertyAssignment: AST.PropertyAssignment;
 	StringLiteral: AST.StringLiteral;
 }
 

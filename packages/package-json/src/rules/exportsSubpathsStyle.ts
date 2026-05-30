@@ -67,7 +67,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { options, sourceFile }) {
+				JsonSourceFile(node, { options }) {
 					const property = getPackagePropertyOfName(node, "exports");
 
 					if (
@@ -78,7 +78,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 					}
 
 					const initializer = property.initializer;
-					const range = getJsonNodeRange(property.name, sourceFile);
+					const range = getJsonNodeRange(property.name, node);
 
 					if (
 						options.prefer === "explicit" &&
@@ -88,8 +88,8 @@ export default ruleCreator.createRule(jsonLanguage, {
 					) {
 						context.report({
 							fix: {
-								range: getJsonNodeRange(initializer, sourceFile),
-								text: `{ ".": ${initializer.getText(sourceFile)} }`,
+								range: getJsonNodeRange(initializer, node),
+								text: `{ ".": ${initializer.getText(node)} }`,
 							},
 							message: "preferExplicit",
 							range,
@@ -112,8 +112,8 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 					context.report({
 						fix: {
-							range: getJsonNodeRange(initializer, sourceFile),
-							text: rootSubpath.initializer.getText(sourceFile),
+							range: getJsonNodeRange(initializer, node),
+							text: rootSubpath.initializer.getText(node),
 						},
 						message: "preferImplicit",
 						range,

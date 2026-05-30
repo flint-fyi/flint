@@ -1,7 +1,7 @@
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import { SyntaxKind } from "typescript";
 
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -25,47 +25,45 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { sourceFile }) {
-					const nameProperty = getPackagePropertyOfName(node, "name");
+				JsonSourceFile(node) {
+					const { name, publishConfig } = getPackagePropertiesOfNames(node, [
+						"name",
+						"publishConfig",
+					]);
 
 					if (
-						nameProperty?.kind !== SyntaxKind.PropertyAssignment ||
-						nameProperty.initializer.kind !== SyntaxKind.StringLiteral ||
-						nameProperty.initializer.text.startsWith("@")
+						name?.kind !== SyntaxKind.PropertyAssignment ||
+						name.initializer.kind !== SyntaxKind.StringLiteral ||
+						name.initializer.text.startsWith("@")
 					) {
 						return;
 					}
 
-					const publishConfigProperty = getPackagePropertyOfName(
-						node,
-						"publishConfig",
-					);
-
 					if (
-						publishConfigProperty?.kind !== SyntaxKind.PropertyAssignment ||
-						publishConfigProperty.initializer.kind !==
+						publishConfig?.kind !== SyntaxKind.PropertyAssignment ||
+						publishConfig.initializer.kind !==
 							SyntaxKind.ObjectLiteralExpression
 					) {
 						return;
 					}
 
-					const publishConfig = publishConfigProperty.initializer;
+					const publishConfigValue = publishConfig.initializer;
 
-					for (const property of publishConfig.properties) {
+					for (const property of publishConfigValue.properties) {
 						if (
 							property.kind === SyntaxKind.PropertyAssignment &&
 							property.name.kind === SyntaxKind.StringLiteral &&
 							property.name.text === "access"
 						) {
 							const { range, text } = removeObjectProperty(
-								sourceFile,
+								node,
 								property,
-								publishConfig,
+								publishConfigValue,
 							);
 
 							context.report({
 								message: "redundantAccess",
-								range: getJsonNodeRange(property.name, sourceFile),
+								range: getJsonNodeRange(property.name, node),
 								suggestions: [
 									{
 										id: "removeAccess",

@@ -171,7 +171,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 		return {
 			visitors: {
-				JsonSourceFile(node, { options, sourceFile }) {
+				JsonSourceFile(node, { options }) {
 					const ignoredProperties = new Set(options.ignoreProperties);
 
 					if (node.statements.length !== 1) {
@@ -189,7 +189,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							property.name.kind === SyntaxKind.StringLiteral &&
 							!ignoredProperties.has(property.name.text)
 						) {
-							checkPropertyValue(property, sourceFile, expression);
+							checkPropertyValue(property, node, expression);
 						}
 					}
 				},

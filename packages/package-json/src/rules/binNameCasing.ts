@@ -24,7 +24,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { sourceFile }) {
+				JsonSourceFile(node) {
 					const property = getPackagePropertyOfName(node, "bin");
 					if (
 						property?.kind !== ts.SyntaxKind.PropertyAssignment ||
@@ -48,7 +48,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							continue;
 						}
 
-						const range = getJsonNodeRange(binProperty.name, sourceFile);
+						const range = getJsonNodeRange(binProperty.name, node);
 
 						context.report({
 							message: "invalidCase",
