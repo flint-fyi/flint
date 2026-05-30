@@ -36,6 +36,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			testCase: ParsedTestCaseInvalid,
 			sourceFile: AST.SourceFile,
 		) {
+			// Skip empty code blocks — there are no lines to format.
+			if (testCase.code === "") {
+				return;
+			}
+
 			const fix = [
 				...createNewlineFixes(testCase.code, testCase.nodes.code, sourceFile),
 				...createNewlineFixes(
