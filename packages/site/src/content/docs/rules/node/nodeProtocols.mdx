@@ -4,7 +4,7 @@ title: "nodeProtocols"
 topic: "rules"
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { TabItem, Tabs } from "@astrojs/starlight/components";
 
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
@@ -20,13 +20,9 @@ The protocol is supported in Node.js 16+ and is the recommended way to import bu
 <TabItem label="❌ Incorrect">
 
 ```ts
-import fs from "fs";
-
-import path from "path";
-
-import { readFile } from "fs";
-
+import fs, { readFile } from "fs";
 import fsPromises from "fs/promises";
+import path from "path";
 
 const crypto = require("crypto");
 ```
@@ -35,13 +31,9 @@ const crypto = require("crypto");
 <TabItem label="✅ Correct">
 
 ```ts
-import fs from "node:fs";
-
-import path from "node:path";
-
-import { readFile } from "node:fs";
-
+import fs, { readFile } from "node:fs";
 import fsPromises from "node:fs/promises";
+import path from "node:path";
 
 const crypto = require("node:crypto");
 ```

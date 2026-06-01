@@ -1,11 +1,12 @@
+import { SyntaxKind } from "typescript";
+import { z } from "zod/v4";
+
 import {
 	getJsonNodeRange,
 	jsonLanguage,
 	type JsonSourceFile,
 } from "@flint.fyi/json-language";
 import type { AST } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
-import { z } from "zod/v4";
 
 import { removeArrayElement } from "../removeArrayElement.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";

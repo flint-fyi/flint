@@ -4,7 +4,7 @@ title: "assertStrict"
 topic: "rules"
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { TabItem, Tabs } from "@astrojs/starlight/components";
 
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
@@ -21,10 +21,7 @@ Strict mode provides better error messages with diffs and more reliable equality
 
 ```ts
 import assert from "assert";
-
-import assert from "node:assert";
-
-import { deepEqual } from "node:assert";
+import assert, { deepEqual } from "node:assert";
 ```
 
 </TabItem>
@@ -32,12 +29,8 @@ import { deepEqual } from "node:assert";
 
 ```ts
 import assert from "assert/strict";
-
+import { strict as assert, strict } from "node:assert";
 import assert from "node:assert/strict";
-
-import { strict as assert } from "node:assert";
-
-import { strict } from "node:assert";
 ```
 
 </TabItem>

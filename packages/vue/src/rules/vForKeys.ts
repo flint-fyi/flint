@@ -1,9 +1,10 @@
+import * as vue from "@vue/compiler-dom";
+import ts from "typescript";
+
 import type { CharacterReportRange } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 import { reportSourceCode } from "@flint.fyi/volar-language";
 import { vueLanguage } from "@flint.fyi/vue-language";
-import * as vue from "@vue/compiler-dom";
-import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

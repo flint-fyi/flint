@@ -1,9 +1,10 @@
+import * as tsutils from "ts-api-utils";
+import * as ts from "typescript";
+
 import {
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

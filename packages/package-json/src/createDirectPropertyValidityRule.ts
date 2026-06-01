@@ -1,3 +1,6 @@
+import type { Result } from "package-json-validator";
+import { SyntaxKind } from "typescript";
+
 import type { AnyRule } from "@flint.fyi/core";
 import {
 	getJsonNodeRange,
@@ -5,8 +8,6 @@ import {
 	type JsonNode,
 	type JsonSourceFile,
 } from "@flint.fyi/json-language";
-import type { Result } from "package-json-validator";
-import { SyntaxKind } from "typescript";
 
 import { getPackagePropertiesOfNames } from "./getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "./ruleCreator.ts";

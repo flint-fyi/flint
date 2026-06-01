@@ -1,6 +1,7 @@
+import { SyntaxKind } from "typescript";
+
 import type { JsonSourceFile } from "@flint.fyi/json-language";
 import type { AST } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
 
 import { getPackageProperties } from "./getPackageProperties.ts";
 

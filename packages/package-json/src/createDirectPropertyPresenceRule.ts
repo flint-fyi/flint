@@ -1,7 +1,8 @@
-import type { AnyRule } from "@flint.fyi/core";
-import { jsonLanguage, type JsonSourceFile } from "@flint.fyi/json-language";
 import ts from "typescript";
 import { z } from "zod/v4";
+
+import type { AnyRule } from "@flint.fyi/core";
+import { jsonLanguage, type JsonSourceFile } from "@flint.fyi/json-language";
 
 import { getPackagePropertyOfName } from "./getPackagePropertyOfName.ts";
 import { ruleCreator } from "./ruleCreator.ts";

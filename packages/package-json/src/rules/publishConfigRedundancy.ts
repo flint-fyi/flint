@@ -1,5 +1,6 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import { SyntaxKind } from "typescript";
+
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";

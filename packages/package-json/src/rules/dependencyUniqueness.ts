@@ -1,6 +1,7 @@
+import { SyntaxKind } from "typescript";
+
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import type { AST } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
 
 import { getPackageProperties } from "../getPackageProperties.ts";
 import { removeArrayElement } from "../removeArrayElement.ts";

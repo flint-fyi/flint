@@ -4,8 +4,9 @@
 // Changing from the switch to manual ifs is due to:
 // https://github.com/Microsoft/TypeScript/issues/56275
 
-import type { AST } from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
+
+import type { AST } from "@flint.fyi/typescript-language";
 
 export function tsAstToLiteral(node: AST.ArrayLiteralExpression): unknown[];
 export function tsAstToLiteral(node: AST.ObjectLiteralExpression): object;

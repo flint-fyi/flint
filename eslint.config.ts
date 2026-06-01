@@ -1,9 +1,8 @@
+import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import eslint from "@eslint/js";
 import eslintJson from "@eslint/json";
 import markdown from "@eslint/markdown";
-import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import vitest from "@vitest/eslint-plugin";
-import { defineConfig, globalIgnores } from "eslint/config";
 import jsdoc from "eslint-plugin-jsdoc";
 import jsonc from "eslint-plugin-jsonc";
 import n from "eslint-plugin-n";
@@ -12,6 +11,7 @@ import perfectionist from "eslint-plugin-perfectionist";
 import { Alphabet } from "eslint-plugin-perfectionist/alphabet";
 import * as regexp from "eslint-plugin-regexp";
 import yml from "eslint-plugin-yml";
+import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
 
 const importAlphabet = Alphabet.generateRecommendedAlphabet()
@@ -144,21 +144,9 @@ export default defineConfig(
 			// Use no-restricted-syntax to target e.g. `type Foo = typeof import('foo.js')` as well.
 			"no-restricted-syntax": ["error", ...banJsImportExtension()],
 
-			"perfectionist/sort-imports": [
-				"error",
-				{
-					alphabet: importAlphabet,
-					groups: [
-						"side-effect",
-						["builtin", "external"],
-						["parent", "sibling", "index", "subpath"],
-						"unknown",
-					],
-
-					partitionByNewLine: false,
-					type: "custom",
-				},
-			],
+			// Covered by Prettier plugin
+			"perfectionist/sort-imports": "off",
+			"perfectionist/sort-named-imports": "off",
 		},
 		settings: {
 			perfectionist: { partitionByComment: true, type: "natural" },

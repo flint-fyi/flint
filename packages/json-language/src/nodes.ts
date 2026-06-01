@@ -1,6 +1,7 @@
+import type * as ts from "typescript";
+
 import type { WithExitKeys } from "@flint.fyi/core";
 import type { AST } from "@flint.fyi/typescript-language";
-import type * as ts from "typescript";
 
 export type JsonMinusNumericLiteral = Omit<
 	AST.PrefixUnaryExpression,

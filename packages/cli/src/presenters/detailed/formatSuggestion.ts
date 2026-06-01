@@ -1,5 +1,6 @@
-import { formatReport, type ReportInterpolationData } from "@flint.fyi/core";
 import chalk from "chalk";
+
+import { formatReport, type ReportInterpolationData } from "@flint.fyi/core";
 
 import { ColorCodes } from "./constants.ts";
 

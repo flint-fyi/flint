@@ -1,8 +1,10 @@
-import { normalizePath } from "@flint.fyi/utils";
 import fs from "node:fs";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { normalizePath } from "@flint.fyi/utils";
 
 import { createDiskBackedLinterHost } from "./createDiskBackedLinterHost.ts";
 

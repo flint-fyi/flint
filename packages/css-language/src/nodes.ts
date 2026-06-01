@@ -1,5 +1,6 @@
-import type { WithExitKeys } from "@flint.fyi/core";
 import type { CssNode } from "css-tree";
+
+import type { WithExitKeys } from "@flint.fyi/core";
 
 export type CssNodesByName = {
 	[Node in CssNode as Node["type"]]: Node;

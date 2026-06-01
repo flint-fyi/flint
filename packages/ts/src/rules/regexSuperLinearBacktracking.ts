@@ -1,9 +1,10 @@
+import { analyse, type ParsedLiteral } from "scslre";
+
 import {
+	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
-	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import { analyse, type ParsedLiteral } from "scslre";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";

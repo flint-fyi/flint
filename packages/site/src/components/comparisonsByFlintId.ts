@@ -1,7 +1,7 @@
 import {
-	type Comparison,
 	comparisons,
 	getComparisonId,
+	type Comparison,
 } from "@flint.fyi/comparisons";
 
 const comparisonsByFlintId = new Map(

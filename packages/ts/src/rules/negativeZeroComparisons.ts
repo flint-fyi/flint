@@ -1,6 +1,8 @@
-import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
+import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
+
+import { ruleCreator } from "./ruleCreator.ts";
 import {
 	isComparisonOperator,
 	isEqualityOperator,
@@ -15,8 +17,6 @@ function isNegativeZero(node: AST.Expression): boolean {
 		node.operand.text === "0"
 	);
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

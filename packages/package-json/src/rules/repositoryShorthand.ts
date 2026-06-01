@@ -1,6 +1,7 @@
+import ts from "typescript";
+
 import { jsonLanguage } from "@flint.fyi/json-language";
 import { getTSNodeRange } from "@flint.fyi/typescript-language";
-import ts from "typescript";
 
 import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";

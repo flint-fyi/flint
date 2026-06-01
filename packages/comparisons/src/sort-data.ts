@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
+
 import prettier from "prettier";
 
 import dataOriginal from "./data.json" with { type: "json" };

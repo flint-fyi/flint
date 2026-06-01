@@ -1,4 +1,4 @@
-import { type RuleAbout, RuleCreator } from "@flint.fyi/core";
+import { RuleCreator, type RuleAbout } from "@flint.fyi/core";
 
 export const ruleCreator = new RuleCreator({
 	docs: (ruleId) => `https://flint.fyi/rules/vitest/${ruleId.toLowerCase()}`,

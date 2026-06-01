@@ -1,9 +1,10 @@
+import { parseArgs } from "node:util";
+
 import {
 	createDiskBackedLinterHost,
 	createEphemeralLinterHost,
 	findConfigFileName,
 } from "@flint.fyi/core";
-import { parseArgs } from "node:util";
 
 import packageData from "../package.json" with { type: "json" };
 import { options } from "./options.ts";

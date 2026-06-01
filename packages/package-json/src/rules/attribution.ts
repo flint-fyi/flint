@@ -1,6 +1,7 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
+
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "../ruleCreator.ts";

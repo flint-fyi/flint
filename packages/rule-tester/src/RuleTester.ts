@@ -1,19 +1,21 @@
+import assert from "node:assert/strict";
+import path from "node:path";
+
+import { CachedFactory } from "cached-factory";
+
 import {
+	createDiskBackedLinterHost,
+	createEphemeralLinterHost,
+	createVFSLinterHost,
+	parseOptions,
 	type AnyLanguage,
 	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
 	type AnyRule,
-	createDiskBackedLinterHost,
-	createEphemeralLinterHost,
-	createVFSLinterHost,
 	type InferredInputObject,
-	parseOptions,
 	type RuleAbout,
 	type VFSLinterHost,
 } from "@flint.fyi/core";
-import { CachedFactory } from "cached-factory";
-import assert from "node:assert/strict";
-import path from "node:path";
 
 import { createOutput } from "./createOutput.ts";
 import { createReportSnapshot } from "./createReportSnapshot.ts";

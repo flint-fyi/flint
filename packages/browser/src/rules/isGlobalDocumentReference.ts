@@ -1,9 +1,10 @@
+import { SyntaxKind } from "typescript";
+
 import {
+	isGlobalDeclaration,
 	type AST,
 	type Checker,
-	isGlobalDeclaration,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
