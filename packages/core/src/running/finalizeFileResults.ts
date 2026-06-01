@@ -56,7 +56,11 @@ export function finalizeFileResults(
 				language.about.name,
 				filePath,
 			);
-			languageReports.push(...language.getLanguageReports(file));
+			const source = `flint/${language.about.name.toLowerCase()}`;
+			for (const report of language.getLanguageReports(file)) {
+				report.source = source;
+				languageReports.push(report);
+			}
 			log(
 				"Retrieved %s language reports for file %s",
 				language.about.name,
