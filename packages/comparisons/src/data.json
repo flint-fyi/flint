@@ -6255,11 +6255,10 @@
 			}
 		],
 		"flint": {
-			"name": "arrayIndexKeyes",
+			"name": "arrayIndexKeys",
 			"plugin": "react",
 			"preset": "logical"
-		},
-		"notes": "Overly opinionated."
+		}
 	},
 	{
 		"eslint": [
@@ -27925,7 +27924,6 @@
 			"plugin": "css",
 			"preset": "logical"
 		},
-		"notes": "@eslint/css treats comment-only blocks as empty; Stylelint can be configured to do the same.",
 		"stylelint": [
 			{
 				"name": "block-no-empty",
@@ -27951,7 +27949,6 @@
 			"plugin": "css",
 			"preset": "logical"
 		},
-		"notes": "@eslint/css also requires fallback fonts, while Stylelint only requires a generic family keyword.",
 		"stylelint": [
 			{
 				"name": "font-family-no-missing-generic-family-keyword",
@@ -28037,7 +28034,6 @@
 			"plugin": "css",
 			"preset": "logical"
 		},
-		"notes": "Stylelint's equivalent only checks invalid @import rule positions.",
 		"stylelint": [
 			{
 				"name": "no-invalid-position-at-import-rule",
@@ -28063,7 +28059,6 @@
 			"plugin": "css",
 			"preset": "logical"
 		},
-		"notes": "Stylelint splits invalid at-rule checks across unknown at-rules, invalid preludes, unknown descriptors, and invalid descriptor values.",
 		"stylelint": [
 			{
 				"name": "at-rule-descriptor-no-unknown",
@@ -28126,7 +28121,6 @@
 			"plugin": "css",
 			"preset": "logical"
 		},
-		"notes": "Stylelint splits invalid property checks across property names and property values.",
 		"stylelint": [
 			{
 				"name": "declaration-property-value-no-unknown",
