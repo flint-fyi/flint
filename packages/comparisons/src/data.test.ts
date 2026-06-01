@@ -50,6 +50,7 @@ describe("data.json", () => {
 			} else {
 				seenIds.add(id);
 			}
+
 			expect(duplicates).toEqual([]);
 		}
 	});
