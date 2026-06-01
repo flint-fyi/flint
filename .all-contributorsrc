@@ -141,7 +141,9 @@
         "doc",
         "code",
         "maintenance",
-        "bug"
+        "bug",
+        "infra",
+        "ideas"
       ]
     },
     {
@@ -249,6 +251,15 @@
       "name": "Matt Van Horn",
       "avatar_url": "https://avatars.githubusercontent.com/u/455140?v=4",
       "profile": "https://github.com/mvanhorn",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "tamashoo",
+      "name": "tamashoo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/72484282?v=4",
+      "profile": "https://github.com/Tamashoo",
       "contributions": [
         "code"
       ]

@@ -28,6 +28,7 @@
 	},
 	"devDependencies": {
 		"@arethetypeswrong/core": "catalog:dev",
+		"@changesets/changelog-github": "catalog:dev",
 		"@changesets/cli": "catalog:dev",
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
 		"@eslint/js": "catalog:dev",

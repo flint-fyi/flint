@@ -1,19 +1,18 @@
-import type { AST } from "@flint.fyi/typescript-language";
+import {
+	type AST,
+	isStaticString,
+	isStringRawNoSubstitution,
+} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
 import { findProperty } from "./findProperty.ts";
 import { tsAstToLiteral } from "./tsAstToLiteral.ts";
-import type { ParsedTestCase, ParsedTestCaseInvalid } from "./types.ts";
+import type { ParsedTestCaseCodeNode, ParsedTestCaseInvalid } from "./types.ts";
 
-export function parseTestCase(
-	node: AST.Expression,
-): ParsedTestCase | undefined {
-	if (
-		node.kind === SyntaxKind.StringLiteral ||
-		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral
-	) {
+export function parseTestCase(node: AST.Expression) {
+	if (isTestCaseCode(node)) {
 		return {
-			code: node.text,
+			code: getTestCaseCode(node),
 			nodes: {
 				case: node,
 				code: node,
@@ -25,37 +24,18 @@ export function parseTestCase(
 		return undefined;
 	}
 
-	const code = findProperty(
-		node.properties,
-		"code",
-
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const code = findProperty(node.properties, "code", isTestCaseCode);
 	if (!code) {
 		return undefined;
 	}
 
-	const fileName = findProperty(
-		node.properties,
-		"fileName",
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const fileName = findProperty(node.properties, "fileName", isStaticString);
 	const files = findProperty(
 		node.properties,
 		"files",
 		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
-	const name = findProperty(
-		node.properties,
-		"name",
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const name = findProperty(node.properties, "name", isStaticString);
 	const options = findProperty(
 		node.properties,
 		"options",
@@ -63,7 +43,7 @@ export function parseTestCase(
 	);
 
 	return {
-		code: code.text,
+		code: getTestCaseCode(code),
 		fileName: fileName?.text,
 		files: files && (tsAstToLiteral(files) as Record<string, string>),
 		name: name?.text,
@@ -86,54 +66,30 @@ export function parseTestCaseInvalid(
 		return undefined;
 	}
 
-	const code = findProperty(
-		node.properties,
-		"code",
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const code = findProperty(node.properties, "code", isTestCaseCode);
 	if (!code) {
 		return undefined;
 	}
 
-	const fileName = findProperty(
-		node.properties,
-		"fileName",
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const fileName = findProperty(node.properties, "fileName", isStaticString);
 	const files = findProperty(
 		node.properties,
 		"files",
 		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
-	const name = findProperty(
-		node.properties,
-		"name",
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const name = findProperty(node.properties, "name", isStaticString);
 	const options = findProperty(
 		node.properties,
 		"options",
 		(node) => node.kind === SyntaxKind.ObjectLiteralExpression,
 	);
-	const snapshot = findProperty(
-		node.properties,
-		"snapshot",
-		(node) =>
-			node.kind === SyntaxKind.StringLiteral ||
-			node.kind === SyntaxKind.NoSubstitutionTemplateLiteral,
-	);
+	const snapshot = findProperty(node.properties, "snapshot", isStaticString);
 	if (!snapshot) {
 		return undefined;
 	}
 
 	return {
-		code: code.text,
+		code: getTestCaseCode(code),
 		fileName: fileName?.text,
 		files: files && (tsAstToLiteral(files) as Record<string, string>),
 		name: name?.text,
@@ -149,4 +105,16 @@ export function parseTestCaseInvalid(
 		options: options && tsAstToLiteral(options),
 		snapshot: snapshot.text,
 	};
+}
+
+function getTestCaseCode(node: ParsedTestCaseCodeNode) {
+	if (isStringRawNoSubstitution(node)) {
+		return node.template.rawText ?? node.template.text;
+	}
+
+	return node.text;
+}
+
+function isTestCaseCode(node: AST.Expression) {
+	return isStaticString(node) || isStringRawNoSubstitution(node);
 }
