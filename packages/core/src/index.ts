@@ -63,6 +63,7 @@ export type {
 	ConfigRuleDefinition,
 	ConfigRuleDefinitionObject,
 	ConfigUseDefinition,
+	ProcessedConfigDefinition,
 } from "./types/configs.ts";
 export type {
 	MessageForContext,
@@ -77,6 +78,7 @@ export type {
 } from "./types/directives.ts";
 export type { FormattingResults } from "./types/formatting.ts";
 export type {
+	FileSystemWatcher,
 	LinterHost,
 	LinterHostDirectoryEntry,
 	LinterHostDirectoryWatcher,
