@@ -70,6 +70,7 @@ const fileReportSchema = z.object({
 
 const languageReportSchema = z.object({
 	code: z.string().optional(),
+	source: z.string().optional(),
 	text: z.string(),
 });
 
