@@ -1,4 +1,5 @@
 import eslint from "@eslint/js";
+import eslintJson from "@eslint/json";
 import markdown from "@eslint/markdown";
 import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import vitest from "@vitest/eslint-plugin";
@@ -6,7 +7,7 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import jsdoc from "eslint-plugin-jsdoc";
 import jsonc from "eslint-plugin-jsonc";
 import n from "eslint-plugin-n";
-import packageJson from "eslint-plugin-package-json";
+import packageJson from "eslint-plugin-package-json/experimental";
 import perfectionist from "eslint-plugin-perfectionist";
 import { Alphabet } from "eslint-plugin-perfectionist/alphabet";
 import * as regexp from "eslint-plugin-regexp";
@@ -258,11 +259,9 @@ export default defineConfig(
 	},
 	{
 		extends: [packageJson.configs.recommended, packageJson.configs.stylistic],
+		files: ["**/package.json"],
 		ignores: ["packages/e2e/tests/**/package.json"],
-	},
-	{
-		extends: [packageJson.configs["recommended-publishable"]],
-		files: ["packages/*/package.json"],
+		plugins: { json: eslintJson },
 		rules: {
 			"package-json/require-homepage": "error",
 		},

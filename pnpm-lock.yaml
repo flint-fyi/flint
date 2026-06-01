@@ -61,8 +61,8 @@ catalogs:
       specifier: 18.0.0
       version: 18.0.0
     eslint-plugin-package-json:
-      specifier: 1.1.0
-      version: 1.1.0
+      specifier: 1.2.0
+      version: 1.2.0
     eslint-plugin-perfectionist:
       specifier: 5.9.0
       version: 5.9.0
@@ -220,6 +220,9 @@ importers:
       '@eslint/js':
         specifier: catalog:dev
         version: 10.0.1(eslint@10.3.0(jiti@2.7.0))
+      '@eslint/json':
+        specifier: 1.2.0
+        version: 1.2.0
       '@eslint/markdown':
         specifier: catalog:dev
         version: 8.0.0
@@ -267,7 +270,7 @@ importers:
         version: 18.0.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
-        version: 1.1.0(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
+        version: 1.2.0(@eslint/json@1.2.0)(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
       eslint-plugin-perfectionist:
         specifier: catalog:dev
         version: 5.9.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
@@ -554,7 +557,7 @@ importers:
         version: 18.0.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
-        version: 1.1.0(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
+        version: 1.2.0(@eslint/json@1.2.0)(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
       eslint-plugin-perfectionist:
         specifier: catalog:dev
         version: 5.9.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
@@ -4578,11 +4581,15 @@ packages:
       typescript:
         optional: true
 
-  eslint-plugin-package-json@1.1.0:
-    resolution: {integrity: sha512-yFBkYxHBlGKBi3Av17pCkJie+G3/DN/XEy1KGkHnTLXCY8eX7rF2kGiFn8a3N4iIGV4NJzKA0HdpINwVxczX0Q==}
+  eslint-plugin-package-json@1.2.0:
+    resolution: {integrity: sha512-3BszsD7XVddaUNbMfK+1lF1Qg8ck0nO3bNT/7IjXP8wrGzPThHZpkhm5UnbY1Nb/s3o6DUNgHI4aEqQV/t83fw==}
     engines: {node: ^22.22.2 || >=24.15.0}
     peerDependencies:
+      '@eslint/json': '>=1.0.0'
       eslint: '>=9.0.0'
+    peerDependenciesMeta:
+      '@eslint/json':
+        optional: true
 
   eslint-plugin-perfectionist@5.9.0:
     resolution: {integrity: sha512-8TWzg02zmnBdZwCkWLi8jhzqXI+fE7Z/RwV8SL6xD45tJ8Bp3wGuYL2XtQgfe/Wd0eBqOUX+s6ey73IyszvKTA==}
@@ -10973,7 +10980,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  eslint-plugin-package-json@1.1.0(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0)):
+  eslint-plugin-package-json@1.2.0(@eslint/json@1.2.0)(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0)):
     dependencies:
       '@altano/repository-tools': 2.0.1
       change-case: 5.4.4
@@ -10981,11 +10988,14 @@ snapshots:
       detect-newline: 4.0.1
       eslint: 10.3.0(jiti@2.7.0)
       eslint-fix-utils: 0.4.2(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
+      eslint-json-compat-utils: 0.2.3(@eslint/json@1.2.0)(eslint@10.3.0(jiti@2.7.0))(jsonc-eslint-parser@3.1.0)
       jsonc-eslint-parser: 3.1.0
       package-json-validator: 1.5.1
       semver: 7.8.0
       sort-object-keys: 2.1.0
       sort-package-json: 3.6.1
+    optionalDependencies:
+      '@eslint/json': 1.2.0
     transitivePeerDependencies:
       - '@types/estree'
 
