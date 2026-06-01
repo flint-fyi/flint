@@ -54,7 +54,7 @@ export const jsonLanguage: Language<JsonNodeVisitors, JsonFileServices> =
 
 				node.forEachChild(visit);
 
-				// @ts-expect-error -- The node parameter type shouldn't be `never`...?
+				// @ts-expect-error -- The node parameter type shouldn't be `undefined`...?
 				visitors[`${key}:exit`]?.(node, visitorServices);
 			};
 
