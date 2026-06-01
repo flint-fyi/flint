@@ -1853,18 +1853,6 @@
 	{
 		"eslint": [
 			{
-				"name": "@eslint-react/jsx-no-comment-textnodes",
-				"url": "https://eslint-react.xyz/docs/rules/jsx-no-comment-textnodes"
-			}
-		],
-		"flint": {
-			"name": "commentTextNodes",
-			"plugin": "jsx"
-		}
-	},
-	{
-		"eslint": [
-			{
 				"name": "@eslint-react/jsx-no-key-after-spread",
 				"url": "https://eslint-react.xyz/docs/rules/jsx-no-key-after-spread"
 			}
@@ -1984,6 +1972,10 @@
 			{
 				"name": "react/jsx-no-comment-textnodes",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/jsx-no-comment-textnodes.md"
+			},
+			{
+				"name": "@eslint-react/jsx-no-comment-textnodes",
+				"url": "https://eslint-react.xyz/docs/rules/jsx-no-comment-textnodes"
 			}
 		],
 		"flint": {
@@ -6419,18 +6411,6 @@
 	{
 		"eslint": [
 			{
-				"name": "@eslint-react/no-children-to-array",
-				"url": "https://eslint-react.xyz/docs/rules/no-children-to-array"
-			}
-		],
-		"flint": {
-			"name": "childrenToArrays",
-			"plugin": "react"
-		}
-	},
-	{
-		"eslint": [
-			{
 				"name": "react/prefer-es6-class",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/prefer-es6-class.md"
 			}
@@ -6529,6 +6509,10 @@
 			{
 				"name": "react/display-name",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/display-name.md"
+			},
+			{
+				"name": "@eslint-react/no-missing-component-display-name",
+				"url": "https://eslint-react.xyz/docs/rules/no-missing-component-display-name"
 			}
 		],
 		"flint": {
@@ -7589,18 +7573,6 @@
 	{
 		"eslint": [
 			{
-				"name": "@eslint-react/no-missing-component-display-name",
-				"url": "https://eslint-react.xyz/docs/rules/no-missing-component-display-name"
-			}
-		],
-		"flint": {
-			"name": "componentDisplayNames",
-			"plugin": "react"
-		}
-	},
-	{
-		"eslint": [
-			{
 				"name": "@eslint-react/no-missing-context-display-name",
 				"url": "https://eslint-react.xyz/docs/rules/no-missing-context-display-name"
 			}
@@ -7872,18 +7844,6 @@
 	{
 		"eslint": [
 			{
-				"name": "@eslint-react/no-unused-state",
-				"url": "https://eslint-react.xyz/docs/rules/no-unused-state"
-			}
-		],
-		"flint": {
-			"name": "unusedState",
-			"plugin": "react"
-		}
-	},
-	{
-		"eslint": [
-			{
 				"name": "@eslint-react/no-use-context",
 				"url": "https://eslint-react.xyz/docs/rules/no-use-context"
 			}
@@ -7986,6 +7946,10 @@
 			{
 				"name": "react/no-unused-state",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-unused-state.md"
+			},
+			{
+				"name": "@eslint-react/no-unused-state",
+				"url": "https://eslint-react.xyz/docs/rules/no-unused-state"
 			}
 		],
 		"flint": {
