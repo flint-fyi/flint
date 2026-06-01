@@ -1,5 +1,10 @@
 import type { commonlyIgnoredGlobs } from "../host/watcher.ts";
 
+export type FileSystemWatcher = Pick<
+	LinterHost,
+	"watchDirectorySync" | "watchFileSync"
+>;
+
 export interface LinterHost {
 	fileTypeSync(pathAbsolute: string): "directory" | "file" | undefined;
 	getCurrentDirectory(): string;
