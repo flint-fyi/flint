@@ -8,17 +8,10 @@ import jsonc from "eslint-plugin-jsonc";
 import n from "eslint-plugin-n";
 import packageJson from "eslint-plugin-package-json/experimental";
 import perfectionist from "eslint-plugin-perfectionist";
-import { Alphabet } from "eslint-plugin-perfectionist/alphabet";
 import * as regexp from "eslint-plugin-regexp";
 import yml from "eslint-plugin-yml";
 import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
-
-const importAlphabet = Alphabet.generateRecommendedAlphabet()
-	.sortByNaturalSort()
-	.placeCharacterBefore({ characterAfter: "-", characterBefore: "/" })
-	.placeCharacterBefore({ characterAfter: "/", characterBefore: "." })
-	.getCharacters();
 
 // https://typescript-eslint.io/troubleshooting/typed-linting/performance#importextensions-enforcing-extensions-are-not-used
 function banJsImportExtension() {
