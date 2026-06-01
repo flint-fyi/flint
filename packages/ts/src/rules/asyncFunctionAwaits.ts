@@ -88,7 +88,7 @@ function bodyContainsAwait(body: ts.Block | ts.Expression) {
 		return ts.forEachChild(node, checkForAwait);
 	}
 
-	return ts.forEachChild(body, checkForAwait);
+	return checkForAwait(body);
 }
 
 function bodyReturnsThenable(

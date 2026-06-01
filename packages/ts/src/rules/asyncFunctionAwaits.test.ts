@@ -125,6 +125,10 @@ const fn = async () => {
 };
 `,
 		`
+declare function loadData(): Promise<void>;
+const load = async () => await loadData();
+`,
+		`
 class Example {
     async method() {
         await this.fetchData();
