@@ -13,6 +13,7 @@ import {
 	type AnyOptionalSchema,
 	type AnyRule,
 	type InferredInputObject,
+	type LanguageReports,
 	type RuleAbout,
 	type VFSLinterHost,
 } from "@flint.fyi/core";
@@ -32,6 +33,7 @@ export interface RuleTesterDefaults {
 	files?: Record<string, string>;
 }
 export interface RuleTesterOptions {
+	assertNoLanguageReports?: boolean;
 	defaults?: RuleTesterDefaults;
 	describe?: TesterSetupDescribe;
 	diskBackedFSRoot?: string;
@@ -62,6 +64,7 @@ export class RuleTester {
 	#testerOptions: Required<Omit<RuleTesterOptions, "diskBackedFSRoot">>;
 
 	constructor({
+		assertNoLanguageReports = false,
 		defaults = {},
 		describe,
 		diskBackedFSRoot,
@@ -118,6 +121,7 @@ export class RuleTester {
 		}
 
 		this.#testerOptions = {
+			assertNoLanguageReports,
 			defaults,
 			describe: defaultTo(describe, scope, "describe"),
 			it,
@@ -156,12 +160,16 @@ export class RuleTester {
 		);
 
 		this.#itTestCase(testCaseNormalized, async () => {
-			const reports = await runTestCaseRule(
+			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
 				{ options: parseOptions(rule.options, testCase.options), rule },
 				testCaseNormalized,
+				{
+					collectLanguageReports: this.#testerOptions.assertNoLanguageReports,
+				},
 			);
+			assertNoLanguageReports(languageReports);
 			const actualSnapshot = createReportSnapshot(testCase.code, reports);
 
 			assert.equal(actualSnapshot, testCase.snapshot);
@@ -229,12 +237,16 @@ export class RuleTester {
 		);
 
 		this.#itTestCase(testCaseNormalized, async () => {
-			const reports = await runTestCaseRule(
+			const { languageReports, reports } = await runTestCaseRule(
 				this.#fileFactories,
 				this.#linterHost,
 				{ options: parseOptions(rule.options, testCase.options), rule },
 				testCaseNormalized,
+				{
+					collectLanguageReports: this.#testerOptions.assertNoLanguageReports,
+				},
 			);
+			assertNoLanguageReports(languageReports);
 
 			if (reports.length) {
 				assert.deepStrictEqual(
@@ -243,6 +255,18 @@ export class RuleTester {
 				);
 			}
 		});
+	}
+}
+
+function assertNoLanguageReports(languageReports: LanguageReports) {
+	// TODO (#2842): Surface each report's structured source
+	if (languageReports.length) {
+		assert.fail(
+			[
+				`Expected no language reports, but found ${languageReports.length}:`,
+				...languageReports.map((languageReport) => languageReport.text),
+			].join("\n\n"),
+		);
 	}
 }
 
