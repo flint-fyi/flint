@@ -29,6 +29,7 @@ export {
 	nodeModulesDir,
 	vcsDirectories,
 } from "./host/watcher.ts";
+export { withFileSystemWatcher } from "./host/withFileSystemWatcher.ts";
 export { createLanguage } from "./languages/createLanguage.ts";
 export { createPlugin } from "./plugins/createPlugin.ts";
 export { formatReport } from "./reporting/formatReport.ts";
