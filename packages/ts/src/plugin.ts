@@ -35,6 +35,7 @@ import arrayTypes from "./rules/arrayTypes.ts";
 import arrayUnnecessaryLengthChecks from "./rules/arrayUnnecessaryLengthChecks.ts";
 import asConstAssertions from "./rules/asConstAssertions.ts";
 import assignmentOperatorShorthands from "./rules/assignmentOperatorShorthands.ts";
+import asyncFunctionAwaits from "./rules/asyncFunctionAwaits.ts";
 import asyncPromiseExecutors from "./rules/asyncPromiseExecutors.ts";
 import asyncUnnecessaryPromiseWrappers from "./rules/asyncUnnecessaryPromiseWrappers.ts";
 import atAccesses from "./rules/atAccesses.ts";
@@ -346,6 +347,7 @@ export const ts = createPlugin({
 		arrayUnnecessaryLengthChecks,
 		asConstAssertions,
 		assignmentOperatorShorthands,
+		asyncFunctionAwaits,
 		asyncPromiseExecutors,
 		asyncUnnecessaryPromiseWrappers,
 		atAccesses,

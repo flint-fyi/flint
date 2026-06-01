@@ -13,6 +13,7 @@ import {
 import path from "node:path";
 import url from "node:url";
 import { internalHelpers, svelte2tsx } from "svelte2tsx";
+import type { CompileError } from "svelte/compiler";
 import type * as ts from "typescript";
 
 const sveltePath = path.dirname(
@@ -104,17 +105,36 @@ export function errorToLanguageReport(
 			text: `${fileName} - Unknown error`,
 		};
 	}
+	const svelteError = isSvelteCompileError(error) ? error : null;
 	const loc =
-		"position" in error && Array.isArray(error.position)
-			? `:${error.position[0]}:${error.position[1]}`
+		svelteError?.start != null
+			? `:${svelteError.start.line}:${svelteError.start.column}`
 			: "";
 	const res: LanguageReport = {
 		text: `${fileName}${loc} - ${"message" in error && typeof error.message === "string" ? error.message : "Codegen error"}`,
 	};
+	if (svelteError?.start != null) {
+		res.range = {
+			begin: svelteError.start.character,
+			end: svelteError.end?.character ?? svelteError.start.character,
+		};
+	}
 	if ("code" in error && typeof error.code === "string") {
 		res.code = error.code;
 	}
 	return res;
+}
+
+// https://github.com/sveltejs/svelte/blob/4d8f99a2709e3c02e48d8bc6c77458f4ba49d0e3/packages/svelte/src/compiler/utils/compile_diagnostic.js#L51
+function isSvelteCompileError(error: object): error is CompileError {
+	return (
+		"start" in error &&
+		typeof (error as Record<string, unknown>).start === "object" &&
+		(error as Record<string, unknown>).start !== null &&
+		"character" in (error as { start: object }).start &&
+		typeof (error as { start: { character: unknown } }).start.character ===
+			"number"
+	);
 }
 
 // adapted from https://github.com/withastro/astro/blob/a19140fd11efbc635a391d176da54b0dc5e4a99c/packages/language-tools/ts-plugin/src/astro2tsx.ts

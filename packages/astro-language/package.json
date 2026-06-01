@@ -28,6 +28,7 @@
 	"dependencies": {
 		"@astrojs/compiler": "^4.0.0",
 		"@astrojs/ts-plugin": "^1.10.7",
+		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",

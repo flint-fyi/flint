@@ -73,6 +73,54 @@ ruleTester.describe(rule, {
 			code: `
                 ruleTester.describe(rule, {
                     valid: [
+                        String.raw\`a\`,
+                        String.raw\`a\`,
+                    ],
+                    invalid: []
+                });
+
+`,
+			snapshot: `
+                ruleTester.describe(rule, {
+                    valid: [
+                        String.raw\`a\`,
+                        String.raw\`a\`,
+                        ~~~~~~~~~~~~~
+                        This test code already appeared in a previous test.
+                    ],
+                    invalid: []
+                });
+
+`,
+		},
+		{
+			code: `
+                ruleTester.describe(rule, {
+                    valid: [
+                        "a\\\\n",
+                        String.raw\`a\\n\`,
+                    ],
+                    invalid: []
+                });
+
+`,
+			snapshot: `
+                ruleTester.describe(rule, {
+                    valid: [
+                        "a\\\\n",
+                        String.raw\`a\\n\`,
+                        ~~~~~~~~~~~~~~~
+                        This test code already appeared in a previous test.
+                    ],
+                    invalid: []
+                });
+
+`,
+		},
+		{
+			code: `
+                ruleTester.describe(rule, {
+                    valid: [
                         { code: "a" },
                         { code: "a" },
                     ],
@@ -91,6 +139,30 @@ ruleTester.describe(rule, {
                     invalid: []
                 });
             
+`,
+		},
+		{
+			code: `
+                ruleTester.describe(rule, {
+                    valid: [
+                        { code: "a" },
+                        { code: String.raw\`a\` },
+                    ],
+                    invalid: []
+                });
+
+`,
+			snapshot: `
+                ruleTester.describe(rule, {
+                    valid: [
+                        { code: "a" },
+                        { code: String.raw\`a\` },
+                        ~~~~~~~~~~~~~~~~~~~~~~~
+                        This test code already appeared in a previous test.
+                    ],
+                    invalid: []
+                });
+
 `,
 		},
 		{

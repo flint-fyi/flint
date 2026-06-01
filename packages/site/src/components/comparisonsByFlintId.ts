@@ -1,4 +1,8 @@
-import { comparisons, getComparisonId } from "@flint.fyi/comparisons";
+import {
+	type Comparison,
+	comparisons,
+	getComparisonId,
+} from "@flint.fyi/comparisons";
 
 const comparisonsByFlintId = new Map(
 	comparisons.map((comparison) => [
@@ -7,7 +11,10 @@ const comparisonsByFlintId = new Map(
 	]),
 );
 
-export function getComparisonByFlintId(pluginId: string, ruleId: string) {
+export function getComparisonByFlintId(
+	pluginId: string,
+	ruleId: string,
+): Comparison {
 	const comparisonId = getComparisonId(pluginId, ruleId);
 	const comparison = comparisonsByFlintId.get(comparisonId);
 

@@ -371,6 +371,9 @@ importers:
       '@astrojs/ts-plugin':
         specifier: ^1.10.7
         version: 1.10.7
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
       '@flint.fyi/ts-patch':
         specifier: workspace:^
         version: link:../ts-patch
@@ -494,6 +497,9 @@ importers:
       prettier:
         specifier: 3.8.1
         version: 3.8.1
+      zod:
+        specifier: ^4.3.6
+        version: 4.4.1
     devDependencies:
       '@eslint-community/eslint-plugin-eslint-comments':
         specifier: catalog:dev
