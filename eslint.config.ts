@@ -131,6 +131,7 @@ export default defineConfig(
 			"n/no-extraneous-import": "off",
 			"n/no-extraneous-require": "off",
 			"n/no-unpublished-import": "off",
+			"n/no-unpublished-require": "off",
 
 			// Restrict imports
 			"@typescript-eslint/no-restricted-imports": [
