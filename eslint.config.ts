@@ -127,6 +127,10 @@ export default defineConfig(
 			// https://github.com/eslint-community/eslint-plugin-n/issues/472
 			"n/no-unpublished-bin": "off",
 
+			// Covered by knip
+			"n/no-extraneous-import": "off",
+			"n/no-unpublished-import": "off",
+
 			// Restrict imports
 			"@typescript-eslint/no-restricted-imports": [
 				"error",
@@ -241,8 +245,6 @@ export default defineConfig(
 	{
 		files: ["packages/e2e/tests/**/*.ts"],
 		rules: {
-			"n/no-extraneous-import": "off",
-			"n/no-unpublished-import": "off",
 			"n/no-unsupported-features/node-builtins": "off",
 		},
 	},
