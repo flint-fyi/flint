@@ -1,6 +1,5 @@
 import type { AnyRule } from "@flint.fyi/core";
-import { jsonLanguage } from "@flint.fyi/json-language";
-import type { JsonSourceFile } from "@flint.fyi/json-language";
+import { jsonLanguage, type JsonSourceFile } from "@flint.fyi/json-language";
 import ts from "typescript";
 import { z } from "zod/v4";
 
