@@ -129,6 +129,7 @@ export default defineConfig(
 
 			// Covered by knip
 			"n/no-extraneous-import": "off",
+			"n/no-extraneous-require": "off",
 			"n/no-unpublished-import": "off",
 
 			// Restrict imports
@@ -159,15 +160,6 @@ export default defineConfig(
 			],
 		},
 		settings: {
-			n: {
-				convertPath: [
-					{
-						exclude: ["**/ruleTester.ts", "**/*.test.ts", "**/*.test-d.ts"],
-						include: ["packages/*/src/**/*.ts"],
-						replace: ["src/(.+).ts$", "lib/$1.js"],
-					},
-				],
-			},
 			perfectionist: { partitionByComment: true, type: "natural" },
 		},
 	},
