@@ -21,7 +21,14 @@ Strict mode provides better error messages with diffs and more reliable equality
 
 ```ts
 import assert from "assert";
-import assert, { deepEqual } from "node:assert";
+```
+
+```ts
+import assert from "node:assert";
+```
+
+```ts
+import { deepEqual } from "node:assert";
 ```
 
 </TabItem>
@@ -29,8 +36,18 @@ import assert, { deepEqual } from "node:assert";
 
 ```ts
 import assert from "assert/strict";
-import { strict as assert, strict } from "node:assert";
+```
+
+```ts
 import assert from "node:assert/strict";
+```
+
+```ts
+import { strict as assert } from "node:assert";
+```
+
+```ts
+import { strict } from "node:assert";
 ```
 
 </TabItem>
