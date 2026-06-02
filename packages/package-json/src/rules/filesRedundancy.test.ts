@@ -425,6 +425,18 @@ ruleTester.describe(rule, {
 `,
 		`
 {
+  "main": "lib/indexxjs",
+  "files": ["lib/index.js"]
+}
+`,
+		`
+{
+  "main": "+pagexsvelte",
+  "files": ["+page.svelte"]
+}
+`,
+		`
+{
   "files": ["CHANGELOG.md", "dist/"]
 }
 `,
