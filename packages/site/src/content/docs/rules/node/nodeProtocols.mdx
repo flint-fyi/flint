@@ -20,10 +20,22 @@ The protocol is supported in Node.js 16+ and is the recommended way to import bu
 <TabItem label="❌ Incorrect">
 
 ```ts
-import fs, { readFile } from "fs";
-import fsPromises from "fs/promises";
-import path from "path";
+import fs from "fs";
+```
 
+```ts
+import path from "path";
+```
+
+```ts
+import { readFile } from "fs";
+```
+
+```ts
+import fsPromises from "fs/promises";
+```
+
+```ts
 const crypto = require("crypto");
 ```
 
@@ -31,10 +43,22 @@ const crypto = require("crypto");
 <TabItem label="✅ Correct">
 
 ```ts
-import fs, { readFile } from "node:fs";
-import fsPromises from "node:fs/promises";
-import path from "node:path";
+import fs from "node:fs";
+```
 
+```ts
+import path from "node:path";
+```
+
+```ts
+import { readFile } from "node:fs";
+```
+
+```ts
+import fsPromises from "node:fs/promises";
+```
+
+```ts
 const crypto = require("node:crypto");
 ```
 
