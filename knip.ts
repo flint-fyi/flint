@@ -33,9 +33,6 @@ export default {
 		"packages/json": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
-		"packages/json-language": {
-			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
-		},
 		"packages/jsx": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
