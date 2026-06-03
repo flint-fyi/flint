@@ -40,10 +40,10 @@ export const cssLanguage: Language<CssNodeVisitors, CssFileServices> =
 			const visitorServices = { options, ...file.services };
 
 			walk(file.services.root, {
-				// @ts-expect-error -- Expression produces a union type that is too complex to represent
+				// @ts-expect-error -- The intersection AnPlusB & Atrule & AtrulePrelude &...was reduced to `never` because property `type` has conflicting types in some constituents.
 				enter: (node: CssNode) => visitors[node.type]?.(node, visitorServices),
 				leave: (node: CssNode) =>
-					// @ts-expect-error -- Expression produces a union type that is too complex to represent
+					// @ts-expect-error -- Argument of type `CssNode` is not assignable to parameter of type `undefined`.
 					visitors[`${node.type}:exit`]?.(node, visitorServices),
 			});
 		},
