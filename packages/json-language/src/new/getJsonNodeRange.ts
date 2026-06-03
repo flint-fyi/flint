@@ -1,5 +1,6 @@
-import type { CharacterReportRange } from "@flint.fyi/core";
 import type { AnyNode } from "@humanwhocodes/momoa";
+
+import type { CharacterReportRange } from "@flint.fyi/core";
 
 export function getJsonNodeRange(node: AnyNode): CharacterReportRange {
 	return {

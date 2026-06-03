@@ -1,11 +1,12 @@
-import { createLanguage, type Language } from "@flint.fyi/core";
 import {
+	parse,
+	traverse,
 	type AnyNode,
 	type DocumentNode,
 	type Node,
-	parse,
-	traverse,
 } from "@humanwhocodes/momoa";
+
+import { createLanguage, type Language } from "@flint.fyi/core";
 
 import type { JsonNodeVisitors } from "./nodes.ts";
 
