@@ -3,7 +3,7 @@ import { SyntaxKind } from "typescript";
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import type { AST } from "@flint.fyi/typescript-language";
 
-import { getPackageProperties } from "../getPackageProperties.ts";
+import { getPackagePropertiesLegacy } from "../getPackageProperties.ts";
 import { removeArrayElement } from "../removeArrayElement.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
@@ -162,7 +162,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 						}
 					}
 
-					for (const property of getPackageProperties(node) ?? []) {
+					for (const property of getPackagePropertiesLegacy(node) ?? []) {
 						if (
 							property.kind !== SyntaxKind.PropertyAssignment ||
 							property.name.kind !== SyntaxKind.StringLiteral ||

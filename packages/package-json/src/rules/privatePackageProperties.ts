@@ -3,8 +3,8 @@ import { z } from "zod/v4";
 
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
-import { getPackageProperties } from "../getPackageProperties.ts";
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getPackagePropertiesLegacy } from "../getPackageProperties.ts";
+import { getPackagePropertyOfNameLegacy } from "../getPackagePropertyOfName.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -35,7 +35,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 		return {
 			visitors: {
 				JsonSourceFile(node, { options }) {
-					const properties = getPackageProperties(node);
+					const properties = getPackagePropertiesLegacy(node);
 					const root = node.statements[0];
 
 					if (
@@ -45,7 +45,10 @@ export default ruleCreator.createRule(jsonLanguage, {
 						return;
 					}
 
-					const privateProperty = getPackagePropertyOfName(node, "private");
+					const privateProperty = getPackagePropertyOfNameLegacy(
+						node,
+						"private",
+					);
 
 					if (
 						privateProperty?.kind !== SyntaxKind.PropertyAssignment ||

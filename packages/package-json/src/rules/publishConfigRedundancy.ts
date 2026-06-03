@@ -2,7 +2,7 @@ import { SyntaxKind } from "typescript";
 
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
-import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
+import { getPackagePropertiesOfNamesLegacy } from "../getPackagePropertiesOfNames.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -27,10 +27,10 @@ export default ruleCreator.createRule(jsonLanguage, {
 		return {
 			visitors: {
 				JsonSourceFile(node) {
-					const { name, publishConfig } = getPackagePropertiesOfNames(node, [
-						"name",
-						"publishConfig",
-					]);
+					const { name, publishConfig } = getPackagePropertiesOfNamesLegacy(
+						node,
+						["name", "publishConfig"],
+					);
 
 					if (
 						name?.kind !== SyntaxKind.PropertyAssignment ||

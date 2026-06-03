@@ -2,7 +2,7 @@ import { SyntaxKind } from "typescript";
 
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
-import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
+import { getPackagePropertiesOfNamesLegacy } from "../getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 export default ruleCreator.createRule(jsonLanguage, {
@@ -27,7 +27,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 			visitors: {
 				JsonSourceFile(node) {
 					const { devDependencies, peerDependencies } =
-						getPackagePropertiesOfNames(node, [
+						getPackagePropertiesOfNamesLegacy(node, [
 							"peerDependencies",
 							"devDependencies",
 						]);

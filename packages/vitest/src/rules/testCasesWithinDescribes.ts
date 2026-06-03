@@ -65,8 +65,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 				},
 				"CallExpression:exit": (node) => {
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					switch (parseVitestFunctionCall(node!)?.name) {
+					switch (parseVitestFunctionCall(node)?.name) {
 						case "describe":
 						case "xdescribe":
 							insideDescribeStack -= 1;

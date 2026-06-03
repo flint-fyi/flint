@@ -43,7 +43,7 @@ export const cssLanguage: Language<CssNodeVisitors, CssFileServices> =
 				// @ts-expect-error -- The intersection AnPlusB & Atrule & AtrulePrelude &...was reduced to `never` because property `type` has conflicting types in some constituents.
 				enter: (node: CssNode) => visitors[node.type]?.(node, visitorServices),
 				leave: (node: CssNode) =>
-					// @ts-expect-error -- Argument of type `CssNode` is not assignable to parameter of type `undefined`.
+					// @ts-expect-error -- The intersection AnPlusB & Atrule & AtrulePrelude &...was reduced to `never` because property `type` has conflicting types in some constituents.
 					visitors[`${node.type}:exit`]?.(node, visitorServices),
 			});
 		},

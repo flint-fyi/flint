@@ -3,7 +3,7 @@ import ts from "typescript";
 
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getPackagePropertyOfNameLegacy } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 export default ruleCreator.createRule(jsonLanguage, {
@@ -26,7 +26,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 		return {
 			visitors: {
 				JsonSourceFile(node) {
-					const property = getPackagePropertyOfName(node, "bin");
+					const property = getPackagePropertyOfNameLegacy(node, "bin");
 					if (
 						property?.kind !== ts.SyntaxKind.PropertyAssignment ||
 						property.initializer.kind !== ts.SyntaxKind.ObjectLiteralExpression

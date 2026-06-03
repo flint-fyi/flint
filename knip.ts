@@ -50,6 +50,12 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/package-json": {
+			// Temporary, until we migrate rules
+			entry: [
+				"src/getPackagePropertiesOfNames.ts",
+				"src/getPackagePropertyOfName.ts",
+				"src/getPackageProperties.ts",
+			],
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
 		},
 		"packages/performance": {

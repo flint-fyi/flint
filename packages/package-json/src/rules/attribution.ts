@@ -3,7 +3,7 @@ import { z } from "zod/v4";
 
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
-import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
+import { getPackagePropertiesOfNamesLegacy } from "../getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 export default ruleCreator.createRule(jsonLanguage, {
@@ -66,7 +66,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 						author,
 						contributors,
 						private: privateNode,
-					} = getPackagePropertiesOfNames(node, [
+					} = getPackagePropertiesOfNamesLegacy(node, [
 						"private",
 						"author",
 						"contributors",
