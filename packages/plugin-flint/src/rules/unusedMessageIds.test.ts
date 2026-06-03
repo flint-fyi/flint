@@ -160,8 +160,7 @@ ruleCreator.createRule(typescriptLanguage, {
 	},
 });
 `,
-		{
-			code: `
+		`
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { reportSourceCode } from "@flint.fyi/volar-language";
 import { ruleCreator } from "../ruleCreator";
@@ -187,9 +186,7 @@ ruleCreator.createRule(typescriptLanguage, {
 	},
 });
 `,
-		},
-		{
-			code: `
+		`
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { reportSourceCode as reportFromSourceCode } from "@flint.fyi/volar-language";
 import { ruleCreator } from "../ruleCreator";
@@ -215,9 +212,7 @@ ruleCreator.createRule(typescriptLanguage, {
 	},
 });
 `,
-		},
-		{
-			code: `
+		`
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as volarLanguage from "@flint.fyi/volar-language";
 import { ruleCreator } from "../ruleCreator";
@@ -243,9 +238,7 @@ ruleCreator.createRule(typescriptLanguage, {
 	},
 });
 `,
-		},
-		{
-			code: `
+		`
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { reportSourceCode } from "@flint.fyi/volar-language";
 import { ruleCreator } from "../ruleCreator";
@@ -278,6 +271,5 @@ ruleCreator.createRule(typescriptLanguage, {
 	},
 });
 `,
-		},
 	],
 });
