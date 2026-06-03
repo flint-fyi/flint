@@ -49,9 +49,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const Component: (props: Record<string, unknown>) => unknown;
 <Component>Text with > and "</Component>
 `,
 			snapshot: `
+declare const Component: (props: Record<string, unknown>) => unknown;
 <Component>Text with > and "</Component>
                      ~
                      This unescaped entity \`>\` may not render properly.

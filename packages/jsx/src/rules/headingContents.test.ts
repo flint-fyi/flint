@@ -36,10 +36,14 @@ ruleTester.describe(rule, {
 	],
 	valid: [
 		`<h1>Heading Content</h1>`,
-		`<h2><TextWrapper /></h2>`,
+		`
+declare const TextWrapper: (props: Record<string, unknown>) => unknown;
+<h2><TextWrapper /></h2>`,
 		`<h4 aria-label="Heading" />`,
 		`<h5 aria-labelledby="heading-id" />`,
 		`<div>Not a heading</div>`,
-		`<h6>{content}</h6>`,
+		`
+declare const content: unknown;
+<h6>{content}</h6>`,
 	],
 });
