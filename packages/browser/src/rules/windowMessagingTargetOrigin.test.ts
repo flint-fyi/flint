@@ -45,9 +45,11 @@ parent.postMessage("message");
 		},
 		{
 			code: `
+if (top)
 top.postMessage("message");
 `,
 			snapshot: `
+if (top)
 top.postMessage("message");
     ~~~~~~~~~~~
     This \`postMessage()\` call is missing the required \`targetOrigin\` argument.
@@ -60,11 +62,26 @@ top.postMessage("message");
 		`self.postMessage("message", "https://example.com");`,
 		`globalThis.postMessage("message", "*");`,
 		`parent.postMessage("message", "https://example.com");`,
-		`top.postMessage("message", "*");`,
-		`worker.postMessage("message");`,
-		`messagePort.postMessage("message");`,
-		`broadcastChannel.postMessage("message");`,
-		`otherObject.postMessage("message");`,
+		`
+			if (top)
+			top.postMessage("message", "*");
+		`,
+		`
+			declare const worker: Worker;
+			worker.postMessage("message");
+		`,
+		`
+			declare const messagePort: MessagePort;
+			messagePort.postMessage("message");
+		`,
+		`
+			declare const broadcastChannel: BroadcastChannel;
+			broadcastChannel.postMessage("message");
+		`,
+		`
+			declare const otherObject: { postMessage(message: string): void };
+			otherObject.postMessage("message");
+		`,
 		`
 			declare const other: { postMessage(message: string): void };
 			other.postMessage("message");
