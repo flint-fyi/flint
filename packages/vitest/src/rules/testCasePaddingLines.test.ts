@@ -10,9 +10,6 @@ const second = 'baz';
 it('first', () => {
   // stuff
 });
-fit('second', () => {
-  // stuff
-});
 test('first first', () => {});
 test('second second', () => {});
 
@@ -26,10 +23,9 @@ describe('other second', () => {
   });
   test.skip('skipping', () => {}); // Another comment
   it.skip('skipping too', () => {});
-});xtest('weird', () => {});
+});
 test
   .skip('skippy skip', () => {});
-xit('second first', () => {});
 `,
 			output: `
 const first = 'bar';
@@ -39,10 +35,6 @@ it('first', () => {
   // stuff
 });
 
-fit('second', () => {
-  // stuff
-});
-
 test('first first', () => {});
 
 test('second second', () => {});
@@ -63,12 +55,8 @@ describe('other second', () => {
   it.skip('skipping too', () => {});
 });
 
-xtest('weird', () => {});
-
 test
   .skip('skippy skip', () => {});
-
-xit('second first', () => {});
 `,
 			snapshot: `
 const first = 'bar';
@@ -78,11 +66,6 @@ it('first', () => {
 This statement should be separated from a neighboring \`test\` block by a blank line.
   // stuff
 });
-fit('second', () => {
-~~~
-This statement should be separated from a neighboring \`test\` block by a blank line.
-  // stuff
-});
 test('first first', () => {});
 ~~~~
 This statement should be separated from a neighboring \`test\` block by a blank line.
@@ -108,16 +91,11 @@ describe('other second', () => {
   it.skip('skipping too', () => {});
   ~~
   This statement should be separated from a neighboring \`test\` block by a blank line.
-});xtest('weird', () => {});
-   ~~~~~
-   This statement should be separated from a neighboring \`test\` block by a blank line.
+});
 test
 ~~~~
 This statement should be separated from a neighboring \`test\` block by a blank line.
   .skip('skippy skip', () => {});
-xit('second first', () => {});
-~~~
-This statement should be separated from a neighboring \`test\` block by a blank line.
 `,
 		},
 	],
@@ -130,10 +108,6 @@ it('first', () => {
   // stuff
 });
 
-fit('second', () => {
-  // stuff
-});
-
 test('first first', () => {});
 
 test('second second', () => {});
@@ -154,12 +128,8 @@ describe('other second', () => {
   it.skip('skipping too', () => {});
 });
 
-xtest('weird', () => {});
-
 test
   .skip('skippy skip', () => {});
-
-xit('second first', () => {});
 `,
 	],
 });

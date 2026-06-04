@@ -7,13 +7,8 @@ const knownVitestFunctionNames = [
 	"beforeAll",
 	"beforeEach",
 	"describe",
-	"fit",
 	"it",
 	"test",
-	"xdescribe",
-	"xit",
-	"xit",
-	"xtest",
 ] as const;
 
 const knownBlockNamesSet = new Set<string>(knownVitestFunctionNames);

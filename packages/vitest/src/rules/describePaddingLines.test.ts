@@ -20,14 +20,6 @@ describe('someText', () => {
   describe('some other condition', () => {
   });
 });
-xdescribe('...', () => {
-  // Another comment
-  describe('some condition', () => {
-    const anotherThing = 500;
-    describe('yet another condition', () => { // A comment over here!
-    });
-  });
-});fdescribe('...', () => {});
 describe.skip('skip me', () => {});
 const value = 'value';
 describe
@@ -53,18 +45,6 @@ describe('someText', () => {
   describe('some other condition', () => {
   });
 });
-
-xdescribe('...', () => {
-  // Another comment
-  describe('some condition', () => {
-    const anotherThing = 500;
-
-    describe('yet another condition', () => { // A comment over here!
-    });
-  });
-});
-
-fdescribe('...', () => {});
 
 describe.skip('skip me', () => {});
 
@@ -95,20 +75,6 @@ This statement should be separated from a neighboring \`describe\` block by a bl
   This statement should be separated from a neighboring \`describe\` block by a blank line.
   });
 });
-xdescribe('...', () => {
-~~~~~~~~~
-This statement should be separated from a neighboring \`describe\` block by a blank line.
-  // Another comment
-  describe('some condition', () => {
-    const anotherThing = 500;
-    describe('yet another condition', () => { // A comment over here!
-    ~~~~~~~~
-    This statement should be separated from a neighboring \`describe\` block by a blank line.
-    });
-  });
-});fdescribe('...', () => {});
-   ~~~~~~~~~
-   This statement should be separated from a neighboring \`describe\` block by a blank line.
 describe.skip('skip me', () => {});
 ~~~~~~~~
 This statement should be separated from a neighboring \`describe\` block by a blank line.
@@ -143,18 +109,6 @@ describe('someText', () => {
   describe('some other condition', () => {
   });
 });
-
-xdescribe('...', () => {
-  // Another comment
-  describe('some condition', () => {
-    const anotherThing = 500;
-
-    describe('yet another condition', () => { // A comment over here!
-    });
-  });
-});
-
-fdescribe('weird', () => {});
 
 describe.skip('skip me', () => {});
 

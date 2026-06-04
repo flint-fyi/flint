@@ -11,13 +11,8 @@ const statementMatches = new Map([
 	["describe", { blockName: "describe", category: "describe" }],
 	["expect", { blockName: "expect", category: "expect" }],
 	["expectTypeOf", { blockName: "expect", category: "expectTypeOf" }],
-	["fdescribe", { blockName: "describe", category: "describe" }],
-	["fit", { blockName: "test", category: "testCase" }],
 	["it", { blockName: "test", category: "testCase" }],
 	["test", { blockName: "test", category: "testCase" }],
-	["xdescribe", { blockName: "describe", category: "describe" }],
-	["xit", { blockName: "test", category: "testCase" }],
-	["xtest", { blockName: "test", category: "testCase" }],
 ]);
 
 export default createStatementPaddingRule(
