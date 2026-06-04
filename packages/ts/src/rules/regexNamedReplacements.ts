@@ -1,11 +1,14 @@
-import { visitRegExpAST } from "@eslint-community/regexpp";
-import type { AST as RegExpAST } from "@eslint-community/regexpp";
 import {
-	type AST,
+	visitRegExpAST,
+	type AST as RegExpAST,
+} from "@eslint-community/regexpp";
+import ts from "typescript";
+
+import {
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
-import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";

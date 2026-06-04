@@ -1,7 +1,8 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import { SyntaxKind } from "typescript";
 
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
+
+import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 export default ruleCreator.createRule(jsonLanguage, {
@@ -24,11 +25,13 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { sourceFile }) {
-					const peerDependencies = getPackagePropertyOfName(
-						node,
-						"peerDependencies",
-					);
+				JsonSourceFile(node) {
+					const { devDependencies, peerDependencies } =
+						getPackagePropertiesOfNames(node, [
+							"peerDependencies",
+							"devDependencies",
+						]);
+
 					if (
 						peerDependencies?.kind !== SyntaxKind.PropertyAssignment ||
 						peerDependencies.initializer.kind !==
@@ -38,10 +41,6 @@ export default ruleCreator.createRule(jsonLanguage, {
 					}
 
 					const devDependencyNames = new Set<string>();
-					const devDependencies = getPackagePropertyOfName(
-						node,
-						"devDependencies",
-					);
 					if (
 						devDependencies?.kind === SyntaxKind.PropertyAssignment &&
 						devDependencies.initializer.kind ===
@@ -66,7 +65,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							context.report({
 								data: { name: dependency.name.text },
 								message: "missingDevDependency",
-								range: getJsonNodeRange(dependency.name, sourceFile),
+								range: getJsonNodeRange(dependency.name, node),
 							});
 						}
 					}

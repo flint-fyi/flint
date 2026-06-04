@@ -1,4 +1,5 @@
 import path from "node:path/posix";
+
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { createVFSLinterHost } from "../host/createVFSLinterHost.ts";

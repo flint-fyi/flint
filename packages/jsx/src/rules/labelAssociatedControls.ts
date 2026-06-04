@@ -1,10 +1,13 @@
-import {
-	type AST,
-	getTSNodeRange,
-	type TypeScriptFileServices,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
+
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 const controlElements = new Set([
 	"input",
@@ -14,8 +17,6 @@ const controlElements = new Set([
 	"select",
 	"textarea",
 ]);
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

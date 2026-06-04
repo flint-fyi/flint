@@ -1,3 +1,3 @@
 export { getJsonNodeRange } from "./getJsonNodeRange.ts";
-export * from "./language.ts";
-export type * from "./nodes.ts";
+export { jsonLanguage } from "./language.ts";
+export type { JsonNode, JsonSourceFile } from "./nodes.ts";

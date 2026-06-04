@@ -1,10 +1,13 @@
+import { SyntaxKind } from "typescript";
+
 import {
-	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import { SyntaxKind } from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 type ModernMethodName = "after" | "append" | "before" | "prepend";
 
@@ -50,8 +53,6 @@ function getPropertyNameNode(node: AST.LeftHandSideExpression) {
 
 	return node.name;
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

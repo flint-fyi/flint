@@ -1,6 +1,9 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
+
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 const arrayMethodsRequiringReturn = new Set([
 	"every",
@@ -17,8 +20,6 @@ const arrayMethodsRequiringReturn = new Set([
 	"sort",
 	"toSorted",
 ]);
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

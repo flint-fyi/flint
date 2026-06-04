@@ -40,6 +40,9 @@
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "^2.4.15",
+		"@biomejs/js-api": "^4.0.0",
+		"@biomejs/wasm-nodejs": "^2.4.15",
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
 		"@eslint/json": "1.2.0",
 		"@eslint/markdown": "catalog:dev",

@@ -1,13 +1,15 @@
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+
+import { debugForFile } from "debug-for-file";
+
 import {
 	isConfig,
-	type LinterHost,
 	runConfig,
 	runConfigFixing,
 	validateConfigDefinition,
+	type LinterHost,
 } from "@flint.fyi/core";
-import { debugForFile } from "debug-for-file";
-import path from "node:path";
-import { pathToFileURL } from "node:url";
 
 import { runPrettier } from "./formatting/runPrettier.ts";
 import type { OptionsValues } from "./options.ts";

@@ -1,12 +1,15 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import {
 	isElementAccessExpression,
 	isNumericLiteral,
 	isPrefixUnaryExpression,
 	isStringLiteral,
+	SyntaxKind,
+	type Expression,
 } from "typescript";
-import type { Expression } from "typescript";
-import { SyntaxKind } from "typescript";
+
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 function isAcceptableIndexExpression(property: Expression): boolean {
 	return (
@@ -17,8 +20,6 @@ function isAcceptableIndexExpression(property: Expression): boolean {
 			isNumericLiteral(property.operand))
 	);
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

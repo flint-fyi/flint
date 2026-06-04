@@ -1,11 +1,12 @@
+import { debugForFile } from "debug-for-file";
+import * as prettier from "prettier";
+
 import type {
 	FormattingResults,
 	LinterHost,
 	LintResultsMaybeWithChanges,
 } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
-import { debugForFile } from "debug-for-file";
-import * as prettier from "prettier";
 
 const log = debugForFile(import.meta.filename);
 

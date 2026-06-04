@@ -61,8 +61,8 @@ catalogs:
       specifier: 18.0.0
       version: 18.0.0
     eslint-plugin-package-json:
-      specifier: 1.1.0
-      version: 1.1.0
+      specifier: 1.2.0
+      version: 1.2.0
     eslint-plugin-perfectionist:
       specifier: 5.9.0
       version: 5.9.0
@@ -220,6 +220,9 @@ importers:
       '@eslint/js':
         specifier: catalog:dev
         version: 10.0.1(eslint@10.3.0(jiti@2.7.0))
+      '@eslint/json':
+        specifier: 1.2.0
+        version: 1.2.0
       '@eslint/markdown':
         specifier: catalog:dev
         version: 8.0.0
@@ -241,6 +244,9 @@ importers:
       '@flint.fyi/vitest':
         specifier: workspace:^
         version: link:packages/vitest
+      '@ianvs/prettier-plugin-sort-imports':
+        specifier: ^4.7.1
+        version: 4.7.1(@vue/compiler-sfc@3.5.30)(prettier@3.8.1)
       '@types/node':
         specifier: catalog:dev
         version: 24.12.0
@@ -267,7 +273,7 @@ importers:
         version: 18.0.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
-        version: 1.1.0(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
+        version: 1.2.0(@eslint/json@1.2.0)(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
       eslint-plugin-perfectionist:
         specifier: catalog:dev
         version: 5.9.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
@@ -501,6 +507,15 @@ importers:
         specifier: ^4.3.6
         version: 4.4.1
     devDependencies:
+      '@biomejs/biome':
+        specifier: ^2.4.15
+        version: 2.4.16
+      '@biomejs/js-api':
+        specifier: ^4.0.0
+        version: 4.0.0(@biomejs/wasm-nodejs@2.4.16)
+      '@biomejs/wasm-nodejs':
+        specifier: ^2.4.15
+        version: 2.4.16
       '@eslint-community/eslint-plugin-eslint-comments':
         specifier: catalog:dev
         version: 4.7.0(eslint@10.3.0(jiti@2.7.0))
@@ -554,7 +569,7 @@ importers:
         version: 18.0.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
-        version: 1.1.0(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
+        version: 1.2.0(@eslint/json@1.2.0)(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
       eslint-plugin-perfectionist:
         specifier: catalog:dev
         version: 5.9.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
@@ -1711,6 +1726,80 @@ packages:
     resolution: {integrity: sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA==}
     engines: {node: '>=18'}
 
+  '@biomejs/biome@2.4.16':
+    resolution: {integrity: sha512-x9ajFh1zChVybCiM3TN6OD4phAqLgtPZjFrZF+aTMYCPjwBO+k529TX7PPsAqtGNLeV4UgzwQnowEgS7bGmzcA==}
+    engines: {node: '>=14.21.3'}
+    hasBin: true
+
+  '@biomejs/cli-darwin-arm64@2.4.16':
+    resolution: {integrity: sha512-wxPvu4XOA85YJk9ixSWUmq/QBHbid85BISbOAqqBM/5xQpPk9ayjk5375tOlSC0BeCwNSbPFafQBm+vBumXq0A==}
+    engines: {node: '>=14.21.3'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@biomejs/cli-darwin-x64@2.4.16':
+    resolution: {integrity: sha512-xFCqGPwYusQJp4N4NJLi1XJiZqjwFdjhT+KqtNy+Ug3qgfczqnTa6MSDvxJF6TkuDLoYJItMapz6tAf7kCekFw==}
+    engines: {node: '>=14.21.3'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@biomejs/cli-linux-arm64-musl@2.4.16':
+    resolution: {integrity: sha512-oYxnW0ARfJkr72ezzF2OR8N/rtkgLUQeYtF8cFhVswbknHxtTcmzSsanVJP8yQKnGpGpc2ck6c5zLvHahL6Cbg==}
+    engines: {node: '>=14.21.3'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@biomejs/cli-linux-arm64@2.4.16':
+    resolution: {integrity: sha512-2kFb4//jxfZaP6D+Rj5VkHkxgyD9EoRAVBEQb8PKRv+s4NO2zYNJKXFaJmK1CmhufJOWEfpHKaRbOja7qjmdhQ==}
+    engines: {node: '>=14.21.3'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@biomejs/cli-linux-x64-musl@2.4.16':
+    resolution: {integrity: sha512-iHDS+MCM65DPqWGu+ECC3uoALyj2H7F4nVUPxIPjz/PIl94EUu+EDfGZDzFP+NY1EOPVt9NQvwFqq7HdMmowdg==}
+    engines: {node: '>=14.21.3'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@biomejs/cli-linux-x64@2.4.16':
+    resolution: {integrity: sha512-NbcBbi/nJqn5baae6wqRXdS7Gadf2uRpehSh6vMSYpG8OhkXl/Xg8aorWrJ+9VWqAT5ml90alLvorkpMW0nBwQ==}
+    engines: {node: '>=14.21.3'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@biomejs/cli-win32-arm64@2.4.16':
+    resolution: {integrity: sha512-0rgImMsNb5v/chhkIFe3wu7PEFClS6RBAYUijGL9UsYN3PanSaoK24HSSuSJb1pYbYYVjzAyZTl3gtjJ84BM8A==}
+    engines: {node: '>=14.21.3'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@biomejs/cli-win32-x64@2.4.16':
+    resolution: {integrity: sha512-Kp85jgoBHa05gix6UIRjfCDiUV3w/8VIdZ247VyyO2gEjaw12WEVhdIjlxp/AMzXxqxQwbxNTDVZ3Mwd2RG5rw==}
+    engines: {node: '>=14.21.3'}
+    cpu: [x64]
+    os: [win32]
+
+  '@biomejs/js-api@4.0.0':
+    resolution: {integrity: sha512-EOArR/6drRzM1/hwOIz1pZw90FL31Ud4Y7hEHGWVtMNmAwS9SrwZ8hMENGlLVXCeGW/kL46p8kX7eO6x9Nmezg==}
+    peerDependencies:
+      '@biomejs/wasm-bundler': ^2.3.0
+      '@biomejs/wasm-nodejs': ^2.3.0
+      '@biomejs/wasm-web': ^2.3.0
+    peerDependenciesMeta:
+      '@biomejs/wasm-bundler':
+        optional: true
+      '@biomejs/wasm-nodejs':
+        optional: true
+      '@biomejs/wasm-web':
+        optional: true
+
+  '@biomejs/wasm-nodejs@2.4.16':
+    resolution: {integrity: sha512-3BSGXHJ25Is+9gRgV+Gwz7YdMktrMOBP+Vw3RwXy3Y/CHqXbbNSyhaMt6VFk1J/WAGutdYfBy+NzhlvOftwd+g==}
+
   '@braidai/lang@1.1.2':
     resolution: {integrity: sha512-qBcknbBufNHlui137Hft8xauQMTZDKdophmLFv05r2eNmdIv/MlPuP4TdUknHG68UdWLgVZwgxVe735HzJNIwA==}
 
@@ -2340,6 +2429,24 @@ packages:
   '@humanwhocodes/retry@0.4.3':
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
+
+  '@ianvs/prettier-plugin-sort-imports@4.7.1':
+    resolution: {integrity: sha512-jmTNYGlg95tlsoG3JLCcuC4BrFELJtLirLAkQW/71lXSyOhVt/Xj7xWbbGcuVbNq1gwWgSyMrPjJc9Z30hynVw==}
+    peerDependencies:
+      '@prettier/plugin-oxc': ^0.0.4 || ^0.1.0
+      '@vue/compiler-sfc': 2.7.x || 3.x
+      content-tag: ^4.0.0
+      prettier: 2 || 3 || ^4.0.0-0
+      prettier-plugin-ember-template-tag: ^2.1.0
+    peerDependenciesMeta:
+      '@prettier/plugin-oxc':
+        optional: true
+      '@vue/compiler-sfc':
+        optional: true
+      content-tag:
+        optional: true
+      prettier-plugin-ember-template-tag:
+        optional: true
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -4578,11 +4685,15 @@ packages:
       typescript:
         optional: true
 
-  eslint-plugin-package-json@1.1.0:
-    resolution: {integrity: sha512-yFBkYxHBlGKBi3Av17pCkJie+G3/DN/XEy1KGkHnTLXCY8eX7rF2kGiFn8a3N4iIGV4NJzKA0HdpINwVxczX0Q==}
+  eslint-plugin-package-json@1.2.0:
+    resolution: {integrity: sha512-3BszsD7XVddaUNbMfK+1lF1Qg8ck0nO3bNT/7IjXP8wrGzPThHZpkhm5UnbY1Nb/s3o6DUNgHI4aEqQV/t83fw==}
     engines: {node: ^22.22.2 || >=24.15.0}
     peerDependencies:
+      '@eslint/json': '>=1.0.0'
       eslint: '>=9.0.0'
+    peerDependenciesMeta:
+      '@eslint/json':
+        optional: true
 
   eslint-plugin-perfectionist@5.9.0:
     resolution: {integrity: sha512-8TWzg02zmnBdZwCkWLi8jhzqXI+fE7Z/RwV8SL6xD45tJ8Bp3wGuYL2XtQgfe/Wd0eBqOUX+s6ey73IyszvKTA==}
@@ -8003,6 +8114,47 @@ snapshots:
 
   '@bcoe/v8-coverage@1.0.2': {}
 
+  '@biomejs/biome@2.4.16':
+    optionalDependencies:
+      '@biomejs/cli-darwin-arm64': 2.4.16
+      '@biomejs/cli-darwin-x64': 2.4.16
+      '@biomejs/cli-linux-arm64': 2.4.16
+      '@biomejs/cli-linux-arm64-musl': 2.4.16
+      '@biomejs/cli-linux-x64': 2.4.16
+      '@biomejs/cli-linux-x64-musl': 2.4.16
+      '@biomejs/cli-win32-arm64': 2.4.16
+      '@biomejs/cli-win32-x64': 2.4.16
+
+  '@biomejs/cli-darwin-arm64@2.4.16':
+    optional: true
+
+  '@biomejs/cli-darwin-x64@2.4.16':
+    optional: true
+
+  '@biomejs/cli-linux-arm64-musl@2.4.16':
+    optional: true
+
+  '@biomejs/cli-linux-arm64@2.4.16':
+    optional: true
+
+  '@biomejs/cli-linux-x64-musl@2.4.16':
+    optional: true
+
+  '@biomejs/cli-linux-x64@2.4.16':
+    optional: true
+
+  '@biomejs/cli-win32-arm64@2.4.16':
+    optional: true
+
+  '@biomejs/cli-win32-x64@2.4.16':
+    optional: true
+
+  '@biomejs/js-api@4.0.0(@biomejs/wasm-nodejs@2.4.16)':
+    optionalDependencies:
+      '@biomejs/wasm-nodejs': 2.4.16
+
+  '@biomejs/wasm-nodejs@2.4.16': {}
+
   '@braidai/lang@1.1.2': {}
 
   '@capsizecss/unpack@4.0.0':
@@ -8688,6 +8840,19 @@ snapshots:
   '@humanwhocodes/momoa@3.3.10': {}
 
   '@humanwhocodes/retry@0.4.3': {}
+
+  '@ianvs/prettier-plugin-sort-imports@4.7.1(@vue/compiler-sfc@3.5.30)(prettier@3.8.1)':
+    dependencies:
+      '@babel/generator': 7.29.1
+      '@babel/parser': 7.29.2
+      '@babel/traverse': 7.29.0
+      '@babel/types': 7.29.0
+      prettier: 3.8.1
+      semver: 7.8.0
+    optionalDependencies:
+      '@vue/compiler-sfc': 3.5.30
+    transitivePeerDependencies:
+      - supports-color
 
   '@img/colour@1.1.0': {}
 
@@ -10973,7 +11138,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  eslint-plugin-package-json@1.1.0(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0)):
+  eslint-plugin-package-json@1.2.0(@eslint/json@1.2.0)(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0)):
     dependencies:
       '@altano/repository-tools': 2.0.1
       change-case: 5.4.4
@@ -10981,11 +11146,14 @@ snapshots:
       detect-newline: 4.0.1
       eslint: 10.3.0(jiti@2.7.0)
       eslint-fix-utils: 0.4.2(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
+      eslint-json-compat-utils: 0.2.3(@eslint/json@1.2.0)(eslint@10.3.0(jiti@2.7.0))(jsonc-eslint-parser@3.1.0)
       jsonc-eslint-parser: 3.1.0
       package-json-validator: 1.5.1
       semver: 7.8.0
       sort-object-keys: 2.1.0
       sort-package-json: 3.6.1
+    optionalDependencies:
+      '@eslint/json': 1.2.0
     transitivePeerDependencies:
       - '@types/estree'
 

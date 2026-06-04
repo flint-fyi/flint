@@ -4,7 +4,7 @@ title: "importEmptyBlocks"
 topic: "rules"
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { TabItem, Tabs } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
@@ -19,7 +19,7 @@ This rule detects such empty blocks to help keep imports clean and intentional.
 <TabItem label="❌ Incorrect">
 
 ```ts
-import {} from "mod";
+import "mod";
 ```
 
 ```ts

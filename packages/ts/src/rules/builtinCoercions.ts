@@ -1,10 +1,13 @@
-import {
-	type AST,
-	getTSNodeRange,
-	type TypeScriptFileServices,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
+
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 const nativeCoercionFunctions = new Set([
 	"BigInt",
@@ -23,8 +26,6 @@ const arrayMethodsWithBooleanCallback = new Set([
 	"findLastIndex",
 	"some",
 ]);
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

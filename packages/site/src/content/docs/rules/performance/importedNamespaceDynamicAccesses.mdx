@@ -4,7 +4,7 @@ title: "importedNamespaceDynamicAccesses"
 topic: "rules"
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { TabItem, Tabs } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
@@ -31,6 +31,7 @@ function getValue(key: string) {
 
 ```ts
 import * as api from "api-library";
+
 const method = getMethodName();
 api[method]();
 ```
@@ -48,6 +49,7 @@ function getValue(key: string) {
 
 ```ts
 import { method1, method2 } from "api-library";
+
 const method = condition ? method1 : method2;
 method();
 ```

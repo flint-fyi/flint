@@ -1,5 +1,6 @@
-import { jsonLanguage } from "@flint.fyi/json-language";
 import ts from "typescript";
+
+import { jsonLanguage } from "@flint.fyi/json-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

@@ -4,7 +4,7 @@ title: "unnecessaryRenames"
 topic: "rules"
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { TabItem, Tabs } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
@@ -21,11 +21,11 @@ This rule reports locations that can be simplified to remove the renaming.
 <TabItem label="❌ Incorrect">
 
 ```ts
-import { value as value } from "module";
+import { value } from "module";
 ```
 
 ```ts
-import { first as first, second } from "module";
+import { first, second } from "module";
 ```
 
 </TabItem>

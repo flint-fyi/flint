@@ -1,8 +1,8 @@
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
-const withKeyword = "with";
-
 import { ruleCreator } from "./ruleCreator.ts";
+
+const withKeyword = "with";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

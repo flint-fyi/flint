@@ -1,10 +1,11 @@
+import { SyntaxKind } from "typescript";
+
 import {
-	type AST,
 	isFunction,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

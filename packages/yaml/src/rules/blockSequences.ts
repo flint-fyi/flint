@@ -1,5 +1,8 @@
-import { yamlLanguage } from "@flint.fyi/yaml-language";
 import type * as yamlParser from "yaml-unist-parser";
+
+import { yamlLanguage } from "@flint.fyi/yaml-language";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 function buildBlockSequenceFix(
 	node: yamlParser.FlowSequence,
@@ -45,8 +48,6 @@ function getNodeText(
 		node.position.end.offset,
 	);
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(yamlLanguage, {
 	about: {
