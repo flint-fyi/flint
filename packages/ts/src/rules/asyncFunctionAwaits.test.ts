@@ -125,8 +125,8 @@ const fn = async () => {
 };
 `,
 		`
-declare function loadData(): Promise<void>;
-const load = async () => await loadData();
+declare function asyncOperation(): Promise<void>;
+const withAbstract = async () => await asyncOperation();
 `,
 		`
 class Example {

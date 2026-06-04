@@ -47,7 +47,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.asteriskToken ||
 				!node.body ||
 				isEmptyBody(node.body) ||
-				bodyContainsAwait(node.body) ||
+				checkForAwait(node.body) ||
 				bodyReturnsThenable(node.body, typeChecker)
 			) {
 				return;
@@ -71,26 +71,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 });
 
 // TODO: Use a scope analyzer (#400)?
-function bodyContainsAwait(body: ts.Block | ts.Expression) {
-	function checkForAwait(node: ts.Node): boolean | undefined {
-		if (ts.isAwaitExpression(node)) {
-			return true;
-		}
-
-		if (ts.isForOfStatement(node) && node.awaitModifier) {
-			return true;
-		}
-
-		if (tsutils.isFunctionScopeBoundary(node)) {
-			return false;
-		}
-
-		return ts.forEachChild(node, checkForAwait);
-	}
-
-	return checkForAwait(body);
-}
-
 function bodyReturnsThenable(
 	body: ts.Block | ts.Expression,
 	typeChecker: ts.TypeChecker,
@@ -116,6 +96,22 @@ function bodyReturnsThenable(
 	}
 
 	return ts.forEachChild(body, checkReturnStatements);
+}
+
+function checkForAwait(node: ts.Node): boolean | undefined {
+	if (ts.isAwaitExpression(node)) {
+		return true;
+	}
+
+	if (ts.isForOfStatement(node) && node.awaitModifier) {
+		return true;
+	}
+
+	if (tsutils.isFunctionScopeBoundary(node)) {
+		return false;
+	}
+
+	return ts.forEachChild(node, checkForAwait);
 }
 
 function isEmptyBody(body: ts.Block | ts.Expression) {
