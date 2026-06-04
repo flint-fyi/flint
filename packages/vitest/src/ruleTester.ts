@@ -6,11 +6,9 @@ export const ruleTester = new RuleTester({
 	assertNoLanguageReports: true,
 	defaults: {
 		fileName: "file.ts",
-		files: {
-			...createRuleTesterTSConfig({
-				types: ["vitest/globals", "node"],
-			}),
-		},
+		files: createRuleTesterTSConfig({
+			types: ["vitest/globals", "node"],
+		}),
 	},
 	describe,
 	diskBackedFSRoot: import.meta.dirname,
