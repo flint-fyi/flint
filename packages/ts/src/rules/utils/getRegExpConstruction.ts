@@ -1,9 +1,10 @@
+import ts from "typescript";
+
 import {
-	type AST,
 	isGlobalDeclarationOfName,
+	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
-import ts from "typescript";
 
 export function getRegExpConstruction(
 	node: AST.CallExpression | AST.NewExpression,

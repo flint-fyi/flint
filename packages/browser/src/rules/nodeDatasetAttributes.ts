@@ -1,11 +1,14 @@
+import { SyntaxKind } from "typescript";
+
 import {
-	type AST,
 	getTSNodeRange,
 	isGlobalDeclaration,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import { SyntaxKind } from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 type AttributeMethodName =
 	| "getAttribute"
@@ -55,8 +58,6 @@ function isAttributeMethodName(
 ): methodName is AttributeMethodName {
 	return attributeMethodNames.has(methodName);
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

@@ -1,6 +1,8 @@
-import { nullThrows } from "@flint.fyi/utils";
-import cliCursor from "cli-cursor";
 import readline from "node:readline";
+
+import cliCursor from "cli-cursor";
+
+import { nullThrows } from "@flint.fyi/utils";
 
 import type { RendererContext, RendererFactory } from "../types.ts";
 import { createListeners } from "./createListeners.ts";

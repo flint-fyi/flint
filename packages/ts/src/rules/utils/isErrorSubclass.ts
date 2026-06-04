@@ -1,9 +1,10 @@
+import ts from "typescript";
+
 import {
+	isGlobalDeclaration,
 	type AST,
 	type Checker,
-	isGlobalDeclaration,
 } from "@flint.fyi/typescript-language";
-import ts from "typescript";
 
 const builtinErrorNames = new Set([
 	"Error",

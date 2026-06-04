@@ -1,8 +1,10 @@
+import path from "node:path";
+
+import { suggestionsForWord, type DocumentValidator } from "cspell-lib";
+
 import type { Suggestion } from "@flint.fyi/core";
 import { textLanguage } from "@flint.fyi/text-language";
 import { parseJsonSafe } from "@flint.fyi/utils";
-import { type DocumentValidator, suggestionsForWord } from "cspell-lib";
-import path from "node:path";
 
 import { createDocumentValidator } from "./createDocumentValidator.ts";
 import { ruleCreator } from "./ruleCreator.ts";

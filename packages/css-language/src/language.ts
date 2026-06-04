@@ -1,5 +1,6 @@
+import { parse, walk, type CssNode } from "css-tree";
+
 import { createLanguage, type Language } from "@flint.fyi/core";
-import { type CssNode, parse, walk } from "css-tree";
 
 import type { CssNodeVisitors } from "./nodes.ts";
 

@@ -1,4 +1,10 @@
+import assert from "node:assert/strict";
+import path from "node:path";
+
+import type { CachedFactory } from "cached-factory";
+
 import {
+	processRuleReport,
 	type AnyLanguage,
 	type AnyLanguageFileFactory,
 	type AnyOptionalSchema,
@@ -6,14 +12,10 @@ import {
 	type FileReport,
 	type InferredOutputObject,
 	type NormalizedReport,
-	processRuleReport,
 	type RuleAbout,
 	type VFSLinterHost,
 } from "@flint.fyi/core";
 import { normalizePath, pathKey } from "@flint.fyi/utils";
-import type { CachedFactory } from "cached-factory";
-import assert from "node:assert/strict";
-import path from "node:path";
 
 import type { TestCaseNormalized } from "./normalizeTestCase.ts";
 

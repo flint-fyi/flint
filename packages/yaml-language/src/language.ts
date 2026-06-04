@@ -1,5 +1,6 @@
-import { createLanguage } from "@flint.fyi/core";
 import * as yamlParser from "yaml-unist-parser";
+
+import { createLanguage } from "@flint.fyi/core";
 
 import { parseDirectivesFromYamlFile } from "./directives/parseDirectivesFromYamlFile.ts";
 import type { YamlNodesByName, YamlNodeVisitors } from "./nodes.ts";

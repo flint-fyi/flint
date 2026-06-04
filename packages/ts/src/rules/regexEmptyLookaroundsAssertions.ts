@@ -1,10 +1,11 @@
 import { visitRegExpAST } from "@eslint-community/regexpp";
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type {
-	AST,
-	TypeScriptFileServices,
-} from "@flint.fyi/typescript-language";
 import { isPotentiallyEmpty } from "regexp-ast-analysis";
+
+import {
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";

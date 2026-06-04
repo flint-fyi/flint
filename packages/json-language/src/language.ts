@@ -1,5 +1,6 @@
-import { createLanguage, type Language } from "@flint.fyi/core";
 import * as ts from "typescript";
+
+import { createLanguage, type Language } from "@flint.fyi/core";
 
 import type {
 	JsonNodeName,

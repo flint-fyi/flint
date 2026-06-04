@@ -1,4 +1,4 @@
-import type { LinterName, Comparison } from "@flint.fyi/comparisons";
+import type { Comparison, LinterName } from "@flint.fyi/comparisons";
 
 export interface RuleEquivalentLinksProps {
 	comparison: Comparison;

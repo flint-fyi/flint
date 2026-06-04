@@ -1,11 +1,12 @@
+import { SyntaxKind } from "typescript";
+import { z } from "zod/v4";
+
 import {
 	getJsonNodeRange,
 	jsonLanguage,
 	type JsonSourceFile,
 } from "@flint.fyi/json-language";
 import type { AST } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
-import { z } from "zod/v4";
 
 import { removeArrayElement } from "../removeArrayElement.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";
@@ -171,7 +172,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 		return {
 			visitors: {
-				JsonSourceFile(node, { options, sourceFile }) {
+				JsonSourceFile(node, { options }) {
 					const ignoredProperties = new Set(options.ignoreProperties);
 
 					if (node.statements.length !== 1) {
@@ -189,7 +190,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							property.name.kind === SyntaxKind.StringLiteral &&
 							!ignoredProperties.has(property.name.text)
 						) {
-							checkPropertyValue(property, sourceFile, expression);
+							checkPropertyValue(property, node, expression);
 						}
 					}
 				},

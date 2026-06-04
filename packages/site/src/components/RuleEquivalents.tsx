@@ -1,4 +1,5 @@
 import { linterNames, type LinterName } from "@flint.fyi/comparisons";
+
 import { getComparisonByFlintId } from "./comparisonsByFlintId";
 import { RuleEquivalentLinks } from "./RuleEquivalentLinks";
 

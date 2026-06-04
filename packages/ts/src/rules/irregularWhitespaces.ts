@@ -1,6 +1,7 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
 import { z } from "zod/v4";
+
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

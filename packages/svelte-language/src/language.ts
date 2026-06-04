@@ -1,7 +1,8 @@
+import { parse, type AST } from "svelte/compiler";
+
 import type { LanguageReports, SourceFileWithLineMap } from "@flint.fyi/core";
 import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
 import { createVolarBasedLanguage } from "@flint.fyi/volar-language";
-import { type AST, parse } from "svelte/compiler";
 
 import { extractDirectives } from "./extractDirectives.ts";
 import {

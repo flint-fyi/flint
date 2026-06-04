@@ -106,7 +106,8 @@
         "maintenance",
         "bug",
         "infra",
-        "doc"
+        "doc",
+        "test"
       ]
     },
     {

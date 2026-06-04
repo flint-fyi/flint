@@ -1,6 +1,7 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import { kebabCase } from "change-case";
 import ts from "typescript";
+
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";
@@ -28,7 +29,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { sourceFile }) {
+				JsonSourceFile(node) {
 					const property = getPackagePropertyOfName(node, "scripts");
 					if (
 						property?.kind !== ts.SyntaxKind.PropertyAssignment ||
@@ -56,7 +57,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							continue;
 						}
 
-						const range = getJsonNodeRange(scriptsProperty.name, sourceFile);
+						const range = getJsonNodeRange(scriptsProperty.name, node);
 
 						context.report({
 							message: "invalidCase",

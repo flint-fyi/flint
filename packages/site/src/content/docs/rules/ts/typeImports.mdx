@@ -4,7 +4,7 @@ title: "typeImports"
 topic: "rules"
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { TabItem, Tabs } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
@@ -55,7 +55,7 @@ type Admin = User & { isAdmin: boolean };
 <TabItem label="❌ Incorrect">
 
 ```ts
-import { User, createUser } from "./users";
+import { createUser, User } from "./users";
 
 type Admin = User & { isAdmin: boolean };
 const user = createUser();
@@ -65,8 +65,7 @@ const user = createUser();
 <TabItem label="✅ Correct">
 
 ```ts
-import type { User } from "./users";
-import { createUser } from "./users";
+import { createUser, type User } from "./users";
 
 type Admin = User & { isAdmin: boolean };
 const user = createUser();
@@ -218,8 +217,8 @@ It defaults to `"type-imports"`.
 Examples of correct code with `{ prefer: "type-imports" }`, and incorrect code with `{ prefer: "no-type-imports" }`:
 
 ```ts
-import type { User } from "./types";
 import type UserModel from "./model";
+import type { User } from "./types";
 
 type Admin = User & { model: UserModel };
 ```
@@ -227,8 +226,8 @@ type Admin = User & { model: UserModel };
 Examples of incorrect code with `{ prefer: "type-imports" }`, and correct code with `{ prefer: "no-type-imports" }`:
 
 ```ts
-import { User } from "./types";
 import UserModel from "./model";
+import { User } from "./types";
 
 type Admin = User & { model: UserModel };
 ```
@@ -236,7 +235,7 @@ type Admin = User & { model: UserModel };
 With `{ prefer: "no-type-imports" }`, inline type specifiers are also reported.
 
 ```ts
-import { type User, createUser } from "./users";
+import { createUser, type User } from "./users";
 
 type Admin = User & { isAdmin: boolean };
 const user = createUser();

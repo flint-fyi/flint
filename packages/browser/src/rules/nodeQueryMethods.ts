@@ -1,10 +1,13 @@
+import { SyntaxKind } from "typescript";
+
 import {
 	getTSNodeRange,
 	isGlobalDeclaration,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import { SyntaxKind } from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 const legacyMethods = new Set([
 	"getElementById",
@@ -19,8 +22,6 @@ const methodReplacements: Record<string, string> = {
 	getElementsByTagName: "querySelectorAll",
 	getElementsByTagNameNS: "querySelectorAll",
 };
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

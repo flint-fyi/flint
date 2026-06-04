@@ -1,8 +1,11 @@
+import * as ts from "typescript";
+
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 function isNonArrowFunctionBoundary(node: ts.Node): "quit" | boolean {
 	if (ts.isArrowFunction(node)) {
@@ -17,8 +20,6 @@ function isNonArrowFunctionBoundary(node: ts.Node): "quit" | boolean {
 		ts.isConstructorDeclaration(node)
 	);
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

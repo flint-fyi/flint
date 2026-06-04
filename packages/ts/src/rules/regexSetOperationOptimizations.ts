@@ -1,13 +1,14 @@
 import {
-	type AST as RegExpAST,
 	RegExpParser,
 	visitRegExpAST,
+	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
+import { toUnicodeSet } from "regexp-ast-analysis";
+
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import { toUnicodeSet } from "regexp-ast-analysis";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";

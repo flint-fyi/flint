@@ -1,7 +1,8 @@
-import type { LinterHost } from "@flint.fyi/core";
-import { normalizePath, pathKey, type PathKey } from "@flint.fyi/utils";
 import { dirname, resolve } from "pathe";
 import ts from "typescript";
+
+import type { LinterHost } from "@flint.fyi/core";
+import { normalizePath, pathKey, type PathKey } from "@flint.fyi/utils";
 
 import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
 

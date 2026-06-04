@@ -1,23 +1,17 @@
-import eslint from "@eslint/js";
-import markdown from "@eslint/markdown";
 import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
+import eslint from "@eslint/js";
+import eslintJson from "@eslint/json";
+import markdown from "@eslint/markdown";
 import vitest from "@vitest/eslint-plugin";
-import { defineConfig, globalIgnores } from "eslint/config";
 import jsdoc from "eslint-plugin-jsdoc";
 import jsonc from "eslint-plugin-jsonc";
 import n from "eslint-plugin-n";
-import packageJson from "eslint-plugin-package-json";
+import packageJson from "eslint-plugin-package-json/experimental";
 import perfectionist from "eslint-plugin-perfectionist";
-import { Alphabet } from "eslint-plugin-perfectionist/alphabet";
 import * as regexp from "eslint-plugin-regexp";
 import yml from "eslint-plugin-yml";
+import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
-
-const importAlphabet = Alphabet.generateRecommendedAlphabet()
-	.sortByNaturalSort()
-	.placeCharacterBefore({ characterAfter: "-", characterBefore: "/" })
-	.placeCharacterBefore({ characterAfter: "/", characterBefore: "." })
-	.getCharacters();
 
 // https://typescript-eslint.io/troubleshooting/typed-linting/performance#importextensions-enforcing-extensions-are-not-used
 function banJsImportExtension() {
@@ -126,6 +120,12 @@ export default defineConfig(
 			// https://github.com/eslint-community/eslint-plugin-n/issues/472
 			"n/no-unpublished-bin": "off",
 
+			// Covered by knip
+			"n/no-extraneous-import": "off",
+			"n/no-extraneous-require": "off",
+			"n/no-unpublished-import": "off",
+			"n/no-unpublished-require": "off",
+
 			// Restrict imports
 			"@typescript-eslint/no-restricted-imports": [
 				"error",
@@ -137,32 +137,11 @@ export default defineConfig(
 			// Use no-restricted-syntax to target e.g. `type Foo = typeof import('foo.js')` as well.
 			"no-restricted-syntax": ["error", ...banJsImportExtension()],
 
-			"perfectionist/sort-imports": [
-				"error",
-				{
-					alphabet: importAlphabet,
-					groups: [
-						"side-effect",
-						["builtin", "external"],
-						["parent", "sibling", "index", "subpath"],
-						"unknown",
-					],
-
-					partitionByNewLine: false,
-					type: "custom",
-				},
-			],
+			// Covered by Prettier plugin
+			"perfectionist/sort-imports": "off",
+			"perfectionist/sort-named-imports": "off",
 		},
 		settings: {
-			n: {
-				convertPath: [
-					{
-						exclude: ["**/ruleTester.ts", "**/*.test.ts", "**/*.test-d.ts"],
-						include: ["packages/*/src/**/*.ts"],
-						replace: ["src/(.+).ts$", "lib/$1.js"],
-					},
-				],
-			},
 			perfectionist: { partitionByComment: true, type: "natural" },
 		},
 	},
@@ -240,8 +219,6 @@ export default defineConfig(
 	{
 		files: ["packages/e2e/tests/**/*.ts"],
 		rules: {
-			"n/no-extraneous-import": "off",
-			"n/no-unpublished-import": "off",
 			"n/no-unsupported-features/node-builtins": "off",
 		},
 	},
@@ -258,11 +235,9 @@ export default defineConfig(
 	},
 	{
 		extends: [packageJson.configs.recommended, packageJson.configs.stylistic],
+		files: ["**/package.json"],
 		ignores: ["packages/e2e/tests/**/package.json"],
-	},
-	{
-		extends: [packageJson.configs["recommended-publishable"]],
-		files: ["packages/*/package.json"],
+		plugins: { json: eslintJson },
 		rules: {
 			"package-json/require-homepage": "error",
 		},

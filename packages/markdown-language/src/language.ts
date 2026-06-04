@@ -1,9 +1,10 @@
-import { createLanguage } from "@flint.fyi/core";
 import type * as mdast from "mdast";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { gfmFromMarkdown } from "mdast-util-gfm";
 import { gfm } from "micromark-extension-gfm";
 import type { Node } from "unist";
+
+import { createLanguage } from "@flint.fyi/core";
 
 import { parseDirectivesFromMarkdownFile } from "./directives/parseDirectivesFromMarkdownFile.ts";
 import type {

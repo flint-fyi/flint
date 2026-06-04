@@ -4,7 +4,7 @@ title: "tripleSlashReferences"
 topic: "rules"
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { TabItem, Tabs } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
@@ -35,6 +35,7 @@ const path = require("path");
 
 ```ts
 import type { MyType } from "./types";
+
 export const value: MyType = 1;
 ```
 

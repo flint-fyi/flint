@@ -1,7 +1,8 @@
-import type { FileReport } from "@flint.fyi/core";
-import { nullThrows } from "@flint.fyi/utils";
 import * as shikiCli from "@shikijs/cli";
 import chalk from "chalk";
+
+import type { FileReport } from "@flint.fyi/core";
+import { nullThrows } from "@flint.fyi/utils";
 
 import { ColorCodes, indenter } from "./constants.ts";
 

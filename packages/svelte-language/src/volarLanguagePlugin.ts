@@ -1,20 +1,22 @@
+import path from "node:path";
+import url from "node:url";
+
+import { decode } from "@jridgewell/sourcemap-codec";
+import {
+	forEachEmbeddedCode,
+	type CodeMapping,
+	type LanguagePlugin,
+	type VirtualCode,
+} from "@volar/language-core";
+import type { CompileError } from "svelte/compiler";
+import { internalHelpers, svelte2tsx } from "svelte2tsx";
+import type * as ts from "typescript";
+
 import {
 	getPositionOfColumnAndLine,
 	type LanguageReport,
 	type SourceFileWithLineMap,
 } from "@flint.fyi/core";
-import { decode } from "@jridgewell/sourcemap-codec";
-import {
-	type CodeMapping,
-	forEachEmbeddedCode,
-	type LanguagePlugin,
-	type VirtualCode,
-} from "@volar/language-core";
-import path from "node:path";
-import url from "node:url";
-import { internalHelpers, svelte2tsx } from "svelte2tsx";
-import type { CompileError } from "svelte/compiler";
-import type * as ts from "typescript";
 
 const sveltePath = path.dirname(
 	url.fileURLToPath(import.meta.resolve("svelte/package.json")),

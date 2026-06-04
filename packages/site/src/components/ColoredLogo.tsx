@@ -1,7 +1,7 @@
+import type { PluginLogoColors } from "~/data/pluginData";
 import clsx from "clsx";
 
 import styles from "./ColoredLogo.module.css";
-import type { PluginLogoColors } from "~/data/pluginData";
 
 export interface ColoredLogoProps {
 	colors: PluginLogoColors;

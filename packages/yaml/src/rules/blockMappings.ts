@@ -1,5 +1,8 @@
-import { yamlLanguage } from "@flint.fyi/yaml-language";
 import type * as yaml from "yaml-unist-parser";
+
+import { yamlLanguage } from "@flint.fyi/yaml-language";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 /**
  * Calculate the expected indentation for a flow mapping's pairs when converted to block style.
@@ -66,8 +69,6 @@ function convertToBlock(node: yaml.FlowMapping, sourceText: string) {
 
 	return "\n" + pairs.join("\n");
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(yamlLanguage, {
 	about: {

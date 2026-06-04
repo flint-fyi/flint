@@ -1,6 +1,7 @@
+import { SyntaxKind } from "typescript";
+
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import type { AST } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
 
 import { getPackageProperties } from "../getPackageProperties.ts";
 import { removeArrayElement } from "../removeArrayElement.ts";
@@ -50,7 +51,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { sourceFile }) {
+				JsonSourceFile(node) {
 					const dependencies = new Set<string>();
 					const crossGroupDependencies: AST.ObjectLiteralExpression[] = [];
 
@@ -70,14 +71,14 @@ export default ruleCreator.createRule(jsonLanguage, {
 							}
 
 							const { range, text } = removeArrayElement(
-								sourceFile,
+								node,
 								element,
 								initializer,
 							);
 
 							context.report({
 								message: "duplicateDependency",
-								range: getJsonNodeRange(element, sourceFile),
+								range: getJsonNodeRange(element, node),
 								suggestions: [
 									{
 										id: "removeDependency",
@@ -110,14 +111,14 @@ export default ruleCreator.createRule(jsonLanguage, {
 							}
 
 							const { range, text } = removeObjectProperty(
-								sourceFile,
+								node,
 								dependency,
 								initializer,
 							);
 
 							context.report({
 								message: "duplicateDependency",
-								range: getJsonNodeRange(dependencyName, sourceFile),
+								range: getJsonNodeRange(dependencyName, node),
 								suggestions: [
 									{
 										id: "removeDependency",
@@ -141,14 +142,14 @@ export default ruleCreator.createRule(jsonLanguage, {
 								}
 
 								const { range, text } = removeObjectProperty(
-									sourceFile,
+									node,
 									dependency,
 									dependencyGroup,
 								);
 
 								context.report({
 									message: "crossGroupDuplicate",
-									range: getJsonNodeRange(dependency.name, sourceFile),
+									range: getJsonNodeRange(dependency.name, node),
 									suggestions: [
 										{
 											id: "removeDependency",
