@@ -748,9 +748,6 @@ importers:
       '@flint.fyi/json-language':
         specifier: workspace:^
         version: link:../json-language
-      typescript:
-        specifier: ^5.9.3 || ^6.0.0
-        version: 5.9.3
       zod:
         specifier: ^4.3.6
         version: 4.4.1
@@ -758,6 +755,9 @@ importers:
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
+      '@humanwhocodes/momoa':
+        specifier: ^3.3.10
+        version: 3.3.10
       tsdown:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(oxc-resolver@11.19.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0))(synckit@0.11.12)(typescript@5.9.3)

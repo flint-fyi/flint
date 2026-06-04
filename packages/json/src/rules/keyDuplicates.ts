@@ -1,7 +1,6 @@
-import ts from "typescript";
 import z from "zod/v4";
 
-import { jsonLanguage } from "@flint.fyi/json-language";
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -36,18 +35,15 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				ObjectLiteralExpression(node, { options, sourceFile }) {
+				Object(node, { options }) {
 					const seenKeys = new Set<string>();
 
-					for (const property of node.properties.toReversed()) {
-						if (
-							!ts.isPropertyAssignment(property) ||
-							!ts.isStringLiteral(property.name)
-						) {
+					for (const property of node.members.toReversed()) {
+						if (property.name.type !== "String") {
 							continue;
 						}
 
-						const key = property.name.text;
+						const key = property.name.value;
 						if (options.allowKeys.includes(key)) {
 							continue;
 						}
@@ -58,13 +54,10 @@ export default ruleCreator.createRule(jsonLanguage, {
 							seenKeys.add(key);
 							continue;
 						}
-
+						const range = getJsonNodeRange(property.name);
 						context.report({
 							message: "duplicateKey",
-							range: {
-								begin: property.name.getStart(sourceFile),
-								end: property.name.end,
-							},
+							range,
 						});
 					}
 				},

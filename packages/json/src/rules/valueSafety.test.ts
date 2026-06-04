@@ -19,8 +19,8 @@ ruleTester.describe(rule, {
 `,
 			snapshot: `
 [-2e308]
-  ~~~~~
-  This number evaluates to Infinity.
+ ~~~~~~
+ This number evaluates to -Infinity.
 `,
 		},
 		{
@@ -101,8 +101,8 @@ ruleTester.describe(rule, {
 `,
 			snapshot: `
 [-9007199254740992]
-  ~~~~~~~~~~~~~~~~
-  This integer is outside the safe integer range.
+ ~~~~~~~~~~~~~~~~~
+ This integer is outside the safe integer range.
 `,
 		},
 		{
