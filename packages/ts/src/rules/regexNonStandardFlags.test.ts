@@ -6,24 +6,24 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-/foo/l;
+new RegExp("foo", "l");
 `,
 			snapshot: `
-/foo/l;
-     ~
-     Non-standard flag 'l' is not part of the ECMAScript standard.
+new RegExp("foo", "l");
+                   ~
+                   Non-standard flag 'l' is not part of the ECMAScript standard.
 `,
 		},
 		{
 			code: `
-/foo/gxl;
+RegExp("foo", "gxl");
 `,
 			snapshot: `
-/foo/gxl;
-      ~
-      Non-standard flag 'x' is not part of the ECMAScript standard.
-       ~
-       Non-standard flag 'l' is not part of the ECMAScript standard.
+RegExp("foo", "gxl");
+                ~
+                Non-standard flag 'x' is not part of the ECMAScript standard.
+                 ~
+                 Non-standard flag 'l' is not part of the ECMAScript standard.
 `,
 		},
 		{
@@ -50,25 +50,25 @@ new RegExp("foo", "gxl");
 		},
 		{
 			code: `
-/pattern/n;
+new RegExp("pattern", "n");
 `,
 			snapshot: `
-/pattern/n;
-         ~
-         Non-standard flag 'n' is not part of the ECMAScript standard.
+new RegExp("pattern", "n");
+                       ~
+                       Non-standard flag 'n' is not part of the ECMAScript standard.
 `,
 		},
 		/* spellchecker:disable */
 		{
 			code: `
-/test/gixl;
+RegExp("test", "gixl");
 `,
 			snapshot: `
-/test/gixl;
-        ~
-        Non-standard flag 'x' is not part of the ECMAScript standard.
-         ~
-         Non-standard flag 'l' is not part of the ECMAScript standard.
+RegExp("test", "gixl");
+                  ~
+                  Non-standard flag 'x' is not part of the ECMAScript standard.
+                   ~
+                   Non-standard flag 'l' is not part of the ECMAScript standard.
 `,
 			/* spellchecker:enable */
 		},
@@ -83,6 +83,6 @@ new RegExp("foo", "gxl");
 		`new RegExp("foo", "gi");`,
 		`RegExp("foo", "gimsuy");`,
 		`RegExp("foo");`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 	],
 });

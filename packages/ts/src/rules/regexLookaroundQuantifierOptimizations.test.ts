@@ -134,6 +134,6 @@ RegExp("(?<=a{2,})");
 		`/(?<!cd)/;`,
 		`/(?=a{3})/;`,
 		`new RegExp("(?=ab)");`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 	],
 });

@@ -227,7 +227,7 @@ RegExp("[ABCDEFG]");
 		`new RegExp("\\\\d");`,
 		`new RegExp("\\\\D");`,
 		`new RegExp("foo");`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 		String.raw`/[\q{a|b|c|d|e|f|abcdef}]/v;`,
 	],
 });

@@ -216,7 +216,7 @@ new RegExp("(?=)");
 		`/(?=a+)/;`,
 		`/(?=[a-z])/;`,
 		`new RegExp("(?=a)");`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 		`/(^)x/;`,
 		`/x($)/;`,
 		`/(?=(?=.).*)/;`,
