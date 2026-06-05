@@ -1,5 +1,4 @@
 import { kebabCase } from "change-case";
-import ts from "typescript";
 
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
 
