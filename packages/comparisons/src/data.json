@@ -5962,7 +5962,8 @@
 		"flint": {
 			"name": "propertyOrder",
 			"plugin": "package-json",
-			"preset": "sorting"
+			"preset": "sorting",
+			"status": "implemented"
 		}
 	},
 	{

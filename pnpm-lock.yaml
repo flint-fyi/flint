@@ -945,9 +945,21 @@ importers:
       change-case:
         specifier: ^5.4.4
         version: 5.4.4
+      detect-indent:
+        specifier: ^7.0.2
+        version: 7.0.2
+      detect-newline:
+        specifier: ^4.0.1
+        version: 4.0.1
       package-json-validator:
         specifier: ^1.5.1
         version: 1.5.1
+      sort-object-keys:
+        specifier: ^2.1.0
+        version: 2.1.0
+      sort-package-json:
+        specifier: ^4.0.0
+        version: 4.0.0
       typescript:
         specifier: ^5.9.0 || ^6.0.0
         version: 5.9.3
@@ -6772,6 +6784,11 @@ packages:
   sort-package-json@3.6.1:
     resolution: {integrity: sha512-Chgejw1+10p2D0U2tB7au1lHtz6TkFnxmvZktyBCRyV0GgmF6nl1IxXxAsPtJVsUyg/fo+BfCMAVVFUVRkAHrQ==}
     engines: {node: '>=20'}
+    hasBin: true
+
+  sort-package-json@4.0.0:
+    resolution: {integrity: sha512-6aYOlYI9AWioZ+rzu+4zKLmoFqJP0/fHDxrd7X04yqEibikY+5YVF0EYlyGn4v6X2PJY7yAUWV7oeP+i5rOm/g==}
+    engines: {node: '>=22'}
     hasBin: true
 
   source-map-js@1.2.1:
@@ -13977,6 +13994,16 @@ snapshots:
       tinyglobby: 0.2.16
 
   sort-package-json@3.6.1:
+    dependencies:
+      detect-indent: 7.0.2
+      detect-newline: 4.0.1
+      git-hooks-list: 4.2.1
+      is-plain-obj: 4.1.0
+      semver: 7.8.0
+      sort-object-keys: 2.1.0
+      tinyglobby: 0.2.16
+
+  sort-package-json@4.0.0:
     dependencies:
       detect-indent: 7.0.2
       detect-newline: 4.0.1
