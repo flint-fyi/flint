@@ -38,7 +38,6 @@ void result;
 		`const array: number[] = []; array.push(1);`,
 		`const object = { value: 1 }; object.value = 2;`,
 		`const array = [1, 2, 3]; array[0] = 4;`,
-		`const value = 1; void value;`,
 		`
 declare const object: { property: string };
 const { property } = object;

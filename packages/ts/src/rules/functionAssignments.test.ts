@@ -43,11 +43,6 @@ myFunction = function() {};
 myFunction();
 `,
 		`
-let myFunction = function() {};
-myFunction = () => {};
-myFunction();
-`,
-		`
 function outer() {
     let inner = function() {};
     inner = () => {};

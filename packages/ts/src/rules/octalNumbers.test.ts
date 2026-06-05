@@ -4,9 +4,15 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `const value = 0; void value;`,
+			code: `
+const value = 0;
+void value;
+`,
 			name: "RuleTester invalid-suite sentinel",
-			snapshot: `const value = 0; void value;`,
+			snapshot: `
+const value = 0;
+void value;
+`,
 		},
 	],
 	valid: [
