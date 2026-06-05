@@ -25,9 +25,13 @@ const value = void 0;
 		},
 		{
 			code: `
+declare function someFunction(): void;
+
 void someFunction();
 `,
 			snapshot: `
+declare function someFunction(): void;
+
 void someFunction();
 ~~~~~~~~~~~~~~~~~~~
 Prefer an explicit value over using the void operator to produce undefined.
@@ -35,19 +39,33 @@ Prefer an explicit value over using the void operator to produce undefined.
 		},
 		{
 			code: `
-return void calculate();
+declare function calculate(): number;
+
+function getValue() {
+	return void calculate();
+}
 `,
 			snapshot: `
-return void calculate();
-       ~~~~~~~~~~~~~~~~
-       Prefer an explicit value over using the void operator to produce undefined.
+declare function calculate(): number;
+
+function getValue() {
+	return void calculate();
+	       ~~~~~~~~~~~~~~~~
+	       Prefer an explicit value over using the void operator to produce undefined.
+}
 `,
 		},
 		{
 			code: `
+declare const a: number;
+declare const b: number;
+
 const result = void (a + b);
 `,
 			snapshot: `
+declare const a: number;
+declare const b: number;
+
 const result = void (a + b);
                ~~~~~~~~~~~~
                Prefer an explicit value over using the void operator to produce undefined.
@@ -55,9 +73,15 @@ const result = void (a + b);
 		},
 		{
 			code: `
+declare const expression: unknown;
+declare const anotherExpression: unknown;
+
 void expression, anotherExpression;
 `,
 			snapshot: `
+declare const expression: unknown;
+declare const anotherExpression: unknown;
+
 void expression, anotherExpression;
 ~~~~~~~~~~~~~~~
 Prefer an explicit value over using the void operator to produce undefined.
@@ -65,11 +89,15 @@ Prefer an explicit value over using the void operator to produce undefined.
 		},
 		{
 			code: `
+declare function doSomething(): void;
+
 function process() {
 	void doSomething();
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
+
 function process() {
 	void doSomething();
 	~~~~~~~~~~~~~~~~~~
@@ -79,9 +107,13 @@ function process() {
 		},
 		{
 			code: `
+declare function action(): void;
+
 const callback = () => void action();
 `,
 			snapshot: `
+declare function action(): void;
+
 const callback = () => void action();
                        ~~~~~~~~~~~~~
                        Prefer an explicit value over using the void operator to produce undefined.
@@ -90,10 +122,22 @@ const callback = () => void action();
 	],
 	valid: [
 		`const value = undefined;`,
-		`return undefined;`,
-		`someFunction();`,
-		`const result = doSomething();`,
-		`if (value === undefined) {}`,
+		`function getValue() { return undefined; }`,
+		`
+declare function someFunction(): void;
+
+someFunction();
+`,
+		`
+declare function doSomething(): number;
+
+const result = doSomething();
+`,
+		`
+declare const value: unknown;
+
+if (value === undefined) {}
+`,
 		`function returns() { return; }`,
 	],
 });

@@ -6,17 +6,17 @@ ruleTester.describe(rule, {
 		{
 			code: `
 const handler = function() {
-    console.log("hello");
+    "hello";
 }.bind(this);
 `,
 			output: `
 const handler = function() {
-    console.log("hello");
+    "hello";
 };
 `,
 			snapshot: `
 const handler = function() {
-    console.log("hello");
+    "hello";
 }.bind(this);
   ~~~~~~~~~~
   This \`.bind()\` call is unnecessary because the function does not use \`this\`.
@@ -24,16 +24,22 @@ const handler = function() {
 		},
 		{
 			code: `
+declare const context: unknown;
+
 const fn = function(x: number) {
     return x * 2;
 }.bind(context);
 `,
 			output: `
+declare const context: unknown;
+
 const fn = function(x: number) {
     return x * 2;
 };
 `,
 			snapshot: `
+declare const context: unknown;
+
 const fn = function(x: number) {
     return x * 2;
 }.bind(context);
@@ -44,17 +50,17 @@ const fn = function(x: number) {
 		{
 			code: `
 const arrow = (() => {
-    console.log("hello");
+    "hello";
 }).bind(this);
 `,
 			output: `
 const arrow = (() => {
-    console.log("hello");
+    "hello";
 });
 `,
 			snapshot: `
 const arrow = (() => {
-    console.log("hello");
+    "hello";
 }).bind(this);
    ~~~~~~~~~~
    \`.bind()\` has no effect on arrow functions.
@@ -62,31 +68,61 @@ const arrow = (() => {
 		},
 		{
 			code: `
-const arrowWithThis = (() => {
-    this.foo();
-}).bind(context);
+declare const context: unknown;
+
+class Example {
+    foo() {}
+
+    method() {
+        const arrowWithThis = (() => {
+            this.foo();
+        }).bind(context);
+    }
+}
 `,
 			output: `
-const arrowWithThis = (() => {
-    this.foo();
-});
+declare const context: unknown;
+
+class Example {
+    foo() {}
+
+    method() {
+        const arrowWithThis = (() => {
+            this.foo();
+        });
+    }
+}
 `,
 			snapshot: `
-const arrowWithThis = (() => {
-    this.foo();
-}).bind(context);
-   ~~~~~~~~~~~~~
-   \`.bind()\` has no effect on arrow functions.
+declare const context: unknown;
+
+class Example {
+    foo() {}
+
+    method() {
+        const arrowWithThis = (() => {
+            this.foo();
+        }).bind(context);
+           ~~~~~~~~~~~~~
+           \`.bind()\` has no effect on arrow functions.
+    }
+}
 `,
 		},
 		{
 			code: `
+declare const context: unknown;
+
 const arrow = (() => {}).bind(context);
 `,
 			output: `
+declare const context: unknown;
+
 const arrow = (() => {});
 `,
 			snapshot: `
+declare const context: unknown;
+
 const arrow = (() => {}).bind(context);
                          ~~~~~~~~~~~~~
                          \`.bind()\` has no effect on arrow functions.
@@ -94,9 +130,13 @@ const arrow = (() => {}).bind(context);
 		},
 		{
 			code: `
+declare function createContext(): unknown;
+
 const arrow = (() => {}).bind(createContext());
 `,
 			snapshot: `
+declare function createContext(): unknown;
+
 const arrow = (() => {}).bind(createContext());
                          ~~~~~~~~~~~~~~~~~~~~~
                          \`.bind()\` has no effect on arrow functions.
@@ -105,26 +145,44 @@ const arrow = (() => {}).bind(createContext());
 	],
 	valid: [
 		`
-const handler = function() {
+declare const context: { handleClick(): void };
+
+const handler = function(this: { handleClick(): void }) {
     this.handleClick();
-}.bind(this);
+}.bind(context);
 `,
 		`
-const fn = function() {
+declare const context: { value: number };
+
+const fn = function(this: { value: number }) {
     return this.value * 2;
 }.bind(context);
 `,
 		`
 const regular = function() {
-    console.log("hello");
+    "hello";
 };
 `,
 		`
 const arrow = () => {
-    console.log("hello");
+    "hello";
 };
 `,
-		`obj.method.bind(obj);`,
-		`fn.bind(context, arg1, arg2);`,
+		`
+const object = {
+    method() {},
+};
+
+object.method.bind(object);
+`,
+		`
+declare const context: unknown;
+declare const firstArgument: string;
+declare const secondArgument: string;
+
+function callback(first: string, second: string) {}
+
+callback.bind(context, firstArgument, secondArgument);
+`,
 	],
 });

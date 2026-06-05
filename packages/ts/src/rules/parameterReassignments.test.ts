@@ -159,12 +159,12 @@ function f({ x, y }: { x: number; y: string }) {
 		},
 		{
 			code: `
-function f([x, , z]: [number, string, boolean]) {
+function f([x, , z]: [number, string, number]) {
 	z++;
 }
 `,
 			snapshot: `
-function f([x, , z]: [number, string, boolean]) {
+function f([x, , z]: [number, string, number]) {
 	z++;
 	~
 	Reassigning function parameters can make them more difficult to reason about.
@@ -189,16 +189,22 @@ function f({ a: x }: { a: number }) {
 	valid: [
 		`
 function f(x: number) {
-	const y = x;
+	let y = x;
 	y = 5;
 }
 `,
 		`
 function f(x: number) {
-	let x = 5;
+	x;
+	{
+		let x = 5;
+		x;
+	}
 }
 `,
 		`
+let x = 0;
+
 function f() {
 	x = 5;
 }
@@ -218,25 +224,25 @@ const f = (x: number) => {
 };
 `,
 		`
-function f(x: number) {
+function f(x: { prop: number }) {
 	x.prop = 5;
 }
 `,
 		`
 function f(x: { prop: number }) {
-	const temp = x;
+	let temp = x;
 	temp = { prop: 5 };
 }
 `,
 		`
 function f({ x }: { x: number }) {
-	const y = x;
+	let y = x;
 	y = 5;
 }
 `,
 		`
 function f([a, b]: [number, string]) {
-	const c = a;
+	let c = a;
 	c = 10;
 }
 `,
