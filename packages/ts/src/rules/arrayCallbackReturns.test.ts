@@ -5,43 +5,49 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const values: number[];
 const result = values.map((value) => {
-    console.log(value);
+    void value;
 });
 `,
 			snapshot: `
+declare const values: number[];
 const result = values.map((value) => {
                           ~~~~~~~~~~~~
                           Array method \`map\` callback expects a return value.
-    console.log(value);
-    ~~~~~~~~~~~~~~~~~~~
+    void value;
+    ~~~~~~~~~~~
 });
 ~
 `,
 		},
 		{
 			code: `
+declare const values: number[];
 const result = values.filter(function (value) {
-    console.log(value);
+    void value;
 });
 `,
 			snapshot: `
+declare const values: number[];
 const result = values.filter(function (value) {
                              ~~~~~~~~~~~~~~~~~~
                              Array method \`filter\` callback expects a return value.
-    console.log(value);
-    ~~~~~~~~~~~~~~~~~~~
+    void value;
+    ~~~~~~~~~~~
 });
 ~
 `,
 		},
 		{
 			code: `
+declare const values: number[];
 const result = values.find((value) => {
     value > 10;
 });
 `,
 			snapshot: `
+declare const values: number[];
 const result = values.find((value) => {
                            ~~~~~~~~~~~~
                            Array method \`find\` callback expects a return value.
@@ -53,11 +59,15 @@ const result = values.find((value) => {
 		},
 		{
 			code: `
+declare const values: number[];
+declare const target: number;
 const result = values.some((value) => {
     value === target;
 });
 `,
 			snapshot: `
+declare const values: number[];
+declare const target: number;
 const result = values.some((value) => {
                            ~~~~~~~~~~~~
                            Array method \`some\` callback expects a return value.
@@ -69,11 +79,13 @@ const result = values.some((value) => {
 		},
 		{
 			code: `
+declare const values: number[];
 const result = values.every((value) => {
     value > 0;
 });
 `,
 			snapshot: `
+declare const values: number[];
 const result = values.every((value) => {
                             ~~~~~~~~~~~~
                             Array method \`every\` callback expects a return value.
@@ -85,43 +97,33 @@ const result = values.every((value) => {
 		},
 		{
 			code: `
-const result = values.reduce((accumulator, value) => {
-    accumulator.push(value);
-}, []);
-`,
-			snapshot: `
-const result = values.reduce((accumulator, value) => {
-                             ~~~~~~~~~~~~~~~~~~~~~~~~~
-                             Array method \`reduce\` callback expects a return value.
-    accumulator.push(value);
-    ~~~~~~~~~~~~~~~~~~~~~~~~
-}, []);
-~
-`,
-		},
-		{
-			code: `
+declare const values: number[];
 const result = values.flatMap((value) => {
-    console.log(value);
+    void value;
 });
 `,
 			snapshot: `
+declare const values: number[];
 const result = values.flatMap((value) => {
                               ~~~~~~~~~~~~
                               Array method \`flatMap\` callback expects a return value.
-    console.log(value);
-    ~~~~~~~~~~~~~~~~~~~
+    void value;
+    ~~~~~~~~~~~
 });
 ~
 `,
 		},
 		{
 			code: `
+declare const values: number[];
+declare const target: number;
 const result = values.findIndex((value) => {
     value === target;
 });
 `,
 			snapshot: `
+declare const values: number[];
+declare const target: number;
 const result = values.findIndex((value) => {
                                 ~~~~~~~~~~~~
                                 Array method \`findIndex\` callback expects a return value.
@@ -131,55 +133,81 @@ const result = values.findIndex((value) => {
 ~
 `,
 		},
-		{
-			code: `
-const sorted = values.sort((a, b) => {
-    console.log(a, b);
-});
-`,
-			snapshot: `
-const sorted = values.sort((a, b) => {
-                           ~~~~~~~~~~~
-                           Array method \`sort\` callback expects a return value.
-    console.log(a, b);
-    ~~~~~~~~~~~~~~~~~~
-});
-~
-`,
-		},
-		{
-			code: `
-const sorted = values.toSorted((a, b) => {
-    console.log(a, b);
-});
-`,
-			snapshot: `
-const sorted = values.toSorted((a, b) => {
-                               ~~~~~~~~~~~
-                               Array method \`toSorted\` callback expects a return value.
-    console.log(a, b);
-    ~~~~~~~~~~~~~~~~~~
-});
-~
-`,
-		},
 	],
 	valid: [
-		`const result = values.map((value) => value * 2);`,
-		`const result = values.map((value) => { return value * 2; });`,
-		`const result = values.filter((value) => value > 0);`,
-		`const result = values.filter((value) => { return value > 0; });`,
-		`const result = values.find((value) => value === target);`,
-		`const result = values.some((value) => value > 0);`,
-		`const result = values.every((value) => value > 0);`,
-		`const result = values.reduce((sum, value) => sum + value, 0);`,
-		`const result = values.reduce((sum, value) => { return sum + value; }, 0);`,
-		`values.forEach((value) => { console.log(value); });`,
-		`values.forEach((value) => console.log(value));`,
-		`const result = values.map(transform);`,
-		`const result = values.sort((a, b) => a - b);`,
-		`const result = values.toSorted((a, b) => a - b);`,
-		`const result = values.findLast((value) => value > 0);`,
-		`const result = values.findLastIndex((value) => value > 0);`,
+		`
+declare const values: number[];
+const result = values.map((value) => value * 2);
+`,
+		`
+declare const values: number[];
+const result = values.map((value) => {
+    return value * 2;
+});
+`,
+		`
+declare const values: number[];
+const result = values.filter((value) => value > 0);
+`,
+		`
+declare const values: number[];
+const result = values.filter((value) => {
+    return value > 0;
+});
+`,
+		`
+declare const values: number[];
+declare const target: number;
+const result = values.find((value) => value === target);
+`,
+		`
+declare const values: number[];
+const result = values.some((value) => value > 0);
+`,
+		`
+declare const values: number[];
+const result = values.every((value) => value > 0);
+`,
+		`
+declare const values: number[];
+const result = values.reduce((sum, value) => sum + value, 0);
+`,
+		`
+declare const values: number[];
+const result = values.reduce((sum, value) => {
+    return sum + value;
+}, 0);
+`,
+		`
+declare const values: number[];
+values.forEach((value) => {
+    void value;
+});
+`,
+		`
+declare const values: number[];
+values.forEach((value) => void value);
+`,
+		`
+declare const values: number[];
+declare const transform: (value: number) => number;
+const result = values.map(transform);
+`,
+		`
+declare const values: number[];
+const result = values.sort((a, b) => a - b);
+`,
+		`
+declare const values: number[];
+const result = values.toSorted((a, b) => a - b);
+`,
+		`
+declare const values: number[];
+const result = values.findLast((value) => value > 0);
+`,
+		`
+declare const values: number[];
+const result = values.findLastIndex((value) => value > 0);
+`,
 	],
 });

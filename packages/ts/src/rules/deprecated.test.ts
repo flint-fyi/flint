@@ -61,16 +61,16 @@ const obj = {
     /** @deprecated Use newProperty instead */
     oldProperty: 1
 };
-console.log(obj.oldProperty);
+void obj.oldProperty;
 `,
 			snapshot: `
 const obj = {
     /** @deprecated Use newProperty instead */
     oldProperty: 1
 };
-console.log(obj.oldProperty);
-                ~~~~~~~~~~~
-                This is deprecated.
+void obj.oldProperty;
+         ~~~~~~~~~~~
+         This is deprecated.
 `,
 		},
 		{
@@ -399,7 +399,7 @@ a.b;
 			code: `
 class A {
     /** @deprecated */
-    b: string;
+    b!: string;
 }
 declare const a: A;
 const { b } = a;
@@ -407,7 +407,7 @@ const { b } = a;
 			snapshot: `
 class A {
     /** @deprecated */
-    b: string;
+    b!: string;
 }
 declare const a: A;
 const { b } = a;
@@ -770,13 +770,13 @@ export default a();
 		{
 			code: `
 /** @deprecated */
-declare function decorator(constructor: Function);
+declare function decorator(constructor: Function): void;
 @decorator
 export class Foo {}
 `,
 			snapshot: `
 /** @deprecated */
-declare function decorator(constructor: Function);
+declare function decorator(constructor: Function): void;
 @decorator
  ~~~~~~~~~
  This is deprecated.
@@ -825,14 +825,14 @@ const c = a[key];
 			code: `
 class A {
     /** @deprecated */
-    accessor b: 1;
+    accessor b: 1 = 1;
 }
 new A().b;
 `,
 			snapshot: `
 class A {
     /** @deprecated */
-    accessor b: 1;
+    accessor b: 1 = 1;
 }
 new A().b;
         ~
@@ -971,7 +971,7 @@ const c = a[2];
 function unused() {}
 function active() {}
 active();`,
-		`const obj = { property: 1 }; console.log(obj.property);`,
+		`const obj = { property: 1 }; void obj.property;`,
 		`/** @deprecated */ var a;`,
 		`/** @deprecated */ var a = 1;`,
 		`/** @deprecated */ let a;`,
@@ -999,6 +999,10 @@ a['b'];
 const a = {
     b: 1,
     /** @deprecated */ c: 2,
+} as {
+    [key: string]: number;
+    b: 1;
+    /** @deprecated */ c: 2;
 };
 a['b' + 'c'];
 `,
@@ -1019,8 +1023,8 @@ a?.b;
 `,
 		`
 class A {
-    b: 1;
-    /** @deprecated */ c: 2;
+    b: 1 = 1;
+    /** @deprecated */ c: 2 = 2;
 }
 new A().b;
 `,
@@ -1052,6 +1056,9 @@ const {
 const a = {
     /** @deprecated */
     b: 'string',
+} as {
+    [key: string]: string;
+    /** @deprecated */ b: 'string';
 };
 const c = a['nonExistentProperty'];
 `,
@@ -1059,6 +1066,9 @@ const c = a['nonExistentProperty'];
 const a = {
     /** @deprecated */
     b: 'string',
+} as {
+    [key: string]: string;
+    /** @deprecated */ b: 'string';
 };
 function getKey() {
     return 'c';
@@ -1069,14 +1079,9 @@ const c = a[getKey()];
 const a = {
     /** @deprecated */
     b: 'string',
-};
-const key = {};
-const c = a[key];
-`,
-		`
-const a = {
-    /** @deprecated */
-    b: 'string',
+} as {
+    [key: symbol]: string;
+    /** @deprecated */ b: 'string';
 };
 const key = Symbol('key');
 const c = a[key];

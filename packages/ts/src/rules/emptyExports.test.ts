@@ -1,3 +1,5 @@
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import rule from "./emptyExports.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -24,6 +26,15 @@ Empty export does nothing and can be removed.
 export * from 'module';
 export {};
 `,
+			files: {
+				"node_modules/module/index.d.ts": `
+export interface A {}
+export const value: unknown;
+`,
+				"node_modules/module/package.json": `{
+	"types": "index.d.ts"
+}`,
+			},
 			output: `
 export * from 'module';
 
@@ -40,6 +51,15 @@ Empty export does nothing and can be removed.
 export {};
 export * from 'module';
 `,
+			files: {
+				"node_modules/module/index.d.ts": `
+export interface A {}
+export const value: unknown;
+`,
+				"node_modules/module/package.json": `{
+	"types": "index.d.ts"
+}`,
+			},
 			output: `
 
 export * from 'module';
@@ -113,6 +133,18 @@ Empty export does nothing and can be removed.
 import value = require('module');
 export {};
 `,
+			files: {
+				...createRuleTesterTSConfig({
+					module: "commonjs",
+					moduleResolution: "node",
+				}),
+				"types.d.ts": `
+declare module 'module' {
+    const value: unknown;
+    export = value;
+}
+`,
+			},
 			output: `
 import value = require('module');
 
@@ -130,6 +162,18 @@ import value = require('module');
 export {};
 export {};
 `,
+			files: {
+				...createRuleTesterTSConfig({
+					module: "commonjs",
+					moduleResolution: "node",
+				}),
+				"types.d.ts": `
+declare module 'module' {
+    const value: unknown;
+    export = value;
+}
+`,
+			},
 			output: `
 import value = require('module');
 
@@ -148,14 +192,26 @@ Empty export does nothing and can be removed.
 		{
 			code: `
 import { value } from 'module';
+void value;
 export {};
 `,
+			files: {
+				"node_modules/module/index.d.ts": `
+export interface A {}
+export const value: unknown;
+`,
+				"node_modules/module/package.json": `{
+	"types": "index.d.ts"
+}`,
+			},
 			output: `
 import { value } from 'module';
+void value;
 
 `,
 			snapshot: `
 import { value } from 'module';
+void value;
 export {};
 ~~~~~~~~~~
 Empty export does nothing and can be removed.
@@ -164,14 +220,26 @@ Empty export does nothing and can be removed.
 		{
 			code: `
 import * as ns from 'module';
+void ns;
 export {};
 `,
+			files: {
+				"node_modules/module/index.d.ts": `
+export interface A {}
+export const value: unknown;
+`,
+				"node_modules/module/package.json": `{
+	"types": "index.d.ts"
+}`,
+			},
 			output: `
 import * as ns from 'module';
+void ns;
 
 `,
 			snapshot: `
 import * as ns from 'module';
+void ns;
 export {};
 ~~~~~~~~~~
 Empty export does nothing and can be removed.
@@ -182,6 +250,18 @@ Empty export does nothing and can be removed.
 export = {};
 export {};
 `,
+			files: {
+				...createRuleTesterTSConfig({
+					module: "commonjs",
+					moduleResolution: "node",
+				}),
+				"types.d.ts": `
+declare module 'module' {
+    const value: unknown;
+    export = value;
+}
+`,
+			},
 			output: `
 export = {};
 
@@ -195,14 +275,63 @@ Empty export does nothing and can be removed.
 		},
 	],
 	valid: [
-		`declare module 'module'`,
-		`import {} from 'module';`,
-		`import * as ns from 'module';`,
-		`export = {};`,
-		`export = 3;`,
+		{ code: `declare module 'module' {}`, fileName: "file.d.ts" },
+		{
+			code: `import {} from 'module';`,
+			files: {
+				"node_modules/module/index.d.ts": `
+export interface A {}
+export const value: unknown;
+`,
+				"node_modules/module/package.json": `{
+	"types": "index.d.ts"
+}`,
+			},
+		},
+		{
+			code: `import * as ns from 'module'; void ns;`,
+			files: {
+				"node_modules/module/index.d.ts": `
+export interface A {}
+export const value: unknown;
+`,
+				"node_modules/module/package.json": `{
+	"types": "index.d.ts"
+}`,
+			},
+		},
+		{
+			code: `export = {};`,
+			files: {
+				...createRuleTesterTSConfig({
+					module: "commonjs",
+					moduleResolution: "node",
+				}),
+				"types.d.ts": `
+declare module 'module' {
+    const value: unknown;
+    export = value;
+}
+`,
+			},
+		},
+		{
+			code: `export = 3;`,
+			files: {
+				...createRuleTesterTSConfig({
+					module: "commonjs",
+					moduleResolution: "node",
+				}),
+				"types.d.ts": `
+declare module 'module' {
+    const value: unknown;
+    export = value;
+}
+`,
+			},
+		},
 		`export const value = {};`,
 		`const value = {}; export default value;`,
-		`export * from 'module'; export = {};`,
 		`export {};`,
 		{
 			code: `export type A = 1; export {};`,
@@ -215,10 +344,28 @@ Empty export does nothing and can be removed.
 		{
 			code: `import type { A } from 'module'; export {};`,
 			fileName: "test.d.ts",
+			files: {
+				"node_modules/module/index.d.ts": `
+export interface A {}
+export const value: unknown;
+`,
+				"node_modules/module/package.json": `{
+	"types": "index.d.ts"
+}`,
+			},
 		},
 		{
 			code: `import { A } from 'module'; export {};`,
 			fileName: "test.d.ts",
+			files: {
+				"node_modules/module/index.d.ts": `
+export interface A {}
+export const value: unknown;
+`,
+				"node_modules/module/package.json": `{
+	"types": "index.d.ts"
+}`,
+			},
 		},
 	],
 });

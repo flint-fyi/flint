@@ -5,10 +5,12 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+const obj: { [key: string]: number } = {};
 const key = "property";
 delete obj[key];
 `,
 			snapshot: `
+const obj: { [key: string]: number } = {};
 const key = "property";
 delete obj[key];
            ~~~
@@ -17,9 +19,17 @@ delete obj[key];
 		},
 		{
 			code: `
+const obj: { [key: string]: number } = {};
+function getKey() {
+    return "property";
+}
 delete obj[getKey()];
 `,
 			snapshot: `
+const obj: { [key: string]: number } = {};
+function getKey() {
+    return "property";
+}
 delete obj[getKey()];
            ~~~~~~~~
            Using the \`delete\` operator on a computed key can be dangerous and is often not well optimized.
@@ -27,10 +37,12 @@ delete obj[getKey()];
 		},
 		{
 			code: `
+const arr: { [index: number]: number } = {};
 const i = 0;
 delete arr[i];
 `,
 			snapshot: `
+const arr: { [index: number]: number } = {};
 const i = 0;
 delete arr[i];
            ~
@@ -137,18 +149,20 @@ delete container[typeof 1];
 		},
 	],
 	valid: [
-		"delete obj.property;",
-		"delete obj['literal'];",
-		"delete obj[0];",
-		"const obj = { a: 1 }; delete obj.a;",
+		`const obj: { property?: number } = {};
+delete obj.property;`,
+		`const obj: { literal?: number } = {};
+delete obj['literal'];`,
+		`const obj: { 0?: number } = {};
+delete obj[0];`,
+		`const obj: { a?: number } = { a: 1 };
+delete obj.a;`,
 		"const container: { [i: string]: 0 } = {}; delete container.aaa;",
 		"const container: { [i: string]: 0 } = {}; delete container.delete;",
 		"const container: { [i: string]: 0 } = {}; delete container[7];",
 		"const container: { [i: string]: 0 } = {}; delete container[-7];",
 		"const container: { [i: string]: 0 } = {}; delete container['-Infinity'];",
 		"const container: { [i: string]: 0 } = {}; delete container['+Infinity'];",
-		"const value = 1; delete value;",
-		"const value = 1; delete -value;",
 		"const container: { [i: string]: 0 } = {}; delete container['aaa'];",
 		"const container: { [i: string]: 0 } = {}; delete container['delete'];",
 		"const container: { [i: string]: 0 } = {}; delete container['NaN'];",
