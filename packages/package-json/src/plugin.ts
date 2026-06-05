@@ -11,6 +11,7 @@ import peerDependenciesInstallation from "./rules/peerDependenciesInstallation.t
 import peerDependenciesMetaRelationship from "./rules/peerDependenciesMetaRelationship.ts";
 import privatePackageProperties from "./rules/privatePackageProperties.ts";
 import privatePresence from "./rules/privatePresence.ts";
+import propertyOrder from "./rules/propertyOrder.ts";
 import publishConfigRedundancy from "./rules/publishConfigRedundancy.ts";
 import repositoryShorthand from "./rules/repositoryShorthand.ts";
 import scriptsNameCasing from "./rules/scriptsNameCasing.ts";
@@ -30,6 +31,7 @@ export const packageJson = createPlugin({
 		peerDependenciesMetaRelationship,
 		privatePackageProperties,
 		privatePresence,
+		propertyOrder,
 		publishConfigRedundancy,
 		repositoryShorthand,
 		scriptsNameCasing,

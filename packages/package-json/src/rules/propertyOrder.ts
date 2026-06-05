@@ -18,7 +18,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 	messages: {
 		incorrectOrder: {
 			primary:
-				"Top-level property `{{property}}` is not ordered in the standard way.",
+				"Top-level property `{{ property }}` is not ordered in the standard way.",
 			secondary: [
 				"Properties should be declared in a consistent order to improve readability and maintainability.",
 			],
@@ -90,15 +90,12 @@ export default ruleCreator.createRule(jsonLanguage, {
 							data: {
 								property: value,
 							},
+							fix: {
+								range: getJsonNodeRange(node),
+								text: fixOrder(),
+							},
 							message: "incorrectOrder",
 							range: getJsonNodeRange(propertyKey),
-							suggestions: [
-								{
-									id: "fixOrder",
-									range: getJsonNodeRange(node),
-									text: fixOrder(),
-								},
-							],
 						});
 					}
 				},
