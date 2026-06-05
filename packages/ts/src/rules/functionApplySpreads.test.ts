@@ -230,15 +230,15 @@ Use the spread operator instead of \`.apply()\`.
 		},
 		{
 			code: `
-const args = [1, 2, 3];
+const args = [Math.max, undefined, [1, 2, 3]] as [typeof Math.max, undefined, number[]];
 Reflect.apply.apply(Reflect, args);
 `,
 			output: `
-const args = [1, 2, 3];
+const args = [Math.max, undefined, [1, 2, 3]] as [typeof Math.max, undefined, number[]];
 Reflect.apply(...args);
 `,
 			snapshot: `
-const args = [1, 2, 3];
+const args = [Math.max, undefined, [1, 2, 3]] as [typeof Math.max, undefined, number[]];
 Reflect.apply.apply(Reflect, args);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Use the spread operator instead of \`.apply()\`.
@@ -265,27 +265,86 @@ Use the spread operator instead of \`.apply()\`.
 		`function example(...args: number[]) { return args; } example(...[1, 2, 3]);`,
 		`const obj = { example() {} }; obj.example();`,
 		`Math.max(...[1, 2, 3]);`,
-		`function example() {} example.apply({}, [1, 2, 3]);`,
-		`function example() {} example.apply(undefined, [1, 2, 3]);`,
-		`function example() {} example.apply(null, [a, b, c]);`,
-		`function example() {} example.call(undefined, 1, 2, 3);`,
-		`function example() {} example.apply(someThis, args);`,
-		`function example() {} example.apply();`,
+		`
+function example(...values: number[]) { return values; }
+example.apply({}, [1, 2, 3]);
+`,
+		`
+function example(...values: number[]) { return values; }
+example.apply(undefined, [1, 2, 3]);
+`,
+		`
+const a = 1;
+const b = 2;
+const c = 3;
+function example(...values: number[]) { return values; }
+example.apply(null, [a, b, c]);
+`,
+		`
+function example(...values: number[]) { return values; }
+example.call(undefined, 1, 2, 3);
+`,
+		`
+const someThis = {};
+const args = [1, 2, 3];
+function example(...values: number[]) { return values; }
+example.apply(someThis, args);
+`,
 		`function example() {} example.apply(undefined);`,
-		`function example() {} const args: number[] = []; example.apply(undefined, args, extra);`,
-		`const example = { bar() {} }; example.bar.apply(otherObj, []);`,
-		`const array: number[] = []; [].push.apply(array, [1, 2]);`,
-		`function example() {} (example as any)['apply'](null, args);`,
-		`function example() {} example.apply(this, [1, 2]);`,
-		`const obj = { method() {} }; obj.method.apply(differentObj, []);`,
-		`const a = { b: { c() {} } }; a.b.c.apply(a.c, []);`,
+		`
+const otherObj = {};
+const example = { bar() {} };
+example.bar.apply(otherObj, []);
+`,
+		`
+const array: number[] = [];
+[0].push.apply(array, [1, 2]);
+`,
+		`
+const args = [1, 2];
+function example(...values: number[]) { return values; }
+example["apply"](null, args);
+`,
+		`
+function example(...values: number[]) { return values; }
+example.apply(this, [1, 2]);
+`,
+		`
+const differentObj = {};
+const obj = { method() {} };
+obj.method.apply(differentObj, []);
+`,
+		`
+const a = { b: { c() {} } };
+a.b.c.apply(a, []);
+`,
 		`function func() {} func.apply(null);`,
 		`function func() {} func.apply(undefined);`,
-		`function func() {} func.apply(null, ...[1, 2]);`,
-		`function func() {} func.apply(null, [...args]);`,
-		`function example() {} example.apply(bar, [1, 2]);`,
-		`const a = { b() {} }; const c = { d() {} }; a.b.apply(c.d, []);`,
-		`const obj = { method() {} }; obj.method.apply(otherObj, []);`,
+		`
+function func(...values: number[]) { return values; }
+const args: [number[]] = [[1, 2]];
+func.apply(null, ...args);
+`,
+		`
+const args = [1, 2];
+function func(...values: number[]) { return values; }
+func.apply(null, [...args]);
+`,
+		`
+const bar = {};
+function example(...values: number[]) { return values; }
+example.apply(bar, [1, 2]);
+`,
+		`
+const a = { b() {} };
+const c = { d() {} };
+a.b.apply(c.d, []);
+`,
+		`
+const otherObj = {};
+const obj = { method() {} };
+obj.method.apply(otherObj, []);
+`,
 		`
 interface CustomInterface {
     apply(thisArg: unknown, args: unknown[]): void;
@@ -296,9 +355,9 @@ customObj.apply(null, args);
 `,
 		`
 interface ApplyLike {
-    apply(ctx: null, items: number[]): void;
+    apply(context: null, items: number[]): void;
 }
-const obj: ApplyLike = { apply(ctx, items) {} };
+const obj: ApplyLike = { apply(context, items) { context; items; } };
 const items = [1, 2];
 obj.apply(null, items);
 `,

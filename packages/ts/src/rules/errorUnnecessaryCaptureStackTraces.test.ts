@@ -6,126 +6,189 @@ ruleTester.describe(rule, {
 		{
 			code: `
 class MyError extends Error {
-	constructor() {
-		Error.captureStackTrace(this, MyError);
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace(this, MyError);
+    }
 }
 `,
+			files: {
+				"error.d.ts": `
+interface ErrorConstructor {
+    captureStackTrace(error: object, constructor?: unknown): void;
+}
+`,
+			},
 			snapshot: `
 class MyError extends Error {
-	constructor() {
-		Error.captureStackTrace(this, MyError);
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace(this, MyError);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
+    }
 }
 `,
 		},
 		{
 			code: `
 class MyError extends Error {
-	constructor() {
-		Error.captureStackTrace?.(this, MyError);
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace?.(this, MyError);
+    }
 }
 `,
+			files: {
+				"error.d.ts": `
+interface ErrorConstructor {
+    captureStackTrace(error: object, constructor?: unknown): void;
+}
+`,
+			},
 			snapshot: `
 class MyError extends Error {
-	constructor() {
-		Error.captureStackTrace?.(this, MyError);
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace?.(this, MyError);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
+    }
 }
 `,
 		},
 		{
 			code: `
 class MyError extends Error {
-	constructor() {
-		Error.captureStackTrace(this, this.constructor);
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace(this, this.constructor);
+    }
 }
 `,
+			files: {
+				"error.d.ts": `
+interface ErrorConstructor {
+    captureStackTrace(error: object, constructor?: unknown): void;
+}
+`,
+			},
 			snapshot: `
 class MyError extends Error {
-	constructor() {
-		Error.captureStackTrace(this, this.constructor);
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace(this, this.constructor);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
+    }
 }
 `,
 		},
 		{
 			code: `
 class MyError extends Error {
-	constructor() {
-		Error.captureStackTrace?.(this, this.constructor);
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace?.(this, this.constructor);
+    }
 }
 `,
+			files: {
+				"error.d.ts": `
+interface ErrorConstructor {
+    captureStackTrace(error: object, constructor?: unknown): void;
+}
+`,
+			},
 			snapshot: `
 class MyError extends Error {
-	constructor() {
-		Error.captureStackTrace?.(this, this.constructor);
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace?.(this, this.constructor);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
+    }
 }
 `,
 		},
 		{
 			code: `
 class MyError extends Error {
-	constructor() {
-		Error.captureStackTrace(this, new.target);
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace(this, new.target);
+    }
 }
 `,
+			files: {
+				"error.d.ts": `
+interface ErrorConstructor {
+    captureStackTrace(error: object, constructor?: unknown): void;
+}
+`,
+			},
 			snapshot: `
 class MyError extends Error {
-	constructor() {
-		Error.captureStackTrace(this, new.target);
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace(this, new.target);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
+    }
 }
 `,
 		},
 		{
 			code: `
 class MyError extends Error {
-	constructor() {
-		Error.captureStackTrace?.(this, new.target);
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace?.(this, new.target);
+    }
 }
 `,
+			files: {
+				"error.d.ts": `
+interface ErrorConstructor {
+    captureStackTrace(error: object, constructor?: unknown): void;
+}
+`,
+			},
 			snapshot: `
 class MyError extends Error {
-	constructor() {
-		Error.captureStackTrace?.(this, new.target);
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace?.(this, new.target);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
+    }
 }
 `,
 		},
 		{
 			code: `
 class MyError extends TypeError {
-	constructor() {
-		Error.captureStackTrace(this, MyError);
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace(this, MyError);
+    }
 }
 `,
+			files: {
+				"error.d.ts": `
+interface ErrorConstructor {
+    captureStackTrace(error: object, constructor?: unknown): void;
+}
+`,
+			},
 			snapshot: `
 class MyError extends TypeError {
-	constructor() {
-		Error.captureStackTrace(this, MyError);
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
-	}
+    constructor() {
+        super();
+        Error.captureStackTrace(this, MyError);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Calling \`Error.captureStackTrace()\` is unnecessary in built-in Error subclass constructors.
+    }
 }
 `,
 		},
@@ -137,20 +200,51 @@ class MyError extends TypeError {
 		this.name = 'MyError';
 	}
 }`,
-		`class MyError extends CustomError {
+		{
+			code: `class CustomError {}
+class MyError extends CustomError {
 	constructor() {
+		super();
 		Error.captureStackTrace(this, MyError);
 	}
 }`,
-		`class MyClass {
+			files: {
+				"error.d.ts": `
+interface ErrorConstructor {
+    captureStackTrace(error: object, constructor?: unknown): void;
+}
+`,
+			},
+		},
+		{
+			code: `class MyClass {
 	constructor() {
 		Error.captureStackTrace(this, MyClass);
 	}
 }`,
-		`class MyError extends Error {
+			files: {
+				"error.d.ts": `
+interface ErrorConstructor {
+    captureStackTrace(error: object, constructor?: unknown): void;
+}
+`,
+			},
+		},
+		{
+			code: `class OtherClass {}
+class MyError extends Error {
 	constructor() {
+		super();
 		Error.captureStackTrace(this, OtherClass);
 	}
 }`,
+			files: {
+				"error.d.ts": `
+interface ErrorConstructor {
+    captureStackTrace(error: object, constructor?: unknown): void;
+}
+`,
+			},
+		},
 	],
 });

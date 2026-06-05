@@ -5,16 +5,6 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-undefined = 1;
-`,
-			snapshot: `
-undefined = 1;
-~~~~~~~~~
-Read-only global variables should not be reassigned or modified.
-`,
-		},
-		{
-			code: `
 NaN = 42;
 `,
 			snapshot: `
@@ -35,77 +25,77 @@ Read-only global variables should not be reassigned or modified.
 		},
 		{
 			code: `
-Object = null;
+Object = Object;
 `,
 			snapshot: `
-Object = null;
+Object = Object;
 ~~~~~~
 Read-only global variables should not be reassigned or modified.
 `,
 		},
 		{
 			code: `
-Array = function() {};
+Array = Array;
 `,
 			snapshot: `
-Array = function() {};
+Array = Array;
 ~~~~~
 Read-only global variables should not be reassigned or modified.
 `,
 		},
 		{
 			code: `
-String = "test";
+String = String;
 `,
 			snapshot: `
-String = "test";
+String = String;
 ~~~~~~
 Read-only global variables should not be reassigned or modified.
 `,
 		},
 		{
 			code: `
-Number = 123;
+Number = Number;
 `,
 			snapshot: `
-Number = 123;
+Number = Number;
 ~~~~~~
 Read-only global variables should not be reassigned or modified.
 `,
 		},
 		{
 			code: `
-Boolean = true;
+Boolean = Boolean;
 `,
 			snapshot: `
-Boolean = true;
+Boolean = Boolean;
 ~~~~~~~
 Read-only global variables should not be reassigned or modified.
 `,
 		},
 		{
 			code: `
-Math = {};
+Math = Math;
 `,
 			snapshot: `
-Math = {};
+Math = Math;
 ~~~~
 Read-only global variables should not be reassigned or modified.
 `,
 		},
 		{
 			code: `
-JSON = null;
+JSON = JSON;
 `,
 			snapshot: `
-JSON = null;
+JSON = JSON;
 ~~~~
 Read-only global variables should not be reassigned or modified.
 `,
 		},
 		{
 			code: `
-window = {};
+window = window;
 `,
 			files: {
 				"tsconfig.json": `{
@@ -116,18 +106,8 @@ window = {};
 }`,
 			},
 			snapshot: `
-window = {};
+window = window;
 ~~~~~~
-Read-only global variables should not be reassigned or modified.
-`,
-		},
-		{
-			code: `
-undefined += 1;
-`,
-			snapshot: `
-undefined += 1;
-~~~~~~~~~
 Read-only global variables should not be reassigned or modified.
 `,
 		},
@@ -139,16 +119,6 @@ NaN *= 2;
 NaN *= 2;
 ~~~
 Read-only global variables should not be reassigned or modified.
-`,
-		},
-		{
-			code: `
-++undefined;
-`,
-			snapshot: `
-++undefined;
-  ~~~~~~~~~
-  Read-only global variables should not be reassigned or modified.
 `,
 		},
 		{
@@ -171,37 +141,70 @@ Read-only global variables should not be reassigned or modified.
   Read-only global variables should not be reassigned or modified.
 `,
 		},
-		{
-			code: `
-Object--;
-`,
-			snapshot: `
-Object--;
-~~~~~~
-Read-only global variables should not be reassigned or modified.
-`,
-		},
 	],
 	valid: [
-		`let undefined = 1;`,
-		`const NaN = 42;`,
-		`var Infinity = 100;`,
-		`function Object() {}`,
-		`let value = undefined;`,
-		`const result = NaN;`,
-		`if (value === undefined) {}`,
-		`const obj = { undefined: 1 };`,
-		`obj.undefined = 2;`,
-		`const custom = { NaN: 42 }; custom.NaN = 100;`,
-		`let myVar = 5; myVar = 10;`,
-		`const data = { value: 1 }; data.value = 2;`,
-		`let counter = 0; counter++;`,
-		`let index = 10; --index;`,
+		`
+let undefined = 1;
+undefined;
+`,
+		`
+const NaN = 42;
+NaN;
+`,
+		`
+var Infinity = 100;
+Infinity;
+`,
+		`
+function Object() {}
+Object();
+`,
+		`
+let value = undefined;
+value;
+`,
+		`
+const result = NaN;
+result;
+`,
+		`
+declare const value: number | undefined;
+if (value === undefined) {}
+`,
+		`
+const obj = { undefined: 1 };
+obj;
+`,
+		`
+const obj = { undefined: 1 };
+obj.undefined = 2;
+`,
+		`
+const custom = { NaN: 42 };
+custom.NaN = 100;
+`,
+		`
+let myVar = 5;
+myVar = 10;
+`,
+		`
+const data = { value: 1 };
+data.value = 2;
+`,
+		`
+let counter = 0;
+counter++;
+`,
+		`
+let index = 10;
+--index;
+`,
 		`
 function test() {
     let undefined = 5;
     undefined = 10;
 }
+test();
 `,
 		`
 const obj = {
@@ -214,11 +217,13 @@ obj.undefined = 5;
 const fn = (undefined: number) => {
     undefined = 10;
 };
+fn(5);
 `,
 		`
 function test(NaN: string) {
     NaN = "updated";
 }
+test("value");
 `,
 	],
 });
