@@ -5,6 +5,11 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const condition: boolean;
+declare const otherCondition: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (condition) {
     doSomething();
 } else {
@@ -14,6 +19,11 @@ if (condition) {
 }
 `,
 			output: `
+declare const condition: boolean;
+declare const otherCondition: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (condition) {
     doSomething();
 } else if (otherCondition) {
@@ -21,6 +31,11 @@ if (condition) {
     }
 `,
 			snapshot: `
+declare const condition: boolean;
+declare const otherCondition: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (condition) {
     doSomething();
 } else {
@@ -36,6 +51,12 @@ if (condition) {
 		},
 		{
 			code: `
+declare const condition: boolean;
+declare const otherCondition: boolean;
+declare function doDefault(): void;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (condition) {
     doSomething();
 } else {
@@ -47,6 +68,12 @@ if (condition) {
 }
 `,
 			output: `
+declare const condition: boolean;
+declare const otherCondition: boolean;
+declare function doDefault(): void;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (condition) {
     doSomething();
 } else if (otherCondition) {
@@ -56,6 +83,12 @@ if (condition) {
     }
 `,
 			snapshot: `
+declare const condition: boolean;
+declare const otherCondition: boolean;
+declare function doDefault(): void;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (condition) {
     doSomething();
 } else {
@@ -75,6 +108,10 @@ if (condition) {
 		},
 		{
 			code: `
+declare const a: boolean;
+declare const b: boolean;
+declare function doSomething(): void;
+
 if (a) {
     if (b) {
         doSomething();
@@ -82,11 +119,19 @@ if (a) {
 }
 `,
 			output: `
+declare const a: boolean;
+declare const b: boolean;
+declare function doSomething(): void;
+
 if (a && b) {
         doSomething();
     }
 `,
 			snapshot: `
+declare const a: boolean;
+declare const b: boolean;
+declare function doSomething(): void;
+
 if (a) {
     if (b) {
     ~~~~~~~~
@@ -100,14 +145,26 @@ if (a) {
 		},
 		{
 			code: `
+declare const a: boolean;
+declare const b: boolean;
+declare function doSomething(): void;
+
 if (a)
     if (b)
         doSomething();
 `,
 			output: `
+declare const a: boolean;
+declare const b: boolean;
+declare function doSomething(): void;
+
 if (a && b) doSomething();
 `,
 			snapshot: `
+declare const a: boolean;
+declare const b: boolean;
+declare function doSomething(): void;
+
 if (a)
     if (b)
     ~~~~~~
@@ -118,6 +175,11 @@ if (a)
 		},
 		{
 			code: `
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare function doSomething(): void;
+
 if (a || b) {
     if (c) {
         doSomething();
@@ -125,11 +187,21 @@ if (a || b) {
 }
 `,
 			output: `
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare function doSomething(): void;
+
 if ((a || b) && c) {
         doSomething();
     }
 `,
 			snapshot: `
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare function doSomething(): void;
+
 if (a || b) {
     if (c) {
     ~~~~~~~~
@@ -143,6 +215,11 @@ if (a || b) {
 		},
 		{
 			code: `
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare function doSomething(): void;
+
 if (a) {
     if (b || c) {
         doSomething();
@@ -150,11 +227,21 @@ if (a) {
 }
 `,
 			output: `
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare function doSomething(): void;
+
 if (a && (b || c)) {
         doSomething();
     }
 `,
 			snapshot: `
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare function doSomething(): void;
+
 if (a) {
     if (b || c) {
     ~~~~~~~~~~~~~
@@ -168,6 +255,11 @@ if (a) {
 		},
 		{
 			code: `
+declare const a: boolean | undefined;
+declare const b: boolean;
+declare const c: boolean;
+declare function doSomething(): void;
+
 if (a ?? b) {
     if (c) {
         doSomething();
@@ -175,11 +267,21 @@ if (a ?? b) {
 }
 `,
 			output: `
+declare const a: boolean | undefined;
+declare const b: boolean;
+declare const c: boolean;
+declare function doSomething(): void;
+
 if ((a ?? b) && c) {
         doSomething();
     }
 `,
 			snapshot: `
+declare const a: boolean | undefined;
+declare const b: boolean;
+declare const c: boolean;
+declare function doSomething(): void;
+
 if (a ?? b) {
     if (c) {
     ~~~~~~~~
@@ -193,6 +295,12 @@ if (a ?? b) {
 		},
 		{
 			code: `
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare const condition: boolean;
+declare function doSomething(): void;
+
 if (a) {
     if (condition ? b : c) {
         doSomething();
@@ -200,11 +308,23 @@ if (a) {
 }
 `,
 			output: `
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare const condition: boolean;
+declare function doSomething(): void;
+
 if (a && (condition ? b : c)) {
         doSomething();
     }
 `,
 			snapshot: `
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare const condition: boolean;
+declare function doSomething(): void;
+
 if (a) {
     if (condition ? b : c) {
     ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -218,6 +338,12 @@ if (a) {
 		},
 		{
 			code: `
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare const d: boolean;
+declare function doSomething(): void;
+
 if (a && b) {
     if (c && d) {
         doSomething();
@@ -225,11 +351,23 @@ if (a && b) {
 }
 `,
 			output: `
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare const d: boolean;
+declare function doSomething(): void;
+
 if (a && b && c && d) {
         doSomething();
     }
 `,
 			snapshot: `
+declare const a: boolean;
+declare const b: boolean;
+declare const c: boolean;
+declare const d: boolean;
+declare function doSomething(): void;
+
 if (a && b) {
     if (c && d) {
     ~~~~~~~~~~~~~
@@ -243,6 +381,11 @@ if (a && b) {
 		},
 		{
 			code: `
+declare const otherValue: boolean;
+declare const value: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (value) {
     doSomething();
 } else {
@@ -250,11 +393,21 @@ if (value) {
 }
 `,
 			output: `
+declare const otherValue: boolean;
+declare const value: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (value) {
     doSomething();
 } else if (otherValue) doSomethingElse();
 `,
 			snapshot: `
+declare const otherValue: boolean;
+declare const value: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (value) {
     doSomething();
 } else {
@@ -266,6 +419,11 @@ if (value) {
 		},
 		{
 			code: `
+declare const a: boolean;
+declare function doSomething(): void;
+declare function getValue(): boolean;
+let assigned = false;
+
 if (a) {
     if (assigned = getValue()) {
         doSomething();
@@ -273,11 +431,21 @@ if (a) {
 }
 `,
 			output: `
+declare const a: boolean;
+declare function doSomething(): void;
+declare function getValue(): boolean;
+let assigned = false;
+
 if (a && (assigned = getValue())) {
         doSomething();
     }
 `,
 			snapshot: `
+declare const a: boolean;
+declare function doSomething(): void;
+declare function getValue(): boolean;
+let assigned = false;
+
 if (a) {
     if (assigned = getValue()) {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -291,10 +459,44 @@ if (a) {
 		},
 	],
 	valid: [
-		`if (condition) { doSomething(); }`,
-		`if (condition) { doSomething(); } else { doSomethingElse(); }`,
-		`if (condition) { doSomething(); } else if (otherCondition) { doSomethingElse(); }`,
 		`
+declare const condition: boolean;
+declare function doSomething(): void;
+
+if (condition) {
+    doSomething();
+}
+`,
+		`
+declare const condition: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
+if (condition) {
+    doSomething();
+} else {
+    doSomethingElse();
+}
+`,
+		`
+declare const condition: boolean;
+declare const otherCondition: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
+if (condition) {
+    doSomething();
+} else if (otherCondition) {
+    doSomethingElse();
+}
+`,
+		`
+declare const condition: boolean;
+declare const otherCondition: boolean;
+declare function doAnotherThing(): void;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (condition) {
     doSomething();
 } else {
@@ -305,6 +507,12 @@ if (condition) {
 }
 `,
 		`
+declare const condition: boolean;
+declare const otherCondition: boolean;
+declare function doAnotherThing(): void;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (condition) {
     doSomething();
 } else {
@@ -315,6 +523,11 @@ if (condition) {
 }
 `,
 		`
+declare const a: boolean;
+declare const b: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (a) {
     if (b) {
         doSomething();
@@ -324,6 +537,11 @@ if (a) {
 }
 `,
 		`
+declare const a: boolean;
+declare const b: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (a) {
     if (b) {
         doSomething();
@@ -333,6 +551,11 @@ if (a) {
 }
 `,
 		`
+declare const a: boolean;
+declare const b: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (a) {
     doSomething();
     if (b) {
@@ -341,6 +564,11 @@ if (a) {
 }
 `,
 		`
+declare const a: boolean;
+declare const b: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (a) {
     if (b) {
         doSomething();
@@ -349,6 +577,11 @@ if (a) {
 }
 `,
 		`
+declare const condition: boolean;
+declare const otherCondition: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (condition) {
     doSomething();
 } else {
@@ -359,6 +592,11 @@ if (condition) {
 }
 `,
 		`
+declare const condition: boolean;
+declare const otherCondition: boolean;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 if (condition) {
     doSomething();
 } else {
@@ -369,6 +607,10 @@ if (condition) {
 }
 `,
 		`
+declare const a: boolean;
+declare const b: boolean;
+declare function doSomething(): void;
+
 if (a) {
     // comment
     if (b) {
@@ -377,6 +619,10 @@ if (a) {
 }
 `,
 		`
+declare const a: boolean;
+declare const b: boolean;
+declare function doSomething(): void;
+
 if (a) {
     if (b) {
         doSomething();
