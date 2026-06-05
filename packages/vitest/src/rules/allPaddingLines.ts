@@ -24,7 +24,7 @@ export default createStatementPaddingRule(
 	{
 		description: "Enforces padding around Vitest blocks.",
 		id: "allPaddingLines",
-		presets: ["stylisticStrict"],
+		presets: [],
 	},
 	(statement) => {
 		const rootName = getStatementRootName(statement);

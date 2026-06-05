@@ -21866,8 +21866,6 @@
 		"flint": {
 			"name": "afterAllPaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},
@@ -21881,9 +21879,7 @@
 		"flint": {
 			"name": "afterEachPaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"status": "implemented"
 		}
 	},
 	{
@@ -21909,8 +21905,6 @@
 		"flint": {
 			"name": "allPaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},
@@ -21924,8 +21918,6 @@
 		"flint": {
 			"name": "beforeAllPaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},
@@ -21939,8 +21931,6 @@
 		"flint": {
 			"name": "beforeEachPaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},
@@ -22064,8 +22054,6 @@
 		"flint": {
 			"name": "describePaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},
@@ -22146,8 +22134,6 @@
 		"flint": {
 			"name": "expectGroupPaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},
@@ -22609,8 +22595,6 @@
 		"flint": {
 			"name": "testCasePaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},

@@ -4,7 +4,7 @@ export default createBlockPaddingRule(
 	{
 		description: "Enforces padding around `beforeEach` blocks.",
 		id: "beforeEachPaddingLines",
-		presets: ["stylisticStrict"],
+		presets: [],
 	},
 	"beforeEach",
 );
