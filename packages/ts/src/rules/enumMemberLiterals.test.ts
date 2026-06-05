@@ -35,9 +35,17 @@ enum Foo { a = 1 + 2 }
 		},
 		{
 			code: `
+function getValue() {
+    return 1;
+}
+
 enum Foo { a = getValue() }
 `,
 			snapshot: `
+function getValue() {
+    return 1;
+}
+
 enum Foo { a = getValue() }
            ~~~~~~~~~~~~~~
            Prefer initializing enum members with literal values for predictability.
@@ -45,9 +53,13 @@ enum Foo { a = getValue() }
 		},
 		{
 			code: `
+const x = 1;
+
 enum Foo { a = \`\${x}\` }
 `,
 			snapshot: `
+const x = 1;
+
 enum Foo { a = \`\${x}\` }
            ~~~~~~~~~~
            Prefer initializing enum members with literal values for predictability.

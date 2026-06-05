@@ -77,8 +77,8 @@ const values = new Array("a", "b");
 		`const values = new Array<number>();`,
 		`const values = new Array<number>(1, 2, 3);`,
 		`const values = Array<string>();`,
-		`const values = new CustomArray();`,
-		`const values = CustomArray(1, 2, 3);`,
+		`declare class CustomArray {} const values = new CustomArray();`,
+		`declare function CustomArray(...args: number[]): unknown[]; const values = CustomArray(1, 2, 3);`,
 		`
 class Array { constructor() {} }
 const values = new Array();

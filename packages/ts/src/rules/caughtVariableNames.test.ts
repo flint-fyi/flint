@@ -5,111 +5,138 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (badName) {
-    console.log(badName);
+    void badName;
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (badName) {
          ~~~~~~~
          Use \`error\` as the name for the catch clause parameter instead of \`badName\`.
-    console.log(badName);
+    void badName;
 }
 `,
 		},
 		{
 			code: `
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (e) {
-    console.log(e);
+    void e;
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (e) {
          ~
          Use \`error\` as the name for the catch clause parameter instead of \`e\`.
-    console.log(e);
+    void e;
 }
 `,
 		},
 		{
 			code: `
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (err) {
-    console.log(err);
+    void err;
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (err) {
          ~~~
          Use \`error\` as the name for the catch clause parameter instead of \`err\`.
-    console.log(err);
+    void err;
 }
 `,
 		},
 		{
 			code: `
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (ex) {
-    console.log(ex);
+    void ex;
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (ex) {
          ~~
          Use \`error\` as the name for the catch clause parameter instead of \`ex\`.
-    console.log(ex);
+    void ex;
 }
 `,
 		},
 	],
 	valid: [
 		`
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (error) {
-    console.log(error);
+    void error;
 }
 `,
 		`
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (fsError) {
-    console.log(fsError);
+    void fsError;
 }
 `,
 		`
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (authError) {
-    console.log(authError);
+    void authError;
 }
 `,
 		`
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (networkError) {
-    console.log(networkError);
+    void networkError;
 }
 `,
 		`
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch {
-    console.log("error occurred");
+    const message = "error occurred";
+    void message;
 }
 `,
 	],

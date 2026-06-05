@@ -6,14 +6,14 @@ ruleTester.describe(rule, {
 		{
 			code: `
 const obj = {
-    get value() {
+    get value(): number {
         return this.value;
     }
 };
 `,
 			snapshot: `
 const obj = {
-    get value() {
+    get value(): number {
         return this.value;
                ~~~~~~~~~~
                This getter recursively accesses its own property via \`this\`, causing infinite recursion.
@@ -24,14 +24,14 @@ const obj = {
 		{
 			code: `
 const obj = {
-    set value(newValue) {
+    set value(newValue: number) {
         this.value = newValue;
     }
 };
 `,
 			snapshot: `
 const obj = {
-    set value(newValue) {
+    set value(newValue: number) {
         this.value = newValue;
         ~~~~~~~~~~
         This setter recursively assigns to its own property via \`this\`, causing infinite recursion.
@@ -42,14 +42,14 @@ const obj = {
 		{
 			code: `
 class Example {
-    get name() {
+    get name(): string {
         return this.name;
     }
 }
 `,
 			snapshot: `
 class Example {
-    get name() {
+    get name(): string {
         return this.name;
                ~~~~~~~~~
                This getter recursively accesses its own property via \`this\`, causing infinite recursion.
@@ -77,8 +77,10 @@ class Example {
 		},
 		{
 			code: `
+declare const condition: boolean;
+
 class Example {
-    get count() {
+    get count(): number {
         if (condition) {
             return this.count;
         }
@@ -87,8 +89,10 @@ class Example {
 }
 `,
 			snapshot: `
+declare const condition: boolean;
+
 class Example {
-    get count() {
+    get count(): number {
         if (condition) {
             return this.count;
                    ~~~~~~~~~~
@@ -101,14 +105,30 @@ class Example {
 		},
 	],
 	valid: [
-		`const obj = { get value() { return this._value; } };`,
-		`const obj = { set value(v) { this._value = v; } };`,
-		`class Example { private _name: string; get name() { return this._name; } }`,
-		`class Example { private _name: string; set name(v: string) { this._name = v; } }`,
-		`class Example { get name() { return this.otherProperty; } }`,
-		`class Example { set name(v: string) { this.otherProperty = v; } }`,
+		`const obj = { _value: 0, get value() { return this._value; } };`,
+		`const obj = { _value: 0, set value(value: number) { this._value = value; } };`,
+		`class Example { private _name = ""; get name() { return this._name; } }`,
+		`class Example { private _name = ""; set name(value: string) { this._name = value; } }`,
+		`class Example { otherProperty = ""; get name() { return this.otherProperty; } }`,
+		`class Example { otherProperty = ""; set name(value: string) { this.otherProperty = value; } }`,
 		`class Example { get name() { const fn = () => this.name; return ""; } }`,
-		`const obj = { get value() { return otherObj.value; } };`,
-		`class Example { get name() { return super.name; } }`,
+		`
+declare const otherObj: { value: number };
+
+const obj = { get value() { return otherObj.value; } };
+`,
+		`
+class Base {
+    get name() {
+        return "";
+    }
+}
+
+class Example extends Base {
+    get name() {
+        return super.name;
+    }
+}
+`,
 	],
 });

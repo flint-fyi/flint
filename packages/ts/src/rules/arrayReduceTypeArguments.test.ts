@@ -158,19 +158,37 @@ tuple.reduce((accumulator, value) => accumulator.concat(value * 2), [] as number
 		{
 			code: `
 function example<U extends number[]>(values: U) {
-    return values.reduce(() => {}, {} as Record<string, boolean>);
+    return values.reduce(
+        (accumulator, value) => ({
+            ...accumulator,
+            [value]: true,
+        }),
+        {} as Record<string, boolean>,
+    );
 }
 `,
 			output: `
 function example<U extends number[]>(values: U) {
-    return values.reduce<Record<string, boolean>>(() => {}, {});
+    return values.reduce<Record<string, boolean>>(
+        (accumulator, value) => ({
+            ...accumulator,
+            [value]: true,
+        }),
+        {},
+    );
 }
 `,
 			snapshot: `
 function example<U extends number[]>(values: U) {
-    return values.reduce(() => {}, {} as Record<string, boolean>);
-                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                   Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
+    return values.reduce(
+        (accumulator, value) => ({
+            ...accumulator,
+            [value]: true,
+        }),
+        {} as Record<string, boolean>,
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Using a type assertion on a reducer's initial value is less type-safe than providing a type parameter.
+    );
 }
 `,
 		},
@@ -280,20 +298,30 @@ tuple.reduce(accumulator => {
 	],
 	valid: [
 		`[1, 2, 3].reduce((sum, num) => sum + num, 0);`,
-		`[1, 2, 3].reduce((accumulator, value) => accumulator.concat(value * 2), []);`,
-		`[1, 2, 3]?.reduce((accumulator, value) => accumulator.concat(value * 2), []);`,
+		`
+const initial: number[] = [];
+[1, 2, 3].reduce((accumulator, value) => accumulator.concat(value * 2), initial);
+`,
+		`
+const initial: number[] = [];
+[1, 2, 3]?.reduce((accumulator, value) => accumulator.concat(value * 2), initial);
+`,
 		`[1, 2, 3]["reduce"]((sum, num) => sum + num, 0);`,
 		`[1, 2, 3][null as unknown as "reduce"]((sum, num) => sum + num, 0);`,
-		`declare const tuple: [number, number, number]; tuple.reduce((accumulator, value) => accumulator.concat(value * 2), []);`,
+		`
+declare const tuple: [number, number, number];
+const initial: number[] = [];
+tuple.reduce((accumulator, value) => accumulator.concat(value * 2), initial);
+`,
 		`["a", "b"].reduce((accumulator, name) => \`\${accumulator} | hello \${name}!\`);`,
 		`
 new (class Mine {
-    reduce() {}
+    reduce(callback: () => void, initial: number) {}
 })().reduce(() => {}, 1 as number);
 `,
 		`
 class Mine {
-    reduce() {}
+    reduce(callback: () => void, initial: number) {}
 }
 new Mine().reduce(() => {}, 1 as number);
 `,

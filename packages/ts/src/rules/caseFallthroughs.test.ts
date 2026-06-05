@@ -5,6 +5,10 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const value: number;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 switch (value) {
     case 1:
         doSomething();
@@ -14,6 +18,10 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: number;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 switch (value) {
     case 1:
     ~~~~
@@ -27,6 +35,11 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: number;
+declare function first(): void;
+declare function second(): void;
+declare function third(): void;
+
 switch (value) {
     case 1:
         first();
@@ -38,6 +51,11 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: number;
+declare function first(): void;
+declare function second(): void;
+declare function third(): void;
+
 switch (value) {
     case 1:
     ~~~~
@@ -55,6 +73,9 @@ switch (value) {
 		},
 		{
 			code: `
+declare const condition: boolean;
+declare const value: number;
+
 switch (value) {
     case 1:
         if (condition) {
@@ -65,6 +86,9 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const condition: boolean;
+declare const value: number;
+
 switch (value) {
     case 1:
     ~~~~
@@ -80,6 +104,10 @@ switch (value) {
 	],
 	valid: [
 		`
+declare const value: number;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 switch (value) {
     case 1:
         doSomething();
@@ -90,14 +118,22 @@ switch (value) {
 }
 `,
 		`
-switch (value) {
-    case 1:
-        return first();
-    case 2:
-        return second();
+declare const value: number;
+declare function first(): string;
+declare function second(): string;
+
+function getResult() {
+    switch (value) {
+        case 1:
+            return first();
+        case 2:
+            return second();
+    }
 }
 `,
 		`
+declare const value: number;
+
 switch (value) {
     case 1:
         throw new Error("error");
@@ -106,6 +142,9 @@ switch (value) {
 }
 `,
 		`
+declare const value: number;
+declare function doSomething(): void;
+
 switch (value) {
     case 1:
     case 2:
@@ -114,6 +153,10 @@ switch (value) {
 }
 `,
 		`
+declare const value: number;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 switch (value) {
     case 1:
         doSomething();
@@ -124,6 +167,10 @@ switch (value) {
 }
 `,
 		`
+declare const value: number;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 switch (value) {
     case 1:
         doSomething();
@@ -134,6 +181,10 @@ switch (value) {
 }
 `,
 		`
+declare const value: number;
+declare function doSomething(): void;
+declare function doSomethingElse(): void;
+
 switch (value) {
     case 1:
         doSomething();
@@ -144,18 +195,29 @@ switch (value) {
 }
 `,
 		`
-switch (value) {
-    case 1:
-        if (condition) {
-            return first();
-        } else {
-            return second();
-        }
-    case 2:
-        break;
+declare const condition: boolean;
+declare const value: number;
+declare function first(): string;
+declare function second(): string;
+
+function getResult() {
+    switch (value) {
+        case 1:
+            if (condition) {
+                return first();
+            } else {
+                return second();
+            }
+        case 2:
+            break;
+    }
 }
 `,
 		`
+declare const value: number;
+declare function doDefault(): void;
+declare function doSomething(): void;
+
 switch (value) {
     case 1:
         doSomething();
