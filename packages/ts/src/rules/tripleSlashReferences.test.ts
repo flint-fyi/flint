@@ -8,6 +8,11 @@ ruleTester.describe(rule, {
 /// <reference path="./types.d.ts" />
 const value = 1;
 `,
+			files: {
+				"types.d.ts": `
+export type Foo = string;
+`,
+			},
 			snapshot: `
 /// <reference path="./types.d.ts" />
                      ~~~~~~~~~~~~
@@ -20,6 +25,11 @@ const value = 1;
 /// <reference types="node" />
 const process = {};
 `,
+			files: {
+				"node_modules/@types/node/index.d.ts": `
+export {};
+`,
+			},
 			snapshot: `
 /// <reference types="node" />
                       ~~~~
@@ -41,8 +51,22 @@ const value = 1;
 		},
 	],
 	valid: [
-		`import { foo } from "./foo";`,
-		`import type { Foo } from "./types";`,
+		{
+			code: `import { foo } from "./foo";`,
+			files: {
+				"foo.ts": `
+export const foo = 1;
+`,
+			},
+		},
+		{
+			code: `import type { Foo } from "./types";`,
+			files: {
+				"types.ts": `
+export type Foo = string;
+`,
+			},
+		},
 		`const value = 1;`,
 		`// Regular comment`,
 	],
