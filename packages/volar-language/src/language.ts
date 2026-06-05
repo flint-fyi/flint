@@ -230,6 +230,8 @@ setVolarCreateFile((data, program, sourceFile) => {
 		`Volar.js language plugin for script (${sourceFile.fileName}) with language id ${sourceScript.generated.root.languageId} doesn't have __flintCreateFile property`,
 	);
 
+	const rootLanguageId = sourceScript.generated.root.languageId;
+
 	const sourceText = sourceScript.snapshot.getText(
 		0,
 		sourceScript.snapshot.getLength(),
@@ -380,7 +382,13 @@ setVolarCreateFile((data, program, sourceFile) => {
 								: diagnostic.file,
 						}),
 					),
-					...(getLanguageReports?.() ?? []),
+					// The language plugin's own diagnostics (e.g. the Astro/Vue/Svelte
+					// compiler) are attributed to the root document's language, which
+					// the TypeScript pre-emit diagnostics above are not.
+					...(getLanguageReports?.() ?? []).map((report) => ({
+						...report,
+						source: `flint/${rootLanguageId}`,
+					})),
 				];
 			},
 		},

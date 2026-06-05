@@ -58,7 +58,10 @@ export function finalizeFileResults(
 			);
 			const source = `flint/${language.about.name.toLowerCase()}`;
 			for (const report of language.getLanguageReports(file)) {
-				report.source = source;
+				// A producer that knows its own origin (the volar-based languages,
+				// whose diagnostics all surface through TypeScript) sets `source`
+				// itself; only fall back to the language name when it didn't.
+				report.source ??= source;
 				languageReports.push(report);
 			}
 			log(
