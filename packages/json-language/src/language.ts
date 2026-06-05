@@ -17,6 +17,7 @@ const kindOverrides = new Map<ts.SyntaxKind, JsonNodeName>([
 	[ts.SyntaxKind.SourceFile, "JsonSourceFile"],
 ] as const);
 
+/** @deprecated Use the new `momoa` based language exported from `@flint.fyi/json-language/new` instead */
 export const jsonLanguage: Language<JsonNodeVisitors, JsonFileServices> =
 	createLanguage<JsonNodeVisitors, JsonFileServices>({
 		about: {

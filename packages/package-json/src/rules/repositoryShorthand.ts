@@ -44,6 +44,7 @@ function createUrl(shorthand: string) {
 	}
 }
 
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description: `Enforces using an object locator for \`repository\`.`,

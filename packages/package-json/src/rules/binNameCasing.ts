@@ -6,6 +6,7 @@ import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description: "Enforce that names for bin properties are in kebab case.",

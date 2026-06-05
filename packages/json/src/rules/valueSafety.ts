@@ -28,6 +28,7 @@ function hasLoneSurrogate(text: string): boolean {
 	return false;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description: "Reports JSON values that are unsafe for data interchange.",

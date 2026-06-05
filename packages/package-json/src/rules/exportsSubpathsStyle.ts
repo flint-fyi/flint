@@ -35,6 +35,7 @@ function isImplicitRootExportsObject(node: AST.ObjectLiteralExpression) {
 	);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:

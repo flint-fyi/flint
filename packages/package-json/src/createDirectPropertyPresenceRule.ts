@@ -28,6 +28,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 ) {
 	const id = `${propertyName}Presence` as const;
 
+	// eslint-disable-next-line @typescript-eslint/no-deprecated
 	const rule: AnyRule = ruleCreator.createRule(jsonLanguage, {
 		about: {
 			description: `Enforces that the \`${propertyName}\` property is present.`,

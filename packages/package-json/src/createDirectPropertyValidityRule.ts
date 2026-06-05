@@ -22,6 +22,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 	const id = `${propertyName}Validity` as const;
 	const propertyNames = [propertyName, ...propertyNameAliases];
 
+	// eslint-disable-next-line @typescript-eslint/no-deprecated
 	const rule: AnyRule = ruleCreator.createRule(jsonLanguage, {
 		about: {
 			description: `Enforces that the \`${propertyName}\`${propertyNameAliases.length ? ` (also: ${propertyNameAliases.map((alias) => `\`${alias}\``).join(", ")})` : ""} property is valid.`,
