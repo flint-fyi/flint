@@ -104,10 +104,10 @@ RegExp("\\\\c1");
 		`new RegExp("\\\\n");`,
 		`new RegExp("\\\\t");`,
 		`new RegExp("\\\\cX");`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 		`/abc/;`,
 		`/[abc]/;`,
-		`notRegExp("\\\\c");`,
-		`new NotRegExp("\\\\c");`,
+		`declare function notRegExp(pattern: string): void; notRegExp("\\\\c");`,
+		`declare class NotRegExp { constructor(pattern: string); } new NotRegExp("\\\\c");`,
 	],
 });

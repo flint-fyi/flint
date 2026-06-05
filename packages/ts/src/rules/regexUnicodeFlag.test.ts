@@ -93,9 +93,11 @@ This regular expression is missing the Unicode ('u') flag for proper Unicode cha
 		},
 		{
 			code: String.raw`
+declare const flags: string;
 RegExp("abc", flags);
 `,
 			snapshot: String.raw`
+declare const flags: string;
 RegExp("abc", flags);
 ~~~~~~~~~~~~~~~~~~~~
 This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
@@ -107,7 +109,13 @@ This regular expression is missing the Unicode ('u') flag for proper Unicode cha
 		String.raw`/abc/gu;`,
 		String.raw`/abc/v;`,
 		String.raw`RegExp("abc", "u");`,
-		String.raw`RegExp(variable);`,
-		String.raw`RegExp(...args);`,
+		String.raw`
+declare const variable: string;
+RegExp(variable);
+`,
+		String.raw`
+declare const args: [string];
+RegExp(...args);
+`,
 	],
 });
