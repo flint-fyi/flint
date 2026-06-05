@@ -9,6 +9,7 @@ import { ruleCreator } from "../ruleCreator.ts";
 // See https://docs.npmjs.com/cli/v11/using-npm/scripts
 const builtinCamelCaseScripts = new Set(["prepublishOnly"]);
 
+// flint-disable-next-line ts/deprecated
 // eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
