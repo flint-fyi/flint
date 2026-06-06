@@ -29,11 +29,10 @@ export function removeObjectProperty(
 			? objectNode.members[index + 1]
 			: undefined;
 
-	const { begin: propertyBegin, end: propertyEnd } = getJsonNodeRange(
-		propertyNode.value,
-	);
+	const { begin: propertyBegin, end: propertyEnd } =
+		getJsonNodeRange(propertyNode);
 	if (next) {
-		const { begin: nextBegin } = getJsonNodeRange(next.value);
+		const { begin: nextBegin } = getJsonNodeRange(next);
 		return {
 			range: {
 				begin: propertyBegin,
@@ -44,7 +43,7 @@ export function removeObjectProperty(
 	}
 
 	if (previous) {
-		const { end: previousEnd } = getJsonNodeRange(previous.value);
+		const { end: previousEnd } = getJsonNodeRange(previous);
 		return {
 			range: {
 				begin: previousEnd,
