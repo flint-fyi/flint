@@ -6,10 +6,12 @@ ruleTester.describe(rule, {
 		{
 			code: `
 declare const element: HTMLElement;
+declare const child: Node;
 element.appendChild(child);
 `,
 			snapshot: `
 declare const element: HTMLElement;
+declare const child: Node;
 element.appendChild(child);
         ~~~~~~~~~~~
         \`append()\` is more modern and flexible than \`appendChild()\`.
@@ -18,10 +20,12 @@ element.appendChild(child);
 		{
 			code: `
 declare const node: HTMLElement;
+declare const child: Node;
 node.insertBefore(child, null);
 `,
 			snapshot: `
 declare const node: HTMLElement;
+declare const child: Node;
 node.insertBefore(child, null);
      ~~~~~~~~~~~~
      \`append()\` is more modern and flexible than \`insertBefore()\`.
@@ -30,20 +34,26 @@ node.insertBefore(child, null);
 		{
 			code: `
 declare const node: HTMLElement;
-node.insertBefore(child, parent.firstChild);
+declare const child: Node;
+declare const parentNode: Node;
+node.insertBefore(child, parentNode.firstChild);
 `,
 			snapshot: `
 declare const node: HTMLElement;
-node.insertBefore(child, parent.firstChild);
+declare const child: Node;
+declare const parentNode: Node;
+node.insertBefore(child, parentNode.firstChild);
      ~~~~~~~~~~~~
      \`prepend()\` is more modern and flexible than \`insertBefore()\`.
 `,
 		},
 		{
 			code: `
+declare const element: HTMLElement;
 document.body.appendChild(element);
 `,
 			snapshot: `
+declare const element: HTMLElement;
 document.body.appendChild(element);
               ~~~~~~~~~~~
               \`append()\` is more modern and flexible than \`appendChild()\`.
@@ -53,14 +63,18 @@ document.body.appendChild(element);
 	valid: [
 		`
 declare const element: HTMLElement;
+declare const child: Node;
 element.append(child);
 `,
 		`
 declare const node: HTMLElement;
+declare const newNode: Node;
 node.prepend(newNode);
 `,
 		`
 declare const element: HTMLElement;
+declare const child1: Node;
+declare const child2: Node;
 element.append(child1, child2);
 `,
 		`
@@ -69,6 +83,7 @@ element.append("text");
 `,
 		`
 declare const node: HTMLElement;
+declare const child: Node;
 node.append(child);
 `,
 		`
@@ -81,6 +96,8 @@ element.method();
 `,
 		`
 declare const node: HTMLElement;
+declare const child: Node;
+declare const referenceNode: Node;
 node.insertBefore(child, referenceNode);
 `,
 	],

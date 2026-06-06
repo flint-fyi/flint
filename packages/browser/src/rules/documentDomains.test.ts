@@ -38,7 +38,10 @@ window.document.domain = "example.com";
 	],
 	valid: [
 		`document.createElement("iframe");`,
-		`other.document.domain = "example.com";`,
+		`
+			declare const other: { document: { domain: string } };
+			other.document.domain = "example.com";
+		`,
 		`
 			const document = { domain: "example.com" };
 			console.log(document.domain);

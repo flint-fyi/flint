@@ -66,10 +66,12 @@ node.getAttribute("data-foo-bar");
 		{
 			code: `
 declare const element: HTMLElement;
+declare const value: string;
 element.setAttribute("data-my-value", value);
 `,
 			snapshot: `
 declare const element: HTMLElement;
+declare const value: string;
 element.setAttribute("data-my-value", value);
         ~~~~~~~~~~~~
         Prefer using \`.dataset\` as a safer, more idiomatic API for accessing data-* attributes.
@@ -89,14 +91,39 @@ element.getAttribute(\`data-foo\`);
 		},
 	],
 	valid: [
-		`element.getAttribute("aria-label");`,
-		`element.setAttribute("id", "value");`,
-		`element.getAttribute("data");`,
-		`element.getAttribute("data-");`,
-		`element.removeAttribute("class");`,
-		`element.hasAttribute("hidden");`,
-		`element.getAttribute(variable);`,
-		`element.dataset.foo;`,
+		`
+			declare const element: HTMLElement;
+			element.getAttribute("aria-label");
+		`,
+		`
+			declare const element: HTMLElement;
+			element.setAttribute("id", "value");
+		`,
+		`
+			declare const element: HTMLElement;
+			element.getAttribute("data");
+		`,
+		`
+			declare const element: HTMLElement;
+			element.getAttribute("data-");
+		`,
+		`
+			declare const element: HTMLElement;
+			element.removeAttribute("class");
+		`,
+		`
+			declare const element: HTMLElement;
+			element.hasAttribute("hidden");
+		`,
+		`
+			declare const element: HTMLElement;
+			declare const variable: string;
+			element.getAttribute(variable);
+		`,
+		`
+			declare const element: HTMLElement;
+			element.dataset.foo;
+		`,
 		`
 			declare const element: {
 				getAttribute(name: string): string;
