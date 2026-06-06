@@ -51,10 +51,7 @@ export default {
 		},
 		"packages/package-json": {
 			// Temporary, until we migrate rules
-			entry: [
-				"src/removeArrayElement.ts",
-				"src/removeObjectProperty.ts",
-			],
+			entry: ["src/removeArrayElement.ts", "src/removeObjectProperty.ts"],
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
 		},
 		"packages/performance": {
@@ -85,7 +82,11 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/ts": {
-			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
+			project: [
+				"src/**/*.ts!",
+				"!src/typescript.d.ts",
+				"!src/rules/ruleTester.ts!",
+			],
 		},
 		"packages/vitest": {
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],

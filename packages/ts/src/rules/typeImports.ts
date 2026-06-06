@@ -2,6 +2,7 @@ import ts, { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
 import {
+	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -9,7 +10,6 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
-import { forEachChild } from "./utils/forEachChild.ts";
 
 interface ImportedSpecifier {
 	local: AST.Identifier;
@@ -60,9 +60,7 @@ function getImportSource(
 		: node.moduleSpecifier.getText(sourceFile);
 }
 
-function getImportSpecifiers(
-	node: AST.ImportDeclaration,
-): ImportSpecifierNode[] {
+function getImportSpecifiers(node: AST.ImportDeclaration) {
 	const importClause = node.importClause;
 	if (!importClause) {
 		return [];

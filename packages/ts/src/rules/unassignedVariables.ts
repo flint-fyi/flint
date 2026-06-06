@@ -3,8 +3,6 @@ import ts, { SyntaxKind } from "typescript";
 import {
 	getModifyingReferences,
 	typescriptLanguage,
-	type AST,
-	type Checker,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -30,19 +28,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function hasAssignments(
-			identifier: AST.Identifier,
-			sourceFile: AST.SourceFile,
-			typeChecker: Checker,
-		): boolean {
-			// TODO (#400): Switch to scope analysis
-			return !!getModifyingReferences(identifier, sourceFile, typeChecker)
-				.length;
-		}
-
 		return {
 			visitors: {
-				VariableDeclaration: (node, { sourceFile, typeChecker }) => {
+				VariableDeclaration: (node, { sourceFile }) => {
 					if (node.initializer || node.name.kind !== SyntaxKind.Identifier) {
 						return;
 					}
@@ -54,7 +42,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (!hasAssignments(node.name, sourceFile, typeChecker)) {
+					if (!getModifyingReferences(node.name, sourceFile).length) {
 						context.report({
 							data: {
 								name: node.name.text,
