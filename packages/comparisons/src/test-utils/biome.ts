@@ -26,7 +26,7 @@ export function getBiomeLintRules() {
 			...collectRulesIn("Style"),
 			...collectRulesIn("Suspicious"),
 		]),
-	);
+	).sort();
 }
 
 function collectRulesIn(key: keyof DefsWithProperties) {

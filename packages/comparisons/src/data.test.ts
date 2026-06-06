@@ -107,7 +107,7 @@ describe("data.json", () => {
 	});
 
 	it("includes all Biome rules", () => {
-		const biomeRuleNames = getBiomeLintRules().sort();
+		const biomeRuleNames = getBiomeLintRules();
 
 		const biomeRulesCoveredByFlint = Array.from(
 			new Set(findBiomeRulesInFlint().map((comparison) => comparison.name)),
