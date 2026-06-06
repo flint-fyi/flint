@@ -3,8 +3,6 @@ import ts, { SyntaxKind } from "typescript";
 import {
 	getModifyingReferences,
 	typescriptLanguage,
-	type AST,
-	type Checker,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
