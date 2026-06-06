@@ -70,7 +70,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 });
 
-// TODO: Use a scope analyzer (#400)?
 function bodyReturnsThenable(
 	body: ts.Block | ts.Expression,
 	typeChecker: ts.TypeChecker,
@@ -98,6 +97,7 @@ function bodyReturnsThenable(
 	return ts.forEachChild(body, checkReturnStatements);
 }
 
+// TODO: Use a scope analyzer (#400)?
 function checkForAwait(node: ts.Node): boolean | undefined {
 	if (ts.isAwaitExpression(node)) {
 		return true;
