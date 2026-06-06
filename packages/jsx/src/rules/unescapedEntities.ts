@@ -1,13 +1,13 @@
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
+import { ruleCreator } from "./ruleCreator.ts";
+
 const problematicEntities = [
 	{ entity: '"', toBrace: '{"\\""}', toHTML: "&quot;" },
 	{ entity: "'", toBrace: '{"\'"}', toHTML: "&#39;" },
 	{ entity: ">", toBrace: "{'>'}", toHTML: "&gt;" },
 	{ entity: "}", toBrace: "{'}'}", toHTML: "&#125;" },
 ];
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

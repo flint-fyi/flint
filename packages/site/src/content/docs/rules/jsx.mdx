@@ -3,8 +3,8 @@ description: "JSX linting rules provided by Flint."
 title: "JSX Plugin"
 ---
 
-import { RulesTable } from "~/components/RulesTable.tsx";
 import PluginTop from "~/components/PluginTop.astro";
+import { RulesTable } from "~/components/RulesTable.tsx";
 
 <PluginTop pluginId="jsx" />
 
@@ -12,11 +12,12 @@ import PluginTop from "~/components/PluginTop.astro";
 
 Flint's JSX plugin provides the following presets:
 
-| Preset                                | Recommended   | Description                                                                     |
-| ------------------------------------- | ------------- | ------------------------------------------------------------------------------- |
-| **[`logical`](#logical)**             | ✅ Always     | Common rules for finding bugs and enforcing good logical practices for JSX.     |
-| **[`logicalStrict`](#logicalstrict)** | ☑️ When Ready | Additional rules for finding bugs and enforcing good logical practices for JSX. |
-| **[`stylistic`](#stylistic)**         | ✅ Always     | Common rules for consistent styling and best JSX stylistic practices for JSX.   |
+| Preset                                    | Recommended   | Description                                                                       |
+| ----------------------------------------- | ------------- | --------------------------------------------------------------------------------- |
+| **[`logical`](#logical)**                 | ✅ Always     | Common rules for finding bugs and enforcing good logical practices for JSX.       |
+| **[`logicalStrict`](#logicalstrict)**     | ☑️ When Ready | Additional rules for finding bugs and enforcing good logical practices for JSX.   |
+| **[`stylistic`](#stylistic)**             | ✅ Always     | Common rules for consistent styling and best JSX stylistic practices for JSX.     |
+| **[`stylisticStrict`](#stylisticstrict)** | ☑️ When Ready | Additional rules for consistent styling and best JSX stylistic practices for JSX. |
 
 If you are just getting started with linting, Flint recommends using the [`logical`](#logical) and [`stylistic`](#stylistic) presets:
 
@@ -106,6 +107,24 @@ export default defineConfig({
 		{
 			files: jsx.files.all,
 			rules: jsx.presets.stylistic,
+		},
+	],
+});
+```
+
+### `stylisticStrict`
+
+Additional rules that enforce consistent JSX styling and best JSX stylistic practices for most-to-all JavaScript and TypeScript files.
+
+```ts title="flint.config.ts"
+import { jsx } from "@flint.fyi/jsx";
+import { defineConfig, ts } from "flint";
+
+export default defineConfig({
+	use: [
+		{
+			files: jsx.files.all,
+			rules: jsx.presets.stylisticStrict,
 		},
 	],
 });

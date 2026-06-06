@@ -35,8 +35,9 @@ const excludedESLintRulesByPluginName = new Map([
 ]);
 
 describe("data.json", () => {
-	it("does not include any duplicate Flint rules", () => {
+	it("should not include any duplicate Flint rules", () => {
 		const seenIds = new Set<string>();
+		const duplicates: string[] = [];
 
 		for (const comparison of comparisons) {
 			const id = getComparisonId(
@@ -44,9 +45,13 @@ describe("data.json", () => {
 				comparison.flint.name,
 			);
 
-			expect(seenIds).not.toContain(id);
+			if (seenIds.has(id)) {
+				duplicates.push(id);
+			} else {
+				seenIds.add(id);
+			}
 
-			seenIds.add(id);
+			expect(duplicates).toEqual([]);
 		}
 	});
 

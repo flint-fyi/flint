@@ -1,9 +1,11 @@
-import {
-	type AST,
-	getModifyingReferences,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
 import ts, { SyntaxKind } from "typescript";
+
+import {
+	getModifyingReferences,
+	getTSNodeRange,
+	typescriptLanguage,
+	type AST,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -28,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function collectBindingElements(name: AST.BindingName): AST.Identifier[] {
+		function collectBindingElements(name: AST.BindingName) {
 			if (name.kind === SyntaxKind.Identifier) {
 				return [name];
 			}
@@ -46,7 +48,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				VariableDeclarationList: (node, { sourceFile, typeChecker }) => {
+				VariableDeclarationList: (node, { sourceFile }) => {
 					if (!(node.flags & ts.NodeFlags.Const) || !node.declarations.length) {
 						return;
 					}
@@ -58,16 +60,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							const modifyingReferences = getModifyingReferences(
 								identifier,
 								sourceFile,
-								typeChecker,
 							);
 
 							for (const reference of modifyingReferences) {
 								context.report({
 									message: "noConstAssign",
-									range: {
-										begin: reference.getStart(sourceFile),
-										end: reference.getEnd(),
-									},
+									range: getTSNodeRange(reference, sourceFile),
 								});
 							}
 						}

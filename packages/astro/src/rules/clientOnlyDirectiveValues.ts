@@ -1,6 +1,7 @@
+import ts, { SyntaxKind } from "typescript";
+
 import { astroLanguage } from "@flint.fyi/astro-language";
 import { getTSNodeRange } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

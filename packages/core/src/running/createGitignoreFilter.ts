@@ -1,5 +1,6 @@
-import ignore from "ignore";
 import path from "path";
+
+import ignore from "ignore";
 
 import type { LinterHost } from "../types/host.ts";
 

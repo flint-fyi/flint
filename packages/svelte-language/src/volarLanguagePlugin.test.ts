@@ -13,6 +13,7 @@ describe("errorToLanguageReport", () => {
 
 		expect(errorToLanguageReport("App.svelte", error)).toEqual({
 			range: { begin: 10, end: 20 },
+			source: "svelte",
 			text: "App.svelte:1:5 - parse error",
 		});
 	});
@@ -37,10 +38,12 @@ describe("errorToLanguageReport", () => {
 			`App.svelte:3:4 - ${(parseError as { message: string }).message}`,
 		);
 		expect(result.range).toEqual({ begin: 16, end: 16 });
+		expect(result.source).toBe("svelte");
 	});
 
 	it("returns fallback text for non-object errors", () => {
 		expect(errorToLanguageReport("App.svelte", "oops")).toEqual({
+			source: "svelte",
 			text: "App.svelte - Unknown error",
 		});
 	});

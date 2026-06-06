@@ -1,6 +1,6 @@
+import eslintCommentsPlugin from "@eslint-community/eslint-plugin-eslint-comments";
 import eslintJsonPlugin from "@eslint/json";
 import markdownPlugin from "@eslint/markdown";
-import eslintCommentsPlugin from "@eslint-community/eslint-plugin-eslint-comments";
 import nextPlugin from "@next/eslint-plugin-next";
 import nuxtPlugin from "@nuxt/eslint-plugin";
 import tseslintPlugin from "@typescript-eslint/eslint-plugin";

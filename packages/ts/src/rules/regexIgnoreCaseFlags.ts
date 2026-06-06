@@ -1,7 +1,8 @@
 import {
-	type AST as RegExpAST,
 	visitRegExpAST,
+	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
+
 import {
 	getTSNodeRange,
 	typescriptLanguage,

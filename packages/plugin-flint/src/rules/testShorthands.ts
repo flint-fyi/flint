@@ -1,9 +1,10 @@
+import ts from "typescript";
+
 import type { FileChange } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts from "typescript";
 
 import { getRuleTesterDescribedCases } from "../utils/getRuleTesterDescribedCases.ts";
 import { ruleCreator } from "./ruleCreator.ts";

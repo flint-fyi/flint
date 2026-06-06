@@ -1,11 +1,12 @@
-import {
-	type AST,
-	getTSNodeRange,
-	type TypeScriptFileServices,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
+
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -47,7 +48,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				node.asteriskToken ||
 				!node.body ||
 				isEmptyBody(node.body) ||
-				bodyContainsAwait(node.body) ||
+				checkForAwait(node.body) ||
 				bodyReturnsThenable(node.body, typeChecker)
 			) {
 				return;
@@ -69,27 +70,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 	},
 });
-
-// TODO: Use a scope analyzer (#400)?
-function bodyContainsAwait(body: ts.Block | ts.Expression) {
-	function checkForAwait(node: ts.Node): boolean | undefined {
-		if (ts.isAwaitExpression(node)) {
-			return true;
-		}
-
-		if (ts.isForOfStatement(node) && node.awaitModifier) {
-			return true;
-		}
-
-		if (tsutils.isFunctionScopeBoundary(node)) {
-			return false;
-		}
-
-		return ts.forEachChild(node, checkForAwait);
-	}
-
-	return ts.forEachChild(body, checkForAwait);
-}
 
 function bodyReturnsThenable(
 	body: ts.Block | ts.Expression,
@@ -116,6 +96,23 @@ function bodyReturnsThenable(
 	}
 
 	return ts.forEachChild(body, checkReturnStatements);
+}
+
+// TODO: Use a scope analyzer (#400)?
+function checkForAwait(node: ts.Node): boolean | undefined {
+	if (ts.isAwaitExpression(node)) {
+		return true;
+	}
+
+	if (ts.isForOfStatement(node) && node.awaitModifier) {
+		return true;
+	}
+
+	if (tsutils.isFunctionScopeBoundary(node)) {
+		return false;
+	}
+
+	return ts.forEachChild(node, checkForAwait);
 }
 
 function isEmptyBody(body: ts.Block | ts.Expression) {

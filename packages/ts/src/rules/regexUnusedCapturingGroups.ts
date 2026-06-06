@@ -1,10 +1,11 @@
 import { visitRegExpAST } from "@eslint-community/regexpp";
 import type { CapturingGroup } from "@eslint-community/regexpp/ast";
+
 import {
-	type AST,
 	getTSNodeRange,
-	type TypeScriptFileServices,
 	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";

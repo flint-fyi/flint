@@ -1,10 +1,11 @@
+import ts from "typescript";
+
 import type { FileChange } from "@flint.fyi/core";
 import {
-	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
-import ts from "typescript";
 
 import { getRuleTesterDescribedCases } from "../utils/getRuleTesterDescribedCases.ts";
 import type {

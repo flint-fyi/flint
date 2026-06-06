@@ -1,10 +1,13 @@
+import { SyntaxKind } from "typescript";
+
 import {
-	type AST,
-	type Checker,
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 function isLocalExportsVariable(
 	node: AST.Identifier,
@@ -36,8 +39,6 @@ function isModuleExportsAccessAssignment(
 		isModuleExportsAccess(node.left)
 	);
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

@@ -1,11 +1,13 @@
-import {
-	type AST,
-	getTSNodeRange,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
-import { nullThrows } from "@flint.fyi/utils";
 import { SyntaxKind } from "typescript";
 
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+	type AST,
+} from "@flint.fyi/typescript-language";
+import { nullThrows } from "@flint.fyi/utils";
+
+import { ruleCreator } from "./ruleCreator.ts";
 import { isDeclaredInNodeTypes } from "./utils/isDeclaredInNodeTypes.ts";
 
 const nodeBuiltinModules = new Set([
@@ -64,8 +66,6 @@ const nodeBuiltinModules = new Set([
 	"worker_threads",
 	"zlib",
 ]);
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

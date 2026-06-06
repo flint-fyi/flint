@@ -1,4 +1,5 @@
 import type { PluginData } from "~/data/pluginData";
+
 import { PluginCard } from "./PluginCard";
 import styles from "./PluginCards.module.css";
 

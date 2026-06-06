@@ -1,9 +1,12 @@
+import ts from "typescript";
+
 import {
-	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
-import ts from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 function isLiteralValue(node: AST.AnyNode) {
 	if (ts.isPrefixUnaryExpression(node)) {
@@ -27,8 +30,6 @@ function isThisLiteralAssignment(node: AST.BinaryExpression) {
 		isLiteralValue(node.right)
 	);
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

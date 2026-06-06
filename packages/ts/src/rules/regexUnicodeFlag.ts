@@ -1,10 +1,11 @@
-import type { Fix } from "@flint.fyi/core";
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type {
-	AST,
-	TypeScriptFileServices,
-} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
+
+import type { Fix } from "@flint.fyi/core";
+import {
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";

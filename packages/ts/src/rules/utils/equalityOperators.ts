@@ -1,6 +1,9 @@
-import { unwrapParenthesizedNode } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
+
+import {
+	unwrapParenthesizedNode,
+	type AST,
+} from "@flint.fyi/typescript-language";
 
 export type EqualityOperator = "!=" | "!==" | "==" | "===";
 

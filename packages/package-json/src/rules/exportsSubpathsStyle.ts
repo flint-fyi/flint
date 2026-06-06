@@ -1,9 +1,10 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
-import type { AST } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
+import type { AST } from "@flint.fyi/typescript-language";
+
+import { getPackagePropertyOfNameLegacy } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 function getSingleRootSubpath(node: AST.ObjectLiteralExpression) {
@@ -34,6 +35,8 @@ function isImplicitRootExportsObject(node: AST.ObjectLiteralExpression) {
 	);
 }
 
+// flint-disable-next-line ts/deprecated
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:
@@ -67,8 +70,8 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { options, sourceFile }) {
-					const property = getPackagePropertyOfName(node, "exports");
+				JsonSourceFile(node, { options }) {
+					const property = getPackagePropertyOfNameLegacy(node, "exports");
 
 					if (
 						property?.kind !== SyntaxKind.PropertyAssignment ||
@@ -78,7 +81,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 					}
 
 					const initializer = property.initializer;
-					const range = getJsonNodeRange(property.name, sourceFile);
+					const range = getJsonNodeRange(property.name, node);
 
 					if (
 						options.prefer === "explicit" &&
@@ -88,8 +91,8 @@ export default ruleCreator.createRule(jsonLanguage, {
 					) {
 						context.report({
 							fix: {
-								range: getJsonNodeRange(initializer, sourceFile),
-								text: `{ ".": ${initializer.getText(sourceFile)} }`,
+								range: getJsonNodeRange(initializer, node),
+								text: `{ ".": ${initializer.getText(node)} }`,
 							},
 							message: "preferExplicit",
 							range,
@@ -112,8 +115,8 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 					context.report({
 						fix: {
-							range: getJsonNodeRange(initializer, sourceFile),
-							text: rootSubpath.initializer.getText(sourceFile),
+							range: getJsonNodeRange(initializer, node),
+							text: rootSubpath.initializer.getText(node),
 						},
 						message: "preferImplicit",
 						range,

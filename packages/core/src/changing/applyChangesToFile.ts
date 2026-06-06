@@ -1,5 +1,6 @@
-import { nullThrows } from "@flint.fyi/utils";
 import { debugForFile } from "debug-for-file";
+
+import { nullThrows } from "@flint.fyi/utils";
 
 import type { FileChange } from "../types/changes.ts";
 import type { LinterHost } from "../types/host.ts";

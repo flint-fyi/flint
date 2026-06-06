@@ -1,11 +1,21 @@
+import type {
+	Language as VolarLanguage,
+	LanguagePlugin as VolarLanguagePlugin,
+	Mapper as VolarMapper,
+	SourceScript as VolarSourceScript,
+} from "@volar/language-core";
+import type { TypeScriptServiceScript as VolarTypeScriptServiceScript } from "@volar/typescript";
+import { proxyCreateProgram } from "@volar/typescript/lib/node/proxyCreateProgram.js";
+import ts from "typescript";
+
 import {
-	type CharacterReportRange,
 	createLanguage,
 	DirectivesCollector,
-	type FileAboutData,
-	type FileReport,
 	getColumnAndLineOfPosition,
 	isSuggestionForFiles,
+	type CharacterReportRange,
+	type FileAboutData,
+	type FileReport,
 	type Language,
 	type LanguageFileCacheImpacts,
 	type LanguageReports,
@@ -16,28 +26,19 @@ import {
 } from "@flint.fyi/core";
 import { setTSProgramCreationProxy } from "@flint.fyi/ts-patch";
 import {
-	type AST,
-	type Checker,
 	convertTypeScriptDiagnosticToLanguageReport,
 	extractDirectivesFromTypeScriptFile,
-	type ExtractedDirective,
 	NodeSyntaxKinds,
 	setVolarCreateFile,
 	throwUnknownLanguageExtension,
-	type TypeScriptFileServices,
 	typescriptLanguage,
+	type AST,
+	type Checker,
+	type ExtractedDirective,
+	type TypeScriptFileServices,
 	type TypeScriptNodesByName,
 } from "@flint.fyi/typescript-language";
 import { assert, FlintAssertionError, nullThrows } from "@flint.fyi/utils";
-import type {
-	Language as VolarLanguage,
-	LanguagePlugin as VolarLanguagePlugin,
-	Mapper as VolarMapper,
-	SourceScript as VolarSourceScript,
-} from "@volar/language-core";
-import type { TypeScriptServiceScript as VolarTypeScriptServiceScript } from "@volar/typescript";
-import { proxyCreateProgram } from "@volar/typescript/lib/node/proxyCreateProgram.js";
-import ts from "typescript";
 
 import packageJson from "../package.json" with { type: "json" };
 

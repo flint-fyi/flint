@@ -1,16 +1,17 @@
+import ts, { SyntaxKind } from "typescript";
+
 import {
-	type AST,
-	type Checker,
 	getDeclarationsIfGlobal,
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import ts, { SyntaxKind } from "typescript";
-
-const deprecatedProperties = new Set(["charCode", "keyCode", "which"]);
 
 import { ruleCreator } from "./ruleCreator.ts";
+
+const deprecatedProperties = new Set(["charCode", "keyCode", "which"]);
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

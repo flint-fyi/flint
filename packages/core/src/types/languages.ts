@@ -72,10 +72,6 @@ export interface LanguageAbout {
 export interface LanguageReport {
 	code?: string;
 	range?: CharacterReportRange;
-	/**
-	 * Identifies the producer of the report (e.g. `flint/typescript`,
-	 * `flint/astro`) so editor-facing diagnostics can attribute their source.
-	 */
 	source?: string;
 	text: string;
 }

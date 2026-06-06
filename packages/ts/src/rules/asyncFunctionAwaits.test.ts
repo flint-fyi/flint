@@ -125,6 +125,10 @@ const fn = async () => {
 };
 `,
 		`
+declare function asyncOperation(): Promise<void>;
+const withAbstract = async () => await asyncOperation();
+`,
+		`
 class Example {
     async method() {
         await this.fetchData();
