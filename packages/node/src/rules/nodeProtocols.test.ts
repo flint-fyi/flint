@@ -199,13 +199,20 @@ import path = require("path");
 		`const { readFile } = require("node:fs");`,
 		`import fs = require("node:fs");`,
 		`import path = require("node:path");`,
-		`import customFs from "custom-fs";`,
-		`import myPath from "./my-path";`,
+		{
+			code: `import customFs from "custom-fs";`,
+			files: { "node_modules/custom-fs/index.ts": `export default {};` },
+		},
+		{
+			code: `import myPath from "./my-path";`,
+			files: { "my-path.ts": `export default {};` },
+		},
 		`const custom = require("custom-module");`,
 		`const relative = require("./relative");`,
 		`
 function require(moduleName: string) {}
 require("path");
+export {};
 		`,
 	],
 });

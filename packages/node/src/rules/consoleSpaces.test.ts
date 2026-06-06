@@ -61,14 +61,14 @@ console.log("test ");
 			code: `
 import { Console } from 'console';
 
-const console = new Console();
+const console = new Console(process.stdout);
 
 console.log("test ");
 `,
 			snapshot: `
 import { Console } from 'console';
 
-const console = new Console();
+const console = new Console(process.stdout);
 
 console.log("test ");
                  ~
@@ -79,14 +79,14 @@ console.log("test ");
 			code: `
 import { Console } from 'node:console';
 
-const console = new Console();
+const console = new Console(process.stdout);
 
 console.log("test ");
 `,
 			snapshot: `
 import { Console } from 'node:console';
 
-const console = new Console();
+const console = new Console(process.stdout);
 
 console.log("test ");
                  ~
@@ -205,7 +205,10 @@ console.groupCollapsed(" collapsed ");
 		`console.debug("debug");`,
 		`console.log("test with spaces in middle");`,
 		`console.log("test", "with", "multiple", "args");`,
-		`console.log(variable);`,
+		`
+declare const variable: unknown;
+console.log(variable);
+`,
 		`console.log(123);`,
 		`console.log(\`template\`);`,
 		`console.trace("trace");`,
@@ -221,7 +224,7 @@ console.groupCollapsed(" collapsed ");
 		`console.log("  intentionally indented");`,
 		`console.log("  intentionally indented", "more");`,
 		`
-const console = { log: (...args: unknown[]) => void };
+const console = { log: (...args: unknown[]) => {} };
 
 console.log(" collapsed ");
 
