@@ -1,5 +1,6 @@
-import { declarationIncludesGlobal } from "@flint.fyi/typescript-language";
 import type ts from "typescript";
+
+import { declarationIncludesGlobal } from "@flint.fyi/typescript-language";
 
 import { getSpecifierNames } from "./getSpecifierNames.ts";
 import { isFromFile } from "./isFromFile.ts";

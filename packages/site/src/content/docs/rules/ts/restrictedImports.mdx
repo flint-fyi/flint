@@ -4,7 +4,7 @@ title: "restrictedImports"
 topic: "rules"
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { TabItem, Tabs } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
@@ -21,7 +21,6 @@ This rule allows you to restrict specific modules from being imported using [`Ty
 ```ts
 // With restrictions: [{ specifier: { from: "package", package: "lodash" } }]
 import _ from "lodash";
-
 // With restrictions: [{ specifier: { from: "package", name: "useState", package: "react" } }]
 import { useState } from "react";
 
@@ -35,7 +34,6 @@ import { secret } from "./internal/secret";
 ```ts
 // With restrictions: [{ specifier: { from: "package", package: "lodash" } }]
 import { pick } from "lodash-es";
-
 // With restrictions: [{ specifier: { from: "package", name: "useState", package: "react" } }]
 import { useEffect } from "react";
 

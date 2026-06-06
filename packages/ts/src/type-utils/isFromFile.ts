@@ -1,6 +1,8 @@
-import { pathKey } from "@flint.fyi/utils";
 import path from "node:path";
+
 import ts from "typescript";
+
+import { pathKey } from "@flint.fyi/utils";
 
 export function isFromFile(
 	sourceFile: ts.SourceFile,

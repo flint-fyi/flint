@@ -1,9 +1,10 @@
+import ts, { SyntaxKind } from "typescript";
+import { z } from "zod/v4";
+
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
-import { z } from "zod/v4";
 
 import { getSpecifierNames } from "../type-utils/getSpecifierNames.ts";
 import { matchesSpecifier } from "../type-utils/matchesSpecifier.ts";
