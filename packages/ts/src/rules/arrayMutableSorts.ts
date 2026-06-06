@@ -1,9 +1,12 @@
+import * as ts from "typescript";
+
 import {
 	getTSNodeRange,
 	isBuiltinArrayMethod,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 const methodsReturningNewArray = new Set([
 	"concat",
@@ -75,8 +78,6 @@ function isInlineArrayCreation(node: ts.Expression): boolean {
 
 	return false;
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

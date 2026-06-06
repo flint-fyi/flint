@@ -1,4 +1,6 @@
-import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
+import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 /**
  * Finds the position and length of an octal escape sequence in a string.
@@ -25,8 +27,6 @@ function findOctalEscape(
 		length: match[0].length,
 	};
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

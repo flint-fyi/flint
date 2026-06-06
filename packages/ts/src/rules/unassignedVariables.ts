@@ -1,10 +1,11 @@
+import ts, { SyntaxKind } from "typescript";
+
 import {
-	type AST,
-	type Checker,
 	getModifyingReferences,
 	typescriptLanguage,
+	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

@@ -1,5 +1,6 @@
-import type { AST } from "@flint.fyi/typescript-language";
 import ts from "typescript";
+
+import type { AST } from "@flint.fyi/typescript-language";
 
 // TODO (#2772): Fill out remaining TypeScript APIs
 

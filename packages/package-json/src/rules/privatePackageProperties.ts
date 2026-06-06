@@ -1,12 +1,15 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
-import { getPackageProperties } from "../getPackageProperties.ts";
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
+
+import { getPackagePropertiesLegacy } from "../getPackageProperties.ts";
+import { getPackagePropertyOfNameLegacy } from "../getPackagePropertyOfName.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
+// flint-disable-next-line ts/deprecated
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:
@@ -33,8 +36,8 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { options, sourceFile }) {
-					const properties = getPackageProperties(node);
+				JsonSourceFile(node, { options }) {
+					const properties = getPackagePropertiesLegacy(node);
 					const root = node.statements[0];
 
 					if (
@@ -44,7 +47,10 @@ export default ruleCreator.createRule(jsonLanguage, {
 						return;
 					}
 
-					const privateProperty = getPackagePropertyOfName(node, "private");
+					const privateProperty = getPackagePropertyOfNameLegacy(
+						node,
+						"private",
+					);
 
 					if (
 						privateProperty?.kind !== SyntaxKind.PropertyAssignment ||
@@ -65,7 +71,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 						}
 
 						const { range, text } = removeObjectProperty(
-							sourceFile,
+							node,
 							property,
 							root.expression,
 						);
@@ -75,7 +81,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 								propertyName: property.name.text,
 							},
 							message: "unnecessaryProperty",
-							range: getJsonNodeRange(property.name, sourceFile),
+							range: getJsonNodeRange(property.name, node),
 							suggestions: [
 								{
 									id: "removePrivatePackageProperty",

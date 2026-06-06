@@ -1,6 +1,7 @@
-import { dirnameKey, normalizePath, pathKey } from "@flint.fyi/utils";
 import fs from "node:fs";
 import path from "node:path";
+
+import { dirnameKey, normalizePath, pathKey } from "@flint.fyi/utils";
 
 import type {
 	LinterHost,
@@ -8,8 +9,6 @@ import type {
 	LinterHostFileWatcherEvent,
 } from "../types/host.ts";
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
-
-const ignoredPaths = ["/node_modules", "/.git", "/.jj"];
 
 export function createDiskBackedLinterHost(cwd: string): LinterHost {
 	const caseSensitiveFS = isFileSystemCaseSensitive();
@@ -268,7 +267,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 						if (changedKey.startsWith(dirKeySlash)) {
 							relative = relative.slice(directoryPathAbsolute.length);
 						}
-						for (const ignored of ignoredPaths) {
+						for (const ignored of options.ignoredPaths) {
 							if (
 								relative.endsWith(ignored) ||
 								relative.includes(ignored + "/")
@@ -287,7 +286,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return createWatcher(
 				filePathAbsolute,
 				false,
-				options?.pollingInterval ?? 2_000,
+				options.pollingInterval ?? 2_000,
 				(normalizedChangedFilePath, event) => {
 					if (
 						normalizedChangedFilePath != null &&

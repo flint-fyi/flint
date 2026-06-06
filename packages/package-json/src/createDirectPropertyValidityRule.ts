@@ -1,3 +1,6 @@
+import type { Result } from "package-json-validator";
+import { SyntaxKind } from "typescript";
+
 import type { AnyRule } from "@flint.fyi/core";
 import {
 	getJsonNodeRange,
@@ -5,10 +8,8 @@ import {
 	type JsonNode,
 	type JsonSourceFile,
 } from "@flint.fyi/json-language";
-import type { Result } from "package-json-validator";
-import { SyntaxKind } from "typescript";
 
-import { getPackagePropertiesOfNames } from "./getPackagePropertiesOfNames.ts";
+import { getPackagePropertiesOfNamesLegacy } from "./getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export type PropertyValidator = (value: unknown) => Result;
@@ -19,8 +20,10 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 	propertyValidator: PropertyValidator,
 ) {
 	const id = `${propertyName}Validity` as const;
-	const propertyNames = new Set([propertyName, ...propertyNameAliases]);
+	const propertyNames = [propertyName, ...propertyNameAliases];
 
+	// flint-disable-next-line ts/deprecated
+	// eslint-disable-next-line @typescript-eslint/no-deprecated
 	const rule: AnyRule = ruleCreator.createRule(jsonLanguage, {
 		about: {
 			description: `Enforces that the \`${propertyName}\`${propertyNameAliases.length ? ` (also: ${propertyNameAliases.map((alias) => `\`${alias}\``).join(", ")})` : ""} property is valid.`,
@@ -101,12 +104,15 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 
 			return {
 				visitors: {
-					JsonSourceFile: (node, { sourceFile }) => {
-						for (const initializer of getPackagePropertiesOfNames(
+					JsonSourceFile: (node) => {
+						const properties = getPackagePropertiesOfNamesLegacy(
 							node,
 							propertyNames,
-						)) {
-							checkValue(initializer, sourceFile);
+						);
+						for (const property of Object.values(properties)) {
+							if (property?.initializer) {
+								checkValue(property.initializer, node);
+							}
 						}
 					},
 				},

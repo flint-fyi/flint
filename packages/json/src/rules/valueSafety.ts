@@ -1,5 +1,6 @@
-import { jsonLanguage } from "@flint.fyi/json-language";
 import ts from "typescript";
+
+import { jsonLanguage } from "@flint.fyi/json-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -27,6 +28,8 @@ function hasLoneSurrogate(text: string): boolean {
 	return false;
 }
 
+// flint-disable-next-line ts/deprecated
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description: "Reports JSON values that are unsafe for data interchange.",

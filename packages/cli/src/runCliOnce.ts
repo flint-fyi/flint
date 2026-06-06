@@ -1,13 +1,15 @@
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+
+import { debugForFile } from "debug-for-file";
+
 import {
 	isConfig,
-	type LinterHost,
 	runConfig,
 	runConfigFixing,
 	validateConfigDefinition,
+	type LinterHost,
 } from "@flint.fyi/core";
-import { debugForFile } from "debug-for-file";
-import path from "node:path";
-import { pathToFileURL } from "node:url";
 
 import { runPrettier } from "./formatting/runPrettier.ts";
 import type { OptionsValues } from "./options.ts";
@@ -70,10 +72,7 @@ export async function runCliOnce(
 				skipLanguageReports,
 			}));
 
-	// TODO: Eventually, it'd be nice to move everything fully in-memory.
-	// This would be better for performance to avoid excess file system I/O.
-	// https://github.com/flint-fyi/flint/issues/73
-	const formattingResults = await runPrettier(lintResults, values.fix);
+	const formattingResults = await runPrettier(host, lintResults, values.fix);
 
 	const duration = performance.now() - startTime;
 

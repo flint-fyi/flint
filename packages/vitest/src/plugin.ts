@@ -1,5 +1,6 @@
-import { createPlugin } from "@flint.fyi/core";
 import { configDefaults } from "vitest/config";
+
+import { createPlugin } from "@flint.fyi/core";
 
 import afterAllPaddingLines from "./rules/afterAllPaddingLines.ts";
 import afterEachPaddingLines from "./rules/afterEachPaddingLines.ts";

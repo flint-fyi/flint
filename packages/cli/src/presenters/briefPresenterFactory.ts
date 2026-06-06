@@ -1,7 +1,8 @@
-import { formatReport, hasFix } from "@flint.fyi/core";
-import { makeAbsolute } from "@flint.fyi/utils";
 import chalk from "chalk";
 import { textTable } from "text-table-fast";
+
+import { formatReport, hasFix } from "@flint.fyi/core";
+import { makeAbsolute } from "@flint.fyi/utils";
 
 import { presentHeader } from "./shared/header.ts";
 import { presentLanguageReports } from "./shared/presentLanguageReports.ts";

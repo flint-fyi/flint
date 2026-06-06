@@ -1,0 +1,75 @@
+---
+description: "Reports hex colors with invalid values."
+title: "hexColorValidity"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="css" rule="hexColorValidity" />
+
+CSS values for hex colors must have 3, 4, 6, or 8 digits or letters in `a-f` after the `#`.
+Values with other characters, or the wrong number of characters, are not valid hex colors.
+
+This rule reports on values that start with a `#` but are not valid hex colors.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```tsx
+div {
+	color: #a1;
+}
+```
+
+```tsx
+div {
+	color: #a1b2c;
+}
+```
+
+```tsx
+div {
+	color: #ggg;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```tsx
+div {
+	color: #a1b;
+}
+```
+
+```tsx
+div {
+	color: #a1b2c3;
+}
+```
+
+```tsx
+div {
+	color: #fff;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you're using a processor that works with seemingly invalid CSS colors, this rule might not be for you.
+
+## Further Reading
+
+- [MDN: `<hex-color>` CSS type>`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/hex-color)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="css" ruleId="hexColorValidity" />

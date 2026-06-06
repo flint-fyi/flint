@@ -1,14 +1,14 @@
 import {
-	type AST,
 	getTSNodeRange,
-	type TypeScriptFileServices,
 	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import {
-	type AccessorPair,
 	collectAccessorPairs,
+	type AccessorPair,
 } from "./utils/collectAccessorPairs.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {

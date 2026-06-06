@@ -1,5 +1,17 @@
 # @flint.fyi/comparisons
 
+## 0.3.4
+
+### Patch Changes
+
+- b007575: Add CSS language and plugin.
+- c65a939: Fix mismatched implementation statuses.
+- d4b17c7: Update data for the vitest plugin.
+- ed1b0fc: Add missing `package-json` data and update eslint urls.
+- 06f86d3: Add `peerDependenciesMetaRelationship` rule.
+- Updated dependencies [b007575]
+  - @flint.fyi/css@0.0.1
+
 ## 0.3.3
 
 ### Patch Changes

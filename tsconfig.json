@@ -18,6 +18,8 @@
 		{ "path": "./packages/cli" },
 		{ "path": "./packages/comparisons" },
 		{ "path": "./packages/core" },
+		{ "path": "./packages/css" },
+		{ "path": "./packages/css-language" },
 		{ "path": "./packages/e2e" },
 		{ "path": "./packages/flint" },
 		{ "path": "./packages/json" },

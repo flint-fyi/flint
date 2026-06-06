@@ -1,6 +1,7 @@
-import { markdownLanguage } from "@flint.fyi/markdown-language";
 import GithubSlugger from "github-slugger";
 import type { Node, Text } from "mdast";
+
+import { markdownLanguage } from "@flint.fyi/markdown-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

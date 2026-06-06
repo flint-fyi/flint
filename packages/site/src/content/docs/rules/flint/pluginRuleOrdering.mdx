@@ -4,7 +4,7 @@ title: "pluginRuleOrdering"
 topic: "rules"
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { TabItem, Tabs } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
@@ -21,6 +21,7 @@ Alphabetically sorted lists are also easier to search through.
 
 ```ts
 import { createPlugin } from "@flint.fyi/core";
+
 import firstRule from "./rules/firstRule.ts";
 import secondRule from "./rules/secondRule.ts";
 
@@ -35,6 +36,7 @@ export const plugin = createPlugin({
 
 ```ts
 import { createPlugin } from "@flint.fyi/core";
+
 import firstRule from "./rules/firstRule.ts";
 import secondRule from "./rules/secondRule.ts";
 

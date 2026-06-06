@@ -1,9 +1,10 @@
+import ts from "typescript";
+
 import {
 	getTSNodeRange,
 	isGlobalVariable,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

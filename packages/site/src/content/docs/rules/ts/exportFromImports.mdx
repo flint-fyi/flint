@@ -4,7 +4,7 @@ title: "exportFromImports"
 topic: "rules"
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { TabItem, Tabs } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
@@ -22,6 +22,7 @@ It can be done in a single `export...from` declaration, which is more concise an
 
 ```ts
 import defaultExport from "./foo.js";
+
 export default defaultExport;
 ```
 
@@ -42,6 +43,7 @@ export { default } from "./foo.js";
 
 ```ts
 import { named } from "./foo.js";
+
 export { named };
 ```
 
@@ -62,6 +64,7 @@ export { named } from "./foo.js";
 
 ```ts
 import * as namespace from "./foo.js";
+
 export { namespace };
 ```
 
@@ -82,6 +85,7 @@ export * as namespace from "./foo.js";
 
 ```ts
 import defaultExport, { named } from "./foo.js";
+
 export default defaultExport;
 export { defaultExport as renamedDefault, named, named as renamedNamed };
 ```

@@ -1,7 +1,9 @@
-import { nullThrows } from "@flint.fyi/utils";
 import * as path from "node:path";
+
 import * as tsutils from "ts-api-utils";
 import ts from "typescript";
+
+import { nullThrows } from "@flint.fyi/utils";
 
 import type * as AST from "./types/ast.ts";
 

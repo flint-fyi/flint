@@ -7,6 +7,10 @@ export default {
 	workspaces: {
 		".": {
 			entry: ["*.config.{js,ts}"],
+			ignoreDependencies: [
+				// The changesets CLI isn't directly referenced anywhere, but we need it to create new changesets.
+				"@changesets/cli",
+			],
 			project: ["*.config.{js,ts}", "scripts/**/*.ts"],
 		},
 		"packages/astro": {
@@ -21,7 +25,10 @@ export default {
 		},
 		"packages/comparisons": {
 			entry: ["src/sort-data.ts!"],
-			project: ["src/**/*.ts!", "!src/test-util.ts!"],
+			project: ["src/**/*.ts!", "!src/test-utils/*.ts!"],
+		},
+		"packages/css": {
+			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
 		},
 		"packages/json": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
