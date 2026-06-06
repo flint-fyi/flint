@@ -20,12 +20,12 @@ node.getStart();
 		{
 			code: `
 import ts from "typescript";
-declare const node: string | ts.Node;
+declare const node: ts.Expression | ts.Statement;
 node.getStart();
 `,
 			snapshot: `
 import ts from "typescript";
-declare const node: string | ts.Node;
+declare const node: ts.Expression | ts.Statement;
 node.getStart();
 ~~~~~~~~~~~~~~~
 \`getStart()\` should be called with a \`sourceFile\` parameter for better performance.
@@ -50,7 +50,7 @@ node.getStart();
 	],
 	valid: [
 		'import ts from "typescript"; declare const node: ts.Node; declare const sourceFile: ts.SourceFile;node.getStart(sourceFile);',
-		'import ts from "typescript"; declare const node: string | ts.Node; declare const sourceFile: ts.SourceFile;node.getStart(sourceFile);',
-		'import ts from "typescript"; interface CustomNode extends ts.Node {} declare const node: CustomNode; node.getStart(sourceFile);',
+		'import ts from "typescript"; declare const node: ts.Expression | ts.Statement; declare const sourceFile: ts.SourceFile;node.getStart(sourceFile);',
+		'import ts from "typescript"; interface CustomNode extends ts.Node {} declare const node: CustomNode; declare const sourceFile: ts.SourceFile; node.getStart(sourceFile);',
 	],
 });

@@ -1247,6 +1247,9 @@ importers:
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
+      '@flint.fyi/volar-language':
+        specifier: workspace:^
+        version: link:../volar-language
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
