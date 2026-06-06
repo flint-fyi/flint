@@ -18,24 +18,19 @@ export function isFromPackage(
 		return false;
 	}
 
-	const typesPackageName = packageName.replace(/^@([^/]+)\//, "$1__");
+	const resolvedName = program.sourceFileToPackageName.get(sourceFile.path);
 
-	// Use the program's sourceFileToPackageName mapping when available,
-	// following the same approach as @typescript-eslint/type-utils.
-	const pkgName = (
-		program as unknown as {
-			sourceFileToPackageName?: ReadonlyMap<string, string>;
-		}
-	).sourceFileToPackageName?.get(
-		(sourceFile as unknown as { path: string }).path,
-	);
-
-	if (pkgName != null) {
-		return pkgName === packageName || pkgName === typesPackageName;
+	if (
+		resolvedName === packageName ||
+		sourceFile.fileName.includes(`/node_modules/${packageName}/`)
+	) {
+		return true;
 	}
 
+	const typesPackageName = packageName.replace(/^@([^/]+)\//, "$1__");
+
 	return (
-		sourceFile.fileName.includes(`/node_modules/${packageName}/`) ||
+		resolvedName === typesPackageName ||
 		sourceFile.fileName.includes(`/node_modules/@types/${typesPackageName}/`)
 	);
 }
