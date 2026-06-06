@@ -1,8 +1,9 @@
 // cspell:ignore LICENCE
 
+import { SyntaxKind } from "typescript";
+
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import type { AST } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
 
 import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { removeArrayElement } from "../removeArrayElement.ts";
