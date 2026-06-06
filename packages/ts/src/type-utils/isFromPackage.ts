@@ -2,7 +2,7 @@ import ts from "typescript";
 
 import { isDeclaredInModuleBlock } from "./isDeclaredInModuleBlock.ts";
 
-// TODO: Investigate unifying the two / contributing upstream.
+// TODO: Investigate unifying this with / contributing upstream to typescript-eslint.
 export function isFromPackage(
 	declaration: ts.Declaration,
 	packageName: string,

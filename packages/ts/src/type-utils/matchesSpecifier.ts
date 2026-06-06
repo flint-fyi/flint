@@ -6,6 +6,7 @@ import { isFromFile } from "./isFromFile.ts";
 import { isFromPackage } from "./isFromPackage.ts";
 import type { TypeOrValueSpecifier } from "./schemas.ts";
 
+// TODO: Investigate unifying this with / contributing upstream to typescript-eslint
 export function matchesSpecifier(
 	importedName: string | undefined,
 	declarations: ts.Declaration[],
