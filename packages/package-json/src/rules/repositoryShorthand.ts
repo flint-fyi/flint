@@ -3,7 +3,7 @@ import ts from "typescript";
 import { jsonLanguage } from "@flint.fyi/json-language";
 import { getTSNodeRange } from "@flint.fyi/typescript-language";
 
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getPackagePropertyOfNameLegacy } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 const providerRegexes = {
@@ -44,6 +44,8 @@ function createUrl(shorthand: string) {
 	}
 }
 
+// flint-disable-next-line ts/deprecated
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description: `Enforces using an object locator for \`repository\`.`,
@@ -64,7 +66,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 		return {
 			visitors: {
 				JsonSourceFile: (node) => {
-					const property = getPackagePropertyOfName(node, "repository");
+					const property = getPackagePropertyOfNameLegacy(node, "repository");
 					if (
 						property?.kind !== ts.SyntaxKind.PropertyAssignment ||
 						property.initializer.kind !== ts.SyntaxKind.StringLiteral

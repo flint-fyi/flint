@@ -7,10 +7,20 @@ export { getTSNodeRange } from "./getTSNodeRange.ts";
 export * from "./language.ts";
 export type * from "./nodes.ts";
 export type { TypeScriptNodesByName } from "./nodes.ts";
+export {
+	createScopeManager,
+	type FunctionWithParameters,
+	getScopeManager,
+	type Scope,
+	type ScopeManager,
+	type ScopeReference,
+	type ScopeVariable,
+} from "./scope/scopeManager.ts";
 export type * as AST from "./types/ast.ts";
 export type { Checker } from "./types/checker.ts";
 export { createRuleTesterTSConfig } from "./utils/createRuleTesterTSConfig.ts";
 export { declarationIncludesGlobal } from "./utils/declarationIncludesGlobal.ts";
+export { forEachChild } from "./utils/forEachChild.ts";
 export { getDeclarationsIfGlobal } from "./utils/getDeclarationsIfGlobal.ts";
 export { getModifyingReferences } from "./utils/getModifyingReferences.ts";
 export { hasSameTokens } from "./utils/hasSameTokens.ts";

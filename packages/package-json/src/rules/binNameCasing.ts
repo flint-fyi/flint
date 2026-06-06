@@ -1,7 +1,6 @@
 import { kebabCase } from "change-case";
-import ts from "typescript";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
 
 import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";
@@ -25,31 +24,25 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node) {
+				Document(node) {
 					const property = getPackagePropertyOfName(node, "bin");
-					if (
-						property?.kind !== ts.SyntaxKind.PropertyAssignment ||
-						property.initializer.kind !== ts.SyntaxKind.ObjectLiteralExpression
-					) {
+					if (property?.value.type !== "Object") {
 						return;
 					}
 
-					for (const binProperty of property.initializer.properties) {
-						if (
-							binProperty.kind !== ts.SyntaxKind.PropertyAssignment ||
-							binProperty.name.kind !== ts.SyntaxKind.StringLiteral
-						) {
+					for (const binProperty of property.value.members) {
+						if (binProperty.name.type !== "String") {
 							continue;
 						}
 
-						const propertyName = binProperty.name.text;
+						const propertyName = binProperty.name.value;
 						const kebabCasePropertyName = kebabCase(propertyName);
 
 						if (propertyName === kebabCasePropertyName) {
 							continue;
 						}
 
-						const range = getJsonNodeRange(binProperty.name, node);
+						const range = getJsonNodeRange(binProperty.name);
 
 						context.report({
 							message: "invalidCase",

@@ -4,7 +4,7 @@ export default createBlockPaddingRule(
 	{
 		description: "Enforces padding around `describe` blocks.",
 		id: "describePaddingLines",
-		presets: ["stylisticStrict"],
+		presets: [],
 	},
 	["describe", "fdescribe", "xdescribe"],
 );
