@@ -16,7 +16,8 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./new": "./src/new/index.ts"
 	},
 	"files": [
 		"lib/",
@@ -28,6 +29,7 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
+		"@humanwhocodes/momoa": "^3.3.10",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
@@ -40,7 +42,8 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./lib/index.js",
+			"./new": "./lib/new/index.js"
 		}
 	}
 }

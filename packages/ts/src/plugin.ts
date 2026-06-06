@@ -251,6 +251,7 @@ import regexZeroQuantifiers from "./rules/regexZeroQuantifiers.ts";
 import requireImports from "./rules/requireImports.ts";
 import responseJsonMethods from "./rules/responseJsonMethods.ts";
 import restrictedIdentifiers from "./rules/restrictedIdentifiers.ts";
+import restrictedImports from "./rules/restrictedImports.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import returnThisTypes from "./rules/returnThisTypes.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
@@ -564,6 +565,7 @@ export const ts = createPlugin({
 		requireImports,
 		responseJsonMethods,
 		restrictedIdentifiers,
+		restrictedImports,
 		returnAssignments,
 		returnThisTypes,
 		selfAssignments,
