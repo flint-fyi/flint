@@ -80,7 +80,7 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/ts": {
-			entry: "src/typescript.d.ts",
+			entry: ["src/typescript.d.ts"],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/vitest": {
