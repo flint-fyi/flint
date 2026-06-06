@@ -1,9 +1,8 @@
 // cspell:ignore LICENCE
 
-import { SyntaxKind } from "typescript";
+import type { ElementNode, MemberNode } from "@humanwhocodes/momoa";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
-import type { AST } from "@flint.fyi/typescript-language";
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
 
 import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { removeArrayElement } from "../removeArrayElement.ts";
@@ -28,29 +27,26 @@ type FilesRedundancyMessage =
 	| "redundantDuplicate"
 	| "redundantMain";
 
-function getBinFiles(property: AST.PropertyAssignment | undefined) {
+function getBinFiles(property: MemberNode | undefined) {
 	if (!property) {
 		return [];
 	}
 
-	const initializer = property.initializer;
-	if (initializer.kind === SyntaxKind.StringLiteral) {
-		return [initializer.text];
+	const value = property.value;
+	if (value.type === "String") {
+		return [value.value];
 	}
 
-	if (initializer.kind !== SyntaxKind.ObjectLiteralExpression) {
+	if (value.type !== "Object") {
 		return [];
 	}
 
-	return initializer.properties.flatMap((binProperty) => {
-		if (
-			binProperty.kind !== SyntaxKind.PropertyAssignment ||
-			binProperty.initializer.kind !== SyntaxKind.StringLiteral
-		) {
+	return value.members.flatMap((binProperty) => {
+		if (binProperty.value.type !== "String") {
 			return [];
 		}
 
-		return [binProperty.initializer.text];
+		return [binProperty.value.value];
 	});
 }
 
@@ -116,43 +112,35 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { sourceFile }) {
+				Document(node) {
 					const properties = getPackagePropertiesOfNames(
 						node,
 						packagePropertyNames,
 					);
 					const filesProperty = properties.files;
-					if (
-						filesProperty?.initializer.kind !==
-						SyntaxKind.ArrayLiteralExpression
-					) {
+					if (filesProperty?.value.type !== "Array") {
 						return;
 					}
 
-					const filesArray = filesProperty.initializer;
+					const filesArray = filesProperty.value;
 					const mainFile =
-						properties.main?.initializer.kind === SyntaxKind.StringLiteral
-							? properties.main.initializer.text
+						properties.main?.value.type === "String"
+							? properties.main.value.value
 							: undefined;
 					const binFiles = getBinFiles(properties.bin);
 					const seenFiles = new Set<string>();
 
 					function reportEntry(
-						element: AST.StringLiteral,
+						element: ElementNode,
+						file: string,
 						message: FilesRedundancyMessage,
 					) {
-						const { range, text } = removeArrayElement(
-							sourceFile,
-							element,
-							filesArray,
-						);
+						const { range, text } = removeArrayElement(element, filesArray);
 
 						context.report({
-							data: {
-								file: element.text,
-							},
+							data: { file },
 							message,
-							range: getJsonNodeRange(element, sourceFile),
+							range: getJsonNodeRange(element.value),
 							suggestions: [
 								{
 									id: "removeFilesEntry",
@@ -164,21 +152,21 @@ export default ruleCreator.createRule(jsonLanguage, {
 					}
 
 					for (const element of filesArray.elements) {
-						if (element.kind !== SyntaxKind.StringLiteral) {
+						if (element.value.type !== "String") {
 							continue;
 						}
 
-						const value = element.text;
+						const value = element.value.value;
 
 						if (seenFiles.has(value)) {
-							reportEntry(element, "redundantDuplicate");
+							reportEntry(element, value, "redundantDuplicate");
 							continue;
 						}
 
 						seenFiles.add(value);
 
 						if (defaultFilePatterns.some((pattern) => pattern.test(value))) {
-							reportEntry(element, "redundantDefault");
+							reportEntry(element, value, "redundantDefault");
 							continue;
 						}
 
@@ -189,12 +177,12 @@ export default ruleCreator.createRule(jsonLanguage, {
 						}
 
 						if (mainFile && filesEntryRegex.test(mainFile)) {
-							reportEntry(element, "redundantMain");
+							reportEntry(element, value, "redundantMain");
 							continue;
 						}
 
 						if (binFiles.some((binFile) => filesEntryRegex.test(binFile))) {
-							reportEntry(element, "redundantBin");
+							reportEntry(element, value, "redundantBin");
 						}
 					}
 				},
