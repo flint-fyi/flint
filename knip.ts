@@ -52,9 +52,6 @@ export default {
 		"packages/package-json": {
 			// Temporary, until we migrate rules
 			entry: [
-				"src/getPackagePropertiesOfNames.ts",
-				"src/getPackagePropertyOfName.ts",
-				"src/getPackageProperties.ts",
 				"src/removeArrayElement.ts",
 				"src/removeObjectProperty.ts",
 			],

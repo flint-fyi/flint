@@ -1,13 +1,10 @@
-import { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
 
-import { getPackagePropertiesOfNamesLegacy } from "../getPackagePropertiesOfNames.ts";
+import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
-// flint-disable-next-line ts/deprecated
-// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:
@@ -63,44 +60,41 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { options }) {
+				Document(node, { options }) {
 					const {
 						author,
 						contributors,
 						private: privateNode,
-					} = getPackagePropertiesOfNamesLegacy(node, [
+					} = getPackagePropertiesOfNames(node, [
 						"private",
 						"author",
 						"contributors",
 					]);
 					if (
 						options.ignorePrivate &&
-						privateNode?.kind === SyntaxKind.PropertyAssignment &&
-						privateNode.initializer.kind === SyntaxKind.TrueKeyword
+						privateNode?.value.type === "Boolean" &&
+						privateNode.value.value
 					) {
 						return;
 					}
 
 					if (
 						options.preferContributorsOnly &&
-						author?.kind === SyntaxKind.PropertyAssignment &&
-						author.name.kind === SyntaxKind.StringLiteral
+						author?.name.type === "String"
 					) {
 						context.report({
 							message: "preferContributorsOnly",
-							range: getJsonNodeRange(author.name, node),
+							range: getJsonNodeRange(author.name),
 						});
 					}
 
 					if (
-						contributors?.kind === SyntaxKind.PropertyAssignment &&
-						contributors.initializer.kind ===
-							SyntaxKind.ArrayLiteralExpression &&
-						!contributors.initializer.elements.length
+						contributors?.value.type === "Array" &&
+						!contributors.value.elements.length
 					) {
 						context.report({
 							message: "emptyContributors",
-							range: getJsonNodeRange(contributors.initializer, node),
+							range: getJsonNodeRange(contributors.value),
 						});
 					}
 
