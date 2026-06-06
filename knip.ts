@@ -50,8 +50,6 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/package-json": {
-			// Temporary, until we migrate rules
-			entry: ["src/removeArrayElement.ts", "src/removeObjectProperty.ts"],
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
 		},
 		"packages/performance": {

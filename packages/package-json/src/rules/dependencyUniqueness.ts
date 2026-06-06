@@ -1,11 +1,10 @@
-import { SyntaxKind } from "typescript";
+import type { ArrayNode, ObjectNode } from "@humanwhocodes/momoa";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
-import type { AST } from "@flint.fyi/typescript-language";
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
 
-import { getPackagePropertiesLegacy } from "../getPackageProperties.ts";
-import { removeArrayElementLegacy } from "../removeArrayElement.ts";
-import { removeObjectPropertyLegacy } from "../removeObjectProperty.ts";
+import { getPackageProperties } from "../getPackageProperties.ts";
+import { removeArrayElement } from "../removeArrayElement.ts";
+import { removeObjectProperty } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 const dependencyPropertyNames = new Set([
@@ -23,8 +22,6 @@ const crossGroupDependencyPropertyNames = new Set([
 	"peerDependencies",
 ]);
 
-// flint-disable-next-line ts/deprecated
-// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:
@@ -53,34 +50,29 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node) {
+				Document(node) {
 					const dependencies = new Set<string>();
-					const crossGroupDependencies: AST.ObjectLiteralExpression[] = [];
+					const crossGroupDependencies: ObjectNode[] = [];
 
-					function checkArrayDependencies(
-						initializer: AST.ArrayLiteralExpression,
-					) {
+					function checkArrayDependencies(initializer: ArrayNode) {
 						const seen = new Set<string>();
 
 						for (const element of initializer.elements.toReversed()) {
-							if (element.kind !== SyntaxKind.StringLiteral) {
+							const elementValue = element.value;
+							if (elementValue.type !== "String") {
 								continue;
 							}
 
-							if (!seen.has(element.text)) {
-								seen.add(element.text);
+							if (!seen.has(elementValue.value)) {
+								seen.add(elementValue.value);
 								continue;
 							}
 
-							const { range, text } = removeArrayElementLegacy(
-								node,
-								element,
-								initializer,
-							);
+							const { range, text } = removeArrayElement(element, initializer);
 
 							context.report({
 								message: "duplicateDependency",
-								range: getJsonNodeRange(element, node),
+								range: getJsonNodeRange(elementValue),
 								suggestions: [
 									{
 										id: "removeDependency",
@@ -92,35 +84,28 @@ export default ruleCreator.createRule(jsonLanguage, {
 						}
 					}
 
-					function checkObjectDependencies(
-						initializer: AST.ObjectLiteralExpression,
-					) {
+					function checkObjectDependencies(initializer: ObjectNode) {
 						const seen = new Set<string>();
 
-						for (const dependency of initializer.properties.toReversed()) {
-							if (
-								dependency.kind !== SyntaxKind.PropertyAssignment ||
-								dependency.name.kind !== SyntaxKind.StringLiteral
-							) {
+						for (const dependencyProperty of initializer.members.toReversed()) {
+							const dependencyName = dependencyProperty.name;
+							if (dependencyName.type !== "String") {
 								continue;
 							}
 
-							const dependencyName = dependency.name;
-
-							if (!seen.has(dependencyName.text)) {
-								seen.add(dependencyName.text);
+							if (!seen.has(dependencyName.value)) {
+								seen.add(dependencyName.value);
 								continue;
 							}
 
-							const { range, text } = removeObjectPropertyLegacy(
-								node,
-								dependency,
+							const { range, text } = removeObjectProperty(
+								dependencyProperty,
 								initializer,
 							);
 
 							context.report({
 								message: "duplicateDependency",
-								range: getJsonNodeRange(dependencyName, node),
+								range: getJsonNodeRange(dependencyName),
 								suggestions: [
 									{
 										id: "removeDependency",
@@ -134,24 +119,22 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 					function checkCrossGroupDependencies() {
 						for (const dependencyGroup of crossGroupDependencies) {
-							for (const dependency of dependencyGroup.properties) {
+							for (const dependency of dependencyGroup.members) {
 								if (
-									dependency.kind !== SyntaxKind.PropertyAssignment ||
-									dependency.name.kind !== SyntaxKind.StringLiteral ||
-									!dependencies.has(dependency.name.text)
+									dependency.name.type !== "String" ||
+									!dependencies.has(dependency.name.value)
 								) {
 									continue;
 								}
 
-								const { range, text } = removeObjectPropertyLegacy(
-									node,
+								const { range, text } = removeObjectProperty(
 									dependency,
 									dependencyGroup,
 								);
 
 								context.report({
 									message: "crossGroupDuplicate",
-									range: getJsonNodeRange(dependency.name, node),
+									range: getJsonNodeRange(dependency.name),
 									suggestions: [
 										{
 											id: "removeDependency",
@@ -164,40 +147,36 @@ export default ruleCreator.createRule(jsonLanguage, {
 						}
 					}
 
-					for (const property of getPackagePropertiesLegacy(node) ?? []) {
+					for (const property of getPackageProperties(node) ?? []) {
 						if (
-							property.kind !== SyntaxKind.PropertyAssignment ||
-							property.name.kind !== SyntaxKind.StringLiteral ||
-							!dependencyPropertyNames.has(property.name.text)
+							property.name.type !== "String" ||
+							!dependencyPropertyNames.has(property.name.value)
 						) {
 							continue;
 						}
 
-						const initializer = property.initializer;
+						const propertyValue = property.value;
 
-						if (initializer.kind === SyntaxKind.ArrayLiteralExpression) {
-							checkArrayDependencies(initializer);
+						if (propertyValue.type === "Array") {
+							checkArrayDependencies(propertyValue);
 							continue;
 						}
 
-						if (initializer.kind === SyntaxKind.ObjectLiteralExpression) {
-							checkObjectDependencies(initializer);
+						if (propertyValue.type === "Object") {
+							checkObjectDependencies(propertyValue);
 
-							const groupName = property.name.text;
+							const groupName = property.name.value;
 
 							if (groupName === "dependencies") {
-								for (const dependency of initializer.properties) {
-									if (
-										dependency.kind !== SyntaxKind.PropertyAssignment ||
-										dependency.name.kind !== SyntaxKind.StringLiteral
-									) {
+								for (const dependency of propertyValue.members) {
+									if (dependency.name.type !== "String") {
 										continue;
 									}
 
-									dependencies.add(dependency.name.text);
+									dependencies.add(dependency.name.value);
 								}
 							} else if (crossGroupDependencyPropertyNames.has(groupName)) {
-								crossGroupDependencies.push(initializer);
+								crossGroupDependencies.push(propertyValue);
 							}
 						}
 					}
