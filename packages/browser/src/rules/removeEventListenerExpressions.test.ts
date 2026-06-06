@@ -42,15 +42,15 @@ element.removeEventListener("click", () => console.log("clicked"));
 		{
 			code: `
 declare const element: HTMLElement;
-document.getElementById("button").removeEventListener("mouseover", function handler() {
+document.getElementById("button")!.removeEventListener("mouseover", function handler() {
     console.log("hover");
 });
 `,
 			snapshot: `
 declare const element: HTMLElement;
-document.getElementById("button").removeEventListener("mouseover", function handler() {
-                                                                   ~~~~~~~~~~~~~~~~~~~~
-                                                                   Inline function expressions in \`removeEventListener\` calls will not remove the original listener.
+document.getElementById("button")!.removeEventListener("mouseover", function handler() {
+                                                                    ~~~~~~~~~~~~~~~~~~~~
+                                                                    Inline function expressions in \`removeEventListener\` calls will not remove the original listener.
     console.log("hover");
     ~~~~~~~~~~~~~~~~~~~~~
 });
@@ -60,10 +60,12 @@ document.getElementById("button").removeEventListener("mouseover", function hand
 		{
 			code: `
 declare const element: HTMLElement;
+declare function resize(): void;
 window.removeEventListener("resize", () => resize());
 `,
 			snapshot: `
 declare const element: HTMLElement;
+declare function resize(): void;
 window.removeEventListener("resize", () => resize());
                                      ~~~~~~~~~~~~~~
                                      Inline function expressions in \`removeEventListener\` calls will not remove the original listener.
@@ -72,27 +74,32 @@ window.removeEventListener("resize", () => resize());
 	],
 	valid: [
 		`
-declare const element: HTMLElement;
+declare const element: { removeEventListener(type: string, listener?: unknown): void };
 element.removeEventListener("click", null);
 `,
 		`
-declare const element: HTMLElement;
+declare const element: { removeEventListener(type: string, listener?: unknown): void };
 element.removeEventListener("click");
 `,
 		`
 declare const element: HTMLElement;
+declare const handler: EventListener;
 element.removeEventListener("click", handler);
 `,
 		`
 declare const element: HTMLElement;
-element.removeEventListener("click", this.handler);
+function test(this: { handler: EventListener }) {
+    element.removeEventListener("click", this.handler);
+}
 `,
 		`
 declare const element: HTMLElement;
+declare const obj: { handler: EventListener };
 element.removeEventListener("click", obj.handler);
 `,
 		`
 declare const element: HTMLElement;
+declare const handler: EventListener;
 element.addEventListener("click", handler);
 `,
 		`
@@ -104,7 +111,7 @@ declare const element: HTMLElement;
 function handler() { console.log("clicked"); }
 element.removeEventListener("click", handler);`,
 		`
-declare const other: { removeEventListener: (...args: unknown) => void };
+declare const other: { removeEventListener: (...args: unknown[]) => void };
 other.removeEventListener("click", null);
 `,
 	],
