@@ -55,6 +55,9 @@ export default {
 			ignoreDependencies: [
 				// It's bugging IDK.
 				"@flint.fyi/rule-tester!",
+
+				// Used only inside rule tester fixture source strings.
+				"@flint.fyi/volar-language",
 			],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},

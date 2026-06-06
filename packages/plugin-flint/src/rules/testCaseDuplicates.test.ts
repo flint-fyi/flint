@@ -5,215 +5,289 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-                ruleTester.describe(rule, {
-                    valid: ['a', 'a'],
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: ['a', 'a'],
+    invalid: []
+});
+
 `,
 			snapshot: `
-                ruleTester.describe(rule, {
-                    valid: ['a', 'a'],
-                                 ~~~
-                                 This test code already appeared in a previous test.
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: ['a', 'a'],
+                 ~~~
+                 This test code already appeared in a previous test.
+    invalid: []
+});
+
 `,
 		},
 		{
 			code: `
-                ruleTester.describe(rule, {
-                    valid: [
-                        'a',
-                        "a",
-                    ],
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        'a',
+        "a",
+    ],
+    invalid: []
+});
+
 `,
 			snapshot: `
-                ruleTester.describe(rule, {
-                    valid: [
-                        'a',
-                        "a",
-                        ~~~
-                        This test code already appeared in a previous test.
-                    ],
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        'a',
+        "a",
+        ~~~
+        This test code already appeared in a previous test.
+    ],
+    invalid: []
+});
+
 `,
 		},
 		{
 			code: `
-                ruleTester.describe(rule, {
-                    valid: [
-                        \`a\`,
-                        \`a\`,
-                    ],
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        \`a\`,
+        \`a\`,
+    ],
+    invalid: []
+});
+
 `,
 			snapshot: `
-                ruleTester.describe(rule, {
-                    valid: [
-                        \`a\`,
-                        \`a\`,
-                        ~~~
-                        This test code already appeared in a previous test.
-                    ],
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        \`a\`,
+        \`a\`,
+        ~~~
+        This test code already appeared in a previous test.
+    ],
+    invalid: []
+});
+
 `,
 		},
 		{
 			code: `
-                ruleTester.describe(rule, {
-                    valid: [
-                        { code: "a" },
-                        { code: "a" },
-                    ],
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        { code: "a" },
+        { code: "a" },
+    ],
+    invalid: []
+});
+
 `,
 			snapshot: `
-                ruleTester.describe(rule, {
-                    valid: [
-                        { code: "a" },
-                        { code: "a" },
-                        ~~~~~~~~~~~~~
-                        This test code already appeared in a previous test.
-                    ],
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        { code: "a" },
+        { code: "a" },
+        ~~~~~~~~~~~~~
+        This test code already appeared in a previous test.
+    ],
+    invalid: []
+});
+
 `,
 		},
 		{
 			code: `
-                ruleTester.describe(rule, {
-                    valid: [
-                        { code: "a", fileName: "b.ts" },
-                        { code: "a", fileName: "b.ts" },
-                    ],
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        { code: "a", fileName: "b.ts" },
+        { code: "a", fileName: "b.ts" },
+    ],
+    invalid: []
+});
+
 `,
 			snapshot: `
-                ruleTester.describe(rule, {
-                    valid: [
-                        { code: "a", fileName: "b.ts" },
-                        { code: "a", fileName: "b.ts" },
-                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                        This test code already appeared in a previous test.
-                    ],
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        { code: "a", fileName: "b.ts" },
+        { code: "a", fileName: "b.ts" },
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        This test code already appeared in a previous test.
+    ],
+    invalid: []
+});
+
 `,
 		},
 		{
 			code: `
-                ruleTester.describe(rule, {
-                    valid: [
-                        { code: "a", fileName: "b.ts", options: { c: "d" } },
-                        { code: "a", fileName: "b.ts", options: { c: "d" } },
-                    ],
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        { code: "a", fileName: "b.ts", name: "first" },
+        { code: "a", fileName: "b.ts", name: "second" },
+    ],
+    invalid: []
+});
+
 `,
 			snapshot: `
-                ruleTester.describe(rule, {
-                    valid: [
-                        { code: "a", fileName: "b.ts", options: { c: "d" } },
-                        { code: "a", fileName: "b.ts", options: { c: "d" } },
-                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                        This test code already appeared in a previous test.
-                    ],
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        { code: "a", fileName: "b.ts", name: "first" },
+        { code: "a", fileName: "b.ts", name: "second" },
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        This test code already appeared in a previous test.
+    ],
+    invalid: []
+});
+
 `,
 		},
 		{
 			code: `
-                ruleTester.describe(rule, {
-                    valid: [
-                        { code: "a", files: { "b.ts": "{}" } },
-                        { code: "a", files: { "b.ts": "{}" } },
-                    ],
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        { code: "a", files: { "b.ts": "{}" } },
+        { code: "a", files: { "b.ts": "{}" } },
+    ],
+    invalid: []
+});
+
 `,
 			snapshot: `
-                ruleTester.describe(rule, {
-                    valid: [
-                        { code: "a", files: { "b.ts": "{}" } },
-                        { code: "a", files: { "b.ts": "{}" } },
-                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                        This test code already appeared in a previous test.
-                    ],
-                    invalid: []
-                });
-            
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        { code: "a", files: { "b.ts": "{}" } },
+        { code: "a", files: { "b.ts": "{}" } },
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        This test code already appeared in a previous test.
+    ],
+    invalid: []
+});
+
 `,
 		},
 	],
 	valid: [
 		`
-            describe(rule, {
-                valid: ['a', 'a'],
-                invalid: []
-            });
-        `,
+import { describe } from "vitest";
+
+import rule from "../ruleCreationMethods";
+
+describe(rule.about.id, () => {
+    const tests = {
+        valid: ['a', 'a'],
+        invalid: []
+    };
+    void tests;
+});
+`,
 		`
-            ruleTester.describe(rule, {
-                valid: ['a', 'b'],
-                invalid: []
-            });
-        `,
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: ['a', 'b'],
+    invalid: []
+});
+`,
 		`
-            ruleTester.describe(rule, {
-                valid: [
-                    { code: \`a\`, fileName: "b.ts" },
-                    { code: \`a\`, fileName: "c.ts" },
-                ],
-                invalid: []
-            });
-        `,
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        { code: \`a\`, fileName: "b.ts" },
+        { code: \`a\`, fileName: "c.ts" },
+    ],
+    invalid: []
+});
+`,
 		`
-            ruleTester.describe(rule, {
-                valid: [
-                    { code: \`a\`, fileName: "b.ts", options: { c: "d" } },
-                    { code: \`a\`, fileName: "b.ts", options: { c: "e" } },
-                ],
-                invalid: []
-            });
-        `,
-		`
-            ruleTester.describe(rule, {
-                valid: [
-                    { code: \`a\`, fileName: "b.ts", options: { c: "d" } },
-                    { code: \`a\`, fileName: "c.ts", options: { c: "d" } },
-                ],
-                invalid: []
-            });
-        `,
-		`
-            ruleTester.describe(rule, {
-                valid: [
-                    { code: \`a\`, files: { "b.ts": "{}" } },
-                    { code: \`a\`, files: { "c.ts": "{}" } },
-                ],
-                invalid: []
-            });
-        `,
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        { code: \`a\`, files: { "b.ts": "{}" } },
+        { code: \`a\`, files: { "c.ts": "{}" } },
+    ],
+    invalid: []
+});
+`,
 	],
 });
