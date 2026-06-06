@@ -1,11 +1,6 @@
 import type { ArrayNode, ElementNode } from "@humanwhocodes/momoa";
 
-import {
-	getJsonNodeRange as getJsonNodeRangeLegacy,
-	type JsonSourceFile,
-} from "@flint.fyi/json-language";
 import { getJsonNodeRange } from "@flint.fyi/json-language/new";
-import type { AST } from "@flint.fyi/typescript-language";
 
 export function removeArrayElement(
 	elementNode: ElementNode,
