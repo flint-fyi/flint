@@ -1,5 +1,6 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
+
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

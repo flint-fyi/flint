@@ -1,9 +1,12 @@
+import * as ts from "typescript";
+
 import {
-	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 function haveSameArrayExpression(
 	expr1: AST.Expression,
@@ -94,8 +97,6 @@ function isSomeOrEveryCall(node: AST.Expression, methodName: "every" | "some") {
 function isZero(node: AST.Expression) {
 	return ts.isNumericLiteral(node) && node.text === "0";
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

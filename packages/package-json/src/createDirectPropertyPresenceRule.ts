@@ -1,10 +1,10 @@
-import type { AnyRule } from "@flint.fyi/core";
-import { jsonLanguage } from "@flint.fyi/json-language";
-import type { JsonSourceFile } from "@flint.fyi/json-language";
 import ts from "typescript";
 import { z } from "zod/v4";
 
-import { getPackagePropertyOfName } from "./getPackagePropertyOfName.ts";
+import type { AnyRule } from "@flint.fyi/core";
+import { jsonLanguage, type JsonSourceFile } from "@flint.fyi/json-language";
+
+import { getPackagePropertyOfNameLegacy } from "./getPackagePropertyOfName.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export interface CreatePropertyPresenceRuleOptions {
@@ -28,6 +28,8 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 ) {
 	const id = `${propertyName}Presence` as const;
 
+	// flint-disable-next-line ts/deprecated
+	// eslint-disable-next-line @typescript-eslint/no-deprecated
 	const rule: AnyRule = ruleCreator.createRule(jsonLanguage, {
 		about: {
 			description: `Enforces that the \`${propertyName}\` property is present.`,
@@ -60,7 +62,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 							return;
 						}
 
-						if (!getPackagePropertyOfName(node, propertyName)) {
+						if (!getPackagePropertyOfNameLegacy(node, propertyName)) {
 							context.report({
 								data: { propertyName },
 								message: "missing",
@@ -77,7 +79,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 }
 
 function isPrivatePackage(node: JsonSourceFile) {
-	const privacy = getPackagePropertyOfName(node, "private");
+	const privacy = getPackagePropertyOfNameLegacy(node, "private");
 
 	return (
 		privacy?.kind === ts.SyntaxKind.PropertyAssignment &&

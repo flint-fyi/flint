@@ -1,13 +1,16 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import { kebabCase } from "change-case";
 import ts from "typescript";
 
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
+
+import { getPackagePropertyOfNameLegacy } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 // See https://docs.npmjs.com/cli/v11/using-npm/scripts
 const builtinCamelCaseScripts = new Set(["prepublishOnly"]);
 
+// flint-disable-next-line ts/deprecated
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description: "Enforce that names for scripts properties are in kebab case.",
@@ -28,8 +31,8 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { sourceFile }) {
-					const property = getPackagePropertyOfName(node, "scripts");
+				JsonSourceFile(node) {
+					const property = getPackagePropertyOfNameLegacy(node, "scripts");
 					if (
 						property?.kind !== ts.SyntaxKind.PropertyAssignment ||
 						property.initializer.kind !== ts.SyntaxKind.ObjectLiteralExpression
@@ -56,7 +59,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							continue;
 						}
 
-						const range = getJsonNodeRange(scriptsProperty.name, sourceFile);
+						const range = getJsonNodeRange(scriptsProperty.name, node);
 
 						context.report({
 							message: "invalidCase",

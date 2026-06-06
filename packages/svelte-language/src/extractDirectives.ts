@@ -1,10 +1,11 @@
+import type { AST } from "svelte/compiler";
+
 import {
 	getColumnAndLineOfPosition,
 	type SourceFileWithLineMap,
 } from "@flint.fyi/core";
 import type { ExtractedDirective } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import type { AST } from "svelte/compiler";
 
 export function extractDirectives(
 	ast: AST.Root,

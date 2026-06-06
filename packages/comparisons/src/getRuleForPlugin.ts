@@ -7,7 +7,7 @@ import { performance } from "@flint.fyi/performance";
 import { flint } from "@flint.fyi/plugin-flint";
 import { spelling } from "@flint.fyi/spelling";
 import { vitest } from "@flint.fyi/vitest";
-import { type AnyRule, json, md, packageJson, ts, yaml } from "flint";
+import { json, md, packageJson, ts, yaml, type AnyRule } from "flint";
 
 const plugins = {
 	astro,

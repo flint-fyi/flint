@@ -1,6 +1,8 @@
-import { nullThrows } from "@flint.fyi/utils";
-import cliCursor from "cli-cursor";
 import readline from "node:readline";
+
+import cliCursor from "cli-cursor";
+
+import { nullThrows } from "@flint.fyi/utils";
 
 import type { RendererContext, RendererFactory } from "../types.ts";
 import { createListeners } from "./createListeners.ts";
@@ -15,7 +17,7 @@ export const interactiveRendererFactory: RendererFactory = {
 	about: {
 		name: "interactive",
 	},
-	initialize(presenter) {
+	initialize(host, presenter) {
 		const onDisposeListeners = createListeners();
 		const onQuitListeners = createListeners();
 		const [getFile, setFile] = createState(0);
@@ -112,7 +114,7 @@ export const interactiveRendererFactory: RendererFactory = {
 						printHeader(getFile(), filesWithReportResults.length),
 						printControls(getFile(), filesWithReportResults.length),
 						"",
-						await printFile(filePath, presenter, fileResults.reports),
+						await printFile(host, filePath, presenter, fileResults.reports),
 						"",
 						printSummary(filesWithReportResults),
 					].join("\n"),

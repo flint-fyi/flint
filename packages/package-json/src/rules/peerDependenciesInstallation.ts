@@ -1,9 +1,12 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import { SyntaxKind } from "typescript";
 
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
+
+import { getPackagePropertiesOfNamesLegacy } from "../getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
+// flint-disable-next-line ts/deprecated
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:
@@ -24,11 +27,13 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { sourceFile }) {
-					const peerDependencies = getPackagePropertyOfName(
-						node,
-						"peerDependencies",
-					);
+				JsonSourceFile(node) {
+					const { devDependencies, peerDependencies } =
+						getPackagePropertiesOfNamesLegacy(node, [
+							"peerDependencies",
+							"devDependencies",
+						]);
+
 					if (
 						peerDependencies?.kind !== SyntaxKind.PropertyAssignment ||
 						peerDependencies.initializer.kind !==
@@ -38,10 +43,6 @@ export default ruleCreator.createRule(jsonLanguage, {
 					}
 
 					const devDependencyNames = new Set<string>();
-					const devDependencies = getPackagePropertyOfName(
-						node,
-						"devDependencies",
-					);
 					if (
 						devDependencies?.kind === SyntaxKind.PropertyAssignment &&
 						devDependencies.initializer.kind ===
@@ -66,7 +67,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							context.report({
 								data: { name: dependency.name.text },
 								message: "missingDevDependency",
-								range: getJsonNodeRange(dependency.name, sourceFile),
+								range: getJsonNodeRange(dependency.name, node),
 							});
 						}
 					}

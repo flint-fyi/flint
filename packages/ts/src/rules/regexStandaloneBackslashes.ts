@@ -1,9 +1,10 @@
 import { visitRegExpAST } from "@eslint-community/regexpp";
 import type { Character } from "@eslint-community/regexpp/ast";
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type {
-	AST,
-	TypeScriptFileServices,
+
+import {
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";

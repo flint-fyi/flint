@@ -1,6 +1,7 @@
 import { parse } from "@astrojs/compiler/sync";
 import type { RootNode } from "@astrojs/compiler/types";
 import { getLanguagePlugin } from "@astrojs/ts-plugin/dist/language.js";
+
 import type { SourceFileWithLineMap } from "@flint.fyi/core";
 import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
 import { createVolarBasedLanguage } from "@flint.fyi/volar-language";

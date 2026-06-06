@@ -1,5 +1,6 @@
-import type { CharacterReportRange } from "@flint.fyi/core";
 import type * as ts from "typescript";
+
+import type { CharacterReportRange } from "@flint.fyi/core";
 
 import type * as AST from "./types/ast.ts";
 

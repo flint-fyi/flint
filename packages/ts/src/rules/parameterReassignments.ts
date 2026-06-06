@@ -1,9 +1,9 @@
 import {
-	type FunctionWithParameters,
 	getScopeManager,
 	getTSNodeRange,
-	type TypeScriptFileServices,
 	typescriptLanguage,
+	type FunctionWithParameters,
+	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";

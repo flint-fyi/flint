@@ -1,12 +1,13 @@
 import {
 	parseRegExpLiteral,
-	type AST as RegExpAST,
 	visitRegExpAST,
+	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
+
 import {
+	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
-	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";

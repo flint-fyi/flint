@@ -1,14 +1,15 @@
+import { SyntaxKind } from "typescript";
+
 import {
-	type AST,
 	getTSNodeRange,
 	isGlobalDeclaration,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
-
-const globalNames = new Set(["alert", "confirm", "prompt"]);
 
 import { ruleCreator } from "./ruleCreator.ts";
+
+const globalNames = new Set(["alert", "confirm", "prompt"]);
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

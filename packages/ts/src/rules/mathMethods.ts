@@ -1,12 +1,13 @@
+import { SyntaxKind } from "typescript";
+
 import {
-	type AST,
-	type Checker,
 	getTSNodeRange,
 	hasSameTokens,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
+	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { skipParentheses } from "./utils/skipParentheses.ts";

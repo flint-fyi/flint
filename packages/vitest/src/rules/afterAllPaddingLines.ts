@@ -4,7 +4,7 @@ export default createBlockPaddingRule(
 	{
 		description: "Enforces padding around `afterAll` blocks.",
 		id: "afterAllPaddingLines",
-		presets: ["stylisticStrict"],
+		presets: [],
 	},
 	"afterAll",
 );

@@ -1,12 +1,13 @@
+import ts, { SyntaxKind } from "typescript";
+import { z } from "zod/v4";
+
 import {
-	type AST,
-	type Checker,
 	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
-import { z } from "zod/v4";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

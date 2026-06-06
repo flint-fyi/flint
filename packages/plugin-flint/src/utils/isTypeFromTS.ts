@@ -1,5 +1,6 @@
-import type { AST, Checker } from "@flint.fyi/typescript-language";
 import type { Type } from "typescript";
+
+import type { AST, Checker } from "@flint.fyi/typescript-language";
 
 export function isTypeFromTS(
 	node: AST.Expression,

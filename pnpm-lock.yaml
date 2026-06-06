@@ -61,8 +61,8 @@ catalogs:
       specifier: 18.0.0
       version: 18.0.0
     eslint-plugin-package-json:
-      specifier: 1.1.0
-      version: 1.1.0
+      specifier: 1.2.0
+      version: 1.2.0
     eslint-plugin-perfectionist:
       specifier: 5.9.0
       version: 5.9.0
@@ -220,6 +220,9 @@ importers:
       '@eslint/js':
         specifier: catalog:dev
         version: 10.0.1(eslint@10.3.0(jiti@2.7.0))
+      '@eslint/json':
+        specifier: 1.2.0
+        version: 1.2.0
       '@eslint/markdown':
         specifier: catalog:dev
         version: 8.0.0
@@ -241,6 +244,9 @@ importers:
       '@flint.fyi/vitest':
         specifier: workspace:^
         version: link:packages/vitest
+      '@ianvs/prettier-plugin-sort-imports':
+        specifier: ^4.7.1
+        version: 4.7.1(@vue/compiler-sfc@3.5.30)(prettier@3.8.1)
       '@types/node':
         specifier: catalog:dev
         version: 24.12.0
@@ -267,7 +273,7 @@ importers:
         version: 18.0.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
-        version: 1.1.0(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
+        version: 1.2.0(@eslint/json@1.2.0)(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
       eslint-plugin-perfectionist:
         specifier: catalog:dev
         version: 5.9.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
@@ -497,6 +503,9 @@ importers:
       prettier:
         specifier: 3.8.1
         version: 3.8.1
+      zod:
+        specifier: ^4.3.6
+        version: 4.4.1
     devDependencies:
       '@eslint-community/eslint-plugin-eslint-comments':
         specifier: catalog:dev
@@ -551,7 +560,7 @@ importers:
         version: 18.0.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
-        version: 1.1.0(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
+        version: 1.2.0(@eslint/json@1.2.0)(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
       eslint-plugin-perfectionist:
         specifier: catalog:dev
         version: 5.9.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
@@ -764,6 +773,9 @@ importers:
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
+      '@humanwhocodes/momoa':
+        specifier: ^3.3.10
+        version: 3.3.10
       typescript:
         specifier: ^5.9.0 || ^6.0.0
         version: 5.9.3
@@ -946,6 +958,9 @@ importers:
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
+      '@humanwhocodes/momoa':
+        specifier: ^3.3.10
+        version: 3.3.10
       tsdown:
         specifier: catalog:dev
         version: 0.21.0(@arethetypeswrong/core@0.18.2)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(oxc-resolver@11.19.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0))(synckit@0.11.12)(typescript@5.9.3)
@@ -2337,6 +2352,24 @@ packages:
   '@humanwhocodes/retry@0.4.3':
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
+
+  '@ianvs/prettier-plugin-sort-imports@4.7.1':
+    resolution: {integrity: sha512-jmTNYGlg95tlsoG3JLCcuC4BrFELJtLirLAkQW/71lXSyOhVt/Xj7xWbbGcuVbNq1gwWgSyMrPjJc9Z30hynVw==}
+    peerDependencies:
+      '@prettier/plugin-oxc': ^0.0.4 || ^0.1.0
+      '@vue/compiler-sfc': 2.7.x || 3.x
+      content-tag: ^4.0.0
+      prettier: 2 || 3 || ^4.0.0-0
+      prettier-plugin-ember-template-tag: ^2.1.0
+    peerDependenciesMeta:
+      '@prettier/plugin-oxc':
+        optional: true
+      '@vue/compiler-sfc':
+        optional: true
+      content-tag:
+        optional: true
+      prettier-plugin-ember-template-tag:
+        optional: true
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -4575,11 +4608,15 @@ packages:
       typescript:
         optional: true
 
-  eslint-plugin-package-json@1.1.0:
-    resolution: {integrity: sha512-yFBkYxHBlGKBi3Av17pCkJie+G3/DN/XEy1KGkHnTLXCY8eX7rF2kGiFn8a3N4iIGV4NJzKA0HdpINwVxczX0Q==}
+  eslint-plugin-package-json@1.2.0:
+    resolution: {integrity: sha512-3BszsD7XVddaUNbMfK+1lF1Qg8ck0nO3bNT/7IjXP8wrGzPThHZpkhm5UnbY1Nb/s3o6DUNgHI4aEqQV/t83fw==}
     engines: {node: ^22.22.2 || >=24.15.0}
     peerDependencies:
+      '@eslint/json': '>=1.0.0'
       eslint: '>=9.0.0'
+    peerDependenciesMeta:
+      '@eslint/json':
+        optional: true
 
   eslint-plugin-perfectionist@5.9.0:
     resolution: {integrity: sha512-8TWzg02zmnBdZwCkWLi8jhzqXI+fE7Z/RwV8SL6xD45tJ8Bp3wGuYL2XtQgfe/Wd0eBqOUX+s6ey73IyszvKTA==}
@@ -8686,6 +8723,19 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
+  '@ianvs/prettier-plugin-sort-imports@4.7.1(@vue/compiler-sfc@3.5.30)(prettier@3.8.1)':
+    dependencies:
+      '@babel/generator': 7.29.1
+      '@babel/parser': 7.29.2
+      '@babel/traverse': 7.29.0
+      '@babel/types': 7.29.0
+      prettier: 3.8.1
+      semver: 7.8.0
+    optionalDependencies:
+      '@vue/compiler-sfc': 3.5.30
+    transitivePeerDependencies:
+      - supports-color
+
   '@img/colour@1.1.0': {}
 
   '@img/sharp-darwin-arm64@0.34.5':
@@ -10970,7 +11020,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  eslint-plugin-package-json@1.1.0(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0)):
+  eslint-plugin-package-json@1.2.0(@eslint/json@1.2.0)(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0)):
     dependencies:
       '@altano/repository-tools': 2.0.1
       change-case: 5.4.4
@@ -10978,11 +11028,14 @@ snapshots:
       detect-newline: 4.0.1
       eslint: 10.3.0(jiti@2.7.0)
       eslint-fix-utils: 0.4.2(@types/estree@1.0.8)(eslint@10.3.0(jiti@2.7.0))
+      eslint-json-compat-utils: 0.2.3(@eslint/json@1.2.0)(eslint@10.3.0(jiti@2.7.0))(jsonc-eslint-parser@3.1.0)
       jsonc-eslint-parser: 3.1.0
       package-json-validator: 1.5.1
       semver: 7.8.0
       sort-object-keys: 2.1.0
       sort-package-json: 3.6.1
+    optionalDependencies:
+      '@eslint/json': 1.2.0
     transitivePeerDependencies:
       - '@types/estree'
 
