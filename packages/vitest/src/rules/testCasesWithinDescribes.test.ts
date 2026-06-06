@@ -5,10 +5,10 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-beforeEach("my test", () => {})
+beforeEach(() => {})
 `,
 			snapshot: `
-beforeEach("my test", () => {})
+beforeEach(() => {})
 ~~~~~~~~~~
 Prefer wrapping \`beforeEach()\` hooks in a \`describe()\` block.
 `,
@@ -44,11 +44,11 @@ describe("test suite", () => {
 		{
 			code: `
 describe("test suite", () => {});
-afterAll("my test", () => {})
+afterAll(() => {})
 `,
 			snapshot: `
 describe("test suite", () => {});
-afterAll("my test", () => {})
+afterAll(() => {})
 ~~~~~~~~
 Prefer wrapping \`afterAll()\` hooks in a \`describe()\` block.
 `,
@@ -105,23 +105,23 @@ Prefer wrapping \`it()\` tests in a \`describe()\` block.
 		},
 	],
 	valid: [
-		"it.each()",
+		"it.each([])",
 		`
 import { it } from "vitest";
-it.extend()
+it.extend({})
 `,
 		`describe("test suite", () => { test("my test") });`,
 		`describe("test suite", () => { it("my test") });`,
 		`
 describe("test suite", () => {
-	beforeEach("a", () => {});
+	beforeEach(() => {});
 	describe("b", () => {});
 	test("c", () => {})
 });
 `,
-		`describe("test suite", () => { beforeAll("my beforeAll") });`,
-		`describe("test suite", () => { afterEach("my afterEach") });`,
-		`describe("test suite", () => { afterAll("my afterAll") });`,
+		`describe("test suite", () => { beforeAll(() => {}) });`,
+		`describe("test suite", () => { afterEach(() => {}) });`,
+		`describe("test suite", () => { afterAll(() => {}) });`,
 		`
 describe("test suite", () => {
 	it("my test", () => {})
@@ -130,7 +130,10 @@ describe("test suite", () => {
 	test("my other test", () => {})
 });
 `,
-		"foo()",
+		`
+function foo() {}
+foo();
+`,
 		`describe.each([1, true])("trues", value => { it("an it", () => expect(value).toBe(true) ); });`,
 		`
 describe("%s", () => {
@@ -139,20 +142,20 @@ describe("%s", () => {
 	});
 });
 
-describe.each("world")("%s", () => {
+describe.each(["world"])("%s", () => {
 	it.each([1, 2, 3])("%n", () => {
 		//
 	});
 });
 `,
 		`
-describe.each("hello")("%s", () => {
+describe.each(["hello"])("%s", () => {
 	it("is fine", () => {
 		//
 	});
 });
 
-describe.each("world")("%s", () => {
+describe.each(["world"])("%s", () => {
 	it.each([1, 2, 3])("%n", () => {
 		//
 	});

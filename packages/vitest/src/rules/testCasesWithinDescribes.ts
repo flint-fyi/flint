@@ -46,15 +46,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							break;
 
 						case "describe":
-						case "xdescribe":
 							insideDescribeStack += 1;
 							break;
 
-						case "fit":
 						case "it":
 						case "test":
-						case "xit":
-						case "xtest":
 							if (!insideDescribeStack) {
 								context.report({
 									data: { name: functionCall.name, type: "test" },
@@ -67,7 +63,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"CallExpression:exit": (node) => {
 					switch (parseVitestFunctionCall(node)?.name) {
 						case "describe":
-						case "xdescribe":
 							insideDescribeStack -= 1;
 							break;
 					}
