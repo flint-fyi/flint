@@ -4,8 +4,6 @@ import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-// flint-disable-next-line ts/deprecated
-// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:
