@@ -5,6 +5,7 @@ import {
 	pathKey,
 	type PathKey,
 } from "@flint.fyi/utils";
+import picomatch from "picomatch";
 
 import type {
 	LinterHost,
@@ -132,6 +133,37 @@ export function createVFSLinterHost(
 		},
 		getFileTouchTimeSync(filePath) {
 			return fileMap.get(pathKey(filePath, caseSensitiveFS))?.touchTime;
+		},
+		async glob(patterns, options) {
+			const isIncluded = picomatch(patterns);
+			const isExcluded = createExcludeMatcher(options.exclude);
+			const cwdNormalized = normalizePath(options.cwd);
+
+			const found: string[] = [];
+			const seen = new Set<PathKey>();
+			for (const file of fileMap.values()) {
+				const relative = relativeWithinCwd(file.path, cwdNormalized);
+				if (relative == null) {
+					continue;
+				}
+				if (isIncluded(relative) && !isExcluded?.(relative)) {
+					found.push(file.path);
+					seen.add(pathKey(file.path, caseSensitiveFS));
+				}
+			}
+
+			// Merge files only the base host knows about, letting VFS entries
+			// shadow them (mirrors readDirectorySync's overlay semantics).
+			for (const filePathAbsolute of (await baseHost?.glob(
+				patterns,
+				options,
+			)) ?? []) {
+				if (!seen.has(pathKey(filePathAbsolute, caseSensitiveFS))) {
+					found.push(filePathAbsolute);
+				}
+			}
+
+			return found;
 		},
 		isCaseSensitiveFS() {
 			return caseSensitiveFS;
@@ -277,4 +309,32 @@ export function createVFSLinterHost(
 	};
 
 	return host;
+}
+
+function createExcludeMatcher(patterns: string[] | undefined) {
+	if (!patterns?.length) {
+		return undefined;
+	}
+
+	const withDescendants = patterns.flatMap((pattern) => {
+		const base = pattern.replace(/\/+$/, "");
+		return [base, `${base}/**`];
+	});
+
+	return picomatch(withDescendants);
+}
+
+function relativeWithinCwd(filePathAbsolute: string, cwdNormalized: string) {
+	if (filePathAbsolute === cwdNormalized) {
+		return "";
+	}
+
+	const prefix = cwdNormalized.endsWith("/")
+		? cwdNormalized
+		: `${cwdNormalized}/`;
+	if (!filePathAbsolute.startsWith(prefix)) {
+		return undefined;
+	}
+
+	return filePathAbsolute.slice(prefix.length);
 }

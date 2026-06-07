@@ -1,6 +1,7 @@
 import { dirnameKey, normalizePath, pathKey } from "@flint.fyi/utils";
 import fs from "node:fs";
 import path from "node:path";
+import { glob as tinyglob } from "tinyglobby";
 
 import type {
 	LinterHost,
@@ -8,6 +9,7 @@ import type {
 	LinterHostFileWatcherEvent,
 } from "../types/host.ts";
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
+import { commonlyIgnoredPaths } from "./watcher.ts";
 
 export function createDiskBackedLinterHost(cwd: string): LinterHost {
 	const caseSensitiveFS = isFileSystemCaseSensitive();
@@ -176,6 +178,17 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		getFileTouchTimeSync(filePath) {
 			return fs.statSync(filePath).mtimeMs;
 		},
+		async glob(patterns, options) {
+			const found = await tinyglob(patterns, {
+				absolute: true,
+				cwd: options.cwd,
+				// Prune VCS/dependency directories by default; tinyglobby skips
+				// these at the directory level, so it never descends into them.
+				ignore: [...commonlyIgnoredPaths, ...(options.exclude ?? [])],
+				onlyFiles: true,
+			});
+			return found.map(normalizePath);
+		},
 		isCaseSensitiveFS() {
 			return caseSensitiveFS;
 		},
@@ -186,9 +199,8 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 
 			const result = await Promise.all(
 				dirents.map(async (entry): Promise<[] | LinterHostDirectoryEntry> => {
-					const isSymbolicLink = entry.isSymbolicLink();
 					let stat: Pick<typeof entry, "isDirectory" | "isFile"> = entry;
-					if (isSymbolicLink) {
+					if (entry.isSymbolicLink()) {
 						try {
 							stat = await fs.promises.stat(
 								path.join(directoryPathAbsolute, entry.name),
@@ -198,9 +210,9 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 						}
 					}
 					if (stat.isDirectory()) {
-						return { isSymbolicLink, name: entry.name, type: "directory" };
+						return { name: entry.name, type: "directory" };
 					} else if (stat.isFile()) {
-						return { isSymbolicLink, name: entry.name, type: "file" };
+						return { name: entry.name, type: "file" };
 					}
 
 					return [];
@@ -216,9 +228,8 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			});
 
 			for (const entry of dirents) {
-				const isSymbolicLink = entry.isSymbolicLink();
 				let stat: Pick<typeof entry, "isDirectory" | "isFile"> = entry;
-				if (isSymbolicLink) {
+				if (entry.isSymbolicLink()) {
 					try {
 						stat = fs.statSync(path.join(directoryPathAbsolute, entry.name));
 					} catch {
@@ -226,9 +237,9 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 					}
 				}
 				if (stat.isDirectory()) {
-					result.push({ isSymbolicLink, name: entry.name, type: "directory" });
+					result.push({ name: entry.name, type: "directory" });
 				} else if (stat.isFile()) {
-					result.push({ isSymbolicLink, name: entry.name, type: "file" });
+					result.push({ name: entry.name, type: "file" });
 				}
 			}
 

@@ -3,6 +3,7 @@ export interface LinterHost {
 	getCurrentDirectory(): string;
 	getFileTouchTime(filePath: string): Promise<number | undefined>;
 	getFileTouchTimeSync(filePath: string): number | undefined;
+	glob(patterns: string[], options: LinterHostGlobOptions): Promise<string[]>;
 	isCaseSensitiveFS(): boolean;
 	readDirectory(
 		directoryPathAbsolute: string,
@@ -25,15 +26,19 @@ export interface LinterHost {
 }
 
 export interface LinterHostDirectoryEntry {
-	isSymbolicLink?: boolean;
 	name: string;
 	type: "directory" | "file";
 }
-export type LinterHostDirectoryWatcher = (filePathAbsolute: string) => void;
 
+export type LinterHostDirectoryWatcher = (filePathAbsolute: string) => void;
 export type LinterHostFileWatcher = (event: LinterHostFileWatcherEvent) => void;
 
 export type LinterHostFileWatcherEvent = "changed" | "created" | "deleted";
+
+export interface LinterHostGlobOptions {
+	cwd: string;
+	exclude?: string[];
+}
 
 export interface VFSLinterHost extends LinterHost {
 	vfsDeleteFile(filePathAbsolute: string): void;
