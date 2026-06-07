@@ -1,4 +1,5 @@
 import type { DiagnosticMessage } from "@astrojs/compiler/types";
+
 import {
 	getPositionOfColumnAndLine,
 	type LanguageReport,

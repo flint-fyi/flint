@@ -1,14 +1,15 @@
-import { getTSNodeRange } from "@flint.fyi/typescript-language";
-import {
-	type TypeScriptFileServices,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-const globalObjects = new Set(["Atomics", "JSON", "Math", "Reflect"]);
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+
+const globalObjects = new Set(["Atomics", "JSON", "Math", "Reflect"]);
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

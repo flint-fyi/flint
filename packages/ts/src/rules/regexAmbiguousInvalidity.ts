@@ -1,17 +1,18 @@
 import {
-	type AST as RegExpAST,
 	RegExpParser,
 	RegExpValidator,
 	visitRegExpAST,
+	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
 import type { CharacterClassElement } from "@eslint-community/regexpp/ast";
-import {
-	type AST,
-	isGlobalDeclarationOfName,
-	type TypeScriptFileServices,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
 import ts from "typescript";
+
+import {
+	isGlobalDeclarationOfName,
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

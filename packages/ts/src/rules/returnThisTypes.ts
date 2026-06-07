@@ -1,11 +1,12 @@
-import {
-	type AST,
-	getTSNodeRange,
-	type TypeScriptFileServices,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
+
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { forEachReturnStatement } from "./utils/forEachReturnStatement.ts";

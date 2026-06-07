@@ -1,7 +1,7 @@
 import {
-	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";

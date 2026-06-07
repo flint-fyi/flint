@@ -1,5 +1,6 @@
-import type { CharacterReportRange } from "@flint.fyi/core";
 import type { CssNode } from "css-tree";
+
+import type { CharacterReportRange } from "@flint.fyi/core";
 
 export function getCssNodeRange(node: CssNode): CharacterReportRange {
 	return {

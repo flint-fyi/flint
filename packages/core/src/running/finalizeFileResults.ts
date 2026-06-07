@@ -1,6 +1,8 @@
-import { pathKey } from "@flint.fyi/utils";
-import { debugForFile } from "debug-for-file";
 import { resolve } from "node:path";
+
+import { debugForFile } from "debug-for-file";
+
+import { pathKey } from "@flint.fyi/utils";
 
 import { DirectivesFilterer } from "../directives/DirectivesFilterer.ts";
 import { directiveReports } from "../directives/reports/directiveReports.ts";

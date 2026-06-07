@@ -1,8 +1,5 @@
-import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
-import { assert, nullThrows } from "@flint.fyi/utils";
-import { createVolarBasedLanguage } from "@flint.fyi/volar-language";
 import type { Mapper as VolarMapper } from "@volar/language-core";
-import { NodeTypes, type RootNode, parse as vueParse } from "@vue/compiler-dom";
+import { NodeTypes, parse as vueParse, type RootNode } from "@vue/compiler-dom";
 import {
 	createVueLanguagePlugin,
 	createParsedCommandLine as createVueParsedCommandLine,
@@ -10,6 +7,10 @@ import {
 	tsCodegen,
 	VueVirtualCode,
 } from "@vue/language-core";
+
+import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
+import { assert, nullThrows } from "@flint.fyi/utils";
+import { createVolarBasedLanguage } from "@flint.fyi/volar-language";
 
 import { extractTemplateDirectives } from "./extractTemplateDirectives.ts";
 import { vueParsingErrorsToLanguageReports } from "./vueParsingErrorsToLanguageReports.ts";

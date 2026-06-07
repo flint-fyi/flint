@@ -1,8 +1,11 @@
+import { SyntaxKind } from "typescript";
+
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 function isAssertImport(importName: string) {
 	return (
@@ -12,8 +15,6 @@ function isAssertImport(importName: string) {
 		importName === "node:assert/strict"
 	);
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

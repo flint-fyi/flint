@@ -1,7 +1,9 @@
-import { dirnameKey, normalizePath, pathKey } from "@flint.fyi/utils";
 import fs from "node:fs";
 import path from "node:path";
+
 import { glob as tinyglob } from "tinyglobby";
+
+import { dirnameKey, normalizePath, pathKey } from "@flint.fyi/utils";
 
 import type {
 	LinterHost,

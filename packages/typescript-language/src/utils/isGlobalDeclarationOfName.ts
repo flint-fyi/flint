@@ -1,5 +1,6 @@
-import type { Checker } from "@flint.fyi/typescript-language";
 import ts from "typescript";
+
+import type { Checker } from "@flint.fyi/typescript-language";
 
 import { declarationIncludesGlobal } from "./declarationIncludesGlobal.ts";
 

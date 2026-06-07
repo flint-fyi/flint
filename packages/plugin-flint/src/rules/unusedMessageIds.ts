@@ -1,11 +1,12 @@
+import { SyntaxKind } from "typescript";
+
 import type { CharacterReportRange } from "@flint.fyi/core";
 import {
-	type AST,
-	type Checker,
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
 
 import { findProperty } from "../utils/findProperty.ts";
 import {

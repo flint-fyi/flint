@@ -1,3 +1,5 @@
+import picomatch from "picomatch";
+
 import {
 	dirnameKey,
 	normalizeDirname,
@@ -5,7 +7,6 @@ import {
 	pathKey,
 	type PathKey,
 } from "@flint.fyi/utils";
-import picomatch from "picomatch";
 
 import type {
 	LinterHost,

@@ -1,4 +1,3 @@
-import type { AnyRule } from "@flint.fyi/core";
 import {
 	validateAuthor,
 	validateBin,
@@ -39,6 +38,8 @@ import {
 	validateVersion,
 	validateWorkspaces,
 } from "package-json-validator";
+
+import type { AnyRule } from "@flint.fyi/core";
 
 import { createDirectPropertyValidityRule } from "./createDirectPropertyValidityRule.ts";
 

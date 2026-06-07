@@ -1,5 +1,6 @@
-import type { LanguageReports } from "@flint.fyi/core";
 import type { CompilerError } from "@vue/compiler-dom";
+
+import type { LanguageReports } from "@flint.fyi/core";
 
 export function vueParsingErrorsToLanguageReports(
 	fileName: string,

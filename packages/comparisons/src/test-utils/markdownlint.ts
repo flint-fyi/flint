@@ -1,7 +1,8 @@
-import type { Rule } from "markdownlint";
 import fs from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
+
+import type { Rule } from "markdownlint";
 
 import { comparisons } from "../index.ts";
 

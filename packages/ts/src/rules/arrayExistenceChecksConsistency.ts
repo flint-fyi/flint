@@ -1,8 +1,11 @@
+import * as ts from "typescript";
+
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 const indexMethods = new Set([
 	"findIndex",
@@ -10,8 +13,6 @@ const indexMethods = new Set([
 	"indexOf",
 	"lastIndexOf",
 ]);
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

@@ -1,5 +1,6 @@
-import { makeAbsolute, nullThrows } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
+
+import { makeAbsolute, nullThrows } from "@flint.fyi/utils";
 
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";

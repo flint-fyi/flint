@@ -1,10 +1,13 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import { SyntaxKind } from "typescript";
 
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
+
+import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
+// flint-disable-next-line ts/deprecated
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:
@@ -25,11 +28,12 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { sourceFile }) {
-					const peerDependenciesMeta = getPackagePropertyOfName(
-						node,
-						"peerDependenciesMeta",
-					);
+				JsonSourceFile(node) {
+					const { peerDependencies, peerDependenciesMeta } =
+						getPackagePropertiesOfNames(node, [
+							"peerDependencies",
+							"peerDependenciesMeta",
+						]);
 
 					// Bail early if there are no peerDependenciesMeta or if it's the wrong shape
 					if (
@@ -39,11 +43,6 @@ export default ruleCreator.createRule(jsonLanguage, {
 					) {
 						return;
 					}
-
-					const peerDependencies = getPackagePropertyOfName(
-						node,
-						"peerDependencies",
-					);
 
 					// Collect the set of dependency names declared in peerDependencies
 					const declaredPeerDependencyNames = new Set<string>();
@@ -72,14 +71,14 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 							if (!declaredPeerDependencyNames.has(dependencyName)) {
 								const { range, text } = removeObjectProperty(
-									sourceFile,
+									node,
 									element,
 									peerDependenciesMeta.initializer,
 								);
 								context.report({
 									data: { dependencyName },
 									message: "unnecessaryPeerDependency",
-									range: getJsonNodeRange(element.name, sourceFile),
+									range: getJsonNodeRange(element.name, node),
 									suggestions: [
 										{
 											id: "removeUnnecessaryPeerDependencyMeta",

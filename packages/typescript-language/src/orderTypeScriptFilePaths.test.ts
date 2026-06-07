@@ -1,5 +1,6 @@
-import { createVFSLinterHost, type VFSLinterHost } from "@flint.fyi/core";
 import { describe, expect, it } from "vitest";
+
+import { createVFSLinterHost, type VFSLinterHost } from "@flint.fyi/core";
 
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
 

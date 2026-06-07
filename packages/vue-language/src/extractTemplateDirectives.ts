@@ -1,10 +1,11 @@
-import type { ExtractedDirective } from "@flint.fyi/typescript-language";
-import { nullThrows } from "@flint.fyi/utils";
 import {
 	NodeTypes,
 	type RootNode,
 	type TemplateChildNode,
 } from "@vue/compiler-dom";
+
+import type { ExtractedDirective } from "@flint.fyi/typescript-language";
+import { nullThrows } from "@flint.fyi/utils";
 
 export function extractTemplateDirectives(ast: RootNode) {
 	const directives: ExtractedDirective[] = [];

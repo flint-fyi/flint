@@ -1,7 +1,8 @@
-import { DirectivesCollector } from "@flint.fyi/core";
-import { nullThrows } from "@flint.fyi/utils";
 import type { Root } from "mdast";
 import { visit } from "unist-util-visit";
+
+import { DirectivesCollector } from "@flint.fyi/core";
+import { nullThrows } from "@flint.fyi/utils";
 
 export function parseDirectivesFromMarkdownFile(
 	root: Root,

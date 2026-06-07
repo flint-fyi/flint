@@ -1,10 +1,13 @@
-import {
-	type AST,
-	getTSNodeRange,
-	type TypeScriptFileServices,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
+
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 const implicitRoles: Record<string, string> = {
 	a: "link",
@@ -33,8 +36,6 @@ const implicitRoles: Record<string, string> = {
 	textarea: "textbox",
 	ul: "list",
 };
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

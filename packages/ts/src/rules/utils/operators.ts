@@ -1,5 +1,6 @@
-import type { AST } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
+
+import type { AST } from "@flint.fyi/typescript-language";
 
 export function isComparisonOperator(token: AST.BinaryOperatorToken) {
 	switch (token.kind) {

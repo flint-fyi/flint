@@ -1,9 +1,10 @@
+import { SyntaxKind } from "typescript";
+
 import {
-	type AST,
 	isStaticString,
 	isStringRawNoSubstitution,
+	type AST,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
 
 import { findProperty } from "./findProperty.ts";
 import { tsAstToLiteral } from "./tsAstToLiteral.ts";

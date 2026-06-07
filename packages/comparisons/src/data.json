@@ -1824,6 +1824,10 @@
 			{
 				"name": "react/no-children-prop",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-children-prop.md"
+			},
+			{
+				"name": "@eslint-react/jsx-no-children-prop",
+				"url": "https://eslint-react.xyz/docs/rules/jsx-no-children-prop"
 			}
 		],
 		"flint": {
@@ -1831,6 +1835,68 @@
 			"plugin": "jsx",
 			"preset": "stylistic",
 			"status": "implemented"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/jsx-no-children-prop-with-children",
+				"url": "https://eslint-react.xyz/docs/rules/jsx-no-children-prop-with-children"
+			}
+		],
+		"flint": {
+			"name": "childrenPropsWithChildren",
+			"plugin": "jsx",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/jsx-no-key-after-spread",
+				"url": "https://eslint-react.xyz/docs/rules/jsx-no-key-after-spread"
+			}
+		],
+		"flint": {
+			"name": "keyAndSpreadOrderings",
+			"plugin": "jsx",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/jsx-no-leaked-dollar",
+				"url": "https://eslint-react.xyz/docs/rules/jsx-no-leaked-dollar"
+			}
+		],
+		"flint": {
+			"name": "dollarLeakage",
+			"plugin": "jsx"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/jsx-no-leaked-semicolon",
+				"url": "https://eslint-react.xyz/docs/rules/jsx-no-leaked-semicolon"
+			}
+		],
+		"flint": {
+			"name": "semicolonLeakage",
+			"plugin": "jsx"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/rsc-function-definion",
+				"url": "https://eslint-react.xyz/docs/rules/rsc-function-definition"
+			}
+		],
+		"flint": {
+			"name": "rscFunctionDefinitions",
+			"plugin": "react"
 		}
 	},
 	{
@@ -1906,6 +1972,10 @@
 			{
 				"name": "react/jsx-no-comment-textnodes",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/jsx-no-comment-textnodes.md"
+			},
+			{
+				"name": "@eslint-react/jsx-no-comment-textnodes",
+				"url": "https://eslint-react.xyz/docs/rules/jsx-no-comment-textnodes"
 			}
 		],
 		"flint": {
@@ -2424,6 +2494,10 @@
 			{
 				"name": "react/no-namespace",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-namespace.md"
+			},
+			{
+				"name": "@eslint-react/jsx-no-namespace",
+				"url": "https://eslint-react.xyz/docs/rules/jsx-no-namespace"
 			}
 		],
 		"flint": {
@@ -2719,6 +2793,10 @@
 			{
 				"name": "react/jsx-no-script-url",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-no-script-url.md"
+			},
+			{
+				"name": "@eslint-react/dom-no-script-url",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-script-url"
 			}
 		],
 		"flint": {
@@ -2759,14 +2837,16 @@
 			{
 				"name": "react/no-access-state-in-setstate",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-access-state-in-setstate.md"
+			},
+			{
+				"name": "@eslint-react/no-access-state-in-setstate",
+				"url": "https://eslint-react.xyz/docs/rules/no-access-state-in-setstate"
 			}
 		],
 		"flint": {
-			"name": "stateAccessesInSets",
-			"plugin": "jsx",
-			"status": "skipped"
-		},
-		"notes": "Overly opinionated."
+			"name": "stateAccessesInSetStates",
+			"plugin": "jsx"
+		}
 	},
 	{
 		"eslint": [
@@ -2855,6 +2935,10 @@
 			{
 				"name": "react/jsx-no-useless-fragment",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-no-useless-fragment.md"
+			},
+			{
+				"name": "@eslint-react/jsx-no-useless-fragment",
+				"url": "https://eslint-react.xyz/docs/rules/jsx-no-useless-fragment"
 			}
 		],
 		"deno": [
@@ -6252,14 +6336,77 @@
 			{
 				"name": "react/no-array-index-key",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-array-index-key.md"
+			},
+			{
+				"name": "@eslint-react/no-array-index-key",
+				"url": "https://eslint-react.xyz/docs/rules/no-array-index-key"
 			}
 		],
 		"flint": {
-			"name": "arrayIndexKeyes",
+			"name": "arrayIndexKeys",
 			"plugin": "react",
 			"preset": "logical"
-		},
-		"notes": "Overly opinionated."
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-children-count",
+				"url": "https://eslint-react.xyz/docs/rules/no-children-count"
+			}
+		],
+		"flint": {
+			"name": "childrenCounts",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-children-for-each",
+				"url": "https://eslint-react.xyz/docs/rules/no-children-for-each"
+			}
+		],
+		"flint": {
+			"name": "childrenForEaches",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-children-map",
+				"url": "https://eslint-react.xyz/docs/rules/no-children-map"
+			}
+		],
+		"flint": {
+			"name": "childrenMaps",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-children-only",
+				"url": "https://eslint-react.xyz/docs/rules/no-children-only"
+			}
+		],
+		"flint": {
+			"name": "childrenOnlys",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-children-to-array",
+				"url": "https://eslint-react.xyz/docs/rules/no-children-to-array"
+			}
+		],
+		"flint": {
+			"name": "childrenToArrays",
+			"plugin": "react"
+		}
 	},
 	{
 		"eslint": [
@@ -6362,6 +6509,10 @@
 			{
 				"name": "react/display-name",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/display-name.md"
+			},
+			{
+				"name": "@eslint-react/no-missing-component-display-name",
+				"url": "https://eslint-react.xyz/docs/rules/no-missing-component-display-name"
 			}
 		],
 		"flint": {
@@ -6470,6 +6621,101 @@
 	{
 		"eslint": [
 			{
+				"name": "@eslint-react/no-class-component",
+				"url": "https://eslint-react.xyz/docs/rules/no-class-component"
+			}
+		],
+		"flint": {
+			"name": "classComponents",
+			"plugin": "react",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-clone-element",
+				"url": "https://eslint-react.xyz/docs/rules/no-clone-element"
+			}
+		],
+		"flint": {
+			"name": "cloneElementCalls",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-component-will-mount",
+				"url": "https://eslint-react.xyz/docs/rules/no-component-will-mount"
+			}
+		],
+		"flint": {
+			"name": "componentWillMountCalls",
+			"plugin": "react",
+			"preset": "logical"
+		},
+		"notes": "React Versions >= 16.3.0"
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-component-will-receive-props",
+				"url": "https://eslint-react.xyz/docs/rules/no-component-will-receive-props"
+			}
+		],
+		"flint": {
+			"name": "componentWillReceivePropsCalls",
+			"plugin": "react",
+			"preset": "logical"
+		},
+		"notes": "React Versions >= 16.3.0"
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-component-will-update",
+				"url": "https://eslint-react.xyz/docs/rules/no-component-will-update"
+			}
+		],
+		"flint": {
+			"name": "componentWillUpdateCalls",
+			"plugin": "react",
+			"preset": "logical"
+		},
+		"notes": "React Versions >= 16.3.0"
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-context-provider",
+				"url": "https://eslint-react.xyz/docs/rules/no-context-provider"
+			}
+		],
+		"flint": {
+			"name": "contextProviders",
+			"plugin": "react",
+			"preset": "stylistic"
+		},
+		"notes": "React Versions >= 19.0.0"
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-create-ref",
+				"url": "https://eslint-react.xyz/docs/rules/no-create-ref"
+			}
+		],
+		"flint": {
+			"name": "createRefCalls",
+			"plugin": "react",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "react/forbid-foreign-prop-types",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/forbid-foreign-prop-types.md"
 			}
@@ -6567,6 +6813,10 @@
 			{
 				"name": "react-hooks/set-state-in-effect",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect"
+			},
+			{
+				"name": "@eslint-react/set-state-in-effect",
+				"url": "https://eslint-react.xyz/docs/rules/set-state-in-effect"
 			}
 		],
 		"flint": {
@@ -6580,6 +6830,10 @@
 			{
 				"name": "react-hooks/error-boundaries",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/error-boundaries"
+			},
+			{
+				"name": "@eslint-react/error-boundaries",
+				"url": "https://eslint-react.xyz/docs/rules/error-boundaries"
 			}
 		],
 		"flint": {
@@ -6593,6 +6847,10 @@
 			{
 				"name": "react-hooks/exhaustive-deps",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/exhaustive-deps"
+			},
+			{
+				"name": "@eslint-react/exhaustive-deps",
+				"url": "https://eslint-react.xyz/docs/rules/exhaustive-deps"
 			}
 		],
 		"flint": {
@@ -6606,6 +6864,10 @@
 			{
 				"name": "react/no-find-dom-node",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-find-dom-node.md"
+			},
+			{
+				"name": "@eslint-react/dom-no-find-dom-node",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-find-dom-node"
 			}
 		],
 		"flint": {
@@ -6614,6 +6876,74 @@
 			"status": "skipped"
 		},
 		"notes": "Superseded by deprecated."
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/dom-no-flush-sync",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-flush-sync"
+			}
+		],
+		"flint": {
+			"name": "reactDomFlushSyncCalls",
+			"plugin": "react",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/dom-no-hydrate",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-hydrate"
+			}
+		],
+		"flint": {
+			"name": "reactDomHydrateCalls",
+			"plugin": "react",
+			"preset": "logical"
+		},
+		"notes": "React Versions >= 18.0.0"
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/dom-no-missing-button-type",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-missing-button-type"
+			}
+		],
+		"flint": {
+			"name": "buttonTypePresence",
+			"plugin": "jsx"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/dom-no-missing-iframe-sandbox",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-missing-iframe-sandbox"
+			}
+		],
+		"flint": {
+			"name": "iframeSandboxPresence",
+			"plugin": "jsx",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/dom-no-render",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-render"
+			}
+		],
+		"flint": {
+			"name": "reactDomRenderCalls",
+			"plugin": "react",
+			"preset": "logical"
+		},
+		"notes": "React Versions >= 18.0.0"
 	},
 	{
 		"eslint": [
@@ -6673,6 +7003,10 @@
 			{
 				"name": "react-hooks/globals",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/globals"
+			},
+			{
+				"name": "@eslint-react/globals",
+				"url": "https://eslint-react.xyz/docs/rules/globals"
 			}
 		],
 		"flint": {
@@ -6686,6 +7020,10 @@
 			{
 				"name": "react-hooks/immutability",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/immutability"
+			},
+			{
+				"name": "@eslint-react/immutability",
+				"url": "https://eslint-react.xyz/docs/rules/immutability"
 			}
 		],
 		"flint": {
@@ -6767,12 +7105,66 @@
 			{
 				"name": "react/no-unknown-property",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-unknown-property.md"
+			},
+			{
+				"name": "@eslint-react/dom-no-unknown-property",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-unknown-property"
 			}
 		],
 		"flint": {
 			"name": "propertyValidity",
 			"plugin": "react",
 			"preset": "javascript"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/dom-no-unsafe-iframe-sandbox",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-unsafe-iframe-sandbox"
+			}
+		],
+		"flint": {
+			"name": "iframeSandboxSafety",
+			"plugin": "jsx"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/dom-no-unsafe-target-blank",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-unsafe-target-blank"
+			}
+		],
+		"flint": {
+			"name": "targetBlankSafety",
+			"plugin": "jsx"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/dom-no-use-form-state",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-use-form-state"
+			}
+		],
+		"flint": {
+			"name": "useFormStateCalls",
+			"plugin": "react"
+		},
+		"notes": "React Versions >= 19.0.0"
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/dom-no-void-elements-with-children",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-void-elements-with-children"
+			}
+		],
+		"flint": {
+			"name": "voidElementsWithChildren",
+			"plugin": "react",
+			"preset": "logical"
 		}
 	},
 	{
@@ -6835,6 +7227,10 @@
 			{
 				"name": "react-hooks/purity",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/purity"
+			},
+			{
+				"name": "@eslint-react/purity",
+				"url": "https://eslint-react.xyz/docs/rules/purity"
 			}
 		],
 		"flint": {
@@ -6862,6 +7258,10 @@
 			{
 				"name": "react-hooks/refs",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/refs"
+			},
+			{
+				"name": "@eslint-react/refs",
+				"url": "https://eslint-react.xyz/docs/rules/refs"
 			}
 		],
 		"flint": {
@@ -6886,8 +7286,25 @@
 	{
 		"eslint": [
 			{
+				"name": "@eslint-react/dom-no-string-style-prop",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-string-style-prop"
+			}
+		],
+		"flint": {
+			"name": "stylePropsType",
+			"plugin": "react",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "react/no-render-return-value",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-render-return-value.md"
+			},
+			{
+				"name": "@eslint-react/dom-no-render-return-value",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-render-return-value"
 			}
 		],
 		"flint": {
@@ -6902,6 +7319,10 @@
 			{
 				"name": "react-hooks/set-state-in-render",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-render"
+			},
+			{
+				"name": "@eslint-react/set-state-in-render",
+				"url": "https://eslint-react.xyz/docs/rules/set-state-in-render"
 			}
 		],
 		"flint": {
@@ -6963,6 +7384,10 @@
 			{
 				"name": "react-hooks/rules-of-hooks",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/rules-of-hooks"
+			},
+			{
+				"name": "@eslint-react/rules-of-hooks",
+				"url": "https://eslint-react.xyz/docs/rules/rules-of-hooks"
 			}
 		],
 		"flint": {
@@ -6990,6 +7415,10 @@
 			{
 				"name": "react/no-direct-mutation-state",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-direct-mutation-state.md"
+			},
+			{
+				"name": "@eslint-react/no-direct-mutation-state",
+				"url": "https://eslint-react.xyz/docs/rules/no-direct-mutation-state"
 			}
 		],
 		"flint": {
@@ -7001,8 +7430,439 @@
 	{
 		"eslint": [
 			{
+				"name": "@eslint-react/no-duplicate-key",
+				"url": "https://eslint-react.xyz/docs/rules/no-direct-mutation-state"
+			}
+		],
+		"flint": {
+			"name": "keyDuplications",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-forward-ref",
+				"url": "https://eslint-react.xyz/docs/rules/no-forward-ref"
+			}
+		],
+		"flint": {
+			"name": "forwardRefCalls",
+			"plugin": "react"
+		},
+		"notes": "React Versions >= 19.0.0"
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-implicit-children",
+				"url": "https://eslint-react.xyz/docs/rules/no-implicit-children"
+			}
+		],
+		"flint": {
+			"name": "implicitChildren",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-implicit-key",
+				"url": "https://eslint-react.xyz/docs/rules/no-implicit-key"
+			}
+		],
+		"flint": {
+			"name": "implicitKeys",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-implicit-ref",
+				"url": "https://eslint-react.xyz/docs/rules/no-implicit-ref"
+			}
+		],
+		"flint": {
+			"name": "implicitRefs",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-leaked-conditional-rendering",
+				"url": "https://eslint-react.xyz/docs/rules/no-leaked-conditional-rendering"
+			}
+		],
+		"flint": {
+			"name": "leakedConditionalRenderings",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/web-api-no-leaked-event-listener",
+				"url": "https://eslint-react.xyz/docs/rules/web-api-no-leaked-event-listener"
+			}
+		],
+		"flint": {
+			"name": "eventListenerCleanup",
+			"plugin": "react",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/web-api-no-leaked-fetch",
+				"url": "https://eslint-react.xyz/docs/rules/web-api-no-leaked-fetch"
+			}
+		],
+		"flint": {
+			"name": "fetchCleanup",
+			"plugin": "react",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/web-api-no-leaked-interval",
+				"url": "https://eslint-react.xyz/docs/rules/web-api-no-leaked-interval"
+			}
+		],
+		"flint": {
+			"name": "intervalCleanup",
+			"plugin": "react",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/web-api-no-leaked-resize-observer",
+				"url": "https://eslint-react.xyz/docs/rules/web-api-no-leaked-resize-observer"
+			}
+		],
+		"flint": {
+			"name": "resizeObserverCleanup",
+			"plugin": "react",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/web-api-no-leaked-timeout",
+				"url": "https://eslint-react.xyz/docs/rules/web-api-no-leaked-timeout"
+			}
+		],
+		"flint": {
+			"name": "timeoutCleanup",
+			"plugin": "react",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-missing-context-display-name",
+				"url": "https://eslint-react.xyz/docs/rules/no-missing-context-display-name"
+			}
+		],
+		"flint": {
+			"name": "contextDisplayNames",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/naming-convention-context-name",
+				"url": "https://eslint-react.xyz/docs/rules/naming-convention-context-name"
+			}
+		],
+		"flint": {
+			"name": "contextNames",
+			"plugin": "react",
+			"preset": "stylistic",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/naming-convention-id-name",
+				"url": "https://eslint-react.xyz/docs/rules/naming-convention-id-name"
+			}
+		],
+		"flint": {
+			"name": "idNames",
+			"plugin": "react",
+			"preset": "stylistic",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/naming-convention-ref-name",
+				"url": "https://eslint-react.xyz/docs/rules/naming-convention-ref-name"
+			}
+		],
+		"flint": {
+			"name": "refNames",
+			"plugin": "react",
+			"preset": "stylistic",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-missing-key",
+				"url": "https://eslint-react.xyz/docs/rules/no-missing-key"
+			}
+		],
+		"flint": {
+			"name": "missingKeys",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-misused-capture-owner-stack",
+				"url": "https://eslint-react.xyz/docs/rules/no-misused-capture-owner-stack"
+			}
+		],
+		"flint": {
+			"name": "captureOwnerStackUsage",
+			"plugin": "react",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-nested-component-definitions",
+				"url": "https://eslint-react.xyz/docs/rules/no-nested-component-definitions"
+			}
+		],
+		"flint": {
+			"name": "nestedComponentDefinitions",
+			"plugin": "react",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-nested-lazy-component-declarations",
+				"url": "https://eslint-react.xyz/docs/rules/no-nested-lazy-component-declarations"
+			}
+		],
+		"flint": {
+			"name": "nestedLazyComponentDeclarations",
+			"plugin": "react",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "https://eslint-react.xyz/docs/rules/no-access-state-in-setstate",
+				"url": "https://eslint-react.xyz/docs/rules/no-access-state-in-setstate"
+			}
+		],
+		"flint": {
+			"name": "stateAccessesInSetStates",
+			"plugin": "react",
+			"status": "skipped"
+		},
+		"notes": "Only relevant to Class Components, which are no longer recommended."
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-set-state-in-component-did-mount",
+				"url": "https://eslint-react.xyz/docs/rules/no-set-state-in-component-did-mount"
+			}
+		],
+		"flint": {
+			"name": "setStatesInComponentDidMounts",
+			"plugin": "react",
+			"status": "skipped"
+		},
+		"notes": "Only relevant to Class Components, which are no longer recommended."
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-set-state-in-component-did-update",
+				"url": "https://eslint-react.xyz/docs/rules/no-set-state-in-component-did-update"
+			}
+		],
+		"flint": {
+			"name": "setStatesInComponentDidUpdates",
+			"plugin": "react",
+			"status": "skipped"
+		},
+		"notes": "Only relevant to Class Components, which are no longer recommended."
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-set-state-in-component-will-update",
+				"url": "https://eslint-react.xyz/docs/rules/no-set-state-in-component-will-update"
+			}
+		],
+		"flint": {
+			"name": "setStatesInComponentWillUpdates",
+			"plugin": "react",
+			"status": "skipped"
+		},
+		"notes": "Only relevant to Class Components, which are no longer recommended."
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-unnecessary-use-prefix",
+				"url": "https://eslint-react.xyz/docs/rules/no-unnecessary-use-prefix"
+			}
+		],
+		"flint": {
+			"name": "usePrefixes",
+			"plugin": "react",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-unsafe-component-will-mount",
+				"url": "https://eslint-react.xyz/docs/rules/no-unsafe-component-will-mount"
+			}
+		],
+		"flint": {
+			"name": "unsafeComponentWillMountCalls",
+			"plugin": "react",
+			"status": "skipped"
+		},
+		"notes": "Only relevant to Class Components, which are no longer recommended."
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-unsafe-component-will-receive-props",
+				"url": "https://eslint-react.xyz/docs/rules/no-unsafe-component-will-receive-props"
+			}
+		],
+		"flint": {
+			"name": "unsafeComponentWillReceivePropsCalls",
+			"plugin": "react",
+			"status": "skipped"
+		},
+		"notes": "Only relevant to Class Components, which are no longer recommended."
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-unsafe-component-will-update",
+				"url": "https://eslint-react.xyz/docs/rules/no-unsafe-component-will-update"
+			}
+		],
+		"flint": {
+			"name": "unsafeComponentWillUpdateCalls",
+			"plugin": "react",
+			"status": "skipped"
+		},
+		"notes": "Only relevant to Class Components, which are no longer recommended."
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-unstable-context-value",
+				"url": "https://eslint-react.xyz/docs/rules/no-unstable-context-value"
+			}
+		],
+		"flint": {
+			"name": "contextValueStability",
+			"plugin": "react",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-unstable-default-props",
+				"url": "https://eslint-react.xyz/docs/rules/no-unstable-default-props"
+			}
+		],
+		"flint": {
+			"name": "defaultPropsStability",
+			"plugin": "react",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-unused-class-component-members",
+				"url": "https://eslint-react.xyz/docs/rules/no-unused-class-component-members"
+			}
+		],
+		"flint": {
+			"name": "unusedClassComponentMembers",
+			"plugin": "react",
+			"status": "skipped"
+		},
+		"notes": "Only relevant to Class Components, which are no longer recommended."
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-unused-props",
+				"url": "https://eslint-react.xyz/docs/rules/no-unused-props"
+			}
+		],
+		"flint": {
+			"name": "unusedProps",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/no-use-context",
+				"url": "https://eslint-react.xyz/docs/rules/no-use-context"
+			}
+		],
+		"flint": {
+			"name": "useContextUsage",
+			"plugin": "react"
+		},
+		"notes": "React Versions >= 19.0.0"
+	},
+	{
+		"eslint": [
+			{
 				"name": "react-hooks/static-components",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/static-components"
+			},
+			{
+				"name": "@eslint-react/static-components",
+				"url": "https://eslint-react.xyz/docs/rules/static-components"
 			}
 		],
 		"flint": {
@@ -7043,6 +7903,10 @@
 			{
 				"name": "react-hooks/unsupported-syntax",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/unsupported-syntax"
+			},
+			{
+				"name": "@eslint-react/unsupported-syntax",
+				"url": "https://eslint-react.xyz/docs/rules/unsupported-syntax"
 			}
 		],
 		"flint": {
@@ -7082,6 +7946,10 @@
 			{
 				"name": "react/no-unused-state",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-unused-state.md"
+			},
+			{
+				"name": "@eslint-react/no-unused-state",
+				"url": "https://eslint-react.xyz/docs/rules/no-unused-state"
 			}
 		],
 		"flint": {
@@ -7095,6 +7963,10 @@
 			{
 				"name": "react-hooks/use-memo",
 				"url": "https://react.dev/reference/eslint-plugin-react-hooks/lints/use-memo"
+			},
+			{
+				"name": "@eslint-react/use-memo",
+				"url": "https://eslint-react.xyz/docs/rules/use-memo"
 			}
 		],
 		"flint": {
@@ -7122,12 +7994,41 @@
 			{
 				"name": "react/hook-use-state",
 				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/hook-use-state.md"
+			},
+			{
+				"name": "@eslint-react/use-state",
+				"url": "https://eslint-react.xyz/docs/rules/use-state"
 			}
 		],
 		"flint": {
-			"name": "useStateDestructures",
+			"name": "useStateUsage",
 			"plugin": "react",
 			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/dom-no-dangerously-set-innerhtml",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-dangerously-set-innerhtml"
+			}
+		],
+		"flint": {
+			"name": "dangerouslySetInnerHtmls",
+			"plugin": "react"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "@eslint-react/dom-no-dangerously-set-innerhtml-with-children",
+				"url": "https://eslint-react.xyz/docs/rules/dom-no-dangerously-set-innerhtml-with-children"
+			}
+		],
+		"flint": {
+			"name": "dangerouslySetInnerHtmlsWithChildren",
+			"plugin": "react",
+			"preset": "logical"
 		}
 	},
 	{
@@ -12210,8 +13111,9 @@
 		"flint": {
 			"name": "extraneousClasses",
 			"plugin": "ts",
-			"preset": "logicalStrict",
-			"status": "implemented"
+			"preset": "logical",
+			"status": "implemented",
+			"strictness": "strict"
 		},
 		"oxlint": [
 			{
@@ -18130,7 +19032,8 @@
 		"flint": {
 			"name": "returnVoidSafety",
 			"plugin": "ts",
-			"preset": "logicalStrict"
+			"preset": "logical",
+			"strictness": "strict"
 		}
 	},
 	{
@@ -20963,8 +21866,6 @@
 		"flint": {
 			"name": "afterAllPaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},
@@ -20978,9 +21879,7 @@
 		"flint": {
 			"name": "afterEachPaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"status": "implemented",
-			"strictness": "strict"
+			"status": "implemented"
 		}
 	},
 	{
@@ -21006,8 +21905,6 @@
 		"flint": {
 			"name": "allPaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},
@@ -21021,8 +21918,6 @@
 		"flint": {
 			"name": "beforeAllPaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},
@@ -21036,8 +21931,6 @@
 		"flint": {
 			"name": "beforeEachPaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},
@@ -21161,8 +22054,6 @@
 		"flint": {
 			"name": "describePaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},
@@ -21243,8 +22134,6 @@
 		"flint": {
 			"name": "expectGroupPaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},
@@ -21706,8 +22595,6 @@
 		"flint": {
 			"name": "testCasePaddingLines",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict",
 			"status": "implemented"
 		}
 	},
@@ -27858,6 +28745,2127 @@
 		"flint": {
 			"name": "bindSyncValidity",
 			"plugin": "vue",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/use-baseline",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/use-baseline.md"
+			}
+		],
+		"flint": {
+			"name": "baselineFeatures",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"biome": [
+			{
+				"name": "useBaseline",
+				"url": "https://biomejs.dev/linter/rules/use-baseline"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/use-layers",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/use-layers.md"
+			}
+		],
+		"flint": {
+			"name": "cascadeLayers",
+			"plugin": "css",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/color-hex-style",
+				"url": "https://ota-meshi.github.io/eslint-plugin-css/rules/color-hex-style.html"
+			}
+		],
+		"flint": {
+			"name": "hexColorStyles",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "color-hex-length",
+				"url": "https://stylelint.io/user-guide/rules/color-hex-length"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/no-empty-blocks",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/no-empty-blocks.md"
+			}
+		],
+		"flint": {
+			"name": "emptyBlocks",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "block-no-empty",
+				"url": "https://stylelint.io/user-guide/rules/block-no-empty"
+			}
+		],
+		"biome": [
+			{
+				"name": "noEmptyBlock",
+				"url": "https://biomejs.dev/linter/rules/no-empty-block"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/font-family-fallbacks",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/font-family-fallbacks.md"
+			}
+		],
+		"flint": {
+			"name": "fontFamilyFallbacks",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "font-family-no-missing-generic-family-keyword",
+				"url": "https://stylelint.io/user-guide/rules/font-family-no-missing-generic-family-keyword"
+			}
+		],
+		"biome": [
+			{
+				"name": "useGenericFontNames",
+				"url": "https://biomejs.dev/linter/rules/use-generic-font-names"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/no-important",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/no-important.md"
+			}
+		],
+		"flint": {
+			"name": "importantDeclarations",
+			"plugin": "css",
+			"preset": "logical",
+			"strictness": "strict"
+		},
+		"stylelint": [
+			{
+				"name": "declaration-no-important",
+				"url": "https://stylelint.io/user-guide/rules/declaration-no-important"
+			},
+			{
+				"name": "keyframe-declaration-no-important",
+				"url": "https://stylelint.io/user-guide/rules/keyframe-declaration-no-important"
+			}
+		],
+		"notes": "Stylelint splits !important declarations in keyframes into a separate rule.",
+		"biome": [
+			{
+				"name": "noImportantInKeyframe",
+				"url": "https://biomejs.dev/linter/rules/no-important-in-keyframe"
+			},
+			{
+				"name": "noImportantStyles",
+				"url": "https://biomejs.dev/linter/rules/no-important-styles"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/no-duplicate-imports",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/no-duplicate-imports.md"
+			}
+		],
+		"flint": {
+			"name": "importDuplicates",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "no-duplicate-at-import-rules",
+				"url": "https://stylelint.io/user-guide/rules/no-duplicate-at-import-rules"
+			}
+		],
+		"biome": [
+			{
+				"name": "noDuplicateAtImportRules",
+				"url": "https://biomejs.dev/linter/rules/no-duplicate-at-import-rules"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/no-invalid-at-rule-placement",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/no-invalid-at-rule-placement.md"
+			}
+		],
+		"flint": {
+			"name": "atRulePlacements",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "no-invalid-position-at-import-rule",
+				"url": "https://stylelint.io/user-guide/rules/no-invalid-position-at-import-rule"
+			}
+		],
+		"biome": [
+			{
+				"name": "noInvalidPositionAtImportRule",
+				"url": "https://biomejs.dev/linter/rules/no-invalid-position-at-import-rule"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/no-invalid-at-rules",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/no-invalid-at-rules.md"
+			}
+		],
+		"flint": {
+			"name": "atRuleValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "at-rule-descriptor-no-unknown",
+				"url": "https://stylelint.io/user-guide/rules/at-rule-descriptor-no-unknown"
+			},
+			{
+				"name": "at-rule-descriptor-value-no-unknown",
+				"url": "https://stylelint.io/user-guide/rules/at-rule-descriptor-value-no-unknown"
+			},
+			{
+				"name": "at-rule-no-unknown",
+				"url": "https://stylelint.io/user-guide/rules/at-rule-no-unknown"
+			},
+			{
+				"name": "at-rule-prelude-no-invalid",
+				"url": "https://stylelint.io/user-guide/rules/at-rule-prelude-no-invalid"
+			}
+		],
+		"biome": [
+			{
+				"name": "noUnknownAtRules",
+				"url": "https://biomejs.dev/linter/rules/no-unknown-at-rules"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/no-invalid-named-grid-areas",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/no-invalid-named-grid-areas.md"
+			}
+		],
+		"flint": {
+			"name": "namedGridAreaValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "named-grid-areas-no-invalid",
+				"url": "https://stylelint.io/user-guide/rules/named-grid-areas-no-invalid"
+			}
+		],
+		"biome": [
+			{
+				"name": "noInvalidGridAreas",
+				"url": "https://biomejs.dev/linter/rules/no-invalid-grid-areas"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/no-invalid-properties",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/no-invalid-properties.md"
+			}
+		],
+		"flint": {
+			"name": "propertyValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "declaration-property-value-no-unknown",
+				"url": "https://stylelint.io/user-guide/rules/declaration-property-value-no-unknown"
+			},
+			{
+				"name": "property-no-unknown",
+				"url": "https://stylelint.io/user-guide/rules/property-no-unknown"
+			}
+		],
+		"biome": [
+			{
+				"name": "noUnknownProperty",
+				"url": "https://biomejs.dev/linter/rules/no-unknown-property"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/no-duplicate-keyframe-selectors",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/no-duplicate-keyframe-selectors.md"
+			}
+		],
+		"flint": {
+			"name": "keyframeSelectorDuplicates",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "keyframe-block-no-duplicate-selectors",
+				"url": "https://stylelint.io/user-guide/rules/keyframe-block-no-duplicate-selectors"
+			}
+		],
+		"biome": [
+			{
+				"name": "noDuplicateSelectorsKeyframeBlock",
+				"url": "https://biomejs.dev/linter/rules/no-duplicate-selectors-keyframe-block"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/prefer-logical-properties",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/prefer-logical-properties.md"
+			}
+		],
+		"flint": {
+			"name": "logicalProperties",
+			"plugin": "css",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/named-color",
+				"url": "https://ota-meshi.github.io/eslint-plugin-css/rules/named-color.html"
+			}
+		],
+		"flint": {
+			"name": "namedColors",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "color-named",
+				"url": "https://stylelint.io/user-guide/rules/color-named"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/number-leading-zero",
+				"url": "https://ota-meshi.github.io/eslint-plugin-css/rules/number-leading-zero.html"
+			}
+		],
+		"flint": {
+			"name": "numberLeadingZeros",
+			"plugin": "css",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/no-number-trailing-zeros",
+				"url": "https://ota-meshi.github.io/eslint-plugin-css/rules/no-number-trailing-zeros.html"
+			}
+		],
+		"flint": {
+			"name": "numericTrailingZeros",
+			"plugin": "css",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/property-casing",
+				"url": "https://ota-meshi.github.io/eslint-plugin-css/rules/property-casing.html"
+			}
+		],
+		"flint": {
+			"name": "propertyCasing",
+			"plugin": "css",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/relative-font-units",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/relative-font-units.md"
+			}
+		],
+		"flint": {
+			"name": "fontUnitRelativity",
+			"plugin": "css",
+			"preset": "logical",
+			"strictness": "strict"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/prefer-reduce-shorthand-property-box-values",
+				"url": "https://ota-meshi.github.io/eslint-plugin-css/rules/prefer-reduce-shorthand-property-box-values.html"
+			}
+		],
+		"flint": {
+			"name": "shorthandValueRedundancy",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "shorthand-property-no-redundant-values",
+				"url": "https://stylelint.io/user-guide/rules/shorthand-property-no-redundant-values"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/selector-complexity",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/selector-complexity.md"
+			}
+		],
+		"flint": {
+			"name": "selectorComplexity",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"notes": "Overly opinionated.",
+		"stylelint": [
+			{
+				"name": "selector-max-attribute",
+				"url": "https://stylelint.io/user-guide/rules/selector-max-attribute"
+			},
+			{
+				"name": "selector-max-class",
+				"url": "https://stylelint.io/user-guide/rules/selector-max-class"
+			},
+			{
+				"name": "selector-max-combinators",
+				"url": "https://stylelint.io/user-guide/rules/selector-max-combinators"
+			},
+			{
+				"name": "selector-max-compound-selectors",
+				"url": "https://stylelint.io/user-guide/rules/selector-max-compound-selectors"
+			},
+			{
+				"name": "selector-max-id",
+				"url": "https://stylelint.io/user-guide/rules/selector-max-id"
+			},
+			{
+				"name": "selector-max-pseudo-class",
+				"url": "https://stylelint.io/user-guide/rules/selector-max-pseudo-class"
+			},
+			{
+				"name": "selector-max-type",
+				"url": "https://stylelint.io/user-guide/rules/selector-max-type"
+			},
+			{
+				"name": "selector-max-universal",
+				"url": "https://stylelint.io/user-guide/rules/selector-max-universal"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/no-unmatchable-selectors",
+				"url": "https://github.com/eslint/css/blob/main/docs/rules/no-unmatchable-selectors.md"
+			}
+		],
+		"flint": {
+			"name": "selectorMatchability",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "selector-anb-no-unmatchable",
+				"url": "https://stylelint.io/user-guide/rules/selector-anb-no-unmatchable"
+			}
+		],
+		"biome": [
+			{
+				"name": "noUnmatchableAnbSelector",
+				"url": "https://biomejs.dev/linter/rules/no-unmatchable-anb-selector"
+			}
+		]
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/no-useless-color-alpha",
+				"url": "https://ota-meshi.github.io/eslint-plugin-css/rules/no-useless-color-alpha.html"
+			}
+		],
+		"flint": {
+			"name": "colorAlphaRedundancy",
+			"plugin": "css",
+			"preset": "stylistic"
+		}
+	},
+	{
+		"eslint": [
+			{
+				"name": "css/no-length-zero-unit",
+				"url": "https://ota-meshi.github.io/eslint-plugin-css/rules/no-length-zero-unit.html"
+			}
+		],
+		"flint": {
+			"name": "zeroLengthUnits",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "length-zero-no-unit",
+				"url": "https://stylelint.io/user-guide/rules/length-zero-no-unit"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "calcOperatorValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "function-calc-no-unspaced-operator",
+				"url": "https://stylelint.io/user-guide/rules/function-calc-no-unspaced-operator"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "atRuleDeprecations",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "at-rule-no-deprecated",
+				"url": "https://stylelint.io/user-guide/rules/at-rule-no-deprecated"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "declarationPropertyValueKeywordDeprecations",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "declaration-property-value-keyword-no-deprecated",
+				"url": "https://stylelint.io/user-guide/rules/declaration-property-value-keyword-no-deprecated"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mediaTypeDeprecations",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "media-type-no-deprecated",
+				"url": "https://stylelint.io/user-guide/rules/media-type-no-deprecated"
+			}
+		],
+		"biome": [
+			{
+				"name": "noDeprecatedMediaType",
+				"url": "https://biomejs.dev/linter/rules/no-deprecated-media-type"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "propertyDeprecations",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "property-no-deprecated",
+				"url": "https://stylelint.io/user-guide/rules/property-no-deprecated"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorDeprecations",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "selector-no-deprecated",
+				"url": "https://stylelint.io/user-guide/rules/selector-no-deprecated"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "descendingSpecificity",
+			"plugin": "css",
+			"preset": "logical",
+			"strictness": "strict"
+		},
+		"stylelint": [
+			{
+				"name": "no-descending-specificity",
+				"url": "https://stylelint.io/user-guide/rules/no-descending-specificity"
+			}
+		],
+		"biome": [
+			{
+				"name": "noDescendingSpecificity",
+				"url": "https://biomejs.dev/linter/rules/no-descending-specificity"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "customPropertyDuplicates",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "declaration-block-no-duplicate-custom-properties",
+				"url": "https://stylelint.io/user-guide/rules/declaration-block-no-duplicate-custom-properties"
+			}
+		],
+		"biome": [
+			{
+				"name": "noDuplicateCustomProperties",
+				"url": "https://biomejs.dev/linter/rules/no-duplicate-custom-properties"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "declarationPropertyDuplicates",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "declaration-block-no-duplicate-properties",
+				"url": "https://stylelint.io/user-guide/rules/declaration-block-no-duplicate-properties"
+			}
+		],
+		"biome": [
+			{
+				"name": "noDuplicateProperties",
+				"url": "https://biomejs.dev/linter/rules/no-duplicate-properties"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "fontFamilyNameDuplicates",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "font-family-no-duplicate-names",
+				"url": "https://stylelint.io/user-guide/rules/font-family-no-duplicate-names"
+			}
+		],
+		"biome": [
+			{
+				"name": "noDuplicateFontNames",
+				"url": "https://biomejs.dev/linter/rules/no-duplicate-font-names"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorDuplicates",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "no-duplicate-selectors",
+				"url": "https://stylelint.io/user-guide/rules/no-duplicate-selectors"
+			}
+		],
+		"biome": [
+			{
+				"name": "noDuplicateSelectors",
+				"url": "https://biomejs.dev/linter/rules/no-duplicate-selectors"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "emptyComments",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "comment-no-empty",
+				"url": "https://stylelint.io/user-guide/rules/comment-no-empty"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "emptySources",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "no-empty-source",
+				"url": "https://stylelint.io/user-guide/rules/no-empty-source"
+			}
+		],
+		"biome": [
+			{
+				"name": "noEmptySource",
+				"url": "https://biomejs.dev/linter/rules/no-empty-source"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "declarationPositionValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "no-invalid-position-declaration",
+				"url": "https://stylelint.io/user-guide/rules/no-invalid-position-declaration"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "doubleSlashCommentValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "no-invalid-double-slash-comments",
+				"url": "https://stylelint.io/user-guide/rules/no-invalid-double-slash-comments"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mediaQueryValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "media-query-no-invalid",
+				"url": "https://stylelint.io/user-guide/rules/media-query-no-invalid"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "selector-no-invalid",
+				"url": "https://stylelint.io/user-guide/rules/selector-no-invalid"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "syntaxStringValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "syntax-string-no-invalid",
+				"url": "https://stylelint.io/user-guide/rules/syntax-string-no-invalid"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "whitespaceValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "no-irregular-whitespace",
+				"url": "https://stylelint.io/user-guide/rules/no-irregular-whitespace"
+			}
+		],
+		"biome": [
+			{
+				"name": "noIrregularWhitespace",
+				"url": "https://biomejs.dev/linter/rules/no-irregular-whitespace"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "customPropertyVarFunctionPresence",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "custom-property-no-missing-var-function",
+				"url": "https://stylelint.io/user-guide/rules/custom-property-no-missing-var-function"
+			}
+		],
+		"biome": [
+			{
+				"name": "noMissingVarFunction",
+				"url": "https://biomejs.dev/linter/rules/no-missing-var-function"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "nestingSelectorScopingRootPresence",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "nesting-selector-no-missing-scoping-root",
+				"url": "https://stylelint.io/user-guide/rules/nesting-selector-no-missing-scoping-root"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "linearGradientDirectionValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "function-linear-gradient-no-nonstandard-direction",
+				"url": "https://stylelint.io/user-guide/rules/function-linear-gradient-no-nonstandard-direction"
+			}
+		],
+		"biome": [
+			{
+				"name": "noInvalidDirectionInLinearGradient",
+				"url": "https://biomejs.dev/linter/rules/no-invalid-direction-in-linear-gradient"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "shorthandPropertyOverrides",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "declaration-block-no-shorthand-property-overrides",
+				"url": "https://stylelint.io/user-guide/rules/declaration-block-no-shorthand-property-overrides"
+			}
+		],
+		"biome": [
+			{
+				"name": "noShorthandPropertyOverrides",
+				"url": "https://biomejs.dev/linter/rules/no-shorthand-property-overrides"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "stringValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "string-no-newline",
+				"url": "https://stylelint.io/user-guide/rules/string-no-newline"
+			}
+		],
+		"biome": [
+			{
+				"name": "noUselessEscapeInString",
+				"url": "https://biomejs.dev/linter/rules/no-useless-escape-in-string"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "animationNameValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "no-unknown-animations",
+				"url": "https://stylelint.io/user-guide/rules/no-unknown-animations"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "annotationValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "annotation-no-unknown",
+				"url": "https://stylelint.io/user-guide/rules/annotation-no-unknown"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "customMediaValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "no-unknown-custom-media",
+				"url": "https://stylelint.io/user-guide/rules/no-unknown-custom-media"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "customPropertyValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "no-unknown-custom-properties",
+				"url": "https://stylelint.io/user-guide/rules/no-unknown-custom-properties"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "functionValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "function-no-unknown",
+				"url": "https://stylelint.io/user-guide/rules/function-no-unknown"
+			}
+		],
+		"biome": [
+			{
+				"name": "noUnknownFunction",
+				"url": "https://biomejs.dev/linter/rules/no-unknown-function"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mediaFeatureNameValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "media-feature-name-no-unknown",
+				"url": "https://stylelint.io/user-guide/rules/media-feature-name-no-unknown"
+			}
+		],
+		"biome": [
+			{
+				"name": "noUnknownMediaFeatureName",
+				"url": "https://biomejs.dev/linter/rules/no-unknown-media-feature-name"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mediaFeatureNameValueValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "media-feature-name-value-no-unknown",
+				"url": "https://stylelint.io/user-guide/rules/media-feature-name-value-no-unknown"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "pseudoClassValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "selector-pseudo-class-no-unknown",
+				"url": "https://stylelint.io/user-guide/rules/selector-pseudo-class-no-unknown"
+			}
+		],
+		"biome": [
+			{
+				"name": "noUnknownPseudoClass",
+				"url": "https://biomejs.dev/linter/rules/no-unknown-pseudo-class"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "pseudoElementValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "selector-pseudo-element-no-unknown",
+				"url": "https://stylelint.io/user-guide/rules/selector-pseudo-element-no-unknown"
+			}
+		],
+		"biome": [
+			{
+				"name": "noUnknownPseudoElement",
+				"url": "https://biomejs.dev/linter/rules/no-unknown-pseudo-element"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorTypeValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "selector-type-no-unknown",
+				"url": "https://stylelint.io/user-guide/rules/selector-type-no-unknown"
+			}
+		],
+		"biome": [
+			{
+				"name": "noUnknownTypeSelector",
+				"url": "https://biomejs.dev/linter/rules/no-unknown-type-selector"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unitValidity",
+			"plugin": "css",
+			"preset": "logical"
+		},
+		"stylelint": [
+			{
+				"name": "unit-no-unknown",
+				"url": "https://stylelint.io/user-guide/rules/unit-no-unknown"
+			}
+		],
+		"biome": [
+			{
+				"name": "noUnknownUnit",
+				"url": "https://biomejs.dev/linter/rules/no-unknown-unit"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "alphaValueNotations",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "alpha-value-notation",
+				"url": "https://stylelint.io/user-guide/rules/alpha-value-notation"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "atRuleEmptyLines",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule.",
+		"stylelint": [
+			{
+				"name": "at-rule-empty-line-before",
+				"url": "https://stylelint.io/user-guide/rules/at-rule-empty-line-before"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "atRuleRequiredProperties",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "at-rule-property-required-list",
+				"url": "https://stylelint.io/user-guide/rules/at-rule-property-required-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "nestedStyleRuleRedundancy",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "block-no-redundant-nested-style-rules",
+				"url": "https://stylelint.io/user-guide/rules/block-no-redundant-nested-style-rules"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "colorFunctionAliasNotations",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "color-function-alias-notation",
+				"url": "https://stylelint.io/user-guide/rules/color-function-alias-notation"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "colorFunctionNotations",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "color-function-notation",
+				"url": "https://stylelint.io/user-guide/rules/color-function-notation"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "hexColorAlphas",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "color-hex-alpha",
+				"url": "https://stylelint.io/user-guide/rules/color-hex-alpha"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "commentEmptyLines",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule.",
+		"stylelint": [
+			{
+				"name": "comment-empty-line-before",
+				"url": "https://stylelint.io/user-guide/rules/comment-empty-line-before"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "commentPatterns",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "comment-pattern",
+				"url": "https://stylelint.io/user-guide/rules/comment-pattern"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "commentWhitespace",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule.",
+		"stylelint": [
+			{
+				"name": "comment-whitespace-inside",
+				"url": "https://stylelint.io/user-guide/rules/comment-whitespace-inside"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "customMediaPatterns",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "custom-media-pattern",
+				"url": "https://stylelint.io/user-guide/rules/custom-media-pattern"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "customPropertyEmptyLines",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule.",
+		"stylelint": [
+			{
+				"name": "custom-property-empty-line-before",
+				"url": "https://stylelint.io/user-guide/rules/custom-property-empty-line-before"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "customPropertyPatterns",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "custom-property-pattern",
+				"url": "https://stylelint.io/user-guide/rules/custom-property-pattern"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "declarationEmptyLines",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule.",
+		"stylelint": [
+			{
+				"name": "declaration-empty-line-before",
+				"url": "https://stylelint.io/user-guide/rules/declaration-empty-line-before"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "declarationPropertyValueLimits",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"stylelint": [
+			{
+				"name": "declaration-property-max-values",
+				"url": "https://stylelint.io/user-guide/rules/declaration-property-max-values"
+			}
+		],
+		"notes": "Overly opinionated."
+	},
+	{
+		"flint": {
+			"name": "displayNotations",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "display-notation",
+				"url": "https://stylelint.io/user-guide/rules/display-notation"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "fontFamilyNameQuotes",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "font-family-name-quotes",
+				"url": "https://stylelint.io/user-guide/rules/font-family-name-quotes"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "fontWeightNotations",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "font-weight-notation",
+				"url": "https://stylelint.io/user-guide/rules/font-weight-notation"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "functionNameCasing",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "function-name-case",
+				"url": "https://stylelint.io/user-guide/rules/function-name-case"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "hueDegreeNotations",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "hue-degree-notation",
+				"url": "https://stylelint.io/user-guide/rules/hue-degree-notation"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "hexColors",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "color-no-hex",
+				"url": "https://stylelint.io/user-guide/rules/color-no-hex"
+			}
+		],
+		"biome": [
+			{
+				"name": "noHexColors",
+				"url": "https://biomejs.dev/linter/rules/no-hex-colors"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "importNotations",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "import-notation",
+				"url": "https://stylelint.io/user-guide/rules/import-notation"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "keyframeSelectorNotations",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "keyframe-selector-notation",
+				"url": "https://stylelint.io/user-guide/rules/keyframe-selector-notation"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "keyframesNamePatterns",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "keyframes-name-pattern",
+				"url": "https://stylelint.io/user-guide/rules/keyframes-name-pattern"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "layerNamePatterns",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "layer-name-pattern",
+				"url": "https://stylelint.io/user-guide/rules/layer-name-pattern"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "lightnessNotations",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "lightness-notation",
+				"url": "https://stylelint.io/user-guide/rules/lightness-notation"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "longhandPropertyRedundancy",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "declaration-block-no-redundant-longhand-properties",
+				"url": "https://stylelint.io/user-guide/rules/declaration-block-no-redundant-longhand-properties"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mediaFeatureRangeNotations",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "media-feature-range-notation",
+				"url": "https://stylelint.io/user-guide/rules/media-feature-range-notation"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "nestingAtRuleRequirements",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "rule-nesting-at-rule-required-list",
+				"url": "https://stylelint.io/user-guide/rules/rule-nesting-at-rule-required-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "nestingDepthLimits",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"stylelint": [
+			{
+				"name": "max-nesting-depth",
+				"url": "https://stylelint.io/user-guide/rules/max-nesting-depth"
+			}
+		],
+		"notes": "Overly opinionated."
+	},
+	{
+		"flint": {
+			"name": "numberPrecisionLimits",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"stylelint": [
+			{
+				"name": "number-max-precision",
+				"url": "https://stylelint.io/user-guide/rules/number-max-precision"
+			}
+		],
+		"notes": "Overly opinionated."
+	},
+	{
+		"flint": {
+			"name": "propertyLayoutMappings",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "property-layout-mappings",
+				"url": "https://stylelint.io/user-guide/rules/property-layout-mappings"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorNestingRelativity",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "relative-selector-nesting-notation",
+				"url": "https://stylelint.io/user-guide/rules/relative-selector-nesting-notation"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "ruleEmptyLines",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"notes": "Formatting rule.",
+		"stylelint": [
+			{
+				"name": "rule-empty-line-before",
+				"url": "https://stylelint.io/user-guide/rules/rule-empty-line-before"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorAttributeQuotes",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "selector-attribute-quotes",
+				"url": "https://stylelint.io/user-guide/rules/selector-attribute-quotes"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorClassPatterns",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "selector-class-pattern",
+				"url": "https://stylelint.io/user-guide/rules/selector-class-pattern"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorIdPatterns",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "selector-id-pattern",
+				"url": "https://stylelint.io/user-guide/rules/selector-id-pattern"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorNestedPatterns",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "selector-nested-pattern",
+				"url": "https://stylelint.io/user-guide/rules/selector-nested-pattern"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorNotNotations",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "selector-not-notation",
+				"url": "https://stylelint.io/user-guide/rules/selector-not-notation"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorPseudoElementColonNotations",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "selector-pseudo-element-colon-notation",
+				"url": "https://stylelint.io/user-guide/rules/selector-pseudo-element-colon-notation"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorSpecificityLimits",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"stylelint": [
+			{
+				"name": "selector-max-specificity",
+				"url": "https://stylelint.io/user-guide/rules/selector-max-specificity"
+			}
+		],
+		"notes": "Overly opinionated."
+	},
+	{
+		"flint": {
+			"name": "selectorTypeCasing",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "selector-type-case",
+				"url": "https://stylelint.io/user-guide/rules/selector-type-case"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "singleLineDeclarationLimits",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"stylelint": [
+			{
+				"name": "declaration-block-single-line-max-declarations",
+				"url": "https://stylelint.io/user-guide/rules/declaration-block-single-line-max-declarations"
+			}
+		],
+		"notes": "Overly opinionated."
+	},
+	{
+		"flint": {
+			"name": "minimumTimeMilliseconds",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"stylelint": [
+			{
+				"name": "time-min-milliseconds",
+				"url": "https://stylelint.io/user-guide/rules/time-min-milliseconds"
+			}
+		],
+		"notes": "Overly opinionated."
+	},
+	{
+		"flint": {
+			"name": "urlQuotes",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "function-url-quotes",
+				"url": "https://stylelint.io/user-guide/rules/function-url-quotes"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "urlSchemeRelativity",
+			"plugin": "css",
+			"preset": "logical",
+			"strictness": "strict"
+		},
+		"stylelint": [
+			{
+				"name": "function-url-no-scheme-relative",
+				"url": "https://stylelint.io/user-guide/rules/function-url-no-scheme-relative"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unitLayoutMappings",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "unit-layout-mappings",
+				"url": "https://stylelint.io/user-guide/rules/unit-layout-mappings"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "valueKeywordCasing",
+			"plugin": "css",
+			"preset": "stylistic"
+		},
+		"stylelint": [
+			{
+				"name": "value-keyword-case",
+				"url": "https://stylelint.io/user-guide/rules/value-keyword-case"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "valueKeywordLayoutMappings",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "value-keyword-layout-mappings",
+				"url": "https://stylelint.io/user-guide/rules/value-keyword-layout-mappings"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "atRuleVendorPrefixes",
+			"plugin": "css",
+			"preset": "logical",
+			"strictness": "strict"
+		},
+		"stylelint": [
+			{
+				"name": "at-rule-no-vendor-prefix",
+				"url": "https://stylelint.io/user-guide/rules/at-rule-no-vendor-prefix"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mediaFeatureNameVendorPrefixes",
+			"plugin": "css",
+			"preset": "logical",
+			"strictness": "strict"
+		},
+		"stylelint": [
+			{
+				"name": "media-feature-name-no-vendor-prefix",
+				"url": "https://stylelint.io/user-guide/rules/media-feature-name-no-vendor-prefix"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "propertyVendorPrefixes",
+			"plugin": "css",
+			"preset": "logical",
+			"strictness": "strict"
+		},
+		"stylelint": [
+			{
+				"name": "property-no-vendor-prefix",
+				"url": "https://stylelint.io/user-guide/rules/property-no-vendor-prefix"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorVendorPrefixes",
+			"plugin": "css",
+			"preset": "logical",
+			"strictness": "strict"
+		},
+		"stylelint": [
+			{
+				"name": "selector-no-vendor-prefix",
+				"url": "https://stylelint.io/user-guide/rules/selector-no-vendor-prefix"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "valueVendorPrefixes",
+			"plugin": "css",
+			"preset": "logical",
+			"strictness": "strict"
+		},
+		"stylelint": [
+			{
+				"name": "value-no-vendor-prefix",
+				"url": "https://stylelint.io/user-guide/rules/value-no-vendor-prefix"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "qualifyingTypeSelectors",
+			"plugin": "css",
+			"preset": "logical",
+			"strictness": "strict"
+		},
+		"stylelint": [
+			{
+				"name": "selector-no-qualifying-type",
+				"url": "https://stylelint.io/user-guide/rules/selector-no-qualifying-type"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "containerNamePatterns",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "container-name-pattern",
+				"url": "https://stylelint.io/user-guide/rules/container-name-pattern"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "atRules",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "at-rule-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/at-rule-allowed-list"
+			},
+			{
+				"name": "at-rule-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/at-rule-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "commentWords",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "comment-word-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/comment-word-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "declarationPropertyUnits",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "declaration-property-unit-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/declaration-property-unit-allowed-list"
+			},
+			{
+				"name": "declaration-property-unit-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/declaration-property-unit-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "declarationPropertyValues",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "declaration-property-value-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/declaration-property-value-allowed-list"
+			},
+			{
+				"name": "declaration-property-value-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/declaration-property-value-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "functions",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "function-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/function-allowed-list"
+			},
+			{
+				"name": "function-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/function-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mediaFeatureNames",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "media-feature-name-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/media-feature-name-allowed-list"
+			},
+			{
+				"name": "media-feature-name-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/media-feature-name-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mediaFeatureNameValues",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "media-feature-name-value-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/media-feature-name-value-allowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mediaFeatureUnits",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "media-feature-name-unit-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/media-feature-name-unit-allowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "properties",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "property-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/property-allowed-list"
+			},
+			{
+				"name": "property-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/property-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "pseudoClasses",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "selector-pseudo-class-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/selector-pseudo-class-allowed-list"
+			},
+			{
+				"name": "selector-pseudo-class-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/selector-pseudo-class-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "pseudoElements",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "selector-pseudo-element-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/selector-pseudo-element-allowed-list"
+			},
+			{
+				"name": "selector-pseudo-element-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/selector-pseudo-element-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "ruleSelectorProperties",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "rule-selector-property-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/rule-selector-property-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorAttributeOperators",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "selector-attribute-operator-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/selector-attribute-operator-allowed-list"
+			},
+			{
+				"name": "selector-attribute-operator-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/selector-attribute-operator-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorCombinators",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "selector-combinator-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/selector-combinator-allowed-list"
+			},
+			{
+				"name": "selector-combinator-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/selector-combinator-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectors",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "selector-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/selector-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "units",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "unit-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/unit-allowed-list"
+			},
+			{
+				"name": "unit-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/unit-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "urlSchemes",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "function-url-scheme-allowed-list",
+				"url": "https://stylelint.io/user-guide/rules/function-url-scheme-allowed-list"
+			},
+			{
+				"name": "function-url-scheme-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/function-url-scheme-disallowed-list"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "selectorAttributeNames",
+			"plugin": "css"
+		},
+		"stylelint": [
+			{
+				"name": "selector-attribute-name-disallowed-list",
+				"url": "https://stylelint.io/user-guide/rules/selector-attribute-name-disallowed-list"
+			}
+		]
+	},
+	{
+		"biome": [
+			{
+				"name": "noExcessiveLinesPerFile",
+				"url": "https://biomejs.dev/linter/rules/no-excessive-lines-per-file"
+			}
+		],
+		"flint": {
+			"name": "fileLineLimits",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"notes": "Overly opinionated."
+	},
+	{
+		"biome": [
+			{
+				"name": "noExcessiveSelectorClasses",
+				"url": "https://biomejs.dev/linter/rules/no-excessive-selector-classes"
+			}
+		],
+		"flint": {
+			"name": "selectorClassLimits",
+			"plugin": "css",
+			"status": "skipped"
+		},
+		"notes": "Overly opinionated."
+	},
+	{
+		"biome": [
+			{
+				"name": "noValueAtRule",
+				"url": "https://biomejs.dev/linter/rules/no-value-at-rule"
+			}
+		],
+		"flint": {
+			"name": "valueAtRules",
+			"plugin": "css",
 			"preset": "logical"
 		}
 	}

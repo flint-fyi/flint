@@ -1,11 +1,14 @@
+import ts, { SyntaxKind } from "typescript";
+
 import {
+	getTSNodeRange,
+	typescriptLanguage,
 	type AST,
 	type Checker,
-	getTSNodeRange,
 	type TypeScriptFileServices,
-	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 function isImportFromNodeEvents(
 	expression: ts.Expression,
@@ -15,8 +18,6 @@ function isImportFromNodeEvents(
 		(expression.text === "events" || expression.text === "node:events")
 	);
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

@@ -1,9 +1,12 @@
+import { SyntaxKind } from "typescript";
+
 import {
-	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 const validTypeofValues = new Set([
 	"bigint",
@@ -28,8 +31,6 @@ function getStringValue(node: AST.Expression) {
 function getTypeofOperand(node: AST.Expression) {
 	return node.kind === SyntaxKind.TypeOfExpression && node.expression;
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
