@@ -3,7 +3,7 @@ import { z } from "zod/v4";
 
 import {
 	getJsonNodeRange,
-	getJsonNodeText,
+	getNodeText,
 	jsonLanguage,
 } from "@flint.fyi/json-language/new";
 
@@ -87,7 +87,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 						context.report({
 							fix: {
 								range: getJsonNodeRange(propertyValue),
-								text: `{ ".": ${getJsonNodeText(propertyValue, sourceText)} }`,
+								text: `{ ".": ${getNodeText(propertyValue, sourceText)} }`,
 							},
 							message: "preferExplicit",
 							range,
@@ -111,7 +111,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 					context.report({
 						fix: {
 							range: getJsonNodeRange(propertyValue),
-							text: getJsonNodeText(rootSubpath.value, sourceText),
+							text: getNodeText(rootSubpath.value, sourceText),
 						},
 						message: "preferImplicit",
 						range,
