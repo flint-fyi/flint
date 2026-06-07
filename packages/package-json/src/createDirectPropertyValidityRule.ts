@@ -4,7 +4,7 @@ import type { Result } from "package-json-validator";
 import type { AnyRule } from "@flint.fyi/core";
 import {
 	getJsonNodeRange,
-	getJsonNodeText,
+	getNodeText,
 	jsonLanguage,
 } from "@flint.fyi/json-language/new";
 
@@ -38,7 +38,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 		},
 		setup(context) {
 			function checkValue(node: ValueNode, sourceText: string) {
-				const value: unknown = JSON.parse(getJsonNodeText(node, sourceText));
+				const value: unknown = JSON.parse(getNodeText(node, sourceText));
 				const result = propertyValidator(value);
 
 				reportIssues(result, node);
