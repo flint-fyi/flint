@@ -7,8 +7,5 @@
 	},
 	"extends": "../../tsconfig.base.json",
 	"include": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
-	"references": [
-		{ "path": "../rule-tester" },
-		{ "path": "./tsconfig.src.json" }
-	]
+	"references": [{ "path": "./tsconfig.src.json" }]
 }

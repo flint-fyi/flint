@@ -26,7 +26,6 @@
 		"@flint.fyi/core": "workspace:^"
 	},
 	"devDependencies": {
-		"@flint.fyi/rule-tester": "workspace:^",
 		"vitest": "catalog:dev"
 	},
 	"engines": {
