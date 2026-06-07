@@ -439,5 +439,12 @@ const result = obj.value || "default";
 declare const baseHost: string[] | null;
 console.log(baseHost == null ? { cwd: process.cwd() } : { baseHost });
 `,
+		`
+let content: { value: string } | undefined;
+let matcher: { value: string } | undefined;
+if (content !== undefined) {
+    matcher = content;
+}
+`,
 	],
 });
