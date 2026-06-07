@@ -28,11 +28,11 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/json-language": "workspace:^",
-		"typescript": "^5.9.3 || ^6.0.0",
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
+		"@humanwhocodes/momoa": "^3.3.10",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

@@ -3,7 +3,7 @@ import { SyntaxKind } from "typescript";
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertiesOfNamesLegacy } from "../getPackagePropertiesOfNames.ts";
-import { removeObjectProperty } from "../removeObjectProperty.ts";
+import { removeObjectPropertyLegacy } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 // flint-disable-next-line ts/deprecated
@@ -58,7 +58,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							property.name.kind === SyntaxKind.StringLiteral &&
 							property.name.text === "access"
 						) {
-							const { range, text } = removeObjectProperty(
+							const { range, text } = removeObjectPropertyLegacy(
 								node,
 								property,
 								publishConfigValue,

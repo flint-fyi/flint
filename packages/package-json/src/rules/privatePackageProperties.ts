@@ -5,7 +5,7 @@ import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertiesLegacy } from "../getPackageProperties.ts";
 import { getPackagePropertyOfNameLegacy } from "../getPackagePropertyOfName.ts";
-import { removeObjectProperty } from "../removeObjectProperty.ts";
+import { removeObjectPropertyLegacy } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 // flint-disable-next-line ts/deprecated
@@ -70,7 +70,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							continue;
 						}
 
-						const { range, text } = removeObjectProperty(
+						const { range, text } = removeObjectPropertyLegacy(
 							node,
 							property,
 							root.expression,

@@ -17,7 +17,6 @@ import {
 	type FileAboutData,
 	type FileReport,
 	type Language,
-	type LanguageCreateRule,
 	type LanguageFileCacheImpacts,
 	type LanguageReports,
 	type NormalizedReportRangeObject,

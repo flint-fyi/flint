@@ -111,7 +111,6 @@ export type {
 	Plugin,
 	PluginPresets,
 	PluginRulesFactory,
-	PluginRulesOptions,
 } from "./types/plugins.ts";
 export type {
 	CharacterReportRange,

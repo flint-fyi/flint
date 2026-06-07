@@ -13,7 +13,11 @@ export default defineConfig({
 				exclude: ["packages/e2e/tests/**/package.json"],
 				include: packageJson.files.all,
 			},
-			rules: [packageJson.presets.logical, packageJson.presets.stylistic],
+			rules: [
+				packageJson.presets.logical,
+				packageJson.presets.sorting,
+				packageJson.presets.stylistic,
+			],
 		},
 		{
 			files: json.files.all,

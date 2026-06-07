@@ -19,6 +19,7 @@ export function astroCompilerDiagnosticToLanguageReport(
 	return {
 		code: `ASTRO${diagnostic.code}`,
 		range: { begin, end: begin + diagnostic.location.length },
+		source: "astro",
 		text: `${fileName}:${diagnostic.location.line}:${diagnostic.location.column} - ${diagnostic.text}${diagnostic.hint ? ` (${diagnostic.hint})` : ""}`,
 	};
 }

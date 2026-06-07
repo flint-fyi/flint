@@ -90,7 +90,9 @@ describe("cacheStorageSchema decoding", () => {
 			files: {
 				"src/index.ts": {
 					dependencies: ["src/utils.ts"],
-					languageReports: [{ code: "TS1234", text: "Error message" }],
+					languageReports: [
+						{ code: "TS1234", source: "typescript", text: "Error message" },
+					],
 					reports: [
 						{
 							about: { id: "test-rule" },
@@ -113,6 +115,19 @@ describe("cacheStorageSchema decoding", () => {
 		const result = z.safeDecode(cacheStorageSchema, JSON.stringify(validCache));
 
 		expect(result.success).toBe(true);
+		expect(result).toEqual(
+			expect.objectContaining({
+				data: expect.objectContaining({
+					files: {
+						"src/index.ts": expect.objectContaining({
+							languageReports: [
+								expect.objectContaining({ source: "typescript" }),
+							],
+						}),
+					},
+				}),
+			}),
+		);
 	});
 
 	it("parses cache with report containing optional fields", () => {
@@ -361,6 +376,9 @@ describe("cacheStorageSchema", () => {
 			files: {
 				"src/index.ts": {
 					dependencies: ["src/utils.ts"],
+					languageReports: [
+						{ code: "TS1234", source: "typescript", text: "Error message" },
+					],
 					reports: [
 						{
 							about: { id: "test-rule" },

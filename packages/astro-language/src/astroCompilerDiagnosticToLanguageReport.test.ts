@@ -23,6 +23,7 @@ describe("astroCompilerDiagnosticToLanguageReport", () => {
 		);
 
 		expect(report.range).toEqual({ begin: 11, end: 19 }); // "set:html" = 8 chars
+		expect(report.source).toBe("astro");
 		expect(sourceText.slice(11, 19)).toBe("set:html");
 		expect(report.text).toContain(":2:6");
 	});

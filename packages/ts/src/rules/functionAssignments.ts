@@ -1,5 +1,6 @@
 import {
 	getModifyingReferences,
+	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 
@@ -29,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				FunctionDeclaration: (node, { sourceFile, typeChecker }) => {
+				FunctionDeclaration: (node, { sourceFile }) => {
 					if (!node.name) {
 						return;
 					}
@@ -37,16 +38,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const modifyingReferences = getModifyingReferences(
 						node.name,
 						sourceFile,
-						typeChecker,
 					);
 
 					for (const reference of modifyingReferences) {
 						context.report({
 							message: "noFunctionAssignment",
-							range: {
-								begin: reference.getStart(sourceFile),
-								end: reference.getEnd(),
-							},
+							range: getTSNodeRange(reference, sourceFile),
 						});
 					}
 				},

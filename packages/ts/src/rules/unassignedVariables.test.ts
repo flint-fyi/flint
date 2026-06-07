@@ -69,5 +69,9 @@ function example() {
 		`let result; result ||= "default";`,
 		`let data; data &&= "value";`,
 		`let nullish; nullish ??= "fallback";`,
+		`let value; [value] = values;`,
+		`let value; ({ value } = object);`,
+		`let value; for (value of values) {}`,
+		`let key; for (key in object) {}`,
 	],
 });
