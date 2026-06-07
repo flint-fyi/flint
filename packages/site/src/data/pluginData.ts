@@ -264,11 +264,19 @@ export const pluginDataByGroup: Record<string, Record<string, PluginData>> = {
 };
 
 export function getPluginData(pluginId: string) {
+	const pluginData = getPluginDataSafe(pluginId);
+
+	if (!pluginData) {
+		throw new Error(`Unknown pluginId: ${pluginId}`);
+	}
+
+	return pluginData;
+}
+
+export function getPluginDataSafe(pluginId: string) {
 	for (const group of Object.keys(pluginDataByGroup)) {
 		if (pluginId in pluginDataByGroup[group]) {
 			return { group, plugin: pluginDataByGroup[group][pluginId] };
 		}
 	}
-
-	throw new Error(`Unknown pluginId: ${pluginId}`);
 }

@@ -10,7 +10,7 @@
 		"properties": {
 			"flint": {
 				"type": "object",
-				"required": ["name", "plugin"],
+				"required": ["name"],
 				"additionalProperties": false,
 				"properties": {
 					"name": {
@@ -26,6 +26,7 @@
 							"browser",
 							"css",
 							"flint",
+							"graphql",
 							"json",
 							"jsx",
 							"md",
@@ -34,7 +35,11 @@
 							"nuxt",
 							"package-json",
 							"performance",
+							"playwright",
+							"qwik",
 							"react",
+							"react-native",
+							"security",
 							"solid",
 							"spelling",
 							"svelte",

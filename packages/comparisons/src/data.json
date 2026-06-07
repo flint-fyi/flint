@@ -3996,7 +3996,7 @@
 		"flint": {
 			"name": "anonymousOperations",
 			"plugin": "graphql",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4009,7 +4009,7 @@
 		"flint": {
 			"name": "argumentNameDuplicates",
 			"plugin": "graphql",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4022,8 +4022,7 @@
 		"flint": {
 			"name": "deprecatedDates",
 			"plugin": "graphql",
-			"preset": "logical",
-			"strictness": "strict"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4036,7 +4035,7 @@
 		"flint": {
 			"name": "deprecatedReasons",
 			"plugin": "graphql",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4049,8 +4048,7 @@
 		"flint": {
 			"name": "descriptionStyles",
 			"plugin": "graphql",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4063,7 +4061,7 @@
 		"flint": {
 			"name": "enumValueNameDuplicates",
 			"plugin": "graphql",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4076,8 +4074,7 @@
 		"flint": {
 			"name": "executableDefinitionLocations",
 			"plugin": "graphql",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4090,7 +4087,7 @@
 		"flint": {
 			"name": "fieldDefinitionNameDuplicates",
 			"plugin": "graphql",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4103,7 +4100,7 @@
 		"flint": {
 			"name": "fieldDuplicates",
 			"plugin": "graphql",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4116,7 +4113,7 @@
 		"flint": {
 			"name": "inputFieldNameDuplicates",
 			"plugin": "graphql",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4129,8 +4126,7 @@
 		"flint": {
 			"name": "inputNames",
 			"plugin": "graphql",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4143,7 +4139,7 @@
 		"flint": {
 			"name": "namedOperations",
 			"plugin": "graphql",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4156,8 +4152,7 @@
 		"flint": {
 			"name": "namingConventions",
 			"plugin": "graphql",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4170,7 +4165,7 @@
 		"flint": {
 			"name": "operationNameDuplicates",
 			"plugin": "graphql",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4183,7 +4178,7 @@
 		"flint": {
 			"name": "rootTypes",
 			"plugin": "graphql",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -4196,7 +4191,7 @@
 		"flint": {
 			"name": "variableNameDuplicates",
 			"plugin": "graphql",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10625,7 +10620,7 @@
 		"flint": {
 			"name": "describeCallbacks",
 			"plugin": "playwright",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10638,7 +10633,7 @@
 		"flint": {
 			"name": "elementHandles",
 			"plugin": "playwright",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10651,7 +10646,7 @@
 		"flint": {
 			"name": "evals",
 			"plugin": "playwright",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10664,7 +10659,7 @@
 		"flint": {
 			"name": "forceOptions",
 			"plugin": "playwright",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10677,7 +10672,7 @@
 		"flint": {
 			"name": "missingAwaits",
 			"plugin": "playwright",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10690,7 +10685,7 @@
 		"flint": {
 			"name": "networkidles",
 			"plugin": "playwright",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10703,7 +10698,7 @@
 		"flint": {
 			"name": "pagePauses",
 			"plugin": "playwright",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10716,7 +10711,7 @@
 		"flint": {
 			"name": "uselessAwaits",
 			"plugin": "playwright",
-			"preset": "stylistic"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10729,7 +10724,7 @@
 		"flint": {
 			"name": "waitForNavigations",
 			"plugin": "playwright",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10742,7 +10737,7 @@
 		"flint": {
 			"name": "waitForSelectors",
 			"plugin": "playwright",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10755,7 +10750,7 @@
 		"flint": {
 			"name": "waitForTimeouts",
 			"plugin": "playwright",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10767,8 +10762,7 @@
 		],
 		"flint": {
 			"name": "classlists",
-			"plugin": "qwik",
-			"preset": "stylistic"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10780,8 +10774,7 @@
 		],
 		"flint": {
 			"name": "lexicalScopes",
-			"plugin": "qwik",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10793,8 +10786,7 @@
 		],
 		"flint": {
 			"name": "loaderLocations",
-			"plugin": "qwik",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10806,8 +10798,7 @@
 		],
 		"flint": {
 			"name": "methodUsages",
-			"plugin": "qwik",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -10819,8 +10810,7 @@
 		],
 		"flint": {
 			"name": "visibleTasks",
-			"plugin": "qwik",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -12627,7 +12617,7 @@
 		"flint": {
 			"name": "deepImports",
 			"plugin": "react-native",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -12640,8 +12630,7 @@
 		"flint": {
 			"name": "literalColors",
 			"plugin": "react-native",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"status": "skipped"
 		}
 	},
 	{
@@ -12654,7 +12643,7 @@
 		"flint": {
 			"name": "platformComponents",
 			"plugin": "react-native",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -12667,7 +12656,7 @@
 		"flint": {
 			"name": "rawTexts",
 			"plugin": "react-native",
-			"preset": "logical"
+			"status": "skipped"
 		}
 	},
 	{
@@ -12680,7 +12669,7 @@
 		"flint": {
 			"name": "secrets",
 			"plugin": "security",
-			"preset": "security"
+			"status": "skipped"
 		}
 	},
 	{
