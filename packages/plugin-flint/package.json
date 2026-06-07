@@ -1,8 +1,8 @@
 {
 	"name": "@flint.fyi/plugin-flint",
-	"version": "0.5.0",
+	"version": "0.5.1",
 	"description": "[Experimental] A Flint plugin for linting Flint plugins.",
-	"homepage": "https://www.flint.fyi/rules/flint",
+	"homepage": "https://flint.fyi/rules/flint",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "JoshuaKGoldberg",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": false,
 	"type": "module",

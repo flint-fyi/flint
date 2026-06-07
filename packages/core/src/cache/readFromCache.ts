@@ -1,6 +1,7 @@
-import { nullThrows, pathKey } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
+
+import { nullThrows, pathKey } from "@flint.fyi/utils";
 
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";

@@ -35,6 +35,7 @@ import arrayTypes from "./rules/arrayTypes.ts";
 import arrayUnnecessaryLengthChecks from "./rules/arrayUnnecessaryLengthChecks.ts";
 import asConstAssertions from "./rules/asConstAssertions.ts";
 import assignmentOperatorShorthands from "./rules/assignmentOperatorShorthands.ts";
+import asyncFunctionAwaits from "./rules/asyncFunctionAwaits.ts";
 import asyncPromiseExecutors from "./rules/asyncPromiseExecutors.ts";
 import asyncUnnecessaryPromiseWrappers from "./rules/asyncUnnecessaryPromiseWrappers.ts";
 import atAccesses from "./rules/atAccesses.ts";
@@ -247,8 +248,10 @@ import regexUnusedQuantifiers from "./rules/regexUnusedQuantifiers.ts";
 import regexValidity from "./rules/regexValidity.ts";
 import regexWordMatchers from "./rules/regexWordMatchers.ts";
 import regexZeroQuantifiers from "./rules/regexZeroQuantifiers.ts";
+import requireImports from "./rules/requireImports.ts";
 import responseJsonMethods from "./rules/responseJsonMethods.ts";
 import restrictedIdentifiers from "./rules/restrictedIdentifiers.ts";
+import restrictedImports from "./rules/restrictedImports.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
 import returnThisTypes from "./rules/returnThisTypes.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
@@ -275,6 +278,7 @@ import tripleSlashReferenceValidity from "./rules/tripleSlashReferenceValidity.t
 import tsComments from "./rules/tsComments.ts";
 import tslintComments from "./rules/tslintComments.ts";
 import typeAssertionStyles from "./rules/typeAssertionStyles.ts";
+import typeImports from "./rules/typeImports.ts";
 import typeofComparisons from "./rules/typeofComparisons.ts";
 import unassignedVariables from "./rules/unassignedVariables.ts";
 import undefinedTypeofChecks from "./rules/undefinedTypeofChecks.ts";
@@ -344,6 +348,7 @@ export const ts = createPlugin({
 		arrayUnnecessaryLengthChecks,
 		asConstAssertions,
 		assignmentOperatorShorthands,
+		asyncFunctionAwaits,
 		asyncPromiseExecutors,
 		asyncUnnecessaryPromiseWrappers,
 		atAccesses,
@@ -556,8 +561,11 @@ export const ts = createPlugin({
 		regexValidity,
 		regexWordMatchers,
 		regexZeroQuantifiers,
+		requireImports,
+		requireImports,
 		responseJsonMethods,
 		restrictedIdentifiers,
+		restrictedImports,
 		returnAssignments,
 		returnThisTypes,
 		selfAssignments,
@@ -584,6 +592,7 @@ export const ts = createPlugin({
 		tsComments,
 		tslintComments,
 		typeAssertionStyles,
+		typeImports,
 		typeofComparisons,
 		unassignedVariables,
 		undefinedTypeofChecks,

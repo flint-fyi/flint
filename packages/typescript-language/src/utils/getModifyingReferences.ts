@@ -1,6 +1,7 @@
-import type { Checker } from "@flint.fyi/typescript-language";
 import * as tsutils from "ts-api-utils";
 import ts from "typescript";
+
+import type { Checker } from "@flint.fyi/typescript-language";
 
 import type * as AST from "../types/ast.ts";
 

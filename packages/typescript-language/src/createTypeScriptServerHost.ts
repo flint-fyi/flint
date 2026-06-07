@@ -1,9 +1,11 @@
-import type { LinterHost } from "@flint.fyi/core";
-import { assert, FlintAssertionError } from "@flint.fyi/utils";
 import fs from "node:fs";
-import path from "node:path";
 import timers from "node:timers";
+
+import { resolve } from "pathe";
 import ts from "typescript";
+
+import { commonlyIgnoredPaths, type LinterHost } from "@flint.fyi/core";
+import { assert, FlintAssertionError } from "@flint.fyi/utils";
 
 function serverHostMethodNotImplemented(methodName: string): never {
 	throw new FlintAssertionError(
@@ -38,7 +40,7 @@ export function createTypeScriptServerHost(
 		directoryExists(directoryPath) {
 			return (
 				host.fileTypeSync(
-					path.resolve(host.getCurrentDirectory(), directoryPath),
+					resolve(host.getCurrentDirectory(), directoryPath),
 				) === "directory"
 			);
 		},
@@ -47,9 +49,8 @@ export function createTypeScriptServerHost(
 		},
 		fileExists(filePath) {
 			return (
-				host.fileTypeSync(
-					path.resolve(host.getCurrentDirectory(), filePath),
-				) === "file"
+				host.fileTypeSync(resolve(host.getCurrentDirectory(), filePath)) ===
+				"file"
 			);
 		},
 		readDirectory(directoryPath, extensions, exclude, include, depth) {
@@ -72,9 +73,7 @@ export function createTypeScriptServerHost(
 				try {
 					fs.readdirSync = originalReadDirSync;
 					return host
-						.readDirectorySync(
-							path.resolve(host.getCurrentDirectory(), readPath),
-						)
+						.readDirectorySync(resolve(host.getCurrentDirectory(), readPath))
 						.map(
 							(dirent) =>
 								new DirentCtor(
@@ -104,19 +103,17 @@ export function createTypeScriptServerHost(
 			}
 		},
 		readFile(filePath) {
-			return host.readFileSync(
-				path.resolve(host.getCurrentDirectory(), filePath),
-			);
+			return host.readFileSync(resolve(host.getCurrentDirectory(), filePath));
 		},
 		setImmediate: timers.setImmediate,
 		setTimeout: timers.setTimeout,
 		watchDirectory(directoryPath, callback, recursive = false) {
 			const watcher = host.watchDirectorySync(
-				path.resolve(host.getCurrentDirectory(), directoryPath),
+				resolve(host.getCurrentDirectory(), directoryPath),
 				(filePathAbsolute) => {
 					callback(filePathAbsolute);
 				},
-				{ recursive },
+				{ ignoredPaths: commonlyIgnoredPaths, recursive },
 			);
 			return {
 				close() {
@@ -126,7 +123,7 @@ export function createTypeScriptServerHost(
 		},
 		watchFile(filePath, callback) {
 			const watcher = host.watchFileSync(
-				path.resolve(host.getCurrentDirectory(), filePath),
+				resolve(host.getCurrentDirectory(), filePath),
 				(event) => {
 					let eventKind: ts.FileWatcherEventKind;
 					switch (event) {
@@ -142,6 +139,7 @@ export function createTypeScriptServerHost(
 					}
 					callback(filePath, eventKind);
 				},
+				{ ignoredPaths: commonlyIgnoredPaths },
 			);
 			return {
 				close() {

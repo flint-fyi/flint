@@ -1,5 +1,6 @@
-import type { AST } from "@flint.fyi/typescript-language";
 import ts from "typescript";
+
+import type { AST } from "@flint.fyi/typescript-language";
 
 export function isInBooleanContext(node: AST.AnyNode): boolean {
 	switch (node.parent.kind) {

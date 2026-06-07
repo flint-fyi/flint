@@ -1,0 +1,73 @@
+---
+description: "Enforces that the `gypfile` property is present."
+title: "gypfilePresence"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="gypfilePresence" />
+
+This rule requires the `gypfile` field in `package.json` to be present.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"gypfile": true
+}
+```
+
+```json
+{
+	"gypfile": false,
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `ignorePrivate`
+
+Whether the property should still be required when the package's `private` property is `true`.
+Defaults to `false`.
+
+This option can be useful if the rule is enabled on many `package.json` files and some files differ in privacy.
+
+## When Not To Use It
+
+If your package does not use node-gyp, you can disable this rule.
+For example, a package with only JavaScript files usually does not need `gypfile` metadata.
+
+## Related Rules
+
+- [gypfileValidity](/rules/package-json/gypfilevalidity) - Enforces that the `gypfile` property is valid.
+
+## Further Reading
+
+- [npm: `package.json` > `gypfile`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#gypfile)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="gypfilePresence" />

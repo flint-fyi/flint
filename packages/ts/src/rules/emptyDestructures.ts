@@ -1,8 +1,8 @@
 import {
-	type TypeScriptFileServices,
 	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
-import type { AST } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

@@ -4,9 +4,11 @@ import { getCollection } from "astro:content";
 
 const paths = await getCollection("docs");
 const pages = Object.fromEntries(
-	paths.map(({ data, id }) => {
-		return [id, { data }] as const;
-	}),
+	process.env.SKIP_OG
+		? []
+		: paths.map(({ data, id }) => {
+				return [id, { data }] as const;
+			}),
 );
 
 export const { GET, getStaticPaths } = await OGImageRoute({

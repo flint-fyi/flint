@@ -1,6 +1,7 @@
-import type { CharacterReportRange } from "@flint.fyi/core";
-import { type AST, typescriptLanguage } from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
+
+import type { CharacterReportRange } from "@flint.fyi/core";
+import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

@@ -3,12 +3,13 @@ import type {
 	CapturingGroup,
 	RegExpLiteral,
 } from "@eslint-community/regexpp/ast";
+import { isZeroLength } from "regexp-ast-analysis";
+
 import {
+	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
-	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import { isZeroLength } from "regexp-ast-analysis";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";

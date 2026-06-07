@@ -1,9 +1,12 @@
+import { SyntaxKind } from "typescript";
+
 import {
-	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 function getConditionDirection(
 	condition: AST.Expression,
@@ -113,8 +116,6 @@ function getIncrementorDirection(incrementor: AST.Expression) {
 
 	return undefined;
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

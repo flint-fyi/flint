@@ -1,12 +1,5 @@
 export { getJsonNodeRange } from "./getJsonNodeRange.ts";
-export { type JsonFileServices, jsonLanguage } from "./language.ts";
-export type {
-	JsonMinusNumericLiteral,
-	JsonNode,
-	JsonNodeName,
-	JsonNodesByName,
-	JsonNodeVisitors,
-	JsonObjectExpression,
-	JsonObjectExpressionStatement,
-	JsonSourceFile,
-} from "./nodes.ts";
+// flint-disable-next-line ts/deprecated
+// eslint-disable-next-line @typescript-eslint/no-deprecated
+export { jsonLanguage } from "./language.ts";
+export type { JsonNode, JsonSourceFile } from "./nodes.ts";

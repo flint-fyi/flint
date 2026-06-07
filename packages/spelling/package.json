@@ -1,8 +1,8 @@
 {
 	"name": "@flint.fyi/spelling",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"description": "[Experimental] A spell-checker plugin for Flint powered by CSpell.",
-	"homepage": "https://www.flint.fyi/rules/spelling",
+	"homepage": "https://flint.fyi/rules/spelling",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "JoshuaKGoldberg",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": false,
 	"type": "module",

@@ -1,7 +1,9 @@
-import { normalizePath } from "@flint.fyi/utils";
-import { debugForFile } from "debug-for-file";
 import * as fs from "node:fs/promises";
 import path from "node:path";
+
+import { debugForFile } from "debug-for-file";
+
+import { normalizePath } from "@flint.fyi/utils";
 
 import type {
 	ConfigRuleDefinition,

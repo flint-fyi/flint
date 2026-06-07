@@ -1,13 +1,17 @@
-import type { FileChange } from "@flint.fyi/core";
-import {
-	type AST,
-	getTSNodeRange,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
 import ts from "typescript";
 
+import type { FileChange } from "@flint.fyi/core";
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+	type AST,
+} from "@flint.fyi/typescript-language";
+
 import { getRuleTesterDescribedCases } from "../utils/getRuleTesterDescribedCases.ts";
-import type { ParsedTestCaseInvalid } from "../utils/types.ts";
+import type {
+	ParsedTestCaseCodeNode,
+	ParsedTestCaseInvalid,
+} from "../utils/types.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -56,7 +60,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function createNewlineFixes(
 			code: string,
-			node: AST.NoSubstitutionTemplateLiteral | AST.StringLiteral,
+			node: ParsedTestCaseCodeNode,
 			sourceFile: AST.SourceFile,
 		) {
 			if (node.kind === ts.SyntaxKind.StringLiteral) {
@@ -68,13 +72,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				];
 			}
 
+			const template =
+				node.kind === ts.SyntaxKind.TaggedTemplateExpression
+					? node.template
+					: node;
 			const changes: FileChange[] = [];
 
 			if (!code.startsWith("\n")) {
 				changes.push({
 					range: {
-						begin: node.getStart(sourceFile) + 1,
-						end: node.getStart(sourceFile) + 1,
+						begin: template.getStart(sourceFile) + 1,
+						end: template.getStart(sourceFile) + 1,
 					},
 					text: "\n",
 				});
@@ -83,8 +91,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (!code.endsWith("\n")) {
 				changes.push({
 					range: {
-						begin: node.getEnd() - 1,
-						end: node.getEnd() - 1,
+						begin: template.getEnd() - 1,
+						end: template.getEnd() - 1,
 					},
 					text: "\n",
 				});

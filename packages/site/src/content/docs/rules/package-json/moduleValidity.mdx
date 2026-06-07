@@ -1,0 +1,66 @@
+---
+description: "Enforces that the `module` property is valid."
+title: "moduleValidity"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="moduleValidity" />
+
+This rule checks that the `module` property is a non-empty string.
+The value should be the path to the package's module entry point.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"module": ""
+}
+```
+
+```json
+{
+	"module": []
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"module": "./index.js"
+}
+```
+
+```json
+{
+	"module": "index.js"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with this package's `module` field expectations, you can disable this rule.
+For example, if your package uses `exports` instead of `module`, this rule may not be useful for you.
+
+## Related Rules
+
+- [modulePresence](/rules/package-json/modulepresence) - Enforces that the `module` property is present.
+
+## Further Reading
+
+- [Node.js: Package entry points](https://nodejs.org/api/packages.html#package-entry-points)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="moduleValidity" />

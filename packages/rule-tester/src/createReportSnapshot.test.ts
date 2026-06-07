@@ -1,8 +1,9 @@
+import { describe, expect, it } from "vitest";
+
 import {
 	getColumnAndLineOfPosition,
 	type NormalizedReport,
 } from "@flint.fyi/core";
-import { describe, expect, it } from "vitest";
 
 import { createReportSnapshot } from "./createReportSnapshot.ts";
 

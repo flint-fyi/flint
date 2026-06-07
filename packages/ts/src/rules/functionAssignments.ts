@@ -1,5 +1,7 @@
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import { getModifyingReferences } from "@flint.fyi/typescript-language";
+import {
+	getModifyingReferences,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

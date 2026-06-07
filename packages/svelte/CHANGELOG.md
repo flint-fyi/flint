@@ -1,5 +1,20 @@
 # @flint.fyi/svelte
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+  - @flint.fyi/svelte-language@0.0.3
+
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [97adb66]
+  - @flint.fyi/ts@0.19.0
+
 ## 0.0.2
 
 ### Patch Changes

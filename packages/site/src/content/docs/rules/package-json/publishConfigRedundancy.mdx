@@ -1,0 +1,75 @@
+---
+description: "Reports `publishConfig.access` fields that do not affect unscoped packages."
+title: "publishConfigRedundancy"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="publishConfigRedundancy" />
+
+This rule reports `publishConfig.access` fields in unscoped packages.
+Unscoped npm packages are always published with public access, so this field only changes publishing behavior for scoped packages.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"name": "my-package",
+	"publishConfig": {
+		"access": "public"
+	}
+}
+```
+
+```json
+{
+	"name": "my-package",
+	"publishConfig": {
+		"access": "restricted",
+		"registry": "https://registry.npmjs.org/"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"name": "@scope/my-package",
+	"publishConfig": {
+		"access": "public"
+	}
+}
+```
+
+```json
+{
+	"name": "my-package",
+	"publishConfig": {
+		"registry": "https://registry.npmjs.org/"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If a package intentionally keeps `publishConfig.access` as documentation for a future move to a scoped package, this rule might not be for you.
+
+## Further Reading
+
+- [npm: `publishConfig`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#publishconfig)
+- [npm: `npm publish`](https://docs.npmjs.com/cli/v11/commands/npm-publish)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="publishConfigRedundancy" />

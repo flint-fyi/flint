@@ -1,10 +1,11 @@
+import * as tsutils from "ts-api-utils";
+import ts from "typescript";
+
 import {
 	DirectivesCollector,
 	type NormalizedReportRangeObject,
 } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
 
 import { normalizeRange } from "../normalizeRange.ts";
 import type * as AST from "../types/ast.ts";

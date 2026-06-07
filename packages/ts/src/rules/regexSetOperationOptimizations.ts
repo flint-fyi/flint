@@ -1,13 +1,14 @@
 import {
-	type AST as RegExpAST,
 	RegExpParser,
 	visitRegExpAST,
+	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
+import { toUnicodeSet } from "regexp-ast-analysis";
+
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import { toUnicodeSet } from "regexp-ast-analysis";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
@@ -109,10 +110,7 @@ function isFixedPatternEquivalent(
 		return false;
 	}
 
-	const convertedUs = toUnicodeSet(
-		convertedElement as Parameters<typeof toUnicodeSet>[0],
-		flags,
-	);
+	const convertedUs = toUnicodeSet(convertedElement, flags);
 
 	return originalUs.equals(convertedUs);
 }

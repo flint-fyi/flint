@@ -1,5 +1,6 @@
-import { createPlugin } from "@flint.fyi/core";
 import { configDefaults } from "vitest/config";
+
+import { createPlugin } from "@flint.fyi/core";
 
 import afterAllPaddingLines from "./rules/afterAllPaddingLines.ts";
 import afterEachPaddingLines from "./rules/afterEachPaddingLines.ts";
@@ -10,6 +11,7 @@ import describePaddingLines from "./rules/describePaddingLines.ts";
 import expectGroupPaddingLines from "./rules/expectGroupPaddingLines.ts";
 import nodeTestImports from "./rules/nodeTestImports.ts";
 import testCasePaddingLines from "./rules/testCasePaddingLines.ts";
+import testCasesWithinDescribes from "./rules/testCasesWithinDescribes.ts";
 
 export const vitest = createPlugin({
 	files: {
@@ -26,5 +28,6 @@ export const vitest = createPlugin({
 		expectGroupPaddingLines,
 		nodeTestImports,
 		testCasePaddingLines,
+		testCasesWithinDescribes,
 	],
 });

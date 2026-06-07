@@ -1,4 +1,4 @@
-import * as fs from "node:fs/promises";
+import { nullThrows } from "@flint.fyi/utils";
 
 import type { RendererFactory } from "./types.ts";
 
@@ -6,7 +6,7 @@ export const singleRendererFactory: RendererFactory = {
 	about: {
 		name: "single",
 	},
-	initialize(presenter) {
+	initialize(host, presenter) {
 		return {
 			announce() {
 				for (const line of presenter.header) {
@@ -23,7 +23,10 @@ export const singleRendererFactory: RendererFactory = {
 							}
 
 							// TODO: Can we re-use the sourcefile representation?
-							const sourceFileText = await fs.readFile(filePath, "utf-8");
+							const sourceFileText = nullThrows(
+								await host.readFile(filePath),
+								"Expected reported file to exist.",
+							);
 							return {
 								file: {
 									filePath,

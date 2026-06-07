@@ -1,0 +1,346 @@
+---
+description: "Reports imports that do not match the configured type import style."
+title: "typeImports"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="typeImports" />
+
+TypeScript's `import type` syntax marks imports that exist only for type checking.
+Those imports are removed from emitted JavaScript without requiring the transpiler to understand the imported module's types.
+
+This rule enforces a consistent style for imports whose bindings are only referenced in type positions.
+By default it reports regular imports that should use `import type`.
+It can also enforce the opposite style with regular imports instead of `import type`.
+
+Using a consistent type import style makes each import's runtime behavior clear.
+The default preference also helps single-file transpilers remove type-only imports without needing type information from the whole project.
+
+:::tip
+If you want to optimize for single-file transpilers, we recommend additionally using [TypeScript's `isolatedModules`](http://aka.ms/tsconfig#isolatedModules) compiler option.
+:::
+
+## Examples
+
+### Type-only named imports
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { User } from "./types";
+
+type Admin = User & { isAdmin: boolean };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import type { User } from "./types";
+
+type Admin = User & { isAdmin: boolean };
+```
+
+</TabItem>
+</Tabs>
+
+### Mixed type and value imports
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { createUser, User } from "./users";
+
+type Admin = User & { isAdmin: boolean };
+const user = createUser();
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import { createUser, type User } from "./users";
+
+type Admin = User & { isAdmin: boolean };
+const user = createUser();
+```
+
+</TabItem>
+</Tabs>
+
+With the default `fixStyle: "separate-type-imports"`, mixed imports are split into a separate `import type` declaration.
+
+### Default and namespace imports
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import User from "./types";
+
+type Admin = User & { isAdmin: boolean };
+```
+
+```ts
+import * as Types from "./types";
+
+type Admin = Types.User & { isAdmin: boolean };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import type User from "./types";
+
+type Admin = User & { isAdmin: boolean };
+```
+
+```ts
+import type * as Types from "./types";
+
+type Admin = Types.User & { isAdmin: boolean };
+```
+
+</TabItem>
+</Tabs>
+
+### Type queries
+
+References inside `typeof` type queries are safe to convert to `import type`.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import User from "./types";
+
+type UserConstructor = typeof User;
+type UserName = typeof User.name;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import type User from "./types";
+
+type UserConstructor = typeof User;
+type UserName = typeof User.name;
+```
+
+</TabItem>
+</Tabs>
+
+### Type-only exports
+
+Imports that are only re-exported with `export type` can use `import type`.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { User } from "./types";
+
+export type { User };
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import type { User } from "./types";
+
+export type { User };
+```
+
+</TabItem>
+</Tabs>
+
+Regular `export { User }` and `export default User` may create runtime exports, so this rule treats them as value usages unless the import is already type-only.
+
+### Computed property names in type literals
+
+Computed property names in type-only declarations can reference values for type checking.
+This rule allows those imports to become type-only when the containing type is erased.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import * as constants from "./constants";
+
+type Values = {
+	[constants.value]: readonly string[];
+};
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+import type * as constants from "./constants";
+
+type Values = {
+	[constants.value]: readonly string[];
+};
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### Defaults
+
+```json
+{
+	"fixStyle": "separate-type-imports",
+	"prefer": "type-imports"
+}
+```
+
+### `prefer`
+
+`prefer` controls whether the rule expects type-only imports or regular imports for bindings used only as types.
+It defaults to `"type-imports"`.
+
+- `"type-imports"` reports regular imports that are used only as types.
+- `"no-type-imports"` reports `import type` declarations and inline `type` import specifiers.
+
+Examples of correct code with `{ prefer: "type-imports" }`, and incorrect code with `{ prefer: "no-type-imports" }`:
+
+```ts
+import type UserModel from "./model";
+import type { User } from "./types";
+
+type Admin = User & { model: UserModel };
+```
+
+Examples of incorrect code with `{ prefer: "type-imports" }`, and correct code with `{ prefer: "no-type-imports" }`:
+
+```ts
+import UserModel from "./model";
+import { User } from "./types";
+
+type Admin = User & { model: UserModel };
+```
+
+With `{ prefer: "no-type-imports" }`, inline type specifiers are also reported.
+
+```ts
+import { createUser, type User } from "./users";
+
+type Admin = User & { isAdmin: boolean };
+const user = createUser();
+```
+
+### `fixStyle`
+
+`fixStyle` controls how auto-fixes are written when `prefer` is `"type-imports"`.
+It defaults to `"inline-type-imports"`.
+
+- `"inline-type-imports"` adds inline type specifiers such as `import { type User } from "./types"` when TypeScript syntax allows it.
+- `"separate-type-imports"` adds top-level type-only declarations such as `import type { User } from "./types"`.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+import { User } from "./types";
+
+type Admin = User & { admin: boolean };
+```
+
+</TabItem>
+<TabItem label="✅ With `separate-type-imports`">
+
+```ts
+import type { User } from "./types";
+
+type Admin = User & { admin: boolean };
+```
+
+</TabItem>
+<TabItem label="✅ With `inline-type-imports`">
+
+```ts
+import { type User } from "./types";
+
+type Admin = User & { admin: boolean };
+```
+
+</TabItem>
+</Tabs>
+
+Default imports and namespace imports cannot use inline type specifiers.
+They are fixed to top-level `import type` declarations even when `fixStyle` is `"inline-type-imports"`.
+
+```ts
+import type User from "./types";
+import type * as Types from "./types";
+```
+
+## `import()` Type Annotations
+
+This rule does not report `import()` type annotations.
+Use top-level `import type` declarations if your project wants to avoid inline `import()` type references.
+
+Examples of code this rule allows:
+
+```ts
+type User = import("./types").User;
+```
+
+```ts
+let value: import("./types").User;
+```
+
+## Decorator Metadata Caveat
+
+When a file contains decorators and the TypeScript compiler options enable both `experimentalDecorators` and `emitDecoratorMetadata`, TypeScript can emit runtime metadata for types that appear only in type annotations.
+In that configuration, this rule does not report import declarations from decorated files because changing those imports to `import type` can change emitted decorator metadata.
+
+This caveat only applies to legacy experimental decorators with emitted decorator metadata.
+Files using stable decorators without `emitDecoratorMetadata` are reported normally.
+
+## Comparison with `verbatimModuleSyntax`
+
+TypeScript's `verbatimModuleSyntax` compiler option also distinguishes type-only imports from value imports.
+This rule and `verbatimModuleSyntax` overlap, but they are not identical.
+
+| Situation                                                    | This rule               | `verbatimModuleSyntax`                                  |
+| ------------------------------------------------------------ | ----------------------- | ------------------------------------------------------- |
+| Unused imports                                               | Ignores them            | Can report a compiler error                             |
+| Files with legacy decorator metadata                         | Ignores decorated files | Uses TypeScript's emit behavior                         |
+| Feedback location                                            | Lint report with fixes  | Compiler error                                          |
+| Inline imports such as `import { type User } from "./types"` | Allowed by default      | Can emit an empty runtime import in some configurations |
+
+Use this rule when you want lint feedback and auto-fixes for import style.
+Use `verbatimModuleSyntax` when you want the TypeScript compiler to enforce that syntax during builds.
+
+## When Not To Use It
+
+If your project intentionally keeps type-only dependencies in regular imports, configure `{ prefer: "no-type-imports" }` or disable this rule.
+If your project already relies on TypeScript's `verbatimModuleSyntax` errors for import consistency, you may not need this rule because the compiler will reject many related import forms.
+Large existing projects may also prefer to adopt this rule gradually because it can change many import declarations at once.
+
+## Related Rules
+
+- [`importTypeSideEffects`](/rules/ts/importtypesideeffects) reports imports such as `import { type A, type B }` that may emit empty side-effect imports under `verbatimModuleSyntax`.
+
+## Further Reading
+
+- [TypeScript: Type-Only Imports and Exports](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export)
+- [TypeScript: `verbatimModuleSyntax`](https://www.typescriptlang.org/tsconfig/#verbatimModuleSyntax)
+- [TypeScript 4.5: Type Modifiers on Import Names](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html#type-modifiers-on-import-names)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="typeImports" />

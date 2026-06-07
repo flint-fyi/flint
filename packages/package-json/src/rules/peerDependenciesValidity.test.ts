@@ -63,24 +63,6 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
 			code: `
 {
   "peerDependencies": {
-    "example": "bowie"
-  }
-}
-`,
-			snapshot: `
-{
-  "peerDependencies": {
-    "example": "bowie"
-               ~~~~~~~
-               Invalid peerDependencies: invalid version range for dependency example: bowie.
-  }
-}
-`,
-		},
-		{
-			code: `
-{
-  "peerDependencies": {
     "example": 123
   }
 }
@@ -90,7 +72,7 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
   "peerDependencies": {
     "example": 123
                ~~~
-               Invalid peerDependencies: dependency version for example should be a string: 123.
+               Invalid peerDependencies: dependency version for \`example\` should be a string: 123.
   }
 }
 `,
@@ -108,7 +90,7 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
   "peerDependencies": {
     "example": null
                ~~~~
-               Invalid peerDependencies: dependency version for example should be a string: null.
+               Invalid peerDependencies: dependency version for \`example\` should be a string: null.
   }
 }
 `,
@@ -126,25 +108,7 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
   "peerDependencies": {
     "example": {}
                ~~
-               Invalid peerDependencies: dependency version for example should be a string: [object Object].
-  }
-}
-`,
-		},
-		{
-			code: `
-{
-  "peerDependencies": {
-    "example": "workspace"
-  }
-}
-`,
-			snapshot: `
-{
-  "peerDependencies": {
-    "example": "workspace"
-               ~~~~~~~~~~~
-               Invalid peerDependencies: invalid version range for dependency example: workspace.
+               Invalid peerDependencies: dependency version for \`example\` should be a string: [object Object].
   }
 }
 `,
@@ -177,6 +141,13 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
 {
   "peerDependencies": {
     "example": "catalog:"
+  }
+}
+`,
+		`
+{
+  "peerDependencies": {
+    "example": "bowie"
   }
 }
 `,
@@ -219,6 +190,13 @@ ruleTester.describe(directPropertyValidityRules.peerDependenciesValidity, {
 {
   "peerDependencies": {
     "example": "workspace:^1.2.3"
+  }
+}
+`,
+		`
+{
+  "peerDependencies": {
+    "example": "workspace"
   }
 }
 `,

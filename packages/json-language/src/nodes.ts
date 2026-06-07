@@ -1,6 +1,7 @@
+import type * as ts from "typescript";
+
 import type { WithExitKeys } from "@flint.fyi/core";
 import type { AST } from "@flint.fyi/typescript-language";
-import type * as ts from "typescript";
 
 export type JsonMinusNumericLiteral = Omit<
 	AST.PrefixUnaryExpression,
@@ -17,12 +18,14 @@ export type JsonNodeName = keyof JsonNodesByName;
 export interface JsonNodesByName {
 	ArrayLiteralExpression: AST.ArrayLiteralExpression;
 	BooleanLiteral: AST.BooleanLiteral;
+	JsonExpression: AST.Expression;
 	JsonMinusNumericLiteral: JsonMinusNumericLiteral;
 	JsonObjectExpressionStatement: JsonObjectExpressionStatement;
 	JsonSourceFile: JsonSourceFile;
 	NullLiteral: AST.NullLiteral;
 	NumericLiteral: AST.NumericLiteral;
 	ObjectLiteralExpression: AST.ObjectLiteralExpression;
+	PropertyAssignment: AST.PropertyAssignment;
 	StringLiteral: AST.StringLiteral;
 }
 

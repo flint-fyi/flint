@@ -4,13 +4,14 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
+import ts from "typescript";
+
 import {
 	getColumnAndLineOfPosition,
 	getPositionOfColumnAndLine,
 	type LanguageReport,
 	type SourceFileWithLineMapAndFileName,
 } from "@flint.fyi/core";
-import ts from "typescript";
 
 export interface TSDiagnostic extends TSDiagnosticRelatedInformation {
 	relatedInformation?: TSDiagnosticRelatedInformation[];

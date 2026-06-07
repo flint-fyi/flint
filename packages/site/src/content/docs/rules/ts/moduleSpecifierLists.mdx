@@ -4,7 +4,7 @@ title: "moduleSpecifierLists"
 topic: "rules"
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { TabItem, Tabs } from "@astrojs/starlight/components";
 import { RuleEquivalents } from "~/components/RuleEquivalents";
 import RuleSummary from "~/components/RuleSummary.astro";
 
@@ -22,7 +22,7 @@ This rule reports import and export statements that have empty braces with no sp
 <TabItem label="❌ Incorrect">
 
 ```ts
-import {} from "module";
+import "module";
 ```
 
 ```ts

@@ -1,5 +1,6 @@
+import { SyntaxKind, type Expression, type SourceFile } from "typescript";
+
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import { type Expression, type SourceFile, SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

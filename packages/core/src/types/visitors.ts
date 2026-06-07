@@ -10,6 +10,6 @@ type Simplify<T> = {
  */
 export type WithExitKeys<T> = Simplify<
 	T & {
-		[K in keyof T & string as `${K}:exit`]?: T[K];
+		[K in keyof T & string as `${K}:exit`]: T[K];
 	}
 >;

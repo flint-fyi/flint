@@ -1,4 +1,5 @@
 import type { Node, RootNode } from "@astrojs/compiler/types";
+
 import type { ExtractedDirective } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 

@@ -1,5 +1,18 @@
 # @flint.fyi/typescript-language
 
+## 0.18.2
+
+### Patch Changes
+
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
+## 0.18.1
+
+### Patch Changes
+
+- fe112e0: Support `disable-next-line` directives targeting the next code line, skipping intervening comments.
+
 ## 0.18.0
 
 ### Minor Changes

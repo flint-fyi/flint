@@ -1,5 +1,6 @@
-import { normalizePath } from "@flint.fyi/utils";
 import { execa } from "execa";
+
+import { normalizePath } from "@flint.fyi/utils";
 
 declare global {
 	// TODO[typescript>=6.0]: Remove this declaration.
@@ -41,5 +42,5 @@ export function runFlint(cwd: string, args: string[] = []) {
 		cwd,
 		env: { FORCE_COLOR: "1" },
 		reject: false,
-	})`npx flint ${args}`;
+	})`flint ${args}`;
 }

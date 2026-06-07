@@ -14,7 +14,8 @@
         "projectManagement",
         "tool",
         "bug",
-        "test"
+        "test",
+        "blog"
       ],
       "login": "JoshuaKGoldberg",
       "name": "Josh Goldberg ✨",
@@ -89,7 +90,8 @@
         "ideas",
         "test",
         "doc",
-        "code"
+        "code",
+        "blog"
       ]
     },
     {
@@ -104,7 +106,8 @@
         "maintenance",
         "bug",
         "infra",
-        "doc"
+        "doc",
+        "test"
       ]
     },
     {
@@ -139,7 +142,9 @@
         "doc",
         "code",
         "maintenance",
-        "bug"
+        "bug",
+        "infra",
+        "ideas"
       ]
     },
     {
@@ -163,7 +168,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/6604943?v=4",
       "profile": "https://www.kolharsam.net",
       "contributions": [
-        "code"
+        "code",
+        "maintenance"
       ]
     },
     {
@@ -219,7 +225,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/76519301?v=4",
       "profile": "https://github.com/Yonava",
       "contributions": [
-        "code"
+        "code",
+        "doc"
       ]
     },
     {
@@ -229,6 +236,33 @@
       "profile": "https://techmannih.me",
       "contributions": [
         "ideas"
+      ]
+    },
+    {
+      "login": "sarthak-commits",
+      "name": "D4TT BOOST",
+      "avatar_url": "https://avatars.githubusercontent.com/u/203012840?v=4",
+      "profile": "https://github.com/Sarthak-commits",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "mvanhorn",
+      "name": "Matt Van Horn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/455140?v=4",
+      "profile": "https://github.com/mvanhorn",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "tamashoo",
+      "name": "tamashoo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/72484282?v=4",
+      "profile": "https://github.com/Tamashoo",
+      "contributions": [
+        "code"
       ]
     }
   ],

@@ -1,5 +1,6 @@
-import { type FileResults, hasFix } from "@flint.fyi/core";
 import chalk from "chalk";
+
+import { hasFix, type FileResults } from "@flint.fyi/core";
 
 import { pluralize } from "../../presenters/pluralize.ts";
 
@@ -23,11 +24,7 @@ export function printSummary(filesWithReportResults: [string, FileResults][]) {
 			" across ",
 			chalk.bold(pluralize(counts.files, "file")),
 			...(counts.fixable
-				? [
-						" (",
-						chalk.bold(pluralize(counts.fixable, "fixable with --fix")),
-						")",
-					]
+				? [" (", chalk.bold(`${counts.fixable} fixable with --fix`), ")"]
 				: []),
 			".",
 		].join(""),

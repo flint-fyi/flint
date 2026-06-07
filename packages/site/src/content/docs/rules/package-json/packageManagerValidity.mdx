@@ -1,0 +1,79 @@
+---
+description: "Enforces that the `packageManager` property is valid."
+title: "packageManagerValidity"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="packageManagerValidity" />
+
+This rule checks that the `packageManager` property is a string in `name@version` form.
+Supported package manager names are `npm`, `pnpm`, `yarn`, `bun`, and `deno`.
+The version should be a valid semver version.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"packageManager": "pnpm"
+}
+```
+
+```json
+{
+	"packageManager": "pip@1.2.3"
+}
+```
+
+```json
+{
+	"packageManager": "pnpm@latest"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"packageManager": "pnpm@10.3.0"
+}
+```
+
+```json
+{
+	"packageManager": "pnpm@10.3.0+sha224.953c8233f7a92884eee2de69a1b92d1f2ec1655e66d08071ba9a02fa"
+}
+```
+
+```json
+{
+	"packageManager": "yarn@4.5.1"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `packageManager` field specification, you can disable this rule.
+For example, if your package manager uses non-semver release labels in this field, this rule may not be correct for you.
+
+## Related Rules
+
+- [packageManagerPresence](/rules/package-json/packagemanagerpresence) - Enforces that the `packageManager` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `packageManager`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#packagemanager)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="packageManagerValidity" />

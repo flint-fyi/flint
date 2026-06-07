@@ -1,11 +1,12 @@
+import ts from "typescript";
+
 import {
-	type AST,
-	type Checker,
 	declarationIncludesGlobal,
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
-import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

@@ -1,11 +1,12 @@
+import { parseArgs } from "node:util";
+
 import {
 	createDiskBackedLinterHost,
 	createEphemeralLinterHost,
+	findConfigFileName,
 } from "@flint.fyi/core";
-import { parseArgs } from "node:util";
 
 import packageData from "../package.json" with { type: "json" };
-import { findConfigFileName } from "./findConfigFileName.ts";
 import { options } from "./options.ts";
 import { createRendererFactory } from "./renderers/createRendererFactory.ts";
 import { runCliOnce } from "./runCliOnce.ts";
@@ -88,7 +89,7 @@ export async function runCli(args: string[]) {
 		return 2;
 	}
 
-	const getRenderer = createRendererFactory(configFileName, values);
+	const getRenderer = createRendererFactory(host, configFileName, values);
 
 	if (values.watch) {
 		await runCliWatch(host, configFileName, getRenderer, values);

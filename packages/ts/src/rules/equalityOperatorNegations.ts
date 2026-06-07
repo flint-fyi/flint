@@ -1,8 +1,9 @@
+import { SyntaxKind } from "typescript";
+
 import {
 	typescriptLanguage,
 	unwrapParenthesizedNode,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

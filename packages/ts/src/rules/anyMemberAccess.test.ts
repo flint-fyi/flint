@@ -331,10 +331,10 @@ class C {
   getObs$: any;
   run(): void {
     this.getObs$.pipe().subscribe();
-                        ~~~~~~~~~
-                        Unsafe member access on \`any\` typed value.
                  ~~~~
                  Unsafe member access on \`any\` typed value.
+                        ~~~~~~~~~
+                        Unsafe member access on \`any\` typed value.
   }
 }
 `,

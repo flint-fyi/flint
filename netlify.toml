@@ -1,0 +1,2 @@
+[context.deploy-preview.environment]
+  SKIP_OG = "true"

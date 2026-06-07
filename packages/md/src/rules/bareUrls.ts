@@ -1,11 +1,14 @@
-import { markdownLanguage } from "@flint.fyi/markdown-language";
-import type { WithPosition } from "@flint.fyi/markdown-language";
-import { nullThrows } from "@flint.fyi/utils";
 import type { Link } from "mdast";
 
-const urlTester = /(?:https?:\/\/|mailto:)\S+|[\w.+-]+@[\w.-]+\.\w+/gi;
+import {
+	markdownLanguage,
+	type WithPosition,
+} from "@flint.fyi/markdown-language";
+import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
+
+const urlTester = /(?:https?:\/\/|mailto:)\S+|[\w.+-]+@[\w.-]+\.\w+/gi;
 
 export default ruleCreator.createRule(markdownLanguage, {
 	about: {

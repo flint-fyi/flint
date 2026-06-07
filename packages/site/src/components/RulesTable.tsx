@@ -1,15 +1,16 @@
-import {
-	comparisons,
-	type FlintRuleReference,
-	type Comparison,
-} from "@flint.fyi/comparisons" with { type: "json" };
+import { getPluginData } from "~/data/pluginData";
 import clsx from "clsx";
 
-import styles from "./RulesTable.module.css";
-import { getRuleForPluginSafe } from "./getRuleForPlugin";
-import { InlineMarkdown } from "./InlineMarkdown";
-import { getPluginData } from "~/data/pluginData";
+import {
+	comparisons,
+	getRuleForPluginSafe,
+	type Comparison,
+	type FlintRuleReference,
+} from "@flint.fyi/comparisons";
+
 import { createRuleComparator } from "./createRuleComparator";
+import { InlineMarkdown } from "./InlineMarkdown";
+import styles from "./RulesTable.module.css";
 
 function renderFlintPlugin(flint: FlintRuleReference) {
 	return (

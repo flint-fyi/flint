@@ -1,5 +1,6 @@
-import { makeAbsolute, nullThrows } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
+
+import { makeAbsolute, nullThrows } from "@flint.fyi/utils";
 
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
@@ -11,9 +12,12 @@ export function collectLanguageFilesByFilePath(
 	rulesOptionsByFile: Map<AnyRule, Map<string, unknown>>,
 	host: LinterHost,
 ) {
+	const filePathsByLanguage = new CachedFactory<AnyLanguage, Set<string>>(
+		() => new Set(),
+	);
 	const languageFilesByFilePath = new CachedFactory<
 		string,
-		Map<AnyLanguage, AnyLanguageFile>
+		Map<AnyLanguage, AnyLanguageFile | undefined>
 	>(() => new Map());
 
 	const languageFilesByLanguage = new CachedFactory((language: AnyLanguage) => {
@@ -39,9 +43,21 @@ export function collectLanguageFilesByFilePath(
 				continue;
 			}
 
-			const file = languageFilesByLanguage.get(rule.language).get(filePath);
+			filePathsByLanguage.get(rule.language).add(filePath);
+			languageFilesByFilePath.get(filePath).set(rule.language, undefined);
+		}
+	}
 
-			languageFilesByFilePath.get(filePath).set(rule.language, file);
+	for (const [language, filePaths] of filePathsByLanguage.entries()) {
+		const languageFiles = languageFilesByLanguage.get(language);
+		const orderedFilePaths = language.orderFilePaths
+			? language.orderFilePaths([...filePaths], host)
+			: filePaths;
+
+		for (const filePath of orderedFilePaths) {
+			languageFilesByFilePath
+				.get(filePath)
+				.set(language, languageFiles.get(filePath));
 		}
 	}
 
@@ -50,7 +66,10 @@ export function collectLanguageFilesByFilePath(
 			([filePath, filesByLanguage]) => [
 				filePath,
 				Array.from(filesByLanguage.entries()).map(([language, file]) => ({
-					file,
+					file: nullThrows(
+						file,
+						"Language file is expected to be present by the map",
+					),
 					language,
 				})),
 			],

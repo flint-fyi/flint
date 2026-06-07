@@ -3,14 +3,15 @@ import type {
 	CapturingGroup,
 	RegExpLiteral,
 } from "@eslint-community/regexpp/ast";
+import ts from "typescript";
+
 import {
+	getTSNodeRange,
+	typescriptLanguage,
 	type AST,
 	type Checker,
-	getTSNodeRange,
 	type TypeScriptFileServices,
-	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
@@ -127,7 +128,7 @@ function getNamedGroupsFromExpression(
 		ts.isTypeAssertionExpression(unwrapped)
 	) {
 		return getNamedGroupsFromExpression(
-			unwrapped.expression as AST.Expression,
+			unwrapped.expression,
 			typeChecker,
 			sourceFile,
 		);
@@ -162,11 +163,7 @@ function getRegexFromExecCall(
 	}
 
 	const regexObject = node.expression.expression;
-	return getRegexInfoFromExpression(
-		regexObject as AST.Expression,
-		typeChecker,
-		sourceFile,
-	);
+	return getRegexInfoFromExpression(regexObject, typeChecker, sourceFile);
 }
 
 function getRegexFromMatchAllCall(
@@ -396,7 +393,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const object = skipParentheses(node.expression as AST.Expression);
+					const object = skipParentheses(node.expression);
 					const objectType = typeChecker.getTypeAtLocation(object);
 
 					if (isAnyType(objectType)) {

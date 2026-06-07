@@ -1,7 +1,7 @@
-import type { AnyRule } from "@flint.fyi/core";
 import {
 	validateAuthor,
 	validateBin,
+	validateBrowser,
 	validateBugs,
 	validateBundleDependencies,
 	validateConfig,
@@ -16,8 +16,10 @@ import {
 	validateExports,
 	validateFiles,
 	validateFunding,
+	validateGypfile,
 	validateHomepage,
 	validateKeywords,
+	validateLibc,
 	validateLicense,
 	validateMain,
 	validateMan,
@@ -26,6 +28,7 @@ import {
 	validateOs,
 	validatePackageManager,
 	validatePeerDependencies,
+	validatePeerDependenciesMeta,
 	validatePrivate,
 	validatePublishConfig,
 	validateRepository,
@@ -36,11 +39,14 @@ import {
 	validateWorkspaces,
 } from "package-json-validator";
 
+import type { AnyRule } from "@flint.fyi/core";
+
 import { createDirectPropertyValidityRule } from "./createDirectPropertyValidityRule.ts";
 
 const properties = [
 	["author", validateAuthor],
 	["bin", validateBin],
+	["browser", validateBrowser],
 	["bugs", validateBugs],
 	[
 		"bundleDependencies",
@@ -61,8 +67,10 @@ const properties = [
 	["exports", validateExports],
 	["files", validateFiles],
 	["funding", validateFunding],
+	["gypfile", validateGypfile],
 	["homepage", validateHomepage],
 	["keywords", validateKeywords],
+	["libc", validateLibc],
 	["license", validateLicense],
 	["main", validateMain],
 	["man", validateMan],
@@ -72,6 +80,7 @@ const properties = [
 	["os", validateOs],
 	["packageManager", validatePackageManager],
 	["peerDependencies", validatePeerDependencies],
+	["peerDependenciesMeta", validatePeerDependenciesMeta],
 	["private", validatePrivate],
 	["publishConfig", validatePublishConfig],
 	["repository", validateRepository],

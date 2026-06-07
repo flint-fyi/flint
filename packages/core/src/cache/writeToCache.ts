@@ -1,7 +1,8 @@
-import { CachedFactory } from "cached-factory";
-import { debugForFile } from "debug-for-file";
 import * as fs from "node:fs/promises";
 import { dirname } from "node:path";
+
+import { CachedFactory } from "cached-factory";
+import { debugForFile } from "debug-for-file";
 import omitEmpty from "omit-empty";
 
 import type { CacheStorage } from "../types/cache.ts";
