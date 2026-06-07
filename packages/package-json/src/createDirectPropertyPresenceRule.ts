@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 import type { AnyRule } from "@flint.fyi/core";
 import { jsonLanguage, type JsonSourceFile } from "@flint.fyi/json-language";
 
-import { getPackagePropertyOfName } from "./getPackagePropertyOfName.ts";
+import { getPackagePropertyOfNameLegacy } from "./getPackagePropertyOfName.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export interface CreatePropertyPresenceRuleOptions {
@@ -62,7 +62,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 							return;
 						}
 
-						if (!getPackagePropertyOfName(node, propertyName)) {
+						if (!getPackagePropertyOfNameLegacy(node, propertyName)) {
 							context.report({
 								data: { propertyName },
 								message: "missing",
@@ -79,7 +79,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 }
 
 function isPrivatePackage(node: JsonSourceFile) {
-	const privacy = getPackagePropertyOfName(node, "private");
+	const privacy = getPackagePropertyOfNameLegacy(node, "private");
 
 	return (
 		privacy?.kind === ts.SyntaxKind.PropertyAssignment &&

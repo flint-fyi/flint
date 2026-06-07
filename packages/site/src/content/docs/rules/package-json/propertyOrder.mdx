@@ -1,0 +1,72 @@
+---
+description: "Enforces that package properties are declared in a consistent order."
+title: "propertyOrder"
+topic: "rules"
+---
+
+import { Aside, TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="propertyOrder" />
+
+A conventional order exists for `package.json` top-level properties.
+npm does not enforce this order, but for consistency and readability, this rule can enforce it.
+We use the order specified in [`sort-package-json`](https://github.com/keithamus/sort-package-json) as the default sort order.
+Any properties not defined by this ordering are placed after the standard fields and sorted lexicographically.
+
+<Aside type="tip">
+	This rule is especially useful in monorepos with many `package.json` files
+	that would ideally be consistently ordered.
+</Aside>
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"version": "1.0.0",
+	"name": "my-package"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"name": "my-package",
+	"version": "1.0.0"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `customOrder`
+
+> Type: `string[]`
+
+Custom order for package properties.
+This option replaces the default order, and allows you to specify any custom properties you may have in your packages.
+All properties not in this collection will be sorted according to the `sort-package-json` specification.
+
+```ts
+packageJson.rules({
+	propertyOrder: {
+		customOrder: ["name", "version", "description"],
+	},
+});
+```
+
+## Related Rules
+
+- `sortCollections` - (Not yet implemented) Enforces that collection fields (e.g. `dependencies`, `files`) are sorted.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="propertyOrder" />

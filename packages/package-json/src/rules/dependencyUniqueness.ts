@@ -3,9 +3,9 @@ import { SyntaxKind } from "typescript";
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import type { AST } from "@flint.fyi/typescript-language";
 
-import { getPackageProperties } from "../getPackageProperties.ts";
-import { removeArrayElement } from "../removeArrayElement.ts";
-import { removeObjectProperty } from "../removeObjectProperty.ts";
+import { getPackagePropertiesLegacy } from "../getPackageProperties.ts";
+import { removeArrayElementLegacy } from "../removeArrayElement.ts";
+import { removeObjectPropertyLegacy } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 const dependencyPropertyNames = new Set([
@@ -72,7 +72,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 								continue;
 							}
 
-							const { range, text } = removeArrayElement(
+							const { range, text } = removeArrayElementLegacy(
 								node,
 								element,
 								initializer,
@@ -112,7 +112,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 								continue;
 							}
 
-							const { range, text } = removeObjectProperty(
+							const { range, text } = removeObjectPropertyLegacy(
 								node,
 								dependency,
 								initializer,
@@ -143,7 +143,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 									continue;
 								}
 
-								const { range, text } = removeObjectProperty(
+								const { range, text } = removeObjectPropertyLegacy(
 									node,
 									dependency,
 									dependencyGroup,
@@ -164,7 +164,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 						}
 					}
 
-					for (const property of getPackageProperties(node) ?? []) {
+					for (const property of getPackagePropertiesLegacy(node) ?? []) {
 						if (
 							property.kind !== SyntaxKind.PropertyAssignment ||
 							property.name.kind !== SyntaxKind.StringLiteral ||

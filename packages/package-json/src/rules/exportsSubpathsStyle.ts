@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import type { AST } from "@flint.fyi/typescript-language";
 
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getPackagePropertyOfNameLegacy } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 function getSingleRootSubpath(node: AST.ObjectLiteralExpression) {
@@ -71,7 +71,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 		return {
 			visitors: {
 				JsonSourceFile(node, { options }) {
-					const property = getPackagePropertyOfName(node, "exports");
+					const property = getPackagePropertyOfNameLegacy(node, "exports");
 
 					if (
 						property?.kind !== SyntaxKind.PropertyAssignment ||

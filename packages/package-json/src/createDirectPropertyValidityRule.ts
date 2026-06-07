@@ -9,7 +9,7 @@ import {
 	type JsonSourceFile,
 } from "@flint.fyi/json-language";
 
-import { getPackagePropertiesOfNames } from "./getPackagePropertiesOfNames.ts";
+import { getPackagePropertiesOfNamesLegacy } from "./getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export type PropertyValidator = (value: unknown) => Result;
@@ -105,7 +105,10 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 			return {
 				visitors: {
 					JsonSourceFile: (node) => {
-						const properties = getPackagePropertiesOfNames(node, propertyNames);
+						const properties = getPackagePropertiesOfNamesLegacy(
+							node,
+							propertyNames,
+						);
 						for (const property of Object.values(properties)) {
 							if (property?.initializer) {
 								checkValue(property.initializer, node);

@@ -2,8 +2,8 @@ import { SyntaxKind } from "typescript";
 
 import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
-import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
-import { removeObjectProperty } from "../removeObjectProperty.ts";
+import { getPackagePropertiesOfNamesLegacy } from "../getPackagePropertiesOfNames.ts";
+import { removeObjectPropertyLegacy } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 // flint-disable-next-line ts/deprecated
@@ -30,7 +30,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 			visitors: {
 				JsonSourceFile(node) {
 					const { peerDependencies, peerDependenciesMeta } =
-						getPackagePropertiesOfNames(node, [
+						getPackagePropertiesOfNamesLegacy(node, [
 							"peerDependencies",
 							"peerDependenciesMeta",
 						]);
@@ -70,7 +70,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							const dependencyName = element.name.text;
 
 							if (!declaredPeerDependencyNames.has(dependencyName)) {
-								const { range, text } = removeObjectProperty(
+								const { range, text } = removeObjectPropertyLegacy(
 									node,
 									element,
 									peerDependenciesMeta.initializer,

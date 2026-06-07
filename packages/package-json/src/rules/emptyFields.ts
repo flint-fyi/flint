@@ -8,8 +8,8 @@ import {
 } from "@flint.fyi/json-language";
 import type { AST } from "@flint.fyi/typescript-language";
 
-import { removeArrayElement } from "../removeArrayElement.ts";
-import { removeObjectProperty } from "../removeObjectProperty.ts";
+import { removeArrayElementLegacy } from "../removeArrayElement.ts";
+import { removeObjectPropertyLegacy } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 // flint-disable-next-line ts/deprecated
@@ -125,7 +125,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 			sourceFile: JsonSourceFile,
 			arrayNode: AST.ArrayLiteralExpression,
 		) {
-			const { range, text } = removeArrayElement(
+			const { range, text } = removeArrayElementLegacy(
 				sourceFile,
 				element,
 				arrayNode,
@@ -153,7 +153,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 				return;
 			}
 
-			const { range, text } = removeObjectProperty(
+			const { range, text } = removeObjectPropertyLegacy(
 				sourceFile,
 				property,
 				objectNode,

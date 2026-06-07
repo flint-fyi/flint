@@ -5447,7 +5447,8 @@
 		"flint": {
 			"name": "filesRedundancy",
 			"plugin": "package-json",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
@@ -5962,7 +5963,8 @@
 		"flint": {
 			"name": "propertyOrder",
 			"plugin": "package-json",
-			"preset": "sorting"
+			"preset": "sorting",
+			"status": "implemented"
 		}
 	},
 	{
@@ -18885,7 +18887,8 @@
 		],
 		"flint": {
 			"name": "restrictedImports",
-			"plugin": "ts"
+			"plugin": "ts",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{

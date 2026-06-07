@@ -7,7 +7,7 @@ ruleTester.describe(rule, {
 			code: `
 {
   "a": "first",
-  "a": "second",
+  "a": "second"
 }
 `,
 			snapshot: `
@@ -15,7 +15,7 @@ ruleTester.describe(rule, {
   "a": "first",
   ~~~
   This key is made redundant by an identical key later in the object.
-  "a": "second",
+  "a": "second"
 }
 `,
 		},
@@ -23,7 +23,7 @@ ruleTester.describe(rule, {
 			code: `
 {
   "a": "first",
-  "a": "second",
+  "a": "second"
 }
 `,
 			options: {
@@ -34,7 +34,7 @@ ruleTester.describe(rule, {
   "a": "first",
   ~~~
   This key is made redundant by an identical key later in the object.
-  "a": "second",
+  "a": "second"
 }
 `,
 		},
@@ -45,14 +45,14 @@ ruleTester.describe(rule, {
 		`
 {
   "a": "first",
-  "b": "second",
+  "b": "second"
 }
 `,
 		{
 			code: `
 {
   "//": "first",
-  "//": "second",
+  "//": "second"
 }`,
 			options: {
 				allowKeys: ["//"],
