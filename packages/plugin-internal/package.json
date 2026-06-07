@@ -20,7 +20,7 @@
 		".": "./src/index.ts"
 	},
 	"scripts": {
-		"test": "vitest --project plugin-flint"
+		"test": "vitest --project plugin-internal"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^"
