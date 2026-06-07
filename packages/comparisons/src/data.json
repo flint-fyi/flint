@@ -8,6 +8,7 @@
 		],
 		"flint": {
 			"name": "deleteWhereClauses",
+			"plugin": "drizzle",
 			"status": "skipped"
 		}
 	},
@@ -20,6 +21,7 @@
 		],
 		"flint": {
 			"name": "updateWhereClauses",
+			"plugin": "drizzle",
 			"status": "skipped"
 		}
 	},
