@@ -60,7 +60,7 @@ catalogs:
     clsx: 2.1.1
     expressive-code-twoslash: 0.6.0
     konami-emoji-blast: 0.7.0
-    markdown-it: 14.1.1
+    markdown-it: 14.2.0
     react: 19.2.4
     react-dom: 19.2.4
     remark-add-twoslash: 0.0.1
