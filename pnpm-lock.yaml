@@ -1525,8 +1525,8 @@ importers:
         specifier: catalog:dev
         version: 4.1.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@24.12.0)(esbuild@0.27.4)(jiti@2.7.0)(yaml@2.9.0)
       yaml-unist-parser:
-        specifier: 3.1.0
-        version: 3.1.0
+        specifier: 3.2.0
+        version: 3.2.0
 
   packages/yaml-language:
     dependencies:
@@ -1538,7 +1538,7 @@ importers:
         version: link:../utils
       yaml-unist-parser:
         specifier: ^3.0.0
-        version: 3.1.0
+        version: 3.2.0
     devDependencies:
       tsdown:
         specifier: catalog:dev
@@ -7665,8 +7665,8 @@ packages:
     resolution: {integrity: sha512-qhjK/bzSRZ6HtTvgeFvjNPJGWdZ0+x5NREV/9XZWFjIGezew2b4r5JPy66IfOhd5OA7KeFwk1JfmEbnTvev0cA==}
     hasBin: true
 
-  yaml-unist-parser@3.1.0:
-    resolution: {integrity: sha512-hkwsdPLFBV6Vs40Mw5A11gzN9f9AiN8g72D8fXxfqnrW/AYY8/d7Yphx780UMzREcH7aRuHYAyQj9AwrI4E4xg==}
+  yaml-unist-parser@3.2.0:
+    resolution: {integrity: sha512-1WJ0TpBq12nsw7B9kp/XRDfgaDwS+oH/bvkqte722MgEqT7pYx5i/1UveiJSpxTHbmLWs/dexGJRgVcxe6K5fg==}
     engines: {node: '>= 14'}
 
   yaml@1.10.3:
@@ -14939,7 +14939,7 @@ snapshots:
       vscode-uri: 3.1.0
       yaml: 2.7.1
 
-  yaml-unist-parser@3.1.0:
+  yaml-unist-parser@3.2.0:
     dependencies:
       yaml: 2.9.0
 
