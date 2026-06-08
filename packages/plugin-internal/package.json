@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/plugin-internal",
-	"version": "0.5.1",
+	"version": "0.0.1",
 	"private": true,
 	"description": "A Flint plugin with rules specific to our repo.",
 	"homepage": "https://flint.fyi/rules/flint",
