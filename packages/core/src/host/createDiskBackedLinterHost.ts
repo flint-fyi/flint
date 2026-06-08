@@ -9,6 +9,7 @@ import type {
 	LinterHostFileWatcherEvent,
 } from "../types/host.ts";
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
+import { commonlyIgnoredPaths } from "./watcher.ts";
 
 export function createDiskBackedLinterHost(cwd: string): LinterHost {
 	const caseSensitiveFS = isFileSystemCaseSensitive();
@@ -181,7 +182,10 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			const entries = await Array.fromAsync(
 				fs.promises.glob(patterns, {
 					cwd: options.cwd,
-					exclude: options.exclude,
+					exclude: [
+						...commonlyIgnoredPaths.map((dir) => `**/${dir.slice(1)}`),
+						...(options.exclude ?? []),
+					],
 					withFileTypes: true,
 				}),
 			);
