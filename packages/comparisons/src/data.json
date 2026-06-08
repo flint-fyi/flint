@@ -5632,6 +5632,19 @@
 	{
 		"eslint": [
 			{
+				"name": "package-json/no-local-dependencies",
+				"url": "https://eslint-plugin-package-json.dev/rules/no-local-dependencies/"
+			}
+		],
+		"flint": {
+			"name": "localDependencies",
+			"plugin": "package-json",
+			"preset": "logical"
+		}
+	},
+	{
+		"eslint": [
+			{
 				"name": "package-json/require-main",
 				"url": "https://eslint-plugin-package-json.dev/rules/require-properties/require-main"
 			}
