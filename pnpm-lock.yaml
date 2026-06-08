@@ -55,8 +55,8 @@ catalogs:
       specifier: 62.9.0
       version: 62.9.0
     eslint-plugin-jsonc:
-      specifier: 3.1.0
-      version: 3.1.0
+      specifier: 3.2.0
+      version: 3.2.0
     eslint-plugin-n:
       specifier: 18.0.0
       version: 18.0.0
@@ -267,7 +267,7 @@ importers:
         version: 62.9.0(eslint@10.3.0(jiti@2.7.0))
       eslint-plugin-jsonc:
         specifier: catalog:dev
-        version: 3.1.0(@eslint/json@1.2.0)(eslint@10.3.0(jiti@2.7.0))
+        version: 3.2.0(@eslint/json@1.2.0)(eslint@10.3.0(jiti@2.7.0))
       eslint-plugin-n:
         specifier: catalog:dev
         version: 18.0.0(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
@@ -566,7 +566,7 @@ importers:
         version: 62.9.0(eslint@10.3.0(jiti@2.7.0))
       eslint-plugin-jsonc:
         specifier: catalog:dev
-        version: 3.1.0(@eslint/json@1.2.0)(eslint@10.3.0(jiti@2.7.0))
+        version: 3.2.0(@eslint/json@1.2.0)(eslint@10.3.0(jiti@2.7.0))
       eslint-plugin-jsx-a11y:
         specifier: 6.10.2
         version: 6.10.2(eslint@10.3.0(jiti@2.7.0))
@@ -4602,8 +4602,8 @@ packages:
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
 
-  eslint-plugin-jsonc@3.1.0:
-    resolution: {integrity: sha512-m0Ci6+PedWkG89NjRRRTOUmN8v6gzFqMylLz/224meu78o3bH5st1/DcNA3ZqAjFMHISAn+AAhlVCqHF9BSLdA==}
+  eslint-plugin-jsonc@3.2.0:
+    resolution: {integrity: sha512-eQSxJypkpNycQAFE/ph/j+bDD2MiCcojxNb+7nugYzuQZvELYg4YO1Cv1y/8MbjPIEw5u3Lx0VPOTlqJJIhPPw==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: '>=9.38.0'
@@ -10992,11 +10992,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-jsonc@3.1.0(@eslint/json@1.2.0)(eslint@10.3.0(jiti@2.7.0)):
+  eslint-plugin-jsonc@3.2.0(@eslint/json@1.2.0)(eslint@10.3.0(jiti@2.7.0)):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.3.0(jiti@2.7.0))
       '@eslint/core': 1.2.1
-      '@eslint/plugin-kit': 0.6.1
+      '@eslint/plugin-kit': 0.7.1
       '@ota-meshi/ast-token-store': 0.3.0
       diff-sequences: 29.6.3
       eslint: 10.3.0(jiti@2.7.0)
