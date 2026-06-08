@@ -245,7 +245,7 @@ importers:
         specifier: workspace:^
         version: link:packages/vitest
       '@ianvs/prettier-plugin-sort-imports':
-        specifier: ^4.7.1
+        specifier: 4.7.1
         version: 4.7.1(@vue/compiler-sfc@3.5.30)(prettier@3.8.1)
       '@types/node':
         specifier: catalog:dev
@@ -538,10 +538,10 @@ importers:
         specifier: 1.15.2
         version: 1.15.2(eslint@10.3.0(jiti@2.7.0))(typescript@5.9.3)
       '@types/eslint-plugin-jsx-a11y':
-        specifier: ^6.10.1
+        specifier: 6.10.1
         version: 6.10.1(jiti@2.7.0)
       '@types/eslint-plugin-promise':
-        specifier: ^7.3.0
+        specifier: 7.3.0
         version: 7.3.0
       '@typescript-eslint/eslint-plugin':
         specifier: catalog:dev
@@ -607,7 +607,7 @@ importers:
         specifier: catalog:dev
         version: 3.3.0(eslint@10.3.0(jiti@2.7.0))
       markdownlint:
-        specifier: ^0.40.0
+        specifier: 0.40.0
         version: 0.40.0
       tsdown:
         specifier: catalog:dev
@@ -685,7 +685,7 @@ importers:
         version: 5.9.3
     devDependencies:
       '@types/css-tree':
-        specifier: ^2.3.11
+        specifier: 2.3.11
         version: 2.3.11
       tsdown:
         specifier: catalog:dev
@@ -771,7 +771,7 @@ importers:
         specifier: workspace:^
         version: link:../rule-tester
       '@humanwhocodes/momoa':
-        specifier: ^3.3.10
+        specifier: 3.3.10
         version: 3.3.10
       tsdown:
         specifier: catalog:dev
@@ -986,7 +986,7 @@ importers:
         specifier: workspace:^
         version: link:../rule-tester
       '@humanwhocodes/momoa':
-        specifier: ^3.3.10
+        specifier: 3.3.10
         version: 3.3.10
       tsdown:
         specifier: catalog:dev

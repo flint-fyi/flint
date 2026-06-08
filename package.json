@@ -40,7 +40,7 @@
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/vitest": "workspace:^",
-		"@ianvs/prettier-plugin-sort-imports": "^4.7.1",
+		"@ianvs/prettier-plugin-sort-imports": "4.7.1",
 		"@types/node": "catalog:dev",
 		"@vitest/coverage-v8": "catalog:dev",
 		"@vitest/eslint-plugin": "catalog:dev",
