@@ -3,10 +3,10 @@ import type { Result } from "package-json-validator";
 
 import type { AnyRule } from "@flint.fyi/core";
 import {
-	getJsonNodeRange,
+	getNodeRange,
 	getNodeText,
 	jsonLanguage,
-} from "@flint.fyi/json-language/new";
+} from "@flint.fyi/json-language";
 
 import { getPackagePropertiesOfNames } from "./getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "./ruleCreator.ts";
@@ -56,7 +56,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 								error: issue.message,
 							},
 							message: "validationError",
-							range: getJsonNodeRange(node),
+							range: getNodeRange(node),
 						});
 					}
 				}

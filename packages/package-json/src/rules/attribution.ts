@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "../ruleCreator.ts";
@@ -84,7 +84,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 					) {
 						context.report({
 							message: "preferContributorsOnly",
-							range: getJsonNodeRange(author.name),
+							range: getNodeRange(author.name),
 						});
 					}
 
@@ -94,7 +94,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 					) {
 						context.report({
 							message: "emptyContributors",
-							range: getJsonNodeRange(contributors.value),
+							range: getNodeRange(contributors.value),
 						});
 					}
 

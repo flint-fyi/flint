@@ -1,5 +1,4 @@
-export { getJsonNodeRange } from "./getJsonNodeRange.ts";
-// flint-disable-next-line ts/deprecated
-// eslint-disable-next-line @typescript-eslint/no-deprecated
+export { getNodeRange } from "./getNodeRange.ts";
+export { getNodeText } from "./getNodeText.ts";
 export { jsonLanguage } from "./language.ts";
-export type { JsonNode, JsonSourceFile } from "./nodes.ts";
+export type { JsonVisitorKey } from "./nodes.ts";

@@ -1,4 +1,4 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";
@@ -59,7 +59,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 								context.report({
 									data: { dependencyName },
 									message: "unnecessaryPeerDependency",
-									range: getJsonNodeRange(element.name),
+									range: getNodeRange(element.name),
 									suggestions: [
 										{
 											id: "removeUnnecessaryPeerDependencyMeta",

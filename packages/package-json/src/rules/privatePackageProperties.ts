@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackageProperties } from "../getPackageProperties.ts";
 import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
@@ -67,7 +67,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 								propertyName: property.name.value,
 							},
 							message: "unnecessaryProperty",
-							range: getJsonNodeRange(property.name),
+							range: getNodeRange(property.name),
 							suggestions: [
 								{
 									id: "removePrivatePackageProperty",

@@ -1,6 +1,6 @@
 import type { MemberNode, ObjectNode } from "@humanwhocodes/momoa";
 
-import { getJsonNodeRange } from "@flint.fyi/json-language/new";
+import { getNodeRange } from "@flint.fyi/json-language";
 
 export function removeObjectProperty(
 	propertyNode: MemberNode,
@@ -8,7 +8,7 @@ export function removeObjectProperty(
 ) {
 	if (objectNode.members.length === 1) {
 		return {
-			range: getJsonNodeRange(objectNode),
+			range: getNodeRange(objectNode),
 			text: "{}",
 		};
 	}
@@ -24,10 +24,9 @@ export function removeObjectProperty(
 			? objectNode.members[index + 1]
 			: undefined;
 
-	const { begin: propertyBegin, end: propertyEnd } =
-		getJsonNodeRange(propertyNode);
+	const { begin: propertyBegin, end: propertyEnd } = getNodeRange(propertyNode);
 	if (next) {
-		const { begin: nextBegin } = getJsonNodeRange(next);
+		const { begin: nextBegin } = getNodeRange(next);
 		return {
 			range: {
 				begin: propertyBegin,
@@ -38,7 +37,7 @@ export function removeObjectProperty(
 	}
 
 	if (previous) {
-		const { end: previousEnd } = getJsonNodeRange(previous);
+		const { end: previousEnd } = getNodeRange(previous);
 		return {
 			range: {
 				begin: previousEnd,

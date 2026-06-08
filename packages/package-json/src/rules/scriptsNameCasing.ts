@@ -1,6 +1,6 @@
 import { kebabCase } from "change-case";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";
@@ -52,7 +52,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							continue;
 						}
 
-						const range = getJsonNodeRange(scriptsProperty.name);
+						const range = getNodeRange(scriptsProperty.name);
 
 						context.report({
 							message: "invalidCase",

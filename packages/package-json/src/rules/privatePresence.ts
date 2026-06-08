@@ -1,4 +1,4 @@
-import { jsonLanguage } from "@flint.fyi/json-language/new";
+import { jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";

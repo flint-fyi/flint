@@ -1,4 +1,4 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "../ruleCreator.ts";
@@ -51,7 +51,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							context.report({
 								data: { name: dependency.name.value },
 								message: "missingDevDependency",
-								range: getJsonNodeRange(dependency.name),
+								range: getNodeRange(dependency.name),
 							});
 						}
 					}

@@ -1,6 +1,6 @@
 import type { ArrayNode, ElementNode } from "@humanwhocodes/momoa";
 
-import { getJsonNodeRange } from "@flint.fyi/json-language/new";
+import { getNodeRange } from "@flint.fyi/json-language";
 
 export function removeArrayElement(
 	elementNode: ElementNode,
@@ -8,7 +8,7 @@ export function removeArrayElement(
 ) {
 	if (arrayNode.elements.length === 1) {
 		return {
-			range: getJsonNodeRange(arrayNode),
+			range: getNodeRange(arrayNode),
 			text: "[]",
 		};
 	}
@@ -24,11 +24,11 @@ export function removeArrayElement(
 			? arrayNode.elements[index + 1]
 			: undefined;
 
-	const { begin: elementBegin, end: elementEnd } = getJsonNodeRange(
+	const { begin: elementBegin, end: elementEnd } = getNodeRange(
 		elementNode.value,
 	);
 	if (next) {
-		const { begin: nextBegin } = getJsonNodeRange(next.value);
+		const { begin: nextBegin } = getNodeRange(next.value);
 		return {
 			range: {
 				begin: elementBegin,
@@ -39,7 +39,7 @@ export function removeArrayElement(
 	}
 
 	if (previous) {
-		const { end: previousEnd } = getJsonNodeRange(previous.value);
+		const { end: previousEnd } = getNodeRange(previous.value);
 		return {
 			range: {
 				begin: previousEnd,

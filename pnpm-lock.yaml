@@ -785,15 +785,9 @@ importers:
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
-      '@flint.fyi/typescript-language':
-        specifier: workspace:^
-        version: link:../typescript-language
       '@humanwhocodes/momoa':
         specifier: ^3.3.10
         version: 3.3.10
-      typescript:
-        specifier: ^5.9.0 || ^6.0.0
-        version: 5.9.3
     devDependencies:
       tsdown:
         specifier: catalog:dev

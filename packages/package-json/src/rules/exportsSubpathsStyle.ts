@@ -2,10 +2,10 @@ import type { ObjectNode } from "@humanwhocodes/momoa";
 import { z } from "zod/v4";
 
 import {
-	getJsonNodeRange,
+	getNodeRange,
 	getNodeText,
 	jsonLanguage,
-} from "@flint.fyi/json-language/new";
+} from "@flint.fyi/json-language";
 
 import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";
@@ -74,7 +74,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 						return;
 					}
 
-					const range = getJsonNodeRange(property.name);
+					const range = getNodeRange(property.name);
 
 					const propertyValue = property.value;
 
@@ -86,7 +86,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 					) {
 						context.report({
 							fix: {
-								range: getJsonNodeRange(propertyValue),
+								range: getNodeRange(propertyValue),
 								text: `{ ".": ${getNodeText(propertyValue, sourceText)} }`,
 							},
 							message: "preferExplicit",
@@ -110,7 +110,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 					context.report({
 						fix: {
-							range: getJsonNodeRange(propertyValue),
+							range: getNodeRange(propertyValue),
 							text: getNodeText(rootSubpath.value, sourceText),
 						},
 						message: "preferImplicit",

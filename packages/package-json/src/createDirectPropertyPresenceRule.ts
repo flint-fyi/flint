@@ -2,7 +2,7 @@ import type { DocumentNode } from "@humanwhocodes/momoa";
 import { z } from "zod/v4";
 
 import type { AnyRule } from "@flint.fyi/core";
-import { jsonLanguage } from "@flint.fyi/json-language/new";
+import { jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertyOfName } from "./getPackagePropertyOfName.ts";
 import { isBooleanTrue } from "./isBooleanNode.ts";

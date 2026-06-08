@@ -1,6 +1,6 @@
 import type { ArrayNode, ObjectNode } from "@humanwhocodes/momoa";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackageProperties } from "../getPackageProperties.ts";
 import { removeArrayElement } from "../removeArrayElement.ts";
@@ -72,7 +72,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 							context.report({
 								message: "duplicateDependency",
-								range: getJsonNodeRange(elementValue),
+								range: getNodeRange(elementValue),
 								suggestions: [
 									{
 										id: "removeDependency",
@@ -105,7 +105,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 							context.report({
 								message: "duplicateDependency",
-								range: getJsonNodeRange(dependencyName),
+								range: getNodeRange(dependencyName),
 								suggestions: [
 									{
 										id: "removeDependency",
@@ -134,7 +134,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 								context.report({
 									message: "crossGroupDuplicate",
-									range: getJsonNodeRange(dependency.name),
+									range: getNodeRange(dependency.name),
 									suggestions: [
 										{
 											id: "removeDependency",

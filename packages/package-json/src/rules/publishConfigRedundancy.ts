@@ -1,4 +1,4 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";
@@ -55,7 +55,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 							context.report({
 								message: "redundantAccess",
-								range: getJsonNodeRange(property.name),
+								range: getNodeRange(property.name),
 								suggestions: [
 									{
 										id: "removeAccess",

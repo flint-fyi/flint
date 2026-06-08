@@ -6,7 +6,7 @@ import type {
 } from "@humanwhocodes/momoa";
 import { z } from "zod/v4";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { removeArrayElement } from "../removeArrayElement.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";
@@ -110,7 +110,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 			context.report({
 				message: "emptyElement",
-				range: getJsonNodeRange(element.value),
+				range: getNodeRange(element.value),
 				suggestions: [
 					{
 						id: "removeEmptyField",
@@ -130,7 +130,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 			context.report({
 				message: "emptyField",
-				range: getJsonNodeRange(property.name),
+				range: getNodeRange(property.name),
 				suggestions: [
 					{
 						id: "removeEmptyField",
