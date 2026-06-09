@@ -46,7 +46,7 @@
 	},
 	"devDependencies": {
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
-		"@eslint/json": "1.2.0",
+		"@eslint/json": "2.0.0",
 		"@eslint/markdown": "catalog:dev",
 		"@next/eslint-plugin-next": "16.2.6",
 		"@nuxt/eslint-plugin": "1.15.2",
