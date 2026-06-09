@@ -70,7 +70,7 @@
 		"typescript-eslint": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
-	"packageManager": "pnpm@10.33.0",
+	"packageManager": "pnpm@10.34.1",
 	"engines": {
 		"node": ">=24.0.0"
 	}
