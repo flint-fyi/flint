@@ -1,0 +1,98 @@
+---
+description: "Move function definitions to the highest possible scope."
+title: "functionDefinitionScopeConsistency"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="functionDefinitionScopeConsistency" />
+
+A function definition should be placed as close to the top-level scope as possible without breaking its captured values.
+This improves readability, directly improves performance, and allows JavaScript engines to better optimize performance.
+
+When a function doesn't reference any variables from its enclosing scope, it can be moved to the outer scope.
+This rule reports nested functions that could be moved up.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function outer(value: string) {
+	function inner(text: string) {
+		return text === "test";
+	}
+	return inner;
+}
+```
+
+```ts
+function outer(value: string) {
+	const inner = (text: string) => {
+		return text === "test";
+	};
+	return inner;
+}
+```
+
+```ts
+function outer() {
+	return (dispatch: Function) => dispatch({ type: "ACTION" });
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function inner(text: string) {
+	return text === "test";
+}
+
+function outer(value: string) {
+	return inner;
+}
+```
+
+```ts
+function outer(value: string) {
+	function inner() {
+		return value === "test";
+	}
+	return inner;
+}
+```
+
+```ts
+function outer() {
+	return function inner() {
+		return this;
+	};
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you prefer to keep related functions close together for readability, even when they don't share scope, you may want to disable this rule.
+
+For large existing codebases, this rule may produce many warnings that are not critical to fix.
+
+## Further Reading
+
+- [MDN: Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures)
+- [JavaScript Performance Pitfalls in V8](https://ponyfoo.com/articles/javascript-performance-pitfalls-v8)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="functionDefinitionScopeConsistency" />

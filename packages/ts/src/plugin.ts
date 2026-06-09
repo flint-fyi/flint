@@ -109,6 +109,7 @@ import functionApplySpreads from "./rules/functionApplySpreads.ts";
 import functionAssignments from "./rules/functionAssignments.ts";
 import functionCurryingRedundancy from "./rules/functionCurryingRedundancy.ts";
 import functionDeclarationStyles from "./rules/functionDeclarationStyles.ts";
+import functionDefinitionScopeConsistency from "./rules/functionDefinitionScopeConsistency.ts";
 import functionNameMatches from "./rules/functionNameMatches.ts";
 import functionNewCalls from "./rules/functionNewCalls.ts";
 import generatorFunctionYields from "./rules/generatorFunctionYields.ts";
@@ -422,6 +423,7 @@ export const ts = createPlugin({
 		functionAssignments,
 		functionCurryingRedundancy,
 		functionDeclarationStyles,
+		functionDefinitionScopeConsistency,
 		functionNameMatches,
 		functionNewCalls,
 		generatorFunctionYields,
