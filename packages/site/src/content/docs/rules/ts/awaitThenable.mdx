@@ -1,0 +1,96 @@
+---
+description: "Reports awaiting a value that is not a Thenable."
+title: "awaitThenable"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="awaitThenable" />
+
+A "Thenable" value is an object with a `then` method, such as a Promise.
+The `await` keyword is designed to retrieve the result of calling a Thenable's `then` method.
+If `await` is used on a non-Thenable value, the value is directly resolved, but execution still pauses until the next microtask.
+This is often a programmer error, such as forgetting to add parentheses to call a function that returns a Promise.
+
+This rule also checks `for await...of` loops to ensure the iterated value is async iterable.
+Using `for await...of` on a synchronous iterable works, but introduces subtle error handling differences and obscures intent.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+async function getValue() {
+	const value = 42;
+	return await value;
+}
+```
+
+```ts
+async function example() {
+	await null;
+}
+```
+
+```ts
+async function processItems() {
+	const items = [1, 2, 3];
+	for await (const item of items) {
+		console.log(item);
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+async function fetchData() {
+	const data = await fetch("/api");
+	return data;
+}
+```
+
+```ts
+async function waitForPromise() {
+	const promise = Promise.resolve(42);
+	return await promise;
+}
+```
+
+```ts
+async function* asyncGenerator() {
+	yield 1;
+	yield 2;
+}
+async function iterateAsync() {
+	for await (const value of asyncGenerator()) {
+		console.log(value);
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your codebase is transitioning from one style of asynchronous code to another, it may be useful to include `await` on non-Promise values for visual consistency.
+Additionally, if you have generic code that might receive either synchronous or asynchronous values, you might disable this rule.
+
+## Further Reading
+
+- [MDN documentation on await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await)
+- [MDN documentation on for await...of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="awaitThenable" />
