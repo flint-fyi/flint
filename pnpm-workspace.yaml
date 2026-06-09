@@ -14,7 +14,7 @@ catalogs:
     "@typescript-eslint/eslint-plugin": 8.58.1
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
-    "@types/node": 24.12.0
+    "@types/node": 24.13.1
     "@types/omit-empty": 1.0.4
     "@vitest/coverage-v8": 4.1.0
     "@vitest/eslint-plugin": 1.6.1
