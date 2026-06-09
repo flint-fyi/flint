@@ -1,0 +1,107 @@
+---
+description: "Require Promise-like statements to be handled appropriately."
+title: "floatingPromises"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="floatingPromises" />
+
+A "floating" Promise is one that is created without any code set up to handle any errors it might throw.
+Floating Promises can cause several issues, such as improperly sequenced operations, ignored Promise rejections, and silent failures.
+
+This rule reports Promise-valued statements that are not handled in one of the following ways:
+
+- Calling its `.then()` with two arguments (including a rejection handler)
+- Calling its `.catch()` with one argument
+- `await`ing it
+- `return`ing it
+- `void`ing it
+
+This rule also reports when an array containing Promises is created and not properly handled.
+The main way to resolve this is by using one of the Promise concurrency methods to create a single Promise, then handling that accordingly.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+async function getValue(): Promise<number> {
+	return 1;
+}
+
+getValue();
+```
+
+```ts
+Promise.resolve(1);
+```
+
+```ts
+new Promise((resolve) => resolve(1));
+```
+
+```ts
+Promise.resolve(1).then(() => {});
+```
+
+```ts
+[Promise.resolve(1), Promise.resolve(2)];
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+await Promise.resolve(1);
+```
+
+```ts
+Promise.resolve(1).catch(() => {});
+```
+
+```ts
+Promise.resolve(1).then(
+	() => {},
+	() => {},
+);
+```
+
+```ts
+void Promise.resolve(1);
+```
+
+```ts
+const promise = Promise.resolve(1);
+```
+
+```ts
+await Promise.all([Promise.resolve(1), Promise.resolve(2)]);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+This rule can be difficult to enable on large existing projects that set up many floating Promises.
+If you're not worried about crashes from floating or misused Promises, such as if you have global unhandled Promise handlers registered, then in some cases it may be safe to not use this rule.
+
+You might consider using `void` expressions and/or lint disable comments for specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: Using Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
+- [MDN: Promise rejection events](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises#promise_rejection_events)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="floatingPromises" />

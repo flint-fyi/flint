@@ -102,6 +102,7 @@ import exportUniqueNames from "./rules/exportUniqueNames.ts";
 import extraneousClasses from "./rules/extraneousClasses.ts";
 import fetchMethodBodies from "./rules/fetchMethodBodies.ts";
 import finallyStatementSafety from "./rules/finallyStatementSafety.ts";
+import floatingPromises from "./rules/floatingPromises.ts";
 import forDirections from "./rules/forDirections.ts";
 import forInArrays from "./rules/forInArrays.ts";
 import forInGuards from "./rules/forInGuards.ts";
@@ -415,6 +416,7 @@ export const ts = createPlugin({
 		extraneousClasses,
 		fetchMethodBodies,
 		finallyStatementSafety,
+		floatingPromises,
 		forDirections,
 		forInArrays,
 		forInGuards,
