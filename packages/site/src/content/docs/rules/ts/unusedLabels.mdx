@@ -1,0 +1,79 @@
+---
+description: "Labels should not be declared if they are never used with break or continue statements."
+title: "unusedLabels"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unusedLabels" />
+
+Labels in JavaScript and TypeScript are used to identify loops or blocks, allowing break and continue statements to reference them.
+If a label is declared but never referenced, it serves no purpose and should be removed to keep the code clean.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+unused: for (let i = 0; i < 10; i++) {
+	console.log(i);
+}
+
+unused: {
+	console.log("block");
+}
+
+unused: while (true) {
+	break;
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+for (let i = 0; i < 10; i++) {
+	console.log(i);
+}
+
+used: for (let i = 0; i < 10; i++) {
+	if (i === 5) {
+		break used;
+	}
+	console.log(i);
+}
+
+loopLabel: for (let i = 0; i < 10; i++) {
+	for (let j = 0; j < 10; j++) {
+		if (j === 5) {
+			continue loopLabel;
+		}
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+This rule is always recommended.
+Unused labels clutter code and can be confusing to readers.
+
+## Further Reading
+
+- [MDN JavaScript Reference: label](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/label)
+- [MDN JavaScript Reference: break](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/break)
+- [MDN JavaScript Reference: continue](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/continue)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unusedLabels" />
