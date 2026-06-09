@@ -1,0 +1,87 @@
+---
+description: "Variables declared with var should only be used within their block scope."
+title: "variableBlockScopeUsage"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="variableBlockScopeUsage" />
+
+Variables declared with `var` are function-scoped, not block-scoped, which means they are accessible throughout the entire function regardless of where they are declared within blocks like `if` statements, loops, or other block constructs.
+This can lead to unexpected behavior and bugs, as variables may be accessible in places where they logically shouldn't be.
+
+This rule enforces treating `var` declarations as if they were block-scoped, like `let` and `const`, by reporting usages that occur outside the block where the variable is declared.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function test() {
+	if (condition) {
+		var value = 1;
+	}
+	console.log(value);
+}
+
+function calculate() {
+	for (var index = 0; index < 10; index++) {
+		doSomething();
+	}
+	console.log(index);
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function test() {
+	if (condition) {
+		var value = 1;
+		console.log(value);
+	}
+}
+
+function calculate() {
+	var index = 0;
+	for (index = 0; index < 10; index++) {
+		doSomething();
+	}
+	console.log(index);
+}
+
+function better() {
+	let value = 1;
+	if (condition) {
+		console.log(value);
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you are working in a legacy codebase that heavily uses `var` declarations and refactoring to `let`/`const` is not feasible, you may want to disable this rule.
+However, the better solution is to gradually migrate to using `let` and `const` instead of `var`.
+
+## Further Reading
+
+- [MDN Web Docs: var](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/var)
+- [MDN Web Docs: let](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let)
+- [MDN Web Docs: const](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const)
+- [MDN Web Docs: Block statement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="variableBlockScopeUsage" />

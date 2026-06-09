@@ -21631,7 +21631,8 @@
 		"flint": {
 			"name": "variableBlockScopeUsage",
 			"plugin": "ts",
-			"preset": "javascript"
+			"preset": "javascript",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
