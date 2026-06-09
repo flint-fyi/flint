@@ -22,8 +22,8 @@ jobs:
           require-pr-template: true
 
           # PR Failure Actions
-          failure-add-pr-labels: "suspected ai slop"
+          failure-add-pr-labels: suspected ai slop
           failure-pr-message: "Our PR Quality worflow has detected this PR as not conforming to our [AI Contribution guidelines](https://flint.fyi/project/contributing-with-ai).  Please review our guidelines, and if you believe the PR *did* conform to the guidelines and was incorrectly detected, feel free to tag a member of our team for re-consideration."
 
           # Honeypot Trap
-          blocked-terms: "SASSAFRAS"
+          blocked-terms: SASSAFRAS
