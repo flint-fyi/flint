@@ -1,5 +1,11 @@
 # @flint/core
 
+## 0.23.0
+
+### Minor Changes
+
+- [#2856](https://github.com/flint-fyi/flint/pull/2856) [`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f) - Add structured source metadata to language reports.
+
 ## 0.22.0
 
 ### Minor Changes

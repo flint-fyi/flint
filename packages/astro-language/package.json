@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/astro-language",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "[Experimental] Astro language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
