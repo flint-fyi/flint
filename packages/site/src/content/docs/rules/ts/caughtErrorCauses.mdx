@@ -1,0 +1,85 @@
+---
+description: "Reports throwing new errors in catch blocks without preserving the original error as the cause."
+title: "caughtErrorCauses"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="caughtErrorCauses" />
+
+When re-throwing errors in catch blocks, the original error contains valuable debugging information.
+Using the `cause` option when throwing new errors maintains the complete error chain, improving traceability and debuggability.
+Without preserving the cause, the original stack trace and error details are lost.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+try {
+	doSomething();
+} catch (error) {
+	throw new Error("Something went wrong");
+}
+```
+
+```ts
+try {
+	parse(data);
+} catch (error) {
+	throw new SyntaxError("Failed to parse");
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+try {
+	doSomething();
+} catch (error) {
+	throw new Error("Something went wrong", { cause: error });
+}
+```
+
+```ts
+try {
+	parse(data);
+} catch (error) {
+	throw new SyntaxError("Failed to parse", { cause: error });
+}
+```
+
+```ts
+try {
+	doSomething();
+} catch (error) {
+	throw error;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you follow a custom error-handling approach where the original error is intentionally omitted (e.g., to avoid exposing internal details), you may disable this rule.
+If you use a third-party error-handling library that preserves error context using non-standard properties, this rule may not be necessary.
+In rare cases, if you target legacy environments where the `cause` option in `Error` constructors is not supported, you may need to disable this rule.
+
+## Further Reading
+
+- [MDN documentation on Error.cause](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause)
+- [TC39 Error Cause Proposal](https://github.com/tc39/proposal-error-cause)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="caughtErrorCauses" />

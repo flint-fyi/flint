@@ -45,6 +45,7 @@ import caseDeclarations from "./rules/caseDeclarations.ts";
 import caseDuplicates from "./rules/caseDuplicates.ts";
 import caseFallthroughs from "./rules/caseFallthroughs.ts";
 import catchCallbackTypes from "./rules/catchCallbackTypes.ts";
+import caughtErrorCauses from "./rules/caughtErrorCauses.ts";
 import caughtVariableNames from "./rules/caughtVariableNames.ts";
 import chainedAssignments from "./rules/chainedAssignments.ts";
 import charAtComparisons from "./rules/charAtComparisons.ts";
@@ -358,6 +359,7 @@ export const ts = createPlugin({
 		caseDuplicates,
 		caseFallthroughs,
 		catchCallbackTypes,
+		caughtErrorCauses,
 		caughtVariableNames,
 		chainedAssignments,
 		charAtComparisons,
