@@ -28,6 +28,7 @@ jobs:
 
       - name: Changesets Release
         uses: changesets/action@v1
+        env:
+          GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
         with:
-          github-token: ${{ steps.create_token.outputs.token }}
           publish: pnpm release
