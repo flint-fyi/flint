@@ -3,6 +3,7 @@ import ts from "typescript";
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { skipParentheses } from "./utils/skipParentheses.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -121,8 +122,7 @@ function getConstructorKeywordEnd(
 		);
 
 	return (
-		keywordOrName?.getEnd() ??
-		node.getStart(sourceFile) + "constructor".length
+		keywordOrName?.getEnd() ?? node.getStart(sourceFile) + "constructor".length
 	);
 }
 
@@ -152,15 +152,15 @@ function hasUsefulAccessibility(node: AST.ConstructorDeclaration) {
 
 function isMatchingArgument(
 	parameter: AST.ParameterDeclaration,
-	argument: ts.Expression,
+	argument: AST.Expression,
 ) {
 	return parameter.dotDotDotToken
 		? ts.isSpreadElement(argument) &&
 				isMatchingIdentifiers(
 					parameter.name,
-					ts.skipParentheses(argument.expression),
+					skipParentheses(argument.expression),
 				)
-		: isMatchingIdentifiers(parameter.name, ts.skipParentheses(argument));
+		: isMatchingIdentifiers(parameter.name, skipParentheses(argument));
 }
 
 function isMatchingIdentifiers(first: ts.Node, second: ts.Node) {
@@ -173,7 +173,7 @@ function isMatchingIdentifiers(first: ts.Node, second: ts.Node) {
 
 function isPassingThrough(
 	parameters: ts.NodeArray<AST.ParameterDeclaration>,
-	superArguments: ts.NodeArray<ts.Expression>,
+	superArguments: ts.NodeArray<AST.Expression>,
 ) {
 	return (
 		parameters.length === superArguments.length &&
@@ -197,7 +197,7 @@ function isRedundantSuperCall(
 		return false;
 	}
 
-	const call = ts.skipParentheses(statement.expression);
+	const call = skipParentheses(statement.expression);
 
 	return (
 		ts.isCallExpression(call) &&
@@ -212,7 +212,7 @@ function isSimpleParameter(parameter: AST.ParameterDeclaration) {
 	return ts.isIdentifier(parameter.name) && !parameter.initializer;
 }
 
-function isSpreadArguments(superArguments: ts.NodeArray<ts.Expression>) {
+function isSpreadArguments(superArguments: ts.NodeArray<AST.Expression>) {
 	const [argument] = superArguments;
 	if (
 		superArguments.length !== 1 ||
@@ -222,7 +222,7 @@ function isSpreadArguments(superArguments: ts.NodeArray<ts.Expression>) {
 		return false;
 	}
 
-	const value = ts.skipParentheses(argument.expression);
+	const value = skipParentheses(argument.expression);
 
 	return ts.isIdentifier(value) && value.text === "arguments";
 }

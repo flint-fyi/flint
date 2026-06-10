@@ -1,5 +1,5 @@
-import rule from "./unnecessaryConstructors.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./unnecessaryConstructors.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
