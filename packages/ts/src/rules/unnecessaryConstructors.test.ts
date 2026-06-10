@@ -1,424 +1,762 @@
-import { RuleTester } from '@typescript-eslint/rule-tester';
+import rule from "./unnecessaryConstructors.ts";
+import { ruleTester } from "./ruleTester.ts";
 
-import rule from '../../src/rules/no-useless-constructor';
-
-const ruleTester = new RuleTester();
-
-ruleTester.run('no-useless-constructor', rule, {
-  valid: [
-    'class A {}',
-    `
-class A {
-  constructor() {
-    doSomething();
-  }
+ruleTester.describe(rule, {
+	invalid: [
+		{
+			code: `
+class Logger {
+    constructor() {}
 }
-    `,
-    `
-class A extends B {
-  constructor() {}
+`,
+			snapshot: `
+class Logger {
+    constructor() {}
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
 }
-    `,
-    `
-class A extends B {
-  constructor() {
-    super('foo');
-  }
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger {
+    
 }
-    `,
-    `
-class A extends B {
-  constructor(foo, bar) {
-    super(foo, bar, 1);
-  }
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Logger {
+    constructor     () {}
 }
-    `,
-    `
-class A extends B {
-  constructor() {
-    super();
-    doSomething();
-  }
+`,
+			snapshot: `
+class Logger {
+    constructor     () {}
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
 }
-    `,
-    `
-class A extends B {
-  constructor(...args) {
-    super(...args);
-    doSomething();
-  }
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger {
+    
 }
-    `,
-    `
-class A {
-  dummyMethod() {
-    doSomething();
-  }
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Logger {
+    'constructor'() {}
 }
-    `,
-    `
-class A extends B.C {
-  constructor() {
-    super(foo);
-  }
+`,
+			snapshot: `
+class Logger {
+    'constructor'() {}
+    ~~~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
 }
-    `,
-    `
-class A extends B.C {
-  constructor([a, b, c]) {
-    super(...arguments);
-  }
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger {
+    
 }
-    `,
-    `
-class A extends B.C {
-  constructor(a = f()) {
-    super(...arguments);
-  }
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Logger {
+    public constructor() {}
 }
-    `,
-    `
-class A extends B {
-  constructor(a, b, c) {
-    super(a, b);
-  }
+`,
+			snapshot: `
+class Logger {
+    public constructor() {}
+    ~~~~~~~~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
 }
-    `,
-    `
-class A extends B {
-  constructor(foo, bar) {
-    super(foo);
-  }
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger {
+    
 }
-    `,
-    `
-class A extends B {
-  constructor(test) {
-    super();
-  }
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Logger implements Contract {
+    constructor() {}
 }
-    `,
-    `
-class A extends B {
-  constructor() {
-    foo;
-  }
+`,
+			snapshot: `
+class Logger implements Contract {
+    constructor() {}
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
 }
-    `,
-    `
-class A extends B {
-  constructor(foo, bar) {
-    super(bar);
-  }
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger implements Contract {
+    
 }
-    `,
-    // https://github.com/typescript-eslint/typescript-eslint/issues/15
-    `
-declare class A {
-  constructor();
+`,
+				},
+			],
+		},
+		{
+			code: `
+const Logger = class {
+    constructor() {}
+};
+`,
+			snapshot: `
+const Logger = class {
+    constructor() {}
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+};
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+const Logger = class {
+    
+};
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Child extends Base {
+    constructor() {
+        super();
+    }
 }
-    `,
-    `
-class A {
-  constructor();
+`,
+			snapshot: `
+class Child extends Base {
+    constructor() {
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+        super();
+    }
 }
-    `,
-    `
-abstract class A {
-  constructor();
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Child extends Base {
+    
 }
-    `,
-    // https://github.com/typescript-eslint/typescript-eslint/issues/48
-    `
-class A {
-  constructor(private name: string) {}
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Child extends Base {
+    constructor(value) {
+        super(value);
+    }
 }
-    `,
-    `
-class A {
-  constructor(public name: string) {}
+`,
+			snapshot: `
+class Child extends Base {
+    constructor(value) {
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+        super(value);
+    }
 }
-    `,
-    `
-class A {
-  constructor(protected name: string) {}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Child extends Base {
+    
 }
-    `,
-    // https://github.com/typescript-eslint/typescript-eslint/pull/167#discussion_r252638401
-    `
-class A {
-  private constructor() {}
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Child extends Base {
+    constructor(first, second) {
+        super(first, second);
+    }
 }
-    `,
-    `
-class A {
-  protected constructor() {}
+`,
+			snapshot: `
+class Child extends Base {
+    constructor(first, second) {
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+        super(first, second);
+    }
 }
-    `,
-    `
-class A extends B {
-  public constructor() {}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Child extends Base {
+    
 }
-    `,
-    `
-class A extends B {
-  protected constructor(foo, bar) {
-    super(bar);
-  }
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Child extends Base {
+    constructor(...args) {
+        super(...args);
+    }
 }
-    `,
-    `
-class A extends B {
-  private constructor(foo, bar) {
-    super(bar);
-  }
+`,
+			snapshot: `
+class Child extends Base {
+    constructor(...args) {
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+        super(...args);
+    }
 }
-    `,
-    `
-class A extends B {
-  public constructor(foo) {
-    super(foo);
-  }
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Child extends Base {
+    
 }
-    `,
-    `
-class A extends B {
-  public constructor(foo) {}
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Child extends namespaces.Base {
+    constructor() {
+        super(...arguments);
+    }
 }
-    `,
-    // type definition / overload
-    `
-class A {
-  constructor(foo);
+`,
+			snapshot: `
+class Child extends namespaces.Base {
+    constructor() {
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+        super(...arguments);
+    }
 }
-    `,
-    `
-class A extends Object {
-  constructor(@Foo foo: string) {
-    super(foo);
-  }
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Child extends namespaces.Base {
+    
 }
-    `,
-    `
-class A extends Object {
-  constructor(foo: string, @Bar() bar) {
-    super(foo, bar);
-  }
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Child extends Base {
+    constructor(first, second, ...others) {
+        super(...arguments);
+    }
 }
-    `,
-  ],
-  invalid: [
-    {
-      code: `
-class A {
-  constructor() {}
+`,
+			snapshot: `
+class Child extends Base {
+    constructor(first, second, ...others) {
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+        super(...arguments);
+    }
 }
-      `,
-      errors: [
-        {
-          messageId: 'noUselessConstructor',
-          suggestions: [
-            {
-              messageId: 'removeConstructor',
-              output: `
-class A {
-${'  '}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Child extends Base {
+    
 }
-      `,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: `
-class A extends B {
-  constructor() {
-    super();
-  }
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Child extends Base {
+    constructor(first, second, ...others) {
+        super(first, second, ...others);
+    }
 }
-      `,
-      errors: [
-        {
-          messageId: 'noUselessConstructor',
-          suggestions: [
-            {
-              messageId: 'removeConstructor',
-              output: `
-class A extends B {
-${'  '}
+`,
+			snapshot: `
+class Child extends Base {
+    constructor(first, second, ...others) {
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+        super(first, second, ...others);
+    }
 }
-      `,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: `
-class A extends B {
-  constructor(foo) {
-    super(foo);
-  }
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Child extends Base {
+    
 }
-      `,
-      errors: [
-        {
-          messageId: 'noUselessConstructor',
-          suggestions: [
-            {
-              messageId: 'removeConstructor',
-              output: `
-class A extends B {
-${'  '}
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Child extends Base {
+    constructor(value) {
+        (super(value));
+    }
 }
-      `,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: `
-class A extends B {
-  constructor(foo, bar) {
-    super(foo, bar);
-  }
+`,
+			snapshot: `
+class Child extends Base {
+    constructor(value) {
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+        (super(value));
+    }
 }
-      `,
-      errors: [
-        {
-          messageId: 'noUselessConstructor',
-          suggestions: [
-            {
-              messageId: 'removeConstructor',
-              output: `
-class A extends B {
-${'  '}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Child extends Base {
+    
 }
-      `,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: `
-class A extends B {
-  constructor(...args) {
-    super(...args);
-  }
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Child extends Base {
+    constructor(value) {
+        super((value));
+    }
 }
-      `,
-      errors: [
-        {
-          messageId: 'noUselessConstructor',
-          suggestions: [
-            {
-              messageId: 'removeConstructor',
-              output: `
-class A extends B {
-${'  '}
+`,
+			snapshot: `
+class Child extends Base {
+    constructor(value) {
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+        super((value));
+    }
 }
-      `,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: `
-class A extends B.C {
-  constructor() {
-    super(...arguments);
-  }
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Child extends Base {
+    
 }
-      `,
-      errors: [
-        {
-          messageId: 'noUselessConstructor',
-          suggestions: [
-            {
-              messageId: 'removeConstructor',
-              output: `
-class A extends B.C {
-${'  '}
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Child extends Base {
+    constructor() {
+        super(...(arguments));
+    }
 }
-      `,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: `
-class A extends B {
-  constructor(a, b, ...c) {
-    super(...arguments);
-  }
+`,
+			snapshot: `
+class Child extends Base {
+    constructor() {
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+        super(...(arguments));
+    }
 }
-      `,
-      errors: [
-        {
-          messageId: 'noUselessConstructor',
-          suggestions: [
-            {
-              messageId: 'removeConstructor',
-              output: `
-class A extends B {
-${'  '}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Child extends Base {
+    
 }
-      `,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: `
-class A extends B {
-  constructor(a, b, ...c) {
-    super(a, b, ...c);
-  }
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Logger {
+    label = "ready"
+    constructor() {}
+    [0]() {}
 }
-      `,
-      errors: [
-        {
-          messageId: 'noUselessConstructor',
-          suggestions: [
-            {
-              messageId: 'removeConstructor',
-              output: `
-class A extends B {
-${'  '}
+`,
+			snapshot: `
+class Logger {
+    label = "ready"
+    constructor() {}
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+    [0]() {}
 }
-      `,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: `
-class A {
-  public constructor() {}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger {
+    label = "ready"
+    ;
+    [0]() {}
 }
-      `,
-      errors: [
-        {
-          messageId: 'noUselessConstructor',
-          suggestions: [
-            {
-              messageId: 'removeConstructor',
-              output: `
-class A {
-${'  '}
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Logger {
+    label = "ready"
+    constructor() {}
+    *run() {}
 }
-      `,
-            },
-          ],
-        },
-      ],
-    },
-  ],
+`,
+			snapshot: `
+class Logger {
+    label = "ready"
+    constructor() {}
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+    *run() {}
+}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger {
+    label = "ready"
+    ;
+    *run() {}
+}
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Logger {
+    label = "ready"
+    constructor() {}
+    in
+}
+`,
+			snapshot: `
+class Logger {
+    label = "ready"
+    constructor() {}
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+    in
+}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger {
+    label = "ready"
+    ;
+    in
+}
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Logger {
+    label = "ready"
+    constructor() {}
+    instanceof
+}
+`,
+			snapshot: `
+class Logger {
+    label = "ready"
+    constructor() {}
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+    instanceof
+}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger {
+    label = "ready"
+    ;
+    instanceof
+}
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Logger {
+    label = "ready"
+    constructor() {}
+    #instanceof
+}
+`,
+			snapshot: `
+class Logger {
+    label = "ready"
+    constructor() {}
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+    #instanceof
+}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger {
+    label = "ready"
+    
+    #instanceof
+}
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Logger {
+    label
+    constructor() {}
+    [0]() {}
+}
+`,
+			snapshot: `
+class Logger {
+    label
+    constructor() {}
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+    [0]() {}
+}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger {
+    label
+    
+    [0]() {}
+}
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Logger {
+    label = "ready";
+    constructor() {}
+    [0]() {}
+}
+`,
+			snapshot: `
+class Logger {
+    label = "ready";
+    constructor() {}
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+    [0]() {}
+}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger {
+    label = "ready";
+    
+    [0]() {}
+}
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Logger {
+    label = "ready"
+    constructor() {}
+    run() {}
+}
+`,
+			snapshot: `
+class Logger {
+    label = "ready"
+    constructor() {}
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+    run() {}
+}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger {
+    label = "ready"
+    
+    run() {}
+}
+`,
+				},
+			],
+		},
+		{
+			code: `
+class Logger {
+    constructor() {}
+    [0]() {}
+    label = "ready"
+}
+`,
+			snapshot: `
+class Logger {
+    constructor() {}
+    ~~~~~~~~~~~
+    This constructor is equivalent to the implicit default constructor, so it adds no behavior to the class.
+    [0]() {}
+    label = "ready"
+}
+`,
+			suggestions: [
+				{
+					id: "removeConstructor",
+					updated: `
+class Logger {
+    
+    [0]() {}
+    label = "ready"
+}
+`,
+				},
+			],
+		},
+	],
+	valid: [
+		"class Logger {}",
+		"class Logger { constructor() { setup(); } }",
+		"class Logger { log() { setup(); } }",
+		"class Child extends Base { constructor() {} }",
+		'class Child extends Base { constructor() { super("label"); } }',
+		"class Child extends Base { constructor(first, second) { super(first, second, 1); } }",
+		"class Child extends Base { constructor() { super(); setup(); } }",
+		"class Child extends Base { constructor(...args) { super(...args); setup(); } }",
+		"class Child extends namespaces.Base { constructor() { super(outside); } }",
+		"class Child extends namespaces.Base { constructor([first, second]) { super(...arguments); } }",
+		"class Child extends namespaces.Base { constructor(first = make()) { super(...arguments); } }",
+		"class Child extends Base { constructor(first, second, third) { super(first, second); } }",
+		"class Child extends Base { constructor(first, second) { super(first); } }",
+		"class Child extends Base { constructor(value) { super(); } }",
+		"class Child extends Base { constructor() { ready; } }",
+		"class Child extends Base { constructor(first, second) { super(second, first); } }",
+		"class Child extends Base { constructor() { setup(); } }",
+		"class Child extends Base { constructor() { return super(); } }",
+		"class Child extends Base { constructor(...args) { super(args); } }",
+		"class Child extends Base { constructor() { super(...outside); } }",
+		"class Child extends Base { constructor() { super(...arguments, extra); } }",
+		"class Child extends Base { constructor(value) { super(value + 1); } }",
+		"class Logger { constructor() { super(); } }",
+		`
+declare class Logger {
+    constructor();
+}
+`,
+		"class Logger { constructor(); }",
+		"abstract class Logger { constructor(); }",
+		"class Logger { constructor(name); }",
+		"class Logger { constructor(private name: string) {} }",
+		"class Logger { constructor(public name: string) {} }",
+		"class Logger { constructor(protected name: string) {} }",
+		"class Logger { constructor(readonly name: string) {} }",
+		"class Logger { private constructor() {} }",
+		"class Logger { protected constructor() {} }",
+		"class Child extends Base { public constructor() {} }",
+		"class Child extends Base { public constructor() { super(); } }",
+		"class Child extends Base { protected constructor(first, second) { super(second); } }",
+		"class Child extends Base { private constructor(first, second) { super(second); } }",
+		"class Child extends Base { public constructor(value) { super(value); } }",
+		"class Child extends Base { public constructor(value) {} }",
+		"class Logger { constructor(@inject service) {} }",
+		`
+class Child extends Base {
+    constructor(@inject service: Service) {
+        super(service);
+    }
+}
+`,
+		`
+class Child extends Base {
+    constructor(name: string, @optional() label) {
+        super(name, label);
+    }
+}
+`,
+		"const factory = { constructor() {} };",
+	],
 });

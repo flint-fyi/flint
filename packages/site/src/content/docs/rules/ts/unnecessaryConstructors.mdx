@@ -1,21 +1,105 @@
 ---
-description: 'Disallow unnecessary constructors.'
+description: "Reports constructors that are equivalent to the implicit default constructor."
+title: "unnecessaryConstructors"
+topic: "rules"
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
 
-> 🛑 This file is source code, not the primary documentation location! 🛑
->
-> See **https://typescript-eslint.io/rules/no-useless-constructor** for documentation.
+<RuleSummary plugin="ts" rule="unnecessaryConstructors" />
 
-It adds support for:
+Classes that don't declare a constructor receive an implicit one automatically:
 
-- constructors marked as `protected` / `private` (i.e. marking a constructor as non-public),
-- `public` constructors when there is no superclass,
-- constructors with only parameter properties.
+- Base classes get an empty constructor, equivalent to `constructor() {}`.
+- Derived classes get a constructor that forwards all arguments to the parent class, equivalent to `constructor(...args) { super(...args); }`.
 
-### Caveat
+Writing either of those constructors out manually adds code to read and maintain without changing how the class works.
 
-This lint rule will report on constructors whose sole purpose is to change visibility of a parent constructor.
-See [discussion on this rule's lack of type information](https://github.com/typescript-eslint/typescript-eslint/issues/3820#issuecomment-917821240) for context.
+Constructors that do change behavior are not reported, including:
+
+- Constructors marked `private` or `protected`, or marked `public` on a derived class, as those modifiers change who may instantiate the class
+- Constructors with parameter properties such as `constructor(private name: string)`, as those declare and initialize class fields
+- Constructors with parameter decorators, as those can have side effects
+- Constructor overload signatures, which declare types rather than behavior
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Logger {
+	constructor() {}
+}
+```
+
+```ts
+class HttpError extends Error {
+	constructor(message: string) {
+		super(message);
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Logger {}
+```
+
+```ts
+class HttpError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "HttpError";
+	}
+}
+```
+
+```ts
+class Point {
+	constructor(
+		public x: number,
+		public y: number,
+	) {}
+}
+```
+
+</TabItem>
+</Tabs>
+
+Constructors that exist only to widen the visibility of a parent class's `protected` constructor should declare an explicit `public` modifier.
+The rule treats an explicit `public` on a derived class as intentional and does not report it:
+
+```ts
+class Base {
+	protected constructor() {}
+}
+
+class Derived extends Base {
+	public constructor() {
+		super();
+	}
+}
+```
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If your project deliberately declares an explicit constructor on every class, such as to serve as a documented extension point or to keep generated code uniform, you may not want this rule.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+## Further Reading
+
+- [MDN: constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/constructor)
+- [TypeScript Handbook: Parameter Properties](https://www.typescriptlang.org/docs/handbook/2/classes.html#parameter-properties)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryConstructors" />
