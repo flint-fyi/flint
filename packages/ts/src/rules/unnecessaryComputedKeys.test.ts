@@ -1,777 +1,968 @@
-/**
- * @fileoverview Tests for no-useless-computed-key rule.
- * @author Burak Yigit Kaya
- */
+import rule from "./unnecessaryComputedKeys.ts";
+import { ruleTester } from "./ruleTester.ts";
 
-"use strict";
-
-//------------------------------------------------------------------------------
-// Requirements
-//------------------------------------------------------------------------------
-
-const rule = require("../../../lib/rules/no-useless-computed-key"),
-	RuleTester = require("../../../lib/rule-tester/rule-tester");
-
-//------------------------------------------------------------------------------
-// Tests
-//------------------------------------------------------------------------------
-
-const ruleTester = new RuleTester({ languageOptions: { ecmaVersion: 2022 } });
-
-ruleTester.run("no-useless-computed-key", rule, {
-	valid: [
-		"({ 'a': 0, b(){} })",
-		"({ [x]: 0 });",
-		"({ a: 0, [b](){} })",
-		"({ ['__proto__']: [] })",
-		"var { 'a': foo } = obj",
-		"var { [a]: b } = obj;",
-		"var { a } = obj;",
-		"var { a: a } = obj;",
-		"var { a: b } = obj;",
-		{
-			code: "class Foo { a() {} }",
-			options: [{ enforceForClassMembers: true }],
-		},
-		{
-			code: "class Foo { 'a'() {} }",
-			options: [{ enforceForClassMembers: true }],
-		},
-		{
-			code: "class Foo { [x]() {} }",
-			options: [{ enforceForClassMembers: true }],
-		},
-		{
-			code: "class Foo { ['constructor']() {} }",
-			options: [{ enforceForClassMembers: true }],
-		},
-		{
-			code: "class Foo { static ['prototype']() {} }",
-			options: [{ enforceForClassMembers: true }],
-		},
-		{
-			code: "(class { 'a'() {} })",
-			options: [{ enforceForClassMembers: true }],
-		},
-		{
-			code: "(class { [x]() {} })",
-			options: [{ enforceForClassMembers: true }],
-		},
-		{
-			code: "(class { ['constructor']() {} })",
-			options: [{ enforceForClassMembers: true }],
-		},
-		{
-			code: "(class { static ['prototype']() {} })",
-			options: [{ enforceForClassMembers: true }],
-		},
-		"class Foo { 'x'() {} }",
-		"(class { [x]() {} })",
-		"class Foo { static constructor() {} }",
-		"class Foo { prototype() {} }",
-		{
-			code: "class Foo { ['x']() {} }",
-			options: [{ enforceForClassMembers: false }],
-		},
-		{
-			code: "(class { ['x']() {} })",
-			options: [{ enforceForClassMembers: false }],
-		},
-		{
-			code: "class Foo { static ['constructor']() {} }",
-			options: [{ enforceForClassMembers: false }],
-		},
-		{
-			code: "class Foo { ['prototype']() {} }",
-			options: [{ enforceForClassMembers: false }],
-		},
-		{
-			code: "class Foo { a }",
-			options: [{ enforceForClassMembers: true }],
-		},
-		{
-			code: "class Foo { ['constructor'] }",
-			options: [{ enforceForClassMembers: true }],
-		},
-		{
-			code: "class Foo { static ['constructor'] }",
-			options: [{ enforceForClassMembers: true }],
-		},
-		{
-			code: "class Foo { static ['prototype'] }",
-			options: [{ enforceForClassMembers: true }],
-		},
-
-		/*
-		 * Well-known browsers throw syntax error bigint literals on property names,
-		 * so, this rule doesn't touch those for now.
-		 */
-		{
-			code: "({ [99999999999999999n]: 0 })",
-			languageOptions: { ecmaVersion: 2020 },
-		},
-	],
+ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: "({ ['0']: 0 })",
-			output: "({ '0': 0 })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'0'" },
-				},
-			],
-		},
-		{
-			code: "var { ['0']: a } = obj",
-			output: "var { '0': a } = obj",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'0'" },
-				},
-			],
-		},
-		{
-			code: "({ ['0+1,234']: 0 })",
-			output: "({ '0+1,234': 0 })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'0+1,234'" },
-				},
-			],
-		},
-		{
-			code: "({ [0]: 0 })",
-			output: "({ 0: 0 })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "0" },
-				},
-			],
-		},
-		{
-			code: "var { [0]: a } = obj",
-			output: "var { 0: a } = obj",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "0" },
-				},
-			],
-		},
-		{
-			code: "({ ['x']: 0 })",
-			output: "({ 'x': 0 })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "var { ['x']: a } = obj",
-			output: "var { 'x': a } = obj",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "var { ['__proto__']: a } = obj",
-			output: "var { '__proto__': a } = obj",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'__proto__'" },
-				},
-			],
-		},
-		{
-			code: "({ ['x']() {} })",
-			output: "({ 'x'() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "({ [/* this comment prevents a fix */ 'x']: 0 })",
-			output: null,
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "({ ['x' /* this comment also prevents a fix */]: 0 })",
-			output: null,
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "({ [('x')]: 0 })",
-			output: "({ 'x': 0 })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "var { [('x')]: a } = obj",
-			output: "var { 'x': a } = obj",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "({ *['x']() {} })",
-			output: "({ *'x'() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "({ async ['x']() {} })",
-			output: "({ async 'x'() {} })",
-			languageOptions: { ecmaVersion: 8 },
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "({ get[.2]() {} })",
-			output: "({ get.2() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: ".2" },
-				},
-			],
-		},
-		{
-			code: "({ set[.2](value) {} })",
-			output: "({ set.2(value) {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: ".2" },
-				},
-			],
-		},
-		{
-			code: "({ async[.2]() {} })",
-			output: "({ async.2() {} })",
-			languageOptions: { ecmaVersion: 8 },
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: ".2" },
-				},
-			],
-		},
-		{
-			code: "({ [2]() {} })",
-			output: "({ 2() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "({ get [2]() {} })",
-			output: "({ get 2() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "({ set [2](value) {} })",
-			output: "({ set 2(value) {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "({ async [2]() {} })",
-			output: "({ async 2() {} })",
-			languageOptions: { ecmaVersion: 8 },
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "({ get[2]() {} })",
-			output: "({ get 2() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "({ set[2](value) {} })",
-			output: "({ set 2(value) {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "({ async[2]() {} })",
-			output: "({ async 2() {} })",
-			languageOptions: { ecmaVersion: 8 },
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "({ get['foo']() {} })",
-			output: "({ get'foo'() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'foo'" },
-				},
-			],
-		},
-		{
-			code: "({ *[2]() {} })",
-			output: "({ *2() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "({ async*[2]() {} })",
-			output: "({ async*2() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "({ ['constructor']: 1 })",
-			output: "({ 'constructor': 1 })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'constructor'" },
-				},
-			],
-		},
-		{
-			code: "({ ['prototype']: 1 })",
-			output: "({ 'prototype': 1 })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'prototype'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { ['0']() {} }",
-			output: "class Foo { '0'() {} }",
-			options: [{ enforceForClassMembers: true }],
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'0'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { ['0+1,234']() {} }",
-			output: "class Foo { '0+1,234'() {} }",
-			options: [{}],
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'0+1,234'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { ['x']() {} }",
-			output: "class Foo { 'x'() {} }",
-			options: [{ enforceForClassMembers: void 0 }],
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { [/* this comment prevents a fix */ 'x']() {} }",
-			output: null,
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { ['x' /* this comment also prevents a fix */]() {} }",
-			output: null,
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { [('x')]() {} }",
-			output: "class Foo { 'x'() {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { *['x']() {} }",
-			output: "class Foo { *'x'() {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { async ['x']() {} }",
-			output: "class Foo { async 'x'() {} }",
-			languageOptions: { ecmaVersion: 8 },
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { get[.2]() {} }",
-			output: "class Foo { get.2() {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: ".2" },
-				},
-			],
-		},
-		{
-			code: "class Foo { set[.2](value) {} }",
-			output: "class Foo { set.2(value) {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: ".2" },
-				},
-			],
-		},
-		{
-			code: "class Foo { async[.2]() {} }",
-			output: "class Foo { async.2() {} }",
-			languageOptions: { ecmaVersion: 8 },
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: ".2" },
-				},
-			],
-		},
-		{
-			code: "class Foo { [2]() {} }",
-			output: "class Foo { 2() {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "class Foo { get [2]() {} }",
-			output: "class Foo { get 2() {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "class Foo { set [2](value) {} }",
-			output: "class Foo { set 2(value) {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "class Foo { async [2]() {} }",
-			output: "class Foo { async 2() {} }",
-			languageOptions: { ecmaVersion: 8 },
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "class Foo { get[2]() {} }",
-			output: "class Foo { get 2() {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "class Foo { set[2](value) {} }",
-			output: "class Foo { set 2(value) {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "class Foo { async[2]() {} }",
-			output: "class Foo { async 2() {} }",
-			languageOptions: { ecmaVersion: 8 },
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "class Foo { get['foo']() {} }",
-			output: "class Foo { get'foo'() {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'foo'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { *[2]() {} }",
-			output: "class Foo { *2() {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "class Foo { async*[2]() {} }",
-			output: "class Foo { async*2() {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "2" },
-				},
-			],
-		},
-		{
-			code: "class Foo { static ['constructor']() {} }",
-			output: "class Foo { static 'constructor'() {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'constructor'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { ['prototype']() {} }",
-			output: "class Foo { 'prototype'() {} }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'prototype'" },
-				},
-			],
-		},
-		{
-			code: "(class { ['x']() {} })",
-			output: "(class { 'x'() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'x'" },
-				},
-			],
-		},
-		{
-			code: "(class { ['__proto__']() {} })",
-			output: "(class { '__proto__'() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'__proto__'" },
-				},
-			],
-		},
-		{
-			code: "(class { static ['__proto__']() {} })",
-			output: "(class { static '__proto__'() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'__proto__'" },
-				},
-			],
-		},
-		{
-			code: "(class { static ['constructor']() {} })",
-			output: "(class { static 'constructor'() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'constructor'" },
-				},
-			],
-		},
-		{
-			code: "(class { ['prototype']() {} })",
-			output: "(class { 'prototype'() {} })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'prototype'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { ['0'] }",
-			output: "class Foo { '0' }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'0'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { ['0'] = 0 }",
-			output: "class Foo { '0' = 0 }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'0'" },
-				},
-			],
-		},
-		{
-			code: "class Foo { static[0] }",
-			output: "class Foo { static 0 }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "0" },
-				},
-			],
-		},
-		{
-			code: "class Foo { ['#foo'] }",
-			output: "class Foo { '#foo' }",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'#foo'" },
-				},
-			],
-		},
-		{
-			code: "(class { ['__proto__'] })",
-			output: "(class { '__proto__' })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'__proto__'" },
-				},
-			],
-		},
-		{
-			code: "(class { static ['__proto__'] })",
-			output: "(class { static '__proto__' })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'__proto__'" },
-				},
-			],
-		},
-		{
-			code: "(class { ['prototype'] })",
-			output: "(class { 'prototype' })",
-			errors: [
-				{
-					messageId: "unnecessarilyComputedProperty",
-					data: { property: "'prototype'" },
-				},
-			],
+			code: `
+({ ['0']: 0 })
+`,
+			output: `
+({ '0': 0 })
+`,
+			snapshot: `
+({ ['0']: 0 })
+   ~~~~~
+   This computed key is the literal '0', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+const { ['0']: first } = source;
+`,
+			output: `
+const { '0': first } = source;
+`,
+			snapshot: `
+const { ['0']: first } = source;
+        ~~~~~
+        This computed key is the literal '0', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ ['0+1,234']: 0 })
+`,
+			output: `
+({ '0+1,234': 0 })
+`,
+			snapshot: `
+({ ['0+1,234']: 0 })
+   ~~~~~~~~~~~
+   This computed key is the literal '0+1,234', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ [0]: 0 })
+`,
+			output: `
+({ 0: 0 })
+`,
+			snapshot: `
+({ [0]: 0 })
+   ~~~
+   This computed key is the literal 0, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+const { [0]: first } = source;
+`,
+			output: `
+const { 0: first } = source;
+`,
+			snapshot: `
+const { [0]: first } = source;
+        ~~~
+        This computed key is the literal 0, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ ['x']: 0 })
+`,
+			output: `
+({ 'x': 0 })
+`,
+			snapshot: `
+({ ['x']: 0 })
+   ~~~~~
+   This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+const { ['x']: renamed } = source;
+`,
+			output: `
+const { 'x': renamed } = source;
+`,
+			snapshot: `
+const { ['x']: renamed } = source;
+        ~~~~~
+        This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+const { ['__proto__']: proto } = source;
+`,
+			output: `
+const { '__proto__': proto } = source;
+`,
+			snapshot: `
+const { ['__proto__']: proto } = source;
+        ~~~~~~~~~~~~~
+        This computed key is the literal '__proto__', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ ['x']() {} })
+`,
+			output: `
+({ 'x'() {} })
+`,
+			snapshot: `
+({ ['x']() {} })
+   ~~~~~
+   This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ ['x']() {} })
+`,
+			options: { enforceForClassMembers: false },
+			output: `
+({ 'x'() {} })
+`,
+			snapshot: `
+({ ['x']() {} })
+   ~~~~~
+   This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ [/* this comment prevents a fix */ 'x']: 0 })
+`,
+			snapshot: `
+({ [/* this comment prevents a fix */ 'x']: 0 })
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ ['x' /* this comment also prevents a fix */]: 0 })
+`,
+			snapshot: `
+({ ['x' /* this comment also prevents a fix */]: 0 })
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ [('x')]: 0 })
+`,
+			output: `
+({ 'x': 0 })
+`,
+			snapshot: `
+({ [('x')]: 0 })
+   ~~~~~~~
+   This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+const { [('x')]: renamed } = source;
+`,
+			output: `
+const { 'x': renamed } = source;
+`,
+			snapshot: `
+const { [('x')]: renamed } = source;
+        ~~~~~~~
+        This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ *['x']() {} })
+`,
+			output: `
+({ *'x'() {} })
+`,
+			snapshot: `
+({ *['x']() {} })
+    ~~~~~
+    This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ async ['x']() {} })
+`,
+			output: `
+({ async 'x'() {} })
+`,
+			snapshot: `
+({ async ['x']() {} })
+         ~~~~~
+         This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ get[.2]() {} })
+`,
+			output: `
+({ get.2() {} })
+`,
+			snapshot: `
+({ get[.2]() {} })
+      ~~~~
+      This computed key is the literal .2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ set[.2](value) {} })
+`,
+			output: `
+({ set.2(value) {} })
+`,
+			snapshot: `
+({ set[.2](value) {} })
+      ~~~~
+      This computed key is the literal .2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ async[.2]() {} })
+`,
+			output: `
+({ async.2() {} })
+`,
+			snapshot: `
+({ async[.2]() {} })
+        ~~~~
+        This computed key is the literal .2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ [2]() {} })
+`,
+			output: `
+({ 2() {} })
+`,
+			snapshot: `
+({ [2]() {} })
+   ~~~
+   This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ get [2]() {} })
+`,
+			output: `
+({ get 2() {} })
+`,
+			snapshot: `
+({ get [2]() {} })
+       ~~~
+       This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ set [2](value) {} })
+`,
+			output: `
+({ set 2(value) {} })
+`,
+			snapshot: `
+({ set [2](value) {} })
+       ~~~
+       This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ async [2]() {} })
+`,
+			output: `
+({ async 2() {} })
+`,
+			snapshot: `
+({ async [2]() {} })
+         ~~~
+         This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ get[2]() {} })
+`,
+			output: `
+({ get 2() {} })
+`,
+			snapshot: `
+({ get[2]() {} })
+      ~~~
+      This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ set[2](value) {} })
+`,
+			output: `
+({ set 2(value) {} })
+`,
+			snapshot: `
+({ set[2](value) {} })
+      ~~~
+      This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ async[2]() {} })
+`,
+			output: `
+({ async 2() {} })
+`,
+			snapshot: `
+({ async[2]() {} })
+        ~~~
+        This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ get['name']() {} })
+`,
+			output: `
+({ get'name'() {} })
+`,
+			snapshot: `
+({ get['name']() {} })
+      ~~~~~~~~
+      This computed key is the literal 'name', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ *[2]() {} })
+`,
+			output: `
+({ *2() {} })
+`,
+			snapshot: `
+({ *[2]() {} })
+    ~~~
+    This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ async*[2]() {} })
+`,
+			output: `
+({ async*2() {} })
+`,
+			snapshot: `
+({ async*[2]() {} })
+         ~~~
+         This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ ['constructor']: 1 })
+`,
+			output: `
+({ 'constructor': 1 })
+`,
+			snapshot: `
+({ ['constructor']: 1 })
+   ~~~~~~~~~~~~~~~
+   This computed key is the literal 'constructor', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+({ ['prototype']: 1 })
+`,
+			output: `
+({ 'prototype': 1 })
+`,
+			snapshot: `
+({ ['prototype']: 1 })
+   ~~~~~~~~~~~~~
+   This computed key is the literal 'prototype', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { ['0']() {} }
+`,
+			options: { enforceForClassMembers: true },
+			output: `
+class Example { '0'() {} }
+`,
+			snapshot: `
+class Example { ['0']() {} }
+                ~~~~~
+                This computed key is the literal '0', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { ['0+1,234']() {} }
+`,
+			options: {},
+			output: `
+class Example { '0+1,234'() {} }
+`,
+			snapshot: `
+class Example { ['0+1,234']() {} }
+                ~~~~~~~~~~~
+                This computed key is the literal '0+1,234', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { ['x']() {} }
+`,
+			output: `
+class Example { 'x'() {} }
+`,
+			snapshot: `
+class Example { ['x']() {} }
+                ~~~~~
+                This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { [/* this comment prevents a fix */ 'x']() {} }
+`,
+			snapshot: `
+class Example { [/* this comment prevents a fix */ 'x']() {} }
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { ['x' /* this comment also prevents a fix */]() {} }
+`,
+			snapshot: `
+class Example { ['x' /* this comment also prevents a fix */]() {} }
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { [('x')]() {} }
+`,
+			output: `
+class Example { 'x'() {} }
+`,
+			snapshot: `
+class Example { [('x')]() {} }
+                ~~~~~~~
+                This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { *['x']() {} }
+`,
+			output: `
+class Example { *'x'() {} }
+`,
+			snapshot: `
+class Example { *['x']() {} }
+                 ~~~~~
+                 This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { async ['x']() {} }
+`,
+			output: `
+class Example { async 'x'() {} }
+`,
+			snapshot: `
+class Example { async ['x']() {} }
+                      ~~~~~
+                      This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { get[.2]() {} }
+`,
+			output: `
+class Example { get.2() {} }
+`,
+			snapshot: `
+class Example { get[.2]() {} }
+                   ~~~~
+                   This computed key is the literal .2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { set[.2](value) {} }
+`,
+			output: `
+class Example { set.2(value) {} }
+`,
+			snapshot: `
+class Example { set[.2](value) {} }
+                   ~~~~
+                   This computed key is the literal .2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { async[.2]() {} }
+`,
+			output: `
+class Example { async.2() {} }
+`,
+			snapshot: `
+class Example { async[.2]() {} }
+                     ~~~~
+                     This computed key is the literal .2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { [2]() {} }
+`,
+			output: `
+class Example { 2() {} }
+`,
+			snapshot: `
+class Example { [2]() {} }
+                ~~~
+                This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { get [2]() {} }
+`,
+			output: `
+class Example { get 2() {} }
+`,
+			snapshot: `
+class Example { get [2]() {} }
+                    ~~~
+                    This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { set [2](value) {} }
+`,
+			output: `
+class Example { set 2(value) {} }
+`,
+			snapshot: `
+class Example { set [2](value) {} }
+                    ~~~
+                    This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { async [2]() {} }
+`,
+			output: `
+class Example { async 2() {} }
+`,
+			snapshot: `
+class Example { async [2]() {} }
+                      ~~~
+                      This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { get[2]() {} }
+`,
+			output: `
+class Example { get 2() {} }
+`,
+			snapshot: `
+class Example { get[2]() {} }
+                   ~~~
+                   This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { set[2](value) {} }
+`,
+			output: `
+class Example { set 2(value) {} }
+`,
+			snapshot: `
+class Example { set[2](value) {} }
+                   ~~~
+                   This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { async[2]() {} }
+`,
+			output: `
+class Example { async 2() {} }
+`,
+			snapshot: `
+class Example { async[2]() {} }
+                     ~~~
+                     This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { get['name']() {} }
+`,
+			output: `
+class Example { get'name'() {} }
+`,
+			snapshot: `
+class Example { get['name']() {} }
+                   ~~~~~~~~
+                   This computed key is the literal 'name', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { *[2]() {} }
+`,
+			output: `
+class Example { *2() {} }
+`,
+			snapshot: `
+class Example { *[2]() {} }
+                 ~~~
+                 This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { async*[2]() {} }
+`,
+			output: `
+class Example { async*2() {} }
+`,
+			snapshot: `
+class Example { async*[2]() {} }
+                      ~~~
+                      This computed key is the literal 2, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { static ['constructor']() {} }
+`,
+			output: `
+class Example { static 'constructor'() {} }
+`,
+			snapshot: `
+class Example { static ['constructor']() {} }
+                       ~~~~~~~~~~~~~~~
+                       This computed key is the literal 'constructor', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { ['prototype']() {} }
+`,
+			output: `
+class Example { 'prototype'() {} }
+`,
+			snapshot: `
+class Example { ['prototype']() {} }
+                ~~~~~~~~~~~~~
+                This computed key is the literal 'prototype', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+(class { ['x']() {} })
+`,
+			output: `
+(class { 'x'() {} })
+`,
+			snapshot: `
+(class { ['x']() {} })
+         ~~~~~
+         This computed key is the literal 'x', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+(class { ['__proto__']() {} })
+`,
+			output: `
+(class { '__proto__'() {} })
+`,
+			snapshot: `
+(class { ['__proto__']() {} })
+         ~~~~~~~~~~~~~
+         This computed key is the literal '__proto__', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+(class { static ['__proto__']() {} })
+`,
+			output: `
+(class { static '__proto__'() {} })
+`,
+			snapshot: `
+(class { static ['__proto__']() {} })
+                ~~~~~~~~~~~~~
+                This computed key is the literal '__proto__', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+(class { static ['constructor']() {} })
+`,
+			output: `
+(class { static 'constructor'() {} })
+`,
+			snapshot: `
+(class { static ['constructor']() {} })
+                ~~~~~~~~~~~~~~~
+                This computed key is the literal 'constructor', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+(class { ['prototype']() {} })
+`,
+			output: `
+(class { 'prototype'() {} })
+`,
+			snapshot: `
+(class { ['prototype']() {} })
+         ~~~~~~~~~~~~~
+         This computed key is the literal 'prototype', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { ['0'] }
+`,
+			output: `
+class Example { '0' }
+`,
+			snapshot: `
+class Example { ['0'] }
+                ~~~~~
+                This computed key is the literal '0', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { ['0'] = 0 }
+`,
+			output: `
+class Example { '0' = 0 }
+`,
+			snapshot: `
+class Example { ['0'] = 0 }
+                ~~~~~
+                This computed key is the literal '0', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { static[0] }
+`,
+			output: `
+class Example { static 0 }
+`,
+			snapshot: `
+class Example { static[0] }
+                      ~~~
+                      This computed key is the literal 0, so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { ['#hidden'] }
+`,
+			output: `
+class Example { '#hidden' }
+`,
+			snapshot: `
+class Example { ['#hidden'] }
+                ~~~~~~~~~~~
+                This computed key is the literal '#hidden', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+class Example { accessor ['count'] = 0 }
+`,
+			output: `
+class Example { accessor 'count' = 0 }
+`,
+			snapshot: `
+class Example { accessor ['count'] = 0 }
+                         ~~~~~~~~~
+                         This computed key is the literal 'count', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+(class { ['__proto__'] })
+`,
+			output: `
+(class { '__proto__' })
+`,
+			snapshot: `
+(class { ['__proto__'] })
+         ~~~~~~~~~~~~~
+         This computed key is the literal '__proto__', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+(class { static ['__proto__'] })
+`,
+			output: `
+(class { static '__proto__' })
+`,
+			snapshot: `
+(class { static ['__proto__'] })
+                ~~~~~~~~~~~~~
+                This computed key is the literal '__proto__', so its wrapping brackets serve no purpose.
+`,
+		},
+		{
+			code: `
+(class { ['prototype'] })
+`,
+			output: `
+(class { 'prototype' })
+`,
+			snapshot: `
+(class { ['prototype'] })
+         ~~~~~~~~~~~~~
+         This computed key is the literal 'prototype', so its wrapping brackets serve no purpose.
+`,
+		},
+	],
+	valid: [
+		`({ 'first': 0, second() {} })`,
+		`({ [key]: 0 });`,
+		`({ count: 0, [key]() {} })`,
+		`({ ['__proto__']: [] })`,
+		`({ ['__proto__']() {} })`,
+		`({ get ['__proto__']() { return 0; } })`,
+		"({ [`name`]: 0 })",
+		`({ [-1]: 0 })`,
+		`({ [99999999999999999n]: 0 })`,
+		`const { 'first': value } = source;`,
+		`const { [key]: value } = source;`,
+		`const { value } = source;`,
+		`const { count: count } = source;`,
+		`const { count: renamed } = source;`,
+		{
+			code: `class Example { method() {} }`,
+			options: { enforceForClassMembers: true },
+		},
+		{
+			code: `class Example { 'method'() {} }`,
+			options: { enforceForClassMembers: true },
+		},
+		{
+			code: `class Example { [key]() {} }`,
+			options: { enforceForClassMembers: true },
+		},
+		{
+			code: `class Example { ['constructor']() {} }`,
+			options: { enforceForClassMembers: true },
+		},
+		{
+			code: `class Example { static ['prototype']() {} }`,
+			options: { enforceForClassMembers: true },
+		},
+		{
+			code: `(class { 'method'() {} })`,
+			options: { enforceForClassMembers: true },
+		},
+		{
+			code: `(class { [key]() {} })`,
+			options: { enforceForClassMembers: true },
+		},
+		{
+			code: `(class { ['constructor']() {} })`,
+			options: { enforceForClassMembers: true },
+		},
+		{
+			code: `(class { static ['prototype']() {} })`,
+			options: { enforceForClassMembers: true },
+		},
+		`class Example { 'method'() {} }`,
+		`(class { [key]() {} })`,
+		`class Example { static constructor() {} }`,
+		`class Example { prototype() {} }`,
+		`class Example { get ['constructor']() { return 0; } }`,
+		`class Example { static get ['prototype']() { return 0; } }`,
+		`interface Shape { get ['area'](): number; }`,
+		{
+			code: `class Example { ['method']() {} }`,
+			options: { enforceForClassMembers: false },
+		},
+		{
+			code: `(class { ['method']() {} })`,
+			options: { enforceForClassMembers: false },
+		},
+		{
+			code: `class Example { static ['constructor']() {} }`,
+			options: { enforceForClassMembers: false },
+		},
+		{
+			code: `class Example { ['prototype']() {} }`,
+			options: { enforceForClassMembers: false },
+		},
+		{
+			code: `class Example { ['count'] = 0 }`,
+			options: { enforceForClassMembers: false },
+		},
+		{
+			code: `class Example { get ['value']() { return 0; } }`,
+			options: { enforceForClassMembers: false },
+		},
+		{
+			code: `class Example { count = 0 }`,
+			options: { enforceForClassMembers: true },
+		},
+		{
+			code: `class Example { ['constructor'] = 0 }`,
+			options: { enforceForClassMembers: true },
+		},
+		{
+			code: `class Example { static ['constructor'] = 0 }`,
+			options: { enforceForClassMembers: true },
+		},
+		{
+			code: `class Example { static ['prototype'] = 0 }`,
+			options: { enforceForClassMembers: true },
 		},
 	],
 });
