@@ -1,5 +1,5 @@
-import rule from "./unnecessaryComputedKeys.ts";
 import { ruleTester } from "./ruleTester.ts";
+import rule from "./unnecessaryComputedKeys.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
