@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/comparisons",
-	"version": "0.3.4",
+	"version": "0.3.5",
 	"description": "Comparisons of common lint rules across Flint and other web linters.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -28,25 +28,30 @@
 	"dependencies": {
 		"@flint.fyi/astro": "workspace:^",
 		"@flint.fyi/browser": "workspace:^",
+		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/css": "workspace:^",
+		"@flint.fyi/json": "workspace:^",
 		"@flint.fyi/jsx": "workspace:^",
+		"@flint.fyi/md": "workspace:^",
 		"@flint.fyi/node": "workspace:^",
+		"@flint.fyi/package-json": "workspace:^",
 		"@flint.fyi/performance": "workspace:^",
 		"@flint.fyi/plugin-flint": "workspace:^",
 		"@flint.fyi/spelling": "workspace:^",
+		"@flint.fyi/ts": "workspace:^",
 		"@flint.fyi/vitest": "workspace:^",
-		"flint": "workspace:^",
+		"@flint.fyi/yaml": "workspace:^",
 		"prettier": "3.8.1",
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
-		"@eslint/json": "1.2.0",
+		"@eslint/json": "2.0.0",
 		"@eslint/markdown": "catalog:dev",
 		"@next/eslint-plugin-next": "16.2.6",
 		"@nuxt/eslint-plugin": "1.15.2",
-		"@types/eslint-plugin-jsx-a11y": "^6.10.1",
-		"@types/eslint-plugin-promise": "^7.3.0",
+		"@types/eslint-plugin-jsx-a11y": "6.10.1",
+		"@types/eslint-plugin-promise": "7.3.0",
 		"@typescript-eslint/eslint-plugin": "catalog:dev",
 		"@vitest/eslint-plugin": "catalog:dev",
 		"eslint": "catalog:dev",
@@ -68,10 +73,10 @@
 		"eslint-plugin-unicorn": "64.0.0",
 		"eslint-plugin-vue": "10.9.1",
 		"eslint-plugin-yml": "catalog:dev",
-		"markdownlint": "^0.40.0",
+		"markdownlint": "0.40.0",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev",
-		"vue-eslint-parser": "10.3.0"
+		"vue-eslint-parser": "10.4.1"
 	},
 	"engines": {
 		"node": ">=24.0.0"

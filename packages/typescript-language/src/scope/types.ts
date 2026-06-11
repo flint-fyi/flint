@@ -30,6 +30,7 @@ export interface ScopeManager {
 	findVariable(identifier: AST.Identifier): ScopeVariable | undefined;
 	getDeclaredVariables(node: AST.AnyNode): ScopeVariable[];
 	getReferencesInScope(node: AST.AnyNode): ScopeReference[];
+	getScope(node: AST.AnyNode): Scope;
 	globalScope: Scope;
 }
 

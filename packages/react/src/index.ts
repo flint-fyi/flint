@@ -1,1 +1,1 @@
-export * from "./plugin.ts";
+export { react } from "./plugin.ts";

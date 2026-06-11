@@ -1,15 +1,14 @@
+import type { ValueNode } from "@humanwhocodes/momoa";
 import type { Result } from "package-json-validator";
-import { SyntaxKind } from "typescript";
 
 import type { AnyRule } from "@flint.fyi/core";
 import {
-	getJsonNodeRange,
+	getNodeRange,
+	getNodeText,
 	jsonLanguage,
-	type JsonNode,
-	type JsonSourceFile,
 } from "@flint.fyi/json-language";
 
-import { getPackagePropertiesOfNamesLegacy } from "./getPackagePropertiesOfNames.ts";
+import { getPackagePropertiesOfNames } from "./getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export type PropertyValidator = (value: unknown) => Result;
@@ -22,8 +21,6 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 	const id = `${propertyName}Validity` as const;
 	const propertyNames = [propertyName, ...propertyNameAliases];
 
-	// flint-disable-next-line ts/deprecated
-	// eslint-disable-next-line @typescript-eslint/no-deprecated
 	const rule: AnyRule = ruleCreator.createRule(jsonLanguage, {
 		about: {
 			description: `Enforces that the \`${propertyName}\`${propertyNameAliases.length ? ` (also: ${propertyNameAliases.map((alias) => `\`${alias}\``).join(", ")})` : ""} property is valid.`,
@@ -40,18 +37,14 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 			},
 		},
 		setup(context) {
-			function checkValue(node: JsonNode, sourceFile: JsonSourceFile) {
-				const value: unknown = JSON.parse(node.getText(sourceFile));
+			function checkValue(node: ValueNode, sourceText: string) {
+				const value: unknown = JSON.parse(getNodeText(node, sourceText));
 				const result = propertyValidator(value);
 
-				reportIssues(result, node, sourceFile);
+				reportIssues(result, node);
 			}
 
-			function reportIssues(
-				result: Result,
-				node: JsonNode,
-				sourceFile: JsonSourceFile,
-			) {
+			function reportIssues(result: Result, node: ValueNode) {
 				if (!result.errorMessages.length) {
 					return;
 				}
@@ -63,7 +56,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 								error: issue.message,
 							},
 							message: "validationError",
-							range: getJsonNodeRange(node, sourceFile),
+							range: getNodeRange(node),
 						});
 					}
 				}
@@ -72,31 +65,19 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 					(childResult) => childResult.errorMessages.length,
 				);
 				// If the value is an object, and has child results with issues, then report those too
-				if (
-					node.kind === SyntaxKind.ObjectLiteralExpression &&
-					childrenWithIssues.length
-				) {
+				if (node.type === "Object" && childrenWithIssues.length) {
 					for (const childResult of childrenWithIssues) {
 						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-						const childNode = node.properties[childResult.index]!;
-						reportIssues(
-							childResult,
-							(childNode.kind === SyntaxKind.PropertyAssignment
-								? childNode.initializer
-								: childNode) as JsonNode,
-							sourceFile,
-						);
+						const childNode = node.members[childResult.index]!;
+						reportIssues(childResult, childNode.value);
 					}
 				}
 				// If the value is an array, and has child results with issues, then report those too
-				else if (
-					node.kind === SyntaxKind.ArrayLiteralExpression &&
-					childrenWithIssues.length
-				) {
+				else if (node.type === "Array" && childrenWithIssues.length) {
 					for (const childResult of childrenWithIssues) {
 						const childNode = node.elements[childResult.index];
 						if (childNode) {
-							reportIssues(childResult, childNode as JsonNode, sourceFile);
+							reportIssues(childResult, childNode.value);
 						}
 					}
 				}
@@ -104,14 +85,11 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 
 			return {
 				visitors: {
-					JsonSourceFile: (node) => {
-						const properties = getPackagePropertiesOfNamesLegacy(
-							node,
-							propertyNames,
-						);
+					Document: (node, { sourceText }) => {
+						const properties = getPackagePropertiesOfNames(node, propertyNames);
 						for (const property of Object.values(properties)) {
-							if (property?.initializer) {
-								checkValue(property.initializer, node);
+							if (property?.value) {
+								checkValue(property.value, sourceText);
 							}
 						}
 					},

@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/json",
-	"version": "0.16.3",
+	"version": "0.16.4",
 	"description": "[Experimental] JSON plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/json",
 	"repository": {
@@ -32,7 +32,7 @@
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
-		"@humanwhocodes/momoa": "^3.3.10",
+		"@humanwhocodes/momoa": "3.3.10",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

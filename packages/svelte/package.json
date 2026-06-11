@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/svelte",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "[Experimental] Svelte language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/svelte",
 	"repository": {
@@ -35,7 +35,7 @@
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
-		"svelte": "5.55.2",
+		"svelte": "5.56.2",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

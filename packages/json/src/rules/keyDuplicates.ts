@@ -1,6 +1,6 @@
 import z from "zod/v4";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -54,7 +54,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							seenKeys.add(key);
 							continue;
 						}
-						const range = getJsonNodeRange(property.name);
+						const range = getNodeRange(property.name);
 						context.report({
 							message: "duplicateKey",
 							range,

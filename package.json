@@ -23,6 +23,7 @@
 		"lint:knip": "knip",
 		"lint:knip:prod": "knip --strict",
 		"prepare": "husky",
+		"release": "pnpm build && pnpm -r publish",
 		"start:site": "pnpm --filter=site prebuild && pnpm --filter=site start",
 		"test": "vitest"
 	},
@@ -32,7 +33,7 @@
 		"@changesets/cli": "catalog:dev",
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
 		"@eslint/js": "catalog:dev",
-		"@eslint/json": "1.2.0",
+		"@eslint/json": "2.0.0",
 		"@eslint/markdown": "catalog:dev",
 		"@flint.fyi/node": "workspace:^",
 		"@flint.fyi/performance": "workspace:^",
@@ -40,7 +41,7 @@
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/vitest": "workspace:^",
-		"@ianvs/prettier-plugin-sort-imports": "^4.7.1",
+		"@ianvs/prettier-plugin-sort-imports": "4.7.1",
 		"@types/node": "catalog:dev",
 		"@vitest/coverage-v8": "catalog:dev",
 		"@vitest/eslint-plugin": "catalog:dev",
@@ -70,7 +71,7 @@
 		"typescript-eslint": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
-	"packageManager": "pnpm@10.33.0",
+	"packageManager": "pnpm@10.34.1",
 	"engines": {
 		"node": ">=24.0.0"
 	}

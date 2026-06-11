@@ -12,7 +12,9 @@ const log = debugForFile(import.meta.filename);
 export function createLanguage<
 	AstNodesByName,
 	FileServices extends object = object,
->(languageDefinition: LanguageDefinition<AstNodesByName, FileServices>) {
+>(
+	languageDefinition: LanguageDefinition<AstNodesByName, FileServices>,
+): Language<AstNodesByName, FileServices> {
 	const language: Language<AstNodesByName, FileServices> = {
 		...languageDefinition,
 

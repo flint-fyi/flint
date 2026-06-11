@@ -696,4 +696,58 @@ describe(createScopeManager, () => {
 			innerValue?.references.map((reference) => reference.isWrite),
 		).toEqual([true]);
 	});
+
+	it("getScope returns the scope a boundary node creates", () => {
+		const sourceFile = createSourceFile(`
+			function outer() {
+				function inner() {}
+			}
+		`);
+
+		const scopeManager = createScopeManager(sourceFile);
+		const outer = findNthNode<AST.FunctionDeclaration>(
+			sourceFile,
+			SyntaxKind.FunctionDeclaration,
+			0,
+		);
+		const inner = findNthNode<AST.FunctionDeclaration>(
+			sourceFile,
+			SyntaxKind.FunctionDeclaration,
+			1,
+		);
+
+		// A scope-boundary node maps to the scope it creates, not its parent.
+		expect(scopeManager.getScope(inner).block).toBe(inner);
+		expect(scopeManager.getScope(inner).upper).toBe(
+			scopeManager.getScope(outer),
+		);
+		expect(scopeManager.getScope(outer).upper).toBe(scopeManager.globalScope);
+	});
+
+	it("getScope returns the innermost enclosing scope for a non-boundary node", () => {
+		const sourceFile = createSourceFile(`
+			const outerValue = 1;
+			function fn() {
+				const innerValue = 2;
+				innerValue;
+			}
+		`);
+
+		const scopeManager = createScopeManager(sourceFile);
+		const fn = findFirstNode<AST.FunctionDeclaration>(
+			sourceFile,
+			SyntaxKind.FunctionDeclaration,
+		);
+		// Identifiers in source order: outerValue, fn, innerValue (declaration),
+		// innerValue (reference). The reference is the fourth.
+		const innerReference = findNthNode<AST.Identifier>(
+			sourceFile,
+			SyntaxKind.Identifier,
+			3,
+		);
+
+		const scope = scopeManager.getScope(innerReference);
+		expect(scope.block).toBe(fn);
+		expect(scope.upper).toBe(scopeManager.globalScope);
+	});
 });

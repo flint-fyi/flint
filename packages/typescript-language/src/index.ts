@@ -1,12 +1,20 @@
-export { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
+export {
+	convertTypeScriptDiagnosticToLanguageReport,
+	type TSDiagnostic,
+} from "./convertTypeScriptDiagnosticToLanguageReport.ts";
 export {
 	extractDirectivesFromTypeScriptFile,
 	type ExtractedDirective,
 } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 export { getTSNodeRange } from "./getTSNodeRange.ts";
-export * from "./language.ts";
-export type * from "./nodes.ts";
-export type { TypeScriptNodesByName } from "./nodes.ts";
+export {
+	NodeSyntaxKinds,
+	setVolarCreateFile,
+	throwUnknownLanguageExtension,
+	type TypeScriptFileServices,
+	typescriptLanguage,
+} from "./language.ts";
+export type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 export {
 	createScopeManager,
 	type FunctionWithParameters,
@@ -24,7 +32,10 @@ export { forEachChild } from "./utils/forEachChild.ts";
 export { getDeclarationsIfGlobal } from "./utils/getDeclarationsIfGlobal.ts";
 export { getModifyingReferences } from "./utils/getModifyingReferences.ts";
 export { hasSameTokens } from "./utils/hasSameTokens.ts";
-export { isBuiltinArrayMethod } from "./utils/isBuiltinArrayMethod.ts";
+export {
+	type BuiltInArrayMethodNode,
+	isBuiltinArrayMethod,
+} from "./utils/isBuiltinArrayMethod.ts";
 export { isFunction } from "./utils/isFunction.ts";
 export { isGlobalDeclaration } from "./utils/isGlobalDeclaration.ts";
 export { isGlobalDeclarationOfName } from "./utils/isGlobalDeclarationOfName.ts";

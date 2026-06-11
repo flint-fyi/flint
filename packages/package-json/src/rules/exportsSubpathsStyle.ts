@@ -1,42 +1,39 @@
-import { SyntaxKind } from "typescript";
+import type { ObjectNode } from "@humanwhocodes/momoa";
 import { z } from "zod/v4";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
-import type { AST } from "@flint.fyi/typescript-language";
+import {
+	getNodeRange,
+	getNodeText,
+	jsonLanguage,
+} from "@flint.fyi/json-language";
 
-import { getPackagePropertyOfNameLegacy } from "../getPackagePropertyOfName.ts";
+import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
-function getSingleRootSubpath(node: AST.ObjectLiteralExpression) {
-	if (node.properties.length !== 1) {
+function getSingleRootSubpath(objectNode: ObjectNode) {
+	if (objectNode.members.length !== 1) {
 		return undefined;
 	}
 
-	const [property] = node.properties;
+	const [property] = objectNode.members;
 
-	return property?.kind === SyntaxKind.PropertyAssignment &&
-		property.name.kind === SyntaxKind.StringLiteral &&
-		property.name.text === "." &&
-		(property.initializer.kind === SyntaxKind.StringLiteral ||
-			property.initializer.kind === SyntaxKind.ObjectLiteralExpression)
+	return property?.name.type === "String" &&
+		property.name.value === "." &&
+		(property.value.type === "String" || property.value.type === "Object")
 		? property
 		: undefined;
 }
 
-function isImplicitRootExportsObject(node: AST.ObjectLiteralExpression) {
+function isImplicitRootExportsObject(objectNode: ObjectNode) {
 	return (
-		node.properties.length &&
-		node.properties.every(
+		objectNode.members.length &&
+		objectNode.members.every(
 			(property) =>
-				property.kind === SyntaxKind.PropertyAssignment &&
-				property.name.kind === SyntaxKind.StringLiteral &&
-				!property.name.text.startsWith("."),
+				property.name.type === "String" && !property.name.value.startsWith("."),
 		)
 	);
 }
 
-// flint-disable-next-line ts/deprecated
-// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:
@@ -70,29 +67,27 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { options }) {
-					const property = getPackagePropertyOfNameLegacy(node, "exports");
+				Document(node, { options, sourceText }) {
+					const property = getPackagePropertyOfName(node, "exports");
 
-					if (
-						property?.kind !== SyntaxKind.PropertyAssignment ||
-						property.name.kind !== SyntaxKind.StringLiteral
-					) {
+					if (property?.name.type !== "String") {
 						return;
 					}
 
-					const initializer = property.initializer;
-					const range = getJsonNodeRange(property.name, node);
+					const range = getNodeRange(property.name);
+
+					const propertyValue = property.value;
 
 					if (
 						options.prefer === "explicit" &&
-						(initializer.kind === SyntaxKind.StringLiteral ||
-							(initializer.kind === SyntaxKind.ObjectLiteralExpression &&
-								isImplicitRootExportsObject(initializer)))
+						(propertyValue.type === "String" ||
+							(propertyValue.type === "Object" &&
+								isImplicitRootExportsObject(propertyValue)))
 					) {
 						context.report({
 							fix: {
-								range: getJsonNodeRange(initializer, node),
-								text: `{ ".": ${initializer.getText(node)} }`,
+								range: getNodeRange(propertyValue),
+								text: `{ ".": ${getNodeText(propertyValue, sourceText)} }`,
 							},
 							message: "preferExplicit",
 							range,
@@ -103,11 +98,11 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 					if (
 						options.prefer !== "implicit" ||
-						initializer.kind !== SyntaxKind.ObjectLiteralExpression
+						propertyValue.type !== "Object"
 					) {
 						return;
 					}
-					const rootSubpath = getSingleRootSubpath(initializer);
+					const rootSubpath = getSingleRootSubpath(propertyValue);
 
 					if (!rootSubpath) {
 						return;
@@ -115,8 +110,8 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 					context.report({
 						fix: {
-							range: getJsonNodeRange(initializer, node),
-							text: rootSubpath.initializer.getText(node),
+							range: getNodeRange(propertyValue),
+							text: getNodeText(rootSubpath.value, sourceText),
 						},
 						message: "preferImplicit",
 						range,

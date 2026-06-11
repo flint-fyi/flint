@@ -1,5 +1,14 @@
 # @flint.fyi/plugin-flint
 
+## 0.5.2
+
+### Patch Changes
+
+- [#2826](https://github.com/flint-fyi/flint/pull/2826) [`0929f6b`](https://github.com/flint-fyi/flint/commit/0929f6bc724156f97d67562d4ba3fe0248af24ba) - Detect duplicate test cases declared with `String.raw` code.
+
+- Updated dependencies [[`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f)]:
+  - @flint.fyi/core@0.23.0
+
 ## 0.5.1
 
 ### Patch Changes

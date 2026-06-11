@@ -1,10 +1,11 @@
-import ts from "typescript";
+import type { DocumentNode } from "@humanwhocodes/momoa";
 import { z } from "zod/v4";
 
 import type { AnyRule } from "@flint.fyi/core";
-import { jsonLanguage, type JsonSourceFile } from "@flint.fyi/json-language";
+import { jsonLanguage } from "@flint.fyi/json-language";
 
-import { getPackagePropertyOfNameLegacy } from "./getPackagePropertyOfName.ts";
+import { getPackagePropertyOfName } from "./getPackagePropertyOfName.ts";
+import { isBooleanTrue } from "./isBooleanNode.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export interface CreatePropertyPresenceRuleOptions {
@@ -28,8 +29,6 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 ) {
 	const id = `${propertyName}Presence` as const;
 
-	// flint-disable-next-line ts/deprecated
-	// eslint-disable-next-line @typescript-eslint/no-deprecated
 	const rule: AnyRule = ruleCreator.createRule(jsonLanguage, {
 		about: {
 			description: `Enforces that the \`${propertyName}\` property is present.`,
@@ -57,12 +56,12 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 		setup(context) {
 			return {
 				visitors: {
-					JsonSourceFile: (node, { options }) => {
+					Document: (node, { options }) => {
 						if (options.ignorePrivate && isPrivatePackage(node)) {
 							return;
 						}
 
-						if (!getPackagePropertyOfNameLegacy(node, propertyName)) {
+						if (!getPackagePropertyOfName(node, propertyName)) {
 							context.report({
 								data: { propertyName },
 								message: "missing",
@@ -78,11 +77,8 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 	return { id, rule };
 }
 
-function isPrivatePackage(node: JsonSourceFile) {
-	const privacy = getPackagePropertyOfNameLegacy(node, "private");
+function isPrivatePackage(rootNode: DocumentNode) {
+	const privacy = getPackagePropertyOfName(rootNode, "private");
 
-	return (
-		privacy?.kind === ts.SyntaxKind.PropertyAssignment &&
-		privacy.initializer.kind === ts.SyntaxKind.TrueKeyword
-	);
+	return privacy && isBooleanTrue(privacy.value);
 }

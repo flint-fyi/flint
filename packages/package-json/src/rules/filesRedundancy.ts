@@ -2,7 +2,7 @@
 
 import type { ElementNode, MemberNode } from "@humanwhocodes/momoa";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { removeArrayElement } from "../removeArrayElement.ts";
@@ -140,7 +140,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 						context.report({
 							data: { file },
 							message,
-							range: getJsonNodeRange(element.value),
+							range: getNodeRange(element.value),
 							suggestions: [
 								{
 									id: "removeFilesEntry",

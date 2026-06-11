@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/md",
-	"version": "0.15.3",
+	"version": "0.15.4",
 	"description": "[Experimental] Markdown plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/md",
 	"repository": {

@@ -88,7 +88,6 @@ export interface ConfigUseDefinition {
 
 /**
  * Representation of a config that's been loaded from disk.
- * @internal
  */
 export interface ProcessedConfigDefinition extends ConfigDefinition {
 	/**

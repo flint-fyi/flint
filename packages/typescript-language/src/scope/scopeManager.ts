@@ -241,6 +241,9 @@ export function createScopeManager(sourceFile: AST.SourceFile) {
 		getReferencesInScope(node) {
 			return getReferencesInScope(nodeScopes.get(node) ?? globalScope);
 		},
+		getScope(node) {
+			return nodeScopes.get(node) ?? globalScope;
+		},
 		globalScope,
 	} satisfies ScopeManager;
 }

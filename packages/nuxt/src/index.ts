@@ -1,1 +1,1 @@
-export * from "./plugin.ts";
+export { nuxt } from "./plugin.ts";

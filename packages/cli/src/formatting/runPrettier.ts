@@ -6,7 +6,6 @@ import type {
 	LinterHost,
 	LintResultsMaybeWithChanges,
 } from "@flint.fyi/core";
-import { nullThrows } from "@flint.fyi/utils";
 
 const log = debugForFile(import.meta.filename);
 
@@ -33,10 +32,12 @@ export async function runPrettier(
 	await Promise.all(
 		Array.from(allFilePaths).map(async (filePath) => {
 			// TODO: This duplicates the reading of files in languages themselves.
-			const originalFileContent = nullThrows(
-				await host.readFile(filePath),
-				"Expected linted file to exist.",
-			);
+			const originalFileContent = await host.readFile(filePath);
+
+			if (originalFileContent === undefined) {
+				log("Skipping missing file: %s", filePath);
+				return;
+			}
 
 			const updatedFileContent = await prettier.format(originalFileContent, {
 				filepath: filePath,

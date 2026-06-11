@@ -1,5 +1,18 @@
 # @flint.fyi/comparisons
 
+## 0.3.5
+
+### Patch Changes
+
+- [#2822](https://github.com/flint-fyi/flint/pull/2822) [`dad421e`](https://github.com/flint-fyi/flint/commit/dad421eae979c6d49cccc5bf40aca59791c98773) - Add CSS rule comparisons.
+
+- [#2858](https://github.com/flint-fyi/flint/pull/2858) [`48fab32`](https://github.com/flint-fyi/flint/commit/48fab322ffd18e722f9c4a5c58d93f756c3f6b8e) - Add @eslint-react rules to comparison data.
+
+- Updated dependencies [[`c953313`](https://github.com/flint-fyi/flint/commit/c9533135a4bcf39f9a2fed7a9f70c8a4ac13cf58), [`25712ea`](https://github.com/flint-fyi/flint/commit/25712ea8931cfaf9354a94cb3c0bdb6143c46962), [`6004702`](https://github.com/flint-fyi/flint/commit/6004702ed261879a894e6295a9ac5965198cc68a), [`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f), [`5c848a9`](https://github.com/flint-fyi/flint/commit/5c848a9a72ab2128bccfde8054b7d08bdc5cce95)]:
+  - @flint.fyi/ts@0.20.0
+  - @flint.fyi/core@0.23.0
+  - @flint.fyi/css@0.0.2
+
 ## 0.3.4
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/css-language",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "[Experimental] CSS language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -31,7 +31,7 @@
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
-		"@types/css-tree": "^2.3.11",
+		"@types/css-tree": "2.3.11",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

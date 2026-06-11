@@ -4,7 +4,7 @@ import sortObjectKeys from "sort-object-keys";
 import { sortOrder as defaultOrder } from "sort-package-json";
 import { z } from "zod/v4";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -91,11 +91,11 @@ export default ruleCreator.createRule(jsonLanguage, {
 								property: value,
 							},
 							fix: {
-								range: getJsonNodeRange(node),
+								range: getNodeRange(node),
 								text: fixOrder(),
 							},
 							message: "incorrectOrder",
-							range: getJsonNodeRange(propertyKey),
+							range: getNodeRange(propertyKey),
 						});
 					}
 				},

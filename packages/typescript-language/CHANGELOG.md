@@ -1,5 +1,18 @@
 # @flint.fyi/typescript-language
 
+## 0.18.3
+
+### Patch Changes
+
+- [#2828](https://github.com/flint-fyi/flint/pull/2828) [`ca4d017`](https://github.com/flint-fyi/flint/commit/ca4d017c5faecfe86199c2a08f26ed795f037cb7) - Add a TypeScript scope manager API for resolving declarations and references.
+
+- [#2856](https://github.com/flint-fyi/flint/pull/2856) [`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f) - Add structured source metadata to language reports.
+
+- [#2916](https://github.com/flint-fyi/flint/pull/2916) [`e27a8cd`](https://github.com/flint-fyi/flint/commit/e27a8cd3286587e5ed48843f808c7f39095d41dd) - Add `ScopeManager.getScope(node)` to resolve the innermost scope containing a node.
+
+- Updated dependencies [[`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f)]:
+  - @flint.fyi/core@0.23.0
+
 ## 0.18.2
 
 ### Patch Changes
