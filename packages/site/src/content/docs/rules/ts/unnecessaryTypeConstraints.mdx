@@ -25,9 +25,9 @@ interface ContainerAny<T extends any> {}
 
 interface ContainerUnknown<T extends unknown> {}
 
-type RecordAny<T extends any> = {};
+type EntryAny<T extends any> = {};
 
-type RecordUnknown<T extends unknown> = {};
+type EntryUnknown<T extends unknown> = {};
 
 class StoreAny<T extends any> {
 	getValue<U extends any>() {}
@@ -44,7 +44,7 @@ function createValue<T extends any>() {}
 ```ts
 interface Container<T> {}
 
-type Record<T> = {};
+type Entry<T> = {};
 
 class Store<T> {
 	getValue<U>() {}
