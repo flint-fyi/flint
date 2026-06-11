@@ -1,61 +1,75 @@
 ---
-description: 'Disallow unnecessary constraints on generic types.'
+description: "Remove `extends any` and `extends unknown` constraints that don't change a generic type parameter."
+title: "unnecessaryTypeConstraints"
+topic: "rules"
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
 
-> 🛑 This file is source code, not the primary documentation location! 🛑
->
-> See **https://typescript-eslint.io/rules/no-unnecessary-type-constraint** for documentation.
+<RuleSummary plugin="ts" rule="unnecessaryTypeConstraints" />
 
-Generic type parameters (`<T>`) in TypeScript may be "constrained" with an [`extends` keyword](https://www.typescriptlang.org/docs/handbook/generics.html#generic-constraints).
+Generic type parameters (`<T>`) in TypeScript may be "constrained" with an [`extends` keyword](https://www.typescriptlang.org/docs/handbook/2/generics.html#generic-constraints).
 When no `extends` is provided, type parameters default a constraint to `unknown`.
-It is therefore redundant to `extend` from `any` or `unknown`.
+Constraining a type parameter to `any` or `unknown` therefore changes nothing: every type is already assignable to both.
+Removing the constraint leaves behavior the same and makes the type parameter easier to read.
 
 ## Examples
 
 <Tabs>
-<TabItem value="❌ Incorrect">
+<TabItem label="❌ Incorrect">
 
 ```ts
-interface FooAny<T extends any> {}
+interface ContainerAny<T extends any> {}
 
-interface FooUnknown<T extends unknown> {}
+interface ContainerUnknown<T extends unknown> {}
 
-type BarAny<T extends any> = {};
+type RecordAny<T extends any> = {};
 
-type BarUnknown<T extends unknown> = {};
+type RecordUnknown<T extends unknown> = {};
 
-class BazAny<T extends any> {
-  quxAny<U extends any>() {}
+class StoreAny<T extends any> {
+	getValue<U extends any>() {}
 }
 
-const QuuxAny = <T extends any>() => {};
+const createStore = <T extends any>() => {};
 
-function QuuzAny<T extends any>() {}
+function createValue<T extends any>() {}
 ```
 
 </TabItem>
-<TabItem value="✅ Correct">
+<TabItem label="✅ Correct">
 
 ```ts
-interface Foo<T> {}
+interface Container<T> {}
 
-type Bar<T> = {};
+type Record<T> = {};
 
-class Baz<T> {
-  qux<U>() {}
+class Store<T> {
+	getValue<U>() {}
 }
 
-const Quux = <T>() => {};
+const createStore = <T>() => {};
 
-function Quuz<T>() {}
+function createValue<T>() {}
 ```
 
 </TabItem>
 </Tabs>
 
+## Options
+
+This rule is not configurable.
+
 ## When Not To Use It
 
 If you don't care about the specific styles of your type constraints, or never use them in the first place, then you will not need this rule.
+
+## Further Reading
+
+- [TypeScript Handbook: Generic Constraints](https://www.typescriptlang.org/docs/handbook/2/generics.html#generic-constraints)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryTypeConstraints" />

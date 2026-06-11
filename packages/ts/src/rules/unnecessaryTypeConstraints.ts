@@ -1,118 +1,50 @@
-import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
+import ts from "typescript";
 
-import { AST_NODE_TYPES } from '@typescript-eslint/utils';
-import { extname } from 'node:path';
-import * as ts from 'typescript';
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
-import type { MakeRequired } from '../util';
+import { ruleCreator } from "./ruleCreator.ts";
 
-import { createRule } from '../util';
+export default ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Reports unnecessary constraints on generic type parameters.",
+		id: "unnecessaryTypeConstraints",
+		presets: ["logical", "logicalStrict"],
+	},
+	messages: {
+		unnecessaryConstraint: {
+			primary:
+				"Constraining the generic type `{{ name }}` to `{{ constraint }}` does nothing and is unnecessary.",
+			secondary: [
+				"Generic type parameters are implicitly constrained to `unknown`, and every type is assignable to both `any` and `unknown`.",
+			],
+			suggestions: ["Remove the constraint."],
+		},
+	},
+	setup(context) {
+		return {
+			visitors: {
+				TypeParameter: (node, { sourceFile }) => {
+					if (
+						!node.constraint ||
+						(node.constraint.kind !== ts.SyntaxKind.AnyKeyword &&
+							node.constraint.kind !== ts.SyntaxKind.UnknownKeyword)
+					) {
+						return;
+					}
 
-type TypeParameterWithConstraint = MakeRequired<
-  TSESTree.TSTypeParameter,
-  'constraint'
->;
-
-export default createRule({
-  name: 'no-unnecessary-type-constraint',
-  meta: {
-    type: 'suggestion',
-    docs: {
-      description: 'Disallow unnecessary constraints on generic types',
-      recommended: 'recommended',
-    },
-    hasSuggestions: true,
-    messages: {
-      removeUnnecessaryConstraint:
-        'Remove the unnecessary `{{constraint}}` constraint.',
-      unnecessaryConstraint:
-        'Constraining the generic type `{{name}}` to `{{constraint}}` does nothing and is unnecessary.',
-    },
-    schema: [],
-  },
-  defaultOptions: [],
-  create(context) {
-    // In theory, we could use the type checker for more advanced constraint types...
-    // ...but in practice, these types are rare, and likely not worth requiring type info.
-    // https://github.com/typescript-eslint/typescript-eslint/pull/2516#discussion_r495731858
-    const unnecessaryConstraints = new Map([
-      [AST_NODE_TYPES.TSAnyKeyword, 'any'],
-      [AST_NODE_TYPES.TSUnknownKeyword, 'unknown'],
-    ]);
-
-    function checkRequiresGenericDeclarationDisambiguation(
-      filename: string,
-    ): boolean {
-      const pathExt = extname(filename).toLocaleLowerCase() as ts.Extension;
-      switch (pathExt) {
-        case ts.Extension.Cts:
-        case ts.Extension.Mts:
-        case ts.Extension.Tsx:
-          return true;
-
-        default:
-          return false;
-      }
-    }
-
-    const requiresGenericDeclarationDisambiguation =
-      checkRequiresGenericDeclarationDisambiguation(context.filename);
-
-    const checkNode = (
-      node: TypeParameterWithConstraint,
-      inArrowFunction: boolean,
-    ): void => {
-      const constraint = unnecessaryConstraints.get(node.constraint.type);
-      function shouldAddTrailingComma(): boolean {
-        if (!inArrowFunction || !requiresGenericDeclarationDisambiguation) {
-          return false;
-        }
-        // Only <T>() => {} would need trailing comma
-        return (
-          (node.parent as TSESTree.TSTypeParameterDeclaration).params.length ===
-            1 &&
-          context.sourceCode.getTokensAfter(node)[0].value !== ',' &&
-          !node.default
-        );
-      }
-
-      if (constraint) {
-        context.report({
-          node,
-          messageId: 'unnecessaryConstraint',
-          data: {
-            name: node.name.name,
-            constraint,
-          },
-          suggest: [
-            {
-              messageId: 'removeUnnecessaryConstraint',
-              data: {
-                constraint,
-              },
-              fix(fixer): TSESLint.RuleFix | null {
-                return fixer.replaceTextRange(
-                  [node.name.range[1], node.constraint.range[1]],
-                  shouldAddTrailingComma() ? ',' : '',
-                );
-              },
-            },
-          ],
-        });
-      }
-    };
-
-    return {
-      ':not(ArrowFunctionExpression) > TSTypeParameterDeclaration > TSTypeParameter[constraint]'(
-        node: TypeParameterWithConstraint,
-      ): void {
-        checkNode(node, false);
-      },
-      'ArrowFunctionExpression > TSTypeParameterDeclaration > TSTypeParameter[constraint]'(
-        node: TypeParameterWithConstraint,
-      ): void {
-        checkNode(node, true);
-      },
-    };
-  },
+					context.report({
+						data: {
+							constraint: node.constraint.getText(sourceFile),
+							name: node.name.text,
+						},
+						message: "unnecessaryConstraint",
+						range: {
+							begin: node.name.getEnd(),
+							end: node.constraint.getEnd(),
+						},
+					});
+				},
+			},
+		};
+	},
 });
