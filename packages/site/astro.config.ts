@@ -13,8 +13,8 @@ export default defineConfig({
 		konamiEmojiBlast(),
 		starlight({
 			components: {
-				Footer: "src/components/Footer.astro",
 				Head: "src/components/Head.astro",
+				Pagination: "src/components/Pagination.astro",
 			},
 			customCss: ["src/styles.css"],
 			favicon: "/logo.png",
