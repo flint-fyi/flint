@@ -39,7 +39,7 @@ catalogs:
     prettier-plugin-sentences-per-line: 0.2.0
     prettier-plugin-sh: 0.18.0
     rimraf: 6.1.2
-    tsdown: 0.21.0
+    tsdown: 0.22.2
     typescript: 5.9.3
     typescript-eslint: 8.58.1
     vitest: 4.1.0
