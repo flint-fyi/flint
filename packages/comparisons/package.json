@@ -73,7 +73,7 @@
 		"eslint-plugin-unicorn": "64.0.0",
 		"eslint-plugin-vue": "10.9.1",
 		"eslint-plugin-yml": "catalog:dev",
-		"markdownlint": "0.40.0",
+		"markdownlint": "0.41.0",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev",
 		"vue-eslint-parser": "10.4.1"
