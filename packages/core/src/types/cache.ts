@@ -4,11 +4,10 @@ import type { FileReport } from "./reports.ts";
 export interface CacheStorage {
 	configs: Record<string, number>;
 	files: Record<string, FileCacheStorage>;
+	globalInvalidations: GlobalInvalidation[];
 }
 
 export interface FileCacheImpacts {
-	// TODO: also include dependents. (i.e. global type augmentations)
-	// https://github.com/flint-fyi/flint/issues/116
 	dependencies?: string[];
 }
 
@@ -24,4 +23,9 @@ export interface FileCacheStorage extends FileCacheImpacts {
 	 * Unix milliseconds (`Date.now()`) of the last time the file was linted.
 	 */
 	timestamp: number;
+}
+
+export interface GlobalInvalidation {
+	filePath: string;
+	touchTime: number;
 }
