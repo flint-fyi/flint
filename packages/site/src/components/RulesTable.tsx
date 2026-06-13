@@ -1,4 +1,4 @@
-import { getPluginData, getPluginDataSafe } from "~/data/pluginData";
+import { getPluginDataSafe } from "~/data/pluginData";
 import clsx from "clsx";
 
 import {
