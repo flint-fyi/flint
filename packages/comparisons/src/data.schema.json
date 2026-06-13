@@ -29,6 +29,7 @@
 							"flint",
 							"graphql",
 							"json",
+							"jest",
 							"jsx",
 							"md",
 							"next",
@@ -61,7 +62,8 @@
 							"none",
 							"security",
 							"sorting",
-							"stylistic"
+							"stylistic",
+							"stylisticStrict"
 						]
 					},
 					"status": {
