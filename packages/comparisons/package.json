@@ -48,7 +48,7 @@
 		"@eslint/json": "2.0.0",
 		"@eslint/markdown": "catalog:dev",
 		"@next/eslint-plugin-next": "16.2.6",
-		"@nuxt/eslint-plugin": "1.15.2",
+		"@nuxt/eslint-plugin": "1.16.0",
 		"@types/eslint-plugin-jsx-a11y": "6.10.1",
 		"@types/eslint-plugin-promise": "7.3.0",
 		"@typescript-eslint/eslint-plugin": "catalog:dev",
