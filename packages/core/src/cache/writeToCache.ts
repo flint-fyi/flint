@@ -24,8 +24,11 @@ export async function writeToCache(
 		if (fileResult.invalidatesCache) {
 			globalInvalidations.push({
 				filePath,
+				// Fall back to 0 (not the current time) when the host can't report a
+				// touch time: a fabricated "now" would mask later changes, whereas 0
+				// forces a safe re-validation on the next run.
 				// flint-disable-next-line performance/loopAwaits
-				touchTime: await host.getFileTouchTime(filePath),
+				touchTime: (await host.getFileTouchTime(filePath)) ?? 0,
 			});
 		}
 		for (const dependency of fileResult.dependencies) {

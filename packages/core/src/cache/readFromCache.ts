@@ -81,7 +81,7 @@ export async function readFromCache(
 	} of cache.globalInvalidations) {
 		// flint-disable-next-line performance/loopAwaits
 		const currentTouchTime = await host.getFileTouchTime(filePath);
-		if (currentTouchTime > cachedTouchTime) {
+		if (currentTouchTime == null || currentTouchTime > cachedTouchTime) {
 			log(
 				"Linting all %d file(s) because cache-invalidating file %s has changed (current: %d, cached: %d)",
 				allFilePaths.size,
