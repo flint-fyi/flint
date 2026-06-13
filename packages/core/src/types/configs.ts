@@ -52,7 +52,7 @@ export interface ConfigDefinition {
 	projects?: string[];
 
 	/**
-	 * Specifies the files to be linted alongside the rules and settings to lint with.
+	 * Specifies the files to be linted alongside the rules to lint with.
 	 * @see {@link https://flint.fyi/configuration#use|flint.fyi/configuration#use}
 	 */
 	use: ConfigUseDefinition[];
