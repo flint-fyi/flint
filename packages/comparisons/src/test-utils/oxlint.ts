@@ -1,6 +1,4 @@
 import fs from "node:fs/promises";
-import { createRequire } from "node:module";
-import path from "node:path";
 
 import { comparisons } from "../index.ts";
 
@@ -12,17 +10,17 @@ interface OxlintSchema {
 	};
 }
 
-const require = createRequire(import.meta.dirname);
-
 export function findOxlintRulesInFlint() {
 	return comparisons.flatMap((comparison) => comparison.oxlint ?? []);
 }
 
 export async function getOxlintLintRules() {
-	const oxlintDirectory = path.dirname(require.resolve("oxlint/package.json"));
 	const schema = JSON.parse(
 		await fs.readFile(
-			path.join(oxlintDirectory, "configuration_schema.json"),
+			new URL(
+				"configuration_schema.json",
+				import.meta.resolve("oxlint/package.json"),
+			),
 			"utf8",
 		),
 	) as OxlintSchema;

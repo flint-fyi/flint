@@ -17003,7 +17003,8 @@
 		"flint": {
 			"name": "branchCodeDuplicates",
 			"plugin": "ts",
-			"preset": "stylisticStrict"
+			"preset": "stylistic",
+			"strictness": "strict"
 		},
 		"oxlint": [
 			{
@@ -30965,7 +30966,8 @@
 		"flint": {
 			"name": "mockReturnShorthands",
 			"plugin": "vitest",
-			"preset": "stylisticStrict"
+			"preset": "stylistic",
+			"strictness": "strict"
 		},
 		"oxlint": [
 			{
