@@ -30,11 +30,13 @@
 	"devDependencies": {
 		"@astrojs/check": "catalog:site",
 		"@astrojs/react": "catalog:site",
+		"@expressive-code/core": "catalog:site",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@konami-emoji-blast/astro": "catalog:site",
 		"@types/markdown-it": "catalog:site",
 		"@types/node": "catalog:dev",
 		"@types/react-dom": "catalog:site",
+		"expressive-code": "catalog:site",
 		"expressive-code-twoslash": "catalog:site",
 		"react-dom": "catalog:site",
 		"remark-add-twoslash": "catalog:site",

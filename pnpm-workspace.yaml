@@ -49,16 +49,18 @@ catalogs:
   site:
     "@astrojs/check": 0.9.7
     "@astrojs/react": 5.0.0
-    "@astrojs/starlight": 0.38.1
+    "@astrojs/starlight": 0.40.0
+    "@expressive-code/core": 0.43.1
     "@konami-emoji-blast/astro": 0.3.0
     "@types/markdown-it": 14.1.2
     "@types/react": 19.2.14
     "@types/react-dom": 19.2.3
-    astro: 6.4.4
+    astro: 6.4.5
     astro-og-canvas: 0.11.0
     canvaskit-wasm: 0.41.0
     clsx: 2.1.1
-    expressive-code-twoslash: 0.6.0
+    expressive-code: 0.43.1
+    expressive-code-twoslash: 0.6.1
     konami-emoji-blast: 0.7.0
     markdown-it: 14.2.0
     react: 19.2.4
@@ -95,4 +97,3 @@ peerDependencyRules:
 
 shellEmulator: true
 strictDepBuilds: true
-strictPeerDependencies: true

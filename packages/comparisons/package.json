@@ -44,7 +44,7 @@
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.4.15",
+		"@biomejs/biome": "2.4.16",
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
 		"@eslint/json": "2.0.0",
 		"@eslint/markdown": "catalog:dev",
@@ -73,7 +73,7 @@
 		"eslint-plugin-unicorn": "64.0.0",
 		"eslint-plugin-vue": "10.9.1",
 		"eslint-plugin-yml": "catalog:dev",
-		"markdownlint": "0.40.0",
+		"markdownlint": "0.41.0",
 		"oxlint": "1.69.0",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev",
