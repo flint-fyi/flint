@@ -1,5 +1,3 @@
-import fs from "node:fs/promises";
-
 import { comparisons } from "../index.ts";
 
 interface OxlintSchema {
@@ -15,15 +13,12 @@ export function findOxlintRulesInFlint() {
 }
 
 export async function getOxlintLintRules() {
-	const schema = JSON.parse(
-		await fs.readFile(
-			new URL(
-				"configuration_schema.json",
-				import.meta.resolve("oxlint/package.json"),
-			),
-			"utf8",
-		),
-	) as OxlintSchema;
+	const schema = (await import(
+		new URL(
+			"configuration_schema.json",
+			import.meta.resolve("oxlint/package.json"),
+		).toString()
+	)) as OxlintSchema;
 	const properties = schema.definitions?.DummyRuleMap?.properties;
 
 	if (!properties) {
