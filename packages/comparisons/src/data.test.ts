@@ -18,6 +18,7 @@ import {
 import {
 	findOxlintRulesInFlint,
 	getOxlintLintRules,
+	getOxlintRuleConfigName,
 } from "./test-utils/oxlint.ts";
 
 const excludedESLintRulesByPluginName = new Map([
@@ -136,7 +137,7 @@ describe("data.json", () => {
 		const oxlintRuleNames = await getOxlintLintRules();
 
 		const oxlintRulesCoveredByFlint = findOxlintRulesInFlint()
-			.map((comparison) => comparison.name)
+			.map((comparison) => getOxlintRuleConfigName(comparison.name))
 			.sort();
 
 		expect(oxlintRuleNames).toEqual(oxlintRulesCoveredByFlint);

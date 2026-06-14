@@ -769,7 +769,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-alert",
+				"name": "eslint/no-alert",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-alert.html"
 			}
 		]
@@ -889,7 +889,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-implicit-globals",
+				"name": "eslint/no-implicit-globals",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implicit-globals.html"
 			}
 		]
@@ -1093,7 +1093,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-script-url",
+				"name": "eslint/no-script-url",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-script-url.html"
 			}
 		]
@@ -11786,7 +11786,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-await-in-loop",
+				"name": "eslint/no-await-in-loop",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-await-in-loop.html"
 			}
 		]
@@ -11816,7 +11816,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-loop-func",
+				"name": "eslint/no-loop-func",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-loop-func.html"
 			}
 		]
@@ -15564,7 +15564,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "grouped-accessor-pairs",
+				"name": "eslint/grouped-accessor-pairs",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/grouped-accessor-pairs.html"
 			}
 		]
@@ -15583,7 +15583,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "accessor-pairs",
+				"name": "eslint/accessor-pairs",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/accessor-pairs.html"
 			}
 		]
@@ -15780,7 +15780,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "prefer-rest-params",
+				"name": "eslint/prefer-rest-params",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-rest-params.html"
 			}
 		]
@@ -15812,7 +15812,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-caller",
+				"name": "eslint/no-caller",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-caller.html"
 			}
 		]
@@ -15838,7 +15838,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "array-callback-return",
+				"name": "eslint/array-callback-return",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/array-callback-return.html"
 			}
 		]
@@ -15878,7 +15878,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-array-constructor",
+				"name": "eslint/no-array-constructor",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-array-constructor.html"
 			},
 			{
@@ -16574,7 +16574,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "arrow-body-style",
+				"name": "eslint/arrow-body-style",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/arrow-body-style.html"
 			}
 		]
@@ -16599,7 +16599,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "prefer-arrow-callback",
+				"name": "eslint/prefer-arrow-callback",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-arrow-callback.html"
 			}
 		]
@@ -16664,7 +16664,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "logical-assignment-operators",
+				"name": "eslint/logical-assignment-operators",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/logical-assignment-operators.html"
 			}
 		]
@@ -16727,7 +16727,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "require-await",
+				"name": "eslint/require-await",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/require-await.html"
 			},
 			{
@@ -16763,7 +16763,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-async-promise-executor",
+				"name": "eslint/no-async-promise-executor",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-async-promise-executor.html"
 			}
 		]
@@ -16954,7 +16954,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-bitwise",
+				"name": "eslint/no-bitwise",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-bitwise.html"
 			}
 		]
@@ -16981,7 +16981,7 @@
 		"notes": "Superseded by prettier-plugin-curly",
 		"oxlint": [
 			{
-				"name": "curly",
+				"name": "eslint/curly",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/curly.html"
 			}
 		]
@@ -17094,7 +17094,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "new-cap",
+				"name": "eslint/new-cap",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/new-cap.html"
 			}
 		]
@@ -17126,7 +17126,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-case-declarations",
+				"name": "eslint/no-case-declarations",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-case-declarations.html"
 			}
 		]
@@ -17158,7 +17158,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-duplicate-case",
+				"name": "eslint/no-duplicate-case",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-duplicate-case.html"
 			}
 		]
@@ -17190,7 +17190,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-fallthrough",
+				"name": "eslint/no-fallthrough",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-fallthrough.html"
 			}
 		]
@@ -17236,7 +17236,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "preserve-caught-error",
+				"name": "eslint/preserve-caught-error",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/preserve-caught-error.html"
 			}
 		]
@@ -17283,7 +17283,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-multi-assign",
+				"name": "eslint/no-multi-assign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-multi-assign.html"
 			}
 		]
@@ -17341,7 +17341,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-class-assign",
+				"name": "eslint/no-class-assign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-class-assign.html"
 			}
 		]
@@ -17436,7 +17436,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-dupe-class-members",
+				"name": "eslint/no-dupe-class-members",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-dupe-class-members.html"
 			}
 		]
@@ -17467,7 +17467,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "class-methods-use-this",
+				"name": "eslint/class-methods-use-this",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/class-methods-use-this.html"
 			}
 		]
@@ -17502,7 +17502,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "capitalized-comments",
+				"name": "eslint/capitalized-comments",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/capitalized-comments.html"
 			}
 		]
@@ -17521,7 +17521,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-warning-comments",
+				"name": "eslint/no-warning-comments",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-warning-comments.html"
 			}
 		]
@@ -17585,7 +17585,7 @@
 		"notes": "Superseded by unnecessaryConditions.",
 		"oxlint": [
 			{
-				"name": "no-cond-assign",
+				"name": "eslint/no-cond-assign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-cond-assign.html"
 			}
 		]
@@ -17614,7 +17614,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-negated-condition",
+				"name": "eslint/no-negated-condition",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-negated-condition.html"
 			},
 			{
@@ -17643,7 +17643,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "yoda",
+				"name": "eslint/yoda",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/yoda.html"
 			}
 		]
@@ -17729,7 +17729,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-console",
+				"name": "eslint/no-console",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-console.html"
 			}
 		]
@@ -17761,7 +17761,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-const-assign",
+				"name": "eslint/no-const-assign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-const-assign.html"
 			}
 		]
@@ -17787,7 +17787,7 @@
 		"notes": "Superseded by unnecessaryConditions.",
 		"oxlint": [
 			{
-				"name": "no-constant-binary-expression",
+				"name": "eslint/no-constant-binary-expression",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-constant-binary-expression.html"
 			}
 		]
@@ -17819,7 +17819,7 @@
 		"notes": "Superseded by unnecessaryConditions.",
 		"oxlint": [
 			{
-				"name": "no-constant-condition",
+				"name": "eslint/no-constant-condition",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-constant-condition.html"
 			}
 		]
@@ -17884,7 +17884,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-constructor-return",
+				"name": "eslint/no-constructor-return",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-constructor-return.html"
 			}
 		]
@@ -17916,7 +17916,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "constructor-super",
+				"name": "eslint/constructor-super",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/constructor-super.html"
 			}
 		]
@@ -17947,7 +17947,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "prefer-const",
+				"name": "eslint/prefer-const",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-const.html"
 			}
 		]
@@ -17972,7 +17972,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-continue",
+				"name": "eslint/no-continue",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-continue.html"
 			}
 		]
@@ -18052,7 +18052,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-debugger",
+				"name": "eslint/no-debugger",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-debugger.html"
 			}
 		]
@@ -18091,7 +18091,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "default-case-last",
+				"name": "eslint/default-case-last",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/default-case-last.html"
 			}
 		]
@@ -18116,7 +18116,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "default-case",
+				"name": "eslint/default-case",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/default-case.html"
 			}
 		]
@@ -18217,7 +18217,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "default-param-last",
+				"name": "eslint/default-param-last",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/default-param-last.html"
 			}
 		]
@@ -18309,7 +18309,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "prefer-destructuring",
+				"name": "eslint/prefer-destructuring",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-destructuring.html"
 			}
 		]
@@ -18612,7 +18612,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-dupe-else-if",
+				"name": "eslint/no-dupe-else-if",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-dupe-else-if.html"
 			}
 		]
@@ -18639,7 +18639,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-else-return",
+				"name": "eslint/no-else-return",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-else-return.html"
 			}
 		]
@@ -18671,7 +18671,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-empty",
+				"name": "eslint/no-empty",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-empty.html"
 			}
 		]
@@ -18723,7 +18723,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-empty-pattern",
+				"name": "eslint/no-empty-pattern",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-empty-pattern.html"
 			}
 		]
@@ -18821,7 +18821,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-empty-function",
+				"name": "eslint/no-empty-function",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-empty-function.html"
 			}
 		]
@@ -18919,7 +18919,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-empty-static-block",
+				"name": "eslint/no-empty-static-block",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-empty-static-block.html"
 			}
 		]
@@ -19153,7 +19153,7 @@
 		"notes": "Default similar to ESLint's \"{ \"null\": \"ignore\" }\" to true",
 		"oxlint": [
 			{
-				"name": "eqeqeq",
+				"name": "eslint/eqeqeq",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/eqeqeq.html"
 			}
 		]
@@ -19274,7 +19274,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-eval",
+				"name": "eslint/no-eval",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-eval.html"
 			}
 		]
@@ -19324,7 +19324,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-ex-assign",
+				"name": "eslint/no-ex-assign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-ex-assign.html"
 			}
 		]
@@ -19382,7 +19382,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "prefer-exponentiation-operator",
+				"name": "eslint/prefer-exponentiation-operator",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-exponentiation-operator.html"
 			}
 		]
@@ -19656,7 +19656,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-unsafe-finally",
+				"name": "eslint/no-unsafe-finally",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unsafe-finally.html"
 			}
 		]
@@ -19713,7 +19713,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "for-direction",
+				"name": "eslint/for-direction",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/for-direction.html"
 			}
 		]
@@ -19770,7 +19770,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "guard-for-in",
+				"name": "eslint/guard-for-in",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/guard-for-in.html"
 			}
 		]
@@ -19796,7 +19796,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "prefer-spread",
+				"name": "eslint/prefer-spread",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-spread.html"
 			}
 		]
@@ -19828,7 +19828,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-func-assign",
+				"name": "eslint/no-func-assign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-func-assign.html"
 			}
 		]
@@ -19848,7 +19848,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-useless-call",
+				"name": "eslint/no-useless-call",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-call.html"
 			}
 		]
@@ -19867,7 +19867,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "func-style",
+				"name": "eslint/func-style",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/func-style.html"
 			}
 		]
@@ -19906,7 +19906,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "func-name-matching",
+				"name": "eslint/func-name-matching",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/func-name-matching.html"
 			}
 		]
@@ -19925,7 +19925,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "func-names",
+				"name": "eslint/func-names",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/func-names.html"
 			}
 		]
@@ -19951,7 +19951,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-new-func",
+				"name": "eslint/no-new-func",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-new-func.html"
 			}
 		]
@@ -20044,7 +20044,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "require-yield",
+				"name": "eslint/require-yield",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/require-yield.html"
 			}
 		]
@@ -20076,7 +20076,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "getter-return",
+				"name": "eslint/getter-return",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/getter-return.html"
 			}
 		]
@@ -20108,7 +20108,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-global-assign",
+				"name": "eslint/no-global-assign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-global-assign.html"
 			}
 		]
@@ -20140,7 +20140,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-obj-calls",
+				"name": "eslint/no-obj-calls",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-obj-calls.html"
 			}
 		]
@@ -20228,7 +20228,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "id-match",
+				"name": "eslint/id-match",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/id-match.html"
 			}
 		]
@@ -20291,7 +20291,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-implicit-coercion",
+				"name": "eslint/no-implicit-coercion",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implicit-coercion.html"
 			}
 		]
@@ -20321,7 +20321,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-implied-eval",
+				"name": "eslint/no-implied-eval",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implied-eval.html"
 			},
 			{
@@ -20390,7 +20390,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-import-assign",
+				"name": "eslint/no-import-assign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-import-assign.html"
 			}
 		]
@@ -20499,7 +20499,7 @@
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-duplicates.html"
 			},
 			{
-				"name": "no-duplicate-imports",
+				"name": "eslint/no-duplicate-imports",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-duplicate-imports.html"
 			}
 		]
@@ -20729,7 +20729,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "sort-imports",
+				"name": "eslint/sort-imports",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/sort-imports.html"
 			}
 		]
@@ -20821,7 +20821,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-inline-comments",
+				"name": "eslint/no-inline-comments",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-inline-comments.html"
 			}
 		]
@@ -20852,7 +20852,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-inner-declarations",
+				"name": "eslint/no-inner-declarations",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-inner-declarations.html"
 			}
 		]
@@ -20996,7 +20996,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-irregular-whitespace",
+				"name": "eslint/no-irregular-whitespace",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-irregular-whitespace.html"
 			}
 		]
@@ -21028,7 +21028,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "use-isnan",
+				"name": "eslint/use-isnan",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/use-isnan.html"
 			}
 		]
@@ -22200,7 +22200,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-labels",
+				"name": "eslint/no-labels",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-labels.html"
 			}
 		]
@@ -22225,7 +22225,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-label-var",
+				"name": "eslint/no-label-var",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-label-var.html"
 			}
 		]
@@ -22265,7 +22265,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-unmodified-loop-condition",
+				"name": "eslint/no-unmodified-loop-condition",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unmodified-loop-condition.html"
 			}
 		]
@@ -22295,7 +22295,7 @@
 		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
-				"name": "no-magic-numbers",
+				"name": "eslint/no-magic-numbers",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-magic-numbers.html"
 			}
 		]
@@ -22398,7 +22398,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "max-classes-per-file",
+				"name": "eslint/max-classes-per-file",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-classes-per-file.html"
 			}
 		]
@@ -22423,7 +22423,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "complexity",
+				"name": "eslint/complexity",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/complexity.html"
 			}
 		]
@@ -22442,7 +22442,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "max-depth",
+				"name": "eslint/max-depth",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-depth.html"
 			}
 		]
@@ -22461,7 +22461,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "id-length",
+				"name": "eslint/id-length",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/id-length.html"
 			}
 		]
@@ -22486,7 +22486,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "max-lines",
+				"name": "eslint/max-lines",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-lines.html"
 			}
 		]
@@ -22511,7 +22511,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "max-lines-per-function",
+				"name": "eslint/max-lines-per-function",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-lines-per-function.html"
 			}
 		]
@@ -22536,7 +22536,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "max-nested-callbacks",
+				"name": "eslint/max-nested-callbacks",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-nested-callbacks.html"
 			}
 		]
@@ -22566,7 +22566,7 @@
 		"notes": "Overly opinionated.",
 		"oxlint": [
 			{
-				"name": "max-params",
+				"name": "eslint/max-params",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-params.html"
 			}
 		]
@@ -22585,7 +22585,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "max-statements",
+				"name": "eslint/max-statements",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-statements.html"
 			}
 		]
@@ -22911,7 +22911,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-unexpected-multiline",
+				"name": "eslint/no-unexpected-multiline",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unexpected-multiline.html"
 			}
 		]
@@ -22936,7 +22936,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-multi-str",
+				"name": "eslint/no-multi-str",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-multi-str.html"
 			}
 		]
@@ -23171,7 +23171,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-extend-native",
+				"name": "eslint/no-extend-native",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-extend-native.html"
 			}
 		]
@@ -23237,7 +23237,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-compare-neg-zero",
+				"name": "eslint/no-compare-neg-zero",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-compare-neg-zero.html"
 			}
 		]
@@ -23271,7 +23271,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-lonely-if",
+				"name": "eslint/no-lonely-if",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-lonely-if.html"
 			},
 			{
@@ -23334,7 +23334,7 @@
 		"notes": "oxc/missing-throw is a subset",
 		"oxlint": [
 			{
-				"name": "no-new",
+				"name": "eslint/no-new",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-new.html"
 			},
 			{
@@ -23370,7 +23370,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-new-native-nonconstructor",
+				"name": "eslint/no-new-native-nonconstructor",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-new-native-nonconstructor.html"
 			}
 		]
@@ -23546,7 +23546,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-nonoctal-decimal-escape",
+				"name": "eslint/no-nonoctal-decimal-escape",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-nonoctal-decimal-escape.html"
 			}
 		]
@@ -23571,7 +23571,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-eq-null",
+				"name": "eslint/no-eq-null",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-eq-null.html"
 			}
 		]
@@ -23782,7 +23782,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "prefer-numeric-literals",
+				"name": "eslint/prefer-numeric-literals",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-numeric-literals.html"
 			}
 		]
@@ -23812,7 +23812,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-loss-of-precision",
+				"name": "eslint/no-loss-of-precision",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-loss-of-precision.html"
 			}
 		]
@@ -23865,7 +23865,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "prefer-object-spread",
+				"name": "eslint/prefer-object-spread",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-object-spread.html"
 			}
 		]
@@ -23885,7 +23885,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-object-constructor",
+				"name": "eslint/no-object-constructor",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-object-constructor.html"
 			}
 		]
@@ -23951,7 +23951,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "prefer-object-has-own",
+				"name": "eslint/prefer-object-has-own",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-object-has-own.html"
 			}
 		]
@@ -23977,7 +23977,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-dupe-keys",
+				"name": "eslint/no-dupe-keys",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-dupe-keys.html"
 			}
 		]
@@ -24016,7 +24016,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-proto",
+				"name": "eslint/no-proto",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-proto.html"
 			}
 		]
@@ -24048,7 +24048,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-prototype-builtins",
+				"name": "eslint/no-prototype-builtins",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-prototype-builtins.html"
 			}
 		]
@@ -24074,7 +24074,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "object-shorthand",
+				"name": "eslint/object-shorthand",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/object-shorthand.html"
 			}
 		]
@@ -24097,7 +24097,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "sort-keys",
+				"name": "eslint/sort-keys",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/sort-keys.html"
 			}
 		]
@@ -24216,7 +24216,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "operator-assignment",
+				"name": "eslint/operator-assignment",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/operator-assignment.html"
 			}
 		]
@@ -24360,7 +24360,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-param-reassign",
+				"name": "eslint/no-param-reassign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-param-reassign.html"
 			}
 		]
@@ -24404,7 +24404,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "radix",
+				"name": "eslint/radix",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/radix.html"
 			}
 		]
@@ -24454,7 +24454,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-plusplus",
+				"name": "eslint/no-plusplus",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-plusplus.html"
 			}
 		]
@@ -24638,7 +24638,7 @@
 		"notes": "Superseded by awaitThenable.",
 		"oxlint": [
 			{
-				"name": "no-promise-executor-return",
+				"name": "eslint/no-promise-executor-return",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-promise-executor-return.html"
 			}
 		]
@@ -24843,7 +24843,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "prefer-promise-reject-errors",
+				"name": "eslint/prefer-promise-reject-errors",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-promise-reject-errors.html"
 			},
 			{
@@ -24950,7 +24950,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-iterator",
+				"name": "eslint/no-iterator",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-iterator.html"
 			}
 		]
@@ -25214,7 +25214,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-regex-spaces",
+				"name": "eslint/no-regex-spaces",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-regex-spaces.html"
 			}
 		]
@@ -25278,7 +25278,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-control-regex",
+				"name": "eslint/no-control-regex",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-control-regex.html"
 			}
 		]
@@ -25318,7 +25318,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-div-regex",
+				"name": "eslint/no-div-regex",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-div-regex.html"
 			}
 		]
@@ -25423,7 +25423,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-empty-character-class",
+				"name": "eslint/no-empty-character-class",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-empty-character-class.html"
 			}
 		]
@@ -25663,7 +25663,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "prefer-regex-literals",
+				"name": "eslint/prefer-regex-literals",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-regex-literals.html"
 			}
 		]
@@ -25765,7 +25765,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-misleading-character-class",
+				"name": "eslint/no-misleading-character-class",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-misleading-character-class.html"
 			}
 		]
@@ -25809,7 +25809,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "prefer-named-capture-group",
+				"name": "eslint/prefer-named-capture-group",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-named-capture-group.html"
 			}
 		]
@@ -26123,7 +26123,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "require-unicode-regexp",
+				"name": "eslint/require-unicode-regexp",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/require-unicode-regexp.html"
 			}
 		]
@@ -26194,7 +26194,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-useless-backreference",
+				"name": "eslint/no-useless-backreference",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-backreference.html"
 			}
 		]
@@ -26463,7 +26463,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-invalid-regexp",
+				"name": "eslint/no-invalid-regexp",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-invalid-regexp.html"
 			}
 		]
@@ -26615,7 +26615,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-restricted-exports",
+				"name": "eslint/no-restricted-exports",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-restricted-exports.html"
 			}
 		]
@@ -26639,7 +26639,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-restricted-globals",
+				"name": "eslint/no-restricted-globals",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-restricted-globals.html"
 			}
 		]
@@ -26693,7 +26693,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-restricted-imports",
+				"name": "eslint/no-restricted-imports",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-restricted-imports.html"
 			}
 		]
@@ -26724,7 +26724,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-restricted-properties",
+				"name": "eslint/no-restricted-properties",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-restricted-properties.html"
 			}
 		]
@@ -26803,7 +26803,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-return-assign",
+				"name": "eslint/no-return-assign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-return-assign.html"
 			}
 		]
@@ -26908,7 +26908,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-self-assign",
+				"name": "eslint/no-self-assign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-self-assign.html"
 			}
 		]
@@ -26934,7 +26934,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-sequences",
+				"name": "eslint/no-sequences",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-sequences.html"
 			}
 		]
@@ -27020,7 +27020,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-setter-return",
+				"name": "eslint/no-setter-return",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-setter-return.html"
 			}
 		]
@@ -27052,7 +27052,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-shadow-restricted-names",
+				"name": "eslint/no-shadow-restricted-names",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-shadow-restricted-names.html"
 			}
 		]
@@ -27081,7 +27081,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-shadow",
+				"name": "eslint/no-shadow",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-shadow.html"
 			}
 		]
@@ -27231,7 +27231,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-sparse-arrays",
+				"name": "eslint/no-sparse-arrays",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-sparse-arrays.html"
 			}
 		]
@@ -27369,7 +27369,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "prefer-template",
+				"name": "eslint/prefer-template",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-template.html"
 			}
 		]
@@ -27515,7 +27515,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-template-curly-in-string",
+				"name": "eslint/no-template-curly-in-string",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-template-curly-in-string.html"
 			}
 		]
@@ -27664,7 +27664,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "symbol-description",
+				"name": "eslint/symbol-description",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/symbol-description.html"
 			}
 		]
@@ -27758,7 +27758,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-nested-ternary",
+				"name": "eslint/no-nested-ternary",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-nested-ternary.html"
 			},
 			{
@@ -27787,7 +27787,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-ternary",
+				"name": "eslint/no-ternary",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-ternary.html"
 			}
 		]
@@ -27887,7 +27887,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-this-before-super",
+				"name": "eslint/no-this-before-super",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-this-before-super.html"
 			}
 		]
@@ -27957,7 +27957,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-throw-literal",
+				"name": "eslint/no-throw-literal",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-throw-literal.html"
 			},
 			{
@@ -28295,7 +28295,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "valid-typeof",
+				"name": "eslint/valid-typeof",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/valid-typeof.html"
 			}
 		]
@@ -28341,7 +28341,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-unassigned-vars",
+				"name": "eslint/no-unassigned-vars",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unassigned-vars.html"
 			}
 		]
@@ -28404,7 +28404,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-undefined",
+				"name": "eslint/no-undefined",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-undefined.html"
 			}
 		]
@@ -28451,7 +28451,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-undef",
+				"name": "eslint/no-undef",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-undef.html"
 			}
 		]
@@ -28470,7 +28470,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-underscore-dangle",
+				"name": "eslint/no-underscore-dangle",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-underscore-dangle.html"
 			}
 		]
@@ -28490,7 +28490,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "unicode-bom",
+				"name": "eslint/unicode-bom",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/unicode-bom.html"
 			}
 		]
@@ -28549,7 +28549,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-extra-bind",
+				"name": "eslint/no-extra-bind",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-extra-bind.html"
 			}
 		]
@@ -28575,7 +28575,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-lone-blocks",
+				"name": "eslint/no-lone-blocks",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-lone-blocks.html"
 			}
 		]
@@ -28607,7 +28607,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-extra-boolean-cast",
+				"name": "eslint/no-extra-boolean-cast",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-extra-boolean-cast.html"
 			}
 		]
@@ -28633,7 +28633,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-useless-catch",
+				"name": "eslint/no-useless-catch",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-catch.html"
 			}
 		]
@@ -28684,7 +28684,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-self-compare",
+				"name": "eslint/no-self-compare",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-self-compare.html"
 			},
 			{
@@ -28717,7 +28717,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-useless-computed-key",
+				"name": "eslint/no-useless-computed-key",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-computed-key.html"
 			}
 		]
@@ -28743,7 +28743,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-useless-concat",
+				"name": "eslint/no-useless-concat",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-concat.html"
 			}
 		]
@@ -28797,7 +28797,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-useless-constructor",
+				"name": "eslint/no-useless-constructor",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-constructor.html"
 			}
 		]
@@ -28840,7 +28840,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-useless-escape",
+				"name": "eslint/no-useless-escape",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-escape.html"
 			}
 		]
@@ -28884,7 +28884,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-extra-label",
+				"name": "eslint/no-extra-label",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-extra-label.html"
 			}
 		]
@@ -29014,7 +29014,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-useless-rename",
+				"name": "eslint/no-useless-rename",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-rename.html"
 			}
 		]
@@ -29039,7 +29039,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-useless-return",
+				"name": "eslint/no-useless-return",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-return.html"
 			}
 		]
@@ -29131,7 +29131,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-unneeded-ternary",
+				"name": "eslint/no-unneeded-ternary",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unneeded-ternary.html"
 			},
 			{
@@ -29356,7 +29356,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-unreachable",
+				"name": "eslint/no-unreachable",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unreachable.html"
 			}
 		]
@@ -29463,7 +29463,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-unsafe-negation",
+				"name": "eslint/no-unsafe-negation",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unsafe-negation.html"
 			}
 		]
@@ -29488,7 +29488,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-unsafe-optional-chaining",
+				"name": "eslint/no-unsafe-optional-chaining",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unsafe-optional-chaining.html"
 			}
 		]
@@ -29606,7 +29606,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-unused-expressions",
+				"name": "eslint/no-unused-expressions",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unused-expressions.html"
 			}
 		]
@@ -29650,7 +29650,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-unused-labels",
+				"name": "eslint/no-unused-labels",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unused-labels.html"
 			}
 		]
@@ -29704,7 +29704,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-unused-private-class-members",
+				"name": "eslint/no-unused-private-class-members",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unused-private-class-members.html"
 			}
 		]
@@ -29748,7 +29748,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-useless-assignment",
+				"name": "eslint/no-useless-assignment",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-assignment.html"
 			}
 		]
@@ -29787,7 +29787,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-unused-vars",
+				"name": "eslint/no-unused-vars",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unused-vars.html"
 			}
 		]
@@ -29835,7 +29835,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-use-before-define",
+				"name": "eslint/no-use-before-define",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-use-before-define.html"
 			}
 		]
@@ -29898,7 +29898,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-var",
+				"name": "eslint/no-var",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-var.html"
 			}
 		]
@@ -29917,7 +29917,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "block-scoped-var",
+				"name": "eslint/block-scoped-var",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/block-scoped-var.html"
 			}
 		]
@@ -29940,7 +29940,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "init-declarations",
+				"name": "eslint/init-declarations",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/init-declarations.html"
 			}
 		]
@@ -29972,7 +29972,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "sort-vars",
+				"name": "eslint/sort-vars",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/sort-vars.html"
 			}
 		]
@@ -29998,7 +29998,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-delete-var",
+				"name": "eslint/no-delete-var",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-delete-var.html"
 			}
 		]
@@ -30033,7 +30033,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-redeclare",
+				"name": "eslint/no-redeclare",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-redeclare.html"
 			}
 		]
@@ -30058,7 +30058,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "vars-on-top",
+				"name": "eslint/vars-on-top",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/vars-on-top.html"
 			}
 		]
@@ -30097,7 +30097,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-void",
+				"name": "eslint/no-void",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-void.html"
 			}
 		]
@@ -30161,7 +30161,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-with",
+				"name": "eslint/no-with",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-with.html"
 			}
 		]
@@ -30187,7 +30187,7 @@
 		},
 		"oxlint": [
 			{
-				"name": "no-new-wrappers",
+				"name": "eslint/no-new-wrappers",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-new-wrappers.html"
 			}
 		]

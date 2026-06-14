@@ -34,3 +34,9 @@ export async function getOxlintLintRules() {
 
 	return Object.keys(properties).sort();
 }
+
+export function getOxlintRuleConfigName(ruleName: string) {
+	return ruleName.startsWith("eslint/")
+		? ruleName.slice("eslint/".length)
+		: ruleName;
+}
