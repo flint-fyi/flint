@@ -1,13 +1,9 @@
-import { SyntaxKind } from "typescript";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
-
-import { getPackagePropertiesOfNamesLegacy } from "../getPackagePropertiesOfNames.ts";
-import { removeObjectPropertyLegacy } from "../removeObjectProperty.ts";
+import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
+import { removeObjectProperty } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
-// flint-disable-next-line ts/deprecated
-// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:
@@ -28,45 +24,38 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node) {
-					const { name, publishConfig } = getPackagePropertiesOfNamesLegacy(
-						node,
-						["name", "publishConfig"],
-					);
+				Document(node) {
+					const { name, publishConfig } = getPackagePropertiesOfNames(node, [
+						"name",
+						"publishConfig",
+					]);
 
 					if (
-						name?.kind !== SyntaxKind.PropertyAssignment ||
-						name.initializer.kind !== SyntaxKind.StringLiteral ||
-						name.initializer.text.startsWith("@")
+						name?.value.type !== "String" ||
+						name.value.value.startsWith("@")
 					) {
 						return;
 					}
 
-					if (
-						publishConfig?.kind !== SyntaxKind.PropertyAssignment ||
-						publishConfig.initializer.kind !==
-							SyntaxKind.ObjectLiteralExpression
-					) {
+					if (publishConfig?.value.type !== "Object") {
 						return;
 					}
 
-					const publishConfigValue = publishConfig.initializer;
+					const publishConfigValue = publishConfig.value;
 
-					for (const property of publishConfigValue.properties) {
+					for (const property of publishConfigValue.members) {
 						if (
-							property.kind === SyntaxKind.PropertyAssignment &&
-							property.name.kind === SyntaxKind.StringLiteral &&
-							property.name.text === "access"
+							property.name.type === "String" &&
+							property.name.value === "access"
 						) {
-							const { range, text } = removeObjectPropertyLegacy(
-								node,
+							const { range, text } = removeObjectProperty(
 								property,
 								publishConfigValue,
 							);
 
 							context.report({
 								message: "redundantAccess",
-								range: getJsonNodeRange(property.name, node),
+								range: getNodeRange(property.name),
 								suggestions: [
 									{
 										id: "removeAccess",

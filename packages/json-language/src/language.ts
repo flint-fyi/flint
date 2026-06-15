@@ -1,23 +1,20 @@
-import * as ts from "typescript";
+import {
+	parse,
+	traverse,
+	type AnyNode,
+	type DocumentNode,
+	type Node,
+} from "@humanwhocodes/momoa";
 
 import { createLanguage, type Language } from "@flint.fyi/core";
 
-import type {
-	JsonNodeName,
-	JsonNodesByName,
-	JsonNodeVisitors,
-	JsonSourceFile,
-} from "./nodes.ts";
+import type { JsonNodeVisitors } from "./nodes.ts";
 
 export interface JsonFileServices {
-	sourceFile: JsonSourceFile;
+	root: DocumentNode;
+	sourceText: string;
 }
 
-const kindOverrides = new Map<ts.SyntaxKind, JsonNodeName>([
-	[ts.SyntaxKind.SourceFile, "JsonSourceFile"],
-] as const);
-
-/** @deprecated Use the new `momoa` based language exported from `@flint.fyi/json-language/new` instead */
 export const jsonLanguage: Language<JsonNodeVisitors, JsonFileServices> =
 	createLanguage<JsonNodeVisitors, JsonFileServices>({
 		about: {
@@ -26,14 +23,14 @@ export const jsonLanguage: Language<JsonNodeVisitors, JsonFileServices> =
 		createFileFactory: () => {
 			return {
 				createFile: (data) => {
-					const sourceFile = ts.parseJsonText(
-						data.filePathAbsolute,
-						data.sourceText,
-					) as JsonSourceFile;
+					const root = parse(data.sourceText, {
+						mode: "json",
+						ranges: true,
+					});
 
 					return {
 						about: data,
-						services: { sourceFile },
+						services: { root, sourceText: data.sourceText },
 					};
 				},
 			};
@@ -46,20 +43,16 @@ export const jsonLanguage: Language<JsonNodeVisitors, JsonFileServices> =
 			const { visitors } = runtime;
 			const visitorServices = { options, ...file.services };
 
-			const visit = (node: ts.Node) => {
-				const key =
-					kindOverrides.get(node.kind) ??
-					(ts.SyntaxKind[node.kind] as keyof JsonNodesByName);
-
-				// @ts-expect-error -- The node parameter type shouldn't be `never`...?
-				visitors[key]?.(node, visitorServices);
-
-				node.forEachChild(visit);
-
-				// @ts-expect-error -- The node parameter type shouldn't be `never`...?
-				visitors[`${key}:exit`]?.(node, visitorServices);
-			};
-
-			visit(file.services.sourceFile);
+			traverse(file.services.root, {
+				enter: (node: Node) =>
+					// @ts-expect-error -- The intersection DocumentNode & ArrayNode &...was reduced to `never` because property `type` has conflicting types in some constituents.
+					visitors[node.type as AnyNode["type"]]?.(node, visitorServices),
+				exit: (node: Node) =>
+					visitors[`${node.type as AnyNode["type"]}:exit`]?.(
+						// @ts-expect-error -- Argument of type `Node` is not assignable to parameter of type `undefined`
+						node,
+						visitorServices,
+					),
+			});
 		},
 	});

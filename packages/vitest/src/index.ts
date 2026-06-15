@@ -1,1 +1,1 @@
-export * from "./plugin.ts";
+export { vitest } from "./plugin.ts";

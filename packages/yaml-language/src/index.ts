@@ -1,2 +1,2 @@
-export * from "./language.ts";
-export type * from "./nodes.ts";
+export { type YamlFileServices, yamlLanguage } from "./language.ts";
+export type { YamlNodesByName, YamlNodeVisitors } from "./nodes.ts";

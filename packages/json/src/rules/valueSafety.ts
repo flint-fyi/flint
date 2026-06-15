@@ -1,6 +1,6 @@
 import type { AnyNode, NumberNode, StringNode } from "@humanwhocodes/momoa";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language/new";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -93,7 +93,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 	},
 	setup(context) {
 		function checkNumber(node: NumberNode, sourceText: string) {
-			const range = getJsonNodeRange(node);
+			const range = getNodeRange(node);
 			const originalText = sourceText.slice(range.begin, range.end);
 			const value = Number(originalText);
 
@@ -141,7 +141,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 		function checkString(node: StringNode) {
 			if (hasLoneSurrogate(node.value)) {
-				const range = getJsonNodeRange(node);
+				const range = getNodeRange(node);
 				context.report({
 					message: "loneSurrogate",
 					range,

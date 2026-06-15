@@ -1,2 +1,2 @@
-export * from "./language.ts";
-export type * from "./types.ts";
+export { textLanguage } from "./language.ts";
+export type { TextFileServices, TextNodes } from "./types.ts";

@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/json-language",
-	"version": "0.16.3",
+	"version": "0.17.0",
 	"description": "[Experimental] JSON language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -16,8 +16,7 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts",
-		"./new": "./src/new/index.ts"
+		".": "./src/index.ts"
 	},
 	"files": [
 		"lib/",
@@ -28,9 +27,7 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"@flint.fyi/typescript-language": "workspace:^",
-		"@humanwhocodes/momoa": "^3.3.10",
-		"typescript": "^5.9.0 || ^6.0.0"
+		"@humanwhocodes/momoa": "^3.3.10"
 	},
 	"devDependencies": {
 		"tsdown": "catalog:dev",
@@ -42,8 +39,7 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js",
-			"./new": "./lib/new/index.js"
+			".": "./lib/index.js"
 		}
 	}
 }

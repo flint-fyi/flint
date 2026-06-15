@@ -30,7 +30,6 @@
 	"devDependencies": {
 		"@astrojs/check": "catalog:site",
 		"@astrojs/react": "catalog:site",
-		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@konami-emoji-blast/astro": "catalog:site",
 		"@types/markdown-it": "catalog:site",

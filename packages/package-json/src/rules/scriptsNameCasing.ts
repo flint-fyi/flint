@@ -1,16 +1,13 @@
 import { kebabCase } from "change-case";
-import ts from "typescript";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
-import { getPackagePropertyOfNameLegacy } from "../getPackagePropertyOfName.ts";
+import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 // See https://docs.npmjs.com/cli/v11/using-npm/scripts
 const builtinCamelCaseScripts = new Set(["prepublishOnly"]);
 
-// flint-disable-next-line ts/deprecated
-// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description: "Enforce that names for scripts properties are in kebab case.",
@@ -31,25 +28,21 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node) {
-					const property = getPackagePropertyOfNameLegacy(node, "scripts");
-					if (
-						property?.kind !== ts.SyntaxKind.PropertyAssignment ||
-						property.initializer.kind !== ts.SyntaxKind.ObjectLiteralExpression
-					) {
+				Document(node) {
+					const property = getPackagePropertyOfName(node, "scripts");
+					if (property?.value.type !== "Object") {
 						return;
 					}
 
-					for (const scriptsProperty of property.initializer.properties) {
+					for (const scriptsProperty of property.value.members) {
 						if (
-							scriptsProperty.kind !== ts.SyntaxKind.PropertyAssignment ||
-							scriptsProperty.name.kind !== ts.SyntaxKind.StringLiteral ||
-							builtinCamelCaseScripts.has(scriptsProperty.name.text)
+							scriptsProperty.name.type !== "String" ||
+							builtinCamelCaseScripts.has(scriptsProperty.name.value)
 						) {
 							continue;
 						}
 
-						const propertyName = scriptsProperty.name.text;
+						const propertyName = scriptsProperty.name.value;
 						const kebabCasePropertyName = propertyName
 							.split(":")
 							.map((segment) => kebabCase(segment))
@@ -59,7 +52,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							continue;
 						}
 
-						const range = getJsonNodeRange(scriptsProperty.name, node);
+						const range = getNodeRange(scriptsProperty.name);
 
 						context.report({
 							message: "invalidCase",

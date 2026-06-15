@@ -1,7 +1,7 @@
 /**
  * @see https://github.com/sindresorhus/type-fest/blob/main/source/simplify.d.ts
  */
-export type Simplify<T> = {
+type Simplify<T> = {
 	[K in keyof T]: T[K];
 };
 

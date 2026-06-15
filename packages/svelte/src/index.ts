@@ -1,1 +1,1 @@
-export * from "./plugin.ts";
+export { svelte } from "./plugin.ts";

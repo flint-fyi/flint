@@ -1,15 +1,12 @@
-import { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
-import { getPackagePropertiesLegacy } from "../getPackageProperties.ts";
-import { getPackagePropertyOfNameLegacy } from "../getPackagePropertyOfName.ts";
-import { removeObjectPropertyLegacy } from "../removeObjectProperty.ts";
+import { getPackageProperties } from "../getPackageProperties.ts";
+import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { removeObjectProperty } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
-// flint-disable-next-line ts/deprecated
-// eslint-disable-next-line @typescript-eslint/no-deprecated
 export default ruleCreator.createRule(jsonLanguage, {
 	about: {
 		description:
@@ -36,25 +33,19 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { options }) {
-					const properties = getPackagePropertiesLegacy(node);
-					const root = node.statements[0];
+				Document(node, { options }) {
+					const properties = getPackageProperties(node);
+					const root = node.body;
 
-					if (
-						!properties ||
-						root?.expression.kind !== SyntaxKind.ObjectLiteralExpression
-					) {
+					if (!properties || root.type !== "Object") {
 						return;
 					}
 
-					const privateProperty = getPackagePropertyOfNameLegacy(
-						node,
-						"private",
-					);
+					const privateProperty = getPackagePropertyOfName(node, "private");
 
 					if (
-						privateProperty?.kind !== SyntaxKind.PropertyAssignment ||
-						privateProperty.initializer.kind !== SyntaxKind.TrueKeyword
+						privateProperty?.value.type !== "Boolean" ||
+						!privateProperty.value.value
 					) {
 						return;
 					}
@@ -63,25 +54,20 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 					for (const property of properties) {
 						if (
-							property.kind !== SyntaxKind.PropertyAssignment ||
-							property.name.kind !== SyntaxKind.StringLiteral ||
-							!blockedProperties.has(property.name.text)
+							property.name.type !== "String" ||
+							!blockedProperties.has(property.name.value)
 						) {
 							continue;
 						}
 
-						const { range, text } = removeObjectPropertyLegacy(
-							node,
-							property,
-							root.expression,
-						);
+						const { range, text } = removeObjectProperty(property, root);
 
 						context.report({
 							data: {
-								propertyName: property.name.text,
+								propertyName: property.name.value,
 							},
 							message: "unnecessaryProperty",
-							range: getJsonNodeRange(property.name, node),
+							range: getNodeRange(property.name),
 							suggestions: [
 								{
 									id: "removePrivatePackageProperty",

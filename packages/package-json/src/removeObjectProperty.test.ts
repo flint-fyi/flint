@@ -30,8 +30,8 @@ describe(removeObjectProperty, () => {
 
 		expect(result).toBeDefined();
 		expect(result.text).toBe("");
-		expect(result.range.begin).toEqual(firstProperty.value.range![0]);
-		expect(result.range.end).toEqual(secondProperty.value.range![0]);
+		expect(result.range.begin).toEqual(firstProperty.range![0]);
+		expect(result.range.end).toEqual(secondProperty.range![0]);
 	});
 
 	it("removes a middle property from a multi-property object", () => {
@@ -45,8 +45,8 @@ describe(removeObjectProperty, () => {
 
 		expect(result).toBeDefined();
 		expect(result.text).toBe("");
-		expect(result.range.begin).toEqual(middleProperty.value.range![0]);
-		expect(result.range.end).toEqual(nextProperty.value.range![0]);
+		expect(result.range.begin).toEqual(middleProperty.range![0]);
+		expect(result.range.end).toEqual(nextProperty.range![0]);
 	});
 
 	it("removes the last property from a multi-property object", () => {
@@ -60,8 +60,8 @@ describe(removeObjectProperty, () => {
 
 		expect(result).toBeDefined();
 		expect(result.text).toBe("");
-		expect(result.range.begin).toEqual(previousProperty.value.range![1]);
-		expect(result.range.end).toEqual(lastProperty.value.range![1]);
+		expect(result.range.begin).toEqual(previousProperty.range![1]);
+		expect(result.range.end).toEqual(lastProperty.range![1]);
 	});
 
 	it("removes the last property from a two-property object", () => {
@@ -75,8 +75,8 @@ describe(removeObjectProperty, () => {
 
 		expect(result).toBeDefined();
 		expect(result.text).toBe("");
-		expect(result.range.begin).toEqual(previousProperty.value.range![1]);
-		expect(result.range.end).toEqual(lastProperty.value.range![1]);
+		expect(result.range.begin).toEqual(previousProperty.range![1]);
+		expect(result.range.end).toEqual(lastProperty.range![1]);
 	});
 
 	it("throws an error when property is not in the object", () => {
@@ -107,8 +107,8 @@ describe(removeObjectProperty, () => {
 
 		expect(result).toBeDefined();
 		expect(result.text).toBe("");
-		expect(result.range.begin).toEqual(firstProperty.value.range![0]);
-		expect(result.range.end).toEqual(objectNode.members[1]!.value.range![0]);
+		expect(result.range.begin).toEqual(firstProperty.range![0]);
+		expect(result.range.end).toEqual(objectNode.members[1]!.range![0]);
 	});
 
 	it("handles string property values", () => {
@@ -172,7 +172,7 @@ describe(removeObjectProperty, () => {
 
 		expect(result).toBeDefined();
 		expect(result.text).toBe("");
-		expect(result.range.begin).toEqual(firstProperty.value.range![0]);
+		expect(result.range.begin).toEqual(firstProperty.range![0]);
 	});
 
 	it("handles array property values", () => {
@@ -198,8 +198,8 @@ describe(removeObjectProperty, () => {
 
 		expect(result).toBeDefined();
 		expect(result.text).toBe("");
-		expect(result.range.begin).toEqual(firstProperty.value.range![0]);
-		expect(result.range.end).toEqual(secondProperty.value.range![0]);
+		expect(result.range.begin).toEqual(firstProperty.range![0]);
+		expect(result.range.end).toEqual(secondProperty.range![0]);
 	});
 
 	it("removes first property from object with multiline formatting", () => {
