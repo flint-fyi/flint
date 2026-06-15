@@ -10,15 +10,11 @@ export const githubPresenterFactory: PresenterFactory = {
 	},
 	initialize() {
 		return {
-			header: [],
 			*renderFile({ file, reports }) {
 				for (const report of reports) {
 					yield formatAnnotation(file, report);
 					yield "\n";
 				}
-			},
-			*summarize() {
-				// Annotations are self-describing, so no trailing summary is emitted.
 			},
 		};
 	},

@@ -6,9 +6,9 @@ import type {
 } from "@flint.fyi/core";
 
 export interface Presenter {
-	header: string[];
+	header?: string[];
 	renderFile(context: PresenterFileContext): RenderGenerator;
-	summarize(context: PresenterSummarizeContext): RenderGenerator;
+	summarize?(context: PresenterSummarizeContext): RenderGenerator;
 }
 
 export interface PresenterAbout {
