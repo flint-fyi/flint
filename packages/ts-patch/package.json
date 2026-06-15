@@ -26,8 +26,7 @@
 		"./install-patch-hooks": "./src/install-patch-hooks.ts"
 	},
 	"files": [
-		"lib/",
-		"!lib/**/*.map"
+		"lib/"
 	],
 	"devDependencies": {
 		"tsdown": "catalog:dev",

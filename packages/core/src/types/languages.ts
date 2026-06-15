@@ -107,6 +107,7 @@ export interface LanguageDefinition<
 
 export interface LanguageFileCacheImpacts {
 	dependencies: string[];
+	invalidatesCache: boolean;
 }
 
 /**

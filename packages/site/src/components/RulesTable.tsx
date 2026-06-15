@@ -1,4 +1,4 @@
-import { getPluginData } from "~/data/pluginData";
+import { getPluginDataSafe } from "~/data/pluginData";
 import clsx from "clsx";
 
 import {
@@ -13,11 +13,23 @@ import { InlineMarkdown } from "./InlineMarkdown";
 import styles from "./RulesTable.module.css";
 
 function renderFlintPlugin(flint: FlintRuleReference) {
-	return (
+	const pluginData = getPluginDataSafe(flint.plugin);
+
+	if (!pluginData && flint.status !== "skipped") {
+		throw new Error(
+			`Unknown plugin ${flint.plugin} for non-skipped Flint rule ${flint.plugin}/${flint.name}.`,
+		);
+	}
+
+	return pluginData ? (
 		<td className={styles.linkCell}>
 			<a href={`/rules/${flint.plugin}`}>
-				{getPluginData(flint.plugin).plugin.name.split(" ")[0]}
+				{pluginData.plugin.name.split(" ")[0]}
 			</a>
+		</td>
+	) : (
+		<td className={styles.unknownPlugin}>
+			{flint.plugin && `(${flint.plugin})`}
 		</td>
 	);
 }

@@ -5,7 +5,7 @@ import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 import omitEmpty from "omit-empty";
 
-import type { CacheStorage } from "../types/cache.ts";
+import type { CacheStorage, GlobalInvalidation } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
 import type { LintResults } from "../types/linting.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
@@ -21,8 +21,16 @@ export async function writeToCache(
 ) {
 	const fileDependents = new CachedFactory(() => new Set<string>());
 	const timestamp = Date.now();
+	const globalInvalidations: GlobalInvalidation[] = [];
 
 	for (const [filePath, fileResult] of lintResults.filesResults) {
+		if (fileResult.invalidatesCache) {
+			globalInvalidations.push({
+				filePath,
+				// flint-disable-next-line performance/loopAwaits
+				touchTime: await host.getFileTouchTime(filePath),
+			});
+		}
 		for (const dependency of fileResult.dependencies) {
 			fileDependents.get(dependency).add(filePath);
 		}
@@ -54,6 +62,7 @@ export async function writeToCache(
 					),
 				)),
 		},
+		globalInvalidations,
 	};
 
 	const cacheFilePath = getCacheFilePath(cacheLocation);

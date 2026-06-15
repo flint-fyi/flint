@@ -1,13 +1,11 @@
 ---
-import Default from "@astrojs/starlight/components/Footer.astro";
+import Default from "@astrojs/starlight/components/Pagination.astro";
 import type { StarlightRouteData } from "@astrojs/starlight/route-data";
 
 export type Props = StarlightRouteData;
 ---
 
-<Default {...Astro.props}>
-	<slot />
-</Default>
+<Default {...Astro.props} />
 
 <div class="credits">
 	Made with ❤️‍🔥 around the world by

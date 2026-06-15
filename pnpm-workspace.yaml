@@ -22,7 +22,7 @@ catalogs:
     eslint: 10.4.1
     eslint-plugin-jsdoc: 63.0.2
     eslint-plugin-jsonc: 3.2.0
-    eslint-plugin-n: 18.0.0
+    eslint-plugin-n: 18.1.0
     eslint-plugin-package-json: 1.3.0
     eslint-plugin-perfectionist: 5.9.0
     eslint-plugin-regexp: 3.1.0
@@ -39,7 +39,7 @@ catalogs:
     prettier-plugin-sentences-per-line: 0.2.0
     prettier-plugin-sh: 0.18.0
     rimraf: 6.1.2
-    tsdown: 0.21.0
+    tsdown: 0.22.2
     typescript: 5.9.3
     typescript-eslint: 8.58.1
     vitest: 4.1.0
@@ -49,23 +49,25 @@ catalogs:
   site:
     "@astrojs/check": 0.9.7
     "@astrojs/react": 5.0.0
-    "@astrojs/starlight": 0.38.1
+    "@astrojs/starlight": 0.40.0
+    "@expressive-code/core": 0.43.1
     "@konami-emoji-blast/astro": 0.3.0
     "@types/markdown-it": 14.1.2
     "@types/react": 19.2.14
     "@types/react-dom": 19.2.3
-    astro: 6.4.4
+    astro: 6.4.5
     astro-og-canvas: 0.11.0
     canvaskit-wasm: 0.41.0
     clsx: 2.1.1
-    expressive-code-twoslash: 0.6.0
+    expressive-code: 0.43.1
+    expressive-code-twoslash: 0.6.1
     konami-emoji-blast: 0.7.0
     markdown-it: 14.2.0
     react: 19.2.4
     react-dom: 19.2.4
     remark-add-twoslash: 0.0.1
     remark-custom-heading-id: 2.0.0
-    sharp: 0.34.5
+    sharp: 0.35.0
     starlight-blog: 0.26.1
     starlight-links-validator: 0.24.0
     starlight-package-managers: 0.12.0
@@ -95,4 +97,3 @@ peerDependencyRules:
 
 shellEmulator: true
 strictDepBuilds: true
-strictPeerDependencies: true
