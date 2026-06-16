@@ -3,6 +3,10 @@ import { describe, expect, it } from "vitest";
 
 import { comparisons, getComparisonId } from "./index.ts";
 import {
+	findBiomeRulesInFlint,
+	getBiomeLintRules,
+} from "./test-utils/biome.ts";
+import {
 	findESLintRulesInCore,
 	findESLintRulesInPlugin,
 	pluginsRulesByName,
@@ -100,6 +104,16 @@ describe("data.json", () => {
 				expect(pluginESLintRuleNamesCoveredByFlint).toEqual(pluginRuleNames);
 			},
 		);
+	});
+
+	it("includes all Biome rules", () => {
+		const biomeRuleNames = getBiomeLintRules();
+
+		const biomeRulesCoveredByFlint = Array.from(
+			new Set(findBiomeRulesInFlint().map((comparison) => comparison.name)),
+		).sort();
+
+		expect(biomeRuleNames).toEqual(biomeRulesCoveredByFlint);
 	});
 
 	it("includes all Markdownlint rules", async () => {

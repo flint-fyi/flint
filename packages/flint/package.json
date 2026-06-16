@@ -23,7 +23,6 @@
 	},
 	"files": [
 		"lib/",
-		"!lib/**/*.map",
 		"!lib/bin/**"
 	],
 	"scripts": {

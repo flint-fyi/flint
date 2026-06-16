@@ -75,11 +75,8 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/ts": {
-			project: [
-				"src/**/*.ts!",
-				"!src/typescript.d.ts",
-				"!src/rules/ruleTester.ts!",
-			],
+			entry: ["src/typescript.d.ts"],
+			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/vitest": {
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
