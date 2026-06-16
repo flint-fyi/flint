@@ -25,9 +25,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const handler: (...args: unknown[]) => unknown;
 <button onMouseOver={handler} />
 `,
 			snapshot: `
+declare const handler: (...args: unknown[]) => unknown;
 <button onMouseOver={handler} />
         ~~~~~~~~~~~
         \`onMouseOver\` is missing an accompanying \`onFocus\` for keyboard accessibility.
@@ -39,6 +41,8 @@ ruleTester.describe(rule, {
 		`<div onMouseOut={() => void 0} onBlur={() => void 0} />`,
 		`<div onFocus={() => void 0} />`,
 		`<div />`,
-		`<button onClick={handler} />`,
+		`
+declare const handler: (...args: unknown[]) => unknown;
+<button onClick={handler} />`,
 	],
 });

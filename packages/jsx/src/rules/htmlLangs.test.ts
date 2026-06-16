@@ -37,10 +37,14 @@ function App() { return <html><body>Content</body></html>; }
 	valid: [
 		`const el = <html lang="en"></html>;`,
 		`const el = <html lang="en-US"></html>;`,
-		`const el = <html lang={language}></html>;`,
+		`
+declare const language: string;
+const el = <html lang={language}></html>;`,
 		`const el = <html lang="fr" className="root"></html>;`,
 		`const el = <div></div>;`,
-		`const el = <Html></Html>;`,
+		`
+declare const Html: (props: Record<string, unknown>) => unknown;
+const el = <Html></Html>;`,
 		`const el = <html LANG="en"></html>;`,
 	],
 });

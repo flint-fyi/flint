@@ -57,11 +57,11 @@ element.getElementsByClassName("test");
 		},
 		{
 			code: `
-const element = document.querySelector("#root");
+const element = document.querySelector("#root")!;
 element.getElementsByTagName("span");
 `,
 			snapshot: `
-const element = document.querySelector("#root");
+const element = document.querySelector("#root")!;
 element.getElementsByTagName("span");
         ~~~~~~~~~~~~~~~~~~~~
         Prefer \`querySelectorAll()\` over the legacy \`getElementsByTagName()\` method.
@@ -72,8 +72,14 @@ element.getElementsByTagName("span");
 		`document.querySelector("#foo");`,
 		`document.querySelectorAll(".bar");`,
 		`document.querySelectorAll("div");`,
-		`element.querySelector("span");`,
-		`element.querySelectorAll(".test");`,
+		`
+			declare const element: Element;
+			element.querySelector("span");
+		`,
+		`
+			declare const element: Element;
+			element.querySelectorAll(".test");
+		`,
 		`
             const myObject = {
                 getElementById(id: string) {

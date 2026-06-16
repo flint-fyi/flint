@@ -47,7 +47,10 @@ self.confirm("...");
 	valid: [
 		`console.log("...");`,
 		`window.console.log("x");`,
-		`other.alert();`,
+		`
+			declare const other: { alert(): void };
+			other.alert();
+		`,
 		`
 			declare function alert(message: string): void;
 			alert("...");

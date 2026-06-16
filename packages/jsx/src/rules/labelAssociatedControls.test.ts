@@ -87,7 +87,9 @@ ruleTester.describe(rule, {
 	valid: [
 		`<label htmlFor="name">Name</label>`,
 		`<label htmlFor="name" />`,
-		`<label htmlFor={nameId}>Name</label>`,
+		`
+declare const nameId: string;
+<label htmlFor={nameId}>Name</label>`,
 		`<label>Name <input type="text" /></label>`,
 		`<label><input type="text" /></label>`,
 		`<label><select></select></label>`,

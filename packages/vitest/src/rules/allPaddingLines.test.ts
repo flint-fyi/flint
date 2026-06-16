@@ -25,7 +25,7 @@ afterEach(() => {});
 		},
 		{
 			code: `
-const value = 'cherry';
+const value: string = 'cherry';
 beforeEach(() => {});
 it('does something?', () => {
   switch (value) {
@@ -34,8 +34,8 @@ it('does something?', () => {
       break;
     case 'banana':
     case 'cherry':
-      const value = 1;
-      expect(value).toBe(1);
+      const count = 1;
+      expect(count).toBe(1);
       console.log('...');
       // Expected output: "..."
       break;
@@ -45,7 +45,7 @@ it('does something?', () => {
 });
 `,
 			output: `
-const value = 'cherry';
+const value: string = 'cherry';
 
 beforeEach(() => {});
 
@@ -57,9 +57,9 @@ it('does something?', () => {
       break;
     case 'banana':
     case 'cherry':
-      const value = 1;
+      const count = 1;
 
-      expect(value).toBe(1);
+      expect(count).toBe(1);
 
       console.log('...');
       // Expected output: "..."
@@ -70,7 +70,7 @@ it('does something?', () => {
 });
 `,
 			snapshot: `
-const value = 'cherry';
+const value: string = 'cherry';
 beforeEach(() => {});
 ~~~~~~~~~~
 This statement should be separated from a neighboring \`beforeEach\` block by a blank line.
@@ -85,8 +85,8 @@ This statement should be separated from a neighboring \`test\` block by a blank 
       This statement should be separated from a neighboring \`expect\` block by a blank line.
     case 'banana':
     case 'cherry':
-      const value = 1;
-      expect(value).toBe(1);
+      const count = 1;
+      expect(count).toBe(1);
       ~~~~~~
       This statement should be separated from a neighboring \`expect\` block by a blank line.
       console.log('...');

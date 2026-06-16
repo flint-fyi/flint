@@ -5,9 +5,11 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const someID: string;
 <div aria-activedescendant={someID} />
 `,
 			snapshot: `
+declare const someID: string;
 <div aria-activedescendant={someID} />
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      This element with \`aria-activedescendant\` is missing a \`tabIndex\` attribute to manage focus state.
@@ -25,17 +27,37 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		`<CustomComponent />`,
-		`<CustomComponent aria-activedescendant={someID} />`,
-		`<CustomComponent aria-activedescendant={someID} tabIndex={0} />`,
+		`
+declare const CustomComponent: (props: Record<string, unknown>) => unknown;
+<CustomComponent />`,
+		`
+declare const CustomComponent: (props: Record<string, unknown>) => unknown;
+declare const someID: string;
+<CustomComponent aria-activedescendant={someID} />`,
+		`
+declare const CustomComponent: (props: Record<string, unknown>) => unknown;
+declare const someID: string;
+<CustomComponent aria-activedescendant={someID} tabIndex={0} />`,
 		`<div />`,
 		`<input />`,
 		`<div tabIndex={0} />`,
-		`<div aria-activedescendant={someID} tabIndex={0} />`,
-		`<div aria-activedescendant={someID} tabIndex="0" />`,
-		`<div aria-activedescendant={someID} tabIndex={1} />`,
-		`<div aria-activedescendant={someID} tabIndex={-1} />`,
-		`<input aria-activedescendant={someID} />`,
-		`<button aria-activedescendant={someID} />`,
+		`
+declare const someID: string;
+<div aria-activedescendant={someID} tabIndex={0} />`,
+		`
+declare const someID: string;
+<div aria-activedescendant={someID} tabIndex="0" />`,
+		`
+declare const someID: string;
+<div aria-activedescendant={someID} tabIndex={1} />`,
+		`
+declare const someID: string;
+<div aria-activedescendant={someID} tabIndex={-1} />`,
+		`
+declare const someID: string;
+<input aria-activedescendant={someID} />`,
+		`
+declare const someID: string;
+<button aria-activedescendant={someID} />`,
 	],
 });

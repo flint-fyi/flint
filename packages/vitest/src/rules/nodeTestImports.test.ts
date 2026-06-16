@@ -31,7 +31,12 @@ import * as test from "node:test";
 		},
 	],
 	valid: [
-		`import { describe } from "other";`,
+		{
+			code: `import { describe } from "other";`,
+			files: {
+				"node_modules/other/index.d.ts": `export const describe: () => void;`,
+			},
+		},
 		`import { describe } from "vitest";`,
 		`import * as vitest from "vitest";`,
 	],

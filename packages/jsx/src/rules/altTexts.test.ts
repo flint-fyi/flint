@@ -57,7 +57,9 @@ ruleTester.describe(rule, {
 	valid: [
 		`<img src="foo.jpg" alt="A foo" />`,
 		`<img src="foo.jpg" alt="" />`,
-		`<img src="foo.jpg" alt={altTexts} />`,
+		`
+declare const altTexts: string;
+<img src="foo.jpg" alt={altTexts} />`,
 		`<img src="foo.jpg" aria-label="Foo" />`,
 		`<area alt="Click here" href="#" />`,
 		`<input type="image" alt="Submit" />`,

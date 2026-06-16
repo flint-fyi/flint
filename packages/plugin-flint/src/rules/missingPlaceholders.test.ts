@@ -5,78 +5,93 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
-interface RuleContext { report(descriptor: { messageId: string; data?: Record<string, string> }): void; };
-declare const ruleCreator: RuleCreator;
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { ruleCreator } from "../ruleCreator";
 
-ruleCreator.createRule(_, {
+ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Test rule",
+		id: "testRule",
+	},
 	messages: {
 		messagesId: {
 			primary: "This is a message with a {{placeholder1}}",
 			secondary: [
 				"This message also has a {{placeholder2}}",
 			],
-			suggestions: [""]
-		}
+			suggestions: [],
+		},
 	},
-	setup(context: RuleContext) {
+	setup(context) {
 		context.report({
 			message: "messagesId",
+			range: { begin: 0, end: 0 },
 		});
-	}
+		return undefined;
+	},
 });
 `,
 			snapshot: `
-interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
-interface RuleContext { report(descriptor: { messageId: string; data?: Record<string, string> }): void; };
-declare const ruleCreator: RuleCreator;
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { ruleCreator } from "../ruleCreator";
 
-ruleCreator.createRule(_, {
+ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Test rule",
+		id: "testRule",
+	},
 	messages: {
 		messagesId: {
 			primary: "This is a message with a {{placeholder1}}",
 			secondary: [
 				"This message also has a {{placeholder2}}",
 			],
-			suggestions: [""]
-		}
+			suggestions: [],
+		},
 	},
-	setup(context: RuleContext) {
+	setup(context) {
 		context.report({
 			message: "messagesId",
 			         ~~~~~~~~~~~~
 			         Message template requires placeholders in the data object.
+			range: { begin: 0, end: 0 },
 		});
-	}
+		return undefined;
+	},
 });
 `,
 		},
 	],
 	valid: [
 		`
-interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
-interface RuleContext { report(descriptor: { messageId: string; data?: Record<string, string> }): void; };
-declare const ruleCreator: RuleCreator;
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { ruleCreator } from "../ruleCreator";
 
-ruleCreator.createRule(_, {
+ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Test rule",
+		id: "testRule",
+	},
 	messages: {
 		messagesId: {
 			primary: "This is a message with a {{placeholder1}}",
 			secondary: [
 				"This message also has a {{placeholder2}}",
 			],
-			suggestions: [""]
-		}
+			suggestions: [],
+		},
 	},
-	setup(context: RuleContext) {
+	setup(context) {
 		context.report({
 			data: {
 				placeholder1: "value1",
 				placeholder2: "value2",
 			},
 			message: "messagesId",
+			range: { begin: 0, end: 0 },
 		});
-	}
+		return undefined;
+	},
 });
 `,
 	],

@@ -40,7 +40,11 @@ This anchor element is missing accessible content.
 		`<a aria-label="Link" />`,
 		`<a aria-labelledby="label-id" />`,
 		`<a title="Link title" />`,
-		`<a>{variable}</a>`,
-		`<CustomElement></CustomElement>`,
+		`
+declare const variable: unknown;
+<a>{variable}</a>`,
+		`
+declare const CustomElement: (props: Record<string, unknown>) => unknown;
+<CustomElement></CustomElement>`,
 	],
 });

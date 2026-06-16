@@ -63,6 +63,8 @@ ruleTester.describe(rule, {
 		`<div tabIndex={-1} />`,
 		`<div role="button" tabIndex="0" />`,
 		`<article tabIndex="-1" />`,
-		`<CustomElement tabIndex={0} />`,
+		`
+declare const CustomElement: (props: Record<string, unknown>) => unknown;
+<CustomElement tabIndex={0} />`,
 	],
 });

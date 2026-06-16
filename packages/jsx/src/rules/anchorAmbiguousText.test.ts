@@ -90,6 +90,8 @@ ruleTester.describe(rule, {
 		`<a href="/contact">Contact Information</a>`,
 		`<a href="/pricing">See Pricing Details</a>`,
 		`<a href="/download">Download the App</a>`,
-		`<CustomLink>click here</CustomLink>`,
+		`
+declare const CustomLink: (props: Record<string, unknown>) => unknown;
+<CustomLink>click here</CustomLink>`,
 	],
 });
