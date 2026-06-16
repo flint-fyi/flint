@@ -58,7 +58,7 @@ export interface ScopeReference {
 
 export interface ScopeVariable {
 	declarations: AST.Identifier[];
-	defs: ScopeDefinition[];
+	definitions: ScopeDefinition[];
 	name: string;
 	references: ScopeReference[];
 	scope: Scope;

@@ -720,20 +720,20 @@ describe(createScopeManager, () => {
 		const global = (name: string) =>
 			scopeManager.globalScope.variables.find((v) => v.name === name);
 
-		expect(global("imported")?.defs[0]?.kind).toBe("import");
-		expect(global("declared")?.defs[0]?.kind).toBe("variable");
-		expect(global("Cls")?.defs[0]?.kind).toBe("class");
-		expect(global("fn")?.defs[0]?.kind).toBe("function");
+		expect(global("imported")?.definitions[0]?.kind).toBe("import");
+		expect(global("declared")?.definitions[0]?.kind).toBe("variable");
+		expect(global("Cls")?.definitions[0]?.kind).toBe("class");
+		expect(global("fn")?.definitions[0]?.kind).toBe("function");
 
 		const param = scopeManager
 			.getDeclaredVariables(fn)
 			.find((v) => v.name === "param");
-		expect(param?.defs[0]?.kind).toBe("parameter");
+		expect(param?.definitions[0]?.kind).toBe("parameter");
 
 		const caught = scopeManager
 			.getDeclaredVariables(catchClause)
 			.find((v) => v.name === "caught");
-		expect(caught?.defs[0]?.kind).toBe("catch");
+		expect(caught?.definitions[0]?.kind).toBe("catch");
 	});
 
 	it("getScope returns the scope a boundary node creates", () => {

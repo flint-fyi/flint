@@ -116,7 +116,7 @@ export function createScopeManager(sourceFile: AST.SourceFile) {
 		if (!variable) {
 			variable = {
 				declarations: [],
-				defs: [],
+				definitions: [],
 				name: identifier.text,
 				references: [],
 				scope,
@@ -126,7 +126,7 @@ export function createScopeManager(sourceFile: AST.SourceFile) {
 		}
 
 		variable.declarations.push(identifier);
-		variable.defs.push({ identifier, kind, node });
+		variable.definitions.push({ identifier, kind, node });
 		declarationVariablesByIdentifier.set(identifier, variable);
 
 		const declaredVariables = declaredVariablesByNode.get(node) ?? [];
