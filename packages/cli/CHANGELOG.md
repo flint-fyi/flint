@@ -1,5 +1,11 @@
 # @flint/cli
 
+## 0.19.4
+
+### Patch Changes
+
+- [#2974](https://github.com/flint-fyi/flint/pull/2974) [`640c509`](https://github.com/flint-fyi/flint/commit/640c5098a9a66979140399416977bcfb2d179f9a) - Add `--skip-formatting` option, which gives users the ability to opt out of formatting after linting completes.
+
 ## 0.19.3
 
 ### Patch Changes

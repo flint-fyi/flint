@@ -1,5 +1,11 @@
 # @flint/core
 
+## 0.23.1
+
+### Patch Changes
+
+- [#2840](https://github.com/flint-fyi/flint/pull/2840) [`56a5127`](https://github.com/flint-fyi/flint/commit/56a512773f6cae75f9f91135c9ac4a29291661c7) - Route file discovery and cache I/O through the linter host.
+
 ## 0.23.0
 
 ### Minor Changes
