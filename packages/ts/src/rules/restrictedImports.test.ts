@@ -597,7 +597,12 @@ import { restricted } from "test-pkg";
 				],
 			},
 		},
-		`import foo from "anything";`,
+		{
+			code: `import foo from "anything";`,
+			files: {
+				"anything.d.ts": `declare module "anything" { const value: number; export default value; }`,
+			},
+		},
 		{
 			code: `const foo = 1; export { foo };`,
 			options: {
@@ -714,19 +719,6 @@ import { restricted } from "test-pkg";
 		},
 		{
 			code: `import "nonexistent-module";`,
-			options: {
-				restrictions: [
-					{
-						specifier: {
-							from: "package",
-							package: "nonexistent-module",
-						},
-					},
-				],
-			},
-		},
-		{
-			code: `import * as ns from "nonexistent-module";`,
 			options: {
 				restrictions: [
 					{

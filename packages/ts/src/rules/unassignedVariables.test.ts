@@ -67,9 +67,9 @@ function example() {
 		`let result; result ||= "default";`,
 		`let data; data &&= "value";`,
 		`let nullish; nullish ??= "fallback";`,
-		`let value; [value] = values;`,
-		`let value; ({ value } = object);`,
-		`let value; for (value of values) {}`,
-		`let key; for (key in object) {}`,
+		`declare const values: number[]; let value; [value] = values;`,
+		`declare const object: { value: number }; let value; ({ value } = object);`,
+		`declare const values: number[]; let value; for (value of values) {}`,
+		`declare const object: Record<string, number>; let key; for (key in object) {}`,
 	],
 });
