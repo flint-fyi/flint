@@ -89,7 +89,11 @@ Prefer using ECMAScript modules over legacy TypeScript namespaces.
 		},
 	],
 	valid: [
-		`declare global {}`,
+		`
+export {};
+
+declare global {}
+`,
 		`declare module 'name' {}`,
 		`declare module "name" {}`,
 		{
@@ -116,18 +120,20 @@ declare module 'express' {
 		},
 		{
 			code: `
+export {};
+
 declare global {
     namespace inner {}
 }`,
 			options: { allowDeclarations: true },
 		},
 		{
-			code: `namespace name {}`,
+			code: `declare namespace name {}`,
 			fileName: "file.d.ts",
 			options: { allowDefinitionFiles: true },
 		},
 		{
-			code: `module name {}`,
+			code: `declare module name {}`,
 			fileName: "types.d.ts",
 			options: { allowDefinitionFiles: true },
 		},

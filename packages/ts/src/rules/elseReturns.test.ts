@@ -43,6 +43,9 @@ function getValue() {
 		},
 		{
 			code: `
+declare function compute(): number;
+declare function fallback(): number;
+
 function getValue(condition: boolean) {
     if (condition) {
         const value = compute();
@@ -54,6 +57,9 @@ function getValue(condition: boolean) {
 }
 `,
 			snapshot: `
+declare function compute(): number;
+declare function fallback(): number;
+
 function getValue(condition: boolean) {
     if (condition) {
         const value = compute();
@@ -141,12 +147,16 @@ function getValue() {
 		},
 		{
 			code: `
+declare const condition: boolean;
+
 function getValue() {
     if (condition) return 1;
     else return 2;
 }
 `,
 			snapshot: `
+declare const condition: boolean;
+
 function getValue() {
     if (condition) return 1;
     else return 2;
@@ -157,6 +167,8 @@ function getValue() {
 		},
 		{
 			code: `
+declare const error: boolean;
+
 function getValue() {
     if (error) {
         throw new Error("failed");
@@ -166,6 +178,8 @@ function getValue() {
 }
 `,
 			snapshot: `
+declare const error: boolean;
+
 function getValue() {
     if (error) {
         throw new Error("failed");
@@ -179,12 +193,16 @@ function getValue() {
 		},
 		{
 			code: `
+declare const error: boolean;
+
 function getValue() {
     if (error) throw new Error("failed");
     else return 1;
 }
 `,
 			snapshot: `
+declare const error: boolean;
+
 function getValue() {
     if (error) throw new Error("failed");
     else return 1;
@@ -221,6 +239,8 @@ function getValue(a: boolean, b: boolean) {
 		},
 		{
 			code: `
+declare const error: boolean;
+
 function getValue() {
     if (error) {
         throw new Error("failed");
@@ -230,6 +250,8 @@ function getValue() {
 }
 `,
 			snapshot: `
+declare const error: boolean;
+
 function getValue() {
     if (error) {
         throw new Error("failed");
@@ -244,14 +266,62 @@ function getValue() {
 	],
 	valid: [
 		`function getValue() { if (true) { return 1; } return 2; }`,
-		`function getValue() { if (true) { process(); } else { return 1; } }`,
-		`function getValue() { if (true) process(); else return 1; }`,
+		`
+declare function process(): void;
+
+function getValue() {
+    if (true) {
+        process();
+    } else {
+        return 1;
+    }
+}
+`,
+		`
+declare function process(): void;
+
+function getValue() {
+    if (true) process();
+    else return 1;
+}
+`,
 		`if (0) { if (0) {} else {} } else {}`,
 		`function getValue() { if (true) { return 1; } else if (false) { return 2; } }`,
 		`function getValue(a: boolean, b: boolean) { if (a) { return 1; } else if (b) { return 2; } }`,
-		`function getValue(a: boolean, b: boolean) { if (a) { process(); } else if (b) { return 1; } else { fallback(); } }`,
-		`function getValue(a: boolean, b: boolean) { if (a) { return 1; } else if (b) { process(); } else { fallback(); } }`,
 		`
+declare function fallback(): void;
+declare function process(): void;
+
+function getValue(a: boolean, b: boolean) {
+    if (a) {
+        process();
+    } else if (b) {
+        return 1;
+    } else {
+        fallback();
+    }
+}
+`,
+		`
+declare function fallback(): void;
+declare function process(): void;
+
+function getValue(a: boolean, b: boolean) {
+    if (a) {
+        return 1;
+    } else if (b) {
+        process();
+    } else {
+        fallback();
+    }
+}
+`,
+		`
+declare const condition: boolean;
+declare const other: boolean;
+declare function fallback(): void;
+declare function process(): void;
+
 function getValue() {
     if (condition)
         if (other) return 1;
@@ -260,6 +330,10 @@ function getValue() {
 }
 `,
 		`
+declare const condition: boolean;
+declare const other: boolean;
+declare function process(): void;
+
 function getValue() {
     while (condition)
         if (other) return 1;
@@ -269,9 +343,37 @@ function getValue() {
 		`function getValue() { if (true) { for (;;) { return 1; } } else { return 2; } }`,
 		`function getValue() { if (true) { while (true) { return 1; } } else { return 2; } }`,
 		`function getValue() { if (true) { for (let i = 0; i < 10; i++) { return 1; } } else { return 2; } }`,
-		`function getValue() { if (true) { while (condition) { return 1; } } else { return 2; } }`,
-		`function getValue() { if (error) { throw new Error("failed"); } return 1; }`,
-		`function getValue() { if (error) throw new Error("failed"); return 1; }`,
+		`
+declare const condition: boolean;
+
+function getValue() {
+    if (true) {
+        while (condition) {
+            return 1;
+        }
+    } else {
+        return 2;
+    }
+}
+`,
+		`
+declare const error: boolean;
+
+function getValue() {
+    if (error) {
+        throw new Error("failed");
+    }
+    return 1;
+}
+`,
+		`
+declare const error: boolean;
+
+function getValue() {
+    if (error) throw new Error("failed");
+    return 1;
+}
+`,
 		`function getValue(a: boolean, b: boolean) { if (a) { throw new Error("a"); } else if (b) { throw new Error("b"); } }`,
 	],
 });

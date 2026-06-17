@@ -99,7 +99,7 @@ RegExp("[0-9 9]");
 		`new RegExp("");`,
 		`new RegExp("[a][a]");`,
 		`new RegExp("[abc]");`,
-		`new RegExp(value);`,
+		`declare const value: string; new RegExp(value);`,
 		String.raw`/[\q{a}\q{ab}\q{abc}[\w--[ab]][\w&&b]]/v`,
 		String.raw`/[\S \f\n\r\t\v\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]/`,
 		String.raw`/[\u1fff-\u2020\s]/`,

@@ -1,14 +1,5 @@
 import rule from "./functionNewCalls.ts";
-import { ruleTester } from "./ruleTester.ts";
-
-const tsconfigWithDomLib = {
-	"tsconfig.json": `{
-	"extends": "./tsconfig.base.json",
-	"compilerOptions": {
-		"lib": ["esnext", "DOM"]
-	}
-}`,
-};
+import { domLibRuleTester, ruleTester } from "./ruleTester.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -74,9 +65,46 @@ const fn = globalThis.Function("return 1");
 		},
 		{
 			code: `
+const result = new Function("a", "b", "return a + b")(1, 2);
+void result;
+`,
+			snapshot: `
+const result = new Function("a", "b", "return a + b")(1, 2);
+                   ~~~~~~~~
+                   Dynamically creating functions with the Function constructor is insecure and slow.
+void result;
+`,
+		},
+		{
+			code: `
+const CustomFunction = Function;
+const fn = new CustomFunction();
+void fn;
+`,
+			snapshot: `
+const CustomFunction = Function;
+const fn = new CustomFunction();
+               ~~~~~~~~~~~~~~
+               Dynamically creating functions with the Function constructor is insecure and slow.
+void fn;
+`,
+		},
+	],
+	valid: [
+		`const fn = function(a: number, b: number) { return a + b; }; void fn;`,
+		`const fn = (a: number, b: number) => a + b; void fn;`,
+		`function add(a: number, b: number) { return a + b; } add(1, 2);`,
+		`class MyFunction {} new MyFunction();`,
+		`class MyFunction {} const fn = new MyFunction(); void fn;`,
+	],
+});
+
+domLibRuleTester.describe(rule, {
+	invalid: [
+		{
+			code: `
 const fn = new window.Function("return 1");
 `,
-			files: tsconfigWithDomLib,
 			snapshot: `
 const fn = new window.Function("return 1");
                ~~~~~~~~~~~~~~~
@@ -87,41 +115,12 @@ const fn = new window.Function("return 1");
 			code: `
 const fn = window.Function("return 1");
 `,
-			files: tsconfigWithDomLib,
 			snapshot: `
 const fn = window.Function("return 1");
            ~~~~~~~~~~~~~~~
            Dynamically creating functions with the Function constructor is insecure and slow.
 `,
 		},
-		{
-			code: `
-const result = new Function("a", "b", "return a + b")(1, 2);
-`,
-			snapshot: `
-const result = new Function("a", "b", "return a + b")(1, 2);
-                   ~~~~~~~~
-                   Dynamically creating functions with the Function constructor is insecure and slow.
-`,
-		},
-		{
-			code: `
-const CustomFunction = Function;
-const fn = new CustomFunction();
-`,
-			snapshot: `
-const CustomFunction = Function;
-const fn = new CustomFunction();
-               ~~~~~~~~~~~~~~
-               Dynamically creating functions with the Function constructor is insecure and slow.
-`,
-		},
 	],
-	valid: [
-		`const fn = function(a, b) { return a + b; };`,
-		`const fn = (a, b) => a + b;`,
-		`function add(a, b) { return a + b; }`,
-		`class MyFunction {}`,
-		`const fn = new MyFunction();`,
-	],
+	valid: [`window.addEventListener("load", () => {});`],
 });

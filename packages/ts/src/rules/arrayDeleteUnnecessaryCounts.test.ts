@@ -129,7 +129,7 @@ array.splice(1, array.length - 1);
 `,
 		`
 declare const array: number[];
-array.splice(1, array.length, "new");
+array.splice(1, array.length, 0);
 `,
 		`
 declare const array: number[];
@@ -147,6 +147,8 @@ array.splice(1, length);
 `,
 		`
 declare const array: number[];
+declare function splice(start: number, deleteCount: number): void;
+
 splice(1, array.length);
 `,
 		`const result = [1, 2, 3].slice(1);`,

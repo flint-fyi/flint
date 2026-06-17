@@ -278,12 +278,18 @@ const value = \`before \\a after\`;
 		},
 		{
 			code: `
+declare const x: string;
+
 const value = \`\${x} \\a\`;
 `,
 			output: `
+declare const x: string;
+
 const value = \`\${x} a\`;
 `,
 			snapshot: `
+declare const x: string;
+
 const value = \`\${x} \\a\`;
                     ~~
                     Unnecessary escape for character 'a'.
@@ -291,12 +297,18 @@ const value = \`\${x} \\a\`;
 		},
 		{
 			code: `
+declare const x: string;
+
 const value = \`\\a \${x}\`;
 `,
 			output: `
+declare const x: string;
+
 const value = \`a \${x}\`;
 `,
 			snapshot: `
+declare const x: string;
+
 const value = \`\\a \${x}\`;
                ~~
                Unnecessary escape for character 'a'.
@@ -304,12 +316,18 @@ const value = \`\\a \${x}\`;
 		},
 		{
 			code: `
+declare const x: string;
+
 const value = \`\\a \${x} \\b\`;
 `,
 			output: `
+declare const x: string;
+
 const value = \`a \${x} \\b\`;
 `,
 			snapshot: `
+declare const x: string;
+
 const value = \`\\a \${x} \\b\`;
                ~~
                Unnecessary escape for character 'a'.
@@ -488,15 +506,19 @@ const value = "\\!";
 		`const value = "plain text";`,
 		`const value = 'plain text';`,
 		`const value = \`plain text\`;`,
-		`const value = \`\${variable}\`;`,
-		`const value = "\\1";`,
-		`const value = "\\2";`,
-		`const value = "\\3";`,
-		`const value = "\\4";`,
-		`const value = "\\5";`,
-		`const value = "\\6";`,
-		`const value = "\\7";`,
-		`const value = "\\8";`,
-		`const value = "\\9";`,
+		`
+declare const variable: string;
+
+const value = \`\${variable}\`;
+`,
+		`const value = String.raw\`\\1\`;`,
+		`const value = String.raw\`\\2\`;`,
+		`const value = String.raw\`\\3\`;`,
+		`const value = String.raw\`\\4\`;`,
+		`const value = String.raw\`\\5\`;`,
+		`const value = String.raw\`\\6\`;`,
+		`const value = String.raw\`\\7\`;`,
+		`const value = String.raw\`\\8\`;`,
+		`const value = String.raw\`\\9\`;`,
 	],
 });

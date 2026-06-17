@@ -69,11 +69,15 @@ function test() {
 		},
 		{
 			code: `
+declare const condition: boolean;
+
 if (condition) {
 	console.log("conditional");
 }
 `,
 			snapshot: `
+declare const condition: boolean;
+
 if (condition) {
 	console.log("conditional");
 	~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -84,11 +88,20 @@ if (condition) {
 	],
 	valid: [
 		`debugger;`,
-		`log("not console");`,
-		`myConsole.log("custom logger");`,
-		`logger.log("custom logger");`,
-		`const console = { log: () => {} }; console.log("local"); export {};`,
+		`
+declare function log(message: string): void;
+log("not console");
+`,
+		`
+const myConsole = { log(message: string) {} };
+myConsole.log("custom logger");
+`,
+		`
+const logger = { log(message: string) {} };
+logger.log("custom logger");
+`,
+		`const console = { log: (message: string) => {} }; console.log("local"); export {};`,
 		`function test(console: { log: (msg: string) => void }) { console.log("param"); }`,
-		`class Foo { console = { log: () => {} }; test() { this.console.log("member"); } }`,
+		`class Foo { console = { log: (message: string) => {} }; test() { this.console.log("member"); } }`,
 	],
 });

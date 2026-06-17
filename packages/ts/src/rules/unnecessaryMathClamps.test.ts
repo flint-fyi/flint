@@ -85,9 +85,11 @@ const value = Math.min((5), (10));
 		},
 		{
 			code: `
+declare const x: number;
 const value = Math.max(5, Math.min(10, x));
 `,
 			snapshot: `
+declare const x: number;
 const value = Math.max(5, Math.min(10, x));
               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
               Incorrect clamping pattern: \`Math.max(5, Math.min(10, x))\` should be \`Math.min(10, Math.max(5, x))\`.
@@ -95,19 +97,23 @@ const value = Math.max(5, Math.min(10, x));
 		},
 		{
 			code: `
-const value = Math.max(0, Math.min(100, value));
+declare const value: number;
+const result = Math.max(0, Math.min(100, value));
 `,
 			snapshot: `
-const value = Math.max(0, Math.min(100, value));
-              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-              Incorrect clamping pattern: \`Math.max(0, Math.min(100, x))\` should be \`Math.min(100, Math.max(0, x))\`.
+declare const value: number;
+const result = Math.max(0, Math.min(100, value));
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+               Incorrect clamping pattern: \`Math.max(0, Math.min(100, x))\` should be \`Math.min(100, Math.max(0, x))\`.
 `,
 		},
 		{
 			code: `
+declare const input: number;
 const value = Math.max(10, Math.min(20, input));
 `,
 			snapshot: `
+declare const input: number;
 const value = Math.max(10, Math.min(20, input));
               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
               Incorrect clamping pattern: \`Math.max(10, Math.min(20, x))\` should be \`Math.min(20, Math.max(10, x))\`.
@@ -115,9 +121,11 @@ const value = Math.max(10, Math.min(20, input));
 		},
 		{
 			code: `
+declare const score: number;
 const value = Math.max(-10, Math.min(10, score));
 `,
 			snapshot: `
+declare const score: number;
 const value = Math.max(-10, Math.min(10, score));
               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
               Incorrect clamping pattern: \`Math.max(-10, Math.min(10, x))\` should be \`Math.min(10, Math.max(-10, x))\`.
@@ -125,9 +133,11 @@ const value = Math.max(-10, Math.min(10, score));
 		},
 		{
 			code: `
+declare const x: number;
 const result = Math.max(5, Math.min(x, 10));
 `,
 			snapshot: `
+declare const x: number;
 const result = Math.max(5, Math.min(x, 10));
                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                Incorrect clamping pattern: \`Math.max(5, Math.min(10, x))\` should be \`Math.min(10, Math.max(5, x))\`.
@@ -135,22 +145,76 @@ const result = Math.max(5, Math.min(x, 10));
 		},
 	],
 	valid: [
-		`const value = Math.min(x, 10);`,
-		`const value = Math.max(value, 5);`,
-		`const value = Math.min(a, b);`,
-		`const value = Math.max(x, y, z);`,
-		`const value = Math.min(Math.max(x, 5), 10);`,
-		`const value = Math.min(10, Math.max(5, x));`,
-		`const value = Math.min(Math.max(min, value), max);`,
-		`const value = Math.max(x, Math.max(y, z));`,
-		`const value = Math.min(x, Math.min(y, z));`,
-		`const value = Math.min(getMax(), value);`,
+		`
+declare const x: number;
+const value = Math.min(x, 10);
+`,
+		`
+declare const value: number;
+const result = Math.max(value, 5);
+`,
+		`
+declare const a: number;
+declare const b: number;
+const value = Math.min(a, b);
+`,
+		`
+declare const x: number;
+declare const y: number;
+declare const z: number;
+const value = Math.max(x, y, z);
+`,
+		`
+declare const x: number;
+const value = Math.min(Math.max(x, 5), 10);
+`,
+		`
+declare const x: number;
+const value = Math.min(10, Math.max(5, x));
+`,
+		`
+declare const max: number;
+declare const min: number;
+declare const value: number;
+const result = Math.min(Math.max(min, value), max);
+`,
+		`
+declare const x: number;
+declare const y: number;
+declare const z: number;
+const value = Math.max(x, Math.max(y, z));
+`,
+		`
+declare const x: number;
+declare const y: number;
+declare const z: number;
+const value = Math.min(x, Math.min(y, z));
+`,
+		`
+declare const value: number;
+declare function getMax(): number;
+const result = Math.min(getMax(), value);
+`,
 		`const value = Math?.min(5, 10);`,
 		`const value = Math.min?.(5, 10);`,
-		`const value = Math.min(...args);`,
-		`const myMath = { min: (a, b) => a < b ? a : b }; const value = myMath.min(5, 10);`,
+		`
+declare const args: number[];
+const value = Math.min(...args);
+`,
+		`
+const myMath = { min: (a: number, b: number) => a < b ? a : b };
+const value = myMath.min(5, 10);
+`,
 		`function test(Math: { min: (a: number, b: number) => number }) { return Math.min(5, 10); }`,
-		`const value = Math.min(100, Math.max(50, x));`,
-		`const value = Math.min(max, Math.max(min, value));`,
+		`
+declare const x: number;
+const value = Math.min(100, Math.max(50, x));
+`,
+		`
+declare const max: number;
+declare const min: number;
+declare const value: number;
+const result = Math.min(max, Math.max(min, value));
+`,
 	],
 });

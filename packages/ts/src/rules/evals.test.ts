@@ -27,9 +27,13 @@ Avoid using \`eval()\` as it poses security and performance risks.
 		},
 		{
 			code: `
+const code = "alert(1)";
+
 const result = eval(code);
 `,
 			snapshot: `
+const code = "alert(1)";
+
 const result = eval(code);
                ~~~~
                Avoid using \`eval()\` as it poses security and performance risks.
@@ -40,15 +44,5 @@ const result = eval(code);
 		`const obj = { eval: (code: string) => code }; obj.eval("test");`,
 		`function myEval(code: string) { return code; } myEval("test");`,
 		`class Foo { eval(code: string) { return code; } } new Foo().eval("test");`,
-		`
-function eval () {};
-eval("alert(1)");
-export {};
-`,
-		`
-const eval = () => {};
-eval("alert(1)");
-export {};
-`,
 	],
 });

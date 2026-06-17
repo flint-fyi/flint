@@ -137,6 +137,6 @@ RegExp("[^]");
 		String.raw`/[^\w\W]/;`,
 		String.raw`/[^\W\w]/;`,
 		String.raw`new RegExp("[\\s\\S]");`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 	],
 });

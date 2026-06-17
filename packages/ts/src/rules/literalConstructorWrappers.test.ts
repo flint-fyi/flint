@@ -146,21 +146,36 @@ const value = String(123n);
 	],
 	valid: [
 		"const value = 123n;",
-		"const value = BigInt(variable);",
+		`
+declare const variable: string;
+const value = BigInt(variable);
+`,
 		"const value = BigInt('123');",
 		"const value = BigInt(1.5);",
-		"const value = !!variable;",
-		"const value = Boolean(variable);",
+		`
+declare const variable: unknown;
+const value = !!variable;
+`,
+		`
+declare const variable: unknown;
+const value = Boolean(variable);
+`,
 		"const value = 123;",
-		"const value = Number(variable);",
+		`
+declare const variable: unknown;
+const value = Number(variable);
+`,
 		"const value = Number('not a number');",
 		"const value = Number('');",
 		"const value = Number('Infinity');",
 		"const value = 'text';",
-		"const value = String(variable);",
+		`
+declare const variable: unknown;
+const value = String(variable);
+`,
 		"const value = String('already a string');",
 		"const value = `${123}`;",
-		"const CustomBigInt = () => 0n; CustomBigInt(123);",
+		"const CustomBigInt = (value: number) => 0n; CustomBigInt(123);",
 		"function test(Boolean: (value: boolean) => boolean) { Boolean(true); }",
 	],
 });

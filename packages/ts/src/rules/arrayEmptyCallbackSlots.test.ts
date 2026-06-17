@@ -1,7 +1,7 @@
 import rule from "./arrayEmptyCallbackSlots.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { domLibRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+domLibRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
@@ -92,12 +92,18 @@ new Array(5).map(callback);
 		`Array.from({ length: 5 }, (_, index) => index);`,
 		`new Array("a", "b", "c").forEach((item) => console.log(item));`,
 		`new Array(1, 2, 3).map((value) => value * 2);`,
-		`new Array(...items).filter((value) => value > 0);`,
+		`
+const items = [1, 2, 3];
+new Array(...items).filter((value) => value > 0);
+`,
 		`[1, 2, 3].map((value) => value * 2);`,
 		`new Array(5).flat();`,
 		`new Array(5).concat([1, 2, 3]);`,
 		`new Array(5).join(",");`,
 		`const arr: number[] = []; arr.map((value) => value * 2);`,
-		`new Array(someVariable).map((x) => x);`,
+		`
+declare const someVariable: number;
+new Array(someVariable).map((value) => value);
+`,
 	],
 });

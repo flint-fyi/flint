@@ -1,3 +1,5 @@
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import rule from "./namedDefaultExports.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -110,9 +112,33 @@ This default-exported class is missing an informative name.
 		`export default 42;`,
 		`export default { key: "value" };`,
 		`export default ["item"];`,
-		`export = function () {};`,
-		`export = class {};`,
-		`export = function named() {};`,
-		`export = class Named {};`,
+		{
+			code: `export = function () {};`,
+			files: createRuleTesterTSConfig({
+				module: "CommonJS",
+				moduleResolution: "node10",
+			}),
+		},
+		{
+			code: `export = class {};`,
+			files: createRuleTesterTSConfig({
+				module: "CommonJS",
+				moduleResolution: "node10",
+			}),
+		},
+		{
+			code: `export = function named() {};`,
+			files: createRuleTesterTSConfig({
+				module: "CommonJS",
+				moduleResolution: "node10",
+			}),
+		},
+		{
+			code: `export = class Named {};`,
+			files: createRuleTesterTSConfig({
+				module: "CommonJS",
+				moduleResolution: "node10",
+			}),
+		},
 	],
 });

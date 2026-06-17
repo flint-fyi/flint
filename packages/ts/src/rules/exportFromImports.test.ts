@@ -8,6 +8,13 @@ ruleTester.describe(rule, {
 import defaultExport from './foo.js';
 export default defaultExport;
 `,
+			files: {
+				"foo.ts": `
+declare const defaultExport: unknown;
+
+export default defaultExport;
+`,
+			},
 			snapshot: `
 import defaultExport from './foo.js';
 export default defaultExport;
@@ -20,6 +27,11 @@ Prefer \`export { default } from './foo.js'\` instead of separate import and exp
 import { named } from './foo.js';
 export { named };
 `,
+			files: {
+				"foo.ts": `
+export declare const named: unknown;
+`,
+			},
 			snapshot: `
 import { named } from './foo.js';
 export { named };
@@ -32,6 +44,11 @@ export { named };
 import * as namespace from './foo.js';
 export { namespace };
 `,
+			files: {
+				"foo.ts": `
+export declare const named: unknown;
+`,
+			},
 			snapshot: `
 import * as namespace from './foo.js';
 export { namespace };
@@ -44,6 +61,12 @@ export { namespace };
 import { foo, bar } from './module.js';
 export { foo, bar };
 `,
+			files: {
+				"module.ts": `
+export declare const bar: unknown;
+export declare const foo: unknown;
+`,
+			},
 			snapshot: `
 import { foo, bar } from './module.js';
 export { foo, bar };
@@ -58,6 +81,11 @@ export { foo, bar };
 import { original as renamed } from './module.js';
 export { renamed };
 `,
+			files: {
+				"module.ts": `
+export declare const original: unknown;
+`,
+			},
 			snapshot: `
 import { original as renamed } from './module.js';
 export { renamed };
@@ -67,13 +95,56 @@ export { renamed };
 		},
 	],
 	valid: [
-		`export { named } from './foo.js';`,
-		`export { default } from './foo.js';`,
-		`export * as namespace from './foo.js';`,
-		`import { named } from './foo.js';
-const x = named();`,
-		`import { named } from './foo.js';
-console.log(named);`,
+		{
+			code: `export { named } from './foo.js';`,
+			files: {
+				"foo.ts": `
+export declare const named: unknown;
+`,
+			},
+		},
+		{
+			code: `export { default } from './foo.js';`,
+			files: {
+				"foo.ts": `
+declare const defaultExport: unknown;
+
+export default defaultExport;
+`,
+			},
+		},
+		{
+			code: `export * as namespace from './foo.js';`,
+			files: {
+				"foo.ts": `
+export declare const named: unknown;
+`,
+			},
+		},
+		{
+			code: `
+import { named } from './foo.js';
+
+const x = named();
+`,
+			files: {
+				"foo.ts": `
+export declare function named(): unknown;
+`,
+			},
+		},
+		{
+			code: `
+import { named } from './foo.js';
+
+void named;
+`,
+			files: {
+				"foo.ts": `
+export declare const named: unknown;
+`,
+			},
+		},
 		`const foo = 1;
 export { foo };`,
 	],

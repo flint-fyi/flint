@@ -122,7 +122,13 @@ new RegExp("[0-9]", "gs");
 		`/123/g;`,
 		`new RegExp("abc", "i");`,
 		`new RegExp("^foo$", "m");`,
-		`RegExp(variable, "i");`,
-		`new RegExp(pattern);`,
+		`
+declare const variable: string;
+RegExp(variable, "i");
+`,
+		`
+declare const pattern: string;
+new RegExp(pattern);
+`,
 	],
 });
