@@ -1,47 +1,47 @@
-import {
-	getJsonNodeRange,
-	type JsonSourceFile,
-} from "@flint.fyi/json-language";
-import type { AST } from "@flint.fyi/typescript-language";
+import type { MemberNode, ObjectNode } from "@humanwhocodes/momoa";
+
+import { getNodeRange } from "@flint.fyi/json-language";
 
 export function removeObjectProperty(
-	sourceFile: JsonSourceFile,
-	property: AST.PropertyAssignment,
-	objectNode: AST.ObjectLiteralExpression,
+	propertyNode: MemberNode,
+	objectNode: ObjectNode,
 ) {
-	if (objectNode.properties.length === 1) {
+	if (objectNode.members.length === 1) {
 		return {
-			range: getJsonNodeRange(objectNode, sourceFile),
+			range: getNodeRange(objectNode),
 			text: "{}",
 		};
 	}
 
-	const index = objectNode.properties.indexOf(property);
+	const index = objectNode.members.indexOf(propertyNode);
 	if (index === -1) {
 		throw new Error("Node is not a child of the parent object.");
 	}
 
-	const previous = index > 0 ? objectNode.properties[index - 1] : undefined;
+	const previous = index > 0 ? objectNode.members[index - 1] : undefined;
 	const next =
-		index < objectNode.properties.length - 1
-			? objectNode.properties[index + 1]
+		index < objectNode.members.length - 1
+			? objectNode.members[index + 1]
 			: undefined;
 
+	const { begin: propertyBegin, end: propertyEnd } = getNodeRange(propertyNode);
 	if (next) {
+		const { begin: nextBegin } = getNodeRange(next);
 		return {
 			range: {
-				begin: property.getStart(sourceFile),
-				end: next.getStart(sourceFile),
+				begin: propertyBegin,
+				end: nextBegin,
 			},
 			text: "",
 		};
 	}
 
 	if (previous) {
+		const { end: previousEnd } = getNodeRange(previous);
 		return {
 			range: {
-				begin: previous.end,
-				end: property.end,
+				begin: previousEnd,
+				end: propertyEnd,
 			},
 			text: "",
 		};

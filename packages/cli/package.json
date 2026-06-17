@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/cli",
-	"version": "0.19.2",
+	"version": "0.19.4",
 	"description": "[Experimental] Command-line interface for Flint.",
 	"homepage": "https://flint.fyi/cli",
 	"repository": {
@@ -19,8 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/",
-		"!lib/**/*.map"
+		"lib/"
 	],
 	"scripts": {
 		"test": "vitest --project cli"

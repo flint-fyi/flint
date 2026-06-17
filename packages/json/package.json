@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/json",
-	"version": "0.16.3",
+	"version": "0.16.5",
 	"description": "[Experimental] JSON plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/json",
 	"repository": {
@@ -19,8 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/",
-		"!lib/**/*.map"
+		"lib/"
 	],
 	"scripts": {
 		"test": "vitest --project json"
@@ -28,11 +27,11 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/json-language": "workspace:^",
-		"typescript": "^5.9.3 || ^6.0.0",
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
+		"@humanwhocodes/momoa": "3.3.10",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

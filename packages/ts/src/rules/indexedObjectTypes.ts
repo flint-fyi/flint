@@ -1,11 +1,12 @@
+import * as ts from "typescript";
+import { z } from "zod/v4";
+
 import {
-	type AST,
 	getTSNodeRange,
 	isGlobalDeclaration,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
-import { z } from "zod/v4";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

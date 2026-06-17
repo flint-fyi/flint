@@ -1,6 +1,7 @@
-import { type FileReport, formatReport } from "@flint.fyi/core";
-import { nullThrows } from "@flint.fyi/utils";
 import chalk from "chalk";
+
+import { formatReport, type FileReport } from "@flint.fyi/core";
+import { nullThrows } from "@flint.fyi/utils";
 
 import { ColorCodes, indenter } from "./constants.ts";
 import { formatCode } from "./formatCode.ts";

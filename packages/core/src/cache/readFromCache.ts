@@ -1,6 +1,7 @@
-import { nullThrows, pathKey } from "@flint.fyi/utils";
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
+
+import { nullThrows, pathKey } from "@flint.fyi/utils";
 
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
@@ -56,7 +57,7 @@ export async function readFromCache(
 		);
 		// flint-disable-next-line performance/loopAwaits
 		const timestampTouched = await host.getFileTouchTime(filePath);
-		if (timestampTouched > timestampCached) {
+		if (timestampTouched == null || timestampTouched > timestampCached) {
 			log(
 				"Linting all %d file path(s) due to %s touch timestamp %d after cache timestamp %d",
 				allFilePaths.size,
@@ -73,6 +74,24 @@ export async function readFromCache(
 		FileCacheStorage
 	>;
 	const filePathsToLint = new Set<string>();
+
+	for (const {
+		filePath,
+		touchTime: cachedTouchTime,
+	} of cache.globalInvalidations) {
+		// flint-disable-next-line performance/loopAwaits
+		const currentTouchTime = await host.getFileTouchTime(filePath);
+		if (currentTouchTime == null || currentTouchTime > cachedTouchTime) {
+			log(
+				"Linting all %d file(s) because cache-invalidating file %s has changed (current: %d, cached: %d)",
+				allFilePaths.size,
+				filePath,
+				currentTouchTime,
+				cachedTouchTime,
+			);
+			return undefined;
+		}
+	}
 
 	// Any files touched since last cache write will need to be re-linted
 	for (const filePath of allFilePaths) {
@@ -100,7 +119,7 @@ export async function readFromCache(
 		const timestampCached = fileCached.timestamp;
 		// flint-disable-next-line performance/loopAwaits
 		const timestampTouched = await host.getFileTouchTime(filePath);
-		if (timestampTouched > timestampCached) {
+		if (timestampTouched == null || timestampTouched > timestampCached) {
 			log(
 				"Directly invalidating cache for: %s due to touch timestamp %d after cache timestamp %d",
 				filePath,

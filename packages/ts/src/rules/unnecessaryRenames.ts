@@ -1,11 +1,12 @@
+import ts from "typescript";
+
 import type { CharacterReportRange } from "@flint.fyi/core";
 import {
-	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
 	unwrapParenthesizedNode,
+	type AST,
 } from "@flint.fyi/typescript-language";
-import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { countCommentsInRange } from "./utils/countCommentsInRange.ts";

@@ -1,0 +1,135 @@
+---
+description: "Restricts specified modules from being imported."
+title: "restrictedImports"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="restrictedImports" />
+
+Over time, many codebases develop restrictions on which modules can be imported in which areas.
+This rule allows you to restrict specific modules from being imported using [`TypeOrValueSpecifier`](https://typescript-eslint.io/packages/type-utils/type-or-value-specifier/) to identify targets.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+// With restrictions: [{ specifier: { from: "package", package: "lodash" } }]
+import _ from "lodash";
+```
+
+```ts
+// With restrictions: [{ specifier: { from: "package", name: "useState", package: "react" } }]
+import { useState } from "react";
+```
+
+```ts
+// With restrictions: [{ specifier: { from: "file", path: "./internal/secret.ts" } }]
+import { secret } from "./internal/secret";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+// With restrictions: [{ specifier: { from: "package", package: "lodash" } }]
+import { pick } from "lodash-es";
+```
+
+```ts
+// With restrictions: [{ specifier: { from: "package", name: "useState", package: "react" } }]
+import { useEffect } from "react";
+```
+
+```ts
+// With restrictions: [{ specifier: { from: "file", path: "./internal/secret.ts" }, allowTypeImports: true }]
+import type { SecretType } from "./internal/secret";
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `restrictions`
+
+- Type: `Array<Restriction>`
+- Default: `[]`
+
+Each restriction identifies an import target using a `TypeOrValueSpecifier` and optional metadata.
+
+```jsonc
+{
+	"restrictions": [
+		// Restrict a specific export from a package
+		{
+			"specifier": {
+				"from": "package",
+				"name": "useState",
+				"package": "react",
+			},
+			"message": "Use our custom useStateWrapper instead.",
+		},
+
+		// Restrict an entire package
+		{
+			"specifier": { "from": "package", "package": "lodash" },
+			"message": "Use lodash-es for tree-shaking.",
+		},
+
+		// Restrict a local file, but allow type-only imports
+		{
+			"specifier": {
+				"from": "file",
+				"path": "./src/internal/secret.ts",
+			},
+			"allowTypeImports": true,
+		},
+
+		// Restrict a built-in lib type
+		{
+			"specifier": { "from": "lib", "name": "eval" },
+		},
+	],
+}
+```
+
+**Restriction fields:**
+
+| Field              | Type                   | Description                                                |
+| ------------------ | ---------------------- | ---------------------------------------------------------- |
+| `specifier`        | `TypeOrValueSpecifier` | Identifies the restricted import target (see below).       |
+| `message`          | `string?`              | Custom message shown when the restriction is triggered.    |
+| `allowTypeImports` | `boolean?`             | Whether type-only imports are exempt from the restriction. |
+
+**TypeOrValueSpecifier shapes:**
+
+| Variant   | Fields                     | Description                                      |
+| --------- | -------------------------- | ------------------------------------------------ |
+| `package` | `from`, `package`, `name?` | Matches exports from an npm package.             |
+| `file`    | `from`, `path?`, `name?`   | Matches exports from a local file.               |
+| `lib`     | `from`, `name?`            | Matches exports from TypeScript's built-in libs. |
+
+When `name` is omitted, all exports from the matched source are restricted.
+When `name` is provided (as a string or array of strings), only those specific exports are restricted.
+
+## Relationship to TypeOrValueSpecifier
+
+This rule uses the [`TypeOrValueSpecifier`](https://typescript-eslint.io/packages/type-utils/type-or-value-specifier/) config shape from `@typescript-eslint/type-utils` — same `from` discriminator (`"file"`, `"lib"`, `"package"`) and field names (`name`, `path`, `package`).
+
+One deviation: `name` is **optional** here (omitting it restricts all exports from the source), whereas typescript-eslint's `TypeOrValueSpecifier` requires `name`.
+This enables whole-module restrictions like `{ from: "package", package: "lodash" }`.
+
+## When Not To Use It
+
+If you do not need to restrict any modules from being imported, you do not need this rule.
+This rule requires explicit configuration to do anything, so it has no effect without `restrictions`.
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="restrictedImports" />

@@ -1,5 +1,13 @@
 # @flint.fyi/vue
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`c953313`](https://github.com/flint-fyi/flint/commit/c9533135a4bcf39f9a2fed7a9f70c8a4ac13cf58), [`25712ea`](https://github.com/flint-fyi/flint/commit/25712ea8931cfaf9354a94cb3c0bdb6143c46962), [`6004702`](https://github.com/flint-fyi/flint/commit/6004702ed261879a894e6295a9ac5965198cc68a), [`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f), [`5c848a9`](https://github.com/flint-fyi/flint/commit/5c848a9a72ab2128bccfde8054b7d08bdc5cce95)]:
+  - @flint.fyi/ts@0.20.0
+  - @flint.fyi/core@0.23.0
+
 ## 0.1.2
 
 ### Patch Changes

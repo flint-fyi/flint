@@ -1,5 +1,6 @@
-import { type FileResults, hasFix } from "@flint.fyi/core";
 import chalk from "chalk";
+
+import { hasFix, type FileResults } from "@flint.fyi/core";
 
 import { pluralize } from "../../presenters/pluralize.ts";
 

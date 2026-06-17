@@ -1,7 +1,6 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
-import { SyntaxKind } from "typescript";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
 export default ruleCreator.createRule(jsonLanguage, {
@@ -24,49 +23,35 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { sourceFile }) {
-					const peerDependencies = getPackagePropertyOfName(
-						node,
-						"peerDependencies",
-					);
-					if (
-						peerDependencies?.kind !== SyntaxKind.PropertyAssignment ||
-						peerDependencies.initializer.kind !==
-							SyntaxKind.ObjectLiteralExpression
-					) {
+				Document(node) {
+					const { devDependencies, peerDependencies } =
+						getPackagePropertiesOfNames(node, [
+							"peerDependencies",
+							"devDependencies",
+						]);
+
+					if (peerDependencies?.value.type !== "Object") {
 						return;
 					}
 
 					const devDependencyNames = new Set<string>();
-					const devDependencies = getPackagePropertyOfName(
-						node,
-						"devDependencies",
-					);
-					if (
-						devDependencies?.kind === SyntaxKind.PropertyAssignment &&
-						devDependencies.initializer.kind ===
-							SyntaxKind.ObjectLiteralExpression
-					) {
-						for (const dependency of devDependencies.initializer.properties) {
-							if (
-								dependency.kind === SyntaxKind.PropertyAssignment &&
-								dependency.name.kind === SyntaxKind.StringLiteral
-							) {
-								devDependencyNames.add(dependency.name.text);
+					if (devDependencies?.value.type === "Object") {
+						for (const dependencyNode of devDependencies.value.members) {
+							if (dependencyNode.name.type === "String") {
+								devDependencyNames.add(dependencyNode.name.value);
 							}
 						}
 					}
 
-					for (const dependency of peerDependencies.initializer.properties) {
+					for (const dependency of peerDependencies.value.members) {
 						if (
-							dependency.kind === SyntaxKind.PropertyAssignment &&
-							dependency.name.kind === SyntaxKind.StringLiteral &&
-							!devDependencyNames.has(dependency.name.text)
+							dependency.name.type === "String" &&
+							!devDependencyNames.has(dependency.name.value)
 						) {
 							context.report({
-								data: { name: dependency.name.text },
+								data: { name: dependency.name.value },
 								message: "missingDevDependency",
-								range: getJsonNodeRange(dependency.name, sourceFile),
+								range: getNodeRange(dependency.name),
 							});
 						}
 					}

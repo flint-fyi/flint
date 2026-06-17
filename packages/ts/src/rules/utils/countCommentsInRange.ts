@@ -1,5 +1,6 @@
-import type { CharacterReportRange } from "@flint.fyi/core";
 import ts from "typescript";
+
+import type { CharacterReportRange } from "@flint.fyi/core";
 
 export function countCommentsInRange(
 	sourceText: string,

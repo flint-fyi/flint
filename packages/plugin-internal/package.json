@@ -1,0 +1,34 @@
+{
+	"name": "@flint.fyi/plugin-internal",
+	"version": "0.0.1",
+	"private": true,
+	"description": "A Flint plugin with rules specific to our repo.",
+	"homepage": "https://flint.fyi/rules/flint",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/plugin-internal"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"scripts": {
+		"test": "vitest --project plugin-internal"
+	},
+	"dependencies": {
+		"@flint.fyi/core": "workspace:^"
+	},
+	"devDependencies": {
+		"vitest": "catalog:dev"
+	},
+	"engines": {
+		"node": ">=24.0.0"
+	}
+}

@@ -235,6 +235,108 @@ ruleTester.describe(rule, {
 
 `,
 		},
+		{
+			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        String.raw\`a\`,
+        String.raw\`a\`,
+    ],
+    invalid: []
+});
+
+`,
+			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        String.raw\`a\`,
+        String.raw\`a\`,
+        ~~~~~~~~~~~~~
+        This test code already appeared in a previous test.
+    ],
+    invalid: []
+});
+
+`,
+		},
+		{
+			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        "a\\\\n",
+        String.raw\`a\\n\`,
+    ],
+    invalid: []
+});
+
+`,
+			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        "a\\\\n",
+        String.raw\`a\\n\`,
+        ~~~~~~~~~~~~~~~
+        This test code already appeared in a previous test.
+    ],
+    invalid: []
+});
+
+`,
+		},
+		{
+			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        { code: "a" },
+        { code: String.raw\`a\` },
+    ],
+    invalid: []
+});
+
+`,
+			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [
+        { code: "a" },
+        { code: String.raw\`a\` },
+        ~~~~~~~~~~~~~~~~~~~~~~~
+        This test code already appeared in a previous test.
+    ],
+    invalid: []
+});
+
+`,
+		},
 	],
 	valid: [
 		`

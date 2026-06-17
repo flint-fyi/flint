@@ -1,5 +1,17 @@
 # @flint/core
 
+## 0.23.1
+
+### Patch Changes
+
+- [#2840](https://github.com/flint-fyi/flint/pull/2840) [`56a5127`](https://github.com/flint-fyi/flint/commit/56a512773f6cae75f9f91135c9ac4a29291661c7) - Route file discovery and cache I/O through the linter host.
+
+## 0.23.0
+
+### Minor Changes
+
+- [#2856](https://github.com/flint-fyi/flint/pull/2856) [`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f) - Add structured source metadata to language reports.
+
 ## 0.22.0
 
 ### Minor Changes

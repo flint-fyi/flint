@@ -3,14 +3,15 @@ import type {
 	CapturingGroup,
 	RegExpLiteral,
 } from "@eslint-community/regexpp/ast";
+import ts from "typescript";
+
 import {
+	getTSNodeRange,
+	typescriptLanguage,
 	type AST,
 	type Checker,
-	getTSNodeRange,
 	type TypeScriptFileServices,
-	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";

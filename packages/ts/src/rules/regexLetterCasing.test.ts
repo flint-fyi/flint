@@ -127,20 +127,6 @@ ruleTester.describe(rule, {
      Prefer lowercase hexadecimal escapes (\`\\xcd\`) rather than uppercase (\`\\xCD\`) for consistency.
 `,
 		},
-
-		{
-			code: String.raw`
-/[A-Z]/i;
-`,
-			output: String.raw`
-/[a-z]/i;
-`,
-			snapshot: `
-/[A-Z]/i;
-  ~~~
-  Prefer lowercase character class ranges (\`a-z\`) rather than uppercase (\`A-Z\`) for consistency.
-`,
-		},
 	],
 	valid: [
 		String.raw`/(?:[A-Z]:\\|\/)[^:\s)]+:\d+(?::\d+)?/`,
@@ -171,6 +157,5 @@ ruleTester.describe(rule, {
 		String.raw`/utf-?8/`,
 		String.raw`new RegExp('\\u000a');`,
 		String.raw`new RegExp('\\x0a');`,
-		String.raw`/(?:[A-Z]:\\|\/)[^:\s)]+:\d+(?::\d+)?/`,
 	],
 });

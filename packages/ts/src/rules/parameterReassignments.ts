@@ -1,41 +1,12 @@
 import {
-	type AST,
+	getScopeManager,
 	getTSNodeRange,
 	typescriptLanguage,
+	type FunctionWithParameters,
+	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
-import ts from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
-
-function collectParameterNames(
-	parameters: readonly AST.ParameterDeclaration[],
-) {
-	const names = new Set<string>();
-
-	const collectNames = (node: AST.AnyNode) => {
-		if (node.kind === ts.SyntaxKind.Identifier) {
-			names.add((node as ts.Identifier).text);
-		} else if (ts.isObjectBindingPattern(node)) {
-			for (const element of node.elements) {
-				if (!ts.isOmittedExpression(element)) {
-					collectNames(element.name);
-				}
-			}
-		} else if (ts.isArrayBindingPattern(node)) {
-			for (const element of node.elements) {
-				if (!ts.isOmittedExpression(element)) {
-					collectNames(element.name);
-				}
-			}
-		}
-	};
-
-	for (const parameter of parameters) {
-		collectNames(parameter.name);
-	}
-
-	return names;
-}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -59,79 +30,42 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		// TODO: This will be more clean when there is a scope manager
-		// https://github.com/flint-fyi/flint/issues/400
-		const scopes = new Map<ts.Node, Set<string>>();
+		function reportParameterReassignments(
+			node: FunctionWithParameters,
+			{ sourceFile }: TypeScriptFileServices,
+		) {
+			const scopeManager = getScopeManager(sourceFile);
+			const parameterVariables = new Set(
+				node.parameters.flatMap((parameter) =>
+					scopeManager.getDeclaredVariables(parameter),
+				),
+			);
 
-		const checkParameterAssignment = (
-			name: string,
-			node: AST.AnyNode,
-			sourceFile: AST.SourceFile,
-		) => {
-			let currentNode: ts.Node | undefined = node;
-
-			while (currentNode !== undefined) {
+			for (const reference of scopeManager.getReferencesInScope(node)) {
 				if (
-					ts.isFunctionDeclaration(currentNode) ||
-					ts.isFunctionExpression(currentNode) ||
-					ts.isArrowFunction(currentNode)
+					!reference.isWrite ||
+					!reference.variable ||
+					!parameterVariables.has(reference.variable)
 				) {
-					if (scopes.get(currentNode)?.has(name)) {
-						context.report({
-							message: "parameterReassignment",
-							range: getTSNodeRange(node, sourceFile),
-						});
-					}
-					return;
+					continue;
 				}
 
-				currentNode = currentNode.parent as ts.Node | undefined;
+				context.report({
+					message: "parameterReassignment",
+					range: getTSNodeRange(reference.identifier, sourceFile),
+				});
 			}
-		};
-
-		const handleUnaryExpression = (
-			node: AST.PostfixUnaryExpression | AST.PrefixUnaryExpression,
-			{ sourceFile }: { sourceFile: AST.SourceFile },
-		) => {
-			if (
-				(node.operator === ts.SyntaxKind.PlusPlusToken ||
-					node.operator === ts.SyntaxKind.MinusMinusToken) &&
-				ts.isIdentifier(node.operand)
-			) {
-				checkParameterAssignment(node.operand.text, node.operand, sourceFile);
-			}
-		};
+		}
 
 		return {
 			visitors: {
-				ArrowFunction: (node) => {
-					scopes.set(node, collectParameterNames(node.parameters));
-				},
-				BinaryExpression: (node, { sourceFile }) => {
-					const isAssignment =
-						node.operatorToken.kind === ts.SyntaxKind.EqualsToken ||
-						node.operatorToken.kind === ts.SyntaxKind.PlusEqualsToken ||
-						node.operatorToken.kind === ts.SyntaxKind.MinusEqualsToken ||
-						node.operatorToken.kind === ts.SyntaxKind.AsteriskEqualsToken ||
-						node.operatorToken.kind === ts.SyntaxKind.SlashEqualsToken;
-
-					if (!isAssignment || !ts.isIdentifier(node.left)) {
-						return;
-					}
-
-					checkParameterAssignment(node.left.text, node.left, sourceFile);
-				},
-				FunctionDeclaration: (node) => {
-					scopes.set(node, collectParameterNames(node.parameters));
-				},
-				FunctionExpression: (node) => {
-					scopes.set(node, collectParameterNames(node.parameters));
-				},
-				PostfixUnaryExpression: handleUnaryExpression,
-				PrefixUnaryExpression: handleUnaryExpression,
-				Program: () => {
-					scopes.clear();
-				},
+				ArrowFunction: reportParameterReassignments,
+				Constructor: reportParameterReassignments,
+				FunctionDeclaration: reportParameterReassignments,
+				FunctionExpression: reportParameterReassignments,
+				GetAccessor: reportParameterReassignments,
+				MethodDeclaration: reportParameterReassignments,
+				SetAccessor: reportParameterReassignments,
 			},
 		};
 	},

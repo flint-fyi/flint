@@ -3,6 +3,10 @@ import { describe, expect, it } from "vitest";
 
 import { comparisons, getComparisonId } from "./index.ts";
 import {
+	findBiomeRulesInFlint,
+	getBiomeLintRules,
+} from "./test-utils/biome.ts";
+import {
 	findESLintRulesInCore,
 	findESLintRulesInPlugin,
 	pluginsRulesByName,
@@ -11,6 +15,11 @@ import {
 	findMarkdownlintRules,
 	findMarkdownlintRulesInFlint,
 } from "./test-utils/markdownlint.ts";
+import {
+	findOxlintRulesInFlint,
+	getOxlintLintRules,
+	getOxlintRuleConfigName,
+} from "./test-utils/oxlint.ts";
 
 const excludedESLintRulesByPluginName = new Map([
 	// These rules are exported in the React plugin but not mentioned on react.dev.
@@ -35,8 +44,9 @@ const excludedESLintRulesByPluginName = new Map([
 ]);
 
 describe("data.json", () => {
-	it("does not include any duplicate Flint rules", () => {
+	it("should not include any duplicate Flint rules", () => {
 		const seenIds = new Set<string>();
+		const duplicates: string[] = [];
 
 		for (const comparison of comparisons) {
 			const id = getComparisonId(
@@ -44,9 +54,13 @@ describe("data.json", () => {
 				comparison.flint.name,
 			);
 
-			expect(seenIds).not.toContain(id);
+			if (seenIds.has(id)) {
+				duplicates.push(id);
+			} else {
+				seenIds.add(id);
+			}
 
-			seenIds.add(id);
+			expect(duplicates).toEqual([]);
 		}
 	});
 
@@ -97,6 +111,16 @@ describe("data.json", () => {
 		);
 	});
 
+	it("includes all Biome rules", () => {
+		const biomeRuleNames = getBiomeLintRules();
+
+		const biomeRulesCoveredByFlint = Array.from(
+			new Set(findBiomeRulesInFlint().map((comparison) => comparison.name)),
+		).sort();
+
+		expect(biomeRuleNames).toEqual(biomeRulesCoveredByFlint);
+	});
+
 	it("includes all Markdownlint rules", async () => {
 		const markdownlintRuleNames = (await findMarkdownlintRules())
 			.map((rule) => rule.names.at(-1))
@@ -107,5 +131,15 @@ describe("data.json", () => {
 			.sort();
 
 		expect(markdownlintRuleNames).toEqual(markdownlintRulesCoveredByFlint);
+	});
+
+	it("includes all Oxlint rules", async () => {
+		const oxlintRuleNames = await getOxlintLintRules();
+
+		const oxlintRulesCoveredByFlint = findOxlintRulesInFlint()
+			.map((comparison) => getOxlintRuleConfigName(comparison.name))
+			.sort();
+
+		expect(oxlintRuleNames).toEqual(oxlintRulesCoveredByFlint);
 	});
 });

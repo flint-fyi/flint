@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/browser",
-	"version": "0.2.3",
+	"version": "0.2.4",
 	"description": "[Experimental] A Flint plugin for browser code.",
 	"homepage": "https://flint.fyi/rules/browser",
 	"repository": {
@@ -19,8 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/",
-		"!lib/**/*.map"
+		"lib/"
 	],
 	"scripts": {
 		"test": "vitest --project browser"

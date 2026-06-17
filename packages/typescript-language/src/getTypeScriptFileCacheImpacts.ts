@@ -2,6 +2,7 @@ import type { LanguageFile, LanguageFileCacheImpacts } from "@flint.fyi/core";
 
 import { collectReferencedFilePaths } from "./collectReferencedFilePaths.ts";
 import type { TypeScriptFileServices } from "./language.ts";
+import { containsGlobalDeclarations } from "./utils/containsGlobalDeclarations.ts";
 
 export function getTypeScriptFileCacheImpacts(
 	file: LanguageFile<TypeScriptFileServices>,
@@ -17,5 +18,6 @@ export function getTypeScriptFileCacheImpacts(
 				file.services.sourceFile,
 			),
 		],
+		invalidatesCache: containsGlobalDeclarations(file.services.sourceFile),
 	};
 }

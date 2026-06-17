@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/next",
-	"version": "0.2.3",
+	"version": "0.2.4",
 	"description": "[Experimental] A Flint plugin for Next.js code.",
 	"homepage": "https://flint.fyi/rules/next",
 	"repository": {
@@ -19,8 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/",
-		"!lib/**/*.map"
+		"lib/"
 	],
 	"scripts": {
 		"test": "vitest --project next"

@@ -4,7 +4,7 @@ export default createBlockPaddingRule(
 	{
 		description: "Enforces padding around `test` blocks.",
 		id: "testCasePaddingLines",
-		presets: ["stylisticStrict"],
+		presets: [],
 	},
 	["test", "it"],
 	{ blockName: "test" },

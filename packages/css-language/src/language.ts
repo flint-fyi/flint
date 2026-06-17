@@ -1,5 +1,6 @@
+import { parse, walk, type CssNode } from "css-tree";
+
 import { createLanguage, type Language } from "@flint.fyi/core";
-import { type CssNode, parse, walk } from "css-tree";
 
 import type { CssNodeVisitors } from "./nodes.ts";
 
@@ -39,10 +40,10 @@ export const cssLanguage: Language<CssNodeVisitors, CssFileServices> =
 			const visitorServices = { options, ...file.services };
 
 			walk(file.services.root, {
-				// @ts-expect-error -- Expression produces a union type that is too complex to represent
+				// @ts-expect-error -- The intersection AnPlusB & Atrule & AtrulePrelude &...was reduced to `never` because property `type` has conflicting types in some constituents.
 				enter: (node: CssNode) => visitors[node.type]?.(node, visitorServices),
 				leave: (node: CssNode) =>
-					// @ts-expect-error -- Expression produces a union type that is too complex to represent
+					// @ts-expect-error -- The intersection AnPlusB & Atrule & AtrulePrelude &...was reduced to `never` because property `type` has conflicting types in some constituents.
 					visitors[`${node.type}:exit`]?.(node, visitorServices),
 			});
 		},

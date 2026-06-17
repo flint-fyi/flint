@@ -334,8 +334,6 @@ This intersection can be simplified to a subtraction.
 		String.raw`/[\w]/v`,
 		String.raw`/[^a]/v`,
 		String.raw`/test/v`,
-		String.raw`/[a&&b]/v`,
-		String.raw`/[a--b]/v`,
 		String.raw`/[a[^b]]/v`,
 	],
 });

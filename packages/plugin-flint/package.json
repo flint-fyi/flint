@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/plugin-flint",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"description": "[Experimental] A Flint plugin for linting Flint plugins.",
 	"homepage": "https://flint.fyi/rules/flint",
 	"repository": {
@@ -19,8 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/",
-		"!lib/**/*.map"
+		"lib/"
 	],
 	"scripts": {
 		"test": "vitest --project plugin-flint"

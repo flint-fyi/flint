@@ -72,6 +72,7 @@ export interface LanguageAbout {
 export interface LanguageReport {
 	code?: string;
 	range?: CharacterReportRange;
+	source?: string;
 	text: string;
 }
 
@@ -106,6 +107,7 @@ export interface LanguageDefinition<
 
 export interface LanguageFileCacheImpacts {
 	dependencies: string[];
+	invalidatesCache: boolean;
 }
 
 /**

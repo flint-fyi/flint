@@ -1,7 +1,6 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
-import { SyntaxKind } from "typescript";
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
-import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
+import { getPackagePropertiesOfNames } from "../getPackagePropertiesOfNames.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -25,61 +24,42 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { sourceFile }) {
-					const peerDependenciesMeta = getPackagePropertyOfName(
-						node,
-						"peerDependenciesMeta",
-					);
+				Document(node) {
+					const { peerDependencies, peerDependenciesMeta } =
+						getPackagePropertiesOfNames(node, [
+							"peerDependencies",
+							"peerDependenciesMeta",
+						]);
 
 					// Bail early if there are no peerDependenciesMeta or if it's the wrong shape
-					if (
-						peerDependenciesMeta?.kind !== SyntaxKind.PropertyAssignment ||
-						peerDependenciesMeta.initializer.kind !==
-							SyntaxKind.ObjectLiteralExpression
-					) {
+					if (peerDependenciesMeta?.value.type !== "Object") {
 						return;
 					}
 
-					const peerDependencies = getPackagePropertyOfName(
-						node,
-						"peerDependencies",
-					);
-
 					// Collect the set of dependency names declared in peerDependencies
 					const declaredPeerDependencyNames = new Set<string>();
-					if (
-						peerDependencies?.kind === SyntaxKind.PropertyAssignment &&
-						peerDependencies.initializer.kind ===
-							SyntaxKind.ObjectLiteralExpression
-					) {
-						for (const element of peerDependencies.initializer.properties) {
-							if (
-								element.kind === SyntaxKind.PropertyAssignment &&
-								element.name.kind === SyntaxKind.StringLiteral
-							) {
-								declaredPeerDependencyNames.add(element.name.text);
+					if (peerDependencies?.value.type === "Object") {
+						for (const element of peerDependencies.value.members) {
+							if (element.name.type === "String") {
+								declaredPeerDependencyNames.add(element.name.value);
 							}
 						}
 					}
 
 					// Check all dependencies declared in peerDependenciesMeta to ensure they are also declared in peerDependencies
-					for (const element of peerDependenciesMeta.initializer.properties) {
-						if (
-							element.kind === SyntaxKind.PropertyAssignment &&
-							element.name.kind === SyntaxKind.StringLiteral
-						) {
-							const dependencyName = element.name.text;
+					for (const element of peerDependenciesMeta.value.members) {
+						if (element.name.type === "String") {
+							const dependencyName = element.name.value;
 
 							if (!declaredPeerDependencyNames.has(dependencyName)) {
 								const { range, text } = removeObjectProperty(
-									sourceFile,
 									element,
-									peerDependenciesMeta.initializer,
+									peerDependenciesMeta.value,
 								);
 								context.report({
 									data: { dependencyName },
 									message: "unnecessaryPeerDependency",
-									range: getJsonNodeRange(element.name, sourceFile),
+									range: getNodeRange(element.name),
 									suggestions: [
 										{
 											id: "removeUnnecessaryPeerDependencyMeta",

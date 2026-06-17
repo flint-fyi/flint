@@ -1,13 +1,14 @@
+import { SyntaxKind } from "typescript";
+
 import {
 	getTSNodeRange,
 	isGlobalDeclaration,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
-
-const blobReadingMethods = new Set(["arrayBuffer", "bytes", "text"]);
 
 import { ruleCreator } from "./ruleCreator.ts";
+
+const blobReadingMethods = new Set(["arrayBuffer", "bytes", "text"]);
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

@@ -1,9 +1,11 @@
-import { commonlyIgnoredPaths, type LinterHost } from "@flint.fyi/core";
-import { assert, FlintAssertionError } from "@flint.fyi/utils";
 import fs from "node:fs";
 import timers from "node:timers";
+
 import { resolve } from "pathe";
 import ts from "typescript";
+
+import { commonlyIgnoredPaths, type LinterHost } from "@flint.fyi/core";
+import { assert, FlintAssertionError } from "@flint.fyi/utils";
 
 function serverHostMethodNotImplemented(methodName: string): never {
 	throw new FlintAssertionError(

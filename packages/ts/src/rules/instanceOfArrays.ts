@@ -1,10 +1,11 @@
+import { SyntaxKind } from "typescript";
+
 import {
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
 	unwrapParenthesizedNode,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

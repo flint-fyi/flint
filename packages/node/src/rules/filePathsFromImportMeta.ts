@@ -1,10 +1,13 @@
+import { SyntaxKind } from "typescript";
+
 import {
-	type AST,
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import { SyntaxKind } from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 function isFileURLToPathCall(node: AST.Expression): node is AST.CallExpression {
 	return (
@@ -73,8 +76,6 @@ function isPathDirnameCall(node: AST.CallExpression): boolean {
 		node.arguments.length === 1
 	);
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

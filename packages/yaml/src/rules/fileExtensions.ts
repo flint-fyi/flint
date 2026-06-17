@@ -1,5 +1,6 @@
-import { yamlLanguage } from "@flint.fyi/yaml-language";
 import path from "node:path";
+
+import { yamlLanguage } from "@flint.fyi/yaml-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

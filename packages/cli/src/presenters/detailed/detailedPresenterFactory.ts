@@ -1,5 +1,6 @@
-import { hasFix } from "@flint.fyi/core";
 import chalk from "chalk";
+
+import { hasFix } from "@flint.fyi/core";
 
 import { presentHeader } from "../shared/header.ts";
 import { presentLanguageReports } from "../shared/presentLanguageReports.ts";

@@ -7,6 +7,10 @@ export default {
 	workspaces: {
 		".": {
 			entry: ["*.config.{js,ts}"],
+			ignoreDependencies: [
+				// The changesets CLI isn't directly referenced anywhere, but we need it to create new changesets.
+				"@changesets/cli",
+			],
 			project: ["*.config.{js,ts}", "scripts/**/*.ts"],
 		},
 		"packages/astro": {
@@ -64,7 +68,6 @@ export default {
 		"packages/site": {
 			ignoreDependencies: [
 				// Needed for Twoslash
-				"@flint.fyi/core",
 				"@flint.fyi/typescript-language",
 				"zod",
 
@@ -79,6 +82,7 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/ts": {
+			entry: ["src/typescript.d.ts"],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/vitest": {
@@ -97,9 +101,6 @@ export default {
 		},
 		"packages/vue-language": {
 			ignoreDependencies: [
-				// It's bugging IDK.
-				"@flint.fyi/core!",
-
 				// https://github.com/webpro-nl/knip/issues/248
 				"@volar/language-core!",
 			],

@@ -37,6 +37,11 @@
 	min-width: clamp(3.5rem, 7.5vw, 7.5rem);
 }
 
+.unknownPlugin {
+	font-size: var(--sl-text-xs);
+	font-style: italic;
+}
+
 .noneCell {
 	font-size: var(--sl-text-sm);
 	font-style: italic;

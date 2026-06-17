@@ -1,6 +1,6 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
-import { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
+
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackageProperties } from "../getPackageProperties.ts";
 import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
@@ -33,22 +33,19 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { options, sourceFile }) {
+				Document(node, { options }) {
 					const properties = getPackageProperties(node);
-					const root = node.statements[0];
+					const root = node.body;
 
-					if (
-						!properties ||
-						root?.expression.kind !== SyntaxKind.ObjectLiteralExpression
-					) {
+					if (!properties || root.type !== "Object") {
 						return;
 					}
 
 					const privateProperty = getPackagePropertyOfName(node, "private");
 
 					if (
-						privateProperty?.kind !== SyntaxKind.PropertyAssignment ||
-						privateProperty.initializer.kind !== SyntaxKind.TrueKeyword
+						privateProperty?.value.type !== "Boolean" ||
+						!privateProperty.value.value
 					) {
 						return;
 					}
@@ -57,25 +54,20 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 					for (const property of properties) {
 						if (
-							property.kind !== SyntaxKind.PropertyAssignment ||
-							property.name.kind !== SyntaxKind.StringLiteral ||
-							!blockedProperties.has(property.name.text)
+							property.name.type !== "String" ||
+							!blockedProperties.has(property.name.value)
 						) {
 							continue;
 						}
 
-						const { range, text } = removeObjectProperty(
-							sourceFile,
-							property,
-							root.expression,
-						);
+						const { range, text } = removeObjectProperty(property, root);
 
 						context.report({
 							data: {
-								propertyName: property.name.text,
+								propertyName: property.name.value,
 							},
 							message: "unnecessaryProperty",
-							range: getJsonNodeRange(property.name, sourceFile),
+							range: getNodeRange(property.name),
 							suggestions: [
 								{
 									id: "removePrivatePackageProperty",

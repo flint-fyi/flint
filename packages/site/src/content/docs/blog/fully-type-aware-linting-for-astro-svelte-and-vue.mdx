@@ -226,8 +226,8 @@ Take a look at this Flint config structure that imports Flint's Vue language:
 
 ```typescript 'import { vue } from "@flint.fyi/vue"'
 // flint.config.ts
-import { defineConfig } from "flint";
 import { vue } from "@flint.fyi/vue";
+import { defineConfig } from "flint";
 
 export default defineConfig({
 	// ...
@@ -290,8 +290,8 @@ Now, let's look at `flint.config.ts`:
 ```typescript "ts.files.all, vue.files.all" {11-17}
 // flint.config.ts
 
-import { defineConfig, ts } from "flint";
 import { vue } from "@flint.fyi/vue";
+import { defineConfig, ts } from "flint";
 
 export default defineConfig({
 	use: [

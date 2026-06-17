@@ -1,10 +1,10 @@
 import { markdownLanguage } from "@flint.fyi/markdown-language";
 
+import { ruleCreator } from "./ruleCreator.ts";
+
 // Pattern to match label references: ![text][label], [text][label], [label][], or [label]
 // Includes optional ! for images
 const labelPattern = /!?\[(?<left>[^[\]\\]*)\]\[(?<right>[^\]\\]*)\]/g;
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(markdownLanguage, {
 	about: {

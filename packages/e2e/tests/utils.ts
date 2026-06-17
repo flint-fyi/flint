@@ -1,5 +1,6 @@
-import { normalizePath } from "@flint.fyi/utils";
 import { execa } from "execa";
+
+import { normalizePath } from "@flint.fyi/utils";
 
 declare global {
 	// TODO[typescript>=6.0]: Remove this declaration.

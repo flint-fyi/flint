@@ -1,0 +1,99 @@
+---
+description: "Reports async functions that do not use await."
+title: "asyncFunctionAwaits"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="asyncFunctionAwaits" />
+
+Functions can be marked as `async` to allow `await` expressions used inside of them.
+The `async` keyword adds a small amount of conceptual and runtime overhead.
+An async function without `await` expressions may indicate incomplete implementation or leftover code after refactoring.
+
+This rule reports on any function that is marked as `async` but neither includes an `await` nor returns a `Promise`.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+async function processData() {
+	console.log("processing");
+	return 42;
+}
+```
+
+```ts
+const fetchUser = async () => {
+	return { name: "Alice" };
+};
+```
+
+```ts
+class DataService {
+	async getData() {
+		return this.cache.get("data");
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+async function fetchData() {
+	const response = await fetch("/api/data");
+	return response.json();
+}
+```
+
+```ts
+async function processItems() {
+	for await (const item of asyncIterable) {
+		console.log(item);
+	}
+}
+```
+
+```ts
+async function wrapInPromise(): Promise<number> {
+	return Promise.resolve(42);
+}
+```
+
+```ts
+function regularFunction() {
+	return 42;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you intentionally use `async` functions without `await` to ensure thrown errors are wrapped in rejected Promises, you may want to disable this rule.
+This pattern can be useful when you want consistent error handling through `Promise` rejection rather than thrown exceptions.
+You might consider using [Flint disable comments](/directives) and/or [configuration file disables](/configuration#files) for those specific situations instead of completely disabling this rule.
+
+Some projects that manually manage their Promises prefer to write functions that return Promises regardless of whether they're using `await`.
+Additionally, if you are writing prototype code where many functions intentionally can be missing their implementation, this rule may get in your way.
+
+## Further Reading
+
+- [MDN: async function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
+- [MDN: await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await)
+- [MDN: for await...of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="asyncFunctionAwaits" />

@@ -1,16 +1,13 @@
-import type { JsonSourceFile } from "@flint.fyi/json-language";
-import type { AST } from "@flint.fyi/typescript-language";
-import ts from "typescript";
+import type { DocumentNode, MemberNode } from "@humanwhocodes/momoa";
 
 import { getPackageProperties } from "./getPackageProperties.ts";
 
 export function getPackagePropertyOfName(
-	sourceFile: JsonSourceFile,
+	rootNode: DocumentNode,
 	propertyName: string,
-): AST.ObjectLiteralElementLike | undefined {
-	return getPackageProperties(sourceFile)?.find(
+): MemberNode | undefined {
+	return getPackageProperties(rootNode)?.find(
 		(property) =>
-			property.name?.kind === ts.SyntaxKind.StringLiteral &&
-			property.name.text === propertyName,
+			property.name.type === "String" && property.name.value === propertyName,
 	);
 }

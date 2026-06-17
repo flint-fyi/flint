@@ -2,8 +2,8 @@ import { toFileDirURL, toFileURL } from "@cspell/url";
 import {
 	checkFilenameMatchesGlob,
 	createTextDocument,
-	type CSpellSettings,
 	DocumentValidator,
+	type CSpellSettings,
 } from "cspell-lib";
 
 export async function createDocumentValidator(

@@ -1,11 +1,12 @@
-import {
-	getJsonNodeRange,
-	jsonLanguage,
-	type JsonSourceFile,
-} from "@flint.fyi/json-language";
-import type { AST } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
+import type {
+	ArrayNode,
+	ElementNode,
+	MemberNode,
+	ObjectNode,
+} from "@humanwhocodes/momoa";
 import { z } from "zod/v4";
+
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { removeArrayElement } from "../removeArrayElement.ts";
 import { removeObjectProperty } from "../removeObjectProperty.ts";
@@ -41,96 +42,75 @@ export default ruleCreator.createRule(jsonLanguage, {
 			.describe("Top-level package.json properties to ignore."),
 	},
 	setup(context) {
-		function checkArrayElement(
-			element: AST.Expression,
-			sourceFile: JsonSourceFile,
-			arrayNode: AST.ArrayLiteralExpression,
-		) {
-			if (element.kind === SyntaxKind.ArrayLiteralExpression) {
-				if (!element.elements.length) {
-					reportArrayElement(element, sourceFile, arrayNode);
+		function checkArrayElement(element: ElementNode, arrayNode: ArrayNode) {
+			const elementValue = element.value;
+			if (elementValue.type === "Array") {
+				if (!elementValue.elements.length) {
+					reportArrayElement(element, arrayNode);
 					return;
 				}
 
-				for (const nestedElement of element.elements) {
-					checkArrayElement(nestedElement, sourceFile, element);
+				for (const nestedElement of elementValue.elements) {
+					checkArrayElement(nestedElement, elementValue);
 				}
 
 				return;
 			}
 
-			if (element.kind !== SyntaxKind.ObjectLiteralExpression) {
+			if (elementValue.type !== "Object") {
 				return;
 			}
 
-			if (!element.properties.length) {
-				reportArrayElement(element, sourceFile, arrayNode);
+			if (!elementValue.members.length) {
+				reportArrayElement(element, arrayNode);
 				return;
 			}
 
-			for (const property of element.properties) {
-				if (
-					property.kind === SyntaxKind.PropertyAssignment &&
-					property.name.kind === SyntaxKind.StringLiteral
-				) {
-					checkPropertyValue(property, sourceFile, element);
+			for (const property of elementValue.members) {
+				if (property.name.type === "String") {
+					checkPropertyValue(property, elementValue);
 				}
 			}
 		}
 
-		function checkPropertyValue(
-			property: AST.PropertyAssignment,
-			sourceFile: JsonSourceFile,
-			objectNode: AST.ObjectLiteralExpression,
-		) {
-			const value = property.initializer;
+		function checkPropertyValue(property: MemberNode, objectNode: ObjectNode) {
+			const valueNode = property.value;
 
-			if (value.kind === SyntaxKind.ArrayLiteralExpression) {
-				if (!value.elements.length) {
-					reportPropertyValue(property, sourceFile, objectNode);
+			if (valueNode.type === "Array") {
+				if (!valueNode.elements.length) {
+					reportPropertyValue(property, objectNode);
 					return;
 				}
 
-				for (const element of value.elements) {
-					checkArrayElement(element, sourceFile, value);
+				for (const element of valueNode.elements) {
+					checkArrayElement(element, valueNode);
 				}
 
 				return;
 			}
 
-			if (value.kind !== SyntaxKind.ObjectLiteralExpression) {
+			if (valueNode.type !== "Object") {
 				return;
 			}
 
-			if (!value.properties.length) {
-				reportPropertyValue(property, sourceFile, objectNode);
+			if (!valueNode.members.length) {
+				reportPropertyValue(property, objectNode);
 				return;
 			}
 
-			for (const nestedProperty of value.properties) {
-				if (
-					nestedProperty.kind === SyntaxKind.PropertyAssignment &&
-					nestedProperty.name.kind === SyntaxKind.StringLiteral
-				) {
-					checkPropertyValue(nestedProperty, sourceFile, value);
+			for (const nestedProperty of valueNode.members) {
+				if (nestedProperty.name.type === "String") {
+					checkPropertyValue(nestedProperty, valueNode);
 				}
 			}
 		}
 
-		function reportArrayElement(
-			element: AST.ArrayLiteralExpression | AST.ObjectLiteralExpression,
-			sourceFile: JsonSourceFile,
-			arrayNode: AST.ArrayLiteralExpression,
-		) {
-			const { range, text } = removeArrayElement(
-				sourceFile,
-				element,
-				arrayNode,
-			);
+		function reportArrayElement(element: ElementNode, arrayNode: ArrayNode) {
+			const { range, text } = removeArrayElement(element, arrayNode);
 
 			context.report({
 				message: "emptyElement",
-				range: getJsonNodeRange(element, sourceFile),
+				range: getNodeRange(element.value),
 				suggestions: [
 					{
 						id: "removeEmptyField",
@@ -141,24 +121,16 @@ export default ruleCreator.createRule(jsonLanguage, {
 			});
 		}
 
-		function reportPropertyValue(
-			property: AST.PropertyAssignment,
-			sourceFile: JsonSourceFile,
-			objectNode: AST.ObjectLiteralExpression,
-		) {
-			if (property.name.kind !== SyntaxKind.StringLiteral) {
+		function reportPropertyValue(property: MemberNode, objectNode: ObjectNode) {
+			if (property.name.type !== "String") {
 				return;
 			}
 
-			const { range, text } = removeObjectProperty(
-				sourceFile,
-				property,
-				objectNode,
-			);
+			const { range, text } = removeObjectProperty(property, objectNode);
 
 			context.report({
 				message: "emptyField",
-				range: getJsonNodeRange(property.name, sourceFile),
+				range: getNodeRange(property.name),
 				suggestions: [
 					{
 						id: "removeEmptyField",
@@ -171,25 +143,20 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 		return {
 			visitors: {
-				JsonSourceFile(node, { options, sourceFile }) {
+				Document(node, { options }) {
 					const ignoredProperties = new Set(options.ignoreProperties);
 
-					if (node.statements.length !== 1) {
+					const documentBody = node.body;
+					if (documentBody.type !== "Object") {
 						return;
 					}
 
-					const expression = node.statements[0]?.expression;
-					if (expression?.kind !== SyntaxKind.ObjectLiteralExpression) {
-						return;
-					}
-
-					for (const property of expression.properties) {
+					for (const property of documentBody.members) {
 						if (
-							property.kind === SyntaxKind.PropertyAssignment &&
-							property.name.kind === SyntaxKind.StringLiteral &&
-							!ignoredProperties.has(property.name.text)
+							property.name.type === "String" &&
+							!ignoredProperties.has(property.name.value)
 						) {
-							checkPropertyValue(property, sourceFile, expression);
+							checkPropertyValue(property, documentBody);
 						}
 					}
 				},
