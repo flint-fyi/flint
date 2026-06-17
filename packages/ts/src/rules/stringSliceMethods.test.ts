@@ -89,12 +89,30 @@ function process(input: string) {
 		},
 	],
 	valid: [
-		`text.slice(1);`,
-		`text.slice(1, 5);`,
+		`
+declare const text: string;
+text.slice(1);
+`,
+		`
+declare const text: string;
+text.slice(1, 5);
+`,
 		`"hello".slice(0, 3);`,
-		`str?.slice(1);`,
-		`const substr = text.substr(0);`,
-		`const substring = text.substring;`,
-		`text.trim();`,
+		`
+declare const text: string | undefined;
+text?.slice(1);
+`,
+		`
+declare const text: string;
+const substr = text.substr(0);
+`,
+		`
+declare const text: string;
+const substring = text.substring;
+`,
+		`
+declare const text: string;
+text.trim();
+`,
 	],
 });

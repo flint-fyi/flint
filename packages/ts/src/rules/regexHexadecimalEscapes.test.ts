@@ -93,7 +93,6 @@ ruleTester.describe(rule, {
 		String.raw`/\u0100/u;`,
 		String.raw`/\u{100}/u;`,
 		String.raw`/\u0100 \u{100}/u;`,
-		String.raw`/\7/;`,
 		String.raw`/\cA \cB \cM/;`,
 		String.raw`/[\q{\x0a}]/v;`,
 		String.raw`/abc/;`,

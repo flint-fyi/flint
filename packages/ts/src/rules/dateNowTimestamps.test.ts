@@ -47,12 +47,12 @@ const timestamp = Number(new Date());
 	valid: [
 		"const timestamp = Date.now();",
 		"const date = new Date();",
-		"const time = date.getTime();",
+		"const date = new Date(); const time = date.getTime();",
 		"const timestamp = new Date(2024, 0, 1).getTime();",
 		"const value = new Date().toISOString();",
 		"const value = String(new Date());",
 		`
-class Date { getTime: () => 0; }
+class Date { getTime() { return 0; } }
 new Date().getTime();
 export {}
 		`,

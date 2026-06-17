@@ -1,7 +1,7 @@
 import rule from "./impliedEvals.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { domLibRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+domLibRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
@@ -28,6 +28,11 @@ setInterval("code", 0);
 			code: `
 setImmediate("code");
 `,
+			files: {
+				"lib.node.d.ts": `
+declare function setImmediate(handler: string | (() => void)): number;
+`,
+			},
 			snapshot: `
 setImmediate("code");
              ~~~~~~
@@ -38,6 +43,11 @@ setImmediate("code");
 			code: `
 execScript("code");
 `,
+			files: {
+				"lib.custom.d.ts": `
+declare function execScript(code: string): void;
+`,
+			},
 			snapshot: `
 execScript("code");
            ~~~~~~
@@ -169,22 +179,26 @@ export {};
 `,
 		`
 declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
-declare const callback: () => void; setTimeout(callback, 100);
+declare const callback: () => void;
+setTimeout(callback, 100);
 export {};
 `,
 		`
 declare function setInterval(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
-declare function someFunction(): void; setInterval(someFunction, 1000);
+declare function someFunction(): void;
+setInterval(someFunction, 1000);
 export {};
 `,
 		`
 declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
-const fn = () => {}; setTimeout(fn, 100);
+const fn = () => {};
+setTimeout(fn, 100);
 export {};
 `,
 		`
 declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
-declare const fn: { bind: (ctx: unknown) => () => void }; setTimeout(fn.bind(this), 100);
+declare const fn: { bind: (ctx: unknown) => () => void };
+setTimeout(fn.bind(this), 100);
 export {};
 `,
 		`
@@ -192,17 +206,20 @@ window.setTimeout(() => {}, 100);
 export {};
 `,
 		`
-declare const callback: () => void; globalThis.setInterval(callback, 1000);
+declare const callback: () => void;
+globalThis.setInterval(callback, 1000);
 export {};
 `,
 		`
 declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
-declare function getCallback(): () => void; setTimeout(getCallback(), 100);
+declare function getCallback(): () => void;
+setTimeout(getCallback(), 100);
 export {};
 `,
 		`
 declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
-const getCallback = (): (() => void) => () => {}; setTimeout(getCallback(), 100);
+const getCallback = (): (() => void) => () => {};
+setTimeout(getCallback(), 100);
 export {};
 `,
 		`
@@ -215,6 +232,9 @@ function setInterval(input: string, value: number) {}
 setInterval("", 0);
 export {};
 `,
-		`new Function(); export {};`,
+		`
+new Function();
+export {};
+`,
 	],
 });

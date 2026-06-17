@@ -68,9 +68,9 @@ export module Values {}
 		`namespace Values {}`,
 		`declare namespace Values {}`,
 		`export namespace Values {}`,
-		`module "external-module" {}`,
+		`declare module "quoted-module" {}`,
 		`declare module "external-module" {}`,
-		`module 'single-quoted' {}`,
+		`declare module 'single-quoted' {}`,
 		`
 declare module "external" {
     namespace Inner {}

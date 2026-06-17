@@ -64,6 +64,6 @@ new RegExp("[\\\\q{}]", "v");
 		String.raw`/[\q{|a}]/v;`,
 		`/[]/;`,
 		`new RegExp("[a]");`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 	],
 });

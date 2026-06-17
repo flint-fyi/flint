@@ -154,10 +154,26 @@ type Mixed = (string | number)[];
 		},
 		{
 			code: `
+interface Foo {
+    foo: string;
+}
+
+interface Bar {
+    bar: string;
+}
+
 type Intersection = (Foo & Bar)[];
 `,
 			options: { style: "array-simple" },
 			snapshot: `
+interface Foo {
+    foo: string;
+}
+
+interface Bar {
+    bar: string;
+}
+
 type Intersection = (Foo & Bar)[];
                     ~~~~~~~~~~~~~
                     Prefer \`Array<T>\` over \`T[]\`.
@@ -209,12 +225,12 @@ type Obj = { a: string }[];
 		`const mixed: (string | number)[] = [];`,
 		`
 type Array<T> = { other: T };
-const values: Array<string> = [];
+const values: Array<string> = { other: "" };
 export {};
 `,
 		`
 type ReadonlyArray<T> = { other: T };
-const values: ReadonlyArray<string> = [];
+const values: ReadonlyArray<string> = { other: "" };
 export {};
 `,
 		{
@@ -242,15 +258,31 @@ export {};
 			options: { style: "array-simple" },
 		},
 		{
-			code: `const values: ReadonlyArray<Foo & Bar> = [];`,
+			code: `
+interface Foo {
+    foo: string;
+}
+
+interface Bar {
+    bar: string;
+}
+
+const values: ReadonlyArray<Foo & Bar> = [];
+`,
 			options: { style: "array-simple" },
 		},
 		{
-			code: `type Nested = string[][] = [];`,
+			code: `type Nested = string[][];`,
 			options: { style: "array-simple" },
 		},
 		{
-			code: `type TypeRef = MyType[];`,
+			code: `
+interface MyType {
+    value: string;
+}
+
+type TypeRef = MyType[];
+`,
 			options: { style: "array-simple" },
 		},
 	],

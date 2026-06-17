@@ -108,13 +108,13 @@ throw new MyError("oops");
 		{
 			code: `
 class ValidationError {
-  errors: string[];
+  errors: string[] = [];
 }
 throw new ValidationError();
 `,
 			snapshot: `
 class ValidationError {
-  errors: string[];
+  errors: string[] = [];
 }
 throw new ValidationError();
       ~~~~~~~~~~~~~~~~~~~~~

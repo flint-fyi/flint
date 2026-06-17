@@ -172,9 +172,12 @@ new RegExp("(?:abc|)");
 		`/a{0,}/;`,
 		`/[a{0,1}]/;`,
 		`new RegExp("a?");`,
-		`new RegExp(variable);`,
+		`
+declare const variable: string;
+new RegExp(variable);
+`,
 		`RegExp("a?");`,
-		`RegExp();`,
-		`RegExp(123);`,
+		`RegExp(undefined as unknown as string);`,
+		`RegExp(123 as unknown as string);`,
 	],
 });

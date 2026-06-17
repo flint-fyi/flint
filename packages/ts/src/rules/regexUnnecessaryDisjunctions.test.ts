@@ -74,7 +74,7 @@ RegExp("[\\\\q{a}]", "v");
 		`/[a]/v;`,
 		`/[abc]/v;`,
 		`new RegExp("[\\\\q{ab|cd}]", "v");`,
-		`new RegExp(variable, "v");`,
+		`declare const variable: string; new RegExp(variable, "v");`,
 		`/[\\q{ab}]/v;`,
 	],
 });

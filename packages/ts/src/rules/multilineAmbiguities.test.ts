@@ -5,10 +5,18 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+function identifier(value: { doSomething(): void }) {
+    return value;
+}
+const expression = { doSomething() {} };
 const value = identifier
 (expression).doSomething()
 `,
 			snapshot: `
+function identifier(value: { doSomething(): void }) {
+    return value;
+}
+const expression = { doSomething() {} };
 const value = identifier
 (expression).doSomething()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -17,10 +25,16 @@ This ambiguous line break before parentheses will be misinterpreted as a functio
 		},
 		{
 			code: `
+const identifier = [[1]];
+const element = 0;
+const callback = (value: number) => value;
 const value = identifier
 [element].forEach(callback)
 `,
 			snapshot: `
+const identifier = [[1]];
+const element = 0;
+const callback = (value: number) => value;
 const value = identifier
 [element].forEach(callback)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,10 +43,16 @@ This ambiguous line break before brackets will be misinterpreted as a property a
 		},
 		{
 			code: `
+function identifier(strings: TemplateStringsArray) {
+    return strings[0];
+}
 const value = identifier
 \`template literal\`
 `,
 			snapshot: `
+function identifier(strings: TemplateStringsArray) {
+    return strings[0];
+}
 const value = identifier
 \`template literal\`
 ~~~~~~~~~~~~~~~~~~
@@ -41,10 +61,20 @@ This ambiguous line break before a template literal will be misinterpreted as a 
 		},
 		{
 			code: `
+function b(value: { doSomething(): void }) {
+    return value;
+}
+const c = { doSomething() {} };
+const d = c;
 const a = b
 (c || d).doSomething()
 `,
 			snapshot: `
+function b(value: { doSomething(): void }) {
+    return value;
+}
+const c = { doSomething() {} };
+const d = c;
 const a = b
 (c || d).doSomething()
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -53,10 +83,14 @@ This ambiguous line break before parentheses will be misinterpreted as a functio
 		},
 		{
 			code: `
+const f = [[1]];
+const g = 0;
 const e = f
 [g].forEach(x => x)
 `,
 			snapshot: `
+const f = [[1]];
+const g = 0;
 const e = f
 [g].forEach(x => x)
 ~~~~~~~~~~~~~~~~~~~
@@ -65,10 +99,16 @@ This ambiguous line break before brackets will be misinterpreted as a property a
 		},
 		{
 			code: `
+function i(strings: TemplateStringsArray) {
+    return strings[0];
+}
 const h = i
 \`template\`
 `,
 			snapshot: `
+function i(strings: TemplateStringsArray) {
+    return strings[0];
+}
 const h = i
 \`template\`
 ~~~~~~~~~~
@@ -78,12 +118,16 @@ This ambiguous line break before a template literal will be misinterpreted as a 
 		{
 			code: `
 function test() {
+    const value = 1;
+    const calculate = () => (next: number) => next;
     const result = calculate()
     (value + 1).toString()
 }
 `,
 			snapshot: `
 function test() {
+    const value = 1;
+    const calculate = () => (next: number) => next;
     const result = calculate()
     (value + 1).toString()
     ~~~~~~~~~~~~~~~~~~~~~~
@@ -95,6 +139,7 @@ function test() {
 			code: `
 class MyClass {
     method() {
+        const getData = () => [{ value: 1 }];
         const data = getData()
         [0].value
     }
@@ -103,6 +148,7 @@ class MyClass {
 			snapshot: `
 class MyClass {
     method() {
+        const getData = () => [{ value: 1 }];
         const data = getData()
         [0].value
         ~~~~~~~~~
@@ -113,10 +159,18 @@ class MyClass {
 		},
 		{
 			code: `
+function identifier(value: { doSomething(): void }) {
+    return value;
+}
+const expression = { doSomething() {} };
 const value = identifier /* comment with ( */
 (expression).doSomething()
 `,
 			snapshot: `
+function identifier(value: { doSomething(): void }) {
+    return value;
+}
+const expression = { doSomething() {} };
 const value = identifier /* comment with ( */
 (expression).doSomething()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -125,10 +179,16 @@ This ambiguous line break before parentheses will be misinterpreted as a functio
 		},
 		{
 			code: `
+const identifier = [[1]];
+const element = 0;
+const callback = (value: number) => value;
 const value = identifier // comment with [
 [element].forEach(callback)
 `,
 			snapshot: `
+const identifier = [[1]];
+const element = 0;
+const callback = (value: number) => value;
 const value = identifier // comment with [
 [element].forEach(callback)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -137,29 +197,65 @@ This ambiguous line break before brackets will be misinterpreted as a property a
 		},
 	],
 	valid: [
-		`const value = identifier(expression).doSomething()`,
-		`const value = identifier[element].forEach(callback)`,
-		"const value = identifier`template literal`",
 		`
+function identifier(value: { doSomething(): void }) {
+    return value;
+}
+const expression = { doSomething() {} };
+const value = identifier(expression).doSomething()
+`,
+		`
+const identifier = [[1]];
+const element = 0;
+const callback = (value: number) => value;
+const value = identifier[element].forEach(callback)
+`,
+		`
+function identifier(strings: TemplateStringsArray) {
+    return strings[0];
+}
+const value = identifier\`template literal\`
+`,
+		`
+const identifier = 0;
+const expression = { doSomething() {} };
 const value = identifier;
 (expression).doSomething()
 `,
 		`
+const identifier = 0;
+const element = 1;
+const callback = (value: number) => value;
 const value = identifier;
 [element].forEach(callback)
 `,
-		"const value = identifier;\n`template literal`",
 		`
+const identifier = 0;
+const value = identifier;
+\`template literal\`
+`,
+		`
+const b = 1;
+const c = { doSomething() {} };
+const d = c;
 const a = b;
 (c || d).doSomething()
 `,
 		`
+const f = 1;
+const g = 1;
 const e = f;
 [g].forEach(x => x)
 `,
-		"const h = i;\n`template`",
+		`
+const i = 1;
+const h = i;
+\`template\`
+`,
 		`
 function test() {
+    const value = 1;
+    const calculate = () => 1;
     const result = calculate();
     (value + 1).toString()
 }
@@ -167,27 +263,52 @@ function test() {
 		`
 class MyClass {
     method() {
+        const getData = () => [{ value: 1 }];
         const data = getData();
-        [0].value
+        [{ value: 0 }][0].value
     }
 }
 `,
-		`const value = call(); const other = value`,
 		`
+const call = () => 1;
+const value = call(); const other = value
+`,
+		`
+const getData = () => [1, 2, 3];
 const value = getData();
 const element = [1, 2, 3];
 `,
 		`
+const callee = (value: number) => value;
+const a = true;
+const b = 1;
+const c = 2;
 callee(
   a
     ? b
     : c
 );
 `,
-		`const value = identifier/* ( */("arg")`,
-		`const value = identifier/* [ */[0]`,
-		"const value = identifier/* ` */`template`",
 		`
+const identifier = (value: string) => value;
+const value = identifier/* ( */("arg")
+`,
+		`
+const identifier = [1];
+const value = identifier/* [ */[0]
+`,
+		`
+function identifier(strings: TemplateStringsArray) {
+    return strings[0];
+}
+const value = identifier/* \` */\`template\`
+`,
+		`
+type TypeA = { a: string };
+type TypeB = { b: string };
+function createLanguage<T, U>(value: { name: string }) {
+    return value;
+}
 const value = createLanguage<
     TypeA,
     TypeB

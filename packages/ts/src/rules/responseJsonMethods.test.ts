@@ -1,13 +1,17 @@
 import rule from "./responseJsonMethods.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { domLibRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+domLibRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+const data = { value: 1 };
+
 new Response(JSON.stringify(data))
 `,
 			snapshot: `
+const data = { value: 1 };
+
 new Response(JSON.stringify(data))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(...))\`.
@@ -25,9 +29,13 @@ Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(
 		},
 		{
 			code: `
+const data = { value: 1 };
+
 new Response(JSON.stringify(data), {})
 `,
 			snapshot: `
+const data = { value: 1 };
+
 new Response(JSON.stringify(data), {})
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(...))\`.
@@ -35,9 +43,13 @@ Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(
 		},
 		{
 			code: `
+const data = { value: 1 };
+
 new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json' } })
 `,
 			snapshot: `
+const data = { value: 1 };
+
 new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json' } })
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(...))\`.
@@ -45,9 +57,13 @@ Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(
 		},
 		{
 			code: `
+const data = { value: 1 };
+
 new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json' } })
 `,
 			snapshot: `
+const data = { value: 1 };
+
 new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json' } })
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(...))\`.
@@ -55,9 +71,13 @@ Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(
 		},
 		{
 			code: `
+const data = { value: 1 };
+
 new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json; charset=utf-8' } })
 `,
 			snapshot: `
+const data = { value: 1 };
+
 new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json; charset=utf-8' } })
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Prefer the cleaner \`Response.json()\` instead of \`new Response(JSON.stringify(...))\`.
@@ -75,15 +95,24 @@ const response = new Response(JSON.stringify({ message: 'ok' }))
 		},
 	],
 	valid: [
-		`new Response(data)`,
+		`const data = "data";
+new Response(data)`,
 		`new Response("text")`,
-		`new Response(JSON.stringify(data, null, 2))`,
-		`new Response(JSON.stringify(data, replacer))`,
-		`new Response(JSON.stringify(data), { status: 200 })`,
-		`new Response(JSON.stringify(data), { headers: { 'x-custom': 'value' } })`,
-		`new Response(JSON.stringify(data), { status: 200, headers: { 'content-type': 'application/json' } })`,
-		`Response.json(data)`,
+		`const data = { value: 1 };
+new Response(JSON.stringify(data, null, 2))`,
+		`const data = { value: 1 };
+const replacer = (key: string, value: unknown) => value;
+new Response(JSON.stringify(data, replacer))`,
+		`const data = { value: 1 };
+new Response(JSON.stringify(data), { status: 200 })`,
+		`const data = { value: 1 };
+new Response(JSON.stringify(data), { headers: { 'x-custom': 'value' } })`,
+		`const data = { value: 1 };
+new Response(JSON.stringify(data), { status: 200, headers: { 'content-type': 'application/json' } })`,
+		`const data = { value: 1 };
+Response.json(data)`,
 		`Response.json({ value: 1 })`,
-		`new Request(JSON.stringify(data))`,
+		`const data = { value: 1 };
+new Request(JSON.stringify(data))`,
 	],
 });

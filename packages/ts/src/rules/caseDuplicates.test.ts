@@ -5,6 +5,7 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const value: unknown;
 switch (value) {
     case 1:
         break;
@@ -13,6 +14,7 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: unknown;
 switch (value) {
     case 1:
         break;
@@ -25,6 +27,7 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: unknown;
 switch (value) {
     case "a":
         break;
@@ -35,6 +38,7 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: unknown;
 switch (value) {
     case "a":
         break;
@@ -49,6 +53,8 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: unknown;
+declare const x: number;
 switch (value) {
     case x + 1:
         break;
@@ -57,6 +63,8 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: unknown;
+declare const x: number;
 switch (value) {
     case x + 1:
         break;
@@ -69,6 +77,7 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: unknown;
 switch (value) {
     case 1:
         break;
@@ -79,6 +88,7 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: unknown;
 switch (value) {
     case 1:
         break;
@@ -93,6 +103,7 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: unknown;
 switch (value) {
     case true:
         break;
@@ -103,6 +114,7 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: unknown;
 switch (value) {
     case true:
         break;
@@ -117,6 +129,8 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: unknown;
+declare const obj: { property: number };
 switch (value) {
     case obj.property:
         break;
@@ -125,6 +139,8 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: unknown;
+declare const obj: { property: number };
 switch (value) {
     case obj.property:
         break;
@@ -165,11 +181,13 @@ const result = (input: number) => {
 		},
 		{
 			code: `
+declare const value: unknown;
 switch (value) {
     case 1: case 1: break;
 }
 `,
 			snapshot: `
+declare const value: unknown;
 switch (value) {
     case 1: case 1: break;
             ~~~~~~
@@ -179,6 +197,7 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: unknown;
 const condition = true;
 switch (value) {
     case condition ? "a" : "b":
@@ -188,6 +207,7 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: unknown;
 const condition = true;
 switch (value) {
     case condition ? "a" : "b":
@@ -201,6 +221,7 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: unknown;
 switch (value) {
     case /* comment */ 1:
         break;
@@ -209,6 +230,7 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: unknown;
 switch (value) {
     case /* comment */ 1:
         break;
@@ -221,6 +243,8 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: unknown;
+declare const obj: { property: number };
 switch (value) {
     case obj.property:
         break;
@@ -229,6 +253,8 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: unknown;
+declare const obj: { property: number };
 switch (value) {
     case obj.property:
         break;
@@ -241,13 +267,32 @@ switch (value) {
 		},
 	],
 	valid: [
-		`switch (value) { case 1: break; case 2: break; }`,
-		`switch (value) { case 1: break; case 2: break; case 3: break; }`,
-		`switch (value) { case "a": break; case "b": break; }`,
-		`switch (value) { case true: break; case false: break; }`,
-		`switch (value) { case 1: case 2: break; }`,
-		`switch (value) { default: break; }`,
 		`
+declare const value: unknown;
+switch (value) { case 1: break; case 2: break; }
+`,
+		`
+declare const value: unknown;
+switch (value) { case 1: break; case 2: break; case 3: break; }
+`,
+		`
+declare const value: unknown;
+switch (value) { case "a": break; case "b": break; }
+`,
+		`
+declare const value: unknown;
+switch (value) { case true: break; case false: break; }
+`,
+		`
+declare const value: unknown;
+switch (value) { case 1: case 2: break; }
+`,
+		`
+declare const value: unknown;
+switch (value) { default: break; }
+`,
+		`
+declare const value: unknown;
 switch (value) {
     case 1:
         break;
@@ -256,6 +301,9 @@ switch (value) {
 }
 `,
 		`
+declare const value: unknown;
+declare const x: number;
+declare const y: number;
 switch (value) {
     case x:
         break;
@@ -264,6 +312,8 @@ switch (value) {
 }
 `,
 		`
+declare const value: unknown;
+declare const obj: { a: number; b: number };
 switch (value) {
     case obj.a:
         break;
@@ -272,19 +322,22 @@ switch (value) {
 }
 `,
 		`
+declare const value: unknown;
 switch (value) {
     case 1:
-        console.log("one");
+        void "one";
         break;
     case 2:
-        console.log("two");
+        void "two";
         break;
     default:
-        console.log("default");
+        void "default";
         break;
 }
 `,
 		`
+declare const value: unknown;
+declare const x: number;
 switch (value) {
     case x + 1:
         break;

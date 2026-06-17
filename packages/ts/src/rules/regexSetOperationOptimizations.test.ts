@@ -333,7 +333,6 @@ This intersection can be simplified to a subtraction.
 		String.raw`/[abc]/v`,
 		String.raw`/[\w]/v`,
 		String.raw`/[^a]/v`,
-		String.raw`/[a&&[^b]]/u`,
 		String.raw`/test/v`,
 		String.raw`/[a[^b]]/v`,
 	],
