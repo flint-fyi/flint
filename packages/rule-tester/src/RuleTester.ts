@@ -64,7 +64,7 @@ export class RuleTester {
 	#testerOptions: Required<Omit<RuleTesterOptions, "diskBackedFSRoot">>;
 
 	constructor({
-		assertNoLanguageReports = false,
+		assertNoLanguageReports = true,
 		defaults = {},
 		describe,
 		diskBackedFSRoot,

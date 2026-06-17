@@ -4,7 +4,6 @@ import { RuleTester } from "@flint.fyi/rule-tester";
 import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
 
 export const ruleTester = new RuleTester({
-	assertNoLanguageReports: true,
 	defaults: {
 		fileName: "file.test.ts",
 		files: createRuleTesterTSConfig(),
