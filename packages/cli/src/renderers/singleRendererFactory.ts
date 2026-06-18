@@ -9,7 +9,7 @@ export const singleRendererFactory: RendererFactory = {
 	initialize(host, presenter) {
 		return {
 			announce() {
-				for (const line of presenter.header) {
+				for (const line of presenter.header ?? []) {
 					console.log(line);
 				}
 			},
@@ -49,14 +49,16 @@ export const singleRendererFactory: RendererFactory = {
 					}
 				}
 
-				const summary = presenter.summarize({
+				const summary = presenter.summarize?.({
 					duration,
 					formattingResults,
 					lintResults,
 				});
 
-				for (const line of await Array.fromAsync(summary)) {
-					process.stdout.write(line);
+				if (summary) {
+					for (const line of await Array.fromAsync(summary)) {
+						process.stdout.write(line);
+					}
 				}
 			},
 		};

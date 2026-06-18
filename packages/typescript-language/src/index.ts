@@ -20,6 +20,8 @@ export {
 	type FunctionWithParameters,
 	getScopeManager,
 	type Scope,
+	type ScopeDefinition,
+	type ScopeDefinitionKind,
 	type ScopeManager,
 	type ScopeReference,
 	type ScopeVariable,

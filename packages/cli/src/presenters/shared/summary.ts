@@ -41,7 +41,7 @@ export function* presentSummary(
 		);
 	}
 
-	if (formattingResults.dirty.size) {
+	if (formattingResults?.dirty.size) {
 		yield "\n";
 
 		if (formattingResults.written) {

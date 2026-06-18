@@ -104,6 +104,8 @@ jobs:
         with:
           filter: "tree:0"
       - uses: ./.github/actions/prepare
+        with:
+          node-version: ${{ matrix.node-version }}
       - name: Cache Vite cache
         uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
         with:

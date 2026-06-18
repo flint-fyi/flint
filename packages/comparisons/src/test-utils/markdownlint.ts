@@ -1,6 +1,4 @@
 import fs from "node:fs/promises";
-import { createRequire } from "node:module";
-import path from "node:path";
 
 import type { Rule } from "markdownlint";
 
@@ -10,10 +8,11 @@ interface MarkdownlintModule {
 	default: Rule | Rule[];
 }
 
-const require = createRequire(import.meta.dirname);
-
 export async function findMarkdownlintRules(): Promise<Rule[]> {
-	const markdownlintDirectory = path.dirname(require.resolve("markdownlint"));
+	const markdownlintDirectory = new URL(
+		".",
+		import.meta.resolve("markdownlint"),
+	);
 	const fileNames = await fs.readdir(markdownlintDirectory);
 
 	return (
@@ -22,7 +21,7 @@ export async function findMarkdownlintRules(): Promise<Rule[]> {
 				.filter((fileName) => /md\d+\.mjs/.test(fileName))
 				.map(async (fileName) => {
 					const module = (await import(
-						path.join(markdownlintDirectory, fileName)
+						new URL(fileName, markdownlintDirectory).href
 					)) as MarkdownlintModule;
 
 					return module.default;

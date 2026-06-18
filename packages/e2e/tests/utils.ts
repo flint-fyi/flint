@@ -36,11 +36,14 @@ export function normalizeOutput(stdout: string, cwd: string): string {
 
 /**
  * Runs the flint CLI with color output enabled.
+ *
+ * `GITHUB_ACTIONS` is cleared so the default presenter stays deterministic:
+ * otherwise CI would auto-select the `github` presenter and change the output.
  */
 export function runFlint(cwd: string, args: string[] = []) {
 	return execa({
 		cwd,
-		env: { FORCE_COLOR: "1" },
+		env: { FORCE_COLOR: "1", GITHUB_ACTIONS: undefined },
 		reject: false,
 	})`flint ${args}`;
 }

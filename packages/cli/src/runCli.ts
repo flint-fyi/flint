@@ -51,6 +51,9 @@ export async function runCli(args: string[]) {
 			"    Which 'presenter' to output results using: brief (default) or detailed.",
 		);
 		console.log("");
+		console.log("  --skip-formatting");
+		console.log("    Whether to skip formatting after linting.");
+		console.log("");
 		console.log("  --skip-language-reports");
 		console.log(
 			"    Whether to skip generating language reports after linting.",
@@ -89,7 +92,7 @@ export async function runCli(args: string[]) {
 		return 2;
 	}
 
-	const getRenderer = createRendererFactory(host, configFileName, values);
+	const getRenderer = await createRendererFactory(host, configFileName, values);
 
 	if (values.watch) {
 		await runCliWatch(host, configFileName, getRenderer, values);

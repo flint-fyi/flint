@@ -1,3 +1,5 @@
+import picomatch from "picomatch";
+
 import {
 	dirnameKey,
 	normalizeDirname,
@@ -62,6 +64,7 @@ export function createVFSLinterHost(
 	interface VfsFile {
 		content: string;
 		path: string;
+		touchTime: number;
 	}
 
 	const fileMap = new Map<PathKey, VfsFile>();
@@ -129,9 +132,39 @@ export function createVFSLinterHost(
 		async getFileTouchTime(filePath) {
 			return host.getFileTouchTimeSync(filePath);
 		},
-		getFileTouchTimeSync() {
-			// TODO: uhh... this probably doesn't work amazingly
-			return Date.now();
+		getFileTouchTimeSync(filePath) {
+			return fileMap.get(pathKey(filePath, caseSensitiveFS))?.touchTime;
+		},
+		async glob(patterns, options) {
+			const isIncluded = picomatch(patterns);
+			const isExcluded = createExcludeMatcher(options.exclude);
+			const cwdNormalized = normalizePath(options.cwd);
+
+			const found: string[] = [];
+			const seen = new Set<PathKey>();
+			for (const file of fileMap.values()) {
+				const relative = relativeWithinCwd(file.path, cwdNormalized);
+				if (relative == null) {
+					continue;
+				}
+				if (isIncluded(relative) && !isExcluded?.(relative)) {
+					found.push(file.path);
+					seen.add(pathKey(file.path, caseSensitiveFS));
+				}
+			}
+
+			// Merge files only the base host knows about, letting VFS entries
+			// shadow them (mirrors readDirectorySync's overlay semantics).
+			for (const filePathAbsolute of (await baseHost?.glob(
+				patterns,
+				options,
+			)) ?? []) {
+				if (!seen.has(pathKey(filePathAbsolute, caseSensitiveFS))) {
+					found.push(filePathAbsolute);
+				}
+			}
+
+			return found;
 		},
 		isCaseSensitiveFS() {
 			return caseSensitiveFS;
@@ -213,7 +246,7 @@ export function createVFSLinterHost(
 			const existing = fileMap.get(key);
 			const storedPath = existing?.path ?? normalizePath(filePathAbsolute);
 			const fileEvent = existing != null ? "changed" : "created";
-			fileMap.set(key, { content, path: storedPath });
+			fileMap.set(key, { content, path: storedPath, touchTime: Date.now() });
 			watchEvent(storedPath, fileEvent);
 		},
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
@@ -277,4 +310,32 @@ export function createVFSLinterHost(
 	};
 
 	return host;
+}
+
+function createExcludeMatcher(patterns: string[] | undefined) {
+	if (!patterns?.length) {
+		return undefined;
+	}
+
+	const withDescendants = patterns.flatMap((pattern) => {
+		const base = pattern.replace(/\/+$/, "");
+		return [base, `${base}/**`];
+	});
+
+	return picomatch(withDescendants);
+}
+
+function relativeWithinCwd(filePathAbsolute: string, cwdNormalized: string) {
+	if (filePathAbsolute === cwdNormalized) {
+		return "";
+	}
+
+	const prefix = cwdNormalized.endsWith("/")
+		? cwdNormalized
+		: `${cwdNormalized}/`;
+	if (!filePathAbsolute.startsWith(prefix)) {
+		return undefined;
+	}
+
+	return filePathAbsolute.slice(prefix.length);
 }

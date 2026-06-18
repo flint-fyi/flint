@@ -57,7 +57,7 @@ export async function readFromCache(
 		);
 		// flint-disable-next-line performance/loopAwaits
 		const timestampTouched = await host.getFileTouchTime(filePath);
-		if (timestampTouched > timestampCached) {
+		if (timestampTouched == null || timestampTouched > timestampCached) {
 			log(
 				"Linting all %d file path(s) due to %s touch timestamp %d after cache timestamp %d",
 				allFilePaths.size,
@@ -81,7 +81,7 @@ export async function readFromCache(
 	} of cache.globalInvalidations) {
 		// flint-disable-next-line performance/loopAwaits
 		const currentTouchTime = await host.getFileTouchTime(filePath);
-		if (currentTouchTime > cachedTouchTime) {
+		if (currentTouchTime == null || currentTouchTime > cachedTouchTime) {
 			log(
 				"Linting all %d file(s) because cache-invalidating file %s has changed (current: %d, cached: %d)",
 				allFilePaths.size,
@@ -119,7 +119,7 @@ export async function readFromCache(
 		const timestampCached = fileCached.timestamp;
 		// flint-disable-next-line performance/loopAwaits
 		const timestampTouched = await host.getFileTouchTime(filePath);
-		if (timestampTouched > timestampCached) {
+		if (timestampTouched == null || timestampTouched > timestampCached) {
 			log(
 				"Directly invalidating cache for: %s due to touch timestamp %d after cache timestamp %d",
 				filePath,

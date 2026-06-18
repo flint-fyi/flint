@@ -17,6 +17,20 @@ export interface Scope {
 	variables: ScopeVariable[];
 }
 
+export interface ScopeDefinition {
+	identifier: AST.Identifier;
+	kind: ScopeDefinitionKind;
+	node: AST.AnyNode;
+}
+
+export type ScopeDefinitionKind =
+	| "catch"
+	| "class"
+	| "function"
+	| "import"
+	| "parameter"
+	| "variable";
+
 export interface ScopeInternal extends Scope {
 	// TODO: Many scopes have no child scopes and/or variables; making these
 	// optional (or dropping them) may cut allocations, once we can measure it.
@@ -44,6 +58,7 @@ export interface ScopeReference {
 
 export interface ScopeVariable {
 	declarations: AST.Identifier[];
+	definitions: ScopeDefinition[];
 	name: string;
 	references: ScopeReference[];
 	scope: Scope;

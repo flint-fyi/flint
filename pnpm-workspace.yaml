@@ -19,7 +19,7 @@ catalogs:
     "@vitest/coverage-v8": 4.1.0
     "@vitest/eslint-plugin": 1.6.1
     console-fail-test: 0.6.1
-    eslint: 10.4.1
+    eslint: 10.5.0
     eslint-plugin-jsdoc: 63.0.2
     eslint-plugin-jsonc: 3.2.0
     eslint-plugin-n: 18.1.0
@@ -71,7 +71,7 @@ catalogs:
     starlight-blog: 0.26.1
     starlight-links-validator: 0.24.0
     starlight-package-managers: 0.12.0
-    starlight-sidebar-topics: 0.7.1
+    starlight-sidebar-topics: 0.8.0
 
 disallowWorkspaceCycles: true
 

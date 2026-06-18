@@ -1,6 +1,3 @@
-import * as fs from "node:fs/promises";
-import { dirname } from "node:path";
-
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 import omitEmpty from "omit-empty";
@@ -27,8 +24,11 @@ export async function writeToCache(
 		if (fileResult.invalidatesCache) {
 			globalInvalidations.push({
 				filePath,
+				// Fall back to 0 (not the current time) when the host can't report a
+				// touch time: a fabricated "now" would mask later changes, whereas 0
+				// forces a safe re-validation on the next run.
 				// flint-disable-next-line performance/loopAwaits
-				touchTime: await host.getFileTouchTime(filePath),
+				touchTime: (await host.getFileTouchTime(filePath)) ?? 0,
 			});
 		}
 		for (const dependency of fileResult.dependencies) {
@@ -38,8 +38,11 @@ export async function writeToCache(
 
 	const storage: CacheStorage = {
 		configs: {
-			[configFileName]: await host.getFileTouchTime(configFileName),
-			"package.json": await host.getFileTouchTime("package.json"),
+			// Fall back to 0 (not the current time) when the host can't report a
+			// touch time: a fabricated "now" would mask later changes, whereas 0
+			// forces a safe re-validation on the next run.
+			[configFileName]: (await host.getFileTouchTime(configFileName)) ?? 0,
+			"package.json": (await host.getFileTouchTime("package.json")) ?? 0,
 		},
 		files: {
 			...Object.fromEntries(
@@ -65,16 +68,12 @@ export async function writeToCache(
 		globalInvalidations,
 	};
 
-	const cacheFilePath = getCacheFilePath(cacheLocation);
-	const cacheFileDirectory = dirname(cacheFilePath);
-
-	await fs.mkdir(cacheFileDirectory, { recursive: true });
-
 	const encoded = cacheStorageSchema.safeEncode(storage);
 	if (!encoded.success) {
 		log("Failed to encode cache data: %s", encoded.error.message);
 		return;
 	}
 
-	await fs.writeFile(cacheFilePath, encoded.data);
+	const cacheFilePath = getCacheFilePath(cacheLocation);
+	await host.writeFile(cacheFilePath, encoded.data);
 }

@@ -697,6 +697,45 @@ describe(createScopeManager, () => {
 		).toEqual([true]);
 	});
 
+	it("tags each variable with its definition kind", () => {
+		const sourceFile = createSourceFile(`
+			import imported from "mod";
+			const declared = 1;
+			class Cls {}
+			function fn(param) {
+				try {} catch (caught) {}
+			}
+		`);
+
+		const scopeManager = createScopeManager(sourceFile);
+		const fn = findFirstNode<AST.FunctionDeclaration>(
+			sourceFile,
+			SyntaxKind.FunctionDeclaration,
+		);
+		const catchClause = findFirstNode<AST.CatchClause>(
+			sourceFile,
+			SyntaxKind.CatchClause,
+		);
+
+		const global = (name: string) =>
+			scopeManager.globalScope.variables.find((v) => v.name === name);
+
+		expect(global("imported")?.definitions[0]?.kind).toBe("import");
+		expect(global("declared")?.definitions[0]?.kind).toBe("variable");
+		expect(global("Cls")?.definitions[0]?.kind).toBe("class");
+		expect(global("fn")?.definitions[0]?.kind).toBe("function");
+
+		const param = scopeManager
+			.getDeclaredVariables(fn)
+			.find((v) => v.name === "param");
+		expect(param?.definitions[0]?.kind).toBe("parameter");
+
+		const caught = scopeManager
+			.getDeclaredVariables(catchClause)
+			.find((v) => v.name === "caught");
+		expect(caught?.definitions[0]?.kind).toBe("catch");
+	});
+
 	it("getScope returns the scope a boundary node creates", () => {
 		const sourceFile = createSourceFile(`
 			function outer() {
