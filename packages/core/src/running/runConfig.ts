@@ -14,6 +14,7 @@ import type { LanguageFilesWithOptions } from "./types.ts";
 export interface RunConfigOptions {
 	cacheLocation?: string | undefined;
 	ignoreCache?: boolean;
+	skipCacheWrite?: boolean;
 	skipLanguageReports?: boolean;
 }
 
@@ -23,6 +24,7 @@ export async function runConfig(
 	{
 		cacheLocation: cacheLocationFromCli,
 		ignoreCache,
+		skipCacheWrite,
 		skipLanguageReports,
 	}: RunConfigOptions,
 ): Promise<LintResults> {
@@ -78,12 +80,14 @@ export async function runConfig(
 	const ruleCount = rulesFilesAndOptionsByRule.size;
 	const lintResults = { allFilePaths, cached, filesResults, ruleCount };
 
-	await writeToCache(
-		host,
-		configDefinition.filePath,
-		lintResults,
-		cacheLocationOverride,
-	);
+	if (!skipCacheWrite) {
+		await writeToCache(
+			host,
+			configDefinition.filePath,
+			lintResults,
+			cacheLocationOverride,
+		);
+	}
 
 	return lintResults;
 }
