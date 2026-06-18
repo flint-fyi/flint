@@ -1,5 +1,12 @@
 # @flint.fyi/package-json
 
+## 0.19.2
+
+### Patch Changes
+
+- Updated dependencies [[`7d1bf0a`](https://github.com/flint-fyi/flint/commit/7d1bf0aef3a6eb2f553e36c5018b36ad4d17f022)]:
+  - @flint.fyi/json-language@0.18.0
+
 ## 0.19.1
 
 ### Patch Changes

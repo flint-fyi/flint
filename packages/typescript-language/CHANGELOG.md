@@ -1,5 +1,11 @@
 # @flint.fyi/typescript-language
 
+## 0.18.4
+
+### Patch Changes
+
+- [#2917](https://github.com/flint-fyi/flint/pull/2917) [`87e9ad4`](https://github.com/flint-fyi/flint/commit/87e9ad4da64ac3cb48296a2361a86e815b1f06f5) - Tag each `ScopeVariable` with its definition kind via `defs` (variable, parameter, catch, function, class, import).
+
 ## 0.18.3
 
 ### Patch Changes

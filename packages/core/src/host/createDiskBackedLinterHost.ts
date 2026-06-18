@@ -9,6 +9,7 @@ import type {
 	LinterHostFileWatcherEvent,
 } from "../types/host.ts";
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
+import { commonlyIgnoredPaths } from "./watcher.ts";
 
 export function createDiskBackedLinterHost(cwd: string): LinterHost {
 	const caseSensitiveFS = isFileSystemCaseSensitive();
@@ -177,6 +178,21 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		getFileTouchTimeSync(filePath) {
 			return fs.statSync(filePath).mtimeMs;
 		},
+		async glob(patterns, options) {
+			const entries = await Array.fromAsync(
+				fs.promises.glob(patterns, {
+					cwd: options.cwd,
+					exclude: [
+						...commonlyIgnoredPaths.map((dir) => `**/${dir.slice(1)}`),
+						...(options.exclude ?? []),
+					],
+					withFileTypes: true,
+				}),
+			);
+			return entries
+				.filter((entry) => entry.isFile())
+				.map((entry) => normalizePath(path.join(entry.parentPath, entry.name)));
+		},
 		isCaseSensitiveFS() {
 			return caseSensitiveFS;
 		},
@@ -298,9 +314,16 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			);
 		},
 		async writeFile(filePathAbsolute, content) {
+			// Create missing parent directories so a single writeFile call always
+			// succeeds, with no separate mkdir step for callers.
+			await fs.promises.mkdir(path.dirname(filePathAbsolute), {
+				recursive: true,
+			});
+
 			await fs.promises.writeFile(filePathAbsolute, content, "utf8");
 		},
 		writeFileSync(filePathAbsolute, content) {
+			fs.mkdirSync(path.dirname(filePathAbsolute), { recursive: true });
 			fs.writeFileSync(filePathAbsolute, content, "utf8");
 		},
 	};

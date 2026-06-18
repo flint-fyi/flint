@@ -8,6 +8,7 @@ import {
 	runConfig,
 	runConfigFixing,
 	validateConfigDefinition,
+	type FormattingResults,
 	type LinterHost,
 } from "@flint.fyi/core";
 
@@ -72,7 +73,12 @@ export async function runCliOnce(
 				skipLanguageReports,
 			}));
 
-	const formattingResults = await runPrettier(host, lintResults, values.fix);
+	const skipFormatting = values["skip-formatting"] ?? false;
+
+	let formattingResults: FormattingResults | undefined;
+	if (!skipFormatting) {
+		formattingResults = await runPrettier(host, lintResults, values.fix);
+	}
 
 	const duration = performance.now() - startTime;
 
@@ -83,7 +89,7 @@ export async function runCliOnce(
 		lintResults,
 	});
 
-	if (formattingResults.dirty.size && !formattingResults.written) {
+	if (formattingResults?.dirty.size && !formattingResults.written) {
 		return { exitCode: 1, lintResults };
 	}
 

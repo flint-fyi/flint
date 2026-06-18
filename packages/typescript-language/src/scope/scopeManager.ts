@@ -16,6 +16,7 @@ import {
 } from "./scopes.ts";
 import type {
 	FunctionWithParameters,
+	ScopeDefinitionKind,
 	ScopeInternal,
 	ScopeManager,
 	ScopeReference,
@@ -25,6 +26,8 @@ import type {
 export type {
 	FunctionWithParameters,
 	Scope,
+	ScopeDefinition,
+	ScopeDefinitionKind,
 	ScopeManager,
 	ScopeReference,
 	ScopeVariable,
@@ -51,15 +54,16 @@ function createScopeManager(sourceFile: AST.SourceFile) {
 		scope: ScopeInternal,
 		name: AST.BindingName,
 		node: AST.AnyNode,
+		kind: ScopeDefinitionKind,
 	) {
 		if (name.kind === SyntaxKind.Identifier) {
-			return [addVariable(scope, name, node)];
+			return [addVariable(scope, name, node, kind)];
 		}
 
 		const variables: ScopeVariable[] = [];
 		for (const element of name.elements) {
 			if (element.kind !== SyntaxKind.OmittedExpression) {
-				variables.push(...addBindingName(scope, element.name, node));
+				variables.push(...addBindingName(scope, element.name, node, kind));
 			}
 		}
 
@@ -75,7 +79,7 @@ function createScopeManager(sourceFile: AST.SourceFile) {
 		}
 
 		if (node.importClause.name) {
-			addVariable(scope, node.importClause.name, node);
+			addVariable(scope, node.importClause.name, node, "import");
 		}
 
 		const { namedBindings } = node.importClause;
@@ -84,7 +88,7 @@ function createScopeManager(sourceFile: AST.SourceFile) {
 		}
 
 		if (namedBindings.kind === SyntaxKind.NamespaceImport) {
-			addVariable(scope, namedBindings.name, node);
+			addVariable(scope, namedBindings.name, node, "import");
 			return;
 		}
 
@@ -93,13 +97,18 @@ function createScopeManager(sourceFile: AST.SourceFile) {
 				continue;
 			}
 
-			addVariable(scope, element.name, node);
+			addVariable(scope, element.name, node, "import");
 		}
 	}
 
 	function addParameters(scope: ScopeInternal, node: FunctionWithParameters) {
 		for (const parameter of node.parameters) {
-			const variables = addBindingName(scope, parameter.name, node);
+			const variables = addBindingName(
+				scope,
+				parameter.name,
+				node,
+				"parameter",
+			);
 			declaredVariablesByNode.set(parameter, variables);
 		}
 	}
@@ -108,11 +117,13 @@ function createScopeManager(sourceFile: AST.SourceFile) {
 		scope: ScopeInternal,
 		identifier: AST.Identifier,
 		node: AST.AnyNode,
+		kind: ScopeDefinitionKind,
 	) {
 		let variable = scope.variablesByName.get(identifier.text);
 		if (!variable) {
 			variable = {
 				declarations: [],
+				definitions: [],
 				name: identifier.text,
 				references: [],
 				scope,
@@ -122,6 +133,7 @@ function createScopeManager(sourceFile: AST.SourceFile) {
 		}
 
 		variable.declarations.push(identifier);
+		variable.definitions.push({ identifier, kind, node });
 		declarationVariablesByIdentifier.set(identifier, variable);
 
 		const declaredVariables = declaredVariablesByNode.get(node) ?? [];
@@ -152,31 +164,36 @@ function createScopeManager(sourceFile: AST.SourceFile) {
 				break;
 			case SyntaxKind.CatchClause:
 				if (node.variableDeclaration) {
-					addBindingName(nodeScope, node.variableDeclaration.name, node);
+					addBindingName(
+						nodeScope,
+						node.variableDeclaration.name,
+						node,
+						"catch",
+					);
 				}
 				break;
 			case SyntaxKind.ClassDeclaration:
 				if (node.name) {
-					addVariable(nodeScope, node.name, node);
+					addVariable(nodeScope, node.name, node, "class");
 				}
 				break;
 
 			case SyntaxKind.ClassExpression:
 				if (node.name) {
-					addVariable(nodeScope, node.name, node);
+					addVariable(nodeScope, node.name, node, "class");
 				}
 				break;
 
 			case SyntaxKind.FunctionDeclaration:
 				if (node.name) {
-					addVariable(scope, node.name, node);
+					addVariable(scope, node.name, node, "function");
 				}
 				addParameters(nodeScope, node);
 				break;
 
 			case SyntaxKind.FunctionExpression:
 				if (node.name) {
-					addVariable(nodeScope, node.name, node);
+					addVariable(nodeScope, node.name, node, "function");
 				}
 				addParameters(nodeScope, node);
 				break;
@@ -197,6 +214,7 @@ function createScopeManager(sourceFile: AST.SourceFile) {
 					getVariableDeclarationScope(node, nodeScope),
 					node.name,
 					node,
+					"variable",
 				);
 				break;
 		}
