@@ -16,7 +16,6 @@ export {
 } from "./language.ts";
 export type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 export {
-	createScopeManager,
 	type FunctionWithParameters,
 	getScopeManager,
 	type Scope,

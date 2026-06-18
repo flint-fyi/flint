@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import type * as AST from "../types/ast.ts";
 import { forEachChild } from "../utils/forEachChild.ts";
-import { createScopeManager } from "./scopeManager.ts";
+import { getScopeManager } from "./scopeManager.ts";
 
 function createSourceFile(sourceText: string, scriptKind = ts.ScriptKind.TS) {
 	return ts.createSourceFile(
@@ -64,7 +64,7 @@ function findNthNode<TNode extends AST.AnyNode>(
 	return found;
 }
 
-describe(createScopeManager, () => {
+describe(getScopeManager, () => {
 	it("resolves identifier references to the nearest lexical declaration", () => {
 		const sourceFile = createSourceFile(`
 			let value;
@@ -74,7 +74,7 @@ describe(createScopeManager, () => {
 			value = 2;
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const functionDeclaration = findFirstNode<AST.FunctionDeclaration>(
 			sourceFile,
 			SyntaxKind.FunctionDeclaration,
@@ -109,7 +109,7 @@ describe(createScopeManager, () => {
 			const expr = function named() {};
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 
 		expect(
 			scopeManager.globalScope.variables.map((variable) => variable.name),
@@ -124,7 +124,7 @@ describe(createScopeManager, () => {
 			item;
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 
 		expect(
 			scopeManager.globalScope.variables.map((variable) => variable.name),
@@ -139,7 +139,7 @@ describe(createScopeManager, () => {
 			}
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const parameter = findFirstNode<AST.ParameterDeclaration>(
 			sourceFile,
 			SyntaxKind.Parameter,
@@ -161,7 +161,7 @@ describe(createScopeManager, () => {
 			import * as namespace from "namespace-pkg";
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 
 		expect(
 			scopeManager.globalScope.variables.map((variable) => variable.name),
@@ -174,7 +174,7 @@ describe(createScopeManager, () => {
 			value;
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const variable = scopeManager.globalScope.variables.find(
 			(v) => v.name === "value",
 		);
@@ -197,7 +197,7 @@ describe(createScopeManager, () => {
 			ts.ScriptKind.TSX,
 		);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const variableDeclaration = findFirstNode<AST.VariableDeclaration>(
 			sourceFile,
 			SyntaxKind.VariableDeclaration,
@@ -220,7 +220,7 @@ describe(createScopeManager, () => {
 			value;
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const variable = scopeManager.globalScope.variables.find(
 			(v) => v.name === "value",
 		);
@@ -247,7 +247,7 @@ describe(createScopeManager, () => {
 			for (value in object) {}
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const variable = scopeManager.globalScope.variables.find(
 			(v) => v.name === "value",
 		);
@@ -272,7 +272,7 @@ describe(createScopeManager, () => {
 			}
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const outerDeclaration = findNthNode<AST.VariableDeclaration>(
 			sourceFile,
 			SyntaxKind.VariableDeclaration,
@@ -302,7 +302,7 @@ describe(createScopeManager, () => {
 			return value;
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const variable = scopeManager.globalScope.variables.find(
 			(v) => v.name === "value",
 		);
@@ -322,7 +322,7 @@ describe(createScopeManager, () => {
 			}
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const catchClause = findFirstNode<AST.CatchClause>(
 			sourceFile,
 			SyntaxKind.CatchClause,
@@ -358,7 +358,7 @@ describe(createScopeManager, () => {
 			}
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const catchClause = findFirstNode<AST.CatchClause>(
 			sourceFile,
 			SyntaxKind.CatchClause,
@@ -399,7 +399,7 @@ describe(createScopeManager, () => {
 			}
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const catchClause = findFirstNode<AST.CatchClause>(
 			sourceFile,
 			SyntaxKind.CatchClause,
@@ -427,7 +427,7 @@ describe(createScopeManager, () => {
 			namespace.member;
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const names = scopeManager.globalScope.variables.map(
 			(variable) => variable.name,
 		);
@@ -446,7 +446,7 @@ describe(createScopeManager, () => {
 			Baz;
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const variableNames = scopeManager.globalScope.variables.map((v) => v.name);
 		const baz = scopeManager.globalScope.variables.find(
 			(v) => v.name === "Baz",
@@ -467,7 +467,7 @@ describe(createScopeManager, () => {
 			named++;
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const value = scopeManager.globalScope.variables.find(
 			(v) => v.name === "value",
 		);
@@ -496,7 +496,7 @@ describe(createScopeManager, () => {
 			}
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const functionDeclaration = findFirstNode<AST.FunctionDeclaration>(
 			sourceFile,
 			SyntaxKind.FunctionDeclaration,
@@ -520,7 +520,7 @@ describe(createScopeManager, () => {
 			}
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const outer = findNthNode<AST.FunctionDeclaration>(
 			sourceFile,
 			SyntaxKind.FunctionDeclaration,
@@ -553,7 +553,7 @@ describe(createScopeManager, () => {
 			withoutWrites;
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const withWrites = scopeManager.globalScope.variables.find(
 			(v) => v.name === "withWrites",
 		);
@@ -574,7 +574,7 @@ describe(createScopeManager, () => {
 			[value] = next;
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const value = scopeManager.globalScope.variables.find(
 			(v) => v.name === "value",
 		);
@@ -593,7 +593,7 @@ describe(createScopeManager, () => {
 			for (value of values) {}
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const value = scopeManager.globalScope.variables.find(
 			(v) => v.name === "value",
 		);
@@ -613,7 +613,7 @@ describe(createScopeManager, () => {
 			value;
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const outer = scopeManager.globalScope.variables.find(
 			(v) => v.name === "value",
 		);
@@ -641,7 +641,7 @@ describe(createScopeManager, () => {
 			}
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const outer = scopeManager.globalScope.variables.find(
 			(v) => v.name === "value",
 		);
@@ -669,7 +669,7 @@ describe(createScopeManager, () => {
 			Value = undefined;
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const variableDeclaration = findFirstNode<AST.VariableDeclaration>(
 			sourceFile,
 			SyntaxKind.VariableDeclaration,
@@ -704,7 +704,7 @@ describe(createScopeManager, () => {
 			}
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const outer = findNthNode<AST.FunctionDeclaration>(
 			sourceFile,
 			SyntaxKind.FunctionDeclaration,
@@ -733,7 +733,7 @@ describe(createScopeManager, () => {
 			}
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const fn = findFirstNode<AST.FunctionDeclaration>(
 			sourceFile,
 			SyntaxKind.FunctionDeclaration,
