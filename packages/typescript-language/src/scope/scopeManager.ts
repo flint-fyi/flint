@@ -33,11 +33,9 @@ export type {
 	ScopeVariable,
 } from "./types.ts";
 
-/** @internal */
-export const scopeManagers = new WeakCachedFactory<
-	AST.SourceFile,
-	ScopeManager
->(createScopeManager);
+const scopeManagers = new WeakCachedFactory<AST.SourceFile, ScopeManager>(
+	createScopeManager,
+);
 
 export function getScopeManager(sourceFile: AST.SourceFile) {
 	return scopeManagers.get(sourceFile);
