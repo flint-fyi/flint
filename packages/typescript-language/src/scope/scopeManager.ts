@@ -33,6 +33,7 @@ export type {
 	ScopeVariable,
 } from "./types.ts";
 
+/** @internal */
 export const scopeManagers = new WeakCachedFactory<
 	AST.SourceFile,
 	ScopeManager
