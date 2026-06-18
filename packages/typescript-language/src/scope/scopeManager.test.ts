@@ -1,9 +1,9 @@
 import ts, { SyntaxKind } from "typescript";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import type * as AST from "../types/ast.ts";
 import { forEachChild } from "../utils/forEachChild.ts";
-import { getScopeManager } from "./scopeManager.ts";
+import { getScopeManager, scopeManagers } from "./scopeManager.ts";
 
 function createSourceFile(sourceText: string, scriptKind = ts.ScriptKind.TS) {
 	return ts.createSourceFile(
@@ -65,6 +65,27 @@ function findNthNode<TNode extends AST.AnyNode>(
 }
 
 describe(getScopeManager, () => {
+	// The scope managers are cached at the module level, so reset between tests
+	// to keep each test starting from a fresh cache.
+	afterEach(() => {
+		scopeManagers.clear();
+	});
+
+	it("returns the same scope manager instance for the same source file", () => {
+		const sourceFile = createSourceFile(`const value = 1;`);
+
+		expect(getScopeManager(sourceFile)).toBe(getScopeManager(sourceFile));
+	});
+
+	it("returns different scope manager instances for different source files", () => {
+		const sourceFile = createSourceFile(`const value = 1;`);
+		const otherSourceFile = createSourceFile(`const value = 2;`);
+
+		expect(getScopeManager(sourceFile)).not.toBe(
+			getScopeManager(otherSourceFile),
+		);
+	});
+
 	it("resolves identifier references to the nearest lexical declaration", () => {
 		const sourceFile = createSourceFile(`
 			let value;
