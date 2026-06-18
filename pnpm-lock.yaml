@@ -637,8 +637,8 @@ importers:
         specifier: workspace:^
         version: link:../utils
       cached-factory:
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.3.0
+        version: 0.3.0
       debug-for-file:
         specifier: ^0.4.0
         version: 0.4.0
@@ -1086,8 +1086,8 @@ importers:
         specifier: workspace:^
         version: link:../utils
       cached-factory:
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.3.0
+        version: 0.3.0
     devDependencies:
       tsdown:
         specifier: catalog:dev
@@ -4343,8 +4343,8 @@ packages:
     resolution: {integrity: sha512-tixWYgm5ZoOD+3g6UTea91eow5z6AAHaho3g0V9CNSNb45gM8SmflpAc+GRd1InC4AqN/07Unrgp56Y94N9hJQ==}
     engines: {node: '>=20.19.0'}
 
-  cached-factory@0.2.0:
-    resolution: {integrity: sha512-6XGkilRVhace8gARfWVvkjyWoazCp21VUQXdDyWEcAz3sHSwXji76srbLfJ6BcHRAZveW9ICYprhqsdoRYZ+YQ==}
+  cached-factory@0.3.0:
+    resolution: {integrity: sha512-8PWf78SYJg9kGpUNlqOlg2iE4nu/iW7FidBVdvEZPy0GJRUyN91X7q0VzX/oyJE6bGrgr/bR0VhcGF87vgeQaw==}
     engines: {node: '>=18'}
 
   call-bind-apply-helpers@1.0.2:
@@ -10889,7 +10889,7 @@ snapshots:
 
   cac@7.0.0: {}
 
-  cached-factory@0.2.0: {}
+  cached-factory@0.3.0: {}
 
   call-bind-apply-helpers@1.0.2:
     dependencies:

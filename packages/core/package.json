@@ -26,7 +26,7 @@
 	},
 	"dependencies": {
 		"@flint.fyi/utils": "workspace:^",
-		"cached-factory": "^0.2.0",
+		"cached-factory": "^0.3.0",
 		"debug-for-file": "^0.4.0",
 		"ignore": "^7.0.5",
 		"omit-empty": "^1.0.0",
