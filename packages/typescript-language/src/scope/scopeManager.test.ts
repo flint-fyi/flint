@@ -707,7 +707,7 @@ describe(getScopeManager, () => {
 			}
 		`);
 
-		const scopeManager = createScopeManager(sourceFile);
+		const scopeManager = getScopeManager(sourceFile);
 		const fn = findFirstNode<AST.FunctionDeclaration>(
 			sourceFile,
 			SyntaxKind.FunctionDeclaration,
