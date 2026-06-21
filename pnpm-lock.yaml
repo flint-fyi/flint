@@ -659,7 +659,7 @@ importers:
         specifier: catalog:dev
         version: 1.0.4
       '@types/picomatch':
-        specifier: ^4.0.3
+        specifier: 4.0.3
         version: 4.0.3
       tsdown:
         specifier: catalog:dev
