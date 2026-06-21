@@ -13,7 +13,7 @@ import type { LanguageAndFile } from "./types.ts";
 
 const log = debugForFile(import.meta.filename);
 
-export interface FinalizedFileResults {
+export interface FinalizedFileResult {
 	dependencies: Set<string>;
 	invalidatesCache?: boolean;
 	languageReports: LanguageReport[];
@@ -27,13 +27,13 @@ export interface FinalizedFileResults {
  *   - Reports: from rules reports by file path
  * ...and then disposes of each language file.
  */
-export function finalizeFileResults(
+export function finalizeFileResult(
 	filePath: string,
 	languageAndFiles: LanguageAndFile[],
 	reports: FileReport[],
 	host: LinterHost,
 	skipLanguageReports?: boolean,
-): FinalizedFileResults {
+): FinalizedFileResult {
 	const directivesFilterer = new DirectivesFilterer();
 	const fileDependencies = new Set<string>();
 	const languageReports: LanguageReport[] = [];

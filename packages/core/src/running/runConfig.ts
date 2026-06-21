@@ -7,7 +7,7 @@ import type { LintResults } from "../types/linting.ts";
 import type { FileReport } from "../types/reports.ts";
 import type { AnyRule } from "../types/rules.ts";
 import { collectFilesAndOptions } from "./collectFilesAndOptions.ts";
-import { finalizeFileResults } from "./finalizeFileResults.ts";
+import { finalizeFileResult } from "./finalizeFileResult.ts";
 import { runLintRule } from "./runLintRule.ts";
 import type { LanguageFilesWithOptions } from "./types.ts";
 
@@ -55,7 +55,7 @@ export async function runConfig(
 	const filesResults = new Map(
 		Array.from(languageFilesByFilePath).map(([filePath, languageAndFiles]) => [
 			filePath,
-			finalizeFileResults(
+			finalizeFileResult(
 				filePath,
 				languageAndFiles,
 				reportsByFilePath.get(filePath).flat(),
