@@ -130,6 +130,9 @@ catalogs:
     '@astrojs/check':
       specifier: 0.9.7
       version: 0.9.7
+    '@astrojs/markdown-remark':
+      specifier: 7.2.0
+      version: 7.2.0
     '@astrojs/react':
       specifier: 5.0.0
       version: 5.0.0
@@ -1138,6 +1141,9 @@ importers:
       '@astrojs/check':
         specifier: catalog:site
         version: 0.9.7(prettier-plugin-astro@0.14.1)(prettier@3.8.1)(typescript@5.9.3)
+      '@astrojs/markdown-remark':
+        specifier: catalog:site
+        version: 7.2.0
       '@astrojs/react':
         specifier: catalog:site
         version: 5.0.0(@types/node@24.13.1)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yaml@2.9.0)
