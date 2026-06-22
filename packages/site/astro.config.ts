@@ -1,3 +1,4 @@
+import { unified } from "@astrojs/markdown-remark";
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
@@ -143,12 +144,14 @@ export default defineConfig({
 		react(),
 	],
 	markdown: {
-		remarkPlugins: [
-			remarkAddTwoslash({
-				excludes: [/content\/docs\/blog/, /content\/docs\/rules\/\w+\/\w+/],
-			}),
-			remarkHeadingId,
-		],
+		processor: unified({
+			remarkPlugins: [
+				remarkAddTwoslash({
+					excludes: [/content\/docs\/blog/, /content\/docs\/rules\/\w+\/\w+/],
+				}),
+				remarkHeadingId,
+			],
+		}),
 	},
 	redirects: {
 		"/discord": "https://discord.gg/cFK3RAUDhy",
