@@ -45,6 +45,7 @@ export interface LinterHostDirectoryEntry {
 }
 
 export type LinterHostDirectoryWatcher = (filePathAbsolute: string) => void;
+
 export type LinterHostFileWatcher = (event: LinterHostFileWatcherEvent) => void;
 
 export type LinterHostFileWatcherEvent = "changed" | "created" | "deleted";
