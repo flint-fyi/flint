@@ -6,7 +6,6 @@ export function withFileSystemWatcher(
 ): LinterHost {
 	return {
 		...host,
-		watchDirectorySync: watcher.watchDirectorySync.bind(watcher),
-		watchFileSync: watcher.watchFileSync.bind(watcher),
+		...watcher,
 	};
 }
