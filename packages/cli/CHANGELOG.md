@@ -1,5 +1,11 @@
 # @flint/cli
 
+## 0.20.0
+
+### Minor Changes
+
+- [#2965](https://github.com/flint-fyi/flint/pull/2965) [`ae6c324`](https://github.com/flint-fyi/flint/commit/ae6c3240fde5ad8f8e056977b434e4382ccf59a0) - Added a `github` presenter that emits GitHub Actions annotations, used automatically when running in GitHub Actions.
+
 ## 0.19.4
 
 ### Patch Changes
