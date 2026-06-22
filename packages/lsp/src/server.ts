@@ -22,6 +22,7 @@ import {
 	validateConfigDefinition,
 	withFileSystemWatcher,
 	type FileResults,
+	type LinterHostFileWatcherEvent,
 	type ProcessedConfigDefinition,
 	type VFSLinterHost,
 } from "@flint.fyi/core";
@@ -92,17 +93,15 @@ export function startServer(): void {
 			return;
 		}
 
-		// The LSP-backed watcher feeds onDidChangeWatchedFiles into the host's
-		// watchDirectorySync API so we don't have to fan watch events to the
-		// linter manually elsewhere in this file.
+		const fileSystemWatcher = createLspFileSystemWatcher(connection);
 		vfsHost = createVFSLinterHost({
 			baseHost: withFileSystemWatcher(
 				createDiskBackedLinterHost(workspaceRoot),
-				createLspFileSystemWatcher(connection),
+				fileSystemWatcher,
 			),
 		});
 
-		watchedFilesSubscription = vfsHost.watchDirectorySync(
+		watchedFilesSubscription = fileSystemWatcher.watchDirectoryWithEventSync(
 			workspaceRoot,
 			handleWatchedFileChange,
 			{ ignoredPaths: commonlyIgnoredPaths, recursive: true },
@@ -123,7 +122,7 @@ export function startServer(): void {
 
 	function handleWatchedFileChange(
 		filePath: string,
-		event?: "changed" | "created" | "deleted",
+		event: LinterHostFileWatcherEvent,
 	): void {
 		if (
 			event === "created" ||

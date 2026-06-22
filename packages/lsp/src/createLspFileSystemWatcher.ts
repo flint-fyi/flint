@@ -4,14 +4,28 @@ import { FileChangeType, type Connection } from "vscode-languageserver/node.js";
 
 import type {
 	FileSystemWatcher,
-	LinterHostDirectoryWatcher,
 	LinterHostFileWatcher,
 	LinterHostFileWatcherEvent,
+	WatchDirectoryOptions,
 } from "@flint.fyi/core";
 import { normalizePath } from "@flint.fyi/utils";
 
+export interface LspFileSystemWatcher extends FileSystemWatcher {
+	watchDirectoryWithEventSync(
+		this: void,
+		directoryPathAbsolute: string,
+		callback: LspFileSystemDirectoryWatcher,
+		options: WatchDirectoryOptions,
+	): Disposable;
+}
+
+type LspFileSystemDirectoryWatcher = (
+	filePathAbsolute: string,
+	event: LinterHostFileWatcherEvent,
+) => void;
+
 interface DirectorySubscription {
-	callback: LinterHostDirectoryWatcher;
+	callback: LspFileSystemDirectoryWatcher;
 	recursive: boolean;
 	rootPath: string;
 }
@@ -27,13 +41,11 @@ const FILE_CHANGE_TYPE_TO_EVENT: Record<
 
 /**
  * `FileSystemWatcher` backed by the LSP's `workspace/onDidChangeWatchedFiles`
- * notifications. Editor-driven filesystem events feed the standard host watch
- * API so the LSP server can subscribe to it the same way the CLI's watch mode
- * subscribes to the polling default.
+ * notifications.
  */
 export function createLspFileSystemWatcher(
 	connection: Connection,
-): FileSystemWatcher {
+): LspFileSystemWatcher {
 	const directorySubs = new Set<DirectorySubscription>();
 	const fileSubs = new Map<string, Set<LinterHostFileWatcher>>();
 
@@ -57,20 +69,33 @@ export function createLspFileSystemWatcher(
 		}
 	});
 
+	function watchDirectoryWithEventSync(
+		directoryPathAbsolute: string,
+		callback: LspFileSystemDirectoryWatcher,
+		options: WatchDirectoryOptions,
+	) {
+		const sub: DirectorySubscription = {
+			callback,
+			recursive: options.recursive,
+			rootPath: normalizePath(directoryPathAbsolute),
+		};
+		directorySubs.add(sub);
+		return {
+			[Symbol.dispose]() {
+				directorySubs.delete(sub);
+			},
+		};
+	}
+
 	return {
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
-			const sub: DirectorySubscription = {
+			return watchDirectoryWithEventSync(
+				directoryPathAbsolute,
 				callback,
-				recursive: options.recursive,
-				rootPath: normalizePath(directoryPathAbsolute),
-			};
-			directorySubs.add(sub);
-			return {
-				[Symbol.dispose]() {
-					directorySubs.delete(sub);
-				},
-			};
+				options,
+			);
 		},
+		watchDirectoryWithEventSync,
 		watchFileSync(filePathAbsolute, callback) {
 			const normalized = normalizePath(filePathAbsolute);
 			let set = fileSubs.get(normalized);
