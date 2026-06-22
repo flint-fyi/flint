@@ -5,6 +5,7 @@ import { pathToFileURL } from "node:url";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TextDocument } from "vscode-languageserver-textdocument";
+import { FileChangeType } from "vscode-languageserver/node.js";
 
 import type { FileResults } from "@flint.fyi/core";
 
@@ -85,9 +86,6 @@ const mocks = vi.hoisted(() => {
 			lintFiles,
 		},
 		validateConfigDefinition: vi.fn(() => undefined),
-		watchDirectoryCallback: undefined as
-			| ((filePath: string, event?: "changed" | "created" | "deleted") => void)
-			| undefined,
 	};
 
 	return state;
@@ -112,14 +110,6 @@ vi.mock("@flint.fyi/core", () => {
 			readFileSync: vi.fn(() => "const value = 1;\n"),
 			vfsDeleteFile: vi.fn(),
 			vfsUpsertFile: vi.fn(),
-			watchDirectorySync: vi.fn((_path, callback) => {
-				mocks.watchDirectoryCallback = callback;
-				return {
-					[Symbol.dispose]() {
-						/* intentionally empty */
-					},
-				};
-			}),
 		})),
 		findConfigFileName: vi.fn(() =>
 			Promise.resolve(mocks.directoryEntries[0]?.name),
@@ -405,15 +395,40 @@ describe("startServer", () => {
 
 		mocks.validateConfigDefinition.mockClear();
 		mocks.directoryEntries = [{ name: nextConfigFileName }];
-		mocks.watchDirectoryCallback?.(
-			path.join(workspaceRoot, "flint.config.mjs").replaceAll(path.sep, "/"),
-			"changed",
-		);
+		mocks.connection.callbacks.changeWatchedFiles?.({
+			changes: [
+				{
+					type: FileChangeType.Changed,
+					uri: pathToFileURL(path.join(workspaceRoot, "flint.config.mjs")).href,
+				},
+			],
+		});
 		await flushQueuedWork();
 
 		expect(mocks.validateConfigDefinition).toHaveBeenCalledWith(
 			expect.anything(),
 			nextConfigFileName,
+		);
+	});
+
+	it("rebuilds when an external watched file is created", async () => {
+		await startInitializedServer();
+		await flushQueuedWork();
+		mocks.lintSessionCreate.mockClear();
+
+		mocks.connection.callbacks.changeWatchedFiles?.({
+			changes: [
+				{
+					type: FileChangeType.Created,
+					uri: pathToFileURL(path.join(workspaceRoot, "src/new.ts")).href,
+				},
+			],
+		});
+		await flushQueuedWork();
+
+		expect(mocks.lintSessionCreate).toHaveBeenCalledExactlyOnceWith(
+			expect.anything(),
+			expect.anything(),
 		);
 	});
 
