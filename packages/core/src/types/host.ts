@@ -1,11 +1,21 @@
 import type { commonlyIgnoredGlobs } from "../host/watcher.ts";
 
-export type FileSystemWatcher = Pick<
-	LinterHost,
-	"watchDirectorySync" | "watchFileSync"
->;
+export interface FileSystemWatcher {
+	watchDirectorySync(
+		this: void,
+		directoryPathAbsolute: string,
+		callback: LinterHostDirectoryWatcher,
+		options: WatchDirectoryOptions,
+	): Disposable;
+	watchFileSync(
+		this: void,
+		filePathAbsolute: string,
+		callback: LinterHostFileWatcher,
+		options: WatchOptions,
+	): Disposable;
+}
 
-export interface LinterHost {
+export interface LinterHost extends FileSystemWatcher {
 	fileTypeSync(pathAbsolute: string): "directory" | "file" | undefined;
 	getCurrentDirectory(): string;
 	getFileTouchTime(filePath: string): Promise<number | undefined>;
@@ -25,16 +35,6 @@ export interface LinterHost {
 	readDirectorySync(directoryPathAbsolute: string): LinterHostDirectoryEntry[];
 	readFile(filePathAbsolute: string): Promise<string | undefined>;
 	readFileSync(filePathAbsolute: string): string | undefined;
-	watchDirectorySync(
-		directoryPathAbsolute: string,
-		callback: LinterHostDirectoryWatcher,
-		options: WatchDirectoryOptions,
-	): Disposable;
-	watchFileSync(
-		filePathAbsolute: string,
-		callback: LinterHostFileWatcher,
-		options: WatchOptions,
-	): Disposable;
 	writeFile(filePathAbsolute: string, content: string): Promise<void>;
 	writeFileSync(filePathAbsolute: string, content: string): void;
 }
