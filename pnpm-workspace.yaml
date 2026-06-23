@@ -78,7 +78,7 @@ disallowWorkspaceCycles: true
 
 engineStrict: true
 
-nodeVersion: 26.1.0
+nodeVersion: 24.15.0
 
 onlyBuiltDependencies:
   - esbuild@0.25.11

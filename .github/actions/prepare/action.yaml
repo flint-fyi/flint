@@ -6,7 +6,7 @@ inputs:
   node-version:
     description: The Node.js version to use
     required: false
-    default: 26
+    default: 24.15.0
 
 runs:
   steps:

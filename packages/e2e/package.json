@@ -32,6 +32,6 @@
 		"vitest-ansi-serializer": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=26.1.0"
+		"node": ">=24.0.0"
 	}
 }
