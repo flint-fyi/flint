@@ -1,5 +1,11 @@
 # @flint/core
 
+## 0.23.2
+
+### Patch Changes
+
+- [#2993](https://github.com/flint-fyi/flint/pull/2993) [`08eaf06`](https://github.com/flint-fyi/flint/commit/08eaf06ea683b575afee056a76142823f0f5ff27) - Avoid writing stale cache data during fix loops.
+
 ## 0.23.1
 
 ### Patch Changes
