@@ -27,3 +27,9 @@ jobs:
 
           # Honeypot Trap
           blocked-terms: SASSAFRAS
+
+          # Exemptions
+          exempt-bots: |
+            renovate[bot]
+            github-actions[bot]
+            flint-tokens-bot[bot]
