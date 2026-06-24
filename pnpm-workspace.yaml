@@ -94,6 +94,11 @@ peerDependencyRules:
     eslint-plugin-jsx-a11y>eslint: "10"
     eslint-plugin-react>eslint: "10"
     eslint-plugin-solid>eslint: "10"
+    expressive-code-twoslash>@expressive-code/core: "0.43"
+    expressive-code-twoslash>expressive-code: "0.43"
 
 shellEmulator: true
+
 strictDepBuilds: true
+
+strictPeerDependencies: true

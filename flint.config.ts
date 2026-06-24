@@ -24,7 +24,7 @@ export default defineConfig({
 			rules: json.presets.logical,
 		},
 		{
-			files: [md.files.all, ".changeset/*.md", ".github/**/*.md"],
+			files: md.files.all,
 			rules: md.presets.logicalStrict,
 		},
 		{
@@ -58,6 +58,10 @@ export default defineConfig({
 				include: yaml.files.all,
 			},
 			rules: yaml.presets.logical,
+		},
+		{
+			files: [".github/workflows/*.yaml"],
+			rules: [yaml.rules({ stringMappingKeys: false })],
 		},
 		{
 			files: [globs.all, "**/*.mdx"],
