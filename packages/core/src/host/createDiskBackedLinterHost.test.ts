@@ -2,11 +2,12 @@ import fs from "node:fs";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { normalizePath } from "@flint.fyi/utils";
 
 import { createDiskBackedLinterHost } from "./createDiskBackedLinterHost.ts";
+import { commonlyIgnoredGlobs } from "./watcher.ts";
 
 const INTEGRATION_DIR_NAME = ".flint-disk-backed-linter-host-integration-tests";
 
@@ -36,7 +37,7 @@ describe("createDiskBackedLinterHost", () => {
 		fs.mkdirSync(integrationRoot, { recursive: true });
 	});
 
-	afterEach(() => {
+	afterAll(() => {
 		fs.rmSync(integrationRoot, { force: true, recursive: true });
 	});
 
@@ -661,6 +662,75 @@ describe("createDiskBackedLinterHost", () => {
 				expect(onEvent).toHaveBeenCalledWith(directoryPath);
 			});
 			onEvent.mockClear();
+		});
+	});
+
+	describe("glob", () => {
+		it("returns paths relative to options.cwd", async () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			fs.mkdirSync(path.join(integrationRoot, "src"), { recursive: true });
+			fs.writeFileSync(path.join(integrationRoot, "src", "file.ts"), "");
+
+			const matches = await host.glob(["**/*.ts"], {
+				cwd: integrationRoot,
+				exclude: [],
+			});
+
+			expect(matches).toEqual(["src/file.ts"]);
+		});
+
+		it("matches dotfiles and dot-directories", async () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			fs.mkdirSync(path.join(integrationRoot, ".github"), { recursive: true });
+			fs.mkdirSync(path.join(integrationRoot, ".changeset"), {
+				recursive: true,
+			});
+			fs.writeFileSync(path.join(integrationRoot, ".github", "foo.md"), "");
+			fs.writeFileSync(path.join(integrationRoot, ".changeset", "a.md"), "");
+
+			const matches = await host.glob(["**/*.md"], {
+				cwd: integrationRoot,
+				exclude: [],
+			});
+
+			expect(matches).toContain(".github/foo.md");
+			expect(matches).toContain(".changeset/a.md");
+		});
+
+		it("honors exclude patterns", async () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			fs.writeFileSync(path.join(integrationRoot, "keep.ts"), "");
+			fs.writeFileSync(path.join(integrationRoot, "drop.ts"), "");
+
+			const matches = await host.glob(["**/*.ts"], {
+				cwd: integrationRoot,
+				exclude: ["drop.ts"],
+			});
+
+			expect(matches).toEqual(["keep.ts"]);
+		});
+
+		it("prunes commonly-ignored directories when passed as exclude", async () => {
+			const host = createDiskBackedLinterHost(integrationRoot);
+			fs.mkdirSync(path.join(integrationRoot, "node_modules", "pkg"), {
+				recursive: true,
+			});
+			fs.mkdirSync(path.join(integrationRoot, ".git"), { recursive: true });
+			fs.writeFileSync(
+				path.join(integrationRoot, "node_modules", "pkg", "index.ts"),
+				"",
+			);
+			fs.writeFileSync(path.join(integrationRoot, ".git", "config"), "");
+			fs.writeFileSync(path.join(integrationRoot, "src.ts"), "");
+
+			const matches = await host.glob(["**/*"], {
+				cwd: integrationRoot,
+				exclude: commonlyIgnoredGlobs,
+			});
+
+			expect(matches).toContain("src.ts");
+			expect(matches.some((p) => p.startsWith("node_modules/"))).toBe(false);
+			expect(matches.some((p) => p.startsWith(".git/"))).toBe(false);
 		});
 	});
 });
