@@ -17,7 +17,7 @@ const flintRuleStatusSchema = z.union([
 ]);
 
 const flintRuleReferenceSchema = z.object({
-	name: linterNameSchema,
+	name: z.string(),
 	plugin: z.string(),
 	preset: z.string(),
 	status: flintRuleStatusSchema.optional(),
@@ -30,6 +30,8 @@ const linterRuleReferenceSchema = z.object({
 	name: z.string(),
 	url: z.string(),
 });
+
+export type LinterRuleReference = z.infer<typeof linterRuleReferenceSchema>;
 
 const comparisonSchema = z.object({
 	biome: z.array(linterRuleReferenceSchema).optional(),

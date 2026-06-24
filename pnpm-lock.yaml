@@ -51,6 +51,9 @@ catalogs:
     eslint:
       specifier: 10.4.1
       version: 10.4.1
+    eslint-plugin-import:
+      specifier: 2.32.0
+      version: 2.32.0
     eslint-plugin-jsdoc:
       specifier: 63.0.2
       version: 63.0.2
@@ -69,6 +72,9 @@ catalogs:
     eslint-plugin-regexp:
       specifier: 3.1.0
       version: 3.1.0
+    eslint-plugin-unicorn:
+      specifier: 64.0.0
+      version: 64.0.0
     eslint-plugin-yml:
       specifier: 3.4.0
       version: 3.4.0
@@ -568,7 +574,7 @@ importers:
         specifier: 7.3.3
         version: 7.3.3(eslint@10.4.1(jiti@2.7.0))
       eslint-plugin-import:
-        specifier: 2.32.0
+        specifier: catalog:dev
         version: 2.32.0(@typescript-eslint/parser@8.59.0(eslint@10.4.1(jiti@2.7.0))(typescript@5.9.3))(eslint@10.4.1(jiti@2.7.0))
       eslint-plugin-jsdoc:
         specifier: catalog:dev
@@ -1019,6 +1025,37 @@ importers:
       vitest:
         specifier: catalog:dev
         version: 4.1.0(@emnapi/core@1.11.0)(@emnapi/runtime@1.11.0)(@types/node@24.13.1)(esbuild@0.27.4)(jiti@2.7.0)(yaml@2.9.0)
+
+  packages/performance-testing:
+    dependencies:
+      '@flint.fyi/comparisons':
+        specifier: workspace:^
+        version: link:../comparisons
+      console-table-without-index:
+        specifier: ^0.1.1
+        version: 0.1.1
+      debug-for-file:
+        specifier: ^0.4.0
+        version: 0.4.1
+      execa:
+        specifier: ^9.6.1
+        version: 9.6.1
+      flint:
+        specifier: workspace:^
+        version: link:../flint
+      prettier:
+        specifier: 3.8.1
+        version: 3.8.1
+    devDependencies:
+      eslint:
+        specifier: catalog:dev
+        version: 10.4.1(jiti@2.7.0)
+      eslint-plugin-import:
+        specifier: catalog:dev
+        version: 2.32.0(@typescript-eslint/parser@8.59.0(eslint@10.4.1(jiti@2.7.0))(typescript@5.9.3))(eslint@10.4.1(jiti@2.7.0))
+      eslint-plugin-unicorn:
+        specifier: catalog:dev
+        version: 64.0.0(eslint@10.4.1(jiti@2.7.0))
 
   packages/plugin-flint:
     dependencies:
@@ -4346,6 +4383,10 @@ packages:
     resolution: {integrity: sha512-KxgTskG1eCVCKB6f3XuM3lkzuM+0ASGCPVLIJU8r6Lv6lzCCk4FEoYkHJubEnUKzqHAQNVl1lw5UOyufTTILjg==}
     engines: {node: '>=20.19.0'}
 
+  console-table-without-index@0.1.1:
+    resolution: {integrity: sha512-afFFu25d5aS/ME5RHJcfsyWQucijEqYTF9L/sqbNhioC5q9HTmm+MipswZJmcPnDXSFM7PmqK61Mq511/61iJg==}
+    engines: {node: '>=18'}
+
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
@@ -4454,6 +4495,10 @@ packages:
 
   debug-for-file@0.4.0:
     resolution: {integrity: sha512-skj9N5jSw8tyMFuJkihWuO832Qulkq2NF8wzEdbA7Db7BCTfoShZdrcMsVHRtF7d1jYPQ2B5SaEaUOW2dFoqOw==}
+    engines: {node: '>=18.3.0'}
+
+  debug-for-file@0.4.1:
+    resolution: {integrity: sha512-ZlGiAP8dHlzBaWGxo0A3gZFJSFcvZEVWWzzTlo4XLBgb04vz8/QQ7wOE/orTzMLxRh3rND2pTrE9clFgkHi9Mg==}
     engines: {node: '>=18.3.0'}
 
   debug@3.2.7:
@@ -6247,6 +6292,10 @@ packages:
   normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
+
+  not-a-log@1.0.2:
+    resolution: {integrity: sha512-VY4FJzIwL7hrjJbnAgGW50eVAsLXvYjjvKSigPcXOTH26fYut7vX5OuZY8RoQJjkRoYDWf31Kh7fxqsL028nOw==}
+    engines: {node: '>=18'}
 
   npm-package-arg@13.0.2:
     resolution: {integrity: sha512-IciCE3SY3uE84Ld8WZU23gAPPV9rIYod4F+rc+vJ7h7cwAJt9Vk6TVsK60ry7Uj3SRS3bqRRIGuTp9YVlk6WNA==}
@@ -10798,6 +10847,10 @@ snapshots:
 
   console-fail-test@0.6.1: {}
 
+  console-table-without-index@0.1.1:
+    dependencies:
+      not-a-log: 1.0.2
+
   convert-source-map@2.0.0: {}
 
   cookie-es@1.2.2: {}
@@ -10935,6 +10988,14 @@ snapshots:
   debounce@3.0.0: {}
 
   debug-for-file@0.4.0:
+    dependencies:
+      '@types/debug': 4.1.13
+      debug: 4.4.3
+      read-package-up: 12.0.0
+    transitivePeerDependencies:
+      - supports-color
+
+  debug-for-file@0.4.1:
     dependencies:
       '@types/debug': 4.1.13
       debug: 4.4.3
@@ -13349,6 +13410,8 @@ snapshots:
       validate-npm-package-license: 3.0.4
 
   normalize-path@3.0.0: {}
+
+  not-a-log@1.0.2: {}
 
   npm-package-arg@13.0.2:
     dependencies:
