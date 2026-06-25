@@ -24191,9 +24191,9 @@
 		"flint": {
 			"name": "octalNumbers",
 			"plugin": "ts",
-			"preset": "javascript",
-			"status": "implemented"
-		}
+			"status": "skipped"
+		},
+		"notes": "Handled by TypeScript / otherwise is stylistic."
 	},
 	{
 		"biome": [
