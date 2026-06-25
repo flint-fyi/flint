@@ -329,6 +329,44 @@ const result = arr !== undefined ? arr.map(x => x * 2).filter(x => x > 0) : [];
                Prefer nullish coalescing operator (\`??\`) over ternary expression for nullish checks.
 `,
 		},
+		{
+			code: `
+let value: { x: number } | undefined;
+if (value === undefined) {
+  value = { x: 1 };
+}
+`,
+			output: `
+let value: { x: number } | undefined;
+value ??= { x: 1 };
+`,
+			snapshot: `
+let value: { x: number } | undefined;
+if (value === undefined) {
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Prefer nullish coalescing assignment (\`??=\`) over assignment with null/undefined check.
+  value = { x: 1 };
+  ~~~~~~~~~~~~~~~~~
+}
+~
+`,
+		},
+		{
+			code: `
+let value: { x: number } | undefined;
+if (value === undefined) value = { x: 1 };
+`,
+			output: `
+let value: { x: number } | undefined;
+value ??= { x: 1 };
+`,
+			snapshot: `
+let value: { x: number } | undefined;
+if (value === undefined) value = { x: 1 };
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Prefer nullish coalescing assignment (\`??=\`) over assignment with null/undefined check.
+`,
+		},
 	],
 	valid: [
 		`
@@ -400,6 +438,13 @@ const result = obj.value || "default";
 		`
 declare const baseHost: string[] | null;
 console.log(baseHost == null ? { cwd: process.cwd() } : { baseHost });
+`,
+		`
+let content: { value: string } | undefined;
+let matcher: { value: string } | undefined;
+if (content !== undefined) {
+    matcher = content;
+}
 `,
 	],
 });

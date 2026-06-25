@@ -1,0 +1,60 @@
+---
+description: "Reports uses of `document.write()` and `document.writeln()` which block HTML parsing."
+title: "documentWrites"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="documentWrites" />
+
+The `document.write()` and `document.writeln()` APIs write strings into the document stream while HTML is being parsed.
+They can block parsing, replace the current document after load, and turn string construction mistakes into script injection vulnerabilities.
+Create DOM nodes directly, or let your framework render the content.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+document.write("<main>Loaded</main>");
+```
+
+```ts
+window.document.writeln(`<p>${location.search}</p>`);
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const main = document.createElement("main");
+main.textContent = "Loaded";
+document.body.append(main);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you maintain legacy third-party snippets that intentionally rely on parser-inserted script execution and cannot be changed yet, it may be preferable to disable this rule around those snippets.
+For application code, prefer explicit DOM construction, static script tags, or renderer-managed updates.
+
+## Further Reading
+
+- [MDN: `document.write()`](https://developer.mozilla.org/en-US/docs/Web/API/Document/write)
+- [MDN: `document.writeln()`](https://developer.mozilla.org/en-US/docs/Web/API/Document/writeln)
+- [MDN: Cross-site scripting](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="documentWrites" />

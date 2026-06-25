@@ -21,7 +21,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile: (node) => {
+				Document: (node) => {
 					if (!getPackagePropertyOfName(node, "private")) {
 						context.report({
 							message: "missing",

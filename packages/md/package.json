@@ -1,8 +1,8 @@
 {
 	"name": "@flint.fyi/md",
-	"version": "0.15.2",
+	"version": "0.15.4",
 	"description": "[Experimental] Markdown plugin for Flint.",
-	"homepage": "https://www.flint.fyi/rules/md",
+	"homepage": "https://flint.fyi/rules/md",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "JoshuaKGoldberg",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": false,
 	"type": "module",
@@ -19,8 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/",
-		"!lib/**/*.map"
+		"lib/"
 	],
 	"scripts": {
 		"test": "vitest --project md"

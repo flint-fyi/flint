@@ -1,0 +1,107 @@
+---
+description: "Enforce consistent root `exports` subpath style in package.json."
+title: "exportsSubpathsStyle"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="exportsSubpathsStyle" />
+
+The Node.js `exports` field allows a single root export to be written as a direct value or under the `"."` subpath.
+Both forms resolve the package root, but using one style consistently keeps package manifests easier to compare.
+
+By default, this rule prefers the explicit `"."` subpath form.
+The explicit form keeps the top-level `exports` shape stable if the package later adds additional subpaths.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"exports": "./index.js"
+}
+```
+
+```json
+{
+	"exports": {
+		"import": "./index.mjs",
+		"require": "./index.cjs"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"exports": {
+		".": "./index.js"
+	}
+}
+```
+
+```json
+{
+	"exports": {
+		".": {
+			"import": "./index.mjs",
+			"require": "./index.cjs"
+		}
+	}
+}
+```
+
+```json
+{
+	"exports": {
+		".": "./index.js",
+		"./utils": "./utils.js"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `prefer`
+
+> Type: `"explicit" | "implicit"`
+>
+> Default: `"explicit"`
+
+Which single root export style to enforce.
+Use `"explicit"` to require the `"."` subpath wrapper.
+Use `"implicit"` to prefer the direct root export value when no other subpaths are present.
+
+```ts
+packageJson.rules({
+	exportsSubpathsStyle: {
+		prefer: "implicit",
+	},
+});
+```
+
+With `"implicit"`, this rule does not unwrap `exports` objects that declare more than the root subpath.
+Multiple package subpaths require the explicit object form.
+
+## When Not To Use It
+
+If your project does not use `exports`, or your package manifests intentionally mix both single-root forms to match generated output from another tool, this rule may not be useful for that package.
+
+## Further Reading
+
+- [Node.js: Package entry points](https://nodejs.org/api/packages.html#package-entry-points)
+- [Node.js: Subpath exports](https://nodejs.org/api/packages.html#subpath-exports)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="exportsSubpathsStyle" />

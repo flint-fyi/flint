@@ -1,36 +1,3 @@
-import {
-	type AnyRuleDefinition,
-	type CharacterReportRange,
-	createLanguage,
-	DirectivesCollector,
-	type FileAboutData,
-	type FileReport,
-	getColumnAndLineOfPosition,
-	isSuggestionForFiles,
-	type Language,
-	type LanguageFileCacheImpacts,
-	type LanguageReports,
-	type NormalizedReportRangeObject,
-	type RuleContext,
-	type RuleReport,
-	type SourceFileWithLineMap,
-	type UnsafeAnyRule,
-} from "@flint.fyi/core";
-import { setTSProgramCreationProxy } from "@flint.fyi/ts-patch";
-import {
-	type AST,
-	type Checker,
-	convertTypeScriptDiagnosticToLanguageReport,
-	extractDirectivesFromTypeScriptFile,
-	type ExtractedDirective,
-	NodeSyntaxKinds,
-	setVolarCreateFile,
-	throwUnknownLanguageExtension,
-	type TypeScriptFileServices,
-	typescriptLanguage,
-	type TypeScriptNodesByName,
-} from "@flint.fyi/typescript-language";
-import { assert, FlintAssertionError, nullThrows } from "@flint.fyi/utils";
 import type {
 	Language as VolarLanguage,
 	LanguagePlugin as VolarLanguagePlugin,
@@ -40,6 +7,38 @@ import type {
 import type { TypeScriptServiceScript as VolarTypeScriptServiceScript } from "@volar/typescript";
 import { proxyCreateProgram } from "@volar/typescript/lib/node/proxyCreateProgram.js";
 import ts from "typescript";
+
+import {
+	createLanguage,
+	DirectivesCollector,
+	getColumnAndLineOfPosition,
+	isSuggestionForFiles,
+	type CharacterReportRange,
+	type FileAboutData,
+	type FileReport,
+	type Language,
+	type LanguageFileCacheImpacts,
+	type LanguageReports,
+	type NormalizedReportRangeObject,
+	type RuleContext,
+	type RuleReport,
+	type SourceFileWithLineMap,
+} from "@flint.fyi/core";
+import { setTSProgramCreationProxy } from "@flint.fyi/ts-patch";
+import {
+	convertTypeScriptDiagnosticToLanguageReport,
+	extractDirectivesFromTypeScriptFile,
+	NodeSyntaxKinds,
+	setVolarCreateFile,
+	throwUnknownLanguageExtension,
+	typescriptLanguage,
+	type AST,
+	type Checker,
+	type ExtractedDirective,
+	type TypeScriptFileServices,
+	type TypeScriptNodesByName,
+} from "@flint.fyi/typescript-language";
+import { assert, FlintAssertionError, nullThrows } from "@flint.fyi/utils";
 
 import packageJson from "../package.json" with { type: "json" };
 
@@ -438,12 +437,11 @@ export function createVolarBasedLanguage<FileServices extends object>(
 				);
 			},
 		}),
-		createRule: (ruleDefinition: AnyRuleDefinition) => {
-			// flint-disable-next-line ts/anyReturns
+		createRule: (ruleDefinition) => {
 			return {
 				...ruleDefinition,
 				language: typescriptLanguage,
-			} as UnsafeAnyRule;
+			};
 		},
 	};
 }

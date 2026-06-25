@@ -1,0 +1,62 @@
+---
+description: "Reports uses of `document.domain` which relaxes same-origin protections."
+title: "documentDomains"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="browser" rule="documentDomains" />
+
+The `document.domain` API changes the origin the browser uses for same-origin checks.
+Setting it can let pages on related subdomains access each other when the browser would otherwise keep them isolated.
+Use `location.hostname` or `location.origin` when you only need to read the current page's host or origin.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+document.domain = "example.com";
+```
+
+```ts
+window.document.domain = "example.com";
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+const currentHost = location.hostname;
+```
+
+```ts
+const currentOrigin = location.origin;
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+If you maintain a legacy app that temporarily depends on cross-subdomain same-origin relaxation while migration is in progress, it may be reasonable to disable this rule for those files.
+For new code, prefer current host checks or server-side origin configuration instead.
+
+## Further Reading
+
+- [MDN: `document.domain`](https://developer.mozilla.org/en-US/docs/Web/API/Document/domain)
+- [MDN: `location.hostname`](https://developer.mozilla.org/en-US/docs/Web/API/Location/hostname)
+- [MDN: Same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="browser" ruleId="documentDomains" />

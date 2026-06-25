@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"title": "Flint Comparisons Data",
-	"description": "Maps linting rules across tools (Flint, ESLint, Biome, Oxlint, Deno, markdownlint) for comparison.",
+	"description": "Maps linting rules across tools (Flint, ESLint, Biome, Oxlint, Deno, markdownlint, Stylelint) for comparison.",
 	"type": "array",
 	"items": {
 		"type": "object",
@@ -10,7 +10,7 @@
 		"properties": {
 			"flint": {
 				"type": "object",
-				"required": ["name", "plugin"],
+				"required": ["name"],
 				"additionalProperties": false,
 				"properties": {
 					"name": {
@@ -24,8 +24,12 @@
 						"enum": [
 							"astro",
 							"browser",
+							"css",
+							"drizzle",
 							"flint",
+							"graphql",
 							"json",
+							"jest",
 							"jsx",
 							"md",
 							"next",
@@ -33,7 +37,11 @@
 							"nuxt",
 							"package-json",
 							"performance",
+							"playwright",
+							"qwik",
 							"react",
+							"react-native",
+							"security",
 							"solid",
 							"spelling",
 							"svelte",
@@ -50,7 +58,6 @@
 							"config",
 							"javascript",
 							"logical",
-							"logicalStrict",
 							"none",
 							"security",
 							"sorting",
@@ -96,6 +103,13 @@
 			"oxlint": {
 				"type": "array",
 				"description": "Equivalent Oxlint rule(s).",
+				"items": {
+					"$ref": "#/$defs/toolRule"
+				}
+			},
+			"stylelint": {
+				"type": "array",
+				"description": "Equivalent Stylelint rule(s).",
 				"items": {
 					"$ref": "#/$defs/toolRule"
 				}

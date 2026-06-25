@@ -1,10 +1,13 @@
-import {
-	type AST,
-	isGlobalDeclarationOfName,
-	type TypeScriptFileServices,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
 import * as ts from "typescript";
+
+import {
+	isGlobalDeclarationOfName,
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 const requiresNew = new Set([
 	"Array",
@@ -45,8 +48,6 @@ const disallowsNew = new Set([
 	"String",
 	"Symbol",
 ]);
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

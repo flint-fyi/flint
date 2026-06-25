@@ -1,6 +1,7 @@
+import { AsyncLocalStorage } from "node:async_hooks";
+
 import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
-import { AsyncLocalStorage } from "node:async_hooks";
 
 import type { LinterHost } from "../types/host.ts";
 import type { AnyLanguageFile } from "../types/languages.ts";

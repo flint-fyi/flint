@@ -1,6 +1,7 @@
+import { SyntaxKind } from "typescript";
+
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
-import { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

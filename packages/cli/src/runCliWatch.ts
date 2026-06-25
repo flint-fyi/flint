@@ -1,7 +1,13 @@
-import type { LinterHost, LintResults } from "@flint.fyi/core";
-import { pathKey } from "@flint.fyi/utils";
 import debounce from "debounce";
 import { debugForFile } from "debug-for-file";
+
+import {
+	nodeModulesCache,
+	vcsDirectories,
+	type LinterHost,
+	type LintResults,
+} from "@flint.fyi/core";
+import { pathKey } from "@flint.fyi/utils";
 
 import type { OptionsValues } from "./options.ts";
 import type { Renderer } from "./renderers/types.ts";
@@ -77,6 +83,7 @@ export async function runCliWatch(
 
 		log("Watching cwd:", cwd);
 		const watcher = host.watchDirectorySync(cwd, rerun, {
+			ignoredPaths: [nodeModulesCache, ...vcsDirectories],
 			recursive: true,
 		});
 	});
@@ -90,11 +97,11 @@ function shouldRerunForFileChange(
 		return true;
 	}
 
-	if (lintResults.filesResults.has(changedFilePath)) {
+	if (lintResults.allFilePaths.has(changedFilePath)) {
 		return true;
 	}
 
-	for (const fileResult of lintResults.filesResults.values()) {
+	for (const fileResult of lintResults.allFileResults.values()) {
 		if (fileResult.dependencies.has(changedFilePath)) {
 			return true;
 		}

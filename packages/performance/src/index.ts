@@ -1,1 +1,1 @@
-export * from "./plugin.ts";
+export { performance } from "./plugin.ts";

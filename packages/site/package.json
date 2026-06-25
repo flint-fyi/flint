@@ -7,28 +7,20 @@
 	"scripts": {
 		"astro": "astro",
 		"prebuild": "astro sync",
-		"build": "astro check && astro build",
+		"build": "astro build",
+		"check": "astro check",
 		"dev": "astro dev",
 		"preview": "astro preview",
 		"start": "astro dev"
 	},
 	"dependencies": {
 		"@astrojs/starlight": "catalog:site",
-		"@flint.fyi/astro": "workspace:^",
-		"@flint.fyi/browser": "workspace:^",
 		"@flint.fyi/comparisons": "workspace:^",
-		"@flint.fyi/jsx": "workspace:^",
-		"@flint.fyi/node": "workspace:^",
-		"@flint.fyi/performance": "workspace:^",
-		"@flint.fyi/plugin-flint": "workspace:^",
-		"@flint.fyi/spelling": "workspace:^",
-		"@flint.fyi/vitest": "workspace:^",
 		"@types/react": "catalog:site",
 		"astro": "catalog:site",
 		"astro-og-canvas": "catalog:site",
 		"canvaskit-wasm": "catalog:site",
 		"clsx": "catalog:site",
-		"flint": "workspace:^",
 		"konami-emoji-blast": "catalog:site",
 		"markdown-it": "catalog:site",
 		"react": "catalog:site",
@@ -37,13 +29,15 @@
 	},
 	"devDependencies": {
 		"@astrojs/check": "catalog:site",
+		"@astrojs/markdown-remark": "catalog:site",
 		"@astrojs/react": "catalog:site",
-		"@flint.fyi/core": "workspace:^",
+		"@expressive-code/core": "catalog:site",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@konami-emoji-blast/astro": "catalog:site",
 		"@types/markdown-it": "catalog:site",
 		"@types/node": "catalog:dev",
 		"@types/react-dom": "catalog:site",
+		"expressive-code": "catalog:site",
 		"expressive-code-twoslash": "catalog:site",
 		"react-dom": "catalog:site",
 		"remark-add-twoslash": "catalog:site",
@@ -53,5 +47,8 @@
 		"starlight-links-validator": "catalog:site",
 		"starlight-sidebar-topics": "catalog:site",
 		"zod": "catalog:dev"
+	},
+	"engines": {
+		"node": ">=24.0.0"
 	}
 }

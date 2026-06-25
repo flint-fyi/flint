@@ -1,6 +1,12 @@
+import path from "node:path";
+
+import { createProjectService } from "@typescript-eslint/project-service";
+import { debugForFile } from "debug-for-file";
+import * as ts from "typescript";
+
 import {
-	type AnyOptionalSchema,
 	createLanguage,
+	type AnyOptionalSchema,
 	type FileAboutData,
 	type InferredOutputObject,
 	type LanguageFile,
@@ -9,10 +15,6 @@ import {
 	type RuleRuntime,
 } from "@flint.fyi/core";
 import { assert, nullThrows } from "@flint.fyi/utils";
-import { createProjectService } from "@typescript-eslint/project-service";
-import { debugForFile } from "debug-for-file";
-import path from "node:path";
-import * as ts from "typescript";
 
 import packageJson from "../package.json" with { type: "json" };
 import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
@@ -21,6 +23,7 @@ import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesF
 import { getFirstEnumValues } from "./getFirstEnumValues.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
 import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
+import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
 import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
 
@@ -163,6 +166,7 @@ export const typescriptLanguage = createLanguage<
 			.getPreEmitDiagnostics(file.services.program, file.services.sourceFile)
 			.map(convertTypeScriptDiagnosticToLanguageReport);
 	},
+	orderFilePaths: orderTypeScriptFilePaths,
 	runFileVisitors(file, options, runtime) {
 		if (!runtime.visitors) {
 			return;

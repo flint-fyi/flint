@@ -5,10 +5,6 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
-  id-token: write
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
@@ -17,13 +13,23 @@ jobs:
     if: github.event.repository.fork != true
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: ./.github/actions/prepare
-      - run: pnpm build
-      - env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        name: Create Release Pull Request
-        uses: changesets/action@v1
+
+      - name: Create Token
+        id: create_token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
-          publish: pnpm -r publish
+          client-id: ${{ vars.FLINT_TOKENS_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.FLINT_TOKENS_BOT_PRIVATE_KEY }}
+
+      - name: Changesets Release
+        uses: changesets/action@v1
+        env:
+          GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
+        with:
+          publish: pnpm release

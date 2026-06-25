@@ -1,0 +1,90 @@
+---
+description: "Reports package.json properties that do not apply to private packages."
+title: "privatePackageProperties"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="privatePackageProperties" />
+
+This rule reports package properties that are unnecessary when `private` is `true`.
+Private packages cannot be published to npm, so publication metadata such as `files` and `publishConfig` does not apply.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"private": true,
+	"files": ["lib"]
+}
+```
+
+```json
+{
+	"private": true,
+	"publishConfig": {
+		"access": "public"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"private": true
+}
+```
+
+```json
+{
+	"private": false,
+	"files": ["lib"],
+	"publishConfig": {
+		"access": "public"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `blockedProperties`
+
+> Type: `string[]`
+>
+> Default: `["files", "publishConfig"]`
+
+Package properties to report when `private` is `true`.
+Configured values replace the default list.
+
+```ts
+packageJson.rules({
+	privatePackageProperties: {
+		blockedProperties: ["files", "publishConfig", "sideEffects"],
+	},
+});
+```
+
+## When Not To Use It
+
+If your private packages intentionally keep publish-related metadata for internal packing checks or release simulations, you can disable this rule.
+
+## Further Reading
+
+- [npm: `package.json` > `private`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#private)
+- [npm: `package.json` > `files`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#files)
+- [npm: `package.json` > `publishConfig`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#publishconfig)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="privatePackageProperties" />

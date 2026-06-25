@@ -117,6 +117,116 @@ function f(x: number) {
 		},
 		{
 			code: `
+function f(value?: string) {
+	value ??= "fallback";
+}
+`,
+			snapshot: `
+function f(value?: string) {
+	value ??= "fallback";
+	~~~~~
+	Reassigning function parameters can make them more difficult to reason about.
+}
+`,
+		},
+		{
+			code: `
+function f(value: number) {
+	[value] = [5];
+}
+`,
+			snapshot: `
+function f(value: number) {
+	[value] = [5];
+	 ~~~~~
+	 Reassigning function parameters can make them more difficult to reason about.
+}
+`,
+		},
+		{
+			code: `
+function f(value: number) {
+	({ value } = { value: 5 });
+}
+`,
+			snapshot: `
+function f(value: number) {
+	({ value } = { value: 5 });
+	   ~~~~~
+	   Reassigning function parameters can make them more difficult to reason about.
+}
+`,
+		},
+		{
+			code: `
+function f(value: string, items: string[]) {
+	for (value of items) {}
+}
+`,
+			snapshot: `
+function f(value: string, items: string[]) {
+	for (value of items) {}
+	     ~~~~~
+	     Reassigning function parameters can make them more difficult to reason about.
+}
+`,
+		},
+		{
+			code: `
+class Example {
+	method(value: number) {
+		value = 5;
+	}
+}
+`,
+			snapshot: `
+class Example {
+	method(value: number) {
+		value = 5;
+		~~~~~
+		Reassigning function parameters can make them more difficult to reason about.
+	}
+}
+`,
+		},
+		{
+			code: `
+class Example {
+	constructor(value: number) {
+		value++;
+	}
+}
+`,
+			snapshot: `
+class Example {
+	constructor(value: number) {
+		value++;
+		~~~~~
+		Reassigning function parameters can make them more difficult to reason about.
+	}
+}
+`,
+		},
+		{
+			code: `
+class Example {
+	set value(input: number) {
+		input = 0;
+	}
+}
+`,
+			snapshot: `
+class Example {
+	set value(input: number) {
+		input = 0;
+		~~~~~
+		Reassigning function parameters can make them more difficult to reason about.
+	}
+}
+`,
+		},
+		{
+			code: `
 function f({ x }: { x: number }) {
 	x = 5;
 }
@@ -207,6 +317,15 @@ function f() {
 function f(x: number) {
 	function inner() {
 		x = 5;
+	}
+}
+`,
+		`
+function f(value: number) {
+	class Example {
+		method() {
+			value = 5;
+		}
 	}
 }
 `,

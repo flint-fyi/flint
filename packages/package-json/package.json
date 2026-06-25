@@ -1,8 +1,8 @@
 {
 	"name": "@flint.fyi/package-json",
-	"version": "0.17.1",
+	"version": "0.19.2",
 	"description": "[Experimental] package.json plugin for Flint.",
-	"homepage": "https://www.flint.fyi/rules/package-json",
+	"homepage": "https://flint.fyi/rules/package-json",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "JoshuaKGoldberg",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": false,
 	"type": "module",
@@ -19,8 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/",
-		"!lib/**/*.map"
+		"lib/"
 	],
 	"scripts": {
 		"test": "vitest --project package-json"
@@ -28,15 +27,19 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/json-language": "workspace:^",
-		"@flint.fyi/typescript-language": "workspace:^",
 		"change-case": "^5.4.4",
-		"package-json-validator": "^1.5.0",
-		"typescript": "^5.9.0 || ^6.0.0",
+		"detect-indent": "^7.0.2",
+		"detect-newline": "^4.0.1",
+		"package-json-validator": "^1.5.1",
+		"sort-object-keys": "^2.1.0",
+		"sort-package-json": "^4.0.0",
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
+		"@humanwhocodes/momoa": "3.3.10",
 		"tsdown": "catalog:dev",
+		"typescript": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
 	"engines": {

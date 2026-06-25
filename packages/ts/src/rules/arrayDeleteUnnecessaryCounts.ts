@@ -1,12 +1,14 @@
+import * as ts from "typescript";
+
 import {
-	type AST,
 	getTSNodeRange,
 	hasSameTokens,
 	typescriptLanguage,
 	unwrapParenthesizedNode,
+	type AST,
 } from "@flint.fyi/typescript-language";
-import * as ts from "typescript";
 
+import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
 function isUnnecessaryCountArgument(
@@ -45,8 +47,6 @@ function isUnnecessaryCountArgument(
 
 	return undefined;
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

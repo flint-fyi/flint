@@ -1,4 +1,8 @@
-import type { FormattingResults, LintResults } from "@flint.fyi/core";
+import type {
+	FormattingResults,
+	LinterHost,
+	LintResults,
+} from "@flint.fyi/core";
 
 import type { Presenter } from "../presenters/types.ts";
 
@@ -15,12 +19,12 @@ export interface RendererAbout {
 
 export interface RendererContext {
 	duration: number;
-	formattingResults: FormattingResults;
+	formattingResults: FormattingResults | undefined;
 	ignoreCache: boolean;
 	lintResults: LintResults;
 }
 
 export interface RendererFactory {
 	about: RendererAbout;
-	initialize(presenter: Presenter): Renderer;
+	initialize(host: LinterHost, presenter: Presenter): Renderer;
 }

@@ -1,8 +1,8 @@
 {
 	"name": "@flint.fyi/ts",
-	"version": "0.18.1",
+	"version": "0.20.0",
 	"description": "[Experimental] TypeScript language plugin for Flint.",
-	"homepage": "https://www.flint.fyi/rules/ts",
+	"homepage": "https://flint.fyi/rules/ts",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "JoshuaKGoldberg",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": false,
 	"type": "module",
@@ -19,8 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/",
-		"!lib/**/*.map"
+		"lib/"
 	],
 	"scripts": {
 		"test": "vitest --project ts"

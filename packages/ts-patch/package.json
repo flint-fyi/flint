@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "JoshuaKGoldberg",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": [
 		"./lib/install-patch-hooks.js",
@@ -26,8 +26,7 @@
 		"./install-patch-hooks": "./src/install-patch-hooks.ts"
 	},
 	"files": [
-		"lib/",
-		"!lib/**/*.map"
+		"lib/"
 	],
 	"devDependencies": {
 		"tsdown": "catalog:dev",

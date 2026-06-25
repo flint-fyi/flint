@@ -1,6 +1,6 @@
-import { getJsonNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 import { kebabCase } from "change-case";
-import ts from "typescript";
+
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertyOfName } from "../getPackagePropertyOfName.ts";
 import { ruleCreator } from "../ruleCreator.ts";
@@ -28,25 +28,21 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				JsonSourceFile(node, { sourceFile }) {
+				Document(node) {
 					const property = getPackagePropertyOfName(node, "scripts");
-					if (
-						property?.kind !== ts.SyntaxKind.PropertyAssignment ||
-						property.initializer.kind !== ts.SyntaxKind.ObjectLiteralExpression
-					) {
+					if (property?.value.type !== "Object") {
 						return;
 					}
 
-					for (const scriptsProperty of property.initializer.properties) {
+					for (const scriptsProperty of property.value.members) {
 						if (
-							scriptsProperty.kind !== ts.SyntaxKind.PropertyAssignment ||
-							scriptsProperty.name.kind !== ts.SyntaxKind.StringLiteral ||
-							builtinCamelCaseScripts.has(scriptsProperty.name.text)
+							scriptsProperty.name.type !== "String" ||
+							builtinCamelCaseScripts.has(scriptsProperty.name.value)
 						) {
 							continue;
 						}
 
-						const propertyName = scriptsProperty.name.text;
+						const propertyName = scriptsProperty.name.value;
 						const kebabCasePropertyName = propertyName
 							.split(":")
 							.map((segment) => kebabCase(segment))
@@ -56,7 +52,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 							continue;
 						}
 
-						const range = getJsonNodeRange(scriptsProperty.name, sourceFile);
+						const range = getNodeRange(scriptsProperty.name);
 
 						context.report({
 							message: "invalidCase",

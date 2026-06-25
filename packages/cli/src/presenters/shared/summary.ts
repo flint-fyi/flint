@@ -34,18 +34,14 @@ export function* presentSummary(
 				" across ",
 				chalk.bold(pluralize(counts.files, "file")),
 				...(counts.fixable
-					? [
-							" (",
-							chalk.bold(pluralize(counts.fixable, "fixable with --fix")),
-							")",
-						]
+					? [" (", chalk.bold(`${counts.fixable} fixable with --fix`), ")"]
 					: []),
 				".\n",
 			].join(""),
 		);
 	}
 
-	if (formattingResults.dirty.size) {
+	if (formattingResults?.dirty.size) {
 		yield "\n";
 
 		if (formattingResults.written) {

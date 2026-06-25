@@ -1,8 +1,9 @@
 export interface LinterHost {
 	fileTypeSync(pathAbsolute: string): "directory" | "file" | undefined;
 	getCurrentDirectory(): string;
-	getFileTouchTime(filePath: string): Promise<number>;
-	getFileTouchTimeSync(filePath: string): number;
+	getFileTouchTime(filePath: string): Promise<number | undefined>;
+	getFileTouchTimeSync(filePath: string): number | undefined;
+	glob(patterns: string[], options: LinterHostGlobOptions): Promise<string[]>;
 	isCaseSensitiveFS(): boolean;
 	readDirectory(
 		directoryPathAbsolute: string,
@@ -18,7 +19,7 @@ export interface LinterHost {
 	watchFileSync(
 		filePathAbsolute: string,
 		callback: LinterHostFileWatcher,
-		options?: WatchOptions,
+		options: WatchOptions,
 	): Disposable;
 	writeFile(filePathAbsolute: string, content: string): Promise<void>;
 	writeFileSync(filePathAbsolute: string, content: string): void;
@@ -28,11 +29,16 @@ export interface LinterHostDirectoryEntry {
 	name: string;
 	type: "directory" | "file";
 }
-export type LinterHostDirectoryWatcher = (filePathAbsolute: string) => void;
 
+export type LinterHostDirectoryWatcher = (filePathAbsolute: string) => void;
 export type LinterHostFileWatcher = (event: LinterHostFileWatcherEvent) => void;
 
 export type LinterHostFileWatcherEvent = "changed" | "created" | "deleted";
+
+export interface LinterHostGlobOptions {
+	cwd: string;
+	exclude?: string[];
+}
 
 export interface VFSLinterHost extends LinterHost {
 	vfsDeleteFile(filePathAbsolute: string): void;
@@ -45,5 +51,6 @@ export interface WatchDirectoryOptions extends WatchOptions {
 }
 
 export interface WatchOptions {
+	ignoredPaths: string[];
 	pollingInterval?: number;
 }

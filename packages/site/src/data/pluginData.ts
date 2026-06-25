@@ -34,6 +34,17 @@ const pluginDataById = {
 		id: "browser",
 		name: "Browser",
 	},
+	css: {
+		colors: {
+			flame: "#66309A",
+			heart: "#2862E9",
+			squiggly: "#031E4C",
+		},
+		description:
+			"Rules for CSS (Cascading Style Sheets), a browser language for styling documents.",
+		id: "css",
+		name: "CSS",
+	},
 	flint: {
 		colors: {
 			flame: "#F2BF80",
@@ -241,6 +252,7 @@ export const pluginDataByGroup: Record<string, Record<string, PluginData>> = {
 	},
 	incubator: {
 		astro: pluginDataById.astro,
+		css: pluginDataById.css,
 		next: pluginDataById.next,
 		nuxt: pluginDataById.nuxt,
 		react: pluginDataById.react,
@@ -252,11 +264,19 @@ export const pluginDataByGroup: Record<string, Record<string, PluginData>> = {
 };
 
 export function getPluginData(pluginId: string) {
+	const pluginData = getPluginDataSafe(pluginId);
+
+	if (!pluginData) {
+		throw new Error(`Unknown pluginId: ${pluginId}`);
+	}
+
+	return pluginData;
+}
+
+export function getPluginDataSafe(pluginId: string) {
 	for (const group of Object.keys(pluginDataByGroup)) {
 		if (pluginId in pluginDataByGroup[group]) {
 			return { group, plugin: pluginDataByGroup[group][pluginId] };
 		}
 	}
-
-	throw new Error(`Unknown pluginId: ${pluginId}`);
 }

@@ -1,0 +1,83 @@
+---
+description: "Enforces that the `funding` property is valid."
+title: "fundingValidity"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="fundingValidity" />
+
+This rule checks that the `funding` property is a URL string, a funding object, or an array of URL strings and funding objects.
+Funding objects should have non-empty `type` and `url` properties.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"funding": "not-a-url"
+}
+```
+
+```json
+{
+	"funding": {
+		"type": "individual"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"funding": "https://example.com/donate"
+}
+```
+
+```json
+{
+	"funding": {
+		"type": "individual",
+		"url": "https://example.com/donate"
+	}
+}
+```
+
+```json
+{
+	"funding": [
+		"https://example.com/donate",
+		{
+			"type": "patreon",
+			"url": "https://example.com/patreon"
+		}
+	]
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `funding` field specification, you can disable this rule.
+For example, if your package registry accepts a different funding metadata shape, this rule may not be correct for you.
+
+## Related Rules
+
+- [fundingPresence](/rules/package-json/fundingpresence) - Enforces that the `funding` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `funding`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#funding)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="fundingValidity" />

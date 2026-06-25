@@ -1,6 +1,7 @@
-import type { WithExitKeys } from "@flint.fyi/core";
 import type * as mdast from "mdast";
 import type { Point, Position } from "unist";
+
+import type { WithExitKeys } from "@flint.fyi/core";
 
 export interface MarkdownNodesByName extends RootContentMapWithChildren {
 	root: WithPosition<mdast.Root>;

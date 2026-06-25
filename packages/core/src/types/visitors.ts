@@ -1,7 +1,7 @@
 /**
  * @see https://github.com/sindresorhus/type-fest/blob/main/source/simplify.d.ts
  */
-export type Simplify<T> = {
+type Simplify<T> = {
 	[K in keyof T]: T[K];
 };
 
@@ -10,6 +10,6 @@ export type Simplify<T> = {
  */
 export type WithExitKeys<T> = Simplify<
 	T & {
-		[K in keyof T & string as `${K}:exit`]?: T[K];
+		[K in keyof T & string as `${K}:exit`]: T[K];
 	}
 >;

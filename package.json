@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "Josh Goldberg ✨",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"type": "module",
 	"scripts": {
@@ -22,14 +22,17 @@
 		"lint:knip": "knip",
 		"lint:knip:prod": "knip --strict",
 		"prepare": "husky",
+		"release": "pnpm build && pnpm -r publish",
 		"start:site": "pnpm --filter=site prebuild && pnpm --filter=site start",
 		"test": "vitest"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/core": "catalog:dev",
+		"@changesets/changelog-github": "catalog:dev",
 		"@changesets/cli": "catalog:dev",
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
 		"@eslint/js": "catalog:dev",
+		"@eslint/json": "2.0.0",
 		"@eslint/markdown": "catalog:dev",
 		"@flint.fyi/node": "workspace:^",
 		"@flint.fyi/performance": "workspace:^",
@@ -37,6 +40,7 @@
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/vitest": "workspace:^",
+		"@ianvs/prettier-plugin-sort-imports": "4.7.1",
 		"@types/node": "catalog:dev",
 		"@vitest/coverage-v8": "catalog:dev",
 		"@vitest/eslint-plugin": "catalog:dev",

@@ -3,10 +3,8 @@ import { debugForFile } from "debug-for-file";
 import type {
 	FileAboutData,
 	Language,
-	LanguageCreateRule,
 	LanguageDefinition,
 } from "../types/languages.ts";
-import type { AnyRuleDefinition } from "../types/rules.ts";
 import { makeDisposable } from "./makeDisposable.ts";
 
 const log = debugForFile(import.meta.filename);
@@ -14,7 +12,9 @@ const log = debugForFile(import.meta.filename);
 export function createLanguage<
 	AstNodesByName,
 	FileServices extends object = object,
->(languageDefinition: LanguageDefinition<AstNodesByName, FileServices>) {
+>(
+	languageDefinition: LanguageDefinition<AstNodesByName, FileServices>,
+): Language<AstNodesByName, FileServices> {
 	const language: Language<AstNodesByName, FileServices> = {
 		...languageDefinition,
 
@@ -38,12 +38,12 @@ export function createLanguage<
 			return fileFactory;
 		},
 
-		createRule: ((ruleDefinition: AnyRuleDefinition) => {
+		createRule(ruleDefinition) {
 			return {
 				...ruleDefinition,
 				language,
 			};
-		}) as LanguageCreateRule<AstNodesByName, FileServices>,
+		},
 	};
 
 	return language;

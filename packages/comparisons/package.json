@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/comparisons",
-	"version": "0.3.2",
+	"version": "0.3.6",
 	"description": "Comparisons of common lint rules across Flint and other web linters.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -10,8 +10,8 @@
 	},
 	"license": "MIT",
 	"author": {
-		"name": "JoshuaKGoldberg",
-		"email": "npm@joshuakgoldberg.com"
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": false,
 	"type": "module",
@@ -19,19 +19,65 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/",
-		"!lib/**/*.map"
+		"lib/"
 	],
 	"scripts": {
 		"test": "vitest --project comparisons"
 	},
 	"dependencies": {
-		"prettier": "3.8.1"
+		"@flint.fyi/astro": "workspace:^",
+		"@flint.fyi/browser": "workspace:^",
+		"@flint.fyi/core": "workspace:^",
+		"@flint.fyi/css": "workspace:^",
+		"@flint.fyi/json": "workspace:^",
+		"@flint.fyi/jsx": "workspace:^",
+		"@flint.fyi/md": "workspace:^",
+		"@flint.fyi/node": "workspace:^",
+		"@flint.fyi/package-json": "workspace:^",
+		"@flint.fyi/performance": "workspace:^",
+		"@flint.fyi/plugin-flint": "workspace:^",
+		"@flint.fyi/spelling": "workspace:^",
+		"@flint.fyi/ts": "workspace:^",
+		"@flint.fyi/vitest": "workspace:^",
+		"@flint.fyi/yaml": "workspace:^",
+		"prettier": "3.8.1",
+		"zod": "^4.3.6"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "2.4.16",
+		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
+		"@eslint/json": "2.0.0",
+		"@eslint/markdown": "catalog:dev",
+		"@next/eslint-plugin-next": "16.2.6",
+		"@nuxt/eslint-plugin": "1.16.0",
+		"@types/eslint-plugin-jsx-a11y": "6.10.1",
+		"@types/eslint-plugin-promise": "7.3.0",
+		"@typescript-eslint/eslint-plugin": "catalog:dev",
+		"@vitest/eslint-plugin": "catalog:dev",
 		"eslint": "catalog:dev",
+		"eslint-plugin-astro": "1.7.0",
+		"eslint-plugin-eslint-plugin": "7.3.3",
+		"eslint-plugin-import": "2.32.0",
+		"eslint-plugin-jsdoc": "catalog:dev",
+		"eslint-plugin-jsonc": "catalog:dev",
+		"eslint-plugin-jsx-a11y": "6.10.2",
+		"eslint-plugin-n": "catalog:dev",
+		"eslint-plugin-package-json": "catalog:dev",
+		"eslint-plugin-perfectionist": "catalog:dev",
+		"eslint-plugin-promise": "7.3.0",
+		"eslint-plugin-react": "7.37.5",
+		"eslint-plugin-react-hooks": "7.1.1",
+		"eslint-plugin-regexp": "catalog:dev",
+		"eslint-plugin-solid": "0.14.5",
+		"eslint-plugin-svelte": "3.17.1",
+		"eslint-plugin-unicorn": "64.0.0",
+		"eslint-plugin-vue": "10.9.1",
+		"eslint-plugin-yml": "catalog:dev",
+		"markdownlint": "0.41.0",
+		"oxlint": "1.69.0",
 		"tsdown": "catalog:dev",
-		"vitest": "catalog:dev"
+		"vitest": "catalog:dev",
+		"vue-eslint-parser": "10.4.1"
 	},
 	"engines": {
 		"node": ">=24.0.0"

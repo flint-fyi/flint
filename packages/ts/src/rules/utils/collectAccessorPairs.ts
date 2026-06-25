@@ -1,5 +1,6 @@
-import type { AST } from "@flint.fyi/typescript-language";
 import ts from "typescript";
+
+import type { AST } from "@flint.fyi/typescript-language";
 
 export interface AccessorInfo {
 	index: number;

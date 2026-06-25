@@ -2503,6 +2503,7 @@ export interface SourceFile extends ts.Node {
 	libReferenceDirectives: readonly ts.FileReference[];
 	moduleName?: string;
 	readonly parent: NullNode;
+	path: ts.Path;
 	referencedFiles: readonly ts.FileReference[];
 	readonly statements: ts.NodeArray<Statement>;
 	text: string;
@@ -3224,6 +3225,7 @@ export type AnyNode =
 	| NotEmittedStatement
 	| NotEmittedTypeElement
 	| NullLiteral
+	| NullNode
 	| NumberKeyword
 	| NumericLiteral
 	| ObjectBindingPattern

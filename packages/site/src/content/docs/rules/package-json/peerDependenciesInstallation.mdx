@@ -1,0 +1,62 @@
+---
+description: "Enforces that peer dependencies are installed through devDependencies."
+title: "peerDependenciesInstallation"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="peerDependenciesInstallation" />
+
+This rule reports dependencies declared in `peerDependencies` without a matching entry in `devDependencies`.
+Packages listed in `peerDependencies` express compatibility with consumer-installed versions.
+Declaring the same packages in `devDependencies` installs them locally for tests, builds, and editor tooling.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"peerDependencies": {
+		"typescript": "^5.0.0 || ^6.0.0"
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"peerDependencies": {
+		"typescript": "^5.0.0 || ^6.0.0"
+	},
+	"devDependencies": {
+		"typescript": "^5.9.0"
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If a package's peer dependencies are installed by another guaranteed local development mechanism, such as a root workspace package that all package tasks run through, this rule might not be for you.
+For publishable packages that install and test from their own package manifests, this rule catches missing local installs.
+
+## Further Reading
+
+- [npm: `package.json` > `peerDependencies`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#peerdependencies)
+- [npm: `package.json` > `devDependencies`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#devdependencies)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents
+	pluginId="package-json"
+	ruleId="peerDependenciesInstallation"
+/>

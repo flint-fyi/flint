@@ -25,6 +25,7 @@ body:
         - Astro
         - Browser
         - Flint
+        - Internal
         - JSON
         - JSX
         - Markdown

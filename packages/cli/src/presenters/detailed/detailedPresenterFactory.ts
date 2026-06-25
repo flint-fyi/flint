@@ -1,5 +1,6 @@
-import { hasFix } from "@flint.fyi/core";
 import chalk from "chalk";
+
+import { hasFix } from "@flint.fyi/core";
 
 import { presentHeader } from "../shared/header.ts";
 import { presentLanguageReports } from "../shared/presentLanguageReports.ts";
@@ -55,7 +56,9 @@ export const detailedPresenterFactory: PresenterFactory = {
 			},
 			*summarize(summaryContext) {
 				yield* presentSummary(counts, summaryContext);
-				yield* presentLanguageReports(summaryContext.lintResults.filesResults);
+				yield* presentLanguageReports(
+					summaryContext.lintResults.allFileResults,
+				);
 			},
 		};
 	},

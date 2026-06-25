@@ -1,6 +1,6 @@
-import { jsonLanguage } from "@flint.fyi/json-language";
-import ts from "typescript";
 import z from "zod/v4";
+
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -35,35 +35,30 @@ export default ruleCreator.createRule(jsonLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				ObjectLiteralExpression(node, { options: { form }, sourceFile }) {
-					for (const property of node.properties) {
-						if (
-							!ts.isPropertyAssignment(property) ||
-							!ts.isStringLiteral(property.name)
-						) {
+				Object(node, { options: { form } }) {
+					for (const property of node.members) {
+						if (property.name.type !== "String") {
 							continue;
 						}
 
-						const key = property.name.text;
+						const key = property.name.value;
 						const normalizedKey = key.normalize(form);
 
 						if (key === normalizedKey) {
 							continue;
 						}
 
+						const range = getNodeRange(property.name);
 						context.report({
 							data: { form },
 							message: "unnormalizedKey",
-							range: {
-								begin: property.name.getStart(sourceFile),
-								end: property.name.end,
-							},
+							range,
 							suggestions: [
 								{
 									id: "normalizeKey",
 									range: {
-										begin: property.name.getStart(sourceFile) + 1,
-										end: property.name.end - 1,
+										begin: range.begin + 1,
+										end: range.end - 1,
 									},
 									text: normalizedKey,
 								},

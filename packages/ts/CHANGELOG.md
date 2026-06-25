@@ -1,5 +1,35 @@
 # @flint/ts
 
+## 0.20.0
+
+### Minor Changes
+
+- [#2196](https://github.com/flint-fyi/flint/pull/2196) [`c953313`](https://github.com/flint-fyi/flint/commit/c9533135a4bcf39f9a2fed7a9f70c8a4ac13cf58) - Add `restrictedImports` rule.
+
+### Patch Changes
+
+- [#2918](https://github.com/flint-fyi/flint/pull/2918) [`25712ea`](https://github.com/flint-fyi/flint/commit/25712ea8931cfaf9354a94cb3c0bdb6143c46962) - Fix the `nullishCoalescingOperators` `if` statement assignment autofix to skip cases where the nullish check expression differs from the assignment target.
+
+- [#2902](https://github.com/flint-fyi/flint/pull/2902) [`6004702`](https://github.com/flint-fyi/flint/commit/6004702ed261879a894e6295a9ac5965198cc68a) - Fix the `nullishCoalescingOperators` autofix for `if` statement assignments to produce `??=` instead of a no-op `??` expression.
+
+- [#2859](https://github.com/flint-fyi/flint/pull/2859) [`5c848a9`](https://github.com/flint-fyi/flint/commit/5c848a9a72ab2128bccfde8054b7d08bdc5cce95) - `asyncFunctionAwaits` no longer incorrectly flags arrow functions with expression bodies; e.g. `async () => await loadData()` is now correctly recognized as containing an `await`.
+
+- Updated dependencies [[`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f)]:
+  - @flint.fyi/core@0.23.0
+
+## 0.19.1
+
+### Patch Changes
+
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
+## 0.19.0
+
+### Minor Changes
+
+- 97adb66: Added requireImports rule.
+
 ## 0.18.1
 
 ### Patch Changes

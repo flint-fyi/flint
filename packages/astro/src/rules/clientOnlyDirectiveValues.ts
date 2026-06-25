@@ -1,6 +1,7 @@
+import ts, { SyntaxKind } from "typescript";
+
 import { astroLanguage } from "@flint.fyi/astro-language";
 import { getTSNodeRange } from "@flint.fyi/typescript-language";
-import ts, { SyntaxKind } from "typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -39,7 +40,7 @@ export default ruleCreator.createRule(astroLanguage, {
 		description:
 			"Reports `client:only` directives without a value, or with a value whose type cannot be a renderer hint string.",
 		id: "clientOnlyDirectiveValues",
-		preset: "logical",
+		presets: ["logical"],
 	},
 	messages: {
 		invalidValue: {

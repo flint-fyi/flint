@@ -1,0 +1,73 @@
+---
+description: "Enforces that the `module` property is present."
+title: "modulePresence"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="modulePresence" />
+
+This rule requires the `module` field in `package.json` to be present.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"module": "./index.js"
+}
+```
+
+```json
+{
+	"module": "./index.js",
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `ignorePrivate`
+
+Whether the property should still be required when the package's `private` property is `true`.
+Defaults to `false`.
+
+This option can be useful if the rule is enabled on many `package.json` files and some files differ in privacy.
+
+## When Not To Use It
+
+If your package does not publish a separate ES module entry point, you can disable this rule.
+For example, a package that uses `exports` for all entry points may not need a `module` field.
+
+## Related Rules
+
+- [moduleValidity](/rules/package-json/modulevalidity) - Enforces that the `module` property is valid.
+
+## Further Reading
+
+- [Node.js: Package entry points](https://nodejs.org/api/packages.html#package-entry-points)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="modulePresence" />

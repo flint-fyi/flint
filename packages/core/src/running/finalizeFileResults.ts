@@ -1,6 +1,8 @@
-import { pathKey } from "@flint.fyi/utils";
-import { debugForFile } from "debug-for-file";
 import { resolve } from "node:path";
+
+import { debugForFile } from "debug-for-file";
+
+import { pathKey } from "@flint.fyi/utils";
 
 import { DirectivesFilterer } from "../directives/DirectivesFilterer.ts";
 import { directiveReports } from "../directives/reports/directiveReports.ts";
@@ -10,6 +12,13 @@ import type { FileReport } from "../types/reports.ts";
 import type { LanguageAndFile } from "./types.ts";
 
 const log = debugForFile(import.meta.filename);
+
+export interface FinalizedFileResults {
+	dependencies: Set<string>;
+	invalidatesCache?: boolean;
+	languageReports: LanguageReport[];
+	reports: FileReport[];
+}
 
 /**
  * For a single file path, collects its:
@@ -24,10 +33,11 @@ export function finalizeFileResults(
 	reports: FileReport[],
 	host: LinterHost,
 	skipLanguageReports?: boolean,
-) {
+): FinalizedFileResults {
 	const directivesFilterer = new DirectivesFilterer();
 	const fileDependencies = new Set<string>();
 	const languageReports: LanguageReport[] = [];
+	let invalidatesCache = false;
 
 	for (const { file, language } of languageAndFiles) {
 		if (file.directives) {
@@ -35,10 +45,18 @@ export function finalizeFileResults(
 			directivesFilterer.add(file.directives);
 		}
 
-		const cache = language.getFileCacheImpacts?.(file);
+		const cacheImpacts = language.getFileCacheImpacts?.(file);
 
-		if (cache?.dependencies) {
-			for (const dependency of cache.dependencies) {
+		if (cacheImpacts?.invalidatesCache) {
+			invalidatesCache = true;
+			log(
+				'File "%s" contains code that is global in nature and will invalidate the linting cache when changed.',
+				filePath,
+			);
+		}
+
+		if (cacheImpacts?.dependencies) {
+			for (const dependency of cacheImpacts.dependencies) {
 				const normalized = pathKey(
 					resolve(dependency),
 					host.isCaseSensitiveFS(),
@@ -80,6 +98,7 @@ export function finalizeFileResults(
 
 	return {
 		dependencies: fileDependencies,
+		invalidatesCache,
 		languageReports,
 		reports: [
 			...filterResult.reports,

@@ -1,29 +1,31 @@
-import type { JsonNode, JsonSourceFile } from "@flint.fyi/json-language";
-import { SyntaxKind } from "typescript";
+import type { DocumentNode, MemberNode } from "@humanwhocodes/momoa";
 
 import { getPackageProperties } from "./getPackageProperties.ts";
 
-export function* getPackagePropertiesOfNames(
-	sourceFile: JsonSourceFile,
-	propertyNames: ReadonlySet<string>,
-) {
-	const properties = getPackageProperties(sourceFile);
+export function getPackagePropertiesOfNames<T extends string[]>(
+	rootNode: DocumentNode,
+	propertyNames: T,
+): Partial<Record<T[number], MemberNode>> {
+	const result: Partial<Record<T[number], MemberNode>> = {};
+
+	const properties = getPackageProperties(rootNode);
 	if (!properties) {
-		return;
+		return result;
 	}
 
-	const root = sourceFile.statements[0];
-	if (root?.expression.kind !== SyntaxKind.ObjectLiteralExpression) {
-		return;
-	}
+	const propertyNameSet = new Set(propertyNames);
 
-	for (const property of root.expression.properties) {
+	const isPropertyName = (name: string): name is T[number] => {
+		return propertyNameSet.has(name as T[number]);
+	};
+
+	for (const property of properties) {
 		if (
-			property.kind === SyntaxKind.PropertyAssignment &&
-			property.name.kind === SyntaxKind.StringLiteral &&
-			propertyNames.has(property.name.text)
+			property.name.type === "String" &&
+			isPropertyName(property.name.value)
 		) {
-			yield property.initializer as JsonNode;
+			result[property.name.value] = property;
 		}
 	}
+	return result;
 }

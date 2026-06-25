@@ -1,7 +1,8 @@
 import {
-	type AST as RegExpAST,
 	visitRegExpAST,
+	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
+
 import {
 	getTSNodeRange,
 	typescriptLanguage,
@@ -249,7 +250,7 @@ function toCharacterClassElement(
 			if (element.negate) {
 				return [element];
 			}
-			return element.elements as CharElement[];
+			return element.elements;
 
 		case "CharacterSet":
 			if (element.kind === "any") {

@@ -1,9 +1,10 @@
-import type { FileReport } from "@flint.fyi/core";
-import * as fs from "node:fs";
+import type { FileReport, LinterHost } from "@flint.fyi/core";
+import { nullThrows } from "@flint.fyi/utils";
 
 import type { Presenter } from "../../presenters/types.ts";
 
 export async function printFile(
+	host: LinterHost,
 	filePath: string,
 	presenter: Presenter,
 	reports: FileReport[],
@@ -13,7 +14,10 @@ export async function printFile(
 			presenter.renderFile({
 				file: {
 					filePath,
-					text: fs.readFileSync(filePath, "utf-8"),
+					text: nullThrows(
+						host.readFileSync(filePath),
+						"Expected reported file to exist.",
+					),
 				},
 				reports,
 			}),

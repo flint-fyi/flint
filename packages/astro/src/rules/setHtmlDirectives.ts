@@ -1,4 +1,5 @@
 import type { Node } from "@astrojs/compiler/types";
+
 import { astroLanguage } from "@flint.fyi/astro-language";
 import { nullThrows } from "@flint.fyi/utils";
 import { reportSourceCode } from "@flint.fyi/volar-language";
@@ -10,7 +11,7 @@ export default ruleCreator.createRule(astroLanguage, {
 		description:
 			"Reports using Astro's `set:html` directive, which injects content without escaping.",
 		id: "setHtmlDirectives",
-		preset: "security",
+		presets: ["security"],
 	},
 	messages: {
 		setHtml: {

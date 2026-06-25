@@ -70,6 +70,7 @@ const fileReportSchema = z.object({
 
 const languageReportSchema = z.object({
 	code: z.string().optional(),
+	source: z.string().optional(),
 	text: z.string(),
 });
 
@@ -80,9 +81,15 @@ const fileCacheStorageSchema = z.object({
 	timestamp: z.number(),
 });
 
+const globalInvalidations = z.object({
+	filePath: z.string(),
+	touchTime: z.number(),
+});
+
 export const cacheStorageSchema = jsonCodec(
 	z.object({
 		configs: z.record(z.string(), z.number()),
 		files: z.record(z.string(), fileCacheStorageSchema),
+		globalInvalidations: z.array(globalInvalidations),
 	}),
 );

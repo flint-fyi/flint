@@ -1,0 +1,60 @@
+---
+description: "Enforces that the `browser` property is valid."
+title: "browserValidity"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="browserValidity" />
+
+This rule checks that the `browser` property is a non-empty string.
+The value should be the path to the module used when the package is bundled for browsers.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"browser": ""
+}
+```
+
+```json
+{
+	"browser": {}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"browser": "./browser.js"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## When Not To Use It
+
+If you don't need compliance with npm's `browser` field specification, you can disable this rule.
+For example, if your package's browser entry point is interpreted by tooling that accepts a different shape, this rule may not be correct for you.
+
+## Related Rules
+
+- [browserPresence](/rules/package-json/browserpresence) - Enforces that the `browser` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `browser`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#browser)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="browserValidity" />

@@ -1,10 +1,11 @@
-import type { AnyRule } from "@flint.fyi/core";
-import { jsonLanguage } from "@flint.fyi/json-language";
-import type { JsonSourceFile } from "@flint.fyi/json-language";
-import ts from "typescript";
+import type { DocumentNode } from "@humanwhocodes/momoa";
 import { z } from "zod/v4";
 
+import type { AnyRule } from "@flint.fyi/core";
+import { jsonLanguage } from "@flint.fyi/json-language";
+
 import { getPackagePropertyOfName } from "./getPackagePropertyOfName.ts";
+import { isBooleanTrue } from "./isBooleanNode.ts";
 import { ruleCreator } from "./ruleCreator.ts";
 
 export interface CreatePropertyPresenceRuleOptions {
@@ -55,7 +56,7 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 		setup(context) {
 			return {
 				visitors: {
-					JsonSourceFile: (node, { options }) => {
+					Document: (node, { options }) => {
 						if (options.ignorePrivate && isPrivatePackage(node)) {
 							return;
 						}
@@ -76,11 +77,8 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 	return { id, rule };
 }
 
-function isPrivatePackage(node: JsonSourceFile) {
-	const privacy = getPackagePropertyOfName(node, "private");
+function isPrivatePackage(rootNode: DocumentNode) {
+	const privacy = getPackagePropertyOfName(rootNode, "private");
 
-	return (
-		privacy?.kind === ts.SyntaxKind.PropertyAssignment &&
-		privacy.initializer.kind === ts.SyntaxKind.TrueKeyword
-	);
+	return privacy && isBooleanTrue(privacy.value);
 }

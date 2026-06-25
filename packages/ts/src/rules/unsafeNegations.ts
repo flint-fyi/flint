@@ -1,15 +1,16 @@
+import { SyntaxKind } from "typescript";
+
 import {
 	typescriptLanguage,
 	unwrapParenthesizedNode,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 const operatorStrings = new Map([
 	[SyntaxKind.InKeyword, "in"],
 	[SyntaxKind.InstanceOfKeyword, "instanceof"],
 ]);
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

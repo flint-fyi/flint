@@ -1,0 +1,73 @@
+---
+description: "Enforces that the `funding` property is present."
+title: "fundingPresence"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="fundingPresence" />
+
+This rule requires the `funding` field in `package.json` to be present.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{}
+```
+
+```json
+{
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"funding": "https://example.com/donate"
+}
+```
+
+```json
+{
+	"funding": "https://example.com/donate",
+	"name": "my-repository"
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `ignorePrivate`
+
+Whether the property should still be required when the package's `private` property is `true`.
+Defaults to `false`.
+
+This option can be useful if the rule is enabled on many `package.json` files and some files differ in privacy.
+
+## When Not To Use It
+
+If your package does not accept funding, you can disable this rule.
+For example, an internal package may not have public sponsorship or donation links.
+
+## Related Rules
+
+- [fundingValidity](/rules/package-json/fundingvalidity) - Enforces that the `funding` property is valid.
+
+## Further Reading
+
+- [npm: `package.json` > `funding`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#funding)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="package-json" ruleId="fundingPresence" />

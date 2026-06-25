@@ -1,3 +1,4 @@
+import { unified } from "@astrojs/markdown-remark";
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
@@ -13,8 +14,8 @@ export default defineConfig({
 		konamiEmojiBlast(),
 		starlight({
 			components: {
-				Footer: "src/components/Footer.astro",
 				Head: "src/components/Head.astro",
+				Pagination: "src/components/Pagination.astro",
 			},
 			customCss: ["src/styles.css"],
 			favicon: "/logo.png",
@@ -104,6 +105,7 @@ export default defineConfig({
 								{
 									items: [
 										{ label: "Astro", link: "rules/astro" },
+										{ label: "CSS", link: "rules/css" },
 										{ label: "Next", link: "rules/next" },
 										{ label: "Nuxt", link: "rules/nuxt" },
 										{ label: "React", link: "rules/react" },
@@ -142,12 +144,14 @@ export default defineConfig({
 		react(),
 	],
 	markdown: {
-		remarkPlugins: [
-			remarkAddTwoslash({
-				excludes: [/content\/docs\/blog/, /content\/docs\/rules\/\w+\/\w+/],
-			}),
-			remarkHeadingId,
-		],
+		processor: unified({
+			remarkPlugins: [
+				remarkAddTwoslash({
+					excludes: [/content\/docs\/blog/, /content\/docs\/rules\/\w+\/\w+/],
+				}),
+				remarkHeadingId,
+			],
+		}),
 	},
 	redirects: {
 		"/discord": "https://discord.gg/cFK3RAUDhy",
@@ -156,14 +160,13 @@ export default defineConfig({
 	site: "https://flint.fyi",
 	vite: {
 		define: {
-			// @astrojs/ts-plugin is "type":"commonjs"
-			// __filename is not defined in ES module scope
-			//   Stack trace:
-			//     at D (file:///home/runner/work/flint/flint/packages/site/dist/chunks/getRuleForPlugin_C5J7xdaO.mjs:68627:687)
-			//     at requireAstro2tsx (file:///home/runner/work/flint/flint/packages/site/dist/chunks/getRuleForPlugin_C5J7xdaO.mjs:69379:17)
 			__filename: "import.meta.filename",
 		},
 		resolve: {
+			alias: {
+				// https://github.com/csstree/csstree/issues/314#issuecomment-3794237969
+				"css-tree": "css-tree/dist/csstree.esm",
+			},
 			conditions: ["node", "import", "default", "browser"],
 		},
 	},

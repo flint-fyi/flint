@@ -1,0 +1,74 @@
+---
+description: "Enforces that any dependencies declared in `peerDependenciesMeta` are also defined in the package's `peerDependencies`."
+title: "peerDependenciesMetaRelationship"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="package-json" rule="peerDependenciesMetaRelationship" />
+
+The rule checks that any dependencies declared in `peerDependenciesMeta` are also defined in the package's `peerDependencies`.
+
+`peerDependenciesMeta` is meant to provide metadata about peer dependencies.
+So entries that do not correspond to an existing `peerDependencies` dependency are considered redundant.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```json
+{
+	"peerDependencies": {
+		"one-package": "^1.0.0"
+	},
+	"peerDependenciesMeta": {
+		"some-other-package": {
+			"optional": true
+		}
+	}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```json
+{
+	"peerDependencies": {
+		"some-package": "^1.0.0"
+	},
+	"peerDependenciesMeta": {
+		"some-package": {
+			"optional": true
+		}
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Suggestions
+
+When this rule reports an invalid `peerDependenciesMeta` entry, it provides an editor suggestion to remove that property.
+
+## Related Rules
+
+- [peerDependenciesPresence](/rules/package-json/peerdependenciespresence) - Enforces that the `peerDependencies` property is present.
+
+## Further Reading
+
+- [npm: `package.json` > `peerDependenciesMeta`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#peerdependenciesmeta)
+- [pnpm: `package.json` > `peerDependenciesMeta`](https://pnpm.io/package_json#peerdependenciesmeta)
+- [Yarn: `package.json` > `peerDependenciesMeta`](https://yarnpkg.com/configuration/manifest#peerdependenciesmeta)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents
+	pluginId="package-json"
+	ruleId="peerDependenciesMetaRelationship"
+/>

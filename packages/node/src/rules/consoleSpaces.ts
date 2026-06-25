@@ -1,11 +1,13 @@
-import {
-	type AST,
-	type Checker,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
-import { nullThrows } from "@flint.fyi/utils";
 import { SyntaxKind } from "typescript";
 
+import {
+	typescriptLanguage,
+	type AST,
+	type Checker,
+} from "@flint.fyi/typescript-language";
+import { nullThrows } from "@flint.fyi/utils";
+
+import { ruleCreator } from "./ruleCreator.ts";
 import { isDeclaredInNodeTypes } from "./utils/isDeclaredInNodeTypes.ts";
 
 const consoleMethods = new Set([
@@ -38,8 +40,6 @@ function isConsoleMethodCall(node: AST.Expression, typeChecker: Checker) {
 		isDeclaredInNodeTypes(node.expression, typeChecker)
 	);
 }
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

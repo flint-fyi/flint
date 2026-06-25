@@ -100,19 +100,24 @@ describe('other second', () => {
   // With a comment
   it('is another second w/ it', () => {
   ~~
-   ~~~~~
-   This statement should be separated from a neighboring \`test\` block by a blank line.
-~~~~
-This statement should be separated from a neighboring \`test\` block by a blank line.
-This statement should be separated from a neighboring \`test\` block by a blank line.
+  This statement should be separated from a neighboring \`test\` block by a blank line.
+  });
+  test.skip('skipping', () => {}); // Another comment
+  ~~~~
   This statement should be separated from a neighboring \`test\` block by a blank line.
   it.skip('skipping too', () => {});
   ~~
   This statement should be separated from a neighboring \`test\` block by a blank line.
 });xtest('weird', () => {});
+   ~~~~~
+   This statement should be separated from a neighboring \`test\` block by a blank line.
 test
+~~~~
+This statement should be separated from a neighboring \`test\` block by a blank line.
   .skip('skippy skip', () => {});
 xit('second first', () => {});
+~~~
+This statement should be separated from a neighboring \`test\` block by a blank line.
 `,
 		},
 	],

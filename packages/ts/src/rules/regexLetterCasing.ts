@@ -3,10 +3,11 @@ import type {
 	Character,
 	CharacterClassRange,
 } from "@eslint-community/regexpp/ast";
+
 import {
+	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
-	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";

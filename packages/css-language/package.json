@@ -1,0 +1,46 @@
+{
+	"name": "@flint.fyi/css-language",
+	"version": "0.0.2",
+	"description": "[Experimental] CSS language for Flint.",
+	"homepage": "https://flint.fyi",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/css-language"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"files": [
+		"lib/"
+	],
+	"scripts": {
+		"test": "vitest --project css-language"
+	},
+	"dependencies": {
+		"@flint.fyi/core": "workspace:^",
+		"css-tree": "^3.2.1",
+		"typescript": "^5.9.0 || ^6.0.0"
+	},
+	"devDependencies": {
+		"@types/css-tree": "2.3.11",
+		"tsdown": "catalog:dev",
+		"vitest": "catalog:dev"
+	},
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"exports": {
+			".": "./lib/index.js"
+		}
+	}
+}

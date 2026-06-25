@@ -1,4 +1,4 @@
-import * as fs from "node:fs/promises";
+import { nullThrows } from "@flint.fyi/utils";
 
 import type { RendererFactory } from "./types.ts";
 
@@ -6,16 +6,16 @@ export const singleRendererFactory: RendererFactory = {
 	about: {
 		name: "single",
 	},
-	initialize(presenter) {
+	initialize(host, presenter) {
 		return {
 			announce() {
-				for (const line of presenter.header) {
+				for (const line of presenter.header ?? []) {
 					console.log(line);
 				}
 			},
 			async render({ duration, formattingResults, lintResults }) {
 				const fileContexts = await Promise.all(
-					lintResults.filesResults
+					lintResults.allFileResults
 						.entries()
 						.map(async ([filePath, fileResults]) => {
 							if (!fileResults.reports.length) {
@@ -23,7 +23,10 @@ export const singleRendererFactory: RendererFactory = {
 							}
 
 							// TODO: Can we re-use the sourcefile representation?
-							const sourceFileText = await fs.readFile(filePath, "utf-8");
+							const sourceFileText = nullThrows(
+								await host.readFile(filePath),
+								"Expected reported file to exist.",
+							);
 							return {
 								file: {
 									filePath,
@@ -46,14 +49,16 @@ export const singleRendererFactory: RendererFactory = {
 					}
 				}
 
-				const summary = presenter.summarize({
+				const summary = presenter.summarize?.({
 					duration,
 					formattingResults,
 					lintResults,
 				});
 
-				for (const line of await Array.fromAsync(summary)) {
-					process.stdout.write(line);
+				if (summary) {
+					for (const line of await Array.fromAsync(summary)) {
+						process.stdout.write(line);
+					}
 				}
 			},
 		};

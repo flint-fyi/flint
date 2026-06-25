@@ -1,5 +1,38 @@
 # @flint/cli
 
+## 0.19.4
+
+### Patch Changes
+
+- [#2974](https://github.com/flint-fyi/flint/pull/2974) [`640c509`](https://github.com/flint-fyi/flint/commit/640c5098a9a66979140399416977bcfb2d179f9a) - Add `--skip-formatting` option, which gives users the ability to opt out of formatting after linting completes.
+
+## 0.19.3
+
+### Patch Changes
+
+- [#2939](https://github.com/flint-fyi/flint/pull/2939) [`abcc5d8`](https://github.com/flint-fyi/flint/commit/abcc5d8a3d312b90b7fb1bfc8f48acadd54b2a1e) - Skip files that no longer exist when running Prettier.
+
+- [#2843](https://github.com/flint-fyi/flint/pull/2843) [`f88d7c8`](https://github.com/flint-fyi/flint/commit/f88d7c885ef6d905ddf5e1b4d0111a002615933b) - Route Prettier file reads and writes through the linter host.
+
+- [#2844](https://github.com/flint-fyi/flint/pull/2844) [`f7b868a`](https://github.com/flint-fyi/flint/commit/f7b868ad2f7cb5b7712c743da2f397068fb73de6) - Route CLI renderer file reads through the linter host.
+
+- Updated dependencies [[`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f)]:
+  - @flint.fyi/core@0.23.0
+
+## 0.19.2
+
+### Patch Changes
+
+- 61076ad: Extract `findConfigFileName` and `configFileNameCandidates` from `@flint.fyi/cli` into `@flint.fyi/core` so the CLI, the upcoming LSP server, and other consumers can share a single implementation.
+- Updated dependencies [61076ad]
+  - @flint.fyi/core@0.22.0
+
+## 0.19.1
+
+### Patch Changes
+
+- fb8d0b6: Correct fixable report counts to say `--fix` instead of `--fixs`.
+
 ## 0.19.0
 
 ### Minor Changes

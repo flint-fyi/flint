@@ -1,5 +1,6 @@
-import { jsonLanguage } from "@flint.fyi/json-language";
-import ts from "typescript";
+import type { AnyNode, NumberNode, StringNode } from "@humanwhocodes/momoa";
+
+import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -91,24 +92,16 @@ export default ruleCreator.createRule(jsonLanguage, {
 		},
 	},
 	setup(context) {
-		function checkNumericLiteral(
-			node: ts.NumericLiteral,
-			sourceFile: ts.SourceFile,
-		) {
-			const originalText = sourceFile.text.substring(
-				node.getStart(sourceFile),
-				node.end,
-			);
+		function checkNumber(node: NumberNode, sourceText: string) {
+			const range = getNodeRange(node);
+			const originalText = sourceText.slice(range.begin, range.end);
 			const value = Number(originalText);
 
 			if (!Number.isFinite(value)) {
 				context.report({
 					data: { sign: value > 0 ? "" : "-" },
 					message: "infinity",
-					range: {
-						begin: node.getStart(sourceFile),
-						end: node.end,
-					},
+					range,
 				});
 				return;
 			}
@@ -122,10 +115,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 				) {
 					context.report({
 						message: "unsafeZero",
-						range: {
-							begin: node.getStart(sourceFile),
-							end: node.end,
-						},
+						range,
 					});
 				}
 				return;
@@ -135,10 +125,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 				if (value > MAX_SAFE_INTEGER || value < MIN_SAFE_INTEGER) {
 					context.report({
 						message: "unsafeInteger",
-						range: {
-							begin: node.getStart(sourceFile),
-							end: node.end,
-						},
+						range,
 					});
 				}
 				return;
@@ -147,48 +134,44 @@ export default ruleCreator.createRule(jsonLanguage, {
 			if (value !== 0 && Math.abs(value) < MIN_NORMAL) {
 				context.report({
 					message: "subnormal",
-					range: {
-						begin: node.getStart(sourceFile),
-						end: node.end,
-					},
+					range,
 				});
 			}
 		}
 
-		function checkStringLiteral(
-			node: ts.StringLiteral,
-			sourceFile: ts.SourceFile,
-		) {
-			if (hasLoneSurrogate(node.text)) {
+		function checkString(node: StringNode) {
+			if (hasLoneSurrogate(node.value)) {
+				const range = getNodeRange(node);
 				context.report({
 					message: "loneSurrogate",
-					range: {
-						begin: node.getStart(sourceFile),
-						end: node.end,
-					},
+					range,
 				});
 			}
 		}
 
-		function checkNode(node: ts.Node, sourceFile: ts.SourceFile) {
-			if (ts.isNumericLiteral(node)) {
-				checkNumericLiteral(node, sourceFile);
-			} else if (ts.isStringLiteral(node)) {
-				checkStringLiteral(node, sourceFile);
-			} else {
-				node.forEachChild((child) => {
-					checkNode(child, sourceFile);
-				});
+		function checkNode(node: AnyNode, sourceText: string) {
+			if (node.type === "Number") {
+				checkNumber(node, sourceText);
+			} else if (node.type === "String") {
+				checkString(node);
+			} else if (node.type === "Array") {
+				for (const element of node.elements) {
+					checkNode(element.value, sourceText);
+				}
+			} else if (node.type === "Object") {
+				for (const property of node.members) {
+					checkNode(property.value, sourceText);
+				}
 			}
 		}
 
 		return {
 			visitors: {
-				ArrayLiteralExpression: (node, { sourceFile }) => {
-					checkNode(node, sourceFile);
+				Array: (node, { sourceText }) => {
+					checkNode(node, sourceText);
 				},
-				ObjectLiteralExpression: (node, { sourceFile }) => {
-					checkNode(node, sourceFile);
+				Object: (node, { sourceText }) => {
+					checkNode(node, sourceText);
 				},
 			},
 		};

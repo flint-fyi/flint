@@ -1,15 +1,16 @@
 import {
-	type AST as RegExpAST,
 	RegExpParser,
 	visitRegExpAST,
+	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
-import type { MessageForContext } from "@flint.fyi/core";
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
-import type {
-	AST,
-	TypeScriptFileServices,
-} from "@flint.fyi/typescript-language";
 import { toUnicodeSet } from "regexp-ast-analysis";
+
+import type { MessageForContext } from "@flint.fyi/core";
+import {
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";

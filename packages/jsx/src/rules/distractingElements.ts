@@ -1,14 +1,15 @@
-import {
-	type AST,
-	getTSNodeRange,
-	type TypeScriptFileServices,
-	typescriptLanguage,
-} from "@flint.fyi/typescript-language";
 import { SyntaxKind } from "typescript";
 
-const distractingElements = new Set(["blink", "marquee"]);
+import {
+	getTSNodeRange,
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+
+const distractingElements = new Set(["blink", "marquee"]);
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {

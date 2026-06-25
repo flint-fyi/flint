@@ -1,11 +1,14 @@
+import { SyntaxKind } from "typescript";
+
 import {
-	type AST,
-	type Checker,
 	getTSNodeRange,
 	isGlobalVariable,
 	typescriptLanguage,
+	type AST,
+	type Checker,
 } from "@flint.fyi/typescript-language";
-import { SyntaxKind } from "typescript";
+
+import { ruleCreator } from "./ruleCreator.ts";
 
 const windowLikeNames = new Set([
 	"globalThis",
@@ -14,8 +17,6 @@ const windowLikeNames = new Set([
 	"top",
 	"window",
 ]);
-
-import { ruleCreator } from "./ruleCreator.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
