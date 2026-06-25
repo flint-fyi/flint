@@ -32,7 +32,6 @@ export { declarationIncludesGlobal } from "./utils/declarationIncludesGlobal.ts"
 export { forEachChild } from "./utils/forEachChild.ts";
 export { getDeclarationsIfGlobal } from "./utils/getDeclarationsIfGlobal.ts";
 export { getModifyingReferences } from "./utils/getModifyingReferences.ts";
-export { getStaticPropertyName } from "./utils/getStaticPropertyName.ts";
 export {
 	getStaticNumberValue,
 	getStaticStringValue,

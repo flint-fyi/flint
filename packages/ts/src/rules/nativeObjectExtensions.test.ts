@@ -195,16 +195,6 @@ Extending the Array prototype modifies built-in behavior that other code depends
 		},
 		{
 			code: `
-Array[\`prototype\`].custom = function() {};
-`,
-			snapshot: `
-Array[\`prototype\`].custom = function() {};
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Extending the Array prototype modifies built-in behavior that other code depends on.
-`,
-		},
-		{
-			code: `
 Object.defineProperty(Array.prototype, "custom", { value: function() {} });
 `,
 			snapshot: `

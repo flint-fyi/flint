@@ -1,7 +1,6 @@
 import * as ts from "typescript";
 
 import {
-	getStaticPropertyName,
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
@@ -60,6 +59,26 @@ function getPrototypeObject(
 	return ts.isIdentifier(node.expression) && node.expression;
 }
 
+function isPrototypeAccess(
+	node: AST.AnyNode,
+): node is AST.ElementAccessExpression | AST.PropertyAccessExpression {
+	switch (node.kind) {
+		case ts.SyntaxKind.ElementAccessExpression:
+			// TODO: Use a util like getStaticValue
+			// https://github.com/flint-fyi/flint/issues/1298
+			return (
+				ts.isStringLiteral(node.argumentExpression) &&
+				node.argumentExpression.text === "prototype"
+			);
+
+		case ts.SyntaxKind.PropertyAccessExpression:
+			return node.name.text === "prototype";
+
+		default:
+			return false;
+	}
+}
+
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description:
@@ -87,7 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.ElementAccessExpression | AST.PropertyAccessExpression,
 			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
-			if (getStaticPropertyName(node) !== "prototype") {
+			if (!isPrototypeAccess(node)) {
 				return;
 			}
 
