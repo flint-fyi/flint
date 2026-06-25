@@ -5,6 +5,28 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+function f(arg) {
+    f(arg);
+    {
+        let arg = 2;
+        console.log(arg);
+    }
+}
+`,
+			snapshot: `
+function f(arg) {
+           ~~~
+           This parameter is only used in recursive calls.
+    f(arg);
+    {
+        let arg = 2;
+        console.log(arg);
+    }
+}
+`,
+		},
+		{
+			code: `
 function test(onlyUsedInRecursion) {
     return test(onlyUsedInRecursion);
 }
