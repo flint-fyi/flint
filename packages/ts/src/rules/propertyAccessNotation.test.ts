@@ -199,6 +199,19 @@ const num = obj["prop123"];
 		},
 		{
 			code: `
+const value = obj[\`property\`];
+`,
+			output: `
+const value = obj.property;
+`,
+			snapshot: `
+const value = obj[\`property\`];
+                  ~~~~~~~~~~
+                  Prefer the cleaner dot notation instead of bracket notation for \`property\`.
+`,
+		},
+		{
+			code: `
 type ObjType = { foo: string };
 declare const obj: ObjType;
 obj["foo"];
@@ -286,7 +299,6 @@ container['known'] = 123;
 		`const value = arr[index];`,
 		`const value = obj[1 + 2];`,
 		`const value = obj[getKey()];`,
-		`const value = obj[\`template\`];`,
 		`const value = obj[\`template\${var}\`];`,
 		`const value = obj?.property;`,
 		`const value = obj?.[dynamicKey];`,

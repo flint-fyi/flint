@@ -1,6 +1,7 @@
 import * as ts from "typescript";
 
 import {
+	getStaticNumberValue,
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
@@ -22,24 +23,6 @@ function hasCallbackArgument(callExpression: AST.CallExpression) {
 		ts.isFunctionExpression(firstArgument) ||
 		(ts.isIdentifier(firstArgument) && firstArgument.text !== "undefined")
 	);
-}
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function isNumericLiteral(node: ts.Expression) {
-	if (ts.isNumericLiteral(node)) {
-		return true;
-	}
-
-	if (ts.isPrefixUnaryExpression(node)) {
-		return (
-			(node.operator === ts.SyntaxKind.MinusToken ||
-				node.operator === ts.SyntaxKind.PlusToken) &&
-			ts.isNumericLiteral(node.operand)
-		);
-	}
-
-	return false;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -91,7 +74,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const firstArgument = args[0]!;
-					if (!isNumericLiteral(firstArgument) || !hasCallbackArgument(node)) {
+					if (
+						getStaticNumberValue(firstArgument) === undefined ||
+						!hasCallbackArgument(node)
+					) {
 						return;
 					}
 

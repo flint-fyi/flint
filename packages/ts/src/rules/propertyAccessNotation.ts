@@ -2,6 +2,7 @@ import ts from "typescript";
 import { z } from "zod/v4";
 
 import {
+	getStaticPropertyName,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -63,23 +64,6 @@ function getModifiers(node: null | ts.Node | undefined) {
 	return node && ts.canHaveModifiers(node) ? ts.getModifiers(node) : undefined;
 }
 
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function getPropertyKeyText(node: AST.ElementAccessExpression) {
-	switch (node.argumentExpression.kind) {
-		case ts.SyntaxKind.FalseKeyword:
-			return "false";
-		case ts.SyntaxKind.NullKeyword:
-			return "null";
-		case ts.SyntaxKind.StringLiteral:
-			return node.argumentExpression.text;
-		case ts.SyntaxKind.TrueKeyword:
-			return "true";
-		default:
-			return undefined;
-	}
-}
-
 function keyCannotBeUsedWithDotNotation(key: string) {
 	return (
 		!/^[\p{L}_$][\p{L}\d_$]*$/u.test(key) || javascriptReservedWords.has(key)
@@ -115,6 +99,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function getKeyTypeInformation(
 			node: AST.ElementAccessExpression,
+			key: string,
 			typeChecker: Checker,
 		) {
 			const propertySymbol =
@@ -124,10 +109,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					.getNonNullableType()
 					.getProperties()
 					.find(
-						(propertySymbol) =>
-							ts.isStringLiteral(node.argumentExpression) &&
-							(propertySymbol.escapedName as string) ===
-								node.argumentExpression.text,
+						(propertySymbol) => (propertySymbol.escapedName as string) === key,
 					);
 
 			const modifierKind = getModifiers(
@@ -147,13 +129,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					node,
 					{ options, sourceFile, typeChecker },
 				) => {
-					const key = getPropertyKeyText(node);
+					const key = getStaticPropertyName(node);
 					if (!key || keyCannotBeUsedWithDotNotation(key)) {
 						return;
 					}
 
 					const { inaccessible, propertySymbol } = getKeyTypeInformation(
 						node,
+						key,
 						typeChecker,
 					);
 					if (inaccessible) {
