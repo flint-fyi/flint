@@ -1,53 +1,22 @@
 import * as ts from "typescript";
 
 import {
+	getScopeManager,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
+	type Scope,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-// TODO (#400): Switch to scope analysis
-function getContainingScope(node: ts.Node) {
-	let current: ts.Node | undefined = node;
-
-	while (current) {
-		if (
-			ts.isFunctionDeclaration(current) ||
-			ts.isFunctionExpression(current) ||
-			ts.isArrowFunction(current) ||
-			ts.isMethodDeclaration(current) ||
-			ts.isBlock(current) ||
-			ts.isForStatement(current) ||
-			ts.isForOfStatement(current) ||
-			ts.isForInStatement(current) ||
-			ts.isSourceFile(current)
-		) {
-			return current;
-		}
-
-		current = current.parent as ts.Node | undefined;
-	}
-
-	return undefined;
-}
-
-// TODO (#400): Switch to scope analysis
-function isInScope(
-	accessScope: ts.Node | undefined,
-	declarationScope: ts.Node | undefined,
-) {
-	if (!declarationScope) {
-		return true;
-	}
-
-	let current = accessScope;
+function isInScope(accessScope: Scope, declarationScope: Scope) {
+	let current: Scope | undefined = accessScope;
 	while (current) {
 		if (current === declarationScope) {
 			return true;
 		}
-		current = current.parent;
+		current = current.upper;
 	}
 	return false;
 }
@@ -123,50 +92,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			declarationEnd: number;
 			destructuredProperties: Map<string, null | string>;
 			initKey: string;
-			scope: ts.Node | undefined;
+			scope: Scope;
 		}[] = [];
-
-		function collectDestructuredProperties(node: AST.VariableDeclaration) {
-			if (!node.initializer || !ts.isObjectBindingPattern(node.name)) {
-				return;
-			}
-
-			const initKey = getInitializerKey(node.initializer);
-			if (!initKey) {
-				return;
-			}
-
-			const properties = new Map<string, null | string>();
-			for (const element of node.name.elements) {
-				if (!ts.isBindingElement(element)) {
-					continue;
-				}
-
-				if (element.propertyName) {
-					if (ts.isIdentifier(element.propertyName)) {
-						if (
-							ts.isObjectBindingPattern(element.name) ||
-							ts.isArrayBindingPattern(element.name)
-						) {
-							properties.set(element.propertyName.text, null);
-						} else if (ts.isIdentifier(element.name)) {
-							properties.set(element.propertyName.text, element.name.text);
-						}
-					}
-				} else if (ts.isIdentifier(element.name)) {
-					properties.set(element.name.text, element.name.text);
-				}
-			}
-
-			if (properties.size) {
-				destructuredObjects.push({
-					declarationEnd: node.getEnd(),
-					destructuredProperties: properties,
-					initKey,
-					scope: getContainingScope(node),
-				});
-			}
-		}
 
 		return {
 			visitors: {
@@ -180,7 +107,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const accessScope = getContainingScope(node);
+					const accessScope = getScopeManager(sourceFile).getScope(node);
 
 					const destructured = destructuredObjects.find(
 						(object) =>
@@ -232,7 +159,50 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						suggestions,
 					});
 				},
-				VariableDeclaration: collectDestructuredProperties,
+				"SourceFile:exit"() {
+					destructuredObjects.length = 0;
+				},
+				VariableDeclaration: (node, { sourceFile }) => {
+					if (!node.initializer || !ts.isObjectBindingPattern(node.name)) {
+						return;
+					}
+
+					const initKey = getInitializerKey(node.initializer);
+					if (!initKey) {
+						return;
+					}
+
+					const properties = new Map<string, null | string>();
+					for (const element of node.name.elements) {
+						if (!ts.isBindingElement(element)) {
+							continue;
+						}
+
+						if (element.propertyName) {
+							if (ts.isIdentifier(element.propertyName)) {
+								if (
+									ts.isObjectBindingPattern(element.name) ||
+									ts.isArrayBindingPattern(element.name)
+								) {
+									properties.set(element.propertyName.text, null);
+								} else if (ts.isIdentifier(element.name)) {
+									properties.set(element.propertyName.text, element.name.text);
+								}
+							}
+						} else if (ts.isIdentifier(element.name)) {
+							properties.set(element.name.text, element.name.text);
+						}
+					}
+
+					if (properties.size) {
+						destructuredObjects.push({
+							declarationEnd: node.getEnd(),
+							destructuredProperties: properties,
+							initKey,
+							scope: getScopeManager(sourceFile).getScope(node),
+						});
+					}
+				},
 			},
 		};
 	},
