@@ -43,11 +43,6 @@ describe("githubPresenterFactory", () => {
 			runMode: "single-run",
 		});
 
-		const reproValues = [2, 1];
-		expect(reproValues.sort()).toEqual([1, 2]);
-		const reproNames = ["b", "a"];
-		expect(reproNames.sort()).toEqual(["a", "b"]);
-
 		expect("header" in presenter).toBe(false);
 		expect("summarize" in presenter).toBe(false);
 	});
