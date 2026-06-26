@@ -58,7 +58,7 @@ function formatAnnotationMessage(
 	const ruleId = report.about.id;
 	const message = formatReport(report.data, report.message.primary);
 
-	return `${relativeFilePath(file.filePath)}:${begin.line + 1}:${begin.column + 1} ${ruleId}: ${message}`;
+	return `${ruleId}: ${message} [${relativeFilePath(file.filePath)}:${begin.line + 1}:${begin.column + 1}]`;
 }
 
 function relativeFilePath(filePath: string) {
