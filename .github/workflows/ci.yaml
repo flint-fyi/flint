@@ -15,6 +15,7 @@ jobs:
       - uses: ./.github/actions/prepare
       - run: pnpm run build # Ensure packages pass attw, etc.
       - run: pnpm --filter=site check # Validate packages/site without a full Astro build.
+
   dedupe_check:
     name: Dedupe Check
     runs-on: ubuntu-latest
@@ -22,6 +23,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: ./.github/actions/prepare
       - run: pnpm dedupe --check --prefer-offline
+
   flint:
     name: Flint
     runs-on: ubuntu-latest
@@ -30,6 +32,7 @@ jobs:
       - uses: ./.github/actions/prepare
       - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
       - run: pnpm run flint
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -38,6 +41,7 @@ jobs:
       - uses: ./.github/actions/prepare
       - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
       - run: pnpm run lint
+
   lint_knip:
     name: Lint Knip
     runs-on: ubuntu-latest
@@ -47,6 +51,7 @@ jobs:
       - run: pnpm run build # Knip requires all exports to be generated.
       - run: pnpm run lint:knip
       - run: pnpm run lint:knip:prod
+
   typecheck:
     name: Typecheck
     runs-on: ubuntu-latest
@@ -54,10 +59,10 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: ./.github/actions/prepare
       - run: pnpm exec tsc -b
+
   test:
     name: Test
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os:
@@ -65,12 +70,8 @@ jobs:
           - ubuntu-latest
           - windows-latest
         node-version: [24, 25]
-
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
-        with:
-          fetch-depth: 0 # required so origin/main can be diffed
-          filter: "tree:0"
       - uses: ./.github/actions/prepare
         with:
           node-version: ${{ matrix.node-version }}
@@ -79,18 +80,12 @@ jobs:
         with:
           key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
-      - # Run partial test pass on PRs (only changed files), excluding e2e.
-        if: ${{ github.event_name == 'pull_request' }}
-        name: Run affected tests except e2e
-        run: pnpm run test --changed origin/${{ github.base_ref }} --project='!e2e'
-      - # On main, run the full non-e2e test suite.
-        if: ${{ github.ref == 'refs/heads/main' }}
-        name: Run full test suite except e2e
+      - name: Run full test suite except e2e
         run: pnpm run test --project='!e2e'
+  
   test_e2e:
     name: Test E2E
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os:
@@ -98,7 +93,6 @@ jobs:
           - ubuntu-latest
           - windows-latest
         node-version: [24, 25]
-
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
