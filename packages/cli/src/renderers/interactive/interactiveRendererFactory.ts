@@ -30,7 +30,7 @@ export const interactiveRendererFactory: RendererFactory = {
 		function announce() {
 			console.clear();
 
-			for (const line of presenter.header) {
+			for (const line of presenter.header ?? []) {
 				console.log(line);
 			}
 		}
@@ -49,7 +49,7 @@ export const interactiveRendererFactory: RendererFactory = {
 
 		async function render({ lintResults }: RendererContext) {
 			const filesWithReportResults = Array.from(
-				lintResults.filesResults,
+				lintResults.allFileResults,
 			).filter(([, results]) => results.reports.length);
 
 			const events: Record<string, (() => boolean) | undefined> = {

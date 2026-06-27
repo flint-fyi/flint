@@ -1,5 +1,13 @@
 # @flint.fyi/comparisons
 
+## 0.3.6
+
+### Patch Changes
+
+- [#2816](https://github.com/flint-fyi/flint/pull/2816) [`08323ad`](https://github.com/flint-fyi/flint/commit/08323add35de3d836496be1d0ca2e702f58de0ca) - Added Biome rules.
+
+- [#2970](https://github.com/flint-fyi/flint/pull/2970) [`dcd90d6`](https://github.com/flint-fyi/flint/commit/dcd90d66839a48170d7587fcfe68f75d6957da4a) - Added Oxlint rule coverage to comparison data and tests.
+
 ## 0.3.5
 
 ### Patch Changes

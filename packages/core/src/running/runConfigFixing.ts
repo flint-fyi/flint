@@ -1,5 +1,6 @@
 import { debugForFile } from "debug-for-file";
 
+import { writeToCache } from "../cache/writeToCache.ts";
 import { applyChangesToFiles } from "../changing/applyChangesToFiles.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
@@ -46,6 +47,7 @@ export async function runConfigFixing(
 		const lintResults = await runConfig(configDefinition, host, {
 			cacheLocation,
 			ignoreCache,
+			skipCacheWrite: true,
 			skipLanguageReports,
 		});
 
@@ -54,7 +56,7 @@ export async function runConfigFixing(
 		// flint-disable-next-line performance/loopAwaits
 		const fixedFilePaths = await applyChangesToFiles(
 			host,
-			lintResults.filesResults,
+			lintResults.allFileResults,
 			requestedSuggestions,
 		);
 
@@ -62,6 +64,13 @@ export async function runConfigFixing(
 
 		if (!fixedFilePaths.length) {
 			log("No file changes found, stopping.");
+			// flint-disable-next-line performance/loopAwaits
+			await writeToCache(
+				host,
+				configDefinition.filePath,
+				lintResults,
+				cacheLocation || configDefinition.cacheLocation,
+			);
 			return { ...lintResults, changed };
 		}
 

@@ -786,7 +786,13 @@
 			"plugin": "browser",
 			"preset": "stylistic",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-classlist-toggle",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-classlist-toggle.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -880,7 +886,13 @@
 			"plugin": "browser",
 			"preset": "logical",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-implicit-globals",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implicit-globals.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -894,7 +906,13 @@
 			"plugin": "browser",
 			"preset": "logical",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-keyboard-event-key",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-keyboard-event-key.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -1055,6 +1073,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noScriptUrl",
+				"url": "https://biomejs.dev/linter/rules/no-script-url"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-script-url",
@@ -1071,12 +1095,6 @@
 			{
 				"name": "eslint/no-script-url",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-script-url.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noScriptUrl",
-				"url": "https://biomejs.dev/linter/rules/no-script-url"
 			}
 		]
 	},
@@ -4906,6 +4924,786 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "afterAllPaddingLines",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/padding-around-after-all-blocks",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/padding-around-after-all-blocks.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "aliasMethods",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-alias-methods",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-alias-methods.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "calledWithAssertions",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-called-with",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-called-with.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "commentedOutTests",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-commented-out-tests",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-commented-out-tests.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "comparisonMatcherAssertions",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-comparison-matcher",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-comparison-matcher.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "conditionalExpects",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-conditional-expect",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-conditional-expect.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "confusingSetTimeouts",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-confusing-set-timeout",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-confusing-set-timeout.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "deprecatedFunctions",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-deprecated-functions",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-deprecated-functions.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "describeCallbackValidity",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/valid-describe-callback",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/valid-describe-callback.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "doneCallbacks",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-done-callback",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-done-callback.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "eachLoops",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-each",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-each.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "emptyTestTodos",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-todo",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-todo.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "endingWithExpect",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-ending-with-an-expect",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-ending-with-an-expect.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "equalityMatchers",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-equality-matcher",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-equality-matcher.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "expectResolves",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-expect-resolves",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-expect-resolves.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "expectsOutsideTests",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-standalone-expect",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-standalone-expect.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "expectValidity",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/valid-expect",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/valid-expect.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "hookContents",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/require-hook",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/require-hook.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "hookDuplicates",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-duplicate-hooks",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-duplicate-hooks.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "hookOrders",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-hooks-in-order",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-hooks-in-order.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "hooks",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-hooks",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-hooks.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "hooksBeforeTestCases",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-hooks-on-top",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-hooks-on-top.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "jasmineGlobals",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-jasmine-globals",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-jasmine-globals.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "maximumExpects",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/max-expects",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/max-expects.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "maximumNestedDescribes",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/max-nested-describe",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/max-nested-describe.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mockedFunctionInstances",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-jest-mocked",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-jest-mocked.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mockReturnShorthands",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-mock-return-shorthand",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-mock-return-shorthand.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "mocksDirectoryImports",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-mocks-import",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-mocks-import.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "promiseExpectChains",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/valid-expect-in-promise",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/valid-expect-in-promise.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "promiseSettleAssertions",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-mock-promise-shorthand",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-mock-promise-shorthand.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "restrictedMatchers",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-restricted-matchers",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-restricted-matchers.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "restrictedJestMethods",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-restricted-jest-methods",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-restricted-jest-methods.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "snapshotHints",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-snapshot-hint",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-snapshot-hint.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "snapshotInterpolations",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-interpolation-in-snapshots",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-interpolation-in-snapshots.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "snapshotSizes",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-large-snapshots",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-large-snapshots.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "spyOnMocks",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-spy-on",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-spy-on.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "strictEqualityMatchers",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-strict-equal",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-strict-equal.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "testBodyExpectations",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/expect-expect",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/expect-expect.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "testCaseAssertions",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-expect-assertions",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-expect-assertions.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "testCaseOnlyFlags",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-focused-tests",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-focused-tests.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "testCasePaddingLines",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/padding-around-test-blocks",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/padding-around-test-blocks.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "testCasesWithinDescribes",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/require-top-level-describe",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/require-top-level-describe.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "testCaseTitles",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-lowercase-title",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-lowercase-title.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "testConditionals",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-conditional-in-test",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-conditional-in-test.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "testDefinitionFunctions",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/consistent-test-it",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/consistent-test-it.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "testDisables",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-disabled-tests",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-disabled-tests.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "testExports",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-export",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-export.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "testPrefixes",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-test-prefixes",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-test-prefixes.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "testReturnStatements",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-test-return-statement",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-test-return-statement.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "titleRepeats",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-identical-title",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-identical-title.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "titleValidity",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/valid-title",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/valid-title.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "toBeMatchers",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-to-be",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-to-be.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "toContainMatchers",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-to-contain",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-to-contain.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "toHaveBeenCalledAssertions",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-to-have-been-called",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-to-have-been-called.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "toHaveBeenCalledTimesAssertions",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-to-have-been-called-times",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-to-have-been-called-times.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "toHaveLengthMatchers",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-to-have-length",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-to-have-length.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "toThrowMessages",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/require-to-throw-message",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/require-to-throw-message.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "unnecessaryAsyncExpectFunctions",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-unneeded-async-expect-function",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-unneeded-async-expect-function.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "untypedMockFactories",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/no-untyped-mock-factory",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/no-untyped-mock-factory.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "jestGlobalImports",
+			"plugin": "jest",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "jest/prefer-importing-jest-globals",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-importing-jest-globals.html"
+			}
+		]
+	},
+	{
 		"eslint": [
 			{
 				"name": "jsx-a11y/accessible-emoji",
@@ -4960,6 +5758,12 @@
 		"notes": "Overly opinionated."
 	},
 	{
+		"biome": [
+			{
+				"name": "useAltText",
+				"url": "https://biomejs.dev/linter/rules/use-alt-text"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/alt-text",
@@ -4974,14 +5778,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/alt-text",
+				"name": "jsx-a11y/alt-text",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/alt-text.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useAltText",
-				"url": "https://biomejs.dev/linter/rules/use-alt-text"
 			}
 		]
 	},
@@ -5013,6 +5811,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useAnchorContent",
+				"url": "https://biomejs.dev/linter/rules/use-anchor-content"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/anchor-has-content",
@@ -5027,18 +5831,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/anchor-has-content",
+				"name": "jsx-a11y/anchor-has-content",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/anchor-has-content.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useAnchorContent",
-				"url": "https://biomejs.dev/linter/rules/use-anchor-content"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useValidAnchor",
+				"url": "https://biomejs.dev/linter/rules/use-valid-anchor"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/anchor-is-valid",
@@ -5053,18 +5857,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/anchor-is-valid",
+				"name": "jsx-a11y/anchor-is-valid",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/anchor-is-valid.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useValidAnchor",
-				"url": "https://biomejs.dev/linter/rules/use-valid-anchor"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useAriaActivedescendantWithTabindex",
+				"url": "https://biomejs.dev/linter/rules/use-aria-activedescendant-with-tabindex"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/aria-activedescendant-has-tabindex",
@@ -5079,18 +5883,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/aria-activedescendant-has-tabindex",
+				"name": "jsx-a11y/aria-activedescendant-has-tabindex",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/aria-activedescendant-has-tabindex.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useAriaActivedescendantWithTabindex",
-				"url": "https://biomejs.dev/linter/rules/use-aria-activedescendant-with-tabindex"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noAriaHiddenOnFocusable",
+				"url": "https://biomejs.dev/linter/rules/no-aria-hidden-on-focusable"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/no-aria-hidden-on-focusable",
@@ -5106,18 +5910,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/no-aria-hidden-on-focusable",
+				"name": "jsx-a11y/no-aria-hidden-on-focusable",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-aria-hidden-on-focusable.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noAriaHiddenOnFocusable",
-				"url": "https://biomejs.dev/linter/rules/no-aria-hidden-on-focusable"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useValidAriaProps",
+				"url": "https://biomejs.dev/linter/rules/use-valid-aria-props"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/aria-props",
@@ -5132,18 +5936,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/aria-props",
+				"name": "jsx-a11y/aria-props",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/aria-props.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useValidAriaProps",
-				"url": "https://biomejs.dev/linter/rules/use-valid-aria-props"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useValidAriaValues",
+				"url": "https://biomejs.dev/linter/rules/use-valid-aria-values"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/aria-proptypes",
@@ -5156,14 +5960,20 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useValidAriaValues",
-				"url": "https://biomejs.dev/linter/rules/use-valid-aria-values"
+				"name": "jsx-a11y/aria-proptypes",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/aria-proptypes.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useValidAriaRole",
+				"url": "https://biomejs.dev/linter/rules/use-valid-aria-role"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/aria-role",
@@ -5178,18 +5988,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/aria-role",
+				"name": "jsx-a11y/aria-role",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/aria-role.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useValidAriaRole",
-				"url": "https://biomejs.dev/linter/rules/use-valid-aria-role"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noAriaUnsupportedElements",
+				"url": "https://biomejs.dev/linter/rules/no-aria-unsupported-elements"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/aria-unsupported-elements",
@@ -5204,14 +6014,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/aria-unsupported-elements",
+				"name": "jsx-a11y/aria-unsupported-elements",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/aria-unsupported-elements.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noAriaUnsupportedElements",
-				"url": "https://biomejs.dev/linter/rules/no-aria-unsupported-elements"
 			}
 		]
 	},
@@ -5229,6 +6033,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "useValidAutocomplete",
+				"url": "https://biomejs.dev/linter/rules/use-valid-autocomplete"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/autocomplete-valid",
@@ -5243,18 +6053,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/autocomplete-valid",
+				"name": "jsx-a11y/autocomplete-valid",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/autocomplete-valid.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useValidAutocomplete",
-				"url": "https://biomejs.dev/linter/rules/use-valid-autocomplete"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noAutofocus",
+				"url": "https://biomejs.dev/linter/rules/no-autofocus"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/no-autofocus",
@@ -5269,14 +6079,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/no-autofocus",
+				"name": "jsx-a11y/no-autofocus",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-autofocus.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noAutofocus",
-				"url": "https://biomejs.dev/linter/rules/no-autofocus"
 			}
 		]
 	},
@@ -5295,6 +6099,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "noImplicitBoolean",
+				"url": "https://biomejs.dev/linter/rules/no-implicit-boolean"
+			}
+		],
 		"deno": [
 			{
 				"name": "jsx-boolean-value",
@@ -5313,10 +6123,10 @@
 			"preset": "stylistic",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noImplicitBoolean",
-				"url": "https://biomejs.dev/linter/rules/no-implicit-boolean"
+				"name": "react/jsx-boolean-value",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-boolean-value.html"
 			}
 		]
 	},
@@ -5347,6 +6157,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "useButtonType",
+				"url": "https://biomejs.dev/linter/rules/use-button-type"
+			}
+		],
 		"deno": [
 			{
 				"name": "button-has-type",
@@ -5369,10 +6185,10 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useButtonType",
-				"url": "https://biomejs.dev/linter/rules/use-button-type"
+				"name": "react/button-has-type",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/button-has-type.html"
 			}
 		]
 	},
@@ -5391,6 +6207,12 @@
 		"notes": "No longer necessary in modern browsers."
 	},
 	{
+		"biome": [
+			{
+				"name": "useConsistentCurlyBraces",
+				"url": "https://biomejs.dev/linter/rules/use-consistent-curly-braces"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/jsx-curly-brace-presence",
@@ -5403,14 +6225,20 @@
 			"status": "skipped"
 		},
 		"notes": "Formatting rule.",
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useConsistentCurlyBraces",
-				"url": "https://biomejs.dev/linter/rules/use-consistent-curly-braces"
+				"name": "react/jsx-curly-brace-presence",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-curly-brace-presence.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noChildrenProp",
+				"url": "https://biomejs.dev/linter/rules/no-children-prop"
+			}
+		],
 		"deno": [
 			{
 				"name": "jsx-no-children-prop",
@@ -5433,10 +6261,10 @@
 			"preset": "stylistic",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noChildrenProp",
-				"url": "https://biomejs.dev/linter/rules/no-children-prop"
+				"name": "react/no-children-prop",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-children-prop.html"
 			}
 		]
 	},
@@ -5468,6 +6296,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "useKeyWithClickEvents",
+				"url": "https://biomejs.dev/linter/rules/use-key-with-click-events"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/click-events-have-key-events",
@@ -5482,14 +6316,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/click-events-have-key-events",
+				"name": "jsx-a11y/click-events-have-key-events",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/click-events-have-key-events.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useKeyWithClickEvents",
-				"url": "https://biomejs.dev/linter/rules/use-key-with-click-events"
 			}
 		]
 	},
@@ -5536,6 +6364,12 @@
 		"notes": "Formatting rule."
 	},
 	{
+		"biome": [
+			{
+				"name": "noCommentText",
+				"url": "https://biomejs.dev/linter/rules/no-comment-text"
+			}
+		],
 		"deno": [
 			{
 				"name": "jsx-no-comment-text-nodes",
@@ -5558,10 +6392,10 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noCommentText",
-				"url": "https://biomejs.dev/linter/rules/no-comment-text"
+				"name": "react/jsx-no-comment-textnodes",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-no-comment-textnodes.html"
 			}
 		]
 	},
@@ -5577,7 +6411,13 @@
 			"plugin": "jsx",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated and brittle."
+		"notes": "Overly opinionated and brittle.",
+		"oxlint": [
+			{
+				"name": "react/jsx-pascal-case",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-pascal-case.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -5590,7 +6430,13 @@
 			"name": "controlAssociatedLabels",
 			"plugin": "jsx",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "jsx-a11y/control-has-associated-label",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/control-has-associated-label.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -5632,7 +6478,13 @@
 			"plugin": "jsx",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "react/no-object-type-as-default-prop",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-object-type-as-default-prop.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -5648,6 +6500,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "noDistractingElements",
+				"url": "https://biomejs.dev/linter/rules/no-distracting-elements"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/no-distracting-elements",
@@ -5662,14 +6520,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/no-distracting-elements",
+				"name": "jsx-a11y/no-distracting-elements",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-distracting-elements.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noDistractingElements",
-				"url": "https://biomejs.dev/linter/rules/no-distracting-elements"
 			}
 		]
 	},
@@ -5699,10 +6551,10 @@
 		}
 	},
 	{
-		"eslint": [
+		"biome": [
 			{
-				"name": "react/jsx-props-no-spread-multi",
-				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spread-multi.md"
+				"name": "noDuplicatedSpreadProps",
+				"url": "https://biomejs.dev/linter/rules/no-duplicated-spread-props"
 			}
 		],
 		"deno": [
@@ -5711,19 +6563,31 @@
 				"url": "https://docs.deno.com/lint/rules/jsx-props-no-spread-multi"
 			}
 		],
+		"eslint": [
+			{
+				"name": "react/jsx-props-no-spread-multi",
+				"url": "https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-spread-multi.md"
+			}
+		],
 		"flint": {
 			"name": "duplicateSpreads",
 			"plugin": "jsx",
 			"status": "skipped"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noDuplicatedSpreadProps",
-				"url": "https://biomejs.dev/linter/rules/no-duplicated-spread-props"
+				"name": "react/jsx-props-no-spread-multi",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-props-no-spread-multi.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noVoidElementsWithChildren",
+				"url": "https://biomejs.dev/linter/rules/no-void-elements-with-children"
+			}
+		],
 		"deno": [
 			{
 				"name": "jsx-void-dom-elements-no-children",
@@ -5743,10 +6607,10 @@
 			"status": "implemented",
 			"strictness": "strict"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noVoidElementsWithChildren",
-				"url": "https://biomejs.dev/linter/rules/no-void-elements-with-children"
+				"name": "react/void-dom-elements-no-children",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/void-dom-elements-no-children.html"
 			}
 		]
 	},
@@ -5804,9 +6668,21 @@
 			"plugin": "jsx",
 			"status": "skipped"
 		},
-		"notes": "Generally handled by parsers."
+		"notes": "Generally handled by parsers.",
+		"oxlint": [
+			{
+				"name": "react/jsx-filename-extension",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-filename-extension.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useFragmentSyntax",
+				"url": "https://biomejs.dev/linter/rules/use-fragment-syntax"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/jsx-fragments",
@@ -5818,10 +6694,10 @@
 			"plugin": "jsx",
 			"preset": "stylistic"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useFragmentSyntax",
-				"url": "https://biomejs.dev/linter/rules/use-fragment-syntax"
+				"name": "react/jsx-fragments",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-fragments.html"
 			}
 		]
 	},
@@ -5857,9 +6733,21 @@
 			"plugin": "jsx",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "react/jsx-handler-names",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-handler-names.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useHeadingContent",
+				"url": "https://biomejs.dev/linter/rules/use-heading-content"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/heading-has-content",
@@ -5872,14 +6760,20 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useHeadingContent",
-				"url": "https://biomejs.dev/linter/rules/use-heading-content"
+				"name": "jsx-a11y/heading-has-content",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/heading-has-content.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useHtmlLang",
+				"url": "https://biomejs.dev/linter/rules/use-html-lang"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/html-has-lang",
@@ -5894,18 +6788,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/html-has-lang",
+				"name": "jsx-a11y/html-has-lang",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/html-has-lang.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useHtmlLang",
-				"url": "https://biomejs.dev/linter/rules/use-html-lang"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useIframeSandbox",
+				"url": "https://biomejs.dev/linter/rules/use-iframe-sandbox"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/iframe-missing-sandbox",
@@ -5918,10 +6812,10 @@
 			"preset": "logical",
 			"strictness": "strict"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useIframeSandbox",
-				"url": "https://biomejs.dev/linter/rules/use-iframe-sandbox"
+				"name": "react/iframe-missing-sandbox",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/iframe-missing-sandbox.html"
 			}
 		]
 	},
@@ -5952,6 +6846,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "useIframeTitle",
+				"url": "https://biomejs.dev/linter/rules/use-iframe-title"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/iframe-has-title",
@@ -5966,18 +6866,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/iframe-has-title",
+				"name": "jsx-a11y/iframe-has-title",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/iframe-has-title.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useIframeTitle",
-				"url": "https://biomejs.dev/linter/rules/use-iframe-title"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noRedundantAlt",
+				"url": "https://biomejs.dev/linter/rules/no-redundant-alt"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/img-redundant-alt",
@@ -5991,14 +6891,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/img-redundant-alt",
+				"name": "jsx-a11y/img-redundant-alt",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/img-redundant-alt.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noRedundantAlt",
-				"url": "https://biomejs.dev/linter/rules/no-redundant-alt"
 			}
 		]
 	},
@@ -6040,9 +6934,21 @@
 			"name": "inputCheckedMutability",
 			"plugin": "jsx",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/checked-requires-onchange-or-readonly",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/checked-requires-onchange-or-readonly.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noInteractiveElementToNoninteractiveRole",
+				"url": "https://biomejs.dev/linter/rules/no-interactive-element-to-noninteractive-role"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/no-interactive-element-to-noninteractive-role",
@@ -6055,14 +6961,20 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noInteractiveElementToNoninteractiveRole",
-				"url": "https://biomejs.dev/linter/rules/no-interactive-element-to-noninteractive-role"
+				"name": "jsx-a11y/no-interactive-element-to-noninteractive-role",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-interactive-element-to-noninteractive-role.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useFocusableInteractive",
+				"url": "https://biomejs.dev/linter/rules/use-focusable-interactive"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/interactive-supports-focus",
@@ -6075,10 +6987,10 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useFocusableInteractive",
-				"url": "https://biomejs.dev/linter/rules/use-focusable-interactive"
+				"name": "jsx-a11y/interactive-supports-focus",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/interactive-supports-focus.html"
 			}
 		]
 	},
@@ -6109,6 +7021,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "noLabelWithoutControl",
+				"url": "https://biomejs.dev/linter/rules/no-label-without-control"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/label-has-associated-control",
@@ -6123,14 +7041,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/label-has-associated-control",
+				"name": "jsx-a11y/label-has-associated-control",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/label-has-associated-control.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noLabelWithoutControl",
-				"url": "https://biomejs.dev/linter/rules/no-label-without-control"
 			}
 		]
 	},
@@ -6149,6 +7061,12 @@
 		"notes": "Superseded by labelAssociatedControls."
 	},
 	{
+		"biome": [
+			{
+				"name": "useValidLang",
+				"url": "https://biomejs.dev/linter/rules/use-valid-lang"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/lang",
@@ -6164,14 +7082,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/lang",
+				"name": "jsx-a11y/lang",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/lang.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useValidLang",
-				"url": "https://biomejs.dev/linter/rules/use-valid-lang"
 			}
 		]
 	},
@@ -6221,7 +7133,13 @@
 			"plugin": "jsx",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "react/jsx-max-depth",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-max-depth.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -6238,6 +7156,12 @@
 		"notes": "Formatting rule."
 	},
 	{
+		"biome": [
+			{
+				"name": "useMediaCaption",
+				"url": "https://biomejs.dev/linter/rules/use-media-caption"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/media-has-caption",
@@ -6252,14 +7176,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/media-has-caption",
+				"name": "jsx-a11y/media-has-caption",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/media-has-caption.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useMediaCaption",
-				"url": "https://biomejs.dev/linter/rules/use-media-caption"
 			}
 		]
 	},
@@ -6277,6 +7195,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "useKeyWithMouseEvents",
+				"url": "https://biomejs.dev/linter/rules/use-key-with-mouse-events"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/mouse-events-have-key-events",
@@ -6291,14 +7215,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/mouse-events-have-key-events",
+				"name": "jsx-a11y/mouse-events-have-key-events",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/mouse-events-have-key-events.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useKeyWithMouseEvents",
-				"url": "https://biomejs.dev/linter/rules/use-key-with-mouse-events"
 			}
 		]
 	},
@@ -6318,7 +7236,13 @@
 			"plugin": "jsx",
 			"status": "skipped"
 		},
-		"notes": "Generally handled by parsers."
+		"notes": "Generally handled by parsers.",
+		"oxlint": [
+			{
+				"name": "react/no-namespace",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-namespace.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -6348,6 +7272,12 @@
 		"notes": "Formatting rule."
 	},
 	{
+		"biome": [
+			{
+				"name": "noNoninteractiveElementInteractions",
+				"url": "https://biomejs.dev/linter/rules/no-noninteractive-element-interactions"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/no-noninteractive-element-interactions",
@@ -6360,14 +7290,20 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noNoninteractiveElementInteractions",
-				"url": "https://biomejs.dev/linter/rules/no-noninteractive-element-interactions"
+				"name": "jsx-a11y/no-noninteractive-element-interactions",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-noninteractive-element-interactions.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noNoninteractiveElementToInteractiveRole",
+				"url": "https://biomejs.dev/linter/rules/no-noninteractive-element-to-interactive-role"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/no-noninteractive-element-to-interactive-role",
@@ -6380,14 +7316,20 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noNoninteractiveElementToInteractiveRole",
-				"url": "https://biomejs.dev/linter/rules/no-noninteractive-element-to-interactive-role"
+				"name": "jsx-a11y/no-noninteractive-element-to-interactive-role",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-noninteractive-element-to-interactive-role.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noNoninteractiveTabindex",
+				"url": "https://biomejs.dev/linter/rules/no-noninteractive-tabindex"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/no-noninteractive-tabindex",
@@ -6402,18 +7344,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/no-noninteractive-tabindex",
+				"name": "jsx-a11y/no-noninteractive-tabindex",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-noninteractive-tabindex.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noNoninteractiveTabindex",
-				"url": "https://biomejs.dev/linter/rules/no-noninteractive-tabindex"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noDuplicateJsxProps",
+				"url": "https://biomejs.dev/linter/rules/no-duplicate-jsx-props"
+			}
+		],
 		"deno": [
 			{
 				"name": "jsx-no-duplicate-props",
@@ -6432,10 +7374,10 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noDuplicateJsxProps",
-				"url": "https://biomejs.dev/linter/rules/no-duplicate-jsx-props"
+				"name": "react/jsx-no-duplicate-props",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-no-duplicate-props.html"
 			}
 		]
 	},
@@ -6520,7 +7462,13 @@
 			"plugin": "jsx",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "react/jsx-props-no-spreading",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-props-no-spreading.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -6534,7 +7482,13 @@
 			"plugin": "jsx",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/no-redundant-should-component-update",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-redundant-should-component-update.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -6567,9 +7521,21 @@
 			"name": "renderReturns",
 			"plugin": "jsx",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/require-render-return",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/require-render-return.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noRedundantRoles",
+				"url": "https://biomejs.dev/linter/rules/no-redundant-roles"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/no-redundant-roles",
@@ -6584,18 +7550,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/no-redundant-roles",
+				"name": "jsx-a11y/no-redundant-roles",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-redundant-roles.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noRedundantRoles",
-				"url": "https://biomejs.dev/linter/rules/no-redundant-roles"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useAriaPropsForRole",
+				"url": "https://biomejs.dev/linter/rules/use-aria-props-for-role"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/role-has-required-aria-props",
@@ -6610,18 +7576,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/role-has-required-aria-props",
+				"name": "jsx-a11y/role-has-required-aria-props",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/role-has-required-aria-props.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useAriaPropsForRole",
-				"url": "https://biomejs.dev/linter/rules/use-aria-props-for-role"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useAriaPropsSupportedByRole",
+				"url": "https://biomejs.dev/linter/rules/use-aria-props-supported-by-role"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/role-supports-aria-props",
@@ -6636,18 +7602,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/role-supports-aria-props",
+				"name": "jsx-a11y/role-supports-aria-props",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/role-supports-aria-props.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useAriaPropsSupportedByRole",
-				"url": "https://biomejs.dev/linter/rules/use-aria-props-supported-by-role"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useSemanticElements",
+				"url": "https://biomejs.dev/linter/rules/use-semantic-elements"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/prefer-tag-over-role",
@@ -6663,18 +7629,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/prefer-tag-over-role",
+				"name": "jsx-a11y/prefer-tag-over-role",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/prefer-tag-over-role.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useSemanticElements",
-				"url": "https://biomejs.dev/linter/rules/use-semantic-elements"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noHeaderScope",
+				"url": "https://biomejs.dev/linter/rules/no-header-scope"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/scope",
@@ -6689,18 +7655,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/scope",
+				"name": "jsx-a11y/scope",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/scope.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noHeaderScope",
-				"url": "https://biomejs.dev/linter/rules/no-header-scope"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noScriptUrl",
+				"url": "https://biomejs.dev/linter/rules/no-script-url"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/jsx-no-script-url",
@@ -6716,14 +7682,20 @@
 			"plugin": "jsx",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noScriptUrl",
-				"url": "https://biomejs.dev/linter/rules/no-script-url"
+				"name": "react/jsx-no-script-url",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-no-script-url.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useSelfClosingElements",
+				"url": "https://biomejs.dev/linter/rules/use-self-closing-elements"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/self-closing-comp",
@@ -6735,10 +7707,10 @@
 			"plugin": "jsx",
 			"preset": "stylistic"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useSelfClosingElements",
-				"url": "https://biomejs.dev/linter/rules/use-self-closing-elements"
+				"name": "react/self-closing-comp",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/self-closing-comp.html"
 			}
 		]
 	},
@@ -6784,6 +7756,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "noStaticElementInteractions",
+				"url": "https://biomejs.dev/linter/rules/no-static-element-interactions"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/no-static-element-interactions",
@@ -6796,10 +7774,10 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noStaticElementInteractions",
-				"url": "https://biomejs.dev/linter/rules/no-static-element-interactions"
+				"name": "jsx-a11y/no-static-element-interactions",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-static-element-interactions.html"
 			}
 		]
 	},
@@ -6818,6 +7796,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "noPositiveTabindex",
+				"url": "https://biomejs.dev/linter/rules/no-positive-tabindex"
+			}
+		],
 		"eslint": [
 			{
 				"name": "jsx-a11y/tabindex-no-positive",
@@ -6832,14 +7816,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsx_a11y/tabindex-no-positive",
+				"name": "jsx-a11y/tabindex-no-positive",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/tabindex-no-positive.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noPositiveTabindex",
-				"url": "https://biomejs.dev/linter/rules/no-positive-tabindex"
 			}
 		]
 	},
@@ -6858,6 +7836,12 @@
 		"notes": "Formatting rule."
 	},
 	{
+		"biome": [
+			{
+				"name": "noBlankTarget",
+				"url": "https://biomejs.dev/linter/rules/no-blank-target"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/jsx-no-target-blank",
@@ -6870,10 +7854,10 @@
 			"status": "skipped"
 		},
 		"notes": "No longer necessary in modern browsers.",
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noBlankTarget",
-				"url": "https://biomejs.dev/linter/rules/no-blank-target"
+				"name": "react/jsx-no-target-blank",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-no-target-blank.html"
 			}
 		]
 	},
@@ -6900,7 +7884,13 @@
 			"name": "undefinedElements",
 			"plugin": "jsx",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/jsx-no-undef",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-no-undef.html"
+			}
+		]
 	},
 	{
 		"deno": [
@@ -6920,9 +7910,27 @@
 			"plugin": "jsx",
 			"preset": "stylistic",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/no-unescaped-entities",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-unescaped-entities.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noUselessFragments",
+				"url": "https://biomejs.dev/linter/rules/no-useless-fragments"
+			}
+		],
+		"deno": [
+			{
+				"name": "jsx-no-useless-fragment",
+				"url": "https://docs.deno.com/lint/rules/jsx-no-useless-fragment"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/jsx-no-useless-fragment",
@@ -6933,22 +7941,16 @@
 				"url": "https://eslint-react.xyz/docs/rules/jsx-no-useless-fragment"
 			}
 		],
-		"deno": [
-			{
-				"name": "jsx-no-useless-fragment",
-				"url": "https://docs.deno.com/lint/rules/jsx-no-useless-fragment"
-			}
-		],
 		"flint": {
 			"name": "unnecessaryFragments",
 			"plugin": "jsx",
 			"preset": "stylistic",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noUselessFragments",
-				"url": "https://biomejs.dev/linter/rules/no-useless-fragments"
+				"name": "react/jsx-no-useless-fragment",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-no-useless-fragment.html"
 			}
 		]
 	},
@@ -6963,7 +7965,13 @@
 			"name": "unsafeLifecycleMethods",
 			"plugin": "jsx",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/no-unsafe",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-unsafe.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -7939,9 +8947,21 @@
 			"name": "anchorNatives",
 			"plugin": "next",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "nextjs/no-html-link-for-pages",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-html-link-for-pages.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noNextAsyncClientComponent",
+				"url": "https://biomejs.dev/linter/rules/no-next-async-client-component"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@next/next/no-async-client-component",
@@ -7953,10 +8973,10 @@
 			"plugin": "next",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noNextAsyncClientComponent",
-				"url": "https://biomejs.dev/linter/rules/no-next-async-client-component"
+				"name": "nextjs/no-async-client-component",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-async-client-component.html"
 			}
 		]
 	},
@@ -7971,7 +8991,13 @@
 			"name": "cssManualStylesheets",
 			"plugin": "next",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "nextjs/no-css-tags",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-css-tags.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -7984,7 +9010,13 @@
 			"name": "customFontsInPages",
 			"plugin": "next",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "nextjs/no-page-custom-font",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-page-custom-font.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -7997,9 +9029,21 @@
 			"name": "googleAnalyticsInlineScript",
 			"plugin": "next",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "nextjs/next-script-for-ga",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/next-script-for-ga.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useGoogleFontDisplay",
+				"url": "https://biomejs.dev/linter/rules/use-google-font-display"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@next/next/google-font-display",
@@ -8011,14 +9055,20 @@
 			"plugin": "next",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useGoogleFontDisplay",
-				"url": "https://biomejs.dev/linter/rules/use-google-font-display"
+				"name": "nextjs/google-font-display",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/google-font-display.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useGoogleFontPreconnect",
+				"url": "https://biomejs.dev/linter/rules/use-google-font-preconnect"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@next/next/google-font-preconnect",
@@ -8030,10 +9080,10 @@
 			"plugin": "next",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useGoogleFontPreconnect",
-				"url": "https://biomejs.dev/linter/rules/use-google-font-preconnect"
+				"name": "nextjs/google-font-preconnect",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/google-font-preconnect.html"
 			}
 		]
 	},
@@ -8048,9 +9098,21 @@
 			"name": "headDuplicates",
 			"plugin": "next",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "nextjs/no-duplicate-head",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-duplicate-head.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noHeadImportInDocument",
+				"url": "https://biomejs.dev/linter/rules/no-head-import-in-document"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@next/next/no-head-import-in-document",
@@ -8062,14 +9124,20 @@
 			"plugin": "next",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noHeadImportInDocument",
-				"url": "https://biomejs.dev/linter/rules/no-head-import-in-document"
+				"name": "nextjs/no-head-import-in-document",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-head-import-in-document.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noHeadElement",
+				"url": "https://biomejs.dev/linter/rules/no-head-element"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@next/next/no-head-element",
@@ -8081,14 +9149,20 @@
 			"plugin": "next",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noHeadElement",
-				"url": "https://biomejs.dev/linter/rules/no-head-element"
+				"name": "nextjs/no-head-element",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-head-element.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noImgElement",
+				"url": "https://biomejs.dev/linter/rules/no-img-element"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@next/next/no-img-element",
@@ -8100,14 +9174,20 @@
 			"plugin": "next",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noImgElement",
-				"url": "https://biomejs.dev/linter/rules/no-img-element"
+				"name": "nextjs/no-img-element",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-img-element.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useInlineScriptId",
+				"url": "https://biomejs.dev/linter/rules/use-inline-script-id"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@next/next/inline-script-id",
@@ -8119,10 +9199,10 @@
 			"plugin": "next",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useInlineScriptId",
-				"url": "https://biomejs.dev/linter/rules/use-inline-script-id"
+				"name": "nextjs/inline-script-id",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/inline-script-id.html"
 			}
 		]
 	},
@@ -8137,9 +9217,21 @@
 			"name": "moduleAssignments",
 			"plugin": "next",
 			"preset": "javascript"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "nextjs/no-assign-module-variable",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-assign-module-variable.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noDocumentImportInPage",
+				"url": "https://biomejs.dev/linter/rules/no-document-import-in-page"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@next/next/no-document-import-in-page",
@@ -8151,10 +9243,10 @@
 			"plugin": "next",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noDocumentImportInPage",
-				"url": "https://biomejs.dev/linter/rules/no-document-import-in-page"
+				"name": "nextjs/no-document-import-in-page",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-document-import-in-page.html"
 			}
 		]
 	},
@@ -8169,9 +9261,21 @@
 			"name": "nextScriptInHeads",
 			"plugin": "next",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "nextjs/no-script-component-in-head",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-script-component-in-head.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noBeforeInteractiveScriptOutsideDocument",
+				"url": "https://biomejs.dev/linter/rules/no-before-interactive-script-outside-document"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@next/next/no-before-interactive-script-outside-document",
@@ -8183,14 +9287,20 @@
 			"plugin": "next",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noBeforeInteractiveScriptOutsideDocument",
-				"url": "https://biomejs.dev/linter/rules/no-before-interactive-script-outside-document"
+				"name": "nextjs/no-before-interactive-script-outside-document",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-before-interactive-script-outside-document.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noUnwantedPolyfillio",
+				"url": "https://biomejs.dev/linter/rules/no-unwanted-polyfillio"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@next/next/no-unwanted-polyfillio",
@@ -8202,14 +9312,20 @@
 			"plugin": "next",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noUnwantedPolyfillio",
-				"url": "https://biomejs.dev/linter/rules/no-unwanted-polyfillio"
+				"name": "nextjs/no-unwanted-polyfillio",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-unwanted-polyfillio.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noSyncScripts",
+				"url": "https://biomejs.dev/linter/rules/no-sync-scripts"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@next/next/no-sync-scripts",
@@ -8221,10 +9337,10 @@
 			"plugin": "next",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noSyncScripts",
-				"url": "https://biomejs.dev/linter/rules/no-sync-scripts"
+				"name": "nextjs/no-sync-scripts",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-sync-scripts.html"
 			}
 		]
 	},
@@ -8239,7 +9355,13 @@
 			"name": "styledJsxInDocuments",
 			"plugin": "next",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "nextjs/no-styled-jsx-in-document",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-styled-jsx-in-document.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -8252,7 +9374,13 @@
 			"name": "titleInDocumentHeads",
 			"plugin": "next",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "nextjs/no-title-in-document-head",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-title-in-document-head.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -8265,7 +9393,13 @@
 			"name": "typos",
 			"plugin": "next",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "nextjs/no-typos",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/nextjs/no-typos.html"
+			}
+		]
 	},
 	{
 		"deno": [
@@ -8365,7 +9499,13 @@
 			"name": "callbackErrorHandling",
 			"plugin": "node",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "node/handle-callback-err",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/node/handle-callback-err.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -8391,7 +9531,13 @@
 			"name": "callbackReturns",
 			"plugin": "node",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "node/callback-return",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/node/callback-return.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -8542,7 +9688,13 @@
 			"preset": "stylistic",
 			"strictness": "strict",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-import-meta-properties",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-import-meta-properties.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -8846,9 +9998,21 @@
 			"name": "pathConcatenations",
 			"plugin": "node",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "node/no-path-concat",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/node/no-path-concat.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noProcessEnv",
+				"url": "https://biomejs.dev/linter/rules/no-process-env"
+			}
+		],
 		"eslint": [
 			{
 				"name": "n/no-process-env",
@@ -8860,10 +10024,10 @@
 			"plugin": "node",
 			"status": "skipped"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noProcessEnv",
-				"url": "https://biomejs.dev/linter/rules/no-process-env"
+				"name": "node/no-process-env",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/node/no-process-env.html"
 			}
 		]
 	},
@@ -9037,7 +10201,13 @@
 			"plugin": "node",
 			"status": "skipped"
 		},
-		"notes": "CJS-specific."
+		"notes": "CJS-specific.",
+		"oxlint": [
+			{
+				"name": "node/global-require",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/node/global-require.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -10538,6 +11708,58 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "jsxArrayPropValues",
+			"plugin": "performance",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "react-perf/jsx-no-new-array-as-prop",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react_perf/jsx-no-new-array-as-prop.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "jsxElementPropValues",
+			"plugin": "performance",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "react-perf/jsx-no-jsx-as-prop",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react_perf/jsx-no-jsx-as-prop.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "jsxFunctionPropValues",
+			"plugin": "performance",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "react-perf/jsx-no-new-function-as-prop",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react_perf/jsx-no-new-function-as-prop.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "jsxObjectPropValues",
+			"plugin": "performance",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "react-perf/jsx-no-new-object-as-prop",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react_perf/jsx-no-new-object-as-prop.html"
+			}
+		]
+	},
+	{
 		"biome": [
 			{
 				"name": "noAwaitInLoops",
@@ -10570,6 +11792,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noLoopFunc",
+				"url": "https://biomejs.dev/linter/rules/no-loop-func"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-loop-func",
@@ -10586,10 +11814,10 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noLoopFunc",
-				"url": "https://biomejs.dev/linter/rules/no-loop-func"
+				"name": "eslint/no-loop-func",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-loop-func.html"
 			}
 		]
 	},
@@ -10830,6 +12058,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "noArrayIndexKey",
+				"url": "https://biomejs.dev/linter/rules/no-array-index-key"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/no-array-index-key",
@@ -10845,10 +12079,10 @@
 			"plugin": "react",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noArrayIndexKey",
-				"url": "https://biomejs.dev/linter/rules/no-array-index-key"
+				"name": "react/no-array-index-key",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-array-index-key.html"
 			}
 		]
 	},
@@ -10916,6 +12150,20 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "childrenMethods",
+			"plugin": "react",
+			"status": "skipped"
+		},
+		"notes": "Split into more granular rules.",
+		"oxlint": [
+			{
+				"name": "react/no-react-children",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-react-children.html"
+			}
+		]
+	},
+	{
 		"eslint": [
 			{
 				"name": "@eslint-react/no-children-only",
@@ -10951,7 +12199,13 @@
 			"plugin": "react",
 			"status": "skipped"
 		},
-		"notes": "create-react-class is long-outdated."
+		"notes": "create-react-class is long-outdated.",
+		"oxlint": [
+			{
+				"name": "react/prefer-es6-class",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/prefer-es6-class.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -10965,7 +12219,13 @@
 			"plugin": "react",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/prefer-function-component",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/prefer-function-component.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -10993,7 +12253,13 @@
 			"plugin": "react",
 			"preset": "stylistic",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/state-in-constructor",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/state-in-constructor.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -11005,7 +12271,13 @@
 		"flint": {
 			"name": "cloneElementCalls",
 			"plugin": "react"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/no-clone-element",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-clone-element.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -11045,7 +12317,13 @@
 			"plugin": "react",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/no-did-mount-set-state",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-did-mount-set-state.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -11059,7 +12337,13 @@
 			"plugin": "react",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/no-did-update-set-state",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-did-update-set-state.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -11077,7 +12361,13 @@
 			"plugin": "react",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/display-name",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/display-name.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -11091,7 +12381,13 @@
 			"plugin": "react",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/only-export-components",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/only-export-components.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -11123,7 +12419,13 @@
 			"name": "componentNesting",
 			"plugin": "react",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/no-unstable-nested-components",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-unstable-nested-components.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -11165,7 +12467,13 @@
 			"plugin": "react",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "react/no-multi-comp",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-multi-comp.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -11221,7 +12529,13 @@
 			"plugin": "react",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/no-will-update-set-state",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-will-update-set-state.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -11275,7 +12589,13 @@
 			"plugin": "react",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/jsx-no-constructed-context-values",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-no-constructed-context-values.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -11344,6 +12664,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "noDangerouslySetInnerHtmlWithChildren",
+				"url": "https://biomejs.dev/linter/rules/no-dangerously-set-inner-html-with-children"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/no-danger-with-children",
@@ -11355,14 +12681,20 @@
 			"plugin": "react",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noDangerouslySetInnerHtmlWithChildren",
-				"url": "https://biomejs.dev/linter/rules/no-dangerously-set-inner-html-with-children"
+				"name": "react/no-danger-with-children",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-danger-with-children.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noDangerouslySetInnerHtml",
+				"url": "https://biomejs.dev/linter/rules/no-dangerously-set-inner-html"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/no-danger",
@@ -11375,10 +12707,10 @@
 			"preset": "logical",
 			"strictness": "strict"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noDangerouslySetInnerHtml",
-				"url": "https://biomejs.dev/linter/rules/no-dangerously-set-inner-html"
+				"name": "react/no-danger",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-danger.html"
 			}
 		]
 	},
@@ -11499,6 +12831,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "useExhaustiveDependencies",
+				"url": "https://biomejs.dev/linter/rules/use-exhaustive-dependencies"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react-hooks/exhaustive-deps",
@@ -11514,10 +12852,10 @@
 			"plugin": "react",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useExhaustiveDependencies",
-				"url": "https://biomejs.dev/linter/rules/use-exhaustive-dependencies"
+				"name": "react/exhaustive-deps",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/exhaustive-deps.html"
 			}
 		]
 	},
@@ -11551,7 +12889,13 @@
 			"plugin": "react",
 			"status": "skipped"
 		},
-		"notes": "Superseded by deprecated."
+		"notes": "Superseded by deprecated.",
+		"oxlint": [
+			{
+				"name": "react/no-find-dom-node",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-find-dom-node.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -11565,7 +12909,13 @@
 			"plugin": "react",
 			"status": "skipped"
 		},
-		"notes": "`React.forwardRef` is no longer necessary as of React 19."
+		"notes": "`React.forwardRef` is no longer necessary as of React 19.",
+		"oxlint": [
+			{
+				"name": "react/forward-ref-uses-ref",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/forward-ref-uses-ref.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -11624,7 +12974,13 @@
 			"name": "functionComponentThisReferences",
 			"plugin": "react",
 			"preset": "javascript"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/no-this-in-sfc",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-this-in-sfc.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -11762,9 +13118,21 @@
 			"plugin": "react",
 			"status": "skipped"
 		},
-		"notes": "`isMounted` is no longer present in modern React."
+		"notes": "`isMounted` is no longer present in modern React.",
+		"oxlint": [
+			{
+				"name": "react/no-is-mounted",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-is-mounted.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useJsxKeyInIterable",
+				"url": "https://biomejs.dev/linter/rules/use-jsx-key-in-iterable"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/jsx-key",
@@ -11777,10 +13145,10 @@
 			"preset": "logical",
 			"strictness": "strict"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useJsxKeyInIterable",
-				"url": "https://biomejs.dev/linter/rules/use-jsx-key-in-iterable"
+				"name": "react/jsx-key",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-key.html"
 			}
 		]
 	},
@@ -11893,6 +13261,12 @@
 		"notes": "Overly opinionated."
 	},
 	{
+		"biome": [
+			{
+				"name": "noUnknownAttribute",
+				"url": "https://biomejs.dev/linter/rules/no-unknown-attribute"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/no-unknown-property",
@@ -11908,10 +13282,10 @@
 			"plugin": "react",
 			"preset": "javascript"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noUnknownAttribute",
-				"url": "https://biomejs.dev/linter/rules/no-unknown-attribute"
+				"name": "react/no-unknown-property",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-unknown-property.html"
 			}
 		]
 	},
@@ -12041,7 +13415,13 @@
 			"plugin": "react",
 			"status": "skipped"
 		},
-		"notes": "Generally handled by parsers."
+		"notes": "Generally handled by parsers.",
+		"oxlint": [
+			{
+				"name": "react/react-in-jsx-scope",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/react-in-jsx-scope.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -12075,6 +13455,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "noReactStringRefs",
+				"url": "https://biomejs.dev/linter/rules/no-react-string-refs"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/no-string-refs",
@@ -12086,14 +13472,20 @@
 			"plugin": "react",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noReactStringRefs",
-				"url": "https://biomejs.dev/linter/rules/no-react-string-refs"
+				"name": "react/no-string-refs",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-string-refs.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noRenderReturnValue",
+				"url": "https://biomejs.dev/linter/rules/no-render-return-value"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/no-render-return-value",
@@ -12110,10 +13502,10 @@
 			"status": "skipped"
 		},
 		"notes": "`render` is no longer recommended in modern React.",
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noRenderReturnValue",
-				"url": "https://biomejs.dev/linter/rules/no-render-return-value"
+				"name": "react/no-render-return-value",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-render-return-value.html"
 			}
 		]
 	},
@@ -12158,7 +13550,13 @@
 		"flint": {
 			"name": "restrictedComponentProps",
 			"plugin": "react"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/forbid-component-props",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/forbid-component-props.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -12170,9 +13568,21 @@
 		"flint": {
 			"name": "restrictedDomProps",
 			"plugin": "react"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/forbid-dom-props",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/forbid-dom-props.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noRestrictedElements",
+				"url": "https://biomejs.dev/linter/rules/no-restricted-elements"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react/forbid-elements",
@@ -12183,10 +13593,10 @@
 			"name": "restrictedElements",
 			"plugin": "react"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noRestrictedElements",
-				"url": "https://biomejs.dev/linter/rules/no-restricted-elements"
+				"name": "react/forbid-elements",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/forbid-elements.html"
 			}
 		]
 	},
@@ -12215,6 +13625,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "useHookAtTopLevel",
+				"url": "https://biomejs.dev/linter/rules/use-hook-at-top-level"
+			}
+		],
 		"eslint": [
 			{
 				"name": "react-hooks/rules-of-hooks",
@@ -12230,10 +13646,10 @@
 			"plugin": "react",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useHookAtTopLevel",
-				"url": "https://biomejs.dev/linter/rules/use-hook-at-top-level"
+				"name": "react/rules-of-hooks",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/rules-of-hooks.html"
 			}
 		]
 	},
@@ -12249,7 +13665,13 @@
 			"plugin": "react",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "react/no-set-state",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-set-state.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -12322,7 +13744,13 @@
 			"name": "stateMutations",
 			"plugin": "react",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/no-direct-mutation-state",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/no-direct-mutation-state.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -12353,7 +13781,13 @@
 			"plugin": "react",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/style-prop-object",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/style-prop-object.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -12608,7 +14042,13 @@
 			"name": "useStateUsage",
 			"plugin": "react",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/hook-use-state",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/hook-use-state.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -14140,7 +15580,13 @@
 			"name": "accessorPairs",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/accessor-pairs",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/accessor-pairs.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -14193,7 +15639,13 @@
 		"flint": {
 			"name": "amdImports",
 			"plugin": "ts"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "import/no-amd",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-amd.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -14447,7 +15899,13 @@
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/no-unnecessary-array-splice-count",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-unnecessary-array-splice-count.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -14544,6 +16002,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useFind",
+				"url": "https://biomejs.dev/linter/rules/use-find"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/prefer-find",
@@ -14556,10 +16020,10 @@
 			"preset": "stylistic",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useFind",
-				"url": "https://biomejs.dev/linter/rules/use-find"
+				"name": "typescript/prefer-find",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-find.html"
 			}
 		]
 	},
@@ -14665,8 +16129,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "@typescript-eslint/prefer-includes",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/@typescript-eslint/prefer-includes.html"
+				"name": "typescript/prefer-includes",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-includes.html"
 			}
 		]
 	},
@@ -14683,7 +16147,13 @@
 			"preset": "stylistic",
 			"status": "implemented",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-includes",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-includes.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -14843,7 +16313,13 @@
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/no-array-reverse",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-reverse.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -14857,7 +16333,13 @@
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/no-array-sort",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-sort.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -15073,6 +16555,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useConsistentArrowReturn",
+				"url": "https://biomejs.dev/linter/rules/use-consistent-arrow-return"
+			}
+		],
 		"eslint": [
 			{
 				"name": "arrow-body-style",
@@ -15088,12 +16576,6 @@
 			{
 				"name": "eslint/arrow-body-style",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/arrow-body-style.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useConsistentArrowReturn",
-				"url": "https://biomejs.dev/linter/rules/use-consistent-arrow-return"
 			}
 		]
 	},
@@ -15114,7 +16596,13 @@
 			"name": "arrowCallbacks",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/prefer-arrow-callback",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-arrow-callback.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -15173,7 +16661,13 @@
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/logical-assignment-operators",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/logical-assignment-operators.html"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -15185,6 +16679,20 @@
 			{
 				"name": "oxc/no-async-await",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/no-async-await.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "asyncEndpointHandlers",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"notes": "Targeted to legacy Express async endpoint handlers.",
+		"oxlint": [
+			{
+				"name": "oxc/no-async-endpoint-handlers",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/no-async-endpoint-handlers.html"
 			}
 		]
 	},
@@ -15299,7 +16807,13 @@
 			"preset": "stylistic",
 			"status": "implemented",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-at",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-at.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -15484,6 +16998,20 @@
 			"plugin": "ts",
 			"status": "skipped"
 		}
+	},
+	{
+		"flint": {
+			"name": "branchCodeDuplicates",
+			"plugin": "ts",
+			"preset": "stylistic",
+			"strictness": "strict"
+		},
+		"oxlint": [
+			{
+				"name": "oxc/branches-sharing-code",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/branches-sharing-code.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -15688,6 +17216,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useErrorCause",
+				"url": "https://biomejs.dev/linter/rules/use-error-cause"
+			}
+		],
 		"eslint": [
 			{
 				"name": "preserve-caught-error",
@@ -15700,10 +17234,10 @@
 			"preset": "logical",
 			"strictness": "strict"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useErrorCause",
-				"url": "https://biomejs.dev/linter/rules/use-error-cause"
+				"name": "eslint/preserve-caught-error",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/preserve-caught-error.html"
 			}
 		]
 	},
@@ -15729,6 +17263,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noMultiAssign",
+				"url": "https://biomejs.dev/linter/rules/no-multi-assign"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-multi-assign",
@@ -15745,12 +17285,6 @@
 			{
 				"name": "eslint/no-multi-assign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-multi-assign.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noMultiAssign",
-				"url": "https://biomejs.dev/linter/rules/no-multi-assign"
 			}
 		]
 	},
@@ -15843,7 +17377,13 @@
 			"plugin": "ts",
 			"preset": "javascript",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-class-fields",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-class-fields.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -15857,7 +17397,13 @@
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/class-literal-property-style",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/class-literal-property-style.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -15896,6 +17442,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useThisInClassMethods",
+				"url": "https://biomejs.dev/linter/rules/use-this-in-class-methods"
+			}
+		],
 		"eslint": [
 			{
 				"name": "class-methods-use-this",
@@ -15913,10 +17465,10 @@
 			"status": "implemented",
 			"strictness": "strict"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useThisInClassMethods",
-				"url": "https://biomejs.dev/linter/rules/use-this-in-class-methods"
+				"name": "eslint/class-methods-use-this",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/class-methods-use-this.html"
 			}
 		]
 	},
@@ -15947,7 +17499,13 @@
 			"name": "commentCapitalization",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/capitalized-comments",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/capitalized-comments.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -15960,7 +17518,13 @@
 			"name": "commentWarnings",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-warning-comments",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-warning-comments.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -15972,7 +17536,13 @@
 		"flint": {
 			"name": "commonjsModules",
 			"plugin": "ts"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "import/no-commonjs",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-commonjs.html"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -15980,7 +17550,13 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
-		"notes": "Handled by TypeScript / otherwise is stylistic."
+		"notes": "Handled by TypeScript / otherwise is stylistic.",
+		"oxlint": [
+			{
+				"name": "oxc/bad-comparison-sequence",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/bad-comparison-sequence.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -16040,6 +17616,10 @@
 			{
 				"name": "eslint/no-negated-condition",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-negated-condition.html"
+			},
+			{
+				"name": "unicorn/no-negated-condition",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-negated-condition.html"
 			}
 		]
 	},
@@ -16115,7 +17695,13 @@
 			"name": "consistentReturns",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/consistent-return",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/consistent-return.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -16249,7 +17835,13 @@
 			"name": "constEnums",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "oxc/no-const-enum",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/no-const-enum.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -16321,7 +17913,13 @@
 			"plugin": "ts",
 			"preset": "javascript",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/constructor-super",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/constructor-super.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -16346,9 +17944,21 @@
 			"name": "constVariables",
 			"plugin": "ts",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/prefer-const",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-const.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noContinue",
+				"url": "https://biomejs.dev/linter/rules/no-continue"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-continue",
@@ -16365,12 +17975,6 @@
 				"name": "eslint/no-continue",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-continue.html"
 			}
-		],
-		"biome": [
-			{
-				"name": "noContinue",
-				"url": "https://biomejs.dev/linter/rules/no-continue"
-			}
 		]
 	},
 	{
@@ -16386,7 +17990,13 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"notes": "unicorn/consistent-date-clone"
+		"notes": "unicorn/consistent-date-clone",
+		"oxlint": [
+			{
+				"name": "unicorn/consistent-date-clone",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/consistent-date-clone.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -16526,6 +18136,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "noDefaultExport",
+				"url": "https://biomejs.dev/linter/rules/no-default-export"
+			}
+		],
 		"eslint": [
 			{
 				"name": "import/no-default-export",
@@ -16536,10 +18152,10 @@
 			"name": "defaultExports",
 			"plugin": "ts"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noDefaultExport",
-				"url": "https://biomejs.dev/linter/rules/no-default-export"
+				"name": "import/no-default-export",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-default-export.html"
 			}
 		]
 	},
@@ -16617,9 +18233,21 @@
 			"name": "defaultParameterReassignments",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-default-parameters",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-default-parameters.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noDeprecatedImports",
+				"url": "https://biomejs.dev/linter/rules/no-deprecated-imports"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/no-deprecated",
@@ -16632,10 +18260,10 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noDeprecatedImports",
-				"url": "https://biomejs.dev/linter/rules/no-deprecated-imports"
+				"name": "typescript/no-deprecated",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-deprecated.html"
 			}
 		]
 	},
@@ -16658,6 +18286,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useDestructuring",
+				"url": "https://biomejs.dev/linter/rules/use-destructuring"
+			}
+		],
 		"eslint": [
 			{
 				"name": "prefer-destructuring",
@@ -16677,12 +18311,6 @@
 			{
 				"name": "eslint/prefer-destructuring",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-destructuring.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useDestructuring",
-				"url": "https://biomejs.dev/linter/rules/use-destructuring"
 			}
 		]
 	},
@@ -16955,7 +18583,13 @@
 		"flint": {
 			"name": "dynamicRequires",
 			"plugin": "ts"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "import/no-dynamic-require",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-dynamic-require.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -17054,7 +18688,13 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
-		"notes": "Formatting rule."
+		"notes": "Formatting rule.",
+		"oxlint": [
+			{
+				"name": "unicorn/empty-brace-spaces",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/empty-brace-spaces.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -17198,7 +18838,13 @@
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/require-module-attributes",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/require-module-attributes.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -17303,7 +18949,13 @@
 			"name": "endingTernaryIfElses",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-ternary",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-ternary.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -17546,7 +19198,13 @@
 			"preset": "logical",
 			"status": "implemented",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/custom-error-definition",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/custom-error-definition.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -17560,7 +19218,13 @@
 			"plugin": "ts",
 			"preset": "logical",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/no-useless-error-capture-stack-trace",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-useless-error-capture-stack-trace.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -17881,8 +19545,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "import/exports",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/exports.html"
+				"name": "import/export",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/export.html"
 			}
 		]
 	},
@@ -18017,8 +19681,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "typescript/noFloatingPromises",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/noFloatingPromises.html"
+				"name": "typescript/no-floating-promises",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-floating-promises.html"
 			}
 		]
 	},
@@ -18112,6 +19776,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useSpread",
+				"url": "https://biomejs.dev/linter/rules/use-spread"
+			}
+		],
 		"eslint": [
 			{
 				"name": "prefer-spread",
@@ -18128,12 +19798,6 @@
 			{
 				"name": "eslint/prefer-spread",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-spread.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useSpread",
-				"url": "https://biomejs.dev/linter/rules/use-spread"
 			}
 		]
 	},
@@ -18239,7 +19903,13 @@
 			"name": "functionNameMatches",
 			"plugin": "ts",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/func-name-matching",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/func-name-matching.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -18261,6 +19931,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noImpliedEval",
+				"url": "https://biomejs.dev/linter/rules/no-implied-eval"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-new-func",
@@ -18277,12 +19953,6 @@
 			{
 				"name": "eslint/no-new-func",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-new-func.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noImpliedEval",
-				"url": "https://biomejs.dev/linter/rules/no-implied-eval"
 			}
 		]
 	},
@@ -18555,7 +20225,13 @@
 			"name": "identifierMatches",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/id-match",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/id-match.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -18587,7 +20263,13 @@
 			"name": "immediateMutations",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/no-immediate-mutation",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-immediate-mutation.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -18606,9 +20288,21 @@
 			"name": "implicitCoercions",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-implicit-coercion",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implicit-coercion.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noImpliedEval",
+				"url": "https://biomejs.dev/linter/rules/no-implied-eval"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-implied-eval",
@@ -18627,14 +20321,12 @@
 		},
 		"oxlint": [
 			{
+				"name": "eslint/no-implied-eval",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implied-eval.html"
+			},
+			{
 				"name": "typescript/no-implied-eval",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-implied-eval.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noImpliedEval",
-				"url": "https://biomejs.dev/linter/rules/no-implied-eval"
 			}
 		]
 	},
@@ -18695,7 +20387,13 @@
 			"name": "importAssignments",
 			"plugin": "ts",
 			"preset": "javascript"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-import-assign",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-import-assign.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -18774,8 +20472,8 @@
 		"notes": "Handled by TypeScript.",
 		"oxlint": [
 			{
-				"name": "eslint/default",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/default.html"
+				"name": "import/default",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/default.html"
 			}
 		]
 	},
@@ -18799,6 +20497,10 @@
 			{
 				"name": "import/no-duplicates",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-duplicates.html"
+			},
+			{
+				"name": "eslint/no-duplicate-imports",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-duplicate-imports.html"
 			}
 		]
 	},
@@ -18945,8 +20647,8 @@
 		"notes": "Handled by TypeScript.",
 		"oxlint": [
 			{
-				"name": "eslint/namespace",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/namespace.html"
+				"name": "import/namespace",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/namespace.html"
 			}
 		]
 	},
@@ -19024,7 +20726,13 @@
 			"name": "importsSorting",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/sort-imports",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/sort-imports.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -19038,7 +20746,13 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
-		"notes": "Formatting rule."
+		"notes": "Formatting rule.",
+		"oxlint": [
+			{
+				"name": "import/newline-after-import",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/newline-after-import.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -19071,13 +20785,7 @@
 			"name": "importUnnecessaryPathSegments",
 			"plugin": "ts",
 			"preset": "stylistic"
-		},
-		"oxlint": [
-			{
-				"name": "import/no-useless-path-segments",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-useless-path-segments.html"
-			}
-		]
+		}
 	},
 	{
 		"eslint": [
@@ -19110,7 +20818,13 @@
 			"name": "inlineComments",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-inline-comments",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-inline-comments.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -19247,7 +20961,13 @@
 			"plugin": "ts",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/no-invalid-void-type",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-invalid-void-type.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -19337,7 +21057,13 @@
 			"name": "iteratorMethodFunctionReferences",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/no-array-callback-reference",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-callback-reference.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -19353,8 +21079,8 @@
 		},
 		"oxlint": [
 			{
-				"name": "jsdoc/check-ass",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/check-ass.html"
+				"name": "jsdoc/check-access",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/check-access.html"
 			}
 		]
 	},
@@ -19828,7 +21554,13 @@
 			"name": "jsdocParameterNamePresence",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "jsdoc/require-param-name",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-param-name.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -19930,7 +21662,13 @@
 			"name": "jsdocPropertyNamePresence",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "jsdoc/require-property-name",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-property-name.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -20188,7 +21926,13 @@
 			"name": "jsdocThrowDescriptions",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "jsdoc/require-throws-description",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-throws-description.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -20214,7 +21958,13 @@
 			"name": "jsdocThrowTypes",
 			"plugin": "ts",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "jsdoc/require-throws-type",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-throws-type.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -20371,7 +22121,13 @@
 			"name": "jsdocYieldDescriptions",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "jsdoc/require-yields-description",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-yields-description.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -20403,7 +22159,13 @@
 			"name": "jsdocYieldTypes",
 			"plugin": "ts",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "jsdoc/require-yields-type",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-yields-type.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -20481,7 +22243,13 @@
 			"preset": "stylistic",
 			"status": "implemented"
 		},
-		"notes": "Will apply to all literals, not just bigint"
+		"notes": "Will apply to all literals, not just bigint",
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-bigint-literals",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-bigint-literals.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -20494,7 +22262,13 @@
 			"name": "loopConditionConstants",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-unmodified-loop-condition",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unmodified-loop-condition.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -20605,6 +22379,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noExcessiveClassesPerFile",
+				"url": "https://biomejs.dev/linter/rules/no-excessive-classes-per-file"
+			}
+		],
 		"eslint": [
 			{
 				"name": "max-classes-per-file",
@@ -20621,15 +22401,15 @@
 				"name": "eslint/max-classes-per-file",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-classes-per-file.html"
 			}
-		],
-		"biome": [
-			{
-				"name": "noExcessiveClassesPerFile",
-				"url": "https://biomejs.dev/linter/rules/no-excessive-classes-per-file"
-			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noExcessiveCognitiveComplexity",
+				"url": "https://biomejs.dev/linter/rules/no-excessive-cognitive-complexity"
+			}
+		],
 		"eslint": [
 			{
 				"name": "complexity",
@@ -20641,10 +22421,10 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noExcessiveCognitiveComplexity",
-				"url": "https://biomejs.dev/linter/rules/no-excessive-cognitive-complexity"
+				"name": "eslint/complexity",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/complexity.html"
 			}
 		]
 	},
@@ -20687,6 +22467,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noExcessiveLinesPerFile",
+				"url": "https://biomejs.dev/linter/rules/no-excessive-lines-per-file"
+			}
+		],
 		"eslint": [
 			{
 				"name": "max-lines",
@@ -20702,12 +22488,6 @@
 			{
 				"name": "eslint/max-lines",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-lines.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noExcessiveLinesPerFile",
-				"url": "https://biomejs.dev/linter/rules/no-excessive-lines-per-file"
 			}
 		]
 	},
@@ -20737,6 +22517,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noExcessiveNestedCallbacks",
+				"url": "https://biomejs.dev/linter/rules/no-excessive-nested-callbacks"
+			}
+		],
 		"eslint": [
 			{
 				"name": "max-nested-callbacks",
@@ -20752,12 +22538,6 @@
 			{
 				"name": "eslint/max-nested-callbacks",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-nested-callbacks.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noExcessiveNestedCallbacks",
-				"url": "https://biomejs.dev/linter/rules/no-excessive-nested-callbacks"
 			}
 		]
 	},
@@ -20802,7 +22582,13 @@
 			"name": "maximumStatements",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/max-statements",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-statements.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -20841,7 +22627,13 @@
 			"name": "memberAccessibility",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/explicit-member-accessibility",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/explicit-member-accessibility.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -20858,6 +22650,12 @@
 		"notes": "Superseded by sorting plugin rules."
 	},
 	{
+		"biome": [
+			{
+				"name": "useConsistentMethodSignatures",
+				"url": "https://biomejs.dev/linter/rules/use-consistent-method-signatures"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/method-signature-style",
@@ -20869,10 +22667,10 @@
 			"plugin": "ts",
 			"preset": "stylistic"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useConsistentMethodSignatures",
-				"url": "https://biomejs.dev/linter/rules/use-consistent-method-signatures"
+				"name": "typescript/method-signature-style",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/method-signature-style.html"
 			}
 		]
 	},
@@ -21020,7 +22818,13 @@
 			"name": "moduleFormats",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-module",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-module.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -21033,7 +22837,13 @@
 			"name": "moduleImportStyles",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/import-style",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/import-style.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -21060,7 +22870,13 @@
 			"plugin": "ts",
 			"preset": "logical",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/require-module-specifiers",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/require-module-specifiers.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -21072,7 +22888,13 @@
 		"flint": {
 			"name": "moduleSyntaxDeclarations",
 			"plugin": "ts"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "import/unambiguous",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/unambiguous.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -21095,6 +22917,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noMultiStr",
+				"url": "https://biomejs.dev/linter/rules/no-multi-str"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-multi-str",
@@ -21110,12 +22938,6 @@
 			{
 				"name": "eslint/no-multi-str",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-multi-str.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noMultiStr",
-				"url": "https://biomejs.dev/linter/rules/no-multi-str"
 			}
 		]
 	},
@@ -21203,7 +23025,13 @@
 		"flint": {
 			"name": "namedExports",
 			"plugin": "ts"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "import/no-named-export",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-named-export.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -21374,7 +23202,13 @@
 			"preset": "stylistic",
 			"status": "implemented",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-negative-index",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-negative-index.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -21479,6 +23313,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noFloatingClasses",
+				"url": "https://biomejs.dev/linter/rules/no-floating-classes"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-new",
@@ -21500,12 +23340,6 @@
 			{
 				"name": "oxc/missing-throw",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/missing-throw.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noFloatingClasses",
-				"url": "https://biomejs.dev/linter/rules/no-floating-classes"
 			}
 		]
 	},
@@ -21542,6 +23376,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noNodejsModules",
+				"url": "https://biomejs.dev/linter/rules/no-nodejs-modules"
+			}
+		],
 		"eslint": [
 			{
 				"name": "import/no-nodejs-modules",
@@ -21552,10 +23392,10 @@
 			"name": "nodeBuiltinImports",
 			"plugin": "ts"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noNodejsModules",
-				"url": "https://biomejs.dev/linter/rules/no-nodejs-modules"
+				"name": "import/no-nodejs-modules",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-nodejs-modules.html"
 			}
 		]
 	},
@@ -21712,6 +23552,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noEqualsToNull",
+				"url": "https://biomejs.dev/linter/rules/no-equals-to-null"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-eq-null",
@@ -21725,18 +23571,18 @@
 		},
 		"oxlint": [
 			{
-				"name": "eslint/no-eql-null",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-eql-null.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noEqualsToNull",
-				"url": "https://biomejs.dev/linter/rules/no-equals-to-null"
+				"name": "eslint/no-eq-null",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-eq-null.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useNullishCoalescing",
+				"url": "https://biomejs.dev/linter/rules/use-nullish-coalescing"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/prefer-nullish-coalescing",
@@ -21749,10 +23595,10 @@
 			"preset": "stylistic",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useNullishCoalescing",
-				"url": "https://biomejs.dev/linter/rules/use-nullish-coalescing"
+				"name": "typescript/prefer-nullish-coalescing",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-nullish-coalescing.html"
 			}
 		]
 	},
@@ -22128,7 +23974,13 @@
 			"plugin": "ts",
 			"preset": "javascript",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-dupe-keys",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-dupe-keys.html"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -22144,6 +23996,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noProto",
+				"url": "https://biomejs.dev/linter/rules/no-proto"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-proto",
@@ -22160,12 +24018,6 @@
 			{
 				"name": "eslint/no-proto",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-proto.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noProto",
-				"url": "https://biomejs.dev/linter/rules/no-proto"
 			}
 		]
 	},
@@ -22219,7 +24071,13 @@
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/object-shorthand",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/object-shorthand.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -22393,7 +24251,13 @@
 			"name": "optionalChainOperators",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/prefer-optional-chain",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-optional-chain.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -22448,7 +24312,13 @@
 			"name": "parameterProperties",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/parameter-properties",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/parameter-properties.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -22487,7 +24357,13 @@
 			"plugin": "ts",
 			"preset": "logical",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-param-reassign",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-param-reassign.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -22499,7 +24375,13 @@
 		"flint": {
 			"name": "parentRelativeImports",
 			"plugin": "ts"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "import/no-relative-parent-imports",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-relative-parent-imports.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -22553,6 +24435,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noIncrementDecrement",
+				"url": "https://biomejs.dev/linter/rules/no-increment-decrement"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-plusplus",
@@ -22568,12 +24456,6 @@
 			{
 				"name": "eslint/no-plusplus",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-plusplus.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noIncrementDecrement",
-				"url": "https://biomejs.dev/linter/rules/no-increment-decrement"
 			}
 		]
 	},
@@ -22753,7 +24635,13 @@
 			"preset": "logical",
 			"status": "skipped"
 		},
-		"notes": "Superseded by awaitThenable."
+		"notes": "Superseded by awaitThenable.",
+		"oxlint": [
+			{
+				"name": "eslint/no-promise-executor-return",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-promise-executor-return.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -22824,7 +24712,13 @@
 		"flint": {
 			"name": "promiseMultipleResolutions",
 			"plugin": "ts"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "promise/no-multiple-resolved",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/no-multiple-resolved.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -22980,7 +24874,13 @@
 		"flint": {
 			"name": "promiseReturnWrappers",
 			"plugin": "ts"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "promise/no-return-wrap",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/promise/no-return-wrap.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -23028,7 +24928,13 @@
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/dot-notation",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/dot-notation.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -23068,7 +24974,13 @@
 			"status": "skipped",
 			"strictness": "strict"
 		},
-		"notes": "Better suited to a functional/immutable-focused plugin."
+		"notes": "Better suited to a functional/immutable-focused plugin.",
+		"oxlint": [
+			{
+				"name": "typescript/prefer-readonly",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-readonly.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -23082,7 +24994,13 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
-		"notes": "Better suited to a functional/immutable-focused plugin."
+		"notes": "Better suited to a functional/immutable-focused plugin.",
+		"oxlint": [
+			{
+				"name": "typescript/prefer-readonly-parameter-types",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-readonly-parameter-types.html"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -23381,6 +25299,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "noDivRegex",
+				"url": "https://biomejs.dev/linter/rules/no-div-regex"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-div-regex",
@@ -23396,12 +25320,6 @@
 			{
 				"name": "eslint/no-div-regex",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-div-regex.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noDivRegex",
-				"url": "https://biomejs.dev/linter/rules/no-div-regex"
 			}
 		]
 	},
@@ -23581,6 +25499,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "useRegexpExec",
+				"url": "https://biomejs.dev/linter/rules/use-regexp-exec"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/prefer-regexp-exec",
@@ -23598,10 +25522,10 @@
 			"status": "implemented",
 			"strictness": "strict"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useRegexpExec",
-				"url": "https://biomejs.dev/linter/rules/use-regexp-exec"
+				"name": "typescript/prefer-regexp-exec",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-regexp-exec.html"
 			}
 		]
 	},
@@ -23736,7 +25660,13 @@
 			"plugin": "ts",
 			"preset": "logical",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/prefer-regex-literals",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-regex-literals.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -23832,7 +25762,13 @@
 			"plugin": "ts",
 			"preset": "logical",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-misleading-character-class",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-misleading-character-class.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -23850,6 +25786,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "useNamedCaptureGroup",
+				"url": "https://biomejs.dev/linter/rules/use-named-capture-group"
+			}
+		],
 		"eslint": [
 			{
 				"name": "prefer-named-capture-group",
@@ -23865,10 +25807,10 @@
 			"plugin": "ts",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useNamedCaptureGroup",
-				"url": "https://biomejs.dev/linter/rules/use-named-capture-group"
+				"name": "eslint/prefer-named-capture-group",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-named-capture-group.html"
 			}
 		]
 	},
@@ -24158,6 +26100,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "useUnicodeRegex",
+				"url": "https://biomejs.dev/linter/rules/use-unicode-regex"
+			}
+		],
 		"eslint": [
 			{
 				"name": "require-unicode-regexp",
@@ -24173,10 +26121,10 @@
 			"plugin": "ts",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useUnicodeRegex",
-				"url": "https://biomejs.dev/linter/rules/use-unicode-regex"
+				"name": "eslint/require-unicode-regexp",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/require-unicode-regexp.html"
 			}
 		]
 	},
@@ -24319,13 +26267,7 @@
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
-		},
-		"oxlint": [
-			{
-				"name": "eslint/no-useless-escape",
-				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-escape.html"
-			}
-		]
+		}
 	},
 	{
 		"eslint": [
@@ -24605,7 +26547,13 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
-		"notes": "Deprecated in favor of requireImports."
+		"notes": "Deprecated in favor of requireImports.",
+		"oxlint": [
+			{
+				"name": "typescript/no-var-requires",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-var-requires.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -24632,7 +26580,13 @@
 			"name": "responseStaticJsonMethods",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-response-static-json",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-response-static-json.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -24658,7 +26612,13 @@
 			"name": "restrictedExports",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-restricted-exports",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-restricted-exports.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -24761,7 +26721,13 @@
 		"flint": {
 			"name": "restrictedProperties",
 			"plugin": "ts"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-restricted-properties",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-restricted-properties.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -24795,7 +26761,13 @@
 		"flint": {
 			"name": "restrictedTypes",
 			"plugin": "ts"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/no-restricted-types",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-restricted-types.html"
+			}
+		]
 	},
 	{
 		"flint": {
@@ -24811,6 +26783,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noReturnAssign",
+				"url": "https://biomejs.dev/linter/rules/no-return-assign"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-return-assign",
@@ -24827,12 +26805,6 @@
 			{
 				"name": "eslint/no-return-assign",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-return-assign.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noReturnAssign",
-				"url": "https://biomejs.dev/linter/rules/no-return-assign"
 			}
 		]
 	},
@@ -24901,7 +26873,13 @@
 			"plugin": "ts",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/strict-void-return",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/strict-void-return.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -24953,7 +26931,13 @@
 			"plugin": "ts",
 			"preset": "javascript",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-sequences",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-sequences.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -25094,7 +27078,13 @@
 			"name": "shadows",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-shadow",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-shadow.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -25257,7 +27247,13 @@
 			"name": "spreadSyntaxes",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-spread",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-spread.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -25297,7 +27293,13 @@
 			"name": "strictBooleanExpressions",
 			"plugin": "ts",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/strict-boolean-expressions",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/strict-boolean-expressions.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -25451,6 +27453,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useStringStartsEndsWith",
+				"url": "https://biomejs.dev/linter/rules/use-string-starts-ends-with"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/prefer-string-starts-ends-with",
@@ -25465,14 +27473,12 @@
 		},
 		"oxlint": [
 			{
+				"name": "typescript/prefer-string-starts-ends-with",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-string-starts-ends-with.html"
+			},
+			{
 				"name": "unicorn/prefer-string-starts-ends-with",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-string-starts-ends-with.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useStringStartsEndsWith",
-				"url": "https://biomejs.dev/linter/rules/use-string-starts-ends-with"
 			}
 		]
 	},
@@ -25591,7 +27597,13 @@
 			"name": "switchCaseBreakPositions",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/switch-case-break-position",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/switch-case-break-position.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -25714,7 +27726,13 @@
 			"name": "templateLiteralEscapesConsistency",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/consistent-template-literal-escape",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/consistent-template-literal-escape.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -25750,6 +27768,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noTernary",
+				"url": "https://biomejs.dev/linter/rules/no-ternary"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-ternary",
@@ -25765,12 +27789,6 @@
 			{
 				"name": "eslint/no-ternary",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-ternary.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noTernary",
-				"url": "https://biomejs.dev/linter/rules/no-ternary"
 			}
 		]
 	},
@@ -25794,6 +27812,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noUselessThisAlias",
+				"url": "https://biomejs.dev/linter/rules/no-useless-this-alias"
+			}
+		],
 		"eslint": [
 			{
 				"name": "consistent-this",
@@ -25810,10 +27834,10 @@
 			"preset": "logical",
 			"status": "implemented"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noUselessThisAlias",
-				"url": "https://biomejs.dev/linter/rules/no-useless-this-alias"
+				"name": "typescript/no-this-alias",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-this-alias.html"
 			}
 		]
 	},
@@ -25828,7 +27852,13 @@
 			"name": "thisAssignments",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/no-this-assignment",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-this-assignment.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -25859,6 +27889,19 @@
 			{
 				"name": "eslint/no-this-before-super",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-this-before-super.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "thisInExportedFunctions",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "oxc/no-this-in-exported-function",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/no-this-in-exported-function.html"
 			}
 		]
 	},
@@ -25959,7 +28002,13 @@
 			"preset": "stylistic",
 			"status": "implemented",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-top-level-await",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-top-level-await.html"
+			}
+		]
 	},
 	{
 		"deno": [
@@ -26101,7 +28150,13 @@
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/consistent-type-assertions",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/consistent-type-assertions.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -26171,7 +28226,13 @@
 			"name": "typeExports",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/consistent-type-exports",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/consistent-type-exports.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -26406,7 +28467,13 @@
 			"name": "underscoreNames",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-underscore-dangle",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-underscore-dangle.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -26446,7 +28513,13 @@
 			"plugin": "ts",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/unified-signatures",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/unified-signatures.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -26576,7 +28649,13 @@
 			"name": "unnecessaryCollectionArguments",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/no-useless-collection-argument",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-useless-collection-argument.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -26635,7 +28714,13 @@
 			"name": "unnecessaryComputedKeys",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-useless-computed-key",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-computed-key.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -26680,7 +28765,13 @@
 			"name": "unnecessaryConditions",
 			"plugin": "ts",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/no-unnecessary-condition",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-condition.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -26746,7 +28837,13 @@
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-useless-escape",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-escape.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -26759,7 +28856,13 @@
 			"name": "unnecessaryIteratorArrays",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/no-useless-iterator-to-array",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-useless-iterator-to-array.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -26876,7 +28979,13 @@
 			"name": "unnecessaryQualifiers",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/no-unnecessary-qualifier",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-qualifier.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -26911,6 +29020,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noUselessReturn",
+				"url": "https://biomejs.dev/linter/rules/no-useless-return"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-useless-return",
@@ -26922,10 +29037,10 @@
 			"plugin": "ts",
 			"preset": "stylistic"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noUselessReturn",
-				"url": "https://biomejs.dev/linter/rules/no-useless-return"
+				"name": "eslint/no-useless-return",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-return.html"
 			}
 		]
 	},
@@ -26940,7 +29055,13 @@
 			"name": "unnecessarySpreads",
 			"plugin": "ts",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/no-useless-spread",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-useless-spread.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -27114,6 +29235,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noUselessTypeConversion",
+				"url": "https://biomejs.dev/linter/rules/no-useless-type-conversion"
+			}
+		],
 		"eslint": [
 			{
 				"name": "@typescript-eslint/no-unnecessary-type-conversion",
@@ -27125,10 +29252,10 @@
 			"plugin": "ts",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noUselessTypeConversion",
-				"url": "https://biomejs.dev/linter/rules/no-useless-type-conversion"
+				"name": "typescript/no-unnecessary-type-conversion",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-type-conversion.html"
 			}
 		]
 	},
@@ -27143,7 +29270,13 @@
 			"name": "unnecessaryTypeParameters",
 			"plugin": "ts",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/no-unnecessary-type-parameters",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-type-parameters.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -27396,7 +29529,13 @@
 			"name": "unsafeTypeAssertions",
 			"plugin": "ts",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/no-unsafe-type-assertion",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unsafe-type-assertion.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -27444,6 +29583,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noUnusedExpressions",
+				"url": "https://biomejs.dev/linter/rules/no-unused-expressions"
+			}
+		],
 		"eslint": [
 			{
 				"name": "no-unused-expressions",
@@ -27463,12 +29608,6 @@
 			{
 				"name": "eslint/no-unused-expressions",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unused-expressions.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "noUnusedExpressions",
-				"url": "https://biomejs.dev/linter/rules/no-unused-expressions"
 			}
 		]
 	},
@@ -27606,7 +29745,13 @@
 			"name": "unusedValues",
 			"plugin": "ts",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-useless-assignment",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-assignment.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -27658,7 +29803,13 @@
 			"name": "urlRelativity",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/relative-url-style",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/relative-url-style.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -27681,7 +29832,13 @@
 			"name": "usageBeforeDefinition",
 			"plugin": "ts",
 			"preset": "javascript"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-use-before-define",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-use-before-define.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -27694,7 +29851,13 @@
 			"name": "uselessDefaultAssignments",
 			"plugin": "ts",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/no-useless-default-assignment",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-useless-default-assignment.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -27732,7 +29895,13 @@
 			"name": "varDeclarations",
 			"plugin": "ts",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-var",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-var.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -27870,6 +30039,12 @@
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useVarsOnTop",
+				"url": "https://biomejs.dev/linter/rules/use-vars-on-top"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vars-on-top",
@@ -27885,12 +30060,6 @@
 			{
 				"name": "eslint/vars-on-top",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/vars-on-top.html"
-			}
-		],
-		"biome": [
-			{
-				"name": "useVarsOnTop",
-				"url": "https://biomejs.dev/linter/rules/use-vars-on-top"
 			}
 		]
 	},
@@ -27943,7 +30112,13 @@
 		"flint": {
 			"name": "webpackLoaderSyntax",
 			"plugin": "ts"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "import/no-webpack-loader-syntax",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/import/no-webpack-loader-syntax.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -28028,7 +30203,13 @@
 			"name": "wrapperObjectTypes",
 			"plugin": "ts",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "typescript/no-wrapper-object-types",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-wrapper-object-types.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28041,7 +30222,13 @@
 			"name": "afterAllPaddingLines",
 			"plugin": "vitest",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/padding-around-after-all-blocks",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/padding-around-after-all-blocks.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28067,7 +30254,13 @@
 			"name": "aliasMethods",
 			"plugin": "vitest",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/no-alias-methods",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-alias-methods.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28120,7 +30313,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/prefer-strict-boolean-matchers",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-strict-boolean-matchers.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28133,7 +30332,13 @@
 			"name": "calledOnceAssertions",
 			"plugin": "vitest",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-called-once",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-called-once.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28147,7 +30352,13 @@
 			"plugin": "vitest",
 			"preset": "stylistic",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-called-exactly-once-with",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-called-exactly-once-with.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28161,7 +30372,13 @@
 			"plugin": "vitest",
 			"preset": "stylistic",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-called-times",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-called-times.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28175,7 +30392,13 @@
 			"plugin": "vitest",
 			"preset": "stylistic",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-called-with",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-called-with.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28189,7 +30412,13 @@
 			"plugin": "vitest",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/no-commented-out-tests",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-commented-out-tests.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28202,9 +30431,21 @@
 			"name": "comparisonMatcherAssertions",
 			"plugin": "vitest",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-comparison-matcher",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-comparison-matcher.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noConditionalExpect",
+				"url": "https://biomejs.dev/linter/rules/no-conditional-expect"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vitest/no-conditional-expect",
@@ -28217,10 +30458,10 @@
 			"preset": "stylistic",
 			"strictness": "strict"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noConditionalExpect",
-				"url": "https://biomejs.dev/linter/rules/no-conditional-expect"
+				"name": "vitest/no-conditional-expect",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-conditional-expect.html"
 			}
 		]
 	},
@@ -28235,7 +30476,13 @@
 			"name": "describeCallbackValidity",
 			"plugin": "vitest",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/valid-describe-callback",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/valid-describe-callback.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28261,7 +30508,13 @@
 			"name": "describeTitleReferences",
 			"plugin": "vitest",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-describe-function-title",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-describe-function-title.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28292,7 +30545,13 @@
 		"flint": {
 			"name": "eachForConsistency",
 			"plugin": "vitest"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/consistent-each-for",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/consistent-each-for.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28305,7 +30564,13 @@
 			"name": "eachLoops",
 			"plugin": "vitest",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-each",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-each.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28319,7 +30584,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/prefer-todo",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-todo.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28332,7 +30603,13 @@
 			"name": "equalityMatchers",
 			"plugin": "vitest",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-equality-matcher",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-equality-matcher.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28358,9 +30635,21 @@
 			"name": "expectResolves",
 			"plugin": "vitest",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-expect-resolves",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-expect-resolves.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noMisplacedAssertion",
+				"url": "https://biomejs.dev/linter/rules/no-misplaced-assertion"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vitest/no-standalone-expect",
@@ -28373,10 +30662,10 @@
 			"preset": "logical",
 			"strictness": "strict"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noMisplacedAssertion",
-				"url": "https://biomejs.dev/linter/rules/no-misplaced-assertion"
+				"name": "vitest/no-standalone-expect",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-standalone-expect.html"
 			}
 		]
 	},
@@ -28391,7 +30680,13 @@
 			"name": "expectValidity",
 			"plugin": "vitest",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/valid-expect",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/valid-expect.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28404,7 +30699,13 @@
 			"name": "falsyMatchers",
 			"plugin": "vitest"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/prefer-to-be-falsy",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-be-falsy.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28417,7 +30718,13 @@
 			"name": "filenames",
 			"plugin": "vitest"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/consistent-test-filename",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/consistent-test-filename.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28431,7 +30738,13 @@
 			"plugin": "vitest",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/hoisted-apis-on-top",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/hoisted-apis-on-top.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28445,9 +30758,21 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/require-hook",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-hook.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noDuplicateTestHooks",
+				"url": "https://biomejs.dev/linter/rules/no-duplicate-test-hooks"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vitest/no-duplicate-hooks",
@@ -28460,14 +30785,20 @@
 			"preset": "logical",
 			"strictness": "strict"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noDuplicateTestHooks",
-				"url": "https://biomejs.dev/linter/rules/no-duplicate-test-hooks"
+				"name": "vitest/no-duplicate-hooks",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-duplicate-hooks.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useTestHooksInOrder",
+				"url": "https://biomejs.dev/linter/rules/use-test-hooks-in-order"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vitest/prefer-hooks-in-order",
@@ -28480,10 +30811,10 @@
 			"preset": "stylistic",
 			"strictness": "strict"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useTestHooksInOrder",
-				"url": "https://biomejs.dev/linter/rules/use-test-hooks-in-order"
+				"name": "vitest/prefer-hooks-in-order",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-hooks-in-order.html"
 			}
 		]
 	},
@@ -28499,9 +30830,21 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/no-hooks",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-hooks.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useTestHooksOnTop",
+				"url": "https://biomejs.dev/linter/rules/use-test-hooks-on-top"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vitest/prefer-hooks-on-top",
@@ -28514,10 +30857,10 @@
 			"preset": "stylistic",
 			"strictness": "strict"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useTestHooksOnTop",
-				"url": "https://biomejs.dev/linter/rules/use-test-hooks-on-top"
+				"name": "vitest/prefer-hooks-on-top",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-hooks-on-top.html"
 			}
 		]
 	},
@@ -28531,7 +30874,13 @@
 		"flint": {
 			"name": "importsInMocks",
 			"plugin": "vitest"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-import-in-mock",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-import-in-mock.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28545,9 +30894,21 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/max-expects",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/max-expects.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noExcessiveNestedTestSuites",
+				"url": "https://biomejs.dev/linter/rules/no-excessive-nested-test-suites"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vitest/max-nested-describe",
@@ -28560,10 +30921,10 @@
 			"status": "skipped"
 		},
 		"notes": "Overly opinionated.",
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noExcessiveNestedTestSuites",
-				"url": "https://biomejs.dev/linter/rules/no-excessive-nested-test-suites"
+				"name": "vitest/max-nested-describe",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/max-nested-describe.html"
 			}
 		]
 	},
@@ -28579,7 +30940,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/require-top-level-describe",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-top-level-describe.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28596,6 +30963,20 @@
 		}
 	},
 	{
+		"flint": {
+			"name": "mockReturnShorthands",
+			"plugin": "vitest",
+			"preset": "stylistic",
+			"strictness": "strict"
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-mock-return-shorthand",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-mock-return-shorthand.html"
+			}
+		]
+	},
+	{
 		"eslint": [
 			{
 				"name": "vitest/no-mocks-import",
@@ -28607,7 +30988,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/no-mocks-import",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-mocks-import.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28621,7 +31008,13 @@
 			"plugin": "vitest",
 			"preset": "stylistic",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/require-mock-type-parameters",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-mock-type-parameters.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28635,7 +31028,13 @@
 			"plugin": "vitest",
 			"preset": "logical",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/no-import-node-test",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-import-node-test.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28649,7 +31048,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Superseded by floatingPromises."
+		"notes": "Superseded by floatingPromises.",
+		"oxlint": [
+			{
+				"name": "vitest/require-awaited-expect-poll",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-awaited-expect-poll.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28663,7 +31068,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Superseded by floatingPromises."
+		"notes": "Superseded by floatingPromises.",
+		"oxlint": [
+			{
+				"name": "vitest/valid-expect-in-promise",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/valid-expect-in-promise.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28676,7 +31087,13 @@
 			"name": "promiseSettleAssertions",
 			"plugin": "vitest",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-mock-promise-shorthand",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-mock-promise-shorthand.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28688,7 +31105,13 @@
 		"flint": {
 			"name": "restrictedMatchers",
 			"plugin": "vitest"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/no-restricted-matchers",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-restricted-matchers.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28700,7 +31123,13 @@
 		"flint": {
 			"name": "restrictedViMethods",
 			"plugin": "vitest"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/no-restricted-vi-methods",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-restricted-vi-methods.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28714,7 +31143,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/prefer-snapshot-hint",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-snapshot-hint.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28728,7 +31163,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/no-interpolation-in-snapshots",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-interpolation-in-snapshots.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28741,7 +31182,13 @@
 			"name": "snapshotLocalTextContexts",
 			"plugin": "vitest",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/require-local-test-context-for-concurrent-snapshots",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-local-test-context-for-concurrent-snapshots.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28755,7 +31202,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/no-large-snapshots",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-large-snapshots.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28769,7 +31222,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/prefer-spy-on",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-spy-on.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28783,9 +31242,21 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/prefer-strict-equal",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-strict-equal.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useExpect",
+				"url": "https://biomejs.dev/linter/rules/use-expect"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vitest/expect-expect",
@@ -28797,10 +31268,10 @@
 			"plugin": "vitest",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useExpect",
-				"url": "https://biomejs.dev/linter/rules/use-expect"
+				"name": "vitest/expect-expect",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/expect-expect.html"
 			}
 		]
 	},
@@ -28815,9 +31286,21 @@
 			"name": "testCaseAssertions",
 			"plugin": "vitest",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-expect-assertions",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-expect-assertions.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noFocusedTests",
+				"url": "https://biomejs.dev/linter/rules/no-focused-tests"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vitest/no-focused-tests",
@@ -28830,10 +31313,10 @@
 			"status": "skipped"
 		},
 		"notes": "Handled by Vitest in CI mode.",
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noFocusedTests",
-				"url": "https://biomejs.dev/linter/rules/no-focused-tests"
+				"name": "vitest/no-focused-tests",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-focused-tests.html"
 			}
 		]
 	},
@@ -28877,7 +31360,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/prefer-lowercase-title",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-lowercase-title.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28891,7 +31380,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/no-conditional-tests",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-conditional-tests.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28905,9 +31400,21 @@
 			"plugin": "vitest",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/no-conditional-in-test",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-conditional-in-test.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useConsistentTestIt",
+				"url": "https://biomejs.dev/linter/rules/use-consistent-test-it"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vitest/consistent-test-it",
@@ -28918,14 +31425,20 @@
 			"name": "testDefinitionFunctions",
 			"plugin": "vitest"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useConsistentTestIt",
-				"url": "https://biomejs.dev/linter/rules/use-consistent-test-it"
+				"name": "vitest/consistent-test-it",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/consistent-test-it.html"
 			}
 		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noSkippedTests",
+				"url": "https://biomejs.dev/linter/rules/no-skipped-tests"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vitest/no-disabled-tests",
@@ -28938,10 +31451,10 @@
 			"status": "skipped"
 		},
 		"notes": "Handled by Vitest in CI mode.",
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noSkippedTests",
-				"url": "https://biomejs.dev/linter/rules/no-skipped-tests"
+				"name": "vitest/no-disabled-tests",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-disabled-tests.html"
 			}
 		]
 	},
@@ -28969,7 +31482,13 @@
 			"name": "testPrefixes",
 			"plugin": "vitest",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/no-test-prefixes",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-test-prefixes.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -28983,9 +31502,35 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated, and largely handled by TypeScript."
+		"notes": "Overly opinionated, and largely handled by TypeScript.",
+		"oxlint": [
+			{
+				"name": "vitest/no-test-return-statement",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-test-return-statement.html"
+			}
+		]
 	},
 	{
+		"flint": {
+			"name": "testTimeouts",
+			"plugin": "vitest",
+			"status": "skipped"
+		},
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/require-test-timeout",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-test-timeout.html"
+			}
+		]
+	},
+	{
+		"biome": [
+			{
+				"name": "noIdenticalTestTitle",
+				"url": "https://biomejs.dev/linter/rules/no-identical-test-title"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vitest/no-identical-title",
@@ -28997,10 +31542,10 @@
 			"plugin": "vitest",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noIdenticalTestTitle",
-				"url": "https://biomejs.dev/linter/rules/no-identical-test-title"
+				"name": "vitest/no-identical-title",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-identical-title.html"
 			}
 		]
 	},
@@ -29015,7 +31560,13 @@
 			"name": "titleValidity",
 			"plugin": "vitest",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/valid-title",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/valid-title.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29029,7 +31580,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/prefer-to-be",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-be.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29043,7 +31600,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/prefer-to-be-object",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-be-object.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29056,7 +31619,13 @@
 			"name": "toBeTypeOfs",
 			"plugin": "vitest",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-expect-type-of",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-expect-type-of.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29069,7 +31638,13 @@
 			"name": "toContainMatchers",
 			"plugin": "vitest",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-to-contain",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-contain.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29083,7 +31658,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Handled by Vitest in CI mode."
+		"notes": "Handled by Vitest in CI mode.",
+		"oxlint": [
+			{
+				"name": "vitest/warn-todo",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/warn-todo.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29095,7 +31676,13 @@
 		"flint": {
 			"name": "toHaveBeenCalledTimesAssertions",
 			"plugin": "vitest"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-to-have-been-called-times",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-have-been-called-times.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29108,7 +31695,13 @@
 			"name": "toHaveLengthMatchers",
 			"plugin": "vitest",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-to-have-length",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-have-length.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29122,7 +31715,13 @@
 			"plugin": "vitest",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/require-to-throw-message",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-to-throw-message.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29135,7 +31734,13 @@
 			"name": "truthyMatchers",
 			"plugin": "vitest"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "vitest/prefer-to-be-truthy",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-be-truthy.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29147,7 +31752,13 @@
 		"flint": {
 			"name": "unnecessaryAsyncExpectFunctions",
 			"plugin": "vitest"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/no-unneeded-async-expect-function",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-unneeded-async-expect-function.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29159,7 +31770,13 @@
 		"flint": {
 			"name": "viNamespaceNames",
 			"plugin": "vitest"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/consistent-vitest-vi",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/consistent-vitest-vi.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29172,7 +31789,13 @@
 			"name": "vitestGlobalImporting",
 			"plugin": "vitest"
 		},
-		"notes": "Conflicts with vitestGlobalImports."
+		"notes": "Conflicts with vitestGlobalImports.",
+		"oxlint": [
+			{
+				"name": "vitest/no-importing-vitest-globals",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-importing-vitest-globals.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29185,7 +31808,13 @@
 			"name": "vitestGlobalImports",
 			"plugin": "vitest",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/prefer-importing-vitest-globals",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-importing-vitest-globals.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29356,7 +31985,13 @@
 			"name": "beforeRouteEnterThisAccesses",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-this-in-before-route-enter",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-this-in-before-route-enter.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29726,6 +32361,12 @@
 		"notes": "Formatting rule."
 	},
 	{
+		"biome": [
+			{
+				"name": "noVueImportCompilerMacros",
+				"url": "https://biomejs.dev/linter/rules/no-vue-import-compiler-macros"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-import-compiler-macros",
@@ -29737,10 +32378,10 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noVueImportCompilerMacros",
-				"url": "https://biomejs.dev/linter/rules/no-vue-import-compiler-macros"
+				"name": "vue/no-import-compiler-macros",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-import-compiler-macros.html"
 			}
 		]
 	},
@@ -29758,6 +32399,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "noVueDataObjectDeclaration",
+				"url": "https://biomejs.dev/linter/rules/no-vue-data-object-declaration"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-shared-component-data",
@@ -29769,10 +32416,10 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noVueDataObjectDeclaration",
-				"url": "https://biomejs.dev/linter/rules/no-vue-data-object-declaration"
+				"name": "vue/no-shared-component-data",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-shared-component-data.html"
 			}
 		]
 	},
@@ -29840,7 +32487,13 @@
 			"name": "componentNameCasing",
 			"plugin": "vue",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/component-definition-name-casing",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/component-definition-name-casing.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29872,7 +32525,13 @@
 			"name": "componentNameValidity",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-reserved-component-names",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-reserved-component-names.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29989,7 +32648,13 @@
 			"name": "computedPropertyReturns",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/return-in-computed-property",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/return-in-computed-property.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30067,7 +32732,13 @@
 			"name": "dataComputedProperties",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-computed-properties-in-data",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-computed-properties-in-data.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30080,7 +32751,13 @@
 			"name": "defaultExports",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/require-default-export",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/require-default-export.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30106,7 +32783,13 @@
 			"name": "defineEmitsDeclarations",
 			"plugin": "vue",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/define-emits-declaration",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/define-emits-declaration.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30119,7 +32802,13 @@
 			"name": "defineEmitsValidity",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/valid-define-emits",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/valid-define-emits.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30164,9 +32853,21 @@
 			"name": "defineOptionsValidity",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/valid-define-options",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/valid-define-options.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "useVueConsistentDefinePropsDeclaration",
+				"url": "https://biomejs.dev/linter/rules/use-vue-consistent-define-props-declaration"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/define-props-declaration",
@@ -30178,10 +32879,10 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useVueConsistentDefinePropsDeclaration",
-				"url": "https://biomejs.dev/linter/rules/use-vue-consistent-define-props-declaration"
+				"name": "vue/define-props-declaration",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/define-props-declaration.html"
 			}
 		]
 	},
@@ -30196,7 +32897,13 @@
 			"name": "definePropsDestructuring",
 			"plugin": "vue",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/define-props-destructuring",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/define-props-destructuring.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30209,7 +32916,13 @@
 			"name": "definePropsValidity",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/valid-define-props",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/valid-define-props.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30226,6 +32939,12 @@
 		"notes": "Superseded by deprecated."
 	},
 	{
+		"biome": [
+			{
+				"name": "noVueDataObjectDeclaration",
+				"url": "https://biomejs.dev/linter/rules/no-vue-data-object-declaration"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-deprecated-data-object-declaration",
@@ -30237,10 +32956,10 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noVueDataObjectDeclaration",
-				"url": "https://biomejs.dev/linter/rules/no-vue-data-object-declaration"
+				"name": "vue/no-deprecated-data-object-declaration",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-data-object-declaration.html"
 			}
 		]
 	},
@@ -30255,7 +32974,13 @@
 			"name": "deprecatedDestroyedLifecycleHooks",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-deprecated-destroyed-lifecycle",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-destroyed-lifecycle.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30297,7 +33022,13 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
-		"notes": "Superseded by deprecated."
+		"notes": "Superseded by deprecated.",
+		"oxlint": [
+			{
+				"name": "vue/no-deprecated-events-api",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-events-api.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30365,7 +33096,13 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
-		"notes": "Superseded by deprecated."
+		"notes": "Superseded by deprecated.",
+		"oxlint": [
+			{
+				"name": "vue/no-deprecated-model-definition",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-model-definition.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30407,7 +33144,13 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
-		"notes": "Superseded by deprecated."
+		"notes": "Superseded by deprecated.",
+		"oxlint": [
+			{
+				"name": "vue/no-deprecated-delete-set",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-delete-set.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30448,7 +33191,13 @@
 			"name": "deprecatedThisDefaultProps",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-deprecated-props-default-this",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-props-default-this.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30510,7 +33259,13 @@
 			"plugin": "vue",
 			"status": "skipped"
 		},
-		"notes": "Superseded by deprecated."
+		"notes": "Superseded by deprecated.",
+		"oxlint": [
+			{
+				"name": "vue/no-deprecated-vue-config-keycodes",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-vue-config-keycodes.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30523,7 +33278,13 @@
 			"name": "directExports",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/require-direct-export",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/require-direct-export.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30646,7 +33407,13 @@
 			"name": "emitsValidatorReturns",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/return-in-emits-validator",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/return-in-emits-validator.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -30737,7 +33504,13 @@
 			"name": "exposeAfterAwaits",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-expose-after-await",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-expose-after-await.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -31024,6 +33797,12 @@
 		"notes": "Formatting rule."
 	},
 	{
+		"biome": [
+			{
+				"name": "noVueReservedKeys",
+				"url": "https://biomejs.dev/linter/rules/no-vue-reserved-keys"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-reserved-keys",
@@ -31035,10 +33814,10 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noVueReservedKeys",
-				"url": "https://biomejs.dev/linter/rules/no-vue-reserved-keys"
+				"name": "vue/no-reserved-keys",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-reserved-keys.html"
 			}
 		]
 	},
@@ -31067,7 +33846,13 @@
 			"name": "lifecyclesAfterAwaits",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-lifecycle-after-await",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-lifecycle-after-await.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -31285,6 +34070,12 @@
 		}
 	},
 	{
+		"biome": [
+			{
+				"name": "useVueNextTickPromise",
+				"url": "https://biomejs.dev/linter/rules/use-vue-next-tick-promise"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/next-tick-style",
@@ -31296,10 +34087,10 @@
 			"plugin": "vue",
 			"preset": "stylistic"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "useVueNextTickPromise",
-				"url": "https://biomejs.dev/linter/rules/use-vue-next-tick-promise"
+				"name": "vue/next-tick-style",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/next-tick-style.html"
 			}
 		]
 	},
@@ -31314,7 +34105,13 @@
 			"name": "nextTickValidity",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/valid-next-tick",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/valid-next-tick.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -31606,7 +34403,13 @@
 			"name": "propLimits",
 			"plugin": "vue",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/max-props",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/max-props.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -31619,9 +34422,21 @@
 			"name": "propNameCasing",
 			"plugin": "vue",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/prop-name-casing",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/prop-name-casing.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noVueReservedProps",
+				"url": "https://biomejs.dev/linter/rules/no-vue-reserved-props"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-reserved-props",
@@ -31633,10 +34448,10 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noVueReservedProps",
-				"url": "https://biomejs.dev/linter/rules/no-vue-reserved-props"
+				"name": "vue/no-reserved-props",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-reserved-props.html"
 			}
 		]
 	},
@@ -31652,7 +34467,13 @@
 			"plugin": "vue",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-required-prop-with-default",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-required-prop-with-default.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -31665,7 +34486,13 @@
 			"name": "propTypeConstructors",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/require-prop-type-constructor",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/require-prop-type-constructor.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -31678,7 +34505,13 @@
 			"name": "propTypes",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/require-prop-types",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/require-prop-types.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -31723,7 +34556,13 @@
 			"name": "renderReturns",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/require-render-return",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/require-render-return.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -31932,7 +34771,13 @@
 			"name": "scriptSetupExports",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-export-in-script-setup",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-export-in-script-setup.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -32018,7 +34863,13 @@
 			"plugin": "vue",
 			"preset": "logical",
 			"strictness": "strict"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-multiple-slot-args",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-multiple-slot-args.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -32057,7 +34908,13 @@
 			"name": "slotsAsFunctions",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/require-slots-as-functions",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/require-slots-as-functions.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -32477,7 +35334,13 @@
 			"name": "typedRefs",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/require-typed-ref",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/require-typed-ref.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -32733,7 +35596,13 @@
 			"name": "vuePackageImports",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/prefer-import-from-vue",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/prefer-import-from-vue.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -32746,9 +35615,21 @@
 			"name": "watchAfterAwaits",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-watch-after-await",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-watch-after-await.html"
+			}
+		]
 	},
 	{
+		"biome": [
+			{
+				"name": "noVueArrowFuncInWatch",
+				"url": "https://biomejs.dev/linter/rules/no-vue-arrow-func-in-watch"
+			}
+		],
 		"eslint": [
 			{
 				"name": "vue/no-arrow-functions-in-watch",
@@ -32760,10 +35641,10 @@
 			"plugin": "vue",
 			"preset": "logical"
 		},
-		"biome": [
+		"oxlint": [
 			{
-				"name": "noVueArrowFuncInWatch",
-				"url": "https://biomejs.dev/linter/rules/no-vue-arrow-func-in-watch"
+				"name": "vue/no-arrow-functions-in-watch",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-arrow-functions-in-watch.html"
 			}
 		]
 	},

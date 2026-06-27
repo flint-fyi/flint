@@ -264,6 +264,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "styleshit",
+      "name": "Evyatar Daud",
+      "avatar_url": "https://avatars.githubusercontent.com/u/32631382?v=4",
+      "profile": "https://github.com/StyleShit",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

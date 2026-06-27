@@ -15,6 +15,11 @@ import {
 	findMarkdownlintRules,
 	findMarkdownlintRulesInFlint,
 } from "./test-utils/markdownlint.ts";
+import {
+	findOxlintRulesInFlint,
+	getOxlintLintRules,
+	getOxlintRuleConfigName,
+} from "./test-utils/oxlint.ts";
 
 const excludedESLintRulesByPluginName = new Map([
 	// These rules are exported in the React plugin but not mentioned on react.dev.
@@ -126,5 +131,15 @@ describe("data.json", () => {
 			.sort();
 
 		expect(markdownlintRuleNames).toEqual(markdownlintRulesCoveredByFlint);
+	});
+
+	it("includes all Oxlint rules", async () => {
+		const oxlintRuleNames = await getOxlintLintRules();
+
+		const oxlintRulesCoveredByFlint = findOxlintRulesInFlint()
+			.map((comparison) => getOxlintRuleConfigName(comparison.name))
+			.sort();
+
+		expect(oxlintRuleNames).toEqual(oxlintRulesCoveredByFlint);
 	});
 });

@@ -1,5 +1,11 @@
 # @flint.fyi/json-language
 
+## 0.18.0
+
+### Minor Changes
+
+- [#2934](https://github.com/flint-fyi/flint/pull/2934) [`7d1bf0a`](https://github.com/flint-fyi/flint/commit/7d1bf0aef3a6eb2f553e36c5018b36ad4d17f022) - Replaced the TypeScript-based AST language with one based on `@humanwhocodes/momoa`, a parser and AST geared specifically for JSON.
+
 ## 0.17.0
 
 ### Minor Changes
