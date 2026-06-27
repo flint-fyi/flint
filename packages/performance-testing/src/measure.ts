@@ -20,17 +20,17 @@ for (const files of testCaseEntries[0].values) {
 
 		results.push({
 			...testCase,
-			rules: ruleCounts[rules],
 			eslint: await runInHyperfine(
 				`node ${path.join(rootPath, "node_modules/eslint/bin/eslint.js")}`,
 				"ESLint",
 				testCaseSlug,
 			),
 			flint: await runInHyperfine(
-				`node ${path.join(rootPath, "packages/flint/bin/index.js")} --skip-language-reports`,
+				`node ${path.join(rootPath, "packages/flint/bin/index.js")} --skip-formatting --skip-language-reports`,
 				"Flint",
 				testCaseSlug,
 			),
+			rules: ruleCounts[rules],
 		});
 	}
 }
