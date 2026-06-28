@@ -121,7 +121,6 @@ declare const JSON: {
 }
 const result = JSON.parse(JSON.stringify({}));
 void result;
-export {};
 `,
 	],
 });

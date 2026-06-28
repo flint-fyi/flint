@@ -59,7 +59,6 @@ if (document.cookie.includes("session")) {
 			interface Document { cookie: string; }
 			const document: Document = { cookie: "test" };
 			const value = document.cookie;
-			export {};
 		`,
 	],
 });

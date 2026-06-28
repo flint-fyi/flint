@@ -98,7 +98,6 @@ const text = fs.readFileSync('./file.txt', 'utf8');`,
 		`import * as fs from "node:fs/promises";
 const promise = fs.readFile('./package.json', 'utf8'); const data = JSON.parse(await promise);`,
 		`declare const customReader: any;
-const data = JSON.parse(await customReader.readFile('./file.json', 'utf8'));
-export {};`,
+const data = JSON.parse(await customReader.readFile('./file.json', 'utf8'));`,
 	],
 });

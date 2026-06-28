@@ -44,13 +44,11 @@ window.document.write("...");
 			const document = { write(value: string) {}, writeln(value: string) {} };
 			document.write("...");
 			document.writeln("...");
-			export {};
 		`,
 		`
 			const window = { document: { write(value: string) {}, writeln(value: string) {} } };
 			window.document.write("...");
 			window.document.writeln("...");
-			export {};
 		`,
 	],
 });

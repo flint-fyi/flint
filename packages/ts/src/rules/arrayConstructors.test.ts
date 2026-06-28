@@ -82,22 +82,18 @@ const values = new Array("a", "b");
 		`
 class Array { constructor() {} }
 const values = new Array();
-export {};
 `,
 		`
 function Array() { return []; }
 const values = Array();
-export {};
 `,
 		`
 function Array(...args: number[]) { return args; }
 const values = Array(1, 2, 3);
-export {};
 `,
 		`
 const Array = () => [];
 const values = Array();
-export {};
 `,
 	],
 });

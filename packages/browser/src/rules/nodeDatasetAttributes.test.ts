@@ -129,7 +129,6 @@ element.getAttribute(\`data-foo\`);
 				getAttribute(name: string): string;
 			};
 			element.getAttribute("data-foo");
-			export {};
 		`,
 	],
 });

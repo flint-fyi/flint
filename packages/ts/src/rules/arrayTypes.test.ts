@@ -226,12 +226,10 @@ type Obj = { a: string }[];
 		`
 type Array<T> = { other: T };
 const values: Array<string> = { other: "" };
-export {};
 `,
 		`
 type ReadonlyArray<T> = { other: T };
 const values: ReadonlyArray<string> = { other: "" };
-export {};
 `,
 		{
 			code: `const values: Array<string> = [];`,

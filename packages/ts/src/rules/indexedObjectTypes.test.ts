@@ -341,7 +341,6 @@ type Foo = Misc<string, unknown>;
 		},
 		{
 			code: `
-export {};
 type Record = string;
 type Foo = Record;
 `,
@@ -349,7 +348,6 @@ type Foo = Record;
 		},
 		{
 			code: `
-export {};
 type Record<T> = T;
 type Foo = Record<string>;
 `,
@@ -357,7 +355,6 @@ type Foo = Record<string>;
 		},
 		{
 			code: `
-export {};
 type Record<K, V, Extra> = [K, V, Extra];
 type Foo = Record<string, number, unknown>;
 `,
@@ -400,7 +397,6 @@ type T = A.B;
 		`
 type Record<K, V> = { custom: true };
 const data: Record<string, number> = { custom: true };
-export {};
 `,
 	],
 });

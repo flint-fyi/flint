@@ -381,7 +381,7 @@ function test() {
 }
 `,
 		`
-let value: string;
+declare let value: string;
 function test() {
     return value ?? "";
 }

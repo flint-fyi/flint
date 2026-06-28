@@ -228,7 +228,6 @@ const console = { log: (...args: unknown[]) => {} };
 
 console.log(" collapsed ");
 
-export {};
 `,
 		`
 class Console {
@@ -239,7 +238,6 @@ const console = new Console();
 
 console.log(" collapsed ");
 
-export {};
 `,
 	],
 });

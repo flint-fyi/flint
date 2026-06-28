@@ -1,7 +1,7 @@
-import { ruleTester } from "./ruleTester.ts";
+import { scriptRuleTester } from "./ruleTester.ts";
 import rule from "./unnecessaryUseStricts.ts";
 
-ruleTester.describe(rule, {
+scriptRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `

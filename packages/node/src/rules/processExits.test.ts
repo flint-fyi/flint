@@ -72,7 +72,6 @@ if (error) {
 		`
 const process = { exit: () => {} };
 process.exit();
-export {};
 `,
 	],
 });
