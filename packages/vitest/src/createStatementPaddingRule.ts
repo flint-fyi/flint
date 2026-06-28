@@ -169,7 +169,7 @@ export function getStatementRootName(statement: AST.AnyNode) {
 	}
 
 	if (expression.kind === ts.SyntaxKind.AwaitExpression) {
-		return getRootIdentifierName(expression.expression as AST.AnyNode);
+		return getRootIdentifierName(expression.expression);
 	}
 
 	return getRootIdentifierName(expression);
@@ -186,7 +186,7 @@ function getRootIdentifierName(node: AST.AnyNode): string | undefined {
 		node.kind === ts.SyntaxKind.ParenthesizedExpression ||
 		node.kind === ts.SyntaxKind.PropertyAccessExpression
 	) {
-		return getRootIdentifierName(node.expression as AST.AnyNode);
+		return getRootIdentifierName(node.expression);
 	}
 
 	return undefined;
@@ -200,7 +200,7 @@ function getStatementExpression(
 	}
 
 	if (statement.kind === ts.SyntaxKind.LabeledStatement) {
-		return getStatementExpression(statement.statement as AST.AnyNode);
+		return getStatementExpression(statement.statement);
 	}
 
 	return undefined;
