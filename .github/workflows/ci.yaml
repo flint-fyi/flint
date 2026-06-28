@@ -82,7 +82,7 @@ jobs:
           path: node_modules/.vite
       - name: Run full test suite except e2e
         run: pnpm run test --project='!e2e'
-  
+
   test_e2e:
     name: Test E2E
     runs-on: ${{ matrix.os }}
