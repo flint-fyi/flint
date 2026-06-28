@@ -188,6 +188,7 @@ function isInImportDeclaration(node: AST.AnyNode) {
 			return true;
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
 		current = current.parent as AST.AnyNode | undefined;
 	}
 

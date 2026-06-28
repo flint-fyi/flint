@@ -20,7 +20,7 @@ function getParentClassName(node: AST.AnyNode): string | undefined {
 			return undefined;
 
 		default:
-			return getParentClassName(node.parent as AST.AnyNode);
+			return getParentClassName(node.parent);
 	}
 }
 
@@ -37,7 +37,7 @@ function getParentInterface(
 			return undefined;
 
 		default:
-			return getParentInterface(node.parent as AST.AnyNode);
+			return getParentInterface(node.parent);
 	}
 }
 

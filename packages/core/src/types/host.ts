@@ -1,8 +1,16 @@
+import type { commonlyIgnoredGlobs } from "../host/watcher.ts";
+
 export interface LinterHost {
 	fileTypeSync(pathAbsolute: string): "directory" | "file" | undefined;
 	getCurrentDirectory(): string;
 	getFileTouchTime(filePath: string): Promise<number | undefined>;
 	getFileTouchTimeSync(filePath: string): number | undefined;
+
+	/**
+	 * Find a set of files relative to the cwd given a set of glob patterns.
+	 * @param patterns An array of glob patterns, to be parsed by Picomatch with `{ dot: true }`.
+	 * @param options An options bag, wherein you must set the cwd and exclusions.
+	 */
 	glob(patterns: string[], options: LinterHostGlobOptions): Promise<string[]>;
 	isCaseSensitiveFS(): boolean;
 	readDirectory(
@@ -37,7 +45,8 @@ export type LinterHostFileWatcherEvent = "changed" | "created" | "deleted";
 
 export interface LinterHostGlobOptions {
 	cwd: string;
-	exclude?: string[];
+	/** Generally, you'll want to include {@linkcode commonlyIgnoredGlobs}. */
+	exclude: string[];
 }
 
 export interface VFSLinterHost extends LinterHost {
