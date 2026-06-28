@@ -101,5 +101,3 @@ peerDependencyRules:
 shellEmulator: true
 
 strictDepBuilds: true
-
-strictPeerDependencies: true
