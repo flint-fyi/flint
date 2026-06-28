@@ -169,6 +169,7 @@ function isReferenceToGlobalFunction(
 	return !!symbol.getDeclarations()?.some((declaration) => {
 		const sourceFile = declaration.getSourceFile();
 		return (
+			// eslint-disable-next-line @typescript-eslint/no-deprecated
 			sourceFile.hasNoDefaultLib ||
 			sourceFile.fileName.includes("node_modules/@types/node/") ||
 			/\/lib\.[^/]*\.d\.ts$/.test(sourceFile.fileName)

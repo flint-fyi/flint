@@ -68,6 +68,7 @@ function isSymbolFromDefaultLibrary(program: ts.Program, symbol: ts.Symbol) {
 	return declarations.some((declaration) => {
 		const sourceFile = declaration.getSourceFile();
 		return (
+			// eslint-disable-next-line @typescript-eslint/no-deprecated
 			sourceFile.hasNoDefaultLib ||
 			program.isSourceFileDefaultLibrary(sourceFile)
 		);
