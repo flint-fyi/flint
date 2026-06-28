@@ -98,5 +98,8 @@ peerDependencyRules:
     eslint-plugin-solid>eslint: "10"
     expressive-code-twoslash>@expressive-code/core: "0.44"
     expressive-code-twoslash>expressive-code: "0.44"
+    typescript: "6"
 
 shellEmulator: true
+
+strictPeerDependencies: true
