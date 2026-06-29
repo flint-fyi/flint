@@ -23,7 +23,7 @@ catalogs:
     "@vitest/coverage-v8": 4.1.0
     "@vitest/eslint-plugin": 1.6.1
     console-fail-test: 0.6.1
-    eslint: 10.5.0
+    eslint: 10.6.0
     eslint-plugin-jsdoc: 63.0.2
     eslint-plugin-jsonc: 3.2.0
     eslint-plugin-n: 18.2.1
