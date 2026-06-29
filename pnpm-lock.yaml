@@ -258,8 +258,8 @@ catalogs:
       specifier: 3.2.0
       version: 3.2.0
     eslint-plugin-n:
-      specifier: 18.1.0
-      version: 18.1.0
+      specifier: 18.2.1
+      version: 18.2.1
     eslint-plugin-package-json:
       specifier: 1.5.0
       version: 1.5.0
@@ -476,7 +476,7 @@ importers:
         version: 3.2.0(@eslint/json@2.0.0)(eslint@10.5.0)
       eslint-plugin-n:
         specifier: catalog:dev
-        version: 18.1.0(eslint@10.5.0)(typescript@6.0.3)
+        version: 18.2.1(eslint@10.5.0)(typescript@6.0.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
         version: 1.5.0(@eslint/json@2.0.0)(@types/estree@1.0.9)(eslint@10.5.0)
@@ -778,7 +778,7 @@ importers:
         version: 6.10.2(eslint@10.5.0)
       eslint-plugin-n:
         specifier: catalog:dev
-        version: 18.1.0(eslint@10.5.0)(typescript@6.0.3)
+        version: 18.2.1(eslint@10.5.0)(typescript@6.0.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
         version: 1.5.0(@eslint/json@2.0.0)(@types/estree@1.0.9)(eslint@10.5.0)
@@ -4923,8 +4923,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
 
-  eslint-plugin-n@18.1.0:
-    resolution: {integrity: sha512-hkUm9EtnFV2h2fE16jNVUfCVUqvPzI7fGLsFdun5lFt/pbmf2kCgDx6ymi9rx+NCUSggBmurJCZOfG20JBs/kg==}
+  eslint-plugin-n@18.2.1:
+    resolution: {integrity: sha512-aO3C9//yq8JIvYOi/T+jPvcZ9hZzpwzbR8esrYpFtgE9vpbyM8kn42AQOtIqYspVmpaSWr8X+nrlQuAJYxXAaw==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: '>=8.57.1'
@@ -11281,7 +11281,7 @@ snapshots:
       safe-regex-test: 1.1.0
       string.prototype.includes: 2.0.1
 
-  eslint-plugin-n@18.1.0(eslint@10.5.0)(typescript@6.0.3):
+  eslint-plugin-n@18.2.1(eslint@10.5.0)(typescript@6.0.3):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.5.0)
       enhanced-resolve: 5.20.1
