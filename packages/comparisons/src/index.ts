@@ -1,4 +1,9 @@
-export * from "./comparisons.ts";
-export * from "./getRuleForPlugin.ts";
+export {
+	comparisons,
+	getComparisonId,
+	type LinterName,
+	linterNames,
+} from "./comparisons.ts";
+export { getRuleForPlugin, getRuleForPluginSafe } from "./getRuleForPlugin.ts";
 
-export type { Comparison, FlintRuleReference, LinterName } from "./schemas.ts";
+export type { Comparison, FlintRuleReference } from "./schemas.ts";

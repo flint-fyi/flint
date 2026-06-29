@@ -35,7 +35,7 @@ function renderFlintPlugin(flint: FlintRuleReference) {
 }
 
 function renderFlintPreset(flint: FlintRuleReference) {
-	if (!flint.preset) {
+	if (flint.status === "skipped" || !flint.preset) {
 		return <td className={styles.noneCell}>(none)</td>;
 	}
 
