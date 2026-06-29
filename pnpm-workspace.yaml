@@ -15,7 +15,6 @@ catalogs:
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
     "@eslint/js": 10.0.1
     "@eslint/markdown": 8.0.0
-    "@typescript-eslint/eslint-plugin": 8.62.0
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
     "@types/node": 24.13.1
