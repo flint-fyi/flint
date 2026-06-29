@@ -559,7 +559,7 @@ importers:
         specifier: workspace:^
         version: link:../volar-language
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       '@flint.fyi/rule-tester':
@@ -618,7 +618,7 @@ importers:
         specifier: workspace:^
         version: link:../utils
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       '@flint.fyi/rule-tester':
@@ -658,7 +658,7 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
       wrap-ansi:
         specifier: ^10.0.0
@@ -877,7 +877,7 @@ importers:
         specifier: workspace:^
         version: link:../css-language
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       '@flint.fyi/rule-tester':
@@ -963,7 +963,7 @@ importers:
         specifier: 'workspace:'
         version: link:../yaml
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       prettier:
@@ -1029,7 +1029,7 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       '@flint.fyi/rule-tester':
@@ -1113,7 +1113,7 @@ importers:
         specifier: workspace:^
         version: link:../core
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       tsdown:
@@ -1132,7 +1132,7 @@ importers:
         specifier: workspace:^
         version: link:../utils
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       '@flint.fyi/rule-tester':
@@ -1151,7 +1151,7 @@ importers:
         specifier: workspace:^
         version: link:../core
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       tsdown:
@@ -1216,7 +1216,7 @@ importers:
         specifier: ^2.4.0
         version: 2.5.0(typescript@6.0.3)
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       '@flint.fyi/rule-tester':
@@ -1241,7 +1241,7 @@ importers:
         specifier: workspace:^
         version: link:../utils
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       '@flint.fyi/rule-tester':
@@ -1270,7 +1270,7 @@ importers:
         specifier: workspace:^
         version: link:../core
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       tsdown:
@@ -1399,7 +1399,7 @@ importers:
         specifier: workspace:^
         version: link:../core
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       tsdown:
@@ -1449,7 +1449,7 @@ importers:
         specifier: workspace:^
         version: link:../volar-language
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       '@flint.fyi/rule-tester':
@@ -1542,7 +1542,7 @@ importers:
         specifier: ^2.4.0
         version: 2.5.0(typescript@6.0.3)
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
       zod:
         specifier: ^4.3.6
@@ -1619,7 +1619,7 @@ importers:
         specifier: workspace:^
         version: link:../typescript-language
       typescript:
-        specifier: ^5.9.3 || ^6.0.0
+        specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
       '@flint.fyi/rule-tester':

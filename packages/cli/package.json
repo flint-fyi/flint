@@ -33,7 +33,7 @@
 		"debounce": "^3.0.0",
 		"debug-for-file": "^0.4.0",
 		"text-table-fast": "^0.1.0",
-		"typescript": "^5.9.3 || ^6.0.0",
+		"typescript": "^6.0.0",
 		"wrap-ansi": "^10.0.0"
 	},
 	"devDependencies": {
