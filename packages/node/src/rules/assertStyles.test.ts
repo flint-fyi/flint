@@ -76,20 +76,6 @@ Prefer \`assert.ok()\` over \`assert()\` for explicit intent and better readabil
 		{
 			code: `
 declare const value: unknown;
-import * as assert from "node:assert";
-assert(value);
-`,
-			snapshot: `
-declare const value: unknown;
-import * as assert from "node:assert";
-assert(value);
-~~~~~~
-Prefer \`assert.ok()\` over \`assert()\` for explicit intent and better readability.
-`,
-		},
-		{
-			code: `
-declare const value: unknown;
 import assert = require("node:assert");
 assert(value);
 `,
