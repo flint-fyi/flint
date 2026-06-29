@@ -26,7 +26,7 @@ catalogs:
     eslint: 10.5.0
     eslint-plugin-jsdoc: 63.0.2
     eslint-plugin-jsonc: 3.2.0
-    eslint-plugin-n: 18.1.0
+    eslint-plugin-n: 18.2.1
     eslint-plugin-package-json: 1.5.0
     eslint-plugin-perfectionist: 5.9.0
     eslint-plugin-regexp: 3.1.0
@@ -42,8 +42,8 @@ catalogs:
     prettier-plugin-packagejson: 3.0.0
     prettier-plugin-sentences-per-line: 0.2.0
     prettier-plugin-sh: 0.18.0
-    tsdown: 0.22.2
-    typescript: 5.9.3
+    tsdown: 0.22.3
+    typescript: 6.0.3
     typescript-eslint: 8.62.0
     vitest: 4.1.0
     vitest-ansi-serializer: 0.2.1
@@ -131,6 +131,7 @@ peerDependencyRules:
     eslint-plugin-solid>eslint: "10"
     expressive-code-twoslash>@expressive-code/core: "0.44"
     expressive-code-twoslash>expressive-code: "0.44"
+    typescript: "6"
 
 shellEmulator: true
 

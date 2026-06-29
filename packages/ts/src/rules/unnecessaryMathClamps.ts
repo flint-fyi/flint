@@ -1,6 +1,7 @@
 import { SyntaxKind } from "typescript";
 
 import {
+	getStaticNumberValue,
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
@@ -10,34 +11,6 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function extractNumericLiteral(node: AST.Expression) {
-	const unwrapped = unwrapParenthesizedNode(node);
-
-	if (unwrapped.kind === SyntaxKind.NumericLiteral) {
-		return Number(unwrapped.text);
-	}
-
-	if (
-		unwrapped.kind === SyntaxKind.PrefixUnaryExpression &&
-		unwrapped.operator === SyntaxKind.MinusToken &&
-		unwrapped.operand.kind === SyntaxKind.NumericLiteral
-	) {
-		return -Number(unwrapped.operand.text);
-	}
-
-	if (
-		unwrapped.kind === SyntaxKind.PrefixUnaryExpression &&
-		unwrapped.operator === SyntaxKind.PlusToken &&
-		unwrapped.operand.kind === SyntaxKind.NumericLiteral
-	) {
-		return Number(unwrapped.operand.text);
-	}
-
-	return undefined;
-}
 
 function getMathMethodInfo(node: AST.Expression, typeChecker: Checker) {
 	const unwrapped = unwrapParenthesizedNode(node);
@@ -128,7 +101,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					let allNumeric = true;
 
 					for (const arg of outerInfo.arguments) {
-						const value = extractNumericLiteral(arg);
+						const value = getStaticNumberValue(arg);
 						if (value === undefined) {
 							allNumeric = false;
 							break;
@@ -176,9 +149,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								return;
 							}
 
-							const outerConstant = extractNumericLiteral(firstArgument);
-							const innerConstantFirst = extractNumericLiteral(innerFirstArg);
-							const innerConstantSecond = extractNumericLiteral(innerSecondArg);
+							const outerConstant = getStaticNumberValue(firstArgument);
+							const innerConstantFirst = getStaticNumberValue(innerFirstArg);
+							const innerConstantSecond = getStaticNumberValue(innerSecondArg);
 
 							// Incorrect pattern: Math.max(min, Math.min(max, x))
 							// where outer is max and inner is min, and min < max

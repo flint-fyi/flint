@@ -1,6 +1,7 @@
 import { SyntaxKind } from "typescript";
 
 import {
+	getStaticStringValue,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -18,15 +19,6 @@ const validTypeofValues = new Set([
 	"symbol",
 	"undefined",
 ]);
-
-// TODO: Reuse a shared getStaticValue-style utility?
-// https://github.com/flint-fyi/flint/issues/1298
-function getStringValue(node: AST.Expression) {
-	return node.kind === SyntaxKind.StringLiteral ||
-		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral
-		? node.text
-		: undefined;
-}
 
 function getTypeofOperand(node: AST.Expression) {
 	return node.kind === SyntaxKind.TypeOfExpression && node.expression;
@@ -70,8 +62,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const stringValue = getStringValue(comparisonValue);
-			if (stringValue != null && !validTypeofValues.has(stringValue)) {
+			const stringValue = getStaticStringValue(comparisonValue);
+			if (stringValue !== undefined && !validTypeofValues.has(stringValue)) {
 				context.report({
 					message: "invalidValue",
 					range: getTSNodeRange(comparisonValue, sourceFile),
