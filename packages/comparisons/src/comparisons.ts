@@ -1,5 +1,13 @@
 import data from "./data.json" with { type: "json" };
-import type { Comparison, LinterName } from "./schemas.ts";
+import { comparisonsDataSchema } from "./schemas.ts";
+
+export type LinterName =
+	| "biome"
+	| "deno"
+	| "eslint"
+	| "markdownlint"
+	| "oxlint"
+	| "stylelint";
 
 export function getComparisonId(pluginId: string, ruleId: string) {
 	return [pluginId, ruleId].join("/");
@@ -14,6 +22,6 @@ export const linterNames = {
 	stylelint: "Stylelint",
 } as const satisfies Record<LinterName, string>;
 
-const comparisons = data as Comparison[];
+const comparisons = comparisonsDataSchema.parse(data);
 
 export { comparisons };
