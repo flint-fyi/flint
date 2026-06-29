@@ -9,46 +9,50 @@ import {
 } from "./getStaticValue.ts";
 
 describe(getStaticValue, () => {
-	it("returns literal values", () => {
-		expect(getStaticValue(parseExpression('"abc"'))?.value).toBe("abc");
-		expect(getStaticValue(parseExpression("`abc`"))?.value).toBe("abc");
-		expect(getStaticValue(parseExpression("123"))?.value).toBe(123);
-		expect(getStaticValue(parseExpression("1n"))?.value).toBe(1n);
-		expect(getStaticValue(parseExpression("true"))?.value).toBe(true);
-		expect(getStaticValue(parseExpression("false"))?.value).toBe(false);
-		expect(getStaticValue(parseExpression("null"))?.value).toBe(null);
+	it.each([
+		{ source: '"abc"', value: "abc" },
+		{ source: "`abc`", value: "abc" },
+		{ source: "123", value: 123 },
+		{ source: "1n", value: 1n },
+		{ source: "true", value: true },
+		{ source: "false", value: false },
+		{ source: "null", value: null },
+	])("returns literal value for $source", ({ source, value }) => {
+		expect(getStaticValue(parseExpression(source))?.value).toBe(value);
 	});
 
-	it("returns unary expression values", () => {
-		expect(getStaticValue(parseExpression("-1"))?.value).toBe(-1);
-		expect(getStaticValue(parseExpression("+1"))?.value).toBe(1);
-		expect(getStaticValue(parseExpression("~1"))?.value).toBe(-2);
-		expect(getStaticValue(parseExpression("!true"))?.value).toBe(false);
-		expect(getStaticValue(parseExpression("-1n"))?.value).toBe(-1n);
-		expect(getStaticValue(parseExpression("~1n"))?.value).toBe(-2n);
-		expect(Object.is(getStaticValue(parseExpression("-0"))?.value, -0)).toBe(
-			true,
-		);
+	it.each([
+		{ source: "-1", value: -1 },
+		{ source: "+1", value: 1 },
+		{ source: "~1", value: -2 },
+		{ source: "!true", value: false },
+		{ source: "-1n", value: -1n },
+		{ source: "~1n", value: -2n },
+		{ source: "-0", value: -0 },
+	])("returns unary expression value for $source", ({ source, value }) => {
+		expect(getStaticValue(parseExpression(source))?.value).toBe(value);
 	});
 
-	it("unwraps value-preserving expressions", () => {
-		expect(getStaticValue(parseExpression("(1)"))?.value).toBe(1);
-		expect(getStaticValue(parseExpression("1 as number"))?.value).toBe(1);
-		expect(getStaticValue(parseExpression("1 satisfies number"))?.value).toBe(
-			1,
-		);
-		expect(getStaticValue(parseExpression("'abc'!"))?.value).toBe("abc");
-		expect(getStaticValue(parseExpression("<number>1"))?.value).toBe(1);
+	it.each([
+		{ source: "(1)", value: 1 },
+		{ source: "1 as number", value: 1 },
+		{ source: "1 satisfies number", value: 1 },
+		{ source: "'abc'!", value: "abc" },
+		{ source: "<number>1", value: 1 },
+	])("unwraps value-preserving expression for $source", ({ source, value }) => {
+		expect(getStaticValue(parseExpression(source))?.value).toBe(value);
 	});
 
-	it("returns undefined for non-static expressions", () => {
-		expect(getStaticValue(parseExpression("undefined"))).toBeUndefined();
-		expect(getStaticValue(parseExpression("call()"))).toBeUndefined();
-		expect(getStaticValue(parseExpression("member.value"))).toBeUndefined();
-		expect(getStaticValue(parseExpression("`${value}`"))).toBeUndefined();
-		expect(getStaticValue(parseExpression("+1n"))).toBeUndefined();
-		expect(getStaticValue(parseExpression("-'1'"))).toBeUndefined();
-		expect(getStaticValue(parseExpression("1 + 2"))).toBeUndefined();
+	it.each([
+		"undefined",
+		"call()",
+		"member.value",
+		"`${value}`",
+		"+1n",
+		"-'1'",
+		"1 + 2",
+	])("returns undefined for non-static expression %s", (source) => {
+		expect(getStaticValue(parseExpression(source))).toBeUndefined();
 	});
 });
 
