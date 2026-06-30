@@ -76,7 +76,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Cache Vite cache
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
         with:
           key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
@@ -101,7 +101,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Cache Vite cache
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
         with:
           key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
