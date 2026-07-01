@@ -138,7 +138,6 @@ class Set {
 }
 const count = [...new Set(items)].length;
 void count;
-export {};
 `,
 	],
 });

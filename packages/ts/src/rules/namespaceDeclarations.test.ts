@@ -1,7 +1,7 @@
 import rule from "./namespaceDeclarations.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { scriptRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+scriptRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `

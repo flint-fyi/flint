@@ -89,7 +89,6 @@ top.postMessage("message");
 		`
 			declare const window: { postMessage(message: string): void };
 			window.postMessage("message");
-			export {};
 		`,
 	],
 });

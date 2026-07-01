@@ -7371,15 +7371,15 @@
 		"flint": {
 			"name": "propDuplicates",
 			"plugin": "jsx",
-			"preset": "logical",
-			"status": "implemented"
+			"status": "skipped"
 		},
 		"oxlint": [
 			{
 				"name": "react/jsx-no-duplicate-props",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-no-duplicate-props.html"
 			}
-		]
+		],
+		"notes": "Handled by TypeScript / otherwise is stylistic."
 	},
 	{
 		"eslint": [
@@ -10258,7 +10258,6 @@
 		"flint": {
 			"name": "unsupportedGlobals",
 			"plugin": "node",
-			"preset": "logical",
 			"status": "skipped"
 		}
 	},
@@ -10285,7 +10284,6 @@
 		"flint": {
 			"name": "unsupportedSyntax",
 			"plugin": "node",
-			"preset": "logical",
 			"status": "skipped"
 		}
 	},
@@ -16838,9 +16836,7 @@
 		"flint": {
 			"name": "awaitInsidePromiseMethods",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "skipped",
-			"strictness": "strict"
+			"status": "skipped"
 		},
 		"notes": "Superseded by awaitThenable.",
 		"oxlint": [
@@ -16975,8 +16971,7 @@
 		"flint": {
 			"name": "blockStatements",
 			"plugin": "ts",
-			"status": "skipped",
-			"strictness": "strict"
+			"status": "skipped"
 		},
 		"notes": "Superseded by prettier-plugin-curly",
 		"oxlint": [
@@ -17070,8 +17065,7 @@
 		"flint": {
 			"name": "builtinPrototypeMethodAccesses",
 			"plugin": "ts",
-			"status": "skipped",
-			"strictness": "strict"
+			"status": "skipped"
 		},
 		"oxlint": [
 			{
@@ -24191,9 +24185,9 @@
 		"flint": {
 			"name": "octalNumbers",
 			"plugin": "ts",
-			"preset": "javascript",
-			"status": "implemented"
-		}
+			"status": "skipped"
+		},
+		"notes": "Handled by TypeScript / otherwise is stylistic."
 	},
 	{
 		"biome": [
@@ -24632,7 +24626,6 @@
 		"flint": {
 			"name": "promiseExecutorReturns",
 			"plugin": "ts",
-			"preset": "logical",
 			"status": "skipped"
 		},
 		"notes": "Superseded by awaitThenable.",
@@ -24653,7 +24646,6 @@
 		"flint": {
 			"name": "promiseFinallyReturns",
 			"plugin": "ts",
-			"preset": "logical",
 			"status": "skipped"
 		},
 		"notes": "Largely covered by returnVoidSafety.",
@@ -24971,8 +24963,7 @@
 		"flint": {
 			"name": "readonlyClassProperties",
 			"plugin": "ts",
-			"status": "skipped",
-			"strictness": "strict"
+			"status": "skipped"
 		},
 		"notes": "Better suited to a functional/immutable-focused plugin.",
 		"oxlint": [
@@ -25186,7 +25177,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
-		"notes": "Superseded by other regex cleanliness rules"
+		"notes": "Superseded by other regex cleanliness rules."
 	},
 	{
 		"biome": [
@@ -30936,7 +30927,7 @@
 			}
 		],
 		"flint": {
-			"name": "maxiumumDescribesPerFile",
+			"name": "maximumDescribesPerFile",
 			"plugin": "vitest",
 			"status": "skipped"
 		},

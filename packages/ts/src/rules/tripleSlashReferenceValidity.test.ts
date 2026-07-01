@@ -24,7 +24,6 @@ const value = 1;
 `,
 			files: {
 				"node_modules/@types/node/index.d.ts": `
-export {};
 `,
 			},
 		},
@@ -35,7 +34,6 @@ const value = 1;
 `,
 			files: {
 				"types.d.ts": `
-export {};
 `,
 			},
 		},

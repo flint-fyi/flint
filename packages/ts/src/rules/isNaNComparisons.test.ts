@@ -7,56 +7,48 @@ ruleTester.describe(rule, {
 			code: `
 declare const value: number;
 value > NaN;
-export {};
 `,
 			snapshot: `
 declare const value: number;
 value > NaN;
 ~~~~~~~~~~~
 Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
 `,
 		},
 		{
 			code: `
 declare const value: number;
 value < NaN;
-export {};
 `,
 			snapshot: `
 declare const value: number;
 value < NaN;
 ~~~~~~~~~~~
 Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
 `,
 		},
 		{
 			code: `
 declare const value: number;
 value >= NaN;
-export {};
 `,
 			snapshot: `
 declare const value: number;
 value >= NaN;
 ~~~~~~~~~~~~
 Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
 `,
 		},
 		{
 			code: `
 declare const value: number;
 value <= NaN;
-export {};
 `,
 			snapshot: `
 declare const value: number;
 value <= NaN;
 ~~~~~~~~~~~~
 Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
 `,
 		},
 	],
@@ -73,13 +65,11 @@ export {};
 declare const value: number;
 const NaN = 1;
 value === NaN;
-export {};
 `,
 		`
 declare const value: unknown;
 function NaN() {}
 value === NaN;
-export {};
 `,
 	],
 });

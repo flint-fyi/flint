@@ -212,7 +212,6 @@ import path = require("path");
 		`
 function require(moduleName: string) {}
 require("path");
-export {};
 		`,
 	],
 });

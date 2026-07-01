@@ -204,18 +204,15 @@ throw maybe;
 		`
 class CustomError extends Error {}
 throw new CustomError();
-export {};
 `,
 		`
 class CustomError extends Error {}
 class MoreCustomError extends CustomError {}
 throw new MoreCustomError();
-export {};
 `,
 		`
 class CustomError extends TypeError {}
 throw new CustomError();
-export {};
 `,
 		`function getError(): Error { return new Error(); } throw getError();`,
 		`try { } catch (e) { throw e; }`,

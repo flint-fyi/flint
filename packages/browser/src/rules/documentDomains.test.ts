@@ -45,12 +45,10 @@ window.document.domain = "example.com";
 		`
 			const document = { domain: "example.com" };
 			console.log(document.domain);
-			export {};
 		`,
 		`
 			const window = { document: { domain: "example.com" } };
 			console.log(window.document.domain);
-			export {};
 		`,
 	],
 });

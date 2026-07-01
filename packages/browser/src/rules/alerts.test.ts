@@ -54,7 +54,6 @@ self.confirm("...");
 		`
 			declare function alert(message: string): void;
 			alert("...");
-			export {};
 		`,
 	],
 });

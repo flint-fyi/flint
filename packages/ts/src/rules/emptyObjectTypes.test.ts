@@ -74,7 +74,6 @@ Empty interfaces are often used incorrectly and should be avoided.
 	],
 	valid: [
 		`
-export {};
 
 type NonNullable<T> = T & {};
 `,

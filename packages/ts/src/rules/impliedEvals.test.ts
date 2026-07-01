@@ -165,76 +165,62 @@ setTimeout(getCode(), 0);
 		`
 declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
 setTimeout(() => {}, 100);
-export {};
 `,
 		`
 declare function setInterval(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
 setInterval(function() {}, 1000);
-export {};
 `,
 		`
 declare function setImmediate(handler: string | ((...args: unknown[]) => void)): number;
 setImmediate(() => {});
-export {};
 `,
 		`
 declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
 declare const callback: () => void;
 setTimeout(callback, 100);
-export {};
 `,
 		`
 declare function setInterval(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
 declare function someFunction(): void;
 setInterval(someFunction, 1000);
-export {};
 `,
 		`
 declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
 const fn = () => {};
 setTimeout(fn, 100);
-export {};
 `,
 		`
 declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
 declare const fn: { bind: (ctx: unknown) => () => void };
 setTimeout(fn.bind(this), 100);
-export {};
 `,
 		`
 window.setTimeout(() => {}, 100);
-export {};
 `,
 		`
 declare const callback: () => void;
 globalThis.setInterval(callback, 1000);
-export {};
 `,
 		`
 declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
 declare function getCallback(): () => void;
 setTimeout(getCallback(), 100);
-export {};
 `,
 		`
 declare function setTimeout(handler: string | ((...args: unknown[]) => void), timeout?: number): number;
 const getCallback = (): (() => void) => () => {};
 setTimeout(getCallback(), 100);
-export {};
 `,
 		`
 function setTimeout(input: string, value: number) {}
 setTimeout("", 0);
-export {};
 `,
 		`
 function setInterval(input: string, value: number) {}
 setInterval("", 0);
-export {};
 `,
 		`
 new Function();
-export {};
 `,
 	],
 });
