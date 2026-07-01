@@ -1,6 +1,7 @@
 import { SyntaxKind } from "typescript";
 
 import {
+	getStaticNumberValue,
 	getTSNodeRange,
 	hasSameTokens,
 	typescriptLanguage,
@@ -218,8 +219,8 @@ function extractComparisonInfo(node: AST.BinaryExpression) {
 		return null;
 	}
 
-	const leftNumeric = extractNumericLiteral(node.left);
-	const rightNumeric = extractNumericLiteral(node.right);
+	const leftNumeric = getStaticNumberValue(node.left) ?? null;
+	const rightNumeric = getStaticNumberValue(node.right) ?? null;
 
 	// Both sides are numeric or neither - we need exactly one numeric literal
 	if (
@@ -261,36 +262,6 @@ function extractComparisonInfo(node: AST.BinaryExpression) {
 		operatorKind: node.operatorToken.kind,
 		variable: node.left,
 	};
-}
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function extractNumericLiteral(node: AST.Expression) {
-	const unwrapped = unwrapParenthesizedNode(node);
-
-	if (unwrapped.kind === SyntaxKind.NumericLiteral) {
-		return Number(unwrapped.text);
-	}
-
-	// Handle negative numbers: -5
-	if (
-		unwrapped.kind === SyntaxKind.PrefixUnaryExpression &&
-		unwrapped.operator === SyntaxKind.MinusToken &&
-		unwrapped.operand.kind === SyntaxKind.NumericLiteral
-	) {
-		return -Number(unwrapped.operand.text);
-	}
-
-	// Handle positive prefix: +5
-	if (
-		unwrapped.kind === SyntaxKind.PrefixUnaryExpression &&
-		unwrapped.operator === SyntaxKind.PlusToken &&
-		unwrapped.operand.kind === SyntaxKind.NumericLiteral
-	) {
-		return Number(unwrapped.operand.text);
-	}
-
-	return null;
 }
 
 function flipDirection(direction: ComparisonDirection): ComparisonDirection {

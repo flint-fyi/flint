@@ -1,6 +1,7 @@
 import * as ts from "typescript";
 
 import {
+	getStaticNumberValue,
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
@@ -38,26 +39,16 @@ function isParseIntCall(node: AST.CallExpression, typeChecker: Checker) {
 	}
 }
 
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
 function isValidRadix(argument: AST.Expression) {
-	switch (argument.kind) {
-		case ts.SyntaxKind.Identifier:
-			return argument.text !== "undefined";
-
-		case ts.SyntaxKind.NumericLiteral:
-			return isValidRadixValue(Number(argument.text));
-
-		case ts.SyntaxKind.PrefixUnaryExpression:
-			return (
-				argument.operator === ts.SyntaxKind.MinusToken &&
-				ts.isNumericLiteral(argument.operand) &&
-				isValidRadixValue(-Number(argument.operand.text))
-			);
-
-		default:
-			return true;
+	if (
+		argument.kind === ts.SyntaxKind.Identifier &&
+		argument.text === "undefined"
+	) {
+		return false;
 	}
+
+	const value = getStaticNumberValue(argument);
+	return value === undefined ? true : isValidRadixValue(value);
 }
 
 function isValidRadixValue(value: number) {

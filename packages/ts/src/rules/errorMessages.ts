@@ -1,6 +1,7 @@
 import ts, { SyntaxKind } from "typescript";
 
 import {
+	getStaticStringValue,
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
@@ -49,22 +50,9 @@ function hasValidMessageArgument(
 
 	return (
 		!!firstArgument &&
-		!isEmptyString(firstArgument) &&
+		getStaticStringValue(firstArgument) !== "" &&
 		!isUndefinedLiteral(firstArgument)
 	);
-}
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function isEmptyString(node: AST.Expression) {
-	if (
-		node.kind === SyntaxKind.StringLiteral ||
-		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral
-	) {
-		return node.text === "";
-	}
-
-	return false;
 }
 
 function isUndefinedLiteral(node: AST.Expression) {

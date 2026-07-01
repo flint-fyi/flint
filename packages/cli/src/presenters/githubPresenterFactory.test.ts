@@ -64,7 +64,7 @@ describe("githubPresenterFactory", () => {
 		]);
 
 		expect(output).toMatchInlineSnapshot(`
-			"::error file=src/example.ts,line=1,col=7,endColumn=8,endLine=1,title=no-unused-vars::no-unused-vars: 'x' is unused.
+			"::error file=src/example.ts,line=1,col=7,endColumn=8,endLine=1,title=no-unused-vars::no-unused-vars: 'x' is unused. [src/example.ts:1:7]
 			"
 		`);
 	});
@@ -82,7 +82,7 @@ describe("githubPresenterFactory", () => {
 		]);
 
 		expect(output).toMatchInlineSnapshot(`
-			"::error file=src/example.ts,line=2,endLine=4,title=no-multi-line::no-multi-line: Spans lines.
+			"::error file=src/example.ts,line=2,endLine=4,title=no-multi-line::no-multi-line: Spans lines. [src/example.ts:2:1]
 			"
 		`);
 	});
@@ -104,7 +104,7 @@ describe("githubPresenterFactory", () => {
 		]);
 
 		expect(output).toMatchInlineSnapshot(`
-			"::error file=src/example.ts,line=1,col=1,endColumn=3,endLine=1,title=plugin%3Arule::plugin:rule: Use 100%25 care: a, b%0Aand more.
+			"::error file=src/example.ts,line=1,col=1,endColumn=3,endLine=1,title=plugin%3Arule::plugin:rule: Use 100%25 care: a, b%0Aand more. [src/example.ts:1:1]
 			"
 		`);
 	});
@@ -130,8 +130,8 @@ describe("githubPresenterFactory", () => {
 		]);
 
 		expect(output).toMatchInlineSnapshot(`
-			"::error file=src/example.ts,line=1,col=1,endColumn=2,endLine=1,title=rule-a::rule-a: First.
-			::error file=src/example.ts,line=3,col=1,endColumn=2,endLine=3,title=rule-b::rule-b: Second.
+			"::error file=src/example.ts,line=1,col=1,endColumn=2,endLine=1,title=rule-a::rule-a: First. [src/example.ts:1:1]
+			::error file=src/example.ts,line=3,col=1,endColumn=2,endLine=3,title=rule-b::rule-b: Second. [src/example.ts:3:1]
 			"
 		`);
 	});

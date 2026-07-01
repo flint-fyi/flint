@@ -93,7 +93,7 @@ export async function runCliOnce(
 		return { exitCode: 1, lintResults };
 	}
 
-	for (const fileResults of lintResults.filesResults.values()) {
+	for (const fileResults of lintResults.allFileResults.values()) {
 		if (fileResults.languageReports.length || fileResults.reports.length) {
 			return { exitCode: 1, lintResults };
 		}

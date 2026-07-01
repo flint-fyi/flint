@@ -1,6 +1,7 @@
 import ts from "typescript";
 
 import {
+	getStaticStringValue,
 	isGlobalDeclarationOfName,
 	type AST,
 	type TypeScriptFileServices,
@@ -26,8 +27,6 @@ export function getRegExpConstruction(
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const firstArgument = args[0]!;
 
-	// TODO: Use a util like getStaticValue
-	// https://github.com/flint-fyi/flint/issues/1298
 	if (
 		firstArgument.kind !== ts.SyntaxKind.StringLiteral &&
 		firstArgument.kind !== ts.SyntaxKind.NoSubstitutionTemplateLiteral
@@ -38,12 +37,10 @@ export function getRegExpConstruction(
 	let flags = "";
 	if (args.length >= 2) {
 		const flagsArg = args[1];
-		if (
-			flagsArg?.kind === ts.SyntaxKind.StringLiteral ||
-			flagsArg?.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral
-		) {
-			const flagsText = flagsArg.getText(sourceFile);
-			flags = flagsText.slice(1, -1);
+		const flagsValue =
+			flagsArg === undefined ? undefined : getStaticStringValue(flagsArg);
+		if (flagsValue !== undefined) {
+			flags = flagsValue;
 		}
 	}
 

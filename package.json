@@ -16,7 +16,6 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsdown",
-		"clean": "rimraf -g \"**/node_modules\"",
 		"flint": "node packages/flint/bin/index.js",
 		"flint:cache-ignore": "node packages/flint/bin/index.js --cache-ignore",
 		"lint": "eslint . --max-warnings 0",
@@ -65,14 +64,18 @@
 		"prettier-plugin-packagejson": "catalog:dev",
 		"prettier-plugin-sentences-per-line": "catalog:dev",
 		"prettier-plugin-sh": "catalog:dev",
-		"rimraf": "catalog:dev",
 		"tsdown": "catalog:dev",
 		"typescript": "catalog:dev",
 		"typescript-eslint": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
-	"packageManager": "pnpm@10.34.1",
 	"engines": {
 		"node": ">=24.0.0"
+	},
+	"devEngines": {
+		"packageManager": {
+			"name": "pnpm",
+			"version": "11.9.0"
+		}
 	}
 }

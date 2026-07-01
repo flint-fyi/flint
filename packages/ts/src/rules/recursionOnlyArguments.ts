@@ -2,45 +2,16 @@ import * as tsutils from "ts-api-utils";
 import * as ts from "typescript";
 
 import {
+	getScopeManager,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
+	type ScopeManager,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getFunctionName } from "./utils/getFunctionName.ts";
-
-// TODO: This will be more clean when there is a scope manager
-// https://github.com/flint-fyi/flint/issues/400
-function collectParameterReferences(
-	parameterName: string,
-	parameterNode: ts.Identifier,
-	functionNode: ts.Node,
-	functionBody: ts.Node,
-) {
-	const references: ts.Identifier[] = [];
-
-	function collectNode(node: ts.Node): void {
-		if (tsutils.isFunctionScopeBoundary(node) && node !== functionNode) {
-			return;
-		}
-
-		if (
-			ts.isIdentifier(node) &&
-			node.text === parameterName &&
-			node !== parameterNode
-		) {
-			references.push(node);
-		}
-
-		ts.forEachChild(node, collectNode);
-	}
-
-	ts.forEachChild(functionBody, collectNode);
-
-	return references;
-}
 
 function isParameterOnlyUsedInRecursion(
 	parameter: AST.ParameterDeclaration,
@@ -51,23 +22,24 @@ function isParameterOnlyUsedInRecursion(
 		| AST.FunctionDeclaration
 		| AST.FunctionExpression
 		| AST.MethodDeclaration,
+	scopeManager: ScopeManager,
 ) {
 	if (!ts.isIdentifier(parameter.name) || !functionNode.body) {
 		return false;
 	}
 
-	const references = collectParameterReferences(
-		parameter.name.text,
-		parameter.name,
-		functionNode,
-		functionNode.body,
-	);
+	const [variable] = scopeManager.getDeclaredVariables(parameter);
+	if (!variable) {
+		return false;
+	}
+
+	const { references } = variable;
 
 	return (
 		references.length &&
 		references.every((reference) =>
 			isReferenceOnlyUsedInRecursion(
-				reference,
+				reference.identifier,
 				parameterIndex,
 				functionName,
 				functionNode,
@@ -172,6 +144,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
+			const scopeManager = getScopeManager(sourceFile);
+
 			for (const [parameterIndex, parameter] of node.parameters.entries()) {
 				if (
 					isParameterOnlyUsedInRecursion(
@@ -179,6 +153,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						parameterIndex,
 						functionName,
 						node,
+						scopeManager,
 					)
 				) {
 					context.report({

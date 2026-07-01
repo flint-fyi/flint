@@ -49,7 +49,7 @@ export const interactiveRendererFactory: RendererFactory = {
 
 		async function render({ lintResults }: RendererContext) {
 			const filesWithReportResults = Array.from(
-				lintResults.filesResults,
+				lintResults.allFileResults,
 			).filter(([, results]) => results.reports.length);
 
 			const events: Record<string, (() => boolean) | undefined> = {

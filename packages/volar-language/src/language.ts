@@ -363,6 +363,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 					visit(statement);
 				}
 				visit(sourceFile.endOfFileToken);
+				visitors["SourceFile:exit"]?.(sourceFile, visitorServices);
 			},
 			// TODO: cache
 			getLanguageReports() {

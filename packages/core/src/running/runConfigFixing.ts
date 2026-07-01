@@ -56,7 +56,7 @@ export async function runConfigFixing(
 		// flint-disable-next-line performance/loopAwaits
 		const fixedFilePaths = await applyChangesToFiles(
 			host,
-			lintResults.filesResults,
+			lintResults.allFileResults,
 			requestedSuggestions,
 		);
 
