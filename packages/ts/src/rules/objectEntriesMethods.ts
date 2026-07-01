@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -18,11 +18,15 @@ function isArrowFunctionWithParams(
 	return node.kind === SyntaxKind.ArrowFunction && !!node.parameters.length;
 }
 
-function isEmptyObject(node: AST.Expression, typeChecker: Checker) {
+function isEmptyObject(
+	node: AST.Expression,
+	typeChecker: Checker,
+	program: Program,
+) {
 	const unwrapped = skipParentheses(node);
 	return (
 		isEmptyObjectLiteral(unwrapped) ||
-		isObjectCreateNull(unwrapped, typeChecker)
+		isObjectCreateNull(unwrapped, typeChecker, program)
 	);
 }
 
@@ -37,6 +41,7 @@ function isEmptyObjectLiteral(node: AST.Expression) {
 function isObjectAssignPattern(
 	callback: AST.ArrowFunction,
 	typeChecker: Checker,
+	program: Program,
 ) {
 	if (callback.parameters.length < 1) {
 		return false;
@@ -53,12 +58,13 @@ function isObjectAssignPattern(
 	const body = skipParentheses(callback.body as AST.Expression);
 
 	if (
-		!isObjectMethodCall(body, "assign", typeChecker) ||
+		!isObjectMethodCall(body, "assign", typeChecker, program) ||
 		body.arguments.length !== 2 ||
 		!isGlobalDeclarationOfName(
 			body.expression.expression,
 			"Object",
 			typeChecker,
+			program,
 		)
 	) {
 		return false;
@@ -93,13 +99,18 @@ function isObjectAssignPattern(
 	);
 }
 
-function isObjectCreateNull(node: AST.Expression, typeChecker: Checker) {
+function isObjectCreateNull(
+	node: AST.Expression,
+	typeChecker: Checker,
+	program: Program,
+) {
 	if (
-		!isObjectMethodCall(node, "create", typeChecker) ||
+		!isObjectMethodCall(node, "create", typeChecker, program) ||
 		!isGlobalDeclarationOfName(
 			node.expression.expression,
 			"Object",
 			typeChecker,
+			program,
 		) ||
 		node.arguments.length !== 1
 	) {
@@ -116,19 +127,26 @@ function isObjectMethodCall(
 	node: AST.AnyNode,
 	text: string,
 	typeChecker: Checker,
+	program: Program,
 ): node is AST.CallExpression & { expression: AST.PropertyAccessExpression } {
 	return (
 		node.kind === SyntaxKind.CallExpression &&
 		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.kind === SyntaxKind.Identifier &&
 		node.expression.name.text === text &&
-		isGlobalDeclarationOfName(node.expression.expression, "Object", typeChecker)
+		isGlobalDeclarationOfName(
+			node.expression.expression,
+			"Object",
+			typeChecker,
+			program,
+		)
 	);
 }
 
 function isReduceCallWithEmptyObject(
 	node: AST.CallExpression,
 	typeChecker: Checker,
+	program: Program,
 ) {
 	if (
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
@@ -144,7 +162,7 @@ function isReduceCallWithEmptyObject(
 	const initialValue = node.arguments[1]!;
 
 	return (
-		isEmptyObject(initialValue, typeChecker) &&
+		isEmptyObject(initialValue, typeChecker, program) &&
 		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
 	);
 }
@@ -212,8 +230,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (!isReduceCallWithEmptyObject(node, typeChecker)) {
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
+					if (!isReduceCallWithEmptyObject(node, typeChecker, program)) {
 						return;
 					}
 
@@ -228,7 +246,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (
-						!isObjectAssignPattern(callback, typeChecker) &&
+						!isObjectAssignPattern(callback, typeChecker, program) &&
 						!isSpreadAccumulatorPattern(callback)
 					) {
 						return;

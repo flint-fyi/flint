@@ -56,11 +56,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 				},
-				PropertyAccessExpression(node, { sourceFile, typeChecker }) {
+				PropertyAccessExpression(node, { program, sourceFile, typeChecker }) {
 					if (
 						node.name.text === "fromCharCode" &&
 						ts.isIdentifier(node.expression) &&
-						isGlobalDeclarationOfName(node.expression, "String", typeChecker)
+						isGlobalDeclarationOfName(
+							node.expression,
+							"String",
+							typeChecker,
+							program,
+						)
 					) {
 						context.report({
 							message: "preferFromCodePoint",

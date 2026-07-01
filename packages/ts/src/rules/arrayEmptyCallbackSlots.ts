@@ -48,7 +48,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (!ts.isPropertyAccessExpression(node.expression)) {
 						return;
 					}
@@ -62,6 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							objectExpression.expression,
 							"Array",
 							typeChecker,
+							program,
 						)
 					) {
 						return;

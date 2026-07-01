@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -42,23 +42,28 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isWindowLikeIdentifier(
 			node: AST.LeftHandSideExpression,
 			typeChecker: Checker,
+			program: Program,
 		): boolean {
 			return (
 				node.kind === SyntaxKind.Identifier &&
 				windowLikeNames.has(node.text) &&
-				isGlobalVariable(node, typeChecker)
+				isGlobalVariable(node, typeChecker, program)
 			);
 		}
 
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
+				CallExpression(node, { program, sourceFile, typeChecker }) {
 					if (
 						node.arguments.length < 2 &&
 						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 						node.expression.name.kind === SyntaxKind.Identifier &&
 						node.expression.name.text === "postMessage" &&
-						isWindowLikeIdentifier(node.expression.expression, typeChecker)
+						isWindowLikeIdentifier(
+							node.expression.expression,
+							typeChecker,
+							program,
+						)
 					) {
 						context.report({
 							message: "missingTargetOrigin",

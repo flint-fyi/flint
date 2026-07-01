@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { TypeFlags, type Program, type Type } from "typescript";
 
 import {
 	declarationIncludesGlobal,
@@ -12,32 +12,34 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
-function isBuiltinErrorType(type: ts.Type): boolean {
+function isBuiltinErrorType(type: Type, program: Program): boolean {
 	const symbol = type.getSymbol();
 	if (symbol?.getName() !== "Error") {
 		return false;
 	}
 
-	return !!symbol.getDeclarations()?.some(declarationIncludesGlobal);
+	return !!symbol
+		.getDeclarations()
+		?.some((declaration) => declarationIncludesGlobal(declaration, program));
 }
 
-function isErrorType(type: ts.Type): boolean {
-	if (isBuiltinErrorType(type)) {
+function isErrorType(type: Type, program: Program): boolean {
+	if (isBuiltinErrorType(type, program)) {
 		return true;
 	}
 
 	if (type.isUnion()) {
-		return type.types.every((t) => isErrorType(t));
+		return type.types.every((t) => isErrorType(t, program));
 	}
 
 	if (type.isIntersection()) {
-		return type.types.some((t) => isErrorType(t));
+		return type.types.some((t) => isErrorType(t, program));
 	}
 
 	const baseTypes = type.getBaseTypes();
 	if (baseTypes) {
 		for (const baseType of baseTypes) {
-			if (isErrorType(baseType)) {
+			if (isErrorType(baseType, program)) {
 				return true;
 			}
 		}
@@ -81,7 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ThrowStatement(
 					node: AST.ThrowStatement,
-					{ sourceFile, typeChecker }: TypeScriptFileServices,
+					{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 				) {
 					const type = getConstrainedTypeAtLocation(
 						node.expression,
@@ -89,11 +91,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					);
 
 					if (
-						tsutils.isTypeFlagSet(
-							type,
-							ts.TypeFlags.Any | ts.TypeFlags.Unknown,
-						) ||
-						isErrorType(type)
+						tsutils.isTypeFlagSet(type, TypeFlags.Any | TypeFlags.Unknown) ||
+						isErrorType(type, program)
 					) {
 						return;
 					}
@@ -103,9 +102,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						type.isUnion()
 							? type.types.every((t) =>
-									tsutils.isTypeFlagSet(t, ts.TypeFlags.Undefined),
+									tsutils.isTypeFlagSet(t, TypeFlags.Undefined),
 								)
-							: tsutils.isTypeFlagSet(type, ts.TypeFlags.Undefined)
+							: tsutils.isTypeFlagSet(type, TypeFlags.Undefined)
 					) {
 						context.report({
 							message: "throwUndefined",

@@ -415,12 +415,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkCallOrNewExpression(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile, typeChecker }: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (
 				!ts.isIdentifier(node.expression) ||
 				node.expression.text !== "RegExp" ||
-				!isGlobalDeclarationOfName(node.expression, "RegExp", typeChecker) ||
+				!isGlobalDeclarationOfName(
+					node.expression,
+					"RegExp",
+					typeChecker,
+					program,
+				) ||
 				!node.arguments?.length
 			) {
 				return;

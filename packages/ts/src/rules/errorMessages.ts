@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind, type NodeArray, type Program } from "typescript";
 
 import {
 	getStaticStringValue,
@@ -26,6 +26,7 @@ const errorConstructors = [
 function getErrorConstructorWithoutMessage(
 	node: AST.CallExpression | AST.NewExpression,
 	typeChecker: Checker,
+	program: Program,
 ) {
 	if (
 		node.expression.kind !== SyntaxKind.Identifier ||
@@ -35,13 +36,16 @@ function getErrorConstructorWithoutMessage(
 	}
 
 	return errorConstructors.find((errorConstructor) =>
-		isGlobalDeclarationOfName(node.expression, errorConstructor, typeChecker),
+		isGlobalDeclarationOfName(
+			node.expression,
+			errorConstructor,
+			typeChecker,
+			program,
+		),
 	);
 }
 
-function hasValidMessageArgument(
-	args: ts.NodeArray<AST.Expression> | undefined,
-) {
+function hasValidMessageArgument(args: NodeArray<AST.Expression> | undefined) {
 	if (!args?.length) {
 		return false;
 	}
@@ -81,11 +85,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile, typeChecker }: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			const errorConstructor = getErrorConstructorWithoutMessage(
 				node,
 				typeChecker,
+				program,
 			);
 
 			if (errorConstructor) {

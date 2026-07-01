@@ -1,5 +1,16 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import {
+	isElementAccessExpression,
+	isIdentifier,
+	isPropertyAccessExpression,
+	isStringLiteral,
+	SignatureKind,
+	SymbolFlags,
+	SyntaxKind,
+	TypeFlags,
+	type Program,
+	type Type,
+} from "typescript";
 
 import {
 	getTSNodeRange,
@@ -24,22 +35,22 @@ const evalLikeFunctions = new Set([
 // https://github.com/flint-fyi/flint/issues/1298
 function getCalleeName(node: AST.Expression) {
 	switch (node.kind) {
-		case ts.SyntaxKind.ElementAccessExpression:
+		case SyntaxKind.ElementAccessExpression:
 			if (
-				ts.isIdentifier(node.expression) &&
+				isIdentifier(node.expression) &&
 				globalCandidates.has(node.expression.text) &&
-				ts.isStringLiteral(node.argumentExpression)
+				isStringLiteral(node.argumentExpression)
 			) {
 				return node.argumentExpression.text;
 			}
 			break;
 
-		case ts.SyntaxKind.Identifier:
+		case SyntaxKind.Identifier:
 			return node.text;
 
-		case ts.SyntaxKind.PropertyAccessExpression:
+		case SyntaxKind.PropertyAccessExpression:
 			if (
-				ts.isIdentifier(node.expression) &&
+				isIdentifier(node.expression) &&
 				globalCandidates.has(node.expression.text)
 			) {
 				return node.name.text;
@@ -54,10 +65,10 @@ function getCalleeName(node: AST.Expression) {
 // https://github.com/flint-fyi/flint/issues/1298
 function isBind(node: AST.AnyNode) {
 	switch (node.kind) {
-		case ts.SyntaxKind.Identifier:
+		case SyntaxKind.Identifier:
 			return node.text === "bind";
 
-		case ts.SyntaxKind.PropertyAccessExpression:
+		case SyntaxKind.PropertyAccessExpression:
 			return isBind(node.name);
 
 		default:
@@ -65,11 +76,11 @@ function isBind(node: AST.AnyNode) {
 	}
 }
 
-function isDefinitelyString(type: ts.Type) {
+function isDefinitelyString(type: Type) {
 	if (
 		tsutils.isTypeFlagSet(
 			type,
-			ts.TypeFlags.Any | ts.TypeFlags.Unknown | ts.TypeFlags.Never,
+			TypeFlags.Any | TypeFlags.Unknown | TypeFlags.Never,
 		)
 	) {
 		return false;
@@ -79,21 +90,21 @@ function isDefinitelyString(type: ts.Type) {
 		return type.types.every(isDefinitelyString);
 	}
 
-	return tsutils.isTypeFlagSet(type, ts.TypeFlags.StringLike);
+	return tsutils.isTypeFlagSet(type, TypeFlags.StringLike);
 }
 
 function isFunction(
 	node: AST.AnyNode,
 	typeChecker: Checker,
-	program: ts.Program,
+	program: Program,
 ): boolean {
 	switch (node.kind) {
-		case ts.SyntaxKind.ArrowFunction:
-		case ts.SyntaxKind.FunctionDeclaration:
-		case ts.SyntaxKind.FunctionExpression:
+		case SyntaxKind.ArrowFunction:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.FunctionExpression:
 			return true;
 
-		case ts.SyntaxKind.CallExpression:
+		case SyntaxKind.CallExpression:
 			if (isBind(node.expression)) {
 				return true;
 			}
@@ -102,9 +113,9 @@ function isFunction(
 				isFunctionType(node, typeChecker, program)
 			);
 
-		case ts.SyntaxKind.NoSubstitutionTemplateLiteral:
-		case ts.SyntaxKind.StringLiteral:
-		case ts.SyntaxKind.TemplateExpression:
+		case SyntaxKind.NoSubstitutionTemplateLiteral:
+		case SyntaxKind.StringLiteral:
+		case SyntaxKind.TemplateExpression:
 			return false;
 
 		default: {
@@ -119,12 +130,12 @@ function isFunction(
 function isFunctionType(
 	node: AST.AnyNode,
 	typeChecker: Checker,
-	program: ts.Program,
+	program: Program,
 ): boolean {
 	const type = typeChecker.getTypeAtLocation(node);
 
 	if (
-		tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown) ||
+		tsutils.isTypeFlagSet(type, TypeFlags.Any | TypeFlags.Unknown) ||
 		isBuiltinSymbolLike(program, type, "Function")
 	) {
 		return true;
@@ -134,18 +145,12 @@ function isFunctionType(
 
 	if (
 		symbol &&
-		tsutils.isSymbolFlagSet(
-			symbol,
-			ts.SymbolFlags.Function | ts.SymbolFlags.Method,
-		)
+		tsutils.isSymbolFlagSet(symbol, SymbolFlags.Function | SymbolFlags.Method)
 	) {
 		return true;
 	}
 
-	const signatures = typeChecker.getSignaturesOfType(
-		type,
-		ts.SignatureKind.Call,
-	);
+	const signatures = typeChecker.getSignaturesOfType(type, SignatureKind.Call);
 
 	return !!signatures.length;
 }
@@ -153,10 +158,11 @@ function isFunctionType(
 function isReferenceToGlobalFunction(
 	node: AST.CallExpression | AST.NewExpression,
 	typeChecker: Checker,
+	program: Program,
 ): boolean {
 	if (
-		ts.isPropertyAccessExpression(node.expression) ||
-		ts.isElementAccessExpression(node.expression)
+		isPropertyAccessExpression(node.expression) ||
+		isElementAccessExpression(node.expression)
 	) {
 		return true;
 	}
@@ -169,9 +175,7 @@ function isReferenceToGlobalFunction(
 	return !!symbol.getDeclarations()?.some((declaration) => {
 		const sourceFile = declaration.getSourceFile();
 		return (
-			// flint-disable-lines-begin ts/deprecated -- https://github.com/flint-fyi/flint/issues/3057
-			// eslint-disable-next-line @typescript-eslint/no-deprecated -- https://github.com/flint-fyi/flint/issues/3057
-			sourceFile.hasNoDefaultLib ||
+			program.isSourceFileDefaultLibrary(sourceFile) ||
 			sourceFile.fileName.includes("node_modules/@types/node/") ||
 			/\/lib\.[^/]*\.d\.ts$/.test(sourceFile.fileName)
 		);
@@ -243,7 +247,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (
 				!evalLikeFunctions.has(calleeName) ||
 				isFunction(handler, typeChecker, program) ||
-				!isReferenceToGlobalFunction(node, typeChecker)
+				!isReferenceToGlobalFunction(node, typeChecker, program)
 			) {
 				return;
 			}

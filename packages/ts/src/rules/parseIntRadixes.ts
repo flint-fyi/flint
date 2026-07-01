@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { isIdentifier, SyntaxKind, type Program } from "typescript";
 
 import {
 	getStaticNumberValue,
@@ -12,25 +12,31 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isParseIntCall(node: AST.CallExpression, typeChecker: Checker) {
+function isParseIntCall(
+	node: AST.CallExpression,
+	typeChecker: Checker,
+	program: Program,
+) {
 	switch (node.expression.kind) {
-		case ts.SyntaxKind.Identifier:
+		case SyntaxKind.Identifier:
 			return isGlobalDeclarationOfName(
 				node.expression,
 				"parseInt",
 				typeChecker,
+				program,
 			);
 
-		case ts.SyntaxKind.PropertyAccessExpression:
+		case SyntaxKind.PropertyAccessExpression:
 			return (
-				ts.isIdentifier(node.expression.name) &&
+				isIdentifier(node.expression.name) &&
 				node.expression.name.text === "parseInt" &&
-				ts.isIdentifier(node.expression.expression) &&
+				isIdentifier(node.expression.expression) &&
 				node.expression.expression.text === "Number" &&
 				isGlobalDeclarationOfName(
 					node.expression.expression,
 					"Number",
 					typeChecker,
+					program,
 				)
 			);
 
@@ -41,7 +47,7 @@ function isParseIntCall(node: AST.CallExpression, typeChecker: Checker) {
 
 function isValidRadix(argument: AST.Expression) {
 	if (
-		argument.kind === ts.SyntaxKind.Identifier &&
+		argument.kind === SyntaxKind.Identifier &&
 		argument.text === "undefined"
 	) {
 		return false;
@@ -88,9 +94,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (
 					node,
-					{ sourceFile, typeChecker }: TypeScriptFileServices,
+					{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 				) => {
-					if (!isParseIntCall(node, typeChecker)) {
+					if (!isParseIntCall(node, typeChecker, program)) {
 						return;
 					}
 

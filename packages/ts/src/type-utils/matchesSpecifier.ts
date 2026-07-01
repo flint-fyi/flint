@@ -1,4 +1,4 @@
-import type ts from "typescript";
+import type { Declaration, Program } from "typescript";
 
 import { declarationIncludesGlobal } from "@flint.fyi/typescript-language";
 
@@ -10,9 +10,9 @@ import type { TypeOrValueSpecifier } from "./schemas.ts";
 // TODO: Investigate unifying this with / contributing upstream to typescript-eslint
 export function matchesSpecifier(
 	importedName: string | undefined,
-	declarations: ts.Declaration[],
+	declarations: Declaration[],
 	specifier: TypeOrValueSpecifier,
-	program: ts.Program,
+	program: Program,
 ) {
 	const names = getSpecifierNames(specifier);
 	if (
@@ -27,7 +27,7 @@ export function matchesSpecifier(
 			case "file":
 				return isFromFile(declaration.getSourceFile(), specifier.path, program);
 			case "lib":
-				return declarationIncludesGlobal(declaration);
+				return declarationIncludesGlobal(declaration, program);
 			case "package":
 				return isFromPackage(declaration, specifier.package, program);
 		}

@@ -1,11 +1,12 @@
-import type ts from "typescript";
+import type { Declaration, Program } from "typescript";
 
-export function declarationIncludesGlobal(declaration: ts.Declaration) {
+export function declarationIncludesGlobal(
+	declaration: Declaration,
+	program: Program,
+) {
 	const sourceFile = declaration.getSourceFile();
 	return (
-		// flint-disable-lines-begin ts/deprecated -- https://github.com/flint-fyi/flint/issues/3057
-		// eslint-disable-next-line @typescript-eslint/no-deprecated -- https://github.com/flint-fyi/flint/issues/3057
-		sourceFile.hasNoDefaultLib ||
+		program.isSourceFileDefaultLibrary(sourceFile) ||
 		/\/lib\.[^/]*\.d\.ts$/.test(sourceFile.fileName)
 	);
 }
