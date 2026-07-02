@@ -717,18 +717,5 @@ import { restricted } from "test-pkg";
 				],
 			},
 		},
-		{
-			code: `import "nonexistent-module";`,
-			options: {
-				restrictions: [
-					{
-						specifier: {
-							from: "package",
-							package: "nonexistent-module",
-						},
-					},
-				],
-			},
-		},
 	],
 });

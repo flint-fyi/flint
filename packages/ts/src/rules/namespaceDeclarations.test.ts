@@ -15,16 +15,6 @@ Prefer using ECMAScript modules over legacy TypeScript namespaces.
 		},
 		{
 			code: `
-module name {}
-`,
-			snapshot: `
-module name {}
-~~~~~~
-Prefer using ECMAScript modules over legacy TypeScript namespaces.
-`,
-		},
-		{
-			code: `
 export namespace name {}
 `,
 			snapshot: `
@@ -35,30 +25,10 @@ Prefer using ECMAScript modules over legacy TypeScript namespaces.
 		},
 		{
 			code: `
-export module name {}
-`,
-			snapshot: `
-export module name {}
-~~~~~~
-Prefer using ECMAScript modules over legacy TypeScript namespaces.
-`,
-		},
-		{
-			code: `
 declare namespace name {}
 `,
 			snapshot: `
 declare namespace name {}
-~~~~~~~
-Prefer using ECMAScript modules over legacy TypeScript namespaces.
-`,
-		},
-		{
-			code: `
-declare module name {}
-`,
-			snapshot: `
-declare module name {}
 ~~~~~~~
 Prefer using ECMAScript modules over legacy TypeScript namespaces.
 `,
@@ -97,10 +67,6 @@ declare global {}
 		`declare module 'name' {}`,
 		`declare module "name" {}`,
 		{
-			code: `declare module name {}`,
-			options: { allowDeclarations: true },
-		},
-		{
 			code: `declare namespace name {}`,
 			options: { allowDeclarations: true },
 		},
@@ -130,11 +96,6 @@ declare global {
 		{
 			code: `declare namespace name {}`,
 			fileName: "file.d.ts",
-			options: { allowDefinitionFiles: true },
-		},
-		{
-			code: `declare module name {}`,
-			fileName: "types.d.ts",
 			options: { allowDefinitionFiles: true },
 		},
 	],

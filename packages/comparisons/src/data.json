@@ -23110,9 +23110,9 @@
 		"flint": {
 			"name": "namespaceKeywords",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented"
+			"status": "skipped"
 		},
+		"notes": "Handled by TypeScript.",
 		"oxlint": [
 			{
 				"name": "typescript/prefer-namespace-keyword",

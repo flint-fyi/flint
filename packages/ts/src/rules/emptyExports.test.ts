@@ -135,9 +135,12 @@ export {};
 `,
 			files: {
 				...createRuleTesterTSConfig({
-					module: "commonjs",
-					moduleResolution: "node",
+					module: "Node16",
+					moduleResolution: "node16",
 				}),
+				"package.json": `{
+	"type": "commonjs"
+}`,
 				"types.d.ts": `
 declare module 'module' {
     const value: unknown;
@@ -164,9 +167,12 @@ export {};
 `,
 			files: {
 				...createRuleTesterTSConfig({
-					module: "commonjs",
-					moduleResolution: "node",
+					module: "Node16",
+					moduleResolution: "node16",
 				}),
+				"package.json": `{
+	"type": "commonjs"
+}`,
 				"types.d.ts": `
 declare module 'module' {
     const value: unknown;
@@ -252,9 +258,12 @@ export {};
 `,
 			files: {
 				...createRuleTesterTSConfig({
-					module: "commonjs",
-					moduleResolution: "node",
+					module: "Node16",
+					moduleResolution: "node16",
 				}),
+				"package.json": `{
+	"type": "commonjs"
+}`,
 				"types.d.ts": `
 declare module 'module' {
     const value: unknown;
@@ -304,9 +313,12 @@ export const value: unknown;
 			code: `export = {};`,
 			files: {
 				...createRuleTesterTSConfig({
-					module: "commonjs",
-					moduleResolution: "node",
+					module: "Node16",
+					moduleResolution: "node16",
 				}),
+				"package.json": `{
+	"type": "commonjs"
+}`,
 				"types.d.ts": `
 declare module 'module' {
     const value: unknown;
@@ -319,9 +331,12 @@ declare module 'module' {
 			code: `export = 3;`,
 			files: {
 				...createRuleTesterTSConfig({
-					module: "commonjs",
-					moduleResolution: "node",
+					module: "Node16",
+					moduleResolution: "node16",
 				}),
+				"package.json": `{
+	"type": "commonjs"
+}`,
 				"types.d.ts": `
 declare module 'module' {
     const value: unknown;

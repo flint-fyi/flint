@@ -132,7 +132,6 @@ import multilineAmbiguities from "./rules/multilineAmbiguities.ts";
 import namedDefaultExports from "./rules/namedDefaultExports.ts";
 import namespaceDeclarations from "./rules/namespaceDeclarations.ts";
 import namespaceImplicitAmbientImports from "./rules/namespaceImplicitAmbientImports.ts";
-import namespaceKeywords from "./rules/namespaceKeywords.ts";
 import nativeObjectExtensions from "./rules/nativeObjectExtensions.ts";
 import negativeIndexLengthMethods from "./rules/negativeIndexLengthMethods.ts";
 import negativeZeroComparisons from "./rules/negativeZeroComparisons.ts";
@@ -444,7 +443,6 @@ export const ts = createPlugin({
 		namedDefaultExports,
 		namespaceDeclarations,
 		namespaceImplicitAmbientImports,
-		namespaceKeywords,
 		nativeObjectExtensions,
 		negativeIndexLengthMethods,
 		negativeZeroComparisons,
