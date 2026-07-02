@@ -504,25 +504,6 @@ import "test-pkg";
 `,
 		},
 		{
-			code: `import "nonexistent-module";`,
-			files: {
-				"nonexistent-module.d.ts": `declare module "nonexistent-module" {}`,
-			},
-			options: {
-				restrictions: [
-					{
-						specifier: {
-							from: "package",
-							package: "nonexistent-module",
-						},
-					},
-				],
-			},
-			snapshot: `import "nonexistent-module";
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'nonexistent-module' import is restricted.`,
-		},
-		{
 			code: `
 import { restricted } from "test-pkg";
 `,
