@@ -5,6 +5,7 @@ on:
 
 jobs:
   stale:
+    if: github.event.repository.fork != true
     runs-on: ubuntu-latest
     permissions:
       issues: write
