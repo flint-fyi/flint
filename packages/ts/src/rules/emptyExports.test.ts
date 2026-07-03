@@ -138,9 +138,6 @@ export {};
 					module: "Node16",
 					moduleResolution: "node16",
 				}),
-				"package.json": `{
-	"type": "commonjs"
-}`,
 				"types.d.ts": `
 declare module 'module' {
     const value: unknown;
@@ -170,9 +167,6 @@ export {};
 					module: "Node16",
 					moduleResolution: "node16",
 				}),
-				"package.json": `{
-	"type": "commonjs"
-}`,
 				"types.d.ts": `
 declare module 'module' {
     const value: unknown;
