@@ -39,71 +39,81 @@ export function finalizeFileResults(
 	const languageReports: LanguageReport[] = [];
 	let invalidatesCache = false;
 
-	for (const { file, language } of languageAndFiles) {
-		if (file.directives) {
-			log("Adding %d directives for file %s", file.directives.length, filePath);
-			directivesFilterer.add(file.directives);
-		}
-
-		const cacheImpacts = language.getFileCacheImpacts?.(file);
-
-		if (cacheImpacts?.invalidatesCache) {
-			invalidatesCache = true;
-			log(
-				'File "%s" contains code that is global in nature and will invalidate the linting cache when changed.',
-				filePath,
-			);
-		}
-
-		if (cacheImpacts?.dependencies) {
-			for (const dependency of cacheImpacts.dependencies) {
-				const normalized = pathKey(
-					resolve(dependency),
-					host.isCaseSensitiveFS(),
+	try {
+		for (const { file, language } of languageAndFiles) {
+			if (file.directives) {
+				log(
+					"Adding %d directives for file %s",
+					file.directives.length,
+					filePath,
 				);
-				if (!fileDependencies.has(normalized)) {
-					log("Adding file dependency %s for file %s", normalized, filePath);
-					fileDependencies.add(normalized);
+				directivesFilterer.add(file.directives);
+			}
+
+			const cacheImpacts = language.getFileCacheImpacts?.(file);
+
+			if (cacheImpacts?.invalidatesCache) {
+				invalidatesCache = true;
+				log(
+					'File "%s" contains code that is global in nature and will invalidate the linting cache when changed.',
+					filePath,
+				);
+			}
+
+			if (cacheImpacts?.dependencies) {
+				for (const dependency of cacheImpacts.dependencies) {
+					const normalized = pathKey(
+						resolve(dependency),
+						host.isCaseSensitiveFS(),
+					);
+					if (!fileDependencies.has(normalized)) {
+						log("Adding file dependency %s for file %s", normalized, filePath);
+						fileDependencies.add(normalized);
+					}
 				}
+			}
+
+			if (!skipLanguageReports && language.getLanguageReports) {
+				log(
+					"Retrieving %s language reports for file %s",
+					language.about.name,
+					filePath,
+				);
+				languageReports.push(...language.getLanguageReports(file));
+				log(
+					"Retrieved %s language reports for file %s",
+					language.about.name,
+					filePath,
+				);
 			}
 		}
 
-		if (!skipLanguageReports && language.getLanguageReports) {
-			log(
-				"Retrieving %s language reports for file %s",
-				language.about.name,
-				filePath,
-			);
-			languageReports.push(...language.getLanguageReports(file));
-			log(
-				"Retrieved %s language reports for file %s",
-				language.about.name,
-				filePath,
-			);
+		const directiveReportsFromCollector: FileReport[] = [];
+		for (const { file } of languageAndFiles) {
+			if (file.reports) {
+				directiveReportsFromCollector.push(...file.reports);
+			}
+		}
+
+		const filterResult = directivesFilterer.filter(reports);
+
+		const unusedDirectiveReports = filterResult.unusedDirectives.map(
+			(directive) => directiveReports.createUnused(directive),
+		);
+
+		return {
+			dependencies: fileDependencies,
+			invalidatesCache,
+			languageReports,
+			reports: [
+				...filterResult.reports,
+				...directiveReportsFromCollector,
+				...unusedDirectiveReports,
+			],
+		};
+	} finally {
+		for (const { file } of languageAndFiles) {
+			file[Symbol.dispose]();
 		}
 	}
-
-	const directiveReportsFromCollector: FileReport[] = [];
-	for (const { file } of languageAndFiles) {
-		if (file.reports) {
-			directiveReportsFromCollector.push(...file.reports);
-		}
-	}
-
-	const filterResult = directivesFilterer.filter(reports);
-
-	const unusedDirectiveReports = filterResult.unusedDirectives.map(
-		(directive) => directiveReports.createUnused(directive),
-	);
-
-	return {
-		dependencies: fileDependencies,
-		invalidatesCache,
-		languageReports,
-		reports: [
-			...filterResult.reports,
-			...directiveReportsFromCollector,
-			...unusedDirectiveReports,
-		],
-	};
 }
