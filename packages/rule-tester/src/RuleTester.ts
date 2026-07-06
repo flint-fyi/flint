@@ -207,7 +207,7 @@ export class RuleTester {
 			() => {
 				if (testCase.files != null) {
 					assert.notEqual(
-						Object.keys(testCase.files),
+						Object.keys(testCase.files).length,
 						0,
 						`'files' must have at least one file`,
 					);
