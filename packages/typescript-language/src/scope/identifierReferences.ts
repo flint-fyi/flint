@@ -138,11 +138,11 @@ function isIdentifierWithinParent(
 function isTypeReferenceIdentifier(identifier: AST.Identifier) {
 	let current: AST.AnyNode = identifier;
 
-	while ((current.parent as AST.AnyNode).kind === SyntaxKind.QualifiedName) {
-		current = current.parent as AST.AnyNode;
+	while (current.parent.kind === SyntaxKind.QualifiedName) {
+		current = current.parent;
 	}
 
-	const parent = current.parent as AST.AnyNode;
+	const parent = current.parent;
 	if (parent.kind !== SyntaxKind.TypeReference) {
 		return false;
 	}

@@ -1,6 +1,7 @@
 import { SyntaxKind } from "typescript";
 
 import {
+	getStaticNumberValue,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -32,12 +33,7 @@ function isFlatCallWithDepthOne(node: AST.CallExpression) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const firstArgument = node.arguments[0]!;
 
-			// TODO: Use a util like getStaticValue
-			// https://github.com/flint-fyi/flint/issues/1298
-			return (
-				firstArgument.kind === SyntaxKind.NumericLiteral &&
-				firstArgument.text === "1"
-			);
+			return getStaticNumberValue(firstArgument) === 1;
 		}
 
 		default:

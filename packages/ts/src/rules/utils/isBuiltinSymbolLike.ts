@@ -67,9 +67,6 @@ function isSymbolFromDefaultLibrary(program: ts.Program, symbol: ts.Symbol) {
 
 	return declarations.some((declaration) => {
 		const sourceFile = declaration.getSourceFile();
-		return (
-			sourceFile.hasNoDefaultLib ||
-			program.isSourceFileDefaultLibrary(sourceFile)
-		);
+		return program.isSourceFileDefaultLibrary(sourceFile);
 	});
 }

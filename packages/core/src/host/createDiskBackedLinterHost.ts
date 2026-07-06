@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { glob as tinyglobby } from "tinyglobby";
+
 import { dirnameKey, normalizePath, pathKey } from "@flint.fyi/utils";
 
 import type {
@@ -9,7 +11,6 @@ import type {
 	LinterHostFileWatcherEvent,
 } from "../types/host.ts";
 import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
-import { commonlyIgnoredPaths } from "./watcher.ts";
 
 export function createDiskBackedLinterHost(cwd: string): LinterHost {
 	const caseSensitiveFS = isFileSystemCaseSensitive();
@@ -179,19 +180,12 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return fs.statSync(filePath).mtimeMs;
 		},
 		async glob(patterns, options) {
-			const entries = await Array.fromAsync(
-				fs.promises.glob(patterns, {
-					cwd: options.cwd,
-					exclude: [
-						...commonlyIgnoredPaths.map((dir) => `**/${dir.slice(1)}`),
-						...(options.exclude ?? []),
-					],
-					withFileTypes: true,
-				}),
-			);
-			return entries
-				.filter((entry) => entry.isFile())
-				.map((entry) => normalizePath(path.join(entry.parentPath, entry.name)));
+			const entries = await tinyglobby(patterns, {
+				cwd: options.cwd,
+				dot: true,
+				ignore: options.exclude,
+			});
+			return entries.map((entry) => normalizePath(entry));
 		},
 		isCaseSensitiveFS() {
 			return caseSensitiveFS;

@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -31,18 +31,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isNewDateWithNoArguments(
 			node: AST.NewExpression,
 			typeChecker: Checker,
+			program: Program,
 		) {
 			return (
 				node.expression.kind === SyntaxKind.Identifier &&
 				node.expression.text === "Date" &&
 				!node.arguments?.length &&
-				isGlobalDeclarationOfName(node.expression, "Date", typeChecker)
+				isGlobalDeclarationOfName(node.expression, "Date", typeChecker, program)
 			);
 		}
 
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.kind !== SyntaxKind.Identifier ||
@@ -58,7 +59,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						node.expression.expression.kind !== SyntaxKind.NewExpression ||
-						!isNewDateWithNoArguments(node.expression.expression, typeChecker)
+						!isNewDateWithNoArguments(
+							node.expression.expression,
+							typeChecker,
+							program,
+						)
 					) {
 						return;
 					}
@@ -71,8 +76,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				},
-				NewExpression: (node, { sourceFile, typeChecker }) => {
-					if (!isNewDateWithNoArguments(node, typeChecker)) {
+				NewExpression: (node, { program, sourceFile, typeChecker }) => {
+					if (!isNewDateWithNoArguments(node, typeChecker, program)) {
 						return;
 					}
 
@@ -87,6 +92,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									node.parent.expression,
 									node.parent.expression.text,
 									typeChecker,
+									program,
 								)
 							) {
 								context.report({

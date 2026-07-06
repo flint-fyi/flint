@@ -29,7 +29,7 @@
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"language-tags": "^2.1.0",
-		"typescript": "^5.9.3 || ^6.0.0"
+		"typescript": "^6.0.0"
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",

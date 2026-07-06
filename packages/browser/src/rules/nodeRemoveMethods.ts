@@ -30,13 +30,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
+				CallExpression(node, { program, sourceFile, typeChecker }) {
 					if (
 						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.kind !== SyntaxKind.Identifier ||
 						node.expression.name.text !== "removeChild" ||
 						node.arguments.length !== 1 ||
-						!isGlobalDeclaration(node.expression, typeChecker)
+						!isGlobalDeclaration(node.expression, typeChecker, program)
 					) {
 						return;
 					}

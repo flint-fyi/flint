@@ -1,6 +1,7 @@
 import { SyntaxKind } from "typescript";
 
 import {
+	getStaticNumberValue,
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
@@ -23,24 +24,6 @@ function hasCallbackArgument(callExpression: AST.CallExpression) {
 		(firstArgument.kind === SyntaxKind.Identifier &&
 			firstArgument.text !== "undefined")
 	);
-}
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function isNumericLiteral(node: AST.Expression) {
-	if (node.kind === SyntaxKind.NumericLiteral) {
-		return true;
-	}
-
-	if (node.kind === SyntaxKind.PrefixUnaryExpression) {
-		return (
-			(node.operator === SyntaxKind.MinusToken ||
-				node.operator === SyntaxKind.PlusToken) &&
-			node.operand.kind === SyntaxKind.NumericLiteral
-		);
-	}
-
-	return false;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -66,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
@@ -80,6 +63,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							objectExpression.expression,
 							"Array",
 							typeChecker,
+							program,
 						)
 					) {
 						return;
@@ -92,7 +76,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const firstArgument = args[0]!;
-					if (!isNumericLiteral(firstArgument) || !hasCallbackArgument(node)) {
+					if (
+						getStaticNumberValue(firstArgument) === undefined ||
+						!hasCallbackArgument(node)
+					) {
 						return;
 					}
 

@@ -1,10 +1,8 @@
 {
 	"compilerOptions": {
-		"baseUrl": ".",
 		"paths": {
-			"~/*": ["src/*"]
-		},
-		"target": "esnext"
+			"~/*": ["./src/*"]
+		}
 	},
 	"extends": "astro/tsconfigs/strict",
 	"exclude": ["astro.config.ts"]

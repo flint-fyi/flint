@@ -20,7 +20,7 @@ export async function writeToCache(
 	const timestamp = Date.now();
 	const globalInvalidations: GlobalInvalidation[] = [];
 
-	for (const [filePath, fileResult] of lintResults.filesResults) {
+	for (const [filePath, fileResult] of lintResults.allFileResults) {
 		if (fileResult.invalidatesCache) {
 			globalInvalidations.push({
 				filePath,
@@ -46,17 +46,19 @@ export async function writeToCache(
 		},
 		files: {
 			...Object.fromEntries(
-				Array.from(lintResults.filesResults).map(([filePath, fileResults]) => [
-					filePath,
-					{
-						...omitEmpty({
-							dependencies: Array.from(fileResults.dependencies).sort(),
-							languageReports: fileResults.languageReports,
-							reports: fileResults.reports,
-						}),
-						timestamp,
-					},
-				]),
+				Array.from(lintResults.allFileResults).map(
+					([filePath, fileResults]) => [
+						filePath,
+						{
+							...omitEmpty({
+								dependencies: Array.from(fileResults.dependencies).sort(),
+								languageReports: fileResults.languageReports,
+								reports: fileResults.reports,
+							}),
+							timestamp,
+						},
+					],
+				),
 			),
 			...(lintResults.cached &&
 				Object.fromEntries(

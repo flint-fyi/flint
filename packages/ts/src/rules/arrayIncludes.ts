@@ -1,6 +1,7 @@
 import { SyntaxKind } from "typescript";
 
 import {
+	getStaticNumberValue,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -54,39 +55,22 @@ function isIndexOfComparison(node: AST.BinaryExpression, typeChecker: Checker) {
 	}
 
 	const kind = operatorToken.kind;
-	const isZeroValue = isZero(comparedValue);
+	const comparedNumber = getStaticNumberValue(comparedValue);
 	const indexOfOnLeft = left.kind === SyntaxKind.CallExpression;
 
 	const isValidComparison =
-		(isNegativeOne(comparedValue) &&
+		(comparedNumber === -1 &&
 			(kind === SyntaxKind.ExclamationEqualsToken ||
 				kind === SyntaxKind.ExclamationEqualsEqualsToken ||
 				kind === SyntaxKind.EqualsEqualsToken ||
 				kind === SyntaxKind.EqualsEqualsEqualsToken ||
 				(indexOfOnLeft && kind === SyntaxKind.GreaterThanToken) ||
 				(!indexOfOnLeft && kind === SyntaxKind.LessThanToken))) ||
-		(isZeroValue &&
+		(comparedNumber === 0 &&
 			((indexOfOnLeft && kind === SyntaxKind.GreaterThanEqualsToken) ||
 				(!indexOfOnLeft && kind === SyntaxKind.LessThanEqualsToken)));
 
 	return isValidComparison && { indexOfCall, node };
-}
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function isNegativeOne(node: AST.Expression) {
-	return (
-		node.kind === SyntaxKind.PrefixUnaryExpression &&
-		node.operator === SyntaxKind.MinusToken &&
-		node.operand.kind === SyntaxKind.NumericLiteral &&
-		node.operand.text === "1"
-	);
-}
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function isZero(node: AST.Expression) {
-	return node.kind === SyntaxKind.NumericLiteral && node.text === "0";
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

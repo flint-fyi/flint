@@ -1,6 +1,7 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
+	getStaticNumberValue,
 	getTSNodeRange,
 	isGlobalDeclarationOfName,
 	typescriptLanguage,
@@ -11,13 +12,18 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isParseIntCall(node: AST.CallExpression, typeChecker: Checker) {
+function isParseIntCall(
+	node: AST.CallExpression,
+	typeChecker: Checker,
+	program: Program,
+) {
 	switch (node.expression.kind) {
 		case SyntaxKind.Identifier:
 			return isGlobalDeclarationOfName(
 				node.expression,
 				"parseInt",
 				typeChecker,
+				program,
 			);
 
 		case SyntaxKind.PropertyAccessExpression:
@@ -30,6 +36,7 @@ function isParseIntCall(node: AST.CallExpression, typeChecker: Checker) {
 					node.expression.expression,
 					"Number",
 					typeChecker,
+					program,
 				)
 			);
 
@@ -38,26 +45,16 @@ function isParseIntCall(node: AST.CallExpression, typeChecker: Checker) {
 	}
 }
 
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
 function isValidRadix(argument: AST.Expression) {
-	switch (argument.kind) {
-		case SyntaxKind.Identifier:
-			return argument.text !== "undefined";
-
-		case SyntaxKind.NumericLiteral:
-			return isValidRadixValue(Number(argument.text));
-
-		case SyntaxKind.PrefixUnaryExpression:
-			return (
-				argument.operator === SyntaxKind.MinusToken &&
-				argument.operand.kind === SyntaxKind.NumericLiteral &&
-				isValidRadixValue(-Number(argument.operand.text))
-			);
-
-		default:
-			return true;
+	if (
+		argument.kind === SyntaxKind.Identifier &&
+		argument.text === "undefined"
+	) {
+		return false;
 	}
+
+	const value = getStaticNumberValue(argument);
+	return value === undefined ? true : isValidRadixValue(value);
 }
 
 function isValidRadixValue(value: number) {
@@ -97,9 +94,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (
 					node,
-					{ sourceFile, typeChecker }: TypeScriptFileServices,
+					{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 				) => {
-					if (!isParseIntCall(node, typeChecker)) {
+					if (!isParseIntCall(node, typeChecker, program)) {
 						return;
 					}
 

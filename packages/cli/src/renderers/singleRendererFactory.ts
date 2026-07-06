@@ -15,7 +15,7 @@ export const singleRendererFactory: RendererFactory = {
 			},
 			async render({ duration, formattingResults, lintResults }) {
 				const fileContexts = await Promise.all(
-					lintResults.filesResults
+					lintResults.allFileResults
 						.entries()
 						.map(async ([filePath, fileResults]) => {
 							if (!fileResults.reports.length) {

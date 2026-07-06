@@ -154,6 +154,7 @@ function isFunctionType(
 function isReferenceToGlobalFunction(
 	node: AST.CallExpression | AST.NewExpression,
 	typeChecker: Checker,
+	program: Program,
 ): boolean {
 	if (
 		node.expression.kind === SyntaxKind.PropertyAccessExpression ||
@@ -170,7 +171,7 @@ function isReferenceToGlobalFunction(
 	return !!symbol.getDeclarations()?.some((declaration) => {
 		const sourceFile = declaration.getSourceFile();
 		return (
-			sourceFile.hasNoDefaultLib ||
+			program.isSourceFileDefaultLibrary(sourceFile) ||
 			sourceFile.fileName.includes("node_modules/@types/node/") ||
 			/\/lib\.[^/]*\.d\.ts$/.test(sourceFile.fileName)
 		);
@@ -242,7 +243,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (
 				!evalLikeFunctions.has(calleeName) ||
 				isFunction(handler, typeChecker, program) ||
-				!isReferenceToGlobalFunction(node, typeChecker)
+				!isReferenceToGlobalFunction(node, typeChecker, program)
 			) {
 				return;
 			}

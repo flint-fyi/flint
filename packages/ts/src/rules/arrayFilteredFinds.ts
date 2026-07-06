@@ -1,6 +1,7 @@
 import { SyntaxKind } from "typescript";
 
 import {
+	getStaticNumberValue,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -22,23 +23,6 @@ function isArrayFilterCall(
 		node.arguments.length <= 2 &&
 		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
 	);
-}
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function isNegativeOneIndex(node: AST.Expression): boolean {
-	return (
-		node.kind === SyntaxKind.PrefixUnaryExpression &&
-		node.operator === SyntaxKind.MinusToken &&
-		node.operand.kind === SyntaxKind.NumericLiteral &&
-		node.operand.text === "1"
-	);
-}
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function isZeroIndex(node: AST.Expression) {
-	return node.kind === SyntaxKind.NumericLiteral && node.text === "0";
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -111,7 +95,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								const arg = node.arguments[0]!;
 
 								if (
-									isZeroIndex(arg) &&
+									getStaticNumberValue(arg) === 0 &&
 									isArrayFilterCall(objectExpression, typeChecker)
 								) {
 									context.report({
@@ -122,7 +106,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								}
 
 								if (
-									isNegativeOneIndex(arg) &&
+									getStaticNumberValue(arg) === -1 &&
 									isArrayFilterCall(objectExpression, typeChecker)
 								) {
 									context.report({
@@ -135,7 +119,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				ElementAccessExpression: (node, { sourceFile, typeChecker }) => {
 					if (
-						isZeroIndex(node.argumentExpression) &&
+						getStaticNumberValue(node.argumentExpression) === 0 &&
 						isArrayFilterCall(node.expression, typeChecker)
 					) {
 						context.report({

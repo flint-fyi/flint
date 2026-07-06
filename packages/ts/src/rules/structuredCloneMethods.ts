@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	isGlobalDeclarationOfName,
@@ -13,6 +13,7 @@ function isJsonMethod(
 	node: AST.AnyNode,
 	methodName: string,
 	typeChecker: Checker,
+	program: Program,
 ): node is AST.CallExpression {
 	return (
 		node.kind === SyntaxKind.CallExpression &&
@@ -22,6 +23,7 @@ function isJsonMethod(
 			node.expression.expression,
 			"JSON",
 			typeChecker,
+			program,
 		) &&
 		node.expression.expression.text === "JSON" &&
 		node.expression.name.text === methodName
@@ -49,9 +51,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node: AST.CallExpression, { sourceFile, typeChecker }) {
+				CallExpression(
+					node: AST.CallExpression,
+					{ program, sourceFile, typeChecker },
+				) {
 					if (
-						!isJsonMethod(node, "parse", typeChecker) ||
+						!isJsonMethod(node, "parse", typeChecker, program) ||
 						node.arguments.length !== 1
 					) {
 						return;
@@ -62,7 +67,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						argument.kind === SyntaxKind.SpreadElement ||
-						!isJsonMethod(argument, "stringify", typeChecker) ||
+						!isJsonMethod(argument, "stringify", typeChecker, program) ||
 						argument.arguments.length !== 1
 					) {
 						return;
