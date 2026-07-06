@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+orb_home=$AMP_ORB_HOME
+export MISE_DATA_DIR="$orb_home/mise"
+export MISE_CONFIG_DIR="$orb_home/mise-config"
+export MISE_INSTALL_PATH="$orb_home/mise-bin/mise"
+export PATH="$orb_home/bin:$PATH"
+
+curl https://mise.run | sh
+ln -sf "$MISE_INSTALL_PATH" "$orb_home/bin/mise"
+eval "$(mise activate bash)"
+
+mise settings set idiomatic_version_file_enable_tools node,pnpm
+mise install --yes
+pnpm install --frozen-lockfile
+
+amp_config_dir="$HOME/.config/amp"
+mkdir -p "$amp_config_dir"
+cat > "$amp_config_dir/AGENTS.md" << EOF_AGENTS
+# Inside the Orb
+
+- This orb may have older system Node.js and pnpm versions; .agents/setup activates mise for repo-managed tools.
+- Run repo tool commands directly, such as pnpm test.
+EOF_AGENTS
