@@ -31,7 +31,7 @@
 	},
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
-		"@humanwhocodes/momoa": "3.3.10",
+		"@humanwhocodes/momoa": "catalog:dev",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

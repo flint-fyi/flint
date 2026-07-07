@@ -38,7 +38,7 @@
 		"@flint.fyi/typescript-language": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev",
-		"vue": "3.5.30"
+		"vue": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"

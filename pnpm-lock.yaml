@@ -209,6 +209,9 @@ catalogs:
     '@arethetypeswrong/core':
       specifier: 0.18.2
       version: 0.18.2
+    '@biomejs/biome':
+      specifier: 2.4.16
+      version: 2.4.16
     '@changesets/changelog-github':
       specifier: 0.7.0
       version: 0.7.0
@@ -221,9 +224,33 @@ catalogs:
     '@eslint/js':
       specifier: 10.0.1
       version: 10.0.1
+    '@eslint/json':
+      specifier: 2.0.0
+      version: 2.0.0
     '@eslint/markdown':
       specifier: 8.0.0
       version: 8.0.0
+    '@humanwhocodes/momoa':
+      specifier: 3.3.10
+      version: 3.3.10
+    '@ianvs/prettier-plugin-sort-imports':
+      specifier: 4.7.1
+      version: 4.7.1
+    '@next/eslint-plugin-next':
+      specifier: 16.2.6
+      version: 16.2.6
+    '@nuxt/eslint-plugin':
+      specifier: 1.16.0
+      version: 1.16.0
+    '@types/css-tree':
+      specifier: 2.3.11
+      version: 2.3.11
+    '@types/eslint-plugin-jsx-a11y':
+      specifier: 6.10.1
+      version: 6.10.1
+    '@types/eslint-plugin-promise':
+      specifier: 7.3.0
+      version: 7.3.0
     '@types/language-tags':
       specifier: 1.0.4
       version: 1.0.4
@@ -236,6 +263,9 @@ catalogs:
     '@types/omit-empty':
       specifier: 1.0.4
       version: 1.0.4
+    '@types/picomatch':
+      specifier: 4.0.3
+      version: 4.0.3
     '@typescript-eslint/eslint-plugin':
       specifier: 8.62.0
       version: 8.62.0
@@ -251,12 +281,24 @@ catalogs:
     eslint:
       specifier: 10.6.0
       version: 10.6.0
+    eslint-plugin-astro:
+      specifier: 1.7.0
+      version: 1.7.0
+    eslint-plugin-eslint-plugin:
+      specifier: 7.3.3
+      version: 7.3.3
+    eslint-plugin-import:
+      specifier: 2.32.0
+      version: 2.32.0
     eslint-plugin-jsdoc:
       specifier: 63.0.2
       version: 63.0.2
     eslint-plugin-jsonc:
       specifier: 3.2.0
       version: 3.2.0
+    eslint-plugin-jsx-a11y:
+      specifier: 6.10.2
+      version: 6.10.2
     eslint-plugin-n:
       specifier: 18.2.1
       version: 18.2.1
@@ -266,9 +308,30 @@ catalogs:
     eslint-plugin-perfectionist:
       specifier: 5.9.0
       version: 5.9.0
+    eslint-plugin-promise:
+      specifier: 7.3.0
+      version: 7.3.0
+    eslint-plugin-react:
+      specifier: 7.37.5
+      version: 7.37.5
+    eslint-plugin-react-hooks:
+      specifier: 7.1.1
+      version: 7.1.1
     eslint-plugin-regexp:
       specifier: 3.1.0
       version: 3.1.0
+    eslint-plugin-solid:
+      specifier: 0.14.5
+      version: 0.14.5
+    eslint-plugin-svelte:
+      specifier: 3.17.1
+      version: 3.17.1
+    eslint-plugin-unicorn:
+      specifier: 64.0.0
+      version: 64.0.0
+    eslint-plugin-vue:
+      specifier: 10.9.1
+      version: 10.9.1
     eslint-plugin-yml:
       specifier: 3.4.0
       version: 3.4.0
@@ -287,6 +350,12 @@ catalogs:
     lint-staged:
       specifier: 17.0.2
       version: 17.0.2
+    markdownlint:
+      specifier: 0.41.0
+      version: 0.41.0
+    oxlint:
+      specifier: 1.69.0
+      version: 1.69.0
     prettier:
       specifier: 3.8.1
       version: 3.8.1
@@ -305,6 +374,9 @@ catalogs:
     prettier-plugin-sh:
       specifier: 0.18.0
       version: 0.18.0
+    svelte:
+      specifier: 5.56.2
+      version: 5.56.2
     tsdown:
       specifier: 0.22.3
       version: 0.22.3
@@ -320,6 +392,15 @@ catalogs:
     vitest-ansi-serializer:
       specifier: 0.2.1
       version: 0.2.1
+    vue:
+      specifier: 3.5.30
+      version: 3.5.30
+    vue-eslint-parser:
+      specifier: 10.4.1
+      version: 10.4.1
+    yaml-unist-parser:
+      specifier: 3.2.0
+      version: 3.2.0
     zod:
       specifier: 4.4.1
       version: 4.4.1
@@ -427,7 +508,7 @@ importers:
         specifier: catalog:dev
         version: 10.0.1(eslint@10.6.0)
       '@eslint/json':
-        specifier: 2.0.0
+        specifier: catalog:dev
         version: 2.0.0
       '@eslint/markdown':
         specifier: catalog:dev
@@ -451,7 +532,7 @@ importers:
         specifier: workspace:^
         version: link:packages/vitest
       '@ianvs/prettier-plugin-sort-imports':
-        specifier: 4.7.1
+        specifier: catalog:dev
         version: 4.7.1(@vue/compiler-sfc@3.5.30)(prettier@3.8.1)
       '@types/node':
         specifier: catalog:dev
@@ -726,28 +807,28 @@ importers:
         version: 4.4.1
     devDependencies:
       '@biomejs/biome':
-        specifier: 2.4.16
+        specifier: catalog:dev
         version: 2.4.16
       '@eslint-community/eslint-plugin-eslint-comments':
         specifier: catalog:dev
         version: 4.7.0(eslint@10.6.0)
       '@eslint/json':
-        specifier: 2.0.0
+        specifier: catalog:dev
         version: 2.0.0
       '@eslint/markdown':
         specifier: catalog:dev
         version: 8.0.0
       '@next/eslint-plugin-next':
-        specifier: 16.2.6
+        specifier: catalog:dev
         version: 16.2.6
       '@nuxt/eslint-plugin':
-        specifier: 1.16.0
+        specifier: catalog:dev
         version: 1.16.0(eslint@10.6.0)(typescript@6.0.3)
       '@types/eslint-plugin-jsx-a11y':
-        specifier: 6.10.1
+        specifier: catalog:dev
         version: 6.10.1(jiti@2.7.0)
       '@types/eslint-plugin-promise':
-        specifier: 7.3.0
+        specifier: catalog:dev
         version: 7.3.0
       '@typescript-eslint/eslint-plugin':
         specifier: catalog:dev
@@ -759,13 +840,13 @@ importers:
         specifier: catalog:dev
         version: 10.6.0(jiti@2.7.0)
       eslint-plugin-astro:
-        specifier: 1.7.0
+        specifier: catalog:dev
         version: 1.7.0(eslint@10.6.0)
       eslint-plugin-eslint-plugin:
-        specifier: 7.3.3
+        specifier: catalog:dev
         version: 7.3.3(eslint@10.6.0)
       eslint-plugin-import:
-        specifier: 2.32.0
+        specifier: catalog:dev
         version: 2.32.0(@typescript-eslint/parser@8.62.0)(eslint@10.6.0)
       eslint-plugin-jsdoc:
         specifier: catalog:dev
@@ -774,7 +855,7 @@ importers:
         specifier: catalog:dev
         version: 3.2.0(@eslint/json@2.0.0)(eslint@10.6.0)
       eslint-plugin-jsx-a11y:
-        specifier: 6.10.2
+        specifier: catalog:dev
         version: 6.10.2(eslint@10.6.0)
       eslint-plugin-n:
         specifier: catalog:dev
@@ -786,37 +867,37 @@ importers:
         specifier: catalog:dev
         version: 5.9.0(eslint@10.6.0)(typescript@6.0.3)
       eslint-plugin-promise:
-        specifier: 7.3.0
+        specifier: catalog:dev
         version: 7.3.0(eslint@10.6.0)
       eslint-plugin-react:
-        specifier: 7.37.5
+        specifier: catalog:dev
         version: 7.37.5(eslint@10.6.0)
       eslint-plugin-react-hooks:
-        specifier: 7.1.1
+        specifier: catalog:dev
         version: 7.1.1(eslint@10.6.0)
       eslint-plugin-regexp:
         specifier: catalog:dev
         version: 3.1.0(eslint@10.6.0)
       eslint-plugin-solid:
-        specifier: 0.14.5
+        specifier: catalog:dev
         version: 0.14.5(eslint@10.6.0)(typescript@6.0.3)
       eslint-plugin-svelte:
-        specifier: 3.17.1
+        specifier: catalog:dev
         version: 3.17.1(eslint@10.6.0)(svelte@5.56.2)
       eslint-plugin-unicorn:
-        specifier: 64.0.0
+        specifier: catalog:dev
         version: 64.0.0(eslint@10.6.0)
       eslint-plugin-vue:
-        specifier: 10.9.1
+        specifier: catalog:dev
         version: 10.9.1(@typescript-eslint/parser@8.62.0)(eslint@10.6.0)(vue-eslint-parser@10.4.1)
       eslint-plugin-yml:
         specifier: catalog:dev
         version: 3.4.0(eslint@10.6.0)
       markdownlint:
-        specifier: 0.41.0
+        specifier: catalog:dev
         version: 0.41.0
       oxlint:
-        specifier: 1.69.0
+        specifier: catalog:dev
         version: 1.69.0
       tsdown:
         specifier: catalog:dev
@@ -825,7 +906,7 @@ importers:
         specifier: catalog:dev
         version: 4.1.0(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
       vue-eslint-parser:
-        specifier: 10.4.1
+        specifier: catalog:dev
         version: 10.4.1(eslint@10.6.0)
 
   packages/core:
@@ -859,7 +940,7 @@ importers:
         specifier: catalog:dev
         version: 1.0.4
       '@types/picomatch':
-        specifier: 4.0.3
+        specifier: catalog:dev
         version: 4.0.3
       tsdown:
         specifier: catalog:dev
@@ -903,7 +984,7 @@ importers:
         version: 6.0.3
     devDependencies:
       '@types/css-tree':
-        specifier: 2.3.11
+        specifier: catalog:dev
         version: 2.3.11
       tsdown:
         specifier: catalog:dev
@@ -989,7 +1070,7 @@ importers:
         specifier: workspace:^
         version: link:../rule-tester
       '@humanwhocodes/momoa':
-        specifier: 3.3.10
+        specifier: catalog:dev
         version: 3.3.10
       tsdown:
         specifier: catalog:dev
@@ -1192,7 +1273,7 @@ importers:
         specifier: workspace:^
         version: link:../rule-tester
       '@humanwhocodes/momoa':
-        specifier: 3.3.10
+        specifier: catalog:dev
         version: 3.3.10
       tsdown:
         specifier: catalog:dev
@@ -1459,7 +1540,7 @@ importers:
         specifier: workspace:^
         version: link:../typescript-language
       svelte:
-        specifier: 5.56.2
+        specifier: catalog:dev
         version: 5.56.2(@typescript-eslint/types@8.62.0)
       tsdown:
         specifier: catalog:dev
@@ -1700,7 +1781,7 @@ importers:
         specifier: catalog:dev
         version: 4.1.0(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
       vue:
-        specifier: 3.5.30
+        specifier: catalog:dev
         version: 3.5.30(typescript@6.0.3)
 
   packages/vue-language:
@@ -1759,7 +1840,7 @@ importers:
         specifier: catalog:dev
         version: 4.1.0(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
       yaml-unist-parser:
-        specifier: 3.2.0
+        specifier: catalog:dev
         version: 3.2.0
 
   packages/yaml-language:

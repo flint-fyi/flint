@@ -10,13 +10,23 @@ autoInstallPeers: false
 catalogs:
   dev:
     "@arethetypeswrong/core": 0.18.2
+    "@biomejs/biome": 2.4.16
     "@changesets/cli": 2.31.0
     "@changesets/changelog-github": 0.7.0
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
+    "@eslint/json": 2.0.0
     "@eslint/js": 10.0.1
     "@eslint/markdown": 8.0.0
+    "@humanwhocodes/momoa": 3.3.10
+    "@ianvs/prettier-plugin-sort-imports": 4.7.1
+    "@next/eslint-plugin-next": 16.2.6
+    "@nuxt/eslint-plugin": 1.16.0
     "@typescript-eslint/eslint-plugin": 8.62.0
+    "@types/eslint-plugin-jsx-a11y": 6.10.1
+    "@types/eslint-plugin-promise": 7.3.0
+    "@types/css-tree": 2.3.11
     "@types/language-tags": 1.0.4
+    "@types/picomatch": 4.0.3
     "@types/mdast": 4.0.4
     "@types/node": 24.13.1
     "@types/omit-empty": 1.0.4
@@ -24,29 +34,46 @@ catalogs:
     "@vitest/eslint-plugin": 1.6.1
     console-fail-test: 0.6.1
     eslint: 10.6.0
+    eslint-plugin-astro: 1.7.0
+    eslint-plugin-eslint-plugin: 7.3.3
+    eslint-plugin-import: 2.32.0
     eslint-plugin-jsdoc: 63.0.2
     eslint-plugin-jsonc: 3.2.0
+    eslint-plugin-jsx-a11y: 6.10.2
     eslint-plugin-n: 18.2.1
     eslint-plugin-package-json: 1.5.0
     eslint-plugin-perfectionist: 5.9.0
+    eslint-plugin-promise: 7.3.0
+    eslint-plugin-react: 7.37.5
+    eslint-plugin-react-hooks: 7.1.1
     eslint-plugin-regexp: 3.1.0
+    eslint-plugin-solid: 0.14.5
+    eslint-plugin-svelte: 3.17.1
+    eslint-plugin-unicorn: 64.0.0
+    eslint-plugin-vue: 10.9.1
     eslint-plugin-yml: 3.4.0
+    markdownlint: 0.41.0
     execa: 9.6.1
     husky: 9.1.7
     jiti: 2.7.0
     knip: 6.24.0
     lint-staged: 17.0.2
+    oxlint: 1.69.0
     prettier: 3.8.1
     prettier-plugin-astro: 0.14.1
     prettier-plugin-curly: 0.4.1
     prettier-plugin-packagejson: 3.0.0
     prettier-plugin-sentences-per-line: 0.2.0
     prettier-plugin-sh: 0.18.0
+    svelte: 5.56.2
     tsdown: 0.22.3
     typescript: 6.0.3
     typescript-eslint: 8.62.0
     vitest: 4.1.0
     vitest-ansi-serializer: 0.2.1
+    vue: 3.5.30
+    vue-eslint-parser: 10.4.1
+    yaml-unist-parser: 3.2.0
     zod: 4.4.1
 
   site:

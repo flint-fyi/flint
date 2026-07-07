@@ -34,7 +34,7 @@
 	"devDependencies": {
 		"@flint.fyi/rule-tester": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
-		"svelte": "5.56.2",
+		"svelte": "catalog:dev",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

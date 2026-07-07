@@ -32,7 +32,7 @@
 		"@flint.fyi/rule-tester": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev",
-		"yaml-unist-parser": "3.2.0"
+		"yaml-unist-parser": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"
