@@ -1,72 +1,62 @@
-import path from "path";
+import path from "node:path";
 
 import ignore from "ignore";
 
 import type { LinterHost } from "../types/host.ts";
 
-export function createGitignoreFilter(cwd: string, host: LinterHost) {
-	const ig = ignore();
-	const visited = new Set<string>();
+export function createGitignoreFilter(host: LinterHost) {
+	const cwd = host.getCurrentDirectory();
+	const matchers = new Map<string, ignore.Ignore | undefined>();
 
-	function loadDir(dir: string): void {
-		if (visited.has(dir) || !dir.startsWith(cwd)) {
-			return;
+	function matcherForDirectory(directory: string) {
+		if (matchers.has(directory)) {
+			return matchers.get(directory);
 		}
 
-		const parent = path.posix.dirname(dir);
-		if (parent !== dir) {
-			loadDir(parent);
-		}
-		visited.add(dir);
-
-		const gitignorePath = path.posix.join(dir, ".gitignore");
-		if (host.fileTypeSync(gitignorePath) !== "file") {
-			return;
+		let matcher: ignore.Ignore | undefined;
+		const gitignorePath = path.posix.join(directory, ".gitignore");
+		if (host.fileTypeSync(gitignorePath) === "file") {
+			const content = host.readFileSync(gitignorePath);
+			if (content !== undefined) {
+				matcher = ignore().add(content);
+			}
 		}
 
-		const content = host.readFileSync(gitignorePath);
-		if (content === undefined) {
-			return;
-		}
-
-		const prefix = path.posix.relative(cwd, dir);
-
-		const rules = content
-			.split("\n")
-			.filter((line) => !(/^\s*$/.test(line) || line.startsWith("#")))
-			.map((rule) => {
-				const negated = rule.startsWith("!");
-				const [negatePrefix, pattern] = negated
-					? ["!", rule.slice(1)]
-					: ["", rule];
-
-				const patternWithoutTrailingSlash = pattern.replace(/\/$/, "");
-				const hasSlashInBeginningOrMiddle =
-					patternWithoutTrailingSlash.includes("/");
-
-				if (hasSlashInBeginningOrMiddle) {
-					const relativePattern = patternWithoutTrailingSlash.startsWith("/")
-						? pattern
-						: "/" + pattern;
-
-					return prefix
-						? `${negatePrefix}${prefix}${relativePattern}`
-						: `${negatePrefix}${relativePattern}`;
-				}
-
-				if (prefix) {
-					return `${negatePrefix}${prefix}/**/${pattern}`;
-				}
-
-				return rule;
-			});
-
-		ig.add(rules);
+		matchers.set(directory, matcher);
+		return matcher;
 	}
 
-	// Accept a absolute path
-	return (filePath: string) => {
-		loadDir(path.posix.dirname(filePath));
-		return !ig.ignores(path.posix.relative(cwd, filePath));
+	function isPathIgnored(pathAbsolute: string, isDirectory: boolean) {
+		let directory = path.posix.dirname(pathAbsolute);
+		while (directory.startsWith(cwd)) {
+			const matcher = matcherForDirectory(directory);
+			if (matcher) {
+				const relative =
+					path.posix.relative(directory, pathAbsolute) +
+					(isDirectory ? "/" : "");
+				const result = matcher.test(relative);
+				if (result.ignored || result.unignored) {
+					return result.ignored;
+				}
+			}
+			if (directory === cwd) {
+				break;
+			}
+			directory = path.posix.dirname(directory);
+		}
+		return false;
+	}
+
+	return (filePathAbsolute: string) => {
+		let current = filePathAbsolute;
+		let isDirectory = false;
+		while (current.startsWith(cwd) && current !== cwd) {
+			if (isPathIgnored(current, isDirectory)) {
+				return false;
+			}
+			current = path.posix.dirname(current);
+			isDirectory = true;
+		}
+		return true;
 	};
 }
