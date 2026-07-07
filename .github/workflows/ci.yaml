@@ -11,53 +11,58 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: ./.github/actions/prepare
       - run: pnpm run build # Ensure packages pass attw, etc.
       - run: pnpm --filter=site check # Validate packages/site without a full Astro build.
+
   dedupe_check:
     name: Dedupe Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: ./.github/actions/prepare
       - run: pnpm dedupe --check --prefer-offline
+
   flint:
     name: Flint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: ./.github/actions/prepare
       - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
       - run: pnpm run flint
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: ./.github/actions/prepare
       - run: pnpm run --filter=site prebuild # Generate packages/site/.astro
       - run: pnpm run lint
+
   lint_knip:
     name: Lint Knip
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: ./.github/actions/prepare
       - run: pnpm run build # Knip requires all exports to be generated.
       - run: pnpm run lint:knip
       - run: pnpm run lint:knip:prod
+
   typecheck:
     name: Typecheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: ./.github/actions/prepare
       - run: pnpm exec tsc -b
+
   test:
     name: Test
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os:
@@ -65,47 +70,38 @@ jobs:
           - ubuntu-latest
           - windows-latest
         node-version: [24, 25]
-
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: ./.github/actions/prepare
         with:
-          fetch-depth: 0 # required so origin/main can be diffed
+          node-version: ${{ matrix.node-version }}
+      - name: Cache Vite cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          path: node_modules/.vite
+      - name: Run full test suite except e2e
+        run: pnpm run test --project='!e2e'
+
+  test_e2e:
+    name: Test E2E
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+        node-version: [24, 25]
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
           filter: "tree:0"
       - uses: ./.github/actions/prepare
         with:
           node-version: ${{ matrix.node-version }}
       - name: Cache Vite cache
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
-        with:
-          key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          path: node_modules/.vite
-      - # Run partial test pass on PRs (only changed files), excluding e2e.
-        if: ${{ github.event_name == 'pull_request' }}
-        name: Run affected tests except e2e
-        run: pnpm run test --changed origin/${{ github.base_ref }} --project='!e2e'
-      - # On main, run the full non-e2e test suite.
-        if: ${{ github.ref == 'refs/heads/main' }}
-        name: Run full test suite except e2e
-        run: pnpm run test --project='!e2e'
-  test_e2e:
-    name: Test E2E
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os:
-          - macos-latest
-          - ubuntu-latest
-          - windows-latest
-        node-version: [24, 25]
-
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          filter: "tree:0"
-      - uses: ./.github/actions/prepare
-      - name: Cache Vite cache
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite

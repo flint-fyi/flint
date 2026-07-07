@@ -28,12 +28,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (
 						!ts.isPropertyAccessExpression(node.expression) ||
 						!ts.isIdentifier(node.expression.expression) ||
 						node.expression.expression.text !== "console" ||
-						!isGlobalVariable(node.expression.expression, typeChecker)
+						!isGlobalVariable(node.expression.expression, typeChecker, program)
 					) {
 						return;
 					}

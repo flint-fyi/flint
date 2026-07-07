@@ -23,6 +23,9 @@ export const options = {
 	presenter: {
 		type: "string",
 	},
+	"skip-formatting": {
+		type: "boolean",
+	},
 	"skip-language-reports": {
 		type: "boolean",
 	},

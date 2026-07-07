@@ -79,7 +79,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.CallExpression | AST.NewExpression,
 			namesToReport: Set<string>,
 			message: "disallowedNew" | "missingNew",
-			{ sourceFile, typeChecker }: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (!ts.isIdentifier(node.expression)) {
 				return;
@@ -90,7 +90,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (!isGlobalDeclarationOfName(node.expression, name, typeChecker)) {
+			if (
+				!isGlobalDeclarationOfName(node.expression, name, typeChecker, program)
+			) {
 				return;
 			}
 

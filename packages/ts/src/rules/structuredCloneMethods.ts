@@ -1,4 +1,12 @@
-import * as ts from "typescript";
+import {
+	isCallExpression,
+	isIdentifier,
+	isPropertyAccessExpression,
+	isSpreadElement,
+	type CallExpression,
+	type Node,
+	type Program,
+} from "typescript";
 
 import {
 	isGlobalDeclarationOfName,
@@ -10,18 +18,20 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isJsonMethod(
-	node: ts.Node,
+	node: Node,
 	methodName: string,
 	typeChecker: Checker,
-): node is ts.CallExpression {
+	program: Program,
+): node is CallExpression {
 	return (
-		ts.isCallExpression(node) &&
-		ts.isPropertyAccessExpression(node.expression) &&
-		ts.isIdentifier(node.expression.expression) &&
+		isCallExpression(node) &&
+		isPropertyAccessExpression(node.expression) &&
+		isIdentifier(node.expression.expression) &&
 		isGlobalDeclarationOfName(
 			node.expression.expression,
 			"JSON",
 			typeChecker,
+			program,
 		) &&
 		node.expression.expression.text === "JSON" &&
 		node.expression.name.text === methodName
@@ -49,9 +59,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node: AST.CallExpression, { sourceFile, typeChecker }) {
+				CallExpression(
+					node: AST.CallExpression,
+					{ program, sourceFile, typeChecker },
+				) {
 					if (
-						!isJsonMethod(node, "parse", typeChecker) ||
+						!isJsonMethod(node, "parse", typeChecker, program) ||
 						node.arguments.length !== 1
 					) {
 						return;
@@ -61,8 +74,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const argument = node.arguments[0]!;
 
 					if (
-						ts.isSpreadElement(argument) ||
-						!isJsonMethod(argument, "stringify", typeChecker) ||
+						isSpreadElement(argument) ||
+						!isJsonMethod(argument, "stringify", typeChecker, program) ||
 						argument.arguments.length !== 1
 					) {
 						return;
@@ -71,7 +84,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const stringifyArgument = argument.arguments[0]!;
 
-					if (ts.isSpreadElement(stringifyArgument)) {
+					if (isSpreadElement(stringifyArgument)) {
 						return;
 					}
 

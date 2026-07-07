@@ -14,6 +14,7 @@ import type { LanguageFilesWithOptions } from "./types.ts";
 export interface RunConfigOptions {
 	cacheLocation?: string | undefined;
 	ignoreCache?: boolean;
+	skipCacheWrite?: boolean;
 	skipLanguageReports?: boolean;
 }
 
@@ -23,6 +24,7 @@ export async function runConfig(
 	{
 		cacheLocation: cacheLocationFromCli,
 		ignoreCache,
+		skipCacheWrite,
 		skipLanguageReports,
 	}: RunConfigOptions,
 ): Promise<LintResults> {
@@ -50,7 +52,7 @@ export async function runConfig(
 	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule, host);
 
 	// 3. For each file path, finalize output using each of its language files
-	const filesResults = new Map(
+	const allFileResults = new Map(
 		Array.from(languageFilesByFilePath).map(([filePath, languageAndFiles]) => [
 			filePath,
 			finalizeFileResults(
@@ -63,10 +65,10 @@ export async function runConfig(
 		]),
 	);
 
-	// 4. Merge cached file results into filesResults
+	// 4. Merge cached file results into allFileResults
 	if (cached) {
 		for (const [filePath, cachedStorage] of cached) {
-			filesResults.set(filePath, {
+			allFileResults.set(filePath, {
 				dependencies: new Set(cachedStorage.dependencies),
 				languageReports: cachedStorage.languageReports ?? [],
 				reports: cachedStorage.reports ?? [],
@@ -76,14 +78,21 @@ export async function runConfig(
 
 	// 5. Write the results to cache, then return them! We did it!
 	const ruleCount = rulesFilesAndOptionsByRule.size;
-	const lintResults = { allFilePaths, cached, filesResults, ruleCount };
+	const lintResults: LintResults = {
+		allFilePaths,
+		allFileResults,
+		cached,
+		ruleCount,
+	};
 
-	await writeToCache(
-		host,
-		configDefinition.filePath,
-		lintResults,
-		cacheLocationOverride,
-	);
+	if (!skipCacheWrite) {
+		await writeToCache(
+			host,
+			configDefinition.filePath,
+			lintResults,
+			cacheLocationOverride,
+		);
+	}
 
 	return lintResults;
 }

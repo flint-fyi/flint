@@ -136,7 +136,7 @@ export function createVFSLinterHost(
 			return fileMap.get(pathKey(filePath, caseSensitiveFS))?.touchTime;
 		},
 		async glob(patterns, options) {
-			const isIncluded = picomatch(patterns);
+			const isIncluded = picomatch(patterns, { dot: true });
 			const isExcluded = createExcludeMatcher(options.exclude);
 			const cwdNormalized = normalizePath(options.cwd);
 
@@ -148,19 +148,16 @@ export function createVFSLinterHost(
 					continue;
 				}
 				if (isIncluded(relative) && !isExcluded?.(relative)) {
-					found.push(file.path);
-					seen.add(pathKey(file.path, caseSensitiveFS));
+					found.push(relative);
+					seen.add(pathKey(relative, caseSensitiveFS));
 				}
 			}
 
 			// Merge files only the base host knows about, letting VFS entries
 			// shadow them (mirrors readDirectorySync's overlay semantics).
-			for (const filePathAbsolute of (await baseHost?.glob(
-				patterns,
-				options,
-			)) ?? []) {
-				if (!seen.has(pathKey(filePathAbsolute, caseSensitiveFS))) {
-					found.push(filePathAbsolute);
+			for (const relative of (await baseHost?.glob(patterns, options)) ?? []) {
+				if (!seen.has(pathKey(relative, caseSensitiveFS))) {
+					found.push(relative);
 				}
 			}
 
@@ -322,7 +319,7 @@ function createExcludeMatcher(patterns: string[] | undefined) {
 		return [base, `${base}/**`];
 	});
 
-	return picomatch(withDescendants);
+	return picomatch(withDescendants, { dot: true });
 }
 
 function relativeWithinCwd(filePathAbsolute: string, cwdNormalized: string) {

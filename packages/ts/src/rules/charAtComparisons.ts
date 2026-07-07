@@ -1,6 +1,7 @@
 import * as ts from "typescript";
 
 import {
+	getStaticStringValue,
 	typescriptLanguage,
 	type AST,
 	type Checker,
@@ -14,14 +15,6 @@ const comparisonOperators = new Set([
 	ts.SyntaxKind.ExclamationEqualsEqualsToken,
 	ts.SyntaxKind.ExclamationEqualsToken,
 ]);
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function getStringLiteralLength(node: AST.Expression) {
-	return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)
-		? node.text.length
-		: undefined;
-}
 
 function isStringCharAtCall(node: AST.Expression, typeChecker: Checker) {
 	return (
@@ -75,8 +68,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const length = getStringLiteralLength(literal);
-					if (length === undefined || length <= 1) {
+					const value = getStaticStringValue(literal);
+					if (value === undefined || value.length <= 1) {
 						return;
 					}
 
@@ -86,7 +79,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					context.report({
 						data: {
-							length,
+							length: value.length,
 							result: isEquality ? "false" : "true",
 						},
 						message: "invalidComparison",

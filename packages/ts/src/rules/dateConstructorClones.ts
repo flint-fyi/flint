@@ -33,12 +33,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				NewExpression: (node, { sourceFile, typeChecker }) => {
+				NewExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (
 						node.expression.kind !== SyntaxKind.Identifier ||
 						node.expression.text !== "Date" ||
 						node.arguments?.length !== 1 ||
-						!isGlobalDeclarationOfName(node.expression, "Date", typeChecker)
+						!isGlobalDeclarationOfName(
+							node.expression,
+							"Date",
+							typeChecker,
+							program,
+						)
 					) {
 						return;
 					}

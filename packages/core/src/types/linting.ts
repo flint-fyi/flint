@@ -11,8 +11,8 @@ export interface FileResults {
 
 export interface LintResults {
 	allFilePaths: Set<string>;
+	allFileResults: Map<string, FinalizedFileResults>;
 	cached: Map<string, FileCacheStorage> | undefined;
-	filesResults: Map<string, FinalizedFileResults>;
 	ruleCount: number;
 }
 
