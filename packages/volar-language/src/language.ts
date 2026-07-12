@@ -6,7 +6,15 @@ import type {
 } from "@volar/language-core";
 import type { TypeScriptServiceScript as VolarTypeScriptServiceScript } from "@volar/typescript";
 import { proxyCreateProgram } from "@volar/typescript/lib/node/proxyCreateProgram.js";
-import ts from "typescript";
+import {
+	getPreEmitDiagnostics,
+	type CreateProgramOptions,
+	type Node,
+	type Program,
+} from "typescript";
+import type ts from "typescript";
+
+//import ts from "typescript";
 
 import {
 	createLanguage,
@@ -43,8 +51,8 @@ import { assert, FlintAssertionError, nullThrows } from "@flint.fyi/utils";
 import packageJson from "../package.json" with { type: "json" };
 
 type VolarLanguagePluginInitializer<FileServices extends object> = (
-	ts: typeof import("typescript"),
-	options: ts.CreateProgramOptions,
+	typescript: typeof ts,
+	options: CreateProgramOptions,
 ) => {
 	createFile: VolarBasedLanguageCreateFile<FileServices>;
 	languagePlugins: VolarLanguagePlugin<string>[];
@@ -69,7 +77,7 @@ const { pluginInitializers } = (globalTyped[stateSymbol] = {
 
 export interface VolarBasedLanguageCreateFileContext {
 	data: FileAboutData;
-	program: ts.Program;
+	program: Program;
 	serviceScript: VolarTypeScriptServiceScript;
 	sourceFile: AST.SourceFile;
 	sourceScript: VolarSourceScript<string> & {
@@ -78,7 +86,7 @@ export interface VolarBasedLanguageCreateFileContext {
 	volarLanguage: VolarLanguage;
 }
 
-type ProxiedTSProgram = ts.Program & {
+type ProxiedTSProgram = Program & {
 	[stateSymbol]?:
 		| undefined
 		| {
@@ -115,7 +123,7 @@ setTSProgramCreationProxy(
 				apply(_, thisArg, args: unknown[]) {
 					let volarLanguage = null as null | VolarLanguage<string>;
 					const createProgramProxy = new Proxy(createProgram, {
-						apply(target, thisArg, [options]: [ts.CreateProgramOptions]) {
+						apply(target, thisArg, [options]: [CreateProgramOptions]) {
 							assert(
 								options.host != null,
 								"Expected options.host to be defined",
@@ -136,7 +144,7 @@ setTSProgramCreationProxy(
 									throw error;
 								}
 							};
-							return Reflect.apply(target, thisArg, args) as ts.Program;
+							return Reflect.apply(target, thisArg, args) as Program;
 						},
 					});
 					const proxied = proxyCreateProgram(
@@ -319,7 +327,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 
 				const visitorServices = { options, ...file.services };
 				let lastMappingIdx = 0;
-				const visit = (node: ts.Node) => {
+				const visit = (node: Node) => {
 					const key = NodeSyntaxKinds[node.kind] as keyof TypeScriptNodesByName;
 
 					// @ts-expect-error -- The node parameter type shouldn't be `never`...?
@@ -368,7 +376,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 			// TODO: cache
 			getLanguageReports() {
 				return [
-					...ts.getPreEmitDiagnostics(program, sourceFile).map((diagnostic) =>
+					...getPreEmitDiagnostics(program, sourceFile).map((diagnostic) =>
 						convertTypeScriptDiagnosticToLanguageReport({
 							...diagnostic,
 							// For some unknown reason, Volar doesn't set file.text to sourceText
