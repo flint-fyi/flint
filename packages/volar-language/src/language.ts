@@ -14,8 +14,6 @@ import {
 } from "typescript";
 import type ts from "typescript";
 
-//import ts from "typescript";
-
 import {
 	createLanguage,
 	DirectivesCollector,
