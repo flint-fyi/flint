@@ -32,7 +32,7 @@
 		"@volar/language-core": "2.4.28",
 		"@vue/compiler-dom": "^3.5.0",
 		"@vue/language-core": "3.2.1",
-		"typescript": "^5.9.0 || ^6.0.0"
+		"typescript": "^7.0.0"
 	},
 	"devDependencies": {
 		"@flint.fyi/core": "workspace:^",

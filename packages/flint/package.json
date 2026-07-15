@@ -37,7 +37,7 @@
 		"@flint.fyi/ts": "workspace:",
 		"@flint.fyi/ts-patch": "workspace:",
 		"@flint.fyi/yaml": "workspace:",
-		"typescript": "^6.0.0"
+		"typescript": "^7.0.0"
 	},
 	"devDependencies": {
 		"prettier": "catalog:dev",
