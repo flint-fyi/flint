@@ -72,7 +72,7 @@ catalogs:
     remark-add-twoslash: 0.0.1
     remark-custom-heading-id: 2.0.0
     sharp: 0.35.2
-    starlight-blog: 0.27.0
+    starlight-blog: 0.28.0
     starlight-links-validator: 0.25.2
     starlight-package-managers: 0.12.0
     starlight-sidebar-topics: 0.8.0

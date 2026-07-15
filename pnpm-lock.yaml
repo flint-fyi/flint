@@ -391,8 +391,8 @@ catalogs:
       specifier: 0.35.2
       version: 0.35.2
     starlight-blog:
-      specifier: 0.27.0
-      version: 0.27.0
+      specifier: 0.28.0
+      version: 0.28.0
     starlight-links-validator:
       specifier: 0.25.2
       version: 0.25.2
@@ -1382,7 +1382,7 @@ importers:
         version: 0.35.2
       starlight-blog:
         specifier: catalog:site
-        version: 0.27.0(@astrojs/markdown-satteri@0.3.3)(@astrojs/starlight@0.41.3)(astro@7.0.6)
+        version: 0.28.0(@astrojs/markdown-satteri@0.3.3)(@astrojs/starlight@0.41.3)(astro@7.0.6)(typescript@6.0.3)
       starlight-links-validator:
         specifier: catalog:site
         version: 0.25.2(@astrojs/starlight@0.41.3)(astro@7.0.6)
@@ -6833,6 +6833,15 @@ packages:
   scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
+  schema-dts-lib@1.0.0:
+    resolution: {integrity: sha512-9MEO5vpQH9JdBioUupqluzxSYxPLjhmqRUudk15adUl/ypnRsM2/M1kN3AmVJQeG7nZqcL68H8JlGqQQT6vy9A==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      typescript: '>=4.9.5'
+
+  schema-dts@2.0.0:
+    resolution: {integrity: sha512-t7NoCy3Rn5GHGx6p7s1qIYK/AeIb8ZxJNR9WUNFkwMv2CiiGZBmqqYWc2FlZVm5ZbiHMY4OvBWhj7QtyrFO2Jw==}
+
   scslre@0.3.0:
     resolution: {integrity: sha512-3A6sD0WYP7+QrjbfNA2FN3FsOaGGFoekCVgTyypy53gPxhbkCIjtO6YWgdrfM+n/8sI8JeXZOIxsHjMTNxQ4nQ==}
     engines: {node: ^14.0.0 || >=16.0.0}
@@ -6980,8 +6989,8 @@ packages:
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
 
-  starlight-blog@0.27.0:
-    resolution: {integrity: sha512-eCYT0VusgXXwmDfiTiQMUMjhfJAbtnEq5J0Wit37ut9t/LvBd8Oi9yQwe0kmY6wvH2yU905mNO6FJDZeryWtFw==}
+  starlight-blog@0.28.0:
+    resolution: {integrity: sha512-tKddmNbbUd20lV/m4Giih2RtDEegpnzPbrNdiwgI29XOCzVKXjtt9T9ckxTJU+cxwG1f0ii++J8duN9iBzw7Iw==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       '@astrojs/starlight': '>=0.41.0'
@@ -13824,6 +13833,16 @@ snapshots:
 
   scheduler@0.27.0: {}
 
+  schema-dts-lib@1.0.0(typescript@6.0.3):
+    dependencies:
+      typescript: 6.0.3
+
+  schema-dts@2.0.0(typescript@6.0.3):
+    dependencies:
+      schema-dts-lib: 1.0.0(typescript@6.0.3)
+    transitivePeerDependencies:
+      - typescript
+
   scslre@0.3.0:
     dependencies:
       '@eslint-community/regexpp': 4.12.2
@@ -14022,7 +14041,7 @@ snapshots:
 
   stackback@0.0.2: {}
 
-  starlight-blog@0.27.0(@astrojs/markdown-satteri@0.3.3)(@astrojs/starlight@0.41.3)(astro@7.0.6):
+  starlight-blog@0.28.0(@astrojs/markdown-satteri@0.3.3)(@astrojs/starlight@0.41.3)(astro@7.0.6)(typescript@6.0.3):
     dependencies:
       '@astrojs/markdown-remark': 7.2.1
       '@astrojs/mdx': 7.0.0(@astrojs/markdown-satteri@0.3.3)(astro@7.0.6)
@@ -14034,6 +14053,7 @@ snapshots:
       hast-util-to-string: 3.0.1
       mdast-util-mdx-expression: 2.0.1
       satteri: 0.9.3
+      schema-dts: 2.0.0(typescript@6.0.3)
       unist-util-is: 6.0.1
       unist-util-remove: 4.0.0
       unist-util-visit: 5.1.0
@@ -14041,6 +14061,7 @@ snapshots:
       - '@astrojs/markdown-satteri'
       - astro
       - supports-color
+      - typescript
 
   starlight-links-validator@0.25.2(@astrojs/starlight@0.41.3)(astro@7.0.6):
     dependencies:
