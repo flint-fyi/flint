@@ -15,7 +15,7 @@ catalogs:
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
     "@eslint/js": 10.0.1
     "@eslint/markdown": 8.0.0
-    "@typescript-eslint/eslint-plugin": 8.63.0
+    "@typescript-eslint/eslint-plugin": 8.64.0
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
     "@types/node": 24.13.1
@@ -44,7 +44,7 @@ catalogs:
     prettier-plugin-sh: 0.19.0
     tsdown: 0.22.3
     typescript: 6.0.3
-    typescript-eslint: 8.63.0
+    typescript-eslint: 8.64.0
     vitest: 4.1.0
     vitest-ansi-serializer: 0.2.1
     zod: 4.4.1
