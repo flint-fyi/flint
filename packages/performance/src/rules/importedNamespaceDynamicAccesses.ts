@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind, type Declaration } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function isNamespaceImportDeclaration(declaration: ts.Declaration) {
+		function isNamespaceImportDeclaration(declaration: Declaration) {
 			return (
 				declaration.kind === SyntaxKind.NamespaceImport &&
 				declaration.parent.kind === SyntaxKind.ImportClause &&
