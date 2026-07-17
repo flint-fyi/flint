@@ -169,7 +169,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			if (stat?.isFile()) {
 				return "file";
 			}
-			return undefined;
+			return;
 		},
 		getCurrentDirectory() {
 			return cwd;
@@ -244,14 +244,14 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			try {
 				return await fs.promises.readFile(filePathAbsolute, "utf8");
 			} catch {
-				return undefined;
+				return;
 			}
 		},
 		readFileSync(filePathAbsolute) {
 			try {
 				return fs.readFileSync(filePathAbsolute, "utf8");
 			} catch {
-				return undefined;
+				return;
 			}
 		},
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
@@ -262,7 +262,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return createWatcher(
 				directoryPathAbsolute,
 				options.recursive,
-				options.pollingInterval ?? 2_000,
+				options.pollingInterval ?? 2000,
 				(normalizedChangedFilePath) => {
 					normalizedChangedFilePath ??= directoryPathAbsolute;
 					const changedKey = pathKey(
@@ -293,7 +293,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return createWatcher(
 				filePathAbsolute,
 				false,
-				options.pollingInterval ?? 2_000,
+				options.pollingInterval ?? 2000,
 				(normalizedChangedFilePath, event) => {
 					if (
 						normalizedChangedFilePath != null &&

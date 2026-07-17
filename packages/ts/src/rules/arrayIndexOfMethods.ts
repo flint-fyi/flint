@@ -16,7 +16,7 @@ function isFindIndexWithDirectEquality(
 	typeChecker: Checker,
 ) {
 	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
-		return undefined;
+		return;
 	}
 
 	const methodName = node.expression.name.text;
@@ -24,7 +24,7 @@ function isFindIndexWithDirectEquality(
 		(methodName !== "findIndex" && methodName !== "findLastIndex") ||
 		node.arguments.length !== 1
 	) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -35,7 +35,7 @@ function isFindIndexWithDirectEquality(
 			callback.kind !== SyntaxKind.FunctionExpression) ||
 		callback.parameters.length !== 1
 	) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -50,7 +50,7 @@ function isFindIndexWithDirectEquality(
 		) ||
 		!isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)
 	) {
-		return undefined;
+		return;
 	}
 
 	return { methodName, node };

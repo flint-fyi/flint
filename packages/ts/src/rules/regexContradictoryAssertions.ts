@@ -89,32 +89,32 @@ function findContradictions(pattern: string, doubleEscaped: boolean) {
 
 function getCharacterFromEscape(escape: string) {
 	switch (escape) {
-		case "\\\\d":
-		case "\\d":
+		case String.raw`\\d`:
+		case String.raw`\d`:
 			return "0";
 
-		case "\\\\D":
-		case "\\D":
+		case String.raw`\\D`:
+		case String.raw`\D`:
 			return " ";
 
-		case "\\\\s":
-		case "\\s":
+		case String.raw`\\s`:
+		case String.raw`\s`:
 			return " ";
 
-		case "\\\\S":
-		case "\\S":
+		case String.raw`\\S`:
+		case String.raw`\S`:
 			return "a";
 
-		case "\\\\w":
-		case "\\w":
+		case String.raw`\\w`:
+		case String.raw`\w`:
 			return "a";
 
-		case "\\\\W":
-		case "\\W":
+		case String.raw`\\W`:
+		case String.raw`\W`:
 			return " ";
 
 		default:
-			return undefined;
+			return;
 	}
 }
 
@@ -124,7 +124,7 @@ function getCharBeforeAssertion(
 	doubleEscaped: boolean,
 ) {
 	if (assertionStart <= 0) {
-		return undefined;
+		return;
 	}
 
 	if (doubleEscaped) {
@@ -187,9 +187,9 @@ function getCharRepresentation(
 		}
 
 		if (
-			twoCharEscape === "\\b" ||
-			twoCharEscape === "\\B" ||
-			twoCharEscape === "\\0" ||
+			twoCharEscape === String.raw`\b` ||
+			twoCharEscape === String.raw`\B` ||
+			twoCharEscape === String.raw`\0` ||
 			remaining.length < 1 ||
 			!remaining[1]
 		) {
@@ -209,7 +209,7 @@ function getElementChar(element: string, doubleEscaped: boolean) {
 	if (element.startsWith("[")) {
 		const inner = element.slice(1, element.lastIndexOf("]"));
 		if (!inner.length || inner.startsWith("^")) {
-			return undefined;
+			return;
 		}
 
 		if (inner.includes("-") && inner.length > 1) {
@@ -234,7 +234,7 @@ function getElementChar(element: string, doubleEscaped: boolean) {
 			return withoutQuantifier[2];
 		}
 
-		return undefined;
+		return;
 	}
 
 	if (!doubleEscaped && withoutQuantifier.startsWith("\\")) {
@@ -247,7 +247,7 @@ function getElementChar(element: string, doubleEscaped: boolean) {
 			return withoutQuantifier[1];
 		}
 
-		return undefined;
+		return;
 	}
 
 	return withoutQuantifier;

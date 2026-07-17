@@ -18,7 +18,7 @@ export async function getOxlintLintRules(): Promise<string[]> {
 		new URL(
 			"configuration_schema.json",
 			import.meta.resolve("oxlint/package.json"),
-		).toString(),
+		).href,
 		{ with: { type: "json" } }
 	)) as { default: OxlintSchema };
 	const properties = schema.definitions?.DummyRuleMap?.properties;

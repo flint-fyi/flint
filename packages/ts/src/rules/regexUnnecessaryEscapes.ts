@@ -45,11 +45,10 @@ function adjustPositionForEscapes(escaped: string, unescapedPosition: number) {
 	let unescapedIndex = 0;
 
 	while (unescapedIndex < unescapedPosition && escapedIndex < escaped.length) {
-		if (escaped[escapedIndex] === "\\" && escaped[escapedIndex + 1] === "\\") {
-			escapedIndex += 2;
-		} else {
-			escapedIndex += 1;
-		}
+		escapedIndex +=
+			escaped[escapedIndex] === "\\" && escaped[escapedIndex + 1] === "\\"
+				? 2
+				: 1;
 		unescapedIndex += 1;
 	}
 
@@ -187,7 +186,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const patternUnescaped = construction.pattern.replace(/\\\\/g, "\\");
+			const patternUnescaped = construction.pattern.replaceAll("\\\\", "\\");
 			checkPattern(construction.flags, patternUnescaped, construction.start);
 		}
 

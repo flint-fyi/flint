@@ -89,7 +89,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const patternEscaped = construction.pattern.replace(/\\\\/g, "\\");
+			const patternEscaped = construction.pattern.replaceAll("\\\\", "\\");
 			checkPattern(patternEscaped, construction.start + 1, construction.flags);
 		}
 

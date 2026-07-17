@@ -71,17 +71,19 @@ export default ruleCreator.createRule(markdownLanguage, {
 				},
 				link(node) {
 					// Check if this is a fragment link (starts with #)
-					if (node.url.startsWith("#")) {
-						const fragment = node.url.slice(1); // Remove the #
-						if (fragment) {
-							// Decode URI components (e.g., %C3%A9 -> é)
-							const decodedFragment = decodeURIComponent(fragment);
-							linksToCheck.push({
-								begin: node.position.start.offset,
-								end: node.position.end.offset,
-								fragment: decodedFragment,
-							});
-						}
+					if (!node.url.startsWith("#")) {
+						return;
+					}
+
+					const fragment = node.url.slice(1); // Remove the #
+					if (fragment) {
+						// Decode URI components (e.g., %C3%A9 -> é)
+						const decodedFragment = decodeURIComponent(fragment);
+						linksToCheck.push({
+							begin: node.position.start.offset,
+							end: node.position.end.offset,
+							fragment: decodedFragment,
+						});
 					}
 				},
 				root() {

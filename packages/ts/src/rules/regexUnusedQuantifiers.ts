@@ -44,26 +44,28 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			visitRegExpAST(regexpAst, {
 				onQuantifierEnter(node) {
-					if (node.min === 1 && node.max === 1) {
-						const quantifierStart = node.element.end;
-						context.report({
-							data: {
-								raw: node.raw,
-							},
-							fix: {
-								range: {
-									begin: patternStart + quantifierStart,
-									end: patternStart + node.end,
-								},
-								text: "",
-							},
-							message: "uselessQuantifier",
+					if (!(node.min === 1 && node.max === 1)) {
+						return;
+					}
+
+					const quantifierStart = node.element.end;
+					context.report({
+						data: {
+							raw: node.raw,
+						},
+						fix: {
 							range: {
-								begin: patternStart + node.start,
+								begin: patternStart + quantifierStart,
 								end: patternStart + node.end,
 							},
-						});
-					}
+							text: "",
+						},
+						message: "uselessQuantifier",
+						range: {
+							begin: patternStart + node.start,
+							end: patternStart + node.end,
+						},
+					});
 				},
 			});
 		}

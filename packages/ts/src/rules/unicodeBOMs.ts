@@ -24,7 +24,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				SourceFile: (node) => {
 					const text = node.getFullText();
-					if (text.charCodeAt(0) !== 0xfeff) {
+					if (text.charCodeAt(0) !== 0xfe_ff) {
 						return {};
 					}
 

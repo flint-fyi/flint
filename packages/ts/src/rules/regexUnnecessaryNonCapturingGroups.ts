@@ -85,7 +85,7 @@ function isUnnecessaryGroup(group: RegExpAST.Group, pattern: string) {
 
 function mightCreateNewElement(before: string, after: string): boolean {
 	// Control: \cA
-	if (before.endsWith("\\c") && /^[a-z]/i.test(after)) {
+	if (before.endsWith(String.raw`\c`) && /^[a-z]/i.test(after)) {
 		return true;
 	}
 
@@ -178,23 +178,25 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			visitRegExpAST(regexpAst, {
 				onGroupEnter(group) {
-					if (isUnnecessaryGroup(group, pattern)) {
-						const groupContent = group.raw.slice(3, -1);
-						context.report({
-							fix: {
-								range: {
-									begin: patternStart + group.start,
-									end: patternStart + group.end,
-								},
-								text: groupContent,
-							},
-							message: "unnecessaryGroup",
+					if (!isUnnecessaryGroup(group, pattern)) {
+						return;
+					}
+
+					const groupContent = group.raw.slice(3, -1);
+					context.report({
+						fix: {
 							range: {
 								begin: patternStart + group.start,
 								end: patternStart + group.end,
 							},
-						});
-					}
+							text: groupContent,
+						},
+						message: "unnecessaryGroup",
+						range: {
+							begin: patternStart + group.start,
+							end: patternStart + group.end,
+						},
+					});
 				},
 			});
 		}

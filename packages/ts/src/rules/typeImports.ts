@@ -120,7 +120,7 @@ function getTypeImportFix(
 			importClause.name ||
 			namedBindings?.kind !== SyntaxKind.NamedImports
 		) {
-			return undefined;
+			return;
 		}
 
 		const typeSpecifiers = new Set(report.typeSpecifiers);

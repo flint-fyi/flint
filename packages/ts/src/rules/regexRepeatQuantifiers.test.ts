@@ -17,11 +17,11 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: `
-/\\d\\d\\d\\d\\d-\\d\\d\\d\\d\\d/;
+			code: String.raw`
+/\d\d\d\d\d-\d\d\d\d\d/;
 `,
-			output: `
-/\\d{5}-\\d{5}/;
+			output: String.raw`
+/\d{5}-\d{5}/;
 `,
 			snapshot: `
 /\\d\\d\\d\\d\\d-\\d\\d\\d\\d\\d/;
@@ -71,11 +71,11 @@ new RegExp("aaaaa");
 `,
 		},
 		{
-			code: `
-/\\w\\w\\w\\w\\w/;
+			code: String.raw`
+/\w\w\w\w\w/;
 `,
-			output: `
-/\\w{5}/;
+			output: String.raw`
+/\w{5}/;
 `,
 			snapshot: `
 /\\w\\w\\w\\w\\w/;
@@ -93,10 +93,10 @@ new RegExp("aaaaa");
 		`/{{}}/;`,
 		`/aaa/;`,
 		`/aaaa/;`,
-		`/\\d\\d/;`,
+		String.raw`/\d\d/;`,
 		`/[ab][ab]/;`,
 		`/../;`,
-		`/\\w\\w\\w/;`,
+		String.raw`/\w\w\w/;`,
 		`new RegExp("aaaa");`,
 		`RegExp("aaaa");`,
 	],

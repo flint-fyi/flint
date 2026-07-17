@@ -620,7 +620,7 @@ describe(createVFSLinterHost, () => {
 					ignoredPaths: [],
 					recursive: false,
 				});
-				host.vfsUpsertFile("C:\\file.txt", "content");
+				host.vfsUpsertFile(String.raw`C:\file.txt`, "content");
 
 				expect(onEvent).toHaveBeenCalledExactlyOnceWith("C:/file.txt");
 			});

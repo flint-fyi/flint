@@ -23,7 +23,7 @@ function findEscapeBackspaces(pattern: string, flags: string) {
 
 	visitRegExpAST(ast, {
 		onCharacterEnter(node: Character) {
-			if (node.raw === "\\b") {
+			if (node.raw === String.raw`\b`) {
 				results.push(node);
 			}
 		},
@@ -78,7 +78,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const patternEscaped = construction.pattern.replace(/\\\\/g, "\\");
+			const patternEscaped = construction.pattern.replaceAll("\\\\", "\\");
 			const backspaces = findEscapeBackspaces(
 				patternEscaped,
 				construction.flags,

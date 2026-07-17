@@ -46,11 +46,11 @@ function computeFixedPattern(
 		const extractedChars = singleCharAlts.map((alt) => alt.raw);
 
 		let replacement: string;
-		if (!remainingAlts.length) {
-			replacement = extractedChars.join("");
-		} else {
-			const remainingDisjunction = `\\q{${remainingAlts.map((alt) => alt.raw).join("|")}}`;
+		if (remainingAlts.length) {
+			const remainingDisjunction = String.raw`\q{${remainingAlts.map((alt) => alt.raw).join("|")}}`;
 			replacement = extractedChars.join("") + remainingDisjunction;
+		} else {
+			replacement = extractedChars.join("");
 		}
 
 		replacements.push({
@@ -166,7 +166,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const patternEscaped = construction.pattern.replace(/\\\\/g, "\\");
+			const patternEscaped = construction.pattern.replaceAll("\\\\", "\\");
 			const unnecessaryAlternatives = findUnnecessaryStringAlternatives(
 				patternEscaped,
 				construction.flags,
@@ -180,7 +180,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				patternEscaped,
 				unnecessaryAlternatives,
 			);
-			const fixedPatternEscaped = fixedPattern.replace(/\\/g, "\\\\");
+			const fixedPatternEscaped = fixedPattern.replaceAll("\\", "\\\\");
 
 			for (const info of unnecessaryAlternatives) {
 				context.report({

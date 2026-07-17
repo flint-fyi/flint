@@ -54,7 +54,7 @@ function getCalleeName(node: AST.Expression) {
 			break;
 	}
 
-	return undefined;
+	return;
 }
 
 // TODO: Use a util like getStaticValue

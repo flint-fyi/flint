@@ -57,7 +57,7 @@ function convertNumberToScientificNotation(
 }
 
 function getRaw(text: string) {
-	return text.replace(/_/g, "");
+	return text.replaceAll("_", "");
 }
 
 function isBaseTen(raw: string) {

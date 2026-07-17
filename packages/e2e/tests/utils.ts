@@ -29,9 +29,9 @@ export function normalizeOutput(stdout: string, cwd: string): string {
 	const normalizedCwd = normalizePath(cwd);
 
 	return stdout
-		.replace(/\\/g, "/")
-		.replace(new RegExp(RegExp.escape(normalizedCwd), "gi"), "<cwd>")
-		.replace(/Finished in \S+/g, "Finished in <time>");
+		.replaceAll("\\", "/")
+		.replaceAll(new RegExp(RegExp.escape(normalizedCwd), "gi"), "<cwd>")
+		.replaceAll(/Finished in \S+/g, "Finished in <time>");
 }
 
 /**

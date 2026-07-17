@@ -210,7 +210,7 @@ function extractAssignmentFromIfStatement(node: AST.IfStatement) {
 		assignmentExpr?.kind !== SyntaxKind.BinaryExpression ||
 		assignmentExpr.operatorToken.kind !== SyntaxKind.EqualsToken
 	) {
-		return undefined;
+		return;
 	}
 
 	return { left: assignmentExpr.left, right: assignmentExpr.right };
@@ -559,7 +559,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					sourceFile,
 				);
 			}
-			return undefined;
+			return;
 		}
 
 		function createNullishNodesFix(

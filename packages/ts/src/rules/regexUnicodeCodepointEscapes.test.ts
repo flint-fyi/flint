@@ -17,9 +17,9 @@ ruleTester.describe(rule, {
  ~~~~~~~~~~~~
  Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1F600}`" +
-				String.raw` instead of surrogate pair ` +
+				" instead of surrogate pair " +
 				"`\\uD83D\\uDE00`" +
-				String.raw`.
+				`.
 `,
 		},
 		{
@@ -35,9 +35,9 @@ ruleTester.describe(rule, {
  ~~~~~~~~~~~~
  Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1f600}`" +
-				String.raw` instead of surrogate pair ` +
+				" instead of surrogate pair " +
 				"`\\ud83d\\ude00`" +
-				String.raw`.
+				`.
 `,
 		},
 		{
@@ -53,9 +53,9 @@ ruleTester.describe(rule, {
   ~~~~~~~~~~~~
   Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1F600}`" +
-				String.raw` instead of surrogate pair ` +
+				" instead of surrogate pair " +
 				"`\\uD83D\\uDE00`" +
-				String.raw`.
+				`.
 `,
 		},
 		{
@@ -71,9 +71,9 @@ ruleTester.describe(rule, {
  ~~~~~~~~~~~~
  Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1F600}`" +
-				String.raw` instead of surrogate pair ` +
+				" instead of surrogate pair " +
 				"`\\uD83D\\uDE00`" +
-				String.raw`.
+				`.
 `,
 		},
 		{
@@ -89,9 +89,9 @@ new RegExp("\\uD83D\\uDE00", "u");
             ~~~~~~~~~~~~~~
             Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1F600}`" +
-				String.raw` instead of surrogate pair ` +
+				" instead of surrogate pair " +
 				"`\\uD83D\\uDE00`" +
-				String.raw`.
+				`.
 `,
 		},
 		{
@@ -107,15 +107,15 @@ new RegExp("\\uD83D\\uDE00", "u");
  ~~~~~~~~~~~~
  Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1F600}`" +
-				String.raw` instead of surrogate pair ` +
+				" instead of surrogate pair " +
 				"`\\uD83D\\uDE00`" +
-				String.raw`.
+				`.
              ~~~~~~~~~~~~
              Prefer the more expressive Unicode codepoint escape ` +
 				"`\\u{1F601}`" +
-				String.raw` instead of surrogate pair ` +
+				" instead of surrogate pair " +
 				"`\\uD83D\\uDE01`" +
-				String.raw`.
+				`.
 `,
 		},
 	],

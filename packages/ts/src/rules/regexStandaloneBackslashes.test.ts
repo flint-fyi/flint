@@ -66,8 +66,8 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: `
-new RegExp("\\\\c");
+			code: String.raw`
+new RegExp("\\c");
 `,
 			snapshot: `
 new RegExp("\\\\c");
@@ -76,8 +76,8 @@ new RegExp("\\\\c");
 `,
 		},
 		{
-			code: `
-RegExp("\\\\c1");
+			code: String.raw`
+RegExp("\\c1");
 `,
 			snapshot: `
 RegExp("\\\\c1");
@@ -101,13 +101,13 @@ RegExp("\\\\c1");
 		String.raw`/\u0000/;`,
 		String.raw`/\\/;`,
 		String.raw`/[[\cA-\cZ]--\cX]/v;`,
-		`new RegExp("\\\\n");`,
-		`new RegExp("\\\\t");`,
-		`new RegExp("\\\\cX");`,
+		String.raw`new RegExp("\\n");`,
+		String.raw`new RegExp("\\t");`,
+		String.raw`new RegExp("\\cX");`,
 		`declare const variable: string; new RegExp(variable);`,
 		`/abc/;`,
 		`/[abc]/;`,
-		`declare function notRegExp(pattern: string): void; notRegExp("\\\\c");`,
-		`declare class NotRegExp { constructor(pattern: string); } new NotRegExp("\\\\c");`,
+		String.raw`declare function notRegExp(pattern: string): void; notRegExp("\\c");`,
+		String.raw`declare class NotRegExp { constructor(pattern: string); } new NotRegExp("\\c");`,
 	],
 });

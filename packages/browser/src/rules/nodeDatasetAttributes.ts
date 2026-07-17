@@ -23,7 +23,9 @@ function convertDataAttributeToDatasetKey(
 	return attributeName.startsWith("data-")
 		? attributeName
 				.slice(5)
-				.replace(/-([a-z])/g, (_match, letter: string) => letter.toUpperCase())
+				.replaceAll(/-([a-z])/g, (_match, letter: string) =>
+					letter.toUpperCase(),
+				)
 		: undefined;
 }
 
@@ -33,12 +35,12 @@ function getMethodDetails(node: AST.CallExpression) {
 		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.kind !== SyntaxKind.Identifier
 	) {
-		return undefined;
+		return;
 	}
 
 	const methodName = node.expression.name.text;
 	if (!isAttributeMethodName(methodName)) {
-		return undefined;
+		return;
 	}
 
 	return {

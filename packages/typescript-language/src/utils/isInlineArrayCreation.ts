@@ -67,13 +67,7 @@ export function isInlineArrayCreation(node: AST.Expression): boolean {
 		}
 	}
 
-	if (
-		node.kind === SyntaxKind.NewExpression &&
+	return node.kind === SyntaxKind.NewExpression &&
 		node.expression.kind === SyntaxKind.Identifier &&
-		node.expression.text === "Array"
-	) {
-		return true;
-	}
-
-	return false;
+		node.expression.text === "Array";
 }

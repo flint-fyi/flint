@@ -59,7 +59,7 @@ async function validateChangesets(files: string[]): Promise<void> {
 				return false;
 			}
 
-			const found = summary.split("\n")[0];
+			const found = summary.split("\n", 1)[0];
 			const errors: string[] = [];
 			let recommended = found;
 

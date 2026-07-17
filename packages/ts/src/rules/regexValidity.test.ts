@@ -25,11 +25,11 @@ RegExp("[");
 `,
 		},
 		{
-			code: `
-new RegExp("\\\\");
+			code: String.raw`
+new RegExp("\\");
 `,
-			snapshot: `
-new RegExp("\\\\");
+			snapshot: String.raw`
+new RegExp("\\");
             ~~
             Invalid regular expression pattern.
 `,
@@ -100,7 +100,7 @@ RegExp("abc", "gqx");
 	valid: [
 		`RegExp("abc");`,
 		`RegExp("abc", "gi");`,
-		`new RegExp("\\\\d+");`,
+		String.raw`new RegExp("\\d+");`,
 		`new RegExp("abc", "dgimsuy");`,
 		`
 declare const patternVar: string;
@@ -112,7 +112,7 @@ RegExp("abc", flagsVar);
 `,
 		`/abc/;`,
 		`/abc/gi;`,
-		`/\\d+/;`,
+		String.raw`/\d+/;`,
 		`/abc/dgimsuy;`,
 	],
 });

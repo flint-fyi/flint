@@ -25,7 +25,7 @@ function getMathMethodInfo(
 		unwrapped.arguments.length < 1 ||
 		unwrapped.arguments.some((arg) => arg.kind === SyntaxKind.SpreadElement)
 	) {
-		return undefined;
+		return;
 	}
 
 	if (isMathMethod(unwrapped.expression, "min", typeChecker, program)) {
@@ -44,7 +44,7 @@ function getMathMethodInfo(
 		};
 	}
 
-	return undefined;
+	return;
 }
 
 function isMathMethod(

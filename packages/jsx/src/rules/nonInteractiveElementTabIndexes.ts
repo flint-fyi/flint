@@ -79,7 +79,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function getTabIndexValue(attr: AST.JsxAttribute) {
 			if (!attr.initializer) {
-				return undefined;
+				return;
 			}
 
 			if (attr.initializer.kind === SyntaxKind.StringLiteral) {
@@ -95,7 +95,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 			}
 
-			return undefined;
+			return;
 		}
 
 		function getRoleValue(attributes: AST.JsxAttributes) {
@@ -113,7 +113,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return roleProperty.initializer.text;
 			}
 
-			return undefined;
+			return;
 		}
 
 		function checkTabIndex(

@@ -43,7 +43,7 @@ function canReject(element: RegExpAST.Element): boolean {
 		case "CharacterClass":
 			return !isMatchAll(element);
 		case "CharacterSet":
-			return element.kind !== "any" || element.raw !== "[\\s\\S]";
+			return element.kind !== "any" || element.raw !== String.raw`[\s\S]`;
 		case "Quantifier":
 			return element.min !== 0 && canReject(element.element);
 		default:

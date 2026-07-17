@@ -38,14 +38,14 @@ function getParsedElement(pattern: string, unicodeSets: boolean) {
 		});
 
 		if (ast.alternatives.length !== 1) {
-			return undefined;
+			return;
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const alt = ast.alternatives[0]!;
 
 		if (alt.elements.length !== 1) {
-			return undefined;
+			return;
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -58,12 +58,12 @@ function getParsedElement(pattern: string, unicodeSets: boolean) {
 			element.type === "Group" ||
 			element.type === "Backreference"
 		) {
-			return undefined;
+			return;
 		}
 
 		return element;
 	} catch {
-		return undefined;
+		return;
 	}
 }
 

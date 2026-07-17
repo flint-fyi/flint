@@ -29,14 +29,10 @@ function isDoubleNegation(
 	}
 
 	const operand = node.operand;
-	if (
+	return (
 		operand.kind === SyntaxKind.PrefixUnaryExpression &&
 		operand.operator === SyntaxKind.ExclamationToken
-	) {
-		return true;
-	}
-
-	return false;
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

@@ -168,44 +168,46 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 				},
 				onQuantifierLeave(quantifier) {
-					if (quantifier.min === 0) {
-						const popped = zeroMinQuantifierStack.pop();
-						if (popped === quantifier && collectedAssertions.length) {
-							const assertionsInThisQuantifier = collectedAssertions.filter(
-								(assertion) => isDescendantOf(assertion, quantifier),
-							);
+					if (quantifier.min !== 0) {
+						return;
+					}
 
-							const unnecessary = getUnnecessaryAssertions(
-								quantifier.element,
-								assertionsInThisQuantifier,
-							);
+					const popped = zeroMinQuantifierStack.pop();
+					if (popped === quantifier && collectedAssertions.length) {
+						const assertionsInThisQuantifier = collectedAssertions.filter(
+							(assertion) => isDescendantOf(assertion, quantifier),
+						);
 
-							for (const assertion of unnecessary) {
-								context.report({
-									data: {
-										quantifier: quantifier.raw,
-										raw: assertion.raw,
-									},
-									fix: {
-										range: {
-											begin: patternStart + assertion.start,
-											end: patternStart + assertion.end,
-										},
-										text: "",
-									},
-									message: "unnecessaryOptionalAssertion",
+						const unnecessary = getUnnecessaryAssertions(
+							quantifier.element,
+							assertionsInThisQuantifier,
+						);
+
+						for (const assertion of unnecessary) {
+							context.report({
+								data: {
+									quantifier: quantifier.raw,
+									raw: assertion.raw,
+								},
+								fix: {
 									range: {
 										begin: patternStart + assertion.start,
 										end: patternStart + assertion.end,
 									},
-								});
-							}
+									text: "",
+								},
+								message: "unnecessaryOptionalAssertion",
+								range: {
+									begin: patternStart + assertion.start,
+									end: patternStart + assertion.end,
+								},
+							});
+						}
 
-							for (const assertion of assertionsInThisQuantifier) {
-								const index = collectedAssertions.indexOf(assertion);
-								if (index !== -1) {
-									collectedAssertions.splice(index, 1);
-								}
+						for (const assertion of assertionsInThisQuantifier) {
+							const index = collectedAssertions.indexOf(assertion);
+							if (index !== -1) {
+								collectedAssertions.splice(index, 1);
 							}
 						}
 					}

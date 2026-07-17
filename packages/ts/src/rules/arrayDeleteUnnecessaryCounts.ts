@@ -44,7 +44,7 @@ function isUnnecessaryCountArgument(
 			}
 	}
 
-	return undefined;
+	return;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

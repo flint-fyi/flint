@@ -13,8 +13,8 @@ function hasCommentsInRange(
 	start: number,
 	end: number,
 ) {
-	const text = sourceFile.text.slice(start, end);
-	return text.includes("//") || text.includes("/*");
+	const text = new Set(sourceFile.text.slice(start, end));
+	return text.has("//") || text.has("/*");
 }
 
 function isIfWithoutElse(

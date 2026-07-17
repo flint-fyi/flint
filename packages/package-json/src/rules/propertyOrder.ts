@@ -67,7 +67,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 								type === "tab" ? "\t" : indent,
 							) + endCharacter;
 						if (newline === "\r\n") {
-							result = result.replace(/\n/g, newline);
+							result = result.replaceAll("\n", newline);
 						}
 
 						return result;
