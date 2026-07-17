@@ -18,4 +18,5 @@ jobs:
         with:
           days-before-close: 7
           days-before-stale: -1
-          only-labels: suspected ai slop
+          stale-pr-label: suspected ai slop
+          stale-pr-message: ""
