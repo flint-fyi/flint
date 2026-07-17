@@ -1,15 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-orb_home=$AMP_ORB_HOME
-export MISE_DATA_DIR="$orb_home/mise"
-export MISE_CONFIG_DIR="$orb_home/mise-config"
-export MISE_INSTALL_PATH="$orb_home/mise-bin/mise"
-export PATH="$orb_home/bin:$PATH"
-
 curl https://mise.run | sh
-ln -sf "$MISE_INSTALL_PATH" "$orb_home/bin/mise"
-eval "$(mise activate bash)"
+eval "$(~/.local/bin/mise activate bash)"
 
 mise settings set idiomatic_version_file_enable_tools node,pnpm
 mise install --yes
