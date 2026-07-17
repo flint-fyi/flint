@@ -261,8 +261,8 @@ catalogs:
       specifier: 18.2.1
       version: 18.2.1
     eslint-plugin-package-json:
-      specifier: 1.5.0
-      version: 1.5.0
+      specifier: 1.6.0
+      version: 1.6.0
     eslint-plugin-perfectionist:
       specifier: 5.10.0
       version: 5.10.0
@@ -479,7 +479,7 @@ importers:
         version: 18.2.1(eslint@10.7.0)(typescript@6.0.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
-        version: 1.5.0(@eslint/json@2.0.0)(@types/estree@1.0.9)(eslint@10.7.0)
+        version: 1.6.0(@eslint/json@2.0.0)(@types/estree@1.0.9)(eslint@10.7.0)
       eslint-plugin-perfectionist:
         specifier: catalog:dev
         version: 5.10.0(eslint@10.7.0)(typescript@6.0.3)
@@ -781,7 +781,7 @@ importers:
         version: 18.2.1(eslint@10.7.0)(typescript@6.0.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
-        version: 1.5.0(@eslint/json@2.0.0)(@types/estree@1.0.9)(eslint@10.7.0)
+        version: 1.6.0(@eslint/json@2.0.0)(@types/estree@1.0.9)(eslint@10.7.0)
       eslint-plugin-perfectionist:
         specifier: catalog:dev
         version: 5.10.0(eslint@10.7.0)(typescript@6.0.3)
@@ -4711,8 +4711,8 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
-  eslint-fix-utils@0.4.2:
-    resolution: {integrity: sha512-n7ZTcwwkP5scedlhvWMcqxED+O1NzXcj5Rxn/0kJQMP88k02vRcBfQ1qsk/JHb6Aw8bajFoetFCCBiNIcNCsvA==}
+  eslint-fix-utils@0.4.3:
+    resolution: {integrity: sha512-EKzNhsNavV5DdkHVltHBM9TqfsonCmiUhOm1Ra97zo03M9IAx3wtM1eC27eWGMj/D3LrALmHHNe1QlQH1P7Nxw==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
       '@types/estree': '>=1'
@@ -4815,8 +4815,8 @@ packages:
       typescript:
         optional: true
 
-  eslint-plugin-package-json@1.5.0:
-    resolution: {integrity: sha512-KQkAdn+7I4vn1W4Va+V8M94RhcgZBvgrxMglDqgEhJgQDRUJ9RdtrEiHoe/84oVTIlp0jiPttLYwkExdvHYhZQ==}
+  eslint-plugin-package-json@1.6.0:
+    resolution: {integrity: sha512-pROaDdg6qRV7RF6qebqoXIuPBagHI1jNklZBKP0IPikfL2hW25JZnBp4Q0tmdNJZx2LIh3rgdmcqqz4CIkSuCg==}
     engines: {node: ^22.22.2 || >=24.15.0}
     peerDependencies:
       '@eslint/json': '>=1.0.0'
@@ -10977,7 +10977,7 @@ snapshots:
       eslint: 10.7.0(jiti@2.7.0)
       semver: 7.8.5
 
-  eslint-fix-utils@0.4.2(@types/estree@1.0.9)(eslint@10.7.0):
+  eslint-fix-utils@0.4.3(@types/estree@1.0.9)(eslint@10.7.0):
     dependencies:
       eslint: 10.7.0(jiti@2.7.0)
     optionalDependencies:
@@ -11133,14 +11133,14 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  eslint-plugin-package-json@1.5.0(@eslint/json@2.0.0)(@types/estree@1.0.9)(eslint@10.7.0):
+  eslint-plugin-package-json@1.6.0(@eslint/json@2.0.0)(@types/estree@1.0.9)(eslint@10.7.0):
     dependencies:
       '@altano/repository-tools': 2.0.1
       change-case: 5.4.4
       detect-indent: 7.0.2
       detect-newline: 4.0.1
       eslint: 10.7.0(jiti@2.7.0)
-      eslint-fix-utils: 0.4.2(@types/estree@1.0.9)(eslint@10.7.0)
+      eslint-fix-utils: 0.4.3(@types/estree@1.0.9)(eslint@10.7.0)
       eslint-json-compat-utils: 0.2.3(@eslint/json@2.0.0)(eslint@10.7.0)(jsonc-eslint-parser@3.1.0)
       jsonc-eslint-parser: 3.1.0
       package-json-validator: 1.5.1
