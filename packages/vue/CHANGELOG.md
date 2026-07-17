@@ -1,5 +1,12 @@
 # @flint.fyi/vue
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [[`1f71b3e`](https://github.com/flint-fyi/flint/commit/1f71b3ef2d31dbe39ff8c967887801912fb28573)]:
+  - @flint.fyi/ts@0.21.0
+
 ## 0.1.3
 
 ### Patch Changes

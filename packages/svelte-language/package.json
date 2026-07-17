@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/svelte-language",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "[Experimental] Svelte language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
