@@ -5,119 +5,119 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
-/\\x00/;
+			code: String.raw`
+/\x00/;
 `,
-			output: `
-/\\0/;
+			output: String.raw`
+/\0/;
 `,
-			snapshot: `
-/\\x00/;
+			snapshot: String.raw`
+/\x00/;
  ~~~~
- Prefer standard escape sequence '\\0' over '\\x00'.
+ Prefer standard escape sequence '\0' over '\x00'.
 `,
 		},
 		{
-			code: `
-/\\x0a/;
+			code: String.raw`
+/\x0a/;
 `,
-			output: `
-/\\n/;
+			output: String.raw`
+/\n/;
 `,
-			snapshot: `
-/\\x0a/;
+			snapshot: String.raw`
+/\x0a/;
  ~~~~
- Prefer standard escape sequence '\\n' over '\\x0a'.
+ Prefer standard escape sequence '\n' over '\x0a'.
 `,
 		},
 		{
-			code: `
-/\\x09/;
+			code: String.raw`
+/\x09/;
 `,
-			output: `
-/\\t/;
+			output: String.raw`
+/\t/;
 `,
-			snapshot: `
-/\\x09/;
+			snapshot: String.raw`
+/\x09/;
  ~~~~
- Prefer standard escape sequence '\\t' over '\\x09'.
+ Prefer standard escape sequence '\t' over '\x09'.
 `,
 		},
 		{
-			code: `
-/\\x0d/;
+			code: String.raw`
+/\x0d/;
 `,
-			output: `
-/\\r/;
+			output: String.raw`
+/\r/;
 `,
-			snapshot: `
-/\\x0d/;
+			snapshot: String.raw`
+/\x0d/;
  ~~~~
- Prefer standard escape sequence '\\r' over '\\x0d'.
+ Prefer standard escape sequence '\r' over '\x0d'.
 `,
 		},
 		{
-			code: `
-/\\u000a/;
+			code: String.raw`
+/\u000a/;
 `,
-			output: `
-/\\n/;
+			output: String.raw`
+/\n/;
 `,
-			snapshot: `
-/\\u000a/;
+			snapshot: String.raw`
+/\u000a/;
  ~~~~~~
- Prefer standard escape sequence '\\n' over '\\u000a'.
+ Prefer standard escape sequence '\n' over '\u000a'.
 `,
 		},
 		{
-			code: `
-/\\cJ/;
+			code: String.raw`
+/\cJ/;
 `,
-			output: `
-/\\n/;
+			output: String.raw`
+/\n/;
 `,
-			snapshot: `
-/\\cJ/;
+			snapshot: String.raw`
+/\cJ/;
  ~~~
- Prefer standard escape sequence '\\n' over '\\cJ'.
+ Prefer standard escape sequence '\n' over '\cJ'.
 `,
 		},
 		{
-			code: `
-/\\u{a}/u;
+			code: String.raw`
+/\u{a}/u;
 `,
-			output: `
-/\\n/u;
+			output: String.raw`
+/\n/u;
 `,
-			snapshot: `
-/\\u{a}/u;
+			snapshot: String.raw`
+/\u{a}/u;
  ~~~~~
- Prefer standard escape sequence '\\n' over '\\u{a}'.
+ Prefer standard escape sequence '\n' over '\u{a}'.
 `,
 		},
 		{
-			code: `
-new RegExp("\\\\x0a");
+			code: String.raw`
+new RegExp("\\x0a");
 `,
-			output: `
-new RegExp("\\\\n");
+			output: String.raw`
+new RegExp("\\n");
 `,
-			snapshot: `
-new RegExp("\\\\x0a");
+			snapshot: String.raw`
+new RegExp("\\x0a");
             ~~~~~
-            Prefer standard escape sequence '\\\\n' over '\\\\x0a'.
+            Prefer standard escape sequence '\\n' over '\\x0a'.
 `,
 		},
 	],
 	valid: [
-		`/\\0\\t\\n\\v\\f\\r/;`,
-		`/\\0/;`,
-		`/\\t/;`,
-		`/\\n/;`,
-		`/\\r/;`,
+		String.raw`/\0\t\n\v\f\r/;`,
+		String.raw`/\0/;`,
+		String.raw`/\t/;`,
+		String.raw`/\n/;`,
+		String.raw`/\r/;`,
 		`/foo/;`,
-		`/\\x1f/;`,
-		`new RegExp("\\\\0\\\\t\\\\n\\\\v\\\\f\\\\r");`,
+		String.raw`/\x1f/;`,
+		String.raw`new RegExp("\\0\\t\\n\\v\\f\\r");`,
 		`new RegExp("foo");`,
 		`new RegExp(variable);`,
 	],

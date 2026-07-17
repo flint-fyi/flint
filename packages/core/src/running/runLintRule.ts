@@ -33,9 +33,9 @@ export async function runLintRule(
 		host,
 		report(ruleReport) {
 			const targetFile =
-				ruleReport.filePath != null
-					? fileByPath.get(ruleReport.filePath)
-					: fileStorage.getStore();
+				ruleReport.filePath == null
+					? fileStorage.getStore()
+					: fileByPath.get(ruleReport.filePath);
 
 			if (targetFile == null) {
 				throw new Error(

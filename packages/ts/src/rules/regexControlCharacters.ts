@@ -18,12 +18,12 @@ interface ControlCharInfo {
 }
 
 const knownControlEscapes: Record<number, string> = {
-	0: "\\0",
-	9: "\\t",
-	10: "\\n",
-	11: "\\v",
-	12: "\\f",
-	13: "\\r",
+	0: String.raw`\0`,
+	9: String.raw`\t`,
+	10: String.raw`\n`,
+	11: String.raw`\v`,
+	12: String.raw`\f`,
+	13: String.raw`\r`,
 };
 
 const controlCharacterSinglePattern =
@@ -68,19 +68,19 @@ function formatCodePoint(codePoint: number): string {
 }
 
 function parseControlCharCodePoint(match: string): number | undefined {
-	if (match.startsWith("\\x")) {
-		return parseInt(match.slice(2), 16);
+	if (match.startsWith(String.raw`\x`)) {
+		return Number.parseInt(match.slice(2), 16);
 	}
 
-	if (match.startsWith("\\u{")) {
-		return parseInt(match.slice(3, -1), 16);
+	if (match.startsWith(String.raw`\u{`)) {
+		return Number.parseInt(match.slice(3, -1), 16);
 	}
 
-	if (match.startsWith("\\u00")) {
-		return parseInt(match.slice(4), 16);
+	if (match.startsWith(String.raw`\u00`)) {
+		return Number.parseInt(match.slice(4), 16);
 	}
 
-	if (match.startsWith("\\c")) {
+	if (match.startsWith(String.raw`\c`)) {
 		const letter = match[2];
 		if (letter) {
 			return letter.charCodeAt(0) - 64;

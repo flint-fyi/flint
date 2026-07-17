@@ -9,6 +9,7 @@ import n from "eslint-plugin-n";
 import packageJson from "eslint-plugin-package-json/experimental";
 import perfectionist from "eslint-plugin-perfectionist";
 import * as regexp from "eslint-plugin-regexp";
+import unicorn from "eslint-plugin-unicorn";
 import yml from "eslint-plugin-yml";
 import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
@@ -16,7 +17,7 @@ import tseslint from "typescript-eslint";
 // https://typescript-eslint.io/troubleshooting/typed-linting/performance#importextensions-enforcing-extensions-are-not-used
 function banJsImportExtension() {
 	const message = `Unexpected use of .js file extension (.js) in import; please use .ts`;
-	const literalAttributeMatcher = `Literal[value=/\\..+\\.js$/]`;
+	const literalAttributeMatcher = String.raw`Literal[value=/\..+\.js$/]`;
 	return [
 		{
 			message,
@@ -61,6 +62,7 @@ export default defineConfig(
 			regexp.configs["flat/recommended"],
 			tseslint.configs.strictTypeChecked,
 			tseslint.configs.stylisticTypeChecked,
+			unicorn.configs.unopinionated,
 		],
 		files: ["**/*.{js,ts}"],
 		languageOptions: {

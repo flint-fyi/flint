@@ -27,7 +27,7 @@ describe("normalizePath", () => {
 		expect(normalized).toEqual("/");
 	});
 
-	it("doesn't strip root 'C:\\'", () => {
+	it(String.raw`doesn't strip root 'C:\'`, () => {
 		const normalized = normalizePath("C:\\");
 
 		expect(normalized).toEqual("C:/");

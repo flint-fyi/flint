@@ -123,12 +123,12 @@ function getCoercionWrapperProblem(
 	sourceFile: AST.SourceFile,
 ) {
 	if (node.parameters.length !== 1) {
-		return undefined;
+		return;
 	}
 
 	const coercionFunction = getWrappedCoercionFunction(node, parameterName);
 	if (!coercionFunction) {
-		return undefined;
+		return;
 	}
 
 	const range = getTSNodeRange(node, sourceFile);
@@ -149,7 +149,7 @@ function getFunctionProblem(
 ) {
 	const soleParameterText = getSoleParameterText(node);
 	if (!soleParameterText) {
-		return undefined;
+		return;
 	}
 
 	return (
@@ -167,7 +167,7 @@ function getIdentityCallbackProblem(
 		!isIdentityFunction(node, soleParameterText) ||
 		!isArrayMethodCallback(node)
 	) {
-		return undefined;
+		return;
 	}
 
 	const range = getTSNodeRange(node, sourceFile);
@@ -187,12 +187,12 @@ function getSoleParameterText(
 	node: AST.ArrowFunction | AST.FunctionExpression,
 ) {
 	if (node.parameters.length !== 1) {
-		return undefined;
+		return;
 	}
 
 	const parameter = node.parameters[0];
 	if (parameter?.name.kind !== SyntaxKind.Identifier) {
-		return undefined;
+		return;
 	}
 
 	return parameter.name.text;

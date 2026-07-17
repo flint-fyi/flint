@@ -12,13 +12,13 @@ function hasLoneSurrogate(text: string): boolean {
 	for (let i = 0; i < text.length; i++) {
 		const code = text.charCodeAt(i);
 
-		if (code >= 0xdc00 && code <= 0xdfff) {
+		if (code >= 0xdc_00 && code <= 0xdf_ff) {
 			return true;
 		}
 
-		if (code >= 0xd800 && code <= 0xdbff) {
+		if (code >= 0xd8_00 && code <= 0xdb_ff) {
 			const next = text.charCodeAt(i + 1);
-			if (!(next >= 0xdc00 && next <= 0xdfff)) {
+			if (!(next >= 0xdc_00 && next <= 0xdf_ff)) {
 				return true;
 			}
 			i++;
@@ -107,7 +107,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 			}
 
 			if (value === 0 && originalText !== "0") {
-				const normalized = originalText.toLowerCase().replace(/[_\s]/g, "");
+				const normalized = originalText.toLowerCase().replaceAll(/[_\s]/g, "");
 				if (
 					!normalized.startsWith("0e") &&
 					!normalized.startsWith("-0e") &&
@@ -140,28 +140,44 @@ export default ruleCreator.createRule(jsonLanguage, {
 		}
 
 		function checkString(node: StringNode) {
-			if (hasLoneSurrogate(node.value)) {
-				const range = getNodeRange(node);
-				context.report({
-					message: "loneSurrogate",
-					range,
-				});
+			if (!hasLoneSurrogate(node.value)) {
+				return;
 			}
+
+			const range = getNodeRange(node);
+			context.report({
+				message: "loneSurrogate",
+				range,
+			});
 		}
 
 		function checkNode(node: AnyNode, sourceText: string) {
-			if (node.type === "Number") {
-				checkNumber(node, sourceText);
-			} else if (node.type === "String") {
-				checkString(node);
-			} else if (node.type === "Array") {
-				for (const element of node.elements) {
-					checkNode(element.value, sourceText);
+			switch (node.type) {
+				case "Array": {
+					for (const element of node.elements) {
+						checkNode(element.value, sourceText);
+					}
+
+					break;
 				}
-			} else if (node.type === "Object") {
-				for (const property of node.members) {
-					checkNode(property.value, sourceText);
+				case "Number": {
+					checkNumber(node, sourceText);
+
+					break;
 				}
+				case "Object": {
+					for (const property of node.members) {
+						checkNode(property.value, sourceText);
+					}
+
+					break;
+				}
+				case "String": {
+					checkString(node);
+
+					break;
+				}
+				// No default
 			}
 		}
 

@@ -78,5 +78,5 @@ export async function* createDetailedReport(
 }
 
 function formatUrl(url: string, text: string) {
-	return `\u001B]8;;${url}\u0007${text}\u001B]8;;\u0007`;
+	return `\u{1B}]8;;${url}\u{7}${text}\u{1B}]8;;\u{7}`;
 }

@@ -4,7 +4,7 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: String.raw`
+			code: `
 /([0-9]{4})/;
 `,
 			snapshot: `
@@ -15,20 +15,20 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					id: "addGroupName",
-					updated: String.raw`
+					updated: `
 /(?<name>[0-9]{4})/;
 `,
 				},
 				{
 					id: "convertToNonCapturing",
-					updated: String.raw`
+					updated: `
 /(?:[0-9]{4})/;
 `,
 				},
 			],
 		},
 		{
-			code: String.raw`
+			code: `
 /(a)(b)/;
 `,
 			snapshot: `
@@ -41,25 +41,25 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					id: "addGroupName",
-					updated: String.raw`
+					updated: `
 /(?<name>a)(b)/;
 `,
 				},
 				{
 					id: "convertToNonCapturing",
-					updated: String.raw`
+					updated: `
 /(?:a)(b)/;
 `,
 				},
 				{
 					id: "addGroupName",
-					updated: String.raw`
+					updated: `
 /(a)(?<name>b)/;
 `,
 				},
 				{
 					id: "convertToNonCapturing",
-					updated: String.raw`
+					updated: `
 /(a)(?:b)/;
 `,
 				},
@@ -90,7 +90,7 @@ ruleTester.describe(rule, {
 			],
 		},
 		{
-			code: String.raw`
+			code: `
 /(a)/v;
 `,
 			snapshot: `
@@ -101,20 +101,20 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					id: "addGroupName",
-					updated: String.raw`
+					updated: `
 /(?<name>a)/v;
 `,
 				},
 				{
 					id: "convertToNonCapturing",
-					updated: String.raw`
+					updated: `
 /(?:a)/v;
 `,
 				},
 			],
 		},
 		{
-			code: String.raw`
+			code: `
 /(?<outer>(?<inner>a)(b))/;
 `,
 			snapshot: `
@@ -125,20 +125,20 @@ ruleTester.describe(rule, {
 			suggestions: [
 				{
 					id: "addGroupName",
-					updated: String.raw`
+					updated: `
 /(?<outer>(?<inner>a)(?<name>b))/;
 `,
 				},
 				{
 					id: "convertToNonCapturing",
-					updated: String.raw`
+					updated: `
 /(?<outer>(?<inner>a)(?:b))/;
 `,
 				},
 			],
 		},
 		{
-			code: String.raw`
+			code: `
 new RegExp("([0-9]{4})");
 `,
 			snapshot: `
@@ -149,20 +149,20 @@ new RegExp("([0-9]{4})");
 			suggestions: [
 				{
 					id: "addGroupName",
-					updated: String.raw`
+					updated: `
 new RegExp("(?<name>[0-9]{4})");
 `,
 				},
 				{
 					id: "convertToNonCapturing",
-					updated: String.raw`
+					updated: `
 new RegExp("(?:[0-9]{4})");
 `,
 				},
 			],
 		},
 		{
-			code: String.raw`
+			code: `
 RegExp("(a)(b)");
 `,
 			snapshot: `
@@ -175,25 +175,25 @@ RegExp("(a)(b)");
 			suggestions: [
 				{
 					id: "addGroupName",
-					updated: String.raw`
+					updated: `
 RegExp("(?<name>a)(b)");
 `,
 				},
 				{
 					id: "convertToNonCapturing",
-					updated: String.raw`
+					updated: `
 RegExp("(?:a)(b)");
 `,
 				},
 				{
 					id: "addGroupName",
-					updated: String.raw`
+					updated: `
 RegExp("(a)(?<name>b)");
 `,
 				},
 				{
 					id: "convertToNonCapturing",
-					updated: String.raw`
+					updated: `
 RegExp("(a)(?:b)");
 `,
 				},
@@ -211,7 +211,7 @@ new RegExp("(?<year>[0-9]{4})-(\\w{5})");
 				"`" +
 				String.raw`(\w{5})` +
 				"`" +
-				String.raw` should be converted to a named or non-capturing group for clarity.
+				` should be converted to a named or non-capturing group for clarity.
 `,
 			suggestions: [
 				{
@@ -230,16 +230,16 @@ new RegExp("(?<year>[0-9]{4})-(?:\\w{5})");
 		},
 	],
 	valid: [
-		String.raw`/normal_regex/`,
-		String.raw`/(?:[0-9]{4})/`,
-		String.raw`/(?<year>[0-9]{4})/`,
+		"/normal_regex/",
+		"/(?:[0-9]{4})/",
+		"/(?<year>[0-9]{4})/",
 		String.raw`/\u{1F680}/u`,
-		String.raw`/(?<a>x)(?<b>y)/`,
-		String.raw`/(?<outer>(?<inner>a))/`,
-		String.raw`new RegExp("normal_regex")`,
-		String.raw`new RegExp("(?:[0-9]{4})")`,
-		String.raw`new RegExp("(?<year>[0-9]{4})")`,
-		String.raw`RegExp("(?<a>x)(?<b>y)")`,
-		String.raw`new RegExp(variable)`,
+		"/(?<a>x)(?<b>y)/",
+		"/(?<outer>(?<inner>a))/",
+		'new RegExp("normal_regex")',
+		'new RegExp("(?:[0-9]{4})")',
+		'new RegExp("(?<year>[0-9]{4})")',
+		'RegExp("(?<a>x)(?<b>y)")',
+		"new RegExp(variable)",
 	],
 });

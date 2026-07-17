@@ -83,7 +83,7 @@ export async function collectFilesAndOptions(
 						nullThrows(
 							languageFilesByFilePath.get(filePath),
 							"Language file is expected to be present by the map",
-						).values(),
+						),
 					),
 					options,
 				})),

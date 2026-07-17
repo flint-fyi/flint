@@ -65,7 +65,7 @@ export function collectLanguageFilesByFilePath(
 		Array.from(languageFilesByFilePath.entries()).map(
 			([filePath, filesByLanguage]) => [
 				filePath,
-				Array.from(filesByLanguage.entries()).map(([language, file]) => ({
+				Array.from(filesByLanguage).map(([language, file]) => ({
 					file: nullThrows(
 						file,
 						"Language file is expected to be present by the map",

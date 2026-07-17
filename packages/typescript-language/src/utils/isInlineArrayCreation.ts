@@ -65,13 +65,9 @@ export function isInlineArrayCreation(node: ts.Expression) {
 		}
 	}
 
-	if (
+	return (
 		ts.isNewExpression(node) &&
 		ts.isIdentifier(node.expression) &&
 		node.expression.text === "Array"
-	) {
-		return true;
-	}
-
-	return false;
+	);
 }

@@ -4,67 +4,67 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
-/a\\b-?a/;
+			code: String.raw`
+/a\b-?a/;
 `,
-			snapshot: `
-/a\\b-?a/;
+			snapshot: String.raw`
+/a\b-?a/;
     ~~
     The quantifier '-?' is always entered despite having a minimum of 0.
 `,
 		},
 		{
-			code: `
-/a\\ba*-/;
+			code: String.raw`
+/a\ba*-/;
 `,
-			snapshot: `
-/a\\ba*-/;
+			snapshot: String.raw`
+/a\ba*-/;
     ~~
-    The quantifier 'a*' can never be entered because it contradicts the assertion '\\b'.
+    The quantifier 'a*' can never be entered because it contradicts the assertion '\b'.
 `,
 		},
 		{
-			code: `
-new RegExp("a\\\\b-?a");
+			code: String.raw`
+new RegExp("a\\b-?a");
 `,
-			snapshot: `
-new RegExp("a\\\\b-?a");
+			snapshot: String.raw`
+new RegExp("a\\b-?a");
                 ~~
                 The quantifier '-?' is always entered despite having a minimum of 0.
 `,
 		},
 		{
-			code: `
-RegExp("a\\\\ba*-");
+			code: String.raw`
+RegExp("a\\ba*-");
 `,
-			snapshot: `
-RegExp("a\\\\ba*-");
+			snapshot: String.raw`
+RegExp("a\\ba*-");
             ~~
-            The quantifier 'a*' can never be entered because it contradicts the assertion '\\\\b'.
+            The quantifier 'a*' can never be entered because it contradicts the assertion '\\b'.
 `,
 		},
 		{
-			code: `
-/a\\b[a-z]?b/;
+			code: String.raw`
+/a\b[a-z]?b/;
 `,
-			snapshot: `
-/a\\b[a-z]?b/;
+			snapshot: String.raw`
+/a\b[a-z]?b/;
     ~~~~~~
-    The quantifier '[a-z]?' can never be entered because it contradicts the assertion '\\b'.
+    The quantifier '[a-z]?' can never be entered because it contradicts the assertion '\b'.
 `,
 		},
 	],
 	valid: [
-		`/a\\ba/;`,
-		`/a\\b /;`,
-		`/a\\b-/;`,
-		`/\\ba/;`,
-		`/a\\b/;`,
-		`/\\bword\\b/;`,
+		String.raw`/a\ba/;`,
+		String.raw`/a\b /;`,
+		String.raw`/a\b-/;`,
+		String.raw`/\ba/;`,
+		String.raw`/a\b/;`,
+		String.raw`/\bword\b/;`,
 		`/foo.*bar/;`,
-		`new RegExp("a\\\\b");`,
+		String.raw`new RegExp("a\\b");`,
 		`new RegExp("foo");`,
-		`RegExp("\\\\bword\\\\b");`,
+		String.raw`RegExp("\\bword\\b");`,
 		`new RegExp(variable);`,
 	],
 });

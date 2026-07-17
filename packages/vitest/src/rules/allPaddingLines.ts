@@ -29,7 +29,7 @@ export default createStatementPaddingRule(
 	(statement) => {
 		const rootName = getStatementRootName(statement);
 		if (!rootName) {
-			return undefined;
+			return;
 		}
 
 		return statementMatches.get(rootName);

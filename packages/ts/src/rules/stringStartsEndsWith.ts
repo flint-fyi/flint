@@ -10,7 +10,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 const REGEX_METACHARACTERS = /[+[{(.?*|\\]/;
 
 function escapeString(str: string): string {
-	return str.replace(/["'\\]/g, "\\$&");
+	return str.replaceAll(/["'\\]/g, String.raw`\$&`);
 }
 
 function isSimpleString(pattern: string): boolean {

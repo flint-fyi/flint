@@ -14,20 +14,20 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /a+(a*)/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /a+(a*)/;
     ~~
     Capturing group with 'a*' will always capture the empty string because 'a+' consumes matching characters first.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /a+(a+)/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /a+(a+)/;
     ~~
     Capturing group with 'a+' will always capture only 1 character because 'a+' consumes matching characters first.
@@ -44,10 +44,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /^(a*).+/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /^(a*).+/;
    ~~
    Quantifier 'a*' at the end of capturing group may capture less than expected due to backtracking.
@@ -64,10 +64,10 @@ new RegExp("\\d+(\\d*)");
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[a-z]+([a-z]*)/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[a-z]+([a-z]*)/;
         ~~~~~~
         Capturing group with '[a-z]*' will always capture the empty string because '[a-z]+' consumes matching characters first.
@@ -76,21 +76,21 @@ new RegExp("\\d+(\\d*)");
 	],
 	valid: [
 		`RegExp(variable);`,
-		String.raw`/(a+)/;`,
-		String.raw`/(a+a+)/;`,
-		String.raw`/(a+a+)b+/;`,
+		"/(a+)/;",
+		"/(a+a+)/;",
+		"/(a+a+)b+/;",
 		String.raw`/\$(\d+)/g;`,
 		String.raw`/\b(?:id|name)=["']([^"']+)["']/g;`,
 		String.raw`/\d+(\w*)/;`,
 		String.raw`/^([+-]?(?:\d+(?:\.\d+)?|\.\d+))(e)([+-]?)(\d+)$/i;`,
-		String.raw`/^(a*)$/;`,
+		"/^(a*)$/;",
 		String.raw`/^[+-]?\d+\.(\d+)(?:e[+-]?\d+)?$/i;`,
 		String.raw`/^\/(.*)\/([dgimsuyv]*)$/;`,
 		String.raw`/^\/(.+)\/([dgimsuyv]*)$/;`,
 		String.raw`/^\/\/\s*flint-(\S+)(?:\s+(.+))?/;`,
 		String.raw`/^\s*flint-(\S+)(?:\s+(.+))?/;`,
-		String.raw`/a+(b*)/;`,
-		String.raw`/a+a+/;`,
-		String.raw`new RegExp("a+(b*)");`,
+		"/a+(b*)/;",
+		"/a+a+/;",
+		'new RegExp("a+(b*)");',
 	],
 });

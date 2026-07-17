@@ -37,7 +37,7 @@ export function volarLanguagePlugin(
 	return {
 		createVirtualCode(fileName, languageId, snapshot) {
 			if (languageId !== "svelte") {
-				return undefined;
+				return;
 			}
 			return {
 				codegenStacks: [],
@@ -59,7 +59,7 @@ export function volarLanguagePlugin(
 			if (fileName.endsWith(".svelte")) {
 				return "svelte";
 			}
-			return undefined;
+			return;
 		},
 		typescript: {
 			extraFileExtensions: [
@@ -79,7 +79,7 @@ export function volarLanguagePlugin(
 						};
 					}
 				}
-				return undefined;
+				return;
 			},
 		},
 		updateVirtualCode(fileName, virtualCode, snapshot) {
@@ -111,9 +111,9 @@ export function errorToLanguageReport(
 	}
 	const svelteError = isSvelteCompileError(error) ? error : null;
 	const loc =
-		svelteError?.start != null
-			? `:${svelteError.start.line}:${svelteError.start.column}`
-			: "";
+		svelteError?.start == null
+			? ""
+			: `:${svelteError.start.line}:${svelteError.start.column}`;
 	const res: LanguageReport = {
 		source: "svelte",
 		text: `${fileName}${loc} - ${"message" in error && typeof error.message === "string" ? error.message : "Codegen error"}`,
@@ -261,7 +261,7 @@ function getEmbeddedTsCode(
 			mappings,
 			snapshot: {
 				getChangeRange() {
-					return undefined;
+					return;
 				},
 				getLength() {
 					return codeWithTypes.length;
@@ -280,7 +280,7 @@ function getEmbeddedTsCode(
 			mappings: [],
 			snapshot: {
 				getChangeRange() {
-					return undefined;
+					return;
 				},
 				getLength() {
 					return 0;

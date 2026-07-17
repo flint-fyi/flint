@@ -74,10 +74,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 new RegExp("[A-z]");
 `,
-			snapshot: String.raw`
+			snapshot: `
 new RegExp("[A-z]");
              ~~~
              Obscure character range 'A-z' (A to z) is not obvious.

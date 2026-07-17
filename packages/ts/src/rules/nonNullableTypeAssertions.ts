@@ -30,7 +30,7 @@ function getTypesIfNotLoose(
 ) {
 	const type = typeChecker.getTypeAtLocation(node);
 	if (tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown)) {
-		return undefined;
+		return;
 	}
 
 	return tsutils.unionConstituents(type);

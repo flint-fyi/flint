@@ -147,11 +147,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						keyword = "function";
 					} else if (ts.isArrowFunction(node)) {
 						const firstToken = node.getFirstToken(sourceFile);
-						if (firstToken && ts.isIdentifier(firstToken)) {
-							keyword = firstToken.text;
-						} else {
-							keyword = "(";
-						}
+						keyword =
+							firstToken && ts.isIdentifier(firstToken) ? firstToken.text : "(";
 					}
 
 					context.report({

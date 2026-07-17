@@ -108,11 +108,13 @@ function isHexSubset(elements: RegExpAST.CharacterClassElement[]) {
 				// Contains a non-hex letter range
 				return false;
 			}
-		} else if (element.type === "Character") {
+		} else if (
+			element.type === "Character" &&
+			isLetter(element.value) &&
+			!isHexLetter(element.value)
+		) {
 			// Individual letters don't qualify as hex subset by themselves
-			if (isLetter(element.value) && !isHexLetter(element.value)) {
-				return false;
-			}
+			return false;
 		}
 	}
 	return hasHexRange;

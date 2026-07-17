@@ -51,7 +51,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function getVariadicArgumentsNode(node: AST.CallExpression) {
 			if (!isApplyCall(node) || node.arguments.length !== 2) {
-				return undefined;
+				return;
 			}
 
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -61,7 +61,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				argumentsNode.kind === SyntaxKind.ArrayLiteralExpression ||
 				argumentsNode.kind === SyntaxKind.SpreadElement
 			) {
-				return undefined;
+				return;
 			}
 
 			return argumentsNode;

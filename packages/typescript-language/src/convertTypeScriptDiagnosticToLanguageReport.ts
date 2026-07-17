@@ -87,16 +87,16 @@ function formatReport(diagnostic: TSDiagnostic) {
 	return output;
 }
 
-const gutterStyleSequence = "\u001B[7m";
+const gutterStyleSequence = "\u{1B}[7m";
 const ellipsis = "...";
 const gutterSeparator = " ";
-const resetEscapeSequence = "\u001B[0m";
+const resetEscapeSequence = "\u{1B}[0m";
 const COLOR = {
-	Blue: "\u001B[94m",
-	Cyan: "\u001B[96m",
-	Grey: "\u001B[90m",
-	Red: "\u001B[91m",
-	Yellow: "\u001B[93m",
+	Blue: "\u{1B}[94m",
+	Cyan: "\u{1B}[96m",
+	Grey: "\u{1B}[90m",
+	Red: "\u{1B}[91m",
+	Yellow: "\u{1B}[93m",
 };
 
 function displayFilename(name: string) {
@@ -150,7 +150,7 @@ function formatCodeSpan(
 				: file.text.length;
 		let lineContent = file.text.slice(lineStart, lineEnd);
 		lineContent = lineContent.trimEnd();
-		lineContent = lineContent.replace(/\t/g, " ");
+		lineContent = lineContent.replaceAll("\t", " ");
 		context +=
 			indent +
 			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
@@ -164,14 +164,14 @@ function formatCodeSpan(
 		context += squiggleColor;
 		if (i === firstLine) {
 			const lastCharForLine = i === lastLine ? lastLineChar : undefined;
-			context += lineContent.slice(0, firstLineChar).replace(/\S/g, " ");
+			context += lineContent.slice(0, firstLineChar).replaceAll(/\S/g, " ");
 			context += lineContent
 				.slice(firstLineChar, lastCharForLine)
-				.replace(/./g, "~");
+				.replaceAll(/./g, "~");
 		} else if (i === lastLine) {
-			context += lineContent.slice(0, lastLineChar).replace(/./g, "~");
+			context += lineContent.slice(0, lastLineChar).replaceAll(/./g, "~");
 		} else {
-			context += lineContent.replace(/./g, "~");
+			context += lineContent.replaceAll(/./g, "~");
 		}
 		context += resetEscapeSequence;
 	}

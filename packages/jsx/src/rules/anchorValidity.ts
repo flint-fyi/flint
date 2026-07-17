@@ -60,7 +60,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			if (hrefProperty?.kind !== SyntaxKind.JsxAttribute) {
-				return undefined;
+				return;
 			}
 
 			if (hrefProperty.initializer?.kind === SyntaxKind.StringLiteral) {

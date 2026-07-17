@@ -133,7 +133,7 @@ ruleTester.describe(rule, {
 		`"abc".replace(/./, "$\`$'");`,
 		`"abc".replace(/(.)/, "$1");`,
 		`"abc".replace(/(?<name>.)/, "$<name>");`,
-		String.raw`"abc".replace(/[a]/v, "$$");`,
+		'"abc".replace(/[a]/v, "$$");',
 		`"abc".replace(/./, "$1$2");`,
 		`"abc".replace(/./, "$99");`,
 		`"abc".replace("a", "$");`,

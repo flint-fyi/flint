@@ -7,7 +7,7 @@ import { parseTestCase, parseTestCaseInvalid } from "./parseTestCases.ts";
 export function getRuleTesterDescribedCases(node: AST.CallExpression) {
 	const arrays = getRuleTesterCaseArrays(node);
 	if (!arrays) {
-		return undefined;
+		return;
 	}
 
 	return {

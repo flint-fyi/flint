@@ -76,7 +76,7 @@ describe("getColumnAndLineOfPosition", () => {
 		});
 	});
 
-	test("position is on \\n", () => {
+	test(String.raw`position is on \n`, () => {
 		const res = getColumnAndLineOfPosition("0\n23", 1);
 
 		expect(res).toEqual({
@@ -136,7 +136,7 @@ describe("getColumnAndLineOfPosition", () => {
 		});
 	});
 
-	test("position is much bigger than the source - \\r", () => {
+	test(String.raw`position is much bigger than the source - \r`, () => {
 		const res = getColumnAndLineOfPosition("0\r23\r56", 999);
 
 		expect(res).toEqual({
@@ -146,7 +146,7 @@ describe("getColumnAndLineOfPosition", () => {
 		});
 	});
 
-	test("\\r\\n line endings", () => {
+	test(String.raw`\r\n line endings`, () => {
 		const res = getColumnAndLineOfPosition("0\r\n34\r\n78", 3);
 
 		expect(res).toEqual({
@@ -156,7 +156,7 @@ describe("getColumnAndLineOfPosition", () => {
 		});
 	});
 
-	test("\\r\\n line endings - 2", () => {
+	test(String.raw`\r\n line endings - 2`, () => {
 		const res = getColumnAndLineOfPosition("0\r\n34\r\n78", 8);
 
 		expect(res).toEqual({

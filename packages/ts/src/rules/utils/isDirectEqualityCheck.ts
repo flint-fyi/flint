@@ -23,13 +23,13 @@ export function isDirectEqualityCheck(
 	}
 
 	if (body?.kind !== SyntaxKind.BinaryExpression) {
-		return undefined;
+		return;
 	}
 
 	const { left, operatorToken, right } = body;
 
 	if (!operators.includes(operatorToken.kind)) {
-		return undefined;
+		return;
 	}
 
 	const isLeftParam =
@@ -44,12 +44,12 @@ export function isDirectEqualityCheck(
 		return left;
 	}
 
-	return undefined;
+	return;
 }
 
 function getDirectReturnExpression(body: AST.Block) {
 	if (body.statements.length !== 1) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion

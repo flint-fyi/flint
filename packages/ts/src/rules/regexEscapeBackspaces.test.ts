@@ -54,8 +54,8 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: `
-new RegExp("[\\\\b]");
+			code: String.raw`
+new RegExp("[\\b]");
 `,
 			snapshot: `
 new RegExp("[\\\\b]");
@@ -65,13 +65,13 @@ new RegExp("[\\\\b]");
 		},
 	],
 	valid: [
-		`new RegExp("\\\\b");`,
+		String.raw`new RegExp("\\b");`,
 		`new RegExp(variable);`,
 		String.raw`/[\n]/;`,
 		String.raw`/[\t]/;`,
 		String.raw`/[\u0008]/;`,
-		String.raw`/[a]/;`,
-		String.raw`/[abc]/;`,
+		"/[a]/;",
+		"/[abc]/;",
 		String.raw`/\b/;`,
 		String.raw`/\ba/;`,
 		String.raw`/\bword\b/;`,

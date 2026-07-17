@@ -101,7 +101,7 @@ function getMemberKeyName(member: AST.ClassElement) {
 	) {
 		const text = getNameText(member.name);
 		if (!text) {
-			return undefined;
+			return;
 		}
 
 		const isStatic = member.modifiers?.some(
@@ -118,7 +118,7 @@ function getMemberKeyName(member: AST.ClassElement) {
 		return { group, isStatic: !!isStatic, node: member.name, text } as const;
 	}
 
-	return undefined;
+	return;
 }
 
 // TODO: Use a util like getStaticValue
@@ -135,5 +135,5 @@ function getNameText(name: AST.PropertyName) {
 		return name.text;
 	}
 
-	return undefined;
+	return;
 }

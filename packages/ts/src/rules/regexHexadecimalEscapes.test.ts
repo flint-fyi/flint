@@ -96,7 +96,7 @@ ruleTester.describe(rule, {
 		String.raw`/\7/;`,
 		String.raw`/\cA \cB \cM/;`,
 		String.raw`/[\q{\x0a}]/v;`,
-		String.raw`/abc/;`,
+		"/abc/;",
 		String.raw`/a \x0a \cM \0 \u0100 \u{100}/u;`,
 	],
 });

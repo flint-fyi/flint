@@ -7,156 +7,156 @@ ruleTester.describe(rule, {
 			code: `
 /[0-9a-zA-Z_]/;
 `,
-			output: `
-/\\w/;
+			output: String.raw`
+/\w/;
 `,
-			snapshot: `
+			snapshot: String.raw`
 /[0-9a-zA-Z_]/;
  ~~~~~~~~~~~~
- Character class '[0-9a-zA-Z_]' can be replaced with '\\w'.
+ Character class '[0-9a-zA-Z_]' can be replaced with '\w'.
 `,
 		},
 		{
 			code: `
 /[a-zA-Z0-9_]/;
 `,
-			output: `
-/\\w/;
+			output: String.raw`
+/\w/;
 `,
-			snapshot: `
+			snapshot: String.raw`
 /[a-zA-Z0-9_]/;
  ~~~~~~~~~~~~
- Character class '[a-zA-Z0-9_]' can be replaced with '\\w'.
+ Character class '[a-zA-Z0-9_]' can be replaced with '\w'.
 `,
 		},
 		{
 			code: `
 /[A-Za-z0-9_]/;
 `,
-			output: `
-/\\w/;
+			output: String.raw`
+/\w/;
 `,
-			snapshot: `
+			snapshot: String.raw`
 /[A-Za-z0-9_]/;
  ~~~~~~~~~~~~
- Character class '[A-Za-z0-9_]' can be replaced with '\\w'.
+ Character class '[A-Za-z0-9_]' can be replaced with '\w'.
 `,
 		},
 		{
 			code: `
 /[_0-9a-zA-Z]/;
 `,
-			output: `
-/\\w/;
+			output: String.raw`
+/\w/;
 `,
-			snapshot: `
+			snapshot: String.raw`
 /[_0-9a-zA-Z]/;
  ~~~~~~~~~~~~
- Character class '[_0-9a-zA-Z]' can be replaced with '\\w'.
+ Character class '[_0-9a-zA-Z]' can be replaced with '\w'.
 `,
 		},
 		{
 			code: `
 /[^0-9a-zA-Z_]/;
 `,
-			output: `
-/\\W/;
+			output: String.raw`
+/\W/;
 `,
-			snapshot: `
+			snapshot: String.raw`
 /[^0-9a-zA-Z_]/;
  ~~~~~~~~~~~~~
- Character class '[^0-9a-zA-Z_]' can be replaced with '\\W'.
+ Character class '[^0-9a-zA-Z_]' can be replaced with '\W'.
 `,
 		},
 		{
 			code: `
 /[0-9a-z_]/i;
 `,
-			output: `
-/\\w/i;
+			output: String.raw`
+/\w/i;
 `,
-			snapshot: `
+			snapshot: String.raw`
 /[0-9a-z_]/i;
  ~~~~~~~~~
- Character class '[0-9a-z_]' can be replaced with '\\w'.
+ Character class '[0-9a-z_]' can be replaced with '\w'.
 `,
 		},
 		{
 			code: `
 /[^0-9a-z_]/i;
 `,
-			output: `
-/\\W/i;
+			output: String.raw`
+/\W/i;
 `,
-			snapshot: `
+			snapshot: String.raw`
 /[^0-9a-z_]/i;
  ~~~~~~~~~~
- Character class '[^0-9a-z_]' can be replaced with '\\W'.
+ Character class '[^0-9a-z_]' can be replaced with '\W'.
 `,
 		},
 		{
-			code: `
-/[\\da-zA-Z_]/;
+			code: String.raw`
+/[\da-zA-Z_]/;
 `,
-			output: `
-/\\w/;
+			output: String.raw`
+/\w/;
 `,
-			snapshot: `
-/[\\da-zA-Z_]/;
+			snapshot: String.raw`
+/[\da-zA-Z_]/;
  ~~~~~~~~~~~
- Character class '[\\da-zA-Z_]' can be replaced with '\\w'.
+ Character class '[\da-zA-Z_]' can be replaced with '\w'.
 `,
 		},
 		{
 			code: `
 new RegExp("[0-9a-zA-Z_]");
 `,
-			output: `
-new RegExp("\\\\w");
+			output: String.raw`
+new RegExp("\\w");
 `,
-			snapshot: `
+			snapshot: String.raw`
 new RegExp("[0-9a-zA-Z_]");
             ~~~~~~~~~~~~
-            Character class '[0-9a-zA-Z_]' can be replaced with '\\w'.
+            Character class '[0-9a-zA-Z_]' can be replaced with '\w'.
 `,
 		},
 		{
 			code: `
 new RegExp("[^0-9a-zA-Z_]");
 `,
-			output: `
-new RegExp("\\\\W");
+			output: String.raw`
+new RegExp("\\W");
 `,
-			snapshot: `
+			snapshot: String.raw`
 new RegExp("[^0-9a-zA-Z_]");
             ~~~~~~~~~~~~~
-            Character class '[^0-9a-zA-Z_]' can be replaced with '\\W'.
+            Character class '[^0-9a-zA-Z_]' can be replaced with '\W'.
 `,
 		},
 		{
 			code: `
 RegExp("[0-9a-zA-Z_]");
 `,
-			output: `
-RegExp("\\\\w");
+			output: String.raw`
+RegExp("\\w");
 `,
-			snapshot: `
+			snapshot: String.raw`
 RegExp("[0-9a-zA-Z_]");
         ~~~~~~~~~~~~
-        Character class '[0-9a-zA-Z_]' can be replaced with '\\w'.
+        Character class '[0-9a-zA-Z_]' can be replaced with '\w'.
 `,
 		},
 		{
 			code: `
 new RegExp("[0-9a-z_]", "i");
 `,
-			output: `
-new RegExp("\\\\w", "i");
+			output: String.raw`
+new RegExp("\\w", "i");
 `,
-			snapshot: `
+			snapshot: String.raw`
 new RegExp("[0-9a-z_]", "i");
             ~~~~~~~~~
-            Character class '[0-9a-z_]' can be replaced with '\\w'.
+            Character class '[0-9a-z_]' can be replaced with '\w'.
 `,
 		},
 	],
@@ -166,11 +166,11 @@ new RegExp("[0-9a-z_]", "i");
 		`/[0-9a-zA-Z_#]/;`,
 		`/[0-9a-zA-Z]/;`,
 		`/[a-zA-Z_]/;`,
-		`/\\w/;`,
-		`/\\W/;`,
+		String.raw`/\w/;`,
+		String.raw`/\W/;`,
 		`/foo/;`,
-		`new RegExp("\\\\w");`,
-		`new RegExp("\\\\W");`,
+		String.raw`new RegExp("\\w");`,
+		String.raw`new RegExp("\\W");`,
 		`new RegExp("foo");`,
 		`new RegExp(variable);`,
 	],

@@ -128,7 +128,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const patternEscaped = construction.pattern.replace(/\\\\/g, "\\");
+			const patternEscaped = construction.pattern.replaceAll("\\\\", "\\");
 			const unnecessaryRanges = findUnnecessaryRanges(
 				patternEscaped,
 				construction.flags,

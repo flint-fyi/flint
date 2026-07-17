@@ -73,7 +73,7 @@ describe("data.json", () => {
 				[...builtinRules]
 					// flint-disable-lines-end ts/deprecated
 					.flatMap(([ruleName, module]) =>
-						!module.meta?.deprecated ? [ruleName] : [],
+						module.meta?.deprecated ? [] : [ruleName],
 					)
 					.sort(),
 			);
@@ -87,7 +87,7 @@ describe("data.json", () => {
 			);
 		});
 
-		it.each(Array.from(pluginsRulesByName.entries()))(
+		it.each(Array.from(pluginsRulesByName))(
 			"includes all %s rules",
 			(pluginName, rules) => {
 				const pluginRuleNames = new Set(

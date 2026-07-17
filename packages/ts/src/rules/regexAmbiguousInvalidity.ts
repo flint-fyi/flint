@@ -36,9 +36,9 @@ interface PatternIssue {
 const validator = new RegExpValidator({ ecmaVersion: 2020, strict: true });
 
 const CHARACTER_CLASS_SYNTAX_CHARACTERS = new Set(
-	"\\/()[]{}^$.|-+*?".split(""),
+	String.raw`\/()[]{}^$.|-+*?`.split(""),
 );
-const SYNTAX_CHARACTERS = new Set("\\/()[]{}^$.|+*?".split(""));
+const SYNTAX_CHARACTERS = new Set(String.raw`\/()[]{}^$.|+*?`.split(""));
 
 function isControlEscape(raw: string) {
 	return /^\\c[A-Za-z]$/u.test(raw);
@@ -181,7 +181,7 @@ function checkPatternWithRegexpp(
 				return;
 			}
 
-			if (cNode.raw === "\\u" || cNode.raw === "\\x") {
+			if (cNode.raw === String.raw`\u` || cNode.raw === String.raw`\x`) {
 				issues.push({
 					data: { expr: cNode.raw },
 					end: cNode.end,
@@ -192,7 +192,7 @@ function checkPatternWithRegexpp(
 				return;
 			}
 
-			if (cNode.raw === "\\p" || cNode.raw === "\\P") {
+			if (cNode.raw === String.raw`\p` || cNode.raw === String.raw`\P`) {
 				issues.push({
 					data: { expr: cNode.raw },
 					end: cNode.end,
@@ -207,7 +207,7 @@ function checkPatternWithRegexpp(
 				issues.push({
 					data: {
 						escape: cNode.raw,
-						hex: `\\x${cNode.value.toString(16).padStart(2, "0")}`,
+						hex: String.raw`\x${cNode.value.toString(16).padStart(2, "0")}`,
 					},
 					end: cNode.end,
 					message: "octalEscape",
@@ -222,7 +222,7 @@ function checkPatternWithRegexpp(
 				cNode.parent.type === "CharacterClassRange";
 
 			if (!insideCharClass) {
-				if (cNode.raw === "\\k") {
+				if (cNode.raw === String.raw`\k`) {
 					issues.push({
 						data: { expr: cNode.raw },
 						end: cNode.end,
@@ -270,15 +270,17 @@ function checkPatternWithRegexpp(
 			}
 		},
 		onQuantifierEnter(quantifierNode) {
-			if (quantifierNode.element.type === "Assertion") {
-				issues.push({
-					data: {},
-					end: quantifierNode.end,
-					message: "quantifiedAssertion",
-					start: quantifierNode.start,
-				});
-				reported = true;
+			if (quantifierNode.element.type !== "Assertion") {
+				return;
 			}
+
+			issues.push({
+				data: {},
+				end: quantifierNode.end,
+				message: "quantifiedAssertion",
+				start: quantifierNode.start,
+			});
+			reported = true;
 		},
 	});
 
@@ -334,7 +336,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"Either use a valid control escape sequence or escape the standalone backslash.",
 			],
 			suggestions: [
-				"Use a valid control escape like \\cA or escape the backslash.",
+				String.raw`Use a valid control escape like \cA or escape the backslash.`,
 			],
 		},
 		invalidPropertyEscape: {
@@ -344,7 +346,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"Either use a valid property escape sequence or remove the useless escaping.",
 			],
 			suggestions: [
-				"Use a valid Unicode property escape like \\p{L} with the 'u' flag.",
+				String.raw`Use a valid Unicode property escape like \p{L} with the 'u' flag.`,
 			],
 		},
 		invalidRange: {
@@ -391,7 +393,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			suggestions: ["Escape the character with a backslash."],
 		},
 		uselessEscape: {
-			primary: "Useless escape '\\{{ escaped }}'.",
+			primary: String.raw`Useless escape '\{{ escaped }}'.`,
 			secondary: [
 				"This regex uses syntax from ECMAScript Annex B which is ambiguous or deprecated.",
 				"Identity escapes with non-syntax characters are forbidden in strict mode.",
@@ -455,7 +457,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const text = node.getText(sourceFile);
 					const lastSlash = text.lastIndexOf("/");
 					if (lastSlash <= 0) {
-						return undefined;
+						return;
 					}
 
 					const flagsText = text.slice(lastSlash + 1);

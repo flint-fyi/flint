@@ -15,7 +15,7 @@ interface Finding {
 	start: number;
 }
 
-const lookaheadOpeners = ["(?=", "(?!"];
+const lookaheadOpeners = new Set(["(?!", "(?="]);
 const lookbehindOpeners = ["(?<=", "(?<!"];
 const allLookaroundOpeners = [...lookaheadOpeners, ...lookbehindOpeners];
 
@@ -148,8 +148,8 @@ function findTriviallyNestedAssertions(
 			content.startsWith(lookaround),
 		);
 		if (innerOpener) {
-			const isOuterLookahead = lookaheadOpeners.includes(opener);
-			const isInnerLookahead = lookaheadOpeners.includes(innerOpener);
+			const isOuterLookahead = lookaheadOpeners.has(opener);
+			const isInnerLookahead = lookaheadOpeners.has(innerOpener);
 
 			if (isOuterLookahead === isInnerLookahead) {
 				const innerContentStart = innerOpener.length;

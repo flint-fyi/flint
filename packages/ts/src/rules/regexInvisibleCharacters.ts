@@ -14,15 +14,15 @@ import { getRegExpLiteralDetails } from "./utils/getRegExpLiteralDetails.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 
 const codepoints = {
-	braillePatternBlank: 0x2800,
-	leftToRight: 0x200e,
-	mongolianVowelSeparator: 0x180e,
-	nextLine: 0x0085,
-	rightToLeft: 0x200f,
-	space: 0x0020,
-	zeroWidthNonJoiner: 0x200c,
-	zeroWidthSpace: 0x200b,
-	zeroWithJoiner: 0x200d,
+	braillePatternBlank: 0x28_00,
+	leftToRight: 0x20_0e,
+	mongolianVowelSeparator: 0x18_0e,
+	nextLine: 0x00_85,
+	rightToLeft: 0x20_0f,
+	space: 0x00_20,
+	zeroWidthNonJoiner: 0x20_0c,
+	zeroWidthSpace: 0x20_0b,
+	zeroWithJoiner: 0x20_0d,
 };
 
 function isInvisible(codePoint: number): boolean {
@@ -48,14 +48,14 @@ function isSpace(codePoint: number): boolean {
 
 function toEscapeSequence(codePoint: number, hasUnicode: boolean): string {
 	if (codePoint <= 0xff) {
-		return `\\x${codePoint.toString(16).toUpperCase().padStart(2, "0")}`;
+		return String.raw`\x${codePoint.toString(16).toUpperCase().padStart(2, "0")}`;
 	}
 
 	if (hasUnicode) {
-		return `\\u{${codePoint.toString(16).toUpperCase()}}`;
+		return String.raw`\u{${codePoint.toString(16).toUpperCase()}}`;
 	}
 
-	return `\\u${codePoint.toString(16).toUpperCase().padStart(4, "0")}`;
+	return String.raw`\u${codePoint.toString(16).toUpperCase().padStart(4, "0")}`;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -144,7 +144,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const patternEscaped = construction.pattern.replace(/\\\\/g, "\\");
+			const patternEscaped = construction.pattern.replaceAll("\\\\", "\\");
 			checkPattern(patternEscaped, construction.start + 1, construction.flags);
 		}
 

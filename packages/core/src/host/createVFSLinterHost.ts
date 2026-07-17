@@ -187,7 +187,7 @@ export function createVFSLinterHost(
 					name: relPath,
 					type: "file",
 				};
-				if (slashIndex >= 0) {
+				if (slashIndex !== -1) {
 					dirent = {
 						name: relPath.slice(0, slashIndex),
 						type: "directory",
@@ -224,7 +224,7 @@ export function createVFSLinterHost(
 			if (baseHost?.fileTypeSync(filePathAbsolute) === "file") {
 				return baseHost.readFileSync(filePathAbsolute);
 			}
-			return undefined;
+			return;
 		},
 		vfsDeleteFile(filePathAbsolute) {
 			const key = pathKey(filePathAbsolute, caseSensitiveFS);
@@ -242,7 +242,7 @@ export function createVFSLinterHost(
 			const key = pathKey(filePathAbsolute, caseSensitiveFS);
 			const existing = fileMap.get(key);
 			const storedPath = existing?.path ?? normalizePath(filePathAbsolute);
-			const fileEvent = existing != null ? "changed" : "created";
+			const fileEvent = existing == null ? "created" : "changed";
 			fileMap.set(key, { content, path: storedPath, touchTime: Date.now() });
 			watchEvent(storedPath, fileEvent);
 		},
@@ -311,7 +311,7 @@ export function createVFSLinterHost(
 
 function createExcludeMatcher(patterns: string[] | undefined) {
 	if (!patterns?.length) {
-		return undefined;
+		return;
 	}
 
 	const withDescendants = patterns.flatMap((pattern) => {
@@ -331,7 +331,7 @@ function relativeWithinCwd(filePathAbsolute: string, cwdNormalized: string) {
 		? cwdNormalized
 		: `${cwdNormalized}/`;
 	if (!filePathAbsolute.startsWith(prefix)) {
-		return undefined;
+		return;
 	}
 
 	return filePathAbsolute.slice(prefix.length);

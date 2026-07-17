@@ -54,7 +54,7 @@ function getPropertyKeyText(name: AST.PropertyName) {
 			if (name.expression.kind === SyntaxKind.Identifier) {
 				return name.expression.text;
 			}
-			return undefined;
+			return;
 
 		case SyntaxKind.Identifier:
 		case SyntaxKind.NoSubstitutionTemplateLiteral:
@@ -63,7 +63,7 @@ function getPropertyKeyText(name: AST.PropertyName) {
 			return name.text;
 
 		default:
-			return undefined;
+			return;
 	}
 }
 

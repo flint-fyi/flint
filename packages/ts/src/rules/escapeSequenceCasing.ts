@@ -30,7 +30,7 @@ function findLowercaseEscapeSequence(text: string): EscapeInfo | undefined {
 			const hexPart = match[1];
 			if (hexPart && hexPart !== hexPart.toUpperCase()) {
 				const original = match[0];
-				const fixed = original.replace(
+				const fixed = original.replaceAll(
 					escapeCase,
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					(data) => data[0]! + data.slice(1).toUpperCase(),

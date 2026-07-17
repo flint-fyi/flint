@@ -53,6 +53,7 @@
 		"eslint-plugin-package-json": "catalog:dev",
 		"eslint-plugin-perfectionist": "catalog:dev",
 		"eslint-plugin-regexp": "catalog:dev",
+		"eslint-plugin-unicorn": "catalog:dev",
 		"eslint-plugin-yml": "catalog:dev",
 		"flint": "workspace:^",
 		"husky": "catalog:dev",

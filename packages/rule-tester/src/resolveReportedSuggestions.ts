@@ -19,7 +19,7 @@ export function resolveReportedSuggestions(
 		.filter(isTruthy);
 
 	if (!suggestionsReported.length) {
-		return undefined;
+		return;
 	}
 
 	return suggestionsReported.map((suggestionReported) =>

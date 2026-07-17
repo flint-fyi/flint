@@ -22,12 +22,12 @@ export function parseTestCase(node: AST.Expression) {
 	}
 
 	if (node.kind !== SyntaxKind.ObjectLiteralExpression) {
-		return undefined;
+		return;
 	}
 
 	const code = findProperty(node.properties, "code", isTestCaseCode);
 	if (!code) {
-		return undefined;
+		return;
 	}
 
 	const fileName = findProperty(node.properties, "fileName", isStaticString);

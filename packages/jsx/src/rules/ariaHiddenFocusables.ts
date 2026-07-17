@@ -100,7 +100,7 @@ function findTabIndexValue(
 	);
 
 	if (!tabIndexProperty?.initializer) {
-		return undefined;
+		return;
 	}
 
 	if (tabIndexProperty.initializer.kind === SyntaxKind.JsxExpression) {
@@ -114,7 +114,7 @@ function findTabIndexValue(
 		return Number(tabIndexProperty.initializer.text);
 	}
 
-	return undefined;
+	return;
 }
 
 function isAriaHiddenTrue(ariaHiddenProperty: AST.JsxAttribute) {

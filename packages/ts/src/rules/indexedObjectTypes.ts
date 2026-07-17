@@ -12,13 +12,13 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function getSingleIndexSignature(members: NodeArray<AST.TypeElement>) {
 	if (members.length !== 1) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const member = members[0]!;
 	if (member.kind !== SyntaxKind.IndexSignature) {
-		return undefined;
+		return;
 	}
 
 	return member;
@@ -36,7 +36,7 @@ function getTypeName(node: AST.InterfaceDeclaration | AST.TypeLiteralNode) {
 		}
 		current = current.parent;
 	}
-	return undefined;
+	return;
 }
 
 function isDirectlyRecursive(

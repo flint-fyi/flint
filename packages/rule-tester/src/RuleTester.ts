@@ -71,8 +71,9 @@ export class RuleTester {
 		skip,
 	}: RuleTesterOptions = {}) {
 		let baseHost =
-			diskBackedFSRoot != null
-				? createEphemeralLinterHost(
+			diskBackedFSRoot == null
+				? undefined
+				: createEphemeralLinterHost(
 						createDiskBackedLinterHost(
 							path.resolve(
 								process.cwd(),
@@ -80,8 +81,7 @@ export class RuleTester {
 								"_flint-rule-tester-virtual",
 							),
 						),
-					)
-				: undefined;
+					);
 		const { files: defaultFiles = {} } = defaults;
 		if (Object.keys(defaultFiles).length) {
 			const vfs = createVFSLinterHost(
@@ -188,11 +188,10 @@ export class RuleTester {
 			: this.#testerOptions.it;
 
 		if (testCase.skip) {
-			if ("skip" in test && typeof test.skip === "function") {
-				test = test.skip as TesterSetupIt;
-			} else {
-				test = this.#testerOptions.skip;
-			}
+			test =
+				"skip" in test && typeof test.skip === "function"
+					? (test.skip as TesterSetupIt)
+					: this.#testerOptions.skip;
 		}
 
 		test(

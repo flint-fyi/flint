@@ -13,8 +13,9 @@ export function parseOptions<
 	options: InferredInputObject<OptionsSchema>,
 ): InferredOutputObject<OptionsSchema> {
 	return (
-		schema !== undefined
-			? z.parse(
+		schema === undefined
+			? undefined
+			: z.parse(
 					new z.$ZodPrefault({
 						defaultValue: {},
 						innerType: new z.$ZodObject({
@@ -26,6 +27,5 @@ export function parseOptions<
 					}),
 					options,
 				)
-			: undefined
 	) as InferredOutputObject<OptionsSchema>;
 }

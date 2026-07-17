@@ -41,7 +41,7 @@ function resolveSymbolDeclarations(
 ) {
 	let symbol = typeChecker.getSymbolAtLocation(nameNode);
 	if (!symbol) {
-		return undefined;
+		return;
 	}
 
 	if (symbol.flags & ts.SymbolFlags.Alias) {

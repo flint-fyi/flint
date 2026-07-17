@@ -35,12 +35,12 @@ function getCapturingGroups(regexpAst: RegExpAST.Pattern) {
 
 function getRegexPatternAndFlags(node: AST.Expression) {
 	if (node.kind !== SyntaxKind.RegularExpressionLiteral) {
-		return undefined;
+		return;
 	}
 
 	const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(node.text);
 	if (!match) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -69,15 +69,13 @@ function checkImpossibleRange(
 				return { lowerBound, upperBound };
 			}
 
-			if (upper === lower) {
-				// x <= 5 && x >= 5 is valid (effectively x === 5)
-				// x <= 5 && x > 5 is impossible
-				// x < 5 && x >= 5 is impossible
-				// x < 5 && x > 5 is impossible
-				// Only impossible if at least one bound is strict
-				if (upperBound.isStrict || lowerBound.isStrict) {
-					return { lowerBound, upperBound };
-				}
+			// x <= 5 && x >= 5 is valid (effectively x === 5)
+			// x <= 5 && x > 5 is impossible
+			// x < 5 && x >= 5 is impossible
+			// x < 5 && x > 5 is impossible
+			// Only impossible if at least one bound is strict
+			if (upper === lower && (upperBound.isStrict || lowerBound.isStrict)) {
+				return { lowerBound, upperBound };
 			}
 		}
 	}
@@ -159,18 +157,15 @@ function checkRedundantOrComparison(
 	for (const [index, a] of comparisons.entries()) {
 		for (const b of comparisons.slice(index + 1)) {
 			// Must compare the same operands
+			// Also check flipped operands
 			if (
-				!hasSameTokens(a.variable, b.variable, sourceFile) ||
-				!hasSameTokens(a.node.left, b.node.left, sourceFile) ||
-				!hasSameTokens(a.node.right, b.node.right, sourceFile)
+				(!hasSameTokens(a.variable, b.variable, sourceFile) ||
+					!hasSameTokens(a.node.left, b.node.left, sourceFile) ||
+					!hasSameTokens(a.node.right, b.node.right, sourceFile)) &&
+				(!hasSameTokens(a.node.left, b.node.right, sourceFile) ||
+					!hasSameTokens(a.node.right, b.node.left, sourceFile))
 			) {
-				// Also check flipped operands
-				if (
-					!hasSameTokens(a.node.left, b.node.right, sourceFile) ||
-					!hasSameTokens(a.node.right, b.node.left, sourceFile)
-				) {
-					continue;
-				}
+				continue;
 			}
 
 			const suggestion = getSimplifiedOperator(a.operatorKind, b.operatorKind);

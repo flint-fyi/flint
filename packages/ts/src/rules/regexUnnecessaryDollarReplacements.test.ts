@@ -4,7 +4,7 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: String.raw`
+			code: `
 "text".replace(/(a)(b)/, "$3");
 `,
 			snapshot: `
@@ -14,7 +14,7 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "text".replace(/a/, "$1");
 `,
 			snapshot: `
@@ -24,7 +24,7 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "text".replace(/(?<first>a)/, "$<middle>");
 `,
 			snapshot: `
@@ -34,7 +34,7 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "text".replace(/(a)/, "$<name>");
 `,
 			snapshot: `
@@ -44,7 +44,7 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "text".replaceAll(/(a)/g, "$2");
 `,
 			snapshot: `
@@ -54,7 +54,7 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "text".replace(/(a)/, "$99");
 `,
 			snapshot: `
@@ -64,7 +64,7 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "text".replace(/(?<first>a)(?<second>b)/, "$<third>");
 `,
 			snapshot: `
@@ -75,15 +75,15 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		String.raw`"text".replace(/(a)(b)/, "$2$1")`,
-		String.raw`"text".replace(/(?<first>a)/, "$<first>")`,
-		String.raw`"text".replace(/a/, "$&")`,
-		String.raw`"text".replace(/a/, "$$1")`,
-		String.raw`"text".replace(/(a)/, "$1")`,
-		String.raw`"text".replace(/(a)(b)(c)/, "$1$2$3")`,
-		String.raw`"text".replaceAll(/(a)/g, "$1")`,
-		String.raw`"text".replace(/a/, "$'")`,
+		'"text".replace(/(a)(b)/, "$2$1")',
+		'"text".replace(/(?<first>a)/, "$<first>")',
+		'"text".replace(/a/, "$&")',
+		'"text".replace(/a/, "$$1")',
+		'"text".replace(/(a)/, "$1")',
+		'"text".replace(/(a)(b)(c)/, "$1$2$3")',
+		'"text".replaceAll(/(a)/g, "$1")',
+		'"text".replace(/a/, "$\'")',
 		String.raw`"text".replace(/a/, "$\`")`,
-		String.raw`"text".replace(/(a)/, "no references")`,
+		'"text".replace(/(a)/, "no references")',
 	],
 });

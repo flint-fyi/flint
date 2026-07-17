@@ -4,8 +4,8 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
-/a\\bb/;
+			code: String.raw`
+/a\bb/;
 `,
 			snapshot: `
 /a\\bb/;
@@ -14,8 +14,8 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: `
-/-\\b-/;
+			code: String.raw`
+/-\b-/;
 `,
 			snapshot: `
 /-\\b-/;
@@ -24,8 +24,8 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: `
-/a\\B-/;
+			code: String.raw`
+/a\B-/;
 `,
 			snapshot: `
 /a\\B-/;
@@ -34,8 +34,8 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: `
-/-\\Ba/;
+			code: String.raw`
+/-\Ba/;
 `,
 			snapshot: `
 /-\\Ba/;
@@ -64,8 +64,8 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: `
-new RegExp("a\\\\bb");
+			code: String.raw`
+new RegExp("a\\bb");
 `,
 			snapshot: `
 new RegExp("a\\\\bb");
@@ -74,8 +74,8 @@ new RegExp("a\\\\bb");
 `,
 		},
 		{
-			code: `
-new RegExp("-\\\\b-");
+			code: String.raw`
+new RegExp("-\\b-");
 `,
 			snapshot: `
 new RegExp("-\\\\b-");
@@ -84,8 +84,8 @@ new RegExp("-\\\\b-");
 `,
 		},
 		{
-			code: `
-new RegExp("a\\\\B-");
+			code: String.raw`
+new RegExp("a\\B-");
 `,
 			snapshot: `
 new RegExp("a\\\\B-");
@@ -115,22 +115,22 @@ new RegExp("a$b");
 		},
 	],
 	valid: [
-		`/\\bword/;`,
-		`/word\\b/;`,
-		`/a\\b-/;`,
-		`/-\\ba/;`,
-		`/a\\Ba/;`,
-		`/-\\B-/;`,
+		String.raw`/\bword/;`,
+		String.raw`/word\b/;`,
+		String.raw`/a\b-/;`,
+		String.raw`/-\ba/;`,
+		String.raw`/a\Ba/;`,
+		String.raw`/-\B-/;`,
 		`/^abc/;`,
 		`/abc$/;`,
 		`/a^b/m;`,
 		`/a$b/m;`,
-		`/[\\b]/;`,
-		`/a\\^b/;`,
-		`/a\\$b/;`,
+		String.raw`/[\b]/;`,
+		String.raw`/a\^b/;`,
+		String.raw`/a\$b/;`,
 		`new RegExp(variable);`,
-		`new RegExp("\\\\bword");`,
-		`new RegExp("word\\\\b");`,
+		String.raw`new RegExp("\\bword");`,
+		String.raw`new RegExp("word\\b");`,
 		`new RegExp("^abc");`,
 		`new RegExp("abc$");`,
 		`new RegExp("a^b", "m");`,

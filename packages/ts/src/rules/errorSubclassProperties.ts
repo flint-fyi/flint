@@ -20,7 +20,7 @@ function analyzeConstructor(node: AST.ClassDeclaration) {
 	}
 
 	if (!constructor) {
-		return undefined;
+		return;
 	}
 
 	let hasSuperCall = false;
@@ -34,7 +34,7 @@ function analyzeConstructor(node: AST.ClassDeclaration) {
 
 	const body = constructor.body;
 	if (!body) {
-		return undefined;
+		return;
 	}
 
 	for (const statement of body.statements) {

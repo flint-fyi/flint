@@ -56,19 +56,33 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							});
 						}
 
-						if (statement.kind === SyntaxKind.Block) {
-							statement.statements.forEach(checkStatement);
-						} else if (statement.kind === SyntaxKind.IfStatement) {
-							checkStatement(statement.thenStatement);
-							if (statement.elseStatement) {
-								checkStatement(statement.elseStatement);
+						switch (statement.kind) {
+							case SyntaxKind.Block: {
+								statement.statements.forEach(checkStatement);
+
+								break;
 							}
-						} else if (statement.kind === SyntaxKind.SwitchStatement) {
-							statement.caseBlock.clauses.forEach((clause) => {
-								clause.statements.forEach(checkStatement);
-							});
-						} else if (statement.kind === SyntaxKind.LabeledStatement) {
-							checkStatement(statement.statement);
+							case SyntaxKind.IfStatement: {
+								checkStatement(statement.thenStatement);
+								if (statement.elseStatement) {
+									checkStatement(statement.elseStatement);
+								}
+
+								break;
+							}
+							case SyntaxKind.LabeledStatement: {
+								checkStatement(statement.statement);
+
+								break;
+							}
+							case SyntaxKind.SwitchStatement: {
+								statement.caseBlock.clauses.forEach((clause) => {
+									clause.statements.forEach(checkStatement);
+								});
+
+								break;
+							}
+							// No default
 						}
 					}
 
