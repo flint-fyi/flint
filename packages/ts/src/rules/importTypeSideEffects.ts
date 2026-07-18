@@ -41,8 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const namedBindings = node.importClause.namedBindings;
 					if (
-						!namedBindings ||
-						!ts.isNamedImports(namedBindings) ||
+						namedBindings?.kind !== ts.SyntaxKind.NamedImports ||
 						!namedBindings.elements.length ||
 						namedBindings.elements.some((element) => !element.isTypeOnly)
 					) {

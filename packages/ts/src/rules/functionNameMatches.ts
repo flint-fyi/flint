@@ -11,10 +11,10 @@ import { ruleCreator } from "./ruleCreator.ts";
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
 function getNameText(name: AST.PropertyName) {
-	return ts.isIdentifier(name) ||
-		ts.isPrivateIdentifier(name) ||
-		ts.isStringLiteral(name) ||
-		ts.isNumericLiteral(name)
+	return name.kind === ts.SyntaxKind.Identifier ||
+		name.kind === ts.SyntaxKind.PrivateIdentifier ||
+		name.kind === ts.SyntaxKind.StringLiteral ||
+		name.kind === ts.SyntaxKind.NumericLiteral
 		? name.text
 		: undefined;
 }
@@ -58,7 +58,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				PropertyAssignment: (node, { sourceFile }) => {
 					if (
-						!ts.isFunctionExpression(node.initializer) ||
+						node.initializer.kind !== ts.SyntaxKind.FunctionExpression ||
 						!node.initializer.name
 					) {
 						return;
@@ -83,8 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				PropertyDeclaration: (node, { sourceFile }) => {
 					if (
-						!node.initializer ||
-						!ts.isFunctionExpression(node.initializer) ||
+						node.initializer?.kind !== ts.SyntaxKind.FunctionExpression ||
 						node.name.kind !== ts.SyntaxKind.Identifier ||
 						!node.initializer.name
 					) {
@@ -110,10 +109,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				VariableDeclaration: (node, { sourceFile }) => {
 					if (
-						!node.initializer ||
-						!ts.isFunctionExpression(node.initializer) ||
+						node.initializer?.kind !== ts.SyntaxKind.FunctionExpression ||
 						!node.initializer.name ||
-						!ts.isIdentifier(node.name)
+						node.name.kind !== ts.SyntaxKind.Identifier
 					) {
 						return;
 					}

@@ -37,8 +37,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const firstStatement = node.statements[0]!;
 
 					if (
-						!ts.isExpressionStatement(firstStatement) ||
-						!ts.isStringLiteral(firstStatement.expression) ||
+						firstStatement.kind !== ts.SyntaxKind.ExpressionStatement ||
+						firstStatement.expression.kind !== ts.SyntaxKind.StringLiteral ||
 						firstStatement.expression.text !== "use strict"
 					) {
 						return;

@@ -15,9 +15,9 @@ function getPropertyName(
 	accessor: AST.GetAccessorDeclaration | AST.SetAccessorDeclaration,
 	sourceFile: AST.SourceFile,
 ) {
-	return ts.isIdentifier(accessor.name) ||
-		ts.isStringLiteral(accessor.name) ||
-		ts.isNumericLiteral(accessor.name)
+	return accessor.name.kind === ts.SyntaxKind.Identifier ||
+		accessor.name.kind === ts.SyntaxKind.StringLiteral ||
+		accessor.name.kind === ts.SyntaxKind.NumericLiteral
 		? accessor.name.text
 		: accessor.name.getText(sourceFile);
 }
@@ -64,7 +64,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const propertyName = getPropertyName(accessor, sourceFile);
-			const isGetter = ts.isGetAccessorDeclaration(accessor);
+			const isGetter = accessor.kind === ts.SyntaxKind.GetAccessor;
 
 			function checkNode(node: ts.Node): void {
 				if (tsutils.isFunctionScopeBoundary(node)) {

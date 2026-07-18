@@ -20,7 +20,7 @@ export function isInBooleanContext(node: AST.AnyNode): boolean {
 		// TODO: This should make sure the Boolean is the global one...
 		case ts.SyntaxKind.CallExpression: {
 			return (
-				ts.isIdentifier(node.parent.expression) &&
+				node.parent.expression.kind === ts.SyntaxKind.Identifier &&
 				node.parent.expression.text === "Boolean" &&
 				node.parent.arguments.length === 1 &&
 				node.parent.arguments[0] === node

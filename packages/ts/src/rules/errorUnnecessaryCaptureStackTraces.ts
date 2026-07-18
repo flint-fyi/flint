@@ -89,9 +89,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						for (const statement of member.body.statements) {
 							if (
-								!ts.isExpressionStatement(statement) ||
+								statement.kind !== ts.SyntaxKind.ExpressionStatement ||
 								!(
-									ts.isCallExpression(statement.expression) ||
+									statement.expression.kind === ts.SyntaxKind.CallExpression ||
 									ts.isCallChain(statement.expression)
 								) ||
 								!isCaptureStackTraceCall(statement.expression)

@@ -16,7 +16,7 @@ function getRegexFlags(node: AST.Expression, sourceFile: AST.SourceFile) {
 		case ts.SyntaxKind.CallExpression:
 		case ts.SyntaxKind.NewExpression:
 			if (
-				ts.isIdentifier(node.expression) &&
+				node.expression.kind === ts.SyntaxKind.Identifier &&
 				node.expression.text === "RegExp" &&
 				node.arguments
 			) {
@@ -26,7 +26,7 @@ function getRegexFlags(node: AST.Expression, sourceFile: AST.SourceFile) {
 
 				const flagsArg = node.arguments[1];
 
-				if (flagsArg && ts.isStringLiteral(flagsArg)) {
+				if (flagsArg?.kind === ts.SyntaxKind.StringLiteral) {
 					return flagsArg.text;
 				}
 			}
@@ -46,11 +46,11 @@ function getRegexFlags(node: AST.Expression, sourceFile: AST.SourceFile) {
 
 function needsParentheses(node: AST.AnyNode) {
 	return !(
-		ts.isIdentifier(node) ||
-		ts.isRegularExpressionLiteral(node) ||
-		ts.isParenthesizedExpression(node) ||
-		ts.isCallExpression(node) ||
-		ts.isNewExpression(node)
+		node.kind === ts.SyntaxKind.Identifier ||
+		node.kind === ts.SyntaxKind.RegularExpressionLiteral ||
+		node.kind === ts.SyntaxKind.ParenthesizedExpression ||
+		node.kind === ts.SyntaxKind.CallExpression ||
+		node.kind === ts.SyntaxKind.NewExpression
 	);
 }
 
@@ -79,7 +79,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
+						node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression ||
 						node.arguments.length !== 1
 					) {
 						return;

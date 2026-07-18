@@ -12,8 +12,8 @@ export function getFunctionName(
 ) {
 	switch (node.kind) {
 		case ts.SyntaxKind.ArrowFunction: {
-			return ts.isVariableDeclaration(node.parent) &&
-				ts.isIdentifier(node.parent.name)
+			return node.parent.kind === ts.SyntaxKind.VariableDeclaration &&
+				node.parent.name.kind === ts.SyntaxKind.Identifier
 				? node.parent.name.text
 				: undefined;
 		}
@@ -24,7 +24,9 @@ export function getFunctionName(
 
 		case ts.SyntaxKind.MethodDeclaration:
 		case ts.SyntaxKind.MethodSignature:
-			return ts.isIdentifier(node.name) ? node.name.text : undefined;
+			return node.name.kind === ts.SyntaxKind.Identifier
+				? node.name.text
+				: undefined;
 
 		default:
 			return undefined;

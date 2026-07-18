@@ -35,8 +35,8 @@ function analyzeConditionalForNullish(
 
 	// Simple truthiness check: x ? x : y
 	if (
-		ts.isIdentifier(condition) &&
-		ts.isIdentifier(whenTrue) &&
+		condition.kind === ts.SyntaxKind.Identifier &&
+		whenTrue.kind === ts.SyntaxKind.Identifier &&
 		condition.text === whenTrue.text
 	) {
 		return {
@@ -49,13 +49,13 @@ function analyzeConditionalForNullish(
 
 	// Negation: !x ? y : x
 	if (
-		ts.isPrefixUnaryExpression(condition) &&
+		condition.kind === ts.SyntaxKind.PrefixUnaryExpression &&
 		condition.operator === ts.SyntaxKind.ExclamationToken
 	) {
 		const operand = condition.operand;
 		if (
-			ts.isIdentifier(operand) &&
-			ts.isIdentifier(whenFalse) &&
+			operand.kind === ts.SyntaxKind.Identifier &&
+			whenFalse.kind === ts.SyntaxKind.Identifier &&
 			operand.text === whenFalse.text
 		) {
 			return {
@@ -68,7 +68,10 @@ function analyzeConditionalForNullish(
 	}
 
 	// Comparison patterns: x !== null ? x : y
-	if (ts.isBinaryExpression(condition) && isNullLikeComparison(condition)) {
+	if (
+		condition.kind === ts.SyntaxKind.BinaryExpression &&
+		isNullLikeComparison(condition)
+	) {
 		const { isNegation, value: testValue } =
 			extractValueFromComparison(condition);
 
@@ -96,15 +99,17 @@ function analyzeConditionalForNullish(
 
 	// Logical AND pattern: x !== undefined && x !== null ? x : y
 	if (
-		ts.isBinaryExpression(condition) &&
+		condition.kind === ts.SyntaxKind.BinaryExpression &&
 		condition.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
 	) {
-		const leftIsComparison = ts.isBinaryExpression(condition.left)
-			? isNullLikeComparison(condition.left)
-			: false;
-		const rightIsComparison = ts.isBinaryExpression(condition.right)
-			? isNullLikeComparison(condition.right)
-			: false;
+		const leftIsComparison =
+			condition.left.kind === ts.SyntaxKind.BinaryExpression
+				? isNullLikeComparison(condition.left)
+				: false;
+		const rightIsComparison =
+			condition.right.kind === ts.SyntaxKind.BinaryExpression
+				? isNullLikeComparison(condition.right)
+				: false;
 
 		if (leftIsComparison && rightIsComparison) {
 			const leftComp = condition.left as AST.BinaryExpression;
@@ -130,15 +135,17 @@ function analyzeConditionalForNullish(
 
 	// Logical OR pattern: x === undefined || x === null ? y : x
 	if (
-		ts.isBinaryExpression(condition) &&
+		condition.kind === ts.SyntaxKind.BinaryExpression &&
 		condition.operatorToken.kind === ts.SyntaxKind.BarBarToken
 	) {
-		const leftIsComparison = ts.isBinaryExpression(condition.left)
-			? isNullLikeComparison(condition.left)
-			: false;
-		const rightIsComparison = ts.isBinaryExpression(condition.right)
-			? isNullLikeComparison(condition.right)
-			: false;
+		const leftIsComparison =
+			condition.left.kind === ts.SyntaxKind.BinaryExpression
+				? isNullLikeComparison(condition.left)
+				: false;
+		const rightIsComparison =
+			condition.right.kind === ts.SyntaxKind.BinaryExpression
+				? isNullLikeComparison(condition.right)
+				: false;
 
 		if (leftIsComparison && rightIsComparison) {
 			const leftComp = condition.left as AST.BinaryExpression;
@@ -175,9 +182,9 @@ function consequentMatchesTest(
 	}
 
 	if (
-		ts.isPropertyAccessExpression(consequent) ||
-		ts.isElementAccessExpression(consequent) ||
-		ts.isCallExpression(consequent)
+		consequent.kind === ts.SyntaxKind.PropertyAccessExpression ||
+		consequent.kind === ts.SyntaxKind.ElementAccessExpression ||
+		consequent.kind === ts.SyntaxKind.CallExpression
 	) {
 		return consequentMatchesTest(consequent.expression, test, sourceFile);
 	}
@@ -188,20 +195,19 @@ function consequentMatchesTest(
 function extractAssignmentFromIfStatement(node: AST.IfStatement) {
 	let assignmentExpr: AST.Expression | undefined;
 
-	if (ts.isBlock(node.thenStatement)) {
+	if (node.thenStatement.kind === ts.SyntaxKind.Block) {
 		if (node.thenStatement.statements.length === 1) {
 			const stmt = node.thenStatement.statements[0];
-			if (stmt && ts.isExpressionStatement(stmt)) {
+			if (stmt?.kind === ts.SyntaxKind.ExpressionStatement) {
 				assignmentExpr = stmt.expression;
 			}
 		}
-	} else if (ts.isExpressionStatement(node.thenStatement)) {
+	} else if (node.thenStatement.kind === ts.SyntaxKind.ExpressionStatement) {
 		assignmentExpr = node.thenStatement.expression;
 	}
 
 	if (
-		!assignmentExpr ||
-		!ts.isBinaryExpression(assignmentExpr) ||
+		assignmentExpr?.kind !== ts.SyntaxKind.BinaryExpression ||
 		assignmentExpr.operatorToken.kind !== ts.SyntaxKind.EqualsToken
 	) {
 		return undefined;
@@ -350,7 +356,7 @@ function isMixedLogicalExpression(node: AST.BinaryExpression) {
 
 		seen.add(current);
 
-		if (ts.isBinaryExpression(current)) {
+		if (current.kind === ts.SyntaxKind.BinaryExpression) {
 			if (
 				current.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
 			) {
@@ -539,7 +545,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			) {
 				if (hasSameTokens(node.expression, test, sourceFile)) {
 					return {
-						needsDot: ts.isElementAccessExpression(node),
+						needsDot: node.kind === ts.SyntaxKind.ElementAccessExpression,
 						pos: node.expression.getEnd(),
 					};
 				}
@@ -549,7 +555,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					sourceFile,
 				);
 			}
-			if (ts.isCallExpression(node)) {
+			if (node.kind === ts.SyntaxKind.CallExpression) {
 				return getOptionalChainInsertPosition(
 					node.expression,
 					test,

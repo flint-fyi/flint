@@ -37,8 +37,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ImportDeclaration: (node, { sourceFile }) => {
 					if (
-						!node.importClause?.namedBindings ||
-						!ts.isNamedImports(node.importClause.namedBindings) ||
+						node.importClause?.namedBindings?.kind !==
+							ts.SyntaxKind.NamedImports ||
 						node.importClause.namedBindings.elements.length
 					) {
 						return;

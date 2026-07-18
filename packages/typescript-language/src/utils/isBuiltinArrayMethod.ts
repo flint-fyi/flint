@@ -14,11 +14,11 @@ export function isBuiltinArrayMethod(
 	typeChecker: Checker,
 ): node is BuiltInArrayMethodNode {
 	return (
-		ts.isPropertyAccessExpression(node.expression) &&
+		node.expression.kind === ts.SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.text === name &&
 		typeChecker.isArrayType(
 			typeChecker.getTypeAtLocation(node.expression.expression),
 		) &&
-		!ts.isExpressionStatement(node.parent)
+		node.parent.kind !== ts.SyntaxKind.ExpressionStatement
 	);
 }

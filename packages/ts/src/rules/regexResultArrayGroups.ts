@@ -26,14 +26,14 @@ interface NamedCapturingGroup {
 function extractCallExpression(expression: AST.Expression) {
 	const unwrapped = skipParentheses(expression);
 
-	if (ts.isCallExpression(unwrapped)) {
+	if (unwrapped.kind === ts.SyntaxKind.CallExpression) {
 		return unwrapped;
 	}
 
 	if (
-		ts.isNonNullExpression(unwrapped) ||
-		ts.isAsExpression(unwrapped) ||
-		ts.isTypeAssertionExpression(unwrapped)
+		unwrapped.kind === ts.SyntaxKind.NonNullExpression ||
+		unwrapped.kind === ts.SyntaxKind.AsExpression ||
+		unwrapped.kind === ts.SyntaxKind.TypeAssertionExpression
 	) {
 		return extractCallExpression(unwrapped.expression);
 	}
@@ -98,7 +98,7 @@ function getNamedGroupsFromExpression(
 ) {
 	const unwrapped = skipParentheses(node);
 
-	if (ts.isIdentifier(unwrapped)) {
+	if (unwrapped.kind === ts.SyntaxKind.Identifier) {
 		const symbol = typeChecker.getSymbolAtLocation(unwrapped);
 		if (symbol) {
 			const resolvedSymbol =
@@ -109,7 +109,7 @@ function getNamedGroupsFromExpression(
 		}
 	}
 
-	if (ts.isCallExpression(unwrapped)) {
+	if (unwrapped.kind === ts.SyntaxKind.CallExpression) {
 		const regexInfo = getRegexFromCall(unwrapped, typeChecker, sourceFile);
 		if (regexInfo) {
 			const namedGroups = getNamedCapturingGroups(
@@ -123,9 +123,9 @@ function getNamedGroupsFromExpression(
 	}
 
 	if (
-		ts.isNonNullExpression(unwrapped) ||
-		ts.isAsExpression(unwrapped) ||
-		ts.isTypeAssertionExpression(unwrapped)
+		unwrapped.kind === ts.SyntaxKind.NonNullExpression ||
+		unwrapped.kind === ts.SyntaxKind.AsExpression ||
+		unwrapped.kind === ts.SyntaxKind.TypeAssertionExpression
 	) {
 		return getNamedGroupsFromExpression(
 			unwrapped.expression,
@@ -154,7 +154,7 @@ function getRegexFromExecCall(
 	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
 ) {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
+	if (node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression) {
 		return undefined;
 	}
 
@@ -171,7 +171,7 @@ function getRegexFromMatchAllCall(
 	typeChecker: Checker,
 	sourceFile: AST.SourceFile,
 ) {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
+	if (node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression) {
 		return undefined;
 	}
 
@@ -196,7 +196,7 @@ function getRegexFromMatchCall(
 	sourceFile: AST.SourceFile,
 ) {
 	if (
-		!ts.isPropertyAccessExpression(node.expression) ||
+		node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.text !== "match" ||
 		node.arguments.length !== 1
 	) {
@@ -226,11 +226,14 @@ function getRegexInfoFromExpression(
 ) {
 	const unwrapped = skipParentheses(node);
 
-	if (ts.isRegularExpressionLiteral(unwrapped)) {
+	if (unwrapped.kind === ts.SyntaxKind.RegularExpressionLiteral) {
 		return getRegExpLiteralDetails(unwrapped, { sourceFile });
 	}
 
-	if (ts.isCallExpression(unwrapped) || ts.isNewExpression(unwrapped)) {
+	if (
+		unwrapped.kind === ts.SyntaxKind.CallExpression ||
+		unwrapped.kind === ts.SyntaxKind.NewExpression
+	) {
 		const construction = getRegExpConstruction(unwrapped, {
 			sourceFile,
 			typeChecker,
@@ -243,7 +246,7 @@ function getRegexInfoFromExpression(
 		}
 	}
 
-	if (ts.isIdentifier(unwrapped)) {
+	if (unwrapped.kind === ts.SyntaxKind.Identifier) {
 		const symbol = typeChecker.getSymbolAtLocation(unwrapped);
 		if (symbol) {
 			const declarations = symbol.getDeclarations();
@@ -384,7 +387,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ElementAccessExpression: (node, { sourceFile, typeChecker }) => {
 					const argument = skipParentheses(node.argumentExpression);
-					if (!ts.isNumericLiteral(argument)) {
+					if (argument.kind !== ts.SyntaxKind.NumericLiteral) {
 						return;
 					}
 

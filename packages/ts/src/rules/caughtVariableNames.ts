@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CatchClause: (node, { sourceFile }) => {
 					const variable = node.variableDeclaration;
-					if (!variable || !ts.isIdentifier(variable.name)) {
+					if (variable?.name.kind !== ts.SyntaxKind.Identifier) {
 						return;
 					}
 
