@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/pr-quality-closures.yaml"
+      - .github/workflows/pr-quality-closures.yaml
 
 jobs:
   stale:
