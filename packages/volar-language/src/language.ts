@@ -149,41 +149,41 @@ setTSProgramCreationProxy(
 						ts,
 						createProgramProxy,
 						(ts, options) => {
-							const languagePlugins = Array.from(pluginInitializers)
-								.map((initializer) => initializer(ts, options))
-								.flatMap(({ createFile, languagePlugins }) =>
-									languagePlugins.map((plugin) => {
-										if (plugin.typescript == null) {
-											return plugin;
-										}
-
-										(plugin as VolarLanguagePluginWithCreateFile)[stateSymbol] =
-											{ createFile };
-
-										const getServiceScript =
-											plugin.typescript.getServiceScript.bind(
-												plugin.typescript,
-											);
-										plugin.typescript.getServiceScript = (root) => {
-											const script = getServiceScript(root);
-											if (script == null) {
-												return script;
-											}
-											return {
-												...script,
-												// Leading offset is useful for LanguageService [1], but we don't use it.
-												// The Vue language plugin doesn't provide preventLeadingOffset [2], so we
-												// have to provide it ourselves.
-												//
-												// [1] https://github.com/volarjs/volar.js/discussions/188
-												// [2] https://github.com/vuejs/language-tools/blob/fd05a1c92c9af63e6af1eab926084efddf7c46c3/packages/language-core/lib/languagePlugin.ts#L113-L130
-												preventLeadingOffset: true,
-											};
-										};
-
+							const languagePlugins = Array.from(
+								pluginInitializers,
+								(initializer) => initializer(ts, options),
+							).flatMap(({ createFile, languagePlugins }) =>
+								languagePlugins.map((plugin) => {
+									if (plugin.typescript == null) {
 										return plugin;
-									}),
-								);
+									}
+
+									(plugin as VolarLanguagePluginWithCreateFile)[stateSymbol] = {
+										createFile,
+									};
+
+									const getServiceScript =
+										plugin.typescript.getServiceScript.bind(plugin.typescript);
+									plugin.typescript.getServiceScript = (root) => {
+										const script = getServiceScript(root);
+										if (script == null) {
+											return script;
+										}
+										return {
+											...script,
+											// Leading offset is useful for LanguageService [1], but we don't use it.
+											// The Vue language plugin doesn't provide preventLeadingOffset [2], so we
+											// have to provide it ourselves.
+											//
+											// [1] https://github.com/volarjs/volar.js/discussions/188
+											// [2] https://github.com/vuejs/language-tools/blob/fd05a1c92c9af63e6af1eab926084efddf7c46c3/packages/language-core/lib/languagePlugin.ts#L113-L130
+											preventLeadingOffset: true,
+										};
+									};
+
+									return plugin;
+								}),
+							);
 							return {
 								languagePlugins,
 								setup: (lang) => {
@@ -261,19 +261,13 @@ setVolarCreateFile((data, program, sourceFile) => {
 	);
 
 	const map = volarLanguage.maps.get(serviceScript.code, sourceScript);
-	const sortedMappings = map.mappings.toSorted(
-		({ generatedOffsets: [a] }, { generatedOffsets: [b] }) => {
-			assert(
-				a != null,
-				"Expected generatedOffsets to have at least one element",
-			);
-			assert(
-				b != null,
-				"Expected generatedOffsets to have at least one element",
-			);
-			return a - b;
-		},
-	);
+	const sortedMappings = map.mappings.toSorted((first, second) => {
+		const [a] = first.generatedOffsets;
+		const [b] = second.generatedOffsets;
+		assert(a != null, "Expected generatedOffsets to have at least one element");
+		assert(b != null, "Expected generatedOffsets to have at least one element");
+		return a - b;
+	});
 	const {
 		directives,
 		extraContext,

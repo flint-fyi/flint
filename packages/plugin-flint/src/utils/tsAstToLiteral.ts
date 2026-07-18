@@ -28,7 +28,7 @@ export function tsAstToLiteral(node: ts.Node): unknown {
 	}
 
 	if (ts.isNumericLiteral(node)) {
-		return Number.parseFloat(node.text);
+		return Number(node.text);
 	}
 
 	if (ts.isObjectLiteralExpression(node)) {

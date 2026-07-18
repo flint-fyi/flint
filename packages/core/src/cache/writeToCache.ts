@@ -46,19 +46,19 @@ export async function writeToCache(
 		},
 		files: {
 			...Object.fromEntries(
-				Array.from(lintResults.allFileResults).map(
-					([filePath, fileResults]) => [
-						filePath,
-						{
-							...omitEmpty({
-								dependencies: Array.from(fileResults.dependencies).sort(),
-								languageReports: fileResults.languageReports,
-								reports: fileResults.reports,
-							}),
-							timestamp,
-						},
-					],
-				),
+				Array.from(lintResults.allFileResults, ([filePath, fileResults]) => [
+					filePath,
+					{
+						...omitEmpty({
+							dependencies: Array.from(fileResults.dependencies).toSorted(
+								(a, b) => a.localeCompare(b),
+							),
+							languageReports: fileResults.languageReports,
+							reports: fileResults.reports,
+						}),
+						timestamp,
+					},
+				]),
 			),
 			...(lintResults.cached &&
 				Object.fromEntries(

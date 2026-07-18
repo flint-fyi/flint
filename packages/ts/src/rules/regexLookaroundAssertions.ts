@@ -25,7 +25,7 @@ function buildFixedPattern(
 ) {
 	let result = originalPattern;
 
-	for (const { group, position } of [...boundaryGroups].reverse()) {
+	for (const { group, position } of [...boundaryGroups].toReversed()) {
 		const assertion = position === "start" ? "(?<=" : "(?=";
 		const groupContent = groupToRaw(group);
 		const replacement = `${assertion}${groupContent})`;
@@ -175,7 +175,7 @@ function parseReplacementReferences(text: string) {
 
 	while ((match = pattern.exec(text))) {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const index = parseInt(match[1]!, 10);
+		const index = Number(match[1]!);
 		if (index > 0) {
 			references.set(index, (references.get(index) ?? 0) + 1);
 		}

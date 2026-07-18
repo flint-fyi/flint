@@ -78,14 +78,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const firstArgument = construction.args[0]!;
 
 			const secondArgument = construction.args[1];
-			const hasSecondArgument = secondArgument !== undefined;
-			const secondIsStringLiteral =
-				secondArgument?.kind === SyntaxKind.StringLiteral;
 
 			if (hasUnicodeFlag(construction.flags)) {
 				return;
 			}
 
+			const hasSecondArgument = secondArgument !== undefined;
+			const secondIsStringLiteral =
+				secondArgument?.kind === SyntaxKind.StringLiteral;
 			const nodeStart = node.getStart(services.sourceFile);
 			const nodeEnd = node.getEnd();
 

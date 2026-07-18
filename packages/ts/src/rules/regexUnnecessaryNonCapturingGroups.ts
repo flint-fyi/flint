@@ -17,12 +17,12 @@ import { parseRegexpAst } from "./utils/parseRegexpAst.ts";
 function canUnwrap(group: RegExpAST.Group, pattern: string): boolean {
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const alternative = group.alternatives[0]!;
-	const groupContent = alternative.raw;
 
 	if (!alternative.elements.length) {
 		return true;
 	}
 
+	const groupContent = alternative.raw;
 	const parent = group.parent;
 	let textBefore: string;
 	let textAfter: string;

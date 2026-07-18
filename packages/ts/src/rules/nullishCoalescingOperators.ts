@@ -570,7 +570,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			test?: AST.AnyNode,
 		) {
 			const getText = (node: AST.AnyNode) =>
-				sourceFile.text.substring(node.getStart(sourceFile), node.getEnd());
+				sourceFile.text.slice(node.getStart(sourceFile), node.getEnd());
 
 			let leftText = getText(consequent);
 
@@ -599,7 +599,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			range: CharacterReportRange,
 		) {
 			const getText = (node: AST.AnyNode) =>
-				sourceFile.text.substring(node.getStart(sourceFile), node.getEnd());
+				sourceFile.text.slice(node.getStart(sourceFile), node.getEnd());
 
 			return { range, text: `${getText(left)} ??= ${getText(right)};` };
 		}

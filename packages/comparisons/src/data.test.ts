@@ -75,7 +75,7 @@ describe("data.json", () => {
 					.flatMap(([ruleName, module]) =>
 						module.meta?.deprecated ? [] : [ruleName],
 					)
-					.sort(),
+					.toSorted((a, b) => a.localeCompare(b)),
 			);
 
 			const builtinESLintRuleNamesCoveredByFlint = new Set(
@@ -97,13 +97,13 @@ describe("data.json", () => {
 								!excludedESLintRulesByPluginName.get(pluginName)?.has(ruleName),
 						)
 						.map((ruleName) => `${pluginName}/${ruleName}`)
-						.sort(),
+						.toSorted((a, b) => a.localeCompare(b)),
 				);
 
 				const pluginESLintRuleNamesCoveredByFlint = new Set(
 					findESLintRulesInPlugin(pluginName)
 						.map((rule) => rule.name)
-						.sort(),
+						.toSorted((a, b) => a.localeCompare(b)),
 				);
 
 				expect(pluginESLintRuleNamesCoveredByFlint).toEqual(pluginRuleNames);
@@ -116,7 +116,7 @@ describe("data.json", () => {
 
 		const biomeRulesCoveredByFlint = Array.from(
 			new Set(findBiomeRulesInFlint().map((comparison) => comparison.name)),
-		).sort();
+		).toSorted((a, b) => a.localeCompare(b));
 
 		expect(biomeRuleNames).toEqual(biomeRulesCoveredByFlint);
 	});
@@ -124,11 +124,11 @@ describe("data.json", () => {
 	it("includes all Markdownlint rules", async () => {
 		const markdownlintRuleNames = (await findMarkdownlintRules())
 			.map((rule) => rule.names.at(-1))
-			.sort();
+			.toSorted((a, b) => (a ?? "").localeCompare(b ?? ""));
 
 		const markdownlintRulesCoveredByFlint = findMarkdownlintRulesInFlint()
 			.map((comparison) => comparison.name)
-			.sort();
+			.toSorted((a, b) => a.localeCompare(b));
 
 		expect(markdownlintRuleNames).toEqual(markdownlintRulesCoveredByFlint);
 	});
@@ -138,7 +138,7 @@ describe("data.json", () => {
 
 		const oxlintRulesCoveredByFlint = findOxlintRulesInFlint()
 			.map((comparison) => getOxlintRuleConfigName(comparison.name))
-			.sort();
+			.toSorted((a, b) => a.localeCompare(b));
 
 		expect(oxlintRuleNames).toEqual(oxlintRulesCoveredByFlint);
 	});

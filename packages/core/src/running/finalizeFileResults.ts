@@ -1,4 +1,4 @@
-import { resolve } from "node:path";
+import path from "node:path";
 
 import { debugForFile } from "debug-for-file";
 
@@ -57,7 +57,7 @@ export function finalizeFileResults(
 		if (cacheImpacts?.dependencies) {
 			for (const dependency of cacheImpacts.dependencies) {
 				const normalized = pathKey(
-					resolve(dependency),
+					path.resolve(dependency),
 					host.isCaseSensitiveFS(),
 				);
 				if (!fileDependencies.has(normalized)) {

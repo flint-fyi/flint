@@ -144,6 +144,15 @@ export default defineConfig(
 			// Covered by Prettier plugin
 			"perfectionist/sort-imports": "off",
 			"perfectionist/sort-named-imports": "off",
+
+			// `Symbol.dispose` and `Symbol.asyncDispose` are standard ES2026
+			// (explicit resource management, shipped in Node 24) but the rule's
+			// static builtin list has no ignore option and hasn't caught up.
+			"unicorn/no-nonstandard-builtin-properties": "off",
+
+			// Language plugins intentionally register extensions and enforce
+			// single-instance invariants at module load time.
+			"unicorn/no-top-level-side-effects": "off",
 		},
 		settings: {
 			perfectionist: { partitionByComment: true, type: "natural" },

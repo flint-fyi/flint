@@ -165,7 +165,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						onCharacterClassEnter(ccNode) {
 							const result = processCharacterClass(ccNode);
 							if (result) {
-								const sortedNodes = [...result.nodes].sort(
+								const sortedNodes = [...result.nodes].toSorted(
 									(a, b) => a.start - b.start,
 								);
 

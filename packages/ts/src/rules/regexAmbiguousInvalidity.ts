@@ -256,7 +256,7 @@ function checkPatternWithRegexpp(
 					: SYNTAX_CHARACTERS;
 
 				if (
-					cNode.value === identity.charCodeAt(0) &&
+					cNode.value === identity.codePointAt(0) &&
 					!syntaxChars.has(identity)
 				) {
 					issues.push({

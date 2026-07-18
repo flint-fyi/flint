@@ -10,10 +10,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 function calculateIndent(node: yaml.FlowMapping, sourceText: string) {
 	const lineStart =
 		sourceText.lastIndexOf("\n", node.position.start.offset) + 1;
-	const beforeNode = sourceText.substring(
-		lineStart,
-		node.position.start.offset,
-	);
+	const beforeNode = sourceText.slice(lineStart, node.position.start.offset);
 
 	const leadingWhitespace = /^\s*/.exec(beforeNode)?.[0] ?? "";
 
@@ -24,9 +21,11 @@ function getNodeText(
 	node: yaml.MappingKey | yaml.MappingValue,
 	sourceText: string,
 ) {
-	return sourceText.substring(
-		node.children[0]?.position.start.offset ?? node.position.start.offset,
-		node.children[0]?.position.end.offset ?? node.position.end.offset,
+	const [firstChild] = node.children;
+
+	return sourceText.slice(
+		firstChild?.position.start.offset ?? node.position.start.offset,
+		firstChild?.position.end.offset ?? node.position.end.offset,
 	);
 }
 
@@ -35,8 +34,7 @@ function getNodeText(
  */
 function canConvertToBlock(node: yaml.FlowMapping) {
 	for (const child of node.children) {
-		const keyNode = child.children[0];
-		const valueNode = child.children[1];
+		const [keyNode, valueNode] = child.children;
 		if (!keyNode.children.length || !valueNode.children.length) {
 			return false;
 		}
@@ -55,10 +53,10 @@ function convertToBlock(node: yaml.FlowMapping, sourceText: string) {
 	for (const child of node.children) {
 		const [keyNode, valueNode] = child.children;
 		const keyText = getNodeText(keyNode, sourceText);
-		const valueChild = valueNode.children[0];
+		const [valueChild] = valueNode.children;
 
 		if (valueChild) {
-			const valueText = sourceText.substring(
+			const valueText = sourceText.slice(
 				valueChild.position.start.offset,
 				valueChild.position.end.offset,
 			);

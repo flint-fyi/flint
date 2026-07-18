@@ -300,9 +300,6 @@ function getRegexInfoFromSymbol(
 					}
 				}
 			}
-
-			if (ts.isParameter(declaration)) {
-			}
 		}
 	}
 

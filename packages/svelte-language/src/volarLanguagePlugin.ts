@@ -184,11 +184,11 @@ function getEmbeddedTsCode(
 				});
 				if (current != null) {
 					let length = genOffset - current.genOffset;
-					const sourceText = text.substring(
+					const sourceText = text.slice(
 						current.sourceOffset,
 						current.sourceOffset + length,
 					);
-					const genText = tsx.code.substring(
+					const genText = tsx.code.slice(
 						current.genOffset,
 						current.genOffset + length,
 					);
@@ -267,7 +267,7 @@ function getEmbeddedTsCode(
 					return codeWithTypes.length;
 				},
 				getText(start, end) {
-					return codeWithTypes.substring(start, end);
+					return codeWithTypes.slice(start, end);
 				},
 			},
 		};

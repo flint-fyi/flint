@@ -1,4 +1,4 @@
-import * as path from "node:path";
+import path from "node:path";
 
 import * as tsutils from "ts-api-utils";
 import ts from "typescript";
