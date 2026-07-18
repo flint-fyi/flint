@@ -2,7 +2,7 @@ import {
 	visitRegExpAST,
 	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
@@ -173,7 +173,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegexLiteral(
 			node: AST.RegularExpressionLiteral,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			{ sourceFile }: { sourceFile: AST.SourceFile },
 		) {
 			const text = node.getText(sourceFile);
 			const match = /^\/(.*)\/([dgimsuyv]*)$/.exec(text);
@@ -194,10 +194,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function checkRegExpConstructor(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile }: { sourceFile: ts.SourceFile },
+			{ sourceFile }: { sourceFile: AST.SourceFile },
 		) {
 			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
+				node.expression.kind !== SyntaxKind.Identifier ||
 				node.expression.text !== "RegExp"
 			) {
 				return;
@@ -210,7 +210,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const firstArgument = args[0];
 
-			if (firstArgument?.kind !== ts.SyntaxKind.StringLiteral) {
+			if (firstArgument?.kind !== SyntaxKind.StringLiteral) {
 				return;
 			}
 
@@ -218,7 +218,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			let flags = "";
 			const secondArgument = args[1];
-			if (secondArgument?.kind === ts.SyntaxKind.StringLiteral) {
+			if (secondArgument?.kind === SyntaxKind.StringLiteral) {
 				flags = secondArgument.text;
 			}
 

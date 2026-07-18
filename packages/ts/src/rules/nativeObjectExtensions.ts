@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -56,22 +56,22 @@ const nativeConstructors = new Set([
 function getPrototypeObject(
 	node: AST.ElementAccessExpression | AST.PropertyAccessExpression,
 ) {
-	return ts.isIdentifier(node.expression) && node.expression;
+	return node.expression.kind === SyntaxKind.Identifier && node.expression;
 }
 
 function isPrototypeAccess(
 	node: AST.AnyNode,
 ): node is AST.ElementAccessExpression | AST.PropertyAccessExpression {
 	switch (node.kind) {
-		case ts.SyntaxKind.ElementAccessExpression:
+		case SyntaxKind.ElementAccessExpression:
 			// TODO: Use a util like getStaticValue
 			// https://github.com/flint-fyi/flint/issues/1298
 			return (
-				ts.isStringLiteral(node.argumentExpression) &&
+				node.argumentExpression.kind === SyntaxKind.StringLiteral &&
 				node.argumentExpression.text === "prototype"
 			);
 
-		case ts.SyntaxKind.PropertyAccessExpression:
+		case SyntaxKind.PropertyAccessExpression:
 			return node.name.text === "prototype";
 
 		default:
@@ -128,15 +128,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			switch (node.parent.kind) {
 				// Case 2: Object.defineProperty(Array.prototype, ...)
 				// Case 3: Object.defineProperties(Array.prototype, ...)
-				case ts.SyntaxKind.CallExpression: {
+				case SyntaxKind.CallExpression: {
 					if (node.parent.arguments[0] !== node) {
 						break;
 					}
 
 					const callee = node.parent.expression;
 					if (
-						!ts.isPropertyAccessExpression(callee) ||
-						!ts.isIdentifier(callee.expression) ||
+						callee.kind !== SyntaxKind.PropertyAccessExpression ||
+						callee.expression.kind !== SyntaxKind.Identifier ||
 						callee.expression.text !== "Object" ||
 						(callee.name.text !== "defineProperty" &&
 							callee.name.text !== "defineProperties") ||
@@ -158,16 +158,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					break;
 				}
 
-				case ts.SyntaxKind.ElementAccessExpression:
-				case ts.SyntaxKind.PropertyAccessExpression: {
+				case SyntaxKind.ElementAccessExpression:
+				case SyntaxKind.PropertyAccessExpression: {
 					if (node.parent.expression !== node) {
 						break;
 					}
 
 					const grandparent = node.parent.parent;
 					if (
-						!ts.isBinaryExpression(grandparent) ||
-						grandparent.operatorToken.kind !== ts.SyntaxKind.EqualsToken ||
+						grandparent.kind !== SyntaxKind.BinaryExpression ||
+						grandparent.operatorToken.kind !== SyntaxKind.EqualsToken ||
 						grandparent.left !== node.parent
 					) {
 						break;

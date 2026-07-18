@@ -1,9 +1,5 @@
 import * as tsutils from "ts-api-utils";
 import {
-	isElementAccessExpression,
-	isIdentifier,
-	isPropertyAccessExpression,
-	isStringLiteral,
 	SignatureKind,
 	SymbolFlags,
 	SyntaxKind,
@@ -37,9 +33,9 @@ function getCalleeName(node: AST.Expression) {
 	switch (node.kind) {
 		case SyntaxKind.ElementAccessExpression:
 			if (
-				isIdentifier(node.expression) &&
+				node.expression.kind === SyntaxKind.Identifier &&
 				globalCandidates.has(node.expression.text) &&
-				isStringLiteral(node.argumentExpression)
+				node.argumentExpression.kind === SyntaxKind.StringLiteral
 			) {
 				return node.argumentExpression.text;
 			}
@@ -50,7 +46,7 @@ function getCalleeName(node: AST.Expression) {
 
 		case SyntaxKind.PropertyAccessExpression:
 			if (
-				isIdentifier(node.expression) &&
+				node.expression.kind === SyntaxKind.Identifier &&
 				globalCandidates.has(node.expression.text)
 			) {
 				return node.name.text;
@@ -161,8 +157,8 @@ function isReferenceToGlobalFunction(
 	program: Program,
 ): boolean {
 	if (
-		isPropertyAccessExpression(node.expression) ||
-		isElementAccessExpression(node.expression)
+		node.expression.kind === SyntaxKind.PropertyAccessExpression ||
+		node.expression.kind === SyntaxKind.ElementAccessExpression
 	) {
 		return true;
 	}

@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getStaticNumberValue,
@@ -16,8 +16,8 @@ function isArrayFilterCall(
 	typeChecker: Checker,
 ): node is AST.CallExpression {
 	return (
-		ts.isCallExpression(node) &&
-		ts.isPropertyAccessExpression(node.expression) &&
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.text === "filter" &&
 		!!node.arguments.length &&
 		node.arguments.length <= 2 &&
@@ -57,7 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (!ts.isPropertyAccessExpression(node.expression)) {
+					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
 

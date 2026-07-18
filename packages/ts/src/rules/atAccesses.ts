@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -49,31 +49,31 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function isLeftHandSide(node: AST.ElementAccessExpression) {
 	switch (node.parent.kind) {
-		case ts.SyntaxKind.ArrayLiteralExpression: {
+		case SyntaxKind.ArrayLiteralExpression: {
 			return (
-				ts.isBinaryExpression(node.parent.parent) &&
+				node.parent.parent.kind === SyntaxKind.BinaryExpression &&
 				tsutils.isAssignmentKind(node.parent.parent.operatorToken.kind) &&
 				node.parent.parent.left === node.parent
 			);
 		}
 
-		case ts.SyntaxKind.BinaryExpression:
+		case SyntaxKind.BinaryExpression:
 			return (
 				tsutils.isAssignmentKind(node.parent.operatorToken.kind) &&
 				node.parent.left === node
 			);
 
-		case ts.SyntaxKind.DeleteExpression:
+		case SyntaxKind.DeleteExpression:
 			return true;
 
-		case ts.SyntaxKind.PostfixUnaryExpression:
-		case ts.SyntaxKind.PrefixUnaryExpression:
+		case SyntaxKind.PostfixUnaryExpression:
+		case SyntaxKind.PrefixUnaryExpression:
 			return node.parent.operand === node;
 
-		case ts.SyntaxKind.PropertyAssignment:
-		case ts.SyntaxKind.ShorthandPropertyAssignment: {
+		case SyntaxKind.PropertyAssignment:
+		case SyntaxKind.ShorthandPropertyAssignment: {
 			return (
-				node.parent.parent.parent.kind === ts.SyntaxKind.BinaryExpression &&
+				node.parent.parent.parent.kind === SyntaxKind.BinaryExpression &&
 				tsutils.isAssignmentKind(
 					node.parent.parent.parent.operatorToken.kind,
 				) &&
@@ -92,15 +92,15 @@ function isLengthMinusAccess(
 	const argument = unwrapParenthesizedNode(node.argumentExpression);
 
 	if (
-		!ts.isBinaryExpression(argument) ||
-		argument.operatorToken.kind !== ts.SyntaxKind.MinusToken
+		argument.kind !== SyntaxKind.BinaryExpression ||
+		argument.operatorToken.kind !== SyntaxKind.MinusToken
 	) {
 		return false;
 	}
 
 	const left = unwrapParenthesizedNode(argument.left);
 	if (
-		!ts.isPropertyAccessExpression(left) ||
+		left.kind !== SyntaxKind.PropertyAccessExpression ||
 		left.name.text !== "length" ||
 		!hasSameTokens(left.expression, node.expression, sourceFile)
 	) {
@@ -108,7 +108,7 @@ function isLengthMinusAccess(
 	}
 
 	const right = unwrapParenthesizedNode(argument.right);
-	if (!ts.isNumericLiteral(right)) {
+	if (right.kind !== SyntaxKind.NumericLiteral) {
 		return false;
 	}
 

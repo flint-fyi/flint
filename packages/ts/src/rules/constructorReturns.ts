@@ -1,7 +1,11 @@
 import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	forEachChild,
+	typescriptLanguage,
+	type AST,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -32,8 +36,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					function checkForReturnStatements(node: ts.Node): void {
-						if (ts.isReturnStatement(node)) {
+					function checkForReturnStatements(node: AST.AnyNode): void {
+						if (node.kind === SyntaxKind.ReturnStatement) {
 							if (node.expression) {
 								context.report({
 									message: "noConstructorReturn",
@@ -50,10 +54,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							return;
 						}
 
-						ts.forEachChild(node, checkForReturnStatements);
+						forEachChild(node, checkForReturnStatements);
 					}
 
-					ts.forEachChild(node.body, checkForReturnStatements);
+					forEachChild(node.body, checkForReturnStatements);
 				},
 			},
 		};

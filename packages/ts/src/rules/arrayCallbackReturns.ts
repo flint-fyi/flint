@@ -1,7 +1,11 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	forEachChild,
+	typescriptLanguage,
+	type AST,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -45,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile }) => {
-					if (!ts.isPropertyAccessExpression(node.expression)) {
+					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
 
@@ -80,27 +84,27 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 });
 
-function getCallbackBody(node: ts.Node): ts.Block | undefined {
-	if (ts.isArrowFunction(node)) {
-		return ts.isBlock(node.body) ? node.body : undefined;
+function getCallbackBody(node: AST.AnyNode): AST.Block | undefined {
+	if (node.kind === SyntaxKind.ArrowFunction) {
+		return node.body.kind === SyntaxKind.Block ? node.body : undefined;
 	}
 
-	if (ts.isFunctionExpression(node)) {
+	if (node.kind === SyntaxKind.FunctionExpression) {
 		return node.body;
 	}
 
 	return undefined;
 }
 
-function hasReturnWithValue(block: ts.Block): boolean {
+function hasReturnWithValue(block: AST.Block): boolean {
 	let hasReturn = false;
 
-	function visit(node: ts.Node): void {
+	function visit(node: AST.AnyNode): void {
 		if (hasReturn) {
 			return;
 		}
 
-		if (ts.isReturnStatement(node) && node.expression) {
+		if (node.kind === SyntaxKind.ReturnStatement && node.expression) {
 			hasReturn = true;
 			return;
 		}
@@ -109,9 +113,9 @@ function hasReturnWithValue(block: ts.Block): boolean {
 			return;
 		}
 
-		ts.forEachChild(node, visit);
+		forEachChild(node, visit);
 	}
 
-	ts.forEachChild(block, visit);
+	forEachChild(block, visit);
 	return hasReturn;
 }

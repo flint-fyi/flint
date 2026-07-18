@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getStaticNumberValue,
@@ -25,7 +25,7 @@ function isIndexOfCall(node: AST.CallExpression) {
 	// TODO: Use a util like getStaticValue
 	// https://github.com/flint-fyi/flint/issues/1298
 	return (
-		ts.isPropertyAccessExpression(node.expression) &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.text === "indexOf"
 	);
 }
@@ -35,9 +35,9 @@ function isIndexOfComparison(node: AST.BinaryExpression, typeChecker: Checker) {
 
 	let indexOfAndValue: [AST.CallExpression, AST.Expression] | undefined;
 
-	if (ts.isCallExpression(left) && isIndexOfCall(left)) {
+	if (left.kind === SyntaxKind.CallExpression && isIndexOfCall(left)) {
 		indexOfAndValue = [left, right];
-	} else if (ts.isCallExpression(right) && isIndexOfCall(right)) {
+	} else if (right.kind === SyntaxKind.CallExpression && isIndexOfCall(right)) {
 		indexOfAndValue = [right, left];
 	}
 
@@ -48,7 +48,7 @@ function isIndexOfComparison(node: AST.BinaryExpression, typeChecker: Checker) {
 	const [indexOfCall, comparedValue] = indexOfAndValue;
 
 	if (
-		!ts.isPropertyAccessExpression(indexOfCall.expression) ||
+		indexOfCall.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		!hasIncludesMethod(indexOfCall.expression.expression, typeChecker)
 	) {
 		return undefined;
@@ -56,19 +56,19 @@ function isIndexOfComparison(node: AST.BinaryExpression, typeChecker: Checker) {
 
 	const kind = operatorToken.kind;
 	const comparedNumber = getStaticNumberValue(comparedValue);
-	const indexOfOnLeft = ts.isCallExpression(left);
+	const indexOfOnLeft = left.kind === SyntaxKind.CallExpression;
 
 	const isValidComparison =
 		(comparedNumber === -1 &&
-			(kind === ts.SyntaxKind.ExclamationEqualsToken ||
-				kind === ts.SyntaxKind.ExclamationEqualsEqualsToken ||
-				kind === ts.SyntaxKind.EqualsEqualsToken ||
-				kind === ts.SyntaxKind.EqualsEqualsEqualsToken ||
-				(indexOfOnLeft && kind === ts.SyntaxKind.GreaterThanToken) ||
-				(!indexOfOnLeft && kind === ts.SyntaxKind.LessThanToken))) ||
+			(kind === SyntaxKind.ExclamationEqualsToken ||
+				kind === SyntaxKind.ExclamationEqualsEqualsToken ||
+				kind === SyntaxKind.EqualsEqualsToken ||
+				kind === SyntaxKind.EqualsEqualsEqualsToken ||
+				(indexOfOnLeft && kind === SyntaxKind.GreaterThanToken) ||
+				(!indexOfOnLeft && kind === SyntaxKind.LessThanToken))) ||
 		(comparedNumber === 0 &&
-			((indexOfOnLeft && kind === ts.SyntaxKind.GreaterThanEqualsToken) ||
-				(!indexOfOnLeft && kind === ts.SyntaxKind.LessThanEqualsToken)));
+			((indexOfOnLeft && kind === SyntaxKind.GreaterThanEqualsToken) ||
+				(!indexOfOnLeft && kind === SyntaxKind.LessThanEqualsToken)));
 
 	return isValidComparison && { indexOfCall, node };
 }

@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -30,8 +30,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
-						!ts.isIdentifier(node.expression.expression) ||
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+						node.expression.expression.kind !== SyntaxKind.Identifier ||
 						node.expression.expression.text !== "console" ||
 						!isGlobalVariable(node.expression.expression, typeChecker, program)
 					) {

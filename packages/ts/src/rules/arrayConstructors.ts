@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -33,7 +33,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (
-				!ts.isIdentifier(node.expression) ||
+				node.expression.kind !== SyntaxKind.Identifier ||
 				node.expression.text !== "Array" ||
 				shouldAllowCallOrNew(node) ||
 				!isGlobalDeclarationOfName(
@@ -83,5 +83,5 @@ function shouldAllowCallOrNew(node: AST.CallExpression | AST.NewExpression) {
 	}
 
 	const soleArgument = getSoleArgument(node);
-	return !!soleArgument && ts.isNumericLiteral(soleArgument);
+	return !!soleArgument && soleArgument.kind === SyntaxKind.NumericLiteral;
 }

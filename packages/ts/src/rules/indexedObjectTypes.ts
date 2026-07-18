@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -10,14 +10,14 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function getSingleIndexSignature(members: ts.NodeArray<AST.TypeElement>) {
+function getSingleIndexSignature(members: NodeArray<AST.TypeElement>) {
 	if (members.length !== 1) {
 		return undefined;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const member = members[0]!;
-	if (member.kind !== ts.SyntaxKind.IndexSignature) {
+	if (member.kind !== SyntaxKind.IndexSignature) {
 		return undefined;
 	}
 
@@ -25,13 +25,13 @@ function getSingleIndexSignature(members: ts.NodeArray<AST.TypeElement>) {
 }
 
 function getTypeName(node: AST.InterfaceDeclaration | AST.TypeLiteralNode) {
-	if (node.kind === ts.SyntaxKind.InterfaceDeclaration) {
+	if (node.kind === SyntaxKind.InterfaceDeclaration) {
 		return node.name.text;
 	}
 
-	let current = node.parent as ts.Node | undefined;
+	let current = node.parent as AST.AnyNode | undefined;
 	while (current) {
-		if (ts.isTypeAliasDeclaration(current)) {
+		if (current.kind === SyntaxKind.TypeAliasDeclaration) {
 			return current.name.text;
 		}
 		current = current.parent;
@@ -44,7 +44,7 @@ function isDirectlyRecursive(
 	parentTypeName: string,
 ): boolean {
 	switch (node.kind) {
-		case ts.SyntaxKind.ConditionalType:
+		case SyntaxKind.ConditionalType:
 			return (
 				isDirectlyRecursive(node.checkType, parentTypeName) ||
 				isDirectlyRecursive(node.extendsType, parentTypeName) ||
@@ -52,23 +52,23 @@ function isDirectlyRecursive(
 				isDirectlyRecursive(node.falseType, parentTypeName)
 			);
 
-		case ts.SyntaxKind.IndexedAccessType:
+		case SyntaxKind.IndexedAccessType:
 			return (
 				isDirectlyRecursive(node.objectType, parentTypeName) ||
 				isDirectlyRecursive(node.indexType, parentTypeName)
 			);
 
-		case ts.SyntaxKind.IntersectionType:
-		case ts.SyntaxKind.UnionType:
+		case SyntaxKind.IntersectionType:
+		case SyntaxKind.UnionType:
 			return node.types.some((type) =>
 				isDirectlyRecursive(type, parentTypeName),
 			);
-		case ts.SyntaxKind.ParenthesizedType:
+		case SyntaxKind.ParenthesizedType:
 			return isDirectlyRecursive(node.type, parentTypeName);
 
-		case ts.SyntaxKind.TypeReference:
+		case SyntaxKind.TypeReference:
 			if (
-				node.typeName.kind === ts.SyntaxKind.Identifier &&
+				node.typeName.kind === SyntaxKind.Identifier &&
 				node.typeName.text === parentTypeName
 			) {
 				return true;
@@ -121,7 +121,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkForRecord(
 			node: AST.InterfaceDeclaration | AST.TypeLiteralNode,
-			members: ts.NodeArray<AST.TypeElement>,
+			members: NodeArray<AST.TypeElement>,
 			sourceFile: AST.SourceFile,
 		) {
 			const member = getSingleIndexSignature(members);
@@ -158,7 +158,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				) => {
 					if (
 						options.style === "index-signature" &&
-						node.typeName.kind === ts.SyntaxKind.Identifier &&
+						node.typeName.kind === SyntaxKind.Identifier &&
 						node.typeName.text === "Record" &&
 						isGlobalDeclaration(node.typeName, typeChecker, program) &&
 						node.typeArguments?.length === 2
