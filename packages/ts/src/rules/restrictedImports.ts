@@ -223,7 +223,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					node,
 					{ options, program, sourceFile, typeChecker },
 				) => {
-					if (node.moduleSpecifier?.kind !== ts.SyntaxKind.StringLiteral) {
+					if (node.moduleSpecifier?.kind !== SyntaxKind.StringLiteral) {
 						return;
 					}
 
@@ -231,7 +231,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const topLevelTypeOnly = node.isTypeOnly;
 					const range = getTSNodeRange(node, sourceFile);
 
-					if (node.exportClause?.kind === ts.SyntaxKind.NamedExports) {
+					if (node.exportClause?.kind === SyntaxKind.NamedExports) {
 						for (const element of node.exportClause.elements) {
 							const isTypeOnly = topLevelTypeOnly || element.isTypeOnly;
 							const importedName = element.propertyName
@@ -278,7 +278,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					node,
 					{ options, program, sourceFile, typeChecker },
 				) => {
-					if (node.moduleSpecifier.kind !== ts.SyntaxKind.StringLiteral) {
+					if (node.moduleSpecifier.kind !== SyntaxKind.StringLiteral) {
 						return;
 					}
 
@@ -345,7 +345,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (bindings.kind === ts.SyntaxKind.NamedImports) {
+					if (bindings.kind === SyntaxKind.NamedImports) {
 						for (const element of bindings.elements) {
 							const isTypeOnly = topLevelTypeOnly || element.isTypeOnly;
 							const importedName = element.propertyName

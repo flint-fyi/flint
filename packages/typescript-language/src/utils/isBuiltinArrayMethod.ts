@@ -1,4 +1,5 @@
-import ts from "typescript";
+import type ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import type { AST, Checker } from "@flint.fyi/typescript-language";
 
@@ -14,11 +15,11 @@ export function isBuiltinArrayMethod(
 	typeChecker: Checker,
 ): node is BuiltInArrayMethodNode {
 	return (
-		node.expression.kind === ts.SyntaxKind.PropertyAccessExpression &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.text === name &&
 		typeChecker.isArrayType(
 			typeChecker.getTypeAtLocation(node.expression.expression),
 		) &&
-		node.parent.kind !== ts.SyntaxKind.ExpressionStatement
+		node.parent.kind !== SyntaxKind.ExpressionStatement
 	);
 }

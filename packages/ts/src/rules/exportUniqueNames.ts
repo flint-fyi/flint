@@ -1,4 +1,5 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -68,7 +69,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					function checkExportDeclaration(statement: AST.ExportDeclaration) {
 						if (
-							statement.exportClause?.kind === ts.SyntaxKind.NamedExports &&
+							statement.exportClause?.kind === SyntaxKind.NamedExports &&
 							!statement.isTypeOnly
 						) {
 							for (const specifier of statement.exportClause.elements) {
@@ -87,7 +88,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 
 						for (const declaration of statement.declarationList.declarations) {
-							if (declaration.name.kind === ts.SyntaxKind.Identifier) {
+							if (declaration.name.kind === SyntaxKind.Identifier) {
 								checkAndReportDuplicate(
 									declaration.name.text,
 									declaration.name,

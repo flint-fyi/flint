@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -11,10 +11,10 @@ import { ruleCreator } from "./ruleCreator.ts";
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
 function getNameText(name: AST.PropertyName) {
-	return name.kind === ts.SyntaxKind.Identifier ||
-		name.kind === ts.SyntaxKind.PrivateIdentifier ||
-		name.kind === ts.SyntaxKind.StringLiteral ||
-		name.kind === ts.SyntaxKind.NumericLiteral
+	return name.kind === SyntaxKind.Identifier ||
+		name.kind === SyntaxKind.PrivateIdentifier ||
+		name.kind === SyntaxKind.StringLiteral ||
+		name.kind === SyntaxKind.NumericLiteral
 		? name.text
 		: undefined;
 }
@@ -58,7 +58,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				PropertyAssignment: (node, { sourceFile }) => {
 					if (
-						node.initializer.kind !== ts.SyntaxKind.FunctionExpression ||
+						node.initializer.kind !== SyntaxKind.FunctionExpression ||
 						!node.initializer.name
 					) {
 						return;
@@ -83,8 +83,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				PropertyDeclaration: (node, { sourceFile }) => {
 					if (
-						node.initializer?.kind !== ts.SyntaxKind.FunctionExpression ||
-						node.name.kind !== ts.SyntaxKind.Identifier ||
+						node.initializer?.kind !== SyntaxKind.FunctionExpression ||
+						node.name.kind !== SyntaxKind.Identifier ||
 						!node.initializer.name
 					) {
 						return;
@@ -109,9 +109,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				VariableDeclaration: (node, { sourceFile }) => {
 					if (
-						node.initializer?.kind !== ts.SyntaxKind.FunctionExpression ||
+						node.initializer?.kind !== SyntaxKind.FunctionExpression ||
 						!node.initializer.name ||
-						node.name.kind !== ts.SyntaxKind.Identifier
+						node.name.kind !== SyntaxKind.Identifier
 					) {
 						return;
 					}
