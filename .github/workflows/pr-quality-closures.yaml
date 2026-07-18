@@ -2,6 +2,10 @@ name: Close Suspected AI Slop
 on:
   schedule:
     - cron: "13 13 * * *"
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/pr-quality-closures.yaml
 
 jobs:
   stale:
@@ -14,9 +18,6 @@ jobs:
       - uses: actions/stale@1e223db275d687790206a7acac4d1a11bd6fe629 # v10
         with:
           days-before-close: 7
-          days-before-stale: 0
-          only-labels: suspected ai slop
-          stale-issue-message: ""
+          days-before-stale: -1
+          stale-pr-label: suspected ai slop
           stale-pr-message: ""
-          stale-issue-label: ""
-          stale-pr-label: ""
