@@ -116,7 +116,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const sortedElements = [...elements].sort((a, b) =>
+			const sortedElements = elements.toSorted((a, b) =>
 				compareRuleNames(a.text, b.text),
 			);
 			const fix = hasCommentsInArray(array, sourceFile)

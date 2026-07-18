@@ -61,12 +61,10 @@ function getCachedLocalFileRegex(fileName: string) {
 		return cachedRegex;
 	}
 
-	// TODO[typescript>=6.0]: Use RegExp.escape once TypeScript includes its types.
-	const escapedBaseFileName = baseFileName.replaceAll(
-		/[\\^$.*+?()[\]{}|]/g,
-		String.raw`\$&`,
+	const regex = new RegExp(
+		String.raw`^(\./)?${RegExp.escape(baseFileName)}$`,
+		"i",
 	);
-	const regex = new RegExp(String.raw`^(\.\/)?${escapedBaseFileName}$`, "i");
 	cachedRegexes.set(baseFileName, regex);
 	return regex;
 }

@@ -182,7 +182,7 @@ function simplifyCharacterClass(
 	}
 
 	// Add individual characters
-	for (const char of [...keptCharacters].sort((a, b) => a - b)) {
+	for (const char of [...keptCharacters].toSorted((a, b) => a - b)) {
 		result += String.fromCodePoint(char);
 	}
 
@@ -252,7 +252,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// Simplify all character classes and add the i flag
 					let simplifiedPattern = pattern;
 					// Process in reverse order to preserve offsets
-					for (const charClass of [...characterClasses].reverse()) {
+					for (const charClass of [...characterClasses].toReversed()) {
 						simplifiedPattern = simplifyCharacterClass(
 							simplifiedPattern,
 							charClass,

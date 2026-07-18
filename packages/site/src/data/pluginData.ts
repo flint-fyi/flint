@@ -282,9 +282,9 @@ export function getPluginData(pluginId: string): PluginData {
 }
 
 export function getPluginDataSafe(pluginId: string): PluginData | undefined {
-	for (const group of Object.keys(pluginDataByGroup)) {
-		if (pluginId in pluginDataByGroup[group]) {
-			return { group, plugin: pluginDataByGroup[group][pluginId] };
+	for (const [group, pluginData] of Object.entries(pluginDataByGroup)) {
+		if (pluginId in pluginData) {
+			return { group, plugin: pluginData[pluginId] };
 		}
 	}
 }

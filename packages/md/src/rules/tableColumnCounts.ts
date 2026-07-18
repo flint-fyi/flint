@@ -28,12 +28,11 @@ export default ruleCreator.createRule(markdownLanguage, {
 		return {
 			visitors: {
 				table: (node) => {
-					if (!node.children.length) {
+					const [headerRow] = node.children;
+					if (!headerRow) {
 						return;
 					}
 
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					const headerRow = node.children[0]!;
 					const dataRows = node.children.slice(1);
 
 					for (const dataRow of dataRows) {

@@ -6,8 +6,8 @@ export function isBuiltinSymbolLike(
 	type: ts.Type,
 	symbolName: string,
 ): boolean {
-	return isBuiltinSymbolLikeRecurser(program, type, (subType) => {
-		const symbol = subType.getSymbol();
+	return isBuiltinSymbolLikeRecurser(program, type, (subtype) => {
+		const symbol = subtype.getSymbol();
 		if (!symbol) {
 			return false;
 		}

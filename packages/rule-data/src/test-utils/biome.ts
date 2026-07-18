@@ -27,7 +27,7 @@ export function getBiomeLintRules(): string[] {
 			...collectRulesIn("Style"),
 			...collectRulesIn("Suspicious"),
 		]),
-	).sort();
+	).toSorted((a, b) => a.localeCompare(b));
 }
 
 function collectRulesIn(key: keyof DefsWithProperties) {

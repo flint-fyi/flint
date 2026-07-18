@@ -12,11 +12,13 @@ function buildBlockSequenceFix(
 	const items: string[] = [];
 
 	for (const item of node.children) {
-		if (item.children.length) {
-			const child = item.children[0];
-			const itemText = getNodeText(child, sourceText);
-			items.push(`\n${indent}- ${itemText}`);
+		const [child] = item.children;
+		if (!child) {
+			continue;
 		}
+
+		const itemText = getNodeText(child, sourceText);
+		items.push(`\n${indent}- ${itemText}`);
 	}
 
 	return items.join("");
@@ -43,10 +45,7 @@ function getNodeText(
 	node: yamlParser.YamlUnistNode,
 	sourceText: string,
 ): string {
-	return sourceText.substring(
-		node.position.start.offset,
-		node.position.end.offset,
-	);
+	return sourceText.slice(node.position.start.offset, node.position.end.offset);
 }
 
 export default ruleCreator.createRule(yamlLanguage, {

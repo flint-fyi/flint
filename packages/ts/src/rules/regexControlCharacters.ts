@@ -83,6 +83,7 @@ function parseControlCharCodePoint(match: string): number | undefined {
 	if (match.startsWith(String.raw`\c`)) {
 		const letter = match[2];
 		if (letter) {
+			// eslint-disable-next-line unicorn/prefer-code-point -- arithmetic relies on charCodeAt returning a number, not undefined
 			return letter.charCodeAt(0) - 64;
 		}
 	}

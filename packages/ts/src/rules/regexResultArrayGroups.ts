@@ -304,9 +304,6 @@ function getRegexInfoFromSymbol(
 					}
 				}
 			}
-
-			if (declaration.kind === SyntaxKind.Parameter) {
-			}
 		}
 	}
 

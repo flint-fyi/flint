@@ -69,5 +69,5 @@ function buildIssueUrl(message: string, stack: string | undefined): string {
 			"`" + (process.argv.slice(2).join(" ") || "<none>") + "`",
 		].join("\n"),
 	);
-	return issueUrl.toString();
+	return issueUrl.href;
 }

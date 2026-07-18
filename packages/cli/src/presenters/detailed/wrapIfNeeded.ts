@@ -1,3 +1,4 @@
+// eslint-disable-next-line unicorn/import-style -- only the ChalkInstance type is needed; a default value import would be unused
 import type { ChalkInstance } from "chalk";
 import wrapAnsi from "wrap-ansi";
 

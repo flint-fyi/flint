@@ -29,7 +29,7 @@ export async function getOxlintLintRules(): Promise<string[]> {
 		);
 	}
 
-	return Object.keys(properties).sort();
+	return Object.keys(properties).toSorted((a, b) => a.localeCompare(b));
 }
 
 export function getOxlintRuleConfigName(ruleName: string): string {

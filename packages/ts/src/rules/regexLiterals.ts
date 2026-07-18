@@ -91,9 +91,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			if (
 				construction.args.length === 2 &&
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				getStaticStringValue(construction.args[1]!) === undefined
 			) {
 				return;

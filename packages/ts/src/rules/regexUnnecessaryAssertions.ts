@@ -30,12 +30,12 @@ function findUnnecessaryAssertions(
 	let match: null | RegExpExecArray;
 	while ((match = wordBoundaryRegex.exec(pattern)) !== null) {
 		const assertionStart = match.index;
-		const assertionEnd = match.index + match[0].length;
 
 		if (isInsideCharacterClass(pattern, assertionStart)) {
 			continue;
 		}
 
+		const assertionEnd = match.index + match[0].length;
 		const characterBefore = getCharBeforeAssertion(
 			pattern,
 			assertionStart,
@@ -71,12 +71,12 @@ function findUnnecessaryAssertions(
 
 	while ((match = negatedWordBoundaryRegex.exec(pattern)) !== null) {
 		const assertionStart = match.index;
-		const assertionEnd = match.index + match[0].length;
 
 		if (isInsideCharacterClass(pattern, assertionStart)) {
 			continue;
 		}
 
+		const assertionEnd = match.index + match[0].length;
 		const characterBefore = getCharBeforeAssertion(
 			pattern,
 			assertionStart,
@@ -277,11 +277,11 @@ function isInsideCharacterClass(pattern: string, position: number) {
 	let inClass = false;
 	let escaped = false;
 	for (let index = 0; index < position; index++) {
-		const char = pattern[index];
 		if (escaped) {
 			escaped = false;
 			continue;
 		}
+		const char = pattern[index];
 		if (char === "\\") {
 			escaped = true;
 			continue;

@@ -85,7 +85,7 @@ function isMatchAnyCharacterClass(
 	}
 
 	for (const positive of positiveElements) {
-		const matchingNegative = negativeElements.find(
+		const matchingNegative = negativeElements.some(
 			(negative) => negative.kind === positive.kind,
 		);
 		if (matchingNegative) {

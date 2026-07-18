@@ -12,6 +12,7 @@ function hasComments(block: AST.Block, sourceFile: AST.SourceFile) {
 	const fullText = sourceFile.getFullText();
 	const openBrace = block.getStart(sourceFile);
 	const closeBrace = block.getEnd();
+	// eslint-disable-next-line unicorn/prefer-string-slice -- relies on substring argument-swapping for statement-less blocks
 	const innerText = fullText.substring(openBrace + 1, closeBrace - 1);
 
 	return /\S+/.test(innerText.trim());

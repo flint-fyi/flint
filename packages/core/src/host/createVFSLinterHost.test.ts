@@ -867,7 +867,7 @@ describe(createVFSLinterHost, () => {
 				exclude: [],
 			});
 
-			expect(matches.toSorted()).toEqual([
+			expect(matches.toSorted((a, b) => a.localeCompare(b))).toEqual([
 				"base-only.ts",
 				"overlay-only.ts",
 				"shared.ts",
@@ -902,7 +902,10 @@ describe(createVFSLinterHost, () => {
 				exclude: [],
 			});
 
-			expect(matches.toSorted()).toEqual([".changeset/a.md", ".github/foo.md"]);
+			expect(matches.toSorted((a, b) => a.localeCompare(b))).toEqual([
+				".changeset/a.md",
+				".github/foo.md",
+			]);
 		});
 
 		it("honors exclude patterns against dot-paths", async () => {

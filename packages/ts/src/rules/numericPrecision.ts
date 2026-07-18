@@ -50,7 +50,7 @@ function convertNumberToScientificNotation(
 
 	if (splitNumber.length > 1) {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		normalizedNumber.magnitude += parseInt(splitNumber[1]!, 10);
+		normalizedNumber.magnitude += Number(splitNumber[1]!);
 	}
 
 	return normalizedNumber;

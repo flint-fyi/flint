@@ -56,8 +56,9 @@ export default ruleCreator.createRule(markdownLanguage, {
 		}
 
 		function checkTextNode(node: WithPosition<Link>) {
+			const [firstChild] = node.children;
 			const textNode = nullThrows(
-				node.children[0],
+				firstChild,
 				`First node child should be defined for link node ${node.position.start.offset}`,
 			);
 			const textPosition = textNode.position;
@@ -83,8 +84,9 @@ export default ruleCreator.createRule(markdownLanguage, {
 		return {
 			visitors: {
 				link(node) {
+					const [firstChild] = node.children;
 					const firstNodeChild = nullThrows(
-						node.children[0],
+						firstChild,
 						`First node child should be defined for link node`,
 					);
 					if (

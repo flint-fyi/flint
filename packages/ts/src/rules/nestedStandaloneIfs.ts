@@ -122,7 +122,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				const elseKeyword = grandparent
 					.getChildren(sourceFile)
-					.find((child) => child.kind === SyntaxKind.ElseKeyword);
+					.some((child) => child.kind === SyntaxKind.ElseKeyword);
 
 				if (!elseKeyword) {
 					return;

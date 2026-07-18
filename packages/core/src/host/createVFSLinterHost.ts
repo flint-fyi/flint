@@ -194,16 +194,13 @@ export function createVFSLinterHost(
 				}
 				const relPath = file.path.slice(dirNormSlash.length);
 				const slashIndex = relPath.indexOf("/");
-				let dirent: LinterHostDirectoryEntry = {
-					name: relPath,
-					type: "file",
-				};
-				if (slashIndex !== -1) {
-					dirent = {
-						name: relPath.slice(0, slashIndex),
-						type: "directory",
-					};
-				}
+				const dirent: LinterHostDirectoryEntry =
+					slashIndex === -1
+						? { name: relPath, type: "file" }
+						: {
+								name: relPath.slice(0, slashIndex),
+								type: "directory",
+							};
 				const entryKey = pathKey(dirent.name, caseSensitiveFS);
 				if (!result.has(entryKey)) {
 					result.set(entryKey, dirent);

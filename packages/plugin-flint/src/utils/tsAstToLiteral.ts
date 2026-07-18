@@ -28,7 +28,7 @@ export function tsAstToLiteral(node: AST.AnyNode): unknown {
 	}
 
 	if (node.kind === SyntaxKind.NumericLiteral) {
-		return Number.parseFloat(node.text);
+		return Number(node.text);
 	}
 
 	if (node.kind === SyntaxKind.ObjectLiteralExpression) {

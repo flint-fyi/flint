@@ -46,7 +46,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const openBrace = block.getStart(sourceFile);
 			const closeBrace = block.getEnd();
-			const innerText = fullText.substring(openBrace + 1, closeBrace - 1);
+			const innerText = fullText.slice(openBrace + 1, closeBrace - 1);
 
 			// Check if there are any non-whitespace characters (which would be comments)
 			// since we already know there are no statements
