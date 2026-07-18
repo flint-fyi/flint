@@ -28,11 +28,13 @@ function hasCommentsInArray(
 	array: AST.ArrayLiteralExpression,
 	sourceFile: AST.SourceFile,
 ) {
-	const arrayText = new Set(
-		sourceFile.text.slice(array.getStart(sourceFile), array.getEnd()),
+	// eslint-disable-next-line unicorn/prefer-set-has -- substring check on a string, not array membership
+	const arrayText = sourceFile.text.slice(
+		array.getStart(sourceFile),
+		array.getEnd(),
 	);
 
-	return arrayText.has("//") || arrayText.has("/*");
+	return arrayText.includes("//") || arrayText.includes("/*");
 }
 
 // TODO: Maybe we will have a function to check if a symbol is from Flint in the future

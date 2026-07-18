@@ -13,8 +13,9 @@ function hasCommentsInRange(
 	start: number,
 	end: number,
 ) {
-	const text = new Set(sourceFile.text.slice(start, end));
-	return text.has("//") || text.has("/*");
+	// eslint-disable-next-line unicorn/prefer-set-has -- substring check on a string, not array membership
+	const text = sourceFile.text.slice(start, end);
+	return text.includes("//") || text.includes("/*");
 }
 
 function isIfWithoutElse(

@@ -153,6 +153,26 @@ export default defineConfig(
 			// Language plugins intentionally register extensions and enforce
 			// single-instance invariants at module load time.
 			"unicorn/no-top-level-side-effects": "off",
+
+			"unicorn/prefer-await": "off",
+
+			// Conflicts with Prettier: Prettier lowercases hex digits
+			// (0xff) while this rule wants uppercase (0xFF).
+			"unicorn/number-literal-case": "off",
+
+			// Conflicts with Flint's own ts/regexLetterCasing which
+			// requires lowercase unicode escapes (\u{a0}) for consistency.
+			"unicorn/escape-case": "off",
+
+			// Conflicts with Flint's own ts/regexHexadecimalEscapes which
+			// prefers the more succinct \xa0 over \u{a0}.
+			"unicorn/prefer-unicode-code-point-escapes": "off",
+
+			// Test files for escape-related rules intentionally use \\ in
+			// regular template literals so the source contains literal
+			// backslashes; converting to String.raw exposes \8/\9 escapes
+			// that trigger ts/nonOctalDecimalEscapes on the test itself.
+			"unicorn/prefer-string-raw": "off",
 		},
 		settings: {
 			perfectionist: { partitionByComment: true, type: "natural" },

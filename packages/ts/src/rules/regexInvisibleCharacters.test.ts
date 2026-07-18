@@ -8,8 +8,8 @@ ruleTester.describe(rule, {
 			code: `
 /\t/;
 `,
-			output: String.raw`
-/\x09/;
+			output: `
+/\\x09/;
 `,
 			snapshot: `
 /\t/;
@@ -19,39 +19,39 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-/\u{A0}/;
+/\u00a0/;
 `,
-			output: String.raw`
-/\xA0/;
+			output: `
+/\\xA0/;
 `,
 			snapshot: `
-/\u{A0}/;
+/\u00a0/;
  ~
  Prefer the more clear '\\xA0' instead of this invisible character.
 `,
 		},
 		{
 			code: `
-/\u{200B}/;
+/\u200b/;
 `,
-			output: String.raw`
-/\u200B/;
+			output: `
+/\\u200B/;
 `,
 			snapshot: `
-/\u{200B}/;
+/\u200b/;
  ~
  Prefer the more clear '\\u200B' instead of this invisible character.
 `,
 		},
 		{
 			code: `
-/\u{200B}/u;
+/\u200b/u;
 `,
-			output: String.raw`
-/\u{200B}/u;
+			output: `
+/\\u{200B}/u;
 `,
 			snapshot: `
-/\u{200B}/u;
+/\u200b/u;
  ~
  Prefer the more clear '\\u{200B}' instead of this invisible character.
 `,
@@ -60,8 +60,8 @@ ruleTester.describe(rule, {
 			code: `
 /[\t]/;
 `,
-			output: String.raw`
-/[\x09]/;
+			output: `
+/[\\x09]/;
 `,
 			snapshot: `
 /[\t]/;
@@ -71,13 +71,13 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-/[\t\u{A0}]/;
+/[\t\u00a0]/;
 `,
-			output: String.raw`
-/[\x09\xA0]/;
+			output: `
+/[\\x09\\xA0]/;
 `,
 			snapshot: `
-/[\t\u{A0}]/;
+/[\t\u00a0]/;
   ~
   Prefer the more clear '\\x09' instead of this invisible character.
    ~
@@ -86,39 +86,39 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-/\u{1680}/;
-`,
-			output: String.raw`
 /\u1680/;
 `,
+			output: `
+/\\u1680/;
+`,
 			snapshot: `
-/\u{1680}/;
+/\u1680/;
  ~
  Prefer the more clear '\\u1680' instead of this invisible character.
 `,
 		},
 		{
 			code: `
-/\u{180E}/;
+/\u180e/;
 `,
-			output: String.raw`
-/\u180E/;
+			output: `
+/\\u180E/;
 `,
 			snapshot: `
-/\u{180E}/;
+/\u180e/;
  ~
  Prefer the more clear '\\u180E' instead of this invisible character.
 `,
 		},
 		{
 			code: `
-/\u{2000}\u{2001}\u{2002}\u{2003}\u{2004}\u{2005}\u{2006}\u{2007}\u{2008}\u{2009}\u{200A}/;
+/\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a/;
 `,
-			output: String.raw`
-/\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A/;
+			output: `
+/\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A/;
 `,
 			snapshot: `
-/\u{2000}\u{2001}\u{2002}\u{2003}\u{2004}\u{2005}\u{2006}\u{2007}\u{2008}\u{2009}\u{200A}/;
+/\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a/;
  ~
  Prefer the more clear '\\u2000' instead of this invisible character.
   ~
@@ -145,13 +145,13 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-/\u{202F}\u{205F}\u{3000}/;
+/\u202f\u205f\u3000/;
 `,
-			output: String.raw`
-/\u202F\u205F\u3000/;
+			output: `
+/\\u202F\\u205F\\u3000/;
 `,
 			snapshot: `
-/\u{202F}\u{205F}\u{3000}/;
+/\u202f\u205f\u3000/;
  ~
  Prefer the more clear '\\u202F' instead of this invisible character.
   ~
@@ -162,91 +162,91 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
-/\u{FEFF}/;
+/\ufeff/;
 `,
-			output: String.raw`
-/\uFEFF/;
+			output: `
+/\\uFEFF/;
 `,
 			snapshot: `
-/\u{FEFF}/;
+/\ufeff/;
  ~
  Prefer the more clear '\\uFEFF' instead of this invisible character.
 `,
 		},
 		{
 			code: `
-/\u{85}/;
+/\u0085/;
 `,
-			output: String.raw`
-/\x85/;
+			output: `
+/\\x85/;
 `,
 			snapshot: `
-/\u{85}/;
+/\u0085/;
  ~
  Prefer the more clear '\\x85' instead of this invisible character.
 `,
 		},
 		{
 			code: `
-/\u{200C}/;
+/\u200c/;
 `,
-			output: String.raw`
-/\u200C/;
+			output: `
+/\\u200C/;
 `,
 			snapshot: `
-/\u{200C}/;
+/\u200c/;
  ~
  Prefer the more clear '\\u200C' instead of this invisible character.
 `,
 		},
 		{
 			code: `
-/\u{200D}/;
+/\u200d/;
 `,
-			output: String.raw`
-/\u200D/;
+			output: `
+/\\u200D/;
 `,
 			snapshot: `
-/\u{200D}/;
+/\u200d/;
  ~
  Prefer the more clear '\\u200D' instead of this invisible character.
 `,
 		},
 		{
 			code: `
-/\u{200E}/;
+/\u200e/;
 `,
-			output: String.raw`
-/\u200E/;
+			output: `
+/\\u200E/;
 `,
 			snapshot: `
-/\u{200E}/;
+/\u200e/;
  ~
  Prefer the more clear '\\u200E' instead of this invisible character.
 `,
 		},
 		{
 			code: `
-/\u{200F}/;
+/\u200f/;
 `,
-			output: String.raw`
-/\u200F/;
+			output: `
+/\\u200F/;
 `,
 			snapshot: `
-/\u{200F}/;
+/\u200f/;
  ~
  Prefer the more clear '\\u200F' instead of this invisible character.
 `,
 		},
 		{
 			code: `
-/\u{2800}/;
-`,
-			output: String.raw`
 /\u2800/;
 `,
+			output: `
+/\\u2800/;
+`,
 			snapshot: `
-/\u{2800}/;
+/\u2800/;
  ~
  Prefer the more clear '\\u2800' instead of this invisible character.
 `,
@@ -255,8 +255,8 @@ ruleTester.describe(rule, {
 			code: `
 new RegExp('\t');
 `,
-			output: String.raw`
-new RegExp('\x09');
+			output: `
+new RegExp('\\x09');
 `,
 			snapshot: `
 new RegExp('\t');
@@ -268,8 +268,8 @@ new RegExp('\t');
 			code: `
 /[\\q{\t}]/v;
 `,
-			output: String.raw`
-/[\q{\x09}]/v;
+			output: `
+/[\\q{\\x09}]/v;
 `,
 			snapshot: `
 /[\\q{\t}]/v;
@@ -284,8 +284,8 @@ new RegExp('\t');
 		`/[a]/;`,
 		`/a/;`,
 		`/abc/;`,
-		String.raw`
-const a = '' + '\t';
+		`
+const a = '' + '\\t';
 new RegExp(a);
 `,
 		`new RegExp(' ');`,
