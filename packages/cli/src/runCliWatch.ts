@@ -34,21 +34,21 @@ export async function runCliWatch(
 			const renderer = getRenderer();
 			currentRenderer = renderer;
 
-			void (async () => {
-				try {
-					const { lintResults } = await runCliOnce(
-						host,
-						configFileName,
-						renderer,
-						initial ? values : { ...values, "cache-ignore": false },
-					);
+			runCliOnce(
+				host,
+				configFileName,
+				renderer,
+				initial ? values : { ...values, "cache-ignore": false },
+			).then(
+				({ lintResults }) => {
 					if (currentRenderer === renderer) {
 						currentLintResults = lintResults;
 					}
-				} catch (error) {
+				},
+				(error: unknown) => {
 					log("Error during lint run: %o", error);
-				}
-			})();
+				},
+			);
 
 			renderer.onQuit?.(() => {
 				watcher[Symbol.dispose]();

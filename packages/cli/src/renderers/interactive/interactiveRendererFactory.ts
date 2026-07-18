@@ -85,9 +85,8 @@ export const interactiveRendererFactory: RendererFactory = {
 				}
 
 				function queueRerender() {
-					const previousTask = currentTask;
 					currentTask = (async () => {
-						await previousTask;
+						await currentTask;
 						await rerender();
 					})();
 				}

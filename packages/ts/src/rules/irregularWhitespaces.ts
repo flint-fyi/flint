@@ -20,7 +20,7 @@ interface IrregularWhitespaceMatch {
 
 function findIrregularWhitespaces(text: string): IrregularWhitespaceMatch[] {
 	const irregularWhitespacePattern =
-		/[\f\v\u{85}\u{FEFF}\u{A0}\u{1680}\u{180E}\u{2000}\u{2001}\u{2002}\u{2003}\u{2004}\u{2005}\u{2006}\u{2007}\u{2008}\u{2009}\u{200A}\u{200B}\u{202F}\u{205F}\u{3000}\u{2028}\u{2029}]/gu;
+		/[\f\v\x85\ufeff\xa0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u202f\u205f\u3000\u2028\u2029]/gu;
 
 	const matches: IrregularWhitespaceMatch[] = [];
 	let match: null | RegExpExecArray;
@@ -51,7 +51,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			primary:
 				"Irregular whitespace characters can cause unexpected behavior and display issues.",
 			secondary: [
-				String.raw`Irregular whitespace includes characters like non-breaking spaces (\u00A0), zero-width spaces (\u200B), and various Unicode space characters.`,
+				"Irregular whitespace includes characters like non-breaking spaces (\\u00A0), zero-width spaces (\\u200B), and various Unicode space characters.",
 				"These characters are often invisible or look like regular spaces, but may be interpreted differently by tools and parsers.",
 				"They can be accidentally introduced through copy-paste from external sources.",
 			],

@@ -66,12 +66,5 @@ String.raw\`\\0\\8\`;
 `,
 		},
 	],
-	valid: [
-		'"8"',
-		'"9"',
-		'"w8less"',
-		'"December 19"',
-		String.raw`"\\8"`,
-		String.raw`"\0\u0038"`,
-	],
+	valid: ['"8"', '"9"', '"w8less"', '"December 19"', '"\\\\8"', '"\\0\\u0038"'],
 });
