@@ -25,7 +25,6 @@ function isDeclarationName(node: ts.Identifier) {
 function isLeftHandSide(node: AST.Identifier) {
 	return (
 		node.parent.kind === ts.SyntaxKind.BinaryExpression &&
-		ts.isBinaryExpression(node.parent) &&
 		node.parent.left === node &&
 		node.parent.operatorToken.kind >= ts.SyntaxKind.FirstAssignment &&
 		node.parent.operatorToken.kind <= ts.SyntaxKind.LastAssignment

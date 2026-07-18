@@ -9,7 +9,7 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isLiteralValue(node: AST.AnyNode) {
-	if (ts.isPrefixUnaryExpression(node)) {
+	if (node.kind === ts.SyntaxKind.PrefixUnaryExpression) {
 		return isLiteralValue(node.operand);
 	}
 
@@ -23,9 +23,9 @@ function isLiteralValue(node: AST.AnyNode) {
 
 function isThisLiteralAssignment(node: AST.BinaryExpression) {
 	return (
-		(ts.isElementAccessExpression(node.left) ||
-			ts.isPropertyAccessExpression(node.left)) &&
-		ts.isPropertyAccessExpression(node.left) &&
+		(node.left.kind === ts.SyntaxKind.ElementAccessExpression ||
+			node.left.kind === ts.SyntaxKind.PropertyAccessExpression) &&
+		node.left.kind === ts.SyntaxKind.PropertyAccessExpression &&
 		node.left.expression.kind === ts.SyntaxKind.ThisKeyword &&
 		isLiteralValue(node.right)
 	);
@@ -54,8 +54,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkStatement(node: AST.Statement, sourceFile: AST.SourceFile) {
 			if (
-				!ts.isExpressionStatement(node) ||
-				!ts.isBinaryExpression(node.expression) ||
+				node.kind !== ts.SyntaxKind.ExpressionStatement ||
+				node.expression.kind !== ts.SyntaxKind.BinaryExpression ||
 				node.expression.operatorToken.kind !== ts.SyntaxKind.EqualsToken ||
 				!isThisLiteralAssignment(node.expression)
 			) {
@@ -71,11 +71,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				Constructor: (node, { sourceFile }) => {
-					if (
-						!node.body ||
-						(!ts.isClassDeclaration(node.parent) &&
-							!ts.isClassExpression(node.parent))
-					) {
+					if (!node.body) {
 						return;
 					}
 

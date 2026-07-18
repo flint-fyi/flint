@@ -145,8 +145,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				case ts.SyntaxKind.PropertyAssignment: {
 					return (
 						node.parent.name === node &&
-						!ts.isComputedPropertyName(node.parent.name) &&
-						ts.isObjectLiteralExpression(node.parent.parent)
+						node.parent.name.kind !== ts.SyntaxKind.ComputedPropertyName
 					);
 				}
 			}
@@ -156,14 +155,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			let current: AST.AnyNode = node;
 
 			while (
-				ts.isPropertyAccessExpression(current.parent) &&
+				current.parent.kind === ts.SyntaxKind.PropertyAccessExpression &&
 				current.parent.name === current
 			) {
 				current = current.parent;
 			}
 
 			while (
-				ts.isElementAccessExpression(current.parent) &&
+				current.parent.kind === ts.SyntaxKind.ElementAccessExpression &&
 				current.parent.argumentExpression === current
 			) {
 				current = current.parent;
@@ -242,7 +241,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				ts.isShorthandPropertyAssignment(node.parent) &&
+				node.parent.kind === ts.SyntaxKind.ShorthandPropertyAssignment &&
 				node.parent.name === node
 			) {
 				const symbol = typeChecker.getSymbolAtLocation(node);
@@ -316,32 +315,32 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			typeChecker: ts.TypeChecker,
 		) {
 			const bindingPattern = node.parent;
-			if (!ts.isObjectBindingPattern(bindingPattern)) {
+			if (bindingPattern.kind !== ts.SyntaxKind.ObjectBindingPattern) {
 				return;
 			}
 
 			const propertyName = node.propertyName ?? node.name;
-			if (!ts.isIdentifier(propertyName)) {
+			if (propertyName.kind !== ts.SyntaxKind.Identifier) {
 				return;
 			}
 
 			const declarationOrPattern = bindingPattern.parent;
 			let objectType: ts.Type | undefined;
 
-			if (ts.isVariableDeclaration(declarationOrPattern)) {
+			if (declarationOrPattern.kind === ts.SyntaxKind.VariableDeclaration) {
 				const initializer = declarationOrPattern.initializer;
 				if (initializer) {
 					objectType = typeChecker.getTypeAtLocation(initializer);
 				}
-			} else if (ts.isBindingElement(declarationOrPattern)) {
+			} else if (declarationOrPattern.kind === ts.SyntaxKind.BindingElement) {
 				const parentInitializer = declarationOrPattern.parent.parent;
-				if (ts.isVariableDeclaration(parentInitializer)) {
+				if (parentInitializer.kind === ts.SyntaxKind.VariableDeclaration) {
 					const init = parentInitializer.initializer;
 					if (init) {
 						const parentType = typeChecker.getTypeAtLocation(init);
 						const parentPropertyName =
 							declarationOrPattern.propertyName ?? declarationOrPattern.name;
-						if (ts.isIdentifier(parentPropertyName)) {
+						if (parentPropertyName.kind === ts.SyntaxKind.Identifier) {
 							const prop = parentType.getProperty(parentPropertyName.text);
 							if (prop) {
 								objectType = typeChecker.getTypeOfSymbolAtLocation(
@@ -362,7 +361,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						isDeprecatedFromDeclarations(property))
 				) {
 					const reportNode = node.propertyName ?? node.name;
-					if (ts.isIdentifier(reportNode)) {
+					if (reportNode.kind === ts.SyntaxKind.Identifier) {
 						context.report({
 							message: "deprecated",
 							range: getTSNodeRange(reportNode, sourceFile),
@@ -378,7 +377,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			typeChecker: ts.TypeChecker,
 		) {
 			for (const type of node.types) {
-				if (ts.isIdentifier(type.expression)) {
+				if (type.expression.kind === ts.SyntaxKind.Identifier) {
 					const symbol = typeChecker.getSymbolAtLocation(type.expression);
 					if (isDeprecated(symbol, typeChecker)) {
 						context.report({
@@ -396,7 +395,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			typeChecker: ts.TypeChecker,
 		) {
 			const callExpr = node.parent;
-			if (!ts.isCallExpression(callExpr) || callExpr.expression !== node) {
+			if (
+				callExpr.kind !== ts.SyntaxKind.CallExpression ||
+				callExpr.expression !== node
+			) {
 				return;
 			}
 
@@ -429,20 +431,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (
-						ts.isPropertyAccessExpression(node.parent) &&
+						node.parent.kind === ts.SyntaxKind.PropertyAccessExpression &&
 						node === node.parent.name
 					) {
 						checkNode(node, sourceFile, typeChecker);
 						return;
 					}
 
-					if (ts.isQualifiedName(node.parent) && node === node.parent.right) {
+					if (
+						node.parent.kind === ts.SyntaxKind.QualifiedName &&
+						node === node.parent.right
+					) {
 						checkNode(node, sourceFile, typeChecker);
 						return;
 					}
 
 					if (
-						ts.isElementAccessExpression(node.parent) &&
+						node.parent.kind === ts.SyntaxKind.ElementAccessExpression &&
 						node === node.parent.argumentExpression
 					) {
 						return;
@@ -453,7 +458,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 				PrivateIdentifier: (node, { sourceFile, typeChecker }) => {
 					if (
-						ts.isPropertyAccessExpression(node.parent) &&
+						node.parent.kind === ts.SyntaxKind.PropertyAccessExpression &&
 						node === node.parent.name
 					) {
 						checkNode(node, sourceFile, typeChecker);
@@ -470,7 +475,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 // TODO (#400): Switch to scope analysis
 function isInsideHeritageClause(node: AST.AnyNode) {
-	if (ts.isHeritageClause(node)) {
+	if (node.kind === ts.SyntaxKind.HeritageClause) {
 		return true;
 	}
 
@@ -493,7 +498,7 @@ function isInsideHeritageClause(node: AST.AnyNode) {
 
 // TODO (#400): Switch to scope analysis
 function isInsideImport(node: AST.AnyNode) {
-	if (ts.isImportDeclaration(node)) {
+	if (node.kind === ts.SyntaxKind.ImportDeclaration) {
 		return true;
 	}
 
