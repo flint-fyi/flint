@@ -7,6 +7,7 @@ eval "$(~/.local/bin/mise activate bash)"
 mise settings set idiomatic_version_file_enable_tools node,pnpm
 mise install --yes
 pnpm install --frozen-lockfile
+pnpm --filter=site prebuild
 
 amp_config_dir="$HOME/.config/amp"
 mkdir -p "$amp_config_dir"
