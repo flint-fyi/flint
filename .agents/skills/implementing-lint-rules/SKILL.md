@@ -7,6 +7,22 @@ description: "Implements ESLint-style lint rules with proper AST handling, targe
 
 Patterns and practices for implementing lint rules in Flint.
 
+## Starting Context
+
+Before writing a new rule or expanding an existing one, read the backing issue and at least one nearby rule in the same plugin.
+Use the local rule implementation, test, docs page, `plugin.ts`, and `packages/comparisons/src/data.json` patterns as the implementation template.
+`data.json` is very large: search it for the relevant rule names and pull only the matching entries into context instead of reading the whole file.
+External linter rules can be behavior references, but they should not determine Flint's architecture or test layout.
+
+If an issue is labeled `status: in discussion`, `status: blocked`, or `status: needs investigation`, tell the user before treating it as ready for implementation.
+If a rule came from an AI-assisted first draft, review it against current project patterns before asking for review.
+
+## Complete Rule Surface
+
+For a new rule, expect to update the rule implementation, rule tests, rule docs, comparisons data, plugin registration, and a changeset when the behavior is user-facing.
+Keep rule registrations and comparisons data alphabetical.
+The docs `description` frontmatter should match the rule's `about.description`.
+
 ## Reporting
 
 Prefer targeted report ranges when possible.
@@ -25,6 +41,13 @@ Example: instead of messages like _"Octal escape sequences should not be used in
 
 ## AST Node Handling
 
+The guidance in this section is specific to TypeScript and TypeScript-derived languages.
+Rules for other languages also visit AST nodes, but should use node types from their own `*-language` package rather than TSL `AST.*` nodes or `ts.*` APIs.
+
+Prefer TSL `AST.*` node types whenever a visitor gives them to you.
+Treat `ts.Node`, `ts.forEachChild`, `ts.findAncestor`, and broad TypeScript-native traversal as escape hatches.
+If one is necessary, keep it narrow and make sure tests cover the path that required it.
+
 When you have an `AST.Expression` or `AST.*Declaration`, check whether nodes are certain types using a comparison like `node.kind === ts.SyntaxKind.BinaryExpression`.
 
 When you have a `ts.Node` type, however, you'll have to use `ts.is*` checks such as `ts.isBinaryExpression`, or failing that `tsutils` from `ts-api-utils` to get nice type narrowing.
@@ -34,6 +57,19 @@ Same with other TypeScript APIs that optionally take in a sourceFile.
 
 Don't use `node.getText(sourceFile)` APIs to check if two nodes are equivalent.
 Use `hasSameTokens` or similar.
+
+In a `SourceFile` visitor, use the `node` parameter itself instead of destructuring `sourceFile` from context.
+
+Don't add `@ts-expect-error` or broad type assertions to work around visitor typing unless there is an existing local pattern and a narrow reason.
+
+## Type-Aware Rules
+
+Like AST node handling above, this section is specific to TypeScript and TypeScript-derived languages.
+
+If a rule depends on the type checker, project service, module resolution, or file graph, add tests that prove the type information is necessary.
+Use multi-file RuleTester cases when behavior depends on imports, declarations, compiler options, file names, or project boundaries.
+When a test needs compiler options, pass the relevant TSConfig files through `files`.
+Don't assume `pnpm flint` and `tsc` report identical type information unless the rule's test setup verifies the relevant behavior.
 
 ## Unit Tests
 
@@ -59,6 +95,8 @@ Don't use foo/bar/etc. names.
 Use succinct descriptive ones instead.
 Example: instead of `let foo;` use `let value;`.
 Instead of `foo-.-bar` use `before-.-after`.
+
+When several test cases use the same code with different `options`, `files`, or `fileName`, give them names so failures are easy to locate.
 
 If a rule has fixes and/or suggestions, those should be tested in unit tests.
 

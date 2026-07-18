@@ -26,12 +26,17 @@ When a variable is only used once, prefer to inline it unless it includes multip
 
 Whenever you want to implement a helper/utility method, first check if an equivalent exists in the `typescript` package, or failing that `ts-api-utils`.
 
+## Rule Development
+
+Rule-specific implementation guidance lives in `.agents/skills/implementing-lint-rules/SKILL.md`.
+When adding or changing a lint rule, read and follow that skill instead of relying on this root file for rule workflow details.
+
 ## Documentation
 
 Markdown files should try to limit to one sentence per line.
 If a paragraph has multiple sentences, try to start each on a new line.
 
-The `description` frontmatter property in `.mdx` rule docs files should match their rule's `rule.meta.about`.
+The `description` frontmatter property in `.mdx` rule docs files should match the rule's `about.description`.
 
 Don't be vague in documentation.
 Be precise.
