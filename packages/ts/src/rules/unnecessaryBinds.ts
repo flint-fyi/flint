@@ -113,7 +113,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression(node, { sourceFile }) {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
+						node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.text !== "bind" ||
 						node.arguments.length !== 1
 					) {

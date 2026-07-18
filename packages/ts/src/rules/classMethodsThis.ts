@@ -66,23 +66,23 @@ function getMemberDisplayName(
 	const name = member.name;
 
 	if (
-		ts.isIdentifier(name) ||
-		ts.isStringLiteral(name) ||
-		ts.isNumericLiteral(name)
+		name.kind === ts.SyntaxKind.Identifier ||
+		name.kind === ts.SyntaxKind.StringLiteral ||
+		name.kind === ts.SyntaxKind.NumericLiteral
 	) {
 		return name.text;
 	}
 
-	if (ts.isPrivateIdentifier(name)) {
+	if (name.kind === ts.SyntaxKind.PrivateIdentifier) {
 		return name.text;
 	}
 
-	if (ts.isComputedPropertyName(name)) {
+	if (name.kind === ts.SyntaxKind.ComputedPropertyName) {
 		const expr = name.expression;
 		if (
-			ts.isStringLiteral(expr) ||
-			ts.isNoSubstitutionTemplateLiteral(expr) ||
-			ts.isNumericLiteral(expr)
+			expr.kind === ts.SyntaxKind.StringLiteral ||
+			expr.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral ||
+			expr.kind === ts.SyntaxKind.NumericLiteral
 		) {
 			return expr.text;
 		}
@@ -101,7 +101,7 @@ function hasModifier(
 }
 
 function isPublicMember(member: ClassMember): boolean {
-	if (ts.isPrivateIdentifier(member.name)) {
+	if (member.name.kind === ts.SyntaxKind.PrivateIdentifier) {
 		return false;
 	}
 

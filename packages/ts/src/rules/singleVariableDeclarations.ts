@@ -27,8 +27,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ForStatement: (node, { sourceFile }) => {
 					if (
-						node.initializer &&
-						ts.isVariableDeclarationList(node.initializer) &&
+						node.initializer?.kind === ts.SyntaxKind.VariableDeclarationList &&
 						node.initializer.declarations.length > 1
 					) {
 						context.report({

@@ -75,7 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			for (const argument of node.arguments) {
 				const argumentType = typeChecker.getTypeAtLocation(argument);
 
-				if (ts.isSpreadElement(argument)) {
+				if (argument.kind === ts.SyntaxKind.SpreadElement) {
 					const spreadType = typeChecker.getTypeAtLocation(argument.expression);
 					const anyType = discriminateAnyType(
 						spreadType,
@@ -243,7 +243,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const template = node.template;
-					if (!ts.isTemplateExpression(template)) {
+					if (template.kind !== ts.SyntaxKind.TemplateExpression) {
 						return;
 					}
 

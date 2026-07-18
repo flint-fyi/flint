@@ -125,7 +125,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					.getProperties()
 					.find(
 						(propertySymbol) =>
-							ts.isStringLiteral(node.argumentExpression) &&
+							node.argumentExpression.kind === ts.SyntaxKind.StringLiteral &&
 							(propertySymbol.escapedName as string) ===
 								node.argumentExpression.text,
 					);

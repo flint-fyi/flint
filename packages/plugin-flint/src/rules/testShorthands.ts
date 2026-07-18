@@ -38,14 +38,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					for (const testCase of describedCases.valid) {
 						const caseNode = testCase.nodes.case;
 						if (
-							ts.isObjectLiteralExpression(caseNode) &&
+							caseNode.kind === ts.SyntaxKind.ObjectLiteralExpression &&
 							caseNode.properties.length === 1 &&
-							caseNode.properties[0]?.name &&
-							ts.isIdentifier(caseNode.properties[0].name) &&
+							caseNode.properties[0]?.name?.kind === ts.SyntaxKind.Identifier &&
 							caseNode.properties[0].name.text === "code"
 						) {
 							let fix: FileChange | undefined;
-							if (ts.isPropertyAssignment(caseNode.properties[0])) {
+							if (
+								caseNode.properties[0].kind === ts.SyntaxKind.PropertyAssignment
+							) {
 								fix = {
 									range: getTSNodeRange(caseNode, sourceFile),
 									text: caseNode.properties[0].initializer.getText(sourceFile),

@@ -51,14 +51,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const { parent } = node;
 
 					if (
-						(ts.isPropertyAccessExpression(parent) ||
-							ts.isPropertyAssignment(parent) ||
-							ts.isShorthandPropertyAssignment(parent) ||
-							ts.isParameter(parent) ||
-							ts.isVariableDeclaration(parent) ||
-							ts.isPropertyDeclaration(parent) ||
-							ts.isBindingElement(parent) ||
-							ts.isPropertySignature(parent)) &&
+						(parent.kind === ts.SyntaxKind.PropertyAccessExpression ||
+							parent.kind === ts.SyntaxKind.PropertyAssignment ||
+							parent.kind === ts.SyntaxKind.ShorthandPropertyAssignment ||
+							parent.kind === ts.SyntaxKind.Parameter ||
+							parent.kind === ts.SyntaxKind.VariableDeclaration ||
+							parent.kind === ts.SyntaxKind.PropertyDeclaration ||
+							parent.kind === ts.SyntaxKind.BindingElement ||
+							parent.kind === ts.SyntaxKind.PropertySignature) &&
 						parent.name === node
 					) {
 						return;

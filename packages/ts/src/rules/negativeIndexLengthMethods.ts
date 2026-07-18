@@ -77,7 +77,7 @@ function getNegativeIndexLengthNode(
 	const unwrapped = unwrapParenthesizedNode(node);
 
 	if (
-		!ts.isBinaryExpression(unwrapped) ||
+		unwrapped.kind !== ts.SyntaxKind.BinaryExpression ||
 		unwrapped.operatorToken.kind !== ts.SyntaxKind.MinusToken
 	) {
 		return;
@@ -107,14 +107,14 @@ function isLengthPropertyAccess(
 	sourceFile: AST.SourceFile,
 ): node is AST.PropertyAccessExpression {
 	return (
-		ts.isPropertyAccessExpression(node) &&
+		node.kind === ts.SyntaxKind.PropertyAccessExpression &&
 		node.name.text === "length" &&
 		hasSameTokens(node.expression, target, sourceFile)
 	);
 }
 
 function isPositiveNumericLiteral(node: AST.Expression) {
-	if (!ts.isNumericLiteral(node)) {
+	if (node.kind !== ts.SyntaxKind.NumericLiteral) {
 		return false;
 	}
 
@@ -158,20 +158,30 @@ function isSupportedType(
 }
 
 function isValidPrototypePattern(node: AST.Expression, method: string) {
-	if (ts.isArrayLiteralExpression(node) && !node.elements.length) {
+	if (
+		node.kind === ts.SyntaxKind.ArrayLiteralExpression &&
+		!node.elements.length
+	) {
 		return true;
 	}
 
-	if (method === "slice" && ts.isStringLiteral(node) && node.text === "") {
+	if (
+		method === "slice" &&
+		node.kind === ts.SyntaxKind.StringLiteral &&
+		node.text === ""
+	) {
 		return true;
 	}
 
-	if (!ts.isPropertyAccessExpression(node) || node.name.text !== "prototype") {
+	if (
+		node.kind !== ts.SyntaxKind.PropertyAccessExpression ||
+		node.name.text !== "prototype"
+	) {
 		return false;
 	}
 
 	const object = node.expression;
-	if (!ts.isIdentifier(object)) {
+	if (object.kind !== ts.SyntaxKind.Identifier) {
 		return false;
 	}
 
@@ -179,7 +189,7 @@ function isValidPrototypePattern(node: AST.Expression, method: string) {
 }
 
 function parseCallExpression(node: AST.CallExpression): ParsedCall | undefined {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
+	if (node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression) {
 		return;
 	}
 
@@ -205,12 +215,12 @@ function parsePrototypeCall(
 	node: AST.CallExpression,
 	isApply: boolean,
 ): ParsedCall | undefined {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
+	if (node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression) {
 		return;
 	}
 
 	const callee = node.expression.expression;
-	if (!ts.isPropertyAccessExpression(callee)) {
+	if (callee.kind !== ts.SyntaxKind.PropertyAccessExpression) {
 		return;
 	}
 
@@ -232,12 +242,13 @@ function parsePrototypeCall(
 
 	if (isApply) {
 		const arrayArgument = restArguments[0];
-		if (!arrayArgument || !ts.isArrayLiteralExpression(arrayArgument)) {
+		if (arrayArgument?.kind !== ts.SyntaxKind.ArrayLiteralExpression) {
 			return;
 		}
 
 		const argumentNodes = arrayArgument.elements.filter(
-			(element): element is AST.Expression => !ts.isSpreadElement(element),
+			(element): element is AST.Expression =>
+				element.kind !== ts.SyntaxKind.SpreadElement,
 		);
 
 		return {

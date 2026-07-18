@@ -68,8 +68,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					function checkExportDeclaration(statement: AST.ExportDeclaration) {
 						if (
-							statement.exportClause &&
-							ts.isNamedExports(statement.exportClause) &&
+							statement.exportClause?.kind === ts.SyntaxKind.NamedExports &&
 							!statement.isTypeOnly
 						) {
 							for (const specifier of statement.exportClause.elements) {
@@ -88,7 +87,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 
 						for (const declaration of statement.declarationList.declarations) {
-							if (ts.isIdentifier(declaration.name)) {
+							if (declaration.name.kind === ts.SyntaxKind.Identifier) {
 								checkAndReportDuplicate(
 									declaration.name.text,
 									declaration.name,

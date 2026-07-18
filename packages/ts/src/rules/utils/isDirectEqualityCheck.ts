@@ -22,7 +22,7 @@ export function isDirectEqualityCheck(
 			break;
 	}
 
-	if (!body || !ts.isBinaryExpression(body)) {
+	if (body?.kind !== ts.SyntaxKind.BinaryExpression) {
 		return undefined;
 	}
 
@@ -32,8 +32,10 @@ export function isDirectEqualityCheck(
 		return undefined;
 	}
 
-	const isLeftParam = ts.isIdentifier(left) && left.text === parameterName;
-	const isRightParam = ts.isIdentifier(right) && right.text === parameterName;
+	const isLeftParam =
+		left.kind === ts.SyntaxKind.Identifier && left.text === parameterName;
+	const isRightParam =
+		right.kind === ts.SyntaxKind.Identifier && right.text === parameterName;
 
 	if (isLeftParam && !isRightParam) {
 		return right;

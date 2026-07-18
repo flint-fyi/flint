@@ -55,7 +55,7 @@ function getImportSource(
 	node: AST.ImportDeclaration,
 	sourceFile: AST.SourceFile,
 ) {
-	return ts.isStringLiteral(node.moduleSpecifier)
+	return node.moduleSpecifier.kind === ts.SyntaxKind.StringLiteral
 		? node.moduleSpecifier.text
 		: node.moduleSpecifier.getText(sourceFile);
 }
@@ -217,8 +217,8 @@ function isOnlyTypeReference(node: AST.Identifier) {
 		}
 
 		if (
-			ts.isTypeAliasDeclaration(parent) ||
-			ts.isInterfaceDeclaration(parent) ||
+			parent.kind === ts.SyntaxKind.TypeAliasDeclaration ||
+			parent.kind === ts.SyntaxKind.InterfaceDeclaration ||
 			ts.isTypeParameterDeclaration(parent)
 		) {
 			return true;
@@ -353,7 +353,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (options.prefer === "no-type-imports") {
 						for (const statement of node.statements) {
 							if (
-								!ts.isImportDeclaration(statement) ||
+								statement.kind !== ts.SyntaxKind.ImportDeclaration ||
 								!statement.importClause
 							) {
 								continue;
@@ -410,7 +410,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const references = new Map<ImportedSpecifier, AST.Identifier[]>();
 
 					for (const statement of node.statements) {
-						if (!ts.isImportDeclaration(statement) || !statement.importClause) {
+						if (
+							statement.kind !== ts.SyntaxKind.ImportDeclaration ||
+							!statement.importClause
+						) {
 							continue;
 						}
 
@@ -441,7 +444,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					function collectReferences(node: AST.AnyNode) {
-						if (ts.isIdentifier(node) && !isInImportDeclaration(node)) {
+						if (
+							node.kind === ts.SyntaxKind.Identifier &&
+							!isInImportDeclaration(node)
+						) {
 							const symbol = getReferencedSymbol(typeChecker, node);
 							const importedSpecifier = importedSpecifiers.find(
 								(specifier) =>
@@ -461,7 +467,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					for (const statement of node.statements) {
 						if (
-							!ts.isImportDeclaration(statement) ||
+							statement.kind !== ts.SyntaxKind.ImportDeclaration ||
 							!statement.importClause ||
 							isTypeImportDeclaration(statement)
 						) {

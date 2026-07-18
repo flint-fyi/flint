@@ -52,9 +52,9 @@ function getPropertyName(
 	sourceFile: AST.SourceFile,
 ) {
 	if (
-		ts.isIdentifier(accessor.name) ||
-		ts.isStringLiteral(accessor.name) ||
-		ts.isNumericLiteral(accessor.name)
+		accessor.name.kind === ts.SyntaxKind.Identifier ||
+		accessor.name.kind === ts.SyntaxKind.StringLiteral ||
+		accessor.name.kind === ts.SyntaxKind.NumericLiteral
 	) {
 		return accessor.name.text;
 	}

@@ -108,9 +108,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const style = options.style;
 
 			if (
-				!initializer ||
-				!ts.isNewExpression(initializer) ||
-				!ts.isIdentifier(initializer.expression)
+				initializer?.kind !== ts.SyntaxKind.NewExpression ||
+				initializer.expression.kind !== ts.SyntaxKind.Identifier
 			) {
 				return;
 			}
@@ -155,7 +154,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			if (
 				!ts.isTypeReferenceNode(typeAnnotation) ||
-				!ts.isIdentifier(typeAnnotation.typeName) ||
+				typeAnnotation.typeName.kind !== ts.SyntaxKind.Identifier ||
 				typeAnnotation.typeName.text !== constructorName ||
 				isBuiltInTypedArray(typeAnnotation.typeName.text) ||
 				!!typeAnnotation.typeArguments !== !initializer.typeArguments
