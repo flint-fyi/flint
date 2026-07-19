@@ -68,16 +68,17 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 							filename = filename.slice("\\\\?\\".length);
 						}
 						if (filename === normalizedWatchBasename) {
-							const changedPath = fs
-								.statSync(normalizedWatchPath, { throwIfNoEntry: false })
-								?.isDirectory()
-								? normalizePath(path.resolve(normalizedWatchPath, filename))
-								: normalizedWatchPath;
 							// /foo/bar is a directory
 							// /foo/bar/bar is a file
 							// fs.watch('/foo/bar')
 							// /foo/bar/bar deleted -> filename === bar
 							// /foo/bar deleted -> filename === bar
+							const changedPath = fs
+								.statSync(normalizedWatchPath, { throwIfNoEntry: false })
+								?.isDirectory()
+								? normalizePath(path.resolve(normalizedWatchPath, filename))
+								: normalizedWatchPath;
+
 							if (statAndEmitIfChanged(changedPath)) {
 								return;
 							}

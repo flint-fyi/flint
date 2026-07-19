@@ -62,7 +62,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					break;
 				}
-				// No default
 			}
 		}
 

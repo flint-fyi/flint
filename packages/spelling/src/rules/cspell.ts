@@ -158,15 +158,13 @@ export default ruleCreator.createRule(textLanguage, {
 			visitors: {
 				file: (text, { filePath, filePathAbsolute }) => {
 					fileTasks.push({
-						documentValidatorTask: (async () => {
-							const config = await configPromise;
-							return createDocumentValidator(
+						documentValidatorTask: (async () =>
+							createDocumentValidator(
 								cwd,
 								filePathAbsolute,
 								text,
-								config,
-							);
-						})(),
+								await configPromise,
+							))(),
 						filePath,
 						text,
 					});

@@ -154,6 +154,7 @@ export default defineConfig(
 			// single-instance invariants at module load time.
 			"unicorn/no-top-level-side-effects": "off",
 
+			// Too opinionated.
 			"unicorn/prefer-await": "off",
 
 			// Conflicts with Prettier: Prettier lowercases hex digits
@@ -173,6 +174,13 @@ export default defineConfig(
 			// backslashes; converting to String.raw exposes \8/\9 escapes
 			// that trigger ts/nonOctalDecimalEscapes on the test itself.
 			"unicorn/prefer-string-raw": "off",
+
+			// Use the type-aware version.
+			"@typescript-eslint/require-array-sort-compare": [
+				"error",
+				{ ignoreStringArrays: true },
+			],
+			"unicorn/require-array-sort-compare": "off",
 		},
 		settings: {
 			perfectionist: { partitionByComment: true, type: "natural" },

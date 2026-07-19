@@ -51,7 +51,7 @@ export async function writeToCache(
 					{
 						...omitEmpty({
 							dependencies: Array.from(fileResults.dependencies).toSorted(
-								(a, b) => a.localeCompare(b),
+								(a, b) => a.localeCompare(b, "en-US"),
 							),
 							languageReports: fileResults.languageReports,
 							reports: fileResults.reports,

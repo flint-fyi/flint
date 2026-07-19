@@ -739,7 +739,7 @@ describe(createVFSLinterHost, () => {
 				exclude: [],
 			});
 
-			expect(matches.toSorted((a, b) => a.localeCompare(b))).toEqual([
+			expect(matches.toSorted((a, b) => a.localeCompare(b, "en-US"))).toEqual([
 				"base-only.ts",
 				"overlay-only.ts",
 				"shared.ts",
@@ -774,7 +774,7 @@ describe(createVFSLinterHost, () => {
 				exclude: [],
 			});
 
-			expect(matches.toSorted((a, b) => a.localeCompare(b))).toEqual([
+			expect(matches.toSorted((a, b) => a.localeCompare(b, "en-US"))).toEqual([
 				".changeset/a.md",
 				".github/foo.md",
 			]);

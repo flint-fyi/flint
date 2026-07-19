@@ -121,11 +121,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return;
 				}
 
-				const elseKeyword = grandparent
+				const hasElseKeyword = grandparent
 					.getChildren(sourceFile)
 					.some((child) => child.kind === SyntaxKind.ElseKeyword);
 
-				if (!elseKeyword) {
+				if (!hasElseKeyword) {
 					return;
 				}
 

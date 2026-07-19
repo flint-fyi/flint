@@ -175,7 +175,7 @@ function getExpectedValueDescription(
 			const validTokens = tokenValues[propertyName];
 			if (validTokens !== undefined) {
 				const tokens = Array.from(validTokens).toSorted((a, b) =>
-					a.localeCompare(b),
+					a.localeCompare(b, "en-US"),
 				);
 				return tokens.length > 4
 					? `one of: ${tokens.slice(0, 4).join(", ")}, ...`
