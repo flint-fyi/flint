@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-code-point -- UTF-16 code units are intentional for surrogate detection */
 import type { AnyNode, NumberNode, StringNode } from "@humanwhocodes/momoa";
 
 import { getNodeRange, jsonLanguage } from "@flint.fyi/json-language";
@@ -10,7 +11,6 @@ const MIN_NORMAL = 2.2250738585072014e-308;
 
 function hasLoneSurrogate(text: string): boolean {
 	for (let i = 0; i < text.length; i++) {
-		// eslint-disable-next-line unicorn/prefer-code-point -- UTF-16 code units are intentional for surrogate detection
 		const code = text.charCodeAt(i);
 
 		if (code >= 0xdc_00 && code <= 0xdf_ff) {
@@ -18,7 +18,6 @@ function hasLoneSurrogate(text: string): boolean {
 		}
 
 		if (code >= 0xd8_00 && code <= 0xdb_ff) {
-			// eslint-disable-next-line unicorn/prefer-code-point -- UTF-16 code units are intentional for surrogate detection
 			const next = text.charCodeAt(i + 1);
 			if (!(next >= 0xdc_00 && next <= 0xdf_ff)) {
 				return true;
@@ -179,7 +178,6 @@ export default ruleCreator.createRule(jsonLanguage, {
 
 					break;
 				}
-				// No default
 			}
 		}
 

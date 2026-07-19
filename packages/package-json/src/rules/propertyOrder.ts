@@ -46,7 +46,7 @@ export default ruleCreator.createRule(jsonLanguage, {
 					const allKeys = Object.keys(json);
 					const orderedNonStandardKeys = allKeys
 						.filter((key) => !sortOrder.includes(key))
-						.toSorted((a, b) => a.localeCompare(b));
+						.toSorted((a, b) => a.localeCompare(b, "en-US"));
 
 					const expectedOrder = sortObjectKeys(json, [
 						...sortOrder,

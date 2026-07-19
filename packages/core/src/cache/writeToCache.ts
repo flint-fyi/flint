@@ -50,7 +50,7 @@ export async function writeToCache(
 					{
 						...(fileResults.dependencies.size && {
 							dependencies: Array.from(fileResults.dependencies).toSorted(
-								(a, b) => a.localeCompare(b),
+								(a, b) => a.localeCompare(b, "en-US"),
 							),
 						}),
 						...(fileResults.languageReports.length && {

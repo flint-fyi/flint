@@ -156,12 +156,12 @@ function checkRedundantOrComparison(
 ) {
 	for (const [index, a] of comparisons.entries()) {
 		for (const b of comparisons.slice(index + 1)) {
-			// Must compare the same operands
-			// Also check flipped operands
 			if (
+				// Must compare the same operands
 				(!hasSameTokens(a.variable, b.variable, sourceFile) ||
 					!hasSameTokens(a.node.left, b.node.left, sourceFile) ||
 					!hasSameTokens(a.node.right, b.node.right, sourceFile)) &&
+				// Also check flipped operands
 				(!hasSameTokens(a.node.left, b.node.right, sourceFile) ||
 					!hasSameTokens(a.node.right, b.node.left, sourceFile))
 			) {
