@@ -24,6 +24,7 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/build": {
+			ignoreDependencies: ["tsdown!"],
 			project: ["src/**/*.ts!"],
 		},
 		"packages/comparisons": {
