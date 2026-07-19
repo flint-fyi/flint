@@ -432,6 +432,9 @@ importers:
       '@eslint/markdown':
         specifier: catalog:dev
         version: 8.0.0
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:packages/build
       '@flint.fyi/node':
         specifier: workspace:^
         version: link:packages/node
@@ -562,6 +565,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -599,6 +605,9 @@ importers:
         specifier: ^5.9.0 || ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -621,6 +630,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -630,6 +642,12 @@ importers:
       vitest:
         specifier: catalog:dev
         version: 4.1.0(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+
+  packages/build:
+    dependencies:
+      tsdown:
+        specifier: catalog:dev
+        version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
 
   packages/cli:
     dependencies:
@@ -664,6 +682,9 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       prettier:
         specifier: catalog:dev
         version: 3.8.1
@@ -737,6 +758,9 @@ importers:
       '@eslint/markdown':
         specifier: catalog:dev
         version: 8.0.0
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@next/eslint-plugin-next':
         specifier: 16.2.6
         version: 16.2.6
@@ -855,6 +879,9 @@ importers:
         specifier: ^4.3.6
         version: 4.4.1
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@types/omit-empty':
         specifier: catalog:dev
         version: 1.0.4
@@ -880,6 +907,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -902,6 +932,9 @@ importers:
         specifier: ^5.9.0 || ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@types/css-tree':
         specifier: 2.3.11
         version: 2.3.11
@@ -914,6 +947,9 @@ importers:
 
   packages/e2e:
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/spelling':
         specifier: workspace:^
         version: link:../spelling
@@ -966,6 +1002,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       prettier:
         specifier: catalog:dev
         version: 3.8.1
@@ -985,6 +1024,9 @@ importers:
         specifier: ^4.3.6
         version: 4.4.1
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -1007,6 +1049,9 @@ importers:
         specifier: ^3.3.10
         version: 3.3.10
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -1032,6 +1077,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -1072,6 +1120,9 @@ importers:
         specifier: ^5.0.0
         version: 5.1.0
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -1094,6 +1145,9 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -1116,6 +1170,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -1135,6 +1192,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -1154,6 +1214,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -1188,6 +1251,9 @@ importers:
         specifier: ^4.3.6
         version: 4.4.1
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -1219,6 +1285,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -1244,6 +1313,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -1256,6 +1328,9 @@ importers:
 
   packages/plugin-internal:
     dependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
@@ -1273,6 +1348,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -1289,6 +1367,9 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -1395,6 +1476,9 @@ importers:
 
   packages/solid:
     dependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
@@ -1424,6 +1508,9 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -1452,6 +1539,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -1501,6 +1591,9 @@ importers:
         specifier: ^5.9.0 || ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -1514,6 +1607,9 @@ importers:
         specifier: workspace:^
         version: link:../core
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -1548,6 +1644,9 @@ importers:
         specifier: ^4.3.6
         version: 4.4.1
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -1560,6 +1659,9 @@ importers:
 
   packages/ts-patch:
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -1594,6 +1696,9 @@ importers:
         specifier: ^5.9.0 || ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -1603,6 +1708,9 @@ importers:
 
   packages/utils:
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -1622,6 +1730,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -1656,6 +1767,9 @@ importers:
         specifier: ^5.9.0 || ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -1687,6 +1801,9 @@ importers:
         specifier: ^5.9.0 || ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -1730,6 +1847,9 @@ importers:
         specifier: ^5.9.0 || ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
@@ -1749,6 +1869,9 @@ importers:
         specifier: workspace:^
         version: link:../yaml-language
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/rule-tester':
         specifier: workspace:^
         version: link:../rule-tester
@@ -1764,6 +1887,9 @@ importers:
 
   packages/yaml-language:
     dependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
