@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getStaticNumberValue,
@@ -39,8 +39,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
 					switch (node.operatorToken.kind) {
-						case ts.SyntaxKind.AmpersandToken:
-						case ts.SyntaxKind.AsteriskToken:
+						case SyntaxKind.AmpersandToken:
+						case SyntaxKind.AsteriskToken:
 							if (isZeroLiteral(node.left) || isZeroLiteral(node.right)) {
 								context.report({
 									message: "erasingOperation",
@@ -49,7 +49,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 							break;
 
-						case ts.SyntaxKind.SlashToken:
+						case SyntaxKind.SlashToken:
 							if (isZeroLiteral(node.left) && !isZeroLiteral(node.right)) {
 								context.report({
 									message: "erasingOperation",
