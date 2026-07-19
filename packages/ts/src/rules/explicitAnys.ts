@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -10,8 +10,8 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function isNodeWithinKeyofAny(node: AST.AnyKeyword) {
 	return (
-		node.parent.kind === ts.SyntaxKind.TypeOperator &&
-		node.parent.operator === ts.SyntaxKind.KeyOfKeyword
+		node.parent.kind === SyntaxKind.TypeOperator &&
+		node.parent.operator === SyntaxKind.KeyOfKeyword
 	);
 }
 

@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 /**
  * Inspects top-level statements of a TS source file to determine
@@ -25,6 +25,6 @@ export function containsGlobalDeclarations(sourceFileNode: ts.SourceFile) {
 		}
 
 		const modifiers = ts.getModifiers(statement);
-		return modifiers?.some((mod) => mod.kind === ts.SyntaxKind.DeclareKeyword);
+		return modifiers?.some((mod) => mod.kind === SyntaxKind.DeclareKeyword);
 	});
 }

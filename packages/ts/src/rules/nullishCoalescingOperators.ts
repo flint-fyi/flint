@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
@@ -35,8 +35,8 @@ function analyzeConditionalForNullish(
 
 	// Simple truthiness check: x ? x : y
 	if (
-		condition.kind === ts.SyntaxKind.Identifier &&
-		whenTrue.kind === ts.SyntaxKind.Identifier &&
+		condition.kind === SyntaxKind.Identifier &&
+		whenTrue.kind === SyntaxKind.Identifier &&
 		condition.text === whenTrue.text
 	) {
 		return {
@@ -49,13 +49,13 @@ function analyzeConditionalForNullish(
 
 	// Negation: !x ? y : x
 	if (
-		condition.kind === ts.SyntaxKind.PrefixUnaryExpression &&
-		condition.operator === ts.SyntaxKind.ExclamationToken
+		condition.kind === SyntaxKind.PrefixUnaryExpression &&
+		condition.operator === SyntaxKind.ExclamationToken
 	) {
 		const operand = condition.operand;
 		if (
-			operand.kind === ts.SyntaxKind.Identifier &&
-			whenFalse.kind === ts.SyntaxKind.Identifier &&
+			operand.kind === SyntaxKind.Identifier &&
+			whenFalse.kind === SyntaxKind.Identifier &&
 			operand.text === whenFalse.text
 		) {
 			return {
@@ -69,7 +69,7 @@ function analyzeConditionalForNullish(
 
 	// Comparison patterns: x !== null ? x : y
 	if (
-		condition.kind === ts.SyntaxKind.BinaryExpression &&
+		condition.kind === SyntaxKind.BinaryExpression &&
 		isNullLikeComparison(condition)
 	) {
 		const { isNegation, value: testValue } =
@@ -99,15 +99,15 @@ function analyzeConditionalForNullish(
 
 	// Logical AND pattern: x !== undefined && x !== null ? x : y
 	if (
-		condition.kind === ts.SyntaxKind.BinaryExpression &&
-		condition.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
+		condition.kind === SyntaxKind.BinaryExpression &&
+		condition.operatorToken.kind === SyntaxKind.AmpersandAmpersandToken
 	) {
 		const leftIsComparison =
-			condition.left.kind === ts.SyntaxKind.BinaryExpression
+			condition.left.kind === SyntaxKind.BinaryExpression
 				? isNullLikeComparison(condition.left)
 				: false;
 		const rightIsComparison =
-			condition.right.kind === ts.SyntaxKind.BinaryExpression
+			condition.right.kind === SyntaxKind.BinaryExpression
 				? isNullLikeComparison(condition.right)
 				: false;
 
@@ -135,15 +135,15 @@ function analyzeConditionalForNullish(
 
 	// Logical OR pattern: x === undefined || x === null ? y : x
 	if (
-		condition.kind === ts.SyntaxKind.BinaryExpression &&
-		condition.operatorToken.kind === ts.SyntaxKind.BarBarToken
+		condition.kind === SyntaxKind.BinaryExpression &&
+		condition.operatorToken.kind === SyntaxKind.BarBarToken
 	) {
 		const leftIsComparison =
-			condition.left.kind === ts.SyntaxKind.BinaryExpression
+			condition.left.kind === SyntaxKind.BinaryExpression
 				? isNullLikeComparison(condition.left)
 				: false;
 		const rightIsComparison =
-			condition.right.kind === ts.SyntaxKind.BinaryExpression
+			condition.right.kind === SyntaxKind.BinaryExpression
 				? isNullLikeComparison(condition.right)
 				: false;
 
@@ -182,9 +182,9 @@ function consequentMatchesTest(
 	}
 
 	if (
-		consequent.kind === ts.SyntaxKind.PropertyAccessExpression ||
-		consequent.kind === ts.SyntaxKind.ElementAccessExpression ||
-		consequent.kind === ts.SyntaxKind.CallExpression
+		consequent.kind === SyntaxKind.PropertyAccessExpression ||
+		consequent.kind === SyntaxKind.ElementAccessExpression ||
+		consequent.kind === SyntaxKind.CallExpression
 	) {
 		return consequentMatchesTest(consequent.expression, test, sourceFile);
 	}
@@ -195,20 +195,20 @@ function consequentMatchesTest(
 function extractAssignmentFromIfStatement(node: AST.IfStatement) {
 	let assignmentExpr: AST.Expression | undefined;
 
-	if (node.thenStatement.kind === ts.SyntaxKind.Block) {
+	if (node.thenStatement.kind === SyntaxKind.Block) {
 		if (node.thenStatement.statements.length === 1) {
 			const stmt = node.thenStatement.statements[0];
-			if (stmt?.kind === ts.SyntaxKind.ExpressionStatement) {
+			if (stmt?.kind === SyntaxKind.ExpressionStatement) {
 				assignmentExpr = stmt.expression;
 			}
 		}
-	} else if (node.thenStatement.kind === ts.SyntaxKind.ExpressionStatement) {
+	} else if (node.thenStatement.kind === SyntaxKind.ExpressionStatement) {
 		assignmentExpr = node.thenStatement.expression;
 	}
 
 	if (
-		assignmentExpr?.kind !== ts.SyntaxKind.BinaryExpression ||
-		assignmentExpr.operatorToken.kind !== ts.SyntaxKind.EqualsToken
+		assignmentExpr?.kind !== SyntaxKind.BinaryExpression ||
+		assignmentExpr.operatorToken.kind !== SyntaxKind.EqualsToken
 	) {
 		return undefined;
 	}
@@ -221,8 +221,8 @@ function extractValueFromComparison(node: AST.BinaryExpression): {
 	value: AST.Expression | null;
 } {
 	const isNegation =
-		node.operatorToken.kind === ts.SyntaxKind.ExclamationEqualsToken ||
-		node.operatorToken.kind === ts.SyntaxKind.ExclamationEqualsEqualsToken;
+		node.operatorToken.kind === SyntaxKind.ExclamationEqualsToken ||
+		node.operatorToken.kind === SyntaxKind.ExclamationEqualsEqualsToken;
 
 	if (isNullLike(node.left)) {
 		return { isNegation, value: node.right };
@@ -239,13 +239,13 @@ function getComparisonOperator(
 	node: AST.BinaryExpression,
 ): NullishCheckOperator {
 	switch (node.operatorToken.kind) {
-		case ts.SyntaxKind.EqualsEqualsEqualsToken:
+		case SyntaxKind.EqualsEqualsEqualsToken:
 			return "===";
-		case ts.SyntaxKind.EqualsEqualsToken:
+		case SyntaxKind.EqualsEqualsToken:
 			return "==";
-		case ts.SyntaxKind.ExclamationEqualsEqualsToken:
+		case SyntaxKind.ExclamationEqualsEqualsToken:
 			return "!==";
-		case ts.SyntaxKind.ExclamationEqualsToken:
+		case SyntaxKind.ExclamationEqualsToken:
 			return "!=";
 		default:
 			return "";
@@ -254,14 +254,14 @@ function getComparisonOperator(
 
 function getIfStatementNullishCheckValue(node: AST.IfStatement) {
 	switch (node.expression.kind) {
-		case ts.SyntaxKind.BinaryExpression:
+		case SyntaxKind.BinaryExpression:
 			if (isNullLikeComparison(node.expression)) {
 				return extractValueFromComparison(node.expression).value ?? undefined;
 			}
 			return;
 
-		case ts.SyntaxKind.PrefixUnaryExpression:
-			if (node.expression.operator === ts.SyntaxKind.ExclamationToken) {
+		case SyntaxKind.PrefixUnaryExpression:
+			if (node.expression.operator === SyntaxKind.ExclamationToken) {
 				return node.expression.operand;
 			}
 			return;
@@ -285,30 +285,29 @@ function getTypeFlags(type: ts.Type): ts.TypeFlags {
 
 function isConditionalTest(node: AST.AnyNode): boolean {
 	switch (node.parent.kind) {
-		case ts.SyntaxKind.BinaryExpression:
+		case SyntaxKind.BinaryExpression:
 			if (
-				node.parent.operatorToken.kind ===
-					ts.SyntaxKind.AmpersandAmpersandToken ||
-				node.parent.operatorToken.kind === ts.SyntaxKind.BarBarToken
+				node.parent.operatorToken.kind === SyntaxKind.AmpersandAmpersandToken ||
+				node.parent.operatorToken.kind === SyntaxKind.BarBarToken
 			) {
 				return isConditionalTest(node.parent);
 			}
 			return false;
 
-		case ts.SyntaxKind.ConditionalExpression:
+		case SyntaxKind.ConditionalExpression:
 			return node.parent.condition === node || isConditionalTest(node.parent);
 
-		case ts.SyntaxKind.DoStatement:
-		case ts.SyntaxKind.IfStatement:
-		case ts.SyntaxKind.WhileStatement:
+		case SyntaxKind.DoStatement:
+		case SyntaxKind.IfStatement:
+		case SyntaxKind.WhileStatement:
 			return node.parent.expression === node;
 
-		case ts.SyntaxKind.ForStatement:
+		case SyntaxKind.ForStatement:
 			return node.parent.condition === node;
 
-		case ts.SyntaxKind.PrefixUnaryExpression:
+		case SyntaxKind.PrefixUnaryExpression:
 			return (
-				node.parent.operator === ts.SyntaxKind.ExclamationToken &&
+				node.parent.operator === SyntaxKind.ExclamationToken &&
 				isConditionalTest(node.parent)
 			);
 
@@ -356,16 +355,14 @@ function isMixedLogicalExpression(node: AST.BinaryExpression) {
 
 		seen.add(current);
 
-		if (current.kind === ts.SyntaxKind.BinaryExpression) {
-			if (
-				current.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
-			) {
+		if (current.kind === SyntaxKind.BinaryExpression) {
+			if (current.operatorToken.kind === SyntaxKind.AmpersandAmpersandToken) {
 				return true;
 			}
 
 			if (
-				current.operatorToken.kind === ts.SyntaxKind.BarBarToken ||
-				current.operatorToken.kind === ts.SyntaxKind.BarBarEqualsToken
+				current.operatorToken.kind === SyntaxKind.BarBarToken ||
+				current.operatorToken.kind === SyntaxKind.BarBarEqualsToken
 			) {
 				queue.push(current.parent, current.left, current.right);
 			}
@@ -386,9 +383,9 @@ function isNullishType(type: ts.Type) {
 // https://github.com/flint-fyi/flint/issues/1298
 function isNullLike(node: AST.AnyNode) {
 	switch (node.kind) {
-		case ts.SyntaxKind.Identifier:
+		case SyntaxKind.Identifier:
 			return node.text === "undefined";
-		case ts.SyntaxKind.NullKeyword:
+		case SyntaxKind.NullKeyword:
 			return true;
 		default:
 			return false;
@@ -397,10 +394,10 @@ function isNullLike(node: AST.AnyNode) {
 
 function isNullLikeComparison(node: AST.BinaryExpression) {
 	return (
-		(node.operatorToken.kind === ts.SyntaxKind.EqualsEqualsToken ||
-			node.operatorToken.kind === ts.SyntaxKind.EqualsEqualsEqualsToken ||
-			node.operatorToken.kind === ts.SyntaxKind.ExclamationEqualsToken ||
-			node.operatorToken.kind === ts.SyntaxKind.ExclamationEqualsEqualsToken) &&
+		(node.operatorToken.kind === SyntaxKind.EqualsEqualsToken ||
+			node.operatorToken.kind === SyntaxKind.EqualsEqualsEqualsToken ||
+			node.operatorToken.kind === SyntaxKind.ExclamationEqualsToken ||
+			node.operatorToken.kind === SyntaxKind.ExclamationEqualsEqualsToken) &&
 		(isNullLike(node.left) || isNullLike(node.right))
 	);
 }
@@ -540,12 +537,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			sourceFile: AST.SourceFile,
 		) {
 			if (
-				node.kind === ts.SyntaxKind.PropertyAccessExpression ||
-				node.kind === ts.SyntaxKind.ElementAccessExpression
+				node.kind === SyntaxKind.PropertyAccessExpression ||
+				node.kind === SyntaxKind.ElementAccessExpression
 			) {
 				if (hasSameTokens(node.expression, test, sourceFile)) {
 					return {
-						needsDot: node.kind === ts.SyntaxKind.ElementAccessExpression,
+						needsDot: node.kind === SyntaxKind.ElementAccessExpression,
 						pos: node.expression.getEnd(),
 					};
 				}
@@ -555,7 +552,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					sourceFile,
 				);
 			}
-			if (node.kind === ts.SyntaxKind.CallExpression) {
+			if (node.kind === SyntaxKind.CallExpression) {
 				return getOptionalChainInsertPosition(
 					node.expression,
 					test,
@@ -614,10 +611,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						(options.ignoreConditionalTests && isConditionalTest(node)) ||
 						(options.ignoreMixedLogicalExpressions &&
 							isMixedLogicalExpression(node)) ||
-						![
-							ts.SyntaxKind.BarBarEqualsToken,
-							ts.SyntaxKind.BarBarToken,
-						].includes(node.operatorToken.kind) ||
+						![SyntaxKind.BarBarEqualsToken, SyntaxKind.BarBarToken].includes(
+							node.operatorToken.kind,
+						) ||
 						shouldIgnoreNode(node.left, options.ignorePrimitives, typeChecker)
 					) {
 						return;
@@ -630,7 +626,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						fix: {
 							range,
 							text:
-								node.operatorToken.kind === ts.SyntaxKind.BarBarToken
+								node.operatorToken.kind === SyntaxKind.BarBarToken
 									? "??"
 									: "??=",
 						},

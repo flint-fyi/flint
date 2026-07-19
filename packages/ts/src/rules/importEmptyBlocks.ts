@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -38,7 +38,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				ImportDeclaration: (node, { sourceFile }) => {
 					if (
 						node.importClause?.namedBindings?.kind !==
-							ts.SyntaxKind.NamedImports ||
+							SyntaxKind.NamedImports ||
 						node.importClause.namedBindings.elements.length
 					) {
 						return;
@@ -60,7 +60,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const commaToken = node.importClause
 						.getChildren(sourceFile)
-						.find((child) => child.kind === ts.SyntaxKind.CommaToken);
+						.find((child) => child.kind === SyntaxKind.CommaToken);
 
 					if (!commaToken) {
 						return;

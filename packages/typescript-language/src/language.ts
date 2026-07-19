@@ -2,7 +2,7 @@ import path from "node:path";
 
 import { createProjectService } from "@typescript-eslint/project-service";
 import { debugForFile } from "debug-for-file";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	createLanguage,
@@ -35,7 +35,7 @@ export interface TypeScriptFileServices {
 
 const log = debugForFile(import.meta.filename);
 
-export const NodeSyntaxKinds = getFirstEnumValues(ts.SyntaxKind);
+export const NodeSyntaxKinds = getFirstEnumValues(SyntaxKind);
 
 interface GlobalLanguageState {
 	packageVersion: string;

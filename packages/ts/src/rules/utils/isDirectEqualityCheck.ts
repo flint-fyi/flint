@@ -1,28 +1,28 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
 export function isDirectEqualityCheck(
 	node: AST.ArrowFunction | AST.FunctionExpression,
-	operators: ts.SyntaxKind[],
+	operators: SyntaxKind[],
 	parameterName: string,
 ) {
 	let body: AST.Expression | undefined;
 
 	switch (node.kind) {
-		case ts.SyntaxKind.ArrowFunction:
+		case SyntaxKind.ArrowFunction:
 			body =
-				node.body.kind === ts.SyntaxKind.Block
+				node.body.kind === SyntaxKind.Block
 					? getDirectReturnExpression(node.body)
 					: node.body;
 			break;
 
-		case ts.SyntaxKind.FunctionExpression:
+		case SyntaxKind.FunctionExpression:
 			body = getDirectReturnExpression(node.body);
 			break;
 	}
 
-	if (body?.kind !== ts.SyntaxKind.BinaryExpression) {
+	if (body?.kind !== SyntaxKind.BinaryExpression) {
 		return undefined;
 	}
 
@@ -33,9 +33,9 @@ export function isDirectEqualityCheck(
 	}
 
 	const isLeftParam =
-		left.kind === ts.SyntaxKind.Identifier && left.text === parameterName;
+		left.kind === SyntaxKind.Identifier && left.text === parameterName;
 	const isRightParam =
-		right.kind === ts.SyntaxKind.Identifier && right.text === parameterName;
+		right.kind === SyntaxKind.Identifier && right.text === parameterName;
 
 	if (isLeftParam && !isRightParam) {
 		return right;
@@ -55,7 +55,7 @@ function getDirectReturnExpression(body: AST.Block) {
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const statement = body.statements[0]!;
 
-	return statement.kind === ts.SyntaxKind.ReturnStatement
+	return statement.kind === SyntaxKind.ReturnStatement
 		? statement.expression
 		: undefined;
 }

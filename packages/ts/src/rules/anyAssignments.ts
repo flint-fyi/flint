@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	typescriptLanguage,
@@ -353,7 +353,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ArrayLiteralExpression: (node, { sourceFile, typeChecker }) => {
 					for (const element of node.elements) {
-						if (element.kind !== ts.SyntaxKind.SpreadElement) {
+						if (element.kind !== SyntaxKind.SpreadElement) {
 							continue;
 						}
 
@@ -403,7 +403,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.initializer,
 					);
 
-					if (node.name.kind === ts.SyntaxKind.ArrayBindingPattern) {
+					if (node.name.kind === SyntaxKind.ArrayBindingPattern) {
 						checkArrayDestructure(
 							node.name,
 							initializerType,
@@ -413,7 +413,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (node.name.kind === ts.SyntaxKind.ObjectBindingPattern) {
+					if (node.name.kind === SyntaxKind.ObjectBindingPattern) {
 						checkObjectDestructure(
 							node.name,
 							initializerType,
@@ -455,9 +455,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					let key: string | undefined;
 
 					if (
-						node.name.kind === ts.SyntaxKind.Identifier ||
-						node.name.kind === ts.SyntaxKind.StringLiteral ||
-						node.name.kind === ts.SyntaxKind.NumericLiteral
+						node.name.kind === SyntaxKind.Identifier ||
+						node.name.kind === SyntaxKind.StringLiteral ||
+						node.name.kind === SyntaxKind.NumericLiteral
 					) {
 						key = node.name.text;
 					}
@@ -554,7 +554,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.initializer,
 					);
 
-					if (node.name.kind === ts.SyntaxKind.ArrayBindingPattern) {
+					if (node.name.kind === SyntaxKind.ArrayBindingPattern) {
 						checkArrayDestructure(
 							node.name,
 							initializerType,
@@ -564,7 +564,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (node.name.kind === ts.SyntaxKind.ObjectBindingPattern) {
+					if (node.name.kind === SyntaxKind.ObjectBindingPattern) {
 						checkObjectDestructure(
 							node.name,
 							initializerType,

@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	DirectivesCollector,
@@ -89,7 +89,7 @@ function computeNextCodeLine(
 	const kind = scanner.scan();
 
 	// Reaching the end of the file means there are no more lines
-	if (kind === ts.SyntaxKind.EndOfFileToken) {
+	if (kind === SyntaxKind.EndOfFileToken) {
 		return undefined;
 	}
 

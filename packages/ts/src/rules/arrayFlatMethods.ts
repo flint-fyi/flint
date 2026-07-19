@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -13,7 +13,7 @@ import { skipParentheses } from "./utils/skipParentheses.ts";
 
 function isConcatApply(node: AST.CallExpression, typeChecker: Checker) {
 	if (
-		node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression ||
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.text !== "apply"
 	) {
 		return false;
@@ -21,7 +21,7 @@ function isConcatApply(node: AST.CallExpression, typeChecker: Checker) {
 
 	const callExpression = node.expression.expression;
 	if (
-		callExpression.kind !== ts.SyntaxKind.PropertyAccessExpression ||
+		callExpression.kind !== SyntaxKind.PropertyAccessExpression ||
 		callExpression.name.text !== "concat"
 	) {
 		return false;
@@ -31,8 +31,8 @@ function isConcatApply(node: AST.CallExpression, typeChecker: Checker) {
 
 	const isEmptyArrayConcat = isEmptyArrayLiteral(concatObject);
 	const isArrayPrototypeConcat =
-		concatObject.kind === ts.SyntaxKind.PropertyAccessExpression &&
-		concatObject.expression.kind === ts.SyntaxKind.Identifier &&
+		concatObject.kind === SyntaxKind.PropertyAccessExpression &&
+		concatObject.expression.kind === SyntaxKind.Identifier &&
 		concatObject.expression.text === "Array" &&
 		concatObject.name.text === "prototype";
 
@@ -60,7 +60,7 @@ function isConcatApply(node: AST.CallExpression, typeChecker: Checker) {
 
 function isConcatCall(node: AST.CallExpression, typeChecker: Checker) {
 	if (
-		node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression ||
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.text !== "call"
 	) {
 		return false;
@@ -68,7 +68,7 @@ function isConcatCall(node: AST.CallExpression, typeChecker: Checker) {
 
 	const callExpression = node.expression.expression;
 	if (
-		callExpression.kind !== ts.SyntaxKind.PropertyAccessExpression ||
+		callExpression.kind !== SyntaxKind.PropertyAccessExpression ||
 		callExpression.name.text !== "concat"
 	) {
 		return false;
@@ -76,8 +76,8 @@ function isConcatCall(node: AST.CallExpression, typeChecker: Checker) {
 
 	const concatObject = callExpression.expression;
 	if (
-		concatObject.kind !== ts.SyntaxKind.PropertyAccessExpression ||
-		concatObject.expression.kind !== ts.SyntaxKind.Identifier ||
+		concatObject.kind !== SyntaxKind.PropertyAccessExpression ||
+		concatObject.expression.kind !== SyntaxKind.Identifier ||
 		concatObject.expression.text !== "Array" ||
 		concatObject.name.text !== "prototype"
 	) {
@@ -96,7 +96,7 @@ function isConcatCall(node: AST.CallExpression, typeChecker: Checker) {
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const secondArg = node.arguments[1]!;
-	if (secondArg.kind !== ts.SyntaxKind.SpreadElement) {
+	if (secondArg.kind !== SyntaxKind.SpreadElement) {
 		return false;
 	}
 
@@ -105,7 +105,7 @@ function isConcatCall(node: AST.CallExpression, typeChecker: Checker) {
 
 function isConcatSpread(node: AST.CallExpression, typeChecker: Checker) {
 	if (
-		node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression ||
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.text !== "concat"
 	) {
 		return false;
@@ -121,7 +121,7 @@ function isConcatSpread(node: AST.CallExpression, typeChecker: Checker) {
 	}
 
 	const arg = node.arguments[0];
-	if (arg?.kind !== ts.SyntaxKind.SpreadElement) {
+	if (arg?.kind !== SyntaxKind.SpreadElement) {
 		return false;
 	}
 
@@ -130,7 +130,7 @@ function isConcatSpread(node: AST.CallExpression, typeChecker: Checker) {
 
 function isEmptyArrayLiteral(node: AST.Expression) {
 	return (
-		node.kind === ts.SyntaxKind.ArrayLiteralExpression && !node.elements.length
+		node.kind === SyntaxKind.ArrayLiteralExpression && !node.elements.length
 	);
 }
 
@@ -138,7 +138,7 @@ function isIdentityArrowFunction(node: AST.Expression) {
 	const expression = skipParentheses(node);
 
 	if (
-		expression.kind !== ts.SyntaxKind.ArrowFunction ||
+		expression.kind !== SyntaxKind.ArrowFunction ||
 		expression.parameters.length !== 1
 	) {
 		return false;
@@ -147,19 +147,17 @@ function isIdentityArrowFunction(node: AST.Expression) {
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const param = expression.parameters[0]!;
 
-	if (param.name.kind !== ts.SyntaxKind.Identifier) {
+	if (param.name.kind !== SyntaxKind.Identifier) {
 		return false;
 	}
 
 	const body = skipParentheses(expression.body as AST.Expression);
-	return (
-		body.kind === ts.SyntaxKind.Identifier && body.text === param.name.text
-	);
+	return body.kind === SyntaxKind.Identifier && body.text === param.name.text;
 }
 
 function isIdentityFlatMapCall(node: AST.CallExpression, typeChecker: Checker) {
 	if (
-		node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression ||
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.text !== "flatMap" ||
 		node.arguments.length !== 1
 	) {

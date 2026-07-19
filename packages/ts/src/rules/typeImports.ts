@@ -55,7 +55,7 @@ function getImportSource(
 	node: AST.ImportDeclaration,
 	sourceFile: AST.SourceFile,
 ) {
-	return node.moduleSpecifier.kind === ts.SyntaxKind.StringLiteral
+	return node.moduleSpecifier.kind === SyntaxKind.StringLiteral
 		? node.moduleSpecifier.text
 		: node.moduleSpecifier.getText(sourceFile);
 }
@@ -74,7 +74,7 @@ function getImportSpecifiers(node: AST.ImportDeclaration) {
 
 	const namedBindings = importClause.namedBindings;
 	if (namedBindings) {
-		if (namedBindings.kind === ts.SyntaxKind.NamespaceImport) {
+		if (namedBindings.kind === SyntaxKind.NamespaceImport) {
 			specifiers.push(namedBindings);
 		} else {
 			specifiers.push(...namedBindings.elements);
@@ -110,7 +110,7 @@ function getTypeImportFix(
 		if (
 			!importClause ||
 			importClause.name ||
-			namedBindings?.kind !== ts.SyntaxKind.NamedImports
+			namedBindings?.kind !== SyntaxKind.NamedImports
 		) {
 			return undefined;
 		}
@@ -137,7 +137,7 @@ function getTypeImportFix(
 		fixStyle === "inline-type-imports" &&
 		importClause &&
 		!importClause.name &&
-		namedBindings?.kind === ts.SyntaxKind.NamedImports
+		namedBindings?.kind === SyntaxKind.NamedImports
 	) {
 		const moduleText = node.moduleSpecifier.getText(sourceFile);
 		const namedText = namedBindings.elements
@@ -212,13 +212,13 @@ function isOnlyTypeReference(node: AST.Identifier) {
 	let parent = node.parent as AST.AnyNode | undefined;
 
 	while (parent) {
-		if (parent.kind === ts.SyntaxKind.HeritageClause) {
+		if (parent.kind === SyntaxKind.HeritageClause) {
 			return parent.token === SyntaxKind.ImplementsKeyword;
 		}
 
 		if (
-			parent.kind === ts.SyntaxKind.TypeAliasDeclaration ||
-			parent.kind === ts.SyntaxKind.InterfaceDeclaration ||
+			parent.kind === SyntaxKind.TypeAliasDeclaration ||
+			parent.kind === SyntaxKind.InterfaceDeclaration ||
 			ts.isTypeParameterDeclaration(parent)
 		) {
 			return true;
@@ -353,7 +353,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (options.prefer === "no-type-imports") {
 						for (const statement of node.statements) {
 							if (
-								statement.kind !== ts.SyntaxKind.ImportDeclaration ||
+								statement.kind !== SyntaxKind.ImportDeclaration ||
 								!statement.importClause
 							) {
 								continue;
@@ -411,7 +411,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					for (const statement of node.statements) {
 						if (
-							statement.kind !== ts.SyntaxKind.ImportDeclaration ||
+							statement.kind !== SyntaxKind.ImportDeclaration ||
 							!statement.importClause
 						) {
 							continue;
@@ -445,7 +445,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					function collectReferences(node: AST.AnyNode) {
 						if (
-							node.kind === ts.SyntaxKind.Identifier &&
+							node.kind === SyntaxKind.Identifier &&
 							!isInImportDeclaration(node)
 						) {
 							const symbol = getReferencedSymbol(typeChecker, node);
@@ -467,7 +467,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					for (const statement of node.statements) {
 						if (
-							statement.kind !== ts.SyntaxKind.ImportDeclaration ||
+							statement.kind !== SyntaxKind.ImportDeclaration ||
 							!statement.importClause ||
 							isTypeImportDeclaration(statement)
 						) {

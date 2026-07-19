@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -71,10 +71,7 @@ function blockReturnsIdentifier(block: AST.Block, parameterName: string) {
 	}
 
 	const statement = block.statements[0];
-	if (
-		statement?.kind !== ts.SyntaxKind.ReturnStatement ||
-		!statement.expression
-	) {
+	if (statement?.kind !== SyntaxKind.ReturnStatement || !statement.expression) {
 		return false;
 	}
 
@@ -83,11 +80,11 @@ function blockReturnsIdentifier(block: AST.Block, parameterName: string) {
 
 function expressionMatchesName(expression: AST.ConciseBody, name: string) {
 	const unwrapped =
-		expression.kind === ts.SyntaxKind.ParenthesizedExpression
+		expression.kind === SyntaxKind.ParenthesizedExpression
 			? expression.expression
 			: expression;
 
-	return unwrapped.kind === ts.SyntaxKind.Identifier && unwrapped.text === name;
+	return unwrapped.kind === SyntaxKind.Identifier && unwrapped.text === name;
 }
 
 function getCoercionCallName(
@@ -95,8 +92,8 @@ function getCoercionCallName(
 	parameterName: string,
 ): string | undefined {
 	if (
-		expression.kind !== ts.SyntaxKind.CallExpression ||
-		expression.expression.kind !== ts.SyntaxKind.Identifier
+		expression.kind !== SyntaxKind.CallExpression ||
+		expression.expression.kind !== SyntaxKind.Identifier
 	) {
 		return undefined;
 	}
@@ -111,7 +108,7 @@ function getCoercionCallName(
 
 	const argument = expression.arguments[0];
 	if (
-		argument?.kind !== ts.SyntaxKind.Identifier ||
+		argument?.kind !== SyntaxKind.Identifier ||
 		argument.text !== parameterName
 	) {
 		return undefined;
@@ -194,7 +191,7 @@ function getSoleParameterText(
 	}
 
 	const parameter = node.parameters[0];
-	if (parameter?.name.kind !== ts.SyntaxKind.Identifier) {
+	if (parameter?.name.kind !== SyntaxKind.Identifier) {
 		return undefined;
 	}
 
@@ -206,24 +203,21 @@ function getWrappedCoercionFunction(
 	parameterName: string,
 ): string | undefined {
 	if (
-		node.kind === ts.SyntaxKind.ArrowFunction &&
-		node.body.kind !== ts.SyntaxKind.Block
+		node.kind === SyntaxKind.ArrowFunction &&
+		node.body.kind !== SyntaxKind.Block
 	) {
 		return getCoercionCallName(node.body, parameterName);
 	}
 
 	if (
-		node.body.kind !== ts.SyntaxKind.Block ||
+		node.body.kind !== SyntaxKind.Block ||
 		node.body.statements.length !== 1
 	) {
 		return undefined;
 	}
 
 	const statement = node.body.statements[0];
-	if (
-		statement?.kind !== ts.SyntaxKind.ReturnStatement ||
-		!statement.expression
-	) {
+	if (statement?.kind !== SyntaxKind.ReturnStatement || !statement.expression) {
 		return undefined;
 	}
 
@@ -234,9 +228,9 @@ function isArrayMethodCallback(
 	node: AST.ArrowFunction | AST.FunctionExpression,
 ) {
 	return (
-		node.parent.kind === ts.SyntaxKind.CallExpression &&
+		node.parent.kind === SyntaxKind.CallExpression &&
 		node.parent.arguments[0] === node &&
-		node.parent.expression.kind === ts.SyntaxKind.PropertyAccessExpression &&
+		node.parent.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		arrayMethodsWithBooleanCallback.has(node.parent.expression.name.text)
 	);
 }
@@ -246,14 +240,14 @@ function isIdentityFunction(
 	soleParameterText: string,
 ) {
 	if (
-		node.kind === ts.SyntaxKind.ArrowFunction &&
-		node.body.kind !== ts.SyntaxKind.Block
+		node.kind === SyntaxKind.ArrowFunction &&
+		node.body.kind !== SyntaxKind.Block
 	) {
 		return expressionMatchesName(node.body, soleParameterText);
 	}
 
 	return (
-		node.body.kind === ts.SyntaxKind.Block &&
+		node.body.kind === SyntaxKind.Block &&
 		blockReturnsIdentifier(node.body, soleParameterText)
 	);
 }
