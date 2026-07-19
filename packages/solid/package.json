@@ -25,6 +25,7 @@
 		"test": "vitest --project solid"
 	},
 	"dependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
 		"typescript": "^6.0.0"
 	},

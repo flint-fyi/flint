@@ -1476,6 +1476,9 @@ importers:
 
   packages/solid:
     dependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
@@ -1887,6 +1890,9 @@ importers:
 
   packages/yaml-language:
     dependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
