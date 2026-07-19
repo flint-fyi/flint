@@ -2,7 +2,10 @@
 set -euo pipefail
 
 curl https://mise.run | sh
-eval "$(~/.local/bin/mise activate bash)"
+# Use shims instead of `mise activate bash`'s shell functions so the orb's
+# repo-managed Node.js/pnpm propagate to child processes like husky's dash
+# pre-commit hook, which would otherwise hit the orb's older system Node.js.
+eval "$(~/.local/bin/mise activate --shims bash)"
 
 mise settings set idiomatic_version_file_enable_tools node,pnpm
 mise install --yes
