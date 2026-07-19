@@ -20,7 +20,7 @@
 		"./tsconfig.base.json": "./tsconfig.base.json",
 		"./tsdown": "./src/tsdown/index.ts"
 	},
-	"dependencies": {
+	"devDependencies": {
 		"tsdown": "catalog:dev"
 	}
 }
