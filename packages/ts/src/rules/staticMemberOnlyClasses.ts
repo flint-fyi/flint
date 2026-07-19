@@ -89,7 +89,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			let hasPrivateConstructorMember = false;
 
 			for (const member of node.members) {
-				if (ts.isConstructorDeclaration(member)) {
+				if (member.kind === ts.SyntaxKind.Constructor) {
 					if (hasPrivateConstructor(member)) {
 						hasPrivateConstructorMember = true;
 						break;
@@ -102,24 +102,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				if (
-					ts.isSemicolonClassElement(member) ||
-					ts.isClassStaticBlockDeclaration(member)
+					member.kind === ts.SyntaxKind.SemicolonClassElement ||
+					member.kind === ts.SyntaxKind.ClassStaticBlockDeclaration
 				) {
 					continue;
 				}
 
-				if (ts.isIndexSignatureDeclaration(member)) {
+				if (member.kind === ts.SyntaxKind.IndexSignature) {
 					hasNonStaticMember = true;
 					break;
 				}
 
-				if (
-					(ts.isPropertyDeclaration(member) ||
-						ts.isMethodDeclaration(member) ||
-						ts.isGetAccessorDeclaration(member) ||
-						ts.isSetAccessorDeclaration(member)) &&
-					!hasStaticModifier(member.modifiers)
-				) {
+				if (!hasStaticModifier(member.modifiers)) {
 					hasNonStaticMember = true;
 					break;
 				}
