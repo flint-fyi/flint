@@ -1,6 +1,6 @@
 import ts from "typescript";
 
-import type { AST } from "@flint.fyi/typescript-language";
+import type { AST, ScopeVariable } from "@flint.fyi/typescript-language";
 
 const knownVitestFunctionNames = [
 	"afterAll",
@@ -95,3 +95,26 @@ function parseVitestCallee(
 			return parseVitestCallee(node.tag, targetNode);
 	}
 }
+
+export const isTestVitestFunction = (node: AST.CallExpression) => {
+	const vitestFunction = parseVitestFunctionCall(node);
+	return vitestFunction?.name === "test";
+};
+
+export const getTestCallExpressionsFromDeclaredVariables = (
+	declaredVariables: readonly ScopeVariable[],
+): AST.CallExpression[] => {
+	return declaredVariables.reduce<AST.CallExpression[]>(
+		(acc, { references }) =>
+			acc.concat(
+				references
+					.map(({ identifier }) => identifier.parent)
+					.filter(
+						(node): node is AST.CallExpression =>
+							node.kind === ts.SyntaxKind.CallExpression &&
+							isTestVitestFunction(node),
+					),
+			),
+		[],
+	);
+};
