@@ -42,7 +42,10 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs",
+			".": {
+				"types": "./dist/index.d.mts",
+				"default": "./dist/index.mjs"
+			},
 			"./install-patch": "./dist/install-patch.mjs",
 			"./install-patch-hooks": "./dist/install-patch-hooks.mjs"
 		}
