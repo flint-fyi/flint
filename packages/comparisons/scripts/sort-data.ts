@@ -3,8 +3,7 @@ import path from "node:path";
 import process from "node:process";
 import { isDeepStrictEqual, parseArgs } from "node:util";
 
-import dataOriginal from "./data.json" with { type: "json" };
-import { comparisonsDataSchema } from "./schemas.ts";
+import { comparisons as dataOriginal } from "@flint.fyi/comparisons" with { type: "json" };
 
 const dataFilePath = path.join(import.meta.dirname, "data.json");
 
@@ -20,13 +19,11 @@ const {
 	},
 });
 
-const dataSorted = comparisonsDataSchema
-	.parse(dataOriginal)
-	.toSorted((a, b) =>
-		a.flint.plugin === b.flint.plugin
-			? a.flint.name.localeCompare(b.flint.name)
-			: a.flint.plugin.localeCompare(b.flint.plugin),
-	);
+const dataSorted = dataOriginal.toSorted((a, b) =>
+	a.flint.plugin === b.flint.plugin
+		? a.flint.name.localeCompare(b.flint.name)
+		: a.flint.plugin.localeCompare(b.flint.plugin),
+);
 
 const dirty = !isDeepStrictEqual(dataOriginal, dataSorted);
 
