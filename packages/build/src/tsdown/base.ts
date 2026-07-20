@@ -6,6 +6,7 @@ export const base: UserConfig = {
 		profile: "esm-only",
 	},
 	clean: ["./node_modules/.cache/tsbuild/"],
+	dts: { build: true, incremental: true },
 	entry: ["src/index.ts"],
 	failOnWarn: true,
 };
