@@ -1,9 +1,9 @@
 {
+	"extends": "@flint.fyi/build/tsconfig.base.json",
 	"compilerOptions": {
 		"noEmit": true,
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.json"
 	},
-	"extends": "./tsconfig.base.json",
 	"files": ["./packages/flint/bin/index.js", "./lint-staged.config.js"],
 	"include": [
 		"./@types/*/*.ts",

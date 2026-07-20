@@ -29,6 +29,7 @@
 		"lib/"
 	],
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev",
 		"typescript": "catalog:dev"
 	},

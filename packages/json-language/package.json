@@ -29,6 +29,7 @@
 		"@humanwhocodes/momoa": "^3.3.10"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

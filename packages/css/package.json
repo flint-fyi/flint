@@ -30,6 +30,7 @@
 		"typescript": "^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"

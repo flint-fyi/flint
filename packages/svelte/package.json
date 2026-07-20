@@ -32,6 +32,7 @@
 		"typescript": "^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"svelte": "5.56.2",
