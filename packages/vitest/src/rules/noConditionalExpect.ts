@@ -12,7 +12,6 @@ import { ruleCreator } from "../ruleCreator.ts";
 import {
 	getTestCallExpressionsFromDeclaredVariables,
 	isTestVitestFunction,
-	parseVitestFunctionCall,
 } from "../utils/parseVitestFunctionCall.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -41,7 +40,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression(node, { options, sourceFile }) {
+				BinaryExpression(node) {
+						if (isLogicalBinaryExpression(node)) {
+							increaseConditionalDepth();
+						}
+					},
+					"BinaryExpression:exit"(node) {
+						if (isLogicalBinaryExpression(node)) {
+							decreaseConditionalDepth();
+						}
+					},
+					CallExpression(node, { options, sourceFile }) {
 					if (isCatchCall(node)) {
 						inPromiseCatch = true;
 					}
@@ -51,16 +60,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							getExpectAssertionsCount(node) ?? expectAssertions;
 					}
 
-					const vitestFunction = parseVitestFunctionCall(node);
-					if (!vitestFunction) {
-						return;
-					}
-
-					if (vitestFunction.name === "test") {
+					if (isTestVitestFunction(node)) {
 						inTestCase = true;
 					}
 
-					if (vitestFunction.name !== "expect") {
+					if (!isExpectCall(node)) {
 						return;
 					}
 
@@ -106,8 +110,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				IfStatement: increaseConditionalDepth,
 				"IfStatement:exit": decreaseConditionalDepth,
-				LogicalExpression: increaseConditionalDepth,
-				"LogicalExpression:exit": decreaseConditionalDepth,
 				SwitchStatement: increaseConditionalDepth,
 				"SwitchStatement:exit": decreaseConditionalDepth,
 			},
@@ -155,6 +157,22 @@ function isCatchCall({ expression }: AST.CallExpression): boolean {
 		);
 	}
 	return false;
+}
+
+function isExpectCall({ expression }: AST.CallExpression): boolean {
+	return (
+		expression.kind === ts.SyntaxKind.Identifier && expression.text === "expect"
+	);
+}
+
+function isLogicalBinaryExpression({
+	operatorToken,
+}: AST.BinaryExpression): boolean {
+	return (
+		operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken ||
+		operatorToken.kind === ts.SyntaxKind.BarBarToken ||
+		operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken
+	);
 }
 
 // e.g. 1_000 -> 1000

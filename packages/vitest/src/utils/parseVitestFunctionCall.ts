@@ -13,7 +13,6 @@ const knownVitestFunctionNames = [
 	"test",
 	"xdescribe",
 	"xit",
-	"xit",
 	"xtest",
 ] as const;
 
@@ -96,9 +95,11 @@ function parseVitestCallee(
 	}
 }
 
+const testCaseFunctionNamesSet = new Set(["fit", "it", "test", "xit", "xtest"]);
+
 export const isTestVitestFunction = (node: AST.CallExpression) => {
 	const vitestFunction = parseVitestFunctionCall(node);
-	return vitestFunction?.name === "test";
+	return vitestFunction != null && testCaseFunctionNamesSet.has(vitestFunction.name);
 };
 
 export const getTestCallExpressionsFromDeclaredVariables = (
