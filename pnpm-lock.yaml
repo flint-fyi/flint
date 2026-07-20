@@ -1476,9 +1476,6 @@ importers:
 
   packages/solid:
     dependencies:
-      '@flint.fyi/build':
-        specifier: workspace:^
-        version: link:../build
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
@@ -1486,6 +1483,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -1887,9 +1887,6 @@ importers:
 
   packages/yaml-language:
     dependencies:
-      '@flint.fyi/build':
-        specifier: workspace:^
-        version: link:../build
       '@flint.fyi/core':
         specifier: workspace:^
         version: link:../core
@@ -1900,6 +1897,9 @@ importers:
         specifier: ^3.0.0
         version: 3.2.0
     devDependencies:
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.21.3)(typescript@6.0.3)
