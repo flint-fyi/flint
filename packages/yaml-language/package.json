@@ -25,7 +25,6 @@
 		"test": "vitest --project yaml-language"
 	},
 	"dependencies": {
-		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"yaml-unist-parser": "^3.0.0"
