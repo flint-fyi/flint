@@ -739,9 +739,6 @@ importers:
       '@flint.fyi/yaml':
         specifier: workspace:^
         version: link:../yaml
-      prettier:
-        specifier: 3.8.1
-        version: 3.8.1
       zod:
         specifier: ^4.3.6
         version: 4.4.1
