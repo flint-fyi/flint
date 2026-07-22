@@ -116,48 +116,32 @@ This default-exported class is missing an informative name.
 			code: `export = function () {};`,
 			files: {
 				...createRuleTesterTSConfig({
-					module: "Node16",
-					moduleResolution: "node16",
+					module: "commonjs",
 				}),
-				"package.json": `{
-	"type": "commonjs"
-}`,
 			},
 		},
 		{
 			code: `export = class {};`,
 			files: {
 				...createRuleTesterTSConfig({
-					module: "Node16",
-					moduleResolution: "node16",
+					module: "commonjs",
 				}),
-				"package.json": `{
-	"type": "commonjs"
-}`,
 			},
 		},
 		{
 			code: `export = function named() {};`,
 			files: {
 				...createRuleTesterTSConfig({
-					module: "Node16",
-					moduleResolution: "node16",
+					module: "commonjs",
 				}),
-				"package.json": `{
-	"type": "commonjs"
-}`,
 			},
 		},
 		{
 			code: `export = class Named {};`,
 			files: {
 				...createRuleTesterTSConfig({
-					module: "Node16",
-					moduleResolution: "node16",
+					module: "commonjs",
 				}),
-				"package.json": `{
-	"type": "commonjs"
-}`,
 			},
 		},
 	],
