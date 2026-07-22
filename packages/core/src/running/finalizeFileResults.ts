@@ -25,7 +25,6 @@ export interface FinalizedFileResults {
  *   - Cache dependencies: from each language file
  *   - LanguageReport: from each language file (if not skipped)
  *   - Reports: from rules reports by file path
- * ...and then disposes of each language file.
  */
 export function finalizeFileResults(
 	filePath: string,
@@ -38,11 +37,6 @@ export function finalizeFileResults(
 	const fileDependencies = new Set<string>();
 	const languageReports: LanguageReport[] = [];
 	let invalidatesCache = false;
-	using files = new DisposableStack();
-
-	for (const { file } of languageAndFiles) {
-		files.use(file);
-	}
 
 	for (const { file, language } of languageAndFiles) {
 		if (file.directives) {
