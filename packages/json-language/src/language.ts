@@ -11,7 +11,6 @@ import { createLanguage, type Language } from "@flint.fyi/core";
 import type { JsonNodeVisitors } from "./nodes.ts";
 
 export interface JsonFileServices {
-	filePath: string;
 	filePathAbsolute: string;
 	root: DocumentNode;
 	sourceText: string;
@@ -33,7 +32,6 @@ export const jsonLanguage: Language<JsonNodeVisitors, JsonFileServices> =
 					return {
 						about: data,
 						services: {
-							filePath: data.filePath,
 							filePathAbsolute: data.filePathAbsolute,
 							root,
 							sourceText: data.sourceText,
