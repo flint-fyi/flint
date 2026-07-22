@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind, TypeFlags } from "typescript";
 
 import {
 	isGlobalDeclarationOfName,
@@ -40,11 +40,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression(node, { sourceFile, typeChecker }) {
 					if (
-						ts.isPropertyAccessExpression(node.expression) &&
+						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 						node.expression.name.text === "charCodeAt" &&
 						tsutils.isTypeFlagSet(
 							typeChecker.getTypeAtLocation(node.expression.expression),
-							ts.TypeFlags.StringLike,
+							TypeFlags.StringLike,
 						)
 					) {
 						context.report({
@@ -56,11 +56,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					}
 				},
-				PropertyAccessExpression(node, { sourceFile, typeChecker }) {
+				PropertyAccessExpression(node, { program, sourceFile, typeChecker }) {
 					if (
 						node.name.text === "fromCharCode" &&
-						ts.isIdentifier(node.expression) &&
-						isGlobalDeclarationOfName(node.expression, "String", typeChecker)
+						node.expression.kind === SyntaxKind.Identifier &&
+						isGlobalDeclarationOfName(
+							node.expression,
+							"String",
+							typeChecker,
+							program,
+						)
 					) {
 						context.report({
 							message: "preferFromCodePoint",

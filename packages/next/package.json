@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/next",
-	"version": "0.2.4",
+	"version": "0.3.0",
 	"description": "[Experimental] A Flint plugin for Next.js code.",
 	"homepage": "https://flint.fyi/rules/next",
 	"repository": {
@@ -26,9 +26,10 @@
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"typescript": "^5.9.3 || ^6.0.0"
+		"typescript": "^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev"
 	},
 	"engines": {

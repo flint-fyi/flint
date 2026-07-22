@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -10,7 +10,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 // TODO: This will be more clean when there is a scope manager
 // https://github.com/flint-fyi/flint/issues/400
 function containsThis(node: ts.Node): boolean {
-	if (node.kind === ts.SyntaxKind.ThisKeyword) {
+	if (node.kind === SyntaxKind.ThisKeyword) {
 		return true;
 	}
 
@@ -57,16 +57,16 @@ function isStaticValue(node: ts.Expression): boolean {
 	}
 
 	return (
-		node.kind === ts.SyntaxKind.ThisKeyword ||
-		node.kind === ts.SyntaxKind.SuperKeyword ||
-		node.kind === ts.SyntaxKind.TrueKeyword ||
-		node.kind === ts.SyntaxKind.FalseKeyword ||
-		node.kind === ts.SyntaxKind.NullKeyword ||
+		node.kind === SyntaxKind.ThisKeyword ||
+		node.kind === SyntaxKind.SuperKeyword ||
+		node.kind === SyntaxKind.TrueKeyword ||
+		node.kind === SyntaxKind.FalseKeyword ||
+		node.kind === SyntaxKind.NullKeyword ||
 		ts.isBigIntLiteral(node) ||
 		ts.isNumericLiteral(node) ||
 		ts.isStringLiteral(node) ||
 		ts.isNoSubstitutionTemplateLiteral(node) ||
-		node.kind === ts.SyntaxKind.RegularExpressionLiteral
+		node.kind === SyntaxKind.RegularExpressionLiteral
 	);
 }
 
@@ -113,7 +113,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression(node, { sourceFile }) {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.text !== "bind" ||
 						node.arguments.length !== 1
 					) {

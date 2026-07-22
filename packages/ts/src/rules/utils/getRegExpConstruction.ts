@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getStaticStringValue,
@@ -9,12 +9,12 @@ import {
 
 export function getRegExpConstruction(
 	node: AST.CallExpression | AST.NewExpression,
-	{ sourceFile, typeChecker }: TypeScriptFileServices,
+	{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 ) {
 	if (
-		node.expression.kind !== ts.SyntaxKind.Identifier ||
+		node.expression.kind !== SyntaxKind.Identifier ||
 		node.expression.text !== "RegExp" ||
-		!isGlobalDeclarationOfName(node.expression, "RegExp", typeChecker)
+		!isGlobalDeclarationOfName(node.expression, "RegExp", typeChecker, program)
 	) {
 		return;
 	}
@@ -28,8 +28,8 @@ export function getRegExpConstruction(
 	const firstArgument = args[0]!;
 
 	if (
-		firstArgument.kind !== ts.SyntaxKind.StringLiteral &&
-		firstArgument.kind !== ts.SyntaxKind.NoSubstitutionTemplateLiteral
+		firstArgument.kind !== SyntaxKind.StringLiteral &&
+		firstArgument.kind !== SyntaxKind.NoSubstitutionTemplateLiteral
 	) {
 		return;
 	}

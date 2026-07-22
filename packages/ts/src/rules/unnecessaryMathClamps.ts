@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	getStaticNumberValue,
@@ -12,7 +12,11 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function getMathMethodInfo(node: AST.Expression, typeChecker: Checker) {
+function getMathMethodInfo(
+	node: AST.Expression,
+	typeChecker: Checker,
+	program: Program,
+) {
 	const unwrapped = unwrapParenthesizedNode(node);
 
 	if (
@@ -24,7 +28,7 @@ function getMathMethodInfo(node: AST.Expression, typeChecker: Checker) {
 		return undefined;
 	}
 
-	if (isMathMethod(unwrapped.expression, "min", typeChecker)) {
+	if (isMathMethod(unwrapped.expression, "min", typeChecker, program)) {
 		return {
 			arguments: Array.from(unwrapped.arguments),
 			method: "min",
@@ -32,7 +36,7 @@ function getMathMethodInfo(node: AST.Expression, typeChecker: Checker) {
 		};
 	}
 
-	if (isMathMethod(unwrapped.expression, "max", typeChecker)) {
+	if (isMathMethod(unwrapped.expression, "max", typeChecker, program)) {
 		return {
 			arguments: Array.from(unwrapped.arguments),
 			method: "max",
@@ -47,6 +51,7 @@ function isMathMethod(
 	node: AST.Expression,
 	methodName: string,
 	typeChecker: Checker,
+	program: Program,
 ) {
 	return (
 		node.kind === SyntaxKind.PropertyAccessExpression &&
@@ -54,7 +59,7 @@ function isMathMethod(
 		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === methodName &&
 		node.expression.kind === SyntaxKind.Identifier &&
-		isGlobalDeclarationOfName(node.expression, "Math", typeChecker)
+		isGlobalDeclarationOfName(node.expression, "Math", typeChecker, program)
 	);
 }
 
@@ -90,8 +95,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
-					const outerInfo = getMathMethodInfo(node, typeChecker);
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
+					const outerInfo = getMathMethodInfo(node, typeChecker, program);
 					if (!outerInfo) {
 						return;
 					}
@@ -135,7 +140,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 						const secondArgument = outerInfo.arguments[1]!;
 
-						const innerInfo = getMathMethodInfo(secondArgument, typeChecker);
+						const innerInfo = getMathMethodInfo(
+							secondArgument,
+							typeChecker,
+							program,
+						);
 
 						if (
 							innerInfo &&

@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -98,7 +98,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						!isFunction(node.expression.expression, typeChecker)
 					) {
 						return;

@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -9,23 +9,23 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function containsOptionalChain(node: AST.Expression): boolean {
-	let current: ts.Node = node;
+	let current: AST.AnyNode = node;
 	let foundNonOptionalAccess = false;
 
 	while (true) {
-		if (ts.isParenthesizedExpression(current)) {
+		if (current.kind === SyntaxKind.ParenthesizedExpression) {
 			return !foundNonOptionalAccess && isOptionalChainRoot(current.expression);
 		}
 
-		if (ts.isNonNullExpression(current)) {
+		if (current.kind === SyntaxKind.NonNullExpression) {
 			current = current.expression;
 			continue;
 		}
 
 		if (
-			ts.isPropertyAccessExpression(current) ||
-			ts.isElementAccessExpression(current) ||
-			ts.isCallExpression(current)
+			current.kind === SyntaxKind.PropertyAccessExpression ||
+			current.kind === SyntaxKind.ElementAccessExpression ||
+			current.kind === SyntaxKind.CallExpression
 		) {
 			if (current.questionDotToken) {
 				return true;
@@ -41,14 +41,14 @@ function containsOptionalChain(node: AST.Expression): boolean {
 }
 
 function isNonNullExpressionContinued(node: AST.NonNullExpression): boolean {
-	if (ts.isParenthesizedExpression(node.expression)) {
+	if (node.expression.kind === SyntaxKind.ParenthesizedExpression) {
 		return false;
 	}
 
 	if (
-		ts.isPropertyAccessExpression(node.parent) ||
-		ts.isElementAccessExpression(node.parent) ||
-		ts.isCallExpression(node.parent)
+		node.parent.kind === SyntaxKind.PropertyAccessExpression ||
+		node.parent.kind === SyntaxKind.ElementAccessExpression ||
+		node.parent.kind === SyntaxKind.CallExpression
 	) {
 		return node.parent.expression === node;
 	}
@@ -56,21 +56,21 @@ function isNonNullExpressionContinued(node: AST.NonNullExpression): boolean {
 	return false;
 }
 
-function isOptionalChainRoot(node: ts.Node): boolean {
-	let current: ts.Node = node;
+function isOptionalChainRoot(node: AST.AnyNode): boolean {
+	let current: AST.AnyNode = node;
 	while (true) {
 		if (
-			ts.isNonNullExpression(current) ||
-			ts.isParenthesizedExpression(current)
+			current.kind === SyntaxKind.NonNullExpression ||
+			current.kind === SyntaxKind.ParenthesizedExpression
 		) {
 			current = current.expression;
 			continue;
 		}
 
 		if (
-			ts.isPropertyAccessExpression(current) ||
-			ts.isElementAccessExpression(current) ||
-			ts.isCallExpression(current)
+			current.kind === SyntaxKind.PropertyAccessExpression ||
+			current.kind === SyntaxKind.ElementAccessExpression ||
+			current.kind === SyntaxKind.CallExpression
 		) {
 			return Boolean(current.questionDotToken);
 		}

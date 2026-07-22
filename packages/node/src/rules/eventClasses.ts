@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -10,11 +10,9 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isImportFromNodeEvents(
-	expression: ts.Expression,
-): expression is AST.StringLiteral {
+function isImportFromNodeEvents(expression: AST.Expression): boolean {
 	return (
-		ts.isStringLiteral(expression) &&
+		expression.kind === SyntaxKind.StringLiteral &&
 		(expression.text === "events" || expression.text === "node:events")
 	);
 }
@@ -40,8 +38,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function isDeclarationEventEmitter(declaration: ts.Declaration) {
-			if (ts.isImportSpecifier(declaration)) {
+		function isDeclarationEventEmitter(declaration: AST.AnyNode) {
+			if (declaration.kind === SyntaxKind.ImportSpecifier) {
 				const importedName =
 					declaration.propertyName?.text ?? declaration.name.text;
 
@@ -50,8 +48,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				if (
-					declaration.parent.parent.parent.kind ===
-						SyntaxKind.ImportDeclaration &&
 					isImportFromNodeEvents(
 						declaration.parent.parent.parent.moduleSpecifier,
 					)
@@ -61,9 +57,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				ts.isImportEqualsDeclaration(declaration) &&
+				declaration.kind === SyntaxKind.ImportEqualsDeclaration &&
 				declaration.name.text === "EventEmitter" &&
-				ts.isExternalModuleReference(declaration.moduleReference) &&
+				declaration.moduleReference.kind ===
+					SyntaxKind.ExternalModuleReference &&
 				isImportFromNodeEvents(declaration.moduleReference.expression)
 			) {
 				return true;
@@ -76,10 +73,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			identifier: AST.Identifier,
 			typeChecker: Checker,
 		) {
-			return typeChecker
-				.getSymbolAtLocation(identifier)
-				?.getDeclarations()
-				?.some(isDeclarationEventEmitter);
+			return (
+				typeChecker.getSymbolAtLocation(identifier)?.getDeclarations() as
+					| AST.AnyNode[]
+					| undefined
+			)?.some(isDeclarationEventEmitter);
 		}
 
 		function checkExpression(

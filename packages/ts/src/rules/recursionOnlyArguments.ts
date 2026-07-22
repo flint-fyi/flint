@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getScopeManager,
@@ -24,7 +24,7 @@ function isParameterOnlyUsedInRecursion(
 		| AST.MethodDeclaration,
 	scopeManager: ScopeManager,
 ) {
-	if (!ts.isIdentifier(parameter.name) || !functionNode.body) {
+	if (parameter.name.kind !== SyntaxKind.Identifier || !functionNode.body) {
 		return false;
 	}
 
@@ -49,20 +49,20 @@ function isParameterOnlyUsedInRecursion(
 }
 
 function isRecursiveCall(
-	callExpression: ts.CallExpression,
+	callExpression: AST.CallExpression,
 	functionName: string,
-	functionNode: ts.Node,
+	functionNode: AST.AnyNode,
 ): boolean {
 	const callee = callExpression.expression;
 
 	let calleeMatchesFunctionName = false;
 
-	if (ts.isIdentifier(callee)) {
+	if (callee.kind === SyntaxKind.Identifier) {
 		calleeMatchesFunctionName = callee.text === functionName;
 	} else if (
-		ts.isPropertyAccessExpression(callee) &&
-		callee.expression.kind === ts.SyntaxKind.ThisKeyword &&
-		ts.isIdentifier(callee.name)
+		callee.kind === SyntaxKind.PropertyAccessExpression &&
+		callee.expression.kind === SyntaxKind.ThisKeyword &&
+		callee.name.kind === SyntaxKind.Identifier
 	) {
 		calleeMatchesFunctionName = callee.name.text === functionName;
 	}
@@ -72,9 +72,9 @@ function isRecursiveCall(
 	}
 
 	for (
-		let current: ts.Node | undefined = callExpression.parent;
+		let current: AST.AnyNode | undefined = callExpression.parent;
 		current;
-		current = current.parent as ts.Node | undefined
+		current = current.parent as AST.AnyNode | undefined
 	) {
 		if (current === functionNode) {
 			return true;
@@ -88,14 +88,14 @@ function isRecursiveCall(
 }
 
 function isReferenceOnlyUsedInRecursion(
-	reference: ts.Identifier,
+	reference: AST.Identifier,
 	parameterIndex: number,
 	functionName: string,
-	functionNode: ts.Node,
+	functionNode: AST.AnyNode,
 ): boolean {
 	const parent = reference.parent;
 
-	if (!ts.isCallExpression(parent)) {
+	if (parent.kind !== SyntaxKind.CallExpression) {
 		return false;
 	}
 

@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	isGlobalDeclaration,
@@ -11,9 +11,13 @@ import {
 export function isGlobalDocumentReference(
 	node: AST.Expression,
 	typeChecker: Checker,
+	program: Program,
 ) {
 	if (node.kind === SyntaxKind.Identifier) {
-		return node.text === "document" && isGlobalDeclaration(node, typeChecker);
+		return (
+			node.text === "document" &&
+			isGlobalDeclaration(node, typeChecker, program)
+		);
 	}
 
 	return (
@@ -21,6 +25,6 @@ export function isGlobalDocumentReference(
 		node.expression.kind === SyntaxKind.Identifier &&
 		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === "document" &&
-		isGlobalDeclaration(node.name, typeChecker)
+		isGlobalDeclaration(node.name, typeChecker, program)
 	);
 }

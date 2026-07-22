@@ -1,6 +1,6 @@
-import * as ts from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript";
 
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -27,7 +27,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (node, { sourceFile }) => {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.text !== "flatMap" ||
 						node.arguments.length !== 1
 					) {
@@ -62,30 +62,31 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 });
 
-function blockReturnsIdentifier(block: ts.Block, parameterName: string) {
+function blockReturnsIdentifier(block: AST.Block, parameterName: string) {
 	if (block.statements.length !== 1) {
 		return false;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const statement = block.statements[0]!;
-	if (!ts.isReturnStatement(statement) || !statement.expression) {
+	if (statement.kind !== SyntaxKind.ReturnStatement || !statement.expression) {
 		return false;
 	}
 
 	return expressionMatchesName(statement.expression, parameterName);
 }
 
-function expressionMatchesName(expression: ts.Expression, name: string) {
-	const unwrapped = ts.isParenthesizedExpression(expression)
-		? expression.expression
-		: expression;
+function expressionMatchesName(expression: AST.Expression, name: string) {
+	const unwrapped =
+		expression.kind === SyntaxKind.ParenthesizedExpression
+			? expression.expression
+			: expression;
 
-	return ts.isIdentifier(unwrapped) && unwrapped.text === name;
+	return unwrapped.kind === SyntaxKind.Identifier && unwrapped.text === name;
 }
 
 function getSingleParameterName(
-	parameters: ts.NodeArray<ts.ParameterDeclaration>,
+	parameters: NodeArray<AST.ParameterDeclaration>,
 ) {
 	if (parameters.length !== 1) {
 		return undefined;
@@ -93,39 +94,39 @@ function getSingleParameterName(
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const parameter = parameters[0]!;
-	if (!ts.isIdentifier(parameter.name)) {
+	if (parameter.name.kind !== SyntaxKind.Identifier) {
 		return undefined;
 	}
 
 	return parameter.name.text;
 }
 
-function isIdentityArrowFunction(node: ts.ArrowFunction) {
+function isIdentityArrowFunction(node: AST.ArrowFunction) {
 	const parameterName = getSingleParameterName(node.parameters);
 	if (!parameterName) {
 		return false;
 	}
 
-	if (ts.isBlock(node.body)) {
+	if (node.body.kind === SyntaxKind.Block) {
 		return blockReturnsIdentifier(node.body, parameterName);
 	}
 
 	return expressionMatchesName(node.body, parameterName);
 }
 
-function isIdentityFunction(node: ts.Node): boolean {
-	if (ts.isArrowFunction(node)) {
+function isIdentityFunction(node: AST.AnyNode): boolean {
+	if (node.kind === SyntaxKind.ArrowFunction) {
 		return isIdentityArrowFunction(node);
 	}
 
-	if (ts.isFunctionExpression(node)) {
+	if (node.kind === SyntaxKind.FunctionExpression) {
 		return isIdentityFunctionExpression(node);
 	}
 
 	return false;
 }
 
-function isIdentityFunctionExpression(node: ts.FunctionExpression) {
+function isIdentityFunctionExpression(node: AST.FunctionExpression) {
 	const parameterName = getSingleParameterName(node.parameters);
 	if (!parameterName) {
 		return false;

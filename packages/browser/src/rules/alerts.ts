@@ -53,7 +53,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
+				CallExpression(node, { program, sourceFile, typeChecker }) {
 					const found = getCalleeNameAndNode(node.expression);
 					if (found === undefined) {
 						return;
@@ -62,7 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const { name, node: nodeToReport } = found;
 					if (
 						!globalNames.has(name) ||
-						!isGlobalDeclaration(nodeToReport, typeChecker)
+						!isGlobalDeclaration(nodeToReport, typeChecker, program)
 					) {
 						return;
 					}

@@ -22,9 +22,9 @@ describe("createGitignoreFilter", () => {
 		const filePath = path.join(integrationRoot, "src", "file.ts");
 		host.vfsUpsertFile(filePath, "content");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(filePath)).toBe(true);
+		expect(isNotIgnored(filePath)).toBe(true);
 	});
 
 	it("ignores comments and empty lines", () => {
@@ -35,10 +35,10 @@ describe("createGitignoreFilter", () => {
 		const logFile = path.join(integrationRoot, "debug.log");
 		const tsFile = path.join(integrationRoot, "index.ts");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(logFile)).toBe(false);
-		expect(gitignoreFilter(tsFile)).toBe(true);
+		expect(isNotIgnored(logFile)).toBe(false);
+		expect(isNotIgnored(tsFile)).toBe(true);
 	});
 
 	it("handles escaped hash at the beginning", () => {
@@ -49,10 +49,10 @@ describe("createGitignoreFilter", () => {
 		const comment = path.join(integrationRoot, "comment.txt");
 		const hashFile = path.join(integrationRoot, "#real.txt");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(comment)).toBe(true);
-		expect(gitignoreFilter(hashFile)).toBe(false);
+		expect(isNotIgnored(comment)).toBe(true);
+		expect(isNotIgnored(hashFile)).toBe(false);
 	});
 
 	it("handles non-escaped trailing spaces (automatically removed)", () => {
@@ -63,10 +63,10 @@ describe("createGitignoreFilter", () => {
 		const logFile = path.join(integrationRoot, "test.log");
 		const txtFile = path.join(integrationRoot, "test.txt");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(logFile)).toBe(false);
-		expect(gitignoreFilter(txtFile)).toBe(true);
+		expect(isNotIgnored(logFile)).toBe(false);
+		expect(isNotIgnored(txtFile)).toBe(true);
 	});
 
 	it("handles escaped trailing spaces", () => {
@@ -91,13 +91,13 @@ describe("createGitignoreFilter", () => {
 		);
 		const normalFile = path.join(integrationRoot, "normal.txt");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(fileNoTrailingSpace)).toBe(false);
-		expect(gitignoreFilter(fileWithExtraSpace)).toBe(true);
-		expect(gitignoreFilter(fileWithEscapedSpace)).toBe(false);
-		expect(gitignoreFilter(fileWithDifferentName)).toBe(true);
-		expect(gitignoreFilter(normalFile)).toBe(true);
+		expect(isNotIgnored(fileNoTrailingSpace)).toBe(false);
+		expect(isNotIgnored(fileWithExtraSpace)).toBe(true);
+		expect(isNotIgnored(fileWithEscapedSpace)).toBe(false);
+		expect(isNotIgnored(fileWithDifferentName)).toBe(true);
+		expect(isNotIgnored(normalFile)).toBe(true);
 	});
 
 	it("treats leading spaces as part of the pattern", () => {
@@ -106,11 +106,11 @@ describe("createGitignoreFilter", () => {
 		const logFileWithSpaces = path.join(integrationRoot, "  test.log");
 		const txtFile = path.join(integrationRoot, "test.txt");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(logFile)).toBe(true);
-		expect(gitignoreFilter(logFileWithSpaces)).toBe(false);
-		expect(gitignoreFilter(txtFile)).toBe(true);
+		expect(isNotIgnored(logFile)).toBe(true);
+		expect(isNotIgnored(logFileWithSpaces)).toBe(false);
+		expect(isNotIgnored(txtFile)).toBe(true);
 	});
 
 	it("handles negation patterns", () => {
@@ -122,11 +122,11 @@ describe("createGitignoreFilter", () => {
 		const importantLog = path.join(integrationRoot, "important.log");
 		const importantLogNegated = path.join(integrationRoot, "!important.log");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(debugLog)).toBe(false);
-		expect(gitignoreFilter(importantLogNegated)).toBe(false);
-		expect(gitignoreFilter(importantLog)).toBe(true);
+		expect(isNotIgnored(debugLog)).toBe(false);
+		expect(isNotIgnored(importantLogNegated)).toBe(false);
+		expect(isNotIgnored(importantLog)).toBe(true);
 	});
 
 	it("handles escaped exclamation mark at the beginning", () => {
@@ -136,9 +136,9 @@ describe("createGitignoreFilter", () => {
 		);
 		const literal = path.join(integrationRoot, "!literal.txt");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(literal)).toBe(false);
+		expect(isNotIgnored(literal)).toBe(false);
 	});
 
 	it("cannot re-include files when parent directory is excluded", () => {
@@ -155,11 +155,11 @@ describe("createGitignoreFilter", () => {
 		);
 		const otherFile = path.join(integrationRoot, "other.txt");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(childFile)).toBe(false);
-		expect(gitignoreFilter(nestedFile)).toBe(false);
-		expect(gitignoreFilter(otherFile)).toBe(true);
+		expect(isNotIgnored(childFile)).toBe(false);
+		expect(isNotIgnored(nestedFile)).toBe(false);
+		expect(isNotIgnored(otherFile)).toBe(true);
 	});
 
 	it("handles absolute path patterns with leading slash", () => {
@@ -168,11 +168,11 @@ describe("createGitignoreFilter", () => {
 		const srcFile = path.join(integrationRoot, "src", "index.ts");
 		const srcBuild = path.join(integrationRoot, "src", "build", "output.js");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(rootBuild)).toBe(false);
-		expect(gitignoreFilter(srcFile)).toBe(true);
-		expect(gitignoreFilter(srcBuild)).toBe(true);
+		expect(isNotIgnored(rootBuild)).toBe(false);
+		expect(isNotIgnored(srcFile)).toBe(true);
+		expect(isNotIgnored(srcBuild)).toBe(true);
 	});
 
 	it("handles trailing slash (directories only)", () => {
@@ -187,12 +187,12 @@ describe("createGitignoreFilter", () => {
 			"file.js",
 		);
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(buildDir)).toBe(false);
-		expect(gitignoreFilter(buildLiteralFile)).toBe(true);
-		expect(gitignoreFilter(buildJsFile)).toBe(true);
-		expect(gitignoreFilter(nestedBuildDir)).toBe(false);
+		expect(isNotIgnored(buildDir)).toBe(false);
+		expect(isNotIgnored(buildLiteralFile)).toBe(true);
+		expect(isNotIgnored(buildJsFile)).toBe(true);
+		expect(isNotIgnored(nestedBuildDir)).toBe(false);
 	});
 
 	it("handles leading and trailing slash (anchored directory)", () => {
@@ -206,11 +206,11 @@ describe("createGitignoreFilter", () => {
 			"file.js",
 		);
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(buildDir)).toBe(false);
-		expect(gitignoreFilter(buildFile)).toBe(true);
-		expect(gitignoreFilter(nestedBuildDir)).toBe(true);
+		expect(isNotIgnored(buildDir)).toBe(false);
+		expect(isNotIgnored(buildFile)).toBe(true);
+		expect(isNotIgnored(nestedBuildDir)).toBe(true);
 	});
 
 	it("handles patterns with slash in the middle", () => {
@@ -221,11 +221,11 @@ describe("createGitignoreFilter", () => {
 		const nestedMatch = path.join(srcDir, "nested", "foo", "bar.js");
 		const otherFile = path.join(srcDir, "baz.js");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(directMatch)).toBe(false);
-		expect(gitignoreFilter(nestedMatch)).toBe(true);
-		expect(gitignoreFilter(otherFile)).toBe(true);
+		expect(isNotIgnored(directMatch)).toBe(false);
+		expect(isNotIgnored(nestedMatch)).toBe(true);
+		expect(isNotIgnored(otherFile)).toBe(true);
 	});
 
 	it("handles patterns without slash (match at any level)", () => {
@@ -236,11 +236,11 @@ describe("createGitignoreFilter", () => {
 		const nestedFile = path.join(srcDir, "foo", "bar.js");
 		const deepFile = path.join(srcDir, "nested", "deep", "test.js");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(directFile)).toBe(false);
-		expect(gitignoreFilter(nestedFile)).toBe(false);
-		expect(gitignoreFilter(deepFile)).toBe(false);
+		expect(isNotIgnored(directFile)).toBe(false);
+		expect(isNotIgnored(nestedFile)).toBe(false);
+		expect(isNotIgnored(deepFile)).toBe(false);
 	});
 
 	it("handles asterisk wildcard", () => {
@@ -252,11 +252,11 @@ describe("createGitignoreFilter", () => {
 		const distFile = path.join(integrationRoot, "dist", "bundle.js");
 		const srcFile = path.join(integrationRoot, "src", "index.ts");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(logFile)).toBe(false);
-		expect(gitignoreFilter(distFile)).toBe(false);
-		expect(gitignoreFilter(srcFile)).toBe(true);
+		expect(isNotIgnored(logFile)).toBe(false);
+		expect(isNotIgnored(distFile)).toBe(false);
+		expect(isNotIgnored(srcFile)).toBe(true);
 	});
 
 	it("handles wildcards and character ranges", () => {
@@ -273,16 +273,16 @@ describe("createGitignoreFilter", () => {
 		const fileA = path.join(integrationRoot, "fileA.txt");
 		const other = path.join(integrationRoot, "other.js");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(test1)).toBe(false);
-		expect(gitignoreFilter(test2)).toBe(false);
-		expect(gitignoreFilter(testNoChar)).toBe(true);
-		expect(gitignoreFilter(testTwoChars)).toBe(true);
-		expect(gitignoreFilter(file1)).toBe(false);
-		expect(gitignoreFilter(file5)).toBe(false);
-		expect(gitignoreFilter(fileA)).toBe(true);
-		expect(gitignoreFilter(other)).toBe(true);
+		expect(isNotIgnored(test1)).toBe(false);
+		expect(isNotIgnored(test2)).toBe(false);
+		expect(isNotIgnored(testNoChar)).toBe(true);
+		expect(isNotIgnored(testTwoChars)).toBe(true);
+		expect(isNotIgnored(file1)).toBe(false);
+		expect(isNotIgnored(file5)).toBe(false);
+		expect(isNotIgnored(fileA)).toBe(true);
+		expect(isNotIgnored(other)).toBe(true);
 	});
 
 	it("handles leading double asterisk pattern", () => {
@@ -292,12 +292,12 @@ describe("createGitignoreFilter", () => {
 		const deepFoo = path.join(integrationRoot, "deep", "nested", "foo");
 		const otherFile = path.join(integrationRoot, "other.txt");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(rootFoo)).toBe(false);
-		expect(gitignoreFilter(barFoo)).toBe(false);
-		expect(gitignoreFilter(deepFoo)).toBe(false);
-		expect(gitignoreFilter(otherFile)).toBe(true);
+		expect(isNotIgnored(rootFoo)).toBe(false);
+		expect(isNotIgnored(barFoo)).toBe(false);
+		expect(isNotIgnored(deepFoo)).toBe(false);
+		expect(isNotIgnored(otherFile)).toBe(true);
 	});
 
 	it("handles trailing double asterisk pattern", () => {
@@ -306,11 +306,11 @@ describe("createGitignoreFilter", () => {
 		const abcDeep = path.join(integrationRoot, "abc", "deep", "nested.js");
 		const otherFile = path.join(integrationRoot, "other.js");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(abcFile)).toBe(false);
-		expect(gitignoreFilter(abcDeep)).toBe(false);
-		expect(gitignoreFilter(otherFile)).toBe(true);
+		expect(isNotIgnored(abcFile)).toBe(false);
+		expect(isNotIgnored(abcDeep)).toBe(false);
+		expect(isNotIgnored(otherFile)).toBe(true);
 	});
 
 	it("handles middle double asterisk pattern", () => {
@@ -320,12 +320,12 @@ describe("createGitignoreFilter", () => {
 		const aXYB = path.join(integrationRoot, "a", "x", "y", "b");
 		const other = path.join(integrationRoot, "other");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(aB)).toBe(false);
-		expect(gitignoreFilter(aXB)).toBe(false);
-		expect(gitignoreFilter(aXYB)).toBe(false);
-		expect(gitignoreFilter(other)).toBe(true);
+		expect(isNotIgnored(aB)).toBe(false);
+		expect(isNotIgnored(aXB)).toBe(false);
+		expect(isNotIgnored(aXYB)).toBe(false);
+		expect(isNotIgnored(other)).toBe(true);
 	});
 
 	it("handles nested .gitignore files", () => {
@@ -338,12 +338,12 @@ describe("createGitignoreFilter", () => {
 		const srcTemp = path.join(srcDir, "temp", "cache.txt");
 		const srcFile = path.join(srcDir, "index.ts");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(rootLog)).toBe(false);
-		expect(gitignoreFilter(srcLog)).toBe(false);
-		expect(gitignoreFilter(srcTemp)).toBe(false);
-		expect(gitignoreFilter(srcFile)).toBe(true);
+		expect(isNotIgnored(rootLog)).toBe(false);
+		expect(isNotIgnored(srcLog)).toBe(false);
+		expect(isNotIgnored(srcTemp)).toBe(false);
+		expect(isNotIgnored(srcFile)).toBe(true);
 	});
 
 	it("handles negation with leading slash in subdirectory", () => {
@@ -356,10 +356,10 @@ describe("createGitignoreFilter", () => {
 		const ignoredFile = path.join(srcDir, "api.generated.ts");
 		const keptFile = path.join(srcDir, "keep.generated.ts");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(ignoredFile)).toBe(false);
-		expect(gitignoreFilter(keptFile)).toBe(true);
+		expect(isNotIgnored(ignoredFile)).toBe(false);
+		expect(isNotIgnored(keptFile)).toBe(true);
 	});
 
 	it("handles unanchored pattern in nested .gitignore (should match any depth)", () => {
@@ -369,9 +369,9 @@ describe("createGitignoreFilter", () => {
 		const srcDist = path.join(srcDir, "dist", "bundle.js");
 		const nestedDist = path.join(srcDir, "nested", "dist", "bundle.js");
 
-		const gitignoreFilter = createGitignoreFilter(integrationRoot, host);
+		const isNotIgnored = createGitignoreFilter(host);
 
-		expect(gitignoreFilter(srcDist)).toBe(false);
-		expect(gitignoreFilter(nestedDist)).toBe(false);
+		expect(isNotIgnored(srcDist)).toBe(false);
+		expect(isNotIgnored(nestedDist)).toBe(false);
 	});
 });

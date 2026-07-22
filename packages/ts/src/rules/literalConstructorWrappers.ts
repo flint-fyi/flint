@@ -1,4 +1,11 @@
-import * as ts from "typescript";
+import {
+	isBigIntLiteral,
+	isIdentifier,
+	isLiteralExpression,
+	isNumericLiteral,
+	isStringLiteral,
+	SyntaxKind,
+} from "typescript";
 
 import {
 	isGlobalDeclarationOfName,
@@ -13,8 +20,8 @@ const literalConstructors = new Set(["BigInt", "Boolean", "Number", "String"]);
 
 function isBooleanLiteral(node: AST.Expression) {
 	return (
-		node.kind === ts.SyntaxKind.TrueKeyword ||
-		node.kind === ts.SyntaxKind.FalseKeyword
+		node.kind === SyntaxKind.TrueKeyword ||
+		node.kind === SyntaxKind.FalseKeyword
 	);
 }
 
@@ -24,16 +31,16 @@ function isLiteralArgument(node: AST.Expression, constructorName: string) {
 			return isNumericLiteralForBigInt(node);
 
 		case "Boolean":
-			return ts.isLiteralExpression(node) || isBooleanLiteral(node);
+			return isLiteralExpression(node) || isBooleanLiteral(node);
 
 		case "Number":
-			return ts.isStringLiteral(node) && isValidNumericString(node.text);
+			return isStringLiteral(node) && isValidNumericString(node.text);
 
 		case "String":
 			return (
-				ts.isNumericLiteral(node) ||
+				isNumericLiteral(node) ||
 				isBooleanLiteral(node) ||
-				ts.isBigIntLiteral(node)
+				isBigIntLiteral(node)
 			);
 
 		default:
@@ -42,9 +49,7 @@ function isLiteralArgument(node: AST.Expression, constructorName: string) {
 }
 
 function isNumericLiteralForBigInt(node: AST.Expression) {
-	return (
-		node.kind === ts.SyntaxKind.NumericLiteral && /^-?\d+$/.test(node.text)
-	);
+	return node.kind === SyntaxKind.NumericLiteral && /^-?\d+$/.test(node.text);
 }
 
 function isValidNumericString(value: string) {
@@ -80,9 +85,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (
 					node,
-					{ sourceFile, typeChecker }: TypeScriptFileServices,
+					{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 				) => {
-					if (!ts.isIdentifier(node.expression)) {
+					if (!isIdentifier(node.expression)) {
 						return;
 					}
 
@@ -90,7 +95,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						!literalConstructors.has(name) ||
 						node.arguments.length !== 1 ||
-						!isGlobalDeclarationOfName(node.expression, name, typeChecker)
+						!isGlobalDeclarationOfName(
+							node.expression,
+							name,
+							typeChecker,
+							program,
+						)
 					) {
 						return;
 					}

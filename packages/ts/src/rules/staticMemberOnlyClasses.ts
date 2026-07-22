@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -16,7 +16,7 @@ function hasDecorators(node: AST.ClassDeclaration | AST.ClassExpression) {
 function hasExtendsClause(node: AST.ClassDeclaration | AST.ClassExpression) {
 	return (
 		node.heritageClauses?.some(
-			(clause) => clause.token === ts.SyntaxKind.ExtendsKeyword,
+			(clause) => clause.token === SyntaxKind.ExtendsKeyword,
 		) ?? false
 	);
 }
@@ -24,7 +24,7 @@ function hasExtendsClause(node: AST.ClassDeclaration | AST.ClassExpression) {
 function hasPrivateConstructor(node: AST.ConstructorDeclaration) {
 	return (
 		node.modifiers?.some(
-			(modifier) => modifier.kind === ts.SyntaxKind.PrivateKeyword,
+			(modifier) => modifier.kind === SyntaxKind.PrivateKeyword,
 		) ?? false
 	);
 }
@@ -33,16 +33,15 @@ function hasStaticModifier(
 	modifiers: ts.NodeArray<AST.ModifierLike> | undefined,
 ) {
 	return (
-		modifiers?.some(
-			(modifier) => modifier.kind === ts.SyntaxKind.StaticKeyword,
-		) ?? false
+		modifiers?.some((modifier) => modifier.kind === SyntaxKind.StaticKeyword) ??
+		false
 	);
 }
 
 function isAbstractClass(node: AST.ClassDeclaration | AST.ClassExpression) {
 	return (
 		node.modifiers?.some(
-			(modifier) => modifier.kind === ts.SyntaxKind.AbstractKeyword,
+			(modifier) => modifier.kind === SyntaxKind.AbstractKeyword,
 		) ?? false
 	);
 }
@@ -89,7 +88,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			let hasPrivateConstructorMember = false;
 
 			for (const member of node.members) {
-				if (ts.isConstructorDeclaration(member)) {
+				if (member.kind === SyntaxKind.Constructor) {
 					if (hasPrivateConstructor(member)) {
 						hasPrivateConstructorMember = true;
 						break;
@@ -102,24 +101,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 
 				if (
-					ts.isSemicolonClassElement(member) ||
-					ts.isClassStaticBlockDeclaration(member)
+					member.kind === SyntaxKind.SemicolonClassElement ||
+					member.kind === SyntaxKind.ClassStaticBlockDeclaration
 				) {
 					continue;
 				}
 
-				if (ts.isIndexSignatureDeclaration(member)) {
+				if (member.kind === SyntaxKind.IndexSignature) {
 					hasNonStaticMember = true;
 					break;
 				}
 
-				if (
-					(ts.isPropertyDeclaration(member) ||
-						ts.isMethodDeclaration(member) ||
-						ts.isGetAccessorDeclaration(member) ||
-						ts.isSetAccessorDeclaration(member)) &&
-					!hasStaticModifier(member.modifiers)
-				) {
+				if (!hasStaticModifier(member.modifiers)) {
 					hasNonStaticMember = true;
 					break;
 				}

@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -67,7 +67,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function checkParameters(
-			parameters: ts.NodeArray<AST.ParameterDeclaration>,
+			parameters: NodeArray<AST.ParameterDeclaration>,
 			sourceFile: AST.SourceFile,
 		): void {
 			for (const parameter of parameters) {

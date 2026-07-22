@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getScopeManager,
@@ -25,10 +25,10 @@ function isInScope(accessScope: Scope, declarationScope: Scope) {
 // https://github.com/flint-fyi/flint/issues/1298
 function getInitializerKey(node: AST.Expression): string | undefined {
 	switch (node.kind) {
-		case ts.SyntaxKind.Identifier:
+		case SyntaxKind.Identifier:
 			return node.text;
 
-		case ts.SyntaxKind.PropertyAccessExpression: {
+		case SyntaxKind.PropertyAccessExpression: {
 			if (node.questionDotToken) {
 				return undefined;
 			}
@@ -41,28 +41,28 @@ function getInitializerKey(node: AST.Expression): string | undefined {
 			return `${objectKey}.${node.name.text}`;
 		}
 
-		case ts.SyntaxKind.ThisKeyword:
+		case SyntaxKind.ThisKeyword:
 			return "this";
 	}
 }
 
 function isLeftHandSide(node: AST.AnyNode) {
 	switch (node.parent.kind) {
-		case ts.SyntaxKind.BinaryExpression:
+		case SyntaxKind.BinaryExpression:
 			return (
 				node.parent.left === node &&
-				node.parent.operatorToken.kind >= ts.SyntaxKind.FirstAssignment &&
-				node.parent.operatorToken.kind <= ts.SyntaxKind.LastAssignment
+				node.parent.operatorToken.kind >= SyntaxKind.FirstAssignment &&
+				node.parent.operatorToken.kind <= SyntaxKind.LastAssignment
 			);
 
-		case ts.SyntaxKind.DeleteExpression:
+		case SyntaxKind.DeleteExpression:
 			return true;
 
-		case ts.SyntaxKind.PostfixUnaryExpression:
-		case ts.SyntaxKind.PrefixUnaryExpression:
+		case SyntaxKind.PostfixUnaryExpression:
+		case SyntaxKind.PrefixUnaryExpression:
 			return (
-				node.parent.operator === ts.SyntaxKind.PlusPlusToken ||
-				node.parent.operator === ts.SyntaxKind.MinusMinusToken
+				node.parent.operator === SyntaxKind.PlusPlusToken ||
+				node.parent.operator === SyntaxKind.MinusMinusToken
 			);
 
 		default:

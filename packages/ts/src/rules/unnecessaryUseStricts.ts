@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -37,8 +37,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const firstStatement = node.statements[0]!;
 
 					if (
-						!ts.isExpressionStatement(firstStatement) ||
-						!ts.isStringLiteral(firstStatement.expression) ||
+						firstStatement.kind !== SyntaxKind.ExpressionStatement ||
+						firstStatement.expression.kind !== SyntaxKind.StringLiteral ||
 						firstStatement.expression.text !== "use strict"
 					) {
 						return;

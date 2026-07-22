@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -12,11 +12,11 @@ import { ruleCreator } from "./ruleCreator.ts";
 // https://github.com/JoshuaKGoldberg/flint/issues/400
 function getParentClassName(node: AST.AnyNode): string | undefined {
 	switch (node.parent.kind) {
-		case ts.SyntaxKind.ClassDeclaration:
-		case ts.SyntaxKind.ClassExpression:
+		case SyntaxKind.ClassDeclaration:
+		case SyntaxKind.ClassExpression:
 			return node.parent.name?.text;
 
-		case ts.SyntaxKind.SourceFile:
+		case SyntaxKind.SourceFile:
 			return undefined;
 
 		default:
@@ -30,10 +30,10 @@ function getParentInterface(
 	node: AST.AnyNode,
 ): AST.InterfaceDeclaration | undefined {
 	switch (node.parent.kind) {
-		case ts.SyntaxKind.InterfaceDeclaration:
+		case SyntaxKind.InterfaceDeclaration:
 			return node.parent;
 
-		case ts.SyntaxKind.SourceFile:
+		case SyntaxKind.SourceFile:
 			return undefined;
 
 		default:
@@ -44,8 +44,8 @@ function getParentInterface(
 function getTypeReferenceName(
 	node: AST.TypeNode | undefined,
 ): string | undefined {
-	return node?.kind === ts.SyntaxKind.TypeReference &&
-		node.typeName.kind === ts.SyntaxKind.Identifier
+	return node?.kind === SyntaxKind.TypeReference &&
+		node.typeName.kind === SyntaxKind.Identifier
 		? node.typeName.text
 		: undefined;
 }
@@ -118,9 +118,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				MethodDeclaration: (node, { sourceFile }) => {
 					if (
 						node.body ||
-						(node.parent.kind !== ts.SyntaxKind.ClassDeclaration &&
-							node.parent.kind !== ts.SyntaxKind.ClassExpression) ||
-						node.name.kind !== ts.SyntaxKind.Identifier ||
+						(node.parent.kind !== SyntaxKind.ClassDeclaration &&
+							node.parent.kind !== SyntaxKind.ClassExpression) ||
+						node.name.kind !== SyntaxKind.Identifier ||
 						node.name.text !== "new"
 					) {
 						return;
@@ -143,7 +143,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				MethodSignature: (node, { sourceFile }) => {
 					if (
-						node.name.kind !== ts.SyntaxKind.Identifier ||
+						node.name.kind !== SyntaxKind.Identifier ||
 						node.name.text !== "constructor"
 					) {
 						return;

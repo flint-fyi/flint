@@ -29,6 +29,7 @@
 		"@flint.fyi/yaml-language": "workspace:^"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev",

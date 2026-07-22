@@ -1,18 +1,19 @@
-import ts from "typescript";
+import { SyntaxKind, type TypeChecker } from "typescript";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 // TODO: This will be more clean when there is a scope manager
 // https://github.com/flint-fyi/flint/issues/400
-function isGlobalRequire(node: ts.Expression, typeChecker: ts.TypeChecker) {
+function isGlobalRequire(node: AST.Expression, typeChecker: TypeChecker) {
 	// TODO: Use a util like getStaticValue
 	// https://github.com/flint-fyi/flint/issues/1298
-	if (!ts.isIdentifier(node) || node.text !== "require") {
+	if (node.kind !== SyntaxKind.Identifier || node.text !== "require") {
 		return false;
 	}
 
@@ -65,7 +66,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				ImportEqualsDeclaration: (node, { sourceFile }) => {
 					if (
-						node.moduleReference.kind === ts.SyntaxKind.ExternalModuleReference
+						node.moduleReference.kind === SyntaxKind.ExternalModuleReference
 					) {
 						context.report({
 							message: "noRequireImports",

@@ -1,6 +1,6 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -28,14 +28,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				ArrayLiteralExpression: (node, { sourceFile }) => {
 					for (const element of node.elements) {
 						if (
-							!ts.isSpreadElement(element) ||
-							!ts.isParenthesizedExpression(element.expression)
+							element.kind !== SyntaxKind.SpreadElement ||
+							element.expression.kind !== SyntaxKind.ParenthesizedExpression
 						) {
 							continue;
 						}
 
 						const inner = element.expression.expression;
-						if (!ts.isConditionalExpression(inner)) {
+						if (inner.kind !== SyntaxKind.ConditionalExpression) {
 							continue;
 						}
 
@@ -43,7 +43,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const whenFalse = unwrapParentheses(inner.whenFalse);
 
 						if (
-							ts.isArrayLiteralExpression(whenTrue) &&
+							whenTrue.kind === SyntaxKind.ArrayLiteralExpression &&
 							isStringLike(whenFalse) &&
 							isEmptyStringLike(whenFalse)
 						) {
@@ -66,7 +66,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						if (
 							isStringLike(whenTrue) &&
-							ts.isArrayLiteralExpression(whenFalse) &&
+							whenFalse.kind === SyntaxKind.ArrayLiteralExpression &&
 							isEmptyArray(whenFalse)
 						) {
 							context.report({
@@ -91,20 +91,25 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 });
 
-function isEmptyArray(node: ts.Expression) {
-	return ts.isArrayLiteralExpression(node) && !node.elements.length;
+function isEmptyArray(node: AST.Expression) {
+	return (
+		node.kind === SyntaxKind.ArrayLiteralExpression && !node.elements.length
+	);
 }
 
-function isEmptyStringLike(node: ts.Expression) {
+function isEmptyStringLike(node: AST.Expression) {
 	return isStringLike(node) && node.text === "";
 }
 
-function isStringLike(node: ts.Expression) {
-	return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node);
+function isStringLike(node: AST.Expression) {
+	return (
+		node.kind === SyntaxKind.StringLiteral ||
+		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral
+	);
 }
 
-function unwrapParentheses(node: ts.Expression): ts.Expression {
-	return ts.isParenthesizedExpression(node)
+function unwrapParentheses(node: AST.Expression): AST.Expression {
+	return node.kind === SyntaxKind.ParenthesizedExpression
 		? unwrapParentheses(node.expression)
 		: node;
 }

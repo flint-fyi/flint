@@ -28,6 +28,7 @@
 		"@flint.fyi/core": "workspace:^"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev"
 	},
 	"engines": {
