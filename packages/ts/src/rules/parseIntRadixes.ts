@@ -1,4 +1,4 @@
-import { isIdentifier, SyntaxKind, type Program } from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	getStaticNumberValue,
@@ -28,9 +28,9 @@ function isParseIntCall(
 
 		case SyntaxKind.PropertyAccessExpression:
 			return (
-				isIdentifier(node.expression.name) &&
+				node.expression.name.kind === SyntaxKind.Identifier &&
 				node.expression.name.text === "parseInt" &&
-				isIdentifier(node.expression.expression) &&
+				node.expression.expression.kind === SyntaxKind.Identifier &&
 				node.expression.expression.text === "Number" &&
 				isGlobalDeclarationOfName(
 					node.expression.expression,

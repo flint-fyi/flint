@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -13,7 +13,7 @@ function analyzeConstructor(node: AST.ClassDeclaration) {
 	let constructor: AST.ConstructorDeclaration | undefined;
 
 	for (const member of node.members) {
-		if (ts.isConstructorDeclaration(member) && member.body) {
+		if (member.kind === SyntaxKind.Constructor && member.body) {
 			constructor = member;
 			break;
 		}
@@ -28,9 +28,9 @@ function analyzeConstructor(node: AST.ClassDeclaration) {
 	let hasNameAssignment = false;
 	let nameValue: string | undefined;
 	let hasRedundantMessageAssignment = false;
-	let superCallNode: ts.CallExpression | undefined;
-	let nameAssignmentNode: ts.BinaryExpression | undefined;
-	let messageAssignmentNode: ts.BinaryExpression | undefined;
+	let superCallNode: AST.CallExpression | undefined;
+	let nameAssignmentNode: AST.BinaryExpression | undefined;
+	let messageAssignmentNode: AST.BinaryExpression | undefined;
 
 	const body = constructor.body;
 	if (!body) {
@@ -38,12 +38,12 @@ function analyzeConstructor(node: AST.ClassDeclaration) {
 	}
 
 	for (const statement of body.statements) {
-		if (!ts.isExpressionStatement(statement)) {
+		if (statement.kind !== SyntaxKind.ExpressionStatement) {
 			continue;
 		}
 
 		if (
-			ts.isCallExpression(statement.expression) &&
+			statement.expression.kind === SyntaxKind.CallExpression &&
 			statement.expression.expression.kind === SyntaxKind.SuperKeyword
 		) {
 			hasSuperCall = true;
@@ -52,9 +52,9 @@ function analyzeConstructor(node: AST.ClassDeclaration) {
 		}
 
 		if (
-			ts.isBinaryExpression(statement.expression) &&
+			statement.expression.kind === SyntaxKind.BinaryExpression &&
 			statement.expression.operatorToken.kind === SyntaxKind.EqualsToken &&
-			ts.isPropertyAccessExpression(statement.expression.left) &&
+			statement.expression.left.kind === SyntaxKind.PropertyAccessExpression &&
 			statement.expression.left.expression.kind === SyntaxKind.ThisKeyword
 		) {
 			const propName = statement.expression.left.name.text;
@@ -62,13 +62,13 @@ function analyzeConstructor(node: AST.ClassDeclaration) {
 			if (propName === "name") {
 				hasNameAssignment = true;
 				nameAssignmentNode = statement.expression;
-				if (ts.isStringLiteral(statement.expression.right)) {
+				if (statement.expression.right.kind === SyntaxKind.StringLiteral) {
 					nameValue = statement.expression.right.text;
 				} else if (
-					ts.isPropertyAccessExpression(statement.expression.right) &&
-					ts.isPropertyAccessExpression(
-						statement.expression.right.expression,
-					) &&
+					statement.expression.right.kind ===
+						SyntaxKind.PropertyAccessExpression &&
+					statement.expression.right.expression.kind ===
+						SyntaxKind.PropertyAccessExpression &&
 					statement.expression.right.expression.expression.kind ===
 						SyntaxKind.ThisKeyword &&
 					statement.expression.right.expression.name.text === "constructor" &&

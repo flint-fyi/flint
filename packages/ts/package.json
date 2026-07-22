@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/ts",
-	"version": "0.20.0",
+	"version": "0.21.0",
 	"description": "[Experimental] TypeScript language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/ts",
 	"repository": {
@@ -36,6 +36,7 @@
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"

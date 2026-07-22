@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
@@ -37,7 +37,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				ArrowFunction: (node, { sourceFile }) => {
-					if (!isAsyncFunction(node) || !ts.isCallExpression(node.body)) {
+					if (
+						!isAsyncFunction(node) ||
+						node.body.kind !== SyntaxKind.CallExpression
+					) {
 						return;
 					}
 
@@ -61,8 +64,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function getMessageForBody(node: AST.CallExpression) {
 	if (
-		!ts.isPropertyAccessExpression(node.expression) ||
-		!ts.isIdentifier(node.expression.expression) ||
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+		node.expression.expression.kind !== SyntaxKind.Identifier ||
 		node.expression.expression.text !== "Promise"
 	) {
 		return undefined;
@@ -80,6 +83,6 @@ function getMessageForBody(node: AST.CallExpression) {
 
 function isAsyncFunction(node: AST.ArrowFunction) {
 	return node.modifiers?.some(
-		(modifier) => modifier.kind === ts.SyntaxKind.AsyncKeyword,
+		(modifier) => modifier.kind === SyntaxKind.AsyncKeyword,
 	);
 }

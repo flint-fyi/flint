@@ -1,12 +1,4 @@
-import {
-	isCallExpression,
-	isIdentifier,
-	isPropertyAccessExpression,
-	isSpreadElement,
-	type CallExpression,
-	type Node,
-	type Program,
-} from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	isGlobalDeclarationOfName,
@@ -18,15 +10,15 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isJsonMethod(
-	node: Node,
+	node: AST.AnyNode,
 	methodName: string,
 	typeChecker: Checker,
 	program: Program,
-): node is CallExpression {
+): node is AST.CallExpression {
 	return (
-		isCallExpression(node) &&
-		isPropertyAccessExpression(node.expression) &&
-		isIdentifier(node.expression.expression) &&
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.expression.kind === SyntaxKind.Identifier &&
 		isGlobalDeclarationOfName(
 			node.expression.expression,
 			"JSON",
@@ -74,7 +66,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const argument = node.arguments[0]!;
 
 					if (
-						isSpreadElement(argument) ||
+						argument.kind === SyntaxKind.SpreadElement ||
 						!isJsonMethod(argument, "stringify", typeChecker, program) ||
 						argument.arguments.length !== 1
 					) {
@@ -84,7 +76,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const stringifyArgument = argument.arguments[0]!;
 
-					if (isSpreadElement(stringifyArgument)) {
+					if (stringifyArgument.kind === SyntaxKind.SpreadElement) {
 						return;
 					}
 

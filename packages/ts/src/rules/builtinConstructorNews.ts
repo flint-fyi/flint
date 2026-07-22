@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	isGlobalDeclarationOfName,
@@ -81,7 +81,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			message: "disallowedNew" | "missingNew",
 			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
-			if (!ts.isIdentifier(node.expression)) {
+			if (node.expression.kind !== SyntaxKind.Identifier) {
 				return;
 			}
 

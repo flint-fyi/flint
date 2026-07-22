@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -108,15 +108,15 @@ function isNodeInsideReturnType(node: AST.AnyNode) {
 
 	while (current) {
 		if (
-			current.kind === ts.SyntaxKind.FunctionDeclaration ||
-			current.kind === ts.SyntaxKind.FunctionExpression ||
-			current.kind === ts.SyntaxKind.ArrowFunction ||
-			current.kind === ts.SyntaxKind.MethodDeclaration ||
-			current.kind === ts.SyntaxKind.MethodSignature ||
-			current.kind === ts.SyntaxKind.FunctionType ||
-			current.kind === ts.SyntaxKind.CallSignature ||
-			current.kind === ts.SyntaxKind.ConstructSignature ||
-			current.kind === ts.SyntaxKind.ConstructorType
+			current.kind === SyntaxKind.FunctionDeclaration ||
+			current.kind === SyntaxKind.FunctionExpression ||
+			current.kind === SyntaxKind.ArrowFunction ||
+			current.kind === SyntaxKind.MethodDeclaration ||
+			current.kind === SyntaxKind.MethodSignature ||
+			current.kind === SyntaxKind.FunctionType ||
+			current.kind === SyntaxKind.CallSignature ||
+			current.kind === SyntaxKind.ConstructSignature ||
+			current.kind === SyntaxKind.ConstructorType
 		) {
 			return !!current.type && isDescendantOf(node, current.type);
 		}

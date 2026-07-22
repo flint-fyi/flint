@@ -1,5 +1,11 @@
 # @flint.fyi/css
 
+## 0.1.0
+
+### Minor Changes
+
+- [#3064](https://github.com/flint-fyi/flint/pull/3064) [`1f71b3e`](https://github.com/flint-fyi/flint/commit/1f71b3ef2d31dbe39ff8c967887801912fb28573) - Removed support for TypeScript 5.
+
 ## 0.0.2
 
 ### Patch Changes

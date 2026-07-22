@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -18,9 +18,11 @@ function hasCommentsInRange(
 }
 
 function isIfWithoutElse(
-	node: ts.Node,
+	node: AST.AnyNode,
 ): node is AST.IfStatement & { elseStatement: undefined } {
-	return ts.isIfStatement(node) && node.elseStatement === undefined;
+	return (
+		node.kind === SyntaxKind.IfStatement && node.elseStatement === undefined
+	);
 }
 
 const lowerPrecedenceThanLogicalAnd = new Set([

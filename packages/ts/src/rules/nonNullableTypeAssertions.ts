@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -41,20 +41,20 @@ function isConstAssertion(
 	sourceFile: AST.SourceFile,
 ) {
 	return (
-		node.type.kind === ts.SyntaxKind.TypeReference &&
-		node.type.typeName.kind === ts.SyntaxKind.Identifier &&
+		node.type.kind === SyntaxKind.TypeReference &&
+		node.type.typeName.kind === SyntaxKind.Identifier &&
 		node.type.typeName.getText(sourceFile) === "const"
 	);
 }
 
 function needsParentheses(expression: AST.Expression) {
 	switch (expression.kind) {
-		case ts.SyntaxKind.ArrowFunction:
-		case ts.SyntaxKind.AwaitExpression:
-		case ts.SyntaxKind.BinaryExpression:
-		case ts.SyntaxKind.ConditionalExpression:
-		case ts.SyntaxKind.PrefixUnaryExpression:
-		case ts.SyntaxKind.YieldExpression:
+		case SyntaxKind.ArrowFunction:
+		case SyntaxKind.AwaitExpression:
+		case SyntaxKind.BinaryExpression:
+		case SyntaxKind.ConditionalExpression:
+		case SyntaxKind.PrefixUnaryExpression:
+		case SyntaxKind.YieldExpression:
 			return true;
 		default:
 			return false;

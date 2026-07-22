@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind, type ModifierLike, type NodeArray } from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -63,7 +63,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						allowDeclarations &&
 						tsutils.includesModifier(
-							node.modifiers as ts.NodeArray<ts.ModifierLike>,
+							node.modifiers as NodeArray<ModifierLike>,
 							SyntaxKind.DeclareKeyword,
 						)
 					) {

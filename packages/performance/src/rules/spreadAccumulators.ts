@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	typescriptLanguage,
@@ -54,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkAssignmentInLoop(node: ts.Node, sourceFile: AST.SourceFile) {
 			if (
 				ts.isBinaryExpression(node) &&
-				node.operatorToken.kind === ts.SyntaxKind.EqualsToken
+				node.operatorToken.kind === SyntaxKind.EqualsToken
 			) {
 				checkBinaryEqualsExpression(node, sourceFile);
 			}
@@ -89,7 +89,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const firstToken = spreadNode.getFirstToken(sourceFile);
-			if (firstToken?.kind !== ts.SyntaxKind.DotDotDotToken) {
+			if (firstToken?.kind !== SyntaxKind.DotDotDotToken) {
 				return;
 			}
 

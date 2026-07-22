@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/astro-language",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "[Experimental] Astro language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -35,6 +35,7 @@
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

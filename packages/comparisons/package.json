@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/comparisons",
-	"version": "0.3.6",
+	"version": "0.3.7",
 	"description": "Comparisons of common lint rules across Flint and other web linters.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -48,6 +48,7 @@
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
 		"@eslint/json": "2.0.0",
 		"@eslint/markdown": "catalog:dev",
+		"@flint.fyi/build": "workspace:^",
 		"@next/eslint-plugin-next": "16.2.6",
 		"@nuxt/eslint-plugin": "1.16.0",
 		"@types/eslint-plugin-jsx-a11y": "6.10.1",

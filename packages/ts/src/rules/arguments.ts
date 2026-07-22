@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -51,14 +51,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const { parent } = node;
 
 					if (
-						(ts.isPropertyAccessExpression(parent) ||
-							ts.isPropertyAssignment(parent) ||
-							ts.isShorthandPropertyAssignment(parent) ||
-							ts.isParameter(parent) ||
-							ts.isVariableDeclaration(parent) ||
-							ts.isPropertyDeclaration(parent) ||
-							ts.isBindingElement(parent) ||
-							ts.isPropertySignature(parent)) &&
+						(parent.kind === SyntaxKind.PropertyAccessExpression ||
+							parent.kind === SyntaxKind.PropertyAssignment ||
+							parent.kind === SyntaxKind.ShorthandPropertyAssignment ||
+							parent.kind === SyntaxKind.Parameter ||
+							parent.kind === SyntaxKind.VariableDeclaration ||
+							parent.kind === SyntaxKind.PropertyDeclaration ||
+							parent.kind === SyntaxKind.BindingElement ||
+							parent.kind === SyntaxKind.PropertySignature) &&
 						parent.name === node
 					) {
 						return;
