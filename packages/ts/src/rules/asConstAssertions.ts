@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -12,26 +12,26 @@ import { ruleCreator } from "./ruleCreator.ts";
 // https://github.com/flint-fyi/flint/issues/1298
 function getTextValue(node: AST.Expression | AST.TypeNode): string | undefined {
 	switch (node.kind) {
-		case ts.SyntaxKind.FalseKeyword:
+		case SyntaxKind.FalseKeyword:
 			return "false";
-		case ts.SyntaxKind.LiteralType:
+		case SyntaxKind.LiteralType:
 			return getTextValue(node.literal);
-		case ts.SyntaxKind.NumericLiteral:
+		case SyntaxKind.NumericLiteral:
 			return node.text;
-		case ts.SyntaxKind.StringLiteral:
+		case SyntaxKind.StringLiteral:
 			return node.text;
-		case ts.SyntaxKind.TrueKeyword:
+		case SyntaxKind.TrueKeyword:
 			return "true";
 	}
 }
 
 function isLiteralType(node: AST.TypeNode): boolean {
 	return (
-		ts.isLiteralTypeNode(node) &&
-		(ts.isStringLiteral(node.literal) ||
-			ts.isNumericLiteral(node.literal) ||
-			node.literal.kind === ts.SyntaxKind.TrueKeyword ||
-			node.literal.kind === ts.SyntaxKind.FalseKeyword)
+		node.kind === SyntaxKind.LiteralType &&
+		(node.literal.kind === SyntaxKind.StringLiteral ||
+			node.literal.kind === SyntaxKind.NumericLiteral ||
+			node.literal.kind === SyntaxKind.TrueKeyword ||
+			node.literal.kind === SyntaxKind.FalseKeyword)
 	);
 }
 

@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -102,16 +102,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				NonNullExpression: (node, { sourceFile, typeChecker }) => {
 					if (
-						node.parent.kind !== ts.SyntaxKind.BinaryExpression ||
+						node.parent.kind !== SyntaxKind.BinaryExpression ||
 						node.parent.operatorToken.kind !==
-							ts.SyntaxKind.QuestionQuestionToken ||
+							SyntaxKind.QuestionQuestionToken ||
 						node.parent.left !== node
 					) {
 						return;
 					}
 
 					if (
-						node.expression.kind === ts.SyntaxKind.Identifier &&
+						node.expression.kind === SyntaxKind.Identifier &&
 						hasNoAssignmentBeforeNode(
 							node.expression,
 							node,

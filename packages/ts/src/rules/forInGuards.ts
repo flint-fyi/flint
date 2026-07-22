@@ -1,19 +1,19 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isIfStatementGuard(node: AST.IfStatement) {
-	if (ts.isContinueStatement(node.thenStatement)) {
+	if (node.thenStatement.kind === SyntaxKind.ContinueStatement) {
 		return true;
 	}
 
 	if (
-		ts.isBlock(node.thenStatement) &&
+		node.thenStatement.kind === SyntaxKind.Block &&
 		node.thenStatement.statements.length === 1 &&
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		ts.isContinueStatement(node.thenStatement.statements[0]!)
+		node.thenStatement.statements[0]!.kind === SyntaxKind.ContinueStatement
 	) {
 		return true;
 	}
@@ -45,11 +45,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ForInStatement: (node, { sourceFile }) => {
 					switch (node.statement.kind) {
-						case ts.SyntaxKind.EmptyStatement:
-						case ts.SyntaxKind.IfStatement:
+						case SyntaxKind.EmptyStatement:
+						case SyntaxKind.IfStatement:
 							return;
 
-						case ts.SyntaxKind.Block: {
+						case SyntaxKind.Block: {
 							if (!node.statement.statements.length) {
 								return;
 							}
@@ -58,7 +58,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							const firstStatement = node.statement.statements[0]!;
 
 							if (
-								firstStatement.kind === ts.SyntaxKind.IfStatement &&
+								firstStatement.kind === SyntaxKind.IfStatement &&
 								(node.statement.statements.length === 1 ||
 									isIfStatementGuard(firstStatement))
 							) {

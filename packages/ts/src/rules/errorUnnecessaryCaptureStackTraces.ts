@@ -77,8 +77,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				ClassDeclaration: (node, { sourceFile, typeChecker }) => {
-					if (!isErrorSubclass(node, typeChecker)) {
+				ClassDeclaration: (node, { program, sourceFile, typeChecker }) => {
+					if (!isErrorSubclass(node, typeChecker, program)) {
 						return;
 					}
 
@@ -89,9 +89,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						for (const statement of member.body.statements) {
 							if (
-								!ts.isExpressionStatement(statement) ||
+								statement.kind !== SyntaxKind.ExpressionStatement ||
 								!(
-									ts.isCallExpression(statement.expression) ||
+									statement.expression.kind === SyntaxKind.CallExpression ||
 									ts.isCallChain(statement.expression)
 								) ||
 								!isCaptureStackTraceCall(statement.expression)

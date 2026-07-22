@@ -1,5 +1,18 @@
 # flint
 
+## 0.17.0
+
+### Minor Changes
+
+- [#3064](https://github.com/flint-fyi/flint/pull/3064) [`1f71b3e`](https://github.com/flint-fyi/flint/commit/1f71b3ef2d31dbe39ff8c967887801912fb28573) - Removed support for TypeScript 5.
+
+### Patch Changes
+
+- Updated dependencies [[`1f71b3e`](https://github.com/flint-fyi/flint/commit/1f71b3ef2d31dbe39ff8c967887801912fb28573)]:
+  - @flint.fyi/ts-patch@0.14.0
+  - @flint.fyi/cli@0.21.0
+  - @flint.fyi/ts@0.21.0
+
 ## 0.16.0
 
 ### Minor Changes

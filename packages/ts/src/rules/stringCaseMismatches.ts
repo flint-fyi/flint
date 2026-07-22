@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getStaticStringValue,
@@ -38,7 +38,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression(node, { sourceFile }) {
-					if (!ts.isPropertyAccessExpression(node.expression)) {
+					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
 
@@ -46,17 +46,17 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						(node.expression.name.text !== "toLowerCase" &&
 							node.expression.name.text !== "toUpperCase") ||
 						node.arguments.length ||
-						!ts.isBinaryExpression(node.parent)
+						node.parent.kind !== SyntaxKind.BinaryExpression
 					) {
 						return;
 					}
 
 					const operator = node.parent.operatorToken.kind;
 					if (
-						operator !== ts.SyntaxKind.EqualsEqualsToken &&
-						operator !== ts.SyntaxKind.EqualsEqualsEqualsToken &&
-						operator !== ts.SyntaxKind.ExclamationEqualsToken &&
-						operator !== ts.SyntaxKind.ExclamationEqualsEqualsToken
+						operator !== SyntaxKind.EqualsEqualsToken &&
+						operator !== SyntaxKind.EqualsEqualsEqualsToken &&
+						operator !== SyntaxKind.ExclamationEqualsToken &&
+						operator !== SyntaxKind.ExclamationEqualsEqualsToken
 					) {
 						return;
 					}
@@ -81,8 +81,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						? value.toLowerCase()
 						: value.toUpperCase();
 					const isEquality =
-						operator === ts.SyntaxKind.EqualsEqualsToken ||
-						operator === ts.SyntaxKind.EqualsEqualsEqualsToken;
+						operator === SyntaxKind.EqualsEqualsToken ||
+						operator === SyntaxKind.EqualsEqualsEqualsToken;
 
 					context.report({
 						data: {

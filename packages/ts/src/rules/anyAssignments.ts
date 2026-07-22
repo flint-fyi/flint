@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	typescriptLanguage,
@@ -353,7 +353,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ArrayLiteralExpression: (node, { sourceFile, typeChecker }) => {
 					for (const element of node.elements) {
-						if (!ts.isSpreadElement(element)) {
+						if (element.kind !== SyntaxKind.SpreadElement) {
 							continue;
 						}
 
@@ -403,7 +403,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.initializer,
 					);
 
-					if (ts.isArrayBindingPattern(node.name)) {
+					if (node.name.kind === SyntaxKind.ArrayBindingPattern) {
 						checkArrayDestructure(
 							node.name,
 							initializerType,
@@ -413,7 +413,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (ts.isObjectBindingPattern(node.name)) {
+					if (node.name.kind === SyntaxKind.ObjectBindingPattern) {
 						checkObjectDestructure(
 							node.name,
 							initializerType,
@@ -445,10 +445,6 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (!ts.isObjectLiteralExpression(node.parent)) {
-						return;
-					}
-
 					const contextualType = typeChecker.getContextualType(node.parent);
 					if (!contextualType) {
 						return;
@@ -459,9 +455,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					let key: string | undefined;
 
 					if (
-						ts.isIdentifier(node.name) ||
-						ts.isStringLiteral(node.name) ||
-						ts.isNumericLiteral(node.name)
+						node.name.kind === SyntaxKind.Identifier ||
+						node.name.kind === SyntaxKind.StringLiteral ||
+						node.name.kind === SyntaxKind.NumericLiteral
 					) {
 						key = node.name.text;
 					}
@@ -521,12 +517,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const parent = node.parent;
-					if (!ts.isObjectLiteralExpression(parent)) {
-						return;
-					}
-
-					const contextualType = typeChecker.getContextualType(parent);
+					const contextualType = typeChecker.getContextualType(node.parent);
 					if (!contextualType) {
 						return;
 					}
@@ -563,7 +554,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.initializer,
 					);
 
-					if (ts.isArrayBindingPattern(node.name)) {
+					if (node.name.kind === SyntaxKind.ArrayBindingPattern) {
 						checkArrayDestructure(
 							node.name,
 							initializerType,
@@ -573,7 +564,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (ts.isObjectBindingPattern(node.name)) {
+					if (node.name.kind === SyntaxKind.ObjectBindingPattern) {
 						checkObjectDestructure(
 							node.name,
 							initializerType,

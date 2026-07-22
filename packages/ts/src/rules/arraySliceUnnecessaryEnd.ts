@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (node, { sourceFile }) => {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						node.expression.name.text !== "slice" ||
 						node.arguments.length !== 2
 					) {
@@ -71,12 +71,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function isInfinity(node: AST.Expression) {
 	switch (node.kind) {
-		case ts.SyntaxKind.Identifier:
+		case SyntaxKind.Identifier:
 			return node.text === "Infinity";
 
-		case ts.SyntaxKind.PropertyAccessExpression:
+		case SyntaxKind.PropertyAccessExpression:
 			return (
-				ts.isIdentifier(node.expression) &&
+				node.expression.kind === SyntaxKind.Identifier &&
 				node.expression.text === "Number" &&
 				node.name.text === "POSITIVE_INFINITY"
 			);
@@ -92,7 +92,7 @@ function isLengthOfReceiver(
 	sourceFile: AST.SourceFile,
 ) {
 	return (
-		ts.isPropertyAccessExpression(endArgument) &&
+		endArgument.kind === SyntaxKind.PropertyAccessExpression &&
 		endArgument.name.text === "length" &&
 		hasSameTokens(receiver, endArgument.expression, sourceFile)
 	);

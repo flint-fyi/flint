@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind, TypeFlags } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -59,7 +59,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			const type = getConstrainedTypeAtLocation(node, typeChecker);
 
-			if (tsutils.isTypeFlagSet(type, ts.TypeFlags.Any)) {
+			if (tsutils.isTypeFlagSet(type, TypeFlags.Any)) {
 				if (tsutils.isIntrinsicErrorType(type)) {
 					return;
 				}
@@ -100,7 +100,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression: (node, services) => {
-					if (node.expression.kind !== ts.SyntaxKind.ImportKeyword) {
+					if (node.expression.kind !== SyntaxKind.ImportKeyword) {
 						checkNode(node.expression, services, "unsafeCall");
 					}
 				},

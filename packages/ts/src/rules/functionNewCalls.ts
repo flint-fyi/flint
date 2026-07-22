@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -36,9 +36,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile, typeChecker }: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
-			if (isFunctionConstructor(node, typeChecker)) {
+			if (isFunctionConstructor(node, typeChecker, program)) {
 				context.report({
 					message: "noFunctionConstructor",
 					range: getTSNodeRange(node.expression, sourceFile),
@@ -49,16 +49,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isFunctionConstructor(
 			node: AST.CallExpression | AST.NewExpression,
 			typeChecker: Checker,
+			program: Program,
 		) {
 			if (node.expression.kind === SyntaxKind.Identifier) {
 				if (
-					isGlobalDeclarationOfName(node.expression, "Function", typeChecker)
+					isGlobalDeclarationOfName(
+						node.expression,
+						"Function",
+						typeChecker,
+						program,
+					)
 				) {
 					return true;
 				}
 			} else if (
 				node.expression.kind === SyntaxKind.PropertyAccessExpression &&
-				isGlobalDeclaration(node.expression, typeChecker)
+				isGlobalDeclaration(node.expression, typeChecker, program)
 			) {
 				const propertyName = node.expression.name.text;
 				if (propertyName !== "Function") {

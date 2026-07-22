@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/ts-patch",
-	"version": "0.13.5",
+	"version": "0.14.0",
 	"description": "[Experimental] Utilities for patching TypeScript used by @flint/core.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -29,6 +29,7 @@
 		"lib/"
 	],
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev",
 		"typescript": "catalog:dev"
 	},

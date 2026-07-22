@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import type * as AST from "../types/ast.ts";
 import { unwrapParenthesizedNode } from "./unwrapParenthesizedNode.ts";
@@ -60,7 +60,7 @@ function areSameToken(
 		return nodeA.text === (nodeB as typeof nodeA).text;
 	}
 
-	if (nodeA.kind === ts.SyntaxKind.RegularExpressionLiteral) {
+	if (nodeA.kind === SyntaxKind.RegularExpressionLiteral) {
 		return (
 			sourceFile.text.slice(nodeA.getStart(sourceFile), nodeA.getEnd()) ===
 			sourceFile.text.slice(nodeB.getStart(sourceFile), nodeB.getEnd())

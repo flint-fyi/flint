@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -10,18 +10,18 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 const operatorTexts = new Map([
-	[ts.SyntaxKind.AmpersandToken, "&"],
-	[ts.SyntaxKind.AsteriskAsteriskToken, "**"],
-	[ts.SyntaxKind.AsteriskToken, "*"],
-	[ts.SyntaxKind.BarToken, "|"],
-	[ts.SyntaxKind.CaretToken, "^"],
-	[ts.SyntaxKind.GreaterThanGreaterThanGreaterThanToken, ">>>"],
-	[ts.SyntaxKind.GreaterThanGreaterThanToken, ">>"],
-	[ts.SyntaxKind.LessThanLessThanToken, "<<"],
-	[ts.SyntaxKind.MinusToken, "-"],
-	[ts.SyntaxKind.PercentToken, "%"],
-	[ts.SyntaxKind.PlusToken, "+"],
-	[ts.SyntaxKind.SlashToken, "/"],
+	[SyntaxKind.AmpersandToken, "&"],
+	[SyntaxKind.AsteriskAsteriskToken, "**"],
+	[SyntaxKind.AsteriskToken, "*"],
+	[SyntaxKind.BarToken, "|"],
+	[SyntaxKind.CaretToken, "^"],
+	[SyntaxKind.GreaterThanGreaterThanGreaterThanToken, ">>>"],
+	[SyntaxKind.GreaterThanGreaterThanToken, ">>"],
+	[SyntaxKind.LessThanLessThanToken, "<<"],
+	[SyntaxKind.MinusToken, "-"],
+	[SyntaxKind.PercentToken, "%"],
+	[SyntaxKind.PlusToken, "+"],
+	[SyntaxKind.SlashToken, "/"],
 ]);
 
 const commutativeOperatorsWithShorthand = new Set(["&", "*", "^", "|"]);
@@ -83,8 +83,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
 					if (
-						node.operatorToken.kind !== ts.SyntaxKind.EqualsToken ||
-						!ts.isBinaryExpression(node.right)
+						node.operatorToken.kind !== SyntaxKind.EqualsToken ||
+						node.right.kind !== SyntaxKind.BinaryExpression
 					) {
 						return;
 					}

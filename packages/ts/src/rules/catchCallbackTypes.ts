@@ -1,5 +1,13 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import {
+	isFunctionLike,
+	isInterfaceDeclaration,
+	isPropertyAccessExpression,
+	TypeFlags,
+	type Program,
+	type Type,
+	type TypeChecker,
+} from "typescript";
 
 import {
 	declarationIncludesGlobal,
@@ -33,7 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function isGlobalPromiseType(type: ts.Type): boolean {
+		function isGlobalPromiseType(type: Type, program: Program): boolean {
 			const symbol = type.getSymbol();
 			if (symbol?.getName() !== "Promise") {
 				return false;
@@ -46,17 +54,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			return declarations.some(
 				(declaration) =>
-					ts.isInterfaceDeclaration(declaration) &&
+					isInterfaceDeclaration(declaration) &&
 					declaration.name.text === "Promise" &&
-					declarationIncludesGlobal(declaration),
+					declarationIncludesGlobal(declaration, program),
 			);
 		}
 
 		function isCatchOrThenCallback(
 			node: AST.CallExpression,
 			typeChecker: Checker,
+			program: Program,
 		): "catch" | "then" | undefined {
-			if (!ts.isPropertyAccessExpression(node.expression)) {
+			if (!isPropertyAccessExpression(node.expression)) {
 				return undefined;
 			}
 
@@ -70,7 +79,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				typeChecker,
 			);
 
-			if (!isGlobalPromiseType(objectType)) {
+			if (!isGlobalPromiseType(objectType, program)) {
 				return undefined;
 			}
 
@@ -80,9 +89,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function checkCallbackParameter(
 			callback: AST.Expression,
 			sourceFile: AST.SourceFile,
-			typeChecker: ts.TypeChecker,
+			typeChecker: TypeChecker,
 		) {
-			if (!ts.isFunctionLike(callback) || !callback.parameters.length) {
+			if (!isFunctionLike(callback) || !callback.parameters.length) {
 				return;
 			}
 
@@ -93,8 +102,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const paramType = typeChecker.getTypeFromTypeNode(firstParameter.type);
 
 				if (
-					tsutils.isTypeFlagSet(paramType, ts.TypeFlags.Unknown) ||
-					!tsutils.isTypeFlagSet(paramType, ts.TypeFlags.Any)
+					tsutils.isTypeFlagSet(paramType, TypeFlags.Unknown) ||
+					!tsutils.isTypeFlagSet(paramType, TypeFlags.Any)
 				) {
 					return;
 				}
@@ -113,8 +122,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
-					const callbackType = isCatchOrThenCallback(node, typeChecker);
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
+					const callbackType = isCatchOrThenCallback(
+						node,
+						typeChecker,
+						program,
+					);
 
 					switch (callbackType) {
 						case "catch":

@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 import z from "zod/v4";
 
 import {
@@ -42,7 +42,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ options, sourceFile }: VisitorServices,
 		) {
 			if (
-				node.name?.kind !== ts.SyntaxKind.Identifier ||
+				node.name?.kind !== SyntaxKind.Identifier ||
 				!options.deny?.includes(node.name.text)
 			) {
 				return;

@@ -1,5 +1,20 @@
 # @flint.fyi/comparisons
 
+## 0.3.7
+
+### Patch Changes
+
+- Updated dependencies [[`1f71b3e`](https://github.com/flint-fyi/flint/commit/1f71b3ef2d31dbe39ff8c967887801912fb28573)]:
+  - @flint.fyi/plugin-flint@0.6.0
+  - @flint.fyi/performance@0.3.0
+  - @flint.fyi/browser@0.3.0
+  - @flint.fyi/vitest@0.2.0
+  - @flint.fyi/astro@0.3.0
+  - @flint.fyi/node@0.3.0
+  - @flint.fyi/css@0.1.0
+  - @flint.fyi/jsx@0.4.0
+  - @flint.fyi/ts@0.21.0
+
 ## 0.3.6
 
 ### Patch Changes

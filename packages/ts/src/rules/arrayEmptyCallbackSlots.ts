@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getStaticNumberValue,
@@ -19,9 +19,10 @@ function hasCallbackArgument(callExpression: AST.CallExpression) {
 	const firstArgument = callExpression.arguments[0]!;
 
 	return (
-		ts.isArrowFunction(firstArgument) ||
-		ts.isFunctionExpression(firstArgument) ||
-		(ts.isIdentifier(firstArgument) && firstArgument.text !== "undefined")
+		firstArgument.kind === SyntaxKind.ArrowFunction ||
+		firstArgument.kind === SyntaxKind.FunctionExpression ||
+		(firstArgument.kind === SyntaxKind.Identifier &&
+			firstArgument.text !== "undefined")
 	);
 }
 
@@ -48,20 +49,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (!ts.isPropertyAccessExpression(node.expression)) {
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
+					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
 
 					const objectExpression = node.expression.expression;
 
 					if (
-						!ts.isNewExpression(objectExpression) ||
-						!ts.isIdentifier(objectExpression.expression) ||
+						objectExpression.kind !== SyntaxKind.NewExpression ||
+						objectExpression.expression.kind !== SyntaxKind.Identifier ||
 						!isGlobalDeclarationOfName(
 							objectExpression.expression,
 							"Array",
 							typeChecker,
+							program,
 						)
 					) {
 						return;

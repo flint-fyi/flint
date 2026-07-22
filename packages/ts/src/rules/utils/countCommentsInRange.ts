@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
 
@@ -16,12 +16,12 @@ export function countCommentsInRange(
 
 	for (
 		let token = scanner.scan();
-		token !== ts.SyntaxKind.EndOfFileToken;
+		token !== SyntaxKind.EndOfFileToken;
 		token = scanner.scan()
 	) {
 		if (
-			token === ts.SyntaxKind.SingleLineCommentTrivia ||
-			token === ts.SyntaxKind.MultiLineCommentTrivia
+			token === SyntaxKind.SingleLineCommentTrivia ||
+			token === SyntaxKind.MultiLineCommentTrivia
 		) {
 			count++;
 		}

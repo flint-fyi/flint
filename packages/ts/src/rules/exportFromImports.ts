@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getStaticStringValue,
@@ -104,19 +104,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					for (const statement of node.statements) {
 						switch (statement.kind) {
-							case ts.SyntaxKind.ExportAssignment:
+							case SyntaxKind.ExportAssignment:
 								if (!statement.isExportEquals) {
 									exportAssignments.push(statement);
 								}
 								break;
 
-							case ts.SyntaxKind.ExportDeclaration:
+							case SyntaxKind.ExportDeclaration:
 								if (!statement.moduleSpecifier) {
 									namedExports.push(statement);
 								}
 								break;
 
-							case ts.SyntaxKind.ImportDeclaration: {
+							case SyntaxKind.ImportDeclaration: {
 								const info = getImportInfo(statement, sourceFile);
 								if (info) {
 									if (info.defaultImport) {

@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts from "typescript";
 
 export function isBuiltinSymbolLike(
 	program: ts.Program,
@@ -67,11 +67,6 @@ function isSymbolFromDefaultLibrary(program: ts.Program, symbol: ts.Symbol) {
 
 	return declarations.some((declaration) => {
 		const sourceFile = declaration.getSourceFile();
-		return (
-			// flint-disable-lines-begin ts/deprecated -- https://github.com/flint-fyi/flint/issues/3057
-			// eslint-disable-next-line @typescript-eslint/no-deprecated -- https://github.com/flint-fyi/flint/issues/3057
-			sourceFile.hasNoDefaultLib ||
-			program.isSourceFileDefaultLibrary(sourceFile)
-		);
+		return program.isSourceFileDefaultLibrary(sourceFile);
 	});
 }

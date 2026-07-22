@@ -23,6 +23,10 @@ export default {
 		"packages/browser": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
+		"packages/build": {
+			ignoreDependencies: ["tsdown!"],
+			project: ["src/**/*.ts!"],
+		},
 		"packages/comparisons": {
 			entry: ["src/sort-data.ts!"],
 			project: ["src/**/*.ts!", "!src/test-utils/*.ts!"],

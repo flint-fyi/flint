@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind, TypeFlags, type Type } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -11,35 +11,35 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 
-function getParentFunction(node: ts.Node) {
-	let current: ts.Node | undefined = node.parent;
+function getParentFunction(node: AST.AnyNode) {
+	let current: AST.AnyNode | undefined = node.parent;
 
 	while (current) {
 		if (
-			ts.isFunctionDeclaration(current) ||
-			ts.isFunctionExpression(current) ||
-			ts.isArrowFunction(current) ||
-			ts.isMethodDeclaration(current)
+			current.kind === SyntaxKind.FunctionDeclaration ||
+			current.kind === SyntaxKind.FunctionExpression ||
+			current.kind === SyntaxKind.ArrowFunction ||
+			current.kind === SyntaxKind.MethodDeclaration
 		) {
 			return current;
 		}
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
-		current = current.parent as ts.Node | undefined;
+		current = current.parent as AST.AnyNode | undefined;
 	}
 
 	return undefined;
 }
 
 function isInValidPosition(
-	node: ts.Node,
-): { invalidAncestor: ts.Node; valid: false } | { valid: true } {
-	if (ts.isExpressionStatement(node.parent)) {
+	node: AST.AnyNode,
+): { invalidAncestor: AST.AnyNode; valid: false } | { valid: true } {
+	if (node.parent.kind === SyntaxKind.ExpressionStatement) {
 		return { valid: true };
 	}
 
 	if (
-		ts.isBinaryExpression(node.parent) &&
-		node.parent.operatorToken.kind === ts.SyntaxKind.CommaToken
+		node.parent.kind === SyntaxKind.BinaryExpression &&
+		node.parent.operatorToken.kind === SyntaxKind.CommaToken
 	) {
 		if (node.parent.right === node) {
 			return isInValidPosition(node.parent);
@@ -47,44 +47,47 @@ function isInValidPosition(
 		return { valid: true };
 	}
 
-	if (ts.isParenthesizedExpression(node.parent)) {
+	if (node.parent.kind === SyntaxKind.ParenthesizedExpression) {
 		return isInValidPosition(node.parent);
 	}
 
 	if (
-		ts.isConditionalExpression(node.parent) &&
+		node.parent.kind === SyntaxKind.ConditionalExpression &&
 		(node.parent.whenTrue === node || node.parent.whenFalse === node)
 	) {
 		return isInValidPosition(node.parent);
 	}
 
 	if (
-		ts.isBinaryExpression(node.parent) &&
-		(node.parent.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken ||
-			node.parent.operatorToken.kind === ts.SyntaxKind.BarBarToken ||
-			node.parent.operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken) &&
+		node.parent.kind === SyntaxKind.BinaryExpression &&
+		(node.parent.operatorToken.kind === SyntaxKind.AmpersandAmpersandToken ||
+			node.parent.operatorToken.kind === SyntaxKind.BarBarToken ||
+			node.parent.operatorToken.kind === SyntaxKind.QuestionQuestionToken) &&
 		node.parent.right === node
 	) {
 		return isInValidPosition(node.parent);
 	}
 
-	if (ts.isVoidExpression(node.parent)) {
+	if (node.parent.kind === SyntaxKind.VoidExpression) {
 		return { valid: true };
 	}
 
-	if (ts.isArrowFunction(node.parent) && node.parent.body === node) {
+	if (
+		node.parent.kind === SyntaxKind.ArrowFunction &&
+		node.parent.body === node
+	) {
 		return { invalidAncestor: node.parent, valid: false };
 	}
 
-	if (ts.isReturnStatement(node.parent)) {
+	if (node.parent.kind === SyntaxKind.ReturnStatement) {
 		return { invalidAncestor: node.parent, valid: false };
 	}
 
 	return { invalidAncestor: node, valid: false };
 }
 
-function isVoidLike(type: ts.Type) {
-	return tsutils.isTypeFlagSet(type, ts.TypeFlags.VoidLike);
+function isVoidLike(type: Type) {
+	return tsutils.isTypeFlagSet(type, TypeFlags.VoidLike);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -150,7 +153,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const { invalidAncestor } = positionResult;
 
-			if (ts.isArrowFunction(invalidAncestor)) {
+			if (invalidAncestor.kind === SyntaxKind.ArrowFunction) {
 				const arrowBodyText = sourceFile.text.slice(
 					invalidAncestor.body.getStart(sourceFile),
 					invalidAncestor.body.getEnd(),
@@ -188,7 +191,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				text: `void ${nodeText}`,
 			};
 
-			if (!ts.isReturnStatement(invalidAncestor)) {
+			if (invalidAncestor.kind !== SyntaxKind.ReturnStatement) {
 				context.report({
 					message: "voidExpressionValue",
 					range: getTSNodeRange(node, sourceFile),
@@ -200,7 +203,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const functionNode = getParentFunction(invalidAncestor);
 			const isLastStatement =
 				functionNode &&
-				ts.isBlock(invalidAncestor.parent) &&
+				invalidAncestor.parent.kind === SyntaxKind.Block &&
 				invalidAncestor.parent.parent === functionNode &&
 				invalidAncestor.parent.statements.at(-1) === invalidAncestor;
 
