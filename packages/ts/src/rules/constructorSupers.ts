@@ -1,7 +1,11 @@
 import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
+import {
+	forEachChild,
+	typescriptLanguage,
+	type AST,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -9,14 +13,14 @@ function classHasExtendsClause(
 	node: AST.ClassDeclaration | AST.ClassExpression,
 ) {
 	return node.heritageClauses?.some(
-		(clause) => clause.token === ts.SyntaxKind.ExtendsKeyword,
+		(clause) => clause.token === SyntaxKind.ExtendsKeyword,
 	);
 }
 
-function containsSuperCall(node: ts.Node): boolean {
+function containsSuperCall(node: AST.AnyNode): boolean {
 	if (
-		ts.isCallExpression(node) &&
-		node.expression.kind === ts.SyntaxKind.SuperKeyword
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.SuperKeyword
 	) {
 		return true;
 	}
@@ -25,7 +29,7 @@ function containsSuperCall(node: ts.Node): boolean {
 		return false;
 	}
 
-	return ts.forEachChild(node, containsSuperCall) ?? false;
+	return forEachChild(node, containsSuperCall) ?? false;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -76,7 +80,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (isDerivedClass && !hasSuperCall) {
 				const constructorKeyword = constructor
 					.getChildren(sourceFile)
-					.find((child) => child.kind === ts.SyntaxKind.Constructor);
+					.find((child) => child.kind === SyntaxKind.Constructor);
 
 				context.report({
 					message: "missingSuperCall",
@@ -97,12 +101,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function findAndReportSuperCalls(
-			node: ts.Node,
+			node: AST.AnyNode,
 			sourceFile: AST.SourceFile,
 		) {
 			if (
-				ts.isCallExpression(node) &&
-				node.expression.kind === ts.SyntaxKind.SuperKeyword
+				node.kind === SyntaxKind.CallExpression &&
+				node.expression.kind === SyntaxKind.SuperKeyword
 			) {
 				context.report({
 					message: "unexpectedSuperCall",
@@ -118,7 +122,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			ts.forEachChild(node, (child) => {
+			forEachChild(node, (child) => {
 				findAndReportSuperCalls(child, sourceFile);
 			});
 		}
@@ -128,7 +132,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: { sourceFile: AST.SourceFile },
 		) {
 			for (const member of node.members) {
-				if (member.kind === ts.SyntaxKind.Constructor) {
+				if (member.kind === SyntaxKind.Constructor) {
 					checkConstructor(node, member, sourceFile);
 				}
 			}

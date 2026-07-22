@@ -1,9 +1,4 @@
-import {
-	isPropertyAccessExpression,
-	isShorthandPropertyAssignment,
-	type Identifier,
-	type Program,
-} from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	declarationIncludesGlobal,
@@ -37,13 +32,17 @@ function isOnlyGlobalDeclaration(
 	);
 }
 
-function isPropertyAccess(node: Identifier) {
-	return isPropertyAccessExpression(node.parent) && node.parent.name === node;
+function isPropertyAccess(node: AST.Identifier) {
+	return (
+		node.parent.kind === SyntaxKind.PropertyAccessExpression &&
+		node.parent.name === node
+	);
 }
 
-function isPropertyShorthand(node: Identifier) {
+function isPropertyShorthand(node: AST.Identifier) {
 	return (
-		isShorthandPropertyAssignment(node.parent) && node.parent.name === node
+		node.parent.kind === SyntaxKind.ShorthandPropertyAssignment &&
+		node.parent.name === node
 	);
 }
 

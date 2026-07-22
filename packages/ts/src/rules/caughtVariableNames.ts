@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 
@@ -31,7 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CatchClause: (node, { sourceFile }) => {
 					const variable = node.variableDeclaration;
-					if (!variable || !ts.isIdentifier(variable.name)) {
+					if (variable?.name.kind !== SyntaxKind.Identifier) {
 						return;
 					}
 

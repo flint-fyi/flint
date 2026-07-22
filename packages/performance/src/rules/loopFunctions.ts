@@ -81,17 +81,27 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			name: AST.BindingName,
 			variables: Set<string>,
 		): void {
-			if (ts.isIdentifier(name)) {
-				variables.add(name.text);
-			} else if (ts.isArrayBindingPattern(name)) {
-				for (const element of name.elements) {
-					if (ts.isBindingElement(element)) {
+			switch (name.kind) {
+				case SyntaxKind.ArrayBindingPattern: {
+					for (const element of name.elements) {
+						if (element.kind === SyntaxKind.BindingElement) {
+							addBindingNames(element.name, variables);
+						}
+					}
+
+					break;
+				}
+				case SyntaxKind.Identifier: {
+					variables.add(name.text);
+
+					break;
+				}
+				case SyntaxKind.ObjectBindingPattern: {
+					for (const element of name.elements) {
 						addBindingNames(element.name, variables);
 					}
-				}
-			} else if (ts.isObjectBindingPattern(name)) {
-				for (const element of name.elements) {
-					addBindingNames(element.name, variables);
+
+					break;
 				}
 			}
 		}

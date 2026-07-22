@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind, TypeFlags } from "typescript";
 
 import {
 	typescriptLanguage,
@@ -55,17 +55,17 @@ function findUnescapedDollars(replacementString: string): DollarIssue[] {
 }
 
 function isRegExpArgument(argument: AST.Expression, typeChecker: Checker) {
-	if (argument.kind === ts.SyntaxKind.RegularExpressionLiteral) {
+	if (argument.kind === SyntaxKind.RegularExpressionLiteral) {
 		return true;
 	}
 
 	if (
-		argument.kind === ts.SyntaxKind.NewExpression ||
-		argument.kind === ts.SyntaxKind.CallExpression
+		argument.kind === SyntaxKind.NewExpression ||
+		argument.kind === SyntaxKind.CallExpression
 	) {
 		const callOrNew = argument;
 		if (
-			callOrNew.expression.kind === ts.SyntaxKind.Identifier &&
+			callOrNew.expression.kind === SyntaxKind.Identifier &&
 			callOrNew.expression.text === "RegExp"
 		) {
 			return true;
@@ -79,7 +79,7 @@ function isRegExpArgument(argument: AST.Expression, typeChecker: Checker) {
 
 function isStringType(node: AST.Expression, typeChecker: Checker) {
 	const type = typeChecker.getTypeAtLocation(node);
-	return (type.flags & ts.TypeFlags.StringLike) !== 0;
+	return (type.flags & TypeFlags.StringLike) !== 0;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -107,7 +107,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression) {
+					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
 
@@ -131,7 +131,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						!isRegExpArgument(regexpArgument, typeChecker) ||
 						!isStringType(propertyAccess.expression, typeChecker) ||
-						stringLiteral.kind !== ts.SyntaxKind.StringLiteral
+						stringLiteral.kind !== SyntaxKind.StringLiteral
 					) {
 						return;
 					}

@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	typescriptLanguage,
@@ -75,7 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			for (const argument of node.arguments) {
 				const argumentType = typeChecker.getTypeAtLocation(argument);
 
-				if (ts.isSpreadElement(argument)) {
+				if (argument.kind === SyntaxKind.SpreadElement) {
 					const spreadType = typeChecker.getTypeAtLocation(argument.expression);
 					const anyType = discriminateAnyType(
 						spreadType,
@@ -243,7 +243,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const template = node.template;
-					if (!ts.isTemplateExpression(template)) {
+					if (template.kind !== SyntaxKind.TemplateExpression) {
 						return;
 					}
 

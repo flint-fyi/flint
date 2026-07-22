@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -22,7 +22,7 @@ function isOverloadedDeclaration(
 
 	for (const statement of statements) {
 		if (
-			ts.isFunctionDeclaration(statement) &&
+			statement.kind === SyntaxKind.FunctionDeclaration &&
 			statement.name?.text === node.name.text
 		) {
 			count++;
@@ -102,7 +102,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					for (const declaration of node.declarationList.declarations) {
 						switch (declaration.initializer?.kind) {
-							case ts.SyntaxKind.ArrowFunction:
+							case SyntaxKind.ArrowFunction:
 								if (!options.allowArrowFunctions) {
 									context.report({
 										message: "preferDeclaration",
@@ -111,7 +111,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								}
 								break;
 
-							case ts.SyntaxKind.FunctionExpression:
+							case SyntaxKind.FunctionExpression:
 								context.report({
 									message: "preferDeclaration",
 									range: getTSNodeRange(declaration.name, sourceFile),

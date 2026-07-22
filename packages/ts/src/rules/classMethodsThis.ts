@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
@@ -21,15 +21,15 @@ function classImplementsSomething(
 ): boolean {
 	return (
 		classNode.heritageClauses?.some(
-			(clause) => clause.token === ts.SyntaxKind.ImplementsKeyword,
+			(clause) => clause.token === SyntaxKind.ImplementsKeyword,
 		) ?? false
 	);
 }
 
 function containsThis(node: ts.Node): boolean {
 	switch (node.kind) {
-		case ts.SyntaxKind.ClassDeclaration:
-		case ts.SyntaxKind.ClassExpression: {
+		case SyntaxKind.ClassDeclaration:
+		case SyntaxKind.ClassExpression: {
 			const classNode = node as ts.ClassDeclaration | ts.ClassExpression;
 			for (const member of classNode.members) {
 				if (
@@ -43,13 +43,13 @@ function containsThis(node: ts.Node): boolean {
 			return false;
 		}
 
-		case ts.SyntaxKind.ClassStaticBlockDeclaration:
-		case ts.SyntaxKind.FunctionDeclaration:
-		case ts.SyntaxKind.FunctionExpression:
+		case SyntaxKind.ClassStaticBlockDeclaration:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.FunctionExpression:
 			return false;
 
-		case ts.SyntaxKind.SuperKeyword:
-		case ts.SyntaxKind.ThisKeyword:
+		case SyntaxKind.SuperKeyword:
+		case SyntaxKind.ThisKeyword:
 			return true;
 
 		default:
@@ -66,23 +66,23 @@ function getMemberDisplayName(
 	const name = member.name;
 
 	if (
-		ts.isIdentifier(name) ||
-		ts.isStringLiteral(name) ||
-		ts.isNumericLiteral(name)
+		name.kind === SyntaxKind.Identifier ||
+		name.kind === SyntaxKind.StringLiteral ||
+		name.kind === SyntaxKind.NumericLiteral
 	) {
 		return name.text;
 	}
 
-	if (ts.isPrivateIdentifier(name)) {
+	if (name.kind === SyntaxKind.PrivateIdentifier) {
 		return name.text;
 	}
 
-	if (ts.isComputedPropertyName(name)) {
+	if (name.kind === SyntaxKind.ComputedPropertyName) {
 		const expr = name.expression;
 		if (
-			ts.isStringLiteral(expr) ||
-			ts.isNoSubstitutionTemplateLiteral(expr) ||
-			ts.isNumericLiteral(expr)
+			expr.kind === SyntaxKind.StringLiteral ||
+			expr.kind === SyntaxKind.NoSubstitutionTemplateLiteral ||
+			expr.kind === SyntaxKind.NumericLiteral
 		) {
 			return expr.text;
 		}
@@ -95,13 +95,13 @@ function getMemberDisplayName(
 
 function hasModifier(
 	modifiers: ts.NodeArray<AST.ModifierLike> | undefined,
-	kind: ts.SyntaxKind,
+	kind: SyntaxKind,
 ): boolean {
 	return modifiers?.some((modifier) => modifier.kind === kind) ?? false;
 }
 
 function isPublicMember(member: ClassMember): boolean {
-	if (ts.isPrivateIdentifier(member.name)) {
+	if (member.name.kind === SyntaxKind.PrivateIdentifier) {
 		return false;
 	}
 
@@ -113,8 +113,8 @@ function isPublicMember(member: ClassMember): boolean {
 	if (
 		modifiers.some(
 			(m) =>
-				m.kind === ts.SyntaxKind.PrivateKeyword ||
-				m.kind === ts.SyntaxKind.ProtectedKeyword,
+				m.kind === SyntaxKind.PrivateKeyword ||
+				m.kind === SyntaxKind.ProtectedKeyword,
 		)
 	) {
 		return false;
@@ -128,13 +128,13 @@ function shouldSkipMember(
 	classNode: AST.ClassDeclaration | AST.ClassExpression,
 	options: RuleOptions,
 ): boolean {
-	if (hasModifier(member.modifiers, ts.SyntaxKind.StaticKeyword)) {
+	if (hasModifier(member.modifiers, SyntaxKind.StaticKeyword)) {
 		return true;
 	}
 
 	if (
 		options.ignoreOverrideMethods &&
-		hasModifier(member.modifiers, ts.SyntaxKind.OverrideKeyword)
+		hasModifier(member.modifiers, SyntaxKind.OverrideKeyword)
 	) {
 		return true;
 	}
@@ -252,8 +252,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				member.initializer.kind !== ts.SyntaxKind.ArrowFunction &&
-				member.initializer.kind !== ts.SyntaxKind.FunctionExpression
+				member.initializer.kind !== SyntaxKind.ArrowFunction &&
+				member.initializer.kind !== SyntaxKind.FunctionExpression
 			) {
 				return;
 			}
@@ -275,16 +275,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			for (const member of node.members) {
 				switch (member.kind) {
-					case ts.SyntaxKind.GetAccessor:
+					case SyntaxKind.GetAccessor:
 						checkAccessor(member, node, sourceFile, options, "getter");
 						break;
-					case ts.SyntaxKind.MethodDeclaration:
+					case SyntaxKind.MethodDeclaration:
 						checkMethod(member, node, sourceFile, options);
 						break;
-					case ts.SyntaxKind.PropertyDeclaration:
+					case SyntaxKind.PropertyDeclaration:
 						checkPropertyInitializerFunction(member, node, sourceFile, options);
 						break;
-					case ts.SyntaxKind.SetAccessor:
+					case SyntaxKind.SetAccessor:
 						checkAccessor(member, node, sourceFile, options, "setter");
 						break;
 				}

@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
@@ -29,9 +29,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				BinaryExpression(node: AST.BinaryExpression, { sourceFile }) {
 					if (
-						node.operatorToken.kind !== ts.SyntaxKind.EqualsToken ||
-						node.right.kind !== ts.SyntaxKind.ThisKeyword ||
-						!ts.isIdentifier(node.left)
+						node.operatorToken.kind !== SyntaxKind.EqualsToken ||
+						node.right.kind !== SyntaxKind.ThisKeyword ||
+						node.left.kind !== SyntaxKind.Identifier
 					) {
 						return;
 					}
@@ -46,8 +46,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				VariableDeclaration(node: AST.VariableDeclaration, { sourceFile }) {
 					if (
-						node.initializer?.kind !== ts.SyntaxKind.ThisKeyword ||
-						!ts.isIdentifier(node.name)
+						node.initializer?.kind !== SyntaxKind.ThisKeyword ||
+						node.name.kind !== SyntaxKind.Identifier
 					) {
 						return;
 					}

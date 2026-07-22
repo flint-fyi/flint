@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -14,19 +14,21 @@ function hasNamedBindings(node: AST.ImportDeclaration) {
 		return false;
 	}
 
-	return !ts.isNamedImports(namedBindings) || !!namedBindings.elements.length;
+	return (
+		namedBindings.kind !== SyntaxKind.NamedImports ||
+		!!namedBindings.elements.length
+	);
 }
 
 function hasNamespaceImport(node: AST.ImportDeclaration) {
 	const namedBindings = node.importClause?.namedBindings;
-	return namedBindings && ts.isNamespaceImport(namedBindings);
+	return namedBindings?.kind === SyntaxKind.NamespaceImport;
 }
 
 function isEmptyNamedImports(node: AST.ImportDeclaration) {
 	const namedBindings = node.importClause?.namedBindings;
 	return (
-		namedBindings &&
-		ts.isNamedImports(namedBindings) &&
+		namedBindings?.kind === SyntaxKind.NamedImports &&
 		!namedBindings.elements.length
 	);
 }
@@ -114,7 +116,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					range: getTSNodeRange(node, sourceFile),
 					text: "",
 				},
-				...(importClause.phaseModifier === ts.SyntaxKind.TypeKeyword
+				...(importClause.phaseModifier === SyntaxKind.TypeKeyword
 					? []
 					: [
 							{
@@ -131,9 +133,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				ExportDeclaration: (node, { sourceFile }) => {
 					if (
 						node.moduleSpecifier === undefined ||
-						!ts.isExportDeclaration(node) ||
-						!node.exportClause ||
-						!ts.isNamedExports(node.exportClause) ||
+						node.exportClause?.kind !== SyntaxKind.NamedExports ||
 						!!node.exportClause.elements.length
 					) {
 						return;

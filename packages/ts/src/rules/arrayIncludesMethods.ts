@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -18,7 +18,7 @@ function isSomeWithDirectEquality(
 	// TODO: Use a util like getStaticValue
 	// https://github.com/flint-fyi/flint/issues/1298
 	if (
-		!ts.isPropertyAccessExpression(node.expression) ||
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.text !== "some" ||
 		node.arguments.length !== 1
 	) {
@@ -29,7 +29,8 @@ function isSomeWithDirectEquality(
 	const callback = node.arguments[0]!;
 
 	if (
-		(!ts.isArrowFunction(callback) && !ts.isFunctionExpression(callback)) ||
+		(callback.kind !== SyntaxKind.ArrowFunction &&
+			callback.kind !== SyntaxKind.FunctionExpression) ||
 		callback.parameters.length !== 1
 	) {
 		return false;
@@ -39,10 +40,10 @@ function isSomeWithDirectEquality(
 	const firstParameter = callback.parameters[0]!;
 
 	return (
-		firstParameter.name.kind === ts.SyntaxKind.Identifier &&
+		firstParameter.name.kind === SyntaxKind.Identifier &&
 		isDirectEqualityCheck(
 			callback,
-			[ts.SyntaxKind.EqualsEqualsToken, ts.SyntaxKind.EqualsEqualsEqualsToken],
+			[SyntaxKind.EqualsEqualsToken, SyntaxKind.EqualsEqualsEqualsToken],
 			firstParameter.name.text,
 		) &&
 		isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)

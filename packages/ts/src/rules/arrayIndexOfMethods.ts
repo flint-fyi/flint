@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -15,7 +15,7 @@ function isFindIndexWithDirectEquality(
 	node: AST.CallExpression,
 	typeChecker: Checker,
 ) {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
+	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 		return undefined;
 	}
 
@@ -31,7 +31,8 @@ function isFindIndexWithDirectEquality(
 	const callback = node.arguments[0]!;
 
 	if (
-		(!ts.isArrowFunction(callback) && !ts.isFunctionExpression(callback)) ||
+		(callback.kind !== SyntaxKind.ArrowFunction &&
+			callback.kind !== SyntaxKind.FunctionExpression) ||
 		callback.parameters.length !== 1
 	) {
 		return undefined;
@@ -41,10 +42,10 @@ function isFindIndexWithDirectEquality(
 	const firstParameter = callback.parameters[0]!;
 
 	if (
-		firstParameter.name.kind !== ts.SyntaxKind.Identifier ||
+		firstParameter.name.kind !== SyntaxKind.Identifier ||
 		!isDirectEqualityCheck(
 			callback,
-			[ts.SyntaxKind.EqualsEqualsEqualsToken],
+			[SyntaxKind.EqualsEqualsEqualsToken],
 			firstParameter.name.text,
 		) ||
 		!isArrayOrTupleTypeAtLocation(node.expression.expression, typeChecker)

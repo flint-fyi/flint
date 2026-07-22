@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -9,7 +9,7 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function getNodeText(node: ts.Node, sourceFile: AST.SourceFile) {
+function getNodeText(node: AST.AnyNode, sourceFile: AST.SourceFile) {
 	return sourceFile.text.slice(node.getStart(sourceFile), node.getEnd());
 }
 
@@ -48,8 +48,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// condition ? true : false
 					if (
-						whenTrue.kind === ts.SyntaxKind.TrueKeyword &&
-						whenFalse.kind === ts.SyntaxKind.FalseKeyword
+						whenTrue.kind === SyntaxKind.TrueKeyword &&
+						whenFalse.kind === SyntaxKind.FalseKeyword
 					) {
 						const range = getTSNodeRange(node, sourceFile);
 						context.report({
@@ -65,14 +65,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// condition ? false : true
 					if (
-						whenTrue.kind === ts.SyntaxKind.FalseKeyword &&
-						whenFalse.kind === ts.SyntaxKind.TrueKeyword
+						whenTrue.kind === SyntaxKind.FalseKeyword &&
+						whenFalse.kind === SyntaxKind.TrueKeyword
 					) {
 						const range = getTSNodeRange(node, sourceFile);
 						const conditionText = getNodeText(condition, sourceFile);
 						const needsParens =
-							ts.isBinaryExpression(condition) ||
-							ts.isConditionalExpression(condition);
+							condition.kind === SyntaxKind.BinaryExpression ||
+							condition.kind === SyntaxKind.ConditionalExpression;
 
 						const negatedCondition = needsParens
 							? `!(${conditionText})`
@@ -108,8 +108,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// !condition ? alternate : condition
 					if (
-						ts.isPrefixUnaryExpression(condition) &&
-						condition.operator === ts.SyntaxKind.ExclamationToken &&
+						condition.kind === SyntaxKind.PrefixUnaryExpression &&
+						condition.operator === SyntaxKind.ExclamationToken &&
 						hasSameTokens(condition.operand, whenFalse, sourceFile)
 					) {
 						const range = getTSNodeRange(node, sourceFile);

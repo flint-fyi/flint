@@ -5,7 +5,7 @@ import {
 	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
 import type { CharacterClassElement } from "@eslint-community/regexpp/ast";
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	isGlobalDeclarationOfName,
@@ -418,7 +418,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (
-				!ts.isIdentifier(node.expression) ||
+				node.expression.kind !== SyntaxKind.Identifier ||
 				node.expression.text !== "RegExp" ||
 				!isGlobalDeclarationOfName(
 					node.expression,
@@ -434,13 +434,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const patternArg = node.arguments[0]!;
 
-			if (!ts.isStringLiteral(patternArg)) {
+			if (patternArg.kind !== SyntaxKind.StringLiteral) {
 				return;
 			}
 
 			const flagsArg = node.arguments[1];
 			const flagsText =
-				flagsArg && ts.isStringLiteral(flagsArg) ? flagsArg.text : "";
+				flagsArg?.kind === SyntaxKind.StringLiteral ? flagsArg.text : "";
 			const flags = parseFlags(flagsText);
 			const issues = checkPatternWithRegexpp(patternArg.text, flags);
 

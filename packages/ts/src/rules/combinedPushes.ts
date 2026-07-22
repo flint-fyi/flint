@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	typescriptLanguage,
@@ -30,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function isArrayPushCall(node: AST.CallExpression, typeChecker: Checker) {
 			return (
-				ts.isPropertyAccessExpression(node.expression) &&
+				node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 				node.expression.name.text === "push" &&
 				typeChecker.isArrayType(
 					typeChecker.getTypeAtLocation(node.expression.expression),
@@ -43,7 +43,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			sourceFile: AST.SourceFile,
 		) {
 			return (
-				ts.isPropertyAccessExpression(node.expression) &&
+				node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 				node.expression.expression.getText(sourceFile)
 			);
 		}
@@ -54,8 +54,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			typeChecker: Checker,
 		) {
 			if (
-				!ts.isExpressionStatement(statement) ||
-				!ts.isCallExpression(statement.expression) ||
+				statement.kind !== SyntaxKind.ExpressionStatement ||
+				statement.expression.kind !== SyntaxKind.CallExpression ||
 				!isArrayPushCall(statement.expression, typeChecker)
 			) {
 				return undefined;

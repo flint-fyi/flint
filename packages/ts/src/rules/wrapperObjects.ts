@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				NewExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (
-						node.expression.kind !== ts.SyntaxKind.Identifier ||
+						node.expression.kind !== SyntaxKind.Identifier ||
 						!wrapperConstructors.has(node.expression.text) ||
 						!isGlobalDeclarationOfName(
 							node.expression,

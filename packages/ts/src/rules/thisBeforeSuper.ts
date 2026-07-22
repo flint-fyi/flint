@@ -1,41 +1,45 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
+import {
+	forEachChild,
+	typescriptLanguage,
+	type AST,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 function findAllThisOrSuper(
-	node: ts.Node,
-	sourceFile: ts.SourceFile,
-	results: ts.Node[],
+	node: AST.AnyNode,
+	sourceFile: AST.SourceFile,
+	results: AST.AnyNode[],
 ): void {
 	if (isNestedScope(node)) {
 		return;
 	}
 
-	if (node.kind === ts.SyntaxKind.ThisKeyword) {
+	if (node.kind === SyntaxKind.ThisKeyword) {
 		results.push(node);
 		return;
 	}
 
 	if (
-		node.kind === ts.SyntaxKind.SuperKeyword &&
-		ts.isPropertyAccessExpression(node.parent)
+		node.kind === SyntaxKind.SuperKeyword &&
+		node.parent.kind === SyntaxKind.PropertyAccessExpression
 	) {
 		results.push(node);
 		return;
 	}
 
-	ts.forEachChild(node, (child) => {
+	forEachChild(node, (child) => {
 		findAllThisOrSuper(child, sourceFile, results);
 	});
 }
 
 function findAllThisOrSuperBeforePosition(
-	node: ts.Node,
+	node: AST.AnyNode,
 	position: number,
-	sourceFile: ts.SourceFile,
-	results: ts.Node[],
+	sourceFile: AST.SourceFile,
+	results: AST.AnyNode[],
 ): void {
 	if (node.getStart(sourceFile) >= position) {
 		return;
@@ -45,50 +49,50 @@ function findAllThisOrSuperBeforePosition(
 		return;
 	}
 
-	if (node.kind === ts.SyntaxKind.ThisKeyword) {
+	if (node.kind === SyntaxKind.ThisKeyword) {
 		results.push(node);
 		return;
 	}
 
 	if (
-		node.kind === ts.SyntaxKind.SuperKeyword &&
-		ts.isPropertyAccessExpression(node.parent)
+		node.kind === SyntaxKind.SuperKeyword &&
+		node.parent.kind === SyntaxKind.PropertyAccessExpression
 	) {
 		results.push(node);
 		return;
 	}
 
-	ts.forEachChild(node, (child) => {
+	forEachChild(node, (child) => {
 		findAllThisOrSuperBeforePosition(child, position, sourceFile, results);
 	});
 }
 
-function findFirstSuperCall(node: ts.Node): ts.CallExpression | undefined {
+function findFirstSuperCall(node: AST.AnyNode): AST.CallExpression | undefined {
 	if (isNestedScope(node)) {
 		return undefined;
 	}
 
 	if (
-		ts.isCallExpression(node) &&
-		node.expression.kind === ts.SyntaxKind.SuperKeyword
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.SuperKeyword
 	) {
 		return node;
 	}
 
-	return ts.forEachChild(node, (child) => {
+	return forEachChild(node, (child) => {
 		return findFirstSuperCall(child);
 	});
 }
 
 // TODO: This will be more clean when there is a scope manager
 // https://github.com/flint-fyi/flint/issues/400
-function isNestedScope(node: ts.Node) {
+function isNestedScope(node: AST.AnyNode) {
 	return (
-		ts.isFunctionDeclaration(node) ||
-		ts.isFunctionExpression(node) ||
-		ts.isArrowFunction(node) ||
-		ts.isClassDeclaration(node) ||
-		ts.isClassExpression(node)
+		node.kind === SyntaxKind.FunctionDeclaration ||
+		node.kind === SyntaxKind.FunctionExpression ||
+		node.kind === SyntaxKind.ArrowFunction ||
+		node.kind === SyntaxKind.ClassDeclaration ||
+		node.kind === SyntaxKind.ClassExpression
 	);
 }
 
@@ -127,7 +131,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					const hasExtends = node.parent.heritageClauses.some(
-						(clause) => clause.token === ts.SyntaxKind.ExtendsKeyword,
+						(clause) => clause.token === SyntaxKind.ExtendsKeyword,
 					);
 
 					if (!hasExtends || !node.body) {
@@ -136,7 +140,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const superCall = findFirstSuperCall(node.body);
 
-					const invalidNodes: ts.Node[] = [];
+					const invalidNodes: AST.AnyNode[] = [];
 
 					if (superCall) {
 						const superCallStart = superCall.getStart(sourceFile);
@@ -156,7 +160,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					for (const invalidNode of invalidNodes) {
 						context.report({
 							message:
-								invalidNode.kind === ts.SyntaxKind.ThisKeyword
+								invalidNode.kind === SyntaxKind.ThisKeyword
 									? "thisBeforeSuper"
 									: "superBeforeSuper",
 							range: {

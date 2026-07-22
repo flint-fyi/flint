@@ -85,18 +85,6 @@ function getMemberMethod(
 		}
 	}
 
-	if (
-		ts.isExportDeclaration(member) ||
-		ts.isImportDeclaration(member) ||
-		ts.isTypeAliasDeclaration(member) ||
-		ts.isInterfaceDeclaration(member) ||
-		ts.isClassDeclaration(member) ||
-		ts.isEnumDeclaration(member) ||
-		ts.isModuleDeclaration(member)
-	) {
-		return undefined;
-	}
-
 	return undefined;
 }
 

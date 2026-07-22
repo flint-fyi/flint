@@ -23,6 +23,7 @@
 		"test": "vitest --project e2e"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/spelling": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",

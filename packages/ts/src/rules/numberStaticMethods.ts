@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -24,11 +24,10 @@ function isDeclarationName(node: ts.Identifier) {
 
 function isLeftHandSide(node: AST.Identifier) {
 	return (
-		node.parent.kind === ts.SyntaxKind.BinaryExpression &&
-		ts.isBinaryExpression(node.parent) &&
+		node.parent.kind === SyntaxKind.BinaryExpression &&
 		node.parent.left === node &&
-		node.parent.operatorToken.kind >= ts.SyntaxKind.FirstAssignment &&
-		node.parent.operatorToken.kind <= ts.SyntaxKind.LastAssignment
+		node.parent.operatorToken.kind >= SyntaxKind.FirstAssignment &&
+		node.parent.operatorToken.kind <= SyntaxKind.LastAssignment
 	);
 }
 

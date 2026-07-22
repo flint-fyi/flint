@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -37,7 +37,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const statement = node.body.statements[0]!;
 					if (
-						!ts.isReturnStatement(statement) ||
+						statement.kind !== SyntaxKind.ReturnStatement ||
 						!statement.expression ||
 						!isLiteralValue(statement.expression)
 					) {
@@ -56,16 +56,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function isLiteralValue(node: AST.AnyNode): boolean {
 	switch (node.kind) {
-		case ts.SyntaxKind.BigIntLiteral:
-		case ts.SyntaxKind.FalseKeyword:
-		case ts.SyntaxKind.NoSubstitutionTemplateLiteral:
-		case ts.SyntaxKind.NullKeyword:
-		case ts.SyntaxKind.NumericLiteral:
-		case ts.SyntaxKind.RegularExpressionLiteral:
-		case ts.SyntaxKind.StringLiteral:
-		case ts.SyntaxKind.TrueKeyword:
+		case SyntaxKind.BigIntLiteral:
+		case SyntaxKind.FalseKeyword:
+		case SyntaxKind.NoSubstitutionTemplateLiteral:
+		case SyntaxKind.NullKeyword:
+		case SyntaxKind.NumericLiteral:
+		case SyntaxKind.RegularExpressionLiteral:
+		case SyntaxKind.StringLiteral:
+		case SyntaxKind.TrueKeyword:
 			return true;
-		case ts.SyntaxKind.PrefixUnaryExpression:
+		case SyntaxKind.PrefixUnaryExpression:
 			return isLiteralValue(node.operand);
 		default:
 			return false;

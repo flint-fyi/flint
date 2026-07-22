@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind, TypeFlags } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -10,10 +10,10 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function getRegexFlags(node: AST.Expression, sourceFile: AST.SourceFile) {
 	switch (node.kind) {
-		case ts.SyntaxKind.CallExpression:
-		case ts.SyntaxKind.NewExpression:
+		case SyntaxKind.CallExpression:
+		case SyntaxKind.NewExpression:
 			if (
-				ts.isIdentifier(node.expression) &&
+				node.expression.kind === SyntaxKind.Identifier &&
 				node.expression.text === "RegExp" &&
 				node.arguments
 			) {
@@ -24,14 +24,14 @@ function getRegexFlags(node: AST.Expression, sourceFile: AST.SourceFile) {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const flagsArg = node.arguments[1]!;
 
-				if (ts.isStringLiteral(flagsArg)) {
+				if (flagsArg.kind === SyntaxKind.StringLiteral) {
 					return flagsArg.text;
 				}
 			}
 
 			return undefined;
 
-		case ts.SyntaxKind.RegularExpressionLiteral: {
+		case SyntaxKind.RegularExpressionLiteral: {
 			const text = node.getText(sourceFile);
 			const lastSlash = text.lastIndexOf("/");
 			return lastSlash >= 0 ? text.slice(lastSlash + 1) : "";
@@ -63,7 +63,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
-					if (!ts.isPropertyAccessExpression(node.expression)) {
+					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
 
@@ -83,7 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const objectType = typeChecker.getTypeAtLocation(
 						node.expression.expression,
 					);
-					if (!(objectType.flags & ts.TypeFlags.StringLike)) {
+					if (!(objectType.flags & TypeFlags.StringLike)) {
 						return;
 					}
 

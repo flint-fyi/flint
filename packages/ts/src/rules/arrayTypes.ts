@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -12,20 +12,20 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function isSimpleType(typeNode: AST.TypeNode | undefined): boolean {
 	switch (typeNode?.kind) {
-		case ts.SyntaxKind.AnyKeyword:
-		case ts.SyntaxKind.BigIntKeyword:
-		case ts.SyntaxKind.BooleanKeyword:
-		case ts.SyntaxKind.NeverKeyword:
-		case ts.SyntaxKind.NumberKeyword:
-		case ts.SyntaxKind.ObjectKeyword:
-		case ts.SyntaxKind.StringKeyword:
-		case ts.SyntaxKind.SymbolKeyword:
-		case ts.SyntaxKind.TypeReference:
-		case ts.SyntaxKind.UndefinedKeyword:
-		case ts.SyntaxKind.UnknownKeyword:
-		case ts.SyntaxKind.VoidKeyword:
+		case SyntaxKind.AnyKeyword:
+		case SyntaxKind.BigIntKeyword:
+		case SyntaxKind.BooleanKeyword:
+		case SyntaxKind.NeverKeyword:
+		case SyntaxKind.NumberKeyword:
+		case SyntaxKind.ObjectKeyword:
+		case SyntaxKind.StringKeyword:
+		case SyntaxKind.SymbolKeyword:
+		case SyntaxKind.TypeReference:
+		case SyntaxKind.UndefinedKeyword:
+		case SyntaxKind.UnknownKeyword:
+		case SyntaxKind.VoidKeyword:
 			return true;
-		case ts.SyntaxKind.ArrayType:
+		case SyntaxKind.ArrayType:
 			return isSimpleType(typeNode.elementType);
 		default:
 			return false;
@@ -86,8 +86,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ArrayType: (node, { options, sourceFile }) => {
 					if (
-						node.parent.kind === ts.SyntaxKind.TypeOperator &&
-						node.parent.operator === ts.SyntaxKind.ReadonlyKeyword
+						node.parent.kind === SyntaxKind.TypeOperator &&
+						node.parent.operator === SyntaxKind.ReadonlyKeyword
 					) {
 						return;
 					}
@@ -111,8 +111,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				TypeOperator: (node, { options, sourceFile }) => {
 					if (
-						node.operator !== ts.SyntaxKind.ReadonlyKeyword ||
-						node.type.kind !== ts.SyntaxKind.ArrayType
+						node.operator !== SyntaxKind.ReadonlyKeyword ||
+						node.type.kind !== SyntaxKind.ArrayType
 					) {
 						return;
 					}
@@ -141,7 +141,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					{ options, program, sourceFile, typeChecker },
 				) => {
 					if (
-						node.typeName.kind !== ts.SyntaxKind.Identifier ||
+						node.typeName.kind !== SyntaxKind.Identifier ||
 						!isGlobalDeclaration(node.typeName, typeChecker, program)
 					) {
 						return;

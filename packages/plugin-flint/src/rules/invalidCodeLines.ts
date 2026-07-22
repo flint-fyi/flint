@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import type { FileChange } from "@flint.fyi/core";
 import {
@@ -63,7 +63,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: ParsedTestCaseCodeNode,
 			sourceFile: AST.SourceFile,
 		) {
-			if (node.kind === ts.SyntaxKind.StringLiteral) {
+			if (node.kind === SyntaxKind.StringLiteral) {
 				return [
 					{
 						range: getTSNodeRange(node, sourceFile),
@@ -73,7 +73,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const template =
-				node.kind === ts.SyntaxKind.TaggedTemplateExpression
+				node.kind === SyntaxKind.TaggedTemplateExpression
 					? node.template
 					: node;
 			const changes: FileChange[] = [];
