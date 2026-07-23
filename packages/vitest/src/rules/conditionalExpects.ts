@@ -33,6 +33,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				"Call `expect.assertions(...)` to guarantee the expected assertions ran, then enable the `expectAssertions` option.",
 			],
 		},
+		noPromiseCatchExpect: {
+			primary: "Avoid calling `expect` inside a `.catch()` handler",
+			secondary: [
+				"A `.catch()` handler only runs if the promise rejects.",
+				"If the promise resolves, the assertion never runs and the test passes without checking anything.",
+				"Assertion failures thrown inside the handler can also be swallowed by the rest of the promise chain.",
+			],
+			suggestions: [
+				"Assert on the rejection directly with `await expect(promise).rejects.toThrow(...)`.",
+				"Call `expect.assertions(...)` to guarantee the handler actually ran.",
+			],
+		},
 	},
 	options: {
 		expectAssertions: z.boolean().default(false),
@@ -85,7 +97,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						});
 					} else if (inPromiseCatch) {
 						context.report({
-							message: "noConditionalExpect",
+							message: "noPromiseCatchExpect",
 							range,
 						});
 					}

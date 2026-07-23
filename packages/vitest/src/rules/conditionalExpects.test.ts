@@ -119,7 +119,7 @@ promise.catch(() => {
 promise.catch(() => {
     expect(true).toBe(false);
     ~~~~~~~~~~~~
-    Avoid calling \`expect\` inside conditional statements
+    Avoid calling \`expect\` inside a \`.catch()\` handler
 });
 `,
 		},

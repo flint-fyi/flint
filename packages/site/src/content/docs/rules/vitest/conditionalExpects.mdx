@@ -14,9 +14,15 @@ import RuleSummary from "~/components/RuleSummary.astro";
 Calling `expect` inside a conditional statement (`if`, `switch`, a ternary, `&&`/`||`/`??`, or a `catch` block) means the assertion may never run at all.
 If the condition is never met, the test passes without actually checking anything.
 
-This rule reports `expect` calls made inside conditional statements and inside `.catch()` handlers within a test case.
+The same is true of a `.catch()` handler.
+It only runs if the promise rejects, so a promise that resolves means the assertion never runs.
+Assertion failures thrown inside the handler can also be swallowed by the rest of the promise chain.
+
+This rule reports both cases separately, since they have different fixes.
 
 ## Examples
+
+### Conditional statements
 
 <Tabs>
 <TabItem label="❌ Incorrect">
@@ -35,12 +41,6 @@ test("something", () => {
 });
 ```
 
-```ts
-promise.catch(() => {
-	expect(true).toBe(false);
-});
-```
-
 </TabItem>
 <TabItem label="✅ Correct">
 
@@ -56,6 +56,40 @@ test("something", () => {
 	if (something) {
 		expect(something).toBe(true);
 	}
+});
+```
+
+</TabItem>
+</Tabs>
+
+### `.catch()` handlers
+
+Prefer asserting on the rejection directly, so the assertion runs whether or not the promise rejects.
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+promise.catch(() => {
+	expect(true).toBe(false);
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+test("something", async () => {
+	await expect(promise).rejects.toThrow();
+});
+```
+
+```ts
+test("something", async () => {
+	expect.assertions(1);
+	await promise.catch((error) => {
+		expect(error).toBeDefined();
+	});
 });
 ```
 
