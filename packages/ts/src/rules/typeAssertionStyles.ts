@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -10,8 +10,8 @@ import { ruleCreator } from "./ruleCreator.ts";
 
 function isConstAssertion(node: AST.TypeAssertion, sourceFile: AST.SourceFile) {
 	return (
-		node.type.kind === ts.SyntaxKind.TypeReference &&
-		node.type.typeName.kind === ts.SyntaxKind.Identifier &&
+		node.type.kind === SyntaxKind.TypeReference &&
+		node.type.typeName.kind === SyntaxKind.Identifier &&
 		node.type.typeName.getText(sourceFile) === "const"
 	);
 }

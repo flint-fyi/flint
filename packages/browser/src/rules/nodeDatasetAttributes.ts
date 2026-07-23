@@ -1,6 +1,7 @@
 import { SyntaxKind } from "typescript";
 
 import {
+	getStaticStringValue,
 	getTSNodeRange,
 	isGlobalDeclaration,
 	typescriptLanguage,
@@ -80,13 +81,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
+				CallExpression(node, { program, sourceFile, typeChecker }) {
 					const details = getMethodDetails(node);
 					if (!details) {
 						return;
 					}
 
-					const attributeName = getStringLiteralValue(
+					const attributeName = getStaticStringValue(
 						nullThrows(
 							node.arguments[0],
 							"First argument is expected to be present by prior length check",
@@ -101,7 +102,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					if (!isGlobalDeclaration(node.expression, typeChecker)) {
+					if (!isGlobalDeclaration(node.expression, typeChecker, program)) {
 						return;
 					}
 
@@ -115,20 +116,3 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		};
 	},
 });
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function getStringLiteralValue(node: AST.Expression): string | undefined {
-	if (node.kind === SyntaxKind.StringLiteral) {
-		return node.text;
-	}
-
-	if (
-		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral &&
-		node.parent.kind !== SyntaxKind.TaggedTemplateExpression
-	) {
-		return node.text;
-	}
-
-	return undefined;
-}

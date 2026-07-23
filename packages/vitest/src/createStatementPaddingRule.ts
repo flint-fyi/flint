@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -168,25 +168,25 @@ export function getStatementRootName(statement: AST.AnyNode) {
 		return undefined;
 	}
 
-	if (expression.kind === ts.SyntaxKind.AwaitExpression) {
-		return getRootIdentifierName(expression.expression as AST.AnyNode);
+	if (expression.kind === SyntaxKind.AwaitExpression) {
+		return getRootIdentifierName(expression.expression);
 	}
 
 	return getRootIdentifierName(expression);
 }
 
 function getRootIdentifierName(node: AST.AnyNode): string | undefined {
-	if (node.kind === ts.SyntaxKind.Identifier) {
+	if (node.kind === SyntaxKind.Identifier) {
 		return node.text;
 	}
 
 	if (
-		node.kind === ts.SyntaxKind.CallExpression ||
-		node.kind === ts.SyntaxKind.NonNullExpression ||
-		node.kind === ts.SyntaxKind.ParenthesizedExpression ||
-		node.kind === ts.SyntaxKind.PropertyAccessExpression
+		node.kind === SyntaxKind.CallExpression ||
+		node.kind === SyntaxKind.NonNullExpression ||
+		node.kind === SyntaxKind.ParenthesizedExpression ||
+		node.kind === SyntaxKind.PropertyAccessExpression
 	) {
-		return getRootIdentifierName(node.expression as AST.AnyNode);
+		return getRootIdentifierName(node.expression);
 	}
 
 	return undefined;
@@ -195,12 +195,12 @@ function getRootIdentifierName(node: AST.AnyNode): string | undefined {
 function getStatementExpression(
 	statement: AST.AnyNode,
 ): AST.AnyNode | undefined {
-	if (statement.kind === ts.SyntaxKind.ExpressionStatement) {
+	if (statement.kind === SyntaxKind.ExpressionStatement) {
 		return statement.expression;
 	}
 
-	if (statement.kind === ts.SyntaxKind.LabeledStatement) {
-		return getStatementExpression(statement.statement as AST.AnyNode);
+	if (statement.kind === SyntaxKind.LabeledStatement) {
+		return getStatementExpression(statement.statement);
 	}
 
 	return undefined;

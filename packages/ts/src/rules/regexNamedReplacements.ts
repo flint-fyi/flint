@@ -2,7 +2,7 @@ import {
 	visitRegExpAST,
 	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
-import ts from "typescript";
+import { SyntaxKind, TypeFlags } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -34,7 +34,7 @@ function getCapturingGroups(regexpAst: RegExpAST.Pattern) {
 }
 
 function getRegexPatternAndFlags(node: AST.Expression) {
-	if (node.kind !== ts.SyntaxKind.RegularExpressionLiteral) {
+	if (node.kind !== SyntaxKind.RegularExpressionLiteral) {
 		return undefined;
 	}
 
@@ -92,7 +92,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 						(node.expression.name.text !== "replace" &&
 							node.expression.name.text !== "replaceAll") ||
 						node.arguments.length < 2 ||
@@ -100,7 +100,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							getConstrainedTypeAtLocation(
 								node.expression.expression,
 								typeChecker,
-							).flags & ts.TypeFlags.StringLike
+							).flags & TypeFlags.StringLike
 						)
 					) {
 						return;
@@ -110,7 +110,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.expression.expression,
 						typeChecker,
 					);
-					if (!(objectType.flags & ts.TypeFlags.StringLike)) {
+					if (!(objectType.flags & TypeFlags.StringLike)) {
 						return;
 					}
 
@@ -119,7 +119,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const replacementArg = node.arguments[1]!;
 
-					if (!ts.isStringLiteral(replacementArg)) {
+					if (replacementArg.kind !== SyntaxKind.StringLiteral) {
 						return;
 					}
 

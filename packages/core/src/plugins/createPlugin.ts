@@ -81,5 +81,5 @@ function collectPresetsFromRules<
 		}
 	}
 
-	return Object.fromEntries(presets.entries()) as PluginPresets<Rules>;
+	return Object.fromEntries(presets.entries());
 }

@@ -1,3 +1,5 @@
+import type { Program } from "typescript";
+
 import type { AST, Checker } from "@flint.fyi/typescript-language";
 
 import { declarationsIncludeGlobal } from "./declarationsIncludeGlobal.ts";
@@ -11,6 +13,7 @@ import { declarationsIncludeGlobal } from "./declarationsIncludeGlobal.ts";
 export function isGlobalVariable(
 	node: AST.Expression,
 	typeChecker: Checker,
+	program: Program,
 ): boolean {
 	const symbol = typeChecker.getSymbolAtLocation(node);
 	if (!symbol) {
@@ -26,5 +29,5 @@ export function isGlobalVariable(
 		return true;
 	}
 
-	return declarationsIncludeGlobal(declarations);
+	return declarationsIncludeGlobal(declarations, program);
 }

@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -27,8 +27,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ForStatement: (node, { sourceFile }) => {
 					if (
-						node.initializer &&
-						ts.isVariableDeclarationList(node.initializer) &&
+						node.initializer?.kind === SyntaxKind.VariableDeclarationList &&
 						node.initializer.declarations.length > 1
 					) {
 						context.report({

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+curl https://mise.run | sh
+# Use shims instead of `mise activate bash`'s shell functions so the orb's
+# repo-managed Node.js/pnpm propagate to child processes like husky's dash
+# pre-commit hook, which would otherwise hit the orb's older system Node.js.
+eval "$(~/.local/bin/mise activate --shims bash)"
+
+mise settings set idiomatic_version_file_enable_tools node,pnpm
+mise install --yes
+pnpm install --frozen-lockfile
+pnpm --filter=site prebuild
+
+amp_config_dir="$HOME/.config/amp"
+mkdir -p "$amp_config_dir"
+cat > "$amp_config_dir/AGENTS.md" << EOF_AGENTS
+# Inside the Orb
+
+- This orb may have older system Node.js and pnpm versions; .agents/setup activates mise for repo-managed tools.
+- Run repo tool commands directly, such as pnpm test.
+EOF_AGENTS

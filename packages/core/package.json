@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/core",
-	"version": "0.23.1",
+	"version": "0.23.3",
 	"description": "[Experimental] Core building blocks for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -19,7 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project core"
@@ -31,9 +31,11 @@
 		"ignore": "^7.0.5",
 		"omit-empty": "^1.0.0",
 		"picomatch": "^4.0.4",
+		"tinyglobby": "^0.2.17",
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@types/omit-empty": "catalog:dev",
 		"@types/picomatch": "4.0.3",
 		"tsdown": "catalog:dev",
@@ -45,7 +47,7 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

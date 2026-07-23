@@ -1,5 +1,18 @@
 # @flint.fyi/volar-language
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [[`1f71b3e`](https://github.com/flint-fyi/flint/commit/1f71b3ef2d31dbe39ff8c967887801912fb28573)]:
+  - @flint.fyi/ts-patch@0.14.0
+
+## 0.1.3
+
+### Patch Changes
+
+- [#3035](https://github.com/flint-fyi/flint/pull/3035) [`70e5d9c`](https://github.com/flint-fyi/flint/commit/70e5d9cf7e747d001ae17ddcb0dd56a1d671795a) - Fire `SourceFile:exit` visitors when linting Volar-backed files (Vue, Svelte, Astro).
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/svelte",
-	"version": "0.0.5",
+	"version": "0.1.0",
 	"description": "[Experimental] Svelte language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/svelte",
 	"repository": {
@@ -19,7 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project svelte"
@@ -29,9 +29,10 @@
 		"@flint.fyi/svelte-language": "workspace:^",
 		"@flint.fyi/ts": "workspace:^",
 		"@flint.fyi/volar-language": "workspace:^",
-		"typescript": "^5.9.3 || ^6.0.0"
+		"typescript": "^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
 		"svelte": "5.56.2",
@@ -44,7 +45,7 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

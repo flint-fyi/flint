@@ -48,6 +48,14 @@ export async function runConfig(
 		cacheLocationOverride,
 	);
 
+	using files = new DisposableStack();
+
+	for (const languageAndFiles of languageFilesByFilePath.values()) {
+		for (const { file } of languageAndFiles) {
+			files.use(file);
+		}
+	}
+
 	// 2. For each lint rule, run it on all files and store each file's results
 	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule, host);
 

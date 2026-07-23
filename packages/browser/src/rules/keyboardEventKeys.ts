@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { isInterfaceDeclaration, SyntaxKind, type Program } from "typescript";
 
 import {
 	getDeclarationsIfGlobal,
@@ -45,8 +45,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isKeyboardEventProperty(
 			name: AST.Identifier,
 			typeChecker: Checker,
+			program: Program,
 		) {
-			const declarations = getDeclarationsIfGlobal(name, typeChecker);
+			const declarations = getDeclarationsIfGlobal(name, typeChecker, program);
 			if (!declarations) {
 				return;
 			}
@@ -57,19 +58,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			);
 
 			return (
-				ts.isInterfaceDeclaration(declaration.parent) &&
+				isInterfaceDeclaration(declaration.parent) &&
 				["KeyboardEvent", "UIEvent"].includes(declaration.parent.name.text)
 			);
 		}
 
 		return {
 			visitors: {
-				PropertyAccessExpression(node, { sourceFile, typeChecker }) {
+				PropertyAccessExpression(node, { program, sourceFile, typeChecker }) {
 					if (
 						node.name.kind === SyntaxKind.Identifier &&
 						deprecatedProperties.has(node.name.text) &&
 						isKeyboardEvent(node.expression, typeChecker) &&
-						isKeyboardEventProperty(node.name, typeChecker)
+						isKeyboardEventProperty(node.name, typeChecker, program)
 					) {
 						context.report({
 							data: { property: node.name.text },

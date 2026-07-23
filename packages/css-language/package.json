@@ -19,7 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project css-language"
@@ -30,6 +30,7 @@
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@types/css-tree": "2.3.11",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
@@ -40,7 +41,7 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

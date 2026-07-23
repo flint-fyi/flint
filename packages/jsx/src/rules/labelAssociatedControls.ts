@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -78,7 +78,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			});
 		}
 
-		function hasNestedControl(children: ts.NodeArray<AST.JsxChild>): boolean {
+		function hasNestedControl(children: NodeArray<AST.JsxChild>): boolean {
 			return children.some((child) => {
 				if (child.kind === SyntaxKind.JsxElement) {
 					const { tagName } = child.openingElement;

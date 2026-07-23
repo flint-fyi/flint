@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/jsx",
-	"version": "0.3.3",
+	"version": "0.4.0",
 	"description": "[Experimental] A Flint plugin for JSX code.",
 	"homepage": "https://flint.fyi/rules/jsx",
 	"repository": {
@@ -19,7 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project jsx"
@@ -29,9 +29,10 @@
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"language-tags": "^2.1.0",
-		"typescript": "^5.9.3 || ^6.0.0"
+		"typescript": "^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
 		"@types/language-tags": "catalog:dev",
 		"tsdown": "catalog:dev",
@@ -43,7 +44,7 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -9,26 +9,29 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 import { isInBooleanContext } from "./utils/isInBooleanContext.ts";
 
-function getNodeText(node: ts.Node, sourceFile: AST.SourceFile) {
+function getNodeText(node: AST.AnyNode, sourceFile: AST.SourceFile) {
 	return sourceFile.text.slice(node.getStart(sourceFile), node.getEnd());
 }
 
 // TODO: This should make sure the Boolean is the global one...
-function isBooleanCall(node: ts.CallExpression) {
-	return ts.isIdentifier(node.expression) && node.expression.text === "Boolean";
+function isBooleanCall(node: AST.CallExpression) {
+	return (
+		node.expression.kind === SyntaxKind.Identifier &&
+		node.expression.text === "Boolean"
+	);
 }
 
 function isDoubleNegation(
-	node: ts.PrefixUnaryExpression,
+	node: AST.PrefixUnaryExpression,
 ): node is typeof node & { operand: AST.PrefixUnaryExpression } {
-	if (node.operator !== ts.SyntaxKind.ExclamationToken) {
+	if (node.operator !== SyntaxKind.ExclamationToken) {
 		return false;
 	}
 
 	const operand = node.operand;
 	if (
-		ts.isPrefixUnaryExpression(operand) &&
-		operand.operator === ts.SyntaxKind.ExclamationToken
+		operand.kind === SyntaxKind.PrefixUnaryExpression &&
+		operand.operator === SyntaxKind.ExclamationToken
 	) {
 		return true;
 	}

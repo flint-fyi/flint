@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/react",
-	"version": "0.1.7",
+	"version": "0.2.0",
 	"description": "[Experimental] A Flint plugin for React code.",
 	"homepage": "https://flint.fyi/rules/react",
 	"repository": {
@@ -19,16 +19,17 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project react"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
-		"typescript": "^5.9.3 || ^6.0.0"
+		"typescript": "^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev"
 	},
 	"engines": {
@@ -37,7 +38,7 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

@@ -1,17 +1,12 @@
 {
+	"extends": "astro/tsconfigs/strict",
 	"compilerOptions": {
-		"baseUrl": ".",
-		"composite": true,
 		"jsx": "react-jsx",
 		"jsxImportSource": "react",
-		"noEmit": false,
 		"paths": {
-			"~/*": ["src/*"]
-		},
-		"target": "esnext",
-		"emitDeclarationOnly": true
+			"~/*": ["./src/*"]
+		}
 	},
-	"extends": "astro/tsconfigs/strict",
 	"include": [".astro/types.d.ts", "*.config.*", "src"],
 	"references": [
 		{ "path": "../comparisons" },

@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -26,13 +26,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		function getShorthand(kind: ts.SyntaxKind) {
+		function getShorthand(kind: SyntaxKind) {
 			switch (kind) {
-				case ts.SyntaxKind.AmpersandAmpersandToken:
+				case SyntaxKind.AmpersandAmpersandToken:
 					return "&&=";
-				case ts.SyntaxKind.BarBarToken:
+				case SyntaxKind.BarBarToken:
 					return "||=";
-				case ts.SyntaxKind.QuestionQuestionToken:
+				case SyntaxKind.QuestionQuestionToken:
 					return "??=";
 				default:
 					return undefined;
@@ -43,8 +43,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
 					if (
-						node.operatorToken.kind !== ts.SyntaxKind.EqualsToken ||
-						!ts.isBinaryExpression(node.right)
+						node.operatorToken.kind !== SyntaxKind.EqualsToken ||
+						node.right.kind !== SyntaxKind.BinaryExpression
 					) {
 						return;
 					}

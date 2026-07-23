@@ -1,7 +1,8 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
 import {
+	getStaticNumberValue,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -13,18 +14,18 @@ const sizePropertyNames = new Set(["length", "size"]);
 
 function hasLogicalOrFallback(node: AST.Expression) {
 	return (
-		ts.isBinaryExpression(node.parent) &&
-		node.parent.operatorToken.kind === ts.SyntaxKind.BarBarToken &&
+		node.parent.kind === SyntaxKind.BinaryExpression &&
+		node.parent.operatorToken.kind === SyntaxKind.BarBarToken &&
 		node.parent.left === node
 	);
 }
 
 function isDoubleNegation(node: AST.Expression) {
 	return (
-		ts.isPrefixUnaryExpression(node) &&
-		node.operator === ts.SyntaxKind.ExclamationToken &&
-		ts.isPrefixUnaryExpression(node.operand) &&
-		node.operand.operator === ts.SyntaxKind.ExclamationToken
+		node.kind === SyntaxKind.PrefixUnaryExpression &&
+		node.operator === SyntaxKind.ExclamationToken &&
+		node.operand.kind === SyntaxKind.PrefixUnaryExpression &&
+		node.operand.operator === SyntaxKind.ExclamationToken
 	);
 }
 
@@ -34,31 +35,31 @@ function isInBooleanContext(node: AST.Expression) {
 	}
 
 	switch (node.parent.kind) {
-		case ts.SyntaxKind.BinaryExpression:
+		case SyntaxKind.BinaryExpression:
 			return (
-				node.parent.operatorToken.kind ===
-					ts.SyntaxKind.AmpersandAmpersandToken && node.parent.left === node
+				node.parent.operatorToken.kind === SyntaxKind.AmpersandAmpersandToken &&
+				node.parent.left === node
 			);
 
-		case ts.SyntaxKind.CallExpression:
+		case SyntaxKind.CallExpression:
 			return (
-				ts.isIdentifier(node.parent.expression) &&
+				node.parent.expression.kind === SyntaxKind.Identifier &&
 				node.parent.expression.text === "Boolean" &&
 				node.parent.arguments.length === 1 &&
 				node.parent.arguments[0] === node
 			);
 
-		case ts.SyntaxKind.ConditionalExpression:
-		case ts.SyntaxKind.ForStatement:
+		case SyntaxKind.ConditionalExpression:
+		case SyntaxKind.ForStatement:
 			return node.parent.condition === node;
 
-		case ts.SyntaxKind.DoStatement:
-		case ts.SyntaxKind.IfStatement:
-		case ts.SyntaxKind.WhileStatement:
+		case SyntaxKind.DoStatement:
+		case SyntaxKind.IfStatement:
+		case SyntaxKind.WhileStatement:
 			return node.parent.expression === node;
 
-		case ts.SyntaxKind.PrefixUnaryExpression:
-			return node.parent.operator === ts.SyntaxKind.ExclamationToken;
+		case SyntaxKind.PrefixUnaryExpression:
+			return node.parent.operator === SyntaxKind.ExclamationToken;
 
 		default:
 			return false;
@@ -67,22 +68,22 @@ function isInBooleanContext(node: AST.Expression) {
 
 function isInNullishCoalescing(node: AST.Expression) {
 	return (
-		ts.isBinaryExpression(node.parent) &&
-		node.parent.operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken
+		node.parent.kind === SyntaxKind.BinaryExpression &&
+		node.parent.operatorToken.kind === SyntaxKind.QuestionQuestionToken
 	);
 }
 
 function isNegated(node: AST.PropertyAccessExpression) {
 	if (
-		!ts.isPrefixUnaryExpression(node.parent) ||
-		node.parent.operator !== ts.SyntaxKind.ExclamationToken
+		node.parent.kind !== SyntaxKind.PrefixUnaryExpression ||
+		node.parent.operator !== SyntaxKind.ExclamationToken
 	) {
 		return { negated: false, outerNode: node };
 	}
 
 	if (
-		ts.isPrefixUnaryExpression(node.parent.parent) &&
-		node.parent.parent.operator === ts.SyntaxKind.ExclamationToken
+		node.parent.parent.kind === SyntaxKind.PrefixUnaryExpression &&
+		node.parent.parent.operator === SyntaxKind.ExclamationToken
 	) {
 		return { negated: false, outerNode: node.parent.parent };
 	}
@@ -92,30 +93,30 @@ function isNegated(node: AST.PropertyAccessExpression) {
 
 function requiresBooleanType(node: AST.Expression) {
 	switch (node.parent.kind) {
-		case ts.SyntaxKind.ArrowFunction:
-		case ts.SyntaxKind.PropertyDeclaration:
-		case ts.SyntaxKind.ReturnStatement:
-		case ts.SyntaxKind.VariableDeclaration:
+		case SyntaxKind.ArrowFunction:
+		case SyntaxKind.PropertyDeclaration:
+		case SyntaxKind.ReturnStatement:
+		case SyntaxKind.VariableDeclaration:
 			return true;
 
-		case ts.SyntaxKind.BinaryExpression:
+		case SyntaxKind.BinaryExpression:
 			if (
-				node.parent.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
+				node.parent.operatorToken.kind === SyntaxKind.EqualsToken &&
 				node.parent.right === node
 			) {
 				return true;
 			}
 
 			if (
-				node.parent.operatorToken.kind === ts.SyntaxKind.BarBarToken ||
-				node.parent.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
+				node.parent.operatorToken.kind === SyntaxKind.BarBarToken ||
+				node.parent.operatorToken.kind === SyntaxKind.AmpersandAmpersandToken
 			) {
 				return node.parent.right === node;
 			}
 
 			return false;
 
-		case ts.SyntaxKind.ParenthesizedExpression:
+		case SyntaxKind.ParenthesizedExpression:
 			return requiresBooleanType(node.parent.expression);
 	}
 
@@ -181,25 +182,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const { left, operatorToken, right } = node;
 
 					if (
-						!ts.isPropertyAccessExpression(left) ||
+						left.kind !== SyntaxKind.PropertyAccessExpression ||
 						!sizePropertyNames.has(left.name.text) ||
-						// TODO: Use a util like getStaticValue
-						// https://github.com/flint-fyi/flint/issues/1298
-						!ts.isNumericLiteral(right) ||
-						right.text !== "0"
+						!Object.is(getStaticNumberValue(right), 0)
 					) {
 						return;
 					}
 
 					const isNonZeroCheck =
-						operatorToken.kind === ts.SyntaxKind.GreaterThanToken ||
-						operatorToken.kind === ts.SyntaxKind.ExclamationEqualsEqualsToken ||
-						operatorToken.kind === ts.SyntaxKind.ExclamationEqualsToken;
+						operatorToken.kind === SyntaxKind.GreaterThanToken ||
+						operatorToken.kind === SyntaxKind.ExclamationEqualsEqualsToken ||
+						operatorToken.kind === SyntaxKind.ExclamationEqualsToken;
 
 					const isZeroCheck =
-						operatorToken.kind === ts.SyntaxKind.EqualsEqualsEqualsToken ||
-						operatorToken.kind === ts.SyntaxKind.EqualsEqualsToken ||
-						operatorToken.kind === ts.SyntaxKind.LessThanEqualsToken;
+						operatorToken.kind === SyntaxKind.EqualsEqualsEqualsToken ||
+						operatorToken.kind === SyntaxKind.EqualsEqualsToken ||
+						operatorToken.kind === SyntaxKind.LessThanEqualsToken;
 
 					if (!isNonZeroCheck && !isZeroCheck) {
 						return;

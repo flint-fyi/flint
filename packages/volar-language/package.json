@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/volar-language",
-	"version": "0.1.2",
+	"version": "0.1.4",
 	"description": "[Experimental] Volar.js language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -19,7 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project volar-language"
@@ -34,6 +34,7 @@
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
@@ -43,7 +44,7 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

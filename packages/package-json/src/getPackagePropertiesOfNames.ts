@@ -16,7 +16,7 @@ export function getPackagePropertiesOfNames<T extends string[]>(
 	const propertyNameSet = new Set(propertyNames);
 
 	const isPropertyName = (name: string): name is T[number] => {
-		return propertyNameSet.has(name as T[number]);
+		return propertyNameSet.has(name);
 	};
 
 	for (const property of properties) {

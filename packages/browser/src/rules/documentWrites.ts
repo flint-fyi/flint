@@ -33,12 +33,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				CallExpression(node, { sourceFile, typeChecker }) {
+				CallExpression(node, { program, sourceFile, typeChecker }) {
 					const { expression } = node;
 					if (
 						expression.kind === SyntaxKind.PropertyAccessExpression &&
 						documentWriteNames.has(expression.name.text) &&
-						isGlobalDocumentReference(expression.expression, typeChecker)
+						isGlobalDocumentReference(
+							expression.expression,
+							typeChecker,
+							program,
+						)
 					) {
 						context.report({
 							data: { method: expression.name.text },

@@ -1,5 +1,17 @@
 # @flint/core
 
+## 0.23.3
+
+### Patch Changes
+
+- [#2854](https://github.com/flint-fyi/flint/pull/2854) [`cbacb2b`](https://github.com/flint-fyi/flint/commit/cbacb2b3b73a8091fff37ebe56e373e89a309311) - Resolve nested `.gitignore` files with one matcher per directory.
+
+## 0.23.2
+
+### Patch Changes
+
+- [#2993](https://github.com/flint-fyi/flint/pull/2993) [`08eaf06`](https://github.com/flint-fyi/flint/commit/08eaf06ea683b575afee056a76142823f0f5ff27) - Avoid writing stale cache data during fix loops.
+
 ## 0.23.1
 
 ### Patch Changes

@@ -1,46 +1,12 @@
 import { SyntaxKind } from "typescript";
 
 import {
+	getStaticValue,
 	getTSNodeRange,
 	typescriptLanguage,
-	type AST,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function getLiteralValue(
-	initializer: AST.Expression,
-): number | string | undefined {
-	switch (initializer.kind) {
-		case SyntaxKind.NoSubstitutionTemplateLiteral:
-		case SyntaxKind.StringLiteral:
-			return initializer.text;
-
-		case SyntaxKind.NumericLiteral:
-			return Number(initializer.text);
-
-		case SyntaxKind.PrefixUnaryExpression: {
-			if (initializer.operand.kind !== SyntaxKind.NumericLiteral) {
-				return undefined;
-			}
-
-			const value = Number(initializer.operand.text);
-			if (initializer.operator === SyntaxKind.MinusToken) {
-				return -value;
-			}
-			if (initializer.operator === SyntaxKind.PlusToken) {
-				return value;
-			}
-
-			return undefined;
-		}
-
-		default:
-			return undefined;
-	}
-}
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -73,8 +39,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							continue;
 						}
 
-						const value = getLiteralValue(member.initializer);
-						if (value === undefined) {
+						const value = getStaticValue(member.initializer)?.value;
+						if (typeof value !== "number" && typeof value !== "string") {
 							continue;
 						}
 

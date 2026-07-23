@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/ts-patch",
-	"version": "0.13.5",
+	"version": "0.14.0",
 	"description": "[Experimental] Utilities for patching TypeScript used by @flint/core.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -14,10 +14,10 @@
 		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": [
-		"./lib/install-patch-hooks.js",
-		"./lib/install-patch.js",
-		"./lib/proxy-program.js",
-		"./lib/shared.js"
+		"./dist/install-patch-hooks.js",
+		"./dist/install-patch.js",
+		"./dist/proxy-program.js",
+		"./dist/shared.js"
 	],
 	"type": "module",
 	"exports": {
@@ -26,14 +26,15 @@
 		"./install-patch-hooks": "./src/install-patch-hooks.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev",
 		"typescript": "catalog:dev"
 	},
 	"peerDependencies": {
-		"typescript": "^5.9.3 || ^6.0.0"
+		"typescript": "^6.0.0"
 	},
 	"engines": {
 		"node": ">=24.0.0"
@@ -41,9 +42,9 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js",
-			"./install-patch": "./lib/install-patch.js",
-			"./install-patch-hooks": "./lib/install-patch-hooks.js"
+			".": "./dist/index.mjs",
+			"./install-patch": "./dist/install-patch.mjs",
+			"./install-patch-hooks": "./dist/install-patch-hooks.mjs"
 		}
 	}
 }

@@ -35,11 +35,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkNode(
 			node: AST.CallExpression | AST.NewExpression,
-			{ sourceFile, typeChecker }: TypeScriptFileServices,
+			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		): void {
 			if (
 				node.expression.kind !== SyntaxKind.Identifier ||
-				!isGlobalDeclarationOfName(node.expression, "Object", typeChecker)
+				!isGlobalDeclarationOfName(
+					node.expression,
+					"Object",
+					typeChecker,
+					program,
+				)
 			) {
 				return;
 			}

@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -19,27 +19,26 @@ function isUnnecessaryCountArgument(
 	const argument = unwrapParenthesizedNode(argumentRoot);
 
 	switch (argument.kind) {
-		case ts.SyntaxKind.Identifier:
+		case SyntaxKind.Identifier:
 			return argument.text === "Infinity" ? "`Infinity`" : undefined;
 
-		case ts.SyntaxKind.PropertyAccessExpression:
+		case SyntaxKind.PropertyAccessExpression:
 			if (
-				ts.isIdentifier(argument.expression) &&
+				argument.expression.kind === SyntaxKind.Identifier &&
 				argument.expression.text === "Number" &&
-				ts.isIdentifier(argument.name) &&
+				argument.name.kind === SyntaxKind.Identifier &&
 				argument.name.text === "POSITIVE_INFINITY"
 			) {
 				return "`Number.POSITIVE_INFINITY`";
 			}
 
 			if (
-				ts.isIdentifier(argument.name) &&
+				argument.name.kind === SyntaxKind.Identifier &&
 				argument.name.text === "length" &&
 				hasSameTokens(argument.expression, calleeObject, sourceFile)
 			) {
-				const objectText = ts.isIdentifier(calleeObject)
-					? calleeObject.text
-					: "…";
+				const objectText =
+					calleeObject.kind === SyntaxKind.Identifier ? calleeObject.text : "…";
 				const optionalChain = argument.questionDotToken ? "?." : ".";
 				return `\`${objectText}${optionalChain}length\``;
 			}
@@ -71,8 +70,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression: (node, { sourceFile, typeChecker }) => {
 					if (
-						!ts.isPropertyAccessExpression(node.expression) ||
-						!ts.isIdentifier(node.expression.name)
+						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
+						node.expression.name.kind !== SyntaxKind.Identifier
 					) {
 						return;
 					}
@@ -99,13 +98,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const firstArg = node.arguments[0]!;
-					if (ts.isSpreadElement(firstArg)) {
+					if (firstArg.kind === SyntaxKind.SpreadElement) {
 						return;
 					}
 
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const secondArg = node.arguments[1]!;
-					if (ts.isSpreadElement(secondArg)) {
+					if (secondArg.kind === SyntaxKind.SpreadElement) {
 						return;
 					}
 

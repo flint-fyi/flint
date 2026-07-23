@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/vue-language",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "[Experimental] Vue.js language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -19,7 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project vue-language"
@@ -35,6 +35,7 @@
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/core": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
@@ -45,7 +46,7 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

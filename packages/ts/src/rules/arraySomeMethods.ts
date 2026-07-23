@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind, type TypeChecker } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -57,7 +57,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function checkFilterLengthComparison(
 	node: AST.BinaryExpression,
-	typeChecker: ts.TypeChecker,
+	typeChecker: TypeChecker,
 ) {
 	const lengthAccess = isNonZeroLengthCheck(node) && getLengthAccess(node);
 	return lengthAccess
@@ -67,22 +67,22 @@ function checkFilterLengthComparison(
 
 function checkFindIndexComparison(
 	node: AST.BinaryExpression,
-	typeChecker: ts.TypeChecker,
+	typeChecker: TypeChecker,
 ) {
 	return (
 		isFindIndexNegativeOneCheck(node) &&
-		ts.isCallExpression(node.left) &&
+		node.left.kind === SyntaxKind.CallExpression &&
 		getFindIndexCall(node.left, typeChecker)
 	);
 }
 
 function getFilterCall(
 	node: AST.LeftHandSideExpression,
-	typeChecker: ts.TypeChecker,
+	typeChecker: TypeChecker,
 ) {
 	if (
-		!ts.isCallExpression(node) ||
-		!ts.isPropertyAccessExpression(node.expression) ||
+		node.kind !== SyntaxKind.CallExpression ||
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		node.expression.name.text !== "filter" ||
 		!node.arguments.length ||
 		!isArrayType(node.expression.expression, typeChecker)
@@ -97,12 +97,9 @@ function getFilterCall(
 	};
 }
 
-function getFindIndexCall(
-	node: AST.CallExpression,
-	typeChecker: ts.TypeChecker,
-) {
+function getFindIndexCall(node: AST.CallExpression, typeChecker: TypeChecker) {
 	if (
-		!ts.isPropertyAccessExpression(node.expression) ||
+		node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
 		!["findIndex", "findLastIndex"].includes(node.expression.name.text) ||
 		!node.arguments.length ||
 		!isArrayType(node.expression.expression, typeChecker)
@@ -121,23 +118,23 @@ function getFindIndexCall(
 // https://github.com/flint-fyi/flint/issues/1298
 function getLengthAccess(node: AST.BinaryExpression) {
 	return (
-		ts.isPropertyAccessExpression(node.left) &&
+		node.left.kind === SyntaxKind.PropertyAccessExpression &&
 		node.left.name.text === "length" &&
 		node.left
 	);
 }
 
-function isArrayType(node: ts.Expression, typeChecker: ts.TypeChecker) {
+function isArrayType(node: AST.Expression, typeChecker: TypeChecker) {
 	const type = typeChecker.getTypeAtLocation(node);
 	return typeChecker.isArrayType(type);
 }
 
 function isFindIndexNegativeOneCheck(node: AST.BinaryExpression) {
 	if (
-		node.operatorToken.kind !== ts.SyntaxKind.ExclamationEqualsEqualsToken ||
-		!ts.isPrefixUnaryExpression(node.right) ||
-		node.right.operator !== ts.SyntaxKind.MinusToken ||
-		!ts.isNumericLiteral(node.right.operand)
+		node.operatorToken.kind !== SyntaxKind.ExclamationEqualsEqualsToken ||
+		node.right.kind !== SyntaxKind.PrefixUnaryExpression ||
+		node.right.operator !== SyntaxKind.MinusToken ||
+		node.right.operand.kind !== SyntaxKind.NumericLiteral
 	) {
 		return false;
 	}
@@ -149,32 +146,32 @@ function isNonZeroLengthCheck(node: AST.BinaryExpression) {
 	const { left, operatorToken, right } = node;
 
 	if (
-		operatorToken.kind === ts.SyntaxKind.GreaterThanToken &&
-		ts.isNumericLiteral(right) &&
+		operatorToken.kind === SyntaxKind.GreaterThanToken &&
+		right.kind === SyntaxKind.NumericLiteral &&
 		right.text === "0"
 	) {
 		return true;
 	}
 
 	if (
-		operatorToken.kind === ts.SyntaxKind.ExclamationEqualsEqualsToken &&
-		ts.isNumericLiteral(right) &&
+		operatorToken.kind === SyntaxKind.ExclamationEqualsEqualsToken &&
+		right.kind === SyntaxKind.NumericLiteral &&
 		right.text === "0"
 	) {
 		return true;
 	}
 
 	if (
-		operatorToken.kind === ts.SyntaxKind.GreaterThanEqualsToken &&
-		ts.isNumericLiteral(right) &&
+		operatorToken.kind === SyntaxKind.GreaterThanEqualsToken &&
+		right.kind === SyntaxKind.NumericLiteral &&
 		right.text === "1"
 	) {
 		return true;
 	}
 
 	if (
-		operatorToken.kind === ts.SyntaxKind.LessThanToken &&
-		ts.isNumericLiteral(left) &&
+		operatorToken.kind === SyntaxKind.LessThanToken &&
+		left.kind === SyntaxKind.NumericLiteral &&
 		left.text === "0"
 	) {
 		return true;

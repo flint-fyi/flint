@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	typescriptLanguage,
@@ -158,7 +158,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (construction.args.length >= 2) {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const secondArgument = construction.args[1]!;
-				if (secondArgument.kind === ts.SyntaxKind.StringLiteral) {
+				if (secondArgument.kind === SyntaxKind.StringLiteral) {
 					const flagsStart = secondArgument.getStart(services.sourceFile) + 1;
 					hasInvalidFlags = checkFlags(construction.flags, flagsStart);
 				}

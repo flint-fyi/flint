@@ -25,9 +25,9 @@ Example: instead of messages like _"Octal escape sequences should not be used in
 
 ## AST Node Handling
 
-When you have an `AST.Expression` or `AST.*Declaration`, check whether nodes are certain types using a comparison like `node.kind === ts.SyntaxKind.BinaryExpression`.
+When you have an `AST.Expression` or `AST.*Declaration`, check whether nodes are certain types using a comparison like `node.kind === SyntaxKind.BinaryExpression`.
 
-When you have a `ts.Node` type, however, you'll have to use `ts.is*` checks such as `ts.isBinaryExpression`, or failing that `tsutils` from `ts-api-utils` to get nice type narrowing.
+When you have a `ts.Node` type, however, you'll have to use `ts.is*` checks such as `ts.isBinaryExpression`, or failing that, `tsutils` from `ts-api-utils` to get nice type narrowing.
 
 Always pass source files to `node.getStart(sourceFile)` - don't just call `node.getStart()`.
 Same with other TypeScript APIs that optionally take in a sourceFile.
