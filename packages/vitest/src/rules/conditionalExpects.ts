@@ -17,7 +17,8 @@ import {
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "disallow conditional expects",
-		id: "noConditionalExpect",
+		id: "conditionalExpects",
+		presets: ["stylisticStrict"],
 	},
 	messages: {
 		noConditionalExpect: {
@@ -41,16 +42,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				BinaryExpression(node) {
-						if (isLogicalBinaryExpression(node)) {
-							increaseConditionalDepth();
-						}
-					},
-					"BinaryExpression:exit"(node) {
-						if (isLogicalBinaryExpression(node)) {
-							decreaseConditionalDepth();
-						}
-					},
-					CallExpression(node, { options, sourceFile }) {
+					if (isLogicalBinaryExpression(node)) {
+						increaseConditionalDepth();
+					}
+				},
+				"BinaryExpression:exit"(node) {
+					if (isLogicalBinaryExpression(node)) {
+						decreaseConditionalDepth();
+					}
+				},
+				CallExpression(node, { options, sourceFile }) {
 					if (isCatchCall(node)) {
 						inPromiseCatch = true;
 					}

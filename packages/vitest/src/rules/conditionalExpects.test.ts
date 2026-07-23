@@ -1,5 +1,5 @@
 import { ruleTester } from "../ruleTester.ts";
-import rule from "./noConditionalExpect.ts";
+import rule from "./conditionalExpects.ts";
 
 ruleTester.describe(rule, {
 	invalid: [
