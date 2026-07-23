@@ -22,7 +22,7 @@
 		"flint": "bin/index.js"
 	},
 	"files": [
-		"lib/",
+		"dist/",
 		"!lib/bin/**"
 	],
 	"scripts": {
@@ -52,7 +52,7 @@
 	},
 	"publishConfig": {
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

@@ -14,10 +14,10 @@
 		"url": "https://flint.fyi/team"
 	},
 	"sideEffects": [
-		"./lib/install-patch-hooks.js",
-		"./lib/install-patch.js",
-		"./lib/proxy-program.js",
-		"./lib/shared.js"
+		"./dist/install-patch-hooks.js",
+		"./dist/install-patch.js",
+		"./dist/proxy-program.js",
+		"./dist/shared.js"
 	],
 	"type": "module",
 	"exports": {
@@ -26,7 +26,7 @@
 		"./install-patch-hooks": "./src/install-patch-hooks.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
@@ -42,9 +42,9 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js",
-			"./install-patch": "./lib/install-patch.js",
-			"./install-patch-hooks": "./lib/install-patch-hooks.js"
+			".": "./dist/index.mjs",
+			"./install-patch": "./dist/install-patch.mjs",
+			"./install-patch-hooks": "./dist/install-patch-hooks.mjs"
 		}
 	}
 }
