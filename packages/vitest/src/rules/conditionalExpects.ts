@@ -23,8 +23,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	messages: {
 		noConditionalExpect: {
 			primary: "Avoid calling `expect` inside conditional statements",
-			secondary: [],
-			suggestions: [],
+			secondary: [
+				"An `expect` inside a conditional only runs when that branch is taken.",
+				"If the condition is never met, the test passes without actually asserting anything.",
+				"That can hide bugs by giving false confidence that the assertion ran.",
+			],
+			suggestions: [
+				"Move this `expect` out of the conditional so it always runs.",
+				"Call `expect.assertions(...)` to guarantee the expected assertions ran, then enable the `expectAssertions` option.",
+			],
 		},
 	},
 	options: {
@@ -76,9 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							message: "noConditionalExpect",
 							range,
 						});
-					}
-
-					if (inPromiseCatch) {
+					} else if (inPromiseCatch) {
 						context.report({
 							message: "noConditionalExpect",
 							range,
@@ -109,6 +114,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						inTestCase = true;
 					}
 				},
+				"FunctionDeclaration:exit": () => (inTestCase = false),
 				IfStatement: increaseConditionalDepth,
 				"IfStatement:exit": decreaseConditionalDepth,
 				SwitchStatement: increaseConditionalDepth,
