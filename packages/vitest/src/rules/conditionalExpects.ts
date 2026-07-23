@@ -126,7 +126,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						inTestCase = true;
 					}
 				},
-				"FunctionDeclaration:exit": () => {
+				"FunctionDeclaration:exit"() {
 					inTestCase = false;
 				},
 				IfStatement: increaseConditionalDepth,
