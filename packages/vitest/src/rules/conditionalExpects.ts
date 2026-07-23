@@ -110,11 +110,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const testCallExpressions =
 						getTestCallExpressionsFromDeclaredVariables(declaredVariables);
 
-					if (testCallExpressions.length > 0) {
+					if (testCallExpressions.length) {
 						inTestCase = true;
 					}
 				},
-				"FunctionDeclaration:exit": () => (inTestCase = false),
+				"FunctionDeclaration:exit": () => {
+					inTestCase = false;
+				},
 				IfStatement: increaseConditionalDepth,
 				"IfStatement:exit": decreaseConditionalDepth,
 				SwitchStatement: increaseConditionalDepth,
