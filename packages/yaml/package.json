@@ -41,10 +41,7 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": {
-				"types": "./dist/index.d.mts",
-				"default": "./dist/index.mjs"
-			}
+			".": "./dist/index.mjs"
 		}
 	}
 }

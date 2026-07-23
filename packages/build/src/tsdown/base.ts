@@ -8,5 +8,9 @@ export const base: UserConfig = {
 	clean: ["./node_modules/.cache/tsbuild/"],
 	dts: { build: true, incremental: true },
 	entry: ["src/index.ts"],
+	exports: {
+		devExports: true,
+		packageJson: false,
+	},
 	failOnWarn: true,
 };
