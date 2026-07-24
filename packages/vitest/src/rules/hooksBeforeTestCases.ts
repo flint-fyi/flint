@@ -62,10 +62,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						hooksContext[hooksContext.length - 1] = true;
 					}
 
-					if (
-						hooksContext[hooksContext.length - 1] &&
-						hookFunctionNamesSet.has(name)
-					) {
+					if (hooksContext.at(-1) && hookFunctionNamesSet.has(name)) {
 						context.report({
 							message: "hookBeforeTestCase",
 							range: getTSNodeRange(targetNode, sourceFile),
