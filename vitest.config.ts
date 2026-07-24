@@ -2,12 +2,14 @@ import { readdirSync } from "node:fs";
 import path from "node:path";
 import { platform } from "node:process";
 
-import { defineConfig } from "vitest/config";
+import { defaultExclude, defineConfig } from "vitest/config";
 
 export default defineConfig({
 	test: {
 		coverage: {
-			provider: "v8",
+			exclude: [...defaultExclude, "e2e/tests/**"],
+			include: ["packages/**/src/**/*.{ts,tsx}"],
+			reporter: ["html", "lcov", "text"],
 		},
 		projects: readdirSync(path.join(import.meta.dirname, "packages")).map(
 			(name) => ({
