@@ -138,16 +138,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 });
 
-function getExpectAssertionsCount(node: ts.CallExpression): number | undefined {
-	if (!ts.isPropertyAccessExpression(node.expression)) {
+function getExpectAssertionsCount(
+	node: AST.CallExpression,
+): number | undefined {
+	if (node.expression.kind !== ts.SyntaxKind.PropertyAccessExpression) {
 		return undefined;
 	}
 	const { expression: object, name: property } = node.expression;
 
-	if (!ts.isIdentifier(object) || object.text !== "expect") {
+	if (object.kind !== ts.SyntaxKind.Identifier || object.text !== "expect") {
 		return undefined;
 	}
-	if (!ts.isIdentifier(property) || property.text !== "assertions") {
+	if (
+		property.kind !== ts.SyntaxKind.Identifier ||
+		property.text !== "assertions"
+	) {
 		return undefined;
 	}
 	if (node.arguments.length !== 1) {
@@ -160,7 +165,7 @@ function getExpectAssertionsCount(node: ts.CallExpression): number | undefined {
 		return undefined;
 	}
 
-	if (!ts.isNumericLiteral(assertions)) {
+	if (assertions.kind !== ts.SyntaxKind.NumericLiteral) {
 		return undefined;
 	}
 
