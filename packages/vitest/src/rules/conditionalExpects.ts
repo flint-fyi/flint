@@ -12,12 +12,13 @@ import { nullThrows } from "@flint.fyi/utils";
 import { ruleCreator } from "../ruleCreator.ts";
 import {
 	getTestCallExpressionsFromDeclaredVariables,
-	isTestVitestFunction,
+	isVitestTestFunction,
 } from "../utils/parseVitestFunctionCall.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
-		description: "disallow conditional expects",
+		description:
+			"Enforces that `expect` statements aren't conditionally executed.",
 		id: "conditionalExpects",
 		presets: ["logical"],
 	},
@@ -81,8 +82,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							getExpectAssertionsCount(node) ?? expectAssertions;
 					}
 
-					if (isTestVitestFunction(node)) {
+					if (isVitestTestFunction(node)) {
 						inTestCase = true;
+						expectAssertions = 0;
 					}
 
 					if (!isExpectCall(node)) {
@@ -91,7 +93,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const range = getTSNodeRange(node, sourceFile);
 
-					if (inTestCase && conditionalDepth > 0 && expectAssertions === 0) {
+					// A conditional depth above zero already implies we are inside a
+					// test, since the depth only changes while in one.
+					if (expectAssertions === 0 && conditionalDepth > 0) {
 						context.report({
 							message: "noConditionalExpect",
 							range,
@@ -104,9 +108,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 				},
 				"CallExpression:exit"(node) {
-					if (isTestVitestFunction(node)) {
+					if (isVitestTestFunction(node)) {
 						inTestCase = false;
-						expectAssertions = 0;
 					}
 
 					if (isCatchCall(node)) {
@@ -118,17 +121,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				ConditionalExpression: increaseConditionalDepth,
 				"ConditionalExpression:exit": decreaseConditionalDepth,
 				FunctionDeclaration(node, { sourceFile }) {
-					const scopeManager = getScopeManager(sourceFile);
-					const declaredVariables = scopeManager.getDeclaredVariables(node);
-					const testCallExpressions =
-						getTestCallExpressionsFromDeclaredVariables(declaredVariables);
-
-					if (testCallExpressions.length) {
+					if (isTestCallbackFunction(node, sourceFile)) {
 						inTestCase = true;
+						expectAssertions = 0;
 					}
 				},
-				"FunctionDeclaration:exit"() {
-					inTestCase = false;
+				"FunctionDeclaration:exit"(node, { sourceFile }) {
+					if (isTestCallbackFunction(node, sourceFile)) {
+						inTestCase = false;
+					}
 				},
 				IfStatement: increaseConditionalDepth,
 				"IfStatement:exit": decreaseConditionalDepth,
@@ -199,6 +200,18 @@ function isLogicalBinaryExpression({
 		operatorToken.kind === ts.SyntaxKind.BarBarToken ||
 		operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken
 	);
+}
+
+function isTestCallbackFunction(
+	node: AST.FunctionDeclaration,
+	sourceFile: AST.SourceFile,
+): boolean {
+	const scopeManager = getScopeManager(sourceFile);
+	const declaredVariables = scopeManager.getDeclaredVariables(node);
+	const testCallExpressions =
+		getTestCallExpressionsFromDeclaredVariables(declaredVariables);
+
+	return testCallExpressions.length > 0;
 }
 
 // e.g. 1_000 -> 1000

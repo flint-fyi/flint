@@ -197,6 +197,26 @@ test("test", assertSomething);
 			code: `
 test("test", () => {
     if (something) {
+        function helper() {}
+        expect(something).toBe(true);
+    }
+});
+`,
+			snapshot: `
+test("test", () => {
+    if (something) {
+        function helper() {}
+        expect(something).toBe(true);
+        ~~~~~~~~~~~~~~~~~
+        Avoid calling \`expect\` inside conditional statements
+    }
+});
+`,
+		},
+		{
+			code: `
+test("test", () => {
+    if (something) {
         expect(something).toBe(true);
     }
 });
