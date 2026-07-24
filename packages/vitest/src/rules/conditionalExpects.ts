@@ -13,7 +13,7 @@ import { ruleCreator } from "../ruleCreator.ts";
 import {
 	getTestCallExpressionsFromDeclaredVariables,
 	isVitestTestFunction,
-} from "../utils/parseVitestFunctionCall.ts";
+} from "../utils/testCaseFunctions.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
