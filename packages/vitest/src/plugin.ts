@@ -9,6 +9,7 @@ import beforeAllPaddingLines from "./rules/beforeAllPaddingLines.ts";
 import beforeEachPaddingLines from "./rules/beforeEachPaddingLines.ts";
 import describePaddingLines from "./rules/describePaddingLines.ts";
 import expectGroupPaddingLines from "./rules/expectGroupPaddingLines.ts";
+import hooksBeforeTestCases from "./rules/hooksBeforeTestCases.ts";
 import nodeTestImports from "./rules/nodeTestImports.ts";
 import testCasePaddingLines from "./rules/testCasePaddingLines.ts";
 import testCasesWithinDescribes from "./rules/testCasesWithinDescribes.ts";
@@ -26,6 +27,7 @@ export const vitest = createPlugin({
 		beforeEachPaddingLines,
 		describePaddingLines,
 		expectGroupPaddingLines,
+		hooksBeforeTestCases,
 		nodeTestImports,
 		testCasePaddingLines,
 		testCasesWithinDescribes,
