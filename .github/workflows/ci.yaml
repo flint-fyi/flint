@@ -72,8 +72,6 @@ jobs:
         node-version: [24, 25, 26]
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
-        with:
-          filter: "tree:0"
       - uses: ./.github/actions/prepare
         with:
           node-version: ${{ matrix.node-version }}
