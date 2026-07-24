@@ -19,7 +19,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "disallow conditional expects",
 		id: "conditionalExpects",
-		presets: ["stylisticStrict"],
+		presets: ["logical"],
 	},
 	messages: {
 		noConditionalExpect: {
