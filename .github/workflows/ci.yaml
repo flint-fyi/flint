@@ -61,7 +61,7 @@ jobs:
       - run: pnpm exec tsc -b
 
   test_e2e:
-    name: Test E2E (${{ matrix.os }}, Node.js ${{ matrix.node-version }})
+    name: Test E2E (Node.js ${{ matrix.node-version }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
