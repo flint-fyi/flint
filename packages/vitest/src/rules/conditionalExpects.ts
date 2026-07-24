@@ -211,7 +211,7 @@ function isTestCallbackFunction(
 	const testCallExpressions =
 		getTestCallExpressionsFromDeclaredVariables(declaredVariables);
 
-	return testCallExpressions.length > 0;
+	return !!testCallExpressions.length;
 }
 
 // e.g. 1_000 -> 1000
