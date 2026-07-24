@@ -1,5 +1,5 @@
 ---
-description: "disallow conditional expects"
+description: "Enforces that `expect` statements aren't conditionally executed."
 title: "conditionalExpects"
 topic: "rules"
 ---
@@ -11,14 +11,8 @@ import RuleSummary from "~/components/RuleSummary.astro";
 
 <RuleSummary plugin="vitest" rule="conditionalExpects" />
 
-Calling `expect` inside a conditional statement (`if`, `switch`, a ternary, `&&`/`||`/`??`, or a `catch` block) means the assertion may never run at all.
+Calling `expect` inside a conditional statement (`if`, `switch`, a ternary, `&&`/`||`/`??`, or a `catch` block) means the assertion may never run.
 If the condition is never met, the test passes without actually checking anything.
-
-The same is true of a `.catch()` handler.
-It only runs if the promise rejects, so a promise that resolves means the assertion never runs.
-Assertion failures thrown inside the handler can also be swallowed by the rest of the promise chain.
-
-This rule reports both cases separately, since they have different fixes.
 
 ## Examples
 
@@ -41,34 +35,6 @@ test("something", () => {
 });
 ```
 
-</TabItem>
-<TabItem label="✅ Correct">
-
-```ts
-test("something", () => {
-	expect(something).toBe(true);
-});
-```
-
-```ts
-test("something", () => {
-	expect.assertions(1);
-	if (something) {
-		expect(something).toBe(true);
-	}
-});
-```
-
-</TabItem>
-</Tabs>
-
-### `.catch()` handlers
-
-Prefer asserting on the rejection directly, so the assertion runs whether or not the promise rejects.
-
-<Tabs>
-<TabItem label="❌ Incorrect">
-
 ```ts
 promise.catch(() => {
 	expect(true).toBe(false);
@@ -79,17 +45,14 @@ promise.catch(() => {
 <TabItem label="✅ Correct">
 
 ```ts
-test("something", async () => {
-	await expect(promise).rejects.toThrow();
+test("something", () => {
+	expect(something).toBe(true);
 });
 ```
 
 ```ts
 test("something", async () => {
-	expect.assertions(1);
-	await promise.catch((error) => {
-		expect(error).toBeDefined();
-	});
+	await expect(promise).rejects.toThrow();
 });
 ```
 
@@ -100,7 +63,7 @@ test("something", async () => {
 
 ### `expectAssertions`
 
-Whether to allow `expect` calls inside conditionals when the test case also calls `expect.assertions(...)`.
+Whether to allow `expect` calls inside conditionals when the test case calls `expect.assertions(...)`.
 Defaults to `false`.
 
 `expect.assertions(...)` tells Vitest exactly how many assertions the test must run, so a conditional `expect` that gets skipped will still fail the test for not matching that count.
