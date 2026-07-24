@@ -84,7 +84,7 @@ jobs:
         run: pnpm run test --project e2e
 
   test_node:
-    name: Test (Node.js ${{ matrix.node-version }})
+    name: Test (Node.js ${{ matrix.node-version }}, ubuntu-latest)
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -109,7 +109,6 @@ jobs:
       matrix:
         os:
           - macos-latest
-          - ubuntu-latest
           - windows-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
@@ -120,9 +119,9 @@ jobs:
           key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
       - name: Run Unit Tests
-        run: pnpm run test --project='!e2e'
+        run: pnpm run test --project='!e2e' --coverage
       - name: Report Code Coverage
         uses: codecov/codecov-action@v5
-        if: success() && (matrix.os == 'ubuntu-latest')
+        if: success() && (matrix.os == 'macos-latest')
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
