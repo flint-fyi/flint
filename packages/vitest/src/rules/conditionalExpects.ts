@@ -7,6 +7,7 @@ import {
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "../ruleCreator.ts";
 import {
@@ -159,11 +160,10 @@ function getExpectAssertionsCount(
 		return undefined;
 	}
 
-	const [assertions] = node.arguments;
-
-	if (!assertions) {
-		return undefined;
-	}
+	const assertions = nullThrows(
+		node.arguments[0],
+		"argument count is exactly 1, so the first argument is present",
+	);
 
 	if (assertions.kind !== ts.SyntaxKind.NumericLiteral) {
 		return undefined;

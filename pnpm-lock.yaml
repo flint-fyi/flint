@@ -1726,6 +1726,9 @@ importers:
       '@flint.fyi/typescript-language':
         specifier: workspace:^
         version: link:../typescript-language
+      '@flint.fyi/utils':
+        specifier: workspace:^
+        version: link:../utils
       typescript:
         specifier: ^6.0.0
         version: 6.0.3

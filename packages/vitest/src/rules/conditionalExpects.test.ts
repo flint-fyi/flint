@@ -72,6 +72,34 @@ test("test", () => {
 		{
 			code: `
 test("test", () => {
+    something || expect(something).toBe(true);
+});
+`,
+			snapshot: `
+test("test", () => {
+    something || expect(something).toBe(true);
+                 ~~~~~~~~~~~~~~~~~
+                 Avoid calling \`expect\` inside conditional statements
+});
+`,
+		},
+		{
+			code: `
+test("test", () => {
+    something ?? expect(something).toBe(true);
+});
+`,
+			snapshot: `
+test("test", () => {
+    something ?? expect(something).toBe(true);
+                 ~~~~~~~~~~~~~~~~~
+                 Avoid calling \`expect\` inside conditional statements
+});
+`,
+		},
+		{
+			code: `
+test("test", () => {
     try {
         somethingThatThrows();
     } catch (error) {
@@ -165,9 +193,106 @@ function assertSomething() {
 test("test", assertSomething);
 `,
 		},
+		{
+			code: `
+test("test", () => {
+    if (something) {
+        expect(something).toBe(true);
+    }
+});
+`,
+			options: { expectAssertions: true },
+			snapshot: `
+test("test", () => {
+    if (something) {
+        expect(something).toBe(true);
+        ~~~~~~~~~~~~~~~~~
+        Avoid calling \`expect\` inside conditional statements
+    }
+});
+`,
+		},
+		{
+			code: `
+test("test", () => {
+    expect.hasAssertions();
+    if (something) {
+        expect(something).toBe(true);
+    }
+});
+`,
+			options: { expectAssertions: true },
+			snapshot: `
+test("test", () => {
+    expect.hasAssertions();
+    if (something) {
+        expect(something).toBe(true);
+        ~~~~~~~~~~~~~~~~~
+        Avoid calling \`expect\` inside conditional statements
+    }
+});
+`,
+		},
+		{
+			code: `
+test("test", () => {
+    expect.assertions();
+    if (something) {
+        expect(something).toBe(true);
+    }
+});
+`,
+			options: { expectAssertions: true },
+			snapshot: `
+test("test", () => {
+    expect.assertions();
+    if (something) {
+        expect(something).toBe(true);
+        ~~~~~~~~~~~~~~~~~
+        Avoid calling \`expect\` inside conditional statements
+    }
+});
+`,
+		},
+		{
+			code: `
+test("test", () => {
+    expect.assertions(count);
+    if (something) {
+        expect(something).toBe(true);
+    }
+});
+`,
+			options: { expectAssertions: true },
+			snapshot: `
+test("test", () => {
+    expect.assertions(count);
+    if (something) {
+        expect(something).toBe(true);
+        ~~~~~~~~~~~~~~~~~
+        Avoid calling \`expect\` inside conditional statements
+    }
+});
+`,
+		},
+		{
+			code: `
+promise["catch"](() => {
+    expect(true).toBe(false);
+});
+`,
+			snapshot: `
+promise["catch"](() => {
+    expect(true).toBe(false);
+    ~~~~~~~~~~~~
+    Avoid calling \`expect\` inside a \`.catch()\` handler
+});
+`,
+		},
 	],
 	valid: [
 		`test("test", () => { expect(true).toBe(true); });`,
+		`test("test", () => { expect(1 + 1).toBe(2); });`,
 		`test("test", () => { if (something) { doSomething(); } });`,
 		`if (something) { expect(something).toBe(true); }`,
 		`describe("suite", () => { if (something) { expect(something).toBe(true); } });`,
@@ -175,6 +300,17 @@ test("test", assertSomething);
 			code: `
 test("test", () => {
     expect.assertions(1);
+    if (something) {
+        expect(something).toBe(true);
+    }
+});
+`,
+			options: { expectAssertions: true },
+		},
+		{
+			code: `
+test("test", () => {
+    expect.assertions(1_000);
     if (something) {
         expect(something).toBe(true);
     }
