@@ -95,7 +95,14 @@ function parseVitestCallee(
 	}
 }
 
-const testCaseFunctionNamesSet = new Set(["fit", "it", "test", "xit", "xtest"]);
+const testCaseFunctionNamesSet = new Set([
+	"bench",
+	"fit",
+	"it",
+	"test",
+	"xit",
+	"xtest",
+]);
 
 export const isVitestTestFunction = (node: AST.CallExpression): boolean => {
 	const vitestFunction = parseVitestFunctionCall(node);
