@@ -105,6 +105,8 @@ jobs:
   test_os:
     name: Test
     runs-on: ${{ matrix.os }}
+    permissions:
+      id-token: write
     strategy:
       matrix:
         os:
@@ -125,4 +127,4 @@ jobs:
         if: success() && (matrix.os == 'macos-latest')
         with:
           fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
