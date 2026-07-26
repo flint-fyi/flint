@@ -124,7 +124,7 @@ jobs:
         run: pnpm run test --project='!e2e' --coverage
       - name: Report Code Coverage
         uses: codecov/codecov-action@v5
-        if: success() && (matrix.os == 'macos-latest')
+        if: ${{ !cancelled() && (matrix.os == 'macos-latest') }}
         with:
           fail_ci_if_error: true
           use_oidc: true
