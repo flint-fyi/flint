@@ -11,10 +11,8 @@
 	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 25" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-25-21bb42.svg" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 	<!-- prettier-ignore-end -->
-	<a href="https://github.com/flint-fyi/flint/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
 	<a href="https://github.com/flint-fyi/flint/blob/main/LICENSE.md" target="_blank"><img alt="📝 License: MIT" src="https://img.shields.io/badge/%F0%9F%93%9D_license-MIT-21bb42.svg" /></a>
-	<a href="http://npmjs.com/package/flint" target="_blank"><img alt="📦 npm version" src="https://img.shields.io/npm/v/flint?color=21bb42&label=%F0%9F%93%A6%20npm" /></a>
-	<img alt="💪 TypeScript: Strict" src="https://img.shields.io/badge/%F0%9F%92%AA_typescript-strict-21bb42.svg" />
+	<a href="https://codecov.io/gh/flint-fyi/flint" ><img alt="Codecov Badge" src="https://codecov.io/gh/flint-fyi/flint/graph/badge.svg?token=wbfiq2V6e4"/></a>
 </p>
 
 <img align="right" alt="A flaming heart atop a brown linter-style squiggly line" height="128" src="https://flint.fyi/logo.png" width="105">

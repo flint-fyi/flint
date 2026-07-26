@@ -60,8 +60,8 @@ jobs:
       - uses: ./.github/actions/prepare
       - run: pnpm exec tsc -b
 
-  test:
-    name: Test
+  test_e2e:
+    name: Test E2E (Node.js ${{ matrix.node-version }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -69,41 +69,62 @@ jobs:
           - macos-latest
           - ubuntu-latest
           - windows-latest
-        node-version: [24, 25]
+        node-version: [24, 25, 26]
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: ./.github/actions/prepare
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Cache Vite cache
+      - name: Cache Vite Cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
-      - name: Run full test suite except e2e
+      - name: Run e2e Tests
+        run: pnpm run test --project e2e
+
+  test_node:
+    name: Test (Node.js ${{ matrix.node-version }}, ubuntu-latest)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24, 25, 26]
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: ./.github/actions/prepare
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache Vite Cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          key: vite-cache-ubuntu-latest-${{ hashFiles('pnpm-lock.yaml') }}
+          path: node_modules/.vite
+      - name: Run Unit Tests
         run: pnpm run test --project='!e2e'
 
-  test_e2e:
-    name: Test E2E
+  test_os:
+    name: Test
     runs-on: ${{ matrix.os }}
+    permissions:
+      id-token: write
     strategy:
       matrix:
         os:
           - macos-latest
-          - ubuntu-latest
           - windows-latest
-        node-version: [24, 25]
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
-        with:
-          filter: "tree:0"
       - uses: ./.github/actions/prepare
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Cache Vite cache
+      - name: Cache Vite Cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           key: vite-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: node_modules/.vite
-      - name: Run e2e test suite
-        run: pnpm run test --project e2e
+      - name: Run Unit Tests
+        run: pnpm run test --project='!e2e' --coverage
+      - name: Report Code Coverage
+        uses: codecov/codecov-action@v5
+        if: ${{ !cancelled() && (matrix.os == 'macos-latest') }}
+        with:
+          fail_ci_if_error: true
+          use_oidc: true
