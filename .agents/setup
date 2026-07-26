@@ -9,6 +9,11 @@ eval "$(~/.local/bin/mise activate --shims bash)"
 
 mise settings set idiomatic_version_file_enable_tools node,pnpm
 mise install --yes
+
+cat >> "$HOME/.bash_profile" << EOF_PROFILE
+eval "\$("$HOME/.local/bin/mise" activate --shims bash)"
+EOF_PROFILE
+
 pnpm install --frozen-lockfile
 pnpm --filter=site prebuild
 
