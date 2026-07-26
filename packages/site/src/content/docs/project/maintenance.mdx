@@ -7,7 +7,6 @@ title: Maintenance
 This page contains the guidelines for members of the [Flint team](/project/team).
 If you're interested in contributing, welcome!
 See [Contributing](/project/contributing) for how to work effectively with us.
-
 :::
 
 The Flint project tries to keep to a casual maintenance flow.
@@ -23,25 +22,34 @@ When reviewing open issues, feel free to write your opinion on them and/or emoji
 Try to create an issue for any area of work that would qualify for a [waiting period](#waiting-periods).
 This gives other team members a chance to learn about your intentions -- especially newer ones ramping up on the project.
 
-### Pull Request Reviews
+## Pull Request Reviews
 
 As with issues, pull requests should go through a [waiting period](#waiting-periods) before merge.
-Additionally, for nontrivial pull requests, please don't merge until at least one member from the [Committer group](/project/team#committers) _and_ the [Maintainers group](/project/team#maintainers) has approved.
+Additionally, for nontrivial pull requests, please don't merge until at least two team members have approved.
+If the pull request author is a team member, they count as one of the two approvals.
 
 1. If you request changes on a pull request, add the `status: waiting for author`
    - This label will be removed automatically if an author re-requests review
 2. If you give a pull request its first approval, add the `1 approval` label
-3. Once a pull request has approval from both teams, add the `ready to merge` label
+   - If the PR author is a team member, then go straight to `ready to merge`
+3. Once a pull request has met the approval threshold, add the `ready to merge` label
 
-Waiting for both team members' approval helps the team feel ownership and stay informed about changes.
-Approval from the [project lead](/project/team#project-lead) is intentionally not required, as we don't want to fall into a [BDFL](https://en.wikipedia.org/wiki/Benevolent_dictator_for_life) system.
+Waiting for at least two team members' approval helps the team feel ownership and stay informed about changes.
+
+### Changesets
+
+When reviewing a pull request, please confirm the presence of a changeset if the pull request introduces a user-facing[^1] change.
+If present, ensure the changeset is accurate and done at the appropriate version level (patch, minor, or major) based on the nature of the change.
+If a changeset is missing or inaccurate, please request that the author add or fix it before approving the pull request.
+
+[^1]: A user, in this context, is any consumer of _any_ of the packages we publish, as well as users of the `flint` CLI.
 
 ## Waiting Periods
 
 We leave nontrivial issues and pull requests open for some time following any significant change to give team members a chance to weigh in.
 
-- For anything clearly good and straightforward (e.g. small typo fixes, reproducible user-facing crashes, trivial dependency bumps, etc.), no waiting period is necessary.
-- For anything _really_ big (e.g. major rearchitectures), wait 5 business days.
-- For anything else: wait 2 business days.
+- For anything clearly good and straightforward (e.g. small typo fixes, reproducible user-facing crashes, trivial dependency bumps, etc.) or high urgency (e.g. unblocking `main` build failures), no waiting period is necessary.
+- For anything _really_ big (e.g. major re-architecture), wait 5 business days.
+- For anything else: wait 1 business day.
 
-Use your best judgment and ✨ vibes ✨ interpretation for what category issues and pull requests fall under and what constitutes a significant change.
+Use your best judgment and ✨ vibes ✨ for what category issues and pull requests fall under and what constitutes a significant change.
