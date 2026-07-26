@@ -6,4 +6,8 @@ export {
 } from "./comparisons.ts";
 export { getRuleForPlugin, getRuleForPluginSafe } from "./getRuleForPlugin.ts";
 
-export type { Comparison, FlintRuleReference } from "./schemas.ts";
+export {
+	type Comparison,
+	comparisonsDataSchema,
+	type FlintRuleReference,
+} from "./schemas.ts";

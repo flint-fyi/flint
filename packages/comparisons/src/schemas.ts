@@ -1,3 +1,17 @@
+/* eslint perfectionist/sort-objects: ["error", {
+	customGroups: [
+		{
+			groupName: "flint",
+			elementNamePattern: "^flint$",
+		},
+		{
+			groupName: "notes",
+			elementNamePattern: "^notes$",
+		},
+	],
+	groups: ["flint", "unknown", "notes"],
+}] */
+
 import { z } from "zod/v4";
 
 const flintRulePluginSchema = z.union([
@@ -72,14 +86,14 @@ export type Comparison = z.infer<typeof comparisonSchema>;
 
 const comparisonSchema = z
 	.object({
+		flint: flintRuleReferenceSchema,
 		biome: z.array(linterRuleReferenceSchema).optional(),
 		deno: z.array(linterRuleReferenceSchema).optional(),
 		eslint: z.array(linterRuleReferenceSchema).optional(),
-		flint: flintRuleReferenceSchema,
 		markdownlint: z.array(linterRuleReferenceSchema).optional(),
-		notes: z.string().optional(),
 		oxlint: z.array(linterRuleReferenceSchema).optional(),
 		stylelint: z.array(linterRuleReferenceSchema).optional(),
+		notes: z.string().optional(),
 	})
 	.strict();
 

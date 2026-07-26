@@ -1,5 +1,5 @@
 import data from "./data.json" with { type: "json" };
-import { comparisonsDataSchema } from "./schemas.ts";
+import { comparisonsDataSchema, type Comparison } from "./schemas.ts";
 
 export type LinterName =
 	| "biome"
@@ -22,6 +22,6 @@ export const linterNames = {
 	stylelint: "Stylelint",
 } as const satisfies Record<LinterName, string>;
 
-const comparisons = comparisonsDataSchema.parse(data);
+const comparisons: Comparison[] = comparisonsDataSchema.parse(data);
 
 export { comparisons };
