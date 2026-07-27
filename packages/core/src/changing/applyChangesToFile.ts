@@ -2,7 +2,7 @@ import { debugForFile } from "debug-for-file";
 
 import { nullThrows } from "@flint.fyi/utils";
 
-import type { FileChange } from "../types/changes.ts";
+import type { FileChange, MetaChange } from "../types/changes.ts";
 import type { LinterHost } from "../types/host.ts";
 import { applyChangesToText } from "./applyChangesToText.ts";
 
@@ -12,6 +12,7 @@ export async function applyChangesToFile(
 	host: LinterHost,
 	absoluteFilePath: string,
 	changes: FileChange[],
+	meta: MetaChange,
 ) {
 	log(
 		"Collecting %d changes to apply to file: %s",
@@ -27,11 +28,11 @@ export async function applyChangesToFile(
 
 	log("Writing %d changes to file: %s", changes.length, absoluteFilePath);
 
-	await host.writeFile(newAbsoluteFilePath, updatedFileContent);
+	await host.writeFile(absoluteFilePath, updatedFileContent);
 
 	// should this be an actual rename?
-	if (wip) {
-		host.deleteFile(oldAbsoluteFilePath);
+	if (meta.newPath !== undefined) {
+		host.renameFile(absoluteFilePath, meta.newPath);
 	}
 
 	log("Wrote changes to file: %s", absoluteFilePath);

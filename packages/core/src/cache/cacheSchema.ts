@@ -33,8 +33,21 @@ const suggestionForFileSchema = changeBaseSchema.extend({
 	text: z.string(),
 });
 
+// Record<string, FileChange[] | (MetaChange & { patches?: FileChange[] })>
+
+const metaChange = z.object({
+	newPath: z.string().optional(),
+});
+
 const suggestionForFilesSchema = changeBaseSchema.extend({
-	files: z.record(z.string(), z.array(fixSchema).optional()),
+	files: z.record(
+		z.string(),
+		z.union([
+			z.array(fixSchema),
+			metaChange.extend({ patches: z.array(fixSchema).optional() }),
+			// z.undefined(),
+		]),
+	),
 });
 
 const suggestionSchema = z.union([

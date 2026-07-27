@@ -4,20 +4,32 @@ import { isSuggestionForFiles } from "../utils/predicates.ts";
 export function resolveChange(
 	change: Change,
 	sourceFilePath: string,
-): ResolvedChange | ResolvedChange[] {
+): ResolvedChange[] {
 	if (!isSuggestionForFiles(change)) {
-		return {
-			...change,
-			filePath: sourceFilePath,
-		};
+		return [
+			{
+				...change,
+				filePath: sourceFilePath,
+			},
+		];
 	}
 
-	return Object.entries(change.files).flatMap(
-		([filePath, fileChanges = []]) => {
-			return fileChanges.map((fileChange) => ({
-				...fileChange,
-				filePath,
-			}));
-		},
-	);
+	return Object.entries(change.files).flatMap(([filePath, fileChanges]) => {
+		if (fileChanges === undefined) {
+			return [];
+		}
+
+		const changes = Array.isArray(fileChanges)
+			? fileChanges
+			: fileChanges.patches;
+
+		if (changes === undefined) {
+			return [];
+		}
+
+		return changes.map((fileChange) => ({
+			...fileChange,
+			filePath,
+		}));
+	});
 }
