@@ -16,8 +16,6 @@ If the condition is never met, the test passes without actually checking anythin
 
 ## Examples
 
-### Conditional statements
-
 <Tabs>
 <TabItem label="❌ Incorrect">
 
@@ -38,6 +36,32 @@ test("something", () => {
 ```ts
 promise.catch(() => {
 	expect(true).toBe(false);
+});
+```
+
+```ts
+test("something", () => {
+	try {
+		doSomething();
+	} catch {
+		expect(true).toBe(false);
+	}
+});
+```
+
+```ts
+test("something", () => {
+	switch (something) {
+		case "a":
+			expect(something).toBe("a");
+			break;
+	}
+});
+```
+
+```ts
+test("something", () => {
+	something && expect(something).toBe(true);
 });
 ```
 
