@@ -1,5 +1,5 @@
 ---
-description: "Reports hooks before any test case."
+description: "Reports hooks after the first test case."
 title: "hooksBeforeTestCases"
 topic: "rules"
 ---
@@ -51,7 +51,7 @@ describe("math", () => {
 
 This rule is not configurable.
 
-## When Not To Use It
+## When Not to Use It
 
 If you prefer to declare hooks close to the test cases that use them, this rule might not be for you.
 Because Vitest applies hooks to every test in their scope no matter their placement, the ordering is a matter of readability rather than correctness.

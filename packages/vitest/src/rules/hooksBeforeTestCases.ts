@@ -26,12 +26,12 @@ const exemptModifiers = ["extend", "scoped"];
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
-		description: "Reports hooks before any test case.",
+		description: "Reports hooks after the first test case.",
 		id: "hooksBeforeTestCases",
 		presets: ["stylisticStrict"],
 	},
 	messages: {
-		hookBeforeTestCase: {
+		hookAfterTestCase: {
 			primary: "This hook appears after a test case.",
 			secondary: [
 				"Vitest runs setup and teardown hooks for every test case in their scope, regardless of where they are declared.",
@@ -41,14 +41,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		},
 	},
 	setup(context) {
-		const hooksContext = [false];
+		const testCaseSeenByScope = [false];
 		return {
 			visitors: {
 				CallExpression(node, { sourceFile }) {
 					const vitestFunction = parseVitestFunctionCall(node);
 
 					if (!vitestFunction) {
-						hooksContext.push(false);
+						testCaseSeenByScope.push(false);
 						return;
 					}
 
@@ -59,20 +59,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					);
 
 					if (testCaseFunctionNamesSet.has(name) && !hasExemptModifier) {
-						hooksContext[hooksContext.length - 1] = true;
+						testCaseSeenByScope[testCaseSeenByScope.length - 1] = true;
 					}
 
-					if (hooksContext.at(-1) && hookFunctionNamesSet.has(name)) {
+					if (testCaseSeenByScope.at(-1) && hookFunctionNamesSet.has(name)) {
 						context.report({
-							message: "hookBeforeTestCase",
+							message: "hookAfterTestCase",
 							range: getTSNodeRange(targetNode, sourceFile),
 						});
 					}
 
-					hooksContext.push(false);
+					testCaseSeenByScope.push(false);
 				},
 				"CallExpression:exit"() {
-					hooksContext.pop();
+					testCaseSeenByScope.pop();
 				},
 			},
 		};
