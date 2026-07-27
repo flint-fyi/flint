@@ -12,7 +12,7 @@ import RuleSummary from "~/components/RuleSummary.astro";
 <RuleSummary plugin="vitest" rule="hooksBeforeTestCases" />
 
 Vitest runs setup and teardown hooks for every test case in their scope, regardless of where they are declared.
-Some repositories prefer to declare hooks before any test cases so the setup a test relies on is visible above it.
+Some repositories prefer to declare hooks before all test cases, so the setup/teardown that tests rely on is visible above them.
 
 This rule reports on any hook declared after a test case in the same scope.
 

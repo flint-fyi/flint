@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			primary: "This hook appears after a test case.",
 			secondary: [
 				"Vitest runs setup and teardown hooks for every test case in their scope, regardless of where they are declared.",
-				"This repository prefers declaring hooks before any test cases so the setup a test relies on is visible above it.",
+				"This repository prefers to declare hooks before all test cases, so the setup/teardown that tests rely on is visible above them.",
 			],
 			suggestions: ["Move this hook above the test cases in its scope."],
 		},
