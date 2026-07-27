@@ -5,20 +5,24 @@ import type { AST } from "@flint.fyi/typescript-language";
 
 import { parseVitestFunctionCall } from "./parseVitestFunctionCall.ts";
 
+const knownBlockNames = [
+	"afterAll",
+	"afterEach",
+	"beforeAll",
+	"beforeEach",
+	"describe",
+	"fit",
+	"it",
+	"test",
+	"xdescribe",
+	"xit",
+	"xtest",
+];
+
+const unknownBlockNames = ["foo", "expect", "vi", "tests"];
+
 describe(parseVitestFunctionCall, () => {
-	it.each([
-		"afterAll",
-		"afterEach",
-		"beforeAll",
-		"beforeEach",
-		"describe",
-		"fit",
-		"it",
-		"test",
-		"xdescribe",
-		"xit",
-		"xtest",
-	])("parses %s called as an identifier", (name) => {
+	it.each(knownBlockNames)("parses %s called as an identifier", (name) => {
 		expect(
 			parseVitestFunctionCall(parseCallExpression(`${name}(() => {})`)),
 		).toMatchObject({
@@ -27,7 +31,7 @@ describe(parseVitestFunctionCall, () => {
 		});
 	});
 
-	it.each(["foo", "expect", "vi", "beforeeach"])(
+	it.each(unknownBlockNames)(
 		"returns undefined for unknown function %s",
 		(name) => {
 			expect(
