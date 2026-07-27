@@ -63,6 +63,52 @@ beforeAll(() => {})
 This hook appears after a test case.
 `,
 		},
+		{
+			code: `
+test("first test", () => {})
+beforeEach(() => {})
+test("second test", () => {})
+`,
+			snapshot: `
+test("first test", () => {})
+beforeEach(() => {})
+~~~~~~~~~~
+This hook appears after a test case.
+test("second test", () => {})
+`,
+		},
+		{
+			code: `
+describe("suite", () => {
+	beforeAll(() => {})
+	it("my test", () => {})
+	afterAll(() => {})
+})
+`,
+			snapshot: `
+describe("suite", () => {
+	beforeAll(() => {})
+	it("my test", () => {})
+	afterAll(() => {})
+	~~~~~~~~
+	This hook appears after a test case.
+})
+`,
+		},
+		{
+			code: `
+test("my test", () => {})
+foo()
+afterEach(() => {})
+`,
+			snapshot: `
+test("my test", () => {})
+foo()
+afterEach(() => {})
+~~~~~~~~~
+This hook appears after a test case.
+`,
+		},
 	],
 	valid: [
 		`
