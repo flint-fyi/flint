@@ -5,96 +5,96 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
-/\\x1f/;
+			code: String.raw`
+/\x1f/;
 `,
-			snapshot: `
-/\\x1f/;
+			snapshot: String.raw`
+/\x1f/;
  ~~~~
- Unexpected control character '\\x1f' (U+001F) in regular expression.
+ Unexpected control character '\x1f' (U+001F) in regular expression.
 `,
 		},
 		{
-			code: `
-/\\x00/;
+			code: String.raw`
+/\x00/;
 `,
-			snapshot: `
-/\\x00/;
+			snapshot: String.raw`
+/\x00/;
  ~~~~
- Unexpected control character '\\x00' (U+0000) in regular expression.
+ Unexpected control character '\x00' (U+0000) in regular expression.
 `,
 		},
 		{
-			code: `
-/\\x0a/;
+			code: String.raw`
+/\x0a/;
 `,
-			snapshot: `
-/\\x0a/;
+			snapshot: String.raw`
+/\x0a/;
  ~~~~
- Unexpected control character '\\x0a' (U+000A) in regular expression.
+ Unexpected control character '\x0a' (U+000A) in regular expression.
 `,
 		},
 		{
-			code: `
-/\\u001f/;
+			code: String.raw`
+/\u001f/;
 `,
-			snapshot: `
-/\\u001f/;
+			snapshot: String.raw`
+/\u001f/;
  ~~~~~~
- Unexpected control character '\\u001f' (U+001F) in regular expression.
+ Unexpected control character '\u001f' (U+001F) in regular expression.
 `,
 		},
 		{
-			code: `
-/\\u{1f}/;
+			code: String.raw`
+/\u{1f}/;
 `,
-			snapshot: `
-/\\u{1f}/;
+			snapshot: String.raw`
+/\u{1f}/;
  ~~~~~~
- Unexpected control character '\\u{1f}' (U+001F) in regular expression.
+ Unexpected control character '\u{1f}' (U+001F) in regular expression.
 `,
 		},
 		{
-			code: `
-/\\cA/;
+			code: String.raw`
+/\cA/;
 `,
-			snapshot: `
-/\\cA/;
+			snapshot: String.raw`
+/\cA/;
  ~~~
- Unexpected control character '\\cA' (U+0001) in regular expression.
+ Unexpected control character '\cA' (U+0001) in regular expression.
 `,
 		},
 		{
-			code: `
-new RegExp("\\\\x1f");
+			code: String.raw`
+new RegExp("\\x1f");
 `,
-			snapshot: `
-new RegExp("\\\\x1f");
+			snapshot: String.raw`
+new RegExp("\\x1f");
             ~~~~~
-            Unexpected control character '\\\\x1f' (U+001F) in regular expression.
+            Unexpected control character '\\x1f' (U+001F) in regular expression.
 `,
 		},
 		{
-			code: `
-RegExp("\\\\u001f");
+			code: String.raw`
+RegExp("\\u001f");
 `,
-			snapshot: `
-RegExp("\\\\u001f");
+			snapshot: String.raw`
+RegExp("\\u001f");
         ~~~~~~~
-        Unexpected control character '\\\\u001f' (U+001F) in regular expression.
+        Unexpected control character '\\u001f' (U+001F) in regular expression.
 `,
 		},
 	],
 	valid: [
 		`/foo/;`,
-		`/\\n/;`,
-		`/\\t/;`,
-		`/\\r/;`,
-		`/\\x20/;`,
-		`/\\x7f/;`,
-		`/\\u0020/;`,
+		String.raw`/\n/;`,
+		String.raw`/\t/;`,
+		String.raw`/\r/;`,
+		String.raw`/\x20/;`,
+		String.raw`/\x7f/;`,
+		String.raw`/\u0020/;`,
 		`new RegExp("foo");`,
-		`new RegExp("\\\\n");`,
+		String.raw`new RegExp("\\n");`,
 		`new RegExp(variable);`,
 	],
 });

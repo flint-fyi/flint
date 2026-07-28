@@ -29,6 +29,6 @@ export function getFunctionName(
 				: undefined;
 
 		default:
-			return undefined;
+			return;
 	}
 }

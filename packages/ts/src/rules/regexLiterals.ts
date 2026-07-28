@@ -26,27 +26,27 @@ function escapeForRegexLiteral(pattern: string) {
 
 		switch (char) {
 			case "\n": {
-				result += "\\n";
+				result += String.raw`\n`;
 				break;
 			}
 
 			case "\r": {
-				result += "\\r";
+				result += String.raw`\r`;
 				break;
 			}
 
-			case "\u2028": {
-				result += "\\u2028";
+			case "\u{2028}": {
+				result += String.raw`\u2028`;
 				break;
 			}
 
-			case "\u2029": {
-				result += "\\u2029";
+			case "\u{2029}": {
+				result += String.raw`\u2029`;
 				break;
 			}
 
 			case "/": {
-				result += "\\/";
+				result += String.raw`\/`;
 				break;
 			}
 
@@ -91,11 +91,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (construction.args.length === 2) {
+			if (
+				construction.args.length === 2 &&
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				if (getStaticStringValue(construction.args[1]!) === undefined) {
-					return;
-				}
+				getStaticStringValue(construction.args[1]!) === undefined
+			) {
+				return;
 			}
 
 			if (!parseRegexpAst(construction.pattern, construction.flags)) {

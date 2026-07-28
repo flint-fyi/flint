@@ -4,20 +4,20 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: String.raw`
+			code: `
 /b(?:a+)+b/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /b(?:a+)+b/;
      ~~
      Quantifier 'a+' can reach itself via '(?:a+)+', causing exponential backtracking.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /(?:ba+|a+b){2}/;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /(?:ba+|a+b){2}/;
      ~~~~~
      Quantifiers 'a+' and 'a+' can exchange characters, causing polynomial backtracking.
@@ -54,10 +54,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 new RegExp("b(?:a+)+b");
 `,
-			snapshot: String.raw`
+			snapshot: `
 new RegExp("b(?:a+)+b");
                 ~~
                 Quantifier 'a+' can reach itself via '(?:a+)+', causing exponential backtracking.
@@ -75,10 +75,10 @@ RegExp("\\ba+a+$");
 		},
 	],
 	valid: [
-		String.raw`/regexp/;`,
-		String.raw`/a+b+a+b+/;`,
+		"/regexp/;",
+		"/a+b+a+b+/;",
 		String.raw`/\w+\b[\w-]+/;`,
-		String.raw`/(?:a+)+/;`,
+		"/(?:a+)+/;",
 		`/a/;`,
 		`/a+/;`,
 		`/a*b+/;`,

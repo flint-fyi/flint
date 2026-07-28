@@ -50,11 +50,11 @@ function isFourDigitUnicodeEscape(raw: string) {
 }
 
 function isHighSurrogate(codePoint: number) {
-	return codePoint >= 0xd800 && codePoint <= 0xdbff;
+	return codePoint >= 0xd8_00 && codePoint <= 0xdb_ff;
 }
 
 function isLowSurrogate(codePoint: number) {
-	return codePoint >= 0xdc00 && codePoint <= 0xdfff;
+	return codePoint >= 0xdc_00 && codePoint <= 0xdf_ff;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -68,7 +68,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			primary:
 				"Prefer the Unicode codepoint escape '{{ replacement }}' instead of 4-digit escape '{{ raw }}'.",
 			secondary: [
-				"The \\u{...} format is more flexible, readable, and consistent with modern Unicode handling in JavaScript.",
+				String.raw`The \u{...} format is more flexible, readable, and consistent with modern Unicode handling in JavaScript.`,
 			],
 			suggestions: ["Replace `{{ raw }}` with `{{ replacement }}`."],
 		},
@@ -114,7 +114,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const charInfo = characters[index]!;
 
-				const replacement = `\\u{${charInfo.raw.slice(2)}}`;
+				const replacement = String.raw`\u{${charInfo.raw.slice(2)}}`;
 
 				context.report({
 					data: {

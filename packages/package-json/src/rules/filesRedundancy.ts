@@ -52,7 +52,7 @@ function getBinFiles(property: MemberNode | undefined) {
 
 function getCachedLocalFileRegex(fileName: string) {
 	if (wildcardsRegex.test(fileName)) {
-		return undefined;
+		return;
 	}
 
 	const baseFileName = fileName.replace("./", "");
@@ -61,12 +61,10 @@ function getCachedLocalFileRegex(fileName: string) {
 		return cachedRegex;
 	}
 
-	// TODO[typescript>=6.0]: Use RegExp.escape once TypeScript includes its types.
-	const escapedBaseFileName = baseFileName.replace(
-		/[\\^$.*+?()[\]{}|]/g,
-		"\\$&",
+	const regex = new RegExp(
+		String.raw`^(\./)?${RegExp.escape(baseFileName)}$`,
+		"i",
 	);
-	const regex = new RegExp(`^(\\.\\/)?${escapedBaseFileName}$`, "i");
 	cachedRegexes.set(baseFileName, regex);
 	return regex;
 }

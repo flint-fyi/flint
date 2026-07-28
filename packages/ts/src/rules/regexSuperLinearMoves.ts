@@ -43,7 +43,7 @@ function canReject(element: RegExpAST.Element): boolean {
 		case "CharacterClass":
 			return !isMatchAll(element);
 		case "CharacterSet":
-			return element.kind !== "any" || element.raw !== "[\\s\\S]";
+			return element.kind !== "any" || element.raw !== String.raw`[\s\S]`;
 		case "Quantifier":
 			return element.min !== 0 && canReject(element.element);
 		default:
@@ -89,7 +89,7 @@ function generateAttackString(quantifier: RegExpAST.Quantifier) {
 
 	switch (quantifier.element.type) {
 		case "Character": {
-			character = String.fromCharCode(quantifier.element.value);
+			character = String.fromCodePoint(quantifier.element.value);
 			break;
 		}
 
@@ -97,7 +97,7 @@ function generateAttackString(quantifier: RegExpAST.Quantifier) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const first = quantifier.element.elements[0]!;
 			if (first.type === "Character") {
-				character = String.fromCharCode(first.value);
+				character = String.fromCodePoint(first.value);
 			}
 			break;
 		}

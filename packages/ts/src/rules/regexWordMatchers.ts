@@ -122,8 +122,7 @@ function isUpperRange(element: RegExpAST.CharacterClassElement) {
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
-		description:
-			"Reports character classes that match word characters and could use \\w or \\W instead.",
+		description: String.raw`Reports character classes that match word characters and could use \w or \W instead.`,
 		id: "regexWordMatchers",
 		presets: ["stylisticStrict"],
 	},
@@ -131,7 +130,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		preferWord: {
 			primary:
 				"Character class '{{ raw }}' can be replaced with '{{ replacement }}'.",
-			secondary: ["The \\w shorthand matches [a-zA-Z0-9_] (word characters)."],
+			secondary: [
+				String.raw`The \w shorthand matches [a-zA-Z0-9_] (word characters).`,
+			],
 			suggestions: ["Replace with '{{ replacement }}'."],
 		},
 	},
@@ -144,7 +145,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const issues = findIssues(pattern, flags);
 
 			for (const issue of issues) {
-				const replacement = issue.negated ? "\\W" : "\\w";
+				const replacement = issue.negated ? String.raw`\W` : String.raw`\w`;
 				context.report({
 					data: {
 						raw: issue.raw,
@@ -176,32 +177,31 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const { flags, pattern, start } = construction;
-			const unescapedPattern = pattern.replace(/\\\\/g, "\\");
+			const unescapedPattern = pattern.replaceAll("\\\\", "\\");
 			const issues = findIssues(unescapedPattern, flags);
 
 			function mapPositionToSource(pos: number) {
 				let sourcePos = 0;
 				let patternPos = 0;
 				while (patternPos < pos && sourcePos < pattern.length) {
-					if (pattern[sourcePos] === "\\" && pattern[sourcePos + 1] === "\\") {
-						sourcePos += 2;
-					} else {
-						sourcePos += 1;
-					}
+					sourcePos +=
+						pattern[sourcePos] === "\\" && pattern[sourcePos + 1] === "\\"
+							? 2
+							: 1;
 					patternPos += 1;
 				}
 				return sourcePos;
 			}
 
 			for (const issue of issues) {
-				const replacement = issue.negated ? "\\\\W" : "\\\\w";
+				const replacement = issue.negated ? String.raw`\\W` : String.raw`\\w`;
 				const adjustedStart = mapPositionToSource(issue.start);
 				const adjustedEnd = mapPositionToSource(issue.end);
 
 				context.report({
 					data: {
 						raw: issue.raw,
-						replacement: issue.negated ? "\\W" : "\\w",
+						replacement: issue.negated ? String.raw`\W` : String.raw`\w`,
 					},
 					fix: {
 						range: {

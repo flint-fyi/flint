@@ -69,5 +69,5 @@ function getInitializerValue(initializer: AST.JsxAttributeValue) {
 			: undefined;
 	}
 
-	return undefined;
+	return;
 }

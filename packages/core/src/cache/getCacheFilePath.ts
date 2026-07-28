@@ -1,8 +1,8 @@
-import { join } from "node:path";
+import path from "node:path";
 
-const defaultCacheFileDirectory = join("node_modules", ".cache");
+const defaultCacheFileDirectory = path.join("node_modules", ".cache");
 const defaultCacheFileName = "flint.json";
-const defaultCacheFilePath = join(
+const defaultCacheFilePath = path.join(
 	defaultCacheFileDirectory,
 	defaultCacheFileName,
 );
@@ -13,7 +13,7 @@ export const getCacheFilePath = (userProvidedCacheLocation?: string) => {
 			return userProvidedCacheLocation;
 		}
 
-		return join(userProvidedCacheLocation, defaultCacheFileName);
+		return path.join(userProvidedCacheLocation, defaultCacheFileName);
 	}
 
 	return defaultCacheFilePath;

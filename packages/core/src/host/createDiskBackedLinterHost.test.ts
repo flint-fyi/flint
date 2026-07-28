@@ -649,7 +649,7 @@ describe("createDiskBackedLinterHost", () => {
 		it("correctly reports when dir and its child have the same name", async () => {
 			const host = createDiskBackedLinterHost(integrationRoot);
 			const directoryPath = normalizePath(path.join(integrationRoot, "dir"));
-			const subDirectoryPath = normalizePath(path.join(directoryPath, "dir"));
+			const subdirectoryPath = normalizePath(path.join(directoryPath, "dir"));
 			const onEvent = vi.fn();
 			using _ = host.watchDirectorySync(directoryPath, onEvent, {
 				ignoredPaths: [],
@@ -665,15 +665,15 @@ describe("createDiskBackedLinterHost", () => {
 			});
 			onEvent.mockClear();
 
-			fs.mkdirSync(subDirectoryPath, { recursive: true });
+			fs.mkdirSync(subdirectoryPath, { recursive: true });
 			await vi.waitFor(() => {
-				expect(onEvent).toHaveBeenCalledWith(subDirectoryPath);
+				expect(onEvent).toHaveBeenCalledWith(subdirectoryPath);
 			});
 			onEvent.mockClear();
 
-			fs.rmSync(subDirectoryPath, { force: true, recursive: true });
+			fs.rmSync(subdirectoryPath, { force: true, recursive: true });
 			await vi.waitFor(() => {
-				expect(onEvent).toHaveBeenCalledWith(subDirectoryPath);
+				expect(onEvent).toHaveBeenCalledWith(subdirectoryPath);
 			});
 			onEvent.mockClear();
 
@@ -683,7 +683,7 @@ describe("createDiskBackedLinterHost", () => {
 			});
 			onEvent.mockClear();
 
-			fs.mkdirSync(subDirectoryPath, { recursive: true });
+			fs.mkdirSync(subdirectoryPath, { recursive: true });
 			await vi.waitFor(() => {
 				expect(onEvent).toHaveBeenCalledWith(directoryPath);
 			});

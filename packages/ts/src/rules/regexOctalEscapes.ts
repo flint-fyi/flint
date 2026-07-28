@@ -41,10 +41,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			primary:
 				"Octal escape sequence '{{ raw }}' can be confused with backreferences.",
 			secondary: [
-				"Octal escapes like \\1 can be mistaken for backreferences. The same sequence may be a character or a backreference depending on the number of capturing groups.",
+				String.raw`Octal escapes like \1 can be mistaken for backreferences. The same sequence may be a character or a backreference depending on the number of capturing groups.`,
 			],
 			suggestions: [
-				"Use hexadecimal escape sequences (e.g., \\x07) instead of octal escapes.",
+				String.raw`Use hexadecimal escape sequences (e.g., \x07) instead of octal escapes.`,
 			],
 		},
 	},
@@ -63,7 +63,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			visitRegExpAST(regexpAst, {
 				onCharacterEnter(charNode) {
-					if (charNode.raw === "\\0") {
+					if (charNode.raw === String.raw`\0`) {
 						return;
 					}
 
@@ -73,18 +73,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const octalMatch = /^\\([0-7]+)$/.exec(charNode.raw);
 					if (octalMatch?.[1]) {
-						const octalValue = parseInt(octalMatch[1], 8);
+						const octalValue = Number.parseInt(octalMatch[1], 8);
 						if (
 							octalValue > 0 &&
 							octalValue <= capturingGroupCount &&
-							!charNode.raw.startsWith("\\0")
+							!charNode.raw.startsWith(String.raw`\0`)
 						) {
 							return;
 						}
 					}
 
 					const shouldReport =
-						charNode.raw.startsWith("\\0") ||
+						charNode.raw.startsWith(String.raw`\0`) ||
 						!(
 							charNode.parent.type === "CharacterClass" ||
 							charNode.parent.type === "CharacterClassRange"

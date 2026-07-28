@@ -24,7 +24,7 @@ export function createBlockPaddingRule(
 		(statement) => {
 			const rootName = getStatementRootName(statement);
 			if (!rootName || !targetNameSet.has(rootName)) {
-				return undefined;
+				return;
 			}
 
 			return {

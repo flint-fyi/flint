@@ -7,8 +7,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\q{}]/v;
 `,
-			snapshot: `
-/[\\q{}]/v;
+			snapshot: String.raw`
+/[\q{}]/v;
   ~~~~
   This empty string literal in a character class will always match the empty string.
 `,
@@ -17,8 +17,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[a\q{}]/v;
 `,
-			snapshot: `
-/[a\\q{}]/v;
+			snapshot: String.raw`
+/[a\q{}]/v;
    ~~~~
    This empty string literal in a character class will always match the empty string.
 `,
@@ -27,8 +27,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[\q{}b]/v;
 `,
-			snapshot: `
-/[\\q{}b]/v;
+			snapshot: String.raw`
+/[\q{}b]/v;
   ~~~~
   This empty string literal in a character class will always match the empty string.
 `,
@@ -37,18 +37,18 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /[a\q{}b]/v;
 `,
-			snapshot: `
-/[a\\q{}b]/v;
+			snapshot: String.raw`
+/[a\q{}b]/v;
    ~~~~
    This empty string literal in a character class will always match the empty string.
 `,
 		},
 		{
-			code: `
-new RegExp("[\\\\q{}]", "v");
+			code: String.raw`
+new RegExp("[\\q{}]", "v");
 `,
-			snapshot: `
-new RegExp("[\\\\q{}]", "v");
+			snapshot: String.raw`
+new RegExp("[\\q{}]", "v");
              ~~~~
              This empty string literal in a character class will always match the empty string.
 `,

@@ -4,78 +4,78 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: String.raw`
+			code: `
 /abc/;
 `,
-			output: String.raw`
+			output: `
 /abc/u;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /abc/;
 ~~~~~
 This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /abc/g;
 `,
-			output: String.raw`
+			output: `
 /abc/gu;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /abc/g;
 ~~~~~~
 This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /abc/gim;
 `,
-			output: String.raw`
+			output: `
 /abc/gimu;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /abc/gim;
 ~~~~~~~~
 This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 RegExp("abc");
 `,
-			output: String.raw`
+			output: `
 RegExp("abc", "u");
 `,
-			snapshot: String.raw`
+			snapshot: `
 RegExp("abc");
 ~~~~~~~~~~~~~
 This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 new RegExp("abc");
 `,
-			output: String.raw`
+			output: `
 new RegExp("abc", "u");
 `,
-			snapshot: String.raw`
+			snapshot: `
 new RegExp("abc");
 ~~~~~~~~~~~~~~~~~
 This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 RegExp("abc", "g");
 `,
-			output: String.raw`
+			output: `
 RegExp("abc", "gu");
 `,
-			snapshot: String.raw`
+			snapshot: `
 RegExp("abc", "g");
 ~~~~~~~~~~~~~~~~~~
 This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
@@ -92,10 +92,10 @@ This regular expression is missing the Unicode ('u') flag for proper Unicode cha
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 RegExp("abc", flags);
 `,
-			snapshot: String.raw`
+			snapshot: `
 RegExp("abc", flags);
 ~~~~~~~~~~~~~~~~~~~~
 This regular expression is missing the Unicode ('u') flag for proper Unicode character handling.
@@ -103,11 +103,11 @@ This regular expression is missing the Unicode ('u') flag for proper Unicode cha
 		},
 	],
 	valid: [
-		String.raw`/abc/u;`,
-		String.raw`/abc/gu;`,
-		String.raw`/abc/v;`,
-		String.raw`RegExp("abc", "u");`,
-		String.raw`RegExp(variable);`,
-		String.raw`RegExp(...args);`,
+		"/abc/u;",
+		"/abc/gu;",
+		"/abc/v;",
+		'RegExp("abc", "u");',
+		"RegExp(variable);",
+		"RegExp(...args);",
 	],
 });

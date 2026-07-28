@@ -42,29 +42,27 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			patternStart: number,
 		) {
 			if (
-				element.type === "Assertion" &&
-				element.kind === kind &&
-				!element.negate
+				!(element.type === "Assertion" && element.kind === kind) ||
+				element.negate
 			) {
-				const innerContent = element.raw.slice(
-					kind === "lookahead" ? 3 : 4,
-					-1,
-				);
-				context.report({
-					fix: {
-						range: {
-							begin: patternStart + element.start,
-							end: patternStart + element.end,
-						},
-						text: innerContent,
-					},
-					message: kind,
+				return;
+			}
+
+			const innerContent = element.raw.slice(kind === "lookahead" ? 3 : 4, -1);
+			context.report({
+				fix: {
 					range: {
 						begin: patternStart + element.start,
 						end: patternStart + element.end,
 					},
-				});
-			}
+					text: innerContent,
+				},
+				message: kind,
+				range: {
+					begin: patternStart + element.start,
+					end: patternStart + element.end,
+				},
+			});
 		}
 
 		function checkPattern(
@@ -122,7 +120,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const patternEscaped = construction.pattern.replace(/\\\\/g, "\\");
+			const patternEscaped = construction.pattern.replaceAll("\\\\", "\\");
 			checkPattern(patternEscaped, construction.start + 1, construction.flags);
 		}
 

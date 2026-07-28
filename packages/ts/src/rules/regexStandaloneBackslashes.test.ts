@@ -66,8 +66,8 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: `
-new RegExp("\\\\c");
+			code: String.raw`
+new RegExp("\\c");
 `,
 			snapshot: `
 new RegExp("\\\\c");
@@ -76,8 +76,8 @@ new RegExp("\\\\c");
 `,
 		},
 		{
-			code: `
-RegExp("\\\\c1");
+			code: String.raw`
+RegExp("\\c1");
 `,
 			snapshot: `
 RegExp("\\\\c1");
@@ -101,13 +101,13 @@ RegExp("\\\\c1");
 		String.raw`/\u0000/;`,
 		String.raw`/\\/;`,
 		String.raw`/[[\cA-\cZ]--\cX]/v;`,
-		`new RegExp("\\\\n");`,
-		`new RegExp("\\\\t");`,
-		`new RegExp("\\\\cX");`,
+		String.raw`new RegExp("\\n");`,
+		String.raw`new RegExp("\\t");`,
+		String.raw`new RegExp("\\cX");`,
 		`new RegExp(variable);`,
 		`/abc/;`,
 		`/[abc]/;`,
-		`notRegExp("\\\\c");`,
-		`new NotRegExp("\\\\c");`,
+		String.raw`notRegExp("\\c");`,
+		String.raw`new NotRegExp("\\c");`,
 	],
 });

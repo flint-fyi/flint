@@ -68,7 +68,7 @@ export async function runCli(args: string[]) {
 		);
 		console.log("");
 		console.log(
-			"See \u001B]8;;flint.fyi\u0007flint.fyi\u001B]8;;\u0007 for more information.",
+			"See \u{1B}]8;;flint.fyi\u{7}flint.fyi\u{1B}]8;;\u{7} for more information.",
 		);
 		return 0;
 	}
@@ -87,7 +87,7 @@ export async function runCli(args: string[]) {
 			"The Flint CLI auto-initializer is not yet implemented. Check back soon!",
 		);
 		console.error(
-			`In the meantime, why not join \u001B]8;;https://flint.fyi/discord\u0007flint.fyi/discord\u001B]8;;\u0007 and chat with us? ❤️`,
+			`In the meantime, why not join \u{1B}]8;;https://flint.fyi/discord\u{7}flint.fyi/discord\u{1B}]8;;\u{7} and chat with us? ❤️`,
 		);
 		return 2;
 	}

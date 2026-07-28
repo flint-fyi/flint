@@ -25,7 +25,7 @@ function buildFixedPattern(
 ) {
 	let result = originalPattern;
 
-	for (const { group, position } of [...boundaryGroups].reverse()) {
+	for (const { group, position } of [...boundaryGroups].toReversed()) {
 		const assertion = position === "start" ? "(?<=" : "(?=";
 		const groupContent = groupToRaw(group);
 		const replacement = `${assertion}${groupContent})`;
@@ -58,18 +58,18 @@ function getBoundaryGroups(
 		groups.length > 2 ||
 		groups.some((group) => group.name != null)
 	) {
-		return undefined;
+		return;
 	}
 
 	const alternatives = pattern.alternatives;
 	if (alternatives.length !== 1) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const elements = alternatives[0]!.elements;
 	if (elements.length < 2) {
-		return undefined;
+		return;
 	}
 
 	const result: BoundaryGroup[] = [];
@@ -85,7 +85,7 @@ function getBoundaryGroups(
 		} else if (lastElement === group) {
 			result.push({ group, position: "end" });
 		} else {
-			return undefined;
+			return;
 		}
 	} else {
 		const [first, second] = groups;
@@ -97,7 +97,7 @@ function getBoundaryGroups(
 				{ group: second!, position: "end" },
 			);
 		} else {
-			return undefined;
+			return;
 		}
 	}
 
@@ -118,12 +118,12 @@ function getCapturingGroups(pattern: RegExpAST.Pattern) {
 
 function getRegexPatternAndFlags(node: AST.Expression) {
 	if (node.kind !== SyntaxKind.RegularExpressionLiteral) {
-		return undefined;
+		return;
 	}
 
 	const match = /^\/(.+)\/([dgimsuyv]*)$/.exec(node.text);
 	if (!match) {
-		return undefined;
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -175,7 +175,7 @@ function parseReplacementReferences(text: string) {
 
 	while ((match = pattern.exec(text))) {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const index = parseInt(match[1]!, 10);
+		const index = Number(match[1]!);
 		if (index > 0) {
 			references.set(index, (references.get(index) ?? 0) + 1);
 		}

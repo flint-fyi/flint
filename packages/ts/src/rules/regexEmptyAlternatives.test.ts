@@ -134,11 +134,11 @@ RegExp("|a");
 `,
 		},
 		{
-			code: `
-/(?:\\|\\|||\\|)/;
+			code: String.raw`
+/(?:\|\|||\|)/;
 `,
-			snapshot: `
-/(?:\\|\\|||\\|)/;
+			snapshot: String.raw`
+/(?:\|\|||\|)/;
          ~
          Empty alternative in regular expression may be a mistake.
 `,

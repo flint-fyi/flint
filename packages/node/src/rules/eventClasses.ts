@@ -56,17 +56,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 			}
 
-			if (
+			return (
 				declaration.kind === SyntaxKind.ImportEqualsDeclaration &&
 				declaration.name.text === "EventEmitter" &&
 				declaration.moduleReference.kind ===
 					SyntaxKind.ExternalModuleReference &&
 				isImportFromNodeEvents(declaration.moduleReference.expression)
-			) {
-				return true;
-			}
-
-			return false;
+			);
 		}
 
 		function isIdentifierEventEmitter(

@@ -81,7 +81,7 @@ function getIncrementorDirection(incrementor: AST.Expression) {
 			case SyntaxKind.PlusPlusToken:
 				return 1;
 			default:
-				return undefined;
+				return;
 		}
 	}
 
@@ -114,7 +114,7 @@ function getIncrementorDirection(incrementor: AST.Expression) {
 		}
 	}
 
-	return undefined;
+	return;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {

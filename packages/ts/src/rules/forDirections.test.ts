@@ -120,6 +120,6 @@ for (let i = 10; text[i] !== " " && i >= 0; i++) { }
 		`for (let index = 10; index > 0; index -= 1) { }`,
 		`for (let index = 0; index < 10; index += 2) { }`,
 		`for (let index = 10; index > 0; index -= 2) { }`,
-		`for (let i = 10; i >= 0 && text[i] === "\\"; i--) { }`,
+		String.raw`for (let i = 10; i >= 0 && text[i] === "\"; i--) { }`,
 	],
 });

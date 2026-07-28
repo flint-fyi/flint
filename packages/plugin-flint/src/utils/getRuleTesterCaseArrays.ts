@@ -12,7 +12,7 @@ export function getRuleTesterCaseArrays(node: AST.CallExpression) {
 		node.expression.name.text !== "describe" ||
 		node.arguments.length !== 2
 	) {
-		return undefined;
+		return;
 	}
 
 	// TODO: Check node.expression.expression's type for being a RuleTester
@@ -20,7 +20,7 @@ export function getRuleTesterCaseArrays(node: AST.CallExpression) {
 
 	const argument = node.arguments[1];
 	if (argument?.kind !== SyntaxKind.ObjectLiteralExpression) {
-		return undefined;
+		return;
 	}
 
 	const valid = findProperty(
@@ -38,7 +38,7 @@ export function getRuleTesterCaseArrays(node: AST.CallExpression) {
 	);
 
 	if (!valid || !invalid) {
-		return undefined;
+		return;
 	}
 
 	return { invalid, valid };

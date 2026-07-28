@@ -19,7 +19,7 @@ export function printSummary(filesWithReportResults: [string, FileResults][]) {
 
 	return chalk.red(
 		[
-			"\u2716 Found ",
+			"\u{2716} Found ",
 			chalk.bold(pluralize(counts.all, "report")),
 			" across ",
 			chalk.bold(pluralize(counts.files, "file")),

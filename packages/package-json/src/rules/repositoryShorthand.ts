@@ -26,7 +26,7 @@ function createUrl(shorthand: string) {
 	if (!shorthand.includes(":")) {
 		// If this is definitely not a valid repository, bail out
 		if (shorthand.split("/").filter(Boolean).length < 2) {
-			return undefined;
+			return;
 		}
 
 		// If the provider is missing or unrecognized, default to GitHub
@@ -34,7 +34,7 @@ function createUrl(shorthand: string) {
 	}
 
 	// Use the appropriate provider url if one is specified
-	const [provider, repository] = shorthand.split(":");
+	const [provider, repository] = shorthand.split(":", 2);
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	if (isProvider(provider!) && repository) {
 		return `${providerUrls[provider]}${repository}`;

@@ -27,7 +27,7 @@ function getModernMethodName(methodName: string, node: AST.CallExpression) {
 				`First argument should be defined for call expression (${methodName})`,
 			);
 			if (firstArgument.kind !== SyntaxKind.StringLiteral) {
-				return undefined;
+				return;
 			}
 
 			const position = firstArgument.text.toLowerCase();
@@ -44,11 +44,11 @@ function getModernMethodName(methodName: string, node: AST.CallExpression) {
 
 function getPropertyNameNode(node: AST.LeftHandSideExpression) {
 	if (node.kind !== SyntaxKind.PropertyAccessExpression) {
-		return undefined;
+		return;
 	}
 
 	if (node.name.kind !== SyntaxKind.Identifier) {
-		return undefined;
+		return;
 	}
 
 	return node.name;
@@ -118,7 +118,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const modernMethod = getModernMethodName(nameNode.text, node);
 					if (!modernMethod) {
-						return undefined;
+						return;
 					}
 
 					context.report({

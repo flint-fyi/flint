@@ -28,6 +28,7 @@ function hasCommentsInArray(
 	array: AST.ArrayLiteralExpression,
 	sourceFile: AST.SourceFile,
 ) {
+	// eslint-disable-next-line unicorn/prefer-set-has -- substring check on a string, not array membership
 	const arrayText = sourceFile.text.slice(
 		array.getStart(sourceFile),
 		array.getEnd(),
@@ -117,7 +118,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const sortedElements = [...elements].sort((a, b) =>
+			const sortedElements = elements.toSorted((a, b) =>
 				compareRuleNames(a.text, b.text),
 			);
 			const fix = hasCommentsInArray(array, sourceFile)

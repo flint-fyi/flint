@@ -73,7 +73,7 @@ function computeNextCodeLine(
 	const nextLineStart = lineStarts[directiveLine + 1];
 
 	if (nextLineStart === undefined) {
-		return undefined;
+		return;
 	}
 
 	// Skip comments and whitespace to find the first token on the next line
@@ -90,7 +90,7 @@ function computeNextCodeLine(
 
 	// Reaching the end of the file means there are no more lines
 	if (kind === SyntaxKind.EndOfFileToken) {
-		return undefined;
+		return;
 	}
 
 	const tokenPos = scanner.getTokenStart();
@@ -103,7 +103,7 @@ function computeNextCodeLine(
 		// If there is an empty line between the directive and the target line,
 		// the directive should keep its default next-line behavior.
 		if (sourceFile.text.slice(start, end).trim() === "") {
-			return undefined;
+			return;
 		}
 	}
 

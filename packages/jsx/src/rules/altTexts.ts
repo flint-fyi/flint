@@ -45,12 +45,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const elementName = tagName.text.toLowerCase();
 
-			if (elementName === "img" || elementName === "area") {
-				checkAltAttribute(attributes, tagName, elementName, sourceFile);
-			} else if (elementName === "input") {
-				checkInputElement(attributes, tagName, sourceFile);
-			} else if (elementName === "object") {
-				checkObjectAccessibility(attributes, tagName, sourceFile);
+			switch (elementName) {
+				case "area":
+				case "img": {
+					checkAltAttribute(attributes, tagName, elementName, sourceFile);
+
+					break;
+				}
+				case "input": {
+					checkInputElement(attributes, tagName, sourceFile);
+
+					break;
+				}
+				case "object": {
+					checkObjectAccessibility(attributes, tagName, sourceFile);
+
+					break;
+				}
 			}
 		}
 

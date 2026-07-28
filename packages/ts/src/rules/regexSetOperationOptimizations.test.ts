@@ -4,169 +4,169 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: String.raw`
+			code: `
 /[a&&[^b]]/v;
 `,
-			output: String.raw`
+			output: `
 /[a--[b]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[a&&[^b]]/v;
 ~~~~~~~~~~~~
 This intersection can be simplified to a subtraction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[a&&b&&[^c]]/v;
 `,
-			output: String.raw`
+			output: `
 /[[a&&b]--[c]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[a&&b&&[^c]]/v;
 ~~~~~~~~~~~~~~~
 This intersection can be simplified to a subtraction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[a&&[^b]&&c]/v;
 `,
-			output: String.raw`
+			output: `
 /[[a&&c]--[b]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[a&&[^b]&&c]/v;
 ~~~~~~~~~~~~~~~
 This intersection can be simplified to a subtraction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[a&&b&&[^c]&&d]/v;
 `,
-			output: String.raw`
+			output: `
 /[[a&&b&&d]--[c]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[a&&b&&[^c]&&d]/v;
 ~~~~~~~~~~~~~~~~~~
 This intersection can be simplified to a subtraction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[^a]&&b&&c]/v;
 `,
-			output: String.raw`
+			output: `
 /[[b&&c]--[a]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[^a]&&b&&c]/v;
 ~~~~~~~~~~~~~~~
 This intersection can be simplified to a subtraction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[^b]&&a]/v;
 `,
-			output: String.raw`
+			output: `
 /[a--[b]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[^b]&&a]/v;
 ~~~~~~~~~~~~
 This intersection can be simplified to a subtraction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[abc]&&[^def]]/v;
 `,
-			output: String.raw`
+			output: `
 /[[abc]--[def]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[abc]&&[^def]]/v;
 ~~~~~~~~~~~~~~~~~~
 This intersection can be simplified to a subtraction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[a--[^b]]/v;
 `,
-			output: String.raw`
+			output: `
 /[a&&[b]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[a--[^b]]/v;
 ~~~~~~~~~~~~
 This subtraction can be simplified to an intersection.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[a--[^b]--c]/v;
 `,
-			output: String.raw`
+			output: `
 /[[a&&[b]]--c]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[a--[^b]--c]/v;
 ~~~~~~~~~~~~~~~
 This subtraction can be simplified to an intersection.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[a--b--[^c]]/v;
 `,
-			output: String.raw`
+			output: `
 /[[a--b]&&[c]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[a--b--[^c]]/v;
 ~~~~~~~~~~~~~~~
 This subtraction can be simplified to an intersection.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[abc]--[^def]]/v;
 `,
-			output: String.raw`
+			output: `
 /[[abc]&&[def]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[abc]--[^def]]/v;
 ~~~~~~~~~~~~~~~~~~
 This subtraction can be simplified to an intersection.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[^a]&&[^b]]/v;
 `,
-			output: String.raw`
+			output: `
 /[^[a][b]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[^a]&&[^b]]/v;
 ~~~~~~~~~~~~~~~
 This character class can be simplified to a negated disjunction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[^[^a]&&[^b]]/v;
 `,
-			output: String.raw`
+			output: `
 /[[a][b]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[^[^a]&&[^b]]/v;
 ~~~~~~~~~~~~~~~~
 This character class can be simplified to a negated disjunction.
@@ -225,52 +225,52 @@ This character class can be simplified to a negated disjunction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[^a]&&[b]&&[^c]]/v;
 `,
-			output: String.raw`
+			output: `
 /[[^[a][c]]&&[b]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[^a]&&[b]&&[^c]]/v;
 ~~~~~~~~~~~~~~~~~~~~
 This expression can be simplified to a negated disjunction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[^a][^b]]/v;
 `,
-			output: String.raw`
+			output: `
 /[^[a]&&[b]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[^a][^b]]/v;
 ~~~~~~~~~~~~~
 This character class can be simplified to a negated conjunction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[^abc][^def]]/v;
 `,
-			output: String.raw`
+			output: `
 /[^[abc]&&[def]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[^abc][^def]]/v;
 ~~~~~~~~~~~~~~~~~
 This character class can be simplified to a negated conjunction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[^[^a][^b]]/v;
 `,
-			output: String.raw`
+			output: `
 /[[a]&&[b]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[^[^a][^b]]/v;
 ~~~~~~~~~~~~~~
 This character class can be simplified to a negated conjunction.
@@ -290,26 +290,26 @@ This character class can be simplified to a negated conjunction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[a&&[^b]&&[^c]&&d]/v;
 `,
-			output: String.raw`
+			output: `
 /[[^[b][c]]&&a&&d]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[a&&[^b]&&[^c]&&d]/v;
 ~~~~~~~~~~~~~~~~~~~~~
 This expression can be simplified to a negated disjunction.
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[[^bc]&&a&&d]/v;
 `,
-			output: String.raw`
+			output: `
 /[[a&&d]--[bc]]/v;
 `,
-			snapshot: String.raw`
+			snapshot: `
 /[[^bc]&&a&&d]/v;
 ~~~~~~~~~~~~~~~~
 This intersection can be simplified to a subtraction.
@@ -317,24 +317,24 @@ This intersection can be simplified to a subtraction.
 		},
 	],
 	valid: [
-		String.raw`/[[abc]]/v`,
+		"/[[abc]]/v",
 		String.raw`/[\d]/u`,
 		String.raw`/[^\d]/v`,
-		String.raw`/[a--b]/v`,
-		String.raw`/[a&&b]/v`,
-		String.raw`/[^ab]/v`,
-		String.raw`/[^a&&b]/v;`,
+		"/[a--b]/v",
+		"/[a&&b]/v",
+		"/[^ab]/v",
+		"/[^a&&b]/v;",
 		String.raw`/[\s\p{ASCII}]/u`,
 		String.raw`/[^\S\P{ASCII}]/u`,
-		String.raw`/[^[]]/v`,
-		String.raw`/[a&&b&&[c]]/v`,
-		String.raw`/[a--b--[c]]/v`,
-		String.raw`/[a]/v`,
-		String.raw`/[abc]/v`,
+		"/[^[]]/v",
+		"/[a&&b&&[c]]/v",
+		"/[a--b--[c]]/v",
+		"/[a]/v",
+		"/[abc]/v",
 		String.raw`/[\w]/v`,
-		String.raw`/[^a]/v`,
-		String.raw`/[a&&[^b]]/u`,
-		String.raw`/test/v`,
-		String.raw`/[a[^b]]/v`,
+		"/[^a]/v",
+		"/[a&&[^b]]/u",
+		"/test/v",
+		"/[a[^b]]/v",
 	],
 });

@@ -5,159 +5,159 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
-/\\p{gc=L}/u;
+			code: String.raw`
+/\p{gc=L}/u;
 `,
-			output: `
-/\\p{L}/u;
+			output: String.raw`
+/\p{L}/u;
 `,
-			snapshot: `
-/\\p{gc=L}/u;
+			snapshot: String.raw`
+/\p{gc=L}/u;
  ~~~~~~~~
  The 'gc=' prefix is unnecessary for this Unicode property.
 `,
 		},
 		{
-			code: `
-/\\p{gc=Letter}/u;
+			code: String.raw`
+/\p{gc=Letter}/u;
 `,
-			output: `
-/\\p{Letter}/u;
+			output: String.raw`
+/\p{Letter}/u;
 `,
-			snapshot: `
-/\\p{gc=Letter}/u;
+			snapshot: String.raw`
+/\p{gc=Letter}/u;
  ~~~~~~~~~~~~~
  The 'gc=' prefix is unnecessary for this Unicode property.
 `,
 		},
 		{
-			code: `
-/\\p{General_Category=L}/u;
+			code: String.raw`
+/\p{General_Category=L}/u;
 `,
-			output: `
-/\\p{L}/u;
+			output: String.raw`
+/\p{L}/u;
 `,
-			snapshot: `
-/\\p{General_Category=L}/u;
+			snapshot: String.raw`
+/\p{General_Category=L}/u;
  ~~~~~~~~~~~~~~~~~~~~~~
  The 'General_Category=' prefix is unnecessary for this Unicode property.
 `,
 		},
 		{
-			code: `
-/\\P{gc=L}/u;
+			code: String.raw`
+/\P{gc=L}/u;
 `,
-			output: `
-/\\P{L}/u;
+			output: String.raw`
+/\P{L}/u;
 `,
-			snapshot: `
-/\\P{gc=L}/u;
+			snapshot: String.raw`
+/\P{gc=L}/u;
  ~~~~~~~~
  The 'gc=' prefix is unnecessary for this Unicode property.
 `,
 		},
 		{
-			code: `
-new RegExp("\\\\p{gc=L}", "u");
+			code: String.raw`
+new RegExp("\\p{gc=L}", "u");
 `,
-			output: `
-new RegExp("\\\\p{L}", "u");
+			output: String.raw`
+new RegExp("\\p{L}", "u");
 `,
-			snapshot: `
-new RegExp("\\\\p{gc=L}", "u");
+			snapshot: String.raw`
+new RegExp("\\p{gc=L}", "u");
             ~~~~~~~~
             The 'gc=' prefix is unnecessary for this Unicode property.
 `,
 		},
 		{
-			code: `
-/\\p{sc=Grek}/u;
+			code: String.raw`
+/\p{sc=Grek}/u;
 `,
-			output: `
-/\\p{sc=Greek}/u;
+			output: String.raw`
+/\p{sc=Greek}/u;
 `,
-			snapshot: `
-/\\p{sc=Grek}/u;
+			snapshot: String.raw`
+/\p{sc=Grek}/u;
  ~~~~~~~~~~~
  Use long Script property name 'Greek' instead of 'Grek'.
 `,
 		},
 		{
-			code: `
-/\\p{scx=Latn}/u;
+			code: String.raw`
+/\p{scx=Latn}/u;
 `,
-			output: `
-/\\p{scx=Latin}/u;
+			output: String.raw`
+/\p{scx=Latin}/u;
 `,
-			snapshot: `
-/\\p{scx=Latn}/u;
+			snapshot: String.raw`
+/\p{scx=Latn}/u;
  ~~~~~~~~~~~~
  Use long Script property name 'Latin' instead of 'Latn'.
 `,
 		},
 		{
-			code: `
-/\\p{Script=Cyrl}/u;
+			code: String.raw`
+/\p{Script=Cyrl}/u;
 `,
-			output: `
-/\\p{Script=Cyrillic}/u;
+			output: String.raw`
+/\p{Script=Cyrillic}/u;
 `,
-			snapshot: `
-/\\p{Script=Cyrl}/u;
+			snapshot: String.raw`
+/\p{Script=Cyrl}/u;
  ~~~~~~~~~~~~~~~
  Use long Script property name 'Cyrillic' instead of 'Cyrl'.
 `,
 		},
 		{
-			code: `
-new RegExp("\\\\p{sc=Grek}", "u");
+			code: String.raw`
+new RegExp("\\p{sc=Grek}", "u");
 `,
-			output: `
-new RegExp("\\\\p{sc=Greek}", "u");
+			output: String.raw`
+new RegExp("\\p{sc=Greek}", "u");
 `,
-			snapshot: `
-new RegExp("\\\\p{sc=Grek}", "u");
+			snapshot: String.raw`
+new RegExp("\\p{sc=Grek}", "u");
             ~~~~~~~~~~~
             Use long Script property name 'Greek' instead of 'Grek'.
 `,
 		},
 		{
-			code: `
-/\\p{Script_Extensions=Arab}/u;
+			code: String.raw`
+/\p{Script_Extensions=Arab}/u;
 `,
-			output: `
-/\\p{Script_Extensions=Arabic}/u;
+			output: String.raw`
+/\p{Script_Extensions=Arabic}/u;
 `,
-			snapshot: `
-/\\p{Script_Extensions=Arab}/u;
+			snapshot: String.raw`
+/\p{Script_Extensions=Arab}/u;
  ~~~~~~~~~~~~~~~~~~~~~~~~~~
  Use long Script property name 'Arabic' instead of 'Arab'.
 `,
 		},
 		{
-			code: `
-/\\P{sc=Hebr}/u;
+			code: String.raw`
+/\P{sc=Hebr}/u;
 `,
-			output: `
-/\\P{sc=Hebrew}/u;
+			output: String.raw`
+/\P{sc=Hebrew}/u;
 `,
-			snapshot: `
-/\\P{sc=Hebr}/u;
+			snapshot: String.raw`
+/\P{sc=Hebr}/u;
  ~~~~~~~~~~~
  Use long Script property name 'Hebrew' instead of 'Hebr'.
 `,
 		},
 	],
 	valid: [
-		`/\\p{L}/u;`,
-		`/\\p{Letter}/u;`,
-		`/\\p{sc=Greek}/u;`,
-		`/\\p{Script=Latin}/u;`,
-		`/\\p{ASCII}/u;`,
-		`/\\p{L}/;`,
+		String.raw`/\p{L}/u;`,
+		String.raw`/\p{Letter}/u;`,
+		String.raw`/\p{sc=Greek}/u;`,
+		String.raw`/\p{Script=Latin}/u;`,
+		String.raw`/\p{ASCII}/u;`,
+		String.raw`/\p{L}/;`,
 		`/abc/u;`,
 		`new RegExp(variable, "u");`,
-		`new RegExp("\\\\p{L}", "u");`,
-		`new RegExp("\\\\p{sc=Greek}", "u");`,
+		String.raw`new RegExp("\\p{L}", "u");`,
+		String.raw`new RegExp("\\p{sc=Greek}", "u");`,
 	],
 });

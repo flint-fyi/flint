@@ -4,10 +4,10 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: String.raw`
+			code: `
 "text".replace(/(Java)Script/, "$1");
 `,
-			output: String.raw`
+			output: `
 "text".replace(/(?<=Java)Script/, "");
 `,
 			snapshot: `
@@ -17,10 +17,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "text".replace(/Java(Script)/, "Type$1");
 `,
-			output: String.raw`
+			output: `
 "text".replace(/Java(?=Script)/, "Type");
 `,
 			snapshot: `
@@ -30,10 +30,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "text".replace(/(pre)text(suf)/, "$1x$2");
 `,
-			output: String.raw`
+			output: `
 "text".replace(/(?<=pre)text(?=suf)/, "x");
 `,
 			snapshot: `
@@ -45,10 +45,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "text".replaceAll(/(Java)Script/g, "$1");
 `,
-			output: String.raw`
+			output: `
 "text".replaceAll(/(?<=Java)Script/g, "");
 `,
 			snapshot: `
@@ -58,10 +58,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 "text".replace(/(a)bc(d)/, "$1-$2");
 `,
-			output: String.raw`
+			output: `
 "text".replace(/(?<=a)bc(?=d)/, "-");
 `,
 			snapshot: `
@@ -74,16 +74,16 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		String.raw`"text".replace(/(pre)pattern/, replacement)`,
-		String.raw`"text".replace(/(pre)pattern/, "$1-$1")`,
-		String.raw`"text".replace(/(pre)pattern/, "$&")`,
-		String.raw`"text".replace(/(pre)pattern/, "$$1")`,
-		String.raw`"text".replace(/(a)(b)c/, "$1")`,
+		'"text".replace(/(pre)pattern/, replacement)',
+		'"text".replace(/(pre)pattern/, "$1-$1")',
+		'"text".replace(/(pre)pattern/, "$&")',
+		'"text".replace(/(pre)pattern/, "$$1")',
+		'"text".replace(/(a)(b)c/, "$1")',
 		String.raw`"text".replace(/(a)\1b/, "$1")`,
-		String.raw`"text".replace(/a(b)c/, "$1")`,
-		String.raw`"text".replace(/(a+)b/, "$1")`,
-		String.raw`"text".replace(/(?<=a)b/, "c")`,
-		String.raw`"text".replace(/a(?=b)/, "c")`,
-		String.raw`"text".replace(/(pre)pattern/, "$<name>")`,
+		'"text".replace(/a(b)c/, "$1")',
+		'"text".replace(/(a+)b/, "$1")',
+		'"text".replace(/(?<=a)b/, "c")',
+		'"text".replace(/a(?=b)/, "c")',
+		'"text".replace(/(pre)pattern/, "$<name>")',
 	],
 });

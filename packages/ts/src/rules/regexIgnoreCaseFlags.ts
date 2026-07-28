@@ -108,11 +108,13 @@ function isHexSubset(elements: RegExpAST.CharacterClassElement[]) {
 				// Contains a non-hex letter range
 				return false;
 			}
-		} else if (element.type === "Character") {
+		} else if (
+			element.type === "Character" &&
+			isLetter(element.value) &&
+			!isHexLetter(element.value)
+		) {
 			// Individual letters don't qualify as hex subset by themselves
-			if (isLetter(element.value) && !isHexLetter(element.value)) {
-				return false;
-			}
+			return false;
 		}
 	}
 	return hasHexRange;
@@ -180,7 +182,7 @@ function simplifyCharacterClass(
 	}
 
 	// Add individual characters
-	for (const char of [...keptCharacters].sort((a, b) => a - b)) {
+	for (const char of [...keptCharacters].toSorted((a, b) => a - b)) {
 		result += String.fromCodePoint(char);
 	}
 
@@ -250,7 +252,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					// Simplify all character classes and add the i flag
 					let simplifiedPattern = pattern;
 					// Process in reverse order to preserve offsets
-					for (const charClass of [...characterClasses].reverse()) {
+					for (const charClass of [...characterClasses].toReversed()) {
 						simplifiedPattern = simplifyCharacterClass(
 							simplifiedPattern,
 							charClass,

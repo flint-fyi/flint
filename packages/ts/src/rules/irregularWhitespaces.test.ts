@@ -5,164 +5,164 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-const value\u00A0= 1;
+const value\u{A0}= 1;
 `,
 			snapshot: `
-const value\u00A0= 1;
+const value\u{A0}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value\u1680= 1;
+const value\u{1680}= 1;
 `,
 			snapshot: `
-const value\u1680= 1;
+const value\u{1680}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value\u2000= 1;
+const value\u{2000}= 1;
 `,
 			snapshot: `
-const value\u2000= 1;
+const value\u{2000}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value\u200B= 1;
+const value\u{200B}= 1;
 `,
 			snapshot: `
-const value\u200B= 1;
+const value\u{200B}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value\u3000= 1;
+const value\u{3000}= 1;
 `,
 			snapshot: `
-const value\u3000= 1;
+const value\u{3000}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value\u205F= 1;
+const value\u{205F}= 1;
 `,
 			snapshot: `
-const value\u205F= 1;
+const value\u{205F}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value\u202F= 1;
+const value\u{202F}= 1;
 `,
 			snapshot: `
-const value\u202F= 1;
+const value\u{202F}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value\uFEFF= 1;
+const value\u{FEFF}= 1;
 `,
 			snapshot: `
-const value\uFEFF= 1;
+const value\u{FEFF}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value\u000C= 1;
+const value\u{C}= 1;
 `,
 			snapshot: `
-const value\u000C= 1;
+const value\u{C}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value\u000B= 1;
+const value\u{B}= 1;
 `,
 			snapshot: `
-const value\u000B= 1;
+const value\u{B}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value\u0085= 1;
+const value\u{85}= 1;
 `,
 			snapshot: `
-const value\u0085= 1;
+const value\u{85}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value\u180E= 1;
+const value\u{180E}= 1;
 `,
 			snapshot: `
-const value\u180E= 1;
+const value\u{180E}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const a\u00A0= 1;
-const b\u00A0= 2;
+const a\u{A0}= 1;
+const b\u{A0}= 2;
 `,
 			snapshot: `
-const a\u00A0= 1;
+const a\u{A0}= 1;
        ~
        Irregular whitespace characters can cause unexpected behavior and display issues.
-const b\u00A0= 2;
+const b\u{A0}= 2;
        ~
        Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value\u2028= 1;
+const value\u{2028}= 1;
 `,
 			snapshot: `
-const value\u2028= 1;
+const value\u{2028}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value\u2029= 1;
+const value\u{2029}= 1;
 `,
 			snapshot: `
-const value\u2029= 1;
+const value\u{2029}= 1;
            ~
            Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-const value = \`\u00A0\`;
+const value = \`\u{A0}\`;
 `,
 			snapshot: `
-const value = \`\u00A0\`;
+const value = \`\u{A0}\`;
                ~
                Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
@@ -170,11 +170,11 @@ const value = \`\u00A0\`;
 		{
 			code: `
 const x = 1;
-const value = \`\u00A0\${x}\u00A0\`;
+const value = \`\u{A0}\${x}\u{A0}\`;
 `,
 			snapshot: `
 const x = 1;
-const value = \`\u00A0\${x}\u00A0\`;
+const value = \`\u{A0}\${x}\u{A0}\`;
                ~
                Irregular whitespace characters can cause unexpected behavior and display issues.
                     ~
@@ -183,21 +183,21 @@ const value = \`\u00A0\${x}\u00A0\`;
 		},
 		{
 			code: `
-const value = /\u00A0/;
+const value = /\u{A0}/;
 `,
 			snapshot: `
-const value = /\u00A0/;
+const value = /\u{A0}/;
                ~
                Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
 		},
 		{
 			code: `
-// Comment\u00A0with irregular space
+// Comment\u{A0}with irregular space
 const value = 1;
 `,
 			snapshot: `
-// Comment\u00A0with irregular space
+// Comment\u{A0}with irregular space
           ~
           Irregular whitespace characters can cause unexpected behavior and display issues.
 const value = 1;
@@ -205,11 +205,11 @@ const value = 1;
 		},
 		{
 			code: `
-/* Block\u00A0comment */
+/* Block\u{A0}comment */
 const value = 1;
 `,
 			snapshot: `
-/* Block\u00A0comment */
+/* Block\u{A0}comment */
         ~
         Irregular whitespace characters can cause unexpected behavior and display issues.
 const value = 1;
@@ -224,23 +224,23 @@ const value = 1;
 		`// Comment with regular spaces`,
 		`/* Block comment */`,
 		{
-			code: `const value = \`\u00A0\`;`,
+			code: `const value = \`\u{A0}\`;`,
 			options: { skipTemplates: true },
 		},
 		{
-			code: `const x = 1; const value = \`\u00A0\${x}\u00A0\`;`,
+			code: `const x = 1; const value = \`\u{A0}\${x}\u{A0}\`;`,
 			options: { skipTemplates: true },
 		},
 		{
-			code: `const value = /\u00A0/;`,
+			code: `const value = /\u{A0}/;`,
 			options: { skipRegularExpressions: true },
 		},
 		{
-			code: `// Comment\u00A0with irregular space`,
+			code: `// Comment\u{A0}with irregular space`,
 			options: { skipComments: true },
 		},
 		{
-			code: `/* Block\u00A0comment */`,
+			code: `/* Block\u{A0}comment */`,
 			options: { skipComments: true },
 		},
 	],
@@ -250,11 +250,11 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-const element = <div>\u00A0</div>;
+const element = <div>\u{A0}</div>;
 `,
 			fileName: "file.tsx",
 			snapshot: `
-const element = <div>\u00A0</div>;
+const element = <div>\u{A0}</div>;
                      ~
                      Irregular whitespace characters can cause unexpected behavior and display issues.
 `,
@@ -262,7 +262,7 @@ const element = <div>\u00A0</div>;
 	],
 	valid: [
 		{
-			code: `const element = <div>\u00A0</div>;`,
+			code: `const element = <div>\u{A0}</div>;`,
 			fileName: "file.tsx",
 			options: { skipJSXText: true },
 		},

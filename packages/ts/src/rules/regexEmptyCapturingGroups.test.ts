@@ -57,8 +57,8 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /(\b)/;
 `,
-			snapshot: `
-/(\\b)/;
+			snapshot: String.raw`
+/(\b)/;
  ~~~~
  This capturing group captures only empty strings.
 `,
@@ -144,11 +144,11 @@ new RegExp("()");
 `,
 		},
 		{
-			code: `
-RegExp("(\\\\b)");
+			code: String.raw`
+RegExp("(\\b)");
 `,
-			snapshot: `
-RegExp("(\\\\b)");
+			snapshot: String.raw`
+RegExp("(\\b)");
         ~~~~
         This capturing group captures only empty strings.
 `,
@@ -170,8 +170,8 @@ RegExp("(\\\\b)");
 		`/(a?)?/;`,
 		`/(a{1,})/;`,
 		`/([a-z])/;`,
-		`/(\\d)/;`,
-		`/(\\w)/;`,
+		String.raw`/(\d)/;`,
+		String.raw`/(\w)/;`,
 		`/(.)/;`,
 		`new RegExp("(a)");`,
 		`new RegExp(variable);`,

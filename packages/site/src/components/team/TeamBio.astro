@@ -37,7 +37,9 @@ const {
 		<ol class="services">
 			{
 				[["github", `https://github.com/${username}`] as const, ...links]
-					.sort(([a], [b]) => (a === "seti:html" ? 1 : a.localeCompare(b)))
+					.sort(([a], [b]) =>
+						a === "seti:html" ? 1 : a.localeCompare(b, "en-US"),
+					)
 					.map(([service, url]) => (
 						<li class="service">
 							<a

@@ -9,6 +9,7 @@ import n from "eslint-plugin-n";
 import packageJson from "eslint-plugin-package-json/experimental";
 import perfectionist from "eslint-plugin-perfectionist";
 import * as regexp from "eslint-plugin-regexp";
+import unicorn from "eslint-plugin-unicorn";
 import yml from "eslint-plugin-yml";
 import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
@@ -16,7 +17,7 @@ import tseslint from "typescript-eslint";
 // https://typescript-eslint.io/troubleshooting/typed-linting/performance#importextensions-enforcing-extensions-are-not-used
 function banJsImportExtension() {
 	const message = `Unexpected use of .js file extension (.js) in import; please use .ts`;
-	const literalAttributeMatcher = `Literal[value=/\\..+\\.js$/]`;
+	const literalAttributeMatcher = String.raw`Literal[value=/\..+\.js$/]`;
 	return [
 		{
 			message,
@@ -61,6 +62,7 @@ export default defineConfig(
 			regexp.configs["flat/recommended"],
 			tseslint.configs.strictTypeChecked,
 			tseslint.configs.stylisticTypeChecked,
+			unicorn.configs.unopinionated,
 		],
 		files: ["**/*.{js,ts}"],
 		languageOptions: {
@@ -142,6 +144,43 @@ export default defineConfig(
 			// Covered by Prettier plugin
 			"perfectionist/sort-imports": "off",
 			"perfectionist/sort-named-imports": "off",
+
+			// `Symbol.dispose` and `Symbol.asyncDispose` are standard ES2026
+			// (explicit resource management, shipped in Node 24) but the rule's
+			// static builtin list has no ignore option and hasn't caught up.
+			"unicorn/no-nonstandard-builtin-properties": "off",
+
+			// Language plugins intentionally register extensions and enforce
+			// single-instance invariants at module load time.
+			"unicorn/no-top-level-side-effects": "off",
+
+			// Too opinionated.
+			"unicorn/prefer-await": "off",
+
+			// Conflicts with Prettier: Prettier lowercases hex digits
+			// (0xff) while this rule wants uppercase (0xFF).
+			"unicorn/number-literal-case": "off",
+
+			// Conflicts with Flint's own ts/regexLetterCasing which
+			// requires lowercase unicode escapes (\u{a0}) for consistency.
+			"unicorn/escape-case": "off",
+
+			// Conflicts with Flint's own ts/regexHexadecimalEscapes which
+			// prefers the more succinct \xa0 over \u{a0}.
+			"unicorn/prefer-unicode-code-point-escapes": "off",
+
+			// Test files for escape-related rules intentionally use \\ in
+			// regular template literals so the source contains literal
+			// backslashes; converting to String.raw exposes \8/\9 escapes
+			// that trigger ts/nonOctalDecimalEscapes on the test itself.
+			"unicorn/prefer-string-raw": "off",
+
+			// Use the type-aware version.
+			"@typescript-eslint/require-array-sort-compare": [
+				"error",
+				{ ignoreStringArrays: true },
+			],
+			"unicorn/require-array-sort-compare": "off",
 		},
 		settings: {
 			perfectionist: { partitionByComment: true, type: "natural" },

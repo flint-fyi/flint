@@ -64,7 +64,7 @@ function getExplicitKey(raw: string) {
 }
 
 function hasCategoryKey(explicitKey: string) {
-	const lower = explicitKey.toLowerCase().replace(/_/g, "");
+	const lower = explicitKey.toLowerCase().replaceAll("_", "");
 	return lower === "gc" || lower === "generalcategory";
 }
 
@@ -126,7 +126,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							end: patternStart + sourceEnd,
 						},
 						text: isStringPattern
-							? replacement.replace(/\\/g, "\\\\")
+							? replacement.replaceAll("\\", "\\\\")
 							: replacement,
 					},
 					message,
@@ -141,7 +141,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				characterSet: CharacterSetWithValue,
 				explicitKey: string,
 			) {
-				const open = characterSet.negate ? "\\P{" : "\\p{";
+				const open = characterSet.negate ? String.raw`\P{` : String.raw`\p{`;
 				const replacement = `${open}${characterSet.value}}`;
 				reportOn(
 					characterSet,
@@ -164,7 +164,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return;
 				}
 
-				const open = characterSet.negate ? "\\P{" : "\\p{";
+				const open = characterSet.negate ? String.raw`\P{` : String.raw`\p{`;
 				const replacement = `${open}${explicitKey}=${longName}}`;
 				reportOn(
 					characterSet,

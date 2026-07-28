@@ -274,9 +274,9 @@ export function getPluginData(pluginId: string) {
 }
 
 export function getPluginDataSafe(pluginId: string) {
-	for (const group of Object.keys(pluginDataByGroup)) {
-		if (pluginId in pluginDataByGroup[group]) {
-			return { group, plugin: pluginDataByGroup[group][pluginId] };
+	for (const [group, pluginData] of Object.entries(pluginDataByGroup)) {
+		if (pluginId in pluginData) {
+			return { group, plugin: pluginData[pluginId] };
 		}
 	}
 }

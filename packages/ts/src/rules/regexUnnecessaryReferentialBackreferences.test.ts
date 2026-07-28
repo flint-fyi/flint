@@ -4,8 +4,8 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: `
-/(a)?b\\1/;
+			code: String.raw`
+/(a)?b\1/;
 `,
 			snapshot: `
 /(a)?b\\1/;
@@ -14,8 +14,8 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: `
-/(a)*\\1/;
+			code: String.raw`
+/(a)*\1/;
 `,
 			snapshot: `
 /(a)*\\1/;
@@ -24,8 +24,8 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: `
-/(?:(a)|b)\\1/;
+			code: String.raw`
+/(?:(a)|b)\1/;
 `,
 			snapshot: `
 /(?:(a)|b)\\1/;
@@ -34,8 +34,8 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: `
-/(?:(a)|b)+\\1/;
+			code: String.raw`
+/(?:(a)|b)+\1/;
 `,
 			snapshot: `
 /(?:(a)|b)+\\1/;
@@ -44,8 +44,8 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: `
-/((a)|c)+b\\2/;
+			code: String.raw`
+/((a)|c)+b\2/;
 `,
 			snapshot: `
 /((a)|c)+b\\2/;
@@ -64,8 +64,8 @@ new RegExp("(a)?\\\\1");
 `,
 		},
 		{
-			code: `
-/(a){0,5}b\\1/;
+			code: String.raw`
+/(a){0,5}b\1/;
 `,
 			snapshot: `
 /(a){0,5}b\\1/;
@@ -74,8 +74,8 @@ new RegExp("(a)?\\\\1");
 `,
 		},
 		{
-			code: `
-/(?:(a)b)*\\1/;
+			code: String.raw`
+/(?:(a)b)*\1/;
 `,
 			snapshot: `
 /(?:(a)b)*\\1/;
@@ -85,13 +85,13 @@ new RegExp("(a)?\\\\1");
 		},
 	],
 	valid: [
-		`/(a)\\1/;`,
-		`/(a+)b\\1/;`,
-		`/(a)+\\1/;`,
-		`/(?=(a))\\1/;`,
-		`/(a)(b)\\1\\2/;`,
-		`/()\\1/;`,
-		`/(a?)\\1/;`,
+		String.raw`/(a)\1/;`,
+		String.raw`/(a+)b\1/;`,
+		String.raw`/(a)+\1/;`,
+		String.raw`/(?=(a))\1/;`,
+		String.raw`/(a)(b)\1\2/;`,
+		String.raw`/()\1/;`,
+		String.raw`/(a?)\1/;`,
 		`RegExp(variable);`,
 	],
 });

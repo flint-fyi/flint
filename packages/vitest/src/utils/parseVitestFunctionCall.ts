@@ -40,7 +40,7 @@ export function parseVitestFunctionCall(node: AST.CallExpression) {
 	const parsedCallee = parseVitestCallee(node.expression);
 
 	if (!parsedCallee || !knownBlockNamesSet.has(parsedCallee.name)) {
-		return undefined;
+		return;
 	}
 
 	switch (node.expression.kind) {

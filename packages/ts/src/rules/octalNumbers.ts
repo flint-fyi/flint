@@ -52,7 +52,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						};
 
 						// Parse the octal value
-						const octalValue = parseInt(text, 8);
+						const octalValue = Number.parseInt(text, 8);
 						const modernOctalSyntax = `0o${text.slice(1)}`;
 						const decimalWithoutLeadingZero = text.slice(1);
 

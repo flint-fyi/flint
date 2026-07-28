@@ -35,9 +35,7 @@ export function resolveChangesByFile(
 		}
 	}
 
-	for (const [absoluteFilePath, fileResults] of Array.from(
-		filesResults.entries(),
-	)) {
+	for (const [absoluteFilePath, fileResults] of Array.from(filesResults)) {
 		for (const report of fileResults.reports) {
 			collectReportFix(absoluteFilePath, report);
 			collectReportSuggestions(absoluteFilePath, report);

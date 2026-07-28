@@ -9,6 +9,6 @@ export function parseRegexpAst(pattern: string, flags = "") {
 			unicodeSets: flags.includes("v"),
 		});
 	} catch {
-		return undefined;
+		return;
 	}
 }

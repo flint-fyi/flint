@@ -74,21 +74,17 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 							filename = filename.slice("\\\\?\\".length);
 						}
 						if (filename === normalizedWatchBasename) {
-							let changedPath = normalizedWatchPath;
 							// /foo/bar is a directory
 							// /foo/bar/bar is a file
 							// fs.watch('/foo/bar')
 							// /foo/bar/bar deleted -> filename === bar
 							// /foo/bar deleted -> filename === bar
-							if (
-								fs
-									.statSync(normalizedWatchPath, { throwIfNoEntry: false })
-									?.isDirectory()
-							) {
-								changedPath = normalizePath(
-									path.resolve(normalizedWatchPath, filename),
-								);
-							}
+							const changedPath = fs
+								.statSync(normalizedWatchPath, { throwIfNoEntry: false })
+								?.isDirectory()
+								? normalizePath(path.resolve(normalizedWatchPath, filename))
+								: normalizedWatchPath;
+
 							if (statAndEmitIfChanged(changedPath)) {
 								return;
 							}
@@ -173,7 +169,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			} catch {
 				// Fall through to undefined.
 			}
-			return undefined;
+			return;
 		},
 		getCurrentDirectory() {
 			return cwd;
@@ -256,14 +252,14 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			try {
 				return await fs.promises.readFile(filePathAbsolute, "utf8");
 			} catch {
-				return undefined;
+				return;
 			}
 		},
 		readFileSync(filePathAbsolute) {
 			try {
 				return fs.readFileSync(filePathAbsolute, "utf8");
 			} catch {
-				return undefined;
+				return;
 			}
 		},
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
@@ -274,7 +270,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return createWatcher(
 				directoryPathAbsolute,
 				options.recursive,
-				options.pollingInterval ?? 2_000,
+				options.pollingInterval ?? 2000,
 				(normalizedChangedFilePath) => {
 					normalizedChangedFilePath ??= directoryPathAbsolute;
 					const changedKey = pathKey(
@@ -305,7 +301,7 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			return createWatcher(
 				filePathAbsolute,
 				false,
-				options.pollingInterval ?? 2_000,
+				options.pollingInterval ?? 2000,
 				(normalizedChangedFilePath, event) => {
 					if (
 						normalizedChangedFilePath != null &&

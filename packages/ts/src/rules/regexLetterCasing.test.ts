@@ -5,10 +5,10 @@ import { ruleTester } from "./ruleTester.ts";
 ruleTester.describe(rule, {
 	invalid: [
 		{
-			code: String.raw`
+			code: `
 /Regexp/i;
 `,
-			output: String.raw`
+			output: `
 /regexp/i;
 `,
 			snapshot: `
@@ -18,10 +18,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /ReGeXp/i;
 `,
-			output: String.raw`
+			output: `
 /regexp/i;
 `,
 			snapshot: `
@@ -35,10 +35,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /[A-Z]/i;
 `,
-			output: String.raw`
+			output: `
 /[a-z]/i;
 `,
 			snapshot: `
@@ -132,12 +132,12 @@ ruleTester.describe(rule, {
 		String.raw`/(?:[A-Z]:\\|\/)[^:\s)]+:\d+(?::\d+)?/`,
 		String.raw`/(?:https?:\/\/|mailto:)\S+|[\w.+-]+@[\w.-]+\.\w+/`,
 		String.raw`/[\n\r]/`,
-		String.raw`/[a-z]/;`,
-		String.raw`/[A-z]/;`,
-		String.raw`/[a-z]/g;`,
-		String.raw`/[a-z]/giu;`,
-		String.raw`/[a-z]/i;`,
-		String.raw`/[a-z]/u;`,
+		"/[a-z]/;",
+		"/[A-z]/;",
+		"/[a-z]/g;",
+		"/[a-z]/giu;",
+		"/[a-z]/i;",
+		"/[a-z]/u;",
 		String.raw`/\cA/;`,
 		String.raw`/\s$/`,
 		String.raw`/\u{a}/;`,
@@ -148,13 +148,13 @@ ruleTester.describe(rule, {
 		String.raw`/^[+-]?\d+(?:\.\d+)?(?:e[+-]?\d+)?$/`,
 		String.raw`/^[+-]?\d+\.(\d+)(?:e[+-]?\d+)?$/`,
 		String.raw`/^[+-]?\d+\.\d+(?:e[+-]?\d+)?$/`,
-		String.raw`/^0[xobi]/`,
-		String.raw`/^true|false|null|yes|no|on|off|y|n$/`,
+		"/^0[xobi]/",
+		"/^true|false|null|yes|no|on|off|y|n$/",
 		String.raw`/<h1[\s>]/`,
-		String.raw`/regexp/;`,
-		String.raw`/Regexp/;`,
-		String.raw`/REGEXP/;`,
-		String.raw`/utf-?8/`,
+		"/regexp/;",
+		"/Regexp/;",
+		"/REGEXP/;",
+		"/utf-?8/",
 		String.raw`new RegExp('\\u000a');`,
 		String.raw`new RegExp('\\x0a');`,
 	],

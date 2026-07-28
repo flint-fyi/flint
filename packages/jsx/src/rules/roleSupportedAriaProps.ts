@@ -148,7 +148,7 @@ const roleToSupportedProps: Partial<Record<string, Set<string>>> = {
 		"aria-setsize",
 	]),
 	navigation: new Set(["aria-expanded"]),
-	none: new Set([]),
+	none: new Set(),
 	note: new Set(["aria-expanded"]),
 	option: new Set([
 		"aria-checked",
@@ -157,7 +157,7 @@ const roleToSupportedProps: Partial<Record<string, Set<string>>> = {
 		"aria-selected",
 		"aria-setsize",
 	]),
-	presentation: new Set([]),
+	presentation: new Set(),
 	progressbar: new Set([
 		"aria-expanded",
 		"aria-valuemax",

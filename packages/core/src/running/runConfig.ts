@@ -61,7 +61,7 @@ export async function runConfig(
 
 	// 3. For each file path, finalize output using each of its language files
 	const allFileResults = new Map(
-		Array.from(languageFilesByFilePath).map(([filePath, languageAndFiles]) => [
+		Array.from(languageFilesByFilePath, ([filePath, languageAndFiles]) => [
 			filePath,
 			finalizeFileResults(
 				filePath,
@@ -112,19 +112,17 @@ async function runRules(
 	const reportsByFilePath = new CachedFactory<string, FileReport[]>(() => []);
 
 	await Promise.all(
-		Array.from(rulesFilesAndOptionsByRule).map(
-			async ([rule, filesAndOptions]) => {
-				const ruleReportsByFilePath = await runLintRule(
-					rule,
-					filesAndOptions,
-					host,
-				);
+		Array.from(rulesFilesAndOptionsByRule, async ([rule, filesAndOptions]) => {
+			const ruleReportsByFilePath = await runLintRule(
+				rule,
+				filesAndOptions,
+				host,
+			);
 
-				for (const [filePath, ruleReports] of ruleReportsByFilePath) {
-					reportsByFilePath.get(filePath).push(...ruleReports);
-				}
-			},
-		),
+			for (const [filePath, ruleReports] of ruleReportsByFilePath) {
+				reportsByFilePath.get(filePath).push(...ruleReports);
+			}
+		}),
 	);
 
 	return reportsByFilePath;

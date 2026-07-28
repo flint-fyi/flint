@@ -45,7 +45,7 @@ function isLengthNonZeroCheck(node: AST.BinaryExpression) {
 		};
 	}
 
-	return undefined;
+	return;
 }
 
 function isLengthProperty(
@@ -78,20 +78,20 @@ function isLengthZeroCheck(node: AST.BinaryExpression) {
 		}
 	}
 
-	return undefined;
+	return;
 }
 
 function isSomeOrEveryCall(node: AST.Expression, methodName: "every" | "some") {
 	if (node.kind !== SyntaxKind.CallExpression) {
-		return undefined;
+		return;
 	}
 
 	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
-		return undefined;
+		return;
 	}
 
 	if (node.expression.name.text !== methodName) {
-		return undefined;
+		return;
 	}
 
 	return node.expression.expression;

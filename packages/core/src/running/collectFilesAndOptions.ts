@@ -74,7 +74,7 @@ export async function collectFilesAndOptions(
 
 	// 5. Join language metadata files into the corresponding options by file path
 	const rulesFilesAndOptionsByRule = new Map(
-		Array.from(rulesOptionsByFile).map(([rule, optionsByFile]) => [
+		Array.from(rulesOptionsByFile, ([rule, optionsByFile]) => [
 			rule,
 			Array.from(optionsByFile)
 				.filter(([filePath]) => languageFilesByFilePath.has(filePath))
@@ -83,7 +83,7 @@ export async function collectFilesAndOptions(
 						nullThrows(
 							languageFilesByFilePath.get(filePath),
 							"Language file is expected to be present by the map",
-						).values(),
+						),
 					),
 					options,
 				})),

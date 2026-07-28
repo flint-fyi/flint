@@ -114,7 +114,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				}
 			}
 
-			let result: ts.Node | undefined = undefined;
+			let result: ts.Node | undefined;
 			ts.forEachChild(node, (child) => {
 				result ??= findSpreadElement(child, identifierName);
 			});

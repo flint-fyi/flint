@@ -27,7 +27,7 @@ function getParentFunction(node: AST.AnyNode) {
 		current = current.parent as AST.AnyNode | undefined;
 	}
 
-	return undefined;
+	return;
 }
 
 function isInValidPosition(

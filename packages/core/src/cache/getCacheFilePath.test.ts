@@ -1,12 +1,12 @@
-import { join } from "node:path";
+import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
 import { getCacheFilePath } from "./getCacheFilePath.ts";
 
-const defaultCacheFileDirectory = join("node_modules", ".cache");
+const defaultCacheFileDirectory = path.join("node_modules", ".cache");
 const defaultCacheFileName = "flint.json";
-const defaultCacheFilePath = join(
+const defaultCacheFilePath = path.join(
 	defaultCacheFileDirectory,
 	defaultCacheFileName,
 );
@@ -17,16 +17,16 @@ describe(getCacheFilePath, () => {
 	});
 
 	it("should return the provided path unchanged when it ends with .json", () => {
-		const provided = join("custom", "cache.json");
+		const provided = path.join("custom", "cache.json");
 
 		expect(getCacheFilePath(provided)).toBe(provided);
 	});
 
 	it("should append the default filename when a directory is provided", () => {
-		const providedDir = join("custom", "cache-dir");
+		const providedDir = path.join("custom", "cache-dir");
 
 		expect(getCacheFilePath(providedDir)).toBe(
-			join(providedDir, defaultCacheFileName),
+			path.join(providedDir, defaultCacheFileName),
 		);
 	});
 
@@ -35,7 +35,7 @@ describe(getCacheFilePath, () => {
 	});
 
 	it("should be case-insensitive when checking for the .json suffix", () => {
-		const providedUpper = join("custom", "CACHE.JSON");
+		const providedUpper = path.join("custom", "CACHE.JSON");
 
 		expect(getCacheFilePath(providedUpper)).toBe(providedUpper);
 	});

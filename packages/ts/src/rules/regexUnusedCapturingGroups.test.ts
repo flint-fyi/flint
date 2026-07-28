@@ -176,7 +176,7 @@ RegExp("(?:hello)");
 		`/(?!a)/;`,
 		`/(?<=a)/;`,
 		`/(?<!a)/;`,
-		`new RegExp("(a)\\\\1");`,
+		String.raw`new RegExp("(a)\\1");`,
 		`RegExp(variable);`,
 	],
 });

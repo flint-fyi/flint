@@ -103,7 +103,7 @@ export function createStatementPaddingRule(
 					sourceFile.getLineAndCharacterOfPosition(nextStart).line;
 
 				if (nextLine - previousLine > 1) {
-					return undefined;
+					return;
 				}
 
 				return {
@@ -165,7 +165,7 @@ export function createStatementPaddingRule(
 export function getStatementRootName(statement: AST.AnyNode) {
 	const expression = getStatementExpression(statement);
 	if (!expression) {
-		return undefined;
+		return;
 	}
 
 	if (expression.kind === SyntaxKind.AwaitExpression) {

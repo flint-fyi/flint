@@ -42,9 +42,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					context.report({
 						message: "preferInterface",
-						range: typeKeyword
-							? getTSNodeRange(typeKeyword, sourceFile)
-							: getTSNodeRange(node, sourceFile),
+						range: getTSNodeRange(typeKeyword ?? node, sourceFile),
 					});
 				},
 			},

@@ -42,13 +42,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					name.kind !== SyntaxKind.Identifier ||
 					expression.kind !== SyntaxKind.Identifier
 				) {
-					return undefined;
+					return;
 				}
 
 				return { name: name.text, node: name };
 			}
 
-			return undefined;
+			return;
 		}
 
 		return {

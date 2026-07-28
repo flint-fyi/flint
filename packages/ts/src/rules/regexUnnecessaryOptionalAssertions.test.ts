@@ -7,7 +7,7 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /(?:\b|(?=a))?/;
 `,
-			output: String.raw`
+			output: `
 /(?:|)?/;
 `,
 			snapshot: `
@@ -22,7 +22,7 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /(?:\b|a)?/;
 `,
-			output: String.raw`
+			output: `
 /(?:|a)?/;
 `,
 			snapshot: `
@@ -32,10 +32,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /(?:^|a)*/;
 `,
-			output: String.raw`
+			output: `
 /(?:|a)*/;
 `,
 			snapshot: `
@@ -45,10 +45,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /(?:$)*/;
 `,
-			output: String.raw`
+			output: `
 /(?:)*/;
 `,
 			snapshot: `
@@ -61,7 +61,7 @@ ruleTester.describe(rule, {
 			code: String.raw`
 /((\b)+){0,}/;
 `,
-			output: String.raw`
+			output: `
 /(()+){0,}/;
 `,
 			snapshot: `
@@ -71,10 +71,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /(?:(?=foo))?/;
 `,
-			output: String.raw`
+			output: `
 /(?:)?/;
 `,
 			snapshot: `
@@ -84,10 +84,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /(?:(?<=bar))?/;
 `,
-			output: String.raw`
+			output: `
 /(?:)?/;
 `,
 			snapshot: `
@@ -97,10 +97,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /(?:(?!x))?/;
 `,
-			output: String.raw`
+			output: `
 /(?:)?/;
 `,
 			snapshot: `
@@ -110,10 +110,10 @@ ruleTester.describe(rule, {
 `,
 		},
 		{
-			code: String.raw`
+			code: `
 /(?:(?<!y))?/;
 `,
-			output: String.raw`
+			output: `
 /(?:)?/;
 `,
 			snapshot: `
@@ -127,13 +127,13 @@ ruleTester.describe(rule, {
 		String.raw`/fo(?:o\b)?/;`,
 		String.raw`/fo(?:o\b)/;`,
 		String.raw`/(?:a|(\b|-){2})?/;`,
-		String.raw`/(?:^a)*/;`,
+		"/(?:^a)*/;",
 		String.raw`/(?:\b-)?/;`,
 		String.raw`/\b/;`,
-		String.raw`/^foo$/;`,
-		String.raw`/(?=bar)/;`,
-		String.raw`RegExp(variable);`,
-		String.raw`/(?:ab)?/;`,
+		"/^foo$/;",
+		"/(?=bar)/;",
+		"RegExp(variable);",
+		"/(?:ab)?/;",
 		String.raw`new RegExp("(?:\\b|a)?");`,
 	],
 });
