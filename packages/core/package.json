@@ -25,6 +25,7 @@
 		"test": "vitest --project core"
 	},
 	"dependencies": {
+		"@altano/repository-tools": "2.0.1",
 		"@flint.fyi/utils": "workspace:^",
 		"cached-factory": "^0.3.0",
 		"debug-for-file": "^0.4.0",

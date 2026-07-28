@@ -854,6 +854,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@altano/repository-tools':
+        specifier: 2.0.1
+        version: 2.0.1
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
@@ -1229,6 +1232,9 @@ importers:
       '@flint.fyi/json-language':
         specifier: workspace:^
         version: link:../json-language
+      '@flint.fyi/utils':
+        specifier: workspace:^
+        version: link:../utils
       change-case:
         specifier: ^5.4.4
         version: 5.4.4

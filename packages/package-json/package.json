@@ -27,6 +27,7 @@
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
 		"@flint.fyi/json-language": "workspace:^",
+		"@flint.fyi/utils": "workspace:^",
 		"change-case": "^5.4.4",
 		"detect-indent": "^7.0.2",
 		"detect-newline": "^4.0.1",
