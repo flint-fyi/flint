@@ -26,7 +26,8 @@ const exemptModifiers = ["extend", "scoped"];
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
-		description: "Enforces that all lifecycle hooks should come before all test cases.",
+		description:
+			"Enforces that all lifecycle hooks should come before all test cases.",
 		id: "hooksBeforeTestCases",
 		presets: ["stylisticStrict"],
 	},
