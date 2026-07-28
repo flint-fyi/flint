@@ -82,7 +82,7 @@ const mocks = vi.hoisted(() => {
 			lintAll,
 			lintFiles,
 		},
-		validateConfigDefinition: vi.fn(() => undefined),
+		validateConfigDefinition: vi.fn<() => string | undefined>(() => undefined),
 	};
 
 	return state;
@@ -248,7 +248,8 @@ describe("startServer", () => {
 		mocks.session.dispose.mockReset();
 		mocks.session.getTransitiveDependentsOf.mockReset();
 		mocks.session.getTransitiveDependentsOf.mockReturnValue(new Set());
-		mocks.validateConfigDefinition.mockClear();
+		mocks.validateConfigDefinition.mockReset();
+		mocks.validateConfigDefinition.mockReturnValue(undefined);
 		mocks.directoryEntries = [{ name: "flint.config.mjs" }];
 	});
 
@@ -272,6 +273,79 @@ describe("startServer", () => {
 		await mocks.connection.callbacks.initialized?.();
 		await vi.dynamicImportSettled();
 	}
+
+	it("reports a missing workspace root", async () => {
+		const { startServer } = await import("./server.ts");
+
+		startServer();
+		const document = TextDocument.create(
+			"file:///workspace/src/file.ts",
+			"typescript",
+			1,
+			"value",
+		);
+		mocks.documents.fireDidChangeContent(document);
+		mocks.documents.fireDidClose(document);
+		mocks.connection.callbacks.initialize?.({});
+		await mocks.connection.callbacks.initialized?.();
+		await vi.dynamicImportSettled();
+
+		expect(mocks.connection.console.error).toHaveBeenCalledWith(
+			"No workspace root provided.",
+		);
+		expect(
+			mocks.connection.callbacks.codeAction?.({
+				context: { diagnostics: [] },
+				textDocument: { uri: "file:///workspace/src/file.ts" },
+			}),
+		).toEqual([]);
+	});
+
+	it("stops when the workspace has no config", async () => {
+		mocks.directoryEntries = [];
+
+		await startInitializedServer();
+		await flushQueuedWork();
+
+		expect(mocks.lintSessionCreate).not.toHaveBeenCalled();
+		expect(mocks.connection.console.error).toHaveBeenCalledWith(
+			`No flint.config.* found in ${workspaceRoot}`,
+		);
+	});
+
+	it("reports config validation errors", async () => {
+		mocks.validateConfigDefinition.mockReturnValue("Invalid config.");
+
+		await startInitializedServer();
+		await flushQueuedWork();
+
+		expect(mocks.connection.console.error).toHaveBeenCalledWith(
+			"Lint error: Invalid config.",
+		);
+		expect(mocks.lintSessionCreate).not.toHaveBeenCalled();
+	});
+
+	it.each(["rootPath", "rootUri"] as const)(
+		"starts with the legacy %s parameter",
+		async (rootProperty) => {
+			const { startServer } = await import("./server.ts");
+
+			startServer();
+			mocks.connection.callbacks.initialize?.(
+				rootProperty === "rootUri"
+					? { rootUri: pathToFileURL(workspaceRoot).href }
+					: { rootPath: workspaceRoot },
+			);
+			await mocks.connection.callbacks.initialized?.();
+			await flushQueuedWork();
+
+			expect(mocks.lintSessionCreate).toHaveBeenCalled();
+
+			mocks.connection.callbacks.shutdown?.();
+
+			expect(mocks.session.dispose).toHaveBeenCalled();
+		},
+	);
 
 	it("publishes opened document diagnostics without starting a full workspace lint", async () => {
 		const initialFullLint = createDeferred<Map<string, never>>();
@@ -318,6 +392,12 @@ describe("startServer", () => {
 				uri: openedFileUri,
 			});
 			expect(mocks.lintAll).not.toHaveBeenCalled();
+			expect(
+				mocks.connection.callbacks.codeAction?.({
+					context: { diagnostics: [] },
+					textDocument: { uri: openedFileUri },
+				}),
+			).toEqual([]);
 		} finally {
 			initialFullLint.resolve(new Map<string, never>());
 			await vi.runAllTimersAsync();
