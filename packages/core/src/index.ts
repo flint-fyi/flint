@@ -1,5 +1,6 @@
 export { getCacheFilePath } from "./cache/getCacheFilePath.ts";
 export { writeToCache } from "./cache/writeToCache.ts";
+export { applyChangesToFiles } from "./changing/applyChangesToFiles.ts";
 export { applyChangesToText } from "./changing/applyChangesToText.ts";
 export { defineConfig } from "./configs/defineConfig.ts";
 export {

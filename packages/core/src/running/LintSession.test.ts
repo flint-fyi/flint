@@ -121,6 +121,31 @@ describe(LintSession, () => {
 		}
 	});
 
+	it("reruns every configured file for rules that require all files", async () => {
+		const filesSeenInTeardown: string[][] = [];
+		const visitedFilePaths: string[] = [];
+		const { configDefinition, host, root } = await createTestProject({
+			onTeardown: () => {
+				filesSeenInTeardown.push([...visitedFilePaths]);
+			},
+			requiresAllFiles: true,
+			visitedFilePaths,
+		});
+		const session = await LintSession.create(configDefinition, host);
+
+		try {
+			await session.lintFiles([path.posix.join(root, "a.txt")]);
+
+			expect(
+				filesSeenInTeardown.map((filePaths) =>
+					filePaths.map((filePath) => path.basename(filePath)),
+				),
+			).toEqual([["a.txt", "b.txt", "c.txt"]]);
+		} finally {
+			session.dispose();
+		}
+	});
+
 	it("disposes language files and retained factories", async () => {
 		const factoryDispose = vi.fn();
 		const fileDispose = vi.fn();
@@ -141,13 +166,19 @@ describe(LintSession, () => {
 async function createTestProject({
 	factoryDispose,
 	fileDispose,
+	onTeardown,
 	orderedCreatedFilePaths,
 	orderFilePaths,
+	requiresAllFiles,
+	visitedFilePaths,
 }: {
 	factoryDispose?: () => void;
 	fileDispose?: () => void;
+	onTeardown?: () => void;
 	orderedCreatedFilePaths?: string[];
 	orderFilePaths?: (filePaths: readonly string[]) => string[];
+	requiresAllFiles?: boolean;
+	visitedFilePaths?: string[];
 } = {}) {
 	const root = normalizePath(
 		await mkdtemp(path.join(os.tmpdir(), "flint-lint-session-")),
@@ -215,10 +246,18 @@ async function createTestProject({
 				suggestions: [],
 			},
 		},
+		...(requiresAllFiles && { requiresAllFiles }),
 		setup(context) {
 			return {
+				...(onTeardown && {
+					teardown: () => {
+						onTeardown();
+						return undefined;
+					},
+				}),
 				visitors: {
-					Root(_node, services) {
+					Root(node, services) {
+						visitedFilePaths?.push(node.filePath);
 						if (typeof services.sourceText !== "string") {
 							throw new Error("Expected source text.");
 						}

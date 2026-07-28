@@ -1,11 +1,10 @@
-import { nullThrows } from "@flint.fyi/utils";
-
 import { readFromCache } from "../cache/readFromCache.ts";
 import type { FileCacheStorage } from "../types/cache.ts";
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
 import type { AnyRule } from "../types/rules.ts";
 import { collectLanguageFilesByFilePath } from "./collectLanguageFilesByFilePath.ts";
+import { collectRulesFilesAndOptions } from "./collectRulesFilesAndOptions.ts";
 import { collectRulesOptionsByFile } from "./collectRulesOptionsByFile.ts";
 import { computeUseDefinitions } from "./computeUseDefinitions.ts";
 import type { LanguageAndFile, LanguageFilesWithOptions } from "./types.ts";
@@ -67,27 +66,15 @@ export async function collectFilesAndOptions(
 
 	// 4. Collect metadata for each linted file on its enabled rules' languages
 	const languageFilesByFilePath = collectLanguageFilesByFilePath(
-		cached,
 		rulesOptionsByFile,
 		host,
+		{ cached },
 	);
 
 	// 5. Join language metadata files into the corresponding options by file path
-	const rulesFilesAndOptionsByRule = new Map(
-		Array.from(rulesOptionsByFile).map(([rule, optionsByFile]) => [
-			rule,
-			Array.from(optionsByFile)
-				.filter(([filePath]) => languageFilesByFilePath.has(filePath))
-				.map(([filePath, options]) => ({
-					languageFiles: Array.from(
-						nullThrows(
-							languageFilesByFilePath.get(filePath),
-							"Language file is expected to be present by the map",
-						).values(),
-					),
-					options,
-				})),
-		]),
+	const rulesFilesAndOptionsByRule = collectRulesFilesAndOptions(
+		rulesOptionsByFile,
+		languageFilesByFilePath,
 	);
 
 	return {

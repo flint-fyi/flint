@@ -2,22 +2,24 @@ import path from "node:path";
 
 import { CachedFactory } from "cached-factory";
 
-import { makeAbsolute, nullThrows, pathKey } from "@flint.fyi/utils";
+import { pathKey } from "@flint.fyi/utils";
 
 import type { ProcessedConfigDefinition } from "../types/configs.ts";
 import type { LinterHost } from "../types/host.ts";
 import type {
 	AnyLanguage,
-	AnyLanguageFile,
 	AnyLanguageFileFactory,
 } from "../types/languages.ts";
-import type { FileResults } from "../types/linting.ts";
 import type { AnyRule } from "../types/rules.ts";
+import { collectLanguageFilesByFilePath } from "./collectLanguageFilesByFilePath.ts";
+import { collectRulesFilesAndOptions } from "./collectRulesFilesAndOptions.ts";
 import { collectRulesOptionsByFile } from "./collectRulesOptionsByFile.ts";
 import { computeUseDefinitions } from "./computeUseDefinitions.ts";
-import { finalizeFileResults } from "./finalizeFileResults.ts";
+import {
+	finalizeFileResults,
+	type FinalizedFileResults,
+} from "./finalizeFileResults.ts";
 import { runRules } from "./runRules.ts";
-import type { LanguageAndFile, LanguageFilesWithOptions } from "./types.ts";
 
 export interface LintSessionLintOptions {
 	skipLanguageReports?: boolean;
@@ -25,7 +27,7 @@ export interface LintSessionLintOptions {
 
 export class LintSession implements Disposable {
 	readonly allFilePaths: Set<string>;
-	readonly storedResults = new Map<string, FileResults>();
+	readonly storedResults = new Map<string, FinalizedFileResults>();
 
 	get ruleCount(): number {
 		return this.#rulesOptionsByFile.size;
@@ -121,14 +123,14 @@ export class LintSession implements Disposable {
 
 	async lintAll(
 		options?: LintSessionLintOptions,
-	): Promise<Map<string, FileResults>> {
+	): Promise<Map<string, FinalizedFileResults>> {
 		return await this.lintFiles(this.allFilePaths, options);
 	}
 
 	async lintFiles(
 		filePaths: Iterable<string>,
 		options?: LintSessionLintOptions,
-	): Promise<Map<string, FileResults>> {
+	): Promise<Map<string, FinalizedFileResults>> {
 		this.#assertNotDisposed();
 
 		const lintedFilePaths = this.#resolveLintedFilePaths(filePaths);
@@ -136,12 +138,20 @@ export class LintSession implements Disposable {
 			return new Map();
 		}
 
-		const languageFilesByFilePath =
-			this.#collectLanguageFilesByFilePath(lintedFilePaths);
+		this.#addFilesRequiredByRules(lintedFilePaths);
+
+		const languageFilesByFilePath = collectLanguageFilesByFilePath(
+			this.#rulesOptionsByFile,
+			this.#host,
+			{
+				filePaths: lintedFilePaths,
+				languageFileFactories: this.#languageFileFactories,
+			},
+		);
 
 		try {
-			const rulesFilesAndOptionsByRule = this.#collectRulesFilesAndOptions(
-				lintedFilePaths,
+			const rulesFilesAndOptionsByRule = collectRulesFilesAndOptions(
+				this.#rulesOptionsByFile,
 				languageFilesByFilePath,
 			);
 
@@ -149,7 +159,7 @@ export class LintSession implements Disposable {
 				rulesFilesAndOptionsByRule,
 				this.#host,
 			);
-			const filesResults = new Map<string, FileResults>();
+			const filesResults = new Map<string, FinalizedFileResults>();
 
 			for (const [filePath, languageAndFiles] of languageFilesByFilePath) {
 				const fileResults = finalizeFileResults(
@@ -178,110 +188,25 @@ export class LintSession implements Disposable {
 		this.dispose();
 	}
 
+	#addFilesRequiredByRules(filePaths: Set<string>): void {
+		for (const [rule, optionsByFile] of this.#rulesOptionsByFile) {
+			if (
+				!rule.requiresAllFiles ||
+				!filePaths.intersection(optionsByFile).size
+			) {
+				continue;
+			}
+
+			for (const filePath of optionsByFile.keys()) {
+				filePaths.add(filePath);
+			}
+		}
+	}
+
 	#assertNotDisposed(): void {
 		if (this.#disposed) {
 			throw new Error("LintSession has already been disposed.");
 		}
-	}
-
-	#collectLanguageFilesByFilePath(
-		filePaths: Set<string>,
-	): Map<string, LanguageAndFile[]> {
-		const filePathsByLanguage = new CachedFactory<AnyLanguage, Set<string>>(
-			() => new Set(),
-		);
-		const languageFilesByFilePath = new CachedFactory<
-			string,
-			Map<AnyLanguage, AnyLanguageFile | undefined>
-		>(() => new Map());
-
-		for (const [rule, optionsByFile] of this.#rulesOptionsByFile) {
-			for (const filePath of filePaths) {
-				if (!optionsByFile.has(filePath)) {
-					continue;
-				}
-
-				const filesByLanguage = languageFilesByFilePath.get(filePath);
-				if (filesByLanguage.has(rule.language)) {
-					continue;
-				}
-
-				filePathsByLanguage.get(rule.language).add(filePath);
-				filesByLanguage.set(rule.language, undefined);
-			}
-		}
-
-		for (const [language, languageFilePaths] of filePathsByLanguage.entries()) {
-			const fileFactory = this.#languageFileFactories.get(language);
-			const orderedFilePaths = language.orderFilePaths
-				? language.orderFilePaths([...languageFilePaths], this.#host)
-				: languageFilePaths;
-
-			for (const filePath of orderedFilePaths) {
-				const file = fileFactory.createFile({
-					filePath,
-					filePathAbsolute: makeAbsolute(filePath),
-					sourceText: nullThrows(
-						this.#host.readFileSync(filePath),
-						`Expected ${filePath} to exist`,
-					),
-				});
-
-				languageFilesByFilePath.get(filePath).set(language, file);
-			}
-		}
-
-		return new Map(
-			Array.from(languageFilesByFilePath.entries()).map(
-				([filePath, filesByLanguage]) => [
-					filePath,
-					Array.from(filesByLanguage.entries()).map(([language, file]) => ({
-						file: nullThrows(
-							file,
-							"Language file is expected to be present by the map",
-						),
-						language,
-					})),
-				],
-			),
-		);
-	}
-
-	#collectRulesFilesAndOptions(
-		filePaths: Set<string>,
-		languageFilesByFilePath: Map<string, LanguageAndFile[]>,
-	): Map<AnyRule, LanguageFilesWithOptions[]> {
-		const rulesFilesAndOptionsByRule = new Map<
-			AnyRule,
-			LanguageFilesWithOptions[]
-		>();
-
-		for (const [rule, optionsByFile] of this.#rulesOptionsByFile) {
-			const filesAndOptions: LanguageFilesWithOptions[] = [];
-
-			for (const filePath of filePaths) {
-				const options = optionsByFile.get(filePath);
-				if (options == null) {
-					continue;
-				}
-
-				filesAndOptions.push({
-					languageFiles: Array.from(
-						nullThrows(
-							languageFilesByFilePath.get(filePath),
-							"Language file is expected to be present by the map",
-						).values(),
-					),
-					options,
-				});
-			}
-
-			if (filesAndOptions.length) {
-				rulesFilesAndOptionsByRule.set(rule, filesAndOptions);
-			}
-		}
-
-		return rulesFilesAndOptionsByRule;
 	}
 
 	#resolveLintedFilePaths(filePaths: Iterable<string>): Set<string> {
@@ -297,7 +222,7 @@ export class LintSession implements Disposable {
 		return lintedFilePaths;
 	}
 
-	#storeResults(filePath: string, fileResults: FileResults): void {
+	#storeResults(filePath: string, fileResults: FinalizedFileResults): void {
 		const previous = this.storedResults.get(filePath);
 		if (previous) {
 			for (const dependencyKey of previous.dependencies) {
