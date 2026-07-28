@@ -10258,7 +10258,6 @@
 		"flint": {
 			"name": "unsupportedGlobals",
 			"plugin": "node",
-			"preset": "logical",
 			"status": "skipped"
 		}
 	},
@@ -10285,7 +10284,6 @@
 		"flint": {
 			"name": "unsupportedSyntax",
 			"plugin": "node",
-			"preset": "logical",
 			"status": "skipped"
 		}
 	},
@@ -12006,6 +12004,7 @@
 			}
 		],
 		"flint": {
+			"plugin": "qwik",
 			"name": "classlists",
 			"status": "skipped"
 		}
@@ -12018,6 +12017,7 @@
 			}
 		],
 		"flint": {
+			"plugin": "qwik",
 			"name": "lexicalScopes",
 			"status": "skipped"
 		}
@@ -12030,6 +12030,7 @@
 			}
 		],
 		"flint": {
+			"plugin": "qwik",
 			"name": "loaderLocations",
 			"status": "skipped"
 		}
@@ -12042,6 +12043,7 @@
 			}
 		],
 		"flint": {
+			"plugin": "qwik",
 			"name": "methodUsages",
 			"status": "skipped"
 		}
@@ -12054,6 +12056,7 @@
 			}
 		],
 		"flint": {
+			"plugin": "qwik",
 			"name": "visibleTasks",
 			"status": "skipped"
 		}
@@ -16839,9 +16842,7 @@
 		"flint": {
 			"name": "awaitInsidePromiseMethods",
 			"plugin": "ts",
-			"preset": "logical",
-			"status": "skipped",
-			"strictness": "strict"
+			"status": "skipped"
 		},
 		"notes": "Superseded by awaitThenable.",
 		"oxlint": [
@@ -16976,8 +16977,7 @@
 		"flint": {
 			"name": "blockStatements",
 			"plugin": "ts",
-			"status": "skipped",
-			"strictness": "strict"
+			"status": "skipped"
 		},
 		"notes": "Superseded by prettier-plugin-curly",
 		"oxlint": [
@@ -17071,8 +17071,7 @@
 		"flint": {
 			"name": "builtinPrototypeMethodAccesses",
 			"plugin": "ts",
-			"status": "skipped",
-			"strictness": "strict"
+			"status": "skipped"
 		},
 		"oxlint": [
 			{
@@ -24633,7 +24632,6 @@
 		"flint": {
 			"name": "promiseExecutorReturns",
 			"plugin": "ts",
-			"preset": "logical",
 			"status": "skipped"
 		},
 		"notes": "Superseded by awaitThenable.",
@@ -24654,7 +24652,6 @@
 		"flint": {
 			"name": "promiseFinallyReturns",
 			"plugin": "ts",
-			"preset": "logical",
 			"status": "skipped"
 		},
 		"notes": "Largely covered by returnVoidSafety.",
@@ -24972,8 +24969,7 @@
 		"flint": {
 			"name": "readonlyClassProperties",
 			"plugin": "ts",
-			"status": "skipped",
-			"strictness": "strict"
+			"status": "skipped"
 		},
 		"notes": "Better suited to a functional/immutable-focused plugin.",
 		"oxlint": [
@@ -25187,7 +25183,7 @@
 			"plugin": "ts",
 			"status": "skipped"
 		},
-		"notes": "Superseded by other regex cleanliness rules"
+		"notes": "Superseded by other regex cleanliness rules."
 	},
 	{
 		"biome": [
@@ -30937,7 +30933,7 @@
 			}
 		],
 		"flint": {
-			"name": "maxiumumDescribesPerFile",
+			"name": "maximumDescribesPerFile",
 			"plugin": "vitest",
 			"status": "skipped"
 		},

@@ -10,7 +10,7 @@
 		"properties": {
 			"flint": {
 				"type": "object",
-				"required": ["name"],
+				"required": ["name", "plugin"],
 				"additionalProperties": false,
 				"properties": {
 					"name": {
