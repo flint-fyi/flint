@@ -22,6 +22,27 @@ const knownTestFunctionNames = [
 
 const unknownTestFunctionNames = ["foo", "expect", "vi", "tests"];
 
+function parseCallExpression(source: string): AST.CallExpression {
+	const sourceFile = ts.createSourceFile(
+		"parseVitestTestFunctionCall.test.ts",
+		`${source};`,
+		ts.ScriptTarget.ESNext,
+		true,
+		ts.ScriptKind.TS,
+	);
+	const statement = sourceFile.statements[0];
+	if (statement?.kind !== SyntaxKind.ExpressionStatement) {
+		throw new Error(`Could not parse call expression: ${source}`);
+	}
+
+	const expression = (statement as ts.ExpressionStatement).expression;
+	if (expression.kind !== SyntaxKind.CallExpression) {
+		throw new Error(`Could not parse call expression: ${source}`);
+	}
+
+	return expression as AST.CallExpression;
+}
+
 describe(parseVitestTestFunctionCall, () => {
 	it.each(knownTestFunctionNames)(
 		"parses %s called as an identifier",
@@ -167,24 +188,3 @@ describe(parseVitestTestFunctionCall, () => {
 		},
 	);
 });
-
-function parseCallExpression(source: string): AST.CallExpression {
-	const sourceFile = ts.createSourceFile(
-		"parseVitestTestFunctionCall.test.ts",
-		`${source};`,
-		ts.ScriptTarget.ESNext,
-		true,
-		ts.ScriptKind.TS,
-	);
-	const statement = sourceFile.statements[0];
-	if (statement?.kind !== SyntaxKind.ExpressionStatement) {
-		throw new Error(`Could not parse call expression: ${source}`);
-	}
-
-	const expression = (statement as ts.ExpressionStatement).expression;
-	if (expression.kind !== SyntaxKind.CallExpression) {
-		throw new Error(`Could not parse call expression: ${source}`);
-	}
-
-	return expression as AST.CallExpression;
-}
