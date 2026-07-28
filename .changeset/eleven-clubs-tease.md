@@ -3,4 +3,4 @@
 "@flint.fyi/vitest": patch
 ---
 
-Add Rule: Vitest conditionalExpects
+Added a `conditionalExpects` rule.
