@@ -9,12 +9,9 @@ import { FileChangeType } from "vscode-languageserver/node.js";
 
 import type { FileResults } from "@flint.fyi/core";
 
-interface Deferred<T> {
-	promise: Promise<T>;
-	resolve(value: T): void;
-}
+import { normalizeFilePath } from "./lintSessionChanges.ts";
 
-function createDeferred<T>(): Deferred<T> {
+function createDeferred<T>() {
 	let resolve!: (value: T) => void;
 	const promise = new Promise<T>((res) => {
 		resolve = res;
@@ -23,9 +20,9 @@ function createDeferred<T>(): Deferred<T> {
 	return { promise, resolve };
 }
 
-function createFileResults(message: string): FileResults {
+function createFileResults(message: string) {
 	return {
-		dependencies: new Set(),
+		dependencies: new Set<string>(),
 		languageReports: [
 			{
 				range: { begin: 0, end: 5 },
@@ -328,9 +325,15 @@ describe("startServer", () => {
 	});
 
 	it("publishes changed diagnostics before dependent diagnostics", async () => {
-		const changedFilePath = path.join(workspaceRoot, "src/b.ts");
-		const dependentFilePath = path.join(workspaceRoot, "src/a.ts");
-		const transitiveDependentFilePath = path.join(workspaceRoot, "src/c.ts");
+		const changedFilePath = normalizeFilePath(
+			path.join(workspaceRoot, "src/b.ts"),
+		);
+		const dependentFilePath = normalizeFilePath(
+			path.join(workspaceRoot, "src/a.ts"),
+		);
+		const transitiveDependentFilePath = normalizeFilePath(
+			path.join(workspaceRoot, "src/c.ts"),
+		);
 		const changedFileUri = pathToFileURL(changedFilePath).href;
 		const dependentFileUri = pathToFileURL(dependentFilePath).href;
 		const transitiveDependentFileUri = pathToFileURL(

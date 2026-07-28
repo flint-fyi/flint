@@ -23,9 +23,7 @@
 	},
 	"files": [
 		"bin/",
-		"lib/",
-		"!lib/**/*.map",
-		"!lib/bin/**"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --typecheck --project lsp"
@@ -38,6 +36,7 @@
 		"vscode-languageserver-textdocument": "^1.0.12"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
@@ -47,7 +46,7 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

@@ -1,8 +1,8 @@
 import type { TextDocument } from "vscode-languageserver-textdocument";
 import {
-	CodeAction,
 	CodeActionKind,
 	TextEdit,
+	type CodeAction,
 	type CodeActionContext,
 	type Diagnostic,
 } from "vscode-languageserver/node.js";
@@ -23,7 +23,7 @@ export function createCodeActions(
 	reports: FileReport[],
 	document: TextDocument,
 	options?: CodeActionOptions,
-): CodeAction[] {
+) {
 	const reportsByKey = new Map(
 		reports.map((report) => [
 			diagnosticKey(
@@ -84,7 +84,7 @@ function createFilesSuggestionAction(
 	diagnostic: Diagnostic,
 	suggestion: Extract<Suggestion, { files: object }>,
 	options: CodeActionOptions | undefined,
-): CodeAction | undefined {
+) {
 	if (!options) {
 		return undefined;
 	}
@@ -124,7 +124,7 @@ function createFixAction(
 	diagnostic: Diagnostic,
 	fixes: FileChange[],
 	document: TextDocument,
-): CodeAction {
+) {
 	return {
 		diagnostics: [diagnostic],
 		edit: {
@@ -144,7 +144,7 @@ function createSuggestionAction(
 	suggestion: Suggestion,
 	document: TextDocument,
 	options: CodeActionOptions | undefined,
-): CodeAction | undefined {
+) {
 	if ("files" in suggestion) {
 		return createFilesSuggestionAction(diagnostic, suggestion, options);
 	}
@@ -167,14 +167,11 @@ function diagnosticKey(
 	beginColumn: number,
 	endLine: number,
 	endColumn: number,
-): string {
+) {
 	return [id, beginLine, beginColumn, endLine, endColumn].join("|");
 }
 
-function fileChangeToTextEdit(
-	change: FileChange,
-	document: TextDocument,
-): TextEdit {
+function fileChangeToTextEdit(change: FileChange, document: TextDocument) {
 	return TextEdit.replace(
 		{
 			end: document.positionAt(change.range.end),
