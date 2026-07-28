@@ -30456,7 +30456,6 @@
 			"name": "conditionalExpects",
 			"plugin": "vitest",
 			"preset": "logical",
-			"strictness": "strict",
 			"status": "implemented"
 		},
 		"oxlint": [
