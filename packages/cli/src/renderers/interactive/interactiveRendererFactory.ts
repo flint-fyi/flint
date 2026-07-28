@@ -14,8 +14,7 @@ import { printHeader } from "./printHeader.ts";
 import { printSummary } from "./printSummary.ts";
 
 export const interactiveRendererFactory: RendererFactory = {
-	about: {		name: "interactive",
-	},
+	about: { name: "interactive" },
 	initialize(host, presenter) {
 		const onDisposeListeners = createListeners();
 		const onQuitListeners = createListeners();
