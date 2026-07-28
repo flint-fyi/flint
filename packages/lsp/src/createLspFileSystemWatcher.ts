@@ -11,24 +11,23 @@ import type {
 import { normalizePath } from "@flint.fyi/utils";
 
 export interface LspFileSystemWatcher extends FileSystemWatcher {
-	watchDirectoryWithEventSync(
-		this: void,
+	watchDirectoryWithEventSync: (
 		directoryPathAbsolute: string,
 		callback: LspFileSystemDirectoryWatcher,
 		options: WatchDirectoryOptions,
-	): Disposable;
+	) => Disposable;
 }
-
-type LspFileSystemDirectoryWatcher = (
-	filePathAbsolute: string,
-	event: LinterHostFileWatcherEvent,
-) => void;
 
 interface DirectorySubscription {
 	callback: LspFileSystemDirectoryWatcher;
 	recursive: boolean;
 	rootPath: string;
 }
+
+type LspFileSystemDirectoryWatcher = (
+	filePathAbsolute: string,
+	event: LinterHostFileWatcherEvent,
+) => void;
 
 const FILE_CHANGE_TYPE_TO_EVENT: Record<
 	FileChangeType,
@@ -39,31 +38,33 @@ const FILE_CHANGE_TYPE_TO_EVENT: Record<
 	[FileChangeType.Deleted]: "deleted",
 };
 
-/**
- * `FileSystemWatcher` backed by the LSP's `workspace/onDidChangeWatchedFiles`
- * notifications.
- */
 export function createLspFileSystemWatcher(
 	connection: Connection,
 ): LspFileSystemWatcher {
-	const directorySubs = new Set<DirectorySubscription>();
-	const fileSubs = new Map<string, Set<LinterHostFileWatcher>>();
+	const directorySubscriptions = new Set<DirectorySubscription>();
+	const fileSubscriptions = new Map<string, Set<LinterHostFileWatcher>>();
 
-	connection.onDidChangeWatchedFiles((params) => {
-		for (const change of params.changes) {
+	connection.onDidChangeWatchedFiles((watchedFilesParams) => {
+		for (const change of watchedFilesParams.changes) {
 			const filePath = normalizePath(fileURLToPath(change.uri));
 			const event = FILE_CHANGE_TYPE_TO_EVENT[change.type];
 
-			for (const sub of directorySubs) {
-				if (isFileUnderDirectory(filePath, sub.rootPath, sub.recursive)) {
-					sub.callback(filePath, event);
+			for (const subscription of directorySubscriptions) {
+				if (
+					isFileUnderDirectory(
+						filePath,
+						subscription.rootPath,
+						subscription.recursive,
+					)
+				) {
+					subscription.callback(filePath, event);
 				}
 			}
 
-			const fileWatchers = fileSubs.get(filePath);
+			const fileWatchers = fileSubscriptions.get(filePath);
 			if (fileWatchers) {
-				for (const cb of fileWatchers) {
-					cb(event);
+				for (const callback of fileWatchers) {
+					callback(event);
 				}
 			}
 		}
@@ -74,15 +75,15 @@ export function createLspFileSystemWatcher(
 		callback: LspFileSystemDirectoryWatcher,
 		options: WatchDirectoryOptions,
 	) {
-		const sub: DirectorySubscription = {
+		const subscription: DirectorySubscription = {
 			callback,
 			recursive: options.recursive,
 			rootPath: normalizePath(directoryPathAbsolute),
 		};
-		directorySubs.add(sub);
+		directorySubscriptions.add(subscription);
 		return {
 			[Symbol.dispose]() {
-				directorySubs.delete(sub);
+				directorySubscriptions.delete(subscription);
 			},
 		};
 	}
@@ -97,22 +98,22 @@ export function createLspFileSystemWatcher(
 		},
 		watchDirectoryWithEventSync,
 		watchFileSync(filePathAbsolute, callback) {
-			const normalized = normalizePath(filePathAbsolute);
-			let set = fileSubs.get(normalized);
-			if (!set) {
-				set = new Set();
-				fileSubs.set(normalized, set);
+			const normalizedFilePath = normalizePath(filePathAbsolute);
+			let fileWatchers = fileSubscriptions.get(normalizedFilePath);
+			if (!fileWatchers) {
+				fileWatchers = new Set();
+				fileSubscriptions.set(normalizedFilePath, fileWatchers);
 			}
-			set.add(callback);
+			fileWatchers.add(callback);
 			return {
 				[Symbol.dispose]() {
-					const current = fileSubs.get(normalized);
-					if (!current) {
+					const currentFileWatchers = fileSubscriptions.get(normalizedFilePath);
+					if (!currentFileWatchers) {
 						return;
 					}
-					current.delete(callback);
-					if (!current.size) {
-						fileSubs.delete(normalized);
+					currentFileWatchers.delete(callback);
+					if (!currentFileWatchers.size) {
+						fileSubscriptions.delete(normalizedFilePath);
 					}
 				},
 			};
@@ -124,7 +125,7 @@ function isFileUnderDirectory(
 	filePath: string,
 	rootPath: string,
 	recursive: boolean,
-): boolean {
+) {
 	if (filePath === rootPath) {
 		return true;
 	}

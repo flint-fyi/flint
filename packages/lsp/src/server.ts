@@ -8,7 +8,6 @@ import {
 	TextDocuments,
 	TextDocumentSyncKind,
 	type InitializeParams,
-	type InitializeResult,
 } from "vscode-languageserver/node.js";
 
 import {
@@ -23,7 +22,6 @@ import {
 	withFileSystemWatcher,
 	type FileResults,
 	type LinterHostFileWatcherEvent,
-	type ProcessedConfigDefinition,
 	type VFSLinterHost,
 } from "@flint.fyi/core";
 
@@ -38,17 +36,9 @@ import {
 } from "./lintSessionChanges.ts";
 
 const LINT_DEBOUNCE_MS = 250;
+const CONFIG_RELOAD_QUERY_PARAMETER = "flintLspCacheBust";
 
-// `import()` honors ESM module identity per resolved URL. A unique query
-// param forces a fresh module graph when the user's config file is reloaded.
-const CONFIG_CACHE_BUST_PARAM = "flintLspCacheBust";
-
-interface RebuildSessionResult {
-	canLint: boolean;
-	previousUris: Set<string>;
-}
-
-export function startServer(): void {
+export function startServer() {
 	const connection = createConnection(process.stdin, process.stdout);
 	const documents = new TextDocuments(TextDocument);
 
@@ -66,8 +56,8 @@ export function startServer(): void {
 	let structuralVersion = 0;
 	let watchedFilesSubscription: Disposable | undefined;
 
-	connection.onInitialize((params: InitializeParams): InitializeResult => {
-		workspaceRoot = getWorkspaceRoot(params);
+	connection.onInitialize((initializeParams: InitializeParams) => {
+		workspaceRoot = getWorkspaceRoot(initializeParams);
 
 		return {
 			capabilities: {
@@ -123,7 +113,7 @@ export function startServer(): void {
 	function handleWatchedFileChange(
 		filePath: string,
 		event: LinterHostFileWatcherEvent,
-	): void {
+	) {
 		if (
 			event === "created" ||
 			event === "deleted" ||
@@ -137,13 +127,13 @@ export function startServer(): void {
 		requestIncrementalLint(filePath);
 	}
 
-	function queueLintRun(): void {
+	function queueLintRun() {
 		runQueuedLint().catch((error: unknown) => {
 			connection.console.error(`Lint error: ${formatUnknownError(error)}`);
 		});
 	}
 
-	function requestFullRebuild(): void {
+	function requestFullRebuild() {
 		structuralVersion += 1;
 		pendingFullRebuild = true;
 		pendingPaths.clear();
@@ -155,7 +145,7 @@ export function startServer(): void {
 		queueLintRun();
 	}
 
-	function requestIncrementalLint(filePath: string): void {
+	function requestIncrementalLint(filePath: string) {
 		if (
 			workspaceRoot &&
 			isStructuralFilePath(filePath, workspaceRoot, configFileNameCandidates)
@@ -168,7 +158,7 @@ export function startServer(): void {
 		scheduleDebouncedLint();
 	}
 
-	function scheduleDebouncedLint(): void {
+	function scheduleDebouncedLint() {
 		if (debounceTimer) {
 			clearTimeout(debounceTimer);
 		}
@@ -178,7 +168,7 @@ export function startServer(): void {
 		}, LINT_DEBOUNCE_MS);
 	}
 
-	async function runQueuedLint(): Promise<void> {
+	async function runQueuedLint() {
 		if (lintInFlight) {
 			return;
 		}
@@ -236,9 +226,7 @@ export function startServer(): void {
 		}
 	}
 
-	async function rebuildSession(
-		expectedStructuralVersion: number,
-	): Promise<RebuildSessionResult | undefined> {
+	async function rebuildSession(expectedStructuralVersion: number) {
 		if (!vfsHost || !workspaceRoot) {
 			return undefined;
 		}
@@ -282,7 +270,7 @@ export function startServer(): void {
 	async function lintChangedPathsAndPublish(
 		filePaths: Set<string>,
 		expectedStructuralVersion: number,
-	): Promise<Set<string> | undefined> {
+	) {
 		const session = lintSession;
 		if (!session) {
 			requestFullRebuild();
@@ -318,15 +306,16 @@ export function startServer(): void {
 		return publishedUris;
 	}
 
-	async function loadConfigDefinition(
-		configFileName: string,
-	): Promise<ProcessedConfigDefinition> {
+	async function loadConfigDefinition(configFileName: string) {
 		if (!workspaceRoot) {
 			throw new Error("No workspace root provided.");
 		}
 
 		const configUrl = pathToFileURL(path.join(workspaceRoot, configFileName));
-		configUrl.searchParams.set(CONFIG_CACHE_BUST_PARAM, Date.now().toString());
+		configUrl.searchParams.set(
+			CONFIG_RELOAD_QUERY_PARAMETER,
+			Date.now().toString(),
+		);
 
 		const imported = (await import(configUrl.href)) as Record<string, unknown>;
 		const config: unknown = imported.default;
@@ -388,13 +377,13 @@ export function startServer(): void {
 		);
 	}
 
-	function queueOpenDocumentPaths(): void {
+	function queueOpenDocumentPaths() {
 		for (const document of documents.all()) {
 			pendingPaths.add(normalizeFilePath(fileURLToPath(document.uri)));
 		}
 	}
 
-	function getDiagnosticDocument(uri: string): TextDocument | undefined {
+	function getDiagnosticDocument(uri: string) {
 		const document = documents.get(uri);
 		if (document) {
 			return document;
@@ -426,8 +415,8 @@ export function startServer(): void {
 		requestIncrementalLint(filePath);
 	});
 
-	connection.onCodeAction((params) => {
-		const uri = params.textDocument.uri;
+	connection.onCodeAction((codeActionParams) => {
+		const uri = codeActionParams.textDocument.uri;
 		const fileResults = storedResults.get(uri);
 		const document = documents.get(uri);
 
@@ -437,7 +426,7 @@ export function startServer(): void {
 
 		return createCodeActions(
 			uri,
-			params.context,
+			codeActionParams.context,
 			fileResults.reports,
 			document,
 			{
@@ -461,22 +450,19 @@ function formatUnknownError(error: unknown) {
 	return error instanceof Error ? error.message : String(error);
 }
 
-function getWorkspaceRoot(params: InitializeParams) {
-	const workspaceFolderUri = params.workspaceFolders?.[0]?.uri;
+function getWorkspaceRoot(initializeParams: InitializeParams) {
+	const workspaceFolderUri = initializeParams.workspaceFolders?.[0]?.uri;
 	if (workspaceFolderUri) {
 		return fileURLToPath(workspaceFolderUri);
 	}
 
-	// rootUri/rootPath are deprecated in LSP, but still needed for clients
-	// that don't yet send workspaceFolders. Cast through `unknown` to avoid
-	// deprecation diagnostics while still reading the typed shape.
-	const legacy = params as unknown as {
+	const legacyInitializeParams = initializeParams as unknown as {
 		rootPath?: null | string;
 		rootUri?: null | string;
 	};
-	if (legacy.rootUri) {
-		return fileURLToPath(legacy.rootUri);
+	if (legacyInitializeParams.rootUri) {
+		return fileURLToPath(legacyInitializeParams.rootUri);
 	}
 
-	return legacy.rootPath ?? undefined;
+	return legacyInitializeParams.rootPath ?? undefined;
 }

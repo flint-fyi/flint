@@ -1,3 +1,6 @@
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+
 import { describe, expect, it } from "vitest";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import type { CodeActionContext } from "vscode-languageserver/node.js";
@@ -8,9 +11,13 @@ import { createCodeActions } from "./codeActions.ts";
 
 describe(createCodeActions, () => {
 	it("creates cross-file suggestion edits", () => {
-		const workspaceRoot = "/workspace";
-		const sourceUri = "file:///workspace/src/file.ts";
-		const targetUri = "file:///workspace/cspell.json";
+		const workspaceRoot = path.resolve("workspace");
+		const sourceUri = pathToFileURL(
+			path.join(workspaceRoot, "src/file.ts"),
+		).href;
+		const targetUri = pathToFileURL(
+			path.join(workspaceRoot, "cspell.json"),
+		).href;
 		const sourceDocument = TextDocument.create(
 			sourceUri,
 			"typescript",

@@ -1,11 +1,7 @@
 import { stripVTControlCharacters } from "node:util";
 
 import type { TextDocument } from "vscode-languageserver-textdocument";
-import {
-	Diagnostic,
-	DiagnosticSeverity,
-	Range,
-} from "vscode-languageserver/node.js";
+import { DiagnosticSeverity, Range } from "vscode-languageserver/node.js";
 
 import {
 	formatReport,
@@ -22,7 +18,7 @@ const LANGUAGE_DIAGNOSTIC_SOURCE = "flint/language";
 export function mapFileResultsToDiagnostics(
 	fileResults: FileResults,
 	document: TextDocument | undefined,
-): Diagnostic[] {
+) {
 	return [
 		...fileResults.reports.map(mapReportToDiagnostic),
 		...fileResults.languageReports.map((report) =>
@@ -34,7 +30,7 @@ export function mapFileResultsToDiagnostics(
 function formatMessage(
 	message: ReportMessageData,
 	data: ReportInterpolationData | undefined,
-): string {
+) {
 	return [message.primary, ...message.secondary]
 		.map((part) => formatReport(data, part))
 		.join(" ");
@@ -43,7 +39,7 @@ function formatMessage(
 function mapLanguageReport(
 	report: LanguageReport,
 	document: TextDocument | undefined,
-): Diagnostic {
+) {
 	const range =
 		report.range && document
 			? Range.create(
@@ -61,7 +57,7 @@ function mapLanguageReport(
 	};
 }
 
-function mapReportToDiagnostic(report: FileReport): Diagnostic {
+function mapReportToDiagnostic(report: FileReport) {
 	return {
 		...(report.about.url && {
 			codeDescription: { href: report.about.url },
