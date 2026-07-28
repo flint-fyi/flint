@@ -10,7 +10,7 @@ import type { FileReport } from "@flint.fyi/core";
 import { createCodeActions } from "./codeActions.ts";
 
 describe(createCodeActions, () => {
-	it("creates cross-file suggestion edits", () => {
+	it("creates fixes and suggestion edits", () => {
 		const workspaceRoot = path.resolve("workspace");
 		const sourceUri = pathToFileURL(
 			path.join(workspaceRoot, "src/file.ts"),
@@ -29,6 +29,12 @@ describe(createCodeActions, () => {
 			about: {
 				id: "spelling/cspell",
 			},
+			fix: [
+				{
+					range: { begin: 6, end: 10 },
+					text: "word",
+				},
+			],
 			message: {
 				primary: "Forbidden or unknown word.",
 				secondary: [],
@@ -50,6 +56,28 @@ describe(createCodeActions, () => {
 					},
 					id: "addWordToWords",
 				},
+				{
+					files: {
+						"empty.json": [],
+					},
+					id: "empty",
+				},
+				{
+					files: {
+						"missing.json": [
+							{
+								range: { begin: 0, end: 0 },
+								text: "{}",
+							},
+						],
+					},
+					id: "missing",
+				},
+				{
+					id: "replaceWord",
+					range: { begin: 6, end: 10 },
+					text: "word",
+				},
 			],
 		};
 		const context: CodeActionContext = {
@@ -57,6 +85,15 @@ describe(createCodeActions, () => {
 				{
 					code: "spelling/cspell",
 					message: "Forbidden or unknown word.",
+					range: {
+						end: { character: 10, line: 0 },
+						start: { character: 6, line: 0 },
+					},
+					source: "flint",
+				},
+				{
+					code: "spelling/other",
+					message: "Other report.",
 					range: {
 						end: { character: 10, line: 0 },
 						start: { character: 6, line: 0 },
@@ -73,14 +110,28 @@ describe(createCodeActions, () => {
 			sourceDocument,
 			{
 				getDocument(uri) {
-					return uri === targetUri ? targetDocument : sourceDocument;
+					return uri === targetUri ? targetDocument : undefined;
 				},
 				workspaceRoot,
 			},
 		);
 
-		expect(actions).toHaveLength(1);
+		expect(actions).toHaveLength(3);
 		expect(actions[0]?.edit).toEqual({
+			changes: {
+				[sourceUri]: [
+					{
+						newText: "word",
+						range: {
+							end: { character: 10, line: 0 },
+							start: { character: 6, line: 0 },
+						},
+					},
+				],
+			},
+		});
+		expect(actions[0]?.title).toBe("Fix: Forbidden or unknown word.");
+		expect(actions[1]?.edit).toEqual({
 			changes: {
 				[targetUri]: [
 					{
@@ -93,7 +144,25 @@ describe(createCodeActions, () => {
 				],
 			},
 		});
-		expect(actions[0]?.title).toBe("Suggestion: addWordToWords");
+		expect(actions[1]?.title).toBe("Suggestion: addWordToWords");
+		expect(actions[2]?.edit).toEqual({
+			changes: {
+				[sourceUri]: [
+					{
+						newText: "word",
+						range: {
+							end: { character: 10, line: 0 },
+							start: { character: 6, line: 0 },
+						},
+					},
+				],
+			},
+		});
+		expect(actions[2]?.title).toBe("Suggestion: replaceWord");
+
+		expect(
+			createCodeActions(sourceUri, context, [report], sourceDocument),
+		).toHaveLength(2);
 	});
 
 	it("does not create code actions for language diagnostics", () => {
