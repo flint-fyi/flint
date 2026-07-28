@@ -30,7 +30,7 @@ export const interactiveRendererFactory: RendererFactory = {
 		function announce() {
 			console.clear();
 
-			for (const line of presenter.header ?? []) {
+			for (const line of presenter.header) {
 				console.log(line);
 			}
 		}
