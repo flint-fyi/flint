@@ -8,6 +8,7 @@
 	"include": [
 		"./@types/*/*.ts",
 		"./*.ts",
+		"./packages/*/scripts/*.ts",
 		"./packages/*/tsdown.config.ts",
 		"./scripts/*.ts"
 	],

@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.json",
+		"rootDir": "src/",
+		"outDir": "lib/",
+		"types": ["node"]
+	},
+	"extends": "@flint.fyi/build/tsconfig.base.json",
+	"include": ["src", "src/data.json"],
+	"exclude": ["src/**/*.test.ts"],
+	"references": [
+		{ "path": "../astro" },
+		{ "path": "../browser" },
+		{ "path": "../flint" },
+		{ "path": "../jsx" },
+		{ "path": "../node" },
+		{ "path": "../performance" },
+		{ "path": "../plugin-flint" },
+		{ "path": "../spelling" },
+		{ "path": "../vitest" }
+	]
+}
