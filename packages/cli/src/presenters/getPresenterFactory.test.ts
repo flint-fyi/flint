@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterAll, describe, expect, it, vi } from "vitest";
 
 import type { OptionsValues } from "../options.ts";
 import { getPresenterFactory } from "./getPresenterFactory.ts";
@@ -22,16 +22,12 @@ vi.mock("./githubPresenterFactory.ts", () => ({
 describe(getPresenterFactory, () => {
 	const originalGithubActions = process.env.GITHUB_ACTIONS;
 
-	afterEach(() => {
-		if (originalGithubActions === undefined) {
-			delete process.env.GITHUB_ACTIONS;
-		} else {
-			process.env.GITHUB_ACTIONS = originalGithubActions;
-		}
+	afterAll(() => {
+		process.env.GITHUB_ACTIONS = originalGithubActions;
 	});
 
 	it("should use the brief presenter by default for non-interactive runs", async () => {
-		delete process.env.GITHUB_ACTIONS;
+		process.env.GITHUB_ACTIONS = undefined;
 
 		await expect(getPresenterFactory({ interactive: false })).resolves.toBe(
 			briefPresenterFactory,
@@ -39,7 +35,7 @@ describe(getPresenterFactory, () => {
 	});
 
 	it("should use the detailed presenter when interactive mode is enabled", async () => {
-		delete process.env.GITHUB_ACTIONS;
+		process.env.GITHUB_ACTIONS = undefined;
 
 		await expect(getPresenterFactory({ interactive: true })).resolves.toBe(
 			detailedPresenterFactory,
