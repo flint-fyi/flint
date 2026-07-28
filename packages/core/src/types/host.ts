@@ -1,18 +1,16 @@
 import type { commonlyIgnoredGlobs } from "../host/watcher.ts";
 
 export interface FileSystemWatcher {
-	watchDirectorySync(
-		this: void,
+	watchDirectorySync: (
 		directoryPathAbsolute: string,
 		callback: LinterHostDirectoryWatcher,
 		options: WatchDirectoryOptions,
-	): Disposable;
-	watchFileSync(
-		this: void,
+	) => Disposable;
+	watchFileSync: (
 		filePathAbsolute: string,
 		callback: LinterHostFileWatcher,
 		options: WatchOptions,
-	): Disposable;
+	) => Disposable;
 }
 
 export interface LinterHost extends FileSystemWatcher {
