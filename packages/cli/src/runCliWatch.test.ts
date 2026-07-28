@@ -1,4 +1,4 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -116,9 +116,71 @@ describe(runCliWatch, () => {
 		expect(loadConfigDefinition).toHaveBeenCalledTimes(2);
 		expect(finalFileCount).toBe(3);
 	});
+
+	it("rebuilds the lint session after a structural file changes", async () => {
+		const project = await createTestProject();
+		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
+		let quit: (() => void) | undefined;
+		let renderCount = 0;
+
+		await runCliWatch(
+			project.host,
+			"flint.config.ts",
+			() =>
+				({
+					announce: vi.fn(),
+					onQuit(callback) {
+						quit = callback;
+					},
+					async render() {
+						renderCount += 1;
+
+						if (renderCount === 1) {
+							await writeFile(path.join(project.root, "package.json"), "{}");
+						} else {
+							quit?.();
+						}
+					},
+				}) satisfies Renderer,
+			values,
+		);
+
+		expect(loadConfigDefinition).toHaveBeenCalledTimes(2);
+		expect(renderCount).toBe(2);
+	});
+
+	it("applies fixes and re-lints changed files", async () => {
+		const project = await createTestProject({ fixText: "fixed" });
+		vi.mocked(loadConfigDefinition).mockResolvedValue(project.configDefinition);
+		let quit: (() => void) | undefined;
+
+		await runCliWatch(
+			project.host,
+			"flint.config.ts",
+			() =>
+				({
+					announce: vi.fn(),
+					onQuit(callback) {
+						quit = callback;
+					},
+					render() {
+						quit?.();
+						return Promise.resolve();
+					},
+				}) satisfies Renderer,
+			{ ...values, fix: true },
+		);
+
+		expect(await readFile(project.aPath, "utf8")).toBe("fixed");
+		expect(project.visitedFilePaths).toEqual([
+			project.aPath,
+			project.bPath,
+			project.aPath,
+		]);
+	});
 });
 
-async function createTestProject() {
+async function createTestProject({ fixText }: { fixText?: string } = {}) {
 	const root = normalizePath(
 		await mkdtemp(path.join(os.tmpdir(), "flint-cli-watch-")),
 	);
@@ -158,12 +220,32 @@ async function createTestProject() {
 			description: "Test.",
 			id: "test",
 		},
-		messages: {},
-		setup() {
+		messages: {
+			found: {
+				primary: "Found.",
+				secondary: [],
+				suggestions: [],
+			},
+		},
+		setup(context) {
 			return {
 				visitors: {
 					file(file) {
 						visitedFilePaths.push(file.filePath);
+						if (
+							fixText &&
+							file.filePath === aPath &&
+							file.sourceText !== fixText
+						) {
+							context.report({
+								fix: {
+									range: { begin: 0, end: file.sourceText.length },
+									text: fixText,
+								},
+								message: "found",
+								range: { begin: 0, end: file.sourceText.length },
+							});
+						}
 					},
 				},
 			};

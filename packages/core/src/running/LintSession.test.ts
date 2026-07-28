@@ -103,6 +103,7 @@ describe(LintSession, () => {
 		const bPath = path.posix.join(root, "b.txt");
 		const cPath = path.posix.join(root, "c.txt");
 		dependenciesByFilePath.set(aPath, [bPath]);
+		dependenciesByFilePath.set(bPath, [cPath]);
 		dependenciesByFilePath.set(cPath, [aPath]);
 		const session = await LintSession.create(configDefinition, host);
 
@@ -116,6 +117,33 @@ describe(LintSession, () => {
 					Array.from(dependents).map((filePath) => path.basename(filePath)),
 				),
 			).toEqual(new Set(["a.txt", "c.txt"]));
+		} finally {
+			session.dispose();
+		}
+	});
+
+	it("replaces dependencies when a file is relinted", async () => {
+		const { configDefinition, dependenciesByFilePath, host, root } =
+			await createTestProject();
+		const aPath = path.posix.join(root, "a.txt");
+		const bPath = path.posix.join(root, "b.txt");
+		const cPath = path.posix.join(root, "c.txt");
+		dependenciesByFilePath.set(aPath, [bPath]);
+		const session = await LintSession.create(configDefinition, host);
+
+		try {
+			await session.lintFiles([aPath]);
+			expect(session.getTransitiveDependentsOf([bPath])).toEqual(
+				new Set([aPath]),
+			);
+
+			dependenciesByFilePath.set(aPath, [cPath]);
+			await session.lintFiles([aPath]);
+
+			expect(session.getTransitiveDependentsOf([bPath])).toEqual(new Set());
+			expect(session.getTransitiveDependentsOf([cPath])).toEqual(
+				new Set([aPath]),
+			);
 		} finally {
 			session.dispose();
 		}
@@ -160,6 +188,25 @@ describe(LintSession, () => {
 
 		expect(fileDispose).toHaveBeenCalledTimes(1);
 		expect(factoryDispose).toHaveBeenCalledTimes(1);
+	});
+
+	it("ignores unknown files and rejects use after disposal", async () => {
+		const { configDefinition, host, root } = await createTestProject();
+		const session = await LintSession.create(configDefinition, host);
+
+		expect(
+			await session.lintFiles([path.posix.join(root, "unknown.txt")]),
+		).toEqual(new Map());
+
+		session[Symbol.dispose]();
+		session.dispose();
+
+		expect(() => session.getTransitiveDependentsOf([])).toThrow(
+			"LintSession has already been disposed.",
+		);
+		await expect(session.lintAll()).rejects.toThrow(
+			"LintSession has already been disposed.",
+		);
 	});
 });
 
