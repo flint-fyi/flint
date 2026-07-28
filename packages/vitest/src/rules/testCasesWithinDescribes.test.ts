@@ -112,6 +112,8 @@ it.extend()
 `,
 		`describe("test suite", () => { test("my test") });`,
 		`describe("test suite", () => { it("my test") });`,
+		`fdescribe("test suite", () => { it("my test") });`,
+		`xdescribe("test suite", () => { it("my test") });`,
 		`
 describe("test suite", () => {
 	beforeEach("a", () => {});

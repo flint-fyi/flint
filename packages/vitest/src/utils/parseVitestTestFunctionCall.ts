@@ -8,6 +8,7 @@ const knownVitestFunctionNames = [
 	"beforeAll",
 	"beforeEach",
 	"describe",
+	"fdescribe",
 	"fit",
 	"it",
 	"test",
@@ -17,7 +18,7 @@ const knownVitestFunctionNames = [
 	"xtest",
 ] as const;
 
-const knownBlockNamesSet = new Set<string>(knownVitestFunctionNames);
+const knownVitestFunctionNamesSet = new Set<string>(knownVitestFunctionNames);
 
 const knownVitestFunctionModifiersSet = new Set([
 	"concurrent",
@@ -36,10 +37,10 @@ interface VitestCallee {
 	targetNode: AST.AnyNode;
 }
 
-export function parseVitestFunctionCall(node: AST.CallExpression) {
+export function parseVitestTestFunctionCall(node: AST.CallExpression) {
 	const parsedCallee = parseVitestCallee(node.expression);
 
-	if (!parsedCallee || !knownBlockNamesSet.has(parsedCallee.name)) {
+	if (!parsedCallee || !knownVitestFunctionNamesSet.has(parsedCallee.name)) {
 		return undefined;
 	}
 

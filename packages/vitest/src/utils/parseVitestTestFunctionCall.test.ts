@@ -3,14 +3,15 @@ import { describe, expect, it } from "vitest";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
-import { parseVitestFunctionCall } from "./parseVitestFunctionCall.ts";
+import { parseVitestTestFunctionCall } from "./parseVitestTestFunctionCall.ts";
 
-const knownBlockNames = [
+const knownTestFunctionNames = [
 	"afterAll",
 	"afterEach",
 	"beforeAll",
 	"beforeEach",
 	"describe",
+	"fdescribe",
 	"fit",
 	"it",
 	"test",
@@ -19,23 +20,26 @@ const knownBlockNames = [
 	"xtest",
 ];
 
-const unknownBlockNames = ["foo", "expect", "vi", "tests"];
+const unknownTestFunctionNames = ["foo", "expect", "vi", "tests"];
 
-describe(parseVitestFunctionCall, () => {
-	it.each(knownBlockNames)("parses %s called as an identifier", (name) => {
-		expect(
-			parseVitestFunctionCall(parseCallExpression(`${name}(() => {})`)),
-		).toMatchObject({
-			name,
-			segments: [],
-		});
-	});
+describe(parseVitestTestFunctionCall, () => {
+	it.each(knownTestFunctionNames)(
+		"parses %s called as an identifier",
+		(name) => {
+			expect(
+				parseVitestTestFunctionCall(parseCallExpression(`${name}(() => {})`)),
+			).toMatchObject({
+				name,
+				segments: [],
+			});
+		},
+	);
 
-	it.each(unknownBlockNames)(
+	it.each(unknownTestFunctionNames)(
 		"returns undefined for unknown function %s",
 		(name) => {
 			expect(
-				parseVitestFunctionCall(parseCallExpression(`${name}(() => {})`)),
+				parseVitestTestFunctionCall(parseCallExpression(`${name}(() => {})`)),
 			).toBeUndefined();
 		},
 	);
@@ -51,7 +55,9 @@ describe(parseVitestFunctionCall, () => {
 		{ segments: ["todo"], source: "describe.todo(() => {})" },
 		{ segments: ["skip", "only"], source: "test.skip.only(() => {})" },
 	])("parses modifier chain $source", ({ segments, source }) => {
-		expect(parseVitestFunctionCall(parseCallExpression(source))).toMatchObject({
+		expect(
+			parseVitestTestFunctionCall(parseCallExpression(source)),
+		).toMatchObject({
 			segments,
 		});
 	});
@@ -63,7 +69,7 @@ describe(parseVitestFunctionCall, () => {
 		"test.extend({})",
 	])("returns undefined for unknown modifier in %s", (source) => {
 		expect(
-			parseVitestFunctionCall(parseCallExpression(source)),
+			parseVitestTestFunctionCall(parseCallExpression(source)),
 		).toBeUndefined();
 	});
 
@@ -89,7 +95,9 @@ describe(parseVitestFunctionCall, () => {
 			source: "test.extend({})('my test', () => {})",
 		},
 	])("parses call-returning callee $source", ({ name, segments, source }) => {
-		expect(parseVitestFunctionCall(parseCallExpression(source))).toMatchObject({
+		expect(
+			parseVitestTestFunctionCall(parseCallExpression(source)),
+		).toMatchObject({
 			name,
 			segments,
 		});
@@ -107,7 +115,9 @@ describe(parseVitestFunctionCall, () => {
 			source: "describe.skip.each`\na\n${1}\n`('%i', () => {})",
 		},
 	])("parses tagged template callee $source", ({ name, segments, source }) => {
-		expect(parseVitestFunctionCall(parseCallExpression(source))).toMatchObject({
+		expect(
+			parseVitestTestFunctionCall(parseCallExpression(source)),
+		).toMatchObject({
 			name,
 			segments,
 		});
@@ -119,13 +129,13 @@ describe(parseVitestFunctionCall, () => {
 		"test.nonsense.each([1])('%i', () => {})",
 	])("returns undefined for call-returning callee %s", (source) => {
 		expect(
-			parseVitestFunctionCall(parseCallExpression(source)),
+			parseVitestTestFunctionCall(parseCallExpression(source)),
 		).toBeUndefined();
 	});
 
 	it("accepts an unknown final segment on a call-returning callee", () => {
 		expect(
-			parseVitestFunctionCall(
+			parseVitestTestFunctionCall(
 				parseCallExpression("test.nonsense([1])('%i', () => {})"),
 			),
 		).toMatchObject({ name: "test", segments: ["nonsense"] });
@@ -137,7 +147,7 @@ describe(parseVitestFunctionCall, () => {
 		"test().it(() => {})",
 	])("returns undefined when a known name is a property %s", (source) => {
 		expect(
-			parseVitestFunctionCall(parseCallExpression(source)),
+			parseVitestTestFunctionCall(parseCallExpression(source)),
 		).toBeUndefined();
 	});
 
@@ -150,7 +160,7 @@ describe(parseVitestFunctionCall, () => {
 		"reports $targetNode as the target node of $source",
 		({ source, targetNode }) => {
 			expect(
-				parseVitestFunctionCall(
+				parseVitestTestFunctionCall(
 					parseCallExpression(source),
 				)?.targetNode.getText(),
 			).toBe(targetNode);
@@ -160,7 +170,7 @@ describe(parseVitestFunctionCall, () => {
 
 function parseCallExpression(source: string): AST.CallExpression {
 	const sourceFile = ts.createSourceFile(
-		"parseVitestFunctionCall.test.ts",
+		"parseVitestTestFunctionCall.test.ts",
 		`${source};`,
 		ts.ScriptTarget.ESNext,
 		true,
