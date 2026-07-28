@@ -45,6 +45,7 @@ export default defineConfig({
 				ts.rules({
 					// Pending https://github.com/flint-fyi/flint/issues/2165
 					objectShorthand: false,
+					typeImports: true,
 				}),
 			],
 		},
