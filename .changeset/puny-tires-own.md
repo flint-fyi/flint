@@ -3,4 +3,4 @@
 "@flint.fyi/vitest": patch
 ---
 
-Added Rule: Vitest hooksBeforeTestCases
+Added `hooksBeforeTestCases` rule.
