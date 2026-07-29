@@ -1,6 +1,6 @@
 import { CachedFactory } from "cached-factory";
 
-import type { FileChange } from "../types/changes.ts";
+import type { FileChangeset } from "../types/changes.ts";
 import type { FileResults } from "../types/linting.ts";
 import type { FileReport } from "../types/reports.ts";
 import { flatten } from "../utils/arrays.ts";
@@ -10,12 +10,15 @@ import { resolveChange } from "./resolveChange.ts";
 export function resolveChangesByFile(
 	filesResults: Map<string, FileResults>,
 	requestedSuggestions: Set<string>,
-) {
-	const changesByFile = new CachedFactory<string, FileChange[]>(() => []);
+): [filePath: string, fileChangeset: FileChangeset][] {
+	const changesByFile = new CachedFactory<string, FileChangeset>(() => ({
+		patches: [],
+	}));
 
 	function collectReportFix(absoluteFilePath: string, report: FileReport) {
 		if (report.fix) {
-			changesByFile.get(absoluteFilePath).push(...report.fix);
+			const patches = (changesByFile.get(absoluteFilePath).patches ??= []);
+			patches.push(...report.fix);
 		}
 	}
 
@@ -28,8 +31,14 @@ export function resolveChangesByFile(
 			if (requestedSuggestions.has(key)) {
 				const resolved = resolveChange(suggestion, absoluteFilePath);
 
-				for (const change of flatten(resolved)) {
-					changesByFile.get(change.filePath).push(change);
+				for (const change of flatten(resolved.patches)) {
+					const changeset = changesByFile.get(change.filePath);
+					const patches = (changeset.patches ??= []);
+					patches.push(change);
+
+					if (resolved.newPath !== undefined) {
+						changeset.newPath ??= resolved.newPath;
+					}
 				}
 			}
 		}

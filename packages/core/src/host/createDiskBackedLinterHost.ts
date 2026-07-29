@@ -155,6 +155,20 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 	}
 
 	return {
+		async fileType(pathAbsolute) {
+			try {
+				const stat = await fs.promises.stat(pathAbsolute);
+				if (stat.isDirectory()) {
+					return "directory";
+				}
+				if (stat.isFile()) {
+					return "file";
+				}
+			} catch {
+				// Fall through to undefined.
+			}
+			return undefined;
+		},
 		fileTypeSync(pathAbsolute) {
 			try {
 				const stat = fs.statSync(pathAbsolute);
@@ -256,6 +270,9 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 			} catch {
 				return undefined;
 			}
+		},
+		async renameFile(filePathAbsolute, target) {
+			await fs.promises.rename(filePathAbsolute, target);
 		},
 		watchDirectorySync(directoryPathAbsolute, callback, options) {
 			directoryPathAbsolute = normalizePath(directoryPathAbsolute);

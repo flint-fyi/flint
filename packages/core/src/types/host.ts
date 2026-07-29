@@ -1,6 +1,7 @@
 import type { commonlyIgnoredGlobs } from "../host/watcher.ts";
 
 export interface LinterHost {
+	fileType(pathAbsolute: string): Promise<"directory" | "file" | undefined>;
 	fileTypeSync(pathAbsolute: string): "directory" | "file" | undefined;
 	getCurrentDirectory(): string;
 	getFileTouchTime(filePath: string): Promise<number | undefined>;
@@ -22,7 +23,7 @@ export interface LinterHost {
 	renameFile(
 		filePathAbsolute: string,
 		target: string,
-	): Promise<string | undefined>;
+	): Promise<boolean | undefined>;
 	watchDirectorySync(
 		directoryPathAbsolute: string,
 		callback: LinterHostDirectoryWatcher,
