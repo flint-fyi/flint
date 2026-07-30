@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/vitest",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "[Experimental] A Flint plugin for Vitest.",
 	"homepage": "https://flint.fyi/rules/vitest",
 	"repository": {
