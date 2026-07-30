@@ -36,7 +36,9 @@ interface VitestCallee {
 	targetNode: AST.AnyNode;
 }
 
-export function parseVitestFunctionCall(node: AST.CallExpression) {
+export function parseVitestFunctionCall(
+	node: AST.CallExpression,
+): undefined | VitestCallee {
 	const parsedCallee = parseVitestCallee(node.expression);
 
 	if (!parsedCallee || !knownBlockNamesSet.has(parsedCallee.name)) {

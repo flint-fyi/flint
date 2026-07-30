@@ -263,7 +263,12 @@ export const pluginDataByGroup: Record<string, Record<string, PluginData>> = {
 	},
 };
 
-export function getPluginData(pluginId: string) {
+export interface PluginGroupData {
+	group: string;
+	plugin: PluginData;
+}
+
+export function getPluginData(pluginId: string): PluginGroupData {
 	const pluginData = getPluginDataSafe(pluginId);
 
 	if (!pluginData) {
@@ -273,7 +278,9 @@ export function getPluginData(pluginId: string) {
 	return pluginData;
 }
 
-export function getPluginDataSafe(pluginId: string) {
+export function getPluginDataSafe(
+	pluginId: string,
+): PluginGroupData | undefined {
 	for (const group of Object.keys(pluginDataByGroup)) {
 		if (pluginId in pluginDataByGroup[group]) {
 			return { group, plugin: pluginDataByGroup[group][pluginId] };

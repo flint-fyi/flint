@@ -3,7 +3,7 @@ import { SyntaxKind } from "typescript";
 
 import type * as AST from "../types/ast.ts";
 
-export function isNonReferenceIdentifier(identifier: AST.Identifier) {
+export function isNonReferenceIdentifier(identifier: AST.Identifier): boolean {
 	if (
 		isIdentifierDeclaration(identifier) ||
 		isTypeReferenceIdentifier(identifier)
@@ -34,7 +34,7 @@ export function isNonReferenceIdentifier(identifier: AST.Identifier) {
 	return false;
 }
 
-export function isWriteReference(identifier: AST.Identifier) {
+export function isWriteReference(identifier: AST.Identifier): boolean {
 	const { parent } = identifier;
 
 	if (isAssignmentTarget(identifier)) {

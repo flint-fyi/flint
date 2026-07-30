@@ -10,6 +10,11 @@ import { getDisableNextLineRange } from "./getDisableNextLineRange.ts";
 import { isCommentDirectiveType } from "./predicates.ts";
 import { directiveReports } from "./reports/directiveReports.ts";
 
+export interface DirectivesCollectorResult {
+	directives: CommentDirective[];
+	reports: FileReport[];
+}
+
 export class DirectivesCollector {
 	#directives: CommentDirective[] = [];
 	#reports: FileReport[] = [];
@@ -22,7 +27,11 @@ export class DirectivesCollector {
 		this.#statementsStartIndex = firstStatementIndex;
 	}
 
-	add(range: NormalizedReportRangeObject, selection: string, type: string) {
+	add(
+		range: NormalizedReportRangeObject,
+		selection: string,
+		type: string,
+	): void {
 		if (!isCommentDirectiveType(type)) {
 			this.#reports.push(directiveReports.createUnknown(type, range));
 			return;
@@ -63,7 +72,7 @@ export class DirectivesCollector {
 		}
 	}
 
-	collect() {
+	collect(): DirectivesCollectorResult {
 		const deferredReports = this.#collectDeferredNextLineReports();
 		return {
 			directives: this.#directives,

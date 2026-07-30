@@ -7,7 +7,7 @@ export function isFromPackage(
 	declaration: Declaration,
 	packageName: string,
 	program: Program,
-) {
+): boolean {
 	if (isDeclaredInModuleBlock(declaration, packageName)) {
 		return true;
 	}
