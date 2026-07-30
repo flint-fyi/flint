@@ -1,5 +1,20 @@
 # @flint.fyi/package-json
 
+## 0.20.0
+
+### Minor Changes
+
+- [#2795](https://github.com/flint-fyi/flint/pull/2795) [`712d902`](https://github.com/flint-fyi/flint/commit/712d9023e236719fb3ff128bb6c6a9b3ee3ade9c) - Add the `repositoryDirectoryValidity` rule.
+
+- [#3118](https://github.com/flint-fyi/flint/pull/3118) [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20) - Begin bundling all package entry points.
+
+### Patch Changes
+
+- Updated dependencies [[`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20)]:
+  - @flint.fyi/json-language@0.19.0
+  - @flint.fyi/utils@0.15.0
+  - @flint.fyi/core@0.24.0
+
 ## 0.19.2
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # @flint/cli
 
+## 0.22.0
+
+### Minor Changes
+
+- [#3118](https://github.com/flint-fyi/flint/pull/3118) [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20) - Begin bundling all package entry points.
+
+### Patch Changes
+
+- [#3136](https://github.com/flint-fyi/flint/pull/3136) [`db27b14`](https://github.com/flint-fyi/flint/commit/db27b14f41e4f3022d019f43038665729302b5e4) - Fixed issue where flint executions in GitHub were not logging a summary (including formatting issues).
+
+- [#3137](https://github.com/flint-fyi/flint/pull/3137) [`894e5f6`](https://github.com/flint-fyi/flint/commit/894e5f6a556662f3761a3c4054cd89f29e627e16) - Lazy load all presenter factories.
+
+- Updated dependencies [[`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20)]:
+  - @flint.fyi/utils@0.15.0
+  - @flint.fyi/core@0.24.0
+
 ## 0.21.0
 
 ### Minor Changes

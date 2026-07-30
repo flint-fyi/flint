@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/yaml",
-	"version": "0.15.4",
+	"version": "0.16.0",
 	"description": "[Experimental] YAML language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/yaml",
 	"repository": {

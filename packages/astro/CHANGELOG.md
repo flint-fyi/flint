@@ -1,5 +1,21 @@
 # @flint.fyi/plugin-astro
 
+## 0.4.0
+
+### Minor Changes
+
+- [#3118](https://github.com/flint-fyi/flint/pull/3118) [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20) - Begin bundling all package entry points.
+
+### Patch Changes
+
+- Updated dependencies [[`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20), [`5cf1562`](https://github.com/flint-fyi/flint/commit/5cf15621bad3527b694a1a99bd35f464d00d5237)]:
+  - @flint.fyi/typescript-language@0.19.0
+  - @flint.fyi/astro-language@0.1.0
+  - @flint.fyi/volar-language@0.2.0
+  - @flint.fyi/utils@0.15.0
+  - @flint.fyi/core@0.24.0
+  - @flint.fyi/ts@0.22.0
+
 ## 0.3.0
 
 ### Minor Changes

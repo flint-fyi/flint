@@ -1,5 +1,20 @@
 # @flint/ts
 
+## 0.22.0
+
+### Minor Changes
+
+- [#3118](https://github.com/flint-fyi/flint/pull/3118) [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20) - Begin bundling all package entry points.
+
+- [#3138](https://github.com/flint-fyi/flint/pull/3138) [`5cf1562`](https://github.com/flint-fyi/flint/commit/5cf15621bad3527b694a1a99bd35f464d00d5237) - Moved `typeImports` from the `stylistic` config to the `logicalStrict` config.
+
+### Patch Changes
+
+- Updated dependencies [[`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20)]:
+  - @flint.fyi/typescript-language@0.19.0
+  - @flint.fyi/utils@0.15.0
+  - @flint.fyi/core@0.24.0
+
 ## 0.21.0
 
 ### Minor Changes

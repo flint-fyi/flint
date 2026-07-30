@@ -1,5 +1,11 @@
 # @flint/utils
 
+## 0.15.0
+
+### Minor Changes
+
+- [#3118](https://github.com/flint-fyi/flint/pull/3118) [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20) - Begin bundling all package entry points.
+
 ## 0.14.1
 
 ### Patch Changes
