@@ -14,9 +14,7 @@ import { printHeader } from "./printHeader.ts";
 import { printSummary } from "./printSummary.ts";
 
 export const interactiveRendererFactory: RendererFactory = {
-	about: {
-		name: "interactive",
-	},
+	about: { name: "interactive" },
 	initialize(host, presenter) {
 		const onDisposeListeners = createListeners();
 		const onQuitListeners = createListeners();
@@ -30,7 +28,7 @@ export const interactiveRendererFactory: RendererFactory = {
 		function announce() {
 			console.clear();
 
-			for (const line of presenter.header ?? []) {
+			for (const line of presenter.header) {
 				console.log(line);
 			}
 		}
