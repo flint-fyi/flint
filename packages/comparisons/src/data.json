@@ -28251,7 +28251,9 @@
 		"flint": {
 			"name": "typeImports",
 			"plugin": "ts",
-			"status": "implemented"
+			"status": "implemented",
+			"preset": "logical",
+			"strictness": "strict"
 		},
 		"oxlint": [
 			{

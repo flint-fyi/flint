@@ -312,6 +312,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports imports that do not match the configured type import style.",
 		id: "typeImports",
+		presets: ["logicalStrict"],
 	},
 	messages: {
 		avoidImportType: {

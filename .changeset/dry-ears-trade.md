@@ -2,4 +2,4 @@
 "@flint.fyi/ts": minor
 ---
 
-Removed the `typeImports` rule from the `stylistic` config.
+Moved `typeImports` from the `stylistic` config to the `logicalStrict` config.
