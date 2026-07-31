@@ -1,6 +1,9 @@
 import type { FileChange } from "../types/changes.ts";
 
-export function applyFileChangeToText(change: FileChange, text: string) {
+export function applyFileChangeToText(
+	change: FileChange,
+	text: string,
+): string {
 	return (
 		text.slice(0, change.range.begin) +
 		change.text +

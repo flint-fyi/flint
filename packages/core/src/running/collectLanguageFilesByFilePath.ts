@@ -11,7 +11,13 @@ export function collectLanguageFilesByFilePath(
 	cached: Map<string, FileCacheStorage> | undefined,
 	rulesOptionsByFile: Map<AnyRule, Map<string, unknown>>,
 	host: LinterHost,
-) {
+): Map<
+	string,
+	{
+		file: AnyLanguageFile;
+		language: AnyLanguage;
+	}[]
+> {
 	const filePathsByLanguage = new CachedFactory<AnyLanguage, Set<string>>(
 		() => new Set(),
 	);
