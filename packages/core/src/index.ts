@@ -9,8 +9,8 @@ export {
 export { isConfig } from "./configs/isConfig.ts";
 export { validateConfigDefinition } from "./configs/validateConfigDefinition.ts";
 export {
-	DirectivesCollector,
 	type DirectiveCollection,
+	DirectivesCollector,
 } from "./directives/DirectivesCollector.ts";
 export { directiveReports } from "./directives/reports/directiveReports.ts";
 export { globs } from "./globs/index.ts";
