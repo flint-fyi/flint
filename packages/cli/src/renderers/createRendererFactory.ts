@@ -4,12 +4,13 @@ import type { OptionsValues } from "../options.ts";
 import { getPresenterFactory } from "../presenters/getPresenterFactory.ts";
 import { interactiveRendererFactory } from "./interactive/interactiveRendererFactory.ts";
 import { singleRendererFactory } from "./singleRendererFactory.ts";
+import type { Renderer } from "./types.ts";
 
 export async function createRendererFactory(
 	host: LinterHost,
 	configFileName: string,
 	values: OptionsValues,
-) {
+): Promise<() => Renderer> {
 	const presenterFactory = await getPresenterFactory(values);
 	const rendererFactory = values.interactive
 		? interactiveRendererFactory

@@ -6,7 +6,7 @@ export function* presentHeader({
 	configFileName,
 	ignoreCache,
 	runMode,
-}: PresenterInitializeContext) {
+}: PresenterInitializeContext): Generator<string, void, unknown> {
 	const configFileNameText = chalk.cyan(chalk.bold(configFileName));
 	yield chalk.gray(
 		runMode === "single-run"

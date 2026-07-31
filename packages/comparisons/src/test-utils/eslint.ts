@@ -25,8 +25,9 @@ import vuePlugin from "eslint-plugin-vue";
 import ymlPlugin from "eslint-plugin-yml";
 
 import { comparisons } from "../index.ts";
+import type { RuleInfo } from "./RuleInfo.ts";
 
-export function findESLintRulesInCore() {
+export function findESLintRulesInCore(): RuleInfo[] {
 	return comparisons.flatMap(
 		(comparison) =>
 			comparison.eslint?.filter((rule) =>
@@ -35,7 +36,7 @@ export function findESLintRulesInCore() {
 	);
 }
 
-export function findESLintRulesInPlugin(pluginName: string) {
+export function findESLintRulesInPlugin(pluginName: string): RuleInfo[] {
 	return comparisons.flatMap(
 		(comparison) =>
 			comparison.eslint?.filter((rule) =>

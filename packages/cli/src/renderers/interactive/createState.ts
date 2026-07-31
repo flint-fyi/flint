@@ -1,4 +1,6 @@
-export function createState<T>(initial: T) {
+export function createState<T>(
+	initial: T,
+): readonly [() => T, (updated: T) => boolean] {
 	let current = initial;
 
 	return [
