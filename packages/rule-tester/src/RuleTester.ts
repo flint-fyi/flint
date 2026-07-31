@@ -130,7 +130,7 @@ export class RuleTester {
 	describe<OptionsSchema extends AnyOptionalSchema | undefined>(
 		rule: AnyRule<RuleAbout, OptionsSchema>,
 		{ invalid, valid }: TestCases<InferredInputObject<OptionsSchema>>,
-	) {
+	): void {
 		this.#testerOptions.describe(rule.about.id, () => {
 			this.#testerOptions.describe("invalid", () => {
 				for (const testCase of invalid) {

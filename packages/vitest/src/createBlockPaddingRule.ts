@@ -11,7 +11,7 @@ export function createBlockPaddingRule(
 		blockName?: string;
 		ignoreConsecutiveTargetNames?: boolean;
 	},
-) {
+): ReturnType<typeof createStatementPaddingRule> {
 	const normalizedTargetNames: string[] = Array.isArray(targetNames)
 		? targetNames
 		: [targetNames];

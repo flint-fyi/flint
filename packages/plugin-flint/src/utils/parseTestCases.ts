@@ -4,13 +4,21 @@ import {
 	isStaticString,
 	isStringRawNoSubstitution,
 	type AST,
+	type StaticString,
+	type StringRawNoSubstitution,
 } from "@flint.fyi/typescript-language";
 
 import { findProperty } from "./findProperty.ts";
 import { tsAstToLiteral } from "./tsAstToLiteral.ts";
-import type { ParsedTestCaseCodeNode, ParsedTestCaseInvalid } from "./types.ts";
+import type {
+	ParsedTestCase,
+	ParsedTestCaseCodeNode,
+	ParsedTestCaseInvalid,
+} from "./types.ts";
 
-export function parseTestCase(node: AST.Expression) {
+export function parseTestCase(
+	node: AST.Expression,
+): ParsedTestCase | undefined {
 	if (isTestCaseCode(node)) {
 		return {
 			code: getTestCaseCode(node),
@@ -22,12 +30,12 @@ export function parseTestCase(node: AST.Expression) {
 	}
 
 	if (node.kind !== SyntaxKind.ObjectLiteralExpression) {
-		return undefined;
+		return;
 	}
 
 	const code = findProperty(node.properties, "code", isTestCaseCode);
 	if (!code) {
-		return undefined;
+		return;
 	}
 
 	const fileName = findProperty(node.properties, "fileName", isStaticString);
@@ -64,12 +72,12 @@ export function parseTestCaseInvalid(
 	node: AST.Expression,
 ): ParsedTestCaseInvalid | undefined {
 	if (node.kind !== SyntaxKind.ObjectLiteralExpression) {
-		return undefined;
+		return;
 	}
 
 	const code = findProperty(node.properties, "code", isTestCaseCode);
 	if (!code) {
-		return undefined;
+		return;
 	}
 
 	const fileName = findProperty(node.properties, "fileName", isStaticString);
@@ -86,7 +94,7 @@ export function parseTestCaseInvalid(
 	);
 	const snapshot = findProperty(node.properties, "snapshot", isStaticString);
 	if (!snapshot) {
-		return undefined;
+		return;
 	}
 
 	return {
@@ -116,6 +124,8 @@ function getTestCaseCode(node: ParsedTestCaseCodeNode) {
 	return node.text;
 }
 
-function isTestCaseCode(node: AST.Expression) {
+function isTestCaseCode(
+	node: AST.Expression,
+): node is StaticString | StringRawNoSubstitution {
 	return isStaticString(node) || isStringRawNoSubstitution(node);
 }

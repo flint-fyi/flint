@@ -1,11 +1,15 @@
 import type { MemberNode, ObjectNode } from "@humanwhocodes/momoa";
 
+import type { CharacterReportRange } from "@flint.fyi/core";
 import { getNodeRange } from "@flint.fyi/json-language";
 
 export function removeObjectProperty(
 	propertyNode: MemberNode,
 	objectNode: ObjectNode,
-) {
+): {
+	range: CharacterReportRange;
+	text: string;
+} {
 	if (objectNode.members.length === 1) {
 		return {
 			range: getNodeRange(objectNode),
