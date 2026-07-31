@@ -2,7 +2,7 @@ import { SyntaxKind } from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
-export function isComparisonOperator(token: AST.BinaryOperatorToken) {
+export function isComparisonOperator(token: AST.BinaryOperatorToken): boolean {
 	switch (token.kind) {
 		case SyntaxKind.EqualsEqualsEqualsToken:
 		case SyntaxKind.EqualsEqualsToken:
@@ -18,7 +18,7 @@ export function isComparisonOperator(token: AST.BinaryOperatorToken) {
 	}
 }
 
-export function isEqualityOperator(token: AST.BinaryOperatorToken) {
+export function isEqualityOperator(token: AST.BinaryOperatorToken): boolean {
 	switch (token.kind) {
 		case SyntaxKind.EqualsEqualsEqualsToken:
 		case SyntaxKind.EqualsEqualsToken:
@@ -30,7 +30,9 @@ export function isEqualityOperator(token: AST.BinaryOperatorToken) {
 	}
 }
 
-export function isNegatedEqualityOperator(token: AST.BinaryOperatorToken) {
+export function isNegatedEqualityOperator(
+	token: AST.BinaryOperatorToken,
+): boolean {
 	switch (token.kind) {
 		case SyntaxKind.ExclamationEqualsEqualsToken:
 		case SyntaxKind.ExclamationEqualsToken:

@@ -162,7 +162,9 @@ export function createStatementPaddingRule(
 	});
 }
 
-export function getStatementRootName(statement: AST.AnyNode) {
+export function getStatementRootName(
+	statement: AST.AnyNode,
+): string | undefined {
 	const expression = getStatementExpression(statement);
 	if (!expression) {
 		return undefined;

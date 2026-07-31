@@ -1,12 +1,12 @@
 import type * as yamlParser from "yaml-unist-parser";
 
-import { DirectivesCollector } from "@flint.fyi/core";
+import { DirectivesCollector, type DirectiveCollection } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 
 export function parseDirectivesFromYamlFile(
 	root: yamlParser.Root,
 	sourceText: string,
-) {
+): DirectiveCollection {
 	const index = root.children.at(0)?.position.start.offset ?? sourceText.length;
 	const collector = new DirectivesCollector(index);
 

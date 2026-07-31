@@ -456,7 +456,7 @@ export function createVolarBasedLanguage<FileServices extends object>(
 export function reportSourceCode<T extends string>(
 	context: RuleContext<T>,
 	report: RuleReport<T>,
-) {
+): void {
 	context.report({
 		...report,
 		fix: (report.fix && !Array.isArray(report.fix)

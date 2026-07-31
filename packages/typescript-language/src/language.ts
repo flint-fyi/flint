@@ -74,7 +74,7 @@ const languageState: GlobalLanguageState = (globalTyped[stateSymbol] = {
 	volarCreateFile: null,
 });
 
-export function setVolarCreateFile(create: VolarCreateFile) {
+export function setVolarCreateFile(create: VolarCreateFile): void {
 	assert(
 		languageState.volarCreateFile == null,
 		"setVolarCreateFile is expected to be called only once",

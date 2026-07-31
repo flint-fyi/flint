@@ -1,6 +1,9 @@
 export function createRuleTesterTSConfig(
 	defaultCompilerOptions?: Record<string, unknown>,
-) {
+): {
+	"tsconfig.base.json": string;
+	"tsconfig.json": string;
+} {
 	return {
 		"tsconfig.base.json": JSON.stringify(
 			{
