@@ -40,16 +40,15 @@ export function normalizeOutput(stdout: string, cwd: string): string {
  * `GITHUB_ACTIONS` is cleared so the default presenter stays deterministic:
  * otherwise CI would auto-select the `github` presenter and change the output.
  */
-export function runFlint(
+export async function runFlint(
 	cwd: string,
 	args: string[] = [],
 ): Promise<{ exitCode: number | undefined; stdout: string }> {
-	return execa({
+	const { exitCode, stdout } = await execa({
 		cwd,
 		env: { FORCE_COLOR: "1", GITHUB_ACTIONS: undefined },
 		reject: false,
-	})`flint ${args}` as Promise<{
-		exitCode: number | undefined;
-		stdout: string;
-	}>;
+	})`flint ${args}`;
+
+	return { exitCode, stdout };
 }
