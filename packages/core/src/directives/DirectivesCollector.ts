@@ -10,7 +10,7 @@ import { getDisableNextLineRange } from "./getDisableNextLineRange.ts";
 import { isCommentDirectiveType } from "./predicates.ts";
 import { directiveReports } from "./reports/directiveReports.ts";
 
-export interface DirectivesCollectorResult {
+export interface DirectiveCollection {
 	directives: CommentDirective[];
 	reports: FileReport[];
 }
@@ -72,7 +72,7 @@ export class DirectivesCollector {
 		}
 	}
 
-	collect(): DirectivesCollectorResult {
+	collect(): DirectiveCollection {
 		const deferredReports = this.#collectDeferredNextLineReports();
 		return {
 			directives: this.#directives,
