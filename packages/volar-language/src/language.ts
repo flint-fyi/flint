@@ -1,5 +1,5 @@
 import type {
-	Language as VolarLanguage,
+	Language as VolarCoreLanguage,
 	LanguagePlugin as VolarLanguagePlugin,
 	Mapper as VolarMapper,
 	SourceScript as VolarSourceScript,
@@ -81,14 +81,14 @@ export interface VolarBasedLanguageCreateFileContext {
 	sourceScript: VolarSourceScript<string> & {
 		generated: NonNullable<VolarSourceScript<string>["generated"]>;
 	};
-	volarLanguage: VolarLanguage;
+	volarLanguage: VolarCoreLanguage;
 }
 
 type ProxiedTSProgram = Program & {
 	[stateSymbol]?:
 		| undefined
 		| {
-				volarLanguage: VolarLanguage<string>;
+				volarLanguage: VolarCoreLanguage<string>;
 		  };
 };
 
@@ -119,7 +119,7 @@ setTSProgramCreationProxy(
 			} as unknown as typeof createProgram,
 			{
 				apply(_, thisArg, args: unknown[]) {
-					let volarLanguage = null as null | VolarLanguage<string>;
+					let volarLanguage = null as null | VolarCoreLanguage<string>;
 					const createProgramProxy = new Proxy(createProgram, {
 						apply(target, thisArg, [options]: [CreateProgramOptions]) {
 							assert(
@@ -418,12 +418,14 @@ setVolarCreateFile((data, program, sourceFile) => {
 	};
 });
 
-export function createVolarBasedLanguage<FileServices extends object>(
-	initializer: VolarLanguagePluginInitializer<FileServices>,
-): Language<
+export type VolarLanguage<FileServices extends object> = Language<
 	TypeScriptNodesByName,
 	Partial<FileServices> & TypeScriptFileServices
-> {
+>;
+
+export function createVolarBasedLanguage<FileServices extends object>(
+	initializer: VolarLanguagePluginInitializer<FileServices>,
+): VolarLanguage<FileServices> {
 	pluginInitializers.add(initializer);
 	return {
 		...createLanguage<
@@ -505,5 +507,3 @@ function translateRange(
 	}
 	return null;
 }
-
-export type { Language } from "@flint.fyi/core";
