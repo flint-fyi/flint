@@ -75,8 +75,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			return (
 				typeChecker.getSymbolAtLocation(identifier)?.getDeclarations() as
-					| AST.AnyNode[]
-					| undefined
+					AST.AnyNode[] | undefined
 			)?.some(isDeclarationEventEmitter);
 		}
 

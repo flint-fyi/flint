@@ -49,8 +49,7 @@ export interface TestSuggestionForFiles {
 }
 
 export type ValidTestCase<Options extends object | undefined> =
-	| string
-	| ValidTestCaseObject<Options>;
+	string | ValidTestCaseObject<Options>;
 
 export type ValidTestCaseObject<Options extends object | undefined> =
 	TestCase<Options>;

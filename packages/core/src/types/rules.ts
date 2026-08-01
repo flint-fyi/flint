@@ -12,14 +12,12 @@ import type { AnyOptionalSchema, InferredOutputObject } from "./shapes.ts";
 export type AnyRule<
 	About extends RuleAbout = RuleAbout,
 	OptionsSchema extends AnyOptionalSchema | undefined =
-		| AnyOptionalSchema
-		| undefined,
+		AnyOptionalSchema | undefined,
 > = Rule<About, string, OptionsSchema>;
 
 export type AnyRuleDefinition<
 	OptionsSchema extends AnyOptionalSchema | undefined =
-		| AnyOptionalSchema
-		| undefined,
+		AnyOptionalSchema | undefined,
 > = RuleDefinition<RuleAbout, unknown, object, string, OptionsSchema>;
 
 /**

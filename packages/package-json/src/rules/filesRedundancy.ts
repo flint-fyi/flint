@@ -22,10 +22,7 @@ const cachedRegexes = new Map<string, RegExp>();
 const packagePropertyNames = ["bin", "files", "main"];
 
 type FilesRedundancyMessage =
-	| "redundantBin"
-	| "redundantDefault"
-	| "redundantDuplicate"
-	| "redundantMain";
+	"redundantBin" | "redundantDefault" | "redundantDuplicate" | "redundantMain";
 
 function getBinFiles(property: MemberNode | undefined) {
 	if (!property) {
