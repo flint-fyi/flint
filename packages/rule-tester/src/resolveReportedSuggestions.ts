@@ -63,15 +63,21 @@ function resolveReportedSuggestionForFiles(
 						return [
 							filePath,
 							suggestionCasesExpected.map((suggestionCaseExpected) => {
-								const changes = suggestionReported.files[filePath];
+								const fileChanges = suggestionReported.files[filePath];
+
+								const changes = Array.isArray(fileChanges)
+									? fileChanges
+									: fileChanges?.patches;
+
 								return {
 									original: suggestionCaseExpected.original,
-									updated: changes
-										? applyChangesToText(
-												changes,
-												suggestionCaseExpected.original,
-											)
-										: suggestionCaseExpected.original,
+									updated:
+										changes === undefined
+											? suggestionCaseExpected.original
+											: applyChangesToText(
+													changes,
+													suggestionCaseExpected.original,
+												),
 								};
 							}),
 						];

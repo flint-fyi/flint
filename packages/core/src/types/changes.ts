@@ -9,8 +9,16 @@ export interface ChangeBase {
 	id: string;
 }
 
+export interface FileChangeset extends MetaChange {
+	patches?: FileChange[];
+}
+
 export interface ResolvedChange extends FileChange {
 	filePath: string;
+}
+
+export interface ResolvedChangeset extends MetaChange {
+	patches: ResolvedChange[];
 }
 
 /**
@@ -36,13 +44,17 @@ export type Fix = FileChange;
 /**
  * A "suggestion" (potentially unsafe text change) to be made to file(s).
  */
+export interface MetaChange {
+	newPath?: string;
+}
+
 export type Suggestion = SuggestionForFile | SuggestionForFiles;
 
 /**
  * A suggestion that applies to one or more separate files.
  */
 export interface SuggestionForFiles extends ChangeBase {
-	files: Partial<Record<string, FileChange[]>>;
+	files: Record<string, FileChange[] | FileChangeset>;
 }
 
 /**

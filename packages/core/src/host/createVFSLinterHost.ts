@@ -111,6 +111,19 @@ export function createVFSLinterHost(
 		}
 	}
 	const host: VFSLinterHost = {
+		async fileType(pathAbsolute) {
+			const key = pathKey(pathAbsolute, caseSensitiveFS);
+			const keySlash = dirnameKey(pathAbsolute, caseSensitiveFS);
+			for (const fileKey of fileMap.keys()) {
+				if (key === fileKey) {
+					return "file";
+				}
+				if (fileKey.startsWith(keySlash)) {
+					return "directory";
+				}
+			}
+			return await baseHost?.fileType(pathAbsolute);
+		},
 		fileTypeSync(pathAbsolute) {
 			const key = pathKey(pathAbsolute, caseSensitiveFS);
 			const keySlash = dirnameKey(pathAbsolute, caseSensitiveFS);
@@ -228,6 +241,21 @@ export function createVFSLinterHost(
 				return baseHost.readFileSync(filePathAbsolute);
 			}
 			return undefined;
+		},
+		async renameFile(filePathAbsolute, target) {
+			const [content, targetExists] = await Promise.all([
+				host.readFile(filePathAbsolute),
+				host.fileType(target),
+			]);
+
+			if (targetExists) {
+				return false;
+			}
+
+			if (content && !target) {
+				host.vfsDeleteFile(filePathAbsolute);
+				host.vfsUpsertFile(target, content);
+			}
 		},
 		vfsDeleteFile(filePathAbsolute) {
 			const key = pathKey(filePathAbsolute, caseSensitiveFS);

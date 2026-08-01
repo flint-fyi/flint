@@ -2,7 +2,7 @@ import { CachedFactory } from "cached-factory";
 import { debugForFile } from "debug-for-file";
 import omitEmpty from "omit-empty";
 
-import type { CacheStorage, GlobalInvalidation } from "../types/cache.ts";
+import type { GlobalInvalidation } from "../types/cache.ts";
 import type { LinterHost } from "../types/host.ts";
 import type { LintResults } from "../types/linting.ts";
 import { cacheStorageSchema } from "./cacheSchema.ts";
@@ -36,7 +36,7 @@ export async function writeToCache(
 		}
 	}
 
-	const storage: CacheStorage = {
+	const storage: (typeof cacheStorageSchema)["_zod"]["output"] = {
 		configs: {
 			// Fall back to 0 (not the current time) when the host can't report a
 			// touch time: a fabricated "now" would mask later changes, whereas 0

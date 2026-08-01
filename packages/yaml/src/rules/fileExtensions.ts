@@ -1,5 +1,3 @@
-import path from "node:path";
-
 import { yamlLanguage } from "@flint.fyi/yaml-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -24,9 +22,7 @@ export default ruleCreator.createRule(yamlLanguage, {
 		return {
 			visitors: {
 				root: (node, { filePath }) => {
-					const extension = path.extname(filePath);
-
-					if (extension.toLowerCase() !== ".yml") {
+					if (filePath.endsWith(".yml")) {
 						return;
 					}
 
@@ -36,6 +32,16 @@ export default ruleCreator.createRule(yamlLanguage, {
 							begin: node.position.start.offset,
 							end: node.position.start.offset + 1,
 						},
+						suggestions: [
+							{
+								files: {
+									[filePath]: {
+										newPath: filePath.slice(0, filePath.length - 3) + ".yaml",
+									},
+								},
+								id: "useYamlExtension",
+							},
+						],
 					});
 				},
 			},
