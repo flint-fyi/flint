@@ -34,7 +34,7 @@ catalogs:
     execa: 9.6.1
     husky: 9.1.7
     jiti: 2.7.0
-    knip: https://pkg.pr.new/knip@1912
+    knip: 6.31.0
     lint-staged: 17.0.2
     prettier: 3.8.1
     prettier-plugin-astro: 0.14.1
@@ -82,6 +82,9 @@ dedupePeers: true
 disallowWorkspaceCycles: true
 
 engineStrict: true
+
+minimumReleaseAgeExclude:
+  - knip@6.31.0
 
 nodeVersion: 24.15.0
 
