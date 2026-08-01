@@ -9,7 +9,7 @@ interface MarkdownlintModule {
 	default: Rule | Rule[];
 }
 
-export async function findMarkdownlintRules(): Promise<LinterRuleReference[]> {
+export async function findMarkdownlintRules(): Promise<Rule[]> {
 	const markdownlintDirectory = new URL(
 		".",
 		import.meta.resolve("markdownlint"),
