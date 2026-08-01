@@ -519,6 +519,9 @@ importers:
       prettier-plugin-sh:
         specifier: catalog:dev
         version: 0.19.0(prettier@3.8.1)
+      pretty-quick:
+        specifier: ^4.2.2
+        version: 4.2.2(prettier@3.8.1)
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
@@ -6620,6 +6623,13 @@ packages:
     resolution: {integrity: sha512-gjVS5hOP+M3wMm5nmNOucbIrqudzs9v/57bWRHQWLYklXqoXKrVfYW2W9+glfGsqtPgpiz5WwyEEB+ksXIx3gQ==}
     engines: {node: '>=18'}
 
+  pretty-quick@4.2.2:
+    resolution: {integrity: sha512-uAh96tBW1SsD34VhhDmWuEmqbpfYc/B3j++5MC/6b3Cb8Ow7NJsvKFhg0eoGu2xXX+o9RkahkTK6sUdd8E7g5w==}
+    engines: {node: '>=14'}
+    hasBin: true
+    peerDependencies:
+      prettier: ^3.0.0
+
   prismjs@1.30.0:
     resolution: {integrity: sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw==}
     engines: {node: '>=6'}
@@ -7234,6 +7244,9 @@ packages:
   tinyclip@0.1.12:
     resolution: {integrity: sha512-Ae3OVUqifDw0wBriIBS7yVaW44Dp6eSHQcyq4Igc7eN2TJH/2YsicswaW+J/OuMvhpDPOKEgpAZCjkb4hpoyeA==}
     engines: {node: ^16.14.0 || >= 17.3.0}
+
+  tinyexec@0.3.2:
+    resolution: {integrity: sha512-KQQR9yN7R5+OSwaK0XQoj22pwHoTlgYqmUscPYoknOoWCWfj/5/ABTMRi69FrKU5ffPVh5QcFikpWJI/P1ocHA==}
 
   tinyexec@1.2.4:
     resolution: {integrity: sha512-SHf/r48b7vOrjve9PxJo3MN5v5yuyjHvdUcrQffT3WXMUfnGmHDVbC4k3sHJaJTgZCwpUplIaAo5ANtMyp3YHg==}
@@ -13392,6 +13405,17 @@ snapshots:
     dependencies:
       parse-ms: 4.0.0
 
+  pretty-quick@4.2.2(prettier@3.8.1):
+    dependencies:
+      '@pkgr/core': 0.2.9
+      ignore: 7.0.5
+      mri: 1.2.0
+      picocolors: 1.1.1
+      picomatch: 4.0.5
+      prettier: 3.8.1
+      tinyexec: 0.3.2
+      tslib: 2.8.1
+
   prismjs@1.30.0: {}
 
   proc-log@6.1.0: {}
@@ -14227,6 +14251,8 @@ snapshots:
 
   tinyclip@0.1.12: {}
 
+  tinyexec@0.3.2: {}
+
   tinyexec@1.2.4: {}
 
   tinyglobby@0.2.17:
@@ -14290,8 +14316,7 @@ snapshots:
       - oxc-resolver
       - vue-tsc
 
-  tslib@2.8.1:
-    optional: true
+  tslib@2.8.1: {}
 
   twoslash-eslint@0.3.6(eslint@10.8.0):
     dependencies:
