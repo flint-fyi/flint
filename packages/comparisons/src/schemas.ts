@@ -70,6 +70,8 @@ const linterRuleReferenceSchema = z
 
 export type Comparison = z.infer<typeof comparisonSchema>;
 
+export type LinterRuleReference = z.infer<typeof linterRuleReferenceSchema>;
+
 const comparisonSchema = z
 	.object({
 		biome: z.array(linterRuleReferenceSchema).optional(),
