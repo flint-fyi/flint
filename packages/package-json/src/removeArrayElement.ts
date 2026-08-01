@@ -1,15 +1,13 @@
 import type { ArrayNode, ElementNode } from "@humanwhocodes/momoa";
 
-import type { CharacterReportRange } from "@flint.fyi/core";
 import { getNodeRange } from "@flint.fyi/json-language";
+
+import type { MutationResult } from "./MutationResult.ts";
 
 export function removeArrayElement(
 	elementNode: ElementNode,
 	arrayNode: ArrayNode,
-): {
-	range: CharacterReportRange;
-	text: string;
-} {
+): MutationResult {
 	if (arrayNode.elements.length === 1) {
 		return {
 			range: getNodeRange(arrayNode),

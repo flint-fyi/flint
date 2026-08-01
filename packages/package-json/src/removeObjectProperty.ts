@@ -1,15 +1,13 @@
 import type { MemberNode, ObjectNode } from "@humanwhocodes/momoa";
 
-import type { CharacterReportRange } from "@flint.fyi/core";
 import { getNodeRange } from "@flint.fyi/json-language";
+
+import type { MutationResult } from "./MutationResult.ts";
 
 export function removeObjectProperty(
 	propertyNode: MemberNode,
 	objectNode: ObjectNode,
-): {
-	range: CharacterReportRange;
-	text: string;
-} {
+): MutationResult {
 	if (objectNode.members.length === 1) {
 		return {
 			range: getNodeRange(objectNode),
