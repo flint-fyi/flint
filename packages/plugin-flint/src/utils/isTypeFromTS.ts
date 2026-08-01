@@ -6,7 +6,7 @@ export function isTypeFromTS(
 	node: AST.Expression,
 	typeChecker: Checker,
 	typeName: string,
-) {
+): boolean {
 	const type = typeChecker.getTypeAtLocation(node);
 	const visited = new Set<Type>();
 

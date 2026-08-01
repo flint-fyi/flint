@@ -1,5 +1,6 @@
 import ts, { SyntaxKind } from "typescript";
 
+import type { Rule } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
 	typescriptLanguage,
@@ -14,6 +15,12 @@ export interface StatementPaddingMatch {
 	category: string;
 }
 
+export type StatementPaddingRule = Rule<
+	VitestRuleAbout,
+	"missingPadding",
+	undefined
+>;
+
 export function createStatementPaddingRule(
 	about: VitestRuleAbout,
 	getStatementMatch: (
@@ -23,7 +30,7 @@ export function createStatementPaddingRule(
 		previousMatch: StatementPaddingMatch | undefined,
 		nextMatch: StatementPaddingMatch | undefined,
 	) => boolean,
-) {
+): StatementPaddingRule {
 	return ruleCreator.createRule(typescriptLanguage, {
 		about,
 		messages: {

@@ -8,18 +8,22 @@ import { isTruthy } from "@flint.fyi/utils";
 
 import type { TestCaseNormalized } from "./normalizeTestCase.ts";
 import { isTestSuggestionForFiles } from "./predicates.ts";
-import type { InvalidTestCase, TestSuggestionFileCase } from "./types.ts";
+import type {
+	InvalidTestCase,
+	TestSuggestion,
+	TestSuggestionFileCase,
+} from "./types.ts";
 
 export function resolveReportedSuggestions(
 	reports: NormalizedReport[],
 	testCaseNormalized: InvalidTestCase & TestCaseNormalized,
-) {
+): TestSuggestion[] | undefined {
 	const suggestionsReported = reports
 		.flatMap((report) => report.suggestions)
 		.filter(isTruthy);
 
 	if (!suggestionsReported.length) {
-		return undefined;
+		return;
 	}
 
 	return suggestionsReported.map((suggestionReported) =>

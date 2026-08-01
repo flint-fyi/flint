@@ -1,7 +1,9 @@
-import type * as ts from "typescript";
-
 import type { InvalidTestCase, TestCase } from "@flint.fyi/rule-tester";
-import type { AST } from "@flint.fyi/typescript-language";
+import type {
+	AST,
+	StaticString,
+	StringRawNoSubstitution,
+} from "@flint.fyi/typescript-language";
 
 export interface ParsedTestCase extends TestCase {
 	nodes: ParsedTestCaseNodes;
@@ -19,7 +21,7 @@ export interface ParsedTestCaseInvalid extends InvalidTestCase {
 }
 
 export interface ParsedTestCaseNodes {
-	case: ts.Node;
+	case: AST.ObjectLiteralExpression | StaticString | StringRawNoSubstitution;
 	code: ParsedTestCaseCodeNode;
 	fileName?: ParsedTestCaseStaticStringNode | undefined;
 	files?: AST.ObjectLiteralExpression | undefined;
