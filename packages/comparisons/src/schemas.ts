@@ -70,6 +70,7 @@ const linterRuleReferenceSchema = z
 
 export type Comparison = z.infer<typeof comparisonSchema>;
 
+/** @internal */
 export type LinterRuleReference = z.infer<typeof linterRuleReferenceSchema>;
 
 const comparisonSchema = z
