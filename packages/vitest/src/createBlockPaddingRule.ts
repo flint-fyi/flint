@@ -1,6 +1,7 @@
 import {
 	createStatementPaddingRule,
 	getStatementRootName,
+	type StatementPaddingRule,
 } from "./createStatementPaddingRule.ts";
 import type { VitestRuleAbout } from "./ruleCreator.ts";
 
@@ -11,7 +12,7 @@ export function createBlockPaddingRule(
 		blockName?: string;
 		ignoreConsecutiveTargetNames?: boolean;
 	},
-): ReturnType<typeof createStatementPaddingRule> {
+): StatementPaddingRule {
 	const normalizedTargetNames: string[] = Array.isArray(targetNames)
 		? targetNames
 		: [targetNames];

@@ -15,6 +15,12 @@ export interface StatementPaddingMatch {
 	category: string;
 }
 
+export type StatementPaddingRule = Rule<
+	VitestRuleAbout,
+	"missingPadding",
+	undefined
+>;
+
 export function createStatementPaddingRule(
 	about: VitestRuleAbout,
 	getStatementMatch: (
@@ -24,7 +30,7 @@ export function createStatementPaddingRule(
 		previousMatch: StatementPaddingMatch | undefined,
 		nextMatch: StatementPaddingMatch | undefined,
 	) => boolean,
-): Rule<VitestRuleAbout, "missingPadding", undefined> {
+): StatementPaddingRule {
 	return ruleCreator.createRule(typescriptLanguage, {
 		about,
 		messages: {
