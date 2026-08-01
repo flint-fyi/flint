@@ -83,9 +83,6 @@ disallowWorkspaceCycles: true
 
 engineStrict: true
 
-minimumReleaseAgeExclude:
-  - knip@6.31.0
-
 nodeVersion: 24.15.0
 
 overrides:
