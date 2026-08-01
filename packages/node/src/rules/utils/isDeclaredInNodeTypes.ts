@@ -9,7 +9,11 @@ export function isDeclaredInNodeTypes(
 		.getSymbol()
 		?.getDeclarations();
 
-	return !!declarations?.some((declaration) =>
-		declaration.getSourceFile().fileName.includes("node_modules/@types/node/"),
+	return (
+		declarations?.some((declaration) =>
+			declaration
+				.getSourceFile()
+				.fileName.includes("node_modules/@types/node/"),
+		) ?? false
 	);
 }
