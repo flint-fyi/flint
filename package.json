@@ -42,6 +42,7 @@
 		"@flint.fyi/ts-patch": "workspace:^",
 		"@flint.fyi/vitest": "workspace:^",
 		"@ianvs/prettier-plugin-sort-imports": "4.7.1",
+		"@prettier/plugin-oxc": "^0.2.2",
 		"@types/node": "catalog:dev",
 		"@vitest/coverage-v8": "catalog:dev",
 		"@vitest/eslint-plugin": "catalog:dev",
