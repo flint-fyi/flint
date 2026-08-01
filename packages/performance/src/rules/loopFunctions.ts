@@ -151,8 +151,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						keyword = "function";
 					} else if (node.kind === SyntaxKind.ArrowFunction) {
 						const firstToken = node.getFirstToken(sourceFile) as
-							| AST.AnyNode
-							| undefined;
+							AST.AnyNode | undefined;
 						keyword =
 							firstToken?.kind === SyntaxKind.Identifier
 								? firstToken.text

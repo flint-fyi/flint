@@ -73,7 +73,9 @@ export type PluginRulesFactory<Rules extends AnyRule[]> = (
 ) => PluginConfiguredRules<Rules>;
 
 type PluginRulesOptions<Rules extends AnyRule[]> = {
-	[Rule in Rules[number] as Rule["about"]["id"]]?: Rule["options"] extends undefined
+	[
+		Rule in Rules[number] as Rule["about"]["id"]
+	]?: Rule["options"] extends undefined
 		? boolean
 		: boolean | InferredInputObject<Rule["options"]>;
 };

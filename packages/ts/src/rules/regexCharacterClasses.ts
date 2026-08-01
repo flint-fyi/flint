@@ -344,12 +344,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					visitRegExpAST(regexpAst, {
 						onAssertionEnter(assertion) {
-							if (
-								!(
-									assertion.kind === "lookahead" ||
-									assertion.kind === "lookbehind"
-								)
-							) {
+							if (!(
+								assertion.kind === "lookahead" ||
+								assertion.kind === "lookbehind"
+							)) {
 								return;
 							}
 
