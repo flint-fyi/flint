@@ -3,11 +3,10 @@ import chalk from "chalk";
 import type { FileResults } from "@flint.fyi/core";
 
 import { pluralize } from "../pluralize.ts";
-import type { RenderGenerator } from "../types.ts";
 
 export function* presentLanguageReports(
 	filesResults: Map<string, FileResults>,
-): RenderGenerator {
+): Generator<string, void, unknown> {
 	const languageReports = Array.from(filesResults.values()).flatMap(
 		(fileResults) => fileResults.languageReports,
 	);
