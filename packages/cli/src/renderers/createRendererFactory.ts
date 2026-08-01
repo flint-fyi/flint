@@ -6,11 +6,13 @@ import { interactiveRendererFactory } from "./interactive/interactiveRendererFac
 import { singleRendererFactory } from "./singleRendererFactory.ts";
 import type { Renderer } from "./types.ts";
 
+export type RendererFactory = () => Renderer;
+
 export async function createRendererFactory(
 	host: LinterHost,
 	configFileName: string,
 	values: OptionsValues,
-): Promise<() => Renderer> {
+): Promise<RendererFactory> {
 	const presenterFactory = await getPresenterFactory(values);
 	const rendererFactory = values.interactive
 		? interactiveRendererFactory
