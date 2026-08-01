@@ -39,11 +39,11 @@ import {
 	validateWorkspaces,
 } from "package-json-validator";
 
-import type { AnyRule } from "@flint.fyi/core";
-
 import {
 	createDirectPropertyValidityRule,
 	type PropertyValidator,
+	type ValidityRule,
+	type ValidityRuleName,
 } from "./createDirectPropertyValidityRule.ts";
 
 interface LocalValidPropertyOptions {
@@ -116,8 +116,6 @@ const properties = defineProperties([
 
 type ValidityProperty = (typeof properties)[number][0];
 
-type ValidityRuleName = `${ValidityProperty}Validity`;
-
 export const directPropertyValidityRules = Object.fromEntries(
 	properties.map(([propertyName, propertySettings]) => {
 		const [propertyNameAliases, propertyValidator] =
@@ -132,4 +130,6 @@ export const directPropertyValidityRules = Object.fromEntries(
 		);
 		return [id, rule] as const;
 	}),
-) as Record<ValidityRuleName, AnyRule>;
+) as {
+	[PropertyName in ValidityProperty as ValidityRuleName<PropertyName>]: ValidityRule<PropertyName>;
+};
