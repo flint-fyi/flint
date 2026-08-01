@@ -34,7 +34,7 @@ export function findMessagesProperty(
 
 export function* forEachMessageString(
 	messagesProperty: AST.PropertyAssignment,
-): Generator<MessageStringVisitorContext> {
+): Generator<MessageStringVisitorContext, undefined, undefined> {
 	if (
 		messagesProperty.initializer.kind !== SyntaxKind.ObjectLiteralExpression
 	) {

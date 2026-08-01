@@ -1,12 +1,12 @@
 import chalk from "chalk";
 
-import type { PresenterInitializeContext } from "../types.ts";
+import type { PresenterInitializeContext, RenderGenerator } from "../types.ts";
 
 export function* presentHeader({
 	configFileName,
 	ignoreCache,
 	runMode,
-}: PresenterInitializeContext): Generator<string, void, unknown> {
+}: PresenterInitializeContext): RenderGenerator {
 	const configFileNameText = chalk.cyan(chalk.bold(configFileName));
 	yield chalk.gray(
 		runMode === "single-run"
