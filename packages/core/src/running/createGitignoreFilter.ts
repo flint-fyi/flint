@@ -4,9 +4,9 @@ import ignore from "ignore";
 
 import type { LinterHost } from "../types/host.ts";
 
-export function createGitignoreFilter(
-	host: LinterHost,
-): (filePathAbsolute: string) => boolean {
+export type GitignoreFilter = (filePathAbsolute: string) => boolean;
+
+export function createGitignoreFilter(host: LinterHost): GitignoreFilter {
 	const cwd = host.getCurrentDirectory();
 	const matchers = new Map<string, ignore.Ignore | undefined>();
 
