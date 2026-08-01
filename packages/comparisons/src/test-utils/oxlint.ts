@@ -1,5 +1,5 @@
 import { comparisons } from "../index.ts";
-import type { RuleInfo } from "./RuleInfo.ts";
+import type { LinterRuleReference } from "../schemas.ts";
 
 interface OxlintSchema {
 	definitions?: {
@@ -9,7 +9,7 @@ interface OxlintSchema {
 	};
 }
 
-export function findOxlintRulesInFlint(): RuleInfo[] {
+export function findOxlintRulesInFlint(): LinterRuleReference[] {
 	return comparisons.flatMap((comparison) => comparison.oxlint ?? []);
 }
 

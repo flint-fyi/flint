@@ -3,13 +3,13 @@ import fs from "node:fs/promises";
 import type { Rule } from "markdownlint";
 
 import { comparisons } from "../index.ts";
-import type { RuleInfo } from "./RuleInfo.ts";
+import type { LinterRuleReference } from "../schemas.ts";
 
 interface MarkdownlintModule {
 	default: Rule | Rule[];
 }
 
-export async function findMarkdownlintRules(): Promise<Rule[]> {
+export async function findMarkdownlintRules(): Promise<LinterRuleReference[]> {
 	const markdownlintDirectory = new URL(
 		".",
 		import.meta.resolve("markdownlint"),
@@ -31,6 +31,6 @@ export async function findMarkdownlintRules(): Promise<Rule[]> {
 	).flat();
 }
 
-export function findMarkdownlintRulesInFlint(): RuleInfo[] {
+export function findMarkdownlintRulesInFlint(): LinterRuleReference[] {
 	return comparisons.flatMap((comparison) => comparison.markdownlint ?? []);
 }

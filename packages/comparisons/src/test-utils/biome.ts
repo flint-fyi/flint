@@ -1,7 +1,7 @@
 import schema from "@biomejs/biome/configuration_schema.json" with { type: "json" };
 
 import { comparisons } from "../index.ts";
-import type { RuleInfo } from "./RuleInfo.ts";
+import type { LinterRuleReference } from "../schemas.ts";
 
 type Defs = typeof schema.$defs;
 
@@ -11,7 +11,7 @@ type DefsWithProperties = {
 		: never]: Defs[K];
 };
 
-export function findBiomeRulesInFlint(): RuleInfo[] {
+export function findBiomeRulesInFlint(): LinterRuleReference[] {
 	return comparisons.flatMap((comparison) => comparison.biome ?? []);
 }
 
