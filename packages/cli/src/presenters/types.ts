@@ -45,5 +45,5 @@ export interface PresenterVirtualFile {
 }
 
 export type RenderGenerator =
-	| AsyncGenerator<string, undefined, undefined>
-	| Generator<string, undefined, undefined>;
+	| AsyncGenerator<string, void, unknown>
+	| Generator<string, void, unknown>;

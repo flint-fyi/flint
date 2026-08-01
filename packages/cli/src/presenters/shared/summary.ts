@@ -1,7 +1,7 @@
 import chalk from "chalk";
 
 import { pluralize } from "../pluralize.ts";
-import type { PresenterSummarizeContext, RenderGenerator } from "../types.ts";
+import type { PresenterSummarizeContext } from "../types.ts";
 
 export interface SummaryCounts {
 	all: number;
@@ -12,7 +12,7 @@ export interface SummaryCounts {
 export function* presentSummary(
 	counts: SummaryCounts,
 	{ duration, formattingResults, lintResults }: PresenterSummarizeContext,
-): RenderGenerator {
+): Generator<string, void, unknown> {
 	if (lintResults.changed?.size) {
 		yield chalk.green(
 			[

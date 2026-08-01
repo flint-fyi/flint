@@ -3,7 +3,6 @@ import chalk from "chalk";
 import { formatReport, type FileReport } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 
-import type { RenderGenerator } from "../types.ts";
 import { ColorCodes, indenter } from "./constants.ts";
 import { formatCode } from "./formatCode.ts";
 import { formatSuggestion } from "./formatSuggestion.ts";
@@ -13,7 +12,7 @@ export async function* createDetailedReport(
 	report: FileReport,
 	sourceFileText: string,
 	width: number,
-): RenderGenerator {
+): AsyncGenerator<string, void, unknown> {
 	yield indenter;
 	yield wrapIfNeeded(
 		chalk.hex(ColorCodes.primaryMessage),
