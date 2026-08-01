@@ -5,7 +5,7 @@ export function collectFilesValues(
 	filesValues: FilesValue[],
 	exclude: Set<string>,
 	include: Set<string>,
-) {
+): void {
 	for (const files of filesValues) {
 		switch (typeof files) {
 			case "function":

@@ -9,7 +9,7 @@ export type LinterName =
 	| "oxlint"
 	| "stylelint";
 
-export function getComparisonId(pluginId: string, ruleId: string) {
+export function getComparisonId(pluginId: string, ruleId: string): string {
 	return [pluginId, ruleId].join("/");
 }
 

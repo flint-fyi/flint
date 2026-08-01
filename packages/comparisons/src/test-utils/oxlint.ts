@@ -1,4 +1,5 @@
 import { comparisons } from "../index.ts";
+import type { LinterRuleReference } from "../schemas.ts";
 
 interface OxlintSchema {
 	definitions?: {
@@ -8,11 +9,11 @@ interface OxlintSchema {
 	};
 }
 
-export function findOxlintRulesInFlint() {
+export function findOxlintRulesInFlint(): LinterRuleReference[] {
 	return comparisons.flatMap((comparison) => comparison.oxlint ?? []);
 }
 
-export async function getOxlintLintRules() {
+export async function getOxlintLintRules(): Promise<string[]> {
 	const schema = (await import(
 		new URL(
 			"configuration_schema.json",
@@ -30,7 +31,7 @@ export async function getOxlintLintRules() {
 	return Object.keys(properties).sort();
 }
 
-export function getOxlintRuleConfigName(ruleName: string) {
+export function getOxlintRuleConfigName(ruleName: string): string {
 	return ruleName.startsWith("eslint/")
 		? ruleName.slice("eslint/".length)
 		: ruleName;

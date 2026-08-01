@@ -1,7 +1,7 @@
 import { nullThrows } from "@flint.fyi/utils";
 
 import type { AnyLanguageFile } from "../types/languages.ts";
-import type { RuleReport } from "../types/reports.ts";
+import type { FileReport, RuleReport } from "../types/reports.ts";
 import type { AnyRule } from "../types/rules.ts";
 import { getColumnAndLineOfPosition } from "../utils/getColumnAndLineOfPosition.ts";
 
@@ -12,7 +12,7 @@ export function processRuleReport(
 	currentFile: AnyLanguageFile,
 	rule: AnyRule,
 	ruleReport: RuleReport,
-) {
+): FileReport | null {
 	let range = ruleReport.range;
 	let fix =
 		ruleReport.fix && !Array.isArray(ruleReport.fix)

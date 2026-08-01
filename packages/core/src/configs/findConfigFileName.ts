@@ -12,7 +12,9 @@ export const configFileNameCandidates = [
 	"flint.config.js",
 ];
 
-export async function findConfigFileName(host: LinterHost) {
+export async function findConfigFileName(
+	host: LinterHost,
+): Promise<string | undefined> {
 	const currentDirectoryContents = await host.readDirectory(
 		host.getCurrentDirectory(),
 	);

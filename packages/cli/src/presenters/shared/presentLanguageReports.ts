@@ -6,7 +6,7 @@ import { pluralize } from "../pluralize.ts";
 
 export function* presentLanguageReports(
 	filesResults: Map<string, FileResults>,
-) {
+): Generator<string, void, unknown> {
 	const languageReports = Array.from(filesResults.values()).flatMap(
 		(fileResults) => fileResults.languageReports,
 	);

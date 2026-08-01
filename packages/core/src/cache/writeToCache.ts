@@ -15,7 +15,7 @@ export async function writeToCache(
 	configFileName: string,
 	lintResults: LintResults,
 	cacheLocation: string | undefined,
-) {
+): Promise<void> {
 	const fileDependents = new CachedFactory(() => new Set<string>());
 	const timestamp = Date.now();
 	const globalInvalidations: GlobalInvalidation[] = [];
