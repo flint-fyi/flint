@@ -1,0 +1,116 @@
+---
+description: "Reports statements that cannot be reached during execution."
+title: "unreachableStatements"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unreachableStatements" />
+
+Abrupt control flow from `return`, `throw`, `break`, and `continue` can make later statements impossible to execute.
+This rule also follows syntactically infinite loops, exhaustive branches, switch dispatch and fallthrough, labels, and pending control flow through `finally` blocks.
+It does not assume that calls return `never` or that named functions terminate execution.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+function getValue() {
+	return 1;
+	console.log("unreachable");
+}
+```
+
+```ts
+function chooseValue(condition: boolean) {
+	if (condition) {
+		return 1;
+	} else {
+		return 2;
+	}
+	console.log("unreachable");
+}
+```
+
+```ts
+while (true) {
+	processQueue();
+}
+console.log("unreachable");
+```
+
+```ts
+function finish() {
+	try {
+		return;
+	} finally {
+		throw new Error("failed cleanup");
+	}
+	console.log("unreachable");
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+function maybeFinish(condition: boolean) {
+	if (condition) {
+		return;
+	}
+	console.log("still reachable");
+}
+```
+
+```ts
+while (hasWork()) {
+	processQueue();
+}
+console.log("queue finished");
+```
+
+```ts
+while (true) {
+	if (isComplete()) {
+		break;
+	}
+}
+console.log("complete");
+```
+
+```ts
+function initialize() {
+	return helper;
+	function helper() {
+		return pending;
+	}
+	var pending: string | undefined;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+Do not use this rule when generated code intentionally includes unreachable statements, or when another control-flow analysis already reports them and duplicate diagnostics are undesirable.
+
+## Further Reading
+
+- [MDN: Control flow and error handling](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling)
+- [MDN: return](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/return)
+- [MDN: switch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch)
+- [MDN: try...catch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unreachableStatements" />
