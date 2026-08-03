@@ -29267,7 +29267,8 @@
 		"flint": {
 			"name": "unnecessaryTypeParameters",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
