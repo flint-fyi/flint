@@ -1,6 +1,6 @@
-import { linterNames, type LinterName } from "@flint.fyi/comparisons";
+import { linterNames, type LinterName } from "@flint.fyi/rule-data";
 
-import { getComparisonByFlintId } from "./comparisonsByFlintId";
+import { getRuleDataByFlintId } from "./getRuleDataByFlintId";
 import { RuleEquivalentLinks } from "./RuleEquivalentLinks";
 
 export interface RuleEquivalentsProps {
@@ -9,16 +9,16 @@ export interface RuleEquivalentsProps {
 }
 
 export function RuleEquivalents({ pluginId, ruleId }: RuleEquivalentsProps) {
-	const comparison = getComparisonByFlintId(pluginId, ruleId);
+	const ruleDetails = getRuleDataByFlintId(pluginId, ruleId);
 
 	return (
 		<ul>
 			{(Object.entries(linterNames) as [LinterName, string][]).map(
 				([linter, linterName]) =>
-					comparison[linter] && (
+					ruleDetails[linter] && (
 						<li key={linter}>
 							{linterName}:{" "}
-							<RuleEquivalentLinks comparison={comparison} linter={linter} />
+							<RuleEquivalentLinks ruleDetails={ruleDetails} linter={linter} />
 						</li>
 					),
 			)}

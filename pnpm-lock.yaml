@@ -695,163 +695,6 @@ importers:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
 
-  packages/comparisons:
-    dependencies:
-      '@flint.fyi/astro':
-        specifier: workspace:^
-        version: link:../astro
-      '@flint.fyi/browser':
-        specifier: workspace:^
-        version: link:../browser
-      '@flint.fyi/core':
-        specifier: workspace:^
-        version: link:../core
-      '@flint.fyi/css':
-        specifier: workspace:^
-        version: link:../css
-      '@flint.fyi/json':
-        specifier: workspace:^
-        version: link:../json
-      '@flint.fyi/jsx':
-        specifier: workspace:^
-        version: link:../jsx
-      '@flint.fyi/md':
-        specifier: workspace:^
-        version: link:../md
-      '@flint.fyi/node':
-        specifier: workspace:^
-        version: link:../node
-      '@flint.fyi/package-json':
-        specifier: workspace:^
-        version: link:../package-json
-      '@flint.fyi/performance':
-        specifier: workspace:^
-        version: link:../performance
-      '@flint.fyi/plugin-flint':
-        specifier: workspace:^
-        version: link:../plugin-flint
-      '@flint.fyi/spelling':
-        specifier: workspace:^
-        version: link:../spelling
-      '@flint.fyi/ts':
-        specifier: workspace:^
-        version: link:../ts
-      '@flint.fyi/vitest':
-        specifier: workspace:^
-        version: link:../vitest
-      '@flint.fyi/yaml':
-        specifier: workspace:^
-        version: link:../yaml
-      zod:
-        specifier: ^4.3.6
-        version: 4.4.3
-    devDependencies:
-      '@biomejs/biome':
-        specifier: 2.4.16
-        version: 2.4.16
-      '@eslint-community/eslint-plugin-eslint-comments':
-        specifier: catalog:dev
-        version: 4.7.0(eslint@10.8.0)
-      '@eslint/json':
-        specifier: 2.0.0
-        version: 2.0.0
-      '@eslint/markdown':
-        specifier: catalog:dev
-        version: 8.0.0
-      '@flint.fyi/build':
-        specifier: workspace:^
-        version: link:../build
-      '@next/eslint-plugin-next':
-        specifier: 16.2.6
-        version: 16.2.6
-      '@nuxt/eslint-plugin':
-        specifier: 1.16.0
-        version: 1.16.0(eslint@10.8.0)(typescript@6.0.3)
-      '@types/eslint-plugin-jsx-a11y':
-        specifier: 6.10.1
-        version: 6.10.1(jiti@2.7.0)
-      '@types/eslint-plugin-promise':
-        specifier: 7.3.0
-        version: 7.3.0
-      '@typescript-eslint/eslint-plugin':
-        specifier: catalog:dev
-        version: 8.64.0(@typescript-eslint/parser@8.64.0)(eslint@10.8.0)(typescript@6.0.3)
-      '@vitest/eslint-plugin':
-        specifier: catalog:dev
-        version: 1.6.1(eslint@10.8.0)(typescript@6.0.3)(vitest@4.1.0)
-      eslint:
-        specifier: catalog:dev
-        version: 10.8.0(jiti@2.7.0)
-      eslint-plugin-astro:
-        specifier: 1.7.0
-        version: 1.7.0(eslint@10.8.0)
-      eslint-plugin-eslint-plugin:
-        specifier: 7.3.3
-        version: 7.3.3(eslint@10.8.0)
-      eslint-plugin-import:
-        specifier: 2.32.0
-        version: 2.32.0(@typescript-eslint/parser@8.64.0)(eslint@10.8.0)
-      eslint-plugin-jsdoc:
-        specifier: catalog:dev
-        version: 63.0.2(eslint@10.8.0)
-      eslint-plugin-jsonc:
-        specifier: catalog:dev
-        version: 3.3.0(@eslint/json@2.0.0)(eslint@10.8.0)
-      eslint-plugin-jsx-a11y:
-        specifier: 6.10.2
-        version: 6.10.2(eslint@10.8.0)
-      eslint-plugin-n:
-        specifier: catalog:dev
-        version: 18.2.1(eslint@10.8.0)(typescript@6.0.3)
-      eslint-plugin-package-json:
-        specifier: catalog:dev
-        version: 1.6.0(@eslint/json@2.0.0)(@types/estree@1.0.9)(eslint@10.8.0)
-      eslint-plugin-perfectionist:
-        specifier: catalog:dev
-        version: 5.10.0(eslint@10.8.0)(typescript@6.0.3)
-      eslint-plugin-promise:
-        specifier: 7.3.0
-        version: 7.3.0(eslint@10.8.0)
-      eslint-plugin-react:
-        specifier: 7.37.5
-        version: 7.37.5(eslint@10.8.0)
-      eslint-plugin-react-hooks:
-        specifier: 7.1.1
-        version: 7.1.1(eslint@10.8.0)
-      eslint-plugin-regexp:
-        specifier: catalog:dev
-        version: 3.1.0(eslint@10.8.0)
-      eslint-plugin-solid:
-        specifier: 0.14.5
-        version: 0.14.5(eslint@10.8.0)(typescript@6.0.3)
-      eslint-plugin-svelte:
-        specifier: 3.17.1
-        version: 3.17.1(eslint@10.8.0)(svelte@5.56.2)
-      eslint-plugin-unicorn:
-        specifier: 64.0.0
-        version: 64.0.0(eslint@10.8.0)
-      eslint-plugin-vue:
-        specifier: 10.9.1
-        version: 10.9.1(@typescript-eslint/parser@8.64.0)(eslint@10.8.0)(vue-eslint-parser@10.4.1)
-      eslint-plugin-yml:
-        specifier: catalog:dev
-        version: 3.4.0(eslint@10.8.0)
-      markdownlint:
-        specifier: 0.41.0
-        version: 0.41.0
-      oxlint:
-        specifier: 1.69.0
-        version: 1.69.0
-      tsdown:
-        specifier: catalog:dev
-        version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
-      vitest:
-        specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
-      vue-eslint-parser:
-        specifier: 10.4.1
-        version: 10.4.1(eslint@10.8.0)
-
   packages/core:
     dependencies:
       '@altano/repository-tools':
@@ -1361,6 +1204,163 @@ importers:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
 
+  packages/rule-data:
+    dependencies:
+      '@flint.fyi/astro':
+        specifier: workspace:^
+        version: link:../astro
+      '@flint.fyi/browser':
+        specifier: workspace:^
+        version: link:../browser
+      '@flint.fyi/core':
+        specifier: workspace:^
+        version: link:../core
+      '@flint.fyi/css':
+        specifier: workspace:^
+        version: link:../css
+      '@flint.fyi/json':
+        specifier: workspace:^
+        version: link:../json
+      '@flint.fyi/jsx':
+        specifier: workspace:^
+        version: link:../jsx
+      '@flint.fyi/md':
+        specifier: workspace:^
+        version: link:../md
+      '@flint.fyi/node':
+        specifier: workspace:^
+        version: link:../node
+      '@flint.fyi/package-json':
+        specifier: workspace:^
+        version: link:../package-json
+      '@flint.fyi/performance':
+        specifier: workspace:^
+        version: link:../performance
+      '@flint.fyi/plugin-flint':
+        specifier: workspace:^
+        version: link:../plugin-flint
+      '@flint.fyi/spelling':
+        specifier: workspace:^
+        version: link:../spelling
+      '@flint.fyi/ts':
+        specifier: workspace:^
+        version: link:../ts
+      '@flint.fyi/vitest':
+        specifier: workspace:^
+        version: link:../vitest
+      '@flint.fyi/yaml':
+        specifier: workspace:^
+        version: link:../yaml
+      zod:
+        specifier: ^4.3.6
+        version: 4.4.3
+    devDependencies:
+      '@biomejs/biome':
+        specifier: 2.4.16
+        version: 2.4.16
+      '@eslint-community/eslint-plugin-eslint-comments':
+        specifier: catalog:dev
+        version: 4.7.0(eslint@10.8.0)
+      '@eslint/json':
+        specifier: 2.0.0
+        version: 2.0.0
+      '@eslint/markdown':
+        specifier: catalog:dev
+        version: 8.0.0
+      '@flint.fyi/build':
+        specifier: workspace:^
+        version: link:../build
+      '@next/eslint-plugin-next':
+        specifier: 16.2.6
+        version: 16.2.6
+      '@nuxt/eslint-plugin':
+        specifier: 1.16.0
+        version: 1.16.0(eslint@10.8.0)(typescript@6.0.3)
+      '@types/eslint-plugin-jsx-a11y':
+        specifier: 6.10.1
+        version: 6.10.1(jiti@2.7.0)
+      '@types/eslint-plugin-promise':
+        specifier: 7.3.0
+        version: 7.3.0
+      '@typescript-eslint/eslint-plugin':
+        specifier: catalog:dev
+        version: 8.64.0(@typescript-eslint/parser@8.64.0)(eslint@10.8.0)(typescript@6.0.3)
+      '@vitest/eslint-plugin':
+        specifier: catalog:dev
+        version: 1.6.1(eslint@10.8.0)(typescript@6.0.3)(vitest@4.1.0)
+      eslint:
+        specifier: catalog:dev
+        version: 10.8.0(jiti@2.7.0)
+      eslint-plugin-astro:
+        specifier: 1.7.0
+        version: 1.7.0(eslint@10.8.0)
+      eslint-plugin-eslint-plugin:
+        specifier: 7.3.3
+        version: 7.3.3(eslint@10.8.0)
+      eslint-plugin-import:
+        specifier: 2.32.0
+        version: 2.32.0(@typescript-eslint/parser@8.64.0)(eslint@10.8.0)
+      eslint-plugin-jsdoc:
+        specifier: catalog:dev
+        version: 63.0.2(eslint@10.8.0)
+      eslint-plugin-jsonc:
+        specifier: catalog:dev
+        version: 3.3.0(@eslint/json@2.0.0)(eslint@10.8.0)
+      eslint-plugin-jsx-a11y:
+        specifier: 6.10.2
+        version: 6.10.2(eslint@10.8.0)
+      eslint-plugin-n:
+        specifier: catalog:dev
+        version: 18.2.1(eslint@10.8.0)(typescript@6.0.3)
+      eslint-plugin-package-json:
+        specifier: catalog:dev
+        version: 1.6.0(@eslint/json@2.0.0)(@types/estree@1.0.9)(eslint@10.8.0)
+      eslint-plugin-perfectionist:
+        specifier: catalog:dev
+        version: 5.10.0(eslint@10.8.0)(typescript@6.0.3)
+      eslint-plugin-promise:
+        specifier: 7.3.0
+        version: 7.3.0(eslint@10.8.0)
+      eslint-plugin-react:
+        specifier: 7.37.5
+        version: 7.37.5(eslint@10.8.0)
+      eslint-plugin-react-hooks:
+        specifier: 7.1.1
+        version: 7.1.1(eslint@10.8.0)
+      eslint-plugin-regexp:
+        specifier: catalog:dev
+        version: 3.1.0(eslint@10.8.0)
+      eslint-plugin-solid:
+        specifier: 0.14.5
+        version: 0.14.5(eslint@10.8.0)(typescript@6.0.3)
+      eslint-plugin-svelte:
+        specifier: 3.17.1
+        version: 3.17.1(eslint@10.8.0)(svelte@5.56.2)
+      eslint-plugin-unicorn:
+        specifier: 64.0.0
+        version: 64.0.0(eslint@10.8.0)
+      eslint-plugin-vue:
+        specifier: 10.9.1
+        version: 10.9.1(@typescript-eslint/parser@8.64.0)(eslint@10.8.0)(vue-eslint-parser@10.4.1)
+      eslint-plugin-yml:
+        specifier: catalog:dev
+        version: 3.4.0(eslint@10.8.0)
+      markdownlint:
+        specifier: 0.41.0
+        version: 0.41.0
+      oxlint:
+        specifier: 1.69.0
+        version: 1.69.0
+      tsdown:
+        specifier: catalog:dev
+        version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
+      vitest:
+        specifier: catalog:dev
+        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+      vue-eslint-parser:
+        specifier: 10.4.1
+        version: 10.4.1(eslint@10.8.0)
+
   packages/rule-tester:
     dependencies:
       '@flint.fyi/core':
@@ -1388,9 +1388,9 @@ importers:
       '@astrojs/starlight':
         specifier: catalog:site
         version: 0.41.6(@astrojs/markdown-remark@7.2.2)(astro@7.1.6)(typescript@6.0.3)
-      '@flint.fyi/comparisons':
+      '@flint.fyi/rule-data':
         specifier: workspace:^
-        version: link:../comparisons
+        version: link:../rule-data
       '@types/react':
         specifier: catalog:site
         version: 19.2.18
