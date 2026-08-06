@@ -21724,6 +21724,12 @@
 				"url": "https://github.com/import-js/eslint-plugin-import/blob/HEAD/docs/rules/no-cycle.md"
 			}
 		],
+		"flint": {
+			"name": "importCycles",
+			"plugin": "ts",
+			"preset": "stylistic",
+			"status": "implemented"
+		},
 		"oxlint": [
 			{
 				"name": "import/no-cycle",
