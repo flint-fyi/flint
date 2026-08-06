@@ -68,7 +68,8 @@
 		"tsdown": "catalog:dev",
 		"typescript": "catalog:dev",
 		"typescript-eslint": "catalog:dev",
-		"vitest": "catalog:dev"
+		"vitest": "catalog:dev",
+		"vitest-ansi-serializer": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=24.0.0"
