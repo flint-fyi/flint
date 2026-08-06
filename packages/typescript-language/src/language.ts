@@ -28,6 +28,7 @@ import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
 
 export interface TypeScriptFileServices {
+	filePath: string;
 	program: ts.Program;
 	sourceFile: AST.SourceFile;
 	typeChecker: Checker;
@@ -126,6 +127,7 @@ export const typescriptLanguage = createLanguage<
 					about: data,
 					language: typescriptLanguage,
 					services: {
+						filePath: data.filePath,
 						program,
 						sourceFile,
 						typeChecker: program.getTypeChecker(),
