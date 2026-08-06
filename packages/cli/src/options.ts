@@ -1,6 +1,20 @@
-import type { parseArgs, ParseArgsOptionsConfig } from "node:util";
+import type { ParseArgsOptionsConfig } from "node:util";
 
-export const options = {
+export interface OptionsValues {
+	"cache-ignore"?: boolean;
+	"cache-location"?: string;
+	fix?: boolean;
+	"fix-suggestions"?: string[];
+	help?: boolean;
+	interactive?: boolean;
+	presenter?: string;
+	"skip-formatting"?: boolean;
+	"skip-language-reports"?: boolean;
+	version?: boolean;
+	watch?: boolean;
+}
+
+export const options: ParseArgsOptionsConfig = {
 	"cache-ignore": {
 		type: "boolean",
 	},
@@ -35,8 +49,4 @@ export const options = {
 	watch: {
 		type: "boolean",
 	},
-} satisfies ParseArgsOptionsConfig;
-
-export type OptionsValues = ReturnType<
-	typeof parseArgs<{ options: typeof options }>
->["values"];
+};
