@@ -1,8 +1,9 @@
 import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
-import rule, { resolveModuleSourceFiles } from "./importCycles.ts";
+import rule from "./importCycles.ts";
 import { ruleTester } from "./ruleTester.ts";
+import { resolveModuleSourceFiles } from "./utils/resolveModuleSourceFiles.ts";
 
 describe(resolveModuleSourceFiles, () => {
 	it("follows aliased module symbols and filters their declarations", () => {

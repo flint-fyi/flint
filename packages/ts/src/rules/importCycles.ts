@@ -10,6 +10,7 @@ import {
 import { normalizePath, nullThrows, pathKey } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { resolveModuleSourceFiles } from "./utils/resolveModuleSourceFiles.ts";
 
 interface Edge {
 	range: { begin: number; end: number };
@@ -21,21 +22,6 @@ interface ProgramGraph {
 	displayPaths: Map<string, string>;
 	edges: Edge[];
 	edgesBySource: Map<string, Edge[]>;
-}
-
-export function resolveModuleSourceFiles(
-	typeChecker: Pick<ts.TypeChecker, "getAliasedSymbol" | "getSymbolAtLocation">,
-	literal: ts.Expression,
-	eligible: ReadonlySet<ts.SourceFile>,
-): ts.SourceFile[] | undefined {
-	let symbol = typeChecker.getSymbolAtLocation(literal);
-	while (symbol && symbol.flags & ts.SymbolFlags.Alias) {
-		symbol = typeChecker.getAliasedSymbol(symbol);
-	}
-	return symbol?.declarations?.filter(
-		(declaration): declaration is ts.SourceFile =>
-			ts.isSourceFile(declaration) && eligible.has(declaration),
-	);
 }
 
 function canonicalizeRoute(route: string[]) {
