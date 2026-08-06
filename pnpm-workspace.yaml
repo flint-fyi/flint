@@ -18,7 +18,7 @@ catalogs:
     "@typescript-eslint/eslint-plugin": 8.64.0
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
-    "@types/node": 24.13.1
+    "@types/node": 26.1.2
     "@types/omit-empty": 1.0.4
     "@vitest/coverage-v8": 4.1.0
     "@vitest/eslint-plugin": 1.6.1
@@ -83,7 +83,7 @@ disallowWorkspaceCycles: true
 
 engineStrict: true
 
-nodeVersion: 24.15.0
+nodeVersion: 26.7.0
 
 overrides:
   read-package-up: 12.0.0
