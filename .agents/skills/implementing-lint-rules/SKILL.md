@@ -12,7 +12,7 @@ Patterns and practices for implementing lint rules in Flint.
 Prefer targeted report ranges when possible.
 Example: if an issue is with specific characters in a literal, don't report the whole node; report the smallest range that includes those characters.
 
-Set the plugin, such as `"logical"` or `"javascript"`, that they correspond to in the comparisons data.
+Set the plugin, such as `"logical"` or `"javascript"`, that they correspond to in the rule data.
 
 If two node visitor functions have roughly the same body text, try to extract to a helper function.
 
