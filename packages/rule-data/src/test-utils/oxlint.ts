@@ -1,4 +1,4 @@
-import { comparisons } from "../index.ts";
+import { ruleData } from "../index.ts";
 import type { LinterRuleReference } from "../schemas.ts";
 
 interface OxlintSchema {
@@ -10,7 +10,7 @@ interface OxlintSchema {
 }
 
 export function findOxlintRulesInFlint(): LinterRuleReference[] {
-	return comparisons.flatMap((comparison) => comparison.oxlint ?? []);
+	return ruleData.flatMap((ruleDetails) => ruleDetails.oxlint ?? []);
 }
 
 export async function getOxlintLintRules(): Promise<string[]> {

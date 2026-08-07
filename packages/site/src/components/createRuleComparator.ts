@@ -1,6 +1,6 @@
-import type { Comparison } from "@flint.fyi/comparisons";
+import type { RuleDetails } from "@flint.fyi/rule-data";
 
-export type RuleComparator = (a: Comparison, b: Comparison) => number;
+export type RuleComparator = (a: RuleDetails, b: RuleDetails) => number;
 
 export type RuleSortBy = "name" | "preset";
 

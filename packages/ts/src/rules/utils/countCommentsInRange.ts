@@ -5,7 +5,7 @@ import type { CharacterReportRange } from "@flint.fyi/core";
 export function countCommentsInRange(
 	sourceText: string,
 	{ begin, end }: CharacterReportRange,
-) {
+): number {
 	const scanner = ts.createScanner(
 		ts.ScriptTarget.Latest,
 		false,

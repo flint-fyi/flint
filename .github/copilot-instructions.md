@@ -28,7 +28,7 @@ If your changes to built files (`.json`, `.ts`, other TSConfig includes) are onl
 As long as you built once before the changes it's fine.
 
 Don't include changes to unrelated files or areas of files.
-Example: if changing `packages/comparisons/src/data.json` to add `implemented: true`, don't include unrelated newlines and spacing unless required by the formatter.
+Example: if changing `packages/rule-data/src/data.json` to add `implemented: true`, don't include unrelated newlines and spacing unless required by the formatter.
 
 ### PR Description
 

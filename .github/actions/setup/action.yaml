@@ -1,0 +1,33 @@
+name: Setup
+
+description: Sets up the repo for a typical CI job
+
+inputs:
+  install-flags:
+    description: Flags to pass to `pnpm install`
+    default: --frozen-lockfile
+    required: false
+  node-version:
+    description: The Node.js version to use
+    required: false
+    default: 26.7.0
+  skip-checkout:
+    description: Skip the checkout step if the repo is already checked out
+    default: false
+    required: false
+
+runs:
+  steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      if: ${{ inputs.skip-checkout == 'false' }}
+    - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      with:
+        cache: true
+    - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+      with:
+        node-version: ${{ inputs.node-version }}
+    - run: pnpm install ${{ inputs.install-flags }}
+      shell: bash
+      env:
+        HUSKY: 0
+  using: composite
