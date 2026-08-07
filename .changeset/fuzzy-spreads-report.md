@@ -1,5 +1,5 @@
 ---
-"@flint.fyi/comparisons": patch
+"@flint.fyi/rule-data": patch
 "@flint.fyi/ts": minor
 ---
 

@@ -68,12 +68,12 @@ const linterRuleReferenceSchema = z
 	})
 	.strict();
 
-export type Comparison = z.infer<typeof comparisonSchema>;
+export type RuleDetails = z.infer<typeof ruleDetailsSchema>;
 
 /** @internal */
 export type LinterRuleReference = z.infer<typeof linterRuleReferenceSchema>;
 
-const comparisonSchema = z
+const ruleDetailsSchema = z
 	.object({
 		biome: z.array(linterRuleReferenceSchema).optional(),
 		deno: z.array(linterRuleReferenceSchema).optional(),
@@ -86,4 +86,4 @@ const comparisonSchema = z
 	})
 	.strict();
 
-export const comparisonsDataSchema = z.array(comparisonSchema);
+export const ruleDataSchema = z.array(ruleDetailsSchema);
