@@ -63,7 +63,7 @@ jobs:
           - macos-latest
           - ubuntu-latest
           - windows-latest
-        node-version: [24, 25, 26]
+        node-version: [26.1.0, 26]
     steps:
       - uses: $/.github/actions/setup
         with:
@@ -81,7 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [24, 25, 26]
+        node-version: [26.1.0, 26]
     steps:
       - uses: $/.github/actions/setup
         with:
@@ -114,15 +114,15 @@ jobs:
       - name: Run Unit Tests
         run: pnpm run test --project='!e2e' --coverage
       - name: Report Code Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5
         if: ${{ !cancelled() && (matrix.os == 'macos-latest') }}
         with:
           fail_ci_if_error: true
           use_oidc: true
 
-  check_comps_sort:
-    name: Ensure comparisons data remains sorted
+  check_rule_data_sort:
+    name: Ensure rule data remains sorted
     runs-on: ubuntu-latest
     steps:
       - uses: $/.github/actions/setup
-      - run: pnpm run --filter=comparisons sort-data --check
+      - run: pnpm run --filter=rule-data sort-data --check

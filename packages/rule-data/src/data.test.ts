@@ -1,7 +1,7 @@
 import { builtinRules } from "eslint/use-at-your-own-risk";
 import { describe, expect, it } from "vitest";
 
-import { comparisons, getComparisonId } from "./index.ts";
+import { getFlintRuleId, ruleData } from "./index.ts";
 import {
 	findBiomeRulesInFlint,
 	getBiomeLintRules,
@@ -48,10 +48,10 @@ describe("data.json", () => {
 		const seenIds = new Set<string>();
 		const duplicates: string[] = [];
 
-		for (const comparison of comparisons) {
-			const id = getComparisonId(
-				comparison.flint.plugin,
-				comparison.flint.name,
+		for (const ruleDetails of ruleData) {
+			const id = getFlintRuleId(
+				ruleDetails.flint.plugin,
+				ruleDetails.flint.name,
 			);
 
 			if (seenIds.has(id)) {
