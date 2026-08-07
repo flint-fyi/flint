@@ -23,10 +23,6 @@ export default {
 			ignoreDependencies: ["tsdown!"],
 			project: ["src/**/*.ts!"],
 		},
-		"packages/comparisons": {
-			entry: ["scripts/*.ts"],
-			project: ["src/**/*.ts!", "!src/test-utils/*.ts!"],
-		},
 		"packages/css": {
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
 		},
@@ -50,6 +46,10 @@ export default {
 		},
 		"packages/plugin-flint": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
+		},
+		"packages/rule-data": {
+			entry: ["scripts/*.ts"],
+			project: ["src/**/*.ts!", "!src/test-utils/*.ts!"],
 		},
 		"packages/site": {
 			ignoreDependencies: [

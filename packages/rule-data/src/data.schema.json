@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"title": "Flint Comparisons Data",
+	"title": "Flint Rule Data",
 	"description": "Maps linting rules across tools (Flint, ESLint, Biome, Oxlint, Deno, markdownlint, Stylelint) for comparison.",
 	"type": "array",
 	"items": {

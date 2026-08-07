@@ -18,12 +18,12 @@ catalogs:
     "@typescript-eslint/eslint-plugin": 8.64.0
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
-    "@types/node": 24.13.1
+    "@types/node": 26.1.2
     "@types/omit-empty": 1.0.4
     "@vitest/coverage-v8": 4.1.0
     "@vitest/eslint-plugin": 1.6.1
     console-fail-test: 0.6.1
-    eslint: 10.7.0
+    eslint: 10.8.0
     eslint-plugin-jsdoc: 63.0.2
     eslint-plugin-jsonc: 3.3.0
     eslint-plugin-n: 18.2.1
@@ -50,28 +50,28 @@ catalogs:
     zod: 4.4.1
 
   site:
-    "@astrojs/check": 0.9.9
-    "@astrojs/markdown-remark": 7.2.1
-    "@astrojs/react": 6.0.1
-    "@astrojs/starlight": 0.41.3
-    "@expressive-code/core": 0.44.0
+    "@astrojs/check": 0.9.10
+    "@astrojs/markdown-remark": 7.2.2
+    "@astrojs/react": 6.0.2
+    "@astrojs/starlight": 0.41.6
+    "@expressive-code/core": 0.44.1
     "@konami-emoji-blast/astro": 0.3.0
     "@types/markdown-it": 14.1.2
-    "@types/react": 19.2.14
-    "@types/react-dom": 19.2.3
-    astro: 7.0.6
+    "@types/react": 19.2.18
+    "@types/react-dom": 19.2.4
+    astro: 7.1.6
     astro-og-canvas: 0.13.0
     canvaskit-wasm: 0.41.1
     clsx: 2.1.1
-    expressive-code: 0.44.0
+    expressive-code: 0.44.1
     expressive-code-twoslash: 0.6.1
     konami-emoji-blast: 0.7.0
     markdown-it: 14.3.0
-    react: 19.2.4
-    react-dom: 19.2.4
+    react: 19.2.8
+    react-dom: 19.2.8
     remark-add-twoslash: 0.0.1
     remark-custom-heading-id: 2.0.0
-    sharp: 0.35.2
+    sharp: 0.35.3
     starlight-blog: 0.28.0
     starlight-links-validator: 0.25.2
     starlight-package-managers: 0.12.0
@@ -83,7 +83,7 @@ disallowWorkspaceCycles: true
 
 engineStrict: true
 
-nodeVersion: 24.15.0
+nodeVersion: 26.7.0
 
 overrides:
   read-package-up: 12.0.0
