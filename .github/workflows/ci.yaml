@@ -120,9 +120,9 @@ jobs:
           fail_ci_if_error: true
           use_oidc: true
 
-  check_comps_sort:
-    name: Ensure comparisons data remains sorted
+  check_rule_data_sort:
+    name: Ensure rule data remains sorted
     runs-on: ubuntu-latest
     steps:
       - uses: $/.github/actions/setup
-      - run: pnpm run --filter=comparisons sort-data --check
+      - run: pnpm run --filter=rule-data sort-data --check
