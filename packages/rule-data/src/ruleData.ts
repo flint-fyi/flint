@@ -1,5 +1,5 @@
 import data from "./data.json" with { type: "json" };
-import { comparisonsDataSchema } from "./schemas.ts";
+import { ruleDataSchema } from "./schemas.ts";
 
 export type LinterName =
 	| "biome"
@@ -9,7 +9,7 @@ export type LinterName =
 	| "oxlint"
 	| "stylelint";
 
-export function getComparisonId(pluginId: string, ruleId: string): string {
+export function getFlintRuleId(pluginId: string, ruleId: string): string {
 	return [pluginId, ruleId].join("/");
 }
 
@@ -22,6 +22,6 @@ export const linterNames = {
 	stylelint: "Stylelint",
 } as const satisfies Record<LinterName, string>;
 
-const comparisons = comparisonsDataSchema.parse(data);
+const ruleData = ruleDataSchema.parse(data);
 
-export { comparisons };
+export { ruleData };

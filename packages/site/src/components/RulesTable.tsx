@@ -2,11 +2,11 @@ import { getPluginDataSafe } from "~/data/pluginData";
 import clsx from "clsx";
 
 import {
-	comparisons,
 	getRuleForPluginSafe,
-	type Comparison,
+	ruleData,
 	type FlintRuleReference,
-} from "@flint.fyi/comparisons";
+	type RuleDetails,
+} from "@flint.fyi/rule-data";
 
 import { createRuleComparator } from "./createRuleComparator";
 import { InlineMarkdown } from "./InlineMarkdown";
@@ -79,15 +79,15 @@ function renderFlintRuleDescription(flint: FlintRuleReference) {
 	return description ? <InlineMarkdown markdown={description} /> : null;
 }
 
-function renderImplemented(comparisons: Comparison[]) {
-	const count = comparisons.filter(
-		(comparison) => comparison.flint.status === "implemented",
+function renderImplemented(ruleData: RuleDetails[]) {
+	const count = ruleData.filter(
+		(ruleDetails) => ruleDetails.flint.status === "implemented",
 	).length;
 
-	return count === comparisons.length ? null : (
+	return count === ruleData.length ? null : (
 		<>
-			Implemented: {count} of {comparisons.length} (
-			{Math.trunc((count / comparisons.length) * 1000) / 10}%)
+			Implemented: {count} of {ruleData.length} (
+			{Math.trunc((count / ruleData.length) * 1000) / 10}%)
 		</>
 	);
 }
@@ -100,13 +100,13 @@ export function RulesTable({
 }: RulesTableProps) {
 	const comparator = createRuleComparator(sortBy);
 
-	const values = comparisons
-		.filter((comparison) => {
-			if ((comparison.flint.status === "skipped") === implementing) {
+	const values = ruleData
+		.filter((ruleDetails) => {
+			if ((ruleDetails.flint.status === "skipped") === implementing) {
 				return false;
 			}
 
-			if (plugin && comparison.flint.plugin !== plugin) {
+			if (plugin && ruleDetails.flint.plugin !== plugin) {
 				return false;
 			}
 
@@ -135,22 +135,22 @@ export function RulesTable({
 					<th>{implementing ? "Preset" : "Notes"}</th>
 				</thead>
 				<tbody>
-					{values.map((comparison) => (
-						<tr key={comparison.flint.name}>
+					{values.map((ruleDetails) => (
+						<tr key={ruleDetails.flint.name}>
 							<td
 								className={clsx(
 									styles.ruleNameCell,
-									comparison.flint.status === "implemented" &&
+									ruleDetails.flint.status === "implemented" &&
 										styles.implementingCell,
 								)}
 							>
-								<code>{renderFlintName(comparison.flint)}</code>
-								<small>{renderFlintRuleDescription(comparison.flint)}</small>
+								<code>{renderFlintName(ruleDetails.flint)}</code>
+								<small>{renderFlintRuleDescription(ruleDetails.flint)}</small>
 							</td>
-							{!plugin && renderFlintPlugin(comparison.flint)}
+							{!plugin && renderFlintPlugin(ruleDetails.flint)}
 							{implementing
-								? renderFlintPreset(comparison.flint)
-								: renderFlintNotes(comparison.notes)}
+								? renderFlintPreset(ruleDetails.flint)
+								: renderFlintNotes(ruleDetails.notes)}
 						</tr>
 					))}
 				</tbody>
