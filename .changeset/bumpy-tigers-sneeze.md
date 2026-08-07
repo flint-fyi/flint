@@ -11,7 +11,7 @@
 "@flint.fyi/package-json": minor
 "@flint.fyi/plugin-flint": minor
 "@flint.fyi/vue-language": minor
-"@flint.fyi/comparisons": minor
+"@flint.fyi/rule-data": minor
 "@flint.fyi/performance": minor
 "@flint.fyi/rule-tester": minor
 "@flint.fyi/spelling": minor
