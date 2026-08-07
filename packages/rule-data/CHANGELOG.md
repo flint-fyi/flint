@@ -1,4 +1,4 @@
-# @flint.fyi/comparisons
+# @flint.fyi/rule-data
 
 ## 0.4.0
 

@@ -10,7 +10,7 @@
 		"CHANGELOG.md",
 		"lib",
 		"node_modules",
-		"packages/comparisons/src/data.json",
+		"packages/rule-data/src/data.json",
 		"packages/site/dist",
 		"pnpm-lock.yaml"
 	],
