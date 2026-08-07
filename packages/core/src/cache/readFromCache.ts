@@ -111,7 +111,6 @@ export async function readFromCache(
 						dependency,
 					);
 					markAsUncached(filePath);
-					continue;
 				}
 			}
 		}
