@@ -28810,7 +28810,8 @@
 		"flint": {
 			"name": "unnecessaryContinues",
 			"plugin": "ts",
-			"preset": "logical"
+			"preset": "logical",
+			"status": "implemented"
 		}
 	},
 	{
