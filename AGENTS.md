@@ -18,7 +18,7 @@ Example: don't restate things that are either implied by the type system or appa
 
 In large lists such as `plugins.ts` `rules`, keep things alphabetical.
 
-In JSON files such as the comparisons data.json, even if they're not linted to stay alphabetical, keep them alphabetical (excluding `package.json` files).
+In JSON files such as the `rule-data` data.json, even if they're not linted to stay alphabetical, keep them alphabetical (excluding `package.json` files).
 
 When a variable is only used once, prefer to inline it unless it includes multiple logical operands
 

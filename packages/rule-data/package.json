@@ -1,12 +1,12 @@
 {
-	"name": "@flint.fyi/comparisons",
+	"name": "@flint.fyi/rule-data",
 	"version": "0.4.0",
-	"description": "Comparisons of common lint rules across Flint and other web linters.",
+	"description": "Data for all of Flint's rules and mappings between Flint and other web linters.",
 	"homepage": "https://flint.fyi",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flint-fyi/flint.git",
-		"directory": "packages/comparisons"
+		"directory": "packages/rule-data"
 	},
 	"license": "MIT",
 	"author": {
@@ -23,7 +23,7 @@
 	],
 	"scripts": {
 		"sort-data": "node scripts/sort-data.ts",
-		"test": "vitest --project comparisons"
+		"test": "vitest --project rule-data"
 	},
 	"dependencies": {
 		"@flint.fyi/astro": "workspace:^",
