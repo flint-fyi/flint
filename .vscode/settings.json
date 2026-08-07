@@ -38,8 +38,8 @@
 	"js/ts.tsdk.path": "node_modules/typescript/lib",
 	"json.schemas": [
 		{
-			"fileMatch": ["packages/comparisons/src/data.json"],
-			"url": "./packages/comparisons/src/data.schema.json"
+			"fileMatch": ["packages/rule-data/src/data.json"],
+			"url": "./packages/rule-data/src/data.schema.json"
 		}
 	]
 }
