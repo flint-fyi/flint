@@ -28711,7 +28711,8 @@
 		"flint": {
 			"name": "unnecessaryComputedKeys",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
