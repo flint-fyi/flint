@@ -3,7 +3,7 @@ import type { LinterHost } from "../types/host.ts";
 /**
  * Flint config file names in preference order.
  */
-export const configFileNameCandidates = [
+export const configFileNameCandidates: string[] = [
 	"flint.config.ts",
 	"flint.config.mts",
 	"flint.config.cts",

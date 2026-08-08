@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports -- TODO: Use Zod Mini in core package
 import z from "zod/v4";
 
+import type { CacheStorage } from "../types/cache.ts";
 import { jsonCodec } from "../utils/codecs.ts";
 
 const characterReportRangeSchema = z.object({
@@ -86,10 +87,15 @@ const globalInvalidations = z.object({
 	touchTime: z.number(),
 });
 
-export const cacheStorageSchema = jsonCodec(
+const cacheStorageSchemaObject: z.ZodType<CacheStorage, CacheStorage> =
 	z.object({
 		configs: z.record(z.string(), z.number()),
 		files: z.record(z.string(), fileCacheStorageSchema),
 		globalInvalidations: z.array(globalInvalidations),
-	}),
-);
+	}) as z.ZodType<CacheStorage, CacheStorage>;
+
+type CacheStorageSchema<T extends z.core.$ZodType> = z.ZodCodec<z.ZodString, T>;
+
+export const cacheStorageSchema: CacheStorageSchema<
+	typeof cacheStorageSchemaObject
+> = jsonCodec(cacheStorageSchemaObject);
