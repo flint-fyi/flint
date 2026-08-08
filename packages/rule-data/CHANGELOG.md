@@ -1,5 +1,32 @@
 # @flint.fyi/rule-data
 
+## 0.5.0
+
+### Minor Changes
+
+- [#3168](https://github.com/flint-fyi/flint/pull/3168) [`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34) - Drop support for node versions <26.1.0.
+
+- [#3155](https://github.com/flint-fyi/flint/pull/3155) [`bd567bd`](https://github.com/flint-fyi/flint/commit/bd567bdb9283c5a531333ff56d59e13999d46455) - Renamed the `comparisons` package to `rule-data`.
+
+### Patch Changes
+
+- Updated dependencies [[`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34)]:
+  - @flint.fyi/package-json@0.21.0
+  - @flint.fyi/plugin-flint@0.8.0
+  - @flint.fyi/performance@0.5.0
+  - @flint.fyi/spelling@0.4.0
+  - @flint.fyi/browser@0.5.0
+  - @flint.fyi/vitest@0.4.0
+  - @flint.fyi/astro@0.5.0
+  - @flint.fyi/core@0.25.0
+  - @flint.fyi/json@0.18.0
+  - @flint.fyi/node@0.5.0
+  - @flint.fyi/yaml@0.17.0
+  - @flint.fyi/css@0.3.0
+  - @flint.fyi/jsx@0.6.0
+  - @flint.fyi/md@0.17.0
+  - @flint.fyi/ts@0.23.0
+
 ## 0.4.0
 
 ### Minor Changes

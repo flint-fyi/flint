@@ -1,5 +1,23 @@
 # flint
 
+## 0.19.0
+
+### Minor Changes
+
+- [#3168](https://github.com/flint-fyi/flint/pull/3168) [`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34) - Drop support for node versions <26.1.0.
+
+### Patch Changes
+
+- Updated dependencies [[`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34)]:
+  - @flint.fyi/package-json@0.21.0
+  - @flint.fyi/ts-patch@0.16.0
+  - @flint.fyi/core@0.25.0
+  - @flint.fyi/json@0.18.0
+  - @flint.fyi/yaml@0.17.0
+  - @flint.fyi/cli@0.23.0
+  - @flint.fyi/md@0.17.0
+  - @flint.fyi/ts@0.23.0
+
 ## 0.18.0
 
 ### Minor Changes
