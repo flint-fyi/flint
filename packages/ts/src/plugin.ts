@@ -250,6 +250,7 @@ import regexWordMatchers from "./rules/regexWordMatchers.ts";
 import regexZeroQuantifiers from "./rules/regexZeroQuantifiers.ts";
 import requireImports from "./rules/requireImports.ts";
 import responseJsonMethods from "./rules/responseJsonMethods.ts";
+import restrictedGlobals from "./rules/restrictedGlobals.ts";
 import restrictedIdentifiers from "./rules/restrictedIdentifiers.ts";
 import restrictedImports from "./rules/restrictedImports.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
@@ -564,6 +565,7 @@ export const ts = createPlugin({
 		requireImports,
 		requireImports,
 		responseJsonMethods,
+		restrictedGlobals,
 		restrictedIdentifiers,
 		restrictedImports,
 		returnAssignments,

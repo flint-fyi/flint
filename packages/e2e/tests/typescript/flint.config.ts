@@ -5,7 +5,10 @@ export default defineConfig({
 	use: [
 		{
 			files: "fixtures/**/*.ts",
-			rules: ts.presets.logical,
+			rules: [
+				ts.presets.logical,
+				ts.rules({ restrictedGlobals: { deny: ["Array"] } }),
+			],
 		},
 	],
 });
