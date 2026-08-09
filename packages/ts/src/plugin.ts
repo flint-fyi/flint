@@ -253,6 +253,7 @@ import responseJsonMethods from "./rules/responseJsonMethods.ts";
 import restrictedIdentifiers from "./rules/restrictedIdentifiers.ts";
 import restrictedImports from "./rules/restrictedImports.ts";
 import returnAssignments from "./rules/returnAssignments.ts";
+import returnAwaitPromises from "./rules/returnAwaitPromises.ts";
 import returnThisTypes from "./rules/returnThisTypes.ts";
 import selfAssignments from "./rules/selfAssignments.ts";
 import sequences from "./rules/sequences.ts";
@@ -567,6 +568,7 @@ export const ts = createPlugin({
 		restrictedIdentifiers,
 		restrictedImports,
 		returnAssignments,
+		returnAwaitPromises,
 		returnThisTypes,
 		selfAssignments,
 		sequences,
