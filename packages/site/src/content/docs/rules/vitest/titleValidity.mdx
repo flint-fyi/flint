@@ -1,0 +1,217 @@
+---
+description: "This rule aims to enforce valid titles for `describe()`, `it()` and `test()` titles."
+title: "titleValidity"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="vitest" rule="titleValidity" />
+
+Reports `describe()`, `it()`, and `test()` calls with invalid titles.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+describe(1, () => {
+	// ...
+});
+```
+
+```ts
+it("", () => {
+	// ...
+});
+```
+
+```ts
+it("it returns a number", () => {
+	// ...
+});
+```
+
+```ts
+it(" returns a number ", () => {
+	// ...
+});
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+describe("1", () => {
+	// ...
+});
+```
+
+```ts
+it("returns a number", () => {
+	// ...
+});
+```
+
+```ts
+declare function getValue(): number;
+
+describe(getValue, () => {
+	// ...
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `allowArguments`
+
+Whether to allow identifiers as titles.
+Defaults to `false`.
+
+Only identifiers are skipped by this option.
+Function calls such as `getTitle()` and property accesses such as `config.title` are not skipped, and are still reported.
+
+Examples of **incorrect** code for this rule with the `{ "allowArguments": true }` option:
+
+```ts
+declare function getTitle(): unknown;
+
+it(getTitle(), () => {
+	// ...
+});
+```
+
+```ts
+declare const config: { title: unknown };
+
+it(config.title, () => {
+	// ...
+});
+```
+
+Examples of **correct** code for this rule with the `{ "allowArguments": true }` option:
+
+```ts
+declare const title: unknown;
+
+it(title, () => {
+	// ...
+});
+```
+
+### `disallowedWords`
+
+Words that are not allowed to appear in titles.
+Defaults to `[]`.
+
+Words are matched case-insensitively on word boundaries, against the title string only.
+Because of the word boundaries, `"skip"` does not match a title containing `skipped`.
+
+Examples of **incorrect** code for this rule with the `{ "disallowedWords": ["skips"] }` option:
+
+```ts
+it("skips the empty case", () => {
+	// ...
+});
+```
+
+Examples of **correct** code for this rule with the `{ "disallowedWords": ["skips"] }` option:
+
+```ts
+it("ignores the empty case", () => {
+	// ...
+});
+```
+
+### `ignoreTypeOfDescribeName`
+
+Whether to skip checking the type of `describe()` titles.
+Defaults to `false`.
+
+Examples of **correct** code for this rule with the `{ "ignoreTypeOfDescribeName": true }` option:
+
+```ts
+declare const value: unknown;
+
+describe(typeof value, () => {
+	// ...
+});
+```
+
+### `mustMatch`
+
+Regular expressions that titles must match, optionally with a custom message.
+Not set by default.
+
+A string or a `[pattern, message]` pair applies to `describe`, `it`, and `test` alike.
+An object applies a separate pattern per function:
+
+```json
+{
+	"mustMatch": {
+		"it": ["^should ", "Start test titles with \"should\"."]
+	}
+}
+```
+
+Aliases map onto those three keys: `xdescribe` uses `describe`, `fit` and `xit` use `it`, and `xtest` uses `test`.
+
+Examples of **incorrect** code for this rule with the `{ "mustMatch": "^should " }` option:
+
+```ts
+it("returns a number", () => {
+	// ...
+});
+```
+
+Examples of **correct** code for this rule with the `{ "mustMatch": "^should " }` option:
+
+```ts
+it("should return a number", () => {
+	// ...
+});
+```
+
+### `mustNotMatch`
+
+Regular expressions that titles must not match, optionally with a custom message.
+Not set by default.
+
+It takes the same shapes as `mustMatch`.
+When a title matches `mustNotMatch`, that is reported and `mustMatch` is not checked.
+
+Examples of **incorrect** code for this rule with the `{ "mustNotMatch": "^should " }` option:
+
+```ts
+it("should return a number", () => {
+	// ...
+});
+```
+
+Examples of **correct** code for this rule with the `{ "mustNotMatch": "^should " }` option:
+
+```ts
+it("returns a number", () => {
+	// ...
+});
+```
+
+## When Not To Use It
+
+Projects that lean on generated titles, or that have a large existing suite whose titles would be disruptive to rename, might prefer to enable only the options they need rather than the whole rule.
+
+## Further Reading
+
+- [Vitest API: Describe](https://vitest.dev/api/describe)
+- [Vitest API: Test](https://vitest.dev/api/test)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="vitest" ruleId="titleValidity" />
