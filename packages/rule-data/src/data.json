@@ -26757,7 +26757,8 @@
 		],
 		"flint": {
 			"name": "restrictedTypes",
-			"plugin": "ts"
+			"plugin": "ts",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
