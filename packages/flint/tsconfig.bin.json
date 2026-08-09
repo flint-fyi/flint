@@ -2,7 +2,6 @@
 	"extends": "@flint.fyi/build/tsconfig.base.json",
 	"compilerOptions": {
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.bin.json",
-		"allowJs": true,
 		"checkJs": true,
 		"rootDir": "bin/",
 		"outDir": "lib/bin/",
