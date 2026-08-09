@@ -1,0 +1,88 @@
+---
+description: "Disallows accessing specified properties on configured types or values."
+title: "restrictedProperties"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="restrictedProperties" />
+
+This rule restricts statically known properties on values and nominal types identified by a `TypeOrValueSpecifier`.
+Unlike spelling-based checks, it follows imported and immutable aliases while distinguishing shadowed values and structurally identical types.
+It checks property reads, calls, writes, optional accesses, and object destructuring declarations and assignments.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+JSON.parse(input);
+```
+
+```ts
+const { parse } = JSON;
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+JSON.stringify(value);
+```
+
+```ts
+const JSON = { parse: customParse };
+JSON.parse(input);
+```
+
+</TabItem>
+</Tabs>
+
+## Options
+
+### `restrictions`
+
+- Type: `Array<Restriction>`
+- Default: `[]`
+
+Each entry requires an `object` TypeOrValueSpecifier and exact `property` string, and may include a custom `message`.
+
+```jsonc
+{
+	"restrictions": [
+		{
+			"message": "Use the validated parser.",
+			"object": { "from": "lib", "name": "JSON" },
+			"property": "parse",
+		},
+	],
+}
+```
+
+An object specifier may use `{ "from": "lib", "name": "..." }`, `{ "from": "file", "path": "...", "name": "..." }`, or `{ "from": "package", "package": "...", "name": "..." }`.
+The optional `name` may also be an array.
+The rule matches values through import aliases, namespace-qualified exports, and immutable `const` alias chains.
+It also matches nominal types through type aliases, base classes and interfaces, generic constraints, and intersections.
+All non-nullish members of a union must match the restriction, which avoids reporting accesses that may occur on an unrelated value.
+The rule recognizes literal and statically evaluated string, number, and bigint keys, but skips dynamic keys, symbols, `any`, `unknown`, and unions containing unrelated receivers.
+It reports property names without a fix because replacing an access can alter evaluation order, accessors, assignment behavior, or `this` binding.
+
+## When Not To Use It
+
+Projects without property-specific API policies do not need to configure this rule.
+The rule is also unsuitable when restrictions depend on dynamic keys or runtime value flow that TypeScript cannot resolve.
+For deprecation diagnostics, use TypeScript deprecations or Flint's dedicated deprecation rules instead.
+
+## Further Reading
+
+- [TypeScript: Symbols](https://www.typescriptlang.org/docs/handbook/symbols.html)
+- [MDN: Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring)
+- [MDN: Property accessors](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents plugin="ts" rule="restrictedProperties" />
