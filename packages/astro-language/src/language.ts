@@ -21,7 +21,7 @@ export interface AstroServices {
 }
 
 export const astroLanguage: VolarLanguage<AstroServices> =
-	createVolarBasedLanguage<AstroServices>(() => {
+	createVolarBasedLanguage(() => {
 		return {
 			createFile({ sourceFile, sourceScript }) {
 				const sourceText = sourceScript.snapshot.getText(

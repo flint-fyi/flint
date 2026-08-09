@@ -20,7 +20,7 @@ export interface MarkdownFileServices {
 export const markdownLanguage: Language<
 	MarkdownNodeVisitors,
 	MarkdownFileServices
-> = createLanguage<MarkdownNodeVisitors, MarkdownFileServices>({
+> = createLanguage({
 	about: {
 		name: "Markdown",
 	},
