@@ -1,8 +1,8 @@
 import { spelling } from "@flint.fyi/spelling";
 import { ts } from "@flint.fyi/ts";
-import { defineConfig } from "flint";
+import { defineConfig, type Config } from "flint";
 
-export default defineConfig({
+const config: Config = defineConfig({
 	use: [
 		{
 			files: "fixtures/**/*.ts",
@@ -10,3 +10,5 @@ export default defineConfig({
 		},
 	],
 });
+
+export default config;
