@@ -2,8 +2,7 @@
 
 ## Code Style
 
-Always prefer implicit/inferred return types.
-Only add them to solve a TypeScript type-checking complaint or similar.
+Prefer explicit return types for functions and methods.
 
 Prefer early-returns except when there's only one conditional in a function.
 Example: prefer `const x = getX(); if (!x) { return; } ...` over `const x = getX(); if (x) { ... }`.
