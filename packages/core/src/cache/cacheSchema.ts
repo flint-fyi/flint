@@ -1,26 +1,46 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports -- TODO: Use Zod Mini in core package
 import z from "zod/v4";
 
-import type { CacheStorage } from "../types/cache.ts";
+import type { BaseAbout } from "../types/about.ts";
+import type {
+	CacheStorage,
+	FileCacheStorage,
+	GlobalInvalidation,
+} from "../types/cache.ts";
+import type {
+	Fix,
+	Suggestion,
+	SuggestionForFile,
+	SuggestionForFiles,
+} from "../types/changes.ts";
+import type { LanguageReport } from "../types/languages.ts";
+import type { CharacterReportRange, ColumnAndLine } from "../types/ranges.ts";
+import type {
+	FileReport,
+	NormalizedReportRangeObject,
+	ReportInterpolationData,
+	ReportMessageData,
+} from "../types/reports.ts";
 import { jsonCodec } from "../utils/codecs.ts";
 
-const characterReportRangeSchema = z.object({
+const characterReportRangeSchema: z.ZodType<CharacterReportRange> = z.object({
 	begin: z.number(),
 	end: z.number(),
 });
 
-const columnAndLineSchema = z.object({
+const columnAndLineSchema: z.ZodType<ColumnAndLine> = z.object({
 	column: z.number(),
 	line: z.number(),
 	raw: z.number(),
 });
 
-const normalizedReportRangeObjectSchema = z.object({
-	begin: columnAndLineSchema,
-	end: columnAndLineSchema,
-});
+const normalizedReportRangeObjectSchema: z.ZodType<NormalizedReportRangeObject> =
+	z.object({
+		begin: columnAndLineSchema,
+		end: columnAndLineSchema,
+	});
 
-const fixSchema = z.object({
+const fixSchema: z.ZodType<Fix> = z.object({
 	range: characterReportRangeSchema,
 	text: z.string(),
 });
@@ -29,73 +49,72 @@ const changeBaseSchema = z.object({
 	id: z.string(),
 });
 
-const suggestionForFileSchema = changeBaseSchema.extend({
-	range: characterReportRangeSchema,
-	text: z.string(),
-});
+const suggestionForFileSchema: z.ZodType<SuggestionForFile> =
+	changeBaseSchema.extend({
+		range: characterReportRangeSchema,
+		text: z.string(),
+	});
 
-const suggestionForFilesSchema = changeBaseSchema.extend({
-	files: z.record(z.string(), z.array(fixSchema).optional()),
-});
+const suggestionForFilesSchema: z.ZodType<SuggestionForFiles> =
+	changeBaseSchema.extend({
+		files: z.record(z.string(), z.array(fixSchema).exactOptional()),
+	});
 
-const suggestionSchema = z.union([
+const suggestionSchema: z.ZodType<Suggestion> = z.union([
 	suggestionForFileSchema,
 	suggestionForFilesSchema,
 ]);
 
-const reportMessageDataSchema = z.object({
+const reportMessageDataSchema: z.ZodType<ReportMessageData> = z.object({
 	primary: z.string(),
 	secondary: z.array(z.string()),
 	suggestions: z.array(z.string()),
 });
 
-const baseAboutSchema = z.object({
+const baseAboutSchema: z.ZodType<BaseAbout> = z.object({
 	id: z.string(),
-	url: z.string().optional(),
+	url: z.string().exactOptional(),
 });
 
-const reportInterpolationDataSchema = z.record(
-	z.string(),
-	z.union([z.boolean(), z.number(), z.string()]),
-);
+const reportInterpolationDataSchema: z.ZodType<ReportInterpolationData> =
+	z.record(z.string(), z.union([z.boolean(), z.number(), z.string()]));
 
-const fileReportSchema = z.object({
+const fileReportSchema: z.ZodType<FileReport> = z.object({
 	about: baseAboutSchema,
-	data: reportInterpolationDataSchema.optional(),
-	dependencies: z.array(z.string()).optional(),
-	fix: z.array(fixSchema).optional(),
+	data: reportInterpolationDataSchema.exactOptional(),
+	dependencies: z.array(z.string()).exactOptional(),
+	fix: z.array(fixSchema).exactOptional(),
 	message: reportMessageDataSchema,
 	range: normalizedReportRangeObjectSchema,
-	suggestions: z.array(suggestionSchema).optional(),
+	suggestions: z.array(suggestionSchema).exactOptional(),
 });
 
-const languageReportSchema = z.object({
-	code: z.string().optional(),
-	source: z.string().optional(),
+const languageReportSchema: z.ZodType<LanguageReport> = z.object({
+	code: z.string().exactOptional(),
+	source: z.string().exactOptional(),
+	range: characterReportRangeSchema.exactOptional(),
 	text: z.string(),
 });
 
-const fileCacheStorageSchema = z.object({
-	dependencies: z.array(z.string()).optional(),
-	languageReports: z.array(languageReportSchema).optional(),
-	reports: z.array(fileReportSchema).optional(),
+const fileCacheStorageSchema: z.ZodType<FileCacheStorage> = z.object({
+	dependencies: z.array(z.string()).exactOptional(),
+	languageReports: z.array(languageReportSchema).exactOptional(),
+	reports: z.array(fileReportSchema).exactOptional(),
 	timestamp: z.number(),
 });
 
-const globalInvalidations = z.object({
+const globalInvalidation: z.ZodType<GlobalInvalidation> = z.object({
 	filePath: z.string(),
 	touchTime: z.number(),
 });
 
-const cacheStorageSchemaObject: z.ZodType<CacheStorage, CacheStorage> =
-	z.object({
-		configs: z.record(z.string(), z.number()),
-		files: z.record(z.string(), fileCacheStorageSchema),
-		globalInvalidations: z.array(globalInvalidations),
-	}) as z.ZodType<CacheStorage, CacheStorage>;
+const cacheStorageSchemaObject: z.ZodType<CacheStorage> = z.object({
+	configs: z.record(z.string(), z.number()),
+	files: z.record(z.string(), fileCacheStorageSchema),
+	globalInvalidations: z.array(globalInvalidation),
+});
 
-type CacheStorageSchema<T extends z.core.$ZodType> = z.ZodCodec<z.ZodString, T>;
-
-export const cacheStorageSchema: CacheStorageSchema<
-	typeof cacheStorageSchemaObject
+export const cacheStorageSchema: z.ZodCodec<
+	z.ZodString,
+	z.ZodType<CacheStorage>
 > = jsonCodec(cacheStorageSchemaObject);
