@@ -91,8 +91,8 @@ const fileReportSchema: z.ZodType<FileReport> = z.object({
 
 const languageReportSchema: z.ZodType<LanguageReport> = z.object({
 	code: z.string().exactOptional(),
-	source: z.string().exactOptional(),
 	range: characterReportRangeSchema.exactOptional(),
+	source: z.string().exactOptional(),
 	text: z.string(),
 });
 
