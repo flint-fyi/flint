@@ -18,6 +18,8 @@ jobs:
       id-token: write
     steps:
       - uses: $/.github/actions/setup
+        with:
+          cache: false
 
       - name: Create Token
         id: create_token
