@@ -1,5 +1,8 @@
 {
 	"extends": "@flint.fyi/build/tsconfig.base.json",
+	"compilerOptions": {
+		"isolatedDeclarations": true
+	},
 	"include": [],
 	"references": [
 		{ "path": "./tsconfig.bin.json" },
