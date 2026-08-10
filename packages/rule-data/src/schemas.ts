@@ -52,9 +52,9 @@ const flintRuleReferenceSchema = z.union([
 		.object({
 			name: z.string().min(1),
 			plugin: flintRulePluginSchema,
-			preset: flintRulePresetSchema.optional(),
-			status: z.literal(["implemented"]).optional(),
-			strictness: z.literal("strict").optional(),
+			preset: flintRulePresetSchema.exactOptional(),
+			status: z.literal(["implemented"]).exactOptional(),
+			strictness: z.literal("strict").exactOptional(),
 		})
 		.strict(),
 ]);
@@ -75,14 +75,14 @@ export type LinterRuleReference = z.infer<typeof linterRuleReferenceSchema>;
 
 const ruleDetailsSchema = z
 	.object({
-		biome: z.array(linterRuleReferenceSchema).optional(),
-		deno: z.array(linterRuleReferenceSchema).optional(),
-		eslint: z.array(linterRuleReferenceSchema).optional(),
+		biome: z.array(linterRuleReferenceSchema).exactOptional(),
+		deno: z.array(linterRuleReferenceSchema).exactOptional(),
+		eslint: z.array(linterRuleReferenceSchema).exactOptional(),
 		flint: flintRuleReferenceSchema,
-		markdownlint: z.array(linterRuleReferenceSchema).optional(),
-		notes: z.string().optional(),
-		oxlint: z.array(linterRuleReferenceSchema).optional(),
-		stylelint: z.array(linterRuleReferenceSchema).optional(),
+		markdownlint: z.array(linterRuleReferenceSchema).exactOptional(),
+		notes: z.string().exactOptional(),
+		oxlint: z.array(linterRuleReferenceSchema).exactOptional(),
+		stylelint: z.array(linterRuleReferenceSchema).exactOptional(),
 	})
 	.strict();
 
