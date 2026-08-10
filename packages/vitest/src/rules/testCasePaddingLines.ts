@@ -6,6 +6,6 @@ export default createBlockPaddingRule(
 		id: "testCasePaddingLines",
 		presets: [],
 	},
-	["test", "it", "fit", "xit", "xtest"],
+	["test", "it"],
 	{ blockName: "test" },
 );

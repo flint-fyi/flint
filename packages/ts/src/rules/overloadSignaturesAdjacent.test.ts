@@ -1,44 +1,8 @@
 import rule from "./overloadSignaturesAdjacent.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { scriptRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+scriptRuleTester.describe(rule, {
 	invalid: [
-		{
-			code: `
-function foo(s: string): void;
-function foo(n: number): void;
-function bar(): void {}
-function baz(): void {}
-function foo(sn: string | number): void {}
-`,
-			snapshot: `
-function foo(s: string): void;
-function foo(n: number): void;
-function bar(): void {}
-function baz(): void {}
-function foo(sn: string | number): void {}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-All foo signatures should be adjacent.
-`,
-		},
-		{
-			code: `
-function foo(s: string): void;
-function foo(n: number): void;
-type bar = number;
-type baz = number | string;
-function foo(sn: string | number): void {}
-`,
-			snapshot: `
-function foo(s: string): void;
-function foo(n: number): void;
-type bar = number;
-type baz = number | string;
-function foo(sn: string | number): void {}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-All foo signatures should be adjacent.
-`,
-		},
 		{
 			code: `
 declare function foo(s: string): void;
@@ -54,24 +18,6 @@ declare function bar(): void;
 declare function baz(): void;
 declare function foo(sn: string | number): void;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-All foo signatures should be adjacent.
-`,
-		},
-		{
-			code: `
-export function foo(s: string): void;
-export function foo(n: number): void;
-export function bar(): void {}
-export function baz(): void {}
-export function foo(sn: string | number): void {}
-`,
-			snapshot: `
-export function foo(s: string): void;
-export function foo(n: number): void;
-export function bar(): void {}
-export function baz(): void {}
-export function foo(sn: string | number): void {}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 All foo signatures should be adjacent.
 `,
 		},
@@ -333,186 +279,6 @@ type Foo = {
 		},
 		{
 			code: `
-class Foo {
-	constructor(s: string);
-	constructor(n: number);
-	bar(): void {}
-	baz(): void {}
-	constructor(sn: string | number) {}
-}
-`,
-			snapshot: `
-class Foo {
-	constructor(s: string);
-	constructor(n: number);
-	bar(): void {}
-	baz(): void {}
-	constructor(sn: string | number) {}
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	All constructor signatures should be adjacent.
-}
-`,
-		},
-		{
-			code: `
-class Foo {
-	foo(s: string): void;
-	foo(n: number): void;
-	bar(): void {}
-	baz(): void {}
-	foo(sn: string | number): void {}
-}
-`,
-			snapshot: `
-class Foo {
-	foo(s: string): void;
-	foo(n: number): void;
-	bar(): void {}
-	baz(): void {}
-	foo(sn: string | number): void {}
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	All foo signatures should be adjacent.
-}
-`,
-		},
-		{
-			code: `
-class Foo {
-	foo(s: string): void;
-	['foo'](n: number): void;
-	bar(): void {}
-	baz(): void {}
-	foo(sn: string | number): void {}
-}
-`,
-			snapshot: `
-class Foo {
-	foo(s: string): void;
-	['foo'](n: number): void;
-	bar(): void {}
-	baz(): void {}
-	foo(sn: string | number): void {}
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	All foo signatures should be adjacent.
-}
-`,
-		},
-		{
-			code: `
-class Foo {
-	constructor(s: string);
-	name: string;
-	constructor(n: number);
-	constructor(sn: string | number) {}
-	bar(): void {}
-	baz(): void {}
-}
-`,
-			snapshot: `
-class Foo {
-	constructor(s: string);
-	name: string;
-	constructor(n: number);
-	~~~~~~~~~~~~~~~~~~~~~~~
-	All constructor signatures should be adjacent.
-	constructor(sn: string | number) {}
-	bar(): void {}
-	baz(): void {}
-}
-`,
-		},
-		{
-			code: `
-class Foo {
-	foo(s: string): void;
-	name: string;
-	foo(n: number): void;
-	foo(sn: string | number): void {}
-	bar(): void {}
-	baz(): void {}
-}
-`,
-			snapshot: `
-class Foo {
-	foo(s: string): void;
-	name: string;
-	foo(n: number): void;
-	~~~~~~~~~~~~~~~~~~~~~
-	All foo signatures should be adjacent.
-	foo(sn: string | number): void {}
-	bar(): void {}
-	baz(): void {}
-}
-`,
-		},
-		{
-			code: `
-class Foo {
-	static foo(s: string): void;
-	name: string;
-	static foo(n: number): void;
-	static foo(sn: string | number): void {}
-	bar(): void {}
-	baz(): void {}
-}
-`,
-			snapshot: `
-class Foo {
-	static foo(s: string): void;
-	name: string;
-	static foo(n: number): void;
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	All static foo signatures should be adjacent.
-	static foo(sn: string | number): void {}
-	bar(): void {}
-	baz(): void {}
-}
-`,
-		},
-		{
-			code: `
-function wrap() {
-	function foo(s: string): void;
-	function foo(n: number): void;
-	type bar = number;
-	function foo(sn: string | number): void {}
-}
-`,
-			snapshot: `
-function wrap() {
-	function foo(s: string): void;
-	function foo(n: number): void;
-	type bar = number;
-	function foo(sn: string | number): void {}
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	All foo signatures should be adjacent.
-}
-`,
-		},
-		{
-			code: `
-if (true) {
-	function foo(s: string): void;
-	function foo(n: number): void;
-	let a = 1;
-	function foo(sn: string | number): void {}
-	foo(a);
-}
-`,
-			snapshot: `
-if (true) {
-	function foo(s: string): void;
-	function foo(n: number): void;
-	let a = 1;
-	function foo(sn: string | number): void {}
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	All foo signatures should be adjacent.
-	foo(a);
-}
-`,
-		},
-		{
-			code: `
 declare module 'Foo' {
 	export function foo(s: string): void;
 	export function foo(n: number): void;
@@ -695,15 +461,26 @@ const foo = 'a', bar = 'b';
 interface Foo {}
 class Foo {}
 `,
-		`
+		{
+			code: `
 import { connect } from 'react-redux';
 export interface ErrorMessageModel {
 	message: string;
 }
+declare const ErrorMessage: unknown;
 function mapStateToProps() {}
 function mapDispatchToProps() {}
 export default connect(mapStateToProps, mapDispatchToProps)(ErrorMessage);
 `,
+			files: {
+				"node_modules/react-redux/index.d.ts": `
+export function connect(
+	mapStateToProps: () => void,
+	mapDispatchToProps: () => void,
+): (component: unknown) => unknown;
+`,
+			},
+		},
 		`
 function wrap() {
 	function foo(s: string): void;

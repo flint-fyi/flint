@@ -74,6 +74,6 @@ new RegExp("a{1,1}");
 		`/a*/;`,
 		`/a?/;`,
 		`new RegExp("a{1}");`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 	],
 });

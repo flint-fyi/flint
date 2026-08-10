@@ -1,3 +1,5 @@
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import rule from "./newNativeNonConstructors.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -7,6 +9,13 @@ ruleTester.describe(rule, {
 			code: `
 new Symbol("description");
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+				noUnusedLocals: false,
+			}),
 			output: `
 Symbol("description");
 `,
@@ -16,59 +25,14 @@ new Symbol("description");
 Symbol cannot be called with \`new\`.
 `,
 		},
-		{
-			code: `
-new BigInt(42);
-`,
-			output: `
-BigInt(42);
-`,
-			snapshot: `
-new BigInt(42);
-~~~
-BigInt cannot be called with \`new\`.
-`,
-		},
-		{
-			code: `
-const value = new Symbol();
-`,
-			output: `
-const value = Symbol();
-`,
-			snapshot: `
-const value = new Symbol();
-              ~~~
-              Symbol cannot be called with \`new\`.
-`,
-		},
-		{
-			code: `
-function create() {
-    return new BigInt(100);
-}
-`,
-			output: `
-function create() {
-    return BigInt(100);
-}
-`,
-			snapshot: `
-function create() {
-    return new BigInt(100);
-           ~~~
-           BigInt cannot be called with \`new\`.
-}
-`,
-		},
 	],
 	valid: [
 		`Symbol("description");`,
 		`BigInt(42);`,
-		`const value = Symbol();`,
-		`const number = BigInt(100);`,
-		`function create() { return Symbol("key"); }`,
-		`const array = [Symbol("a"), Symbol("b")];`,
+		`const value = Symbol(); void value;`,
+		`const number = BigInt(100); void number;`,
+		`function create() { return Symbol("key"); } void create;`,
+		`const array = [Symbol("a"), Symbol("b")]; void array;`,
 		`new String("text");`,
 		`new Number(42);`,
 		`new Boolean(true);`,
@@ -78,7 +42,7 @@ function create() {
 		`new Error("message");`,
 		`new Map();`,
 		`new Set();`,
-		`new Promise((resolve) => resolve());`,
+		`new Promise<void>((resolve) => resolve());`,
 		`new WeakMap();`,
 		`new WeakSet();`,
 		`

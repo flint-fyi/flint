@@ -7371,15 +7371,15 @@
 		"flint": {
 			"name": "propDuplicates",
 			"plugin": "jsx",
-			"preset": "logical",
-			"status": "implemented"
+			"status": "skipped"
 		},
 		"oxlint": [
 			{
 				"name": "react/jsx-no-duplicate-props",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-no-duplicate-props.html"
 			}
-		]
+		],
+		"notes": "Handled by TypeScript / otherwise is stylistic."
 	},
 	{
 		"eslint": [
@@ -23116,9 +23116,9 @@
 		"flint": {
 			"name": "namespaceKeywords",
 			"plugin": "ts",
-			"preset": "stylistic",
-			"status": "implemented"
+			"status": "skipped"
 		},
+		"notes": "Handled by TypeScript.",
 		"oxlint": [
 			{
 				"name": "typescript/prefer-namespace-keyword",
@@ -24191,9 +24191,9 @@
 		"flint": {
 			"name": "octalNumbers",
 			"plugin": "ts",
-			"preset": "javascript",
-			"status": "implemented"
-		}
+			"status": "skipped"
+		},
+		"notes": "Handled by TypeScript / otherwise is stylistic."
 	},
 	{
 		"biome": [

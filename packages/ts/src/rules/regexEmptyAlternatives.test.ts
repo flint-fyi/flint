@@ -185,7 +185,7 @@ RegExp("|a");
 		`/a?/;`,
 		`new RegExp("a|b");`,
 		`RegExp("abc");`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 		`/[|]/;`,
 		`/[a|b]/;`,
 		`/()/;`,

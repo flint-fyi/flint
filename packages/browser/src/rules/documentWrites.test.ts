@@ -36,18 +36,19 @@ window.document.write("...");
 	],
 	valid: [
 		`document.createElement("main");`,
-		`other.document.write("...");`,
 		`
-			const document = { write() {}, writeln() {} };
-			document.write("...");
-			document.writeln("...");
-			export {};
+			declare const other: { document: { write(value: string): void } };
+			other.document.write("...");
 		`,
 		`
-			const window = { document: { write() {}, writeln() {} } };
+			const document = { write(value: string) {}, writeln(value: string) {} };
+			document.write("...");
+			document.writeln("...");
+		`,
+		`
+			const window = { document: { write(value: string) {}, writeln(value: string) {} } };
 			window.document.write("...");
 			window.document.writeln("...");
-			export {};
 		`,
 	],
 });

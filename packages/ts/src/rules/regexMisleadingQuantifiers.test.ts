@@ -92,6 +92,6 @@ new RegExp("(a?){5}");
 		`/a{3}/;`,
 		`/(abc)+/;`,
 		`new RegExp("a+");`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 	],
 });

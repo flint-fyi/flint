@@ -4,7 +4,7 @@
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.test.json",
 		"rootDir": "src/",
 		"outDir": "node_modules/.cache/tsbuild/test",
-		"types": []
+		"types": ["node"]
 	},
 	"include": ["src/**/*.test.ts", "src/ruleTester.ts"],
 	"references": [

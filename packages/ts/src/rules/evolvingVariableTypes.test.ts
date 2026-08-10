@@ -49,6 +49,8 @@ value = 1;
 		},
 		{
 			code: `
+declare function compute(): number;
+
 function process() {
     let result;
     result = compute();
@@ -56,6 +58,8 @@ function process() {
 }
 `,
 			snapshot: `
+declare function compute(): number;
+
 function process() {
     let result;
         ~~~~~~
@@ -83,12 +87,24 @@ let initialized = 1, uninitialized;
 		`const value = 1;`,
 		`var value = null;`,
 		`var value: unknown;`,
-		`let { a, b } = obj;`,
-		`let [first, second] = arr;`,
-		`for (let item of items) {}`,
-		`for (let key in obj) {}`,
+		`
+const obj = { a: 1, b: 2 };
+let { a, b } = obj;
+`,
+		`
+const arr = [1, 2] as const;
+let [first, second] = arr;
+`,
+		`
+const items = [1, 2, 3];
+for (let item of items) {}
+`,
+		`
+const obj = { key: "value" };
+for (let key in obj) {}
+`,
 		{
-			code: `declare let value;`,
+			code: `declare let value: unknown;`,
 			fileName: "file.d.ts",
 		},
 	],

@@ -9,6 +9,7 @@ export function createRuleTesterTSConfig(
 			{
 				compilerOptions: {
 					lib: ["esnext"],
+					moduleDetection: "force",
 					moduleResolution: "bundler",
 					strict: true,
 					target: "esnext",

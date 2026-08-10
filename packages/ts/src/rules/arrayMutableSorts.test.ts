@@ -38,14 +38,20 @@ const sorted = items.sort((a, b) => a - b);
 		{
 			code: `
 const data: string[] = ["c", "a", "b"];
+declare function doSomething(value: string[]): void;
+
 doSomething(data.sort());
 `,
 			output: `
 const data: string[] = ["c", "a", "b"];
+declare function doSomething(value: string[]): void;
+
 doSomething(data.toSorted());
 `,
 			snapshot: `
 const data: string[] = ["c", "a", "b"];
+declare function doSomething(value: string[]): void;
+
 doSomething(data.sort());
                  ~~~~~~
                  Use \`.toSorted()\` instead of \`.sort()\` to avoid mutating the original array.
@@ -54,25 +60,40 @@ doSomething(data.sort());
 
 		{
 			code: `
-const values: number[] = [3, 1, 2];
-return values.sort();
+function sortValues() {
+    const values: number[] = [3, 1, 2];
+
+    return values.sort();
+}
 `,
 			output: `
-const values: number[] = [3, 1, 2];
-return values.toSorted();
+function sortValues() {
+    const values: number[] = [3, 1, 2];
+
+    return values.toSorted();
+}
 `,
 			snapshot: `
-const values: number[] = [3, 1, 2];
-return values.sort();
-              ~~~~~~
-              Use \`.toSorted()\` instead of \`.sort()\` to avoid mutating the original array.
+function sortValues() {
+    const values: number[] = [3, 1, 2];
+
+    return values.sort();
+                  ~~~~~~
+                  Use \`.toSorted()\` instead of \`.sort()\` to avoid mutating the original array.
+}
 `,
 		},
 	],
 	valid: [
 		`const values: number[] = [3, 1, 2]; const sorted = values.toSorted();`,
 		`const values: number[] = [3, 1, 2]; values.sort();`,
-		`const values: number[] = [3, 1, 2]; values.sort(); doSomething(values);`,
+		`
+const values: number[] = [3, 1, 2];
+declare function doSomething(value: number[]): void;
+
+values.sort();
+doSomething(values);
+`,
 		`const obj = { sort: () => "test" }; const result = obj.sort();`,
 		`function test(arr: number[]) { arr.sort(); }`,
 		`const values: number[] = [3, 1, 2]; values.sort((a, b) => a - b);`,

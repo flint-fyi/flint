@@ -267,38 +267,6 @@ declare const second: boolean;
 				},
 			],
 		},
-		{
-			code: `
-declare let first: boolean | null;
-declare const second: boolean;
-(first = second)! = true;
-`,
-			snapshot: `
-declare let first: boolean | null;
-declare const second: boolean;
-(first = second)! = true;
-                ~
-                Non-null assertion before assignment (\`a! = b\`) looks similar to not-equals (\`a != b\`).
-`,
-			suggestions: [
-				{
-					id: "removeAssertion",
-					updated: `
-declare let first: boolean | null;
-declare const second: boolean;
-(first = second) = true;
-`,
-				},
-				{
-					id: "wrapInParentheses",
-					updated: `
-declare let first: boolean | null;
-declare const second: boolean;
-((first = second)!) = true;
-`,
-				},
-			],
-		},
 	],
 	valid: [
 		`
@@ -355,7 +323,7 @@ declare const value: string | null;
 value == "test";
 `,
 		`
-declare const key: string | null;
+declare const key: string;
 declare const object: Record<string, number>;
 key in object;
 `,

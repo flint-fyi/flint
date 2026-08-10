@@ -25,9 +25,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const handleClick: (...args: unknown[]) => unknown;
 <button onClick={handleClick}>Submit</button>
 `,
 			snapshot: `
+declare const handleClick: (...args: unknown[]) => unknown;
 <button onClick={handleClick}>Submit</button>
  ~~~~~~
  It is generally preferable to add an explicit \`type\` attribute to buttons.
@@ -63,6 +65,8 @@ ruleTester.describe(rule, {
 		`<button type="button" />`,
 		`<input type="button" />`,
 		`<a href="#">Link</a>`,
-		`<CustomElement type="button" />`,
+		`
+declare const CustomElement: (props: Record<string, unknown>) => unknown;
+<CustomElement type="button" />`,
 	],
 });

@@ -74,7 +74,7 @@ ruleTester.describe(rule, {
 		},
 	],
 	valid: [
-		String.raw`"text".replace(/(pre)pattern/, replacement)`,
+		String.raw`declare const replacement: string; "text".replace(/(pre)pattern/, replacement)`,
 		String.raw`"text".replace(/(pre)pattern/, "$1-$1")`,
 		String.raw`"text".replace(/(pre)pattern/, "$&")`,
 		String.raw`"text".replace(/(pre)pattern/, "$$1")`,

@@ -5,6 +5,7 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare function doSomething(): Promise<void>;
 async function example() {
     for (let i = 0; i < 10; i++) {
         await doSomething();
@@ -12,6 +13,7 @@ async function example() {
 }
 `,
 			snapshot: `
+declare function doSomething(): Promise<void>;
 async function example() {
     for (let i = 0; i < 10; i++) {
         await doSomething();
@@ -23,6 +25,7 @@ async function example() {
 		},
 		{
 			code: `
+declare function process(item: unknown): Promise<void>;
 async function example() {
     const items = [1, 2, 3];
     for (const item of items) {
@@ -31,6 +34,7 @@ async function example() {
 }
 `,
 			snapshot: `
+declare function process(item: unknown): Promise<void>;
 async function example() {
     const items = [1, 2, 3];
     for (const item of items) {
@@ -43,16 +47,18 @@ async function example() {
 		},
 		{
 			code: `
+declare function process(item: unknown): Promise<void>;
 async function example() {
-    const items = { a: 1, b: 2 };
+    const items: Record<string, number> = { a: 1, b: 2 };
     for (const key in items) {
         await process(items[key]);
     }
 }
 `,
 			snapshot: `
+declare function process(item: unknown): Promise<void>;
 async function example() {
-    const items = { a: 1, b: 2 };
+    const items: Record<string, number> = { a: 1, b: 2 };
     for (const key in items) {
         await process(items[key]);
         ~~~~~
@@ -63,6 +69,7 @@ async function example() {
 		},
 		{
 			code: `
+declare function doSomething(): Promise<void>;
 async function example() {
     let i = 0;
     while (i < 10) {
@@ -72,6 +79,7 @@ async function example() {
 }
 `,
 			snapshot: `
+declare function doSomething(): Promise<void>;
 async function example() {
     let i = 0;
     while (i < 10) {
@@ -85,6 +93,7 @@ async function example() {
 		},
 		{
 			code: `
+declare function doSomething(): Promise<void>;
 async function example() {
     let i = 0;
     do {
@@ -94,6 +103,7 @@ async function example() {
 }
 `,
 			snapshot: `
+declare function doSomething(): Promise<void>;
 async function example() {
     let i = 0;
     do {
@@ -107,6 +117,8 @@ async function example() {
 		},
 		{
 			code: `
+declare const condition: boolean;
+declare function doSomething(): Promise<void>;
 async function example() {
     for (let i = 0; i < 10; i++) {
         if (condition) {
@@ -116,6 +128,8 @@ async function example() {
 }
 `,
 			snapshot: `
+declare const condition: boolean;
+declare function doSomething(): Promise<void>;
 async function example() {
     for (let i = 0; i < 10; i++) {
         if (condition) {
@@ -129,6 +143,7 @@ async function example() {
 		},
 		{
 			code: `
+declare function foo(): Promise<void>;
 async function example() {
     for (let i = 0; i < 10; i++) {
         const result = await foo();
@@ -136,6 +151,7 @@ async function example() {
 }
 `,
 			snapshot: `
+declare function foo(): Promise<void>;
 async function example() {
     for (let i = 0; i < 10; i++) {
         const result = await foo();
@@ -148,6 +164,7 @@ async function example() {
 	],
 	valid: [
 		`
+declare function doSomething(): Promise<void>;
 async function example() {
     const promises = [];
     for (let i = 0; i < 10; i++) {
@@ -157,6 +174,7 @@ async function example() {
 }
 `,
 		`
+declare function doSomething(): Promise<void>;
 async function example() {
     for (let i = 0; i < 10; i++) {
         doSomething();
@@ -164,6 +182,7 @@ async function example() {
 }
 `,
 		`
+declare function doSomething(): Promise<void>;
 function example() {
     for (let i = 0; i < 10; i++) {
         const fn = async () => {
@@ -173,6 +192,7 @@ function example() {
 }
 `,
 		`
+declare function doSomething(): Promise<void>;
 async function example() {
     for (let i = 0; i < 10; i++) {
         const fn = async () => {
@@ -182,6 +202,7 @@ async function example() {
 }
 `,
 		`
+declare function process(item: unknown): Promise<void>;
 async function example() {
     const items = [1, 2, 3];
     await Promise.all(items.map(async (item) => {

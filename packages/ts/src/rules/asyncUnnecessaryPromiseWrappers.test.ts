@@ -55,12 +55,14 @@ async function nestedResolve() {
 }
 `,
 		`
-promise.then((value) => {
-    console.log(value);
-});
+const promise = Promise.resolve("value");
+promise.then((value) => value);
 `,
 		`
-const result = await Promise.resolve(42);
+async function test() {
+    const result = await Promise.resolve(42);
+    return result;
+}
 `,
 	],
 });

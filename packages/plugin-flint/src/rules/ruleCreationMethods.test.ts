@@ -5,6 +5,8 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+
 export default typescriptLanguage.createRule({
 	about: {
 		description: "Test rule",
@@ -18,6 +20,8 @@ export default typescriptLanguage.createRule({
 });
 `,
 			snapshot: `
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+
 export default typescriptLanguage.createRule({
                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                Plugin rules should be created through RuleCreator instead of calling language.createRule() directly.
@@ -36,14 +40,19 @@ export default typescriptLanguage.createRule({
 	],
 	valid: [
 		`
-interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; }
-declare const ruleCreator: RuleCreator;
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { ruleCreator } from "../ruleCreator";
 
-export default ruleCreator.createRule(_, {
+export default ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Test rule",
+		id: "testRule",
+		presets: ["logical"],
+	},
 	messages: {},
 	setup(context) {
 		return { visitors: {} };
-	}
+	},
 });
 `,
 	],

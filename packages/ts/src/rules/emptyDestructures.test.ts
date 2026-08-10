@@ -1,13 +1,15 @@
 import rule from "./emptyDestructures.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { domLibRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+domLibRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const object: {};
 const {} = object;
 `,
 			snapshot: `
+declare const object: {};
 const {} = object;
       ~~
       Destructuring patterns that don't extract at least one value are unnecessary.
@@ -15,9 +17,11 @@ const {} = object;
 		},
 		{
 			code: `
+declare const array: [];
 const [] = array;
 `,
 			snapshot: `
+declare const array: [];
 const [] = array;
       ~~
       Destructuring patterns that don't extract at least one value are unnecessary.
@@ -25,12 +29,12 @@ const [] = array;
 		},
 		{
 			code: `
-function process({}) {
+function process({}: {}) {
     console.log("processed");
 }
 `,
 			snapshot: `
-function process({}) {
+function process({}: {}) {
                  ~~
                  Destructuring patterns that don't extract at least one value are unnecessary.
     console.log("processed");
@@ -39,12 +43,12 @@ function process({}) {
 		},
 		{
 			code: `
-function process([]) {
+function process([]: []) {
     console.log("processed");
 }
 `,
 			snapshot: `
-function process([]) {
+function process([]: []) {
                  ~~
                  Destructuring patterns that don't extract at least one value are unnecessary.
     console.log("processed");
@@ -53,12 +57,12 @@ function process([]) {
 		},
 		{
 			code: `
-const process = ({}) => {
+const process = ({}: {}) => {
     console.log("processed");
 };
 `,
 			snapshot: `
-const process = ({}) => {
+const process = ({}: {}) => {
                  ~~
                  Destructuring patterns that don't extract at least one value are unnecessary.
     console.log("processed");
@@ -67,12 +71,12 @@ const process = ({}) => {
 		},
 		{
 			code: `
-const process = ([]) => {
+const process = ([]: []) => {
     console.log("processed");
 };
 `,
 			snapshot: `
-const process = ([]) => {
+const process = ([]: []) => {
                  ~~
                  Destructuring patterns that don't extract at least one value are unnecessary.
     console.log("processed");
@@ -81,9 +85,11 @@ const process = ([]) => {
 		},
 		{
 			code: `
+declare const object: { prop: {} };
 const { prop: {} } = object;
 `,
 			snapshot: `
+declare const object: { prop: {} };
 const { prop: {} } = object;
               ~~
               Destructuring patterns that don't extract at least one value are unnecessary.
@@ -91,9 +97,11 @@ const { prop: {} } = object;
 		},
 		{
 			code: `
+declare const object: { prop: [] };
 const { prop: [] } = object;
 `,
 			snapshot: `
+declare const object: { prop: [] };
 const { prop: [] } = object;
               ~~
               Destructuring patterns that don't extract at least one value are unnecessary.
@@ -101,11 +109,13 @@ const { prop: [] } = object;
 		},
 		{
 			code: `
+declare const objects: {}[];
 for (const {} of objects) {
     console.log("iterating");
 }
 `,
 			snapshot: `
+declare const objects: {}[];
 for (const {} of objects) {
            ~~
            Destructuring patterns that don't extract at least one value are unnecessary.
@@ -115,70 +125,62 @@ for (const {} of objects) {
 		},
 		{
 			code: `
+declare const arrays: Array<[]>;
 for (const [] of arrays) {
     console.log("iterating");
 }
 `,
 			snapshot: `
+declare const arrays: Array<[]>;
 for (const [] of arrays) {
            ~~
            Destructuring patterns that don't extract at least one value are unnecessary.
     console.log("iterating");
-}
-`,
-		},
-		{
-			code: `
-try {
-    doSomething();
-} catch ({}) {
-    console.log("error");
-}
-`,
-			snapshot: `
-try {
-    doSomething();
-} catch ({}) {
-         ~~
-         Destructuring patterns that don't extract at least one value are unnecessary.
-    console.log("error");
-}
-`,
-		},
-		{
-			code: `
-try {
-    doSomething();
-} catch ([]) {
-    console.log("error");
-}
-`,
-			snapshot: `
-try {
-    doSomething();
-} catch ([]) {
-         ~~
-         Destructuring patterns that don't extract at least one value are unnecessary.
-    console.log("error");
 }
 `,
 		},
 	],
 	valid: [
-		`const { a } = object;`,
-		`const { a, b } = object;`,
-		`const [ a ] = array;`,
-		`const [ a, b ] = array;`,
-		`function process({ a }) { console.log(a); }`,
-		`function process([ a ]) { console.log(a); }`,
-		`const process = ({ a }) => console.log(a);`,
-		`const process = ([ a ]) => console.log(a);`,
-		`const { prop: { nested } } = object;`,
-		`const { prop: [ element ] } = object;`,
-		`for (const { value } of objects) { console.log(value); }`,
-		`for (const [ value ] of arrays) { console.log(value); }`,
-		`try { doSomething(); } catch ({ message }) { console.log(message); }`,
-		`try { doSomething(); } catch ([ first ]) { console.log(first); }`,
+		`
+declare const object: { a: string };
+const { a } = object;
+`,
+		`
+declare const object: { a: string; b: string };
+const { a, b } = object;
+`,
+		`
+declare const array: [string];
+const [a] = array;
+`,
+		`
+declare const array: [string, string];
+const [a, b] = array;
+`,
+		`function process({ a }: { a: string }) { console.log(a); }`,
+		`function process([a]: [string]) { console.log(a); }`,
+		`const process = ({ a }: { a: string }) => console.log(a);`,
+		`const process = ([a]: [string]) => console.log(a);`,
+		`
+declare const object: { prop: { nested: string } };
+const { prop: { nested } } = object;
+`,
+		`
+declare const object: { prop: [string] };
+const { prop: [element] } = object;
+`,
+		`
+declare const objects: Array<{ value: string }>;
+for (const { value } of objects) {
+    console.log(value);
+}
+`,
+		`
+declare const arrays: Array<[string]>;
+for (const [value] of arrays) {
+    console.log(value);
+}
+`,
 		`const object = {};`,
 		`const array = [];`,
 		`function returnEmpty() { return {}; }`,
