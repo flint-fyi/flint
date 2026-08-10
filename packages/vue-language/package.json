@@ -31,7 +31,7 @@
 		"@flint.fyi/volar-language": "workspace:^",
 		"@volar/language-core": "2.4.28",
 		"@vue/compiler-dom": "^3.5.0",
-		"@vue/language-core": "3.2.1",
+		"@vue/language-core": "3.3.9",
 		"typescript": "^5.9.0 || ^6.0.0"
 	},
 	"devDependencies": {

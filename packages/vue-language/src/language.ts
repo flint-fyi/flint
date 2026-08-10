@@ -75,7 +75,7 @@ export const vueLanguage: VolarLanguage<VueServices> =
 				);
 
 				const codegen = nullThrows(
-					tsCodegen.get(virtualCode.sfc),
+					tsCodegen.get(virtualCode.ir),
 					`tsCodegen for ${data.filePathAbsolute} is undefined`,
 				);
 
