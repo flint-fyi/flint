@@ -26,7 +26,10 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 		ignorePrivateDefault = false,
 		logical,
 	}: CreatePropertyPresenceRuleOptions = {},
-) {
+): {
+	id: `${PropertyName}Presence`;
+	rule: AnyRule;
+} {
 	const id = `${propertyName}Presence` as const;
 
 	const rule: AnyRule = ruleCreator.createRule(jsonLanguage, {

@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/plugin-flint",
-	"version": "0.6.0",
+	"version": "0.8.0",
 	"description": "[Experimental] A Flint plugin for linting Flint plugins.",
 	"homepage": "https://flint.fyi/rules/flint",
 	"repository": {
@@ -19,7 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project plugin-flint"
@@ -38,12 +38,12 @@
 		"vitest": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

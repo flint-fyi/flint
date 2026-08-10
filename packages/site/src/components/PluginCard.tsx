@@ -1,11 +1,11 @@
-import type { PluginData } from "~/data/pluginData";
+import type { PluginDetails } from "~/data/pluginData";
 
 import { ColoredLogo } from "./ColoredLogo";
 import { InlineMarkdown } from "./InlineMarkdown";
 import styles from "./PluginCard.module.css";
 
 export interface PluginCardProps {
-	data: PluginData;
+	data: PluginDetails;
 }
 
 export function PluginCard({

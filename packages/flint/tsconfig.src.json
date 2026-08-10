@@ -2,6 +2,7 @@
 	"extends": "@flint.fyi/build/tsconfig.base.json",
 	"compilerOptions": {
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.src.json",
+		"isolatedDeclarations": true,
 		"rootDir": "src/",
 		"outDir": "lib/",
 		"types": []

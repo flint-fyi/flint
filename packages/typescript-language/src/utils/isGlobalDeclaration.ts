@@ -8,6 +8,6 @@ export function isGlobalDeclaration(
 	node: AST.Expression,
 	typeChecker: Checker,
 	program: Program,
-) {
+): boolean {
 	return !!getDeclarationsIfGlobal(node, typeChecker, program);
 }

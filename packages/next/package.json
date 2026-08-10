@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/next",
-	"version": "0.3.0",
+	"version": "0.5.0",
 	"description": "[Experimental] A Flint plugin for Next.js code.",
 	"homepage": "https://flint.fyi/rules/next",
 	"repository": {
@@ -19,7 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project next"
@@ -33,12 +33,12 @@
 		"tsdown": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

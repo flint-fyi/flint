@@ -10,6 +10,7 @@ import {
 	validateConfigDefinition,
 	type FormattingResults,
 	type LinterHost,
+	type LintResults,
 } from "@flint.fyi/core";
 
 import { runPrettier } from "./formatting/runPrettier.ts";
@@ -18,12 +19,17 @@ import type { Renderer } from "./renderers/types.ts";
 
 const log = debugForFile(import.meta.filename);
 
+export interface CliResult {
+	exitCode: number;
+	lintResults: LintResults | undefined;
+}
+
 export async function runCliOnce(
 	host: LinterHost,
 	configFileName: string,
 	renderer: Renderer,
 	values: OptionsValues,
-) {
+): Promise<CliResult> {
 	const { default: config } = (await import(
 		pathToFileURL(path.join(host.getCurrentDirectory(), configFileName)).href
 	)) as {

@@ -24,21 +24,24 @@ import unicornPlugin from "eslint-plugin-unicorn";
 import vuePlugin from "eslint-plugin-vue";
 import ymlPlugin from "eslint-plugin-yml";
 
-import { comparisons } from "../index.ts";
+import { ruleData } from "../index.ts";
+import type { LinterRuleReference } from "../schemas.ts";
 
-export function findESLintRulesInCore() {
-	return comparisons.flatMap(
-		(comparison) =>
-			comparison.eslint?.filter((rule) =>
+export function findESLintRulesInCore(): LinterRuleReference[] {
+	return ruleData.flatMap(
+		(ruleDetails) =>
+			ruleDetails.eslint?.filter((rule) =>
 				rule.url.includes("/eslint.org/docs"),
 			) ?? [],
 	);
 }
 
-export function findESLintRulesInPlugin(pluginName: string) {
-	return comparisons.flatMap(
-		(comparison) =>
-			comparison.eslint?.filter((rule) =>
+export function findESLintRulesInPlugin(
+	pluginName: string,
+): LinterRuleReference[] {
+	return ruleData.flatMap(
+		(ruleDetails) =>
+			ruleDetails.eslint?.filter((rule) =>
 				rule.name.startsWith(`${pluginName}/`),
 			) ?? [],
 	);

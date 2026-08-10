@@ -14,10 +14,6 @@ export default {
 			project: ["*.config.{js,ts}", "scripts/**/*.ts"],
 		},
 		"packages/astro": {
-			ignoreDependencies: [
-				// https://github.com/webpro-nl/knip/issues/248
-				"@astrojs/compiler!",
-			],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/browser": {
@@ -27,10 +23,6 @@ export default {
 			ignoreDependencies: ["tsdown!"],
 			project: ["src/**/*.ts!"],
 		},
-		"packages/comparisons": {
-			entry: ["src/sort-data.ts!"],
-			project: ["src/**/*.ts!", "!src/test-utils/*.ts!"],
-		},
 		"packages/css": {
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
 		},
@@ -39,13 +31,6 @@ export default {
 		},
 		"packages/jsx": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
-		},
-		"packages/markdown-language": {
-			ignoreDependencies: [
-				// https://github.com/webpro-nl/knip/issues/248
-				"@types/mdast!",
-				"@types/unist!",
-			],
 		},
 		"packages/md": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
@@ -69,6 +54,10 @@ export default {
 			],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
+		"packages/rule-data": {
+			entry: ["scripts/*.ts"],
+			project: ["src/**/*.ts!", "!src/test-utils/*.ts!"],
+		},
 		"packages/site": {
 			ignoreDependencies: [
 				// Needed for Twoslash
@@ -83,7 +72,7 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/svelte": {
-			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
+			project: ["src/**/*.{svelte,ts}!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/ts": {
 			entry: ["src/typescript.d.ts"],
@@ -92,22 +81,14 @@ export default {
 		"packages/vitest": {
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
 		},
-		"packages/volar-language": {
-			// https://github.com/webpro-nl/knip/issues/248
-			ignoreDependencies: ["@volar/language-core!"],
-		},
 		"packages/vue": {
 			ignoreDependencies: [
 				// Needed for compiler output in tests
 				"vue",
 			],
-			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
+			project: ["src/**/*.{ts,vue}!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/vue-language": {
-			ignoreDependencies: [
-				// https://github.com/webpro-nl/knip/issues/248
-				"@volar/language-core!",
-			],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/yaml": {

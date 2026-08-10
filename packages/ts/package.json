@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/ts",
-	"version": "0.21.0",
+	"version": "0.23.0",
 	"description": "[Experimental] TypeScript language plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/ts",
 	"repository": {
@@ -19,7 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project ts"
@@ -42,12 +42,12 @@
 		"vitest": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

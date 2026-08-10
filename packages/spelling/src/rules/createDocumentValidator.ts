@@ -11,7 +11,7 @@ export async function createDocumentValidator(
 	fileName: string,
 	text: string,
 	config: CSpellSettings,
-) {
+): Promise<DocumentValidator | undefined> {
 	const document = createTextDocument({
 		content: text,
 		uri: fileName,

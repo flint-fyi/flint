@@ -4,7 +4,9 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports -- TODO: Use Zod Mini in core package
 import z from "zod/v4";
 
-export const jsonCodec = <T extends z.core.$ZodType>(schema: T) =>
+export const jsonCodec = <T extends z.core.$ZodType>(
+	schema: T,
+): z.ZodCodec<z.ZodString, T> =>
 	z.codec(z.string(), schema, {
 		decode: (jsonString, ctx) => {
 			try {

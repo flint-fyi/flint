@@ -9,7 +9,7 @@ export function getFunctionName(
 		| AST.FunctionExpression
 		| AST.MethodDeclaration
 		| AST.MethodSignature,
-) {
+): string | undefined {
 	switch (node.kind) {
 		case SyntaxKind.ArrowFunction: {
 			return node.parent.kind === SyntaxKind.VariableDeclaration &&
@@ -29,6 +29,6 @@ export function getFunctionName(
 				: undefined;
 
 		default:
-			return undefined;
+			return;
 	}
 }

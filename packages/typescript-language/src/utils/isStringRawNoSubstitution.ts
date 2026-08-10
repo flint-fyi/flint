@@ -2,11 +2,13 @@ import { SyntaxKind } from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
+export interface StringRawNoSubstitution extends AST.TaggedTemplateExpression {
+	template: AST.NoSubstitutionTemplateLiteral;
+}
+
 export function isStringRawNoSubstitution(
 	node: AST.Expression,
-): node is AST.TaggedTemplateExpression & {
-	template: AST.NoSubstitutionTemplateLiteral;
-} {
+): node is StringRawNoSubstitution {
 	if (node.kind !== SyntaxKind.TaggedTemplateExpression) {
 		return false;
 	}

@@ -1,6 +1,6 @@
-import type { Comparison } from "@flint.fyi/comparisons";
+import type { RuleDetails } from "@flint.fyi/rule-data";
 
-export type RuleComparator = (a: Comparison, b: Comparison) => number;
+export type RuleComparator = (a: RuleDetails, b: RuleDetails) => number;
 
 export type RuleSortBy = "name" | "preset";
 
@@ -10,15 +10,15 @@ export function createRuleComparator(sortBy?: RuleSortBy): RuleComparator {
 	}
 
 	return (a, b) => {
+		if (a.flint.status === "skipped" || !a.flint.preset) {
+			return 1;
+		}
+
+		if (b.flint.status === "skipped" || !b.flint.preset) {
+			return -1;
+		}
+
 		if (a.flint.preset !== b.flint.preset) {
-			if (!a.flint.preset) {
-				return 1;
-			}
-
-			if (!b.flint.preset) {
-				return -1;
-			}
-
 			return a.flint.preset.localeCompare(b.flint.preset);
 		}
 

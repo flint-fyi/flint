@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/yaml-language",
-	"version": "0.15.4",
+	"version": "0.17.0",
 	"description": "[Experimental] YAML language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -19,7 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project yaml-language"
@@ -35,12 +35,12 @@
 		"vitest": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

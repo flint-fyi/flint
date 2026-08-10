@@ -37,7 +37,7 @@ const scopeManagers = new WeakCachedFactory<AST.SourceFile, ScopeManager>(
 	createScopeManager,
 );
 
-export function getScopeManager(sourceFile: AST.SourceFile) {
+export function getScopeManager(sourceFile: AST.SourceFile): ScopeManager {
 	return scopeManagers.get(sourceFile);
 }
 

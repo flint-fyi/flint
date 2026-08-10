@@ -13,7 +13,4 @@ export const base: UserConfig = {
 		packageJson: false,
 	},
 	failOnWarn: true,
-	fixedExtension: false,
-	outDir: "lib",
-	unbundle: true,
 };

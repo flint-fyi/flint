@@ -1,12 +1,13 @@
 {
-	"extends": "@flint.fyi/build/tsconfig.base.json",
 	"compilerOptions": {
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.json",
 		"rootDir": "src/",
 		"outDir": "lib/",
 		"types": ["node"]
 	},
+	"extends": "@flint.fyi/build/tsconfig.base.json",
 	"include": ["src", "src/data.json"],
+	"exclude": ["src/**/*.test.ts"],
 	"references": [
 		{ "path": "../astro" },
 		{ "path": "../browser" },

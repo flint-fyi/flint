@@ -6,7 +6,10 @@ import { nullThrows } from "@flint.fyi/utils";
 
 import { ColorCodes, indenter } from "./constants.ts";
 
-export async function formatCode(report: FileReport, sourceFileText: string) {
+export async function formatCode(
+	report: FileReport,
+	sourceFileText: string,
+): Promise<string> {
 	const { begin, end } = report.range;
 	const sourceFileLines = sourceFileText.split("\n");
 	const sourceLines = sourceFileLines.slice(begin.line, end.line + 1);

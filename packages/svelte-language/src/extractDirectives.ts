@@ -10,7 +10,7 @@ import { nullThrows } from "@flint.fyi/utils";
 export function extractDirectives(
 	ast: AST.Root,
 	source: SourceFileWithLineMap,
-) {
+): ExtractedDirective[] {
 	const directives: ExtractedDirective[] = [];
 
 	function visit(

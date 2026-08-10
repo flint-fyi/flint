@@ -134,7 +134,7 @@ export class RuleTester {
 	describe<OptionsSchema extends AnyOptionalSchema | undefined>(
 		rule: AnyRule<RuleAbout, OptionsSchema>,
 		{ invalid, valid }: TestCases<InferredInputObject<OptionsSchema>>,
-	) {
+	): void {
 		this.#testerOptions.describe(rule.about.id, () => {
 			this.#testerOptions.describe("invalid", () => {
 				for (const testCase of invalid) {
@@ -215,7 +215,7 @@ export class RuleTester {
 			() => {
 				if (testCase.files != null) {
 					assert.notEqual(
-						Object.keys(testCase.files),
+						Object.keys(testCase.files).length,
 						0,
 						`'files' must have at least one file`,
 					);

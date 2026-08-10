@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/cli",
-	"version": "0.21.0",
+	"version": "0.23.0",
 	"description": "[Experimental] Command-line interface for Flint.",
 	"homepage": "https://flint.fyi/cli",
 	"repository": {
@@ -19,7 +19,7 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project cli"
@@ -45,12 +45,12 @@
 		"prettier": "^3.7.4"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }
