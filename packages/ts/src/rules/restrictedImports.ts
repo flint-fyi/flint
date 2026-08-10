@@ -1,6 +1,7 @@
 import ts, { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
+import type { CharacterReportRange } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
 	typescriptLanguage,
@@ -126,7 +127,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			importedName: string,
 			isTypeOnly: boolean,
 			source: string,
-			range: ReturnType<typeof getTSNodeRange>,
+			range: CharacterReportRange,
 			program: ts.Program,
 		) {
 			for (const restriction of restrictions) {
@@ -162,7 +163,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			moduleDeclarations: ts.Declaration[],
 			source: string,
 			topLevelTypeOnly: boolean,
-			range: ReturnType<typeof getTSNodeRange>,
+			range: CharacterReportRange,
 			program: ts.Program,
 		) {
 			for (const restriction of restrictions) {

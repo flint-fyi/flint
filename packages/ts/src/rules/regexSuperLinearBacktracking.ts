@@ -1,4 +1,4 @@
-import { analyse, type ParsedLiteral } from "scslre";
+import { analyse, type AnalysisResult, type ParsedLiteral } from "scslre";
 
 import {
 	typescriptLanguage,
@@ -54,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			patternStart: number,
 			flags: string,
 		) {
-			let result: ReturnType<typeof analyse>;
+			let result: AnalysisResult;
 			try {
 				result = analyse(parsed, {
 					reportTypes: { Move: false },
