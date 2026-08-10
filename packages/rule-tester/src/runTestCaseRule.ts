@@ -11,6 +11,7 @@ import {
 	type AnyRule,
 	type FileReport,
 	type InferredOutputObject,
+	type LanguageReport,
 	type RuleAbout,
 	type VFSLinterHost,
 } from "@flint.fyi/core";
@@ -37,7 +38,7 @@ export async function runTestCaseRule<
 	{ options, rule }: Required<TestCaseRuleConfiguration<OptionsSchema>>,
 	{ code, fileName, files }: TestCaseNormalized,
 	{ collectLanguageReports = false }: RunTestCaseRuleOptions = {},
-) {
+): Promise<{ languageReports: LanguageReport[]; reports: FileReport[] }> {
 	const filePathAbsolute = normalizePath(
 		path.resolve(linterHost.getCurrentDirectory(), fileName),
 	);
