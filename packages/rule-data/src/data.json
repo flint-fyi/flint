@@ -7119,7 +7119,13 @@
 			"plugin": "jsx",
 			"status": "skipped"
 		},
-		"notes": "Overly opinionated."
+		"notes": "Overly opinionated.",
+		"oxlint": [
+			{
+				"name": "react/jsx-no-literals",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-no-literals.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -9659,7 +9665,13 @@
 			"plugin": "node",
 			"status": "skipped"
 		},
-		"notes": "CJS-specific."
+		"notes": "CJS-specific.",
+		"oxlint": [
+			{
+				"name": "node/exports-style",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/node/exports-style.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -9919,7 +9931,13 @@
 			"plugin": "node",
 			"status": "skipped"
 		},
-		"notes": "Superseded by ESM and ordering rules."
+		"notes": "Superseded by ESM and ordering rules.",
+		"oxlint": [
+			{
+				"name": "node/no-mixed-requires",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/node/no-mixed-requires.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -10175,7 +10193,13 @@
 			"name": "synchronousMethods",
 			"plugin": "node",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "node/no-sync",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/node/no-sync.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -10187,7 +10211,13 @@
 		"flint": {
 			"name": "topLevelAwaits",
 			"plugin": "node"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "node/no-top-level-await",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/node/no-top-level-await.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -12284,6 +12314,19 @@
 		]
 	},
 	{
+		"flint": {
+			"name": "compilerDiagnostics",
+			"plugin": "react",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "react/react-compiler",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/react-compiler.html"
+			}
+		]
+	},
+	{
 		"eslint": [
 			{
 				"name": "react-hooks/config",
@@ -12965,7 +13008,13 @@
 			"name": "functionComponentDefinitions",
 			"plugin": "react",
 			"preset": "stylistic"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "react/function-component-definition",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/react/function-component-definition.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -15985,6 +16034,19 @@
 		]
 	},
 	{
+		"flint": {
+			"name": "arrayFillWithReferenceTypes",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/no-array-fill-with-reference-type",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-fill-with-reference-type.html"
+			}
+		]
+	},
+	{
 		"eslint": [
 			{
 				"name": "unicorn/prefer-array-find",
@@ -17486,7 +17548,13 @@
 			"status": "implemented",
 			"strictness": "strict"
 		},
-		"notes": "Just for Array#push(); the others would be their own rules."
+		"notes": "Just for Array#push(); the others would be their own rules.",
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-single-call",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-single-call.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -17645,6 +17713,19 @@
 			{
 				"name": "eslint/yoda",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/yoda.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "confusingArrayWithCalls",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/no-confusing-array-with",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-confusing-array-with.html"
 			}
 		]
 	},
@@ -19362,6 +19443,19 @@
 		]
 	},
 	{
+		"flint": {
+			"name": "explicitTimerDelays",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/explicit-timer-delay",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/explicit-timer-delay.html"
+			}
+		]
+	},
+	{
 		"biome": [
 			{
 				"name": "useExponentiationOperator",
@@ -19449,7 +19543,13 @@
 			"plugin": "ts",
 			"preset": "stylistic",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-export-from",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-export-from.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -22591,6 +22691,19 @@
 		]
 	},
 	{
+		"flint": {
+			"name": "maxNestedCalls",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/max-nested-calls",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/max-nested-calls.html"
+			}
+		]
+	},
+	{
 		"eslint": [
 			{
 				"name": "@typescript-eslint/no-meaningless-void-operator",
@@ -23618,6 +23731,19 @@
 			{
 				"name": "unicorn/no-null",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-null.html"
+			}
+		]
+	},
+	{
+		"flint": {
+			"name": "numberCoercions",
+			"plugin": "ts",
+			"status": "skipped"
+		},
+		"oxlint": [
+			{
+				"name": "unicorn/prefer-number-coercion",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-number-coercion.html"
 			}
 		]
 	},
@@ -25094,6 +25220,10 @@
 			"status": "implemented"
 		},
 		"oxlint": [
+			{
+				"name": "oxc/bad-match-all-arg",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/bad-match-all-arg.html"
+			},
 			{
 				"name": "oxc/bad-replace-all-arg",
 				"url": "https://oxc.rs/docs/guide/usage/linter/rules/oxc/bad-replace-all-arg.html"
@@ -26652,7 +26782,13 @@
 			"name": "restrictedIdentifiers",
 			"plugin": "ts",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/id-denylist",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/id-denylist.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -29326,7 +29462,13 @@
 			"name": "unreachableLoops",
 			"plugin": "ts",
 			"status": "skipped"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "eslint/no-unreachable-loop",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unreachable-loop.html"
+			}
+		]
 	},
 	{
 		"biome": [
@@ -31329,7 +31471,13 @@
 			"name": "testCasePaddingLines",
 			"plugin": "vitest",
 			"status": "implemented"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vitest/padding-around-test-blocks",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vitest/padding-around-test-blocks.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -32620,7 +32768,13 @@
 			"name": "computedAsyncProperties",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-async-in-computed-properties",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-async-in-computed-properties.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -32665,7 +32819,13 @@
 			"name": "computedPropertySideEffects",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-side-effects-in-computed-properties",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-side-effects-in-computed-properties.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -33765,7 +33925,13 @@
 			"name": "keyDuplicates",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/no-dupe-keys",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/no-dupe-keys.html"
+			}
+		]
 	},
 	{
 		"eslint": [
@@ -34287,7 +34453,13 @@
 			"name": "optionalPropDefaults",
 			"plugin": "vue",
 			"preset": "logical"
-		}
+		},
+		"oxlint": [
+			{
+				"name": "vue/require-default-prop",
+				"url": "https://oxc.rs/docs/guide/usage/linter/rules/vue/require-default-prop.html"
+			}
+		]
 	},
 	{
 		"biome": [
