@@ -58,6 +58,7 @@ jobs:
     name: Test E2E (Node.js ${{ matrix.node-version }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os:
           - macos-latest
