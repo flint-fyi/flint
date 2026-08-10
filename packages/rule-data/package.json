@@ -50,7 +50,7 @@
 		"@eslint/markdown": "catalog:dev",
 		"@flint.fyi/build": "workspace:^",
 		"@next/eslint-plugin-next": "16.2.6",
-		"@nuxt/eslint-plugin": "1.16.0",
+		"@nuxt/eslint-plugin": "1.17.0",
 		"@types/eslint-plugin-jsx-a11y": "6.10.1",
 		"@types/eslint-plugin-promise": "7.3.0",
 		"@typescript-eslint/eslint-plugin": "catalog:dev",
