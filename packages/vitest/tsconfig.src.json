@@ -8,13 +8,13 @@
 	},
 	"include": [
 		"src",
-		"../typescript-language/src/directives",
+		"../typescript-language/src/directives/parseDirectivesFromTypeScriptFile.ts",
 		"../typescript-language/src/types"
 	],
 	"exclude": ["src/**/*.test.ts", "src/ruleTester.ts"],
 	"references": [
-		{ "path": "../core" },
-		{ "path": "../typescript-language" },
+		{ "path": "../core/tsconfig.src.json" },
+		{ "path": "../typescript-language/tsconfig.src.json" },
 		{ "path": "../utils" }
 	]
 }

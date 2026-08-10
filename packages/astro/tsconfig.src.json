@@ -9,11 +9,11 @@
 	"include": ["src"],
 	"exclude": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
 	"references": [
-		{ "path": "../astro-language" },
-		{ "path": "../core" },
-		{ "path": "../ts" },
-		{ "path": "../typescript-language" },
+		{ "path": "../astro-language/tsconfig.src.json" },
+		{ "path": "../core/tsconfig.src.json" },
+		{ "path": "../ts/tsconfig.src.json" },
+		{ "path": "../typescript-language/tsconfig.src.json" },
 		{ "path": "../utils" },
-		{ "path": "../volar-language" }
+		{ "path": "../volar-language/tsconfig.src.json" }
 	]
 }

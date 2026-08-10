@@ -9,8 +9,8 @@
 	},
 	"include": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
 	"references": [
-		{ "path": "../rule-tester" },
-		{ "path": "../ts" },
+		{ "path": "../rule-tester/tsconfig.src.json" },
+		{ "path": "../ts/tsconfig.src.json" },
 		{ "path": "./tsconfig.src.json" }
 	]
 }

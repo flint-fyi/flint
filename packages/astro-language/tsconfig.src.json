@@ -11,8 +11,8 @@
 	"exclude": ["src/**/*.test.ts"],
 	"references": [
 		{ "path": "../ts-patch" },
-		{ "path": "../typescript-language" },
+		{ "path": "../typescript-language/tsconfig.src.json" },
 		{ "path": "../utils" },
-		{ "path": "../volar-language" }
+		{ "path": "../volar-language/tsconfig.src.json" }
 	]
 }
