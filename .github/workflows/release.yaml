@@ -9,13 +9,28 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  release:
+  select-mode:
     if: github.event.repository.fork != true
-    name: Release
+    name: Select Changesets Mode
+    outputs:
+      mode: ${{ steps.select-mode.outputs.mode }}
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      id-token: write
+      contents: read
+    steps:
+      - uses: $/.github/actions/setup
+
+      - name: Select Changesets Mode
+        id: select-mode
+        uses: changesets/action/select-mode@198f833dd7d863100ea6e28967bc9a9fdefadb0a # v2.1.0
+
+  version:
+    if: needs.select-mode.outputs.mode == 'version'
+    name: Version Packages
+    needs: select-mode
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: $/.github/actions/setup
         with:
@@ -30,8 +45,32 @@ jobs:
           permission-pull-requests: write
           private-key: ${{ secrets.FLINT_TOKENS_BOT_PRIVATE_KEY }}
 
-      - name: Changesets Release
-        uses: changesets/action@198f833dd7d863100ea6e28967bc9a9fdefadb0a # v2.1.0
+      - name: Version Packages
+        uses: changesets/action/version@198f833dd7d863100ea6e28967bc9a9fdefadb0a # v2.1.0
         with:
           github-token: ${{ steps.create_token.outputs.token }}
-          publish-script: pnpm release
+
+  publish:
+    if: needs.select-mode.outputs.mode == 'publish'
+    name: Publish Packages
+    needs: select-mode
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: $/.github/actions/setup
+
+      - name: Create Token
+        id: create_token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.FLINT_TOKENS_BOT_CLIENT_ID }}
+          permission-contents: write
+          private-key: ${{ secrets.FLINT_TOKENS_BOT_PRIVATE_KEY }}
+
+      - name: Publish Packages
+        uses: changesets/action/publish@198f833dd7d863100ea6e28967bc9a9fdefadb0a # v2.1.0
+        with:
+          github-token: ${{ steps.create_token.outputs.token }}
+          script: pnpm release
