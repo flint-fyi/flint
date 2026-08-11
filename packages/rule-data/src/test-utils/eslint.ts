@@ -47,6 +47,7 @@ export function findESLintRulesInPlugin(
 	);
 }
 
+// flint-disable-next-line ts/constructorGenericCalls
 // eslint-disable-next-line @typescript-eslint/consistent-generic-constructors
 export const pluginsRulesByName: Map<string, object> = new Map([
 	["@eslint-community/eslint-comments", eslintCommentsPlugin.rules],
