@@ -115,7 +115,7 @@ jobs:
       - name: Run Unit Tests
         run: pnpm run test --project='!e2e' --coverage
       - name: Report Code Coverage
-        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
         if: ${{ !cancelled() && (matrix.os == 'macos-latest') }}
         with:
           fail_ci_if_error: true
