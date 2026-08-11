@@ -6,11 +6,7 @@
 		"outDir": "lib/",
 		"types": ["node"]
 	},
-	"include": [
-		"src",
-		"../typescript-language/src/directives/parseDirectivesFromTypeScriptFile.ts",
-		"../typescript-language/src/types"
-	],
+	"include": ["src"],
 	"exclude": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
 	"references": [
 		{ "path": "../core/tsconfig.src.json" },
