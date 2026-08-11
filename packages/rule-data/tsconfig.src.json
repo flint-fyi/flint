@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.json",
+		"isolatedDeclarations": true,
 		"rootDir": "src/",
 		"outDir": "lib/",
 		"types": ["node"]

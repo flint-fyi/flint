@@ -1,27 +1,21 @@
 import data from "./data.json" with { type: "json" };
-import { ruleDataSchema } from "./schemas.ts";
+import { ruleDataSchema, type RuleDetails } from "./schemas.ts";
 
-export type LinterName =
-	| "biome"
-	| "deno"
-	| "eslint"
-	| "markdownlint"
-	| "oxlint"
-	| "stylelint";
+export type LinterName = Exclude<keyof RuleDetails, "flint" | "notes">;
 
 export function getFlintRuleId(pluginId: string, ruleId: string): string {
 	return [pluginId, ruleId].join("/");
 }
 
-export const linterNames = {
+export const linterNames: Record<LinterName, string> = {
 	biome: "Biome",
 	deno: "Deno",
 	eslint: "ESLint",
 	markdownlint: "Markdownlint",
 	oxlint: "Oxlint",
 	stylelint: "Stylelint",
-} as const satisfies Record<LinterName, string>;
+};
 
-const ruleData = ruleDataSchema.parse(data);
+const ruleData: RuleDetails[] = ruleDataSchema.parse(data);
 
 export { ruleData };
