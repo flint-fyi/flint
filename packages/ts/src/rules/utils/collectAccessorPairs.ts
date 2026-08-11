@@ -16,7 +16,7 @@ export interface AccessorPair {
 export function collectAccessorPairs(
 	members: ts.NodeArray<AST.AnyNode>,
 	sourceFile: AST.SourceFile,
-) {
+): Map<string, AccessorPair> {
 	const pairs = new Map<string, AccessorPair>();
 
 	members.forEach((member, index) => {

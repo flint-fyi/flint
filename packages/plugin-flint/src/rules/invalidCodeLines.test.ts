@@ -5,6 +5,11 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -19,6 +24,11 @@ Rule report message.
 });
 `,
 			output: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -35,6 +45,11 @@ Rule report message.
 });
 `,
 			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -53,6 +68,11 @@ Rule report message.
 		},
 		{
 			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -69,6 +89,11 @@ Rule report message.
 });
 `,
 			output: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -88,6 +113,11 @@ Rule report message.
 });
 `,
 			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -110,6 +140,11 @@ Rule report message.
 
 		{
 			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -125,6 +160,11 @@ Rule report message.\`,
 });
 `,
 			output: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -142,6 +182,11 @@ Rule report message.
 });
 `,
 			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -163,6 +208,11 @@ Rule report message.\`,
 
 		{
 			code: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -177,6 +227,11 @@ Rule report message.
 });
 `,
 			output: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -194,6 +249,11 @@ Rule report message.
 });
 `,
 			snapshot: `
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
 ruleTester.describe(rule, {
     valid: ['a', 'a'],
     invalid: [
@@ -213,41 +273,56 @@ Rule report message.
 	],
 	valid: [
 		`
-            ruleTester.describe(rule, {
-                valid: [],
-                invalid: []
-            });
-    `,
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: []
+});
+`,
 		`
-            ruleTester.describe(rule, {
-                valid: [],
-                invalid: [
-                {
-                    code: \`
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: [
+        {
+            code: \`
 \`,
-                    snapshot: \`
+            snapshot: \`
 ~
 \`,
-    }
-                ],
-            });
-    `,
+        }
+    ],
+});
+`,
 		`
-            ruleTester.describe(rule, {
-                valid: [],
-                invalid: [
-                {
-                    code: \`
+import { RuleTester } from "@flint.fyi/rule-tester";
+import rule from "../ruleCreationMethods";
+
+const ruleTester = new RuleTester();
+
+ruleTester.describe(rule, {
+    valid: [],
+    invalid: [
+        {
+            code: \`
 console.log();
 \`,
-                    snapshot: \`
+            snapshot: \`
 console.log();
 ~~~~~~~~~~~~~
 Rule report message.
 \`,
-    }
-                ],
-            });
-    `,
+        }
+    ],
+});
+`,
 	],
 });

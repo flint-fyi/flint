@@ -41,46 +41,26 @@ class Example {
 		},
 		{
 			code: `
+declare const condition: boolean;
+
 class Example {
     constructor() {
         if (condition) {
-            return new OtherClass();
+            return new Example();
         }
     }
 }
 `,
 			snapshot: `
+declare const condition: boolean;
+
 class Example {
     constructor() {
         if (condition) {
-            return new OtherClass();
-            ~~~~~~~~~~~~~~~~~~~~~~~~
+            return new Example();
+            ~~~~~~~~~~~~~~~~~~~~~
             Returning a value from a constructor function overrides the newly created instance.
         }
-    }
-}
-`,
-		},
-		{
-			code: `
-class Example {
-    constructor(value: number) {
-        if (value < 0) {
-            return null;
-        }
-        this.value = value;
-    }
-}
-`,
-			snapshot: `
-class Example {
-    constructor(value: number) {
-        if (value < 0) {
-            return null;
-            ~~~~~~~~~~~~
-            Returning a value from a constructor function overrides the newly created instance.
-        }
-        this.value = value;
     }
 }
 `,
@@ -88,9 +68,31 @@ class Example {
 	],
 	valid: [
 		`class Example { constructor() {} }`,
-		`class Example { constructor() { this.value = 1; } }`,
+		`
+class Example {
+    value = 0;
+
+    constructor() {
+        this.value = 1;
+    }
+}
+`,
 		`class Example { constructor() { return; } }`,
-		`class Example { constructor() { if (condition) { return; } this.value = 1; } }`,
+		`
+declare const condition: boolean;
+
+class Example {
+    value = 0;
+
+    constructor() {
+        if (condition) {
+            return;
+        }
+
+        this.value = 1;
+    }
+}
+`,
 		`class Example { constructor() { const factory = () => { return {}; }; } }`,
 		`class Example { constructor() { function helper() { return 1; } } }`,
 	],

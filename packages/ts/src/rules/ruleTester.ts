@@ -13,6 +13,18 @@ export const ruleTester = new RuleTester({
 	it,
 });
 
+export const scriptRuleTester = new RuleTester({
+	defaults: {
+		fileName: "file.ts",
+		files: createRuleTesterTSConfig({
+			moduleDetection: "auto",
+		}),
+	},
+	describe,
+	diskBackedFSRoot: import.meta.dirname,
+	it,
+});
+
 export const domLibRuleTester = new RuleTester({
 	defaults: {
 		fileName: "file.ts",

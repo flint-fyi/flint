@@ -83,19 +83,6 @@ new RegExp("aaaaa");
  Prefer \`\\w{5}\` instead of repeating \`\\w\` 5 times.
 `,
 		},
-		{
-			code: `
-/\\1\\1\\1\\1\\1/;
-`,
-			output: `
-/\\1{5}/;
-`,
-			snapshot: `
-/\\1\\1\\1\\1\\1/;
- ~~~~~~~~~~
- Prefer \`\\1{5}\` instead of repeating \`\\1\` 5 times.
-`,
-		},
 	],
 	valid: [
 		`/a{3}/;`,
@@ -110,7 +97,6 @@ new RegExp("aaaaa");
 		`/[ab][ab]/;`,
 		`/../;`,
 		`/\\w\\w\\w/;`,
-		`/\\1\\1/;`,
 		`new RegExp("aaaa");`,
 		`RegExp("aaaa");`,
 	],

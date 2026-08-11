@@ -142,7 +142,7 @@ RegExp("\\\\#");
 		String.raw`/\r/;`,
 		String.raw`/\x41/;`,
 		String.raw`/\u0041/;`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 		String.raw`new RegExp("\\.");`,
 		String.raw`new RegExp("[a\\-b]");`,
 	],

@@ -100,7 +100,7 @@ function find<T extends string[]>(arr: T) {
 		`declare const array: string[]; array.findIndex((item) => item.startsWith("v"));`,
 		`declare const array: number[]; array.findIndex((item) => item > 0);`,
 		`declare const array: string[]; array.findIndex((item, index) => item === "value");`,
-		`declare const array: object[]; array.findIndex((item) => item.id === 1);`,
+		`declare const array: { id: number }[]; array.findIndex((item) => item.id === 1);`,
 		`declare const array: string[]; array.findIndex((item) => item == "value");`,
 		`declare const obj: { findIndex(fn: (x: string) => boolean): number }; obj.findIndex((x) => x === "value");`,
 	],

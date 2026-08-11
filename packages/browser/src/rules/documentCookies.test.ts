@@ -50,13 +50,15 @@ if (document.cookie.includes("session")) {
 	],
 	valid: [
 		`const value = cookieStore.get("name");`,
-		`cookieManager.set("name", "value");`,
+		`
+			declare const cookieManager: { set(name: string, value: string): void };
+			cookieManager.set("name", "value");
+		`,
 		`const doc = { cookie: "value" }; const x = doc.cookie;`,
 		`
 			interface Document { cookie: string; }
 			const document: Document = { cookie: "test" };
 			const value = document.cookie;
-			export {};
 		`,
 	],
 });

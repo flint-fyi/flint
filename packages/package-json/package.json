@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/package-json",
-	"version": "0.19.2",
+	"version": "0.21.0",
 	"description": "[Experimental] package.json plugin for Flint.",
 	"homepage": "https://flint.fyi/rules/package-json",
 	"repository": {
@@ -45,7 +45,7 @@
 		"vitest": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",

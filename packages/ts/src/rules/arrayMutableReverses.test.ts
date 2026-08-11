@@ -22,14 +22,20 @@ const reversed = values.reverse();
 		{
 			code: `
 const items: string[] = ["a", "b", "c"];
+declare function doSomething(value: string[]): void;
+
 doSomething(items.reverse());
 `,
 			output: `
 const items: string[] = ["a", "b", "c"];
+declare function doSomething(value: string[]): void;
+
 doSomething(items.toReversed());
 `,
 			snapshot: `
 const items: string[] = ["a", "b", "c"];
+declare function doSomething(value: string[]): void;
+
 doSomething(items.reverse());
                   ~~~~~~~~~
                   Use \`.toReversed()\` instead of \`.reverse()\` to avoid mutating the original array.
@@ -37,27 +43,41 @@ doSomething(items.reverse());
 		},
 		{
 			code: `
-const values: number[] = [1, 2, 3];
-return values.reverse();
+function reverseValues() {
+    const values: number[] = [1, 2, 3];
+
+    return values.reverse();
+}
 `,
 			output: `
-const values: number[] = [1, 2, 3];
-return values.toReversed();
+function reverseValues() {
+    const values: number[] = [1, 2, 3];
+
+    return values.toReversed();
+}
 `,
 			snapshot: `
-const values: number[] = [1, 2, 3];
-return values.reverse();
-              ~~~~~~~~~
-              Use \`.toReversed()\` instead of \`.reverse()\` to avoid mutating the original array.
+function reverseValues() {
+    const values: number[] = [1, 2, 3];
+
+    return values.reverse();
+                  ~~~~~~~~~
+                  Use \`.toReversed()\` instead of \`.reverse()\` to avoid mutating the original array.
+}
 `,
 		},
 	],
 	valid: [
 		`const values: number[] = [1, 2, 3]; const reversed = values.toReversed();`,
 		`const values: number[] = [1, 2, 3]; values.reverse();`,
-		`const values: number[] = [1, 2, 3]; values.reverse(); doSomething(values);`,
+		`
+const values: number[] = [1, 2, 3];
+declare function doSomething(value: number[]): void;
+
+values.reverse();
+doSomething(values);
+`,
 		`const obj = { reverse: () => "test" }; const result = obj.reverse();`,
-		`const values: number[] = [1, 2, 3]; values.reverse(someArg);`,
 		`function test(arr: number[]) { arr.reverse(); }`,
 	],
 });

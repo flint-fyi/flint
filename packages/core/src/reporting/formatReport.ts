@@ -6,7 +6,7 @@ import type { ReportInterpolationData } from "../types/reports.ts";
 export function formatReport(
 	data: ReportInterpolationData | undefined,
 	content: string,
-) {
+): string {
 	if (!data) {
 		return content;
 	}

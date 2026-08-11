@@ -10,7 +10,10 @@ import {
 
 import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
 import { assert, nullThrows } from "@flint.fyi/utils";
-import { createVolarBasedLanguage } from "@flint.fyi/volar-language";
+import {
+	createVolarBasedLanguage,
+	type VolarLanguage,
+} from "@flint.fyi/volar-language";
 
 import { extractTemplateDirectives } from "./extractTemplateDirectives.ts";
 import { vueParsingErrorsToLanguageReports } from "./vueParsingErrorsToLanguageReports.ts";
@@ -29,8 +32,8 @@ export interface VueServices {
 type VueCodegen =
 	typeof tsCodegen extends WeakMap<WeakKey, infer V> ? V : never;
 
-export const vueLanguage = createVolarBasedLanguage<VueServices>(
-	(ts, options) => {
+export const vueLanguage: VolarLanguage<VueServices> =
+	createVolarBasedLanguage<VueServices>((ts, options) => {
 		const { configFilePath } = options.options;
 		const host = options.host
 			? {
@@ -72,7 +75,7 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 				);
 
 				const codegen = nullThrows(
-					tsCodegen.get(virtualCode.sfc),
+					tsCodegen.get(virtualCode.ir),
 					`tsCodegen for ${data.filePathAbsolute} is undefined`,
 				);
 
@@ -125,5 +128,4 @@ export const vueLanguage = createVolarBasedLanguage<VueServices>(
 				),
 			],
 		};
-	},
-);
+	});

@@ -5,11 +5,11 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-const object = { property: "value" };
+const object: { property?: string } = { property: "value" };
 delete object.property;
 `,
 			snapshot: `
-const object = { property: "value" };
+const object: { property?: string } = { property: "value" };
 delete object.property;
 ~~~~~~
 Using the delete operator prevents optimizations in JavaScript engines.
@@ -17,11 +17,11 @@ Using the delete operator prevents optimizations in JavaScript engines.
 		},
 		{
 			code: `
-const object = { first: 1, second: 2 };
+const object: { first?: number; second?: number } = { first: 1, second: 2 };
 delete object["first"];
 `,
 			snapshot: `
-const object = { first: 1, second: 2 };
+const object: { first?: number; second?: number } = { first: 1, second: 2 };
 delete object["first"];
 ~~~~~~
 Using the delete operator prevents optimizations in JavaScript engines.
@@ -30,6 +30,7 @@ Using the delete operator prevents optimizations in JavaScript engines.
 		{
 			code: `
 class Example {
+    property?: string;
     method() {
         delete this.property;
     }
@@ -37,6 +38,7 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    property?: string;
     method() {
         delete this.property;
         ~~~~~~
@@ -73,11 +75,11 @@ Using the delete operator prevents optimizations in JavaScript engines.
 		},
 		{
 			code: `
-const nested = { outer: { inner: "value" } };
+const nested: { outer: { inner?: string } } = { outer: { inner: "value" } };
 delete nested.outer.inner;
 `,
 			snapshot: `
-const nested = { outer: { inner: "value" } };
+const nested: { outer: { inner?: string } } = { outer: { inner: "value" } };
 delete nested.outer.inner;
 ~~~~~~
 Using the delete operator prevents optimizations in JavaScript engines.
@@ -86,11 +88,11 @@ Using the delete operator prevents optimizations in JavaScript engines.
 	],
 	valid: [
 		`
-const object = { property: "value" };
+const object: { property?: string } = { property: "value" };
 object.property = undefined;
 `,
 		`
-const object = { property: "value" };
+const object: { property?: string } = { property: "value" };
 const { property, ...rest } = object;
 `,
 		`

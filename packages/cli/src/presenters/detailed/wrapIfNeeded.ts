@@ -7,7 +7,7 @@ export function wrapIfNeeded(
 	lineFormat: ChalkInstance,
 	text: string,
 	width: number,
-) {
+): string {
 	const lines = wrapAnsi(text, width).split("\n");
 
 	return [

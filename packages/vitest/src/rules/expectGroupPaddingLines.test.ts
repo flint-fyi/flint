@@ -5,8 +5,8 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-functionOne();
-functionTwo();
+const functionOne = () => {};
+const functionTwo = () => {};
 
 const someText = 'abc';
 const someObject = {
@@ -73,8 +73,8 @@ test('expectTypeOf test', () => {
 });
 `,
 			output: `
-functionOne();
-functionTwo();
+const functionOne = () => {};
+const functionTwo = () => {};
 
 const someText = 'abc';
 const someObject = {
@@ -154,8 +154,8 @@ test('expectTypeOf test', () => {
 });
 `,
 			snapshot: `
-functionOne();
-functionTwo();
+const functionOne = () => {};
+const functionTwo = () => {};
 
 const someText = 'abc';
 const someObject = {
@@ -251,8 +251,8 @@ test('expectTypeOf test', () => {
 	],
 	valid: [
 		`
-functionOne();
-functionTwo();
+const functionOne = () => {};
+const functionTwo = () => {};
 
 const someText = 'abc';
 const someObject = {

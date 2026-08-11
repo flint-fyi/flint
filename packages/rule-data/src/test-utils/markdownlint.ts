@@ -2,7 +2,8 @@ import fs from "node:fs/promises";
 
 import type { Rule } from "markdownlint";
 
-import { comparisons } from "../index.ts";
+import { ruleData } from "../index.ts";
+import type { LinterRuleReference } from "../schemas.ts";
 
 interface MarkdownlintModule {
 	default: Rule | Rule[];
@@ -30,6 +31,6 @@ export async function findMarkdownlintRules(): Promise<Rule[]> {
 	).flat();
 }
 
-export function findMarkdownlintRulesInFlint() {
-	return comparisons.flatMap((comparison) => comparison.markdownlint ?? []);
+export function findMarkdownlintRulesInFlint(): LinterRuleReference[] {
+	return ruleData.flatMap((ruleDetails) => ruleDetails.markdownlint ?? []);
 }

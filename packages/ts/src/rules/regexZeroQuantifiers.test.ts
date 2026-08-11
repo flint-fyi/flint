@@ -104,6 +104,6 @@ new RegExp("a{0}");
 		`/a{1}/;`,
 		`/a{1,2}/;`,
 		`new RegExp("a+");`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 	],
 });

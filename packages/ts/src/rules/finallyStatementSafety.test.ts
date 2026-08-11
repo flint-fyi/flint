@@ -5,46 +5,63 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-try {
-    doSomething();
-} finally {
-    return 1;
+declare function doSomething(): void;
+function test() {
+    try {
+        doSomething();
+    } finally {
+        return 1;
+    }
 }
+test();
 `,
 			snapshot: `
-try {
-    doSomething();
-} finally {
-    return 1;
-    ~~~~~~
-    Control flow statements in \`finally\` blocks misleadingly override control flow from \`try\`/\`catch\` blocks.
+declare function doSomething(): void;
+function test() {
+    try {
+        doSomething();
+    } finally {
+        return 1;
+        ~~~~~~
+        Control flow statements in \`finally\` blocks misleadingly override control flow from \`try\`/\`catch\` blocks.
+    }
 }
+test();
 `,
 		},
 		{
 			code: `
-try {
-    doSomething();
-} catch (error) {
-    console.error(error);
-} finally {
-    return;
+declare function doSomething(): void;
+function test() {
+    try {
+        doSomething();
+    } catch (error) {
+        void error;
+    } finally {
+        return;
+    }
 }
+test();
 `,
 			snapshot: `
-try {
-    doSomething();
-} catch (error) {
-    console.error(error);
-} finally {
-    return;
-    ~~~~~~
-    Control flow statements in \`finally\` blocks misleadingly override control flow from \`try\`/\`catch\` blocks.
+declare function doSomething(): void;
+function test() {
+    try {
+        doSomething();
+    } catch (error) {
+        void error;
+    } finally {
+        return;
+        ~~~~~~
+        Control flow statements in \`finally\` blocks misleadingly override control flow from \`try\`/\`catch\` blocks.
+    }
 }
+test();
 `,
 		},
 		{
 			code: `
+declare function doSomething(): void;
 try {
     doSomething();
 } finally {
@@ -52,6 +69,7 @@ try {
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
 try {
     doSomething();
 } finally {
@@ -63,6 +81,8 @@ try {
 		},
 		{
 			code: `
+declare const condition: boolean;
+declare function doSomething(): void;
 while (condition) {
     try {
         doSomething();
@@ -72,6 +92,8 @@ while (condition) {
 }
 `,
 			snapshot: `
+declare const condition: boolean;
+declare function doSomething(): void;
 while (condition) {
     try {
         doSomething();
@@ -85,6 +107,7 @@ while (condition) {
 		},
 		{
 			code: `
+declare function doSomething(): void;
 for (let i = 0; i < 10; i++) {
     try {
         doSomething();
@@ -94,6 +117,7 @@ for (let i = 0; i < 10; i++) {
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
 for (let i = 0; i < 10; i++) {
     try {
         doSomething();
@@ -107,6 +131,7 @@ for (let i = 0; i < 10; i++) {
 		},
 		{
 			code: `
+declare function doSomething(): void;
 function test() {
     try {
         doSomething();
@@ -115,8 +140,10 @@ function test() {
         return "override";
     }
 }
+test();
 `,
 			snapshot: `
+declare function doSomething(): void;
 function test() {
     try {
         doSomething();
@@ -127,56 +154,78 @@ function test() {
         Control flow statements in \`finally\` blocks misleadingly override control flow from \`try\`/\`catch\` blocks.
     }
 }
+test();
 `,
 		},
 		{
 			code: `
-try {
-    doSomething();
-} finally {
-    if (condition) {
-        return;
-    }
-}
-`,
-			snapshot: `
-try {
-    doSomething();
-} finally {
-    if (condition) {
-        return;
-        ~~~~~~
-        Control flow statements in \`finally\` blocks misleadingly override control flow from \`try\`/\`catch\` blocks.
-    }
-}
-`,
-		},
-		{
-			code: `
-try {
-    doSomething();
-} finally {
-    switch (value) {
-        case 1:
+declare const condition: boolean;
+declare function doSomething(): void;
+function test() {
+    try {
+        doSomething();
+    } finally {
+        if (condition) {
             return;
+        }
     }
 }
+test();
 `,
 			snapshot: `
-try {
-    doSomething();
-} finally {
-    switch (value) {
-        case 1:
+declare const condition: boolean;
+declare function doSomething(): void;
+function test() {
+    try {
+        doSomething();
+    } finally {
+        if (condition) {
             return;
             ~~~~~~
             Control flow statements in \`finally\` blocks misleadingly override control flow from \`try\`/\`catch\` blocks.
+        }
     }
 }
+test();
 `,
 		},
 		{
 			code: `
+declare const value: number;
+declare function doSomething(): void;
+function test() {
+    try {
+        doSomething();
+    } finally {
+        switch (value) {
+            case 1:
+                return;
+        }
+    }
+}
+test();
+`,
+			snapshot: `
+declare const value: number;
+declare function doSomething(): void;
+function test() {
+    try {
+        doSomething();
+    } finally {
+        switch (value) {
+            case 1:
+                return;
+                ~~~~~~
+                Control flow statements in \`finally\` blocks misleadingly override control flow from \`try\`/\`catch\` blocks.
+        }
+    }
+}
+test();
+`,
+		},
+		{
+			code: `
+declare function doSomething(): void;
 try {
     doSomething();
 } finally {
@@ -186,6 +235,7 @@ try {
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
 try {
     doSomething();
 } finally {
@@ -199,11 +249,50 @@ try {
 		},
 	],
 	valid: [
-		`try { doSomething(); } finally { cleanup(); }`,
-		`try { doSomething(); } catch (error) { console.error(error); } finally { cleanup(); }`,
-		`try { return 1; } finally { cleanup(); }`,
-		`try { throw new Error("Error"); } finally { cleanup(); }`,
 		`
+declare function cleanup(): void;
+declare function doSomething(): void;
+try {
+    doSomething();
+} finally {
+    cleanup();
+}
+`,
+		`
+declare function cleanup(): void;
+declare function doSomething(): void;
+try {
+    doSomething();
+} catch (error) {
+    void error;
+} finally {
+    cleanup();
+}
+`,
+		`
+declare function cleanup(): void;
+function test() {
+    try {
+        return 1;
+    } finally {
+        cleanup();
+    }
+}
+test();
+`,
+		`
+declare function cleanup(): void;
+try {
+    throw new Error("Error");
+} finally {
+    cleanup();
+}
+`,
+		`
+declare const console: {
+    log(value: string): void;
+};
+declare function doSomething(): void;
 try {
     doSomething();
 } finally {
@@ -211,6 +300,8 @@ try {
 }
 `,
 		`
+declare function cleanup(): void;
+declare function doSomething(): string;
 function test() {
     try {
         return doSomething();
@@ -218,8 +309,11 @@ function test() {
         cleanup();
     }
 }
+test();
 `,
 		`
+declare const condition: boolean;
+declare function cleanup(): void;
 while (condition) {
     try {
         break;
@@ -229,6 +323,7 @@ while (condition) {
 }
 `,
 		`
+declare function cleanup(): void;
 for (let i = 0; i < 10; i++) {
     try {
         continue;
@@ -238,6 +333,9 @@ for (let i = 0; i < 10; i++) {
 }
 `,
 		`
+declare const condition: boolean;
+declare function cleanup(): void;
+declare function doSomething(): void;
 try {
     doSomething();
 } finally {
@@ -247,6 +345,8 @@ try {
 }
 `,
 		`
+declare function cleanup(): void;
+declare function doSomething(): void;
 try {
     doSomething();
 } finally {
@@ -256,6 +356,9 @@ try {
 }
 `,
 		`
+declare const condition: boolean;
+declare function cleanup(): void;
+declare function doSomething(): void;
 try {
     doSomething();
 } finally {
@@ -265,6 +368,7 @@ try {
 }
 `,
 		`
+declare function doSomething(): void;
 try {
     doSomething();
 } finally {
@@ -274,6 +378,9 @@ try {
 }
 `,
 		`
+declare const condition: boolean;
+declare const shouldExit: boolean;
+declare function doSomething(): void;
 try {
     doSomething();
 } finally {
@@ -283,6 +390,8 @@ try {
 }
 `,
 		`
+declare function doSomething(): void;
+declare function process(value: number): void;
 try {
     doSomething();
 } finally {
@@ -293,6 +402,9 @@ try {
 }
 `,
 		`
+declare function cleanup(): void;
+declare function doSomething(): void;
+declare function log(): void;
 try {
     doSomething();
 } finally {

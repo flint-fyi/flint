@@ -1,9 +1,7 @@
 {
 	"compilerOptions": {
 		"allowImportingTsExtensions": true,
-		"allowJs": true,
 		"allowUnreachableCode": false,
-		"checkJs": true,
 		"composite": true,
 		"declaration": true,
 		"emitDeclarationOnly": true,

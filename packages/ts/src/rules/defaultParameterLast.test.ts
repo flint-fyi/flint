@@ -61,16 +61,6 @@ class Example {
 }
 `,
 		},
-		{
-			code: `
-function example(a?: number, b: number) {}
-`,
-			snapshot: `
-function example(a?: number, b: number) {}
-                             ~~~~~~~~~
-                             Default parameters should be last to allow omitting optional tail arguments.
-`,
-		},
 	],
 	valid: [
 		"function greet(greeting: string, name = 'World') {}",

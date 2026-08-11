@@ -22,14 +22,14 @@ function sum() {
 		{
 			code: `
 function logAll() {
-    console.log(arguments);
+    void arguments;
 }
 `,
 			snapshot: `
 function logAll() {
-    console.log(arguments);
-                ~~~~~~~~~
-                Use rest parameters instead of the \`arguments\` object.
+    void arguments;
+         ~~~~~~~~~
+         Use rest parameters instead of the \`arguments\` object.
 }
 `,
 		},
@@ -101,16 +101,18 @@ class Example {
 			code: `
 class Example {
     set value(input: number) {
-        console.log(arguments[0]);
+        void input;
+        void arguments[0];
     }
 }
 `,
 			snapshot: `
 class Example {
     set value(input: number) {
-        console.log(arguments[0]);
-                    ~~~~~~~~~
-                    Use rest parameters instead of the \`arguments\` object.
+        void input;
+        void arguments[0];
+             ~~~~~~~~~
+             Use rest parameters instead of the \`arguments\` object.
     }
 }
 `,
@@ -119,16 +121,16 @@ class Example {
 			code: `
 class Example {
     constructor() {
-        console.log(arguments[0]);
+        void arguments[0];
     }
 }
 `,
 			snapshot: `
 class Example {
     constructor() {
-        console.log(arguments[0]);
-                    ~~~~~~~~~
-                    Use rest parameters instead of the \`arguments\` object.
+        void arguments[0];
+             ~~~~~~~~~
+             Use rest parameters instead of the \`arguments\` object.
     }
 }
 `,
@@ -136,17 +138,27 @@ class Example {
 	],
 	valid: [
 		`function sum(...values: number[]) { return values.reduce((a, b) => a + b, 0); }`,
-		`const logAll = (...items: unknown[]) => console.log(items);`,
+		`const logAll = (...items: unknown[]) => void items;`,
 		`function getLength(...args: unknown[]) { return args.length; }`,
-		`const obj = { arguments: 1 }; console.log(obj.arguments);`,
-		`function test(arguments: number) { return arguments; }`,
+		`const obj = { arguments: 1 }; void obj.arguments;`,
 		`const arrow = () => { const args = [1, 2, 3]; return args; };`,
 		`class Example { arguments = 5; method() { return this.arguments; } }`,
-		`const arrow = () => arguments;`,
-		`const nested = () => { const inner = () => arguments; };`,
+		`
+function outer() {
+    const arrow = () => arguments;
+    return arrow;
+}
+`,
+		`
+function outer() {
+    const nested = () => {
+        const inner = () => arguments;
+        return inner;
+    };
+    return nested;
+}
+`,
 		`function outer() { const arrow = () => arguments; }`,
-		`const obj = { arguments };`,
-		`function test() { const arguments = 5; return arguments; }`,
-		`function test({ arguments }: { arguments: number }) { return arguments; }`,
+		`function outer() { const obj = { arguments }; return obj; }`,
 	],
 });

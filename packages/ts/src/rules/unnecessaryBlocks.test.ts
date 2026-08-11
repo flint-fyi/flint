@@ -37,6 +37,9 @@ function test() {
 		},
 		{
 			code: `
+declare const condition: boolean;
+declare function doSomething(): void;
+
 if (condition) {
     doSomething();
     {
@@ -45,6 +48,9 @@ if (condition) {
 }
 `,
 			snapshot: `
+declare const condition: boolean;
+declare function doSomething(): void;
+
 if (condition) {
     doSomething();
     {
@@ -58,14 +64,16 @@ if (condition) {
 		{
 			code: `
 {
-    console.log("standalone");
+    const message = "standalone";
+    void message;
 }
 `,
 			snapshot: `
 {
 ~
 This standalone block statement is unnecessary and doesn't change any variable scopes.
-    console.log("standalone");
+    const message = "standalone";
+    void message;
 }
 `,
 		},
@@ -73,37 +81,60 @@ This standalone block statement is unnecessary and doesn't change any variable s
 			code: `
 function outer() {
     {
-        console.log("inner");
+        const message = "inner";
+        void message;
     }
     {
-        console.log("another");
+        const message = "another";
+        void message;
     }
 }
+outer();
 `,
 			snapshot: `
 function outer() {
     {
     ~
     This standalone block statement is unnecessary and doesn't change any variable scopes.
-        console.log("inner");
+        const message = "inner";
+        void message;
     }
     {
     ~
     This standalone block statement is unnecessary and doesn't change any variable scopes.
-        console.log("another");
+        const message = "another";
+        void message;
     }
 }
+outer();
 `,
 		},
 	],
 	valid: [
-		`if (condition) { doSomething(); }`,
-		`for (let i = 0; i < 10; i++) { console.log(i); }`,
-		`while (condition) { doWork(); }`,
-		`do { doWork(); } while (condition);`,
+		`
+declare const condition: boolean;
+declare function doSomething(): void;
+
+if (condition) { doSomething(); }
+`,
+		`for (let i = 0; i < 10; i++) { void i; }`,
+		`
+declare const condition: boolean;
+declare function doWork(): void;
+
+while (condition) { doWork(); }
+`,
+		`
+declare const condition: boolean;
+declare function doWork(): void;
+
+do { doWork(); } while (condition);
+`,
 		`function test() { return 42; }`,
 		`const arrow = () => { return 1; };`,
 		`
+declare const value: number;
+
 switch (value) {
     case 1: {
         const x = 1;
@@ -116,6 +147,9 @@ switch (value) {
 }
 `,
 		`
+declare function doSomething(): void;
+declare function handleError(error: unknown): void;
+
 try {
     doSomething();
 } catch (error) {
@@ -130,11 +164,17 @@ class MyClass {
 }
 `,
 		`
+declare const items: readonly string[];
+declare function processItem(item: string): void;
+
 for (const item of items) {
     processItem(item);
 }
 `,
 		`
+declare const object: object;
+declare function processKey(key: string): void;
+
 for (const key in object) {
     processKey(key);
 }
@@ -150,9 +190,12 @@ label: {
 }
 `,
 		`
-{
-  await using _ = { [Symbol.asyncDispose]: () => { } };
+async function run() {
+  {
+    await using _ = { [Symbol.asyncDispose]: () => Promise.resolve() };
+  }
 }
+run();
 `,
 	],
 });

@@ -7,7 +7,7 @@ import { ColorCodes } from "./constants.ts";
 export function formatSuggestion(
 	data: ReportInterpolationData | undefined,
 	suggestion: string,
-) {
+): string {
 	suggestion = formatReport(data, suggestion);
 
 	return [

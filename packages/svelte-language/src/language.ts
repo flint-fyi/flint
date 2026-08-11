@@ -2,7 +2,10 @@ import { parse, type AST } from "svelte/compiler";
 
 import type { LanguageReports, SourceFileWithLineMap } from "@flint.fyi/core";
 import { setTSExtraSupportedExtensions } from "@flint.fyi/ts-patch";
-import { createVolarBasedLanguage } from "@flint.fyi/volar-language";
+import {
+	createVolarBasedLanguage,
+	type VolarLanguage,
+} from "@flint.fyi/volar-language";
 
 import { extractDirectives } from "./extractDirectives.ts";
 import {
@@ -20,8 +23,8 @@ export interface SvelteServices {
 	};
 }
 
-export const svelteLanguage = createVolarBasedLanguage<SvelteServices>(
-	(ts, options) => {
+export const svelteLanguage: VolarLanguage<SvelteServices> =
+	createVolarBasedLanguage<SvelteServices>((ts, options) => {
 		return {
 			createFile({ sourceFile, sourceScript }) {
 				const sourceText = sourceScript.snapshot.getText(
@@ -85,5 +88,4 @@ export const svelteLanguage = createVolarBasedLanguage<SvelteServices>(
 			},
 			languagePlugins: [volarLanguagePlugin(ts, options)],
 		};
-	},
-);
+	});

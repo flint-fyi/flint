@@ -69,10 +69,7 @@ export async function readFromCache(
 		}
 	}
 
-	const cached = new Map(Object.entries(cache.files)) as Map<
-		string,
-		FileCacheStorage
-	>;
+	const cached = new Map(Object.entries(cache.files));
 	const filePathsToLint = new Set<string>();
 
 	for (const {

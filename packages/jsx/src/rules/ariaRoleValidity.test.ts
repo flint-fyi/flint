@@ -48,9 +48,13 @@ ruleTester.describe(rule, {
 		`<div role="button" />`,
 		`<div role="navigation" />`,
 		`<span role="link" />`,
-		`<div role={dynamicRole} />`,
+		`
+declare const dynamicRole: string;
+<div role={dynamicRole} />`,
 		`<div />`,
 		`<button role="button" />`,
-		`<CustomElement role="other" />`,
+		`
+declare const CustomElement: (props: Record<string, unknown>) => unknown;
+<CustomElement role="other" />`,
 	],
 });

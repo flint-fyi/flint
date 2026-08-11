@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/browser",
-	"version": "0.3.0",
+	"version": "0.5.0",
 	"description": "[Experimental] A Flint plugin for browser code.",
 	"homepage": "https://flint.fyi/rules/browser",
 	"repository": {
@@ -37,7 +37,7 @@
 		"vitest": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",

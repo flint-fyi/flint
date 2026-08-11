@@ -25,9 +25,11 @@ Assigning to \`exports\` rather than \`module.exports\` may break references to 
 		},
 		{
 			code: `
+declare const somethingElse: unknown;
 exports = somethingElse;
 `,
 			snapshot: `
+declare const somethingElse: unknown;
 exports = somethingElse;
 ~~~~~~~
 Assigning to \`exports\` rather than \`module.exports\` may break references to \`module.exports\`.
@@ -40,7 +42,7 @@ Assigning to \`exports\` rather than \`module.exports\` may break references to 
 		`module.exports = {};`,
 		`module.exports = exports = {};`,
 		`exports = module.exports = {};`,
-		`function f(exports) { exports = {}; }`,
-		`let exports; exports = {};`,
+		`function f(exports: unknown) { exports = {}; }`,
+		`let exports; exports = {}; export {};`,
 	],
 });

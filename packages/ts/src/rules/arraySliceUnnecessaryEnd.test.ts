@@ -69,14 +69,17 @@ const result = data.slice(0, Number.POSITIVE_INFINITY);
 		},
 		{
 			code: `
+declare function doSomething(value: unknown): void;
 const values = [1, 2, 3, 4, 5];
 doSomething(values.slice(2, values.length));
 `,
 			output: `
+declare function doSomething(value: unknown): void;
 const values = [1, 2, 3, 4, 5];
 doSomething(values.slice(2));
 `,
 			snapshot: `
+declare function doSomething(value: unknown): void;
 const values = [1, 2, 3, 4, 5];
 doSomething(values.slice(2, values.length));
                             ~~~~~~~~~~~~~

@@ -17,7 +17,10 @@ export function createDirectPropertyValidityRule<PropertyName extends string>(
 	propertyName: PropertyName,
 	propertyNameAliases: readonly string[],
 	propertyValidator: PropertyValidator,
-) {
+): {
+	id: `${PropertyName}Validity`;
+	rule: AnyRule;
+} {
 	const id = `${propertyName}Validity` as const;
 	const propertyNames = [propertyName, ...propertyNameAliases];
 

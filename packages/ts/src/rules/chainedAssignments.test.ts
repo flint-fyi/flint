@@ -35,11 +35,15 @@ first = second = third = 0;
 		},
 		{
 			code: `
+declare function getValue(): number;
+
 let value;
 let another;
 value = another = getValue();
 `,
 			snapshot: `
+declare function getValue(): number;
+
 let value;
 let another;
 value = another = getValue();
@@ -167,13 +171,13 @@ first ??= second ??= 0;
 		},
 		{
 			code: `
-let first;
-let second;
+let first = 0;
+let second = 0;
 first += second += 5;
 `,
 			snapshot: `
-let first;
-let second;
+let first = 0;
+let second = 0;
 first += second += 5;
       ~~
       Prefer separate assignment statements for readability instead of chaining assignments.
@@ -181,13 +185,13 @@ first += second += 5;
 		},
 		{
 			code: `
-let first;
-let second;
+let first = 0;
+let second = 0;
 first |= second |= 3;
 `,
 			snapshot: `
-let first;
-let second;
+let first = 0;
+let second = 0;
 first |= second |= 3;
       ~~
       Prefer separate assignment statements for readability instead of chaining assignments.
@@ -200,7 +204,11 @@ first |= second |= 3;
 		`let first = 1; let second = 2;`,
 		`let first; let second; first = 1; second = 2;`,
 		`let first; let second; first = 1; second = first;`,
-		`const value = getValue();`,
+		`
+declare function getValue(): number;
+
+const value = getValue();
+`,
 		`let first; first = 1;`,
 		`
 let first;
