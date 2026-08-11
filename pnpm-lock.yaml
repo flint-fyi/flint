@@ -231,8 +231,8 @@ catalogs:
       specifier: 4.0.4
       version: 4.0.4
     '@types/node':
-      specifier: 26.1.2
-      version: 26.1.2
+      specifier: 26.2.0
+      version: 26.2.0
     '@types/omit-empty':
       specifier: 1.0.4
       version: 1.0.4
@@ -419,7 +419,7 @@ importers:
         version: 0.7.0
       '@changesets/cli':
         specifier: catalog:dev
-        version: 2.31.0(@types/node@26.1.2)
+        version: 2.31.0(@types/node@26.2.0)
       '@eslint-community/eslint-plugin-eslint-comments':
         specifier: catalog:dev
         version: 4.7.0(eslint@10.8.0)
@@ -458,7 +458,7 @@ importers:
         version: 4.7.1(@vue/compiler-sfc@3.5.30)(prettier@3.8.1)
       '@types/node':
         specifier: catalog:dev
-        version: 26.1.2
+        version: 26.2.0
       '@vitest/coverage-v8':
         specifier: catalog:dev
         version: 4.1.0(vitest@4.1.0)
@@ -536,7 +536,7 @@ importers:
         version: 8.64.0(eslint@10.8.0)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
       vitest-ansi-serializer:
         specifier: catalog:dev
         version: 0.2.1(vitest@4.1.0)
@@ -579,7 +579,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/astro-language:
     dependencies:
@@ -616,7 +616,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/browser:
     dependencies:
@@ -644,7 +644,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/build:
     dependencies:
@@ -739,7 +739,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/css:
     dependencies:
@@ -764,7 +764,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/css-language:
     dependencies:
@@ -789,7 +789,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/e2e:
     devDependencies:
@@ -813,7 +813,7 @@ importers:
         version: link:../flint
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
       vitest-ansi-serializer:
         specifier: catalog:dev
         version: 0.2.1(vitest@4.1.0)
@@ -884,7 +884,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/json-language:
     dependencies:
@@ -903,7 +903,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/jsx:
     dependencies:
@@ -937,7 +937,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/markdown-language:
     dependencies:
@@ -974,7 +974,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/md:
     dependencies:
@@ -1005,7 +1005,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/next:
     dependencies:
@@ -1049,7 +1049,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/nuxt:
     dependencies:
@@ -1117,7 +1117,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/performance:
     dependencies:
@@ -1145,7 +1145,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/plugin-flint:
     dependencies:
@@ -1176,7 +1176,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/plugin-internal:
     dependencies:
@@ -1189,7 +1189,7 @@ importers:
     devDependencies:
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/react:
     dependencies:
@@ -1359,7 +1359,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
       vue-eslint-parser:
         specifier: 10.4.1
         version: 10.4.1(eslint@10.8.0)
@@ -1384,7 +1384,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/site:
     dependencies:
@@ -1399,7 +1399,7 @@ importers:
         version: 19.2.18
       astro:
         specifier: catalog:site
-        version: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)
+        version: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.2.0)(jiti@2.7.0)(yaml@2.9.0)
       astro-og-canvas:
         specifier: catalog:site
         version: 0.13.0(astro@7.1.6)
@@ -1433,7 +1433,7 @@ importers:
         version: 7.2.2
       '@astrojs/react':
         specifier: catalog:site
-        version: 6.0.2(@types/node@26.1.2)(@types/react-dom@19.2.4)(@types/react@19.2.18)(esbuild@0.28.1)(jiti@2.7.0)(react-dom@19.2.8)(react@19.2.8)(yaml@2.9.0)
+        version: 6.0.2(@types/node@26.2.0)(@types/react-dom@19.2.4)(@types/react@19.2.18)(esbuild@0.28.1)(jiti@2.7.0)(react-dom@19.2.8)(react@19.2.8)(yaml@2.9.0)
       '@expressive-code/core':
         specifier: catalog:site
         version: 0.44.1
@@ -1448,7 +1448,7 @@ importers:
         version: 14.1.2
       '@types/node':
         specifier: catalog:dev
-        version: 26.1.2
+        version: 26.2.0
       '@types/react-dom':
         specifier: catalog:site
         version: 19.2.4(@types/react@19.2.18)
@@ -1469,7 +1469,7 @@ importers:
         version: 2.0.0
       sharp:
         specifier: catalog:site
-        version: 0.35.3(@types/node@26.1.2)
+        version: 0.35.3(@types/node@26.2.0)
       starlight-blog:
         specifier: catalog:site
         version: 0.28.0(@astrojs/markdown-satteri@0.3.5)(@astrojs/starlight@0.41.6)(astro@7.1.6)(typescript@6.0.3)
@@ -1528,7 +1528,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/svelte:
     dependencies:
@@ -1565,7 +1565,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/svelte-language:
     dependencies:
@@ -1608,7 +1608,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/text-language:
     dependencies:
@@ -1664,7 +1664,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/ts-patch:
     devDependencies:
@@ -1713,7 +1713,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/utils:
     devDependencies:
@@ -1725,7 +1725,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/vitest:
     dependencies:
@@ -1750,7 +1750,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/volar-language:
     dependencies:
@@ -1784,7 +1784,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/vue:
     dependencies:
@@ -1824,7 +1824,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
       vue:
         specifier: 3.5.30
         version: 3.5.30(typescript@6.0.3)
@@ -1867,7 +1867,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/yaml:
     dependencies:
@@ -1889,7 +1889,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
       yaml-unist-parser:
         specifier: 3.2.0
         version: 3.2.0
@@ -1914,7 +1914,7 @@ importers:
         version: 0.22.3(@arethetypeswrong/core@0.18.2)(oxc-resolver@11.24.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
 packages:
 
@@ -3877,8 +3877,8 @@ packages:
   '@types/node@24.13.1':
     resolution: {integrity: sha512-RSpUJGmvsJ1ZeBehQZFhIdpsz+bIpES0nIQXko4Ybq+N+kX6XvOq3Jo+iJ82FWLdblFq85AsMikd3m35jgezYg==}
 
-  '@types/node@26.1.2':
-    resolution: {integrity: sha512-Vu4a5UFA9rIIFJ7rB/Vaafh9lrCQszopTCx6KjFboXTGQbPNasehVR5TEiithSDGyd1DEiUByggTZsg8jukeIg==}
+  '@types/node@26.2.0':
+    resolution: {integrity: sha512-5IviulTZeRNp2vAJ514cc/HUlY5nZ9fCbq9DMyC52BrhFZACo3nI0R7qBxhQmo/d27NFe96ur/b7Wwxklda+kg==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -8127,7 +8127,7 @@ snapshots:
       '@astrojs/markdown-remark': 7.2.2
       '@mdx-js/mdx': 3.1.1
       acorn: 8.16.0
-      astro: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)
+      astro: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.2.0)(jiti@2.7.0)(yaml@2.9.0)
       es-module-lexer: 2.0.0
       estree-util-visit: 2.0.0
       hast-util-to-html: 9.0.5
@@ -8147,7 +8147,7 @@ snapshots:
     dependencies:
       prismjs: 1.30.0
 
-  '@astrojs/react@6.0.2(@types/node@26.1.2)(@types/react-dom@19.2.4)(@types/react@19.2.18)(esbuild@0.28.1)(jiti@2.7.0)(react-dom@19.2.8)(react@19.2.8)(yaml@2.9.0)':
+  '@astrojs/react@6.0.2(@types/node@26.2.0)(@types/react-dom@19.2.4)(@types/react@19.2.18)(esbuild@0.28.1)(jiti@2.7.0)(react-dom@19.2.8)(react@19.2.8)(yaml@2.9.0)':
     dependencies:
       '@astrojs/internal-helpers': 0.10.2
       '@types/react': 19.2.18
@@ -8157,7 +8157,7 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
       ultrahtml: 1.6.0
-      vite: 8.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+      vite: 8.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - '@types/node'
       - '@vitejs/devtools'
@@ -8194,7 +8194,7 @@ snapshots:
       '@types/hast': 3.0.4
       '@types/js-yaml': 4.0.9
       '@types/mdast': 4.0.4
-      astro: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)
+      astro: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.2.0)(jiti@2.7.0)(yaml@2.9.0)
       astro-expressive-code: 0.44.0(astro@7.1.6)
       bcp-47: 2.1.0
       hast-util-from-html: 2.0.3
@@ -8491,7 +8491,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@changesets/cli@2.31.0(@types/node@26.1.2)':
+  '@changesets/cli@2.31.0(@types/node@26.2.0)':
     dependencies:
       '@changesets/apply-release-plan': 7.1.1
       '@changesets/assemble-release-plan': 6.0.10
@@ -8507,7 +8507,7 @@ snapshots:
       '@changesets/should-skip-package': 0.1.2
       '@changesets/types': 6.1.0
       '@changesets/write': 0.4.0
-      '@inquirer/external-editor': 1.0.3(@types/node@26.1.2)
+      '@inquirer/external-editor': 1.0.3(@types/node@26.2.0)
       '@manypkg/get-packages': 1.1.3
       ansi-colors: 4.1.3
       enquirer: 2.4.1
@@ -9264,12 +9264,12 @@ snapshots:
   '@img/sharp-win32-x64@0.35.3':
     optional: true
 
-  '@inquirer/external-editor@1.0.3(@types/node@26.1.2)':
+  '@inquirer/external-editor@1.0.3(@types/node@26.2.0)':
     dependencies:
       chardet: 2.1.1
       iconv-lite: 0.7.2
     optionalDependencies:
-      '@types/node': 26.1.2
+      '@types/node': 26.2.0
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
@@ -9292,7 +9292,7 @@ snapshots:
 
   '@konami-emoji-blast/astro@0.3.0(astro@7.1.6)(konami-emoji-blast@0.7.0)':
     dependencies:
-      astro: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)
+      astro: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.2.0)(jiti@2.7.0)(yaml@2.9.0)
       konami-emoji-blast: 0.7.0
 
   '@loaderkit/resolve@1.0.4':
@@ -9850,7 +9850,7 @@ snapshots:
     dependencies:
       undici-types: 7.18.2
 
-  '@types/node@26.1.2':
+  '@types/node@26.2.0':
     dependencies:
       undici-types: 8.3.0
 
@@ -9870,7 +9870,7 @@ snapshots:
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 26.1.2
+      '@types/node': 26.2.0
 
   '@types/trusted-types@2.0.7': {}
 
@@ -10030,7 +10030,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-rc.3
       '@types/babel__core': 7.20.5
       react-refresh: 0.18.0
-      vite: 8.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+      vite: 8.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -10046,7 +10046,7 @@ snapshots:
       obug: 2.1.3
       std-env: 4.0.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+      vitest: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   '@vitest/eslint-plugin@1.6.1(eslint@10.8.0)(typescript@6.0.3)(vitest@4.1.0)':
     dependencies:
@@ -10055,7 +10055,7 @@ snapshots:
       eslint: 10.8.0(jiti@2.7.0)
     optionalDependencies:
       typescript: 6.0.3
-      vitest: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+      vitest: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -10074,7 +10074,7 @@ snapshots:
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+      vite: 8.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   '@vitest/pretty-format@4.1.0':
     dependencies:
@@ -10395,18 +10395,18 @@ snapshots:
 
   astro-expressive-code@0.44.0(astro@7.1.6):
     dependencies:
-      astro: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)
+      astro: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.2.0)(jiti@2.7.0)(yaml@2.9.0)
       rehype-expressive-code: 0.44.0
       url-extras: 0.1.0
 
   astro-og-canvas@0.13.0(astro@7.1.6):
     dependencies:
-      astro: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)
+      astro: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.2.0)(jiti@2.7.0)(yaml@2.9.0)
       canvaskit-wasm: 0.41.1
       deterministic-object-hash: 2.0.2
       entities: 8.0.0
 
-  astro@7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0):
+  astro@7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.2.0)(jiti@2.7.0)(yaml@2.9.0):
     dependencies:
       '@astrojs/compiler-rs': 0.3.2(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)
       '@astrojs/internal-helpers': 0.10.2
@@ -10456,14 +10456,14 @@ snapshots:
       ultrahtml: 1.6.0
       unifont: 0.7.4
       unstorage: 1.17.5
-      vite: 8.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+      vite: 8.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
       vitefu: 1.1.2(vite@8.1.0)
       xxhash-wasm: 1.1.0
       yargs-parser: 22.0.0
       zod: 4.4.3
     optionalDependencies:
       '@astrojs/markdown-remark': 7.2.2
-      sharp: 0.35.3(@types/node@26.1.2)
+      sharp: 0.35.3(@types/node@26.2.0)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -14014,7 +14014,7 @@ snapshots:
 
   sh-syntax@0.6.0: {}
 
-  sharp@0.35.3(@types/node@26.1.2):
+  sharp@0.35.3(@types/node@26.2.0):
     dependencies:
       '@img/colour': 1.1.0
       detect-libc: 2.1.2
@@ -14045,7 +14045,7 @@ snapshots:
       '@img/sharp-win32-arm64': 0.35.3
       '@img/sharp-win32-ia32': 0.35.3
       '@img/sharp-win32-x64': 0.35.3
-      '@types/node': 26.1.2
+      '@types/node': 26.2.0
 
   shebang-command@2.0.0:
     dependencies:
@@ -14202,7 +14202,7 @@ snapshots:
       '@astrojs/markdown-satteri': 0.3.5
       '@astrojs/starlight': 0.41.6(@astrojs/markdown-remark@7.2.2)(astro@7.1.6)(typescript@6.0.3)
       '@types/picomatch': 4.0.3
-      astro: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)
+      astro: 7.1.6(@astrojs/markdown-remark@7.2.2)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.2.0)(jiti@2.7.0)(yaml@2.9.0)
       github-slugger: 2.0.0
       hast-util-from-html: 2.0.3
       is-absolute-url: 5.0.0
@@ -14706,7 +14706,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite@8.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0):
+  vite@8.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.5
@@ -14714,7 +14714,7 @@ snapshots:
       rolldown: 1.1.3
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 26.1.2
+      '@types/node': 26.2.0
       esbuild: 0.28.1
       fsevents: 2.3.3
       jiti: 2.7.0
@@ -14722,13 +14722,13 @@ snapshots:
 
   vitefu@1.1.2(vite@8.1.0):
     optionalDependencies:
-      vite: 8.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+      vite: 8.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   vitest-ansi-serializer@0.2.1(vitest@4.1.0):
     dependencies:
-      vitest: 4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+      vitest: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
-  vitest@4.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0):
+  vitest@4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0):
     dependencies:
       '@vitest/expect': 4.1.0
       '@vitest/mocker': 4.1.0(vite@8.1.0)
@@ -14748,10 +14748,10 @@ snapshots:
       tinyexec: 1.2.4
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vite: 8.1.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+      vite: 8.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 26.1.2
+      '@types/node': 26.2.0
     transitivePeerDependencies:
       - '@vitejs/devtools'
       - esbuild
