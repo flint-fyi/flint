@@ -25,7 +25,7 @@ catalogs:
     console-fail-test: 0.6.1
     eslint: 10.8.0
     eslint-plugin-jsdoc: 63.0.2
-    eslint-plugin-jsonc: 3.3.0
+    eslint-plugin-jsonc: 3.4.1
     eslint-plugin-n: 18.2.1
     eslint-plugin-package-json: 1.6.0
     eslint-plugin-perfectionist: 5.10.0
