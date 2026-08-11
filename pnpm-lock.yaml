@@ -1343,8 +1343,8 @@ importers:
         specifier: 64.0.0
         version: 64.0.0(eslint@10.8.0)
       eslint-plugin-vue:
-        specifier: 10.9.1
-        version: 10.9.1(@typescript-eslint/parser@8.64.0)(eslint@10.8.0)(vue-eslint-parser@10.4.1)
+        specifier: 10.10.0
+        version: 10.10.0(@typescript-eslint/parser@8.64.0)(eslint@10.8.0)(vue-eslint-parser@10.4.1)
       eslint-plugin-yml:
         specifier: catalog:dev
         version: 3.4.0(eslint@10.8.0)
@@ -5030,8 +5030,8 @@ packages:
     peerDependencies:
       eslint: '>=9.38.0'
 
-  eslint-plugin-vue@10.9.1:
-    resolution: {integrity: sha512-cHB0Tf4Duvzwecwd/AqWzZvF/QszE13BhjVUpVXWCy9AeMR5GjkAjP3i85vqgLgOuTmkHR1OJ5oMeqLHtuw8zg==}
+  eslint-plugin-vue@10.10.0:
+    resolution: {integrity: sha512-dL9x9rBHqqNcByWiLOHK6L0SB97V82/NC0cZRn9cXPjM7pCuWlpQQP9bFH4vjBv80ej1ZpzAkuD8zWH1o9bZbA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       '@stylistic/eslint-plugin': ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
@@ -6629,8 +6629,8 @@ packages:
     resolution: {integrity: sha512-Q8qQfPiZ+THO/3ZrOrO0cJJKfpYCagtMUkXbnEfmgUjwXg6z/WBeOyS9APBBPCTSiDV+s4SwQGu8yFsiMRIudg==}
     engines: {node: '>=4'}
 
-  postcss-selector-parser@7.1.1:
-    resolution: {integrity: sha512-orRsuYpJVw8LdAwqqLykBj9ecS5/cRHlI5+nvTo8LcCKmzDmqVORXtOIYEEQuL9D4BxtA1lm5isAqzQZCoQ6Eg==}
+  postcss-selector-parser@7.1.5:
+    resolution: {integrity: sha512-KvvtD7SrlBP7dlgkBghEE3r84CABm5SmV2aNcG4oCA+qDnJ/tvKonFVvwWAyyWUEwxuNawdfEAZKP9zM3oZ2Uw==}
     engines: {node: '>=4'}
 
   postcss@8.5.15:
@@ -7877,9 +7877,9 @@ packages:
     resolution: {integrity: sha512-GCPAHLvrIH13+c0SuacwvRYj2SxJXQ4kaVTT5xgL3kPrz56XxkF21IGhjSE1+W0aw7gpBWRGXLCPnPby6lSpmQ==}
     engines: {node: '>=12'}
 
-  xml-name-validator@4.0.0:
-    resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
-    engines: {node: '>=12'}
+  xml-name-validator@5.0.0:
+    resolution: {integrity: sha512-EvGK8EJ3DhaHfbRlETOWAS5pO9MZITeauHKJyb8wyajUfQUenkIg2MvLDTZ4T/TgIcm3HU0TFBgWWboAZ30UHg==}
+    engines: {node: '>=18'}
 
   xml-naming@0.1.0:
     resolution: {integrity: sha512-k8KO9hrMyNk6tUWqUfkTEZbezRRpONVOzUTnc97VnCvyj6Tf9lyUR9EDAIeiVLv56jsMcoXEwjW8Kv5yPY52lw==}
@@ -11145,7 +11145,7 @@ snapshots:
       eslint-compat-utils: 0.6.5(eslint@10.8.0)
       globals: 16.5.0
       postcss: 8.5.15
-      postcss-selector-parser: 7.1.1
+      postcss-selector-parser: 7.1.5
     transitivePeerDependencies:
       - supports-color
 
@@ -11387,16 +11387,16 @@ snapshots:
       semver: 7.8.5
       strip-indent: 4.1.1
 
-  eslint-plugin-vue@10.9.1(@typescript-eslint/parser@8.64.0)(eslint@10.8.0)(vue-eslint-parser@10.4.1):
+  eslint-plugin-vue@10.10.0(@typescript-eslint/parser@8.64.0)(eslint@10.8.0)(vue-eslint-parser@10.4.1):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.8.0)
       eslint: 10.8.0(jiti@2.7.0)
       natural-compare: 1.4.0
       nth-check: 2.1.1
-      postcss-selector-parser: 7.1.1
+      postcss-selector-parser: 7.1.5
       semver: 7.8.5
       vue-eslint-parser: 10.4.1(eslint@10.8.0)
-      xml-name-validator: 4.0.0
+      xml-name-validator: 5.0.0
     optionalDependencies:
       '@typescript-eslint/parser': 8.64.0(eslint@10.8.0)(typescript@6.0.3)
 
@@ -13508,7 +13508,7 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-selector-parser@7.1.1:
+  postcss-selector-parser@7.1.5:
     dependencies:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
@@ -14339,7 +14339,7 @@ snapshots:
       espree: 10.4.0
       postcss: 8.5.15
       postcss-scss: 4.0.9(postcss@8.5.15)
-      postcss-selector-parser: 7.1.1
+      postcss-selector-parser: 7.1.5
       semver: 7.8.5
     optionalDependencies:
       svelte: 5.56.2(@typescript-eslint/types@8.66.0)
@@ -14945,7 +14945,7 @@ snapshots:
 
   xdg-basedir@5.1.0: {}
 
-  xml-name-validator@4.0.0: {}
+  xml-name-validator@5.0.0: {}
 
   xml-naming@0.1.0: {}
 

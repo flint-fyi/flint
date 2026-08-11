@@ -72,7 +72,7 @@
 		"eslint-plugin-solid": "0.14.5",
 		"eslint-plugin-svelte": "3.17.1",
 		"eslint-plugin-unicorn": "64.0.0",
-		"eslint-plugin-vue": "10.9.1",
+		"eslint-plugin-vue": "10.10.0",
 		"eslint-plugin-yml": "catalog:dev",
 		"markdownlint": "0.41.0",
 		"oxlint": "1.77.0",
