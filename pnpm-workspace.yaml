@@ -42,6 +42,7 @@ catalogs:
     prettier-plugin-packagejson: 3.0.0
     prettier-plugin-sentences-per-line: 0.2.0
     prettier-plugin-sh: 0.19.0
+    pkg-pr-new: 0.0.87
     tsdown: 0.22.3
     typescript: 6.0.3
     typescript-eslint: 8.66.0

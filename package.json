@@ -59,6 +59,7 @@
 		"jiti": "catalog:dev",
 		"knip": "catalog:dev",
 		"lint-staged": "catalog:dev",
+		"pkg-pr-new": "catalog:dev",
 		"prettier": "catalog:dev",
 		"prettier-plugin-astro": "catalog:dev",
 		"prettier-plugin-curly": "catalog:dev",
