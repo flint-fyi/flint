@@ -1,9 +1,9 @@
 export { getRuleForPlugin, getRuleForPluginSafe } from "./getRuleForPlugin.ts";
+export { getFlintRuleId, ruleData } from "./ruleData.ts";
+
 export {
-	getFlintRuleId,
+	type FlintRuleReference,
 	type LinterName,
 	linterNames,
-	ruleData,
-} from "./ruleData.ts";
-
-export type { FlintRuleReference, RuleDetails } from "./schemas.ts";
+	type RuleDetails,
+} from "./schemas.ts";

@@ -124,6 +124,26 @@ export interface LinterRuleReference {
 	url: string;
 }
 
+export const linterNames = {
+	biome: "Biome",
+	deno: "Deno",
+	eslint: "ESLint",
+	markdownlint: "Markdownlint",
+	oxlint: "Oxlint",
+	stylelint: "Stylelint",
+} as const;
+
+export type LinterName = keyof typeof linterNames;
+
+export interface RuleDetails extends AlternateLinterDetails {
+	flint: FlintRuleReference;
+	notes?: string;
+}
+
+type AlternateLinterDetails = Partial<
+	Record<LinterName, LinterRuleReference[]>
+>;
+
 const ruleDetailsSchema: z.ZodType<RuleDetails> = z
 	.object({
 		biome: z.array(linterRuleReferenceSchema).exactOptional(),
@@ -136,17 +156,6 @@ const ruleDetailsSchema: z.ZodType<RuleDetails> = z
 		stylelint: z.array(linterRuleReferenceSchema).exactOptional(),
 	})
 	.strict();
-
-export interface RuleDetails {
-	biome?: LinterRuleReference[];
-	deno?: LinterRuleReference[];
-	eslint?: LinterRuleReference[];
-	flint: FlintRuleReference;
-	markdownlint?: LinterRuleReference[];
-	notes?: string;
-	oxlint?: LinterRuleReference[];
-	stylelint?: LinterRuleReference[];
-}
 
 export const ruleDataSchema: z.ZodArray<z.ZodType<RuleDetails>> =
 	z.array(ruleDetailsSchema);
