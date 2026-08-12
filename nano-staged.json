@@ -1,4 +1,4 @@
 {
-	"*": "prettier --ignore-unknown --write",
+	"*": "pretty-quick --staged",
 	".changeset/*.md": "node scripts/validate-changesets.ts"
 }

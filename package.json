@@ -64,6 +64,7 @@
 		"prettier-plugin-packagejson": "catalog:dev",
 		"prettier-plugin-sentences-per-line": "catalog:dev",
 		"prettier-plugin-sh": "catalog:dev",
+		"pretty-quick": "^4.2.2",
 		"tsdown": "catalog:dev",
 		"typescript": "catalog:dev",
 		"typescript-eslint": "catalog:dev",
