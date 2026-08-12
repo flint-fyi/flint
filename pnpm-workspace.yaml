@@ -66,7 +66,7 @@ catalogs:
     expressive-code: 0.44.1
     expressive-code-twoslash: 0.6.1
     konami-emoji-blast: 0.7.0
-    markdown-it: 14.3.0
+    markdown-it: 15.0.0
     react: 19.2.8
     react-dom: 19.2.8
     remark-add-twoslash: 0.0.1
