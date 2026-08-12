@@ -31,6 +31,17 @@ export async function runPrettier(
 	// https://github.com/prettier/prettier/issues/17422
 	await Promise.all(
 		Array.from(allFilePaths).map(async (filePath) => {
+			if (
+				(
+					await prettier.getFileInfo(filePath, {
+						ignorePath: ".prettierignore",
+					})
+				).ignored
+			) {
+				log("Skipping ignored file: %s", filePath);
+				return;
+			}
+
 			// TODO: This duplicates the reading of files in languages themselves.
 			const originalFileContent = await host.readFile(filePath);
 
