@@ -24,12 +24,7 @@ export interface ScopeDefinition {
 }
 
 export type ScopeDefinitionKind =
-	| "catch"
-	| "class"
-	| "function"
-	| "import"
-	| "parameter"
-	| "variable";
+	"catch" | "class" | "function" | "import" | "parameter" | "variable";
 
 export interface ScopeInternal extends Scope {
 	// TODO: Many scopes have no child scopes and/or variables; making these

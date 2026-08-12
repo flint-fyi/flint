@@ -56,8 +56,7 @@ export interface Language<
 	getLanguageReports?(file: LanguageFile<FileServices>): LanguageReports;
 	runFileVisitors<
 		OptionsSchema extends AnyOptionalSchema | undefined =
-			| AnyOptionalSchema
-			| undefined,
+			AnyOptionalSchema | undefined,
 	>(
 		file: LanguageFile<FileServices>,
 		options: InferredOutputObject<OptionsSchema>,
@@ -96,8 +95,7 @@ export interface LanguageDefinition<
 	orderFilePaths?(filePaths: readonly string[], host: LinterHost): string[];
 	runFileVisitors<
 		OptionsSchema extends AnyOptionalSchema | undefined =
-			| AnyOptionalSchema
-			| undefined,
+			AnyOptionalSchema | undefined,
 	>(
 		file: LanguageFile<FileServices>,
 		options: InferredOutputObject<OptionsSchema>,
