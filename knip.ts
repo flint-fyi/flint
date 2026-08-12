@@ -10,6 +10,9 @@ export default {
 			ignoreDependencies: [
 				// The changesets CLI isn't directly referenced anywhere, but we need it to create new changesets.
 				"@changesets/cli",
+
+				// Invoked by the Git hook configured in .gitconfig.
+				"nano-staged",
 			],
 			project: ["*.config.{js,ts}", "scripts/**/*.ts"],
 		},
