@@ -1,6 +1,35 @@
 import { z } from "zod/v4";
 
-const flintRulePluginSchema = z.union([
+type FlintPlugin =
+	| "astro"
+	| "browser"
+	| "css"
+	| "drizzle"
+	| "flint"
+	| "graphql"
+	| "jest"
+	| "json"
+	| "jsx"
+	| "md"
+	| "next"
+	| "node"
+	| "nuxt"
+	| "package-json"
+	| "performance"
+	| "playwright"
+	| "qwik"
+	| "react"
+	| "react-native"
+	| "security"
+	| "solid"
+	| "spelling"
+	| "svelte"
+	| "ts"
+	| "vitest"
+	| "vue"
+	| "yaml";
+
+const flintRulePluginSchema: z.ZodType<FlintPlugin> = z.union([
 	z.literal("astro"),
 	z.literal("browser"),
 	z.literal("css"),
@@ -30,7 +59,16 @@ const flintRulePluginSchema = z.union([
 	z.literal("yaml"),
 ]);
 
-const flintRulePresetSchema = z.union([
+type FlintPreset =
+	| "config"
+	| "javascript"
+	| "logical"
+	| "none"
+	| "security"
+	| "sorting"
+	| "stylistic";
+
+const flintRulePresetSchema: z.ZodType<FlintPreset> = z.union([
 	z.literal("config"),
 	z.literal("javascript"),
 	z.literal("logical"),
@@ -40,7 +78,7 @@ const flintRulePresetSchema = z.union([
 	z.literal("stylistic"),
 ]);
 
-const flintRuleReferenceSchema = z.union([
+const flintRuleReferenceSchema: z.ZodType<FlintRuleReference> = z.union([
 	z
 		.object({
 			name: z.string().min(1),
@@ -59,21 +97,54 @@ const flintRuleReferenceSchema = z.union([
 		.strict(),
 ]);
 
-export type FlintRuleReference = z.infer<typeof flintRuleReferenceSchema>;
+export type FlintRuleReference =
+	| {
+			name: string;
+			plugin: FlintPlugin;
+			preset?: FlintPreset;
+			status?: "implemented";
+			strictness?: "strict";
+	  }
+	| {
+			name: string;
+			plugin: FlintPlugin;
+			status: "skipped";
+	  };
 
-const linterRuleReferenceSchema = z
+const linterRuleReferenceSchema: z.ZodType<LinterRuleReference> = z
 	.object({
 		name: z.string(),
 		url: z.url(),
 	})
 	.strict();
 
-export type RuleDetails = z.infer<typeof ruleDetailsSchema>;
-
 /** @internal */
-export type LinterRuleReference = z.infer<typeof linterRuleReferenceSchema>;
+export interface LinterRuleReference {
+	name: string;
+	url: string;
+}
 
-const ruleDetailsSchema = z
+export const linterNames = {
+	biome: "Biome",
+	deno: "Deno",
+	eslint: "ESLint",
+	markdownlint: "Markdownlint",
+	oxlint: "Oxlint",
+	stylelint: "Stylelint",
+} as const;
+
+export type LinterName = keyof typeof linterNames;
+
+export interface RuleDetails extends AlternateLinterDetails {
+	flint: FlintRuleReference;
+	notes?: string;
+}
+
+type AlternateLinterDetails = Partial<
+	Record<LinterName, LinterRuleReference[]>
+>;
+
+const ruleDetailsSchema: z.ZodType<RuleDetails> = z
 	.object({
 		biome: z.array(linterRuleReferenceSchema).exactOptional(),
 		deno: z.array(linterRuleReferenceSchema).exactOptional(),
@@ -86,4 +157,5 @@ const ruleDetailsSchema = z
 	})
 	.strict();
 
-export const ruleDataSchema = z.array(ruleDetailsSchema);
+export const ruleDataSchema: z.ZodArray<z.ZodType<RuleDetails>> =
+	z.array(ruleDetailsSchema);
