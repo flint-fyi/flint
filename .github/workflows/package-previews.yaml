@@ -14,5 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: $/.github/actions/setup
+        with:
+          cache: false
       - run: pnpm build
-      - run: pnpm exec pkg-pr-new publish --pnpm --packageManager=pnpm --commentWithDev './packages/*'
+      - run: pnpm exec pkg-pr-new publish --pnpm --packageManager=pnpm --commentWithDev --commentWithSha './packages/*'
