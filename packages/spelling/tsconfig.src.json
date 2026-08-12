@@ -8,5 +8,8 @@
 	},
 	"include": ["src"],
 	"exclude": ["src/**/*.test.ts", "src/rules/ruleTester.ts"],
-	"references": [{ "path": "../text-language" }, { "path": "../utils" }]
+	"references": [
+		{ "path": "../text-language/tsconfig.src.json" },
+		{ "path": "../utils" }
+	]
 }
