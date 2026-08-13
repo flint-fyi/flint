@@ -261,8 +261,8 @@ catalogs:
       specifier: 18.2.1
       version: 18.2.1
     eslint-plugin-package-json:
-      specifier: 1.6.0
-      version: 1.6.0
+      specifier: 1.7.0
+      version: 1.7.0
     eslint-plugin-perfectionist:
       specifier: 5.10.0
       version: 5.10.0
@@ -479,7 +479,7 @@ importers:
         version: 18.2.1(eslint@10.8.0)(typescript@6.0.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
-        version: 1.6.0(@eslint/json@2.0.0)(@types/estree@1.0.9)(eslint@10.8.0)
+        version: 1.7.0(@eslint/json@2.0.0)(eslint@10.8.0)
       eslint-plugin-perfectionist:
         specifier: catalog:dev
         version: 5.10.0(eslint@10.8.0)(supports-color@10.2.2)(typescript@6.0.3)
@@ -1086,7 +1086,7 @@ importers:
         version: 4.0.1
       package-json-validator:
         specifier: ^1.5.1
-        version: 1.5.1
+        version: 1.6.0
       sort-object-keys:
         specifier: ^2.1.0
         version: 2.1.0
@@ -1314,7 +1314,7 @@ importers:
         version: 18.2.1(eslint@10.8.0)(typescript@6.0.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
-        version: 1.6.0(@eslint/json@2.0.0)(@types/estree@1.0.9)(eslint@10.8.0)
+        version: 1.7.0(@eslint/json@2.0.0)(eslint@10.8.0)
       eslint-plugin-perfectionist:
         specifier: catalog:dev
         version: 5.10.0(eslint@10.8.0)(supports-color@10.2.2)(typescript@6.0.3)
@@ -4929,8 +4929,8 @@ packages:
       typescript:
         optional: true
 
-  eslint-plugin-package-json@1.6.0:
-    resolution: {integrity: sha512-pROaDdg6qRV7RF6qebqoXIuPBagHI1jNklZBKP0IPikfL2hW25JZnBp4Q0tmdNJZx2LIh3rgdmcqqz4CIkSuCg==}
+  eslint-plugin-package-json@1.7.0:
+    resolution: {integrity: sha512-6kc/2obmBs1JZ2/m65iZjDWFxC4n0OVDKTEhsnWCE6syL5qAJb0rzQtYFNaSmFe9hUWqhaTpr2+OnHQlU1X5kQ==}
     engines: {node: ^22.22.2 || >=24.15.0}
     peerDependencies:
       '@eslint/json': '>=1.0.0'
@@ -6449,8 +6449,8 @@ packages:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
     engines: {node: '>=6'}
 
-  package-json-validator@1.5.1:
-    resolution: {integrity: sha512-5WpI9I6pMy/ueq7rkDcJXfVjcHX6OBVTQk4Z7ObVZzsgPv/sX3kUfFFfvobErl/HpgleLcW4egvNypyBwGlkpw==}
+  package-json-validator@1.6.0:
+    resolution: {integrity: sha512-pd5HlhSA4oymER74A8ODqcOHz3sQAQjmTysx1oiJrIMRtIWl9pqxX5L3aUqRb5CBFpXroA8j6fhJmaFKhVUuxQ==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
 
   package-manager-detector@0.2.11:
@@ -11158,9 +11158,10 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  eslint-plugin-package-json@1.6.0(@eslint/json@2.0.0)(@types/estree@1.0.9)(eslint@10.8.0):
+  eslint-plugin-package-json@1.7.0(@eslint/json@2.0.0)(eslint@10.8.0):
     dependencies:
       '@altano/repository-tools': 2.0.1
+      '@types/estree': 1.0.9
       change-case: 5.4.4
       detect-indent: 7.0.2
       detect-newline: 4.0.1
@@ -11168,14 +11169,12 @@ snapshots:
       eslint-fix-utils: 0.4.3(@types/estree@1.0.9)(eslint@10.8.0)
       eslint-json-compat-utils: 0.2.3(@eslint/json@2.0.0)(eslint@10.8.0)(jsonc-eslint-parser@3.1.0)
       jsonc-eslint-parser: 3.1.0
-      package-json-validator: 1.5.1
+      package-json-validator: 1.6.0
       semver: 7.8.5
       sort-object-keys: 2.1.0
       sort-package-json: 4.0.0
     optionalDependencies:
       '@eslint/json': 2.0.0
-    transitivePeerDependencies:
-      - '@types/estree'
 
   eslint-plugin-perfectionist@5.10.0(eslint@10.8.0)(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
@@ -13267,7 +13266,7 @@ snapshots:
 
   p-try@2.2.0: {}
 
-  package-json-validator@1.5.1:
+  package-json-validator@1.6.0:
     dependencies:
       npm-package-arg: 13.0.2
       semver: 7.8.5
