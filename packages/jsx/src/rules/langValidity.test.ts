@@ -56,7 +56,9 @@ const element = <html lang="123"></html>;
 		`const element = <html lang="en"></html>;`,
 		`const element = <html lang="en-US"></html>;`,
 		`const element = <div></div>;`,
-		`const element = <div lang={language}></div>;`,
+		`
+declare const language: string;
+const element = <div lang={language}></div>;`,
 		`const element = <div lang="en-GB-oxendict"></div>;`,
 	],
 });

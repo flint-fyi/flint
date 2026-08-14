@@ -1,6 +1,7 @@
 {
 	"extends": "./tsconfig.base.json",
 	"compilerOptions": {
+		"isolatedDeclarations": true,
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.src.json",
 		"rootDir": "src/",
 		"outDir": "lib/",

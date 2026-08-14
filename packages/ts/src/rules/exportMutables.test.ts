@@ -40,7 +40,7 @@ export let a = 1, b = 2;
 		`export const value = 42;`,
 		`export const items = [];`,
 		`let counter = 0; export { counter };`,
-		`export function increment() { return counter++; }`,
+		`declare let counter: number; export function increment() { return counter++; }`,
 		`export class Counter { value = 0; }`,
 	],
 });

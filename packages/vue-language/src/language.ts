@@ -32,8 +32,8 @@ export interface VueServices {
 type VueCodegen =
 	typeof tsCodegen extends WeakMap<WeakKey, infer V> ? V : never;
 
-export const vueLanguage: VolarLanguage<VueServices> =
-	createVolarBasedLanguage<VueServices>((ts, options) => {
+export const vueLanguage: VolarLanguage<VueServices> = createVolarBasedLanguage(
+	(ts, options) => {
 		const { configFilePath } = options.options;
 		const host = options.host
 			? {
@@ -75,7 +75,7 @@ export const vueLanguage: VolarLanguage<VueServices> =
 				);
 
 				const codegen = nullThrows(
-					tsCodegen.get(virtualCode.sfc),
+					tsCodegen.get(virtualCode.ir),
 					`tsCodegen for ${data.filePathAbsolute} is undefined`,
 				);
 
@@ -128,4 +128,5 @@ export const vueLanguage: VolarLanguage<VueServices> =
 				),
 			],
 		};
-	});
+	},
+);

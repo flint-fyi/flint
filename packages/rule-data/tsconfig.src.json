@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.json",
+		"isolatedDeclarations": true,
 		"rootDir": "src/",
 		"outDir": "lib/",
 		"types": ["node"]
@@ -9,14 +10,14 @@
 	"include": ["src", "src/data.json"],
 	"exclude": ["src/**/*.test.ts"],
 	"references": [
-		{ "path": "../astro" },
-		{ "path": "../browser" },
-		{ "path": "../flint" },
-		{ "path": "../jsx" },
-		{ "path": "../node" },
-		{ "path": "../performance" },
-		{ "path": "../plugin-flint" },
-		{ "path": "../spelling" },
-		{ "path": "../vitest" }
+		{ "path": "../astro/tsconfig.src.json" },
+		{ "path": "../browser/tsconfig.src.json" },
+		{ "path": "../flint/tsconfig.src.json" },
+		{ "path": "../jsx/tsconfig.src.json" },
+		{ "path": "../node/tsconfig.src.json" },
+		{ "path": "../performance/tsconfig.src.json" },
+		{ "path": "../plugin-flint/tsconfig.src.json" },
+		{ "path": "../spelling/tsconfig.src.json" },
+		{ "path": "../vitest/tsconfig.src.json" }
 	]
 }

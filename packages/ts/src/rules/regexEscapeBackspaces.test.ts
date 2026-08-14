@@ -66,7 +66,7 @@ new RegExp("[\\\\b]");
 	],
 	valid: [
 		`new RegExp("\\\\b");`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 		String.raw`/[\n]/;`,
 		String.raw`/[\t]/;`,
 		String.raw`/[\u0008]/;`,

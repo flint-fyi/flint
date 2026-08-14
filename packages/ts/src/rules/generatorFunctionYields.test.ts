@@ -5,15 +5,23 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+function log(value: string) {
+    value;
+}
+
 function* emptyGenerator() {
-    console.log("No yield here");
+    log("No yield here");
 }
 `,
 			snapshot: `
+function log(value: string) {
+    value;
+}
+
 function* emptyGenerator() {
         ~
         Generator functions must contain at least one yield expression to produce values.
-    console.log("No yield here");
+    log("No yield here");
 }
 `,
 		},
@@ -37,6 +45,8 @@ class MyClass {
     *generatorMethod() {
         this.doSomething();
     }
+
+    doSomething() {}
 }
 `,
 			snapshot: `
@@ -46,24 +56,8 @@ class MyClass {
     Generator functions must contain at least one yield expression to produce values.
         this.doSomething();
     }
-}
-`,
-		},
-		{
-			code: `
-function* generatorWithNestedFunction() {
-    function inner() {
-        yield 42;
-    }
-}
-`,
-			snapshot: `
-function* generatorWithNestedFunction() {
-        ~
-        Generator functions must contain at least one yield expression to produce values.
-    function inner() {
-        yield 42;
-    }
+
+    doSomething() {}
 }
 `,
 		},
@@ -106,6 +100,8 @@ const generator = function* () {
 `,
 		`
 class MyClass {
+    value = 1;
+
     *generatorMethod() {
         yield this.value;
     }

@@ -6,28 +6,28 @@ ruleTester.describe(rule, {
 		{
 			code: `
 Promise.resolve().catch((error) => {
-    console.log(error);
+    void error;
 });
 `,
 			snapshot: `
 Promise.resolve().catch((error) => {
                          ~~~~~
                          The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
-    console.log(error);
+    void error;
 });
 `,
 		},
 		{
 			code: `
 Promise.resolve().catch((error: any) => {
-    console.log(error);
+    void error;
 });
 `,
 			snapshot: `
 Promise.resolve().catch((error: any) => {
                          ~~~~~~~~~~
                          The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
-    console.log(error);
+    void error;
 });
 `,
 		},
@@ -36,7 +36,7 @@ Promise.resolve().catch((error: any) => {
 Promise.resolve().then(
     () => {},
     (error) => {
-        console.log(error);
+        void error;
     }
 );
 `,
@@ -46,7 +46,7 @@ Promise.resolve().then(
     (error) => {
      ~~~~~
      The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
-        console.log(error);
+        void error;
     }
 );
 `,
@@ -55,7 +55,7 @@ Promise.resolve().then(
 			code: `
 const promise: Promise<string> = Promise.resolve("test");
 promise.catch((err) => {
-    console.log(err);
+    void err;
 });
 `,
 			snapshot: `
@@ -63,14 +63,14 @@ const promise: Promise<string> = Promise.resolve("test");
 promise.catch((err) => {
                ~~~
                The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
-    console.log(err);
+    void err;
 });
 `,
 		},
 		{
 			code: `
 fetch("/api").catch(function(error) {
-    console.log(error);
+    void error;
 });
 `,
 			files: {
@@ -85,7 +85,7 @@ fetch("/api").catch(function(error) {
 fetch("/api").catch(function(error) {
                              ~~~~~
                              The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
-    console.log(error);
+    void error;
 });
 `,
 		},
@@ -93,18 +93,20 @@ fetch("/api").catch(function(error) {
 			code: `
 function handlePromise<T extends Promise<unknown>>(p: T) {
     p.catch((error) => {
-        console.log(error);
+        void error;
     });
 }
+handlePromise(Promise.resolve());
 `,
 			snapshot: `
 function handlePromise<T extends Promise<unknown>>(p: T) {
     p.catch((error) => {
              ~~~~~
              The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
-        console.log(error);
+        void error;
     });
 }
+handlePromise(Promise.resolve());
 `,
 		},
 		{
@@ -113,10 +115,11 @@ function handlePromise<T extends Promise<string>>(p: T) {
     p.then(
         () => {},
         (error) => {
-            console.log(error);
+            void error;
         }
     );
 }
+handlePromise(Promise.resolve("value"));
 `,
 			snapshot: `
 function handlePromise<T extends Promise<string>>(p: T) {
@@ -125,63 +128,71 @@ function handlePromise<T extends Promise<string>>(p: T) {
         (error) => {
          ~~~~~
          The catch callback parameter should be typed as the safer \`unknown\` instead of \`any\`.
-            console.log(error);
+            void error;
         }
     );
 }
+handlePromise(Promise.resolve("value"));
 `,
 		},
 	],
 	valid: [
 		`
 Promise.resolve().catch((error: unknown) => {
-    console.log(error);
+    void error;
 });
 `,
 		`
 Promise.resolve().then(
     () => {},
     (error: unknown) => {
-        console.log(error);
+        void error;
     }
 );
 `,
 		`
 Promise.resolve().catch(() => {
-    console.log("error occurred");
+    const message = "error occurred";
+    void message;
 });
 `,
 		`
 Promise.resolve().then(() => {});
 `,
 		`
-const arr = [1, 2, 3];
-arr.catch?.((error: unknown) => {});
+const arr = [1, 2, 3] as number[] & {
+    catch?: (callback: (error: unknown) => void) => void;
+};
+arr.catch?.((error: unknown) => {
+    void error;
+});
 `,
 		`
 const promise: Promise<string> = Promise.resolve("test");
 promise.catch((err: unknown) => {
     if (err instanceof Error) {
-        console.log(err.message);
+        void err.message;
     }
 });
 `,
 		`
 function handlePromise<T extends Promise<unknown>>(p: T) {
     p.catch((error: unknown) => {
-        console.log(error);
+        void error;
     });
 }
+handlePromise(Promise.resolve());
 `,
 		`
 function handlePromise<T extends Promise<string>>(p: T) {
     p.then(
         () => {},
         (error: unknown) => {
-            console.log(error);
+            void error;
         }
     );
 }
+handlePromise(Promise.resolve("value"));
 `,
 	],
 });

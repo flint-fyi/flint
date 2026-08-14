@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/plugin-flint",
-	"version": "0.7.0",
+	"version": "0.8.0",
 	"description": "[Experimental] A Flint plugin for linting Flint plugins.",
 	"homepage": "https://flint.fyi/rules/flint",
 	"repository": {
@@ -33,6 +33,7 @@
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
+		"@flint.fyi/volar-language": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

@@ -1,7 +1,7 @@
-import { ruleTester } from "./ruleTester.ts";
+import { domLibRuleTester } from "./ruleTester.ts";
 import rule from "./unassignedVariables.ts";
 
-ruleTester.describe(rule, {
+domLibRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
@@ -28,13 +28,11 @@ console.log(variable);
 		{
 			code: `
 let unassigned: number;
-console.log(unassigned);
 `,
 			snapshot: `
 let unassigned: number;
     ~~~~~~~~~~
     Variable 'unassigned' is declared but never assigned a value.
-console.log(unassigned);
 `,
 		},
 		{
@@ -61,17 +59,17 @@ function example() {
 		`let value: number = 42;`,
 		`let x; x = 5;`,
 		`let y; y = 10; console.log(y);`,
-		`var z; z += 1;`,
-		`let counter; counter++;`,
-		`let value; value--;`,
+		`var z = 0; z += 1;`,
+		`let counter = 0; counter++;`,
+		`let value = 0; value--;`,
 		`for (let index = 0; index < 10; index++) {}`,
-		`for (let item; item < 10; item++) {}`,
+		`for (let item = 0; item < 10; item++) {}`,
 		`let result; result ||= "default";`,
 		`let data; data &&= "value";`,
 		`let nullish; nullish ??= "fallback";`,
-		`let value; [value] = values;`,
-		`let value; ({ value } = object);`,
-		`let value; for (value of values) {}`,
-		`let key; for (key in object) {}`,
+		`declare const values: number[]; let value; [value] = values;`,
+		`declare const object: { value: number }; let value; ({ value } = object);`,
+		`declare const values: number[]; let value; for (value of values) {}`,
+		`declare const object: Record<string, number>; let key; for (key in object) {}`,
 	],
 });

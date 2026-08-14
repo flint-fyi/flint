@@ -133,7 +133,6 @@ import multilineAmbiguities from "./rules/multilineAmbiguities.ts";
 import namedDefaultExports from "./rules/namedDefaultExports.ts";
 import namespaceDeclarations from "./rules/namespaceDeclarations.ts";
 import namespaceImplicitAmbientImports from "./rules/namespaceImplicitAmbientImports.ts";
-import namespaceKeywords from "./rules/namespaceKeywords.ts";
 import nativeObjectExtensions from "./rules/nativeObjectExtensions.ts";
 import negativeIndexLengthMethods from "./rules/negativeIndexLengthMethods.ts";
 import negativeZeroComparisons from "./rules/negativeZeroComparisons.ts";
@@ -165,7 +164,6 @@ import objectShorthand from "./rules/objectShorthand.ts";
 import objectSpreadUnnecessaryFallbacks from "./rules/objectSpreadUnnecessaryFallbacks.ts";
 import objectTypeDefinitions from "./rules/objectTypeDefinitions.ts";
 import octalEscapes from "./rules/octalEscapes.ts";
-import octalNumbers from "./rules/octalNumbers.ts";
 import operatorAssignmentShorthand from "./rules/operatorAssignmentShorthand.ts";
 import overloadSignaturesAdjacent from "./rules/overloadSignaturesAdjacent.ts";
 import parameterReassignments from "./rules/parameterReassignments.ts";
@@ -447,7 +445,6 @@ export const ts = createPlugin({
 		namedDefaultExports,
 		namespaceDeclarations,
 		namespaceImplicitAmbientImports,
-		namespaceKeywords,
 		nativeObjectExtensions,
 		negativeIndexLengthMethods,
 		negativeZeroComparisons,
@@ -479,7 +476,6 @@ export const ts = createPlugin({
 		objectSpreadUnnecessaryFallbacks,
 		objectTypeDefinitions,
 		octalEscapes,
-		octalNumbers,
 		operatorAssignmentShorthand,
 		overloadSignaturesAdjacent,
 		parameterReassignments,

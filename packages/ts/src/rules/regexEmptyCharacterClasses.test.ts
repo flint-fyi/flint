@@ -106,7 +106,7 @@ RegExp("a[]b");
 		`/./;`,
 		`/a/;`,
 		`new RegExp("[a]");`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 		`/[0-9]/;`,
 		`/[A-Z]/;`,
 	],

@@ -49,11 +49,13 @@ function exitHandler() {
 		},
 		{
 			code: `
+declare const error: unknown;
 if (error) {
     process.exit(1);
 }
 `,
 			snapshot: `
+declare const error: unknown;
 if (error) {
     process.exit(1);
     ~~~~~~~~~~~~

@@ -4,7 +4,6 @@
 		"noEmit": true,
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.json"
 	},
-	"files": ["./packages/flint/bin/index.js", "./lint-staged.config.js"],
 	"include": [
 		"./@types/*/*.ts",
 		"./*.ts",

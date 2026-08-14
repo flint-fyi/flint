@@ -1,6 +1,6 @@
 import type { KnipConfig } from "knip";
 
-export default {
+const config: KnipConfig = {
 	ignore: ["packages/e2e/**/*"],
 	ignoreExportsUsedInFile: { interface: true, type: true },
 	treatConfigHintsAsErrors: true,
@@ -45,6 +45,13 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/plugin-flint": {
+			ignoreDependencies: [
+				// It's bugging IDK.
+				"@flint.fyi/rule-tester!",
+
+				// Used only inside rule tester fixture source strings.
+				"@flint.fyi/volar-language",
+			],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/rule-data": {
@@ -88,4 +95,6 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 	},
-} satisfies KnipConfig;
+};
+
+export default config;

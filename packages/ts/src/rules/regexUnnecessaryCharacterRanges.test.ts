@@ -107,6 +107,6 @@ RegExp("[a-b]");
 		`/[a-z]/;`,
 		`/[A-Z]/;`,
 		`new RegExp("[a-z]");`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 	],
 });

@@ -1,5 +1,17 @@
 # @flint.fyi/css
 
+## 0.3.0
+
+### Minor Changes
+
+- [#3168](https://github.com/flint-fyi/flint/pull/3168) [`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34) - Drop support for node versions <26.1.0.
+
+### Patch Changes
+
+- Updated dependencies [[`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34)]:
+  - @flint.fyi/css-language@0.2.0
+  - @flint.fyi/core@0.25.0
+
 ## 0.2.0
 
 ### Minor Changes

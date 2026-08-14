@@ -1,7 +1,7 @@
 import rule from "./asyncFunctionAwaits.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { domLibRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+domLibRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
@@ -51,6 +51,7 @@ class Example {
     async method() {
         this.doSomething();
     }
+    doSomething() {}
 }
 `,
 			snapshot: `
@@ -60,6 +61,7 @@ class Example {
     This function is marked \`async\` but does not contain an \`await\` expression or return a Promise.
         this.doSomething();
     }
+    doSomething() {}
 }
 `,
 		},
@@ -113,6 +115,7 @@ async function withAwait() {
 }
 `,
 		`
+declare const asyncIterable: AsyncIterable<unknown>;
 async function withForAwaitOf() {
     for await (const item of asyncIterable) {
         console.log(item);
@@ -132,6 +135,9 @@ const withAbstract = async () => await asyncOperation();
 class Example {
     async method() {
         await this.fetchData();
+    }
+    fetchData() {
+        return Promise.resolve();
     }
 }
 `,

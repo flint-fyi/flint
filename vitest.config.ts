@@ -2,9 +2,13 @@ import { readdirSync } from "node:fs";
 import path from "node:path";
 import { platform } from "node:process";
 
-import { defaultExclude, defineConfig } from "vitest/config";
+import {
+	defaultExclude,
+	defineConfig,
+	type ViteUserConfigExport,
+} from "vitest/config";
 
-export default defineConfig({
+const config: ViteUserConfigExport = defineConfig({
 	test: {
 		coverage: {
 			exclude: [...defaultExclude, "e2e/tests/**"],
@@ -30,3 +34,5 @@ export default defineConfig({
 		),
 	},
 });
+
+export default config;

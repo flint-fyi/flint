@@ -3,10 +3,10 @@ name: Setup
 description: Sets up the repo for a typical CI job
 
 inputs:
-  install-flags:
-    description: Flags to pass to `pnpm install`
-    default: --frozen-lockfile
+  cache:
+    description: Cache the pnpm store
     required: false
+    default: true
   node-version:
     description: The Node.js version to use
     required: false
@@ -20,14 +20,10 @@ runs:
   steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       if: ${{ inputs.skip-checkout == 'false' }}
-    - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-      with:
-        cache: true
-    - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
-      with:
-        node-version: ${{ inputs.node-version }}
-    - run: pnpm install ${{ inputs.install-flags }}
-      shell: bash
+    - uses: pnpm/setup@84cb39b217b10273981911c288cd62326dc7c6d2 # v2.0.2
       env:
         HUSKY: 0
+      with:
+        cache: ${{ inputs.cache }}
+        runtime: node@${{ inputs.node-version }}
   using: composite

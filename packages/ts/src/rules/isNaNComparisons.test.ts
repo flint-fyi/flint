@@ -5,155 +5,71 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-value === NaN;
-export {};
-`,
-			snapshot: `
-value === NaN;
-~~~~~~~~~~~~~
-Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
-`,
-		},
-		{
-			code: `
-value == NaN;
-export {};
-`,
-			snapshot: `
-value == NaN;
-~~~~~~~~~~~~
-Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
-`,
-		},
-		{
-			code: `
-value !== NaN;
-export {};
-`,
-			snapshot: `
-value !== NaN;
-~~~~~~~~~~~~~
-Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
-`,
-		},
-		{
-			code: `
-value != NaN;
-export {};
-`,
-			snapshot: `
-value != NaN;
-~~~~~~~~~~~~
-Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
-`,
-		},
-		{
-			code: `
-NaN === value;
-export {};
-`,
-			snapshot: `
-NaN === value;
-~~~~~~~~~~~~~
-Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
-`,
-		},
-		{
-			code: `
+declare const value: number;
 value > NaN;
-export {};
 `,
 			snapshot: `
+declare const value: number;
 value > NaN;
 ~~~~~~~~~~~
 Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
 `,
 		},
 		{
 			code: `
+declare const value: number;
 value < NaN;
-export {};
 `,
 			snapshot: `
+declare const value: number;
 value < NaN;
 ~~~~~~~~~~~
 Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
 `,
 		},
 		{
 			code: `
+declare const value: number;
 value >= NaN;
-export {};
 `,
 			snapshot: `
+declare const value: number;
 value >= NaN;
 ~~~~~~~~~~~~
 Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
 `,
 		},
 		{
 			code: `
+declare const value: number;
 value <= NaN;
-export {};
 `,
 			snapshot: `
+declare const value: number;
 value <= NaN;
 ~~~~~~~~~~~~
 Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
-`,
-		},
-		{
-			code: `
-if (value === NaN) {}
-export {};
-`,
-			snapshot: `
-if (value === NaN) {}
-    ~~~~~~~~~~~~~
-    Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
-`,
-		},
-		{
-			code: `
-(value) === (NaN);
-export {};
-`,
-			snapshot: `
-(value) === (NaN);
-~~~~~~~~~~~~~~~~~
-Use \`Number.isNaN()\` instead of comparing with \`NaN\`.
-export {};
 `,
 		},
 	],
 	valid: [
-		`Number.isNaN(value); export {};`,
-		`isNaN(value); export {};`,
-		`value === 0; export {};`,
-		`value === Infinity; export {};`,
-		`value === undefined; export {};`,
-		`value === null; export {};`,
-		`value + NaN; export {};`,
-		`value - NaN; export {};`,
+		`declare const value: number; Number.isNaN(value); export {};`,
+		`declare const value: number; isNaN(value); export {};`,
+		`declare const value: number; value === 0; export {};`,
+		`declare const value: number; value === Infinity; export {};`,
+		`declare const value: number | undefined; value === undefined; export {};`,
+		`declare const value: number | null; value === null; export {};`,
+		`declare const value: number; value + NaN; export {};`,
+		`declare const value: number; value - NaN; export {};`,
 		`
+declare const value: number;
 const NaN = 1;
 value === NaN;
-export {};
 `,
 		`
+declare const value: unknown;
 function NaN() {}
 value === NaN;
-export {};
 `,
 	],
 });

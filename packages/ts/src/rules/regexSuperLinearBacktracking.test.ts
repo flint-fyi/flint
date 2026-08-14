@@ -85,9 +85,9 @@ RegExp("\\ba+a+$");
 		`new RegExp("a+b+");`,
 		`new RegExp("(?:a+)+");`,
 		`RegExp("a*");`,
-		`RegExp(variable);`,
-		`/[/;`,
+		`declare const variable: string; RegExp(variable);`,
+		`RegExp("[");`,
 		`new RegExp("[");`,
-		`/;`,
+		`RegExp("(");`,
 	],
 });

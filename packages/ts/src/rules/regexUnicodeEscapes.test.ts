@@ -90,6 +90,6 @@ new RegExp("\\u0041", "u");
 		String.raw`/\x41/u;`,
 		String.raw`/\cM/u;`,
 		String.raw`/\0/u;`,
-		`RegExp(variable, "u");`,
+		`declare const variable: string; RegExp(variable, "u");`,
 	],
 });

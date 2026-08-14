@@ -41,9 +41,32 @@ import {
 
 import type { AnyRule } from "@flint.fyi/core";
 
-import { createDirectPropertyValidityRule } from "./createDirectPropertyValidityRule.ts";
+import {
+	createDirectPropertyValidityRule,
+	type PropertyValidator,
+} from "./createDirectPropertyValidityRule.ts";
 
-const properties = [
+interface LocalValidPropertyOptions {
+	aliases: readonly string[];
+	validator: PropertyValidator;
+}
+
+type PropertyConfig = readonly [
+	string,
+	LocalValidPropertyOptions | PropertyValidator,
+];
+
+function defineProperties<const T extends readonly PropertyConfig[]>(
+	properties: T,
+) {
+	return properties as {
+		[K in keyof T]: T[K] extends readonly [infer Name extends string, unknown]
+			? readonly [Name, PropertyConfig[1]]
+			: T[K];
+	};
+}
+
+const properties = defineProperties([
 	["author", validateAuthor],
 	["bin", validateBin],
 	["browser", validateBrowser],
@@ -89,7 +112,7 @@ const properties = [
 	["type", validateType],
 	["version", validateVersion],
 	["workspaces", validateWorkspaces],
-] as const;
+]);
 
 type ValidityProperty = (typeof properties)[number][0];
 

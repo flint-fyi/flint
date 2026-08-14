@@ -2,11 +2,15 @@
 	"extends": "@flint.fyi/build/tsconfig.base.json",
 	"compilerOptions": {
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.src.json",
+		"isolatedDeclarations": true,
 		"rootDir": "src/",
 		"outDir": "lib/",
 		"types": ["node"]
 	},
 	"include": ["src"],
 	"exclude": ["src/**/*.test.ts"],
-	"references": [{ "path": "../core" }, { "path": "../utils" }]
+	"references": [
+		{ "path": "../core/tsconfig.src.json" },
+		{ "path": "../utils" }
+	]
 }

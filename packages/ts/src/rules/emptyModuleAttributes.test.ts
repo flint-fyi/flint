@@ -7,6 +7,18 @@ ruleTester.describe(rule, {
 			code: `
 import data from "./data.json" with {};
 `,
+			files: {
+				"data.json": `{
+    "enabled": true
+}`,
+				"tsconfig.json": `{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "module": "esnext",
+        "resolveJsonModule": true
+    }
+}`,
+			},
 			output: `
 import data from "./data.json" ;
 `,
@@ -20,6 +32,15 @@ import data from "./data.json" with {};
 			code: `
 import { x } from "./module" with {};
 `,
+			files: {
+				"module.ts": `export const x = 1;`,
+				"tsconfig.json": `{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "module": "esnext"
+    }
+}`,
+			},
 			output: `
 import { x } from "./module" ;
 `,
@@ -33,6 +54,15 @@ import { x } from "./module" with {};
 			code: `
 export { x } from "./module" with {};
 `,
+			files: {
+				"module.ts": `export const x = 1;`,
+				"tsconfig.json": `{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "module": "esnext"
+    }
+}`,
+			},
 			output: `
 export { x } from "./module" ;
 `,
@@ -46,6 +76,15 @@ export { x } from "./module" with {};
 			code: `
 export * from "./module" with {};
 `,
+			files: {
+				"module.ts": `export const x = 1;`,
+				"tsconfig.json": `{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "module": "esnext"
+    }
+}`,
+			},
 			output: `
 export * from "./module" ;
 `,
@@ -57,10 +96,72 @@ export * from "./module" with {};
 		},
 	],
 	valid: [
-		`import data from "./data.json" with { type: "json" };`,
-		`import { x } from "./module";`,
-		`export { x } from "./module";`,
-		`export * from "./module";`,
-		`import styles from "./styles.css" with { type: "css" };`,
+		{
+			code: `import data from "./data.json" with { type: "json" };`,
+			files: {
+				"data.json": `{
+    "enabled": true
+}`,
+				"tsconfig.json": `{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "module": "esnext",
+        "resolveJsonModule": true
+    }
+}`,
+			},
+		},
+		{
+			code: `
+import { x } from "./module";
+x;
+`,
+			files: {
+				"module.ts": `export const x = 1;`,
+				"tsconfig.json": `{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "module": "esnext"
+    }
+}`,
+			},
+		},
+		{
+			code: `export { x } from "./module";`,
+			files: {
+				"module.ts": `export const x = 1;`,
+				"tsconfig.json": `{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "module": "esnext"
+    }
+}`,
+			},
+		},
+		{
+			code: `export * from "./module";`,
+			files: {
+				"module.ts": `export const x = 1;`,
+				"tsconfig.json": `{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "module": "esnext"
+    }
+}`,
+			},
+		},
+		{
+			code: `import styles from "./styles.css" with { type: "css" };`,
+			files: {
+				"styles.css.d.ts": `declare const styles: string;
+export default styles;`,
+				"tsconfig.json": `{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "module": "esnext"
+    }
+}`,
+			},
+		},
 	],
 });

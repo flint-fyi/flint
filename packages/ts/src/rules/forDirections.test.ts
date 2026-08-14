@@ -85,11 +85,11 @@ for (let index = 0; index < 10; index += -1) {}
 		},
 		{
 			code: `
-declare context text: string;
+declare const text: string;
 for (let i = 10; i >= 0 && text[i] !== " "; i++) { }
 `,
 			snapshot: `
-declare context text: string;
+declare const text: string;
 for (let i = 10; i >= 0 && text[i] !== " "; i++) { }
                                             ~~~
                                             The update moves the counter in the wrong direction for this loop condition.
@@ -97,11 +97,11 @@ for (let i = 10; i >= 0 && text[i] !== " "; i++) { }
 		},
 		{
 			code: `
-declare context text: string;
+declare const text: string;
 for (let i = 10; text[i] !== " " && i >= 0; i++) { }
 `,
 			snapshot: `
-declare context text: string;
+declare const text: string;
 for (let i = 10; text[i] !== " " && i >= 0; i++) { }
                                             ~~~
                                             The update moves the counter in the wrong direction for this loop condition.
@@ -114,12 +114,20 @@ for (let i = 10; text[i] !== " " && i >= 0; i++) { }
 		`for (let index = 10; index >= 0; index--) { }`,
 		`for (let index = 0; 10 > index; index++) { }`,
 		`for (let index = 10; 0 < index; index--) { }`,
-		`for (let index = 10; index >= 0; index += step) { }`,
+		`
+declare const step: number;
+
+for (let index = 10; index >= 0; index += step) { }
+`,
 		`for (let index = 0; index <= 10; index -= 0) { }`,
 		`for (let index = 0; index < 10; index += 1) { }`,
 		`for (let index = 10; index > 0; index -= 1) { }`,
 		`for (let index = 0; index < 10; index += 2) { }`,
 		`for (let index = 10; index > 0; index -= 2) { }`,
-		`for (let i = 10; i >= 0 && text[i] === "\\"; i--) { }`,
+		`
+declare const text: string;
+
+for (let i = 10; i >= 0 && text[i] === "\\\\"; i--) { }
+`,
 	],
 });

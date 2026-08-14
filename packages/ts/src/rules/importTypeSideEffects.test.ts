@@ -7,6 +7,19 @@ ruleTester.describe(rule, {
 			code: `
 import { type A } from "mod";
 `,
+			files: {
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const value: unknown;
+export type A = unknown;
+export type B = unknown;
+export type C = unknown;
+`,
+			},
 			snapshot: `
 import { type A } from "mod";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -17,6 +30,19 @@ Every specifier in this import is a type, so a single top-level \`import type\` 
 			code: `
 import { type A, type B } from "mod";
 `,
+			files: {
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const value: unknown;
+export type A = unknown;
+export type B = unknown;
+export type C = unknown;
+`,
+			},
 			snapshot: `
 import { type A, type B } from "mod";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -27,6 +53,19 @@ Every specifier in this import is a type, so a single top-level \`import type\` 
 			code: `
 import { type A, type B, type C } from "mod";
 `,
+			files: {
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const value: unknown;
+export type A = unknown;
+export type B = unknown;
+export type C = unknown;
+`,
+			},
 			snapshot: `
 import { type A, type B, type C } from "mod";
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -36,18 +75,138 @@ Every specifier in this import is a type, so a single top-level \`import type\` 
 	],
 	valid: [
 		// Top-level type import is correct
-		`import type { A, B } from "mod";`,
+		{
+			code: `import type { A, B } from "mod";`,
+			files: {
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const value: unknown;
+export type A = unknown;
+export type B = unknown;
+export type C = unknown;
+`,
+			},
+		},
 		// Mixed type and value imports are allowed
-		`import { type A, value } from "mod";`,
-		`import { value, type B } from "mod";`,
+		{
+			code: `import { type A, value } from "mod";`,
+			files: {
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const value: unknown;
+export type A = unknown;
+export type B = unknown;
+export type C = unknown;
+`,
+			},
+		},
+		{
+			code: `import { value, type B } from "mod";`,
+			files: {
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const value: unknown;
+export type A = unknown;
+export type B = unknown;
+export type C = unknown;
+`,
+			},
+		},
 		// Value-only imports
-		`import { value } from "mod";`,
-		`import { a, b } from "mod";`,
+		{
+			code: `import { value } from "mod";`,
+			files: {
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const value: unknown;
+export type A = unknown;
+export type B = unknown;
+export type C = unknown;
+`,
+			},
+		},
+		{
+			code: `import { a, b } from "mod";`,
+			files: {
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const value: unknown;
+export type A = unknown;
+export type B = unknown;
+export type C = unknown;
+`,
+			},
+		},
 		// Default import with inline types is allowed
-		`import Default, { type A } from "mod";`,
+		{
+			code: `import Default, { type A } from "mod";`,
+			files: {
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const value: unknown;
+export type A = unknown;
+export type B = unknown;
+export type C = unknown;
+`,
+			},
+		},
 		// Side-effect imports
-		`import "mod";`,
+		{
+			code: `import "mod";`,
+			files: {
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const value: unknown;
+export type A = unknown;
+export type B = unknown;
+export type C = unknown;
+`,
+			},
+		},
 		// Namespace imports
-		`import * as mod from "mod";`,
+		{
+			code: `import * as mod from "mod";`,
+			files: {
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const value: unknown;
+export type A = unknown;
+export type B = unknown;
+export type C = unknown;
+`,
+			},
+		},
 	],
 });

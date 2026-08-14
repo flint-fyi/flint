@@ -48,7 +48,7 @@ enum Numbers { pos = 1, neg = -1, zero = 0, alsoZero = -0 }
 		`enum Status { Active = 1, Inactive = 2 }`,
 		`enum Color { Red = "red", Blue = "blue" }`,
 		`enum Implicit { a, b, c }`,
-		`enum Computed { a = getValue(), b = getValue() }`,
+		`declare function getValue(): number; enum Computed { a = getValue(), b = getValue() }`,
 		`enum Mixed { a = 1, b = "b" }`,
 		`enum Empty {}`,
 	],

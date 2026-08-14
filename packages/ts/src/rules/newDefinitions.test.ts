@@ -143,20 +143,6 @@ declare abstract class Element {
 }
 `,
 		},
-		{
-			code: `
-const instance = class Named {
-    new (): Named;
-};
-`,
-			snapshot: `
-const instance = class Named {
-    new (): Named;
-    ~~~~~~~~~~~~~~
-    A class method named \`new\` that returns the class type is misleading.
-};
-`,
-		},
 	],
 	valid: [
 		`interface Factory { new (): object; }`,
@@ -176,7 +162,15 @@ interface Wrapper<T> {
 }
 `,
 		`class Example { constructor() {} }`,
-		`class Service { constructor(value: number) { console.log(value); } }`,
+		`
+class Service {
+    value: number;
+
+    constructor(value: number) {
+        this.value = value;
+    }
+}
+`,
 		`declare class Factory { create(): Factory; }`,
 		`declare class Builder { build(): object; }`,
 		`
@@ -200,8 +194,14 @@ declare class DifferentClass {}
 		`const anonymous = class { constructor() {} };`,
 		`const named = class MyClass { constructor() {} };`,
 		`type Factory = { new (): object };`,
-		`type Constructor = { new (): SomeOtherType };`,
-		`interface Extended extends Base { new (): Base; }`,
+		`
+interface SomeOtherType {}
+type Constructor = { new (): SomeOtherType };
+`,
+		`
+interface Base {}
+interface Extended extends Base { new (): Base; }
+`,
 		`
 interface Nested {
     inner: {

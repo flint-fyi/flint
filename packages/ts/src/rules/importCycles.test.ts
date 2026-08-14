@@ -59,16 +59,16 @@ import "./file";
 		{
 			code: `
 import { value } from "./second";
-export { value };
+export const current: number = value;
 `,
 			files: {
-				"second.ts": `export { value } from "./file";`,
+				"second.ts": `import { current } from "./file"; export const value: number = current;`,
 			},
 			snapshot: `
 import { value } from "./second";
                       ~~~~~~~~~~
                       Circular module dependency: file.ts → second.ts → file.ts.
-export { value };
+export const current: number = value;
 `,
 		},
 		{
@@ -87,17 +87,17 @@ import "./second";
 		},
 		{
 			code: `
-import { type Model } from "./second";
-export { type Model };
+import { type Model, value } from "./second";
+export const current: Model = value;
 `,
 			files: {
-				"second.ts": `export { type Model } from "./file";`,
+				"second.ts": `import { current } from "./file"; export type Model = number; export const value: Model = current;`,
 			},
 			snapshot: `
-import { type Model } from "./second";
-                           ~~~~~~~~~~
-                           Circular module dependency: file.ts → second.ts → file.ts.
-export { type Model };
+import { type Model, value } from "./second";
+                                  ~~~~~~~~~~
+                                  Circular module dependency: file.ts → second.ts → file.ts.
+export const current: Model = value;
 `,
 		},
 		{
@@ -135,7 +135,8 @@ import "./third";
 		},
 	],
 	valid: [
-		`import "./missing";`,
+		`// @ts-expect-error -- Intentionally unresolved module.
+import "./missing";`,
 		{
 			code: `import type { Model } from "./second";`,
 			files: { "second.ts": `import "./file"; export interface Model {}` },
@@ -153,11 +154,13 @@ import "./third";
 			files: { "second.ts": `import "./file";` },
 		},
 		{
-			code: `const value = require("./second"); void value;`,
+			code: `declare function require(id: string): unknown;
+const value = require("./second"); void value;`,
 			files: { "second.ts": `import "./file";` },
 		},
 		{
-			code: `import second = require("./second"); void second;`,
+			code: `// @ts-expect-error -- Import assignments are intentionally unsupported.
+import second = require("./second"); void second;`,
 			files: { "second.ts": `import "./file";` },
 		},
 		{

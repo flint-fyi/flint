@@ -35,9 +35,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const BLINK: (props: Record<string, unknown>) => unknown;
 <BLINK>Alert!</BLINK>
 `,
 			snapshot: `
+declare const BLINK: (props: Record<string, unknown>) => unknown;
 <BLINK>Alert!</BLINK>
  ~~~~~
  The <blink> element is distracting and deprecated.

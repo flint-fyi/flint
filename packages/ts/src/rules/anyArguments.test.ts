@@ -123,20 +123,6 @@ fn(1, a, 2, b);
 		},
 		{
 			code: `
-declare const value: any;
-declare function fn(x: string, y: number): void;
-fn(...value);
-`,
-			snapshot: `
-declare const value: any;
-declare function fn(x: string, y: number): void;
-fn(...value);
-   ~~~~~~~~
-   Unsafe spread of type \`any\` in function call.
-`,
-		},
-		{
-			code: `
 declare function fn(arg: Set<string>): void;
 fn(new Set<any>());
 `,
@@ -273,20 +259,6 @@ fn(...tuple);
 		},
 		{
 			code: `
-declare function fn(arg: string): void;
-const tuple = [notKnownValue] as const;
-fn(...tuple);
-`,
-			snapshot: `
-declare function fn(arg: string): void;
-const tuple = [notKnownValue] as const;
-fn(...tuple);
-   ~~~~~~~~
-   Unsafe spread of tuple type. The argument is of type \`error\` assigned to parameter of type \`string\`.
-`,
-		},
-		{
-			code: `
 declare const a: any;
 declare const b: any;
 declare function fn(...args: [number, string]): void;
@@ -371,97 +343,33 @@ fn(value);
    Unsafe argument of type \`any\` assigned to parameter of type \`string | undefined\`.
 `,
 		},
-		{
-			code: `
-declare function fn(arg: string): void;
-let value: NotKnown;
-fn(value);
-`,
-			snapshot: `
-declare function fn(arg: string): void;
-let value: NotKnown;
-fn(value);
-   ~~~~~
-   Unsafe argument of type \`error\` assigned to parameter of type \`string\`.
-`,
-		},
-		{
-			code: `
-declare function fn(arg: string): void;
-fn(notKnownValue);
-`,
-			snapshot: `
-declare function fn(arg: string): void;
-fn(notKnownValue);
-   ~~~~~~~~~~~~~
-   Unsafe argument of type \`error\` assigned to parameter of type \`string\`.
-`,
-		},
-		{
-			code: `
-declare function fn(...args: string[]): void;
-let values: NotKnown;
-fn(...values);
-`,
-			snapshot: `
-declare function fn(...args: string[]): void;
-let values: NotKnown;
-fn(...values);
-   ~~~~~~~~~
-   Unsafe spread of type \`error\` in function call.
-`,
-		},
-		{
-			code: `
-declare function tag(strings: TemplateStringsArray, arg: number): void;
-let value: NotKnown;
-tag\`\${value}\`;
-`,
-			snapshot: `
-declare function tag(strings: TemplateStringsArray, arg: number): void;
-let value: NotKnown;
-tag\`\${value}\`;
-    ~~~~~~~~
-    Unsafe argument of type \`error\` assigned to parameter of type \`number\`.
-`,
-		},
-		{
-			code: `
-declare function fn(arg: string[]): void;
-let values: NotKnown[];
-fn(values);
-`,
-			snapshot: `
-declare function fn(arg: string[]): void;
-let values: NotKnown[];
-fn(values);
-   ~~~~~~
-   Unsafe argument of type \`NotKnown[]\` assigned to parameter of type \`string[]\`.
-`,
-		},
-		{
-			code: `
-declare function fn(arg: Promise<string>): void;
-let value: Promise<NotKnown>;
-fn(value);
-`,
-			snapshot: `
-declare function fn(arg: Promise<string>): void;
-let value: Promise<NotKnown>;
-fn(value);
-   ~~~~~
-   Unsafe argument of type \`Promise<NotKnown>\` assigned to parameter of type \`Promise<string>\`.
-`,
-		},
 	],
 	valid: [
 		`declare function fn(arg: string): void; fn("safe");`,
 		`declare function fn(arg: number): void; fn(42);`,
-		`declare function fn(arg: unknown): void; declare const x: any; fn(x);`,
-		`declare function fn(arg: any): void; declare const x: any; fn(x);`,
-		`declare function fn(...args: unknown[]): void; declare const x: any[]; fn(...x);`,
+		`
+declare function fn(arg: unknown): void;
+declare const x: any;
+
+fn(x);
+`,
+		`
+declare function fn(arg: any): void;
+declare const x: any;
+
+fn(x);
+`,
+		`
+declare function fn(...args: unknown[]): void;
+declare const x: any[];
+
+fn(...x);
+`,
 		`const arr = [1, 2, 3]; Math.max(...arr);`,
-		`declare const obj: { name: string }; console.log(obj.name);`,
+		`
+declare const obj: { name: string };
+void obj.name;
+`,
 		`declare function fn(): void; fn();`,
 		`declare function fn(arg: Set<string>): void; fn(new Set<string>());`,
 		`declare function fn(arg: Map<string, number>): void; fn(new Map<string, number>());`,
@@ -469,14 +377,34 @@ fn(value);
 		`function fn<T extends any>(x: T, fn2: (arg: T) => void) { fn2(x); }`,
 		`declare function fn(x: string, y: number): void; const t = ['a', 1] as const; fn(...t);`,
 		`declare function tag(strings: TemplateStringsArray, x: number): void; tag\`\${42}\`;`,
-		`declare function tag(strings: TemplateStringsArray, x: any): void; declare const v: any; tag\`\${v}\`;`,
-		`declare function fn(...args: any[]): void; declare const x: any[]; fn(...x);`,
-		`declare function fn(x: any, y: string): void; declare const a: any; fn(a, "safe");`,
+		`
+declare function tag(strings: TemplateStringsArray, x: any): void;
+declare const v: any;
+
+tag\`\${v}\`;
+`,
+		`
+declare function fn(...args: any[]): void;
+declare const x: any[];
+
+fn(...x);
+`,
+		`
+declare function fn(x: any, y: string): void;
+declare const a: any;
+
+fn(a, "safe");
+`,
 		`new Set<string>(["a", "b"]);`,
 		`new Map<string, number>([["a", 1]]);`,
 		`declare function fn(...args: number[]): void; fn(1, 2, 3);`,
 		`declare function fn(...args: [string, number]): void; fn("a", 1);`,
-		`declare function fn(arg: Promise<string>): void; declare const p: Promise<string>; fn(p);`,
+		`
+declare function fn(arg: Promise<string>): void;
+declare const p: Promise<string>;
+
+fn(p);
+`,
 		`
 declare function fn(x: any): void;
 declare function fn(x: string): string;

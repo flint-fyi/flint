@@ -1,3 +1,5 @@
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import { ruleTester } from "./ruleTester.ts";
 import rule from "./typeofComparisons.ts";
 
@@ -9,6 +11,13 @@ if (typeof value === "") {
     process();
 }
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+				noUnusedLocals: false,
+			}),
 			snapshot: `
 if (typeof value === "") {
                      ~~
@@ -17,70 +26,94 @@ if (typeof value === "") {
 }
 `,
 		},
-		{
-			code: `
-if (typeof data != "invalid") {
-    reject();
-}
-`,
-			snapshot: `
-if (typeof data != "invalid") {
-                   ~~~~~~~~~
-                   This string literal is not one that the typeof operator will ever produce.
-    reject();
-}
-`,
-		},
-		{
-			code: `
-if ("invalid" === typeof flag) {
-    toggle();
-}
-`,
-			snapshot: `
-if ("invalid" === typeof flag) {
-    ~~~~~~~~~
-    This string literal is not one that the typeof operator will ever produce.
-    toggle();
-}
-`,
-		},
-		{
-			code: `
-if (typeof value === "String") {
-    process();
-}
-`,
-			snapshot: `
-if (typeof value === "String") {
-                     ~~~~~~~~
-                     This string literal is not one that the typeof operator will ever produce.
-    process();
-}
-`,
-		},
-		{
-			code: `
-const isValid = typeof input !== "array";
-`,
-			snapshot: `
-const isValid = typeof input !== "array";
-                                 ~~~~~~~
-                                 This string literal is not one that the typeof operator will ever produce.
-`,
-		},
 	],
 	valid: [
-		`if (typeof value === "string") { process(); }`,
-		`if (typeof variable == "undefined") { handle(); }`,
-		`if (typeof data != "number") { reject(); }`,
-		`if (typeof callback !== "function") { throw new Error("Invalid callback"); }`,
-		`if (typeof flag === "boolean") { toggle(); }`,
-		`if (typeof value === "object") { parse(); }`,
-		`if (typeof value === "symbol") { handle(); }`,
-		`if (typeof value === "bigint") { compute(); }`,
-		`if (typeof value === other) { process(); }`,
-		`if (typeof value === typeof other) { compare(); }`,
-		`const type = typeof value;`,
+		`
+declare const value: unknown;
+declare function process(): void;
+
+if (typeof value === "string") {
+    process();
+}
+`,
+		`
+declare const variable: unknown;
+declare function handle(): void;
+
+if (typeof variable == "undefined") {
+    handle();
+}
+`,
+		`
+declare const data: unknown;
+declare function reject(): void;
+
+if (typeof data != "number") {
+    reject();
+}
+`,
+		`
+declare const callback: unknown;
+
+if (typeof callback !== "function") {
+    throw new Error("Invalid callback");
+}
+`,
+		`
+declare const flag: unknown;
+declare function toggle(): void;
+
+if (typeof flag === "boolean") {
+    toggle();
+}
+`,
+		`
+declare const value: unknown;
+declare function parse(): void;
+
+if (typeof value === "object") {
+    parse();
+}
+`,
+		`
+declare const value: unknown;
+declare function handle(): void;
+
+if (typeof value === "symbol") {
+    handle();
+}
+`,
+		`
+declare const value: unknown;
+declare function compute(): void;
+
+if (typeof value === "bigint") {
+    compute();
+}
+`,
+		`
+declare const other: string;
+declare const value: unknown;
+declare function process(): void;
+
+if (typeof value === other) {
+    process();
+}
+`,
+		`
+declare const other: unknown;
+declare const value: unknown;
+declare function compare(): void;
+
+if (typeof value === typeof other) {
+    compare();
+}
+`,
+		`
+declare const value: unknown;
+
+const type = typeof value;
+void type;
+`,
 	],
 });

@@ -305,18 +305,54 @@ This \`=\` assignment can be replaced with an \`|=\` operator assignment.
 		`let value = 5; value &= 3;`,
 		`let value = 5; value ^= 3;`,
 		`let value = 5; value |= 3;`,
-		`let value = 0; value = other + 1;`,
-		`let value = 0; value = other - 1;`,
-		`let value = 0; value = other * 2;`,
-		`let value = 1; value = other / 2;`,
-		`let value = 5; value = other % 2;`,
-		`let value = 2; value = other ** 3;`,
-		`let value = 8; value = other << 2;`,
-		`let value = 8; value = other >> 2;`,
-		`let value = 8; value = other >>> 2;`,
-		`let value = 5; value = other & 3;`,
-		`let value = 5; value = other ^ 3;`,
-		`let value = 5; value = other | 3;`,
+		`
+let other = 0;
+let value = 0;
+value = other + 1;`,
+		`
+let other = 0;
+let value = 0;
+value = other - 1;`,
+		`
+let other = 0;
+let value = 0;
+value = other * 2;`,
+		`
+let other = 0;
+let value = 1;
+value = other / 2;`,
+		`
+let other = 0;
+let value = 5;
+value = other % 2;`,
+		`
+let other = 0;
+let value = 2;
+value = other ** 3;`,
+		`
+let other = 0;
+let value = 8;
+value = other << 2;`,
+		`
+let other = 0;
+let value = 8;
+value = other >> 2;`,
+		`
+let other = 0;
+let value = 8;
+value = other >>> 2;`,
+		`
+let other = 0;
+let value = 5;
+value = other & 3;`,
+		`
+let other = 0;
+let value = 5;
+value = other ^ 3;`,
+		`
+let other = 0;
+let value = 5;
+value = other | 3;`,
 		`let value = 0; value = 1 + value;`,
 		`const object = { a: 0, b: 1 }; object.a = object.b + 1;`,
 		`const array = [0, 1]; array[0] = array[1] + 1;`,

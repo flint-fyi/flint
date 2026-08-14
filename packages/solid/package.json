@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/solid",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"description": "[Experimental] A Flint plugin for SolidJS code.",
 	"homepage": "https://flint.fyi/rules/solid",
 	"repository": {
