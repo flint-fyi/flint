@@ -1,12 +1,13 @@
 {
-	"extends": "@flint.fyi/build/tsconfig.base.json",
+	"extends": "@flint.fyi/build/tsconfig.plugin.json",
 	"compilerOptions": {
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.test.json",
 		"rootDir": "src/",
 		"outDir": "node_modules/.cache/tsbuild/test",
 		"types": []
 	},
-	"include": ["src/**/*.test.ts", "src/ruleTester.ts"],
+	"files": ["src/ruleTester.ts"],
+	"include": ["src/**/*.test.ts"],
 	"references": [
 		{ "path": "../rule-tester/tsconfig.src.json" },
 		{ "path": "./tsconfig.src.json" }
