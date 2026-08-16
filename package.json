@@ -22,7 +22,7 @@
 		"lint:knip": "knip",
 		"lint:knip:prod": "knip --strict",
 		"prepare": "husky",
-		"release": "pnpm build && pnpm -r publish",
+		"release": "pnpm build && changeset publish",
 		"start:site": "pnpm --filter=site prebuild && pnpm --filter=site start",
 		"test": "vitest"
 	},
