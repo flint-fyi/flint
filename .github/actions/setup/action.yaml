@@ -20,6 +20,8 @@ runs:
   steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       if: ${{ inputs.skip-checkout == 'false' }}
+      with:
+        persist-credentials: false
     - uses: pnpm/setup@84cb39b217b10273981911c288cd62326dc7c6d2 # v2.0.2
       env:
         HUSKY: 0
