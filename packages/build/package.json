@@ -22,6 +22,7 @@
 		"./tsdown": "./src/tsdown/index.ts"
 	},
 	"dependencies": {
-		"tsdown": "catalog:dev"
+		"tsdown": "catalog:dev",
+		"tsnapi": "catalog:dev"
 	}
 }

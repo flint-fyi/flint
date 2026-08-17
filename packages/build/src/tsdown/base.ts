@@ -1,4 +1,5 @@
 import type { UserConfig } from "tsdown";
+import ApiSnapshot from "tsnapi/rolldown";
 
 export const base: UserConfig = {
 	attw: {
@@ -13,4 +14,5 @@ export const base: UserConfig = {
 		packageJson: false,
 	},
 	failOnWarn: true,
+	plugins: [ApiSnapshot()],
 };
