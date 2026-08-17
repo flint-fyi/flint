@@ -1,5 +1,11 @@
 # @flint/rule-tester
 
+## 0.19.0
+
+### Minor Changes
+
+- [#2985](https://github.com/flint-fyi/flint/pull/2985) [`91bff9b`](https://github.com/flint-fyi/flint/commit/91bff9bec64b9770f3dc8df634b16f69401af4bf) - Collect TS semantic diagnostics in RuleTester tests.
+
 ## 0.18.0
 
 ### Minor Changes
