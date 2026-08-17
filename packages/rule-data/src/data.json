@@ -528,6 +528,20 @@
 	{
 		"eslint": [
 			{
+				"name": "astro/no-omitted-end-tags",
+				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/no-omitted-end-tags"
+			}
+		],
+		"flint": {
+			"name": "omittedEndTags",
+			"plugin": "astro",
+			"status": "skipped"
+		},
+		"notes": "Handled by the Astro compiler."
+	},
+	{
+		"eslint": [
+			{
 				"name": "astro/no-prerender-export-outside-pages",
 				"url": "https://ota-meshi.github.io/eslint-plugin-astro/rules/no-prerender-export-outside-pages"
 			}
