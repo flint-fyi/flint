@@ -1,4 +1,3 @@
-// flint-disable-next-line ts/typeImports -- false positive https://github.com/flint-fyi/flint/issues/3182
 import { all } from "./all.ts";
 
 export interface Globs {
