@@ -98,9 +98,6 @@ peerDependencyRules:
     expressive-code-twoslash>@expressive-code/core: "0.44"
     expressive-code-twoslash>expressive-code: "0.44"
     typescript: "6"
-  ignoreMissing:
-    - "@emnapi/core"
-    - "@emnapi/runtime"
 
 shellEmulator: true
 
