@@ -1,4 +1,14 @@
-import * as ts from "typescript";
+import {
+	isArrayLiteralExpression,
+	isIdentifier,
+	isNewExpression,
+	isParenthesizedExpression,
+	isSpreadElement,
+	isVariableDeclaration,
+	NodeFlags,
+	SyntaxKind,
+	type Program,
+} from "typescript";
 
 import {
 	getTSNodeRange,
@@ -10,30 +20,43 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isNewSetExpression(expression: AST.Expression, typeChecker: Checker) {
+function isNewSetExpression(
+	expression: AST.Expression,
+	typeChecker: Checker,
+	program: Program,
+) {
 	return (
-		ts.isNewExpression(expression) &&
-		ts.isIdentifier(expression.expression) &&
+		isNewExpression(expression) &&
+		isIdentifier(expression.expression) &&
 		expression.expression.text === "Set" &&
-		isGlobalDeclarationOfName(expression.expression, "Set", typeChecker)
+		isGlobalDeclarationOfName(
+			expression.expression,
+			"Set",
+			typeChecker,
+			program,
+		)
 	);
 }
 
-function isSetExpression(expression: AST.Expression, typeChecker: Checker) {
+function isSetExpression(
+	expression: AST.Expression,
+	typeChecker: Checker,
+	program: Program,
+) {
 	const unwrapped = unwrapParentheses(expression);
 
-	if (isNewSetExpression(unwrapped, typeChecker)) {
+	if (isNewSetExpression(unwrapped, typeChecker, program)) {
 		return true;
 	}
 
-	if (!ts.isIdentifier(unwrapped)) {
+	if (!isIdentifier(unwrapped)) {
 		return false;
 	}
 
 	const symbol = typeChecker.getSymbolAtLocation(unwrapped);
 	if (
 		!symbol?.valueDeclaration ||
-		!ts.isVariableDeclaration(symbol.valueDeclaration)
+		!isVariableDeclaration(symbol.valueDeclaration)
 	) {
 		return false;
 	}
@@ -41,8 +64,8 @@ function isSetExpression(expression: AST.Expression, typeChecker: Checker) {
 	const declaration = symbol.valueDeclaration as AST.VariableDeclaration;
 
 	if (
-		declaration.parent.kind !== ts.SyntaxKind.VariableDeclarationList ||
-		!(declaration.parent.flags & ts.NodeFlags.Const) ||
+		declaration.parent.kind !== SyntaxKind.VariableDeclarationList ||
+		!(declaration.parent.flags & NodeFlags.Const) ||
 		!declaration.initializer
 	) {
 		return false;
@@ -51,11 +74,12 @@ function isSetExpression(expression: AST.Expression, typeChecker: Checker) {
 	return isNewSetExpression(
 		unwrapParentheses(declaration.initializer),
 		typeChecker,
+		program,
 	);
 }
 
 function unwrapParentheses(expression: AST.Expression): AST.Expression {
-	while (ts.isParenthesizedExpression(expression)) {
+	while (isParenthesizedExpression(expression)) {
 		expression = expression.expression;
 	}
 	return expression;
@@ -82,11 +106,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				PropertyAccessExpression: (node, { sourceFile, typeChecker }) => {
+				PropertyAccessExpression: (
+					node,
+					{ program, sourceFile, typeChecker },
+				) => {
 					if (
 						node.questionDotToken ||
 						node.name.text !== "length" ||
-						!ts.isArrayLiteralExpression(node.expression) ||
+						!isArrayLiteralExpression(node.expression) ||
 						node.expression.elements.length !== 1
 					) {
 						return;
@@ -96,8 +123,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const element = node.expression.elements[0]!;
 
 					if (
-						!ts.isSpreadElement(element) ||
-						!isSetExpression(element.expression, typeChecker)
+						!isSpreadElement(element) ||
+						!isSetExpression(element.expression, typeChecker, program)
 					) {
 						return;
 					}

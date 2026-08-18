@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -31,9 +31,9 @@ function getTypeArgumentsRange(
 	let end = typeArguments.end;
 
 	for (const child of children) {
-		if (child.kind === ts.SyntaxKind.LessThanToken) {
+		if (child.kind === SyntaxKind.LessThanToken) {
 			begin = child.getStart(sourceFile);
-		} else if (child.kind === ts.SyntaxKind.GreaterThanToken) {
+		} else if (child.kind === SyntaxKind.GreaterThanToken) {
 			end = child.getEnd();
 		}
 	}
@@ -108,9 +108,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const style = options.style;
 
 			if (
-				!initializer ||
-				!ts.isNewExpression(initializer) ||
-				!ts.isIdentifier(initializer.expression)
+				initializer?.kind !== SyntaxKind.NewExpression ||
+				initializer.expression.kind !== SyntaxKind.Identifier
 			) {
 				return;
 			}
@@ -155,7 +154,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			if (
 				!ts.isTypeReferenceNode(typeAnnotation) ||
-				!ts.isIdentifier(typeAnnotation.typeName) ||
+				typeAnnotation.typeName.kind !== SyntaxKind.Identifier ||
 				typeAnnotation.typeName.text !== constructorName ||
 				isBuiltInTypedArray(typeAnnotation.typeName.text) ||
 				!!typeAnnotation.typeArguments !== !initializer.typeArguments

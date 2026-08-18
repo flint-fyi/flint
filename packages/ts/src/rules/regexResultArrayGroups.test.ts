@@ -7,21 +7,21 @@ ruleTester.describe(rule, {
 			code: `
 const regex = /a(?<foo>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match[1];
 }
 `,
 			output: `
 const regex = /a(?<foo>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match.groups.foo;
 }
 `,
 			snapshot: `
 const regex = /a(?<foo>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match[1];
                         ~~
                         Use \`.groups.foo\` instead of numeric index for the named capturing group 'foo'.
@@ -32,21 +32,21 @@ while (match = regex.exec(text)) {
 			code: `
 const regex = /a(?<foo>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match?.[1];
 }
 `,
 			output: `
 const regex = /a(?<foo>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match?.groups.foo;
 }
 `,
 			snapshot: `
 const regex = /a(?<foo>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match?.[1];
                           ~~
                           Use \`.groups.foo\` instead of numeric index for the named capturing group 'foo'.
@@ -57,21 +57,21 @@ while (match = regex.exec(text)) {
 			code: `
 const regex = /a(?<foo>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match?.[(1)];
 }
 `,
 			output: `
 const regex = /a(?<foo>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match?.groups.foo;
 }
 `,
 			snapshot: `
 const regex = /a(?<foo>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match?.[(1)];
                           ~~~~
                           Use \`.groups.foo\` instead of numeric index for the named capturing group 'foo'.
@@ -82,7 +82,7 @@ while (match = regex.exec(text)) {
 			code: `
 const regex = /(a)(?<bar>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const first = match[1];
     const second = match[2];
 }
@@ -90,7 +90,7 @@ while (match = regex.exec(text)) {
 			output: `
 const regex = /(a)(?<bar>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const first = match[1];
     const second = match.groups.bar;
 }
@@ -98,7 +98,7 @@ while (match = regex.exec(text)) {
 			snapshot: `
 const regex = /(a)(?<bar>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const first = match[1];
     const second = match[2];
                          ~~
@@ -110,29 +110,29 @@ while (match = regex.exec(text)) {
 			code: `
 const regex = /(?<first>a)(?<second>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const [, first, second] = match;
 }
 `,
 			snapshot: `
 const regex = /(?<first>a)(?<second>b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const [, first, second] = match;
 }
 `,
 		},
 		{
 			code: `
-const result = "text".match(/a(?<foo>b)c/);
+const result = "text".match(/a(?<foo>b)c/)!;
 const value = result[1];
 `,
 			output: `
-const result = "text".match(/a(?<foo>b)c/);
+const result = "text".match(/a(?<foo>b)c/)!;
 const value = result.groups.foo;
 `,
 			snapshot: `
-const result = "text".match(/a(?<foo>b)c/);
+const result = "text".match(/a(?<foo>b)c/)!;
 const value = result[1];
                      ~~
                      Use \`.groups.foo\` instead of numeric index for the named capturing group 'foo'.
@@ -140,15 +140,15 @@ const value = result[1];
 		},
 		{
 			code: `
-const match = /(?<foo>test)/u.exec(text)!;
+const match = /(?<foo>test)/u.exec("text")!;
 match[1];
 `,
 			output: `
-const match = /(?<foo>test)/u.exec(text)!;
+const match = /(?<foo>test)/u.exec("text")!;
 match.groups.foo;
 `,
 			snapshot: `
-const match = /(?<foo>test)/u.exec(text)!;
+const match = /(?<foo>test)/u.exec("text")!;
 match[1];
       ~~
       Use \`.groups.foo\` instead of numeric index for the named capturing group 'foo'.
@@ -156,28 +156,28 @@ match[1];
 		},
 		{
 			code: `
-/(?<bar>test)/u.exec(text)?.[1];
+/(?<bar>test)/u.exec("text")?.[1];
 `,
 			output: `
-/(?<bar>test)/u.exec(text)?.groups.bar;
+/(?<bar>test)/u.exec("text")?.groups.bar;
 `,
 			snapshot: `
-/(?<bar>test)/u.exec(text)?.[1];
-                             ~~
-                             Use \`.groups.bar\` instead of numeric index for the named capturing group 'bar'.
+/(?<bar>test)/u.exec("text")?.[1];
+                               ~~
+                               Use \`.groups.bar\` instead of numeric index for the named capturing group 'bar'.
 `,
 		},
 		{
 			code: `
-const match = /(?<baz>test)/u.exec(text);
+const match = /(?<baz>test)/u.exec("text");
 match?.[1];
 `,
 			output: `
-const match = /(?<baz>test)/u.exec(text);
+const match = /(?<baz>test)/u.exec("text");
 match?.groups.baz;
 `,
 			snapshot: `
-const match = /(?<baz>test)/u.exec(text);
+const match = /(?<baz>test)/u.exec("text");
 match?.[1];
         ~~
         Use \`.groups.baz\` instead of numeric index for the named capturing group 'baz'.
@@ -185,19 +185,19 @@ match?.[1];
 		},
 		{
 			code: `
-const match = /(?<foo>test)/u.exec(text);
+const match = /(?<foo>test)/u.exec("text");
 if (match) {
     match[1];
 }
 `,
 			output: `
-const match = /(?<foo>test)/u.exec(text);
+const match = /(?<foo>test)/u.exec("text");
 if (match) {
     match.groups.foo;
 }
 `,
 			snapshot: `
-const match = /(?<foo>test)/u.exec(text);
+const match = /(?<foo>test)/u.exec("text");
 if (match) {
     match[1];
           ~~
@@ -207,19 +207,19 @@ if (match) {
 		},
 		{
 			code: `
-const match = /(?<bar>test)/u.exec(text);
+const match = /(?<bar>test)/u.exec("text");
 match
     ? match[1]
     : null;
 `,
 			output: `
-const match = /(?<bar>test)/u.exec(text);
+const match = /(?<bar>test)/u.exec("text");
 match
     ? match.groups.bar
     : null;
 `,
 			snapshot: `
-const match = /(?<bar>test)/u.exec(text);
+const match = /(?<bar>test)/u.exec("text");
 match
     ? match[1]
             ~~
@@ -229,15 +229,15 @@ match
 		},
 		{
 			code: `
-const match = /(?<baz>test)/u.exec(text);
+const match = /(?<baz>test)/u.exec("text");
 match && match[1];
 `,
 			output: `
-const match = /(?<baz>test)/u.exec(text);
+const match = /(?<baz>test)/u.exec("text");
 match && match.groups.baz;
 `,
 			snapshot: `
-const match = /(?<baz>test)/u.exec(text);
+const match = /(?<baz>test)/u.exec("text");
 match && match[1];
                ~~
                Use \`.groups.baz\` instead of numeric index for the named capturing group 'baz'.
@@ -245,21 +245,21 @@ match && match[1];
 		},
 		{
 			code: `
-const match = /(?<qux>test)/u.exec(text);
+const match = /(?<qux>test)/u.exec("text");
 if (!match) {
 } else {
     match[1];
 }
 `,
 			output: `
-const match = /(?<qux>test)/u.exec(text);
+const match = /(?<qux>test)/u.exec("text");
 if (!match) {
 } else {
     match.groups.qux;
 }
 `,
 			snapshot: `
-const match = /(?<qux>test)/u.exec(text);
+const match = /(?<qux>test)/u.exec("text");
 if (!match) {
 } else {
     match[1];
@@ -273,73 +273,80 @@ if (!match) {
 		`
 const regex = /regexp/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match[0];
 }
 `,
 		`
 const regex = /a(b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match[1];
 }
 `,
 		`
 const regex = /a(b)c/;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match?.[1];
 }
 `,
 		`
 const regex = /a(b)c/;
-let match;
-while (match = regex.exec(text)) {
+type Match = RegExpExecArray & { unknown: string };
+let match: Match | null;
+while (match = regex.exec("text") as Match | null) {
     const value = match.unknown;
 }
 `,
 		`
 const regex = /a(?<foo>b)c/;
-let match;
-while (match = regex.exec(text)) {
+type Match = RegExpExecArray & { unknown: string };
+let match: Match | null;
+while (match = regex.exec("text") as Match | null) {
     const value = match.unknown;
 }
 `,
 		`
 const regex = /reg[[exp]]/v;
 let match;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match[0];
 }
 `,
 		`
-const result = "text".match(/regexp/);
+const result = "text".match(/regexp/)!;
 const value = result[1];
 `,
 		`
-const result = "text".match(/a(b)c/);
+const result = "text".match(/a(b)c/)!;
 const value = result[1];
 `,
 		`
-const result = "text".match(/a(?<foo>b)c/);
-const value = result.groups.foo;
+const result = "text".match(/a(?<foo>b)c/)!;
+const value = result.groups!.foo;
 `,
 		`
-const result = "text".match(/a(?<foo>b)c/);
+const result = "text".match(/a(?<foo>b)c/)! as RegExpMatchArray & { unknown: string };
 const value = result.unknown;
 `,
 		`
-const result = unknown.match(/a(?<foo>b)c/);
+const unknownText = {
+    match(pattern: RegExp) {
+        return "text".match(pattern)!;
+    },
+};
+const result = unknownText.match(/a(?<foo>b)c/);
 const value = result[1];
 `,
 		`
-const result = "text".match(/a(?<foo>b)c/g);
+const result = "text".match(/a(?<foo>b)c/g)!;
 const value = result[1];
 `,
 		`
 const matches = "text".matchAll(/a(?<foo>b)c/g);
 for (const match of matches) {
-    const value = match.groups.foo;
+    const value = match.groups!.foo;
 }
 `,
 		`
@@ -349,22 +356,27 @@ for (const match of matches) {
 }
 `,
 		`
-const matches = unknown.matchAll(/a(?<foo>b)c/g);
+const unknownText = {
+    matchAll(pattern: RegExp) {
+        return "text".matchAll(pattern);
+    },
+};
+const matches = unknownText.matchAll(/a(?<foo>b)c/g);
 for (const match of matches) {
-    const value = match.groups.foo;
+    const value = match.groups!.foo;
 }
 `,
 		`
 const regex = /a(?<foo>b)c/;
 let match: any;
-while (match = regex.exec(text)) {
+while (match = regex.exec("text")) {
     const value = match[1];
 }
 `,
 		`
 const regex = /a(?<foo>b)c/;
 let match: unknown[];
-while (match = regex.exec(text) as any) {
+while (match = regex.exec("text") as any) {
     const value = match[1];
 }
 `,

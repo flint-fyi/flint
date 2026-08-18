@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	typescriptLanguage,
@@ -152,7 +152,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const fullText = node.getText(sourceFile);
 			let quoteChar: string;
 
-			if (node.kind === ts.SyntaxKind.StringLiteral) {
+			if (node.kind === SyntaxKind.StringLiteral) {
 				quoteChar = fullText.startsWith('"') ? '"' : "'";
 			} else {
 				quoteChar = "`";

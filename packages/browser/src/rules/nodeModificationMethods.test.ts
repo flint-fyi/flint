@@ -5,9 +5,15 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const parentNode: Node;
+declare const newNode: Node;
+declare const oldNode: Node;
 parentNode.replaceChild(newNode, oldNode);
 `,
 			snapshot: `
+declare const parentNode: Node;
+declare const newNode: Node;
+declare const oldNode: Node;
 parentNode.replaceChild(newNode, oldNode);
            ~~~~~~~~~~~~
            Prefer \`.replaceWith()\` over \`.replaceChild()\`.
@@ -15,19 +21,29 @@ parentNode.replaceChild(newNode, oldNode);
 		},
 		{
 			code: `
-element.parentNode.replaceChild(element, oldElement);
+declare const element: HTMLElement;
+declare const oldElement: Node;
+element.parentNode!.replaceChild(element, oldElement);
 `,
 			snapshot: `
-element.parentNode.replaceChild(element, oldElement);
-                   ~~~~~~~~~~~~
-                   Prefer \`.replaceWith()\` over \`.replaceChild()\`.
+declare const element: HTMLElement;
+declare const oldElement: Node;
+element.parentNode!.replaceChild(element, oldElement);
+                    ~~~~~~~~~~~~
+                    Prefer \`.replaceWith()\` over \`.replaceChild()\`.
 `,
 		},
 		{
 			code: `
+declare const parentNode: Node;
+declare const newNode: Node;
+declare const referenceNode: Node;
 parentNode.insertBefore(newNode, referenceNode);
 `,
 			snapshot: `
+declare const parentNode: Node;
+declare const newNode: Node;
+declare const referenceNode: Node;
 parentNode.insertBefore(newNode, referenceNode);
            ~~~~~~~~~~~~
            Prefer \`.before()\` over \`.insertBefore()\`, \`.insertAdjacentElement('beforebegin', ...)\`, or \`.insertAdjacentText('beforebegin', ...)\`.
@@ -35,19 +51,25 @@ parentNode.insertBefore(newNode, referenceNode);
 		},
 		{
 			code: `
-parent.insertBefore(node, parent.firstChild);
+declare const parentNode: Node;
+declare const node: Node;
+parentNode.insertBefore(node, parentNode.firstChild);
 `,
 			snapshot: `
-parent.insertBefore(node, parent.firstChild);
-       ~~~~~~~~~~~~
-       Prefer \`.before()\` over \`.insertBefore()\`, \`.insertAdjacentElement('beforebegin', ...)\`, or \`.insertAdjacentText('beforebegin', ...)\`.
+declare const parentNode: Node;
+declare const node: Node;
+parentNode.insertBefore(node, parentNode.firstChild);
+           ~~~~~~~~~~~~
+           Prefer \`.before()\` over \`.insertBefore()\`, \`.insertAdjacentElement('beforebegin', ...)\`, or \`.insertAdjacentText('beforebegin', ...)\`.
 `,
 		},
 		{
 			code: `
+declare const referenceNode: Element;
 referenceNode.insertAdjacentText("beforebegin", "text");
 `,
 			snapshot: `
+declare const referenceNode: Element;
 referenceNode.insertAdjacentText("beforebegin", "text");
               ~~~~~~~~~~~~~~~~~~
               Prefer \`.before()\` over \`.insertBefore()\`, \`.insertAdjacentElement('beforebegin', ...)\`, or \`.insertAdjacentText('beforebegin', ...)\`.
@@ -55,9 +77,11 @@ referenceNode.insertAdjacentText("beforebegin", "text");
 		},
 		{
 			code: `
+declare const element: Element;
 element.insertAdjacentText("afterbegin", "content");
 `,
 			snapshot: `
+declare const element: Element;
 element.insertAdjacentText("afterbegin", "content");
         ~~~~~~~~~~~~~~~~~~
         Prefer \`.prepend()\` over \`.insertAdjacentElement('afterbegin', ...)\` or \`.insertAdjacentText('afterbegin', ...)\`.
@@ -65,9 +89,11 @@ element.insertAdjacentText("afterbegin", "content");
 		},
 		{
 			code: `
+declare const element: Element;
 element.insertAdjacentText("beforeend", "text");
 `,
 			snapshot: `
+declare const element: Element;
 element.insertAdjacentText("beforeend", "text");
         ~~~~~~~~~~~~~~~~~~
         Prefer \`.append()\` over \`.insertAdjacentElement('beforeend', ...)\` or \`.insertAdjacentText('beforeend', ...)\`.
@@ -75,9 +101,11 @@ element.insertAdjacentText("beforeend", "text");
 		},
 		{
 			code: `
+declare const element: Element;
 element.insertAdjacentText("afterend", "text");
 `,
 			snapshot: `
+declare const element: Element;
 element.insertAdjacentText("afterend", "text");
         ~~~~~~~~~~~~~~~~~~
         Prefer \`.after()\` over \`.insertAdjacentElement('afterend', ...)\` or \`.insertAdjacentText('afterend', ...)\`.
@@ -85,9 +113,13 @@ element.insertAdjacentText("afterend", "text");
 		},
 		{
 			code: `
+declare const referenceNode: Element;
+declare const newNode: Element;
 referenceNode.insertAdjacentElement("beforebegin", newNode);
 `,
 			snapshot: `
+declare const referenceNode: Element;
+declare const newNode: Element;
 referenceNode.insertAdjacentElement("beforebegin", newNode);
               ~~~~~~~~~~~~~~~~~~~~~
               Prefer \`.before()\` over \`.insertBefore()\`, \`.insertAdjacentElement('beforebegin', ...)\`, or \`.insertAdjacentText('beforebegin', ...)\`.
@@ -95,9 +127,13 @@ referenceNode.insertAdjacentElement("beforebegin", newNode);
 		},
 		{
 			code: `
+declare const element: Element;
+declare const newNode: Element;
 element.insertAdjacentElement("afterbegin", newNode);
 `,
 			snapshot: `
+declare const element: Element;
+declare const newNode: Element;
 element.insertAdjacentElement("afterbegin", newNode);
         ~~~~~~~~~~~~~~~~~~~~~
         Prefer \`.prepend()\` over \`.insertAdjacentElement('afterbegin', ...)\` or \`.insertAdjacentText('afterbegin', ...)\`.
@@ -105,9 +141,13 @@ element.insertAdjacentElement("afterbegin", newNode);
 		},
 		{
 			code: `
+declare const element: Element;
+declare const newNode: Element;
 element.insertAdjacentElement("beforeend", newNode);
 `,
 			snapshot: `
+declare const element: Element;
+declare const newNode: Element;
 element.insertAdjacentElement("beforeend", newNode);
         ~~~~~~~~~~~~~~~~~~~~~
         Prefer \`.append()\` over \`.insertAdjacentElement('beforeend', ...)\` or \`.insertAdjacentText('beforeend', ...)\`.
@@ -115,9 +155,13 @@ element.insertAdjacentElement("beforeend", newNode);
 		},
 		{
 			code: `
+declare const referenceNode: Element;
+declare const newNode: Element;
 referenceNode.insertAdjacentElement("afterend", newNode);
 `,
 			snapshot: `
+declare const referenceNode: Element;
+declare const newNode: Element;
 referenceNode.insertAdjacentElement("afterend", newNode);
               ~~~~~~~~~~~~~~~~~~~~~
               Prefer \`.after()\` over \`.insertAdjacentElement('afterend', ...)\` or \`.insertAdjacentText('afterend', ...)\`.
@@ -125,9 +169,11 @@ referenceNode.insertAdjacentElement("afterend", newNode);
 		},
 		{
 			code: `
+declare const element: { insertAdjacentText(position: string, value: string): void };
 element.insertAdjacentText("BeforeBegin", "text");
 `,
 			snapshot: `
+declare const element: { insertAdjacentText(position: string, value: string): void };
 element.insertAdjacentText("BeforeBegin", "text");
         ~~~~~~~~~~~~~~~~~~
         Prefer \`.before()\` over \`.insertBefore()\`, \`.insertAdjacentElement('beforebegin', ...)\`, or \`.insertAdjacentText('beforebegin', ...)\`.
@@ -135,9 +181,13 @@ element.insertAdjacentText("BeforeBegin", "text");
 		},
 		{
 			code: `
+declare const element: { insertAdjacentElement(position: string, element: Element): void };
+declare const newNode: Element;
 element.insertAdjacentElement("AFTEREND", newNode);
 `,
 			snapshot: `
+declare const element: { insertAdjacentElement(position: string, element: Element): void };
+declare const newNode: Element;
 element.insertAdjacentElement("AFTEREND", newNode);
         ~~~~~~~~~~~~~~~~~~~~~
         Prefer \`.after()\` over \`.insertAdjacentElement('afterend', ...)\` or \`.insertAdjacentText('afterend', ...)\`.
@@ -145,13 +195,41 @@ element.insertAdjacentElement("AFTEREND", newNode);
 		},
 	],
 	valid: [
-		`oldNode.replaceWith(newNode);`,
-		`referenceNode.before(newNode);`,
-		`referenceNode.before("text");`,
-		`element.prepend("text");`,
-		`element.append("text");`,
-		`element.after("text");`,
-		`element.appendChild(child);`,
-		`element.removeChild(child);`,
+		`
+			declare const oldNode: Element;
+			declare const newNode: Node;
+			oldNode.replaceWith(newNode);
+		`,
+		`
+			declare const referenceNode: Element;
+			declare const newNode: Node;
+			referenceNode.before(newNode);
+		`,
+		`
+			declare const referenceNode: Element;
+			referenceNode.before("text");
+		`,
+		`
+			declare const element: Element;
+			element.prepend("text");
+		`,
+		`
+			declare const element: Element;
+			element.append("text");
+		`,
+		`
+			declare const element: Element;
+			element.after("text");
+		`,
+		`
+			declare const element: Node;
+			declare const child: Node;
+			element.appendChild(child);
+		`,
+		`
+			declare const element: Node;
+			declare const child: Node;
+			element.removeChild(child);
+		`,
 	],
 });

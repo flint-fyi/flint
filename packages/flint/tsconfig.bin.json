@@ -1,11 +1,13 @@
 {
+	"extends": "@flint.fyi/build/tsconfig.base.json",
 	"compilerOptions": {
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.bin.json",
+		"isolatedDeclarations": false,
+		"checkJs": true,
 		"rootDir": "bin/",
 		"outDir": "lib/bin/",
 		"types": ["node"]
 	},
-	"extends": "../../tsconfig.base.json",
 	"include": ["bin"],
 	"references": [{ "path": "../cli" }, { "path": "../ts-patch" }]
 }

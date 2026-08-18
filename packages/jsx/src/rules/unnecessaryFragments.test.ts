@@ -35,9 +35,11 @@ const element = <></>;
 		},
 		{
 			code: `
+declare const Fragment: (props: Record<string, unknown>) => unknown;
 const element = <Fragment><div>Hello</div></Fragment>;
 `,
 			snapshot: `
+declare const Fragment: (props: Record<string, unknown>) => unknown;
 const element = <Fragment><div>Hello</div></Fragment>;
                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 Unnecessary fragment wrapping a single child.
@@ -45,9 +47,11 @@ const element = <Fragment><div>Hello</div></Fragment>;
 		},
 		{
 			code: `
+declare const Fragment: (props: Record<string, unknown>) => unknown;
 const element = <Fragment></Fragment>;
 `,
 			snapshot: `
+declare const Fragment: (props: Record<string, unknown>) => unknown;
 const element = <Fragment></Fragment>;
                 ~~~~~~~~~~~~~~~~~~~~~
                 Unnecessary fragment wrapping no children.
@@ -71,14 +75,16 @@ const element = <>
 		},
 		{
 			code: `
-return (
+declare const Component: (props: Record<string, unknown>) => unknown;
+const element = (
     <>
         <Component />
     </>
 );
 `,
 			snapshot: `
-return (
+declare const Component: (props: Record<string, unknown>) => unknown;
+const element = (
     <>
     ~~
     Unnecessary fragment wrapping a single child.
@@ -91,11 +97,13 @@ return (
 		},
 		{
 			code: `
+declare const Fragment: (props: Record<string, unknown>) => unknown;
 const element = <Fragment>
     Text content
 </Fragment>;
 `,
 			snapshot: `
+declare const Fragment: (props: Record<string, unknown>) => unknown;
 const element = <Fragment>
                 ~~~~~~~~~~
                 Unnecessary fragment wrapping a single child.
@@ -108,19 +116,26 @@ const element = <Fragment>
 	],
 	valid: [
 		`const element = <><div>First</div><div>Second</div></>;`,
-		`const element = <Fragment><div>First</div><div>Second</div></Fragment>;`,
-		`const element = <Fragment key="item"><div>Hello</div></Fragment>;`,
+		`
+declare const Fragment: (props: Record<string, unknown>) => unknown;
+const element = <Fragment><div>First</div><div>Second</div></Fragment>;`,
+		`
+declare const Fragment: (props: Record<string, unknown>) => unknown;
+const element = <Fragment key="item"><div>Hello</div></Fragment>;`,
 		`const element = <><div>A</div><div>B</div><div>C</div></>;`,
 		`const element = <div>Hello</div>;`,
 		`
-return (
+const element = (
     <>
         <div>First</div>
         <div>Second</div>
     </>
 );
 `,
-		`const element = <Fragment key={item.id}><span>{item.text}</span></Fragment>;`,
+		`
+declare const Fragment: (props: Record<string, unknown>) => unknown;
+declare const item: Record<string, unknown>;
+const element = <Fragment key={item.id}><span>{item.text}</span></Fragment>;`,
 		`
 const element = <>
     <div>First</div>

@@ -1,8 +1,9 @@
 import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	DirectivesCollector,
+	type DirectiveCollection,
 	type NormalizedReportRangeObject,
 } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
@@ -18,7 +19,7 @@ export interface ExtractedDirective {
 
 export function extractDirectivesFromTypeScriptFile(
 	sourceFile: AST.SourceFile,
-) {
+): ExtractedDirective[] {
 	const directives: ExtractedDirective[] = [];
 
 	tsutils.forEachComment(sourceFile, (fullText, sourceRange) => {
@@ -51,7 +52,9 @@ export function extractDirectivesFromTypeScriptFile(
 	return directives;
 }
 
-export function parseDirectivesFromTypeScriptFile(sourceFile: AST.SourceFile) {
+export function parseDirectivesFromTypeScriptFile(
+	sourceFile: AST.SourceFile,
+): DirectiveCollection {
 	const collector = new DirectivesCollector(
 		sourceFile.statements.at(0)?.getStart(sourceFile) ?? sourceFile.text.length,
 	);
@@ -89,7 +92,7 @@ function computeNextCodeLine(
 	const kind = scanner.scan();
 
 	// Reaching the end of the file means there are no more lines
-	if (kind === ts.SyntaxKind.EndOfFileToken) {
+	if (kind === SyntaxKind.EndOfFileToken) {
 		return undefined;
 	}
 

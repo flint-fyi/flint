@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind, type Program } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -15,6 +15,7 @@ import { skipParentheses } from "./utils/skipParentheses.ts";
 function checkLogDivideConstant(
 	node: AST.BinaryExpression,
 	typeChecker: Checker,
+	program: Program,
 	constantName: string,
 	replacementMethod: string,
 ) {
@@ -26,8 +27,8 @@ function checkLogDivideConstant(
 	const right = skipParentheses(node.right);
 
 	if (
-		getMathMethodArgument(left, "log", typeChecker) &&
-		isMathProperty(right, constantName, typeChecker)
+		getMathMethodArgument(left, "log", typeChecker, program) &&
+		isMathProperty(right, constantName, typeChecker, program)
 	) {
 		return {
 			description: `Math.log(…) / Math.${constantName}`,
@@ -39,6 +40,7 @@ function checkLogDivideConstant(
 function checkLogTimesConstant(
 	node: AST.BinaryExpression,
 	typeChecker: Checker,
+	program: Program,
 	constantName: string,
 	replacementMethod: string,
 ) {
@@ -50,8 +52,8 @@ function checkLogTimesConstant(
 	const right = skipParentheses(node.right);
 
 	if (
-		getMathMethodArgument(left, "log", typeChecker) &&
-		isMathProperty(right, constantName, typeChecker)
+		getMathMethodArgument(left, "log", typeChecker, program) &&
+		isMathProperty(right, constantName, typeChecker, program)
 	) {
 		return {
 			description: `Math.log(…) * Math.${constantName}`,
@@ -60,8 +62,8 @@ function checkLogTimesConstant(
 	}
 
 	if (
-		isMathProperty(left, constantName, typeChecker) &&
-		getMathMethodArgument(right, "log", typeChecker)
+		isMathProperty(left, constantName, typeChecker, program) &&
+		getMathMethodArgument(right, "log", typeChecker, program)
 	) {
 		return {
 			description: `Math.${constantName} * Math.log(…)`,
@@ -90,6 +92,7 @@ function getMathMethodArgument(
 	node: AST.Expression,
 	methodName: string,
 	typeChecker: Checker,
+	program: Program,
 ) {
 	if (
 		node.kind !== SyntaxKind.CallExpression ||
@@ -104,7 +107,7 @@ function getMathMethodArgument(
 
 	if (
 		argument.kind === SyntaxKind.SpreadElement ||
-		!isMathProperty(node.expression, methodName, typeChecker)
+		!isMathProperty(node.expression, methodName, typeChecker, program)
 	) {
 		return undefined;
 	}
@@ -116,6 +119,7 @@ function isMathProperty(
 	node: AST.Expression,
 	propertyName: string,
 	typeChecker: Checker,
+	program: Program,
 ) {
 	return (
 		node.kind === SyntaxKind.PropertyAccessExpression &&
@@ -123,7 +127,7 @@ function isMathProperty(
 		node.name.kind === SyntaxKind.Identifier &&
 		node.name.text === propertyName &&
 		node.expression.kind === SyntaxKind.Identifier &&
-		isGlobalDeclarationOfName(node.expression, "Math", typeChecker)
+		isGlobalDeclarationOfName(node.expression, "Math", typeChecker, program)
 	);
 }
 
@@ -168,7 +172,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		return {
 			visitors: {
-				BinaryExpression: (node, { sourceFile, typeChecker }) => {
+				BinaryExpression: (node, { program, sourceFile, typeChecker }) => {
 					const logPatterns = [
 						{ constantName: "LOG10E", replacementMethod: "log10" },
 						{ constantName: "LOG2E", replacementMethod: "log2" },
@@ -178,6 +182,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const match = checkLogTimesConstant(
 							node,
 							typeChecker,
+							program,
 							constantName,
 							replacementMethod,
 						);
@@ -203,6 +208,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						const match = checkLogDivideConstant(
 							node,
 							typeChecker,
+							program,
 							constantName,
 							replacementMethod,
 						);
@@ -219,8 +225,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 				},
-				CallExpression: (node, { sourceFile, typeChecker }) => {
-					const argument = getMathMethodArgument(node, "sqrt", typeChecker);
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
+					const argument = getMathMethodArgument(
+						node,
+						"sqrt",
+						typeChecker,
+						program,
+					);
 					if (!argument) {
 						return;
 					}

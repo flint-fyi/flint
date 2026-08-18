@@ -1,8 +1,9 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -84,26 +85,26 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 });
 
-function detectIssue(operator: ts.SyntaxKind, value: number) {
+function detectIssue(operator: SyntaxKind, value: number) {
 	switch (operator) {
-		case ts.SyntaxKind.GreaterThanEqualsToken:
+		case SyntaxKind.GreaterThanEqualsToken:
 			return value === 0 && (["preferNotEqualsMinusOne", "!=="] as const);
-		case ts.SyntaxKind.GreaterThanToken:
+		case SyntaxKind.GreaterThanToken:
 			return value === -1 && (["preferNotEqualsMinusOne", "!=="] as const);
-		case ts.SyntaxKind.LessThanToken:
+		case SyntaxKind.LessThanToken:
 			return value === 0 && (["preferEqualsMinusOne", "==="] as const);
 	}
 }
 
-function getNumericLiteralValue(node: ts.Node): number | undefined {
-	if (ts.isNumericLiteral(node)) {
+function getNumericLiteralValue(node: AST.AnyNode): number | undefined {
+	if (node.kind === SyntaxKind.NumericLiteral) {
 		return Number(node.text);
 	}
 
 	if (
-		ts.isPrefixUnaryExpression(node) &&
-		node.operator === ts.SyntaxKind.MinusToken &&
-		ts.isNumericLiteral(node.operand)
+		node.kind === SyntaxKind.PrefixUnaryExpression &&
+		node.operator === SyntaxKind.MinusToken &&
+		node.operand.kind === SyntaxKind.NumericLiteral
 	) {
 		return -Number(node.operand.text);
 	}
@@ -111,34 +112,34 @@ function getNumericLiteralValue(node: ts.Node): number | undefined {
 	return undefined;
 }
 
-function getOperatorText(kind: ts.SyntaxKind) {
+function getOperatorText(kind: SyntaxKind) {
 	switch (kind) {
-		case ts.SyntaxKind.GreaterThanEqualsToken:
+		case SyntaxKind.GreaterThanEqualsToken:
 			return ">=";
-		case ts.SyntaxKind.GreaterThanToken:
+		case SyntaxKind.GreaterThanToken:
 			return ">";
-		case ts.SyntaxKind.LessThanEqualsToken:
+		case SyntaxKind.LessThanEqualsToken:
 			return "<=";
-		case ts.SyntaxKind.LessThanToken:
+		case SyntaxKind.LessThanToken:
 			return "<";
 		default:
 			return "";
 	}
 }
 
-function isComparisonOperator(kind: ts.SyntaxKind) {
+function isComparisonOperator(kind: SyntaxKind) {
 	return (
-		kind === ts.SyntaxKind.LessThanToken ||
-		kind === ts.SyntaxKind.LessThanEqualsToken ||
-		kind === ts.SyntaxKind.GreaterThanToken ||
-		kind === ts.SyntaxKind.GreaterThanEqualsToken
+		kind === SyntaxKind.LessThanToken ||
+		kind === SyntaxKind.LessThanEqualsToken ||
+		kind === SyntaxKind.GreaterThanToken ||
+		kind === SyntaxKind.GreaterThanEqualsToken
 	);
 }
 
-function isIndexMethodCall(node: ts.Node) {
+function isIndexMethodCall(node: AST.AnyNode) {
 	return (
-		ts.isCallExpression(node) &&
-		ts.isPropertyAccessExpression(node.expression) &&
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		indexMethods.has(node.expression.name.text) &&
 		node
 	);

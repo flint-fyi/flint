@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -18,7 +18,9 @@ type ClassMemberWithModifiers =
 function hasDecorators(
 	node: AST.ClassDeclaration | AST.ClassExpression,
 ): boolean {
-	return node.modifiers?.some(ts.isDecorator) ?? false;
+	return (
+		node.modifiers?.some((node) => node.kind === SyntaxKind.Decorator) ?? false
+	);
 }
 
 function hasParameterProperties(
@@ -27,21 +29,20 @@ function hasParameterProperties(
 	return constructor.parameters.some((parameter) =>
 		parameter.modifiers?.some(
 			(modifier) =>
-				modifier.kind === ts.SyntaxKind.PublicKeyword ||
-				modifier.kind === ts.SyntaxKind.PrivateKeyword ||
-				modifier.kind === ts.SyntaxKind.ProtectedKeyword ||
-				modifier.kind === ts.SyntaxKind.ReadonlyKeyword,
+				modifier.kind === SyntaxKind.PublicKeyword ||
+				modifier.kind === SyntaxKind.PrivateKeyword ||
+				modifier.kind === SyntaxKind.ProtectedKeyword ||
+				modifier.kind === SyntaxKind.ReadonlyKeyword,
 		),
 	);
 }
 
 function hasStaticModifier(
-	modifiers: ts.NodeArray<AST.ModifierLike> | undefined,
+	modifiers: NodeArray<AST.ModifierLike> | undefined,
 ): boolean {
 	return (
-		modifiers?.some(
-			(modifier) => modifier.kind === ts.SyntaxKind.StaticKeyword,
-		) ?? false
+		modifiers?.some((modifier) => modifier.kind === SyntaxKind.StaticKeyword) ??
+		false
 	);
 }
 
@@ -50,7 +51,7 @@ function hasSuperClass(
 ): boolean {
 	return (
 		node.heritageClauses?.some(
-			(clause) => clause.token === ts.SyntaxKind.ExtendsKeyword,
+			(clause) => clause.token === SyntaxKind.ExtendsKeyword,
 		) ?? false
 	);
 }
@@ -59,9 +60,9 @@ function isRealMember(
 	member: AST.ClassElement,
 ): member is ClassMemberWithModifiers {
 	return (
-		!ts.isConstructorDeclaration(member) &&
-		!ts.isClassStaticBlockDeclaration(member) &&
-		!ts.isSemicolonClassElement(member)
+		member.kind !== SyntaxKind.Constructor &&
+		member.kind !== SyntaxKind.ClassStaticBlockDeclaration &&
+		member.kind !== SyntaxKind.SemicolonClassElement
 	);
 }
 
@@ -161,14 +162,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (!realMembers.length) {
 				for (const member of node.members) {
 					if (
-						ts.isConstructorDeclaration(member) &&
+						member.kind === SyntaxKind.Constructor &&
 						hasParameterProperties(member)
 					) {
 						return;
 					}
 				}
 
-				const hasConstructor = node.members.some(ts.isConstructorDeclaration);
+				const hasConstructor = node.members.some(
+					(node) => node.kind === SyntaxKind.Constructor,
+				);
 
 				if (hasConstructor) {
 					if (!options.allowConstructorOnly) {
@@ -190,7 +193,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			let onlyConstructor = true;
 
 			for (const member of node.members) {
-				if (ts.isConstructorDeclaration(member)) {
+				if (member.kind === SyntaxKind.Constructor) {
 					if (hasParameterProperties(member)) {
 						onlyConstructor = false;
 						onlyStatic = false;

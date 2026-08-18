@@ -1,6 +1,8 @@
 import { SyntaxKind } from "typescript";
 
 import {
+	getStaticNumberValue,
+	getStaticStringValue,
 	getTSNodeRange,
 	isGlobalDeclaration,
 	typescriptLanguage,
@@ -26,28 +28,6 @@ function convertToLiteral(value: string, radix: number): string {
 		default:
 			return value;
 	}
-}
-
-function getRadixValue(node: AST.Expression): number | undefined {
-	if (node.kind !== SyntaxKind.NumericLiteral) {
-		return undefined;
-	}
-
-	const value = Number(node.text);
-	if (![2, 8, 16].includes(value)) {
-		return undefined;
-	}
-
-	return value;
-}
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function getStringValue(node: AST.Expression): string | undefined {
-	return node.kind === SyntaxKind.StringLiteral ||
-		node.kind === SyntaxKind.NoSubstitutionTemplateLiteral
-		? node.text
-		: undefined;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -76,7 +56,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const stringValue = getStringValue(
+			const stringValue = getStaticStringValue(
 				nullThrows(
 					node.arguments[0],
 					"First argument is expected to be present by prior length check",
@@ -86,13 +66,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			const radixValue = getRadixValue(
+			const radixValue = getStaticNumberValue(
 				nullThrows(
 					node.arguments[1],
 					"Second argument is expected to be present by prior length check",
 				),
 			);
-			if (!radixValue) {
+			if (radixValue === undefined || ![2, 8, 16].includes(radixValue)) {
 				return;
 			}
 
@@ -108,11 +88,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		return {
 			visitors: {
-				CallExpression: (node, { sourceFile, typeChecker }) => {
+				CallExpression: (node, { program, sourceFile, typeChecker }) => {
 					if (node.expression.kind === SyntaxKind.Identifier) {
 						if (
 							node.expression.text === "parseInt" &&
-							isGlobalDeclaration(node.expression, typeChecker)
+							isGlobalDeclaration(node.expression, typeChecker, program)
 						) {
 							checkParseIntCall(node, sourceFile);
 						}
@@ -122,7 +102,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.expression.expression.text === "Number" &&
 						node.expression.name.kind === SyntaxKind.Identifier &&
 						node.expression.name.text === "parseInt" &&
-						isGlobalDeclaration(node.expression.expression, typeChecker)
+						isGlobalDeclaration(
+							node.expression.expression,
+							typeChecker,
+							program,
+						)
 					) {
 						checkParseIntCall(node, sourceFile);
 					}

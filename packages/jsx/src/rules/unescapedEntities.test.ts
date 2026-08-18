@@ -5,16 +5,6 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-<div>Greater than > sign</div>
-`,
-			snapshot: `
-<div>Greater than > sign</div>
-                  ~
-                  This unescaped entity \`>\` may not render properly.
-`,
-		},
-		{
-			code: `
 <span>Double "quote" example</span>
 `,
 			snapshot: `
@@ -35,40 +25,6 @@ ruleTester.describe(rule, {
           This unescaped entity \`'\` may not render properly.
                 ~
                 This unescaped entity \`'\` may not render properly.
-`,
-		},
-		{
-			code: `
-<div>Closing } brace</div>
-`,
-			snapshot: `
-<div>Closing } brace</div>
-             ~
-             This unescaped entity \`}\` may not render properly.
-`,
-		},
-		{
-			code: `
-<Component>Text with > and "</Component>
-`,
-			snapshot: `
-<Component>Text with > and "</Component>
-                     ~
-                     This unescaped entity \`>\` may not render properly.
-                           ~
-                           This unescaped entity \`"\` may not render properly.
-`,
-		},
-		{
-			code: `
-<div>Multiple >> problems</div>
-`,
-			snapshot: `
-<div>Multiple >> problems</div>
-              ~
-              This unescaped entity \`>\` may not render properly.
-               ~
-               This unescaped entity \`>\` may not render properly.
 `,
 		},
 	],

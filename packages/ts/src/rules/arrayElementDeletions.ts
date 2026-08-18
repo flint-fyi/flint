@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -16,10 +16,10 @@ function buildSpliceReplacement(
 ): string {
 	const children = elementAccess.getChildren(sourceFile);
 	const openBracket = children.find(
-		(child) => child.kind === ts.SyntaxKind.OpenBracketToken,
+		(child) => child.kind === SyntaxKind.OpenBracketToken,
 	);
 	const closeBracket = children.find(
-		(child) => child.kind === ts.SyntaxKind.CloseBracketToken,
+		(child) => child.kind === SyntaxKind.CloseBracketToken,
 	);
 
 	const before = sourceFile.text.slice(
@@ -58,7 +58,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				DeleteExpression: (node, { sourceFile, typeChecker }) => {
 					if (
-						!ts.isElementAccessExpression(node.expression) ||
+						node.expression.kind !== SyntaxKind.ElementAccessExpression ||
 						!isArrayOrTupleTypeAtLocation(
 							node.expression.expression,
 							typeChecker,

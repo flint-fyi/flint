@@ -3,7 +3,7 @@ import type { Node, RootNode } from "@astrojs/compiler/types";
 import type { ExtractedDirective } from "@flint.fyi/typescript-language";
 import { nullThrows } from "@flint.fyi/utils";
 
-export function extractDirectives(ast: RootNode) {
+export function extractDirectives(ast: RootNode): ExtractedDirective[] {
 	const directives: ExtractedDirective[] = [];
 
 	function visit(node: Node) {

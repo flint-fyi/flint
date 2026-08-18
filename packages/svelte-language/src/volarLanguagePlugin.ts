@@ -10,7 +10,8 @@ import {
 } from "@volar/language-core";
 import type { CompileError } from "svelte/compiler";
 import { internalHelpers, svelte2tsx } from "svelte2tsx";
-import type * as ts from "typescript";
+import type ts from "typescript";
+import type { CreateProgramOptions, ScriptKind } from "typescript";
 
 import {
 	getPositionOfColumnAndLine,
@@ -26,13 +27,13 @@ const svelte2tsxPath = path.dirname(
 );
 
 export function volarLanguagePlugin(
-	ts: typeof import("typescript"),
-	options: ts.CreateProgramOptions,
+	typescript: typeof ts,
+	options: CreateProgramOptions,
 ): LanguagePlugin<string> {
 	const cwd =
 		typeof options.options.configFilePath === "string"
 			? path.dirname(options.options.configFilePath)
-			: (options.host ?? ts.sys).getCurrentDirectory();
+			: (options.host ?? typescript.sys).getCurrentDirectory();
 	return {
 		createVirtualCode(fileName, languageId, snapshot) {
 			if (languageId !== "svelte") {
@@ -42,7 +43,7 @@ export function volarLanguagePlugin(
 				codegenStacks: [],
 				embeddedCodes: [
 					getEmbeddedTsCode(
-						ts,
+						typescript,
 						cwd,
 						fileName,
 						snapshot.getText(0, snapshot.getLength()),
@@ -65,7 +66,7 @@ export function volarLanguagePlugin(
 				{
 					extension: "svelte",
 					isMixedContent: true,
-					scriptKind: 7 satisfies ts.ScriptKind.Deferred,
+					scriptKind: 7 satisfies ScriptKind.Deferred,
 				},
 			],
 			getServiceScript(root) {
@@ -74,7 +75,7 @@ export function volarLanguagePlugin(
 						return {
 							code,
 							extension: ".tsx",
-							scriptKind: 4 satisfies ts.ScriptKind.TSX,
+							scriptKind: 4 satisfies ScriptKind.TSX,
 						};
 					}
 				}
@@ -85,7 +86,7 @@ export function volarLanguagePlugin(
 			virtualCode.snapshot = snapshot;
 			virtualCode.embeddedCodes = [
 				getEmbeddedTsCode(
-					ts,
+					typescript,
 					cwd,
 					fileName,
 					snapshot.getText(0, snapshot.getLength()),
@@ -96,7 +97,8 @@ export function volarLanguagePlugin(
 	};
 }
 
-export const virtualCodeReports = new WeakMap<VirtualCode, LanguageReport>();
+export const virtualCodeReports: WeakMap<VirtualCode, LanguageReport> =
+	new WeakMap<VirtualCode, LanguageReport>();
 
 export function errorToLanguageReport(
 	fileName: string,
@@ -143,13 +145,13 @@ function isSvelteCompileError(error: object): error is CompileError {
 
 // adapted from https://github.com/withastro/astro/blob/a19140fd11efbc635a391d176da54b0dc5e4a99c/packages/language-tools/ts-plugin/src/astro2tsx.ts
 function getEmbeddedTsCode(
-	ts: typeof import("typescript"),
+	typescript: typeof ts,
 	cwd: string,
 	fileName: string,
 	text: string,
 ): VirtualCode {
 	const svelteTsxFiles = internalHelpers.get_global_types(
-		ts.sys,
+		typescript.sys,
 		false,
 		sveltePath,
 		svelte2tsxPath,

@@ -1,7 +1,15 @@
-import * as ts from "typescript";
+import {
+	getLeadingCommentRanges,
+	getTrailingCommentRanges,
+	SyntaxKind,
+} from "typescript";
 import { z } from "zod/v4";
 
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	forEachChild,
+	typescriptLanguage,
+	type AST,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -86,8 +94,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const excludedRanges: { end: number; start: number }[] = [];
 
-					function collectExcludedRanges(astNode: ts.Node) {
-						if (astNode.kind === ts.SyntaxKind.StringLiteral) {
+					function collectExcludedRanges(astNode: AST.AnyNode) {
+						if (astNode.kind === SyntaxKind.StringLiteral) {
 							excludedRanges.push({
 								end: astNode.getEnd(),
 								start: astNode.getStart(sourceFile),
@@ -96,7 +104,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						if (
 							options.skipRegularExpressions &&
-							astNode.kind === ts.SyntaxKind.RegularExpressionLiteral
+							astNode.kind === SyntaxKind.RegularExpressionLiteral
 						) {
 							excludedRanges.push({
 								end: astNode.getEnd(),
@@ -106,10 +114,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 						if (
 							options.skipTemplates &&
-							(astNode.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral ||
-								astNode.kind === ts.SyntaxKind.TemplateHead ||
-								astNode.kind === ts.SyntaxKind.TemplateMiddle ||
-								astNode.kind === ts.SyntaxKind.TemplateTail)
+							(astNode.kind === SyntaxKind.NoSubstitutionTemplateLiteral ||
+								astNode.kind === SyntaxKind.TemplateHead ||
+								astNode.kind === SyntaxKind.TemplateMiddle ||
+								astNode.kind === SyntaxKind.TemplateTail)
 						) {
 							excludedRanges.push({
 								end: astNode.getEnd(),
@@ -117,25 +125,23 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							});
 						}
 
-						if (options.skipJSXText && astNode.kind === ts.SyntaxKind.JsxText) {
+						if (options.skipJSXText && astNode.kind === SyntaxKind.JsxText) {
 							excludedRanges.push({
 								end: astNode.getEnd(),
 								start: astNode.getFullStart(),
 							});
 						}
 
-						ts.forEachChild(astNode, collectExcludedRanges);
+						forEachChild(astNode, collectExcludedRanges);
 					}
 
 					collectExcludedRanges(node);
 
 					if (options.skipComments) {
-						const commentRanges = [
-							...(ts.getLeadingCommentRanges(text, 0) ?? []),
-						];
+						const commentRanges = [...(getLeadingCommentRanges(text, 0) ?? [])];
 
-						function collectCommentRanges(astNode: ts.Node) {
-							const leading = ts.getLeadingCommentRanges(
+						function collectCommentRanges(astNode: AST.AnyNode) {
+							const leading = getLeadingCommentRanges(
 								text,
 								astNode.getFullStart(),
 							);
@@ -143,15 +149,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								commentRanges.push(...leading);
 							}
 
-							const trailing = ts.getTrailingCommentRanges(
-								text,
-								astNode.getEnd(),
-							);
+							const trailing = getTrailingCommentRanges(text, astNode.getEnd());
 							if (trailing) {
 								commentRanges.push(...trailing);
 							}
 
-							ts.forEachChild(astNode, collectCommentRanges);
+							forEachChild(astNode, collectCommentRanges);
 						}
 
 						collectCommentRanges(node);

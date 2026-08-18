@@ -5,6 +5,7 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const value: number;
 switch (value) {
     case 1:
         let x = 1;
@@ -12,6 +13,7 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: number;
 switch (value) {
     case 1:
         let x = 1;
@@ -23,6 +25,7 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: number;
 switch (value) {
     case 1:
         const x = 1;
@@ -30,6 +33,7 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: number;
 switch (value) {
     case 1:
         const x = 1;
@@ -41,6 +45,7 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: number;
 switch (value) {
     case 1:
         function foo() {}
@@ -48,6 +53,7 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: number;
 switch (value) {
     case 1:
         function foo() {}
@@ -59,6 +65,7 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: number;
 switch (value) {
     case 1:
         class Foo {}
@@ -66,6 +73,7 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: number;
 switch (value) {
     case 1:
         class Foo {}
@@ -77,6 +85,7 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: number;
 switch (value) {
     default:
         let x = 1;
@@ -84,6 +93,7 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: number;
 switch (value) {
     default:
         let x = 1;
@@ -95,6 +105,7 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: number;
 switch (value) {
     default:
         const x = 1;
@@ -102,6 +113,7 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: number;
 switch (value) {
     default:
         const x = 1;
@@ -113,6 +125,7 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: number;
 switch (value) {
     case 1:
         let x = 1;
@@ -122,6 +135,7 @@ switch (value) {
 }
 `,
 			snapshot: `
+declare const value: number;
 switch (value) {
     case 1:
         let x = 1;
@@ -137,36 +151,66 @@ switch (value) {
 		},
 		{
 			code: `
+declare const value: number;
 switch (value) {
     case 1:
         const x = 1;
-        console.log(x);
+        void x;
         break;
 }
 `,
 			snapshot: `
+declare const value: number;
 switch (value) {
     case 1:
         const x = 1;
         ~~~~~
         Variables declared in case clauses without braces leak into the surrounding scope.
-        console.log(x);
+        void x;
         break;
 }
 `,
 		},
 	],
 	valid: [
-		`switch (value) { case 1: { let x = 1; break; } }`,
-		`switch (value) { case 1: { const x = 1; break; } }`,
-		`switch (value) { case 1: { function foo() {} break; } }`,
-		`switch (value) { case 1: { class Foo {} break; } }`,
-		`switch (value) { default: { let x = 1; break; } }`,
-		`switch (value) { default: { const x = 1; break; } }`,
-		`switch (value) { case 1: var x = 1; break; }`,
-		`switch (value) { case 1: break; }`,
-		`switch (value) { case 1: console.log("test"); break; }`,
 		`
+declare const value: number;
+switch (value) { case 1: { let x = 1; break; } }
+`,
+		`
+declare const value: number;
+switch (value) { case 1: { const x = 1; break; } }
+`,
+		`
+declare const value: number;
+switch (value) { case 1: { function foo() {} break; } }
+`,
+		`
+declare const value: number;
+switch (value) { case 1: { class Foo {} break; } }
+`,
+		`
+declare const value: number;
+switch (value) { default: { let x = 1; break; } }
+`,
+		`
+declare const value: number;
+switch (value) { default: { const x = 1; break; } }
+`,
+		`
+declare const value: number;
+switch (value) { case 1: var x = 1; break; }
+`,
+		`
+declare const value: number;
+switch (value) { case 1: break; }
+`,
+		`
+declare const value: number;
+switch (value) { case 1: void "test"; break; }
+`,
+		`
+declare const value: number;
 switch (value) {
     case 1: {
         let x = 1;
@@ -175,6 +219,7 @@ switch (value) {
 }
 `,
 		`
+declare const value: number;
 switch (value) {
     case 1: {
         const x = 1;
@@ -183,6 +228,7 @@ switch (value) {
 }
 `,
 		`
+declare const value: number;
 switch (value) {
     case 1: {
         function foo() {}
@@ -191,6 +237,7 @@ switch (value) {
 }
 `,
 		`
+declare const value: number;
 switch (value) {
     case 1: {
         class Foo {}
@@ -199,6 +246,7 @@ switch (value) {
 }
 `,
 		`
+declare const value: number;
 switch (value) {
     case 1:
         var x = 1;
@@ -206,6 +254,7 @@ switch (value) {
 }
 `,
 		`
+declare const value: number;
 switch (value) {
     case 1: {
         let x = 1;
@@ -217,6 +266,7 @@ switch (value) {
 }
 `,
 		`
+declare const value: number;
 switch (value) {
     default: {
         let x = 1;

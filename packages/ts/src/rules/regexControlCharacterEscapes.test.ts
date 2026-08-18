@@ -119,6 +119,6 @@ new RegExp("\\\\x0a");
 		`/\\x1f/;`,
 		`new RegExp("\\\\0\\\\t\\\\n\\\\v\\\\f\\\\r");`,
 		`new RegExp("foo");`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 	],
 });

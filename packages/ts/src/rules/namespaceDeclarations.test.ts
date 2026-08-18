@@ -1,7 +1,7 @@
 import rule from "./namespaceDeclarations.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { scriptRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+scriptRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
@@ -15,16 +15,6 @@ Prefer using ECMAScript modules over legacy TypeScript namespaces.
 		},
 		{
 			code: `
-module name {}
-`,
-			snapshot: `
-module name {}
-~~~~~~
-Prefer using ECMAScript modules over legacy TypeScript namespaces.
-`,
-		},
-		{
-			code: `
 export namespace name {}
 `,
 			snapshot: `
@@ -35,30 +25,10 @@ Prefer using ECMAScript modules over legacy TypeScript namespaces.
 		},
 		{
 			code: `
-export module name {}
-`,
-			snapshot: `
-export module name {}
-~~~~~~
-Prefer using ECMAScript modules over legacy TypeScript namespaces.
-`,
-		},
-		{
-			code: `
 declare namespace name {}
 `,
 			snapshot: `
 declare namespace name {}
-~~~~~~~
-Prefer using ECMAScript modules over legacy TypeScript namespaces.
-`,
-		},
-		{
-			code: `
-declare module name {}
-`,
-			snapshot: `
-declare module name {}
 ~~~~~~~
 Prefer using ECMAScript modules over legacy TypeScript namespaces.
 `,
@@ -89,13 +59,13 @@ Prefer using ECMAScript modules over legacy TypeScript namespaces.
 		},
 	],
 	valid: [
-		`declare global {}`,
+		`
+export {};
+
+declare global {}
+`,
 		`declare module 'name' {}`,
 		`declare module "name" {}`,
-		{
-			code: `declare module name {}`,
-			options: { allowDeclarations: true },
-		},
 		{
 			code: `declare namespace name {}`,
 			options: { allowDeclarations: true },
@@ -116,19 +86,16 @@ declare module 'express' {
 		},
 		{
 			code: `
+export {};
+
 declare global {
     namespace inner {}
 }`,
 			options: { allowDeclarations: true },
 		},
 		{
-			code: `namespace name {}`,
+			code: `declare namespace name {}`,
 			fileName: "file.d.ts",
-			options: { allowDefinitionFiles: true },
-		},
-		{
-			code: `module name {}`,
-			fileName: "types.d.ts",
 			options: { allowDefinitionFiles: true },
 		},
 	],

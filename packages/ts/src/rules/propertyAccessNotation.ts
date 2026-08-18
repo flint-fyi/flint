@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -67,13 +67,13 @@ function getModifiers(node: null | ts.Node | undefined) {
 // https://github.com/flint-fyi/flint/issues/1298
 function getPropertyKeyText(node: AST.ElementAccessExpression) {
 	switch (node.argumentExpression.kind) {
-		case ts.SyntaxKind.FalseKeyword:
+		case SyntaxKind.FalseKeyword:
 			return "false";
-		case ts.SyntaxKind.NullKeyword:
+		case SyntaxKind.NullKeyword:
 			return "null";
-		case ts.SyntaxKind.StringLiteral:
+		case SyntaxKind.StringLiteral:
 			return node.argumentExpression.text;
-		case ts.SyntaxKind.TrueKeyword:
+		case SyntaxKind.TrueKeyword:
 			return "true";
 		default:
 			return undefined;
@@ -125,7 +125,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					.getProperties()
 					.find(
 						(propertySymbol) =>
-							ts.isStringLiteral(node.argumentExpression) &&
+							node.argumentExpression.kind === SyntaxKind.StringLiteral &&
 							(propertySymbol.escapedName as string) ===
 								node.argumentExpression.text,
 					);
@@ -136,8 +136,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			return {
 				inaccessible:
-					modifierKind === ts.SyntaxKind.PrivateKeyword ||
-					modifierKind === ts.SyntaxKind.ProtectedKeyword,
+					modifierKind === SyntaxKind.PrivateKeyword ||
+					modifierKind === SyntaxKind.ProtectedKeyword,
 				propertySymbol,
 			};
 		}

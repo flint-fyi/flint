@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind, TypeFlags } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -42,14 +42,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		// TODO (#400): Switch to scope analysis
 		function isInHeritageClause(node: AST.AnyNode) {
-			let current: ts.Node | undefined = node.parent;
+			let current: AST.AnyNode | undefined = node.parent;
 
 			while (current) {
-				if (ts.isHeritageClause(current)) {
+				if (current.kind === SyntaxKind.HeritageClause) {
 					return true;
 				}
 
-				current = current.parent as ts.Node | undefined;
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
+				current = current.parent as AST.AnyNode | undefined;
 			}
 
 			return false;
@@ -64,13 +65,13 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				typeChecker,
 			);
 
-			if (!tsutils.isTypeFlagSet(objectType, ts.TypeFlags.Any)) {
+			if (!tsutils.isTypeFlagSet(objectType, TypeFlags.Any)) {
 				return undefined;
 			}
 
 			if (
-				ts.isPropertyAccessExpression(node.expression) ||
-				ts.isElementAccessExpression(node.expression)
+				node.expression.kind === SyntaxKind.PropertyAccessExpression ||
+				node.expression.kind === SyntaxKind.ElementAccessExpression
 			) {
 				const deeper = findRootAnyAccess(node.expression, typeChecker);
 				if (deeper) {
@@ -87,8 +88,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			reportedChains.add(node);
 
 			if (
-				ts.isPropertyAccessExpression(node.expression) ||
-				ts.isElementAccessExpression(node.expression)
+				node.expression.kind === SyntaxKind.PropertyAccessExpression ||
+				node.expression.kind === SyntaxKind.ElementAccessExpression
 			) {
 				markChainAsReported(node.expression);
 			}
@@ -115,7 +116,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				typeChecker,
 			);
 			const reportNode =
-				rootAccess.kind === ts.SyntaxKind.PropertyAccessExpression
+				rootAccess.kind === SyntaxKind.PropertyAccessExpression
 					? rootAccess.name
 					: rootAccess.argumentExpression;
 
@@ -136,16 +137,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const keyNode = node.argumentExpression;
 
 			if (
-				ts.isStringLiteral(keyNode) ||
-				ts.isNumericLiteral(keyNode) ||
-				ts.isNoSubstitutionTemplateLiteral(keyNode)
+				keyNode.kind === SyntaxKind.StringLiteral ||
+				keyNode.kind === SyntaxKind.NumericLiteral ||
+				keyNode.kind === SyntaxKind.NoSubstitutionTemplateLiteral
 			) {
 				return;
 			}
 
 			const keyType = getConstrainedTypeAtLocation(keyNode, typeChecker);
 
-			if (tsutils.isTypeFlagSet(keyType, ts.TypeFlags.Any)) {
+			if (tsutils.isTypeFlagSet(keyType, TypeFlags.Any)) {
 				context.report({
 					data: {
 						type: tsutils.isIntrinsicErrorType(keyType) ? "`error`" : "`any`",

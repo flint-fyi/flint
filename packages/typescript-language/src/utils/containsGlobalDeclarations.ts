@@ -1,10 +1,12 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 /**
  * Inspects top-level statements of a TS source file to determine
  * if it introduces or modifies entities in the global scope.
  */
-export function containsGlobalDeclarations(sourceFileNode: ts.SourceFile) {
+export function containsGlobalDeclarations(
+	sourceFileNode: ts.SourceFile,
+): boolean {
 	const isModule = ts.isExternalModule(sourceFileNode);
 
 	return sourceFileNode.statements.some((statement) => {
@@ -25,6 +27,6 @@ export function containsGlobalDeclarations(sourceFileNode: ts.SourceFile) {
 		}
 
 		const modifiers = ts.getModifiers(statement);
-		return modifiers?.some((mod) => mod.kind === ts.SyntaxKind.DeclareKeyword);
+		return modifiers?.some((mod) => mod.kind === SyntaxKind.DeclareKeyword);
 	});
 }

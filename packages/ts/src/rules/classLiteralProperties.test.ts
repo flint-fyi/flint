@@ -186,14 +186,13 @@ class Example {
 	],
 	valid: [
 		`class Example { readonly value = 'hello'; }`,
-		`class Example { get value() { return this.compute(); } }`,
-		`class Example { get value() { return getValue(); } }`,
-		`class Example { get value() { return someVariable; } }`,
+		`class Example { compute() { return 1; } get value() { return this.compute(); } }`,
+		`function getValue() { return 1; } class Example { get value() { return getValue(); } }`,
+		`const someVariable = 1; class Example { get value() { return someVariable; } }`,
 		`class Example { get items() { return []; } }`,
 		`class Example { get config() { return {}; } }`,
 		`class Example { get fn() { return () => {}; } }`,
 		`class Example { get value() { const x = 1; return x; } }`,
-		`class Example { get value() { } }`,
 		`class Example { get value() { return; } }`,
 	],
 });

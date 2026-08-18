@@ -1,38 +1,45 @@
 import {
-	comparisons,
-	type Comparison,
+	type FlintRuleReference,
 	type LinterRuleReference,
-} from "@flint.fyi/comparisons";
+	ruleData,
+	type RuleDetails,
+} from "@flint.fyi/rule-data";
 
 import type { TestCaseRules } from "../../testCases.ts";
 
-export interface PotentialComparison extends Omit<Comparison, "eslint"> {
-	preset: "logical";
-	plugin: "ts";
+type ImplementedRuleReference = Exclude<
+	FlintRuleReference,
+	{ status: "skipped" }
+>;
+
+export interface PotentialComparison
+	extends Omit<RuleDetails, "eslint" | "flint"> {
 	eslint: [LinterRuleReference, ...LinterRuleReference[]];
+	flint: ImplementedRuleReference;
+	plugin: "ts";
+	preset: "logical";
 }
 
-export interface ComparableComparisonData extends Omit<
-	PotentialComparison,
-	"eslint"
-> {
+export interface ComparableComparisonData
+	extends Omit<PotentialComparison, "eslint"> {
 	eslint: LinterRuleReference;
 }
 
-export const manyComparisons = comparisons
+export const manyComparisons = ruleData
 	.filter(
 		(comparison): comparison is PotentialComparison =>
+			comparison.flint.status === "implemented" &&
+			!!comparison.flint.preset &&
 			["javascript", "logical", "stylistic"].includes(
 				comparison.flint.preset,
 			) &&
 			comparison.flint.plugin === "ts" &&
-			comparison.flint.status === "implemented" &&
 			!!comparison.eslint,
 	)
 	.map(
 		(comparison): ComparableComparisonData => ({
 			...comparison,
-			eslint: comparison.eslint!.at(-1)!,
+			eslint: comparison.eslint.at(-1)!,
 		}),
 	);
 

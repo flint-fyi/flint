@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -8,16 +8,21 @@ import {
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isAcceptableSecondArgument(node: ts.Node) {
+function isAcceptableSecondArgument(node: AST.AnyNode) {
 	return isEmptyObjectLiteral(node) || isJsonContentTypeHeadersObject(node);
 }
 
-function isEmptyObjectLiteral(node: ts.Node) {
-	return ts.isObjectLiteralExpression(node) && !node.properties.length;
+function isEmptyObjectLiteral(node: AST.AnyNode) {
+	return (
+		node.kind === SyntaxKind.ObjectLiteralExpression && !node.properties.length
+	);
 }
 
-function isJsonContentTypeHeader(node: ts.Node) {
-	if (!ts.isObjectLiteralExpression(node) || node.properties.length !== 1) {
+function isJsonContentTypeHeader(node: AST.AnyNode) {
+	if (
+		node.kind !== SyntaxKind.ObjectLiteralExpression ||
+		node.properties.length !== 1
+	) {
 		return false;
 	}
 
@@ -25,18 +30,22 @@ function isJsonContentTypeHeader(node: ts.Node) {
 	const property = node.properties[0]!;
 
 	return (
-		ts.isPropertyAssignment(property) &&
-		(ts.isIdentifier(property.name) || ts.isStringLiteral(property.name)) &&
+		property.kind === SyntaxKind.PropertyAssignment &&
+		(property.name.kind === SyntaxKind.Identifier ||
+			property.name.kind === SyntaxKind.StringLiteral) &&
 		// TODO: Use a util like getStaticValue
 		// https://github.com/flint-fyi/flint/issues/1298
 		property.name.text.toLowerCase() === "content-type" &&
-		ts.isStringLiteral(property.initializer) &&
+		property.initializer.kind === SyntaxKind.StringLiteral &&
 		property.initializer.text.toLowerCase().startsWith("application/json")
 	);
 }
 
-function isJsonContentTypeHeadersObject(node: ts.Node) {
-	if (!ts.isObjectLiteralExpression(node) || node.properties.length !== 1) {
+function isJsonContentTypeHeadersObject(node: AST.AnyNode) {
+	if (
+		node.kind !== SyntaxKind.ObjectLiteralExpression ||
+		node.properties.length !== 1
+	) {
 		return false;
 	}
 
@@ -44,20 +53,21 @@ function isJsonContentTypeHeadersObject(node: ts.Node) {
 	const property = node.properties[0]!;
 
 	return (
-		ts.isPropertyAssignment(property) &&
-		(ts.isIdentifier(property.name) || ts.isStringLiteral(property.name)) &&
+		property.kind === SyntaxKind.PropertyAssignment &&
+		(property.name.kind === SyntaxKind.Identifier ||
+			property.name.kind === SyntaxKind.StringLiteral) &&
 		property.name.text.toLowerCase() === "headers" &&
 		isJsonContentTypeHeader(property.initializer)
 	);
 }
 
-function isJsonStringifyCall(node: ts.Node): node is AST.CallExpression {
+function isJsonStringifyCall(node: AST.AnyNode): node is AST.CallExpression {
 	return (
-		ts.isCallExpression(node) &&
-		ts.isPropertyAccessExpression(node.expression) &&
-		ts.isIdentifier(node.expression.expression) &&
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
+		node.expression.expression.kind === SyntaxKind.Identifier &&
 		node.expression.expression.text === "JSON" &&
-		ts.isIdentifier(node.expression.name) &&
+		node.expression.name.kind === SyntaxKind.Identifier &&
 		node.expression.name.text === "stringify"
 	);
 }
@@ -84,7 +94,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				NewExpression: (node, { sourceFile }) => {
 					if (
-						!ts.isIdentifier(node.expression) ||
+						node.expression.kind !== SyntaxKind.Identifier ||
 						node.expression.text !== "Response" ||
 						!node.arguments?.length ||
 						node.arguments.length > 2

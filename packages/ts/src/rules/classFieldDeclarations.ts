@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -9,24 +9,24 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isLiteralValue(node: AST.AnyNode) {
-	if (ts.isPrefixUnaryExpression(node)) {
+	if (node.kind === SyntaxKind.PrefixUnaryExpression) {
 		return isLiteralValue(node.operand);
 	}
 
 	return (
-		node.kind === ts.SyntaxKind.TrueKeyword ||
-		node.kind === ts.SyntaxKind.FalseKeyword ||
-		node.kind === ts.SyntaxKind.NullKeyword ||
+		node.kind === SyntaxKind.TrueKeyword ||
+		node.kind === SyntaxKind.FalseKeyword ||
+		node.kind === SyntaxKind.NullKeyword ||
 		ts.isLiteralExpression(node)
 	);
 }
 
 function isThisLiteralAssignment(node: AST.BinaryExpression) {
 	return (
-		(ts.isElementAccessExpression(node.left) ||
-			ts.isPropertyAccessExpression(node.left)) &&
-		ts.isPropertyAccessExpression(node.left) &&
-		node.left.expression.kind === ts.SyntaxKind.ThisKeyword &&
+		(node.left.kind === SyntaxKind.ElementAccessExpression ||
+			node.left.kind === SyntaxKind.PropertyAccessExpression) &&
+		node.left.kind === SyntaxKind.PropertyAccessExpression &&
+		node.left.expression.kind === SyntaxKind.ThisKeyword &&
 		isLiteralValue(node.right)
 	);
 }
@@ -54,9 +54,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function checkStatement(node: AST.Statement, sourceFile: AST.SourceFile) {
 			if (
-				!ts.isExpressionStatement(node) ||
-				!ts.isBinaryExpression(node.expression) ||
-				node.expression.operatorToken.kind !== ts.SyntaxKind.EqualsToken ||
+				node.kind !== SyntaxKind.ExpressionStatement ||
+				node.expression.kind !== SyntaxKind.BinaryExpression ||
+				node.expression.operatorToken.kind !== SyntaxKind.EqualsToken ||
 				!isThisLiteralAssignment(node.expression)
 			) {
 				return;
@@ -71,11 +71,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				Constructor: (node, { sourceFile }) => {
-					if (
-						!node.body ||
-						(!ts.isClassDeclaration(node.parent) &&
-							!ts.isClassExpression(node.parent))
-					) {
+					if (!node.body) {
 						return;
 					}
 

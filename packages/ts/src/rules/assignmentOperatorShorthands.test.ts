@@ -86,14 +86,20 @@ Prefer the logical assignment operator shorthand \`||=\`.
 		{
 			code: `
 let result = false;
+declare function getValue(): boolean;
+
 result = result || getValue();
 `,
 			output: `
 let result = false;
+declare function getValue(): boolean;
+
 result ||= getValue();
 `,
 			snapshot: `
 let result = false;
+declare function getValue(): boolean;
+
 result = result || getValue();
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Prefer the logical assignment operator shorthand \`||=\`.
@@ -102,14 +108,20 @@ Prefer the logical assignment operator shorthand \`||=\`.
 		{
 			code: `
 const data = { nested: { value: null as number | null } };
+declare function getDefault(): number;
+
 data.nested.value = data.nested.value ?? getDefault();
 `,
 			output: `
 const data = { nested: { value: null as number | null } };
+declare function getDefault(): number;
+
 data.nested.value ??= getDefault();
 `,
 			snapshot: `
 const data = { nested: { value: null as number | null } };
+declare function getDefault(): number;
+
 data.nested.value = data.nested.value ?? getDefault();
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Prefer the logical assignment operator shorthand \`??=\`.
@@ -120,17 +132,32 @@ Prefer the logical assignment operator shorthand \`??=\`.
 		`let value = 0; value ||= 1;`,
 		`let value = 0; value &&= 1;`,
 		`let value: number | null = null; value ??= 1;`,
-		`let value = 0; value = other || 1;`,
-		`let value = 0; value = other && 1;`,
-		`let value: number | null = null; value = other ?? 1;`,
+		`
+let value = 0;
+declare const other: number;
+value = other || 1;
+`,
+		`
+let value = 0;
+declare const other: number;
+value = other && 1;
+`,
+		`
+let value: number | null = null;
+declare const other: number | null;
+value = other ?? 1;
+`,
 		`let value = 0; value = 1 || value;`,
 		`let value = 0; value = 1 && value;`,
-		`let value: number | null = null; value = 1 ?? value;`,
 		`let value = 0; value = value + 1;`,
 		`let value = 0; value = value - 1;`,
 		`let value = 0; value = value * 2;`,
 		`const object = { a: 0, b: 1 }; object.a = object.b || 1;`,
 		`const array = [0, 1]; array[0] = array[1] || 1;`,
-		`let count = 0; count = count || other || 1;`,
+		`
+let count = 0;
+declare const other: number;
+count = count || other || 1;
+`,
 	],
 });

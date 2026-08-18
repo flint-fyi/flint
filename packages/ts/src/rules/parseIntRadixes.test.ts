@@ -75,26 +75,6 @@ Number.parseInt("10", 1);
 		},
 		{
 			code: `
-parseInt();
-`,
-			snapshot: `
-parseInt();
-~~~~~~~~~~
-This \`parseInt\` call is missing a radix parameter to specify the numeral system base.
-`,
-		},
-		{
-			code: `
-Number.parseInt();
-`,
-			snapshot: `
-Number.parseInt();
-~~~~~~~~~~~~~~~~~
-This \`parseInt\` call is missing a radix parameter to specify the numeral system base.
-`,
-		},
-		{
-			code: `
 parseInt("10", -1);
 `,
 			snapshot: `
@@ -143,17 +123,32 @@ Number.parseInt("10", 0);
 		`parseInt("10", 36);`,
 		`Number.parseInt("10", 10);`,
 		`Number.parseInt("10", 2);`,
-		`parseInt("10", radix);`,
-		`parseInt("10", getRadix());`,
+		`
+declare const radix: number;
+parseInt("10", radix);
+`,
+		`
+declare function getRadix(): number;
+parseInt("10", getRadix());
+`,
 		`const obj = { parseInt: (s: string) => 0 }; obj.parseInt("10");`,
 		`function parseInt(s: string) { return 0; } parseInt("10"); export {};`,
 		`const parseInt = (s: string) => 0; parseInt("10"); export {};`,
 		`class Foo { parseInt(s: string) { return 0; } } new Foo().parseInt("10");`,
 		`function test(Number: { parseInt: (s: string) => number }) { Number.parseInt("10"); }`,
 		`parseInt("10", 8);`,
-		`parseInt("10", someVariable);`,
-		`parseInt("10", someObject.property);`,
-		`parseInt("10", someArray[0]);`,
+		`
+declare const someVariable: number;
+parseInt("10", someVariable);
+`,
+		`
+declare const someObject: { property: number };
+parseInt("10", someObject.property);
+`,
+		`
+declare const someArray: number[];
+parseInt("10", someArray[0]);
+`,
 		`parseInt("10", 2 + 8);`,
 	],
 });

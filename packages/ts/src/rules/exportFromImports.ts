@@ -1,6 +1,7 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
+	getStaticStringValue,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
@@ -24,11 +25,9 @@ function getImportInfo(
 		return undefined;
 	}
 
-	// TODO: Use a util like getStaticValue
-	// https://github.com/flint-fyi/flint/issues/1298
-	const moduleSpecifier = ts.isStringLiteral(node.moduleSpecifier)
-		? node.moduleSpecifier.text
-		: node.moduleSpecifier.getText(sourceFile);
+	const moduleSpecifier =
+		getStaticStringValue(node.moduleSpecifier) ??
+		node.moduleSpecifier.getText(sourceFile);
 
 	const info: ImportInfo = {
 		declaration: node,
@@ -105,19 +104,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					for (const statement of node.statements) {
 						switch (statement.kind) {
-							case ts.SyntaxKind.ExportAssignment:
+							case SyntaxKind.ExportAssignment:
 								if (!statement.isExportEquals) {
 									exportAssignments.push(statement);
 								}
 								break;
 
-							case ts.SyntaxKind.ExportDeclaration:
+							case SyntaxKind.ExportDeclaration:
 								if (!statement.moduleSpecifier) {
 									namedExports.push(statement);
 								}
 								break;
 
-							case ts.SyntaxKind.ImportDeclaration: {
+							case SyntaxKind.ImportDeclaration: {
 								const info = getImportInfo(statement, sourceFile);
 								if (info) {
 									if (info.defaultImport) {

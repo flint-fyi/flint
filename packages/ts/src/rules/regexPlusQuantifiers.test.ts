@@ -134,9 +134,12 @@ RegExp("a{1,}");
 		`/a?/;`,
 		`/a{2}/;`,
 		`new RegExp("a+");`,
-		`new RegExp(variable);`,
+		`
+declare const variable: string;
+new RegExp(variable);
+`,
 		`RegExp("a+");`,
-		`RegExp();`,
-		`RegExp(123);`,
+		`RegExp(undefined as unknown as string);`,
+		`RegExp(123 as unknown as string);`,
 	],
 });

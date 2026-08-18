@@ -25,7 +25,7 @@ parentNode.removeChild(childNode);
 		{
 			code: `
 declare const element: HTMLElement;
-element.parentNode.removeChild(element);
+element.parentNode!.removeChild(element);
 `,
 			output: `
 declare const element: HTMLElement;
@@ -33,15 +33,15 @@ element.remove();
 `,
 			snapshot: `
 declare const element: HTMLElement;
-element.parentNode.removeChild(element);
-                   ~~~~~~~~~~~
-                   Prefer the modern \`element.remove()\` over \`element.parentNode.removeChild(element)\`.
+element.parentNode!.removeChild(element);
+                    ~~~~~~~~~~~
+                    Prefer the modern \`element.remove()\` over \`element.parentNode!.removeChild(element)\`.
 `,
 		},
 		{
 			code: `
 declare const node: HTMLElement;
-node.parentElement.removeChild(node);
+node.parentElement!.removeChild(node);
 `,
 			output: `
 declare const node: HTMLElement;
@@ -49,19 +49,22 @@ node.remove();
 `,
 			snapshot: `
 declare const node: HTMLElement;
-node.parentElement.removeChild(node);
-                   ~~~~~~~~~~~
-                   Prefer the modern \`node.remove()\` over \`node.parentElement.removeChild(node)\`.
+node.parentElement!.removeChild(node);
+                    ~~~~~~~~~~~
+                    Prefer the modern \`node.remove()\` over \`node.parentElement!.removeChild(node)\`.
 `,
 		},
 		{
 			code: `
+declare const footer: HTMLElement;
 document.body.removeChild(footer);
 `,
 			output: `
+declare const footer: HTMLElement;
 footer.remove();
 `,
 			snapshot: `
+declare const footer: HTMLElement;
 document.body.removeChild(footer);
               ~~~~~~~~~~~
               Prefer the modern \`footer.remove()\` over \`document.body.removeChild(footer)\`.
@@ -70,7 +73,7 @@ document.body.removeChild(footer);
 	],
 	valid: [
 		`
-declare const parentNode: { removeChild: (child: HTMLElement): void };
+declare const parentNode: { removeChild: (child: HTMLElement) => void };
 declare const childNode: HTMLElement;
 parentNode.removeChild(childNode);
 `,
@@ -84,14 +87,16 @@ node.remove();
 `,
 		`
 declare const child: HTMLElement;
-child.parentNode.appendChild(child);
+child.parentNode!.appendChild(child);
 `,
 		`
-declare const parent: HTMLElement;
-parent.replaceChild(newChild, oldChild);
+declare const parentElement: HTMLElement;
+declare const newChild: Node;
+declare const oldChild: Node;
+parentElement.replaceChild(newChild, oldChild);
 `,
 		`
-declare const other: HTMLElement;
+declare const other: { removeChild(): void };
 other.removeChild();
 `,
 		`

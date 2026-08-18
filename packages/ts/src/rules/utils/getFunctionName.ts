@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -9,24 +9,26 @@ export function getFunctionName(
 		| AST.FunctionExpression
 		| AST.MethodDeclaration
 		| AST.MethodSignature,
-) {
+): string | undefined {
 	switch (node.kind) {
-		case ts.SyntaxKind.ArrowFunction: {
-			return ts.isVariableDeclaration(node.parent) &&
-				ts.isIdentifier(node.parent.name)
+		case SyntaxKind.ArrowFunction: {
+			return node.parent.kind === SyntaxKind.VariableDeclaration &&
+				node.parent.name.kind === SyntaxKind.Identifier
 				? node.parent.name.text
 				: undefined;
 		}
 
-		case ts.SyntaxKind.FunctionDeclaration:
-		case ts.SyntaxKind.FunctionExpression:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.FunctionExpression:
 			return node.name?.text;
 
-		case ts.SyntaxKind.MethodDeclaration:
-		case ts.SyntaxKind.MethodSignature:
-			return ts.isIdentifier(node.name) ? node.name.text : undefined;
+		case SyntaxKind.MethodDeclaration:
+		case SyntaxKind.MethodSignature:
+			return node.name.kind === SyntaxKind.Identifier
+				? node.name.text
+				: undefined;
 
 		default:
-			return undefined;
+			return;
 	}
 }

@@ -196,7 +196,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/54253392?v=4",
       "profile": "https://github.com/cylewaitforit",
       "contributions": [
-        "doc"
+        "doc",
+        "tool"
       ]
     },
     {
@@ -226,7 +227,8 @@
       "profile": "https://github.com/Yonava",
       "contributions": [
         "code",
-        "doc"
+        "doc",
+        "bug"
       ]
     },
     {

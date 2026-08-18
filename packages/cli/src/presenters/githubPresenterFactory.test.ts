@@ -1,9 +1,26 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import type { FileReport } from "@flint.fyi/core";
 
 import { githubPresenterFactory } from "./githubPresenterFactory.ts";
-import type { PresenterVirtualFile } from "./types.ts";
+import { presentSummary } from "./shared/summary.ts";
+import type {
+	Presenter,
+	PresenterSummarizeContext,
+	PresenterVirtualFile,
+} from "./types.ts";
+
+vi.mock("./shared/presentLanguageReports.ts", () => ({
+	presentLanguageReports: vi.fn().mockImplementation(function* () {
+		yield "::language reports::\n";
+	}),
+}));
+
+vi.mock("./shared/summary.ts", () => ({
+	presentSummary: vi.fn().mockImplementation(function* () {
+		yield "::summary::\n";
+	}),
+}));
 
 function createReport(
 	overrides: Partial<FileReport> & Pick<FileReport, "about" | "range">,
@@ -18,13 +35,19 @@ function createReport(
 	};
 }
 
-async function renderFile(file: PresenterVirtualFile, reports: FileReport[]) {
-	const presenter = githubPresenterFactory.initialize({
+function initializePresenter(): Presenter {
+	return githubPresenterFactory.initialize({
 		configFileName: "flint.config.ts",
 		ignoreCache: false,
 		runMode: "single-run",
 	});
+}
 
+async function renderFile(
+	presenter: Presenter,
+	file: PresenterVirtualFile,
+	reports: FileReport[],
+) {
 	const lines = await Array.fromAsync(presenter.renderFile({ file, reports }));
 
 	return lines.join("");
@@ -36,19 +59,9 @@ const file: PresenterVirtualFile = {
 };
 
 describe("githubPresenterFactory", () => {
-	it("does not emit a header or summary", () => {
-		const presenter = githubPresenterFactory.initialize({
-			configFileName: "flint.config.ts",
-			ignoreCache: false,
-			runMode: "single-run",
-		});
-
-		expect("header" in presenter).toBe(false);
-		expect("summarize" in presenter).toBe(false);
-	});
-
 	it("emits a single-line error annotation with column info", async () => {
-		const output = await renderFile(file, [
+		const presenter = initializePresenter();
+		const output = await renderFile(presenter, file, [
 			createReport({
 				about: { id: "no-unused-vars" },
 				message: {
@@ -64,13 +77,14 @@ describe("githubPresenterFactory", () => {
 		]);
 
 		expect(output).toMatchInlineSnapshot(`
-			"::error file=src/example.ts,line=1,col=7,endColumn=8,endLine=1,title=no-unused-vars::no-unused-vars: 'x' is unused.
+			"::error file=src/example.ts,line=1,col=7,endColumn=8,endLine=1,title=no-unused-vars::no-unused-vars: 'x' is unused. [src/example.ts:1:7]
 			"
 		`);
 	});
 
 	it("omits column info for multi-line reports", async () => {
-		const output = await renderFile(file, [
+		const presenter = initializePresenter();
+		const output = await renderFile(presenter, file, [
 			createReport({
 				about: { id: "no-multi-line" },
 				message: { primary: "Spans lines.", secondary: [], suggestions: [] },
@@ -82,13 +96,14 @@ describe("githubPresenterFactory", () => {
 		]);
 
 		expect(output).toMatchInlineSnapshot(`
-			"::error file=src/example.ts,line=2,endLine=4,title=no-multi-line::no-multi-line: Spans lines.
+			"::error file=src/example.ts,line=2,endLine=4,title=no-multi-line::no-multi-line: Spans lines. [src/example.ts:2:1]
 			"
 		`);
 	});
 
 	it("escapes special characters in the rule id and message", async () => {
-		const output = await renderFile(file, [
+		const presenter = initializePresenter();
+		const output = await renderFile(presenter, file, [
 			createReport({
 				about: { id: "plugin:rule" },
 				message: {
@@ -104,13 +119,14 @@ describe("githubPresenterFactory", () => {
 		]);
 
 		expect(output).toMatchInlineSnapshot(`
-			"::error file=src/example.ts,line=1,col=1,endColumn=3,endLine=1,title=plugin%3Arule::plugin:rule: Use 100%25 care: a, b%0Aand more.
+			"::error file=src/example.ts,line=1,col=1,endColumn=3,endLine=1,title=plugin%3Arule::plugin:rule: Use 100%25 care: a, b%0Aand more. [src/example.ts:1:1]
 			"
 		`);
 	});
 
 	it("emits one annotation per report", async () => {
-		const output = await renderFile(file, [
+		const presenter = initializePresenter();
+		const output = await renderFile(presenter, file, [
 			createReport({
 				about: { id: "rule-a" },
 				message: { primary: "First.", secondary: [], suggestions: [] },
@@ -130,9 +146,55 @@ describe("githubPresenterFactory", () => {
 		]);
 
 		expect(output).toMatchInlineSnapshot(`
-			"::error file=src/example.ts,line=1,col=1,endColumn=2,endLine=1,title=rule-a::rule-a: First.
-			::error file=src/example.ts,line=3,col=1,endColumn=2,endLine=3,title=rule-b::rule-b: Second.
+			"::error file=src/example.ts,line=1,col=1,endColumn=2,endLine=1,title=rule-a::rule-a: First. [src/example.ts:1:1]
+			::error file=src/example.ts,line=3,col=1,endColumn=2,endLine=3,title=rule-b::rule-b: Second. [src/example.ts:3:1]
 			"
 		`);
+	});
+
+	it("emits summary", async () => {
+		const presenter = initializePresenter();
+		const fileReports = [
+			createReport({
+				about: { id: "rule-a" },
+				message: { primary: "First.", secondary: [], suggestions: [] },
+				range: {
+					begin: { column: 0, line: 0, raw: 0 },
+					end: { column: 1, line: 0, raw: 1 },
+				},
+			}),
+			createReport({
+				about: { id: "rule-b" },
+				message: { primary: "Second.", secondary: [], suggestions: [] },
+				range: {
+					begin: { column: 0, line: 2, raw: 20 },
+					end: { column: 1, line: 2, raw: 21 },
+				},
+			}),
+		];
+		await renderFile(presenter, file, fileReports);
+
+		const summaryContext: PresenterSummarizeContext = {
+			duration: 1234,
+			formattingResults: undefined,
+			lintResults: {
+				allFilePaths: new Set(["src/example.ts"]),
+				// @ts-expect-error -- mock result
+				allFileResults: new Map([["src/example.ts", fileReports]]),
+				ruleCount: 2,
+			},
+		};
+
+		const summaryLines = await Array.fromAsync(
+			presenter.summarize(summaryContext),
+		);
+
+		const summaryOutput = summaryLines.join("");
+
+		expect(summaryOutput).toEqual("::summary::\n::language reports::\n");
+		expect(presentSummary).toHaveBeenCalledWith(
+			{ all: 2, files: 1, fixable: 0 },
+			summaryContext,
+		);
 	});
 });

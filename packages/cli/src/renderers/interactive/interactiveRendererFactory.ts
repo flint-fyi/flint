@@ -5,7 +5,7 @@ import cliCursor from "cli-cursor";
 import { nullThrows } from "@flint.fyi/utils";
 
 import type { RendererContext, RendererFactory } from "../types.ts";
-import { createListeners } from "./createListeners.ts";
+import { createEmitter } from "./createEmitter.ts";
 import { createState } from "./createState.ts";
 import { printAllClear } from "./printAllClear.ts";
 import { printControls } from "./printControls.ts";
@@ -14,12 +14,10 @@ import { printHeader } from "./printHeader.ts";
 import { printSummary } from "./printSummary.ts";
 
 export const interactiveRendererFactory: RendererFactory = {
-	about: {
-		name: "interactive",
-	},
+	about: { name: "interactive" },
 	initialize(host, presenter) {
-		const onDisposeListeners = createListeners();
-		const onQuitListeners = createListeners();
+		const onDisposeListeners = createEmitter();
+		const onQuitListeners = createEmitter();
 		const [getFile, setFile] = createState(0);
 
 		cliCursor.hide();
@@ -30,7 +28,7 @@ export const interactiveRendererFactory: RendererFactory = {
 		function announce() {
 			console.clear();
 
-			for (const line of presenter.header ?? []) {
+			for (const line of presenter.header) {
 				console.log(line);
 			}
 		}

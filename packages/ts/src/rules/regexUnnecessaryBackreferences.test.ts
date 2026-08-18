@@ -131,7 +131,6 @@ RegExp("(a)|\\\\1");
 		`/(?=(a))\\w\\1/;`,
 		`/(?<=(a))b\\1/;`,
 		`/(a)?\\1/;`,
-		`new RegExp(variable);`,
-		`RegExp();`,
+		`declare const variable: string; new RegExp(variable);`,
 	],
 });

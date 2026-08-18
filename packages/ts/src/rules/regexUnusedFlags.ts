@@ -2,7 +2,7 @@ import {
 	visitRegExpAST,
 	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	typescriptLanguage,
@@ -181,7 +181,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const secondArgument = construction.args[1]!;
-			if (secondArgument.kind !== ts.SyntaxKind.StringLiteral) {
+			if (secondArgument.kind !== SyntaxKind.StringLiteral) {
 				return;
 			}
 

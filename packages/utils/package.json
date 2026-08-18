@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/utils",
-	"version": "0.14.1",
+	"version": "0.16.0",
 	"description": "[Experimental] Shared utilities used by @flint/core and at least one other package.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -19,22 +19,23 @@
 		".": "./src/index.ts"
 	},
 	"files": [
-		"lib/"
+		"dist/"
 	],
 	"scripts": {
 		"test": "vitest --project utils"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./lib/index.js"
+			".": "./dist/index.mjs"
 		}
 	}
 }

@@ -27,7 +27,7 @@ function isInsideFunction(node: ts.Node): boolean {
 			ts.isSetAccessorDeclaration(current)
 		) {
 			return true;
-		}
+		} // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
 		current = current.parent as ts.Node | undefined;
 	}
 

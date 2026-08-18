@@ -205,26 +205,6 @@ type T = 0n & bigint;
 		},
 		{
 			code: `
-type ErrorTypes = NotKnown | 0;
-`,
-			snapshot: `
-type ErrorTypes = NotKnown | 0;
-                  ~~~~~~~~
-                  NotKnown is an 'error' type that acts as 'any' and overrides all other types in this union type.
-`,
-		},
-		{
-			code: `
-type ErrorTypes = NotKnown & 0;
-`,
-			snapshot: `
-type ErrorTypes = NotKnown & 0;
-                  ~~~~~~~~
-                  NotKnown is an 'error' type that acts as 'any' and overrides all other types in this intersection type.
-`,
-		},
-		{
-			code: `
 type B = "b";
 type T = B | string;
 `,

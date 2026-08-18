@@ -8,7 +8,7 @@ export async function printFile(
 	filePath: string,
 	presenter: Presenter,
 	reports: FileReport[],
-) {
+): Promise<string> {
 	return (
 		await Array.fromAsync(
 			presenter.renderFile({

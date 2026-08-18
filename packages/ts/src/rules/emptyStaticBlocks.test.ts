@@ -1,7 +1,7 @@
 import rule from "./emptyStaticBlocks.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { domLibRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+domLibRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
@@ -148,6 +148,8 @@ class Example {
 `,
 		`
 class Example {
+    static property = 0;
+
     static {
         this.property = 1;
     }

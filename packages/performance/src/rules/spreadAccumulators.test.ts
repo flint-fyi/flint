@@ -5,13 +5,15 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-let array = [];
+declare const items: number[];
+let array: number[] = [];
 for (const item of items) {
     array = [...array, item];
 }
 `,
 			snapshot: `
-let array = [];
+declare const items: number[];
+let array: number[] = [];
 for (const item of items) {
     array = [...array, item];
              ~~~
@@ -21,13 +23,15 @@ for (const item of items) {
 		},
 		{
 			code: `
-let result = [];
+declare const items: number[];
+let result: number[] = [];
 for (let i = 0; i < items.length; i++) {
     result = [...result, items[i]];
 }
 `,
 			snapshot: `
-let result = [];
+declare const items: number[];
+let result: number[] = [];
 for (let i = 0; i < items.length; i++) {
     result = [...result, items[i]];
               ~~~
@@ -37,13 +41,17 @@ for (let i = 0; i < items.length; i++) {
 		},
 		{
 			code: `
-let object = {};
+declare const keys: string[];
+declare const value: number;
+let object: Record<string, unknown> = {};
 for (const key of keys) {
     object = { ...object, [key]: value };
 }
 `,
 			snapshot: `
-let object = {};
+declare const keys: string[];
+declare const value: number;
+let object: Record<string, unknown> = {};
 for (const key of keys) {
     object = { ...object, [key]: value };
                ~~~
@@ -53,13 +61,15 @@ for (const key of keys) {
 		},
 		{
 			code: `
-let data = {};
+declare const entries: number[];
+let data: Record<string, unknown> = {};
 for (const entry of entries) {
     data = { ...data, property: entry };
 }
 `,
 			snapshot: `
-let data = {};
+declare const entries: number[];
+let data: Record<string, unknown> = {};
 for (const entry of entries) {
     data = { ...data, property: entry };
              ~~~
@@ -69,7 +79,7 @@ for (const entry of entries) {
 		},
 		{
 			code: `
-let numbers = [];
+let numbers: number[] = [];
 let i = 0;
 while (i < 10) {
     numbers = [...numbers, i];
@@ -77,7 +87,7 @@ while (i < 10) {
 }
 `,
 			snapshot: `
-let numbers = [];
+let numbers: number[] = [];
 let i = 0;
 while (i < 10) {
     numbers = [...numbers, i];
@@ -89,7 +99,7 @@ while (i < 10) {
 		},
 		{
 			code: `
-let items = [];
+let items: number[] = [];
 let i = 0;
 do {
     items = [...items, i];
@@ -97,7 +107,7 @@ do {
 } while (i < 5);
 `,
 			snapshot: `
-let items = [];
+let items: number[] = [];
 let i = 0;
 do {
     items = [...items, i];
@@ -109,13 +119,15 @@ do {
 		},
 		{
 			code: `
-let collection = [];
+declare const values: Record<string, number>;
+let collection: number[] = [];
 for (const value in values) {
     collection = [...collection, values[value]];
 }
 `,
 			snapshot: `
-let collection = [];
+declare const values: Record<string, number>;
+let collection: number[] = [];
 for (const value in values) {
     collection = [...collection, values[value]];
                   ~~~
@@ -125,7 +137,8 @@ for (const value in values) {
 		},
 		{
 			code: `
-let accumulated = [];
+declare const condition: boolean;
+let accumulated: number[] = [];
 for (let i = 0; i < 10; i++) {
     if (condition) {
         accumulated = [...accumulated, i];
@@ -133,7 +146,8 @@ for (let i = 0; i < 10; i++) {
 }
 `,
 			snapshot: `
-let accumulated = [];
+declare const condition: boolean;
+let accumulated: number[] = [];
 for (let i = 0; i < 10; i++) {
     if (condition) {
         accumulated = [...accumulated, i];
@@ -146,51 +160,61 @@ for (let i = 0; i < 10; i++) {
 	],
 	valid: [
 		`
-let array = [];
+declare const items: number[];
+let array: number[] = [];
 for (const item of items) {
     array.push(item);
 }
 `,
 		`
-let result = [];
+declare const items: number[];
+let result: number[] = [];
 for (let i = 0; i < items.length; i++) {
     result.push(items[i]);
 }
 `,
 		`
-let object = {};
+declare const keys: string[];
+declare const value: number;
+let object: Record<string, unknown> = {};
 for (const key of keys) {
     object[key] = value;
 }
 `,
 		`
-let data = {};
+declare const entries: number[];
+let data: Record<string, unknown> = {};
 for (const entry of entries) {
     Object.assign(data, entry);
 }
 `,
 		`
+declare const items: number[];
 const array = items.map(item => item);
 `,
 		`
-let accumulated = [];
+let accumulated: number[] = [];
 for (let i = 0; i < 10; i++) {
     const temp = [...accumulated, i];
 }
 `,
 		`
-let result = [];
+declare const someOtherArray: number[];
+let result: number[][] = [];
 for (let i = 0; i < 10; i++) {
     const newArray = [...someOtherArray, i];
     result.push(newArray);
 }
 `,
 		`
+declare const array1: number[];
+declare const array2: number[];
 const combined = [...array1, ...array2];
 `,
 		`
+declare const items: number[];
 function example() {
-    let inner = [];
+    let inner: number[] = [];
     for (const item of items) {
         const fn = () => {
             inner = [...inner, item];

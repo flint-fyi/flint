@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
 import {
@@ -13,25 +13,28 @@ import { countCommentsInRange } from "./utils/countCommentsInRange.ts";
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
-function getModuleNameText(node: ts.Node | undefined) {
+function getModuleNameText(node: AST.AnyNode | undefined) {
 	if (!node) {
 		return;
 	}
 
-	if (ts.isIdentifier(node) || ts.isStringLiteral(node)) {
+	if (
+		node.kind === SyntaxKind.Identifier ||
+		node.kind === SyntaxKind.StringLiteral
+	) {
 		return node.text;
 	}
 }
 
 function getPropertyAssignmentTargetInfo(node: AST.PropertyAssignment) {
 	if (
-		node.initializer.kind === ts.SyntaxKind.BinaryExpression &&
-		node.initializer.operatorToken.kind === ts.SyntaxKind.EqualsToken
+		node.initializer.kind === SyntaxKind.BinaryExpression &&
+		node.initializer.operatorToken.kind === SyntaxKind.EqualsToken
 	) {
 		const targetParent = node.initializer.left;
 		return {
 			parenthesizesTarget:
-				targetParent.kind === ts.SyntaxKind.ParenthesizedExpression,
+				targetParent.kind === SyntaxKind.ParenthesizedExpression,
 			replacementNode: node.initializer,
 			targetNode: unwrapParenthesizedNode(targetParent),
 		};
@@ -114,8 +117,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			for (const property of node.properties) {
 				if (
-					!ts.isPropertyAssignment(property) ||
-					property.name.kind === ts.SyntaxKind.ComputedPropertyName
+					property.kind !== SyntaxKind.PropertyAssignment ||
+					property.name.kind === SyntaxKind.ComputedPropertyName
 				) {
 					continue;
 				}
@@ -123,12 +126,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const { parenthesizesTarget, replacementNode, targetNode } =
 					getPropertyAssignmentTargetInfo(property);
 
-				if (ts.isObjectLiteralExpression(targetNode)) {
+				if (targetNode.kind === SyntaxKind.ObjectLiteralExpression) {
 					checkObjectLiteralDestructuring(targetNode, sourceFile);
 					continue;
 				}
 
-				if (targetNode.kind !== ts.SyntaxKind.Identifier) {
+				if (targetNode.kind !== SyntaxKind.Identifier) {
 					continue;
 				}
 
@@ -149,12 +152,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
-					if (node.operatorToken.kind !== ts.SyntaxKind.EqualsToken) {
+					if (node.operatorToken.kind !== SyntaxKind.EqualsToken) {
 						return;
 					}
 
 					const left = unwrapParenthesizedNode(node.left);
-					if (left.kind !== ts.SyntaxKind.ObjectLiteralExpression) {
+					if (left.kind !== SyntaxKind.ObjectLiteralExpression) {
 						return;
 					}
 
@@ -162,8 +165,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				BindingElement: (node, { sourceFile }) => {
 					if (
-						node.propertyName?.kind !== ts.SyntaxKind.ComputedPropertyName &&
-						node.name.kind === ts.SyntaxKind.Identifier &&
+						node.propertyName?.kind !== SyntaxKind.ComputedPropertyName &&
+						node.name.kind === SyntaxKind.Identifier &&
 						getModuleNameText(node.propertyName) ===
 							getModuleNameText(node.name)
 					) {

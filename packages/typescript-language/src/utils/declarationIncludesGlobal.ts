@@ -1,9 +1,12 @@
-import type ts from "typescript";
+import type { Declaration, Program } from "typescript";
 
-export function declarationIncludesGlobal(declaration: ts.Declaration) {
+export function declarationIncludesGlobal(
+	declaration: Declaration,
+	program: Program,
+): boolean {
 	const sourceFile = declaration.getSourceFile();
 	return (
-		sourceFile.hasNoDefaultLib ||
+		program.isSourceFileDefaultLibrary(sourceFile) ||
 		/\/lib\.[^/]*\.d\.ts$/.test(sourceFile.fileName)
 	);
 }

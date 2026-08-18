@@ -65,9 +65,11 @@ const obj = {
 		},
 		{
 			code: `
+declare const condition: boolean;
 const value = condition ? Symbol() : null;
 `,
 			snapshot: `
+declare const condition: boolean;
 const value = condition ? Symbol() : null;
                           ~~~~~~~~
                           Symbols without descriptions are more difficult to debug or reason about.

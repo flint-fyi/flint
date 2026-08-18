@@ -96,7 +96,7 @@ To add a new rule, `{ruleName}` to an existing Flint plugin `{plugin}`:
    - `packages/site/src/content/docs/rules/{plugin}/{ruleName}.mdx`
 2. Update existing files that reference rules:
    - `packages/{plugin}/src/plugin.ts`: add the rule in alphabetical order to `rules`
-   - `packages/comparisons/src/data.json`: mark the rule as `"status": "implemented"`
+   - `packages/rule-data/src/data.json`: mark the rule as `"status": "implemented"`
 3. Try to follow these best practices when writing the rule's documentation and tests:
    - In documentation, see the sections present in other rules and fill them out
      - In _Further Reading_ documentation, find at least one first-party source such as MDN

@@ -1,6 +1,7 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
+	forEachChild,
 	getTSNodeRange,
 	typescriptLanguage,
 	unwrapParenthesizedNode,
@@ -10,7 +11,7 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function containsThisOrArguments(node: AST.Block): boolean {
-	function visit(current: ts.Node): boolean {
+	function visit(current: AST.AnyNode): boolean {
 		if (
 			current.kind === SyntaxKind.ThisKeyword ||
 			current.kind === SyntaxKind.SuperKeyword
@@ -18,27 +19,30 @@ function containsThisOrArguments(node: AST.Block): boolean {
 			return true;
 		}
 
-		if (ts.isIdentifier(current) && current.text === "arguments") {
+		if (
+			current.kind === SyntaxKind.Identifier &&
+			current.text === "arguments"
+		) {
 			return true;
 		}
 
 		if (
-			ts.isMetaProperty(current) &&
+			current.kind === SyntaxKind.MetaProperty &&
 			current.keywordToken === SyntaxKind.NewKeyword
 		) {
 			return true;
 		}
 
 		if (
-			ts.isFunctionDeclaration(current) ||
-			ts.isFunctionExpression(current) ||
-			ts.isClassDeclaration(current) ||
-			ts.isClassExpression(current)
+			current.kind === SyntaxKind.FunctionDeclaration ||
+			current.kind === SyntaxKind.FunctionExpression ||
+			current.kind === SyntaxKind.ClassDeclaration ||
+			current.kind === SyntaxKind.ClassExpression
 		) {
 			return false;
 		}
 
-		return ts.forEachChild(current, visit) ?? false;
+		return forEachChild(current, visit) ?? false;
 	}
 
 	return visit(node);

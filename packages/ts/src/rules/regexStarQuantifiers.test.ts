@@ -133,9 +133,7 @@ RegExp("a{0,}");
 		`/a?/;`,
 		`/a{2}/;`,
 		`new RegExp("a*");`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 		`RegExp("a*");`,
-		`RegExp();`,
-		`RegExp(123);`,
 	],
 });

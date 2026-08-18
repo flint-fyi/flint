@@ -1,17 +1,14 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import {
+	getStaticStringValue,
+	typescriptLanguage,
+} from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isLowerCase(text: string) {
 	return text === text.toLowerCase();
-}
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function isStringLiteral(node: ts.Node) {
-	return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node);
 }
 
 function isUpperCase(text: string) {
@@ -41,7 +38,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				CallExpression(node, { sourceFile }) {
-					if (!ts.isPropertyAccessExpression(node.expression)) {
+					if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 						return;
 					}
 
@@ -49,28 +46,27 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						(node.expression.name.text !== "toLowerCase" &&
 							node.expression.name.text !== "toUpperCase") ||
 						node.arguments.length ||
-						!ts.isBinaryExpression(node.parent)
+						node.parent.kind !== SyntaxKind.BinaryExpression
 					) {
 						return;
 					}
 
 					const operator = node.parent.operatorToken.kind;
 					if (
-						operator !== ts.SyntaxKind.EqualsEqualsToken &&
-						operator !== ts.SyntaxKind.EqualsEqualsEqualsToken &&
-						operator !== ts.SyntaxKind.ExclamationEqualsToken &&
-						operator !== ts.SyntaxKind.ExclamationEqualsEqualsToken
+						operator !== SyntaxKind.EqualsEqualsToken &&
+						operator !== SyntaxKind.EqualsEqualsEqualsToken &&
+						operator !== SyntaxKind.ExclamationEqualsToken &&
+						operator !== SyntaxKind.ExclamationEqualsEqualsToken
 					) {
 						return;
 					}
 
 					const otherSide =
 						node.parent.left === node ? node.parent.right : node.parent.left;
-					if (!isStringLiteral(otherSide)) {
+					const value = getStaticStringValue(otherSide);
+					if (value === undefined) {
 						return;
 					}
-
-					const value = otherSide.text;
 					const isToLower = node.expression.name.text === "toLowerCase";
 					const expectedCase = isToLower ? "lowercase" : "uppercase";
 					const matchesCase = isToLower
@@ -85,8 +81,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						? value.toLowerCase()
 						: value.toUpperCase();
 					const isEquality =
-						operator === ts.SyntaxKind.EqualsEqualsToken ||
-						operator === ts.SyntaxKind.EqualsEqualsEqualsToken;
+						operator === SyntaxKind.EqualsEqualsToken ||
+						operator === SyntaxKind.EqualsEqualsEqualsToken;
 
 					context.report({
 						data: {

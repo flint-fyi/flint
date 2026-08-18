@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -20,8 +20,8 @@ function isLengthNonZeroCheck(node: AST.BinaryExpression) {
 	const { left, operatorToken, right } = node;
 
 	if (
-		operatorToken.kind === ts.SyntaxKind.ExclamationEqualsToken ||
-		operatorToken.kind === ts.SyntaxKind.ExclamationEqualsEqualsToken
+		operatorToken.kind === SyntaxKind.ExclamationEqualsToken ||
+		operatorToken.kind === SyntaxKind.ExclamationEqualsEqualsToken
 	) {
 		if (isLengthProperty(left) && isZero(right)) {
 			return {
@@ -36,7 +36,7 @@ function isLengthNonZeroCheck(node: AST.BinaryExpression) {
 	}
 
 	if (
-		operatorToken.kind === ts.SyntaxKind.GreaterThanToken &&
+		operatorToken.kind === SyntaxKind.GreaterThanToken &&
 		isLengthProperty(left) &&
 		isZero(right)
 	) {
@@ -51,15 +51,18 @@ function isLengthNonZeroCheck(node: AST.BinaryExpression) {
 function isLengthProperty(
 	node: AST.Expression,
 ): node is AST.PropertyAccessExpression {
-	return ts.isPropertyAccessExpression(node) && node.name.text === "length";
+	return (
+		node.kind === SyntaxKind.PropertyAccessExpression &&
+		node.name.text === "length"
+	);
 }
 
 function isLengthZeroCheck(node: AST.BinaryExpression) {
 	const { left, operatorToken, right } = node;
 
 	if (
-		operatorToken.kind === ts.SyntaxKind.EqualsEqualsToken ||
-		operatorToken.kind === ts.SyntaxKind.EqualsEqualsEqualsToken
+		operatorToken.kind === SyntaxKind.EqualsEqualsToken ||
+		operatorToken.kind === SyntaxKind.EqualsEqualsEqualsToken
 	) {
 		if (isLengthProperty(left) && isZero(right)) {
 			return {
@@ -79,11 +82,11 @@ function isLengthZeroCheck(node: AST.BinaryExpression) {
 }
 
 function isSomeOrEveryCall(node: AST.Expression, methodName: "every" | "some") {
-	if (!ts.isCallExpression(node)) {
+	if (node.kind !== SyntaxKind.CallExpression) {
 		return undefined;
 	}
 
-	if (!ts.isPropertyAccessExpression(node.expression)) {
+	if (node.expression.kind !== SyntaxKind.PropertyAccessExpression) {
 		return undefined;
 	}
 
@@ -95,7 +98,7 @@ function isSomeOrEveryCall(node: AST.Expression, methodName: "every" | "some") {
 }
 
 function isZero(node: AST.Expression) {
-	return ts.isNumericLiteral(node) && node.text === "0";
+	return node.kind === SyntaxKind.NumericLiteral && node.text === "0";
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -125,12 +128,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				BinaryExpression: (node, { sourceFile }) => {
-					if (
-						node.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
-					) {
+					if (node.operatorToken.kind === SyntaxKind.AmpersandAmpersandToken) {
 						const { left, right } = node;
 
-						if (!ts.isBinaryExpression(left)) {
+						if (left.kind !== SyntaxKind.BinaryExpression) {
 							return;
 						}
 
@@ -159,10 +160,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						}
 					}
 
-					if (node.operatorToken.kind === ts.SyntaxKind.BarBarToken) {
+					if (node.operatorToken.kind === SyntaxKind.BarBarToken) {
 						const { left, right } = node;
 
-						if (!ts.isBinaryExpression(left)) {
+						if (left.kind !== SyntaxKind.BinaryExpression) {
 							return;
 						}
 

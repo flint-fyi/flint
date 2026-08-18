@@ -1,20 +1,37 @@
-import * as path from "node:path";
+import path from "node:path";
+import process from "node:process";
 
-import { formatReport, type FileReport } from "@flint.fyi/core";
+import { formatReport, hasFix, type FileReport } from "@flint.fyi/core";
 
+import { presentHeader } from "./shared/header.ts";
+import { presentLanguageReports } from "./shared/presentLanguageReports.ts";
+import { presentSummary } from "./shared/summary.ts";
 import type { PresenterFactory, PresenterVirtualFile } from "./types.ts";
 
 export const githubPresenterFactory: PresenterFactory = {
 	about: {
 		name: "github",
 	},
-	initialize() {
+	initialize(context) {
+		const counts = { all: 0, files: 0, fixable: 0 };
+
 		return {
+			header: Array.from(presentHeader(context)),
 			*renderFile({ file, reports }) {
+				counts.all += reports.length;
+				counts.files += 1;
+				counts.fixable += reports.filter(hasFix).length;
+
 				for (const report of reports) {
 					yield formatAnnotation(file, report);
 					yield "\n";
 				}
+			},
+			*summarize(summaryContext) {
+				yield* presentSummary(counts, summaryContext);
+				yield* presentLanguageReports(
+					summaryContext.lintResults.allFileResults,
+				);
 			},
 		};
 	},
@@ -34,7 +51,7 @@ function escapeProperty(value: string) {
 function formatAnnotation(file: PresenterVirtualFile, report: FileReport) {
 	const { begin, end } = report.range;
 	const ruleId = report.about.id;
-	const message = formatReport(report.data, report.message.primary);
+	const message = formatAnnotationMessage(file, report);
 
 	const properties = [
 		`file=${escapeProperty(relativeFilePath(file.filePath))}`,
@@ -47,7 +64,18 @@ function formatAnnotation(file: PresenterVirtualFile, report: FileReport) {
 
 	properties.push(`endLine=${end.line + 1}`, `title=${escapeProperty(ruleId)}`);
 
-	return `::error ${properties.join(",")}::${escapeData(`${ruleId}: ${message}`)}`;
+	return `::error ${properties.join(",")}::${escapeData(message)}`;
+}
+
+function formatAnnotationMessage(
+	file: PresenterVirtualFile,
+	report: FileReport,
+) {
+	const { begin } = report.range;
+	const ruleId = report.about.id;
+	const message = formatReport(report.data, report.message.primary);
+
+	return `${ruleId}: ${message} [${relativeFilePath(file.filePath)}:${begin.line + 1}:${begin.column + 1}]`;
 }
 
 function relativeFilePath(filePath: string) {

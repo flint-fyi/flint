@@ -1,6 +1,7 @@
-import * as ts from "typescript";
+import { SyntaxKind, TypeFlags, type Type } from "typescript";
 
 import {
+	getStaticStringValue,
 	typescriptLanguage,
 	type AST,
 	type Checker,
@@ -9,31 +10,23 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 const comparisonOperators = new Set([
-	ts.SyntaxKind.EqualsEqualsEqualsToken,
-	ts.SyntaxKind.EqualsEqualsToken,
-	ts.SyntaxKind.ExclamationEqualsEqualsToken,
-	ts.SyntaxKind.ExclamationEqualsToken,
+	SyntaxKind.EqualsEqualsEqualsToken,
+	SyntaxKind.EqualsEqualsToken,
+	SyntaxKind.ExclamationEqualsEqualsToken,
+	SyntaxKind.ExclamationEqualsToken,
 ]);
-
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-function getStringLiteralLength(node: AST.Expression) {
-	return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)
-		? node.text.length
-		: undefined;
-}
 
 function isStringCharAtCall(node: AST.Expression, typeChecker: Checker) {
 	return (
-		ts.isCallExpression(node) &&
-		ts.isPropertyAccessExpression(node.expression) &&
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.text === "charAt" &&
 		isStringType(typeChecker.getTypeAtLocation(node.expression.expression))
 	);
 }
 
-function isStringType(type: ts.Type) {
-	return (type.flags & ts.TypeFlags.StringLike) !== 0;
+function isStringType(type: Type) {
+	return (type.flags & TypeFlags.StringLike) !== 0;
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -75,18 +68,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						return;
 					}
 
-					const length = getStringLiteralLength(literal);
-					if (length === undefined || length <= 1) {
+					const value = getStaticStringValue(literal);
+					if (value === undefined || value.length <= 1) {
 						return;
 					}
 
 					const isEquality =
-						node.operatorToken.kind === ts.SyntaxKind.EqualsEqualsEqualsToken ||
-						node.operatorToken.kind === ts.SyntaxKind.EqualsEqualsToken;
+						node.operatorToken.kind === SyntaxKind.EqualsEqualsEqualsToken ||
+						node.operatorToken.kind === SyntaxKind.EqualsEqualsToken;
 
 					context.report({
 						data: {
-							length,
+							length: value.length,
 							result: isEquality ? "false" : "true",
 						},
 						message: "invalidComparison",

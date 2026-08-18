@@ -8,7 +8,7 @@ export function isFromFile(
 	sourceFile: ts.SourceFile,
 	specifiedPath: string | undefined,
 	program: ts.Program,
-) {
+): boolean {
 	if (specifiedPath === undefined) {
 		return (
 			!sourceFile.fileName.includes("/node_modules/") &&

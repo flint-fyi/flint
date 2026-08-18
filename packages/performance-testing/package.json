@@ -20,19 +20,20 @@
 		"measure": "DEBUG=\"*runInHyperfine\" node src/measure.ts"
 	},
 	"dependencies": {
-		"@flint.fyi/comparisons": "workspace:^",
+		"@flint.fyi/rule-data": "workspace:^",
 		"console-table-without-index": "^0.1.1",
 		"debug-for-file": "^0.4.0",
-		"execa": "^9.6.1",
+		"execa": "catalog:dev",
 		"flint": "workspace:^",
-		"prettier": "3.8.1"
+		"prettier": "catalog:dev"
 	},
 	"devDependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"eslint": "catalog:dev",
 		"eslint-plugin-import": "catalog:dev",
 		"eslint-plugin-unicorn": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	}
 }

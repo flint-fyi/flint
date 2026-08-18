@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	typescriptLanguage,
@@ -139,7 +139,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			services: TypeScriptFileServices,
 		) {
 			if (
-				node.expression.kind !== ts.SyntaxKind.Identifier ||
+				node.expression.kind !== SyntaxKind.Identifier ||
 				node.expression.text !== "RegExp"
 			) {
 				return;
@@ -153,7 +153,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const stringLiteral = args[0]!;
 
-			if (stringLiteral.kind !== ts.SyntaxKind.StringLiteral) {
+			if (stringLiteral.kind !== SyntaxKind.StringLiteral) {
 				return;
 			}
 

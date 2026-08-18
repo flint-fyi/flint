@@ -1,6 +1,5 @@
-import * as ts from "typescript";
-
 import {
+	getStaticStringValue,
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
@@ -66,16 +65,6 @@ function escapeForRegexLiteral(pattern: string) {
 	return result;
 }
 
-// TODO: Use a util like getStaticValue
-// https://github.com/flint-fyi/flint/issues/1298
-// (also move this into getRegExpConstruction)
-function isStaticString(node: AST.Expression) {
-	return (
-		node.kind === ts.SyntaxKind.StringLiteral ||
-		node.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral
-	);
-}
-
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
 		description: "Use a regular expression literal when the pattern is static.",
@@ -102,17 +91,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			if (!isStaticString(construction.args[0]!)) {
-				return;
-			}
-
-			if (
-				construction.args.length === 2 &&
+			if (construction.args.length === 2) {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				!isStaticString(construction.args[1]!)
-			) {
-				return;
+				if (getStaticStringValue(construction.args[1]!) === undefined) {
+					return;
+				}
 			}
 
 			if (!parseRegexpAst(construction.pattern, construction.flags)) {
