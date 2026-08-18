@@ -82,7 +82,7 @@ disallowWorkspaceCycles: true
 
 engineStrict: true
 
-nodeVersion: 26.1.0
+nodeVersion: 26.3.0
 
 overrides:
   read-package-up: 12.0.0
