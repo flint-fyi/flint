@@ -1,5 +1,6 @@
 /.husky
-packages/*/.astro
-packages/*/dist
-packages/*/lib
+/packages/*/__snapshots__/**
+/packages/*/.astro
+/packages/*/dist
+/packages/*/lib
 /pnpm-lock.yaml

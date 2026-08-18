@@ -3,6 +3,7 @@ import type { KnipConfig } from "knip";
 const config: KnipConfig = {
 	ignore: ["packages/e2e/**/*"],
 	ignoreExportsUsedInFile: { interface: true, type: true },
+	ignoreFiles: ["packages/*/__snapshots__/**"],
 	treatConfigHintsAsErrors: true,
 	workspaces: {
 		".": {

@@ -15,7 +15,11 @@ import {
 } from "flint";
 
 const config: Config = defineConfig({
-	ignore: ["coverage/", "packages/e2e/tests/**/fixtures/**/*"],
+	ignore: [
+		"coverage/",
+		"packages/e2e/tests/**/fixtures/",
+		"packages/*/__snapshots__/",
+	],
 	use: [
 		{
 			files: {

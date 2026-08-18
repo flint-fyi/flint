@@ -38,15 +38,14 @@ function banJsImportExtension() {
 
 const config: ConfigObject[] = defineConfig(
 	globalIgnores([
-		"**/*.snap",
 		"**/node_modules",
 		"packages/*/.astro",
 		"packages/*/dist",
 		"packages/*/lib",
-		"packages/fixtures",
-		"packages/e2e/tests/**/fixtures/**",
+		"packages/e2e/tests/**/fixtures",
+		"packages/*/__snapshots__",
 		"pnpm-lock.yaml",
-		"coverage",
+		"coverage/",
 	]),
 	{ linterOptions: { reportUnusedDisableDirectives: "error" } },
 	{
