@@ -70,6 +70,7 @@ export async function readFromCache(
 	}
 
 	const cached = new Map(Object.entries(cache.files));
+	const dependencyTouchTimes = new Map<string, number | undefined>();
 	const filePathsToLint = new Set<string>();
 
 	for (const {
@@ -99,18 +100,10 @@ export async function readFromCache(
 			continue;
 		}
 
-		if (fileCached.dependencies) {
-			for (const dependency of fileCached.dependencies) {
-				if (!allFilePathKeys.has(pathKey(dependency, caseSensitiveFS))) {
-					log(
-						"Directly invalidating cache for: %s due to dependency %s not being in linted files cache",
-						filePath,
-						dependency,
-					);
-					markAsUncached(filePath);
-					continue;
-				}
-			}
+		// flint-disable-next-line performance/loopAwaits
+		if (await hasOutdatedDependency(filePath, fileCached)) {
+			markAsUncached(filePath);
+			continue;
 		}
 
 		const timestampCached = fileCached.timestamp;
@@ -169,6 +162,44 @@ export async function readFromCache(
 		allFilePaths.size,
 	);
 	return cached;
+
+	async function getDependencyTouchTime(dependency: string) {
+		if (dependencyTouchTimes.has(dependency)) {
+			return dependencyTouchTimes.get(dependency);
+		}
+
+		const touchTime = await host.getFileTouchTime(dependency);
+		dependencyTouchTimes.set(dependency, touchTime);
+		return touchTime;
+	}
+
+	async function hasOutdatedDependency(
+		filePath: string,
+		fileCached: FileCacheStorage,
+	) {
+		for (const dependency of fileCached.dependencies ?? []) {
+			// Dependencies inside the lint set are validated by their own cache
+			// entries, then propagated here by the transitive invalidation pass.
+			if (allFilePathKeys.has(pathKey(dependency, caseSensitiveFS))) {
+				continue;
+			}
+
+			// flint-disable-next-line performance/loopAwaits
+			const timestampTouched = await getDependencyTouchTime(dependency);
+			if (timestampTouched == null || timestampTouched > fileCached.timestamp) {
+				log(
+					"Directly invalidating cache for: %s due to dependency %s touch timestamp %d after cache timestamp %d",
+					filePath,
+					dependency,
+					timestampTouched,
+					fileCached.timestamp,
+				);
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 	function markAsUncached(filePath: string) {
 		cached.delete(filePath);
