@@ -1,33 +1,21 @@
 import type { TestCaseRules } from "../../testCases.ts";
-import { commonComparisons, manyComparisons } from "./rules.ts";
-
-const ruleValues: Record<TestCaseRules, string> = {
-	1: `forInArrays: true,`,
-	common: commonComparisons
-		.sort((a, b) => a.flint.name.localeCompare(b.flint.name))
-		.map((comparison) => `${comparison.flint.name}: true`)
-		.join(",\n"),
-	many: manyComparisons
-		.sort((a, b) => a.flint.name.localeCompare(b.flint.name))
-		.map((comparison) => `${comparison.flint.name}: true`)
-		.join(",\n"),
-};
+import { comparedRules } from "./rules.ts";
 
 export function createFlintConfigFile(rules: TestCaseRules) {
 	return `
 import { defineConfig, ts } from "flint";
 
 export default defineConfig({
-	ignore: ["coverage/", "packages/e2e/tests/**/fixtures/**/*"],
+	ignore: ["node_modules", "*.config.*"],
 	use: [
 		{
-			files: ts.files.all,
+			files: ["src/**/*.ts"],
 			rules: [
 				ts.rules({
-					${ruleValues[rules]}
-				})
-			]
-		}
+					${comparedRules[rules].map(({ flint }) => `${flint}: true`).join(",\n")}
+				}),
+			],
+		},
 	],
 });
 `;

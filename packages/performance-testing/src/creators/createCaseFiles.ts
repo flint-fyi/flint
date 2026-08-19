@@ -5,25 +5,25 @@ import { createFlintConfigFile } from "./files/createFlintConfigFile.ts";
 import { createStandardTSConfigFile } from "./files/createStandardTSConfigFile.ts";
 import { range } from "./utils.ts";
 
-export function createCaseFiles(testCase: TestCase): Structure {
-	const topLevelWidth = Math.max(1, Math.floor(Math.log(testCase.files) * 1.7));
+export function countCaseFiles(testCase: TestCase): number {
+	return countStructureFiles(createSourceFiles(testCase));
+}
 
+export function createCaseFiles(testCase: TestCase): Structure {
 	return {
 		"eslint.config.js": [createESLintConfigFile(testCase.rules), "typescript"],
 		"flint.config.ts": [createFlintConfigFile(testCase.rules), "typescript"],
-		src: {
-			"index.ts": [createIndexFile(topLevelWidth), "typescript"],
-			...Object.fromEntries(
-				new Array(topLevelWidth)
-					.fill(undefined)
-					.map((_, index) => [
-						`example${index}`,
-						createExampleDirectory(index),
-					]),
-			),
-		},
+		src: createSourceFiles(testCase),
 		"tsconfig.json": [createStandardTSConfigFile(), "json"],
 	};
+}
+
+function countStructureFiles(structure: Structure): number {
+	return Object.values(structure).reduce(
+		(total, value) =>
+			total + (Array.isArray(value) ? 1 : countStructureFiles(value)),
+		0,
+	);
 }
 
 function createExampleDirectory(index: number): Structure {
@@ -72,4 +72,17 @@ function createIndexFile(topLevelWidth: number) {
 
 		${indices.map((index) => `export { example${index} } from "./example${index}/index.js";`).join("\n\t\t")}
 	`;
+}
+
+function createSourceFiles(testCase: TestCase): Structure {
+	const topLevelWidth = Math.max(1, Math.floor(Math.log(testCase.files) * 1.7));
+
+	return {
+		"index.ts": [createIndexFile(topLevelWidth), "typescript"],
+		...Object.fromEntries(
+			new Array(topLevelWidth)
+				.fill(undefined)
+				.map((_, index) => [`example${index}`, createExampleDirectory(index)]),
+		),
+	};
 }

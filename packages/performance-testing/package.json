@@ -31,7 +31,10 @@
 		"@flint.fyi/build": "workspace:^",
 		"eslint": "catalog:dev",
 		"eslint-plugin-import": "catalog:dev",
-		"eslint-plugin-unicorn": "catalog:dev"
+		"eslint-plugin-regexp": "catalog:dev",
+		"eslint-plugin-unicorn": "catalog:dev",
+		"typescript": "catalog:dev",
+		"typescript-eslint": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=26.1.0"

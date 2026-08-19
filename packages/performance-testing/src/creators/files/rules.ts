@@ -1,55 +1,86 @@
-import {
-	type FlintRuleReference,
-	type LinterRuleReference,
-	ruleData,
-	type RuleDetails,
-} from "@flint.fyi/rule-data";
+import { ruleData, type LinterRuleReference } from "@flint.fyi/rule-data";
 
 import type { TestCaseRules } from "../../testCases.ts";
 
-type ImplementedRuleReference = Exclude<
-	FlintRuleReference,
-	{ status: "skipped" }
->;
-
-export interface PotentialComparison
-	extends Omit<RuleDetails, "eslint" | "flint"> {
-	eslint: [LinterRuleReference, ...LinterRuleReference[]];
-	flint: ImplementedRuleReference;
-	plugin: "ts";
-	preset: "logical";
+export interface ComparedRule {
+	eslint: string;
+	flint: string;
+	preset: string | undefined;
+	strictness: string | undefined;
 }
 
-export interface ComparableComparisonData
-	extends Omit<PotentialComparison, "eslint"> {
-	eslint: LinterRuleReference;
+const measuredPresets = new Set(["javascript", "logical", "stylistic"]);
+
+const singleRuleName = "forInArrays";
+
+function compareESLintRules(a: string, b: string) {
+	return rankESLintRule(a) - rankESLintRule(b) || a.localeCompare(b);
 }
 
-export const manyComparisons = ruleData
-	.filter(
-		(comparison): comparison is PotentialComparison =>
-			comparison.flint.status === "implemented" &&
-			!!comparison.flint.preset &&
-			["javascript", "logical", "stylistic"].includes(
-				comparison.flint.preset,
-			) &&
-			comparison.flint.plugin === "ts" &&
-			!!comparison.eslint,
-	)
-	.map(
-		(comparison): ComparableComparisonData => ({
-			...comparison,
-			eslint: comparison.eslint.at(-1)!,
-		}),
-	);
+function rankESLintRule(name: string) {
+	if (name.startsWith("@typescript-eslint/")) {
+		return 0;
+	}
 
-export const commonComparisons = manyComparisons.filter(
-	(comparison) =>
-		comparison.flint.preset === "logical" && !comparison.flint.strictness,
+	return name.includes("/") ? 2 : 1;
+}
+
+// Flint rules are often mapped to several overlapping ESLint rules, such as a
+// core rule and its typescript-eslint extension. Enabling all of them would
+// make ESLint repeat work that Flint only does once.
+function selectESLintRule(references: LinterRuleReference[]) {
+	return references
+		.map((reference) => reference.name)
+		.reduce((selected, name) =>
+			compareESLintRules(name, selected) < 0 ? name : selected,
+		);
+}
+
+const comparableRules: ComparedRule[] = ruleData
+	.flatMap((details): ComparedRule[] => {
+		const { flint } = details;
+
+		if (
+			flint.plugin !== "ts" ||
+			flint.status !== "implemented" ||
+			!details.eslint?.length
+		) {
+			return [];
+		}
+
+		return [
+			{
+				eslint: selectESLintRule(details.eslint),
+				flint: flint.name,
+				preset: flint.preset,
+				strictness: flint.strictness,
+			},
+		];
+	})
+	.sort((a, b) => a.flint.localeCompare(b.flint));
+
+const manyRules = comparableRules.filter(
+	(rule) => rule.preset !== undefined && measuredPresets.has(rule.preset),
 );
 
+const commonRules = manyRules.filter(
+	(rule) => rule.preset === "logical" && !rule.strictness,
+);
+
+const singleRule = manyRules.find((rule) => rule.flint === singleRuleName);
+
+if (!singleRule) {
+	throw new Error(`No ESLint comparison is known for ts/${singleRuleName}.`);
+}
+
+export const comparedRules: Record<TestCaseRules, ComparedRule[]> = {
+	1: [singleRule],
+	common: commonRules,
+	many: manyRules,
+};
+
 export const ruleCounts: Record<TestCaseRules, number> = {
-	1: 1,
-	common: commonComparisons.length,
-	many: manyComparisons.length,
+	1: comparedRules[1].length,
+	common: comparedRules.common.length,
+	many: comparedRules.many.length,
 };

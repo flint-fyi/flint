@@ -1180,9 +1180,18 @@ importers:
       eslint-plugin-import:
         specifier: catalog:dev
         version: 2.32.0(@typescript-eslint/parser@8.66.0)(eslint@10.8.0)(supports-color@10.2.2)
+      eslint-plugin-regexp:
+        specifier: catalog:dev
+        version: 3.1.0(eslint@10.8.0)
       eslint-plugin-unicorn:
         specifier: catalog:dev
         version: 64.0.0(eslint@10.8.0)
+      typescript:
+        specifier: catalog:dev
+        version: 6.0.3
+      typescript-eslint:
+        specifier: catalog:dev
+        version: 8.66.0(eslint@10.8.0)(supports-color@10.2.2)(typescript@6.0.3)
 
   packages/plugin-flint:
     dependencies:

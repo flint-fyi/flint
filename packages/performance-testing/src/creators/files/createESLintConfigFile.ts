@@ -1,98 +1,73 @@
 import type { TestCaseRules } from "../../testCases.ts";
-import { commonComparisons, manyComparisons } from "./rules.ts";
+import { comparedRules } from "./rules.ts";
 
-const pluginData = new Map([
-	[
-		"import",
-		{
-			alias: "importPlugin",
-			importer: `import importPlugin from "eslint-plugin-import";`,
-			name: "import",
-		},
-	],
-	[
-		"regexp",
-		{
-			importer: `import regexp from "eslint-plugin-regexp";`,
-			name: "regexp",
-		},
-	],
-	[
-		"unicorn",
-		{
-			importer: `import unicorn from "eslint-plugin-unicorn";`,
-			name: "unicorn",
-		},
-	],
+interface PluginPackage {
+	alias: string;
+	specifier: string;
+}
+
+// typescript-eslint's base config already registers this one.
+const preregisteredPlugin = "@typescript-eslint";
+
+const pluginPackages = new Map<string, PluginPackage>([
+	["import", { alias: "importPlugin", specifier: "eslint-plugin-import" }],
+	["regexp", { alias: "regexp", specifier: "eslint-plugin-regexp" }],
+	["unicorn", { alias: "unicorn", specifier: "eslint-plugin-unicorn" }],
 ]);
 
-const ruleValues = {
-	1: [
-		{
-			config: `"@typescript-eslint/no-for-in-array": "error",`,
-			plugin: undefined,
-		},
-	],
-	common: commonComparisons
-		.sort((a, b) => a.eslint.name.localeCompare(b.eslint.name))
-		.map((comparison) => ({
-			config: `"${comparison.eslint?.name}": "error"`,
-			plugin: comparison.eslint.name.slice(
-				0,
-				comparison.eslint.name.indexOf("/"),
-			),
-		})),
-	many: manyComparisons
-		.sort((a, b) => a.eslint.name.localeCompare(b.eslint.name))
-		.map((comparison) => ({
-			config: `"${comparison.eslint?.name}": "error"`,
-			plugin: comparison.eslint.name.slice(
-				0,
-				comparison.eslint.name.indexOf("/"),
-			),
-		})),
-};
-
 export function createESLintConfigFile(rules: TestCaseRules) {
-	const enabled = ruleValues[rules];
-	const includedPluginData = Array.from(
-		new Set(
-			enabled
-				.flatMap((enable) =>
-					enable.plugin ? pluginData.get(enable.plugin) : undefined,
-				)
-				.filter((data) => data !== undefined),
-		),
-	);
+	const enabled = comparedRules[rules];
+	const used = new Map<string, PluginPackage>();
+
+	for (const { eslint } of enabled) {
+		const pluginName = getPluginName(eslint);
+
+		if (pluginName === undefined || pluginName === preregisteredPlugin) {
+			continue;
+		}
+
+		const pluginPackage = pluginPackages.get(pluginName);
+
+		if (!pluginPackage) {
+			throw new Error(`No ESLint plugin package is known for ${eslint}.`);
+		}
+
+		used.set(pluginName, pluginPackage);
+	}
+
+	const plugins = Array.from(used, ([name, pluginPackage]) => ({
+		...pluginPackage,
+		name,
+	})).sort((a, b) => a.name.localeCompare(b.name));
 
 	return `
 import { defineConfig, globalIgnores } from "eslint/config";
-${includedPluginData.map((data) => data.importer).join("\n")}
+${plugins.map(({ alias, specifier }) => `import ${alias} from "${specifier}";`).join("\n")}
 import tseslint from "typescript-eslint";
 
 export default defineConfig(
-	globalIgnores(["node_modules", "pnpm-lock.yaml", "*.config.*"]),
+	globalIgnores(["node_modules", "*.config.*"]),
 	tseslint.configs.base,
-	${
-		includedPluginData.length
-			? `{
-		plugins: {
-			${includedPluginData.map((data) => `${data.name}: ${data.alias ?? data.name} `).join(",\n")}
-		}
-	},
-`
-			: ""
-	}{
-		files: ["**/*.ts"],
+	{
+		files: ["src/**/*.ts"],
 		languageOptions: {
 			parserOptions: {
 				projectService: true,
 			},
 		},
+		plugins: {
+			${plugins.map(({ alias, name }) => `"${name}": ${alias}`).join(",\n")}
+		},
 		rules: {
-			${enabled.map(({ config }) => config).join(",\n")}
-		}
+			${enabled.map(({ eslint }) => `"${eslint}": "error"`).join(",\n")}
+		},
 	},
 );
 `;
+}
+
+function getPluginName(ruleName: string) {
+	const separator = ruleName.indexOf("/");
+
+	return separator === -1 ? undefined : ruleName.slice(0, separator);
 }

@@ -2,7 +2,6 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import { debugForFile } from "debug-for-file";
-import { execa } from "execa";
 
 import { createPackageFile } from "./creators/files/createPackageFile.ts";
 import { writeCaseFiles } from "./creators/writeCaseFiles.ts";
@@ -46,7 +45,5 @@ for (const files of testCaseEntries[0].values) {
 		await createCase({ files, rules });
 	}
 }
-
-await execa({ stdio: "inherit" })`pnpm install`;
 
 log("Seeded cases.");
