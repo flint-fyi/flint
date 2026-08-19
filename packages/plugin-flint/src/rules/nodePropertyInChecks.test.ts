@@ -20,12 +20,12 @@ if('a' in node) {}
 		{
 			code: `
 import ts from "typescript";
-declare const node: string | ts.Node;
+declare const node: ts.Expression | ts.Statement;
 if('a' in node) {}
 `,
 			snapshot: `
 import ts from "typescript";
-declare const node: string | ts.Node;
+declare const node: ts.Expression | ts.Statement;
 if('a' in node) {}
    ~~~~~~~~~~~
    Avoid using the \`in\` operator to check properties on TypeScript nodes.
@@ -49,6 +49,6 @@ if('a' in node) {}
 		},
 	],
 	valid: [
-		'import ts from "typescript"; declare const node: ts.Node; if(node.a) {}',
+		'import ts from "typescript"; declare const node: ts.Node; if(node.kind) {}',
 	],
 });

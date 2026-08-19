@@ -55,9 +55,17 @@ const fn: () => {} = () => ({});
 		},
 		{
 			code: `
+interface Bar {
+    value: string;
+}
+
 interface Foo extends Bar {}
 `,
 			snapshot: `
+interface Bar {
+    value: string;
+}
+
 interface Foo extends Bar {}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Empty interfaces are often used incorrectly and should be avoided.
@@ -65,12 +73,25 @@ Empty interfaces are often used incorrectly and should be avoided.
 		},
 	],
 	valid: [
-		`type NonNullable<T> = T & {};`,
+		`
+
+type NonNullable<T> = T & {};
+`,
 		`type HasMembers = { foo: string };`,
 		`interface HasMembers { foo: string }`,
-		`interface ExtendsMultiple extends Foo, Bar {}`,
+		`
+interface Foo {
+    foo: string;
+}
+
+interface Bar {
+    bar: string;
+}
+
+interface ExtendsMultiple extends Foo, Bar {}
+`,
 		`let value: object;`,
 		`let value: unknown;`,
-		`type Mapped = { [K in keyof T]: T[K] };`,
+		`type Mapped<T> = { [K in keyof T]: T[K] };`,
 	],
 });

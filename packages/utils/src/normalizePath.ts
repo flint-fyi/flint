@@ -19,7 +19,7 @@ export function dirnameKey(path: string, caseSensitiveFS: boolean): PathKey {
 	return (pathKey(path, caseSensitiveFS) + "/") as PathKey;
 }
 
-export function normalizeDirname(path: string) {
+export function normalizeDirname(path: string): string {
 	const lastSlashIdx = path.lastIndexOf("/");
 	path = path.slice(0, lastSlashIdx + 1);
 	if (path.indexOf("/") === lastSlashIdx && path.endsWith("/")) {

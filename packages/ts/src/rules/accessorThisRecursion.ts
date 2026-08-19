@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
 import {
 	typescriptLanguage,
@@ -15,9 +15,9 @@ function getPropertyName(
 	accessor: AST.GetAccessorDeclaration | AST.SetAccessorDeclaration,
 	sourceFile: AST.SourceFile,
 ) {
-	return ts.isIdentifier(accessor.name) ||
-		ts.isStringLiteral(accessor.name) ||
-		ts.isNumericLiteral(accessor.name)
+	return accessor.name.kind === SyntaxKind.Identifier ||
+		accessor.name.kind === SyntaxKind.StringLiteral ||
+		accessor.name.kind === SyntaxKind.NumericLiteral
 		? accessor.name.text
 		: accessor.name.getText(sourceFile);
 }
@@ -64,7 +64,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			const propertyName = getPropertyName(accessor, sourceFile);
-			const isGetter = ts.isGetAccessorDeclaration(accessor);
+			const isGetter = accessor.kind === SyntaxKind.GetAccessor;
 
 			function checkNode(node: ts.Node): void {
 				if (tsutils.isFunctionScopeBoundary(node)) {
@@ -83,7 +83,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			) {
 				if (
 					node.name.text !== propertyName ||
-					node.expression.kind !== ts.SyntaxKind.ThisKeyword
+					node.expression.kind !== SyntaxKind.ThisKeyword
 				) {
 					return;
 				}
@@ -99,7 +99,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				} else if (
 					ts.isBinaryExpression(node.parent) &&
 					node.parent.left === node &&
-					node.parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
+					node.parent.operatorToken.kind === SyntaxKind.EqualsToken
 				) {
 					context.report({
 						message: "noSetterRecursion",

@@ -5,64 +5,64 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: String.raw`
-/\07/;
+new RegExp("\\07");
 `,
 			snapshot: String.raw`
-/\07/;
- ~~~
- Octal escape sequence '\07' can be confused with backreferences.
+new RegExp("\\07");
+            ~~~
+            Octal escape sequence '\07' can be confused with backreferences.
 `,
 		},
 		{
 			code: String.raw`
-/\077/;
+new RegExp("\\077");
 `,
 			snapshot: String.raw`
-/\077/;
- ~~~~
- Octal escape sequence '\077' can be confused with backreferences.
+new RegExp("\\077");
+            ~~~~
+            Octal escape sequence '\077' can be confused with backreferences.
 `,
 		},
 		{
 			code: String.raw`
-/[\077]/;
+new RegExp("[\\077]");
 `,
 			snapshot: String.raw`
-/[\077]/;
-  ~~~~
-  Octal escape sequence '\077' can be confused with backreferences.
+new RegExp("[\\077]");
+             ~~~~
+             Octal escape sequence '\077' can be confused with backreferences.
 `,
 		},
 		{
 			code: String.raw`
-/\7/;
+new RegExp("\\7");
 `,
 			snapshot: String.raw`
-/\7/;
- ~~
- Octal escape sequence '\7' can be confused with backreferences.
+new RegExp("\\7");
+            ~~
+            Octal escape sequence '\7' can be confused with backreferences.
 `,
 		},
 		{
 			code: String.raw`
-/\1\2/;
+new RegExp("\\1\\2");
 `,
 			snapshot: String.raw`
-/\1\2/;
- ~~
- Octal escape sequence '\1' can be confused with backreferences.
-   ~~
-   Octal escape sequence '\2' can be confused with backreferences.
+new RegExp("\\1\\2");
+            ~~
+            Octal escape sequence '\1' can be confused with backreferences.
+              ~~
+              Octal escape sequence '\2' can be confused with backreferences.
 `,
 		},
 		{
 			code: String.raw`
-/()\1\2/;
+new RegExp("()\\1\\2");
 `,
 			snapshot: String.raw`
-/()\1\2/;
-     ~~
-     Octal escape sequence '\2' can be confused with backreferences.
+new RegExp("()\\1\\2");
+                ~~
+                Octal escape sequence '\2' can be confused with backreferences.
 `,
 		},
 		{
@@ -78,11 +78,11 @@ new RegExp("\\07");
 	],
 	valid: [
 		String.raw`/\0/;`,
-		String.raw`/[\7]/;`,
-		String.raw`/[\1-\4]/;`,
+		String.raw`new RegExp("[\\7]");`,
+		String.raw`new RegExp("[\\1-\\4]");`,
 		String.raw`/()\1/;`,
 		String.raw`/()()\1\2/;`,
 		String.raw`new RegExp("\\0");`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 	],
 });

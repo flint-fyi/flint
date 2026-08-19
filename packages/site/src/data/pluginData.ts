@@ -1,4 +1,4 @@
-export interface PluginData {
+export interface PluginDetails {
 	colors: PluginLogoColors;
 	description: string;
 	id: string;
@@ -232,9 +232,12 @@ const pluginDataById = {
 		id: "yaml",
 		name: "YAML",
 	},
-} satisfies Record<string, PluginData>;
+} satisfies Record<string, PluginDetails>;
 
-export const pluginDataByGroup: Record<string, Record<string, PluginData>> = {
+export const pluginDataByGroup: Record<
+	string,
+	Record<string, PluginDetails>
+> = {
 	core: {
 		json: pluginDataById.json,
 		md: pluginDataById.md,
@@ -263,7 +266,12 @@ export const pluginDataByGroup: Record<string, Record<string, PluginData>> = {
 	},
 };
 
-export function getPluginData(pluginId: string) {
+export interface PluginData {
+	group: string;
+	plugin: PluginDetails;
+}
+
+export function getPluginData(pluginId: string): PluginData {
 	const pluginData = getPluginDataSafe(pluginId);
 
 	if (!pluginData) {
@@ -273,7 +281,7 @@ export function getPluginData(pluginId: string) {
 	return pluginData;
 }
 
-export function getPluginDataSafe(pluginId: string) {
+export function getPluginDataSafe(pluginId: string): PluginData | undefined {
 	for (const group of Object.keys(pluginDataByGroup)) {
 		if (pluginId in pluginDataByGroup[group]) {
 			return { group, plugin: pluginDataByGroup[group][pluginId] };

@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 
@@ -59,7 +59,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const openParen = findChildToken(
 						node,
-						ts.SyntaxKind.OpenParenToken,
+						SyntaxKind.OpenParenToken,
 						sourceFile,
 					);
 					if (!openParen) {
@@ -85,7 +85,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const openBracket = findChildToken(
 						node,
-						ts.SyntaxKind.OpenBracketToken,
+						SyntaxKind.OpenBracketToken,
 						sourceFile,
 					);
 					if (!openBracket) {
@@ -116,7 +116,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 function findChildToken(
 	node: AST.CallExpression | AST.ElementAccessExpression,
-	kind: ts.SyntaxKind,
+	kind: SyntaxKind,
 	sourceFile: AST.SourceFile,
 ) {
 	for (const child of node.getChildren(sourceFile)) {
@@ -133,7 +133,7 @@ function getExpressionEnd(
 ) {
 	const greaterThan =
 		node.typeArguments &&
-		findChildToken(node, ts.SyntaxKind.GreaterThanToken, sourceFile);
+		findChildToken(node, SyntaxKind.GreaterThanToken, sourceFile);
 
 	return greaterThan?.getEnd() ?? node.expression.getEnd();
 }

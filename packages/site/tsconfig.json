@@ -1,4 +1,5 @@
 {
+	"extends": "astro/tsconfigs/strict",
 	"compilerOptions": {
 		"jsx": "react-jsx",
 		"jsxImportSource": "react",
@@ -6,14 +7,13 @@
 			"~/*": ["./src/*"]
 		}
 	},
-	"extends": "astro/tsconfigs/strict",
 	"include": [".astro/types.d.ts", "*.config.*", "src"],
 	"references": [
-		{ "path": "../comparisons" },
 		{ "path": "../browser" },
-		{ "path": "../plugin-flint" },
 		{ "path": "../node" },
 		{ "path": "../performance" },
+		{ "path": "../plugin-flint" },
+		{ "path": "../rule-data" },
 		{ "path": "../spelling" }
 	]
 }

@@ -6,6 +6,7 @@ ruleTester.describe(rule, {
 		{
 			code: `
 class Example {
+    value!: string;
     constructor() {
         this.value = 'hello';
     }
@@ -13,6 +14,7 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    value!: string;
     constructor() {
         this.value = 'hello';
         ~~~~~~~~~~~~~~~~~~~~~
@@ -24,6 +26,7 @@ class Example {
 		{
 			code: `
 class Example {
+    count!: number;
     constructor() {
         this.count = 42;
     }
@@ -31,6 +34,7 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    count!: number;
     constructor() {
         this.count = 42;
         ~~~~~~~~~~~~~~~~
@@ -42,6 +46,7 @@ class Example {
 		{
 			code: `
 class Example {
+    enabled!: boolean;
     constructor() {
         this.enabled = true;
     }
@@ -49,6 +54,7 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    enabled!: boolean;
     constructor() {
         this.enabled = true;
         ~~~~~~~~~~~~~~~~~~~~
@@ -60,6 +66,7 @@ class Example {
 		{
 			code: `
 class Example {
+    disabled!: boolean;
     constructor() {
         this.disabled = false;
     }
@@ -67,6 +74,7 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    disabled!: boolean;
     constructor() {
         this.disabled = false;
         ~~~~~~~~~~~~~~~~~~~~~~
@@ -78,6 +86,7 @@ class Example {
 		{
 			code: `
 class Example {
+    data!: null;
     constructor() {
         this.data = null;
     }
@@ -85,6 +94,7 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    data!: null;
     constructor() {
         this.data = null;
         ~~~~~~~~~~~~~~~~~
@@ -96,6 +106,7 @@ class Example {
 		{
 			code: `
 class Example {
+    negative!: number;
     constructor() {
         this.negative = -1;
     }
@@ -103,6 +114,7 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    negative!: number;
     constructor() {
         this.negative = -1;
         ~~~~~~~~~~~~~~~~~~~
@@ -134,16 +146,91 @@ class MyError extends Error {
 	],
 	valid: [
 		`class Example { value = 'hello'; }`,
-		`class Example { constructor() { this.value = getValue(); } }`,
-		`class Example { constructor() { this.value = param; } }`,
-		`class Example { constructor(value) { this.value = value; } }`,
-		`class Example { constructor() { this.value = this.compute(); } }`,
+		`
+declare function getValue(): string;
+class Example {
+    value!: string;
+    constructor() {
+        this.value = getValue();
+    }
+}
+`,
+		`
+declare const param: string;
+class Example {
+    value!: string;
+    constructor() {
+        this.value = param;
+    }
+}
+`,
+		`
+class Example {
+    value!: string;
+    constructor(value: string) {
+        this.value = value;
+    }
+}
+`,
+		`
+class Example {
+    value!: string;
+    compute(): string {
+        return "value";
+    }
+    constructor() {
+        this.value = this.compute();
+    }
+}
+`,
 		`class Example { constructor() { const value = 'hello'; } }`,
-		`class Example { constructor() { value = 'hello'; } }`,
-		`class Example { constructor() { other.value = 'hello'; } }`,
-		`class Example { constructor() { this.value += 1; } }`,
-		`class Example { constructor() { this.items = []; } }`,
-		`class Example { constructor() { this.config = {}; } }`,
-		`class Example { constructor() { this.fn = () => {}; } }`,
+		`
+let value = "";
+class Example {
+    constructor() {
+        value = 'hello';
+    }
+}
+`,
+		`
+declare const other: { value: string };
+class Example {
+    constructor() {
+        other.value = 'hello';
+    }
+}
+`,
+		`
+class Example {
+    value = 0;
+    constructor() {
+        this.value += 1;
+    }
+}
+`,
+		`
+class Example {
+    items: unknown[] = [];
+    constructor() {
+        this.items = [];
+    }
+}
+`,
+		`
+class Example {
+    config: object = {};
+    constructor() {
+        this.config = {};
+    }
+}
+`,
+		`
+class Example {
+    fn = () => {};
+    constructor() {
+        this.fn = () => {};
+    }
+}
+`,
 	],
 });

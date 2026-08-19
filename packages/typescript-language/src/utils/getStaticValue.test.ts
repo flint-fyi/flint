@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 import { describe, expect, it } from "vitest";
 
 import type * as AST from "../types/ast.ts";
@@ -89,7 +89,7 @@ function parseExpression(source: string): AST.Expression {
 		ts.ScriptKind.TS,
 	);
 	const statement = sourceFile.statements[0];
-	if (statement?.kind !== ts.SyntaxKind.VariableStatement) {
+	if (statement?.kind !== SyntaxKind.VariableStatement) {
 		throw new Error(`Could not parse expression: ${source}`);
 	}
 

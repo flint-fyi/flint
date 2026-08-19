@@ -1,4 +1,12 @@
-import ts, { SyntaxKind } from "typescript";
+import {
+	isExpressionWithTypeArguments,
+	isShorthandPropertyAssignment,
+	isTypeNode,
+	isTypeParameterDeclaration,
+	SymbolFlags,
+	SyntaxKind,
+	type Symbol,
+} from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -14,7 +22,7 @@ import { ruleCreator } from "./ruleCreator.ts";
 interface ImportedSpecifier {
 	local: AST.Identifier;
 	specifier: ImportSpecifierNode;
-	symbol: ts.Symbol | undefined;
+	symbol: Symbol | undefined;
 }
 
 type ImportSpecifierNode =
@@ -55,7 +63,7 @@ function getImportSource(
 	node: AST.ImportDeclaration,
 	sourceFile: AST.SourceFile,
 ) {
-	return ts.isStringLiteral(node.moduleSpecifier)
+	return node.moduleSpecifier.kind === SyntaxKind.StringLiteral
 		? node.moduleSpecifier.text
 		: node.moduleSpecifier.getText(sourceFile);
 }
@@ -74,7 +82,7 @@ function getImportSpecifiers(node: AST.ImportDeclaration) {
 
 	const namedBindings = importClause.namedBindings;
 	if (namedBindings) {
-		if (namedBindings.kind === ts.SyntaxKind.NamespaceImport) {
+		if (namedBindings.kind === SyntaxKind.NamespaceImport) {
 			specifiers.push(namedBindings);
 		} else {
 			specifiers.push(...namedBindings.elements);
@@ -85,8 +93,16 @@ function getImportSpecifiers(node: AST.ImportDeclaration) {
 }
 
 function getReferencedSymbol(typeChecker: Checker, node: AST.Identifier) {
-	const symbol = typeChecker.getSymbolAtLocation(node);
-	return symbol?.flags && (symbol.flags & ts.SymbolFlags.Alias) !== 0
+	let symbol: Symbol | undefined;
+	const parent = node.parent;
+
+	if (isShorthandPropertyAssignment(parent)) {
+		symbol = typeChecker.getShorthandAssignmentValueSymbol(parent);
+	} else {
+		symbol = typeChecker.getSymbolAtLocation(node);
+	}
+
+	return symbol?.flags && (symbol.flags & SymbolFlags.Alias) !== 0
 		? typeChecker.getAliasedSymbol(symbol)
 		: symbol;
 }
@@ -110,7 +126,7 @@ function getTypeImportFix(
 		if (
 			!importClause ||
 			importClause.name ||
-			namedBindings?.kind !== ts.SyntaxKind.NamedImports
+			namedBindings?.kind !== SyntaxKind.NamedImports
 		) {
 			return undefined;
 		}
@@ -137,7 +153,7 @@ function getTypeImportFix(
 		fixStyle === "inline-type-imports" &&
 		importClause &&
 		!importClause.name &&
-		namedBindings?.kind === ts.SyntaxKind.NamedImports
+		namedBindings?.kind === SyntaxKind.NamedImports
 	) {
 		const moduleText = node.moduleSpecifier.getText(sourceFile);
 		const namedText = namedBindings.elements
@@ -212,19 +228,19 @@ function isOnlyTypeReference(node: AST.Identifier) {
 	let parent = node.parent as AST.AnyNode | undefined;
 
 	while (parent) {
-		if (parent.kind === ts.SyntaxKind.HeritageClause) {
+		if (parent.kind === SyntaxKind.HeritageClause) {
 			return parent.token === SyntaxKind.ImplementsKeyword;
 		}
 
 		if (
-			ts.isTypeAliasDeclaration(parent) ||
-			ts.isInterfaceDeclaration(parent) ||
-			ts.isTypeParameterDeclaration(parent)
+			parent.kind === SyntaxKind.TypeAliasDeclaration ||
+			parent.kind === SyntaxKind.InterfaceDeclaration ||
+			isTypeParameterDeclaration(parent)
 		) {
 			return true;
 		}
 
-		if (ts.isTypeNode(parent) && !ts.isExpressionWithTypeArguments(parent)) {
+		if (isTypeNode(parent) && !isExpressionWithTypeArguments(parent)) {
 			return true;
 		}
 
@@ -312,7 +328,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		description:
 			"Reports imports that do not match the configured type import style.",
 		id: "typeImports",
-		presets: ["stylistic"],
+		presets: ["logicalStrict"],
 	},
 	messages: {
 		avoidImportType: {
@@ -353,7 +369,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (options.prefer === "no-type-imports") {
 						for (const statement of node.statements) {
 							if (
-								!ts.isImportDeclaration(statement) ||
+								statement.kind !== SyntaxKind.ImportDeclaration ||
 								!statement.importClause
 							) {
 								continue;
@@ -410,7 +426,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const references = new Map<ImportedSpecifier, AST.Identifier[]>();
 
 					for (const statement of node.statements) {
-						if (!ts.isImportDeclaration(statement) || !statement.importClause) {
+						if (
+							statement.kind !== SyntaxKind.ImportDeclaration ||
+							!statement.importClause
+						) {
 							continue;
 						}
 
@@ -441,7 +460,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					function collectReferences(node: AST.AnyNode) {
-						if (ts.isIdentifier(node) && !isInImportDeclaration(node)) {
+						if (
+							node.kind === SyntaxKind.Identifier &&
+							!isInImportDeclaration(node)
+						) {
 							const symbol = getReferencedSymbol(typeChecker, node);
 							const importedSpecifier = importedSpecifiers.find(
 								(specifier) =>
@@ -461,7 +483,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					for (const statement of node.statements) {
 						if (
-							!ts.isImportDeclaration(statement) ||
+							statement.kind !== SyntaxKind.ImportDeclaration ||
 							!statement.importClause ||
 							isTypeImportDeclaration(statement)
 						) {

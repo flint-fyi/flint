@@ -1,5 +1,5 @@
 export {
 	createVolarBasedLanguage,
-	type Language,
 	reportSourceCode,
+	type VolarLanguage,
 } from "./language.ts";

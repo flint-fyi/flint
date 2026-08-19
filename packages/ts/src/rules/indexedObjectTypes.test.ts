@@ -65,20 +65,20 @@ function process(data: { [key: string]: number }): void {}
 		},
 		{
 			code: `
-type Foo = Generic<{ [key: string]: any }>;
+type Foo = Partial<{ [key: string]: any }>;
 `,
 			snapshot: `
-type Foo = Generic<{ [key: string]: any }>;
+type Foo = Partial<{ [key: string]: any }>;
                    ~~~~~~~~~~~~~~~~~~~~~~
                    Prefer \`Record<K, V>\` over an index signature.
 `,
 		},
 		{
 			code: `
-type Foo = Generic<{ readonly [key: string]: any }>;
+type Foo = Partial<{ readonly [key: string]: any }>;
 `,
 			snapshot: `
-type Foo = Generic<{ readonly [key: string]: any }>;
+type Foo = Partial<{ readonly [key: string]: any }>;
                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                    Prefer \`Record<K, V>\` over an index signature.
 `,
@@ -95,10 +95,10 @@ function foo(arg: { [key: string]: any }) {}
 		},
 		{
 			code: `
-function foo(): { [key: string]: any } {}
+function foo(): { [key: string]: any } { return {}; }
 `,
 			snapshot: `
-function foo(): { [key: string]: any } {}
+function foo(): { [key: string]: any } { return {}; }
                 ~~~~~~~~~~~~~~~~~~~~~~
                 Prefer \`Record<K, V>\` over an index signature.
 `,
@@ -115,50 +115,40 @@ function foo(arg: { readonly [key: string]: any }) {}
 		},
 		{
 			code: `
-function foo(): { readonly [key: string]: any } {}
+function foo(): { readonly [key: string]: any } { return {}; }
 `,
 			snapshot: `
-function foo(): { readonly [key: string]: any } {}
+function foo(): { readonly [key: string]: any } { return {}; }
                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 Prefer \`Record<K, V>\` over an index signature.
 `,
 		},
 		{
 			code: `
-type Foo = { [k: string]: A.Foo };
+type Foo = { [k: string]: Error };
 `,
 			snapshot: `
-type Foo = { [k: string]: A.Foo };
+type Foo = { [k: string]: Error };
            ~~~~~~~~~~~~~~~~~~~~~~
            Prefer \`Record<K, V>\` over an index signature.
 `,
 		},
 		{
 			code: `
-type Foo = { [key: string]: AnotherFoo };
+type Foo = { [key: string]: Uint8Array };
 `,
 			snapshot: `
-type Foo = { [key: string]: AnotherFoo };
+type Foo = { [key: string]: Uint8Array };
            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
            Prefer \`Record<K, V>\` over an index signature.
 `,
 		},
 		{
 			code: `
-type Foo = { [key: string]: string } | Foo;
+interface Foo { [k: string]: Error; }
 `,
 			snapshot: `
-type Foo = { [key: string]: string } | Foo;
-           ~~~~~~~~~~~~~~~~~~~~~~~~~
-           Prefer \`Record<K, V>\` over an index signature.
-`,
-		},
-		{
-			code: `
-interface Foo { [k: string]: A.Foo; }
-`,
-			snapshot: `
-interface Foo { [k: string]: A.Foo; }
+interface Foo { [k: string]: Error; }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Prefer \`Record<K, V>\` over an index signature.
 `,
@@ -249,11 +239,11 @@ type Foo = Record<symbol, any>;
 		},
 		{
 			code: `
-type Foo = Generic<Record<string, any>>;
+type Foo = Partial<Record<string, any>>;
 `,
 			options: { style: "index-signature" },
 			snapshot: `
-type Foo = Generic<Record<string, any>>;
+type Foo = Partial<Record<string, any>>;
                    ~~~~~~~~~~~~~~~~~~~
                    Prefer an index signature over \`Record<K, V>\`.
 `,
@@ -297,16 +287,13 @@ type Foo = Record<Exclude<'a' | 'b' | 'c', 'a'>, any>;
 		`type Foo = { bar: string; };`,
 		`type Foo = { [key: string]: any; bar: string; };`,
 
-		`type Foo = Generic<{ [key: string]: any; bar: string; }>;`,
+		`type Foo = Partial<{ [key: string]: any; bar: string; }>;`,
 		`function foo(arg: { [key: string]: any; bar: string }) {}`,
-		`function foo(): { [key: string]: any; bar: string } {}`,
-
-		`type Foo = { [key: string] };`,
-		`type Foo = { [] };`,
-		`interface Foo { [key: string]; }`,
-		`interface Foo { []; }`,
+		`function foo(): { [key: string]: any; bar: string } { return { bar: "" }; }`,
 
 		`
+interface Base {}
+
 interface Extended extends Base {
     [key: string]: number;
 }
@@ -314,7 +301,6 @@ interface Extended extends Base {
 
 		`type Foo = { [key: string]: string | Foo };`,
 		`type Foo = { [key: string]: Foo };`,
-		`type Foo = { [key: string]: Foo } | Foo;`,
 		`type Foo = { [key in string]: Foo };`,
 		`interface Foo { [key: string]: Foo; }`,
 		`interface Foo<T> { [key: string]: Foo<T>; }`,
@@ -325,28 +311,53 @@ interface Extended extends Base {
 		`interface Foo<T> { [s: string]: T extends Foo<T> ? string : number; }`,
 		`interface Foo<T> { [s: string]: T extends true ? Foo<T> : number; }`,
 		`interface Foo<T> { [s: string]: T extends true ? string : Foo<T>; }`,
-		`interface Foo { [s: string]: Foo[number]; }`,
-		`interface Foo { [s: string]: {}[Foo]; }`,
+		`interface Foo extends Array<string> { [s: string]: Foo[number]; }`,
+		`
+interface T {
+    value: string;
+}
 
-		`type Mapped = { [K in keyof T]: T[K] };`,
-		`type T = { [key in Foo]: key | number };`,
+type Mapped = { [K in keyof T]: T[K] };
+`,
+		`
+type Foo = "value";
+type T = { [key in Foo]: key | number };
+`,
 		`function foo(e: { readonly [key in PropertyKey]-?: key }) {}`,
-		`function f(): { [k in keyof ParseResult]: unknown; } { return {}; }`,
+		`
+interface ParseResult {
+    value: string;
+}
+
+function f(): { [k in keyof ParseResult]: unknown; } { return { value: undefined }; }
+`,
 
 		{
-			code: `type Foo = Misc<string, unknown>;`,
+			code: `
+type Misc<T, U> = [T, U];
+type Foo = Misc<string, unknown>;
+`,
 			options: { style: "index-signature" },
 		},
 		{
-			code: `type Foo = Record;`,
+			code: `
+type Record = string;
+type Foo = Record;
+`,
 			options: { style: "index-signature" },
 		},
 		{
-			code: `type Foo = Record<string>;`,
+			code: `
+type Record<T> = T;
+type Foo = Record<string>;
+`,
 			options: { style: "index-signature" },
 		},
 		{
-			code: `type Foo = Record<string, number, unknown>;`,
+			code: `
+type Record<K, V, Extra> = [K, V, Extra];
+type Foo = Record<string, number, unknown>;
+`,
 			options: { style: "index-signature" },
 		},
 		{
@@ -362,7 +373,7 @@ interface Extended extends Base {
 			options: { style: "index-signature" },
 		},
 		{
-			code: `type Foo = Generic<{ [key: string]: any }>;`,
+			code: `type Foo = Partial<{ [key: string]: any }>;`,
 			options: { style: "index-signature" },
 		},
 		{
@@ -370,17 +381,22 @@ interface Extended extends Base {
 			options: { style: "index-signature" },
 		},
 		{
-			code: `function foo(): { [key: string]: any } {}`,
+			code: `function foo(): { [key: string]: any } { return {}; }`,
 			options: { style: "index-signature" },
 		},
 		{
-			code: `type T = A.B;`,
+			code: `
+namespace A {
+    export type B = string;
+}
+
+type T = A.B;
+`,
 			options: { style: "index-signature" },
 		},
 		`
 type Record<K, V> = { custom: true };
 const data: Record<string, number> = { custom: true };
-export {};
 `,
 	],
 });

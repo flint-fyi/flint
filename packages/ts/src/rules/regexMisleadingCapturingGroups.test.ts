@@ -75,7 +75,7 @@ new RegExp("\\d+(\\d*)");
 		},
 	],
 	valid: [
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 		String.raw`/(a+)/;`,
 		String.raw`/(a+a+)/;`,
 		String.raw`/(a+a+)b+/;`,

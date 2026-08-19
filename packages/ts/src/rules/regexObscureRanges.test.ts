@@ -93,9 +93,9 @@ new RegExp("[A-z]");
 		String.raw`/[\0-\x1F]/;`,
 		String.raw`/[\x10-\xFF]/;`,
 		String.raw`/[\cA-\cZ]/;`,
-		String.raw`/[\2-\5]/;`,
+		String.raw`new RegExp("[\\2-\\5]");`,
 		String.raw`/[\u0000-\uFFFF]/;`,
 		`new RegExp("[a-z]");`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 	],
 });

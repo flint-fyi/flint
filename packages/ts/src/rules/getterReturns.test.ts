@@ -5,56 +5,6 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-const object = {
-    get value() {
-        console.log("accessed");
-    }
-};
-`,
-			snapshot: `
-const object = {
-    get value() {
-        ~~~~~
-        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
-        console.log("accessed");
-    }
-};
-`,
-		},
-		{
-			code: `
-class Example {
-    get value() {
-        this.compute();
-    }
-}
-`,
-			snapshot: `
-class Example {
-    get value() {
-        ~~~~~
-        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
-        this.compute();
-    }
-}
-`,
-		},
-		{
-			code: `
-const object = {
-    get value() {}
-};
-`,
-			snapshot: `
-const object = {
-    get value() {}
-        ~~~~~
-        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
-};
-`,
-		},
-		{
-			code: `
 class Example {
     get value() {
         return;
@@ -74,6 +24,8 @@ class Example {
 		{
 			code: `
 const object = {
+    condition: true,
+    data: 1,
     get value() {
         if (this.condition) {
             return this.data;
@@ -83,6 +35,8 @@ const object = {
 `,
 			snapshot: `
 const object = {
+    condition: true,
+    data: 1,
     get value() {
         ~~~~~
         This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
@@ -96,80 +50,8 @@ const object = {
 		{
 			code: `
 class Example {
-    get value() {
-        const helper = () => { return 42; };
-    }
-}
-`,
-			snapshot: `
-class Example {
-    get value() {
-        ~~~~~
-        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
-        const helper = () => { return 42; };
-    }
-}
-`,
-		},
-		{
-			code: `
-class Example {
-    get value() {
-        function inner() { return 1; }
-    }
-}
-`,
-			snapshot: `
-class Example {
-    get value() {
-        ~~~~~
-        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
-        function inner() { return 1; }
-    }
-}
-`,
-		},
-		{
-			code: `
-class Example {
-    get "computed-name"() {
-        console.log("no return");
-    }
-}
-`,
-			snapshot: `
-class Example {
-    get "computed-name"() {
-        ~~~~~~~~~~~~~~~
-        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
-        console.log("no return");
-    }
-}
-`,
-		},
-		{
-			code: `
-const key = "dynamic";
-const object = {
-    get [key]() {
-        console.log("accessed");
-    }
-};
-`,
-			snapshot: `
-const key = "dynamic";
-const object = {
-    get [key]() {
-        ~~~~~
-        This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
-        console.log("accessed");
-    }
-};
-`,
-		},
-		{
-			code: `
-class Example {
+    items = [1];
+
     get value() {
         for (const item of this.items) {
             return item;
@@ -179,6 +61,8 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    items = [1];
+
     get value() {
         ~~~~~
         This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
@@ -192,6 +76,9 @@ class Example {
 		{
 			code: `
 class Example {
+    condition = true;
+    data = 1;
+
     get value() {
         while (this.condition) {
             return this.data;
@@ -201,6 +88,9 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    condition = true;
+    data = 1;
+
     get value() {
         ~~~~~
         This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
@@ -214,6 +104,8 @@ class Example {
 		{
 			code: `
 class Example {
+    type = "a";
+
     get value() {
         switch (this.type) {
             case "a":
@@ -226,6 +118,8 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    type = "a";
+
     get value() {
         ~~~~~
         This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
@@ -242,24 +136,32 @@ class Example {
 		{
 			code: `
 class Example {
+    compute() {
+        return 1;
+    }
+
     get value() {
         try {
             return this.compute();
         } catch {
-            console.log("error");
+            "error";
         }
     }
 }
 `,
 			snapshot: `
 class Example {
+    compute() {
+        return 1;
+    }
+
     get value() {
         ~~~~~
         This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
         try {
             return this.compute();
         } catch {
-            console.log("error");
+            "error";
         }
     }
 }
@@ -268,6 +170,9 @@ class Example {
 		{
 			code: `
 class Example {
+    condition = true;
+    other = false;
+
     get value() {
         if (this.condition) {
             return 1;
@@ -279,6 +184,9 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    condition = true;
+    other = false;
+
     get value() {
         ~~~~~
         This getter implicitly returns \`undefined\` because it does not explicitly \`return\` a value.
@@ -293,11 +201,30 @@ class Example {
 		},
 	],
 	valid: [
-		`const object = { get value() { return this._value; } };`,
-		`class Example { get value() { return this._value; } }`,
+		`
+const object = {
+    _value: 1,
+    get value() {
+        return this._value;
+    },
+};
+`,
+		`
+class Example {
+    private _value = 1;
+
+    get value() {
+        return this._value;
+    }
+}
+`,
 		`const object = { get value() { return 42; } };`,
 		`
 class Example {
+    condition = true;
+    data = 1;
+    defaultValue = 2;
+
     get value() {
         if (this.condition) {
             return this.data;
@@ -308,12 +235,16 @@ class Example {
 `,
 		`
 class Example {
+    condition = true;
+    data = 1;
+    defaultValue = 2;
+
     get value() {
         return this.condition ? this.data : this.defaultValue;
     }
 }
 `,
-		`class Example { get value(): number; }`,
+		`declare class Example { get value(): number; }`,
 		`
 abstract class Base {
     abstract get value(): number;
@@ -321,10 +252,10 @@ abstract class Base {
 `,
 		`
 const object = {
-    value: 42,
+    _value: 42,
     set value(newValue: number) {
-        console.log("set", newValue);
-    }
+        this._value = newValue;
+    },
 };
 `,
 		`
@@ -337,14 +268,18 @@ class Example {
 `,
 		`
 class Example {
+    private _value = 1;
+
     get value() {
-        const inner = () => { console.log("inner"); };
+        const inner = () => { return "inner"; };
         return this._value;
     }
 }
 `,
 		`
 class Example {
+    condition = true;
+
     get value() {
         if (this.condition) {
             return 1;
@@ -356,6 +291,8 @@ class Example {
 `,
 		`
 class Example {
+    type = "a";
+
     get value() {
         switch (this.type) {
             case "a":
@@ -370,6 +307,12 @@ class Example {
 `,
 		`
 class Example {
+    fallback = 0;
+
+    compute() {
+        return 1;
+    }
+
     get value() {
         try {
             return this.compute();
@@ -381,6 +324,10 @@ class Example {
 `,
 		`
 class Example {
+    private _value = 1;
+
+    riskyOperation() {}
+
     get value() {
         try {
             this.riskyOperation();
@@ -399,6 +346,9 @@ class Example {
 `,
 		`
 class Example {
+    condition = true;
+    private _value = 1;
+
     get value() {
         if (this.condition) {
             throw new Error("Invalid");

@@ -1,20 +1,37 @@
-import * as path from "node:path";
+import path from "node:path";
+import process from "node:process";
 
-import { formatReport, type FileReport } from "@flint.fyi/core";
+import { formatReport, hasFix, type FileReport } from "@flint.fyi/core";
 
+import { presentHeader } from "./shared/header.ts";
+import { presentLanguageReports } from "./shared/presentLanguageReports.ts";
+import { presentSummary } from "./shared/summary.ts";
 import type { PresenterFactory, PresenterVirtualFile } from "./types.ts";
 
 export const githubPresenterFactory: PresenterFactory = {
 	about: {
 		name: "github",
 	},
-	initialize() {
+	initialize(context) {
+		const counts = { all: 0, files: 0, fixable: 0 };
+
 		return {
+			header: Array.from(presentHeader(context)),
 			*renderFile({ file, reports }) {
+				counts.all += reports.length;
+				counts.files += 1;
+				counts.fixable += reports.filter(hasFix).length;
+
 				for (const report of reports) {
 					yield formatAnnotation(file, report);
 					yield "\n";
 				}
+			},
+			*summarize(summaryContext) {
+				yield* presentSummary(counts, summaryContext);
+				yield* presentLanguageReports(
+					summaryContext.lintResults.allFileResults,
+				);
 			},
 		};
 	},

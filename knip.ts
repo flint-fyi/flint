@@ -1,31 +1,23 @@
 import type { KnipConfig } from "knip";
 
-export default {
+const config: KnipConfig = {
 	ignore: ["packages/e2e/**/*"],
 	ignoreExportsUsedInFile: { interface: true, type: true },
 	treatConfigHintsAsErrors: true,
 	workspaces: {
 		".": {
 			entry: ["*.config.{js,ts}"],
-			ignoreDependencies: [
-				// The changesets CLI isn't directly referenced anywhere, but we need it to create new changesets.
-				"@changesets/cli",
-			],
 			project: ["*.config.{js,ts}", "scripts/**/*.ts"],
 		},
 		"packages/astro": {
-			ignoreDependencies: [
-				// https://github.com/webpro-nl/knip/issues/248
-				"@astrojs/compiler!",
-			],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/browser": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
-		"packages/comparisons": {
-			entry: ["src/sort-data.ts!"],
-			project: ["src/**/*.ts!", "!src/test-utils/*.ts!"],
+		"packages/build": {
+			ignoreDependencies: ["tsdown!"],
+			project: ["src/**/*.ts!"],
 		},
 		"packages/css": {
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
@@ -35,13 +27,6 @@ export default {
 		},
 		"packages/jsx": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
-		},
-		"packages/markdown-language": {
-			ignoreDependencies: [
-				// https://github.com/webpro-nl/knip/issues/248
-				"@types/mdast!",
-				"@types/unist!",
-			],
 		},
 		"packages/md": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
@@ -56,7 +41,18 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/plugin-flint": {
+			ignoreDependencies: [
+				// It's bugging IDK.
+				"@flint.fyi/rule-tester!",
+
+				// Used only inside rule tester fixture source strings.
+				"@flint.fyi/volar-language",
+			],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
+		},
+		"packages/rule-data": {
+			entry: ["scripts/*.ts"],
+			project: ["src/**/*.ts!", "!src/test-utils/*.ts!"],
 		},
 		"packages/site": {
 			ignoreDependencies: [
@@ -72,7 +68,7 @@ export default {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/svelte": {
-			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
+			project: ["src/**/*.{svelte,ts}!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/ts": {
 			entry: ["src/typescript.d.ts"],
@@ -81,26 +77,20 @@ export default {
 		"packages/vitest": {
 			project: ["src/**/*.ts!", "!src/ruleTester.ts!"],
 		},
-		"packages/volar-language": {
-			// https://github.com/webpro-nl/knip/issues/248
-			ignoreDependencies: ["@volar/language-core!"],
-		},
 		"packages/vue": {
 			ignoreDependencies: [
 				// Needed for compiler output in tests
 				"vue",
 			],
-			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
+			project: ["src/**/*.{ts,vue}!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/vue-language": {
-			ignoreDependencies: [
-				// https://github.com/webpro-nl/knip/issues/248
-				"@volar/language-core!",
-			],
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/yaml": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 	},
-} satisfies KnipConfig;
+};
+
+export default config;

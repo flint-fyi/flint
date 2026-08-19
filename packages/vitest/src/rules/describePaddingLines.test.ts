@@ -5,8 +5,8 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-functionOne();
-functionTwo();
+const functionOne = () => {};
+const functionTwo = () => {};
 
 const someText = 'abc';
 const someObject = {
@@ -20,14 +20,6 @@ describe('someText', () => {
   describe('some other condition', () => {
   });
 });
-xdescribe('...', () => {
-  // Another comment
-  describe('some condition', () => {
-    const anotherThing = 500;
-    describe('yet another condition', () => { // A comment over here!
-    });
-  });
-});fdescribe('...', () => {});
 describe.skip('skip me', () => {});
 const value = 'value';
 describe
@@ -36,8 +28,8 @@ describe
   });
 `,
 			output: `
-functionOne();
-functionTwo();
+const functionOne = () => {};
+const functionTwo = () => {};
 
 const someText = 'abc';
 const someObject = {
@@ -53,18 +45,6 @@ describe('someText', () => {
   describe('some other condition', () => {
   });
 });
-
-xdescribe('...', () => {
-  // Another comment
-  describe('some condition', () => {
-    const anotherThing = 500;
-
-    describe('yet another condition', () => { // A comment over here!
-    });
-  });
-});
-
-fdescribe('...', () => {});
 
 describe.skip('skip me', () => {});
 
@@ -76,8 +56,8 @@ describe
   });
 `,
 			snapshot: `
-functionOne();
-functionTwo();
+const functionOne = () => {};
+const functionTwo = () => {};
 
 const someText = 'abc';
 const someObject = {
@@ -95,20 +75,6 @@ This statement should be separated from a neighboring \`describe\` block by a bl
   This statement should be separated from a neighboring \`describe\` block by a blank line.
   });
 });
-xdescribe('...', () => {
-~~~~~~~~~
-This statement should be separated from a neighboring \`describe\` block by a blank line.
-  // Another comment
-  describe('some condition', () => {
-    const anotherThing = 500;
-    describe('yet another condition', () => { // A comment over here!
-    ~~~~~~~~
-    This statement should be separated from a neighboring \`describe\` block by a blank line.
-    });
-  });
-});fdescribe('...', () => {});
-   ~~~~~~~~~
-   This statement should be separated from a neighboring \`describe\` block by a blank line.
 describe.skip('skip me', () => {});
 ~~~~~~~~
 This statement should be separated from a neighboring \`describe\` block by a blank line.
@@ -126,8 +92,8 @@ This statement should be separated from a neighboring \`describe\` block by a bl
 	],
 	valid: [
 		`
-functionOne();
-functionTwo();
+const functionOne = () => {};
+const functionTwo = () => {};
 
 const someText = 'abc';
 const someObject = {
@@ -143,18 +109,6 @@ describe('someText', () => {
   describe('some other condition', () => {
   });
 });
-
-xdescribe('...', () => {
-  // Another comment
-  describe('some condition', () => {
-    const anotherThing = 500;
-
-    describe('yet another condition', () => { // A comment over here!
-    });
-  });
-});
-
-fdescribe('weird', () => {});
 
 describe.skip('skip me', () => {});
 

@@ -1,5 +1,5 @@
 import * as tsutils from "ts-api-utils";
-import * as ts from "typescript";
+import { SyntaxKind, type InterfaceType, type TypeChecker } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -45,8 +45,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile, typeChecker }: TypeScriptFileServices,
 		) {
 			if (
-				originalClassNode.kind !== ts.SyntaxKind.ClassDeclaration &&
-				originalClassNode.kind !== ts.SyntaxKind.ClassExpression
+				originalClassNode.kind !== SyntaxKind.ClassDeclaration &&
+				originalClassNode.kind !== SyntaxKind.ClassExpression
 			) {
 				return;
 			}
@@ -79,7 +79,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function isFunctionReturningThis(
 			functionNode: FunctionLike,
 			originalClassNode: ClassLikeDeclaration,
-			typeChecker: ts.TypeChecker,
+			typeChecker: TypeChecker,
 		) {
 			if (!functionNode.body || isThisSpecifiedInParameters(functionNode)) {
 				return false;
@@ -87,9 +87,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const classType = typeChecker.getTypeAtLocation(
 				originalClassNode,
-			) as ts.InterfaceType;
+			) as InterfaceType;
 
-			if (functionNode.body.kind !== ts.SyntaxKind.Block) {
+			if (functionNode.body.kind !== SyntaxKind.Block) {
 				return (
 					classType.thisType ===
 					typeChecker.getTypeAtLocation(functionNode.body)
@@ -104,7 +104,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return;
 				}
 
-				if (statement.expression.kind === ts.SyntaxKind.ThisKeyword) {
+				if (statement.expression.kind === SyntaxKind.ThisKeyword) {
 					hasReturnThis = true;
 					return;
 				}
@@ -139,24 +139,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const firstArgument = functionNode.parameters[0]!;
 
 			return (
-				ts.isIdentifier(firstArgument.name) &&
+				firstArgument.name.kind === SyntaxKind.Identifier &&
 				firstArgument.name.text === "this"
 			);
 		}
 
 		function tryGetNameInType(
 			name: string,
-			typeNode: ts.TypeNode,
-		): ts.TypeReferenceNode | undefined {
+			typeNode: AST.TypeNode,
+		): AST.TypeReferenceNode | undefined {
 			if (
-				ts.isTypeReferenceNode(typeNode) &&
-				ts.isIdentifier(typeNode.typeName) &&
+				typeNode.kind === SyntaxKind.TypeReference &&
+				typeNode.typeName.kind === SyntaxKind.Identifier &&
 				typeNode.typeName.text === name
 			) {
 				return typeNode;
 			}
 
-			if (ts.isUnionTypeNode(typeNode)) {
+			if (typeNode.kind === SyntaxKind.UnionType) {
 				for (const type of typeNode.types) {
 					const found = tryGetNameInType(name, type);
 					if (found) {
@@ -185,8 +185,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				) {
 					if (
 						node.initializer &&
-						(ts.isFunctionExpression(node.initializer) ||
-							ts.isArrowFunction(node.initializer))
+						(node.initializer.kind === SyntaxKind.FunctionExpression ||
+							node.initializer.kind === SyntaxKind.ArrowFunction)
 					) {
 						checkFunction(node.initializer, node.parent, services);
 					}

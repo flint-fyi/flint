@@ -1,21 +1,23 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
+	type AST,
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
-function isEmptyObjectLiteral(node: ts.Expression) {
+function isEmptyObjectLiteral(node: AST.Expression) {
 	const unwrapped = unwrapParentheses(node);
 	return (
-		ts.isObjectLiteralExpression(unwrapped) && !unwrapped.properties.length
+		unwrapped.kind === SyntaxKind.ObjectLiteralExpression &&
+		!unwrapped.properties.length
 	);
 }
 
-function unwrapParentheses(node: ts.Expression): ts.Expression {
-	return ts.isParenthesizedExpression(node)
+function unwrapParentheses(node: AST.Expression): AST.Expression {
+	return node.kind === SyntaxKind.ParenthesizedExpression
 		? unwrapParentheses(node.expression)
 		: node;
 }
@@ -45,19 +47,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ObjectLiteralExpression: (node, { sourceFile }) => {
 					for (const property of node.properties) {
-						if (!ts.isSpreadAssignment(property)) {
+						if (property.kind !== SyntaxKind.SpreadAssignment) {
 							continue;
 						}
 
 						const spreadExpression = unwrapParentheses(property.expression);
-						if (!ts.isBinaryExpression(spreadExpression)) {
+						if (spreadExpression.kind !== SyntaxKind.BinaryExpression) {
 							continue;
 						}
 
 						const operatorKind = spreadExpression.operatorToken.kind;
 						if (
-							operatorKind !== ts.SyntaxKind.BarBarToken &&
-							operatorKind !== ts.SyntaxKind.QuestionQuestionToken
+							operatorKind !== SyntaxKind.BarBarToken &&
+							operatorKind !== SyntaxKind.QuestionQuestionToken
 						) {
 							continue;
 						}

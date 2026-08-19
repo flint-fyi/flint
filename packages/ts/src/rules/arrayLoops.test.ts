@@ -1,7 +1,7 @@
 import rule from "./arrayLoops.ts";
-import { ruleTester } from "./ruleTester.ts";
+import { domLibRuleTester } from "./ruleTester.ts";
 
-ruleTester.describe(rule, {
+domLibRuleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
@@ -18,10 +18,12 @@ Prefer a more direct for-of loop over \`.forEach()\`.
 		{
 			code: `
 declare const array: string[];
+declare function process(item: string): void;
 array.forEach(function (item) { process(item); });
 `,
 			snapshot: `
 declare const array: string[];
+declare function process(item: string): void;
 array.forEach(function (item) { process(item); });
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Prefer a more direct for-of loop over \`.forEach()\`.
@@ -29,9 +31,11 @@ Prefer a more direct for-of loop over \`.forEach()\`.
 		},
 		{
 			code: `
+declare function handle(value: number): void;
 [1, 2, 3].forEach((value) => { handle(value); });
 `,
 			snapshot: `
+declare function handle(value: number): void;
 [1, 2, 3].forEach((value) => { handle(value); });
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Prefer a more direct for-of loop over \`.forEach()\`.

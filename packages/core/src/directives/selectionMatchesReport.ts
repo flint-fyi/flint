@@ -3,6 +3,9 @@ import type { FileReport } from "../types/reports.ts";
 // TODO: There's got to be a better way.
 // Maybe an existing common one like minimatch?
 // https://github.com/flint-fyi/flint/issues/245
-export function selectionMatchesReport(matcher: RegExp, report: FileReport) {
+export function selectionMatchesReport(
+	matcher: RegExp,
+	report: FileReport,
+): boolean {
 	return matcher.test(report.about.id);
 }

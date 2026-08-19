@@ -128,7 +128,7 @@ new RegExp("a$b");
 		`/[\\b]/;`,
 		`/a\\^b/;`,
 		`/a\\$b/;`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 		`new RegExp("\\\\bword");`,
 		`new RegExp("word\\\\b");`,
 		`new RegExp("^abc");`,

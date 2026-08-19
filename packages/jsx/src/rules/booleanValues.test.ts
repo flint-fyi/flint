@@ -25,9 +25,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const Component: (props: Record<string, unknown>) => unknown;
 <Component isActive={true} />
 `,
 			snapshot: `
+declare const Component: (props: Record<string, unknown>) => unknown;
 <Component isActive={true} />
            ~~~~~~~~~~~~~~~
            Prefer shorthand boolean attribute \`isActive\` over explicit \`isActive={true}\`.
@@ -49,10 +51,15 @@ ruleTester.describe(rule, {
 	valid: [
 		`<button disabled>Click me</button>`,
 		`<input type="text" required />`,
-		`<Component isActive />`,
+		`
+declare const Component: (props: Record<string, unknown>) => unknown;
+<Component isActive />`,
 		`<button disabled={false}>Click me</button>`,
 		`<input type="text" required={false} />`,
-		`<Component isActive={someCondition} />`,
+		`
+declare const Component: (props: Record<string, unknown>) => unknown;
+declare const someCondition: boolean;
+<Component isActive={someCondition} />`,
 		`<button>Click me</button>`,
 		`<div className="test" />`,
 	],

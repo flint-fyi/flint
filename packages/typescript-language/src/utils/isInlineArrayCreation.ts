@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import ts from "typescript";
 
 const methodsReturningNewArray = new Set([
 	"concat",
@@ -22,7 +22,7 @@ const objectStaticMethods = new Set(["entries", "keys", "values"]);
  * These are cases where a new array is created immediately before the method call,
  * so mutating methods like .sort() or .reverse() are safe to use.
  */
-export function isInlineArrayCreation(node: ts.Expression) {
+export function isInlineArrayCreation(node: ts.Expression): boolean {
 	if (ts.isArrayLiteralExpression(node)) {
 		return true;
 	}

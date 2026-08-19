@@ -5,7 +5,16 @@ import { createCommentDirectiveNotPreviouslyDisabled } from "./createCommentDire
 import { createCommentDirectiveUnknown } from "./createCommentDirectiveUnknown.ts";
 import { createCommentDirectiveUnused } from "./createCommentDirectiveUnused.ts";
 
-export const directiveReports = {
+export interface DirectiveReports {
+	createAlreadyDisabled: typeof createCommentDirectiveAlreadyDisabled;
+	createFileAfterContent: typeof createCommentDirectiveFileAfterContent;
+	createNoSelection: typeof createCommentDirectiveNoSelection;
+	createNotPreviouslyDisabled: typeof createCommentDirectiveNotPreviouslyDisabled;
+	createUnknown: typeof createCommentDirectiveUnknown;
+	createUnused: typeof createCommentDirectiveUnused;
+}
+
+export const directiveReports: DirectiveReports = {
 	createAlreadyDisabled: createCommentDirectiveAlreadyDisabled,
 	createFileAfterContent: createCommentDirectiveFileAfterContent,
 	createNoSelection: createCommentDirectiveNoSelection,

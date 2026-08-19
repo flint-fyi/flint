@@ -1,13 +1,13 @@
-import type { createProgram } from "typescript";
+import type ts from "typescript";
 
 // We store extras in globalThis rather than in a local module-level variable,
 // to make it work in Vitest
 const globalTyped = globalThis as typeof globalThis & {
 	_flintCreateProgramProxies: Set<
 		(
-			ts: typeof import("typescript"),
-			create: typeof createProgram,
-		) => typeof createProgram
+			typescript: typeof ts,
+			create: typeof ts.createProgram,
+		) => typeof ts.createProgram
 	>;
 	_flintExtraSupportedExtensions: Set<string>;
 };
@@ -18,7 +18,9 @@ globalTyped._flintCreateProgramProxies ??= new Set();
 globalTyped._flintExtraSupportedExtensions ??= new Set();
 /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
-export function setTSExtraSupportedExtensions(extensions: string[]) {
+export function setTSExtraSupportedExtensions(
+	extensions: string[],
+): () => void {
 	for (const ext of extensions) {
 		globalTyped._flintExtraSupportedExtensions.add(ext);
 	}
@@ -31,10 +33,10 @@ export function setTSExtraSupportedExtensions(extensions: string[]) {
 
 export function setTSProgramCreationProxy(
 	proxy: (
-		ts: typeof import("typescript"),
-		create: typeof createProgram,
-	) => typeof createProgram,
-) {
+		typescript: typeof ts,
+		create: typeof ts.createProgram,
+	) => typeof ts.createProgram,
+): () => boolean {
 	globalTyped._flintCreateProgramProxies.add(proxy);
 
 	return () => globalTyped._flintCreateProgramProxies.delete(proxy);

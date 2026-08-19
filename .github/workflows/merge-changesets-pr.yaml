@@ -1,0 +1,48 @@
+name: Merge Changesets PR
+
+on:
+  schedule:
+    - cron: "0 14 * * 1"
+  workflow_dispatch: ~
+
+jobs:
+  merge-changesets-pr:
+    if: github.event.repository.fork != true
+    name: Merge Changesets PR
+    runs-on: ubuntu-slim
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Create Token
+        id: create_token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.FLINT_TOKENS_BOT_CLIENT_ID }}
+          permission-contents: write
+          permission-pull-requests: write
+          private-key: ${{ secrets.FLINT_TOKENS_BOT_PRIVATE_KEY }}
+
+      - name: Merge Changesets PR if old enough
+        env:
+          GH_TOKEN: ${{ steps.create_token.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          pr_json=$(gh pr list --head changeset-release/main --state open --json createdAt,number --limit 1)
+
+          if [ "$(echo "$pr_json" | jq length)" = "0" ]; then
+            echo "No open Changesets PR found."
+            exit 0
+          fi
+
+          pr_number=$(echo "$pr_json" | jq -r '.[0].number')
+          created_at=$(echo "$pr_json" | jq -r '.[0].createdAt')
+          created_at_timestamp=$(date --date="$created_at" +%s)
+          three_days_ago_timestamp=$(date --date="3 days ago" +%s)
+
+          if [ "$created_at_timestamp" -gt "$three_days_ago_timestamp" ]; then
+            echo "Changesets PR #$pr_number is less than 3 days old."
+            exit 0
+          fi
+
+          gh pr merge "$pr_number" --auto --merge

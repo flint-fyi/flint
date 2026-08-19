@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -8,13 +8,8 @@ const knownVitestFunctionNames = [
 	"beforeAll",
 	"beforeEach",
 	"describe",
-	"fit",
 	"it",
 	"test",
-	"xdescribe",
-	"xit",
-	"xit",
-	"xtest",
 ] as const;
 
 const knownBlockNamesSet = new Set<string>(knownVitestFunctionNames);
@@ -36,7 +31,9 @@ interface VitestCallee {
 	targetNode: AST.AnyNode;
 }
 
-export function parseVitestFunctionCall(node: AST.CallExpression) {
+export function parseVitestFunctionCall(
+	node: AST.CallExpression,
+): undefined | VitestCallee {
 	const parsedCallee = parseVitestCallee(node.expression);
 
 	if (!parsedCallee || !knownBlockNamesSet.has(parsedCallee.name)) {
@@ -44,18 +41,18 @@ export function parseVitestFunctionCall(node: AST.CallExpression) {
 	}
 
 	switch (node.expression.kind) {
-		case ts.SyntaxKind.CallExpression:
-		case ts.SyntaxKind.TaggedTemplateExpression:
+		case SyntaxKind.CallExpression:
+		case SyntaxKind.TaggedTemplateExpression:
 			return parsedCallee.segments
 				.slice(0, -1)
 				.every((segment) => knownVitestFunctionModifiersSet.has(segment))
 				? parsedCallee
 				: undefined;
 
-		case ts.SyntaxKind.Identifier:
+		case SyntaxKind.Identifier:
 			return parsedCallee;
 
-		case ts.SyntaxKind.PropertyAccessExpression:
+		case SyntaxKind.PropertyAccessExpression:
 			return parsedCallee.segments.every((segment) =>
 				knownVitestFunctionModifiersSet.has(segment),
 			)
@@ -69,17 +66,17 @@ function parseVitestCallee(
 	targetNode?: AST.AnyNode,
 ): undefined | VitestCallee {
 	switch (node.kind) {
-		case ts.SyntaxKind.CallExpression:
+		case SyntaxKind.CallExpression:
 			return parseVitestCallee(node.expression, targetNode);
 
-		case ts.SyntaxKind.Identifier:
+		case SyntaxKind.Identifier:
 			return {
 				name: node.text,
 				segments: [],
 				targetNode: targetNode ?? node,
 			};
 
-		case ts.SyntaxKind.PropertyAccessExpression: {
+		case SyntaxKind.PropertyAccessExpression: {
 			const parsedExpression = parseVitestCallee(node.expression, node);
 
 			return (
@@ -91,7 +88,7 @@ function parseVitestCallee(
 			);
 		}
 
-		case ts.SyntaxKind.TaggedTemplateExpression:
+		case SyntaxKind.TaggedTemplateExpression:
 			return parseVitestCallee(node.tag, targetNode);
 	}
 }

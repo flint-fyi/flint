@@ -91,14 +91,20 @@ const instance = new EE();
 	valid: [
 		`class Derived extends EventTarget {}`,
 		`const target = new EventTarget();`,
-		`
+		{
+			code: `
 			import { EventEmitter } from "./custom-emitter";
 			class Derived extends EventEmitter {}
 		`,
-		`
+			files: { "custom-emitter.ts": `export class EventEmitter {}` },
+		},
+		{
+			code: `
 			import { EventEmitter } from "./custom-emitter";
 			const emitter = new EventEmitter();
 		`,
+			files: { "custom-emitter.ts": `export class EventEmitter {}` },
+		},
 		`
 			class EventEmitter {}
 			class Derived extends EventEmitter {}
@@ -110,6 +116,9 @@ const instance = new EE();
 		`
 			import { EventTarget } from "events";
 			class Derived extends EventTarget {}
+			declare module "events" {
+				export const EventTarget: typeof globalThis.EventTarget;
+			}
 		`,
 	],
 });

@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript";
 
 import {
 	getStaticStringValue,
@@ -7,14 +7,22 @@ import {
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
 
+export interface RegExpConstruction {
+	args: NodeArray<AST.Expression>;
+	flags: string;
+	pattern: string;
+	raw: string;
+	start: number;
+}
+
 export function getRegExpConstruction(
 	node: AST.CallExpression | AST.NewExpression,
-	{ sourceFile, typeChecker }: TypeScriptFileServices,
-) {
+	{ program, sourceFile, typeChecker }: TypeScriptFileServices,
+): RegExpConstruction | undefined {
 	if (
-		node.expression.kind !== ts.SyntaxKind.Identifier ||
+		node.expression.kind !== SyntaxKind.Identifier ||
 		node.expression.text !== "RegExp" ||
-		!isGlobalDeclarationOfName(node.expression, "RegExp", typeChecker)
+		!isGlobalDeclarationOfName(node.expression, "RegExp", typeChecker, program)
 	) {
 		return;
 	}
@@ -28,8 +36,8 @@ export function getRegExpConstruction(
 	const firstArgument = args[0]!;
 
 	if (
-		firstArgument.kind !== ts.SyntaxKind.StringLiteral &&
-		firstArgument.kind !== ts.SyntaxKind.NoSubstitutionTemplateLiteral
+		firstArgument.kind !== SyntaxKind.StringLiteral &&
+		firstArgument.kind !== SyntaxKind.NoSubstitutionTemplateLiteral
 	) {
 		return;
 	}

@@ -1,0 +1,27 @@
+{
+	"name": "@flint.fyi/build",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Flint build scripts and configs",
+	"homepage": "https://flint.fyi",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flint-fyi/flint.git",
+		"directory": "packages/build"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Flint Team",
+		"url": "https://flint.fyi/team"
+	},
+	"type": "module",
+	"exports": {
+		"./package.json": "./package.json",
+		"./tsconfig.base.json": "./tsconfig.base.json",
+		"./tsconfig.plugin.json": "./tsconfig.plugin.json",
+		"./tsdown": "./src/tsdown/index.ts"
+	},
+	"dependencies": {
+		"tsdown": "catalog:dev"
+	}
+}

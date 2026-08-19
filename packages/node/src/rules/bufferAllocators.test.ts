@@ -49,6 +49,9 @@ const buffer = new Buffer('test');
 		`const buffer = Buffer.from([0x62, 0x75, 0x66, 0x66, 0x65, 0x72]);`,
 		`const buffer = Buffer.alloc(10);`,
 		`const buffer = Buffer.from('test');`,
-		`const value = new CustomBuffer(10);`,
+		`
+declare class CustomBuffer { constructor(size: number); }
+const value = new CustomBuffer(10);
+`,
 	],
 });

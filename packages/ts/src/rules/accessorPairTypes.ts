@@ -1,4 +1,4 @@
-import ts from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript";
 
 import {
 	typescriptLanguage,
@@ -41,9 +41,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			sourceFile: AST.SourceFile,
 		) {
 			if (
-				ts.isIdentifier(accessor.name) ||
-				ts.isStringLiteral(accessor.name) ||
-				ts.isNumericLiteral(accessor.name)
+				accessor.name.kind === SyntaxKind.Identifier ||
+				accessor.name.kind === SyntaxKind.StringLiteral ||
+				accessor.name.kind === SyntaxKind.NumericLiteral
 			) {
 				return accessor.name.text;
 			}
@@ -52,15 +52,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		}
 
 		function collectAccessorPairs(
-			members: ts.NodeArray<AST.AnyNode>,
+			members: NodeArray<AST.AnyNode>,
 			sourceFile: AST.SourceFile,
 		) {
 			const pairs = new Map<string, AccessorPair>();
 
 			for (const member of members) {
 				if (
-					member.kind !== ts.SyntaxKind.GetAccessor &&
-					member.kind !== ts.SyntaxKind.SetAccessor
+					member.kind !== SyntaxKind.GetAccessor &&
+					member.kind !== SyntaxKind.SetAccessor
 				) {
 					continue;
 				}
@@ -72,7 +72,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					pairs.set(name, pair);
 				}
 
-				if (member.kind === ts.SyntaxKind.GetAccessor) {
+				if (member.kind === SyntaxKind.GetAccessor) {
 					pair.getter = member;
 				} else {
 					pair.setter = member;

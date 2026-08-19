@@ -1,13 +1,13 @@
 {
+	"extends": "@flint.fyi/build/tsconfig.base.json",
 	"compilerOptions": {
 		"noEmit": true,
 		"tsBuildInfoFile": "node_modules/.cache/tsbuild/info.json"
 	},
-	"extends": "./tsconfig.base.json",
-	"files": ["./packages/flint/bin/index.js", "./lint-staged.config.js"],
 	"include": [
 		"./@types/*/*.ts",
 		"./*.ts",
+		"./packages/*/scripts/*.ts",
 		"./packages/*/tsdown.config.ts",
 		"./scripts/*.ts"
 	],
@@ -16,7 +16,6 @@
 		{ "path": "./packages/astro-language" },
 		{ "path": "./packages/browser" },
 		{ "path": "./packages/cli" },
-		{ "path": "./packages/comparisons" },
 		{ "path": "./packages/core" },
 		{ "path": "./packages/css" },
 		{ "path": "./packages/css-language" },
@@ -34,6 +33,7 @@
 		{ "path": "./packages/performance" },
 		{ "path": "./packages/plugin-flint" },
 		{ "path": "./packages/react" },
+		{ "path": "./packages/rule-data" },
 		{ "path": "./packages/rule-tester" },
 		{ "path": "./packages/solid" },
 		{ "path": "./packages/spelling" },

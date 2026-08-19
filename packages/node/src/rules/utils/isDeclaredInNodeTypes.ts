@@ -3,13 +3,17 @@ import type { AST, Checker } from "@flint.fyi/typescript-language";
 export function isDeclaredInNodeTypes(
 	node: AST.Expression,
 	typeChecker: Checker,
-) {
+): boolean {
 	const declarations = typeChecker
 		.getTypeAtLocation(node)
 		.getSymbol()
 		?.getDeclarations();
 
-	return declarations?.some((declaration) =>
-		declaration.getSourceFile().fileName.includes("node_modules/@types/node/"),
+	return (
+		declarations?.some((declaration) =>
+			declaration
+				.getSourceFile()
+				.fileName.includes("node_modules/@types/node/"),
+		) ?? false
 	);
 }

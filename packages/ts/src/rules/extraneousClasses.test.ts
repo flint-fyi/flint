@@ -47,7 +47,7 @@ const Named = class MyClass {};
 			code: `
 class ConstructorOnly {
     constructor() {
-        console.log("init");
+        "init";
     }
 }
 `,
@@ -56,7 +56,7 @@ class ConstructorOnly {
       ~~~~~~~~~~~~~~~
       This class contains only a constructor and can be removed or replaced with a standalone function.
     constructor() {
-        console.log("init");
+        "init";
     }
 }
 `,
@@ -65,7 +65,7 @@ class ConstructorOnly {
 			code: `
 class ConstructorWithParams {
     constructor(value: number) {
-        console.log(value);
+        value.toString();
     }
 }
 `,
@@ -74,7 +74,7 @@ class ConstructorWithParams {
       ~~~~~~~~~~~~~~~~~~~~~
       This class contains only a constructor and can be removed or replaced with a standalone function.
     constructor(value: number) {
-        console.log(value);
+        value.toString();
     }
 }
 `,
@@ -169,7 +169,7 @@ class StaticAndConstructor {
 			code: `
 class StaticBlock {
     static {
-        console.log("init");
+        "init";
     }
 }
 `,
@@ -178,7 +178,7 @@ class StaticBlock {
       ~~~~~~~~~~~
       This empty class does nothing and can be removed.
     static {
-        console.log("init");
+        "init";
     }
 }
 `,
@@ -314,10 +314,14 @@ class StaticOnly {
 		},
 		{
 			code: `
+declare function decorator(value: unknown, context: ClassDecoratorContext): void;
+
 @decorator
 class Empty {}
 `,
 			snapshot: `
+declare function decorator(value: unknown, context: ClassDecoratorContext): void;
+
 @decorator
 class Empty {}
       ~~~~~
@@ -326,12 +330,16 @@ class Empty {}
 		},
 		{
 			code: `
+declare function decorator(value: unknown, context: ClassDecoratorContext): void;
+
 @decorator
 class ConstructorOnly {
     constructor() {}
 }
 `,
 			snapshot: `
+declare function decorator(value: unknown, context: ClassDecoratorContext): void;
+
 @decorator
 class ConstructorOnly {
       ~~~~~~~~~~~~~~~
@@ -342,12 +350,16 @@ class ConstructorOnly {
 		},
 		{
 			code: `
+declare function decorator(value: unknown, context: ClassDecoratorContext): void;
+
 @decorator
 class StaticOnly {
     static value = 42;
 }
 `,
 			snapshot: `
+declare function decorator(value: unknown, context: ClassDecoratorContext): void;
+
 @decorator
 class StaticOnly {
       ~~~~~~~~~~
@@ -394,9 +406,18 @@ class WithSemicolon {
 		`abstract class Example { abstract get value(): number; }`,
 		`abstract class Example { abstract set value(value: number); }`,
 		`abstract class Example { abstract accessor prop: number; }`,
-		`class Derived extends Base {}`,
-		`class Derived extends Base { static value = 42; }`,
-		`class Derived extends Base { constructor() { super(); } }`,
+		`
+declare const Base: new () => object;
+class Derived extends Base {}
+`,
+		`
+declare const Base: new () => object;
+class Derived extends Base { static value = 42; }
+`,
+		`
+declare const Base: new () => object;
+class Derived extends Base { constructor() { super(); } }
+`,
 
 		{
 			code: `class Empty {}`,
@@ -411,7 +432,7 @@ class WithSemicolon {
 			options: { allowConstructorOnly: true },
 		},
 		{
-			code: `class ConstructorWithParams { constructor(value: number) { console.log(value); } }`,
+			code: `class ConstructorWithParams { constructor(value: number) { value.toString(); } }`,
 			options: { allowConstructorOnly: true },
 		},
 		{
@@ -431,19 +452,36 @@ class WithSemicolon {
 			options: { allowStaticOnly: true },
 		},
 		{
-			code: `@decorator class Empty {}`,
+			code: `
+declare function decorator(value: unknown, context: ClassDecoratorContext): void;
+
+@decorator class Empty {}
+`,
 			options: { allowWithDecorator: true },
 		},
 		{
-			code: `@decorator class ConstructorOnly { constructor() {} }`,
+			code: `
+declare function decorator(value: unknown, context: ClassDecoratorContext): void;
+
+@decorator class ConstructorOnly { constructor() {} }
+`,
 			options: { allowWithDecorator: true },
 		},
 		{
-			code: `@decorator class StaticOnly { static value = 42; }`,
+			code: `
+declare function decorator(value: unknown, context: ClassDecoratorContext): void;
+
+@decorator class StaticOnly { static value = 42; }
+`,
 			options: { allowWithDecorator: true },
 		},
 		{
-			code: `@dec1 @dec2 class MultiDecorator {}`,
+			code: `
+declare function dec1(value: unknown, context: ClassDecoratorContext): void;
+declare function dec2(value: unknown, context: ClassDecoratorContext): void;
+
+@dec1 @dec2 class MultiDecorator {}
+`,
 			options: { allowWithDecorator: true },
 		},
 	],

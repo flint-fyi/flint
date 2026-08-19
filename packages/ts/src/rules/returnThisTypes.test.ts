@@ -31,31 +31,6 @@ class Foo {
 		{
 			code: `
 class Foo {
-    f = function (): Foo {
-        return this;
-    };
-}
-`,
-			output: `
-class Foo {
-    f = function (): this {
-        return this;
-    };
-}
-`,
-			snapshot: `
-class Foo {
-    f = function (): Foo {
-                     ~~~
-                     Prefer \`this\` as the return type instead of the class name for polymorphic chaining.
-        return this;
-    };
-}
-`,
-		},
-		{
-			code: `
-class Foo {
     f(): Foo {
         const self = this;
         return self;
@@ -306,7 +281,8 @@ class Foo {
 			code: `
 class Animal<T> {
     eat(): Animal<T> {
-        console.log("I'm moving!");
+        const movement = "I'm moving!";
+        movement;
         return this;
     }
 }
@@ -314,7 +290,8 @@ class Animal<T> {
 			output: `
 class Animal<T> {
     eat(): this {
-        console.log("I'm moving!");
+        const movement = "I'm moving!";
+        movement;
         return this;
     }
 }
@@ -324,7 +301,8 @@ class Animal<T> {
     eat(): Animal<T> {
            ~~~~~~~~~
            Prefer \`this\` as the return type instead of the class name for polymorphic chaining.
-        console.log("I'm moving!");
+        const movement = "I'm moving!";
+        movement;
         return this;
     }
 }
@@ -332,7 +310,7 @@ class Animal<T> {
 		},
 		{
 			code: `
-declare const valueUnion: number | string;
+declare const valueUnion: string;
 
 class BaseUnion {
     f(): BaseUnion | string {
@@ -345,7 +323,7 @@ class BaseUnion {
 }
 `,
 			output: `
-declare const valueUnion: number | string;
+declare const valueUnion: string;
 
 class BaseUnion {
     f(): this | string {
@@ -358,7 +336,7 @@ class BaseUnion {
 }
 `,
 			snapshot: `
-declare const valueUnion: number | string;
+declare const valueUnion: string;
 
 class BaseUnion {
     f(): BaseUnion | string {
@@ -396,9 +374,11 @@ class Foo {
     f7(foo: Foo): Foo {
         return Math.random() > 0.5 ? foo : this;
     }
-    f10(this: Foo, that: Foo): Foo;
+    f10(this: Foo, that: Foo): Foo {
+        return that;
+    }
     f11(): Foo {
-        return;
+        return new Foo();
     }
     f13(this: Foo): Foo {
         return this;

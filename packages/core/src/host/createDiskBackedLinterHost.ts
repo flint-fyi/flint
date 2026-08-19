@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { findRootSync } from "@altano/repository-tools/findRootSync.js";
 import { glob as tinyglobby } from "tinyglobby";
 
 import { dirnameKey, normalizePath, pathKey } from "@flint.fyi/utils";
@@ -15,6 +16,11 @@ import { isFileSystemCaseSensitive } from "./isFileSystemCaseSensitive.ts";
 export function createDiskBackedLinterHost(cwd: string): LinterHost {
 	const caseSensitiveFS = isFileSystemCaseSensitive();
 	cwd = normalizePath(cwd);
+	const foundRepositoryRoot = findRootSync(cwd);
+	const repositoryRoot =
+		foundRepositoryRoot == null
+			? undefined
+			: normalizePath(foundRepositoryRoot);
 
 	function createWatcher(
 		normalizedWatchPath: string,
@@ -178,6 +184,9 @@ export function createDiskBackedLinterHost(cwd: string): LinterHost {
 		},
 		getFileTouchTimeSync(filePath) {
 			return fs.statSync(filePath).mtimeMs;
+		},
+		getRepositoryRoot() {
+			return repositoryRoot;
 		},
 		async glob(patterns, options) {
 			const entries = await tinyglobby(patterns, {

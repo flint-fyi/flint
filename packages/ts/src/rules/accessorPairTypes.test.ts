@@ -6,6 +6,8 @@ ruleTester.describe(rule, {
 		{
 			code: `
 class Example {
+    private _value = "";
+
     get value(): string {
         return this._value;
     }
@@ -16,6 +18,8 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    private _value = "";
+
     get value(): string {
         ~~~~~
         A getter's return type should be assignable to its corresponding setter's parameter type.
@@ -82,6 +86,8 @@ type Example = {
 		{
 			code: `
 class Example {
+    private _value: string | number = "";
+
     get value(): string | number {
         return this._value;
     }
@@ -92,6 +98,8 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    private _value: string | number = "";
+
     get value(): string | number {
         ~~~~~
         A getter's return type should be assignable to its corresponding setter's parameter type.
@@ -107,6 +115,8 @@ class Example {
 	valid: [
 		`
 class Example {
+    private _value = "";
+
     get value(): string {
         return this._value;
     }
@@ -117,6 +127,8 @@ class Example {
 `,
 		`
 class Example {
+    private _value = "";
+
     get value(): string {
         return this._value;
     }
@@ -127,6 +139,8 @@ class Example {
 `,
 		`
 class Example {
+    private _value = "";
+
     get value() {
         return this._value;
     }
@@ -134,6 +148,8 @@ class Example {
 `,
 		`
 class Example {
+    private _value = "";
+
     set value(newValue: string) {
         this._value = newValue;
     }
@@ -145,7 +161,7 @@ const object = {
         return 42;
     },
     set value(newValue: number) {
-        console.log(newValue);
+        void newValue;
     }
 };
 `,
@@ -163,6 +179,9 @@ type Example = {
 `,
 		`
 class Example {
+    private _first = "";
+    private _second = 0;
+
     get first(): string {
         return this._first;
     }

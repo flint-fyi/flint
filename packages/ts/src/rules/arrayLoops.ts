@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -15,7 +15,7 @@ function isForEachCall(
 	node: AST.CallExpression,
 ): node is AST.CallExpression & { expression: AST.PropertyAccessExpression } {
 	return (
-		node.expression.kind === ts.SyntaxKind.PropertyAccessExpression &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		node.expression.name.text === "forEach" &&
 		node.arguments.length >= 1
 	);

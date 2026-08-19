@@ -1,4 +1,14 @@
-import ts from "typescript";
+import {
+	isClassDeclaration,
+	isFunctionDeclaration,
+	isIdentifier,
+	isInterfaceDeclaration,
+	isPropertySignature,
+	isVariableDeclaration,
+	type Declaration,
+	type Node,
+	type Program,
+} from "typescript";
 
 import type { Checker } from "@flint.fyi/typescript-language";
 
@@ -8,9 +18,10 @@ import { declarationIncludesGlobal } from "./declarationIncludesGlobal.ts";
  * TODO: Use a scope analyzer (#400).
  */
 export function isGlobalDeclarationOfName(
-	node: ts.Node,
+	node: Node,
 	name: string,
 	typeChecker: Checker,
+	program: Program,
 ): boolean {
 	const declarations = typeChecker.getSymbolAtLocation(node)?.getDeclarations();
 	if (!declarations) {
@@ -21,37 +32,43 @@ export function isGlobalDeclarationOfName(
 		// Special case: a variable set to a known identifier. E.g.:
 		// const CustomFunction = Function;
 		if (
-			ts.isVariableDeclaration(declaration) &&
+			isVariableDeclaration(declaration) &&
 			declaration.initializer &&
-			ts.isIdentifier(declaration.initializer)
+			isIdentifier(declaration.initializer)
 		) {
 			return isGlobalDeclarationOfName(
 				declaration.initializer,
 				name,
 				typeChecker,
+				program,
 			);
 		}
 
 		// Special case: a property of an interface
-		if (ts.isPropertySignature(declaration)) {
-			return isGlobalDeclarationOfName(declaration.parent, name, typeChecker);
+		if (isPropertySignature(declaration)) {
+			return isGlobalDeclarationOfName(
+				declaration.parent,
+				name,
+				typeChecker,
+				program,
+			);
 		}
 
 		return (
 			isDeclarationOfName(declaration, name) &&
-			declarationIncludesGlobal(declaration)
+			declarationIncludesGlobal(declaration, program)
 		);
 	});
 }
 
-function isDeclarationOfName(node: ts.Declaration, name: string) {
+function isDeclarationOfName(node: Declaration, name: string) {
 	if (
-		ts.isClassDeclaration(node) ||
-		ts.isFunctionDeclaration(node) ||
-		ts.isInterfaceDeclaration(node) ||
-		ts.isVariableDeclaration(node)
+		isClassDeclaration(node) ||
+		isFunctionDeclaration(node) ||
+		isInterfaceDeclaration(node) ||
+		isVariableDeclaration(node)
 	) {
-		return node.name && ts.isIdentifier(node.name) && node.name.text === name;
+		return node.name && isIdentifier(node.name) && node.name.text === name;
 	}
 
 	return false;

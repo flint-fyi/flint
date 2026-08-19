@@ -1,4 +1,5 @@
-import ts from "typescript";
+import type ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -15,13 +16,13 @@ export interface AccessorPair {
 export function collectAccessorPairs(
 	members: ts.NodeArray<AST.AnyNode>,
 	sourceFile: AST.SourceFile,
-) {
+): Map<string, AccessorPair> {
 	const pairs = new Map<string, AccessorPair>();
 
 	members.forEach((member, index) => {
 		if (
-			member.kind !== ts.SyntaxKind.GetAccessor &&
-			member.kind !== ts.SyntaxKind.SetAccessor
+			member.kind !== SyntaxKind.GetAccessor &&
+			member.kind !== SyntaxKind.SetAccessor
 		) {
 			return;
 		}
@@ -35,7 +36,7 @@ export function collectAccessorPairs(
 
 		const entry = { index, node: member };
 
-		if (member.kind === ts.SyntaxKind.GetAccessor) {
+		if (member.kind === SyntaxKind.GetAccessor) {
 			pair.getter = entry;
 		} else {
 			pair.setter = entry;
@@ -52,9 +53,9 @@ function getPropertyName(
 	sourceFile: AST.SourceFile,
 ) {
 	if (
-		ts.isIdentifier(accessor.name) ||
-		ts.isStringLiteral(accessor.name) ||
-		ts.isNumericLiteral(accessor.name)
+		accessor.name.kind === SyntaxKind.Identifier ||
+		accessor.name.kind === SyntaxKind.StringLiteral ||
+		accessor.name.kind === SyntaxKind.NumericLiteral
 	) {
 		return accessor.name.text;
 	}

@@ -2,13 +2,19 @@ import path from "node:path";
 
 import { createProjectService } from "@typescript-eslint/project-service";
 import { debugForFile } from "debug-for-file";
-import * as ts from "typescript";
+import {
+	getPreEmitDiagnostics,
+	SyntaxKind,
+	type Node,
+	type Program,
+} from "typescript";
 
 import {
 	createLanguage,
 	type AnyOptionalSchema,
 	type FileAboutData,
 	type InferredOutputObject,
+	type Language,
 	type LanguageFile,
 	type LanguageFileDefinition,
 	type LanguageReports,
@@ -28,14 +34,15 @@ import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
 
 export interface TypeScriptFileServices {
-	program: ts.Program;
+	program: Program;
 	sourceFile: AST.SourceFile;
 	typeChecker: Checker;
 }
 
 const log = debugForFile(import.meta.filename);
 
-export const NodeSyntaxKinds = getFirstEnumValues(ts.SyntaxKind);
+export const NodeSyntaxKinds: typeof SyntaxKind =
+	getFirstEnumValues(SyntaxKind);
 
 interface GlobalLanguageState {
 	packageVersion: string;
@@ -43,20 +50,21 @@ interface GlobalLanguageState {
 }
 type VolarCreateFile = (
 	data: FileAboutData,
-	program: ts.Program,
+	program: Program,
 	sourceFile: AST.SourceFile,
 ) => VolarLanguageFileDefinition;
 
-type VolarLanguageFileDefinition = LanguageFileDefinition<object> & {
-	__volarServices: {
-		getLanguageReports(): LanguageReports;
-		runVisitors(
-			file: LanguageFile<TypeScriptFileServices>,
-			options: InferredOutputObject<AnyOptionalSchema | undefined>,
-			runtime: RuleRuntime<TypeScriptNodeVisitors, TypeScriptFileServices>,
-		): void;
+type VolarLanguageFileDefinition =
+	LanguageFileDefinition<TypeScriptFileServices> & {
+		__volarServices: {
+			getLanguageReports(): LanguageReports;
+			runVisitors(
+				file: LanguageFile<TypeScriptFileServices>,
+				options: InferredOutputObject<AnyOptionalSchema | undefined>,
+				runtime: RuleRuntime<TypeScriptNodeVisitors, TypeScriptFileServices>,
+			): void;
+		};
 	};
-};
 
 const stateSymbol = Symbol.for("@flint.fyi/typescript-language/state");
 
@@ -74,7 +82,7 @@ const languageState: GlobalLanguageState = (globalTyped[stateSymbol] = {
 	volarCreateFile: null,
 });
 
-export function setVolarCreateFile(create: VolarCreateFile) {
+export function setVolarCreateFile(create: VolarCreateFile): void {
 	assert(
 		languageState.volarCreateFile == null,
 		"setVolarCreateFile is expected to be called only once",
@@ -82,10 +90,10 @@ export function setVolarCreateFile(create: VolarCreateFile) {
 	languageState.volarCreateFile = create;
 }
 
-export const typescriptLanguage = createLanguage<
+export const typescriptLanguage: Language<
 	TypeScriptNodeVisitors,
 	TypeScriptFileServices
->({
+> = createLanguage({
 	about: {
 		name: "TypeScript",
 	},
@@ -127,8 +135,9 @@ export const typescriptLanguage = createLanguage<
 					language: typescriptLanguage,
 					services: {
 						program,
-						sourceFile,
-						typeChecker: program.getTypeChecker(),
+						sourceFile: sourceFile as AST.SourceFile,
+						// ew, I don't like this. the ts -> AST type story is not great
+						typeChecker: program.getTypeChecker() as unknown as Checker,
 					},
 					[Symbol.dispose]() {
 						service.closeClientFile(data.filePathAbsolute);
@@ -162,9 +171,10 @@ export const typescriptLanguage = createLanguage<
 				file as VolarLanguageFileDefinition
 			).__volarServices.getLanguageReports();
 		}
-		return ts
-			.getPreEmitDiagnostics(file.services.program, file.services.sourceFile)
-			.map(convertTypeScriptDiagnosticToLanguageReport);
+		return getPreEmitDiagnostics(
+			file.services.program,
+			file.services.sourceFile,
+		).map(convertTypeScriptDiagnosticToLanguageReport);
 	},
 	orderFilePaths: orderTypeScriptFilePaths,
 	runFileVisitors(file, options, runtime) {
@@ -184,7 +194,7 @@ export const typescriptLanguage = createLanguage<
 		const { visitors } = runtime;
 		const visitorServices = { options, ...file.services };
 
-		const visit = (node: ts.Node) => {
+		const visit = (node: Node) => {
 			const key = NodeSyntaxKinds[node.kind] as keyof TypeScriptNodesByName;
 
 			// @ts-expect-error -- The node parameter type shouldn't be `never`...?

@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind, type NodeArray } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -9,14 +9,12 @@ import {
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasDefaultModifier(
-	modifiers: ts.NodeArray<AST.ModifierLike> | undefined,
+	modifiers: NodeArray<AST.ModifierLike> | undefined,
 ) {
 	return modifiers?.some((mod) => mod.kind === SyntaxKind.DefaultKeyword);
 }
 
-function hasExportModifier(
-	modifiers: ts.NodeArray<AST.ModifierLike> | undefined,
-) {
+function hasExportModifier(modifiers: NodeArray<AST.ModifierLike> | undefined) {
 	return modifiers?.some((mod) => mod.kind === SyntaxKind.ExportKeyword);
 }
 
@@ -69,15 +67,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (
-						ts.isArrowFunction(node.expression) ||
-						(ts.isFunctionExpression(node.expression) && !node.expression.name)
+						node.expression.kind === SyntaxKind.ArrowFunction ||
+						(node.expression.kind === SyntaxKind.FunctionExpression &&
+							!node.expression.name)
 					) {
 						context.report({
 							message: "anonymousFunction",
 							range: getTSNodeRange(node.expression, sourceFile),
 						});
 					} else if (
-						ts.isClassExpression(node.expression) &&
+						node.expression.kind === SyntaxKind.ClassExpression &&
 						!node.expression.name
 					) {
 						context.report({

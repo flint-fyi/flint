@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { SyntaxKind } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -32,7 +32,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				ElementAccessExpression: (node, { sourceFile, typeChecker }) => {
 					if (
-						!ts.isNumericLiteral(node.argumentExpression) ||
+						node.argumentExpression.kind !== SyntaxKind.NumericLiteral ||
 						node.argumentExpression.text !== "0" ||
 						!isFilterCall(node.expression, typeChecker)
 					) {
@@ -67,8 +67,8 @@ function isFilterCall(
 	typeChecker: Checker,
 ): node is AST.CallExpression & { expression: AST.PropertyAccessExpression } {
 	return (
-		ts.isCallExpression(node) &&
-		ts.isPropertyAccessExpression(node.expression) &&
+		node.kind === SyntaxKind.CallExpression &&
+		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
 		!!node.arguments.length &&
 		node.expression.name.text === "filter" &&
 		typeChecker.isArrayType(

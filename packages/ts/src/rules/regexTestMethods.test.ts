@@ -6,10 +6,14 @@ ruleTester.describe(rule, {
 		{
 			code: `
 declare const pattern: RegExp;
+declare const text: string;
+
 if (pattern.exec(text)) {}
 `,
 			snapshot: `
 declare const pattern: RegExp;
+declare const text: string;
+
 if (pattern.exec(text)) {}
     ~~~~~~~~~~~~~~~~~~
     Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
@@ -17,12 +21,18 @@ if (pattern.exec(text)) {}
 		},
 		{
 			code: `
+declare const text: string;
+
 while (/search/.exec(text)) {}
 `,
 			output: `
+declare const text: string;
+
 while (/search/.test(text)) {}
 `,
 			snapshot: `
+declare const text: string;
+
 while (/search/.exec(text)) {}
        ~~~~~~~~~~~~~~~~~~~
        Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
@@ -31,10 +41,14 @@ while (/search/.exec(text)) {}
 		{
 			code: `
 declare const pattern: RegExp;
+declare const text: string;
+
 const found = !pattern.exec(text);
 `,
 			snapshot: `
 declare const pattern: RegExp;
+declare const text: string;
+
 const found = !pattern.exec(text);
                ~~~~~~~~~~~~~~~~~~
                Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
@@ -43,10 +57,14 @@ const found = !pattern.exec(text);
 		{
 			code: `
 declare const pattern: RegExp;
+declare const text: string;
+
 const found = Boolean(pattern.exec(text));
 `,
 			snapshot: `
 declare const pattern: RegExp;
+declare const text: string;
+
 const found = Boolean(pattern.exec(text));
                       ~~~~~~~~~~~~~~~~~~
                       Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
@@ -87,10 +105,14 @@ if (text.match(new RegExp("search"))) {}
 		{
 			code: `
 declare const pattern: RegExp;
+declare const text: string;
+
 const result = pattern.exec(text) ? "found" : "missing";
 `,
 			snapshot: `
 declare const pattern: RegExp;
+declare const text: string;
+
 const result = pattern.exec(text) ? "found" : "missing";
                ~~~~~~~~~~~~~~~~~~
                Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
@@ -99,10 +121,16 @@ const result = pattern.exec(text) ? "found" : "missing";
 		{
 			code: `
 declare const pattern: RegExp;
+declare const text: string;
+declare const other: boolean;
+
 if (pattern.exec(text) && other) {}
 `,
 			snapshot: `
 declare const pattern: RegExp;
+declare const text: string;
+declare const other: boolean;
+
 if (pattern.exec(text) && other) {}
     ~~~~~~~~~~~~~~~~~~
     Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
@@ -111,10 +139,14 @@ if (pattern.exec(text) && other) {}
 		{
 			code: `
 declare const pattern: RegExp;
+declare const text: string;
+
 do {} while (pattern.exec(text));
 `,
 			snapshot: `
 declare const pattern: RegExp;
+declare const text: string;
+
 do {} while (pattern.exec(text));
              ~~~~~~~~~~~~~~~~~~
              Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
@@ -123,10 +155,14 @@ do {} while (pattern.exec(text));
 		{
 			code: `
 declare const pattern: RegExp;
+declare const text: string;
+
 for (; pattern.exec(text);) {}
 `,
 			snapshot: `
 declare const pattern: RegExp;
+declare const text: string;
+
 for (; pattern.exec(text);) {}
        ~~~~~~~~~~~~~~~~~~
        Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
@@ -146,9 +182,13 @@ if (text.match(/search/g)) {}
 		},
 		{
 			code: `
+declare const text: string;
+
 if (/search/g.exec(text)) {}
 `,
 			snapshot: `
+declare const text: string;
+
 if (/search/g.exec(text)) {}
     ~~~~~~~~~~~~~~~~~~~~
     Prefer the faster \`RegExp.test()\` for boolean checks instead of the slower \`RegExp.exec()\`.
@@ -156,13 +196,45 @@ if (/search/g.exec(text)) {}
 		},
 	],
 	valid: [
-		`declare const text: string; const matches = text.match(/search/);`,
-		`declare const pattern: RegExp; const result = pattern.exec(text);`,
-		`declare const pattern: RegExp; pattern.test(text);`,
-		`declare const text: string; text.match();`,
-		`declare const text: string; text.match("search");`,
-		`declare const pattern: RegExp; if (pattern.test(text)) {}`,
-		`declare const pattern: RegExp; const group = pattern.exec(text)?.[1];`,
+		`
+declare const text: string;
+
+const matches = text.match(/search/);
+`,
+		`
+declare const pattern: RegExp;
+declare const text: string;
+
+const result = pattern.exec(text);
+`,
+		`
+declare const pattern: RegExp;
+declare const text: string;
+
+pattern.test(text);
+`,
+		`
+declare const text: { match(): unknown };
+
+text.match();
+`,
+		`
+declare const text: string;
+
+text.match("search");
+`,
+		`
+declare const pattern: RegExp;
+declare const text: string;
+
+if (pattern.test(text)) {}
+`,
+		`
+declare const pattern: RegExp;
+declare const text: string;
+
+const group = pattern.exec(text)?.[1];
+`,
 		`
 declare const hasMatch: { match(...args: unknown[]): unknown };
 hasMatch.match(/test/);

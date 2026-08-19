@@ -1,5 +1,5 @@
 {
-	"extends": "../../tsconfig.base.json",
+	"extends": "@flint.fyi/build/tsconfig.base.json",
 	"include": [],
 	"references": [
 		{ "path": "./tsconfig.bin.json" },

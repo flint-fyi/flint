@@ -7,9 +7,10 @@ export const ruleTester = new RuleTester({
 	defaults: {
 		fileName: "file.ts",
 		files: createRuleTesterTSConfig({
+			module: "preserve",
 			types: ["node"],
 			// TODO: remove this; there is a bug in blobReadingMethods - it doesn't respect type from @types/node
-			lib: ["dom"],
+			lib: ["esnext", "dom"],
 		}),
 	},
 	describe,

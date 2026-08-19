@@ -11,7 +11,7 @@ export async function applyChangesToFiles(
 	host: LinterHost,
 	filesResults: Map<string, FileResults>,
 	requestedSuggestions: Set<string>,
-) {
+): Promise<string[]> {
 	log("Resolving changes from results.");
 
 	const changesByFile = resolveChangesByFile(

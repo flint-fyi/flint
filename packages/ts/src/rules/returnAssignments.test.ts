@@ -21,12 +21,16 @@ function getValue() {
 		},
 		{
 			code: `
+declare function calculate(): number;
+
 function process() {
     let result;
     return result = calculate();
 }
 `,
 			snapshot: `
+declare function calculate(): number;
+
 function process() {
     let result;
     return result = calculate();
@@ -69,9 +73,13 @@ const arrow = () => {
 		},
 		{
 			code: `
+let value = 0;
+
 const arrowImplicit = () => (value = 100);
 `,
 			snapshot: `
+let value = 0;
+
 const arrowImplicit = () => (value = 100);
                                    ~
                                    Placing an assignment inside a return statement can be misleading and is often a sign of a logical mistake.
@@ -96,13 +104,13 @@ function multiply(factor: number) {
 		{
 			code: `
 function compound() {
-    let count;
+    let count = 0;
     return count += 5;
 }
 `,
 			snapshot: `
 function compound() {
-    let count;
+    let count = 0;
     return count += 5;
                  ~~
                  Placing an assignment inside a return statement can be misleading and is often a sign of a logical mistake.
@@ -112,13 +120,13 @@ function compound() {
 		{
 			code: `
 function bitwise() {
-    let flags;
+    let flags = 0;
     return flags |= 0x01;
 }
 `,
 			snapshot: `
 function bitwise() {
-    let flags;
+    let flags = 0;
     return flags |= 0x01;
                  ~~
                  Placing an assignment inside a return statement can be misleading and is often a sign of a logical mistake.
@@ -129,9 +137,20 @@ function bitwise() {
 	valid: [
 		`function getValue() { return 1; }`,
 		`function getValue() { let value = 1; return value; }`,
-		`function process() { const result = calculate(); return result; }`,
+		`
+declare function calculate(): number;
+
+function process() {
+    const result = calculate();
+    return result;
+}
+`,
 		`const arrow = () => { let value = 42; return value; };`,
-		`const arrowImplicit = () => getValue();`,
+		`
+declare function getValue(): number;
+
+const arrowImplicit = () => getValue();
+`,
 		`
 function update() {
     let status = "updated";

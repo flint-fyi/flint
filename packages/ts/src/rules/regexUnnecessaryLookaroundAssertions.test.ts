@@ -158,6 +158,6 @@ RegExp("(?<=(?<=x)y)");
 		`/(?<=a(?!b))/;`,
 		`/(?=a(?<=b))/;`,
 		`/(?<=(?=a)b)/;`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 	],
 });

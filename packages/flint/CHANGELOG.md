@@ -1,5 +1,54 @@
 # flint
 
+## 0.19.0
+
+### Minor Changes
+
+- [#3168](https://github.com/flint-fyi/flint/pull/3168) [`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34) - Drop support for node versions <26.1.0.
+
+### Patch Changes
+
+- Updated dependencies [[`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34)]:
+  - @flint.fyi/package-json@0.21.0
+  - @flint.fyi/ts-patch@0.16.0
+  - @flint.fyi/core@0.25.0
+  - @flint.fyi/json@0.18.0
+  - @flint.fyi/yaml@0.17.0
+  - @flint.fyi/cli@0.23.0
+  - @flint.fyi/md@0.17.0
+  - @flint.fyi/ts@0.23.0
+
+## 0.18.0
+
+### Minor Changes
+
+- [#3118](https://github.com/flint-fyi/flint/pull/3118) [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20) - Begin bundling all package entry points.
+
+### Patch Changes
+
+- Updated dependencies [[`db27b14`](https://github.com/flint-fyi/flint/commit/db27b14f41e4f3022d019f43038665729302b5e4), [`712d902`](https://github.com/flint-fyi/flint/commit/712d9023e236719fb3ff128bb6c6a9b3ee3ade9c), [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20), [`5cf1562`](https://github.com/flint-fyi/flint/commit/5cf15621bad3527b694a1a99bd35f464d00d5237), [`894e5f6`](https://github.com/flint-fyi/flint/commit/894e5f6a556662f3761a3c4054cd89f29e627e16)]:
+  - @flint.fyi/cli@0.22.0
+  - @flint.fyi/package-json@0.20.0
+  - @flint.fyi/ts-patch@0.15.0
+  - @flint.fyi/core@0.24.0
+  - @flint.fyi/json@0.17.0
+  - @flint.fyi/yaml@0.16.0
+  - @flint.fyi/md@0.16.0
+  - @flint.fyi/ts@0.22.0
+
+## 0.17.0
+
+### Minor Changes
+
+- [#3064](https://github.com/flint-fyi/flint/pull/3064) [`1f71b3e`](https://github.com/flint-fyi/flint/commit/1f71b3ef2d31dbe39ff8c967887801912fb28573) - Removed support for TypeScript 5.
+
+### Patch Changes
+
+- Updated dependencies [[`1f71b3e`](https://github.com/flint-fyi/flint/commit/1f71b3ef2d31dbe39ff8c967887801912fb28573)]:
+  - @flint.fyi/ts-patch@0.14.0
+  - @flint.fyi/cli@0.21.0
+  - @flint.fyi/ts@0.21.0
+
 ## 0.16.0
 
 ### Minor Changes

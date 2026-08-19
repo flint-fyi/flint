@@ -32,7 +32,7 @@ export async function computeUseDefinitions(
 	log("Collecting files from %d use pattern(s)", configDefinition.use.length);
 
 	const cwd = host.getCurrentDirectory();
-	const gitignoreFilter = createGitignoreFilter(cwd, host);
+	const isNotIgnored = createGitignoreFilter(host);
 
 	const allFilePaths = new Set<string>();
 
@@ -48,7 +48,7 @@ export async function computeUseDefinitions(
 			for (const filePath of matches) {
 				const filePathAbsolute = path.join(cwd, filePath);
 
-				if (gitignoreFilter(filePathAbsolute)) {
+				if (isNotIgnored(filePathAbsolute)) {
 					found.add(filePathAbsolute);
 					allFilePaths.add(filePathAbsolute);
 				}

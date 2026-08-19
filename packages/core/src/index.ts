@@ -8,7 +8,10 @@ export {
 } from "./configs/findConfigFileName.ts";
 export { isConfig } from "./configs/isConfig.ts";
 export { validateConfigDefinition } from "./configs/validateConfigDefinition.ts";
-export { DirectivesCollector } from "./directives/DirectivesCollector.ts";
+export {
+	type DirectiveCollection,
+	DirectivesCollector,
+} from "./directives/DirectivesCollector.ts";
 export { directiveReports } from "./directives/reports/directiveReports.ts";
 export { globs } from "./globs/index.ts";
 export { createDiskBackedLinterHost } from "./host/createDiskBackedLinterHost.ts";

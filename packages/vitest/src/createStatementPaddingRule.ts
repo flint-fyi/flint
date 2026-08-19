@@ -1,5 +1,6 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 
+import type { Rule } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
 	typescriptLanguage,
@@ -14,6 +15,12 @@ export interface StatementPaddingMatch {
 	category: string;
 }
 
+export type StatementPaddingRule = Rule<
+	VitestRuleAbout,
+	"missingPadding",
+	undefined
+>;
+
 export function createStatementPaddingRule(
 	about: VitestRuleAbout,
 	getStatementMatch: (
@@ -23,7 +30,7 @@ export function createStatementPaddingRule(
 		previousMatch: StatementPaddingMatch | undefined,
 		nextMatch: StatementPaddingMatch | undefined,
 	) => boolean,
-) {
+): StatementPaddingRule {
 	return ruleCreator.createRule(typescriptLanguage, {
 		about,
 		messages: {
@@ -162,13 +169,15 @@ export function createStatementPaddingRule(
 	});
 }
 
-export function getStatementRootName(statement: AST.AnyNode) {
+export function getStatementRootName(
+	statement: AST.AnyNode,
+): string | undefined {
 	const expression = getStatementExpression(statement);
 	if (!expression) {
 		return undefined;
 	}
 
-	if (expression.kind === ts.SyntaxKind.AwaitExpression) {
+	if (expression.kind === SyntaxKind.AwaitExpression) {
 		return getRootIdentifierName(expression.expression);
 	}
 
@@ -176,15 +185,15 @@ export function getStatementRootName(statement: AST.AnyNode) {
 }
 
 function getRootIdentifierName(node: AST.AnyNode): string | undefined {
-	if (node.kind === ts.SyntaxKind.Identifier) {
+	if (node.kind === SyntaxKind.Identifier) {
 		return node.text;
 	}
 
 	if (
-		node.kind === ts.SyntaxKind.CallExpression ||
-		node.kind === ts.SyntaxKind.NonNullExpression ||
-		node.kind === ts.SyntaxKind.ParenthesizedExpression ||
-		node.kind === ts.SyntaxKind.PropertyAccessExpression
+		node.kind === SyntaxKind.CallExpression ||
+		node.kind === SyntaxKind.NonNullExpression ||
+		node.kind === SyntaxKind.ParenthesizedExpression ||
+		node.kind === SyntaxKind.PropertyAccessExpression
 	) {
 		return getRootIdentifierName(node.expression);
 	}
@@ -195,11 +204,11 @@ function getRootIdentifierName(node: AST.AnyNode): string | undefined {
 function getStatementExpression(
 	statement: AST.AnyNode,
 ): AST.AnyNode | undefined {
-	if (statement.kind === ts.SyntaxKind.ExpressionStatement) {
+	if (statement.kind === SyntaxKind.ExpressionStatement) {
 		return statement.expression;
 	}
 
-	if (statement.kind === ts.SyntaxKind.LabeledStatement) {
+	if (statement.kind === SyntaxKind.LabeledStatement) {
 		return getStatementExpression(statement.statement);
 	}
 

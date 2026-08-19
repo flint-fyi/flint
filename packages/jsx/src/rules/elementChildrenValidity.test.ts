@@ -35,9 +35,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const expression: unknown;
 <hr>{expression}</hr>
 `,
 			snapshot: `
+declare const expression: unknown;
 <hr>{expression}</hr>
  ~~
  The \`<hr>\` element is a void element and cannot have children.
@@ -161,8 +163,12 @@ ruleTester.describe(rule, {
 		`<link rel="stylesheet" />`,
 		`<div>Content</div>`,
 		`<span><br /></span>`,
-		`<CustomComponent>children</CustomComponent>`,
-		`<Button>Click me</Button>`,
+		`
+declare const CustomComponent: (props: Record<string, unknown>) => unknown;
+<CustomComponent>children</CustomComponent>`,
+		`
+declare const Button: (props: Record<string, unknown>) => unknown;
+<Button>Click me</Button>`,
 		`<area />`,
 		`<base />`,
 		`<col />`,

@@ -82,7 +82,6 @@ custom.charCodeAt(0);
 		`
 const String = { fromCharCode: (code: number) => "" };
 String.fromCharCode(65);
-export {};
 `,
 	],
 });

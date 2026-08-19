@@ -23,12 +23,13 @@
 		"test": "vitest --project plugin-internal"
 	},
 	"dependencies": {
+		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/core": "workspace:^"
 	},
 	"devDependencies": {
 		"vitest": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	}
 }
