@@ -6,8 +6,7 @@ interface PluginPackage {
 	specifier: string;
 }
 
-// typescript-eslint's base config already registers this one.
-const preregisteredPlugin = "@typescript-eslint";
+const preregisteredPlugins = new Set(["@typescript-eslint"]);
 
 const pluginPackages = new Map<string, PluginPackage>([
 	["import", { alias: "importPlugin", specifier: "eslint-plugin-import" }],
@@ -22,7 +21,7 @@ export function createESLintConfigFile(rules: TestCaseRules): string {
 	for (const { eslint } of enabled) {
 		const pluginName = getPluginName(eslint);
 
-		if (pluginName === undefined || pluginName === preregisteredPlugin) {
+		if (pluginName === undefined || preregisteredPlugins.has(pluginName)) {
 			continue;
 		}
 

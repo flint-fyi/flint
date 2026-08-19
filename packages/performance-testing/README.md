@@ -38,4 +38,3 @@ Numbers from any one machine are only meaningful next to the other linter measur
 Flint rules that map to several overlapping ESLint rules — typically a core rule and its typescript-eslint extension — are paired with just one of them, preferring the typescript-eslint rule, then the core rule, then the plugin rule that sorts first.
 - **Same type information.** Both run type-aware: ESLint through `projectService`, Flint through the case's `tsconfig.json`.
 - **Same cold start.** Flint runs with `--cache-ignore` so Hyperfine's repeated runs re-lint from scratch, matching ESLint's lack of a cache.
-Flint also runs with `--skip-formatting` and `--skip-language-reports`, which have no ESLint equivalent.
