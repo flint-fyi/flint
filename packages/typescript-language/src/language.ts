@@ -102,6 +102,10 @@ export const typescriptLanguage: Language<
 			host: createTypeScriptServerHost(host),
 		});
 
+		// @typescript-eslint/project-service hardcodes `hasLevel: () => true`, so
+		// tsserver builds log messages that its disabled `debug` namespaces discard.
+		service.logger.hasLevel = () => service.logger.loggingEnabled();
+
 		function createFile(data: FileAboutData) {
 			log("Opening client file:", data.filePathAbsolute);
 			service.openClientFile(data.filePathAbsolute);
