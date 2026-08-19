@@ -30,6 +30,12 @@ export {
 	vcsDirectories,
 } from "./host/watcher.ts";
 export { createLanguage } from "./languages/createLanguage.ts";
+export {
+	type FileVisitorSubscription,
+	type GroupedFileVisitors,
+	groupFileVisitors,
+	runFileVisitorSubscriptions,
+} from "./languages/groupFileVisitors.ts";
 export { createPlugin } from "./plugins/createPlugin.ts";
 export { formatReport } from "./reporting/formatReport.ts";
 export { RuleCreator, type RuleCreatorOptions } from "./rules/RuleCreator.ts";
@@ -37,7 +43,6 @@ export { parseOptions } from "./running/parseOptions.ts";
 export { processRuleReport } from "./running/processRuleReport.ts";
 export { runConfig } from "./running/runConfig.ts";
 export { runConfigFixing } from "./running/runConfigFixing.ts";
-export { runLintRule } from "./running/runLintRule.ts";
 export type { BaseAbout } from "./types/about.ts";
 export type {
 	CacheStorage,
@@ -88,6 +93,7 @@ export type {
 	AnyLanguageFile,
 	AnyLanguageFileFactory,
 	FileAboutData,
+	FileVisitors,
 	GetLanguageAstNodesByName,
 	GetLanguageFileServices,
 	Language,

@@ -82,7 +82,15 @@ export async function runTestCaseRule<
 	});
 
 	if (ruleRuntime) {
-		rule.language.runFileVisitors(file, options, ruleRuntime);
+		if (ruleRuntime.visitors) {
+			rule.language.runFileVisitors(file, [
+				{
+					services: { options, ...file.services },
+					visitors: ruleRuntime.visitors,
+				},
+			]);
+		}
+
 		await ruleRuntime.teardown?.();
 	}
 

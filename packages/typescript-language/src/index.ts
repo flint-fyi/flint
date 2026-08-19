@@ -3,18 +3,23 @@ export {
 	type TSDiagnostic,
 } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
 export {
+	createNodeVisitorDispatch,
+	type NodeVisitorDispatch,
+	type NodeVisitorSubscriptions,
+} from "./createNodeVisitorDispatch.ts";
+export {
 	extractDirectivesFromTypeScriptFile,
 	type ExtractedDirective,
 } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 export { getTSNodeRange } from "./getTSNodeRange.ts";
 export {
-	NodeSyntaxKinds,
 	setVolarCreateFile,
 	throwUnknownLanguageExtension,
 	type TypeScriptFileServices,
 	typescriptLanguage,
 } from "./language.ts";
 export type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
+export { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
 export {
 	type FunctionWithParameters,
 	getScopeManager,
