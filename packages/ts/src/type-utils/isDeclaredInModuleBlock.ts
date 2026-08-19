@@ -1,4 +1,6 @@
-import ts from "typescript";
+import type ts from "typescript";
+
+import typescript from "@flint.fyi/typescript-language/typescript";
 
 // TODO (#400): Switch to scope analysis
 export function isDeclaredInModuleBlock(
@@ -6,11 +8,11 @@ export function isDeclaredInModuleBlock(
 	packageName: string,
 ): boolean {
 	let current: ts.Node = declaration;
-	while (!ts.isSourceFile(current)) {
+	while (!typescript.isSourceFile(current)) {
 		if (
-			ts.isModuleDeclaration(current) &&
-			!(current.flags & ts.NodeFlags.Namespace) &&
-			ts.isStringLiteral(current.name) &&
+			typescript.isModuleDeclaration(current) &&
+			!(current.flags & typescript.NodeFlags.Namespace) &&
+			typescript.isStringLiteral(current.name) &&
 			current.name.text === packageName
 		) {
 			return true;

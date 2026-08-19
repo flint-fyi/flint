@@ -1,10 +1,11 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -17,8 +18,8 @@ const moduleIndicatorKinds = new Set([
 
 function hasExportModifier(node: AST.Statement) {
 	return !!(
-		ts.canHaveModifiers(node) &&
-		ts
+		typescript.canHaveModifiers(node) &&
+		typescript
 			.getModifiers(node)
 			?.some((modifier) => modifier.kind === SyntaxKind.ExportKeyword)
 	);

@@ -1,13 +1,13 @@
+import type { Expression } from "typescript";
+
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import {
 	isElementAccessExpression,
 	isNumericLiteral,
 	isPrefixUnaryExpression,
 	isStringLiteral,
 	SyntaxKind,
-	type Expression,
-} from "typescript";
-
-import { typescriptLanguage } from "@flint.fyi/typescript-language";
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

@@ -4,7 +4,7 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import ts from "typescript";
+import type ts from "typescript";
 
 import {
 	getColumnAndLineOfPosition,
@@ -12,6 +12,8 @@ import {
 	type LanguageReport,
 	type SourceFileWithLineMapAndFileName,
 } from "@flint.fyi/core";
+
+import typescript from "./typescript.ts";
 
 export interface TSDiagnostic extends TSDiagnosticRelatedInformation {
 	relatedInformation?: TSDiagnosticRelatedInformation[];
@@ -54,7 +56,10 @@ function formatReport(diagnostic: TSDiagnostic) {
 	}
 	output += color(`TS${diagnostic.code}`, COLOR.Grey);
 	output += ": ";
-	output += ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
+	output += typescript.flattenDiagnosticMessageText(
+		diagnostic.messageText,
+		"\n",
+	);
 	if (diagnostic.file !== undefined) {
 		output += "\n";
 		output += formatCodeSpan(
@@ -80,7 +85,8 @@ function formatReport(diagnostic: TSDiagnostic) {
 				output += formatCodeSpan(file, start!, length!, indent, COLOR.Cyan);
 			}
 			output += "\n";
-			output += indent + ts.flattenDiagnosticMessageText(messageText, "\n");
+			output +=
+				indent + typescript.flattenDiagnosticMessageText(messageText, "\n");
 		}
 	}
 

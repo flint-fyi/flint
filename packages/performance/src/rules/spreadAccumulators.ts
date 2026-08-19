@@ -1,11 +1,14 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -32,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function getIdentifierName(node: ts.Node) {
-			return ts.isIdentifier(node) ? node.text : undefined;
+			return typescript.isIdentifier(node) ? node.text : undefined;
 		}
 
 		function hasSpreadOfIdentifier(
@@ -40,32 +43,33 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			identifierName: string,
 		): boolean | undefined {
 			if (
-				(ts.isSpreadElement(node) || ts.isSpreadAssignment(node)) &&
+				(typescript.isSpreadElement(node) ||
+					typescript.isSpreadAssignment(node)) &&
 				identifierName === getIdentifierName(node.expression)
 			) {
 				return true;
 			}
 
-			return ts.forEachChild(node, (child) => {
+			return typescript.forEachChild(node, (child) => {
 				return hasSpreadOfIdentifier(child, identifierName);
 			});
 		}
 
 		function checkAssignmentInLoop(node: ts.Node, sourceFile: AST.SourceFile) {
 			if (
-				ts.isBinaryExpression(node) &&
+				typescript.isBinaryExpression(node) &&
 				node.operatorToken.kind === SyntaxKind.EqualsToken
 			) {
 				checkBinaryEqualsExpression(node, sourceFile);
 			}
 
-			ts.forEachChild(node, (child) => {
+			typescript.forEachChild(node, (child) => {
 				if (
-					ts.isDoStatement(child) ||
-					ts.isForInStatement(child) ||
-					ts.isForOfStatement(child) ||
-					ts.isForStatement(child) ||
-					ts.isWhileStatement(child) ||
+					typescript.isDoStatement(child) ||
+					typescript.isForInStatement(child) ||
+					typescript.isForOfStatement(child) ||
+					typescript.isForStatement(child) ||
+					typescript.isWhileStatement(child) ||
 					tsutils.isFunctionScopeBoundary(child)
 				) {
 					return;
@@ -107,7 +111,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: ts.Node,
 			identifierName: string,
 		): ts.Node | undefined {
-			if (ts.isSpreadElement(node) || ts.isSpreadAssignment(node)) {
+			if (
+				typescript.isSpreadElement(node) ||
+				typescript.isSpreadAssignment(node)
+			) {
 				const spreadName = getIdentifierName(node.expression);
 				if (spreadName === identifierName) {
 					return node;
@@ -115,7 +122,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			let result: ts.Node | undefined = undefined;
-			ts.forEachChild(node, (child) => {
+			typescript.forEachChild(node, (child) => {
 				result ??= findSpreadElement(child, identifierName);
 			});
 

@@ -1,6 +1,7 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import type * as AST from "../types/ast.ts";
+import typescript, { SyntaxKind } from "../typescript.ts";
 import { unwrapParenthesizedNode } from "./unwrapParenthesizedNode.ts";
 
 export function hasSameTokens(
@@ -23,7 +24,7 @@ export function hasSameTokens(
 			return false;
 		}
 
-		if (ts.isTokenKind(currentA.kind)) {
+		if (typescript.isTokenKind(currentA.kind)) {
 			if (!areSameToken(currentA, currentB, sourceFile)) {
 				return false;
 			}
@@ -50,12 +51,12 @@ function areSameToken(
 	sourceFile: AST.SourceFile,
 ): boolean {
 	if (
-		ts.isIdentifier(nodeA) ||
-		ts.isPrivateIdentifier(nodeA) ||
-		ts.isNumericLiteral(nodeA) ||
-		ts.isBigIntLiteral(nodeA) ||
-		ts.isStringLiteral(nodeA) ||
-		ts.isNoSubstitutionTemplateLiteral(nodeA)
+		typescript.isIdentifier(nodeA) ||
+		typescript.isPrivateIdentifier(nodeA) ||
+		typescript.isNumericLiteral(nodeA) ||
+		typescript.isBigIntLiteral(nodeA) ||
+		typescript.isStringLiteral(nodeA) ||
+		typescript.isNoSubstitutionTemplateLiteral(nodeA)
 	) {
 		return nodeA.text === (nodeB as typeof nodeA).text;
 	}

@@ -1,9 +1,12 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -15,9 +18,9 @@ function containsThis(node: ts.Node): boolean {
 	}
 
 	if (
-		ts.isFunctionExpression(node) ||
-		ts.isFunctionDeclaration(node) ||
-		ts.isArrowFunction(node)
+		typescript.isFunctionExpression(node) ||
+		typescript.isFunctionDeclaration(node) ||
+		typescript.isArrowFunction(node)
 	) {
 		return false;
 	}
@@ -34,23 +37,23 @@ function containsThis(node: ts.Node): boolean {
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
 function isStaticValue(node: ts.Expression): boolean {
-	if (ts.isParenthesizedExpression(node)) {
+	if (typescript.isParenthesizedExpression(node)) {
 		return isStaticValue(node.expression);
 	}
 
-	if (ts.isPrefixUnaryExpression(node)) {
+	if (typescript.isPrefixUnaryExpression(node)) {
 		return isStaticValue(node.operand);
 	}
 
-	if (ts.isIdentifier(node)) {
+	if (typescript.isIdentifier(node)) {
 		return true;
 	}
 
-	if (ts.isPropertyAccessExpression(node)) {
+	if (typescript.isPropertyAccessExpression(node)) {
 		return isStaticValue(node.expression);
 	}
 
-	if (ts.isElementAccessExpression(node)) {
+	if (typescript.isElementAccessExpression(node)) {
 		return (
 			isStaticValue(node.expression) && isStaticValue(node.argumentExpression)
 		);
@@ -62,16 +65,16 @@ function isStaticValue(node: ts.Expression): boolean {
 		node.kind === SyntaxKind.TrueKeyword ||
 		node.kind === SyntaxKind.FalseKeyword ||
 		node.kind === SyntaxKind.NullKeyword ||
-		ts.isBigIntLiteral(node) ||
-		ts.isNumericLiteral(node) ||
-		ts.isStringLiteral(node) ||
-		ts.isNoSubstitutionTemplateLiteral(node) ||
+		typescript.isBigIntLiteral(node) ||
+		typescript.isNumericLiteral(node) ||
+		typescript.isStringLiteral(node) ||
+		typescript.isNoSubstitutionTemplateLiteral(node) ||
 		node.kind === SyntaxKind.RegularExpressionLiteral
 	);
 }
 
 function unwrapParentheses(node: ts.Expression): ts.Expression {
-	while (ts.isParenthesizedExpression(node)) {
+	while (typescript.isParenthesizedExpression(node)) {
 		node = node.expression;
 	}
 	return node;
@@ -133,7 +136,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 						: undefined;
 
-					if (ts.isArrowFunction(boundFunction)) {
+					if (typescript.isArrowFunction(boundFunction)) {
 						context.report({
 							fix,
 							message: "arrowBind",
@@ -146,7 +149,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					if (
-						ts.isFunctionExpression(boundFunction) &&
+						typescript.isFunctionExpression(boundFunction) &&
 						!containsThis(boundFunction.body)
 					) {
 						context.report({

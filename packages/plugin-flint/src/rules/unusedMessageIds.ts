@@ -1,5 +1,3 @@
-import { SyntaxKind } from "typescript";
-
 import type { CharacterReportRange } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
@@ -7,6 +5,7 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/typescript";
 
 import { findProperty } from "../utils/findProperty.ts";
 import {

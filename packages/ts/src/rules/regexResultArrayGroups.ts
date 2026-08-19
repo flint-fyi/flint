@@ -3,7 +3,7 @@ import type {
 	CapturingGroup,
 	RegExpLiteral,
 } from "@eslint-community/regexpp/ast";
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getTSNodeRange,
@@ -12,6 +12,9 @@ import {
 	type Checker,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getRegExpConstruction } from "./utils/getRegExpConstruction.ts";
@@ -50,16 +53,16 @@ function findAssignmentsToSymbol(
 
 	function visit(node: ts.Node) {
 		if (
-			ts.isBinaryExpression(node) &&
+			typescript.isBinaryExpression(node) &&
 			node.operatorToken.kind === SyntaxKind.EqualsToken &&
-			ts.isIdentifier(node.left)
+			typescript.isIdentifier(node.left)
 		) {
 			const leftSymbol = typeChecker.getSymbolAtLocation(node.left);
 			if (leftSymbol === symbol) {
 				assignments.push(node);
 			}
 		}
-		ts.forEachChild(node, visit);
+		typescript.forEachChild(node, visit);
 	}
 
 	visit(sourceFile);
@@ -102,7 +105,7 @@ function getNamedGroupsFromExpression(
 		const symbol = typeChecker.getSymbolAtLocation(unwrapped);
 		if (symbol) {
 			const resolvedSymbol =
-				symbol.flags & ts.SymbolFlags.Alias
+				symbol.flags & typescript.SymbolFlags.Alias
 					? typeChecker.getAliasedSymbol(symbol)
 					: symbol;
 			return getRegexInfoFromSymbol(resolvedSymbol, typeChecker, sourceFile);
@@ -180,7 +183,7 @@ function getRegexFromMatchAllCall(
 	}
 
 	const objectType = typeChecker.getTypeAtLocation(node.expression.expression);
-	if (!(objectType.flags & ts.TypeFlags.StringLike)) {
+	if (!(objectType.flags & typescript.TypeFlags.StringLike)) {
 		return undefined;
 	}
 
@@ -204,7 +207,7 @@ function getRegexFromMatchCall(
 	}
 
 	const objectType = typeChecker.getTypeAtLocation(node.expression.expression);
-	if (!(objectType.flags & ts.TypeFlags.StringLike)) {
+	if (!(objectType.flags & typescript.TypeFlags.StringLike)) {
 		return undefined;
 	}
 
@@ -253,7 +256,7 @@ function getRegexInfoFromExpression(
 			if (declarations) {
 				for (const declaration of declarations) {
 					if (
-						ts.isVariableDeclaration(declaration) &&
+						typescript.isVariableDeclaration(declaration) &&
 						declaration.initializer
 					) {
 						return getRegexInfoFromExpression(
@@ -279,7 +282,10 @@ function getRegexInfoFromSymbol(
 
 	if (declarations) {
 		for (const declaration of declarations) {
-			if (ts.isVariableDeclaration(declaration) && declaration.initializer) {
+			if (
+				typescript.isVariableDeclaration(declaration) &&
+				declaration.initializer
+			) {
 				const callExpression = extractCallExpression(
 					declaration.initializer as AST.Expression,
 				);
@@ -301,7 +307,7 @@ function getRegexInfoFromSymbol(
 				}
 			}
 
-			if (ts.isParameter(declaration)) {
+			if (typescript.isParameter(declaration)) {
 				continue;
 			}
 		}
@@ -334,7 +340,7 @@ function getRegexInfoFromSymbol(
 }
 
 function isAnyType(type: ts.Type): boolean {
-	return (type.flags & ts.TypeFlags.Any) !== 0;
+	return (type.flags & typescript.TypeFlags.Any) !== 0;
 }
 
 function isRegExpExecArrayOrRegExpMatchArray(
@@ -353,8 +359,8 @@ function isRegExpExecArrayOrRegExpMatchArray(
 		return type.types.every(
 			(constituent) =>
 				isRegExpExecArrayOrRegExpMatchArray(constituent, typeChecker) ||
-				(constituent.flags & ts.TypeFlags.Null) !== 0 ||
-				(constituent.flags & ts.TypeFlags.Undefined) !== 0,
+				(constituent.flags & typescript.TypeFlags.Null) !== 0 ||
+				(constituent.flags & typescript.TypeFlags.Undefined) !== 0,
 		);
 	}
 

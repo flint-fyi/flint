@@ -1,6 +1,5 @@
-import ts, { SyntaxKind } from "typescript";
-
 import type * as AST from "../types/ast.ts";
+import typescript, { SyntaxKind } from "../typescript.ts";
 import type {
 	FunctionWithParameters,
 	ScopeInternal,
@@ -53,7 +52,7 @@ export function getVariableDeclarationScope(
 ): ScopeInternal {
 	if (
 		node.parent.kind === SyntaxKind.VariableDeclarationList &&
-		!(node.parent.flags & ts.NodeFlags.BlockScoped)
+		!(node.parent.flags & typescript.NodeFlags.BlockScoped)
 	) {
 		return findContainingVariableScope(scope);
 	}

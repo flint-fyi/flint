@@ -1,7 +1,10 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import { astroLanguage } from "@flint.fyi/astro-language";
 import { getTSNodeRange } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -11,7 +14,9 @@ function typeCanBeClientOnlyValue(
 ): boolean {
 	if (
 		type.flags &
-		(ts.TypeFlags.Any | ts.TypeFlags.StringLike | ts.TypeFlags.Unknown)
+		(typescript.TypeFlags.Any |
+			typescript.TypeFlags.StringLike |
+			typescript.TypeFlags.Unknown)
 	) {
 		return true;
 	}

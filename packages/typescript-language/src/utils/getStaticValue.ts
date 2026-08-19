@@ -1,6 +1,5 @@
-import { SyntaxKind } from "typescript";
-
 import type * as AST from "../types/ast.ts";
+import { SyntaxKind } from "../typescript.ts";
 import { unwrapParenthesizedNode } from "./unwrapParenthesizedNode.ts";
 
 export interface StaticValue {

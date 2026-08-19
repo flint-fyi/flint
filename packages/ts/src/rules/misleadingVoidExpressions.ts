@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, TypeFlags, type Type } from "typescript";
+import type { Type } from "typescript";
 
 import {
 	getTSNodeRange,
@@ -7,6 +6,11 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import {
+	SyntaxKind,
+	TypeFlags,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";

@@ -1,10 +1,14 @@
-import { isIdentifier, SyntaxKind, type Program } from "typescript";
+import type { Program } from "typescript";
 
 import {
 	isGlobalDeclaration,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import {
+	isIdentifier,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 const builtinErrorNames = new Set([
 	"Error",

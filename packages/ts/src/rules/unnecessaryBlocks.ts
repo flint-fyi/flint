@@ -1,14 +1,15 @@
-import { isNodeFlagSet } from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
-
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isUsingVariableStatement(node: AST.AnyNode) {
 	return (
 		node.kind === SyntaxKind.VariableStatement &&
-		isNodeFlagSet(node.declarationList, ts.NodeFlags.Using)
+		tsutils.isNodeFlagSet(node.declarationList, typescript.NodeFlags.Using)
 	);
 }
 

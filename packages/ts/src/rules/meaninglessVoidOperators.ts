@@ -1,7 +1,8 @@
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import type ts from "typescript";
 
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
@@ -9,7 +10,7 @@ import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
 function isVoidOrUndefinedType(type: ts.Type) {
 	return tsutils.isTypeFlagSet(
 		type,
-		ts.TypeFlags.Void | ts.TypeFlags.Undefined,
+		typescript.TypeFlags.Void | typescript.TypeFlags.Undefined,
 	);
 }
 

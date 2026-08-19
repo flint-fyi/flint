@@ -1,3 +1,12 @@
+import type { Program } from "typescript";
+
+import {
+	getTSNodeRange,
+	isGlobalDeclarationOfName,
+	typescriptLanguage,
+	type AST,
+	type Checker,
+} from "@flint.fyi/typescript-language";
 import {
 	isArrayLiteralExpression,
 	isIdentifier,
@@ -7,16 +16,7 @@ import {
 	isVariableDeclaration,
 	NodeFlags,
 	SyntaxKind,
-	type Program,
-} from "typescript";
-
-import {
-	getTSNodeRange,
-	isGlobalDeclarationOfName,
-	typescriptLanguage,
-	type AST,
-	type Checker,
-} from "@flint.fyi/typescript-language";
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getTSNodeRange,
@@ -6,11 +6,14 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasDecorators(node: AST.ClassDeclaration | AST.ClassExpression) {
-	return node.modifiers?.some(ts.isDecorator) ?? false;
+	return node.modifiers?.some(typescript.isDecorator) ?? false;
 }
 
 function hasExtendsClause(node: AST.ClassDeclaration | AST.ClassExpression) {

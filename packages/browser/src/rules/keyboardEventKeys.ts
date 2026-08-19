@@ -1,4 +1,4 @@
-import { isInterfaceDeclaration, SyntaxKind, type Program } from "typescript";
+import type { Program } from "typescript";
 
 import {
 	getDeclarationsIfGlobal,
@@ -7,6 +7,10 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import {
+	isInterfaceDeclaration,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";

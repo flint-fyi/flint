@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getTSNodeRange,
@@ -6,6 +6,9 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -121,7 +124,7 @@ function getNameFromPropertyName(
 ): undefined | { name: string; type: "computed" | "normal" | "quoted" } {
 	switch (name.kind) {
 		case SyntaxKind.ComputedPropertyName:
-			if (ts.isStringLiteral(name.expression)) {
+			if (typescript.isStringLiteral(name.expression)) {
 				return { name: name.expression.text, type: "quoted" };
 			}
 			return undefined;
@@ -151,7 +154,7 @@ function isSameMethod(method1: Method, method2: Method | undefined) {
 
 function isStatic(node: ts.Node) {
 	return (
-		ts.canHaveModifiers(node) &&
+		typescript.canHaveModifiers(node) &&
 		!!node.modifiers?.some((mod) => mod.kind === SyntaxKind.StaticKeyword)
 	);
 }

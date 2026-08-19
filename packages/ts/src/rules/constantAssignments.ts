@@ -1,11 +1,12 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getModifyingReferences,
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -49,7 +50,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				VariableDeclarationList: (node, { sourceFile }) => {
-					if (!(node.flags & ts.NodeFlags.Const) || !node.declarations.length) {
+					if (
+						!(node.flags & typescript.NodeFlags.Const) ||
+						!node.declarations.length
+					) {
 						return;
 					}
 

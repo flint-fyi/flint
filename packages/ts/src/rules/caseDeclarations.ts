@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getTSNodeRange,
@@ -7,6 +6,10 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -40,7 +43,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					statement.kind === SyntaxKind.VariableStatement &&
 					tsutils.isNodeFlagSet(
 						statement.declarationList,
-						ts.NodeFlags.Let | ts.NodeFlags.Const,
+						typescript.NodeFlags.Let | typescript.NodeFlags.Const,
 					)
 				) {
 					return statement.declarationList.getChildAt(0, sourceFile);

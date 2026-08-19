@@ -1,4 +1,4 @@
-import * as tsutils from "ts-api-utils";
+import type { Comment } from "ts-api-utils";
 import { z } from "zod/v4";
 
 import type {
@@ -6,6 +6,7 @@ import type {
 	ReportInterpolationData,
 } from "@flint.fyi/core";
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -125,7 +126,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				SourceFile(node, { options }) {
 					function reportCommentDirective(
-						comment: tsutils.Comment,
+						comment: Comment,
 						directive: string,
 						data: ReportInterpolationData,
 						messageDefault: MessageForContext<typeof context>,
@@ -197,7 +198,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					function checkComment(
-						comment: tsutils.Comment,
+						comment: Comment,
 						directive: SuppressionDirective,
 						description: string,
 					) {

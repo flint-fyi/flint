@@ -1,5 +1,3 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	hasSameTokens,
@@ -8,6 +6,9 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
@@ -130,7 +131,7 @@ function isSupportedType(
 	const type = getConstrainedTypeAtLocation(node, typeChecker);
 
 	return isTypeRecursive(type, (constituent) => {
-		if ((constituent.flags & ts.TypeFlags.Any) !== 0) {
+		if ((constituent.flags & typescript.TypeFlags.Any) !== 0) {
 			return true;
 		}
 
@@ -148,7 +149,7 @@ function isSupportedType(
 
 		if (
 			constituent.isStringLiteral() ||
-			(constituent.flags & ts.TypeFlags.String) !== 0
+			(constituent.flags & typescript.TypeFlags.String) !== 0
 		) {
 			return supportedTypes.has("String");
 		}

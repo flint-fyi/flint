@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getTSNodeRange,
@@ -7,6 +6,10 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
@@ -64,7 +67,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ program, sourceFile, typeChecker }: TypeScriptFileServices,
 		): void {
 			const type = typeChecker.getTypeAtLocation(returnNode);
-			const functionNode = ts.findAncestor(
+			const functionNode = typescript.findAncestor(
 				returnNode,
 				// TODO: I believe isFunctionLikeDeclaration was incorrectly marked
 				// as deprecated in https://github.com/JoshuaKGoldberg/ts-api-utils/pull/124
@@ -111,7 +114,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						returnNodeType === signatureReturnType ||
 						tsutils.isTypeFlagSet(
 							signatureReturnType,
-							ts.TypeFlags.Any | ts.TypeFlags.Unknown,
+							typescript.TypeFlags.Any | typescript.TypeFlags.Unknown,
 						)
 					) {
 						return;
@@ -132,7 +135,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							(awaitedSignatureReturnType &&
 								tsutils.isTypeFlagSet(
 									awaitedSignatureReturnType,
-									ts.TypeFlags.Any | ts.TypeFlags.Unknown,
+									typescript.TypeFlags.Any | typescript.TypeFlags.Unknown,
 								))
 						) {
 							return;
@@ -148,7 +151,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const functionReturnType = signature.getReturnType();
 					if (
 						(anyType === AnyType.Any || anyType === AnyType.Error) &&
-						tsutils.isTypeFlagSet(functionReturnType, ts.TypeFlags.Unknown)
+						tsutils.isTypeFlagSet(
+							functionReturnType,
+							typescript.TypeFlags.Unknown,
+						)
 					) {
 						return;
 					}
@@ -160,7 +166,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								typeChecker.getTypeArguments(functionReturnType)[0],
 								"Array type should have at least one type argument",
 							),
-							ts.TypeFlags.Unknown,
+							typescript.TypeFlags.Unknown,
 						)
 					) {
 						return;
@@ -169,7 +175,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					if (
 						awaitedType &&
 						anyType === AnyType.PromiseAny &&
-						tsutils.isTypeFlagSet(awaitedType, ts.TypeFlags.Unknown)
+						tsutils.isTypeFlagSet(awaitedType, typescript.TypeFlags.Unknown)
 					) {
 						return;
 					}
@@ -199,7 +205,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						thisExpression &&
 						tsutils.isTypeFlagSet(
 							getConstrainedTypeAtLocation(thisExpression, typeChecker),
-							ts.TypeFlags.Any,
+							typescript.TypeFlags.Any,
 						)
 					) {
 						message = "unsafeReturnThis";

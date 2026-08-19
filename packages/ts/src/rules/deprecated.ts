@@ -1,10 +1,13 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -45,7 +48,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function isDeprecatedFromDeclarations(symbol: ts.Symbol | undefined) {
 			return symbol?.getDeclarations()?.some((declaration) => {
-				const tags = ts.getJSDocTags(declaration);
+				const tags = typescript.getJSDocTags(declaration);
 				return tags.some(
 					(tag) =>
 						tag.tagName.text === "deprecated" ||
@@ -63,7 +66,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return false;
 			}
 
-			if (!(symbol.flags & ts.SymbolFlags.Alias)) {
+			if (!(symbol.flags & typescript.SymbolFlags.Alias)) {
 				return !!(
 					checkAliasedSymbol &&
 					(getJsDocDeprecation(symbol, typeChecker) ||
@@ -74,7 +77,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const targetSymbol = typeChecker.getAliasedSymbol(symbol);
 			let current: ts.Symbol | undefined = symbol;
 
-			while (current.flags & ts.SymbolFlags.Alias) {
+			while (current.flags & typescript.SymbolFlags.Alias) {
 				if (
 					getJsDocDeprecation(current, typeChecker) ||
 					isDeprecatedFromDeclarations(current)
@@ -196,7 +199,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			const symbol = typeChecker.getSymbolAtLocation(node);
 
 			const aliasedSymbol =
-				symbol && symbol.flags & ts.SymbolFlags.Alias
+				symbol && symbol.flags & typescript.SymbolFlags.Alias
 					? typeChecker.getAliasedSymbol(symbol)
 					: symbol;
 
@@ -482,11 +485,14 @@ function isInsideHeritageClause(node: AST.AnyNode) {
 	let current: ts.Node | undefined = node.parent;
 
 	while (current) {
-		if (ts.isHeritageClause(current)) {
+		if (typescript.isHeritageClause(current)) {
 			return true;
 		}
 
-		if (ts.isSourceFile(current) || ts.isClassDeclaration(current)) {
+		if (
+			typescript.isSourceFile(current) ||
+			typescript.isClassDeclaration(current)
+		) {
 			break;
 		}
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?
@@ -505,18 +511,18 @@ function isInsideImport(node: AST.AnyNode) {
 	let current: ts.Node | undefined = node.parent;
 
 	while (current) {
-		if (ts.isImportDeclaration(current)) {
+		if (typescript.isImportDeclaration(current)) {
 			return true;
 		}
 
 		if (
-			ts.isSourceFile(current) ||
-			ts.isFunctionDeclaration(current) ||
-			ts.isFunctionExpression(current) ||
-			ts.isArrowFunction(current) ||
-			ts.isClassDeclaration(current) ||
-			ts.isClassExpression(current) ||
-			ts.isBlock(current)
+			typescript.isSourceFile(current) ||
+			typescript.isFunctionDeclaration(current) ||
+			typescript.isFunctionExpression(current) ||
+			typescript.isArrowFunction(current) ||
+			typescript.isClassDeclaration(current) ||
+			typescript.isClassExpression(current) ||
+			typescript.isBlock(current)
 		) {
 			return false;
 		}

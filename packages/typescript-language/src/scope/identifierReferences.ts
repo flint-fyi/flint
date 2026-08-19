@@ -1,7 +1,6 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
-
+import tsutils from "../ts-api-utils.ts";
 import type * as AST from "../types/ast.ts";
+import { SyntaxKind } from "../typescript.ts";
 
 export function isNonReferenceIdentifier(identifier: AST.Identifier): boolean {
 	if (

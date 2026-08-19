@@ -1,7 +1,7 @@
-import * as tsutils from "ts-api-utils";
 import type ts from "typescript";
 
 import type { Checker } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
 
 export function formatReportedType(
 	type: ts.Type,

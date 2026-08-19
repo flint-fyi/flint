@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -6,6 +6,9 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -153,7 +156,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				!ts.isTypeReferenceNode(typeAnnotation) ||
+				!typescript.isTypeReferenceNode(typeAnnotation) ||
 				typeAnnotation.typeName.kind !== SyntaxKind.Identifier ||
 				typeAnnotation.typeName.text !== constructorName ||
 				isBuiltInTypedArray(typeAnnotation.typeName.text) ||

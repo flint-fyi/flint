@@ -2,12 +2,7 @@ import path from "node:path";
 
 import { createProjectService } from "@typescript-eslint/project-service";
 import { debugForFile } from "debug-for-file";
-import {
-	getPreEmitDiagnostics,
-	SyntaxKind,
-	type Node,
-	type Program,
-} from "typescript";
+import type { Node, Program } from "typescript";
 
 import {
 	createLanguage,
@@ -32,6 +27,7 @@ import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
 import type * as AST from "./types/ast.ts";
 import type { Checker } from "./types/checker.ts";
+import { getPreEmitDiagnostics, SyntaxKind } from "./typescript.ts";
 
 export interface TypeScriptFileServices {
 	program: Program;

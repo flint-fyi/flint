@@ -2,10 +2,12 @@ import fs from "node:fs";
 import timers from "node:timers";
 
 import { resolve } from "pathe";
-import ts from "typescript";
+import type ts from "typescript";
 
 import { commonlyIgnoredPaths, type LinterHost } from "@flint.fyi/core";
 import { assert, FlintAssertionError } from "@flint.fyi/utils";
+
+import typescript from "./typescript.ts";
 
 function serverHostMethodNotImplemented(methodName: string): never {
 	throw new FlintAssertionError(
@@ -30,7 +32,7 @@ export function createTypeScriptServerHost(
 	host: LinterHost,
 ): ts.server.ServerHost {
 	return {
-		...ts.sys,
+		...typescript.sys,
 		args: [],
 		clearImmediate: timers.clearImmediate,
 		clearTimeout: timers.clearTimeout,
@@ -90,7 +92,7 @@ export function createTypeScriptServerHost(
 			};
 			fs.readdirSync = patchedReaddirSync;
 			try {
-				return ts.sys.readDirectory(
+				return typescript.sys.readDirectory(
 					directoryPath,
 					extensions,
 					exclude,
@@ -128,13 +130,13 @@ export function createTypeScriptServerHost(
 					let eventKind: ts.FileWatcherEventKind;
 					switch (event) {
 						case "changed":
-							eventKind = ts.FileWatcherEventKind.Changed;
+							eventKind = typescript.FileWatcherEventKind.Changed;
 							break;
 						case "created":
-							eventKind = ts.FileWatcherEventKind.Created;
+							eventKind = typescript.FileWatcherEventKind.Created;
 							break;
 						case "deleted":
-							eventKind = ts.FileWatcherEventKind.Deleted;
+							eventKind = typescript.FileWatcherEventKind.Deleted;
 							break;
 					}
 					callback(filePath, eventKind);

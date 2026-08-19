@@ -4,9 +4,12 @@
 // Changing from the switch to manual ifs is due to:
 // https://github.com/Microsoft/TypeScript/issues/56275
 
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 export function tsAstToLiteral(node: AST.ArrayLiteralExpression): unknown[];
 export function tsAstToLiteral(node: AST.ObjectLiteralExpression): object;
@@ -21,24 +24,24 @@ export function tsAstToLiteral(node: ts.Node): unknown {
 			return true;
 	}
 
-	if (ts.isArrayLiteralExpression(node)) {
+	if (typescript.isArrayLiteralExpression(node)) {
 		return node.elements
 			.filter((element) => element.kind !== SyntaxKind.SpreadElement)
 			.map((element) => tsAstToLiteral(element));
 	}
 
-	if (ts.isNumericLiteral(node)) {
+	if (typescript.isNumericLiteral(node)) {
 		return parseFloat(node.text);
 	}
 
-	if (ts.isObjectLiteralExpression(node)) {
+	if (typescript.isObjectLiteralExpression(node)) {
 		return Object.fromEntries(
 			node.properties
 				.filter(
 					(
 						property,
 					): property is ts.PropertyAssignment & { name: ts.Identifier } =>
-						ts.isPropertyAssignment(property) &&
+						typescript.isPropertyAssignment(property) &&
 						(property.name.kind === SyntaxKind.Identifier ||
 							property.name.kind === SyntaxKind.StringLiteral),
 				)
@@ -49,7 +52,7 @@ export function tsAstToLiteral(node: ts.Node): unknown {
 		);
 	}
 
-	if (ts.isStringLiteral(node)) {
+	if (typescript.isStringLiteral(node)) {
 		return node.text;
 	}
 

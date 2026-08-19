@@ -1,4 +1,4 @@
-import { SyntaxKind, TypeFlags, type Type } from "typescript";
+import type { Type } from "typescript";
 
 import {
 	getStaticStringValue,
@@ -6,6 +6,10 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import {
+	SyntaxKind,
+	TypeFlags,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -7,6 +7,9 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -60,7 +63,9 @@ const javascriptReservedWords = new Set([
 ]);
 
 function getModifiers(node: null | ts.Node | undefined) {
-	return node && ts.canHaveModifiers(node) ? ts.getModifiers(node) : undefined;
+	return node && typescript.canHaveModifiers(node)
+		? typescript.getModifiers(node)
+		: undefined;
 }
 
 // TODO: Use a util like getStaticValue
@@ -167,7 +172,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						if (
 							typeChecker
 								.getIndexInfosOfType(objectType)
-								.some((info) => info.keyType.flags & ts.TypeFlags.StringLike)
+								.some(
+									(info) =>
+										info.keyType.flags & typescript.TypeFlags.StringLike,
+								)
 						) {
 							return;
 						}

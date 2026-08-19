@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, type TypeChecker } from "typescript";
+import type { TypeChecker } from "typescript";
 
 import {
 	forEachChild,
@@ -8,6 +7,8 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import { SyntaxKind } from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

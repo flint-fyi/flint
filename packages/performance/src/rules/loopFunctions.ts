@@ -1,11 +1,14 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -110,18 +113,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: ts.Node,
 			loopVariables: Set<string>,
 		): boolean | undefined {
-			if (ts.isIdentifier(node) && loopVariables.has(node.text)) {
+			if (typescript.isIdentifier(node) && loopVariables.has(node.text)) {
 				return true;
 			}
 
-			return ts.forEachChild(node, (child) => {
+			return typescript.forEachChild(node, (child) => {
 				return (
 					!tsutils.isFunctionScopeBoundary(child) &&
-					!ts.isDoStatement(child) &&
-					!ts.isForInStatement(child) &&
-					!ts.isForOfStatement(child) &&
-					!ts.isForStatement(child) &&
-					!ts.isWhileStatement(child) &&
+					!typescript.isDoStatement(child) &&
+					!typescript.isForInStatement(child) &&
+					!typescript.isForOfStatement(child) &&
+					!typescript.isForStatement(child) &&
+					!typescript.isWhileStatement(child) &&
 					referencesLoopVariable(child, loopVariables)
 				);
 			});
@@ -143,11 +146,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					const start = node.getStart(sourceFile);
 					let keyword = "function";
 
-					if (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node)) {
+					if (
+						typescript.isFunctionDeclaration(node) ||
+						typescript.isFunctionExpression(node)
+					) {
 						keyword = "function";
-					} else if (ts.isArrowFunction(node)) {
+					} else if (typescript.isArrowFunction(node)) {
 						const firstToken = node.getFirstToken(sourceFile);
-						if (firstToken && ts.isIdentifier(firstToken)) {
+						if (firstToken && typescript.isIdentifier(firstToken)) {
 							keyword = firstToken.text;
 						} else {
 							keyword = "(";
@@ -166,16 +172,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				ts.isDoStatement(node) ||
-				ts.isForInStatement(node) ||
-				ts.isForOfStatement(node) ||
-				ts.isForStatement(node) ||
-				ts.isWhileStatement(node)
+				typescript.isDoStatement(node) ||
+				typescript.isForInStatement(node) ||
+				typescript.isForOfStatement(node) ||
+				typescript.isForStatement(node) ||
+				typescript.isWhileStatement(node)
 			) {
 				return;
 			}
 
-			ts.forEachChild(node, (child) => {
+			typescript.forEachChild(node, (child) => {
 				checkFunctionInLoop(child, loopNode, loopVariables, sourceFile);
 			});
 		}

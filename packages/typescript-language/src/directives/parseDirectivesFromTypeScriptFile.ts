@@ -1,6 +1,3 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	DirectivesCollector,
 	type DirectiveCollection,
@@ -9,7 +6,9 @@ import {
 import { nullThrows } from "@flint.fyi/utils";
 
 import { normalizeRange } from "../normalizeRange.ts";
+import tsutils from "../ts-api-utils.ts";
 import type * as AST from "../types/ast.ts";
+import typescript, { SyntaxKind } from "../typescript.ts";
 
 export interface ExtractedDirective {
 	range: NormalizedReportRangeObject;
@@ -80,7 +79,7 @@ function computeNextCodeLine(
 	}
 
 	// Skip comments and whitespace to find the first token on the next line
-	const scanner = ts.createScanner(
+	const scanner = typescript.createScanner(
 		sourceFile.languageVersion,
 		true,
 		sourceFile.languageVariant,

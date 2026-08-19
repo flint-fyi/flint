@@ -1,9 +1,10 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getModifyingReferences,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -37,7 +38,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					if (
 						node.parent.kind === SyntaxKind.VariableDeclarationList &&
-						!!(node.parent.flags & ts.NodeFlags.Const)
+						!!(node.parent.flags & typescript.NodeFlags.Const)
 					) {
 						return;
 					}

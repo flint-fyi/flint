@@ -1,15 +1,16 @@
-import ts, { SyntaxKind } from "typescript";
-
 import type { CharacterReportRange } from "@flint.fyi/core";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 export function countCommentsInRange(
 	sourceText: string,
 	{ begin, end }: CharacterReportRange,
 ): number {
-	const scanner = ts.createScanner(
-		ts.ScriptTarget.Latest,
+	const scanner = typescript.createScanner(
+		typescript.ScriptTarget.Latest,
 		false,
-		ts.LanguageVariant.Standard,
+		typescript.LanguageVariant.Standard,
 		sourceText.slice(begin, end),
 	);
 	let count = 0;

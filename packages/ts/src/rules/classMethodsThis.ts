@@ -1,7 +1,10 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 import { z } from "zod/v4";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -33,8 +36,8 @@ function containsThis(node: ts.Node): boolean {
 			const classNode = node as ts.ClassDeclaration | ts.ClassExpression;
 			for (const member of classNode.members) {
 				if (
-					ts.isPropertyDeclaration(member) &&
-					ts.isComputedPropertyName(member.name) &&
+					typescript.isPropertyDeclaration(member) &&
+					typescript.isComputedPropertyName(member.name) &&
 					containsThis(member.name.expression)
 				) {
 					return true;
@@ -53,7 +56,7 @@ function containsThis(node: ts.Node): boolean {
 			return true;
 
 		default:
-			return ts.forEachChild(node, containsThis) ?? false;
+			return typescript.forEachChild(node, containsThis) ?? false;
 	}
 }
 

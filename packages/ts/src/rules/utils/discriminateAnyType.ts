@@ -1,7 +1,8 @@
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import type ts from "typescript";
 
 import type { Checker } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript from "@flint.fyi/typescript-language/typescript";
 import { nullThrows } from "@flint.fyi/utils";
 
 export const AnyType = {
@@ -35,7 +36,7 @@ function discriminateAnyTypeWorker(
 		return AnyType.Safe;
 	}
 	visited.add(type);
-	if (tsutils.isTypeFlagSet(type, ts.TypeFlags.Any)) {
+	if (tsutils.isTypeFlagSet(type, typescript.TypeFlags.Any)) {
 		return tsutils.isIntrinsicErrorType(type) ? AnyType.Error : AnyType.Any;
 	}
 	if (checker.isArrayType(type)) {
@@ -44,7 +45,7 @@ function discriminateAnyTypeWorker(
 			"Array type should have at least one type argument",
 		);
 		if (
-			tsutils.isTypeFlagSet(elementType, ts.TypeFlags.Any) &&
+			tsutils.isTypeFlagSet(elementType, typescript.TypeFlags.Any) &&
 			!tsutils.isIntrinsicErrorType(elementType)
 		) {
 			return AnyType.AnyArray;

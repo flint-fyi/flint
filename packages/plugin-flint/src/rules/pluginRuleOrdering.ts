@@ -1,10 +1,13 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { findProperty } from "../utils/findProperty.ts";
 import { ruleCreator } from "./ruleCreator.ts";
@@ -51,7 +54,7 @@ function isCreatePluginCall(
 	}
 
 	const resolvedSymbol =
-		symbol.flags & ts.SymbolFlags.Alias
+		symbol.flags & typescript.SymbolFlags.Alias
 			? typeChecker.getAliasedSymbol(symbol)
 			: symbol;
 

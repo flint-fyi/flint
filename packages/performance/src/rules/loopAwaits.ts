@@ -1,11 +1,14 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "../ruleCreator.ts";
 
@@ -57,7 +60,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			ts.forEachChild(node, (child) => {
+			typescript.forEachChild(node, (child) => {
 				checkForAwaitExpressions(child, loopNode, sourceFile);
 			});
 		}

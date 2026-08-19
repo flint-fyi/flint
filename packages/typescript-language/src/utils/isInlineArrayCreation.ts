@@ -1,4 +1,6 @@
-import ts from "typescript";
+import type ts from "typescript";
+
+import typescript from "../typescript.ts";
 
 const methodsReturningNewArray = new Set([
 	"concat",
@@ -23,20 +25,20 @@ const objectStaticMethods = new Set(["entries", "keys", "values"]);
  * so mutating methods like .sort() or .reverse() are safe to use.
  */
 export function isInlineArrayCreation(node: ts.Expression): boolean {
-	if (ts.isArrayLiteralExpression(node)) {
+	if (typescript.isArrayLiteralExpression(node)) {
 		return true;
 	}
 
-	if (ts.isParenthesizedExpression(node)) {
+	if (typescript.isParenthesizedExpression(node)) {
 		return isInlineArrayCreation(node.expression);
 	}
 
-	if (ts.isCallExpression(node)) {
-		if (ts.isPropertyAccessExpression(node.expression)) {
+	if (typescript.isCallExpression(node)) {
+		if (typescript.isPropertyAccessExpression(node.expression)) {
 			const methodName = node.expression.name.text;
 
 			if (
-				ts.isIdentifier(node.expression.expression) &&
+				typescript.isIdentifier(node.expression.expression) &&
 				node.expression.expression.text === "Object" &&
 				objectStaticMethods.has(methodName)
 			) {
@@ -44,7 +46,7 @@ export function isInlineArrayCreation(node: ts.Expression): boolean {
 			}
 
 			if (
-				ts.isIdentifier(node.expression.expression) &&
+				typescript.isIdentifier(node.expression.expression) &&
 				node.expression.expression.text === "Array" &&
 				(methodName === "from" || methodName === "of")
 			) {
@@ -57,17 +59,17 @@ export function isInlineArrayCreation(node: ts.Expression): boolean {
 		}
 
 		if (
-			ts.isIdentifier(node.expression) &&
+			typescript.isIdentifier(node.expression) &&
 			node.expression.text === "Array" &&
-			ts.isNewExpression(node.parent)
+			typescript.isNewExpression(node.parent)
 		) {
 			return true;
 		}
 	}
 
 	if (
-		ts.isNewExpression(node) &&
-		ts.isIdentifier(node.expression) &&
+		typescript.isNewExpression(node) &&
+		typescript.isIdentifier(node.expression) &&
 		node.expression.text === "Array"
 	) {
 		return true;

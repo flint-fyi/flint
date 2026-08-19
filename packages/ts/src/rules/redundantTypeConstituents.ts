@@ -1,42 +1,45 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 const literalToPrimitiveTypeFlags: Record<number, ts.TypeFlags> = {
-	[ts.TypeFlags.BigIntLiteral]: ts.TypeFlags.BigInt,
-	[ts.TypeFlags.BooleanLiteral]: ts.TypeFlags.Boolean,
-	[ts.TypeFlags.NumberLiteral]: ts.TypeFlags.Number,
-	[ts.TypeFlags.StringLiteral]: ts.TypeFlags.String,
-	[ts.TypeFlags.TemplateLiteral]: ts.TypeFlags.String,
+	[typescript.TypeFlags.BigIntLiteral]: typescript.TypeFlags.BigInt,
+	[typescript.TypeFlags.BooleanLiteral]: typescript.TypeFlags.Boolean,
+	[typescript.TypeFlags.NumberLiteral]: typescript.TypeFlags.Number,
+	[typescript.TypeFlags.StringLiteral]: typescript.TypeFlags.String,
+	[typescript.TypeFlags.TemplateLiteral]: typescript.TypeFlags.String,
 };
 
 const literalTypeFlags = [
-	ts.TypeFlags.BigIntLiteral,
-	ts.TypeFlags.BooleanLiteral,
-	ts.TypeFlags.NumberLiteral,
-	ts.TypeFlags.StringLiteral,
-	ts.TypeFlags.TemplateLiteral,
+	typescript.TypeFlags.BigIntLiteral,
+	typescript.TypeFlags.BooleanLiteral,
+	typescript.TypeFlags.NumberLiteral,
+	typescript.TypeFlags.StringLiteral,
+	typescript.TypeFlags.TemplateLiteral,
 ];
 
 const primitiveTypeFlags = [
-	ts.TypeFlags.BigInt,
-	ts.TypeFlags.Boolean,
-	ts.TypeFlags.Number,
-	ts.TypeFlags.String,
+	typescript.TypeFlags.BigInt,
+	typescript.TypeFlags.Boolean,
+	typescript.TypeFlags.Number,
+	typescript.TypeFlags.String,
 ];
 
 const primitiveTypeFlagNames: Record<number, string> = {
-	[ts.TypeFlags.BigInt]: "bigint",
-	[ts.TypeFlags.Boolean]: "boolean",
-	[ts.TypeFlags.Number]: "number",
-	[ts.TypeFlags.String]: "string",
+	[typescript.TypeFlags.BigInt]: "bigint",
+	[typescript.TypeFlags.Boolean]: "boolean",
+	[typescript.TypeFlags.Number]: "number",
+	[typescript.TypeFlags.String]: "string",
 };
 
 function describeLiteralType(type: ts.Type): string {
@@ -57,15 +60,15 @@ function describeLiteralType(type: ts.Type): string {
 		return String(type.aliasSymbol.escapedName);
 	}
 
-	if (type.flags & ts.TypeFlags.Any) {
+	if (type.flags & typescript.TypeFlags.Any) {
 		return "any";
 	}
 
-	if (type.flags & ts.TypeFlags.Never) {
+	if (type.flags & typescript.TypeFlags.Never) {
 		return "never";
 	}
 
-	if (type.flags & ts.TypeFlags.Unknown) {
+	if (type.flags & typescript.TypeFlags.Unknown) {
 		return "unknown";
 	}
 
@@ -214,7 +217,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						for (const typePart of typeParts) {
 							const typeName = describeLiteralType(typePart);
 
-							if (typePart.flags === ts.TypeFlags.Any) {
+							if (typePart.flags === typescript.TypeFlags.Any) {
 								context.report({
 									data: { container: "intersection", typeName },
 									message:
@@ -224,7 +227,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								continue;
 							}
 
-							if (typePart.flags === ts.TypeFlags.Never) {
+							if (typePart.flags === typescript.TypeFlags.Never) {
 								context.report({
 									data: { container: "intersection", typeName },
 									message: "overrides",
@@ -233,7 +236,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								continue;
 							}
 
-							if (typePart.flags === ts.TypeFlags.Unknown) {
+							if (typePart.flags === typescript.TypeFlags.Unknown) {
 								context.report({
 									data: { container: "intersection", typeName },
 									message: "overridden",
@@ -338,13 +341,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							const typeName = describeLiteralType(typePart);
 
 							if (
-								typePart.flags === ts.TypeFlags.Any ||
-								typePart.flags === ts.TypeFlags.Unknown
+								typePart.flags === typescript.TypeFlags.Any ||
+								typePart.flags === typescript.TypeFlags.Unknown
 							) {
 								context.report({
 									data: { container: "union", typeName },
 									message:
-										typePart.flags === ts.TypeFlags.Any && typeName !== "any"
+										typePart.flags === typescript.TypeFlags.Any &&
+										typeName !== "any"
 											? "errorTypeOverrides"
 											: "overrides",
 									range: getTSNodeRange(typeNode, sourceFile),
@@ -353,7 +357,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							}
 
 							if (
-								typePart.flags === ts.TypeFlags.Never &&
+								typePart.flags === typescript.TypeFlags.Never &&
 								!isNodeInsideReturnType(node)
 							) {
 								context.report({

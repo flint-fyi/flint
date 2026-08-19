@@ -2,9 +2,9 @@ import {
 	visitRegExpAST,
 	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
-import { SyntaxKind } from "typescript";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { parseRegexpAst } from "./utils/parseRegexpAst.ts";

@@ -1,5 +1,7 @@
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import type ts from "typescript";
+
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript from "@flint.fyi/typescript-language/typescript";
 
 export function isBuiltinSymbolLike(
 	program: ts.Program,
@@ -24,7 +26,7 @@ export function isBuiltinSymbolLike(
 		if (
 			actualSymbolName === "Function" &&
 			tsutils.isObjectType(subType) &&
-			tsutils.isObjectFlagSet(subType, ts.ObjectFlags.Anonymous)
+			tsutils.isObjectFlagSet(subType, typescript.ObjectFlags.Anonymous)
 		) {
 			return false;
 		}

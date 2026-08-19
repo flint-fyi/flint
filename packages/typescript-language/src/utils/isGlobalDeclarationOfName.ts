@@ -1,3 +1,7 @@
+import type { Declaration, Node, Program } from "typescript";
+
+import type { Checker } from "@flint.fyi/typescript-language";
+
 import {
 	isClassDeclaration,
 	isFunctionDeclaration,
@@ -5,13 +9,7 @@ import {
 	isInterfaceDeclaration,
 	isPropertySignature,
 	isVariableDeclaration,
-	type Declaration,
-	type Node,
-	type Program,
-} from "typescript";
-
-import type { Checker } from "@flint.fyi/typescript-language";
-
+} from "../typescript.ts";
 import { declarationIncludesGlobal } from "./declarationIncludesGlobal.ts";
 
 /**

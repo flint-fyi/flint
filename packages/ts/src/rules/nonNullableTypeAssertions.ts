@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getTSNodeRange,
@@ -8,11 +7,15 @@ import {
 	type Checker,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 function couldBeNullish(type: ts.Type): boolean {
-	if (type.flags & ts.TypeFlags.TypeParameter) {
+	if (type.flags & typescript.TypeFlags.TypeParameter) {
 		const constraint = type.getConstraint();
 		return constraint === undefined || couldBeNullish(constraint);
 	}
@@ -21,7 +24,11 @@ function couldBeNullish(type: ts.Type): boolean {
 		return type.types.some(couldBeNullish);
 	}
 
-	return (type.flags & (ts.TypeFlags.Null | ts.TypeFlags.Undefined)) !== 0;
+	return (
+		(type.flags &
+			(typescript.TypeFlags.Null | typescript.TypeFlags.Undefined)) !==
+		0
+	);
 }
 
 function getTypesIfNotLoose(
@@ -29,7 +36,12 @@ function getTypesIfNotLoose(
 	typeChecker: Checker,
 ) {
 	const type = typeChecker.getTypeAtLocation(node);
-	if (tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown)) {
+	if (
+		tsutils.isTypeFlagSet(
+			type,
+			typescript.TypeFlags.Any | typescript.TypeFlags.Unknown,
+		)
+	) {
 		return undefined;
 	}
 
@@ -66,7 +78,10 @@ function sameTypeWithoutNullish(
 	originalTypes: ts.Type[],
 ) {
 	const nonNullishOriginalTypes = originalTypes.filter(
-		(type) => (type.flags & (ts.TypeFlags.Null | ts.TypeFlags.Undefined)) === 0,
+		(type) =>
+			(type.flags &
+				(typescript.TypeFlags.Null | typescript.TypeFlags.Undefined)) ===
+			0,
 	);
 
 	if (nonNullishOriginalTypes.length === originalTypes.length) {

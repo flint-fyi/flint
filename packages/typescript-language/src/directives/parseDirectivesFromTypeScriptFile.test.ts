@@ -1,7 +1,7 @@
-import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
 import type * as AST from "../types/ast.ts";
+import typescript from "../typescript.ts";
 import {
 	extractDirectivesFromTypeScriptFile,
 	parseDirectivesFromTypeScriptFile,
@@ -9,10 +9,10 @@ import {
 
 describe(parseDirectivesFromTypeScriptFile, () => {
 	it("returns empty arrays when there are no directives", () => {
-		const sourceFile = ts.createSourceFile(
+		const sourceFile = typescript.createSourceFile(
 			"test.ts",
 			"// unrelated",
-			ts.ScriptTarget.ESNext,
+			typescript.ScriptTarget.ESNext,
 			true,
 		) as AST.SourceFile;
 
@@ -25,14 +25,14 @@ describe(parseDirectivesFromTypeScriptFile, () => {
 	});
 
 	it("returns parsed directives when there are comment directives", () => {
-		const sourceFile = ts.createSourceFile(
+		const sourceFile = typescript.createSourceFile(
 			"test.ts",
 			`
                 // flint-disable-file a
                 // flint-disable-next-line b
                 // flint-invalid
             `,
-			ts.ScriptTarget.ESNext,
+			typescript.ScriptTarget.ESNext,
 			true,
 		) as AST.SourceFile;
 
@@ -112,10 +112,10 @@ describe(parseDirectivesFromTypeScriptFile, () => {
 });
 
 function createSourceFile(content: string) {
-	return ts.createSourceFile(
+	return typescript.createSourceFile(
 		"test.ts",
 		content,
-		ts.ScriptTarget.ESNext,
+		typescript.ScriptTarget.ESNext,
 		true,
 	) as AST.SourceFile;
 }

@@ -1,10 +1,11 @@
-import { SyntaxKind, type Program } from "typescript";
+import type { Program } from "typescript";
 
 import {
 	isGlobalDeclaration,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/typescript";
 
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298

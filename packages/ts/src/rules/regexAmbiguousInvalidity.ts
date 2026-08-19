@@ -5,7 +5,6 @@ import {
 	type AST as RegExpAST,
 } from "@eslint-community/regexpp";
 import type { CharacterClassElement } from "@eslint-community/regexpp/ast";
-import { SyntaxKind } from "typescript";
 
 import {
 	isGlobalDeclarationOfName,
@@ -13,6 +12,7 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

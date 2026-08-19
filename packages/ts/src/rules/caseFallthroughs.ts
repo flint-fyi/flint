@@ -1,11 +1,11 @@
+import type { NodeArray } from "typescript";
+
+import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
 import {
 	getLeadingCommentRanges,
 	getTrailingCommentRanges,
 	SyntaxKind,
-	type NodeArray,
-} from "typescript";
-
-import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

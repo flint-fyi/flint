@@ -1,17 +1,18 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isMutableDeclaration(node: AST.VariableDeclarationList): boolean {
 	return (
-		(node.flags & ts.NodeFlags.Let) !== 0 ||
-		(node.flags & ts.NodeFlags.Const) === 0
+		(node.flags & typescript.NodeFlags.Let) !== 0 ||
+		(node.flags & typescript.NodeFlags.Const) === 0
 	);
 }
 

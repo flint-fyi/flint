@@ -6,13 +6,8 @@ import type {
 } from "@volar/language-core";
 import type { TypeScriptServiceScript as VolarTypeScriptServiceScript } from "@volar/typescript";
 import { proxyCreateProgram } from "@volar/typescript/lib/node/proxyCreateProgram.js";
-import {
-	getPreEmitDiagnostics,
-	type CreateProgramOptions,
-	type Node,
-	type Program,
-} from "typescript";
 import type ts from "typescript";
+import type { CreateProgramOptions, Node, Program } from "typescript";
 
 import {
 	createLanguage,
@@ -44,6 +39,7 @@ import {
 	type TypeScriptFileServices,
 	type TypeScriptNodesByName,
 } from "@flint.fyi/typescript-language";
+import { getPreEmitDiagnostics } from "@flint.fyi/typescript-language/typescript";
 import { assert, FlintAssertionError, nullThrows } from "@flint.fyi/utils";
 
 import packageJson from "../package.json" with { type: "json" };

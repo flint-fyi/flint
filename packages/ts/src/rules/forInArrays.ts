@@ -1,10 +1,11 @@
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import type ts from "typescript";
 
 import {
 	typescriptLanguage,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";
@@ -40,7 +41,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			return tsutils.isTypeFlagSet(
 				typeChecker.getTypeOfSymbol(lengthProperty),
-				ts.TypeFlags.NumberLike,
+				typescript.TypeFlags.NumberLike,
 			);
 		}
 

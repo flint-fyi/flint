@@ -1,4 +1,3 @@
-import { SyntaxKind } from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -7,6 +6,7 @@ import {
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 import { z } from "zod/v4";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
@@ -6,6 +6,9 @@ import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { getSpecifierNames } from "../type-utils/getSpecifierNames.ts";
 import { matchesSpecifier } from "../type-utils/matchesSpecifier.ts";
@@ -45,7 +48,7 @@ function resolveSymbolDeclarations(
 		return undefined;
 	}
 
-	if (symbol.flags & ts.SymbolFlags.Alias) {
+	if (symbol.flags & typescript.SymbolFlags.Alias) {
 		symbol = typeChecker.getAliasedSymbol(symbol);
 	}
 

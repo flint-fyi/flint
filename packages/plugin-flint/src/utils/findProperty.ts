@@ -1,7 +1,7 @@
 import type ts from "typescript";
-import { SyntaxKind } from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/typescript";
 
 export function findProperty<Node extends AST.Expression>(
 	properties: ts.NodeArray<AST.ObjectLiteralElementLike>,

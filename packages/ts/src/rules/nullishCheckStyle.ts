@@ -1,10 +1,10 @@
-import { isNullKeyword } from "ts-api-utils";
 import { z } from "zod/v4";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import {
@@ -190,8 +190,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						} else if (
 							options.looseNullishComparisonStyle === "prefer-undefined"
 						) {
-							const leftIsNull = isNullKeyword(node.left);
-							const rightIsNull = isNullKeyword(node.right);
+							const leftIsNull = tsutils.isNullKeyword(node.left);
+							const rightIsNull = tsutils.isNullKeyword(node.right);
 
 							if (leftIsNull || rightIsNull) {
 								context.report({

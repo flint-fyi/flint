@@ -1,23 +1,26 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 function isNonArrowFunctionBoundary(node: ts.Node): "quit" | boolean {
-	if (ts.isArrowFunction(node)) {
+	if (typescript.isArrowFunction(node)) {
 		return "quit";
 	}
 	return (
-		ts.isFunctionDeclaration(node) ||
-		ts.isFunctionExpression(node) ||
-		ts.isMethodDeclaration(node) ||
-		ts.isGetAccessorDeclaration(node) ||
-		ts.isSetAccessorDeclaration(node) ||
-		ts.isConstructorDeclaration(node)
+		typescript.isFunctionDeclaration(node) ||
+		typescript.isFunctionExpression(node) ||
+		typescript.isMethodDeclaration(node) ||
+		typescript.isGetAccessorDeclaration(node) ||
+		typescript.isSetAccessorDeclaration(node) ||
+		typescript.isConstructorDeclaration(node)
 	);
 }
 
@@ -66,7 +69,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					// TODO: This might get simpler when we have scope analysis.
 					// https://github.com/JoshuaKGoldberg/flint/issues/400
-					if (!ts.findAncestor(node, isNonArrowFunctionBoundary)) {
+					if (!typescript.findAncestor(node, isNonArrowFunctionBoundary)) {
 						return;
 					}
 
@@ -78,10 +81,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							.getDeclarations()
 							?.some(
 								(declaration) =>
-									ts.isParameter(declaration) ||
-									ts.isVariableDeclaration(declaration) ||
-									ts.isPropertyDeclaration(declaration) ||
-									ts.isBindingElement(declaration),
+									typescript.isParameter(declaration) ||
+									typescript.isVariableDeclaration(declaration) ||
+									typescript.isPropertyDeclaration(declaration) ||
+									typescript.isBindingElement(declaration),
 							)
 					) {
 						return;

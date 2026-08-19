@@ -1,6 +1,7 @@
-import { SyntaxKind, type Node } from "typescript";
+import type { Node } from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/typescript";
 
 export function isImportedBindingFromModule(
 	declaration: Node,

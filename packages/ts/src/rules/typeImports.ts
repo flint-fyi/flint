@@ -1,12 +1,4 @@
-import {
-	isExpressionWithTypeArguments,
-	isShorthandPropertyAssignment,
-	isTypeNode,
-	isTypeParameterDeclaration,
-	SymbolFlags,
-	SyntaxKind,
-	type Symbol,
-} from "typescript";
+import type { Symbol } from "typescript";
 import { z } from "zod/v4";
 
 import {
@@ -16,6 +8,14 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import {
+	isExpressionWithTypeArguments,
+	isShorthandPropertyAssignment,
+	isTypeNode,
+	isTypeParameterDeclaration,
+	SymbolFlags,
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

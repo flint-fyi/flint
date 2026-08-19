@@ -16,7 +16,9 @@
 	"sideEffects": true,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./ts-api-utils": "./src/ts-api-utils.ts",
+		"./typescript": "./src/typescript.ts"
 	},
 	"files": [
 		"dist/"
@@ -45,7 +47,9 @@
 	"publishConfig": {
 		"access": "public",
 		"exports": {
-			".": "./dist/index.mjs"
+			".": "./dist/index.mjs",
+			"./ts-api-utils": "./dist/ts-api-utils.mjs",
+			"./typescript": "./dist/typescript.mjs"
 		}
 	}
 }

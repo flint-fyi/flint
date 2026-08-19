@@ -1,9 +1,10 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -29,7 +30,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		return {
 			visitors: {
 				SourceFile(node, { sourceFile }) {
-					if (!ts.isExternalModule(sourceFile)) {
+					if (!typescript.isExternalModule(sourceFile)) {
 						return;
 					}
 

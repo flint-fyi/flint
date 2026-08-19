@@ -1,11 +1,14 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	typescriptLanguage,
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -71,11 +74,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					return;
 				}
 
-				if (ts.isPropertyAccessExpression(node)) {
+				if (typescript.isPropertyAccessExpression(node)) {
 					checkPropertyAccessExpression(node);
 				}
 
-				ts.forEachChild(node, checkNode);
+				typescript.forEachChild(node, checkNode);
 			}
 
 			function checkPropertyAccessExpression(
@@ -97,7 +100,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 				} else if (
-					ts.isBinaryExpression(node.parent) &&
+					typescript.isBinaryExpression(node.parent) &&
 					node.parent.left === node &&
 					node.parent.operatorToken.kind === SyntaxKind.EqualsToken
 				) {
@@ -113,7 +116,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			// TODO: This will be more clean when there is a scope manager
 			// https://github.com/flint-fyi/flint/issues/400
-			ts.forEachChild(accessor.body, checkNode);
+			typescript.forEachChild(accessor.body, checkNode);
 		}
 
 		return {

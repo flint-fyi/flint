@@ -1,5 +1,3 @@
-import ts, { SyntaxKind } from "typescript";
-
 import type { Rule } from "@flint.fyi/core";
 import {
 	getTSNodeRange,
@@ -7,6 +5,9 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator, type VitestRuleAbout } from "./ruleCreator.ts";
 
@@ -49,7 +50,7 @@ export function createStatementPaddingRule(
 				node: AST.AnyNode,
 				sourceFile: AST.SourceFile,
 			) {
-				const leadingComments = ts.getLeadingCommentRanges(
+				const leadingComments = typescript.getLeadingCommentRanges(
 					sourceFile.text,
 					node.getFullStart(),
 				);
@@ -75,7 +76,7 @@ export function createStatementPaddingRule(
 				node: AST.AnyNode,
 				sourceFile: AST.SourceFile,
 			) {
-				const trailingComments = ts.getTrailingCommentRanges(
+				const trailingComments = typescript.getTrailingCommentRanges(
 					sourceFile.text,
 					node.getEnd(),
 				);

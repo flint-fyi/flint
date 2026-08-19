@@ -1,6 +1,5 @@
-import { SyntaxKind } from "typescript";
-
 import type { AST } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/typescript";
 
 export function isInBooleanContext(node: AST.AnyNode): boolean {
 	switch (node.parent.kind) {

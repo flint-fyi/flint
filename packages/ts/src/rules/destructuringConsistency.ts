@@ -1,5 +1,3 @@
-import ts, { SyntaxKind } from "typescript";
-
 import {
 	getScopeManager,
 	getTSNodeRange,
@@ -7,6 +5,9 @@ import {
 	type AST,
 	type Scope,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -129,7 +130,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						destructured.destructuredProperties.get(propertyName);
 
 					if (
-						(ts.isCallExpression(node.parent) &&
+						(typescript.isCallExpression(node.parent) &&
 							node.parent.expression === node) ||
 						isLeftHandSide(node)
 					) {
@@ -163,7 +164,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					destructuredObjects.length = 0;
 				},
 				VariableDeclaration: (node, { sourceFile }) => {
-					if (!node.initializer || !ts.isObjectBindingPattern(node.name)) {
+					if (
+						!node.initializer ||
+						!typescript.isObjectBindingPattern(node.name)
+					) {
 						return;
 					}
 
@@ -174,22 +178,22 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 					const properties = new Map<string, null | string>();
 					for (const element of node.name.elements) {
-						if (!ts.isBindingElement(element)) {
+						if (!typescript.isBindingElement(element)) {
 							continue;
 						}
 
 						if (element.propertyName) {
-							if (ts.isIdentifier(element.propertyName)) {
+							if (typescript.isIdentifier(element.propertyName)) {
 								if (
-									ts.isObjectBindingPattern(element.name) ||
-									ts.isArrayBindingPattern(element.name)
+									typescript.isObjectBindingPattern(element.name) ||
+									typescript.isArrayBindingPattern(element.name)
 								) {
 									properties.set(element.propertyName.text, null);
-								} else if (ts.isIdentifier(element.name)) {
+								} else if (typescript.isIdentifier(element.name)) {
 									properties.set(element.propertyName.text, element.name.text);
 								}
 							}
-						} else if (ts.isIdentifier(element.name)) {
+						} else if (typescript.isIdentifier(element.name)) {
 							properties.set(element.name.text, element.name.text);
 						}
 					}

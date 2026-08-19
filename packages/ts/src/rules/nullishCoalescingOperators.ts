@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 import { z } from "zod/v4";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
@@ -10,6 +9,10 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -327,14 +330,14 @@ function isFalsyLiteralType(part: ts.Type) {
 
 	const flags = part.getFlags();
 
-	if (flags & ts.TypeFlags.BooleanLiteral) {
+	if (flags & typescript.TypeFlags.BooleanLiteral) {
 		const literal = part as unknown as { intrinsicName?: string };
 		if (literal.intrinsicName === "false") {
 			return true;
 		}
 	}
 
-	if (flags & ts.TypeFlags.BigIntLiteral) {
+	if (flags & typescript.TypeFlags.BigIntLiteral) {
 		const value = (part as ts.BigIntLiteralType).value;
 		if (!value.negative && value.base10Value === "0") {
 			return true;
@@ -375,7 +378,7 @@ function isMixedLogicalExpression(node: AST.BinaryExpression) {
 function isNullishType(type: ts.Type) {
 	return tsutils.isTypeFlagSet(
 		type,
-		ts.TypeFlags.Null | ts.TypeFlags.Undefined,
+		typescript.TypeFlags.Null | typescript.TypeFlags.Undefined,
 	);
 }
 
@@ -408,7 +411,10 @@ function isTypeEligibleForPreferNullish(
 ) {
 	if (
 		!typeCanBeNullish(type) ||
-		tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown) ||
+		tsutils.isTypeFlagSet(
+			type,
+			typescript.TypeFlags.Any | typescript.TypeFlags.Unknown,
+		) ||
 		!ignorePrimitives
 	) {
 		return true;
@@ -417,16 +423,16 @@ function isTypeEligibleForPreferNullish(
 	const ignorableFlags = [
 		(ignorePrimitives === true ||
 			(typeof ignorePrimitives === "object" && ignorePrimitives.bigint)) &&
-			ts.TypeFlags.BigIntLike,
+			typescript.TypeFlags.BigIntLike,
 		(ignorePrimitives === true ||
 			(typeof ignorePrimitives === "object" && ignorePrimitives.boolean)) &&
-			ts.TypeFlags.BooleanLike,
+			typescript.TypeFlags.BooleanLike,
 		(ignorePrimitives === true ||
 			(typeof ignorePrimitives === "object" && ignorePrimitives.number)) &&
-			ts.TypeFlags.NumberLike,
+			typescript.TypeFlags.NumberLike,
 		(ignorePrimitives === true ||
 			(typeof ignorePrimitives === "object" && ignorePrimitives.string)) &&
-			ts.TypeFlags.StringLike,
+			typescript.TypeFlags.StringLike,
 	]
 		.filter((flag) => typeof flag === "number")
 		.reduce((previous, flag) => previous | flag, 0);
@@ -441,7 +447,10 @@ function shouldIgnoreNode(
 ) {
 	const type = typeChecker.getTypeAtLocation(node);
 	return (
-		tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown) ||
+		tsutils.isTypeFlagSet(
+			type,
+			typescript.TypeFlags.Any | typescript.TypeFlags.Unknown,
+		) ||
 		!typeCanBeNullish(type) ||
 		typeHasNonNullishFalsyValues(type) ||
 		!isTypeEligibleForPreferNullish(type, ignorePrimitives)
@@ -459,10 +468,10 @@ function typeHasNonNullishFalsyValues(type: ts.Type) {
 			(constituent) =>
 				isFalsyLiteralType(constituent) ||
 				constituent.getFlags() &
-					(ts.TypeFlags.String |
-						ts.TypeFlags.Number |
-						ts.TypeFlags.BigInt |
-						ts.TypeFlags.Boolean),
+					(typescript.TypeFlags.String |
+						typescript.TypeFlags.Number |
+						typescript.TypeFlags.BigInt |
+						typescript.TypeFlags.Boolean),
 		);
 }
 

@@ -1,15 +1,18 @@
-import ts, { SyntaxKind } from "typescript";
 import { describe, expect, it } from "vitest";
 
 import type * as AST from "../types/ast.ts";
+import typescript, { SyntaxKind } from "../typescript.ts";
 import { forEachChild } from "../utils/forEachChild.ts";
 import { getScopeManager } from "./scopeManager.ts";
 
-function createSourceFile(sourceText: string, scriptKind = ts.ScriptKind.TS) {
-	return ts.createSourceFile(
+function createSourceFile(
+	sourceText: string,
+	scriptKind = typescript.ScriptKind.TS,
+) {
+	return typescript.createSourceFile(
 		"test.ts",
 		sourceText,
-		ts.ScriptTarget.ESNext,
+		typescript.ScriptTarget.ESNext,
 		true,
 		scriptKind,
 	) as AST.SourceFile;
@@ -209,7 +212,7 @@ describe(getScopeManager, () => {
 				return <input name="value" />;
 			}
 		`,
-			ts.ScriptKind.TSX,
+			typescript.ScriptKind.TSX,
 		);
 
 		const scopeManager = getScopeManager(sourceFile);

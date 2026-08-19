@@ -1,11 +1,12 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind, type ModifierLike, type NodeArray } from "typescript";
+import type { ModifierLike, NodeArray } from "typescript";
 import { z } from "zod/v4";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import { SyntaxKind } from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

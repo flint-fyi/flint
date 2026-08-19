@@ -1,13 +1,16 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
 function hasExportModifier(node: AST.Statement) {
 	return !!(
-		ts.canHaveModifiers(node) &&
-		ts
+		typescript.canHaveModifiers(node) &&
+		typescript
 			.getModifiers(node)
 			?.some((modifier) => modifier.kind === SyntaxKind.ExportKeyword)
 	);
@@ -18,13 +21,13 @@ function isInsideFunction(node: ts.Node): boolean {
 
 	while (current) {
 		if (
-			ts.isFunctionDeclaration(current) ||
-			ts.isFunctionExpression(current) ||
-			ts.isArrowFunction(current) ||
-			ts.isMethodDeclaration(current) ||
-			ts.isConstructorDeclaration(current) ||
-			ts.isGetAccessorDeclaration(current) ||
-			ts.isSetAccessorDeclaration(current)
+			typescript.isFunctionDeclaration(current) ||
+			typescript.isFunctionExpression(current) ||
+			typescript.isArrowFunction(current) ||
+			typescript.isMethodDeclaration(current) ||
+			typescript.isConstructorDeclaration(current) ||
+			typescript.isGetAccessorDeclaration(current) ||
+			typescript.isSetAccessorDeclaration(current)
 		) {
 			return true;
 		} // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- removing causes type error on the `while` loop. TSESLint bug?

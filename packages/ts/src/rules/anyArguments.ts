@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	typescriptLanguage,
@@ -7,6 +6,10 @@ import {
 	type Checker,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
@@ -90,7 +93,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							if (
 								tsutils.isTypeFlagSet(
 									restType,
-									ts.TypeFlags.Any | ts.TypeFlags.Unknown,
+									typescript.TypeFlags.Any | typescript.TypeFlags.Unknown,
 								)
 							) {
 								continue;
@@ -101,7 +104,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									elementType &&
 									tsutils.isTypeFlagSet(
 										elementType,
-										ts.TypeFlags.Any | ts.TypeFlags.Unknown,
+										typescript.TypeFlags.Any | typescript.TypeFlags.Unknown,
 									)
 								) {
 									continue;
@@ -205,7 +208,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				if (
 					tsutils.isTypeFlagSet(
 						parameterInfo.type,
-						ts.TypeFlags.Any | ts.TypeFlags.Unknown,
+						typescript.TypeFlags.Any | typescript.TypeFlags.Unknown,
 					)
 				) {
 					parameterIndex++;
@@ -302,7 +305,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						if (
 							tsutils.isTypeFlagSet(
 								parameterType,
-								ts.TypeFlags.Any | ts.TypeFlags.Unknown,
+								typescript.TypeFlags.Any | typescript.TypeFlags.Unknown,
 							)
 						) {
 							continue;
@@ -342,7 +345,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			if (
 				lastParamDeclaration &&
-				ts.isParameter(lastParamDeclaration) &&
+				typescript.isParameter(lastParamDeclaration) &&
 				lastParamDeclaration.dotDotDotToken
 			) {
 				if (index < parameters.length - 1) {
@@ -416,7 +419,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				if (
 					tsutils.isTypeFlagSet(
 						parameterType,
-						ts.TypeFlags.Any | ts.TypeFlags.Unknown,
+						typescript.TypeFlags.Any | typescript.TypeFlags.Unknown,
 					)
 				) {
 					continue;

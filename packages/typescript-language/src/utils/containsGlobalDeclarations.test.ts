@@ -1,6 +1,6 @@
-import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
+import typescript from "../typescript.ts";
 import { containsGlobalDeclarations } from "./containsGlobalDeclarations.ts";
 
 describe(containsGlobalDeclarations, () => {
@@ -67,10 +67,10 @@ describe(containsGlobalDeclarations, () => {
 });
 
 function getSourceFile(rawFileContent: string) {
-	return ts.createSourceFile(
+	return typescript.createSourceFile(
 		"mayContainGlobals.ts",
 		rawFileContent,
-		ts.ScriptTarget.ESNext,
+		typescript.ScriptTarget.ESNext,
 		true,
 	);
 }

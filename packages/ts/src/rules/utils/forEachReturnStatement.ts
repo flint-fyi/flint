@@ -1,4 +1,8 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
+
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 // Copied from typescript https://github.com/microsoft/TypeScript/blob/42b0e3c4630c129ca39ce0df9fff5f0d1b4dd348/src/compiler/utilities.ts#L1335
 // Warning: This has the same semantics as the forEach family of functions,
@@ -26,7 +30,7 @@ export function forEachReturnStatement<T>(
 			case SyntaxKind.TryStatement:
 			case SyntaxKind.WhileStatement:
 			case SyntaxKind.WithStatement:
-				return ts.forEachChild(node, traverse);
+				return typescript.forEachChild(node, traverse);
 
 			case SyntaxKind.ReturnStatement:
 				return visitor(node as ts.ReturnStatement);

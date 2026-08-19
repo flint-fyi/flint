@@ -1,11 +1,14 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	typescriptLanguage,
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { AnyType, discriminateAnyType } from "./utils/discriminateAnyType.ts";
@@ -14,7 +17,7 @@ import { isUnsafeAssignment } from "./utils/isUnsafeAssignment.ts";
 
 function isTypeAny(type: ts.Type): boolean {
 	return (
-		tsutils.isTypeFlagSet(type, ts.TypeFlags.Any) &&
+		tsutils.isTypeFlagSet(type, typescript.TypeFlags.Any) &&
 		!tsutils.isIntrinsicErrorType(type)
 	);
 }
@@ -29,7 +32,10 @@ function isTypeAnyArray(type: ts.Type, checker: Checker): boolean {
 }
 
 function isTypeAnyOrUnknown(type: ts.Type): boolean {
-	return tsutils.isTypeFlagSet(type, ts.TypeFlags.Any | ts.TypeFlags.Unknown);
+	return tsutils.isTypeFlagSet(
+		type,
+		typescript.TypeFlags.Any | typescript.TypeFlags.Unknown,
+	);
 }
 
 export default ruleCreator.createRule(typescriptLanguage, {
@@ -132,7 +138,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			for (let i = 0; i < pattern.elements.length; i++) {
 				const element = pattern.elements[i];
-				if (!element || ts.isOmittedExpression(element)) {
+				if (!element || typescript.isOmittedExpression(element)) {
 					continue;
 				}
 
@@ -157,7 +163,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 					didReport = true;
-				} else if (ts.isArrayBindingPattern(name)) {
+				} else if (typescript.isArrayBindingPattern(name)) {
 					didReport =
 						checkArrayDestructureWorker(
 							name,
@@ -165,7 +171,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							sourceFile,
 							typeChecker,
 						) || didReport;
-				} else if (ts.isObjectBindingPattern(name)) {
+				} else if (typescript.isObjectBindingPattern(name)) {
 					didReport =
 						checkObjectDestructureWorker(
 							name,
@@ -196,16 +202,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				const propertyName = element.propertyName ?? element.name;
 
 				if (
-					ts.isIdentifier(propertyName) ||
-					ts.isStringLiteral(propertyName) ||
-					ts.isNumericLiteral(propertyName)
+					typescript.isIdentifier(propertyName) ||
+					typescript.isStringLiteral(propertyName) ||
+					typescript.isNumericLiteral(propertyName)
 				) {
 					key = propertyName.text;
-				} else if (ts.isComputedPropertyName(propertyName)) {
+				} else if (typescript.isComputedPropertyName(propertyName)) {
 					const expression = propertyName.expression;
 					if (
-						ts.isStringLiteral(expression) ||
-						ts.isNoSubstitutionTemplateLiteral(expression)
+						typescript.isStringLiteral(expression) ||
+						typescript.isNoSubstitutionTemplateLiteral(expression)
 					) {
 						key = expression.text;
 					}
@@ -237,7 +243,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						},
 					});
 					didReport = true;
-				} else if (ts.isArrayBindingPattern(name)) {
+				} else if (typescript.isArrayBindingPattern(name)) {
 					didReport =
 						checkArrayDestructureWorker(
 							name,
@@ -245,7 +251,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							sourceFile,
 							typeChecker,
 						) || didReport;
-				} else if (ts.isObjectBindingPattern(name)) {
+				} else if (typescript.isObjectBindingPattern(name)) {
 					didReport =
 						checkObjectDestructureWorker(
 							name,

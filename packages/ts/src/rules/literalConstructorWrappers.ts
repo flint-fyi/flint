@@ -1,18 +1,17 @@
 import {
+	isGlobalDeclarationOfName,
+	typescriptLanguage,
+	type AST,
+	type TypeScriptFileServices,
+} from "@flint.fyi/typescript-language";
+import {
 	isBigIntLiteral,
 	isIdentifier,
 	isLiteralExpression,
 	isNumericLiteral,
 	isStringLiteral,
 	SyntaxKind,
-} from "typescript";
-
-import {
-	isGlobalDeclarationOfName,
-	typescriptLanguage,
-	type AST,
-	type TypeScriptFileServices,
-} from "@flint.fyi/typescript-language";
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

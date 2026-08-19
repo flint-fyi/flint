@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getTSNodeRange,
@@ -6,6 +6,9 @@ import {
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -16,9 +19,11 @@ const globalReplacements = new Map([
 
 function isDeclarationName(node: ts.Identifier) {
 	return (
-		(ts.isFunctionDeclaration(node.parent) && node.parent.name === node) ||
-		(ts.isVariableDeclaration(node.parent) && node.parent.name === node) ||
-		(ts.isParameter(node.parent) && node.parent.name === node)
+		(typescript.isFunctionDeclaration(node.parent) &&
+			node.parent.name === node) ||
+		(typescript.isVariableDeclaration(node.parent) &&
+			node.parent.name === node) ||
+		(typescript.isParameter(node.parent) && node.parent.name === node)
 	);
 }
 
@@ -33,13 +38,15 @@ function isLeftHandSide(node: AST.Identifier) {
 
 function isPropertyAccessOfNode(node: ts.Identifier) {
 	return (
-		ts.isPropertyAccessExpression(node.parent) && node.parent.name === node
+		typescript.isPropertyAccessExpression(node.parent) &&
+		node.parent.name === node
 	);
 }
 
 function isPropertyShorthandOfNode(node: ts.Identifier) {
 	return (
-		ts.isShorthandPropertyAssignment(node.parent) && node.parent.name === node
+		typescript.isShorthandPropertyAssignment(node.parent) &&
+		node.parent.name === node
 	);
 }
 

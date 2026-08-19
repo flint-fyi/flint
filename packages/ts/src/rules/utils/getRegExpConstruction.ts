@@ -1,4 +1,4 @@
-import { SyntaxKind, type NodeArray } from "typescript";
+import type { NodeArray } from "typescript";
 
 import {
 	getStaticStringValue,
@@ -6,6 +6,7 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/typescript";
 
 export interface RegExpConstruction {
 	args: NodeArray<AST.Expression>;

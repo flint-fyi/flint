@@ -1,11 +1,12 @@
 import * as path from "node:path";
 
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import type ts from "typescript";
 
 import { nullThrows } from "@flint.fyi/utils";
 
+import tsutils from "./ts-api-utils.ts";
 import type * as AST from "./types/ast.ts";
+import typescript from "./typescript.ts";
 
 export function collectReferencedFilePaths(
 	program: ts.Program,
@@ -14,13 +15,13 @@ export function collectReferencedFilePaths(
 	const modulePaths = new Set<string>();
 
 	function resolveModulePath(moduleSpecifier: string): string | undefined {
-		const resolved = ts.resolveModuleName(
+		const resolved = typescript.resolveModuleName(
 			moduleSpecifier,
 			sourceFile.fileName,
 			program.getCompilerOptions(),
 			// TODO: Eventually, the file system should be abstracted
 			// https://github.com/flint-fyi/flint/issues/73
-			ts.sys,
+			typescript.sys,
 		);
 
 		if (resolved.resolvedModule?.isExternalLibraryImport === false) {
@@ -54,7 +55,7 @@ export function collectReferencedFilePaths(
 			modulePaths.add(resolvedPath);
 		}
 
-		ts.forEachChild(node, visit);
+		typescript.forEachChild(node, visit);
 	}
 
 	visit(sourceFile);
@@ -65,17 +66,17 @@ export function collectReferencedFilePaths(
 function isAwaitImportCall(node: ts.Node): node is AST.AwaitExpression & {
 	expression: ts.CallExpression & { arguments: [ts.StringLiteral] };
 } {
-	return ts.isAwaitExpression(node) && isImportCall(node.expression);
+	return typescript.isAwaitExpression(node) && isImportCall(node.expression);
 }
 
 function isImportCall(
 	node: ts.Node,
 ): node is ts.CallExpression & { arguments: [ts.StringLiteral] } {
 	return (
-		ts.isCallExpression(node) &&
+		typescript.isCallExpression(node) &&
 		tsutils.isImportExpression(node.expression) &&
 		!!node.arguments.length &&
-		ts.isStringLiteral(
+		typescript.isStringLiteral(
 			nullThrows(
 				node.arguments[0],
 				"First argument is expected to be present by prior length check",
@@ -88,7 +89,8 @@ function isImportDeclaration(
 	node: ts.Node,
 ): node is AST.ImportDeclaration & { moduleSpecifier: AST.StringLiteral } {
 	return (
-		ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)
+		typescript.isImportDeclaration(node) &&
+		typescript.isStringLiteral(node.moduleSpecifier)
 	);
 }
 
@@ -96,8 +98,8 @@ function isImportTypeNode(node: ts.Node): node is ts.ImportTypeNode & {
 	argument: ts.LiteralTypeNode & { literal: ts.StringLiteral };
 } {
 	return (
-		ts.isImportTypeNode(node) &&
-		ts.isLiteralTypeNode(node.argument) &&
-		ts.isStringLiteral(node.argument.literal)
+		typescript.isImportTypeNode(node) &&
+		typescript.isLiteralTypeNode(node.argument) &&
+		typescript.isStringLiteral(node.argument.literal)
 	);
 }

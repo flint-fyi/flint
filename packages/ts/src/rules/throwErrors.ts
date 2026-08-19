@@ -1,5 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import { TypeFlags, type Program, type Type } from "typescript";
+import type { Program, Type } from "typescript";
 
 import {
 	declarationIncludesGlobal,
@@ -8,6 +7,8 @@ import {
 	type AST,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import { TypeFlags } from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";

@@ -1,10 +1,9 @@
-import { SyntaxKind } from "typescript";
-
 import {
 	getStaticValue,
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 

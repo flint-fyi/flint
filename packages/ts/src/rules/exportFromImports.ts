@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getStaticStringValue,
@@ -6,6 +6,9 @@ import {
 	typescriptLanguage,
 	type AST,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
@@ -42,9 +45,9 @@ function getImportInfo(
 	}
 
 	if (clause.namedBindings) {
-		if (ts.isNamespaceImport(clause.namedBindings)) {
+		if (typescript.isNamespaceImport(clause.namedBindings)) {
 			info.namespaceImport = clause.namedBindings.name.text;
-		} else if (ts.isNamedImports(clause.namedBindings)) {
+		} else if (typescript.isNamedImports(clause.namedBindings)) {
 			for (const element of clause.namedBindings.elements) {
 				const importedName = element.propertyName
 					? element.propertyName.text
@@ -137,7 +140,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					for (const exportDeclaration of namedExports) {
 						if (
 							!exportDeclaration.exportClause ||
-							!ts.isNamedExports(exportDeclaration.exportClause)
+							!typescript.isNamedExports(exportDeclaration.exportClause)
 						) {
 							continue;
 						}
@@ -185,7 +188,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					for (const exportAssignment of exportAssignments) {
-						if (!ts.isIdentifier(exportAssignment.expression)) {
+						if (!typescript.isIdentifier(exportAssignment.expression)) {
 							continue;
 						}
 

@@ -1,28 +1,31 @@
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import {
 	getTSNodeRange,
 	typescriptLanguage,
 } from "@flint.fyi/typescript-language";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { isErrorSubclass } from "./utils/isErrorSubclass.ts";
 
 function isCaptureStackTraceCall(node: ts.Node): boolean {
-	if (!ts.isCallExpression(node) && !ts.isOptionalChain(node)) {
+	if (!typescript.isCallExpression(node) && !typescript.isOptionalChain(node)) {
 		return false;
 	}
 
-	const callExpression = ts.isCallExpression(node) ? node : undefined;
+	const callExpression = typescript.isCallExpression(node) ? node : undefined;
 	if (!callExpression) {
-		return ts.isCallExpression(node) && isCaptureStackTraceCall(node);
+		return typescript.isCallExpression(node) && isCaptureStackTraceCall(node);
 	}
 
 	return (
-		ts.isPropertyAccessExpression(callExpression.expression) &&
-		ts.isIdentifier(callExpression.expression.expression) &&
+		typescript.isPropertyAccessExpression(callExpression.expression) &&
+		typescript.isIdentifier(callExpression.expression.expression) &&
 		callExpression.expression.expression.text === "Error" &&
-		ts.isIdentifier(callExpression.expression.name) &&
+		typescript.isIdentifier(callExpression.expression.name) &&
 		callExpression.expression.name.text === "captureStackTrace"
 	);
 }
@@ -31,23 +34,23 @@ function isValidSecondArgument(
 	node: ts.Expression,
 	className: string | undefined,
 ): boolean {
-	if (ts.isIdentifier(node)) {
+	if (typescript.isIdentifier(node)) {
 		return node.text === className;
 	}
 
 	if (
-		ts.isPropertyAccessExpression(node) &&
+		typescript.isPropertyAccessExpression(node) &&
 		node.expression.kind === SyntaxKind.ThisKeyword &&
-		ts.isIdentifier(node.name) &&
+		typescript.isIdentifier(node.name) &&
 		node.name.text === "constructor"
 	) {
 		return true;
 	}
 
 	if (
-		ts.isMetaProperty(node) &&
+		typescript.isMetaProperty(node) &&
 		node.keywordToken === SyntaxKind.NewKeyword &&
-		ts.isIdentifier(node.name) &&
+		typescript.isIdentifier(node.name) &&
 		node.name.text === "target"
 	) {
 		return true;
@@ -83,7 +86,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					for (const member of node.members) {
-						if (!ts.isConstructorDeclaration(member) || !member.body) {
+						if (!typescript.isConstructorDeclaration(member) || !member.body) {
 							continue;
 						}
 
@@ -92,7 +95,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 								statement.kind !== SyntaxKind.ExpressionStatement ||
 								!(
 									statement.expression.kind === SyntaxKind.CallExpression ||
-									ts.isCallChain(statement.expression)
+									typescript.isCallChain(statement.expression)
 								) ||
 								!isCaptureStackTraceCall(statement.expression)
 							) {

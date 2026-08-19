@@ -1,13 +1,4 @@
-import * as tsutils from "ts-api-utils";
-import {
-	isFunctionLike,
-	isInterfaceDeclaration,
-	isPropertyAccessExpression,
-	TypeFlags,
-	type Program,
-	type Type,
-	type TypeChecker,
-} from "typescript";
+import type { Program, Type, TypeChecker } from "typescript";
 
 import {
 	declarationIncludesGlobal,
@@ -15,6 +6,13 @@ import {
 	type AST,
 	type Checker,
 } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import {
+	isFunctionLike,
+	isInterfaceDeclaration,
+	isPropertyAccessExpression,
+	TypeFlags,
+} from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 import { getConstrainedTypeAtLocation } from "./utils/getConstrainedType.ts";

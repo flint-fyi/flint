@@ -1,7 +1,10 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import type ts from "typescript";
 
 import type { AST } from "@flint.fyi/typescript-language";
+import tsutils from "@flint.fyi/typescript-language/ts-api-utils";
+import typescript, {
+	SyntaxKind,
+} from "@flint.fyi/typescript-language/typescript";
 import { nullThrows } from "@flint.fyi/utils";
 
 /**
@@ -26,13 +29,13 @@ function isUnsafeAssignmentWorker(
 	senderNode: AST.Expression,
 	visited: Map<ts.Type, Set<ts.Type>>,
 ): false | { receiver: ts.Type; sender: ts.Type } {
-	if (tsutils.isTypeFlagSet(type, ts.TypeFlags.Any)) {
+	if (tsutils.isTypeFlagSet(type, typescript.TypeFlags.Any)) {
 		// Allow assignment of any ==> unknown.
-		if (tsutils.isTypeFlagSet(receiver, ts.TypeFlags.Unknown)) {
+		if (tsutils.isTypeFlagSet(receiver, typescript.TypeFlags.Unknown)) {
 			return false;
 		}
 
-		if (!tsutils.isTypeFlagSet(receiver, ts.TypeFlags.Any)) {
+		if (!tsutils.isTypeFlagSet(receiver, typescript.TypeFlags.Any)) {
 			return { receiver, sender: type };
 		}
 	}

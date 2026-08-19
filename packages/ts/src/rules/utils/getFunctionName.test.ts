@@ -1,14 +1,14 @@
+import type { Node } from "typescript";
+import { describe, expect, it } from "vitest";
+
+import type { AST } from "@flint.fyi/typescript-language";
 import {
 	createSourceFile,
 	forEachChild,
 	ScriptKind,
 	ScriptTarget,
 	SyntaxKind,
-	type Node,
-} from "typescript";
-import { describe, expect, it } from "vitest";
-
-import type { AST } from "@flint.fyi/typescript-language";
+} from "@flint.fyi/typescript-language/typescript";
 
 import { getFunctionName } from "./getFunctionName.ts";
 

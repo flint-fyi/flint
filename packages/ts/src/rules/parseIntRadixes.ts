@@ -1,4 +1,4 @@
-import { SyntaxKind, type Program } from "typescript";
+import type { Program } from "typescript";
 
 import {
 	getStaticNumberValue,
@@ -9,6 +9,7 @@ import {
 	type Checker,
 	type TypeScriptFileServices,
 } from "@flint.fyi/typescript-language";
+import { SyntaxKind } from "@flint.fyi/typescript-language/typescript";
 
 import { ruleCreator } from "./ruleCreator.ts";
 
