@@ -2,11 +2,13 @@ import path from "node:path";
 
 import { createProjectService } from "@typescript-eslint/project-service";
 import { debugForFile } from "debug-for-file";
+import { dirname, join } from "pathe";
 import {
 	getPreEmitDiagnostics,
 	SyntaxKind,
 	type Node,
 	type Program,
+	type server,
 } from "typescript";
 
 import {
@@ -20,7 +22,7 @@ import {
 	type LanguageReports,
 	type RuleRuntime,
 } from "@flint.fyi/core";
-import { assert, nullThrows } from "@flint.fyi/utils";
+import { assert, nullThrows, pathKey, type PathKey } from "@flint.fyi/utils";
 
 import packageJson from "../package.json" with { type: "json" };
 import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
@@ -98,29 +100,82 @@ export const typescriptLanguage: Language<
 		name: "TypeScript",
 	},
 	createFileFactory: (host) => {
-		const { service } = createProjectService({
-			host: createTypeScriptServerHost(host),
-		});
+		const serverHost = createTypeScriptServerHost(host);
+		const { service } = createProjectService({ host: serverHost });
 
-		function createFile(data: FileAboutData) {
-			log("Opening client file:", data.filePathAbsolute);
-			service.openClientFile(data.filePathAbsolute);
+		const caseSensitiveFS = host.isCaseSensitiveFS();
+		const configPathsByDirectory = new Map<PathKey, string | undefined>();
+		const openedFilePaths = new Set<string>();
+		const projectsByConfigPath = new Map<PathKey, server.Project>();
 
-			log("Retrieving client services:", data.filePathAbsolute);
+		function findConfigPath(directory: string): string | undefined {
+			const directoryKey = pathKey(directory, caseSensitiveFS);
+			if (configPathsByDirectory.has(directoryKey)) {
+				return configPathsByDirectory.get(directoryKey);
+			}
+
+			const configPath = join(directory, "tsconfig.json");
+			const parentDirectory = dirname(directory);
+			const found = serverHost.fileExists(configPath)
+				? configPath
+				: parentDirectory === directory
+					? undefined
+					: findConfigPath(parentDirectory);
+
+			configPathsByDirectory.set(directoryKey, found);
+			return found;
+		}
+
+		function getProgram(filePathAbsolute: string) {
+			const configPath = findConfigPath(dirname(filePathAbsolute));
+			const configPathKey =
+				configPath == null ? undefined : pathKey(configPath, caseSensitiveFS);
+
+			// Files are only reused into an already-open project when they'd resolve
+			// to it anyway: the project owns their closest tsconfig.json and its
+			// program already contains them. Re-opening a file that was opened
+			// before lets the service pick up any change to its text.
+			if (configPathKey && !openedFilePaths.has(filePathAbsolute)) {
+				const program = projectsByConfigPath
+					.get(configPathKey)
+					?.getLanguageService(true)
+					.getProgram();
+				if (program?.getSourceFile(filePathAbsolute)) {
+					return program;
+				}
+			}
+
+			log("Opening client file:", filePathAbsolute);
+			const { configFileName } = service.openClientFile(filePathAbsolute);
+			openedFilePaths.add(filePathAbsolute);
+
+			log("Retrieving client services:", filePathAbsolute);
 			const scriptInfo = nullThrows(
-				service.getScriptInfo(data.filePathAbsolute),
-				`Could not find script info for file: ${data.filePathAbsolute}`,
+				service.getScriptInfo(filePathAbsolute),
+				`Could not find script info for file: ${filePathAbsolute}`,
 			);
 
 			const defaultProject = nullThrows(
 				service.getDefaultProjectForFile(scriptInfo.fileName, true),
-				`Could not find default project for file: ${data.filePathAbsolute}`,
+				`Could not find default project for file: ${filePathAbsolute}`,
 			);
 
-			const program = nullThrows(
+			if (
+				configPathKey &&
+				configFileName &&
+				pathKey(configFileName, caseSensitiveFS) === configPathKey
+			) {
+				projectsByConfigPath.set(configPathKey, defaultProject);
+			}
+
+			return nullThrows(
 				defaultProject.getLanguageService(true).getProgram(),
-				`Could not retrieve program for file: ${data.filePathAbsolute}`,
+				`Could not retrieve program for file: ${filePathAbsolute}`,
 			);
+		}
+
+		function createFile(data: FileAboutData) {
+			const program = getProgram(data.filePathAbsolute);
 
 			const sourceFile = nullThrows(
 				program.getSourceFile(data.filePathAbsolute),
@@ -140,7 +195,7 @@ export const typescriptLanguage: Language<
 						typeChecker: program.getTypeChecker() as unknown as Checker,
 					},
 					[Symbol.dispose]() {
-						service.closeClientFile(data.filePathAbsolute);
+						closeFile(data.filePathAbsolute);
 					},
 				};
 			}
@@ -156,9 +211,15 @@ export const typescriptLanguage: Language<
 					sourceFile as AST.SourceFile,
 				),
 				[Symbol.dispose]() {
-					service.closeClientFile(data.filePathAbsolute);
+					closeFile(data.filePathAbsolute);
 				},
 			};
+		}
+
+		function closeFile(filePathAbsolute: string) {
+			if (openedFilePaths.has(filePathAbsolute)) {
+				service.closeClientFile(filePathAbsolute);
+			}
 		}
 
 		return { createFile };
