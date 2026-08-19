@@ -80,9 +80,10 @@ function createSourceFiles(testCase: TestCase): Structure {
 	return {
 		"index.ts": [createIndexFile(topLevelWidth), "typescript"],
 		...Object.fromEntries(
-			new Array(topLevelWidth)
-				.fill(undefined)
-				.map((_, index) => [`example${index}`, createExampleDirectory(index)]),
+			Array.from({ length: topLevelWidth }, (_, index) => [
+				`example${index}`,
+				createExampleDirectory(index),
+			]),
 		),
 	};
 }

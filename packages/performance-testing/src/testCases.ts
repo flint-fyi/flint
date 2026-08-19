@@ -3,7 +3,7 @@ export const testCasesPath = "cases";
 export const testCaseEntries = [
 	{
 		label: "files",
-		values: [2, 256 /* , 1024, 8192 */],
+		values: [2, 256, 1024 /* , 8192 */],
 	},
 	{
 		label: "rules",
@@ -11,11 +11,9 @@ export const testCaseEntries = [
 	},
 ] as const;
 
-export type TestCaseFiles = (typeof testCaseEntries)[0]["values"][number];
-
-export type TestCaseRules = (typeof testCaseEntries)[1]["values"][number];
-
 export interface TestCase {
 	files: number;
 	rules: TestCaseRules;
 }
+
+export type TestCaseRules = (typeof testCaseEntries)[1]["values"][number];

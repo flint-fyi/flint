@@ -8,7 +8,7 @@ export async function writeFile(
 	filePath: string,
 	source: unknown,
 	parser: prettier.BuiltInParserName = "typescript",
-) {
+): Promise<void> {
 	await fs.writeFile(
 		path.join(directory, filePath),
 		await prettier.format(

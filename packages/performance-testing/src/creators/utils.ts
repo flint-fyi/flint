@@ -1,3 +1,3 @@
-export function range(start: number, length: number) {
-	return new Array(length).fill(undefined).map((_, index) => index + start);
+export function range(start: number, length: number): number[] {
+	return Array.from({ length }, (_, index) => index + start);
 }

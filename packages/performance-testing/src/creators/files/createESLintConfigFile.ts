@@ -15,7 +15,7 @@ const pluginPackages = new Map<string, PluginPackage>([
 	["unicorn", { alias: "unicorn", specifier: "eslint-plugin-unicorn" }],
 ]);
 
-export function createESLintConfigFile(rules: TestCaseRules) {
+export function createESLintConfigFile(rules: TestCaseRules): string {
 	const enabled = comparedRules[rules];
 	const used = new Map<string, PluginPackage>();
 

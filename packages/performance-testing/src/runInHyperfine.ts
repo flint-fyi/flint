@@ -11,7 +11,7 @@ export async function runInHyperfine(
 	command: string,
 	label: string,
 	slug: string,
-) {
+): Promise<string> {
 	const cwd = path.join(testCasesPath, slug);
 
 	log("Measuring %s in %s...", label, cwd);

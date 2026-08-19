@@ -24,9 +24,13 @@ for (const files of testCaseEntries[0].values) {
 		const testCase = { files, rules };
 		const testCaseSlug = createTestCaseSlug(testCase);
 
+		// Measurements run one at a time: linters sharing the machine would
+		// contend for CPU and report times that say nothing about either.
 		results.push({
+			// flint-disable-next-line performance/loopAwaits
 			eslint: await runInHyperfine(eslintCommand, "ESLint", testCaseSlug),
 			files: countCaseFiles(testCase),
+			// flint-disable-next-line performance/loopAwaits
 			flint: await runInHyperfine(flintCommand, "Flint", testCaseSlug),
 			rules: ruleCounts[rules],
 		});

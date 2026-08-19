@@ -34,6 +34,7 @@ async function createCase(testCase: TestCase) {
 await fs.mkdir(testCasesPath, { recursive: true });
 
 for (const nested of await fs.readdir(testCasesPath)) {
+	// flint-disable-next-line performance/loopAwaits
 	await fs.rm(path.join(testCasesPath, nested), {
 		force: true,
 		recursive: true,
@@ -42,6 +43,7 @@ for (const nested of await fs.readdir(testCasesPath)) {
 
 for (const files of testCaseEntries[0].values) {
 	for (const rules of testCaseEntries[1].values) {
+		// flint-disable-next-line performance/loopAwaits
 		await createCase({ files, rules });
 	}
 }

@@ -1,4 +1,4 @@
-export function createStandardTSConfigFile() {
+export function createStandardTSConfigFile(): object {
 	return {
 		compilerOptions: {
 			allowImportingTsExtensions: true,

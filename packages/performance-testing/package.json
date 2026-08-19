@@ -1,6 +1,7 @@
 {
 	"name": "@flint.fyi/performance-testing",
 	"version": "0.0.0",
+	"private": true,
 	"description": "Runs performance measurements for Flint and other linters.",
 	"homepage": "https://flint.fyi",
 	"repository": {

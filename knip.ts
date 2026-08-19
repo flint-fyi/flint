@@ -1,7 +1,7 @@
 import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
-	ignore: ["packages/e2e/**/*"],
+	ignore: ["packages/e2e/**/*", "packages/performance-testing/**/*"],
 	ignoreExportsUsedInFile: { interface: true, type: true },
 	treatConfigHintsAsErrors: true,
 	workspaces: {

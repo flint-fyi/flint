@@ -1,7 +1,7 @@
 import type { TestCaseRules } from "../../testCases.ts";
 import { comparedRules } from "./rules.ts";
 
-export function createFlintConfigFile(rules: TestCaseRules) {
+export function createFlintConfigFile(rules: TestCaseRules): string {
 	return `
 import { defineConfig, ts } from "flint";
 
