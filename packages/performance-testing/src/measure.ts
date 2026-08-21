@@ -30,9 +30,9 @@ for (const files of testCaseEntries[0].values) {
 		results.push({
 			// flint-disable-next-line performance/loopAwaits
 			eslint: await runInHyperfine(eslintCommand, "ESLint", testCaseSlug),
+			// flint-disable-next-line performance/loopAwaits
 			flint: await runInHyperfine(flintCommand, "Flint", testCaseSlug),
 			files: countCaseFiles(testCase),
-			// flint-disable-next-line performance/loopAwaits
 			rules: ruleCounts[rules],
 		});
 		/* eslint-enable perfectionist/sort-objects */
