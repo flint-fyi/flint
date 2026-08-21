@@ -33,7 +33,7 @@ const features = [
 ] as const;
 ---
 
-<section class="pack" id="features">
+<section class="pack not-content" id="features">
 	<div class="intro">
 		<p class="flint-eyebrow">🌲 What's in the pack</p>
 		<h2 class="flint-display">Everything you need for the trail</h2>
@@ -50,7 +50,7 @@ const features = [
 					<div class="icon">
 						<Icon name={feature.icon} size="2rem" />
 					</div>
-					<div>
+					<div class="body">
 						<span class="label">{feature.label}</span>
 						<h3 class="flint-display">{feature.title}</h3>
 						<p>{feature.body}</p>
@@ -63,7 +63,7 @@ const features = [
 
 <style>
 	.pack {
-		padding-block: 4rem;
+		padding-block: 3rem;
 	}
 
 	.intro {
@@ -75,6 +75,7 @@ const features = [
 	.intro h2 {
 		color: var(--sl-color-white);
 		font-size: clamp(1.875rem, calc(1rem + 2.5vw), 2.75rem);
+		line-height: 1.15;
 		margin: 0.5rem 0 0;
 		text-wrap: balance;
 	}
@@ -94,8 +95,9 @@ const features = [
 
 	.feature {
 		display: flex;
-		gap: 1.25rem;
-		padding: 1.75rem;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 1.5rem;
 		transition: transform 150ms;
 	}
 
@@ -144,11 +146,17 @@ const features = [
 		justify-content: center;
 	}
 
+	.body {
+		align-items: flex-start;
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+	}
+
 	.label {
 		background: var(--feature-bg);
 		border-radius: 999px;
 		color: var(--feature-fg);
-		display: inline-block;
 		font-size: var(--sl-text-xs);
 		font-weight: 800;
 		letter-spacing: 0.16em;
@@ -159,6 +167,7 @@ const features = [
 	h3 {
 		color: var(--sl-color-white);
 		font-size: var(--sl-text-2xl);
+		line-height: 1.2;
 		margin: 0.6rem 0 0;
 	}
 
@@ -166,6 +175,14 @@ const features = [
 		color: var(--sl-color-gray-2);
 		line-height: 1.6;
 		margin: 0.5rem 0 0;
+	}
+
+	@media (width >= 30rem) {
+		.feature {
+			flex-direction: row;
+			gap: 1.25rem;
+			padding: 1.75rem;
+		}
 	}
 
 	@media (width >= 50rem) {

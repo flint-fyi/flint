@@ -2,7 +2,7 @@
 import PackageManagers from "./PackageManagers.astro";
 ---
 
-<section class="try-it-out" id="try-it-out">
+<section class="try-it-out not-content" id="try-it-out">
 	<div aria-hidden="true" class="sky"></div>
 	<div aria-hidden="true" class="stars"></div>
 
@@ -32,9 +32,9 @@ import PackageManagers from "./PackageManagers.astro";
 		border: 2px solid var(--flint-paper-border);
 		border-radius: 1.5rem;
 		isolation: isolate;
-		margin-block: 4rem;
+		margin-block: clamp(2.5rem, 8vw, 4rem);
 		overflow: hidden;
-		padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.25rem, 4vw, 3rem);
+		padding: clamp(2rem, 6vw, 4.5rem) clamp(1rem, 4vw, 3rem);
 		position: relative;
 	}
 
@@ -70,9 +70,9 @@ import PackageManagers from "./PackageManagers.astro";
 
 	.eyebrow {
 		color: var(--flint-band-eyebrow);
-		font-size: var(--sl-text-sm);
+		font-size: var(--sl-text-xs);
 		font-weight: 800;
-		letter-spacing: 0.2em;
+		letter-spacing: 0.12em;
 		margin: 0;
 		text-transform: uppercase;
 	}
@@ -80,6 +80,7 @@ import PackageManagers from "./PackageManagers.astro";
 	h2 {
 		color: var(--flint-band-text);
 		font-size: clamp(1.875rem, calc(1rem + 2.5vw), 2.75rem);
+		line-height: 1.15;
 		margin: 0.75rem 0 0;
 	}
 
@@ -92,6 +93,13 @@ import PackageManagers from "./PackageManagers.astro";
 	.command {
 		margin-block-start: 2rem;
 		text-align: start;
+	}
+
+	@media (width >= 30rem) {
+		.eyebrow {
+			font-size: var(--sl-text-sm);
+			letter-spacing: 0.2em;
+		}
 	}
 
 	.aside {

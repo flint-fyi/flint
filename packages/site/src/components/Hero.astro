@@ -104,18 +104,18 @@ const assurances = [
 			color-mix(in srgb, var(--flint-badge-text) 35%, transparent);
 		border-radius: 999px;
 		color: var(--flint-badge-text);
-		font-size: var(--sl-text-base);
+		font-size: var(--sl-text-sm);
 		font-weight: 800;
-		letter-spacing: 0.08em;
+		letter-spacing: 0.05em;
 		margin: 0;
-		padding: 0.4rem 1rem;
+		padding: 0.35rem 0.9rem;
 		text-transform: uppercase;
 	}
 
 	h1 {
 		color: var(--sl-color-white);
-		font-size: clamp(2.5rem, calc(1rem + 4.5vw), 4rem);
-		line-height: 1.02;
+		font-size: clamp(2.125rem, calc(1rem + 4.5vw), 4rem);
+		line-height: 1.05;
 		margin: 0;
 	}
 
@@ -129,16 +129,21 @@ const assurances = [
 
 	.actions {
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
 		gap: 0.75rem;
+	}
+
+	.actions a {
+		inline-size: 100%;
+		justify-content: center;
 	}
 
 	.assurances {
 		color: var(--sl-color-gray-2);
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
 		font-size: var(--sl-text-sm);
-		gap: 0.5rem 1.5rem;
+		gap: 0.5rem;
 		list-style: none;
 		margin: 0;
 		padding: 0;
@@ -194,7 +199,7 @@ const assurances = [
 
 	.mark :global(img) {
 		block-size: auto;
-		inline-size: min(100%, 13rem);
+		inline-size: min(100%, 9rem);
 		user-select: none;
 	}
 
@@ -245,10 +250,31 @@ const assurances = [
 		}
 	}
 
+	@media (width >= 30rem) {
+		.actions {
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+
+		.actions a {
+			inline-size: auto;
+		}
+
+		.assurances {
+			flex-direction: row;
+			flex-wrap: wrap;
+			gap: 0.5rem 1.5rem;
+		}
+	}
+
 	@media (width >= 50rem) {
 		.hero {
 			grid-template-columns: 7fr 5fr;
 			padding-block: clamp(2rem, calc(1rem + 8vmin), 6rem);
+		}
+
+		.mark :global(img) {
+			inline-size: min(100%, 13rem);
 		}
 	}
 </style>
