@@ -16,7 +16,7 @@ export type Props = StarlightRouteData;
 
 {
 	Astro.url.pathname === "/" && (
-		<a href="https://www.netlify.com">
+		<a class="netlify" href="https://www.netlify.com">
 			<img
 				alt="Deploys by Netlify"
 				class="dark"
@@ -42,6 +42,13 @@ export type Props = StarlightRouteData;
 
 	.credits a {
 		color: var(--sl-color-gray-2);
+	}
+
+	.netlify {
+		display: block;
+		margin-inline: auto;
+		padding-block-end: 2rem;
+		inline-size: fit-content;
 	}
 
 	:global(html[data-theme="dark"]) .light,

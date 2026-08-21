@@ -4,24 +4,28 @@ import { Icon } from "@astrojs/starlight/components";
 const features = [
 	{
 		body: "Sensible rules right out of the bag. No config wrangling — just unzip, light the fire, and start linting.",
+		accent: "ember",
 		icon: "heart",
 		label: "cozy defaults",
 		title: "Toasty by default",
 	},
 	{
 		body: "Intelligent caching and CI coordination keep duplicate jobs from wandering off-trail. Your runs finish faster.",
+		accent: "moss",
 		icon: "rocket",
 		label: "fast & cached",
 		title: "Always points home",
 	},
 	{
 		body: "Lint rules powered by the full TypeScript type checker — they catch the kind of bugs that hide under tent flaps.",
+		accent: "lake",
 		icon: "star",
 		label: "typed power",
 		title: "Type-checked shelter",
 	},
 	{
 		body: "Configs you can actually read by lantern-light. Powerful when you need it, quiet when you don't.",
+		accent: "berry",
 		icon: "document",
 		label: "clear config",
 		title: "Bright, readable config",
@@ -42,7 +46,7 @@ const features = [
 	<div class="grid">
 		{
 			features.map((feature) => (
-				<article class="flint-paper feature">
+				<article class="flint-paper feature" data-accent={feature.accent}>
 					<div class="icon">
 						<Icon name={feature.icon} size="2rem" />
 					</div>
@@ -107,13 +111,33 @@ const features = [
 		transform: translateY(-4px);
 	}
 
+	.feature[data-accent="ember"] {
+		--feature-bg: var(--flint-tag-ember-bg);
+		--feature-fg: var(--flint-tag-ember-fg);
+	}
+
+	.feature[data-accent="moss"] {
+		--feature-bg: var(--flint-tag-moss-bg);
+		--feature-fg: var(--flint-tag-moss-fg);
+	}
+
+	.feature[data-accent="lake"] {
+		--feature-bg: var(--flint-tag-lake-bg);
+		--feature-fg: var(--flint-tag-lake-fg);
+	}
+
+	.feature[data-accent="berry"] {
+		--feature-bg: var(--flint-tag-berry-bg);
+		--feature-fg: var(--flint-tag-berry-fg);
+	}
+
 	.icon {
 		align-items: center;
-		background: var(--flint-badge-surface);
+		background: var(--feature-bg);
 		block-size: 3.5rem;
 		border: 2px solid var(--flint-paper-border);
 		border-radius: 0.9rem;
-		color: var(--flint-badge-text);
+		color: var(--feature-fg);
 		display: flex;
 		flex-shrink: 0;
 		inline-size: 3.5rem;
@@ -121,9 +145,9 @@ const features = [
 	}
 
 	.label {
-		background: color-mix(in srgb, var(--flint-moss) 22%, transparent);
+		background: var(--feature-bg);
 		border-radius: 999px;
-		color: var(--sl-color-white);
+		color: var(--feature-fg);
 		display: inline-block;
 		font-size: var(--sl-text-xs);
 		font-weight: 800;
