@@ -43,7 +43,7 @@ function createExampleFile(index: number) {
 	return [
 		index > 1 &&
 			range(1, index)
-				.map((i) => `export * as nested${i} from "./nested${i}/index.js";`)
+				.map((i) => `export * as nested${i} from "./nested${i}/index.ts";`)
 				.join("\n\t\t"),
 		`
 			export async function example${index}(prefix: string) {
@@ -70,7 +70,7 @@ function createIndexFile(topLevelWidth: number) {
 			for (const i of await example0("")) {}
 		}
 
-		${indices.map((index) => `export { example${index} } from "./example${index}/index.js";`).join("\n\t\t")}
+		${indices.map((index) => `export { example${index} } from "./example${index}/index.ts";`).join("\n\t\t")}
 	`;
 }
 
