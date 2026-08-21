@@ -1,0 +1,152 @@
+---
+import { Icon } from "@astrojs/starlight/components";
+
+const features = [
+	{
+		body: "Sensible rules right out of the bag. No config wrangling — just unzip, light the fire, and start linting.",
+		icon: "heart",
+		label: "cozy defaults",
+		title: "Toasty by default",
+	},
+	{
+		body: "Intelligent caching and CI coordination keep duplicate jobs from wandering off-trail. Your runs finish faster.",
+		icon: "rocket",
+		label: "fast & cached",
+		title: "Always points home",
+	},
+	{
+		body: "Lint rules powered by the full TypeScript type checker — they catch the kind of bugs that hide under tent flaps.",
+		icon: "star",
+		label: "typed power",
+		title: "Type-checked shelter",
+	},
+	{
+		body: "Configs you can actually read by lantern-light. Powerful when you need it, quiet when you don't.",
+		icon: "document",
+		label: "clear config",
+		title: "Bright, readable config",
+	},
+] as const;
+---
+
+<section class="pack" id="features">
+	<div class="intro">
+		<p class="flint-eyebrow">🌲 What's in the pack</p>
+		<h2 class="flint-display">Everything you need for the trail</h2>
+		<p class="lede">
+			Four little tools, packed thoughtfully. Pull them out when the path gets
+			twisty.
+		</p>
+	</div>
+
+	<div class="grid">
+		{
+			features.map((feature) => (
+				<article class="flint-paper feature">
+					<div class="icon">
+						<Icon name={feature.icon} size="2rem" />
+					</div>
+					<div>
+						<span class="label">{feature.label}</span>
+						<h3 class="flint-display">{feature.title}</h3>
+						<p>{feature.body}</p>
+					</div>
+				</article>
+			))
+		}
+	</div>
+</section>
+
+<style>
+	.pack {
+		padding-block: 4rem;
+	}
+
+	.intro {
+		margin-inline: auto;
+		max-width: 48rem;
+		text-align: center;
+	}
+
+	.intro h2 {
+		color: var(--sl-color-white);
+		font-size: clamp(1.875rem, calc(1rem + 2.5vw), 2.75rem);
+		margin: 0.5rem 0 0;
+		text-wrap: balance;
+	}
+
+	.lede {
+		color: var(--sl-color-gray-2);
+		font-size: var(--sl-text-lg);
+		margin: 1rem 0 0;
+	}
+
+	.grid {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: 100%;
+		margin-block-start: 3rem;
+	}
+
+	.feature {
+		display: flex;
+		gap: 1.25rem;
+		padding: 1.75rem;
+		transition: transform 150ms;
+	}
+
+	.feature:nth-child(odd) {
+		rotate: -0.6deg;
+	}
+
+	.feature:nth-child(even) {
+		rotate: 0.6deg;
+	}
+
+	.feature:hover {
+		transform: translateY(-4px);
+	}
+
+	.icon {
+		align-items: center;
+		background: var(--flint-badge-surface);
+		block-size: 3.5rem;
+		border: 2px solid var(--flint-paper-border);
+		border-radius: 0.9rem;
+		color: var(--flint-badge-text);
+		display: flex;
+		flex-shrink: 0;
+		inline-size: 3.5rem;
+		justify-content: center;
+	}
+
+	.label {
+		background: color-mix(in srgb, var(--flint-moss) 22%, transparent);
+		border-radius: 999px;
+		color: var(--sl-color-white);
+		display: inline-block;
+		font-size: var(--sl-text-xs);
+		font-weight: 800;
+		letter-spacing: 0.16em;
+		padding: 0.2rem 0.6rem;
+		text-transform: uppercase;
+	}
+
+	h3 {
+		color: var(--sl-color-white);
+		font-size: var(--sl-text-2xl);
+		margin: 0.6rem 0 0;
+	}
+
+	.feature p {
+		color: var(--sl-color-gray-2);
+		line-height: 1.6;
+		margin: 0.5rem 0 0;
+	}
+
+	@media (width >= 50rem) {
+		.grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>

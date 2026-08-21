@@ -1,0 +1,198 @@
+---
+import markdownIt from "markdown-it";
+
+import { getRuleForPlugin } from "@flint.fyi/rule-data";
+
+const renderer = markdownIt();
+
+const ruleIds = [
+	"anyAssignments",
+	"unnecessaryComparisons",
+	"deprecated",
+	"caseFallthroughs",
+	"arrayIncludes",
+	"unnecessaryTernaries",
+];
+
+const rules = ruleIds.map((ruleId) => {
+	const { about } = getRuleForPlugin("ts", ruleId);
+
+	return {
+		description: renderer.renderInline(about.description),
+		id: ruleId,
+		preset: about.presets?.[0] ?? "none",
+	};
+});
+---
+
+<section class="trail-map flint-paper" id="rules">
+	<div class="copy">
+		<p class="flint-eyebrow">📖 The trail map</p>
+		<h2 class="flint-display">Hundreds of rules, hand-picked & happy.</h2>
+		<p class="lede">
+			Each rule comes with a friendly explanation, real-world examples, and an
+			autofix when we can manage it. No cryptic codes. No lecture from the
+			scout-master.
+		</p>
+		<div class="actions">
+			<a class="button primary" href="/rules">Browse rules</a>
+			<a class="button" href="/about">Read the docs</a>
+		</div>
+	</div>
+
+	<ul class="rules">
+		{
+			rules.map((rule) => (
+				<li class="rule">
+					<a href={`/rules/ts/${rule.id}`}>{rule.id}</a>
+					<p set:html={rule.description} />
+					<span class="badges">
+						<span class="preset" data-preset="plugin">
+							ts
+						</span>
+						<span class="preset" data-preset={rule.preset}>
+							{rule.preset}
+						</span>
+					</span>
+				</li>
+			))
+		}
+	</ul>
+</section>
+
+<style>
+	.trail-map {
+		display: grid;
+		gap: 2.5rem;
+		grid-template-columns: 100%;
+		padding: clamp(1.5rem, 4vw, 3rem);
+	}
+
+	h2 {
+		color: var(--sl-color-white);
+		font-size: clamp(1.75rem, calc(1rem + 2vw), 2.25rem);
+		margin: 0.5rem 0 0;
+		text-wrap: balance;
+	}
+
+	.lede {
+		color: var(--sl-color-gray-2);
+		font-size: var(--sl-text-lg);
+		line-height: 1.6;
+		margin: 1rem 0 0;
+	}
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-block-start: 1.5rem;
+	}
+
+	.button {
+		border: 2px solid var(--flint-paper-border);
+		border-radius: 999px;
+		color: var(--sl-color-white);
+		font-weight: 700;
+		padding: 0.7rem 1.4rem;
+		text-decoration: none;
+		transition:
+			box-shadow 150ms,
+			transform 150ms;
+	}
+
+	.button.primary {
+		background: var(--flint-ember-fill);
+		border-color: var(--flint-ember-fill);
+		color: var(--flint-ember-fill-text);
+	}
+
+	.button:hover {
+		box-shadow: var(--flint-glow);
+		transform: translateY(-2px);
+	}
+
+	.rules {
+		display: grid;
+		gap: 0.75rem;
+		grid-template-columns: 100%;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.rule {
+		background: var(--sl-color-black);
+		border: 2px solid var(--flint-paper-border);
+		border-radius: 0.75rem;
+		display: flex;
+		flex-direction: column;
+		padding: 0.75rem 0.9rem;
+	}
+
+	.rule a {
+		color: var(--sl-color-white);
+		font-family: var(--sl-font-mono);
+		font-size: var(--sl-text-xs);
+		font-weight: 600;
+		overflow-wrap: anywhere;
+	}
+
+	.rule p {
+		color: var(--sl-color-gray-2);
+		flex: 1;
+		font-size: var(--sl-text-xs);
+		line-height: 1.5;
+		margin: 0.35rem 0 0.6rem;
+	}
+
+	.rule p :global(code) {
+		background: var(--flint-badge-surface);
+		border-radius: 0.3rem;
+		color: var(--flint-badge-text);
+		font-size: 0.95em;
+		padding: 0.05rem 0.25rem;
+	}
+
+	.badges {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+	}
+
+	.preset {
+		align-self: start;
+		border-radius: 0.4rem;
+		display: inline-block;
+		font-size: var(--sl-text-xs);
+		font-weight: 800;
+		letter-spacing: 0.12em;
+		padding: 0.15rem 0.45rem;
+		text-transform: uppercase;
+	}
+
+	.preset[data-preset="logical"] {
+		background: var(--flint-badge-surface);
+		color: var(--flint-badge-text);
+	}
+
+	.preset[data-preset="stylistic"] {
+		background: color-mix(in srgb, var(--flint-moss) 25%, transparent);
+		color: var(--sl-color-white);
+	}
+
+	.preset[data-preset="plugin"] {
+		background: var(--sl-color-gray-6);
+		color: var(--sl-color-gray-2);
+	}
+
+	@media (width >= 50rem) {
+		.trail-map {
+			grid-template-columns: 1fr 1.4fr;
+		}
+
+		.rules {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>

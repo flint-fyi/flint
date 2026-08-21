@@ -1,0 +1,254 @@
+---
+import { LinkButton } from "@astrojs/starlight/components";
+import { Image } from "astro:assets";
+
+const { data } = Astro.locals.starlightRoute.entry;
+const { actions = [], image, tagline, title = data.title } = data.hero ?? {};
+
+const logo = image && "dark" in image ? image.dark : undefined;
+const alt = image?.alt ?? "";
+
+const assurances = [
+	{ color: "moss", text: "100% open source" },
+	{ color: "ember", text: "Works with TS & JS" },
+	{ color: "pine", text: "Loves your monorepo" },
+];
+---
+
+<div class="hero">
+	<div class="copy">
+		<p class="eyebrow">🔥 A fast, friendly linter</p>
+
+		<h1 class="flint-display" data-page-title id="_top" set:html={title} />
+
+		{tagline && <p class="tagline" set:html={tagline} />}
+
+		{
+			actions.length > 0 && (
+				<div class="actions">
+					{actions.map(
+						({
+							attrs: { class: className, ...attrs } = {},
+							icon,
+							link: href,
+							text,
+							variant,
+						}) => (
+							<LinkButton
+								{href}
+								{variant}
+								icon={icon?.name}
+								class:list={[className]}
+								{...attrs}
+							>
+								{text}
+							</LinkButton>
+						),
+					)}
+				</div>
+			)
+		}
+
+		<ul class="assurances">
+			{
+				assurances.map((assurance) => (
+					<li>
+						<span class="dot" data-color={assurance.color} />
+						{assurance.text}
+					</li>
+				))
+			}
+		</ul>
+	</div>
+
+	<div class="art">
+		<div aria-hidden="true" class="glow"></div>
+		<div class="flint-paper mark">
+			{
+				logo && (
+					<Image
+						alt={alt}
+						height={400}
+						loading="eager"
+						src={logo}
+						width={400}
+					/>
+				)
+			}
+		</div>
+		<span aria-hidden="true" class="spark" data-spark="1">✨</span>
+		<span aria-hidden="true" class="spark" data-spark="2">🔥</span>
+		<span aria-hidden="true" class="spark" data-spark="3">✨</span>
+	</div>
+</div>
+
+<style>
+	.hero {
+		align-items: center;
+		display: grid;
+		gap: 3rem;
+		grid-template-columns: 100%;
+		padding-block: clamp(1.5rem, calc(0.5rem + 5vmin), 4rem);
+	}
+
+	.copy {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.eyebrow {
+		align-self: start;
+		background: var(--flint-badge-surface);
+		border: 2px solid
+			color-mix(in srgb, var(--flint-badge-text) 35%, transparent);
+		border-radius: 999px;
+		color: var(--flint-badge-text);
+		font-size: var(--sl-text-base);
+		font-weight: 800;
+		letter-spacing: 0.08em;
+		margin: 0;
+		padding: 0.4rem 1rem;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		color: var(--sl-color-white);
+		font-size: clamp(2.5rem, calc(1rem + 4.5vw), 4rem);
+		line-height: 1.02;
+		margin: 0;
+	}
+
+	.tagline {
+		color: var(--sl-color-gray-2);
+		font-size: var(--sl-text-lg);
+		line-height: 1.6;
+		margin: 0;
+		max-width: 34rem;
+	}
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.assurances {
+		color: var(--sl-color-gray-2);
+		display: flex;
+		flex-wrap: wrap;
+		font-size: var(--sl-text-sm);
+		gap: 0.5rem 1.5rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.assurances li {
+		align-items: center;
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.dot {
+		block-size: 0.5rem;
+		border-radius: 999px;
+		inline-size: 0.5rem;
+	}
+
+	.dot[data-color="moss"] {
+		background: var(--flint-moss);
+	}
+
+	.dot[data-color="ember"] {
+		background: var(--flint-ember);
+	}
+
+	.dot[data-color="pine"] {
+		background: var(--flint-pine-mark);
+	}
+
+	.art {
+		display: grid;
+		place-items: center;
+		position: relative;
+	}
+
+	.glow {
+		background: radial-gradient(
+			circle,
+			color-mix(in srgb, var(--flint-ember) 45%, transparent),
+			transparent 70%
+		);
+		filter: blur(2.5rem);
+		inset: -10%;
+		position: absolute;
+	}
+
+	.mark {
+		display: grid;
+		padding: clamp(1.5rem, 4vw, 2.5rem);
+		place-items: center;
+		position: relative;
+	}
+
+	.mark :global(img) {
+		block-size: auto;
+		inline-size: min(100%, 13rem);
+		user-select: none;
+	}
+
+	.spark {
+		font-size: 1.5rem;
+		position: absolute;
+	}
+
+	.spark[data-spark="1"] {
+		inset-block-start: 0;
+		inset-inline-start: 4%;
+	}
+
+	.spark[data-spark="2"] {
+		inset-block-start: 38%;
+		inset-inline-end: 0;
+	}
+
+	.spark[data-spark="3"] {
+		inset-block-end: 6%;
+		inset-inline-start: 22%;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.spark {
+			animation: drift 5s ease-in-out infinite;
+		}
+
+		.spark[data-spark="2"] {
+			animation-delay: 1.2s;
+		}
+
+		.spark[data-spark="3"] {
+			animation-delay: 2.4s;
+		}
+	}
+
+	@keyframes drift {
+		0%,
+		100% {
+			opacity: 0.65;
+			transform: translateY(0);
+		}
+
+		50% {
+			opacity: 1;
+			transform: translateY(-0.6rem);
+		}
+	}
+
+	@media (width >= 50rem) {
+		.hero {
+			grid-template-columns: 7fr 5fr;
+			padding-block: clamp(2rem, calc(1rem + 8vmin), 6rem);
+		}
+	}
+</style>
