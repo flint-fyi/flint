@@ -1192,6 +1192,9 @@ importers:
       typescript-eslint:
         specifier: catalog:dev
         version: 8.66.0(eslint@10.8.0)(supports-color@10.2.2)(typescript@6.0.3)
+      vitest:
+        specifier: catalog:dev
+        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/plugin-flint:
     dependencies:
@@ -5220,6 +5223,7 @@ packages:
   eslint@9.39.4:
     resolution: {integrity: sha512-XoMjdBOwe/esVgEvLmNsD3IRHkm7fbKIUGvrleloJXUZgDHig2IPWNniv+GwjyJXzuNqVjlr5+4yVUZjycJwfQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'

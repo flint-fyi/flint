@@ -18,7 +18,8 @@
 	"type": "module",
 	"scripts": {
 		"generate": "node src/generate.ts",
-		"measure": "DEBUG=\"*runInHyperfine\" node src/measure.ts"
+		"measure": "DEBUG=\"*runInHyperfine\" node src/measure.ts",
+		"test": "vitest --project performance-testing"
 	},
 	"dependencies": {
 		"@flint.fyi/rule-data": "workspace:^",
@@ -35,7 +36,8 @@
 		"eslint-plugin-regexp": "catalog:dev",
 		"eslint-plugin-unicorn": "catalog:dev",
 		"typescript": "catalog:dev",
-		"typescript-eslint": "catalog:dev"
+		"typescript-eslint": "catalog:dev",
+		"vitest": "catalog:dev"
 	},
 	"engines": {
 		"node": ">=26.1.0"
