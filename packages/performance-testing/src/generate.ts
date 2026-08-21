@@ -3,10 +3,10 @@ import path from "node:path";
 
 import { debugForFile } from "debug-for-file";
 
+import { createTestCaseSlug } from "./createTestCaseSlug.ts";
 import { createPackageFile } from "./creators/files/createPackageFile.ts";
 import { writeCaseFiles } from "./creators/writeCaseFiles.ts";
 import { testCaseEntries, testCasesPath, type TestCase } from "./testCases.ts";
-import { createTestCaseSlug } from "./utils.ts";
 import { writeFile } from "./writing/writeFile.ts";
 
 const log = debugForFile(import.meta.filename);
@@ -28,7 +28,9 @@ async function createCase(testCase: TestCase) {
 		"json",
 	);
 
-	log("Created", await writeCaseFiles(testCase, directory), "files");
+	const createdFiles = await writeCaseFiles(testCase, directory);
+
+	log("Created", createdFiles, "files");
 }
 
 await fs.mkdir(testCasesPath, { recursive: true });

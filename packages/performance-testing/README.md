@@ -5,9 +5,11 @@
 	❤️‍🔥
 </p>
 
+> Requires [hyperfine](https://github.com/sharkdp/hyperfine#installation) to be installed globally.
+
 ```shell
 pnpm generate
-DEBUG=*runInHyperfine pnpm measure
+pnpm measure
 ```
 
 ## Results

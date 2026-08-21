@@ -3,7 +3,7 @@ import type { Structure } from "../writing/writeStructure.ts";
 import { createESLintConfigFile } from "./files/createESLintConfigFile.ts";
 import { createFlintConfigFile } from "./files/createFlintConfigFile.ts";
 import { createStandardTSConfigFile } from "./files/createStandardTSConfigFile.ts";
-import { range } from "./utils.ts";
+import { range } from "./range.ts";
 
 export function countCaseFiles(testCase: TestCase): number {
 	return countStructureFiles(createSourceFiles(testCase));

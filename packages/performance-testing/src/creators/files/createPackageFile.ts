@@ -1,5 +1,5 @@
+import { createTestCaseSlug } from "../../createTestCaseSlug.ts";
 import type { TestCase } from "../../testCases.ts";
-import { createTestCaseSlug } from "../../utils.ts";
 
 export function createPackageFile(data: TestCase): object {
 	return {

@@ -3,11 +3,11 @@ import { fileURLToPath } from "node:url";
 
 import { table } from "console-table-without-index";
 
+import { createTestCaseSlug } from "./createTestCaseSlug.ts";
 import { countCaseFiles } from "./creators/createCaseFiles.ts";
 import { ruleCounts } from "./creators/files/rules.ts";
 import { runInHyperfine } from "./runInHyperfine.ts";
 import { testCaseEntries } from "./testCases.ts";
-import { createTestCaseSlug } from "./utils.ts";
 
 const results: unknown[] = [];
 
