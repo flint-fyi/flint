@@ -179,14 +179,16 @@ const assurances = [
 		position: relative;
 	}
 
+	/* Stays inside `.art`: a negative inset would widen the page's scrollable
+	   overflow, while the blur bleeds outward without doing so. */
 	.glow {
 		background: radial-gradient(
 			circle,
 			color-mix(in srgb, var(--flint-ember) 45%, transparent),
 			transparent 70%
 		);
-		filter: blur(2.5rem);
-		inset: -10%;
+		filter: blur(3rem);
+		inset: 0;
 		position: absolute;
 	}
 
