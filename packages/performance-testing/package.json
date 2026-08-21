@@ -32,9 +32,9 @@
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
 		"eslint": "catalog:dev",
-		"eslint-plugin-import": "catalog:dev",
-		"eslint-plugin-regexp": "catalog:dev",
-		"eslint-plugin-unicorn": "catalog:dev",
+		"eslint-plugin-import": "catalog:comparisons",
+		"eslint-plugin-regexp": "catalog:comparisons",
+		"eslint-plugin-unicorn": "catalog:comparisons",
 		"typescript": "catalog:dev",
 		"typescript-eslint": "catalog:dev",
 		"vitest": "catalog:dev"

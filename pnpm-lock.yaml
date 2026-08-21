@@ -205,6 +205,100 @@ settings:
   excludeLinksFromLockfile: false
 
 catalogs:
+  comparisons:
+    '@biomejs/biome':
+      specifier: 2.4.16
+      version: 2.4.16
+    '@eslint-community/eslint-plugin-eslint-comments':
+      specifier: 4.7.0
+      version: 4.7.0
+    '@eslint/json':
+      specifier: 2.0.0
+      version: 2.0.0
+    '@eslint/markdown':
+      specifier: 8.0.0
+      version: 8.0.0
+    '@next/eslint-plugin-next':
+      specifier: 16.2.6
+      version: 16.2.6
+    '@nuxt/eslint-plugin':
+      specifier: 1.17.0
+      version: 1.17.0
+    '@types/eslint-plugin-jsx-a11y':
+      specifier: 6.10.1
+      version: 6.10.1
+    '@types/eslint-plugin-promise':
+      specifier: 7.3.0
+      version: 7.3.0
+    '@typescript-eslint/eslint-plugin':
+      specifier: 8.66.0
+      version: 8.66.0
+    '@vitest/eslint-plugin':
+      specifier: 1.6.1
+      version: 1.6.1
+    eslint-plugin-astro:
+      specifier: 3.1.0
+      version: 3.1.0
+    eslint-plugin-eslint-plugin:
+      specifier: 7.3.3
+      version: 7.3.3
+    eslint-plugin-import:
+      specifier: 2.32.0
+      version: 2.32.0
+    eslint-plugin-jsdoc:
+      specifier: 63.0.2
+      version: 63.0.2
+    eslint-plugin-jsonc:
+      specifier: 3.4.1
+      version: 3.4.1
+    eslint-plugin-jsx-a11y:
+      specifier: 6.10.2
+      version: 6.10.2
+    eslint-plugin-n:
+      specifier: 18.2.1
+      version: 18.2.1
+    eslint-plugin-package-json:
+      specifier: 1.7.0
+      version: 1.7.0
+    eslint-plugin-perfectionist:
+      specifier: 5.10.0
+      version: 5.10.0
+    eslint-plugin-promise:
+      specifier: 7.3.0
+      version: 7.3.0
+    eslint-plugin-react:
+      specifier: 7.37.5
+      version: 7.37.5
+    eslint-plugin-react-hooks:
+      specifier: 7.1.1
+      version: 7.1.1
+    eslint-plugin-regexp:
+      specifier: 3.1.0
+      version: 3.1.0
+    eslint-plugin-solid:
+      specifier: 0.14.5
+      version: 0.14.5
+    eslint-plugin-svelte:
+      specifier: 3.17.1
+      version: 3.17.1
+    eslint-plugin-unicorn:
+      specifier: 64.0.0
+      version: 64.0.0
+    eslint-plugin-vue:
+      specifier: 10.10.0
+      version: 10.10.0
+    eslint-plugin-yml:
+      specifier: 3.4.0
+      version: 3.4.0
+    markdownlint:
+      specifier: 0.41.0
+      version: 0.41.0
+    oxlint:
+      specifier: 1.77.0
+      version: 1.77.0
+    vue-eslint-parser:
+      specifier: 10.4.1
+      version: 10.4.1
   dev:
     '@arethetypeswrong/core':
       specifier: 0.18.2
@@ -236,9 +330,6 @@ catalogs:
     '@types/omit-empty':
       specifier: 1.0.4
       version: 1.0.4
-    '@typescript-eslint/eslint-plugin':
-      specifier: 8.66.0
-      version: 8.66.0
     '@vitest/coverage-v8':
       specifier: 4.1.0
       version: 4.1.0
@@ -251,9 +342,6 @@ catalogs:
     eslint:
       specifier: 10.8.0
       version: 10.8.0
-    eslint-plugin-import:
-      specifier: 2.32.0
-      version: 2.32.0
     eslint-plugin-jsdoc:
       specifier: 63.0.2
       version: 63.0.2
@@ -272,9 +360,6 @@ catalogs:
     eslint-plugin-regexp:
       specifier: 3.1.0
       version: 3.1.0
-    eslint-plugin-unicorn:
-      specifier: 64.0.0
-      version: 64.0.0
     eslint-plugin-yml:
       specifier: 3.4.0
       version: 3.4.0
@@ -1178,13 +1263,13 @@ importers:
         specifier: catalog:dev
         version: 10.8.0(jiti@2.7.0)(supports-color@10.2.2)
       eslint-plugin-import:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 2.32.0(@typescript-eslint/parser@8.66.0)(eslint@10.8.0)(supports-color@10.2.2)
       eslint-plugin-regexp:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 3.1.0(eslint@10.8.0)
       eslint-plugin-unicorn:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 64.0.0(eslint@10.8.0)
       typescript:
         specifier: catalog:dev
@@ -1308,100 +1393,100 @@ importers:
         version: 4.4.3
     devDependencies:
       '@biomejs/biome':
-        specifier: 2.4.16
+        specifier: catalog:comparisons
         version: 2.4.16
       '@eslint-community/eslint-plugin-eslint-comments':
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 4.7.0(eslint@10.8.0)
       '@eslint/json':
-        specifier: 2.0.0
+        specifier: catalog:comparisons
         version: 2.0.0
       '@eslint/markdown':
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 8.0.0(supports-color@10.2.2)
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
       '@next/eslint-plugin-next':
-        specifier: 16.2.6
+        specifier: catalog:comparisons
         version: 16.2.6
       '@nuxt/eslint-plugin':
-        specifier: 1.17.0
+        specifier: catalog:comparisons
         version: 1.17.0(eslint@10.8.0)(supports-color@10.2.2)(typescript@6.0.3)
       '@types/eslint-plugin-jsx-a11y':
-        specifier: 6.10.1
+        specifier: catalog:comparisons
         version: 6.10.1(jiti@2.7.0)(supports-color@10.2.2)
       '@types/eslint-plugin-promise':
-        specifier: 7.3.0
+        specifier: catalog:comparisons
         version: 7.3.0
       '@typescript-eslint/eslint-plugin':
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 8.66.0(@typescript-eslint/parser@8.66.0)(eslint@10.8.0)(supports-color@10.2.2)(typescript@6.0.3)
       '@vitest/eslint-plugin':
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 1.6.1(eslint@10.8.0)(supports-color@10.2.2)(typescript@6.0.3)(vitest@4.1.0)
       eslint:
         specifier: catalog:dev
         version: 10.8.0(jiti@2.7.0)(supports-color@10.2.2)
       eslint-plugin-astro:
-        specifier: 3.1.0
+        specifier: catalog:comparisons
         version: 3.1.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@typescript-eslint/parser@8.66.0)(eslint-plugin-jsx-a11y@6.10.2)(eslint@10.8.0)(supports-color@10.2.2)(typescript-eslint@8.66.0)
       eslint-plugin-eslint-plugin:
-        specifier: 7.3.3
+        specifier: catalog:comparisons
         version: 7.3.3(eslint@10.8.0)
       eslint-plugin-import:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 2.32.0(@typescript-eslint/parser@8.66.0)(eslint@10.8.0)(supports-color@10.2.2)
       eslint-plugin-jsdoc:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 63.0.2(eslint@10.8.0)(supports-color@10.2.2)
       eslint-plugin-jsonc:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 3.4.1(@eslint/json@2.0.0)(eslint@10.8.0)
       eslint-plugin-jsx-a11y:
-        specifier: 6.10.2
+        specifier: catalog:comparisons
         version: 6.10.2(eslint@10.8.0)
       eslint-plugin-n:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 18.2.1(eslint@10.8.0)(typescript@6.0.3)
       eslint-plugin-package-json:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 1.7.0(@eslint/json@2.0.0)(eslint@10.8.0)
       eslint-plugin-perfectionist:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 5.10.0(eslint@10.8.0)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-promise:
-        specifier: 7.3.0
+        specifier: catalog:comparisons
         version: 7.3.0(eslint@10.8.0)
       eslint-plugin-react:
-        specifier: 7.37.5
+        specifier: catalog:comparisons
         version: 7.37.5(eslint@10.8.0)
       eslint-plugin-react-hooks:
-        specifier: 7.1.1
+        specifier: catalog:comparisons
         version: 7.1.1(eslint@10.8.0)(supports-color@10.2.2)
       eslint-plugin-regexp:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 3.1.0(eslint@10.8.0)
       eslint-plugin-solid:
-        specifier: 0.14.5
+        specifier: catalog:comparisons
         version: 0.14.5(eslint@10.8.0)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-svelte:
-        specifier: 3.17.1
+        specifier: catalog:comparisons
         version: 3.17.1(eslint@10.8.0)(svelte@5.56.2)
       eslint-plugin-unicorn:
-        specifier: 64.0.0
+        specifier: catalog:comparisons
         version: 64.0.0(eslint@10.8.0)
       eslint-plugin-vue:
-        specifier: 10.10.0
+        specifier: catalog:comparisons
         version: 10.10.0(@typescript-eslint/parser@8.66.0)(eslint@10.8.0)(vue-eslint-parser@10.4.1)
       eslint-plugin-yml:
-        specifier: catalog:dev
+        specifier: catalog:comparisons
         version: 3.4.0(eslint@10.8.0)
       markdownlint:
-        specifier: 0.41.0
+        specifier: catalog:comparisons
         version: 0.41.0(supports-color@10.2.2)
       oxlint:
-        specifier: 1.77.0
+        specifier: catalog:comparisons
         version: 1.77.0
       tsdown:
         specifier: catalog:dev
@@ -1410,7 +1495,7 @@ importers:
         specifier: catalog:dev
         version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
       vue-eslint-parser:
-        specifier: 10.4.1
+        specifier: catalog:comparisons
         version: 10.4.1(eslint@10.8.0)(supports-color@10.2.2)
 
   packages/rule-tester:
