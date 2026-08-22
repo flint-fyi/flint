@@ -10,7 +10,7 @@ vi.mock("node:fs/promises", () => ({
 
 const mockWriteFile = vi.mocked(fs.writeFile);
 
-describe("writeFile", () => {
+describe(writeFile, () => {
 	it("formats source as TypeScript when no parser is provided", async () => {
 		await writeFile("cases/files-2-rules-1", "index.ts", "export const x=1");
 

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { createESLintConfigFile } from "./createESLintConfigFile.ts";
 import { comparedRules } from "./rules.ts";
 
-describe("createESLintConfigFile", () => {
+describe(createESLintConfigFile, () => {
 	it("imports no plugin packages when the only rule is preregistered", () => {
 		const actual = createESLintConfigFile(1);
 

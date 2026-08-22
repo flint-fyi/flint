@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { createTestCaseSlug } from "./createTestCaseSlug.ts";
 
-describe("createTestCaseSlug", () => {
+describe(createTestCaseSlug, () => {
 	it("joins the entry labels and values when given a numeric rules count", () => {
 		const actual = createTestCaseSlug({ files: 256, rules: 1 });
 

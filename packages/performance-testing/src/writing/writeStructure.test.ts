@@ -11,7 +11,7 @@ vi.mock("node:fs/promises", () => ({
 
 vi.mock("./writeFile.ts");
 
-describe("writeStructure", () => {
+describe(writeStructure, () => {
 	it("returns zero and creates only the root directory when the structure is empty", async () => {
 		const actual = await writeStructure("cases/case", {});
 

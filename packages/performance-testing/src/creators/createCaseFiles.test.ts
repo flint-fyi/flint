@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { countCaseFiles, createCaseFiles } from "./createCaseFiles.ts";
 
-describe("countCaseFiles", () => {
+describe(countCaseFiles, () => {
 	it.for([2, 256, 1024])(
 		"counts source files matching the requested count when files is %i",
 		(files) => {
@@ -13,7 +13,7 @@ describe("countCaseFiles", () => {
 	);
 });
 
-describe("createCaseFiles", () => {
+describe(createCaseFiles, () => {
 	it("creates a config file per linter alongside src and tsconfig.json", () => {
 		const actual = createCaseFiles({ files: 2, rules: 1 });
 

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { createStandardTSConfigFile } from "./createStandardTSConfigFile.ts";
 
-describe("createStandardTSConfigFile", () => {
+describe(createStandardTSConfigFile, () => {
 	it("includes only src and type checks without emitting", () => {
 		const actual = createStandardTSConfigFile();
 

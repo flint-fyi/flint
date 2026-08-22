@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { range } from "./range.ts";
 
-describe("range", () => {
+describe(range, () => {
 	it("returns an empty array when length is zero", () => {
 		const actual = range(0, 0);
 

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { createFlintConfigFile } from "./createFlintConfigFile.ts";
 import { comparedRules } from "./rules.ts";
 
-describe("createFlintConfigFile", () => {
+describe(createFlintConfigFile, () => {
 	it("enables the single rule when given the 1 rules count", () => {
 		const actual = createFlintConfigFile(1);
 
