@@ -14,7 +14,7 @@ vi.mock("./writeFile.ts");
 
 describe(writeStructure, () => {
 	it("returns zero and creates only the root directory when the structure is empty", async () => {
-		const actual = await writeStructure(path.join("cases/case"), {});
+		const actual = await writeStructure(path.normalize("cases/case"), {});
 
 		expect({
 			created: actual,
@@ -22,13 +22,13 @@ describe(writeStructure, () => {
 			writeFileCalls: vi.mocked(writeFile).mock.calls,
 		}).toEqual({
 			created: 0,
-			mkdirCalls: [[path.join("cases/case"), { recursive: true }]],
+			mkdirCalls: [[path.normalize("cases/case"), { recursive: true }]],
 			writeFileCalls: [],
 		});
 	});
 
 	it("writes nested files and counts them when the structure has directories", async () => {
-		const actual = await writeStructure(path.join("cases/case"), {
+		const actual = await writeStructure(path.normalize("cases/case"), {
 			"package.json": [{ name: "case" }, "json"],
 			src: {
 				"index.ts": ["export {};", "typescript"],
@@ -45,15 +45,25 @@ describe(writeStructure, () => {
 		}).toEqual({
 			created: 3,
 			mkdirCalls: [
-				[path.join("cases/case"), { recursive: true }],
-				[path.join("cases/case/src"), { recursive: true }],
-				[path.join("cases/case/src/nested"), { recursive: true }],
+				[path.normalize("cases/case"), { recursive: true }],
+				[path.normalize("cases/case/src"), { recursive: true }],
+				[path.normalize("cases/case/src/nested"), { recursive: true }],
 			],
 			writeFileCalls: [
-				[path.join("cases/case"), "package.json", { name: "case" }, "json"],
-				[path.join("cases/case/src"), "index.ts", "export {};", "typescript"],
 				[
-					path.join("cases/case/src/nested"),
+					path.normalize("cases/case"),
+					"package.json",
+					{ name: "case" },
+					"json",
+				],
+				[
+					path.normalize("cases/case/src"),
+					"index.ts",
+					"export {};",
+					"typescript",
+				],
+				[
+					path.normalize("cases/case/src/nested"),
 					"index.ts",
 					"export {};",
 					"typescript",
