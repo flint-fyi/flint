@@ -1,7 +1,7 @@
 import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
-	ignore: ["packages/e2e/**/*", "packages/performance-testing/**/*"],
+	ignore: ["packages/e2e/**/*"],
 	ignoreExportsUsedInFile: { interface: true, type: true },
 	treatConfigHintsAsErrors: true,
 	workspaces: {
@@ -39,6 +39,16 @@ const config: KnipConfig = {
 		},
 		"packages/performance": {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
+		},
+		"packages/performance-testing": {
+			ignoreDependencies: [
+				"eslint",
+				"eslint-plugin-import",
+				"eslint-plugin-regexp",
+				"eslint-plugin-unicorn",
+				"typescript-eslint",
+			],
+			project: ["src/**/*.ts!"],
 		},
 		"packages/plugin-flint": {
 			ignoreDependencies: [
