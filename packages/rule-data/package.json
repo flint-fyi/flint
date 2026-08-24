@@ -22,6 +22,8 @@
 		"dist/"
 	],
 	"scripts": {
+		"file-missing-rules-issues": "node scripts/file-missing-rules-issues.ts",
+		"report-missing-rules": "node scripts/report-missing-rules.ts",
 		"sort-data": "node scripts/sort-data.ts",
 		"test": "vitest --project rule-data"
 	},
