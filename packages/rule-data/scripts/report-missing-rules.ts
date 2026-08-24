@@ -1,16 +1,14 @@
 import process from "node:process";
 
 import {
+	collectRuleCoverageReports,
 	formatRuleCoverage,
 	hasRuleCoverageGaps,
-	ruleCoverageSources,
 } from "../src/test-utils/coverage.ts";
 
 let reportedGaps = false;
 
-for (const { collect, linter } of ruleCoverageSources) {
-	const coverage = await collect();
-
+for (const { coverage, linter } of await collectRuleCoverageReports()) {
 	if (!hasRuleCoverageGaps(coverage)) {
 		continue;
 	}

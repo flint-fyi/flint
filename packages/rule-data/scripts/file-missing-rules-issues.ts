@@ -3,9 +3,9 @@ import fs from "node:fs/promises";
 import process from "node:process";
 
 import {
+	collectRuleCoverageReports,
 	formatRuleCoverage,
 	hasRuleCoverageGaps,
-	ruleCoverageSources,
 	type RuleCoverage,
 } from "../src/test-utils/coverage.ts";
 
@@ -36,9 +36,9 @@ const existingIssues = JSON.parse(
 	]),
 ) as ExistingIssue[];
 
-for (const { collect, linter } of ruleCoverageSources) {
-	const coverage = await collect();
+const summarySections: string[] = [];
 
+for (const { coverage, linter } of await collectRuleCoverageReports()) {
 	if (!hasRuleCoverageGaps(coverage)) {
 		continue;
 	}
@@ -69,12 +69,15 @@ for (const { collect, linter } of ruleCoverageSources) {
 		console.log(`Created ${url}: ${title}`);
 	}
 
-	if (process.env.GITHUB_STEP_SUMMARY) {
-		await fs.appendFile(
-			process.env.GITHUB_STEP_SUMMARY,
-			`## ${linter}\n\n${formatRuleCoverage(linter, coverage)}\n\n`,
-		);
-	}
+	summarySections.push(
+		`## ${linter}\n\n${formatRuleCoverage(linter, coverage)}`,
+	);
+}
+
+const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+
+if (summaryPath && summarySections.length) {
+	await fs.appendFile(summaryPath, `${summarySections.join("\n\n")}\n`);
 }
 
 function createIssueBody(linter: string, coverage: RuleCoverage): string {

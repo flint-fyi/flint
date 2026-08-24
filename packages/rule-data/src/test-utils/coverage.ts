@@ -28,6 +28,11 @@ export interface RuleCoverage {
 	stale: string[];
 }
 
+export interface RuleCoverageReport {
+	coverage: RuleCoverage;
+	linter: string;
+}
+
 export interface RuleCoverageSource {
 	collect: () => Promise<RuleCoverage> | RuleCoverage;
 	linter: string;
@@ -54,6 +59,17 @@ const excludedESLintRulesByPluginName = new Map([
 		]),
 	],
 ]);
+
+export async function collectRuleCoverageReports(): Promise<
+	RuleCoverageReport[]
+> {
+	return Promise.all(
+		ruleCoverageSources.map(async ({ collect, linter }) => ({
+			coverage: await collect(),
+			linter,
+		})),
+	);
+}
 
 export function compareRuleCoverage(
 	available: LinterRule[],
