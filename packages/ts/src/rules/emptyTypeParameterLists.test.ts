@@ -35,9 +35,13 @@ Empty type parameter lists are unnecessary.
 		},
 		{
 			code: `
+interface Base {}
+
 interface Empty<> extends Base {}
 `,
 			snapshot: `
+interface Base {}
+
 interface Empty<> extends Base {}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Empty type parameter lists are unnecessary.
@@ -51,6 +55,10 @@ Empty type parameter lists are unnecessary.
 		`interface Container<T> { value: T }`,
 		`type Multi<T, U> = [T, U];`,
 		`function foo<T>(x: T): T { return x; }`,
-		`class Container<T> { value: T; }`,
+		`
+class Container<T> {
+    constructor(public value: T) {}
+}
+`,
 	],
 });

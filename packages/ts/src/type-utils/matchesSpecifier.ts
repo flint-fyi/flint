@@ -13,7 +13,7 @@ export function matchesSpecifier(
 	declarations: Declaration[],
 	specifier: TypeOrValueSpecifier,
 	program: Program,
-) {
+): boolean {
 	const names = getSpecifierNames(specifier);
 	if (
 		names !== undefined &&

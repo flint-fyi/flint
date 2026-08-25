@@ -12,7 +12,7 @@ export function isGlobalDocumentReference(
 	node: AST.Expression,
 	typeChecker: Checker,
 	program: Program,
-) {
+): boolean {
 	if (node.kind === SyntaxKind.Identifier) {
 		return (
 			node.text === "document" &&

@@ -81,20 +81,18 @@ const value = parseInt(\`111110111\`, 2);
 		`const binary = 0b111110111;`,
 		`const octal = 0o767;`,
 		`const hex = 0x1F7;`,
-		`const dynamic = parseInt(value, 2);`,
-		`const variable = parseInt("111", radix);`,
+		`declare const value: string; const dynamic = parseInt(value, 2);`,
+		`declare const radix: number; const variable = parseInt("111", radix);`,
 		`const single = parseInt("111");`,
 		`Number.parseInt("123");`,
 		`Number.parseInt("123", 10);`,
 		`
 			function parseInt(...values: unknown[]) {}
 			parseInt("1", 2);
-			export {};
 		`,
 		`
 			const Number = { parseInt(...values: unknown[]) {} };
 			Number.parseInt("1", 2);
-			export {};
 		`,
 	],
 });

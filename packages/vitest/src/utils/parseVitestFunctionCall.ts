@@ -8,12 +8,8 @@ const knownVitestFunctionNames = [
 	"beforeAll",
 	"beforeEach",
 	"describe",
-	"fit",
 	"it",
 	"test",
-	"xdescribe",
-	"xit",
-	"xtest",
 ] as const;
 
 const knownBlockNamesSet = new Set<string>(knownVitestFunctionNames);
@@ -35,7 +31,9 @@ interface VitestCallee {
 	targetNode: AST.AnyNode;
 }
 
-export function parseVitestFunctionCall(node: AST.CallExpression) {
+export function parseVitestFunctionCall(
+	node: AST.CallExpression,
+): undefined | VitestCallee {
 	const parsedCallee = parseVitestCallee(node.expression);
 
 	if (!parsedCallee || !knownBlockNamesSet.has(parsedCallee.name)) {

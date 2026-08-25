@@ -5,6 +5,11 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const value: string;
+declare function isSomething(value: string): boolean;
+declare function doFirst(): void;
+declare function doSecond(): void;
+
 if (isSomething(value)) {
     doFirst();
 } else if (isSomething(value)) {
@@ -12,6 +17,11 @@ if (isSomething(value)) {
 }
 `,
 			snapshot: `
+declare const value: string;
+declare function isSomething(value: string): boolean;
+declare function doFirst(): void;
+declare function doSecond(): void;
+
 if (isSomething(value)) {
     doFirst();
 } else if (isSomething(value)) {
@@ -23,6 +33,11 @@ if (isSomething(value)) {
 		},
 		{
 			code: `
+declare const value: string;
+declare function isSomething(value: string): boolean;
+declare function doFirst(): void;
+declare function doSecond(): void;
+
 if (isSomething /* ... */ (value)) {
     doFirst();
 } else if (isSomething(value /* ... */)) {
@@ -30,6 +45,11 @@ if (isSomething /* ... */ (value)) {
 }
 `,
 			snapshot: `
+declare const value: string;
+declare function isSomething(value: string): boolean;
+declare function doFirst(): void;
+declare function doSecond(): void;
+
 if (isSomething /* ... */ (value)) {
     doFirst();
 } else if (isSomething(value /* ... */)) {
@@ -41,6 +61,15 @@ if (isSomething /* ... */ (value)) {
 		},
 		{
 			code: `
+declare const first: boolean;
+declare const fourth: boolean;
+declare const second: boolean;
+declare const third: boolean;
+declare function handleFirst(): void;
+declare function handleFourth(): void;
+declare function handleSecond(): void;
+declare function handleThird(): void;
+
 if (first) {
     handleFirst();
 } else if (second) {
@@ -52,6 +81,15 @@ if (first) {
 }
 `,
 			snapshot: `
+declare const first: boolean;
+declare const fourth: boolean;
+declare const second: boolean;
+declare const third: boolean;
+declare function handleFirst(): void;
+declare function handleFourth(): void;
+declare function handleSecond(): void;
+declare function handleThird(): void;
+
 if (first) {
     handleFirst();
 } else if (second) {
@@ -67,6 +105,13 @@ if (first) {
 		},
 		{
 			code: `
+declare const count: number;
+declare function handleFive(): void;
+declare function handleFour(): void;
+declare function handleOne(): void;
+declare function handleThree(): void;
+declare function handleTwo(): void;
+
 if (count === 1) {
     handleOne();
 } else if (count === 2) {
@@ -80,6 +125,13 @@ if (count === 1) {
 }
 `,
 			snapshot: `
+declare const count: number;
+declare function handleFive(): void;
+declare function handleFour(): void;
+declare function handleOne(): void;
+declare function handleThree(): void;
+declare function handleTwo(): void;
+
 if (count === 1) {
     handleOne();
 } else if (count === 2) {
@@ -97,6 +149,9 @@ if (count === 1) {
 		},
 		{
 			code: `
+declare const value: string;
+declare function process(): void;
+
 if (value === "first") {
     process();
 } else if (value === "second") {
@@ -106,6 +161,9 @@ if (value === "first") {
 }
 `,
 			snapshot: `
+declare const value: string;
+declare function process(): void;
+
 if (value === "first") {
     process();
 } else if (value === "second") {
@@ -119,6 +177,12 @@ if (value === "first") {
 		},
 		{
 			code: `
+declare const isActive: boolean;
+declare const isPending: boolean;
+declare const isValid: boolean;
+declare function execute(): void;
+declare function wait(): void;
+
 if (isValid && isActive) {
     execute();
 } else if (isPending) {
@@ -128,6 +192,12 @@ if (isValid && isActive) {
 }
 `,
 			snapshot: `
+declare const isActive: boolean;
+declare const isPending: boolean;
+declare const isValid: boolean;
+declare function execute(): void;
+declare function wait(): void;
+
 if (isValid && isActive) {
     execute();
 } else if (isPending) {
@@ -141,6 +211,11 @@ if (isValid && isActive) {
 		},
 		{
 			code: `
+declare const value: boolean;
+declare function first(): void;
+declare function second(): void;
+declare function third(): void;
+
 if (value) {
     first();
 } else if (value) {
@@ -150,6 +225,11 @@ if (value) {
 }
 `,
 			snapshot: `
+declare const value: boolean;
+declare function first(): void;
+declare function second(): void;
+declare function third(): void;
+
 if (value) {
     first();
 } else if (value) {
@@ -165,13 +245,110 @@ if (value) {
 		},
 	],
 	valid: [
-		`if (isSomething(value)) { doFirst(); } else if (isSomethingElse(value)) { doSecond(); }`,
-		`if (first) { handleFirst(); } else if (second) { handleSecond(); } else if (third && fourth) { handleThird(); } else if (third && fifth) { handleFourth(); }`,
-		`if (count === 1) { handleOne(); } else if (count === 2) { handleTwo(); } else if (count === 3) { handleThree(); } else if (count === 4) { handleFour(); }`,
-		`if (value === "first") { process(); } else if (value === "second") { process(); } else if (value === "third") { process(); }`,
-		`if (isValid) { execute(); } else if (isPending) { wait(); } else if (isInvalid) { reject(); }`,
-		`if (value) { process(); }`,
-		`if (first) { doFirst(); } else { doSecond(); }`,
-		`if (first) { doFirst(); } else if (second) { doSecond(); } else { doDefault(); }`,
+		`
+declare const value: string;
+declare function doFirst(): void;
+declare function doSecond(): void;
+declare function isSomething(value: string): boolean;
+declare function isSomethingElse(value: string): boolean;
+
+if (isSomething(value)) {
+    doFirst();
+} else if (isSomethingElse(value)) {
+    doSecond();
+}`,
+		`
+declare const fifth: boolean;
+declare const first: boolean;
+declare const fourth: boolean;
+declare const second: boolean;
+declare const third: boolean;
+declare function handleFirst(): void;
+declare function handleFourth(): void;
+declare function handleSecond(): void;
+declare function handleThird(): void;
+
+if (first) {
+    handleFirst();
+} else if (second) {
+    handleSecond();
+} else if (third && fourth) {
+    handleThird();
+} else if (third && fifth) {
+    handleFourth();
+}`,
+		`
+declare const count: number;
+declare function handleFour(): void;
+declare function handleOne(): void;
+declare function handleThree(): void;
+declare function handleTwo(): void;
+
+if (count === 1) {
+    handleOne();
+} else if (count === 2) {
+    handleTwo();
+} else if (count === 3) {
+    handleThree();
+} else if (count === 4) {
+    handleFour();
+}`,
+		`
+declare const value: string;
+declare function process(): void;
+
+if (value === "first") {
+    process();
+} else if (value === "second") {
+    process();
+} else if (value === "third") {
+    process();
+}`,
+		`
+declare const isInvalid: boolean;
+declare const isPending: boolean;
+declare const isValid: boolean;
+declare function execute(): void;
+declare function reject(): void;
+declare function wait(): void;
+
+if (isValid) {
+    execute();
+} else if (isPending) {
+    wait();
+} else if (isInvalid) {
+    reject();
+}`,
+		`
+declare const value: boolean;
+declare function process(): void;
+
+if (value) {
+    process();
+}`,
+		`
+declare const first: boolean;
+declare function doFirst(): void;
+declare function doSecond(): void;
+
+if (first) {
+    doFirst();
+} else {
+    doSecond();
+}`,
+		`
+declare const first: boolean;
+declare const second: boolean;
+declare function doDefault(): void;
+declare function doFirst(): void;
+declare function doSecond(): void;
+
+if (first) {
+    doFirst();
+} else if (second) {
+    doSecond();
+} else {
+    doDefault();
+}`,
 	],
 });

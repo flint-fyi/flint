@@ -25,9 +25,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const Component: (props: Record<string, unknown>) => unknown;
 <div>{<Component />}</div>
 `,
 			snapshot: `
+declare const Component: (props: Record<string, unknown>) => unknown;
 <div>{<Component />}</div>
      ~~~~~~~~~~~~~~~
      Curly braces are unnecessary around JSX elements.
@@ -35,9 +37,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const Component: (props: Record<string, unknown>) => unknown;
 <Component>{<></>}</Component>
 `,
 			snapshot: `
+declare const Component: (props: Record<string, unknown>) => unknown;
 <Component>{<></>}</Component>
            ~~~~~~~
            Curly braces are unnecessary around JSX elements.
@@ -47,9 +51,15 @@ ruleTester.describe(rule, {
 	valid: [
 		`<div>Hello</div>`,
 		`<div><span>Content</span></div>`,
-		`<div>{variable}</div>`,
-		`<div>{someFunction()}</div>`,
+		`
+declare const variable: unknown;
+<div>{variable}</div>`,
+		`
+declare const someFunction: (...args: unknown[]) => unknown;
+<div>{someFunction()}</div>`,
 		`<div>{1 + 2}</div>`,
-		`<Component attribute={"value"} />`,
+		`
+declare const Component: (props: Record<string, unknown>) => unknown;
+<Component attribute={"value"} />`,
 	],
 });

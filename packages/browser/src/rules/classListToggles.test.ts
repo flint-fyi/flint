@@ -5,6 +5,8 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const condition: boolean;
+declare const element: HTMLElement;
 if (condition) {
     element.classList.add("active");
 } else {
@@ -12,9 +14,13 @@ if (condition) {
 }
 `,
 			output: `
+declare const condition: boolean;
+declare const element: HTMLElement;
 element.classList.toggle("active", condition);
 `,
 			snapshot: `
+declare const condition: boolean;
+declare const element: HTMLElement;
 if (condition) {
     element.classList.add("active");
                       ~~~
@@ -26,6 +32,8 @@ if (condition) {
 		},
 		{
 			code: `
+declare const isVisible: boolean;
+declare const button: HTMLButtonElement;
 if (isVisible) {
     button.classList.remove("hidden");
 } else {
@@ -33,9 +41,13 @@ if (isVisible) {
 }
 `,
 			output: `
+declare const isVisible: boolean;
+declare const button: HTMLButtonElement;
 button.classList.toggle("hidden", !(isVisible));
 `,
 			snapshot: `
+declare const isVisible: boolean;
+declare const button: HTMLButtonElement;
 if (isVisible) {
     button.classList.remove("hidden");
                      ~~~~~~
@@ -47,15 +59,21 @@ if (isVisible) {
 		},
 		{
 			code: `
+declare const flag: boolean;
+declare const element: HTMLElement;
 if (flag)
     element.classList.add("active");
 else
     element.classList.remove("active");
 `,
 			output: `
+declare const flag: boolean;
+declare const element: HTMLElement;
 element.classList.toggle("active", flag);
 `,
 			snapshot: `
+declare const flag: boolean;
+declare const element: HTMLElement;
 if (flag)
     element.classList.add("active");
                       ~~~
@@ -66,15 +84,29 @@ else
 		},
 	],
 	valid: [
-		`element.classList.toggle("active", condition);`,
-		`element.classList.add("active");`,
-		`element.classList.remove("active");`,
 		`
+			declare const condition: boolean;
+			declare const element: HTMLElement;
+			element.classList.toggle("active", condition);
+		`,
+		`
+			declare const element: HTMLElement;
+			element.classList.add("active");
+		`,
+		`
+			declare const element: HTMLElement;
+			element.classList.remove("active");
+		`,
+		`
+			declare const condition: boolean;
+			declare const element: HTMLElement;
 			if (condition) {
 				element.classList.add("active");
 			}
 		`,
 		`
+			declare const condition: boolean;
+			declare const element: HTMLElement;
 			if (condition) {
 				element.classList.add("active");
 			} else {
@@ -82,6 +114,8 @@ else
 			}
 		`,
 		`
+			declare const condition: boolean;
+			declare const element: HTMLElement;
 			if (condition) {
 				element.classList.add("active");
 			} else {
@@ -89,6 +123,8 @@ else
 			}
 		`,
 		`
+			declare const condition: boolean;
+			declare const element: HTMLElement;
 			if (condition) {
 				element.classList.add("active");
 				console.log("added");
@@ -97,6 +133,8 @@ else
 			}
 		`,
 		`
+			declare const condition: boolean;
+			declare const element: HTMLElement;
 			if (condition) {
 				element.classList.add("class1");
 			} else {
@@ -104,6 +142,9 @@ else
 			}
 		`,
 		`
+			declare const condition: boolean;
+			declare const element1: HTMLElement;
+			declare const element2: HTMLElement;
 			if (condition) {
 				element1.classList.add("active");
 			} else {

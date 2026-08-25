@@ -77,6 +77,7 @@ for (let i = 0; i < 10; i++) {
 		},
 		{
 			code: `
+declare const condition: boolean;
 for (let i = 0; i < 10; i++) {
     if (condition) {
         const fn = () => i;
@@ -84,6 +85,7 @@ for (let i = 0; i < 10; i++) {
 }
 `,
 			snapshot: `
+declare const condition: boolean;
 for (let i = 0; i < 10; i++) {
     if (condition) {
         const fn = () => i;
@@ -150,6 +152,7 @@ for (let i = 0; i < 10; i++) {
 }
 `,
 		`
+declare const i: number;
 function outer() {
     const fn = function() { return i; };
 }

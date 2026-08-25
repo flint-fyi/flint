@@ -1,6 +1,6 @@
 import chalk from "chalk";
 
-export function printControls(file: number, files: number) {
+export function printControls(file: number, files: number): string {
 	return [
 		"   ",
 		chalk.hex(file === 0 ? "#aaaaaa" : "#dddddd")("[<] previous file"),

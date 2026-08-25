@@ -125,48 +125,64 @@ type Callback = (value: never) => void;
 		},
 		{
 			code: `
-function generic<T = any>(): T {}
+function generic<T = any>(): T {
+    return undefined as T;
+}
 `,
 			snapshot: `
-function generic<T = any>(): T {}
+function generic<T = any>(): T {
                      ~~~
                      Avoid using the \`any\` type as it disables type checking for the annotated value.
+    return undefined as T;
+}
 `,
 			suggestions: [
 				{
 					id: "unknown",
 					updated: `
-function generic<T = unknown>(): T {}
+function generic<T = unknown>(): T {
+    return undefined as T;
+}
 `,
 				},
 				{
 					id: "never",
 					updated: `
-function generic<T = never>(): T {}
+function generic<T = never>(): T {
+    return undefined as T;
+}
 `,
 				},
 			],
 		},
 		{
 			code: `
-function generic(): Array<any> {}
+function generic(): Array<any> {
+    return [];
+}
 `,
 			snapshot: `
-function generic(): Array<any> {}
+function generic(): Array<any> {
                           ~~~
                           Avoid using the \`any\` type as it disables type checking for the annotated value.
+    return [];
+}
 `,
 			suggestions: [
 				{
 					id: "unknown",
 					updated: `
-function generic(): Array<unknown> {}
+function generic(): Array<unknown> {
+    return [];
+}
 `,
 				},
 				{
 					id: "never",
 					updated: `
-function generic(): Array<never> {}
+function generic(): Array<never> {
+    return [];
+}
 `,
 				},
 			],
@@ -206,12 +222,12 @@ class Greeter {
 		{
 			code: `
 class Greeter {
-	message: Array<any>;
+	message: Array<any> = [];
 }
 `,
 			snapshot: `
 class Greeter {
-	message: Array<any>;
+	message: Array<any> = [];
 	               ~~~
 	               Avoid using the \`any\` type as it disables type checking for the annotated value.
 }
@@ -221,7 +237,7 @@ class Greeter {
 					id: "unknown",
 					updated: `
 class Greeter {
-	message: Array<unknown>;
+	message: Array<unknown> = [];
 }
 `,
 				},
@@ -229,7 +245,7 @@ class Greeter {
 					id: "never",
 					updated: `
 class Greeter {
-	message: Array<never>;
+	message: Array<never> = [];
 }
 `,
 				},
@@ -365,9 +381,13 @@ type obj = {
 		},
 		{
 			code: `
+class Base<T> {}
+
 class Derived<t = any> extends Base<any> {}
 `,
 			snapshot: `
+class Base<T> {}
+
 class Derived<t = any> extends Base<any> {}
                   ~~~
                   Avoid using the \`any\` type as it disables type checking for the annotated value.
@@ -378,24 +398,32 @@ class Derived<t = any> extends Base<any> {}
 				{
 					id: "unknown",
 					updated: `
+class Base<T> {}
+
 class Derived<t = unknown> extends Base<any> {}
 `,
 				},
 				{
 					id: "never",
 					updated: `
+class Base<T> {}
+
 class Derived<t = never> extends Base<any> {}
 `,
 				},
 				{
 					id: "unknown",
 					updated: `
+class Base<T> {}
+
 class Derived<t = any> extends Base<unknown> {}
 `,
 				},
 				{
 					id: "never",
 					updated: `
+class Base<T> {}
+
 class Derived<t = any> extends Base<never> {}
 `,
 				},

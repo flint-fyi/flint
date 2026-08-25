@@ -3,6 +3,7 @@ import ts, { SyntaxKind } from "typescript";
 
 import {
 	DirectivesCollector,
+	type DirectiveCollection,
 	type NormalizedReportRangeObject,
 } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
@@ -18,7 +19,7 @@ export interface ExtractedDirective {
 
 export function extractDirectivesFromTypeScriptFile(
 	sourceFile: AST.SourceFile,
-) {
+): ExtractedDirective[] {
 	const directives: ExtractedDirective[] = [];
 
 	tsutils.forEachComment(sourceFile, (fullText, sourceRange) => {
@@ -51,7 +52,9 @@ export function extractDirectivesFromTypeScriptFile(
 	return directives;
 }
 
-export function parseDirectivesFromTypeScriptFile(sourceFile: AST.SourceFile) {
+export function parseDirectivesFromTypeScriptFile(
+	sourceFile: AST.SourceFile,
+): DirectiveCollection {
 	const collector = new DirectivesCollector(
 		sourceFile.statements.at(0)?.getStart(sourceFile) ?? sourceFile.text.length,
 	);

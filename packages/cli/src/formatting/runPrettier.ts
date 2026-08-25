@@ -13,7 +13,7 @@ export async function runPrettier(
 	host: LinterHost,
 	lintResults: LintResultsMaybeWithChanges,
 	fix: boolean | undefined,
-) {
+): Promise<FormattingResults> {
 	const allFilePaths = new Set([
 		...(lintResults.changed ?? []),
 		...lintResults.allFilePaths,

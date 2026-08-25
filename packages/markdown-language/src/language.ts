@@ -4,7 +4,7 @@ import { gfmFromMarkdown } from "mdast-util-gfm";
 import { gfm } from "micromark-extension-gfm";
 import type { Node } from "unist";
 
-import { createLanguage } from "@flint.fyi/core";
+import { createLanguage, type Language } from "@flint.fyi/core";
 
 import { parseDirectivesFromMarkdownFile } from "./directives/parseDirectivesFromMarkdownFile.ts";
 import type {
@@ -17,10 +17,10 @@ export interface MarkdownFileServices {
 	root: WithPosition<mdast.Root>;
 }
 
-export const markdownLanguage = createLanguage<
+export const markdownLanguage: Language<
 	MarkdownNodeVisitors,
 	MarkdownFileServices
->({
+> = createLanguage({
 	about: {
 		name: "Markdown",
 	},

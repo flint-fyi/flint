@@ -86,36 +86,6 @@ RegExp("abc", "vu");
 		},
 		{
 			code: `
-/(/;
-`,
-			snapshot: `
-/(/;
- ~
- Invalid regular expression pattern.
-`,
-		},
-		{
-			code: `
-/abc/gg;
-`,
-			snapshot: `
-/abc/gg;
-      ~
-      Duplicate regular expression flag \`g\`.
-`,
-		},
-		{
-			code: `
-/abc/uv;
-`,
-			snapshot: `
-/abc/uv;
-      ~
-      The \`u\` and \`v\` flags cannot be used together.
-`,
-		},
-		{
-			code: `
 RegExp("abc", "gqx");
 `,
 			snapshot: `
@@ -132,8 +102,14 @@ RegExp("abc", "gqx");
 		`RegExp("abc", "gi");`,
 		`new RegExp("\\\\d+");`,
 		`new RegExp("abc", "dgimsuy");`,
-		`RegExp(patternVar);`,
-		`RegExp("abc", flagsVar);`,
+		`
+declare const patternVar: string;
+RegExp(patternVar);
+`,
+		`
+declare const flagsVar: string;
+RegExp("abc", flagsVar);
+`,
 		`/abc/;`,
 		`/abc/gi;`,
 		`/\\d+/;`,

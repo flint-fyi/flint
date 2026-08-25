@@ -172,6 +172,6 @@ new RegExp("[0-9a-z_]", "i");
 		`new RegExp("\\\\w");`,
 		`new RegExp("\\\\W");`,
 		`new RegExp("foo");`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 	],
 });

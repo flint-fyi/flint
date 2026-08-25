@@ -25,7 +25,7 @@ interface DirectiveEvent {
 
 export function computeDirectiveRanges(
 	directives: CommentDirectiveWithinFile[],
-) {
+): RangedSelection[] {
 	if (!directives.length) {
 		return [];
 	}

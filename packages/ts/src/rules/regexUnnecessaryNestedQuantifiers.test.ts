@@ -167,7 +167,7 @@ RegExp("(?:a+)+");
 		`/(?:a?)+?/;`,
 		`/(?:a??)+/;`,
 		String.raw`/(?:a{2})+/;`,
-		`RegExp(variable);`,
+		`declare const variable: string; RegExp(variable);`,
 		`/(?:a|b)+/;`,
 		`/(?:a?b)+/;`,
 	],

@@ -42,10 +42,12 @@ const content = node.innerText;
 		{
 			code: `
 declare const div: HTMLDivElement;
+declare const value: string;
 div.innerText = value;
 `,
 			snapshot: `
 declare const div: HTMLDivElement;
+declare const value: string;
 div.innerText = value;
     ~~~~~~~~~
     Prefer the safer, more performant \`textContent\` over the legacy \`innerText\`.
@@ -53,12 +55,12 @@ div.innerText = value;
 		},
 		{
 			code: `
-const text = document.getElementById("id").innerText;
+const text = document.getElementById("id")!.innerText;
 `,
 			snapshot: `
-const text = document.getElementById("id").innerText;
-                                           ~~~~~~~~~
-                                           Prefer the safer, more performant \`textContent\` over the legacy \`innerText\`.
+const text = document.getElementById("id")!.innerText;
+                                            ~~~~~~~~~
+                                            Prefer the safer, more performant \`textContent\` over the legacy \`innerText\`.
 `,
 		},
 	],
@@ -81,10 +83,11 @@ const content = node.textContent;
 `,
 		`
 declare const div: HTMLDivElement;
+declare const value: string;
 div.textContent = value;
 `,
 		`
-const text = document.getElementById("id").textContent;
+const text = document.getElementById("id")!.textContent;
 `,
 		`
 const obj = { innerText: "value" };

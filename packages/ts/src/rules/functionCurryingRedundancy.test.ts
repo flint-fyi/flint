@@ -5,19 +5,19 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-function add(a, b) {
+function add(a: number, b: number) {
     return a + b;
 }
 const result = add.call(undefined, 1, 2);
 `,
 			output: `
-function add(a, b) {
+function add(a: number, b: number) {
     return a + b;
 }
 const result = add(1, 2);
 `,
 			snapshot: `
-function add(a, b) {
+function add(a: number, b: number) {
     return a + b;
 }
 const result = add.call(undefined, 1, 2);
@@ -27,19 +27,19 @@ const result = add.call(undefined, 1, 2);
 		},
 		{
 			code: `
-function add(a, b) {
+function add(a: number, b: number) {
     return a + b;
 }
 const result = add.call(null, 1, 2);
 `,
 			output: `
-function add(a, b) {
+function add(a: number, b: number) {
     return a + b;
 }
 const result = add(1, 2);
 `,
 			snapshot: `
-function add(a, b) {
+function add(a: number, b: number) {
     return a + b;
 }
 const result = add.call(null, 1, 2);
@@ -49,19 +49,19 @@ const result = add.call(null, 1, 2);
 		},
 		{
 			code: `
-function add(a, b) {
+function add(a: number, b: number) {
     return a + b;
 }
 const result = add.apply(undefined, [1, 2]);
 `,
 			output: `
-function add(a, b) {
+function add(a: number, b: number) {
     return a + b;
 }
 const result = add(...[1, 2]);
 `,
 			snapshot: `
-function add(a, b) {
+function add(a: number, b: number) {
     return a + b;
 }
 const result = add.apply(undefined, [1, 2]);
@@ -71,19 +71,19 @@ const result = add.apply(undefined, [1, 2]);
 		},
 		{
 			code: `
-function add(a, b) {
+function add(a: number, b: number) {
     return a + b;
 }
 const result = add.apply(null, [1, 2]);
 `,
 			output: `
-function add(a, b) {
+function add(a: number, b: number) {
     return a + b;
 }
 const result = add(...[1, 2]);
 `,
 			snapshot: `
-function add(a, b) {
+function add(a: number, b: number) {
     return a + b;
 }
 const result = add.apply(null, [1, 2]);
@@ -131,12 +131,12 @@ callback.apply(null, ["test"]);
 		},
 	],
 	valid: [
-		`function add(a, b) { return a + b; } const result = add(1, 2);`,
+		`function add(a: number, b: number) { return a + b; } const result = add(1, 2);`,
 		`const obj = { value: 10, getValue: function() { return this.value; } }; obj.getValue();`,
-		`const obj = { value: 10 }; function getValue() { return this.value; } const result = getValue.call(obj);`,
+		`const obj = { value: 10 }; function getValue(this: { value: number }) { return this.value; } const result = getValue.call(obj);`,
 		`const obj1 = { method: function() { return 42; } }; const obj2 = {}; obj1.method.call(obj2);`,
 		`
-function greet() {
+function greet(this: { name: string }) {
     return this.name;
 }
 const person = { name: "Alice" };

@@ -6,8 +6,11 @@ import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
 export const ruleTester = new RuleTester({
 	defaults: {
 		fileName: "file.ts",
-		files: createRuleTesterTSConfig(),
+		files: createRuleTesterTSConfig({
+			lib: ["esnext", "dom"],
+		}),
 	},
 	describe,
+	diskBackedFSRoot: import.meta.dirname,
 	it,
 });

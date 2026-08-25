@@ -125,6 +125,6 @@ new RegExp("\\uD83D\\uDE00", "u");
 		String.raw`/\u{1F600}/u;`,
 		`/😀/u;`,
 		String.raw`/\u0041\u0042/u;`,
-		`RegExp(variable, "u");`,
+		`declare const variable: string; RegExp(variable, "u");`,
 	],
 });

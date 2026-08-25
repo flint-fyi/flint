@@ -132,7 +132,7 @@ ruleTester.describe(rule, {
 		String.raw`/\b/;`,
 		String.raw`/^foo$/;`,
 		String.raw`/(?=bar)/;`,
-		String.raw`RegExp(variable);`,
+		String.raw`declare const variable: string; RegExp(variable);`,
 		String.raw`/(?:ab)?/;`,
 		String.raw`new RegExp("(?:\\b|a)?");`,
 	],

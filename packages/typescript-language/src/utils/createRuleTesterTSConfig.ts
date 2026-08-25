@@ -1,11 +1,15 @@
 export function createRuleTesterTSConfig(
 	defaultCompilerOptions?: Record<string, unknown>,
-) {
+): {
+	"tsconfig.base.json": string;
+	"tsconfig.json": string;
+} {
 	return {
 		"tsconfig.base.json": JSON.stringify(
 			{
 				compilerOptions: {
 					lib: ["esnext"],
+					moduleDetection: "force",
 					moduleResolution: "bundler",
 					strict: true,
 					target: "esnext",

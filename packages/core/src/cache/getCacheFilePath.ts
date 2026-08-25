@@ -7,7 +7,9 @@ const defaultCacheFilePath = join(
 	defaultCacheFileName,
 );
 
-export const getCacheFilePath = (userProvidedCacheLocation?: string) => {
+export const getCacheFilePath = (
+	userProvidedCacheLocation?: string,
+): string => {
 	if (userProvidedCacheLocation) {
 		if (userProvidedCacheLocation.toLocaleLowerCase().endsWith(".json")) {
 			return userProvidedCacheLocation;

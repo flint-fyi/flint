@@ -7,6 +7,26 @@ ruleTester.describe(rule, {
 			code: `
 import { } from "mod";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import "mod";
 `,
@@ -20,6 +40,26 @@ import { } from "mod";
 			code: `
 import {  } from "mod";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import "mod";
 `,
@@ -33,6 +73,26 @@ import {  } from "mod";
 			code: `
 import {} from "mod";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import "mod";
 `,
@@ -46,6 +106,26 @@ import {} from "mod";
 			code: `
 import Default, { } from "mod";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import Default from "mod";
 `,
@@ -59,6 +139,26 @@ import Default, { } from "mod";
 			code: `
 import Default, {} from "mod";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import Default from "mod";
 `,
@@ -72,6 +172,26 @@ import Default, {} from "mod";
 			code: `
 import Default, {  } from "mod";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import Default from "mod";
 `,
@@ -85,6 +205,26 @@ import Default, {  } from "mod";
 			code: `
 import type { } from "mod";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import "mod";
 `,
@@ -98,6 +238,26 @@ import type { } from "mod";
 			code: `
 import type {} from "mod";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import "mod";
 `,
@@ -109,34 +269,28 @@ import type {} from "mod";
 		},
 		{
 			code: `
-import type Default, { } from "mod";
-`,
-			output: `
-import type Default from "mod";
-`,
-			snapshot: `
-import type Default, { } from "mod";
-                     ~~~
-                     Empty named import blocks are unnecessary.
-`,
-		},
-		{
-			code: `
-import type Default, {} from "mod";
-`,
-			output: `
-import type Default from "mod";
-`,
-			snapshot: `
-import type Default, {} from "mod";
-                     ~~
-                     Empty named import blocks are unnecessary.
-`,
-		},
-		{
-			code: `
 import { } from "@scope/package";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import "@scope/package";
 `,
@@ -150,6 +304,26 @@ import { } from "@scope/package";
 			code: `
 import { } from "./relative-path";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import "./relative-path";
 `,
@@ -164,6 +338,26 @@ import { } from "./relative-path";
 import {
 } from "mod";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import "mod";
 `,
@@ -180,6 +374,26 @@ import {
 import Default, {
 } from "mod";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import Default from "mod";
 `,
@@ -195,6 +409,26 @@ import Default, {
 			code: `
 import Default /* hello, world */ , { } from "mod";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import Default /* hello, world */  from "mod";
 `,
@@ -208,6 +442,26 @@ import Default /* hello, world */ , { } from "mod";
 			code: `
 import Default /* a, b, c */ , {} from "mod";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import Default /* a, b, c */  from "mod";
 `,
@@ -221,6 +475,26 @@ import Default /* a, b, c */ , {} from "mod";
 			code: `
 import Default /* , */ , { } from "mod";
 `,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
 			output: `
 import Default /* , */  from "mod";
 `,
@@ -232,16 +506,258 @@ import Default /* , */ , { } from "mod";
 		},
 	],
 	valid: [
-		`import { named } from "mod";`,
-		`import Default, { named } from "mod";`,
-		`import Default from "mod";`,
-		`import * as mod from "mod";`,
-		`import "mod";`,
-		`import type { Type } from "mod";`,
-		`import type Default from "mod";`,
-		`import type * as Types from "mod";`,
-		`import { a, b, c } from "mod";`,
-		`import Default, { a, b } from "mod";`,
-		`import type { TypeA, TypeB } from "mod";`,
+		{
+			code: `import { named } from "mod";`,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
+		},
+		{
+			code: `import Default, { named } from "mod";`,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
+		},
+		{
+			code: `import Default from "mod";`,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
+		},
+		{
+			code: `import * as mod from "mod";`,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
+		},
+		{
+			code: `import "mod";`,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
+		},
+		{
+			code: `import type { Type } from "mod";`,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
+		},
+		{
+			code: `import type Default from "mod";`,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
+		},
+		{
+			code: `import type * as Types from "mod";`,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
+		},
+		{
+			code: `import { a, b, c } from "mod";`,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
+		},
+		{
+			code: `import Default, { a, b } from "mod";`,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
+		},
+		{
+			code: `import type { TypeA, TypeB } from "mod";`,
+			files: {
+				"node_modules/@scope/package/index.d.ts": `
+export {};
+`,
+				"node_modules/mod/index.d.ts": `
+declare const Default: unknown;
+
+export default Default;
+export const a: unknown;
+export const b: unknown;
+export const c: unknown;
+export const named: unknown;
+export type Type = unknown;
+export type TypeA = unknown;
+export type TypeB = unknown;
+`,
+				"relative-path.ts": `
+export {};
+`,
+			},
+		},
 	],
 });

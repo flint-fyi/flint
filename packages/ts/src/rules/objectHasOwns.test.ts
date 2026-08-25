@@ -5,84 +5,122 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+const obj = { key: 1 };
 const hasKey = obj.hasOwnProperty("key");
+void hasKey;
 `,
 			snapshot: `
+const obj = { key: 1 };
 const hasKey = obj.hasOwnProperty("key");
                ~~~~~~~~~~~~~~~~~~~~~~~~~
                \`hasOwnProperty()\` calls can fail on objects without \`Object.prototype\` or with overridden properties.
+void hasKey;
 `,
 		},
 		{
 			code: `
+const obj = { prop: 1 };
+
 if (obj.hasOwnProperty("prop")) {
-    console.log("Has property");
+    const message = "Has property";
+    void message;
 }
 `,
 			snapshot: `
+const obj = { prop: 1 };
+
 if (obj.hasOwnProperty("prop")) {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~
     \`hasOwnProperty()\` calls can fail on objects without \`Object.prototype\` or with overridden properties.
-    console.log("Has property");
+    const message = "Has property";
+    void message;
 }
 `,
 		},
 		{
 			code: `
+const obj = { key: 1 };
 const result = Object.prototype.hasOwnProperty.call(obj, "key");
+void result;
 `,
 			snapshot: `
+const obj = { key: 1 };
 const result = Object.prototype.hasOwnProperty.call(obj, "key");
                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                \`hasOwnProperty()\` calls can fail on objects without \`Object.prototype\` or with overridden properties.
+void result;
 `,
 		},
 		{
 			code: `
+const obj = { prop: 1 };
+
 if (Object.prototype.hasOwnProperty.call(obj, "prop")) {
-    console.log("Has property");
+    const message = "Has property";
+    void message;
 }
 `,
 			snapshot: `
+const obj = { prop: 1 };
+
 if (Object.prototype.hasOwnProperty.call(obj, "prop")) {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     \`hasOwnProperty()\` calls can fail on objects without \`Object.prototype\` or with overridden properties.
-    console.log("Has property");
+    const message = "Has property";
+    void message;
 }
 `,
 		},
 		{
 			code: `
+const obj = { key: 1 };
 const hasKey = {}.hasOwnProperty.call(obj, "key");
+void hasKey;
 `,
 			snapshot: `
+const obj = { key: 1 };
 const hasKey = {}.hasOwnProperty.call(obj, "key");
                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                \`hasOwnProperty()\` calls can fail on objects without \`Object.prototype\` or with overridden properties.
+void hasKey;
 `,
 		},
 		{
 			code: `
+const obj = { prop: 1 };
+
 if ({}.hasOwnProperty.call(obj, "prop")) {
-    console.log("Has property");
+    const message = "Has property";
+    void message;
 }
 `,
 			snapshot: `
+const obj = { prop: 1 };
+
 if ({}.hasOwnProperty.call(obj, "prop")) {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     \`hasOwnProperty()\` calls can fail on objects without \`Object.prototype\` or with overridden properties.
-    console.log("Has property");
+    const message = "Has property";
+    void message;
 }
 `,
 		},
 		{
 			code: `
+declare const key: string;
+declare const someObj: object;
+
 const value = someObj.hasOwnProperty(key);
+void value;
 `,
 			snapshot: `
+declare const key: string;
+declare const someObj: object;
+
 const value = someObj.hasOwnProperty(key);
               ~~~~~~~~~~~~~~~~~~~~~~~~~~~
               \`hasOwnProperty()\` calls can fail on objects without \`Object.prototype\` or with overridden properties.
+void value;
 `,
 		},
 		{
@@ -90,6 +128,7 @@ const value = someObj.hasOwnProperty(key);
 function check(obj: object, key: string) {
     return obj.hasOwnProperty(key);
 }
+check({ key: 1 }, "key");
 `,
 			snapshot: `
 function check(obj: object, key: string) {
@@ -97,16 +136,29 @@ function check(obj: object, key: string) {
            ~~~~~~~~~~~~~~~~~~~~~~~
            \`hasOwnProperty()\` calls can fail on objects without \`Object.prototype\` or with overridden properties.
 }
+check({ key: 1 }, "key");
 `,
 		},
 	],
 	valid: [
-		`const hasKey = Object.hasOwn(obj, "key");`,
-		`if (Object.hasOwn(obj, "prop")) { console.log("Has property"); }`,
-		`const result = Object.hasOwn(obj, key);`,
-		`function check(obj: object, key: string) { return Object.hasOwn(obj, key); }`,
-		`const descriptor = Object.getOwnPropertyDescriptor(obj, "key");`,
-		`const keys = Object.getOwnPropertyNames(obj);`,
-		`const symbols = Object.getOwnPropertySymbols(obj);`,
+		`const obj = { key: 1 }; const hasKey = Object.hasOwn(obj, "key"); void hasKey;`,
+		`
+const obj = { prop: 1 };
+
+if (Object.hasOwn(obj, "prop")) {
+    const message = "Has property";
+    void message;
+}
+`,
+		`
+const obj = { key: 1 };
+const key = "key";
+const result = Object.hasOwn(obj, key);
+void result;
+`,
+		`function check(obj: object, key: string) { return Object.hasOwn(obj, key); } check({ key: 1 }, "key");`,
+		`const obj = { key: 1 }; const descriptor = Object.getOwnPropertyDescriptor(obj, "key"); void descriptor;`,
+		`const obj = { key: 1 }; const keys = Object.getOwnPropertyNames(obj); void keys;`,
+		`const obj = { key: Symbol("key") }; const symbols = Object.getOwnPropertySymbols(obj); void symbols;`,
 	],
 });

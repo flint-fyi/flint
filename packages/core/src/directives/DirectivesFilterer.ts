@@ -32,7 +32,7 @@ export class DirectivesFilterer {
 	#directivesForFile: CommentDirective[] = [];
 	#directivesForRanges: CommentDirectiveWithinFile[] = [];
 
-	add(directives: CommentDirective[]) {
+	add(directives: CommentDirective[]): void {
 		for (const directive of directives) {
 			if (isCommentDirectiveWithinFile(directive)) {
 				this.#directivesForRanges.push(directive);

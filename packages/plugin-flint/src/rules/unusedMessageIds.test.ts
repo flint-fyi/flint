@@ -5,273 +5,270 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
-interface RuleContext { report(descriptor: { message: string; data?: Record<string, string> }): void; };
-declare const ruleCreator: RuleCreator;
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { ruleCreator } from "../ruleCreator";
 
-ruleCreator.createRule(_, {
-  messages: {
-    messagesId: {
-      primary: "This message ID has been used.",
-      secondary: [""],
-      suggestions: [""]
-    },
-    unusedMessageId: {
-      primary: "This message ID is never used.",
-      secondary: [""],
-      suggestions: [""]
-    }
-  },
-  setup(context: RuleContext) {
-    context.report({
-      message: "messagesId",
-    });
-  }
+ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Test rule",
+		id: "testRule",
+	},
+	messages: {
+		messagesId: {
+			primary: "This message ID has been used.",
+			secondary: [],
+			suggestions: [],
+		},
+		unusedMessageId: {
+			primary: "This message ID is never used.",
+			secondary: [],
+			suggestions: [],
+		},
+	},
+	setup(context) {
+		context.report({
+			message: "messagesId",
+			range: { begin: 0, end: 0 },
+		});
+		return undefined;
+	},
 });
 `,
 			snapshot: `
-interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
-interface RuleContext { report(descriptor: { message: string; data?: Record<string, string> }): void; };
-declare const ruleCreator: RuleCreator;
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { ruleCreator } from "../ruleCreator";
 
-ruleCreator.createRule(_, {
-  messages: {
-    messagesId: {
-      primary: "This message ID has been used.",
-      secondary: [""],
-      suggestions: [""]
-    },
-    unusedMessageId: {
-    ~~~~~~~~~~~~~~~
-    Message ID 'unusedMessageId' is defined but never used.
-      primary: "This message ID is never used.",
-      secondary: [""],
-      suggestions: [""]
-    }
-  },
-  setup(context: RuleContext) {
-    context.report({
-      message: "messagesId",
-    });
-  }
+ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Test rule",
+		id: "testRule",
+	},
+	messages: {
+		messagesId: {
+			primary: "This message ID has been used.",
+			secondary: [],
+			suggestions: [],
+		},
+		unusedMessageId: {
+		~~~~~~~~~~~~~~~
+		Message ID 'unusedMessageId' is defined but never used.
+			primary: "This message ID is never used.",
+			secondary: [],
+			suggestions: [],
+		},
+	},
+	setup(context) {
+		context.report({
+			message: "messagesId",
+			range: { begin: 0, end: 0 },
+		});
+		return undefined;
+	},
 });
 `,
 		},
 		{
 			code: `
-interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
-interface RuleContext { report(descriptor: { message: string; data?: Record<string, string> }): void; };
-declare const ruleCreator: RuleCreator;
-
-declare module "@flint.fyi/volar-language" {
-  export function reportSourceCode(
-    context: unknown,
-    descriptor: { message: string; data?: Record<string, string> },
-  ): void;
-}
-
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { reportSourceCode } from "@flint.fyi/volar-language";
+import { ruleCreator } from "../ruleCreator";
 
-ruleCreator.createRule(_, {
-  messages: {
-    usedMessageId: {
-      primary: "This message ID has been used.",
-      secondary: [""],
-      suggestions: [""]
-    },
-    unusedMessageId: {
-      primary: "This message ID is never used.",
-      secondary: [""],
-      suggestions: [""]
-    }
-  },
-  setup(context: RuleContext) {
-    reportSourceCode(context, {
-      message: "usedMessageId",
-    });
-  }
+ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Test rule",
+		id: "testRule",
+	},
+	messages: {
+		usedMessageId: {
+			primary: "This message ID has been used.",
+			secondary: [],
+			suggestions: [],
+		},
+		unusedMessageId: {
+			primary: "This message ID is never used.",
+			secondary: [],
+			suggestions: [],
+		},
+	},
+	setup(context) {
+		reportSourceCode(context, {
+			message: "usedMessageId",
+			range: { begin: 0, end: 0 },
+		});
+		return undefined;
+	},
 });
 `,
 			snapshot: `
-interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
-interface RuleContext { report(descriptor: { message: string; data?: Record<string, string> }): void; };
-declare const ruleCreator: RuleCreator;
-
-declare module "@flint.fyi/volar-language" {
-  export function reportSourceCode(
-    context: unknown,
-    descriptor: { message: string; data?: Record<string, string> },
-  ): void;
-}
-
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { reportSourceCode } from "@flint.fyi/volar-language";
+import { ruleCreator } from "../ruleCreator";
 
-ruleCreator.createRule(_, {
-  messages: {
-    usedMessageId: {
-      primary: "This message ID has been used.",
-      secondary: [""],
-      suggestions: [""]
-    },
-    unusedMessageId: {
-    ~~~~~~~~~~~~~~~
-    Message ID 'unusedMessageId' is defined but never used.
-      primary: "This message ID is never used.",
-      secondary: [""],
-      suggestions: [""]
-    }
-  },
-  setup(context: RuleContext) {
-    reportSourceCode(context, {
-      message: "usedMessageId",
-    });
-  }
+ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Test rule",
+		id: "testRule",
+	},
+	messages: {
+		usedMessageId: {
+			primary: "This message ID has been used.",
+			secondary: [],
+			suggestions: [],
+		},
+		unusedMessageId: {
+		~~~~~~~~~~~~~~~
+		Message ID 'unusedMessageId' is defined but never used.
+			primary: "This message ID is never used.",
+			secondary: [],
+			suggestions: [],
+		},
+	},
+	setup(context) {
+		reportSourceCode(context, {
+			message: "usedMessageId",
+			range: { begin: 0, end: 0 },
+		});
+		return undefined;
+	},
 });
 `,
 		},
 	],
 	valid: [
 		`
-interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
-interface RuleContext { report(descriptor: { message: string; data?: Record<string, string> }): void; };
-declare const ruleCreator: RuleCreator;
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
+import { ruleCreator } from "../ruleCreator";
 
-ruleCreator.createRule(_, {
-  messages: {
-    messagesId: {
-      primary: "This message ID has been used.",
-      secondary: [""],
-      suggestions: [""]
-    },
-  },
-  setup(context: RuleContext) {
-    context.report({
-      message: "messagesId",
-    });
-  }
+ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Test rule",
+		id: "testRule",
+	},
+	messages: {
+		messagesId: {
+			primary: "This message ID has been used.",
+			secondary: [],
+			suggestions: [],
+		},
+	},
+	setup(context) {
+		context.report({
+			message: "messagesId",
+			range: { begin: 0, end: 0 },
+		});
+		return undefined;
+	},
 });
 `,
 		`
-interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
-interface RuleContext { report(descriptor: { message: string; data?: Record<string, string> }): void; };
-declare const ruleCreator: RuleCreator;
-
-declare module "@flint.fyi/volar-language" {
-  export function reportSourceCode(
-    context: unknown,
-    descriptor: { message: string; data?: Record<string, string> },
-  ): void;
-}
-
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { reportSourceCode } from "@flint.fyi/volar-language";
+import { ruleCreator } from "../ruleCreator";
 
-ruleCreator.createRule(_, {
-  messages: {
-    messagesId: {
-      primary: "This message ID has been used.",
-      secondary: [""],
-      suggestions: [""]
-    },
-  },
-  setup(context: RuleContext) {
-    reportSourceCode(context, {
-      message: "messagesId",
-    });
-  }
+ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Test rule",
+		id: "testRule",
+	},
+	messages: {
+		messagesId: {
+			primary: "This message ID has been used.",
+			secondary: [],
+			suggestions: [],
+		},
+	},
+	setup(context) {
+		reportSourceCode(context, {
+			message: "messagesId",
+			range: { begin: 0, end: 0 },
+		});
+		return undefined;
+	},
 });
 `,
 		`
-interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
-interface RuleContext { report(descriptor: { message: string; data?: Record<string, string> }): void; };
-declare const ruleCreator: RuleCreator;
-
-declare module "@flint.fyi/volar-language" {
-  export function reportSourceCode(
-    context: unknown,
-    descriptor: { message: string; data?: Record<string, string> },
-  ): void;
-}
-
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { reportSourceCode as reportFromSourceCode } from "@flint.fyi/volar-language";
+import { ruleCreator } from "../ruleCreator";
 
-ruleCreator.createRule(_, {
-  messages: {
-    messagesId: {
-      primary: "This message ID has been used.",
-      secondary: [""],
-      suggestions: [""]
-    },
-  },
-  setup(context: RuleContext) {
-    reportFromSourceCode(context, {
-      message: "messagesId",
-    });
-  }
+ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Test rule",
+		id: "testRule",
+	},
+	messages: {
+		messagesId: {
+			primary: "This message ID has been used.",
+			secondary: [],
+			suggestions: [],
+		},
+	},
+	setup(context) {
+		reportFromSourceCode(context, {
+			message: "messagesId",
+			range: { begin: 0, end: 0 },
+		});
+		return undefined;
+	},
 });
 `,
 		`
-interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
-interface RuleContext { report(descriptor: { message: string; data?: Record<string, string> }): void; };
-declare const ruleCreator: RuleCreator;
-
-declare module "@flint.fyi/volar-language" {
-  export function reportSourceCode(
-    context: unknown,
-    descriptor: { message: string; data?: Record<string, string> },
-  ): void;
-}
-
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import * as volarLanguage from "@flint.fyi/volar-language";
+import { ruleCreator } from "../ruleCreator";
 
-ruleCreator.createRule(_, {
-  messages: {
-    messagesId: {
-      primary: "This message ID has been used.",
-      secondary: [""],
-      suggestions: [""]
-    },
-  },
-  setup(context: RuleContext) {
-    volarLanguage.reportSourceCode(context, {
-      message: "messagesId",
-    });
-  }
+ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Test rule",
+		id: "testRule",
+	},
+	messages: {
+		messagesId: {
+			primary: "This message ID has been used.",
+			secondary: [],
+			suggestions: [],
+		},
+	},
+	setup(context) {
+		volarLanguage.reportSourceCode(context, {
+			message: "messagesId",
+			range: { begin: 0, end: 0 },
+		});
+		return undefined;
+	},
 });
 `,
 		`
-interface RuleCreator { createRule<T>(language: any, ruleConfig: { messages: Record<string, string> }): T; };
-interface RuleContext { report(descriptor: { message: string; data?: Record<string, string> }): void; };
-declare const ruleCreator: RuleCreator;
-
-declare module "@flint.fyi/volar-language" {
-  export function reportSourceCode(
-    context: unknown,
-    descriptor: { message: string; data?: Record<string, string> },
-  ): void;
-}
-
+import { typescriptLanguage } from "@flint.fyi/typescript-language";
 import { reportSourceCode } from "@flint.fyi/volar-language";
+import { ruleCreator } from "../ruleCreator";
 
-ruleCreator.createRule(_, {
-  messages: {
-    messagesId: {
-      primary: "This message ID has been used.",
-      secondary: [""],
-      suggestions: [""]
-    },
-    unusedMessageId: {
-      primary: "This message ID is never used.",
-      secondary: [""],
-      suggestions: [""]
-    }
-  },
-  setup(context: RuleContext) {
-    const message = "messagesId";
+ruleCreator.createRule(typescriptLanguage, {
+	about: {
+		description: "Test rule",
+		id: "testRule",
+	},
+	messages: {
+		messagesId: {
+			primary: "This message ID has been used.",
+			secondary: [],
+			suggestions: [],
+		},
+		unusedMessageId: {
+			primary: "This message ID is never used.",
+			secondary: [],
+			suggestions: [],
+		},
+	},
+	setup(context) {
+		const message = "messagesId";
 
-    reportSourceCode(context, {
-      message,
-    });
-  }
+		reportSourceCode(context, {
+			message,
+			range: { begin: 0, end: 0 },
+		});
+		return undefined;
+	},
 });
 `,
 	],
