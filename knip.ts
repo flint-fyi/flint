@@ -41,6 +41,7 @@ const config: KnipConfig = {
 			project: ["src/**/*.ts!", "!src/rules/ruleTester.ts!"],
 		},
 		"packages/performance-testing": {
+			entry: ["src/{generate,measure}.ts!"],
 			ignoreDependencies: [
 				"eslint",
 				"eslint-plugin-import",

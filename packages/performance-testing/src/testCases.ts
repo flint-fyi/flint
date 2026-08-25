@@ -3,7 +3,7 @@ export const testCasesPath = "cases";
 export const testCaseEntries = [
 	{
 		label: "files",
-		values: [2, 256, 1024 /* , 8192 */],
+		values: [2, 256, 1024],
 	},
 	{
 		label: "rules",
