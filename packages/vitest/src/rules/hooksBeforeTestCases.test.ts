@@ -98,12 +98,12 @@ describe("suite", () => {
 		{
 			code: `
 test("my test", () => {})
-foo()
+console.log()
 afterEach(() => {})
 `,
 			snapshot: `
 test("my test", () => {})
-foo()
+console.log()
 afterEach(() => {})
 ~~~~~~~~~
 This hook appears after a test case.
@@ -135,6 +135,6 @@ describe("suite", () => {
 const myTest = test.extend({})
 beforeEach(() => {})
 `,
-		"foo()",
+		"console.log()",
 	],
 });
