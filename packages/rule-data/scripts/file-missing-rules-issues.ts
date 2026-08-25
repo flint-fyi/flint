@@ -16,7 +16,7 @@ interface ExistingIssue {
 
 const labels = [
 	"area: documentation",
-	"package: comparisons",
+	"package: rule-data",
 	"status: accepting prs",
 ];
 
@@ -101,9 +101,10 @@ function createIssueBody(linter: string, coverage: RuleCoverage): string {
 		"",
 		"To resolve:",
 		"",
-		"1. Add each missing rule to `packages/rule-data/src/data.json`, and remove stale or duplicate references.",
-		"2. Run `pnpm --filter=rule-data sort-data`.",
-		"3. Push to the Renovate branch, or open a PR that bumps the dependency and closes this issue.",
+		"1. Add each missing rule to `packages/rule-data/src/data.json`, and remove stale references.",
+		"2. For rules that shouldn't be skipped, file a [new rule issue](https://github.com/flint-fyi/flint/issues/new?template=03-new-rule.yaml) to track the Flint equivalent.",
+		"3. Run `pnpm --filter=rule-data sort-data`.",
+		"4. Push to the Renovate branch, or open a PR that bumps the dependency and closes this issue.",
 	].join("\n");
 }
 

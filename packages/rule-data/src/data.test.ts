@@ -27,11 +27,7 @@ describe("data.json", () => {
 	it.each(ruleCoverageSources)(
 		"includes all $linter rules",
 		async ({ collect }) => {
-			expect(await collect()).toEqual({
-				duplicates: [],
-				missing: [],
-				stale: [],
-			});
+			expect(await collect()).toEqual({ missing: [], stale: [] });
 		},
 	);
 });

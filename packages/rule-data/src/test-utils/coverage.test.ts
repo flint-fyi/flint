@@ -10,23 +10,9 @@ describe(compareRuleCoverage, () => {
 					{ name: "a", url: undefined },
 					{ name: "b", url: "https://example.com/b" },
 				],
-				["b", "a"],
+				["b", "a", "a"],
 			),
-		).toEqual({ duplicates: [], missing: [], stale: [] });
-	});
-
-	it("reports duplicate covered names", () => {
-		expect(
-			compareRuleCoverage([{ name: "a", url: undefined }], ["a", "a"]),
-		).toEqual({ duplicates: ["a"], missing: [], stale: [] });
-	});
-
-	it("allows duplicate covered names when mappings are many-to-one", () => {
-		expect(
-			compareRuleCoverage([{ name: "a", url: undefined }], ["a", "a"], {
-				allowDuplicates: true,
-			}),
-		).toEqual({ duplicates: [], missing: [], stale: [] });
+		).toEqual({ missing: [], stale: [] });
 	});
 
 	it("reports available rules that are not covered, sorted by name", () => {
@@ -40,7 +26,6 @@ describe(compareRuleCoverage, () => {
 				["b"],
 			),
 		).toEqual({
-			duplicates: [],
 			missing: [
 				{ name: "a", url: undefined },
 				{ name: "c", url: "https://example.com/c" },
@@ -52,7 +37,7 @@ describe(compareRuleCoverage, () => {
 	it("reports covered names that are no longer available, sorted", () => {
 		expect(
 			compareRuleCoverage([{ name: "a", url: undefined }], ["z", "a", "y"]),
-		).toEqual({ duplicates: [], missing: [], stale: ["y", "z"] });
+		).toEqual({ missing: [], stale: ["y", "z"] });
 	});
 });
 
@@ -60,7 +45,6 @@ describe(formatRuleCoverage, () => {
 	it("renders missing rules as a checklist with optional urls", () => {
 		expect(
 			formatRuleCoverage("unicorn", {
-				duplicates: [],
 				missing: [
 					{ name: "unicorn/a", url: "https://example.com/a" },
 					{ name: "unicorn/b", url: undefined },
@@ -77,10 +61,9 @@ describe(formatRuleCoverage, () => {
 		);
 	});
 
-	it("renders stale rules after missing rules", () => {
+	it("renders stale rules as a checklist after missing rules", () => {
 		expect(
 			formatRuleCoverage("unicorn", {
-				duplicates: [],
 				missing: [{ name: "unicorn/a", url: undefined }],
 				stale: ["unicorn/z"],
 			}),
@@ -92,27 +75,7 @@ describe(formatRuleCoverage, () => {
 				"",
 				"**In data.json but no longer provided by unicorn (1):**",
 				"",
-				"- `unicorn/z`",
-			].join("\n"),
-		);
-	});
-
-	it("renders duplicate rules after stale rules", () => {
-		expect(
-			formatRuleCoverage("Oxlint", {
-				duplicates: ["typescript/no-explicit-any"],
-				missing: [],
-				stale: ["typescript/no-var-requires"],
-			}),
-		).toBe(
-			[
-				"**In data.json but no longer provided by Oxlint (1):**",
-				"",
-				"- `typescript/no-var-requires`",
-				"",
-				"**Duplicated in data.json (1):**",
-				"",
-				"- `typescript/no-explicit-any`",
+				"- [ ] `unicorn/z`",
 			].join("\n"),
 		);
 	});

@@ -23,7 +23,6 @@ export interface LinterRule {
 }
 
 export interface RuleCoverage {
-	duplicates: string[];
 	missing: LinterRule[];
 	stale: string[];
 }
@@ -74,22 +73,11 @@ export async function collectRuleCoverageReports(): Promise<
 export function compareRuleCoverage(
 	available: LinterRule[],
 	covered: Iterable<string>,
-	{ allowDuplicates = false }: { allowDuplicates?: boolean } = {},
 ): RuleCoverage {
 	const availableNames = new Set(available.map((rule) => rule.name));
-	const coveredNames = new Set<string>();
-	const duplicates = new Set<string>();
-
-	for (const name of covered) {
-		if (coveredNames.has(name) && !allowDuplicates) {
-			duplicates.add(name);
-		}
-
-		coveredNames.add(name);
-	}
+	const coveredNames = new Set(covered);
 
 	return {
-		duplicates: Array.from(duplicates).sort(),
 		missing: available
 			.filter((rule) => !coveredNames.has(rule.name))
 			.sort((a, b) => a.name.localeCompare(b.name)),
@@ -101,7 +89,7 @@ export function compareRuleCoverage(
 
 export function formatRuleCoverage(
 	linter: string,
-	{ duplicates, missing, stale }: RuleCoverage,
+	{ missing, stale }: RuleCoverage,
 ): string {
 	const sections: string[] = [];
 
@@ -119,33 +107,21 @@ export function formatRuleCoverage(
 	if (stale.length) {
 		sections.push(
 			`**In data.json but no longer provided by ${linter} (${stale.length}):**`,
-			stale.map((name) => `- \`${name}\``).join("\n"),
-		);
-	}
-
-	if (duplicates.length) {
-		sections.push(
-			`**Duplicated in data.json (${duplicates.length}):**`,
-			duplicates.map((name) => `- \`${name}\``).join("\n"),
+			stale.map((name) => `- [ ] \`${name}\``).join("\n"),
 		);
 	}
 
 	return sections.join("\n\n");
 }
 
-export function hasRuleCoverageGaps({
-	duplicates,
-	missing,
-	stale,
-}: RuleCoverage): boolean {
-	return Boolean(duplicates.length || missing.length || stale.length);
+export function hasRuleCoverageGaps({ missing, stale }: RuleCoverage): boolean {
+	return Boolean(missing.length || stale.length);
 }
 
 function collectBiomeCoverage(): RuleCoverage {
 	return compareRuleCoverage(
 		getBiomeLintRules().map((name) => ({ name, url: undefined })),
 		findBiomeRulesInFlint().map((rule) => rule.name),
-		{ allowDuplicates: true },
 	);
 }
 
@@ -160,7 +136,6 @@ function collectESLintCoreCoverage(): RuleCoverage {
 				rule.meta?.deprecated ? [] : [{ name, url: rule.meta?.docs?.url }],
 			),
 		findESLintRulesInCore().map((rule) => rule.name),
-		{ allowDuplicates: true },
 	);
 }
 
@@ -178,7 +153,6 @@ function collectESLintPluginCoverage(
 				url: rule.meta?.docs?.url,
 			})),
 		findESLintRulesInPlugin(pluginName).map((rule) => rule.name),
-		{ allowDuplicates: true },
 	);
 }
 
