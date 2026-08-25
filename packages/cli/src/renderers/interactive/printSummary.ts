@@ -4,7 +4,9 @@ import { hasFix, type FileResults } from "@flint.fyi/core";
 
 import { pluralize } from "../../presenters/pluralize.ts";
 
-export function printSummary(filesWithReportResults: [string, FileResults][]) {
+export function printSummary(
+	filesWithReportResults: [string, FileResults][],
+): string {
 	const counts = {
 		all: filesWithReportResults.reduce(
 			(sum, next) => sum + next[1].reports.length,

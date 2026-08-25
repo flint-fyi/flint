@@ -5,6 +5,8 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (error) {
@@ -12,11 +14,15 @@ try {
 }
 `,
 			output: `
+declare function doSomething(): void;
+
 try {
     doSomething();
 }
 `,
 			snapshot: `
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (error) {
@@ -28,6 +34,8 @@ try {
 		},
 		{
 			code: `
+declare function fetch(input: string): Promise<unknown>;
+
 async function fetchData() {
     try {
         return await fetch("/api/data");
@@ -35,15 +43,21 @@ async function fetchData() {
         throw error;
     }
 }
+fetchData();
 `,
 			output: `
+declare function fetch(input: string): Promise<unknown>;
+
 async function fetchData() {
     try {
         return await fetch("/api/data");
     }
 }
+fetchData();
 `,
 			snapshot: `
+declare function fetch(input: string): Promise<unknown>;
+
 async function fetchData() {
     try {
         return await fetch("/api/data");
@@ -53,10 +67,13 @@ async function fetchData() {
         throw error;
     }
 }
+fetchData();
 `,
 		},
 		{
 			code: `
+declare function processData(): void;
+
 try {
     processData();
 } catch (exception) {
@@ -64,11 +81,15 @@ try {
 }
 `,
 			output: `
+declare function processData(): void;
+
 try {
     processData();
 }
 `,
 			snapshot: `
+declare function processData(): void;
+
 try {
     processData();
 } catch (exception) {
@@ -80,6 +101,8 @@ try {
 		},
 		{
 			code: `
+declare function performOperation(): string;
+
 function handleRequest() {
     try {
         const result = performOperation();
@@ -88,16 +111,22 @@ function handleRequest() {
         throw err;
     }
 }
+handleRequest();
 `,
 			output: `
+declare function performOperation(): string;
+
 function handleRequest() {
     try {
         const result = performOperation();
         return result;
     }
 }
+handleRequest();
 `,
 			snapshot: `
+declare function performOperation(): string;
+
 function handleRequest() {
     try {
         const result = performOperation();
@@ -108,10 +137,14 @@ function handleRequest() {
         throw err;
     }
 }
+handleRequest();
 `,
 		},
 		{
 			code: `
+declare function cleanup(): void;
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (error) {
@@ -121,6 +154,9 @@ try {
 }
 `,
 			output: `
+declare function cleanup(): void;
+declare function doSomething(): void;
+
 try {
     doSomething();
 } finally {
@@ -128,6 +164,9 @@ try {
 }
 `,
 			snapshot: `
+declare function cleanup(): void;
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (error) {
@@ -141,26 +180,49 @@ try {
 		},
 	],
 	valid: [
-		`try { doSomething(); } catch (error) { console.error(error); throw error; }`,
-		`try { doSomething(); } catch (error) { throw new Error("Failed"); }`,
-		`try { doSomething(); } catch (error) { logError(error); throw error; }`,
-		`try { doSomething(); } catch { throw new Error("Something went wrong"); }`,
+		`declare function doSomething(): void; try { doSomething(); } catch (error) { void error; throw error; }`,
+		`declare function doSomething(): void; try { doSomething(); } catch (error) { throw new Error("Failed"); }`,
 		`
+declare function doSomething(): void;
+declare function logError(error: unknown): void;
+
 try {
     doSomething();
 } catch (error) {
-    console.error("An error occurred:", error);
+    logError(error);
+    throw error;
+}
+`,
+		`declare function doSomething(): void; try { doSomething(); } catch { throw new Error("Something went wrong"); }`,
+		`
+declare function doSomething(): void;
+
+try {
+    doSomething();
+} catch (error) {
+    const message = "An error occurred:";
+    void message;
+    void error;
     throw error;
 }
 `,
 		`
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (error) {
-    throw new Error("Operation failed: " + error.message);
+    if (error instanceof Error) {
+        throw new Error("Operation failed: " + error.message);
+    }
+
+    throw error;
 }
 `,
 		`
+declare function cleanup(): void;
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (error) {
@@ -169,13 +231,22 @@ try {
 }
 `,
 		`
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (error) {
-    throw error.originalError;
+    if (typeof error === "object" && error !== null && "originalError" in error) {
+        throw error.originalError;
+    }
+
+    throw error;
 }
 `,
 		`
+declare function fetch(input: string): Promise<unknown>;
+declare function logError(error: unknown): Promise<void>;
+
 async function fetchData() {
     try {
         return await fetch("/api/data");
@@ -184,25 +255,41 @@ async function fetchData() {
         throw error;
     }
 }
+fetchData();
 `,
 		`
+declare function doSomething(): void;
+
 try {
     doSomething();
-} catch ({ message }) {
-    throw message;
+
+} catch (error) {
+    if (error instanceof Error) {
+        const { message } = error;
+        throw message;
+    }
+
+    throw error;
 }
 `,
 		`
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (error) {
 }
 `,
 		`
+declare function cleanup(): void;
+declare function doSomething(): void;
+
 try {
     doSomething();
 } catch (error) {
-    console.log("error");
+    const message = "error";
+    void message;
+    void error;
     cleanup();
     throw error;
 }

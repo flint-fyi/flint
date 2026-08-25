@@ -49,6 +49,12 @@ describe(createVFSLinterHost, () => {
 		expect(host.isCaseSensitiveFS()).toEqual(true);
 	});
 
+	it("does not find repository roots", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });
+
+		expect(host.getRepositoryRoot()).toBeUndefined();
+	});
+
 	describe("stat", () => {
 		it("existing file", () => {
 			const host = createVFSLinterHost({ caseSensitive: true, cwd: "/root" });

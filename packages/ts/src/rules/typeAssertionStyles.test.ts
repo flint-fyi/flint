@@ -5,9 +5,13 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const foo: unknown;
+
 const value = <string>foo;
 `,
 			snapshot: `
+declare const foo: unknown;
+
 const value = <string>foo;
               ~~~~~~~~~~~
               Prefer \`as\` syntax for type assertions instead of legacy angle-brackets.
@@ -25,9 +29,13 @@ const value = <string>"hello";
 		},
 		{
 			code: `
+declare const items: unknown;
+
 const value = <Array<string>>items;
 `,
 			snapshot: `
+declare const items: unknown;
+
 const value = <Array<string>>items;
               ~~~~~~~~~~~~~~~~~~~~
               Prefer \`as\` syntax for type assertions instead of legacy angle-brackets.
@@ -35,11 +43,15 @@ const value = <Array<string>>items;
 		},
 		{
 			code: `
+declare function getValue(): unknown;
+
 function test() {
     return <number>getValue();
 }
 `,
 			snapshot: `
+declare function getValue(): unknown;
+
 function test() {
     return <number>getValue();
            ~~~~~~~~~~~~~~~~~~
@@ -49,9 +61,15 @@ function test() {
 		},
 	],
 	valid: [
-		`const value = foo as string;`,
+		`
+declare const foo: unknown;
+const value = foo as string;
+`,
 		`const value = "hello" as string;`,
-		`const value = items as Array<string>;`,
+		`
+declare const items: unknown;
+const value = items as Array<string>;
+`,
 		`const value = { name: "test" } as const;`,
 		`const value = <const>{ name: "test" };`,
 		`const value = [1, 2, 3] as const;`,

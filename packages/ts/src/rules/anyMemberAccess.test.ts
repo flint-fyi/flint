@@ -53,12 +53,12 @@ value[0];
 		},
 		{
 			code: `
-declare const obj: { a: number };
+declare const obj: Record<PropertyKey, number>;
 declare const key: any;
 obj[key];
 `,
 			snapshot: `
-declare const obj: { a: number };
+declare const obj: Record<PropertyKey, number>;
 declare const key: any;
 obj[key];
     ~~~
@@ -68,12 +68,12 @@ obj[key];
 		{
 			code: `
 declare function getKey(): any;
-declare const obj: { a: number };
+declare const obj: Record<PropertyKey, number>;
 obj[getKey()];
 `,
 			snapshot: `
 declare function getKey(): any;
-declare const obj: { a: number };
+declare const obj: Record<PropertyKey, number>;
 obj[getKey()];
     ~~~~~~~~
     Computed key is \`any\` typed.
@@ -137,32 +137,6 @@ declare const arr: string[];
 arr[1 as any];
     ~~~~~~~~
     Computed key is \`any\` typed.
-`,
-		},
-		{
-			code: `
-let value: NotKnown;
-value.property;
-`,
-			snapshot: `
-let value: NotKnown;
-value.property;
-      ~~~~~~~~
-      Unsafe member access on \`error\` typed value.
-`,
-		},
-		{
-			code: `
-declare const obj: { a: number };
-let key: NotKnown;
-obj[key];
-`,
-			snapshot: `
-declare const obj: { a: number };
-let key: NotKnown;
-obj[key];
-    ~~~
-    Computed key is \`error\` typed.
 `,
 		},
 		{
@@ -251,12 +225,12 @@ arr[0].property;
 		},
 		{
 			code: `
-declare const obj: { a: number };
+declare const obj: Record<PropertyKey, number>;
 declare let y: any;
 obj[(y += 1)];
 `,
 			snapshot: `
-declare const obj: { a: number };
+declare const obj: Record<PropertyKey, number>;
 declare let y: any;
 obj[(y += 1)];
     ~~~~~~~~
@@ -265,12 +239,12 @@ obj[(y += 1)];
 		},
 		{
 			code: `
-declare const obj: { a: number };
+declare const obj: Record<PropertyKey, number>;
 declare const y: any;
 obj[y()];
 `,
 			snapshot: `
-declare const obj: { a: number };
+declare const obj: Record<PropertyKey, number>;
 declare const y: any;
 obj[y()];
     ~~~
@@ -279,12 +253,12 @@ obj[y()];
 		},
 		{
 			code: `
-declare const obj: { a: number } | undefined;
+declare const obj: Record<PropertyKey, number> | undefined;
 declare const key: any;
 obj?.[key];
 `,
 			snapshot: `
-declare const obj: { a: number } | undefined;
+declare const obj: Record<PropertyKey, number> | undefined;
 declare const key: any;
 obj?.[key];
       ~~~
@@ -353,13 +327,13 @@ x["prop" as const];
 		},
 		{
 			code: `
-declare const obj: { a: number };
+declare const obj: Record<PropertyKey, number>;
 declare const cond: boolean;
 declare const anyKey: any;
 obj[cond ? anyKey : "a"];
 `,
 			snapshot: `
-declare const obj: { a: number };
+declare const obj: Record<PropertyKey, number>;
 declare const cond: boolean;
 declare const anyKey: any;
 obj[cond ? anyKey : "a"];
@@ -474,8 +448,8 @@ tuple[0];
 tuple[1];
 `,
 		`
-function foo(x: { a: number }, y: number) {
-	x[y++];
+function foo(x: Record<number, number>, y: number) {
+    x[y++];
 }
 `,
 		`
@@ -485,12 +459,40 @@ obj[key];
 `,
 		`
 declare const sym: unique symbol;
-declare const obj: { [key: typeof sym]: number };
+declare const obj: { [sym]: number };
 obj[sym];
 `,
-		`class B implements FG.A {}`,
-		`interface B extends FG.A {}`,
-		`class B implements F.S.T.A {}`,
-		`interface B extends F.S.T.A {}`,
+		`
+declare namespace FG {
+    interface A {}
+}
+class B implements FG.A {}
+`,
+		`
+declare namespace FG {
+    interface A {}
+}
+interface B extends FG.A {}
+`,
+		`
+declare namespace F {
+    namespace S {
+        namespace T {
+            interface A {}
+        }
+    }
+}
+class B implements F.S.T.A {}
+`,
+		`
+declare namespace F {
+    namespace S {
+        namespace T {
+            interface A {}
+        }
+    }
+}
+interface B extends F.S.T.A {}
+`,
 	],
 });

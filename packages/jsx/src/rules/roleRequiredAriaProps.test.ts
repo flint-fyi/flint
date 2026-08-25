@@ -157,6 +157,8 @@ ruleTester.describe(rule, {
 		`<div role="treeitem" />`,
 		`<div />`,
 		`<button />`,
-		`<CustomElement />`,
+		`
+declare const CustomElement: (props: Record<string, unknown>) => unknown;
+<CustomElement />`,
 	],
 });

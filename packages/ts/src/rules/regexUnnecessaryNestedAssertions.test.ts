@@ -199,7 +199,7 @@ RegExp("(?=$)");
 		`/(?=$)*/;`,
 		`/(?=^)?/;`,
 		`/(?=$){2}/;`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 		`/^/;`,
 		`/$/;`,
 		String.raw`/\b/;`,

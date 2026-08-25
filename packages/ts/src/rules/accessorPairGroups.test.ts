@@ -6,6 +6,8 @@ ruleTester.describe(rule, {
 		{
 			code: `
 class Example {
+    private _value = 0;
+
     get value() {
         return this._value;
     }
@@ -17,6 +19,8 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    private _value = 0;
+
     get value() {
         return this._value;
     }
@@ -32,6 +36,7 @@ class Example {
 		{
 			code: `
 const object = {
+    _value: 0,
     get value() {
         return this._value;
     },
@@ -41,6 +46,7 @@ const object = {
 `,
 			snapshot: `
 const object = {
+    _value: 0,
     get value() {
         return this._value;
     },
@@ -54,6 +60,9 @@ const object = {
 		{
 			code: `
 class Example {
+    private _first = 0;
+    private _second = 0;
+
     set first(value: number) {
         this._first = value;
     }
@@ -70,6 +79,9 @@ class Example {
 `,
 			snapshot: `
 class Example {
+    private _first = 0;
+    private _second = 0;
+
     set first(value: number) {
         this._first = value;
     }
@@ -121,6 +133,8 @@ class Example {
 	valid: [
 		`
 class Example {
+    private _value = 0;
+
     get value() {
         return this._value;
     }
@@ -131,6 +145,8 @@ class Example {
 `,
 		`
 class Example {
+    private _value = 0;
+
     set value(newValue: number) {
         this._value = newValue;
     }
@@ -141,6 +157,7 @@ class Example {
 `,
 		`
 const object = {
+    _value: 0,
     get value() {
         return this._value;
     },
@@ -151,6 +168,8 @@ const object = {
 `,
 		`
 class Example {
+    private _value = 0;
+
     get value() {
         return this._value;
     }
@@ -158,6 +177,8 @@ class Example {
 `,
 		`
 class Example {
+    private _value = 0;
+
     set value(newValue: number) {
         this._value = newValue;
     }

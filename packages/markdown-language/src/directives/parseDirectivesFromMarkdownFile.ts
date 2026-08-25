@@ -1,13 +1,13 @@
 import type { Root } from "mdast";
 import { visit } from "unist-util-visit";
 
-import { DirectivesCollector } from "@flint.fyi/core";
+import { DirectivesCollector, type DirectiveCollection } from "@flint.fyi/core";
 import { nullThrows } from "@flint.fyi/utils";
 
 export function parseDirectivesFromMarkdownFile(
 	root: Root,
 	sourceText: string,
-) {
+): DirectiveCollection {
 	const index =
 		root.children.find((child) => child.position?.start.offset !== undefined)
 			?.position?.start.offset ?? sourceText.length;

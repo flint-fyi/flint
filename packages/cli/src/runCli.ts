@@ -12,7 +12,7 @@ import { createRendererFactory } from "./renderers/createRendererFactory.ts";
 import { runCliOnce } from "./runCliOnce.ts";
 import { runCliWatch } from "./runCliWatch.ts";
 
-export async function runCli(args: string[]) {
+export async function runCli(args: string[]): Promise<number> {
 	const { values } = parseArgs({
 		args,
 		options,

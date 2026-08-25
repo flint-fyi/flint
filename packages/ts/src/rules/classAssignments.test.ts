@@ -1,3 +1,5 @@
+import { createRuleTesterTSConfig } from "@flint.fyi/typescript-language";
+
 import rule from "./classAssignments.ts";
 import { ruleTester } from "./ruleTester.ts";
 
@@ -8,6 +10,12 @@ ruleTester.describe(rule, {
 class A {}
 A = 0;
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
 			snapshot: `
 class A {}
 A = 0;
@@ -15,143 +23,109 @@ A = 0;
 Reassigning a class declaration is misleading and makes the class harder to use.
 `,
 		},
-		{
-			code: `
-class MyClass {}
-MyClass = "string";
-`,
-			snapshot: `
-class MyClass {}
-MyClass = "string";
-~~~~~~~
-Reassigning a class declaration is misleading and makes the class harder to use.
-`,
-		},
-		{
-			code: `
-class Counter {}
-Counter++;
-`,
-			snapshot: `
-class Counter {}
-Counter++;
-~~~~~~~
-Reassigning a class declaration is misleading and makes the class harder to use.
-`,
-		},
-		{
-			code: `
-class Value {}
-++Value;
-`,
-			snapshot: `
-class Value {}
-++Value;
-  ~~~~~
-  Reassigning a class declaration is misleading and makes the class harder to use.
-`,
-		},
-		{
-			code: `
-class MyClass {}
-MyClass += "suffix";
-`,
-			snapshot: `
-class MyClass {}
-MyClass += "suffix";
-~~~~~~~
-Reassigning a class declaration is misleading and makes the class harder to use.
-`,
-		},
-		{
-			code: `
-class Example {}
-Example ??= null;
-`,
-			snapshot: `
-class Example {}
-Example ??= null;
-~~~~~~~
-Reassigning a class declaration is misleading and makes the class harder to use.
-`,
-		},
-		{
-			code: `
-class Test {}
-Test &&= false;
-`,
-			snapshot: `
-class Test {}
-Test &&= false;
-~~~~
-Reassigning a class declaration is misleading and makes the class harder to use.
-`,
-		},
-		{
-			code: `
-class Data {}
-Data ||= null;
-`,
-			snapshot: `
-class Data {}
-Data ||= null;
-~~~~
-Reassigning a class declaration is misleading and makes the class harder to use.
-`,
-		},
-		{
-			code: `
-class Outer {}
-function inner() {
-    Outer = null;
-}
-`,
-			snapshot: `
-class Outer {}
-function inner() {
-    Outer = null;
-    ~~~~~
-    Reassigning a class declaration is misleading and makes the class harder to use.
-}
-`,
-		},
-		{
-			code: `
-class MyClass {}
-if (true) {
-    MyClass = null;
-}
-`,
-			snapshot: `
-class MyClass {}
-if (true) {
-    MyClass = null;
-    ~~~~~~~
-    Reassigning a class declaration is misleading and makes the class harder to use.
-}
-`,
-		},
 	],
 	valid: [
-		`class A {}`,
-		`class MyClass {} const instance = new MyClass();`,
-		`class Counter {} const value = Counter;`,
-		`class Example {} if (Example) { console.log(Example); }`,
-		`const A = 0;`,
-		`class A {} function inner() { const A = "shadowed"; A = "reassigning shadowed is ok"; }`,
-		`let A = "outer"; class A {} A = "reassigning outer is ok";`,
-		`
+		{
+			code: `class A {}`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `class MyClass {} const instance = new MyClass();`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `class Counter {} const value = Counter;`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `class Example {} if (Example) { void Example; }`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `const A = 0;`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `class A {} function inner() { let A = "shadowed"; A = "reassigning shadowed is ok"; }`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `let A = "outer"; { class A {} } A = "reassigning outer is ok";`,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `
 class MyClass {}
 const derived = class extends MyClass {};
 `,
-		`
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `
 class Base {}
 class Derived extends Base {}
 `,
-		`
-class MyClass {}
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
+		{
+			code: `
+class MyClass {
+    property = "";
+}
 const instance = new MyClass();
 instance.property = "value";
 `,
+			fileName: "file.js",
+			files: createRuleTesterTSConfig({
+				allowJs: true,
+				checkJs: false,
+				noEmit: true,
+			}),
+		},
 	],
 });

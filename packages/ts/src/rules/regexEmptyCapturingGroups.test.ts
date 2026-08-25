@@ -174,7 +174,7 @@ RegExp("(\\\\b)");
 		`/(\\w)/;`,
 		`/(.)/;`,
 		`new RegExp("(a)");`,
-		`new RegExp(variable);`,
+		`declare const variable: string; new RegExp(variable);`,
 		`/(a|b|c)/;`,
 		String.raw`/^([\d_]*)(\.[\d_]*)(?:e[+-]?\d+)?$/`,
 		String.raw`/!?\[(?<left>[^[[\]\\]*)\]\[(?<right>[^\]\\]*)\]/g;`,

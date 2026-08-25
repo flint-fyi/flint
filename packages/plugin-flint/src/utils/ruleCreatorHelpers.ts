@@ -35,9 +35,9 @@ function isTypedMethodCall(
 export const isRuleCreatorCreateRule = (
 	node: AST.CallExpression,
 	typeChecker: Checker,
-) => isTypedMethodCall(node, typeChecker, "RuleCreator", "createRule");
+): boolean => isTypedMethodCall(node, typeChecker, "RuleCreator", "createRule");
 
 export const isRuleContextReport = (
 	node: AST.CallExpression,
 	typeChecker: Checker,
-) => isTypedMethodCall(node, typeChecker, "RuleContext", "report");
+): boolean => isTypedMethodCall(node, typeChecker, "RuleContext", "report");

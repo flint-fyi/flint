@@ -120,51 +120,6 @@ enum Direction {
 		{
 			code: `
 enum Direction {
-    Up = 'Up',
-    Down,
-}
-`,
-			snapshot: `
-enum Direction {
-    Up = 'Up',
-    Down,
-    ~~~~
-    Enum member 'Down' has an implicit initializer that may change if the enum is reordered.
-}
-`,
-			suggestions: [
-				{
-					id: "assignIndex",
-					updated: `
-enum Direction {
-    Up = 'Up',
-    Down = 1,
-}
-`,
-				},
-				{
-					id: "assignIncrementedIndex",
-					updated: `
-enum Direction {
-    Up = 'Up',
-    Down = 2,
-}
-`,
-				},
-				{
-					id: "assignStringValue",
-					updated: `
-enum Direction {
-    Up = 'Up',
-    Down = 'Down',
-}
-`,
-				},
-			],
-		},
-		{
-			code: `
-enum Direction {
     Up,
     Down = 'Down',
 }

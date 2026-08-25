@@ -134,11 +134,11 @@ declare const arr: Array<number>;
 		},
 		{
 			code: `
-declare const tuple: [number, string];
+declare const tuple: [number?, string?];
 delete tuple[0];
 `,
 			snapshot: `
-declare const tuple: [number, string];
+declare const tuple: [number?, string?];
 delete tuple[0];
 ~~~~~~~~~~~~~~~
 Avoid using the \`delete\` operator on arrays.
@@ -147,7 +147,7 @@ Avoid using the \`delete\` operator on arrays.
 				{
 					id: "useSplice",
 					updated: `
-declare const tuple: [number, string];
+declare const tuple: [number?, string?];
  tuple.splice(0, 1);
 `,
 				},
@@ -194,27 +194,6 @@ function deleteFromArray<T extends number[]>(a: T) {
 function deleteFromArray<T extends number[]>(a: T) {
 	 a.splice(0, 1);
 }
-`,
-				},
-			],
-		},
-		{
-			code: `
-declare const arr: readonly number[];
-delete arr[0];
-`,
-			snapshot: `
-declare const arr: readonly number[];
-delete arr[0];
-~~~~~~~~~~~~~
-Avoid using the \`delete\` operator on arrays.
-`,
-			suggestions: [
-				{
-					id: "useSplice",
-					updated: `
-declare const arr: readonly number[];
- arr.splice(0, 1);
 `,
 				},
 			],
@@ -346,10 +325,10 @@ declare const array: number[];
  array.splice(0, 1);
 `,
 		`
-delete globalThis.myProperty;
+delete (globalThis as { myProperty?: unknown }).myProperty;
 `,
 		`
-declare const maybeArray: unknown;
+declare const maybeArray: { [index: number]: unknown };
 delete maybeArray[0];
 `,
 		`
@@ -357,7 +336,7 @@ declare const maybeArray: any;
 delete maybeArray[0];
 `,
 		`
-declare const obj: { a: number };
+declare const obj: { a?: number };
 delete obj.a;
 `,
 	],

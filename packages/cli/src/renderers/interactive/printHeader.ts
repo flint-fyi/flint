@@ -1,6 +1,6 @@
 import chalk from "chalk";
 
-export function printHeader(file: number, files: number) {
+export function printHeader(file: number, files: number): string {
 	return [
 		chalk.hex("#aabbee")("📌 Displaying Flint reports in "),
 		chalk.hex("#bbccff")("--interactive"),

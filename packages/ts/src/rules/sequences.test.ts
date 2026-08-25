@@ -5,21 +5,45 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-const a = (1, 2);
+function getValue() {
+    return 1;
+}
+
+const a = (getValue(), 2);
 `,
 			snapshot: `
-const a = (1, 2);
-            ~
-            The "sequence" (comma) operator is often confusing and a sign of mistaken logic.
+function getValue() {
+    return 1;
+}
+
+const a = (getValue(), 2);
+                     ~
+                     The "sequence" (comma) operator is often confusing and a sign of mistaken logic.
 `,
 		},
 		{
 			code: `
+function g() {
+    return 1;
+}
+
+function h() {
+    return 2;
+}
+
 function f() {
     return (g(), h());
 }
 `,
 			snapshot: `
+function g() {
+    return 1;
+}
+
+function h() {
+    return 2;
+}
+
 function f() {
     return (g(), h());
                ~
@@ -29,10 +53,16 @@ function f() {
 		},
 		{
 			code: `
+let a = 0;
+let b = 0;
+
 for ((a = 1, b = 2); ; ) {
 }
 `,
 			snapshot: `
+let a = 0;
+let b = 0;
+
 for ((a = 1, b = 2); ; ) {
            ~
            The "sequence" (comma) operator is often confusing and a sign of mistaken logic.
@@ -43,7 +73,7 @@ for ((a = 1, b = 2); ; ) {
 	valid: [
 		`const a = [1, 2];`,
 		`const a = (1 + 2);`,
-		`function f() { g(); h(); }`,
+		`function g() {} function h() {} function f() { g(); h(); }`,
 		`for (let i = 0; i < 10; i += 1) {}`,
 	],
 });

@@ -5,9 +5,11 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+const value = "value";
 value! ?? "default";
 `,
 			snapshot: `
+const value = "value";
 value! ?? "default";
 ~~~~~~
 The nullish coalescing operator handles null and undefined, making this non-null assertion redundant.
@@ -16,6 +18,7 @@ The nullish coalescing operator handles null and undefined, making this non-null
 				{
 					id: "removeNonNullAssertion",
 					updated: `
+const value = "value";
 value ?? "default";
 `,
 				},
@@ -23,9 +26,13 @@ value ?? "default";
 		},
 		{
 			code: `
+const value = "value";
+const other = "other";
 value! ?? other!;
 `,
 			snapshot: `
+const value = "value";
+const other = "other";
 value! ?? other!;
 ~~~~~~
 The nullish coalescing operator handles null and undefined, making this non-null assertion redundant.
@@ -34,6 +41,8 @@ The nullish coalescing operator handles null and undefined, making this non-null
 				{
 					id: "removeNonNullAssertion",
 					updated: `
+const value = "value";
+const other = "other";
 value ?? other!;
 `,
 				},
@@ -41,9 +50,11 @@ value ?? other!;
 		},
 		{
 			code: `
+declare const object: { property?: string };
 object.property! ?? "default";
 `,
 			snapshot: `
+declare const object: { property?: string };
 object.property! ?? "default";
 ~~~~~~~~~~~~~~~~
 The nullish coalescing operator handles null and undefined, making this non-null assertion redundant.
@@ -52,6 +63,7 @@ The nullish coalescing operator handles null and undefined, making this non-null
 				{
 					id: "removeNonNullAssertion",
 					updated: `
+declare const object: { property?: string };
 object.property ?? "default";
 `,
 				},
@@ -59,9 +71,11 @@ object.property ?? "default";
 		},
 		{
 			code: `
+declare const object: { property?: string } | undefined;
 object!.property! ?? "default";
 `,
 			snapshot: `
+declare const object: { property?: string } | undefined;
 object!.property! ?? "default";
 ~~~~~~~~~~~~~~~~~
 The nullish coalescing operator handles null and undefined, making this non-null assertion redundant.
@@ -70,6 +84,7 @@ The nullish coalescing operator handles null and undefined, making this non-null
 				{
 					id: "removeNonNullAssertion",
 					updated: `
+declare const object: { property?: string } | undefined;
 object!.property ?? "default";
 `,
 				},
@@ -77,9 +92,11 @@ object!.property ?? "default";
 		},
 		{
 			code: `
+declare function getValue(): string | undefined;
 getValue()! ?? "default";
 `,
 			snapshot: `
+declare function getValue(): string | undefined;
 getValue()! ?? "default";
 ~~~~~~~~~~~
 The nullish coalescing operator handles null and undefined, making this non-null assertion redundant.
@@ -88,6 +105,7 @@ The nullish coalescing operator handles null and undefined, making this non-null
 				{
 					id: "removeNonNullAssertion",
 					updated: `
+declare function getValue(): string | undefined;
 getValue() ?? "default";
 `,
 				},
@@ -116,11 +134,13 @@ value ?? "";
 		},
 		{
 			code: `
+declare function getValue(): string;
 let value: string;
 value = getValue();
 value! ?? "";
 `,
 			snapshot: `
+declare function getValue(): string;
 let value: string;
 value = getValue();
 value! ?? "";
@@ -131,6 +151,7 @@ The nullish coalescing operator handles null and undefined, making this non-null
 				{
 					id: "removeNonNullAssertion",
 					updated: `
+declare function getValue(): string;
 let value: string;
 value = getValue();
 value ?? "";
@@ -140,12 +161,16 @@ value ?? "";
 		},
 		{
 			code: `
+declare function getValue(): string;
+declare function other(): string;
 let value: string;
 value = getValue();
 value! ?? "";
 value = other();
 `,
 			snapshot: `
+declare function getValue(): string;
+declare function other(): string;
 let value: string;
 value = getValue();
 value! ?? "";
@@ -157,6 +182,8 @@ value = other();
 				{
 					id: "removeNonNullAssertion",
 					updated: `
+declare function getValue(): string;
+declare function other(): string;
 let value: string;
 value = getValue();
 value ?? "";
@@ -167,10 +194,12 @@ value = other();
 		},
 		{
 			code: `
+declare function getValue(): string;
 let value = getValue();
 value! ?? "";
 `,
 			snapshot: `
+declare function getValue(): string;
 let value = getValue();
 value! ?? "";
 ~~~~~~
@@ -180,6 +209,7 @@ The nullish coalescing operator handles null and undefined, making this non-null
 				{
 					id: "removeNonNullAssertion",
 					updated: `
+declare function getValue(): string;
 let value = getValue();
 value ?? "";
 `,
@@ -242,10 +272,12 @@ function test() {
 		},
 		{
 			code: `
+declare function getValue(): string;
 let value = getValue();
 value ! ?? "";
 `,
 			snapshot: `
+declare function getValue(): string;
 let value = getValue();
 value ! ?? "";
 ~~~~~~~
@@ -255,6 +287,7 @@ The nullish coalescing operator handles null and undefined, making this non-null
 				{
 					id: "removeNonNullAssertion",
 					updated: `
+declare function getValue(): string;
 let value = getValue();
 value ?? "";
 `,
@@ -263,21 +296,53 @@ value ?? "";
 		},
 	],
 	valid: [
-		`value ?? "default";`,
-		`value ?? other!;`,
-		`object.property ?? "default";`,
-		`object.property ?? other!;`,
-		`object!.property ?? "default";`,
-		`object!.property ?? other!;`,
-		`getValue() ?? "default";`,
-		`getValue() ?? other!;`,
-		`(value ?? other)!;`,
+		`
+declare const value: string | undefined;
+value ?? "default";
+`,
+		`
+declare const value: string | undefined;
+declare const other: string | undefined;
+value ?? other!;
+`,
+		`
+declare const object: { property?: string };
+object.property ?? "default";
+`,
+		`
+declare const object: { property?: string };
+declare const other: string | undefined;
+object.property ?? other!;
+`,
+		`
+declare const object: { property?: string } | undefined;
+object!.property ?? "default";
+`,
+		`
+declare const object: { property?: string } | undefined;
+declare const other: string | undefined;
+object!.property ?? other!;
+`,
+		`
+declare function getValue(): string | undefined;
+getValue() ?? "default";
+`,
+		`
+declare function getValue(): string | undefined;
+declare const other: string | undefined;
+getValue() ?? other!;
+`,
+		`
+declare const value: string | undefined;
+declare const other: string | undefined;
+(value ?? other)!;
+`,
 		`
 let value: string;
 value! ?? "";
 `,
 		`
-let value: string;
+let value = "";
 value ?? "";
 `,
 		`
@@ -285,33 +350,38 @@ let value!: string;
 value ?? "";
 `,
 		`
-let value: string;
+declare function doSomething(value: string): void;
+declare const value: string;
 doSomething(value);
 value! ?? "";
 `,
 		`
+declare function getValue(): string;
 let value: string;
 value! ?? "";
 value = getValue();
 `,
 		`
-let value: string;
+declare function doSomething(value: string): void;
+declare function getValue(): string;
+declare let value: string;
 doSomething(value);
 value! ?? "";
 value = getValue();
 `,
 		`
+declare function getValue(): string;
 let value = getValue();
 value ?? "";
 `,
 		`
 function test() {
-    let value: string;
+    let value = "";
     return value ?? "";
 }
 `,
 		`
-let value: string;
+declare let value: string;
 function test() {
     return value ?? "";
 }

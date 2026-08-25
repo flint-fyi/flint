@@ -1,0 +1,31 @@
+name: Setup
+
+description: Sets up the repo for a typical CI job
+
+inputs:
+  cache:
+    description: Cache the pnpm store
+    required: false
+    default: true
+  node-version:
+    description: The Node.js version to use
+    required: false
+    default: 26.7.0
+  skip-checkout:
+    description: Skip the checkout step if the repo is already checked out
+    default: false
+    required: false
+
+runs:
+  steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      if: ${{ inputs.skip-checkout == 'false' }}
+      with:
+        persist-credentials: false
+    - uses: pnpm/setup@84cb39b217b10273981911c288cd62326dc7c6d2 # v2.0.2
+      env:
+        HUSKY: 0
+      with:
+        cache: ${{ inputs.cache }}
+        runtime: node@${{ inputs.node-version }}
+  using: composite

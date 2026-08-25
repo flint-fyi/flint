@@ -5,9 +5,11 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+declare const str: string;
 const result = str.toLowerCase() === "VALUE";
 `,
 			snapshot: `
+declare const str: string;
 const result = str.toLowerCase() === "VALUE";
                                      ~~~~~~~
                                      This \`toLowerCase()\` call is compared against a string that is not lowercase.
@@ -15,9 +17,11 @@ const result = str.toLowerCase() === "VALUE";
 		},
 		{
 			code: `
+declare const str: string;
 const result = str.toUpperCase() === "value";
 `,
 			snapshot: `
+declare const str: string;
 const result = str.toUpperCase() === "value";
                                      ~~~~~~~
                                      This \`toUpperCase()\` call is compared against a string that is not uppercase.
@@ -25,9 +29,11 @@ const result = str.toUpperCase() === "value";
 		},
 		{
 			code: `
+declare const str: string;
 const result = "Mixed" === str.toLowerCase();
 `,
 			snapshot: `
+declare const str: string;
 const result = "Mixed" === str.toLowerCase();
                ~~~~~~~
                This \`toLowerCase()\` call is compared against a string that is not lowercase.
@@ -35,9 +41,11 @@ const result = "Mixed" === str.toLowerCase();
 		},
 		{
 			code: `
+declare const str: string;
 const result = str.toLowerCase() !== "HELLO";
 `,
 			snapshot: `
+declare const str: string;
 const result = str.toLowerCase() !== "HELLO";
                                      ~~~~~~~
                                      This \`toLowerCase()\` call is compared against a string that is not lowercase.
@@ -45,9 +53,11 @@ const result = str.toLowerCase() !== "HELLO";
 		},
 		{
 			code: `
+declare const str: string;
 const result = str.toUpperCase() == "MixedCase";
 `,
 			snapshot: `
+declare const str: string;
 const result = str.toUpperCase() == "MixedCase";
                                     ~~~~~~~~~~~
                                     This \`toUpperCase()\` call is compared against a string that is not uppercase.
@@ -55,11 +65,15 @@ const result = str.toUpperCase() == "MixedCase";
 		},
 		{
 			code: `
+declare const input: string;
+declare function doSomething(): void;
 if (input.toLowerCase() === "YES") {
     doSomething();
 }
 `,
 			snapshot: `
+declare const input: string;
+declare function doSomething(): void;
 if (input.toLowerCase() === "YES") {
                             ~~~~~
                             This \`toLowerCase()\` call is compared against a string that is not lowercase.
@@ -69,13 +83,38 @@ if (input.toLowerCase() === "YES") {
 		},
 	],
 	valid: [
-		`const result = str.toLowerCase() === "value";`,
-		`const result = str.toUpperCase() === "VALUE";`,
-		`const result = str.toLowerCase() === other;`,
-		`const result = str.toUpperCase() !== "HELLO";`,
-		`const result = str.toLowerCase() === "";`,
-		`const result = str.toLowerCase() === "123";`,
-		`const result = str === "VALUE";`,
-		`const result = str.trim() === "VALUE";`,
+		`
+declare const str: string;
+const result = str.toLowerCase() === "value";
+`,
+		`
+declare const str: string;
+const result = str.toUpperCase() === "VALUE";
+`,
+		`
+declare const str: string;
+declare const other: string;
+const result = str.toLowerCase() === other;
+`,
+		`
+declare const str: string;
+const result = str.toUpperCase() !== "HELLO";
+`,
+		`
+declare const str: string;
+const result = str.toLowerCase() === "";
+`,
+		`
+declare const str: string;
+const result = str.toLowerCase() === "123";
+`,
+		`
+declare const str: string;
+const result = str === "VALUE";
+`,
+		`
+declare const str: string;
+const result = str.trim() === "VALUE";
+`,
 	],
 });

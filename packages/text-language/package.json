@@ -1,6 +1,6 @@
 {
 	"name": "@flint.fyi/text-language",
-	"version": "0.15.4",
+	"version": "0.17.0",
 	"description": "[Experimental] Plain text language for Flint.",
 	"homepage": "https://flint.fyi",
 	"repository": {
@@ -32,7 +32,7 @@
 		"tsdown": "catalog:dev"
 	},
 	"engines": {
-		"node": ">=24.0.0"
+		"node": ">=26.1.0"
 	},
 	"publishConfig": {
 		"access": "public",

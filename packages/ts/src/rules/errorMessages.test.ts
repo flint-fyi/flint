@@ -88,13 +88,19 @@ const MyError = Error; throw new MyError();
 		`throw new Error("Something went wrong");`,
 		`throw new TypeError("Expected a number");`,
 		`throw new RangeError(\`Value out of range\`);`,
-		`throw new Error(getMessage());`,
-		`throw new Error(condition ? "a" : "b");`,
-		`const MyError = Error; throw new MyError(condition ? "a" : "b");`,
+		`function getMessage() { return "message"; }
+throw new Error(getMessage());`,
+		`const condition = true;
+throw new Error(condition ? "a" : "b");`,
+		`const condition = true;
+const MyError = Error;
+throw new MyError(condition ? "a" : "b");`,
 		`class CustomError extends Error {} throw new CustomError();`,
 		`
 class Error {
-  constructor(message: string) {}
+  constructor(message?: string) {
+    message;
+  }
 }
 
 throw new Error();
@@ -103,7 +109,9 @@ export {}
 		`,
 		`
 class Error {
-  constructor(message: string) {}
+  constructor(message?: string) {
+    message;
+  }
 }
 
 throw new Error("Something went wrong");

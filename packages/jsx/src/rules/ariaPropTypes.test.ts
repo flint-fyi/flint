@@ -158,7 +158,11 @@ ruleTester.describe(rule, {
 		`<div aria-sort="other" />`,
 		`<div />`,
 		`<input />`,
-		`<div aria-expanded={isExpanded} />`,
-		`<div aria-label={labelText} />`,
+		`
+declare const isExpanded: boolean;
+<div aria-expanded={isExpanded} />`,
+		`
+declare const labelText: string;
+<div aria-label={labelText} />`,
 	],
 });

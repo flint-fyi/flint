@@ -71,7 +71,10 @@ import assert = require("node:assert");
 		`import { strict as assert } from "node:assert";`,
 		`import { strict } from "node:assert";`,
 		`import { strict, deepEqual } from "node:assert";`,
-		`import { deepEqual } from "./custom-assert";`,
+		{
+			code: `import { deepEqual } from "./custom-assert";`,
+			files: { "custom-assert.ts": `export function deepEqual() {}` },
+		},
 		`const assert = require("node:assert/strict");`,
 	],
 });

@@ -86,14 +86,20 @@ const value: Promise<string> = new Promise((resolve) => resolve("test"));
 		},
 		{
 			code: `
-const value: MyClass<T, U> = new MyClass();
+class MyClass<First = unknown, Second = unknown> {}
+
+const value: MyClass<string, number> = new MyClass();
 `,
 			output: `
-const value: MyClass = new MyClass<T, U>();
+class MyClass<First = unknown, Second = unknown> {}
+
+const value: MyClass = new MyClass<string, number>();
 `,
 			snapshot: `
-const value: MyClass<T, U> = new MyClass();
-                    ~~~~~~
+class MyClass<First = unknown, Second = unknown> {}
+
+const value: MyClass<string, number> = new MyClass();
+                    ~~~~~~~~~~~~~~~~
                     Prefer specifying the type argument on the constructor call instead of the type annotation.
 `,
 		},
@@ -118,12 +124,18 @@ class Example {
 		},
 		{
 			code: `
+class Foo<Value = unknown> {}
+
 const value: Foo<string> = new Foo;
 `,
 			output: `
+class Foo<Value = unknown> {}
+
 const value: Foo = new Foo<string>();
 `,
 			snapshot: `
+class Foo<Value = unknown> {}
+
 const value: Foo<string> = new Foo;
                 ~~~~~~~~
                 Prefer specifying the type argument on the constructor call instead of the type annotation.
@@ -190,16 +202,22 @@ const value = new Set<string>();
 		},
 		{
 			code: `
-const value: Map = new Map<string, number>();
+class Collection<Key = unknown, Value = unknown> {}
+
+const value: Collection = new Collection<string, number>();
 `,
 			options: { style: "type-annotation" },
 			output: `
-const value: Map<string, number> = new Map();
+class Collection<Key = unknown, Value = unknown> {}
+
+const value: Collection<string, number> = new Collection();
 `,
 			snapshot: `
-const value: Map = new Map<string, number>();
-                          ~~~~~~~~~~~~~~~~
-                          Prefer specifying the type argument on the type annotation instead of the constructor call.
+class Collection<Key = unknown, Value = unknown> {}
+
+const value: Collection = new Collection<string, number>();
+                                        ~~~~~~~~~~~~~~~~
+                                        Prefer specifying the type argument on the type annotation instead of the constructor call.
 `,
 		},
 		{
@@ -228,9 +246,22 @@ class Example {
 		`const value = new Map<string, number>();`,
 		`const value: Map<string, number> = new Map<string, number>();`,
 		`const value = new Map();`,
-		`const value: Map = new Map();`,
-		`const value: Map<string, number> = Foo();`,
-		`const value: Foo<string> = new Bar<string>();`,
+		`
+class Collection<Key = unknown, Value = unknown> {}
+
+const value: Collection = new Collection();
+`,
+		`
+declare function createMap(): Map<string, number>;
+
+const value: Map<string, number> = createMap();
+`,
+		`
+class Foo<Value = unknown> {}
+class Bar<Value = unknown> extends Foo<Value> {}
+
+const value: Foo<string> = new Bar<string>();
+`,
 		`const value: Float32Array<ArrayBufferLike> = new Float32Array();`,
 		`const value: Int8Array<ArrayBufferLike> = new Int8Array();`,
 		`const value: Uint16Array<ArrayBufferLike> = new Uint16Array();`,
@@ -250,7 +281,11 @@ class Example {
 			options: { style: "type-annotation" },
 		},
 		{
-			code: `const value: Map = new Map();`,
+			code: `
+class Collection<Key = unknown, Value = unknown> {}
+
+const value: Collection = new Collection();
+`,
 			options: { style: "type-annotation" },
 		},
 	],

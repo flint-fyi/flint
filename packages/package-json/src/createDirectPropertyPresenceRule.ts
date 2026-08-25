@@ -1,7 +1,7 @@
 import type { DocumentNode } from "@humanwhocodes/momoa";
 import { z } from "zod/v4";
 
-import type { AnyRule } from "@flint.fyi/core";
+import type { Rule } from "@flint.fyi/core";
 import { jsonLanguage } from "@flint.fyi/json-language";
 
 import { getPackagePropertyOfName } from "./getPackagePropertyOfName.ts";
@@ -20,16 +20,39 @@ export interface CreatePropertyPresenceRuleOptions {
 	logical?: boolean;
 }
 
-export function createDirectPropertyValidityRule<PropertyName extends string>(
+export type PresenceRule<PropertyName extends string> = Rule<
+	{
+		readonly description: string;
+		readonly id: PresenceRuleName<PropertyName>;
+		readonly presets?: readonly ["logical"];
+	} & {
+		readonly pluginId: string;
+		readonly url: string;
+	},
+	"missing",
+	{
+		ignorePrivate: z.ZodDefault<z.ZodBoolean>;
+	}
+>;
+
+export type PresenceRuleName<PropertyName extends string> =
+	`${PropertyName}Presence`;
+
+export function createDirectPropertyValidityRule<
+	const PropertyName extends string,
+>(
 	propertyName: PropertyName,
 	{
 		ignorePrivateDefault = false,
 		logical,
 	}: CreatePropertyPresenceRuleOptions = {},
-) {
+): {
+	id: PresenceRuleName<PropertyName>;
+	rule: PresenceRule<PropertyName>;
+} {
 	const id = `${propertyName}Presence` as const;
 
-	const rule: AnyRule = ruleCreator.createRule(jsonLanguage, {
+	const rule = ruleCreator.createRule(jsonLanguage, {
 		about: {
 			description: `Enforces that the \`${propertyName}\` property is present.`,
 			id,

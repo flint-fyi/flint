@@ -41,6 +41,8 @@ ruleTester.describe(rule, {
 		`<li role="menuitem" />`,
 		`<table role="grid" />`,
 		`<button role="button" />`,
-		`<CustomElement role="button" />`,
+		`
+declare const CustomElement: (props: Record<string, unknown>) => unknown;
+<CustomElement role="button" />`,
 	],
 });

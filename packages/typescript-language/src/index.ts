@@ -48,7 +48,10 @@ export { isGlobalDeclaration } from "./utils/isGlobalDeclaration.ts";
 export { isGlobalDeclarationOfName } from "./utils/isGlobalDeclarationOfName.ts";
 export { isGlobalVariable } from "./utils/isGlobalVariable.ts";
 export { isInlineArrayCreation } from "./utils/isInlineArrayCreation.ts";
-export { isStaticString } from "./utils/isStaticString.ts";
-export { isStringRawNoSubstitution } from "./utils/isStringRawNoSubstitution.ts";
+export { isStaticString, type StaticString } from "./utils/isStaticString.ts";
+export {
+	isStringRawNoSubstitution,
+	type StringRawNoSubstitution,
+} from "./utils/isStringRawNoSubstitution.ts";
 export { unwrapParenthesizedNode } from "./utils/unwrapParenthesizedNode.ts";
 export { unwrapParentParenthesizedExpressions } from "./utils/unwrapParentParenthesizedExpressions.ts";

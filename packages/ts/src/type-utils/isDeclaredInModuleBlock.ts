@@ -4,7 +4,7 @@ import ts from "typescript";
 export function isDeclaredInModuleBlock(
 	declaration: ts.Declaration,
 	packageName: string,
-) {
+): boolean {
 	let current: ts.Node = declaration;
 	while (!ts.isSourceFile(current)) {
 		if (

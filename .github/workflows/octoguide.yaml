@@ -1,6 +1,6 @@
 name: OctoGuide
 
-on:
+on: # zizmor: ignore[dangerous-triggers] This workflow does not check out or execute pull request code.
   discussion:
     types:
       - created

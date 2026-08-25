@@ -120,20 +120,23 @@ Use a non-null assertion (\`!\`) instead of an explicit type assertion.
 		},
 		{
 			code: `
+declare const getValue: () => Promise<string | null>;
+
 async function test() {
-    declare const getValue: () => Promise<string | null>;
     await getValue() as string;
 }
 `,
 			output: `
+declare const getValue: () => Promise<string | null>;
+
 async function test() {
-    declare const getValue: () => Promise<string | null>;
     (await getValue())!;
 }
 `,
 			snapshot: `
+declare const getValue: () => Promise<string | null>;
+
 async function test() {
-    declare const getValue: () => Promise<string | null>;
     await getValue() as string;
     ~~~~~~~~~~~~~~~~~~~~~~~~~~
     Use a non-null assertion (\`!\`) instead of an explicit type assertion.
@@ -232,7 +235,7 @@ Use a non-null assertion (\`!\`) instead of an explicit type assertion.
 	],
 	valid: [
 		`declare const value: string; value as string;`,
-		`declare const value: string | null; value as const;`,
+		`"value" as const;`,
 		`declare const value: string | number | null; value as string;`,
 		`declare const value: string | null; value as string | null;`,
 		`declare const value: any; value as string;`,

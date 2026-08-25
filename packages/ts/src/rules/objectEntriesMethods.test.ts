@@ -110,13 +110,30 @@ Using reduce to build an object from key-value pairs can be replaced with Object
 		`declare const entries: [string, number][]; Object.fromEntries(entries);`,
 		`declare const entries: [string, number][]; Object.fromEntries(entries.map(([key, value]) => [key, value * 2]));`,
 		`declare const entries: [string, number][]; entries.reduce((sum, [, value]) => sum + value, 0);`,
-		`declare const entries: [string, number][]; entries.reduce((accumulator, [key, value]) => { accumulator[key] = value; return accumulator; }, {});`,
+		`
+declare const entries: [string, number][];
+entries.reduce((accumulator, [key, value]) => {
+    accumulator[key] = value;
+    return accumulator;
+}, {} as Record<string, number>);
+`,
 		`declare const entries: [string, number][]; entries.reduce((accumulator, [key, value]) => ({ ...accumulator, [key]: value, extra: true }), {});`,
 		`declare const entries: [string, number][]; entries.reduce((accumulator, [key, value]) => ({ [key]: value, ...accumulator }), {});`,
 		`declare const entries: [string, number][]; entries.reduce((accumulator, [key, value]) => ({ ...accumulator, [key]: value }), { initial: 0 });`,
 		`declare const entries: [string, number][]; entries.reduce((accumulator, [key, value]) => Object.assign(accumulator, { [key]: value, extra: true }), {});`,
 		`declare const entries: [string, number][]; entries.reduce((accumulator, [key, value]) => Object.assign({}, accumulator, { [key]: value }), {});`,
-		`declare const obj: { reduce: (fn: Function, init: object) => object }; obj.reduce((accumulator, [key, value]) => ({ ...accumulator, [key]: value }), {});`,
+		`
+declare const collection: {
+    reduce(
+        callback: (
+            accumulator: Record<string, number>,
+            entry: [string, number],
+        ) => Record<string, number>,
+        initial: Record<string, number>,
+    ): Record<string, number>;
+};
+collection.reduce((accumulator, [key, value]) => ({ ...accumulator, [key]: value }), {});
+`,
 		`declare const entries: [string, number][]; entries.reduce?.((accumulator, [key, value]) => ({ ...accumulator, [key]: value }), {});`,
 		`declare const entries: [string, number][]; entries.reduce((accumulator, [key, value]) => ({ ...accumulator, [key]: value }));`,
 		`declare const entries: [string, number][]; entries.reduce((accumulator, [key, value]) => ({ ...accumulator, staticKey: value }), {});`,
@@ -124,11 +141,26 @@ Using reduce to build an object from key-value pairs can be replaced with Object
 		`declare const entries: [string, number][]; entries.reduce(function(acc, [k, v]) { return { ...acc, [k]: v }; }, {});`,
 		`declare const entries: [string, number][]; entries["reduce"]((accumulator, [key, value]) => ({ ...accumulator, [key]: value }), {});`,
 		`declare const entries: [string, number][]; entries.map((x) => x);`,
-		`declare const entries: [string, number][]; entries.reduce((acc, [key, value]) => Object.assign(other, { [key]: value }), {});`,
+		`
+declare const entries: [string, number][];
+declare const other: Record<string, number>;
+entries.reduce((acc, [key, value]) => Object.assign(other, { [key]: value }), {});
+`,
 		`declare const entries: [string, number][]; entries.reduce((acc, [key, value]) => Object.assign(acc, value), {});`,
-		`declare const entries: [string, number][]; entries.reduce((acc, [key, value]) => ({ ...other, [key]: value }), {});`,
+		`
+declare const entries: [string, number][];
+declare const other: Record<string, number>;
+entries.reduce((acc, [key, value]) => ({ ...other, [key]: value }), {});
+`,
 		`declare const entries: [string, number][]; entries.reduce((acc, [key, value]) => ({ ...acc }), {});`,
-		`declare const entries: [string, number][]; entries.reduce((acc, [key, value]) => myAssign(acc, { [key]: value }), {});`,
+		`
+declare const entries: [string, number][];
+declare function myAssign(
+    left: Record<string, number>,
+    right: Record<string, number>,
+): Record<string, number>;
+entries.reduce((acc, [key, value]) => myAssign(acc, { [key]: value }), {});
+`,
 		`declare const entries: [string, number][]; entries.reduce(({ ...acc }, [key, value]) => ({ ...acc, [key]: value }), {});`,
 		`declare const entries: [string, number][]; entries.reduce((acc, [key, value]) => Object.create({ [key]: value }), {});`,
 		`declare const entries: [string, number][]; entries.reduce((acc, [key, value]) => Object.assign(acc, { [key]: value }), Object.create({}));`,

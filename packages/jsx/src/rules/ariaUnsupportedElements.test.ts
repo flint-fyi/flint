@@ -47,7 +47,9 @@ ruleTester.describe(rule, {
 	valid: [
 		`<meta charset="UTF-8" />`,
 		`<script src="app.js" />`,
-		`<style>{css}</style>`,
+		`
+declare const css: unknown;
+<style>{css}</style>`,
 		`<div role="button" />`,
 		`<button aria-label="Click me" />`,
 	],

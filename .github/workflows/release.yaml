@@ -17,19 +17,21 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
-      - uses: ./.github/actions/prepare
+      - uses: $/.github/actions/setup
+        with:
+          cache: false
 
       - name: Create Token
         id: create_token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
           client-id: ${{ vars.FLINT_TOKENS_BOT_CLIENT_ID }}
+          permission-contents: write
+          permission-pull-requests: write
           private-key: ${{ secrets.FLINT_TOKENS_BOT_PRIVATE_KEY }}
 
       - name: Changesets Release
-        uses: changesets/action@v1
-        env:
-          GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
+        uses: changesets/action@198f833dd7d863100ea6e28967bc9a9fdefadb0a # v2.1.0
         with:
-          publish: pnpm release
+          github-token: ${{ steps.create_token.outputs.token }}
+          publish-script: pnpm release

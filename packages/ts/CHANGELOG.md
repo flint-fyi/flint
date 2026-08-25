@@ -1,5 +1,39 @@
 # @flint/ts
 
+## 0.23.1
+
+### Patch Changes
+
+- [#3242](https://github.com/flint-fyi/flint/pull/3242) [`84c5f15`](https://github.com/flint-fyi/flint/commit/84c5f154162efde80ceeb3ccb80d0c435d52d28b) - Ensure `typeImports` properly detects references from shorthand property assignment identifiers.
+
+## 0.23.0
+
+### Minor Changes
+
+- [#3168](https://github.com/flint-fyi/flint/pull/3168) [`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34) - Drop support for node versions <26.1.0.
+
+### Patch Changes
+
+- Updated dependencies [[`5d98e15`](https://github.com/flint-fyi/flint/commit/5d98e15aa3aefbd3eaf6df6b4b9ead019a7d1c34), [`3f8e15d`](https://github.com/flint-fyi/flint/commit/3f8e15d092d0177bcbf0de75718a075bf5fb4c21)]:
+  - @flint.fyi/typescript-language@0.20.0
+  - @flint.fyi/utils@0.16.0
+  - @flint.fyi/core@0.25.0
+
+## 0.22.0
+
+### Minor Changes
+
+- [#3118](https://github.com/flint-fyi/flint/pull/3118) [`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20) - Begin bundling all package entry points.
+
+- [#3138](https://github.com/flint-fyi/flint/pull/3138) [`5cf1562`](https://github.com/flint-fyi/flint/commit/5cf15621bad3527b694a1a99bd35f464d00d5237) - Moved `typeImports` from the `stylistic` config to the `logicalStrict` config.
+
+### Patch Changes
+
+- Updated dependencies [[`c737600`](https://github.com/flint-fyi/flint/commit/c7376006022dc527a18e5ab433b81fb9687bdf20)]:
+  - @flint.fyi/typescript-language@0.19.0
+  - @flint.fyi/utils@0.15.0
+  - @flint.fyi/core@0.24.0
+
 ## 0.21.0
 
 ### Minor Changes

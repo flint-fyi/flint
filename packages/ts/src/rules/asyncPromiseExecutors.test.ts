@@ -33,16 +33,18 @@ new Promise(async function(resolve, reject) {
 		},
 		{
 			code: `
-const p = new Promise(async (resolve) => {
+const p = new Promise<void>(async (resolve) => {
     resolve();
 });
+p;
 `,
 			snapshot: `
-const p = new Promise(async (resolve) => {
-                      ~~~~~
-                      Async Promise executor functions are not able to properly catch thrown errors and often indicate unnecessarily complex logic.
+const p = new Promise<void>(async (resolve) => {
+                            ~~~~~
+                            Async Promise executor functions are not able to properly catch thrown errors and often indicate unnecessarily complex logic.
     resolve();
 });
+p;
 `,
 		},
 	],
@@ -58,11 +60,22 @@ new Promise(function(resolve, reject) {
 });
 `,
 		`
+function doSomething() {
+    return Promise.resolve();
+}
+
 const p = new Promise((resolve) => {
     doSomething().then(resolve);
 });
+p;
 `,
 		`
+class SomethingElse {
+    constructor(executor: (resolve: () => void) => void | Promise<void>) {
+        executor(() => {});
+    }
+}
+
 new SomethingElse(async (resolve) => {
     resolve();
 });

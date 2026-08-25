@@ -12,7 +12,7 @@ export async function applyChangesToFile(
 	host: LinterHost,
 	absoluteFilePath: string,
 	changes: FileChange[],
-) {
+): Promise<void> {
 	log(
 		"Collecting %d changes to apply to file: %s",
 		changes.length,

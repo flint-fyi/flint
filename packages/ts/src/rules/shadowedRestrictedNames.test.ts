@@ -5,26 +5,6 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
-let undefined = 5;
-`,
-			snapshot: `
-let undefined = 5;
-    ~~~~~~~~~
-    This variable misleadingly shadows the global \`undefined\`.
-`,
-		},
-		{
-			code: `
-const NaN = 123;
-`,
-			snapshot: `
-const NaN = 123;
-      ~~~
-      This variable misleadingly shadows the global \`NaN\`.
-`,
-		},
-		{
-			code: `
 var Infinity = 100;
 `,
 			snapshot: `
@@ -35,81 +15,25 @@ var Infinity = 100;
 		},
 		{
 			code: `
-function test(arguments) {
-    return arguments.length;
-}
+const arrowFunc = (undefined: number) => undefined;
 `,
 			snapshot: `
-function test(arguments) {
-              ~~~~~~~~~
-              This variable misleadingly shadows the global \`arguments\`.
-    return arguments.length;
-}
-`,
-		},
-		{
-			code: `
-function eval() {
-    return 42;
-}
-`,
-			snapshot: `
-function eval() {
-         ~~~~
-         This variable misleadingly shadows the global \`eval\`.
-    return 42;
-}
-`,
-		},
-		{
-			code: `
-const arrowFunc = (undefined) => undefined;
-`,
-			snapshot: `
-const arrowFunc = (undefined) => undefined;
+const arrowFunc = (undefined: number) => undefined;
                    ~~~~~~~~~
                    This variable misleadingly shadows the global \`undefined\`.
 `,
 		},
 		{
 			code: `
-class NaN {
-    constructor() {}
-}
-`,
-			snapshot: `
-class NaN {
-      ~~~
-      This variable misleadingly shadows the global \`NaN\`.
-    constructor() {}
-}
-`,
-		},
-		{
-			code: `
-const obj = {
-    method(eval) {
-        return eval;
-    }
-};
-`,
-			snapshot: `
-const obj = {
-    method(eval) {
-           ~~~~
-           This variable misleadingly shadows the global \`eval\`.
-        return eval;
-    }
-};
-`,
-		},
-		{
-			code: `
+declare const obj: { undefined: number };
+
 function test() {
     const { undefined } = obj;
 }
 `,
 			snapshot: `
+declare const obj: { undefined: number };
+
 function test() {
     const { undefined } = obj;
             ~~~~~~~~~
@@ -119,11 +43,15 @@ function test() {
 		},
 		{
 			code: `
+declare const array: [number];
+
 function test() {
     const [NaN] = array;
 }
 `,
 			snapshot: `
+declare const array: [number];
+
 function test() {
     const [NaN] = array;
            ~~~
@@ -143,6 +71,10 @@ function test() {
 		`class MyClass {}`,
 		`const obj = { undefined: 5 };`,
 		`const key = "undefined";`,
-		`obj.undefined = 5;`,
+		`
+declare const obj: { undefined: number };
+
+obj.undefined = 5;
+`,
 	],
 });

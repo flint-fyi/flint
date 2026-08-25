@@ -135,6 +135,9 @@ export function createVFSLinterHost(
 		getFileTouchTimeSync(filePath) {
 			return fileMap.get(pathKey(filePath, caseSensitiveFS))?.touchTime;
 		},
+		getRepositoryRoot() {
+			return baseHost?.getRepositoryRoot();
+		},
 		async glob(patterns, options) {
 			const isIncluded = picomatch(patterns, { dot: true });
 			const isExcluded = createExcludeMatcher(options.exclude);

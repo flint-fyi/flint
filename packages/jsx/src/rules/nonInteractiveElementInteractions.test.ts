@@ -15,9 +15,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const handler: (...args: unknown[]) => unknown;
 <main onKeyDown={handler} />
 `,
 			snapshot: `
+declare const handler: (...args: unknown[]) => unknown;
 <main onKeyDown={handler} />
  ~~~~
  \`<main>\` elements are non-interactive and so should not have interactive event handlers.
@@ -35,9 +37,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const handler: (...args: unknown[]) => unknown;
 <img onClick={handler} />
 `,
 			snapshot: `
+declare const handler: (...args: unknown[]) => unknown;
 <img onClick={handler} />
  ~~~
  \`<img>\` elements are non-interactive and so should not have interactive event handlers.
@@ -55,9 +59,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const handler: (...args: unknown[]) => unknown;
 <ul onKeyPress={handler} />
 `,
 			snapshot: `
+declare const handler: (...args: unknown[]) => unknown;
 <ul onKeyPress={handler} />
  ~~
  \`<ul>\` elements are non-interactive and so should not have interactive event handlers.
@@ -65,9 +71,11 @@ ruleTester.describe(rule, {
 		},
 		{
 			code: `
+declare const handler: (...args: unknown[]) => unknown;
 <section onClick={handler} role="article" />
 `,
 			snapshot: `
+declare const handler: (...args: unknown[]) => unknown;
 <section onClick={handler} role="article" />
  ~~~~~~~
  \`<section>\` elements are non-interactive and so should not have interactive event handlers.
@@ -85,6 +93,8 @@ ruleTester.describe(rule, {
 		`<h1 onClick={() => {}} role="button" />`,
 		`<li onClick={() => {}} role="menuitem" />`,
 		`<span onClick={() => {}} role="checkbox" />`,
-		`<CustomElement onClick={() => {}} />`,
+		`
+declare const CustomElement: (props: Record<string, unknown>) => unknown;
+<CustomElement onClick={() => {}} />`,
 	],
 });

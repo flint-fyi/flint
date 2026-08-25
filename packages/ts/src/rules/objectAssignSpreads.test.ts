@@ -5,9 +5,11 @@ ruleTester.describe(rule, {
 	invalid: [
 		{
 			code: `
+const source = {};
 Object.assign({}, source)
 `,
 			snapshot: `
+const source = {};
 Object.assign({}, source)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -25,9 +27,13 @@ Object.assign({}, { name: 'test' })
 		},
 		{
 			code: `
+const defaults = {};
+const userConfig = {};
 Object.assign({}, defaults, userConfig)
 `,
 			snapshot: `
+const defaults = {};
+const userConfig = {};
 Object.assign({}, defaults, userConfig)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -35,9 +41,11 @@ Object.assign({}, defaults, userConfig)
 		},
 		{
 			code: `
+const data = {};
 Object.assign({ id: 1 }, data)
 `,
 			snapshot: `
+const data = {};
 Object.assign({ id: 1 }, data)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -45,9 +53,13 @@ Object.assign({ id: 1 }, data)
 		},
 		{
 			code: `
+const overrides = {};
+const extra = {};
 Object.assign({ name: 'default', active: true }, overrides, extra)
 `,
 			snapshot: `
+const overrides = {};
+const extra = {};
 Object.assign({ name: 'default', active: true }, overrides, extra)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -85,9 +97,11 @@ Object.assign({ id: 1, name: 'example', active: true })
 		},
 		{
 			code: `
+const source = {};
 const result = Object.assign({}, source)
 `,
 			snapshot: `
+const source = {};
 const result = Object.assign({}, source)
                ~~~~~~~~~~~~~~~~~~~~~~~~~
                \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -95,9 +109,11 @@ const result = Object.assign({}, source)
 		},
 		{
 			code: `
+const userOptions = {};
 const config = Object.assign({ timeout: 5000 }, userOptions)
 `,
 			snapshot: `
+const userOptions = {};
 const config = Object.assign({ timeout: 5000 }, userOptions)
                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -105,9 +121,13 @@ const config = Object.assign({ timeout: 5000 }, userOptions)
 		},
 		{
 			code: `
+const existing = {};
+const additional = {};
 Object.assign({ ...existing }, additional)
 `,
 			snapshot: `
+const existing = {};
+const additional = {};
 Object.assign({ ...existing }, additional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -115,9 +135,15 @@ Object.assign({ ...existing }, additional)
 		},
 		{
 			code: `
+const computed = "key";
+const value = 1;
+const other = {};
 Object.assign({ [computed]: value }, other)
 `,
 			snapshot: `
+const computed = "key";
+const value = 1;
+const other = {};
 Object.assign({ [computed]: value }, other)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -125,9 +151,13 @@ Object.assign({ [computed]: value }, other)
 		},
 		{
 			code: `
+const shorthand = 1;
+const other = {};
 Object.assign({ shorthand }, other)
 `,
 			snapshot: `
+const shorthand = 1;
+const other = {};
 Object.assign({ shorthand }, other)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -135,6 +165,7 @@ Object.assign({ shorthand }, other)
 		},
 		{
 			code: `
+const baseConfig = {};
 Object.assign(
     {},
     baseConfig,
@@ -142,6 +173,7 @@ Object.assign(
 )
 `,
 			snapshot: `
+const baseConfig = {};
 Object.assign(
 ~~~~~~~~~~~~~~
 \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -157,9 +189,11 @@ Object.assign(
 		},
 		{
 			code: `
+const nested = {};
 Object.assign({}, Object.assign({}, nested))
 `,
 			snapshot: `
+const nested = {};
 Object.assign({}, Object.assign({}, nested))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -169,9 +203,11 @@ Object.assign({}, Object.assign({}, nested))
 		},
 		{
 			code: `
+const deep = {};
 Object.assign({ outer: 1 }, Object.assign({ inner: 2 }, deep))
 `,
 			snapshot: `
+const deep = {};
 Object.assign({ outer: 1 }, Object.assign({ inner: 2 }, deep))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -181,9 +217,15 @@ Object.assign({ outer: 1 }, Object.assign({ inner: 2 }, deep))
 		},
 		{
 			code: `
+const first = {};
+const item = {};
+const last = {};
 [first, Object.assign({}, item), last]
 `,
 			snapshot: `
+const first = {};
+const item = {};
+const last = {};
 [first, Object.assign({}, item), last]
         ~~~~~~~~~~~~~~~~~~~~~~~
         \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -191,9 +233,11 @@ Object.assign({ outer: 1 }, Object.assign({ inner: 2 }, deep))
 		},
 		{
 			code: `
+const data = {};
 function transform() { return Object.assign({}, data); }
 `,
 			snapshot: `
+const data = {};
 function transform() { return Object.assign({}, data); }
                               ~~~~~~~~~~~~~~~~~~~~~~~
                               \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -201,9 +245,13 @@ function transform() { return Object.assign({}, data); }
 		},
 		{
 			code: `
+declare function process(value: unknown): void;
+const params = {};
 process(Object.assign({}, params))
 `,
 			snapshot: `
+declare function process(value: unknown): void;
+const params = {};
 process(Object.assign({}, params))
         ~~~~~~~~~~~~~~~~~~~~~~~~~
         \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -211,9 +259,11 @@ process(Object.assign({}, params))
 		},
 		{
 			code: `
+const inner = {};
 const options = { key: 'value', nested: Object.assign({}, inner) }
 `,
 			snapshot: `
+const inner = {};
 const options = { key: 'value', nested: Object.assign({}, inner) }
                                         ~~~~~~~~~~~~~~~~~~~~~~~~
                                         \`Object.assign()\` with an object literal as the first argument can be replaced with object spread syntax.
@@ -221,44 +271,93 @@ const options = { key: 'value', nested: Object.assign({}, inner) }
 		},
 		{
 			code: `
-Object.assign({ get accessor() {} })
+Object.assign({ get accessor() { return 1; } })
 `,
 			snapshot: `
-Object.assign({ get accessor() {} })
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Object.assign({ get accessor() { return 1; } })
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \`Object.assign()\` with a single object literal argument is unnecessary.
 `,
 		},
 		{
 			code: `
-Object.assign({ set accessor(value) {} })
+Object.assign({ set accessor(value: unknown) {} })
 `,
 			snapshot: `
-Object.assign({ set accessor(value) {} })
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Object.assign({ set accessor(value: unknown) {} })
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \`Object.assign()\` with a single object literal argument is unnecessary.
 `,
 		},
 	],
 	valid: [
-		`Object.assign()`,
-		`Object.assign(target, source)`,
-		`Object.assign(target, { name: 'test' })`,
-		`Object.assign(existingObject, { id: 1 })`,
-		`const result = { ...source }`,
-		`Object.assign(...sources)`,
-		`Object.assign({}, ...sources)`,
-		`const CustomObject = {}; CustomObject.assign({}, source)`,
-		`myObject.assign({}, source)`,
-		`Object.assign({ get accessor() {} }, other)`,
-		`Object.assign({ set accessor(value) {} }, other)`,
-		`Object.assign({ name: 'test', get accessor() {} }, config)`,
-		`Object.assign({ name: 'test', set accessor(value) {} }, { setting: true })`,
-		`Object.assign({}, { get accessor() {} })`,
-		`Object.assign({}, { set accessor(value) {} })`,
-		`Object.assign({}, { name: 'test', get accessor() {} }, {})`,
-		`Object.assign({ config }, settings, {}, { flag: true, set accessor(value) {}, extra }, {})`,
-		`import { assign } from 'utils'; assign({}, source)`,
-		`class Object {} Object.assign({}, data); export {}`,
+		`
+const target = {};
+const source = {};
+Object.assign(target, source)
+`,
+		`
+const target = {};
+Object.assign(target, { name: 'test' })
+`,
+		`
+const existingObject = {};
+Object.assign(existingObject, { id: 1 })
+`,
+		`
+const source = {};
+const result = { ...source }
+`,
+		`
+const sources: [object] = [{}];
+Object.assign(...sources)
+`,
+		`
+const sources = [{}];
+Object.assign({}, ...sources)
+`,
+		`
+const source = {};
+const CustomObject = { assign(...values: unknown[]) { return values; } };
+CustomObject.assign({}, source)
+`,
+		`
+const source = {};
+const myObject = { assign(...values: unknown[]) { return values; } };
+myObject.assign({}, source)
+`,
+		`
+const other = {};
+Object.assign({ get accessor() { return 1; } }, other)
+`,
+		`
+const other = {};
+Object.assign({ set accessor(value: unknown) {} }, other)
+`,
+		`
+const config = {};
+Object.assign({ name: 'test', get accessor() { return 1; } }, config)
+`,
+		`Object.assign({ name: 'test', set accessor(value: unknown) {} }, { setting: true })`,
+		`Object.assign({}, { get accessor() { return 1; } })`,
+		`Object.assign({}, { set accessor(value: unknown) {} })`,
+		`Object.assign({}, { name: 'test', get accessor() { return 1; } }, {})`,
+		`
+const config = {};
+const settings = {};
+const extra = {};
+Object.assign({ config }, settings, {}, { flag: true, set accessor(value: unknown) {}, extra }, {})
+`,
+		`
+const assign = (...values: unknown[]) => values;
+const source = {};
+assign({}, source)
+`,
+		`
+const data = {};
+class Object { static assign(...values: unknown[]) { return values; } }
+Object.assign({}, data);
+export {}
+`,
 	],
 });
