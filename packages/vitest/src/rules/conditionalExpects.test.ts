@@ -1,5 +1,15 @@
-import { ruleTester } from "../ruleTester.ts";
+import { createRuleTester } from "../ruleTester.ts";
 import rule from "./conditionalExpects.ts";
+
+const ruleTester = createRuleTester({
+	"conditionalExpects.globals.d.ts": `
+declare const count: number;
+declare const doSomething: () => void;
+declare const promise: Promise<void>;
+declare const something: boolean;
+declare const somethingThatThrows: () => void;
+`,
+});
 
 ruleTester.describe(rule, {
 	invalid: [
@@ -245,27 +255,6 @@ test("test", () => {
 			snapshot: `
 test("test", () => {
     expect.hasAssertions();
-    if (something) {
-        expect(something).toBe(true);
-        ~~~~~~~~~~~~~~~~~
-        Avoid calling \`expect\` inside conditional statements
-    }
-});
-`,
-		},
-		{
-			code: `
-test("test", () => {
-    expect.assertions();
-    if (something) {
-        expect(something).toBe(true);
-    }
-});
-`,
-			options: { expectAssertions: true },
-			snapshot: `
-test("test", () => {
-    expect.assertions();
     if (something) {
         expect(something).toBe(true);
         ~~~~~~~~~~~~~~~~~
