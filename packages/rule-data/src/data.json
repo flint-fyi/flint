@@ -31009,7 +31009,8 @@
 			"name": "hooksBeforeTestCases",
 			"plugin": "vitest",
 			"preset": "stylistic",
-			"strictness": "strict"
+			"strictness": "strict",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
