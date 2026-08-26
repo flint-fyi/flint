@@ -30609,8 +30609,8 @@
 		"flint": {
 			"name": "conditionalExpects",
 			"plugin": "vitest",
-			"preset": "stylistic",
-			"strictness": "strict"
+			"preset": "logical",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
