@@ -158,10 +158,9 @@ function collectESLintPluginCoverage(
 
 async function collectMarkdownlintCoverage(): Promise<RuleCoverage> {
 	return compareRuleCoverage(
-		(await findMarkdownlintRules()).flatMap((rule) => {
-			const name = rule.names.at(-1);
-			return name ? [{ name, url: undefined }] : [];
-		}),
+		(await findMarkdownlintRules()).flatMap((rule) =>
+			rule.names.slice(-1).map((name) => ({ name, url: undefined })),
+		),
 		findMarkdownlintRulesInFlint().map((rule) => rule.name),
 	);
 }

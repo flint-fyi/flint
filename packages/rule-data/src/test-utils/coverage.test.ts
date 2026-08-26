@@ -1,6 +1,22 @@
 import { describe, expect, it } from "vitest";
 
-import { compareRuleCoverage, formatRuleCoverage } from "./coverage.ts";
+import {
+	collectRuleCoverageReports,
+	compareRuleCoverage,
+	formatRuleCoverage,
+	hasRuleCoverageGaps,
+	ruleCoverageSources,
+} from "./coverage.ts";
+
+describe(collectRuleCoverageReports, () => {
+	it("collects one report per source, preserving source order", async () => {
+		const reports = await collectRuleCoverageReports();
+
+		expect(reports.map(({ linter }) => linter)).toEqual(
+			ruleCoverageSources.map(({ linter }) => linter),
+		);
+	});
+});
 
 describe(compareRuleCoverage, () => {
 	it("reports nothing when the covered names match the available rules", () => {
@@ -78,5 +94,39 @@ describe(formatRuleCoverage, () => {
 				"- [ ] `unicorn/z`",
 			].join("\n"),
 		);
+	});
+
+	it("renders only stale rules when no rules are missing", () => {
+		expect(
+			formatRuleCoverage("unicorn", {
+				missing: [],
+				stale: ["unicorn/z"],
+			}),
+		).toBe(
+			[
+				"**In data.json but no longer provided by unicorn (1):**",
+				"",
+				"- [ ] `unicorn/z`",
+			].join("\n"),
+		);
+	});
+});
+
+describe(hasRuleCoverageGaps, () => {
+	it("returns false when no rules are missing or stale", () => {
+		expect(hasRuleCoverageGaps({ missing: [], stale: [] })).toBe(false);
+	});
+
+	it("returns true when rules are missing", () => {
+		expect(
+			hasRuleCoverageGaps({
+				missing: [{ name: "a", url: undefined }],
+				stale: [],
+			}),
+		).toBe(true);
+	});
+
+	it("returns true when rules are stale", () => {
+		expect(hasRuleCoverageGaps({ missing: [], stale: ["a"] })).toBe(true);
 	});
 });
