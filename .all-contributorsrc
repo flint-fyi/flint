@@ -91,7 +91,8 @@
         "test",
         "doc",
         "code",
-        "blog"
+        "blog",
+        "tool"
       ]
     },
     {
