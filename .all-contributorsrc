@@ -276,6 +276,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "sophalter",
+      "name": "sophalter",
+      "avatar_url": "https://avatars.githubusercontent.com/u/322165076?v=4",
+      "profile": "https://github.com/sophalter",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
