@@ -1258,25 +1258,25 @@ importers:
         version: link:../build
       eslint:
         specifier: catalog:dev
-        version: 10.8.0(jiti@2.7.0)(supports-color@10.2.2)
+        version: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
       eslint-plugin-import:
         specifier: catalog:comparisons
-        version: 2.32.0(@typescript-eslint/parser@8.66.0)(eslint@10.8.0)(supports-color@10.2.2)
+        version: 2.32.0(@typescript-eslint/parser@8.68.0)(eslint@10.9.1)(supports-color@10.2.2)
       eslint-plugin-regexp:
         specifier: catalog:comparisons
-        version: 3.1.0(eslint@10.8.0)
+        version: 3.1.0(eslint@10.9.1)
       eslint-plugin-unicorn:
         specifier: catalog:comparisons
-        version: 64.0.0(eslint@10.8.0)
+        version: 64.0.0(eslint@10.9.1)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
       typescript-eslint:
         specifier: catalog:dev
-        version: 8.66.0(eslint@10.8.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 8.68.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       vitest:
         specifier: catalog:dev
-        version: 4.1.0(@types/node@26.2.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
+        version: 4.1.11(@types/node@26.3.0)(@vitest/coverage-v8@4.1.11)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
 
   packages/plugin-flint:
     dependencies:
