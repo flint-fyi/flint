@@ -17,8 +17,6 @@ const assurances = [
 
 <div class="hero">
 	<div class="copy">
-		<p class="eyebrow">🔥 A fast, friendly linter</p>
-
 		<h1 class="flint-display" data-page-title id="_top" set:html={title} />
 
 		{tagline && <p class="tagline" set:html={tagline} />}
@@ -68,23 +66,20 @@ const assurances = [
 				logo && (
 					<Image
 						alt={alt}
-						height={400}
+						height={200}
 						loading="eager"
 						src={logo}
-						width={400}
+						width={200}
 					/>
 				)
 			}
 		</div>
-		<span aria-hidden="true" class="spark" data-spark="1">✨</span>
-		<span aria-hidden="true" class="spark" data-spark="2">🔥</span>
-		<span aria-hidden="true" class="spark" data-spark="3">✨</span>
 	</div>
 </div>
 
 <style>
 	.hero {
-		align-items: center;
+		align-items: flex-start;
 		display: grid;
 		gap: 3rem;
 		grid-template-columns: 100%;
@@ -95,21 +90,6 @@ const assurances = [
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
-	}
-
-	.eyebrow {
-		align-self: start;
-		background: var(--flint-badge-surface);
-		border: 2px solid
-			color-mix(in srgb, var(--flint-badge-text) 35%, transparent);
-		border-radius: 999px;
-		color: var(--flint-badge-text);
-		font-size: var(--sl-text-sm);
-		font-weight: 800;
-		letter-spacing: 0.05em;
-		margin: 0;
-		padding: 0.35rem 0.9rem;
-		text-transform: uppercase;
 	}
 
 	h1 {
@@ -134,7 +114,6 @@ const assurances = [
 	}
 
 	.actions a {
-		inline-size: 100%;
 		justify-content: center;
 	}
 
@@ -184,7 +163,7 @@ const assurances = [
 	.glow {
 		background: radial-gradient(
 			circle,
-			color-mix(in srgb, var(--flint-ember) 45%, transparent),
+			color-mix(in srgb, var(--flint-ember) 25%, transparent),
 			transparent 70%
 		);
 		filter: blur(3rem);
@@ -194,62 +173,14 @@ const assurances = [
 
 	.mark {
 		display: grid;
-		padding: clamp(1.5rem, 4vw, 2.5rem);
+		padding-left: clamp(0.5rem, 2vw, 1.5rem);
 		place-items: center;
 		position: relative;
 	}
 
 	.mark :global(img) {
 		block-size: auto;
-		inline-size: min(100%, 9rem);
 		user-select: none;
-	}
-
-	.spark {
-		font-size: 1.5rem;
-		position: absolute;
-	}
-
-	.spark[data-spark="1"] {
-		inset-block-start: 0;
-		inset-inline-start: 4%;
-	}
-
-	.spark[data-spark="2"] {
-		inset-block-start: 38%;
-		inset-inline-end: 0;
-	}
-
-	.spark[data-spark="3"] {
-		inset-block-end: 6%;
-		inset-inline-start: 22%;
-	}
-
-	@media (prefers-reduced-motion: no-preference) {
-		.spark {
-			animation: drift 5s ease-in-out infinite;
-		}
-
-		.spark[data-spark="2"] {
-			animation-delay: 1.2s;
-		}
-
-		.spark[data-spark="3"] {
-			animation-delay: 2.4s;
-		}
-	}
-
-	@keyframes drift {
-		0%,
-		100% {
-			opacity: 0.65;
-			transform: translateY(0);
-		}
-
-		50% {
-			opacity: 1;
-			transform: translateY(-0.6rem);
-		}
 	}
 
 	@media (width >= 30rem) {
@@ -271,12 +202,8 @@ const assurances = [
 
 	@media (width >= 50rem) {
 		.hero {
-			grid-template-columns: 7fr 5fr;
+			grid-template-columns: 10fr 3fr;
 			padding-block: clamp(2rem, calc(1rem + 8vmin), 6rem);
-		}
-
-		.mark :global(img) {
-			inline-size: min(100%, 13rem);
 		}
 	}
 </style>

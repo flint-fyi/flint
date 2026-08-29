@@ -139,13 +139,6 @@ table code {
 	padding: 0;
 }
 
-.flint-paper {
-	background: var(--flint-paper);
-	border: 2px solid var(--flint-paper-border);
-	border-radius: 1rem;
-	box-shadow: var(--flint-paper-shadow);
-}
-
 .flint-eyebrow {
 	color: var(--flint-ember-text);
 	font-size: var(--sl-text-sm);
@@ -185,11 +178,23 @@ a.sl-link-button {
 }
 
 /* Homepage (hero) customizations. */
-.hero-ember {
-	color: var(--flint-ember-text);
+
+.hero-first-text {
+	font-size: calc(var(--sl-text-5xl) * 2);
+}
+
+.hero-second {
+	color: var(--sl-color-accent);
+	font-size: calc(var(--sl-text-5xl) * 1.1);
+}
+
+.hero-third {
+	color: var(--sl-color-accent-high);
+	font-size: var(--sl-text-5xl);
 }
 
 /* Starlight chrome customizations. */
+
 header.header {
 	background: var(--sl-color-black);
 	border-block-end: 2px solid var(--sl-color-gray-5);
