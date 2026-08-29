@@ -35,7 +35,7 @@
 		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/rule-tester": "workspace:^",
 		"@flint.fyi/typescript-language": "workspace:^",
-		"svelte": "5.56.2",
+		"svelte": "5.56.10",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},
