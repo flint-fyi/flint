@@ -1,4 +1,4 @@
-import { SyntaxKind, type Node } from "typescript";
+import type { Node, SyntaxKind } from "typescript";
 
 import {
 	groupFileVisitors,
@@ -10,24 +10,33 @@ import {
 import type { TypeScriptFileServices } from "./language.ts";
 import { NodeSyntaxKinds } from "./nodeSyntaxKinds.ts";
 
+/**
+ * All visitor subscriptions for a file, along with the callback to run on them.
+ */
+export interface NodeVisitorsForFile {
+	enter: NodeVisitorSubscriptionsByKind | undefined;
+	exit: NodeVisitorSubscriptionsByKind | undefined;
+	visit: (node: Node) => void;
+}
+
+/**
+ * For each node, the visitor subscriptions that will run when that node is visited.
+ */
 export type NodeVisitorSubscriptions = FileVisitorSubscription<
 	Node,
 	TypeScriptFileServices
 >[];
 
 /**
- * All rules' visitors for a file, indexed by numeric {@link SyntaxKind}.
+ * For each node kind that has visitors registered, its associated subscriptions.
  */
-export interface NodeVisitorDispatch {
-	enter: (NodeVisitorSubscriptions | undefined)[] | undefined;
-	exit: (NodeVisitorSubscriptions | undefined)[] | undefined;
+type NodeVisitorSubscriptionsByKind = Partial<
+	Record<SyntaxKind, NodeVisitorSubscriptions>
+>;
 
-	visit: (node: Node) => void;
-}
-
-export function createNodeVisitorDispatch(
+export function createNodeVisitorsForFile(
 	fileVisitors: readonly FileVisitors<object, TypeScriptFileServices>[],
-): NodeVisitorDispatch | undefined {
+): NodeVisitorsForFile | undefined {
 	const grouped = groupFileVisitors<Node, TypeScriptFileServices>(fileVisitors);
 	const enter = grouped.enter && createSubscriptionsByKind(grouped.enter);
 	const exit = grouped.exit && createSubscriptionsByKind(grouped.exit);
@@ -77,17 +86,14 @@ export function createNodeVisitorDispatch(
 
 function createSubscriptionsByKind(
 	group: Map<string, NodeVisitorSubscriptions>,
-) {
-	const byKind: (NodeVisitorSubscriptions | undefined)[] = new Array<undefined>(
-		SyntaxKind.Count + 1,
-	).fill(undefined);
+): NodeVisitorSubscriptionsByKind {
+	const byKind = Object.create(null) as NodeVisitorSubscriptionsByKind;
 
 	for (const [name, subscriptions] of group) {
 		const kind = NodeSyntaxKinds[name as keyof typeof SyntaxKind] as
 			| number
 			| undefined;
 
-		// Names that alias an earlier kind never matched a visited node's kind
 		if (kind === undefined || NodeSyntaxKinds[kind] !== name) {
 			continue;
 		}

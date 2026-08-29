@@ -3,10 +3,10 @@ export {
 	type TSDiagnostic,
 } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
 export {
-	createNodeVisitorDispatch,
-	type NodeVisitorDispatch,
+	createNodeVisitorsForFile,
+	type NodeVisitorsForFile,
 	type NodeVisitorSubscriptions,
-} from "./createNodeVisitorDispatch.ts";
+} from "./createNodeVisitorsForFile.ts";
 export {
 	extractDirectivesFromTypeScriptFile,
 	type ExtractedDirective,

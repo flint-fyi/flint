@@ -34,7 +34,7 @@ import {
 import { setTSProgramCreationProxy } from "@flint.fyi/ts-patch";
 import {
 	convertTypeScriptDiagnosticToLanguageReport,
-	createNodeVisitorDispatch,
+	createNodeVisitorsForFile,
 	extractDirectivesFromTypeScriptFile,
 	setVolarCreateFile,
 	throwUnknownLanguageExtension,
@@ -319,12 +319,12 @@ setVolarCreateFile((data, program, sourceFile) => {
 	return {
 		__volarServices: {
 			runVisitors(fileVisitors) {
-				const dispatch = createNodeVisitorDispatch(fileVisitors);
-				if (!dispatch) {
+				const visitors = createNodeVisitorsForFile(fileVisitors);
+				if (!visitors) {
 					return;
 				}
 
-				const { enter, exit, visit } = dispatch;
+				const { enter, exit, visit } = visitors;
 				let lastMappingIdx = 0;
 
 				const sourceFileEnter = enter?.[SyntaxKind.SourceFile];

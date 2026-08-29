@@ -16,7 +16,7 @@ import { assert, nullThrows } from "@flint.fyi/utils";
 
 import packageJson from "../package.json" with { type: "json" };
 import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
-import { createNodeVisitorDispatch } from "./createNodeVisitorDispatch.ts";
+import { createNodeVisitorsForFile } from "./createNodeVisitorsForFile.ts";
 import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
 import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
@@ -175,7 +175,7 @@ export const typescriptLanguage: Language<
 			return;
 		}
 
-		createNodeVisitorDispatch(fileVisitors)?.visit(file.services.sourceFile);
+		createNodeVisitorsForFile(fileVisitors)?.visit(file.services.sourceFile);
 	},
 });
 
