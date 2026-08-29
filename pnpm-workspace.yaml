@@ -46,7 +46,7 @@ catalogs:
     typescript-eslint: 8.66.0
     vitest: 4.1.11
     vitest-ansi-serializer: 0.2.1
-    zod: 4.4.1
+    zod: 4.4.3
 
   comparisons:
     "@biomejs/biome": 2.4.16
