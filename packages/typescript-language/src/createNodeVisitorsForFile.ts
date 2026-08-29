@@ -90,9 +90,7 @@ function createSubscriptionsByKind(
 	const byKind = Object.create(null) as NodeVisitorSubscriptionsByKind;
 
 	for (const [name, subscriptions] of group) {
-		const kind = NodeSyntaxKinds[name as keyof typeof SyntaxKind] as
-			| number
-			| undefined;
+		const kind = NodeSyntaxKinds[name as keyof typeof SyntaxKind];
 
 		if (kind === undefined || NodeSyntaxKinds[kind] !== name) {
 			continue;
