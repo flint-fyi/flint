@@ -327,7 +327,7 @@ setVolarCreateFile((data, program, sourceFile) => {
 				const { enter, exit, visit } = dispatch;
 				let lastMappingIdx = 0;
 
-				const sourceFileEnter = enter[SyntaxKind.SourceFile];
+				const sourceFileEnter = enter?.[SyntaxKind.SourceFile];
 				if (sourceFileEnter !== undefined) {
 					runFileVisitorSubscriptions(sourceFileEnter, sourceFile);
 				}

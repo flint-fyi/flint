@@ -51,7 +51,7 @@ export const markdownLanguage: Language<
 		);
 
 		const visit = (node: Node) => {
-			const entering = enter.get(node.type);
+			const entering = enter?.get(node.type);
 			if (entering !== undefined) {
 				runFileVisitorSubscriptions(entering, node);
 			}

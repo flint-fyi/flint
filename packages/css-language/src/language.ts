@@ -42,12 +42,14 @@ export const cssLanguage: Language<CssNodeVisitors, CssFileServices> =
 			);
 
 			walk(file.services.root, {
-				enter: (node: CssNode) => {
-					const entering = enter.get(node.type);
-					if (entering !== undefined) {
-						runFileVisitorSubscriptions(entering, node);
-					}
-				},
+				...(enter && {
+					enter: (node: CssNode) => {
+						const entering = enter.get(node.type);
+						if (entering !== undefined) {
+							runFileVisitorSubscriptions(entering, node);
+						}
+					},
+				}),
 				...(exit && {
 					leave: (node: CssNode) => {
 						const exiting = exit.get(node.type);

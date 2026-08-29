@@ -15,7 +15,7 @@ export interface FileVisitorSubscription<Node, Services extends object> {
  * All rules' visitors for a file, grouped by node kind for a single AST walk.
  */
 export interface GroupedFileVisitors<Node, Services extends object> {
-	enter: Map<string, FileVisitorSubscription<Node, Services>[]>;
+	enter: Map<string, FileVisitorSubscription<Node, Services>[]> | undefined;
 	exit: Map<string, FileVisitorSubscription<Node, Services>[]> | undefined;
 }
 
@@ -76,7 +76,10 @@ export function groupFileVisitors<Node, Services extends object>(
 		}
 	}
 
-	return { enter, exit: exit.size ? exit : undefined };
+	return {
+		enter: enter.size ? enter : undefined,
+		exit: exit.size ? exit : undefined,
+	};
 }
 
 export function runFileVisitorSubscriptions<Node, Services extends object>(

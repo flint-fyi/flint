@@ -19,7 +19,7 @@ export type NodeVisitorSubscriptions = FileVisitorSubscription<
  * All rules' visitors for a file, indexed by numeric {@link SyntaxKind}.
  */
 export interface NodeVisitorDispatch {
-	enter: (NodeVisitorSubscriptions | undefined)[];
+	enter: (NodeVisitorSubscriptions | undefined)[] | undefined;
 	exit: (NodeVisitorSubscriptions | undefined)[] | undefined;
 
 	visit: (node: Node) => void;
@@ -29,38 +29,50 @@ export function createNodeVisitorDispatch(
 	fileVisitors: readonly FileVisitors<object, TypeScriptFileServices>[],
 ): NodeVisitorDispatch | undefined {
 	const grouped = groupFileVisitors<Node, TypeScriptFileServices>(fileVisitors);
-
-	if (!grouped.enter.size && !grouped.exit?.size) {
-		return undefined;
-	}
-
-	const enter = createSubscriptionsByKind(grouped.enter);
+	const enter = grouped.enter && createSubscriptionsByKind(grouped.enter);
 	const exit = grouped.exit && createSubscriptionsByKind(grouped.exit);
 
-	const visit = exit
-		? (node: Node) => {
-				const entering = enter[node.kind];
-				if (entering !== undefined) {
-					runFileVisitorSubscriptions(entering, node);
-				}
+	if (enter) {
+		const visit = exit
+			? (node: Node) => {
+					const entering = enter[node.kind];
+					if (entering !== undefined) {
+						runFileVisitorSubscriptions(entering, node);
+					}
 
-				node.forEachChild(visit);
+					node.forEachChild(visit);
 
-				const exiting = exit[node.kind];
-				if (exiting !== undefined) {
-					runFileVisitorSubscriptions(exiting, node);
+					const exiting = exit[node.kind];
+					if (exiting !== undefined) {
+						runFileVisitorSubscriptions(exiting, node);
+					}
 				}
+			: (node: Node) => {
+					const entering = enter[node.kind];
+					if (entering !== undefined) {
+						runFileVisitorSubscriptions(entering, node);
+					}
+
+					node.forEachChild(visit);
+				};
+
+		return { enter, exit, visit };
+	}
+
+	if (exit) {
+		const visit = (node: Node) => {
+			node.forEachChild(visit);
+
+			const exiting = exit[node.kind];
+			if (exiting !== undefined) {
+				runFileVisitorSubscriptions(exiting, node);
 			}
-		: (node: Node) => {
-				const entering = enter[node.kind];
-				if (entering !== undefined) {
-					runFileVisitorSubscriptions(entering, node);
-				}
+		};
 
-				node.forEachChild(visit);
-			};
+		return { enter, exit, visit };
+	}
 
-	return { enter, exit, visit };
+	return undefined;
 }
 
 function createSubscriptionsByKind(

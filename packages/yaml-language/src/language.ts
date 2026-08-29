@@ -44,7 +44,7 @@ export const yamlLanguage: Language<YamlNodeVisitors, YamlFileServices> =
 			);
 
 			const visit = (node: Node) => {
-				const entering = enter.get(node.type);
+				const entering = enter?.get(node.type);
 				if (entering !== undefined) {
 					runFileVisitorSubscriptions(entering, node);
 				}

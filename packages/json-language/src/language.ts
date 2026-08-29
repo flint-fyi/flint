@@ -50,12 +50,14 @@ export const jsonLanguage: Language<JsonNodeVisitors, JsonFileServices> =
 			);
 
 			traverse(file.services.root, {
-				enter: (node: Node) => {
-					const entering = enter.get(node.type);
-					if (entering !== undefined) {
-						runFileVisitorSubscriptions(entering, node);
-					}
-				},
+				...(enter && {
+					enter: (node: Node) => {
+						const entering = enter.get(node.type);
+						if (entering !== undefined) {
+							runFileVisitorSubscriptions(entering, node);
+						}
+					},
+				}),
 				...(exit && {
 					exit: (node: Node) => {
 						const exiting = exit.get(node.type);
