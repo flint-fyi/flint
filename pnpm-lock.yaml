@@ -249,8 +249,8 @@ catalogs:
       specifier: 63.0.2
       version: 63.0.2
     eslint-plugin-jsonc:
-      specifier: 3.4.1
-      version: 3.4.1
+      specifier: 3.4.2
+      version: 3.4.2
     eslint-plugin-jsx-a11y:
       specifier: 6.10.2
       version: 6.10.2
@@ -346,8 +346,8 @@ catalogs:
       specifier: 63.0.2
       version: 63.0.2
     eslint-plugin-jsonc:
-      specifier: 3.4.1
-      version: 3.4.1
+      specifier: 3.4.2
+      version: 3.4.2
     eslint-plugin-n:
       specifier: 18.2.1
       version: 18.2.1
@@ -564,7 +564,7 @@ importers:
         version: 63.0.2(eslint@10.9.1)(supports-color@10.2.2)
       eslint-plugin-jsonc:
         specifier: catalog:dev
-        version: 3.4.1(@eslint/json@2.0.1)(eslint@10.9.1)
+        version: 3.4.2(@eslint/json@2.0.1)(eslint@10.9.1)
       eslint-plugin-n:
         specifier: catalog:dev
         version: 18.2.1(eslint@10.9.1)(typescript@6.0.3)
@@ -1396,7 +1396,7 @@ importers:
         version: 63.0.2(eslint@10.9.1)(supports-color@10.2.2)
       eslint-plugin-jsonc:
         specifier: catalog:comparisons
-        version: 3.4.1(@eslint/json@2.0.1)(eslint@10.9.1)
+        version: 3.4.2(@eslint/json@2.0.1)(eslint@10.9.1)
       eslint-plugin-jsx-a11y:
         specifier: catalog:comparisons
         version: 6.10.2(eslint@10.9.1)
@@ -5121,8 +5121,8 @@ packages:
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
 
-  eslint-plugin-jsonc@3.4.1:
-    resolution: {integrity: sha512-HHWkjAmVJ3QAffCkfo0XKl3CstLtgbIu5EGfFfVDLQT6vqPrxl4pFbUwFwY03nOlvyuDiiBixhHFrlbzn9u09Q==}
+  eslint-plugin-jsonc@3.4.2:
+    resolution: {integrity: sha512-q5xzjCYFQuhFomTbctXzd3STfDJ8XduvaigjQmMEbP2gzSKrc58y3Fv6D775/cIK1/sRUn+4kpljiU2iW8k0zw==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: '>=9.38.0'
@@ -11212,7 +11212,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-jsonc@3.4.1(@eslint/json@2.0.1)(eslint@10.9.1):
+  eslint-plugin-jsonc@3.4.2(@eslint/json@2.0.1)(eslint@10.9.1):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.9.1)
       '@eslint/core': 1.2.1
