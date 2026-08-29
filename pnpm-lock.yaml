@@ -1264,7 +1264,7 @@ importers:
         version: 2.32.0(@typescript-eslint/parser@8.68.0)(eslint@10.9.1)(supports-color@10.2.2)
       eslint-plugin-regexp:
         specifier: catalog:comparisons
-        version: 3.1.0(eslint@10.9.1)
+        version: 3.2.0(eslint@10.9.1)
       eslint-plugin-unicorn:
         specifier: catalog:comparisons
         version: 64.0.0(eslint@10.9.1)
