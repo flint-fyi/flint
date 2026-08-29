@@ -92,11 +92,9 @@ function createSubscriptionsByKind(
 	for (const [name, subscriptions] of group) {
 		const kind = NodeSyntaxKinds[name as keyof typeof SyntaxKind];
 
-		if (kind === undefined || NodeSyntaxKinds[kind] !== name) {
-			continue;
+		if (kind !== undefined && NodeSyntaxKinds[kind] === name) {
+			byKind[kind] = subscriptions;
 		}
-
-		byKind[kind] = subscriptions;
 	}
 
 	return byKind;
