@@ -216,8 +216,8 @@ catalogs:
       specifier: 2.0.1
       version: 2.0.1
     '@eslint/markdown':
-      specifier: 8.0.0
-      version: 8.0.0
+      specifier: 8.0.3
+      version: 8.0.3
     '@next/eslint-plugin-next':
       specifier: 16.2.6
       version: 16.2.6
@@ -316,8 +316,8 @@ catalogs:
       specifier: 10.0.1
       version: 10.0.1
     '@eslint/markdown':
-      specifier: 8.0.0
-      version: 8.0.0
+      specifier: 8.0.3
+      version: 8.0.3
     '@types/language-tags':
       specifier: 1.0.4
       version: 1.0.4
@@ -519,7 +519,7 @@ importers:
         version: 2.0.1
       '@eslint/markdown':
         specifier: catalog:dev
-        version: 8.0.0(supports-color@10.2.2)
+        version: 8.0.3(supports-color@10.2.2)
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:packages/build
@@ -1357,7 +1357,7 @@ importers:
         version: 2.0.1
       '@eslint/markdown':
         specifier: catalog:comparisons
-        version: 8.0.0(supports-color@10.2.2)
+        version: 8.0.3(supports-color@10.2.2)
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
@@ -3016,8 +3016,8 @@ packages:
     resolution: {integrity: sha512-Thz2j92ceUF3Bq/0TuWb3MWn3Z+Cwc8k5ptF0fakl2D4Mp8mSx07Xr1aQM4R5NoihzarWUdxfOmQ8DesGy4jOg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@eslint/markdown@8.0.0':
-    resolution: {integrity: sha512-Rh3+76uHdnkk/ocLMZfWHXoPA/MK+GOqqjCAioiyNk2eYBC8UniRHdTMbM+2XZqTLWAcQo/SuU1CsXtdIOTX1g==}
+  '@eslint/markdown@8.0.3':
+    resolution: {integrity: sha512-rBTSSShrq7e4O+PWfeE4azH4/CWPNrC+VGxBXiW00o3vYVJnznsZiDayj3KC9JztIMVRZxZHn2nrDIUau/4j7A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   '@eslint/object-schema@2.1.7':
@@ -3031,10 +3031,6 @@ packages:
   '@eslint/plugin-kit@0.4.1':
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@eslint/plugin-kit@0.6.1':
-    resolution: {integrity: sha512-iH1B076HoAshH1mLpHMgwdGeTs0CYwL0SPMkGuSebZrwBp16v415e9NZXg2jtrqPVQjf6IANe2Vtlr5KswtcZQ==}
-    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   '@eslint/plugin-kit@0.7.2':
     resolution: {integrity: sha512-+CNAzxglkrpNf/kKywqQfk74QjtceuOE7Qm+AF8miRvPF/wmmK5+OJOgVh3AVTT3RP2mH3+FOaxlE5v72owk0A==}
@@ -9118,10 +9114,10 @@ snapshots:
       '@humanwhocodes/momoa': 3.3.12
       natural-compare: 1.4.0
 
-  '@eslint/markdown@8.0.0(supports-color@10.2.2)':
+  '@eslint/markdown@8.0.3(supports-color@10.2.2)':
     dependencies:
       '@eslint/core': 1.2.1
-      '@eslint/plugin-kit': 0.6.1
+      '@eslint/plugin-kit': 0.7.2
       github-slugger: 2.0.0
       mdast-util-from-markdown: 2.0.3(supports-color@10.2.2)
       mdast-util-frontmatter: 2.0.1(supports-color@10.2.2)
@@ -9141,11 +9137,6 @@ snapshots:
   '@eslint/plugin-kit@0.4.1':
     dependencies:
       '@eslint/core': 0.17.0
-      levn: 0.4.1
-
-  '@eslint/plugin-kit@0.6.1':
-    dependencies:
-      '@eslint/core': 1.2.1
       levn: 0.4.1
 
   '@eslint/plugin-kit@0.7.2':
