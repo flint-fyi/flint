@@ -786,8 +786,8 @@ importers:
   packages/core:
     dependencies:
       '@altano/repository-tools':
-        specifier: 2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       '@flint.fyi/utils':
         specifier: workspace:^
         version: link:../utils
@@ -2060,6 +2060,9 @@ packages:
 
   '@altano/repository-tools@2.1.0':
     resolution: {integrity: sha512-RGM8IimoK/RDlj+uG9sPgb9CSuHIAMVrtVVeslEMhc7yqDHpdmdKeMQcJfc0WveTtAmBdj/o9r1VW/A27SoPTg==}
+
+  '@altano/repository-tools@2.1.1':
+    resolution: {integrity: sha512-YFVhwoSjwkERQoopw3lX/TaPIDud0m6ac/Z51FoQ3YEPf0OaxFxpofbcHO0E2mTJ0lvmuRArIMUP9Pz2jpTMhg==}
 
   '@andrewbranch/untar.js@1.0.4':
     resolution: {integrity: sha512-pVXSwPsLuw8IGLo2Di0EaOfsk+ntVvpkk942J/sHYIkwvtKUakEcPh7HBgZ6tuimgzKSEHgCvO4XgQ05DEbwDw==}
@@ -8174,6 +8177,8 @@ packages:
 snapshots:
 
   '@altano/repository-tools@2.1.0': {}
+
+  '@altano/repository-tools@2.1.1': {}
 
   '@andrewbranch/untar.js@1.0.4': {}
 
