@@ -34,10 +34,10 @@ for (const files of testCaseEntries[0].values) {
 		// contend for CPU and report times that say nothing about either.
 		/* eslint-disable perfectionist/sort-objects */
 		results.push({
-			eslint,
-			flint,
 			files: countCaseFiles(testCase),
 			rules: ruleCounts[rules],
+			eslint,
+			flint,
 			delta: calculateDelta(eslint, flint),
 		});
 		/* eslint-enable perfectionist/sort-objects */
