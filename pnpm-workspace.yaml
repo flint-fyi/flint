@@ -25,7 +25,7 @@ catalogs:
     eslint: 10.9.1
     eslint-plugin-jsdoc: 63.3.3
     eslint-plugin-jsonc: 3.4.2
-    eslint-plugin-n: 18.2.1
+    eslint-plugin-n: 18.3.0
     eslint-plugin-package-json: 1.7.1
     eslint-plugin-perfectionist: 5.10.1
     eslint-plugin-regexp: 3.2.0
@@ -65,7 +65,7 @@ catalogs:
     eslint-plugin-jsdoc: 63.3.3
     eslint-plugin-jsonc: 3.4.2
     eslint-plugin-jsx-a11y: 6.10.2
-    eslint-plugin-n: 18.2.1
+    eslint-plugin-n: 18.3.0
     eslint-plugin-package-json: 1.7.1
     eslint-plugin-perfectionist: 5.10.1
     eslint-plugin-promise: 7.3.0
