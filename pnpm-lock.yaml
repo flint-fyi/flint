@@ -965,8 +965,8 @@ importers:
         specifier: workspace:^
         version: link:../rule-tester
       '@humanwhocodes/momoa':
-        specifier: 3.3.10
-        version: 3.3.10
+        specifier: 3.3.12
+        version: 3.3.12
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.5)(oxc-resolver@11.24.2)(typescript@6.0.3)
@@ -981,7 +981,7 @@ importers:
         version: link:../core
       '@humanwhocodes/momoa':
         specifier: ^3.3.10
-        version: 3.3.10
+        version: 3.3.12
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^
@@ -1195,8 +1195,8 @@ importers:
         specifier: workspace:^
         version: link:../rule-tester
       '@humanwhocodes/momoa':
-        specifier: 3.3.10
-        version: 3.3.10
+        specifier: 3.3.12
+        version: 3.3.12
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(@arethetypeswrong/core@0.18.5)(oxc-resolver@11.24.2)(typescript@6.0.3)
@@ -3082,8 +3082,8 @@ packages:
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
     engines: {node: '>=12.22'}
 
-  '@humanwhocodes/momoa@3.3.10':
-    resolution: {integrity: sha512-KWiFQpSAqEIyrTXko3hFNLeQvSK8zXlJQzhhxsyVn58WFRYXST99b3Nqnu+ttOtjds2Pl2grUHGpe2NzhPynuQ==}
+  '@humanwhocodes/momoa@3.3.12':
+    resolution: {integrity: sha512-xS9xl4ieqTqhSZfKV3YXj/htwJCUxbgvkTVaK1fkESgrOzvoVSOTRQeQ8tTLOZUS0Csi2xqtJQXgVTRH5OEbHQ==}
     engines: {node: '>=18'}
 
   '@humanwhocodes/retry@0.4.3':
@@ -9115,7 +9115,7 @@ snapshots:
     dependencies:
       '@eslint/core': 1.2.1
       '@eslint/plugin-kit': 0.7.2
-      '@humanwhocodes/momoa': 3.3.10
+      '@humanwhocodes/momoa': 3.3.12
       natural-compare: 1.4.0
 
   '@eslint/markdown@8.0.0(supports-color@10.2.2)':
@@ -9187,7 +9187,7 @@ snapshots:
 
   '@humanwhocodes/module-importer@1.0.1': {}
 
-  '@humanwhocodes/momoa@3.3.10': {}
+  '@humanwhocodes/momoa@3.3.12': {}
 
   '@humanwhocodes/retry@0.4.3': {}
 
