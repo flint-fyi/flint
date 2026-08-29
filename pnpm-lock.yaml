@@ -479,8 +479,8 @@ catalogs:
       specifier: 0.35.3
       version: 0.35.3
     starlight-blog:
-      specifier: 0.28.0
-      version: 0.28.0
+      specifier: 0.29.0
+      version: 0.29.0
     starlight-links-validator:
       specifier: 0.25.2
       version: 0.25.2
@@ -1557,7 +1557,7 @@ importers:
         version: 0.35.3(@types/node@26.3.0)
       starlight-blog:
         specifier: catalog:site
-        version: 0.28.0(@astrojs/markdown-satteri@0.3.5)(@astrojs/starlight@0.41.6)(astro@7.2.0)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 0.29.0(@astrojs/markdown-satteri@0.3.5)(@astrojs/starlight@0.41.6)(astro@7.2.0)(supports-color@10.2.2)(typescript@6.0.3)
       starlight-links-validator:
         specifier: catalog:site
         version: 0.25.2(@astrojs/starlight@0.41.6)(astro@7.2.0)(supports-color@10.2.2)
@@ -7180,8 +7180,8 @@ packages:
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
 
-  starlight-blog@0.28.0:
-    resolution: {integrity: sha512-tKddmNbbUd20lV/m4Giih2RtDEegpnzPbrNdiwgI29XOCzVKXjtt9T9ckxTJU+cxwG1f0ii++J8duN9iBzw7Iw==}
+  starlight-blog@0.29.0:
+    resolution: {integrity: sha512-Pdv5I84ux0109Zt23TbpCfuRZ8ioWvjmwVnmeYD2h0OH2bgVzo7cKsblzMolkaGc1QDnSX8985xaM1QJvcOhqQ==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       '@astrojs/starlight': '>=0.41.0'
@@ -14045,7 +14045,7 @@ snapshots:
 
   stackback@0.0.2: {}
 
-  starlight-blog@0.28.0(@astrojs/markdown-satteri@0.3.5)(@astrojs/starlight@0.41.6)(astro@7.2.0)(supports-color@10.2.2)(typescript@6.0.3):
+  starlight-blog@0.29.0(@astrojs/markdown-satteri@0.3.5)(@astrojs/starlight@0.41.6)(astro@7.2.0)(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
       '@astrojs/markdown-remark': 7.2.2(supports-color@10.2.2)
       '@astrojs/mdx': 7.0.5(@astrojs/markdown-satteri@0.3.5)(astro@7.2.0)(supports-color@10.2.2)
