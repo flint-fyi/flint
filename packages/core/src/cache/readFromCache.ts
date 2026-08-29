@@ -178,8 +178,6 @@ export async function readFromCache(
 		fileCached: FileCacheStorage,
 	) {
 		for (const dependency of fileCached.dependencies ?? []) {
-			// Dependencies inside the lint set are validated by their own cache
-			// entries, then propagated here by the transitive invalidation pass.
 			if (allFilePathKeys.has(pathKey(dependency, caseSensitiveFS))) {
 				continue;
 			}
