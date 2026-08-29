@@ -31,10 +31,6 @@ interface VisitingRuleState extends RuleState {
 	visitors: object;
 }
 
-/**
- * Runs every rule on every file, walking each file's AST only once by
- * dispatching each visited node to all rules subscribed to that node's kind.
- */
 export async function runRules(
 	languageFilesByFilePath: ReadonlyMap<string, LanguageAndFile[]>,
 	rulesOptionsByFile: ReadonlyMap<AnyRule, Map<string, object>>,
@@ -168,7 +164,9 @@ function collectFileVisitors(
 	filePath: string,
 ) {
 	const fileVisitors: FileVisitors<object, object>[] = [];
-	const servicesByParsedOptions = new Map<object | undefined, object>();
+	const servicesByParsedOptions = new CachedFactory<object | undefined, object>(
+		(parsedOptions) => ({ options: parsedOptions, ...file.services }),
+	);
 
 	for (const state of states) {
 		const options = state.optionsByFilePath.get(filePath);
@@ -178,13 +176,10 @@ function collectFileVisitors(
 
 		const parsedOptions = getParsedOptions(state, options);
 
-		let services = servicesByParsedOptions.get(parsedOptions);
-		if (services === undefined) {
-			services = { options: parsedOptions, ...file.services };
-			servicesByParsedOptions.set(parsedOptions, services);
-		}
-
-		fileVisitors.push({ services, visitors: state.visitors });
+		fileVisitors.push({
+			services: servicesByParsedOptions.get(parsedOptions),
+			visitors: state.visitors,
+		});
 	}
 
 	return fileVisitors;

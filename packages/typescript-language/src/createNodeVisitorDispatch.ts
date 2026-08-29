@@ -16,15 +16,10 @@ export type NodeVisitorSubscriptions = FileVisitorSubscription<
 >[];
 
 /**
- * All rules' visitors for a file, indexed by numeric {@link SyntaxKind} so that
- * dispatching a node needs no string keys.
+ * All rules' visitors for a file, indexed by numeric {@link SyntaxKind}.
  */
 export interface NodeVisitorDispatch {
 	enter: (NodeVisitorSubscriptions | undefined)[];
-
-	/**
-	 * Only present if at least one rule subscribed to an `:exit` key.
-	 */
 	exit: (NodeVisitorSubscriptions | undefined)[] | undefined;
 
 	visit: (node: Node) => void;

@@ -1,3 +1,5 @@
+import { WeakCachedFactory } from "cached-factory";
+
 import type { FileVisitors } from "../types/languages.ts";
 import type { RuleVisitor } from "../types/rules.ts";
 
@@ -14,11 +16,6 @@ export interface FileVisitorSubscription<Node, Services extends object> {
  */
 export interface GroupedFileVisitors<Node, Services extends object> {
 	enter: Map<string, FileVisitorSubscription<Node, Services>[]>;
-
-	/**
-	 * Only set if at least one rule subscribed to an `:exit` key, so languages
-	 * can skip their exit handling altogether when nothing needs it.
-	 */
 	exit: Map<string, FileVisitorSubscription<Node, Services>[]> | undefined;
 }
 
@@ -32,7 +29,29 @@ interface VisitorEntry {
 
 const exitSuffix = ":exit";
 
-const entriesCache = new WeakMap<object, readonly VisitorEntry[]>();
+const visitorEntries = new WeakCachedFactory<object, readonly VisitorEntry[]>(
+	(visitors) => {
+		const entries: VisitorEntry[] = [];
+
+		for (const [key, visitor] of Object.entries(
+			visitors as Record<string, undefined | UnknownVisitor>,
+		)) {
+			if (visitor === undefined) {
+				continue;
+			}
+
+			const isExit = key.endsWith(exitSuffix);
+
+			entries.push({
+				isExit,
+				name: isExit ? key.slice(0, -exitSuffix.length) : key,
+				visitor,
+			});
+		}
+
+		return entries;
+	},
+);
 
 export function groupFileVisitors<Node, Services extends object>(
 	fileVisitors: readonly FileVisitors<object, Services>[],
@@ -41,7 +60,7 @@ export function groupFileVisitors<Node, Services extends object>(
 	const exit = new Map<string, FileVisitorSubscription<Node, Services>[]>();
 
 	for (const { services, visitors } of fileVisitors) {
-		for (const entry of getVisitorEntries(visitors)) {
+		for (const entry of visitorEntries.get(visitors)) {
 			const group = entry.isExit ? exit : enter;
 			const subscription = {
 				services,
@@ -67,33 +86,4 @@ export function runFileVisitorSubscriptions<Node, Services extends object>(
 	for (const { services, visitor } of subscriptions) {
 		visitor(node, services);
 	}
-}
-
-function getVisitorEntries(visitors: object): readonly VisitorEntry[] {
-	let entries = entriesCache.get(visitors);
-
-	if (entries === undefined) {
-		const collected: VisitorEntry[] = [];
-
-		for (const [key, visitor] of Object.entries(
-			visitors as Record<string, undefined | UnknownVisitor>,
-		)) {
-			if (visitor === undefined) {
-				continue;
-			}
-
-			const isExit = key.endsWith(exitSuffix);
-
-			collected.push({
-				isExit,
-				name: isExit ? key.slice(0, -exitSuffix.length) : key,
-				visitor,
-			});
-		}
-
-		entries = collected;
-		entriesCache.set(visitors, entries);
-	}
-
-	return entries;
 }
