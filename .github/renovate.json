@@ -22,8 +22,10 @@
 	"packageRules": [
 		{
 			"extends": ["monorepo:astro"],
+			"groupName": "astro"
+		},
+		{
 			"matchSourceUrls": ["https://github.com/withastro/starlight"],
-			"matchPackageNames": ["@astrojs/*"],
 			"groupName": "astro"
 		}
 	]
