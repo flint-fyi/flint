@@ -21,8 +21,10 @@ export interface GroupedFileVisitors<Node, Services extends object> {
 
 type UnknownVisitor = RuleVisitor<never, never>;
 
+type VisitorPhase = "enter" | "exit";
+
 interface VisitorEntry {
-	isExit: boolean;
+	phase: VisitorPhase;
 	name: string;
 	visitor: UnknownVisitor;
 }
@@ -36,17 +38,14 @@ const visitorEntries = new WeakCachedFactory<object, readonly VisitorEntry[]>(
 		for (const [key, visitor] of Object.entries(
 			visitors as Record<string, undefined | UnknownVisitor>,
 		)) {
-			if (visitor === undefined) {
-				continue;
+			if (visitor) {
+				entries.push({
+					...(key.endsWith(exitSuffix)
+						? { phase: "exit", name: key.slice(0, -exitSuffix.length) }
+						: { phase: "enter", name: key }),
+					visitor,
+				});
 			}
-
-			const isExit = key.endsWith(exitSuffix);
-
-			entries.push({
-				isExit,
-				name: isExit ? key.slice(0, -exitSuffix.length) : key,
-				visitor,
-			});
 		}
 
 		return entries;
@@ -61,7 +60,7 @@ export function groupFileVisitors<Node, Services extends object>(
 
 	for (const { services, visitors } of fileVisitors) {
 		for (const entry of visitorEntries.get(visitors)) {
-			const group = entry.isExit ? exit : enter;
+			const group = entry.phase === "enter" ? enter : exit;
 			const subscription = {
 				services,
 				visitor: entry.visitor as RuleVisitor<Node, Services>,

@@ -100,7 +100,7 @@ export async function runRules(
 		}),
 	);
 
-	// 3. Walk each file once, dispatching to the rules enabled on it
+	// 3. Index rule states with visitors by language
 	const statesByLanguage = new Map<AnyLanguage, VisitingRuleState[]>();
 
 	for (const state of ruleStates) {
@@ -109,24 +109,29 @@ export async function runRules(
 			continue;
 		}
 
-		const states = statesByLanguage.get(state.rule.language);
+		const statesForLanguage = statesByLanguage.get(state.rule.language);
 		const visitingState: VisitingRuleState = { ...state, visitors };
 
-		if (states) {
-			states.push(visitingState);
+		if (statesForLanguage) {
+			statesForLanguage.push(visitingState);
 		} else {
 			statesByLanguage.set(state.rule.language, [visitingState]);
 		}
 	}
 
+	// 4. For each language under each file, run its rule visitors
 	for (const [filePath, languageAndFiles] of languageFilesByFilePath) {
 		for (const { file, language } of languageAndFiles) {
-			const states = statesByLanguage.get(language);
-			if (!states) {
+			const statesForLanguage = statesByLanguage.get(language);
+			if (!statesForLanguage) {
 				continue;
 			}
 
-			const fileVisitors = collectFileVisitors(states, file, filePath);
+			const fileVisitors = collectFileVisitors(
+				statesForLanguage,
+				file,
+				filePath,
+			);
 			if (!fileVisitors.length) {
 				continue;
 			}
@@ -139,14 +144,14 @@ export async function runRules(
 		}
 	}
 
-	// 4. Run each rule's teardown, which may report on any file by path
+	// 5. Run each rule's teardown, which may report on any file by path
 	await Promise.all(
 		ruleStates.map(async (state) => {
 			await state.runtime?.teardown?.();
 		}),
 	);
 
-	// 5. Join each rule's reports together, keeping rules in configuration order
+	// 6. Join each rule's reports together, keeping rules in configuration order
 	const reportsByFilePath = new CachedFactory<string, FileReport[]>(() => []);
 
 	for (const state of ruleStates) {
@@ -159,7 +164,7 @@ export async function runRules(
 }
 
 function collectFileVisitors(
-	states: readonly VisitingRuleState[],
+	statesForLanguage: readonly VisitingRuleState[],
 	file: AnyLanguageFile,
 	filePath: string,
 ) {
@@ -168,7 +173,7 @@ function collectFileVisitors(
 		(parsedOptions) => ({ options: parsedOptions, ...file.services }),
 	);
 
-	for (const state of states) {
+	for (const state of statesForLanguage) {
 		const options = state.optionsByFilePath.get(filePath);
 		if (options === undefined) {
 			continue;
