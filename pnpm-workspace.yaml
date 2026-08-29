@@ -53,7 +53,7 @@ catalogs:
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.2
     "@eslint/json": 2.0.1
     "@eslint/markdown": 8.0.3
-    "@next/eslint-plugin-next": 16.2.6
+    "@next/eslint-plugin-next": 16.3.3
     "@nuxt/eslint-plugin": 1.17.0
     "@types/eslint-plugin-jsx-a11y": 6.10.1
     "@types/eslint-plugin-promise": 7.3.0
