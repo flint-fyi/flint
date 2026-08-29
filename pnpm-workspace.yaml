@@ -14,7 +14,7 @@ catalogs:
     "@changesets/changelog-github": 1.0.0
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
     "@eslint/js": 10.0.1
-    "@eslint/markdown": 8.0.0
+    "@eslint/markdown": 8.0.3
     "@types/language-tags": 1.0.4
     "@types/mdast": 4.0.4
     "@types/node": 26.3.0
@@ -52,7 +52,7 @@ catalogs:
     "@biomejs/biome": 2.4.16
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
     "@eslint/json": 2.0.1
-    "@eslint/markdown": 8.0.0
+    "@eslint/markdown": 8.0.3
     "@next/eslint-plugin-next": 16.2.6
     "@nuxt/eslint-plugin": 1.17.0
     "@types/eslint-plugin-jsx-a11y": 6.10.1
