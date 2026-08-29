@@ -60,7 +60,7 @@
 - ce55da4: Add `pluginRuleOrdering` rule.
 - 657dff9: Add `testCaseOnlyFlags` rule.
 - 5b72b31: Added a fixer for the `flint/testShorthands` rule.
-It will now replace the test case object with the string equivalent.
+  It will now replace the test case object with the string equivalent.
 - f0966ab: Add `testCaseNonStaticCode` rule.
 - Updated dependencies [4fc0eef]
 - Updated dependencies [57fa268]

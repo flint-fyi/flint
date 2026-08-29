@@ -1,4 +1,4 @@
 export default {
 	"*": "prettier --ignore-unknown --write",
-	".changeset/*.md": "node scripts/validate-changesets.ts",
+	".changeset/!(README).md": "node scripts/validate-changesets.ts",
 };
