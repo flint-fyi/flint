@@ -53,6 +53,25 @@ describe(readFromCache, () => {
 		vi.useRealTimers();
 	});
 
+	it("keeps a file cached when it has no dependencies", async () => {
+		const host = createHostWithCache(
+			{
+				[configFilePath]: 1000,
+				[filePath]: 2000,
+				"package.json": 1000,
+			},
+			{
+				[filePath]: {
+					timestamp: cacheWriteTime,
+				},
+			},
+		);
+
+		const cached = await read(host, [filePath]);
+
+		expect(cached && Array.from(cached.keys())).toEqual([filePath]);
+	});
+
 	it("keeps a file cached when a dependency outside the lint set was not touched after the cache was written", async () => {
 		const host = createHostWithCache(
 			{
