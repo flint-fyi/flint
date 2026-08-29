@@ -51,7 +51,7 @@ catalogs:
   comparisons:
     "@biomejs/biome": 2.4.16
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
-    "@eslint/json": 2.0.0
+    "@eslint/json": 2.0.1
     "@eslint/markdown": 8.0.0
     "@next/eslint-plugin-next": 16.2.6
     "@nuxt/eslint-plugin": 1.17.0
