@@ -25,12 +25,12 @@
 		"@flint.fyi/rule-data": "workspace:^",
 		"console-table-without-index": "^0.1.1",
 		"debug-for-file": "^0.4.0",
+		"eslint": "catalog:dev",
 		"execa": "catalog:dev",
 		"prettier": "catalog:dev"
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
-		"eslint": "catalog:dev",
 		"eslint-plugin-import": "catalog:comparisons",
 		"eslint-plugin-regexp": "catalog:comparisons",
 		"eslint-plugin-unicorn": "catalog:comparisons",

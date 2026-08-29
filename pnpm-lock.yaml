@@ -1246,6 +1246,9 @@ importers:
       debug-for-file:
         specifier: ^0.4.0
         version: 0.4.0(supports-color@10.2.2)
+      eslint:
+        specifier: catalog:dev
+        version: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
       execa:
         specifier: catalog:dev
         version: 10.0.1
@@ -1256,9 +1259,6 @@ importers:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
-      eslint:
-        specifier: catalog:dev
-        version: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
       eslint-plugin-import:
         specifier: catalog:comparisons
         version: 2.32.0(@typescript-eslint/parser@8.68.0)(eslint@10.9.1)(supports-color@10.2.2)
