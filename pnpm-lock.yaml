@@ -437,8 +437,8 @@ catalogs:
       specifier: 19.2.18
       version: 19.2.18
     '@types/react-dom':
-      specifier: 19.2.4
-      version: 19.2.4
+      specifier: 19.2.5
+      version: 19.2.5
     astro:
       specifier: 7.2.0
       version: 7.2.0
@@ -1521,7 +1521,7 @@ importers:
         version: 7.2.2(supports-color@10.2.2)
       '@astrojs/react':
         specifier: catalog:site
-        version: 6.0.2(@types/node@26.3.0)(@types/react-dom@19.2.4)(@types/react@19.2.18)(esbuild@0.28.1)(jiti@2.7.0)(react-dom@19.2.8)(react@19.2.8)(supports-color@10.2.2)(yaml@2.9.0)
+        version: 6.0.2(@types/node@26.3.0)(@types/react-dom@19.2.5)(@types/react@19.2.18)(esbuild@0.28.1)(jiti@2.7.0)(react-dom@19.2.8)(react@19.2.8)(supports-color@10.2.2)(yaml@2.9.0)
       '@expressive-code/core':
         specifier: catalog:site
         version: 0.44.1
@@ -1536,7 +1536,7 @@ importers:
         version: 26.3.0
       '@types/react-dom':
         specifier: catalog:site
-        version: 19.2.4(@types/react@19.2.18)
+        version: 19.2.5(@types/react@19.2.18)
       expressive-code:
         specifier: catalog:site
         version: 0.44.1
@@ -4124,8 +4124,8 @@ packages:
   '@types/picomatch@4.0.3':
     resolution: {integrity: sha512-iG0T6+nYJ9FAPmx9SsUlnwcq1ZVRuCXcVEvWnntoPlrOpwtSTKNDC9uVAxTsC3PUvJ+99n4RpAcNgBbHX3JSnQ==}
 
-  '@types/react-dom@19.2.4':
-    resolution: {integrity: sha512-Bsc+QHgp+P/F02XDzNCY9jnZNCUuLki36KT7VKrTXXLdHf+vHMNZnW1rVu5DNW/rCK+fya3DATySbLM4yhtKUw==}
+  '@types/react-dom@19.2.5':
+    resolution: {integrity: sha512-fMPwH9v7r/pp43yUd2/Mbiex5KouJwwR3dzHkhLREUC6764VyDsqxhAxv6OFEYR1RhjOyD1naqba8ECDBe7ZQg==}
     peerDependencies:
       '@types/react': ^19.2.0
 
@@ -8241,11 +8241,11 @@ snapshots:
     dependencies:
       prismjs: 1.30.0
 
-  '@astrojs/react@6.0.2(@types/node@26.3.0)(@types/react-dom@19.2.4)(@types/react@19.2.18)(esbuild@0.28.1)(jiti@2.7.0)(react-dom@19.2.8)(react@19.2.8)(supports-color@10.2.2)(yaml@2.9.0)':
+  '@astrojs/react@6.0.2(@types/node@26.3.0)(@types/react-dom@19.2.5)(@types/react@19.2.18)(esbuild@0.28.1)(jiti@2.7.0)(react-dom@19.2.8)(react@19.2.8)(supports-color@10.2.2)(yaml@2.9.0)':
     dependencies:
       '@astrojs/internal-helpers': 0.10.2
       '@types/react': 19.2.18
-      '@types/react-dom': 19.2.4(@types/react@19.2.18)
+      '@types/react-dom': 19.2.5(@types/react@19.2.18)
       '@vitejs/plugin-react': 5.2.0(supports-color@10.2.2)(vite@8.2.1)
       devalue: 5.8.1
       react: 19.2.8
@@ -9930,7 +9930,7 @@ snapshots:
 
   '@types/picomatch@4.0.3': {}
 
-  '@types/react-dom@19.2.4(@types/react@19.2.18)':
+  '@types/react-dom@19.2.5(@types/react@19.2.18)':
     dependencies:
       '@types/react': 19.2.18
 
