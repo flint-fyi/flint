@@ -43,7 +43,7 @@ catalogs:
     prettier-plugin-sh: 0.19.0
     tsdown: 0.22.14
     typescript: 6.0.3
-    typescript-eslint: 8.66.0
+    typescript-eslint: 8.68.0
     vitest: 4.1.11
     vitest-ansi-serializer: 0.2.1
     zod: 4.4.3
@@ -57,7 +57,7 @@ catalogs:
     "@nuxt/eslint-plugin": 1.17.0
     "@types/eslint-plugin-jsx-a11y": 6.10.1
     "@types/eslint-plugin-promise": 7.3.0
-    "@typescript-eslint/eslint-plugin": 8.66.0
+    "@typescript-eslint/eslint-plugin": 8.68.0
     "@vitest/eslint-plugin": 1.6.1
     eslint-plugin-astro: 3.1.0
     eslint-plugin-eslint-plugin: 7.3.3
