@@ -213,8 +213,8 @@ catalogs:
       specifier: 4.7.0
       version: 4.7.0
     '@eslint/json':
-      specifier: 2.0.0
-      version: 2.0.0
+      specifier: 2.0.1
+      version: 2.0.1
     '@eslint/markdown':
       specifier: 8.0.0
       version: 8.0.0
@@ -515,8 +515,8 @@ importers:
         specifier: catalog:dev
         version: 10.0.1(eslint@10.9.1)
       '@eslint/json':
-        specifier: 2.0.0
-        version: 2.0.0
+        specifier: 2.0.1
+        version: 2.0.1
       '@eslint/markdown':
         specifier: catalog:dev
         version: 8.0.0(supports-color@10.2.2)
@@ -564,13 +564,13 @@ importers:
         version: 63.0.2(eslint@10.9.1)(supports-color@10.2.2)
       eslint-plugin-jsonc:
         specifier: catalog:dev
-        version: 3.4.1(@eslint/json@2.0.0)(eslint@10.9.1)
+        version: 3.4.1(@eslint/json@2.0.1)(eslint@10.9.1)
       eslint-plugin-n:
         specifier: catalog:dev
         version: 18.2.1(eslint@10.9.1)(typescript@6.0.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
-        version: 1.7.0(@eslint/json@2.0.0)(eslint@10.9.1)
+        version: 1.7.0(@eslint/json@2.0.1)(eslint@10.9.1)
       eslint-plugin-perfectionist:
         specifier: catalog:dev
         version: 5.10.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
@@ -1354,7 +1354,7 @@ importers:
         version: 4.7.0(eslint@10.9.1)
       '@eslint/json':
         specifier: catalog:comparisons
-        version: 2.0.0
+        version: 2.0.1
       '@eslint/markdown':
         specifier: catalog:comparisons
         version: 8.0.0(supports-color@10.2.2)
@@ -1396,7 +1396,7 @@ importers:
         version: 63.0.2(eslint@10.9.1)(supports-color@10.2.2)
       eslint-plugin-jsonc:
         specifier: catalog:comparisons
-        version: 3.4.1(@eslint/json@2.0.0)(eslint@10.9.1)
+        version: 3.4.1(@eslint/json@2.0.1)(eslint@10.9.1)
       eslint-plugin-jsx-a11y:
         specifier: catalog:comparisons
         version: 6.10.2(eslint@10.9.1)
@@ -1405,7 +1405,7 @@ importers:
         version: 18.2.1(eslint@10.9.1)(typescript@6.0.3)
       eslint-plugin-package-json:
         specifier: catalog:comparisons
-        version: 1.7.0(@eslint/json@2.0.0)(eslint@10.9.1)
+        version: 1.7.0(@eslint/json@2.0.1)(eslint@10.9.1)
       eslint-plugin-perfectionist:
         specifier: catalog:comparisons
         version: 5.10.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
@@ -3012,8 +3012,8 @@ packages:
     resolution: {integrity: sha512-nE7DEIchvtiFTwBw4Lfbu59PG+kCofhjsKaCWzxTpt4lfRjRMqG6uMBzKXuEcyXhOHoUp9riAm7/aWYGhXZ9cw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/json@2.0.0':
-    resolution: {integrity: sha512-P32ZJMIopNWQd1SFhd0tgjfA/hgzUuVSqHmMi2273QaLWHWimXq6V+qL4DNKnjGzO/aNECtYW+rEJ/pWB6uP+w==}
+  '@eslint/json@2.0.1':
+    resolution: {integrity: sha512-Thz2j92ceUF3Bq/0TuWb3MWn3Z+Cwc8k5ptF0fakl2D4Mp8mSx07Xr1aQM4R5NoihzarWUdxfOmQ8DesGy4jOg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   '@eslint/markdown@8.0.0':
@@ -9111,7 +9111,7 @@ snapshots:
 
   '@eslint/js@9.39.4': {}
 
-  '@eslint/json@2.0.0':
+  '@eslint/json@2.0.1':
     dependencies:
       '@eslint/core': 1.2.1
       '@eslint/plugin-kit': 0.7.2
@@ -11135,13 +11135,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-json-compat-utils@0.2.3(@eslint/json@2.0.0)(eslint@10.9.1)(jsonc-eslint-parser@3.1.0):
+  eslint-json-compat-utils@0.2.3(@eslint/json@2.0.1)(eslint@10.9.1)(jsonc-eslint-parser@3.1.0):
     dependencies:
       eslint: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
       esquery: 1.7.0
       jsonc-eslint-parser: 3.1.0
     optionalDependencies:
-      '@eslint/json': 2.0.0
+      '@eslint/json': 2.0.1
 
   eslint-module-utils@2.12.1(@typescript-eslint/parser@8.66.0)(eslint-import-resolver-node@0.3.10)(eslint@10.9.1)(supports-color@10.2.2):
     dependencies:
@@ -11235,7 +11235,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-jsonc@3.4.1(@eslint/json@2.0.0)(eslint@10.9.1):
+  eslint-plugin-jsonc@3.4.1(@eslint/json@2.0.1)(eslint@10.9.1):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.9.1)
       '@eslint/core': 1.2.1
@@ -11243,7 +11243,7 @@ snapshots:
       '@ota-meshi/ast-token-store': 0.3.0
       diff-sequences: 29.6.3
       eslint: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
-      eslint-json-compat-utils: 0.2.3(@eslint/json@2.0.0)(eslint@10.9.1)(jsonc-eslint-parser@3.1.0)
+      eslint-json-compat-utils: 0.2.3(@eslint/json@2.0.1)(eslint@10.9.1)(jsonc-eslint-parser@3.1.0)
       jsonc-eslint-parser: 3.1.0
       natural-compare: 1.4.0
       synckit: 0.11.12
@@ -11283,7 +11283,7 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  eslint-plugin-package-json@1.7.0(@eslint/json@2.0.0)(eslint@10.9.1):
+  eslint-plugin-package-json@1.7.0(@eslint/json@2.0.1)(eslint@10.9.1):
     dependencies:
       '@altano/repository-tools': 2.1.0
       '@types/estree': 1.0.9
@@ -11292,14 +11292,14 @@ snapshots:
       detect-newline: 4.0.1
       eslint: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
       eslint-fix-utils: 0.4.3(@types/estree@1.0.9)(eslint@10.9.1)
-      eslint-json-compat-utils: 0.2.3(@eslint/json@2.0.0)(eslint@10.9.1)(jsonc-eslint-parser@3.1.0)
+      eslint-json-compat-utils: 0.2.3(@eslint/json@2.0.1)(eslint@10.9.1)(jsonc-eslint-parser@3.1.0)
       jsonc-eslint-parser: 3.1.0
       package-json-validator: 1.6.0
       semver: 7.8.5
       sort-object-keys: 2.1.0
       sort-package-json: 4.0.0
     optionalDependencies:
-      '@eslint/json': 2.0.0
+      '@eslint/json': 2.0.1
 
   eslint-plugin-perfectionist@5.10.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
