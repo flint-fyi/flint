@@ -240,8 +240,8 @@ catalogs:
       specifier: 3.1.0
       version: 3.1.0
     eslint-plugin-eslint-plugin:
-      specifier: 7.3.3
-      version: 7.3.3
+      specifier: 7.6.2
+      version: 7.6.2
     eslint-plugin-import:
       specifier: 2.32.0
       version: 2.32.0
@@ -1393,7 +1393,7 @@ importers:
         version: 3.1.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(@typescript-eslint/parser@8.68.0)(eslint-plugin-jsx-a11y@6.10.2)(eslint@10.9.1)(supports-color@10.2.2)(typescript-eslint@8.68.0)
       eslint-plugin-eslint-plugin:
         specifier: catalog:comparisons
-        version: 7.3.3(eslint@10.9.1)
+        version: 7.6.2(eslint@10.9.1)
       eslint-plugin-import:
         specifier: catalog:comparisons
         version: 2.32.0(@typescript-eslint/parser@8.68.0)(eslint@10.9.1)(supports-color@10.2.2)
@@ -5104,8 +5104,8 @@ packages:
     peerDependencies:
       eslint: '>=8'
 
-  eslint-plugin-eslint-plugin@7.3.3:
-    resolution: {integrity: sha512-u99Dsum45JP0j3ep4EcaERIT5VpArPgrXryRMeVNMfnY/bTQFkDl25T3y+FBwVbYnEGCoZzW9DLaI21cDwgldw==}
+  eslint-plugin-eslint-plugin@7.6.2:
+    resolution: {integrity: sha512-MWE0tzCq0VatvFzELsTfmnMZHFZEQc2lK7HjeLLFiQDUPD8M1pCDlpOuQxGBzjbFvyvz4bfYjI03HQlbS5qdQQ==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
     peerDependencies:
       eslint: '>=9.0.0'
@@ -11199,7 +11199,7 @@ snapshots:
       eslint: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
       eslint-compat-utils: 0.5.1(eslint@10.9.1)
 
-  eslint-plugin-eslint-plugin@7.3.3(eslint@10.9.1):
+  eslint-plugin-eslint-plugin@7.6.2(eslint@10.9.1):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.9.1)
       eslint: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
