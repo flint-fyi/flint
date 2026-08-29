@@ -161,7 +161,8 @@
         "maintenance",
         "tool",
         "code",
-        "infra"
+        "infra",
+        "test"
       ]
     },
     {
