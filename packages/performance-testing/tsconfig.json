@@ -6,8 +6,5 @@
 		"outDir": "lib/",
 		"types": ["node"]
 	},
-	"references": [
-		{ "path": "../flint/tsconfig.src.json" },
-		{ "path": "../rule-data/tsconfig.src.json" }
-	]
+	"references": [{ "path": "../rule-data/tsconfig.src.json" }]
 }

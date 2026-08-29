@@ -26,7 +26,6 @@
 		"console-table-without-index": "^0.1.1",
 		"debug-for-file": "^0.4.0",
 		"execa": "catalog:dev",
-		"flint": "workspace:^",
 		"prettier": "catalog:dev"
 	},
 	"devDependencies": {

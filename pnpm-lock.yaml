@@ -1249,9 +1249,6 @@ importers:
       execa:
         specifier: catalog:dev
         version: 10.0.1
-      flint:
-        specifier: workspace:^
-        version: link:../flint
       prettier:
         specifier: catalog:dev
         version: 3.8.1
