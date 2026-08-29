@@ -28941,7 +28941,8 @@
 		"flint": {
 			"name": "unnecessaryConstructors",
 			"plugin": "ts",
-			"preset": "stylistic"
+			"preset": "stylistic",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{

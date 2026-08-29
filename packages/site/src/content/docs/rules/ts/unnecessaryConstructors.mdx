@@ -1,0 +1,87 @@
+---
+description: "Reports constructors that can be removed without changing class behavior or constructor signatures."
+title: "unnecessaryConstructors"
+topic: "rules"
+---
+
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+import { RuleEquivalents } from "~/components/RuleEquivalents";
+import RuleSummary from "~/components/RuleSummary.astro";
+
+<RuleSummary plugin="ts" rule="unnecessaryConstructors" />
+
+Classes without an explicit constructor receive a default constructor.
+This rule reports empty base constructors when removing them preserves behavior and the TypeScript constructor signature.
+Reports provide a removal suggestion rather than an automatic fix.
+
+## Examples
+
+<Tabs>
+<TabItem label="❌ Incorrect">
+
+```ts
+class Store {
+	constructor() {}
+}
+```
+
+```ts
+abstract class Model {
+	id = crypto.randomUUID();
+
+	constructor() {}
+}
+```
+
+</TabItem>
+<TabItem label="✅ Correct">
+
+```ts
+class Store {}
+```
+
+```ts
+class Store {
+	constructor(readonly location: string) {}
+}
+```
+
+```ts
+class Parent {
+	constructor(...values: string[]) {}
+}
+
+class Child extends Parent {
+	constructor(...values: string[]) {
+		super(...values);
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Conservative Analysis
+
+The rule does not report derived constructors, overloads, declarations, decorated classes or members, constructors with parameters, or constructors with associated comments.
+Even a derived constructor that only calls `super(...values)` invokes an iterator that an implicit derived constructor does not invoke.
+These exclusions preserve runtime argument forwarding, `Function.length`, accessibility, declaration output, comments, and custom transform behavior.
+
+## Options
+
+This rule is not configurable.
+
+## When Not To Use It
+
+Disable this rule when a framework or custom transform assigns meaning to explicit constructors that TypeScript does not expose to the rule.
+You may also keep it disabled when explicit constructors are required for generated documentation or runtime reflection.
+
+## Further Reading
+
+- [MDN: constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/constructor)
+- [MDN: Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+- [TypeScript: Classes](https://www.typescriptlang.org/docs/handbook/2/classes.html)
+
+## Equivalents in Other Linters
+
+<RuleEquivalents pluginId="ts" ruleId="unnecessaryConstructors" />
