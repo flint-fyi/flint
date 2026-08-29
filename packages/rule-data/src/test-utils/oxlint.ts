@@ -14,12 +14,13 @@ export function findOxlintRulesInFlint(): LinterRuleReference[] {
 }
 
 export async function getOxlintLintRules(): Promise<string[]> {
-	const schema = (await import(
+	const { default: schema } = (await import(
 		new URL(
 			"configuration_schema.json",
 			import.meta.resolve("oxlint/package.json"),
-		).toString()
-	)) as OxlintSchema;
+		).toString(),
+		{ with: { type: "json" } }
+	)) as { default: OxlintSchema };
 	const properties = schema.definitions?.DummyRuleMap?.properties;
 
 	if (!properties) {

@@ -71,7 +71,7 @@
 - 4fc0eef: Pass host to rules.
 - 57fa268: Add optional character range to language reports.
 - cb7e8a8: Change "diagnostics" nomenclature to "language reports".
-All external references to the term diagnostic or diagnostics are now using the term language report instead.
+  All external references to the term diagnostic or diagnostics are now using the term language report instead.
 
 ### Patch Changes
 

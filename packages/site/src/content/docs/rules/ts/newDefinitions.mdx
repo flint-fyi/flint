@@ -16,10 +16,10 @@ This rule flags misleading definitions that confuse interface construct signatur
 There are two common mistakes this rule catches:
 
 1. **Interface `new()` returning the interface type**: An interface with `new(): InterfaceName` is misleading because interfaces cannot be instantiated directly.
-If the interface describes a constructor function, the return type should typically be different from the interface name.
+   If the interface describes a constructor function, the return type should typically be different from the interface name.
 
 2. **Interface with `constructor` method**: Interfaces should use `new()` signatures to describe constructables, not `constructor()` methods.
-The `constructor` keyword is used in classes, not interfaces.
+   The `constructor` keyword is used in classes, not interfaces.
 
 3. **Class with `new` method returning the class type**: A class method named `new` that returns the class type looks like a constructor definition, but classes use `constructor` instead.
 

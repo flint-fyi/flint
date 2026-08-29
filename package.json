@@ -32,7 +32,7 @@
 		"@changesets/cli": "catalog:dev",
 		"@eslint-community/eslint-plugin-eslint-comments": "catalog:dev",
 		"@eslint/js": "catalog:dev",
-		"@eslint/json": "2.0.0",
+		"@eslint/json": "2.0.1",
 		"@eslint/markdown": "catalog:dev",
 		"@flint.fyi/build": "workspace:^",
 		"@flint.fyi/node": "workspace:^",
@@ -77,7 +77,7 @@
 	"devEngines": {
 		"packageManager": {
 			"name": "pnpm",
-			"version": "11.21.0"
+			"version": "11.24.0"
 		}
 	}
 }
