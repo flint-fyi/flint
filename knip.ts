@@ -52,6 +52,7 @@ const config: KnipConfig = {
 		},
 		"packages/rule-data": {
 			entry: ["scripts/*.ts"],
+			ignoreDependencies: ["@emnapi/core", "@emnapi/runtime"],
 			project: ["src/**/*.ts!", "!src/test-utils/*.ts!"],
 		},
 		"packages/site": {
