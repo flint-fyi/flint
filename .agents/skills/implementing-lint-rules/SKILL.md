@@ -45,7 +45,8 @@ Look at other rule tests and try to mirror their layouts and styles as much as p
 Make sure each piece of logic in a rule is unit tested.
 If removing a piece of logic doesn't fail unit tests, that's likely a sign you're missing unit testing some edge case.
 If you can't find an edge case that requires the logic, then remove that logic.
-Example: if removing `ts.isIdentifier(node.parent) &&` from an if statement doesn't fail unit tests, then maybe you're not testing the case of a non-identifier node parent? If that's possible, add those test case(s).
+Example: if removing `ts.isIdentifier(node.parent) &&` from an if statement doesn't fail unit tests, then maybe you're not testing the case of a non-identifier node parent?
+If that's possible, add those test case(s).
 If that's not possible, remove the logic.
 
 Don't use tabs in template literal strings.

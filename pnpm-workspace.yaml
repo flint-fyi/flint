@@ -39,7 +39,7 @@ catalogs:
     prettier-plugin-astro: 0.14.1
     prettier-plugin-curly: 0.4.1
     prettier-plugin-packagejson: 3.0.2
-    prettier-plugin-sentences-per-line: 0.2.0
+    prettier-plugin-sentences-per-line: 0.2.4
     prettier-plugin-sh: 0.19.0
     tsdown: 0.22.14
     typescript: 6.0.3

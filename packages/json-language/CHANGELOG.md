@@ -39,10 +39,10 @@
 - [#2851](https://github.com/flint-fyi/flint/pull/2851) [`2ffc7eb`](https://github.com/flint-fyi/flint/commit/2ffc7eb1d0d885fe9b9e758d8bff649a97553380) - Add `JsonExpression` and `PropertyAssignment` to the `JsonNode` union.
 
 - [#2901](https://github.com/flint-fyi/flint/pull/2901) [`91f1cc2`](https://github.com/flint-fyi/flint/commit/91f1cc2d211f49f2cde6349cbab28548484b42d8) - Deprecate the legacy TS-based `jsonLanguage`.
-Use the language exported from `./new` instead.
+  Use the language exported from `./new` instead.
 
 - [#2871](https://github.com/flint-fyi/flint/pull/2871) [`0e8c8ab`](https://github.com/flint-fyi/flint/commit/0e8c8ab4926792ebe7b5b881e78e2b6e8ae4cd96) - Add `./new` entry point with new version of the language based on the AST provided by `momoa`.
-This will utlimately replace the current TS-based implementation.
+  This will utlimately replace the current TS-based implementation.
 - Updated dependencies [[`5ee9a84`](https://github.com/flint-fyi/flint/commit/5ee9a8413b7a47cad3569a7df185f6e5e198908f)]:
   - @flint.fyi/core@0.23.0
 
