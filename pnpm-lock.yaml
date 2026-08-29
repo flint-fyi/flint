@@ -261,8 +261,8 @@ catalogs:
       specifier: 1.7.1
       version: 1.7.1
     eslint-plugin-perfectionist:
-      specifier: 5.10.0
-      version: 5.10.0
+      specifier: 5.10.1
+      version: 5.10.1
     eslint-plugin-promise:
       specifier: 7.3.0
       version: 7.3.0
@@ -355,8 +355,8 @@ catalogs:
       specifier: 1.7.1
       version: 1.7.1
     eslint-plugin-perfectionist:
-      specifier: 5.10.0
-      version: 5.10.0
+      specifier: 5.10.1
+      version: 5.10.1
     eslint-plugin-regexp:
       specifier: 3.1.0
       version: 3.1.0
@@ -573,7 +573,7 @@ importers:
         version: 1.7.1(@eslint/json@2.0.1)(eslint@10.9.1)
       eslint-plugin-perfectionist:
         specifier: catalog:dev
-        version: 5.10.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 5.10.1(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-regexp:
         specifier: catalog:dev
         version: 3.1.0(eslint@10.9.1)
@@ -1408,7 +1408,7 @@ importers:
         version: 1.7.1(@eslint/json@2.0.1)(eslint@10.9.1)
       eslint-plugin-perfectionist:
         specifier: catalog:comparisons
-        version: 5.10.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 5.10.1(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-promise:
         specifier: catalog:comparisons
         version: 7.3.0(eslint@10.9.1)
@@ -5159,8 +5159,8 @@ packages:
       '@eslint/json':
         optional: true
 
-  eslint-plugin-perfectionist@5.10.0:
-    resolution: {integrity: sha512-HiqpDrUDbGrMC6iHQbemgDyHJ0366Vyz/qRWmxQcSAkmG25cXr8BdRgx8yAhOKhEfBXn8Rnf/mTCsV4EqUJSxg==}
+  eslint-plugin-perfectionist@5.10.1:
+    resolution: {integrity: sha512-Kprsp9Us0GqAesYaAIzUViw57xYp5WBqzXrcE0Mtww++E5fexWXYBipMuuD7yvyH4vvpBH0+oJ+OMAmZ0oYXkw==}
     engines: {node: ^20.0.0 || >=22.0.0}
     peerDependencies:
       eslint: ^8.45.0 || ^9.0.0 || ^10.0.0
@@ -11285,7 +11285,7 @@ snapshots:
     optionalDependencies:
       '@eslint/json': 2.0.1
 
-  eslint-plugin-perfectionist@5.10.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3):
+  eslint-plugin-perfectionist@5.10.1(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
       '@typescript-eslint/utils': 8.66.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       eslint: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
