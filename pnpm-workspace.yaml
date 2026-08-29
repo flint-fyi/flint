@@ -9,7 +9,7 @@ autoInstallPeers: false
 
 catalogs:
   dev:
-    "@arethetypeswrong/core": 0.18.2
+    "@arethetypeswrong/core": 0.18.5
     "@changesets/cli": 3.0.1
     "@changesets/changelog-github": 1.0.0
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
