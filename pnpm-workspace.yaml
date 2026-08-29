@@ -12,7 +12,7 @@ catalogs:
     "@arethetypeswrong/core": 0.18.5
     "@changesets/cli": 3.0.1
     "@changesets/changelog-github": 1.0.0
-    "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
+    "@eslint-community/eslint-plugin-eslint-comments": 4.7.2
     "@eslint/js": 10.0.1
     "@eslint/markdown": 8.0.0
     "@types/language-tags": 1.0.4
@@ -50,7 +50,7 @@ catalogs:
 
   comparisons:
     "@biomejs/biome": 2.4.16
-    "@eslint-community/eslint-plugin-eslint-comments": 4.7.0
+    "@eslint-community/eslint-plugin-eslint-comments": 4.7.2
     "@eslint/json": 2.0.1
     "@eslint/markdown": 8.0.0
     "@next/eslint-plugin-next": 16.2.6
