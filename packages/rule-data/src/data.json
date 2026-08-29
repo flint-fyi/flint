@@ -29506,7 +29506,8 @@
 		"flint": {
 			"name": "unreachableStatements",
 			"plugin": "ts",
-			"preset": "javascript"
+			"preset": "javascript",
+			"status": "implemented"
 		},
 		"oxlint": [
 			{
