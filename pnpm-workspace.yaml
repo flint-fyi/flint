@@ -83,9 +83,9 @@ catalogs:
 
   site:
     "@astrojs/check": 0.9.10
-    "@astrojs/markdown-remark": 7.2.2
-    "@astrojs/react": 6.0.2
-    "@astrojs/starlight": 0.41.6
+    "@astrojs/markdown-remark": 7.2.4
+    "@astrojs/react": 6.0.4
+    "@astrojs/starlight": 0.41.9
     "@expressive-code/core": 0.44.1
     "@konami-emoji-blast/astro": 0.3.0
     "@types/react": 19.2.18
