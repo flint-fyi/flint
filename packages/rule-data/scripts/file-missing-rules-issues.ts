@@ -10,6 +10,7 @@ import {
 } from "../src/test-utils/coverage.ts";
 
 interface ExistingIssue {
+	body: string;
 	number: number;
 	title: string;
 }
@@ -28,7 +29,7 @@ const existingIssues = JSON.parse(
 		"issue",
 		"list",
 		"--json",
-		"number,title",
+		"number,title,body",
 		"--limit",
 		"1000",
 		"--state",
@@ -45,9 +46,20 @@ for (const { coverage, linter } of await collectRuleCoverageReports()) {
 
 	const title = `📝 Documentation: Add missing ${linter} rules to rule-data`;
 	const body = createIssueBody(linter, coverage);
-	const existingIssue = existingIssues.find((issue) => issue.title === title);
+	const existingIssue = existingIssues.find(
+		(issue) =>
+			issue.body.includes(createIssueBodyLinterComment(linter)) ||
+			issue.title === title,
+	);
 
 	if (existingIssue) {
+		// If we already have an issue that covers the exact same coverage delta, we don't need to update it
+		if (existingIssue.body.includes(createIssueRulesDeltaComment(coverage))) {
+			console.log(
+				`${linter}: Issue #${existingIssue.number} already exists, and is up to date.  Nothing to do...`,
+			);
+			continue;
+		}
 		gh(
 			["issue", "edit", String(existingIssue.number), "--body-file", "-"],
 			body,
@@ -82,6 +94,8 @@ if (summaryPath && summarySections.length) {
 
 function createIssueBody(linter: string, coverage: RuleCoverage): string {
 	return [
+		createIssueBodyLinterComment(linter),
+		createIssueRulesDeltaComment(coverage),
 		"### Documentation Report Checklist",
 		"",
 		"- [x] I have checked the latest `main` branch of the repository.",
@@ -106,6 +120,14 @@ function createIssueBody(linter: string, coverage: RuleCoverage): string {
 		"3. Run `pnpm --filter=rule-data sort-data`.",
 		"4. Push to the Renovate branch, or open a PR that bumps the dependency and closes this issue.",
 	].join("\n");
+}
+
+function createIssueBodyLinterComment(linter: string): string {
+	return `<!-- out-of-sync-data-${linter} -->`;
+}
+
+function createIssueRulesDeltaComment(coverage: RuleCoverage): string {
+	return `<!-- {missing: [${coverage.missing.map((rule) => rule.name).join(",")}], stale: [${coverage.stale.join(",")}]} -->`;
 }
 
 function gh(args: string[], input?: string): string {

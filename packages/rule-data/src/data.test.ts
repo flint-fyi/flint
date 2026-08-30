@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import { getFlintRuleId, ruleData } from "./index.ts";
-import { ruleCoverageSources } from "./test-utils/coverage.ts";
 
 describe("data.json", () => {
 	it("should not include any duplicate Flint rules", () => {
@@ -23,11 +22,4 @@ describe("data.json", () => {
 			expect(duplicates).toEqual([]);
 		}
 	});
-
-	it.each(ruleCoverageSources)(
-		"includes all $linter rules",
-		async ({ collect }) => {
-			expect(await collect()).toEqual({ missing: [], stale: [] });
-		},
-	);
 });
