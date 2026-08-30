@@ -16,7 +16,7 @@ export function resolveUseFilesGlobs(
 	const globs = collectUseFilesGlobsObject(files, configDefinition);
 
 	return {
-		exclude: [...globs.exclude, ...(configDefinition.ignore ?? [])],
+		exclude: [...globs.exclude, ...flatten(configDefinition.ignore ?? [])],
 		include: globs.include,
 	};
 }
