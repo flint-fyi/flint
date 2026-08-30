@@ -55,6 +55,9 @@ for (const { coverage, linter } of await collectRuleCoverageReports()) {
 	if (existingIssue) {
 		// If we already have an issue that covers the exact same coverage delta, we don't need to update it
 		if (existingIssue.body.includes(createIssueRulesDeltaComment(coverage))) {
+			console.log(
+				`${linter}: Issue #${existingIssue.number} already exists, and is up to date.  Nothing to do...`,
+			);
 			continue;
 		}
 		gh(
