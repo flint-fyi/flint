@@ -49,7 +49,7 @@ catalogs:
     zod: 4.4.3
 
   comparisons:
-    "@biomejs/biome": 2.5.10
+    "@biomejs/biome": 2.5.11
     "@eslint-community/eslint-plugin-eslint-comments": 4.7.2
     "@eslint/json": 2.0.1
     "@eslint/markdown": 8.0.3
