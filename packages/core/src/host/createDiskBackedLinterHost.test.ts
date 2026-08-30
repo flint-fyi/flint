@@ -78,14 +78,14 @@ describe("createDiskBackedLinterHost", () => {
 		const host = createDiskBackedLinterHost(integrationRoot);
 		const missingPath = path.join(integrationRoot, "missing.txt");
 
-		expect(await host.getFileTouchTime(missingPath)).toEqual(undefined);
+		expect(await host.getFileTouchTime(missingPath)).toBeUndefined();
 	});
 
 	it("returns undefined for a missing file touch time synchronously", () => {
 		const host = createDiskBackedLinterHost(integrationRoot);
 		const missingPath = path.join(integrationRoot, "missing.txt");
 
-		expect(host.getFileTouchTimeSync(missingPath)).toEqual(undefined);
+		expect(host.getFileTouchTimeSync(missingPath)).toBeUndefined();
 	});
 
 	it("finds the repository root from a nested file", () => {
