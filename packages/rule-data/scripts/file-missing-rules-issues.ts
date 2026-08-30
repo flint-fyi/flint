@@ -46,8 +46,10 @@ for (const { coverage, linter } of await collectRuleCoverageReports()) {
 
 	const title = `📝 Documentation: Add missing ${linter} rules to rule-data`;
 	const body = createIssueBody(linter, coverage);
-	const existingIssue = existingIssues.find((issue) =>
-		issue.body.includes(createIssueBodyLinterComment(linter)),
+	const existingIssue = existingIssues.find(
+		(issue) =>
+			issue.body.includes(createIssueBodyLinterComment(linter)) ||
+			issue.title === title,
 	);
 
 	if (existingIssue) {
