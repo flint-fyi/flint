@@ -2058,9 +2058,6 @@ importers:
 
 packages:
 
-  '@altano/repository-tools@2.1.0':
-    resolution: {integrity: sha512-RGM8IimoK/RDlj+uG9sPgb9CSuHIAMVrtVVeslEMhc7yqDHpdmdKeMQcJfc0WveTtAmBdj/o9r1VW/A27SoPTg==}
-
   '@altano/repository-tools@2.1.1':
     resolution: {integrity: sha512-YFVhwoSjwkERQoopw3lX/TaPIDud0m6ac/Z51FoQ3YEPf0OaxFxpofbcHO0E2mTJ0lvmuRArIMUP9Pz2jpTMhg==}
 
@@ -8176,8 +8173,6 @@ packages:
 
 snapshots:
 
-  '@altano/repository-tools@2.1.0': {}
-
   '@altano/repository-tools@2.1.1': {}
 
   '@andrewbranch/untar.js@1.0.4': {}
@@ -11452,7 +11447,7 @@ snapshots:
 
   eslint-plugin-package-json@1.7.1(@eslint/json@2.0.1)(eslint@10.9.1):
     dependencies:
-      '@altano/repository-tools': 2.1.0
+      '@altano/repository-tools': 2.1.1
       '@types/estree': 1.0.9
       change-case: 5.4.4
       detect-indent: 7.0.2
