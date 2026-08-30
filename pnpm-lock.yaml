@@ -276,8 +276,8 @@ catalogs:
       specifier: 3.2.0
       version: 3.2.0
     eslint-plugin-solid:
-      specifier: 0.16.0
-      version: 0.16.0
+      specifier: 0.16.1
+      version: 0.16.1
     eslint-plugin-svelte:
       specifier: 3.23.0
       version: 3.23.0
@@ -1429,7 +1429,7 @@ importers:
         version: 3.2.0(eslint@10.9.1)
       eslint-plugin-solid:
         specifier: catalog:comparisons
-        version: 0.16.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 0.16.1(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-svelte:
         specifier: catalog:comparisons
         version: 3.23.0(eslint@10.9.1)(svelte@5.56.10)
@@ -4714,10 +4714,6 @@ packages:
     resolution: {integrity: sha512-rKZTGo4fzKYna8UcL0isTg5wkBNla7bxTypLwZQXjIdi++IdP1OJ41rI5Mti3/jltkPujbu4i9LIARYA+zpotQ==}
     engines: {node: '>= 12.0.0'}
 
-  comment-parser@1.4.8:
-    resolution: {integrity: sha512-rKZTGo4fzKYna8UcL0isTg5wkBNla7bxTypLwZQXjIdi++IdP1OJ41rI5Mti3/jltkPujbu4i9LIARYA+zpotQ==}
-    engines: {node: '>= 12.0.0'}
-
   common-ancestor-path@2.0.0:
     resolution: {integrity: sha512-dnN3ibLeoRf2HNC+OlCiNc5d2zxbLJXOtiZUudNFSXZrNSydxcCsSpRzXwfu7BBWCIfHPw+xTayeBvJCP/D8Ng==}
     engines: {node: '>= 18'}
@@ -5226,8 +5222,8 @@ packages:
     peerDependencies:
       eslint: '>=9.38.0'
 
-  eslint-plugin-solid@0.16.0:
-    resolution: {integrity: sha512-q45VUvh3kv9ZHoVWZrep/KJFA7qqBH0khHuEEp0sCzEDuM3FtHFqK6fLWFIIIDGVQ8aFouUHROaOXVi8GgzShA==}
+  eslint-plugin-solid@0.16.1:
+    resolution: {integrity: sha512-RUd46y3Y2acT4//hxSut1UTGnDoZMWEhrplyE0cK0E3cWwvIsfui5HkG7cubQ95TntVacVHe+uYh97PSm0id4A==}
     engines: {node: '>=22.0.0'}
     peerDependencies:
       eslint: ^9.0.0 || ^10.0.0
@@ -5434,8 +5430,8 @@ packages:
     resolution: {integrity: sha512-TBw6K/fxoQGGjCmZDw9w/ZwP3uDcnTM4YH/g+PFRWr8sbe5idXtxNN6vITh4+1ruCZaho6uBFurElsA7F0zzgw==}
     hasBin: true
 
-  fastq@1.20.2:
-    resolution: {integrity: sha512-UpGiiODyCGprM8EPP6JodP6jC9Rws6TCuiDOD+nn0CJhR8guI3g/ozo4ugL0vJ+Yz1UtJuuRPqvQuybVOF1VQA==}
+  fastq@1.20.3:
+    resolution: {integrity: sha512-XKv5nnLs6nLF71NgiKJLIZFLkPyIEuOselLG7ujZnGrRfQK8HpvY+WqKhAJUAdLomwVHErVS4LfxFlPq0/FTAw==}
 
   fault@2.0.1:
     resolution: {integrity: sha512-WtySTkS4OKev5JtpHXnib4Gxiurzh5NCGvWrFaZ34m6JehfTUhKZvn9njTfw48t6JumVQOmrKqpmGcdwxnhqBQ==}
@@ -9528,7 +9524,7 @@ snapshots:
   '@nodelib/fs.walk@1.2.8':
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
-      fastq: 1.20.2
+      fastq: 1.20.3
 
   '@nuxt/eslint-plugin@1.17.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
@@ -10809,8 +10805,6 @@ snapshots:
 
   comment-parser@1.4.8: {}
 
-  comment-parser@1.4.8: {}
-
   common-ancestor-path@2.0.0: {}
 
   concat-map@0.0.1: {}
@@ -11496,7 +11490,7 @@ snapshots:
       regexp-ast-analysis: 0.7.1
       scslre: 0.3.0
 
-  eslint-plugin-solid@0.16.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3):
+  eslint-plugin-solid@0.16.1(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
       '@typescript-eslint/utils': 8.68.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       eslint: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
@@ -11827,7 +11821,7 @@ snapshots:
       strnum: 2.4.2
       xml-naming: 0.3.0
 
-  fastq@1.20.2:
+  fastq@1.20.3:
     dependencies:
       reusify: 1.1.0
 
