@@ -1,87 +1,75 @@
-// Adapted from: https://github.com/ArnaudBarre/tsl/blob/742a6f1a956705239f2149f856b1f572ade79919/src/formatDiagnostic.ts
-// ...which notes:
-// Adapted from: https://github.com/microsoft/TypeScript/blob/78c16795cdee70b9d9f0f248b6dbb6ba50994a59/src/compiler/program.ts#L680-L811
+import type { Diagnostic } from "typescript-native/unstable/sync";
 
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import type { LanguageReport } from "@flint.fyi/core";
 
-import ts from "typescript";
-
-import {
-	getColumnAndLineOfPosition,
-	getPositionOfColumnAndLine,
-	type LanguageReport,
-	type SourceFileWithLineMapAndFileName,
-} from "@flint.fyi/core";
-
-export interface TSDiagnostic extends TSDiagnosticRelatedInformation {
-	relatedInformation?: TSDiagnosticRelatedInformation[];
-}
-export interface TSDiagnosticRelatedInformation {
-	code: number;
-	file: SourceFileWithLineMapAndFileName | undefined;
-	length: number | undefined;
-	messageText: string | ts.DiagnosticMessageChain;
-	start: number | undefined;
-}
+export type TSDiagnostic = Diagnostic;
 
 export function convertTypeScriptDiagnosticToLanguageReport(
-	diagnostic: TSDiagnostic,
+	diagnostic: Diagnostic,
 ): LanguageReport {
 	return {
 		code: `TS${diagnostic.code}`,
+		...(diagnostic.fileName !== undefined && {
+			range: { begin: diagnostic.pos, end: diagnostic.end },
+		}),
 		source: "typescript",
 		text: formatReport(diagnostic),
-		...(diagnostic.file !== undefined &&
-			diagnostic.start !== undefined && {
-				range: {
-					begin: diagnostic.start,
-					end: diagnostic.start + (diagnostic.length ?? 0),
-				},
-			}),
 	};
 }
 
-function color(text: string, formatStyle: string) {
+function color(text: string, formatStyle: string): string {
 	return formatStyle + text + resetEscapeSequence;
 }
 
-function formatReport(diagnostic: TSDiagnostic) {
+function flattenMessage(diagnostic: Diagnostic, depth = 0): string {
+	let output =
+		depth === 0 ? diagnostic.text : `\n${"  ".repeat(depth)}${diagnostic.text}`;
+	for (const child of diagnostic.messageChain ?? []) {
+		output += flattenMessage(child, depth + 1);
+	}
+	return output;
+}
+
+function formatReport(diagnostic: Diagnostic): string {
 	let output = "";
 
-	if (diagnostic.file !== undefined) {
-		output += formatLocation(diagnostic.file, diagnostic.start!);
+	if (diagnostic.fileName !== undefined && diagnostic.startPosition) {
+		output += formatLocation(diagnostic.fileName, diagnostic.startPosition);
 		output += " - ";
 	}
 	output += color(`TS${diagnostic.code}`, COLOR.Grey);
 	output += ": ";
-	output += ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
-	if (diagnostic.file !== undefined) {
-		output += "\n";
+	output += flattenMessage(diagnostic);
+	if (
+		diagnostic.fileName !== undefined &&
+		diagnostic.startPosition &&
+		diagnostic.endPosition &&
+		diagnostic.sourceLines
+	) {
 		output += formatCodeSpan(
-			diagnostic.file,
-			diagnostic.start!,
-			diagnostic.length!,
+			diagnostic.startPosition,
+			diagnostic.endPosition,
+			diagnostic.sourceLines,
 			"",
 			COLOR.Red,
 		);
 	}
-	if (diagnostic.relatedInformation) {
+	for (const related of diagnostic.relatedInformation ?? []) {
 		output += "\n";
-		for (const {
-			file,
-			length,
-			messageText,
-			start,
-		} of diagnostic.relatedInformation) {
-			const indent = "  ";
-			if (file) {
-				output += "\n";
-				output += " " + formatLocation(file, start!);
-				output += formatCodeSpan(file, start!, length!, indent, COLOR.Cyan);
+		const indent = "  ";
+		if (related.fileName !== undefined && related.startPosition) {
+			output += `\n ${formatLocation(related.fileName, related.startPosition)}`;
+			if (related.endPosition && related.sourceLines) {
+				output += formatCodeSpan(
+					related.startPosition,
+					related.endPosition,
+					related.sourceLines,
+					indent,
+					COLOR.Cyan,
+				);
 			}
-			output += "\n";
-			output += indent + ts.flattenDiagnosticMessageText(messageText, "\n");
 		}
+		output += `\n${indent}${flattenMessage(related)}`;
 	}
 
 	return output;
@@ -92,103 +80,74 @@ const ellipsis = "...";
 const gutterSeparator = " ";
 const resetEscapeSequence = "\u001B[0m";
 const COLOR = {
-	Blue: "\u001B[94m",
 	Cyan: "\u001B[96m",
 	Grey: "\u001B[90m",
 	Red: "\u001B[91m",
 	Yellow: "\u001B[93m",
 };
 
-function displayFilename(name: string) {
+function displayFilename(name: string): string {
 	if (name.startsWith("./")) {
 		return name.slice(2);
 	}
-	// TODO: use LinterHost.getCurrentDirectory()
 	return name.slice(process.cwd().length + 1);
 }
 
 function formatCodeSpan(
-	file: SourceFileWithLineMapAndFileName,
-	start: number,
-	length: number,
+	startPosition: { character: number; line: number },
+	endPosition: { character: number; line: number },
+	sourceLines: readonly { line: number; text: string }[],
 	indent: string,
 	squiggleColor: string,
-) {
-	const { column: firstLineChar, line: firstLine } = getColumnAndLineOfPosition(
-		file,
-		start,
-	);
-	const { column: lastLineChar, line: lastLine } = getColumnAndLineOfPosition(
-		file,
-		start + length,
-	);
-	const lastLineInFile = getColumnAndLineOfPosition(
-		file,
-		file.text.length,
-	).line;
-	const hasMoreThanFiveLines = lastLine - firstLine >= 4;
-	// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-	let gutterWidth = (lastLine + 1 + "").length;
-	if (hasMoreThanFiveLines) {
-		gutterWidth = Math.max(ellipsis.length, gutterWidth);
-	}
+): string {
+	const hasMoreThanFiveLines = endPosition.line - startPosition.line >= 4;
+	const gutterWidth = hasMoreThanFiveLines
+		? Math.max(ellipsis.length, `${endPosition.line + 1}`.length)
+		: `${endPosition.line + 1}`.length;
 	let context = "";
-	for (let i = firstLine; i <= lastLine; i++) {
-		context += "\n";
-		if (hasMoreThanFiveLines && firstLine + 1 < i && i < lastLine - 1) {
-			context +=
-				indent +
-				color(ellipsis.padStart(gutterWidth), gutterStyleSequence) +
-				gutterSeparator +
-				"\n";
-			i = lastLine - 1;
+	let previousLine: number | undefined;
+
+	for (const { line, text } of sourceLines) {
+		if (previousLine !== undefined && line > previousLine + 1) {
+			context += `\n${indent}${color(
+				ellipsis.padStart(gutterWidth),
+				gutterStyleSequence,
+			)}${gutterSeparator}`;
 		}
-		const lineStart = getPositionOfColumnAndLine(file, { column: 0, line: i });
-		const lineEnd =
-			i < lastLineInFile
-				? getPositionOfColumnAndLine(file, { column: 0, line: i + 1 })
-				: file.text.length;
-		let lineContent = file.text.slice(lineStart, lineEnd);
-		lineContent = lineContent.trimEnd();
-		lineContent = lineContent.replace(/\t/g, " ");
+		const lineContent = text.replace(/\t/g, " ").trimEnd();
+		context += "\n";
 		context +=
 			indent +
-			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-			color((i + 1 + "").padStart(gutterWidth), gutterStyleSequence) +
-			gutterSeparator;
-		context += lineContent + "\n";
+			color(`${line + 1}`.padStart(gutterWidth), gutterStyleSequence) +
+			gutterSeparator +
+			lineContent +
+			"\n";
 		context +=
 			indent +
 			color("".padStart(gutterWidth), gutterStyleSequence) +
-			gutterSeparator;
-		context += squiggleColor;
-		if (i === firstLine) {
-			const lastCharForLine = i === lastLine ? lastLineChar : undefined;
-			context += lineContent.slice(0, firstLineChar).replace(/\S/g, " ");
-			context += lineContent
-				.slice(firstLineChar, lastCharForLine)
-				.replace(/./g, "~");
-		} else if (i === lastLine) {
-			context += lineContent.slice(0, lastLineChar).replace(/./g, "~");
-		} else {
-			context += lineContent.replace(/./g, "~");
-		}
+			gutterSeparator +
+			squiggleColor;
+		const firstCharacter =
+			line === startPosition.line ? startPosition.character : 0;
+		const lastCharacter =
+			line === endPosition.line ? endPosition.character : lineContent.length;
+		context += " ".repeat(firstCharacter);
+		context += "~".repeat(
+			Math.max(0, Math.min(lastCharacter, lineContent.length) - firstCharacter),
+		);
 		context += resetEscapeSequence;
+		previousLine = line;
 	}
+
 	return context;
 }
 
 function formatLocation(
-	file: SourceFileWithLineMapAndFileName,
-	start: number,
+	fileName: string,
+	position: { character: number; line: number },
 ): string {
-	const { column, line } = getColumnAndLineOfPosition(file, start);
-	const relativeFileName = displayFilename(file.fileName);
-	let output = "";
-	output += color(relativeFileName, COLOR.Cyan);
-	output += ":";
-	output += color(`${line + 1}`, COLOR.Yellow);
-	output += ":";
-	output += color(`${column + 1}`, COLOR.Yellow);
-	return output;
+	return `${color(displayFilename(fileName), COLOR.Cyan)}:${color(
+		`${position.line + 1}`,
+		COLOR.Yellow,
+	)}:${color(`${position.character + 1}`, COLOR.Yellow)}`;
 }
