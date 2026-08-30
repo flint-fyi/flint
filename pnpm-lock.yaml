@@ -461,8 +461,8 @@ catalogs:
       specifier: 0.7.0
       version: 0.7.0
     markdown-it:
-      specifier: 15.0.0
-      version: 15.0.0
+      specifier: 15.0.1
+      version: 15.0.1
     react:
       specifier: 19.2.8
       version: 19.2.8
@@ -1551,7 +1551,7 @@ importers:
         version: 0.7.0
       markdown-it:
         specifier: catalog:site
-        version: 15.0.0
+        version: 15.0.1
       react:
         specifier: catalog:site
         version: 19.2.8
@@ -6298,8 +6298,8 @@ packages:
     resolution: {integrity: sha512-o5vL7aDWatOTX8LzaS1WMoaoxIiLRQJuIKKe2wAw6IeULDHaqbiqiggmx+pKvZDb1Sj+pE46Sn1T7lCqfFtg1Q==}
     engines: {node: '>=16'}
 
-  markdown-it@15.0.0:
-    resolution: {integrity: sha512-Lf8ajvVNdRpzSNB4VegxNy7gjs8gU35l4b4+ET49LrQC5PKYwLZ72u60LeJ9gv3qiaesuYjJWCyVeQmv/QWKQw==}
+  markdown-it@15.0.1:
+    resolution: {integrity: sha512-9/7gE95FNPkfUWrjJIoHZza2iLmuJlPD0UNMxPi7bxUrbCR525YZY0r+zyfes0dZI5ZZ/uNIXUJca0pJvtw41g==}
     hasBin: true
 
   markdown-table@3.0.4:
@@ -12732,7 +12732,7 @@ snapshots:
 
   markdown-extensions@2.0.0: {}
 
-  markdown-it@15.0.0:
+  markdown-it@15.0.1:
     dependencies:
       argparse: 3.0.1
       entities: 8.0.0
