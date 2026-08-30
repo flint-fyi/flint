@@ -3,6 +3,11 @@ export {
 	type TSDiagnostic,
 } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
 export {
+	createTypeScriptProjectSession,
+	type TypeScriptProjectChanges,
+	type TypeScriptProjectSession,
+} from "./createTypeScriptProjectSession.ts";
+export {
 	extractDirectivesFromTypeScriptFile,
 	type ExtractedDirective,
 } from "./directives/parseDirectivesFromTypeScriptFile.ts";
