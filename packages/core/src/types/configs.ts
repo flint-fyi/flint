@@ -42,7 +42,7 @@ export interface ConfigDefinition {
 	 * `ignore` by default includes all patterns defined in a `.gitignore` file, if it exists.
 	 * @see {@link https://flint.fyi/configuration#ignore|flint.fyi/configuration#ignore}
 	 */
-	ignore?: string[];
+	ignore?: AnyLevelDeep<string>;
 
 	/**
 	 * For a root config, you can define a list of "projects" using glob patterns.
