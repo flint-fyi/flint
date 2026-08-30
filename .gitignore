@@ -6,3 +6,4 @@ packages/*/lib
 tsconfig.vitest-temp.json
 /*.tgz
 *.tsbuildinfo
+.worktrees/
