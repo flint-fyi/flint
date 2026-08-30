@@ -1,0 +1,169 @@
+---
+import { LinkButton } from "@astrojs/starlight/components";
+import { Image } from "astro:assets";
+
+const { data } = Astro.locals.starlightRoute.entry;
+const { actions = [], image, tagline, title = data.title } = data.hero ?? {};
+
+const logo = image && "dark" in image ? image.dark : undefined;
+const alt = image?.alt ?? "";
+---
+
+<div class="hero">
+	<div class="copy">
+		<h1 class="flint-display" data-page-title id="_top" set:html={title} />
+
+		{tagline && <p class="tagline" set:html={tagline} />}
+
+		{
+			actions.length > 0 && (
+				<div class="actions">
+					{actions.map(
+						({
+							attrs: { class: className, ...attrs } = {},
+							icon,
+							link: href,
+							text,
+							variant,
+						}) => (
+							<LinkButton
+								{href}
+								{variant}
+								icon={icon?.name}
+								class:list={[className]}
+								{...attrs}
+							>
+								{text}
+							</LinkButton>
+						),
+					)}
+				</div>
+			)
+		}
+	</div>
+
+	<div class="art">
+		<div aria-hidden="true" class="glow"></div>
+		<div class="flint-paper mark">
+			{
+				logo && (
+					<Image
+						alt={alt}
+						height={200}
+						loading="eager"
+						src={logo}
+						width={200}
+					/>
+				)
+			}
+		</div>
+	</div>
+</div>
+
+<style>
+	.hero {
+		align-items: flex-start;
+		display: grid;
+		gap: 3rem;
+		grid-template-columns: 100%;
+		padding-block: clamp(1.5rem, calc(0.5rem + 5vmin), 4rem);
+	}
+
+	.copy {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	h1 {
+		color: var(--sl-color-white);
+		font-size: clamp(2.125rem, calc(1rem + 4.5vw), 4rem);
+		line-height: 1.05;
+		margin: 0;
+	}
+
+	.tagline {
+		color: var(--sl-color-gray-2);
+		font-size: var(--sl-text-lg);
+		line-height: 1.6;
+		margin: 0;
+		max-width: 40rem;
+	}
+
+	.actions {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.actions a {
+		justify-content: center;
+	}
+
+	.dot {
+		block-size: 0.5rem;
+		border-radius: 999px;
+		inline-size: 0.5rem;
+	}
+
+	.dot[data-color="moss"] {
+		background: var(--flint-moss);
+	}
+
+	.dot[data-color="ember"] {
+		background: var(--flint-ember);
+	}
+
+	.dot[data-color="pine"] {
+		background: var(--flint-pine-mark);
+	}
+
+	.art {
+		display: grid;
+		place-items: center;
+		position: relative;
+	}
+
+	/* Stays inside `.art`: a negative inset would widen the page's scrollable
+	   overflow, while the blur bleeds outward without doing so. */
+	.glow {
+		background: radial-gradient(
+			circle,
+			color-mix(in srgb, var(--flint-ember) 25%, transparent),
+			transparent 70%
+		);
+		filter: blur(3rem);
+		inset: 0;
+		position: absolute;
+	}
+
+	.mark {
+		display: grid;
+		padding-left: clamp(0.5rem, 2vw, 1.5rem);
+		place-items: center;
+		position: relative;
+	}
+
+	.mark :global(img) {
+		block-size: auto;
+		user-select: none;
+	}
+
+	@media (width >= 30rem) {
+		.actions {
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+
+		.actions a {
+			inline-size: auto;
+		}
+	}
+
+	@media (width >= 50rem) {
+		.hero {
+			grid-template-columns: 10fr 3fr;
+			padding-block: clamp(2rem, calc(1rem + 8vmin), 6rem);
+		}
+	}
+</style>
