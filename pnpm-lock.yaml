@@ -276,8 +276,8 @@ catalogs:
       specifier: 3.2.0
       version: 3.2.0
     eslint-plugin-solid:
-      specifier: 0.14.5
-      version: 0.14.5
+      specifier: 0.16.0
+      version: 0.16.0
     eslint-plugin-svelte:
       specifier: 3.17.1
       version: 3.17.1
@@ -1429,7 +1429,7 @@ importers:
         version: 3.2.0(eslint@10.9.1)
       eslint-plugin-solid:
         specifier: catalog:comparisons
-        version: 0.14.5(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
+        version: 0.16.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       eslint-plugin-svelte:
         specifier: catalog:comparisons
         version: 3.17.1(eslint@10.9.1)(svelte@5.56.10)
@@ -5194,11 +5194,11 @@ packages:
     peerDependencies:
       eslint: '>=9.38.0'
 
-  eslint-plugin-solid@0.14.5:
-    resolution: {integrity: sha512-nfuYK09ah5aJG/oEN6P1qziy1zLgW4PDWe75VNPi4CEFYk1x2AEqwFeQfEPR7gNn0F2jOeqKhx2E+5oNCOBYWQ==}
-    engines: {node: '>=18.0.0'}
+  eslint-plugin-solid@0.16.0:
+    resolution: {integrity: sha512-q45VUvh3kv9ZHoVWZrep/KJFA7qqBH0khHuEEp0sCzEDuM3FtHFqK6fLWFIIIDGVQ8aFouUHROaOXVi8GgzShA==}
+    engines: {node: '>=22.0.0'}
     peerDependencies:
-      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
+      eslint: ^9.0.0 || ^10.0.0
       typescript: '>=4.8.4'
 
   eslint-plugin-svelte@3.17.1:
@@ -11385,7 +11385,7 @@ snapshots:
       regexp-ast-analysis: 0.7.1
       scslre: 0.3.0
 
-  eslint-plugin-solid@0.14.5(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3):
+  eslint-plugin-solid@0.16.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
       '@typescript-eslint/utils': 8.68.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       eslint: 10.9.1(jiti@2.7.0)(supports-color@10.2.2)
