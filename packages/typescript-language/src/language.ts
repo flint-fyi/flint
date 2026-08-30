@@ -4,10 +4,19 @@ import { createProjectService } from "@typescript-eslint/project-service";
 import { debugForFile } from "debug-for-file";
 import {
 	getPreEmitDiagnostics,
-	SyntaxKind,
-	type Node,
-	type Program,
+	type Program as LegacyProgram,
 } from "typescript";
+import {
+	SyntaxKind,
+	type Node as NativeNode,
+	type SpanMap,
+} from "typescript-native/unstable/ast";
+import type {
+	Checker,
+	Program,
+	Project,
+	Snapshot,
+} from "typescript-native/unstable/sync";
 
 import {
 	createLanguage,
@@ -19,6 +28,7 @@ import {
 	type LanguageFileDefinition,
 	type LanguageReports,
 	type RuleRuntime,
+	type RuleVisitors,
 } from "@flint.fyi/core";
 import { assert, nullThrows } from "@flint.fyi/utils";
 
@@ -31,12 +41,14 @@ import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.t
 import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
 import type * as AST from "./types/ast.ts";
-import type { Checker } from "./types/checker.ts";
 
 export interface TypeScriptFileServices {
+	checker: Checker;
 	program: Program;
+	project: Project;
+	snapshot: Snapshot;
 	sourceFile: AST.SourceFile;
-	typeChecker: Checker;
+	spanMap?: SpanMap;
 }
 
 const log = debugForFile(import.meta.filename);
@@ -48,12 +60,12 @@ interface GlobalLanguageState {
 	packageVersion: string;
 	volarCreateFile: null | VolarCreateFile;
 }
+
 type VolarCreateFile = (
 	data: FileAboutData,
-	program: Program,
+	program: LegacyProgram,
 	sourceFile: AST.SourceFile,
 ) => VolarLanguageFileDefinition;
-
 type VolarLanguageFileDefinition =
 	LanguageFileDefinition<TypeScriptFileServices> & {
 		__volarServices: {
@@ -65,6 +77,29 @@ type VolarLanguageFileDefinition =
 			): void;
 		};
 	};
+
+export function visitTypeScriptNodes<Services extends object>(
+	sourceFile: AST.SourceFile,
+	visitors: RuleVisitors<TypeScriptNodeVisitors, Services>,
+	services: Services,
+): void {
+	const visit = (node: NativeNode): void => {
+		const syntaxKindName = NodeSyntaxKinds[node.kind];
+		if (typeof syntaxKindName !== "string") {
+			node.forEachChild(visit);
+			return;
+		}
+
+		const key = syntaxKindName as keyof TypeScriptNodesByName;
+
+		// @ts-expect-error -- A dynamically selected visitor accepts this kind's node.
+		visitors[key]?.(node, services);
+		node.forEachChild(visit);
+		visitors[`${key}:exit`]?.(node, services);
+	};
+
+	visit(sourceFile);
+}
 
 const stateSymbol = Symbol.for("@flint.fyi/typescript-language/state");
 
@@ -194,19 +229,7 @@ export const typescriptLanguage: Language<
 		const { visitors } = runtime;
 		const visitorServices = { options, ...file.services };
 
-		const visit = (node: Node) => {
-			const key = NodeSyntaxKinds[node.kind] as keyof TypeScriptNodesByName;
-
-			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
-			visitors[key]?.(node, visitorServices);
-
-			node.forEachChild(visit);
-
-			// @ts-expect-error -- The node parameter type shouldn't be `never`...?
-			visitors[`${key}:exit`]?.(node, visitorServices);
-		};
-
-		visit(file.services.sourceFile);
+		visitTypeScriptNodes(file.services.sourceFile, visitors, visitorServices);
 	},
 });
 

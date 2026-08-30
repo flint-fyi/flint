@@ -4,5 +4,10 @@
 		"noEmit": true,
 		"types": ["node"]
 	},
-	"include": ["src/types/ast.test-d.ts", "src/types/ast.ts"]
+	"include": [
+		"src/nodes.test-d.ts",
+		"src/nodes.ts",
+		"src/types/ast.test-d.ts",
+		"src/types/ast.ts"
+	]
 }

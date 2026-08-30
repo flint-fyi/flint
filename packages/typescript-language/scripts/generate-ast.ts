@@ -35,6 +35,12 @@ const aliases = new Map<string, AliasData>();
 const categoryCompatibilityMembers = new Map([
 	["IterationStatement", ["ForInStatement", "ForOfStatement"]],
 ]);
+const canonicalSyntaxKindNames = new Map<number, string>();
+for (const [name, value] of Object.entries(SyntaxKind)) {
+	if (typeof value === "number" && !canonicalSyntaxKindNames.has(value)) {
+		canonicalSyntaxKindNames.set(value, name);
+	}
+}
 
 function closingAngleCount(text: string): number {
 	return text.startsWith(">>>") ? 3 : text.startsWith(">>") ? 2 : 1;
@@ -338,6 +344,12 @@ for (const name of [...exportedNames].sort()) {
 lines.push(
 	"export type Token<TKind extends NativeAST.TokenSyntaxKind = NativeAST.TokenSyntaxKind> = NativeAST.Token<TKind>;",
 );
+
+lines.push("", "export interface SyntaxKindNamesByKind {");
+for (const name of canonicalSyntaxKindNames.values()) {
+	lines.push(`\t[NativeAST.SyntaxKind.${name}]: "${name}";`);
+}
+lines.push("}");
 
 const generatedKindAliases = new Map<string, string>();
 for (const members of genericMembers.values()) {

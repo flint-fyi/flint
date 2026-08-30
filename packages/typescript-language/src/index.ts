@@ -18,6 +18,7 @@ export {
 	throwUnknownLanguageExtension,
 	type TypeScriptFileServices,
 	typescriptLanguage,
+	visitTypeScriptNodes,
 } from "./language.ts";
 export type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 export {
