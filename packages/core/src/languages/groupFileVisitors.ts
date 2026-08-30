@@ -21,13 +21,13 @@ export interface GroupedFileVisitors<Node, Services extends object> {
 
 type UnknownVisitor = RuleVisitor<never, never>;
 
-type VisitorPhase = "enter" | "exit";
-
 interface VisitorEntry {
-	phase: VisitorPhase;
 	name: string;
+	phase: VisitorPhase;
 	visitor: UnknownVisitor;
 }
+
+type VisitorPhase = "enter" | "exit";
 
 const exitSuffix = ":exit";
 
@@ -41,8 +41,8 @@ const visitorEntries = new WeakCachedFactory<object, readonly VisitorEntry[]>(
 			if (visitor) {
 				entries.push({
 					...(key.endsWith(exitSuffix)
-						? { phase: "exit", name: key.slice(0, -exitSuffix.length) }
-						: { phase: "enter", name: key }),
+						? { name: key.slice(0, -exitSuffix.length), phase: "exit" }
+						: { name: key, phase: "enter" }),
 					visitor,
 				});
 			}
