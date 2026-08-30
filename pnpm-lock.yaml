@@ -288,8 +288,8 @@ catalogs:
       specifier: 10.10.0
       version: 10.10.0
     eslint-plugin-yml:
-      specifier: 3.4.0
-      version: 3.4.0
+      specifier: 3.8.1
+      version: 3.8.1
     markdownlint:
       specifier: 0.41.1
       version: 0.41.1
@@ -361,8 +361,8 @@ catalogs:
       specifier: 3.2.0
       version: 3.2.0
     eslint-plugin-yml:
-      specifier: 3.4.0
-      version: 3.4.0
+      specifier: 3.8.1
+      version: 3.8.1
     execa:
       specifier: 10.0.1
       version: 10.0.1
@@ -579,7 +579,7 @@ importers:
         version: 3.2.0(eslint@10.9.1)
       eslint-plugin-yml:
         specifier: catalog:dev
-        version: 3.4.0(eslint@10.9.1)
+        version: 3.8.1(eslint@10.9.1)
       flint:
         specifier: workspace:^
         version: link:packages/flint
@@ -1441,7 +1441,7 @@ importers:
         version: 10.10.0(@typescript-eslint/parser@8.68.0)(eslint@10.9.1)(vue-eslint-parser@10.4.1)
       eslint-plugin-yml:
         specifier: catalog:comparisons
-        version: 3.4.0(eslint@10.9.1)
+        version: 3.8.1(eslint@10.9.1)
       markdownlint:
         specifier: catalog:comparisons
         version: 0.41.1(supports-color@10.2.2)
@@ -5250,8 +5250,8 @@ packages:
       '@typescript-eslint/parser':
         optional: true
 
-  eslint-plugin-yml@3.4.0:
-    resolution: {integrity: sha512-j6U3ESrAkidkvNb3HFN2UMxke46GNp6bsJokabXCICcgomSy3YU4oED9cjzkZ58nYxWD5qnWV1b/2YlqyWMOxA==}
+  eslint-plugin-yml@3.8.1:
+    resolution: {integrity: sha512-E/70psRwxz5EJ8dBtzrFfqSiiInuSytbdtFCjueb/GcKjsWzPBfxfhtQePImMAPjHwMA/VDurO7DJwStDJ4wWg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
     peerDependencies:
       eslint: '>=9.38.0'
@@ -11534,7 +11534,7 @@ snapshots:
     optionalDependencies:
       '@typescript-eslint/parser': 8.68.0(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
 
-  eslint-plugin-yml@3.4.0(eslint@10.9.1):
+  eslint-plugin-yml@3.8.1(eslint@10.9.1):
     dependencies:
       '@eslint/core': 1.2.1
       '@eslint/plugin-kit': 0.7.2
