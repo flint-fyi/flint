@@ -127,7 +127,7 @@ function createIssueBodyLinterComment(linter: string): string {
 }
 
 function createIssueRulesDeltaComment(coverage: RuleCoverage): string {
-	return `<!-- {missing:[${coverage.missing.map((rule) => rule.name).join(",")}], stale: [${coverage.stale.join(",")}]} -->`;
+	return `<!-- {missing: [${coverage.missing.map((rule) => rule.name).join(",")}], stale: [${coverage.stale.join(",")}]} -->`;
 }
 
 function gh(args: string[], input?: string): string {
