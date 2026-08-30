@@ -118,7 +118,6 @@ const linterRuleReferenceSchema: z.ZodType<LinterRuleReference> = z
 	})
 	.strict();
 
-/** @internal */
 export interface LinterRuleReference {
 	name: string;
 	url: string;
