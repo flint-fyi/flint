@@ -7,6 +7,10 @@
 		"types": ["node"],
 		"erasableSyntaxOnly": false
 	},
-	"include": ["src/**/*.test-d.ts", "src/**/*.test.ts"],
+	"include": [
+		"src/**/*.test-d.ts",
+		"src/**/*.test.ts",
+		"src/**/*.testUtils.ts"
+	],
 	"references": [{ "path": "./tsconfig.src.json" }]
 }

@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type * as AST from "../types/ast.ts";
 import { unwrapParenthesizedNode } from "./unwrapParenthesizedNode.ts";
@@ -25,7 +25,7 @@ export function getStaticValue(node: AST.Expression): StaticValue | undefined {
 		case SyntaxKind.NonNullExpression:
 		case SyntaxKind.SatisfiesExpression:
 		case SyntaxKind.TypeAssertionExpression:
-			return getStaticValue(unwrapped.expression);
+			return getStaticValue(unwrapped.expression as AST.Expression);
 
 		case SyntaxKind.BigIntLiteral:
 			return { value: BigInt(unwrapped.text.slice(0, -1)) };
@@ -56,7 +56,7 @@ export function getStaticValue(node: AST.Expression): StaticValue | undefined {
 function getPrefixUnaryStaticValue(
 	node: AST.PrefixUnaryExpression,
 ): StaticValue | undefined {
-	const operand = getStaticValue(node.operand);
+	const operand = getStaticValue(node.operand as AST.Expression);
 	if (!operand) {
 		return undefined;
 	}

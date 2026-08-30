@@ -1,5 +1,7 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import {
+	isAssignmentOperator,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import type * as AST from "../types/ast.ts";
 
@@ -11,7 +13,7 @@ export function isNonReferenceIdentifier(identifier: AST.Identifier): boolean {
 		return true;
 	}
 
-	const { parent } = identifier;
+	const parent = identifier.parent as AST.AnyNode;
 
 	switch (parent.kind) {
 		case SyntaxKind.BindingElement:
@@ -35,7 +37,7 @@ export function isNonReferenceIdentifier(identifier: AST.Identifier): boolean {
 }
 
 export function isWriteReference(identifier: AST.Identifier): boolean {
-	const { parent } = identifier;
+	const parent = identifier.parent as AST.AnyNode;
 
 	if (isAssignmentTarget(identifier)) {
 		return true;
@@ -79,7 +81,7 @@ function isAssignmentTarget(identifier: AST.Identifier) {
 			case SyntaxKind.BinaryExpression:
 				return (
 					parent.left === current &&
-					tsutils.isAssignmentKind(parent.operatorToken.kind)
+					isAssignmentOperator(parent.operatorToken.kind)
 				);
 
 			case SyntaxKind.ForInStatement:
@@ -92,13 +94,13 @@ function isAssignmentTarget(identifier: AST.Identifier) {
 }
 
 function isIdentifierDeclaration(identifier: AST.Identifier) {
-	const { parent } = identifier;
+	const parent = identifier.parent as AST.AnyNode;
 
 	switch (parent.kind) {
 		case SyntaxKind.BindingElement:
 		case SyntaxKind.Parameter:
 		case SyntaxKind.VariableDeclaration:
-			return isIdentifierWithinParent(identifier, parent.name);
+			return !!parent.name && isIdentifierWithinParent(identifier, parent.name);
 		case SyntaxKind.ClassDeclaration:
 		case SyntaxKind.ClassExpression:
 		case SyntaxKind.FunctionDeclaration:
@@ -138,11 +140,11 @@ function isIdentifierWithinParent(
 function isTypeReferenceIdentifier(identifier: AST.Identifier) {
 	let current: AST.AnyNode = identifier;
 
-	while (current.parent.kind === SyntaxKind.QualifiedName) {
-		current = current.parent;
+	while ((current.parent as AST.AnyNode).kind === SyntaxKind.QualifiedName) {
+		current = current.parent as AST.AnyNode;
 	}
 
-	const parent = current.parent;
+	const parent = current.parent as AST.AnyNode;
 	if (parent.kind !== SyntaxKind.TypeReference) {
 		return false;
 	}

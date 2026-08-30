@@ -1,11 +1,10 @@
-import type ts from "typescript";
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { AST, Checker } from "@flint.fyi/typescript-language";
 
 export type BuiltInArrayMethodNode = AST.CallExpression & {
 	expression: AST.PropertyAccessExpression & {
-		expression: ts.Expression;
+		expression: AST.Expression;
 	};
 };
 
@@ -14,11 +13,12 @@ export function isBuiltinArrayMethod(
 	node: AST.CallExpression,
 	typeChecker: Checker,
 ): node is BuiltInArrayMethodNode {
+	const expression = node.expression as AST.Expression;
 	return (
-		node.expression.kind === SyntaxKind.PropertyAccessExpression &&
-		node.expression.name.text === name &&
+		expression.kind === SyntaxKind.PropertyAccessExpression &&
+		expression.name.text === name &&
 		typeChecker.isArrayType(
-			typeChecker.getTypeAtLocation(node.expression.expression),
+			typeChecker.getTypeAtLocation(expression.expression),
 		) &&
 		node.parent.kind !== SyntaxKind.ExpressionStatement
 	);

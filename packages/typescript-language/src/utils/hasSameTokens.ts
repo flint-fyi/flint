@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type * as AST from "../types/ast.ts";
 import { unwrapParenthesizedNode } from "./unwrapParenthesizedNode.ts";
@@ -8,64 +8,75 @@ export function hasSameTokens(
 	nodeB: AST.AnyNode,
 	sourceFile: AST.SourceFile,
 ): boolean {
-	const queueA: ts.Node[] = [unwrapParenthesizedNode(nodeA)];
-	const queueB: ts.Node[] = [unwrapParenthesizedNode(nodeB)];
-
-	while (true) {
-		const currentA = queueA.shift();
-		const currentB = queueB.shift();
-
-		if (!currentA || !currentB) {
-			break;
-		}
-
-		if (currentA.kind !== currentB.kind) {
-			return false;
-		}
-
-		if (ts.isTokenKind(currentA.kind)) {
-			if (!areSameToken(currentA, currentB, sourceFile)) {
-				return false;
-			}
-			continue;
-		}
-
-		const childrenA = currentA.getChildren(sourceFile);
-		const childrenB = currentB.getChildren(sourceFile);
-
-		if (childrenA.length !== childrenB.length) {
-			return false;
-		}
-
-		queueA.push(...childrenA);
-		queueB.push(...childrenB);
-	}
-
-	return queueA.length === queueB.length;
+	const nodeIdentitiesA = getNodeIdentities(
+		unwrapParenthesizedNode(nodeA),
+		sourceFile,
+	);
+	const nodeIdentitiesB = getNodeIdentities(
+		unwrapParenthesizedNode(nodeB),
+		sourceFile,
+	);
+	return (
+		nodeIdentitiesA.length === nodeIdentitiesB.length &&
+		nodeIdentitiesA.every(
+			(nodeIdentity, index) => nodeIdentity === nodeIdentitiesB[index],
+		)
+	);
 }
 
-function areSameToken(
-	nodeA: ts.Node,
-	nodeB: ts.Node,
+function getNodeIdentities(
+	node: AST.AnyNode,
 	sourceFile: AST.SourceFile,
-): boolean {
-	if (
-		ts.isIdentifier(nodeA) ||
-		ts.isPrivateIdentifier(nodeA) ||
-		ts.isNumericLiteral(nodeA) ||
-		ts.isBigIntLiteral(nodeA) ||
-		ts.isStringLiteral(nodeA) ||
-		ts.isNoSubstitutionTemplateLiteral(nodeA)
-	) {
-		return nodeA.text === (nodeB as typeof nodeA).text;
+): string[] {
+	const identities: string[] = [];
+	function visit(current: AST.AnyNode): void {
+		identities.push(getNodeIdentity(current, sourceFile));
+		current.forEachChild((child) => {
+			visit(child as AST.AnyNode);
+		});
 	}
+	visit(node);
+	return identities;
+}
 
-	if (nodeA.kind === SyntaxKind.RegularExpressionLiteral) {
-		return (
-			sourceFile.text.slice(nodeA.getStart(sourceFile), nodeA.getEnd()) ===
-			sourceFile.text.slice(nodeB.getStart(sourceFile), nodeB.getEnd())
-		);
+function getNodeIdentity(
+	node: AST.AnyNode,
+	sourceFile: AST.SourceFile,
+): string {
+	switch (node.kind) {
+		case SyntaxKind.HeritageClause:
+			return `${String(node.kind)}:${String((node as AST.HeritageClause).token)}`;
+
+		case SyntaxKind.ImportAttributes:
+			return `${String(node.kind)}:${String((node as AST.ImportAttributes).token)}`;
+
+		case SyntaxKind.MetaProperty:
+			return `${String(node.kind)}:${String((node as AST.MetaProperty).keywordToken)}`;
+
+		case SyntaxKind.ModuleDeclaration:
+			return `${String(node.kind)}:${String((node as AST.ModuleDeclaration).keyword)}`;
+
+		case SyntaxKind.PostfixUnaryExpression:
+			return `${String(node.kind)}:${String((node as AST.PostfixUnaryExpression).operator)}`;
+
+		case SyntaxKind.PrefixUnaryExpression:
+			return `${String(node.kind)}:${String((node as AST.PrefixUnaryExpression).operator)}`;
+
+		case SyntaxKind.TypeOperator:
+			return `${String(node.kind)}:${String((node as AST.TypeOperatorNode).operator)}`;
+
+		case SyntaxKind.BigIntLiteral:
+		case SyntaxKind.Identifier:
+		case SyntaxKind.NoSubstitutionTemplateLiteral:
+		case SyntaxKind.NumericLiteral:
+		case SyntaxKind.PrivateIdentifier:
+		case SyntaxKind.StringLiteral:
+			return `${String(node.kind)}:${(node as AST.Identifier).text}`;
+
+		case SyntaxKind.RegularExpressionLiteral:
+			return `${String(node.kind)}:${sourceFile.text.slice(node.getStart(sourceFile), node.end)}`;
+
+		default:
+			return String(node.kind);
 	}
-
-	return true;
 }

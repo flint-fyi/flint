@@ -1,7 +1,6 @@
-import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
-import type * as AST from "../types/ast.ts";
+import { createNativeSourceFile } from "../test/createNativeSourceFile.testUtils.ts";
 import {
 	extractDirectivesFromTypeScriptFile,
 	parseDirectivesFromTypeScriptFile,
@@ -9,12 +8,7 @@ import {
 
 describe(parseDirectivesFromTypeScriptFile, () => {
 	it("returns empty arrays when there are no directives", () => {
-		const sourceFile = ts.createSourceFile(
-			"test.ts",
-			"// unrelated",
-			ts.ScriptTarget.ESNext,
-			true,
-		) as AST.SourceFile;
+		const sourceFile = createNativeSourceFile("// unrelated");
 
 		const actual = parseDirectivesFromTypeScriptFile(sourceFile);
 
@@ -24,17 +18,23 @@ describe(parseDirectivesFromTypeScriptFile, () => {
 		});
 	});
 
+	it("accepts a disable-file directive in the header before code", () => {
+		const sourceFile = createNativeSourceFile(
+			"\n// flint-disable-file a\nconst value = 1;",
+		);
+
+		const actual = parseDirectivesFromTypeScriptFile(sourceFile);
+
+		expect(actual.directives).toHaveLength(1);
+		expect(actual.reports).toEqual([]);
+	});
+
 	it("returns parsed directives when there are comment directives", () => {
-		const sourceFile = ts.createSourceFile(
-			"test.ts",
-			`
+		const sourceFile = createNativeSourceFile(`
                 // flint-disable-file a
                 // flint-disable-next-line b
                 // flint-invalid
-            `,
-			ts.ScriptTarget.ESNext,
-			true,
-		) as AST.SourceFile;
+            `);
 
 		const actual = parseDirectivesFromTypeScriptFile(sourceFile);
 
@@ -112,12 +112,7 @@ describe(parseDirectivesFromTypeScriptFile, () => {
 });
 
 function createSourceFile(content: string) {
-	return ts.createSourceFile(
-		"test.ts",
-		content,
-		ts.ScriptTarget.ESNext,
-		true,
-	) as AST.SourceFile;
+	return createNativeSourceFile(content);
 }
 
 describe(extractDirectivesFromTypeScriptFile, () => {

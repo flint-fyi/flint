@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type { AST } from "@flint.fyi/typescript-language";
 
@@ -14,12 +14,11 @@ export function isStringRawNoSubstitution(
 	}
 
 	// TODO: Name-based only; not type-aware about a shadowed `String`.
-	const tag = node.tag;
+	const tag = node.tag as AST.Expression;
 	return (
 		tag.kind === SyntaxKind.PropertyAccessExpression &&
 		tag.expression.kind === SyntaxKind.Identifier &&
-		tag.expression.text === "String" &&
-		tag.name.kind === SyntaxKind.Identifier &&
+		(tag.expression as AST.Identifier).text === "String" &&
 		tag.name.text === "raw" &&
 		node.template.kind === SyntaxKind.NoSubstitutionTemplateLiteral
 	);

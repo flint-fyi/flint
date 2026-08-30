@@ -1,4 +1,6 @@
-import ts from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+
+import type * as AST from "../types/ast.ts";
 
 const methodsReturningNewArray = new Set([
 	"concat",
@@ -22,30 +24,35 @@ const objectStaticMethods = new Set(["entries", "keys", "values"]);
  * These are cases where a new array is created immediately before the method call,
  * so mutating methods like .sort() or .reverse() are safe to use.
  */
-export function isInlineArrayCreation(node: ts.Expression): boolean {
-	if (ts.isArrayLiteralExpression(node)) {
+export function isInlineArrayCreation(node: AST.Expression): boolean {
+	if (node.kind === SyntaxKind.ArrayLiteralExpression) {
 		return true;
 	}
 
-	if (ts.isParenthesizedExpression(node)) {
-		return isInlineArrayCreation(node.expression);
+	if (node.kind === SyntaxKind.ParenthesizedExpression) {
+		return isInlineArrayCreation(node.expression as AST.Expression);
 	}
 
-	if (ts.isCallExpression(node)) {
-		if (ts.isPropertyAccessExpression(node.expression)) {
-			const methodName = node.expression.name.text;
+	if (node.kind === SyntaxKind.CallExpression) {
+		const callExpression = node;
+		if (
+			callExpression.expression.kind === SyntaxKind.PropertyAccessExpression
+		) {
+			const propertyAccess =
+				callExpression.expression as AST.PropertyAccessExpression;
+			const methodName = propertyAccess.name.text;
 
 			if (
-				ts.isIdentifier(node.expression.expression) &&
-				node.expression.expression.text === "Object" &&
+				propertyAccess.expression.kind === SyntaxKind.Identifier &&
+				(propertyAccess.expression as AST.Identifier).text === "Object" &&
 				objectStaticMethods.has(methodName)
 			) {
 				return true;
 			}
 
 			if (
-				ts.isIdentifier(node.expression.expression) &&
-				node.expression.expression.text === "Array" &&
+				propertyAccess.expression.kind === SyntaxKind.Identifier &&
+				(propertyAccess.expression as AST.Identifier).text === "Array" &&
 				(methodName === "from" || methodName === "of")
 			) {
 				return true;
@@ -57,18 +64,18 @@ export function isInlineArrayCreation(node: ts.Expression): boolean {
 		}
 
 		if (
-			ts.isIdentifier(node.expression) &&
-			node.expression.text === "Array" &&
-			ts.isNewExpression(node.parent)
+			callExpression.expression.kind === SyntaxKind.Identifier &&
+			(callExpression.expression as AST.Identifier).text === "Array" &&
+			node.parent.kind === SyntaxKind.NewExpression
 		) {
 			return true;
 		}
 	}
 
 	if (
-		ts.isNewExpression(node) &&
-		ts.isIdentifier(node.expression) &&
-		node.expression.text === "Array"
+		node.kind === SyntaxKind.NewExpression &&
+		node.expression.kind === SyntaxKind.Identifier &&
+		(node.expression as AST.Identifier).text === "Array"
 	) {
 		return true;
 	}

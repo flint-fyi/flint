@@ -1,4 +1,4 @@
-import ts, { SyntaxKind } from "typescript";
+import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
 
 import type * as AST from "../types/ast.ts";
 import type {
@@ -53,7 +53,7 @@ export function getVariableDeclarationScope(
 ): ScopeInternal {
 	if (
 		node.parent.kind === SyntaxKind.VariableDeclarationList &&
-		!(node.parent.flags & ts.NodeFlags.BlockScoped)
+		!(node.parent.flags & NodeFlags.BlockScoped)
 	) {
 		return findContainingVariableScope(scope);
 	}
@@ -103,7 +103,7 @@ function isBlockScopeBoundary(node: AST.AnyNode) {
 	return (
 		node.kind === SyntaxKind.Block &&
 		node.parent.kind !== SyntaxKind.CatchClause &&
-		!isFunctionLike(node.parent)
+		!isFunctionLike(node.parent as AST.AnyNode)
 	);
 }
 

@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import type * as AST from "../types/ast.ts";
 
@@ -6,6 +6,8 @@ export function unwrapParentParenthesizedExpressions(
 	node: AST.BinaryExpression | AST.ParenthesizedExpression,
 ): AST.LeftHandSideExpressionParent {
 	return node.parent.kind === SyntaxKind.ParenthesizedExpression
-		? unwrapParentParenthesizedExpressions(node.parent)
-		: node.parent;
+		? unwrapParentParenthesizedExpressions(
+				node.parent as AST.ParenthesizedExpression,
+			)
+		: (node.parent as AST.LeftHandSideExpressionParent);
 }

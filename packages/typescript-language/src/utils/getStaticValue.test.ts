@@ -1,6 +1,7 @@
-import ts, { SyntaxKind } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import { describe, expect, it } from "vitest";
 
+import { createNativeSourceFile } from "../test/createNativeSourceFile.testUtils.ts";
 import type * as AST from "../types/ast.ts";
 import {
 	getStaticNumberValue,
@@ -81,19 +82,13 @@ describe(getStaticStringValue, () => {
 });
 
 function parseExpression(source: string): AST.Expression {
-	const sourceFile = ts.createSourceFile(
-		"getStaticValue.test.ts",
-		`const value = ${source};`,
-		ts.ScriptTarget.ESNext,
-		true,
-		ts.ScriptKind.TS,
-	);
+	const sourceFile = createNativeSourceFile(`const value = ${source};`);
 	const statement = sourceFile.statements[0];
 	if (statement?.kind !== SyntaxKind.VariableStatement) {
 		throw new Error(`Could not parse expression: ${source}`);
 	}
 
-	const initializer = (statement as ts.VariableStatement).declarationList
+	const initializer = (statement as AST.VariableStatement).declarationList
 		.declarations[0]?.initializer;
 	if (!initializer) {
 		throw new Error(`Could not parse expression: ${source}`);

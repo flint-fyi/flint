@@ -32,10 +32,10 @@ function createDiagnostic(
 		fileName,
 		messageChain: [
 			{
+				...(detailMessageChain && { messageChain: [...detailMessageChain] }),
 				category: 1,
 				code: 1234,
 				end: 0,
-				messageChain: detailMessageChain,
 				pos: 0,
 				text: detail,
 			},

@@ -1,29 +1,23 @@
-import {
-	isClassDeclaration,
-	isFunctionDeclaration,
-	isIdentifier,
-	isInterfaceDeclaration,
-	isPropertySignature,
-	isVariableDeclaration,
-	type Declaration,
-	type Node,
-	type Program,
-} from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
+import type { Program } from "typescript-native/unstable/sync";
 
-import type { Checker } from "@flint.fyi/typescript-language";
-
+import type * as AST from "../types/ast.ts";
+import type { Checker } from "../types/checker.ts";
 import { declarationIncludesGlobal } from "./declarationIncludesGlobal.ts";
 
 /**
  * TODO: Use a scope analyzer (#400).
  */
 export function isGlobalDeclarationOfName(
-	node: Node,
+	node: AST.AnyNode,
 	name: string,
 	typeChecker: Checker,
 	program: Program,
 ): boolean {
-	const declarations = typeChecker.getSymbolAtLocation(node)?.getDeclarations();
+	const declarations = typeChecker
+		.getSymbolAtLocation(node)
+		?.declarations.map((declaration) => declaration.resolve())
+		.filter((declaration): declaration is AST.Declaration => !!declaration);
 	if (!declarations) {
 		return false;
 	}
@@ -32,12 +26,11 @@ export function isGlobalDeclarationOfName(
 		// Special case: a variable set to a known identifier. E.g.:
 		// const CustomFunction = Function;
 		if (
-			isVariableDeclaration(declaration) &&
-			declaration.initializer &&
-			isIdentifier(declaration.initializer)
+			declaration.kind === SyntaxKind.VariableDeclaration &&
+			declaration.initializer?.kind === SyntaxKind.Identifier
 		) {
 			return isGlobalDeclarationOfName(
-				declaration.initializer,
+				declaration.initializer as AST.AnyNode,
 				name,
 				typeChecker,
 				program,
@@ -45,9 +38,9 @@ export function isGlobalDeclarationOfName(
 		}
 
 		// Special case: a property of an interface
-		if (isPropertySignature(declaration)) {
+		if (declaration.kind === SyntaxKind.PropertySignature) {
 			return isGlobalDeclarationOfName(
-				declaration.parent,
+				declaration.parent as AST.AnyNode,
 				name,
 				typeChecker,
 				program,
@@ -61,14 +54,15 @@ export function isGlobalDeclarationOfName(
 	});
 }
 
-function isDeclarationOfName(node: Declaration, name: string) {
-	if (
-		isClassDeclaration(node) ||
-		isFunctionDeclaration(node) ||
-		isInterfaceDeclaration(node) ||
-		isVariableDeclaration(node)
-	) {
-		return node.name && isIdentifier(node.name) && node.name.text === name;
+function isDeclarationOfName(node: AST.Declaration, name: string): boolean {
+	switch (node.kind) {
+		case SyntaxKind.ClassDeclaration:
+		case SyntaxKind.FunctionDeclaration:
+		case SyntaxKind.InterfaceDeclaration:
+		case SyntaxKind.VariableDeclaration:
+			return (
+				node.name?.kind === SyntaxKind.Identifier && node.name.text === name
+			);
 	}
 
 	return false;

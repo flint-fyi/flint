@@ -1,6 +1,6 @@
-import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
+import { createNativeSourceFile } from "../test/createNativeSourceFile.testUtils.ts";
 import { containsGlobalDeclarations } from "./containsGlobalDeclarations.ts";
 
 describe(containsGlobalDeclarations, () => {
@@ -14,6 +14,14 @@ describe(containsGlobalDeclarations, () => {
       }
     `;
 		const sourceFile = getSourceFile(code);
+		expect(containsGlobalDeclarations(sourceFile)).toBe(true);
+	});
+
+	it('returns true for string-literal declare module "global" blocks', () => {
+		const sourceFile = getSourceFile(
+			'import "package"; declare module "global" { interface Value {} }',
+		);
+
 		expect(containsGlobalDeclarations(sourceFile)).toBe(true);
 	});
 
@@ -67,10 +75,5 @@ describe(containsGlobalDeclarations, () => {
 });
 
 function getSourceFile(rawFileContent: string) {
-	return ts.createSourceFile(
-		"mayContainGlobals.ts",
-		rawFileContent,
-		ts.ScriptTarget.ESNext,
-		true,
-	);
+	return createNativeSourceFile(rawFileContent);
 }
