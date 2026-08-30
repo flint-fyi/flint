@@ -2,7 +2,7 @@ packages:
   - packages/*
 
 allowBuilds:
-  esbuild@0.28.1: true
+  esbuild@0.28.2: true
   sharp@0.34.5: true
 
 autoInstallPeers: false
