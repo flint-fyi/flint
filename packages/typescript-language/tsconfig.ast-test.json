@@ -1,0 +1,8 @@
+{
+	"extends": "@flint.fyi/build/tsconfig.base.json",
+	"compilerOptions": {
+		"noEmit": true,
+		"types": ["node"]
+	},
+	"include": ["src/types/ast.test-d.ts", "src/types/ast.ts"]
+}

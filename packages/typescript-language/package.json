@@ -22,7 +22,9 @@
 		"dist/"
 	],
 	"scripts": {
-		"test": "vitest --project typescript-language"
+		"generate:ast": "node scripts/generate-ast.ts",
+		"test": "pnpm test:ast && vitest --project typescript-language",
+		"test:ast": "pnpm generate:ast && git diff --exit-code -- src/types/ast.ts && tsc --project tsconfig.ast-test.json"
 	},
 	"dependencies": {
 		"@flint.fyi/core": "workspace:^",
@@ -37,6 +39,7 @@
 	},
 	"devDependencies": {
 		"@flint.fyi/build": "workspace:^",
+		"prettier": "catalog:dev",
 		"tsdown": "catalog:dev",
 		"vitest": "catalog:dev"
 	},

@@ -1848,6 +1848,9 @@ importers:
       '@flint.fyi/build':
         specifier: workspace:^
         version: link:../build
+      prettier:
+        specifier: catalog:dev
+        version: 3.8.1
       tsdown:
         specifier: catalog:dev
         version: 0.22.14(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(oxc-resolver@11.24.2)(typescript@6.0.3)
