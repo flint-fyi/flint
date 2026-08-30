@@ -6,8 +6,7 @@ Flint will replace its TypeScript 5/6 compiler integration with the native TypeS
 This is a clean break rather than a dual-engine transition.
 The migration must preserve existing lint behavior for TypeScript, JavaScript, Astro, Svelte, and Vue files while intentionally redesigning Flint's TypeScript-specific rule-author API around native snapshots, projects, AST nodes, and checker handles.
 
-Implementation will begin against an exact TypeScript 7.1 nightly and follow the beta and release-candidate stabilization milestones.
-The native Flint major will not be published before TypeScript 7.1 is stable.
+Implementation will begin against an exact TypeScript 7.1 nightly and deliberately adopt subsequent API changes.
 
 ## Goals
 
@@ -22,16 +21,16 @@ The native Flint major will not be published before TypeScript 7.1 is stable.
 ## Non-Goals
 
 - Shipping a compatibility layer that emulates TypeScript 6's `Node`, `Program`, `TypeChecker`, or ProjectService APIs.
-- Supporting TypeScript 5/6 and 7.1 in the same Flint release.
+- Supporting TypeScript 5/6 and 7.1 with parallel runtime engines.
 - Temporarily removing rules or embedded-language support to accelerate the cutover.
 - Depending on private TypeScript protocol or Go implementation details.
 - Guaranteeing TypeScript's advertised compiler speedup applies directly to every Flint workload.
 
 ## Approach
 
-The work will use a staged native rewrite with one final release cutover.
+The work will use a staged native rewrite.
 Each stage will establish a tested native boundary before dependent rules or languages move to it.
-The repository may contain temporary migration states during development, but no published package will expose a dual engine.
+The repository may contain temporary migration states during development, but the completed implementation will have only the native engine.
 
 A big-bang rewrite would make failures across hundreds of TypeScript imports difficult to isolate.
 A TypeScript 6 compatibility facade would conceal snapshot lifetimes, encourage excessive process-boundary calls, and preserve APIs that TypeScript 7.1 intentionally replaced.
@@ -85,7 +84,7 @@ Unrelated projects will retain their incremental state.
 ## Native Rule API
 
 The TypeScript file-services contract will expose the active native `snapshot`, `project`, `program`, `sourceFile`, `checker`, and optional `spanMap`.
-This API is intentionally breaking and will not preserve legacy TypeScript object types.
+It will use native TypeScript object types rather than preserve legacy object types.
 
 Flint will retain visitor-based rule ergonomics.
 Visitor keys and parameter types will instead derive from native AST kinds and Flint's local discriminated unions.
@@ -208,14 +207,14 @@ CI will exercise Linux, macOS, and Windows because native binaries and mapper pr
 
 Performance benchmarks will compare TypeScript 6 and 7.1 project startup, warm snapshot updates, type-aware linting, and embedded-language linting.
 Measurements will separate native project construction, AST transfer, checker calls, mapper work, and Flint rule execution.
-Regressions caused by excessive process-boundary calls or uncached delegated-filesystem access must be investigated before release.
+Regressions caused by excessive process-boundary calls or uncached delegated-filesystem access must be investigated.
 
-## Delivery and Release
+## Dependency Progression and Cleanup
 
 Development will pin an exact TypeScript 7.1 nightly.
-The dependency will be updated deliberately at beta and release candidate, with compatibility changes isolated for review.
+Later TypeScript 7.1 versions will be adopted deliberately, with API compatibility changes isolated for review.
 
-The final cutover will remove:
+The completed migration will remove:
 
 - `@typescript-eslint/project-service`.
 - `ts-api-utils`.
@@ -223,10 +222,6 @@ The final cutover will remove:
 - Volar createProgram interception.
 - Legacy AST and checker declarations superseded by native types and the generated unions.
 - TypeScript 5/6 dependency and peer ranges.
-
-The native release will be a breaking Flint major published only after TypeScript 7.1 is stable and the complete platform and embedded-language test matrix passes.
-
-Release documentation will explain the TypeScript 7.1 requirement, supported native platforms, mapper process execution, the new TypeScript rule API, and migration examples for third-party rules.
 
 ## Further Reading
 
