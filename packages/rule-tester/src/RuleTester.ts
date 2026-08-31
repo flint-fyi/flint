@@ -34,6 +34,7 @@ export interface RuleTesterDefaults {
 }
 export interface RuleTesterOptions {
 	assertNoLanguageReports?: boolean;
+	afterAll?: TesterSetupAfterAll;
 	defaults?: RuleTesterDefaults;
 	describe?: TesterSetupDescribe;
 	diskBackedFSRoot?: string;
@@ -53,6 +54,8 @@ export type TesterSetupDescribe = (
 	setup: () => void,
 ) => void;
 
+export type TesterSetupAfterAll = (setup: () => void) => void;
+
 export type TesterSetupIt = (
 	description: string,
 	setup: () => Promise<void>,
@@ -61,10 +64,13 @@ export type TesterSetupIt = (
 export class RuleTester {
 	#fileFactories: CachedFactory<AnyLanguage, AnyLanguageFileFactory>;
 	#linterHost: VFSLinterHost;
-	#testerOptions: Required<Omit<RuleTesterOptions, "diskBackedFSRoot">>;
+	#testerOptions: Required<
+		Omit<RuleTesterOptions, "afterAll" | "diskBackedFSRoot">
+	>;
 
 	constructor({
 		assertNoLanguageReports = true,
+		afterAll,
 		defaults = {},
 		describe,
 		diskBackedFSRoot,
@@ -104,6 +110,21 @@ export class RuleTester {
 		this.#fileFactories = new CachedFactory((language: AnyLanguage) =>
 			language.createFileFactory(this.#linterHost),
 		);
+		const afterAllSetup = afterAll ?? getSetupFromScope(scope, "afterAll");
+		if (afterAllSetup) {
+			let disposed = false;
+			afterAllSetup(() => {
+				if (disposed) {
+					return;
+				}
+				disposed = true;
+				const resources = new DisposableStack();
+				for (const [, fileFactory] of this.#fileFactories.entries()) {
+					resources.use(fileFactory);
+				}
+				resources.dispose();
+			});
+		}
 
 		it = defaultTo(it, scope, "it");
 
@@ -270,6 +291,15 @@ function assertNoLanguageReports(languageReports: LanguageReports) {
 	}
 }
 
+function getSetupFromScope<TesterSetup>(
+	scope: Record<string, unknown>,
+	scopeKey: string,
+): TesterSetup | undefined {
+	return scopeKey in scope && typeof scope[scopeKey] === "function"
+		? (scope[scopeKey] as TesterSetup)
+		: undefined;
+}
+
 function defaultTo<TesterSetup extends TesterSetupDescribe | TesterSetupIt>(
 	provided: TesterSetup | undefined,
 	scope: Record<string, unknown>,
@@ -279,8 +309,9 @@ function defaultTo<TesterSetup extends TesterSetupDescribe | TesterSetupIt>(
 		return provided;
 	}
 
-	if (scopeKey in scope && typeof scope[scopeKey] === "function") {
-		return scope[scopeKey] as TesterSetup;
+	const setupFromScope = getSetupFromScope<TesterSetup>(scope, scopeKey);
+	if (setupFromScope) {
+		return setupFromScope;
 	}
 
 	throw new Error(`No ${scopeKey} function found`);

@@ -6,6 +6,7 @@ import { createTypeScriptFileSystem } from "./createTypeScriptFileSystem.ts";
 
 export interface TypeScriptProjectChanges {
 	changed?: string[];
+	closeFiles?: string[];
 	created?: string[];
 	deleted?: string[];
 	openFiles?: string[];
@@ -20,9 +21,12 @@ export interface TypeScriptProjectSession extends Disposable {
 export function createTypeScriptProjectSession(
 	host: LinterHost,
 ): TypeScriptProjectSession {
+	const observedSourceTextByFilePath = new Map<string, string | undefined>();
 	const api = new API({
 		cwd: host.getCurrentDirectory(),
-		fs: createTypeScriptFileSystem(host),
+		fs: createTypeScriptFileSystem(host, (fileName) => {
+			observedSourceTextByFilePath.set(fileName, host.readFileSync(fileName));
+		}),
 		runExternalCode: true,
 	});
 	let snapshot: Snapshot;
@@ -96,15 +100,41 @@ export function createTypeScriptProjectSession(
 			return snapshot;
 		},
 		[Symbol.dispose]: dispose,
-		update({ changed, created, deleted, openFiles, openProjects }) {
+		update({ changed, closeFiles, created, deleted, openFiles, openProjects }) {
 			assertActive();
+			const detectedChanged: string[] = [];
+			const detectedCreated: string[] = [];
+			const detectedDeleted: string[] = [];
+			for (const [
+				filePath,
+				previousSourceText,
+			] of observedSourceTextByFilePath) {
+				const sourceText = host.readFileSync(filePath);
+				if (sourceText === previousSourceText) {
+					continue;
+				}
+				if (previousSourceText === undefined) {
+					detectedCreated.push(filePath);
+				} else if (sourceText === undefined) {
+					detectedDeleted.push(filePath);
+				} else {
+					detectedChanged.push(filePath);
+				}
+			}
 			const previousSnapshot = snapshot;
 			snapshot = api.updateSnapshot({
 				fileChanges: {
-					...(changed && { changed }),
-					...(created && { created }),
-					...(deleted && { deleted }),
+					...((changed || detectedChanged.length) && {
+						changed: [...new Set([...(changed ?? []), ...detectedChanged])],
+					}),
+					...((created || detectedCreated.length) && {
+						created: [...new Set([...(created ?? []), ...detectedCreated])],
+					}),
+					...((deleted || detectedDeleted.length) && {
+						deleted: [...new Set([...(deleted ?? []), ...detectedDeleted])],
+					}),
 				},
+				...(closeFiles && { closeFiles }),
 				...(openFiles && { openFiles }),
 				...(openProjects && { openProjects }),
 			});

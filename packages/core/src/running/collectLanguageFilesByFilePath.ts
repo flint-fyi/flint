@@ -11,6 +11,7 @@ export function collectLanguageFilesByFilePath(
 	cached: Map<string, FileCacheStorage> | undefined,
 	rulesOptionsByFile: Map<AnyRule, Map<string, unknown>>,
 	host: LinterHost,
+	resources: DisposableStack,
 ): Map<
 	string,
 	{
@@ -27,18 +28,20 @@ export function collectLanguageFilesByFilePath(
 	>(() => new Map());
 
 	const languageFilesByLanguage = new CachedFactory((language: AnyLanguage) => {
-		const fileFactory = language.createFileFactory(host);
+		const fileFactory = resources.use(language.createFileFactory(host));
 
 		return new CachedFactory((filePath: string) =>
-			fileFactory.createFile({
-				filePath,
-				filePathAbsolute: makeAbsolute(filePath),
-				sourceText: nullThrows(
-					// TODO: switch to read this async
-					host.readFileSync(filePath),
-					`Expected ${filePath} to exist`,
-				),
-			}),
+			resources.use(
+				fileFactory.createFile({
+					filePath,
+					filePathAbsolute: makeAbsolute(filePath),
+					sourceText: nullThrows(
+						// TODO: switch to read this async
+						host.readFileSync(filePath),
+						`Expected ${filePath} to exist`,
+					),
+				}),
+			),
 		);
 	});
 

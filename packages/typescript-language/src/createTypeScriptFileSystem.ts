@@ -2,11 +2,17 @@ import type { FileSystem } from "typescript-native/unstable/fs";
 
 import type { LinterHost } from "@flint.fyi/core";
 
-export function createTypeScriptFileSystem(host: LinterHost): FileSystem {
+export function createTypeScriptFileSystem(
+	host: LinterHost,
+	onFileAccess?: (fileName: string) => void,
+): FileSystem {
 	return {
 		directoryExists: (directoryName) =>
 			host.fileTypeSync(directoryName) === "directory",
-		fileExists: (fileName) => host.fileTypeSync(fileName) === "file",
+		fileExists: (fileName) => {
+			onFileAccess?.(fileName);
+			return host.fileTypeSync(fileName) === "file";
+		},
 		getAccessibleEntries(directoryName) {
 			const entries = host.readDirectorySync(directoryName);
 			return {
@@ -18,6 +24,9 @@ export function createTypeScriptFileSystem(host: LinterHost): FileSystem {
 					.map(({ name }) => name),
 			};
 		},
-		readFile: (fileName) => host.readFileSync(fileName) ?? null,
+		readFile: (fileName) => {
+			onFileAccess?.(fileName);
+			return host.readFileSync(fileName) ?? null;
+		},
 	};
 }

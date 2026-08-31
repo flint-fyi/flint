@@ -135,37 +135,41 @@ export const typescriptLanguage: Language<
 	createFileFactory: (host) => {
 		const unwrapError = (error: unknown): unknown[] =>
 			error instanceof AggregateError ? error.errors : [error];
-		let batch:
+		let sessionState:
 			| undefined
 			| {
 					activeFiles: number;
 					disposed: boolean;
 					openFiles: string[];
+					sourceTextByFilePath: Map<string, string | undefined>;
 					session: TypeScriptProjectSession;
 			  };
+		let disposed = false;
 		let failed = false;
-		const disposeSession = (currentBatch: NonNullable<typeof batch>): void => {
-			if (currentBatch.disposed) {
+		const disposeSession = (
+			currentSessionState: NonNullable<typeof sessionState>,
+		): void => {
+			if (currentSessionState.disposed) {
 				return;
 			}
-			currentBatch.disposed = true;
-			currentBatch.session[Symbol.dispose]();
+			currentSessionState.disposed = true;
+			currentSessionState.session[Symbol.dispose]();
 		};
 		const disposeSessionForFailure = (
-			currentBatch: NonNullable<typeof batch>,
+			currentSessionState: NonNullable<typeof sessionState>,
 		): undefined | { disposalError: unknown } => {
 			try {
-				disposeSession(currentBatch);
+				disposeSession(currentSessionState);
 			} catch (disposalError) {
 				return { disposalError };
 			}
 		};
 		const failSession = (
-			currentBatch: NonNullable<typeof batch>,
+			currentSessionState: NonNullable<typeof sessionState>,
 			error: unknown,
 		): never => {
 			failed = true;
-			const disposalFailure = disposeSessionForFailure(currentBatch);
+			const disposalFailure = disposeSessionForFailure(currentSessionState);
 			if (disposalFailure) {
 				throw new AggregateError(
 					[error, ...unwrapError(disposalFailure.disposalError)],
@@ -176,31 +180,89 @@ export const typescriptLanguage: Language<
 			throw error;
 		};
 
+		const updateTrackedSourceFiles = (
+			currentSessionState: NonNullable<typeof sessionState>,
+		): void => {
+			const snapshot = currentSessionState.session.getSnapshot();
+			const sourceFileNames = new Set<string>();
+			for (const project of snapshot.getProjects?.() ?? []) {
+				for (const fileName of project.program.getSourceFileNames()) {
+					sourceFileNames.add(fileName);
+				}
+			}
+			currentSessionState.sourceTextByFilePath = new Map(
+				Array.from(sourceFileNames, (fileName) => [
+					fileName,
+					host.readFileSync(fileName),
+				]),
+			);
+		};
+
 		function createFile(data: FileAboutData) {
-			if (failed) {
+			if (disposed || failed) {
 				throw new Error("TypeScript project session has been disposed.");
 			}
-			const currentBatch = (batch ??= {
+			const currentSessionState = (sessionState ??= {
 				activeFiles: 0,
 				disposed: false,
-				openFiles: [],
+				openFiles: [] as string[],
+				sourceTextByFilePath: new Map<string, string | undefined>(),
 				session: createTypeScriptProjectSession(host),
 			});
 
 			log("Opening native file:", data.filePathAbsolute);
-			currentBatch.openFiles.push(data.filePathAbsolute);
+			const restartingOpenFiles =
+				currentSessionState.openFiles.length > 0 &&
+				currentSessionState.activeFiles === 0;
+			if (restartingOpenFiles) {
+				try {
+					currentSessionState.session.update({
+						closeFiles: [...currentSessionState.openFiles],
+					});
+				} catch (error) {
+					return failSession(currentSessionState, error);
+				}
+			}
+			const openingFile = !currentSessionState.openFiles.includes(
+				data.filePathAbsolute,
+			);
+			if (openingFile) {
+				currentSessionState.openFiles.push(data.filePathAbsolute);
+			}
+			const changed = [data.filePathAbsolute];
+			const deleted: string[] = [];
+			for (const [
+				filePath,
+				previousSourceText,
+			] of currentSessionState.sourceTextByFilePath) {
+				const sourceText = host.readFileSync(filePath);
+				if (sourceText === undefined) {
+					deleted.push(filePath);
+				} else if (sourceText !== previousSourceText) {
+					changed.push(filePath);
+				}
+			}
 			try {
-				currentBatch.session.update({ openFiles: [...currentBatch.openFiles] });
+				currentSessionState.session.update({
+					changed: [...new Set(changed)],
+					...(deleted.length && { deleted }),
+					...(restartingOpenFiles
+						? { openFiles: [...currentSessionState.openFiles] }
+						: openingFile
+							? { openFiles: [data.filePathAbsolute] }
+							: {}),
+				});
+				updateTrackedSourceFiles(currentSessionState);
 			} catch (error) {
-				return failSession(currentBatch, error);
+				return failSession(currentSessionState, error);
 			}
 			let fileDisposed = false;
 
 			const getSnapshot = (): Snapshot => {
-				if (currentBatch.disposed) {
+				if (currentSessionState.disposed) {
 					throw new Error("TypeScript project session has been disposed.");
 				}
-				return currentBatch.session.getSnapshot();
+				return currentSessionState.session.getSnapshot();
 			};
 			const getProject = (): Project =>
 				nullThrows(
@@ -240,13 +302,7 @@ export const typescriptLanguage: Language<
 					return;
 				}
 				fileDisposed = true;
-				currentBatch.activeFiles -= 1;
-				if (currentBatch.activeFiles === 0) {
-					disposeSession(currentBatch);
-					if (batch === currentBatch) {
-						batch = undefined;
-					}
-				}
+				currentSessionState.activeFiles -= 1;
 			};
 			try {
 				const sourceFile = getSourceFile();
@@ -259,7 +315,7 @@ export const typescriptLanguage: Language<
 						services,
 						[Symbol.dispose]: dispose,
 					};
-					currentBatch.activeFiles += 1;
+					currentSessionState.activeFiles += 1;
 					return file;
 				}
 
@@ -271,11 +327,22 @@ export const typescriptLanguage: Language<
 					`Cannot process ${data.filePathAbsolute} until Volar supports the native TypeScript project session.`,
 				);
 			} catch (error) {
-				return failSession(currentBatch, error);
+				return failSession(currentSessionState, error);
 			}
 		}
 
-		return { createFile };
+		return {
+			createFile,
+			[Symbol.dispose]: () => {
+				if (disposed) {
+					return;
+				}
+				disposed = true;
+				if (sessionState) {
+					disposeSession(sessionState);
+				}
+			},
+		};
 	},
 
 	getFileCacheImpacts: getTypeScriptFileCacheImpacts,

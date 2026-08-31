@@ -45,6 +45,7 @@ export async function collectFilesAndOptions(
 	host: LinterHost,
 	ignoreCache: boolean | undefined,
 	cacheLocationOverride: string | undefined,
+	resources: DisposableStack,
 ): Promise<CollectedFilesAndOptions> {
 	// 1. Collect all file paths to lint and the 'use' rule configuration groups
 	const { allFilePaths, useDefinitions } = await computeUseDefinitions(
@@ -70,6 +71,7 @@ export async function collectFilesAndOptions(
 		cached,
 		rulesOptionsByFile,
 		host,
+		resources,
 	);
 
 	// 5. Join language metadata files into the corresponding options by file path

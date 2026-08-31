@@ -30,6 +30,7 @@ export async function runConfig(
 ): Promise<LintResults> {
 	const cacheLocationOverride =
 		cacheLocationFromCli || configDefinition.cacheLocation;
+	using resources = new DisposableStack();
 
 	// 1. Based on the original config definition, collect:
 	//   - The full list of all file paths to be linted
@@ -46,15 +47,8 @@ export async function runConfig(
 		host,
 		ignoreCache,
 		cacheLocationOverride,
+		resources,
 	);
-
-	using files = new DisposableStack();
-
-	for (const languageAndFiles of languageFilesByFilePath.values()) {
-		for (const { file } of languageAndFiles) {
-			files.use(file);
-		}
-	}
 
 	// 2. For each lint rule, run it on all files and store each file's results
 	const reportsByFilePath = await runRules(rulesFilesAndOptionsByRule, host);

@@ -31,6 +31,7 @@ export function createLanguage<
 				createFile: (data: FileAboutData) => {
 					return makeDisposable(fileFactoryDefinition.createFile(data));
 				},
+				[Symbol.dispose]: () => fileFactoryDefinition[Symbol.dispose]?.(),
 			};
 
 			log("Created file factory.");

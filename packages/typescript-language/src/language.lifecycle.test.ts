@@ -48,7 +48,7 @@ function mockSnapshot(sourceFiles: Record<string, object>) {
 }
 
 describe("typescriptLanguage failed file lifecycle", () => {
-	it("starts a new session after the previous batch is disposed", () => {
+	it("keeps a session until its factory is disposed", () => {
 		mockSnapshot({
 			"/repo/first.ts": { fileName: "/repo/first.ts" },
 			"/repo/second.ts": { fileName: "/repo/second.ts" },
@@ -64,9 +64,10 @@ describe("typescriptLanguage failed file lifecycle", () => {
 			"/repo/second.ts",
 		);
 		second[Symbol.dispose]();
+		factory[Symbol.dispose]();
 
-		expect(mocks.createTypeScriptProjectSession).toHaveBeenCalledTimes(2);
-		expect(mocks.session[Symbol.dispose]).toHaveBeenCalledTimes(2);
+		expect(mocks.createTypeScriptProjectSession).toHaveBeenCalledOnce();
+		expect(mocks.session[Symbol.dispose]).toHaveBeenCalledOnce();
 	});
 
 	it("closes a first-file session exactly once when updating fails", () => {

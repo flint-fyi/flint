@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
 	createLanguage,
 	RuleCreator,
+	type FileAboutData,
 	type LanguageReports,
 } from "@flint.fyi/core";
 
@@ -15,13 +16,30 @@ import {
 } from "./RuleTester.ts";
 
 describe(RuleTester, () => {
+	it("disposes cached language factories once after all tests", async () => {
+		const afterAllSetups: (() => void)[] = [];
+		const dispose = vi.fn();
+		const { createFileFactory, run } = createTestSetup({
+			afterAll: (setup) => afterAllSetups.push(setup),
+			factoryDispose: dispose,
+		});
+
+		await run();
+		expect(afterAllSetups).toHaveLength(1);
+		afterAllSetups[0]?.();
+		afterAllSetups[0]?.();
+
+		expect(createFileFactory).toHaveBeenCalledOnce();
+		expect(dispose).toHaveBeenCalledOnce();
+	});
+
 	it("asserts that test cases contain no language reports by default", async () => {
 		const getLanguageReports = vi.fn(() => [
 			{ text: "A language report." },
 			{ text: "Another language report." },
 		]);
 
-		await expect(createTestSetup({ getLanguageReports })()).rejects.toThrow(
+		await expect(createTestSetup({ getLanguageReports }).run()).rejects.toThrow(
 			`Expected no language reports, but found 2:
 
 A language report.
@@ -38,23 +56,30 @@ Another language report.`,
 			createTestSetup({
 				assertNoLanguageReports: false,
 				getLanguageReports,
-			})(),
+			}).run(),
 		).resolves.toBeUndefined();
 		expect(getLanguageReports).not.toHaveBeenCalled();
 	});
 
 	it("allows languages without language reports", async () => {
-		await expect(createTestSetup({})()).resolves.toBeUndefined();
+		await expect(createTestSetup({}).run()).resolves.toBeUndefined();
 	});
 });
 
 function createTestSetup({
+	afterAll,
 	assertNoLanguageReports,
+	factoryDispose,
 	getLanguageReports,
 }: {
+	afterAll?: (setup: () => void) => void;
 	assertNoLanguageReports?: boolean;
+	factoryDispose?: () => void;
 	getLanguageReports?: () => LanguageReports;
-}): () => Promise<void> {
+}): {
+	createFileFactory: ReturnType<typeof vi.fn>;
+	run: () => Promise<void>;
+} {
 	const testSetups: (() => Promise<void>)[] = [];
 	const collectTest: TesterSetupIt = (_description, setup): void => {
 		testSetups.push(setup);
@@ -62,11 +87,13 @@ function createTestSetup({
 	const runDescribe: TesterSetupDescribe = (_description, setup): void => {
 		setup();
 	};
+	const createFileFactory = vi.fn(() => ({
+		createFile: (about: FileAboutData) => ({ about, services: {} }),
+		...(factoryDispose && { [Symbol.dispose]: factoryDispose }),
+	}));
 	const language = createLanguage({
 		about: { name: "Test" },
-		createFileFactory: () => ({
-			createFile: (about) => ({ about, services: {} }),
-		}),
+		createFileFactory,
 		...(getLanguageReports && { getLanguageReports }),
 		runFileVisitors: vi.fn(),
 	});
@@ -81,6 +108,7 @@ function createTestSetup({
 	});
 
 	new RuleTester({
+		...(afterAll && { afterAll }),
 		...(assertNoLanguageReports === undefined
 			? {}
 			: { assertNoLanguageReports }),
@@ -92,5 +120,5 @@ function createTestSetup({
 
 	const testSetup = testSetups[0];
 	assert.ok(testSetup);
-	return testSetup;
+	return { createFileFactory, run: testSetup };
 }
