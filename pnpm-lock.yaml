@@ -1013,6 +1013,9 @@ importers:
       typescript:
         specifier: ^6.0.0
         version: 6.0.3
+      typescript-native:
+        specifier: catalog:dev
+        version: typescript@7.1.0-dev.20260830.1
     devDependencies:
       '@flint.fyi/build':
         specifier: workspace:^

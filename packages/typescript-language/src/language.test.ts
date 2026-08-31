@@ -2,8 +2,51 @@ import { SyntaxKind } from "typescript-native/unstable/ast";
 import { API } from "typescript-native/unstable/sync";
 import { describe, expect, it } from "vitest";
 
-import { visitTypeScriptNodes } from "./language.ts";
+import { createVFSLinterHost } from "@flint.fyi/core";
+
+import { typescriptLanguage, visitTypeScriptNodes } from "./language.ts";
 import type * as AST from "./types/ast.ts";
+
+describe("typescriptLanguage file lifecycle", () => {
+	it("keeps every file on the final snapshot until LIFO finalization", () => {
+		const host = createVFSLinterHost({ caseSensitive: true, cwd: "/repo" });
+		host.vfsUpsertFile(
+			"/repo/tsconfig.json",
+			JSON.stringify({
+				compilerOptions: { noLib: true },
+				files: ["first.ts", "second.ts"],
+			}),
+		);
+		host.vfsUpsertFile("/repo/first.ts", "export const first = 1;");
+		host.vfsUpsertFile("/repo/second.ts", "export const second = 2;");
+		const factory = typescriptLanguage.createFileFactory(host);
+		const first = factory.createFile({
+			filePath: "/repo/first.ts",
+			filePathAbsolute: "/repo/first.ts",
+			sourceText: "export const first = 1;",
+		});
+		const firstSnapshot = first.services.snapshot;
+		const second = factory.createFile({
+			filePath: "/repo/second.ts",
+			filePathAbsolute: "/repo/second.ts",
+			sourceText: "export const second = 2;",
+		});
+
+		expect(first.services.snapshot).not.toBe(firstSnapshot);
+		expect(first.services.snapshot).toBe(second.services.snapshot);
+		expect(first.services.sourceFile.fileName).toBe("/repo/first.ts");
+		expect(second.services.sourceFile.fileName).toBe("/repo/second.ts");
+		expect(first.services.project).toBeDefined();
+		expect(first.services.program).toBeDefined();
+		expect(first.services.checker).toBeDefined();
+		expect(first.services.typeChecker).toBe(first.services.checker);
+
+		second[Symbol.dispose]();
+		expect(first.services.sourceFile.fileName).toBe("/repo/first.ts");
+		first[Symbol.dispose]();
+		expect(() => first.services.snapshot).toThrow("disposed");
+	});
+});
 
 describe("visitTypeScriptNodes", () => {
 	it("visits native nodes in enter and exit order", () => {

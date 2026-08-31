@@ -1,11 +1,6 @@
 import path from "node:path";
 
-import { createProjectService } from "@typescript-eslint/project-service";
 import { debugForFile } from "debug-for-file";
-import {
-	getPreEmitDiagnostics,
-	type Program as LegacyProgram,
-} from "typescript";
 import {
 	SyntaxKind,
 	type Node as NativeNode,
@@ -34,9 +29,13 @@ import { assert, nullThrows } from "@flint.fyi/utils";
 
 import packageJson from "../package.json" with { type: "json" };
 import { convertTypeScriptDiagnosticToLanguageReport } from "./convertTypeScriptDiagnosticToLanguageReport.ts";
-import { createTypeScriptServerHost } from "./createTypeScriptServerHost.ts";
+import {
+	createTypeScriptProjectSession,
+	type TypeScriptProjectSession,
+} from "./createTypeScriptProjectSession.ts";
 import { parseDirectivesFromTypeScriptFile } from "./directives/parseDirectivesFromTypeScriptFile.ts";
 import { getFirstEnumValues } from "./getFirstEnumValues.ts";
+import { getTypeScriptDiagnostics } from "./getTypeScriptDiagnostics.ts";
 import { getTypeScriptFileCacheImpacts } from "./getTypeScriptFileCacheImpacts.ts";
 import type { TypeScriptNodesByName, TypeScriptNodeVisitors } from "./nodes.ts";
 import { orderTypeScriptFilePaths } from "./orderTypeScriptFilePaths.ts";
@@ -48,7 +47,8 @@ export interface TypeScriptFileServices {
 	project: Project;
 	snapshot: Snapshot;
 	sourceFile: AST.SourceFile;
-	spanMap?: SpanMap;
+	spanMap: SpanMap | undefined;
+	typeChecker: Checker;
 }
 
 const log = debugForFile(import.meta.filename);
@@ -63,7 +63,7 @@ interface GlobalLanguageState {
 
 type VolarCreateFile = (
 	data: FileAboutData,
-	program: LegacyProgram,
+	unsupportedLegacyProgram: never,
 	sourceFile: AST.SourceFile,
 ) => VolarLanguageFileDefinition;
 type VolarLanguageFileDefinition =
@@ -133,67 +133,146 @@ export const typescriptLanguage: Language<
 		name: "TypeScript",
 	},
 	createFileFactory: (host) => {
-		const { service } = createProjectService({
-			host: createTypeScriptServerHost(host),
-		});
+		const unwrapError = (error: unknown): unknown[] =>
+			error instanceof AggregateError ? error.errors : [error];
+		let batch:
+			| undefined
+			| {
+					activeFiles: number;
+					disposed: boolean;
+					openFiles: string[];
+					session: TypeScriptProjectSession;
+			  };
+		let failed = false;
+		const disposeSession = (currentBatch: NonNullable<typeof batch>): void => {
+			if (currentBatch.disposed) {
+				return;
+			}
+			currentBatch.disposed = true;
+			currentBatch.session[Symbol.dispose]();
+		};
+		const disposeSessionForFailure = (
+			currentBatch: NonNullable<typeof batch>,
+		): undefined | { disposalError: unknown } => {
+			try {
+				disposeSession(currentBatch);
+			} catch (disposalError) {
+				return { disposalError };
+			}
+		};
+		const failSession = (
+			currentBatch: NonNullable<typeof batch>,
+			error: unknown,
+		): never => {
+			failed = true;
+			const disposalFailure = disposeSessionForFailure(currentBatch);
+			if (disposalFailure) {
+				throw new AggregateError(
+					[error, ...unwrapError(disposalFailure.disposalError)],
+					"TypeScript file creation and project session cleanup both failed.",
+					{ cause: error },
+				);
+			}
+			throw error;
+		};
 
 		function createFile(data: FileAboutData) {
-			log("Opening client file:", data.filePathAbsolute);
-			service.openClientFile(data.filePathAbsolute);
-
-			log("Retrieving client services:", data.filePathAbsolute);
-			const scriptInfo = nullThrows(
-				service.getScriptInfo(data.filePathAbsolute),
-				`Could not find script info for file: ${data.filePathAbsolute}`,
-			);
-
-			const defaultProject = nullThrows(
-				service.getDefaultProjectForFile(scriptInfo.fileName, true),
-				`Could not find default project for file: ${data.filePathAbsolute}`,
-			);
-
-			const program = nullThrows(
-				defaultProject.getLanguageService(true).getProgram(),
-				`Could not retrieve program for file: ${data.filePathAbsolute}`,
-			);
-
-			const sourceFile = nullThrows(
-				program.getSourceFile(data.filePathAbsolute),
-				`Could not retrieve source file for: ${data.filePathAbsolute}`,
-			);
-
-			const fileExtension = path.extname(data.filePathAbsolute);
-			if (typeScriptCoreSupportedExtensions.has(fileExtension)) {
-				return {
-					...parseDirectivesFromTypeScriptFile(sourceFile as AST.SourceFile),
-					about: data,
-					language: typescriptLanguage,
-					services: {
-						program,
-						sourceFile: sourceFile as AST.SourceFile,
-						// ew, I don't like this. the ts -> AST type story is not great
-						typeChecker: program.getTypeChecker() as unknown as Checker,
-					},
-					[Symbol.dispose]() {
-						service.closeClientFile(data.filePathAbsolute);
-					},
-				};
+			if (failed) {
+				throw new Error("TypeScript project session has been disposed.");
 			}
+			const currentBatch = (batch ??= {
+				activeFiles: 0,
+				disposed: false,
+				openFiles: [],
+				session: createTypeScriptProjectSession(host),
+			});
 
-			if (languageState.volarCreateFile == null) {
-				throwUnknownLanguageExtension(data.filePathAbsolute);
+			log("Opening native file:", data.filePathAbsolute);
+			currentBatch.openFiles.push(data.filePathAbsolute);
+			try {
+				currentBatch.session.update({ openFiles: [...currentBatch.openFiles] });
+			} catch (error) {
+				return failSession(currentBatch, error);
 			}
+			let fileDisposed = false;
 
-			return {
-				...languageState.volarCreateFile(
-					data,
-					program,
-					sourceFile as AST.SourceFile,
-				),
-				[Symbol.dispose]() {
-					service.closeClientFile(data.filePathAbsolute);
+			const getSnapshot = (): Snapshot => {
+				if (currentBatch.disposed) {
+					throw new Error("TypeScript project session has been disposed.");
+				}
+				return currentBatch.session.getSnapshot();
+			};
+			const getProject = (): Project =>
+				nullThrows(
+					getSnapshot().getDefaultProjectForFile(data.filePathAbsolute),
+					`Could not find default project for file: ${data.filePathAbsolute}`,
+				);
+			const getSourceFile = (): AST.SourceFile =>
+				nullThrows(
+					getProject().program.getSourceFile(data.filePathAbsolute),
+					`Could not retrieve source file for: ${data.filePathAbsolute}`,
+				);
+			const services: TypeScriptFileServices = {
+				get checker() {
+					return getProject().checker;
+				},
+				get program() {
+					return getProject().program;
+				},
+				get project() {
+					return getProject();
+				},
+				get snapshot() {
+					return getSnapshot();
+				},
+				get sourceFile() {
+					return getSourceFile();
+				},
+				get spanMap() {
+					return getSourceFile().spanMap;
+				},
+				get typeChecker() {
+					return getProject().checker;
 				},
 			};
+			const dispose = (): void => {
+				if (fileDisposed) {
+					return;
+				}
+				fileDisposed = true;
+				currentBatch.activeFiles -= 1;
+				if (currentBatch.activeFiles === 0) {
+					disposeSession(currentBatch);
+					if (batch === currentBatch) {
+						batch = undefined;
+					}
+				}
+			};
+			try {
+				const sourceFile = getSourceFile();
+				const fileExtension = path.extname(data.filePathAbsolute);
+				if (typeScriptCoreSupportedExtensions.has(fileExtension)) {
+					const file = {
+						...parseDirectivesFromTypeScriptFile(sourceFile),
+						about: data,
+						language: typescriptLanguage,
+						services,
+						[Symbol.dispose]: dispose,
+					};
+					currentBatch.activeFiles += 1;
+					return file;
+				}
+
+				if (languageState.volarCreateFile == null) {
+					throwUnknownLanguageExtension(data.filePathAbsolute);
+				}
+
+				throw new Error(
+					`Cannot process ${data.filePathAbsolute} until Volar supports the native TypeScript project session.`,
+				);
+			} catch (error) {
+				return failSession(currentBatch, error);
+			}
 		}
 
 		return { createFile };
@@ -206,9 +285,9 @@ export const typescriptLanguage: Language<
 				file as VolarLanguageFileDefinition
 			).__volarServices.getLanguageReports();
 		}
-		return getPreEmitDiagnostics(
+		return getTypeScriptDiagnostics(
 			file.services.program,
-			file.services.sourceFile,
+			file.services.sourceFile.fileName,
 		).map(convertTypeScriptDiagnosticToLanguageReport);
 	},
 	orderFilePaths: orderTypeScriptFilePaths,
