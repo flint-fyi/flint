@@ -73,6 +73,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			) {
 				return undefined;
 			}
+			if (!isIdentifier(classList.expression)) {
+				return undefined;
+			}
 
 			const args = expression.arguments;
 			if (args.length !== 1) {
@@ -91,30 +94,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				className: arg.text,
 				method: method.text,
 				methodNode: method,
-			};
-		}
-
-		function getObjectAndClassName(node: AST.Statement) {
-			const call = getClassListMethodCall(node);
-			if (!call) {
-				return undefined;
-			}
-
-			const exprStatement = node as AST.ExpressionStatement;
-			const callExpr = exprStatement.expression as AST.CallExpression;
-			const propertyAccess =
-				callExpr.expression as AST.PropertyAccessExpression;
-			const classList =
-				propertyAccess.expression as AST.PropertyAccessExpression;
-			const object = classList.expression;
-
-			if (!isIdentifier(object)) {
-				return undefined;
-			}
-
-			return {
-				className: call.className,
-				object: object.text,
+				object: classList.expression.text,
 			};
 		}
 
@@ -165,13 +145,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						(thenCall.method === "add" && elseCall.method === "remove") ||
 						(thenCall.method === "remove" && elseCall.method === "add")
 					) {
-						const thenInfo = getObjectAndClassName(thenBlockStatement);
-						if (!thenInfo) {
-							return;
-						}
-
-						const elseInfo = getObjectAndClassName(elseBlockStatement);
-						if (thenInfo.object !== elseInfo?.object) {
+						if (thenCall.object !== elseCall.object) {
 							return;
 						}
 
@@ -190,7 +164,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 									begin: ifStart,
 									end: ifEnd,
 								},
-								text: `${thenInfo.object}.classList.toggle("${className}", ${toggleSecondArg});`,
+								text: `${thenCall.object}.classList.toggle("${className}", ${toggleSecondArg});`,
 							},
 							message: "preferToggle",
 							range: getTSNodeRange(thenCall.methodNode, sourceFile),
