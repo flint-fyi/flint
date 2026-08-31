@@ -258,8 +258,8 @@ catalogs:
       specifier: 18.3.0
       version: 18.3.0
     eslint-plugin-package-json:
-      specifier: 1.7.1
-      version: 1.7.1
+      specifier: 1.8.0
+      version: 1.8.0
     eslint-plugin-perfectionist:
       specifier: 5.10.1
       version: 5.10.1
@@ -352,8 +352,8 @@ catalogs:
       specifier: 18.3.0
       version: 18.3.0
     eslint-plugin-package-json:
-      specifier: 1.7.1
-      version: 1.7.1
+      specifier: 1.8.0
+      version: 1.8.0
     eslint-plugin-perfectionist:
       specifier: 5.10.1
       version: 5.10.1
@@ -570,7 +570,7 @@ importers:
         version: 18.3.0(eslint@10.9.1)(typescript@6.0.3)
       eslint-plugin-package-json:
         specifier: catalog:dev
-        version: 1.7.1(@eslint/json@2.0.1)(eslint@10.9.1)
+        version: 1.8.0(@eslint/json@2.0.1)(eslint@10.9.1)
       eslint-plugin-perfectionist:
         specifier: catalog:dev
         version: 5.10.1(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
@@ -1454,7 +1454,7 @@ importers:
         version: 18.3.0(eslint@10.9.1)(typescript@6.0.3)
       eslint-plugin-package-json:
         specifier: catalog:comparisons
-        version: 1.7.1(@eslint/json@2.0.1)(eslint@10.9.1)
+        version: 1.8.0(@eslint/json@2.0.1)(eslint@10.9.1)
       eslint-plugin-perfectionist:
         specifier: catalog:comparisons
         version: 5.10.1(eslint@10.9.1)(supports-color@10.2.2)(typescript@6.0.3)
@@ -5220,8 +5220,8 @@ packages:
       typescript:
         optional: true
 
-  eslint-plugin-package-json@1.7.1:
-    resolution: {integrity: sha512-nlIlX7thB20+uExdYL0QGAmyjHXI+AgIAWpwTs45be4XkJFaOGjSrShxw42b51aUHWGtNrA+eLSkeA1RYm+ugA==}
+  eslint-plugin-package-json@1.8.0:
+    resolution: {integrity: sha512-nfWWrak5t8yPgSVchNOHCjdFW/pl3+1135Bxsq0KZKo6PUdWWqUTqOVBrvzw1S+8BNOhhEx5c/YxeeCSYySFog==}
     engines: {node: ^22.22.2 || >=24.15.0}
     peerDependencies:
       '@eslint/json': '>=1.0.0'
@@ -11445,7 +11445,7 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  eslint-plugin-package-json@1.7.1(@eslint/json@2.0.1)(eslint@10.9.1):
+  eslint-plugin-package-json@1.8.0(@eslint/json@2.0.1)(eslint@10.9.1):
     dependencies:
       '@altano/repository-tools': 2.1.1
       '@types/estree': 1.0.9
