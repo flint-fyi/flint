@@ -1,4 +1,11 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isIdentifier,
+	isJsxAttribute,
+	isJsxElement,
+	isJsxExpression,
+	isJsxSelfClosingElement,
+	isJsxText,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -35,8 +42,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		): boolean {
 			return element.attributes.properties.some(
 				(property) =>
-					property.kind === SyntaxKind.JsxAttribute &&
-					property.name.kind === SyntaxKind.Identifier &&
+					isJsxAttribute(property) &&
+					isIdentifier(property.name) &&
 					(property.name.text === "aria-label" ||
 						property.name.text === "aria-labelledby" ||
 						property.name.text === "title") &&
@@ -46,22 +53,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function hasTextContent(element: AST.JsxElement) {
 			return element.children.some((child) => {
-				if (child.kind === SyntaxKind.JsxText && child.text.trim()) {
+				if (isJsxText(child) && child.text.trim()) {
 					return true;
 				}
 
-				if (
-					child.kind === SyntaxKind.JsxElement ||
-					child.kind === SyntaxKind.JsxSelfClosingElement
-				) {
-					const childElement =
-						child.kind === SyntaxKind.JsxElement ? child.openingElement : child;
+				if (isJsxElement(child) || isJsxSelfClosingElement(child)) {
+					const childElement = isJsxElement(child)
+						? child.openingElement
+						: child;
 
 					if (
 						!childElement.attributes.properties.some(
 							(attr) =>
-								attr.kind === SyntaxKind.JsxAttribute &&
-								attr.name.kind === SyntaxKind.Identifier &&
+								isJsxAttribute(attr) &&
+								isIdentifier(attr.name) &&
 								attr.name.text === "aria-hidden",
 						)
 					) {
@@ -69,7 +74,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 				}
 
-				if (child.kind === SyntaxKind.JsxExpression && child.expression) {
+				if (isJsxExpression(child) && child.expression) {
 					return true;
 				}
 			});
@@ -80,7 +85,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				JsxElement(node, { sourceFile }) {
 					const openingElement = node.openingElement;
 					if (
-						openingElement.tagName.kind === SyntaxKind.Identifier &&
+						isIdentifier(openingElement.tagName) &&
 						openingElement.tagName.text === "a" &&
 						!hasAccessibleContent(openingElement) &&
 						!hasTextContent(node)
@@ -93,7 +98,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				},
 				JsxSelfClosingElement(node, { sourceFile }) {
 					if (
-						node.tagName.kind === SyntaxKind.Identifier &&
+						isIdentifier(node.tagName) &&
 						node.tagName.text === "a" &&
 						!hasAccessibleContent(node)
 					) {

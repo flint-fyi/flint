@@ -1,4 +1,9 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isIdentifier,
+	isJsxAttribute,
+	isJsxExpression,
+	isStringLiteral,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -39,7 +44,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const { attributes, tagName } = node;
-			if (tagName.kind !== SyntaxKind.Identifier) {
+			if (!isIdentifier(tagName)) {
 				return;
 			}
 
@@ -62,15 +67,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			const properties = attributes.properties.find(
 				(attr) =>
-					attr.kind === SyntaxKind.JsxAttribute &&
-					attr.name.kind === SyntaxKind.Identifier &&
+					isJsxAttribute(attr) &&
+					isIdentifier(attr.name) &&
 					attr.name.text === "alt",
 			);
 
 			const hasAriaLabel = attributes.properties.some(
 				(attr) =>
-					attr.kind === SyntaxKind.JsxAttribute &&
-					attr.name.kind === SyntaxKind.Identifier &&
+					isJsxAttribute(attr) &&
+					isIdentifier(attr.name) &&
 					(attr.name.text === "aria-label" ||
 						attr.name.text === "aria-labelledby") &&
 					attr.initializer,
@@ -90,12 +95,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				properties.kind === SyntaxKind.JsxAttribute &&
-				properties.initializer?.kind === SyntaxKind.JsxExpression
+				isJsxAttribute(properties) &&
+				properties.initializer &&
+				isJsxExpression(properties.initializer)
 			) {
 				const { expression } = properties.initializer;
 				if (
-					expression?.kind === SyntaxKind.Identifier &&
+					expression &&
+					isIdentifier(expression) &&
 					expression.text === "undefined"
 				) {
 					context.report({
@@ -114,14 +121,16 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		) {
 			const typeAttribute = attributes.properties.find(
 				(properties) =>
-					properties.kind === SyntaxKind.JsxAttribute &&
-					properties.name.kind === SyntaxKind.Identifier &&
+					isJsxAttribute(properties) &&
+					isIdentifier(properties.name) &&
 					properties.name.text === "type",
 			);
 
 			if (
-				typeAttribute?.kind === SyntaxKind.JsxAttribute &&
-				typeAttribute.initializer?.kind === SyntaxKind.StringLiteral &&
+				typeAttribute &&
+				isJsxAttribute(typeAttribute) &&
+				typeAttribute.initializer &&
+				isStringLiteral(typeAttribute.initializer) &&
 				typeAttribute.initializer.text === "image"
 			) {
 				checkAltAttribute(
@@ -141,8 +150,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (
 				!attributes.properties.some(
 					(property) =>
-						property.kind === SyntaxKind.JsxAttribute &&
-						property.name.kind === SyntaxKind.Identifier &&
+						isJsxAttribute(property) &&
+						isIdentifier(property.name) &&
 						alternateProperties.has(property.name.text) &&
 						property.initializer,
 				)

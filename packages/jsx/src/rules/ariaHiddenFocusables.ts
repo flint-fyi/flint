@@ -1,4 +1,11 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isIdentifier,
+	isJsxAttribute,
+	isJsxExpression,
+	isNumericLiteral,
+	isStringLiteral,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -46,19 +53,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			const { attributes, tagName } = node;
-			if (tagName.kind !== SyntaxKind.Identifier) {
+			if (!isIdentifier(tagName)) {
 				return;
 			}
 
 			const ariaHiddenProperty = attributes.properties.find(
 				(property) =>
-					property.kind === SyntaxKind.JsxAttribute &&
-					property.name.kind === SyntaxKind.Identifier &&
+					isJsxAttribute(property) &&
+					isIdentifier(property.name) &&
 					property.name.text.toLowerCase() === "aria-hidden",
 			);
 
 			if (
-				ariaHiddenProperty?.kind !== SyntaxKind.JsxAttribute ||
+				!ariaHiddenProperty ||
+				!isJsxAttribute(ariaHiddenProperty) ||
 				!isAriaHiddenTrue(ariaHiddenProperty)
 			) {
 				return;
@@ -94,8 +102,8 @@ function findTabIndexValue(
 ) {
 	const tabIndexProperty = node.attributes.properties.find(
 		(property): property is AST.JsxAttribute =>
-			property.kind === SyntaxKind.JsxAttribute &&
-			property.name.kind === SyntaxKind.Identifier &&
+			isJsxAttribute(property) &&
+			isIdentifier(property.name) &&
 			property.name.text.toLowerCase() === "tabindex",
 	);
 
@@ -103,14 +111,14 @@ function findTabIndexValue(
 		return undefined;
 	}
 
-	if (tabIndexProperty.initializer.kind === SyntaxKind.JsxExpression) {
+	if (isJsxExpression(tabIndexProperty.initializer)) {
 		const expression = tabIndexProperty.initializer.expression;
-		if (expression?.kind === SyntaxKind.NumericLiteral) {
+		if (expression && isNumericLiteral(expression)) {
 			return Number(expression.text);
 		}
 	}
 
-	if (tabIndexProperty.initializer.kind === SyntaxKind.StringLiteral) {
+	if (isStringLiteral(tabIndexProperty.initializer)) {
 		return Number(tabIndexProperty.initializer.text);
 	}
 
@@ -122,11 +130,11 @@ function isAriaHiddenTrue(ariaHiddenProperty: AST.JsxAttribute) {
 		return false;
 	}
 
-	if (ariaHiddenProperty.initializer.kind === SyntaxKind.StringLiteral) {
+	if (isStringLiteral(ariaHiddenProperty.initializer)) {
 		return ariaHiddenProperty.initializer.text === "true";
 	}
 
-	if (ariaHiddenProperty.initializer.kind === SyntaxKind.JsxExpression) {
+	if (isJsxExpression(ariaHiddenProperty.initializer)) {
 		const expression = ariaHiddenProperty.initializer.expression;
 		if (expression?.kind === SyntaxKind.TrueKeyword) {
 			return true;

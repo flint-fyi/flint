@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import { isIdentifier, isJsxAttribute } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -35,7 +35,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			if (
-				node.tagName.kind !== SyntaxKind.Identifier ||
+				!isIdentifier(node.tagName) ||
 				node.tagName.text.toLowerCase() === "th"
 			) {
 				return;
@@ -43,8 +43,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const scopeProperty = node.attributes.properties.find((property) => {
 				return (
-					property.kind === SyntaxKind.JsxAttribute &&
-					property.name.kind === SyntaxKind.Identifier &&
+					isJsxAttribute(property) &&
+					isIdentifier(property.name) &&
 					property.name.text.toLowerCase() === "scope"
 				);
 			});

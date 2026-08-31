@@ -1,4 +1,11 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isIdentifier,
+	isJsxAttribute,
+	isJsxExpression,
+	isNumericLiteral,
+	isStringLiteral,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -118,11 +125,11 @@ function getAttributeValue(
 		return true;
 	}
 
-	if (property.initializer.kind === SyntaxKind.StringLiteral) {
+	if (isStringLiteral(property.initializer)) {
 		return property.initializer.text;
 	}
 
-	if (property.initializer.kind === SyntaxKind.JsxExpression) {
+	if (isJsxExpression(property.initializer)) {
 		const expression = property.initializer.expression;
 		if (!expression) {
 			return undefined;
@@ -136,11 +143,11 @@ function getAttributeValue(
 			return false;
 		}
 
-		if (expression.kind === SyntaxKind.NumericLiteral) {
+		if (isNumericLiteral(expression)) {
 			return Number(expression.text);
 		}
 
-		if (expression.kind === SyntaxKind.StringLiteral) {
+		if (isStringLiteral(expression)) {
 			return expression.text;
 		}
 	}
@@ -281,10 +288,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			for (const property of node.attributes.properties) {
-				if (
-					property.kind !== SyntaxKind.JsxAttribute ||
-					property.name.kind !== SyntaxKind.Identifier
-				) {
+				if (!isJsxAttribute(property) || !isIdentifier(property.name)) {
 					continue;
 				}
 

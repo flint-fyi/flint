@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import { isIdentifier, isJsxAttribute } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -48,7 +48,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (tagName.kind === SyntaxKind.Identifier) {
+			if (isIdentifier(tagName)) {
 				const firstCharacter = tagName.text.charAt(0);
 				if (
 					firstCharacter === firstCharacter.toUpperCase() &&
@@ -61,8 +61,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			if (
 				!attributes.properties.some(
 					(property) =>
-						property.kind === SyntaxKind.JsxAttribute &&
-						property.name.kind === SyntaxKind.Identifier &&
+						isJsxAttribute(property) &&
+						isIdentifier(property.name) &&
 						property.name.text === "aria-activedescendant" &&
 						property.initializer,
 				)
@@ -71,7 +71,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			if (
-				tagName.kind === SyntaxKind.Identifier &&
+				isIdentifier(tagName) &&
 				inherentlyTabbableElements.has(tagName.text.toLowerCase())
 			) {
 				return;
@@ -79,20 +79,20 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 			const hasTabIndex = attributes.properties.some(
 				(property) =>
-					property.kind === SyntaxKind.JsxAttribute &&
-					property.name.kind === SyntaxKind.Identifier &&
+					isJsxAttribute(property) &&
+					isIdentifier(property.name) &&
 					property.name.text.toLowerCase() === "tabindex",
 			);
 
 			if (!hasTabIndex) {
 				const ariaProperty = attributes.properties.find(
 					(property) =>
-						property.kind === SyntaxKind.JsxAttribute &&
-						property.name.kind === SyntaxKind.Identifier &&
+						isJsxAttribute(property) &&
+						isIdentifier(property.name) &&
 						property.name.text === "aria-activedescendant",
 				);
 
-				if (ariaProperty?.kind === SyntaxKind.JsxAttribute) {
+				if (ariaProperty && isJsxAttribute(ariaProperty)) {
 					context.report({
 						message: "missingTabIndex",
 						range: getTSNodeRange(ariaProperty, sourceFile),

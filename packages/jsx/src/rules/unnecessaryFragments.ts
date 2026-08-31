@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import { isIdentifier, isJsxText } from "typescript-native/unstable/ast";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
 import { typescriptLanguage, type AST } from "@flint.fyi/typescript-language";
@@ -31,8 +31,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			range: CharacterReportRange,
 		) {
 			const children = node.children.filter(
-				(child) =>
-					child.kind !== SyntaxKind.JsxText || !!child.text.trim().length,
+				(child) => !isJsxText(child) || !!child.text.trim().length,
 			);
 
 			let childType: string | undefined;
@@ -56,7 +55,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				JsxElement(node, { sourceFile }) {
 					if (
-						node.openingElement.tagName.kind === SyntaxKind.Identifier &&
+						isIdentifier(node.openingElement.tagName) &&
 						!node.openingElement.attributes.properties.length &&
 						node.openingElement.tagName.text === "Fragment"
 					) {

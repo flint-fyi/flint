@@ -1,4 +1,13 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isIdentifier,
+	isJsxAttribute,
+	isJsxElement,
+	isJsxExpression,
+	isJsxSelfClosingElement,
+	isNoSubstitutionTemplateLiteral,
+	isStringLiteral,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -43,31 +52,29 @@ export default ruleCreator.createRule(typescriptLanguage, {
 		function hasHtmlForAttribute(attributes: AST.JsxAttributes): boolean {
 			return attributes.properties.some((property) => {
 				if (
-					property.kind !== SyntaxKind.JsxAttribute ||
-					property.name.kind !== SyntaxKind.Identifier ||
+					!isJsxAttribute(property) ||
+					!isIdentifier(property.name) ||
 					property.name.text !== "htmlFor" ||
 					!property.initializer
 				) {
 					return false;
 				}
 
-				if (property.initializer.kind === SyntaxKind.StringLiteral) {
+				if (isStringLiteral(property.initializer)) {
 					return property.initializer.text !== "";
 				}
 
-				if (property.initializer.kind === SyntaxKind.JsxExpression) {
+				if (isJsxExpression(property.initializer)) {
 					const { expression } = property.initializer;
 					if (!expression) {
 						return false;
 					}
 
 					if (
-						(expression.kind === SyntaxKind.StringLiteral &&
+						(isStringLiteral(expression) && expression.text === "") ||
+						(isNoSubstitutionTemplateLiteral(expression) &&
 							expression.text === "") ||
-						(expression.kind === SyntaxKind.NoSubstitutionTemplateLiteral &&
-							expression.text === "") ||
-						(expression.kind === SyntaxKind.Identifier &&
-							expression.text === "undefined") ||
+						(isIdentifier(expression) && expression.text === "undefined") ||
 						expression.kind === SyntaxKind.NullKeyword
 					) {
 						return false;
@@ -80,18 +87,18 @@ export default ruleCreator.createRule(typescriptLanguage, {
 
 		function hasNestedControl(children: readonly AST.JsxChild[]): boolean {
 			return children.some((child) => {
-				if (child.kind === SyntaxKind.JsxElement) {
+				if (isJsxElement(child)) {
 					const { tagName } = child.openingElement;
 					return (
-						(tagName.kind === SyntaxKind.Identifier &&
+						(isIdentifier(tagName) &&
 							controlElements.has(tagName.text.toLowerCase())) ||
 						hasNestedControl(child.children)
 					);
 				}
 
-				if (child.kind === SyntaxKind.JsxSelfClosingElement) {
+				if (isJsxSelfClosingElement(child)) {
 					return (
-						child.tagName.kind === SyntaxKind.Identifier &&
+						isIdentifier(child.tagName) &&
 						controlElements.has(child.tagName.text.toLowerCase())
 					);
 				}
@@ -104,29 +111,21 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			node: AST.JsxElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (
-				node.kind === SyntaxKind.JsxElement &&
-				hasNestedControl(node.children)
-			) {
+			if (isJsxElement(node) && hasNestedControl(node.children)) {
 				return;
 			}
 
-			const tagName =
-				node.kind === SyntaxKind.JsxElement
-					? node.openingElement.tagName
-					: node.tagName;
+			const tagName = isJsxElement(node)
+				? node.openingElement.tagName
+				: node.tagName;
 
-			if (
-				tagName.kind !== SyntaxKind.Identifier ||
-				tagName.text.toLowerCase() !== "label"
-			) {
+			if (!isIdentifier(tagName) || tagName.text.toLowerCase() !== "label") {
 				return;
 			}
 
-			const attributes =
-				node.kind === SyntaxKind.JsxElement
-					? node.openingElement.attributes
-					: node.attributes;
+			const attributes = isJsxElement(node)
+				? node.openingElement.attributes
+				: node.attributes;
 
 			if (hasHtmlForAttribute(attributes)) {
 				return;

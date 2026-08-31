@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import { isIdentifier, isJsxAttribute } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -32,12 +32,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				JsxOpeningElement(node, { sourceFile }) {
 					if (
-						node.tagName.kind === SyntaxKind.Identifier &&
+						isIdentifier(node.tagName) &&
 						node.tagName.text === "html" &&
 						!node.attributes.properties.some(
 							(property) =>
-								property.kind === SyntaxKind.JsxAttribute &&
-								property.name.kind === SyntaxKind.Identifier &&
+								isJsxAttribute(property) &&
+								isIdentifier(property.name) &&
 								property.name.text.toLowerCase() === "lang",
 						)
 					) {

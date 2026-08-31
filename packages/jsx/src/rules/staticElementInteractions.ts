@@ -1,4 +1,4 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import { isIdentifier, isJsxAttribute } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -54,7 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			{ sourceFile }: TypeScriptFileServices,
 		) {
 			if (
-				node.tagName.kind !== SyntaxKind.Identifier ||
+				!isIdentifier(node.tagName) ||
 				node.tagName.text.toLowerCase() !== node.tagName.text
 			) {
 				return;
@@ -68,10 +68,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			let hadInteractiveHandler = false;
 
 			for (const property of node.attributes.properties) {
-				if (
-					property.kind === SyntaxKind.JsxAttribute &&
-					property.name.kind === SyntaxKind.Identifier
-				) {
+				if (isJsxAttribute(property) && isIdentifier(property.name)) {
 					if (property.name.text === "role") {
 						return;
 					}

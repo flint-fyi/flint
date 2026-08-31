@@ -1,4 +1,10 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isIdentifier,
+	isJsxAttribute,
+	isJsxExpression,
+	isNoSubstitutionTemplateLiteral,
+	isStringLiteral,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -37,22 +43,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (
-				tagName.kind !== SyntaxKind.Identifier ||
-				tagName.text.toLowerCase() !== "iframe"
-			) {
+			if (!isIdentifier(tagName) || tagName.text.toLowerCase() !== "iframe") {
 				return;
 			}
 
 			const titleAttribute = attributes.properties.find((property) => {
 				return (
-					property.kind === SyntaxKind.JsxAttribute &&
-					property.name.kind === SyntaxKind.Identifier &&
+					isJsxAttribute(property) &&
+					isIdentifier(property.name) &&
 					property.name.text.toLowerCase() === "title"
 				);
 			});
 
-			if (titleAttribute?.kind !== SyntaxKind.JsxAttribute) {
+			if (!titleAttribute || !isJsxAttribute(titleAttribute)) {
 				context.report({
 					message: "missingTitle",
 					range: getTSNodeRange(tagName, sourceFile),
@@ -68,26 +71,24 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				return;
 			}
 
-			if (titleAttribute.initializer.kind === SyntaxKind.StringLiteral) {
+			if (isStringLiteral(titleAttribute.initializer)) {
 				if (titleAttribute.initializer.text === "") {
 					context.report({
 						message: "missingTitle",
 						range: getTSNodeRange(tagName, sourceFile),
 					});
 				}
-			} else if (titleAttribute.initializer.kind === SyntaxKind.JsxExpression) {
+			} else if (isJsxExpression(titleAttribute.initializer)) {
 				const { expression } = titleAttribute.initializer;
 				if (!expression) {
 					return;
 				}
 
 				if (
-					(expression.kind === SyntaxKind.StringLiteral &&
+					(isStringLiteral(expression) && expression.text === "") ||
+					(isNoSubstitutionTemplateLiteral(expression) &&
 						expression.text === "") ||
-					(expression.kind === SyntaxKind.NoSubstitutionTemplateLiteral &&
-						expression.text === "") ||
-					(expression.kind === SyntaxKind.Identifier &&
-						expression.text === "undefined")
+					(isIdentifier(expression) && expression.text === "undefined")
 				) {
 					context.report({
 						message: "missingTitle",

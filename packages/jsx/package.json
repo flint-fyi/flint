@@ -29,7 +29,6 @@
 		"@flint.fyi/typescript-language": "workspace:^",
 		"@flint.fyi/utils": "workspace:^",
 		"language-tags": "^2.1.0",
-		"typescript": "^6.0.0",
 		"typescript-native": "catalog:dev"
 	},
 	"devDependencies": {

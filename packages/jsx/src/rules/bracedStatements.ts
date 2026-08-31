@@ -1,4 +1,9 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isJsxElement,
+	isJsxFragment,
+	isJsxSelfClosingElement,
+	isStringLiteral,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -30,20 +35,19 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				JsxExpression(node, { sourceFile }) {
 					if (
 						!node.expression ||
-						(node.parent.kind !== SyntaxKind.JsxElement &&
-							node.parent.kind !== SyntaxKind.JsxFragment)
+						(!isJsxElement(node.parent) && !isJsxFragment(node.parent))
 					) {
 						return;
 					}
 
 					let unnecessaryType: string | undefined;
 
-					if (node.expression.kind === SyntaxKind.StringLiteral) {
+					if (isStringLiteral(node.expression)) {
 						unnecessaryType = "string literals";
 					} else if (
-						node.expression.kind === SyntaxKind.JsxElement ||
-						node.expression.kind === SyntaxKind.JsxSelfClosingElement ||
-						node.expression.kind === SyntaxKind.JsxFragment
+						isJsxElement(node.expression) ||
+						isJsxSelfClosingElement(node.expression) ||
+						isJsxFragment(node.expression)
 					) {
 						unnecessaryType = "JSX elements";
 					}

@@ -1,4 +1,9 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isArrowFunction,
+	isFunctionExpression,
+	isIdentifier,
+	isPropertyAccessExpression,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -36,8 +41,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression(node, { program, sourceFile, typeChecker }) {
 					if (
-						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
-						node.expression.name.kind !== SyntaxKind.Identifier ||
+						!isPropertyAccessExpression(node.expression) ||
+						!isIdentifier(node.expression.name) ||
 						node.expression.name.text !== "removeEventListener" ||
 						node.arguments.length < 2 ||
 						!isGlobalDeclaration(node.expression, typeChecker, program)
@@ -49,10 +54,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						node.arguments[1],
 						"Second argument is expected to be present by prior length check",
 					);
-					if (
-						listener.kind !== SyntaxKind.ArrowFunction &&
-						listener.kind !== SyntaxKind.FunctionExpression
-					) {
+					if (!isArrowFunction(listener) && !isFunctionExpression(listener)) {
 						return;
 					}
 

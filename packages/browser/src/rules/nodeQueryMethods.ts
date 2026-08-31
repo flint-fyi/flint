@@ -1,4 +1,7 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isIdentifier,
+	isPropertyAccessExpression,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -48,8 +51,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression(node, { program, sourceFile, typeChecker }) {
 					if (
-						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
-						node.expression.name.kind === SyntaxKind.Identifier &&
+						isPropertyAccessExpression(node.expression) &&
+						isIdentifier(node.expression.name) &&
 						legacyMethods.has(node.expression.name.text) &&
 						isGlobalDeclaration(node.expression.name, typeChecker, program)
 					) {

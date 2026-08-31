@@ -1,4 +1,9 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isIdentifier,
+	isJsxExpression,
+	isNumericLiteral,
+	isStringLiteral,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -35,7 +40,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				JsxAttribute(node, { sourceFile }) {
 					if (
-						node.name.kind !== SyntaxKind.Identifier ||
+						!isIdentifier(node.name) ||
 						node.name.text.toLowerCase() !== "tabindex" ||
 						!node.initializer
 					) {
@@ -57,14 +62,14 @@ export default ruleCreator.createRule(typescriptLanguage, {
 });
 
 function getInitializerValue(initializer: AST.JsxAttributeValue) {
-	if (initializer.kind === SyntaxKind.StringLiteral) {
+	if (isStringLiteral(initializer)) {
 		const parsed = Number(initializer.text);
 
 		return Number.isNaN(parsed) ? undefined : parsed;
 	}
 
-	if (initializer.kind === SyntaxKind.JsxExpression) {
-		return initializer.expression?.kind === SyntaxKind.NumericLiteral
+	if (isJsxExpression(initializer)) {
+		return initializer.expression && isNumericLiteral(initializer.expression)
 			? Number(initializer.expression.text)
 			: undefined;
 	}

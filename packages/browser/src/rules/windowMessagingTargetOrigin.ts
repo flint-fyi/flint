@@ -1,4 +1,7 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isIdentifier,
+	isPropertyAccessExpression,
+} from "typescript-native/unstable/ast";
 import type { Program } from "typescript-native/unstable/sync";
 
 import {
@@ -10,6 +13,7 @@ import {
 } from "@flint.fyi/typescript-language";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { isASTExpression } from "./typeGuards.ts";
 
 const windowLikeNames = new Set([
 	"globalThis",
@@ -41,12 +45,12 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	},
 	setup(context) {
 		function isWindowLikeIdentifier(
-			node: AST.LeftHandSideExpression,
+			node: AST.Node,
 			typeChecker: Checker,
 			program: Program,
 		): boolean {
 			return (
-				node.kind === SyntaxKind.Identifier &&
+				isIdentifier(node) &&
 				windowLikeNames.has(node.text) &&
 				isGlobalVariable(node, typeChecker, program)
 			);
@@ -57,9 +61,10 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				CallExpression(node, { program, sourceFile, typeChecker }) {
 					if (
 						node.arguments.length < 2 &&
-						node.expression.kind === SyntaxKind.PropertyAccessExpression &&
-						node.expression.name.kind === SyntaxKind.Identifier &&
+						isPropertyAccessExpression(node.expression) &&
+						isIdentifier(node.expression.name) &&
 						node.expression.name.text === "postMessage" &&
+						isASTExpression(node.expression.expression) &&
 						isWindowLikeIdentifier(
 							node.expression.expression,
 							typeChecker,

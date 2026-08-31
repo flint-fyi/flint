@@ -1,4 +1,7 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isIdentifier,
+	isPropertyAccessExpression,
+} from "typescript-native/unstable/ast";
 import type { Program } from "typescript-native/unstable/sync";
 
 import {
@@ -10,11 +13,11 @@ import {
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
 export function isGlobalDocumentReference(
-	node: AST.Expression,
+	node: AST.Node,
 	typeChecker: Checker,
 	program: Program,
 ): boolean {
-	if (node.kind === SyntaxKind.Identifier) {
+	if (isIdentifier(node)) {
 		return (
 			node.text === "document" &&
 			isGlobalDeclaration(node, typeChecker, program)
@@ -22,9 +25,9 @@ export function isGlobalDocumentReference(
 	}
 
 	return (
-		node.kind === SyntaxKind.PropertyAccessExpression &&
-		node.expression.kind === SyntaxKind.Identifier &&
-		node.name.kind === SyntaxKind.Identifier &&
+		isPropertyAccessExpression(node) &&
+		isIdentifier(node.expression) &&
+		isIdentifier(node.name) &&
 		node.name.text === "document" &&
 		isGlobalDeclaration(node.name, typeChecker, program)
 	);

@@ -1,4 +1,8 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isIdentifier,
+	isJsxAttribute,
+	isStringLiteral,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -86,7 +90,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			element: AST.JsxOpeningElement | AST.JsxSelfClosingElement,
 			{ sourceFile }: TypeScriptFileServices,
 		) {
-			if (element.tagName.kind !== SyntaxKind.Identifier) {
+			if (!isIdentifier(element.tagName)) {
 				return;
 			}
 
@@ -101,13 +105,11 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			let hasInteractiveHandler = false;
 
 			for (const property of element.attributes.properties) {
-				if (
-					property.kind === SyntaxKind.JsxAttribute &&
-					property.name.kind === SyntaxKind.Identifier
-				) {
+				if (isJsxAttribute(property) && isIdentifier(property.name)) {
 					if (
 						property.name.text === "role" &&
-						property.initializer?.kind === SyntaxKind.StringLiteral &&
+						property.initializer &&
+						isStringLiteral(property.initializer) &&
 						!nonInteractiveRoles.has(property.initializer.text)
 					) {
 						return;

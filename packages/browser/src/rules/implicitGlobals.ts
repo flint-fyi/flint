@@ -1,4 +1,13 @@
-import { NodeFlags, SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isExportAssignment,
+	isExportDeclaration,
+	isFunctionDeclaration,
+	isIdentifier,
+	isImportDeclaration,
+	isVariableStatement,
+	NodeFlags,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -61,7 +70,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			}
 
 			for (const declaration of node.declarationList.declarations) {
-				if (declaration.name.kind === SyntaxKind.Identifier) {
+				if (isIdentifier(declaration.name)) {
 					context.report({
 						data: { declarationType: "var declaration" },
 						message: "implicitGlobal",
@@ -76,15 +85,15 @@ export default ruleCreator.createRule(typescriptLanguage, {
 				SourceFile(node) {
 					const isModule = node.statements.some(
 						(statement) =>
-							statement.kind === SyntaxKind.ImportDeclaration ||
-							statement.kind === SyntaxKind.ExportDeclaration ||
-							statement.kind === SyntaxKind.ExportAssignment ||
-							(statement.kind === SyntaxKind.VariableStatement &&
+							isImportDeclaration(statement) ||
+							isExportDeclaration(statement) ||
+							isExportAssignment(statement) ||
+							(isVariableStatement(statement) &&
 								(statement.modifiers?.some(
 									(modifier) => modifier.kind === SyntaxKind.ExportKeyword,
 								) ??
 									false)) ||
-							(statement.kind === SyntaxKind.FunctionDeclaration &&
+							(isFunctionDeclaration(statement) &&
 								(statement.modifiers?.some(
 									(modifier) => modifier.kind === SyntaxKind.ExportKeyword,
 								) ??
@@ -96,9 +105,9 @@ export default ruleCreator.createRule(typescriptLanguage, {
 					}
 
 					for (const statement of node.statements) {
-						if (statement.kind === SyntaxKind.FunctionDeclaration) {
+						if (isFunctionDeclaration(statement)) {
 							checkFunctionDeclaration(statement, node);
-						} else if (statement.kind === SyntaxKind.VariableStatement) {
+						} else if (isVariableStatement(statement)) {
 							checkVariableStatement(statement, node);
 						}
 					}

@@ -1,4 +1,8 @@
-import { SyntaxKind } from "typescript-native/unstable/ast";
+import {
+	isIdentifier,
+	isPropertyAccessExpression,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -9,6 +13,7 @@ import {
 import { nullThrows } from "@flint.fyi/utils";
 
 import { ruleCreator } from "./ruleCreator.ts";
+import { isASTExpression } from "./typeGuards.ts";
 
 export default ruleCreator.createRule(typescriptLanguage, {
 	about: {
@@ -40,8 +45,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 	setup(context) {
 		function isFirstChildAccess(node: AST.Expression): boolean {
 			return (
-				node.kind === SyntaxKind.PropertyAccessExpression &&
-				node.name.kind === SyntaxKind.Identifier &&
+				isPropertyAccessExpression(node) &&
+				isIdentifier(node.name) &&
 				node.name.text === "firstChild"
 			);
 		}
@@ -50,8 +55,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 			visitors: {
 				CallExpression(node, { program, sourceFile, typeChecker }) {
 					if (
-						node.expression.kind !== SyntaxKind.PropertyAccessExpression ||
-						node.expression.name.kind !== SyntaxKind.Identifier ||
+						!isPropertyAccessExpression(node.expression) ||
+						!isIdentifier(node.expression.name) ||
 						!isGlobalDeclaration(node.expression.name, typeChecker, program)
 					) {
 						return;
@@ -77,7 +82,8 @@ export default ruleCreator.createRule(typescriptLanguage, {
 							);
 							if (
 								secondArgument.kind !== SyntaxKind.NullKeyword &&
-								!isFirstChildAccess(secondArgument)
+								(!isASTExpression(secondArgument) ||
+									!isFirstChildAccess(secondArgument))
 							) {
 								break;
 							}
