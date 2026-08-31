@@ -1,4 +1,5 @@
-import ts, { SyntaxKind } from "typescript";
+import { TypeFlags } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -83,12 +84,12 @@ function getNegativeIndexLengthNode(
 		return;
 	}
 
-	const right = unwrapParenthesizedNode(unwrapped.right) as AST.Expression;
+	const right = unwrapParenthesizedNode(unwrapped.right);
 	if (!isPositiveNumericLiteral(right)) {
 		return;
 	}
 
-	const left = unwrapParenthesizedNode(unwrapped.left) as AST.Expression;
+	const left = unwrapParenthesizedNode(unwrapped.left);
 
 	if (isLengthPropertyAccess(left, target, sourceFile)) {
 		return {
@@ -130,7 +131,7 @@ function isSupportedType(
 	const type = getConstrainedTypeAtLocation(node, typeChecker);
 
 	return isTypeRecursive(type, (constituent) => {
-		if ((constituent.flags & ts.TypeFlags.Any) !== 0) {
+		if ((constituent.flags & TypeFlags.Any) !== 0) {
 			return true;
 		}
 
@@ -148,7 +149,7 @@ function isSupportedType(
 
 		if (
 			constituent.isStringLiteral() ||
-			(constituent.flags & ts.TypeFlags.String) !== 0
+			(constituent.flags & TypeFlags.String) !== 0
 		) {
 			return supportedTypes.has("String");
 		}

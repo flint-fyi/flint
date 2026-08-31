@@ -3,7 +3,17 @@ import type {
 	CapturingGroup,
 	RegExpLiteral,
 } from "@eslint-community/regexpp/ast";
-import ts, { SyntaxKind } from "typescript";
+import ts from "typescript";
+import {
+	forEachChild,
+	isBinaryExpression,
+	isIdentifier,
+	isParameter,
+	isVariableDeclaration,
+	SyntaxKind,
+	type BinaryExpression,
+	type Node,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -46,20 +56,20 @@ function findAssignmentsToSymbol(
 	sourceFile: AST.SourceFile,
 	typeChecker: Checker,
 ) {
-	const assignments: ts.BinaryExpression[] = [];
+	const assignments: BinaryExpression[] = [];
 
-	function visit(node: ts.Node) {
+	function visit(node: Node) {
 		if (
-			ts.isBinaryExpression(node) &&
+			isBinaryExpression(node) &&
 			node.operatorToken.kind === SyntaxKind.EqualsToken &&
-			ts.isIdentifier(node.left)
+			isIdentifier(node.left)
 		) {
 			const leftSymbol = typeChecker.getSymbolAtLocation(node.left);
 			if (leftSymbol === symbol) {
 				assignments.push(node);
 			}
 		}
-		ts.forEachChild(node, visit);
+		forEachChild(node, visit);
 	}
 
 	visit(sourceFile);
@@ -252,12 +262,9 @@ function getRegexInfoFromExpression(
 			const declarations = symbol.getDeclarations();
 			if (declarations) {
 				for (const declaration of declarations) {
-					if (
-						ts.isVariableDeclaration(declaration) &&
-						declaration.initializer
-					) {
+					if (isVariableDeclaration(declaration) && declaration.initializer) {
 						return getRegexInfoFromExpression(
-							declaration.initializer as AST.Expression,
+							declaration.initializer,
 							typeChecker,
 							sourceFile,
 						);
@@ -279,10 +286,8 @@ function getRegexInfoFromSymbol(
 
 	if (declarations) {
 		for (const declaration of declarations) {
-			if (ts.isVariableDeclaration(declaration) && declaration.initializer) {
-				const callExpression = extractCallExpression(
-					declaration.initializer as AST.Expression,
-				);
+			if (isVariableDeclaration(declaration) && declaration.initializer) {
+				const callExpression = extractCallExpression(declaration.initializer);
 				if (callExpression) {
 					const regexInfo = getRegexFromCall(
 						callExpression,
@@ -301,7 +306,7 @@ function getRegexInfoFromSymbol(
 				}
 			}
 
-			if (ts.isParameter(declaration)) {
+			if (isParameter(declaration)) {
 				continue;
 			}
 		}
@@ -309,9 +314,7 @@ function getRegexInfoFromSymbol(
 
 	const assignments = findAssignmentsToSymbol(symbol, sourceFile, typeChecker);
 	for (const assignment of assignments) {
-		const callExpression = extractCallExpression(
-			assignment.right as AST.Expression,
-		);
+		const callExpression = extractCallExpression(assignment.right);
 		if (callExpression) {
 			const regexInfo = getRegexFromCall(
 				callExpression,

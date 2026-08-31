@@ -1,5 +1,6 @@
 import * as tsutils from "ts-api-utils";
-import { SyntaxKind, type InterfaceType, type TypeChecker } from "typescript";
+import type { InterfaceType, TypeChecker } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,

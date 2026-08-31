@@ -1,5 +1,6 @@
 import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import ts from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import type { CharacterReportRange } from "@flint.fyi/core";
@@ -112,8 +113,8 @@ function analyzeConditionalForNullish(
 				: false;
 
 		if (leftIsComparison && rightIsComparison) {
-			const leftComp = condition.left as AST.BinaryExpression;
-			const rightComp = condition.right as AST.BinaryExpression;
+			const leftComp = condition.left;
+			const rightComp = condition.right;
 
 			const leftValue = extractValueFromComparison(leftComp).value;
 			const rightValue = extractValueFromComparison(rightComp).value;
@@ -148,8 +149,8 @@ function analyzeConditionalForNullish(
 				: false;
 
 		if (leftIsComparison && rightIsComparison) {
-			const leftComp = condition.left as AST.BinaryExpression;
-			const rightComp = condition.right as AST.BinaryExpression;
+			const leftComp = condition.left;
+			const rightComp = condition.right;
 
 			const leftValue = extractValueFromComparison(leftComp).value;
 			const rightValue = extractValueFromComparison(rightComp).value;

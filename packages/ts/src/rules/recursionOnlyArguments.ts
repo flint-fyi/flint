@@ -1,5 +1,10 @@
-import * as tsutils from "ts-api-utils";
-import { SyntaxKind } from "typescript";
+import {
+	isClassLikeDeclaration,
+	isEnumDeclaration,
+	isFunctionLikeDeclaration,
+	isModuleDeclaration,
+	SyntaxKind,
+} from "typescript-native/unstable/ast";
 
 import {
 	getScopeManager,
@@ -74,12 +79,19 @@ function isRecursiveCall(
 	for (
 		let current: AST.AnyNode | undefined = callExpression.parent;
 		current;
-		current = current.parent as AST.AnyNode | undefined
+		current = current.parent
 	) {
 		if (current === functionNode) {
 			return true;
 		}
-		if (tsutils.isFunctionScopeBoundary(current)) {
+		if (
+			isFunctionLikeDeclaration(current) ||
+			isClassLikeDeclaration(current) ||
+			isEnumDeclaration(current) ||
+			isModuleDeclaration(current) ||
+			(current.kind === SyntaxKind.SourceFile &&
+				current.externalModuleIndicator !== undefined)
+		) {
 			return false;
 		}
 	}

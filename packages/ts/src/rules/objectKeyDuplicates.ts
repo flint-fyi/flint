@@ -1,4 +1,4 @@
-import { SyntaxKind, type Node } from "typescript";
+import { SyntaxKind, type Node } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,

@@ -1,4 +1,5 @@
-import { SyntaxKind, TypeFlags } from "typescript";
+import { TypeFlags } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	typescriptLanguage,

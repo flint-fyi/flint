@@ -1,4 +1,5 @@
-import { SyntaxKind, type TypeChecker } from "typescript";
+import type { TypeChecker } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,

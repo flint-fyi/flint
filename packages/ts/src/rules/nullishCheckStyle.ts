@@ -1,4 +1,4 @@
-import { isNullKeyword } from "ts-api-utils";
+import { isNullKeyword } from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import {

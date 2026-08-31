@@ -1,4 +1,5 @@
-import { SyntaxKind, type Program } from "typescript";
+import type { Program } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -55,7 +56,7 @@ function isObjectAssignPattern(
 	}
 
 	const accumulatorName = firstParameter.name.text;
-	const body = skipParentheses(callback.body as AST.Expression);
+	const body = skipParentheses(callback.body);
 
 	if (
 		!isObjectMethodCall(body, "assign", typeChecker, program) ||
@@ -178,7 +179,7 @@ function isSpreadAccumulatorPattern(callback: AST.ArrowFunction) {
 	}
 
 	const accumulatorName = firstParam.name.text;
-	const body = skipParentheses(callback.body as AST.Expression);
+	const body = skipParentheses(callback.body);
 
 	if (
 		body.kind !== SyntaxKind.ObjectLiteralExpression ||

@@ -1,4 +1,5 @@
-import { SyntaxKind, type Program } from "typescript";
+import type { Program } from "typescript";
+import { SyntaxKind } from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,

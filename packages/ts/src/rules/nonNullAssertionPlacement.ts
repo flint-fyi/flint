@@ -1,4 +1,8 @@
-import { SyntaxKind, type Expression, type SourceFile } from "typescript";
+import {
+	SyntaxKind,
+	type Expression,
+	type SourceFile,
+} from "typescript-native/unstable/ast";
 
 import { typescriptLanguage } from "@flint.fyi/typescript-language";
 

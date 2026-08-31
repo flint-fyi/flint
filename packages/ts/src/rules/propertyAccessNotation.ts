@@ -1,4 +1,10 @@
-import ts, { SyntaxKind } from "typescript";
+import { TypeFlags } from "typescript";
+import {
+	canHaveModifiers,
+	getModifiers as getNodeModifiers,
+	SyntaxKind,
+	type Node,
+} from "typescript-native/unstable/ast";
 import { z } from "zod/v4";
 
 import {
@@ -59,8 +65,8 @@ const javascriptReservedWords = new Set([
 	"yield",
 ]);
 
-function getModifiers(node: null | ts.Node | undefined) {
-	return node && ts.canHaveModifiers(node) ? ts.getModifiers(node) : undefined;
+function getModifiers(node: null | Node | undefined) {
+	return node && canHaveModifiers(node) ? getNodeModifiers(node) : undefined;
 }
 
 // TODO: Use a util like getStaticValue
@@ -167,7 +173,7 @@ export default ruleCreator.createRule(typescriptLanguage, {
 						if (
 							typeChecker
 								.getIndexInfosOfType(objectType)
-								.some((info) => info.keyType.flags & ts.TypeFlags.StringLike)
+								.some((info) => info.keyType.flags & TypeFlags.StringLike)
 						) {
 							return;
 						}

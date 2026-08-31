@@ -1,5 +1,15 @@
-import * as tsutils from "ts-api-utils";
-import ts, { SyntaxKind } from "typescript";
+import {
+	forEachChild,
+	isAssignmentOperator,
+	isBinaryExpression,
+	isIdentifier,
+	isParameter,
+	isPostfixUnaryExpression,
+	isPrefixUnaryExpression,
+	isVariableDeclaration,
+	SyntaxKind,
+	type Node,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -33,11 +43,11 @@ function hasNoAssignmentBeforeNode(
 			continue;
 		}
 
-		if (ts.isVariableDeclaration(declaration)) {
+		if (isVariableDeclaration(declaration)) {
 			if (declaration.exclamationToken || declaration.initializer) {
 				return false;
 			}
-		} else if (ts.isParameter(declaration) && declaration.initializer) {
+		} else if (isParameter(declaration) && declaration.initializer) {
 			return false;
 		}
 	}
@@ -47,15 +57,15 @@ function hasNoAssignmentBeforeNode(
 		return true;
 	}
 
-	function findModifyingReference(current: ts.Node): boolean {
-		if (ts.isIdentifier(current)) {
+	function findModifyingReference(current: Node): boolean {
+		if (isIdentifier(current)) {
 			const currentSymbol = typeChecker.getSymbolAtLocation(current);
 			if (currentSymbol?.valueDeclaration === valueDeclaration) {
 				const parent = current.parent;
 
 				if (
-					ts.isBinaryExpression(parent) &&
-					tsutils.isAssignmentKind(parent.operatorToken.kind) &&
+					isBinaryExpression(parent) &&
+					isAssignmentOperator(parent.operatorToken.kind) &&
 					parent.left === current &&
 					parent.getEnd() < nodeEnd
 				) {
@@ -63,8 +73,8 @@ function hasNoAssignmentBeforeNode(
 				}
 
 				if (
-					(ts.isPostfixUnaryExpression(parent) ||
-						ts.isPrefixUnaryExpression(parent)) &&
+					(isPostfixUnaryExpression(parent) ||
+						isPrefixUnaryExpression(parent)) &&
 					parent.operand === current &&
 					parent.getEnd() < nodeEnd
 				) {
@@ -73,7 +83,7 @@ function hasNoAssignmentBeforeNode(
 			}
 		}
 
-		return ts.forEachChild(current, findModifyingReference) ?? false;
+		return forEachChild(current, findModifyingReference) ?? false;
 	}
 
 	return !findModifyingReference(sourceFile);

@@ -1,4 +1,10 @@
-import ts, { SyntaxKind } from "typescript";
+import {
+	canHaveModifiers,
+	isStringLiteral,
+	SyntaxKind,
+	type Node,
+	type PropertyName,
+} from "typescript-native/unstable/ast";
 
 import {
 	getTSNodeRange,
@@ -117,11 +123,11 @@ function getMethodDisplayName(method: Method) {
 // TODO: Use a util like getStaticValue
 // https://github.com/flint-fyi/flint/issues/1298
 function getNameFromPropertyName(
-	name: ts.PropertyName,
+	name: PropertyName,
 ): undefined | { name: string; type: "computed" | "normal" | "quoted" } {
 	switch (name.kind) {
 		case SyntaxKind.ComputedPropertyName:
-			if (ts.isStringLiteral(name.expression)) {
+			if (isStringLiteral(name.expression)) {
 				return { name: name.expression.text, type: "quoted" };
 			}
 			return undefined;
@@ -149,9 +155,9 @@ function isSameMethod(method1: Method, method2: Method | undefined) {
 	);
 }
 
-function isStatic(node: ts.Node) {
+function isStatic(node: Node) {
 	return (
-		ts.canHaveModifiers(node) &&
+		canHaveModifiers(node) &&
 		!!node.modifiers?.some((mod) => mod.kind === SyntaxKind.StaticKeyword)
 	);
 }
